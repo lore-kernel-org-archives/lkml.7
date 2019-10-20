@@ -2,135 +2,107 @@ Return-Path: <SRS0=ATYp=YN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 901E1CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 16:14:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B98E0CA9EAD
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 16:18:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C04C21D80
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 16:14:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A0B3222D2
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 16:18:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="PcAi5q8z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbfJTQOa (ORCPT
+        id S1726590AbfJTQSj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 20 Oct 2019 12:14:30 -0400
-Received: from mga14.intel.com ([192.55.52.115]:39869 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726383AbfJTQN7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 20 Oct 2019 12:13:59 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Oct 2019 09:13:58 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,320,1566889200"; 
-   d="scan'208";a="187321662"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
-  by orsmga007.jf.intel.com with ESMTP; 20 Oct 2019 09:13:58 -0700
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 3FA72300393; Sun, 20 Oct 2019 09:13:58 -0700 (PDT)
-From:   Andi Kleen <andi@firstfloor.org>
-To:     acme@kernel.org
-Cc:     jolsa@kernel.org, eranian@google.com, kan.liang@linux.intel.com,
-        peterz@infradead.org, linux-kernel@vger.kernel.org,
-        Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH v1 5/9] perf evsel: Add iterator to iterate over events ordered by CPU
-Date:   Sun, 20 Oct 2019 09:13:42 -0700
-Message-Id: <20191020161346.18938-6-andi@firstfloor.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191020161346.18938-1-andi@firstfloor.org>
-References: <20191020161346.18938-1-andi@firstfloor.org>
+        Sun, 20 Oct 2019 12:18:39 -0400
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:40851 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726383AbfJTQSj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 20 Oct 2019 12:18:39 -0400
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id x9KGIYP0030051;
+        Mon, 21 Oct 2019 01:18:35 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x9KGIYP0030051
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1571588315;
+        bh=QctcxxPWMqf5XXgvkO77D8RGam01Dbk6TfRZ1jgsDjg=;
+        h=From:Date:Subject:To:Cc:From;
+        b=PcAi5q8zyvwV3cxht3kYOrF6sVMPRFXcGLTC58oTEMDwn8yZtWEHm35E3m/axQign
+         CBxD0VDD9cyRUiC6pUOq9XjnyKTgwP1vEbarvomrb+3oyIzmEwPaPBbzbSelNjYhuw
+         mSqNH20NL0kLrNwHr6jUf4wD9V4rB7/7Lma4mJ//cwZKRnJ4Du7c6IU+o9LqNNlOiy
+         RSPbyQsmXnf82YAdaBMnDlZeiZYAmKOYuGv72Ubny5FIXjBjzEn6/UNC9QqPITMFIu
+         dwa31/8I5tcWyxzjQPR03SgqIu0eD21IT1neEzHcl1YPlgGP/RuEvbagjFXEGy9BAH
+         1gc7qAqwZFlLg==
+X-Nifty-SrcIP: [209.85.217.53]
+Received: by mail-vs1-f53.google.com with SMTP id b1so7274234vsr.10;
+        Sun, 20 Oct 2019 09:18:35 -0700 (PDT)
+X-Gm-Message-State: APjAAAXu85OGkVDvxskL+T3S2qMPPQyGcclFjV5s9v5tMx/Vcdf5D8CW
+        RUY1s9pQCCWC+SuX/7/H28AotikRcj7+zVatRwc=
+X-Google-Smtp-Source: APXvYqxsKFsRU8EhjhAh+/8XykBq6cfg9+fs4dKQaeeoN3dZkYYebbS5FZ4MUi0ubulYB+zeplUPM2kgcgpzz17R2ww=
+X-Received: by 2002:a67:ff14:: with SMTP id v20mr11026053vsp.215.1571588314216;
+ Sun, 20 Oct 2019 09:18:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Mon, 21 Oct 2019 01:17:57 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAScdn6BuvdrVhW=We50f8_618+hh72d2q6rZbSP1u5Abg@mail.gmail.com>
+Message-ID: <CAK7LNAScdn6BuvdrVhW=We50f8_618+hh72d2q6rZbSP1u5Abg@mail.gmail.com>
+Subject: [GIT PULL] Kbuild fixes for v5.4-rc4
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     masahiroy@kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
+Hi Linus,
 
-Add some common code that is needed to iterate over all events
-in CPU order. Used in followon patches
+Please pull some Kbuild fixes. Thanks.
 
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
----
- tools/perf/util/evlist.c | 33 +++++++++++++++++++++++++++++++++
- tools/perf/util/evlist.h |  4 ++++
- tools/perf/util/evsel.h  |  1 +
- 3 files changed, 38 insertions(+)
 
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index fdef4eb82b48..00eaa6c5cdbe 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -324,6 +324,39 @@ static int perf_evlist__nr_threads(struct evlist *evlist,
- 		return perf_thread_map__nr(evlist->core.threads);
- }
- 
-+struct perf_cpu_map *evlist__cpu_iter_start(struct evlist *evlist)
-+{
-+	struct perf_cpu_map *cpus;
-+	struct evsel *pos;
-+
-+	/*
-+	 * evlist->cpus is not necessarily a superset of all the
-+	 * event's cpus, so compute our own super set. This
-+	 * assume that there is a super set
-+	 */
-+	cpus = evlist->core.cpus;
-+	evlist__for_each_entry(evlist, pos) {
-+		pos->cpu_index = 0;
-+		if (pos->core.cpus->nr > cpus->nr)
-+			cpus = pos->core.cpus;
-+	}
-+	return cpus;
-+}
-+
-+bool evlist__cpu_iter_skip(struct evsel *ev, int cpu)
-+{
-+	if (ev->cpu_index >= ev->core.cpus->nr)
-+		return true;
-+	if (cpu >= 0 && ev->core.cpus->map[ev->cpu_index] != cpu)
-+		return true;
-+	return false;
-+}
-+
-+void evlist__cpu_iter_next(struct evsel *ev)
-+{
-+	ev->cpu_index++;
-+}
-+
- void evlist__disable(struct evlist *evlist)
- {
- 	struct evsel *pos;
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index a55f0f2546e5..3f1268b9347b 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -309,6 +309,10 @@ void perf_evlist__to_front(struct evlist *evlist,
- void perf_evlist__set_tracking_event(struct evlist *evlist,
- 				     struct evsel *tracking_evsel);
- 
-+struct perf_cpu_map *evlist__cpu_iter_start(struct evlist *evlist);
-+bool evlist__cpu_iter_skip(struct evsel *ev, int cpu);
-+void evlist__cpu_iter_next(struct evsel *ev);
-+
- struct evsel *
- perf_evlist__find_evsel_by_str(struct evlist *evlist, const char *str);
- 
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 68321d10eb2d..227320501eb8 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -172,6 +172,7 @@ struct evsel {
- 	bool			collect_stat;
- 	bool			weak_group;
- 	bool			percore;
-+	int			cpu_index;
- 	const char		*pmu_name;
- 	struct {
- 		perf_evsel__sb_cb_t	*cb;
+
+The following changes since commit 4f5cafb5cb8471e54afdc9054d973535614f7675:
+
+  Linux 5.4-rc3 (2019-10-13 16:37:36 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
+tags/kbuild-fixes-v5.4-2
+
+for you to fetch changes up to 700dea5a0bea9f64eba89fae7cb2540326fdfdc1:
+
+  kheaders: substituting --sort in archive creation (2019-10-17 09:08:19 +0900)
+
+----------------------------------------------------------------
+Kbuild fixes for v5.4 (2nd)
+
+ - fix a bashism of setlocalversion
+
+ - do not use the too new --sort option of tar
+
+----------------------------------------------------------------
+Dmitry Goldin (1):
+      kheaders: substituting --sort in archive creation
+
+Masahiro Yamada (1):
+      kbuild: update comment about KBUILD_ALLDIRS
+
+Randy Dunlap (1):
+      scripts: setlocalversion: fix a bashism
+
+ Makefile                |  2 +-
+ kernel/gen_kheaders.sh  | 11 +++++++----
+ scripts/setlocalversion |  2 +-
+ 3 files changed, 9 insertions(+), 6 deletions(-)
+
+
 -- 
-2.21.0
-
+Best Regards
+Masahiro Yamada
