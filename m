@@ -2,92 +2,81 @@ Return-Path: <SRS0=ATYp=YN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CAE5CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 15:12:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 089D5CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 15:24:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 062462190F
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 15:12:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD79D21929
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 15:24:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qe7JRxXb"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LK3ejOPl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726552AbfJTPMJ (ORCPT
+        id S1726510AbfJTPYR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 20 Oct 2019 11:12:09 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:39574 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726438AbfJTPMJ (ORCPT
+        Sun, 20 Oct 2019 11:24:17 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:47530 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726448AbfJTPYR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 20 Oct 2019 11:12:09 -0400
-Received: by mail-wr1-f66.google.com with SMTP id r3so11043025wrj.6;
-        Sun, 20 Oct 2019 08:12:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=sEDPpuabV3/B35Mj82XikN4wgjEHBJYpPuqoickG7cM=;
-        b=qe7JRxXbGbvrO0+E0KKpDJTcZaU1q5xXn2OMubvAwzdz6DXYAFokTgupTFoolqGyjg
-         A6KRGTXAyoj4xsKyZ9hk7cwVP0lmWjMLgtqa3oPhH1GCriZSTXht8bdFzzAwN3Thtm6a
-         zJcjZc6VXK0ADr3Rn6HZ9t5VNQ0r2K0dcDHQbGfz97/1IJ3l1p1NVLHdJZOYCwSUsMO9
-         0N75im9QJWuGekHRmtuGXTXpSLgODycgvCE+yH8zM6slPokq7DmscgUhyKkzqbZ+O6t9
-         YMTNlWiGr/iC0i5HVn+9IGiN1TYHeViLEwNLYWCgUc3AIES6tKXttTV4dmkw4q4c98CC
-         e68Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=sEDPpuabV3/B35Mj82XikN4wgjEHBJYpPuqoickG7cM=;
-        b=gcZRQA9MFWYx75XO1oxDxzg0ZIkN3jqN+c6ybX72Gu9G4LvOMhacAQVfY4hj1n+eAD
-         6mBQGHQMdzeuTZfje8nBhCKnKWdJy1onYBq0vEIh5Ha1Trf2MG/plwZTm+/ehrey3qut
-         cM+7tcZ+9XPjmIKZxsdr6yisVHWnpbrGBquS5Cacowcgmm3cPPKvMve1sjREocvxUVpH
-         MNzFkI3DFqyDVUV3+Esz7bRv01R43dKxoNSjYbEx0QDmK2V0Zn2Vx7CXWNQx1L6NBk1V
-         fMqS9z1XxxYiCkyLW4rgM57GyOOjTWEab3ThVHKvUfBX4e73d+0PyseY2fVyMHGP8SUh
-         oUIg==
-X-Gm-Message-State: APjAAAUzfJ7pWLhe5c44gB1PPVTlqMz0JUPQ1+V1YPeMDFOo2qr6Mm6l
-        dHcc1htzSXHjEuP690BhRiC3HVLNE8k4ng==
-X-Google-Smtp-Source: APXvYqw0jfXTUHK8SC+t6VvHbj+B+5ZX/+DPYODZPb1bq/b1S92Q1hjT09/etSBReCQR1wHjlCNhTg==
-X-Received: by 2002:a05:6000:12cd:: with SMTP id l13mr15862953wrx.181.1571584326730;
-        Sun, 20 Oct 2019 08:12:06 -0700 (PDT)
-Received: from localhost.localdomain ([31.147.208.18])
-        by smtp.googlemail.com with ESMTPSA id e12sm6367204wrs.49.2019.10.20.08.12.05
-        (version=TLS1 cipher=AES128-SHA bits=128/128);
-        Sun, 20 Oct 2019 08:12:06 -0700 (PDT)
-From:   =?UTF-8?q?Tomislav=20Po=C5=BEega?= <pozega.tomislav@gmail.com>
-To:     kvalo@codeaurora.org
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ath10k@lists.infradead.org, davem@davemloft.net,
-        torvalds@linux-foundation.org, johannes@sipsolutions.net,
-        linux-wireless@vger.kernel.org
-Subject: Re: WARNING at net/mac80211/sta_info.c:1057 (__sta_info_destroy_part2())
-Date:   Sun, 20 Oct 2019 17:12:00 +0200
-Message-Id: <1571584320-29816-1-git-send-email-pozega.tomislav@gmail.com>
-X-Mailer: git-send-email 1.7.0.4
-In-Reply-To: <87lfuuln5n.fsf@tynnyri.adurom.net>
-References: <87lfuuln5n.fsf@tynnyri.adurom.net>
+        Sun, 20 Oct 2019 11:24:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=4ZH3C9BlRkulrqsRUN1NO9rzPeBK4dlwWV9oddVh+sM=; b=LK3ejOPlikkCcTsnulHKdpcnl
+        8s6WJyrbr4VzaJhIiWuCrdk2S3F93UW6m9ES+6eLTaDcxPzvqHUHezP0h8EeBnZEFm1dXZHSt93NY
+        9bI7xgyr+9+S+h9gK7aRSnuNQRkBs//8au2GkhNvOQ+HycWVHjHK1sOLqPJG93NP1Q84ptSepiLBD
+        WSNO7FYuzuPxU29XV0eAPoIEqe4P8tjp5v/N0OvhIKcxwdSyzXaHdXOzBVOCPGeMs3bysMRppp6AJ
+        bixYWWRZlMZHAStqP6CSgGuYDu0Dh2ZLV73DoS7cbMxyuGVL6SwXGumUxW81dAtqZ7szAuUfjnsok
+        74SW3yOkA==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iMD3o-0006br-E1; Sun, 20 Oct 2019 15:24:00 +0000
+Date:   Sun, 20 Oct 2019 08:24:00 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     linux-mm <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Minchan Kim <minchan@kernel.org>, Mel Gorman <mgorman@suse.de>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Jan Kara <jack@suse.cz>
+Subject: Re: [RFC v1] mm: add page preemption
+Message-ID: <20191020152400.GA9214@bombadil.infradead.org>
+References: <20191020134304.11700-1-hdanton@sina.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191020134304.11700-1-hdanton@sina.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -11 is -EAGAIN which would mean that the HTC credits have run out some
->  reason for the WMI command:
-> 
-> if (ep->tx_credits < credits) {
->         ath10k_dbg(ar, ATH10K_DBG_HTC,
->                 "htc insufficient credits ep %d required %d available %d\n",
->                 eid, credits, ep->tx_credits);
->         spin_unlock_bh(&htc->tx_lock);
->         ret = -EAGAIN;
->         goto err_pull;
-> }
-> 
-> Credits can run out, for example, if there's a lot of WMI command/event
-> activity and are not returned during the 3s wait, firmware crashed or
-> problems with the PCI bus.
+On Sun, Oct 20, 2019 at 09:43:04PM +0800, Hillf Danton wrote:
+> First on the page side, page->prio that is used to mirror the prio
+> of page owner tasks is added, and a couple of helpers for setting,
+> copying and comparing page->prio to help to add pages to lru.
 
-Hi
+Um, no.  struct page is 64 bytes and shall remain so without a very very
+good reason.
 
-Can this occur if the target memory is not properly allocated?
+> @@ -197,6 +198,10 @@ struct page {
+>  	/* Usage count. *DO NOT USE DIRECTLY*. See page_ref.h */
+>  	atomic_t _refcount;
+>  
+> +#ifdef CONFIG_PAGE_PREEMPTION
+> +	int prio; /* mirror page owner task->prio */
+> +#endif
+> +
+>  #ifdef CONFIG_MEMCG
+>  	struct mem_cgroup *mem_cgroup;
+>  #endif
