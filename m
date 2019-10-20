@@ -4,57 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C2ACCA9EAD
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 12:58:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A504BCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 13:04:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2E3D20640
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 12:58:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7224F222D3
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 13:04:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571576308;
-	bh=a4cIo6o/+l6MkZI3kV4/Qt6TYtKNFU41pnysG7BhNLE=;
+	s=default; t=1571576687;
+	bh=BaaDNZa2WmdDajtlcOe5NfEpuESOd1YfNMU6+cnGh1g=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZjuEjprIfJcy57HeVHs/CBRL4ARxoJ40eQEifwMUKrdOSYqISrivCheQzibdfLYe9
-	 6inWzxEhS0UZuUA4O/TVnnrcjJ9KQ+v3gmvzuom+NK/hvYizJgnXQZLYmlLN0psCly
-	 v406g/BmbK9vxS5PXH9YhsgYXutQEI4D+U9w2JAs=
+	b=Tzm1X7ZLhn1rG/KPxfa6phtSxs4sPYOcTbAd7liBFW0WMyul/a4gZk4qQMImrhJPr
+	 Bgg4m9HV3ZGQnDgVXFvrPF/vFkjbaKtDL9vJG0sJ7KY+Zco1jb9iLm005klxvXC/FW
+	 khfgoIPmKF3d5yBpIsMq0dvLJFbPhtsHIMLuNZBc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726342AbfJTM5u (ORCPT
+        id S1726377AbfJTNEq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 20 Oct 2019 08:57:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58316 "EHLO mail.kernel.org"
+        Sun, 20 Oct 2019 09:04:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726295AbfJTM5u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 20 Oct 2019 08:57:50 -0400
+        id S1726298AbfJTNEq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 20 Oct 2019 09:04:46 -0400
 Received: from earth.universe (tmo-104-243.customers.d1-online.com [80.187.104.243])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F33620640;
-        Sun, 20 Oct 2019 12:57:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F1D82067B;
+        Sun, 20 Oct 2019 13:04:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571576269;
-        bh=a4cIo6o/+l6MkZI3kV4/Qt6TYtKNFU41pnysG7BhNLE=;
+        s=default; t=1571576685;
+        bh=BaaDNZa2WmdDajtlcOe5NfEpuESOd1YfNMU6+cnGh1g=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=v1FjeWn5SBJeVRD2R9oZ/FgQSCB2L8VZ2hrOLgLrKlgCzlkL1k3ELGFGSR36OB15G
-         NUQgyUo7xENX9ro6WV+FPiKPFiZBi7VOufshihqPfwBfxDsB7E0H5DukzE6AGNZUf9
-         SNvbvbadbi0ruBS5aJ+ss6wglmJI31pweTp4Qr2A=
+        b=KLL5FwKkE4nV/CejVY0RNccB3WPxc8ji0b3bduxUuMyld8kk5RojAOV4XNPwg9DIj
+         LGIBcDEux2tgEIO9wit3CezvjaPZC9aIf2cK64nYDmeUWIrTmEa6QDyGHQ5DvSLNg+
+         kJeY4EXj0bjXdqGwHpclQwt0JTMGneqfO6CQS5wA=
 Received: by earth.universe (Postfix, from userid 1000)
-        id CAF6D3C09B1; Sun, 20 Oct 2019 14:57:37 +0200 (CEST)
-Date:   Sun, 20 Oct 2019 14:57:37 +0200
+        id 9455A3C09B1; Sun, 20 Oct 2019 15:04:40 +0200 (CEST)
+Date:   Sun, 20 Oct 2019 15:04:40 +0200
 From:   Sebastian Reichel <sre@kernel.org>
-To:     madhuparnabhowmik04@gmail.com
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [PATCH] Power: supply: abx500_chargalg.c: Fixed a code
- indentation error
-Message-ID: <20191020125737.t4lx6nshoszojbtx@earth.universe>
-References: <20191015161341.26868-1-madhuparnabhowmik04@gmail.com>
+To:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
+Cc:     linux-kernel@lists.codethink.co.uk,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] power: reset: fix __le32 cast in reset code
+Message-ID: <20191020130440.k5o5vxwuzb354e7w@earth.universe>
+References: <20191015155414.25267-1-ben.dooks@codethink.co.uk>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="tlbqmfvintztvz3z"
+        protocol="application/pgp-signature"; boundary="r3yb7dqh5bru6ocf"
 Content-Disposition: inline
-In-Reply-To: <20191015161341.26868-1-madhuparnabhowmik04@gmail.com>
+In-Reply-To: <20191015155414.25267-1-ben.dooks@codethink.co.uk>
 User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -62,84 +65,96 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---tlbqmfvintztvz3z
+--r3yb7dqh5bru6ocf
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-On Tue, Oct 15, 2019 at 09:43:41PM +0530, madhuparnabhowmik04@gmail.com wro=
-te:
-> From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+On Tue, Oct 15, 2019 at 04:54:14PM +0100, Ben Dooks (Codethink) wrote:
+> The writel() takes standard integers, not __le32 so
+> fix the following sparse warnings by removing the
+> cpu_to_le32() calls.
 >=20
-> Fixed Code indentation error caused due to using spaces
-> instead of tabs.
-> The error reported by checkpatch.pl is:
->  ERROR: code indent should use tabs where possible
-> The warning reported by checkpatch.pl is:
->  WARNING: please, no spaces at the start of a line
+> drivers/power/reset/at91-reset.c:134:9: warning: cast from restricted __l=
+e32
+> drivers/power/reset/at91-reset.c:143:9: warning: cast from restricted __l=
+e32
 >=20
-> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+> This has made no code changes, the md5sums pre and post applying
+> this patch are the same. The at91 should be natively little endian
+> anyway.
+>=20
+> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
 > ---
 
-Thanks, queued to power-supply's for-next branch.
+Thanks, queued.
 
 -- Sebastian
 
->  drivers/power/supply/abx500_chargalg.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+> Cc: Sebastian Reichel <sre@kernel.org>
+> Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
+> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Cc: Ludovic Desroches <ludovic.desroches@microchip.com>
+> Cc: linux-pm@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  drivers/power/reset/at91-reset.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
 >=20
-> diff --git a/drivers/power/supply/abx500_chargalg.c b/drivers/power/suppl=
-y/abx500_chargalg.c
-> index 23757fb10479..e6e37d4f20e4 100644
-> --- a/drivers/power/supply/abx500_chargalg.c
-> +++ b/drivers/power/supply/abx500_chargalg.c
-> @@ -354,13 +354,13 @@ static int abx500_chargalg_check_charger_enable(str=
-uct abx500_chargalg *di)
+> diff --git a/drivers/power/reset/at91-reset.c b/drivers/power/reset/at91-=
+reset.c
+> index 44ca983a49a1..d94e3267c3b6 100644
+> --- a/drivers/power/reset/at91-reset.c
+> +++ b/drivers/power/reset/at91-reset.c
+> @@ -131,7 +131,7 @@ static int at91sam9g45_restart(struct notifier_block =
+*this, unsigned long mode,
+>  static int sama5d3_restart(struct notifier_block *this, unsigned long mo=
+de,
+>  			   void *cmd)
+>  {
+> -	writel(cpu_to_le32(AT91_RSTC_KEY | AT91_RSTC_PERRST | AT91_RSTC_PROCRST=
+),
+> +	writel(AT91_RSTC_KEY | AT91_RSTC_PERRST | AT91_RSTC_PROCRST,
+>  	       at91_rstc_base);
 > =20
->  	if (di->chg_info.charger_type & USB_CHG) {
->  		return di->usb_chg->ops.check_enable(di->usb_chg,
-> -                         di->bm->bat_type[di->bm->batt_id].normal_vol_lv=
-l,
-> -                         di->bm->bat_type[di->bm->batt_id].normal_cur_lv=
-l);
-> +			di->bm->bat_type[di->bm->batt_id].normal_vol_lvl,
-> +			di->bm->bat_type[di->bm->batt_id].normal_cur_lvl);
->  	} else if ((di->chg_info.charger_type & AC_CHG) &&
->  		   !(di->ac_chg->external)) {
->  		return di->ac_chg->ops.check_enable(di->ac_chg,
-> -                         di->bm->bat_type[di->bm->batt_id].normal_vol_lv=
-l,
-> -                         di->bm->bat_type[di->bm->batt_id].normal_cur_lv=
-l);
-> +			di->bm->bat_type[di->bm->batt_id].normal_vol_lvl,
-> +			di->bm->bat_type[di->bm->batt_id].normal_cur_lvl);
->  	}
->  	return 0;
+>  	return NOTIFY_DONE;
+> @@ -140,9 +140,7 @@ static int sama5d3_restart(struct notifier_block *thi=
+s, unsigned long mode,
+>  static int samx7_restart(struct notifier_block *this, unsigned long mode,
+>  			 void *cmd)
+>  {
+> -	writel(cpu_to_le32(AT91_RSTC_KEY | AT91_RSTC_PROCRST),
+> -	       at91_rstc_base);
+> -
+> +	writel(AT91_RSTC_KEY | AT91_RSTC_PROCRST, at91_rstc_base);
+>  	return NOTIFY_DONE;
 >  }
+> =20
 > --=20
-> 2.17.1
+> 2.23.0
 >=20
 
---tlbqmfvintztvz3z
+--r3yb7dqh5bru6ocf
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl2sWb4ACgkQ2O7X88g7
-+po7UA/7ByxXHbLl3FPKRDFfRH9tDLdQeF9MUepCzmywVN5jpt4CULuUhoFmkKvz
-6uQOQLN52Nm2NlLL2WbvKBtdmuMCuJn4EpiWG0R7er85lpAJJQoP7U0GWB0PDCfe
-g7BSrYEWqYCs3S8GV+xPJNVCoefg6gnWDcorBluP0z6PZnp4wJq8KV6nX9O5Pdzw
-8qkw5ZVyWvuhwvPpvVpK9vFS+e2NE5T9sCa4dlmJZWgWBzJjoaU6VY/aXspJMZim
-K1ZFwriD4SmDKtgu1BvQ1eZuYL1my2dxf1R0QkgweEVBUeCID+SzSFoFCHQEB2of
-jfTFJocQL7xA3YYZ9DzcibzXqBWB0AeQpd9RklVoHPLdNL3S79tZVYd8lwZpNU9V
-6ZgWGAG/+23ir6flUS+lNK60AnhAN7NIrhIDCZ5+WSxcjIZ8EY+l2jvrRcRPA4yx
-/gPoCQqVKckivRyEgQvSWX/3hkh+i4bOXavpZUj6Io5Z2vXwXE8ohq1lN1couO+2
-4aZItc0r54y5WdIoCLpDj5TtHclomfSHEX3Z5HYOwnqbwf4GjV572nl0OPd0PkIM
-jzQkCZJwc9L1VlwPmNbMMt6LfYs0J9Fp73zEV9XulnBfVlCRrSuYYWI42BpiMMIb
-OlbGtE4oF55v9JnttA0YvvCyg1UcBIaBZMcmCLs300nJyfLaIEM=
-=ROpJ
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl2sW2gACgkQ2O7X88g7
++po77Q/8DXDRvmluSTIuWXt4yW2I8ioJJsNAyPINMtbsKQWIp6yoMWWgsFlQtV74
+nWgBHDRsViRUsqqLzcSYEdnJ3rQDUoTpovAg7HqaQi9xuJ9XtOwUJ2+DHEq8MGj/
+dml/EwfXMhKfS93+odQFgappZUvpucZhbqtqFQ7x5ZhzeRBdepnjU8BvqKMJEMRJ
+/n1HfVW9CX9Zy81Cber5c5AV27YXHpKrftImAQ4fDxKDDL9iGarOIJmDxEpRl+vn
+xR0atYdvh4kPNZw/NYEF6JHAk1E2uoctohI9zURrbUDKVHj44QiwNuOOZtnKEm75
+p1mj6NiMTcPNXg0r4wYlZNyjsuFqL3lEJYEHoMW5yNJYocj78t3cEu+sN/zLGRLZ
+vogOiSoO6ctMezShxXZq+6eEOcA+3EPASEb6BOI/hKgLANzrQkwzD3xlVS771ynq
+E/paOFVeh4qE1xuyloS7/nMzBsPO2i/hDXACNK9EjsNgqn17LUFMHEod/tDng026
+Vbk9JYMndymgnnDN6UcdWBRww3UxzCWoS9L1XlHxD171+urfTw55HDGwKGvL+u4M
+VJjfpHMA6ShAIjtSgPgLz9lXR9mQAlXemw/BSR+KFs8/Y1YpOHdHmd/oArR0NYBE
+1rt1766kCtdOZ2/Tw6fntCh/yERsL5N124Q8Nvgv6fCxQnhwnZA=
+=kzwk
 -----END PGP SIGNATURE-----
 
---tlbqmfvintztvz3z--
+--r3yb7dqh5bru6ocf--
