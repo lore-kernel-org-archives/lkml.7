@@ -2,136 +2,98 @@ Return-Path: <SRS0=ATYp=YN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC56CA9EAD
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 00:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97D49CA9EAB
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 00:32:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CEA6222C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 00:17:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57C1220854
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 00:32:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="egbcuwMo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726259AbfJTARL (ORCPT
+        id S1726549AbfJTAcu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 19 Oct 2019 20:17:11 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:10994 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725871AbfJTARK (ORCPT
+        Sat, 19 Oct 2019 20:32:50 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:43671 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726162AbfJTAcu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 19 Oct 2019 20:17:10 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9K0CjWD011180
-        for <linux-kernel@vger.kernel.org>; Sat, 19 Oct 2019 20:17:09 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vqxjju43p-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sat, 19 Oct 2019 20:17:09 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Sun, 20 Oct 2019 01:17:07 +0100
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sun, 20 Oct 2019 01:17:02 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9K0H05l30933392
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 20 Oct 2019 00:17:00 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 84BFFAE053;
-        Sun, 20 Oct 2019 00:17:00 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 60A20AE04D;
-        Sun, 20 Oct 2019 00:16:58 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.181.232])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Sun, 20 Oct 2019 00:16:58 +0000 (GMT)
-Subject: Re: [PATCH v8 2/8] powerpc/ima: add support to initialize ima
- policy rules
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Nayna Jain <nayna@linux.ibm.com>, linuxppc-dev@ozlabs.org,
-        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jeremy Kerr <jk@ozlabs.org>,
-        Matthew Garret <matthew.garret@nebula.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        George Wilson <gcwilson@linux.ibm.com>,
-        Elaine Palmer <erpalmer@us.ibm.com>,
-        Eric Ricther <erichte@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Prakhar Srivastava <prsriva02@gmail.com>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Date:   Sat, 19 Oct 2019 20:16:57 -0400
-In-Reply-To: <1571508377-23603-3-git-send-email-nayna@linux.ibm.com>
-References: <1571508377-23603-1-git-send-email-nayna@linux.ibm.com>
-         <1571508377-23603-3-git-send-email-nayna@linux.ibm.com>
+        Sat, 19 Oct 2019 20:32:50 -0400
+Received: by mail-vs1-f65.google.com with SMTP id b1so6546297vsr.10;
+        Sat, 19 Oct 2019 17:32:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=K58Cs3RFhDfIknOUmW0iaSQCOF5QfHvEO7+Y1rqr0dE=;
+        b=egbcuwModWi2/B79OYSDBS+jOBYfsoZQFisNM7CbuR0ku/iWB8qPbMpWQ1MmyVPZ8T
+         vWWOMiCciYGNJ0BlM1eYKQWEb3LwmCux5PzWke2y3Ml7p2l626PIy/IGjFNJ19uU4zz6
+         c6s3TP+uUCGoXCsBpr/ujFpXIGM88i/V9+BfD3k1YXigJldB9IpO4pGGgccB1VHVQk8k
+         jUUI4Ghi8q0t/n7uV3ZWnjMoSDwB2QOeppS+jszwhmiiwfAXKYPZMvUJbl4Foybo2GZ1
+         QVqn/JusQofFhkr0s6KFbI7SXlQZM7EDEfm2MypI1lokGOuGj1XM1ZdZGDtKgFe7Xm+h
+         cLsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=K58Cs3RFhDfIknOUmW0iaSQCOF5QfHvEO7+Y1rqr0dE=;
+        b=APxjcRk98wqvl1I2Hh/rYqAoAK+wb9zgTq3C2JtbwvDrrQKvJgU1QIuiwwidhSdFiS
+         xTRbCg8BNhQBaOxgcRvjJSGjfNE1aYVxyVcJ4zj1ixhCq8dr2t0FXU5okrp7FWQOx6rJ
+         yvmP10bDDDA13uuT7DLtFB7FjJIBATJxoL4TcJ/Q7VTvNEPoHheUNUrZNpfPh+xO9+t1
+         3YwpP5O6Ub+rudLS2op3g/WtX8TRLvaqrPxxRux7iL50/sd68jnlW8fvtC99ecg1Db5j
+         PwdqPJn/QFNyGP8dYhNoExfyf/xIMkf1Bj1276NqbAw/T+H7YR5dRILLFYPIp9PH4hAr
+         X4zg==
+X-Gm-Message-State: APjAAAU9uWI9EyiCcQy3BfFS5/7viQ6CVUgUdYUl7VPBxOYS0WRfLZJq
+        KBmuuE+x4hgsnL9HUxIYEw==
+X-Google-Smtp-Source: APXvYqzef8ioByAKlYieJ69NYwdVGT9COrmu2Rl7xeQar/ZQzCGfYTvAhZUXOvXlEHu6tRssN9mx5g==
+X-Received: by 2002:a67:e281:: with SMTP id g1mr9866092vsf.16.1571531568694;
+        Sat, 19 Oct 2019 17:32:48 -0700 (PDT)
+Received: from 960ws ([2601:901:202:18cc:6890:3fdd:51d1:9d8c])
+        by smtp.gmail.com with ESMTPSA id q2sm2527148vsr.21.2019.10.19.17.32.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 19 Oct 2019 17:32:48 -0700 (PDT)
+Message-ID: <058a2a50d9a819a5e87d526f986b8bf2017b9671.camel@gmail.com>
+Subject: Re: [PATCH 1/2] platform/x86: huawei-wmi: Stricter battery
+ thresholds set
+From:   ayman.bagabas@gmail.com
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Mattias Jacobsson <2pi@mok.nu>, Takashi Iwai <tiwai@suse.de>,
+        kbuild test robot <lkp@intel.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Sat, 19 Oct 2019 20:32:45 -0400
+In-Reply-To: <20191019082855.GN21344@kadam>
+References: <20191018224221.15495-1-ayman.bagabas@gmail.com>
+         <20191019082855.GN21344@kadam>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19102000-0028-0000-0000-000003AC1E73
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19102000-0029-0000-0000-0000246E4223
-Message-Id: <1571530617.5250.312.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-19_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910200000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2019-10-19 at 14:06 -0400, Nayna Jain wrote:
+On Sat, 2019-10-19 at 11:31 +0300, Dan Carpenter wrote:
+> On Fri, Oct 18, 2019 at 06:42:13PM -0400, Ayman Bagabas wrote:
+> > Check if battery thresholds are within 0 and 100.
+> > ---
+> 
+> Thanks!
+> 
+> Don't forget to add your Signed-off-by: though.
 
-> index 000000000000..65d82ee74ea4
-> --- /dev/null
-> +++ b/arch/powerpc/kernel/ima_arch.c
-> @@ -0,0 +1,39 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2019 IBM Corporation
-> + * Author: Nayna Jain
-> + */
-> +
-> +#include <linux/ima.h>
-> +#include <asm/secure_boot.h>
-> +
-> +bool arch_ima_get_secureboot(void)
-> +{
-> +	return is_ppc_secureboot_enabled();
-> +}
-> +
-> +/*
-> + * The "secure_rules" are enabled only on "secureboot" enabled systems.
-> + * These rules verify the file signatures against known good values.
-> + * The "appraise_type=imasig|modsig" option allows the known good signature
-> + * to be stored as an xattr or as an appended signature.
+Signed-off-by: Ayman Bagabas <ayman.bagabas@gmail.com>
 
-Please add another sentence or two as a separate paragraph with an
-explanation why the kernel module rule is conditional (eg. Only verify
-the appended kernel module signatures once.)
-
-> + */
-> +static const char *const secure_rules[] = {
-> +	"appraise func=KEXEC_KERNEL_CHECK appraise_type=imasig|modsig",
-> +#ifndef CONFIG_MODULE_SIG_FORCE
-> +	"appraise func=MODULE_CHECK appraise_type=imasig|modsig",
-> +#endif
-> +	NULL
-> +};
-> +
-
-Mimi
+Thank you,
+Ayman
+> 
+> regards,
+> dan carpenter
+> 
 
