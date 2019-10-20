@@ -2,61 +2,59 @@ Return-Path: <SRS0=ATYp=YN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5A07CA9EAD
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 20:59:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31719CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 21:14:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80F7521897
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 20:59:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF0FE21D80
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 21:14:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571605148;
-	bh=boQTUh6Tu3qH0IM4MLL8CiD1+e4eE1S96fTvHVhm1ag=;
+	s=default; t=1571606089;
+	bh=+2u9bydwMAJQNAXpoS+7znbfgEcUEuvrPD3zks91wHU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZaYzB20B6p7a09XjVoZ94eEkC0eu7yo8GYhWSD/98JZlT2/N2t1waMa8W9W08RqSy
-	 xplebuAaGe748XrnMJccM0+JLHkVrdaY2r3g3E8lL5quaBLqbkdbJAbKdCMfmJ572R
-	 ZEwrtSRMSlJFgZRwJDJTUEE+H6sskH1rWzvK1bsA=
+	b=kkikIQAI7KdPgWDDXVQY3y6yxUY+BgdN6p89Vhee43nUIjY9sGWel7dSpHPk98sN1
+	 z9JYJ7ZSPiHUYGFLLZo9PgTlITbG5Ze9nTovs4Chg3cETYLYdIfGjZlrRYrWs8CwJK
+	 UOplpfEhcfO/W46y/ej2rE1ifxSb96aUgtOo1YFY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726541AbfJTU7F (ORCPT
+        id S1726567AbfJTVOs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 20 Oct 2019 16:59:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57698 "EHLO mail.kernel.org"
+        Sun, 20 Oct 2019 17:14:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726130AbfJTU7E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 20 Oct 2019 16:59:04 -0400
+        id S1726301AbfJTVOr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 20 Oct 2019 17:14:47 -0400
 Received: from earth.universe (cust-west-pareq2-46-193-15-226.wb.wifirst.net [46.193.15.226])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4018721897;
-        Sun, 20 Oct 2019 20:59:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC0CC218BA;
+        Sun, 20 Oct 2019 21:14:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571605143;
-        bh=boQTUh6Tu3qH0IM4MLL8CiD1+e4eE1S96fTvHVhm1ag=;
+        s=default; t=1571606086;
+        bh=+2u9bydwMAJQNAXpoS+7znbfgEcUEuvrPD3zks91wHU=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NBG1cM5qOQrze7OykO5KU0Se1QvaaBaF8whQY3PDe5eW2IrcDjZETeURTMQdLBMA0
-         G4y8eZW3jdwVGn5KAFEzXj2MrTlnSmyOMqDlaVo+069m6wpn6vRMZOcHJgfO2IZXWs
-         Wu+0LmS5tyC5L0qz7PrqHBKcI17esRVmp6DVQUAI=
+        b=pXyL2YzJ49+C9PqHoSU8DbDWsnmq5++Yq/nF8nfJTIrGQTUTTcBJijvCvjsmuzy2L
+         OV/XQw0r+UzkqQW+uNaEMJHPKN7tSRKQTj01fCthRJklmD0ZJDrShOaRmPsLRmX/gQ
+         HZJcVbB8c+awUNzdxi1GtfNkdHgASkA3UBh5fSlY=
 Received: by earth.universe (Postfix, from userid 1000)
-        id 3C7253C0CA0; Sun, 20 Oct 2019 22:59:01 +0200 (CEST)
-Date:   Sun, 20 Oct 2019 22:59:01 +0200
+        id A56A53C0CA0; Sun, 20 Oct 2019 23:14:43 +0200 (CEST)
+Date:   Sun, 20 Oct 2019 23:14:43 +0200
 From:   Sebastian Reichel <sre@kernel.org>
-To:     Marcel Holtmann <marcel@holtmann.org>
-Cc:     Tony Lindgren <tony@atomide.com>, Adam Ford <aford173@gmail.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        linux-bluetooth@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@collabora.com
-Subject: Re: [PATCHv2 4/4] Bluetooth: btwilink: drop superseded driver
-Message-ID: <20191020205901.56bafijk7cu3rpaj@earth.universe>
-References: <20191003134147.9458-1-sre@kernel.org>
- <20191003134147.9458-5-sre@kernel.org>
- <BC1F82AC-2988-4BC6-99EA-1C9F9289E582@holtmann.org>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Rhyland Klein <rklein@nvidia.com>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] power: supply: sbs-battery: Fix a signedness bug in
+ sbs_get_battery_capacity()
+Message-ID: <20191020211443.mdvope3llryhdlrs@earth.universe>
+References: <20190925110128.GM3264@mwanda>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="td6khbzgjxudi7vx"
+        protocol="application/pgp-signature"; boundary="p6yo3nbqp7ril766"
 Content-Disposition: inline
-In-Reply-To: <BC1F82AC-2988-4BC6-99EA-1C9F9289E582@holtmann.org>
+In-Reply-To: <20190925110128.GM3264@mwanda>
 User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -64,68 +62,65 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---td6khbzgjxudi7vx
-Content-Type: text/plain; charset=utf-8
+--p6yo3nbqp7ril766
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-On Wed, Oct 16, 2019 at 09:15:03PM +0200, Marcel Holtmann wrote:
-> > All users of this driver have been converted to the serdev based
-> > hci_ll driver. The unused driver can be safely dropped now.
-> >=20
-> > Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> > ---
-> > drivers/bluetooth/Kconfig    |  11 --
-> > drivers/bluetooth/Makefile   |   1 -
-> > drivers/bluetooth/btwilink.c | 337 -----------------------------------
-> > 3 files changed, 349 deletions(-)
-> > delete mode 100644 drivers/bluetooth/btwilink.c
+On Wed, Sep 25, 2019 at 02:01:28PM +0300, Dan Carpenter wrote:
+> The "mode" variable is an enum and in this context GCC treats it as an
+> unsigned int so the error handling is never triggered.
 >=20
-> patch has been applied to bluetooth-next tree.
->=20
-> However what I really like to see is that you re-introduce a
-> btwilink driver that is purely serdev based and doesn=E2=80=99t rely on
-> any hci_uart/hci_ldisc code. A clean serdev only driver is that
-> best and easier to maintain long term.
+> Fixes: 51d075660457 ("bq20z75: Add support for charge properties")
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+> ---
 
-So basically move the serdev implementation from hci_ll.c into its
-own driver and make hci_ll hci_uart based only? That effectively
-means, that we have two implementations of the protocol. I don't
-think this will improve maintainability, since then bugs needs to
-be fixed in two places? Note, that we have a couple of drivers
-with serdev+hci_uart by now:
-
-for file in $(grep -l serdev drivers/bluetooth/hci_*c) ; grep -l hci_uart_r=
-egister_proto "${file}"
-hci_bcm.c
-hci_h5.c
-hci_ldisc.c
-hci_ll.c
-hci_mrvl.c
-hci_qca.c
+Thanks, queued.
 
 -- Sebastian
 
---td6khbzgjxudi7vx
+>  drivers/power/supply/sbs-battery.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/power/supply/sbs-battery.c b/drivers/power/supply/sb=
+s-battery.c
+> index f8d74e9f7931..62110af1abcf 100644
+> --- a/drivers/power/supply/sbs-battery.c
+> +++ b/drivers/power/supply/sbs-battery.c
+> @@ -555,7 +555,7 @@ static int sbs_get_battery_capacity(struct i2c_client=
+ *client,
+>  		mode =3D BATTERY_MODE_AMPS;
+> =20
+>  	mode =3D sbs_set_battery_mode(client, mode);
+> -	if (mode < 0)
+> +	if ((int)mode < 0)
+>  		return mode;
+> =20
+>  	ret =3D sbs_read_word_data(client, sbs_data[reg_offset].addr);
+> --=20
+> 2.20.1
+>=20
+
+--p6yo3nbqp7ril766
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl2sypEACgkQ2O7X88g7
-+pp5QQ/9HZr+yWBHDmBiphnMo30Xi90YCZ1Ov6RyGhUJWw2lvBcGkkHGCLuk8M/6
-qvfk4YCI7zdqajXZkVSB7+dRp6QWkt4D5+B8ORjDC1zc103auFsIZmdTBn3c/8/O
-Ed5DR6BKdGgtpdYxnsidYb3GJ5oMCHW9emRVJ603nUrbaipJTlEELjtyC8qemPtK
-px9eTLAAD15WLhImFcq3vs9zP6mZV7EkTIgoIYAoUSJ6MQyapAeQbN19WTn7j+i8
-YF3bB9+NCmM6Y2WJtuzBfq8n4B06OqSB8Yx2oNqRAFNlajIk7AnFwdU9JUj8rdYi
-UrPzL+F0jzitbw0ES05xushHWmMXP+0I4XljEcjiq+UUd3/VkYYYegca+gXmTl+4
-9DSQuITzpuhnKKgV7+VnlxIRg21KFrvC5Xib0BkDCYyTJq085hCq7b97aMlK/YJW
-o04C9zu2vlvtFflQ5ENR5T/t7A6mSpUVcwCOme3o2AhhW7rWWrGZAhFhIq2PFxLp
-9uOTquKl+WbW+rZM+Jx9RhrgGPivmEs+zFzV+bNESuLLcPB3v+b865NvRD+ESzZw
-lFMocVKVE6zgwgy5UiX9/43dcBIdaPeSLdcgz1KoTt91ugDEwzLaaBMkeJjZtsdi
-8qcw1yxVVk+sRBf4PgApEwvvaei+KF4AoNE59m4b5OIkZo4+bPQ=
-=OkWc
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl2szj8ACgkQ2O7X88g7
++prfixAAnPFJtGlcvjzrygJStA/dzUZJ0FWbttCedD3msf+pRX1qZ75ncKZwl0QI
+SH/4+IfWxF5vK7ZEwvyvxszRv1flUefITQbDaFHYh+H134UBZQ3MiWfApVrSjz+J
+xLjErmJl9whtl2C3Cjx8I/CZKhOHyzMJvTm/5SzaVUf0IGPbQsuupA28ygSYeyI/
+0aNAvQrrQ5FQMyKbYskw9G8rDKa4VZc7amoEbIzbwfamFw3DzIYReCV0yIa4cmLd
+uGt+T2zONrFdwaEkBoTom1vjyYg1prN7587lbNu0QeUAcfl0faG/EkNIW8DTv8X+
+/Dc60x+V/3an1eBQjrFZOuWMZzuoPdrxuqBCoTsXAvfXdaupAK6bSDPdG9zPpYj0
+6NNltTCJiEnLxp2E8YEMHE8GGQLQH9mSUgX7cw3qdrrih3WrdTTsh6F57mgwfsB7
+DcQg/YSuZPyHuP6e7doPY2ZPg4zEMJZFiBfQpg0YGdrwQTXeOG1flygCL4VAafeQ
+SN/2jI3ydI1V4gGqkNYEUxnqXvapJzermXAeGuKGFEmWIGwjaXYrFfcGhgUkm82K
+PC+Nwkd5zqwH1RgexPM2WQkm0QDuUylRhmrhAKI4yZm6t6lZ0uDCGGMckrb23HtX
+AaH8gKNTIgy5slyuLB4/8a3h53huhaxkgVm/bcPBIlA2DPMKtII=
+=YAB+
 -----END PGP SIGNATURE-----
 
---td6khbzgjxudi7vx--
+--p6yo3nbqp7ril766--
