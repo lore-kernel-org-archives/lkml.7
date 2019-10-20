@@ -2,153 +2,421 @@ Return-Path: <SRS0=ATYp=YN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D7C3CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 19:52:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28EB5CA9EAD
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 20:05:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40F2C21929
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 19:52:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A73721A4A
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 20:05:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726453AbfJTTwv (ORCPT
+        id S1726418AbfJTUFc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 20 Oct 2019 15:52:51 -0400
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:26445 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725938AbfJTTwv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 20 Oct 2019 15:52:51 -0400
-X-IronPort-AV: E=Sophos;i="5.67,320,1566856800"; 
-   d="scan'208";a="407081613"
-Received: from ip-121.net-89-2-166.rev.numericable.fr (HELO hadrien) ([89.2.166.121])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Oct 2019 21:52:48 +0200
-Date:   Sun, 20 Oct 2019 21:52:48 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@lip6.fr>
-X-X-Sender: jll@hadrien
-To:     Joe Perches <joe@perches.com>
-cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Jules Irenge <jbi.octave@gmail.com>,
-        devel@driverdev.osuosl.org, outreachy-kernel@googlegroups.com,
-        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org
-Subject: Re: [Outreachy kernel] Re: [PATCH v1 1/5] staging: wfx: fix warnings
- of no space is necessary
-In-Reply-To: <6e6bc92cac0858fe5bd37b28f688d3da043f4bef.camel@perches.com>
-Message-ID: <alpine.DEB.2.21.1910202149140.10441@hadrien>
-References: <20191019140719.2542-1-jbi.octave@gmail.com>  <20191019140719.2542-2-jbi.octave@gmail.com> <20191019142443.GH24678@kadam>  <alpine.LFD.2.21.1910191603520.6740@ninjahub.org>  <20191019180514.GI24678@kadam>  <336960fdf88dbed69dd3ed2689a5fb1d2892ace8.camel@perches.com>
-  <20191020191759.GJ24678@kadam> <6e6bc92cac0858fe5bd37b28f688d3da043f4bef.camel@perches.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Sun, 20 Oct 2019 16:05:32 -0400
+Received: from mga07.intel.com ([134.134.136.100]:45572 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725818AbfJTUFb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 20 Oct 2019 16:05:31 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Oct 2019 13:05:30 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,320,1566889200"; 
+   d="scan'208";a="227107416"
+Received: from crojewsk-mobl1.ger.corp.intel.com (HELO [10.252.18.15]) ([10.252.18.15])
+  by fmsmga002.fm.intel.com with ESMTP; 20 Oct 2019 13:05:24 -0700
+Subject: Re: [PATCH v2 05/11] ASoC: wcd934x: add playback dapm widgets
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     robh@kernel.org, broonie@kernel.org, linus.walleij@linaro.org,
+        lee.jones@linaro.org, vinod.koul@linaro.org,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, spapothi@codeaurora.org,
+        bgoswami@codeaurora.org, linux-gpio@vger.kernel.org
+References: <20191018001849.27205-1-srinivas.kandagatla@linaro.org>
+ <20191018001849.27205-6-srinivas.kandagatla@linaro.org>
+From:   Cezary Rojewski <cezary.rojewski@intel.com>
+Message-ID: <e0049071-7fb7-7f9a-e79f-102c1a9c8d20@intel.com>
+Date:   Sun, 20 Oct 2019 22:05:22 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20191018001849.27205-6-srinivas.kandagatla@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2019-10-18 02:18, Srinivas Kandagatla wrote:
+> +static int wcd934x_codec_enable_slim(struct snd_soc_dapm_widget *w,
+> +				     struct snd_kcontrol *kc,
+> +				       int event)
+> +{
+> +	struct snd_soc_component *comp = snd_soc_dapm_to_component(w->dapm);
+> +	struct wcd934x_codec *wcd = snd_soc_component_get_drvdata(comp);
+> +	struct wcd_slim_codec_dai_data *dai = &wcd->dai[w->shift];
+> +
+> +	switch (event) {
+> +	case SND_SOC_DAPM_POST_PMU:
+> +		wcd934x_codec_enable_int_port(dai, comp);
+> +		break;
+> +	case SNDRV_PCM_TRIGGER_STOP:
+> +		break;
+
+Any reason for mentioning _TRIGGER_STOP here?
+
+> +	case SND_SOC_DAPM_POST_PMD:
+> +		kfree(dai->sconfig.chs);
+> +
+> +		break;
+
+Comment for kfree depending on _event_ would be advised.
+
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void wcd934x_codec_hd2_control(struct snd_soc_component *component,
+> +				      u16 interp_idx, int event)
+> +{
+> +	u16 hd2_scale_reg;
+> +	u16 hd2_enable_reg = 0;
+> +
+> +	switch (interp_idx) {
+> +	case INTERP_HPHL:
+> +		hd2_scale_reg = WCD934X_CDC_RX1_RX_PATH_SEC3;
+> +		hd2_enable_reg = WCD934X_CDC_RX1_RX_PATH_CFG0;
+> +		break;
+> +	case INTERP_HPHR:
+> +		hd2_scale_reg = WCD934X_CDC_RX2_RX_PATH_SEC3;
+> +		hd2_enable_reg = WCD934X_CDC_RX2_RX_PATH_CFG0;
+> +		break;
+> +	}
+
+What's the rest of this function for if switch-case does not match?
+Without hd2_enable_reg > 0 you might as well return immediately.
+
+> +
+> +	if (hd2_enable_reg && SND_SOC_DAPM_EVENT_ON(event)) {
+> +		snd_soc_component_update_bits(component, hd2_scale_reg,
+> +				      WCD934X_CDC_RX_PATH_SEC_HD2_ALPHA_MASK,
+> +				      WCD934X_CDC_RX_PATH_SEC_HD2_ALPHA_0P3125);
+> +		snd_soc_component_update_bits(component, hd2_enable_reg,
+> +				      WCD934X_CDC_RX_PATH_CFG_HD2_EN_MASK,
+> +				      WCD934X_CDC_RX_PATH_CFG_HD2_ENABLE);
+> +	}
+> +
+> +	if (hd2_enable_reg && SND_SOC_DAPM_EVENT_OFF(event)) {
+> +		snd_soc_component_update_bits(component, hd2_enable_reg,
+> +				      WCD934X_CDC_RX_PATH_CFG_HD2_EN_MASK,
+> +				      WCD934X_CDC_RX_PATH_CFG_HD2_DISABLE);
+> +		snd_soc_component_update_bits(component, hd2_scale_reg,
+> +				      WCD934X_CDC_RX_PATH_SEC_HD2_ALPHA_MASK,
+> +				      WCD934X_CDC_RX_PATH_SEC_HD2_ALPHA_0P0000);
+> +	}
+> +}
+> +
+> +static void wcd934x_codec_hphdelay_lutbypass(struct snd_soc_component *comp,
+> +					     u16 interp_idx, int event)
+> +{
+> +	u8 hph_dly_mask;
+> +	u16 hph_lut_bypass_reg = 0;
+> +	u16 hph_comp_ctrl7 = 0;
+> +
+> +	switch (interp_idx) {
+> +	case INTERP_HPHL:
+> +		hph_dly_mask = 1;
+> +		hph_lut_bypass_reg = WCD934X_CDC_TOP_HPHL_COMP_LUT;
+> +		hph_comp_ctrl7 = WCD934X_CDC_COMPANDER1_CTL7;
+> +		break;
+> +	case INTERP_HPHR:
+> +		hph_dly_mask = 2;
+> +		hph_lut_bypass_reg = WCD934X_CDC_TOP_HPHR_COMP_LUT;
+> +		hph_comp_ctrl7 = WCD934X_CDC_COMPANDER2_CTL7;
+> +		break;
+> +	default:
+> +		break;
+> +	}
+
+'Default' made it here, what was not the case for most of other 
+switch-case. Keep code consistent would be appreciated.
+Moreover, in the following function "wcd934x_config_compander", you do 
+decide to do all the processing directly within switch-case. I see no 
+reason why you should not do that here too.
+
+Again, once switch-case fails to find match, the rest of function does 
+not do much, really.
 
 
-On Sun, 20 Oct 2019, Joe Perches wrote:
+> +
+> +	if (hph_lut_bypass_reg && SND_SOC_DAPM_EVENT_ON(event)) {
+> +		snd_soc_component_update_bits(comp, WCD934X_CDC_CLSH_TEST0,
+> +					      hph_dly_mask, 0x0);
+> +		snd_soc_component_update_bits(comp, hph_lut_bypass_reg,
+> +					      WCD934X_HPH_LUT_BYPASS_MASK,
+> +					      WCD934X_HPH_LUT_BYPASS_ENABLE);
+> +	}
+> +
+> +	if (hph_lut_bypass_reg && SND_SOC_DAPM_EVENT_OFF(event)) {
+> +		snd_soc_component_update_bits(comp, WCD934X_CDC_CLSH_TEST0,
+> +					      hph_dly_mask, hph_dly_mask);
+> +		snd_soc_component_update_bits(comp, hph_lut_bypass_reg,
+> +					      WCD934X_HPH_LUT_BYPASS_MASK,
+> +					      WCD934X_HPH_LUT_BYPASS_DISABLE);
+> +	}
+> +}
+> +
+> +static int wcd934x_config_compander(struct snd_soc_component *comp,
+> +				    int interp_n, int event)
+> +{
+> +	struct wcd934x_codec *wcd = dev_get_drvdata(comp->dev);
+> +	int compander;
+> +	u16 comp_ctl0_reg, rx_path_cfg0_reg;
+> +
+> +	/* EAR does not have compander */
+> +	if (!interp_n)
+> +		return 0;
+> +
+> +	compander = interp_n - 1;
+> +	if (!wcd->comp_enabled[compander])
+> +		return 0;
+> +
+> +	comp_ctl0_reg = WCD934X_CDC_COMPANDER1_CTL0 + (compander * 8);
+> +	rx_path_cfg0_reg = WCD934X_CDC_RX1_RX_PATH_CFG0 + (compander * 20);
+> +
+> +	switch (event) {
+> +	case SND_SOC_DAPM_PRE_PMU:
+> +		/* Enable Compander Clock */
+> +		snd_soc_component_update_bits(comp, comp_ctl0_reg,
+> +					      WCD934X_COMP_CLK_EN_MASK,
+> +					      WCD934X_COMP_CLK_ENABLE);
+> +		snd_soc_component_update_bits(comp, comp_ctl0_reg,
+> +					      WCD934X_COMP_SOFT_RST_MASK,
+> +					      WCD934X_COMP_SOFT_RST_ENABLE);
+> +		snd_soc_component_update_bits(comp, comp_ctl0_reg,
+> +					      WCD934X_COMP_SOFT_RST_MASK,
+> +					      WCD934X_COMP_SOFT_RST_DISABLE);
+> +		snd_soc_component_update_bits(comp, rx_path_cfg0_reg,
+> +					      WCD934X_HPH_CMP_EN_MASK,
+> +					      WCD934X_HPH_CMP_ENABLE);
+> +		break;
+> +	case SND_SOC_DAPM_POST_PMD:
+> +		snd_soc_component_update_bits(comp, rx_path_cfg0_reg,
+> +					      WCD934X_HPH_CMP_EN_MASK,
+> +					      WCD934X_HPH_CMP_DISABLE);
+> +		snd_soc_component_update_bits(comp, comp_ctl0_reg,
+> +					      WCD934X_COMP_HALT_MASK,
+> +					      WCD934X_COMP_HALT);
+> +		snd_soc_component_update_bits(comp, comp_ctl0_reg,
+> +					      WCD934X_COMP_SOFT_RST_MASK,
+> +					      WCD934X_COMP_SOFT_RST_ENABLE);
+> +		snd_soc_component_update_bits(comp, comp_ctl0_reg,
+> +					      WCD934X_COMP_SOFT_RST_MASK,
+> +					      WCD934X_COMP_SOFT_RST_DISABLE);
+> +		snd_soc_component_update_bits(comp, comp_ctl0_reg,
+> +					      WCD934X_COMP_CLK_EN_MASK, 0x0);
+> +		snd_soc_component_update_bits(comp, comp_ctl0_reg,
+> +					      WCD934X_COMP_SOFT_RST_MASK, 0x0);
+> +		break;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int wcd934x_codec_enable_mix_path(struct snd_soc_dapm_widget *w,
+> +					 struct snd_kcontrol *kc, int event)
+> +{
+> +	struct snd_soc_component *comp = snd_soc_dapm_to_component(w->dapm);
+> +	int offset_val = 0;
+> +	u16 gain_reg, mix_reg;
+> +	int val = 0;
+> +
+> +	gain_reg = WCD934X_CDC_RX0_RX_VOL_MIX_CTL +
+> +					(w->shift * WCD934X_RX_PATH_CTL_OFFSET);
+> +	mix_reg = WCD934X_CDC_RX0_RX_PATH_MIX_CTL +
+> +					(w->shift * WCD934X_RX_PATH_CTL_OFFSET);
+> +
+> +	switch (event) {
+> +	case SND_SOC_DAPM_PRE_PMU:
+> +		/* Clk enable */
+> +		snd_soc_component_update_bits(comp, mix_reg,
+> +					      WCD934X_CDC_RX_MIX_CLK_EN_MASK,
+> +					      WCD934X_CDC_RX_MIX_CLK_ENABLE);
+> +		break;
+> +
+> +	case SND_SOC_DAPM_POST_PMU:
+> +		val = snd_soc_component_read32(comp, gain_reg);
+> +		val += offset_val;
+> +		snd_soc_component_write(comp, gain_reg, val);
+> +		break;
+> +	case SND_SOC_DAPM_POST_PMD:
+> +		break;
 
-> On Sun, 2019-10-20 at 22:17 +0300, Dan Carpenter wrote:
-> > On Sat, Oct 19, 2019 at 01:02:31PM -0700, Joe Perches wrote:
-> > > diff -u -p a/rtl8723bs/core/rtw_mlme_ext.c b/rtl8723bs/core/rtw_mlme_ext.c
-> []
-> > > @@ -1132,7 +1132,7 @@ unsigned int OnAuthClient(struct adapter
-> > >  				goto authclnt_fail;
-> > >  			}
-> > >
-> > > -			memcpy((void *)(pmlmeinfo->chg_txt), (void *)(p + 2), len);
-> > > +			memcpy((void *)(pmlmeinfo->chg_txt), (p + 2), len);
-> >
-> > I wonder why it didn't remove the first void cast?
->
-> drivers/staging/rtl8723bs/include/sta_info.h:151:       unsigned char chg_txt[128];
->
-> I think the cocci transforms for an array do not match a pointer
-> and I wrote the cocci script without much care.
->
-> btw;
->
-> There's probably a generic cocci mechanism to check function
-> prototypes and then remove uses of unnecessary void pointer casts
-> in function calls.  I'm not going to try to figure out that syntax.
+Redundant case?.
+> +	};
+> +
+> +	return 0;
+> +}
+> +
+> +static int wcd934x_codec_set_iir_gain(struct snd_soc_dapm_widget *w,
+> +				      struct snd_kcontrol *kcontrol, int event)
+> +{
+> +	struct snd_soc_component *comp = snd_soc_dapm_to_component(w->dapm);
+> +	int reg = w->reg;
+> +
+> +	switch (event) {
+> +	case SND_SOC_DAPM_POST_PMU:
+> +		/* B1 GAIN */
+> +		snd_soc_component_write(comp, reg,
+> +					snd_soc_component_read32(comp, reg));
+> +		/* B2 GAIN */
+> +		reg++;
+> +		snd_soc_component_write(comp, reg,
+> +					snd_soc_component_read32(comp, reg));
+> +		/* B3 GAIN */
+> +		reg++;
+> +		snd_soc_component_write(comp, reg,
+> +					snd_soc_component_read32(comp, reg));
+> +		/* B4 GAIN */
+> +		reg++;
+> +		snd_soc_component_write(comp, reg,
+> +					snd_soc_component_read32(comp, reg));
+> +		/* B5 GAIN */
+> +		reg++;
+> +		snd_soc_component_write(comp, reg,
+> +					snd_soc_component_read32(comp, reg));
+> +		break;
+> +	default:
+> +		break;
+> +	}
+> +	return 0;
 
-With the --recursive-includes option, perhaps:
+Missing newline before return - based on format of your other functions.
 
-@r@
-identifier f;
-parameter list[n] ps;
-type T;
-identifier i;
-@@
+> +}
+> +
+> +static int wcd934x_codec_enable_main_path(struct snd_soc_dapm_widget *w,
+> +					  struct snd_kcontrol *kcontrol,
+> +					int event)
+> +{
+> +	struct snd_soc_component *comp = snd_soc_dapm_to_component(w->dapm);
+> +	u16 gain_reg;
+> +	u32 val;
+> +
+> +	gain_reg = WCD934X_CDC_RX0_RX_VOL_CTL + (w->shift *
+> +						 WCD934X_RX_PATH_CTL_OFFSET);
+> +
+> +	switch (event) {
+> +	case SND_SOC_DAPM_POST_PMU:
+> +		val = snd_soc_component_read32(comp, gain_reg);
+> +		snd_soc_component_write(comp, gain_reg, val);
+> +		break;
+> +	};
 
-T f(ps, void *i, ...);
+In the function above, "wcd934x_codec_set_iir_gain", you decided against 
+declaring local 'val' for storing _read32, though here, only for a 
+single use-case, you made a difference. Let's keep it consistent and run 
+with one or the other.
 
-@@
-expression e;
-identifier r.f;
-expression list[r.n] es;
-@@
+Also, is there any value for assigning gain_reg outside of switch-case?
 
-f(es,
-- (void *)(e)
-+ e
-  ,...)
+> +
+> +	return 0;
+> +}
 
-This of course only works for functions that have prototypes, and not for
-macros.  It will also run slowly.
+> +static int wcd934x_codec_enable_hphl_pa(struct snd_soc_dapm_widget *w,
+> +					struct snd_kcontrol *kcontrol,
+> +					int event)
+> +{
+> +	struct snd_soc_component *comp = snd_soc_dapm_to_component(w->dapm);
+> +
+> +	switch (event) {
+> +	case SND_SOC_DAPM_PRE_PMU:
+> +		break;
 
-julia
+Redundant case.
 
+> +	case SND_SOC_DAPM_POST_PMU:
+> +		/*
+> +		 * 7ms sleep is required after PA is enabled as per
+> +		 * HW requirement. If compander is disabled, then
+> +		 * 20ms delay is needed.
+> +		 */
+> +		usleep_range(20000, 20100);
+> +
+> +		snd_soc_component_update_bits(comp, WCD934X_HPH_L_TEST,
+> +					      WCD934X_HPH_OCP_DET_MASK,
+> +					      WCD934X_HPH_OCP_DET_ENABLE);
+> +		/* Remove Mute on primary path */
+> +		snd_soc_component_update_bits(comp, WCD934X_CDC_RX1_RX_PATH_CTL,
+> +				      WCD934X_RX_PATH_PGA_MUTE_EN_MASK,
+> +				      0);
+> +		/* Enable GM3 boost */
+> +		snd_soc_component_update_bits(comp, WCD934X_HPH_CNP_WG_CTL,
+> +					      WCD934X_HPH_GM3_BOOST_EN_MASK,
+> +					      WCD934X_HPH_GM3_BOOST_ENABLE);
+> +		/* Enable AutoChop timer at the end of power up */
+> +		snd_soc_component_update_bits(comp,
+> +				      WCD934X_HPH_NEW_INT_HPH_TIMER1,
+> +				      WCD934X_HPH_AUTOCHOP_TIMER_EN_MASK,
+> +				      WCD934X_HPH_AUTOCHOP_TIMER_ENABLE);
+> +		/* Remove mix path mute */
+> +		snd_soc_component_update_bits(comp,
+> +				WCD934X_CDC_RX1_RX_PATH_MIX_CTL,
+> +				WCD934X_CDC_RX_PGA_MUTE_EN_MASK, 0x00);
+> +		break;
+> +	case SND_SOC_DAPM_PRE_PMD:
+> +		/* Enable DSD Mute before PA disable */
+> +
+> +		snd_soc_component_update_bits(comp, WCD934X_HPH_L_TEST,
+> +					      WCD934X_HPH_OCP_DET_MASK,
+> +					      WCD934X_HPH_OCP_DET_DISABLE);
+> +		snd_soc_component_update_bits(comp, WCD934X_CDC_RX1_RX_PATH_CTL,
+> +					      WCD934X_RX_PATH_PGA_MUTE_EN_MASK,
+> +					      WCD934X_RX_PATH_PGA_MUTE_ENABLE);
+> +		snd_soc_component_update_bits(comp,
+> +					      WCD934X_CDC_RX1_RX_PATH_MIX_CTL,
+> +					      WCD934X_RX_PATH_PGA_MUTE_EN_MASK,
+> +					      WCD934X_RX_PATH_PGA_MUTE_ENABLE);
+> +		break;
+> +	case SND_SOC_DAPM_POST_PMD:
+> +		/*
+> +		 * 5ms sleep is required after PA disable. If compander is
+> +		 * disabled, then 20ms delay is needed after PA disable.
+> +		 */
+> +			usleep_range(20000, 20100);
 
->
-> > [ The rest of the email is bonus comments for outreachy developers ].
-> >
-> > And someone needs to check the final patch probably to remove the extra
-> > parentheses around "(p + 2)".  Those were necessary when for the cast
-> > but not required after the cast is gone.
-> >
-> > >  			pmlmeinfo->auth_seq = 3;
-> > >  			issue_auth(padapter, NULL, 0);
-> > >  			set_link_timer(pmlmeext, REAUTH_TO);
-> >
-> > It's sort of tricky to know what "one thing per patch means".
->
-> It seems somewhat arbitrary and based on Greg's understanding
-> of the experience of the patch submitter and also the language
-> of the potential commit message.
->
-> > -       memset((void *)(&(pHTInfo->SelfHTCap)), 0,
-> > +       memset((&(pHTInfo->SelfHTCap)), 0,
-> >                 sizeof(pHTInfo->SelfHTCap));
-> >
-> > Here the parentheses were never related to the cast so we should leave
-> > them as is.  In other words, in the first example, if we didn't remove
-> > the cast that would be "half a thing per patch" and in the second
-> > example that would be "two things in one patch".
->
-> For style patches, it's frequently easier and better to
-> do all the code transformation at once.
->
-> IMO the last should be:
->
-> 	memset(&pHTInfo->SelfHTCap, 0, sizeof(pHTInfo->SelfHTCap));
->
-> like it is here:
->
-> drivers/staging/rtl8192u/ieee80211/rtl819x_HTProc.c:1056:       memset(&pHTInfo->SelfHTCap, 0, sizeof(pHTInfo->SelfHTCap));
->
-> btw2:
->
-> I really dislike all the code inconsistencies and
-> unnecessary code duplication with miscellaneous changes
-> in the rtl staging drivers....
->
-> Horrid stuff.
->
-> --
-> You received this message because you are subscribed to the Google Groups "outreachy-kernel" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to outreachy-kernel+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/outreachy-kernel/6e6bc92cac0858fe5bd37b28f688d3da043f4bef.camel%40perches.com.
->
+Superfluous identation.
+
+> +		break;
+> +	};
+> +
+> +	return 0;
+> +}
+> +
+> +static int wcd934x_codec_enable_hphr_pa(struct snd_soc_dapm_widget *w,
+> +					struct snd_kcontrol *kcontrol,
+> +					int event)
+> +{
+> +	struct snd_soc_component *comp = snd_soc_dapm_to_component(w->dapm);
+> +
+> +	switch (event) {
+> +	case SND_SOC_DAPM_PRE_PMU:
+> +		break;
+
+Redundant case.
+
+> +	case SND_SOC_DAPM_POST_PMU:
+> +		/*
+> +		 * 7ms sleep is required after PA is enabled as per
+> +		 * HW requirement. If compander is disabled, then
+> +		 * 20ms delay is needed.
+> +		 */
+> +		usleep_range(20000, 20100);
+
