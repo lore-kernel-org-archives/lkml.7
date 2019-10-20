@@ -2,110 +2,127 @@ Return-Path: <SRS0=ATYp=YN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55281CA9EAD
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 17:00:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7A29CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 17:23:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 280E221897
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 17:00:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LqpjWLD8"
+	by mail.kernel.org (Postfix) with ESMTP id 915802190F
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 17:23:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbfJTRAx (ORCPT
+        id S1726686AbfJTRWf convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 20 Oct 2019 13:00:53 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:45227 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726504AbfJTRAw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 20 Oct 2019 13:00:52 -0400
-Received: by mail-vs1-f66.google.com with SMTP id e19so7309836vsb.12;
-        Sun, 20 Oct 2019 10:00:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=Z3rFbdU+SplPcjhPOqnh6Ex901p18xA+QjA1SeUaWkw=;
-        b=LqpjWLD8LLWxBJgS4hvN2oCSEiU5rjiaPgS+Dzz8QcV2skMzKalLhWugfPSCZYlugw
-         9B4RIMV3npSVJ7O/DXNuErQT2KlGOcBxmnDfX/Fsi/3r2J/jkekCmsdFMB1GhAwl69xa
-         bVvr3nobbXQ5A2f49tCEO9Eiqbu8XIKbBfHgIR/TZ/3A/vZheBpk3eObUrgSOOkN/Gaj
-         jNJ6I31J8AzzayGDeOaRYg7jpEhJlVKer1Actg1Q9aZW7BDspap01pZcqklx5OePC8RY
-         tRF2v62tLIdfZey4bg7eAVw6xcv+VHfwoQy8SrruzC5UK3s7yNB2bAo1ZB0eAbTnq0cn
-         krdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Z3rFbdU+SplPcjhPOqnh6Ex901p18xA+QjA1SeUaWkw=;
-        b=Ir4r3DXwCbQa+q22D17GiAz8qttr+1gBhN7lbs9aqVjmWCzYLo1JoGXN77KKjZJ+HT
-         5IkY0gAPlP3dXtMTI4N2ve4Ug8fJqR0uQKnl5Rx7dcxpdJ4nvoj+B8A+NZ72h07k3eLl
-         nB+NebHikt9Irf4QAuStt++VWCnuIxVWLnhyQgktYrvygKc3EpGAjK7yXxD2ih704mzB
-         0M8zQvcku540I79QxP7xU2Gax2VIKN1xrsFqUyTAzTW9Et96C7EExP4mE+ec9u1/Z064
-         TKt2FImLjy14HBIOKpu04IHzh4wlnIgUjt3bIUa6VJjmcq3H93+3sM5GVAlTLMSdKDZr
-         ovsg==
-X-Gm-Message-State: APjAAAWpYJWNy2h1ES3hsoY/ZxicYrXB6WisOx7qhfl/60wPBD/ElyQE
-        KtSqCf24ZEw+rzb2+yrSQw==
-X-Google-Smtp-Source: APXvYqyrs6R30s8uibpzuM+64Scem0970K4MY9fjtJ05Zk0lFUy1F+qOyu6EY9rlWKrHNWV80Hct2w==
-X-Received: by 2002:a67:e3da:: with SMTP id k26mr10838781vsm.81.1571590850153;
-        Sun, 20 Oct 2019 10:00:50 -0700 (PDT)
-Received: from localhost.localdomain ([2601:901:202:18cc:820:670:dd1:f572])
-        by smtp.gmail.com with ESMTPSA id n126sm612962vke.51.2019.10.20.10.00.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 20 Oct 2019 10:00:49 -0700 (PDT)
-From:   Ayman Bagabas <ayman.bagabas@gmail.com>
-To:     Darren Hart <dvhart@infradead.org>,
+        Sun, 20 Oct 2019 13:22:35 -0400
+Received: from mail-oln040092071064.outbound.protection.outlook.com ([40.92.71.64]:7910
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726556AbfJTRWf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 20 Oct 2019 13:22:35 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SLiTFYVN9kwUqrWJfdX32ZNWYFiU09DICWBUrpdDAS1bwJiMXXjOpZjcKmUHiiWhNWrcixAnufPBkVtvaZtwovHisSiWpSroDv2kaz3Ny0yjHn2sZh6uTgGI4xNNAHyKTPumcctJS2HfYeyfwFYWYer6eWjOkZyRIThOPRQ6KxLqih/EYAGrTdmVwR8xLotL1AM4spkni2KJgjEy8i4mB21SAzqidjg4AUrLF1Dt73HpjOaT3dFuehc4BxcsUWZVpKxqQ3N1HwJxJgDLv2DdMYikaTKyvTY0FnNQOumYHA8lU6ZWNFTC7Qapw7z8yDDZ2Nc/HsenPYXr7q1V7R+CiA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Mmnm8Nw7F5FpwL4E/v80xnFG7xQV2oCDi3cYIGiH3l8=;
+ b=IViSyzAlcWUar6TbIz25Pk8JWJY0SP/htCqsk3yWcLDarYX+sPtGCnBu6m8+wOiNzLJx89+dPGLavY05ePrjfh9CSyI0bQGN5PKbXCnyq0smAxrRurdO1yQpoaEq2mcD1+ritao0ZgHjaXoh3wcOaqdv/ChixAjMPVD1Jr3tVossL3L9pPJPuLaPr2CRUFkWHHtuwe+HOtWUg1Ov29ScOX3vxMq+VUNp7WAFjSET7qTd4crzyKVvAskeE65UPsLKL+tftEdpy26CTsK1EsAzq1LcL6xQ8gOHjdJMyWgJ/JzkVs94YWlIuF9S1i8yPGK4wRL2mD/rdBf7ONTRY6tDrQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from DB5EUR03FT030.eop-EUR03.prod.protection.outlook.com
+ (10.152.20.53) by DB5EUR03HT204.eop-EUR03.prod.protection.outlook.com
+ (10.152.21.153) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2305.15; Sun, 20 Oct
+ 2019 17:22:30 +0000
+Received: from AM0PR0502MB3668.eurprd05.prod.outlook.com (10.152.20.54) by
+ DB5EUR03FT030.mail.protection.outlook.com (10.152.20.144) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.2305.15 via Frontend Transport; Sun, 20 Oct 2019 17:22:30 +0000
+Received: from AM0PR0502MB3668.eurprd05.prod.outlook.com
+ ([fe80::b1e4:568d:bbc:8247]) by AM0PR0502MB3668.eurprd05.prod.outlook.com
+ ([fe80::b1e4:568d:bbc:8247%6]) with mapi id 15.20.2347.028; Sun, 20 Oct 2019
+ 17:22:30 +0000
+From:   Anatol Belski <weltling@outlook.de>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Michael Jamet <michael.jamet@intel.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Ayman Bagabas <ayman.bagabas@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>, Mattias Jacobsson <2pi@mok.nu>,
-        kbuild test robot <lkp@intel.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] platform/x86: huawei-wmi: Remove unnecessary battery mutex
-Date:   Sun, 20 Oct 2019 13:00:09 -0400
-Message-Id: <20191020170020.26251-3-ayman.bagabas@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191020170020.26251-1-ayman.bagabas@gmail.com>
-References: <20191020170020.26251-1-ayman.bagabas@gmail.com>
+        Yehezkel Bernat <yehezkel.bernat@intel.com>,
+        "David S . Miller" <davem@davemloft.net>
+CC:     "trivial@kernel.org" <trivial@kernel.org>
+Subject: [PATCH] include/linux/byteorder/generic.h: fix signed/unsigned
+ warnings
+Thread-Topic: [PATCH] include/linux/byteorder/generic.h: fix signed/unsigned
+ warnings
+Thread-Index: AQHVh2rzQudqiWaARkuhjP20crUqsA==
+Date:   Sun, 20 Oct 2019 17:22:30 +0000
+Message-ID: <AM0PR0502MB3668B1A0EC328690DA25E9C6BA6E0@AM0PR0502MB3668.eurprd05.prod.outlook.com>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.20.1
+x-clientproxiedby: AM3PR03CA0054.eurprd03.prod.outlook.com
+ (2603:10a6:207:5::12) To AM0PR0502MB3668.eurprd05.prod.outlook.com
+ (2603:10a6:208:19::11)
+x-incomingtopheadermarker: OriginalChecksum:4AD9A2D64179B1FC26103107CEE42BB475C3FDF8CF5FC05E64837A5A4E1E6ED4;UpperCasedChecksum:548BF0AFF53993A14385870947799789786C6933F5FED8B0CA148F17D96BB349;SizeAsReceived:7732;Count:50
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [BWuIjoFCIraVKXtT4WOWg5iFdM9bo4L3]
+x-microsoft-original-message-id: <20191020172159.18175-1-weltling@outlook.de>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 50
+x-eopattributedmessage: 0
+x-ms-traffictypediagnostic: DB5EUR03HT204:
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: zPUSuJWLSert7Fh0ugTq8YgUW/14HSp8S1cvxBHCi903uURbb2Cc4xkXJ8eym/FYZv/vK8jilZcsrUPq2G6SIlFmBVwNdZk1pQ4XQzFEkJflCTSN7uWcmXTNDT0t/RAfbKODDofhzdfgV1AN7cFScNrHPdGI+cV2ivC58s1jqw7s/rSbP9ewWCAHDw1rndHs
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9ab3d4af-0e5c-4c26-ff71-08d7558215d0
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Oct 2019 17:22:30.1989
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB5EUR03HT204
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-battery_lock mutex is never used and not needed.
+From: Anatol Belski <anbelski@microsoft.com>
 
-Fixes: 355a070b09ab ("platform/x86: huawei-wmi: Add battery charging thresholds")
-Signed-off-by: Ayman Bagabas <ayman.bagabas@gmail.com>
+Signed-off-by: Anatol Belski <anbelski@microsoft.com>
 ---
- drivers/platform/x86/huawei-wmi.c | 2 --
- 1 file changed, 2 deletions(-)
+ include/linux/byteorder/generic.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/huawei-wmi.c
-index 7373a65a61d3..a2d846c4a7ee 100644
---- a/drivers/platform/x86/huawei-wmi.c
-+++ b/drivers/platform/x86/huawei-wmi.c
-@@ -67,7 +67,6 @@ struct huawei_wmi {
- 	struct led_classdev cdev;
- 	struct device *dev;
+diff --git a/include/linux/byteorder/generic.h b/include/linux/byteorder/generic.h
+index 4b13e0a3e15b..c9a4c96c9943 100644
+--- a/include/linux/byteorder/generic.h
++++ b/include/linux/byteorder/generic.h
+@@ -190,7 +190,7 @@ static inline void be64_add_cpu(__be64 *var, u64 val)
  
--	struct mutex battery_lock;
- 	struct mutex wmi_lock;
- };
+ static inline void cpu_to_be32_array(__be32 *dst, const u32 *src, size_t len)
+ {
+-	int i;
++	size_t i;
  
-@@ -807,7 +806,6 @@ static int huawei_wmi_probe(struct platform_device *pdev)
+ 	for (i = 0; i < len; i++)
+ 		dst[i] = cpu_to_be32(src[i]);
+@@ -198,7 +198,7 @@ static inline void cpu_to_be32_array(__be32 *dst, const u32 *src, size_t len)
  
- 	if (wmi_has_guid(HWMI_METHOD_GUID)) {
- 		mutex_init(&huawei_wmi->wmi_lock);
--		mutex_init(&huawei_wmi->battery_lock);
+ static inline void be32_to_cpu_array(u32 *dst, const __be32 *src, size_t len)
+ {
+-	int i;
++	size_t i;
  
- 		huawei_wmi_leds_setup(&pdev->dev);
- 		huawei_wmi_fn_lock_setup(&pdev->dev);
+ 	for (i = 0; i < len; i++)
+ 		dst[i] = be32_to_cpu(src[i]);
 -- 
-2.21.0
+2.20.1
 
