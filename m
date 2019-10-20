@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12688CA9EAD
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 10:15:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D58E2CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 10:15:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCC4E2190F
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 10:15:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8FEB2190F
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 10:15:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726359AbfJTKO6 (ORCPT
+        id S1726375AbfJTKPC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 20 Oct 2019 06:14:58 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:60170 "EHLO
+        Sun, 20 Oct 2019 06:15:02 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:60179 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726063AbfJTKO5 (ORCPT
+        with ESMTP id S1725946AbfJTKO6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 20 Oct 2019 06:14:57 -0400
+        Sun, 20 Oct 2019 06:14:58 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1iM8Eh-0007VG-1v; Sun, 20 Oct 2019 12:14:55 +0200
+        id 1iM8Ei-0007VU-2S; Sun, 20 Oct 2019 12:14:56 +0200
 Date:   Sun, 20 Oct 2019 10:13:56 -0000
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: [GIT pull] irq/urgent for 5.4-rc4
+Subject: [GIT pull] x86/urgent for 5.4-rc4
 References: <157156643658.8795.8700195163364281095.tglx@nanos.tec.linutronix.de>
-Message-ID: <157156643658.8795.10312616020081094685.tglx@nanos.tec.linutronix.de>
+Message-ID: <157156643658.8795.4431392863558132451.tglx@nanos.tec.linutronix.de>
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Content-Disposition: inline
@@ -41,219 +41,279 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Linus,
 
-please pull the latest irq-urgent-for-linus git tree from:
+please pull the latest x86-urgent-for-linus git tree from:
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq-urgent-for-linus
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-urgent-for-linus
 
-up to:  c9b59181c2b0: Merge tag 'irqchip-fixes-5.4-1' of git://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms into irq/urgent
+up to:  228d120051a2: x86/boot/acpi: Move get_cmdline_acpi_rsdp() under #ifdef guard
 
-A small set of irq chip driver fixes and updates:
+A small set of x86 fixes:
 
- - Update the SIFIVE PLIC interrupt driver to use the fasteoi handler to
-   address the shortcomings of the existing flow handling which was prone
-   to lose interrupts
+ - Prevent a NULL pointer dereference in the X2APIC code in case of a CPU
+   hotplug failure.
 
- - Use the proper limit for GIC interrupt line numbers
+ - Prevent boot failures on HP superdome machines by invalidating the
+   level2 kernel pagetable entries outside of the kernel area as invalid so
+   BIOS reserved space won't be touched unintentionally. Also ensure that
+   memory holes are rounded up to the next PMD boundary correctly.
 
- - Add retrigger support for the recently merged Anapurna Labs Fabric
-   interrupt controller to make it complete
+ - Enable X2APIC support on Hyper-V to prevent boot failures.
 
- - Enable the ATMEL AIC5 interrupt controller driver on the new SAM9X60 SoC
+ - Set the paravirt name when running on Hyper-V for consistency
+
+ - Move a function under the appropriate ifdef guard to prevent build
+   warnings.
 
 Thanks,
 
 	tglx
 
 ------------------>
-Marc Zyngier (1):
-      irqchip/sifive-plic: Switch to fasteoi flow
+Andrea Parri (1):
+      x86/hyperv: Set pv_info.name to "Hyper-V"
 
-Sandeep Sheriker Mallikarjun (1):
-      irqchip/atmel-aic5: Add support for sam9x60 irqchip
+Roman Kagan (1):
+      x86/hyperv: Make vapic support x2apic mode
 
-Talel Shenhar (1):
-      irqchip/al-fic: Add support for irq retrigger
+Sean Christopherson (1):
+      x86/apic/x2apic: Fix a NULL pointer deref when handling a dying cpu
 
-Zenghui Yu (1):
-      irqchip/gic-v3: Fix GIC_LINE_NR accessor
+Steve Wahl (2):
+      x86/boot/64: Make level2_kernel_pgt pages invalid outside kernel area
+      x86/boot/64: Round memory hole size up to next PMD page
+
+Zhenzhong Duan (1):
+      x86/boot/acpi: Move get_cmdline_acpi_rsdp() under #ifdef guard
 
 
- .../bindings/interrupt-controller/atmel,aic.txt    |  7 ++++--
- drivers/irqchip/irq-al-fic.c                       | 12 +++++++++
- drivers/irqchip/irq-atmel-aic5.c                   | 10 ++++++++
- drivers/irqchip/irq-gic-v3.c                       |  2 +-
- drivers/irqchip/irq-sifive-plic.c                  | 29 +++++++++++-----------
- 5 files changed, 43 insertions(+), 17 deletions(-)
+ arch/x86/boot/compressed/acpi.c       | 48 +++++++++++++++++------------------
+ arch/x86/boot/compressed/misc.c       | 25 +++++++++++++-----
+ arch/x86/hyperv/hv_apic.c             | 20 +++++++++++----
+ arch/x86/kernel/apic/x2apic_cluster.c |  3 ++-
+ arch/x86/kernel/cpu/mshyperv.c        |  4 +++
+ arch/x86/kernel/head64.c              | 22 ++++++++++++++--
+ 6 files changed, 84 insertions(+), 38 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/atmel,aic.txt b/Documentation/devicetree/bindings/interrupt-controller/atmel,aic.txt
-index f4c5d34c4111..7079d44bf3ba 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/atmel,aic.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/atmel,aic.txt
-@@ -1,8 +1,11 @@
- * Advanced Interrupt Controller (AIC)
+diff --git a/arch/x86/boot/compressed/acpi.c b/arch/x86/boot/compressed/acpi.c
+index 149795c369f2..25019d42ae93 100644
+--- a/arch/x86/boot/compressed/acpi.c
++++ b/arch/x86/boot/compressed/acpi.c
+@@ -20,30 +20,6 @@
+  */
+ struct mem_vector immovable_mem[MAX_NUMNODES*2];
  
- Required properties:
--- compatible: Should be "atmel,<chip>-aic"
--  <chip> can be "at91rm9200", "sama5d2", "sama5d3" or "sama5d4"
-+- compatible: Should be:
-+    - "atmel,<chip>-aic" where  <chip> can be "at91rm9200", "sama5d2",
-+      "sama5d3" or "sama5d4"
-+    - "microchip,<chip>-aic" where <chip> can be "sam9x60"
-+
- - interrupt-controller: Identifies the node as an interrupt controller.
- - #interrupt-cells: The number of cells to define the interrupts. It should be 3.
-   The first cell is the IRQ number (aka "Peripheral IDentifier" on datasheet).
-diff --git a/drivers/irqchip/irq-al-fic.c b/drivers/irqchip/irq-al-fic.c
-index 1a57cee3efab..0b0a73739756 100644
---- a/drivers/irqchip/irq-al-fic.c
-+++ b/drivers/irqchip/irq-al-fic.c
-@@ -15,6 +15,7 @@
- 
- /* FIC Registers */
- #define AL_FIC_CAUSE		0x00
-+#define AL_FIC_SET_CAUSE	0x08
- #define AL_FIC_MASK		0x10
- #define AL_FIC_CONTROL		0x28
- 
-@@ -126,6 +127,16 @@ static void al_fic_irq_handler(struct irq_desc *desc)
- 	chained_irq_exit(irqchip, desc);
- }
- 
-+static int al_fic_irq_retrigger(struct irq_data *data)
-+{
-+	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(data);
-+	struct al_fic *fic = gc->private;
-+
-+	writel_relaxed(BIT(data->hwirq), fic->base + AL_FIC_SET_CAUSE);
-+
-+	return 1;
-+}
-+
- static int al_fic_register(struct device_node *node,
- 			   struct al_fic *fic)
- {
-@@ -159,6 +170,7 @@ static int al_fic_register(struct device_node *node,
- 	gc->chip_types->chip.irq_unmask = irq_gc_mask_clr_bit;
- 	gc->chip_types->chip.irq_ack = irq_gc_ack_clr_bit;
- 	gc->chip_types->chip.irq_set_type = al_fic_irq_set_type;
-+	gc->chip_types->chip.irq_retrigger = al_fic_irq_retrigger;
- 	gc->chip_types->chip.flags = IRQCHIP_SKIP_SET_WAKE;
- 	gc->private = fic;
- 
-diff --git a/drivers/irqchip/irq-atmel-aic5.c b/drivers/irqchip/irq-atmel-aic5.c
-index 6acad2ea0fb3..29333497ba10 100644
---- a/drivers/irqchip/irq-atmel-aic5.c
-+++ b/drivers/irqchip/irq-atmel-aic5.c
-@@ -313,6 +313,7 @@ static void __init sama5d3_aic_irq_fixup(void)
- static const struct of_device_id aic5_irq_fixups[] __initconst = {
- 	{ .compatible = "atmel,sama5d3", .data = sama5d3_aic_irq_fixup },
- 	{ .compatible = "atmel,sama5d4", .data = sama5d3_aic_irq_fixup },
-+	{ .compatible = "microchip,sam9x60", .data = sama5d3_aic_irq_fixup },
- 	{ /* sentinel */ },
- };
- 
-@@ -390,3 +391,12 @@ static int __init sama5d4_aic5_of_init(struct device_node *node,
- 	return aic5_of_init(node, parent, NR_SAMA5D4_IRQS);
- }
- IRQCHIP_DECLARE(sama5d4_aic5, "atmel,sama5d4-aic", sama5d4_aic5_of_init);
-+
-+#define NR_SAM9X60_IRQS		50
-+
-+static int __init sam9x60_aic5_of_init(struct device_node *node,
-+				       struct device_node *parent)
-+{
-+	return aic5_of_init(node, parent, NR_SAM9X60_IRQS);
-+}
-+IRQCHIP_DECLARE(sam9x60_aic5, "microchip,sam9x60-aic", sam9x60_aic5_of_init);
-diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-index 422664ac5f53..1edc99335a94 100644
---- a/drivers/irqchip/irq-gic-v3.c
-+++ b/drivers/irqchip/irq-gic-v3.c
-@@ -59,7 +59,7 @@ static struct gic_chip_data gic_data __read_mostly;
- static DEFINE_STATIC_KEY_TRUE(supports_deactivate_key);
- 
- #define GIC_ID_NR	(1U << GICD_TYPER_ID_BITS(gic_data.rdists.gicd_typer))
--#define GIC_LINE_NR	max(GICD_TYPER_SPIS(gic_data.rdists.gicd_typer), 1020U)
-+#define GIC_LINE_NR	min(GICD_TYPER_SPIS(gic_data.rdists.gicd_typer), 1020U)
- #define GIC_ESPI_NR	GICD_TYPER_ESPIS(gic_data.rdists.gicd_typer)
- 
+-/*
+- * Max length of 64-bit hex address string is 19, prefix "0x" + 16 hex
+- * digits, and '\0' for termination.
+- */
+-#define MAX_ADDR_LEN 19
+-
+-static acpi_physical_address get_cmdline_acpi_rsdp(void)
+-{
+-	acpi_physical_address addr = 0;
+-
+-#ifdef CONFIG_KEXEC
+-	char val[MAX_ADDR_LEN] = { };
+-	int ret;
+-
+-	ret = cmdline_find_option("acpi_rsdp", val, MAX_ADDR_LEN);
+-	if (ret < 0)
+-		return 0;
+-
+-	if (kstrtoull(val, 16, &addr))
+-		return 0;
+-#endif
+-	return addr;
+-}
+-
  /*
-diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
-index c72c036aea76..daefc52b0ec5 100644
---- a/drivers/irqchip/irq-sifive-plic.c
-+++ b/drivers/irqchip/irq-sifive-plic.c
-@@ -97,7 +97,7 @@ static inline void plic_irq_toggle(const struct cpumask *mask,
- 	}
+  * Search EFI system tables for RSDP.  If both ACPI_20_TABLE_GUID and
+  * ACPI_TABLE_GUID are found, take the former, which has more features.
+@@ -298,6 +274,30 @@ acpi_physical_address get_rsdp_addr(void)
  }
  
--static void plic_irq_enable(struct irq_data *d)
-+static void plic_irq_unmask(struct irq_data *d)
- {
- 	unsigned int cpu = cpumask_any_and(irq_data_get_affinity_mask(d),
- 					   cpu_online_mask);
-@@ -106,7 +106,7 @@ static void plic_irq_enable(struct irq_data *d)
- 	plic_irq_toggle(cpumask_of(cpu), d->hwirq, 1);
- }
- 
--static void plic_irq_disable(struct irq_data *d)
-+static void plic_irq_mask(struct irq_data *d)
- {
- 	plic_irq_toggle(cpu_possible_mask, d->hwirq, 0);
- }
-@@ -125,10 +125,8 @@ static int plic_set_affinity(struct irq_data *d,
- 	if (cpu >= nr_cpu_ids)
- 		return -EINVAL;
- 
--	if (!irqd_irq_disabled(d)) {
--		plic_irq_toggle(cpu_possible_mask, d->hwirq, 0);
--		plic_irq_toggle(cpumask_of(cpu), d->hwirq, 1);
--	}
-+	plic_irq_toggle(cpu_possible_mask, d->hwirq, 0);
-+	plic_irq_toggle(cpumask_of(cpu), d->hwirq, 1);
- 
- 	irq_data_update_effective_affinity(d, cpumask_of(cpu));
- 
-@@ -136,14 +134,18 @@ static int plic_set_affinity(struct irq_data *d,
- }
- #endif
- 
-+static void plic_irq_eoi(struct irq_data *d)
-+{
-+	struct plic_handler *handler = this_cpu_ptr(&plic_handlers);
+ #if defined(CONFIG_RANDOMIZE_BASE) && defined(CONFIG_MEMORY_HOTREMOVE)
++/*
++ * Max length of 64-bit hex address string is 19, prefix "0x" + 16 hex
++ * digits, and '\0' for termination.
++ */
++#define MAX_ADDR_LEN 19
 +
-+	writel(d->hwirq, handler->hart_base + CONTEXT_CLAIM);
++static acpi_physical_address get_cmdline_acpi_rsdp(void)
++{
++	acpi_physical_address addr = 0;
++
++#ifdef CONFIG_KEXEC
++	char val[MAX_ADDR_LEN] = { };
++	int ret;
++
++	ret = cmdline_find_option("acpi_rsdp", val, MAX_ADDR_LEN);
++	if (ret < 0)
++		return 0;
++
++	if (kstrtoull(val, 16, &addr))
++		return 0;
++#endif
++	return addr;
 +}
 +
- static struct irq_chip plic_chip = {
- 	.name		= "SiFive PLIC",
--	/*
--	 * There is no need to mask/unmask PLIC interrupts.  They are "masked"
--	 * by reading claim and "unmasked" when writing it back.
--	 */
--	.irq_enable	= plic_irq_enable,
--	.irq_disable	= plic_irq_disable,
-+	.irq_mask	= plic_irq_mask,
-+	.irq_unmask	= plic_irq_unmask,
-+	.irq_eoi	= plic_irq_eoi,
- #ifdef CONFIG_SMP
- 	.irq_set_affinity = plic_set_affinity,
- #endif
-@@ -152,7 +154,7 @@ static struct irq_chip plic_chip = {
- static int plic_irqdomain_map(struct irq_domain *d, unsigned int irq,
- 			      irq_hw_number_t hwirq)
+ /* Compute SRAT address from RSDP. */
+ static unsigned long get_acpi_srat_table(void)
  {
--	irq_set_chip_and_handler(irq, &plic_chip, handle_simple_irq);
-+	irq_set_chip_and_handler(irq, &plic_chip, handle_fasteoi_irq);
- 	irq_set_chip_data(irq, NULL);
- 	irq_set_noprobe(irq);
- 	return 0;
-@@ -188,7 +190,6 @@ static void plic_handle_irq(struct pt_regs *regs)
- 					hwirq);
- 		else
- 			generic_handle_irq(irq);
--		writel(hwirq, claim);
+diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
+index 53ac0cb2396d..9652d5c2afda 100644
+--- a/arch/x86/boot/compressed/misc.c
++++ b/arch/x86/boot/compressed/misc.c
+@@ -345,6 +345,7 @@ asmlinkage __visible void *extract_kernel(void *rmode, memptr heap,
+ {
+ 	const unsigned long kernel_total_size = VO__end - VO__text;
+ 	unsigned long virt_addr = LOAD_PHYSICAL_ADDR;
++	unsigned long needed_size;
+ 
+ 	/* Retain x86 boot parameters pointer passed from startup_32/64. */
+ 	boot_params = rmode;
+@@ -379,26 +380,38 @@ asmlinkage __visible void *extract_kernel(void *rmode, memptr heap,
+ 	free_mem_ptr     = heap;	/* Heap */
+ 	free_mem_end_ptr = heap + BOOT_HEAP_SIZE;
+ 
++	/*
++	 * The memory hole needed for the kernel is the larger of either
++	 * the entire decompressed kernel plus relocation table, or the
++	 * entire decompressed kernel plus .bss and .brk sections.
++	 *
++	 * On X86_64, the memory is mapped with PMD pages. Round the
++	 * size up so that the full extent of PMD pages mapped is
++	 * included in the check against the valid memory table
++	 * entries. This ensures the full mapped area is usable RAM
++	 * and doesn't include any reserved areas.
++	 */
++	needed_size = max(output_len, kernel_total_size);
++#ifdef CONFIG_X86_64
++	needed_size = ALIGN(needed_size, MIN_KERNEL_ALIGN);
++#endif
++
+ 	/* Report initial kernel position details. */
+ 	debug_putaddr(input_data);
+ 	debug_putaddr(input_len);
+ 	debug_putaddr(output);
+ 	debug_putaddr(output_len);
+ 	debug_putaddr(kernel_total_size);
++	debug_putaddr(needed_size);
+ 
+ #ifdef CONFIG_X86_64
+ 	/* Report address of 32-bit trampoline */
+ 	debug_putaddr(trampoline_32bit);
+ #endif
+ 
+-	/*
+-	 * The memory hole needed for the kernel is the larger of either
+-	 * the entire decompressed kernel plus relocation table, or the
+-	 * entire decompressed kernel plus .bss and .brk sections.
+-	 */
+ 	choose_random_location((unsigned long)input_data, input_len,
+ 				(unsigned long *)&output,
+-				max(output_len, kernel_total_size),
++				needed_size,
+ 				&virt_addr);
+ 
+ 	/* Validate memory location choices. */
+diff --git a/arch/x86/hyperv/hv_apic.c b/arch/x86/hyperv/hv_apic.c
+index 5c056b8aebef..e01078e93dd3 100644
+--- a/arch/x86/hyperv/hv_apic.c
++++ b/arch/x86/hyperv/hv_apic.c
+@@ -260,11 +260,21 @@ void __init hv_apic_init(void)
  	}
- 	csr_set(sie, SIE_SEIE);
+ 
+ 	if (ms_hyperv.hints & HV_X64_APIC_ACCESS_RECOMMENDED) {
+-		pr_info("Hyper-V: Using MSR based APIC access\n");
++		pr_info("Hyper-V: Using enlightened APIC (%s mode)",
++			x2apic_enabled() ? "x2apic" : "xapic");
++		/*
++		 * With x2apic, architectural x2apic MSRs are equivalent to the
++		 * respective synthetic MSRs, so there's no need to override
++		 * the apic accessors.  The only exception is
++		 * hv_apic_eoi_write, because it benefits from lazy EOI when
++		 * available, but it works for both xapic and x2apic modes.
++		 */
+ 		apic_set_eoi_write(hv_apic_eoi_write);
+-		apic->read      = hv_apic_read;
+-		apic->write     = hv_apic_write;
+-		apic->icr_write = hv_apic_icr_write;
+-		apic->icr_read  = hv_apic_icr_read;
++		if (!x2apic_enabled()) {
++			apic->read      = hv_apic_read;
++			apic->write     = hv_apic_write;
++			apic->icr_write = hv_apic_icr_write;
++			apic->icr_read  = hv_apic_icr_read;
++		}
+ 	}
  }
+diff --git a/arch/x86/kernel/apic/x2apic_cluster.c b/arch/x86/kernel/apic/x2apic_cluster.c
+index 45e92cba92f5..b0889c48a2ac 100644
+--- a/arch/x86/kernel/apic/x2apic_cluster.c
++++ b/arch/x86/kernel/apic/x2apic_cluster.c
+@@ -156,7 +156,8 @@ static int x2apic_dead_cpu(unsigned int dead_cpu)
+ {
+ 	struct cluster_mask *cmsk = per_cpu(cluster_masks, dead_cpu);
+ 
+-	cpumask_clear_cpu(dead_cpu, &cmsk->mask);
++	if (cmsk)
++		cpumask_clear_cpu(dead_cpu, &cmsk->mask);
+ 	free_cpumask_var(per_cpu(ipi_mask, dead_cpu));
+ 	return 0;
+ }
+diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
+index 267daad8c036..c656d92cd708 100644
+--- a/arch/x86/kernel/cpu/mshyperv.c
++++ b/arch/x86/kernel/cpu/mshyperv.c
+@@ -216,6 +216,10 @@ static void __init ms_hyperv_init_platform(void)
+ 	int hv_host_info_ecx;
+ 	int hv_host_info_edx;
+ 
++#ifdef CONFIG_PARAVIRT
++	pv_info.name = "Hyper-V";
++#endif
++
+ 	/*
+ 	 * Extract the features and hints
+ 	 */
+diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
+index 29ffa495bd1c..206a4b6144c2 100644
+--- a/arch/x86/kernel/head64.c
++++ b/arch/x86/kernel/head64.c
+@@ -222,13 +222,31 @@ unsigned long __head __startup_64(unsigned long physaddr,
+ 	 * we might write invalid pmds, when the kernel is relocated
+ 	 * cleanup_highmap() fixes this up along with the mappings
+ 	 * beyond _end.
++	 *
++	 * Only the region occupied by the kernel image has so far
++	 * been checked against the table of usable memory regions
++	 * provided by the firmware, so invalidate pages outside that
++	 * region. A page table entry that maps to a reserved area of
++	 * memory would allow processor speculation into that area,
++	 * and on some hardware (particularly the UV platform) even
++	 * speculative access to some reserved areas is caught as an
++	 * error, causing the BIOS to halt the system.
+ 	 */
+ 
+ 	pmd = fixup_pointer(level2_kernel_pgt, physaddr);
+-	for (i = 0; i < PTRS_PER_PMD; i++) {
++
++	/* invalidate pages before the kernel image */
++	for (i = 0; i < pmd_index((unsigned long)_text); i++)
++		pmd[i] &= ~_PAGE_PRESENT;
++
++	/* fixup pages that are part of the kernel image */
++	for (; i <= pmd_index((unsigned long)_end); i++)
+ 		if (pmd[i] & _PAGE_PRESENT)
+ 			pmd[i] += load_delta;
+-	}
++
++	/* invalidate pages after the kernel image */
++	for (; i < PTRS_PER_PMD; i++)
++		pmd[i] &= ~_PAGE_PRESENT;
+ 
+ 	/*
+ 	 * Fixup phys_base - remove the memory encryption mask to obtain
 
 
