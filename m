@@ -2,96 +2,94 @@ Return-Path: <SRS0=ATYp=YN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E336CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 18:08:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A65A0CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 18:20:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A55621928
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 18:08:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 802EB218BA
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 18:20:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lQyno92/"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bhffvDjV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726754AbfJTSIe (ORCPT
+        id S1726786AbfJTSUa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 20 Oct 2019 14:08:34 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:52471 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726559AbfJTSIe (ORCPT
+        Sun, 20 Oct 2019 14:20:30 -0400
+Received: from mail-pg1-f171.google.com ([209.85.215.171]:42403 "EHLO
+        mail-pg1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726653AbfJTSU3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 20 Oct 2019 14:08:34 -0400
-Received: by mail-wm1-f66.google.com with SMTP id r19so10838124wmh.2;
-        Sun, 20 Oct 2019 11:08:32 -0700 (PDT)
+        Sun, 20 Oct 2019 14:20:29 -0400
+Received: by mail-pg1-f171.google.com with SMTP id f14so6232122pgi.9
+        for <linux-kernel@vger.kernel.org>; Sun, 20 Oct 2019 11:20:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ZyScSgyx1v1KMw11LXs/d910+0o/5j0T6WzSjnl90Ec=;
-        b=lQyno92/NxMfxfaAdR+mU57q/zfWHHiSTBgeqKtrLeobdBwrmxKy8KCMFYCzAGRTZx
-         Z0qImnfC701v8yi3sL6xDOJaoS5fISZEqYdgo0emBbPDPBdYwHX483wROvG1g4II8N21
-         7tFLaM6sN993v+9w0yv+OGuVc0iPnjGmyKxleIleQi1ED4yQu76d6It6sKySFnYJBv5c
-         Krt59icxeVzsw/mMyv6LpQb5awEDRtpRZnHNKkyPb+q8ZJeE2wgnZP4h9n5uNbHyY5Uz
-         VoX1oD/A6C2NrFcipFbo0F4l5W0iwCcFRiJT5CtezpvWC/ChrJ1iq7fDDQ/ZQ/FRIT6Q
-         n0WA==
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:from:to:cc:subject:user-agent:date;
+        bh=hPpICzNZ4Kh87S4bTYCVObRqy3CHa+mSHYJpyaWsGjM=;
+        b=bhffvDjVvdeFW/Tx78BtMAZVB8MmP3/OQBSp6HjqtMP8LyYpafnXDE/wsiq+AvVOKY
+         8OvGACyriUjlq/mCmqnQm+CFvFAJKcU9RM2aPGmvPhm+5SBbmDXMSzWm1RMnRAaQqs11
+         Xa9XawAtOzu61KafTJmjBMdZxOjhRB3SuO080=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ZyScSgyx1v1KMw11LXs/d910+0o/5j0T6WzSjnl90Ec=;
-        b=IB2uLI52J2T0aXcYeEB0thyWN5c1b8JXreBKQqU8WFPnnl+Mlc9E1DSnPpzo9hqpNP
-         iXVdojjJvRZ9LTlApN936rzHJbppX/Nnx77lxtSGxfEUr7hzviwMweZbx4nyyyj6SXw0
-         96SgAQUVL675KlgjQAxvfU+Wb/pFQ8KJsXrCnppXwZ6ncjtIRRDUVqNAFxhFEN9AKNK8
-         jqsLFNvEjuE/1+OavNcn/T53tzJcB/xeTN6OMwXDV384+p2aZ13Cn9e1WduDtwtju8cY
-         Xz80sWB65BpqmzBmnL5MT6gXbdkxm62x3UP5cOB6FoNyC2nqgD/r8ugy9H5+1FVj2BN7
-         o+7w==
-X-Gm-Message-State: APjAAAUBgEQAifPdozCcPyBP8Y1KQC08c5Uruh3snj5FDZrnbiT+D8HD
-        RH0aEfMBs+slbZsqrn/csVGqeGJvfHqQhqXo7CKemS5HPXo=
-X-Google-Smtp-Source: APXvYqzEC44nKgE2J9nQP5cTZEkGghcknqCros6dWpjbg+JD2QhjuAbWQ9aVqWOiSC00SOtfbarRFM11fwxwTpv1XfA=
-X-Received: by 2002:a05:600c:54e:: with SMTP id k14mr17042823wmc.9.1571594911706;
- Sun, 20 Oct 2019 11:08:31 -0700 (PDT)
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:from:to:cc:subject
+         :user-agent:date;
+        bh=hPpICzNZ4Kh87S4bTYCVObRqy3CHa+mSHYJpyaWsGjM=;
+        b=Xdss53xVGHJ3bVeytVLIsVtnzOt8B41qcAp/XRF83hgfc/UiIvU8/mw/Z9cjyRyV7i
+         rWOiSrwP4I+d1qx+zhKKNb+aA1kl5WotiikkwOojAOycm6R+B+yK2oe9BZ/qZUdleBL/
+         tp+fZBb/5moCuOI+JXafM39xk0FagwKdmdQLLRx2FLEN8Y+2Wz0KsZUAaHFDH6fyzvuz
+         wv1go9rzlozY9r62jEfgYkrh6ZATHczV5T/G4tsnMZ7CCDH1tslaw3FcFrzY9LA7PwQU
+         G9J61gQ534FlBCyuH7jxw5SNXVbXTjr3+zC0xjntZ6gW/HBg9dxefwYeyAGk4wqv//mU
+         y4XA==
+X-Gm-Message-State: APjAAAUe5FrilSZoB2KcSFaWFtP6ACuyuQHu2vXGghzj9M4KzRhYaMgh
+        BfPTdHECBa7q4WfNkkddudus7w==
+X-Google-Smtp-Source: APXvYqzfECRM11aVxu+TNtHORkU10rSq08jh5g9G7KzF4s/YTxkke2dpbf/yjDPkiZ2BfBZ0dIhqxQ==
+X-Received: by 2002:a63:d246:: with SMTP id t6mr14765447pgi.5.1571595627178;
+        Sun, 20 Oct 2019 11:20:27 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id v35sm15092846pgn.89.2019.10.20.11.20.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 20 Oct 2019 11:20:26 -0700 (PDT)
+Message-ID: <5daca56a.1c69fb81.41ec4.5d65@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <453A1153-9493-4A04-BF66-CE6A572DEBDB@paragon-software.com>
-In-Reply-To: <453A1153-9493-4A04-BF66-CE6A572DEBDB@paragon-software.com>
-From:   Richard Weinberger <richard.weinberger@gmail.com>
-Date:   Sun, 20 Oct 2019 20:08:20 +0200
-Message-ID: <CAFLxGvyFBGiDab4wxWidjRyDgWkHVfigVsHiRDB4swpB3G+hvQ@mail.gmail.com>
-Subject: Re: [PATCH] fs: exFAT read-only driver GPL implementation by Paragon Software.
-To:     Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
-Cc:     "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <7b896d05df926c6443758b3162c24eb3e1d7510c.1571484439.git.saiprakash.ranjan@codeaurora.org>
+References: <cover.1571484439.git.saiprakash.ranjan@codeaurora.org> <7b896d05df926c6443758b3162c24eb3e1d7510c.1571484439.git.saiprakash.ranjan@codeaurora.org>
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        devicetree@vger.kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Rishabh Bhatnagar <rishabhb@codeaurora.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: Re: [PATCHv2 1/3] soc: qcom: llcc: Add configuration data for SC7180
+User-Agent: alot/0.8.1
+Date:   Sun, 20 Oct 2019 11:20:24 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Oct 19, 2019 at 10:33 AM Konstantin Komarov
-<almaz.alexandrovich@paragon-software.com> wrote:
->
-> Recently exFAT filesystem specification has been made public by Microsoft=
- (https://docs.microsoft.com/en-us/windows/win32/fileio/exfat-specification=
-).
-> Having decades of expertise in commercial file systems development, we at=
- Paragon Software GmbH are very excited by Microsoft's decision and now wan=
-t to make our contribution to the Open Source Community by providing our im=
-plementation of exFAT Read-Only (yet!) fs implementation for the Linux Kern=
-el.
-> We are about to prepare the Read-Write support patch as well.
-> 'fs/exfat' is implemented accordingly to standard Linux fs development ap=
-proach with no use/addition of any custom API's.
-> To divide our contribution from 'drivers/staging' submit of Aug'2019, our=
- Kconfig key is "EXFAT_RO_FS"
+Quoting Sai Prakash Ranjan (2019-10-19 04:37:11)
+> From: Vivek Gautam <vivek.gautam@codeaurora.org>
+>=20
+> Add LLCC configuration data for SC7180 SoC which controls
+> LLCC behaviour.
+>=20
+> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> ---
 
-How is this driver different from the driver in drivers/staging?
-With the driver in staging and the upcoming driver from Samsung this
-is driver number
-three for exfat. ;-\
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 
---=20
-Thanks,
-//richard
