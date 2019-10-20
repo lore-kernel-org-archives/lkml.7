@@ -2,130 +2,100 @@ Return-Path: <SRS0=ATYp=YN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E955ECA9EAE
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 13:24:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF02CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 13:35:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C024C21927
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 13:24:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A477A20640
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 13:35:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571577843;
-	bh=JUeyhbY4XLPzl8wkAxz5gj6htNnsDXVN8k8a2GTjy1A=;
+	s=default; t=1571578506;
+	bh=+4amG+FG7GWnyfpjXdXwK7H4DrC9sreLmaUdP6OQ5p4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ppylZk6MMvy8ITSvxrAYPvZGa1SHpvK8E3gpiO7UK7RpDCIKF2OxvxWTvBcHyaKz+
-	 qmcMTvWUJwoexK/8mdUoUhO3KificW4MCXPVFlkZmbR/hikWBzz9XXvmcxIgmhKBDm
-	 IdExrsZ9t5C09nY5itG7euSg1VF+WUBN4iA36kS4=
+	b=z6Eya9uuacBMPRAvbGlrlPDcX/1pSuEU8xCLnK6170KbLNqw3BYrPepzsyU7xZwYr
+	 BETmETOeX5fyZ78A9yprGIE24x0aoaz7hCFahkDztqB06LsX9EJTzmUGWDgV8bYl2c
+	 OWX0VxLfCaAOeH5qWtRLd1nn2/fRyLGy8ZrnvFWU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726466AbfJTNYC (ORCPT
+        id S1726409AbfJTNfC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 20 Oct 2019 09:24:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33928 "EHLO mail.kernel.org"
+        Sun, 20 Oct 2019 09:35:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726298AbfJTNYC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 20 Oct 2019 09:24:02 -0400
-Received: from earth.universe (tmo-104-243.customers.d1-online.com [80.187.104.243])
+        id S1726296AbfJTNfC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 20 Oct 2019 09:35:02 -0400
+Received: from localhost (unknown [106.51.108.167])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6989218BA;
-        Sun, 20 Oct 2019 13:23:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8FDA20640;
+        Sun, 20 Oct 2019 13:35:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571577841;
-        bh=JUeyhbY4XLPzl8wkAxz5gj6htNnsDXVN8k8a2GTjy1A=;
+        s=default; t=1571578501;
+        bh=+4amG+FG7GWnyfpjXdXwK7H4DrC9sreLmaUdP6OQ5p4=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=u5296DppeCP7gcRjsD5Ko3IbgyouQOgb9XoB8emX153V/EMvyLDkFDoGUYxh7LwB8
-         xTqZ2yCcAfeo4GfEPMurOZ80hpOZmt7vt7trMvqd0gKqtcBE79LmUEWuvzjzpFh1fw
-         T1Tfo8h9cnf4okIUkT8g8bsIzDeENCn6jxLgH49A=
-Received: by earth.universe (Postfix, from userid 1000)
-        id ADA5B3C09B1; Sun, 20 Oct 2019 15:23:52 +0200 (CEST)
-Date:   Sun, 20 Oct 2019 15:23:52 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFT 1/3] power: supply: ab8500: Cleanup probe in reverse order
-Message-ID: <20191020132352.seo2seahsq2k32mb@earth.universe>
-References: <20191004150738.6542-1-krzk@kernel.org>
- <CACRpkdYSnnOJomJi=Db2nkrrdNQmBnNKny1c7ZpDj6KdmKD9Mg@mail.gmail.com>
+        b=m2v3U+a94DsWB/fUiKtmWVvQO1na+tb2s51uhNt9vUwsFoaUjVD40cy9r4ikHUP20
+         kZ382FXkuWNWfPOdp8VU7YJLTJi0f9zZ/w4pnKSE7Z4qiwzXI+v2c32kh9P7otTm52
+         mRZRWQ4e9Mc9Y34dUFGjIscmYk6bObBd5ZIo/XHw=
+Date:   Sun, 20 Oct 2019 19:04:56 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Olof Johansson <olof@lixom.net>,
+        Maxime Ripard <mripard@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v2] arm64: defconfig: Enable Qualcomm pseudo rng
+Message-ID: <20191020133456.GS2654@vkoul-mobl>
+References: <20191019195812.3834545-1-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="bpnqgwqyh5qys2js"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACRpkdYSnnOJomJi=Db2nkrrdNQmBnNKny1c7ZpDj6KdmKD9Mg@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191019195812.3834545-1-bjorn.andersson@linaro.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 19-10-19, 12:58, Bjorn Andersson wrote:
+> Most Qualcomm platforms contain a pseudo random number generator
+> hardware block. Enable the driver for this block and also enable the
+> interface for exposing this to userspace.
 
---bpnqgwqyh5qys2js
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
+Tested-by: Vinod Koul <vkoul@kernel.org>
 
-Hi,
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>  arch/arm64/configs/defconfig | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> index 6baf90875263..4591bf1303da 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -860,6 +860,8 @@ CONFIG_NLS_ISO8859_1=y
+>  CONFIG_SECURITY=y
+>  CONFIG_CRYPTO_ECHAINIV=y
+>  CONFIG_CRYPTO_ANSI_CPRNG=y
+> +CONFIG_CRYPTO_USER_API_RNG=m
+> +CONFIG_CRYPTO_DEV_QCOM_RNG=m
+>  CONFIG_DMA_CMA=y
+>  CONFIG_CMA_SIZE_MBYTES=32
+>  CONFIG_PRINTK_TIME=y
+> -- 
+> 2.23.0
 
-On Wed, Oct 16, 2019 at 10:33:12AM +0200, Linus Walleij wrote:
-> On Fri, Oct 4, 2019 at 5:07 PM Krzysztof Kozlowski <krzk@kernel.org> wrot=
-e:
->=20
-> > It is logical to cleanup in probe's error path in reverse order to
-> > previous actions.  It also makes easier to add additional goto labels
-> > within this error path.
-> >
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
->=20
-> For all 3 patches:
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
->=20
-> The battery charging code is currently disabled on ux500 simply
-> because no platforms with batteries were available for testing
-> or supported by any device trees.
->=20
-> This is getting fix: PostmarketOS is brewing patches for enabling
-> all Ux500-based Samsung phones, all with batteries. So we will
-> soon be able to test and turn this on.
->=20
-> The patches are fine to merge, however notice that we are
-> refactoring all drivers using ADC through the IIO tree:
-> https://lore.kernel.org/linux-iio/20191011071805.5554-4-linus.walleij@lin=
-aro.org/
-> https://lore.kernel.org/linux-iio/20191011071805.5554-2-linus.walleij@lin=
-aro.org/
-> https://lore.kernel.org/linux-iio/20191011071805.5554-3-linus.walleij@lin=
-aro.org/
->=20
-> It would be nice if we could avoid colissions.
-
-Thanks, I merged your immutable branch for the ADC work
-and this patchset.
-
--- Sebastian
-
---bpnqgwqyh5qys2js
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl2sX+UACgkQ2O7X88g7
-+poy/w/8DMZnLieBPLWUCwhIO5fbuByhIgR2X4Aa8sgjZMXRD5ZyreiZNY5HopAV
-5NhV18pa8YcqWLaZO5uar+snOyI959yctBrTSU0ddwt+WAflTxR/sS3d49pNwZDY
-OPz6j85seXjYVqlwSjv+FlN3oBBOoAt2dC0F688OZKyoRQ2+rGoVMasNcG3hIeLm
-XtJ1Snmb05Jbky8j2YD9WJ/6txAMdoy1xYRpLQxM2J6W6ekZ+DBfFkQc2MPYnuBm
-hNKQHvm3wiZ/wXr33UumZc/qJ0ZJx6qzASF9zeiyThn7lGbXMRCyTY1Gow+ECo39
-ZxboDpTt7bGbhcDDjl1mAFeDhC7ceZh1iimq6s5n4dgz8Kg3/uPGacMn+ilZnh8a
-Ab021CnrZzpwDw2+hgfkJfc7GwgkmwfJ5WwvW37iu/0FITDAvIDZMbsAlRLv6c/d
-amB+4VwuA8GXziINCde7f362Gvd0XDJzqSt7ZD3NMR4YNNeYaGd1NZYxd/ox3k6X
-KFrF6Wyl8oQlSkGjBAgSCkh9zqjUv6AN8XtLFzd0G+YnyVqC7WzjPxco+ZA95Aft
-kASFujCAFOBtyU4q1mwIcHhbcZUPHSD9WJ7uzrbH7lx8lrwbs87XV2iIPRCJN66s
-CoCbsUz4ryxNbUcd9xQaAXp9e4wPVb/6rfhBNr+iYVVCjd4agAk=
-=rfQl
------END PGP SIGNATURE-----
-
---bpnqgwqyh5qys2js--
+-- 
+~Vinod
