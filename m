@@ -2,98 +2,106 @@ Return-Path: <SRS0=ATYp=YN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16ECCCA9EA9
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 09:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF6E0CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 09:35:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDB97218BA
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 09:32:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C228218BA
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 09:35:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571564100;
+	bh=zUKzgKQQEtLwc+ZNQX3WQQkyBzsOn+E60JRR68wRRik=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=K5mh3Q3Macs+OQMIk5JPnUlUIJd1OMiyL2X88zVv1tvqotUS/SYi2gVfvzKlbGlv4
+	 bBVsqkrJTbOriOT+BsOFf9LjbaEc9Lpi4gYZrVgRfI/01YlIqMZ0UohQyY/0pNfAID
+	 FlzoRlMt39rggtDDIv9mHHYemk+8Tg94iuwsGvw4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726205AbfJTJck (ORCPT
+        id S1726263AbfJTJe7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 20 Oct 2019 05:32:40 -0400
-Received: from outbound-smtp03.blacknight.com ([81.17.249.16]:54578 "EHLO
-        outbound-smtp03.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725893AbfJTJck (ORCPT
+        Sun, 20 Oct 2019 05:34:59 -0400
+Received: from inca-roads.misterjones.org ([213.251.177.50]:33251 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725893AbfJTJe7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 20 Oct 2019 05:32:40 -0400
-Received: from mail.blacknight.com (pemlinmail03.blacknight.ie [81.17.254.16])
-        by outbound-smtp03.blacknight.com (Postfix) with ESMTPS id CFAE698BA8
-        for <linux-kernel@vger.kernel.org>; Sun, 20 Oct 2019 10:32:37 +0100 (IST)
-Received: (qmail 31103 invoked from network); 20 Oct 2019 09:32:37 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.19.210])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 20 Oct 2019 09:32:37 -0000
-Date:   Sun, 20 Oct 2019 10:32:35 +0100
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Michal Hocko <mhocko@kernel.org>, Vlastimil Babka <vbabka@suse.cz>,
+        Sun, 20 Oct 2019 05:34:59 -0400
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=big-swifty.misterjones.org)
+        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
+        (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iM7by-0001qi-Bk; Sun, 20 Oct 2019 11:34:54 +0200
+Date:   Sun, 20 Oct 2019 10:34:52 +0100
+Message-ID: <867e4zzrnn.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Julia Lawall <julia.lawall@lip6.fr>
+Cc:     Markus Elfring <Markus.Elfring@web.de>,
+        Himanshu Jha <himanshujha199640@gmail.com>,
+        kernel-janitors@vger.kernel.org,
+        Coccinelle <cocci@systeme.lip6.fr>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Torvalds <torvalds@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        Borislav Petkov <bp@alien8.de>, Linux-MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/3] mm, meminit: Recalculate pcpu batch and high limits
- after init completes
-Message-ID: <20191020093235.GL3321@techsingularity.net>
-References: <20191018105606.3249-1-mgorman@techsingularity.net>
- <20191018105606.3249-3-mgorman@techsingularity.net>
- <20191018130127.GP5017@dhcp22.suse.cz>
- <20191018140959.GK3321@techsingularity.net>
- <20191018184024.2bb1a69997a9365c5d4ccf1c@linux-foundation.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <20191018184024.2bb1a69997a9365c5d4ccf1c@linux-foundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        YueHaibing <yuehaibing@huawei.com>
+Subject: Re: coccinelle: api/devm_platform_ioremap_resource: remove useless script
+In-Reply-To: <alpine.DEB.2.21.1910200735400.3689@hadrien>
+References: <e895d04ef5a282b5b48fcb21cbc175d2@www.loen.fr>
+        <693a3b68-a0f1-81fe-40ce-2b6ba189450c@web.de>
+        <868spgzcti.wl-maz@kernel.org>
+        <alpine.DEB.2.21.1910200735400.3689@hadrien>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: julia.lawall@lip6.fr, Markus.Elfring@web.de, himanshujha199640@gmail.com, kernel-janitors@vger.kernel.org, cocci@systeme.lip6.fr, alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, andriy.shevchenko@linux.intel.com, arnd@arndb.de, bgolaszewski@baylibre.com, Gilles.Muller@lip6.fr, gregkh@linuxfoundation.org, torvalds@linuxfoundation.org, linus.walleij@linaro.org, yamada.masahiro@socionext.com, michal.lkml@markovi.net, nicolas.palix@imag.fr, tglx@linutronix.de, yuehaibing@huawei.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 06:40:24PM -0700, Andrew Morton wrote:
-> On Fri, 18 Oct 2019 15:09:59 +0100 Mel Gorman <mgorman@techsingularity.net> wrote:
+On Sun, 20 Oct 2019 06:38:30 +0100,
+Julia Lawall <julia.lawall@lip6.fr> wrote:
 > 
-> > > > Cc: stable@vger.kernel.org # v4.15+
-> > > 
-> > > Hmm, are you sure about 4.15? Doesn't this go all the way down to
-> > > deferred initialization? I do not see any recent changes on when
-> > > setup_per_cpu_pageset is called.
-> > > 
-> > 
-> > No, I'm not 100% sure. It looks like this was always an issue from the
-> > code but did not happen on at least one 4.12-based distribution kernel for
-> > reasons that are non-obvious. Either way, the tag should have been "v4.1+"
+> > If said script was providing a correct semantic patch instead of being
+> > an incentive for people to churn untested patches that span the whole
+> > tree, that'd be a different story. But that's not what this is about.
 > 
-> I could mark
-> 
-> mm-pcp-share-common-code-between-memory-hotplug-and-percpu-sysctl-handler.patch
-> mm-meminit-recalculate-pcpu-batch-and-high-limits-after-init-completes.patch
-> 
-> as Cc: <stable@vger.kernel.org>	[4.1+]
-> 
+> What is the actual incorrectness with the script?
 
-That would be fine.
+The first thing is that it spits out a "WARNING", which is almost
+universally interpreted as something that needs addressing. In this
+case, it really doesn't. The suggested helper is only icing sugar, and
+the original code is perfectly fine.
 
-> But for backporting purposes it's a bit cumbersome that [2/3] is the
-> important patch.  I think I'll switch the ordering so that
-> mm-meminit-recalculate-pcpu-batch-and-high-limits-after-init-completes.patch
-> is the first patch and the other two can be queued for 5.5-rc1, OK?
-> 
+The second thing is that it results in people posting patches they
+don't even compile, let alone test. There would be a good chance for
+these patches to be correct if the script was directly generating
+them, but that's unfortunately not the case.
 
-It might be easier to simply collapse patch 1 and 2 together. They were
-only split to make the review easier and to avoid two relatively big
-changes in one patch.
+> An option could be to adjust the rule such that it can be run with an
+> extra command line option, like -D developer but is not run by default by
+> make coccicheck.
 
-> Also, is a Reported-by:Matt appropriate here?
-> 
+Maybe. I'm not sure this will deter people from running these scripts
+and sending broken patches anyway. No matter how many safeguards you
+put, people will still post broken patches just because they can.
 
-I don't object but I'm not actually sure who reported this first. I think
-it was Thomas who talked to Boris about an EPYC performance issue, who
-talked to Matt thinking it might be a scheduler issue who identified it
-was my problem :P
+	M.
 
 -- 
-Mel Gorman
-SUSE Labs
+Jazz is not dead, it just smells funny.
