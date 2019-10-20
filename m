@@ -2,89 +2,101 @@ Return-Path: <SRS0=ATYp=YN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C60ADCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 23:33:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E82F9CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 23:35:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CB9F21928
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 23:33:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDC5521928
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 23:35:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571614513;
+	bh=lCykGiH8KYX5azB6wHsUNJfO2MfH0lyxbX2iBijn8gs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=d9qy3246p4axF6JZhu5ihA7xibaa23ohFvkVftuoeOYEy0lcK7PLAq4jZOWXf5vMv
+	 o5F43z9SrhPBFro1g5WLKxQVsJ53GwtuI7vr4e2vRFww+aQ2jbHf3GrWST8gTmR8CY
+	 YAYJ77UrH7jbtZp6Vx7MQRlZkH67vWFmPftugE20=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726687AbfJTXdO (ORCPT
+        id S1726731AbfJTXfK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 20 Oct 2019 19:33:14 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:38961 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726571AbfJTXdO (ORCPT
+        Sun, 20 Oct 2019 19:35:10 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:34296 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726655AbfJTXfJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 20 Oct 2019 19:33:14 -0400
-Received: by mail-io1-f69.google.com with SMTP id f9so15819378ioh.6
-        for <linux-kernel@vger.kernel.org>; Sun, 20 Oct 2019 16:33:12 -0700 (PDT)
+        Sun, 20 Oct 2019 19:35:09 -0400
+Received: by mail-ot1-f67.google.com with SMTP id m19so9497171otp.1;
+        Sun, 20 Oct 2019 16:35:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=LcnS/BPD4aOM4PxSo8Hv9J5ZaoK/k6pTFOh7ysR2NzA=;
-        b=J3pWDkO6Nroh6IvHQEU7TbqcU9BXouP8FrsUJQNRz9W+bONMCLEnstv/ZiffnQdfIA
-         +kWHqXGc9AFr5YaX3Z9mKRRavwHDjOcCJ5yq1obzB1/pXmFOQ3JNzlY9g5CPrqTbKrNF
-         YeC2D1sneDPwOUOKI/jVuOOsteOGSGH8P4AXQXlwjX8uQkpsxqmGXUtg/aHNHxL8lwgp
-         TVKrrIP8tcjuyRP5Hn9kH+QZy8QlFhBsfM1Jlp+ISkTQKBPv+7wGdqG9YCZkGpRLtDxA
-         n7ff7px02WaEjZUBJ6vgHMy5QKmihPr76WTCjVl4psJw0KizWl4lGC4XMXGj7ENSkP1R
-         rPdA==
-X-Gm-Message-State: APjAAAV0rlk98osHuhUJP6bPdg+z/+TMkiZNSPWgvaO3phCnpQVwmXBE
-        zZLaPIHHRo1rXtgPxy4143a34Az6w4G/w7vh0BKQCpjDJfOd
-X-Google-Smtp-Source: APXvYqy69ZWKiOaduR7XD3ZyDqZK5jSo6DR/VXXqXiPU9YPMlYvsCItsg8muyIm41ImBvZ+3rVIakLvZj3kw5IN8BZGfV5lJQ8v3
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=N1/IHN/ve/UVAvkgwgytXM/n+jeqbbwYBnVAoJItoZs=;
+        b=OY9xX51liZztwZvFnjW+MtZt8VYC44BkGvpG/qygoRhefC56DONYKty+LJK1LvCkkB
+         8dS+u3yJlKDHaej81VHv9HbkfyMZsE7rYUiQUUHSpeROsFrcnwAppF9DDtqik76bfWot
+         /WwbFpPULAkrZirrILeH/lX7INFKfIucUIMi/tW1GZ4785JHWECS8Oa8EYSA+COEsmg9
+         Mn+fUJ/3YkjmzE2mvjC9YoLjG+2n3ovP+4RUQoZ/PBO9pPjV8IZ3b1rJnl+K76M2tNtK
+         n+DVvwENgw6ffBh4eFXxubWJTQ4KyTqrmC+hAQBAvryexQb2eXJMyuATxDcvGsrcVHQZ
+         jvow==
+X-Gm-Message-State: APjAAAXTF+81/YKjBRvQ2Gou50MnPTd6vK2QjJUWCI0nQ47cRPSEA+21
+        a9x+NR5/3eBORsoQqvaosrADQDX9WQEKoUO8ZX8=
+X-Google-Smtp-Source: APXvYqyuOzu9MZlBlyPAZ1+sMzYtlHZqQtbfvDQ/pZzcle5REH+v+AVjOknrXhmJX1pYgksatO3r38jMIOd9qPCFG+k=
+X-Received: by 2002:a9d:664:: with SMTP id 91mr9655425otn.189.1571614507410;
+ Sun, 20 Oct 2019 16:35:07 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a6b:7104:: with SMTP id q4mr2713358iog.129.1571614391673;
- Sun, 20 Oct 2019 16:33:11 -0700 (PDT)
-Date:   Sun, 20 Oct 2019 16:33:11 -0700
-In-Reply-To: <0000000000007523a60576e80a47@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000008a279405955ffd35@google.com>
-Subject: Re: BUG: MAX_LOCKDEP_CHAINS too low!
-From:   syzbot <syzbot+aaa6fa4949cc5d9b7b25@syzkaller.appspotmail.com>
-To:     dvyukov@google.com, linux-kernel@vger.kernel.org, mingo@kernel.org,
-        peterz@infradead.org, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, will.deacon@arm.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+References: <20191018123534.GA6549@mwanda>
+In-Reply-To: <20191018123534.GA6549@mwanda>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 21 Oct 2019 01:34:56 +0200
+Message-ID: <CAJZ5v0jeoJrrn56VqRSoY-Mc9rp04tWYbTCsQugZV=vXQk0nNg@mail.gmail.com>
+Subject: Re: [PATCH] acpi/nfit: unlock on error in scrub_show()
+To:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Cc:     Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
+On Fri, Oct 18, 2019 at 2:38 PM Dan Carpenter <dan.carpenter@oracle.com> wrote:
+>
+> We change the locking in this function and forgot to update this error
+> path so we are accidentally still holding the "dev->lockdep_mutex".
+>
+> Fixes: 87a30e1f05d7 ("driver-core, libnvdimm: Let device subsystems add local lockdep coverage")
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+> ---
+>  drivers/acpi/nfit/core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/acpi/nfit/core.c b/drivers/acpi/nfit/core.c
+> index 1413324982f0..14e68f202f81 100644
+> --- a/drivers/acpi/nfit/core.c
+> +++ b/drivers/acpi/nfit/core.c
+> @@ -1322,7 +1322,7 @@ static ssize_t scrub_show(struct device *dev,
+>         nfit_device_lock(dev);
+>         nd_desc = dev_get_drvdata(dev);
+>         if (!nd_desc) {
+> -               device_unlock(dev);
+> +               nfit_device_unlock(dev);
+>                 return rc;
+>         }
+>         acpi_desc = to_acpi_desc(nd_desc);
+> --
 
-HEAD commit:    4fe34d61 Merge branch 'x86-urgent-for-linus' of git://git...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1176cd40e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=e0ac4d9b35046343
-dashboard link: https://syzkaller.appspot.com/bug?extid=aaa6fa4949cc5d9b7b25
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14150b40e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12e122ff600000
+Applying as a fix for 5.4, thanks!
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+aaa6fa4949cc5d9b7b25@syzkaller.appspotmail.com
-
-BUG: MAX_LOCKDEP_CHAINS too low!
-turning off the locking correctness validator.
-CPU: 0 PID: 11772 Comm: kworker/u5:486 Not tainted 5.4.0-rc3+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: hci1600 hci_power_on
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  add_chain_cache kernel/locking/lockdep.c:2816 [inline]
-  lookup_chain_cache_add kernel/locking/lockdep.c:2915 [inline]
-  validate_chain kernel/locking/lockdep.c:2936 [inline]
-  __lock_acquire.cold+0x325/0x385 kernel/locking/lockdep.c:3955
-  lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4487
-  process_one_work+0x91c/0x1740 kernel/workqueue.c:2245
-  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
-  kthread+0x361/0x430 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
+@Dan W: Please let me know if you'd rather take it yourself.
