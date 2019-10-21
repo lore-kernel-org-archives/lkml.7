@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68DE3CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 06:44:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01EEACA9EB9
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 06:44:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B0CE20700
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 06:44:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C849B2089C
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 06:44:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CoQZrJE8"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GuRCYZtG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727287AbfJUGon (ORCPT
+        id S1727312AbfJUGos (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 02:44:43 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:42462 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727239AbfJUGom (ORCPT
+        Mon, 21 Oct 2019 02:44:48 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:46398 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726125AbfJUGos (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 02:44:42 -0400
-Received: by mail-pg1-f196.google.com with SMTP id f14so7137562pgi.9
-        for <linux-kernel@vger.kernel.org>; Sun, 20 Oct 2019 23:44:41 -0700 (PDT)
+        Mon, 21 Oct 2019 02:44:48 -0400
+Received: by mail-pf1-f195.google.com with SMTP id q5so7760592pfg.13
+        for <linux-kernel@vger.kernel.org>; Sun, 20 Oct 2019 23:44:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=4ubLY45T5Za3kAnlNfoZFmM61Hil6OCulEjai2WXzcI=;
-        b=CoQZrJE8pd3pseByZay8l41UPp056cB9kwODLSA3851K7XhTlPbCii7Xqi4X5bemX5
-         PjGccbtJ/r5mwEFAwBvVQixcO0187YO2MiuZZXwkpU6l7o0B2VESceFCYyEajsZvuHX0
-         xnfOVUD7djIR6syzfPAfN2V7Oj+pvHLVMG+PE/B8lpn7Fw8Os/pj74V4zZRqcDgVm0ZV
-         MIUjFNlEPh9AF76/vx8QCRPI/ToAuDlQFrroGYjYAzCA6zevkxU/CZRwnE+q0GbzTAom
-         KJsaJc4gHykvJpdR8aH/nXRceK/AsyFtCx3z3bAI1zmRn8alr4qFzYhNnn4qtW1zM8l9
-         92UA==
+        bh=7S85Z16eqmxjvMi+R450sz/jCD08hapdQq20bxkJhIQ=;
+        b=GuRCYZtGI6OJa6X8+/Ffb8CLtebpBzKn0NZw6zffUn9sUbMUSQw/2smdjQAyEdECD3
+         dMQoJ9gWZR/CRhS+tkhIG7O7tZtUVlouDhfhyiAQw2z97JpcLK7xPgBnhtxfLaA8tn65
+         uLzm7NNQq95muYyOqE612+gA7JyzPHObNYoj3nDvcwncyUqmu2oYZUqEOp2ew25NMmgo
+         KN93tzSSewsfwDec/nSg8XESFTYjDhbU13AGcEXLTB3GLYNzOv7oMORl1H01diaRc26p
+         bkEp1OO+6DilyontJxPS9m3bzCDZfJRqYjI5195khDfCWjZv4xw6ht9zGQk0/ZCOL6cw
+         nQ2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=4ubLY45T5Za3kAnlNfoZFmM61Hil6OCulEjai2WXzcI=;
-        b=KuiyUnKs76Y4TsF/ZF6moZq4h/lYJlbmUyc2tLGKbGz0g1ZxhVqPODYyJTzViWSpN6
-         bD4HSYA2RBorj8ITIf6LAk3Hw0xQpoUXxYJeVFYZkUjlnea4pLag52EAvs6pEQt5mNOx
-         47qM4p+XnSaUSX/OmEkXyRx0sJGB8i83B0ifoBNftF+OFvA/DcLAQOuSEdDnYPdjigvy
-         c/J/V6MORxeGwdSkCtrDpTvre2gQgiJhNihkqRqGy3bnSA/jGxr5OAe5PZ6BJg1UZTre
-         tRzwOYYlgmq2NFM0zHoUI1jTftXUKQoDbbNQE2ARw32W9UHJbRa9mlqmHWFn8AqIbhLn
-         QVVQ==
-X-Gm-Message-State: APjAAAXTfW7EXiIeaZ1h86QF32EGOi+k6PjcHdStz2MnV+HbPIgB7A6Z
-        mbb9bx6laZU5h10wPm7x5jP+
-X-Google-Smtp-Source: APXvYqx/X34KDSYLxIQwk6IwNl3IygwXGrXlT6M/tzZUf6CEz+XvVwOPiU25I1YFy2gLGV51AY69Gw==
-X-Received: by 2002:a62:6842:: with SMTP id d63mr20875931pfc.166.1571640281275;
-        Sun, 20 Oct 2019 23:44:41 -0700 (PDT)
+        bh=7S85Z16eqmxjvMi+R450sz/jCD08hapdQq20bxkJhIQ=;
+        b=jQVVOFzFfqwFrfdJAqQZ5jIseOwKmcWzAOB02e8IAe42o5S08CCIuwL51jBQ+ZqoHP
+         o7s3aqa78neSyB7izmTl8OZhEvTaJmGZrE19Y7iqad0R/Yjx7rNsqoZuc0iS5+331Y3q
+         LSzn1uQKLjvP7dVZUUGqLEKJUnty0IGnmBp/J5Uvc8e2V1uQ0tnwRjnVk4SXZ4hZbh8Q
+         Gi5ItAV0uKo7UIW9LE5cdFeH9+MfLAbj4iu9tTVHT+KmxEA0UUHb0UGcbAWyuSR7U6cP
+         OzFbuGXcomIVN+oCvZCrKlKFoVXp6IhvcJQ3ePTksiUt9U9PsdcoYudFYimvGQm2wgbH
+         nSsQ==
+X-Gm-Message-State: APjAAAUbz8iHV64/v4LW3m/WOQsRhqRkNosRXMGw51/TKMX7ZrUtcSHa
+        cQfU3Co82WmXvpjunmte6ENX
+X-Google-Smtp-Source: APXvYqwxSvUROjDFsJmxjbMvpcDF5YALujo6V9ImzLknl4U15yQJoDhBjAS4yK3nij3Yun5eC568gA==
+X-Received: by 2002:a63:2889:: with SMTP id o131mr24222845pgo.444.1571640285755;
+        Sun, 20 Oct 2019 23:44:45 -0700 (PDT)
 Received: from localhost.localdomain ([2405:204:700f:8db6:2442:890f:ac37:8127])
-        by smtp.gmail.com with ESMTPSA id d4sm13156624pjs.9.2019.10.20.23.44.36
+        by smtp.gmail.com with ESMTPSA id d4sm13156624pjs.9.2019.10.20.23.44.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 20 Oct 2019 23:44:40 -0700 (PDT)
+        Sun, 20 Oct 2019 23:44:45 -0700 (PDT)
 From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com
 Cc:     linux-arm-kernel@lists.infradead.org,
         linux-unisoc@lists.infradead.org, linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org, orsonzhai@gmail.com,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v3 3/4] gpio: Add RDA Micro GPIO controller support
-Date:   Mon, 21 Oct 2019 12:14:12 +0530
-Message-Id: <20191021064413.19840-4-manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v3 4/4] MAINTAINERS: Add entry for RDA Micro GPIO driver and binding
+Date:   Mon, 21 Oct 2019 12:14:13 +0530
+Message-Id: <20191021064413.19840-5-manivannan.sadhasivam@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191021064413.19840-1-manivannan.sadhasivam@linaro.org>
 References: <20191021064413.19840-1-manivannan.sadhasivam@linaro.org>
@@ -72,352 +72,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for GPIO controller from RDA Micro. This GPIO controller
-is an in house IP, developed by RDA Micro (now Unisoc) for the use in
-RDA88* series of SoCs. There are multiple GPIO ports present in all SoCs,
-each capable of addressing 32 GPIOs. But only first 8 pins have the
-interrupt capability.
+Add MAINTAINERS entry for RDA Micro GPIO driver and devicetree binding.
 
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- drivers/gpio/Kconfig    |   9 ++
- drivers/gpio/Makefile   |   1 +
- drivers/gpio/gpio-rda.c | 294 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 304 insertions(+)
- create mode 100644 drivers/gpio/gpio-rda.c
+ MAINTAINERS | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 38e096e6925f..a896f0820a21 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -435,6 +435,15 @@ config GPIO_RCAR
- 	help
- 	  Say yes here to support GPIO on Renesas R-Car SoCs.
- 
-+config GPIO_RDA
-+	bool "RDA Micro GPIO controller support"
-+	depends on ARCH_RDA || COMPILE_TEST
-+	depends on OF_GPIO
-+	select GPIO_GENERIC
-+	select GPIOLIB_IRQCHIP
-+	help
-+	  Say Y here to support RDA Micro GPIO controller.
-+
- config GPIO_REG
- 	bool
- 	help
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index d2fd19c15bae..5c68c9a48fa3 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -115,6 +115,7 @@ obj-$(CONFIG_GPIO_PXA)			+= gpio-pxa.o
- obj-$(CONFIG_GPIO_RASPBERRYPI_EXP)	+= gpio-raspberrypi-exp.o
- obj-$(CONFIG_GPIO_RC5T583)		+= gpio-rc5t583.o
- obj-$(CONFIG_GPIO_RCAR)			+= gpio-rcar.o
-+obj-$(CONFIG_GPIO_RDA)			+= gpio-rda.o
- obj-$(CONFIG_GPIO_RDC321X)		+= gpio-rdc321x.o
- obj-$(CONFIG_GPIO_REG)			+= gpio-reg.o
- obj-$(CONFIG_ARCH_SA1100)		+= gpio-sa1100.o
-diff --git a/drivers/gpio/gpio-rda.c b/drivers/gpio/gpio-rda.c
-new file mode 100644
-index 000000000000..28dcbb58b76b
---- /dev/null
-+++ b/drivers/gpio/gpio-rda.c
-@@ -0,0 +1,294 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * RDA Micro GPIO driver
-+ *
-+ * Copyright (C) 2012 RDA Micro Inc.
-+ * Copyright (C) 2019 Manivannan Sadhasivam
-+ */
-+
-+#include <linux/bitops.h>
-+#include <linux/gpio/driver.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/spinlock.h>
-+
-+#define RDA_GPIO_OEN_VAL		0x00
-+#define RDA_GPIO_OEN_SET_OUT		0x04
-+#define RDA_GPIO_OEN_SET_IN		0x08
-+#define RDA_GPIO_VAL			0x0c
-+#define RDA_GPIO_SET			0x10
-+#define RDA_GPIO_CLR			0x14
-+#define RDA_GPIO_INT_CTRL_SET		0x18
-+#define RDA_GPIO_INT_CTRL_CLR		0x1c
-+#define RDA_GPIO_INT_CLR		0x20
-+#define RDA_GPIO_INT_STATUS		0x24
-+
-+#define RDA_GPIO_IRQ_RISE_SHIFT		0
-+#define RDA_GPIO_IRQ_FALL_SHIFT		8
-+#define RDA_GPIO_DEBOUCE_SHIFT		16
-+#define RDA_GPIO_LEVEL_SHIFT		24
-+
-+#define RDA_GPIO_IRQ_MASK		0xff
-+
-+/* Each bank consists of 32 GPIOs */
-+#define RDA_GPIO_BANK_NR	32
-+
-+struct rda_gpio {
-+	struct gpio_chip chip;
-+	void __iomem *base;
-+	spinlock_t lock;
-+	struct irq_chip irq_chip;
-+	int irq;
-+};
-+
-+static inline void rda_gpio_update(struct gpio_chip *chip, unsigned int offset,
-+				   u16 reg, int val)
-+{
-+	struct rda_gpio *rda_gpio = gpiochip_get_data(chip);
-+	void __iomem *base = rda_gpio->base;
-+	unsigned long flags;
-+	u32 tmp;
-+
-+	spin_lock_irqsave(&rda_gpio->lock, flags);
-+	tmp = readl_relaxed(base + reg);
-+
-+	if (val)
-+		tmp |= BIT(offset);
-+	else
-+		tmp &= ~BIT(offset);
-+
-+	writel_relaxed(tmp, base + reg);
-+	spin_unlock_irqrestore(&rda_gpio->lock, flags);
-+}
-+
-+static void rda_gpio_irq_mask(struct irq_data *data)
-+{
-+	struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
-+	struct rda_gpio *rda_gpio = gpiochip_get_data(chip);
-+	void __iomem *base = rda_gpio->base;
-+	u32 offset = irqd_to_hwirq(data);
-+	u32 value;
-+
-+	value = BIT(offset) << RDA_GPIO_IRQ_RISE_SHIFT;
-+	value |= BIT(offset) << RDA_GPIO_IRQ_FALL_SHIFT;
-+
-+	writel_relaxed(value, base + RDA_GPIO_INT_CTRL_CLR);
-+}
-+
-+static void rda_gpio_irq_ack(struct irq_data *data)
-+{
-+	struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
-+	u32 offset = irqd_to_hwirq(data);
-+
-+	rda_gpio_update(chip, offset, RDA_GPIO_INT_CLR, 1);
-+}
-+
-+static int rda_gpio_set_irq(struct gpio_chip *chip, u32 offset,
-+			    unsigned int flow_type)
-+{
-+	struct rda_gpio *rda_gpio = gpiochip_get_data(chip);
-+	void __iomem *base = rda_gpio->base;
-+	u32 value;
-+
-+	switch (flow_type) {
-+	case IRQ_TYPE_EDGE_RISING:
-+		/* Set rising edge trigger */
-+		value = BIT(offset) << RDA_GPIO_IRQ_RISE_SHIFT;
-+		writel_relaxed(value, base + RDA_GPIO_INT_CTRL_SET);
-+
-+		/* Switch to edge trigger interrupt */
-+		value = BIT(offset) << RDA_GPIO_LEVEL_SHIFT;
-+		writel_relaxed(value, base + RDA_GPIO_INT_CTRL_CLR);
-+		break;
-+
-+	case IRQ_TYPE_EDGE_FALLING:
-+		/* Set falling edge trigger */
-+		value = BIT(offset) << RDA_GPIO_IRQ_FALL_SHIFT;
-+		writel_relaxed(value, base + RDA_GPIO_INT_CTRL_SET);
-+
-+		/* Switch to edge trigger interrupt */
-+		value = BIT(offset) << RDA_GPIO_LEVEL_SHIFT;
-+		writel_relaxed(value, base + RDA_GPIO_INT_CTRL_CLR);
-+		break;
-+
-+	case IRQ_TYPE_EDGE_BOTH:
-+		/* Set both edge trigger */
-+		value = BIT(offset) << RDA_GPIO_IRQ_RISE_SHIFT;
-+		value |= BIT(offset) << RDA_GPIO_IRQ_FALL_SHIFT;
-+		writel_relaxed(value, base + RDA_GPIO_INT_CTRL_SET);
-+
-+		/* Switch to edge trigger interrupt */
-+		value = BIT(offset) << RDA_GPIO_LEVEL_SHIFT;
-+		writel_relaxed(value, base + RDA_GPIO_INT_CTRL_CLR);
-+		break;
-+
-+	case IRQ_TYPE_LEVEL_HIGH:
-+		/* Set high level trigger */
-+		value = BIT(offset) << RDA_GPIO_IRQ_RISE_SHIFT;
-+
-+		/* Switch to level trigger interrupt */
-+		value |= BIT(offset) << RDA_GPIO_LEVEL_SHIFT;
-+		writel_relaxed(value, base + RDA_GPIO_INT_CTRL_SET);
-+		break;
-+
-+	case IRQ_TYPE_LEVEL_LOW:
-+		/* Set low level trigger */
-+		value = BIT(offset) << RDA_GPIO_IRQ_FALL_SHIFT;
-+
-+		/* Switch to level trigger interrupt */
-+		value |= BIT(offset) << RDA_GPIO_LEVEL_SHIFT;
-+		writel_relaxed(value, base + RDA_GPIO_INT_CTRL_SET);
-+		break;
-+
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static void rda_gpio_irq_unmask(struct irq_data *data)
-+{
-+	struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
-+	u32 offset = irqd_to_hwirq(data);
-+	u32 trigger = irqd_get_trigger_type(data);
-+
-+	rda_gpio_set_irq(chip, offset, trigger);
-+}
-+
-+static int rda_gpio_irq_set_type(struct irq_data *data, unsigned int flow_type)
-+{
-+	struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
-+	u32 offset = irqd_to_hwirq(data);
-+	int ret;
-+
-+	ret = rda_gpio_set_irq(chip, offset, flow_type);
-+	if (ret)
-+		return ret;
-+
-+	if (flow_type & (IRQ_TYPE_LEVEL_LOW | IRQ_TYPE_LEVEL_HIGH))
-+		irq_set_handler_locked(data, handle_level_irq);
-+	else if (flow_type & (IRQ_TYPE_EDGE_FALLING | IRQ_TYPE_EDGE_RISING))
-+		irq_set_handler_locked(data, handle_edge_irq);
-+
-+	return 0;
-+}
-+
-+static void rda_gpio_irq_handler(struct irq_desc *desc)
-+{
-+	struct gpio_chip *chip = irq_desc_get_handler_data(desc);
-+	struct irq_chip *ic = irq_desc_get_chip(desc);
-+	struct rda_gpio *rda_gpio = gpiochip_get_data(chip);
-+	unsigned long status;
-+	u32 n, girq;
-+
-+	chained_irq_enter(ic, desc);
-+
-+	status = readl_relaxed(rda_gpio->base + RDA_GPIO_INT_STATUS);
-+	/* Only lower 8 bits are capable of generating interrupts */
-+	status &= RDA_GPIO_IRQ_MASK;
-+
-+	for_each_set_bit(n, &status, RDA_GPIO_BANK_NR) {
-+		girq = irq_find_mapping(chip->irq.domain, n);
-+		generic_handle_irq(girq);
-+	}
-+
-+	chained_irq_exit(ic, desc);
-+}
-+
-+static int rda_gpio_probe(struct platform_device *pdev)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	struct device *dev = &pdev->dev;
-+	struct gpio_irq_chip *girq;
-+	struct rda_gpio *rda_gpio;
-+	u32 ngpios;
-+	int ret;
-+
-+	rda_gpio = devm_kzalloc(dev, sizeof(*rda_gpio), GFP_KERNEL);
-+	if (!rda_gpio)
-+		return -ENOMEM;
-+
-+	ret = device_property_read_u32(dev, "ngpios", &ngpios);
-+	if (ret < 0)
-+		return ret;
-+
-+	/*
-+	 * Not all ports have interrupt capability. For instance, on
-+	 * RDA8810PL, GPIOC doesn't support interrupt. So we must handle
-+	 * those also.
-+	 */
-+	rda_gpio->irq = platform_get_irq(pdev, 0);
-+
-+	rda_gpio->base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(rda_gpio->base))
-+		return PTR_ERR(rda_gpio->base);
-+
-+	spin_lock_init(&rda_gpio->lock);
-+
-+	ret = bgpio_init(&rda_gpio->chip, dev, 4,
-+			 rda_gpio->base + RDA_GPIO_VAL,
-+			 rda_gpio->base + RDA_GPIO_SET,
-+			 rda_gpio->base + RDA_GPIO_CLR,
-+			 rda_gpio->base + RDA_GPIO_OEN_SET_OUT,
-+			 rda_gpio->base + RDA_GPIO_OEN_SET_IN,
-+			 BGPIOF_READ_OUTPUT_REG_SET);
-+	if (ret) {
-+		dev_err(dev, "bgpio_init failed\n");
-+		return ret;
-+	}
-+
-+	rda_gpio->chip.label = dev_name(dev);
-+	rda_gpio->chip.ngpio = ngpios;
-+	rda_gpio->chip.base = -1;
-+	rda_gpio->chip.parent = dev;
-+	rda_gpio->chip.of_node = np;
-+
-+	if (rda_gpio->irq >= 0) {
-+		rda_gpio->irq_chip.name = "rda-gpio",
-+		rda_gpio->irq_chip.irq_ack = rda_gpio_irq_ack,
-+		rda_gpio->irq_chip.irq_mask = rda_gpio_irq_mask,
-+		rda_gpio->irq_chip.irq_unmask = rda_gpio_irq_unmask,
-+		rda_gpio->irq_chip.irq_set_type = rda_gpio_irq_set_type,
-+		rda_gpio->irq_chip.flags = IRQCHIP_SKIP_SET_WAKE,
-+
-+		girq = &rda_gpio->chip.irq;
-+		girq->chip = &rda_gpio->irq_chip;
-+		girq->handler = handle_bad_irq;
-+		girq->default_type = IRQ_TYPE_NONE;
-+		girq->parent_handler = rda_gpio_irq_handler;
-+		girq->parent_handler_data = rda_gpio;
-+		girq->num_parents = 1;
-+		girq->parents = devm_kcalloc(dev, 1,
-+					     sizeof(*girq->parents),
-+					     GFP_KERNEL);
-+		if (!girq->parents)
-+			return -ENOMEM;
-+		girq->parents[0] = rda_gpio->irq;
-+	}
-+
-+	platform_set_drvdata(pdev, rda_gpio);
-+
-+	return devm_gpiochip_add_data(dev, &rda_gpio->chip, rda_gpio);
-+}
-+
-+static const struct of_device_id rda_gpio_of_match[] = {
-+	{ .compatible = "rda,8810pl-gpio", },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, rda_gpio_of_match);
-+
-+static struct platform_driver rda_gpio_driver = {
-+	.probe = rda_gpio_probe,
-+	.driver = {
-+		.name = "rda-gpio",
-+		.of_match_table	= rda_gpio_of_match,
-+	},
-+};
-+
-+module_platform_driver_probe(rda_gpio_driver, rda_gpio_probe);
-+
-+MODULE_DESCRIPTION("RDA Micro GPIO driver");
-+MODULE_AUTHOR("Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>");
-+MODULE_LICENSE("GPL v2");
+diff --git a/MAINTAINERS b/MAINTAINERS
+index a69e6db80c79..0303502cd146 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2150,9 +2150,11 @@ L:	linux-unisoc@lists.infradead.org (moderated for non-subscribers)
+ S:	Maintained
+ F:	arch/arm/boot/dts/rda8810pl-*
+ F:	drivers/clocksource/timer-rda.c
++F:	drivers/gpio/gpio-rda.c
+ F:	drivers/irqchip/irq-rda-intc.c
+ F:	drivers/tty/serial/rda-uart.c
+ F:	Documentation/devicetree/bindings/arm/rda.yaml
++F:	Documentation/devicetree/bindings/gpio/gpio-rda.yaml
+ F:	Documentation/devicetree/bindings/interrupt-controller/rda,8810pl-intc.txt
+ F:	Documentation/devicetree/bindings/serial/rda,8810pl-uart.txt
+ F:	Documentation/devicetree/bindings/timer/rda,8810pl-timer.txt
 -- 
 2.17.1
 
