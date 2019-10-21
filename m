@@ -7,53 +7,49 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DB1CCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:05:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D06ACA9EB0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:05:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AA892084C
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:05:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 241E62166E
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:05:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387619AbfJVAFQ (ORCPT
+        id S2387629AbfJVAFS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 20:05:16 -0400
+        Mon, 21 Oct 2019 20:05:18 -0400
 Received: from Galois.linutronix.de ([193.142.43.55]:38895 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387553AbfJVAFI (ORCPT
+        with ESMTP id S2387566AbfJVAFQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 20:05:08 -0400
+        Mon, 21 Oct 2019 20:05:16 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iMgwx-0003v4-D0; Tue, 22 Oct 2019 01:18:55 +0200
+        id 1iMgwv-0003tO-Nk; Tue, 22 Oct 2019 01:18:54 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 928781C03AB;
-        Tue, 22 Oct 2019 01:18:54 +0200 (CEST)
-Date:   Mon, 21 Oct 2019 23:18:54 -0000
-From:   "tip-bot2 for Leo Yan" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 2D3381C0489;
+        Tue, 22 Oct 2019 01:18:53 +0200 (CEST)
+Date:   Mon, 21 Oct 2019 23:18:52 -0000
+From:   "tip-bot2 for Jiri Olsa" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf tests: Disable bp_signal testing for arm64
-Cc:     Leo Yan <leo.yan@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
+Subject: [tip: perf/core] libperf: Move mmap allocation to perf_evlist__mmap_ops::get
+Cc:     Jiri Olsa <jolsa@kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Brajeswar Ghosh <brajeswar.linux@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
         Michael Petlan <mpetlan@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        Will Deacon <will@kernel.org>,
+        Stephane Eranian <eranian@google.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <20191018085531.6348-3-leo.yan@linaro.org>
-References: <20191018085531.6348-3-leo.yan@linaro.org>
+In-Reply-To: <20191017105918.20873-3-jolsa@kernel.org>
+References: <20191017105918.20873-3-jolsa@kernel.org>
 MIME-Version: 1.0
-Message-ID: <157169993406.29376.12473771029179755767.tip-bot2@tip-bot2>
+Message-ID: <157169993270.29376.15194593020616946024.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -69,112 +65,166 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     6a5f3d94cb69a185b921cb92c39888dc31009acb
-Gitweb:        https://git.kernel.org/tip/6a5f3d94cb69a185b921cb92c39888dc31009acb
-Author:        Leo Yan <leo.yan@linaro.org>
-AuthorDate:    Fri, 18 Oct 2019 16:55:31 +08:00
+Commit-ID:     3805e4f303314c2b53fb217dd8549a5b9eb06b11
+Gitweb:        https://git.kernel.org/tip/3805e4f303314c2b53fb217dd8549a5b9eb06b11
+Author:        Jiri Olsa <jolsa@kernel.org>
+AuthorDate:    Thu, 17 Oct 2019 12:59:10 +02:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitterDate: Sat, 19 Oct 2019 15:35:01 -03:00
 
-perf tests: Disable bp_signal testing for arm64
+libperf: Move mmap allocation to perf_evlist__mmap_ops::get
 
-As there are several discussions for enabling perf breakpoint signal
-testing on arm64 platform: arm64 needs to rely on single-step to execute
-the breakpointed instruction and then reinstall the breakpoint exception
-handler.  But if we hook the breakpoint with a signal, the signal
-handler will do the stepping rather than the breakpointed instruction,
-this causes infinite loops as below:
+Move allocation of the mmap array into perf_evlist__mmap_ops::get, to
+centralize the mmap allocation.
 
-         Kernel space              |            Userspace
-  ---------------------------------|--------------------------------
-                                   |  __test_function() -> hit
-				   |                       breakpoint
-  breakpoint_handler()             |
-    `-> user_enable_single_step()  |
-  do_signal()                      |
-                                   |  sig_handler() -> Step one
-				   |                instruction and
-				   |                trap to kernel
-  single_step_handler()            |
-    `-> reinstall_suspended_bps()  |
-                                   |  __test_function() -> hit
-				   |     breakpoint again and
-				   |     repeat up flow infinitely
+Also move nr_mmap setup to perf_evlist__mmap_ops so it's centralized and
+shared by both perf and libperf mmap code.
 
-As Will Deacon mentioned [1]: "that we require the overflow handler to
-do the stepping on arm/arm64, which is relied upon by GDB/ptrace. The
-hw_breakpoint code is a complete disaster so my preference would be to
-rip out the perf part and just implement something directly in ptrace,
-but it's a pretty horrible job".  Though Will commented this on arm
-architecture, but the comment also can apply on arm64 architecture.
-
-For complete information, I searched online and found a few years back,
-Wang Nan sent one patch 'arm64: Store breakpoint single step state into
-pstate' [2]; the patch tried to resolve this issue by avoiding single
-stepping in signal handler and defer to enable the signal stepping when
-return to __test_function().  The fixing was not merged due to the
-concern for missing to handle different usage cases.
-
-Based on the info, the most feasible way is to skip Perf breakpoint
-signal testing for arm64 and this could avoid the duplicate
-investigation efforts when people see the failure.  This patch skips
-this case on arm64 platform, which is same with arm architecture.
-
-[1] https://lkml.org/lkml/2018/11/15/205
-[2] https://lkml.org/lkml/2015/12/23/477
-
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Brajeswar Ghosh <brajeswar.linux@gmail.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jin Yao <yao.jin@linux.intel.com>
 Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Souptick Joarder <jrdr.linux@gmail.com>
-Cc: Will Deacon <will@kernel.org>
-Link: http://lore.kernel.org/lkml/20191018085531.6348-3-leo.yan@linaro.org
+Cc: Stephane Eranian <eranian@google.com>
+Link: http://lore.kernel.org/lkml/20191017105918.20873-3-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/bp_signal.c | 15 ++++++---------
- 1 file changed, 6 insertions(+), 9 deletions(-)
+ tools/perf/lib/evlist.c  | 42 +++++++++++++++++++++++----------------
+ tools/perf/util/evlist.c | 24 ++++++++--------------
+ 2 files changed, 34 insertions(+), 32 deletions(-)
 
-diff --git a/tools/perf/tests/bp_signal.c b/tools/perf/tests/bp_signal.c
-index c1c2c13..166f411 100644
---- a/tools/perf/tests/bp_signal.c
-+++ b/tools/perf/tests/bp_signal.c
-@@ -49,14 +49,6 @@ asm (
- 	"__test_function:\n"
- 	"incq (%rdi)\n"
- 	"ret\n");
--#elif defined (__aarch64__)
--extern void __test_function(volatile long *ptr);
--asm (
--	".globl __test_function\n"
--	"__test_function:\n"
--	"str x30, [x0]\n"
--	"ret\n");
+diff --git a/tools/perf/lib/evlist.c b/tools/perf/lib/evlist.c
+index 854efff..73aac6b 100644
+--- a/tools/perf/lib/evlist.c
++++ b/tools/perf/lib/evlist.c
+@@ -338,10 +338,6 @@ static struct perf_mmap* perf_evlist__alloc_mmap(struct perf_evlist *evlist, boo
+ 	int i;
+ 	struct perf_mmap *map;
+ 
+-	evlist->nr_mmaps = perf_cpu_map__nr(evlist->cpus);
+-	if (perf_cpu_map__empty(evlist->cpus))
+-		evlist->nr_mmaps = perf_thread_map__nr(evlist->threads);
 -
- #else
- static void __test_function(volatile long *ptr)
+ 	map = zalloc(evlist->nr_mmaps * sizeof(struct perf_mmap));
+ 	if (!map)
+ 		return NULL;
+@@ -384,18 +380,22 @@ static void perf_evlist__set_sid_idx(struct perf_evlist *evlist,
+ static struct perf_mmap*
+ perf_evlist__mmap_cb_get(struct perf_evlist *evlist, bool overwrite, int idx)
  {
-@@ -302,10 +294,15 @@ bool test__bp_signal_is_supported(void)
- 	 * stepping into the SIGIO handler and getting stuck on the
- 	 * breakpointed instruction.
- 	 *
-+	 * Since arm64 has the same issue with arm for the single-step
-+	 * handling, this case also gets suck on the breakpointed
-+	 * instruction.
-+	 *
- 	 * Just disable the test for these architectures until these
- 	 * issues are resolved.
- 	 */
--#if defined(__powerpc__) || defined(__s390x__) || defined(__arm__)
-+#if defined(__powerpc__) || defined(__s390x__) || defined(__arm__) || \
-+    defined(__aarch64__)
- 	return false;
- #else
- 	return true;
+-	struct perf_mmap *map = &evlist->mmap[idx];
++	struct perf_mmap *maps;
+ 
+-	if (overwrite) {
+-		if (!evlist->mmap_ovw) {
+-			evlist->mmap_ovw = perf_evlist__alloc_mmap(evlist, true);
+-			if (!evlist->mmap_ovw)
+-				return NULL;
+-		}
+-		map = &evlist->mmap_ovw[idx];
++	maps = overwrite ? evlist->mmap_ovw : evlist->mmap;
++
++	if (!maps) {
++		maps = perf_evlist__alloc_mmap(evlist, overwrite);
++		if (!maps)
++			return NULL;
++
++		if (overwrite)
++			evlist->mmap_ovw = maps;
++		else
++			evlist->mmap = maps;
+ 	}
+ 
+-	return map;
++	return &maps[idx];
+ }
+ 
+ #define FD(e, x, y) (*(int *) xyarray__entry(e->fd, x, y))
+@@ -556,6 +556,17 @@ out_unmap:
+ 	return -1;
+ }
+ 
++static int perf_evlist__nr_mmaps(struct perf_evlist *evlist)
++{
++	int nr_mmaps;
++
++	nr_mmaps = perf_cpu_map__nr(evlist->cpus);
++	if (perf_cpu_map__empty(evlist->cpus))
++		nr_mmaps = perf_thread_map__nr(evlist->threads);
++
++	return nr_mmaps;
++}
++
+ int perf_evlist__mmap_ops(struct perf_evlist *evlist,
+ 			  struct perf_evlist_mmap_ops *ops,
+ 			  struct perf_mmap_param *mp)
+@@ -567,10 +578,7 @@ int perf_evlist__mmap_ops(struct perf_evlist *evlist,
+ 	if (!ops || !ops->get || !ops->mmap)
+ 		return -EINVAL;
+ 
+-	if (!evlist->mmap)
+-		evlist->mmap = perf_evlist__alloc_mmap(evlist, false);
+-	if (!evlist->mmap)
+-		return -ENOMEM;
++	evlist->nr_mmaps = perf_evlist__nr_mmaps(evlist);
+ 
+ 	perf_evlist__for_each_entry(evlist, evsel) {
+ 		if ((evsel->attr.read_format & PERF_FORMAT_ID) &&
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index 6cda5a3..5cded4e 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -599,9 +599,6 @@ static struct mmap *evlist__alloc_mmap(struct evlist *evlist,
+ 	int i;
+ 	struct mmap *map;
+ 
+-	evlist->core.nr_mmaps = perf_cpu_map__nr(evlist->core.cpus);
+-	if (perf_cpu_map__empty(evlist->core.cpus))
+-		evlist->core.nr_mmaps = perf_thread_map__nr(evlist->core.threads);
+ 	map = zalloc(evlist->core.nr_mmaps * sizeof(struct mmap));
+ 	if (!map)
+ 		return NULL;
+@@ -639,19 +636,21 @@ static struct perf_mmap*
+ perf_evlist__mmap_cb_get(struct perf_evlist *_evlist, bool overwrite, int idx)
+ {
+ 	struct evlist *evlist = container_of(_evlist, struct evlist, core);
+-	struct mmap *maps = evlist->mmap;
++	struct mmap *maps;
+ 
+-	if (overwrite) {
+-		maps = evlist->overwrite_mmap;
++	maps = overwrite ? evlist->overwrite_mmap : evlist->mmap;
+ 
+-		if (!maps) {
+-			maps = evlist__alloc_mmap(evlist, true);
+-			if (!maps)
+-				return NULL;
++	if (!maps) {
++		maps = evlist__alloc_mmap(evlist, overwrite);
++		if (!maps)
++			return NULL;
+ 
++		if (overwrite) {
+ 			evlist->overwrite_mmap = maps;
+ 			if (evlist->bkw_mmap_state == BKW_MMAP_NOTREADY)
+ 				perf_evlist__toggle_bkw_mmap(evlist, BKW_MMAP_RUNNING);
++		} else {
++			evlist->mmap = maps;
+ 		}
+ 	}
+ 
+@@ -812,11 +811,6 @@ int evlist__mmap_ex(struct evlist *evlist, unsigned int pages,
+ 		.mmap = perf_evlist__mmap_cb_mmap,
+ 	};
+ 
+-	if (!evlist->mmap)
+-		evlist->mmap = evlist__alloc_mmap(evlist, false);
+-	if (!evlist->mmap)
+-		return -ENOMEM;
+-
+ 	evlist->core.mmap_len = evlist__mmap_size(pages);
+ 	pr_debug("mmap size %zuB\n", evlist->core.mmap_len);
+ 	mp.core.mask = evlist->core.mmap_len - page_size - 1;
