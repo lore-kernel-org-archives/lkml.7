@@ -2,116 +2,108 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6DD5CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:55:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E31CA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:56:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CD422067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:55:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8108D2067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:56:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571648103;
-	bh=P/ILjmf9K7qy+5ndurAox0KwdPha8scfK03vxEE4NRY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=iJynLQPS5pI9Lh4nNdq3hlIZBD0DEo39n3uXEdjY3Zjg0ePqvIhquTQ2VVzYAlpLy
-	 eqJh+PC0hEDh2ThNi4jbapqraTCA231oE+tOKxneBjjxkvy9D2rF/18tjxEdsladaS
-	 czK38hwk8HkVPF6RyjYOyjoJyiWSpBRyEcpr+YiM=
+	s=default; t=1571648180;
+	bh=4qS0Y3y/eO2c0yUyv0E2FKYTWHXivXy74JdrTgveybc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=e6KBq9n0NJssL5ji5X8ms8ITU0uRebb3yH/55u/3UED7JT1KrRrI5G9BSgHVjLuFV
+	 LPwxCGub1LD9IxYCiTibZjv9V8dc4dMaKKWDDUXrFQZHzvDIAbSqpbOQSgdoNSWFLY
+	 9hDC7ZJ04ynloB3AIU5z3YPiIAVDYsNF87VOWTUQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727279AbfJUIzC (ORCPT
+        id S1727268AbfJUI4T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 04:55:02 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:42827 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726648AbfJUIzC (ORCPT
+        Mon, 21 Oct 2019 04:56:19 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:46113 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726648AbfJUI4S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 04:55:02 -0400
-Received: by mail-oi1-f195.google.com with SMTP id i185so10356888oif.9;
-        Mon, 21 Oct 2019 01:55:00 -0700 (PDT)
+        Mon, 21 Oct 2019 04:56:18 -0400
+Received: by mail-lf1-f65.google.com with SMTP id t8so9382639lfc.13;
+        Mon, 21 Oct 2019 01:56:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=P/ILjmf9K7qy+5ndurAox0KwdPha8scfK03vxEE4NRY=;
-        b=qcIdAx+pCT2mvNclo7bSkh3t1yfqyHeWFKZL+trru+D74F9qqvwzrzfgbFrhCLelCH
-         sy+cOMGn0SDsiQrJNBwtMjKsLUwa3qxNehbuA0tNAG8ev326bQ7meCnRF8TgmUkq/phr
-         SmzxuclRSKqNS3byHFotU9M8cOIyIogL5+pU952zYSBr3vFLHg0Xg2rjver8K6Z7YY7B
-         6x2zvJ5RSxf66rUNDUzzKm7A0J1/HLTdE914hFIZhLGI9pV2IrK5kTGHtsFiEeT1Ocyw
-         aHKGWLcCXZFPAm/GXKTBmM6pllNN/2y9+VRrxqFdLLbLWpcfmoxNip/Ub3KwrvDVn6GV
-         ovvw==
-X-Gm-Message-State: APjAAAWxsjiwYzVkxkyvT47sWH1hukgyP2V6IhebSCsMi5+kdI4nOQK9
-        zKVxXUlSbQGet8wmx3umU4AJ462++Y6jAXPhTv4=
-X-Google-Smtp-Source: APXvYqxjzY5Z9AlzOzvJ1XuK2u9xTXSln0v5M1CtCTChjomBuQeW7TgO9aX3S6FSb4eoCSqoL9ysnO+NpbIvsAV6Oss=
-X-Received: by 2002:aca:5885:: with SMTP id m127mr18881140oib.110.1571648099816;
- Mon, 21 Oct 2019 01:54:59 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+TVhX0pj0cp6PSiJ52MPNmOFMdXEiWzFfisANukiR/A=;
+        b=PzJcr1STgaFqPo9lnBj1xDOoCdd+IaDmTpZKkGoE62joTo/L8d81vrXVGmofFj6Uot
+         nvp3OidK/Hia42ZnzZ9FcDr3sqXCTF/UbXSYxeoEBNoENocg0xBQRAJEB042NJ7kIiTK
+         Kv/uPuW9HWC8FmnYVLN4UGwVqn8HLSzg348y+ZoZrxFJv3UsgnXhQ8m9cBukaSN7G344
+         fy4w6oP4OkIi7jStuWCNqU+tpiW6xBNvukPr5L5gLlkMNxSO9ekYNlanx5mM9cPCpnxn
+         ugGkKXKVBpu7gSXq6xuwZb4dadO3IlcHLMSmFVbzVJ3ePweviIjWBbPTcDG4SzwX8oHt
+         mvnA==
+X-Gm-Message-State: APjAAAUOW2F06NiP0FHmTS4Kdy0dmvHRmCkoA1eybGhcfGf/yEkx6ECB
+        mMISpTFg2nYWG/nmWB5JNOsgUXiq
+X-Google-Smtp-Source: APXvYqzquYpUqEiEGDWjfqxRoITpWOiOqXDPraMRA4C29J5VcB4j+QFSHJXDWaT43iL9bW95n09JWg==
+X-Received: by 2002:a19:e018:: with SMTP id x24mr12198432lfg.191.1571648175037;
+        Mon, 21 Oct 2019 01:56:15 -0700 (PDT)
+Received: from xi.terra (c-51f1e055.07-184-6d6c6d4.bbcust.telenor.se. [85.224.241.81])
+        by smtp.gmail.com with ESMTPSA id c22sm453212lfj.28.2019.10.21.01.56.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 21 Oct 2019 01:56:14 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.92.2)
+        (envelope-from <johan@kernel.org>)
+        id 1iMTUJ-0008Gb-3L; Mon, 21 Oct 2019 10:56:27 +0200
+Date:   Mon, 21 Oct 2019 10:56:27 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Johan Hovold <johan@kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Oliver Neukum <oneukum@suse.com>,
+        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable <stable@vger.kernel.org>
+Subject: Re: [PATCH RFC v2 2/2] USB: ldusb: fix ring-buffer locking
+Message-ID: <20191021085627.GD24768@localhost>
+References: <20191018151955.25135-1-johan@kernel.org>
+ <20191018151955.25135-3-johan@kernel.org>
+ <20191018185458.GA1191145@kroah.com>
 MIME-Version: 1.0
-References: <20190814213118.28473-1-kherbst@redhat.com> <2215840.qs0dBhReda@kreacher>
- <CACO55ttC-o9bKU7nHNcfjm2YnffiupQ7UHUt7BYL3fu+yEyTbw@mail.gmail.com>
- <5228680.jBuKzensJx@kreacher> <CAJ=jquZLU2=yxayGCs=XGghxdMMre6qAWRY0Q4VErjBGqeWdjQ@mail.gmail.com>
- <CAJZ5v0hogSM3OgfJ0GFn7+BYwxR05Hb5ZMLo=NiB2wmpu=qeug@mail.gmail.com> <CACO55tvAyE1t2Bm8J=Yb_Gi5PDAgof=mRsJAKHFxOvEZpV-qGg@mail.gmail.com>
-In-Reply-To: <CACO55tvAyE1t2Bm8J=Yb_Gi5PDAgof=mRsJAKHFxOvEZpV-qGg@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 21 Oct 2019 10:54:48 +0200
-Message-ID: <CAJZ5v0hedXR13mw2FANuMNNOx0XmXiUUTus5C14Y-ADGteM4hA@mail.gmail.com>
-Subject: Re: [Nouveau] [PATCH 1/7] Revert "ACPI / OSI: Add OEM _OSI string to
- enable dGPU direct output"
-To:     Karol Herbst <kherbst@redhat.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Alex Hung <alex.hung@canonical.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Dave Airlie <airlied@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Dave Airlie <airlied@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191018185458.GA1191145@kroah.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 10:48 AM Karol Herbst <kherbst@redhat.com> wrote:
->
-> fyi: I decided to go for a different workaround to fix the runpm
-> issues observed with nvidia gpus with nouveau in the "pci: prevent
-> putting nvidia GPUs into lower device states on certain intel bridges"
-> thread
+On Fri, Oct 18, 2019 at 11:54:58AM -0700, Greg Kroah-Hartman wrote:
+> On Fri, Oct 18, 2019 at 05:19:55PM +0200, Johan Hovold wrote:
+> > The custom ring-buffer implementation was merged without any locking
+> > whatsoever, but a spinlock was later added by commit 9d33efd9a791
+> > ("USB: ldusb bugfix").
+> > 
+> > The lock did not cover the loads from the ring-buffer entry after
+> > determining the buffer was non-empty, nor the update of the tail index
+> > once the entry had been processed. The former could lead to stale data
+> > being returned, while the latter could lead to memory corruption on
+> > sufficiently weakly ordered architectures.
+> 
+> Ugh.
+> 
+> This almost looks sane, but what's the odds there is some other issue in
+> here as well?  Would it make sense to just convert the code to use the
+> "standard" ring buffer code instead?
 
-OK, I've seen that.
+Yeah, long term that may be the right thing to do, but I wanted a
+minimal fix addressing the issue at hand without having to reimplement
+the driver and fix all other (less-critical) issues in there...
 
-> that's on the pci and pm mailing list. Maybe it makes sense to wait
-> for that to land before actually removing the ACPI workarounds here?
+For the ring-buffer corruption / info-leak issue, these two patches
+should be sufficient though.
 
-Sounds reasonable.
+Copying the ring-buffer entry to a temporary buffer while holding the
+lock might still be preferred to avoid having to deal with barrier
+subtleties. But unless someone speaks out against 2/2, I'd just go ahead
+and apply it.
 
-> The workaround I had in this series didn't seem to be reliable enough,
-> so I ditched that approached.
-
-OK, please let me know when the _OSI string in question can be dropped.
-
-> On Mon, Oct 21, 2019 at 10:14 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> >
-> > On Mon, Oct 21, 2019 at 4:14 AM Alex Hung <alex.hung@canonical.com> wrote:
-> > >
-> > > We have done some tests on three of Intel + nVidia configuration
-> > > systems with OEM _OSI strings removed - while some bugs are still
-> > > observed, ex. one out of three has suspend/resume issues, no system
-> > > crashes were observed - the biggest issue that worries us.
-> > >
-> > > The positive results give us confident to ack the removal of the OEM
-> > > _OSI strings. While our tests were not able to cover all possible I+N
-> > > systems, we are sure we can fix issues along the way. If there aren't
-> > > systems that cannot be fixed without these OEM _OSI strings, these
-> > > strings should probably enable with DMI quirks (possible future
-> > > patches) so they won't affect others.
-> > >
-> > > Acked-by: Alex Hung <alex.hung@canonical.com>
-> >
-> > OK, thanks!
-> >
-> > I can queue this up or if it's better to route it through the DRM
-> > tree, please do that (and let me know).
+Johan
