@@ -2,82 +2,90 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B857ECA9EB0
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:30:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9803CA9EB0
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:31:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 990202084B
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:30:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9EC820656
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:31:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729240AbfJUOaQ (ORCPT
+        id S1729150AbfJUObO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 10:30:16 -0400
-Received: from muru.com ([72.249.23.125]:38364 "EHLO muru.com"
+        Mon, 21 Oct 2019 10:31:14 -0400
+Received: from muru.com ([72.249.23.125]:38392 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727406AbfJUOaP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 10:30:15 -0400
+        id S1726977AbfJUObO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 10:31:14 -0400
 Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id A43AE80CC;
-        Mon, 21 Oct 2019 14:30:46 +0000 (UTC)
-Date:   Mon, 21 Oct 2019 07:30:08 -0700
+        by muru.com (Postfix) with ESMTPS id 2A172810A;
+        Mon, 21 Oct 2019 14:31:48 +0000 (UTC)
+Date:   Mon, 21 Oct 2019 07:31:10 -0700
 From:   Tony Lindgren <tony@atomide.com>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        David Sterba <dsterba@suse.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mmc@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com
-Subject: Re: [PATCH v2 07/11] omap: remove old hsmmc.[ch] and in Makefile
-Message-ID: <20191021143008.GS5610@atomide.com>
-References: <cover.1571510481.git.hns@goldelico.com>
- <9bd4c0bb0df26523d7f5265cdb06d86d63dafba8.1571510481.git.hns@goldelico.com>
+To:     Stephen Kitt <steve@sk2.org>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Tero Kristo <t-kristo@ti.com>, linux-clk@vger.kernel.org,
+        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] clk/ti/adpll: allocate room for terminating null
+Message-ID: <20191021143110.GT5610@atomide.com>
+References: <20191019155441.2b1b349f@heffalump.sk2.org>
+ <20191019140634.15596-1-steve@sk2.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9bd4c0bb0df26523d7f5265cdb06d86d63dafba8.1571510481.git.hns@goldelico.com>
+In-Reply-To: <20191019140634.15596-1-steve@sk2.org>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* H. Nikolaus Schaller <hns@goldelico.com> [191019 18:43]:
-> --- a/arch/arm/mach-omap2/Makefile
-> +++ b/arch/arm/mach-omap2/Makefile
-> @@ -216,7 +216,6 @@ obj-$(CONFIG_MACH_NOKIA_N8X0)		+= board-n8x0.o
+* Stephen Kitt <steve@sk2.org> [191019 14:07]:
+> The buffer allocated in ti_adpll_clk_get_name doesn't account for the
+> terminating null. This patch switches to devm_kasprintf to avoid
+> overflowing.
+> 
+> Signed-off-by: Stephen Kitt <steve@sk2.org>
+> ---
+> Changes since v2:
+>   - Move "adpll" into the format string and drop base_name entirely.
+> 
+> Changes since v1:
+>   - Use devm_kasprintf instead of manually allocating the target
+>     buffer.
+
+Acked-by: Tony Lindgren <tony@atomide.com>
+
+> ---
+>  drivers/clk/ti/adpll.c | 11 ++---------
+>  1 file changed, 2 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/clk/ti/adpll.c b/drivers/clk/ti/adpll.c
+> index fdfb90058504..bb2f2836dab2 100644
+> --- a/drivers/clk/ti/adpll.c
+> +++ b/drivers/clk/ti/adpll.c
+> @@ -194,15 +194,8 @@ static const char *ti_adpll_clk_get_name(struct ti_adpll_data *d,
+>  		if (err)
+>  			return NULL;
+>  	} else {
+> -		const char *base_name = "adpll";
+> -		char *buf;
+> -
+> -		buf = devm_kzalloc(d->dev, 8 + 1 + strlen(base_name) + 1 +
+> -				    strlen(postfix), GFP_KERNEL);
+> -		if (!buf)
+> -			return NULL;
+> -		sprintf(buf, "%08lx.%s.%s", d->pa, base_name, postfix);
+> -		name = buf;
+> +		name = devm_kasprintf(d->dev, GFP_KERNEL, "%08lx.adpll.%s",
+> +				      d->pa, postfix);
+>  	}
 >  
->  # Platform specific device init code
->  
-> -omap-hsmmc-$(CONFIG_MMC_OMAP_HS)	:= hsmmc.o
->  obj-y					+= $(omap-hsmmc-m) $(omap-hsmmc-y)
-
-The related obj-y line can go now too, right?
-
-And looks like common.h also has struct omap2_hsmmc_info
-so maybe check by grepping for hsmmc_info to see it's gone.
-
-Regards,
-
-Tony
+>  	return name;
+> -- 
+> 2.20.1
+> 
