@@ -2,171 +2,127 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F75ECA9EB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 18:08:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9230CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 18:08:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C49120B7C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 18:08:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8CED20882
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 18:08:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KDFjqE17"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="OH+QEsF7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729980AbfJUSID (ORCPT
+        id S1730030AbfJUSIG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 14:08:03 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:43281 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727110AbfJUSIC (ORCPT
+        Mon, 21 Oct 2019 14:08:06 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.52]:35936 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729878AbfJUSIE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 14:08:02 -0400
-Received: by mail-oi1-f193.google.com with SMTP id t84so11821050oih.10;
-        Mon, 21 Oct 2019 11:08:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=UFzcie1Kdy+TQnFgDdcnkE0/mTEbBivghAaYrK9KZs8=;
-        b=KDFjqE171QwDsMriP+7dTO2DolIsNlI3o+umpcWe+vJaAfJkpr5v8KSGySpxTcBNXn
-         c4TU666kawAQS0CxETuCQDHsw4fe0rXc3UL8pvmPugYog99/rb0akaHtkM2OsOdsqV9T
-         pcjxoKlS4V/r7b1YJPXSffHKizDBIrZEZ2ydb0TkvY/sKJnfe8Eos5RAFwqgPWxkdiDI
-         ujpKiV+5rQPmHjde7Lz2P3ojbW8yUqvKkgHRKUXqtv4NOHszg+u+lNFMAqX1KKYpGUrs
-         u76WQkZFpqvEgRfh7fjjJobJhzj63OGh5XJURcA1Bqa941WecDGluQn0j60Go7ZinUh4
-         8VIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=UFzcie1Kdy+TQnFgDdcnkE0/mTEbBivghAaYrK9KZs8=;
-        b=OtV4QiWviFf6pkDryAx5Qil6aY321pquatQsBctsii6gLLauaHdrhbzKA8RC7OUaNX
-         uatytr/znck9j1et1oOauhJ8X+fcoou+WysbdUE6EyM62atyGHaREtWsHS3KHZtm70NC
-         f7i0eto1HS2GJDIloKrEkR+xFKeU/SFrMfFnwQDyptwN6cSvMkaEipQLJtQVBCbgEemJ
-         K8AVKCo/WneCo2JVNKDI7/bpYGqF73YBXXZEbkbZjAE4LjmhtXAZB9Q2gM48boUoKShz
-         eWwP55qMvpmnc+2JQfpDZUb6Qyfx3v7n6C2PsuJDK/sqCxzGFgx973jAbBrwRhVFTvDT
-         EH6w==
-X-Gm-Message-State: APjAAAVjVPZ/KJ6OE8Q/tKSZpmLwLiQmtC50zxgWukgNhtGT3ES0oPwA
-        gO2ztExbjKxqkSz6JWNW7co=
-X-Google-Smtp-Source: APXvYqxMuJx275nZoTHfvIzsgLsAMZziiN0W1oqwo4vbRBZBcmabAKtm7+5+R02HNdWQBW6hbSeyZw==
-X-Received: by 2002:aca:1b10:: with SMTP id b16mr20769811oib.110.1571681281993;
-        Mon, 21 Oct 2019 11:08:01 -0700 (PDT)
-Received: from [100.71.96.87] ([143.166.81.254])
-        by smtp.gmail.com with ESMTPSA id v132sm3947565oif.34.2019.10.21.11.08.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 21 Oct 2019 11:08:01 -0700 (PDT)
-Subject: Re: [PATCH v3 2/3] PCI: pciehp: Wait for PDS if in-band presence is
- disabled
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Austin Bolen <austin_bolen@dell.com>, keith.busch@intel.com,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, lukas@wunner.de
-References: <20191017193256.3636-1-stuart.w.hayes@gmail.com>
- <20191017193256.3636-3-stuart.w.hayes@gmail.com>
- <20191021134111.GK2819@lahna.fi.intel.com>
-From:   Stuart Hayes <stuart.w.hayes@gmail.com>
-Message-ID: <2ba3b9ea-488b-91ea-ba41-0602efaa21f4@gmail.com>
-Date:   Mon, 21 Oct 2019 13:08:00 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20191021134111.GK2819@lahna.fi.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 21 Oct 2019 14:08:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1571681282;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=qQ6zV65O4QTCFnYrPW5AcyzqoTnREY7XPbgJ3s1IDW8=;
+        b=OH+QEsF7qliA4AI9mvrnicGWFLMcpuY9MqzuAT7wW1sa+9GRkIx1vaVlSIbfhMBMv0
+        NS3/R2t97sq1iP1MJmGf20rkY9S3BMwUYAhsDKNxMD55NNt4f5tsm6CGOhBeoDqiVWqg
+        vXZfuPoPYF7Uhl21FK6i9d/73TExoANaC6RynmClpWDpadd66hjnX9OrioTdY7rfNio4
+        aLr4Tg3urEHez4D9kZV8rV9GXCzW42jtu5ahFuRjmuqhhf4rOaqbzNuUecCpFtGCJhnn
+        tfsNdV/WtxciK7Y+MifqSv+y+m/5RANFDMSQGaP32r6aM09ILJAuizAGWeFEPffg3KxA
+        5yUQ==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDVCbXA4Ewxc="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 44.28.1 DYNA|AUTH)
+        with ESMTPSA id R0b2a8v9LI7xM5P
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Mon, 21 Oct 2019 20:07:59 +0200 (CEST)
+Content-Type: text/plain; charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: [PATCH 1/7] dt-bindings: gpu: pvrsgx: add initial bindings
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20191021172557.GB5610@atomide.com>
+Date:   Mon, 21 Oct 2019 20:07:59 +0200
+Cc:     Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <C6CD5A50-7F0A-4F56-ABB9-CAEDF7E47A5D@goldelico.com>
+References: <cover.1571424390.git.hns@goldelico.com> <f0fb68dc7bc027e5e911721852f6bc6fa2d77a63.1571424390.git.hns@goldelico.com> <CAL_Jsq+obsTSU3iP1wm_3-FsAJ4Mxiz0NbMY1_h5NeFn67Sj+A@mail.gmail.com> <CEA29A3B-4116-4FE3-8E18-0C97353688DC@goldelico.com> <20191021172557.GB5610@atomide.com>
+To:     Tony Lindgren <tony@atomide.com>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+> Am 21.10.2019 um 19:25 schrieb Tony Lindgren <tony@atomide.com>:
+>=20
+> * H. Nikolaus Schaller <hns@goldelico.com> [191021 15:46]:
+>>> Am 21.10.2019 um 17:07 schrieb Rob Herring <robh+dt@kernel.org>:
+>>> On Fri, Oct 18, 2019 at 1:46 PM H. Nikolaus Schaller =
+<hns@goldelico.com> wrote:
+>>>> +Optional properties:
+>>>> +- timer:       the timer to be used by the driver.
+>>>=20
+>>> Needs a better description and vendor prefix at least.
+>>=20
+>> I am not yet sure if it is vendor specific or if all
+>> SGX implementations need some timer.
+>>=20
+>>>=20
+>>> Why is this needed rather than using the OS's timers?
+>>=20
+>> Because nobody understands the current (out of tree and
+>> planned for staging) driver well enough what the timer
+>> is doing. It is currently hard coded that some omap refer
+>> to timer7 and others use timer11.
+>=20
+> Just configure it in the driver based on the compatible
+> value to keep it out of the dts. It's best to stick to
+> standard bindings.
 
-On 10/21/19 8:41 AM, Mika Westerberg wrote:
-> On Thu, Oct 17, 2019 at 03:32:55PM -0400, Stuart Hayes wrote:
->> From: Alexandru Gagniuc <mr.nuke.me@gmail.com>
->>
->> When inband presence is disabled, PDS may come up at any time, or not
->> at all. PDS being low may indicate that the card is still mating, and
->> we could expect contact bounce to bring down the link as well.
->>
->> It is reasonable to assume that most cards will mate in a hotplug slot
->> in about a second. Thus, when we know PDS only reflects out-of-band
->> presence, it's worthwhile to wait the extra second or so to make sure
->> the card is properly mated before loading the driver, and to prevent
->> the hotplug code from disabling a device if the presence detect change
->> goes active after the device is enabled.
->>
->> Signed-off-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
->> Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
-> 
-> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> 
-> One nit below.
-> 
->> ---
->> v2:
->>   replace while(true) loop with do...while
->> v3
->>   remove unused variable declaration (pds)
->>   modify text of warning message
->>
->>  drivers/pci/hotplug/pciehp_hpc.c | 19 +++++++++++++++++++
->>  1 file changed, 19 insertions(+)
->>
->> diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
->> index dc109d521f30..02eb811a014f 100644
->> --- a/drivers/pci/hotplug/pciehp_hpc.c
->> +++ b/drivers/pci/hotplug/pciehp_hpc.c
->> @@ -242,6 +242,22 @@ static bool pci_bus_check_dev(struct pci_bus *bus, int devfn)
->>  	return found;
->>  }
->>  
->> +static void pcie_wait_for_presence(struct pci_dev *pdev)
->> +{
->> +	int timeout = 1250;
->> +	u16 slot_status;
->> +
->> +	do {
->> +		pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &slot_status);
->> +		if (!!(slot_status & PCI_EXP_SLTSTA_PDS))
-> 
-> It is more readable if you write it like:
-> 
-> 		if (slot_status & PCI_EXP_SLTSTA_PDS)
-> 
+IMHO leads to ugly code... Since the timer is not part of
+the SGX IPR module but one of the OMAP timers it is sort
+of hardware connection that can be chosen a little arbitrarily.
 
-I agree, it is more readable, and the double bang shouldn't be needed for an 
-"if" condition.  Thanks.
+This is the main reason why I think adding it to a device tree
+source so that a board that really requires to use a timer
+for a different purpose, can reassign it. This is not possible
+if we hard-code that into the driver by scanning for
+compatible. In that case the driver must check board compatible
+names...
 
->> +			return;
->> +		msleep(10);
->> +		timeout -= 10;
->> +	} while (timeout > 0);
->> +
->> +	pci_info(pdev, "Timeout waiting for Presence Detect state to be set\n");
->> +}
->> +
->>  int pciehp_check_link_status(struct controller *ctrl)
->>  {
->>  	struct pci_dev *pdev = ctrl_dev(ctrl);
->> @@ -251,6 +267,9 @@ int pciehp_check_link_status(struct controller *ctrl)
->>  	if (!pcie_wait_for_link(pdev, true))
->>  		return -1;
->>  
->> +	if (ctrl->inband_presence_disabled)
->> +		pcie_wait_for_presence(pdev);
->> +
->>  	found = pci_bus_check_dev(ctrl->pcie->port->subordinate,
->>  					PCI_DEVFN(0, 0));
->>  
->> -- 
->> 2.18.1
+But if we gain a better understanding of its role in the driver
+(does it really need a dedicated timer and for what and which
+properties the timer must have) we can probably replace it.
+
+>=20
+>>>> +- img,cores:   number of cores. Defaults to <1>.
+>>>=20
+>>> Not discoverable?
+>>=20
+>> Not sure if it is. This is probably available in undocumented
+>> registers of the sgx.
+>=20
+> This too, and whatever non-standrd other properities
+> you might have.
+
+Here it is a feature of the SGX IPR of the SoC, i.e.
+describes that the hardware has one or two cores.
+
+BR,
+NIkolaus
+
