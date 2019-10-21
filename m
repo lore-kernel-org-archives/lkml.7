@@ -7,33 +7,33 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B28BFCA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:13:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75DABCA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:13:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D36321835
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:13:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C32D21744
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:13:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727785AbfJUJNm (ORCPT
+        id S1727818AbfJUJNq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 05:13:42 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:33989 "EHLO
+        Mon, 21 Oct 2019 05:13:46 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:33992 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727687AbfJUJNk (ORCPT
+        with ESMTP id S1727777AbfJUJNo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 05:13:40 -0400
+        Mon, 21 Oct 2019 05:13:44 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iMTk2-0005JJ-5B; Mon, 21 Oct 2019 11:12:42 +0200
+        id 1iMTk3-0005JY-Ne; Mon, 21 Oct 2019 11:12:43 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id BE59A1C047B;
-        Mon, 21 Oct 2019 11:12:41 +0200 (CEST)
-Date:   Mon, 21 Oct 2019 09:12:41 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 545271C0092;
+        Mon, 21 Oct 2019 11:12:43 +0200 (CEST)
+Date:   Mon, 21 Oct 2019 09:12:43 -0000
 From:   "tip-bot2 for Vincent Guittot" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched/fair: Optimize find_idlest_group()
+Subject: [tip: sched/core] sched/fair: Use rq->nr_running when balancing load
 Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
         Ben Segall <bsegall@google.com>,
         Dietmar Eggemann <dietmar.eggemann@arm.com>,
@@ -47,10 +47,10 @@ Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
         riel@surriel.com, srikar@linux.vnet.ibm.com,
         valentin.schneider@arm.com, Ingo Molnar <mingo@kernel.org>,
         Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
-In-Reply-To: <1571405198-27570-11-git-send-email-vincent.guittot@linaro.org>
-References: <1571405198-27570-11-git-send-email-vincent.guittot@linaro.org>
+In-Reply-To: <1571405198-27570-6-git-send-email-vincent.guittot@linaro.org>
+References: <1571405198-27570-6-git-send-email-vincent.guittot@linaro.org>
 MIME-Version: 1.0
-Message-ID: <157164916159.29376.11878648032149648593.tip-bot2@tip-bot2>
+Message-ID: <157164916309.29376.18106664431086525097.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -66,19 +66,21 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     fc1273f4cefe6670d528715581c848abf64f391c
-Gitweb:        https://git.kernel.org/tip/fc1273f4cefe6670d528715581c848abf64f391c
+Commit-ID:     5e23e474431529b7d1480f649ce33d0e9c1b2e48
+Gitweb:        https://git.kernel.org/tip/5e23e474431529b7d1480f649ce33d0e9c1b2e48
 Author:        Vincent Guittot <vincent.guittot@linaro.org>
-AuthorDate:    Fri, 18 Oct 2019 15:26:37 +02:00
+AuthorDate:    Fri, 18 Oct 2019 15:26:32 +02:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Mon, 21 Oct 2019 09:40:55 +02:00
+CommitterDate: Mon, 21 Oct 2019 09:40:54 +02:00
 
-sched/fair: Optimize find_idlest_group()
+sched/fair: Use rq->nr_running when balancing load
 
-find_idlest_group() now reads CPU's load_avg in two different ways.
-
-Consolidate the function to read and use load_avg only once and simplify
-the algorithm to only look for the group with lowest load_avg.
+CFS load_balance() only takes care of CFS tasks whereas CPUs can be used by
+other scheduling classes. Typically, a CFS task preempted by an RT or deadline
+task will not get a chance to be pulled by another CPU because
+load_balance() doesn't take into account tasks from other classes.
+Add sum of nr_running in the statistics and use it to detect such
+situations.
 
 Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
 Cc: Ben Segall <bsegall@google.com>
@@ -98,111 +100,73 @@ Cc: quentin.perret@arm.com
 Cc: riel@surriel.com
 Cc: srikar@linux.vnet.ibm.com
 Cc: valentin.schneider@arm.com
-Link: https://lkml.kernel.org/r/1571405198-27570-11-git-send-email-vincent.guittot@linaro.org
+Link: https://lkml.kernel.org/r/1571405198-27570-6-git-send-email-vincent.guittot@linaro.org
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- kernel/sched/fair.c | 50 ++++++++++++--------------------------------
- 1 file changed, 14 insertions(+), 36 deletions(-)
+ kernel/sched/fair.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
 diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index b0703b4..95a57c7 100644
+index 76a2aa8..4e7396c 100644
 --- a/kernel/sched/fair.c
 +++ b/kernel/sched/fair.c
-@@ -5550,16 +5550,14 @@ find_idlest_group(struct sched_domain *sd, struct task_struct *p,
+@@ -7694,6 +7694,7 @@ struct sg_lb_stats {
+ 	unsigned long group_load; /* Total load over the CPUs of the group */
+ 	unsigned long group_capacity;
+ 	unsigned long group_util; /* Total utilization of the group */
++	unsigned int sum_nr_running; /* Nr of tasks running in the group */
+ 	unsigned int sum_h_nr_running; /* Nr of CFS tasks running in the group */
+ 	unsigned int idle_cpus;
+ 	unsigned int group_weight;
+@@ -7928,7 +7929,7 @@ static inline int sg_imbalanced(struct sched_group *group)
+ static inline bool
+ group_has_capacity(struct lb_env *env, struct sg_lb_stats *sgs)
  {
- 	struct sched_group *idlest = NULL, *group = sd->groups;
- 	struct sched_group *most_spare_sg = NULL;
--	unsigned long min_runnable_load = ULONG_MAX;
--	unsigned long this_runnable_load = ULONG_MAX;
--	unsigned long min_avg_load = ULONG_MAX, this_avg_load = ULONG_MAX;
-+	unsigned long min_load = ULONG_MAX, this_load = ULONG_MAX;
- 	unsigned long most_spare = 0, this_spare = 0;
- 	int imbalance_scale = 100 + (sd->imbalance_pct-100)/2;
- 	unsigned long imbalance = scale_load_down(NICE_0_LOAD) *
- 				(sd->imbalance_pct-100) / 100;
+-	if (sgs->sum_h_nr_running < sgs->group_weight)
++	if (sgs->sum_nr_running < sgs->group_weight)
+ 		return true;
  
- 	do {
--		unsigned long load, avg_load, runnable_load;
-+		unsigned long load;
- 		unsigned long spare_cap, max_spare_cap;
- 		int local_group;
- 		int i;
-@@ -5576,15 +5574,11 @@ find_idlest_group(struct sched_domain *sd, struct task_struct *p,
- 		 * Tally up the load of all CPUs in the group and find
- 		 * the group containing the CPU with most spare capacity.
- 		 */
--		avg_load = 0;
--		runnable_load = 0;
-+		load = 0;
- 		max_spare_cap = 0;
+ 	if ((sgs->group_capacity * 100) >
+@@ -7949,7 +7950,7 @@ group_has_capacity(struct lb_env *env, struct sg_lb_stats *sgs)
+ static inline bool
+ group_is_overloaded(struct lb_env *env, struct sg_lb_stats *sgs)
+ {
+-	if (sgs->sum_h_nr_running <= sgs->group_weight)
++	if (sgs->sum_nr_running <= sgs->group_weight)
+ 		return false;
  
- 		for_each_cpu(i, sched_group_span(group)) {
--			load = cpu_load(cpu_rq(i));
--			runnable_load += load;
--
--			avg_load += cfs_rq_load_avg(&cpu_rq(i)->cfs);
-+			load += cpu_load(cpu_rq(i));
+ 	if ((sgs->group_capacity * 100) <
+@@ -8053,6 +8054,8 @@ static inline void update_sg_lb_stats(struct lb_env *env,
+ 		sgs->sum_h_nr_running += rq->cfs.h_nr_running;
  
- 			spare_cap = capacity_spare_without(i, p);
+ 		nr_running = rq->nr_running;
++		sgs->sum_nr_running += nr_running;
++
+ 		if (nr_running > 1)
+ 			*sg_status |= SG_OVERLOAD;
  
-@@ -5593,31 +5587,15 @@ find_idlest_group(struct sched_domain *sd, struct task_struct *p,
+@@ -8410,13 +8413,13 @@ static inline void calculate_imbalance(struct lb_env *env, struct sd_lb_stats *s
  		}
  
- 		/* Adjust by relative CPU capacity of the group */
--		avg_load = (avg_load * SCHED_CAPACITY_SCALE) /
--					group->sgc->capacity;
--		runnable_load = (runnable_load * SCHED_CAPACITY_SCALE) /
-+		load = (load * SCHED_CAPACITY_SCALE) /
- 					group->sgc->capacity;
+ 		if (busiest->group_weight == 1 || sds->prefer_sibling) {
+-			unsigned int nr_diff = busiest->sum_h_nr_running;
++			unsigned int nr_diff = busiest->sum_nr_running;
+ 			/*
+ 			 * When prefer sibling, evenly spread running tasks on
+ 			 * groups.
+ 			 */
+ 			env->migration_type = migrate_task;
+-			lsub_positive(&nr_diff, local->sum_h_nr_running);
++			lsub_positive(&nr_diff, local->sum_nr_running);
+ 			env->imbalance = nr_diff >> 1;
+ 			return;
+ 		}
+@@ -8580,7 +8583,7 @@ static struct sched_group *find_busiest_group(struct lb_env *env)
  
- 		if (local_group) {
--			this_runnable_load = runnable_load;
--			this_avg_load = avg_load;
-+			this_load = load;
- 			this_spare = max_spare_cap;
- 		} else {
--			if (min_runnable_load > (runnable_load + imbalance)) {
--				/*
--				 * The runnable load is significantly smaller
--				 * so we can pick this new CPU:
--				 */
--				min_runnable_load = runnable_load;
--				min_avg_load = avg_load;
--				idlest = group;
--			} else if ((runnable_load < (min_runnable_load + imbalance)) &&
--				   (100*min_avg_load > imbalance_scale*avg_load)) {
--				/*
--				 * The runnable loads are close so take the
--				 * blocked load into account through avg_load:
--				 */
--				min_avg_load = avg_load;
-+			if (load < min_load) {
-+				min_load = load;
- 				idlest = group;
- 			}
+ 	/* Try to move all excess tasks to child's sibling domain */
+ 	if (sds.prefer_sibling && local->group_type == group_has_spare &&
+-	    busiest->sum_h_nr_running > local->sum_h_nr_running + 1)
++	    busiest->sum_nr_running > local->sum_nr_running + 1)
+ 		goto force_balance;
  
-@@ -5658,18 +5636,18 @@ skip_spare:
- 	 * local domain to be very lightly loaded relative to the remote
- 	 * domains but "imbalance" skews the comparison making remote CPUs
- 	 * look much more favourable. When considering cross-domain, add
--	 * imbalance to the runnable load on the remote node and consider
--	 * staying local.
-+	 * imbalance to the load on the remote node and consider staying
-+	 * local.
- 	 */
- 	if ((sd->flags & SD_NUMA) &&
--	    min_runnable_load + imbalance >= this_runnable_load)
-+	     min_load + imbalance >= this_load)
- 		return NULL;
- 
--	if (min_runnable_load > (this_runnable_load + imbalance))
-+	if (min_load >= this_load + imbalance)
- 		return NULL;
- 
--	if ((this_runnable_load < (min_runnable_load + imbalance)) &&
--	     (100*this_avg_load < imbalance_scale*min_avg_load))
-+	if ((this_load < (min_load + imbalance)) &&
-+	    (100*this_load < imbalance_scale*min_load))
- 		return NULL;
- 
- 	return idlest;
+ 	if (busiest->group_type != group_overloaded &&
