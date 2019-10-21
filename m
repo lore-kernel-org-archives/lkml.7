@@ -2,124 +2,134 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43314CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:41:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9C1DCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:41:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 191BE2166E
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:41:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571665278;
-	bh=CpSOuczRpfLZMlTVrUjM3wVbKg2PUbjfBDwSMSBeGag=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=slZc66Oewpf85f+P35NjDEPEgpCvg68M1O/6JLEGu1SDaBeWotJP9fh/RCxX1FAo4
-	 FCm18kuFuWoMF8l0CsLl6gStp2Xgk/HCngAcoVVG5Pq9yMa9WdQn9k3fi9G0hp3Xtr
-	 CJ/CQHeV/1/07tPC8qVDFs4n2Fnl4JLjlujVM3/s=
+	by mail.kernel.org (Postfix) with ESMTP id 963902166E
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:41:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729660AbfJUNlR (ORCPT
+        id S1729672AbfJUNlU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 09:41:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43168 "EHLO mail.kernel.org"
+        Mon, 21 Oct 2019 09:41:20 -0400
+Received: from mga12.intel.com ([192.55.52.136]:25753 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729069AbfJUNlN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 09:41:13 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B07B2173B;
-        Mon, 21 Oct 2019 13:41:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571665273;
-        bh=CpSOuczRpfLZMlTVrUjM3wVbKg2PUbjfBDwSMSBeGag=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NZGKhPoi+p0PTYLDsETqTUHLY49aMCYWzmi65hsu6Isho+1lj2eLjYVtjNbqUoFLm
-         W5ZFBWYEIa0WukUu5Xkvc1jWYl+0IIm9vXkVxlaeZO9z+cw5QGx14HS8Nb03jVKdwZ
-         oirX+0a9sy7xAgQGcMv5rd7mpDl4ejYC7FsyEfGA=
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 46/57] libperf: Link static tests with libapi.a
-Date:   Mon, 21 Oct 2019 10:38:23 -0300
-Message-Id: <20191021133834.25998-47-acme@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191021133834.25998-1-acme@kernel.org>
-References: <20191021133834.25998-1-acme@kernel.org>
+        id S1729656AbfJUNlR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 09:41:17 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 06:41:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,323,1566889200"; 
+   d="scan'208";a="209446042"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 21 Oct 2019 06:41:12 -0700
+Received: by lahna (sSMTP sendmail emulation); Mon, 21 Oct 2019 16:41:11 +0300
+Date:   Mon, 21 Oct 2019 16:41:11 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Stuart Hayes <stuart.w.hayes@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Austin Bolen <austin_bolen@dell.com>, keith.busch@intel.com,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, lukas@wunner.de
+Subject: Re: [PATCH v3 2/3] PCI: pciehp: Wait for PDS if in-band presence is
+ disabled
+Message-ID: <20191021134111.GK2819@lahna.fi.intel.com>
+References: <20191017193256.3636-1-stuart.w.hayes@gmail.com>
+ <20191017193256.3636-3-stuart.w.hayes@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191017193256.3636-3-stuart.w.hayes@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+On Thu, Oct 17, 2019 at 03:32:55PM -0400, Stuart Hayes wrote:
+> From: Alexandru Gagniuc <mr.nuke.me@gmail.com>
+> 
+> When inband presence is disabled, PDS may come up at any time, or not
+> at all. PDS being low may indicate that the card is still mating, and
+> we could expect contact bounce to bring down the link as well.
+> 
+> It is reasonable to assume that most cards will mate in a hotplug slot
+> in about a second. Thus, when we know PDS only reflects out-of-band
+> presence, it's worthwhile to wait the extra second or so to make sure
+> the card is properly mated before loading the driver, and to prevent
+> the hotplug code from disabling a device if the presence detect change
+> goes active after the device is enabled.
+> 
+> Signed-off-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
+> Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
 
-Both static and dynamic tests needs to link with libapi.a, because it's
-using its functions. Also include path for libapi includes.
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Link: http://lore.kernel.org/lkml/20191017105918.20873-5-jolsa@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/lib/Makefile       | 1 +
- tools/perf/lib/tests/Makefile | 6 +++---
- 2 files changed, 4 insertions(+), 3 deletions(-)
+One nit below.
 
-diff --git a/tools/perf/lib/Makefile b/tools/perf/lib/Makefile
-index 0889c9c3ec19..0f233638ef1f 100644
---- a/tools/perf/lib/Makefile
-+++ b/tools/perf/lib/Makefile
-@@ -107,6 +107,7 @@ else
- endif
- 
- LIBAPI = $(API_PATH)libapi.a
-+export LIBAPI
- 
- $(LIBAPI): FORCE
- 	$(Q)$(MAKE) -C $(LIB_DIR) O=$(OUTPUT) $(OUTPUT)libapi.a
-diff --git a/tools/perf/lib/tests/Makefile b/tools/perf/lib/tests/Makefile
-index 1ee4e9ba848b..a43cd08c5c03 100644
---- a/tools/perf/lib/tests/Makefile
-+++ b/tools/perf/lib/tests/Makefile
-@@ -16,13 +16,13 @@ all:
- 
- include $(srctree)/tools/scripts/Makefile.include
- 
--INCLUDE = -I$(srctree)/tools/perf/lib/include -I$(srctree)/tools/include
-+INCLUDE = -I$(srctree)/tools/perf/lib/include -I$(srctree)/tools/include -I$(srctree)/tools/lib
- 
- $(TESTS_A): FORCE
--	$(QUIET_LINK)$(CC) $(INCLUDE) $(CFLAGS) -o $@ $(subst -a,.c,$@) ../libperf.a
-+	$(QUIET_LINK)$(CC) $(INCLUDE) $(CFLAGS) -o $@ $(subst -a,.c,$@) ../libperf.a $(LIBAPI)
- 
- $(TESTS_SO): FORCE
--	$(QUIET_LINK)$(CC) $(INCLUDE) $(CFLAGS) -L.. -o $@ $(subst -so,.c,$@) -lperf
-+	$(QUIET_LINK)$(CC) $(INCLUDE) $(CFLAGS) -L.. -o $@ $(subst -so,.c,$@) $(LIBAPI) -lperf
- 
- all: $(TESTS_A) $(TESTS_SO)
- 
--- 
-2.21.0
+> ---
+> v2:
+>   replace while(true) loop with do...while
+> v3
+>   remove unused variable declaration (pds)
+>   modify text of warning message
+> 
+>  drivers/pci/hotplug/pciehp_hpc.c | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+> 
+> diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+> index dc109d521f30..02eb811a014f 100644
+> --- a/drivers/pci/hotplug/pciehp_hpc.c
+> +++ b/drivers/pci/hotplug/pciehp_hpc.c
+> @@ -242,6 +242,22 @@ static bool pci_bus_check_dev(struct pci_bus *bus, int devfn)
+>  	return found;
+>  }
+>  
+> +static void pcie_wait_for_presence(struct pci_dev *pdev)
+> +{
+> +	int timeout = 1250;
+> +	u16 slot_status;
+> +
+> +	do {
+> +		pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &slot_status);
+> +		if (!!(slot_status & PCI_EXP_SLTSTA_PDS))
 
+It is more readable if you write it like:
+
+		if (slot_status & PCI_EXP_SLTSTA_PDS)
+
+> +			return;
+> +		msleep(10);
+> +		timeout -= 10;
+> +	} while (timeout > 0);
+> +
+> +	pci_info(pdev, "Timeout waiting for Presence Detect state to be set\n");
+> +}
+> +
+>  int pciehp_check_link_status(struct controller *ctrl)
+>  {
+>  	struct pci_dev *pdev = ctrl_dev(ctrl);
+> @@ -251,6 +267,9 @@ int pciehp_check_link_status(struct controller *ctrl)
+>  	if (!pcie_wait_for_link(pdev, true))
+>  		return -1;
+>  
+> +	if (ctrl->inband_presence_disabled)
+> +		pcie_wait_for_presence(pdev);
+> +
+>  	found = pci_bus_check_dev(ctrl->pcie->port->subordinate,
+>  					PCI_DEVFN(0, 0));
+>  
+> -- 
+> 2.18.1
