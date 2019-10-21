@@ -2,134 +2,136 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED7D7CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:18:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70757CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:18:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B36DE21906
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:18:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571674682;
-	bh=wuXiVSVhv0GuAFMI8jKpur+OW7AvMoJZSNiRXZZygDY=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=ssY/eNvQRz6Df49s8xWimATOrD6tTMx0jpieU34JCRkVGJvDzjcnENvWoKnH/3TM0
-	 hBjNSqW5FUO6XwUMeY3rDaYKjVluwHyTm3livXT2wFWmIzMygMz4GvxKdlgck1TJHv
-	 vU0+jeOZFwzcmV2rXUkwqUKj5omIudhiSbwyykl4=
+	by mail.kernel.org (Postfix) with ESMTP id 50B41214B2
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:18:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728890AbfJUQSB (ORCPT
+        id S1729580AbfJUQSW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 12:18:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37928 "EHLO mail.kernel.org"
+        Mon, 21 Oct 2019 12:18:22 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:32922 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727303AbfJUQSB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 12:18:01 -0400
-Received: from localhost.localdomain (unknown [194.230.155.217])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB90D214B2;
-        Mon, 21 Oct 2019 16:17:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571674680;
-        bh=wuXiVSVhv0GuAFMI8jKpur+OW7AvMoJZSNiRXZZygDY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=2J5EJLOUpiK8dnlh3Y2Ews/l7UoghzFyqIKPUdCNhLUhMRFNBW3K2KN8Fvg6B8dBh
-         RCHc3eXnAUZvbtyiin9Ijn6WSWNP5V6uGjlYOWI5h/nBJ4dOWohIDB5i0tKUu9Wgnq
-         +xJuleX6ojM0STnd0j+4weZkcRQRyhUF8U2xU0uI=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        id S1726276AbfJUQSW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 12:18:22 -0400
+Received: from ip5f5a6266.dynamic.kabel-deutschland.de ([95.90.98.102] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1iMaNr-0006nu-Mh; Mon, 21 Oct 2019 18:18:15 +0200
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v4] ARM: dts: am: Rename "ocmcram" node to "sram"
-Date:   Mon, 21 Oct 2019 18:17:52 +0200
-Message-Id: <20191021161752.21502-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v4 5/7] dt-bindings: sram: Merge Rockchip SRAM bindings into generic
+Date:   Mon, 21 Oct 2019 18:18:14 +0200
+Message-ID: <3101747.Dqu2aBfdh7@diego>
+In-Reply-To: <20191021161351.20789-5-krzk@kernel.org>
+References: <20191021161351.20789-1-krzk@kernel.org> <20191021161351.20789-5-krzk@kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The device node name should reflect generic class of a device so rename
-the "ocmcram" node and its children to "sram".  This will be also in
-sync with upcoming DT schema.  No functional change.
+Am Montag, 21. Oktober 2019, 18:13:49 CEST schrieb Krzysztof Kozlowski:
+> The Rockchip SRAM bindings list only compatible so integrate them into
+> generic SRAM bindings schema.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Acked-by: Heiko Stuebner <heiko@sntech.de>
 
----
+> 
+> ---
+> 
+> Changes since v3:
+> 1. New patch
+> ---
+>  .../bindings/sram/rockchip-smp-sram.txt       | 30 -------------------
+>  .../devicetree/bindings/sram/sram.yaml        | 15 ++++++++++
+>  2 files changed, 15 insertions(+), 30 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/sram/rockchip-smp-sram.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/sram/rockchip-smp-sram.txt b/Documentation/devicetree/bindings/sram/rockchip-smp-sram.txt
+> deleted file mode 100644
+> index 800701ecffca..000000000000
+> --- a/Documentation/devicetree/bindings/sram/rockchip-smp-sram.txt
+> +++ /dev/null
+> @@ -1,30 +0,0 @@
+> -Rockchip SRAM for smp bringup:
+> -------------------------------
+> -
+> -Rockchip's smp-capable SoCs use the first part of the sram for the bringup
+> -of the cores. Once the core gets powered up it executes the code that is
+> -residing at the very beginning of the sram.
+> -
+> -Therefore a reserved section sub-node has to be added to the mmio-sram
+> -declaration.
+> -
+> -Required sub-node properties:
+> -- compatible : should be "rockchip,rk3066-smp-sram"
+> -
+> -The rest of the properties should follow the generic mmio-sram discription
+> -found in Documentation/devicetree/bindings/sram/sram.txt
+> -
+> -Example:
+> -
+> -	sram: sram@10080000 {
+> -		compatible = "mmio-sram";
+> -		reg = <0x10080000 0x10000>;
+> -		#address-cells = <1>;
+> -		#size-cells = <1>;
+> -		ranges;
+> -
+> -		smp-sram@10080000 {
+> -			compatible = "rockchip,rk3066-smp-sram";
+> -			reg = <0x10080000 0x50>;
+> -		};
+> -	};
+> diff --git a/Documentation/devicetree/bindings/sram/sram.yaml b/Documentation/devicetree/bindings/sram/sram.yaml
+> index b92e3e10fbfc..1c2d8b0408c0 100644
+> --- a/Documentation/devicetree/bindings/sram/sram.yaml
+> +++ b/Documentation/devicetree/bindings/sram/sram.yaml
+> @@ -68,6 +68,7 @@ patternProperties:
+>            - amlogic,meson8-smp-sram
+>            - amlogic,meson8b-smp-sram
+>            - renesas,smp-sram
+> +          - rockchip,rk3066-smp-sram
+>            - samsung,exynos4210-sysram
+>            - samsung,exynos4210-sysram-ns
+>  
+> @@ -201,3 +202,17 @@ examples:
+>              reg = <0 0x10>;
+>          };
+>      };
+> +
+> +  - |
+> +    sram@10080000 {
+> +        compatible = "mmio-sram";
+> +        reg = <0x10080000 0x10000>;
+> +        #address-cells = <1>;
+> +        #size-cells = <1>;
+> +        ranges;
+> +
+> +        smp-sram@10080000 {
+> +            compatible = "rockchip,rk3066-smp-sram";
+> +            reg = <0x10080000 0x50>;
+> +        };
+> +    };
+> 
 
-Changes since v3:
-1. Rename also children.
 
-v3 is here:
-https://lore.kernel.org/linux-arm-kernel/20191002164316.14905-9-krzk@kernel.org/
----
- arch/arm/boot/dts/am33xx.dtsi | 6 +++---
- arch/arm/boot/dts/am4372.dtsi | 6 +++---
- 2 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-index fb6b8aa12cc5..765963de5d41 100644
---- a/arch/arm/boot/dts/am33xx.dtsi
-+++ b/arch/arm/boot/dts/am33xx.dtsi
-@@ -393,20 +393,20 @@
- 			};
- 		};
- 
--		ocmcram: ocmcram@40300000 {
-+		ocmcram: sram@40300000 {
- 			compatible = "mmio-sram";
- 			reg = <0x40300000 0x10000>; /* 64k */
- 			ranges = <0x0 0x40300000 0x10000>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 
--			pm_sram_code: pm-sram-code@0 {
-+			pm_sram_code: pm-code-sram@0 {
- 				compatible = "ti,sram";
- 				reg = <0x0 0x1000>;
- 				protect-exec;
- 			};
- 
--			pm_sram_data: pm-sram-data@1000 {
-+			pm_sram_data: pm-data-sram@1000 {
- 				compatible = "ti,sram";
- 				reg = <0x1000 0x1000>;
- 				pool;
-diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
-index 848e2a8884e2..3e3ae48c2e5a 100644
---- a/arch/arm/boot/dts/am4372.dtsi
-+++ b/arch/arm/boot/dts/am4372.dtsi
-@@ -349,20 +349,20 @@
- 			};
- 		};
- 
--		ocmcram: ocmcram@40300000 {
-+		ocmcram: sram@40300000 {
- 			compatible = "mmio-sram";
- 			reg = <0x40300000 0x40000>; /* 256k */
- 			ranges = <0x0 0x40300000 0x40000>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 
--			pm_sram_code: pm-sram-code@0 {
-+			pm_sram_code: pm-code-sram@0 {
- 				compatible = "ti,sram";
- 				reg = <0x0 0x1000>;
- 				protect-exec;
- 			};
- 
--			pm_sram_data: pm-sram-data@1000 {
-+			pm_sram_data: pm-data-sram@1000 {
- 				compatible = "ti,sram";
- 				reg = <0x1000 0x1000>;
- 				pool;
--- 
-2.17.1
 
