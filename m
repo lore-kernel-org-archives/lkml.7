@@ -2,637 +2,167 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E20ADCA9EB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:15:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B059CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:18:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE2ED20684
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:15:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E87B42084B
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:18:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="ISImCuAv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727931AbfJUKPd (ORCPT
+        id S1727958AbfJUKSu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 06:15:33 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:42589 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726767AbfJUKPd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 06:15:33 -0400
-X-Originating-IP: 86.207.98.53
-Received: from localhost (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id E37A8C0006;
-        Mon, 21 Oct 2019 10:15:28 +0000 (UTC)
-Date:   Mon, 21 Oct 2019 12:15:28 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Andreas Kemnade <andreas@kemnade.info>
-Cc:     lee.jones@linaro.org, a.zummo@towertech.it,
-        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org,
-        phh@phh.me, b.galvani@gmail.com, stefan@agner.ch,
-        letux-kernel@openphoenux.org
-Subject: Re: [PATCH 5/5] rtc: rtc-rc5t583: add ricoh rc5t619 RTC driver
-Message-ID: <20191021101528.GU3125@piout.net>
-References: <20191021054104.26155-1-andreas@kemnade.info>
- <20191021054104.26155-6-andreas@kemnade.info>
+        Mon, 21 Oct 2019 06:18:50 -0400
+Received: from mail-eopbgr700084.outbound.protection.outlook.com ([40.107.70.84]:40420
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726725AbfJUKSu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 06:18:50 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nNyK5LChzdXZyibcJ841+kbjmVvjVw5RVeMhZLMOFuzhiJubEyGx3q3YwvWh2lp+/nh1UbRPB/jsUZcSwkeP+58j5zptmB/3UNNt+2IxLJaBv4nDcF6kkRhnfEj7IFHNDzQGfRbcUQA/Uqqf0NHyZAz4CfzasmUBV5qVxWx/Tolk1QuTuSXyUYUuA6d161cXbBLGpcWYQ1jgMjA1TFJGbC29L8MCtt9tQEifHvxiSY29DNMy9lUd5bnSVotepFUzlKxJqoA3UeWYbInf5NColxrusYfND1qfuSNL22WzBSzS2HhEQhZ1L66mMWl51ch3QBu7RBE4PLceq9FM/vKkPg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cR3GKjskOOCPvYJv9Rhz71QzX+S+xlM7KhT8MV4tJXU=;
+ b=UC/bxpE2bj2qfBw/T6oGHd90opWqDAL54AcWw8fSwHhAojBOM69fXgtByI0yf8C0/L0oxgxXlgYRqaBmNO2lyz0NmIsPjuE5VPb+Xszyg1nLpu97xOcajmT3+J24yGQiIcyXu0SSCKctGiFyx41+Syq/70BXxi5dPkA0IESNMHr3paJuImpuhj9IiLdFAAi42nU+u/dkTmu5nRQr/pK+9VYEnC3aq+SPLHr63ElT80Zkll3vOUtC7RrhUcrc7r7AUbgoXRpE9ivjrsL6eb6BaiL94FECPKF5UBcncmRy42srjUQ3Lnrs0I7iN/zYfQtBpyoI9eB+sBsK37XBZUGsOg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cR3GKjskOOCPvYJv9Rhz71QzX+S+xlM7KhT8MV4tJXU=;
+ b=ISImCuAv0nzqVk7oP09rTzWpi0XhiWgQlzt+7r2hsdYevG33KE4D//ZC5hzueZ58ByFWn/j5FOtR7T6IoVyAct4jtbLLSzioqs2EnTp+LFTcJLErlbkYh45GE8o0o2nme9OBrk5Vhya/tE1DWN4CavuPH10C9DkY9ZG5VgwR5ko=
+Received: from BL0PR02CA0013.namprd02.prod.outlook.com (2603:10b6:207:3c::26)
+ by DM6PR02MB5771.namprd02.prod.outlook.com (2603:10b6:5:17a::32) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2367.20; Mon, 21 Oct
+ 2019 10:18:46 +0000
+Received: from CY1NAM02FT010.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e45::205) by BL0PR02CA0013.outlook.office365.com
+ (2603:10b6:207:3c::26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2367.21 via Frontend
+ Transport; Mon, 21 Oct 2019 10:18:46 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ CY1NAM02FT010.mail.protection.outlook.com (10.152.75.50) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2367.14
+ via Frontend Transport; Mon, 21 Oct 2019 10:18:45 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <radhey.shyam.pandey@xilinx.com>)
+        id 1iMUlx-0004jV-Ei; Mon, 21 Oct 2019 03:18:45 -0700
+Received: from [127.0.0.1] (helo=xsj-smtp-dlp2.xlnx.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <radhey.shyam.pandey@xilinx.com>)
+        id 1iMUls-0005et-9U; Mon, 21 Oct 2019 03:18:40 -0700
+Received: from xsj-pvapsmtp01 (mail.xilinx.com [149.199.38.66] (may be forged))
+        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x9LAIc4u027034;
+        Mon, 21 Oct 2019 03:18:38 -0700
+Received: from [10.140.184.180] (helo=ubuntu)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <radheys@ubuntu>)
+        id 1iMUlq-0005eQ-9O; Mon, 21 Oct 2019 03:18:38 -0700
+Received: by ubuntu (Postfix, from userid 13245)
+        id 7C57A10104D; Mon, 21 Oct 2019 15:48:37 +0530 (IST)
+From:   Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+To:     davem@davemloft.net, netdev@vger.kernel.org
+Cc:     michal.simek@xilinx.com, anirudha.sarangi@xilinx.com,
+        john.linn@xilinx.com, mchehab+samsung@kernel.org,
+        gregkh@linuxfoundation.org, nicolas.ferre@microchip.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+Subject: [PATCH v2 net-next] net: axienet: In kconfig add ARM64 as supported platform
+Date:   Mon, 21 Oct 2019 15:48:30 +0530
+Message-Id: <1571653110-20505-1-git-send-email-radhey.shyam.pandey@xilinx.com>
+X-Mailer: git-send-email 2.7.4
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-Result: No--2.045-7.0-31-1
+X-imss-scan-details: No--2.045-7.0-31-1;No--2.045-5.0-31-1
+X-TM-AS-User-Approved-Sender: No;No
+X-TM-AS-Result-Xfilter: Match text exemption rules:No
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(39860400002)(376002)(346002)(189003)(199004)(8936002)(8676002)(478600001)(70206006)(2906002)(81156014)(81166006)(70586007)(336012)(47776003)(186003)(305945005)(426003)(51416003)(5660300002)(103686004)(476003)(126002)(2616005)(26005)(486006)(4326008)(50466002)(36756003)(106002)(50226002)(356004)(48376002)(107886003)(6266002)(316002)(6666004)(42186006)(16586007)(42866002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR02MB5771;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191021054104.26155-6-andreas@kemnade.info>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: e1a41145-7369-4f3c-c1d6-08d756100e9c
+X-MS-TrafficTypeDiagnostic: DM6PR02MB5771:
+X-Microsoft-Antispam-PRVS: <DM6PR02MB5771B895B9D7B93D1F80F985C7690@DM6PR02MB5771.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:372;
+X-Forefront-PRVS: 0197AFBD92
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: dy9nUZ4AS69p/WwUcYdASlg5AVxkG7PEa7gFc3Z9OywyXQ69PFDaRhbn0BCcR/Xqqzx1rxwa0NwTU20ZTIQJcis7+9wj7++l7eXskGDT8RrQ6v7w9E7Dss/Fx7pLGoGiQtsb2vcGAlF1TSE4aLPzc3ap1eNVlj/OrEOU25YtQDLmaBIkKZyd4uZ1ieX+eiXKLHmqToOQLaUQkh5mDKymTzftZqgWxJ4NLtqHqM9Gd5lbIiJKE4gHHW1jeniPSENr2KPzFP+mXE1CM4I++QFYSfCJjANhFpKU9zg2A6pEe24Eu/S/v/1Rk8mmTduUK1Obe7rsUhzlWkvkLyMNQMHaG0Unltm5T0jv/XCe8LniT4AEhsiqUgABs6cnsgBxvvHnXT5vs5vARLH/+aMcOsJajrh0P88US4d12lpTOTdTA2qDhPUih+WRwX05QqD0o1+A
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Oct 2019 10:18:45.9423
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: e1a41145-7369-4f3c-c1d6-08d756100e9c
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB5771
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+xilinx axi_emac driver is supported on ZynqMP UltraScale platform.
+So enable ARCH64 in kconfig. It also removes redundant ARCH_ZYNQ
+dependency. Basic sanity testing is done on zu+ mpsoc zcu102
+evaluation board.
 
-The subject line is weird, how is it related to rc5t583?
+Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+---
+Changes for v2:
+Remove redundant ARCH_ZYNQ dependency.
+Modified commit description.
+---
+ drivers/net/ethernet/xilinx/Kconfig | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-On 21/10/2019 07:41:04+0200, Andreas Kemnade wrote:
->  config RTC_DRV_S35390A
->  	tristate "Seiko Instruments S-35390A"
->  	select BITREVERSE
-> diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
-> index 6b09c21dc1b6..1d0673fd0954 100644
-> --- a/drivers/rtc/Makefile
-> +++ b/drivers/rtc/Makefile
-> @@ -136,6 +136,7 @@ obj-$(CONFIG_RTC_DRV_PXA)	+= rtc-pxa.o
->  obj-$(CONFIG_RTC_DRV_R7301)	+= rtc-r7301.o
->  obj-$(CONFIG_RTC_DRV_R9701)	+= rtc-r9701.o
->  obj-$(CONFIG_RTC_DRV_RC5T583)	+= rtc-rc5t583.o
-> +obj-$(CONFIG_RTC_DRV_RC5T619)	+= rtc-rc5t619.o
->  obj-$(CONFIG_RTC_DRV_RK808)	+= rtc-rk808.o
->  obj-$(CONFIG_RTC_DRV_RP5C01)	+= rtc-rp5c01.o
->  obj-$(CONFIG_RTC_DRV_RS5C313)	+= rtc-rs5c313.o
-> diff --git a/drivers/rtc/rtc-rc5t619.c b/drivers/rtc/rtc-rc5t619.c
-> new file mode 100644
-> index 000000000000..311788ff0723
-> --- /dev/null
-> +++ b/drivers/rtc/rtc-rc5t619.c
-> @@ -0,0 +1,476 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * drivers/rtc/rtc-ricoh619.c
-> + *
-> + * Real time clock driver for RICOH R5T619 power management chip.
-> + *
-> + * Copyright (C) 2019 Andreas Kemnade
-> + *
-> + * Based on code
-> + *  Copyright (C) 2012-2014 RICOH COMPANY,LTD
-> + *
-> + * Based on code
-> + *  Copyright (C) 2011 NVIDIA Corporation
-
-Based on is not useful.
-
-> + */
-> +
-> +/* #define debug		1 */
-> +/* #define verbose_debug	1 */
-> +
-
-No dead code please.
-
-> +#include <linux/kernel.h>
-> +#include <linux/device.h>
-> +#include <linux/errno.h>
-> +#include <linux/init.h>
-> +#include <linux/module.h>
-> +#include <linux/mfd/rn5t618.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/bcd.h>
-> +#include <linux/rtc.h>
-> +#include <linux/slab.h>
-> +#include <linux/irqdomain.h>
-> +
-> +struct rc5t619_rtc {
-> +	int			irq;
-> +	struct rtc_device	*rtc;
-> +	struct rn5t618 *rn5t618;
-> +};
-> +
-> +#define CTRL1_ALARM_ENABLED 0x40
-> +#define CTRL1_24HR 0x20
-> +#define CTRL1_PERIODIC_MASK 0xf
-> +
-> +#define CTRL2_PON 0x10
-> +#define CTRL2_ALARM_STATUS 0x80
-> +#define CTRL2_CTFG 0x4
-> +#define CTRL2_CTC 0x1
-> +
-> +static int rc5t619_rtc_periodic_disable(struct device *dev)
-> +{
-> +	struct rc5t619_rtc *rtc = dev_get_drvdata(dev);
-> +	int err;
-> +
-> +	/* disable function */
-> +	err = regmap_update_bits(rtc->rn5t618->regmap,
-> +			RN5T618_RTC_CTRL1, CTRL1_PERIODIC_MASK, 0);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	/* clear alarm flag and CTFG */
-> +	err = regmap_update_bits(rtc->rn5t618->regmap, RN5T618_RTC_CTRL2,
-> +			CTRL2_ALARM_STATUS | CTRL2_CTFG | CTRL2_CTC, 0);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	return 0;
-> +}
-> +
-> +static int rc5t619_rtc_clk_adjust(struct device *dev, uint8_t clk)
-> +{
-> +	struct rc5t619_rtc *rtc = dev_get_drvdata(dev);
-> +
-> +	return regmap_write(rtc->rn5t618->regmap, RN5T618_RTC_ADJUST, clk);
-
-Is it useful to have a function for a single regmap_write?
-
-Also what is that adjusting? If this is adding/removing clock cycles,
-you need to use .set_offset and .read_offset.
-
-> +}
-> +
-> +static int rc5t619_rtc_pon_get_clr(struct device *dev, uint8_t *pon_f)
-> +{
-> +	struct rc5t619_rtc *rtc = dev_get_drvdata(dev);
-> +	int err;
-> +	unsigned int reg_data;
-> +
-> +	err = regmap_read(rtc->rn5t618->regmap, RN5T618_RTC_CTRL2, &reg_data);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	if (reg_data & CTRL2_PON) {
-> +		*pon_f = 1;
-> +		/* clear VDET PON */
-> +		reg_data &= ~(CTRL2_PON | CTRL2_CTC | 0x4a);	/* 0101-1011 */
-> +		reg_data |= 0x20;	/* 0010-0000 */
-
-Is it possible to have more defines for those magic values?
-
-> +		err = regmap_write(rtc->rn5t618->regmap, RN5T618_RTC_CTRL2,
-> +					reg_data);
-> +	} else {
-> +		*pon_f = 0;
-> +	}
-> +
-> +	return err;
-> +}
-> +
-> +/* 0-12hour, 1-24hour */
-> +static int rc5t619_rtc_24hour_mode_set(struct device *dev, int mode)
-> +{
-> +	struct rc5t619_rtc *rtc = dev_get_drvdata(dev);
-> +
-> +	return regmap_update_bits(rtc->rn5t618->regmap, RN5T618_RTC_CTRL1,
-> +			CTRL1_24HR, mode ? CTRL1_24HR : 0);
-
-Is it useful to have a function for a single regmap_update_bits?
-
-> +}
-> +
-> +
-> +static int rc5t619_rtc_read_time(struct device *dev, struct rtc_time *tm)
-> +{
-> +	struct rc5t619_rtc *rtc = dev_get_drvdata(dev);
-> +	u8 buff[7];
-> +	int err;
-> +	int cent_flag;
-> +
-> +	err = regmap_bulk_read(rtc->rn5t618->regmap, RN5T618_RTC_SECONDS,
-> +				buff, sizeof(buff));
-> +	if (err < 0) {
-> +		dev_err(dev, "failed to read time: %d\n", err);
-
-Please reconsider adding so many strings in the driver, they add almost
-no value but will increase the kernel memory footprint.
-
-> +		return err;
-> +	}
-> +
-> +	if (buff[5] & 0x80)
-A define for the century bit would be good.
-
-> +		cent_flag = 1;
-> +	else
-> +		cent_flag = 0;
-> +
-> +	buff[5] = buff[5] & 0x1f;		/* bit5 19_20 */
-
-This assignment is unnecessary, you can mask the value when using it.
-
-Is the RTC 1900-2099 or 2000-2199? Please include the ouput of rtc-range
-in the commit log:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/abelloni/rtc-tools.git/tree/rtc-range.c
-
-> +
-> +	tm->tm_sec  = bcd2bin(buff[0]);
-> +	tm->tm_min  = bcd2bin(buff[1]);
-> +	tm->tm_hour = bcd2bin(buff[2]);		/* bit5 PA_H20 */
-> +	tm->tm_wday = bcd2bin(buff[3]);
-> +	tm->tm_mday = bcd2bin(buff[4]);
-> +	tm->tm_mon  = bcd2bin(buff[5]) - 1;	/* back to system 0-11 */
-> +	tm->tm_year = bcd2bin(buff[6]) + 100 * cent_flag;
-> +
-> +	return 0;
-> +}
-> +
-> +static int rc5t619_rtc_set_time(struct device *dev, struct rtc_time *tm)
-> +{
-> +	struct rc5t619_rtc *rtc = dev_get_drvdata(dev);
-> +	u8 buff[7];
-> +	int err;
-> +	int cent_flag;
-> +
-> +	if (tm->tm_year >= 100)
-> +		cent_flag = 1;
-> +	else
-> +		cent_flag = 0;
-> +
-> +	tm->tm_mon = tm->tm_mon + 1;
-
-This assignment is not necessary.
-
-> +	buff[0] = bin2bcd(tm->tm_sec);
-> +	buff[1] = bin2bcd(tm->tm_min);
-> +	buff[2] = bin2bcd(tm->tm_hour);
-> +	buff[3] = bin2bcd(tm->tm_wday);
-> +	buff[4] = bin2bcd(tm->tm_mday);
-> +	buff[5] = bin2bcd(tm->tm_mon);		/* system set 0-11 */
-> +	buff[6] = bin2bcd(tm->tm_year - cent_flag * 100);
-> +
-> +	if (cent_flag)
-> +		buff[5] |= 0x80;
-> +
-> +	err = regmap_bulk_write(rtc->rn5t618->regmap, RN5T618_RTC_SECONDS,
-> +				buff, sizeof(buff));
-> +	if (err < 0) {
-> +		dev_err(dev, "failed to program new time: %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int rc5t619_rtc_alarm_is_enabled(struct device *dev,  uint8_t *enabled)
-> +{
-> +	struct rc5t619_rtc *rtc = dev_get_drvdata(dev);
-> +	int err;
-> +	unsigned int reg_data;
-> +
-> +	err = regmap_read(rtc->rn5t618->regmap, RN5T618_RTC_CTRL1, &reg_data);
-> +	if (err) {
-> +		dev_err(dev, "read RTC_CTRL1 error %d\n", err);
-> +		*enabled = 0;
-
-Is it necessary to set enabled here?
-
-> +	} else {
-> +		if (reg_data & CTRL1_ALARM_ENABLED)
-> +			*enabled = 1;
-> +		else
-> +			*enabled = 0;
-> +	}
-> +
-> +	return err;
-> +}
-> +
-> +/* 0-disable, 1-enable */
-> +static int rc5t619_rtc_alarm_enable(struct device *dev, unsigned int enabled)
-> +{
-> +	struct rc5t619_rtc *rtc = dev_get_drvdata(dev);
-> +	int err;
-
-err is not necessary.
-
-> +
-> +	err = regmap_update_bits(rtc->rn5t618->regmap,
-> +			RN5T618_RTC_CTRL1,
-> +			CTRL1_ALARM_ENABLED,
-> +			enabled ? CTRL1_ALARM_ENABLED : 0);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	return 0;
-> +}
-> +
-> +static int rc5t619_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alrm)
-> +{
-> +	struct rc5t619_rtc *rtc = dev_get_drvdata(dev);
-> +	u8 buff[6];
-> +	unsigned int buff_cent;
-> +	int err;
-> +	int cent_flag;
-> +	unsigned int enabled_flag;
-> +
-> +	err = regmap_read(rtc->rn5t618->regmap, RN5T618_RTC_MONTH, &buff_cent);
-> +	if (err < 0) {
-> +		dev_err(dev, "failed to read time: %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	if (buff_cent & 0x80)
-> +		cent_flag = 1;
-> +	else
-> +		cent_flag = 0;
-> +
-> +	err = regmap_bulk_read(rtc->rn5t618->regmap, RN5T618_RTC_ALARM_Y_SEC,
-> +				buff, sizeof(buff));
-> +	if (err)
-> +		return err;
-> +
-> +	err = regmap_read(rtc->rn5t618->regmap, RN5T618_RTC_CTRL1,
-> +				&enabled_flag);
-> +	if (err)
-> +		return err;
-> +
-> +	if (enabled_flag & CTRL1_ALARM_ENABLED)
-> +		enabled_flag = 1;
-
-Why don't you set alrm->enabled directly here?
-
-alrm->enabled = !!(enabled_flag & CTRL1_ALARM_ENABLED);
-
-> +	else
-> +		enabled_flag = 0;
-> +
-> +
-> +	buff[3] = buff[3] & 0x3f;
-> +
-> +	alrm->time.tm_sec  = bcd2bin(buff[0]);
-> +	alrm->time.tm_min  = bcd2bin(buff[1]);
-> +	alrm->time.tm_hour = bcd2bin(buff[2]);
-> +	alrm->time.tm_mday = bcd2bin(buff[3]);
-> +	alrm->time.tm_mon  = bcd2bin(buff[4]) - 1;
-> +	alrm->time.tm_year = bcd2bin(buff[5]) + 100 * cent_flag;
-> +	alrm->enabled = enabled_flag;
-> +	dev_dbg(dev, "read alarm: %d/%d/%d %d:%d:%d\n",
-
-Use %ptR
-
-> +		(alrm->time.tm_mon), alrm->time.tm_mday, alrm->time.tm_year,
-> +		 alrm->time.tm_hour, alrm->time.tm_min, alrm->time.tm_sec);
-> +
-> +	return 0;
-> +}
-> +
-> +static int rc5t619_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alrm)
-> +{
-> +	struct rc5t619_rtc *rtc = dev_get_drvdata(dev);
-> +	u8 buff[6];
-> +	int err;
-> +	int cent_flag;
-> +
-> +	err = 0;
-> +	rc5t619_rtc_alarm_enable(dev, 0);
-
-This may fail
-
-> +	if (rtc->irq == -1)
-> +		return -EIO;
-
-This has to be -EINVAL to get UIE emulation working.
-
-> +
-> +	if (alrm->enabled == 0)
-> +		return 0;
-> +
-> +	if (alrm->time.tm_year >= 100)
-> +		cent_flag = 1;
-> +	else
-> +		cent_flag = 0;
-> +
-> +	alrm->time.tm_mon += 1;
-> +	buff[0] = bin2bcd(alrm->time.tm_sec);
-> +	buff[1] = bin2bcd(alrm->time.tm_min);
-> +	buff[2] = bin2bcd(alrm->time.tm_hour);
-> +	buff[3] = bin2bcd(alrm->time.tm_mday);
-> +	buff[4] = bin2bcd(alrm->time.tm_mon);
-> +	buff[5] = bin2bcd(alrm->time.tm_year - 100 * cent_flag);
-> +	buff[3] |= 0x80;	/* set DAL_EXT */
-
-This bit needs a define.
-
-> +
-> +	err = regmap_bulk_write(rtc->rn5t618->regmap, RN5T618_RTC_ALARM_Y_SEC,
-> +				buff, sizeof(buff));
-> +	if (err) {
-> +		dev_err(dev, "unable to set alarm: %d\n", err);
-> +		return -EBUSY;
-
-Why EBUSY?
-
-> +	}
-> +
-> +	rc5t619_rtc_alarm_enable(dev, alrm->enabled);
-
-This may fail.
-
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct rtc_class_ops rc5t619_rtc_ops = {
-> +	.read_time	= rc5t619_rtc_read_time,
-> +	.set_time	= rc5t619_rtc_set_time,
-> +	.set_alarm	= rc5t619_rtc_set_alarm,
-> +	.read_alarm	= rc5t619_rtc_read_alarm,
-> +	.alarm_irq_enable = rc5t619_rtc_alarm_enable,
-> +};
-> +
-> +static int rc5t619_rtc_alarm_flag_clr(struct device *dev)
-> +{
-> +	struct rc5t619_rtc *rtc = dev_get_drvdata(dev);
-> +
-> +	/* clear alarm-D status bits.*/
-> +	return regmap_update_bits(rtc->rn5t618->regmap,
-> +				RN5T618_RTC_CTRL2,
-> +				CTRL2_ALARM_STATUS | CTRL2_CTC, 0);
-> +}
-> +
-> +static irqreturn_t rc5t619_rtc_irq(int irq, void *data)
-> +{
-> +	struct device *dev = data;
-> +	struct rc5t619_rtc *rtc = dev_get_drvdata(dev);
-> +
-> +	rc5t619_rtc_alarm_flag_clr(dev);
-> +
-> +	rtc_update_irq(rtc->rtc, 1, RTC_IRQF | RTC_AF);
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +
-> +static int rc5t619_rtc_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct rn5t618 *rn5t618 = dev_get_drvdata(pdev->dev.parent);
-> +	struct rc5t619_rtc *rtc;
-> +	uint8_t pon_flag, alarm_flag;
-> +	int err;
-> +
-> +	rtc = devm_kzalloc(dev, sizeof(*rtc), GFP_KERNEL);
-> +	if (IS_ERR(rtc)) {
-> +		err = PTR_ERR(rtc);
-> +		dev_err(&pdev->dev, "no enough memory for rc5t619_rtc using\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	rtc->rn5t618 = rn5t618;
-> +
-> +	dev_set_drvdata(dev, rtc);
-> +	rtc->irq = -1;
-> +
-> +	if (rn5t618->irq_data)
-> +		rtc->irq = regmap_irq_get_virq(rn5t618->irq_data,
-> +				RN5T618_IRQ_RTC);
-> +
-> +	if (rtc->irq  < 0) {
-> +		dev_err(dev, "no irq specified, wakeup is disabled\n");
-> +		rtc->irq = -1;
-> +	}
-> +
-> +	/* get interrupt flag */
-> +	err = rc5t619_rtc_alarm_is_enabled(dev, &alarm_flag);
-> +	if (err)
-> +		return err;
-> +
-> +	/* get PON flag */
-> +	err = rc5t619_rtc_pon_get_clr(&pdev->dev, &pon_flag);
-> +	if (err) {
-> +		dev_err(&pdev->dev, "get PON flag error: %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	/* using 24h-mode */
-> +	err = rc5t619_rtc_24hour_mode_set(&pdev->dev, 1);
-> +
-
-Doesn't that corrupt the time if the RTC was previously set in 12h-mode?
-
-
-> +	/* disable rtc periodic function */
-> +	err = rc5t619_rtc_periodic_disable(&pdev->dev);
-> +	if (err) {
-> +		dev_err(&pdev->dev, "disable rtc periodic int: %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	/* clearing RTC Adjust register */
-> +	err = rc5t619_rtc_clk_adjust(&pdev->dev, 0);
-> +	if (err) {
-> +		dev_err(&pdev->dev, "unable to program RTC_ADJUST: %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	/* disable interrupt */
-> +	err = rc5t619_rtc_alarm_enable(&pdev->dev, 0);
-> +	if (err) {
-> +		dev_err(&pdev->dev, "disable alarm interrupt: %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	if (pon_flag) {
-> +		alarm_flag = 0;
-> +		err = rc5t619_rtc_alarm_flag_clr(&pdev->dev);
-> +		if (err) {
-> +			dev_err(&pdev->dev,
-> +				"pon=1 clear alarm flag error: %d\n", err);
-> +			return err;
-> +		}
-> +	}
-> +
-> +	device_init_wakeup(&pdev->dev, 1);
-
-Do you want to do that even without an irq?
-
-> +
-> +	rtc->rtc = devm_rtc_device_register(&pdev->dev, pdev->name,
-> +				       &rc5t619_rtc_ops, THIS_MODULE);
-> +
-
-Please use devm_rtc_allocate_device and rtc_register_device
-
-> +	if (IS_ERR(rtc->rtc)) {
-> +		err = PTR_ERR(rtc->rtc);
-> +		dev_err(dev, "RTC device register: err %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	/* set interrupt and enable it */
-> +	if (rtc->irq != -1) {
-> +		err = devm_request_threaded_irq(&pdev->dev, rtc->irq, NULL,
-> +						rc5t619_rtc_irq,
-> +						IRQF_ONESHOT,
-> +						"rtc-rc5t619",
-> +						&pdev->dev);
-> +		if (err < 0) {
-> +			dev_err(&pdev->dev, "request IRQ:%d fail\n", rtc->irq);
-> +			rtc->irq = -1;
-> +
-> +			err = rc5t619_rtc_alarm_enable(&pdev->dev, 0);
-> +			if (err)
-> +				return err;
-> +
-> +		} else {
-> +			/* enable wake */
-> +			enable_irq_wake(rtc->irq);
-> +			/* enable alarm_d */
-> +			err = rc5t619_rtc_alarm_enable(&pdev->dev, alarm_flag);
-> +			if (err) {
-> +				dev_err(&pdev->dev, "failed rtc setup\n");
-> +				return -EBUSY;
-> +			}
-> +		}
-> +	} else {
-> +		/* system don't want to using alarm interrupt, so close it */
-> +		err = rc5t619_rtc_alarm_enable(&pdev->dev, 0);
-> +		if (err) {
-> +			dev_err(&pdev->dev, "disable rtc alarm error\n");
-> +			return err;
-> +		}
-> +
-> +		dev_err(&pdev->dev, "ricoh61x interrupt is disabled\n");
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int rc5t619_rtc_remove(struct platform_device *pdev)
-> +{
-> +	rc5t619_rtc_alarm_enable(&pdev->dev, 0);
-
-If the PMIC can be used to start the platform, you probably don't want
-to disable the alarm here. Even if it doesn't, is it actually useful to
-disable the alarm?
-
-> +
-> +	return 0;
-> +}
-> +
-> +static struct platform_driver rc5t619_rtc_driver = {
-> +	.driver	= {
-> +		.name	= "rc5t619-rtc",
-> +	},
-> +	.probe	= rc5t619_rtc_probe,
-> +	.remove	= rc5t619_rtc_remove,
-> +};
-> +
-> +module_platform_driver(rc5t619_rtc_driver);
-> +MODULE_ALIAS("platform:rc5t619-rtc");
-> +MODULE_DESCRIPTION("RICOH RC5T619 RTC driver");
-> +MODULE_LICENSE("GPL");
-> -- 
-> 2.11.0
-> 
-
+diff --git a/drivers/net/ethernet/xilinx/Kconfig b/drivers/net/ethernet/xilinx/Kconfig
+index 8d994ce..da11876 100644
+--- a/drivers/net/ethernet/xilinx/Kconfig
++++ b/drivers/net/ethernet/xilinx/Kconfig
+@@ -6,7 +6,7 @@
+ config NET_VENDOR_XILINX
+ 	bool "Xilinx devices"
+ 	default y
+-	depends on PPC || PPC32 || MICROBLAZE || ARCH_ZYNQ || MIPS || X86 || ARM || COMPILE_TEST
++	depends on PPC || PPC32 || MICROBLAZE || MIPS || X86 || ARM || ARM64 || COMPILE_TEST
+ 	---help---
+ 	  If you have a network (Ethernet) card belonging to this class, say Y.
+ 
+@@ -26,11 +26,11 @@ config XILINX_EMACLITE
+ 
+ config XILINX_AXI_EMAC
+ 	tristate "Xilinx 10/100/1000 AXI Ethernet support"
+-	depends on MICROBLAZE || X86 || ARM || COMPILE_TEST
++	depends on MICROBLAZE || X86 || ARM || ARM64 || COMPILE_TEST
+ 	select PHYLINK
+ 	---help---
+ 	  This driver supports the 10/100/1000 Ethernet from Xilinx for the
+-	  AXI bus interface used in Xilinx Virtex FPGAs.
++	  AXI bus interface used in Xilinx Virtex FPGAs and Soc's.
+ 
+ config XILINX_LL_TEMAC
+ 	tristate "Xilinx LL TEMAC (LocalLink Tri-mode Ethernet MAC) driver"
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.7.4
+
