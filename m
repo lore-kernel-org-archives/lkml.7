@@ -2,316 +2,299 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 591FCCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:47:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 845E0CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:48:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CFFE20B7C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:47:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4461620873
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:48:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="kVUTvCeN"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="WqcvXFIs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728443AbfJUMrb (ORCPT
+        id S1728735AbfJUMsF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 08:47:31 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:41793 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727959AbfJUMrb (ORCPT
+        Mon, 21 Oct 2019 08:48:05 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:51266 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727959AbfJUMsF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 08:47:31 -0400
-Received: by mail-io1-f67.google.com with SMTP id r144so3841710iod.8
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 05:47:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=j8P+PMqsbgTEkUUXtRMl9tg90RLO2oVTHLSSpP0L1Ds=;
-        b=kVUTvCeN6PMLc530aewm7qJZuU4ZF+RiaIJPn6GAE/1e6xAEOD1OklyPEhACcreYU5
-         X63xk0Gag6Htsxk8F8BRiUwqxXt3tQCsBwSZOJAs85ebSh07SqpwXPu/iebMBBiZCVBS
-         Q0h51oFSL5L4Pbauc7bj49VxX1z3j4BNaEI6ozDs7e/KYdeqlPXJJuar3DSBb7ThuSvz
-         BePr9q7pQJ93/o+cEGU73jxcan3VjF3n897/xZ5YGqOngCcyfO+jxPk3qjolaHQVC1oV
-         16itQI4PAg9Qgn0f4+idrS+d1pd9QWY0TbFyXu1bJRB5rfi5Iv+U1bFjWN4duJt9Ze/g
-         2q3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=j8P+PMqsbgTEkUUXtRMl9tg90RLO2oVTHLSSpP0L1Ds=;
-        b=lusXbXaIxItYJXu4TncwLiBt9ZAVSAFim/4oF5npOoiAwGn4p9CgUscX5F3fbSmi5l
-         f95I9hJsdrzWYyl2tOluFYx6IPvTgnaywBrpRS/+BwOk++Yw5GZ8H66ymPAx8mGHDc1U
-         8jGH944ptxt9MlcL61DPVVMgU1ZMXrFXEMq+/A1/KyF8E/175xSRtcUPx5aipwKhTz+9
-         d+AvcCXYG/Mp/MUbOc5EimsrWwf9eHegiN/L2XQvs9WVSempNGVtqpyYjOEUzfzSDixa
-         g9tq+lDQhqLu9QUVSlnCO5/JFPXB5B7Wbhe9PJK6pOiAxdV5N4ryIKZ+onygoZO/TRNC
-         h/pg==
-X-Gm-Message-State: APjAAAV15w3olo3WizgSYL14W9oHkbRA/c+f6RuXBaUU+nMfBhewH30U
-        9wiaQyXZfayk+5G3jBshropAkaUSfbfibGV916Oq3A==
-X-Google-Smtp-Source: APXvYqwn2KFCAeiVocdM7OpYEIXzmjfhzptuh44F+JsJTYnkiE8RUXwHzCNcS51fN5EvDj6Eb/6DjIBMgrXwZMdZSuc=
-X-Received: by 2002:a02:7b0d:: with SMTP id q13mr21070757jac.114.1571662049582;
- Mon, 21 Oct 2019 05:47:29 -0700 (PDT)
+        Mon, 21 Oct 2019 08:48:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1571662082; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=mqgyNMMMmE6bZdq8PkkYyKK6oc32QyDMFnXa9hmBclE=;
+        b=WqcvXFIsFJy4rgOmsnbWPO9NaojWFJ2RGIkv7G3lIxPXCJfTIGUA3MhAdw0slagdewx3bv
+        8vx1Fo798VfsODcUcxcsx5akkSN09Ibf2fGqSFjBBATHvKq4dWN/6o/4oW18097MqYL1UJ
+        WEeoUjYCORGKXRQ/blVBb/05zducaR8=
+Date:   Mon, 21 Oct 2019 14:47:57 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH 4/7] pwm: jz4740: Improve algorithm of clock calculation
+To:     Uwe =?iso-8859-1?q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Stephen Boyd <sboyd@kernel.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>, od@zcrc.me,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mathieu Malaterre <malat@debian.org>,
+        Artur Rojek <contact@artur-rojek.eu>
+Message-Id: <1571662077.3.1@crapouillou.net>
+In-Reply-To: <20190814173218.zhg4se3pppano5m3@pengutronix.de>
+References: <20190812061520.lwzk3us4ginwwxov@pengutronix.de>
+        <1565642590.2007.1@crapouillou.net>
+        <20190812214838.e5hyhnlcyykjfvsb@pengutronix.de>
+        <1565648183.2007.3@crapouillou.net>
+        <20190813052726.g37upws5rlvrszc4@pengutronix.de>
+        <1565694066.1856.1@crapouillou.net>
+        <20190813123331.m4ttfhcgt6wyrcfi@pengutronix.de>
+        <1565700448.1856.2@crapouillou.net>
+        <20190813140903.rdwy7p3mhwetmlnt@pengutronix.de>
+        <1565799035.1984.0@crapouillou.net>
+        <20190814173218.zhg4se3pppano5m3@pengutronix.de>
 MIME-Version: 1.0
-References: <20191007024131.22708-1-brgl@bgdev.pl> <20191012143722.7cb7015d@archlinux>
-In-Reply-To: <20191012143722.7cb7015d@archlinux>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 21 Oct 2019 14:47:18 +0200
-Message-ID: <CAMRc=MekOWGKo4eJ69ifV+MG5==PetPpb87Amrqm_x95sjFiGQ@mail.gmail.com>
-Subject: Re: [PATCH v2] iio: pressure: bmp280: use devm action and remove
- labels from probe
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-sob., 12 pa=C5=BA 2019 o 15:37 Jonathan Cameron <jic23@kernel.org> napisa=
-=C5=82(a):
->
-> On Mon,  7 Oct 2019 04:41:31 +0200
-> Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > We can drop some duplicate code if we use devm_action for disabling
-> > regulators and pm and the managed variant of iio_device_register().
-> >
-> > This allows us to completely remove all remove() callbacks from both
-> > i2c and spi code.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> This is on top of the bulk regulator patch which is awaiting precusors
-> getting to my upstream.  I'll hold this one as well on that.
->
-> If it looks like I've forgotten it then give me a poke.
->
+Hi,
 
-Hi Jonathan,
 
-gentle poke after v5.4-rc4. Only one of the three patches is in next
-so far, the one using bulk regulators is missing too besides this one.
+Le mer., ao=FBt 14, 2019 at 19:32, Uwe Kleine-K=F6nig=20
+<u.kleine-koenig@pengutronix.de> a =E9crit :
+> Hello Paul,
+>=20
+> On Wed, Aug 14, 2019 at 06:10:35PM +0200, Paul Cercueil wrote:
+>>  Le mar. 13 ao=FBt 2019 =E0 16:09, Uwe =3D?iso-8859-1?q?Kleine-K=3DF6nig=
+?=3D=20
+>> a =E9crit :
+>>  > On Tue, Aug 13, 2019 at 02:47:28PM +0200, Paul Cercueil wrote:
+>>  > > Le mar. 13 ao=FBt 2019 =E0 14:33, Uwe Kleine-K=F6nig a =E9crit :
+>>  > > > On Tue, Aug 13, 2019 at 01:01:06PM +0200, Paul Cercueil wrote:
+>>  > > > > Well, you said that I shouln't rely on the fact that=20
+>> clk_round_rate() will
+>>  > > > > round down. That completely defeats the previous algorithm.=20
+>> So please tell
+>>  > > > > me how to use it correctly, because I don't see it.
+>>  > > >
+>>  > > > Using clk_round_rate correctly without additional knowledge=20
+>> is hard. If
+>>  > > > you assume at least some sane behaviour you'd still have to=20
+>> call it
+>>  > > > multiple times. Assuming maxrate is the maximal rate you can=20
+>> handle
+>>  > > > without overflowing your PWM registers you have to do:
+>>  > > >
+>>  > > > 	rate =3D maxrate;
+>>  > > > 	rounded_rate =3D clk_round_rate(clk, rate);
+>>  > > > 	while (rounded_rate > rate) {
+>>  > > > 		if (rate < rounded_rate - rate) {
+>>  > > > 			/*
+>>  > > > 			 * clk doesn't support a rate smaller than
+>>  > > > 			 * maxrate (or the round_rate callback doesn't
+>>  > > > 			 * round consistently).
+>>  > > > 			 */
+>>  > > > 			 return -ESOMETHING;
+>>  > > > 		}
+>>  > > > 		rate =3D rate - (rounded_rate - rate)
+>>  > > > 		rounded_rate =3D clk_round_rate(clk, rate);
+>>  > > > 	}
+>>  > > >
+>>  > > > 	return rate;
+>>  > > >
+>>  > > > Probably it would be sensible to put that in a function=20
+>> provided by the
+>>  > > > clk framework (maybe call it clk_round_rate_down and maybe=20
+>> with
+>>  > > > additional checks).
+>>  > >
+>>  > >  clk_round_rate_down() has been refused multiple times in the=20
+>> past for
+>>  > >  reasons that Stephen can explain.
+>>  >
+>>  > I'd be really interested in these reasons as I think the clk=20
+>> framework
+>>  > should make it easy to solve common tasks related to clocks. And=20
+>> finding
+>>  > out the biggest supported rate not bigger than a given maxrate is
+>>  > something I consider such a common task.
+>>  >
+>>  > The first hit I found when searching was
+>>  > https://lkml.org/lkml/2010/7/14/260 . In there Stephen suggested=20
+>> that
+>>  > clk_round_rate with the current semantic is hardly useful and=20
+>> suggested
+>>  > clk_round_rate_up() and clk_round_rate_down() himself.
+>>=20
+>>  That's from 2010, though.
+>=20
+> If you have a better link please tell me.
+>=20
+>>  I agree that clk_round_rate_up() and clk_round_rate_down() should=20
+>> exist.
+>>  Even if they return -ENOSYS if it's not implemented for a given=20
+>> clock
+>>  controller.
+>=20
+> ack.
+>=20
+>>  > > > > I came up with a much smarter alternative, that doesn't=20
+>> rely on the rounding
+>>  > > > > method of clk_round_rate, and which is better overall (no=20
+>> loop needed). It
+>>  > > > > sounds to me like you're bashing the code without making=20
+>> the effort to
+>>  > > > > understand what it does.
+>>  > > > >
+>>  > > > > Thierry called it a "neat trick"
+>>  > > > > (https://patchwork.kernel.org/patch/10836879/) so it cannot=20
+>> be as bad as you
+>>  > > > > say.
+>>  > > >
+>>  > > > Either that or Thierry failed to see the downside. The=20
+>> obvious downside
+>>  > > > is that once you set the period to something long (and so the=20
+>> clk was
+>>  > > > limited to a small frequency) you never make the clock any=20
+>> faster
+>>  > > > afterwards.
+>>  > >
+>>  > >  Read the algorithm again.
+>>  >
+>>  > I indeed missed a call to clk_set_rate(clk, parent_rate). I=20
+>> thought I
+>>  > grepped for clk_set_rate before claiming the code was broken.=20
+>> Sorry.
+>>  >
+>>  > So I think the code works indeed, but it feels like abusing
+>>  > clk_set_max_rate. So I'd like to see some words from Stephen=20
+>> about this
+>>  > procedure.
+>>  >
+>>  > Also I think this is kind of inelegant to set the maximal rate=20
+>> twice. At
+>>  > least call clk_set_max_rate only once please.
+>>=20
+>>  Ok. I can do that.
+>=20
+> I would still prefer to hear from Stephen about this approach. It=20
+> seems
+> wrong to have two different ways to achieve the same goal and my
+> impression is that clk_round_rate is the function designed for this=20
+> use
+> case.
 
-Best regards,
-Bartosz Golaszewski
+Stephen, any feedback?
+I'm still stuck here.
 
-> Thanks,
->
-> Jonathan
->
-> > ---
-> > v1 -> v2:
-> > - squash the patches using devm_iio_device_register() and devm_action
-> >   to keep the changes bisectable
-> >
-> >  drivers/iio/pressure/bmp280-core.c | 62 +++++++++++++++---------------
-> >  drivers/iio/pressure/bmp280-i2c.c  |  6 ---
-> >  drivers/iio/pressure/bmp280-spi.c  |  6 ---
-> >  drivers/iio/pressure/bmp280.h      |  1 -
-> >  4 files changed, 30 insertions(+), 45 deletions(-)
-> >
-> > diff --git a/drivers/iio/pressure/bmp280-core.c b/drivers/iio/pressure/=
-bmp280-core.c
-> > index c2988dbdb1a7..79254dd26dfd 100644
-> > --- a/drivers/iio/pressure/bmp280-core.c
-> > +++ b/drivers/iio/pressure/bmp280-core.c
-> > @@ -984,6 +984,22 @@ static int bmp085_fetch_eoc_irq(struct device *dev=
-,
-> >       return 0;
-> >  }
-> >
-> > +static void bmp280_pm_disable(void *data)
-> > +{
-> > +     struct device *dev =3D data;
-> > +
-> > +     pm_runtime_get_sync(dev);
-> > +     pm_runtime_put_noidle(dev);
-> > +     pm_runtime_disable(dev);
-> > +}
-> > +
-> > +static void bmp280_regulators_disable(void *data)
-> > +{
-> > +     struct regulator_bulk_data *supplies =3D data;
-> > +
-> > +     regulator_bulk_disable(BMP280_NUM_SUPPLIES, supplies);
-> > +}
-> > +
-> >  int bmp280_common_probe(struct device *dev,
-> >                       struct regmap *regmap,
-> >                       unsigned int chip,
-> > @@ -1055,6 +1071,11 @@ int bmp280_common_probe(struct device *dev,
-> >               return ret;
-> >       }
-> >
-> > +     ret =3D devm_add_action_or_reset(dev, bmp280_regulators_disable,
-> > +                                    data->supplies);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> >       /* Wait to make sure we started up properly */
-> >       usleep_range(data->start_up_time, data->start_up_time + 100);
-> >
-> > @@ -1069,17 +1090,16 @@ int bmp280_common_probe(struct device *dev,
-> >       data->regmap =3D regmap;
-> >       ret =3D regmap_read(regmap, BMP280_REG_ID, &chip_id);
-> >       if (ret < 0)
-> > -             goto out_disable_regulators;
-> > +             return ret;
-> >       if (chip_id !=3D chip) {
-> >               dev_err(dev, "bad chip id: expected %x got %x\n",
-> >                       chip, chip_id);
-> > -             ret =3D -EINVAL;
-> > -             goto out_disable_regulators;
-> > +             return -EINVAL;
-> >       }
-> >
-> >       ret =3D data->chip_info->chip_config(data);
-> >       if (ret < 0)
-> > -             goto out_disable_regulators;
-> > +             return ret;
-> >
-> >       dev_set_drvdata(dev, indio_dev);
-> >
-> > @@ -1093,14 +1113,14 @@ int bmp280_common_probe(struct device *dev,
-> >               if (ret < 0) {
-> >                       dev_err(data->dev,
-> >                               "failed to read calibration coefficients\=
-n");
-> > -                     goto out_disable_regulators;
-> > +                     return ret;
-> >               }
-> >       } else if (chip_id =3D=3D BMP280_CHIP_ID || chip_id =3D=3D BME280=
-_CHIP_ID) {
-> >               ret =3D bmp280_read_calib(data, &data->calib.bmp280, chip=
-_id);
-> >               if (ret < 0) {
-> >                       dev_err(data->dev,
-> >                               "failed to read calibration coefficients\=
-n");
-> > -                     goto out_disable_regulators;
-> > +                     return ret;
-> >               }
-> >       }
-> >
-> > @@ -1112,7 +1132,7 @@ int bmp280_common_probe(struct device *dev,
-> >       if (irq > 0 || (chip_id  =3D=3D BMP180_CHIP_ID)) {
-> >               ret =3D bmp085_fetch_eoc_irq(dev, name, irq, data);
-> >               if (ret)
-> > -                     goto out_disable_regulators;
-> > +                     return ret;
-> >       }
-> >
-> >       /* Enable runtime PM */
-> > @@ -1127,36 +1147,14 @@ int bmp280_common_probe(struct device *dev,
-> >       pm_runtime_use_autosuspend(dev);
-> >       pm_runtime_put(dev);
-> >
-> > -     ret =3D iio_device_register(indio_dev);
-> > +     ret =3D devm_add_action_or_reset(dev, bmp280_pm_disable, dev);
-> >       if (ret)
-> > -             goto out_runtime_pm_disable;
-> > -
-> > -     return 0;
-> > +             return ret;
-> >
-> > -out_runtime_pm_disable:
-> > -     pm_runtime_get_sync(data->dev);
-> > -     pm_runtime_put_noidle(data->dev);
-> > -     pm_runtime_disable(data->dev);
-> > -out_disable_regulators:
-> > -     regulator_bulk_disable(BMP280_NUM_SUPPLIES, data->supplies);
-> > -     return ret;
-> > +     return devm_iio_device_register(dev, indio_dev);
-> >  }
-> >  EXPORT_SYMBOL(bmp280_common_probe);
-> >
-> > -int bmp280_common_remove(struct device *dev)
-> > -{
-> > -     struct iio_dev *indio_dev =3D dev_get_drvdata(dev);
-> > -     struct bmp280_data *data =3D iio_priv(indio_dev);
-> > -
-> > -     iio_device_unregister(indio_dev);
-> > -     pm_runtime_get_sync(data->dev);
-> > -     pm_runtime_put_noidle(data->dev);
-> > -     pm_runtime_disable(data->dev);
-> > -     regulator_bulk_disable(BMP280_NUM_SUPPLIES, data->supplies);
-> > -     return 0;
-> > -}
-> > -EXPORT_SYMBOL(bmp280_common_remove);
-> > -
-> >  #ifdef CONFIG_PM
-> >  static int bmp280_runtime_suspend(struct device *dev)
-> >  {
-> > diff --git a/drivers/iio/pressure/bmp280-i2c.c b/drivers/iio/pressure/b=
-mp280-i2c.c
-> > index acd9a3784fb4..3109c8e2cc11 100644
-> > --- a/drivers/iio/pressure/bmp280-i2c.c
-> > +++ b/drivers/iio/pressure/bmp280-i2c.c
-> > @@ -38,11 +38,6 @@ static int bmp280_i2c_probe(struct i2c_client *clien=
-t,
-> >                                  client->irq);
-> >  }
-> >
-> > -static int bmp280_i2c_remove(struct i2c_client *client)
-> > -{
-> > -     return bmp280_common_remove(&client->dev);
-> > -}
-> > -
-> >  static const struct acpi_device_id bmp280_acpi_i2c_match[] =3D {
-> >       {"BMP0280", BMP280_CHIP_ID },
-> >       {"BMP0180", BMP180_CHIP_ID },
-> > @@ -82,7 +77,6 @@ static struct i2c_driver bmp280_i2c_driver =3D {
-> >               .pm =3D &bmp280_dev_pm_ops,
-> >       },
-> >       .probe          =3D bmp280_i2c_probe,
-> > -     .remove         =3D bmp280_i2c_remove,
-> >       .id_table       =3D bmp280_i2c_id,
-> >  };
-> >  module_i2c_driver(bmp280_i2c_driver);
-> > diff --git a/drivers/iio/pressure/bmp280-spi.c b/drivers/iio/pressure/b=
-mp280-spi.c
-> > index 9d57b7a3b134..625b86878ad8 100644
-> > --- a/drivers/iio/pressure/bmp280-spi.c
-> > +++ b/drivers/iio/pressure/bmp280-spi.c
-> > @@ -86,11 +86,6 @@ static int bmp280_spi_probe(struct spi_device *spi)
-> >                                  spi->irq);
-> >  }
-> >
-> > -static int bmp280_spi_remove(struct spi_device *spi)
-> > -{
-> > -     return bmp280_common_remove(&spi->dev);
-> > -}
-> > -
-> >  static const struct of_device_id bmp280_of_spi_match[] =3D {
-> >       { .compatible =3D "bosch,bmp085", },
-> >       { .compatible =3D "bosch,bmp180", },
-> > @@ -118,7 +113,6 @@ static struct spi_driver bmp280_spi_driver =3D {
-> >       },
-> >       .id_table =3D bmp280_spi_id,
-> >       .probe =3D bmp280_spi_probe,
-> > -     .remove =3D bmp280_spi_remove,
-> >  };
-> >  module_spi_driver(bmp280_spi_driver);
-> >
-> > diff --git a/drivers/iio/pressure/bmp280.h b/drivers/iio/pressure/bmp28=
-0.h
-> > index eda50ef65706..57ba0e85db91 100644
-> > --- a/drivers/iio/pressure/bmp280.h
-> > +++ b/drivers/iio/pressure/bmp280.h
-> > @@ -112,7 +112,6 @@ int bmp280_common_probe(struct device *dev,
-> >                       unsigned int chip,
-> >                       const char *name,
-> >                       int irq);
-> > -int bmp280_common_remove(struct device *dev);
-> >
-> >  /* PM ops */
-> >  extern const struct dev_pm_ops bmp280_dev_pm_ops;
->
+
+>>  > > > > > > > > E.g. if at a rate of 12 MHz your computed hardware=20
+>> value for the period
+>>  > > > > > > > > is 0xf000, then at a rate of 24 MHz it won't fit in=20
+>> 16 bits. So the clock
+>>  > > > > > > > > rate must be reduced to the highest possible that=20
+>> will still give you a
+>>  > > > > > > > > < 16-bit value.
+>>  > > > > > > > >
+>>  > > > > > > > > We always want the highest possible clock rate that=20
+>> works, for the sake of
+>>  > > > > > > > > precision.
+>>  > > > > > > >
+>>  > > > > > > > This is dubious; but ok to keep the driver simple.>=20
+>> (Consider a PWM that
+>>  > > > > > > > can run at i MHz for i in [1, .. 30]. If a period of=20
+>> 120 ns and a duty
+>>  > > > > > > > cycle of 40 ns is requested you can get an exact=20
+>> match with 25 MHz, but
+>>  > > > > > > > not with 30 MHz.)
+>>  > > > > > >
+>>  > > > > > > The clock rate is actually (parent_rate >> (2 * x) )
+>>  > > > > > > for x =3D 0, 1, 2, ...
+>>  > > > > > >
+>>  > > > > > > So if your parent_rate is 30 MHz the next valid one is=20
+>> 7.5 MHz, and the
+>>  > > > > > > next one is 1.875 MHz. It'd be very unlikely that you=20
+>> get a better match at
+>>  > > > > > > a lower clock.
+>>  > > > > >
+>>  > > > > > If the smaller freqs are all dividers of the fastest=20
+>> that's fine. Please
+>>  > > > > > note in a code comment that you're assuming this.
+>>  > > > >
+>>  > > > >  No, I am not assuming this. The current driver just picks=20
+>> the highest clock
+>>  > > > >  rate that works. We're not changing the behaviour here.
+>>  > > >
+>>  > > > But you hide it behind clk API functions that don't guarantee=20
+>> this
+>>  > > > behaviour. And even if it works for you it might not for the=20
+>> next person
+>>  > > > who copies your code to support another hardware.
+>>  > >
+>>  > >  Again, I'm not *trying* to guarantee this behaviour.
+>>  >
+>>  > I didn't request you should guarantee this behaviour. I want you=20
+>> to make
+>>  > it obvious for readers of your code that you rely on something=20
+>> that
+>>  > isn't guaranteed. That your code works today isn't a good enough=20
+>> excuse.
+>>  > There are various examples like these. If you want a few:
+>>  >
+>>  >  - printf("string: %s\n", NULL); works fine with glibc, but=20
+>> segfaults on
+>>  >    other libcs.
+>>  >  - setenv("MYVAR", NULL) used to work (and was equivalent to
+>>  >    setenv("MYVAR", "")) but that was never guaranteed. Then at=20
+>> some
+>>  >    point of time it started to segfault.
+>>  >  - Look into commits like=20
+>> a4435febd4c0f14b25159dca249ecf91301c7c76. This
+>>  >    used to work fine until compilers were changed to optimize more
+>>  >    aggressively.
+>>  >
+>>  > Now if you use a clk and know that all rates smaller than the=20
+>> requested
+>>  > one are divisors of the fast one and your code only works (here:=20
+>> is
+>>  > optimal) when this condition is given, you're walking on thin ice=20
+>> just
+>>  > because this fact it's not guaranteed.
+>>  > The least you can do is to add a code comment to make people=20
+>> aware who
+>>  > debug the breakage or copy your code.
+>>=20
+>>  If I was assuming something, it's not that the requested clock=20
+>> rates are
+>>  always integer dividers of the parent rate - but rather that the=20
+>> difference
+>>  in precision between two possible clock rates (even=20
+>> non-integer-dividers) is
+>>  so tiny that we just don't care.
+>=20
+> I'm more exacting here. If you are asked for X and can provide X - 2=20
+> you
+> shouldn't provide X - 12. Depending on the use case the consumer is=20
+> happy
+> about every bit of accuracy they can get. So if you deliberately=20
+> provide
+> X - 12 because it is easier to do and good enough for you, at least
+> document this laziness to not waste other people's time more than
+> necessary.
+>=20
+> Best regards
+> Uwe
+>=20
+> --
+> Pengutronix e.K.                           | Uwe Kleine-K=F6nig       =20
+>     |
+> Industrial Linux Solutions                 |=20
+> http://www.pengutronix.de/  |
+
+=
+
