@@ -2,124 +2,95 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E1F2CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 02:32:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1764DCA9EAE
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 02:35:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FF7F2064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 02:32:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D74582064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 02:35:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SbVXqm9R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbfJUCcw (ORCPT
+        id S1726895AbfJUCfB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 20 Oct 2019 22:32:52 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:48842 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726726AbfJUCcv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 20 Oct 2019 22:32:51 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id A1C231A04CB;
-        Mon, 21 Oct 2019 04:32:49 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id D22EF1A085F;
-        Mon, 21 Oct 2019 04:32:45 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 41597402B4;
-        Mon, 21 Oct 2019 10:32:41 +0800 (SGT)
-From:   Peng Ma <peng.ma@nxp.com>
-To:     vkoul@kernel.org
-Cc:     dan.j.williams@intel.com, leoyang.li@nxp.com,
-        k.kozlowski.k@gmail.com, fabio.estevam@nxp.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peng Ma <peng.ma@nxp.com>
-Subject: [V2] dmaengine: fsl-edma: Add eDMA support for QorIQ LS1028A platform
-Date:   Mon, 21 Oct 2019 10:21:49 +0800
-Message-Id: <20191021022149.37112-1-peng.ma@nxp.com>
-X-Mailer: git-send-email 2.9.5
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Sun, 20 Oct 2019 22:35:01 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:37463 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726726AbfJUCfB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 20 Oct 2019 22:35:01 -0400
+Received: by mail-pg1-f193.google.com with SMTP id p1so6808505pgi.4;
+        Sun, 20 Oct 2019 19:34:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=4dTX5QEeIMl1rHSa77n8K4615s4yY1hd+Bbq0tmT6Iw=;
+        b=SbVXqm9R6gVBxOC4iuCx7FtSH2VL4fGpSlu6lIm9eFNs1Bum6ZDzI6powSwnqd0D6/
+         NRY86YgDt67SYJqqE334D6Et7203nBFuzWrWgVqlbwOCilnq5/BxR53I1kSyJYCmvRku
+         dg0v/D5LUusYdvR5uZVR2IosWWbIobXrzzuqNP3wyYcUaqKKylgBCKdcORL1YW9jXO8X
+         P8GyJB2z193Fycc7g+UD9QL65+7PGFXNYwmwZQeOrOe4ZR7OAKTG3ji15e/scSUieFsN
+         iovGbhgUJlhPy4QJEv7pBIsix4cq2KnqiKK7wpD8DNr+O9az/EQE/cIPRQDeaG3MZpD+
+         S7tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=4dTX5QEeIMl1rHSa77n8K4615s4yY1hd+Bbq0tmT6Iw=;
+        b=Xg3Si0YsaaNXOiNlC+mlszQ6VnHpGw3Yv2zmD2TzsXlznv+txRM8JZVJ2jWVMV12+y
+         7+xygjw62xNyJPtfO1NquhJo7ZolaQKRr5u14BRBzMOF3xBfCUuEgw+7Y+Sw5m2Gc94i
+         k37mb0Oq9jsFesZiCScq+dP4g9iEAAWilmmCjjj2jDiQBzDMb3PqlwVwZpbo4zjOTMAy
+         l5mksU7CXgqVkwJDtHzUfVMDvsbDCdbJq/PcULrtbT/Gxfr8qhZfBtj11a33MMVSI4SW
+         moyGQJb28n2dVjrL6HHWkPSchxTJcDS0YTCkMZ627ZCriTlgPUse7BNQAU0AraOc0UvD
+         nfjA==
+X-Gm-Message-State: APjAAAUGjRQG+iYsUCspw7spOfBPS3511XB9roqYmX9USQwSGLmXTq4B
+        Xwp1MLW1baBFpuVmDxM2UiRCDfm3
+X-Google-Smtp-Source: APXvYqwFhXqRcW8GJS8bTstm30XBsZCBgB7gzCsRnoYaoaLvOOq0Sj8f9cx0cxfBZl/5fhOurVDRBw==
+X-Received: by 2002:a65:6082:: with SMTP id t2mr23332023pgu.363.1571625298770;
+        Sun, 20 Oct 2019 19:34:58 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id t13sm14441333pfh.12.2019.10.20.19.34.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 20 Oct 2019 19:34:58 -0700 (PDT)
+Subject: Re: [PATCH net-next 01/16] net: dsa: use dsa_to_port helper
+ everywhere
+To:     Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        netdev@vger.kernel.org
+References: <20191020031941.3805884-1-vivien.didelot@gmail.com>
+ <20191020031941.3805884-2-vivien.didelot@gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <f96357d4-4e64-9c8f-073d-7c6ae8d570b3@gmail.com>
+Date:   Sun, 20 Oct 2019 19:34:57 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
+MIME-Version: 1.0
+In-Reply-To: <20191020031941.3805884-2-vivien.didelot@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Our platforms(such as LS1021A, LS1012A, LS1043A, LS1046A, LS1028A) with below
-registers(CHCFG0 - CHCFG15) of eDMA as follows:
-*-----------------------------------------------------------*
-|     Offset   |	OTHERS      |		LS1028A	    |
-|--------------|--------------------|-----------------------|
-|     0x0      |        CHCFG0      |           CHCFG3      |
-|--------------|--------------------|-----------------------|
-|     0x1      |        CHCFG1      |           CHCFG2      |
-|--------------|--------------------|-----------------------|
-|     0x2      |        CHCFG2      |           CHCFG1      |
-|--------------|--------------------|-----------------------|
-|     0x3      |        CHCFG3      |           CHCFG0      |
-|--------------|--------------------|-----------------------|
-|     ...      |        ......      |           ......      |
-|--------------|--------------------|-----------------------|
-|     0xC      |        CHCFG12     |           CHCFG15     |
-|--------------|--------------------|-----------------------|
-|     0xD      |        CHCFG13     |           CHCFG14     |
-|--------------|--------------------|-----------------------|
-|     0xE      |        CHCFG14     |           CHCFG13     |
-|--------------|--------------------|-----------------------|
-|     0xF      |        CHCFG15     |           CHCFG12     |
-*-----------------------------------------------------------*
 
-This patch is to improve edma driver to fit LS1028A platform.
 
-Signed-off-by: Peng Ma <peng.ma@nxp.com>
----
-Changed for V2:
-	- Explaining what's the "Our platforms"
+On 10/19/2019 8:19 PM, Vivien Didelot wrote:
+> Do not let the drivers access the ds->ports static array directly
+> while there is a dsa_to_port helper for this purpose.
+> 
+> At the same time, un-const this helper since the SJA1105 driver
+> assigns the priv member of the returned dsa_port structure.
+> 
+> Signed-off-by: Vivien Didelot <vivien.didelot@gmail.com>
 
- drivers/dma/fsl-edma-common.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.c
-index b1a7ca9..611186b 100644
---- a/drivers/dma/fsl-edma-common.c
-+++ b/drivers/dma/fsl-edma-common.c
-@@ -7,6 +7,7 @@
- #include <linux/module.h>
- #include <linux/slab.h>
- #include <linux/dma-mapping.h>
-+#include <linux/sys_soc.h>
- 
- #include "fsl-edma-common.h"
- 
-@@ -42,6 +43,11 @@
- 
- #define EDMA_TCD		0x1000
- 
-+static struct soc_device_attribute soc_fixup_tuning[] = {
-+	{ .family = "QorIQ LS1028A"},
-+	{ },
-+};
-+
- static void fsl_edma_enable_request(struct fsl_edma_chan *fsl_chan)
- {
- 	struct edma_regs *regs = &fsl_chan->edma->regs;
-@@ -109,10 +115,16 @@ void fsl_edma_chan_mux(struct fsl_edma_chan *fsl_chan,
- 	u32 ch = fsl_chan->vchan.chan.chan_id;
- 	void __iomem *muxaddr;
- 	unsigned int chans_per_mux, ch_off;
-+	int endian_diff[4] = {3, 1, -1, -3};
- 	u32 dmamux_nr = fsl_chan->edma->drvdata->dmamuxs;
- 
- 	chans_per_mux = fsl_chan->edma->n_chans / dmamux_nr;
- 	ch_off = fsl_chan->vchan.chan.chan_id % chans_per_mux;
-+
-+	if (!fsl_chan->edma->big_endian &&
-+	    soc_device_match(soc_fixup_tuning))
-+		ch_off += endian_diff[ch_off % 4];
-+
- 	muxaddr = fsl_chan->edma->muxbase[ch / chans_per_mux];
- 	slot = EDMAMUX_CHCFG_SOURCE(slot);
- 
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
-2.9.5
-
+Florian
