@@ -2,219 +2,266 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AEEDCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 18:40:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23500CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 18:47:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEC6E2086D
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 18:40:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6EEB2086D
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 18:47:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ys7t+SW9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730056AbfJUSkP convert rfc822-to-8bit (ORCPT
+        id S1729826AbfJUSrD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 14:40:15 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:42587 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729826AbfJUSkM (ORCPT
+        Mon, 21 Oct 2019 14:47:03 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:40524 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726672AbfJUSrD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 14:40:12 -0400
-Received: from mail-pg1-f198.google.com ([209.85.215.198])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1iMcbA-0001aS-8O
-        for linux-kernel@vger.kernel.org; Mon, 21 Oct 2019 18:40:08 +0000
-Received: by mail-pg1-f198.google.com with SMTP id u4so10875796pgp.23
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 11:40:08 -0700 (PDT)
+        Mon, 21 Oct 2019 14:47:03 -0400
+Received: by mail-pg1-f195.google.com with SMTP id 15so2988939pgt.7
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 11:47:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4oWcMvAF3AkSdh7Jj7EOsobOZH0CAMgAfdM6Iy8i7tY=;
+        b=Ys7t+SW9gBEB82MvPaaEycHtdcBO4kIjr1l9wHD/NjJ+GMUiIHDypGSeaugD98W3D2
+         3ozejRwgsJXfG9OnLTt52MC6j2k2BYHBBdoMo/ONXrMzTJXovHZbiN/RtHabO2cOlkSQ
+         BDFedaOUgu7Y71rAftwiqyOwu5Ws/52l9YAL4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=uV/wr5mStYOMFDqP/0q8JQz+au2riqBIlFBstNY30Zc=;
-        b=aV0WbmlTLK9U6YaBVk1Zu5ahQoD39GtPuQ+2MnR2c36ZhAVIwRfrYf2mQdq8VICLy1
-         VKEKkfWvbHQBlSP3lxeilOhHOOSr2v/FyrIxpc1ADRckBsT3ZsUK6hGnVZ5tzGU+v0iT
-         gO4n0VmFox9u3SnDZlrIUro7UxrzafI2fWZpTyYU2DqBUdQelyvRRYyPQ0OvmJNk1tz3
-         vyIzF3NH+tAoJXoyiIo6jFw81zZE+8YXhHdetHR4LWGtT36ygcUpSsXYskcHWdq9I+7T
-         5RIDOOe/AgDPanu6t9gxVvE/LMgWe2X/zxA2pfnd08btE1iiw0/yCCKgBsy2NuypZvoO
-         5lEA==
-X-Gm-Message-State: APjAAAWtZ60VK+Om8flMpmB6ZHx80RMg0TdUC8M8+Ic1cunYFLjuheUT
-        bVQdW1yQgIcbbShnudT8BLxOOyb4axifwkfpM/nx9MfZj4X2zi9z0d5xlRcUU3aLXUHn4Pmgcgu
-        glJPl4pJh8ymtJfOWzj8ijAkdJfYwEgCKrRyhGnPozw==
-X-Received: by 2002:a62:870c:: with SMTP id i12mr24621404pfe.103.1571683206825;
-        Mon, 21 Oct 2019 11:40:06 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqy3ZfDTBM98KYJpOua+fOYeuwtOuN36GK2rgrfYo9Ujm2SqfHI2N55tjmZMzIi1FQe01QzYBw==
-X-Received: by 2002:a62:870c:: with SMTP id i12mr24621370pfe.103.1571683206241;
-        Mon, 21 Oct 2019 11:40:06 -0700 (PDT)
-Received: from 2001-b011-380f-3c42-8dca-5b50-948b-6043.dynamic-ip6.hinet.net (2001-b011-380f-3c42-8dca-5b50-948b-6043.dynamic-ip6.hinet.net. [2001:b011:380f:3c42:8dca:5b50:948b:6043])
-        by smtp.gmail.com with ESMTPSA id z12sm18208235pfj.41.2019.10.21.11.40.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 21 Oct 2019 11:40:05 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3601\))
-Subject: Re: [PATCH v3] usb: Add a new quirk to let buggy hub enable and
- disable LPM during suspend and resume
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <42d78a3c-489b-870b-2b38-1a5799d66849@linux.intel.com>
-Date:   Tue, 22 Oct 2019 02:40:00 +0800
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        USB list <linux-usb@vger.kernel.org>,
-        Kernel development list <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <A1608421-22BC-4200-9077-3F21164B1E9A@canonical.com>
-References: <Pine.LNX.4.44L0.1910031503050.1797-100000@iolanthe.rowland.org>
- <A6EC775D-CE42-4F34-9B87-478482EF683A@canonical.com>
- <20191018185918.GA1204767@kroah.com>
- <42d78a3c-489b-870b-2b38-1a5799d66849@linux.intel.com>
-To:     Mathias Nyman <mathias.nyman@linux.intel.com>
-X-Mailer: Apple Mail (2.3601)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4oWcMvAF3AkSdh7Jj7EOsobOZH0CAMgAfdM6Iy8i7tY=;
+        b=ew6Rhe/AwlY3unKL8x+d9PdBNHFdOPd0rEaeLyStDvG5ztAO8yvgL0ZDEPatJpxrCY
+         poi60ugknf9jnUwMB+8uucjp3x6hXcyole+btA5QIGSnxaN/g3Mg9TH2aDqUiAuUM4u5
+         dNF/8LzJ0WruuRFvENmdY77g9yGZXvV1nL+RJ+vciwaA2FAlK9KGOcQUTegbubFgY90i
+         JsMspBPr/CjHOpUDc6jNc/v/7z0NA6nhc6fbSD2gDEHkDrAQ8Y9Ci/Ftd62MJv50S41f
+         9Amzu80ZwP9FusqRvRIUrw0Wxr7DtBKKarOw5Gix4X3dLuDE0EBxiz7dKiB+PxJtHk/X
+         J8qg==
+X-Gm-Message-State: APjAAAXpgay60U+UyiMAsgMmJTCCODJ+WahCZ2XNiXOkujQmV7eR2Gmn
+        jQmJZXqPjEy2d8iVd07bvofpqw==
+X-Google-Smtp-Source: APXvYqzDaJOYNm1B1ci5HNl8Uvds7odpyEAMRkOJ1JiIJEDNp9dyTbfunHlypCqMzsTclpmlGVSdyw==
+X-Received: by 2002:aa7:90da:: with SMTP id k26mr25459478pfk.141.1571683622376;
+        Mon, 21 Oct 2019 11:47:02 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id x12sm15460021pfm.130.2019.10.21.11.47.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 21 Oct 2019 11:47:01 -0700 (PDT)
+Date:   Mon, 21 Oct 2019 11:46:58 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Pavel Labath <labath@google.com>,
+        Pratyush Anand <panand@redhat.com>, kinaba@google.com,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM: hw_breakpoint: Handle inexact watchpoint addresses
+Message-ID: <20191021184658.GE20212@google.com>
+References: <20191019111216.1.I82eae759ca6dc28a245b043f485ca490e3015321@changeid>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191019111216.1.I82eae759ca6dc28a245b043f485ca490e3015321@changeid>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-> On Oct 21, 2019, at 21:59, Mathias Nyman <mathias.nyman@linux.intel.com> wrote:
+On Sat, Oct 19, 2019 at 11:12:26AM -0700, Douglas Anderson wrote:
+> This is commit fdfeff0f9e3d ("arm64: hw_breakpoint: Handle inexact
+> watchpoint addresses") but ported to arm32, which has the same
+> problem.
 > 
-> On 18.10.2019 21.59, Greg Kroah-Hartman wrote:
->> On Thu, Oct 17, 2019 at 02:33:00PM +0800, Kai-Heng Feng wrote:
->>> 
->>> 
->>>> On Oct 4, 2019, at 03:04, Alan Stern <stern@rowland.harvard.edu> wrote:
->>>> 
->>>> On Fri, 4 Oct 2019, Kai-Heng Feng wrote:
->>>> 
->>>>> Dell WD15 dock has a topology like this:
->>>>> /:  Bus 04.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/2p, 10000M
->>>>>    |__ Port 1: Dev 2, If 0, Class=Hub, Driver=hub/7p, 5000M
->>>>>            |__ Port 2: Dev 3, If 0, Class=Vendor Specific Class, Driver=r8152, 5000M
->>>>> 
->>>>> Their IDs:
->>>>> Bus 004 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
->>>>> Bus 004 Device 002: ID 0424:5537 Standard Microsystems Corp.
->>>>> Bus 004 Device 004: ID 0bda:8153 Realtek Semiconductor Corp.
->>>>> 
->>>>> Ethernet cannot be detected after plugging ethernet cable to the dock,
->>>>> the hub and roothub get runtime resumed and runtime suspended
->>>>> immediately:
->>>>> ...
->>>>> [  433.315169] xhci_hcd 0000:3a:00.0: hcd_pci_runtime_resume: 0
->>>>> [  433.315204] usb usb4: usb auto-resume
->>>>> [  433.315226] hub 4-0:1.0: hub_resume
->>>>> [  433.315239] xhci_hcd 0000:3a:00.0: Get port status 4-1 read: 0x10202e2, return 0x10343
->>>>> [  433.315264] usb usb4-port1: status 0343 change 0001
->>>>> [  433.315279] xhci_hcd 0000:3a:00.0: clear port1 connect change, portsc: 0x10002e2
->>>>> [  433.315293] xhci_hcd 0000:3a:00.0: Get port status 4-2 read: 0x2a0, return 0x2a0
->>>>> [  433.317012] xhci_hcd 0000:3a:00.0: xhci_hub_status_data: stopping port polling.
->>>>> [  433.422282] xhci_hcd 0000:3a:00.0: Get port status 4-1 read: 0x10002e2, return 0x343
->>>>> 
->>>>> At this point the SMSC hub (usb 4-1) enters into compliance mode
->>>>> (USB_SS_PORT_LS_COMP_MOD), and USB core tries to warm-reset it,
->>>>> 
->>>>> [  433.422307] usb usb4-port1: do warm reset
->>>>> [  433.422311] usb 4-1: device reset not allowed in state 8
->>>>> [  433.422339] hub 4-0:1.0: state 7 ports 2 chg 0002 evt 0000
->>>>> [  433.422346] xhci_hcd 0000:3a:00.0: Get port status 4-1 read: 0x10002e2, return 0x343
->>>>> [  433.422356] usb usb4-port1: do warm reset
->>>>> [  433.422358] usb 4-1: device reset not allowed in state 8
->>>>> [  433.422428] xhci_hcd 0000:3a:00.0: set port remote wake mask, actual port 0 status  = 0xf0002e2
->>>>> [  433.422455] xhci_hcd 0000:3a:00.0: set port remote wake mask, actual port 1 status  = 0xe0002a0
->>>>> [  433.422465] hub 4-0:1.0: hub_suspend
->>>>> [  433.422475] usb usb4: bus auto-suspend, wakeup 1
->>>>> [  433.426161] xhci_hcd 0000:3a:00.0: xhci_hub_status_data: stopping port polling.
->>>>> [  433.466209] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
->>>>> [  433.510204] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
->>>>> [  433.554051] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
->>>>> [  433.598235] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
->>>>> [  433.642154] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
->>>>> [  433.686204] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
->>>>> [  433.730205] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
->>>>> [  433.774203] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
->>>>> [  433.818207] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
->>>>> [  433.862040] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
->>>>> [  433.862053] xhci_hcd 0000:3a:00.0: xhci_hub_status_data: stopping port polling.
->>>>> [  433.862077] xhci_hcd 0000:3a:00.0: xhci_suspend: stopping port polling.
->>>>> [  433.862096] xhci_hcd 0000:3a:00.0: // Setting command ring address to 0x8578fc001
->>>>> [  433.862312] xhci_hcd 0000:3a:00.0: hcd_pci_runtime_suspend: 0
->>>>> [  433.862445] xhci_hcd 0000:3a:00.0: PME# enabled
->>>>> [  433.902376] xhci_hcd 0000:3a:00.0: restoring config space at offset 0xc (was 0x0, writing 0x20)
->>>>> [  433.902395] xhci_hcd 0000:3a:00.0: restoring config space at offset 0x4 (was 0x100000, writing 0x100403)
->>>>> [  433.902490] xhci_hcd 0000:3a:00.0: PME# disabled
->>>>> [  433.902504] xhci_hcd 0000:3a:00.0: enabling bus mastering
->>>>> [  433.902547] xhci_hcd 0000:3a:00.0: // Setting command ring address to 0x8578fc001
->>>>> [  433.902649] pcieport 0000:00:1b.0: PME: Spurious native interrupt!
->>>>> [  433.902839] xhci_hcd 0000:3a:00.0: Port change event, 4-1, id 3, portsc: 0xb0202e2
->>>>> [  433.902842] xhci_hcd 0000:3a:00.0: resume root hub
->>>>> [  433.902845] xhci_hcd 0000:3a:00.0: handle_port_status: starting port polling.
->>>>> [  433.902877] xhci_hcd 0000:3a:00.0: xhci_resume: starting port polling.
->>>>> [  433.902889] xhci_hcd 0000:3a:00.0: xhci_hub_status_data: stopping port polling.
->>>>> [  433.902891] xhci_hcd 0000:3a:00.0: hcd_pci_runtime_resume: 0
->>>>> [  433.902919] usb usb4: usb wakeup-resume
->>>>> [  433.902942] usb usb4: usb auto-resume
->>>>> [  433.902966] hub 4-0:1.0: hub_resume
->>>>> ...
->>>>> 
->>>>> However the warm-reset never success, the asserted PCI PME keeps the
->>>>> runtime-resume, warm-reset and runtime-suspend loop which never bring it back
->>>>> and causing spurious interrupts floods.
->>>>> 
->>>>> After some trial and errors, the issue goes away if LPM on the SMSC hub
->>>>> is disabled. Digging further, enabling and disabling LPM during runtime
->>>>> resume and runtime suspend respectively can solve the issue.
->>>>> 
->>>>> So bring back the old LPM behavior as a quirk and use it for the SMSC
->>>>> hub to solve the issue.
->>>>> 
->>>>> Fixes: d590c2311150 ("usb: Avoid unnecessary LPM enabling and disabling during suspend and resume")
->>>>> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
->>>>> ---
->>>>> v3:
->>>>> - Add forgotten patch revision changelog.
->>>>> 
->>>>> v2:
->>>>> - Explained by Alan, the hub should properly handle U3 -> U0 transition.
->>>>>  So use a quirk to target this buggy device only.
->>>>> 
->>>>> Documentation/admin-guide/kernel-parameters.txt |  3 +++
->>>>> drivers/usb/core/hub.c                          | 15 +++++++++++++++
->>>>> drivers/usb/core/quirks.c                       |  6 ++++++
->>>>> include/linux/usb/quirks.h                      |  3 +++
->>>>> 4 files changed, 27 insertions(+)
->>>> 
->>>> Mathias may want to try something different to fix this problem.  But
->>>> if he doesn't, this patch is okay with me.
->>>> 
->>>> Acked-by: Alan Stern <stern@rowland.harvard.edu>
->>> 
->>> If there's no objection, can we merge this patch?
->> I wanted to have Mathias weigh in on this before merging it...
+> This problem was found by Android CTS tests, notably the
+> "watchpoint_imprecise" test [1].  I tested locally against a copycat
+> (simplified) version of the test though.
 > 
-> This might need some closer inspection still.
+> [1] https://android.googlesource.com/platform/bionic/+/master/tests/sys_ptrace_test.cpp
 > 
-> The "Get port status 4-1 read: 0x10202e" means port is not really in compliance mode,
-> instead port has CAS (Cold Attach Status) bit set, meaning parts of xHC needed for
-> link training were probably still powered off when device was plugged in, so device failed
-> to reach a connected, enabled, U0: link state. I needs to be warm reset.
-
-[  433.315239] xhci_hcd 0000:3a:00.0: Get port status 4-1 read: 0x10202e2, return 0x10343
-Ok, so we should check 0x10202e2 from xHC here, instead of 0x10343.
-
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
 > 
-> there is no CAS link state in USB3 spec, so xhci driver reports a compliance mode link state
-> to usb core instead. Both states are resolved by a warm reset.
+>  arch/arm/kernel/hw_breakpoint.c | 96 ++++++++++++++++++++++++---------
+>  1 file changed, 70 insertions(+), 26 deletions(-)
 > 
-> But looks like warm reset is refused as usb device state is still "suspended" in software:
-> "usb 4-1: device reset not allowed in state 8"
+> diff --git a/arch/arm/kernel/hw_breakpoint.c b/arch/arm/kernel/hw_breakpoint.c
+> index b0c195e3a06d..d394878409db 100644
+> --- a/arch/arm/kernel/hw_breakpoint.c
+> +++ b/arch/arm/kernel/hw_breakpoint.c
+> @@ -680,26 +680,62 @@ static void disable_single_step(struct perf_event *bp)
+>  	arch_install_hw_breakpoint(bp);
+>  }
+>  
+> +/*
+> + * Arm32 hardware does not always report a watchpoint hit address that matches
+> + * one of the watchpoints set. It can also report an address "near" the
+> + * watchpoint if a single instruction access both watched and unwatched
+> + * addresses. There is no straight-forward way, short of disassembling the
+> + * offending instruction, to map that address back to the watchpoint. This
+> + * function computes the distance of the memory access from the watchpoint as a
+> + * heuristic for the likelyhood that a given access triggered the watchpoint.
+> + *
+> + * See this same function in the arm64 platform code, which has the same
+> + * problem.
+> + *
+> + * The function returns the distance of the address from the bytes watched by
+> + * the watchpoint. In case of an exact match, it returns 0.
+> + */
+> +static u32 get_distance_from_watchpoint(unsigned long addr, u32 val,
+> +					struct arch_hw_breakpoint_ctrl *ctrl)
+> +{
+> +	u32 wp_low, wp_high;
+> +	u32 lens, lene;
+> +
+> +	lens = __ffs(ctrl->len);
 
-Thanks for pointing this out. I'll see what's really going on here.
+Doesn't this always end up with 'lens == 0'? IIUC ctrl->len can have
+the values ARM_BREAKPOINT_LEN_{1,2,4,8}:
 
-Kai-Heng
+#define ARM_BREAKPOINT_LEN_1	0x1
+#define ARM_BREAKPOINT_LEN_2	0x3
+#define ARM_BREAKPOINT_LEN_4	0xf
+#define ARM_BREAKPOINT_LEN_8	0xff
 
+> +	lene = __fls(ctrl->len);
+> +
+> +	wp_low = val + lens;
+> +	wp_high = val + lene;
+
+First I thought these values are off by one, but in difference to
+ffs() from glibc the kernel functions start with index 0, instead
+of using zero as 'no bit set'.
+
+> +	if (addr < wp_low)
+> +		return wp_low - addr;
+> +	else if (addr > wp_high)
+> +		return addr - wp_high;
+> +	else
+> +		return 0;
+> +}
+> +
+>  static void watchpoint_handler(unsigned long addr, unsigned int fsr,
+>  			       struct pt_regs *regs)
+>  {
+> -	int i, access;
+> -	u32 val, ctrl_reg, alignment_mask;
+> +	int i, access, closest_match = 0;
+> +	u32 min_dist = -1, dist;
+> +	u32 val, ctrl_reg;
+>  	struct perf_event *wp, **slots;
+>  	struct arch_hw_breakpoint *info;
+>  	struct arch_hw_breakpoint_ctrl ctrl;
+>  
+>  	slots = this_cpu_ptr(wp_on_reg);
+>  
+> +	/*
+> +	 * Find all watchpoints that match the reported address. If no exact
+> +	 * match is found. Attribute the hit to the closest watchpoint.
+> +	 */
+> +	rcu_read_lock();
+>  	for (i = 0; i < core_num_wrps; ++i) {
+> -		rcu_read_lock();
+> -
+>  		wp = slots[i];
+> -
+>  		if (wp == NULL)
+> -			goto unlock;
+> +			continue;
+>  
+> -		info = counter_arch_bp(wp);
+>  		/*
+>  		 * The DFAR is an unknown value on debug architectures prior
+>  		 * to 7.1. Since we only allow a single watchpoint on these
+> @@ -708,33 +744,31 @@ static void watchpoint_handler(unsigned long addr, unsigned int fsr,
+>  		 */
+>  		if (debug_arch < ARM_DEBUG_ARCH_V7_1) {
+>  			BUG_ON(i > 0);
+> +			info = counter_arch_bp(wp);
+>  			info->trigger = wp->attr.bp_addr;
+>  		} else {
+> -			if (info->ctrl.len == ARM_BREAKPOINT_LEN_8)
+> -				alignment_mask = 0x7;
+> -			else
+> -				alignment_mask = 0x3;
+> -
+> -			/* Check if the watchpoint value matches. */
+> -			val = read_wb_reg(ARM_BASE_WVR + i);
+> -			if (val != (addr & ~alignment_mask))
+> -				goto unlock;
+> -
+> -			/* Possible match, check the byte address select. */
+> -			ctrl_reg = read_wb_reg(ARM_BASE_WCR + i);
+> -			decode_ctrl_reg(ctrl_reg, &ctrl);
+> -			if (!((1 << (addr & alignment_mask)) & ctrl.len))
+> -				goto unlock;
+> -
+>  			/* Check that the access type matches. */
+>  			if (debug_exception_updates_fsr()) {
+>  				access = (fsr & ARM_FSR_ACCESS_MASK) ?
+>  					  HW_BREAKPOINT_W : HW_BREAKPOINT_R;
+>  				if (!(access & hw_breakpoint_type(wp)))
+> -					goto unlock;
+> +					continue;
+>  			}
+>  
+> +			val = read_wb_reg(ARM_BASE_WVR + i);
+> +			ctrl_reg = read_wb_reg(ARM_BASE_WCR + i);
+> +			decode_ctrl_reg(ctrl_reg, &ctrl);
+> +			dist = get_distance_from_watchpoint(addr, val, &ctrl);
+> +			if (dist < min_dist) {
+> +				min_dist = dist;
+> +				closest_match = i;
+> +			}
+> +			/* Is this an exact match? */
+> +			if (dist != 0)
+> +				continue;
+> +
+>  			/* We have a winner. */
+> +			info = counter_arch_bp(wp);
+>  			info->trigger = addr;
+
+Unless we care about using the 'last' watchpoint in case multiple WPs have
+the same address I think it would be clearer to change the above to:
+
+	       	       	if (dist == 0) {
+				/* We have a winner. */
+				info = counter_arch_bp(wp);
+				info->trigger = addr;
+				break;
+			}
+
+>  		}
+>  
+> @@ -748,10 +782,20 @@ static void watchpoint_handler(unsigned long addr, unsigned int fsr,
+>  		 */
+>  		if (is_default_overflow_handler(wp))
+>  			enable_single_step(wp, instruction_pointer(regs));
+> +	}
+>  
+> -unlock:
+> -		rcu_read_unlock();
+> +	if (min_dist > 0 && min_dist != -1) {
+> +		/* No exact match found. */
+> +		wp = slots[closest_match];
+> +		info = counter_arch_bp(wp);
+> +		info->trigger = addr;
+> +		pr_debug("watchpoint fired: address = 0x%x\n", info->trigger);
+> +		perf_bp_event(wp, regs);
+> +		if (is_default_overflow_handler(wp))
+> +			enable_single_step(wp, instruction_pointer(regs));
+>  	}
+> +
+> +	rcu_read_unlock();
+>  }
+>  
+>  static void watchpoint_single_step_handler(unsigned long pc)
+> -- 
+> 2.23.0.866.gb869b98d4c-goog
 > 
-> -Mathias
-
