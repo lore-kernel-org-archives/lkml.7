@@ -7,26 +7,26 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FB06CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:48:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D7A1CA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:48:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FEA420830
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:48:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1A9420830
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:48:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbfJUJsP (ORCPT
+        id S1727940AbfJUJsU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 05:48:15 -0400
-Received: from outbound-smtp06.blacknight.com ([81.17.249.39]:55058 "EHLO
-        outbound-smtp06.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727851AbfJUJsN (ORCPT
+        Mon, 21 Oct 2019 05:48:20 -0400
+Received: from outbound-smtp20.blacknight.com ([46.22.139.247]:58151 "EHLO
+        outbound-smtp20.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727110AbfJUJsN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 21 Oct 2019 05:48:13 -0400
 Received: from mail.blacknight.com (pemlinmail01.blacknight.ie [81.17.254.10])
-        by outbound-smtp06.blacknight.com (Postfix) with ESMTPS id 48BD19891D
+        by outbound-smtp20.blacknight.com (Postfix) with ESMTPS id AB9F61C285D
         for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 10:48:11 +0100 (IST)
-Received: (qmail 32608 invoked from network); 21 Oct 2019 09:48:11 -0000
+Received: (qmail 32640 invoked from network); 21 Oct 2019 09:48:11 -0000
 Received: from unknown (HELO stampy.112glenside.lan) (mgorman@techsingularity.net@[84.203.19.210])
-  by 81.17.254.9 with ESMTPA; 21 Oct 2019 09:48:10 -0000
+  by 81.17.254.9 with ESMTPA; 21 Oct 2019 09:48:11 -0000
 From:   Mel Gorman <mgorman@techsingularity.net>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     Michal Hocko <mhocko@suse.com>, Vlastimil Babka <vbabka@suse.cz>,
@@ -35,9 +35,9 @@ Cc:     Michal Hocko <mhocko@suse.com>, Vlastimil Babka <vbabka@suse.cz>,
         Borislav Petkov <bp@alien8.de>, Linux-MM <linux-mm@kvack.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Mel Gorman <mgorman@techsingularity.net>
-Subject: [PATCH 2/3] mm, pcp: Share common code between memory hotplug and percpu sysctl handler
-Date:   Mon, 21 Oct 2019 10:48:07 +0100
-Message-Id: <20191021094808.28824-3-mgorman@techsingularity.net>
+Subject: [PATCH 3/3] mm, pcpu: Make zone pcp updates and reset internal to the mm
+Date:   Mon, 21 Oct 2019 10:48:08 +0100
+Message-Id: <20191021094808.28824-4-mgorman@techsingularity.net>
 X-Mailer: git-send-email 2.16.4
 In-Reply-To: <20191021094808.28824-1-mgorman@techsingularity.net>
 References: <20191021094808.28824-1-mgorman@techsingularity.net>
@@ -46,67 +46,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Both the percpu_pagelist_fraction sysctl handler and memory hotplug
-have a common requirement of updating the pcpu page allocation batch
-and high values. Split the relevant helper to share common code.
-
-No functional change.
+Memory hotplug needs to be able to reset and reinit the pcpu allocator
+batch and high limits but this action is internal to the VM. Move
+the declaration to internal.h
 
 Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
 Acked-by: Michal Hocko <mhocko@suse.com>
 ---
- mm/page_alloc.c | 23 ++++++++++++-----------
- 1 file changed, 12 insertions(+), 11 deletions(-)
+ include/linux/mm.h | 3 ---
+ mm/internal.h      | 3 +++
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index f972076d0f6b..4179376bb336 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -7991,6 +7991,15 @@ int lowmem_reserve_ratio_sysctl_handler(struct ctl_table *table, int write,
- 	return 0;
- }
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index cc292273e6ba..22d6104f2341 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -2219,9 +2219,6 @@ void warn_alloc(gfp_t gfp_mask, nodemask_t *nodemask, const char *fmt, ...);
  
-+static void __zone_pcp_update(struct zone *zone)
-+{
-+	unsigned int cpu;
-+
-+	for_each_possible_cpu(cpu)
-+		pageset_set_high_and_batch(zone,
-+				per_cpu_ptr(zone->pageset, cpu));
-+}
-+
- /*
-  * percpu_pagelist_fraction - changes the pcp->high for each zone on each
-  * cpu.  It is the fraction of total pages in each zone that a hot per cpu
-@@ -8022,13 +8031,8 @@ int percpu_pagelist_fraction_sysctl_handler(struct ctl_table *table, int write,
- 	if (percpu_pagelist_fraction == old_percpu_pagelist_fraction)
- 		goto out;
+ extern void setup_per_cpu_pageset(void);
  
--	for_each_populated_zone(zone) {
--		unsigned int cpu;
+-extern void zone_pcp_update(struct zone *zone);
+-extern void zone_pcp_reset(struct zone *zone);
 -
--		for_each_possible_cpu(cpu)
--			pageset_set_high_and_batch(zone,
--					per_cpu_ptr(zone->pageset, cpu));
--	}
-+	for_each_populated_zone(zone)
-+		__zone_pcp_update(zone);
- out:
- 	mutex_unlock(&pcp_batch_high_lock);
- 	return ret;
-@@ -8527,11 +8531,8 @@ void free_contig_range(unsigned long pfn, unsigned int nr_pages)
-  */
- void __meminit zone_pcp_update(struct zone *zone)
- {
--	unsigned cpu;
- 	mutex_lock(&pcp_batch_high_lock);
--	for_each_possible_cpu(cpu)
--		pageset_set_high_and_batch(zone,
--				per_cpu_ptr(zone->pageset, cpu));
-+	__zone_pcp_update(zone);
- 	mutex_unlock(&pcp_batch_high_lock);
- }
- #endif
+ /* page_alloc.c */
+ extern int min_free_kbytes;
+ extern int watermark_boost_factor;
+diff --git a/mm/internal.h b/mm/internal.h
+index 0d5f720c75ab..0a3d41c7b3c5 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -165,6 +165,9 @@ extern void post_alloc_hook(struct page *page, unsigned int order,
+ 					gfp_t gfp_flags);
+ extern int user_min_free_kbytes;
+ 
++extern void zone_pcp_update(struct zone *zone);
++extern void zone_pcp_reset(struct zone *zone);
++
+ #if defined CONFIG_COMPACTION || defined CONFIG_CMA
+ 
+ /*
 -- 
 2.16.4
 
