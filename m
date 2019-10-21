@@ -2,139 +2,113 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E9B4CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 20:37:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A1ECA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 20:39:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E722C2067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 20:37:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FAFC2067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 20:39:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="ji6epuuE"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="CdeNerRl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387401AbfJUUhC (ORCPT
+        id S1730258AbfJUUjI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 16:37:02 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:44880 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730238AbfJUUhC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 16:37:02 -0400
-Received: by mail-qk1-f195.google.com with SMTP id u22so14067752qkk.11
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 13:37:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=aN0N6sA3eex62Qq2/1BFeG4qtv64PBbFfLJSss3SQes=;
-        b=ji6epuuE1uWhGTvPbRIMw7vMXfJAumXpjbVQmCghtSg7qqpQKEvd5WK7R4owTuAgvv
-         LCD8nDwZVWakgikSYqbDnzbn25AHj4kv2KAXTxwVslf2Eygd0C6mWl3b1b9xA7gpTiK4
-         ndyw6q6NJnxnIELSNCgJNFLkfC7Rsx+ca920yzv+rsim1k+PxK698ZjVgrwlDJ9hooP1
-         wcRm7UFf8lJhk0l3r4w82SHKyLCsBgj57MGYbkHBvlSrQyAiptlOt32bZZaZ3PtYb26b
-         b2vL356QQSkm21SBuq+zowOqV1dWzwF7c6Zu79IPW1VjXUM7YmIs7FTFiEuJJz3l0SFH
-         +gXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=aN0N6sA3eex62Qq2/1BFeG4qtv64PBbFfLJSss3SQes=;
-        b=Xh4j3fzctpn0MDNGahzZG/nx1vdy+XZBQIRgAO2WRCO8s6VmKHeoRBuHxth+gL9r20
-         Ubgmhj2qdStIhfdCXqsCD/YtQut6onOHP+B92it7ULtIomsgbIdvntu+VYrPu6e87Bfw
-         NlFJBRCyG7RKtpp+M1emPJVLu90QFFfiWvb1rmMReXIZ4cR6yw+ReQjW/7xmTfX82IO8
-         AdJkgaTnM+xHHzjfrYsi7+xCl1i9z83Y7RsSrijI2eVvWEi+dgP5IZ3cMgvR9lfYACs6
-         MJk51TEm8dv9AbauHWR364FWPToBwvdwU0XqVFUWnX1wd//F7iXeCj1suWrRSGR5H3S2
-         ulAQ==
-X-Gm-Message-State: APjAAAUv2C8HJxsyW8Q9q153s0DWuqrOeuBITn5fIkUKUa3V3cfzHkST
-        vOwVgdI3Vln7FlRDUXGdYnFAZoJ7Vw0b7Q==
-X-Google-Smtp-Source: APXvYqzbNaipl1JmlJdTHwNCXalWRzmN4A68zuQLbNzqunduFxSdSK/sPim7bzG7SFLKCeX34fMk4g==
-X-Received: by 2002:a05:620a:159c:: with SMTP id d28mr13392395qkk.422.1571690219755;
-        Mon, 21 Oct 2019 13:36:59 -0700 (PDT)
-Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id i185sm8547624qkc.129.2019.10.21.13.36.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 21 Oct 2019 13:36:59 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH v6 3/4] arm64: use both ZONE_DMA and ZONE_DMA32
-From:   Qian Cai <cai@lca.pw>
-In-Reply-To: <9208de061fe2b9ee7b74206b3cd52cc116e43ac0.camel@suse.de>
-Date:   Mon, 21 Oct 2019 16:36:57 -0400
-Cc:     f.fainelli@gmail.com, mbrugger@suse.com, marc.zyngier@arm.com,
-        catalin.marinas@arm.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-mm@kvack.org, Rob Herring <robh+dt@kernel.org>,
-        linux-rpi-kernel@lists.infradead.org, m.szyprowski@samsung.com,
-        Robin Murphy <Robin.Murphy@arm.com>, phill@raspberrypi.org,
-        will@kernel.org, Christoph Hellwig <hch@lst.de>,
-        linux-arm-kernel@lists.infradead.org, wahrenst@gmx.net
+        Mon, 21 Oct 2019 16:39:08 -0400
+Received: from mout.gmx.net ([212.227.17.20]:35775 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726672AbfJUUjH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 16:39:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1571690311;
+        bh=unC+1ijMGoEqcIPC3fGxRtO5GlwL39BCXuya1+SeGFA=;
+        h=X-UI-Sender-Class:Date:From:To:Subject;
+        b=CdeNerRlsFgscBoJxqRPI1uQgpKxrdTBi14IlkkBQfL94X3Xy8TbYPZYR5uZnXAQh
+         WHHAqwFAcSXDyq7gX5lcrv/2Wj0claOTuWKRMrCiKBuZyRLdRcOsfA8/uzbCzFZQFR
+         zn58hff0jagZpN6mc4FzMLaZOzr8gm8B+w/Lu4FM=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from ls3530.fritz.box ([92.116.162.72]) by mail.gmx.com (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MYvY8-1iZw7L0OKu-00Uslw; Mon, 21
+ Oct 2019 22:38:31 +0200
+Date:   Mon, 21 Oct 2019 22:38:29 +0200
+From:   Helge Deller <deller@gmx.de>
+To:     kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Eric Biederman <ebiederm@xmission.com>
+Subject: [PATCH] kexec: Fix pointer-to-int-cast warnings
+Message-ID: <20191021203829.GA22375@ls3530.fritz.box>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <AA6D37F1-A1B3-4EC4-8620-007095168BC7@lca.pw>
-References: <6703f8dab4a21fe4e1049f8f224502e1733bf72c.camel@suse.de>
- <A1A8EEF0-2273-4338-B4D8-D9B1328484B4@lca.pw>
- <9208de061fe2b9ee7b74206b3cd52cc116e43ac0.camel@suse.de>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-X-Mailer: Apple Mail (2.3445.104.11)
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Provags-ID: V03:K1:/51vtI9nDEGVncHNoLxrPHcmWCXGlNG1rbvuE8WBp5HTJZYXa68
+ mmn1PRLBKW6ZGut2L4+jWFbs14ud/hErioFtcYuJvRe4NizzsGM2/TyuGZoO3zeku8TRQnF
+ 0oGjjJaftgxyU206B5WVXeoD2Mw+pBUVY3qq2lgzw95J0dNfCW+ABGQlFDjluXjeN0+vYGl
+ ZBkV8qlfAy7oLj81iuu+g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:omr0u6W6YOs=:nEB/oDTRKF1UwYZ2pSbZL3
+ hNOwn3ZgNLzQgA2tzAZ5sxrF0f2ew4Rh0TeJdXGUsJ/gBgQGL0/7xmZ6khyBtc6zt011wP2Lt
+ Dga1LJQwT0YBCp5uxROBT1/LaL3FuvlEJcfrGkfpKvNSpLG9JeljXSuqL2tQUlvysOkrDvBnb
+ 6qrAuX/5ewlAmFShpxHSAj6gBuXWhXrJak5E+1Qt5ReVSf1bdCH3fnL1RtJcYeV5XKoQV651k
+ aPxMHHEP+85aPmLotMD1etoCK6NOEFAD+nvNWJv2P6tBEcdfSUhl6FwJT5aU5E3ZXegGDR+f6
+ MN3tQnOGmKvGGkVbgq3Id+5zQ9qzMJ/WP7f1doIi8zclvgEXZ5tBEm1pZsf7qH2lsdcmUraF5
+ UwCkW9YMU9K7AhdXUhvfG4VxVu9CmRLpeNB+1/1nkVKNy7vH7pBTUyhUh+xt6byd1XgcmN57t
+ hE033UAQ/LI0dkQeEnI5xt9S5H8J0tcFfL3X8+X3+k+SVLUFH6Fkkj81F+1hS3mHtAAAgbZ31
+ LYTDsRn795alyb4QIn6JbdK5kB8phk9oZg4p/W84dYr+ETuvEmlynYVqxyPhIi7rSaofqJHMU
+ jM05IFPtKb0S6roOstEJJWecVaWYaOVu3sz/StB4ayMFFzshHqL/EtE2Zjd9J7QOD7Uck8Lrl
+ OPoyEtpRGK9z1b5QO1eMZq+jat0DHU/Nx6nxDi2GpIFjXdO7If1bXIIr96f/B8zdorQ+S6evK
+ 3cIUh3zAVGc8RbTAjmBwmtbUjVvLy1e2JQ65qHiAzKrxrfUgmA8b34mhU5aD6NsWnoBoNGk+p
+ GbtIbXuR+zQmaBSaZs1/6dFhdYS7X8FYOFQcBD/o9s0Z9pZrI4Ck5fAS1dGVqpLUmTW/2MR6g
+ 7VIJGqaTnbZxwZgW/TDtdDn6FUD2n/LPWiJcteqDpyY/P4wsoz5eEMiILiuI1WpgPCX+4E9yi
+ kpT7e8GqgEKQkhwYpHtTyvLfSxh1S2/yoXvpXJVyekgieCPrZwB5Y/52yp0G+iUSM+zjR/WCg
+ bR6WTFXXBoxBospUfHgyJ4NU2iKQmvhwafIC+isbN+02kMlRdQQQqbYjF5OQX0t8OjV+L+LDi
+ rE0ULaT1U3ui8fMlAUD4LmlTdS3pNKXKGNBw6+mJleq/LwjaEiKifKmzB/gtZhyNJTrVeRdsE
+ bSp7NJHDq2R5UcbNWrboekW95eUBTcBtBAKz2d3+l8pVP1rSvSJhsixpqdKjJwPsBzk4b+Xs9
+ RXQjd0RIcYnlOb+/8EltuhBROKZkJ0juRku/t9g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Fix two pointer-to-int-cast warnings when compiling for the 32-bit parisc
+platform:
 
+kernel/kexec_file.c: In function =E2=80=98crash_prepare_elf64_headers=E2=
+=80=99:
+kernel/kexec_file.c:1307:19: warning: cast from pointer to integer of diff=
+erent size [-Wpointer-to-int-cast]
+  phdr->p_vaddr =3D (Elf64_Addr)_text;
+                  ^
+kernel/kexec_file.c:1324:19: warning: cast from pointer to integer of diff=
+erent size [-Wpointer-to-int-cast]
+  phdr->p_vaddr =3D (unsigned long long) __va(mstart);
+                  ^
 
-> On Oct 21, 2019, at 1:55 PM, Nicolas Saenz Julienne =
-<nsaenzjulienne@suse.de> wrote:
->=20
-> On Mon, 2019-10-21 at 13:25 -0400, Qian Cai wrote:
->>> On Oct 21, 2019, at 1:01 PM, Nicolas Saenz Julienne =
-<nsaenzjulienne@suse.de>
->>> wrote:
->>>=20
->>> Could you enable CMA debugging to see if anything interesting comes =
-out of
->>> it.
->>=20
->> I did but nothing interesting came out. Did you use the same config I =
-gave?
->=20
-> Yes, aside from enabling ZONE_DMA.
->=20
->> Also, it has those cmdline.
->>=20
->> page_poison=3Don page_owner=3Don numa_balancing=3Denable \
->> systemd.unified_cgroup_hierarchy=3D1 debug_guardpage_minorder=3D1 \
->> page_alloc.shuffle=3D1
->=20
-> No luck, still works for me even after adding those extra flags. IIRC =
-most of
-> them (if not all) are not even parsed by the time CMA is configured.
->=20
-> So, can you confirm the zones setup you're seeing is similar to this =
-one:
->=20
-> [    0.000000][    T0] Zone ranges:
-> [    0.000000][    T0]   DMA      [mem =
-0x00000000802f0000-0x00000000bfffffff]
-> [    0.000000][    T0]   DMA32    [mem =
-0x00000000c0000000-0x00000000ffffffff]
-> [    0.000000][    T0]   Normal   [mem =
-0x0000000100000000-0x00000093fcffffff]
->=20
-> Maybe your memory starts between 0xe0000000-0xffffffff. That would be
-> problematic (although somewhat unwarranted).
+Signed-off-by: Helge Deller <deller@gmx.de>
 
-I managed to get more information here,
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index 79f252af7dee..74b7652fc993 100644
+=2D-- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -1304,7 +1304,7 @@ int crash_prepare_elf64_headers(struct crash_mem *me=
+m, int kernel_map,
+ 	if (kernel_map) {
+ 		phdr->p_type =3D PT_LOAD;
+ 		phdr->p_flags =3D PF_R|PF_W|PF_X;
+-		phdr->p_vaddr =3D (Elf64_Addr)_text;
++		phdr->p_vaddr =3D (unsigned long) _text;
+ 		phdr->p_filesz =3D phdr->p_memsz =3D _end - _text;
+ 		phdr->p_offset =3D phdr->p_paddr =3D __pa_symbol(_text);
+ 		ehdr->e_phnum++;
+@@ -1321,7 +1321,7 @@ int crash_prepare_elf64_headers(struct crash_mem *me=
+m, int kernel_map,
+ 		phdr->p_offset  =3D mstart;
 
-[    0.000000] cma: dma_contiguous_reserve(limit c0000000)
-[    0.000000] cma: dma_contiguous_reserve: reserving 64 MiB for global =
-area
-[    0.000000] cma: cma_declare_contiguous(size 0x0000000004000000, base =
-0x0000000000000000, limit 0x00000000c0000000 alignment =
-0x0000000000000000)
-[    0.000000] cma: Failed to reserve 512 MiB
-
-Full dmesg:
-
-https://cailca.github.io/files/dmesg.txt=
+ 		phdr->p_paddr =3D mstart;
+-		phdr->p_vaddr =3D (unsigned long long) __va(mstart);
++		phdr->p_vaddr =3D (unsigned long) __va(mstart);
+ 		phdr->p_filesz =3D phdr->p_memsz =3D mend - mstart + 1;
+ 		phdr->p_align =3D 0;
+ 		ehdr->e_phnum++;
