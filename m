@@ -2,108 +2,130 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1937CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 17:40:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FFE5CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 17:42:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 925BD2064B
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 17:40:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49B162064B
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 17:42:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xGDuT/cw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729687AbfJURk2 (ORCPT
+        id S1728969AbfJURme (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 13:40:28 -0400
-Received: from mga04.intel.com ([192.55.52.120]:38681 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726289AbfJURk2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 13:40:28 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 10:40:27 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,324,1566889200"; 
-   d="scan'208";a="200508215"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by orsmga003.jf.intel.com with ESMTP; 21 Oct 2019 10:40:26 -0700
-Date:   Mon, 21 Oct 2019 10:40:26 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 2/5] fs/xfs: Isolate the physical DAX flag from effective
-Message-ID: <20191021174025.GA23024@iweiny-DESK2.sc.intel.com>
-References: <20191020155935.12297-1-ira.weiny@intel.com>
- <20191020155935.12297-3-ira.weiny@intel.com>
- <20191021002621.GC8015@dread.disaster.area>
+        Mon, 21 Oct 2019 13:42:34 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:34310 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726819AbfJURmd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 13:42:33 -0400
+Received: by mail-io1-f68.google.com with SMTP id q1so17010184ion.1
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 10:42:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kzgvuE8ZrpsBhL/phFPBQTgfRoYdysA2uEVHuY0C2yw=;
+        b=xGDuT/cwuXVfrZ+nz3kCY7rJ4/vWXGtj4UhZPRfa1YSHzBQi74gMGk3/6SU0Gtig48
+         Xk9/MF0CSKB8e3EGEL8DWYkliLdOwoSxm8ANLKoggtZUnf4HaFcrW+EBQgg8ccs/Uqc+
+         DrOQPNGyGpOKS2H1DL93zVaj4ubM13Q6xBRWHZeMTUi0kIDdJZIbQNiHFW0YeVmCCcIV
+         a75LJZAK0rp8/y94c7fKSIUrc4CeFq3x1B/fFNaZKcdQyWziXKmEwYexxLwwrzAi9uh/
+         qQ5V19+IoHfGF1ZRC4ygCBLkYIi/3jcAmw01ZHMl6ravgAh++EozyicyZh3hlUoU7jXT
+         SgSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kzgvuE8ZrpsBhL/phFPBQTgfRoYdysA2uEVHuY0C2yw=;
+        b=YTF6TJ9Js3iII7Oxr/BKS2Tvl8OFfv1UiA3wo4yi8k8RdnBLVIgeL8FzQJwrKWNmsY
+         wsrkUJypx3veCusaiS1UxPjZzd+x6jZBAOXx4JW5DQ/XFB9PIher7rDVREJ2MkGtaqcW
+         u19KfHUeA71zFVmM+vCz8A2ajentIftGAhUzxTVPPF0xWM12pDf3WCWKg7XuH2V208dO
+         Qb0fXD09Fnu5js8R0ok+4FPvViBO/fw/0f/spnLq2g0TYBSP8+fOMSKaYtCTjj9O8vdn
+         fh12uNsujQnanDSySzCdn4zO5Dl5fgsXxjBPRfzFXJZIAX7+eMjo52JupwW5Tp1STemm
+         5ttA==
+X-Gm-Message-State: APjAAAW/InlSZuo8AvNObE0naCrQI+2PnG/538J4liKcKeAS9zfmGKer
+        uJAe6COmH4AvSQCMxvOaOMRJHgvGpa2NBr1CEAFUTQ==
+X-Google-Smtp-Source: APXvYqzesuSl1eIcJuavpZhunNVJw70OVV3BzrNelIbrZm7vXlXp4JjJxP1ijjy9Y9ZJW5V4knNFXtI/ftAGh75ZFso=
+X-Received: by 2002:a05:6638:392:: with SMTP id y18mr16267547jap.98.1571679752652;
+ Mon, 21 Oct 2019 10:42:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191021002621.GC8015@dread.disaster.area>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+References: <20191021074808.25795-1-leo.yan@linaro.org>
+In-Reply-To: <20191021074808.25795-1-leo.yan@linaro.org>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Mon, 21 Oct 2019 11:42:21 -0600
+Message-ID: <CANLsYkyvDKw4E7=+fsq7W41iS0P57Rau3fxJffrg8cEScyOOBw@mail.gmail.com>
+Subject: Re: [PATCH] perf cs-etm: Fix definition of macro TO_CS_QUEUE_NR
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Coresight ML <coresight@lists.linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 11:26:21AM +1100, Dave Chinner wrote:
-> On Sun, Oct 20, 2019 at 08:59:32AM -0700, ira.weiny@intel.com wrote:
-> > From: Ira Weiny <ira.weiny@intel.com>
-> > 
-> > xfs_ioctl_setattr_dax_invalidate() currently checks if the DAX flag is
-> > changing as a quick check.
-> > 
-> > But the implementation mixes the physical (XFS_DIFLAG2_DAX) and
-> > effective (S_DAX) DAX flags.
-> 
-> More nuanced than that.
-> 
-> The idea was that if the mount option was set, clearing the
-> per-inode flag would override the mount option. i.e. the mount
-> option sets the S_DAX flag at inode instantiation, so using
-> FSSETXATTR to ensure the FS_XFLAG_DAX is not set would override the
-> mount option setting, giving applications a way of guranteeing they
-> aren't using DAX to access the data.
+On Mon, 21 Oct 2019 at 01:48, Leo Yan <leo.yan@linaro.org> wrote:
+>
+> Macro TO_CS_QUEUE_NR definition has a typo, which uses 'trace_id_chan'
+> as its parameter, this doesn't match with its definition body which uses
+> 'trace_chan_id'.  So renames the parameter to 'trace_chan_id'.
+>
+> It's luck to have a local variable 'trace_chan_id' in the function
+> cs_etm__setup_queue(), even we wrongly define the macro TO_CS_QUEUE_NR,
+> the local variable 'trace_chan_id' is used rather than the macro's
+> parameter 'trace_id_chan'; so the compiler doesn't complain for this
+> before.
+>
+> After renaming the parameter, it leads to a compiling error due
+> cs_etm__setup_queue() has no variable 'trace_id_chan'.  This patch uses
+> the variable 'trace_chan_id' for the macro so that fixes the compiling
+> error.
+>
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> ---
+>  tools/perf/util/cs-etm.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> index 4ba0f871f086..f5f855fff412 100644
+> --- a/tools/perf/util/cs-etm.c
+> +++ b/tools/perf/util/cs-etm.c
+> @@ -110,7 +110,7 @@ static int cs_etm__decode_data_block(struct cs_etm_queue *etmq);
+>   * encode the etm queue number as the upper 16 bit and the channel as
+>   * the lower 16 bit.
+>   */
+> -#define TO_CS_QUEUE_NR(queue_nr, trace_id_chan)        \
+> +#define TO_CS_QUEUE_NR(queue_nr, trace_chan_id)        \
+>                       (queue_nr << 16 | trace_chan_id)
+>  #define TO_QUEUE_NR(cs_queue_nr) (cs_queue_nr >> 16)
+>  #define TO_TRACE_CHAN_ID(cs_queue_nr) (cs_queue_nr & 0x0000ffff)
+> @@ -819,7 +819,7 @@ static int cs_etm__setup_queue(struct cs_etm_auxtrace *etm,
+>          * Note that packets decoded above are still in the traceID's packet
+>          * queue and will be processed in cs_etm__process_queues().
+>          */
+> -       cs_queue_nr = TO_CS_QUEUE_NR(queue_nr, trace_id_chan);
+> +       cs_queue_nr = TO_CS_QUEUE_NR(queue_nr, trace_chan_id);
+>         ret = auxtrace_heap__add(&etm->heap, cs_queue_nr, timestamp);
+>  out:
+>         return ret;
 
-At LSF/MM we discussed keeping the mount option as a global "chicken bit" as
-described by Matt Wilcox[1].  This preserves the existing behavior of turning
-it on no matter what but offers an alternative with the per-file flag.
+Really good catch - Arnaldo please consider.
 
-To do what you describe above, it was suggested, by Ted I believe, that an
-admin can set DAX on the root directory which will enable DAX by default
-through inheritance but allow users to turn it off if they desire.
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 
-I'm concerned that all users who currently use '-o dax' will expect their
-current file systems to be using DAX when those mounts occur.  Their physical
-inode flag is going to be 0 which, if we implement the 'turn off DAX' as you
-describe will mean they will not get the behavior they expect when booting on a
-new kernel.
-
-> 
-> So if the mount option is going to live on, I suspect that we want
-> to keep this code as it stands.
-
-I don't think we can get rid of it soon but I would be in favor of working
-toward deprecating it.  Regardless I think this keeps the semantics simple WRT
-the interaction of the mount and per-file flags.
-
-Ira
-
-[1] https://lwn.net/Articles/787973/
-
-> 
-> Cheers,
-> 
-> Dave.
-> -- 
-> Dave Chinner
-> david@fromorbit.com
+> --
+> 2.17.1
+>
