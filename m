@@ -2,137 +2,132 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19A7DCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 22:48:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EACB8CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 22:49:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE2BF2084C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 22:48:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=hadrons.org header.i=@hadrons.org header.b="noX2JWaK"
+	by mail.kernel.org (Postfix) with ESMTP id C90C92084C
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 22:49:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730434AbfJUWsg (ORCPT
+        id S1730464AbfJUWtd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 18:48:36 -0400
-Received: from 2.152.178.181.dyn.user.ono.com ([2.152.178.181]:48072 "EHLO
-        pulsar.hadrons.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730276AbfJUWsg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 18:48:36 -0400
-X-Greylist: delayed 444 seconds by postgrey-1.27 at vger.kernel.org; Mon, 21 Oct 2019 18:48:35 EDT
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hadrons.org
-        ; s=201908; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
-        Message-Id:Date:Subject:Cc:To:From:From:Reply-To:Subject:Content-Type:
-        Content-ID:Content-Description:X-Debbugs-Cc;
-        bh=lJrBNxtsP/l0O89nUuZsM0aAJUk9os7E7K7eIqjUekg=; b=noX2JWaK1jgwRBsWoeesfU0sRK
-        BdXbFoOQ4z2cZROc7KK8D7S3MI/HbelZYLDuuBpLfRgBwZcD4D/nW6sMVKtnDn5CE8Y+N3Zpwzmin
-        ZypX7kSQEJ5ZUVn7CKW/AmYMwAJkVoZIDw+5uXR9pqhEt8EsqNQaQtYT+YAOeGuJKQkgH0J1gBuDD
-        IuskntQLIbqRbACY+i1X+B557/sfuNhacy9rdWWxUyUTZj/sHIHf7RzmU3sSbgB4UXsCiHNnC4tbg
-        j+HZaHB2wabZzZLOeLzPWt8Bh8ONDg+E5aOYmBjTX4nkE9SersfnY0kXG38dcwRMgTvbXMEvwnjE9
-        aNcm38tA==;
-Received: from guillem by pulsar.hadrons.org with local (Exim 4.92)
-        (envelope-from <guillem@hadrons.org>)
-        id 1iMgWH-0004gr-3E; Tue, 22 Oct 2019 00:51:21 +0200
-From:   Guillem Jover <guillem@hadrons.org>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Jan Kara <jack@suse.cz>, linux-aio@kvack.org,
-        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
-        Benjamin LaHaise <bcrl@kvack.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] aio: Fix io_pgetevents() struct __compat_aio_sigset layout
-Date:   Tue, 22 Oct 2019 00:51:00 +0200
-Message-Id: <20191021225100.17990-1-guillem@hadrons.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191021201550.GW26530@ZenIV.linux.org.uk>
-References: <20191021201550.GW26530@ZenIV.linux.org.uk>
+        Mon, 21 Oct 2019 18:49:33 -0400
+Received: from mga07.intel.com ([134.134.136.100]:59581 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730276AbfJUWtd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 18:49:33 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 15:49:32 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,325,1566889200"; 
+   d="scan'208";a="209483476"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by orsmga002.jf.intel.com with ESMTP; 21 Oct 2019 15:49:31 -0700
+Date:   Mon, 21 Oct 2019 15:49:31 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 5/5] fs/xfs: Allow toggle of physical DAX flag
+Message-ID: <20191021224931.GA25526@iweiny-DESK2.sc.intel.com>
+References: <20191020155935.12297-1-ira.weiny@intel.com>
+ <20191020155935.12297-6-ira.weiny@intel.com>
+ <20191021004536.GD8015@dread.disaster.area>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191021004536.GD8015@dread.disaster.area>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This type is used to pass the sigset_t from userland to the kernel,
-but it was using the kernel native pointer type for the member
-representing the compat userland pointer to the userland sigset_t.
+On Mon, Oct 21, 2019 at 11:45:36AM +1100, Dave Chinner wrote:
+> On Sun, Oct 20, 2019 at 08:59:35AM -0700, ira.weiny@intel.com wrote:
+> > @@ -1232,12 +1233,10 @@ xfs_diflags_to_linux(
+> >  		inode->i_flags |= S_NOATIME;
+> >  	else
+> >  		inode->i_flags &= ~S_NOATIME;
+> > -#if 0	/* disabled until the flag switching races are sorted out */
+> >  	if (xflags & FS_XFLAG_DAX)
+> >  		inode->i_flags |= S_DAX;
+> >  	else
+> >  		inode->i_flags &= ~S_DAX;
+> > -#endif
+> 
+> This code has bit-rotted. See xfs_setup_iops(), where we now have a
+> different inode->i_mapping->a_ops for DAX inodes.
 
-This messes up the layout, and makes the kernel eat up both the
-userland pointer and the size into the kernel pointer, and then
-reads garbage into the kernel sigsetsize. Which makes the sigset_t
-size consistency check fail, and consequently the syscall always
-returns -EINVAL.
+:-(
 
-This breaks both libaio and strace on 32-bit userland running on 64-bit
-kernels. And there are apparently no users in the wild of the current
-broken layout (at least according to codesearch.debian.org and a brief
-check over github.com search). So it looks safe to fix this directly
-in the kernel, instead of either letting userland deal with this
-permanently with the additional overhead or trying to make the syscall
-infer what layout userland used, even though this is also being worked
-around in libaio to temporarily cope with kernels that have not yet
-been fixed.
+> 
+> That, fundamentally, is the issue here - it's not setting/clearing
+> the DAX flag that is the issue, it's doing a swap of the
+> mapping->a_ops while there may be other code using that ops
+> structure.
+> 
+> IOWs, if there is any code anywhere in the kernel that
+> calls an address space op without holding one of the three locks we
+> hold here (i_rwsem, MMAPLOCK, ILOCK) then it can race with the swap
+> of the address space operations.
+> 
+> By limiting the address space swap to file sizes of zero, we rule
+> out the page fault path (mmap of a zero length file segv's with an
+> access beyond EOF on the first read/write page fault, right?).
 
-We use a proper compat_uptr_t instead of a compat_sigset_t pointer.
+Yes I checked that and thought we were safe here...
 
-Fixes: 7a074e96dee6 ("aio: implement io_pgetevents")
-Signed-off-by: Guillem Jover <guillem@hadrons.org>
----
- fs/aio.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+> However, other aops callers that might run unlocked and do the wrong
+> thing if the aops pointer is swapped between check of the aop method
+> existing and actually calling it even if the file size is zero?
+> 
+> A quick look shows that FIBMAP (ioctl_fibmap())) looks susceptible
+> to such a race condition with the current definitions of the XFS DAX
+> aops. I'm guessing there will be others, but I haven't looked
+> further than this...
 
-diff --git a/fs/aio.c b/fs/aio.c
-index 01e0fb9ae45a..0d9a559d488c 100644
---- a/fs/aio.c
-+++ b/fs/aio.c
-@@ -2179,7 +2179,7 @@ SYSCALL_DEFINE5(io_getevents_time32, __u32, ctx_id,
- #ifdef CONFIG_COMPAT
- 
- struct __compat_aio_sigset {
--	compat_sigset_t __user	*sigmask;
-+	compat_uptr_t		sigmask;
- 	compat_size_t		sigsetsize;
- };
- 
-@@ -2193,7 +2193,7 @@ COMPAT_SYSCALL_DEFINE6(io_pgetevents,
- 		struct old_timespec32 __user *, timeout,
- 		const struct __compat_aio_sigset __user *, usig)
- {
--	struct __compat_aio_sigset ksig = { NULL, };
-+	struct __compat_aio_sigset ksig = { 0, };
- 	struct timespec64 t;
- 	bool interrupted;
- 	int ret;
-@@ -2204,7 +2204,7 @@ COMPAT_SYSCALL_DEFINE6(io_pgetevents,
- 	if (usig && copy_from_user(&ksig, usig, sizeof(ksig)))
- 		return -EFAULT;
- 
--	ret = set_compat_user_sigmask(ksig.sigmask, ksig.sigsetsize);
-+	ret = set_compat_user_sigmask(compat_ptr(ksig.sigmask), ksig.sigsetsize);
- 	if (ret)
- 		return ret;
- 
-@@ -2228,7 +2228,7 @@ COMPAT_SYSCALL_DEFINE6(io_pgetevents_time64,
- 		struct __kernel_timespec __user *, timeout,
- 		const struct __compat_aio_sigset __user *, usig)
- {
--	struct __compat_aio_sigset ksig = { NULL, };
-+	struct __compat_aio_sigset ksig = { 0, };
- 	struct timespec64 t;
- 	bool interrupted;
- 	int ret;
-@@ -2239,7 +2239,7 @@ COMPAT_SYSCALL_DEFINE6(io_pgetevents_time64,
- 	if (usig && copy_from_user(&ksig, usig, sizeof(ksig)))
- 		return -EFAULT;
- 
--	ret = set_compat_user_sigmask(ksig.sigmask, ksig.sigsetsize);
-+	ret = set_compat_user_sigmask(compat_ptr(ksig.sigmask), ksig.sigsetsize);
- 	if (ret)
- 		return ret;
- 
--- 
-2.24.0.rc0.303.g954a862665
+I'll check for others and think on what to do about this.  ext4 will have the
+same problem I think.  :-(
 
+I don't suppose using a single a_ops for both DAX and non-DAX is palatable?
+
+> 
+> >  	/* lock, flush and invalidate mapping in preparation for flag change */
+> >  	xfs_ilock(ip, XFS_MMAPLOCK_EXCL | XFS_IOLOCK_EXCL);
+> > +
+> > +	if (i_size_read(inode) != 0) {
+> > +		error = -EOPNOTSUPP;
+> > +		goto out_unlock;
+> > +	}
+> 
+> Wrong error. Should be the same as whatever is returned when we try
+> to change the extent size hint and can't because the file is
+> non-zero in length (-EINVAL, I think). Also needs a comment
+> explainging why this check exists, and probably better written as
+> i_size_read() > 0 ....
+
+Done, done, and done.
+
+Thank you,
+Ira
+
+> 
+> Cheers,
+> 
+> Dave.
+> -- 
+> Dave Chinner
+> david@fromorbit.com
