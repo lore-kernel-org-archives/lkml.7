@@ -2,123 +2,81 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12797CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:40:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73021CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:40:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9F5D2084C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:40:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xIoHYOEM"
+	by mail.kernel.org (Postfix) with ESMTP id 4A3802084C
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:40:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728507AbfJULkD (ORCPT
+        id S1728522AbfJULkY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 07:40:03 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43910 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727685AbfJULkD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 07:40:03 -0400
-Received: by mail-wr1-f66.google.com with SMTP id c2so8331976wrr.10
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 04:40:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=tUXlJyf/EwF52UBQUMrINYmFP1uDjIe8LBm7MrH/x50=;
-        b=xIoHYOEMyhGDXoCpQ9jHFyb0ii1+Dwvu1Q9SEfKtsUww4GbJQQy6Z+jQ8cl+fpelw3
-         ThXt8MFnHE4WeoE8+UnlJTQA1ZYeRuSyGiCfFTKaC0OBBqbot6eli99dXr5TzBuwDLdg
-         hv/656/7etodYAz4ZGpUNsv4u+8lHsnz3JDcP+0QvO0l0qDRgeRmohlWKezDuIXl11Ai
-         bYLHo0gILQbudud59jMRUdxxPNbWw0pXm0FHqeuVlxs2z/vrj8cchV+e99cxB6Xbntp6
-         Qh4S59PcwuPmISifpJ/a8LUwevqg/nE1p3vXY/gT+dfP349mVoc7XFJ3DhM7T9EHY4cW
-         un/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=tUXlJyf/EwF52UBQUMrINYmFP1uDjIe8LBm7MrH/x50=;
-        b=qMsTJKiptUC+pupp8Z9IumIxIao0f/DtOpQ2eQ2y0WN10ohWqhk7p58lKysVlh39HX
-         Ow5jGiz+sQyGsj7JTax4RLhurDJE8OyjThCQQcagIwQ5BUv+rpR6ncY2b7b5xAarA34Y
-         OKLbe0lQJy8XdZYZQCGcA+J2TEI9OHclP5x2rIFUAfdYTBVWTskI2xyvAbfKwo5YBvhE
-         SnuSCjlJ0WxX5qUz5yKYz8nVsazWj689YIENIrWM0/1dlCWXqCOyPg9WgkMhhPdCKUZ1
-         GaJaTToCoJtaqd5uRk4z6RSJQKVYLkSx/tuP7uDF1E57eLBJoR+zXQFkvdo/pymWWsk7
-         2y3Q==
-X-Gm-Message-State: APjAAAXV9pvUM3WJiNlH2GGb+DoM1tLxeLa5Xfp2yURGlfj4eF0Og3s1
-        5wLV6fywF/h1tgFuLYRB+WVp3g==
-X-Google-Smtp-Source: APXvYqxexJrH8EZOViFVhYDgj4YbzWFLCGz4GvVoQtRfylB+aLylAjaNDXZyGLJlTyeyaGzLKfhkRQ==
-X-Received: by 2002:a5d:5222:: with SMTP id i2mr14222242wra.271.1571657999840;
-        Mon, 21 Oct 2019 04:39:59 -0700 (PDT)
-Received: from dell ([95.149.164.99])
-        by smtp.gmail.com with ESMTPSA id p20sm9851205wmc.23.2019.10.21.04.39.59
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 21 Oct 2019 04:39:59 -0700 (PDT)
-Date:   Mon, 21 Oct 2019 12:39:57 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Barry Song <baohua@kernel.org>, stephan@gerhold.net,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Daniel Drake <drake@endlessm.com>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        James Cameron <quozl@laptop.org>
-Subject: Re: [PATCH v2 0/9] Simplify MFD Core
-Message-ID: <20191021113957.GC4365@dell>
-References: <20191021105822.20271-1-lee.jones@linaro.org>
- <CAK8P3a10w9Xg6U8EgUqPLbucP3A0wc9xO_WNG06LxHrsZkZc1g@mail.gmail.com>
+        Mon, 21 Oct 2019 07:40:24 -0400
+Received: from mga02.intel.com ([134.134.136.20]:58478 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727685AbfJULkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 07:40:24 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 04:40:23 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,323,1566889200"; 
+   d="scan'208";a="209428465"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 21 Oct 2019 04:40:18 -0700
+Received: by lahna (sSMTP sendmail emulation); Mon, 21 Oct 2019 14:40:17 +0300
+Date:   Mon, 21 Oct 2019 14:40:17 +0300
+From:   Mika Westerberg <mika.westerberg@intel.com>
+To:     Karol Herbst <kherbst@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Lyude Paul <lyude@redhat.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
+Subject: Re: [PATCH v3] pci: prevent putting nvidia GPUs into lower device
+ states on certain intel bridges
+Message-ID: <20191021114017.GY2819@lahna.fi.intel.com>
+References: <20191016144449.24646-1-kherbst@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAK8P3a10w9Xg6U8EgUqPLbucP3A0wc9xO_WNG06LxHrsZkZc1g@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191016144449.24646-1-kherbst@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 21 Oct 2019, Arnd Bergmann wrote:
+Hi Karol,
 
-> On Mon, Oct 21, 2019 at 12:58 PM Lee Jones <lee.jones@linaro.org> wrote:
-> >
-> > MFD currently has one over-complicated user.  CS5535 uses a mixture of
-> > cell cloning, reference counting and subsystem-level call-backs to
-> > achieve its goal of requesting an IO memory region only once across 3
-> > consumers.  The same can be achieved by handling the region centrally
-> > during the parent device's .probe() sequence.  Releasing can be handed
-> > in a similar way during .remove().
-> >
-> > While we're here, take the opportunity to provide some clean-ups and
-> > error checking to issues noticed along the way.
-> >
-> > This also paves the way for clean cell disabling via Device Tree being
-> > discussed at [0]
-> >
-> > [0] https://lkml.org/lkml/2019/10/18/612.
+Sorry for commenting late, I just came back from vacation.
+
+On Wed, Oct 16, 2019 at 04:44:49PM +0200, Karol Herbst wrote:
+> Fixes state transitions of Nvidia Pascal GPUs from D3cold into higher device
+> states.
 > 
-> As the CS5535 is primarily used on the OLPC XO1, it would be
-> good to have someone test the series on such a machine.
+> v2: convert to pci_dev quirk
+>     put a proper technical explanation of the issue as a in-code comment
+> v3: disable it only for certain combinations of intel and nvidia hardware
 > 
-> I've added a few people to Cc that may be able to help test it, or
-> know someone who can.
+> Signed-off-by: Karol Herbst <kherbst@redhat.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Lyude Paul <lyude@redhat.com>
+> Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
+> Cc: Mika Westerberg <mika.westerberg@intel.com>
+> Cc: linux-pci@vger.kernel.org
+> Cc: linux-pm@vger.kernel.org
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: nouveau@lists.freedesktop.org
+> ---
+>  drivers/pci/pci.c    | 11 ++++++++++
+>  drivers/pci/quirks.c | 52 ++++++++++++++++++++++++++++++++++++++++++++
 
-Wonderful.  Thank you.
-
-> For the actual patches, see
-> https://lore.kernel.org/lkml/20191021105822.20271-1-lee.jones@linaro.org/T/#t
-> 
->     Arnd
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+I may be missing something but why you can't do this in the nouveau
+driver itself?
