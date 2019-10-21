@@ -2,102 +2,110 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA234CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 20:06:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 942F1CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 20:09:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BED092084C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 20:06:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E6E32084C
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 20:09:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X0MaxGN8"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HNA+lusW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730272AbfJUUG6 (ORCPT
+        id S1730237AbfJUUJ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 16:06:58 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:34607 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729406AbfJUUG6 (ORCPT
+        Mon, 21 Oct 2019 16:09:57 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:42211 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730104AbfJUUJ4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 16:06:58 -0400
-Received: by mail-io1-f68.google.com with SMTP id q1so17550475ion.1
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 13:06:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=DIJwALRySeQ5zjngsNl1Oe1bgDriLGNlywHknPtGNKc=;
-        b=X0MaxGN8uxeLjYheUzuflEGcTyAqv8YypCRnHwa4mTnDTdSFogTx9CmYGVwjKjmBXc
-         ImeJqPHySwSBK5FlsHysS8KWszaYtbNOrRgojf/0F+/RfarheahIQiunZyUotRZ9TAof
-         xIVIJOh6WGISCOs5n1WzwQq1osMxUM9HEh3Szg6lGyhQQ7k6jd7Jemg1+TpOtd8USEPH
-         r3a/x+xk11Q/5Opu+1zLFcPL9hujVi3s+U9By+5oBW5H6sgEMiQdgX9KSjIN0fWYy6p2
-         vxxpECwHW/25y9nXwmH/GJvl9MgOHRHPBm4IGzRvu6ppe9DHbvB6CFaDWsXRNxK+lzJf
-         Idjw==
+        Mon, 21 Oct 2019 16:09:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571688595;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=GRr4vvR8SMLlGLaQHrzXZBP/1GJnG/hY1lt52vVZ3iU=;
+        b=HNA+lusWzSNyDPsvdMdhutZeRQpA2g3INz4jDYerCmJm3OAE9Cx3K6tu1kGd2WwSICAcnL
+        DAkL/RKZgNA/YOsld7hKMSEn1ZI1O2TWQd3W1morQ7yN36WlGYsO+QvfQKP1WEpWlXjqmU
+        CzyTgeABKotVYuHhZdS5KazSndwPdyg=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-349-4-B2IW-aN7CnmlOZGX--cg-1; Mon, 21 Oct 2019 16:09:54 -0400
+Received: by mail-wr1-f69.google.com with SMTP id v8so6999289wrt.16
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 13:09:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=DIJwALRySeQ5zjngsNl1Oe1bgDriLGNlywHknPtGNKc=;
-        b=j2RCkPeTaplVf86HaOq2gLcWX/ri2fSs8uSZL59RuMcUohLJhfdxMZ5PCO5yGpm3vz
-         9U3Eo7NyCGuTCv+xLJvanDw5YSe+QadEz92hTBZbP5vdhYcWlT1byLjRnLXr1n3O7fvG
-         irPww56P/AyO4hZBMwQpJLvAcwgKYLYbUVdL2QQVAIk+RAnIfYxFEMG56H6NPDhOyDer
-         rmEyr3Z1yQZHEmrqPSvaYyQ5rWLgfHl9GVACAz/nNoF2+j5H7NFRWyfPFAD4qBtnaimm
-         GVINQdfuXGU18S4Qlt26cvs4G3kx05gVVDtEn1LYJ/Wrim1vPPalKKJ3CJtvUd6NH5pC
-         /jxQ==
-X-Gm-Message-State: APjAAAXVQAU+1Bai+XjnGC0zCaCEr0QIS571QaPV5KbcsMXjGxIQjnYr
-        zFmkQrr1KoRu2rZPwhOr/yU=
-X-Google-Smtp-Source: APXvYqwEYhuc38vwAbFtVAVtw8KV1JZMFhL3O31vXn9gEH9A2rMxW/fJ2esBpTWkjZy7Hbvve2Y6Tg==
-X-Received: by 2002:a02:3208:: with SMTP id j8mr93347jaa.86.1571688417041;
-        Mon, 21 Oct 2019 13:06:57 -0700 (PDT)
-Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
-        by smtp.googlemail.com with ESMTPSA id d21sm4743611iom.29.2019.10.21.13.06.56
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/hTnU2SL18HXqwrFfPhOqj3zVzoYeINRKnKQ1LCV8o0=;
+        b=Zfuo4oBMh0Q7W01F0ssbhtOscp5Yuc2wkmKfw9uYoC+BdcjNSwPRWgTNJnwH2wjSfn
+         WUfPzuCRzwt522RYuVsvK8KJ5MhwrzZc4O3aAJI8nANvtf2VE94EJPzpbhzf9sS0qY73
+         6wCPUpsuePteYJZNMmQj5rm52+ijYSRcoxBq40CqNZBprQjAGHPgngyaNLRInTRX9hkm
+         gFfz0MGypXPpPSsWFm0RZpJ9oTXu30VjolxsAf5kVfyC4Xh7iK6Zxwd7pcZe+Lz5pZU9
+         GDIoTW3PEeezQnbRy5psAWUMcDv22MkLac/90krbShc/t4PlmSpjvDHBkTqI1ltGqQ1Y
+         ob8Q==
+X-Gm-Message-State: APjAAAUHnzrAWonSblCasbtjTIfECwkF8JpzwUiJ/faNpxO5/QSc0oN6
+        eyhmygKhvmud7+d4rF5vFWaWjKGRj7kkp9zLZe4KxP6Djf+EwSb7CEXuBcyoXHfCQ2PJ170OLxq
+        u6gOOw/lKlUYH/CcNiptAHNh7
+X-Received: by 2002:a5d:5609:: with SMTP id l9mr55401wrv.113.1571688592859;
+        Mon, 21 Oct 2019 13:09:52 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwfmZR8HzPKtuiCjhCoyN0qzOEXt2OB3PSphHLqsNZCKo7B/TomBYT5P/XX6wfn6KR6i/zXPQ==
+X-Received: by 2002:a5d:5609:: with SMTP id l9mr55381wrv.113.1571688592582;
+        Mon, 21 Oct 2019 13:09:52 -0700 (PDT)
+Received: from turbo.teknoraver.net (net-109-115-41-234.cust.vodafonedsl.it. [109.115.41.234])
+        by smtp.gmail.com with ESMTPSA id l18sm20701933wrn.48.2019.10.21.13.09.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Oct 2019 13:06:56 -0700 (PDT)
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     emamd001@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Corey Minyard <minyard@acm.org>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        openipmi-developer@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] ipmi: Fix memory leak in __ipmi_bmc_register
-Date:   Mon, 21 Oct 2019 15:06:48 -0500
-Message-Id: <20191021200649.1511-1-navid.emamdoost@gmail.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        Mon, 21 Oct 2019 13:09:51 -0700 (PDT)
+From:   Matteo Croce <mcroce@redhat.com>
+To:     netdev@vger.kernel.org
+Cc:     Jay Vosburgh <j.vosburgh@gmail.com>,
+        Veaceslav Falico <vfalico@gmail.com>,
+        Andy Gospodarek <andy@greyhouse.net>,
+        "David S . Miller " <davem@davemloft.net>,
+        Stanislav Fomichev <sdf@google.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Song Liu <songliubraving@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Paul Blakey <paulb@mellanox.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH net-next 0/4] ICMP flow improvements
+Date:   Mon, 21 Oct 2019 22:09:44 +0200
+Message-Id: <20191021200948.23775-1-mcroce@redhat.com>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+X-MC-Unique: 4-B2IW-aN7CnmlOZGX--cg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the impelementation of __ipmi_bmc_register() the allocated memory for
-bmc should be released in case ida_simple_get() fails.
+This series improves the flow inspector handling of ICMP packets:
+The first two patches just add some comments in the code which would have s=
+aved
+me a few minutes of time, and refactor a piece of code.
+The third one adds to the flow inspector the capability to extract the
+Identifier field, if present, so echo requests and replies are classified
+as part of the same flow.
+The fourth patch uses the function introduced earlier to the bonding driver=
+,
+so echo replies can be balanced across bonding slaves.
 
-Fixes: 68e7e50f195f ("ipmi: Don't use BMC product/dev ids in the BMC name")
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
----
- drivers/char/ipmi/ipmi_msghandler.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Matteo Croce (4):
+  flow_dissector: add meaningful comments
+  flow_dissector: skip the ICMP dissector for non ICMP packets
+  flow_dissector: extract more ICMP information
+  bonding: balance ICMP echoes in layer3+4 mode
 
-diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_msghandler.c
-index 2aab80e19ae0..e4928ed46396 100644
---- a/drivers/char/ipmi/ipmi_msghandler.c
-+++ b/drivers/char/ipmi/ipmi_msghandler.c
-@@ -3031,8 +3031,11 @@ static int __ipmi_bmc_register(struct ipmi_smi *intf,
- 		bmc->pdev.name = "ipmi_bmc";
- 
- 		rv = ida_simple_get(&ipmi_bmc_ida, 0, 0, GFP_KERNEL);
--		if (rv < 0)
-+		if (rv < 0) {
-+			kfree(bmc);
- 			goto out;
-+		}
-+
- 		bmc->pdev.dev.driver = &ipmidriver.driver;
- 		bmc->pdev.id = rv;
- 		bmc->pdev.dev.release = release_bmc_device;
--- 
-2.17.1
+ drivers/net/bonding/bond_main.c | 22 ++++++--
+ include/net/flow_dissector.h    | 11 +++-
+ net/core/flow_dissector.c       | 98 +++++++++++++++++++++++----------
+ 3 files changed, 95 insertions(+), 36 deletions(-)
+
+--=20
+2.21.0
 
