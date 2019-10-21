@@ -2,101 +2,104 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5712CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 17:20:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8CFBC47E49
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 17:24:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 886792086D
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 17:20:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF5DC20873
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 17:24:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XXi0FSGZ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="InW3dMJp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729743AbfJURUY (ORCPT
+        id S1728194AbfJURYK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 13:20:24 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:40141 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726819AbfJURUX (ORCPT
+        Mon, 21 Oct 2019 13:24:10 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:28545 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726819AbfJURYK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 13:20:23 -0400
-Received: by mail-qt1-f194.google.com with SMTP id o49so14340036qta.7
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 10:20:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=i+Q0g4cWBSCHSC+Ozo2/kutzUkLzjJxIG298R3fZU7c=;
-        b=XXi0FSGZgO+h0gcJPglCZdCdti7BxqJBrErIQES23s8EEgu+CNrK3sGDOUaOQN0aHn
-         NL2x/JrK4qROiRGz9V04fD2pKog2nYUwqoj3iP+1WDutyIv8PKZoSc1/u5mNoK+tgQYn
-         qjyHDczVIfJaUeErNMvYAYXAJzK9DiQe2CPIo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=i+Q0g4cWBSCHSC+Ozo2/kutzUkLzjJxIG298R3fZU7c=;
-        b=KOPqbPhzV3ezf3QLU7aiQSb63la029RCJHbOIKTdlxlAYfB9GL5rDEX/3OukN0tez1
-         gA9t3nPOsBzyVFhwrBuXMFAYRu6jQToQUWR90srPsCSKH8I8YlmG0x0zPixjpycJAxFW
-         yibRBmCn9tSjVzuTWdCZwruUBMiJ3zd6XozPvFzpDWFlyEnq2bkUjVQyxg+2VeJPsKar
-         ct3dEbBaUlV0GCoGGQiPWZW1LRPmYcO7suGDyr/AwqXs75GQOoIo0MZccf5Jqu2H3PUz
-         WKO5VamFHONLE2lCYc/otwO++737zuU5m5bsn3wP83YPdqnFZIQ3uKOv//DOxUhEbhCB
-         NQcw==
-X-Gm-Message-State: APjAAAXnmNK2/aAp7FPr0EpHkiIasbJ2ip/KtNYj4qCyPCRU4JtltNvY
-        Al6/jTpXz6Fw7o0EQpZeC5aL6WGEGeE=
-X-Google-Smtp-Source: APXvYqzAXY8XGyolq7gM4yWTFp9BDeHthslPf3bqW3xUZucP97CyqMDnYbY47Fp5pe0pCjI7bBqFag==
-X-Received: by 2002:ac8:549:: with SMTP id c9mr19989647qth.178.1571678421901;
-        Mon, 21 Oct 2019 10:20:21 -0700 (PDT)
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com. [209.85.222.180])
-        by smtp.gmail.com with ESMTPSA id c18sm7598121qkk.17.2019.10.21.10.20.20
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 21 Oct 2019 10:20:20 -0700 (PDT)
-Received: by mail-qk1-f180.google.com with SMTP id p10so13373071qkg.8
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 10:20:20 -0700 (PDT)
-X-Received: by 2002:a37:9c0f:: with SMTP id f15mr23614988qke.62.1571678419798;
- Mon, 21 Oct 2019 10:20:19 -0700 (PDT)
+        Mon, 21 Oct 2019 13:24:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571678648;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=tU7OuvHvFG+jtNsohsW1UDt65sDgAhzQIZb5QOHjnxk=;
+        b=InW3dMJpMHohtxFjyCAzghiTCUWFWLk1v9dW0sijDgmuDaMtEsZEZUCatIMf/RlO43kimA
+        4mtObUyxMGWXB9i6cmUkk3JBk8wyob0TOOojBAIocfz/4+CqqgcMzpQcSuqVtF0ZRo8PN8
+        ewVrKCEBp6Y4gCeOsY3S7Ep3A0q2D38=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-244-ZILDmOTuPt2Q4a3Yd9I06Q-1; Mon, 21 Oct 2019 13:24:03 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4CE96800D41;
+        Mon, 21 Oct 2019 17:24:01 +0000 (UTC)
+Received: from t460s.redhat.com (ovpn-116-42.ams2.redhat.com [10.36.116.42])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B3F7160856;
+        Mon, 21 Oct 2019 17:23:54 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Pingfan Liu <kernelfans@gmail.com>, Qian Cai <cai@lca.pw>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Wei Yang <richard.weiyang@gmail.com>
+Subject: [PATCH v2 0/2] mm: Memory offlining + page isolation cleanups
+Date:   Mon, 21 Oct 2019 19:23:51 +0200
+Message-Id: <20191021172353.3056-1-david@redhat.com>
 MIME-Version: 1.0
-References: <20180521164222.149896-1-briannorris@chromium.org> <20191021161113.GZ3125@piout.net>
-In-Reply-To: <20191021161113.GZ3125@piout.net>
-From:   Brian Norris <briannorris@chromium.org>
-Date:   Mon, 21 Oct 2019 10:20:08 -0700
-X-Gmail-Original-Message-ID: <CA+ASDXOXSKoRcuRWZ1FGNcioFKSiazXGxOvMv5=px_pn46vJbw@mail.gmail.com>
-Message-ID: <CA+ASDXOXSKoRcuRWZ1FGNcioFKSiazXGxOvMv5=px_pn46vJbw@mail.gmail.com>
-Subject: Re: [PATCH] rtc: report time-retrieval errors when updating alarm
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Alessandro Zummo <a.zummo@towertech.it>, linux-rtc@vger.kernel.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Jeffy Chen <jeffy.chen@rock-chips.com>,
-        Matthias Kaehlcke <mka@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MC-Unique: ZILDmOTuPt2Q4a3Yd9I06Q-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alexandre!
+Two cleanups that popped up while working on (and discussing) virtio-mem:
+ https://lkml.org/lkml/2019/9/19/463
 
-On Mon, Oct 21, 2019 at 9:11 AM Alexandre Belloni
-<alexandre.belloni@bootlin.com> wrote:
-> On 21/05/2018 09:42:22-0700, Brian Norris wrote:
-> > __rtc_read_time() can fail (e.g., if the RTC uses an unreliable medium).
-> > When it does, we don't report the error, but instead calculate a
-> > 1-second alarm based on the potentially-garbage 'tm' (in practice,
-> > __rtc_read_time() zeroes out the time first, so it's likely to still be
-> > all 0).
-> >
-> > Let's propagate the error instead.
-> >
->
-> I submitted
-> https://lore.kernel.org/linux-rtc/20191021155631.3342-2-alexandre.belloni@bootlin.com/T/#u
-> to solve this after looking at all the implication checking the return
-> value of __rtc_read_time had.
+Tested with DIMMs on x86.
 
-Only about a year and a half late, nice! Fortunately we have a decent
-(albeit time-consuming) process for rebasing our downstream patches in
-Chrome OS kernels...
+As discussed with michal in v1, I'll soon look into removing the use
+of PG_reserved during memory onlining completely - most probably
+disallowing to offline memory blocks with holes, cleaning up the
+onlining+offlining code.
 
-Brian
+v1 -> v2:
+- "mm/page_alloc.c: Don't set pages PageReserved() when offlining"
+-- Fixup one comment
+- "mm/page_isolation.c: Convert SKIP_HWPOISON to MEMORY_OFFLINE"
+-- Use parenthesis around checks
+- Added ACKs
+
+David Hildenbrand (2):
+  mm/page_alloc.c: Don't set pages PageReserved() when offlining
+  mm/page_isolation.c: Convert SKIP_HWPOISON to MEMORY_OFFLINE
+
+ include/linux/page-isolation.h |  4 ++--
+ mm/memory_hotplug.c            | 12 ++++++------
+ mm/page_alloc.c                |  9 +++------
+ mm/page_isolation.c            | 12 ++++++------
+ 4 files changed, 17 insertions(+), 20 deletions(-)
+
+--=20
+2.21.0
+
