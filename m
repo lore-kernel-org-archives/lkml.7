@@ -2,91 +2,93 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C88DCA9EB9
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:12:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05BA0CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:14:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D7842089C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:12:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C798A205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:14:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571645657;
+	bh=yJkx95UvleOcFFmvQVjJHb82ALHFn9Uyq35PUcIaw0Y=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=vgshiE7ZHoxVkHJBg+ahafFMc3Lrl+QnbEiMBZWNtj7gkfESMk9JGBaKhT5izppSC
+	 UdQC0YvKV0bn1KV3SxzEJlwr9lgApnRIAjxFdyLPbmhWFzmZt9u+muAqFOGZidGxZ7
+	 kFq9LOW2TLu/bFU3xluVJ7Vx9oRUKb0GKdaDlNIo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727689AbfJUIMv (ORCPT
+        id S1727603AbfJUIOQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 04:12:51 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59112 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727597AbfJUIMu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 04:12:50 -0400
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com [209.85.128.69])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7641F85545
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 08:12:50 +0000 (UTC)
-Received: by mail-wm1-f69.google.com with SMTP id v26so2458508wmh.2
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 01:12:50 -0700 (PDT)
+        Mon, 21 Oct 2019 04:14:16 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:46166 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726480AbfJUIOQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 04:14:16 -0400
+Received: by mail-oi1-f195.google.com with SMTP id k25so10252403oiw.13;
+        Mon, 21 Oct 2019 01:14:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=iMBlsmTbyc1by6UD9+Cjcv74kSZEU4gLAG9XLb3vXMM=;
-        b=QpVmjnUu0dZLwH9TbJ2gxLy3njTpXglFtWuqzuFqq8T+Pi0aT6ogVcWc9QPKmVeMNb
-         UkWGsD9FwXrSBu+hwa5wRLLs2XrdaV5z6/OoKrYXqDCha1mpA5xkr/3i6SbxjTBCv7iP
-         C+82f02Pjss1a8v78YnpeU6L/FDym7m5XdjkPC8I3XqqF9lUo83E7u4ZTGJ26Ui21o+a
-         WjGezwwSan02XKOcAZLThsFRBjqCm045BBPVwhmQcinEMD+f2z/0+xmpJHvcFKHrILFn
-         EQAMk4PNNUFynABgLhFQsf/EqYc76WZrmWKHVLk04dpJ5oQRge35AMbgqfft5uB7kX5l
-         s6JA==
-X-Gm-Message-State: APjAAAWzI2atWmb+QGwHNRDkHwxk7fazTclDpCGBUlAV7S2Ca2pdJISo
-        ayAMq1nFrMXerrDK7UbBYtTvlCBWhrv6BR4b8u0C4d4sJmuL7eNQMlwJm8kFafamaNWnqMVuc2A
-        /7y8afgawS/rtI1qJP8M4mpav
-X-Received: by 2002:a05:600c:2503:: with SMTP id d3mr19263027wma.44.1571645568972;
-        Mon, 21 Oct 2019 01:12:48 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqx9/+OXOzpeQV7Ni65kLbXS9IKEOhkhFOGoxsIe0Y4dR3AU7giY9RU0QnZvv+DPO6xdA+wWEw==
-X-Received: by 2002:a05:600c:2503:: with SMTP id d3mr19262990wma.44.1571645568652;
-        Mon, 21 Oct 2019 01:12:48 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:566:fc24:94f2:2f13? ([2001:b07:6468:f312:566:fc24:94f2:2f13])
-        by smtp.gmail.com with ESMTPSA id x7sm16385365wrg.63.2019.10.21.01.12.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 21 Oct 2019 01:12:48 -0700 (PDT)
-Subject: Re: [PATCH v2 3/4] KVM: x86/vPMU: Reuse perf_event to avoid
- unnecessary pmc_reprogram_counter
-To:     Like Xu <like.xu@linux.intel.com>, kvm@vger.kernel.org,
-        peterz@infradead.org, Jim Mattson <jmattson@google.com>
-Cc:     rkrcmar@redhat.com, sean.j.christopherson@intel.com,
-        vkuznets@redhat.com, Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        ak@linux.intel.com, wei.w.wang@intel.com, kan.liang@intel.com,
-        like.xu@intel.com, ehankland@google.com, arbel.moshe@oracle.com,
-        linux-kernel@vger.kernel.org
-References: <20191013091533.12971-1-like.xu@linux.intel.com>
- <20191013091533.12971-4-like.xu@linux.intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <5020e826-e461-c28a-0b40-6e00aaa28163@redhat.com>
-Date:   Mon, 21 Oct 2019 10:12:50 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yJkx95UvleOcFFmvQVjJHb82ALHFn9Uyq35PUcIaw0Y=;
+        b=eJ3LnOZen44WZ/tPE9evshDM6Cc9klSqUWva3Z17bIsXpXmqw3lo41sMzynjtom1SU
+         oPIPnvgENdBj6O0yK1A8dAGjo1xDm5mX9WxvhL2kGfzpHK/tnWL1WUeh5snfF4nOTka5
+         w44R+U7gtPcp9Sq5yV+F0ptaNFPpsBZ61CAHI6hR1Ga1JBqkCGAYYtp9IiPl/r3sw6G3
+         iPvTAIs3WcHqumYWhjKVOS7VeKwnsIk0HII6y2OHlqY3qoZHoBADDJWj75ErT0HL5QCO
+         s3RMVv/9eL9MtY5zcPDOuR+4YQrsw2o8I24JikbNWdG7IIv2lom69I4wCgWmYWHTXvd5
+         6YLA==
+X-Gm-Message-State: APjAAAUOZ+Hiaqy4yr/K9C8oNQn/RqklkAyFAO4p2911guNxGM68jiKZ
+        t6kiTlcnrpN6hs3KDoIz4enmgeEOrnIRO8cuhCg=
+X-Google-Smtp-Source: APXvYqy7s2Z6Q62WqM2aVgLMAG9NJ5QBLTyvrrtZtDgW+H6a/y3PWHqqAtwOWxN5wsb6+PZXiYWc+MWNjHm4txISCwU=
+X-Received: by 2002:aca:d405:: with SMTP id l5mr17085627oig.115.1571645655327;
+ Mon, 21 Oct 2019 01:14:15 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191013091533.12971-4-like.xu@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190814213118.28473-1-kherbst@redhat.com> <2215840.qs0dBhReda@kreacher>
+ <CACO55ttC-o9bKU7nHNcfjm2YnffiupQ7UHUt7BYL3fu+yEyTbw@mail.gmail.com>
+ <5228680.jBuKzensJx@kreacher> <CAJ=jquZLU2=yxayGCs=XGghxdMMre6qAWRY0Q4VErjBGqeWdjQ@mail.gmail.com>
+In-Reply-To: <CAJ=jquZLU2=yxayGCs=XGghxdMMre6qAWRY0Q4VErjBGqeWdjQ@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 21 Oct 2019 10:14:03 +0200
+Message-ID: <CAJZ5v0hogSM3OgfJ0GFn7+BYwxR05Hb5ZMLo=NiB2wmpu=qeug@mail.gmail.com>
+Subject: Re: [Nouveau] [PATCH 1/7] Revert "ACPI / OSI: Add OEM _OSI string to
+ enable dGPU direct output"
+To:     Alex Hung <alex.hung@canonical.com>,
+        Karol Herbst <kherbst@redhat.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Dave Airlie <airlied@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        Mario Limonciello <mario.limonciello@dell.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Dave Airlie <airlied@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Just a naming tweak:
+On Mon, Oct 21, 2019 at 4:14 AM Alex Hung <alex.hung@canonical.com> wrote:
+>
+> We have done some tests on three of Intel + nVidia configuration
+> systems with OEM _OSI strings removed - while some bugs are still
+> observed, ex. one out of three has suspend/resume issues, no system
+> crashes were observed - the biggest issue that worries us.
+>
+> The positive results give us confident to ack the removal of the OEM
+> _OSI strings. While our tests were not able to cover all possible I+N
+> systems, we are sure we can fix issues along the way. If there aren't
+> systems that cannot be fixed without these OEM _OSI strings, these
+> strings should probably enable with DMI quirks (possible future
+> patches) so they won't affect others.
+>
+> Acked-by: Alex Hung <alex.hung@canonical.com>
 
-On 13/10/19 11:15, Like Xu wrote:
-> +	/* the exact requested config to create perf_event */
-> +	u64 programed_config;
+OK, thanks!
 
-	/*
-	 * eventsel value for general purpose counters, ctrl value for
-	 * fixed counters.
-	 */
-	u64 current_config;
-
+I can queue this up or if it's better to route it through the DRM
+tree, please do that (and let me know).
