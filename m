@@ -4,187 +4,79 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23DEECA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 23:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6092CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 23:55:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E94022070C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 23:54:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACFF92070C
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 23:55:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730335AbfJUXyd (ORCPT
+        id S1730463AbfJUXzj convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 19:54:33 -0400
-Received: from mga03.intel.com ([134.134.136.65]:14202 "EHLO mga03.intel.com"
+        Mon, 21 Oct 2019 19:55:39 -0400
+Received: from out1.zte.com.cn ([202.103.147.172]:52268 "EHLO mxct.zte.com.cn"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728819AbfJUXyd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 19:54:33 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 16:54:32 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,325,1566889200"; 
-   d="scan'208";a="191284975"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
-  by orsmga008.jf.intel.com with ESMTP; 21 Oct 2019 16:54:32 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org
-Cc:     "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-        Borislav Petkov <bp@suse.de>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>, kvm@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [PATCH v2 01/16] x86/intel: Initialize IA32_FEATURE_CONTROL MSR at boot
-Date:   Mon, 21 Oct 2019 16:54:23 -0700
-Message-Id: <20191021235423.32733-1-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20191021234632.32363-1-sean.j.christopherson@intel.com>
-References: <20191021234632.32363-1-sean.j.christopherson@intel.com>
+        id S1730180AbfJUXzj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 19:55:39 -0400
+Received: from mse-fl1.zte.com.cn (unknown [10.30.14.238])
+        by Forcepoint Email with ESMTPS id C2F8075B92D3F24D26F4;
+        Tue, 22 Oct 2019 07:55:36 +0800 (CST)
+Received: from notes_smtp.zte.com.cn (notessmtp.zte.com.cn [10.30.1.239])
+        by mse-fl1.zte.com.cn with ESMTP id x9LNtId7050475;
+        Tue, 22 Oct 2019 07:55:18 +0800 (GMT-8)
+        (envelope-from wang.yi59@zte.com.cn)
+Received: from fox-host8.localdomain ([10.74.120.8])
+          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
+          with ESMTP id 2019102207552806-63452 ;
+          Tue, 22 Oct 2019 07:55:28 +0800 
+From:   Yi Wang <wang.yi59@zte.com.cn>
+To:     vinicius.gomes@intel.com, jhs@mojatatu.com
+Cc:     xiyou.wangcong@gmail.com, jiri@resnulli.us, davem@davemloft.net,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn, up2wing@gmail.com,
+        wang.liang82@zte.com.cn
+Subject: [RESEND][PATCH net-next] net: sched: taprio: fix -Wmissing-prototypes warnings
+Date:   Tue, 22 Oct 2019 07:57:42 +0800
+Message-Id: <1571702262-25929-1-git-send-email-wang.yi59@zte.com.cn>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
+ 21, 2013) at 2019-10-22 07:55:28,
+        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
+ 2019-10-22 07:55:20
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+X-MAIL: mse-fl1.zte.com.cn x9LNtId7050475
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Opportunistically initialize IA32_FEATURE_CONTROL MSR to enable VMX when
-the MSR is left unlocked by BIOS.  Configuring IA32_FEATURE_CONTROL at
-boot time paves the way for similar enabling of other features, e.g.
-Software Guard Extensions (SGX).
+We get one warnings when build kernel W=1:
+net/sched/sch_taprio.c:1155:6: warning: no previous prototype for ‘taprio_offload_config_changed’ [-Wmissing-prototypes]
 
-Temporarily leave equivalent KVM code in place in order to avoid
-introducing a regression on Centaur and Zhaoxin CPUs, e.g. removing
-KVM's code would leave the MSR unlocked on those CPUs and would break
-existing functionality if people are loading kvm_intel on Centaur and/or
-Zhaoxin.  Defer enablement of the boot-time configuration on Centaur and
-Zhaoxin to future patches to aid bisection.
+Make the function static to fix this.
 
-Note, Local Machine Check Exceptions (LMCE) are also supported by the
-kernel and enabled via IA32_FEATURE_CONTROL, but the kernel currently
-uses LMCE if and and only if the feature is explicitly enable by BIOS.
-Keep the current behavior to avoid introducing bugs, future patches can
-opt in to opportunistic enabling if it's deemed desirable to do so.
-
-Always lock IA32_FEATURE_CONTROL if it exists, even if the CPU doesn't
-support VMX, so that other existing and future kernel code that queries
-IA32_FEATURE_CONTROL can assume it's locked.
-
-Start from a clean slate when constructing the value to write to
-IA32_FEATURE_CONTROL, i.e. ignore whatever value BIOS left in the MSR so
-as not to enable random features or fault on the WRMSR.
-
-Suggested-by: Borislav Petkov <bp@suse.de>
-Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: Vitaly Kuznetsov <vkuznets@redhat.com>,
-Cc: Wanpeng Li <wanpengli@tencent.com>
-Cc: Jim Mattson <jmattson@google.com>
-Cc: kvm@vger.kernel.org
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
+Acked-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
 ---
- arch/x86/Kconfig.cpu                  |  4 ++++
- arch/x86/kernel/cpu/Makefile          |  1 +
- arch/x86/kernel/cpu/cpu.h             |  4 ++++
- arch/x86/kernel/cpu/feature_control.c | 30 +++++++++++++++++++++++++++
- arch/x86/kernel/cpu/intel.c           |  2 ++
- 5 files changed, 41 insertions(+)
- create mode 100644 arch/x86/kernel/cpu/feature_control.c
+ net/sched/sch_taprio.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/Kconfig.cpu b/arch/x86/Kconfig.cpu
-index af9c967782f6..aafc14a0abf7 100644
---- a/arch/x86/Kconfig.cpu
-+++ b/arch/x86/Kconfig.cpu
-@@ -387,6 +387,10 @@ config X86_DEBUGCTLMSR
- 	def_bool y
- 	depends on !(MK6 || MWINCHIPC6 || MWINCHIP3D || MCYRIXIII || M586MMX || M586TSC || M586 || M486SX || M486) && !UML
- 
-+config X86_FEATURE_CONTROL_MSR
-+	def_bool y
-+	depends on CPU_SUP_INTEL
-+
- menuconfig PROCESSOR_SELECT
- 	bool "Supported processor vendors" if EXPERT
- 	---help---
-diff --git a/arch/x86/kernel/cpu/Makefile b/arch/x86/kernel/cpu/Makefile
-index d7a1e5a9331c..df5ad0cfe3e9 100644
---- a/arch/x86/kernel/cpu/Makefile
-+++ b/arch/x86/kernel/cpu/Makefile
-@@ -29,6 +29,7 @@ obj-y			+= umwait.o
- obj-$(CONFIG_PROC_FS)	+= proc.o
- obj-$(CONFIG_X86_FEATURE_NAMES) += capflags.o powerflags.o
- 
-+obj-$(CONFIG_X86_FEATURE_CONTROL_MSR) += feature_control.o
- ifdef CONFIG_CPU_SUP_INTEL
- obj-y			+= intel.o intel_pconfig.o
- obj-$(CONFIG_PM)	+= intel_epb.o
-diff --git a/arch/x86/kernel/cpu/cpu.h b/arch/x86/kernel/cpu/cpu.h
-index c0e2407abdd6..d2750f53a0cb 100644
---- a/arch/x86/kernel/cpu/cpu.h
-+++ b/arch/x86/kernel/cpu/cpu.h
-@@ -62,4 +62,8 @@ unsigned int aperfmperf_get_khz(int cpu);
- 
- extern void x86_spec_ctrl_setup_ap(void);
- 
-+#ifdef CONFIG_X86_FEATURE_CONTROL_MSR
-+void init_feature_control_msr(struct cpuinfo_x86 *c);
-+#endif
-+
- #endif /* ARCH_X86_CPU_H */
-diff --git a/arch/x86/kernel/cpu/feature_control.c b/arch/x86/kernel/cpu/feature_control.c
-new file mode 100644
-index 000000000000..57b928e64cf5
---- /dev/null
-+++ b/arch/x86/kernel/cpu/feature_control.c
-@@ -0,0 +1,30 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/tboot.h>
-+
-+#include <asm/cpufeature.h>
-+#include <asm/msr-index.h>
-+#include <asm/processor.h>
-+
-+void init_feature_control_msr(struct cpuinfo_x86 *c)
-+{
-+	u64 msr;
-+
-+	if (rdmsrl_safe(MSR_IA32_FEATURE_CONTROL, &msr))
-+		return;
-+
-+	if (msr & FEATURE_CONTROL_LOCKED)
-+		return;
-+
-+	/*
-+	 * Ignore whatever value BIOS left in the MSR to avoid enabling random
-+	 * features or faulting on the WRMSR.
-+	 */
-+	msr = FEATURE_CONTROL_LOCKED;
-+
-+	if (cpu_has(c, X86_FEATURE_VMX)) {
-+		msr |= FEATURE_CONTROL_VMXON_ENABLED_OUTSIDE_SMX;
-+		if (tboot_enabled())
-+			msr |= FEATURE_CONTROL_VMXON_ENABLED_INSIDE_SMX;
-+	}
-+	wrmsrl(MSR_IA32_FEATURE_CONTROL, msr);
-+}
-diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-index c2fdc00df163..15d59224e2f8 100644
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -755,6 +755,8 @@ static void init_intel(struct cpuinfo_x86 *c)
- 	/* Work around errata */
- 	srat_detect_node(c);
- 
-+	init_feature_control_msr(c);
-+
- 	if (cpu_has(c, X86_FEATURE_VMX))
- 		detect_vmx_virtcap(c);
+diff --git a/net/sched/sch_taprio.c b/net/sched/sch_taprio.c
+index 6719a65..2121187 100644
+--- a/net/sched/sch_taprio.c
++++ b/net/sched/sch_taprio.c
+@@ -1152,7 +1152,7 @@ void taprio_offload_free(struct tc_taprio_qopt_offload *offload)
+  * offload state (PENDING, ACTIVE, INACTIVE) so it can be visible in dump().
+  * This is left as TODO.
+  */
+-void taprio_offload_config_changed(struct taprio_sched *q)
++static void taprio_offload_config_changed(struct taprio_sched *q)
+ {
+ 	struct sched_gate_list *oper, *admin;
  
 -- 
-2.22.0
+1.8.3.1
 
