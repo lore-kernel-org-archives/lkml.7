@@ -2,134 +2,81 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27718CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:59:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B820FCA9EB0
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:59:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE209214AE
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:59:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8482620B7C
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:59:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eBddPsKa"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Yr/Q7ZL8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729858AbfJUP7W (ORCPT
+        id S1729847AbfJUP7V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 11:59:22 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:52730 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729834AbfJUP7U (ORCPT
+        Mon, 21 Oct 2019 11:59:21 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:31577 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726847AbfJUP7T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 11:59:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=0d3OdHhsitZEf36EB7P9JTYv0iehqwkuJU2AOWE/RWY=; b=eBddPsKavOfPc2ro/R1LvA0fu
-        KQQ1doWWM83f5s4v39sPAnIBYHhrUjlEw7r0kmpH9NUo3mR7loUB6UYYlxqSDLiyAE2EHqwzAT3b8
-        Sloa+4jqayPhiivA00AMwLyO558Kc3PKe8JD/PY83vyt7YUuBnpP11oi+BJcyEnVN8tdAjOHNPwnj
-        ZN8wJ2AEI/0py49dRUz5ODNi4isc0NdCd6aVBIL/A7vH6YWx2h18PmBxr2Jlf6jBDoso8NSo1zY0C
-        wQy25nBQzDCgsp11GTy9YmmrOt+p8ZCjxhVnRlLNTAmuhrkGHg4UvSQPYr/ckJe/jT6K64sbPhxq0
-        VULIfKjiw==;
-Received: from [2601:1c0:6280:3f0::9ef4]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iMa5S-0001tE-Ca; Mon, 21 Oct 2019 15:59:14 +0000
-Subject: Re: linux-next: Tree for Oct 18 (objtool)
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>, linux@rasmusvillemoes.dk,
-        cyphar@cyphar.com, keescook@chromium.org,
-        christian.brauner@ubuntu.com
-References: <20191018180300.090dbcb9@canb.auug.org.au>
- <40de4e26-450e-b932-3d73-e833c8aeaa2e@infradead.org>
- <20191021123549.GC1817@hirez.programming.kicks-ass.net>
- <20191021131149.GA19358@hirez.programming.kicks-ass.net>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <0700728a-009e-739d-6349-e67359c5074a@infradead.org>
-Date:   Mon, 21 Oct 2019 08:59:13 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Mon, 21 Oct 2019 11:59:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571673558;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=gB3h1+rX6SwZqtoY3Kw85+CkKWUkDR1tjhYDoTIgQqI=;
+        b=Yr/Q7ZL8MJAVMiFbIi8tp9ibze5U2B/hU0douP+WMf2A8OP1GFsJggyWojLWSuE84t1C1T
+        cFZ+6VubAgOafi5tZVkOLsbzjDLsEWpJI/eTtwCRFVdpzoMNLcFJM2sGt27wobMBuyR7+D
+        Dr78NMssfcAoevfbQxOXDn9Ada7w68I=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-304-ZRM1CcYIMe2Hn_ko3VmGjA-1; Mon, 21 Oct 2019 11:59:16 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7CBA01005500;
+        Mon, 21 Oct 2019 15:59:15 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-121-40.rdu2.redhat.com [10.10.121.40])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BD4756012E;
+        Mon, 21 Oct 2019 15:59:13 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <000000000000830fe50595115344@google.com>
+References: <000000000000830fe50595115344@google.com>
+To:     syzbot <syzbot+6455648abc28dbdd1e7f@syzkaller.appspotmail.com>
+Cc:     dhowells@redhat.com, jarkko.sakkinen@linux.intel.com,
+        jmorris@namei.org, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, serge@hallyn.com,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: WARNING: refcount bug in find_key_to_update
 MIME-Version: 1.0
-In-Reply-To: <20191021131149.GA19358@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-ID: <8508.1571673553.1@warthog.procyon.org.uk>
+Date:   Mon, 21 Oct 2019 16:59:13 +0100
+Message-ID: <8509.1571673553@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MC-Unique: ZRM1CcYIMe2Hn_ko3VmGjA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/21/19 6:11 AM, Peter Zijlstra wrote:
-> On Mon, Oct 21, 2019 at 02:35:49PM +0200, Peter Zijlstra wrote:
->> On Fri, Oct 18, 2019 at 08:33:11AM -0700, Randy Dunlap wrote:
->>> On 10/18/19 12:03 AM, Stephen Rothwell wrote:
->>>> Hi all,
->>>>
->>>> Changes since 20191017:
->>>>
->>>
->>> on x86_64:
->>> lib/usercopy.o: warning: objtool: check_zeroed_user()+0x35f: call to __ubsan_handle_shift_out_of_bounds() with UACCESS enabled
->>
->> Blergh... I suppose the below will fix that. I'm a bit conflicted on it
->> though, the alternative is annotating more ubsan crud.
-> 
-> By popular request; here's that alternative. Completely untested :-)
+syzbot <syzbot+6455648abc28dbdd1e7f@syzkaller.appspotmail.com> wrote:
 
-Both patch versions build-tested successfully.  Thanks.
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D11c8adab600=
+000
 
+How do I tell what's been passed into the add_key for the encrypted key?
 
-> ---
->  lib/ubsan.c           | 5 ++++-
->  tools/objtool/check.c | 1 +
->  2 files changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/lib/ubsan.c b/lib/ubsan.c
-> index 39d5952c4273..0dce3ff45b5b 100644
-> --- a/lib/ubsan.c
-> +++ b/lib/ubsan.c
-> @@ -359,9 +359,10 @@ void __ubsan_handle_shift_out_of_bounds(struct shift_out_of_bounds_data *data,
->  	struct type_descriptor *lhs_type = data->lhs_type;
->  	char rhs_str[VALUE_LENGTH];
->  	char lhs_str[VALUE_LENGTH];
-> +	unsigned long flags = user_access_save();
->  
->  	if (suppress_report(&data->location))
-> -		return;
-> +		goto out;
->  
->  	ubsan_prologue(&data->location);
->  
-> @@ -387,6 +388,8 @@ void __ubsan_handle_shift_out_of_bounds(struct shift_out_of_bounds_data *data,
->  			lhs_type->type_name);
->  
->  	ubsan_epilogue();
-> +out:
-> +	user_access_restore(flags);
->  }
->  EXPORT_SYMBOL(__ubsan_handle_shift_out_of_bounds);
->  
-> diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-> index 543c068096b1..4768d91c6d68 100644
-> --- a/tools/objtool/check.c
-> +++ b/tools/objtool/check.c
-> @@ -482,6 +482,7 @@ static const char *uaccess_safe_builtin[] = {
->  	"ubsan_type_mismatch_common",
->  	"__ubsan_handle_type_mismatch",
->  	"__ubsan_handle_type_mismatch_v1",
-> +	"__ubsan_handle_shift_out_of_bounds",
->  	/* misc */
->  	"csum_partial_copy_generic",
->  	"__memcpy_mcsafe",
-> 
+David
 
-
--- 
-~Randy
