@@ -2,115 +2,627 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D2D6CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:45:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6B85CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:46:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1D3520640
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:45:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E6B420640
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:46:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571669153;
-	bh=zSxr6boC9XHsm0JY6dQGUP4Y+pfXYhmlbUslvFJagHU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CCDSD3x6jPMbfMKQcEiEJAHzo11zwxGojWNu9jJ2N0MKh78UT462GTh9vMctCzc5V
-	 GLnUis4+gZYRGnrcxN3LS49nP0O8pujRzVbgPskYQV0mh3UG6ToU3KXSt/MqSaVTfp
-	 QP5YYJolUNAvQQhU/9UeMRIYaofEg2wVz34o9JTI=
+	s=default; t=1571669171;
+	bh=J7Y4tDIkg9/lzSYskKmPkTHy3HabRgJOOX/OXg0oSHg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=qNiJqnuC13pD03RxGiWPk3WyhgkCSXdiYiAvQvyIdyA2yWHqZtyUdadEsSIr4CrWd
+	 imFyCjr7poWCALwYiZVXqZkYqsgS9q8oK3M8JopnS9hqxMnEIgobGG3TVjjggO6i0r
+	 sfuZHdSg3PYQEfR5Q0ME7ESNgofAP5gFPi8rhd0Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728860AbfJUOpw (ORCPT
+        id S1728885AbfJUOqK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 10:45:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41602 "EHLO mail.kernel.org"
+        Mon, 21 Oct 2019 10:46:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726987AbfJUOpw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 10:45:52 -0400
-Received: from localhost (unknown [107.87.137.115])
+        id S1726987AbfJUOqJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 10:46:09 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A29D12053B;
-        Mon, 21 Oct 2019 14:45:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD6E92053B;
+        Mon, 21 Oct 2019 14:46:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571669151;
-        bh=zSxr6boC9XHsm0JY6dQGUP4Y+pfXYhmlbUslvFJagHU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wzQU8e0ZUFNA8uAikS25qhU+PVVOE1nVLd8tB20kS4RhTnUBXXeHPWRWyrc6EfC/U
-         3MxufZMwym9OBnJTJHOyQO6DC35w13zixXNgT34vkVW+/WGisLaRsfWiKq9PCWqjMn
-         eR5n3fRA7Hjg+DR0PEPA/XiaRHmax8grcGZk3iAs=
-Date:   Mon, 21 Oct 2019 10:45:48 -0400
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Jaehoon Chung <jh80.chung@samsung.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/7] debugfs: Add debugfs_create_xul() for hexadecimal
- unsigned long
-Message-ID: <20191021144548.GA41107@kroah.com>
-References: <20191021143742.14487-1-geert+renesas@glider.be>
- <20191021143742.14487-2-geert+renesas@glider.be>
+        s=default; t=1571669168;
+        bh=J7Y4tDIkg9/lzSYskKmPkTHy3HabRgJOOX/OXg0oSHg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=OAhDIhlsoupZyiEkj5vWCrcMCMCzhNs9HjHpnRyi3UdSlS2rESBoRe6ji7WtaBvVL
+         ztzCZQpDLgzW6apHllJLV42SiJLBF3RblL+bbzEyF6JAg3N+iuS+MTb+dri6i7zZli
+         eVy50xKJMBZ3qcsIDCfGgdmtb28NPwIUrND235go=
+Date:   Mon, 21 Oct 2019 15:45:59 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Beniamin Bia <beniamin.bia@analog.com>
+Cc:     <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
+        <knaack.h@gmx.de>, <pmeerw@pmeerw.net>,
+        <gregkh@linuxfoundation.org>, <linux-iio@vger.kernel.org>,
+        <devel@driverdev.osuosl.org>, <linux-kernel@vger.kernel.org>,
+        <mark.rutland@arm.com>, <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>, <paulmck@linux.ibm.com>,
+        <mchehab+samsung@kernel.org>, <linus.walleij@linaro.org>,
+        <nicolas.ferre@microchip.com>, <biabeniamin@outlook.com>,
+        Paul Cercueil <paul.cercueil@analog.com>
+Subject: Re: [PATCH 1/4] iio: adc: Add support for AD7091R5 ADC
+Message-ID: <20191021154559.7baf1a36@archlinux>
+In-Reply-To: <20191021170608.26412-1-beniamin.bia@analog.com>
+References: <20191021170608.26412-1-beniamin.bia@analog.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191021143742.14487-2-geert+renesas@glider.be>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 04:37:36PM +0200, Geert Uytterhoeven wrote:
-> The existing debugfs_create_ulong() function supports objects of
-> type "unsigned long", which are 32-bit or 64-bit depending on the
-> platform, in decimal form.  To format objects in hexadecimal, various
-> debugfs_create_x*() functions exist, but all of them take fixed-size
-> types.
+On Mon, 21 Oct 2019 20:06:05 +0300
+Beniamin Bia <beniamin.bia@analog.com> wrote:
+
+> From: Paul Cercueil <paul.cercueil@analog.com>
 > 
-> Add a debugfs helper for "unsigned long" objects in hexadecimal format.
-> This avoids the need for users to open-code the same, or introduce
-> bugs when casting the value pointer to "u32 *" or "u64 *" to call
-> debugfs_create_x{32,64}().
+> AD7091 is 4-Channel, I2C, Ultra Low Power,12-Bit ADC.
 > 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Datasheet:
+> Link: https://www.analog.com/media/en/technical-documentation/data-sheets/ad7091r-5.pdf
+> 
+> Signed-off-by: Paul Cercueil <paul.cercueil@analog.com>
+> Co-developed-by: Beniamin Bia <beniamin.bia@analog.com>
+> Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
+
+Hi. I'm going to guess this one is a case of upstreaming a driver
+that's been in the Analog tree for quite a while.  Great if so, but
+it has a few rough corners.
+
+See inline,
+
+Thanks,
+
+Jonathan
+
 > ---
->  include/linux/debugfs.h | 10 ++++++++++
->  1 file changed, 10 insertions(+)
+>  drivers/iio/adc/Kconfig        |   7 +
+>  drivers/iio/adc/Makefile       |   1 +
+>  drivers/iio/adc/ad7091r-base.c | 273 +++++++++++++++++++++++++++++++++
+>  drivers/iio/adc/ad7091r-base.h |  30 ++++
+>  drivers/iio/adc/ad7091r5.c     | 108 +++++++++++++
+>  5 files changed, 419 insertions(+)
+>  create mode 100644 drivers/iio/adc/ad7091r-base.c
+>  create mode 100644 drivers/iio/adc/ad7091r-base.h
+>  create mode 100644 drivers/iio/adc/ad7091r5.c
 > 
-> diff --git a/include/linux/debugfs.h b/include/linux/debugfs.h
-> index 33690949b45d6904..d7b2aebcc277d65e 100644
-> --- a/include/linux/debugfs.h
-> +++ b/include/linux/debugfs.h
-> @@ -356,4 +356,14 @@ static inline ssize_t debugfs_write_file_bool(struct file *file,
+> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> index 7e3286265a38..80b1b9551749 100644
+> --- a/drivers/iio/adc/Kconfig
+> +++ b/drivers/iio/adc/Kconfig
+> @@ -22,6 +22,13 @@ config AD7124
+>  	  To compile this driver as a module, choose M here: the module will be
+>  	  called ad7124.
 >  
->  #endif
->  
-> +static inline void debugfs_create_xul(const char *name, umode_t mode,
-> +				      struct dentry *parent,
-> +				      unsigned long *value)
+> +config AD7091R5
+> +	tristate "Analog Devices AD7091R5 ADC Driver"
+> +	depends on I2C
+> +	select REGMAP_I2C
+> +	help
+> +	  Say yes here to build support for Analog Devices AD7091R-5 ADC.
+> +
+>  config AD7266
+>  	tristate "Analog Devices AD7265/AD7266 ADC driver"
+>  	depends on SPI_MASTER
+> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+> index ef9cc485fb67..55e44735aaac 100644
+> --- a/drivers/iio/adc/Makefile
+> +++ b/drivers/iio/adc/Makefile
+> @@ -6,6 +6,7 @@
+>  # When adding new entries keep the list in alphabetical order
+>  obj-$(CONFIG_AD_SIGMA_DELTA) += ad_sigma_delta.o
+>  obj-$(CONFIG_AD7124) += ad7124.o
+> +obj-$(CONFIG_AD7091R5) += ad7091r5.o ad7091r-base.o
+>  obj-$(CONFIG_AD7266) += ad7266.o
+>  obj-$(CONFIG_AD7291) += ad7291.o
+>  obj-$(CONFIG_AD7298) += ad7298.o
+> diff --git a/drivers/iio/adc/ad7091r-base.c b/drivers/iio/adc/ad7091r-base.c
+> new file mode 100644
+> index 000000000000..140413329754
+> --- /dev/null
+> +++ b/drivers/iio/adc/ad7091r-base.c
+> @@ -0,0 +1,273 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * AD7091RX Analog to Digital converter driver
+> + *
+> + * Copyright 2014 Analog Devices Inc.
+> + *
+
+This blank line doesn't add anything.
+
+> + */
+> +
+> +#include "ad7091r-base.h"
+> +
+> +#include <linux/bitops.h>
+> +#include <linux/iio/events.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/module.h>
+> +#include <linux/regmap.h>
+> +
+> +#define AD7091R_REG_RESULT  0
+> +#define AD7091R_REG_CHANNEL 1
+> +#define AD7091R_REG_CONF    2
+> +#define AD7091R_REG_ALERT   3
+> +#define AD7091R_REG_CH_LOW_LIMIT(ch) ((ch) * 3 + 4)
+> +#define AD7091R_REG_CH_HIGH_LIMIT(ch) ((ch) * 3 + 5)
+> +#define AD7091R_REG_CH_HYSTERESIS(ch) ((ch) * 3 + 6)
+> +
+> +/* AD7091R_REG_RESULT */
+> +#define REG_RESULT_CH_ID(x)	    (((x) >> 13) & 0x3)
+
+Prefix these as well.
+
+> +#define REG_RESULT_CONV_RESULT(x)   ((x) & 0xfff)
+> +
+> +/* AD7091R_REG_CONF */
+> +#define REG_CONF_AUTO   BIT(8)
+> +#define REG_CONF_CMD    BIT(10)
+> +
+> +#define REG_CONF_MODE_MASK  (REG_CONF_AUTO | REG_CONF_CMD)
+> +
+> +enum ad7091r_mode {
+> +	AD7091R_MODE_SAMPLE,
+> +	AD7091R_MODE_COMMAND,
+> +	AD7091R_MODE_AUTOCYCLE,
+> +};
+> +
+> +struct ad7091r_state {
+> +	struct device *dev;
+> +	struct regmap *map;
+> +	const struct ad7091r_chip_info *chip_info;
+> +	enum ad7091r_mode mode;
+> +};
+> +
+> +static int ad7091r_set_mode(struct ad7091r_state *st, enum ad7091r_mode mode)
 > +{
-> +	if (sizeof(*value) == sizeof(u32))
-> +		debugfs_create_x32(name, mode, parent, (u32 *)value);
-> +	else
-> +		debugfs_create_x64(name, mode, parent, (u64 *)value);
+> +	int ret;
+> +
+> +	switch (mode) {
+> +	case AD7091R_MODE_SAMPLE:
+> +		ret = regmap_update_bits(st->map, AD7091R_REG_CONF,
+> +				REG_CONF_MODE_MASK, 0);
+> +		break;
+> +	case AD7091R_MODE_COMMAND:
+> +		ret = regmap_update_bits(st->map, AD7091R_REG_CONF,
+> +				REG_CONF_MODE_MASK, REG_CONF_CMD);
+> +		break;
+> +	case AD7091R_MODE_AUTOCYCLE:
+> +		ret = regmap_update_bits(st->map, AD7091R_REG_CONF,
+> +				REG_CONF_MODE_MASK, REG_CONF_AUTO);
+> +		break;
+> +	default:
+> +		ret = -EINVAL;
+> +		break;
+> +	}
+> +
+> +	if (!ret)
+> +		st->mode = mode;
+
+I always prefer the error path out of line.  Slightly longer but more
+consistent with earlier cases.
+
+	if (ret)
+		return ret;
+
+	st->mode = mode;
+
+	return 0;
+
+> +	return ret;
 > +}
+> +
+> +static int ad7091r_set_channel(struct ad7091r_state *st, unsigned int channel)
+> +{
+> +	unsigned int foo;
+> +	int ret;
+> +
+> +	/* AD7091R_REG_CHANNEL is a 8-bit register */
 
-Looks sane, but can you add some kernel-doc comments here so that we can
-pull it into the debugfs documentation?  Also there is debugfs
-documentation in Documentation/filesystems/ so maybe also add this
-there?  I am going to be overhauling the debugfs documentation "soon"
-but it's at the lower part of my todo list, so it will take a while,
-might as well keep it up to date with new stuff added like this so that
-people don't get lost.
+I'm not sure what the comment is telling us...
 
-thanks,
+> +	ret = regmap_write(st->map, AD7091R_REG_CHANNEL,
+> +			BIT(channel) | (BIT(channel) << 8));
+> +	if (ret)
+> +		return ret;
+> +
+> +	/*
+> +	 *  There is a latency of one conversion before the channel conversion
 
-greg k-h
+Slightly odd spacing.
+
+> +	 * sequence is updated
+> +	 */
+> +	return regmap_read(st->map, AD7091R_REG_RESULT, &foo);
+> +}
+> +
+> +static int ad7091r_read_one(struct iio_dev *iio_dev,
+> +		unsigned int channel, unsigned int *read_val)
+> +{
+> +	struct ad7091r_state *st = iio_priv(iio_dev);
+> +	unsigned int val;
+> +	int ret;
+> +
+> +	/* TODO: locking */
+
+? :)
+
+> +	ret = ad7091r_set_channel(st, channel);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regmap_read(st->map, AD7091R_REG_RESULT, &val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (REG_RESULT_CH_ID(val) != channel)
+> +		return -EIO;
+> +
+> +	*read_val = REG_RESULT_CONV_RESULT(val);
+> +	return 0;
+> +}
+> +
+> +static int ad7091r_read_raw(struct iio_dev *iio_dev,
+> +			   struct iio_chan_spec const *chan,
+> +			   int *val, int *val2, long m)
+> +{
+> +	struct ad7091r_state *st = iio_priv(iio_dev);
+> +	unsigned int read_val;
+> +	int ret;
+> +
+> +	mutex_lock(&iio_dev->mlock);
+
+Hmm. I'm not sure if this is mlock being misused to protect some local
+stuff or if it's attempting to prevent us switching to buffered
+mode whilst this is in progress (we don't support buffered mode obviously
+but maybe it's a cut an paste issue?)
+
+> +
+> +	switch (m) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		if (st->mode != AD7091R_MODE_COMMAND) {
+> +			ret = -EBUSY;
+> +			goto unlock;
+> +		}
+> +
+> +		ret = ad7091r_read_one(iio_dev, chan->channel, &read_val);
+> +		if (ret)
+> +			goto unlock;
+> +
+> +		*val = read_val;
+> +		ret = IIO_VAL_INT;
+> +		break;
+> +
+> +	default:
+> +		ret = -EINVAL;
+> +		break;
+> +	}
+> +
+> +unlock:
+> +	mutex_unlock(&iio_dev->mlock);
+> +	return ret;
+> +}
+> +
+> +static const struct iio_info ad7091r_info = {
+> +	.read_raw = ad7091r_read_raw,
+> +};
+> +
+> +static irqreturn_t ad7091r_event_handler(int irq, void *private)
+> +{
+> +	struct ad7091r_state *st = (struct ad7091r_state *) private;
+> +	struct iio_dev *iio_dev = dev_get_drvdata(st->dev);
+> +	unsigned int i, read_val;
+> +	int ret;
+> +	s64 timestamp = iio_get_time_ns(iio_dev);
+> +
+> +	ret = regmap_read(st->map, AD7091R_REG_ALERT, &read_val);
+> +	if (ret)
+> +		return IRQ_HANDLED; /* TODO */
+
+Interesting comment.  TODO what?
+
+> +
+> +	for (i = 0; i < st->chip_info->num_channels; i++) {
+> +		if (read_val & BIT(i * 2))
+> +			iio_push_event(iio_dev,
+> +					IIO_UNMOD_EVENT_CODE(IIO_VOLTAGE, i,
+> +						IIO_EV_TYPE_THRESH,
+> +						IIO_EV_DIR_RISING), timestamp);
+> +		if (read_val & BIT(i * 2 + 1))
+> +			iio_push_event(iio_dev,
+> +					IIO_UNMOD_EVENT_CODE(IIO_VOLTAGE, i,
+> +						IIO_EV_TYPE_THRESH,
+> +						IIO_EV_DIR_FALLING), timestamp);
+> +	}
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +int ad7091r_probe(struct device *dev, const char *name,
+> +		const struct ad7091r_chip_info *chip_info,
+> +		struct regmap *map, int irq)
+> +{
+> +	struct iio_dev *iio_dev;
+> +	struct ad7091r_state *st;
+> +	int ret;
+> +
+> +	iio_dev = devm_iio_device_alloc(dev, sizeof(*st));
+> +	if (!iio_dev)
+> +		return -ENOMEM;
+> +
+> +	st = iio_priv(iio_dev);
+> +	st->dev = dev;
+> +	st->chip_info = chip_info;
+> +	st->map = map;
+> +	dev_set_drvdata(dev, iio_dev);
+
+If you follow comment below to get rid of remove, you can probably drop
+this as well as it will probably be unused.
+
+> +
+> +	iio_dev->dev.parent = dev;
+> +	iio_dev->name = name;
+> +	iio_dev->info = &ad7091r_info;
+> +	iio_dev->modes = INDIO_DIRECT_MODE;
+> +
+> +	iio_dev->num_channels = chip_info->num_channels;
+> +	iio_dev->channels = chip_info->channels;
+> +
+> +	if (irq) {
+> +		ret = devm_request_threaded_irq(dev, irq, NULL,
+> +				ad7091r_event_handler,
+> +				IRQF_TRIGGER_FALLING | IRQF_ONESHOT, name, st);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	/* Use command mode by default */
+
+While I have no idea what command mode it (I'm lazy so haven't
+read the datasheet yet :), the comment doesn't tell us anything
+the code doesn't make obvious.  Hence the comment is just
+an opportunity for bit rot rather than anything helpful.
+
+> +	ret = ad7091r_set_mode(st, AD7091R_MODE_COMMAND);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret = iio_device_register(iio_dev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	dev_dbg(dev, "Probed\n");
+Clean these left over bits of debug out please.
+
+then return iio_device_register
+
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(ad7091r_probe);
+> +
+> +int ad7091r_remove(struct device *dev)
+> +{
+> +	struct iio_dev *iio_dev = dev_get_drvdata(dev);
+> +
+> +	iio_device_unregister(iio_dev);
+
+Hmm. The only thing that seems to get added to remove later
+is the regulator disable.  I'd use devm_add_action_or_reset
+to deal with that and clean out the manual remove path entirely.
+
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(ad7091r_remove);
+> +
+> +static bool ad7091r_writeable_reg(struct device *dev, unsigned int reg)
+> +{
+> +	switch (reg) {
+> +	case AD7091R_REG_RESULT:
+> +	case AD7091R_REG_ALERT:
+> +		return false;
+> +	default:
+> +		return true;
+> +	}
+> +}
+> +
+> +static bool ad7091r_volatile_reg(struct device *dev, unsigned int reg)
+> +{
+> +	switch (reg) {
+> +	case AD7091R_REG_RESULT:
+> +	case AD7091R_REG_ALERT:
+> +		return true;
+> +	default:
+> +		return false;
+> +	}
+> +}
+> +
+> +const struct regmap_config ad7091r_regmap_config = {
+> +	.reg_bits = 8,
+> +	.val_bits = 16,
+> +	.writeable_reg = ad7091r_writeable_reg,
+> +	.volatile_reg = ad7091r_volatile_reg,
+> +};
+> +EXPORT_SYMBOL_GPL(ad7091r_regmap_config);
+> +
+> +//MODULE_AUTHOR("Paul Cercueil <paul.cercueil@analog.com>");
+> +//MODULE_DESCRIPTION("Analog Devices AD7091Rx multi-channel converters");
+> +//MODULE_LICENSE("GPL v2");
+
+Clean these up.
+
+> diff --git a/drivers/iio/adc/ad7091r-base.h b/drivers/iio/adc/ad7091r-base.h
+> new file mode 100644
+> index 000000000000..7a29f86ea82b
+> --- /dev/null
+> +++ b/drivers/iio/adc/ad7091r-base.h
+> @@ -0,0 +1,30 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * AD7091RX Analog to Digital converter driver
+> + *
+> + * Copyright 2014 Analog Devices Inc.
+
+The following blank line doesn't add anything.
+You may also want to claim slightly more recent copyright as I'm guessing
+there were at least some changes since then?
+
+> + *
+> + */
+> +
+> +#ifndef __DRIVERS_IIO_DAC_AD7091R_BASE_H__
+> +#define __DRIVERS_IIO_DAC_AD7091R_BASE_H__
+> +
+> +#include <linux/types.h>
+> +#include <linux/regmap.h>
+Could use a forwards definition of struct regmap here,
+and not include the include for this header.
+> +
+> +struct device;
+> +struct ad7091r_state;
+> +
+> +struct ad7091r_chip_info {
+> +	unsigned int num_channels;
+> +	const struct iio_chan_spec *channels;
+> +};
+> +
+> +extern const struct regmap_config ad7091r_regmap_config;
+> +
+> +int ad7091r_probe(struct device *dev, const char *name,
+> +		const struct ad7091r_chip_info *chip_info,
+> +		struct regmap *map, int irq);
+> +int ad7091r_remove(struct device *dev);
+> +
+> +#endif /* __DRIVERS_IIO_DAC_AD7091R5_BASE_H__ */
+> diff --git a/drivers/iio/adc/ad7091r5.c b/drivers/iio/adc/ad7091r5.c
+> new file mode 100644
+> index 000000000000..1ba838c58c31
+> --- /dev/null
+> +++ b/drivers/iio/adc/ad7091r5.c
+> @@ -0,0 +1,108 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * AD7091R5 Analog to Digital converter driver
+> + *
+> + * Copyright 2014 Analog Devices Inc.
+> + *
+
+One of my favourite nit picks ;)  Why this blank line?
+
+> + */
+> +
+> +#include "ad7091r-base.h"
+> +
+> +#include <linux/i2c.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/module.h>
+> +
+> +static const struct iio_event_spec ad7091r5_events[] = {
+> +	{
+> +		.type = IIO_EV_TYPE_THRESH,
+> +		.dir = IIO_EV_DIR_RISING,
+> +		.mask_separate = BIT(IIO_EV_INFO_VALUE) |
+> +			BIT(IIO_EV_INFO_ENABLE),
+> +	},
+> +	{
+> +		.type = IIO_EV_TYPE_THRESH,
+> +		.dir = IIO_EV_DIR_FALLING,
+> +		.mask_separate = BIT(IIO_EV_INFO_VALUE) |
+> +			BIT(IIO_EV_INFO_ENABLE),
+> +	},
+> +	{
+> +		.type = IIO_EV_TYPE_THRESH,
+> +		.dir = IIO_EV_DIR_EITHER,
+> +		.mask_separate = BIT(IIO_EV_INFO_HYSTERESIS),
+> +	},
+> +};
+> +
+> +#define AD7091R_CHANNEL(idx, bits, ev, num_ev) { \
+> +	.type = IIO_VOLTAGE, \
+> +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW), \
+> +	.indexed = 1, \
+> +	.channel = idx, \
+> +	.event_spec = ev, \
+> +	.num_event_specs = num_ev, \
+> +}
+> +static const struct iio_chan_spec ad7091r5_channels_irq[] = {
+> +	AD7091R_CHANNEL(0, 12, ad7091r5_events, ARRAY_SIZE(ad7091r5_events)),
+> +	AD7091R_CHANNEL(1, 12, ad7091r5_events, ARRAY_SIZE(ad7091r5_events)),
+> +	AD7091R_CHANNEL(2, 12, ad7091r5_events, ARRAY_SIZE(ad7091r5_events)),
+> +	AD7091R_CHANNEL(3, 12, ad7091r5_events, ARRAY_SIZE(ad7091r5_events)),
+> +};
+> +
+> +static const struct iio_chan_spec ad7091r5_channels_noirq[] = {
+> +	AD7091R_CHANNEL(0, 12, NULL, 0),
+> +	AD7091R_CHANNEL(1, 12, NULL, 0),
+> +	AD7091R_CHANNEL(2, 12, NULL, 0),
+> +	AD7091R_CHANNEL(3, 12, NULL, 0),
+> +};
+> +#undef AD7091R_CHANNEL
+> +
+> +static const struct ad7091r_chip_info ad7091r5_chip_info_irq = {
+> +	.channels = ad7091r5_channels_irq,
+> +	.num_channels = ARRAY_SIZE(ad7091r5_channels_irq),
+> +};
+> +
+> +static const struct ad7091r_chip_info ad7091r5_chip_info_noirq = {
+> +	.channels = ad7091r5_channels_noirq,
+> +	.num_channels = ARRAY_SIZE(ad7091r5_channels_noirq),
+> +};
+> +
+> +static int ad7091r5_i2c_probe(struct i2c_client *i2c,
+> +		const struct i2c_device_id *id)
+> +{
+> +	const struct ad7091r_chip_info *chip_info;
+> +	struct regmap *map = devm_regmap_init_i2c(i2c, &ad7091r_regmap_config);
+> +
+> +	if (IS_ERR(map))
+> +		return PTR_ERR(map);
+> +
+> +	if (i2c->irq)
+> +		chip_info = &ad7091r5_chip_info_irq;
+> +	else
+> +		chip_info = &ad7091r5_chip_info_noirq;
+> +
+> +	return ad7091r_probe(&i2c->dev, id->name, chip_info, map, i2c->irq);
+> +}
+> +
+> +static int ad7091r5_i2c_remove(struct i2c_client *i2c)
+> +{
+> +	return ad7091r_remove(&i2c->dev);
+> +}
+> +
+> +static const struct i2c_device_id ad7091r5_i2c_ids[] = {
+> +	{"ad7091r5", 0},
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(i2c, ad7091r5_i2c_ids);
+> +
+> +static struct i2c_driver ad7091r5_driver = {
+> +	.driver = {
+> +		.name = "ad7091r5",
+> +	},
+> +	.probe = ad7091r5_i2c_probe,
+> +	.remove = ad7091r5_i2c_remove,
+> +	.id_table = ad7091r5_i2c_ids,
+> +};
+> +module_i2c_driver(ad7091r5_driver);
+> +
+> +MODULE_AUTHOR("Beniamin Bia <beniamin.bia@analog.com>");
+> +MODULE_DESCRIPTION("Analog Devices AD7091R5 multi-channel ADC driver");
+> +MODULE_LICENSE("GPL v2");
+
