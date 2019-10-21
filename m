@@ -2,217 +2,356 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97D5CCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:14:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B2EBCA9EB0
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:14:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B88F2089C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:14:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 326DF20B7C
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:14:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xTBJZmcq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728836AbfJUNOC (ORCPT
+        id S1728864AbfJUNOU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 09:14:02 -0400
-Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:41741 "EHLO
-        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726767AbfJUNOB (ORCPT
+        Mon, 21 Oct 2019 09:14:20 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:39742 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728840AbfJUNOT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 09:14:01 -0400
-Received: from [192.168.2.10] ([46.9.232.237])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id MXVRiV2Nbo1ZhMXVUiMOId; Mon, 21 Oct 2019 15:13:58 +0200
-Subject: Re: [PATCH 0/2] media: meson: vdec: Add compliant H264 support
-To:     Maxime Jourdan <mjourdan@baylibre.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org
-References: <20191007145909.29979-1-mjourdan@baylibre.com>
- <8563127e-fe2c-a633-556b-8a883cebb171@xs4all.nl>
- <977c48e8-8275-c96a-688b-ccfbb873eb79@baylibre.com>
- <65a88bfc-d82b-1487-7983-507149b11673@xs4all.nl>
- <acef4f1e-0b59-30f5-f31f-9fc22f393072@baylibre.com>
- <fb6edb95-069e-abeb-416e-2327da0a87ab@xs4all.nl>
- <CAMO6nazotuiZQROoA4+b8tHZ-qpR4TS1RZWV6=fyPVCdsxz1Zg@mail.gmail.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <92571553-392c-6c39-89a7-7fc5d311e6fc@xs4all.nl>
-Date:   Mon, 21 Oct 2019 15:13:53 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 21 Oct 2019 09:14:19 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9LDE7B7121513;
+        Mon, 21 Oct 2019 08:14:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1571663647;
+        bh=f+6GI+LbBw1WuyNQvMxFbFdVBF7LdvDUjpMd4xYGnqM=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=xTBJZmcq3JHguGr+gKHCjoUWXk0AlGOFPaWyzEmaZXij/VNZylV0qxEEftAFZqg9P
+         eNUY65990ua/O0deR3YS35BgOcbqyS3kddeou8HI1AhK/ctRJPS3G6oq645xLiUm/4
+         l3X6RRA3zsd2UoWquoFkpUSpO6EHZLCm5uy+vElk=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9LDDbhm105997
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 21 Oct 2019 08:13:37 -0500
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 21
+ Oct 2019 08:13:27 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 21 Oct 2019 08:13:27 -0500
+Received: from lta0400828a.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9LDDE7g017365;
+        Mon, 21 Oct 2019 08:13:19 -0500
+From:   Roger Quadros <rogerq@ti.com>
+To:     <felipe.balbi@linux.intel.com>, <gregkh@linuxfoundation.org>
+CC:     <pawell@cadence.com>, <peter.chen@nxp.com>, <nsekhar@ti.com>,
+        <kurahul@cadence.com>, <linux-usb@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Roger Quadros <rogerq@ti.com>
+Subject: [PATCH v2 2/2] usb: cdns3: Add TI specific wrapper driver
+Date:   Mon, 21 Oct 2019 16:13:05 +0300
+Message-ID: <20191021131305.8689-3-rogerq@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191021131305.8689-1-rogerq@ti.com>
+References: <20191021131305.8689-1-rogerq@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <CAMO6nazotuiZQROoA4+b8tHZ-qpR4TS1RZWV6=fyPVCdsxz1Zg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfCQT1FobNixHI0o87HlV/5RxUjJJ9LfxkepsjS/0tVIOf38xhZbKTitY70US27np3BGtVuCh6NeffOlTSi/ziGHapsCog7Kv55IdfGGTZt3dEMCBpoMH
- qviia/ZxqTaXUT2wV9pEDqtCd95P1AsLaW80iEXddDtI0IGXs2vcNN4JuQfXbOme0WNAQU5g5kG0KpKw9KSC4/ZARovPUfzsH57di8rMy81bkLGSegATEtHF
- Z5/RKPztwmw3ehpmDdZB9I3tTPDZnNS3pVxrncwwKvuL1JcNN/C84+w4fYTKqq9fvGGcNsO6VcPu4wQBZg1bLhLEa3IUkB/oR0xOIU2oDRx8qPS2axg559mg
- ZQLZ5CUOMDTZ8y7dq2zr/aC+8yHBEXChJWMZTZVmuH5YZPx5BVI0qYIAjp8MTj4tKDlYuN47p7//mfKtuN3IjC/8hH+ciFKXBQ90UoH759tejHAC6B561TJ+
- WThmxoY2IzVGUV1xAKwdn+6pEN/Z9Nae05iiXCMBkSw71YVl4Gb1fNzVlf22eEwpCYOCW+9chbcztY/+2xxmNOad16dUiYrtwEV2vw==
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/18/19 9:50 AM, Maxime Jourdan wrote:
-> On Wed, Oct 9, 2019 at 2:01 PM Hans Verkuil <hverkuil@xs4all.nl> wrote:
->>
->> On 10/8/19 3:40 PM, Maxime Jourdan wrote:
->>> On 07/10/2019 18:39, Hans Verkuil wrote:
->>>> On 10/7/19 6:24 PM, Maxime Jourdan wrote:
->>>>> On 07/10/2019 17:12, Hans Verkuil wrote:
->>>>>> On 10/7/19 4:59 PM, Maxime Jourdan wrote:
->>>>>>> Hello,
->>>>>>>
->>>>>>> This patch series aims to bring H.264 support as well as compliance update
->>>>>>> to the amlogic stateful video decoder driver.
->>>>>>>
->>>>>>> There is 1 issue that remains currently:
->>>>>>>
->>>>>>>    - The following codepath had to be commented out from v4l2-compliance as
->>>>>>> it led to stalling:
->>>>>>>
->>>>>>> if (node->codec_mask & STATEFUL_DECODER) {
->>>>>>>      struct v4l2_decoder_cmd cmd;
->>>>>>>      buffer buf_cap(m2m_q);
->>>>>>>
->>>>>>>      memset(&cmd, 0, sizeof(cmd));
->>>>>>>      cmd.cmd = V4L2_DEC_CMD_STOP;
->>>>>>>
->>>>>>>      /* No buffers are queued, call STREAMON, then STOP */
->>>>>>>      fail_on_test(node->streamon(q.g_type()));
->>>>>>>      fail_on_test(node->streamon(m2m_q.g_type()));
->>>>>>>      fail_on_test(doioctl(node, VIDIOC_DECODER_CMD, &cmd));
->>>>>>>
->>>>>>>      fail_on_test(buf_cap.querybuf(node, 0));
->>>>>>>      fail_on_test(buf_cap.qbuf(node));
->>>>>>>      fail_on_test(buf_cap.dqbuf(node));
->>>>>>>      fail_on_test(!(buf_cap.g_flags() & V4L2_BUF_FLAG_LAST));
->>>>>>>      for (unsigned p = 0; p < buf_cap.g_num_planes(); p++)
->>>>>>>          fail_on_test(buf_cap.g_bytesused(p));
->>>>>>>      fail_on_test(node->streamoff(q.g_type()));
->>>>>>>      fail_on_test(node->streamoff(m2m_q.g_type()));
->>>>>>>
->>>>>>>      /* Call STREAMON, queue one CAPTURE buffer, then STOP */
->>>>>>>      fail_on_test(node->streamon(q.g_type()));
->>>>>>>      fail_on_test(node->streamon(m2m_q.g_type()));
->>>>>>>      fail_on_test(buf_cap.querybuf(node, 0));
->>>>>>>      fail_on_test(buf_cap.qbuf(node));
->>>>>>>      fail_on_test(doioctl(node, VIDIOC_DECODER_CMD, &cmd));
->>>>>>>
->>>>>>>      fail_on_test(buf_cap.dqbuf(node));
->>>>>>>      fail_on_test(!(buf_cap.g_flags() & V4L2_BUF_FLAG_LAST));
->>>>>>>      for (unsigned p = 0; p < buf_cap.g_num_planes(); p++)
->>>>>>>          fail_on_test(buf_cap.g_bytesused(p));
->>>>>>>      fail_on_test(node->streamoff(q.g_type()));
->>>>>>>      fail_on_test(node->streamoff(m2m_q.g_type()));
->>>>>>> }
->>>>>>>
->>>>>>> The reason for this is because the driver has a limitation where all
->>>>>>> capturebuffers must be queued to the driver before STREAMON is effective.
->>>>>>> The firmware needs to know in advance what all the buffers are before
->>>>>>> starting to decode.
->>>>>>> This limitation is enforced via q->min_buffers_needed.
->>>>>>> As such, in this compliance codepath, STREAMON is never actually called
->>>>>>> driver-side and there is a stall on fail_on_test(buf_cap.dqbuf(node));
->>>>>>
->>>>>> That's interesting. I will have to look more closely at this.
->>
->> This requires a helper function in videobuf2-v4l2.c.
->>
->> In vdec_decoder_cmd you would need code like this:
->>
->>         if (!vb2_start_streaming_called(&capture_queue)) {
->>                 vb2_dequeue_empty_last_buf(&capture_queue);
->>                 return 0;
->>         }
->>
->> The vb2_dequeue_empty_last_buf (function name can probably be improved upon!)
->> does nothing if no capture buffers were queued, otherwise it takes the first
->> buffer, sets the LAST flag and sets bytesused to 0 and marks it as DONE.
->>
->> The driver cannot do this directly, since the buffers were never queued to the
->> driver and are owned by vb2.
->>
->> This is something that needs to be done for any codec driver that sets
->> min_buffers_needed to a value > 1.
->>
->> The vb2 function would look something like this:
->>
->> void vb2_dqbuf_empty_last_buf(struct vb2_queue *q)
->> {
->>         struct vb2_buffer *vb;
->>         struct vb2_v4l2_buffer *vbuf;
->>         unsigned int i;
->>
->>         if (WARN_ON(q->is_output))
->>                 return;
->>         if (list_empty(&q->queued_list))
->>                 return;
->>         vb = list_first_entry(&q->queued_list, struct vb2_buffer, queued_entry);
->>         list_del(&vb->queued_entry);
->>         for (i = 0; i < vb->num_planes; i++)
->>                 vb2_set_plane_payload(vb, i, 0)
->>         vbuf = to_vb2_v4l2_buffer(vb);
->>         vbuf->flags |= V4L2_BUF_FLAG_LAST;
->>         vb2_buffer_done(vb, VB2_BUF_STATE_DONE);
->> }
->> EXPORT_SYMBOL_GPL(vb2_dqbuf_empty_last_buf);
->>
->> Neither compiled, nor tested, and I think this should be in v4l2-mem2mem.c instead of
->> in videobuf2-v4l2.c since this is very m2m specific.
->>
->> So see this as a suggestion :-)
->>
->> Anyway, the key take-away from this is that userspace does not know if your driver
->> behaves the way it does, so STOP should still produce a sane expected result.
->>
->> Which in this is just a single empty capture buffer marked LAST.
-> 
-> Thanks, this makes sense. It doesn't quite fit the current usage
-> unfortunately as the test in v4l2-compliance goes like this:
-> 
-> fail_on_test(doioctl(node, VIDIOC_DECODER_CMD, &cmd));
-> fail_on_test(buf_cap.querybuf(node, 0));
-> fail_on_test(buf_cap.qbuf(node));
-> fail_on_test(buf_cap.dqbuf(node));
-> fail_on_test(!(buf_cap.g_flags() & V4L2_BUF_FLAG_LAST));
-> 
-> Since the buffer is queued after issuing the stop cmd, it is not
-> possible to flag it as DONE in vdec_decoder_cmd.
-> 
-> A solution would be to hijack vidioc_qbuf and flag the buffer if a
-> stop has been issued previously and the capture queue is not
-> streaming. Would that be okay ?
+The J721e platform comes with 2 Cadence USB3 controller
+instances. This driver supports the TI specific wrapper
+on this platform.
 
-Actually, I am wondering if this shouldn't be integrated into
-v4l2-mem2mem.c. The corner case where you need to use an empty
-last buffer is really awkward for drivers. So perhaps this should
-be integrated into v4l2-mem2mem.c where you can mark that the
-next queued buffer shall be immediately returned as an empty buffer
-with the LAST flag set.
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+---
+ drivers/usb/cdns3/Kconfig    |  10 ++
+ drivers/usb/cdns3/Makefile   |   1 +
+ drivers/usb/cdns3/cdns3-ti.c | 236 +++++++++++++++++++++++++++++++++++
+ 3 files changed, 247 insertions(+)
+ create mode 100644 drivers/usb/cdns3/cdns3-ti.c
 
-Since v4l2-mem2mem already has its own vidioc_qbuf function it can
-easily be added there, and I think that's a much better place than
-having to touch vb2 itself.
-
-Regards,
-
-	Hans
-
-> 
-> Maxime
-> 
->>
->> Regards,
->>
->>         Hans
+diff --git a/drivers/usb/cdns3/Kconfig b/drivers/usb/cdns3/Kconfig
+index d0331613a355..2a1e89d12ed9 100644
+--- a/drivers/usb/cdns3/Kconfig
++++ b/drivers/usb/cdns3/Kconfig
+@@ -43,4 +43,14 @@ config USB_CDNS3_PCI_WRAP
+ 	  If you choose to build this driver as module it will
+ 	  be dynamically linked and module will be called cdns3-pci.ko
+ 
++config USB_CDNS3_TI
++	tristate "Cadence USB3 support on TI platforms"
++	depends on ARCH_K3 || COMPILE_TEST
++	default USB_CDNS3
++	help
++	  Say 'Y' or 'M' here if you are building for Texas Instruments
++	  platforms that contain Cadence USB3 controller core.
++
++	  e.g. J721e.
++
+ endif
+diff --git a/drivers/usb/cdns3/Makefile b/drivers/usb/cdns3/Makefile
+index a703547350bb..948e6b88d1a9 100644
+--- a/drivers/usb/cdns3/Makefile
++++ b/drivers/usb/cdns3/Makefile
+@@ -14,3 +14,4 @@ endif
+ cdns3-$(CONFIG_USB_CDNS3_HOST)		+= host.o
+ 
+ obj-$(CONFIG_USB_CDNS3_PCI_WRAP)	+= cdns3-pci-wrap.o
++obj-$(CONFIG_USB_CDNS3_TI)		+= cdns3-ti.o
+diff --git a/drivers/usb/cdns3/cdns3-ti.c b/drivers/usb/cdns3/cdns3-ti.c
+new file mode 100644
+index 000000000000..5541cba71965
+--- /dev/null
++++ b/drivers/usb/cdns3/cdns3-ti.c
+@@ -0,0 +1,236 @@
++// SPDX-License-Identifier: GPL-2.0
++/**
++ * cdns_ti-ti.c - TI specific Glue layer for Cadence USB Controller
++ *
++ * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com
++ */
++
++#include <linux/bits.h>
++#include <linux/clk.h>
++#include <linux/module.h>
++#include <linux/kernel.h>
++#include <linux/interrupt.h>
++#include <linux/platform_device.h>
++#include <linux/dma-mapping.h>
++#include <linux/io.h>
++#include <linux/of_platform.h>
++#include <linux/pm_runtime.h>
++
++/* USB Wrapper register offsets */
++#define USBSS_PID		0x0
++#define	USBSS_W1		0x4
++#define USBSS_STATIC_CONFIG	0x8
++#define USBSS_PHY_TEST		0xc
++#define	USBSS_DEBUG_CTRL	0x10
++#define	USBSS_DEBUG_INFO	0x14
++#define	USBSS_DEBUG_LINK_STATE	0x18
++#define	USBSS_DEVICE_CTRL	0x1c
++
++/* Wrapper 1 register bits */
++#define USBSS_W1_PWRUP_RST		BIT(0)
++#define USBSS_W1_OVERCURRENT_SEL	BIT(8)
++#define USBSS_W1_MODESTRAP_SEL		BIT(9)
++#define USBSS_W1_OVERCURRENT		BIT(16)
++#define USBSS_W1_MODESTRAP_MASK		GENMASK(18, 17)
++#define USBSS_W1_MODESTRAP_SHIFT	17
++#define USBSS_W1_USB2_ONLY		BIT(19)
++
++/* Static config register bits */
++#define USBSS1_STATIC_PLL_REF_SEL_MASK	GENMASK(8, 5)
++#define USBSS1_STATIC_PLL_REF_SEL_SHIFT	5
++#define USBSS1_STATIC_LOOPBACK_MODE_MASK	GENMASK(4, 3)
++#define USBSS1_STATIC_LOOPBACK_MODE_SHIFT	3
++#define USBSS1_STATIC_VBUS_SEL_MASK	GENMASK(2, 1)
++#define USBSS1_STATIC_VBUS_SEL_SHIFT	1
++#define USBSS1_STATIC_LANE_REVERSE	BIT(0)
++
++/* Modestrap modes */
++enum modestrap_mode { USBSS_MODESTRAP_MODE_NONE,
++		      USBSS_MODESTRAP_MODE_HOST,
++		      USBSS_MODESTRAP_MODE_PERIPHERAL};
++
++struct cdns_ti {
++	struct device *dev;
++	void __iomem *usbss;
++	int usb2_only:1;
++	int vbus_divider:1;
++	struct clk *usb2_refclk;
++	struct clk *lpm_clk;
++};
++
++static const int cdns_ti_rate_table[] = {	/* in KHZ */
++	9600,
++	10000,
++	12000,
++	19200,
++	20000,
++	24000,
++	25000,
++	26000,
++	38400,
++	40000,
++	58000,
++	50000,
++	52000,
++};
++
++static inline u32 cdns_ti_readl(struct cdns_ti *data, u32 offset)
++{
++	return readl(data->usbss + offset);
++}
++
++static inline void cdns_ti_writel(struct cdns_ti *data, u32 offset, u32 value)
++{
++	writel(value, data->usbss + offset);
++}
++
++static int cdns_ti_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct device_node *node = pdev->dev.of_node;
++	struct cdns_ti *data;
++	struct resource	*res;
++	int error;
++	u32 reg;
++	int rate_code, i;
++	unsigned long rate;
++
++	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
++	if (!data)
++		return -ENOMEM;
++
++	platform_set_drvdata(pdev, data);
++
++	data->dev = dev;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	data->usbss = devm_ioremap_resource(dev, res);
++	if (IS_ERR(data->usbss))
++		return PTR_ERR(data->usbss);
++
++	data->usb2_refclk = devm_clk_get(dev, "ref");
++	if (IS_ERR(data->usb2_refclk)) {
++		dev_err(dev, "can't get usb2_refclk\n");
++		return PTR_ERR(data->usb2_refclk);
++	}
++
++	data->lpm_clk = devm_clk_get(dev, "lpm");
++	if (IS_ERR(data->lpm_clk)) {
++		dev_err(dev, "can't get lpm_clk\n");
++		return PTR_ERR(data->lpm_clk);
++	}
++
++	rate = clk_get_rate(data->usb2_refclk);
++	rate /= 1000;	/* To KHz */
++	for (i = 0; i < ARRAY_SIZE(cdns_ti_rate_table); i++) {
++		if (cdns_ti_rate_table[i] == rate)
++			break;
++	}
++
++	if (i == ARRAY_SIZE(cdns_ti_rate_table)) {
++		dev_err(dev, "unsupported usb2_refclk rate: %lu KHz\n", rate);
++		return -EINVAL;
++	}
++
++	rate_code = i;
++
++	pm_runtime_enable(dev);
++	error = pm_runtime_get_sync(dev);
++	if (error < 0) {
++		dev_err(dev, "pm_runtime_get_sync failed: %d\n", error);
++		goto err_get;
++	}
++
++	/* assert RESET */
++	reg = cdns_ti_readl(data, USBSS_W1);
++	reg &= ~USBSS_W1_PWRUP_RST;
++	cdns_ti_writel(data, USBSS_W1, reg);
++
++	/* set static config */
++	reg = cdns_ti_readl(data, USBSS_STATIC_CONFIG);
++	reg &= ~USBSS1_STATIC_PLL_REF_SEL_MASK;
++	reg |= rate_code << USBSS1_STATIC_PLL_REF_SEL_SHIFT;
++
++	reg &= ~USBSS1_STATIC_VBUS_SEL_MASK;
++	data->vbus_divider = device_property_read_bool(dev, "ti,vbus-divider");
++	if (data->vbus_divider)
++		reg |= 1 << USBSS1_STATIC_VBUS_SEL_SHIFT;
++
++	cdns_ti_writel(data, USBSS_STATIC_CONFIG, reg);
++	reg = cdns_ti_readl(data, USBSS_STATIC_CONFIG);
++
++	/* set USB2_ONLY mode if requested */
++	reg = cdns_ti_readl(data, USBSS_W1);
++	data->usb2_only = device_property_read_bool(dev, "ti,usb2-only");
++	if (data->usb2_only)
++		reg |= USBSS_W1_USB2_ONLY;
++
++	/* set default modestrap */
++	reg |= USBSS_W1_MODESTRAP_SEL;
++	reg &= ~USBSS_W1_MODESTRAP_MASK;
++	reg |= USBSS_MODESTRAP_MODE_NONE << USBSS_W1_MODESTRAP_SHIFT;
++	cdns_ti_writel(data, USBSS_W1, reg);
++
++	/* de-assert RESET */
++	reg |= USBSS_W1_PWRUP_RST;
++	cdns_ti_writel(data, USBSS_W1, reg);
++
++	error = of_platform_populate(node, NULL, NULL, dev);
++	if (error) {
++		dev_err(dev, "failed to create children: %d\n", error);
++		goto err;
++	}
++
++	return 0;
++
++err:
++	pm_runtime_put_sync(data->dev);
++err_get:
++	pm_runtime_disable(data->dev);
++
++	return error;
++}
++
++static int cdns_ti_remove_core(struct device *dev, void *c)
++{
++	struct platform_device *pdev = to_platform_device(dev);
++
++	platform_device_unregister(pdev);
++
++	return 0;
++}
++
++static int cdns_ti_remove(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++
++	device_for_each_child(dev, NULL, cdns_ti_remove_core);
++	pm_runtime_put_sync(dev);
++	pm_runtime_disable(dev);
++
++	platform_set_drvdata(pdev, NULL);
++
++	return 0;
++}
++
++static const struct of_device_id cdns_ti_of_match[] = {
++	{ .compatible = "ti,j721e-usb", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, cdns_ti_of_match);
++
++static struct platform_driver cdns_ti_driver = {
++	.probe		= cdns_ti_probe,
++	.remove		= cdns_ti_remove,
++	.driver		= {
++		.name	= "cdns3-ti",
++		.of_match_table	= cdns_ti_of_match,
++	},
++};
++
++module_platform_driver(cdns_ti_driver);
++
++MODULE_ALIAS("platform:cdns3-ti");
++MODULE_AUTHOR("Roger Quadros <rogerq@ti.com>");
++MODULE_LICENSE("GPL v2");
++MODULE_DESCRIPTION("Cadence USB3 TI Glue Layer");
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
