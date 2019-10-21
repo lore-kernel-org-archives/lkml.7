@@ -2,295 +2,189 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A297CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 23:50:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23DEECA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 23:54:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 233342067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 23:50:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TZ2LgbFL"
+	by mail.kernel.org (Postfix) with ESMTP id E94022070C
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 23:54:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730489AbfJUXuF (ORCPT
+        id S1730335AbfJUXyd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 19:50:05 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:44769 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730141AbfJUXuE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 19:50:04 -0400
-Received: by mail-io1-f65.google.com with SMTP id w12so18121552iol.11
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 16:50:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zPUo1XVWAywCr31L1MGbFZJLJCSfIVIJxFTYC9L2BdM=;
-        b=TZ2LgbFLjIjAWm1kGDLg1IgpMauhujV5kdUAPmE0JTcwvq+Rjp1LBg7+M6xGrZZCo4
-         WEwdCnKYnkDYXbn53d7NfDsWEUltwXo/KrXyvf5cjpXu3EbHlvZx1IKJQI+X7N+tAicc
-         WPnyUoACckM7AlMck/B3UXwi+aW3BxQAFH5Rg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zPUo1XVWAywCr31L1MGbFZJLJCSfIVIJxFTYC9L2BdM=;
-        b=dr5tdqY4i92Wm7XxOY/BfUDvWTbiGnD9t95pJ4seZcZb2D9oqqjv9LlzW0H95yyeb6
-         eoHiU284R0JKF/Lao0sknDLKwoqooVNvghWIRHMtLwLJMTk9mI9dATKPZMMb/i8TjCbQ
-         o5owpMdooFh/nZ9yCRivp9SKHwC9blzQ5xIV3Ba7RfcaQ4Zcv2m0etelgIT5ClVPJ6zg
-         IojP/kNQbzOxuRa6LKpz3Gfln7Wji7tmbyrIeYeM0OxEBLB82UR5Q1zZg2mr8sPREveD
-         u0eEQ8Mi4acJO3bxF6krkoSwHqMD2J6UuIyyTsJvp6+k0ltNbhqJ0oOGer7Mpj8fU87O
-         /Q+A==
-X-Gm-Message-State: APjAAAVKOOQDyBgU1hCcXVZD6O47P07Ye3eTw5F0TyyT8vqUFDmsxEoe
-        6+C6Mt1tD3MyvKrqkLQcnnb+fmLru1A=
-X-Google-Smtp-Source: APXvYqwMxFB1ol6BEZCJyLydlz06QoDANnFKx1nFCBXDNmsUdFLZCagBcBMB2HpQ6tbiJnrjAZVW2A==
-X-Received: by 2002:a5e:8219:: with SMTP id l25mr933414iom.292.1571701803163;
-        Mon, 21 Oct 2019 16:50:03 -0700 (PDT)
-Received: from mail-io1-f54.google.com (mail-io1-f54.google.com. [209.85.166.54])
-        by smtp.gmail.com with ESMTPSA id b18sm1561697ilo.70.2019.10.21.16.50.02
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 21 Oct 2019 16:50:02 -0700 (PDT)
-Received: by mail-io1-f54.google.com with SMTP id w12so18121476iol.11
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 16:50:02 -0700 (PDT)
-X-Received: by 2002:a6b:b714:: with SMTP id h20mr977545iof.168.1571701801703;
- Mon, 21 Oct 2019 16:50:01 -0700 (PDT)
+        Mon, 21 Oct 2019 19:54:33 -0400
+Received: from mga03.intel.com ([134.134.136.65]:14202 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728819AbfJUXyd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 19:54:33 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 16:54:32 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,325,1566889200"; 
+   d="scan'208";a="191284975"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
+  by orsmga008.jf.intel.com with ESMTP; 21 Oct 2019 16:54:32 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org
+Cc:     "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        Borislav Petkov <bp@suse.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>, kvm@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: [PATCH v2 01/16] x86/intel: Initialize IA32_FEATURE_CONTROL MSR at boot
+Date:   Mon, 21 Oct 2019 16:54:23 -0700
+Message-Id: <20191021235423.32733-1-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20191021234632.32363-1-sean.j.christopherson@intel.com>
+References: <20191021234632.32363-1-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
-References: <20191019111216.1.I82eae759ca6dc28a245b043f485ca490e3015321@changeid>
- <20191021184658.GE20212@google.com>
-In-Reply-To: <20191021184658.GE20212@google.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 21 Oct 2019 16:49:48 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=X6AzjET0ZRz-faUM0uqqQpfjt-g=0nX=L0LJg-+cjZtw@mail.gmail.com>
-Message-ID: <CAD=FV=X6AzjET0ZRz-faUM0uqqQpfjt-g=0nX=L0LJg-+cjZtw@mail.gmail.com>
-Subject: Re: [PATCH] ARM: hw_breakpoint: Handle inexact watchpoint addresses
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Pavel Labath <labath@google.com>,
-        Pratyush Anand <panand@redhat.com>,
-        Kazuhiro Inaba <kinaba@google.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Opportunistically initialize IA32_FEATURE_CONTROL MSR to enable VMX when
+the MSR is left unlocked by BIOS.  Configuring IA32_FEATURE_CONTROL at
+boot time paves the way for similar enabling of other features, e.g.
+Software Guard Extensions (SGX).
 
-On Mon, Oct 21, 2019 at 11:47 AM Matthias Kaehlcke <mka@chromium.org> wrote:
->
-> On Sat, Oct 19, 2019 at 11:12:26AM -0700, Douglas Anderson wrote:
-> > This is commit fdfeff0f9e3d ("arm64: hw_breakpoint: Handle inexact
-> > watchpoint addresses") but ported to arm32, which has the same
-> > problem.
-> >
-> > This problem was found by Android CTS tests, notably the
-> > "watchpoint_imprecise" test [1].  I tested locally against a copycat
-> > (simplified) version of the test though.
-> >
-> > [1] https://android.googlesource.com/platform/bionic/+/master/tests/sys_ptrace_test.cpp
-> >
-> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > ---
-> >
-> >  arch/arm/kernel/hw_breakpoint.c | 96 ++++++++++++++++++++++++---------
-> >  1 file changed, 70 insertions(+), 26 deletions(-)
-> >
-> > diff --git a/arch/arm/kernel/hw_breakpoint.c b/arch/arm/kernel/hw_breakpoint.c
-> > index b0c195e3a06d..d394878409db 100644
-> > --- a/arch/arm/kernel/hw_breakpoint.c
-> > +++ b/arch/arm/kernel/hw_breakpoint.c
-> > @@ -680,26 +680,62 @@ static void disable_single_step(struct perf_event *bp)
-> >       arch_install_hw_breakpoint(bp);
-> >  }
-> >
-> > +/*
-> > + * Arm32 hardware does not always report a watchpoint hit address that matches
-> > + * one of the watchpoints set. It can also report an address "near" the
-> > + * watchpoint if a single instruction access both watched and unwatched
-> > + * addresses. There is no straight-forward way, short of disassembling the
-> > + * offending instruction, to map that address back to the watchpoint. This
-> > + * function computes the distance of the memory access from the watchpoint as a
-> > + * heuristic for the likelyhood that a given access triggered the watchpoint.
-> > + *
-> > + * See this same function in the arm64 platform code, which has the same
-> > + * problem.
-> > + *
-> > + * The function returns the distance of the address from the bytes watched by
-> > + * the watchpoint. In case of an exact match, it returns 0.
-> > + */
-> > +static u32 get_distance_from_watchpoint(unsigned long addr, u32 val,
-> > +                                     struct arch_hw_breakpoint_ctrl *ctrl)
-> > +{
-> > +     u32 wp_low, wp_high;
-> > +     u32 lens, lene;
-> > +
-> > +     lens = __ffs(ctrl->len);
->
-> Doesn't this always end up with 'lens == 0'? IIUC ctrl->len can have
-> the values ARM_BREAKPOINT_LEN_{1,2,4,8}:
->
-> #define ARM_BREAKPOINT_LEN_1    0x1
-> #define ARM_BREAKPOINT_LEN_2    0x3
-> #define ARM_BREAKPOINT_LEN_4    0xf
-> #define ARM_BREAKPOINT_LEN_8    0xff
+Temporarily leave equivalent KVM code in place in order to avoid
+introducing a regression on Centaur and Zhaoxin CPUs, e.g. removing
+KVM's code would leave the MSR unlocked on those CPUs and would break
+existing functionality if people are loading kvm_intel on Centaur and/or
+Zhaoxin.  Defer enablement of the boot-time configuration on Centaur and
+Zhaoxin to future patches to aid bisection.
 
-Yes, but my best guess without digging into the ARM ARM is that the
-underlying hardware is more flexible.  I don't think it hurts to
-support the flexibility here even if the code creating the breakpoint
-never creates one line that.  ...especially since it makes the arm32
-and arm64 code match in this way.
+Note, Local Machine Check Exceptions (LMCE) are also supported by the
+kernel and enabled via IA32_FEATURE_CONTROL, but the kernel currently
+uses LMCE if and and only if the feature is explicitly enable by BIOS.
+Keep the current behavior to avoid introducing bugs, future patches can
+opt in to opportunistic enabling if it's deemed desirable to do so.
 
+Always lock IA32_FEATURE_CONTROL if it exists, even if the CPU doesn't
+support VMX, so that other existing and future kernel code that queries
+IA32_FEATURE_CONTROL can assume it's locked.
 
-> > +     lene = __fls(ctrl->len);
-> > +
-> > +     wp_low = val + lens;
-> > +     wp_high = val + lene;
->
-> First I thought these values are off by one, but in difference to
-> ffs() from glibc the kernel functions start with index 0, instead
-> of using zero as 'no bit set'.
+Start from a clean slate when constructing the value to write to
+IA32_FEATURE_CONTROL, i.e. ignore whatever value BIOS left in the MSR so
+as not to enable random features or fault on the WRMSR.
 
-Yes, this took me a while.  If you look at the original commit
-fdfeff0f9e3d ("arm64: hw_breakpoint: Handle inexact watchpoint
-addresses") this was clearly done on purpose though.  Specifically
-note the part of the commit message:
+Suggested-by: Borislav Petkov <bp@suse.de>
+Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: Vitaly Kuznetsov <vkuznets@redhat.com>,
+Cc: Wanpeng Li <wanpengli@tencent.com>
+Cc: Jim Mattson <jmattson@google.com>
+Cc: kvm@vger.kernel.org
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+---
+ arch/x86/Kconfig.cpu                  |  4 ++++
+ arch/x86/kernel/cpu/Makefile          |  1 +
+ arch/x86/kernel/cpu/cpu.h             |  4 ++++
+ arch/x86/kernel/cpu/feature_control.c | 30 +++++++++++++++++++++++++++
+ arch/x86/kernel/cpu/intel.c           |  2 ++
+ 5 files changed, 41 insertions(+)
+ create mode 100644 arch/x86/kernel/cpu/feature_control.c
 
-[will: use __ffs instead of ffs - 1]
+diff --git a/arch/x86/Kconfig.cpu b/arch/x86/Kconfig.cpu
+index af9c967782f6..aafc14a0abf7 100644
+--- a/arch/x86/Kconfig.cpu
++++ b/arch/x86/Kconfig.cpu
+@@ -387,6 +387,10 @@ config X86_DEBUGCTLMSR
+ 	def_bool y
+ 	depends on !(MK6 || MWINCHIPC6 || MWINCHIP3D || MCYRIXIII || M586MMX || M586TSC || M586 || M486SX || M486) && !UML
+ 
++config X86_FEATURE_CONTROL_MSR
++	def_bool y
++	depends on CPU_SUP_INTEL
++
+ menuconfig PROCESSOR_SELECT
+ 	bool "Supported processor vendors" if EXPERT
+ 	---help---
+diff --git a/arch/x86/kernel/cpu/Makefile b/arch/x86/kernel/cpu/Makefile
+index d7a1e5a9331c..df5ad0cfe3e9 100644
+--- a/arch/x86/kernel/cpu/Makefile
++++ b/arch/x86/kernel/cpu/Makefile
+@@ -29,6 +29,7 @@ obj-y			+= umwait.o
+ obj-$(CONFIG_PROC_FS)	+= proc.o
+ obj-$(CONFIG_X86_FEATURE_NAMES) += capflags.o powerflags.o
+ 
++obj-$(CONFIG_X86_FEATURE_CONTROL_MSR) += feature_control.o
+ ifdef CONFIG_CPU_SUP_INTEL
+ obj-y			+= intel.o intel_pconfig.o
+ obj-$(CONFIG_PM)	+= intel_epb.o
+diff --git a/arch/x86/kernel/cpu/cpu.h b/arch/x86/kernel/cpu/cpu.h
+index c0e2407abdd6..d2750f53a0cb 100644
+--- a/arch/x86/kernel/cpu/cpu.h
++++ b/arch/x86/kernel/cpu/cpu.h
+@@ -62,4 +62,8 @@ unsigned int aperfmperf_get_khz(int cpu);
+ 
+ extern void x86_spec_ctrl_setup_ap(void);
+ 
++#ifdef CONFIG_X86_FEATURE_CONTROL_MSR
++void init_feature_control_msr(struct cpuinfo_x86 *c);
++#endif
++
+ #endif /* ARCH_X86_CPU_H */
+diff --git a/arch/x86/kernel/cpu/feature_control.c b/arch/x86/kernel/cpu/feature_control.c
+new file mode 100644
+index 000000000000..57b928e64cf5
+--- /dev/null
++++ b/arch/x86/kernel/cpu/feature_control.c
+@@ -0,0 +1,30 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <linux/tboot.h>
++
++#include <asm/cpufeature.h>
++#include <asm/msr-index.h>
++#include <asm/processor.h>
++
++void init_feature_control_msr(struct cpuinfo_x86 *c)
++{
++	u64 msr;
++
++	if (rdmsrl_safe(MSR_IA32_FEATURE_CONTROL, &msr))
++		return;
++
++	if (msr & FEATURE_CONTROL_LOCKED)
++		return;
++
++	/*
++	 * Ignore whatever value BIOS left in the MSR to avoid enabling random
++	 * features or faulting on the WRMSR.
++	 */
++	msr = FEATURE_CONTROL_LOCKED;
++
++	if (cpu_has(c, X86_FEATURE_VMX)) {
++		msr |= FEATURE_CONTROL_VMXON_ENABLED_OUTSIDE_SMX;
++		if (tboot_enabled())
++			msr |= FEATURE_CONTROL_VMXON_ENABLED_INSIDE_SMX;
++	}
++	wrmsrl(MSR_IA32_FEATURE_CONTROL, msr);
++}
+diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+index c2fdc00df163..15d59224e2f8 100644
+--- a/arch/x86/kernel/cpu/intel.c
++++ b/arch/x86/kernel/cpu/intel.c
+@@ -755,6 +755,8 @@ static void init_intel(struct cpuinfo_x86 *c)
+ 	/* Work around errata */
+ 	srat_detect_node(c);
+ 
++	init_feature_control_msr(c);
++
+ 	if (cpu_has(c, X86_FEATURE_VMX))
+ 		detect_vmx_virtcap(c);
+ 
+-- 
+2.22.0
 
-
-> > +     if (addr < wp_low)
-> > +             return wp_low - addr;
-> > +     else if (addr > wp_high)
-> > +             return addr - wp_high;
-> > +     else
-> > +             return 0;
-> > +}
-> > +
-> >  static void watchpoint_handler(unsigned long addr, unsigned int fsr,
-> >                              struct pt_regs *regs)
-> >  {
-> > -     int i, access;
-> > -     u32 val, ctrl_reg, alignment_mask;
-> > +     int i, access, closest_match = 0;
-> > +     u32 min_dist = -1, dist;
-> > +     u32 val, ctrl_reg;
-> >       struct perf_event *wp, **slots;
-> >       struct arch_hw_breakpoint *info;
-> >       struct arch_hw_breakpoint_ctrl ctrl;
-> >
-> >       slots = this_cpu_ptr(wp_on_reg);
-> >
-> > +     /*
-> > +      * Find all watchpoints that match the reported address. If no exact
-> > +      * match is found. Attribute the hit to the closest watchpoint.
-> > +      */
-> > +     rcu_read_lock();
-> >       for (i = 0; i < core_num_wrps; ++i) {
-> > -             rcu_read_lock();
-> > -
-> >               wp = slots[i];
-> > -
-> >               if (wp == NULL)
-> > -                     goto unlock;
-> > +                     continue;
-> >
-> > -             info = counter_arch_bp(wp);
-> >               /*
-> >                * The DFAR is an unknown value on debug architectures prior
-> >                * to 7.1. Since we only allow a single watchpoint on these
-> > @@ -708,33 +744,31 @@ static void watchpoint_handler(unsigned long addr, unsigned int fsr,
-> >                */
-> >               if (debug_arch < ARM_DEBUG_ARCH_V7_1) {
-> >                       BUG_ON(i > 0);
-> > +                     info = counter_arch_bp(wp);
-> >                       info->trigger = wp->attr.bp_addr;
-> >               } else {
-> > -                     if (info->ctrl.len == ARM_BREAKPOINT_LEN_8)
-> > -                             alignment_mask = 0x7;
-> > -                     else
-> > -                             alignment_mask = 0x3;
-> > -
-> > -                     /* Check if the watchpoint value matches. */
-> > -                     val = read_wb_reg(ARM_BASE_WVR + i);
-> > -                     if (val != (addr & ~alignment_mask))
-> > -                             goto unlock;
-> > -
-> > -                     /* Possible match, check the byte address select. */
-> > -                     ctrl_reg = read_wb_reg(ARM_BASE_WCR + i);
-> > -                     decode_ctrl_reg(ctrl_reg, &ctrl);
-> > -                     if (!((1 << (addr & alignment_mask)) & ctrl.len))
-> > -                             goto unlock;
-> > -
-> >                       /* Check that the access type matches. */
-> >                       if (debug_exception_updates_fsr()) {
-> >                               access = (fsr & ARM_FSR_ACCESS_MASK) ?
-> >                                         HW_BREAKPOINT_W : HW_BREAKPOINT_R;
-> >                               if (!(access & hw_breakpoint_type(wp)))
-> > -                                     goto unlock;
-> > +                                     continue;
-> >                       }
-> >
-> > +                     val = read_wb_reg(ARM_BASE_WVR + i);
-> > +                     ctrl_reg = read_wb_reg(ARM_BASE_WCR + i);
-> > +                     decode_ctrl_reg(ctrl_reg, &ctrl);
-> > +                     dist = get_distance_from_watchpoint(addr, val, &ctrl);
-> > +                     if (dist < min_dist) {
-> > +                             min_dist = dist;
-> > +                             closest_match = i;
-> > +                     }
-> > +                     /* Is this an exact match? */
-> > +                     if (dist != 0)
-> > +                             continue;
-> > +
-> >                       /* We have a winner. */
-> > +                     info = counter_arch_bp(wp);
-> >                       info->trigger = addr;
->
-> Unless we care about using the 'last' watchpoint in case multiple WPs have
-> the same address I think it would be clearer to change the above to:
->
->                         if (dist == 0) {
->                                 /* We have a winner. */
->                                 info = counter_arch_bp(wp);
->                                 info->trigger = addr;
->                                 break;
->                         }
-
-Without being an expert on the Hardware Breakpoint API, my
-understanding (based on how the old arm32 code worked and how the
-existing arm64 code works) is that the API accounts for the fact that
-more than one watchpoint can trigger and that we should report on all
-of them.
-
-Specifically if you do:
-
-watch 1 byte at 0x1000
-watch 1 byte at 0x1003
-
-...and then someone does a single 4-byte write at 0x1000 then both
-watchpoints should trigger.  If we do a "break" here then they won't
-both trigger.  Also note that the triggering happens below in the
-"perf_bp_event(wp, regs)" so with your break I think you'll miss it,
-no?
-
-That being said, with my patch we still won't do exactly the right
-thing that for an "imprecise" watchpoint.  Specifically if you do:
-
-watch 1 byte at 0x1008
-watch 1 byte at 0x100b
-write 16 bytes at 0x1000
-
-...then we will _only_ trigger the 0x1008 watchpoint.  ...but that's
-the limitation in how the breakpoints work.  You can see this is what
-happens because the imprecise stuff is outside the for loop and only
-triggers when nothing else did.
-
-
--Doug
