@@ -2,141 +2,185 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 485FACA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 23:46:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6FD7C47E49
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 23:47:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EBA320656
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 23:46:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5646214B2
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 23:47:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730276AbfJUXqP (ORCPT
+        id S1730361AbfJUXrR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 19:46:15 -0400
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:45110 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727264AbfJUXqP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 19:46:15 -0400
-Received: from dread.disaster.area (pa49-180-40-48.pa.nsw.optusnet.com.au [49.180.40.48])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id E32A73629FF;
-        Tue, 22 Oct 2019 10:46:04 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1iMhNE-0007QX-Aa; Tue, 22 Oct 2019 10:46:04 +1100
-Date:   Tue, 22 Oct 2019 10:46:04 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 5/5] fs/xfs: Allow toggle of physical DAX flag
-Message-ID: <20191021234604.GB2681@dread.disaster.area>
-References: <20191020155935.12297-1-ira.weiny@intel.com>
- <20191020155935.12297-6-ira.weiny@intel.com>
- <20191021004536.GD8015@dread.disaster.area>
- <20191021224931.GA25526@iweiny-DESK2.sc.intel.com>
+        Mon, 21 Oct 2019 19:47:17 -0400
+Received: from mga07.intel.com ([134.134.136.100]:62913 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728375AbfJUXrR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 19:47:17 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 16:47:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,325,1566889200"; 
+   d="scan'208";a="209545850"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
+  by fmsmga001.fm.intel.com with ESMTP; 21 Oct 2019 16:47:15 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+Cc:     "H. Peter Anvin" <hpa@zytor.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-edac@vger.kernel.org,
+        Borislav Petkov <bp@suse.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: [PATCH v2 00/16] x86/cpu: Clean up handling of VMX features
+Date:   Mon, 21 Oct 2019 16:46:16 -0700
+Message-Id: <20191021234632.32363-1-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191021224931.GA25526@iweiny-DESK2.sc.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0
-        a=y881pOMu+B+mZdf5UrsJdA==:117 a=y881pOMu+B+mZdf5UrsJdA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=XobE76Q3jBoA:10
-        a=QyXUC8HyAAAA:8 a=7-415B0cAAAA:8 a=YPogiMHmU-6fRLEyw_MA:9
-        a=z-c3JQe-jSBONlfH:21 a=Z1gFN9eyTm15yBDe:21 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 03:49:31PM -0700, Ira Weiny wrote:
-> On Mon, Oct 21, 2019 at 11:45:36AM +1100, Dave Chinner wrote:
-> > On Sun, Oct 20, 2019 at 08:59:35AM -0700, ira.weiny@intel.com wrote:
-> > > @@ -1232,12 +1233,10 @@ xfs_diflags_to_linux(
-> > >  		inode->i_flags |= S_NOATIME;
-> > >  	else
-> > >  		inode->i_flags &= ~S_NOATIME;
-> > > -#if 0	/* disabled until the flag switching races are sorted out */
-> > >  	if (xflags & FS_XFLAG_DAX)
-> > >  		inode->i_flags |= S_DAX;
-> > >  	else
-> > >  		inode->i_flags &= ~S_DAX;
-> > > -#endif
-> > 
-> > This code has bit-rotted. See xfs_setup_iops(), where we now have a
-> > different inode->i_mapping->a_ops for DAX inodes.
-> 
-> :-(
-> 
-> > 
-> > That, fundamentally, is the issue here - it's not setting/clearing
-> > the DAX flag that is the issue, it's doing a swap of the
-> > mapping->a_ops while there may be other code using that ops
-> > structure.
-> > 
-> > IOWs, if there is any code anywhere in the kernel that
-> > calls an address space op without holding one of the three locks we
-> > hold here (i_rwsem, MMAPLOCK, ILOCK) then it can race with the swap
-> > of the address space operations.
-> > 
-> > By limiting the address space swap to file sizes of zero, we rule
-> > out the page fault path (mmap of a zero length file segv's with an
-> > access beyond EOF on the first read/write page fault, right?).
-> 
-> Yes I checked that and thought we were safe here...
-> 
-> > However, other aops callers that might run unlocked and do the wrong
-> > thing if the aops pointer is swapped between check of the aop method
-> > existing and actually calling it even if the file size is zero?
-> > 
-> > A quick look shows that FIBMAP (ioctl_fibmap())) looks susceptible
-> > to such a race condition with the current definitions of the XFS DAX
-> > aops. I'm guessing there will be others, but I haven't looked
-> > further than this...
-> 
-> I'll check for others and think on what to do about this.  ext4 will have the
-> same problem I think.  :-(
-> 
-> I don't suppose using a single a_ops for both DAX and non-DAX is palatable?
+Clean up a handful of interrelated warts in the kernel's handling of VMX:
 
-IMO, no. It means we have to check IS_DAX() in every aops,
-and replicate a bunch of callouts to generic code. i.e this sort of
-thing:
+  - Enable VMX in IA32_FEATURE_CONTROL during boot instead of on-demand
+    during KVM load to avoid future contention over IA32_FEATURE_CONTROL.
 
-	if (aops->method)
-		return aops->method(...)
+  - Rework VMX feature reporting so that it is accurate and up-to-date,
+    now and in the future.
 
-	/* do something else */
+  - Consolidate code across CPUs that support VMX.
 
-results in us having to replicate that logic as something like:
+This series stems from two separate but related issues.  The first issue,
+pointed out by Boris in the SGX enabling series[1], is that the kernel
+currently doesn't ensure the IA32_FEATURE_CONTROL MSR is configured during
+boot.  The second issue is that the kernel's reporting of VMX features is
+stale, potentially inaccurate, and difficult to maintain.
 
-	if (!IS_DAX)
-		return filesystem_aops_method()
+Note, most non-x86 and non-KVM folks are cc'd only on the cover letter and
+on relevant patches.
 
-	/* do something else */
+v2:
+  - Rebase to latest tip/x86/cpu (1edae1ae6258, "x86/Kconfig: Enforce...)
+  - Collect Jim's reviews.
+  - Fix a typo in setting of EPT capabilities [TonyWWang-oc].
+  - Remove defines for reserved VMX feature flags [Paolo].
+  - Print the VMX features under "flags" and maintain all existing names
+    to be backward compatible with the ABI [Paolo].
+  - Create aggregate APIC features to report FLEXPRIORITY and APICV, so
+    that the full feature *and* their associated individual features are
+    printed, e.g. to aid in recognizing why an APIC feature isn't being
+    used.
+  - Fix a few copy paste errors in changelogs.
 
-Indeed, the calling code may well do the wrong thing if we have
-methods defined just to add IS_DAX() checks to avoid using that
-functionality because the caller now thinks that functionality is
-supported when in fact it isn't.
 
-So it seems to me like an even bigger can of worms to try to use a
-single aops structure for vastly different functionality....
+== IA32_FEATURE_CONTROL ==
+Lack of IA32_FEATURE_CONTROL configuration during boot isn't a functional
+issue in the current kernel as the majority of platforms set and lock
+IA32_FEATURE_CONTROL in firmware.  And when the MSR is left unlocked, KVM
+is the only subsystem that writes IA32_FEATURE_CONTROL.  That will change
+if/when SGX support is enabled, as SGX will also want to fully enable
+itself when IA32_FEATURE_CONTROL is unlocked.
 
-Cheers,
+== VMX Feature Reporting ==
+VMX features are not enumerated via CPUID, but instead are enumerated
+through VMX MSRs.  As a result, new VMX features are not automatically
+reported via /proc/cpuinfo.
 
-Dave.
+An attempt was made long ago to report interesting and/or meaningful VMX
+features by synthesizing select features into a Linux-defined cpufeatures
+word.  Synthetic feature flags worked for the initial purpose, but the
+existence of the synthetic flags was forgotten almost immediately, e.g.
+only one new flag (EPT A/D) has been added in the the decade since the
+synthetic VMX features were introduced, while VMX and KVM have gained
+support for many new features.
+
+Placing the synthetic flags in x86_capability also allows them to be
+queried via cpu_has() and company, which is misleading as the flags exist
+purely for reporting via /proc/cpuinfo.  KVM, the only in-kernel user of
+VMX, ignores the flags.
+
+Last but not least, VMX features are reported in /proc/cpuinfo even
+when VMX is unusable due to lack of enabling in IA32_FEATURE_CONTROL.
+
+== Caveats ==
+All of the testing of non-standard flows was done in a VM, as I don't
+have a system that leaves IA32_FEATURE_CONTROL unlocked, or locks it with
+VMX disabled.
+
+The Centaur and Zhaoxin changes are somewhat speculative, as I haven't
+confirmed they actually support IA32_FEATURE_CONTROL, or that they want to
+gain "official" KVM support.  I assume they unofficially support KVM given
+that both CPUs went through the effort of enumerating VMX features.  That
+in turn would require them to support IA32_FEATURE_CONTROL since KVM will
+fault and refuse to load if the MSR doesn't exist.
+
+[1] https://lkml.kernel.org/r/20190925085156.GA3891@zn.tnic
+
+
+Sean Christopherson (16):
+  x86/intel: Initialize IA32_FEATURE_CONTROL MSR at boot
+  x86/mce: WARN once if IA32_FEATURE_CONTROL MSR is left unlocked
+  x86/centaur: Use common IA32_FEATURE_CONTROL MSR initialization
+  x86/zhaoxin: Use common IA32_FEATURE_CONTROL MSR initialization
+  KVM: VMX: Drop initialization of IA32_FEATURE_CONTROL MSR
+  x86/cpu: Clear VMX feature flag if VMX is not fully enabled
+  KVM: VMX: Use VMX feature flag to query BIOS enabling
+  KVM: VMX: Check for full VMX support when verifying CPU compatibility
+  x86/vmx: Introduce VMX_FEATURES_*
+  x86/cpu: Detect VMX features on Intel, Centaur and Zhaoxin CPUs
+  x86/cpu: Print VMX flags in /proc/cpuinfo using VMX_FEATURES_*
+  x86/cpufeatures: Drop synthetic VMX feature flags
+  KVM: VMX: Use VMX_FEATURE_* flags to define VMCS control bits
+  x86/cpufeatures: Clean up synthetic virtualization flags
+  perf/x86: Provide stubs of KVM helpers for non-Intel CPUs
+  KVM: VMX: Allow KVM_INTEL when building for Centaur and/or Zhaoxin
+    CPUs
+
+ MAINTAINERS                           |   2 +-
+ arch/x86/Kconfig.cpu                  |   8 ++
+ arch/x86/boot/mkcpustr.c              |   1 +
+ arch/x86/include/asm/cpufeatures.h    |  15 +---
+ arch/x86/include/asm/perf_event.h     |  22 +++--
+ arch/x86/include/asm/processor.h      |   4 +
+ arch/x86/include/asm/vmx.h            | 105 ++++++++++++-----------
+ arch/x86/include/asm/vmxfeatures.h    |  86 +++++++++++++++++++
+ arch/x86/kernel/cpu/Makefile          |   6 +-
+ arch/x86/kernel/cpu/centaur.c         |  35 +-------
+ arch/x86/kernel/cpu/common.c          |   3 +
+ arch/x86/kernel/cpu/cpu.h             |   4 +
+ arch/x86/kernel/cpu/feature_control.c | 117 ++++++++++++++++++++++++++
+ arch/x86/kernel/cpu/intel.c           |  49 +----------
+ arch/x86/kernel/cpu/mce/intel.c       |   7 +-
+ arch/x86/kernel/cpu/mkcapflags.sh     |  15 +++-
+ arch/x86/kernel/cpu/proc.c            |  14 +++
+ arch/x86/kernel/cpu/zhaoxin.c         |  35 +-------
+ arch/x86/kvm/Kconfig                  |   9 +-
+ arch/x86/kvm/vmx/vmx.c                |  41 ++-------
+ 20 files changed, 343 insertions(+), 235 deletions(-)
+ create mode 100644 arch/x86/include/asm/vmxfeatures.h
+ create mode 100644 arch/x86/kernel/cpu/feature_control.c
+
 -- 
-Dave Chinner
-david@fromorbit.com
+2.22.0
+
