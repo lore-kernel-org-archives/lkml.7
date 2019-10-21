@@ -2,183 +2,78 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88195CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B12FCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:45:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5071020873
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:45:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F0C120873
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:45:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="Yn2N3y3T"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="q46UganW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728917AbfJUMpH (ORCPT
+        id S1728925AbfJUMpZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 08:45:07 -0400
-Received: from mail-wr1-f53.google.com ([209.85.221.53]:44310 "EHLO
-        mail-wr1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728788AbfJUMoi (ORCPT
+        Mon, 21 Oct 2019 08:45:25 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:55922 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728081AbfJUMpY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 08:44:38 -0400
-Received: by mail-wr1-f53.google.com with SMTP id z9so13813350wrl.11
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 05:44:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=az5Qk9HV+xwHSQgQsE7jPUxX1AeC/LW+c8v20q7G+To=;
-        b=Yn2N3y3TuMvAi4XTRPu4kdvgMY/oy9tYbogJ5rt8gHn60GNFokeWPQsFaOPsv2e4JE
-         hLL4Z2ZUJDpFho0Voth3CJ565u+qhPNkTkwk1Yg2KKG+JcmnwuA2IbBI/4/7MyYITUAa
-         8xi6COny3LVcsSizEx9+drR7rX6cCve9/xLIpLdpmFcIU+GspciFTGJS4reOLGP6buSi
-         W3OTHBhupUI6RmNiIgX3N2Ko71rgkKgJR0s2QzWjHYBotStGpFwOpFLnJSDsN1kLyBTP
-         AZxyaNGUSV7bG5VUj9NqmkF4HZFPdQKe9TKGELeTusQOGzNPtEuhIwaWwawoBNEdFWA+
-         tCJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=az5Qk9HV+xwHSQgQsE7jPUxX1AeC/LW+c8v20q7G+To=;
-        b=Sdtp1Nft1TkvHGD1qdsuQjTVT1T667DxchG/A4asQzognkiTNfAkAN6EYN9yg1anxt
-         19H2MpwFG2Z9E+jBCMm9WZRxgizHj8ei/5A/8qX3aw4oNnCTg1kchCviCZeqRMBRMy9j
-         +WA6HPJE1C6zsQUoeWabmckewi2cOfFIJiDfUk6pjYLQwtlwLrpox7pgPP63lzt8FLbR
-         VGpCeDvcv+fi+t79stapRH86LEu6Jq0lkLEtnJrJeb5z+7HENt4nU2GUYEECU7kBucPo
-         alFKyKfKXiC3NpNSot15Af8RE8L5d1GvqgfC0Tfxh6lqKKnR7lfoGiYbokXoW+Zs6CHp
-         KKeA==
-X-Gm-Message-State: APjAAAUiC49+wnEPCqHiDHjlcxYWQCrjB4TFz3vxSpI/eNLlUCiQ7snl
-        bcw/BdyJ8PV1/qX2X0nQosS/Cw==
-X-Google-Smtp-Source: APXvYqwTjMGgIWlEorxrxqhBE9HmBj2vfdY8HwuDzMcoG9+YkQTIR233SwrwQ64xJsk6pkFesXsoAw==
-X-Received: by 2002:adf:f58b:: with SMTP id f11mr16074645wro.85.1571661876038;
-        Mon, 21 Oct 2019 05:44:36 -0700 (PDT)
-Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
-        by smtp.gmail.com with ESMTPSA id a17sm10216150wmb.8.2019.10.21.05.44.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Oct 2019 05:44:35 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v4 2/6] dt-bindings: regulator: max77650: convert the binding document to yaml
-Date:   Mon, 21 Oct 2019 14:44:24 +0200
-Message-Id: <20191021124428.2541-3-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191021124428.2541-1-brgl@bgdev.pl>
-References: <20191021124428.2541-1-brgl@bgdev.pl>
+        Mon, 21 Oct 2019 08:45:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=8npHG7xyZSoSEqzIUQXIFsHT1fl+7N1HJk4jdM+fJxY=; b=q46UganW/nhMIxuKjruzGMf3K
+        4Zis/viOhlxuBseSQJTpgaVbBrYbf6Tkt5BaxjYgVbfJ2+I0hglzi3ZzKc/SqvvhWLoaVt6s08Ye8
+        X9raUG5SeB3x8BXqgb5ouAx836kQX5KfEALvKo2dRIvH0Affp1pJkBVg6ks8uQ3XpVeAWDB3JJ9oI
+        l1BxqZS9GxCfoNwTKAwTHeeSE+U29jYXOSio4Hjk8OMkAfYt5BErwyGvhdeE35YtjIUFF7IuUTH/Y
+        gkmopnc4EDqzcHxVSIqvhPzMZvfaHJu51Ntz2SC6ULaS0cMdhL7Xc4ExztvSQy+ViWGn4jBR/AkYh
+        NmDfCsTOg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iMX3o-0004Yg-7i; Mon, 21 Oct 2019 12:45:20 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D863530702E;
+        Mon, 21 Oct 2019 14:44:21 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 06ADA2022BA17; Mon, 21 Oct 2019 14:45:19 +0200 (CEST)
+Date:   Mon, 21 Oct 2019 14:45:18 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Laurence Oberman <loberman@redhat.com>,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        Michal Hocko <mhocko@suse.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] Test softlockup
+Message-ID: <20191021124518.GF1817@hirez.programming.kicks-ass.net>
+References: <20190819104732.20966-1-pmladek@suse.com>
+ <20190819104732.20966-4-pmladek@suse.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190819104732.20966-4-pmladek@suse.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Mon, Aug 19, 2019 at 12:47:32PM +0200, Petr Mladek wrote:
+> Trigger busy loop by:
+> $> cat /proc/version
+> 
+> Stop the busy loop by:
+> $> cat /proc/consoles
+> 
+> The code also shows the first touch*watchdog() function that hides
+> softlockup on a "well known" location.
 
-Convert the binding document for MAX77650 regulator module to YAML.
-
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- .../bindings/regulator/max77650-regulator.txt | 41 -------------------
- .../regulator/max77650-regulator.yaml         | 31 ++++++++++++++
- 2 files changed, 31 insertions(+), 41 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/regulator/max77650-regulator.txt
- create mode 100644 Documentation/devicetree/bindings/regulator/max77650-regulator.yaml
-
-diff --git a/Documentation/devicetree/bindings/regulator/max77650-regulator.txt b/Documentation/devicetree/bindings/regulator/max77650-regulator.txt
-deleted file mode 100644
-index f1cbe813c30f..000000000000
---- a/Documentation/devicetree/bindings/regulator/max77650-regulator.txt
-+++ /dev/null
-@@ -1,41 +0,0 @@
--Regulator driver for MAX77650 PMIC from Maxim Integrated.
--
--This module is part of the MAX77650 MFD device. For more details
--see Documentation/devicetree/bindings/mfd/max77650.txt.
--
--The regulator controller is represented as a sub-node of the PMIC node
--on the device tree.
--
--The device has a single LDO regulator and a SIMO buck-boost regulator with
--three independent power rails.
--
--Required properties:
----------------------
--- compatible:		Must be "maxim,max77650-regulator"
--
--Each rail must be instantiated under the regulators subnode of the top PMIC
--node. Up to four regulators can be defined. For standard regulator properties
--refer to Documentation/devicetree/bindings/regulator/regulator.txt.
--
--Available regulator compatible strings are: "ldo", "sbb0", "sbb1", "sbb2".
--
--Example:
----------
--
--	regulators {
--		compatible = "maxim,max77650-regulator";
--
--		max77650_ldo: regulator@0 {
--			regulator-compatible = "ldo";
--			regulator-name = "max77650-ldo";
--			regulator-min-microvolt = <1350000>;
--			regulator-max-microvolt = <2937500>;
--		};
--
--		max77650_sbb0: regulator@1 {
--			regulator-compatible = "sbb0";
--			regulator-name = "max77650-sbb0";
--			regulator-min-microvolt = <800000>;
--			regulator-max-microvolt = <1587500>;
--		};
--	};
-diff --git a/Documentation/devicetree/bindings/regulator/max77650-regulator.yaml b/Documentation/devicetree/bindings/regulator/max77650-regulator.yaml
-new file mode 100644
-index 000000000000..7d724159f890
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/max77650-regulator.yaml
-@@ -0,0 +1,31 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/regulator/max77650-regulator.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Regulator driver for MAX77650 PMIC from Maxim Integrated.
-+
-+maintainers:
-+  - Bartosz Golaszewski <bgolaszewski@baylibre.com>
-+
-+description: |
-+  This module is part of the MAX77650 MFD device. For more details
-+  see Documentation/devicetree/bindings/mfd/max77650.yaml.
-+
-+  The regulator controller is represented as a sub-node of the PMIC node
-+  on the device tree.
-+
-+  The device has a single LDO regulator and a SIMO buck-boost regulator with
-+  three independent power rails.
-+
-+properties:
-+  compatible:
-+    const: maxim,max77650-regulator
-+
-+patternProperties:
-+  "^regulator@[0-3]$":
-+    $ref: "regulator.yaml#"
-+
-+required:
-+  - compatible
--- 
-2.23.0
-
+This seems like a terrible interface...
