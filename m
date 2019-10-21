@@ -2,108 +2,111 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E831ECA9EB9
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:05:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69453CA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:07:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCFFB20873
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:05:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47CAD2089C
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:07:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727096AbfJUJFI (ORCPT
+        id S1727130AbfJUJHI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 05:05:08 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:60678 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726181AbfJUJFI (ORCPT
+        Mon, 21 Oct 2019 05:07:08 -0400
+Received: from twhmllg4.macronix.com ([122.147.135.202]:11536 "EHLO
+        TWHMLLG4.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726181AbfJUJHI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 05:05:08 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id D6C2C265D34
-Received: by earth.universe (Postfix, from userid 1000)
-        id D7A113C0CA0; Mon, 21 Oct 2019 11:05:04 +0200 (CEST)
-Date:   Mon, 21 Oct 2019 11:05:04 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     kbuild test robot <lkp@intel.com>
-Cc:     Tony Lindgren <tony@atomide.com>, kbuild-all@lists.01.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH power-supply] power: supply: cpcap-charger:
- cpcap_charger_voltage_to_regval() can be static
-Message-ID: <20191021090504.qqkynac4jmxeru33@earth.universe>
-References: <201910210600.WlHJI3rO%lkp@intel.com>
- <20191020222052.hud2r3jx2rvrrip3@4978f4969bb8>
+        Mon, 21 Oct 2019 05:07:08 -0400
+Received: from twhfmnt1.mxic.com.tw (twhfm1p2.macronix.com [172.17.20.92])
+        by TWHMLLG4.macronix.com with ESMTP id x9L96xaO034780;
+        Mon, 21 Oct 2019 17:06:59 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+Received: from MXML06C.mxic.com.tw (mxml06c.mxic.com.tw [172.17.14.55])
+        by Forcepoint Email with ESMTP id 70FE86F08B94F96178FA;
+        Mon, 21 Oct 2019 17:07:00 +0800 (CST)
+In-Reply-To: <20191021105632.3fa7b3ce@collabora.com>
+References: <1568793387-25199-1-git-send-email-masonccyang@mxic.com.tw> <1568793387-25199-2-git-send-email-masonccyang@mxic.com.tw>
+        <20191007104511.5aa7b8f2@xps13> <20191007112442.783e4fbe@xps13> <OFEDE76FEE.8BC48D9E-ON4825848D.000BCC94-4825848D.000E0643@mxic.com.tw>
+        <20191008170249.06bd45ce@xps13> <OFB4F10613.467EB346-ON48258494.0020403E-48258494.002550A2@LocalDomain>
+        <OF894937F3.4B6774EB-ON4825849A.0027B2DF-4825849A.0028A53F@mxic.com.tw> <20191021094435.78f4b16e@collabora.com>
+        <OF94EDFFB1.AFAD9C25-ON4825849A.002E2815-4825849A.002FB1CE@mxic.com.tw> <20191021105632.3fa7b3ce@collabora.com>
+To:     "Boris Brezillon" <boris.brezillon@collabora.com>
+Cc:     bbrezillon@kernel.org, computersforpeace@gmail.com,
+        dwmw2@infradead.org, frieder.schrempf@kontron.de,
+        gregkh@linuxfoundation.org, juliensu@mxic.com.tw,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        marcel.ziswiler@toradex.com, marek.vasut@gmail.com,
+        "Miquel Raynal" <miquel.raynal@bootlin.com>, richard@nod.at,
+        tglx@linutronix.de, vigneshr@ti.com
+Subject: Re: [PATCH RFC 2/3] mtd: rawnand: Add support Macronix Block Protection
+ function
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="bni24srr2gghv7xz"
-Content-Disposition: inline
-In-Reply-To: <20191020222052.hud2r3jx2rvrrip3@4978f4969bb8>
-User-Agent: NeoMutt/20180716
+X-KeepSent: B0158E79:2CC08A0A-4825849A:0031CDE3;
+ type=4; name=$KeepSent
+X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
+Message-ID: <OFB0158E79.2CC08A0A-ON4825849A.0031CDE3-4825849A.0032153E@mxic.com.tw>
+From:   masonccyang@mxic.com.tw
+Date:   Mon, 21 Oct 2019 17:07:02 +0800
+X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
+ 2019/10/21 PM 05:07:00,
+        Serialize complete at 2019/10/21 PM 05:07:00
+Content-Type: text/plain; charset="US-ASCII"
+X-MAIL: TWHMLLG4.macronix.com x9L96xaO034780
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---bni24srr2gghv7xz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Boris,
 
-Hi,
+> 
+> Assign mtd lock/unlock/is_locked hooks to the generic wrappers in
+> nand_scan_tail():
+> 
+>    mtd->_lock = nand_lock;
+>    mtd->_unlock = nand_unlock;
+>    mtd->_is_locked = nand_is_locked;
+> 
+> Seriously, we've almost implemented the thing for you with all the
+> details we've given. At some point you have to look more closely at how
+> things are done/designed in the NAND framework if you want to
+> contribute core changes. I'm fine giving hints but we're far beyond
+> that point here.
 
-On Mon, Oct 21, 2019 at 06:20:52AM +0800, kbuild test robot wrote:
-> Fixes: d4ee021c410f ("power: supply: cpcap-charger: Limit voltage to 4.2V=
- for battery")
-> Signed-off-by: kbuild test robot <lkp@intel.com>
-> ---
+got your point & idea.
 
-Thanks, I added a long description and queued it to power-supply's
--next branch. I did not fold it into the original patch, which is in
-an immutable branch.
+thanks a lot for your time & opinions.
+Mason
 
--- Sebastian
+CONFIDENTIALITY NOTE:
 
->  cpcap-charger.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/power/supply/cpcap-charger.c b/drivers/power/supply/=
-cpcap-charger.c
-> index 88bbab6e62f07..b4b7f9dc6c4ea 100644
-> --- a/drivers/power/supply/cpcap-charger.c
-> +++ b/drivers/power/supply/cpcap-charger.c
-> @@ -478,7 +478,7 @@ static void cpcap_charger_update_state(struct cpcap_c=
-harger_ddata *ddata,
->  	dev_dbg(ddata->dev, "state: %s\n", status);
->  }
-> =20
-> -int cpcap_charger_voltage_to_regval(int voltage)
-> +static int cpcap_charger_voltage_to_regval(int voltage)
->  {
->  	int offset;
-> =20
+This e-mail and any attachments may contain confidential information 
+and/or personal data, which is protected by applicable laws. Please be 
+reminded that duplication, disclosure, distribution, or use of this e-mail 
+(and/or its attachments) or any part thereof is prohibited. If you receive 
+this e-mail in error, please notify us immediately and delete this mail as 
+well as its attachment(s) from your system. In addition, please be 
+informed that collection, processing, and/or use of personal data is 
+prohibited unless expressly permitted by personal data protection laws. 
+Thank you for your attention and cooperation.
 
---bni24srr2gghv7xz
-Content-Type: application/pgp-signature; name="signature.asc"
+Macronix International Co., Ltd.
 
------BEGIN PGP SIGNATURE-----
+=====================================================================
 
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl2tdL0ACgkQ2O7X88g7
-+po4Rw/+OR3E3IKfuROtwdXhHh1/w8BKqTQ6mI/tFcoRZwyHRcEnN6UtBE29ol0Y
-zp0hU6n/gwvp7VcGHojiP5DB3JcZHsZ/r5un2sdPIU6k3tRy3sjl1qNUgZSH3cRV
-H4RWkRj8j2S3OmV1LHlWj7WgSNQvG1r4eAUj7oASPi7Yxptlz/wk56UZ3gxtpWn8
-fa6jvh3Q0a7LK11G/abCMgWzeFOQ3fUVIY+ivHb0LUJSAch7n177sHBhQWj/ftbb
-CwNRVNLn5Zhpyq+LBX9X0suIADqg1L6uB3JZpjnigO06N/YWn7BvDDU/4A93h15M
-TjsiCALCZF8nJfou6EAmqolP0/6tIk6ROOYeK9WtP0p1cxaYA0u3q7NLpyqYTfZ7
-r1NDXCeT9lvz+o0tlxFzQrcs0CjKC0u9DbS5uyzjjJ4YcqnPWmU2cG+y6ZEVYlo5
-1g6g9dUr6bkedddGVClMw2QcO+1sJailX7cVLyStw+rsvmUJVkbCF3n/VFwRxfgp
-oIowFPEajgeePcG3W7znzijYYkBOaD0VTEpu5HTDu5X6V/MrOS8BSQD2LFPxzpaE
-OgeFiJghOudiGuCsrjLx3UbzYuTvl/ee1SviIDUHTcVb4n2V4TG9JhadmQJ1andB
-AGTkidwSNdG2U3lGoIAdzuEcsk5V8tQOpitnh/dcfm/NuDSA500=
-=QaEr
------END PGP SIGNATURE-----
 
---bni24srr2gghv7xz--
+
+============================================================================
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
