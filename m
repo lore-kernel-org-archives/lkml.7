@@ -2,158 +2,139 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D31ECA9EB0
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 18:05:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67718CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 18:07:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AC0020B7C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 18:05:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 365FD2086D
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 18:07:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JYurzqC/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AzBfPCx1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730078AbfJUSFk (ORCPT
+        id S1729765AbfJUSH2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 14:05:40 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:35673 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729966AbfJUSFj (ORCPT
+        Mon, 21 Oct 2019 14:07:28 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:46468 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726672AbfJUSH1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 14:05:39 -0400
-Received: by mail-pf1-f195.google.com with SMTP id 205so8905322pfw.2;
-        Mon, 21 Oct 2019 11:05:38 -0700 (PDT)
+        Mon, 21 Oct 2019 14:07:27 -0400
+Received: by mail-pf1-f194.google.com with SMTP id q5so8889948pfg.13;
+        Mon, 21 Oct 2019 11:07:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=tcCpwL0onfR06sWsqvX6mF6jQdr+eQVyW0yto6K7hG4=;
-        b=JYurzqC/VqEbhO/X3sS6Q14PnepMCPoiZ5ZXdzu6bk5bYu5tB0nwyEFf3Zya4K1jp5
-         RqpNk7QJQQvThq3Utlro5P6uUs2R2uWwYRFPDlFmtgqmboFh9oo1noVBDxfk0vAjNLNC
-         HsIAaGynDWSXQWeBRwtBQQaIJGc8TdmbzmFxNO867q5hrGPNUB6Of6PqbX1etW1fzW3L
-         qojXAc9r70oZX68lQsvFBoS03JHH6WQBaMEl1IoPX2BhpyEX2+Uayv0gUbJc0iwWZkr0
-         LZ4jDN6ChgAt29dhn7RVuetRAsNkEzSlYpgJfIrUpiCIee45Y4mvku80XdPSGOQKArr0
-         w4aA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KbHCUVncfbVXzjoVKRZ8xqvM9JfSFpXWmdqMW9SfaRQ=;
+        b=AzBfPCx1mtbp3iuy/W5OD0UDNgvG4jUT19hQfYJ4VVhIEI3NaBv/3+aprYHzZWKxru
+         4UzwF8F5+xwyfAUIkhs6BA+joBq0c4P5pRUeO5ar4i7B0zpg/EvvKYU0na09vL0sw0OW
+         jpJyCxQKZDmMfGE6iFga6aXe5QuBu/1wuCBeNlhY/3yaDVdNqvfHcdmAC0vnwzK50PtP
+         iWNGlvuJoaMoIqszWxRRc3X0fOE2AB/jrDcYZurE3mI+rh0RxmEZdy6o/m+xfEmbCivW
+         C+/RFYSclGNMO2TBjiQfix+3/W4CSYYRKv7/EoE3XgXJv+tD+o9VJg2l+FaI8r9VXmhA
+         HyXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=tcCpwL0onfR06sWsqvX6mF6jQdr+eQVyW0yto6K7hG4=;
-        b=TSjSpA/99peGINwZbh1tIY/Sj0PmUD+sQjRWSIm4ZJmgAT/lCnGOhlvUBDrUFoznus
-         b04EHvmM9aitnOoEIZKP1Bk/Ap2qfD4h0x4XtJfEhfJTVbbPU5FNyIroDgHyqSEm+48j
-         o7y3MqdF5WwDtuXzGxgYXIx5Uuku+3mBkfaYM2jbvl/JPSvKE4uv/eZdHcBrWSNnl9Y8
-         S+KnJs/hcQT7Y18CHTcgQzCHllAIbB9tQ1vlqhTx7/Cf8/m76ZqJeL90fxBxNRJVMPs9
-         WOY5FVb/5PHJC7DydgVrQ+A2XU5qE8qKDuKj194C96xEtl4WuqC2GFaUAv8sZxLdBV77
-         qILw==
-X-Gm-Message-State: APjAAAVAlmPj7qJT1N5PcZF/8bi5hqbptzH5wTonODCUOJt3+gpyBskb
-        rK0KkEsMeFq6UwFSH1Xaizg=
-X-Google-Smtp-Source: APXvYqwShECGrMgtkCZNkbBpxSyUczjEot2rIP9v1Pq9qwXKdamaT6TFjN9i9tI8xzvwNdYjP+hFIA==
-X-Received: by 2002:a62:ae06:: with SMTP id q6mr24352444pff.96.1571681138284;
-        Mon, 21 Oct 2019 11:05:38 -0700 (PDT)
-Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id b4sm13929276pju.16.2019.10.21.11.05.36
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KbHCUVncfbVXzjoVKRZ8xqvM9JfSFpXWmdqMW9SfaRQ=;
+        b=O21t3HwifA1BDD1J/XLPvEVPV9wNbEFX0z7zIVfM7y6sqn3N8cAjVqLhy8GSlQEQFe
+         fGB5DXcllE/nnZxoBC6x0TLvBdUDZMdl4Ct3059PT3H3NzWLXm6+MmQ8X3H3drxb8WZW
+         5aOs6xGu9KQA+7i9XTke0rkIFos3qCTq7Pxz7zQlbY7bFIMAObMDWu9S2cTb3OU1hwJm
+         NZ27VAIzMbLlF5QdLweEC1vvA6g4LY0pSSsXbu303SrCXvrzJMHD08pDwAQHEAxzfK6L
+         dB1BoL91N5gofQckNNa/qIEIk2dUnNSqp/YrGq2K8v/DyCVTJZ3b6WPbrNzfzuNbhXOL
+         N8+A==
+X-Gm-Message-State: APjAAAVSnJlYE5ooZPshy0X5sVpnSdH5G8RPk7dc9PFwiNV/BeB3ATgr
+        5cplukKnYT6Cxx+WkCJEymZ6xKMYjGs=
+X-Google-Smtp-Source: APXvYqz4ol6E1J9UjCRv3ntNUDsTxd5HsAkUIbQ7RTpcxDNl9LJKdS8DuSVmyHX3xgxsAfYCP6r7KA==
+X-Received: by 2002:a62:ae06:: with SMTP id q6mr24361988pff.96.1571681246647;
+        Mon, 21 Oct 2019 11:07:26 -0700 (PDT)
+Received: from localhost.localdomain ([124.253.151.72])
+        by smtp.googlemail.com with ESMTPSA id ep10sm31335388pjb.2.2019.10.21.11.07.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Oct 2019 11:05:37 -0700 (PDT)
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-To:     a.hajda@samsung.com, narmstrong@baylibre.com,
-        Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
-        jernej.skrabec@siol.net, airlied@linux.ie, daniel@ffwll.ch,
-        bjorn.andersson@linaro.org
-Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: [PATCH] drm/bridge: ti-sn65dsi86: Decouple DP output lanes from DSI input lanes
-Date:   Mon, 21 Oct 2019 11:05:32 -0700
-Message-Id: <20191021180532.31210-1-jeffrey.l.hugo@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 21 Oct 2019 11:07:26 -0700 (PDT)
+From:   Yadav Lamichhane <tuxomega1@gmail.com>
+To:     tuxomega1@gmail.com
+Cc:     zajec5@gmail.com, linux-wireless@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] BCMA: driver_chipcommon_pmu: fixed a block comment coding style.
+Date:   Mon, 21 Oct 2019 23:35:13 +0530
+Message-Id: <20191021180513.2106-1-tuxomega1@gmail.com>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Based on work by Bjorn Andersson <bjorn.andersson@linaro.org>
+Fixed a coding style issue.
 
-The bridge can be configured to use 1, 2, or 4 DP lanes.  This
-configuration is independent of the input DSI lanes.  Right now, the
-driver assumes that there is 1:1 mapping of input lanes to output lanes
-which is not correct and does not work for manu devices such as the
-Lenovo Miix 630 and Lenovo Yoga C630 laptops.
-
-Instead, configure the DP output lanes based on the connection information
-to the panel, if available.
-
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Signed-off-by: Yadav Lamichhane <tuxomega1@gmail.com>
 ---
- drivers/gpu/drm/bridge/ti-sn65dsi86.c | 27 +++++++++++++++++++++++----
- 1 file changed, 23 insertions(+), 4 deletions(-)
+ drivers/bcma/driver_chipcommon_pmu.c | 24 ++++++++++++++++--------
+ 1 file changed, 16 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-index 43abf01ebd4c..1afdc3d5d541 100644
---- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-+++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-@@ -100,6 +100,7 @@ struct ti_sn_bridge {
- 	struct drm_panel		*panel;
- 	struct gpio_desc		*enable_gpio;
- 	struct regulator_bulk_data	supplies[SN_REGULATOR_SUPPLY_NUM];
-+	int				dp_lanes;
- };
+diff --git a/drivers/bcma/driver_chipcommon_pmu.c b/drivers/bcma/driver_chipcommon_pmu.c
+index f4161064365c..3056f81efca4 100644
+--- a/drivers/bcma/driver_chipcommon_pmu.c
++++ b/drivers/bcma/driver_chipcommon_pmu.c
+@@ -233,8 +233,10 @@ static void bcma_pmu_workarounds(struct bcma_drv_cc *cc)
  
- static const struct regmap_range ti_sn_bridge_volatile_ranges[] = {
-@@ -444,7 +445,7 @@ static void ti_sn_bridge_set_dsi_dp_rate(struct ti_sn_bridge *pdata)
- 	regmap_write(pdata->regmap, SN_DSIA_CLK_FREQ_REG, val);
+ 	switch (bus->chipinfo.id) {
+ 	case BCMA_CHIP_ID_BCM4313:
+-		/* enable 12 mA drive strenth for 4313 and set chipControl
+-		   register bit 1 */
++		/*
++		 * enable 12 mA drive strenth for 4313 and set chipControl
++		 * register bit 1
++		 */
+ 		bcma_chipco_chipctl_maskset(cc, 0,
+ 					    ~BCMA_CCTRL_4313_12MA_LED_DRIVE,
+ 					    BCMA_CCTRL_4313_12MA_LED_DRIVE);
+@@ -246,8 +248,10 @@ static void bcma_pmu_workarounds(struct bcma_drv_cc *cc)
+ 		break;
+ 	case BCMA_CHIP_ID_BCM43224:
+ 	case BCMA_CHIP_ID_BCM43421:
+-		/* enable 12 mA drive strenth for 43224 and set chipControl
+-		   register bit 15 */
++		/*
++		 * enable 12 mA drive strenth for 43224 and set chipControl
++		 * register bit 15
++		 */
+ 		if (bus->chipinfo.rev == 0) {
+ 			bcma_cc_maskset32(cc, BCMA_CC_CHIPCTL,
+ 					  ~BCMA_CCTRL_43224_GPIO_TOGGLE,
+@@ -500,8 +504,10 @@ void bcma_pmu_spuravoid_pllupdate(struct bcma_drv_cc *cc, int spuravoid)
+ 	case BCMA_CHIP_ID_BCM53572:
+ 		/* 5357[ab]0, 43236[ab]0, and 6362b0 */
  
- 	/* set DP data rate */
--	dp_rate_mhz = ((bit_rate_mhz / pdata->dsi->lanes) * DP_CLK_FUDGE_NUM) /
-+	dp_rate_mhz = ((bit_rate_mhz / pdata->dp_lanes) * DP_CLK_FUDGE_NUM) /
- 							DP_CLK_FUDGE_DEN;
- 	for (i = 0; i < ARRAY_SIZE(ti_sn_bridge_dp_rate_lut) - 1; i++)
- 		if (ti_sn_bridge_dp_rate_lut[i] > dp_rate_mhz)
-@@ -504,8 +505,8 @@ static void ti_sn_bridge_enable(struct drm_bridge *bridge)
- 	regmap_update_bits(pdata->regmap, SN_DSI_LANES_REG,
- 			   CHA_DSI_LANES_MASK, val);
- 
--	/* DP lane config */
--	val = DP_NUM_LANES(pdata->dsi->lanes - 1);
-+	/* DP lane config - 4 lanes are encoded with the value "3" */
-+	val = DP_NUM_LANES(pdata->dp_lanes == 4 ? 3 : pdata->dp_lanes);
- 	regmap_update_bits(pdata->regmap, SN_SSC_CONFIG_REG, DP_NUM_LANES_MASK,
- 			   val);
- 
-@@ -699,7 +700,10 @@ static int ti_sn_bridge_probe(struct i2c_client *client,
- 			      const struct i2c_device_id *id)
- {
- 	struct ti_sn_bridge *pdata;
--	int ret;
-+	int ret, len;
-+	struct device_node *endpoint;
-+	struct property *prop;
-+
- 
- 	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C)) {
- 		DRM_ERROR("device doesn't support I2C\n");
-@@ -727,6 +731,21 @@ static int ti_sn_bridge_probe(struct i2c_client *client,
- 		return ret;
- 	}
- 
-+	endpoint = of_graph_get_endpoint_by_regs(pdata->dev->of_node, 1, -1);
-+	prop = of_find_property(endpoint, "data-lanes", &len);
-+	if (!prop) {
-+		DRM_DEBUG("failed to find dp lane mapping, using default\n");
-+		pdata->dp_lanes = 1;
-+	} else {
-+		pdata->dp_lanes = len / sizeof(u32);
-+		if (pdata->dp_lanes < 1 || pdata->dp_lanes > 4 ||
-+		    pdata->dp_lanes == 3) {
-+			DRM_ERROR("bad number of dp lanes: %d\n",
-+				  pdata->dp_lanes);
-+			return -EINVAL;
-+		}
-+	}
-+
- 	dev_set_drvdata(&client->dev, pdata);
- 
- 	pdata->enable_gpio = devm_gpiod_get(pdata->dev, "enable",
+-		/* BCM5357 needs to touch PLL1_PLLCTL[02],
+-		   so offset PLL0_PLLCTL[02] by 6 */
++		/*
++		 * BCM5357 needs to touch PLL1_PLLCTL[02],
++		 * so offset PLL0_PLLCTL[02] by 6
++		 */
+ 		phypll_offset = (bus->chipinfo.id == BCMA_CHIP_ID_BCM5357 ||
+ 		       bus->chipinfo.id == BCMA_CHIP_ID_BCM4749 ||
+ 		       bus->chipinfo.id == BCMA_CHIP_ID_BCM53572) ? 6 : 0;
+@@ -619,8 +625,10 @@ void bcma_pmu_spuravoid_pllupdate(struct bcma_drv_cc *cc, int spuravoid)
+ 	case BCMA_CHIP_ID_BCM43228:
+ 	case BCMA_CHIP_ID_BCM43428:
+ 		/* LCNXN */
+-		/* PLL Settings for spur avoidance on/off mode,
+-		   no on2 support for 43228A0 */
++		/*
++		 * PLL Settings for spur avoidance on/off mode,
++		 * no on2 support for 43228A0
++		 */
+ 		if (spuravoid == 1) {
+ 			bcma_pmu_spuravoid_pll_write(cc, BCMA_CC_PMU_PLL_CTL0,
+ 						     0x01100014);
 -- 
-2.17.1
+2.21.0
 
