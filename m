@@ -2,186 +2,188 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 747FECA9EB0
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 19:03:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0569ECA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 19:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 436EF2086D
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 19:03:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C23F12086D
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 19:03:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="b3tQuHZe"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hOZYCqXH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730120AbfJUTDD (ORCPT
+        id S1730130AbfJUTDO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 15:03:03 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:33224 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727211AbfJUTDC (ORCPT
+        Mon, 21 Oct 2019 15:03:14 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:33457 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727211AbfJUTDO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 15:03:02 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9LIxJYD091924;
-        Mon, 21 Oct 2019 19:02:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=WPm6ksNVKuUPres28dmOnwW/E7lwkBzoIiqD3p9+fOw=;
- b=b3tQuHZe4LZMbrfZPa3X7I1reh0ZReMoZBOVz9Q7OVe3hZMZ4u/BxeAL3vBcrz+g9e77
- xFnCo8pcKJ3qRikVTYvjB0M27aOguojA7DOTVp1Ei6xmXRofHVzRZqUjDVtdR0/vXwI7
- Jouy02MSr7s+Nmm2oEHhNYNtaU7V9NmP6yohCtIWbzwgRH7fskIj8wPQ3l6slg3Df4e4
- Z6MsAAy2oYsqZqXLR1Yp5BL3BapudFMN/yQbpQhNt5xxphzROMPwEhQygofchW8ymFao
- 3GZVNo4HEy5qza2q0ZDMjN6gv9Jd6/5kwh4GFcwjHa13VZk6pWt0xDHpWLdhhyPGu2CN Cw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2vqu4qhm0e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 21 Oct 2019 19:02:50 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9LIvXmG040833;
-        Mon, 21 Oct 2019 19:02:49 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2vrcnas1vv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 21 Oct 2019 19:02:49 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9LJ2m3G032738;
-        Mon, 21 Oct 2019 19:02:48 GMT
-Received: from [192.168.1.222] (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 21 Oct 2019 12:02:48 -0700
-Subject: Re: [PATCH v6 5/9] hugetlb: disable region_add file_region coalescing
-To:     Mina Almasry <almasrymina@google.com>
-Cc:     shuah@kernel.org, rientjes@google.com, shakeelb@google.com,
-        gthelen@google.com, akpm@linux-foundation.org,
-        khalid.aziz@oracle.com, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
-        cgroups@vger.kernel.org, aneesh.kumar@linux.vnet.ibm.com,
-        mkoutny@suse.com
-References: <20191013003024.215429-1-almasrymina@google.com>
- <20191013003024.215429-5-almasrymina@google.com>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <982efbbc-f795-5819-83a8-7d328537e070@oracle.com>
-Date:   Mon, 21 Oct 2019 12:02:46 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
-MIME-Version: 1.0
-In-Reply-To: <20191013003024.215429-5-almasrymina@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9417 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910210183
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9417 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910210183
+        Mon, 21 Oct 2019 15:03:14 -0400
+Received: by mail-pf1-f195.google.com with SMTP id q10so9017648pfl.0
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 12:03:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=jJ5jwtEtZvz3RKTAhKxTqC3TqPRBane8BbT7Fv1RJW8=;
+        b=hOZYCqXHqLC3n/MXyVtTmVRpZnPhQox7vXpqyfiWUOSxFNESfl7BJbI5z7n718hGfv
+         +SqpxbTaH8IK/C8WlH1ldbzr0hXhYFj8W/DyfAj9XpFWFGTEjuvCVQH57EJuLW8Wae97
+         CuSrqpRnahvLph3SP0hlhbQ0ui3dyhNCUKYZGd9m4XHvoX+luJo39SBp7goWzNtEDBNR
+         aft7fRiF/YRgIBEEeEK5/7AVK9UHtMY2IotFkc1BJXono6yiwCRV84AgjaK/oAQzB1ax
+         pKfUOm0u/ZZe7Rwddo+wNwfJtY+hWxgEwFV88yFj1xHlTy7fau8HHxXpl+pRHAi8ga4n
+         9zQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=jJ5jwtEtZvz3RKTAhKxTqC3TqPRBane8BbT7Fv1RJW8=;
+        b=bCSmYxZt1L19/wZvHhB5h1Sawt9UoerqofxK3VdHsD7CJg58ZQcCCCZdYtRAinb0U5
+         +ktD1+DimqQkf48DNJ+DmMGb+Tmodl+AZYE94AFNoJEi4MVcRJ2S+G88af1TQSCk4Dfk
+         Pd5IJafMsWwogADr5ibM4bxhJIA/n7vVs7FdaRyt6NJm3M9gLaMoD+hWfZP4UyQScVud
+         tQ+qSh5hGdFkf/12luN309C7wYAp+koxkOhAEQRtn1KaLIC7rRqHHOx1FIuRNfzmVTih
+         zV0CZkrq31d0qiiTHpCIj7vX6XyCKIbsRFdlRyxkqTKtnx5mt+cnaJ7V8tDentXQZ/qw
+         Z97Q==
+X-Gm-Message-State: APjAAAVI2Di6nNVewC4w7YoqNwMnb2pq1P/7l2xopbgj3MjSLjk9x7LM
+        gEtQWPC5MuFAtSHzD9hxhOdkvaONulw=
+X-Google-Smtp-Source: APXvYqyTxiGSUWeYPGBn1NS7PIVC/jrrrhYoJpYqEd42zW4SoPqkKsN9p0nK2EnaXEJfoULDWS5CuQ==
+X-Received: by 2002:a62:6842:: with SMTP id d63mr24242194pfc.16.1571684592819;
+        Mon, 21 Oct 2019 12:03:12 -0700 (PDT)
+Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
+        by smtp.gmail.com with ESMTPSA id 127sm16223673pfy.56.2019.10.21.12.03.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Oct 2019 12:03:12 -0700 (PDT)
+From:   John Stultz <john.stultz@linaro.org>
+To:     lkml <linux-kernel@vger.kernel.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        Pratik Patel <pratikp@codeaurora.org>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        Vincent Donnefort <Vincent.Donnefort@arm.com>,
+        Sudipto Paul <Sudipto.Paul@arm.com>,
+        "Andrew F . Davis" <afd@ti.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Chenbo Feng <fengc@google.com>,
+        Alistair Strachan <astrachan@google.com>,
+        Hridya Valsaraju <hridya@google.com>,
+        Hillf Danton <hdanton@sina.com>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH v13 0/5] DMA-BUF Heaps (destaging ION)
+Date:   Mon, 21 Oct 2019 19:03:05 +0000
+Message-Id: <20191021190310.85221-1-john.stultz@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/12/19 5:30 PM, Mina Almasry wrote:
-> A follow up patch in this series adds hugetlb cgroup uncharge info the
-> file_region entries in resv->regions. The cgroup uncharge info may
-> differ for different regions, so they can no longer be coalesced at
-> region_add time. So, disable region coalescing in region_add in this
-> patch.
-> 
-> Behavior change:
-> 
-> Say a resv_map exists like this [0->1], [2->3], and [5->6].
-> 
-> Then a region_chg/add call comes in region_chg/add(f=0, t=5).
-> 
-> Old code would generate resv->regions: [0->5], [5->6].
-> New code would generate resv->regions: [0->1], [1->2], [2->3], [3->5],
-> [5->6].
-> 
-> Special care needs to be taken to handle the resv->adds_in_progress
-> variable correctly. In the past, only 1 region would be added for every
-> region_chg and region_add call. But now, each call may add multiple
-> regions, so we can no longer increment adds_in_progress by 1 in region_chg,
-> or decrement adds_in_progress by 1 after region_add or region_abort. Instead,
-> region_chg calls add_reservation_in_range() to count the number of regions
-> needed and allocates those, and that info is passed to region_add and
-> region_abort to decrement adds_in_progress correctly.
-> 
-> Signed-off-by: Mina Almasry <almasrymina@google.com>
-> 
-> ---
-> 
-> Changes in v6:
-> - Fix bug in number of region_caches allocated by region_chg
-> 
-> ---
->  mm/hugetlb.c | 256 +++++++++++++++++++++++++++++----------------------
->  1 file changed, 147 insertions(+), 109 deletions(-)
-> 
-> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-> index 4a60d7d44b4c3..f9c1947925bb9 100644
-> --- a/mm/hugetlb.c
-> +++ b/mm/hugetlb.c
-<snip>
-> -static long region_chg(struct resv_map *resv, long f, long t)
-> +static long region_chg(struct resv_map *resv, long f, long t,
-> +		       long *out_regions_needed)
->  {
-> +	struct file_region *trg = NULL;
->  	long chg = 0;
-> 
-> +	/* Allocate the maximum number of regions we're going to need for this
-> +	 * reservation. The maximum number of regions we're going to need is
-> +	 * (t - f) / 2 + 1, which corresponds to a region with alternating
-> +	 * reserved and unreserved pages.
-> +	 */
-> +	*out_regions_needed = (t - f) / 2 + 1;
-> +
->  	spin_lock(&resv->lock);
-> -retry_locked:
-> -	resv->adds_in_progress++;
-> +
-> +	resv->adds_in_progress += *out_regions_needed;
-> 
->  	/*
->  	 * Check for sufficient descriptors in the cache to accommodate
->  	 * the number of in progress add operations.
->  	 */
-> -	if (resv->adds_in_progress > resv->region_cache_count) {
-> -		struct file_region *trg;
-> -
-> -		VM_BUG_ON(resv->adds_in_progress - resv->region_cache_count > 1);
-> +	while (resv->region_cache_count < resv->adds_in_progress) {
->  		/* Must drop lock to allocate a new descriptor. */
-> -		resv->adds_in_progress--;
->  		spin_unlock(&resv->lock);
-> -
->  		trg = kmalloc(sizeof(*trg), GFP_KERNEL);
->  		if (!trg)
->  			return -ENOMEM;
-> @@ -393,9 +395,9 @@ static long region_chg(struct resv_map *resv, long f, long t)
->  		spin_lock(&resv->lock);
->  		list_add(&trg->link, &resv->region_cache);
->  		resv->region_cache_count++;
-> -		goto retry_locked;
->  	}
+Lucky number 13! :)
+
+Last week in v12 I had re-added some symbol exports to support
+later patches I have pending to enable loading heaps from
+modules. He reminded me that back around v3 (its been awhile!) I
+had removed those exports due to concerns about the fact that we
+don't support module removal.
+
+So I'm respinning the patches, removing the exports again. I'll
+submit a patch to re-add them in a later series enabling moduels
+which can be reviewed indepently.
+
+With that done, lets get on to the boilerplate!
+
+The patchset implements per-heap devices which can be opened
+directly and then an ioctl is used to allocate a dmabuf from the
+heap.
+
+The interface is similar, but much simpler then IONs, only
+providing an ALLOC ioctl.
+
+Also, I've provided relatively simple system and cma heaps.
+
+I've booted and tested these patches with AOSP on the HiKey960
+using the kernel tree here:
+  https://git.linaro.org/people/john.stultz/android-dev.git/log/?h=dev/dma-buf-heap
+
+And the userspace changes here:
+  https://android-review.googlesource.com/c/device/linaro/hikey/+/909436
+
+Compared to ION, this patchset is missing the system-contig,
+carveout and chunk heaps, as I don't have a device that uses
+those, so I'm unable to do much useful validation there.
+Additionally we have no upstream users of chunk or carveout,
+and the system-contig has been deprecated in the common/andoid-*
+kernels, so this should be ok.
+
+I've also removed the stats accounting, since any such
+accounting should be implemented by dma-buf core or the heaps
+themselves.
+
+New in v13:
+* Re-remove symbol exports, per discussion with Brian. I'll
+  resubmit these separately in a later patch so they can be
+  independently reviewed
+
+thanks
+-john
+
+Cc: Laura Abbott <labbott@redhat.com>
+Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Cc: Sumit Semwal <sumit.semwal@linaro.org>
+Cc: Liam Mark <lmark@codeaurora.org>
+Cc: Pratik Patel <pratikp@codeaurora.org>
+Cc: Brian Starkey <Brian.Starkey@arm.com>
+Cc: Vincent Donnefort <Vincent.Donnefort@arm.com>
+Cc: Sudipto Paul <Sudipto.Paul@arm.com>
+Cc: Andrew F. Davis <afd@ti.com>
+Cc: Christoph Hellwig <hch@infradead.org>
+Cc: Chenbo Feng <fengc@google.com>
+Cc: Alistair Strachan <astrachan@google.com>
+Cc: Hridya Valsaraju <hridya@google.com>
+Cc: Hillf Danton <hdanton@sina.com>
+Cc: dri-devel@lists.freedesktop.org
 
 
-I know that I suggested allocating the worst case number of entries, but this
-is going to be too much of a hit for existing hugetlbfs users.  It is not
-uncommon for DBs to have a shared areas in excess of 1TB mapped by hugetlbfs.
-With this new scheme, the above while loop will allocate over a half million
-file region entries and end up only using one.
 
-I think we need to step back and come up with a different approach.  Let me
-give it some more thought before throwing out ideas that may waste more of
-your time.  Sorry.
+Andrew F. Davis (1):
+  dma-buf: Add dma-buf heaps framework
+
+John Stultz (4):
+  dma-buf: heaps: Add heap helpers
+  dma-buf: heaps: Add system heap to dmabuf heaps
+  dma-buf: heaps: Add CMA heap to dmabuf heaps
+  kselftests: Add dma-heap test
+
+ MAINTAINERS                                   |  18 ++
+ drivers/dma-buf/Kconfig                       |  11 +
+ drivers/dma-buf/Makefile                      |   2 +
+ drivers/dma-buf/dma-heap.c                    | 269 ++++++++++++++++++
+ drivers/dma-buf/heaps/Kconfig                 |  14 +
+ drivers/dma-buf/heaps/Makefile                |   4 +
+ drivers/dma-buf/heaps/cma_heap.c              | 178 ++++++++++++
+ drivers/dma-buf/heaps/heap-helpers.c          | 268 +++++++++++++++++
+ drivers/dma-buf/heaps/heap-helpers.h          |  55 ++++
+ drivers/dma-buf/heaps/system_heap.c           | 124 ++++++++
+ include/linux/dma-heap.h                      |  59 ++++
+ include/uapi/linux/dma-heap.h                 |  55 ++++
+ tools/testing/selftests/dmabuf-heaps/Makefile |   9 +
+ .../selftests/dmabuf-heaps/dmabuf-heap.c      | 238 ++++++++++++++++
+ 14 files changed, 1304 insertions(+)
+ create mode 100644 drivers/dma-buf/dma-heap.c
+ create mode 100644 drivers/dma-buf/heaps/Kconfig
+ create mode 100644 drivers/dma-buf/heaps/Makefile
+ create mode 100644 drivers/dma-buf/heaps/cma_heap.c
+ create mode 100644 drivers/dma-buf/heaps/heap-helpers.c
+ create mode 100644 drivers/dma-buf/heaps/heap-helpers.h
+ create mode 100644 drivers/dma-buf/heaps/system_heap.c
+ create mode 100644 include/linux/dma-heap.h
+ create mode 100644 include/uapi/linux/dma-heap.h
+ create mode 100644 tools/testing/selftests/dmabuf-heaps/Makefile
+ create mode 100644 tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
+
 -- 
-Mike Kravetz
+2.17.1
+
