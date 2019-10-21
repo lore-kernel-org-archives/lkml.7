@@ -2,122 +2,157 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22642CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:30:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDEA6CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:30:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E98B4205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:30:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 971B3214B2
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:30:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TzdDrmtj"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="S7XABmBL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728610AbfJUMaQ (ORCPT
+        id S1728731AbfJUMaW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 08:30:16 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:43508 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726767AbfJUMaQ (ORCPT
+        Mon, 21 Oct 2019 08:30:22 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:55605 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726767AbfJUMaV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 08:30:16 -0400
-Received: by mail-wr1-f65.google.com with SMTP id c2so8528614wrr.10
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 05:30:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=MKfn7Qq96hAb4iGxGvvNjTY5LcHJmhrRPIK5yxoQ9Y0=;
-        b=TzdDrmtjzpZq+YFruP5kGDkrOcTZBWWoDy/kM/gOgpKmgg23xYaLmHj5R8rF6f5dAt
-         dd8ByMJTZf/pih6wLCgc/KnCi7nlZnF3bfjN9+1/fScNSZrbk5bgL1XGUHvRk7WdEXlL
-         Wf+MZ+DkJvOR3vCE6hmM0i2ejVqPpx1Fr4zkJfVnut5jO3oHRYQTwcdyWXzZpEsx5hBX
-         YzVRhfmpFJThu3t8wDMfwpWydj6DE62w6j1KOLDzklot9hGksSJA/hVn+JXrnWWfOfMt
-         OZ8q52wqSAA1ckfJ+loIpVjz9rRsdolUyTAi4vuH9KmPhVkfifDA2XFrqqYD0W8dkyAg
-         vj3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MKfn7Qq96hAb4iGxGvvNjTY5LcHJmhrRPIK5yxoQ9Y0=;
-        b=tSe0scBleo6q+q5KhrO6lxgRf18JUjcGWjotSsnXaEjPH4ny0QmYEdV+zPj6Olg4gq
-         QCtMzPueVAN0mB1h3J5f6ujae6kX/RuqQQ6ZJZPM0u0kTGZv8u98dswdjELSFG2C65ai
-         /0LTGdqvjt/JNDv6QRA6calhGlkjF9cKBXutT9HtdrFOMtVHsty8T1U9IFZGMvXwrC1i
-         H05p3wCQ7oJXH7VMiiG/Ar5t+1kUJ3/mCwZK7oeCY5p1g70JwjfFzZHpkalrh7/rso11
-         k5sA2DSn/gCiPxIJiMe7NzmiuI06BpfvH61WyeuUAQKuMxp+SljRJm1HWRlF2cTh0SCH
-         2QBQ==
-X-Gm-Message-State: APjAAAUSIMCPpJUpQt6iH28S4xoRAdKe55DzIaXmBYJj9ITxk2vvxMQE
-        208qafnFup1EpT/QfjD95buGCg==
-X-Google-Smtp-Source: APXvYqyg0YciwtBGWYvFialeJsnKQ0DH2VQACLRJSaRErKbjHyZ+SvIDbc2UI9ay8YKCDrU2GiDlUQ==
-X-Received: by 2002:adf:c143:: with SMTP id w3mr19822761wre.77.1571661014249;
-        Mon, 21 Oct 2019 05:30:14 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id r9sm9332012wrx.28.2019.10.21.05.30.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Oct 2019 05:30:13 -0700 (PDT)
-Date:   Mon, 21 Oct 2019 13:30:12 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     arnd@arndb.de, broonie@kernel.org, linus.walleij@linaro.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        baohua@kernel.org, stephan@gerhold.net
-Subject: Re: [PATCH v2 7/9] mfd: mfd-core: Protect against NULL call-back
- function pointer
-Message-ID: <20191021123012.qpk7tgyjtwp3wtxv@holly.lan>
-References: <20191021105822.20271-1-lee.jones@linaro.org>
- <20191021105822.20271-8-lee.jones@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191021105822.20271-8-lee.jones@linaro.org>
-User-Agent: NeoMutt/20180716
+        Mon, 21 Oct 2019 08:30:21 -0400
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191021123017epoutp039da7e6bbca2c7d4d8e37db6c071f6dae~PqV5dvpcq3100731007epoutp03I
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 12:30:17 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191021123017epoutp039da7e6bbca2c7d4d8e37db6c071f6dae~PqV5dvpcq3100731007epoutp03I
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1571661017;
+        bh=3jLWlkXFd0BZCxdLzottm5AeS5d5UR0kiBso1bSqG9c=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=S7XABmBLQleTNHN4i2h52aNmpyRP1oEF0OKP7Nv7255zd8xlLqc5ZPYwGCYKrPuN3
+         75YB8HAMiwF9fCal0PuvtoYmO8EOI1zPhNJsPLmmcmihAfvf0L9qyH/EGvHH8DuPKV
+         47Bu06ppFpUA95mqVpnQ4hAUgUkGzuz1UUrsmhGA=
+Received: from epsmges5p1new.samsung.com (unknown [182.195.42.73]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+        20191021123017epcas5p306454e7f6a731be72a638928f5756b88~PqV43j6j_1391713917epcas5p3q;
+        Mon, 21 Oct 2019 12:30:17 +0000 (GMT)
+Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
+        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        E6.92.04647.8D4ADAD5; Mon, 21 Oct 2019 21:30:17 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+        20191021123016epcas5p3ab7100162a8d6d803b117976240f20b4~PqV4cogS12642826428epcas5p3u;
+        Mon, 21 Oct 2019 12:30:16 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20191021123016epsmtrp2db4f52c963e168c98f7a8ee612f987b4~PqV4b0us42932329323epsmtrp2a;
+        Mon, 21 Oct 2019 12:30:16 +0000 (GMT)
+X-AuditID: b6c32a49-72bff70000001227-ed-5dada4d8de56
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        D5.90.04081.8D4ADAD5; Mon, 21 Oct 2019 21:30:16 +0900 (KST)
+Received: from ubuntu.sa.corp.samsungelectronics.net (unknown
+        [107.108.83.125]) by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20191021123015epsmtip1a6905fab73ec796bf63879049675b1bf~PqV3IeBkO2622226222epsmtip1o;
+        Mon, 21 Oct 2019 12:30:15 +0000 (GMT)
+From:   Anvesh Salveru <anvesh.s@samsung.com>
+To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     bhelgaas@google.com, gustavo.pimentel@synopsys.com,
+        jingoohan1@gmail.com, andrew.murray@arm.com,
+        lorenzo.pieralisi@arm.com, Anvesh Salveru <anvesh.s@samsung.com>,
+        Pankaj Dubey <pankaj.dubey@samsung.com>
+Subject: [PATCH 2/2] PCI: dwc: Add support to handle ZRX-DC Compliant PHYs
+Date:   Mon, 21 Oct 2019 17:59:53 +0530
+Message-Id: <1571660993-30329-1-git-send-email-anvesh.s@samsung.com>
+X-Mailer: git-send-email 2.7.4
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrMIsWRmVeSWpSXmKPExsWy7bCmhu7NJWtjDbbvYrJo/r+d1eLsroWs
+        FkuaMix23e1gt1jxZSa7xeVdc9gszs47zmbx5vcLdotFW7+wO3B6rJm3htFj56y77B4LNpV6
+        9G1ZxeixZf9nRo/Pm+QC2KK4bFJSczLLUov07RK4Ms6t3Mla8FOgor/hE0sD4xm+LkYODgkB
+        E4kVGzO6GLk4hAR2M0q8f7iQFcL5xCjxdNkJJgjnG6NEy9rVrDAd/TeCIeJ7GSVeXznHDuG0
+        MEm8/t4MVMTJwSagLfHz6F52EFtEwFqi4dUqsLHMAlcYJZpbFjODTBIW8JI49SUbpIZFQFXi
+        1dp3bCA2r4CLxOqLi8HmSAjISdw818kM0ishsIBN4k3rBHaIhIvE+4a9jBC2sMSr41ug4lIS
+        n9/tZYOw8yV67y6FitdITLnbAVVvL3HgyhwWkBuYBTQl1u/SBwkzC/BJ9P5+wgTxJK9ER5sQ
+        hKkk0TazGqJRQmLx/JvMELaHxJcdnWADhQRiJeb+e8M6gVFmFsLMBYyMqxglUwuKc9NTi00L
+        DPNSy/WKE3OLS/PS9ZLzczcxgqNey3MH46xzPocYBTgYlXh4CxatjRViTSwrrsw9xCjBwawk
+        wnvHACjEm5JYWZValB9fVJqTWnyIUZqDRUmcdxLr1RghgfTEktTs1NSC1CKYLBMHp1QD494Q
+        9Uc2Tae2azKd5DK5MKeRYdqe9VWX9vypqA1+c3frmkfe1y4/uXj3iIbqr3mH3N8uDL2Qx7aN
+        6dbynf9eld++IlB3f+m0mNlr+J02fY492MJf2bjh6/Qqu3R99bDYnr9WDOwftlzzmMCQ95sp
+        ztismLm/zJ8peXFiT9IdOd/oS3LH7k8/yarEUpyRaKjFXFScCAA+dN9q9gIAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprOLMWRmVeSWpSXmKPExsWy7bCSnO6NJWtjDdb/VLRo/r+d1eLsroWs
+        FkuaMix23e1gt1jxZSa7xeVdc9gszs47zmbx5vcLdotFW7+wO3B6rJm3htFj56y77B4LNpV6
+        9G1ZxeixZf9nRo/Pm+QC2KK4bFJSczLLUov07RK4Ms6t3Mla8FOgor/hE0sD4xm+LkYODgkB
+        E4n+G8FdjJwcQgK7GSVWHucDsSUEJCS+7P3KBmELS6z895y9i5ELqKaJSaKrcwMzSIJNQFvi
+        59G97CC2iICtRMPfDmaQImaBW4wSm57MYQZZICzgJXHqSzZIDYuAqsSrte/AhvIKuEisvriY
+        FWKBnMTNc53MExh5FjAyrGKUTC0ozk3PLTYsMMxLLdcrTswtLs1L10vOz93ECA4uLc0djJeX
+        xB9iFOBgVOLhdZi+JlaINbGsuDL3EKMEB7OSCO8dg7WxQrwpiZVVqUX58UWlOanFhxilOViU
+        xHmf5h2LFBJITyxJzU5NLUgtgskycXBKNTAuF874Ny04ry33S0554Ys3mhlee/yXbtaSYM1K
+        iNJlby+baLLs6dH48qDdJw0rudba3/OwCsr6l7LBOTV7gyYPs7ztx0PlnlO/Xbzt6/ekcspL
+        Nl5Jnc9XhDa+3jgjyEP1sOfnJyuZZkzffvTXTAf7/ZtDom5MLnCNj09alie9xp+399G3CwuV
+        WIozEg21mIuKEwGZJjEPKgIAAA==
+X-CMS-MailID: 20191021123016epcas5p3ab7100162a8d6d803b117976240f20b4
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20191021123016epcas5p3ab7100162a8d6d803b117976240f20b4
+References: <CGME20191021123016epcas5p3ab7100162a8d6d803b117976240f20b4@epcas5p3.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 11:58:20AM +0100, Lee Jones wrote:
-> If a child device calls mfd_cell_{en,dis}able() without an appropriate
-> call-back being set, we are likely to encounter a panic.  Avoid this
-> by adding suitable checking.
-> 
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Many platforms use DesignWare controller but the PHY can be different in
+different platforms. If the PHY is compliant is to ZRX-DC specification
+it helps in low power consumption during power states.
 
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+If current data rate is 8.0 GT/s or higher and PHY is not compliant to
+ZRX-DC specification, then after every 100ms link should transition to
+recovery state during the low power states.
 
-> ---
->  drivers/mfd/mfd-core.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
-> index 8126665bb2d8..90b43b44a15a 100644
-> --- a/drivers/mfd/mfd-core.c
-> +++ b/drivers/mfd/mfd-core.c
-> @@ -28,6 +28,11 @@ int mfd_cell_enable(struct platform_device *pdev)
->  	const struct mfd_cell *cell = mfd_get_cell(pdev);
->  	int err = 0;
->  
-> +	if (!cell->enable) {
-> +		dev_dbg(&pdev->dev, "No .enable() call-back registered\n");
-> +		return 0;
-> +	}
-> +
->  	/* only call enable hook if the cell wasn't previously enabled */
->  	if (atomic_inc_return(cell->usage_count) == 1)
->  		err = cell->enable(pdev);
-> @@ -45,6 +50,11 @@ int mfd_cell_disable(struct platform_device *pdev)
->  	const struct mfd_cell *cell = mfd_get_cell(pdev);
->  	int err = 0;
->  
-> +	if (!cell->enable) {
-> +		dev_dbg(&pdev->dev, "No .disable() call-back registered\n");
-> +		return 0;
-> +	}
-> +
->  	/* only disable if no other clients are using it */
->  	if (atomic_dec_return(cell->usage_count) == 0)
->  		err = cell->disable(pdev);
-> -- 
-> 2.17.1
-> 
+DesignWare controller provides GEN3_ZRXDC_NONCOMPL field in
+GEN3_RELATED_OFF to specify about ZRX-DC compliant PHY.
+
+Platforms with ZRX-DC compliant PHY can set "snps,phy-zrxdc-compliant"
+property in controller DT node to specify this property to the controller.
+
+Signed-off-by: Anvesh Salveru <anvesh.s@samsung.com>
+Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+---
+ drivers/pci/controller/dwc/pcie-designware.c | 7 +++++++
+ drivers/pci/controller/dwc/pcie-designware.h | 3 +++
+ 2 files changed, 10 insertions(+)
+
+diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+index 820488dfeaed..6560d9f765d7 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.c
++++ b/drivers/pci/controller/dwc/pcie-designware.c
+@@ -556,4 +556,11 @@ void dw_pcie_setup(struct dw_pcie *pci)
+ 		       PCIE_PL_CHK_REG_CHK_REG_START;
+ 		dw_pcie_writel_dbi(pci, PCIE_PL_CHK_REG_CONTROL_STATUS, val);
+ 	}
++
++	if (of_property_read_bool(np, "snps,phy-zrxdc-compliant")) {
++		val = dw_pcie_readl_dbi(pci, PCIE_PORT_GEN3_RELATED);
++		val &= ~PORT_LOGIC_GEN3_ZRXDC_NONCOMPL;
++		dw_pcie_writel_dbi(pci, PCIE_PORT_GEN3_RELATED, val);
++	}
++
+ }
+diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+index 5a18e94e52c8..427a55ec43c6 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.h
++++ b/drivers/pci/controller/dwc/pcie-designware.h
+@@ -60,6 +60,9 @@
+ #define PCIE_MSI_INTR0_MASK		0x82C
+ #define PCIE_MSI_INTR0_STATUS		0x830
+ 
++#define PCIE_PORT_GEN3_RELATED		0x890
++#define PORT_LOGIC_GEN3_ZRXDC_NONCOMPL		BIT(0)
++
+ #define PCIE_ATU_VIEWPORT		0x900
+ #define PCIE_ATU_REGION_INBOUND		BIT(31)
+ #define PCIE_ATU_REGION_OUTBOUND	0
+-- 
+2.17.1
+
