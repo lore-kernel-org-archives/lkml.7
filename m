@@ -2,102 +2,132 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60CCACA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:46:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E78D9CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:47:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 346A120640
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:46:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PDNV32tB"
+	by mail.kernel.org (Postfix) with ESMTP id C12112053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:47:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729293AbfJUOqz (ORCPT
+        id S1728257AbfJUOrs convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 10:46:55 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:60814 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728183AbfJUOqy (ORCPT
+        Mon, 21 Oct 2019 10:47:48 -0400
+Received: from mailoutvs56.siol.net ([185.57.226.247]:52165 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726289AbfJUOrs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 10:46:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571669213;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=F+f6Um5bpTwJO4qunw0Yd8/KHXqiY+M67vv91zC8CJs=;
-        b=PDNV32tBt9xB1SGJEwWEG9WBVet4xFv7Qcwc+HBgKWxfj3qQYEWLM4q8vDpmCRdayKoTKX
-        R7UWNzC1C5LRDoM38ureMdbTNyXx62wC5a4QZsiCPQCT49MDbQKJbjfMx4t2wRZuLzkd1S
-        av/T1f0ROf2Xx853FK2l9J/DDaw2utU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-298-c3fBOIFINueFSQEaUpFbbA-1; Mon, 21 Oct 2019 10:46:50 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B018D800D41;
-        Mon, 21 Oct 2019 14:46:47 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.44])
-        by smtp.corp.redhat.com (Postfix) with SMTP id E463D5C240;
-        Mon, 21 Oct 2019 14:46:34 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Mon, 21 Oct 2019 16:46:46 +0200 (CEST)
-Date:   Mon, 21 Oct 2019 16:46:33 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     linux-kernel@vger.kernel.org, Florian Weimer <fweimer@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>, libc-alpha@sourceware.org,
-        David Howells <dhowells@redhat.com>,
-        Jann Horn <jannh@google.com>, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Shuah Khan <shuah@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Roman Gushchin <guro@fb.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        linux-kselftest@vger.kernel.org, linux-api@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] clone3: add CLONE_CLEAR_SIGHAND
-Message-ID: <20191021144633.GA2720@redhat.com>
-References: <20191014104538.3096-1-christian.brauner@ubuntu.com>
+        Mon, 21 Oct 2019 10:47:48 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id 9BF3452273D;
+        Mon, 21 Oct 2019 16:47:44 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at psrvmta09.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta09.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id 3LVhTk5es8hh; Mon, 21 Oct 2019 16:47:44 +0200 (CEST)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id 334C352273A;
+        Mon, 21 Oct 2019 16:47:44 +0200 (CEST)
+Received: from jernej-laptop.localnet (cpe-86-58-59-25.static.triera.net [86.58.59.25])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Postfix) with ESMTPA id C25E052273D;
+        Mon, 21 Oct 2019 16:47:43 +0200 (CEST)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     mripard@kernel.org, wens@csie.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, mchehab@kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v4 5/6] media: sun4i: Add H3 deinterlace driver
+Date:   Mon, 21 Oct 2019 16:47:43 +0200
+Message-ID: <2174547.3yqp6rY4Nl@jernej-laptop>
+In-Reply-To: <8137fbb3-036a-95e4-2642-5dd46fb55eb9@xs4all.nl>
+References: <20191017183738.68069-1-jernej.skrabec@siol.net> <20191017183738.68069-6-jernej.skrabec@siol.net> <8137fbb3-036a-95e4-2642-5dd46fb55eb9@xs4all.nl>
 MIME-Version: 1.0
-In-Reply-To: <20191014104538.3096-1-christian.brauner@ubuntu.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-MC-Unique: c3fBOIFINueFSQEaUpFbbA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/14, Christian Brauner wrote:
->
-> The child helper process on Linux posix_spawn must ensure that no signal
-> handlers are enabled, so the signal disposition must be either SIG_DFL
-> or SIG_IGN. However, it requires a sigprocmask to obtain the current
-> signal mask and at least _NSIG sigaction calls to reset the signal
-> handlers for each posix_spawn call
+Dne ponedeljek, 21. oktober 2019 ob 13:13:20 CEST je Hans Verkuil napisal(a):
+> On 10/17/19 8:37 PM, Jernej Skrabec wrote:
+> > Allwinner H3 SoC contains deinterlace unit, which has several modes of
+> > operation - bypass, weave, bob and mixed (advanced) mode. I don't know
+> > how mixed mode works, but according to Allwinner it gives best results,
+> > so they use it exclusively. Currently this mode is also hardcoded here.
+> > 
+> > For each interleaved frame queued, this driver produces 2 deinterlaced
+> > frames. Deinterlaced frames are based on 2 consequtive output buffers,
+> > except for the first 2, where same output buffer is given to peripheral
+> > as current and previous.
+> > 
+> > There is no documentation for this core, so register layout and fixed
+> > values were taken from BSP driver.
+> > 
+> > I'm not sure if maximum size of the image unit is capable to process is
+> > governed by size of "flag" buffers, frequency or it really is some HW
+> > limitation. Currently driver can process full HD image in ~15ms (7.5ms
+> > for each capture buffer), which allows to process 1920x1080@60i video
+> > smoothly in real time.
+> > 
+> > Acked-by: Maxime Ripard <mripard@kernel.org>
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > ---
+> > 
+> >  MAINTAINERS                                   |    7 +
+> >  drivers/media/platform/Kconfig                |   12 +
+> >  drivers/media/platform/sunxi/Makefile         |    1 +
+> >  .../media/platform/sunxi/sun8i-di/Makefile    |    2 +
+> >  .../media/platform/sunxi/sun8i-di/sun8i-di.c  | 1028 +++++++++++++++++
+> >  .../media/platform/sunxi/sun8i-di/sun8i-di.h  |  237 ++++
+> >  6 files changed, 1287 insertions(+)
+> >  create mode 100644 drivers/media/platform/sunxi/sun8i-di/Makefile
+> >  create mode 100644 drivers/media/platform/sunxi/sun8i-di/sun8i-di.c
+> >  create mode 100644 drivers/media/platform/sunxi/sun8i-di/sun8i-di.h
+> > 
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index c7b48525822a..c375455125fb 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -4646,6 +4646,13 @@ M:	"Maciej W. Rozycki" <macro@linux-mips.org>
+> > 
+> >  S:	Maintained
+> >  F:	drivers/net/fddi/defxx.*
+> > 
+> > +DEINTERLACE DRIVERS FOR ALLWINNER H3
+> > +M:	Jernej Skrabec <jernej.skrabec@siol.net>
+> > +L:	linux-media@vger.kernel.org
+> > +T:	git git://linuxtv.org/media_tree.git
+> > +S:	Maintained
+> > +F:	drivers/media/platform/sunxi/sun8i-di/
+> 
+> This is missing the bindings file added in the previous patch.
 
-Plus the caller has to block/unblock all signals around clone(VM|VFORK).
+Well, I listed Maxime and Chen-Yu as binding maintainers in patch 4, so that's 
+why I didn't include it here. If you think I should be maintainer of that 
+binding too, I can change that. I took sun6i-csi as example where binding 
+maintainers are Maxime and Chen-Yu and driver maintainer is Yong Deng.
 
-Can this justify the new CLONE_ flag? Honestly, I have no idea. But the
-patch is simple and looks technically correct to me. FWIW,
+Best regards,
+Jernej
 
-Reviewed-by: Oleg Nesterov <oleg@redhat.com>
+> 
+> Regards,
+> 
+> 	Hans
+> 
+> > +
+> > 
+> >  DELL SMBIOS DRIVER
+> >  M:	Pali Rohár <pali.rohar@gmail.com>
+> >  M:	Mario Limonciello <mario.limonciello@dell.com>
+
+
+
 
