@@ -2,163 +2,190 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B62AACA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:18:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A99DECA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:18:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B684222C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:18:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571674723;
-	bh=3vY2pIjyYjAUhRAyST8D3WoCMrO68dPHRpC8oVEgtkA=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=HptOEIx7Gen6cb13kD/FfbNB9I7HHaTKybIU55/Q8OKOrufNHLuKQ+fo5dEyHYftu
-	 44MEnA4LVfgyngd4M0AjEeEOqjQCiYPa6SLdpomg/73gRN/cZV19ybB3O0ihMxKL+Y
-	 v5Dxrf4HYGdEOzs8CAotQKyrW0d5IN7fjS626n5w=
+	by mail.kernel.org (Postfix) with ESMTP id 88174214B2
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:18:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729822AbfJUQSm (ORCPT
+        id S1729853AbfJUQSp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 12:18:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38252 "EHLO mail.kernel.org"
+        Mon, 21 Oct 2019 12:18:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729488AbfJUQSk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728521AbfJUQSk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 21 Oct 2019 12:18:40 -0400
-Received: from localhost.localdomain (unknown [194.230.155.217])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE866214B2;
-        Mon, 21 Oct 2019 16:18:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571674719;
-        bh=3vY2pIjyYjAUhRAyST8D3WoCMrO68dPHRpC8oVEgtkA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=VZqWrp4seF30I+DlEuqKw1SKhfjvnQFQ6zifiz9FS3APtR1PZYLQD45l75W6Gm2I+
-         p8sZOFAgS9Z2JnOK9OZsEeMyWN7ikPcN2F9ebivqgXWmDHDgZRz+SXTPYXRpB3DQPu
-         PnZsUzEtHTvocGkMY6ILwkqXJA+Ajw+cNwpMOgEY=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Santosh Shilimkar <ssantosh@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v4] ARM: dts: keystone: Rename "msmram" node to "sram"
-Date:   Mon, 21 Oct 2019 18:18:23 +0200
-Message-Id: <20191021161823.21624-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        by mail.kernel.org (Postfix) with ESMTPSA id 133D4222BD;
+        Mon, 21 Oct 2019 16:18:39 +0000 (UTC)
+Received: from rostedt by gandalf.local.home with local (Exim 4.92.2)
+        (envelope-from <rostedt@goodmis.org>)
+        id 1iMaOE-0001f6-9J; Mon, 21 Oct 2019 12:18:38 -0400
+Message-Id: <20191021161838.171964708@goodmis.org>
+User-Agent: quilt/0.65
+Date:   Mon, 21 Oct 2019 12:18:00 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>, stable@vger.kernel.org,
+        Song Liu <songliubraving@fb.com>,
+        Prateek Sood <prsood@codeaurora.org>
+Subject: [for-linus][PATCH 2/2] trace: Fix race in perf_trace_buf initialization
+References: <20191021161758.096336406@goodmis.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The device node name should reflect generic class of a device so rename
-the "msmram" node and its children to "sram".  This will be also in sync
-with upcoming DT schema.  No functional change.
+From: Prateek Sood <prsood@codeaurora.org>
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+[  943.034988] Unable to handle kernel paging request at virtual address 0000003106f2003c
+[  943.043653] Mem abort info:
+[  943.046679]   ESR = 0x96000045
+[  943.050428]   Exception class = DABT (current EL), IL = 32 bits
+[  943.056643]   SET = 0, FnV = 0
+[  943.060168]   EA = 0, S1PTW = 0
+[  943.063449] Data abort info:
+[  943.066474]   ISV = 0, ISS = 0x00000045
+[  943.070856]   CM = 0, WnR = 1
+[  943.074016] user pgtable: 4k pages, 39-bit VAs, pgdp = ffffffc034b9b000
+[  943.081446] [0000003106f2003c] pgd=0000000000000000, pud=0000000000000000
+[  943.088862] Internal error: Oops: 96000045 [#1] PREEMPT SMP
+[  943.141700] Process syz-executor (pid: 18393, stack limit = 0xffffffc093190000)
+[  943.164146] pstate: 80400005 (Nzcv daif +PAN -UAO)
+[  943.169119] pc : __memset+0x20/0x1ac
+[  943.172831] lr : memset+0x3c/0x50
+[  943.176269] sp : ffffffc09319fc50
 
+[  943.557593]  __memset+0x20/0x1ac
+[  943.560953]  perf_trace_buf_alloc+0x140/0x1a0
+[  943.565472]  perf_trace_sys_enter+0x158/0x310
+[  943.569985]  syscall_trace_enter+0x348/0x7c0
+[  943.574413]  el0_svc_common+0x11c/0x368
+[  943.578394]  el0_svc_handler+0x12c/0x198
+[  943.582459]  el0_svc+0x8/0xc
+
+In Ramdumps:
+total_ref_count = 3
+perf_trace_buf = (
+    0x0 -> NULL,
+    0x0 -> NULL,
+    0x0 -> NULL,
+    0x0 -> NULL)
+
+event_call in perf_trace_sys_enter()
+event_call = 0xFFFFFF900CB511D8 -> (
+    list = (next = 0xFFFFFF900CB4E2E0, prev = 0xFFFFFF900CB512B0),
+    class = 0xFFFFFF900CDC8308,
+    name = 0xFFFFFF900CDDA1D8,
+    tp = 0xFFFFFF900CDDA1D8,
+    event = (
+      node = (next = 0x0, pprev = 0xFFFFFF900CB80210),
+      list = (next = 0xFFFFFF900CB512E0, prev = 0xFFFFFF900CB4E310),
+      type = 21,
+      funcs = 0xFFFFFF900CB51130),
+    print_fmt = 0xFFFFFF900CB51150,
+    filter = 0x0,
+    mod = 0x0,
+    data = 0x0,
+    flags = 18,
+    perf_refcount = 1,
+    perf_events = 0xFFFFFF8DB8E54158,
+    prog_array = 0x0,
+    perf_perm = 0x0)
+
+perf_events added on CPU0
+(struct hlist_head *)(0xFFFFFF8DB8E54158+__per_cpu_offset[0]) -> (
+    first = 0xFFFFFFC0980FD0E0 -> (
+      next = 0x0,
+      pprev = 0xFFFFFFBEBFD74158))
+
+Could you please confirm:
+1) the race mentioned below exists or not.
+2) if following patch fixes it.
+
+>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8
+
+A race condition exists while initialiazing perf_trace_buf from
+perf_trace_init() and perf_kprobe_init().
+
+      CPU0                                        CPU1
+perf_trace_init()
+  mutex_lock(&event_mutex)
+    perf_trace_event_init()
+      perf_trace_event_reg()
+        total_ref_count == 0
+	buf = alloc_percpu()
+        perf_trace_buf[i] = buf
+        tp_event->class->reg() //fails       perf_kprobe_init()
+	goto fail                              perf_trace_event_init()
+                                                 perf_trace_event_reg()
+        fail:
+	  total_ref_count == 0
+
+                                                   total_ref_count == 0
+                                                   buf = alloc_percpu()
+                                                   perf_trace_buf[i] = buf
+                                                   tp_event->class->reg()
+                                                   total_ref_count++
+
+          free_percpu(perf_trace_buf[i])
+          perf_trace_buf[i] = NULL
+
+Any subsequent call to perf_trace_event_reg() will observe total_ref_count > 0,
+causing the perf_trace_buf to be NULL always. This can result in perf_trace_buf
+getting accessed from perf_trace_buf_alloc() without being initialized. Acquiring
+event_mutex in perf_kprobe_init() before calling perf_trace_event_init() should
+fix this race.
+
+Link: http://lkml.kernel.org/r/1571120245-4186-1-git-send-email-prsood@codeaurora.org
+
+Cc: stable@vger.kernel.org
+Fixes: e12f03d7031a9 ("perf/core: Implement the 'perf_kprobe' PMU")
+Acked-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Prateek Sood <prsood@codeaurora.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
+ kernel/trace/trace_event_perf.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Changes since v3:
-1. Rename also children.
-
-v3 is here:
-https://lore.kernel.org/linux-arm-kernel/20191002164316.14905-7-krzk@kernel.org/
----
- arch/arm/boot/dts/keystone-k2e.dtsi  | 4 ++--
- arch/arm/boot/dts/keystone-k2g.dtsi  | 4 ++--
- arch/arm/boot/dts/keystone-k2hk.dtsi | 4 ++--
- arch/arm/boot/dts/keystone-k2l.dtsi  | 4 ++--
- 4 files changed, 8 insertions(+), 8 deletions(-)
-
-diff --git a/arch/arm/boot/dts/keystone-k2e.dtsi b/arch/arm/boot/dts/keystone-k2e.dtsi
-index 085e7326ea8e..2d94faf31fab 100644
---- a/arch/arm/boot/dts/keystone-k2e.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2e.dtsi
-@@ -86,14 +86,14 @@
- 			};
- 		};
+diff --git a/kernel/trace/trace_event_perf.c b/kernel/trace/trace_event_perf.c
+index 0892e38ed6fb..a9dfa04ffa44 100644
+--- a/kernel/trace/trace_event_perf.c
++++ b/kernel/trace/trace_event_perf.c
+@@ -272,9 +272,11 @@ int perf_kprobe_init(struct perf_event *p_event, bool is_retprobe)
+ 		goto out;
+ 	}
  
--		msm_ram: msmram@c000000 {
-+		msm_ram: sram@c000000 {
- 			compatible = "mmio-sram";
- 			reg = <0x0c000000 0x200000>;
- 			ranges = <0x0 0x0c000000 0x200000>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
++	mutex_lock(&event_mutex);
+ 	ret = perf_trace_event_init(tp_event, p_event);
+ 	if (ret)
+ 		destroy_local_trace_kprobe(tp_event);
++	mutex_unlock(&event_mutex);
+ out:
+ 	kfree(func);
+ 	return ret;
+@@ -282,8 +284,10 @@ int perf_kprobe_init(struct perf_event *p_event, bool is_retprobe)
  
--			sram-bm@1f0000 {
-+			bm-sram@1f0000 {
- 				reg = <0x001f0000 0x8000>;
- 			};
- 		};
-diff --git a/arch/arm/boot/dts/keystone-k2g.dtsi b/arch/arm/boot/dts/keystone-k2g.dtsi
-index 1c833105d6c5..33acf7ddb1c8 100644
---- a/arch/arm/boot/dts/keystone-k2g.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2g.dtsi
-@@ -95,14 +95,14 @@
- 		ranges = <0x0 0x0 0x0 0xc0000000>;
- 		dma-ranges = <0x80000000 0x8 0x00000000 0x80000000>;
+ void perf_kprobe_destroy(struct perf_event *p_event)
+ {
++	mutex_lock(&event_mutex);
+ 	perf_trace_event_close(p_event);
+ 	perf_trace_event_unreg(p_event);
++	mutex_unlock(&event_mutex);
  
--		msm_ram: msmram@c000000 {
-+		msm_ram: sram@c000000 {
- 			compatible = "mmio-sram";
- 			reg = <0x0c000000 0x100000>;
- 			ranges = <0x0 0x0c000000 0x100000>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 
--			sram-bm@f7000 {
-+			bm-sram@f7000 {
- 				reg = <0x000f7000 0x8000>;
- 			};
- 		};
-diff --git a/arch/arm/boot/dts/keystone-k2hk.dtsi b/arch/arm/boot/dts/keystone-k2hk.dtsi
-index ca0f198ba627..8a9447703310 100644
---- a/arch/arm/boot/dts/keystone-k2hk.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2hk.dtsi
-@@ -57,14 +57,14 @@
- &soc0 {
- 		/include/ "keystone-k2hk-clocks.dtsi"
- 
--		msm_ram: msmram@c000000 {
-+		msm_ram: sram@c000000 {
- 			compatible = "mmio-sram";
- 			reg = <0x0c000000 0x600000>;
- 			ranges = <0x0 0x0c000000 0x600000>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 
--			sram-bm@5f0000 {
-+			bm-sram@5f0000 {
- 				reg = <0x5f0000 0x8000>;
- 			};
- 		};
-diff --git a/arch/arm/boot/dts/keystone-k2l.dtsi b/arch/arm/boot/dts/keystone-k2l.dtsi
-index 374c80124c4e..dff5fea72b2f 100644
---- a/arch/arm/boot/dts/keystone-k2l.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2l.dtsi
-@@ -255,14 +255,14 @@
- 			};
- 		};
- 
--		msm_ram: msmram@c000000 {
-+		msm_ram: sram@c000000 {
- 			compatible = "mmio-sram";
- 			reg = <0x0c000000 0x200000>;
- 			ranges = <0x0 0x0c000000 0x200000>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 
--			sram-bm@1f8000 {
-+			bm-sram@1f8000 {
- 				reg = <0x001f8000 0x8000>;
- 			};
- 		};
+ 	destroy_local_trace_kprobe(p_event->tp_event);
+ }
 -- 
-2.17.1
+2.23.0
+
 
