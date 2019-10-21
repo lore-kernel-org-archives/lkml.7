@@ -2,138 +2,101 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66B64CA9EB0
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:14:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC0BCCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:14:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E83B21BE5
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:14:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571674464;
-	bh=peU7ouihHc9hidq+P9WiREumiGLtvR29ujNkdCjneXU=;
-	h=From:To:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JBNRECAiYCdiIGfvWkwiSEgg6ERH9cWjJp4pOxIDkkebpfivcvBS+nktRG0p9OzY7
-	 dE1p2LA7IoV76V40fE5/revcSN5tS7pHAGedVTbiz5tEgXPBAuzpu8AzWaY4zV3fHo
-	 T9sXK2l+mJRiV0yYiDh5Qw8/laTfTPJ2kVN/8AVE=
+	by mail.kernel.org (Postfix) with ESMTP id 9AE6E21BE5
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:14:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729946AbfJUQOX (ORCPT
+        id S1729951AbfJUQOi convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 12:14:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36710 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726289AbfJUQOW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 12:14:22 -0400
-Received: from localhost.localdomain (unknown [194.230.155.217])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B58EC21872;
-        Mon, 21 Oct 2019 16:14:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571674461;
-        bh=peU7ouihHc9hidq+P9WiREumiGLtvR29ujNkdCjneXU=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=E+UmOTXdLqE8ZIaq1PdV4NdYW4SeUoAbxANrgvpJuFgksDbnOqjcpVAoQyUQX+zVO
-         8XAkrW/RKs4OMyBYuAi53a1bZlHmx0nAaiRgUH+EHIhQsDcAErcoyKRbeu63JGch1l
-         FPe8SJTdIBGyYOoutskDB28/qphPyKfNXN0OaCuA=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Heiko Stuebner <heiko@sntech.de>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Subject: [PATCH v4 7/7] dt-bindings: sram: Merge Socionext SRAM bindings into generic
-Date:   Mon, 21 Oct 2019 18:13:51 +0200
-Message-Id: <20191021161351.20789-7-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191021161351.20789-1-krzk@kernel.org>
-References: <20191021161351.20789-1-krzk@kernel.org>
+        Mon, 21 Oct 2019 12:14:38 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:48101 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726289AbfJUQOi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 12:14:38 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-164-yBUMtxjzPbGpm7yEvcnd1w-1; Mon, 21 Oct 2019 17:14:35 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Mon, 21 Oct 2019 17:14:34 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Mon, 21 Oct 2019 17:14:34 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Jessica Yu' <jeyu@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Matthias Maennich <maennich@google.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: RE: [PATCH] scripts/nsdeps: escape '/' for module source files
+Thread-Topic: [PATCH] scripts/nsdeps: escape '/' for module source files
+Thread-Index: AQHViB8egCT4CShepk2NuWs8og91m6dlRBcw
+Date:   Mon, 21 Oct 2019 16:14:34 +0000
+Message-ID: <51d0f654a1d94c7d90eb56ee8eac7209@AcuMS.aculab.com>
+References: <20191021145137.31672-1-jeyu@kernel.org>
+In-Reply-To: <20191021145137.31672-1-jeyu@kernel.org>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+X-MC-Unique: yBUMtxjzPbGpm7yEvcnd1w-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Socionext SRAM bindings list only compatible so integrate them into
-generic SRAM bindings schema.
+From Jessica Yu
+> Sent: 21 October 2019 15:52
+> When doing an out of tree build with O=, the nsdeps script constructs
+> the absolute pathname of the module source file so that it can insert
+> MODULE_IMPORT_NS statements in the right place. However, ${srctree}
+> contains an unescaped path to the source tree, which, when used in a sed
+> substitution, makes sed complain:
+> 
+> ++ sed 's/[^ ]* *//home/jeyu/jeyu-linux\/&/g'
+> sed: -e expression #1, char 12: unknown option to `s'
+> 
+> The sed substitution command 's' ends prematurely with the forward
+> slashes in the pathname, and sed errors out when it encounters the 'h',
+> which is an invalid sed substitution option. So use bash in-variable
+> substitution to escape all forward slashes for sed.
+> 
+> Signed-off-by: Jessica Yu <jeyu@kernel.org>
+> ---
+>  scripts/nsdeps | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/scripts/nsdeps b/scripts/nsdeps
+> index 3754dac13b31..79f96e596a0b 100644
+> --- a/scripts/nsdeps
+> +++ b/scripts/nsdeps
+> @@ -33,7 +33,7 @@ generate_deps() {
+>  	if [ ! -f "$ns_deps_file" ]; then return; fi
+>  	local mod_source_files=`cat $mod_file | sed -n 1p                      \
+>  					      | sed -e 's/\.o/\.c/g'           \
+> -					      | sed "s/[^ ]* */${srctree}\/&/g"`
+> +					      | sed "s/[^ ]* */${srctree//\//\\\/}\/&/g"`
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Rather than adding a bashism - which might bight back later, just change the
+command to use (say) ; instead of / as the separator.
+I think that makes it:
+	sed "s;[^ ]* *;${srctree}/&;g
 
----
+	David
 
-Changes since v3:
-1. New patch
----
- .../bindings/sram/milbeaut-smp-sram.txt       | 24 -------------------
- .../devicetree/bindings/sram/sram.yaml        | 15 ++++++++++++
- 2 files changed, 15 insertions(+), 24 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/sram/milbeaut-smp-sram.txt
-
-diff --git a/Documentation/devicetree/bindings/sram/milbeaut-smp-sram.txt b/Documentation/devicetree/bindings/sram/milbeaut-smp-sram.txt
-deleted file mode 100644
-index 194f6a3c1c1e..000000000000
---- a/Documentation/devicetree/bindings/sram/milbeaut-smp-sram.txt
-+++ /dev/null
-@@ -1,24 +0,0 @@
--Milbeaut SRAM for smp bringup
 -
--Milbeaut SoCs use a part of the sram for the bringup of the secondary cores.
--Once they get powered up in the bootloader, they stay at the specific part
--of the sram.
--Therefore the part needs to be added as the sub-node of mmio-sram.
--
--Required sub-node properties:
--- compatible : should be "socionext,milbeaut-smp-sram"
--
--Example:
--
--        sram: sram@0 {
--                compatible = "mmio-sram";
--                reg = <0x0 0x10000>;
--                #address-cells = <1>;
--                #size-cells = <1>;
--                ranges = <0 0x0 0x10000>;
--
--                smp-sram@f100 {
--                        compatible = "socionext,milbeaut-smp-sram";
--                        reg = <0xf100 0x20>;
--                };
--        };
-diff --git a/Documentation/devicetree/bindings/sram/sram.yaml b/Documentation/devicetree/bindings/sram/sram.yaml
-index 95d8cc7e2b87..de39e06c1ed9 100644
---- a/Documentation/devicetree/bindings/sram/sram.yaml
-+++ b/Documentation/devicetree/bindings/sram/sram.yaml
-@@ -72,6 +72,7 @@ patternProperties:
-           - rockchip,rk3066-smp-sram
-           - samsung,exynos4210-sysram
-           - samsung,exynos4210-sysram-ns
-+          - socionext,milbeaut-smp-sram
- 
-       reg:
-         description:
-@@ -241,3 +242,17 @@ examples:
-             reg = <0x1000 0x8>;
-         };
-     };
-+
-+  - |
-+    sram@0 {
-+        compatible = "mmio-sram";
-+        reg = <0x0 0x10000>;
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+        ranges = <0 0x0 0x10000>;
-+
-+        smp-sram@f100 {
-+            compatible = "socionext,milbeaut-smp-sram";
-+            reg = <0xf100 0x20>;
-+        };
-+    };
--- 
-2.17.1
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
