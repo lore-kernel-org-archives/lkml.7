@@ -2,323 +2,174 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ABE8CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:16:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CA65CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE22D206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:16:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17986206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:16:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="kCntxG+F"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="tKaxAoJh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729138AbfJUOP7 (ORCPT
+        id S1727144AbfJUOQC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 21 Oct 2019 10:16:02 -0400
+Received: from mail-eopbgr690086.outbound.protection.outlook.com ([40.107.69.86]:23523
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728551AbfJUOP7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 21 Oct 2019 10:15:59 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:36872 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728842AbfJUOP6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 10:15:58 -0400
-Received: by mail-qt1-f196.google.com with SMTP id g50so7073539qtb.4
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 07:15:57 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hTo6Infd3CXDeysucGi7sU6dNYYv+PjU3vunbYK0zgflC88hYtMisAoQ0ysEdJ1fSZIr3Agu8Mo+4kvk9lpkDq3N2g+YzkXLT8OGF97dVifKAu6SJHe6gVmXWXPUFm69TYYFjPilWQKPB7Zp7Nuu27ADviq2buGWqY85fs25vY+do+Pb2iy8z0RIl4OVvZzupIslFy0zphe7BfJE2wbXt5OjWLap/5BqXr85cXdV8D/4c79KBur6511W5n+yVylrIQmt4CSkd+Oe6JB5xkBNNKTArEBJRgkSOkAYPY94iNeWXlF8eap6PeWAdW1w9/2EIWuXJax5WC1E6lyxM4TPxw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tTtI2AgSGAyBr7yiugDE7l54HJqEHszXaHLRsfY7aN0=;
+ b=n0CYA6Y+dgF0Y51mZTB257JWqp+zdiitEqLIvEDjrsvzw0y5NLHkBMInW85szUBKxP99tdcff44f/M4QnETAiL5SRohJhnT70/BbO6xRFLA05lvSesLiCQEJmaGQffWsNHIxzkBnUGo/6qri2BxyqRqtLv+TuBgJSZSc8w0oqy6/q7xhT+eOMwXiZAj5wYgmTrQHoKOI7lQ6cBVTsoCGEz8spYytRT7Oid9d5nUyPhSd5wr7NAQ8c8xGNMuplNWvad6R1y/ftDuXRxhktY7dfDkWiqU072P80w/uSipRcKRwBTqsyeHzjc83MKKtl6srRkYY9wv5wjo0FlgHVmEhBA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=davemloft.net smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=SR4XTutzmthc5d7HZlzvb9fPYpgDWiu5nZW7fLVerx8=;
-        b=kCntxG+F1zGFLNKi29nV21oIr+oWcnNbXh3PUmsWE3G90Dm4KkfQgx0khoIx807KF/
-         Fo1lr/49orQnWqqI6pseXkRQc0bPFDWZ4Yn+lX0tanl/fsf2aafO+az+wHWPEGEQcreU
-         2jcEJTTZ93QcKji+Li9QyTYXDDmqIaVZJnOo+mss3C7COKX9swvfSC1+h5uEyv+bEs8X
-         mzsdRItRKrn4AXS/tfSqpQmM9EA9WwUIVFffPwRHxfv8Ie6G5IWxpCNIQdCoEK0tTg9V
-         0CvjLyXqcJIrNKdc3CDyG4fpx7bjYKzknXwgdyjwPaqpQz+K8iJcsEP7e0bNtwRXWPxF
-         9PnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=SR4XTutzmthc5d7HZlzvb9fPYpgDWiu5nZW7fLVerx8=;
-        b=KnQmoFO1Y6eF8Yqo2TqdcuHJMnRZGUDhbDS1l8lYCMRZsp6B1tv1/xQzwhQImAd3D2
-         0jnQUtffs+M7O3DwqNgbch+j6YpxndOMnogjWyHiEfn2NudD4mt/Z0X7Tt7vNb2ZY670
-         Laz0+fsFDtfins7fQOZ1Xn4lVmDSpq4oMTBjebWSembFYBhNIN0kbHxKu8OsoFu8uU1g
-         YWk4fsY1Ol0rxp2nLo9MqTt6Inuzn96hDVAGQbl6JnNfbUZ12cYqQYiiCgFPPnoyzvqY
-         QPoUcTDKCoXwPY2/x2r9pVp5T/Kl+634uZtPfr4C0bXWZv7E90Aimyft94Qs412LV93D
-         7IbA==
-X-Gm-Message-State: APjAAAX0hOzzG+XoV48JqEydHmn0OAbnCRXbDtR4CylJBfTOQGqOjpBe
-        r5um8xbnzRu7azT0XHDSIE4pqw==
-X-Google-Smtp-Source: APXvYqx0A0iC7aDo3GjKGWsrUQLEpvuI2joDEdM2ghjsafGIxZjhcGWwTQP5TnIKoz1WBOGKbTUiiA==
-X-Received: by 2002:a0c:c10d:: with SMTP id f13mr23889157qvh.88.1571667357222;
-        Mon, 21 Oct 2019 07:15:57 -0700 (PDT)
-Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id h184sm8536827qkf.89.2019.10.21.07.15.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 21 Oct 2019 07:15:56 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH v6 3/4] arm64: use both ZONE_DMA and ZONE_DMA32
-From:   Qian Cai <cai@lca.pw>
-In-Reply-To: <20190911182546.17094-4-nsaenzjulienne@suse.de>
-Date:   Mon, 21 Oct 2019 10:15:55 -0400
-Cc:     catalin.marinas@arm.com, Christoph Hellwig <hch@lst.de>,
-        wahrenst@gmx.net, marc.zyngier@arm.com,
-        Rob Herring <robh+dt@kernel.org>, f.fainelli@gmail.com,
-        will@kernel.org, linux-mm@kvack.org, robin.murphy@arm.com,
-        linux-kernel@vger.kernel.org, mbrugger@suse.com,
-        linux-rpi-kernel@lists.infradead.org, phill@raspberrypi.org,
-        linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <3956E54B-6C7A-4C47-B9B6-75F556EFD3F5@lca.pw>
-References: <20190911182546.17094-1-nsaenzjulienne@suse.de>
- <20190911182546.17094-4-nsaenzjulienne@suse.de>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-X-Mailer: Apple Mail (2.3445.104.11)
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tTtI2AgSGAyBr7yiugDE7l54HJqEHszXaHLRsfY7aN0=;
+ b=tKaxAoJhdKpxmxSCQgLZkcsKn+biq8xuxUBabGd+l4Tnw+IUUMiq5g8roC38sVYGqx6L61znNvj0XNWPc2PQ+fbqRmfSw7ovI10EGl7J4SH5LTaunZMggOK/TFKHIrQjqqO5Gw0KXLLHaI8yg904P2AO0uRh5a/fpr4fge4avnc=
+Received: from SN6PR02CA0016.namprd02.prod.outlook.com (2603:10b6:805:a2::29)
+ by CH2PR02MB6661.namprd02.prod.outlook.com (2603:10b6:610:7c::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2367.24; Mon, 21 Oct
+ 2019 14:15:56 +0000
+Received: from SN1NAM02FT030.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e44::203) by SN6PR02CA0016.outlook.office365.com
+ (2603:10b6:805:a2::29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2367.21 via Frontend
+ Transport; Mon, 21 Oct 2019 14:15:56 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; davemloft.net; dkim=none (message not signed)
+ header.d=none;davemloft.net; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ SN1NAM02FT030.mail.protection.outlook.com (10.152.72.114) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2367.14
+ via Frontend Transport; Mon, 21 Oct 2019 14:15:55 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1iMYTT-0006KF-3t; Mon, 21 Oct 2019 07:15:55 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1iMYTO-0006RU-3c; Mon, 21 Oct 2019 07:15:50 -0700
+Received: from xsj-pvapsmtp01 (maildrop.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x9LEFms3016333;
+        Mon, 21 Oct 2019 07:15:49 -0700
+Received: from [172.30.17.123]
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <michals@xilinx.com>)
+        id 1iMYTM-0006Qp-Nh; Mon, 21 Oct 2019 07:15:48 -0700
+Subject: Re: [PATCH v2 net-next] net: axienet: In kconfig add ARM64 as
+ supported platform
+To:     Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>,
+        davem@davemloft.net, netdev@vger.kernel.org
+Cc:     michal.simek@xilinx.com, anirudha.sarangi@xilinx.com,
+        john.linn@xilinx.com, mchehab+samsung@kernel.org,
+        gregkh@linuxfoundation.org, nicolas.ferre@microchip.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <1571653110-20505-1-git-send-email-radhey.shyam.pandey@xilinx.com>
+From:   Michal Simek <michal.simek@xilinx.com>
+Message-ID: <cbdd6608-804a-086c-1892-1903ec4a7d80@xilinx.com>
+Date:   Mon, 21 Oct 2019 16:15:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <1571653110-20505-1-git-send-email-radhey.shyam.pandey@xilinx.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(376002)(136003)(346002)(396003)(39850400004)(199004)(189003)(305945005)(6246003)(4326008)(23676004)(2486003)(230700001)(47776003)(76176011)(36386004)(58126008)(316002)(36756003)(229853002)(106002)(2906002)(9786002)(50466002)(81156014)(31696002)(478600001)(8676002)(81166006)(8936002)(446003)(6666004)(356004)(5660300002)(31686004)(26005)(336012)(2616005)(44832011)(65956001)(486006)(65806001)(70206006)(426003)(70586007)(126002)(11346002)(476003)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR02MB6661;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 8dc608b8-a8cf-4951-3103-08d756313013
+X-MS-TrafficTypeDiagnostic: CH2PR02MB6661:
+X-Microsoft-Antispam-PRVS: <CH2PR02MB666109E2F97B47E1D22F5370C6690@CH2PR02MB6661.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:1388;
+X-Forefront-PRVS: 0197AFBD92
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: +KLVnFws6PMKBTojAm2CaIKPbpPNuiNpTTFZ9cWledxGvt1ELhOxdEb23KEGRgLhbVhXHax1ziuyEj9KYOMwPHVq2guDGmtiChLNmXtgcLHJQjyZvdawypyE5kYIO32dVppozrORmmb5XL9DjIaeENTPEnLPobfse3zbQyLrgyNJK6yLyJrg5VlE3+wC+pMREYi7uBdSRitTMRuxS5/eFIzcQOi7dP3ncw5avUgMrNuePSQXM4CRtQFEXo3AjqJbIBNrLkmCnRhdoOIb6Jnb8POad34M09VUd3dwoI9Acd0UHpD37QaKY5mS1U5IPxbfjBeyQ8F00qFFEbCDpbiXWvq0tLoqnySR+z2Cpw3gS3gVxHWoEDGakw/fb9ptc1zvhL68Ue26oEQ7rVQVFYZzEkAk/4iqVphbFv/MO59oPrSp1tWimYArEnYgh+4tAuGh
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Oct 2019 14:15:55.5023
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8dc608b8-a8cf-4951-3103-08d756313013
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6661
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-> On Sep 11, 2019, at 2:25 PM, Nicolas Saenz Julienne =
-<nsaenzjulienne@suse.de> wrote:
->=20
-> So far all arm64 devices have supported 32 bit DMA masks for their
-> peripherals. This is not true anymore for the Raspberry Pi 4 as most =
-of
-> it's peripherals can only address the first GB of memory on a total of
-> up to 4 GB.
->=20
-> This goes against ZONE_DMA32's intent, as it's expected for ZONE_DMA32
-> to be addressable with a 32 bit mask. So it was decided to =
-re-introduce
-> ZONE_DMA in arm64.
->=20
-> ZONE_DMA will contain the lower 1G of memory, which is currently the
-> memory area addressable by any peripheral on an arm64 device.
-> ZONE_DMA32 will contain the rest of the 32 bit addressable memory.
->=20
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
->=20
+On 21. 10. 19 12:18, Radhey Shyam Pandey wrote:
+> xilinx axi_emac driver is supported on ZynqMP UltraScale platform.
+> So enable ARCH64 in kconfig. It also removes redundant ARCH_ZYNQ
+> dependency. Basic sanity testing is done on zu+ mpsoc zcu102
+> evaluation board.
+> 
+> Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
 > ---
->=20
-> I kept the Reviewed-by as the last bug solution was proposed by =
-Catalin
->=20
-> Changes in v6:
-> - Fixed bug in max_zone_phys
->=20
-> Changes in v5:
-> - Fixed swiotlb initialization
->=20
-> Changes in v4:
-> - Fixed issue when NUMA=3Dn and ZONE_DMA=3Dn
-> - Merged two max_zone_dma*_phys() functions
->=20
-> Changes in v3:
-> - Used fixed size ZONE_DMA
-> - Fix check befor swiotlb_init()
->=20
-> Changes in v2:
-> - Update comment to reflect new zones split
-> - ZONE_DMA will never be left empty
->=20
-> arch/arm64/Kconfig            |  4 +++
-> arch/arm64/include/asm/page.h |  2 ++
-> arch/arm64/mm/init.c          | 54 +++++++++++++++++++++++++----------
-> 3 files changed, 45 insertions(+), 15 deletions(-)
->=20
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index 6b6362b83004..2dbe0165bd15 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -267,6 +267,10 @@ config GENERIC_CSUM
-> config GENERIC_CALIBRATE_DELAY
-> 	def_bool y
->=20
-> +config ZONE_DMA
-> +	bool "Support DMA zone" if EXPERT
-> +	default y
-> +
-> config ZONE_DMA32
-> 	bool "Support DMA32 zone" if EXPERT
-> 	default y
-> diff --git a/arch/arm64/include/asm/page.h =
-b/arch/arm64/include/asm/page.h
-> index d39ddb258a04..7b8c98830101 100644
-> --- a/arch/arm64/include/asm/page.h
-> +++ b/arch/arm64/include/asm/page.h
-> @@ -38,4 +38,6 @@ extern int pfn_valid(unsigned long);
->=20
-> #include <asm-generic/getorder.h>
->=20
-> +#define ARCH_ZONE_DMA_BITS 30
-> +
-> #endif
-> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-> index 8e9bc64c5878..44f07fdf7a59 100644
-> --- a/arch/arm64/mm/init.c
-> +++ b/arch/arm64/mm/init.c
-> @@ -56,6 +56,13 @@ EXPORT_SYMBOL(physvirt_offset);
-> struct page *vmemmap __ro_after_init;
-> EXPORT_SYMBOL(vmemmap);
->=20
-> +/*
-> + * We create both ZONE_DMA and ZONE_DMA32. ZONE_DMA covers the first =
-1G of
-> + * memory as some devices, namely the Raspberry Pi 4, have =
-peripherals with
-> + * this limited view of the memory. ZONE_DMA32 will cover the rest of =
-the 32
-> + * bit addressable memory area.
-> + */
-> +phys_addr_t arm64_dma_phys_limit __ro_after_init;
-> phys_addr_t arm64_dma32_phys_limit __ro_after_init;
->=20
-> #ifdef CONFIG_KEXEC_CORE
-> @@ -169,15 +176,16 @@ static void __init reserve_elfcorehdr(void)
-> {
-> }
-> #endif /* CONFIG_CRASH_DUMP */
-> +
-> /*
-> - * Return the maximum physical address for ZONE_DMA32 =
-(DMA_BIT_MASK(32)). It
-> - * currently assumes that for memory starting above 4G, 32-bit =
-devices will
-> - * use a DMA offset.
-> + * Return the maximum physical address for a zone with a given =
-address size
-> + * limit. It currently assumes that for memory starting above 4G, =
-32-bit
-> + * devices will use a DMA offset.
->  */
-> -static phys_addr_t __init max_zone_dma32_phys(void)
-> +static phys_addr_t __init max_zone_phys(unsigned int zone_bits)
-> {
-> -	phys_addr_t offset =3D memblock_start_of_DRAM() & =
-GENMASK_ULL(63, 32);
-> -	return min(offset + (1ULL << 32), memblock_end_of_DRAM());
-> +	phys_addr_t offset =3D memblock_start_of_DRAM() & =
-GENMASK_ULL(63, zone_bits);
-> +	return min(offset + (1ULL << zone_bits), =
-memblock_end_of_DRAM());
-> }
->=20
-> #ifdef CONFIG_NUMA
-> @@ -186,6 +194,9 @@ static void __init zone_sizes_init(unsigned long =
-min, unsigned long max)
-> {
-> 	unsigned long max_zone_pfns[MAX_NR_ZONES]  =3D {0};
->=20
-> +#ifdef CONFIG_ZONE_DMA
-> +	max_zone_pfns[ZONE_DMA] =3D PFN_DOWN(arm64_dma_phys_limit);
-> +#endif
-> #ifdef CONFIG_ZONE_DMA32
-> 	max_zone_pfns[ZONE_DMA32] =3D PFN_DOWN(arm64_dma32_phys_limit);
-> #endif
-> @@ -201,13 +212,18 @@ static void __init zone_sizes_init(unsigned long =
-min, unsigned long max)
-> 	struct memblock_region *reg;
-> 	unsigned long zone_size[MAX_NR_ZONES], zhole_size[MAX_NR_ZONES];
-> 	unsigned long max_dma32 =3D min;
-> +	unsigned long max_dma =3D min;
->=20
-> 	memset(zone_size, 0, sizeof(zone_size));
->=20
-> -	/* 4GB maximum for 32-bit only capable devices */
-> +#ifdef CONFIG_ZONE_DMA
-> +	max_dma =3D PFN_DOWN(arm64_dma_phys_limit);
-> +	zone_size[ZONE_DMA] =3D max_dma - min;
-> +	max_dma32 =3D max_dma;
-> +#endif
-> #ifdef CONFIG_ZONE_DMA32
-> 	max_dma32 =3D PFN_DOWN(arm64_dma32_phys_limit);
-> -	zone_size[ZONE_DMA32] =3D max_dma32 - min;
-> +	zone_size[ZONE_DMA32] =3D max_dma32 - max_dma;
-> #endif
-> 	zone_size[ZONE_NORMAL] =3D max - max_dma32;
->=20
-> @@ -219,11 +235,17 @@ static void __init zone_sizes_init(unsigned long =
-min, unsigned long max)
->=20
-> 		if (start >=3D max)
-> 			continue;
-> -
-> +#ifdef CONFIG_ZONE_DMA
-> +		if (start < max_dma) {
-> +			unsigned long dma_end =3D min_not_zero(end, =
-max_dma);
-> +			zhole_size[ZONE_DMA] -=3D dma_end - start;
-> +		}
-> +#endif
-> #ifdef CONFIG_ZONE_DMA32
-> 		if (start < max_dma32) {
-> -			unsigned long dma_end =3D min(end, max_dma32);
-> -			zhole_size[ZONE_DMA32] -=3D dma_end - start;
-> +			unsigned long dma32_end =3D min(end, max_dma32);
-> +			unsigned long dma32_start =3D max(start, =
-max_dma);
-> +			zhole_size[ZONE_DMA32] -=3D dma32_end - =
-dma32_start;
-> 		}
-> #endif
-> 		if (end > max_dma32) {
-> @@ -418,9 +440,11 @@ void __init arm64_memblock_init(void)
->=20
-> 	early_init_fdt_scan_reserved_mem();
->=20
-> -	/* 4GB maximum for 32-bit only capable devices */
-> +	if (IS_ENABLED(CONFIG_ZONE_DMA))
-> +		arm64_dma_phys_limit =3D =
-max_zone_phys(ARCH_ZONE_DMA_BITS);
-> +
-> 	if (IS_ENABLED(CONFIG_ZONE_DMA32))
-> -		arm64_dma32_phys_limit =3D max_zone_dma32_phys();
-> +		arm64_dma32_phys_limit =3D max_zone_phys(32);
-> 	else
-> 		arm64_dma32_phys_limit =3D PHYS_MASK + 1;
->=20
-> @@ -430,7 +454,7 @@ void __init arm64_memblock_init(void)
->=20
-> 	high_memory =3D __va(memblock_end_of_DRAM() - 1) + 1;
->=20
-> -	dma_contiguous_reserve(arm64_dma32_phys_limit);
-> +	dma_contiguous_reserve(arm64_dma_phys_limit ? : =
-arm64_dma32_phys_limit);
-> }
->=20
-> void __init bootmem_init(void)
-> @@ -534,7 +558,7 @@ static void __init free_unused_memmap(void)
-> void __init mem_init(void)
-> {
-> 	if (swiotlb_force =3D=3D SWIOTLB_FORCE ||
-> -	    max_pfn > (arm64_dma32_phys_limit >> PAGE_SHIFT))
-> +	    max_pfn > PFN_DOWN(arm64_dma_phys_limit ? : =
-arm64_dma32_phys_limit))
-> 		swiotlb_init(1);
-> 	else
-> 		swiotlb_force =3D SWIOTLB_NO_FORCE;
-> --=20
-> 2.23.0
->=20
->=20
+> Changes for v2:
+> Remove redundant ARCH_ZYNQ dependency.
+> Modified commit description.
+> ---
+>  drivers/net/ethernet/xilinx/Kconfig | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/xilinx/Kconfig b/drivers/net/ethernet/xilinx/Kconfig
+> index 8d994ce..da11876 100644
+> --- a/drivers/net/ethernet/xilinx/Kconfig
+> +++ b/drivers/net/ethernet/xilinx/Kconfig
+> @@ -6,7 +6,7 @@
+>  config NET_VENDOR_XILINX
+>  	bool "Xilinx devices"
+>  	default y
+> -	depends on PPC || PPC32 || MICROBLAZE || ARCH_ZYNQ || MIPS || X86 || ARM || COMPILE_TEST
+> +	depends on PPC || PPC32 || MICROBLAZE || MIPS || X86 || ARM || ARM64 || COMPILE_TEST
+>  	---help---
+>  	  If you have a network (Ethernet) card belonging to this class, say Y.
+>  
+> @@ -26,11 +26,11 @@ config XILINX_EMACLITE
+>  
+>  config XILINX_AXI_EMAC
+>  	tristate "Xilinx 10/100/1000 AXI Ethernet support"
+> -	depends on MICROBLAZE || X86 || ARM || COMPILE_TEST
+> +	depends on MICROBLAZE || X86 || ARM || ARM64 || COMPILE_TEST
+>  	select PHYLINK
+>  	---help---
+>  	  This driver supports the 10/100/1000 Ethernet from Xilinx for the
+> -	  AXI bus interface used in Xilinx Virtex FPGAs.
+> +	  AXI bus interface used in Xilinx Virtex FPGAs and Soc's.
+>  
+>  config XILINX_LL_TEMAC
+>  	tristate "Xilinx LL TEMAC (LocalLink Tri-mode Ethernet MAC) driver"
+> 
 
-With ZONE_DMA=3Dy, this config will fail to reserve 512M CMA on a =
-server,
+Acked-by: Michal Simek <michal.simek@xilinx.com>
 
-https://raw.githubusercontent.com/cailca/linux-mm/master/arm64.config
+But I can image that others could prefer to remove all dependencies.
 
-CONFIG_DMA_CMA=3Dy
-CONFIG_CMA_SIZE_MBYTES=3D64
-CONFIG_CMA_SIZE_SEL_MBYTES=3Dy
-CONFIG_CMA_ALIGNMENT=3D8
-CONFIG_CMA=3Dy
-CONFIG_CMA_DEBUGFS=3Dy
-CONFIG_CMA_AREAS=3D7
-
-Is this expected?=
+Thanks,
+Michal
