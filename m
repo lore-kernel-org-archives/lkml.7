@@ -2,710 +2,127 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17ECACA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:53:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73E4ECA9EB9
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:54:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE1A62070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:53:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 409FA20830
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:54:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="dVkiXiOe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727967AbfJUJxw (ORCPT
+        id S1727873AbfJUJyZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 05:53:52 -0400
-Received: from mga14.intel.com ([192.55.52.115]:59030 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727951AbfJUJxw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 05:53:52 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 02:53:49 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,323,1566889200"; 
-   d="scan'208";a="196065223"
-Received: from lingshan-mobl5.ccr.corp.intel.com (HELO [10.238.129.136]) ([10.238.129.136])
-  by fmsmga008.fm.intel.com with ESMTP; 21 Oct 2019 02:53:45 -0700
-Subject: Re: [RFC 2/2] vhost: IFC VF vdpa layer
-To:     Jason Wang <jasowang@redhat.com>, mst@redhat.com,
-        alex.williamson@redhat.com
-Cc:     linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        netdev@vger.kernel.org, dan.daly@intel.com,
-        cunming.liang@intel.com, tiwei.bie@intel.com, jason.zeng@intel.com,
-        zhiyuan.lv@intel.com
-References: <20191016013050.3918-1-lingshan.zhu@intel.com>
- <20191016013050.3918-3-lingshan.zhu@intel.com>
- <9495331d-3c65-6f49-dcd9-bfdb17054cf0@redhat.com>
-From:   "Zhu, Lingshan" <lingshan.zhu@intel.com>
-Message-ID: <f65358e9-6728-8260-74f7-176d7511e989@intel.com>
-Date:   Mon, 21 Oct 2019 17:53:45 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.0
-MIME-Version: 1.0
-In-Reply-To: <9495331d-3c65-6f49-dcd9-bfdb17054cf0@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Mon, 21 Oct 2019 05:54:25 -0400
+Received: from mail-eopbgr40063.outbound.protection.outlook.com ([40.107.4.63]:13550
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727649AbfJUJyZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 05:54:25 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cjtNWdNvzkZ7rRP/dxguRbD7LXHE1PqGDqjOovZI/cKPd68P3seNLLZZACQX6ovx8Kx8DwTVgBPIvu97ykxEl2PxigxkRTV4ObbYNDOAk+QTdnAEcdR2i0PRqQqa3OarhqlQb1FNQ2p7r/AWRFoBOCJU36e0Byd5Qum4rt/snACcPAoFDbiSLkIchYoaYqjgWch5mgJg06+eLrVdRKH+Y8g9p2OKe7fIdWGXs2mXyC0NmNbW7cdVq04BYOynj38l5W5rZr6fL1lIrOzXYfuAAbZk5ZZENHBfmUE3v2cfrAxQEblAoBgmror1OS26EwuzNH9+pLIDmpTiZVcQT4qWRg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sw/EplxJm4kiJVwTdlro4d3bdOAzgLRcPlbOLSj8bnI=;
+ b=fJXaz5YFy0BVKYdVV17ztpVD1j1SqOI/DI1m/EpFElHn3IxgxfPn0HjMh0+VVm0niRFDaVZwfLeyx7xKHa/rvvAxe9TQ5jJBhONExPZ3YSg6Sq81kwUMNQBMIVlgNggKjpJ8JkLsO8/xDg5kY0uINmysb9OQZNQheBrb2lrCUthBOq0kRImK6sw/UwRm780S1xgohTVj6S4YOO41OKXm5JabVULOTcwWOCMcLPvs9rfQVLcoc39y+XiAWSvHZBxLR+GMV90/QAu357Kctkw32dJY3G/WoYIRg4yEoaPjc0ZbjSGhRac1T04JcTSWo0z05CiR8PH8ETAwNa58iv11Bw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sw/EplxJm4kiJVwTdlro4d3bdOAzgLRcPlbOLSj8bnI=;
+ b=dVkiXiOerPYHk00SoFFKVPfLs1yTXPf7EPO/UO+0/LYBYxG9HTdS9wPqNqukaLURdfweL7FxbPA7lwWsxYuIcmwBisIeCVutct6QFbACCWjdDVYi6iiD6U9BFVTT+tMaM97GxR7+snyjAH6VCnLnpcbfje9nSbCmzBlJ5a6kaN8=
+Received: from VI1PR04MB4431.eurprd04.prod.outlook.com (20.177.55.205) by
+ VI1PR04MB4559.eurprd04.prod.outlook.com (20.177.57.14) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.28; Mon, 21 Oct 2019 09:54:20 +0000
+Received: from VI1PR04MB4431.eurprd04.prod.outlook.com
+ ([fe80::7cba:52d6:9ae9:e5bb]) by VI1PR04MB4431.eurprd04.prod.outlook.com
+ ([fe80::7cba:52d6:9ae9:e5bb%6]) with mapi id 15.20.2347.028; Mon, 21 Oct 2019
+ 09:54:20 +0000
+From:   Peng Ma <peng.ma@nxp.com>
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Wen He <wen.he_1@nxp.com>, Jiaheng Fan <jiaheng.fan@nxp.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [EXT] [RFT] dmaengine: fsl-qdma: Handle invalid qdma-queue0 IRQ
+Thread-Topic: [EXT] [RFT] dmaengine: fsl-qdma: Handle invalid qdma-queue0 IRQ
+Thread-Index: AQHVesWaY7lZ3xT0I06FGKi10zfOGadk8Kvw
+Date:   Mon, 21 Oct 2019 09:54:20 +0000
+Message-ID: <VI1PR04MB443161476574A4424B0B55B2ED690@VI1PR04MB4431.eurprd04.prod.outlook.com>
+References: <20191004150826.6656-1-krzk@kernel.org>
+In-Reply-To: <20191004150826.6656-1-krzk@kernel.org>
+Accept-Language: zh-CN, en-US
 Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.ma@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 7d33613f-88a9-4191-6512-08d7560ca54a
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: VI1PR04MB4559:|VI1PR04MB4559:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR04MB4559079CEFEE525DF9B8EA32ED690@VI1PR04MB4559.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0197AFBD92
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(366004)(376002)(136003)(39860400002)(346002)(13464003)(199004)(189003)(229853002)(486006)(2906002)(11346002)(186003)(476003)(446003)(66066001)(44832011)(71190400001)(71200400001)(81166006)(256004)(8676002)(6436002)(8936002)(81156014)(6116002)(55016002)(3846002)(99286004)(25786009)(9686003)(6506007)(7736002)(305945005)(66446008)(64756008)(74316002)(5660300002)(52536014)(76176011)(6246003)(102836004)(2501003)(2201001)(33656002)(26005)(76116006)(316002)(478600001)(66476007)(110136005)(66946007)(7696005)(14454004)(66556008)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4559;H:VI1PR04MB4431.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 661A++JJNSOF0eiIzmoD6WppU22v2o50i3FS466ZtD1vcavIMrLosjOkUKFAm2PWC1MQb58DEyX7PnJVXO+K09gh6a23YQpw1yq7/nfJnEKy5IivCiQSHR5RKS0v4Rya7SUkQejqJKsJhc3nNaq3gBur+1RwC4NbIf8wfyppxKatxYcAsp/T9VQmq4HHPGTM3DWzWLU50o1bCxEvpuU9q/lPin9pr+ObqbzR+3cdvPOsSj2WyDR/S3h3ABZW2SP8bekIgaoTwYwAeqoQbsINTag6Zx4Tv6H3gyJtllbGLJbqhQM00QC3U3uWcpYJ/YGl1nWo3Lo+frroLr6zYUr5a998MtaceIgIhipVfXUq+SnMxAGkLmuZbtT9QL6MBQngzGlQObsDrhrMFu+enOZdhbnTSBejqYr7lITULa7Y/Tc=
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7d33613f-88a9-4191-6512-08d7560ca54a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Oct 2019 09:54:20.7185
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: i9p4CX4NPiA0uLQfyXpr6xjLta5/7fvnZ/YYhYfxFLN5XP43BCmgT/HJiSPEOd9o
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4559
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 10/16/2019 6:19 PM, Jason Wang wrote:
->
-> On 2019/10/16 上午9:30, Zhu Lingshan wrote:
->> This commit introduced IFC VF operations for vdpa, which complys to
->> vhost_mdev interfaces, handles IFC VF initialization,
->> configuration and removal.
->>
->> Signed-off-by: Zhu Lingshan <lingshan.zhu@intel.com>
->> ---
->>   drivers/vhost/ifcvf/ifcvf_main.c | 541 
->> +++++++++++++++++++++++++++++++++++++++
->>   1 file changed, 541 insertions(+)
->>   create mode 100644 drivers/vhost/ifcvf/ifcvf_main.c
->>
->> diff --git a/drivers/vhost/ifcvf/ifcvf_main.c 
->> b/drivers/vhost/ifcvf/ifcvf_main.c
->> new file mode 100644
->> index 000000000000..c48a29969a85
->> --- /dev/null
->> +++ b/drivers/vhost/ifcvf/ifcvf_main.c
->> @@ -0,0 +1,541 @@
->> +// SPDX-License-Identifier: GPL-2.0-only
->> +/*
->> + * Copyright (C) 2019 Intel Corporation.
->> + */
->> +
->> +#include <linux/interrupt.h>
->> +#include <linux/module.h>
->> +#include <linux/mdev.h>
->> +#include <linux/pci.h>
->> +#include <linux/sysfs.h>
->> +
->> +#include "ifcvf_base.h"
->> +
->> +#define VERSION_STRING    "0.1"
->> +#define DRIVER_AUTHOR    "Intel Corporation"
->> +#define IFCVF_DRIVER_NAME    "ifcvf"
->> +
->> +static irqreturn_t ifcvf_intr_handler(int irq, void *arg)
->> +{
->> +    struct vring_info *vring = arg;
->> +
->> +    if (vring->cb.callback)
->> +        return vring->cb.callback(vring->cb.private);
->> +
->> +    return IRQ_HANDLED;
->> +}
->> +
->> +static u64 ifcvf_mdev_get_features(struct mdev_device *mdev)
->> +{
->> +    return IFC_SUPPORTED_FEATURES;
->
->
-> I would expect this should be done by querying the hw. Or IFC VF can't 
-> get any update through its firmware?
-
-Hi Jason,
-
-Thanks for your comments, for now driver just support these features.
-
->
->
->> +}
->> +
->> +static int ifcvf_mdev_set_features(struct mdev_device *mdev, u64 
->> features)
->> +{
->> +    struct ifcvf_adapter *adapter = mdev_get_drvdata(mdev);
->> +    struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
->> +
->> +    vf->req_features = features;
->> +
->> +    return 0;
->> +}
->> +
->> +static u64 ifcvf_mdev_get_vq_state(struct mdev_device *mdev, u16 qid)
->> +{
->> +    struct ifcvf_adapter *adapter = mdev_get_drvdata(mdev);
->> +    struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
->> +
->> +    return vf->vring[qid].last_avail_idx;
->
->
-> Does this really work? I'd expect it should be fetched from hw since 
-> it's an internal state.
-for now, it's working, we intend to support LM in next version drivers.
->
->
->> +}
->> +
->> +static int ifcvf_mdev_set_vq_state(struct mdev_device *mdev, u16 
->> qid, u64 num)
->> +{
->> +    struct ifcvf_adapter *adapter = mdev_get_drvdata(mdev);
->> +    struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
->> +
->> +    vf->vring[qid].last_used_idx = num;
->
->
-> I fail to understand why last_used_idx is needed. It looks to me the 
-> used idx in the used ring is sufficient.
-I will remove it.
->
->
->> +    vf->vring[qid].last_avail_idx = num;
->
->
-> Do we need a synchronization with hw immediately here?
->
->
->> +
->> +    return 0;
->> +}
->> +
->> +static int ifcvf_mdev_set_vq_address(struct mdev_device *mdev, u16 idx,
->> +                     u64 desc_area, u64 driver_area,
->> +                     u64 device_area)
->> +{
->> +    struct ifcvf_adapter *adapter = mdev_get_drvdata(mdev);
->> +    struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
->> +
->> +    vf->vring[idx].desc = desc_area;
->> +    vf->vring[idx].avail = driver_area;
->> +    vf->vring[idx].used = device_area;
->> +
->> +    return 0;
->> +}
->> +
->> +static void ifcvf_mdev_set_vq_num(struct mdev_device *mdev, u16 qid, 
->> u32 num)
->> +{
->> +    struct ifcvf_adapter *adapter = mdev_get_drvdata(mdev);
->> +    struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
->> +
->> +    vf->vring[qid].size = num;
->> +}
->> +
->> +static void ifcvf_mdev_set_vq_ready(struct mdev_device *mdev,
->> +                u16 qid, bool ready)
->> +{
->> +
->> +    struct ifcvf_adapter *adapter = mdev_get_drvdata(mdev);
->> +    struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
->> +
->> +    vf->vring[qid].ready = ready;
->> +}
->> +
->> +static bool ifcvf_mdev_get_vq_ready(struct mdev_device *mdev, u16 qid)
->> +{
->> +
->> +    struct ifcvf_adapter *adapter = mdev_get_drvdata(mdev);
->> +    struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
->> +
->> +    return vf->vring[qid].ready;
->> +}
->> +
->> +static void ifcvf_mdev_set_vq_cb(struct mdev_device *mdev, u16 idx,
->> +                 struct virtio_mdev_callback *cb)
->> +{
->> +    struct ifcvf_adapter *adapter = mdev_get_drvdata(mdev);
->> +    struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
->> +
->> +    vf->vring[idx].cb = *cb;
->> +}
->> +
->> +static void ifcvf_mdev_kick_vq(struct mdev_device *mdev, u16 idx)
->> +{
->> +    struct ifcvf_adapter *adapter = mdev_get_drvdata(mdev);
->> +    struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
->> +
->> +    ifcvf_notify_queue(vf, idx);
->> +}
->> +
->> +static u8 ifcvf_mdev_get_status(struct mdev_device *mdev)
->> +{
->> +    struct ifcvf_adapter *adapter = mdev_get_drvdata(mdev);
->> +    struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
->> +
->> +    return vf->status;
->> +}
->> +
->> +static u32 ifcvf_mdev_get_generation(struct mdev_device *mdev)
->> +{
->> +    struct ifcvf_adapter *adapter = mdev_get_drvdata(mdev);
->> +    struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
->> +
->> +    return vf->generation;
->> +}
->> +
->> +static int ifcvf_mdev_get_version(struct mdev_device *mdev)
->> +{
->> +    return VIRTIO_MDEV_VERSION;
->> +}
->> +
->> +static u32 ifcvf_mdev_get_device_id(struct mdev_device *mdev)
->> +{
->> +    return IFCVF_DEVICE_ID;
->> +}
->> +
->> +static u32 ifcvf_mdev_get_vendor_id(struct mdev_device *mdev)
->> +{
->> +    return IFCVF_VENDOR_ID;
->> +}
->> +
->> +static u16 ifcvf_mdev_get_vq_align(struct mdev_device *mdev)
->> +{
->> +    return IFCVF_QUEUE_ALIGNMENT;
->> +}
->> +
->> +static int ifcvf_start_datapath(void *private)
->> +{
->> +    int i, ret;
->> +    struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(private);
->> +
->> +    for (i = 0; i < (IFCVF_MAX_QUEUE_PAIRS * 2); i++) {
->> +        if (!vf->vring[i].ready)
->> +            break;
->
->
-> Looks like error should be returned here?
-agreed!
->
->
->> +
->> +        if (!vf->vring[i].size)
->> +            break;
->> +
->> +        if (!vf->vring[i].desc || !vf->vring[i].avail ||
->> +            !vf->vring[i].used)
->> +            break;
->> +    }
->> +    vf->nr_vring = i;
->> +
->> +    ret = ifcvf_start_hw(vf);
->> +    return ret;
->> +}
->> +
->> +static int ifcvf_stop_datapath(void *private)
->> +{
->> +    struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(private);
->> +    int i;
->> +
->> +    for (i = 0; i < IFCVF_MAX_QUEUES; i++)
->> +        vf->vring[i].cb.callback = NULL;
->
->
-> Any synchronization is needed for the vq irq handler?
-I think even we set callback = NULL, the code is still there, on-going 
-routines would not be effected.
->
->
->> +
->> +    ifcvf_stop_hw(vf);
->> +
->> +    return 0;
->> +}
->> +
->> +static void ifcvf_reset_vring(struct ifcvf_adapter *adapter)
->> +{
->> +    int i;
->> +    struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
->> +
->> +    for (i = 0; i < IFCVF_MAX_QUEUE_PAIRS * 2; i++) {
->> +        vf->vring[i].last_used_idx = 0;
->> +        vf->vring[i].last_avail_idx = 0;
->> +        vf->vring[i].desc = 0;
->> +        vf->vring[i].avail = 0;
->> +        vf->vring[i].used = 0;
->> +        vf->vring[i].ready = 0;
->> +        vf->vring->cb.callback = NULL;
->> +        vf->vring->cb.private = NULL;
->> +    }
->> +}
->> +
->> +static void ifcvf_mdev_set_status(struct mdev_device *mdev, u8 status)
->> +{
->> +    struct ifcvf_adapter *adapter = mdev_get_drvdata(mdev);
->> +    struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
->> +
->> +    vf->status = status;
->> +
->> +    if (status == 0) {
->> +        ifcvf_stop_datapath(adapter);
->> +        ifcvf_reset_vring(adapter);
->> +        return;
->> +    }
->> +
->> +    if (status & VIRTIO_CONFIG_S_DRIVER_OK) {
->> +        ifcvf_start_datapath(adapter);
->> +        return;
->> +    }
->> +}
->> +
->> +static u16 ifcvf_mdev_get_queue_max(struct mdev_device *mdev)
->> +{
->> +    return IFCVF_MAX_QUEUES;
->
->
-> The name is confusing, it was used to return the maximum queue size. 
-> In new version of virtio-mdev, the callback was renamed as 
-> get_vq_num_max().
-will change that.
->
->
->> +}
->> +
->> +static struct virtio_mdev_device_ops ifc_mdev_ops = {
->> +    .get_features  = ifcvf_mdev_get_features,
->> +    .set_features  = ifcvf_mdev_set_features,
->> +    .get_status    = ifcvf_mdev_get_status,
->> +    .set_status    = ifcvf_mdev_set_status,
->> +    .get_queue_max = ifcvf_mdev_get_queue_max,
->> +    .get_vq_state   = ifcvf_mdev_get_vq_state,
->> +    .set_vq_state   = ifcvf_mdev_set_vq_state,
->> +    .set_vq_cb      = ifcvf_mdev_set_vq_cb,
->> +    .set_vq_ready   = ifcvf_mdev_set_vq_ready,
->> +    .get_vq_ready    = ifcvf_mdev_get_vq_ready,
->> +    .set_vq_num     = ifcvf_mdev_set_vq_num,
->> +    .set_vq_address = ifcvf_mdev_set_vq_address,
->> +    .kick_vq        = ifcvf_mdev_kick_vq,
->> +    .get_generation    = ifcvf_mdev_get_generation,
->> +    .get_version    = ifcvf_mdev_get_version,
->> +    .get_device_id    = ifcvf_mdev_get_device_id,
->> +    .get_vendor_id    = ifcvf_mdev_get_vendor_id,
->> +    .get_vq_align    = ifcvf_mdev_get_vq_align,
->> +};
->
->
-> set_config/get_config is missing. It looks to me they are not hard, 
-> just implementing the access to dev_cfg. It's key to make kernel 
-> virtio driver to work.
->
-> And in the new version of virito-mdev, features like _F_LOG_ALL should 
-> be advertised through get_mdev_features.
-IMHO, currently the driver can work without set/get_config, vhost_mdev 
-doesn't call them for now.
->
->
->> +
->> +static int ifcvf_init_msix(struct ifcvf_adapter *adapter)
->> +{
->> +    int vector, i, ret, irq;
->> +    struct pci_dev *pdev = to_pci_dev(adapter->dev);
->> +    struct ifcvf_hw *vf = &adapter->vf;
->> +
->> +    ret = pci_alloc_irq_vectors(pdev, IFCVF_MAX_INTR,
->> +            IFCVF_MAX_INTR, PCI_IRQ_MSIX);
->> +    if (ret < 0) {
->> +        IFC_ERR(adapter->dev, "Failed to alloc irq vectors.\n");
->> +        return ret;
->> +    }
->> +
->> +    for (i = 0; i < IFCVF_MAX_QUEUE_PAIRS * 2; i++) {
->> +        vector = i + IFCVF_MSI_QUEUE_OFF;
->> +        irq = pci_irq_vector(pdev, vector);
->> +        ret = request_irq(irq, ifcvf_intr_handler, 0,
->> +                pci_name(pdev), &vf->vring[i]);
->> +        if (ret) {
->> +            IFC_ERR(adapter->dev,
->> +                "Failed to request irq for vq %d.\n", i);
->> +            return ret;
->> +        }
->> +    }
->
->
-> Do we need to provide fallback when we can't do per vq MSIX?
-I think it would be very rarely that can not get enough vectors.
->
->
->> +
->> +    return 0;
->> +}
->> +
->> +static void ifcvf_destroy_adapter(struct ifcvf_adapter *adapter)
->> +{
->> +    int i, vector, irq;
->> +    struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
->> +    struct pci_dev *pdev = to_pci_dev(adapter->dev);
->> +
->> +    for (i = 0; i < IFCVF_MAX_QUEUE_PAIRS * 2; i++) {
->> +        vector = i + IFCVF_MSI_QUEUE_OFF;
->> +        irq = pci_irq_vector(pdev, vector);
->> +        free_irq(irq, &vf->vring[i]);
->> +    }
->> +}
->> +
->> +static ssize_t name_show(struct kobject *kobj, struct device *dev, 
->> char *buf)
->> +{
->> +    const char *name = "vhost accelerator (virtio ring compatible)";
->> +
->> +    return sprintf(buf, "%s\n", name);
->> +}
->> +MDEV_TYPE_ATTR_RO(name);
->> +
->> +static ssize_t device_api_show(struct kobject *kobj, struct device 
->> *dev,
->> +                   char *buf)
->> +{
->> +    return sprintf(buf, "%s\n", VIRTIO_MDEV_DEVICE_API_STRING);
->> +}
->> +MDEV_TYPE_ATTR_RO(device_api);
->> +
->> +static ssize_t available_instances_show(struct kobject *kobj,
->> +                    struct device *dev, char *buf)
->> +{
->> +    struct pci_dev *pdev = to_pci_dev(dev);
->> +    struct ifcvf_adapter *adapter = pci_get_drvdata(pdev);
->> +
->> +    return sprintf(buf, "%d\n", adapter->mdev_count);
->> +}
->> +
->> +MDEV_TYPE_ATTR_RO(available_instances);
->> +
->> +static ssize_t type_show(struct kobject *kobj,
->> +            struct device *dev, char *buf)
->> +{
->> +    return sprintf(buf, "%s\n", "net");
->> +}
->> +
->> +MDEV_TYPE_ATTR_RO(type);
->> +
->> +
->> +static struct attribute *mdev_types_attrs[] = {
->> +    &mdev_type_attr_name.attr,
->> +    &mdev_type_attr_device_api.attr,
->> +    &mdev_type_attr_available_instances.attr,
->> +    &mdev_type_attr_type.attr,
->> +    NULL,
->> +};
->> +
->> +static struct attribute_group mdev_type_group = {
->> +    .name  = "vdpa_virtio",
->
->
-> To be consistent, it should be "vhost" or "virtio".
-agreed!
->
->
->> +    .attrs = mdev_types_attrs,
->> +};
->> +
->> +static struct attribute_group *mdev_type_groups[] = {
->> +    &mdev_type_group,
->> +    NULL,
->> +};
->> +
->> +const struct attribute_group *mdev_dev_groups[] = {
->> +    NULL,
->> +};
->> +
->> +static int ifcvf_mdev_create(struct kobject *kobj, struct 
->> mdev_device *mdev)
->> +{
->> +    struct device *dev = mdev_parent_dev(mdev);
->> +    struct pci_dev *pdev = to_pci_dev(dev);
->> +    struct ifcvf_adapter *adapter = pci_get_drvdata(pdev);
->> +    int ret = 0;
->> +
->> +    mutex_lock(&adapter->mdev_lock);
->> +
->> +    if (adapter->mdev_count < 1) {
->> +        ret = -EINVAL;
->> +        goto out;
->> +    }
->> +
->> +    mdev_set_class_id(mdev, MDEV_ID_VHOST);
->> +    mdev_set_dev_ops(mdev, &ifc_mdev_ops);
->> +
->> +    mdev_set_drvdata(mdev, adapter);
->> +    mdev_set_iommu_device(mdev_dev(mdev), dev);
->> +
->> +    INIT_LIST_HEAD(&adapter->dma_maps);
->> +    adapter->mdev_count--;
->> +
->> +out:
->> +    mutex_unlock(&adapter->mdev_lock);
->> +    return ret;
->> +}
->> +
->> +static int ifcvf_mdev_remove(struct mdev_device *mdev)
->> +{
->> +    struct device *dev = mdev_parent_dev(mdev);
->> +    struct pci_dev *pdev = to_pci_dev(dev);
->> +    struct ifcvf_adapter *adapter = pci_get_drvdata(pdev);
->> +
->> +    mutex_lock(&adapter->mdev_lock);
->> +    adapter->mdev_count++;
->> +    mutex_unlock(&adapter->mdev_lock);
->> +
->> +    return 0;
->> +}
->> +
->> +static struct mdev_parent_ops ifcvf_mdev_fops = {
->> +    .owner            = THIS_MODULE,
->> +    .supported_type_groups    = mdev_type_groups,
->> +    .mdev_attr_groups    = mdev_dev_groups,
->> +    .create            = ifcvf_mdev_create,
->> +    .remove            = ifcvf_mdev_remove,
->> +};
->> +
->> +static int ifcvf_probe(struct pci_dev *pdev, const struct 
->> pci_device_id *id)
->> +{
->> +    struct device *dev = &pdev->dev;
->> +    struct ifcvf_adapter *adapter;
->> +    struct ifcvf_hw *vf;
->> +    int ret, i;
->> +
->> +    adapter = kzalloc(sizeof(struct ifcvf_adapter), GFP_KERNEL);
->> +    if (adapter == NULL) {
->> +        ret = -ENOMEM;
->> +        goto fail;
->> +    }
->> +
->> +    mutex_init(&adapter->mdev_lock);
->> +    adapter->mdev_count = 1;
->
->
-> So this is per VF based vDPA implementation, which seems not 
-> convenient for management.  Anyhow we can control the creation in PF?
->
-> Thanks
-the driver scope for now doesn't support that, we can add these feature 
-in next releases.
->
->
->> +    adapter->dev = dev;
->> +
->> +    pci_set_drvdata(pdev, adapter);
->> +
->> +    ret = pci_enable_device(pdev);
->> +    if (ret) {
->> +        IFC_ERR(adapter->dev, "Failed to enable device.\n");
->> +        goto free_adapter;
->> +    }
->> +
->> +    ret = pci_request_regions(pdev, IFCVF_DRIVER_NAME);
->> +    if (ret) {
->> +        IFC_ERR(adapter->dev, "Failed to request MMIO region.\n");
->> +        goto disable_device;
->> +    }
->> +
->> +    pci_set_master(pdev);
->> +
->> +    ret = ifcvf_init_msix(adapter);
->> +    if (ret) {
->> +        IFC_ERR(adapter->dev, "Failed to initialize MSIX.\n");
->> +        goto free_msix;
->> +    }
->> +
->> +    vf = &adapter->vf;
->> +    for (i = 0; i < IFCVF_PCI_MAX_RESOURCE; i++) {
->> +        vf->mem_resource[i].phys_addr = pci_resource_start(pdev, i);
->> +        vf->mem_resource[i].len = pci_resource_len(pdev, i);
->> +        if (!vf->mem_resource[i].len) {
->> +            vf->mem_resource[i].addr = NULL;
->> +            continue;
->> +        }
->> +
->> +        vf->mem_resource[i].addr = pci_iomap_range(pdev, i, 0,
->> +                vf->mem_resource[i].len);
->> +        if (!vf->mem_resource[i].addr) {
->> +            IFC_ERR(adapter->dev, "Failed to map IO resource %d\n",
->> +                i);
->> +            return -1;
->> +        }
->> +    }
->> +
->> +    if (ifcvf_init_hw(vf, pdev) < 0)
->> +        return -1;
->> +
->> +    ret = mdev_register_device(dev, &ifcvf_mdev_fops);
->> +    if (ret) {
->> +        IFC_ERR(adapter->dev,  "Failed to register mdev device\n");
->> +        goto destroy_adapter;
->> +    }
->> +
->> +    return 0;
->> +
->> +destroy_adapter:
->> +    ifcvf_destroy_adapter(adapter);
->> +free_msix:
->> +    pci_free_irq_vectors(pdev);
->> +    pci_release_regions(pdev);
->> +disable_device:
->> +    pci_disable_device(pdev);
->> +free_adapter:
->> +    kfree(adapter);
->> +fail:
->> +    return ret;
->> +}
->> +
->> +static void ifcvf_remove(struct pci_dev *pdev)
->> +{
->> +    struct device *dev = &pdev->dev;
->> +    struct ifcvf_adapter *adapter = pci_get_drvdata(pdev);
->> +    struct ifcvf_hw *vf;
->> +    int i;
->> +
->> +    mdev_unregister_device(dev);
->> +
->> +    vf = &adapter->vf;
->> +    for (i = 0; i < IFCVF_PCI_MAX_RESOURCE; i++) {
->> +        if (vf->mem_resource[i].addr) {
->> +            pci_iounmap(pdev, vf->mem_resource[i].addr);
->> +            vf->mem_resource[i].addr = NULL;
->> +        }
->> +    }
->> +
->> +    ifcvf_destroy_adapter(adapter);
->> +    pci_free_irq_vectors(pdev);
->> +
->> +    pci_release_regions(pdev);
->> +    pci_disable_device(pdev);
->> +
->> +    kfree(adapter);
->> +}
->> +
->> +static struct pci_device_id ifcvf_pci_ids[] = {
->> +    { PCI_DEVICE_SUB(IFCVF_VENDOR_ID,
->> +            IFCVF_DEVICE_ID,
->> +            IFCVF_SUBSYS_VENDOR_ID,
->> +            IFCVF_SUBSYS_DEVICE_ID) },
->> +    { 0 },
->> +};
->> +MODULE_DEVICE_TABLE(pci, ifcvf_pci_ids);
->> +
->> +static struct pci_driver ifcvf_driver = {
->> +    .name     = IFCVF_DRIVER_NAME,
->> +    .id_table = ifcvf_pci_ids,
->> +    .probe    = ifcvf_probe,
->> +    .remove   = ifcvf_remove,
->> +};
->> +
->> +static int __init ifcvf_init_module(void)
->> +{
->> +    int ret;
->> +
->> +    ret = pci_register_driver(&ifcvf_driver);
->> +    return ret;
->> +}
->> +
->> +static void __exit ifcvf_exit_module(void)
->> +{
->> +    pci_unregister_driver(&ifcvf_driver);
->> +}
->> +
->> +module_init(ifcvf_init_module);
->> +module_exit(ifcvf_exit_module);
->> +
->> +MODULE_LICENSE("GPL v2");
->> +MODULE_VERSION(VERSION_STRING);
->> +MODULE_AUTHOR(DRIVER_AUTHOR);
+SGkgS3J6eXN6dG9mLA0KDQpUaGFua3MgZm9yIHlvdXIgcGF0Y2guDQpSZXZpZXdlZC1ieTogUGVu
+ZyBNYSA8cGVuZy5tYUBueHAuY29tPg0KVGVzdGVkLWJ5OiBQZW5nIE1hIDxwZW5nLm1hQG54cC5j
+b20+DQoNCkJlc3QgUmVnYXJkcywNClBlbmcNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0K
+PkZyb206IEtyenlzenRvZiBLb3psb3dza2kgPGtyemtAa2VybmVsLm9yZz4NCj5TZW50OiAyMDE5
+xOoxMNTCNMjVIDIzOjA4DQo+VG86IFZpbm9kIEtvdWwgPHZrb3VsQGtlcm5lbC5vcmc+OyBEYW4g
+V2lsbGlhbXMgPGRhbi5qLndpbGxpYW1zQGludGVsLmNvbT47DQo+UGVuZyBNYSA8cGVuZy5tYUBu
+eHAuY29tPjsgV2VuIEhlIDx3ZW4uaGVfMUBueHAuY29tPjsgSmlhaGVuZyBGYW4NCj48amlhaGVu
+Zy5mYW5AbnhwLmNvbT47IEtyenlzenRvZiBLb3psb3dza2kgPGtyemtAa2VybmVsLm9yZz47DQo+
+ZG1hZW5naW5lQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZw0K
+PlN1YmplY3Q6IFtFWFRdIFtSRlRdIGRtYWVuZ2luZTogZnNsLXFkbWE6IEhhbmRsZSBpbnZhbGlk
+IHFkbWEtcXVldWUwIElSUQ0KPg0KPkNhdXRpb246IEVYVCBFbWFpbA0KPg0KPnBsYXRmb3JtX2dl
+dF9pcnFfYnluYW1lKCkgbWlnaHQgcmV0dXJuIC1lcnJubyB3aGljaCBsYXRlciB3b3VsZCBiZSBj
+YXN0IHRvIGFuDQo+dW5zaWduZWQgaW50IGFuZCB1c2VkIGluIElSUSBoYW5kbGluZyBjb2RlIGxl
+YWRpbmcgdG8gdXNhZ2Ugb2Ygd3JvbmcgSUQgYW5kDQo+ZXJyb3JzIGFib3V0IHdyb25nIGlycV9i
+YXNlLg0KPg0KPlNpZ25lZC1vZmYtYnk6IEtyenlzenRvZiBLb3psb3dza2kgPGtyemtAa2VybmVs
+Lm9yZz4NCj4NCj4tLS0NCj4NCj5Ob3QgbWFya2luZyBhcyBjYy1zdGFibGUgYXMgdGhpcyB3YXMg
+bm90IHJlcHJvZHVjZWQgYW5kIG5vdCB0ZXN0ZWQuDQo+LS0tDQo+IGRyaXZlcnMvZG1hL2ZzbC1x
+ZG1hLmMgfCAzICsrKw0KPiAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspDQo+DQo+ZGlm
+ZiAtLWdpdCBhL2RyaXZlcnMvZG1hL2ZzbC1xZG1hLmMgYi9kcml2ZXJzL2RtYS9mc2wtcWRtYS5j
+IGluZGV4DQo+MDY2NjRmYmQyZDkxLi44OTc5MjA4M2Q2MmMgMTAwNjQ0DQo+LS0tIGEvZHJpdmVy
+cy9kbWEvZnNsLXFkbWEuYw0KPisrKyBiL2RyaXZlcnMvZG1hL2ZzbC1xZG1hLmMNCj5AQCAtMTE1
+NSw2ICsxMTU1LDkgQEAgc3RhdGljIGludCBmc2xfcWRtYV9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1f
+ZGV2aWNlDQo+KnBkZXYpDQo+ICAgICAgICAgICAgICAgIHJldHVybiByZXQ7DQo+DQo+ICAgICAg
+ICBmc2xfcWRtYS0+aXJxX2Jhc2UgPSBwbGF0Zm9ybV9nZXRfaXJxX2J5bmFtZShwZGV2LA0KPiJx
+ZG1hLXF1ZXVlMCIpOw0KPisgICAgICAgaWYgKGZzbF9xZG1hLT5pcnFfYmFzZSA8IDApDQo+KyAg
+ICAgICAgICAgICAgIHJldHVybiBmc2xfcWRtYS0+aXJxX2Jhc2U7DQo+Kw0KPiAgICAgICAgZnNs
+X3FkbWEtPmZlYXR1cmUgPSBvZl9wcm9wZXJ0eV9yZWFkX2Jvb2wobnAsICJiaWctZW5kaWFuIik7
+DQo+ICAgICAgICBJTklUX0xJU1RfSEVBRCgmZnNsX3FkbWEtPmRtYV9kZXYuY2hhbm5lbHMpOw0K
+Pg0KPi0tDQo+Mi4xNy4xDQoNCg==
