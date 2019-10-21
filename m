@@ -2,144 +2,212 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A165CA9EBA
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:59:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73170CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:00:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 309A12070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:59:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34A992070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:00:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A+lOYOm+"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="E21aNDbX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727956AbfJUJ7Q (ORCPT
+        id S1727963AbfJUKAE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 05:59:16 -0400
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:38179 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726725AbfJUJ7O (ORCPT
+        Mon, 21 Oct 2019 06:00:04 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:40830 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727735AbfJUKAD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 05:59:14 -0400
-Received: by mail-ua1-f68.google.com with SMTP id 107so3615915uau.5
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 02:59:14 -0700 (PDT)
+        Mon, 21 Oct 2019 06:00:03 -0400
+Received: by mail-ot1-f65.google.com with SMTP id y39so10448626ota.7
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 03:00:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=pdHS5iTjhH216W3OQmstavgIx2TJJX3EShTQ+j4ScZ4=;
-        b=A+lOYOm+Xr9/QoAPbGmRqhJkdtF0Lqe8WUL4ACj5RU0nNNF8swHXxJ1znB4G8Os5Ny
-         GFNaGZ/ejdu+ewHfdHOPCmruyouYE59ddCzoE/xVdTrwx+9jDUvHxy7BDp9wIDVdNxfI
-         /6ZVUUwI4YOYuKQGiiojp4zvyT6amzLfph0exWZKznf04jiM3DxdRAExfvqYeyeqcqdD
-         +jHYiIvYbVFtFjJ+6C1ZbvLjFHV0Oba7w+6LuMl93+fW5xmlBomtFj1iieYNFONPPx+n
-         GuW5fPipC9llariB4WKqkEzYSA5LiCXyADKzbRoQItF2MbOokfHyNH6+nW64EQTg2+/Q
-         SDPg==
+        bh=2hHJ5NLcnxlF/35z8dPd6x7teJob8DJgzbVJAWB7Dd0=;
+        b=E21aNDbXg874GinAApeZ/EftmLYQq+nttZxK1wdNrGsnWFeKvlbsM3rgwuKDu2kute
+         UAakWBm04O5eVwtO6AGesMaWKD62BbI0PQmrSdzdI6MbBg0GmEIYXr8deCLc+JA+26I3
+         HZ44l1406jnBi4ERR8aPviUs0Nx7u/9vAQ+zTQu+ieJlXbEDS9kvFAari5ip0p4VcXyo
+         a4hZT4m1QKxftprG8S7DCG6Q6Ytpm3ZSPwz51JsfSoGoGQsCmfmRIXDJbPA+9sNHwhjR
+         ZfidHjhvVWLLnPnlfPowQ6xTbLfv18wym4HZMXg2M0wNRJK1/I1QnXPNvR/chKz2sHF9
+         Q9lQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=pdHS5iTjhH216W3OQmstavgIx2TJJX3EShTQ+j4ScZ4=;
-        b=ucng4PM05dXXVUzGRt14FpSoRiLkM/0hy2b+A5/tPSMOoUEDrEvR5uksHIZO0Sf7XI
-         0LZrO4c87PsaFAck0u6A314Wf2S0aQ9R4jSR6atuv09dTikgpo/5S57FGVvG8WfCHh0I
-         hdZp3GGE3YnwabrclP1IjJz9LXrQd/lif9rISYoDF2WYdov+ajl1/rFoDyHQRqrwpGIJ
-         9ldGawXUVgQ3Zs5e/uXDrsk1lD1O8E7Bbkify9KfF+Lpkn8TnbzWsob2aC3tXGvJQTjZ
-         ABvyZNcYo3S1gM/bSLlZLR2sQ3kCGJ9bkQkR0kmegdcRzm9RGfRmKvNCiQSNCRxYtpuj
-         FmdA==
-X-Gm-Message-State: APjAAAWXwDPeT93eA0ItFrLNn4dTkTLzAHU+7PI6nyQOBvqZLLZx0+8G
-        dus7WdQMnKnl72PulG4nTJoOr218G+qYVB8WiMUaQA==
-X-Google-Smtp-Source: APXvYqyX35z25w9uC+afBeqWkMX+7aKojU6riMDxod1s9TtFAaRTKL1Dky4gIujxC0cprlM32BbtJAeRhAkOs/Lhxl0=
-X-Received: by 2002:ab0:5a97:: with SMTP id w23mr2075364uae.129.1571651953620;
- Mon, 21 Oct 2019 02:59:13 -0700 (PDT)
+        bh=2hHJ5NLcnxlF/35z8dPd6x7teJob8DJgzbVJAWB7Dd0=;
+        b=U+ahE1TKK0X+W4eg8m31iHUs5n4xZwVDpyrDh7D8R9I9YAtKCUP8z9hSLu13PLM77z
+         v6nwMnGV0tLL9deJYNHKJjcq6XPZI5ISiJWf0/ABdLePqoanBJTCETpyJnIPGqkHEego
+         WEoWuflVzGaIai+M9M6kS5h7WG3i0PFtE+RUFVPOFM2Gpm+PxfL6FKM0RqgEZ9IJbuGG
+         tpYN3C8KfqkhO4y3SbJBDplHpcgynzL6jYelg3U0ZWTScLdIXf+KdctLH385z/XMgZ6n
+         IiUTZpxmvb2Cxb9ISwvpjwNmxsQ8X/My3vCuZDPYEPKzy+vdJ6lpoR9ZY33obCWqVPbM
+         KEOg==
+X-Gm-Message-State: APjAAAVEDV5fNZNYLpu8+m3enwkIWPJeaFrbShzVsaZokN5tneAMkEpo
+        8Hde0b4r+92cFY5gUE9YauIBGKzOvlKt7bAoapKwLA==
+X-Google-Smtp-Source: APXvYqw7KADt3Q+rJfurGSwIEXvyWK+xAO6rYiiCArCGLJXYRfHz3OhWGnHBPy3LnT7evTgEJ7vFMdpcp1jylNVbfvo=
+X-Received: by 2002:a9d:5f0f:: with SMTP id f15mr636415oti.251.1571652001826;
+ Mon, 21 Oct 2019 03:00:01 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191018154052.1276506-1-arnd@arndb.de> <20191018154201.1276638-5-arnd@arndb.de>
-In-Reply-To: <20191018154201.1276638-5-arnd@arndb.de>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 21 Oct 2019 11:58:37 +0200
-Message-ID: <CAPDyKFqHoPOPAA_0WpxQUjBTXJ-5BfMbcNXhFNr7rv3RObsgow@mail.gmail.com>
-Subject: Re: [PATCH 05/46] ARM: pxa: split up mach/hardware.h
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Mark Brown <broonie@kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        linux-mtd@lists.infradead.org, linux-rtc@vger.kernel.org,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        linux-watchdog@vger.kernel.org, alsa-devel@alsa-project.org
+References: <20191020173010.GA14744@avx2> <CANpmjNPzkYQjQ1mtJ6-h+6-=igD=GSnN9Sr6B6jpXrH9UJEUxg@mail.gmail.com>
+In-Reply-To: <CANpmjNPzkYQjQ1mtJ6-h+6-=igD=GSnN9Sr6B6jpXrH9UJEUxg@mail.gmail.com>
+From:   Marco Elver <elver@google.com>
+Date:   Mon, 21 Oct 2019 11:59:50 +0200
+Message-ID: <CANpmjNPfrUwKmm2GCUFY9UsoEN1EhgaOSc=w_cLChHtAua=L7Q@mail.gmail.com>
+Subject: Re: [PATCH] proc: fix inode uid/gid writeback race
+To:     Alexey Dobriyan <adobriyan@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, viro@zeniv.linux.org.uk
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 18 Oct 2019 at 17:43, Arnd Bergmann <arnd@arndb.de> wrote:
+On Mon, 21 Oct 2019 at 11:24, Marco Elver <elver@google.com> wrote:
 >
-> The mach/hardware.h is included in lots of places, and it provides
-> three different things on pxa:
+> On Sun, 20 Oct 2019 at 19:30, Alexey Dobriyan <adobriyan@gmail.com> wrote:
+> >
+> > (euid, egid) pair is snapshotted correctly from task under RCU,
+> > but writeback to inode can be done in any order.
+> >
+> > Fix by doing writeback under inode->i_lock where necessary
+> > (/proc/* , /proc/*/fd/* , /proc/*/map_files/* revalidate).
+> >
+> > Reported-by: syzbot+e392f8008a294fdf8891@syzkaller.appspotmail.com
+> > Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
+> > ---
 >
-> - the cpu_is_pxa* macros
-> - an indirect inclusion of mach/addr-map.h
-> - the __REG() and io_pv2() helper macros
+> Thanks!
 >
-> Split it up into separate <linux/soc/pxa/cpu.h> and mach/pxa-regs.h
-> headers, then change all the files that use mach/hardware.h to
-> include the exact set of those three headers that they actually
-> need, allowing for further more targeted cleanup.
+> This certainly fixes the problem of inconsistent uid/gid pair due to
+> racing writebacks, as well as the data-race. If that is the only
+> purpose of this patch, then from what I see this is fine:
 >
-> linux/soc/pxa/cpu.h can remain permanently exported and is now in
-> a global location along with similar headers. pxa-regs.h and
-> addr-map.h are only used in a very small number of drivers now
-> and can be moved to arch/arm/mach-pxa/ directly when those drivers
-> are to pass the necessary data as resources.
+> Acked-by: Marco Elver <elver@google.com>
 >
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: Viresh Kumar <viresh.kumar@linaro.org>
-> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> Cc: Pavel Machek <pavel@ucw.cz>
-> Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> Cc: Dominik Brodowski <linux@dominikbrodowski.net>
-> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Guenter Roeck <linux@roeck-us.net>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: linux-clk@vger.kernel.org
-> Cc: linux-pm@vger.kernel.org
-> Cc: linux-input@vger.kernel.org
-> Cc: linux-leds@vger.kernel.org
-> Cc: linux-mmc@vger.kernel.org
-> Cc: linux-mtd@lists.infradead.org
-> Cc: linux-rtc@vger.kernel.org
-> Cc: linux-usb@vger.kernel.org
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: linux-fbdev@vger.kernel.org
-> Cc: linux-watchdog@vger.kernel.org
-> Cc: alsa-devel@alsa-project.org
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> However, there is probably still a more fundamental problem as outlined below.
+>
+> >  fs/proc/base.c     |   25 +++++++++++++++++++++++--
+> >  fs/proc/fd.c       |    2 +-
+> >  fs/proc/internal.h |    2 ++
+> >  3 files changed, 26 insertions(+), 3 deletions(-)
+> >
+> > --- a/fs/proc/base.c
+> > +++ b/fs/proc/base.c
+> > @@ -1743,6 +1743,25 @@ void task_dump_owner(struct task_struct *task, umode_t mode,
+> >         *rgid = gid;
+> >  }
+> >
+> > +/* use if inode is live */
+> > +void task_dump_owner_to_inode(struct task_struct *task, umode_t mode,
+> > +                             struct inode *inode)
+> > +{
+> > +       kuid_t uid;
+> > +       kgid_t gid;
+> > +
+> > +       task_dump_owner(task, mode, &uid, &gid);
+> > +       /*
+> > +        * There is no atomic "change all credentials at once" system call,
+> > +        * guaranteeing more than _some_ snapshot from "struct cred" ends up
+> > +        * in inode is not possible.
+> > +        */
+> > +       spin_lock(&inode->i_lock);
+> > +       inode->i_uid = uid;
+> > +       inode->i_gid = gid;
+> > +       spin_unlock(&inode->i_lock);
+>
+> 2 tasks can still race here, and the inconsistent scenario I outlined in
+> https://lore.kernel.org/linux-fsdevel/000000000000328b2905951a7667@google.com/
+> could still happen I think (although extremely unlikely). Mainly,
+> causality may still be violated -- but I may be wrong as I don't know
+> the rest of the code (so please be critical of my suggestion).
+>
+> The problem is that if 2 threads race here, one has snapshotted old
+> uid/gid, and the other the new uid/gid. Then it is still possible for
+> the old uid/gid to be written back after new uid/gid, which would
+> result in this bad scenario:
+>
+> === TASK 1 ===
+> | seteuid(1000);
+> | seteuid(0);
+> | stat("/proc/<pid-of-task-1>", &fstat);
+> | assert(fstat.st_uid == 0);  // fails
+> === TASK 2 ===
+> | stat("/proc/<pid-of-task-1>", ...);
+>
+> AFAIK it's not something that can easily be fixed without some
+> timestamp on the uid/gid pair (timestamp updated after setuid/seteuid
+> etc) obtained in the RCU reader critical section. Then in this
+> critical section, uid/gid should only be written if the current pair
+> in inode is older according to snapshot timestamp.
 
-[...]
+Note that timestamp is probably wrong here, but rather some kind of
+sequence number would be needed.
 
-For the mmc part:
-
-Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
+> > +}
+> > +
+> >  struct inode *proc_pid_make_inode(struct super_block * sb,
+> >                                   struct task_struct *task, umode_t mode)
+> >  {
+> > @@ -1769,6 +1788,7 @@ struct inode *proc_pid_make_inode(struct super_block * sb,
+> >         if (!ei->pid)
+> >                 goto out_unlock;
+> >
+> > +       /* fresh inode -- no races */
+> >         task_dump_owner(task, 0, &inode->i_uid, &inode->i_gid);
+> >         security_task_to_inode(task, inode);
+> >
+> > @@ -1802,6 +1822,7 @@ int pid_getattr(const struct path *path, struct kstat *stat,
+> >                          */
+> >                         return -ENOENT;
+> >                 }
+> > +               /* "struct kstat" is thread local, atomic snapshot is enough */
+> >                 task_dump_owner(task, inode->i_mode, &stat->uid, &stat->gid);
+> >         }
+> >         rcu_read_unlock();
+> > @@ -1815,7 +1836,7 @@ int pid_getattr(const struct path *path, struct kstat *stat,
+> >   */
+> >  void pid_update_inode(struct task_struct *task, struct inode *inode)
+> >  {
+> > -       task_dump_owner(task, inode->i_mode, &inode->i_uid, &inode->i_gid);
+> > +       task_dump_owner_to_inode(task, inode->i_mode, inode);
+> >
+> >         inode->i_mode &= ~(S_ISUID | S_ISGID);
+> >         security_task_to_inode(task, inode);
+> > @@ -1990,7 +2011,7 @@ static int map_files_d_revalidate(struct dentry *dentry, unsigned int flags)
+> >         mmput(mm);
+> >
+> >         if (exact_vma_exists) {
+> > -               task_dump_owner(task, 0, &inode->i_uid, &inode->i_gid);
+> > +               task_dump_owner_to_inode(task, 0, inode);
+> >
+> >                 security_task_to_inode(task, inode);
+> >                 status = 1;
+> > --- a/fs/proc/fd.c
+> > +++ b/fs/proc/fd.c
+> > @@ -101,7 +101,7 @@ static bool tid_fd_mode(struct task_struct *task, unsigned fd, fmode_t *mode)
+> >  static void tid_fd_update_inode(struct task_struct *task, struct inode *inode,
+> >                                 fmode_t f_mode)
+> >  {
+> > -       task_dump_owner(task, 0, &inode->i_uid, &inode->i_gid);
+> > +       task_dump_owner_to_inode(task, 0, inode);
+> >
+> >         if (S_ISLNK(inode->i_mode)) {
+> >                 unsigned i_mode = S_IFLNK;
+> > --- a/fs/proc/internal.h
+> > +++ b/fs/proc/internal.h
+> > @@ -123,6 +123,8 @@ static inline struct task_struct *get_proc_task(const struct inode *inode)
+> >
+> >  void task_dump_owner(struct task_struct *task, umode_t mode,
+> >                      kuid_t *ruid, kgid_t *rgid);
+> > +void task_dump_owner_to_inode(struct task_struct *task, umode_t mode,
+> > +                             struct inode *inode);
+> >
+> >  unsigned name_to_int(const struct qstr *qstr);
+> >  /*
