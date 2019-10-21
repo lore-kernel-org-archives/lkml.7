@@ -2,143 +2,123 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C1C6CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 00:45:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2D17CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 00:49:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C17F21A4A
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 00:45:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B994D21A4A
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 00:49:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571618996;
+	bh=QR09s6vtpFYE53JDOxSGUtkXPL4lrs4CX2UWNH0WmKM=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=p2cXXKpN5tBGKdWhXDwE4mDPs8DsE+/IPMxpIkkB9EX6tSqCf2CpXUKhJafQYo6bR
+	 3PSBrbUSvqOQmQ/H9WPkM7IUUuLokTcKUDg3Cj3HsGy0xDBM6mgfYU0NLrRo7YmOwD
+	 G1nWFZwpA9ogWwsxbl+ARI5unARMf5B3eXMeDFSc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726800AbfJUApn (ORCPT
+        id S1726810AbfJUAtv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 20 Oct 2019 20:45:43 -0400
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:35038 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726597AbfJUApm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 20 Oct 2019 20:45:42 -0400
-Received: from dread.disaster.area (pa49-180-40-48.pa.nsw.optusnet.com.au [49.180.40.48])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id EA6A936401C;
-        Mon, 21 Oct 2019 11:45:37 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1iMLpI-0002rU-GA; Mon, 21 Oct 2019 11:45:36 +1100
-Date:   Mon, 21 Oct 2019 11:45:36 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     ira.weiny@intel.com
-Cc:     linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 5/5] fs/xfs: Allow toggle of physical DAX flag
-Message-ID: <20191021004536.GD8015@dread.disaster.area>
-References: <20191020155935.12297-1-ira.weiny@intel.com>
- <20191020155935.12297-6-ira.weiny@intel.com>
+        Sun, 20 Oct 2019 20:49:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45654 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726597AbfJUAtv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 20 Oct 2019 20:49:51 -0400
+Received: from paulmck-ThinkPad-P72 (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FDE3218BA;
+        Mon, 21 Oct 2019 00:49:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571618990;
+        bh=QR09s6vtpFYE53JDOxSGUtkXPL4lrs4CX2UWNH0WmKM=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=dQQvIa5qK0T9YKeOi/rFNl7iXlGyHKTs5lKnSip0dBTVk+hu6ROqBptLZy566ki38
+         PhbQL8eKY9j3cyTR6HEmnieoNdu8n3mUxk0VxlEy68TN55AZJtPUVmt8lMO0v/sOK/
+         cLEQk9EoUzqvFB+gjv1g7lBYV0UiJc6ELCtKhXP8=
+Date:   Sun, 20 Oct 2019 17:49:49 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Yi Wang <wang.yi59@zte.com.cn>
+Cc:     josh@joshtriplett.org, rostedt@goodmis.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        joel@joelfernandes.org, rcu@vger.kernel.org,
+        linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
+        up2wing@gmail.com, wang.liang82@zte.com.cn
+Subject: Re: [PATCH] rcu/rcu_segcblist: fix -Wmissing-prototypes warnings
+Message-ID: <20191021004949.GN2588@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <1571615395-3657-1-git-send-email-wang.yi59@zte.com.cn>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191020155935.12297-6-ira.weiny@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=G6BsK5s5 c=1 sm=1 tr=0
-        a=y881pOMu+B+mZdf5UrsJdA==:117 a=y881pOMu+B+mZdf5UrsJdA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=XobE76Q3jBoA:10
-        a=QyXUC8HyAAAA:8 a=7-415B0cAAAA:8 a=hWqqfTRvkZgBDQNmCT4A:9
-        a=cV2GjQ2AOK1rOS_g:21 a=QTE3axTs5XAi6-A_:21 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1571615395-3657-1-git-send-email-wang.yi59@zte.com.cn>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Oct 20, 2019 at 08:59:35AM -0700, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
+On Mon, Oct 21, 2019 at 07:49:55AM +0800, Yi Wang wrote:
+> We get these warnings when build kernel W=1:
+> kernel/rcu/rcu_segcblist.c:91:6: warning: no previous prototype for ‘rcu_segcblist_set_len’ [-Wmissing-prototypes]
+> kernel/rcu/rcu_segcblist.c:107:6: warning: no previous prototype for ‘rcu_segcblist_add_len’ [-Wmissing-prototypes]
+> kernel/rcu/rcu_segcblist.c:137:6: warning: no previous prototype for ‘rcu_segcblist_xchg_len’ [-Wmissing-prototypes]
 > 
-> Switching between DAX and non-DAX on a file is racy with respect to data
-> operations.  However, if no data is involved the flag is safe to switch.
+> Commit eda669a6a2c5 ("rcu/nocb: Atomic ->len field in rcu_segcblist
+> structure") introduced this, and make the functions static to fix
+> them.
 > 
-> Allow toggling the physical flag if a file is empty.  The file length
-> check is not racy with respect to other operations as it is performed
-> under XFS_MMAPLOCK_EXCL and XFS_IOLOCK_EXCL locks.
-> 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
+
+Good catch!
+
+However, both Ben Dooks, commit 292d1bb2 ("rcu: Several rcu_segcblist
+functions can be static"), and ultimately the kbuild test robot beat
+you to it.  This commit is still in -rcu, but will be part of my pull
+request to -tip in a couple of weeks.
+
+							Thanx, Paul
+
 > ---
->  fs/xfs/xfs_ioctl.c | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
+>  kernel/rcu/rcu_segcblist.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
-> diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-> index d3a7340d3209..3839684c249b 100644
-> --- a/fs/xfs/xfs_ioctl.c
-> +++ b/fs/xfs/xfs_ioctl.c
-> @@ -33,6 +33,7 @@
->  #include "xfs_sb.h"
->  #include "xfs_ag.h"
->  #include "xfs_health.h"
-> +#include "libxfs/xfs_dir2.h"
+> diff --git a/kernel/rcu/rcu_segcblist.c b/kernel/rcu/rcu_segcblist.c
+> index 495c58c..cbc87b8 100644
+> --- a/kernel/rcu/rcu_segcblist.c
+> +++ b/kernel/rcu/rcu_segcblist.c
+> @@ -88,7 +88,7 @@ struct rcu_head *rcu_cblist_dequeue(struct rcu_cblist *rclp)
+>  }
 >  
->  #include <linux/mount.h>
->  #include <linux/namei.h>
-> @@ -1232,12 +1233,10 @@ xfs_diflags_to_linux(
->  		inode->i_flags |= S_NOATIME;
->  	else
->  		inode->i_flags &= ~S_NOATIME;
-> -#if 0	/* disabled until the flag switching races are sorted out */
->  	if (xflags & FS_XFLAG_DAX)
->  		inode->i_flags |= S_DAX;
->  	else
->  		inode->i_flags &= ~S_DAX;
-> -#endif
-
-This code has bit-rotted. See xfs_setup_iops(), where we now have a
-different inode->i_mapping->a_ops for DAX inodes.
-
-That, fundamentally, is the issue here - it's not setting/clearing
-the DAX flag that is the issue, it's doing a swap of the
-mapping->a_ops while there may be other code using that ops
-structure.
-
-IOWs, if there is any code anywhere in the kernel that
-calls an address space op without holding one of the three locks we
-hold here (i_rwsem, MMAPLOCK, ILOCK) then it can race with the swap
-of the address space operations.
-
-By limiting the address space swap to file sizes of zero, we rule
-out the page fault path (mmap of a zero length file segv's with an
-access beyond EOF on the first read/write page fault, right?).
-However, other aops callers that might run unlocked and do the wrong
-thing if the aops pointer is swapped between check of the aop method
-existing and actually calling it even if the file size is zero?
-
-A quick look shows that FIBMAP (ioctl_fibmap())) looks susceptible
-to such a race condition with the current definitions of the XFS DAX
-aops. I'm guessing there will be others, but I haven't looked
-further than this...
-
->  	/* lock, flush and invalidate mapping in preparation for flag change */
->  	xfs_ilock(ip, XFS_MMAPLOCK_EXCL | XFS_IOLOCK_EXCL);
-> +
-> +	if (i_size_read(inode) != 0) {
-> +		error = -EOPNOTSUPP;
-> +		goto out_unlock;
-> +	}
-
-Wrong error. Should be the same as whatever is returned when we try
-to change the extent size hint and can't because the file is
-non-zero in length (-EINVAL, I think). Also needs a comment
-explainging why this check exists, and probably better written as
-i_size_read() > 0 ....
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+>  /* Set the length of an rcu_segcblist structure. */
+> -void rcu_segcblist_set_len(struct rcu_segcblist *rsclp, long v)
+> +static void rcu_segcblist_set_len(struct rcu_segcblist *rsclp, long v)
+>  {
+>  #ifdef CONFIG_RCU_NOCB_CPU
+>  	atomic_long_set(&rsclp->len, v);
+> @@ -104,7 +104,7 @@ void rcu_segcblist_set_len(struct rcu_segcblist *rsclp, long v)
+>   * This increase is fully ordered with respect to the callers accesses
+>   * both before and after.
+>   */
+> -void rcu_segcblist_add_len(struct rcu_segcblist *rsclp, long v)
+> +static void rcu_segcblist_add_len(struct rcu_segcblist *rsclp, long v)
+>  {
+>  #ifdef CONFIG_RCU_NOCB_CPU
+>  	smp_mb__before_atomic(); /* Up to the caller! */
+> @@ -134,7 +134,7 @@ void rcu_segcblist_inc_len(struct rcu_segcblist *rsclp)
+>   * with the actual number of callbacks on the structure.  This exchange is
+>   * fully ordered with respect to the callers accesses both before and after.
+>   */
+> -long rcu_segcblist_xchg_len(struct rcu_segcblist *rsclp, long v)
+> +static long rcu_segcblist_xchg_len(struct rcu_segcblist *rsclp, long v)
+>  {
+>  #ifdef CONFIG_RCU_NOCB_CPU
+>  	return atomic_long_xchg(&rsclp->len, v);
+> -- 
+> 1.8.3.1
+> 
