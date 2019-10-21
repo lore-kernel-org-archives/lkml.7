@@ -2,131 +2,72 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB7BFCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 02:06:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B91BCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 02:10:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85175222C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 02:06:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b6jF/1TC"
+	by mail.kernel.org (Postfix) with ESMTP id 3D90D21897
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 02:10:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726833AbfJUCG3 (ORCPT
+        id S1726900AbfJUCKq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 20 Oct 2019 22:06:29 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:33895 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726725AbfJUCG3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 20 Oct 2019 22:06:29 -0400
-Received: by mail-pg1-f195.google.com with SMTP id k20so6775813pgi.1
-        for <linux-kernel@vger.kernel.org>; Sun, 20 Oct 2019 19:06:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=+yWlFQ3j7MPCBznXsMHQtwJpyH73frvubd7zQPjGqcQ=;
-        b=b6jF/1TCbvWbam16ICWlejQoSAC8+hg+CuxDEnF4riYF5Sq4SSUC+vktJEEOp4GwaL
-         R+MVDsuCHRmEkMhueRjh3U4t/xHsfmYAd5Yomv9TltCGadViASJLNsaikB20jqDJxi8n
-         dWVfgkI6OxuV8SrTlzu1UxF84Waqf0ymzK7EjZVebV+jJvqaIuMIp0TTrl4wcLkRQ1cg
-         JRDHJR3HLRAy4g02+T82IvW12A/CAQAGYnqhqse9BnW+Z7pg+VV47mmjQ77JfilZzDiA
-         +4QoCJLF0pzaHnplp75PudT0JDggsOSIJ3OGCzqSRGkdb8VVyWjD0Hk6gS3A5uCtXRqZ
-         bMQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+yWlFQ3j7MPCBznXsMHQtwJpyH73frvubd7zQPjGqcQ=;
-        b=mHFFHeK3q6UyG0ETj8lHK3lHHkp+FshO+HHn7L4FLUlSSbB2QNJkUiy23SCqyeya3u
-         /ziZthCB2AVlajloUoGsm4Y0LMUNNQvws5Dq1WtuwX9A08U9vMzfdkPzhnrxATaXIgEr
-         TZlwZS4b+pY3jywPREql7CgxoPtzsrwa3U6sU7dbB0T/4xN5Y9/YMUuFbHxbBETe5Kal
-         0oqfesETuiECrAGNQka4QihHJ9oBgHzy4zRzUW6gKn79fEH4MXH9IWjyFPIaUaeBLgac
-         no2RINvY+GUPGcqgF4Lqk63lemxCssIzrC4xSqXA9vgVuq8HtGJmBgLhRa9z6N58oP/4
-         RhSw==
-X-Gm-Message-State: APjAAAX9GnpfnyV3uUfOXDDL5S36VczOfqM2BxWDMdTk8mYA5fZtcaiG
-        l5pd62Htd6YR2JzZw5KvrFtI0w==
-X-Google-Smtp-Source: APXvYqx+O4q4hmJUC+1LMJIMJc8cEyhGSOZvO9jUQMs0EyVIEpjKc4vVl0VNeQL6Dp2g1H3xO8GA+g==
-X-Received: by 2002:a63:b644:: with SMTP id v4mr7468971pgt.249.1571623588138;
-        Sun, 20 Oct 2019 19:06:28 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id k23sm12553705pgi.49.2019.10.20.19.06.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 20 Oct 2019 19:06:26 -0700 (PDT)
-Date:   Sun, 20 Oct 2019 19:06:24 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Chris Goldsworthy <cgoldswo@codeaurora.org>
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        stable@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] of: reserved_mem: add missing of_node_put() for proper
- ref-counting
-Message-ID: <20191021020624.GE4500@tuxbook-pro>
-References: <1571536644-13840-1-git-send-email-cgoldswo@codeaurora.org>
+        Sun, 20 Oct 2019 22:10:46 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57640 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726725AbfJUCKp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 20 Oct 2019 22:10:45 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 050E6B204;
+        Mon, 21 Oct 2019 02:10:43 +0000 (UTC)
+From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+To:     linux-realtek-soc@lists.infradead.org
+Cc:     linux-arm-kernel@lists.infradead.org,
+        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] dt-bindings: arm: realtek: Add RTD1195 and MeLE X1000
+Date:   Mon, 21 Oct 2019 04:10:33 +0200
+Message-Id: <20191021021035.7032-2-afaerber@suse.de>
+X-Mailer: git-send-email 2.16.4
+In-Reply-To: <20191021021035.7032-1-afaerber@suse.de>
+References: <20191021021035.7032-1-afaerber@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1571536644-13840-1-git-send-email-cgoldswo@codeaurora.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat 19 Oct 18:57 PDT 2019, Chris Goldsworthy wrote:
+Add bindings for Realtek RTD1195 SoC and MeLE X1000 TV box.
 
-> Commit d698a388146c ("of: reserved-memory: ignore disabled memory-region
-> nodes") added an early return in of_reserved_mem_device_init_by_idx(), but
-> didn't call of_node_put() on a device_node whose ref-count was incremented
-> in the call to of_parse_phandle() preceding the early exit.
-> 
-> Fixes: d698a388146c ("of: reserved-memory: ignore disabled memory-region nodes")
-> Signed-off-by: Chris Goldsworthy <cgoldswo@codeaurora.org>
-> To: Rob Herring <robh+dt@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> Cc: stable@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-arm-msm@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
+Signed-off-by: Andreas Färber <afaerber@suse.de>
+---
+ Documentation/devicetree/bindings/arm/realtek.yaml | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Cc stable@ is used to assist in making sure your patch is backported to
-stable kernels, other than that the purpose Cc here is to indicate that
-specific people have been requested to comment on your patch.
+diff --git a/Documentation/devicetree/bindings/arm/realtek.yaml b/Documentation/devicetree/bindings/arm/realtek.yaml
+index ab59de17152d..091616880d25 100644
+--- a/Documentation/devicetree/bindings/arm/realtek.yaml
++++ b/Documentation/devicetree/bindings/arm/realtek.yaml
+@@ -14,6 +14,12 @@ properties:
+     const: '/'
+   compatible:
+     oneOf:
++      # RTD1195 SoC based boards
++      - items:
++          - enum:
++              - mele,x1000 # MeLE X1000
++          - const: realtek,rtd1195
++
+       # RTD1293 SoC based boards
+       - items:
+           - enum:
+-- 
+2.16.4
 
-So please skip these from the commit message in the future (for this
-one, wait and see if Rob is willing to trim them as he applies the
-patch).
-
-
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-Regards,
-Bjorn
-
-> ---
->  drivers/of/of_reserved_mem.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
-> index 7989703..6bd610e 100644
-> --- a/drivers/of/of_reserved_mem.c
-> +++ b/drivers/of/of_reserved_mem.c
-> @@ -324,8 +324,10 @@ int of_reserved_mem_device_init_by_idx(struct device *dev,
->  	if (!target)
->  		return -ENODEV;
->  
-> -	if (!of_device_is_available(target))
-> +	if (!of_device_is_available(target)) {
-> +		of_node_put(target);
->  		return 0;
-> +	}
->  
->  	rmem = __find_rmem(target);
->  	of_node_put(target);
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-> 
