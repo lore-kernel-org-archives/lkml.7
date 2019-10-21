@@ -2,135 +2,119 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64666CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 07:58:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77FB9CA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 07:59:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3145C20B7C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 07:58:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43BAD20830
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 07:59:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571644725;
-	bh=HaNxatOx3Yl+LjuXNZSg9j6rwSnjKUPc8eLVmd61SU0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=jX2KUXP5WkcdV9svvEFsWa07nlKcUddcdnQrbVQpNv7f3LRH8xV/WRTmdST/jlLFN
-	 k1Ke08xCwGdDCzKN3VwpPBshOG6Qpk1t4SeCmPn4K4jmNTygNDaVv6J2any3cqnEVm
-	 gz9RPl24KC5MRb2VKv7MQAsszSyZx/LyOc0V96RM=
+	s=default; t=1571644789;
+	bh=799xe0mW8gBVbGXDGOHFYlfgTbwaDxFyDSrCeM7KuD0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Sj31kpmz2TjlIqxWQhO9faCyGs7A9IH2p4iJ7TK17RdmXjc+AxkAXFUu9xvQObB8l
+	 yDmfQC1/zeOwAw6O8+S63wCZiDc18MBCD1kQNvNX4EZJHt0B4xV0rRJFRRtDkAD2K8
+	 UdE72otYrZzL68fUyH6/d0kfHiiHvwkO4ZjJPOJw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727628AbfJUH6o (ORCPT
+        id S1727598AbfJUH7s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 03:58:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47006 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727239AbfJUH6n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 03:58:43 -0400
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77CC5218AC;
-        Mon, 21 Oct 2019 07:58:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571644721;
-        bh=HaNxatOx3Yl+LjuXNZSg9j6rwSnjKUPc8eLVmd61SU0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=luHraHozlqKNUHwEUrw+p/CKnNkzg4GhLnRI3IQVw1ZUnmvt4Cwl7ABV+5EzHS34g
-         CqVlZgKrjSy7nsjEnaLPBzt8i8/jWykyodKl+iP31wL1BC0A++0dn8emaiIgMxVUqa
-         6AeBtKgvcbANkPSenLQVsuD5VltHn5JOl0JQoRvI=
-Received: by mail-wr1-f50.google.com with SMTP id e11so3977103wrv.4;
-        Mon, 21 Oct 2019 00:58:41 -0700 (PDT)
-X-Gm-Message-State: APjAAAV4W1flYsylqq7vFVqeS8VJ1GRc94UTgTHPcKHekPMu1UneTyX2
-        fiut8z6q/ojUxrW+GLZU26l8jt0rhpc0sk23yzg=
-X-Google-Smtp-Source: APXvYqzvF6HJCASpTMUMf7HweDv3Hno9oEAxiqhI3GBGEOPTWQrWQiETxVnKLeVHbQ3ma/xucSMvECIDZp2EBxJkKe8=
-X-Received: by 2002:adf:ebcb:: with SMTP id v11mr17344477wrn.24.1571644719802;
- Mon, 21 Oct 2019 00:58:39 -0700 (PDT)
+        Mon, 21 Oct 2019 03:59:48 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:36239 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726480AbfJUH7r (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 03:59:47 -0400
+Received: by mail-wr1-f68.google.com with SMTP id w18so12145968wrt.3
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 00:59:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=dusALXNtOXXNZZZbyl/xMwyt1ewPplJLSYZZzGVsFtQ=;
+        b=qiafQ9k1U2DEi5MXUxnyA2elBLak4Jl7I2nvYPbcwxYvjPnfosv9ThSnvwmRa7miPt
+         FnQGp0dEFOCpG7XAosjMZNVbRZcFIxD5F+ZMDLde90azxVFLhdK9C3rbOPvkeVit979k
+         4z1coeQPD6A08SVYYE9Lt4SYYaC3UEyEp5Vkfsp+/u3UvWNW6yLt4AeVFyGr/YaunX/t
+         WatGQADyAaQEK7HyiNFd2a5ByhSYLkC1gVQG1uxKI735ZwEj2htzEkPpB8zlgVe3nDq+
+         KVYFUMJ6+6ay2fAGY/GakrO5JyHpmlnQ3Jz6HpTNcM8gDl10wc7aoUlZQU96r425a2k4
+         6hxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dusALXNtOXXNZZZbyl/xMwyt1ewPplJLSYZZzGVsFtQ=;
+        b=UtbdstpbvGdVCs9qrbqy1CYjAwPbIrWLRg/luctxMWCzNTDmyULNmyBgDp33AQQebQ
+         XF4cA4uR1xzN6S2pqYHrwEIJfHzNt2deuQ1slFbbmDMn37zcsY7RVmxxQs4Mup5MEksu
+         LMApU4lTT0jRBHBbOZm1y3vnKrkZz4HWWAGfnwkYt1wDQMD1xZM7xjksO0f4kBNtCq6w
+         s7esinbeqJykkMoHAdCBpBZf6l/tkde3+pnw5ftPD0cRJ78xtSO8T8+Qpdt3O8Cms5O3
+         Z/Hzc3cEps2rO8vD9hua5+zZx5xdKX1ukFHsSYrcDBoAPNQnw3aUGsTMx6zMK4UrIWgP
+         4K6w==
+X-Gm-Message-State: APjAAAX/pXHc3JfcrxxLcJUKOopA5yCBLb0w6H2X1msqtA31UIgytmz2
+        i3pf3pyX0S9uO5G2kSicVomIkh6R
+X-Google-Smtp-Source: APXvYqw6dtNHsaG2r1LYnC/n9/CqcFOW3KoFgm/jtKGuA3KWUgzEWl2MbXMWgikVcqOEKdLmpObT6Q==
+X-Received: by 2002:a5d:638f:: with SMTP id p15mr9417011wru.150.1571644785585;
+        Mon, 21 Oct 2019 00:59:45 -0700 (PDT)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id z9sm13901595wrv.1.2019.10.21.00.59.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Oct 2019 00:59:45 -0700 (PDT)
+Date:   Mon, 21 Oct 2019 09:59:42 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>,
+        Song Liu <songliubraving@fb.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 4/4] perf/core,x86: synchronize PMU task contexts on
+ optimized context switches
+Message-ID: <20191021075942.GA8809@gmail.com>
+References: <0b20a07f-d074-d3da-7551-c9a4a94fe8e3@linux.intel.com>
+ <f3253a36-c174-8051-a462-9728ef721766@linux.intel.com>
 MIME-Version: 1.0
-References: <20191017174554.29840-1-hch@lst.de> <20191017174554.29840-21-hch@lst.de>
-In-Reply-To: <20191017174554.29840-21-hch@lst.de>
-From:   Guo Ren <guoren@kernel.org>
-Date:   Mon, 21 Oct 2019 15:58:28 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTQ_VeBfi1uaafgtp+uA2skq-w2px12ig=5QD1O9J+PgbA@mail.gmail.com>
-Message-ID: <CAJF2gTQ_VeBfi1uaafgtp+uA2skq-w2px12ig=5QD1O9J+PgbA@mail.gmail.com>
-Subject: Re: [PATCH 20/21] csky: remove ioremap_cache
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Michal Simek <monstr@monstr.eu>,
-        Greentime Hu <green.hu@gmail.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Guan Xuetao <gxt@pku.edu.cn>, x86@kernel.org,
-        linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        nios2-dev@lists.rocketboards.org, openrisc@lists.librecores.org,
-        linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        linux-mtd@lists.infradead.org,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f3253a36-c174-8051-a462-9728ef721766@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Acked-by: Guo Ren <guoren@kernel.org>
 
-On Fri, Oct 18, 2019 at 1:47 AM Christoph Hellwig <hch@lst.de> wrote:
->
-> No driver that can be used on csky uses ioremap_cache, and this
-> interface has been deprecated in favor of memremap.
->
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  arch/csky/include/asm/io.h | 2 --
->  arch/csky/mm/ioremap.c     | 7 -------
->  2 files changed, 9 deletions(-)
->
-> diff --git a/arch/csky/include/asm/io.h b/arch/csky/include/asm/io.h
-> index a4b9fb616faa..f572605d5ad5 100644
-> --- a/arch/csky/include/asm/io.h
-> +++ b/arch/csky/include/asm/io.h
-> @@ -36,13 +36,11 @@
->  /*
->   * I/O memory mapping functions.
->   */
-> -extern void __iomem *ioremap_cache(phys_addr_t addr, size_t size);
->  extern void __iomem *__ioremap(phys_addr_t addr, size_t size, pgprot_t prot);
->  extern void iounmap(void *addr);
->
->  #define ioremap(addr, size)            __ioremap((addr), (size), pgprot_noncached(PAGE_KERNEL))
->  #define ioremap_wc(addr, size)         __ioremap((addr), (size), pgprot_writecombine(PAGE_KERNEL))
-> -#define ioremap_cache                  ioremap_cache
->
->  #include <asm-generic/io.h>
->
-> diff --git a/arch/csky/mm/ioremap.c b/arch/csky/mm/ioremap.c
-> index e13cd3497628..ae78256a56fd 100644
-> --- a/arch/csky/mm/ioremap.c
-> +++ b/arch/csky/mm/ioremap.c
-> @@ -44,13 +44,6 @@ void __iomem *__ioremap(phys_addr_t phys_addr, size_t size, pgprot_t prot)
->  }
->  EXPORT_SYMBOL(__ioremap);
->
-> -void __iomem *ioremap_cache(phys_addr_t phys_addr, size_t size)
-> -{
-> -       return __ioremap_caller(phys_addr, size, PAGE_KERNEL,
-> -                               __builtin_return_address(0));
-> -}
-> -EXPORT_SYMBOL(ioremap_cache);
-> -
->  void iounmap(void __iomem *addr)
->  {
->         vunmap((void *)((unsigned long)addr & PAGE_MASK));
-> --
-> 2.20.1
->
+* Alexey Budankov <alexey.budankov@linux.intel.com> wrote:
 
+> +			/*
+> +			 * PMU specific parts of task perf context may require
+> +			 * additional synchronization, at least for proper Intel
+> +			 * LBR callstack data profiling;
+> +			 */
+> +			pmu->sync_task_ctx(ctx->task_ctx_data,
+> +					   next_ctx->task_ctx_data);
 
--- 
-Best Regards
- Guo Ren
+Firstly, I'm pretty sure you never run this on a CPU where 
+pmu->sync_task_ctx is NULL, right? ;-)
 
-ML: https://lore.kernel.org/linux-csky/
+Secondly, even on Intel CPUs in many cases we'll just call into a ~2 deep 
+function pointer based call hierarchy, just to find that nothing needs to 
+be done, because there's no LBR call stack maintained:
+
++       if (!one || !another)
++               return;
+
+So while it's technically a layering violation, it might make sense to 
+elevate this check to the generic layer and say that synchronization 
+calls by the core layer will always provide two valid pointers?
+
+Thanks,
+
+	Ingo
