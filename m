@@ -2,53 +2,52 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC635CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 05:21:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88268CA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 05:23:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8D902084B
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 05:21:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51C5F2084B
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 05:23:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726162AbfJUFVJ (ORCPT
+        id S1726428AbfJUFXJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 01:21:09 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:44975 "EHLO
+        Mon, 21 Oct 2019 01:23:09 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:36797 "EHLO
         mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725765AbfJUFVJ (ORCPT
+        with ESMTP id S1725765AbfJUFXJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 01:21:09 -0400
-Received: by mail-io1-f70.google.com with SMTP id y2so16410575ioj.11
-        for <linux-kernel@vger.kernel.org>; Sun, 20 Oct 2019 22:21:07 -0700 (PDT)
+        Mon, 21 Oct 2019 01:23:09 -0400
+Received: by mail-io1-f70.google.com with SMTP id g126so16562411iof.3
+        for <linux-kernel@vger.kernel.org>; Sun, 20 Oct 2019 22:23:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=RNA7wvEo4dZS4Zjh6nazheoAtSIOteZ88hIBmR8F1xQ=;
-        b=uc3X+vc/et7SFG/COIuMD9eL4WNDmtyFU9O7Sc/O0bIvRMhYetiGixA+fSTAa0zrvu
-         GP8bY2KlPD0wDPbNCPxKrj2LDKhnGiRZ9mlAu5rV5T8HG3cDCa8Cb65re1ugFRS9autk
-         P5UnnpwOZbuI9t6uKGN7DFWETKdaItPzG70mukrK8LF7+vdZ8afsfbwwxRh/DXrX3gfn
-         h/4HrPzNlhYCsBNHKVnaNguMRfBbf5ObGOd3gkop2LvWC6a9cNrKtwDJYY6ohQC6PtHN
-         laNXFQyWLf8ND4WFFkpWf5+1GjEDluu3gZIVkZ2IZ2rqB7ySRROz/LEtAf6Hnvhi4l9o
-         IBdg==
-X-Gm-Message-State: APjAAAVst7FUHWPWZCkHW6nuEoYspvWwivus81Io0Cb9RidB1+TBjVB1
-        LGFU9bOCTq9Ben2hza9AQ3wZEvioqXG/AiaWId11HtbJJqxZ
-X-Google-Smtp-Source: APXvYqyCxl0gyCt8f14Ks5hJ2E9kauUFKQD0IBH+dz03PqnOwax24Qywyva4FwEaknsdd/yE0CqkhHO+VOHjd9NQkTK8A/cz5fxI
+        bh=ZdKnZjst7DyyK+x6sCAL8/L6eZyuHz1MCtPw3YcdJ2s=;
+        b=nGJzOoZSIhrXGlfn4ObGClizD2Pq8EK3Cmrlz6JxCLsyNni9fcA2YoCSaJLVXCOq7/
+         BTE6W8EJbGBuOq3qgUOiHlyGnPtdDFzDO3KYyEr4qJCt2vt0TcpaT+k9HM3FKDZRQ0NP
+         HmE0R1TWD40+rwUSByaTZ0lxwBh6oeXBahr6U0U9v9OwUPpAc03qGUwDCh/Mfmy4hV8p
+         W6IVETBwBtQVgtDIQPacw9dKeQkQOnTqCpM7rpKDcGHOyFjfLDfOWW99HvnBcnyeMjbk
+         Z/nlzHbE7hOrCY6UxQAui831mdj+aWa64VWwKi+BxmGu04QaU0LzzFGGU3rnwH5tWyty
+         rNJg==
+X-Gm-Message-State: APjAAAVt+94X/gtFiG/NNaZgUhKGUvtb97f4OzKtpA27HlVeJ6vNYVq/
+        CHr31hwlPGlTeof9pEWbS4aL84EHtpKQljBPQ/4kc8zrNiRI
+X-Google-Smtp-Source: APXvYqzoxb7HOvJ+gHaP6gB1G2giklxm7tLizdjMyDWOASKppseVav8DVlJJN+ErF+ASQ0rhCtHXngteyKRreuM1MCqb9ZxGIzbj
 MIME-Version: 1.0
-X-Received: by 2002:a6b:b2d5:: with SMTP id b204mr693498iof.137.1571635266901;
- Sun, 20 Oct 2019 22:21:06 -0700 (PDT)
-Date:   Sun, 20 Oct 2019 22:21:06 -0700
+X-Received: by 2002:a92:9edd:: with SMTP id s90mr5566194ilk.244.1571635388574;
+ Sun, 20 Oct 2019 22:23:08 -0700 (PDT)
+Date:   Sun, 20 Oct 2019 22:23:08 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000ccde8d059564d93d@google.com>
-Subject: general protection fault in batadv_iv_ogm_queue_add
-From:   syzbot <syzbot+7dd2da51d8ae6f990403@syzkaller.appspotmail.com>
-To:     a@unstable.cc, b.a.t.m.a.n@lists.open-mesh.org,
-        davem@davemloft.net, linux-kernel@vger.kernel.org,
-        mareklindner@neomailbox.ch, netdev@vger.kernel.org,
-        sven@narfation.org, sw@simonwunderlich.de,
-        syzkaller-bugs@googlegroups.com
+Message-ID: <0000000000000d74c7059564e17f@google.com>
+Subject: KASAN: use-after-free Write in __ext4_expand_extra_isize (2)
+From:   syzbot <syzbot+44b6763edfc17144296f@syzkaller.appspotmail.com>
+To:     adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        tytso@mit.edu
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -59,67 +58,92 @@ Hello,
 
 syzbot found the following crash on:
 
-HEAD commit:    998d7551 Merge branch 'akpm' (patches from Andrew)
+HEAD commit:    b145b0eb Merge tag 'for-linus' of git://git.kernel.org/pub..
 git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1702db87600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=e0ac4d9b35046343
-dashboard link: https://syzkaller.appspot.com/bug?extid=7dd2da51d8ae6f990403
+console output: https://syzkaller.appspot.com/x/log.txt?x=13887f1f600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=1ec3be9936e004f6
+dashboard link: https://syzkaller.appspot.com/bug?extid=44b6763edfc17144296f
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
 Unfortunately, I don't have any reproducer for this crash yet.
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+7dd2da51d8ae6f990403@syzkaller.appspotmail.com
+Reported-by: syzbot+44b6763edfc17144296f@syzkaller.appspotmail.com
 
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 4256 Comm: kworker/u4:0 Not tainted 5.4.0-rc3+ #0
+==================================================================
+BUG: KASAN: use-after-free in memset include/linux/string.h:344 [inline]
+BUG: KASAN: use-after-free in __ext4_expand_extra_isize+0x1ab/0x290  
+fs/ext4/inode.c:5924
+Write of size 736 at addr ffff88803763aea0 by task syz-executor.5/28447
+
+CPU: 1 PID: 28447 Comm: syz-executor.5 Not tainted 5.4.0-rc1+ #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
 Google 01/01/2011
-Workqueue: bat_events batadv_iv_send_outstanding_bat_ogm_packet
-RIP: 0010:batadv_iv_ogm_queue_add+0x49/0x1120  
-net/batman-adv/bat_iv_ogm.c:605
-Code: 48 89 75 b8 48 89 4d c0 4c 89 45 b0 44 89 4d d0 e8 fc 02 46 fa 48 8d  
-7b 03 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 04 02 48  
-89 fa 83 e2 07 38 d0 7f 08 84 c0 0f 85 18 0d 00 00
-RSP: 0018:ffff88805d2cfb80 EFLAGS: 00010246
-RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffff888092284000
-RDX: 0000000000000000 RSI: ffffffff872d1214 RDI: 0000000000000003
-RBP: ffff88805d2cfc18 R08: ffff888092284000 R09: 0000000000000001
-R10: ffffed100ba59f77 R11: 0000000000000003 R12: dffffc0000000000
-R13: ffffed101245080e R14: ffff888092284000 R15: 0000000100051cf6
-FS:  0000000000000000(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00000000200002c0 CR3: 00000000a421b000 CR4: 00000000001426f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 Call Trace:
-  batadv_iv_ogm_schedule+0xb0b/0xe50 net/batman-adv/bat_iv_ogm.c:813
-  batadv_iv_send_outstanding_bat_ogm_packet+0x580/0x760  
-net/batman-adv/bat_iv_ogm.c:1675
-  process_one_work+0x9af/0x1740 kernel/workqueue.c:2269
-  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
-  kthread+0x361/0x430 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-Modules linked in:
----[ end trace 04d065842187c2b8 ]---
-RIP: 0010:batadv_iv_ogm_queue_add+0x49/0x1120  
-net/batman-adv/bat_iv_ogm.c:605
-Code: 48 89 75 b8 48 89 4d c0 4c 89 45 b0 44 89 4d d0 e8 fc 02 46 fa 48 8d  
-7b 03 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 04 02 48  
-89 fa 83 e2 07 38 d0 7f 08 84 c0 0f 85 18 0d 00 00
-RSP: 0018:ffff88805d2cfb80 EFLAGS: 00010246
-RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffff888092284000
-RDX: 0000000000000000 RSI: ffffffff872d1214 RDI: 0000000000000003
-RBP: ffff88805d2cfc18 R08: ffff888092284000 R09: 0000000000000001
-R10: ffffed100ba59f77 R11: 0000000000000003 R12: dffffc0000000000
-R13: ffffed101245080e R14: ffff888092284000 R15: 0000000100051cf6
-FS:  0000000000000000(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00000000200002c0 CR3: 00000000a421b000 CR4: 00000000001426f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
+  __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
+  kasan_report+0x12/0x20 mm/kasan/common.c:634
+  check_memory_region_inline mm/kasan/generic.c:185 [inline]
+  check_memory_region+0x134/0x1a0 mm/kasan/generic.c:192
+  memset+0x24/0x40 mm/kasan/common.c:105
+  memset include/linux/string.h:344 [inline]
+  __ext4_expand_extra_isize+0x1ab/0x290 fs/ext4/inode.c:5924
+  ext4_try_to_expand_extra_isize fs/ext4/inode.c:5976 [inline]
+  ext4_mark_inode_dirty+0x74e/0x9b0 fs/ext4/inode.c:6052
+  ext4_ext_truncate+0x92/0x200 fs/ext4/extents.c:4583
+  ext4_truncate+0xc6e/0x13c0 fs/ext4/inode.c:4511
+  ext4_evict_inode+0x9d4/0x14e0 fs/ext4/inode.c:289
+  evict+0x306/0x680 fs/inode.c:574
+  iput_final fs/inode.c:1563 [inline]
+  iput+0x55d/0x900 fs/inode.c:1589
+  dentry_unlink_inode+0x2d9/0x400 fs/dcache.c:374
+  __dentry_kill+0x38b/0x600 fs/dcache.c:579
+  dentry_kill fs/dcache.c:698 [inline]
+  dput+0x639/0xe10 fs/dcache.c:859
+  __fput+0x424/0x890 fs/file_table.c:293
+  ____fput+0x16/0x20 fs/file_table.c:313
+  task_work_run+0x145/0x1c0 kernel/task_work.c:113
+  exit_task_work include/linux/task_work.h:22 [inline]
+  do_exit+0x904/0x2e60 kernel/exit.c:817
+  do_group_exit+0x135/0x360 kernel/exit.c:921
+  get_signal+0x47c/0x2500 kernel/signal.c:2734
+  do_signal+0x87/0x1700 arch/x86/kernel/signal.c:815
+  exit_to_usermode_loop+0x286/0x380 arch/x86/entry/common.c:159
+  prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
+  syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
+  do_syscall_64+0x65f/0x760 arch/x86/entry/common.c:300
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x459a59
+Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f163d095cf8 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
+RAX: fffffffffffffe00 RBX: 000000000075c120 RCX: 0000000000459a59
+RDX: 0000000000000000 RSI: 0000000000000080 RDI: 000000000075c120
+RBP: 000000000075c118 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 000000000075c124
+R13: 00007ffee9e6c79f R14: 00007f163d0969c0 R15: 000000000075c124
+
+The buggy address belongs to the page:
+page:ffffea0000dd8e80 refcount:2 mapcount:0 mapping:ffff8880a2d8e520  
+index:0x487
+def_blk_aops
+flags: 0x1fffc000000203a(referenced|dirty|lru|active|private)
+raw: 01fffc000000203a ffffea0000e4cc08 ffffea0000b54b88 ffff8880a2d8e520
+raw: 0000000000000487 ffff88808f15d150 00000002ffffffff ffff8880a17cec40
+page dumped because: kasan: bad access detected
+page->mem_cgroup:ffff8880a17cec40
+
+Memory state around the buggy address:
+  ffff88803763af00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  ffff88803763af80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> ffff88803763b000: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+                    ^
+  ffff88803763b080: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+  ffff88803763b100: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+==================================================================
 
 
 ---
