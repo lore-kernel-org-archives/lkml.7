@@ -2,101 +2,170 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62C2ACA9EB9
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:20:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E594ECA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:21:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36AB120B7C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:20:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFA5E20640
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:21:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QQro1XbO"
+	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="lcqCvTk2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727708AbfJUIU6 (ORCPT
+        id S1727714AbfJUIVx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 04:20:58 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:46046 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726480AbfJUIU5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 04:20:57 -0400
-Received: by mail-lf1-f68.google.com with SMTP id v8so8736702lfa.12;
-        Mon, 21 Oct 2019 01:20:56 -0700 (PDT)
+        Mon, 21 Oct 2019 04:21:53 -0400
+Received: from mail-eopbgr680082.outbound.protection.outlook.com ([40.107.68.82]:42564
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726289AbfJUIVx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 04:21:53 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=K2wMGhoFGwN4lRqbVvjfFQp3GEsTzf3tSOca2D3Xdh5UTY8Uy/qPddqoGASPfJDgH6KHkUc9ru54NyWxsdpV0FnEfhxx2XhmxmgfYX0DSfQ7gp1ooYkdbnEyqgAxC4lzXzbWAFdwdKzcKaPJFZ3n4CcQsBAOgYh+xadiLvObFFEDgF6xHrzCefk+jWvxsbKh5I7EoEi+FuQnsOlLcErhUoCLJgFWiGqSjmp4iryu0bY+HMGOFeXIG+/L2W1KulvwvXWSNABbp7q5zrYyHhVVOas+BhhjIvfWe3LgJJo/C00LJ3oGQboC/SFW5TIl40alqA6OTaMTKlfV0NejDq+EyQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iy8jLzROzCX9GJqVkVZTjAOMSMUpi+0GYak3vKUJAMQ=;
+ b=HOnVyqHBNYZguutamFqWtz8hmthhJ2jCyI+ezho+70Yr63iejfIxpT+iTUqxKT95gwgE5XUM7VMtHwbFEhsPoTFDb4LNiL5lCOE5jjEQGUXsgpJbvUtMoVnqqJQNcOzN3IrppoqAc0zpP92ad/VefNmXkpYUuuWo4kPSUazPwBTmnJPoXQrRl29sN0IyciXDn0Gn0QePG02IYh8kgpDx9y4RFIluG3SFKXuCQwYQeyHNd1fGbMp3mAjgDFBIIQEhzBpoDmkBVqTtGitb+atmgSEUmJtP/0tCiVprIHOcAJWzF3ncTJ6S3DITvcd1FWrlHVmWsjSFYLZow95b3OkUbQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
+ dkim=pass header.d=silabs.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=5JzKSpnIK5rSjQFv+xBtJ5cRm0LAw3wIvKLByt2f/kI=;
-        b=QQro1XbO4awUyGIP6YDCeU8B9aDmE+UCgs8wgUZGMLtLgWPlpnGinM3IZSDAJXr3dU
-         zxe+ra5fgBuMtDANQxH1Lmseq/7SOfznON+l98+vY0c38crblBvxev6mhiuafZh/xl7T
-         PCJ4wUfTmUxlsOK93GxcjnHmYb8F7UBvIaV96VbxCF+geUBb7WWLZaJpuSQlKROXixcv
-         vxijcFL9A+Igg91lW1acupgTRVcQOjURXc8FAr2cxyRkRbWvD4pHcDBW84OXBvOCmcyK
-         ABgILBH9qlbGAwZr9tYAJqV+oRsystOutOKABizo5+MQ1J9k8y8Nuf9Hh+iDsWyaWcLb
-         VzMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=5JzKSpnIK5rSjQFv+xBtJ5cRm0LAw3wIvKLByt2f/kI=;
-        b=hRcX4nWUftaR9dPwqok6FCn+AUfIL+EqbAci3nvpPtp8NOXkHtB78bz5Vpm1dHAOU/
-         o6piOa3wfHcEsX5S3GOvKDFpaY3x50O0AFBAnV7hXSivs16x7wzpQdkzviMFmR9DTTlS
-         V+N16mSLZOJi06NyeVA9G96MoSM76FZPfVMbSzgziPTiZ6E9m2LvCcy8FdYPAFb2HN/t
-         iCdzK2L/joszQXHlBjfjDWRp5YeBR+/utbivqmSQF0uqfTsmYV53kcbIl8ZL4heyeUk4
-         GWW4AjA5eFNwuD8z30xMwye5HxD+GaxXesDUfLwBSSQWldVvrmDFuRypcxaJrfIwWYZN
-         xOnA==
-X-Gm-Message-State: APjAAAVsSUc1x85XYN2rpx2bKuJ8U1KnjUt4I1dnbrPdq+eNaXncXiDF
-        fSl8Us9z1V0QBkfv2R2chK4=
-X-Google-Smtp-Source: APXvYqy4KwjOgJwK4T+IIgoUkEcxcswQs8VRoMux4nTdEMlg8h921V+P9V5ED2tELeaDOb47y/wq/g==
-X-Received: by 2002:ac2:4566:: with SMTP id k6mr13856386lfm.132.1571646055615;
-        Mon, 21 Oct 2019 01:20:55 -0700 (PDT)
-Received: from localhost.localdomain ([94.204.252.234])
-        by smtp.gmail.com with ESMTPSA id m17sm16494781lje.0.2019.10.21.01.20.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 21 Oct 2019 01:20:54 -0700 (PDT)
-From:   Christian Hewitt <christianshewitt@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Christian Hewitt <christianshewitt@gmail.com>
-Subject: [PATCH v2] soc: amlogic: meson-gx-socinfo: Fix S905D3 ID for VIM3L
-Date:   Mon, 21 Oct 2019 12:20:04 +0400
-Message-Id: <1571646004-21269-1-git-send-email-christianshewitt@gmail.com>
-X-Mailer: git-send-email 2.7.4
+ d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iy8jLzROzCX9GJqVkVZTjAOMSMUpi+0GYak3vKUJAMQ=;
+ b=lcqCvTk2y3+YCpKLvgC85rYvDYa3FWKY+8ZdpnO2n55M1m5QUkEmxd3y4z6ZaFNbntvUHcWQRCX/iUcX4TdVi/L4xKpRQ9YxjV2RdTVW0g9fZbNyP+HuvbO5lUsh3wXJQEsIAIaEfWizWL6O0FM6o1wC/JyVwAv84r5SZYGzv4s=
+Received: from MN2PR11MB4063.namprd11.prod.outlook.com (10.255.180.22) by
+ MN2PR11MB3949.namprd11.prod.outlook.com (10.255.181.82) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.19; Mon, 21 Oct 2019 08:21:46 +0000
+Received: from MN2PR11MB4063.namprd11.prod.outlook.com
+ ([fe80::ac8c:fc55:d1e2:465f]) by MN2PR11MB4063.namprd11.prod.outlook.com
+ ([fe80::ac8c:fc55:d1e2:465f%5]) with mapi id 15.20.2347.028; Mon, 21 Oct 2019
+ 08:21:46 +0000
+From:   Jerome Pouiller <Jerome.Pouiller@silabs.com>
+To:     "driverdev-devel@linuxdriverproject.org" 
+        <driverdev-devel@linuxdriverproject.org>
+CC:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Jules Irenge <jbi.octave@gmail.com>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "outreachy-kernel@googlegroups.com" 
+        <outreachy-kernel@googlegroups.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v1 1/5] staging: wfx: fix warnings of no space is
+ necessary
+Thread-Topic: [PATCH v1 1/5] staging: wfx: fix warnings of no space is
+ necessary
+Thread-Index: AQHVhoaXW9ETEAkC20KZ2rlidgS3oadiBNmAgAK/PwA=
+Date:   Mon, 21 Oct 2019 08:21:45 +0000
+Message-ID: <4583183.OhVBZdlllx@pc-42>
+References: <20191019140719.2542-1-jbi.octave@gmail.com>
+ <20191019140719.2542-2-jbi.octave@gmail.com> <20191019142443.GH24678@kadam>
+In-Reply-To: <20191019142443.GH24678@kadam>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Jerome.Pouiller@silabs.com; 
+x-originating-ip: [37.71.187.125]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: caceab67-1e54-409d-398a-08d755ffb667
+x-ms-traffictypediagnostic: MN2PR11MB3949:
+x-microsoft-antispam-prvs: <MN2PR11MB3949630B814E417EC0143D8293690@MN2PR11MB3949.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0197AFBD92
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(39850400004)(366004)(396003)(136003)(376002)(346002)(189003)(199004)(446003)(478600001)(6436002)(66574012)(476003)(486006)(6486002)(11346002)(71200400001)(71190400001)(5660300002)(229853002)(99286004)(256004)(6916009)(14454004)(5640700003)(8676002)(6246003)(7736002)(81156014)(305945005)(25786009)(4326008)(81166006)(9686003)(6512007)(76176011)(2351001)(8936002)(66946007)(66476007)(66556008)(76116006)(6506007)(91956017)(102836004)(3846002)(6116002)(66066001)(64756008)(2906002)(66446008)(186003)(26005)(316002)(54906003)(86362001)(33716001)(2501003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB3949;H:MN2PR11MB4063.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: silabs.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: U7KeoZ22FeGnlf63/GfCZroUI6JjjhdqSWhYdJ23QchbvdUFqOKBJBJqgUpZErvMs6ALd0+bd4U/RdMgcaxnKb143K8Z6YLYw1NPM/gflMhXV4uIYhHxEjt6kiNUhxOd9Z3GdsimjDX369Zm1SiZrmRUfmukEDeeWZIel2Diu4Nq90t4LzxodzX4ftu/dvynW8AkRx4XILXvDWXyc+nFdLrn2bfAWqd65Ta2o97PIyDYvYmdtJayDrVaNxmd/UgvgAQo4x+RyxdQlbuqJWqlOS/D8IiIwqZiloTN5+3icte8CSVl5it8vRSdKEnBDKyFGy5QWLFnDeMtbos1Un4/SaS+c/8xndB6Jd7hOOuNUfWFQCQBAD3ZaRqaoMNUar0oE6ygcgpBTJxgn0fxTZiZjipRxW0zZ1fKDWtaiHHPAww=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <736FEC0722E0284582AD517F5E17B446@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: silabs.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: caceab67-1e54-409d-398a-08d755ffb667
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Oct 2019 08:21:45.9635
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 54dbd822-5231-4b20-944d-6f4abcd541fb
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ZGdwcgt4LSB67Z1uH0rqZcJcKwm3nkZGgwU7SJc9jJuLj25pRfsihzCULTMXvG5t9MyPU/TZSjWvRPxhb2YxKQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB3949
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Chip on the board is S905D3 not S905X3:
+On Saturday 19 October 2019 16:24:43 CEST Dan Carpenter wrote:
+> On Sat, Oct 19, 2019 at 03:07:15PM +0100, Jules Irenge wrote:
+> > diff --git a/drivers/staging/wfx/bh.c b/drivers/staging/wfx/bh.c
+> > index 3355183fc86c..573216b08042 100644
+> > --- a/drivers/staging/wfx/bh.c
+> > +++ b/drivers/staging/wfx/bh.c
+> > @@ -69,13 +69,13 @@ static int rx_helper(struct wfx_dev *wdev, size_t r=
+ead_len, int *is_cnf)
+> >       if (wfx_data_read(wdev, skb->data, alloc_len))
+> >               goto err;
+> >
+> > -     piggyback =3D le16_to_cpup((u16 *) (skb->data + alloc_len - 2));
+> > +     piggyback =3D le16_to_cpup((u16 *)(skb->data + alloc_len - 2));
+> >       _trace_piggyback(piggyback, false);
+> >
+> > -     hif =3D (struct hif_msg *) skb->data;
+> > +     hif =3D (struct hif_msg *)skb->data;
+> >       WARN(hif->encrypted & 0x1, "unsupported encryption type");
+> >       if (hif->encrypted =3D=3D 0x2) {
+> > -             if (wfx_sl_decode(wdev, (void *) hif)) {
+> > +             if (wfx_sl_decode(wdev, (void *)hif)) {
+>=20
+> In the future you may want to go through and remove the (void *) casts.
+> It's not required here.
+>=20
+> > diff --git a/drivers/staging/wfx/bus_spi.c b/drivers/staging/wfx/bus_sp=
+i.c
+> > index f65f7d75e731..effd07957753 100644
+> > --- a/drivers/staging/wfx/bus_spi.c
+> > +++ b/drivers/staging/wfx/bus_spi.c
+> > @@ -90,7 +90,7 @@ static int wfx_spi_copy_to_io(void *priv, unsigned in=
+t addr,
+> >       struct wfx_spi_priv *bus =3D priv;
+> >       u16 regaddr =3D (addr << 12) | (count / 2);
+> >       // FIXME: use a bounce buffer
+> > -     u16 *src16 =3D (void *) src;
+> > +     u16 *src16 =3D (void *)src;
+>=20
+> Here we are just getting rid of the constness.  Apparently we are doing
+> that so we can modify it without GCC pointing out the bug!!  I don't
+> know the code but this seems very wrong.
 
-[    0.098998] soc soc0: Amlogic Meson SM1 (S905D3) Revision 2b:c (b0:2) Detected
+Hello Dan, Jules,
 
-Change from v1: use 0xf0 mask instead of 0xf2 as advised by Neil Armstrong.
+Indeed, this code should be improved.
 
-Fixes: 1d7c541b8a5b ("soc: amlogic: meson-gx-socinfo: Add S905X3 ID for VIM3L")
+Each u16 from src is byte-swapped before to be sent to SPI and restored
+before to return from the function:
 
-Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
----
- drivers/soc/amlogic/meson-gx-socinfo.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+	for (i =3D 0; i < count / 2; i++)
+		swab16s(&src16[i]);
+	[...]
+	spi_sync(bus->func, &m);
+   [...]
+	for (i =3D 0; i < count / 2; i++)
+		swab16s(&src16[i]);
 
-diff --git a/drivers/soc/amlogic/meson-gx-socinfo.c b/drivers/soc/amlogic/meson-gx-socinfo.c
-index 87ed558..01fc0d2 100644
---- a/drivers/soc/amlogic/meson-gx-socinfo.c
-+++ b/drivers/soc/amlogic/meson-gx-socinfo.c
-@@ -69,7 +69,7 @@ static const struct meson_gx_package_id {
- 	{ "S922X", 0x29, 0x40, 0xf0 },
- 	{ "A311D", 0x29, 0x10, 0xf0 },
- 	{ "S905X3", 0x2b, 0x5, 0xf },
--	{ "S905X3", 0x2b, 0xb0, 0xf2 },
-+	{ "S905D3", 0x2b, 0xb0, 0xf0 },
- 	{ "A113L", 0x2c, 0x0, 0xf8 },
- };
- 
--- 
-2.7.4
+So, src is same than original, but it is not const.
+
+This is exactly the purpose of the FIXME just before the cast: "use a
+bounce buffer". However, I did not yet make this change because I worry
+about a possible performance penalty.
+
+--=20
+J=E9r=F4me Pouiller
 
