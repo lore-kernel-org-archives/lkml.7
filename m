@@ -2,130 +2,126 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D72B2CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 06:58:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08405CA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 07:01:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD8C32089C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 06:58:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571641098;
-	bh=AIAxBuaIRG9FJxlnE8yMLaE933Srk04IPBo8vooOqUU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TmpXbzs6QBDHIygqBxMSdNpCK7KpdEBAxrfB6a+Ci2jsJ1XDgn9xi9rx+fkTidOXq
-	 Xd1DcPKN6E47hlvqJGeCmvyWmxC5KQjP/gpWPFQlQJYCOjyuN/zVp9BBUHZ5/NLuSU
-	 JYgaP6nJivqFnVdv8F/o8DPjukeSt1tD5cxbXa+U=
+	by mail.kernel.org (Postfix) with ESMTP id D851E205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 07:01:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727290AbfJUG6R (ORCPT
+        id S1727137AbfJUHBW convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 02:58:17 -0400
-Received: from mail-wm1-f43.google.com ([209.85.128.43]:34740 "EHLO
-        mail-wm1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726072AbfJUG6Q (ORCPT
+        Mon, 21 Oct 2019 03:01:22 -0400
+Received: from tyo162.gate.nec.co.jp ([114.179.232.162]:47257 "EHLO
+        tyo162.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726072AbfJUHBW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 02:58:16 -0400
-Received: by mail-wm1-f43.google.com with SMTP id v3so949050wmh.1;
-        Sun, 20 Oct 2019 23:58:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=mERVdcaabbZ+RvMpGbS0z6Z3nUjRdN4OI0NdeA+OOR4=;
-        b=HBZp3Vv63r7qWNzhZZo/J1iBwBRP00R3PaQRH/bIsI3unpSAfuZ9cqZJrKPvZnabih
-         uWD94+v5UMRwZ7GxMCrqnFChgFfiKGHykz16CWicQ81nA1iieM15R0bdNjUxFUH9kFNe
-         rNZcXSjWzzJFWPcn4U6KyqCvbmE8bsKSqFaZv83BwGM0/lxqp4T916hOn/nrdMMVlczC
-         v9cSubA3O0ZqrPyNRnIXfwHzvjuYpVTIRM7TP6hOG6e/ZqDNuQFWK8tM/gn14xLHxXF9
-         3wVMdn7iS3wFl1HNp4spfRdVawMUBRNzP6KEwZIK5YhCLnJWQmINvjFfF+sT/VYRT+nx
-         Ve+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mERVdcaabbZ+RvMpGbS0z6Z3nUjRdN4OI0NdeA+OOR4=;
-        b=syVw3vDxDqu34BDp34tpidKpmG36EWSzDvKINwTLhuWrRaXtuNTSd/ihdCpC2mn+Xu
-         kwhsm4pXBcxvb9bk/pFpWTwrWPYf1FupPvKsy/AXLL2ABHVAY/UWKHlrd5IpOTLVdl1t
-         PUU9BfhD4QYVx45sI5s7YlJbVE2rsklN1LNsA6QTkRXXHYo/dCGfmXvk9gwH+N/Aw5oe
-         ouCbQUKcPXdOj/P95m5f0l/hynkkeRDpXt6Jb8U6QfKrWF65uIiDwYUC8Q8A7S1kFD4X
-         3kT9p08zBK8sBzQBtmmixP414PsjQSY1otOVoerOkDFVJ4rbl/IOpKKhgbBt4P2RZQGQ
-         JUXA==
-X-Gm-Message-State: APjAAAV/44/Ubs3SewpZhUzU5HgafRkxjAKMx55xsHGpzVChvGiCeqc1
-        frkiUW69olKwUrJV1dJBcCw=
-X-Google-Smtp-Source: APXvYqzXQPg7XyemOX/s7mVyBUJ2KZpv8Kd4wG9xlKHcZIW9h1X21edPHRzToz3pc0bCmiPgshwxQw==
-X-Received: by 2002:a05:600c:294c:: with SMTP id n12mr16751201wmd.99.1571641094964;
-        Sun, 20 Oct 2019 23:58:14 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id d11sm15924646wrf.80.2019.10.20.23.58.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 20 Oct 2019 23:58:14 -0700 (PDT)
-Date:   Mon, 21 Oct 2019 08:58:11 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Micah Morton <mortonm@chromium.org>,
-        Jann Horn <jannh@google.com>,
-        Bart Van Assche <bart.vanassche@wdc.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>
-Subject: Re: [GIT PULL] SafeSetID LSM changes for 5.4
-Message-ID: <20191021065811.GA17098@gmail.com>
-References: <CAJ-EccM49yBA+xgkR+3m5pEAJqmH_+FxfuAjijrQxaxxMUAt3Q@mail.gmail.com>
- <CAHk-=wiAsJLw1egFEE=Z7-GGtM6wcvtyytXZA1+BHqta4gg6Hw@mail.gmail.com>
- <20190923233038.GE7828@paulmck-ThinkPad-P72>
+        Mon, 21 Oct 2019 03:01:22 -0400
+Received: from mailgate02.nec.co.jp ([114.179.233.122])
+        by tyo162.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x9L715is011310
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Mon, 21 Oct 2019 16:01:05 +0900
+Received: from mailsv02.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
+        by mailgate02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x9L715qK029922;
+        Mon, 21 Oct 2019 16:01:05 +0900
+Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
+        by mailsv02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x9L6wk2o015052;
+        Mon, 21 Oct 2019 16:01:05 +0900
+Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.150] [10.38.151.150]) by mail02.kamome.nec.co.jp with ESMTP id BT-MMP-9696894; Mon, 21 Oct 2019 16:00:48 +0900
+Received: from BPXM23GP.gisp.nec.co.jp ([10.38.151.215]) by
+ BPXC22GP.gisp.nec.co.jp ([10.38.151.150]) with mapi id 14.03.0439.000; Mon,
+ 21 Oct 2019 16:00:47 +0900
+From:   Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+To:     Michal Hocko <mhocko@kernel.org>
+CC:     Oscar Salvador <osalvador@suse.de>,
+        "mike.kravetz@oracle.com" <mike.kravetz@oracle.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH v2 01/16] mm,hwpoison: cleanup unused PageHuge()
+ check
+Thread-Topic: [RFC PATCH v2 01/16] mm,hwpoison: cleanup unused PageHuge()
+ check
+Thread-Index: AQHVhPYzQyNwsIsv3k6BqLdb1qTKQ6dfsyIAgARmlwA=
+Date:   Mon, 21 Oct 2019 07:00:46 +0000
+Message-ID: <20191021070046.GA8782@hori.linux.bs1.fc.nec.co.jp>
+References: <20191017142123.24245-1-osalvador@suse.de>
+ <20191017142123.24245-2-osalvador@suse.de>
+ <20191018114832.GK5017@dhcp22.suse.cz>
+In-Reply-To: <20191018114832.GK5017@dhcp22.suse.cz>
+Accept-Language: en-US, ja-JP
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.34.125.96]
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-ID: <6BF87E54D030EF48B85507594593D748@gisp.nec.co.jp>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190923233038.GE7828@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-TM-AS-MML: disable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Oct 18, 2019 at 01:48:32PM +0200, Michal Hocko wrote:
+> On Thu 17-10-19 16:21:08, Oscar Salvador wrote:
+> > From: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+> > 
+> > Drop the PageHuge check since memory_failure forks into memory_failure_hugetlb()
+> > for hugetlb pages.
+> > 
+> > Signed-off-by: Oscar Salvador <osalvador@suse.de>
+> > Signed-off-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+> 
+> s-o-b chain is reversed.
+> 
+> The code is a bit confusing. Doesn't this check aim for THP?
 
-* Paul E. McKenney <paulmck@kernel.org> wrote:
+No, PageHuge() is false for thp, so this if branch is just dead code.
 
-> --- a/include/linux/rcupdate.h
-> +++ b/include/linux/rcupdate.h
-> @@ -383,20 +383,22 @@ do {									      \
->  } while (0)
->  
->  /**
-> - * rcu_swap_protected() - swap an RCU and a regular pointer
-> - * @rcu_ptr: RCU pointer
-> + * rcu_replace() - replace an RCU pointer, returning its old value
-> + * @rcu_ptr: RCU pointer, whose old value is returned
->   * @ptr: regular pointer
-> - * @c: the conditions under which the dereference will take place
-> + * @c: the lockdep conditions under which the dereference will take place
->   *
-> - * Perform swap(@rcu_ptr, @ptr) where @rcu_ptr is an RCU-annotated pointer and
-> - * @c is the argument that is passed to the rcu_dereference_protected() call
-> - * used to read that pointer.
-> + * Perform a replacement, where @rcu_ptr is an RCU-annotated
-> + * pointer and @c is the lockdep argument that is passed to the
-> + * rcu_dereference_protected() call used to read that pointer.  The old
-> + * value of @rcu_ptr is returned, and @rcu_ptr is set to @ptr.
->   */
-> -#define rcu_swap_protected(rcu_ptr, ptr, c) do {			\
-> +#define rcu_replace(rcu_ptr, ptr, c)					\
-> +({									\
->  	typeof(ptr) __tmp = rcu_dereference_protected((rcu_ptr), (c));	\
->  	rcu_assign_pointer((rcu_ptr), (ptr));				\
-> -	(ptr) = __tmp;							\
-> -} while (0)
-> +	__tmp;								\
-> +})
+> AFAICS
+> PageTransHuge(hpage) will split the THP or fail so PageTransHuge
+> shouldn't be possible anymore, right?
 
-One small suggestion, would it make sense to name it "rcu_replace_pointer()"?
+Yes, that's right.
 
-This would make it fit into the pointer handling family of RCU functions: 
-rcu_assign_pointer(), rcu_access_pointer(), RCU_INIT_POINTER() et al?
+> But why does hwpoison_user_mappings
+> still work with hpage then?
 
-rcu_swap() would also look a bit weird if used in MM code. ;-)
+hwpoison_user_mappings() is called both from memory_failure() and
+from memory_failure_hugetlb(), so it need handle both cases.
 
 Thanks,
+Naoya Horiguchi
 
-	Ingo
+> 
+> > ---
+> >  mm/memory-failure.c | 5 +----
+> >  1 file changed, 1 insertion(+), 4 deletions(-)
+> > 
+> > diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+> > index 05c8c6df25e6..2cbadb58c7df 100644
+> > --- a/mm/memory-failure.c
+> > +++ b/mm/memory-failure.c
+> > @@ -1345,10 +1345,7 @@ int memory_failure(unsigned long pfn, int flags)
+> >  	 * page_remove_rmap() in try_to_unmap_one(). So to determine page status
+> >  	 * correctly, we save a copy of the page flags at this time.
+> >  	 */
+> > -	if (PageHuge(p))
+> > -		page_flags = hpage->flags;
+> > -	else
+> > -		page_flags = p->flags;
+> > +	page_flags = p->flags;
+> >  
+> >  	/*
+> >  	 * unpoison always clear PG_hwpoison inside page lock
+> > -- 
+> > 2.12.3
+> 
+> -- 
+> Michal Hocko
+> SUSE Labs
+> 
