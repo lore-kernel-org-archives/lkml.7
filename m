@@ -3,257 +3,196 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 575C2CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:01:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA441CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:03:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E8742084C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:01:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96DC22084C
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:03:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="LB6qbqzg"
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="U+xeAb/J";
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="U+xeAb/J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729201AbfJUOB1 (ORCPT
+        id S1728910AbfJUODQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 10:01:27 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:33070 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727152AbfJUOB1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 10:01:27 -0400
-Received: by mail-qk1-f194.google.com with SMTP id 71so8820029qkl.0
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 07:01:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=UpxkHPEmvTpGSIaFfa1DVMi1SAwYCw7pioD2SbRukZE=;
-        b=LB6qbqzgqbrNch0AZul4MtUoNoWGQPcU8MBz4tSIndiDbzA3fH3ppUvQ5D4B6Wv0zc
-         TsAyl2I/FDDcL2jwNvVc+x85z25xX7MPs5XAw7iy2WMQwfXENuw/h6nu3pfhWvkpPO5R
-         hbvc/OeLyZdoZgJmlpNPDuYM62Xgl0VwIKBcqZApE3h48gURHvTMJeNYZBcr2bQypfDM
-         Z3Q33cO5sR1ZQqsGY+eLRguKebxTpKEn7Un2V15h30Ylag7FK4/07P/Hxn8/FHMGJPYj
-         v5MvxM4D6S9gEZKHgOV6QVlH1cHM56QJsgvj7sEZNgjaqo7ihXd1veQRsnjAX53MOsXE
-         Vf/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=UpxkHPEmvTpGSIaFfa1DVMi1SAwYCw7pioD2SbRukZE=;
-        b=rRXh0emKY/z490vscyv/ISFOJuntxnyibx3Mxaeh14fhNmfY3SgA5xrGyawwUE4sTR
-         B/AHjvnrymU2XRlMN4wzLqkiyKxwVk/KABLWpuOX+wZX/MHlw1ORh3wU3WWiZ//rlj2X
-         82TSsx03HUrB0asHXGhEvSh+p8rmjl1c/gpr434BX6PBLYLTXXtldEIdWDn0kk+F9fL/
-         txFmW2Pwh9g5tiXky/8gy3fWbHAbfURtglAUTFUD+x1lU2MLaj0avRAdCwn+vk5H4+we
-         YvojC+Hgbv4DLsgdsuX/y0ls43Yfe/smKMtjrdEQQ7qn4jpnjm0U+mmkeuK/UTYjm+Ie
-         gBkA==
-X-Gm-Message-State: APjAAAWGWeP8Z5e6yZV53qHav9G4VU0XJJxdsNfa2HtjaiWcnTPQY1Sl
-        wWDmdZq8tOyiJax6HeNu0xbWfA==
-X-Google-Smtp-Source: APXvYqy3UHgnO34VHMLYiT3Nah+9/0i2v9AhBD33Pql6X9qoosSZ2V8VKcb48rozDP8Aa5t7888x4w==
-X-Received: by 2002:a05:620a:9da:: with SMTP id y26mr12170065qky.456.1571666485959;
-        Mon, 21 Oct 2019 07:01:25 -0700 (PDT)
-Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id q64sm8476827qkb.32.2019.10.21.07.01.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 21 Oct 2019 07:01:25 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH 1/3] mm, meminit: Recalculate pcpu batch and high limits
- after init completes
-From:   Qian Cai <cai@lca.pw>
-In-Reply-To: <20191021094808.28824-2-mgorman@techsingularity.net>
-Date:   Mon, 21 Oct 2019 10:01:24 -0400
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        Borislav Petkov <bp@alien8.de>, Linux-MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        Mon, 21 Oct 2019 10:03:16 -0400
+Received: from mail-eopbgr60056.outbound.protection.outlook.com ([40.107.6.56]:55429
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728551AbfJUODQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 10:03:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3XlYmLm08HoM71Dq2zLhftn6+THIaEXH85ueIuTPgfo=;
+ b=U+xeAb/JzKVwF10rnEdQYVIezu6jE1WljMMi8kMZgqXhBZdUdIGOq0wGuWVxGvwWQ8jb+iG7Z68SJx0Nw7KtD0ek92EXDuBVyAlqisvUFfKJ4SQxcr1HwBpYhOsLG5MAHdt7cqD+iWTv0ZN8rKS+40gbS/u6Z7C+fSEGHKY1h7g=
+Received: from VI1PR08CA0131.eurprd08.prod.outlook.com (2603:10a6:800:d4::33)
+ by DB7PR08MB3275.eurprd08.prod.outlook.com (2603:10a6:5:24::26) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2347.19; Mon, 21 Oct
+ 2019 14:03:08 +0000
+Received: from VE1EUR03FT051.eop-EUR03.prod.protection.outlook.com
+ (2a01:111:f400:7e09::201) by VI1PR08CA0131.outlook.office365.com
+ (2603:10a6:800:d4::33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2367.21 via Frontend
+ Transport; Mon, 21 Oct 2019 14:03:08 +0000
+Authentication-Results: spf=temperror (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=none action=none
+ header.from=arm.com;
+Received-SPF: TempError (protection.outlook.com: error in processing during
+ lookup of arm.com: DNS Timeout)
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ VE1EUR03FT051.mail.protection.outlook.com (10.152.19.75) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2367.23 via Frontend Transport; Mon, 21 Oct 2019 14:03:06 +0000
+Received: ("Tessian outbound e4042aced47b:v33"); Mon, 21 Oct 2019 14:03:04 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: 7c6971fbf46c02f8
+X-CR-MTA-TID: 64aa7808
+Received: from 92992491f1c0.2 (ip-172-16-0-2.eu-west-1.compute.internal [104.47.9.59])
+        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 7D6622F6-4759-4C40-8592-B400F17CA374.1;
+        Mon, 21 Oct 2019 14:02:58 +0000
+Received: from EUR03-VE1-obe.outbound.protection.outlook.com (mail-ve1eur03lp2059.outbound.protection.outlook.com [104.47.9.59])
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 92992491f1c0.2
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384);
+    Mon, 21 Oct 2019 14:02:58 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JuFDmzbqMaGTbuydZmFbyueIhujbKVtdO7wHY6c7sXvv2NxRIDdmy4Pm7jyoG0vN4HphG60jyoNftcVQN/lQg1P/mlo9RGjUB/TVnhMEczgR8/szcOhoy4J2qbv2gcq14RDttWQkYQapFzc5e1xL7565fv4EAihiB3XnPXmL5DIl1gjK4Z8yXUgPaYca0WJA3dm546hoyRXe5Rx2gE9GR63erDnnNnVDS/xZo5TKJmK4vDLDNpYqz2GSGb/tLp7Oe8a8U5Tv+9D26Jvhr0GSycY3K/eGGSFLitqw1AM+ZASRxg5jd6V4lFYZgEKgxDVj2gmCJ2u7+K3SJz7JBDnyrg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3XlYmLm08HoM71Dq2zLhftn6+THIaEXH85ueIuTPgfo=;
+ b=WwpwVlAcSot4ye35fNg5Ir5iYJ3RJ+LWlU/vnUYpIoioXyXnwhv/sQtKpC5R6/0oPL8UaZkXN4/EpNX7qiI8wKhmF9WXDth2BfAdjdU5dSZbZPAcwZMx4zy0ICvsK7uLCLd13g7TB7nUViLKQDmRzilVraDf7vs2Rzcegf+7I4c4mYc4HtiyazCTh1Rt/VpOl6KNMnz2SRA0vqah9D6iHZ7aQxWlMf+vy1jFDyFoq0V595fVy1iTG1FG3k1tIfZS4f/kWHqO1zmBGUk6dzDlgulkF7+nGg9Gnwi68tbTiFGGdazSa/TP+Saem1J1YqazjCxhHvF1wxzbbmVVneuUfQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3XlYmLm08HoM71Dq2zLhftn6+THIaEXH85ueIuTPgfo=;
+ b=U+xeAb/JzKVwF10rnEdQYVIezu6jE1WljMMi8kMZgqXhBZdUdIGOq0wGuWVxGvwWQ8jb+iG7Z68SJx0Nw7KtD0ek92EXDuBVyAlqisvUFfKJ4SQxcr1HwBpYhOsLG5MAHdt7cqD+iWTv0ZN8rKS+40gbS/u6Z7C+fSEGHKY1h7g=
+Received: from VI1PR08MB4078.eurprd08.prod.outlook.com (20.178.127.92) by
+ VI1PR08MB3248.eurprd08.prod.outlook.com (10.171.183.13) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2367.24; Mon, 21 Oct 2019 14:02:56 +0000
+Received: from VI1PR08MB4078.eurprd08.prod.outlook.com
+ ([fe80::7d25:d1f2:e3eb:868b]) by VI1PR08MB4078.eurprd08.prod.outlook.com
+ ([fe80::7d25:d1f2:e3eb:868b%6]) with mapi id 15.20.2367.022; Mon, 21 Oct 2019
+ 14:02:56 +0000
+From:   Mihail Atanassov <Mihail.Atanassov@arm.com>
+To:     "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
+CC:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        David Airlie <airlied@linux.ie>,
+        Liviu Dudau <Liviu.Dudau@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        nd <nd@arm.com>
+Subject: Re: [v2] drm/komeda: Fix typos in komeda_splitter_validate
+Thread-Topic: [v2] drm/komeda: Fix typos in komeda_splitter_validate
+Thread-Index: AQHVg/rzQgJg1rsyuUiz1kR3zevdn6dlKIKA
+Date:   Mon, 21 Oct 2019 14:02:56 +0000
+Message-ID: <5882846.nLqbd4GdRz@e123338-lin>
+References: <20190930122231.33029-1-mihail.atanassov@arm.com>
+ <20191016082255.GA18768@jamwan02-TSP300>
+In-Reply-To: <20191016082255.GA18768@jamwan02-TSP300>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [217.140.106.51]
+x-clientproxiedby: LO2P123CA0031.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600::19)
+ To VI1PR08MB4078.eurprd08.prod.outlook.com (2603:10a6:803:e5::28)
+Authentication-Results-Original: spf=none (sender IP is )
+ smtp.mailfrom=Mihail.Atanassov@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+X-MS-Office365-Filtering-Correlation-Id: ebe5627f-9dde-4905-e709-08d7562f65fd
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-TrafficTypeDiagnostic: VI1PR08MB3248:|VI1PR08MB3248:|DB7PR08MB3275:
+x-ms-exchange-transport-forked: True
+X-Microsoft-Antispam-PRVS: <DB7PR08MB3275EB5233A052C40862327B8F690@DB7PR08MB3275.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+x-ms-oob-tlc-oobclassifiers: OLM:7219;OLM:7219;
+x-forefront-prvs: 0197AFBD92
+X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(4636009)(7916004)(376002)(366004)(39860400002)(396003)(346002)(136003)(199004)(189003)(51914003)(305945005)(7736002)(6116002)(3846002)(6862004)(6246003)(4326008)(6486002)(99286004)(52116002)(71200400001)(76176011)(71190400001)(54906003)(316002)(6436002)(6512007)(9686003)(229853002)(2906002)(33716001)(25786009)(478600001)(81156014)(6636002)(81166006)(8676002)(8936002)(86362001)(446003)(14454004)(5660300002)(386003)(6506007)(102836004)(26005)(14444005)(256004)(486006)(66066001)(64756008)(66556008)(66476007)(66946007)(66446008)(11346002)(476003)(186003)(39026011);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR08MB3248;H:VI1PR08MB4078.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: 5ygR+oVsRYUsPprnwRGdiui7iwDKYLUJikaHLpuErYHt9jH71UKRMiODd8QuzNA08qikMouFINWZeBNqhIcnzgmjQOQFGsHeYqt3ToSaVffMwtY3smsdTUecKKJ4wIj59FZKI4AddtUDewV8uX1rXn3PXWDRacs7zCZDoZLaCn+zCXh8VkkIXPJTe018FoxvRErvqNSUj41ms/F9ZVrzNmD1/+5mCBkIY9HxaRxYcSt+BsY5gMTgjMNXZnx0CSddphN4xj6HLGMGAqIDlAza5ANEqrS9Rx6PrBP9RwuNJMUIguR/BS8p1EBlBN2XxVHjDZUFlp+AeJKpbIZckqEq/yxWCKIKHxuExM7OR4bP6Bgzz49uhbfDHfpogvo4DuHVRQYdHKy6D0lXPhqIRf460/msl09AC1AK3NNfPBnbxxLJ4hC+5/WT9tRaQysFi8vA
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <7DD74D089B872E4C8ABD08A6F5A8F12E@eurprd08.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <85A7E76A-0839-4A43-86F3-6847639F9F92@lca.pw>
-References: <20191021094808.28824-1-mgorman@techsingularity.net>
- <20191021094808.28824-2-mgorman@techsingularity.net>
-To:     Mel Gorman <mgorman@techsingularity.net>
-X-Mailer: Apple Mail (2.3445.104.11)
+MIME-Version: 1.0
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB3248
+Original-Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Mihail.Atanassov@arm.com; 
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: VE1EUR03FT051.eop-EUR03.prod.protection.outlook.com
+X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(7916004)(4636009)(396003)(376002)(39860400002)(346002)(136003)(189003)(199004)(51914003)(305945005)(97756001)(8936002)(86362001)(102836004)(46406003)(26005)(486006)(7736002)(76130400001)(386003)(8746002)(6506007)(36906005)(3846002)(6116002)(66066001)(23726003)(186003)(446003)(11346002)(14444005)(63350400001)(356004)(336012)(126002)(99286004)(2906002)(6636002)(476003)(33716001)(8676002)(54906003)(70206006)(9686003)(4326008)(26826003)(81156014)(478600001)(81166006)(6486002)(25786009)(6512007)(47776003)(5660300002)(229853002)(76176011)(316002)(6862004)(50466002)(70586007)(22756006)(14454004)(6246003)(39026011);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR08MB3275;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:TempError;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;MX:1;A:1;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 83be254d-2d2b-4039-0fd7-08d7562f5f71
+NoDisclaimer: True
+X-Forefront-PRVS: 0197AFBD92
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 6tK3a2R5m7lauPYJTdhFqd3djCORTHdVvG5zsjIKvAiP89kS4ToJ7pYfGTLBF6GDiVMS0iNSE605Un/4EzxZ5b7fpIlDk2psOTEvc4mpLurtyc43YhDCfO6uz/mIY+3SsZkf0Sf4o1BuHNc2IB3UgvhzlzmhbfZx6FO4DtnhLttwRgJGAWetqcqVga3Iom1wi+5NOuW9wCWLcsaKy6ah3jCUauI37R6bp6ZAWyg/+6yhJ0wjqVuzjv3axmESW5a6k0c4tVcEf9XgH5H8mQ3xoyY0hIvCOKIJ6k+rr6XmlkLQZ8AvGbgi+yh+eV7DKNPROfZ++8z+tXt9v+ntdsi5aivgPCkSF0eTwVgF0ex1UFIBdk9MDshypcMyUSMl2IbV742g+Xp+DdjIvCxtlDb7LYQoLABFxng4RyPjvRdG6Mw=
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Oct 2019 14:03:06.9703
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: ebe5627f-9dde-4905-e709-08d7562f65fd
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR08MB3275
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wednesday, 16 October 2019 09:23:03 BST james qian wang (Arm Technology =
+China) wrote:
+> On Mon, Sep 30, 2019 at 12:23:07PM +0000, Mihail Atanassov wrote:
+> > Fix both the string and the struct member being printed.
+> >=20
+> > Changes since v1:
+> >  - Now with a bonus grammar fix, too.
+> >=20
+> > Fixes: 264b9436d23b ("drm/komeda: Enable writeback split support")
+> > Signed-off-by: Mihail Atanassov <mihail.atanassov@arm.com>
+> > ---
+> >  drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >=20
+> > diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c=
+ b/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c
+> > index 950235af1e79..2b624bfe1751 100644
+> > --- a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c
+> > +++ b/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c
+> > @@ -564,8 +564,8 @@ komeda_splitter_validate(struct komeda_splitter *sp=
+litter,
+> >  	}
+> > =20
+> >  	if (!in_range(&splitter->vsize, dflow->in_h)) {
+> > -		DRM_DEBUG_ATOMIC("split in_in: %d exceed the acceptable range.\n",
+> > -				 dflow->in_w);
+> > +		DRM_DEBUG_ATOMIC("split in_h: %d exceeds the acceptable range.\n",
+> > +				 dflow->in_h);
+>=20
+> Reviewed-by: James Qian Wang (Arm Technology China) <james.qian.wang@arm.=
+com>
+
+Thanks for the review, applied to drm-misc-fixes -
+8ae501e295cce9bc6e0dd82d5204a1d5faef44f8.
+
+> >  		return -EINVAL;
+> >  	}
+> > =20
+>=20
 
 
-> On Oct 21, 2019, at 5:48 AM, Mel Gorman <mgorman@techsingularity.net> =
-wrote:
->=20
-> Deferred memory initialisation updates zone->managed_pages during
-> the initialisation phase but before that finishes, the per-cpu page
-> allocator (pcpu) calculates the number of pages allocated/freed in
-> batches as well as the maximum number of pages allowed on a per-cpu =
-list.
-> As zone->managed_pages is not up to date yet, the pcpu initialisation
-> calculates inappropriately low batch and high values.
->=20
-> This increases zone lock contention quite severely in some cases with =
-the
-> degree of severity depending on how many CPUs share a local zone and =
-the
-> size of the zone. A private report indicated that kernel build times =
-were
-> excessive with extremely high system CPU usage. A perf profile =
-indicated
-> that a large chunk of time was lost on zone->lock contention.
->=20
-> This patch recalculates the pcpu batch and high values after deferred
-> initialisation completes for every populated zone in the system. It
-> was tested on a 2-socket AMD EPYC 2 machine using a kernel compilation
-> workload -- allmodconfig and all available CPUs.
->=20
-> mmtests configuration: config-workload-kernbench-max
-> Configuration was modified to build on a fresh XFS partition.
->=20
-> kernbench
->                                5.4.0-rc3              5.4.0-rc3
->                                  vanilla           resetpcpu-v2
-> Amean     user-256    13249.50 (   0.00%)    16401.31 * -23.79%*
-> Amean     syst-256    14760.30 (   0.00%)     4448.39 *  69.86%*
-> Amean     elsp-256      162.42 (   0.00%)      119.13 *  26.65%*
-> Stddev    user-256       42.97 (   0.00%)       19.15 (  55.43%)
-> Stddev    syst-256      336.87 (   0.00%)        6.71 (  98.01%)
-> Stddev    elsp-256        2.46 (   0.00%)        0.39 (  84.03%)
->=20
->                   5.4.0-rc3    5.4.0-rc3
->                     vanilla resetpcpu-v2
-> Duration User       39766.24     49221.79
-> Duration System     44298.10     13361.67
-> Duration Elapsed      519.11       388.87
->=20
-> The patch reduces system CPU usage by 69.86% and total build time by
-> 26.65%. The variance of system CPU usage is also much reduced.
->=20
-> Before, this was the breakdown of batch and high values over all zones =
-was.
->=20
->    256               batch: 1
->    256               batch: 63
->    512               batch: 7
->    256               high:  0
->    256               high:  378
->    512               high:  42
->=20
-> 512 pcpu pagesets had a batch limit of 7 and a high limit of 42. After =
-the patch
->=20
->    256               batch: 1
->    768               batch: 63
->    256               high:  0
->    768               high:  378
->=20
-> Cc: stable@vger.kernel.org # v4.1+
-> Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
-> ---
-> mm/page_alloc.c | 8 ++++++++
-> 1 file changed, 8 insertions(+)
->=20
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index c0b2e0306720..f972076d0f6b 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -1947,6 +1947,14 @@ void __init page_alloc_init_late(void)
-> 	/* Block until all are initialised */
-> 	wait_for_completion(&pgdat_init_all_done_comp);
->=20
-> +	/*
-> +	 * The number of managed pages has changed due to the =
-initialisation
-> +	 * so the pcpu batch and high limits needs to be updated or the =
-limits
-> +	 * will be artificially small.
-> +	 */
-> +	for_each_populated_zone(zone)
-> +		zone_pcp_update(zone);
-> +
-> 	/*
-> 	 * We initialized the rest of the deferred pages.  Permanently =
-disable
-> 	 * on-demand struct page initialization.
-> --=20
-> 2.16.4
->=20
->=20
+--=20
+Mihail
 
-Warnings from linux-next,
 
-[   14.265911][  T659] BUG: sleeping function called from invalid =
-context at kernel/locking/mutex.c:935
-[   14.265992][  T659] in_atomic(): 1, irqs_disabled(): 1, non_block: 0, =
-pid: 659, name: pgdatinit8
-[   14.266044][  T659] 1 lock held by pgdatinit8/659:
-[   14.266075][  T659]  #0: c000201ffca87b40 =
-(&(&pgdat->node_size_lock)->rlock){....}, at: =
-deferred_init_memmap+0xc4/0x26c
-[   14.266160][  T659] irq event stamp: 26
-[   14.266194][  T659] hardirqs last  enabled at (25): =
-[<c000000000950584>] _raw_spin_unlock_irq+0x44/0x80
-[   14.266246][  T659] hardirqs last disabled at (26): =
-[<c0000000009502ec>] _raw_spin_lock_irqsave+0x3c/0xa0
-[   14.266299][  T659] softirqs last  enabled at (0): =
-[<c0000000000ff8d0>] copy_process+0x720/0x19b0
-[   14.266339][  T659] softirqs last disabled at (0): =
-[<0000000000000000>] 0x0
-[   14.266400][  T659] CPU: 64 PID: 659 Comm: pgdatinit8 Not tainted =
-5.4.0-rc4-next-20191021 #1
-[   14.266462][  T659] Call Trace:
-[   14.266494][  T659] [c00000003d8efae0] [c000000000921cf4] =
-dump_stack+0xe8/0x164 (unreliable)
-[   14.266538][  T659] [c00000003d8efb30] [c000000000157c54] =
-___might_sleep+0x334/0x370
-[   14.266577][  T659] [c00000003d8efbb0] [c00000000094a784] =
-__mutex_lock+0x84/0xb20
-[   14.266627][  T659] [c00000003d8efcc0] [c000000000954038] =
-zone_pcp_update+0x34/0x64
-[   14.266677][  T659] [c00000003d8efcf0] [c000000000b9e6bc] =
-deferred_init_memmap+0x1b8/0x26c
-[   14.266740][  T659] [c00000003d8efdb0] [c000000000149528] =
-kthread+0x1a8/0x1b0
-[   14.266792][  T659] [c00000003d8efe20] [c00000000000b748] =
-ret_from_kernel_thread+0x5c/0x74
-[   14.268288][  T659] node 8 initialised, 1879186 pages in 12200ms
-[   14.268527][  T659] pgdatinit8 (659) used greatest stack depth: 27984 =
-bytes left
-[   15.589983][  T658] BUG: sleeping function called from invalid =
-context at kernel/locking/mutex.c:935
-[   15.590041][  T658] in_atomic(): 1, irqs_disabled(): 1, non_block: 0, =
-pid: 658, name: pgdatinit0
-[   15.590078][  T658] 1 lock held by pgdatinit0/658:
-[   15.590108][  T658]  #0: c000001fff5c7b40 =
-(&(&pgdat->node_size_lock)->rlock){....}, at: =
-deferred_init_memmap+0xc4/0x26c
-[   15.590192][  T658] irq event stamp: 18
-[   15.590224][  T658] hardirqs last  enabled at (17): =
-[<c000000000950654>] _raw_spin_unlock_irqrestore+0x94/0xd0
-[   15.590283][  T658] hardirqs last disabled at (18): =
-[<c0000000009502ec>] _raw_spin_lock_irqsave+0x3c/0xa0
-[   15.590332][  T658] softirqs last  enabled at (0): =
-[<c0000000000ff8d0>] copy_process+0x720/0x19b0
-[   15.590379][  T658] softirqs last disabled at (0): =
-[<0000000000000000>] 0x0
-[   15.590414][  T658] CPU: 8 PID: 658 Comm: pgdatinit0 Tainted: G       =
- W         5.4.0-rc4-next-20191021 #1
-[   15.590460][  T658] Call Trace:
-[   15.590491][  T658] [c00000003d8cfae0] [c000000000921cf4] =
-dump_stack+0xe8/0x164 (unreliable)
-[   15.590541][  T658] [c00000003d8cfb30] [c000000000157c54] =
-___might_sleep+0x334/0x370
-[   15.590588][  T658] [c00000003d8cfbb0] [c00000000094a784] =
-__mutex_lock+0x84/0xb20
-[   15.590643][  T658] [c00000003d8cfcc0] [c000000000954038] =
-zone_pcp_update+0x34/0x64
-[   15.590689][  T658] [c00000003d8cfcf0] [c000000000b9e6bc] =
-deferred_init_memmap+0x1b8/0x26c
-[   15.590739][  T658] [c00000003d8cfdb0] [c000000000149528] =
-kthread+0x1a8/0x1b0
-[   15.590790][  T658] [c00000003d8cfe20] [c00000000000b748] =
-ret_from_kernel_thread+0x5c/0x74
 
