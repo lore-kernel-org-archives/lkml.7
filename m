@@ -2,127 +2,85 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD998CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:31:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F4C7CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:33:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD704218AC
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:31:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAF9C214AE
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:33:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571646836;
+	bh=hGLzhBE4xkGtiLhVS+A//J3+6WAAB/KlzKp2VNekAyo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=emVzdrWVK3WwTDniqt/DF0UmOD9vNzOg+LppheaF6nG+5SD8rxkFXAhPZn20FTFNB
+	 YkR4EMyNbOx9clifmvoPc5N690FGdFZh5cxRhyDaxzhYVW7nEYPhWpXsDGQ1XGo5wH
+	 QuMfXmmzgK+RYm4lzSjrZ5a8bg77WdWKm0Yexfzk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727716AbfJUIbP (ORCPT
+        id S1727073AbfJUIdz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 04:31:15 -0400
-Received: from mga12.intel.com ([192.55.52.136]:5700 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726199AbfJUIbO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 04:31:14 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 01:31:14 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,322,1566889200"; 
-   d="scan'208";a="196047642"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga008.fm.intel.com with ESMTP; 21 Oct 2019 01:31:13 -0700
-Received: from [10.226.39.21] (unknown [10.226.39.21])
-        by linux.intel.com (Postfix) with ESMTP id AF97658029D;
-        Mon, 21 Oct 2019 01:31:10 -0700 (PDT)
-Subject: Re: [PATCH v4 0/3] PCI: Add Intel PCIe Driver and respective
- dt-binding yaml file
-To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "andrew.murray@arm.com" <andrew.murray@arm.com>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "martin.blumenstingl@googlemail.com" 
-        <martin.blumenstingl@googlemail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "hch@infradead.org" <hch@infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "andriy.shevchenko@intel.com" <andriy.shevchenko@intel.com>,
-        "cheol.yong.kim@intel.com" <cheol.yong.kim@intel.com>,
-        "chuanhua.lei@linux.intel.com" <chuanhua.lei@linux.intel.com>,
-        "qi-ming.wu@intel.com" <qi-ming.wu@intel.com>
-References: <cover.1571638827.git.eswara.kota@linux.intel.com>
- <CH2PR12MB4007759DFE5F7F105A7D3363DA690@CH2PR12MB4007.namprd12.prod.outlook.com>
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-Message-ID: <cf1f6d9c-4145-ef12-4b88-737fe7a5de8c@linux.intel.com>
-Date:   Mon, 21 Oct 2019 16:31:09 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 21 Oct 2019 04:33:55 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41152 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726227AbfJUIdz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 04:33:55 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 7940DAEF9;
+        Mon, 21 Oct 2019 08:33:53 +0000 (UTC)
+Date:   Mon, 21 Oct 2019 10:33:52 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
+        alexander.h.duyck@linux.intel.com, aneesh.kumar@linux.ibm.com,
+        anshuman.khandual@arm.com, benh@kernel.crashing.org,
+        borntraeger@de.ibm.com, bp@alien8.de, cai@lca.pw,
+        catalin.marinas@arm.com, christophe.leroy@c-s.fr, dalias@libc.org,
+        damian.tometzki@gmail.com, dan.j.williams@intel.com,
+        dave.hansen@linux.intel.com, fenghua.yu@intel.com,
+        gerald.schaefer@de.ibm.com, glider@google.com, gor@linux.ibm.com,
+        gregkh@linuxfoundation.org, heiko.carstens@de.ibm.com,
+        hpa@zytor.com, ira.weiny@intel.com, jgg@ziepe.ca,
+        linux-mm@kvack.org, logang@deltatee.com, luto@kernel.org,
+        mark.rutland@arm.com, mgorman@techsingularity.net,
+        mingo@redhat.com, mm-commits@vger.kernel.org, mpe@ellerman.id.au,
+        osalvador@suse.de, pagupta@redhat.com, pasha.tatashin@soleen.com,
+        pasic@linux.ibm.com, paulus@samba.org,
+        pavel.tatashin@microsoft.com, peterz@infradead.org,
+        richard.weiyang@gmail.com, richardw.yang@linux.intel.com,
+        robin.murphy@arm.com, rppt@linux.ibm.com, stable@vger.kernel.org,
+        steve.capper@arm.com, tglx@linutronix.de, thomas.lendacky@amd.com,
+        tony.luck@intel.com, torvalds@linux-foundation.org, vbabka@suse.cz,
+        will@kernel.org, willy@infradead.org,
+        yamada.masahiro@socionext.com, yaojun8558363@gmail.com,
+        ysato@users.sourceforge.jp, yuzhao@google.com
+Subject: Re: [patch 07/26] mm/memunmap: don't access uninitialized memmap in
+ memunmap_pages()
+Message-ID: <20191021083352.GE9379@dhcp22.suse.cz>
+References: <20191019031939.9XlSnLGcS%akpm@linux-foundation.org>
+ <20191021082610.GC9379@dhcp22.suse.cz>
+ <8ae0ba46-371b-9fed-0225-2c05bd3d6748@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <CH2PR12MB4007759DFE5F7F105A7D3363DA690@CH2PR12MB4007.namprd12.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8ae0ba46-371b-9fed-0225-2c05bd3d6748@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Gustavo Pimentel,
+On Mon 21-10-19 10:28:16, David Hildenbrand wrote:
+> On 21.10.19 10:26, Michal Hocko wrote:
+> > Has this been properly reviewed? I do not see any Acks nor Reviewed-bys.
+> > 
+> 
+> As I modified this patch while carrying it along, it at least has my
+> implicit Ack/RB.
 
-On 10/21/2019 4:08 PM, Gustavo Pimentel wrote:
-> Hi,
->
->
-> On Mon, Oct 21, 2019 at 7:39:17, Dilip Kota <eswara.kota@linux.intel.com>
-> wrote:
->
->> Intel PCIe is synopsys based controller utilizes the Designware
-> Please do this general replacement in all your patches.
->
-> s/synopsys/Synopsys
->
-> and
->
-> s/Designware/DesignWare
-Sure, i will update it in the next patch version.
-(In the all other patches naming is proper, i got missed it here.)
-I will ensure and take care of it.
-
-Regards,
-Dilip
-
->
->> framework for host initialization and intel application
->> specific register configurations.
->>
->> Changes on v4:
->> 	Add lane resizing API in PCIe DesignWare driver.
->> 	Intel PCIe driver uses it for lane resizing which
->> 	 is being exposed through sysfs attributes.
->> 	Add Intel PCIe sysfs attributes is in separate patch.
->> 	Address review comments given on v3.
->>
->> Changes on v3:
->> 	Compared to v2, map_irq() patch is removed as it is no longer
->> 	  required for Intel PCIe driver. Intel PCIe driver does platform
->> 	  specific interrupt configuration during core initialization. So
->> 	  changed the subject line too.
->> 	Address v2 review comments for DT binding and PCIe driver
->>
->> Dilip Kota (3):
->>    dt-bindings: PCI: intel: Add YAML schemas for the PCIe RC controller
->>    dwc: PCI: intel: PCIe RC controller driver
->>    pci: intel: Add sysfs attributes to configure pcie link
->>
->>   .../devicetree/bindings/pci/intel-gw-pcie.yaml     | 135 ++++
->>   drivers/pci/controller/dwc/Kconfig                 |  10 +
->>   drivers/pci/controller/dwc/Makefile                |   1 +
->>   drivers/pci/controller/dwc/pcie-designware.c       |  43 ++
->>   drivers/pci/controller/dwc/pcie-designware.h       |  15 +
->>   drivers/pci/controller/dwc/pcie-intel-gw.c         | 700 +++++++++++++++
->>   include/uapi/linux/pci_regs.h                      |   1 +
->>   7 files changed, 905 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
->>   create mode 100644 drivers/pci/controller/dwc/pcie-intel-gw.c
->>
->> -- 
->> 2.11.0
->
+OK, thanks!
+-- 
+Michal Hocko
+SUSE Labs
