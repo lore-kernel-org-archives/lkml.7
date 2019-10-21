@@ -2,140 +2,126 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDC87CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:21:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56E23CA9EB0
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:21:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 885B12084B
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:21:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E3D82084B
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:21:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="woqRl8XY"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="ayXC65dy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729544AbfJUPVh (ORCPT
+        id S1727670AbfJUPVr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 11:21:37 -0400
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:40163 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728044AbfJUPVh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 11:21:37 -0400
-Received: by mail-ua1-f67.google.com with SMTP id i13so3917472uaq.7
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 08:21:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HvOcHe5sgnM2Ih10HPGzGtz2+0bgk7nxRpCIIRNQM7A=;
-        b=woqRl8XYxFpkzjzJqhbqZ/o37KeoHSE0zn/+EdUQU4kQK467JyEQRZgquspYLySMJZ
-         vCMxtniRWFfq8PVlZ9OGFFzdq97rjpzYh2Im6/ZIWGl0l35q9u2nYtQ5qwKUF7FS4wL7
-         2P0Kj/jEd3jg7Ez+ToqzRJnuVTDh8d3UGFwF8JzCSQDbp3qtYPyET4z/jfS7ij6tJ/hf
-         7GL4CWrXtUAiwDnyu7Ne2DqOG71Tws7noIZu7fb3BkqnZcwLLw0UoXtQrahfr6Jjm7pn
-         eNodA3bDqT/zML97urY/UvCPJ49M4R8UgiqBKA69H/qeXbtrLLspLWYcCBKJrcF67F5G
-         dokA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HvOcHe5sgnM2Ih10HPGzGtz2+0bgk7nxRpCIIRNQM7A=;
-        b=HMjBflvOsmT0n+amkFBg5CF9hkeT0HWO/L5pzSyBvq5qjL5tSieriq/pKzGFjbbDpv
-         eDKGcYR4l+O+Hn9/GAW5kUEs/z6YAQj7goXzpdBWunze5iqxLDPpwsEiX9pDJA+cPWCw
-         TRecfRN86j/xNF+7PHX65CzEL8Gwiu4GkH2hUofFtHrec7clFAUfuDc8Ch+eNa/xXdUS
-         Nt4Tx1gLXQ5TFLJTkOs01Mhl5ga0fyqW51mHECxlu24lDPrI8BsFNkoHGkPfNl5UThpN
-         ZdHLLawZ7ndPsTcKViq0mMom1WrTnP9B4Yh0LXDUOHoSyQtC9XGn/A2qrJObKjnAXzXB
-         x4Yw==
-X-Gm-Message-State: APjAAAU0Uh9rkxG33negCLAVLSTMdjssOz3ec3RtoD1vrRhppQrWfIG5
-        l26PvWdeUhmK1njw2DV7nqNd5IsBOrudCFJOnNLO9Q==
-X-Google-Smtp-Source: APXvYqzhMXR2NneFdAKl7YDt/OnBvYSd12yNpMMH2svyTHRBphhTEAUOoTgn9L00HK1pOKlkytzxjOdn37raM4VctCE=
-X-Received: by 2002:ab0:331a:: with SMTP id r26mr6180177uao.104.1571671295461;
- Mon, 21 Oct 2019 08:21:35 -0700 (PDT)
+        Mon, 21 Oct 2019 11:21:47 -0400
+Received: from mail.andi.de1.cc ([85.214.55.253]:49222 "EHLO mail.andi.de1.cc"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728044AbfJUPVq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 11:21:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Type:MIME-Version:References:
+        In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ive50pzx0WvHvVBcHs4Tzw6cThZ+6wdZ4fZseJxKh6Y=; b=ayXC65dyk+YOSvIqBmmJY2x7V
+        TWyVZxCtI01zsfw8AMN+8dQ+LYmDlCY3KB+73mt7MI2Vge8+mDP4wN2edfxFs3eE9vYplJfCXX5Xx
+        Nxh/VXE1kITiMjPNGqK6LiU9HvidAyB0U85G4md1nV1yt5NED5oEsyuPiEThoNfI1i2a8=;
+Received: from ip-109-41-64-49.web.vodafone.de ([109.41.64.49] helo=localhost)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1iMZV8-0001G7-Rs; Mon, 21 Oct 2019 17:21:43 +0200
+Received: from [::1] (helo=localhost)
+        by eeepc with esmtp (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1iMZV5-0001HV-EV; Mon, 21 Oct 2019 17:21:39 +0200
+Date:   Mon, 21 Oct 2019 17:20:55 +0200
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Stefan Agner <stefan@agner.ch>, lee.jones@linaro.org,
+        a.zummo@towertech.it, linux-kernel@vger.kernel.org,
+        linux-rtc@vger.kernel.org, phh@phh.me, b.galvani@gmail.com,
+        letux-kernel@openphoenux.org
+Subject: Re: [PATCH 5/5] rtc: rtc-rc5t583: add ricoh rc5t619 RTC driver
+Message-ID: <20191021172055.2fa66549@kemnade.info>
+In-Reply-To: <20191021135028.GV3125@piout.net>
+References: <20191021054104.26155-1-andreas@kemnade.info>
+        <20191021054104.26155-6-andreas@kemnade.info>
+        <d59b7e21112ac96a2d88ae623eb523fc@agner.ch>
+        <20191021135028.GV3125@piout.net>
+X-Mailer: Claws Mail 3.14.1 (GTK+ 2.24.31; i686-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20191021143742.14487-1-geert+renesas@glider.be>
-In-Reply-To: <20191021143742.14487-1-geert+renesas@glider.be>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 21 Oct 2019 17:20:59 +0200
-Message-ID: <CAPDyKFr5H5x9LRjvVsDbNoGgZx-EnZGgUD9fEt=esN8HumNDHQ@mail.gmail.com>
-Subject: Re: [PATCH 0/7] debugfs: Add and use debugfs_create_xul()
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Jaehoon Chung <jh80.chung@samsung.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        netdev <netdev@vger.kernel.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/uCseBc73aLEs0S5AZO0JIAC"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 21 Oct 2019 at 16:37, Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
->
->         Hi all,
->
-> The existing debugfs_create_ulong() function supports objects of
-> type "unsigned long", which are 32-bit or 64-bit depending on the
-> platform, in decimal form.  To format objects in hexadecimal, various
-> debugfs_create_x*() functions exist, but all of them take fixed-size
-> types.
->
-> To work around this, some drivers call one of debugfs_create_x{32,64}(),
-> depending on the size of unsigned long.
-> Other driver just cast the value pointer to "u32 *" or "u64 *",
-> introducing portability bugs or data leaks in the process.
->
-> Hence this patch series adds a debugfs helper for "unsigned long"
-> objects in hexadecimal format, and converts drivers to make use of it.
-> It also contains two cleanups removing superfluous casts, which I added
-> to this series to avoid conflicts.
->
-> Thanks for your comments!
+--Sig_/uCseBc73aLEs0S5AZO0JIAC
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-The mmc changes looks good to me. I guess we could funnel via Greg's
-"debugfs" tree?
+On Mon, 21 Oct 2019 15:50:28 +0200
+Alexandre Belloni <alexandre.belloni@bootlin.com> wrote:
 
-In such case, feel free to add my ack for the mmc changes.
+> On 21/10/2019 15:19:09+0200, Stefan Agner wrote:
+> > On 2019-10-21 07:41, Andreas Kemnade wrote: =20
+> > > Add an RTC driver for the RTC device on Ricoh MFD rc5t619,
+> > > which is implemented as a variant of rn5t618
+> > >=20
+> > > Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> > > ---
+> > >  drivers/rtc/Kconfig       |  10 +
+> > >  drivers/rtc/Makefile      |   1 +
+> > >  drivers/rtc/rtc-rc5t619.c | 476 ++++++++++++++++++++++++++++++++++++=
+++++++++++ =20
+> >=20
+> > Parts of this driver look very similar to drivers/rtc/rtc-rc5t583.c. Can
+> > it maybe shared?
+> >  =20
+>=20
+> If this could be done it would be better. I can't find any public
+> datasheet though...
+>=20
+at least they have different alarm configurations, The rc5t619 can specify
+alarm in seconds, the rc5t583 not but has other alarm configurations which
+are not present in the rn5t619 (judging by the lack of unused registers whe=
+re
+thoes information could be filled in).=20
 
-Kind regards
-Uffe
+Register addresses do not match.
+Some details seem to be the same like century flag.
+Interestingly the rc5t583 driver does not care about 12h/24h mode.
+So there is a bug there.=20
 
->
-> Geert Uytterhoeven (7):
->   debugfs: Add debugfs_create_xul() for hexadecimal unsigned long
->   mac80211: Use debugfs_create_xul() helper
->   net: caif: Fix debugfs on 64-bit platforms
->   mmc: atmel-mci: Fix debugfs on 64-bit platforms
->   mmc: atmel-mci: Remove superfluous cast in debugfs_create_u32() call
->   mmc: dw_mmc: Fix debugfs on 64-bit platforms
->   mmc: dw_mmc: Remove superfluous cast in debugfs_create_u32() call
->
->  drivers/mmc/host/atmel-mci.c   | 10 +++++-----
->  drivers/mmc/host/dw_mmc.c      | 10 +++++-----
->  drivers/net/caif/caif_serial.c |  4 ++--
->  include/linux/debugfs.h        | 10 ++++++++++
->  net/mac80211/debugfs_sta.c     | 17 +++--------------
->  5 files changed, 25 insertions(+), 26 deletions(-)
->
-> --
-> 2.17.1
->
-> Gr{oetje,eeting}s,
->
->                                                 Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                                             -- Linus Torvalds
+Regards,
+Andreas
+
+--Sig_/uCseBc73aLEs0S5AZO0JIAC
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAl2tzNcACgkQl4jFM1s/
+ye+ZuQ//fgwnaZghXCAjYyw0akgrJV9QoXWIwpcFg3jaD8MlWr3W6ykUn8iN2rZh
+dyolY1S7hFMI7asXpyW4DyI30AQ81fdEbivD3XeBYGWkWxm9/gmeSjyHyg5D3Qhm
+5HtJnaBL+7ejSyi8bDp8cc01ayYfbI6RlBdTxl0tqN50yRiPkgoDaf37d6GDt6Nk
+RfrD7W9UuXXDcHBXyimVK2QOx5Z1MPoCHXSa60tW1Mnv91ygut7C+b+lfKdwCHOC
+Edf4atI1gBAzog6/miUMmpqmqZr3d0bPJNx/wyOHqF0ERq76b2LYu1HIPj0Fpm1M
+ZxpcgqOmrwoWSYggbWOF9KLe1zldRWShJnUObAn9Nz0iSLu3byvexhLhz+/d8qVu
+ojbOFDeIXhl1PosjEVwyRlmmaJPRW7Lq7eodTFZTMUd9wKvt5Ih+6MCmXAVMFYeD
+9Wb1rkzzAt0JZR489SaXFpdXtYtlkYnkuTb712j0o7LzYqIkk0Bz9EiInJJLPcPH
+AgCwQMVG7BWi/d2HDBmHXb97vsuZeJcOjfYpe442Fl8zaT47vUHc28UHjseor8hy
+ZkBEUIQFlWlBGObgdowziC5tBrUjks3Ez8Oo43rqxKDACs2SJuWvfJPlHieeWS6H
+OHIMic6DjQLCZNH4bGcJpU7F5QiffqsFe/wZKiEluauiPACxl3M=
+=URg8
+-----END PGP SIGNATURE-----
+
+--Sig_/uCseBc73aLEs0S5AZO0JIAC--
