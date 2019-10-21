@@ -2,114 +2,115 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F068CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:13:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFA4ECA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:14:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EA0120B7C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:13:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FD04206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:14:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mwRpOH0w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728348AbfJULN2 (ORCPT
+        id S1728381AbfJULOB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 07:13:28 -0400
-Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:44325 "EHLO
-        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727571AbfJULN1 (ORCPT
+        Mon, 21 Oct 2019 07:14:01 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:36779 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727571AbfJULOB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 07:13:27 -0400
-Received: from [192.168.2.10] ([46.9.232.237])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id MVcniUFpbo1ZhMVcqiLppd; Mon, 21 Oct 2019 13:13:25 +0200
-Subject: Re: [PATCH v4 5/6] media: sun4i: Add H3 deinterlace driver
-To:     Jernej Skrabec <jernej.skrabec@siol.net>, mripard@kernel.org,
-        wens@csie.org
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-References: <20191017183738.68069-1-jernej.skrabec@siol.net>
- <20191017183738.68069-6-jernej.skrabec@siol.net>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <8137fbb3-036a-95e4-2642-5dd46fb55eb9@xs4all.nl>
-Date:   Mon, 21 Oct 2019 13:13:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 21 Oct 2019 07:14:01 -0400
+Received: by mail-wr1-f66.google.com with SMTP id w18so12925954wrt.3;
+        Mon, 21 Oct 2019 04:13:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=mgMbcoY2iJpVOplEPrT2MAbeo48JMxLYHTj4MqCq1qU=;
+        b=mwRpOH0wPwi/KPQsvXwxRbqS1VxWAgQjGku2mndAPqtu3tybu089S4li4nIA/cW2/l
+         FteZ3XVt/o7b4jPcCB1oD8Tpt8jJmQag81MZjpH7+hEe/qF+N4TbtG6KY28nYaos3nCJ
+         YmYUMPZPjlanRzT3IeLwYXYnz9aKGHcMGeuv3pAiOPx5xR09pU7I+duC7EC329TLb7mn
+         1X6AfShTT4tyf0AocysLbS0RGJhQc4TRjL5NAOQaVYzDE/HRlvj9u72BC8xoIU/ESuMe
+         PN+Nc+40EpBEJ4Ix5EeJUjEKGSSgLtY2rgHqPD2WVWOuPvbrAwqajAyZf2BQS6M/RgJg
+         QpwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=mgMbcoY2iJpVOplEPrT2MAbeo48JMxLYHTj4MqCq1qU=;
+        b=MqdoP1AHHbo3aVhmrks88WbHk3y7qD0Z7wSgDkhvx/liRulxXMkVN5iDXFn0JdyJyf
+         e2GPQTKRCEzdSCrK847FoTK8psG8ru3Z1uDEIle1/8vUvBVht9nozEjMqoU+sgQNU+CF
+         zf754uDHkE1swi6SWKbtJVwJIU56crwp5vOPr8XK8fvPt9ntd3Xdm8uPdXYetggOg/SO
+         JTIcFJbF1aeOk6kY4I6koLyommsu7Hl56VmwG0IEFls8PH1v7ikDr1lfGQdPwA8k/QOo
+         Am9UYP/BO26fyeGHrplePR1a0M8IocfoyHOdbGDckEs4xsrKwQICh8jZ14odi6/Mrtqr
+         ljPQ==
+X-Gm-Message-State: APjAAAVtucldr8V2tdpVhFcgwy7hRyBgBdqxtcipf5wL+cDwlfWOEJmE
+        gfw4dFPJxPsezlEkN1qWDcc=
+X-Google-Smtp-Source: APXvYqyKIYzVt9zufcyDAbXaDTwRCVxSvQ9LRWwDB4vGDpkV9mhHj3MLLzQFKqp+IGJrwRVwzBQACA==
+X-Received: by 2002:a5d:4302:: with SMTP id h2mr20268874wrq.35.1571656438614;
+        Mon, 21 Oct 2019 04:13:58 -0700 (PDT)
+Received: from pali ([2a02:2b88:2:1::5cc6:2f])
+        by smtp.gmail.com with ESMTPSA id v10sm10901208wmg.48.2019.10.21.04.13.57
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 21 Oct 2019 04:13:57 -0700 (PDT)
+Date:   Mon, 21 Oct 2019 13:13:57 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+To:     Maurizio Lombardi <mlombard@redhat.com>
+Cc:     Richard Weinberger <richard.weinberger@gmail.com>,
+        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH] fs: exFAT read-only driver GPL implementation by Paragon
+ Software.
+Message-ID: <20191021111357.q2lg2g43y7hrddqi@pali>
+References: <453A1153-9493-4A04-BF66-CE6A572DEBDB@paragon-software.com>
+ <CAFLxGvyFBGiDab4wxWidjRyDgWkHVfigVsHiRDB4swpB3G+hvQ@mail.gmail.com>
+ <20191021105409.32okvzbslxmcjdze@pali>
+ <0877502e-8369-9cfd-36e8-5a4798260cd4@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20191017183738.68069-6-jernej.skrabec@siol.net>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4wfOrcYAqH7QBWivX1AK7DllWSBUikBvpznnE0MCXdnJosMmjiQHFQoFOuDzkFg++s7AkvCd6Opgc3BsGoZqLEL7ZqPX8v6rDZHCa5ifDgksR9t+4pRPCZ
- fN+EMR3lWs0VBDAA6hWnNAMidQBrH/8raspDN/zVlgGKUP5w4K6d2FHdkGV9VRnzsJrw2LlRdOpqXajwCPfg6YUSFWUGe/1Owt8dKERa3AcaZZzVtEEdK5Ah
- lfbxQXo58S4JsIEy59RsW2utfHc8NzwSE6B9lTzU8SplcjMBxhUIzrYDBUQu/i+kFBrWxB0gWsNaXWn02oJU6vnveEddueSDOdeKmofpfhDsVmpoGi9Lv48H
- GrfiIfaYsPt3ddOy4G7f6voveea3cykjYeqNJRGdY17iZ/Z68XPXYAd/sCuBMCNy3e6e/p4MHS+RbaeokiKlt+39Qsu6d7VHqDuXaQLLorl48YzCINRfzZmO
- j/jE9cM7+akN4pJ0mDB5vGZchJ2iBkmpjZt9EHlIwg3I728Jvf5/Ht+gg5M=
+In-Reply-To: <0877502e-8369-9cfd-36e8-5a4798260cd4@redhat.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/17/19 8:37 PM, Jernej Skrabec wrote:
-> Allwinner H3 SoC contains deinterlace unit, which has several modes of
-> operation - bypass, weave, bob and mixed (advanced) mode. I don't know
-> how mixed mode works, but according to Allwinner it gives best results,
-> so they use it exclusively. Currently this mode is also hardcoded here.
+On Monday 21 October 2019 13:08:07 Maurizio Lombardi wrote:
+> Dne 21.10.2019 v 12:54 Pali Rohár napsal(a):
+> > Plus there is new version of
+> > this out-of-tree Samsung's exfat driver called sdfat which can be found
+> > in some Android phones. 
 > 
-> For each interleaved frame queued, this driver produces 2 deinterlaced
-> frames. Deinterlaced frames are based on 2 consequtive output buffers,
-> except for the first 2, where same output buffer is given to peripheral
-> as current and previous.
+> [...]
 > 
-> There is no documentation for this core, so register layout and fixed
-> values were taken from BSP driver.
+> > 
+> > About that one implementation from Samsung, which was recently merged
+> > into staging tree, more people wrote that code is in horrible state and
+> > probably it should not have been merged. That implementation has
+> > all-one-one driver FAT12, FAT16, FAT32 and exFAT which basically
+> > duplicate current kernel fs/fat code.
+> > 
+> > Quick look at this Konstantin's patch, it looks like that code is not in
+> > such bad state as staging one. It has only exFAT support (no FAT32) but
+> > there is no write support (yet).
 > 
-> I'm not sure if maximum size of the image unit is capable to process is
-> governed by size of "flag" buffers, frequency or it really is some HW
-> limitation. Currently driver can process full HD image in ~15ms (7.5ms
-> for each capture buffer), which allows to process 1920x1080@60i video
-> smoothly in real time.
+> But, AFAIK, Samsung is preparing a patch that will replace the current
+> staging driver with their newer sdfat driver that also has write support.
 > 
-> Acked-by: Maxime Ripard <mripard@kernel.org>
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> ---
->  MAINTAINERS                                   |    7 +
->  drivers/media/platform/Kconfig                |   12 +
->  drivers/media/platform/sunxi/Makefile         |    1 +
->  .../media/platform/sunxi/sun8i-di/Makefile    |    2 +
->  .../media/platform/sunxi/sun8i-di/sun8i-di.c  | 1028 +++++++++++++++++
->  .../media/platform/sunxi/sun8i-di/sun8i-di.h  |  237 ++++
->  6 files changed, 1287 insertions(+)
->  create mode 100644 drivers/media/platform/sunxi/sun8i-di/Makefile
->  create mode 100644 drivers/media/platform/sunxi/sun8i-di/sun8i-di.c
->  create mode 100644 drivers/media/platform/sunxi/sun8i-di/sun8i-di.h
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index c7b48525822a..c375455125fb 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -4646,6 +4646,13 @@ M:	"Maciej W. Rozycki" <macro@linux-mips.org>
->  S:	Maintained
->  F:	drivers/net/fddi/defxx.*
->  
-> +DEINTERLACE DRIVERS FOR ALLWINNER H3
-> +M:	Jernej Skrabec <jernej.skrabec@siol.net>
-> +L:	linux-media@vger.kernel.org
-> +T:	git git://linuxtv.org/media_tree.git
-> +S:	Maintained
-> +F:	drivers/media/platform/sunxi/sun8i-di/
+> https://marc.info/?l=linux-fsdevel&m=156985252507812&w=2
 
-This is missing the bindings file added in the previous patch.
+Maurizio, thank you for reference! I have not caught this Samsung
+activity yet! So we now we have +1 for count of exFAT drivers.
 
-Regards,
-
-	Hans
-
-> +
->  DELL SMBIOS DRIVER
->  M:	Pali Rohár <pali.rohar@gmail.com>
->  M:	Mario Limonciello <mario.limonciello@dell.com>
-
+-- 
+Pali Rohár
+pali.rohar@gmail.com
