@@ -2,102 +2,100 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FCD5CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:38:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F332CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:38:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 678CB20640
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:38:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8153420659
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:38:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729583AbfJUOif (ORCPT
+        id S1729596AbfJUOin (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 10:38:35 -0400
-Received: from michel.telenet-ops.be ([195.130.137.88]:57610 "EHLO
-        michel.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729405AbfJUOh4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 10:37:56 -0400
-Received: from ramsan ([84.194.98.4])
-        by michel.telenet-ops.be with bizsmtp
-        id GEdo2100S05gfCL06Edorm; Mon, 21 Oct 2019 16:37:54 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1iMYoe-0007cz-DO; Mon, 21 Oct 2019 16:37:48 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1iMYoe-0003mc-C6; Mon, 21 Oct 2019 16:37:48 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Jaehoon Chung <jh80.chung@samsung.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Johannes Berg <johannes@sipsolutions.net>
-Cc:     linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 2/7] mac80211: Use debugfs_create_xul() helper
-Date:   Mon, 21 Oct 2019 16:37:37 +0200
-Message-Id: <20191021143742.14487-3-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191021143742.14487-1-geert+renesas@glider.be>
-References: <20191021143742.14487-1-geert+renesas@glider.be>
+        Mon, 21 Oct 2019 10:38:43 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:54524 "EHLO foss.arm.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S1727670AbfJUOil (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 10:38:41 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B3F521042;
+        Mon, 21 Oct 2019 07:38:16 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2845D3F71F;
+        Mon, 21 Oct 2019 07:38:15 -0700 (PDT)
+Date:   Mon, 21 Oct 2019 15:38:13 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Steven Price <steven.price@arm.com>
+Cc:     Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Pouloze <suzuki.poulose@arm.com>,
+        kvm@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 01/10] KVM: arm64: Document PV-time interface
+Message-ID: <20191021143812.GB56589@lakrids.cambridge.arm.com>
+References: <20191011125930.40834-1-steven.price@arm.com>
+ <20191011125930.40834-2-steven.price@arm.com>
+ <20191015175651.GF24604@lakrids.cambridge.arm.com>
+ <20191018171039.GA18838@lakrids.cambridge.arm.com>
+ <d01edcb3-0d9a-d4ec-6a60-a82f3ffccba5@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d01edcb3-0d9a-d4ec-6a60-a82f3ffccba5@arm.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the new debugfs_create_xul() helper instead of open-coding the same
-operation.
+On Mon, Oct 21, 2019 at 02:40:31PM +0100, Steven Price wrote:
+> On 18/10/2019 18:10, Mark Rutland wrote:
+> > On Tue, Oct 15, 2019 at 06:56:51PM +0100, Mark Rutland wrote:
+> [...]
+> >>> +PV_TIME_ST
+> >>> +    ============= ========    ==========
+> >>> +    Function ID:  (uint32)    0xC5000021
+> >>> +    Return value: (int64)     IPA of the stolen time data structure for this
+> >>> +                              VCPU. On failure:
+> >>> +                              NOT_SUPPORTED (-1)
+> >>> +    ============= ========    ==========
+> >>> +
+> >>> +The IPA returned by PV_TIME_ST should be mapped by the guest as normal memory
+> >>> +with inner and outer write back caching attributes, in the inner shareable
+> >>> +domain. A total of 16 bytes from the IPA returned are guaranteed to be
+> >>> +meaningfully filled by the hypervisor (see structure below).
+> >>
+> >> At what granularity is this allowed to share IPA space with other
+> >> mappings? The spec doesn't provide any guidance here, and I strongly
+> >> suspect that it should.
+> >>
+> >> To support a 64K guest, we must ensure that this doesn't share a 64K IPA
+> >> granule with any MMIO, and it probably only makes sense for an instance
+> >> of this structure to share that granule with another vCPU's structure.
+> >>
+> >> We probably _also_ want to ensure that this doesn't share a 64K granule
+> >> with memory the guest sees as regular system RAM. Otherwise we're liable
+> >> to force it into having mismatched attributes for any of that RAM it
+> >> happens to map as part of mapping the PV_TIME_ST structure.
+> > 
+> > I guess we can say that it's userspace's responsibiltiy to set this up
+> > with sufficient alignment, but I do think we want to make a
+> > recommendataion here.
+> 
+> I can add something like this to the kernel's documentation:
+> 
+>     It is advisable that one or more 64k pages are set aside for the
+>     purpose of these structures and not used for other purposes, this
+>     enables the guest to map the region using 64k pages and avoids
+>     conflicting attributes with other memory.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- net/mac80211/debugfs_sta.c | 17 +++--------------
- 1 file changed, 3 insertions(+), 14 deletions(-)
+Sounds good to me!
 
-diff --git a/net/mac80211/debugfs_sta.c b/net/mac80211/debugfs_sta.c
-index c8ad20c28c438dab..ca34dcdac8c0bd4d 100644
---- a/net/mac80211/debugfs_sta.c
-+++ b/net/mac80211/debugfs_sta.c
-@@ -928,12 +928,7 @@ STA_OPS(he_capa);
- 		sta->debugfs_dir, sta, &sta_ ##name## _ops);
- 
- #define DEBUGFS_ADD_COUNTER(name, field)				\
--	if (sizeof(sta->field) == sizeof(u32))				\
--		debugfs_create_u32(#name, 0400, sta->debugfs_dir,	\
--			(u32 *) &sta->field);				\
--	else								\
--		debugfs_create_u64(#name, 0400, sta->debugfs_dir,	\
--			(u64 *) &sta->field);
-+	debugfs_create_ulong(#name, 0400, sta->debugfs_dir, &sta->field);
- 
- void ieee80211_sta_debugfs_add(struct sta_info *sta)
- {
-@@ -978,14 +973,8 @@ void ieee80211_sta_debugfs_add(struct sta_info *sta)
- 				    NL80211_EXT_FEATURE_AIRTIME_FAIRNESS))
- 		DEBUGFS_ADD(airtime);
- 
--	if (sizeof(sta->driver_buffered_tids) == sizeof(u32))
--		debugfs_create_x32("driver_buffered_tids", 0400,
--				   sta->debugfs_dir,
--				   (u32 *)&sta->driver_buffered_tids);
--	else
--		debugfs_create_x64("driver_buffered_tids", 0400,
--				   sta->debugfs_dir,
--				   (u64 *)&sta->driver_buffered_tids);
-+	debugfs_create_xul("driver_buffered_tids", 0400, sta->debugfs_dir,
-+			   &sta->driver_buffered_tids);
- 
- 	drv_sta_add_debugfs(local, sdata, &sta->sta, sta->debugfs_dir);
- }
--- 
-2.17.1
-
+Thanks,
+Mark.
