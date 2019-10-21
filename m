@@ -5,67 +5,67 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F8FCCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 20:52:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7488DCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 20:52:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D827A2084B
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 20:52:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BED22084B
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 20:52:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sASsBmWz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kVuc8Ee2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730545AbfJUUv7 (ORCPT
+        id S1730564AbfJUUwD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 16:51:59 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:41049 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730498AbfJUUvz (ORCPT
+        Mon, 21 Oct 2019 16:52:03 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:41956 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730498AbfJUUwB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 16:51:55 -0400
-Received: by mail-qt1-f193.google.com with SMTP id c17so20324279qtn.8;
-        Mon, 21 Oct 2019 13:51:55 -0700 (PDT)
+        Mon, 21 Oct 2019 16:52:01 -0400
+Received: by mail-qk1-f196.google.com with SMTP id p10so14144514qkg.8;
+        Mon, 21 Oct 2019 13:52:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=gRTkU1hlDhCB4rz+rajjExJGYzm4sxaCoEEvEfqhbgw=;
-        b=sASsBmWzjO6u9ASPRxcZ2BgA0JtTGGA4ZhFH4krisCPp8zdDccuamCONKisNdRau3L
-         xzjZwie63fDkQbtGvi9JehLFTai7At0QA1h3UCBiXeOoJCTrzeN5ExDN0yDwxtjy6Fi6
-         tIEwFiWrwMZ9MMebR7ged0Z4y2VclsLwUrlbcKEfa+zlCnnWZBQe1H/jfya5evv1tcSr
-         x5/EKoP3LXbx2UpmhHE2Yz/et7+dAxrvOfe8Kcbu3lccAC6y/DXFDpCxp39YGoY/nzT7
-         Sq9Umhw0xN1CRKU0NDbPd6Rs4JAPvzJ+AU26M3Des3pN9pB8L+tksCny/Izz4Zyp1uqi
-         qkDw==
+        bh=iu1nzxuAMPzL4Wl9WpBs+eqjfwquU4uIp1Guqhyr0Z0=;
+        b=kVuc8Ee2ZFKoWP8EtCe3+JYsnUEBvJhCoxygbMPdBtO1L+Na7inYTo3E+/GVs2w3eV
+         0Si5KHehSFk8jNDmRW448hK4L/dXhIW9klv67OW60jfzjoCIx4DLvX/kHw+B+EFuUw1U
+         Ms7lv8HTt0/psa6xgMaBspVzupn1lOsgoUmLGL6FAMlX/lhrTZyeNGPdq7DPIIbgOBA7
+         X0yiilHiXJuI49cy4nLqtkxD5XnHsVvmVvUJPPxYaIii89DL17ihme8uQo7zKZQDZs24
+         MPpX1qj0kSh8hQPIXBAFxG8PG5a6SIEUlLve7A3NhGDXj4A4F+WZy/PLyvdtTltjA+Ut
+         BGmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=gRTkU1hlDhCB4rz+rajjExJGYzm4sxaCoEEvEfqhbgw=;
-        b=J6GOlr2DfxMTMhkBawWMkRf31xyP+zMc3LrRnyHibYyP9pvooz9bebNJoh1T3T405b
-         /3GWZaL9amhny10vx9wmw33DSWT71RMlrXtVjjAejNKNIeSR1yW0X8fw+Mm1IoyVRqRq
-         3WL4POsCzOBeMOgbpPIi6Zmx+l7wAfqArS0jUAC8Y0yz6ZBxgh0P218/K4WhgiopWHEh
-         fxwN3WkQICk4ClLlq+KkgG/JxrSFfKZX/CscLpS/B8hR1W70rEZKy+lG+AeKR7DJB+5D
-         LuirKPR4xNMdLcq6juDDJyfpn4WoGBH1Q+pJWCH4dIul/e1m+q3WZzgH1RI+RpzZ+Dp/
-         E+8A==
-X-Gm-Message-State: APjAAAVKjufRBqglxTgeG6ZbsN1CiOqqhZlmmJQzrva8zWF0WdX4F/NS
-        vhq6Jn8aQ52d77l8WDdPSH7jGF15
-X-Google-Smtp-Source: APXvYqw+E0OJZLBaB2a7S+8JO7Z7cCl3HiYQerFM8TNP5ztBeyYvN8UglNrSMoQNxGMrThUkRRrUZg==
-X-Received: by 2002:ac8:f30:: with SMTP id e45mr12511866qtk.222.1571691114590;
-        Mon, 21 Oct 2019 13:51:54 -0700 (PDT)
+        bh=iu1nzxuAMPzL4Wl9WpBs+eqjfwquU4uIp1Guqhyr0Z0=;
+        b=VIvhlHQSIxukUhTQ4Z7MkSBxxtQtRlJAM18/Zi4b01xkjwnHfzhZAYkrHFUrzYERlC
+         S9yQ16505xMbdEOsf/HiCxq72SV7i2boa6RsjQpioQc+tVB3FC3bBk8H9nWVx/QlNijf
+         jokxL/3M519ZeeapCv76DEaYiWC9nGOoooHc/2m0/h3sOr0tWtC1E39s6VDc4h5TJtEB
+         dR8rXcNq+9ZB7mT17mFm39CFHBHDrFUVDzaH/L0tAjV8iXqg/s4uB/owwARUUnRgnIDW
+         XjQq/Ou5o/o/sExVH8QYEKf7ypjby0mD0YNn5OmKjTDHdXqxUsQrKecFPYIIOpRXFBnP
+         Im6Q==
+X-Gm-Message-State: APjAAAUrowZRFSfR/BE5DQCBvVHlGagybAHrMVuFU+NLQQ4tt6mEMfQ6
+        gKshtK/b7L03at9QREe7Vcg=
+X-Google-Smtp-Source: APXvYqxr7KtxYoGFXeCvU1ibSKjkRocVmqGtv4Ts8ZWs0lNrd4ngYaD5wmH0TJ6+BRKBrLT+r9KpZw==
+X-Received: by 2002:a05:620a:905:: with SMTP id v5mr3898142qkv.373.1571691119783;
+        Mon, 21 Oct 2019 13:51:59 -0700 (PDT)
 Received: from localhost (modemcable249.105-163-184.mc.videotron.ca. [184.163.105.249])
-        by smtp.gmail.com with ESMTPSA id t13sm4935639qtn.18.2019.10.21.13.51.53
+        by smtp.gmail.com with ESMTPSA id s67sm396440qkh.70.2019.10.21.13.51.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Oct 2019 13:51:54 -0700 (PDT)
+        Mon, 21 Oct 2019 13:51:59 -0700 (PDT)
 From:   Vivien Didelot <vivien.didelot@gmail.com>
 To:     "David S. Miller" <davem@davemloft.net>
 Cc:     linux-kernel@vger.kernel.org,
         Vivien Didelot <vivien.didelot@gmail.com>,
         Florian Fainelli <f.fainelli@gmail.com>,
         Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org
-Subject: [PATCH net-next v2 12/16] net: dsa: mv88e6xxx: use ports list to map port VLAN
-Date:   Mon, 21 Oct 2019 16:51:26 -0400
-Message-Id: <20191021205130.304149-13-vivien.didelot@gmail.com>
+Subject: [PATCH net-next v2 15/16] net: dsa: allocate ports on touch
+Date:   Mon, 21 Oct 2019 16:51:29 -0400
+Message-Id: <20191021205130.304149-16-vivien.didelot@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191021205130.304149-1-vivien.didelot@gmail.com>
 References: <20191021205130.304149-1-vivien.didelot@gmail.com>
@@ -76,76 +76,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of digging into the other dsa_switch structures of the fabric
-and relying too much on the dsa_to_port helper, use the new list of
-switch fabric ports to define the mask of the local ports allowed to
-receive frames from another port of the fabric.
+Allocate the struct dsa_port the first time it is accessed with
+dsa_port_touch, and remove the static dsa_port array from the
+dsa_switch structure.
 
 Signed-off-by: Vivien Didelot <vivien.didelot@gmail.com>
 Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- drivers/net/dsa/mv88e6xxx/chip.c | 32 ++++++++++++++++++++------------
- 1 file changed, 20 insertions(+), 12 deletions(-)
+ include/net/dsa.h |  2 --
+ net/dsa/dsa2.c    | 16 ++++++++++++++--
+ 2 files changed, 14 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/chip.c
-index 510ccdc2d03c..af8943142053 100644
---- a/drivers/net/dsa/mv88e6xxx/chip.c
-+++ b/drivers/net/dsa/mv88e6xxx/chip.c
-@@ -1057,35 +1057,43 @@ static int mv88e6xxx_set_mac_eee(struct dsa_switch *ds, int port,
- 	return 0;
- }
+diff --git a/include/net/dsa.h b/include/net/dsa.h
+index f572134eb5de..9bc1d3f71f89 100644
+--- a/include/net/dsa.h
++++ b/include/net/dsa.h
+@@ -277,9 +277,7 @@ struct dsa_switch {
+ 	 */
+ 	bool			vlan_filtering;
  
-+/* Mask of the local ports allowed to receive frames from a given fabric port */
- static u16 mv88e6xxx_port_vlan(struct mv88e6xxx_chip *chip, int dev, int port)
+-	/* Dynamically allocated ports, keep last */
+ 	size_t num_ports;
+-	struct dsa_port ports[];
+ };
+ 
+ static inline struct dsa_port *dsa_to_port(struct dsa_switch *ds, int p)
+diff --git a/net/dsa/dsa2.c b/net/dsa/dsa2.c
+index bf8b4e0fcb4f..83cba4623698 100644
+--- a/net/dsa/dsa2.c
++++ b/net/dsa/dsa2.c
+@@ -588,7 +588,13 @@ static struct dsa_port *dsa_port_touch(struct dsa_switch *ds, int index)
+ 	struct dsa_switch_tree *dst = ds->dst;
+ 	struct dsa_port *dp;
+ 
+-	dp = &ds->ports[index];
++	list_for_each_entry(dp, &dst->ports, list)
++		if (dp->ds == ds && dp->index == index)
++			return dp;
++
++	dp = kzalloc(sizeof(*dp), GFP_KERNEL);
++	if (!dp)
++		return NULL;
+ 
+ 	dp->ds = ds;
+ 	dp->index = index;
+@@ -857,7 +863,7 @@ struct dsa_switch *dsa_switch_alloc(struct device *dev, size_t n)
  {
--	struct dsa_switch *ds = NULL;
-+	struct dsa_switch *ds = chip->ds;
-+	struct dsa_switch_tree *dst = ds->dst;
- 	struct net_device *br;
-+	struct dsa_port *dp;
-+	bool found = false;
- 	u16 pvlan;
--	int i;
+ 	struct dsa_switch *ds;
  
--	if (dev < DSA_MAX_SWITCHES)
--		ds = chip->ds->dst->ds[dev];
-+	list_for_each_entry(dp, &dst->ports, list) {
-+		if (dp->ds->index == dev && dp->index == port) {
-+			found = true;
-+			break;
-+		}
+-	ds = devm_kzalloc(dev, struct_size(ds, ports, n), GFP_KERNEL);
++	ds = devm_kzalloc(dev, sizeof(*ds), GFP_KERNEL);
+ 	if (!ds)
+ 		return NULL;
+ 
+@@ -885,6 +891,12 @@ static void dsa_switch_remove(struct dsa_switch *ds)
+ {
+ 	struct dsa_switch_tree *dst = ds->dst;
+ 	unsigned int index = ds->index;
++	struct dsa_port *dp, *next;
++
++	list_for_each_entry_safe(dp, next, &dst->ports, list) {
++		list_del(&dp->list);
++		kfree(dp);
 +	}
  
- 	/* Prevent frames from unknown switch or port */
--	if (!ds || port >= ds->num_ports)
-+	if (!found)
- 		return 0;
- 
- 	/* Frames from DSA links and CPU ports can egress any local port */
--	if (dsa_is_cpu_port(ds, port) || dsa_is_dsa_port(ds, port))
-+	if (dp->type == DSA_PORT_TYPE_CPU || dp->type == DSA_PORT_TYPE_DSA)
- 		return mv88e6xxx_port_mask(chip);
- 
--	br = dsa_to_port(ds, port)->bridge_dev;
-+	br = dp->bridge_dev;
- 	pvlan = 0;
- 
- 	/* Frames from user ports can egress any local DSA links and CPU ports,
- 	 * as well as any local member of their bridge group.
- 	 */
--	for (i = 0; i < mv88e6xxx_num_ports(chip); ++i)
--		if (dsa_is_cpu_port(chip->ds, i) ||
--		    dsa_is_dsa_port(chip->ds, i) ||
--		    (br && dsa_to_port(chip->ds, i)->bridge_dev == br))
--			pvlan |= BIT(i);
-+	list_for_each_entry(dp, &dst->ports, list)
-+		if (dp->ds == ds &&
-+		    (dp->type == DSA_PORT_TYPE_CPU ||
-+		     dp->type == DSA_PORT_TYPE_DSA ||
-+		     (br && dp->bridge_dev == br)))
-+			pvlan |= BIT(dp->index);
- 
- 	return pvlan;
+ 	dsa_tree_remove_switch(dst, index);
  }
 -- 
 2.23.0
