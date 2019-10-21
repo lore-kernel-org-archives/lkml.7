@@ -2,134 +2,253 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DA34CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:16:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3E44C47E49
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E1C021906
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:16:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81765214B2
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:17:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aPSBMj5U"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fJWoLzZ6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728356AbfJUQQp (ORCPT
+        id S1728552AbfJUQRR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 12:16:45 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:33965 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727211AbfJUQQo (ORCPT
+        Mon, 21 Oct 2019 12:17:17 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:39096 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726289AbfJUQRR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 12:16:44 -0400
-Received: by mail-wr1-f66.google.com with SMTP id t16so9552711wrr.1
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 09:16:43 -0700 (PDT)
+        Mon, 21 Oct 2019 12:17:17 -0400
+Received: by mail-wm1-f66.google.com with SMTP id r141so3827187wme.4;
+        Mon, 21 Oct 2019 09:17:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=C2LUAEHBA+y/RJCuqLYg7TE/fmTT0Gl4J+UG5fDkDk8=;
-        b=aPSBMj5U2GkS0CtIXWn74VZb6yffXEgx3z6winBzWnBDNQ53i/f7bD9KqMaPrY/bMX
-         oc7TpTbiTRXAg7/8NDaXg30t7vfmCgUEB14qCc54yb9MGPXl7NDoGWsaEz2IDbUMGTe/
-         3oGif4tqXp4UxbtWM6VelgPy7EQMFZiGPzi5TSxtNSL0OS4iJlsN7Va84+JdhaJIOiPL
-         WToxyYEgokmDfwbs2lUHRjMA2+skkg2tDQ75kvf8V21l4QeIpW3/bt4kdL7wIIEfFWv3
-         hRQT5hwouoWaW/6096t3Oq0SExdae+esdSFm6qVBt6TAws81aHCUcBshXdYmTfvlnnno
-         wIww==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=jk6ZF8wcrRJTLUS9uAlYiz82fH05G0XIqpCiC2ocfFM=;
+        b=fJWoLzZ6a+LlQjRWNuRitS+xH49t0zmke71CsU4929ekM46VTLeKMIxXvpEQhPB/vV
+         4ncBlWFH2k/kNXucS99pn0k24PF/LDoL/Z4Dvno9rEtmFXY4cErrUfR+rJaKbvMXtDJq
+         aRErFriPnP5sJnCHxpovSWLyTbDnKpMQqZ9tUM7DxtepELbUlUeoCsU0et5DSuHksHpb
+         EtR1rsYf2sBrjHI6LOT+KSXiMx1nuZ0cA1Abm2uoRL32Y4Ucy3KtD/MyUAQ4cqWRjnmF
+         OQQdteO9bL/Iu0vBE2fy0J4mhuAlQWeLb3+FBa5WgLpIXXL2oOk538erIdzC/oAs6f48
+         HUzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=C2LUAEHBA+y/RJCuqLYg7TE/fmTT0Gl4J+UG5fDkDk8=;
-        b=I3urR4jeNSIjen/ZqivTeCy/axqtA26MCcL7mQ77vdfEEH+yxEgFIvoc3MCrH3wK/0
-         IKdfzQTroC4+yV67T+mX6+KWFeG6AQR7hHAobQFsrzGfqoikr2ixs6EcTDjY/cfrfuwe
-         rG++61gO0Ss1x4PC17msZuBUCwvOOML5gYXyj9560/m94tJ0679hX10QhQYqwaAnJwIb
-         pT79eh6RIzHOuAIrNgd3Fk5T4YKVspRkfcuafeQ5eZK9f8mv5uGJ9NCROh9gzG6d2Dzs
-         vxnpEgLSnpNwnxz68zONgZ84rtOgOZ8sV7HcXDL8aYE6qd+YNulGzeeT06h2V+aaHnRw
-         5K7g==
-X-Gm-Message-State: APjAAAV1CvY5AcRBZyoGD67dtVrfsos5AS8syV6iU2Ju6lINrQVMK1OP
-        duXryZokGZltafUbwzBnDGYgRg==
-X-Google-Smtp-Source: APXvYqzGV2r6ibkgS5v+c4aTMqcvcaQ6bndOoDtPdoVGjt9vf2C7lwE1ROPULRraYKx7au/inwaJ9Q==
-X-Received: by 2002:adf:dd88:: with SMTP id x8mr18448414wrl.140.1571674601847;
-        Mon, 21 Oct 2019 09:16:41 -0700 (PDT)
-Received: from google.com ([2a00:79e0:d:210:e8f7:125b:61e9:733d])
-        by smtp.gmail.com with ESMTPSA id p12sm15907599wrm.62.2019.10.21.09.16.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Oct 2019 09:16:41 -0700 (PDT)
-Date:   Mon, 21 Oct 2019 17:16:40 +0100
-From:   Matthias Maennich <maennich@google.com>
-To:     Jessica Yu <jeyu@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH v2] scripts/nsdeps: use alternative sed delimiter
-Message-ID: <20191021161640.GA68110@google.com>
-References: <20191021145137.31672-1-jeyu@kernel.org>
- <20191021160419.28270-1-jeyu@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20191021160419.28270-1-jeyu@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=jk6ZF8wcrRJTLUS9uAlYiz82fH05G0XIqpCiC2ocfFM=;
+        b=jF/YQw8kOIyNuFB58aPpKXccg4L7DaF06zrvMRYujGIeGEPpAi1QHQQDkzOrSV4Mot
+         TzvyMVlrYHFBLpWxqrokIAl3VRGkeIIM46m+y0IVgOUgHzA2jI3CBQMON/4ALI0uSt12
+         udvX/XJXfbASITV8ZmbBrvuxeU8C9HnpGcYkwDo8uihVZrF1vwu9vACYtcnccSUKv8F+
+         B/lWn9vYpS4DNh7hT+2ITFDZh3ICbjVicAG0/B1Q7UP5nvLj2I8VB+O03VTrk7cX3N7V
+         +ahwaY+2v50uszWUj1WckWyjvFACcv+eeeqpWk5aUqP5NxAk8Fc1xnhEG+WNno8bd1v7
+         CRtQ==
+X-Gm-Message-State: APjAAAV2bTKYzqW695mm/LU+51rCfJLTekYwXs/jsEoG4n1gPwdlJ1/b
+        PsXsp45q2+ITl1MaqK70zOTcb13N6mI=
+X-Google-Smtp-Source: APXvYqygFPVbzSSqh3ZyVAIa/Dl8Di+XZC/dcgGcwvn0045pPG2FVsNEZizH7EjTqVyb/Kl7kBMPcA==
+X-Received: by 2002:a1c:dd06:: with SMTP id u6mr7987797wmg.109.1571674633421;
+        Mon, 21 Oct 2019 09:17:13 -0700 (PDT)
+Received: from localhost ([194.105.145.90])
+        by smtp.gmail.com with ESMTPSA id a71sm14551087wme.11.2019.10.21.09.17.12
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 21 Oct 2019 09:17:12 -0700 (PDT)
+From:   Igor Opaniuk <igor.opaniuk@gmail.com>
+To:     linux-usb@vger.kernel.org
+Cc:     Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Stefan Agner <stefan.agner@toradex.com>,
+        Max Krummenacher <max.krummenacher@toradex.com>,
+        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+        Sanchayan Maity <maitysanchayan@gmail.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Chen <Peter.Chen@nxp.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH v1 1/2] usb: chipidea: use of extcon framework to work for non OTG case
+Date:   Mon, 21 Oct 2019 19:16:53 +0300
+Message-Id: <20191021161654.14353-1-igor.opaniuk@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jessica!
+From: Stefan Agner <stefan.agner@toradex.com>
 
-On Mon, Oct 21, 2019 at 06:04:19PM +0200, Jessica Yu wrote:
->When doing an out of tree build with O=, the nsdeps script constructs
->the absolute pathname of the module source file so that it can insert
->MODULE_IMPORT_NS statements in the right place. However, ${srctree}
->contains an unescaped path to the source tree, which, when used in a sed
->substitution, makes sed complain:
->
->++ sed 's/[^ ]* *//home/jeyu/jeyu-linux\/&/g'
->sed: -e expression #1, char 12: unknown option to `s'
->
->The sed substitution command 's' ends prematurely with the forward
->slashes in the pathname, and sed errors out when it encounters the 'h',
->which is an invalid sed substitution option. To avoid escaping forward
->slashes in ${srctree}, we can use '|' as an alternative delimiter for
->sed to avoid this error.
->
->Signed-off-by: Jessica Yu <jeyu@kernel.org>
->---
+The existing usage of extcon in chipidea driver freezes the kernel
+presumably due to OTGSC register access.
 
-Thanks for fixing this. I tested O=, but not with a truly out of tree
-build and got outsmarted by ${srctree} being '..' for O=subdir/.
+Prevent accessing any OTG registers for SoC with dual role devices
+but no true OTG support. Use the flag CI_HDRC_DUAL_ROLE_NOT_OTG for
+those devices and in case extcon is present, do the role switch
+using extcon only.
 
-Reviewed-by: Matthias Maennich <maennich@google.com>
-Tested-by: Matthias Maennich <maennich@google.com>
+Signed-off-by: Sanchayan Maity <maitysanchayan@gmail.com>
+Signed-off-by: Stefan Agner <stefan.agner@toradex.com>
+Signed-off-by: Igor Opaniuk <igor.opaniuk@toradex.com>
+---
 
-Cheers,
-Matthias
+ drivers/usb/chipidea/ci.h   |  2 +
+ drivers/usb/chipidea/core.c | 87 +++++++++++++++++++++++++++++++++----
+ 2 files changed, 80 insertions(+), 9 deletions(-)
 
->
->This is an alternative to my first patch here:
->
->  http://lore.kernel.org/r/20191021145137.31672-1-jeyu@kernel.org
->
->Matthias suggested using an alternative sed delimiter instead to avoid the
->ugly/unreadable ${srctree//\//\\\/} substitution.
->
-> scripts/nsdeps | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
->
->diff --git a/scripts/nsdeps b/scripts/nsdeps
->index 3754dac13b31..63da30a33422 100644
->--- a/scripts/nsdeps
->+++ b/scripts/nsdeps
->@@ -33,7 +33,7 @@ generate_deps() {
-> 	if [ ! -f "$ns_deps_file" ]; then return; fi
-> 	local mod_source_files=`cat $mod_file | sed -n 1p                      \
-> 					      | sed -e 's/\.o/\.c/g'           \
->-					      | sed "s/[^ ]* */${srctree}\/&/g"`
->+					      | sed "s|[^ ]* *|${srctree}\/&|g"`
-> 	for ns in `cat $ns_deps_file`; do
-> 		echo "Adding namespace $ns to module $mod_name (if needed)."
-> 		generate_deps_for_ns $ns $mod_source_files
->-- 
->2.16.4
->
+diff --git a/drivers/usb/chipidea/ci.h b/drivers/usb/chipidea/ci.h
+index cf9cc9402826..3a1a549ed39e 100644
+--- a/drivers/usb/chipidea/ci.h
++++ b/drivers/usb/chipidea/ci.h
+@@ -170,6 +170,7 @@ struct hw_bank {
+  * @enabled_otg_timer_bits: bits of enabled otg timers
+  * @next_otg_timer: next nearest enabled timer to be expired
+  * @work: work for role changing
++ * @work_dr: work for role changing for non-OTG controllers
+  * @wq: workqueue thread
+  * @qh_pool: allocation pool for queue heads
+  * @td_pool: allocation pool for transfer descriptors
+@@ -220,6 +221,7 @@ struct ci_hdrc {
+ 	enum otg_fsm_timer		next_otg_timer;
+ 	struct usb_role_switch		*role_switch;
+ 	struct work_struct		work;
++	struct work_struct		work_dr;
+ 	struct workqueue_struct		*wq;
+ 
+ 	struct dma_pool			*qh_pool;
+diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
+index dce5db41501c..48ecc846735c 100644
+--- a/drivers/usb/chipidea/core.c
++++ b/drivers/usb/chipidea/core.c
+@@ -534,6 +534,46 @@ int hw_device_reset(struct ci_hdrc *ci)
+ 	return 0;
+ }
+ 
++static void usb_roleswitch_workqueue(struct work_struct *work)
++{
++	struct ci_hdrc *ci = container_of(work, struct ci_hdrc, work_dr);
++	struct ci_hdrc_cable *id, *vbus;
++	int ret;
++
++	pm_runtime_get_sync(ci->dev);
++
++	id = &ci->platdata->id_extcon;
++	if (!IS_ERR(id->edev)) {
++		int new_role;
++
++		ci_role_stop(ci);
++		hw_wait_phy_stable();
++
++		ret = extcon_get_state(id->edev, EXTCON_USB_HOST);
++		if (ret) {
++			new_role = CI_ROLE_HOST;
++			dev_info(ci->dev, "switching to host role\n");
++		} else {
++			new_role = CI_ROLE_GADGET;
++			dev_info(ci->dev, "switching to gadget role\n");
++		}
++		ci_role_start(ci, new_role);
++	}
++
++	vbus = &ci->platdata->vbus_extcon;
++	if (!IS_ERR(vbus->edev)) {
++		ret = extcon_get_state(vbus->edev, EXTCON_USB);
++		if (ret)
++			usb_gadget_vbus_connect(&ci->gadget);
++		else
++			usb_gadget_vbus_disconnect(&ci->gadget);
++	}
++
++	pm_runtime_put_sync(ci->dev);
++
++	enable_irq(ci->irq);
++}
++
+ static irqreturn_t ci_irq(int irq, void *data)
+ {
+ 	struct ci_hdrc *ci = data;
+@@ -593,10 +633,24 @@ static int ci_cable_notifier(struct notifier_block *nb, unsigned long event,
+ 	struct ci_hdrc_cable *cbl = container_of(nb, struct ci_hdrc_cable, nb);
+ 	struct ci_hdrc *ci = cbl->ci;
+ 
+-	cbl->connected = event;
+-	cbl->changed = true;
++	if (ci->platdata->flags & CI_HDRC_DUAL_ROLE_NOT_OTG) {
++		disable_irq_nosync(ci->irq);
++
++		/*
++		 * This notifier might get called twice in succession,
++		 * once for the ID pin and once for the VBUS pin. Make
++		 * sure we only disable irq in case we successfully add
++		 * work to the work queue.
++		 */
++		if (!queue_work(system_power_efficient_wq, &ci->work_dr))
++			enable_irq(ci->irq);
++	} else {
++		cbl->connected = event;
++		cbl->changed = true;
++
++		ci_irq(ci->irq, ci);
++	}
+ 
+-	ci_irq(ci->irq, ci);
+ 	return NOTIFY_DONE;
+ }
+ 
+@@ -765,6 +819,7 @@ static int ci_get_platdata(struct device *dev,
+ 		ext_id = extcon_get_edev_by_phandle(dev, 1);
+ 		if (IS_ERR(ext_id) && PTR_ERR(ext_id) != -ENODEV)
+ 			return PTR_ERR(ext_id);
++		platdata->flags |= CI_HDRC_DUAL_ROLE_NOT_OTG;
+ 	}
+ 
+ 	cable = &platdata->vbus_extcon;
+@@ -1079,7 +1134,15 @@ static int ci_hdrc_probe(struct platform_device *pdev)
+ 
+ 	ci_get_otg_capable(ci);
+ 
++	if (ci->platdata->flags & CI_HDRC_DUAL_ROLE_NOT_OTG)
++		INIT_WORK(&ci->work_dr, usb_roleswitch_workqueue);
++
++	ret = ci_extcon_register(ci);
++	if (ret)
++		goto stop;
++
+ 	dr_mode = ci->platdata->dr_mode;
++
+ 	/* initialize role(s) before the interrupt is requested */
+ 	if (dr_mode == USB_DR_MODE_OTG || dr_mode == USB_DR_MODE_HOST) {
+ 		ret = ci_hdrc_host_init(ci);
+@@ -1145,8 +1208,18 @@ static int ci_hdrc_probe(struct platform_device *pdev)
+ 
+ 	if (!ci_otg_is_fsm_mode(ci)) {
+ 		/* only update vbus status for peripheral */
+-		if (ci->role == CI_ROLE_GADGET)
+-			ci_handle_vbus_change(ci);
++		if (dr_mode == USB_DR_MODE_PERIPHERAL) {
++			usb_gadget_vbus_connect(&ci->gadget);
++		} else if (ci->role == CI_ROLE_GADGET) {
++			struct ci_hdrc_cable *vbus = &ci->platdata->vbus_extcon;
++
++			/* Use vbus state from extcon if provided */
++			if (!IS_ERR(vbus->edev) &&
++			    extcon_get_state(vbus->edev, EXTCON_USB))
++				usb_gadget_vbus_connect(&ci->gadget);
++			else
++				ci_handle_vbus_change(ci);
++		}
+ 
+ 		ret = ci_role_start(ci, ci->role);
+ 		if (ret) {
+@@ -1161,10 +1234,6 @@ static int ci_hdrc_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto stop;
+ 
+-	ret = ci_extcon_register(ci);
+-	if (ret)
+-		goto stop;
+-
+ 	if (ci->supports_runtime_pm) {
+ 		pm_runtime_set_active(&pdev->dev);
+ 		pm_runtime_enable(&pdev->dev);
+-- 
+2.17.1
+
