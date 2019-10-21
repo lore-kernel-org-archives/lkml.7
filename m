@@ -2,156 +2,123 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 944B5CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:10:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39632CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:11:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62E5120684
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:10:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B99320684
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:11:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z67VptU0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727934AbfJUKKE (ORCPT
+        id S1727944AbfJUKLK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 06:10:04 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59080 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726767AbfJUKKD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 06:10:03 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 7917EB40E;
-        Mon, 21 Oct 2019 10:10:01 +0000 (UTC)
-Subject: Re: [PATCH] scsi: lpfc: Honor module parameter lpfc_use_adisc
-To:     Daniel Wagner <dwagner@suse.de>, linux-scsi@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, James Smart <James.Smart@emulex.com>,
-        Alex Iannicelli <alex.iannicelli@emulex.com>
-References: <20191021100542.24136-1-dwagner@suse.de>
-From:   Hannes Reinecke <hare@suse.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=hare@suse.de; prefer-encrypt=mutual; keydata=
- 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
- azzYF4VRJsdl+d0MCaSy8mUh
-Message-ID: <3a6c2cc9-d90e-2f9f-61a9-8c0d46f8d839@suse.de>
-Date:   Mon, 21 Oct 2019 12:10:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 21 Oct 2019 06:11:10 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:33119 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726767AbfJUKLJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 06:11:09 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 6so1001672wmf.0
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 03:11:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ejY+9Vm9aWJOs97zrA807+W9n/23O9nYbfu1WQqsyN4=;
+        b=Z67VptU0dpTYTmG3ohv8pDSd0+CsFi7qspyxYHYbGvD4wdiRDK3vqJVHPZPaqGXGOm
+         uiLYWy/FZwE/YhpSsGe+Sl426PcGkC6fMRTzwDAHXswSlrMcjOkTambq8295/tCALvGN
+         rKKL5+SWYo8AmXf6bCtgIPSZ2htVNwBaq/RYG1N2EpqnkLXR1qUvuOSfxPAs8j7Wf7kD
+         3ll16iGmFYL4xgfA8RE0S8f7n+faLm8GMFfaXf3OxL6zXNAX5JcGExaSdX2c1FHiTUTH
+         qMKjwTektqUZvXtXiNWR0tqZbofdwnfpfpP7aVIwRxsGnEe4DScDdboA2uBjKM8tZt8Q
+         6KiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ejY+9Vm9aWJOs97zrA807+W9n/23O9nYbfu1WQqsyN4=;
+        b=LVF3ne7Z2uLcjyBJ8EZhConz2C0XeeAC2FNFF5ewGLoT9ZTygyZ7Vnzmi9XXrTpRx/
+         Xq7u9/31Qp+lR0j3FLWCge0OVqqGJWJ5Gk4vEHGzKXm4qSDOh02af9grn5Ef2b1uXqNY
+         i5w0z3AYXhFTfDqL++8tPTHujX5c7ySALi8SA4yBCYdUvU3ctMADIqZ7Bt+du6f4j/cP
+         Ytvrh4vqwME8w8kEH/db5tbG6zT9O6Uv+zBn9VtS0hpBqRoLl3d5WsMNHSWqs4EI92E7
+         UbK7FwWlhtmniOF3BvdPcXsPSJ1SMw7E5u/yTZnQJjvggTpWEdoCH/do+p6kTX01+y6G
+         4oTw==
+X-Gm-Message-State: APjAAAVuatymDRTq897GwNUtR5bImt2Ed9ph+t0rVTqRNwHDeNWmfq3U
+        uBQCCZJFr8m6DokIc+itcXjPEQ==
+X-Google-Smtp-Source: APXvYqz6f/D7+PFLZCxKK/K5eWFiAXnAStPWGTZJu/8oCjOA5TUh20GOlE1d4q4CuQdJrKGrqV6Xcg==
+X-Received: by 2002:a1c:2884:: with SMTP id o126mr20068584wmo.153.1571652667359;
+        Mon, 21 Oct 2019 03:11:07 -0700 (PDT)
+Received: from wychelm.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id j63sm15978535wmj.46.2019.10.21.03.11.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Oct 2019 03:11:06 -0700 (PDT)
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Douglas Anderson <dianders@chromium.org>,
+        Jason Wessel <jason.wessel@windriver.com>
+Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
+        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+        patches@linaro.org, kbuild test robot <lkp@intel.com>
+Subject: [PATCH v2] kdb: Avoid array subscript warnings on non-SMP builds
+Date:   Mon, 21 Oct 2019 11:10:56 +0100
+Message-Id: <20191021101057.23861-1-daniel.thompson@linaro.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <20191021100542.24136-1-dwagner@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/21/19 12:05 PM, Daniel Wagner wrote:
-> The initial lpfc_desc_set_adisc implementation dea3101e0a5c ("lpfc:
-> add Emulex FC driver version 8.0.28") enabled ADISC if
-> 
-> 	cfg_use_adisc && RSCN_MODE && FCP_2_DEVICE
-> 
-> In commit 92d7f7b0cde3 ("[SCSI] lpfc: NPIV: add NPIV support on top of
-> SLI-3") this changed to
-> 
-> 	(cfg_use_adisc && RSC_MODE) || FCP_2_DEVICE
-> 
-> and later in ffc954936b13 ("[SCSI] lpfc 8.3.13: FC Discovery Fixes and
-> enhancements.") to
-> 
-> 	(cfg_use_adisc && RSC_MODE) || (FCP_2_DEVICe && FCP_TARGET)
-> 
-> A customer reports that after a Devlos, an ADISC failure is logged. It
-> turns out the ADISC flag is set even the user explicitly set
-> lpfc_use_adisc = 0.
-> 
-> [Sat Dec 22 22:55:58 2018] lpfc 0000:82:00.0: 2:(0):0203 Devloss timeout on WWPN 50:01:43:80:12:8e:40:20 NPort x05df00 Data: x82000000 x8 xa
-> [Sat Dec 22 23:08:20 2018] lpfc 0000:82:00.0: 2:(0):2755 ADISC failure DID:05DF00 Status:x9/x70000
-> 
-> Fixes: 92d7f7b0cde3 ("[SCSI] lpfc: NPIV: add NPIV support on top of SLI-3")
-> Cc: James Smart <James.Smart@emulex.com>
-> Cc: Alex Iannicelli <alex.iannicelli@emulex.com>
-> Signed-off-by: Daniel Wagner <dwagner@suse.de>
-> ---
-> Hi,
-> 
-> Unfortunatly, I don't really know all the procotols involved. So this
-> is just a rough guess what is wrong. 
-> 
-> Thanks,
-> Daniel
-> 
->  drivers/scsi/lpfc/lpfc_nportdisc.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/scsi/lpfc/lpfc_nportdisc.c b/drivers/scsi/lpfc/lpfc_nportdisc.c
-> index cc6b1b0bae83..d27ae84326df 100644
-> --- a/drivers/scsi/lpfc/lpfc_nportdisc.c
-> +++ b/drivers/scsi/lpfc/lpfc_nportdisc.c
-> @@ -940,9 +940,9 @@ lpfc_disc_set_adisc(struct lpfc_vport *vport, struct lpfc_nodelist *ndlp)
->  
->  	if (!(vport->fc_flag & FC_PT2PT)) {
->  		/* Check config parameter use-adisc or FCP-2 */
-> -		if ((vport->cfg_use_adisc && (vport->fc_flag & FC_RSCN_MODE)) ||
-> +		if (vport->cfg_use_adisc && ((vport->fc_flag & FC_RSCN_MODE) ||
->  		    ((ndlp->nlp_fcp_info & NLP_FCP_2_DEVICE) &&
-> -		     (ndlp->nlp_type & NLP_FCP_TARGET))) {
-> +		     (ndlp->nlp_type & NLP_FCP_TARGET)))) {
->  			spin_lock_irq(shost->host_lock);
->  			ndlp->nlp_flag |= NLP_NPR_ADISC;
->  			spin_unlock_irq(shost->host_lock);
-> 
-Looks reasonable.
+Recent versions of gcc (reported on gcc-7.4) issue array subscript
+warnings for builds where SMP is not enabled.
 
-Reviewed-by: Hannes Reinecke <hare@sused.de>
+kernel/debug/debug_core.c: In function 'kdb_dump_stack_on_cpu':
+kernel/debug/debug_core.c:452:17: warning: array subscript is outside array
++bounds [-Warray-bounds]
+     if (!(kgdb_info[cpu].exception_state & DCPU_IS_SLAVE)) {
+           ~~~~~~~~~^~~~~
+   kernel/debug/debug_core.c:469:33: warning: array subscript is outside array
++bounds [-Warray-bounds]
+     kgdb_info[cpu].exception_state |= DCPU_WANT_BT;
+   kernel/debug/debug_core.c:470:18: warning: array subscript is outside array
++bounds [-Warray-bounds]
+     while (kgdb_info[cpu].exception_state & DCPU_WANT_BT)
 
-Cheers,
+There is no bug here but there is scope to improve the code
+generation for non-SMP systems (whilst also silencing the warning).
 
-Hannes
--- 
-Dr. Hannes Reinecke		      Teamlead Storage & Networking
-hare@suse.de			                  +49 911 74053 688
-SUSE Software Solutions Germany GmbH, Maxfeldstr. 5, 90409 Nürnberg
-HRB 247165 (AG München), GF: Felix Imendörffer
+Reported-by: kbuild test robot <lkp@intel.com>
+Fixes: 2277b492582d ("kdb: Fix stack crawling on 'running' CPUs that aren't the master")
+Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
+---
+
+Notes:
+    Changes in v2:
+    
+     - Moved the IS_ENABLED(CONFIG_SMP) test to the first (slightly easier
+       to read the code, improves code generation a little)
+     - Sent out as a proper patch e-mail ;-)
+
+ kernel/debug/debug_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
+index 70e86b4b4932..2b7c9b67931d 100644
+--- a/kernel/debug/debug_core.c
++++ b/kernel/debug/debug_core.c
+@@ -444,7 +444,7 @@ int dbg_remove_all_break(void)
+ #ifdef CONFIG_KGDB_KDB
+ void kdb_dump_stack_on_cpu(int cpu)
+ {
+-	if (cpu == raw_smp_processor_id()) {
++	if (cpu == raw_smp_processor_id() || !IS_ENABLED(CONFIG_SMP)) {
+ 		dump_stack();
+ 		return;
+ 	}
+--
+2.21.0
+
