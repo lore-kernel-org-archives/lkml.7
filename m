@@ -2,91 +2,135 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E92E9CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:32:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A231CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:33:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B94682089C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:32:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D06F62089C
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:33:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WAB+IVuK"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Oy1bDj8c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728456AbfJULcN (ORCPT
+        id S1728467AbfJULdU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 07:32:13 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:43736 "EHLO
+        Mon, 21 Oct 2019 07:33:20 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43902 "EHLO
         mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727685AbfJULcN (ORCPT
+        with ESMTP id S1727685AbfJULdU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 07:32:13 -0400
-Received: by mail-wr1-f65.google.com with SMTP id c2so8302568wrr.10;
-        Mon, 21 Oct 2019 04:32:11 -0700 (PDT)
+        Mon, 21 Oct 2019 07:33:20 -0400
+Received: by mail-wr1-f65.google.com with SMTP id c2so8306532wrr.10
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 04:33:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=dmRonkI3afpK0imoXn1gq5xR7xj6dy0LkZHT5B+WJK4=;
-        b=WAB+IVuKri7jyIS+XrkdoQjF/G1NPV05XAIxTDCvTQWJKxQzUkQgo2hySIbm2mQM0W
-         JExD82SpklgFPYFn/C0cyfEwjnkn3bTM/i9fzxcMFiCT9nYtCUXvRowCdR1KMFuYQE5n
-         Ee6XfNvGgmykJ3mdNEQ68xHCLwARAQCEeFkvqGxzO4Y4wzFS9DDuMBt/wOcb6odAeky5
-         KVJKGsryqDF6E0edd0XHPOvRfdZgotLjgd5yf9xDAGrgrUBbNZNmcwd/LqLPNignYlrr
-         YU2aSXwoqmNZ1Qs1UCcHASroQAQAuQ57sTmuWGbxZEbAa8ePKRJplh5UdrXmI1wzAc65
-         9SZQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=NvogyYcPH5HiSpRRQoQRP+VJ8MEq3onz6Q0+j4Mfoeg=;
+        b=Oy1bDj8cgdLtX4MeiPkZTXa0D+BsfxOlUyDd1G94MhAQlyikxatILkupmu8WpJHKhr
+         vZ6WT8psdPmKrzaYFRunzvze6/aEy3RAYxWRZ8qtAZfTLsmd1GTW7hyrkb/T/Ov1mNNk
+         NX/X/sYIS9v7KTaHCJD11X4THvbgd53xXx/rnoHat2Y5X5uDlVHoneJklSnl439iAGoj
+         76f8ZodNxPqIBfxoy2YpqezgC4NBmmSdYwvu8vPOKJS4E0UsbD6q3IFIj3bV9pn6KOic
+         4I2FslXSg2psH7JqqY3h0d4EQ0S+I6rz1WxJqctQNUkJBMiSb4+9CC3hPSo1jg34a7pE
+         u6Ag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=dmRonkI3afpK0imoXn1gq5xR7xj6dy0LkZHT5B+WJK4=;
-        b=YZZdJICk/kWCqq1LqEnAkGS67R1S3KCu5EUtqqOxaXj4Ln+uiQRRmMKd1gYuOZeTHg
-         NFzPlmkR7+0vCtR9NtVlzvz1os0tZKZ3yeihkxDO+ar2lpSZb3AkmvXy0yuqJPcQwYSa
-         ojDkq4pThkKzDkQ+TOCSIqbDWBR8VYYDzha8lndp16+cU2a3guPDKLGco5mWgRp3pWrt
-         Tz3q6a5JT+FShxLtd3mOGvWvqTgHoUZAT/fRcgdXYhatEMM0VaHNcArjUMSuJiGjToWH
-         gtp78PI1cviIvFTrCI2IWKHJPvd2/oZvololysqwl3gWXoDJ9OX/ZrhAlvxYgp3R1/zr
-         3r5w==
-X-Gm-Message-State: APjAAAWABCLC9FD4JDSUsxkPWNMsLl99F0C7/nnyHT7Dvg+0YxhGYLA4
-        4gcq45G+8q6ZA/D6Pp6y6U1gOK6Sgx6Kuls6Z+s13jg2El4=
-X-Google-Smtp-Source: APXvYqz+ZPbQLozAQPGPER0WaspvJJddEsUd8jsTQ7g1P2xNiYmNSqmTPpYmSVUbh64hlbHHCu7ymudOIHJcBIQ34/g=
-X-Received: by 2002:a5d:5544:: with SMTP id g4mr892556wrw.72.1571657531203;
- Mon, 21 Oct 2019 04:32:11 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=NvogyYcPH5HiSpRRQoQRP+VJ8MEq3onz6Q0+j4Mfoeg=;
+        b=sNUgIj0LLzImkqxgKeU5/QchZHyWQTCprQjrp1ix28Nu3OUkuriOLY47OcViN3XUMC
+         cHlDeRN/7N6zxsucL8XzZqunbCSEKi3PCPEfGThm4olFu+LXI/B5bzUWVTkx4y83potR
+         ub0tofPbDh/w+EC5tdeVfAt+qDJJr/FnImPjiYg9PGkK5S0fIh3LQ3zC6v9wwRzJ/isq
+         7kFXgLlTDmmC4U1vROH6PKfdml+jDUpPNJq0+ZtR1bPuZdidWrvqV03SwW/d/wuEL0Ce
+         7ejBt6fzBgS4AAGtiTv9IATiKz2KAayby9q8SVhPEb2Tx3Y0Am9UGz0adObCVslMTwVk
+         eTPA==
+X-Gm-Message-State: APjAAAU3mX3AyW2lT+bgyRK/LFuM8DBiFxLfss3g7MPCAji+uMk1SD1c
+        60DtdK9AC69XnUTPsoleflLOKg==
+X-Google-Smtp-Source: APXvYqyMIAyEPCNwcjoYQRMWKDg+5l3URiHknN8ipHfDzYk/6uRZQr+BzUbWIv6eq6k9BO1W7E1c+Q==
+X-Received: by 2002:a5d:678e:: with SMTP id v14mr12033062wru.393.1571657598261;
+        Mon, 21 Oct 2019 04:33:18 -0700 (PDT)
+Received: from dell ([95.149.164.99])
+        by smtp.gmail.com with ESMTPSA id l7sm5284560wro.17.2019.10.21.04.33.17
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 21 Oct 2019 04:33:17 -0700 (PDT)
+Date:   Mon, 21 Oct 2019 12:33:16 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     arnd@arndb.de, broonie@kernel.org, linus.walleij@linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        baohua@kernel.org, stephan@gerhold.net
+Subject: Re: [PATCH v2 1/9] mfd: cs5535-mfd: Use PLATFORM_DEVID_* defines and
+ tidy error message
+Message-ID: <20191021113316.GA4365@dell>
+References: <20191021105822.20271-1-lee.jones@linaro.org>
+ <20191021105822.20271-2-lee.jones@linaro.org>
+ <20191021111555.zsvvdfun3gqhrurw@holly.lan>
 MIME-Version: 1.0
-References: <453A1153-9493-4A04-BF66-CE6A572DEBDB@paragon-software.com>
- <CAFLxGvyFBGiDab4wxWidjRyDgWkHVfigVsHiRDB4swpB3G+hvQ@mail.gmail.com>
- <20191021105409.32okvzbslxmcjdze@pali> <0877502e-8369-9cfd-36e8-5a4798260cd4@redhat.com>
- <20191021111357.q2lg2g43y7hrddqi@pali>
-In-Reply-To: <20191021111357.q2lg2g43y7hrddqi@pali>
-From:   Richard Weinberger <richard.weinberger@gmail.com>
-Date:   Mon, 21 Oct 2019 13:31:59 +0200
-Message-ID: <CAFLxGvyWtWUm81-qyQ-F20bt1pL7_C6rRsCzO84QSLs=gxMDAg@mail.gmail.com>
-Subject: Re: [PATCH] fs: exFAT read-only driver GPL implementation by Paragon Software.
-To:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
-Cc:     Maurizio Lombardi <mlombard@redhat.com>,
-        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191021111555.zsvvdfun3gqhrurw@holly.lan>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 1:13 PM Pali Roh=C3=A1r <pali.rohar@gmail.com> wrot=
-e:
-> On Monday 21 October 2019 13:08:07 Maurizio Lombardi wrote:
-> > Dne 21.10.2019 v 12:54 Pali Roh=C3=A1r napsal(a):
-> Maurizio, thank you for reference! I have not caught this Samsung
-> activity yet! So we now we have +1 for count of exFAT drivers.
+On Mon, 21 Oct 2019, Daniel Thompson wrote:
 
-This is how I counted three exfat drivers.
-1. staging/exfat (old samsung driver)
-2. sdfat (new samsung dirver)
-3. paragon read-only
+> On Mon, Oct 21, 2019 at 11:58:14AM +0100, Lee Jones wrote:
+> > In most contexts '-1' doesn't really mean much to the casual observer.
+> > In almost all cases, it's better to use a human readable define.  In
+> > this case PLATFORM_DEVID_* defines have already been provided for this
+> > purpose.
+> > 
+> > While we're here, let's be specific about the 'MFD devices' which
+> > failed.  It will help when trying to distinguish which of the 2 sets
+> > of sub-devices we actually failed to register.
+> 
+> No objections... but won't the tag added by dev_err() already
+> disambiguate?
 
---=20
-Thanks,
-//richard
+The difference will be between CS5532 and  CS5532 OLPC.
+
+Please see patch 4 in the series.
+
+> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > ---
+> >  drivers/mfd/cs5535-mfd.c | 5 +++--
+> >  1 file changed, 3 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/mfd/cs5535-mfd.c b/drivers/mfd/cs5535-mfd.c
+> > index f1825c0ccbd0..2c47afc22d24 100644
+> > --- a/drivers/mfd/cs5535-mfd.c
+> > +++ b/drivers/mfd/cs5535-mfd.c
+> > @@ -127,10 +127,11 @@ static int cs5535_mfd_probe(struct pci_dev *pdev,
+> >  		cs5535_mfd_cells[i].id = 0;
+> >  	}
+> >  
+> > -	err = mfd_add_devices(&pdev->dev, -1, cs5535_mfd_cells,
+> > +	err = mfd_add_devices(&pdev->dev, PLATFORM_DEVID_NONE, cs5535_mfd_cells,
+> >  			      ARRAY_SIZE(cs5535_mfd_cells), NULL, 0, NULL);
+> >  	if (err) {
+> > -		dev_err(&pdev->dev, "MFD add devices failed: %d\n", err);
+> > +		dev_err(&pdev->dev,
+> > +			"Failed to add CS5532 sub-devices: %d\n", err);
+> 
+>                                            ^^^
+> 
+> Typo (and MODULE_DESCRIPTION() says this is a driver for CS5536 too).
+> Once that is fixed:
+> Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+
+Ta.
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
