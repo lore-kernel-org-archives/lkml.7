@@ -2,134 +2,158 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F700CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:43:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F253CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:43:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CDB620659
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:43:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 663B120659
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:43:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="GD1wGdfH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727723AbfJUInI (ORCPT
+        id S1727745AbfJUInQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 04:43:08 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:43624 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727127AbfJUInH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 04:43:07 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 711A73AA3629CE784B5A;
-        Mon, 21 Oct 2019 16:43:05 +0800 (CST)
-Received: from [127.0.0.1] (10.74.221.148) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Mon, 21 Oct 2019
- 16:42:59 +0800
-Subject: Re: [PATCH] docs: block: Remove blk_init_queue related description
-To:     Jonathan Corbet <corbet@lwn.net>
-References: <1571061002-25998-1-git-send-email-zhangshaokun@hisilicon.com>
- <20191018093920.6fbc8141@lwn.net>
-CC:     <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Jens Axboe <axboe@kernel.dk>
-From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
-Message-ID: <4411794b-0bf2-d785-1eb8-5121668a2a1e@hisilicon.com>
-Date:   Mon, 21 Oct 2019 16:42:59 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.1.1
+        Mon, 21 Oct 2019 04:43:16 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:33536 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726480AbfJUInP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 04:43:15 -0400
+Received: from zn.tnic (p2E584653.dip0.t-ipconnect.de [46.88.70.83])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id EF3441EC06BC;
+        Mon, 21 Oct 2019 10:43:13 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1571647394;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=+kD1jAx8Cm45kEHTqdRITtIEL5bTWSpmcXQjoaK9FS8=;
+        b=GD1wGdfH6JMpwKCUB4WkPwEazofhG+eixVieQYIjcBcyAlyfEppP/Jf43M0OBcBXkQ9dEl
+        GI16y8DEjx2S8Nk2U7d7GJqVM/SMZvSK5+1EcsU11GFjajlUya305pDTrotqyCyGTidFx9
+        Pm1qxhDKOmaLQ2vmCA+lxr0K2mDAO9w=
+Date:   Mon, 21 Oct 2019 10:42:34 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
+Cc:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/6] EDAC/amd64: Gather hardware information early
+Message-ID: <20191021084234.GB7014@zn.tnic>
+References: <20191018153114.39378-1-Yazen.Ghannam@amd.com>
+ <20191018153114.39378-3-Yazen.Ghannam@amd.com>
 MIME-Version: 1.0
-In-Reply-To: <20191018093920.6fbc8141@lwn.net>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.221.148]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191018153114.39378-3-Yazen.Ghannam@amd.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jonathan,
+On Fri, Oct 18, 2019 at 03:31:26PM +0000, Ghannam, Yazen wrote:
+> From: Yazen Ghannam <yazen.ghannam@amd.com>
+> 
+> Split out gathering hardware information from init_one_instance() into a
+> separate function get_hardware_info().
+> 
+> This is necessary so that the information can be cached earlier and used
+> to check if memory is populated and if ECC is enabled on a node.
+> 
+> Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
+> ---
+> Link:
+> https://lkml.kernel.org/r/20190821235938.118710-9-Yazen.Ghannam@amd.com
+> 
+> rfc -> v1:
+> * Fixup after making struct amd64_family_type fam_type global.
+> 
+>  drivers/edac/amd64_edac.c | 72 +++++++++++++++++++++++----------------
+>  1 file changed, 42 insertions(+), 30 deletions(-)
+> 
+> diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
+> index b9a712819c68..4410da7c3a25 100644
+> --- a/drivers/edac/amd64_edac.c
+> +++ b/drivers/edac/amd64_edac.c
+> @@ -3416,33 +3416,16 @@ static void compute_num_umcs(void)
+>  	edac_dbg(1, "Number of UMCs: %x", num_umcs);
+>  }
+>  
+> -static int init_one_instance(unsigned int nid)
+> +static int get_hardware_info(struct amd64_pvt *pvt)
+>  {
+> -	struct pci_dev *F3 = node_to_amd_nb(nid)->misc;
+> -	struct mem_ctl_info *mci = NULL;
+> -	struct edac_mc_layer layers[2];
+> -	struct amd64_pvt *pvt = NULL;
+>  	u16 pci_id1, pci_id2;
+> -	int err = 0, ret;
+> -
+> -	ret = -ENOMEM;
+> -	pvt = kzalloc(sizeof(struct amd64_pvt), GFP_KERNEL);
+> -	if (!pvt)
+> -		goto err_ret;
+> -
+> -	pvt->mc_node_id	= nid;
+> -	pvt->F3 = F3;
+> -
+> -	ret = -EINVAL;
+> -	fam_type = per_family_init(pvt);
+> -	if (!fam_type)
+> -		goto err_free;
+> +	int ret = -EINVAL;
+>  
+>  	if (pvt->fam >= 0x17) {
+>  		pvt->umc = kcalloc(num_umcs, sizeof(struct amd64_umc), GFP_KERNEL);
+>  		if (!pvt->umc) {
+>  			ret = -ENOMEM;
+> -			goto err_free;
+> +			goto err_ret;
+>  		}
+>  
+>  		pci_id1 = fam_type->f0_id;
+> @@ -3452,18 +3435,33 @@ static int init_one_instance(unsigned int nid)
+>  		pci_id2 = fam_type->f2_id;
+>  	}
+>  
+> -	err = reserve_mc_sibling_devs(pvt, pci_id1, pci_id2);
+> -	if (err)
+> +	ret = reserve_mc_sibling_devs(pvt, pci_id1, pci_id2);
+> +	if (ret)
+>  		goto err_post_init;
+>  
+>  	read_mc_regs(pvt);
+>  
+> +	return 0;
+> +
+> +err_post_init:
+> +	if (pvt->fam >= 0x17)
+> +		kfree(pvt->umc);
 
-On 2019/10/18 23:39, Jonathan Corbet wrote:
-> On Mon, 14 Oct 2019 21:50:02 +0800
-> Shaokun Zhang <zhangshaokun@hisilicon.com> wrote:
-> 
->> blk_init_queue has been removed since commit <a1ce35fa4985>
->> ("block: remove dead elevator code"), Let's cleanup the description
->> in the biodoc.rst document.
->>
->> Cc: Jonathan Corbet <corbet@lwn.net>
->> Cc: Jens Axboe <axboe@kernel.dk>
->> Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
-> 
-> So I applied this, then changed my mind and unapplied it; I think it's the
-> wrong fix.
-> 
+So you're freeing pvt->umc here but nothing in that function allocated
+it. get_hardware_info() in probe_one_instance() did but if you do it
+this way, it is kinda hard to follow and the layering is a bit iffy.
 
-Thanks your reply.
+So what I'd suggest is:
 
-Let's to introduce why I hit this: I have a module driver that can works using
-4.19 kernel version, it breaks when I use the 5.3 kernel. While I checked that
-blk_init_queue has been removed by commit <a1ce35fa4985>
-("block: remove dead elevator code"), but there is still something about it in
-this document.
+* Rename get_hardware_info() to something like hw_info_get() so that
+you can have a counterpart hw_info_put() which does any cleanup after
+hw_info_get(), including the freeing of the ->umc.
 
->>  Documentation/block/biodoc.rst | 10 ----------
->>  1 file changed, 10 deletions(-)
->>
->> diff --git a/Documentation/block/biodoc.rst b/Documentation/block/biodoc.rst
->> index b964796ec9c7..a19081d88349 100644
->> --- a/Documentation/block/biodoc.rst
->> +++ b/Documentation/block/biodoc.rst
->> @@ -1013,11 +1013,6 @@ request_fn execution which it means that lots of older drivers
->>  should still be SMP safe. Drivers are free to drop the queue
->>  lock themselves, if required. Drivers that explicitly used the
->>  io_request_lock for serialization need to be modified accordingly.
->> -Usually it's as easy as adding a global lock::
->> -
->> -	static DEFINE_SPINLOCK(my_driver_lock);
->> -
->> -and passing the address to that lock to blk_init_queue().
-> 
-> This is a section about coping with the removal of the io_request_lock,
-> which happened in 2.5, prior to the git era.  I think it is probably safe
-> to say that there are no relevant drivers that still need to be updated
-> for this particular change.
-> 
->>  5.2 64 bit sector numbers (sector_t prepares for 64 bit support)
->>  ----------------------------------------------------------------
->> @@ -1071,11 +1066,6 @@ right thing to use is bio_endio(bio) instead.
->>  If the driver is dropping the io_request_lock from its request_fn strategy,
->>  then it just needs to replace that with q->queue_lock instead.
->>  
->> -As described in Sec 1.1, drivers can set max sector size, max segment size
->> -etc per queue now. Drivers that used to define their own merge functions i
->> -to handle things like this can now just use the blk_queue_* functions at
->> -blk_init_queue time.
->> -
->>  Drivers no longer have to map a {partition, sector offset} into the
->>  correct absolute location anymore, this is done by the block layer, so
->>  where a driver received a request ala this before::
-> 
-> Here, too.  We're talking about teaching drivers how to use bios.
-> 
-> My suggested fix is to just remove both sections from the document
-> entirely; neither is relevant in 2019.
-> 
-> Even better, of course, would be to pass through this document and bring
-> it up to current practice in general; there is certain to be a lot more in
-> need of fixing here.
-> 
+* In probe_one_instance(), if init_one_instance() fails, call
+hw_info_put() on the error path so that all your flow in the probe/init
+functions is nicely ballanced and easily followed.
 
-I'm not very familiar with bio driver and this document, So is Jens or anyone happy to
-do more fixing about it.
+Makes sense?
 
-Thanks,
-Shaokun
+Thx.
 
-> Thanks,
-> 
-> jon
-> 
-> .
-> 
+-- 
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
