@@ -2,228 +2,104 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83DE7CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 20:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A190ACA9EB0
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 20:54:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A4AD2084B
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 20:53:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ufFCTskx"
+	by mail.kernel.org (Postfix) with ESMTP id 830242084B
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 20:54:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730531AbfJUUxB (ORCPT
+        id S1730329AbfJUUy3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 16:53:01 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:40133 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730383AbfJUUvk (ORCPT
+        Mon, 21 Oct 2019 16:54:29 -0400
+Received: from 68-189-91-139.static.snlo.ca.charter.com ([68.189.91.139]:59034
+        "EHLO rjones.pdc.gateworks.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730155AbfJUUy2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 16:51:40 -0400
-Received: by mail-qk1-f193.google.com with SMTP id y81so10251799qkb.7;
-        Mon, 21 Oct 2019 13:51:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=jqgsFlrNKqExdggLkADsTZXOcKKODUTxvxGTYxobfK0=;
-        b=ufFCTskxImKTtNSFmXwBTnh8Wvwq4S5v0UHWaJec1kYgteEBH+FqJRa6gvrvcam4Jc
-         wZcnfe6B9JuOUe/FfhpNlNzPyIQr9FHlGSz6aHUEavlx82hWPaF2DIN8vw3BNWhla+fY
-         seP1Ofija8Y5FaK2akJ2LYA+ks1IxHMCX6AUFg7vIPBJ7qVohdznFd0wxJtMF5qrgmBr
-         8r2vIAyZO5vR2sEyFGy3YHaAJlgBJ5G1q7tx7VYQRdZgEFKE9jq2xa6X5to0/+V6CgjJ
-         NTxsYmAHOvzQpmPfF9b5D8VQjx2ViZsEXlTjJtsJQc+dgtsJQKDfJiBVyJSrStDrcBjg
-         T1gQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=jqgsFlrNKqExdggLkADsTZXOcKKODUTxvxGTYxobfK0=;
-        b=KjSb4+OLyZxgRldxmeHgBzGCLsnCmIT9eol0X6jr6U2j3EGvzcWg65Gw62ERenptV+
-         xjE5YCorVbGaRcNgyBwnYiyzPY7bC3jmBe2Sjw4xtpn1E166FsyckKKIf6i+4JkW/hn2
-         Zf9rUBajJ4+0bF1oqimuVvW9IDiqAsGBUbWLieIriqH8DbUoXw/LlUCJMh3Qdz3brGwr
-         jnM/7t6hCiwZ+twB/bgnWJLD/DHi0boIhA5/ekh2AgVWAfl1LipjFB0ppmTOUVmVxeJY
-         6sRcSFdrGFQZcVCZUN/fd4H1KCUnRzkf3vBCsbmbnoCalHdrfFcaCcOC/ZVZzn4MiX97
-         NH/w==
-X-Gm-Message-State: APjAAAU5fXAuJKZI2wlPAE6xesBRPs9q6REXCYeubxkdIWBYdHHAEbp1
-        +5DLDe1Hxu+1LNsbqgxP0i0=
-X-Google-Smtp-Source: APXvYqxj3tM78Wn4NSi1KnRpblo3W12er4Vr5wooDXAwq83hOwtkoHW1QFKZIdVcKlSrBmC5T2ClOQ==
-X-Received: by 2002:a37:67d4:: with SMTP id b203mr24898207qkc.435.1571691098636;
-        Mon, 21 Oct 2019 13:51:38 -0700 (PDT)
-Received: from localhost (modemcable249.105-163-184.mc.videotron.ca. [184.163.105.249])
-        by smtp.gmail.com with ESMTPSA id l129sm9831589qkd.84.2019.10.21.13.51.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Oct 2019 13:51:38 -0700 (PDT)
-From:   Vivien Didelot <vivien.didelot@gmail.com>
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     linux-kernel@vger.kernel.org,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org
-Subject: [PATCH net-next v2 02/16] net: dsa: add ports list in the switch fabric
-Date:   Mon, 21 Oct 2019 16:51:16 -0400
-Message-Id: <20191021205130.304149-3-vivien.didelot@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191021205130.304149-1-vivien.didelot@gmail.com>
-References: <20191021205130.304149-1-vivien.didelot@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 21 Oct 2019 16:54:28 -0400
+Received: by rjones.pdc.gateworks.com (Postfix, from userid 1002)
+        id 233A81A40AF6; Mon, 21 Oct 2019 13:54:28 -0700 (PDT)
+From:   Robert Jones <rjones@gateworks.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>
+Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Robert Jones <rjones@gateworks.com>
+Subject: [PATCH] ARM: dts: imx: ventana: add fxos8700 on gateworks boards
+Date:   Mon, 21 Oct 2019 13:54:26 -0700
+Message-Id: <20191021205426.28825-1-rjones@gateworks.com>
+X-Mailer: git-send-email 2.9.2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a list of switch ports within the switch fabric. This will help the
-lookup of a port inside the whole fabric, and it is the first step
-towards supporting multiple CPU ports, before deprecating the usage of
-the unique dst->cpu_dp pointer.
+Add fxos8700 iio imu entries for Gateworks ventana SBCs.
 
-In preparation for a future allocation of the dsa_port structures,
-return -ENOMEM in case no structure is returned, even though this
-error cannot be reached yet.
-
-Signed-off-by: Vivien Didelot <vivien.didelot@gmail.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Robert Jones <rjones@gateworks.com>
 ---
- include/net/dsa.h |  5 +++++
- net/dsa/dsa2.c    | 48 +++++++++++++++++++++++++++++++++++++++++------
- 2 files changed, 47 insertions(+), 6 deletions(-)
+ arch/arm/boot/dts/imx6qdl-gw52xx.dtsi | 5 +++++
+ arch/arm/boot/dts/imx6qdl-gw53xx.dtsi | 5 +++++
+ arch/arm/boot/dts/imx6qdl-gw54xx.dtsi | 5 +++++
+ 3 files changed, 15 insertions(+)
 
-diff --git a/include/net/dsa.h b/include/net/dsa.h
-index 2e4fe2f8962b..6ff6dfcdc61d 100644
---- a/include/net/dsa.h
-+++ b/include/net/dsa.h
-@@ -125,6 +125,9 @@ struct dsa_switch_tree {
- 	 */
- 	struct dsa_port		*cpu_dp;
- 
-+	/* List of switch ports */
-+	struct list_head ports;
+diff --git a/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi b/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi
+index 1a9a9d9..2d7d01e 100644
+--- a/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi
+@@ -313,6 +313,11 @@
+ 		interrupts = <12 2>;
+ 		wakeup-gpios = <&gpio7 12 GPIO_ACTIVE_LOW>;
+ 	};
 +
- 	/*
- 	 * Data for the individual switch chips.
- 	 */
-@@ -195,6 +198,8 @@ struct dsa_port {
- 	struct work_struct	xmit_work;
- 	struct sk_buff_head	xmit_queue;
++	fxos8700@1e {
++		compatible = "nxp,fxos8700";
++		reg = <0x1e>;
++	};
+ };
  
-+	struct list_head list;
+ &ldb {
+diff --git a/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi b/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi
+index 54b2bea..bf1a2c6 100644
+--- a/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi
+@@ -304,6 +304,11 @@
+ 		interrupts = <11 2>;
+ 		wakeup-gpios = <&gpio1 11 GPIO_ACTIVE_LOW>;
+ 	};
 +
- 	/*
- 	 * Give the switch driver somewhere to hang its per-port private data
- 	 * structures (accessible from the tagger).
-diff --git a/net/dsa/dsa2.c b/net/dsa/dsa2.c
-index 1716535167ee..ba27ff8b4445 100644
---- a/net/dsa/dsa2.c
-+++ b/net/dsa/dsa2.c
-@@ -45,6 +45,8 @@ static struct dsa_switch_tree *dsa_tree_alloc(int index)
++	fxos8700@1e {
++		compatible = "nxp,fxos8700";
++		reg = <0x1e>;
++	};
+ };
  
- 	dst->index = index;
- 
-+	INIT_LIST_HEAD(&dst->ports);
+ &ldb {
+diff --git a/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi b/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
+index 1b6c133..d9e09a9 100644
+--- a/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
+@@ -361,6 +361,11 @@
+ 		interrupts = <12 2>;
+ 		wakeup-gpios = <&gpio7 12 GPIO_ACTIVE_LOW>;
+ 	};
 +
- 	INIT_LIST_HEAD(&dst->list);
- 	list_add_tail(&dst->list, &dsa_tree_list);
++	fxos8700@1e {
++		compatible = "nxp,fxos8700";
++		reg = <0x1e>;
++	};
+ };
  
-@@ -616,6 +618,22 @@ static int dsa_tree_add_switch(struct dsa_switch_tree *dst,
- 	return err;
- }
- 
-+static struct dsa_port *dsa_port_touch(struct dsa_switch *ds, int index)
-+{
-+	struct dsa_switch_tree *dst = ds->dst;
-+	struct dsa_port *dp;
-+
-+	dp = &ds->ports[index];
-+
-+	dp->ds = ds;
-+	dp->index = index;
-+
-+	INIT_LIST_HEAD(&dp->list);
-+	list_add_tail(&dp->list, &dst->ports);
-+
-+	return dp;
-+}
-+
- static int dsa_port_parse_user(struct dsa_port *dp, const char *name)
- {
- 	if (!name)
-@@ -742,6 +760,20 @@ static int dsa_switch_parse_member_of(struct dsa_switch *ds,
- 	return 0;
- }
- 
-+static int dsa_switch_touch_ports(struct dsa_switch *ds)
-+{
-+	struct dsa_port *dp;
-+	int port;
-+
-+	for (port = 0; port < ds->num_ports; port++) {
-+		dp = dsa_port_touch(ds, port);
-+		if (!dp)
-+			return -ENOMEM;
-+	}
-+
-+	return 0;
-+}
-+
- static int dsa_switch_parse_of(struct dsa_switch *ds, struct device_node *dn)
- {
- 	int err;
-@@ -750,6 +782,10 @@ static int dsa_switch_parse_of(struct dsa_switch *ds, struct device_node *dn)
- 	if (err)
- 		return err;
- 
-+	err = dsa_switch_touch_ports(ds);
-+	if (err)
-+		return err;
-+
- 	return dsa_switch_parse_ports_of(ds, dn);
- }
- 
-@@ -807,6 +843,8 @@ static int dsa_switch_parse_ports(struct dsa_switch *ds,
- 
- static int dsa_switch_parse(struct dsa_switch *ds, struct dsa_chip_data *cd)
- {
-+	int err;
-+
- 	ds->cd = cd;
- 
- 	/* We don't support interconnected switches nor multiple trees via
-@@ -817,6 +855,10 @@ static int dsa_switch_parse(struct dsa_switch *ds, struct dsa_chip_data *cd)
- 	if (!ds->dst)
- 		return -ENOMEM;
- 
-+	err = dsa_switch_touch_ports(ds);
-+	if (err)
-+		return err;
-+
- 	return dsa_switch_parse_ports(ds, cd);
- }
- 
-@@ -849,7 +891,6 @@ static int dsa_switch_probe(struct dsa_switch *ds)
- struct dsa_switch *dsa_switch_alloc(struct device *dev, size_t n)
- {
- 	struct dsa_switch *ds;
--	int i;
- 
- 	ds = devm_kzalloc(dev, struct_size(ds, ports, n), GFP_KERNEL);
- 	if (!ds)
-@@ -858,11 +899,6 @@ struct dsa_switch *dsa_switch_alloc(struct device *dev, size_t n)
- 	ds->dev = dev;
- 	ds->num_ports = n;
- 
--	for (i = 0; i < ds->num_ports; ++i) {
--		ds->ports[i].index = i;
--		ds->ports[i].ds = ds;
--	}
--
- 	return ds;
- }
- EXPORT_SYMBOL_GPL(dsa_switch_alloc);
+ &ldb {
 -- 
-2.23.0
+2.9.2
 
