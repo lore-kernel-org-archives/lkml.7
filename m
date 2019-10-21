@@ -2,81 +2,104 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA8E5CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 19:37:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73939CA9EB0
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 19:37:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DD9E2084B
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 19:37:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 438A82084B
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 19:37:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uhu8ADmf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730153AbfJUThC (ORCPT
+        id S1730182AbfJUThR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 15:37:02 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:43881 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728543AbfJUThC (ORCPT
+        Mon, 21 Oct 2019 15:37:17 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:52432 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728819AbfJUThQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 15:37:02 -0400
-Received: from [213.220.153.21] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iMdU6-0005N0-Dy; Mon, 21 Oct 2019 19:36:54 +0000
-Date:   Mon, 21 Oct 2019 21:36:53 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>, linux@rasmusvillemoes.dk,
-        cyphar@cyphar.com, keescook@chromium.org
-Subject: Re: linux-next: Tree for Oct 18 (objtool)
-Message-ID: <20191021193652.lfccehm37dkkofp7@wittgenstein>
-References: <20191018180300.090dbcb9@canb.auug.org.au>
- <40de4e26-450e-b932-3d73-e833c8aeaa2e@infradead.org>
- <20191021123549.GC1817@hirez.programming.kicks-ass.net>
- <20191021131149.GA19358@hirez.programming.kicks-ass.net>
- <20191021131947.yih3wqjbfroaj4dz@wittgenstein>
- <20191021134759.GG1800@hirez.programming.kicks-ass.net>
+        Mon, 21 Oct 2019 15:37:16 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9LJbD3k071322;
+        Mon, 21 Oct 2019 14:37:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1571686633;
+        bh=ekjozCXAw6b8U4H+XTTsLy7p9fWE1plsq41QyKEnJfY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=uhu8ADmfMLTbK8Fc1tT/Ngqs+VRtp8rNlCN5Ams4IzB3Y3pFN6889fKrb9CHCyVDf
+         R4339oSBJY1z6u9uU3OgV6WYTzyH4+FuXiy3mjP7x6ZwxDYycBN+Wk6G9ZFb5b5GM0
+         mxshtNvpLpJjnbP2Lkg2iO7cb0etkQFYkQccJ+NU=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9LJawLA051959
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 21 Oct 2019 14:36:58 -0500
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 21
+ Oct 2019 14:36:57 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 21 Oct 2019 14:36:57 -0500
+Received: from [10.250.35.43] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9LJZuPo077548;
+        Mon, 21 Oct 2019 14:35:57 -0500
+Subject: Re: [PATCH 1/3] power_supply: Add additional health properties to the
+ header
+To:     Sebastian Reichel <sre@kernel.org>
+CC:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20190930143137.21624-1-dmurphy@ti.com>
+ <20191020122510.4llflz7s2kogcdbf@earth.universe>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <b354bd2e-3fd8-eef9-6609-75d09210e745@ti.com>
+Date:   Mon, 21 Oct 2019 14:35:15 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191021134759.GG1800@hirez.programming.kicks-ass.net>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191020122510.4llflz7s2kogcdbf@earth.universe>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 03:47:59PM +0200, Peter Zijlstra wrote:
-> On Mon, Oct 21, 2019 at 03:19:48PM +0200, Christian Brauner wrote:
-> > On Mon, Oct 21, 2019 at 03:11:49PM +0200, Peter Zijlstra wrote:
-> 
-> > > By popular request; here's that alternative. Completely untested :-)
-> > 
-> > Am I not getting some mails? :)
-> 
-> You're not on the 'right' IRC channels :-)
+Sebastian
 
-Well, we saw that that wasn't true today. :)
+On 10/20/19 7:25 AM, Sebastian Reichel wrote:
+> Hi,
+>
+> On Mon, Sep 30, 2019 at 09:31:35AM -0500, Dan Murphy wrote:
+>> Add HEALTH_WARM, HEALTH_COOL and HEALTH_HOT to the health enum.
+> You used OVERHEAT instead of HOT in the implementation,
+> which makes sense to me, so please drop HOT here. Also
+> this needs to be documented in the ABI documentation:
 
-> 
-> > I prefer this one as it allows us to avoid working around this in
-> > usercopy.c. Should especially make if this potentially helps in other
-> > cases as well?
-> 
-> That was Josh's argument too.
-> 
-> Personally I think GCC is being a moron here, because with value range
-> analysis it should be able to prove the shift-UB cannot happen (the <
-> sizeof(unsigned long) conditions on both), but alas, it emits the UBSAN
-> calls anyway.
+Hmm.  To me OVERHEAT and HOT can mean two different things.  I will 
+check the implementation but I would
 
-Ok, so I take it you route that patch somehwere through tip?
-I'm happy with the ubsan fix:
+prefer to use HOT.
 
-Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+If a battery or charger is HOT that may be expected to be within the 
+heat limits of the device being monitored but that it is hot.
+
+Overheating means the device is above the expected upper thermal limit.  
+Or over the heat limit.
+
+The user may want to take action within the hot range to cool the device 
+or may expect the device to run hot without over heating.
+
+
+> Documentation/ABI/testing/sysfs-class-power
+
+ACK
+
+Dan
+
+
