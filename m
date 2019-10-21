@@ -2,141 +2,132 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C15CA9EB0
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:31:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CBD3CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:31:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BBCD205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:31:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7220D205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:31:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eAOjRR/6"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="ecUT7YuS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728530AbfJUQb3 (ORCPT
+        id S1728485AbfJUQby (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 12:31:29 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:28263 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727101AbfJUQb3 (ORCPT
+        Mon, 21 Oct 2019 12:31:54 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:52363 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726819AbfJUQbx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 12:31:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571675488;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6w7dW9mOc7e8F/WURa36AE0ItFqfFxyky2HnpydUOE0=;
-        b=eAOjRR/6+t1RmQmV1ycxOR5bpqqgKgCb2CK019RqggMMSW8yS1phRmShQMbf1X5Y87sCps
-        aEshZzdWw0RpmtWFln6oJCQ2Iq4F9s2dR4lXoaTqtHv8wWDDhC7ZaJ/jCLaO5ZzmkWH1OE
-        zW+1Qeugm0u/BbzIKUmVX7zNMTwW0Sk=
-Received: from mail-yb1-f197.google.com (mail-yb1-f197.google.com
- [209.85.219.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-299-snuSe-V1OKm9C_fhweXpFg-1; Mon, 21 Oct 2019 12:31:26 -0400
-Received: by mail-yb1-f197.google.com with SMTP id 202so10388292ybe.13
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 09:31:26 -0700 (PDT)
+        Mon, 21 Oct 2019 12:31:53 -0400
+Received: by mail-wm1-f67.google.com with SMTP id r19so14083989wmh.2
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 09:31:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=3IkhyqN1C3DeqmpvyeKao62eu0Id9wyxWa4NyKMwjSY=;
+        b=ecUT7YuSAH7EqAHwjxoJ7bXyebXggXNBwTBOODxudm9W3L4rkeeF2Tup1Rjgq9+0nX
+         1ig00rspZrWlFuh9g6eK7Iu3wfnnlYbTq5Ri8hsPUTViIT9wIE6HafPFwHR/TllGcxDR
+         /9VvDHFweGt+uOWhUbn9oGA4OsW6S59AVRWtMrVsp2JVl6obVs2Z+ocmObYsTyrsJFVq
+         HXrxI67X+xn7XSZiGSVIxnN9jAi3rsKEqKhd4FTequn80r2arymkCrxSqoB1GN+QqgJp
+         iAqbQbKupwGVXNS8Z0tNTPAej0KM6EndGKI+mdUmCApAZb6zvxHZ5V2QC4OygoowVtSt
+         9kGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fsdy/jGiGhYO0LCoELtFkTkwnBVL5KY786AsoYKXAR4=;
-        b=S9qpAclVfQcrmHQ2mTXFeLHWtsm54i6agOgN3XGCx6En0iLd8OwvG9EceIe8yL7pp7
-         ajYxW+Ym094zTPvtI16AHwcFYxEws4HE0ZGc/W8Ytf6+p2VDP8f3WXvjYRu4Rjpuioch
-         jpD4seCx2oHgUN8uHe+LpS194Gh2J9F0vrFBZHnEa/EhSGK9Ek/pd0bdEi+0U+OwXDIg
-         9NqVdRGSmUhmHjxJd3o8Qc0ljLwYuQL7yClBMm2hgid9Jw1fsEGJzMluA+c5hHsiJov5
-         mhEvu8WiaDXjhssHj49e2Hmy8mghkgDBE5BAfZv/IYnfNYuIm8nZy4nnPw8A24ozMIKW
-         pEww==
-X-Gm-Message-State: APjAAAWa+AxcWlV2/pdYPi1ndA2p+f5qMTyubTwNgpZ6RVsr6ex/NXIV
-        E0Ke6DkwSGkDgowAMd2El2Sf4XWyRoYOPPTj/S/YUqswicekeD9IBBz00cupL9z+0QGem1RXQd9
-        Xr5CKFdVldGLTvAvdAPI++ALFGoS+pZCKlQ8VTz8X
-X-Received: by 2002:a05:6902:4c8:: with SMTP id v8mr16247514ybs.66.1571675485764;
-        Mon, 21 Oct 2019 09:31:25 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxciDyD1lopQLg+gvSHhlech/D0NjAF1pJvvntU8U9FKaM9F7s7bZSlGbX3GSbC/6IuqejGRuqLtQKO7Q/5Jvs=
-X-Received: by 2002:a05:6902:4c8:: with SMTP id v8mr16247482ybs.66.1571675485370;
- Mon, 21 Oct 2019 09:31:25 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3IkhyqN1C3DeqmpvyeKao62eu0Id9wyxWa4NyKMwjSY=;
+        b=e0GeNCig+7iFA+JBRb5AdP1LtzZNfuVln0BLBNvf0DmsNY7cL1XynM82XStJ/VH8AO
+         NP6HBIHQdsV8ceenHmJVh50r5WErWyEATxY/1PTvrc6Pd4q8slAY6BwYt5hsXXugLBfv
+         DW6siQfHmp/kL/cnzTG+38h/4RtgGx03wWdSGgkLkzikJrq1riUXZvdKxVGRkZ7K8MaC
+         58Le0+auM4YVxznmHMWp91GSRzpB+LVi9WRqc/GSgHLrt2rJipt0r4tTu9Bnsq/fou63
+         pQkli/KjYyjL++KDSlDXQWZ61BSPznDgDSiBPz9FLgXnx40dozqyGnlTU8WE3yJVhCpT
+         cqSA==
+X-Gm-Message-State: APjAAAWscuq0tysFMeIAygWHP1rTpXqZO8jVyuXQs4tSRj+Km2VilrP6
+        gpKsKOT2wQyK+tIrc15rzpIlew==
+X-Google-Smtp-Source: APXvYqzPOa4k0MGzDnxIlfae62AIVxgrRFLh8OdQdSIsPDPBjcYwh/TC0W5XSEVF4sDYB4ISkgFdIQ==
+X-Received: by 2002:a7b:cf28:: with SMTP id m8mr20552680wmg.63.1571675512031;
+        Mon, 21 Oct 2019 09:31:52 -0700 (PDT)
+Received: from netronome.com ([83.137.2.245])
+        by smtp.gmail.com with ESMTPSA id z9sm16104645wrl.35.2019.10.21.09.31.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Oct 2019 09:31:51 -0700 (PDT)
+Date:   Mon, 21 Oct 2019 18:31:40 +0200
+From:   Simon Horman <simon.horman@netronome.com>
+To:     "Zhu, Lingshan" <lingshan.zhu@intel.com>
+Cc:     mst@redhat.com, jasowang@redhat.com, alex.williamson@redhat.com,
+        linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, dan.daly@intel.com,
+        cunming.liang@intel.com, tiwei.bie@intel.com, jason.zeng@intel.com,
+        zhiyuan.lv@intel.com
+Subject: Re: [RFC 1/2] vhost: IFC VF hardware operation layer
+Message-ID: <20191021163139.GC4486@netronome.com>
+References: <20191016011041.3441-1-lingshan.zhu@intel.com>
+ <20191016011041.3441-2-lingshan.zhu@intel.com>
+ <20191016095347.5sb43knc7eq44ivo@netronome.com>
+ <075be045-3a02-e7d8-672f-4a207c410ee8@intel.com>
 MIME-Version: 1.0
-References: <CACVy4SVuw0Qbjiv6PLRn1symoxGzyBMZx2F5O23+jGZG6WHuYA@mail.gmail.com>
- <20191021083731.GK15862@gauss3.secunet.de>
-In-Reply-To: <20191021083731.GK15862@gauss3.secunet.de>
-From:   Tom Rix <trix@redhat.com>
-Date:   Mon, 21 Oct 2019 09:31:13 -0700
-Message-ID: <CACVy4SV3K257XfFkR_ahkU2yy9mzJD-9LrSiQPCnespB3k_0XQ@mail.gmail.com>
-Subject: Re: [PATCH] xfrm : lock input tasklet skb queue
-To:     Steffen Klassert <steffen.klassert@secunet.com>
-Cc:     herbert@gondor.apana.org.au, davem@davemloft.net,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-X-MC-Unique: snuSe-V1OKm9C_fhweXpFg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <075be045-3a02-e7d8-672f-4a207c410ee8@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When preempt rt is full, softirq and interrupts run in kthreads. So it
-is possible for the tasklet to sleep and for its queue to get modified
-while it sleeps.
+On Mon, Oct 21, 2019 at 05:55:33PM +0800, Zhu, Lingshan wrote:
+> 
+> On 10/16/2019 5:53 PM, Simon Horman wrote:
+> > Hi Zhu,
+> > 
+> > thanks for your patch.
+> > 
+> > On Wed, Oct 16, 2019 at 09:10:40AM +0800, Zhu Lingshan wrote:
 
-On Mon, Oct 21, 2019 at 1:37 AM Steffen Klassert
-<steffen.klassert@secunet.com> wrote:
->
-> On Sun, Oct 20, 2019 at 08:46:10AM -0700, Tom Rix wrote:
-> > On PREEMPT_RT_FULL while running netperf, a corruption
-> > of the skb queue causes an oops.
-> >
-> > This appears to be caused by a race condition here
-> >         __skb_queue_tail(&trans->queue, skb);
-> >         tasklet_schedule(&trans->tasklet);
-> > Where the queue is changed before the tasklet is locked by
-> > tasklet_schedule.
-> >
-> > The fix is to use the skb queue lock.
-> >
-> > Signed-off-by: Tom Rix <trix@redhat.com>
-> > ---
-> >  net/xfrm/xfrm_input.c | 11 ++++++++++-
-> >  1 file changed, 10 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/net/xfrm/xfrm_input.c b/net/xfrm/xfrm_input.c
-> > index 9b599ed66d97..226dead86828 100644
-> > --- a/net/xfrm/xfrm_input.c
-> > +++ b/net/xfrm/xfrm_input.c
-> > @@ -758,12 +758,16 @@ static void xfrm_trans_reinject(unsigned long dat=
-a)
-> >      struct xfrm_trans_tasklet *trans =3D (void *)data;
-> >      struct sk_buff_head queue;
-> >      struct sk_buff *skb;
-> > +    unsigned long flags;
-> >
-> >      __skb_queue_head_init(&queue);
-> > +    spin_lock_irqsave(&trans->queue.lock, flags);
-> >      skb_queue_splice_init(&trans->queue, &queue);
-> >
-> >      while ((skb =3D __skb_dequeue(&queue)))
-> >          XFRM_TRANS_SKB_CB(skb)->finish(dev_net(skb->dev), NULL, skb);
-> > +
-> > +    spin_unlock_irqrestore(&trans->queue.lock, flags);
-> >  }
-> >
-> >  int xfrm_trans_queue(struct sk_buff *skb,
-> > @@ -771,15 +775,20 @@ int xfrm_trans_queue(struct sk_buff *skb,
-> >                     struct sk_buff *))
-> >  {
-> >      struct xfrm_trans_tasklet *trans;
-> > +    unsigned long flags;
-> >
-> >      trans =3D this_cpu_ptr(&xfrm_trans_tasklet);
-> > +    spin_lock_irqsave(&trans->queue.lock, flags);
->
-> As you can see above 'trans' is per cpu, so a spinlock
-> is not needed here. Also this does not run in hard
-> interrupt context, so irqsave is also not needed.
-> I don't see how this can fix anything.
->
-> Can you please explain that race a bit more detailed?
->
+...
 
+> > > +static void ifcvf_read_dev_config(struct ifcvf_hw *hw, u64 offset,
+> > > +		       void *dst, int length)
+> > > +{
+> > > +	int i;
+> > > +	u8 *p;
+> > > +	u8 old_gen, new_gen;
+> > > +
+> > > +	do {
+> > > +		old_gen = ioread8(&hw->common_cfg->config_generation);
+> > > +
+> > > +		p = dst;
+> > > +		for (i = 0; i < length; i++)
+> > > +			*p++ = ioread8((u8 *)hw->dev_cfg + offset + i);
+> > > +
+> > > +		new_gen = ioread8(&hw->common_cfg->config_generation);
+> > > +	} while (old_gen != new_gen);
+> > Would it be wise to limit the number of iterations of the loop above?
+> Thanks but I don't quite get it. This is used to make sure the function
+> would get the latest config.
+
+I am worried about the possibility that it will loop forever.
+Could that happen?
+
+...
+
+> > > +static void io_write64_twopart(u64 val, u32 *lo, u32 *hi)
+> > > +{
+> > > +	iowrite32(val & ((1ULL << 32) - 1), lo);
+> > > +	iowrite32(val >> 32, hi);
+> > > +}
+> > I see this macro is also in virtio_pci_modern.c
+> > 
+> > Assuming lo and hi aren't guaranteed to be sequential
+> > and thus iowrite64_hi_lo() cannot be used perhaps
+> > it would be good to add a common helper somewhere.
+> Thanks, I will try after this IFC patchwork, I will cc you.
+
+Thanks.
+
+...
