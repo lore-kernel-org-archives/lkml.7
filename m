@@ -2,101 +2,552 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CD51CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:40:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DBC4CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:41:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 235C72053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:40:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7BFD2053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:41:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="SPnQESjS"
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="58McUph2";
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="58McUph2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727746AbfJUOkw (ORCPT
+        id S1728033AbfJUOlr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 10:40:52 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:39162 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726289AbfJUOkw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 10:40:52 -0400
-Received: from zn.tnic (p2E584653.dip0.t-ipconnect.de [46.88.70.83])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id ED7501EC0A91;
-        Mon, 21 Oct 2019 16:40:50 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1571668851;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=sZ/MDfegUgGm8z+DRUVp9+PgEkJ14FoaH/PagdpdVVQ=;
-        b=SPnQESjSv3gQJnxBeQ6d82yTpnny42QaV/indOZRO0X3OyepdjZid8re/6wd6suC9HpGUQ
-        yHE8MmmAGoAYE8YruJkZwy0eftaJI2BYYnxbHatfw/8lwxi1tC7i1yEE3gXCE2qgEYsgij
-        xCTPk8vvbKP42ozwxH5Q7lOODxjJrJc=
-Date:   Mon, 21 Oct 2019 16:40:12 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
-Cc:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/6] EDAC/amd64: Save max number of controllers to family
- type
-Message-ID: <20191021144012.GD7014@zn.tnic>
-References: <20191018153114.39378-1-Yazen.Ghannam@amd.com>
- <20191018153114.39378-4-Yazen.Ghannam@amd.com>
+        Mon, 21 Oct 2019 10:41:47 -0400
+Received: from mail-eopbgr10062.outbound.protection.outlook.com ([40.107.1.62]:47758
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726289AbfJUOlr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 10:41:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GIv7uTU0kafNj3RaBYiBJkuOORdVhqqvW4hMPRFZ0SM=;
+ b=58McUph24A87dDKykTnXM6IaEEQ1ntcjHGfqJEqAriaak0e8vJo0asjJQPafbkqQkdpun0vYeFCtWKSVGgVUbvpEXk9C3NpsGOSyt07XgYZOMbLLAHwzodHxcNXs7yOUvXl4l8lpobblpoAxsvLBvPSqvVIJRh8ft5rnuGiN/Ag=
+Received: from HE1PR0802CA0009.eurprd08.prod.outlook.com (2603:10a6:3:bd::19)
+ by AM0PR08MB3841.eurprd08.prod.outlook.com (2603:10a6:208:106::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2367.21; Mon, 21 Oct
+ 2019 14:41:38 +0000
+Received: from VE1EUR03FT057.eop-EUR03.prod.protection.outlook.com
+ (2a01:111:f400:7e09::207) by HE1PR0802CA0009.outlook.office365.com
+ (2603:10a6:3:bd::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2367.20 via Frontend
+ Transport; Mon, 21 Oct 2019 14:41:38 +0000
+Authentication-Results: spf=temperror (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=none action=none
+ header.from=arm.com;
+Received-SPF: TempError (protection.outlook.com: error in processing during
+ lookup of arm.com: DNS Timeout)
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ VE1EUR03FT057.mail.protection.outlook.com (10.152.19.123) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.2305.15 via Frontend Transport; Mon, 21 Oct 2019 14:41:37 +0000
+Received: ("Tessian outbound 3fba803f6da3:v33"); Mon, 21 Oct 2019 14:41:29 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: ed60c1a4c456ea63
+X-CR-MTA-TID: 64aa7808
+Received: from 7d88b54680f3.2 (ip-172-16-0-2.eu-west-1.compute.internal [104.47.12.55])
+        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 5894CF18-030A-4947-98C8-0E8D3553D4E5.1;
+        Mon, 21 Oct 2019 14:41:24 +0000
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04lp2055.outbound.protection.outlook.com [104.47.12.55])
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 7d88b54680f3.2
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Mon, 21 Oct 2019 14:41:24 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AgnvxHwKnjI/ziU5ACjgaOzsx9PQclPPMJA8YzYlyt/ciDS4BBMSqUCRvoZXeGcb33lxP2DIzKqRfmnH7zEaRzEZ80SkYNIDiSHwcTyh4Hgc0W2DdsB/9DSic8xTTgm9wgrtZWoOFwFhN1twu+7NKYYXuCQ7U7T/p4GR6ke1/iYiJJx/iHpBzbm66qCfb6s6LGw00H/AcHp0TLnNZIrm7oz6TmZuafmhkn0UAApu10LbE76ucFl669DsjfGDk93Y7DLoVR+5uxBV/+PeejysZ/2H5EJDmGHf4NM4Z8Ju8yDWDgaHZM6AfkCRRt0QTes+ZEt+8ioryvAyTWaTz264ZA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GIv7uTU0kafNj3RaBYiBJkuOORdVhqqvW4hMPRFZ0SM=;
+ b=TLJRHdF9q6qJw1NtpkxrGLUvoEc5KRPwoJ5q8JSx9GyVXOhQQTfJvmQOkLgbIrb2GSslveIBg5bWSoSfFdwdacCr++rQXXptKLEbHS/wM0UaWwTvZbqa0hCh/xVXb9grHx1g21IJDlzQRKSW67uo8pIEig07tO+RlPuARu0KNSPWrhF8xV0kegC7v+wH47+QLospx9iTCpJpRt+Tbnnx10ikkHpBd1MHngN6etKWVrLzAu4nd96V2JojIqk8jBIzihTQbKrDFjTCwWFoxjjhrsoreHq8tzu9P4RH8rMUb9N0YCrUNHGg9vvwyguztFGUmbZ0rcKcVKFL42tFG6pspw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GIv7uTU0kafNj3RaBYiBJkuOORdVhqqvW4hMPRFZ0SM=;
+ b=58McUph24A87dDKykTnXM6IaEEQ1ntcjHGfqJEqAriaak0e8vJo0asjJQPafbkqQkdpun0vYeFCtWKSVGgVUbvpEXk9C3NpsGOSyt07XgYZOMbLLAHwzodHxcNXs7yOUvXl4l8lpobblpoAxsvLBvPSqvVIJRh8ft5rnuGiN/Ag=
+Received: from VI1PR08MB4078.eurprd08.prod.outlook.com (20.178.127.92) by
+ VI1PR08MB3200.eurprd08.prod.outlook.com (52.133.15.152) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2367.20; Mon, 21 Oct 2019 14:41:22 +0000
+Received: from VI1PR08MB4078.eurprd08.prod.outlook.com
+ ([fe80::7d25:d1f2:e3eb:868b]) by VI1PR08MB4078.eurprd08.prod.outlook.com
+ ([fe80::7d25:d1f2:e3eb:868b%6]) with mapi id 15.20.2367.022; Mon, 21 Oct 2019
+ 14:41:22 +0000
+From:   Mihail Atanassov <Mihail.Atanassov@arm.com>
+To:     Ayan Halder <Ayan.Halder@arm.com>
+CC:     Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        David Airlie <airlied@linux.ie>,
+        Liviu Dudau <Liviu.Dudau@arm.com>,
+        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "kernel@collabora.com" <kernel@collabora.com>,
+        Sean Paul <sean@poorly.run>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        nd <nd@arm.com>
+Subject: Re: [PATCH 1/2] drm/arm: Factor out generic afbc helpers
+Thread-Topic: [PATCH 1/2] drm/arm: Factor out generic afbc helpers
+Thread-Index: AQHVgCWkbVOYIG7/eE2VirVnDYzB4adlLKIAgAAOSIA=
+Date:   Mon, 21 Oct 2019 14:41:22 +0000
+Message-ID: <2485717.1SzL54aMiy@e123338-lin>
+References: <20191011111813.20851-1-andrzej.p@collabora.com>
+ <20191011111813.20851-2-andrzej.p@collabora.com>
+ <20191021135013.GA16072@arm.com>
+In-Reply-To: <20191021135013.GA16072@arm.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [217.140.106.51]
+x-clientproxiedby: LO2P265CA0018.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:62::30) To VI1PR08MB4078.eurprd08.prod.outlook.com
+ (2603:10a6:803:e5::28)
+Authentication-Results-Original: spf=none (sender IP is )
+ smtp.mailfrom=Mihail.Atanassov@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+X-MS-Office365-Filtering-Correlation-Id: b2e359ff-8ee4-45ab-6310-08d75634c711
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-TrafficTypeDiagnostic: VI1PR08MB3200:|VI1PR08MB3200:|AM0PR08MB3841:
+X-MS-Exchange-PUrlCount: 3
+x-ms-exchange-transport-forked: True
+X-Microsoft-Antispam-PRVS: <AM0PR08MB38410B7909A36B33F11DA8C18F690@AM0PR08MB3841.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+x-ms-oob-tlc-oobclassifiers: OLM:8882;OLM:8882;
+x-forefront-prvs: 0197AFBD92
+X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(7916004)(4636009)(376002)(136003)(366004)(396003)(39860400002)(346002)(199004)(189003)(51914003)(25786009)(14454004)(6116002)(76176011)(66066001)(8936002)(81156014)(8676002)(2906002)(6636002)(3846002)(6862004)(486006)(30864003)(33716001)(476003)(81166006)(86362001)(478600001)(11346002)(446003)(66476007)(66556008)(64756008)(66446008)(66946007)(966005)(52116002)(26005)(229853002)(99286004)(186003)(316002)(5660300002)(6246003)(7736002)(386003)(102836004)(6486002)(256004)(6512007)(54906003)(14444005)(9686003)(6436002)(4326008)(71190400001)(6506007)(6306002)(71200400001)(305945005)(39026011)(41533002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR08MB3200;H:VI1PR08MB4078.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: Gueo8KR3M2CV4rD/B422vaVZYxZ40UFnmU6X71Bs0+EdKkDrbOC6RSyWdJ7aJ3AIewa1fLv9vovLZQaB18B83nk5X6+7yzt46jDmTEVKNOjAHfVpjJ9GqwjqWD+vk6JdGhCqu0PjZXbprnjfyqgLPu6FHuKg9Kj/djazvGgzOxn8OUrxdcMLKAY3MslKgZS7MIt/ugnoMTB3ufC5j58/iX7jISxXpOCUpJoLw7CcrJ9EokUHoPvxYFWChDM3RmhwdDmY2rwaGZib4Av6diE2rvGokMWtvcY9b9Mf26D/XDIfIQe1wNBHmgR6se7sPG3oPhN1fHVqUM4oFiUZglug2a0/waBdWMc1IC2CVLd+Ck4VkI19nDxN8ZtgtOJTQxOO+Ek7vTTmuKIi7nEHhRmoCsELxeGPem4dBxtaMfm92vQb8fi2ywNLOieJ7agfs8htv11GNAtHB5p+N9v9lzdMlAPrzFxfp5tG5rOntUhtduo=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <BA4BF98054D1FB45BE382A49F07CEC2A@eurprd08.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191018153114.39378-4-Yazen.Ghannam@amd.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB3200
+Original-Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Mihail.Atanassov@arm.com; 
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: VE1EUR03FT057.eop-EUR03.prod.protection.outlook.com
+X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(7916004)(4636009)(396003)(39860400002)(376002)(346002)(136003)(51914003)(189003)(199004)(26826003)(76176011)(305945005)(478600001)(99286004)(186003)(6506007)(26005)(3846002)(386003)(102836004)(6116002)(316002)(36906005)(54906003)(336012)(356004)(966005)(7736002)(5660300002)(2906002)(14454004)(6636002)(14444005)(86362001)(6246003)(30864003)(66066001)(6862004)(33716001)(486006)(476003)(126002)(81166006)(229853002)(81156014)(8936002)(8746002)(8676002)(25786009)(6486002)(9686003)(6512007)(22756006)(6306002)(4326008)(76130400001)(70586007)(47776003)(23756003)(70206006)(11346002)(446003)(63350400001)(50466002)(39026011)(41533002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR08MB3841;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:TempError;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;MX:1;A:1;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: fef1fec5-de0d-4170-0869-08d75634be21
+NoDisclaimer: True
+X-Forefront-PRVS: 0197AFBD92
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: jLnw9/Bu3ViPh86l1ZisI8HEbWgHJ/mnLnTsU78pt6eqgQfuDCk9RVNnPmTf45SWp1pH673S5ZHKChP4fkk5SfrMHFaOpbMz/lBXI/A1OCxWoBdu8p6Iobr40mop8yulG3haEQLJPQqhA+xyWkm8xseToxC06kbb2sCL6PV5nsjAkLbj/w02mh4QYafq6iJg1ctNhGkZC4xE4p0bmrV3Wm5/PDGsFcVLQaT1SiFNSBRsysO/YYLtFoWfFfPMqxP3mDtxaj4euqzht1BCQ+v9pUC+j9gSdwkyvKlcpfEDSpZglwkDmr72TV7AmnIUfJqw3FPUCqbj49Rc5WihtULk7zhN32K1Ct4yCHMBU2VGFzirbVetI6g9C9DML84DANAnJbL/eKpzA2Ll/pP1r5+cSfYxmRiDkjn8ebr9P863xhiFtzMyhayskLzSkWfjEPCU6ko4grtZB0w+B7q6NbEqI8/T44M7X8geY7H2nWDTLJU=
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Oct 2019 14:41:37.2836
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: b2e359ff-8ee4-45ab-6310-08d75634c711
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB3841
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 03:31:26PM +0000, Ghannam, Yazen wrote:
-> From: Yazen Ghannam <yazen.ghannam@amd.com>
-> 
-> The maximum number of memory controllers is fixed within a family/model
-> group. In most cases, this has been fixed at 2, but some systems may
-> have up to 8.
-> 
-> The struct amd64_family_type already contains family/model-specific
-> information, and this can be used rather than adding model checks to
-> various functions.
-> 
-> Create a new field in struct amd64_family_type for max_num_controllers.
-> Set this when setting other family type information, and use this when
-> needing the maximum number of memory controllers possible for a system.
-> 
-> Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
-> ---
-> Link:
-> https://lkml.kernel.org/r/20190821235938.118710-9-Yazen.Ghannam@amd.com
+Hi Andrzej,
 
-...
+On Monday, 21 October 2019 14:50:14 BST Ayan Halder wrote:
+> On Fri, Oct 11, 2019 at 01:18:10PM +0200, Andrzej Pietrasiewicz wrote:
+> > These are useful for other users of afbc, e.g. rockchip.
+> >=20
+> > Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+>=20
+> Hi Andrzej,
+>=20
+> Thanks a lot for doing this. Much appreciated. :)
+> It was on our TODO list for a long time.
 
-> diff --git a/drivers/edac/amd64_edac.h b/drivers/edac/amd64_edac.h
-> index 8c3cda81e619..0d5a9bc4d6de 100644
-> --- a/drivers/edac/amd64_edac.h
-> +++ b/drivers/edac/amd64_edac.h
-> @@ -479,6 +479,7 @@ struct low_ops {
->  struct amd64_family_type {
->  	const char *ctl_name;
->  	u16 f0_id, f1_id, f2_id, f6_id;
-> +	u8 max_num_controllers;
+Seconded, thanks for the patch!
 
-Sure but call that max_mcs or so, so that the code which mentions it,
-doesn't stick out too much. You can put a comment above it here to
-explain what it is:
+>=20
+> I have cc-ed james.qian.wang@arm.com, Mihail.Atanassov@arm.com for
+> their comments as well.
+>=20
+> > ---
+> >  drivers/gpu/drm/Kconfig          |   4 ++
+> >  drivers/gpu/drm/Makefile         |   1 +
+> >  drivers/gpu/drm/arm/Kconfig      |   1 +
+> >  drivers/gpu/drm/arm/malidp_drv.c |  58 ++--------------
+> >  drivers/gpu/drm/drm_afbc.c       | 114 +++++++++++++++++++++++++++++++
+> >  include/drm/drm_afbc.h           |  25 +++++++
+> >  6 files changed, 149 insertions(+), 54 deletions(-)
+> >  create mode 100644 drivers/gpu/drm/drm_afbc.c
+> >  create mode 100644 include/drm/drm_afbc.h
+> >=20
+> > diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
+> > index 3c88420e3497..00e3f90557f4 100644
+> > --- a/drivers/gpu/drm/Kconfig
+> > +++ b/drivers/gpu/drm/Kconfig
+> > @@ -195,6 +195,10 @@ config DRM_SCHED
+> >  	tristate
+> >  	depends on DRM
+> > =20
+> > +config DRM_AFBC
+> > +	tristate
+> > +	depends on DRM
+> Adding a 'help' would be great here. Stealing the first line from
+> https://www.kernel.org/doc/html/latest/gpu/afbc.html
+>=20
+> "AFBC is a proprietary lossless image compression protocol and format.
+> It provides fine-grained random access and minimizes the amount of
+> data transferred between IP blocks."
+>=20
+> > +
+> >  source "drivers/gpu/drm/i2c/Kconfig"
+> > =20
+> >  source "drivers/gpu/drm/arm/Kconfig"
+> > diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
+> > index 9f0d2ee35794..55368b668355 100644
+> > --- a/drivers/gpu/drm/Makefile
+> > +++ b/drivers/gpu/drm/Makefile
+> > @@ -31,6 +31,7 @@ drm-$(CONFIG_OF) +=3D drm_of.o
+> >  drm-$(CONFIG_AGP) +=3D drm_agpsupport.o
+> >  drm-$(CONFIG_DEBUG_FS) +=3D drm_debugfs.o drm_debugfs_crc.o
+> >  drm-$(CONFIG_DRM_LOAD_EDID_FIRMWARE) +=3D drm_edid_load.o
+> > +drm-$(CONFIG_DRM_AFBC) +=3D drm_afbc.o
+> > =20
+> >  drm_vram_helper-y :=3D drm_gem_vram_helper.o \
+> >  		     drm_vram_helper_common.o \
+> > diff --git a/drivers/gpu/drm/arm/Kconfig b/drivers/gpu/drm/arm/Kconfig
+> > index a204103b3efb..25c3dc408cda 100644
+> > --- a/drivers/gpu/drm/arm/Kconfig
+> > +++ b/drivers/gpu/drm/arm/Kconfig
+> > @@ -29,6 +29,7 @@ config DRM_MALI_DISPLAY
+> >  	select DRM_KMS_HELPER
+> >  	select DRM_KMS_CMA_HELPER
+> >  	select DRM_GEM_CMA_HELPER
+> > +	select DRM_AFBC
+> >  	select VIDEOMODE_HELPERS
+> >  	help
+> >  	  Choose this option if you want to compile the ARM Mali Display
+> > diff --git a/drivers/gpu/drm/arm/malidp_drv.c b/drivers/gpu/drm/arm/mal=
+idp_drv.c
+> > index f25ec4382277..a67b69e08f63 100644
+> > --- a/drivers/gpu/drm/arm/malidp_drv.c
+> > +++ b/drivers/gpu/drm/arm/malidp_drv.c
 
-	/* Maximum number of memory controllers per node */
-	u8 max_mcs;
+This file is GPL-2.0-only. Shouldn't this be preserved when the
+substantive bit of the code in drm_afbc.c comes from here?
 
--- 
-Regards/Gruss,
-    Boris.
+> > @@ -16,6 +16,7 @@
+> >  #include <linux/debugfs.h>
+> > =20
+> >  #include <drm/drmP.h>
+> > +#include <drm/drm_afbc.h>
+> >  #include <drm/drm_atomic.h>
+> >  #include <drm/drm_atomic_helper.h>
+> >  #include <drm/drm_crtc.h>
+> > @@ -33,8 +34,6 @@
+> >  #include "malidp_hw.h"
+> > =20
+> >  #define MALIDP_CONF_VALID_TIMEOUT	250
+> > -#define AFBC_HEADER_SIZE		16
+> > -#define AFBC_SUPERBLK_ALIGNMENT		128
+> > =20
+> >  static void malidp_write_gamma_table(struct malidp_hw_device *hwdev,
+> >  				     u32 data[MALIDP_COEFFTAB_NUM_COEFFS])
+> > @@ -275,24 +274,8 @@ malidp_verify_afbc_framebuffer_caps(struct drm_dev=
+ice *dev,
+> >  					mode_cmd->modifier[0]) =3D=3D false)
+> >  		return false;
+> > =20
+> > -	if (mode_cmd->offsets[0] !=3D 0) {
+> > -		DRM_DEBUG_KMS("AFBC buffers' plane offset should be 0\n");
+> > -		return false;
+> > -	}
+> > -
+> > -	switch (mode_cmd->modifier[0] & AFBC_SIZE_MASK) {
+> > -	case AFBC_SIZE_16X16:
+> > -		if ((mode_cmd->width % 16) || (mode_cmd->height % 16)) {
+> > -			DRM_DEBUG_KMS("AFBC buffers must be aligned to 16 pixels\n");
+> > -			return false;
+> > -		}
+> > -		break;
+> > -	default:
+> > -		DRM_DEBUG_KMS("Unsupported AFBC block size\n");
+> > -		return false;
+> > -	}
+> > -
+> > -	return true;
+> > +	return drm_afbc_check_offset(dev, mode_cmd) &&
+> > +	       drm_afbc_check_size_align(dev, mode_cmd);
+> >  }
+> > =20
+> >  static bool
+> > @@ -300,53 +283,20 @@ malidp_verify_afbc_framebuffer_size(struct drm_de=
+vice *dev,
+> >  				    struct drm_file *file,
+> >  				    const struct drm_mode_fb_cmd2 *mode_cmd)
+> >  {
+> > -	int n_superblocks =3D 0;
+> >  	const struct drm_format_info *info;
+> >  	struct drm_gem_object *objs =3D NULL;
+> > -	u32 afbc_superblock_size =3D 0, afbc_superblock_height =3D 0;
+> > -	u32 afbc_superblock_width =3D 0, afbc_size =3D 0;
+> >  	int bpp =3D 0;
+> > =20
+> > -	switch (mode_cmd->modifier[0] & AFBC_SIZE_MASK) {
+> > -	case AFBC_SIZE_16X16:
+> > -		afbc_superblock_height =3D 16;
+> > -		afbc_superblock_width =3D 16;
+> > -		break;
+> > -	default:
+> > -		DRM_DEBUG_KMS("AFBC superblock size is not supported\n");
+> > -		return false;
+> > -	}
+> > -
+> >  	info =3D drm_get_format_info(dev, mode_cmd);
+> > -
+> > -	n_superblocks =3D (mode_cmd->width / afbc_superblock_width) *
+> > -		(mode_cmd->height / afbc_superblock_height);
+> > -
+> >  	bpp =3D malidp_format_get_bpp(info->format);
+> > =20
+> > -	afbc_superblock_size =3D (bpp * afbc_superblock_width * afbc_superblo=
+ck_height)
+> > -				/ BITS_PER_BYTE;
+> > -
+> > -	afbc_size =3D ALIGN(n_superblocks * AFBC_HEADER_SIZE, AFBC_SUPERBLK_A=
+LIGNMENT);
+> > -	afbc_size +=3D n_superblocks * ALIGN(afbc_superblock_size, AFBC_SUPER=
+BLK_ALIGNMENT);
+> > -
+> > -	if ((mode_cmd->width * bpp) !=3D (mode_cmd->pitches[0] * BITS_PER_BYT=
+E)) {
+> > -		DRM_DEBUG_KMS("Invalid value of (pitch * BITS_PER_BYTE) (=3D%u) "
+> > -			      "should be same as width (=3D%u) * bpp (=3D%u)\n",
+> > -			      (mode_cmd->pitches[0] * BITS_PER_BYTE),
+> > -			      mode_cmd->width, bpp);
+> > -		return false;
+> > -	}
+> > -
+> >  	objs =3D drm_gem_object_lookup(file, mode_cmd->handles[0]);
+> >  	if (!objs) {
+> >  		DRM_DEBUG_KMS("Failed to lookup GEM object\n");
+> >  		return false;
+> >  	}
+> > =20
+> > -	if (objs->size < afbc_size) {
+> > -		DRM_DEBUG_KMS("buffer size (%zu) too small for AFBC buffer size =3D =
+%u\n",
+> > -			      objs->size, afbc_size);
+> > +	if (!drm_afbc_check_fb_size(dev, mode_cmd, objs, bpp)) {
+> >  		drm_gem_object_put_unlocked(objs);
+> >  		return false;
+> >  	}
+> Also can you do the code refactoring for komeda driver as well.
+> specifically komeda_fb_afbc_size_check(). I will let
+> james.qian.wang@arm.com and Mihail.Atanassov@arm.com have their
+> opinion on this.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+I'd say that it'd be really nice to get this work done for us ;)
+but it doesn't have to be in this patch but rather in a follow-up.
+
+>=20
+> > diff --git a/drivers/gpu/drm/drm_afbc.c b/drivers/gpu/drm/drm_afbc.c
+> > new file mode 100644
+> > index 000000000000..3e8a9225fd2e
+> > --- /dev/null
+> > +++ b/drivers/gpu/drm/drm_afbc.c
+> > @@ -0,0 +1,114 @@
+> > +// SPDX-License-Identifier: GPL-2.0+
+> > +/*
+> > + * (C) 2019 Collabora Ltd.
+> > + *
+> > + * author: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+> > + *
+> > + */
+> > +#include <linux/module.h>
+> > +
+> > +#include <drm/drm_afbc.h>
+> > +#include <drm/drm_device.h>
+> > +#include <drm/drm_fourcc.h>
+> > +#include <drm/drm_gem.h>
+> > +#include <drm/drm_mode.h>
+> > +#include <drm/drm_print.h>
+> > +
+> > +#define AFBC_HEADER_SIZE		16
+> > +#define AFBC_SUPERBLK_ALIGNMENT		128
+> > +
+> > +bool drm_afbc_check_offset(struct drm_device *dev,
+> > +			   const struct drm_mode_fb_cmd2 *mode_cmd)
+> > +{
+> > +	if (mode_cmd->offsets[0] !=3D 0) {
+> > +		DRM_DEBUG_KMS("AFBC buffers' plane offset should be 0\n");
+> > +		return false;
+> > +	}
+> > +
+> > +	return true;
+> > +}
+> > +EXPORT_SYMBOL_GPL(drm_afbc_check_offset);
+> > +
+> > +bool drm_afbc_check_size_align(struct drm_device *dev,
+> > +			       const struct drm_mode_fb_cmd2 *mode_cmd)
+> > +{
+> > +
+> > +	switch (mode_cmd->modifier[0] & AFBC_FORMAT_MOD_BLOCK_SIZE_MASK) {
+> > +	case AFBC_FORMAT_MOD_BLOCK_SIZE_16x16:
+> > +		if ((mode_cmd->width % 16) || (mode_cmd->height % 16)) {
+> > +			DRM_DEBUG_KMS(
+> > +				"AFBC buffer must be aligned to 16 pixels\n"
+> > +			);
+> > +			return false;
+> > +		}
+> > +		break;
+> > +	case AFBC_FORMAT_MOD_BLOCK_SIZE_32x8:
+> > +		/* fall through */
+> > +	case AFBC_FORMAT_MOD_BLOCK_SIZE_64x4:
+> > +		/* fall through */
+> > +	case AFBC_FORMAT_MOD_BLOCK_SIZE_32x8_64x4:
+> > +		/* fall through */
+> > +	default:
+> > +		DRM_DEBUG_KMS("Unsupported AFBC block size\n");
+> > +		return false;
+> > +	}
+> > +
+> > +	return true;
+> > +}
+> > +EXPORT_SYMBOL_GPL(drm_afbc_check_size_align);
+> > +
+> > +bool drm_afbc_check_fb_size(struct drm_device *dev,
+> > +			    const struct drm_mode_fb_cmd2 *mode_cmd,
+> > +			    struct drm_gem_object *objs, int bpp)
+> > +{
+> > +	int n_superblocks =3D 0;
+> > +	u32 afbc_superblock_size =3D 0, afbc_superblock_height =3D 0;
+> > +	u32 afbc_superblock_width =3D 0, afbc_size =3D 0;
+> > +
+> > +	switch (mode_cmd->modifier[0] & AFBC_FORMAT_MOD_BLOCK_SIZE_MASK) {
+> > +	case AFBC_FORMAT_MOD_BLOCK_SIZE_16x16:
+> > +		afbc_superblock_height =3D 16;
+> > +		afbc_superblock_width =3D 16;
+> > +		break;
+> > +	case AFBC_FORMAT_MOD_BLOCK_SIZE_32x8:
+> Copying from
+> https://cgit.freedesktop.org/drm/drm-tip/tree/drivers/gpu/drm/arm/display=
+/komeda/komeda_framebuffer.c#n60
+>                 afbc_superblock_width =3D 32;
+>                 afbc_superblock_height =3D 8;
+> > +		/* fall through */
+> > +	case AFBC_FORMAT_MOD_BLOCK_SIZE_64x4:
+> > +		/* fall through */
+> > +	case AFBC_FORMAT_MOD_BLOCK_SIZE_32x8_64x4:
+> > +		/* fall through */
+> > +	default:
+> > +		DRM_DEBUG_KMS("AFBC superblock size is not supported\n");
+> > +		return false;
+> > +	}
+> Can you combine the two switch - case confitions (from this function
+> and the one in drm_afbc_check_size_align()) and put it in a separate
+> function (say drm_afbc_get_superblock_dimensions()) of its own ?
+> This will help to avoid code repetition.
+>=20
+
+I'm personally a bit on the fence about this - functions should ideally
+do one thing. That shared helper would be both getting the dimensions
+_and_ checking the mode_cmd is valid, so one place cares about one half
+of the function's results, and the other - the second half. =AF\_O_/=AF,
+opinions, everybody has them :).
+
+> > +
+> > +	n_superblocks =3D (mode_cmd->width / afbc_superblock_width) *
+> > +		(mode_cmd->height / afbc_superblock_height);
+> > +
+> > +	afbc_superblock_size =3D
+> > +		(bpp * afbc_superblock_width * afbc_superblock_height)
+> > +			/ BITS_PER_BYTE;
+> > +
+> > +	afbc_size =3D ALIGN(n_superblocks * AFBC_HEADER_SIZE,
+> > +			  AFBC_SUPERBLK_ALIGNMENT);
+> > +	afbc_size +=3D n_superblocks *
+> > +		ALIGN(afbc_superblock_size, AFBC_SUPERBLK_ALIGNMENT);
+> > +
+> > +	if ((mode_cmd->width * bpp) !=3D (mode_cmd->pitches[0] * BITS_PER_BYT=
+E)) {
+> > +		DRM_DEBUG_KMS("Invalid value of (pitch * BITS_PER_BYTE) (=3D%u) shou=
+ld be same as width (=3D%u) * bpp (=3D%u)\n",
+> > +			mode_cmd->pitches[0] * BITS_PER_BYTE,
+> > +			mode_cmd->width, bpp
+> > +		);
+> > +		return false;
+> > +	}
+> > +
+> > +	if (objs->size < afbc_size) {
+> > +		DRM_DEBUG_KMS("buffer size (%zu) too small for AFBC buffer size =3D =
+%u\n",
+> > +			objs->size, afbc_size
+> > +		);
+> > +
+> > +		return false;
+> > +	}
+> > +
+> > +	return true;
+> > +}
+> > +EXPORT_SYMBOL(drm_afbc_check_fb_size);
+> > diff --git a/include/drm/drm_afbc.h b/include/drm/drm_afbc.h
+> > new file mode 100644
+> > index 000000000000..ce39c850217b
+> > --- /dev/null
+> > +++ b/include/drm/drm_afbc.h
+> > @@ -0,0 +1,25 @@
+> > +/* SPDX-License-Identifier: GPL-2.0+ */
+> > +/*
+> > + * (C) 2019 Collabora Ltd.
+> > + *
+> > + * author: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+> > + *
+> > + */
+> > +#ifndef __DRM_AFBC_H__
+> > +#define __DRM_AFBC_H__
+> > +
+> > +struct drm_device;
+> > +struct drm_mode_fb_cmd2;
+> > +struct drm_gem_object;
+> > +
+> > +bool drm_afbc_check_offset(struct drm_device *dev,
+> > +			   const struct drm_mode_fb_cmd2 *mode_cmd);
+> > +
+> > +bool drm_afbc_check_size_align(struct drm_device *dev,
+> > +			       const struct drm_mode_fb_cmd2 *mode_cmd);
+> > +
+> > +bool drm_afbc_check_fb_size(struct drm_device *dev,
+> > +			    const struct drm_mode_fb_cmd2 *mode_cmd,
+> > +			    struct drm_gem_object *objs, int bpp);
+> > +
+> > +#endif /* __DRM_AFBC_H__ */
+> > --
+> > 2.17.1
+> >=20
+> > _______________________________________________
+> > dri-devel mailing list
+> > dri-devel@lists.freedesktop.org
+> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+>=20
+
+Overall the patch LGTM as-is, nice and straightforward
+mostly-cut-n-paste, just let's sort out the SPDX identifier question
+I have, then I'll be happy.
+
+--=20
+Mihail
+
+
+
