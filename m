@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4A41CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 05:13:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05AD0CA9EBA
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 05:14:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95B8120830
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 05:13:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC70820830
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 05:14:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zXd1TdKX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tSvNo82P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727089AbfJUFN5 (ORCPT
+        id S1727131AbfJUFNh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 01:13:57 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:34320 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727168AbfJUFNk (ORCPT
+        Mon, 21 Oct 2019 01:13:37 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:36977 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726964AbfJUFNf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 01:13:40 -0400
-Received: by mail-pf1-f193.google.com with SMTP id b128so7658657pfa.1
-        for <linux-kernel@vger.kernel.org>; Sun, 20 Oct 2019 22:13:40 -0700 (PDT)
+        Mon, 21 Oct 2019 01:13:35 -0400
+Received: by mail-pf1-f195.google.com with SMTP id y5so7637729pfo.4
+        for <linux-kernel@vger.kernel.org>; Sun, 20 Oct 2019 22:13:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=jcsWTrEqHmC0K8//XXCKxi9HKF4+9QCm4JwJkdR1HEg=;
-        b=zXd1TdKX/eSJYSajuTTdVwFexvvayqYggOhUBPnWVbl5kE42/+1eNhSWfscsrgD9Pi
-         Pf0LSo/2/55TPc2Y77A7nPotyuP5ehh3ajYqaM40sSZ2jCwhXrg/vCwglkkufeiG86Pp
-         fju+eflgg1LHruo1w6D2naomObl6knTeHgCMK+EDqB6QpQGn0ezAdLCIjhewwQJJJWiy
-         y3qb+F8xctP0L2sVymKSRGdoOxHJ9EUpsSDqoTa7Dbnal3WQUzpJr9yE3KSdeuJmh/dK
-         IO2PHD5saHFtNMX+tR9El8IlYNjSZZW+Xl0ziUtOYjpd74cyRUc/RF/o8OIVBuy7H1tE
-         Durw==
+        bh=eeCp14zFmkC1kLSVU5dKI3r3lBol6BgXW/DGHgVvGZ0=;
+        b=tSvNo82PLkSNjEykRVz6Anf7ct/cSebykqJiQPuV071sDZmzpI1VIBRzmdXuiocOj6
+         cWgNp4aUe6Ue5r1lFGynCtgqtZ42DLRkjc7+TMQTAOa0sirqILEExsice4ymcWiFz90P
+         qpJsqYt2EloQMeO996gwe/OVNchtjdbBOXM3IOEJgDR1ckFGjsPE/AbZzOA+OZqZN/Mw
+         ejbb3qU3uFFHO5N8ikIQtVGCBKamPlTzTjCQG2TInhC/MKty+vKRtR/tzNH3wo8CjXx1
+         trpGeoypQteGjGcUjT7cJJDPvH549VolntT6HmNqMmsUdl8he95lRv4teb3SZHcnT0dC
+         G6jQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=jcsWTrEqHmC0K8//XXCKxi9HKF4+9QCm4JwJkdR1HEg=;
-        b=RDWhvcl7fgEWyNL0qq1K3+B+LTwityVw2B1dC/OewMNF31NWtgq3MPV/I4qhw3+tYk
-         ctUUXZLwy01w3NWucydLI7TK6uXqiaDmEPTjvjti1/MM7nZQ+R2jEBkuIXfugZReHWh9
-         krYn6l7XgVmu+aMR+0U4uPSlmVvc6ljC4l56V6k0OE1ZzZo81XFj5K4VSbs+AvYX2GSG
-         tfou7jMKn7JRAO2r/0tKPaEpK6LwyxJcqjX6NAW83T6QRggAOVdf6vZuC+1+qDg2ncit
-         fkYI/+WoJkjSjDzXkxObvnyxN3Q/UwbRH+bJg15BcgrTX13CQyiI4smfCxwSiLNoN8Tw
-         5KHQ==
-X-Gm-Message-State: APjAAAXpwDSTsvPrYXQwcIRL1cKnscSLCDa6ZUEzMww85erJKR47BlqD
-        G5wrhv+4k5NDwD+O9yPDdoveZQ==
-X-Google-Smtp-Source: APXvYqxsHVxNGFl9wU3yP2cSlvIyzC3UWFMa5v5rUxbF02VOyjJeh8Q83Pr06n5OGH3tBvhhEcqLTQ==
-X-Received: by 2002:a63:2348:: with SMTP id u8mr23709813pgm.422.1571634819450;
-        Sun, 20 Oct 2019 22:13:39 -0700 (PDT)
+        bh=eeCp14zFmkC1kLSVU5dKI3r3lBol6BgXW/DGHgVvGZ0=;
+        b=GlYn6SiuFl8BuwTNlRpM72Tt/XDRHLqumFeLr8YvQ90rVGDgQrQ/9TGX0mJTpbYKHQ
+         wEyTxu2WBTgATgmasUVgLrzW2b8HID1QhIStIJlR7wwNX70F7zeFuuGQEOWBKtAQd4/W
+         f4V67oh68Yg+qPiv4OvqP7wx7UZzUt5Qh4aEbiyUiWYsZQ26vtKYbTJWLsUwVzaShZ2J
+         X4gQ+QT8FIpXK8IK6xxKXYAV2RHWX9fpH9tWqCn1vGoctfUm31ZqUi7HX/uf86g69Iff
+         Wahxci5rksK22o83mwW/nLTpMNdNrnICAjHtjy7U/DPdAxdvO5tN8FVL5D+hKN4lznDM
+         LnVg==
+X-Gm-Message-State: APjAAAXvSCDSxTEzkkkUkFWddH1fuEsMvHzac7HmeRne6Dl5PjSHzjw+
+        h2VRY86IXFMTj+ga/VbJTTcY5A==
+X-Google-Smtp-Source: APXvYqyroXWQ9K2y77aGKRA8cLi4geZiYUAH17tiIIqDvZt3wyMXJEcPc1Cilu8IbkAMhpMJ56qiwg==
+X-Received: by 2002:a63:8ac8:: with SMTP id y191mr23636515pgd.324.1571634812754;
+        Sun, 20 Oct 2019 22:13:32 -0700 (PDT)
 Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id h68sm15716862pfb.149.2019.10.20.22.13.38
+        by smtp.gmail.com with ESMTPSA id h68sm15716862pfb.149.2019.10.20.22.13.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 20 Oct 2019 22:13:38 -0700 (PDT)
+        Sun, 20 Oct 2019 22:13:31 -0700 (PDT)
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>
 Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 10/11] arm64: dts: qcom: db820c: Use regulator names from schematics
-Date:   Sun, 20 Oct 2019 22:13:21 -0700
-Message-Id: <20191021051322.297560-11-bjorn.andersson@linaro.org>
+Subject: [PATCH 05/11] arm64: dts: qcom: db820c: Group root nodes
+Date:   Sun, 20 Oct 2019 22:13:16 -0700
+Message-Id: <20191021051322.297560-6-bjorn.andersson@linaro.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191021051322.297560-1-bjorn.andersson@linaro.org>
 References: <20191021051322.297560-1-bjorn.andersson@linaro.org>
@@ -74,467 +74,133 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update the regulator names in db820c.dtsi to use the names from the
-schematics, instead of the made up genric names.
+Prior refactoring have left a few root nodes scattered throughout
+db820c.dtsi, group these at the top of the file.
 
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi | 239 +++++++++++++------
- 1 file changed, 169 insertions(+), 70 deletions(-)
+ arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi | 94 ++++++++++----------
+ 1 file changed, 45 insertions(+), 49 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-index 6c64deecf950..20d5561cf3e5 100644
+index fc6273b0215d..aed34a461b19 100644
 --- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
 +++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-@@ -107,6 +107,26 @@
- 		pinctrl-0 = <&usb3_vbus_det_gpio>;
+@@ -77,6 +77,51 @@
+ 			enable-gpios = <&pm8994_gpios 15 0>;
+ 		};
  	};
- 
-+	vph_pwr: vph-pwr-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vph_pwr";
-+		regulator-always-on;
-+		regulator-boot-on;
 +
-+		regulator-min-microvolt = <3700000>;
-+		regulator-max-microvolt = <3700000>;
++	gpio_keys {
++		compatible = "gpio-keys";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		autorepeat;
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&volume_up_gpio>;
++
++		button@0 {
++			label = "Volume Up";
++			linux,code = <KEY_VOLUMEUP>;
++			gpios = <&pm8994_gpios 2 GPIO_ACTIVE_LOW>;
++		};
 +	};
 +
-+	vreg_s8a_l3a_input: vreg-s8a-l3a-input {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vreg_s8a_l3a_input";
-+		regulator-always-on;
-+		regulator-boot-on;
-+
-+		regulator-min-microvolt = <0>;
-+		regulator-max-microvolt = <0>;
++	usb2_id: usb2-id {
++		compatible = "linux,extcon-usb-gpio";
++		id-gpio = <&pmi8994_gpios 6 GPIO_ACTIVE_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&usb2_vbus_det_gpio>;
 +	};
 +
- 	wlan_en: wlan-en-1-8v {
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&wlan_en_gpios>;
-@@ -187,7 +207,7 @@
++	usb3_id: usb3-id {
++		compatible = "linux,extcon-usb-gpio";
++		id-gpio = <&pm8994_gpios 22 GPIO_ACTIVE_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&usb3_vbus_det_gpio>;
++	};
++
++	wlan_en: wlan-en-1-8v {
++		pinctrl-names = "default";
++		pinctrl-0 = <&wlan_en_gpios>;
++		compatible = "regulator-fixed";
++		regulator-name = "wlan-en-regulator";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++
++		gpio = <&pm8994_gpios 8 0>;
++
++		/* WLAN card specific delay */
++		startup-delay-us = <70000>;
++		enable-active-high;
++	};
  };
  
- &camss {
--	vdda-supply = <&pm8994_l2>;
-+	vdda-supply = <&vreg_l2a_1p25>;
+ &blsp1_uart1 {
+@@ -497,24 +542,6 @@
+ 	core-vcc-supply = <&pm8994_s4>;
  };
  
- &hdmi {
-@@ -197,30 +217,30 @@
- 	pinctrl-0 = <&hdmi_hpd_active &hdmi_ddc_active>;
- 	pinctrl-1 = <&hdmi_hpd_suspend &hdmi_ddc_suspend>;
- 
--	core-vdda-supply = <&pm8994_l12>;
--	core-vcc-supply = <&pm8994_s4>;
-+	core-vdda-supply = <&vreg_l12a_1p8>;
-+	core-vcc-supply = <&vreg_s4a_1p8>;
- };
- 
- &hdmi_phy {
- 	status = "okay";
- 
--	vddio-supply = <&pm8994_l12>;
--	vcca-supply = <&pm8994_l28>;
-+	vddio-supply = <&vreg_l12a_1p8>;
-+	vcca-supply = <&vreg_l28a_0p925>;
- 	#phy-cells = <0>;
- };
- 
- &hsusb_phy1 {
- 	status = "okay";
- 
--	vdda-pll-supply = <&pm8994_l12>;
--	vdda-phy-dpdm-supply = <&pm8994_l24>;
-+	vdda-pll-supply = <&vreg_l12a_1p8>;
-+	vdda-phy-dpdm-supply = <&vreg_l24a_3p075>;
- };
- 
- &hsusb_phy2 {
- 	status = "okay";
- 
--	vdda-pll-supply = <&pm8994_l12>;
--	vdda-phy-dpdm-supply = <&pm8994_l24>;
-+	vdda-pll-supply = <&vreg_l12a_1p8>;
-+	vdda-phy-dpdm-supply = <&vreg_l24a_3p075>;
- };
- 
- &mdp {
-@@ -493,26 +513,26 @@
- 	status = "okay";
- 	perst-gpio = <&msmgpio 35 GPIO_ACTIVE_LOW>;
- 	vddpe-3v3-supply = <&wlan_en>;
--	vdda-supply = <&pm8994_l28>;
-+	vdda-supply = <&vreg_l28a_0p925>;
- };
- 
- &pcie1 {
- 	status = "okay";
- 	perst-gpio = <&msmgpio 130 GPIO_ACTIVE_LOW>;
--	vdda-supply = <&pm8994_l28>;
-+	vdda-supply = <&vreg_l28a_0p925>;
- };
- 
- &pcie2 {
- 	status = "okay";
- 	perst-gpio = <&msmgpio 114 GPIO_ACTIVE_LOW>;
--	vdda-supply = <&pm8994_l28>;
-+	vdda-supply = <&vreg_l28a_0p925>;
- };
- 
- &pcie_phy {
- 	status = "okay";
- 
--	vdda-phy-supply = <&pm8994_l28>;
--	vdda-pll-supply = <&pm8994_l12>;
-+	vdda-phy-supply = <&vreg_l28a_0p925>;
-+	vdda-pll-supply = <&vreg_l12a_1p8>;
- };
- 
- &pm8994_gpios {
-@@ -656,16 +676,35 @@
+-/ {
+-	gpio_keys {
+-		compatible = "gpio-keys";
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-		autorepeat;
+-
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&volume_up_gpio>;
+-
+-		button@0 {
+-			label = "Volume Up";
+-			linux,code = <KEY_VOLUMEUP>;
+-			gpios = <&pm8994_gpios 2 GPIO_ACTIVE_LOW>;
+-		};
+-	};
+-};
+-
+ &rpm_requests {
  	pm8994-regulators {
  		compatible = "qcom,rpm-pm8994-regulators";
- 
--		vdd_l1-supply = <&pm8994_s3>;
--		vdd_l2_l26_l28-supply = <&pm8994_s3>;
--		vdd_l3_l11-supply = <&pm8994_s3>;
--		vdd_l4_l27_l31-supply = <&pm8994_s3>;
--		vdd_l5_l7-supply = <&pm8994_s5>;
--		vdd_l14_l15-supply = <&pm8994_s5>;
--		vdd_l20_l21-supply = <&pm8994_s5>;
--		vdd_l25-supply = <&pm8994_s3>;
--
--		pm8994_s3: s3 {
-+		vdd_s1-supply = <&vph_pwr>;
-+		vdd_s2-supply = <&vph_pwr>;
-+		vdd_s3-supply = <&vph_pwr>;
-+		vdd_s4-supply = <&vph_pwr>;
-+		vdd_s5-supply = <&vph_pwr>;
-+		vdd_s6-supply = <&vph_pwr>;
-+		vdd_s7-supply = <&vph_pwr>;
-+		vdd_s8-supply = <&vph_pwr>;
-+		vdd_s9-supply = <&vph_pwr>;
-+		vdd_s10-supply = <&vph_pwr>;
-+		vdd_s11-supply = <&vph_pwr>;
-+		vdd_s12-supply = <&vph_pwr>;
-+		vdd_l1-supply = <&vreg_s1b_1p025>;
-+		vdd_l2_l26_l28-supply = <&vreg_s3a_1p3>;
-+		vdd_l3_l11-supply = <&vreg_s8a_l3a_input>;
-+		vdd_l4_l27_l31-supply = <&vreg_s3a_1p3>;
-+		vdd_l5_l7-supply = <&vreg_s5a_2p15>;
-+		vdd_l6_l12_l32-supply = <&vreg_s5a_2p15>;
-+		vdd_l8_l16_l30-supply = <&vph_pwr>;
-+		vdd_l9_l10_l18_l22-supply = <&vph_pwr_bbyp>;
-+		vdd_l13_l19_l23_l24-supply = <&vph_pwr_bbyp>;
-+		vdd_l14_l15-supply = <&vreg_s5a_2p15>;
-+		vdd_l17_l29-supply = <&vph_pwr_bbyp>;
-+		vdd_l20_l21-supply = <&vph_pwr_bbyp>;
-+		vdd_l25-supply = <&vreg_s3a_1p3>;
-+		vdd_lvs1_2-supply = <&vreg_s4a_1p8>;
-+
-+		vreg_s3a_1p3: s3 {
-+			regulator-name = "vreg_s3a_1p3";
- 			regulator-min-microvolt = <1300000>;
- 			regulator-max-microvolt = <1300000>;
- 		};
-@@ -674,137 +713,197 @@
- 		 * 1.8v required on LS expansion
- 		 * for mezzanine boards
- 		 */
--		pm8994_s4: s4 {
-+		vreg_s4a_1p8: s4 {
-+			regulator-name = "vreg_s4a_1p8";
- 			regulator-min-microvolt = <1800000>;
- 			regulator-max-microvolt = <1800000>;
- 			regulator-always-on;
- 		};
--		pm8994_s5: s5 {
-+		vreg_s5a_2p15: s5 {
-+			regulator-name = "vreg_s5a_2p15";
- 			regulator-min-microvolt = <2150000>;
- 			regulator-max-microvolt = <2150000>;
- 		};
--		pm8994_s7: s7 {
-+		vreg_s7a_1p0: s7 {
-+			regulator-name = "vreg_s7a_1p0";
- 			regulator-min-microvolt = <800000>;
- 			regulator-max-microvolt = <800000>;
- 		};
- 
--		pm8994_l1: l1 {
-+		vreg_l1a_1p0: l1 {
-+			regulator-name = "vreg_l1a_1p0";
- 			regulator-min-microvolt = <1000000>;
- 			regulator-max-microvolt = <1000000>;
- 		};
--		pm8994_l2: l2 {
-+		vreg_l2a_1p25: l2 {
-+			regulator-name = "vreg_l2a_1p25";
- 			regulator-min-microvolt = <1250000>;
- 			regulator-max-microvolt = <1250000>;
- 		};
--		pm8994_l3: l3 {
-+		vreg_l3a_0p875: l3 {
-+			regulator-name = "vreg_l3a_0p875";
- 			regulator-min-microvolt = <850000>;
- 			regulator-max-microvolt = <850000>;
- 		};
--		pm8994_l4: l4 {
-+		vreg_l4a_1p225: l4 {
-+			regulator-name = "vreg_l4a_1p225";
- 			regulator-min-microvolt = <1225000>;
- 			regulator-max-microvolt = <1225000>;
- 		};
--		pm8994_l6: l6 {
-+		vreg_l6a_1p2: l6 {
-+			regulator-name = "vreg_l6a_1p2";
- 			regulator-min-microvolt = <1200000>;
- 			regulator-max-microvolt = <1200000>;
- 		};
--		pm8994_l8: l8 {
-+		vreg_l8a_1p8: l8 {
-+			regulator-name = "vreg_l8a_1p8";
- 			regulator-min-microvolt = <1800000>;
- 			regulator-max-microvolt = <1800000>;
- 		};
--		pm8994_l9: l9 {
-+		vreg_l9a_1p8: l9 {
-+			regulator-name = "vreg_l9a_1p8";
- 			regulator-min-microvolt = <1800000>;
- 			regulator-max-microvolt = <1800000>;
- 		};
--		pm8994_l10: l10 {
-+		vreg_l10a_1p8: l10 {
-+			regulator-name = "vreg_l10a_1p8";
- 			regulator-min-microvolt = <1800000>;
- 			regulator-max-microvolt = <1800000>;
- 		};
--		pm8994_l11: l11 {
-+		vreg_l11a_1p15: l11 {
-+			regulator-name = "vreg_l11a_1p15";
- 			regulator-min-microvolt = <1150000>;
- 			regulator-max-microvolt = <1150000>;
- 		};
--		pm8994_l12: l12 {
-+		vreg_l12a_1p8: l12 {
-+			regulator-name = "vreg_l12a_1p8";
- 			regulator-min-microvolt = <1800000>;
- 			regulator-max-microvolt = <1800000>;
- 		};
--		pm8994_l13: l13 {
-+		vreg_l13a_2p95: l13 {
-+			regulator-name = "vreg_l13a_2p95";
- 			regulator-min-microvolt = <1800000>;
- 			regulator-max-microvolt = <2950000>;
- 		};
--		pm8994_l14: l14 {
-+		vreg_l14a_1p8: l14 {
-+			regulator-name = "vreg_l14a_1p8";
- 			regulator-min-microvolt = <1800000>;
- 			regulator-max-microvolt = <1800000>;
- 		};
--		pm8994_l15: l15 {
-+		vreg_l15a_1p8: l15 {
-+			regulator-name = "vreg_l15a_1p8";
- 			regulator-min-microvolt = <1800000>;
- 			regulator-max-microvolt = <1800000>;
- 		};
--		pm8994_l16: l16 {
-+		vreg_l16a_2p7: l16 {
-+			regulator-name = "vreg_l16a_2p7";
- 			regulator-min-microvolt = <2700000>;
- 			regulator-max-microvolt = <2700000>;
- 		};
--		pm8994_l17: l17 {
-+		vreg_l17a_2p8: l17 {
-+			regulator-name = "vreg_l17a_2p8";
- 			regulator-min-microvolt = <2500000>;
- 			regulator-max-microvolt = <2500000>;
- 		};
--		pm8994_l18: l18 {
-+		vreg_l18a_2p85: l18 {
-+			regulator-name = "vreg_l18a_2p85";
- 			regulator-min-microvolt = <2700000>;
- 			regulator-max-microvolt = <2900000>;
- 		};
--		pm8994_l19: l19 {
-+		vreg_l19a_2p8: l19 {
-+			regulator-name = "vreg_l19a_2p8";
- 			regulator-min-microvolt = <3000000>;
- 			regulator-max-microvolt = <3000000>;
- 		};
--		pm8994_l20: l20 {
-+		vreg_l20a_2p95: l20 {
-+			regulator-name = "vreg_l20a_2p95";
- 			regulator-min-microvolt = <2950000>;
- 			regulator-max-microvolt = <2950000>;
- 			regulator-allow-set-load;
- 		};
--		pm8994_l21: l21 {
-+		vreg_l21a_2p95: l21 {
-+			regulator-name = "vreg_l21a_2p95";
- 			regulator-min-microvolt = <2950000>;
- 			regulator-max-microvolt = <2950000>;
- 			regulator-allow-set-load;
- 			regulator-system-load = <200000>;
- 		};
--		pm8994_l22: l22 {
-+		vreg_l22a_3p0: l22 {
-+			regulator-name = "vreg_l22a_3p0";
- 			regulator-min-microvolt = <3300000>;
- 			regulator-max-microvolt = <3300000>;
- 		};
--		pm8994_l23: l23 {
-+		vreg_l23a_2p8: l23 {
-+			regulator-name = "vreg_l23a_2p8";
- 			regulator-min-microvolt = <2800000>;
- 			regulator-max-microvolt = <2800000>;
- 		};
--		pm8994_l24: l24 {
-+		vreg_l24a_3p075: l24 {
-+			regulator-name = "vreg_l24a_3p075";
- 			regulator-min-microvolt = <3075000>;
- 			regulator-max-microvolt = <3075000>;
- 		};
--		pm8994_l25: l25 {
-+		vreg_l25a_1p2: l25 {
-+			regulator-name = "vreg_l25a_1p2";
- 			regulator-min-microvolt = <1200000>;
- 			regulator-max-microvolt = <1200000>;
- 			regulator-allow-set-load;
- 		};
--		pm8994_l27: l27 {
-+		vreg_l26a_0p8: l27 {
-+			regulator-name = "vreg_l26a_0p8";
- 			regulator-min-microvolt = <1000000>;
- 			regulator-max-microvolt = <1000000>;
- 		};
--		pm8994_l28: l28 {
-+		vreg_l28a_0p925: l28 {
-+			regulator-name = "vreg_l28a_0p925";
- 			regulator-min-microvolt = <925000>;
- 			regulator-max-microvolt = <925000>;
- 			regulator-allow-set-load;
- 		};
--		pm8994_l29: l29 {
-+		vreg_l29a_2p8: l29 {
-+			regulator-name = "vreg_l29a_2p8";
- 			regulator-min-microvolt = <2800000>;
- 			regulator-max-microvolt = <2800000>;
- 		};
--		pm8994_l30: l30 {
-+		vreg_l30a_1p8: l30 {
-+			regulator-name = "vreg_l30a_1p8";
- 			regulator-min-microvolt = <1800000>;
- 			regulator-max-microvolt = <1800000>;
- 		};
--		pm8994_l32: l32 {
-+		vreg_l32a_1p8: l32 {
-+			regulator-name = "vreg_l32a_1p8";
- 			regulator-min-microvolt = <1800000>;
- 			regulator-max-microvolt = <1800000>;
- 		};
-+
-+		vreg_lvs1a_1p8: lvs1 {
-+			regulator-name = "vreg_lvs1a_1p8";
-+		};
-+
-+		vreg_lvs2a_1p8: lvs2 {
-+			regulator-name = "vreg_lvs2a_1p8";
-+		};
-+	};
-+
-+	pmi8994-regulators {
-+		compatible = "qcom,rpm-pmi8994-regulators";
-+
-+		vdd_s1-supply = <&vph_pwr>;
-+		vdd_s2-supply = <&vph_pwr>;
-+		vdd_s3-supply = <&vph_pwr>;
-+		vdd_bst_byp-supply = <&vph_pwr>;
-+
-+		vreg_s1b_1p025: s1 {
-+			regulator-name = "vreg_s1b_1p025";
-+			regulator-min-microvolt = <1025000>;
-+			regulator-max-microvolt = <1025000>;
-+		};
-+
-+		vph_pwr_bbyp: bst-byp {
-+			regulator-name = "vph_pwr_bbyp";
-+			regulator-min-microvolt = <3150000>;
-+			regulator-max-microvolt = <3600000>;
-+		};
+@@ -671,37 +698,6 @@
  	};
  };
  
-@@ -814,8 +913,8 @@
- 	pinctrl-0 = <&sdc2_clk_on &sdc2_cmd_on &sdc2_data_on &sdc2_cd_on>;
- 	pinctrl-1 = <&sdc2_clk_off &sdc2_cmd_off &sdc2_data_off &sdc2_cd_off>;
- 	cd-gpios = <&msmgpio 38 0x1>;
--	vmmc-supply = <&pm8994_l21>;
--	vqmmc-supply = <&pm8994_l13>;
-+	vmmc-supply = <&vreg_l21a_2p95>;
-+	vqmmc-supply = <&vreg_l13a_2p95>;
- 	status = "okay";
- };
- 
-@@ -908,13 +1007,13 @@
- &ufsphy {
- 	status = "okay";
- 
--	vdda-phy-supply = <&pm8994_l28>;
--	vdda-pll-supply = <&pm8994_l12>;
-+	vdda-phy-supply = <&vreg_l28a_0p925>;
-+	vdda-pll-supply = <&vreg_l12a_1p8>;
- 
- 	vdda-phy-max-microamp = <18380>;
- 	vdda-pll-max-microamp = <9440>;
- 
--	vddp-ref-clk-supply = <&pm8994_l25>;
-+	vddp-ref-clk-supply = <&vreg_l25a_1p2>;
- 	vddp-ref-clk-max-microamp = <100>;
- 	vddp-ref-clk-always-on;
- };
-@@ -922,9 +1021,9 @@
- &ufshc {
- 	status = "okay";
- 
--	vcc-supply = <&pm8994_l20>;
--	vccq-supply = <&pm8994_l25>;
--	vccq2-supply = <&pm8994_s4>;
-+	vcc-supply = <&vreg_l20a_2p95>;
-+	vccq-supply = <&vreg_l25a_1p2>;
-+	vccq2-supply = <&vreg_s4a_1p8>;
- 
- 	vcc-max-microamp = <600000>;
- 	vccq-max-microamp = <450000>;
-@@ -955,8 +1054,8 @@
- &usb3phy {
- 	status = "okay";
- 
--	vdda-phy-supply = <&pm8994_l28>;
--	vdda-pll-supply = <&pm8994_l12>;
-+	vdda-phy-supply = <&vreg_l28a_0p925>;
-+	vdda-pll-supply = <&vreg_l12a_1p8>;
- 
- };
- 
-@@ -965,9 +1064,9 @@
- 	clocks = <&div1_mclk>,
- 		 <&rpmcc RPM_SMD_BB_CLK1>;
- 
--	vdd-buck-supply = <&pm8994_s4>;
--	vdd-buck-sido-supply = <&pm8994_s4>;
--	vdd-tx-supply = <&pm8994_s4>;
--	vdd-rx-supply = <&pm8994_s4>;
--	vdd-io-supply = <&pm8994_s4>;
-+	vdd-buck-supply = <&vreg_s4a_1p8>;
-+	vdd-buck-sido-supply = <&vreg_s4a_1p8>;
-+	vdd-tx-supply = <&vreg_s4a_1p8>;
-+	vdd-rx-supply = <&vreg_s4a_1p8>;
-+	vdd-io-supply = <&vreg_s4a_1p8>;
- };
+-/ {
+-	usb2_id: usb2-id {
+-		compatible = "linux,extcon-usb-gpio";
+-		id-gpio = <&pmi8994_gpios 6 GPIO_ACTIVE_HIGH>;
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&usb2_vbus_det_gpio>;
+-	};
+-
+-	usb3_id: usb3-id {
+-		compatible = "linux,extcon-usb-gpio";
+-		id-gpio = <&pm8994_gpios 22 GPIO_ACTIVE_HIGH>;
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&usb3_vbus_det_gpio>;
+-	};
+-
+-	wlan_en: wlan-en-1-8v {
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&wlan_en_gpios>;
+-		compatible = "regulator-fixed";
+-		regulator-name = "wlan-en-regulator";
+-		regulator-min-microvolt = <1800000>;
+-		regulator-max-microvolt = <1800000>;
+-
+-		gpio = <&pm8994_gpios 8 0>;
+-
+-		/* WLAN card specific delay */
+-		startup-delay-us = <70000>;
+-		enable-active-high;
+-	};
+-};
+-
+ &spmi_bus {
+ 	pmic@0 {
+ 		pon@800 {
 -- 
 2.23.0
 
