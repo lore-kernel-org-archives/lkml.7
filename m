@@ -7,65 +7,65 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE55CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 17:24:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86D7CCA9EB0
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 17:24:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEC462077C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 17:24:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53B2F20873
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 17:24:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Py4n80tN"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q5MY76FI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728445AbfJURYO (ORCPT
+        id S1728939AbfJURYS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 13:24:14 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:33649 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726819AbfJURYO (ORCPT
+        Mon, 21 Oct 2019 13:24:18 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:54301 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726819AbfJURYQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 13:24:14 -0400
+        Mon, 21 Oct 2019 13:24:16 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571678652;
+        s=mimecast20190719; t=1571678655;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=UvH8Ol4VAdo7noZ3C65OrAnCzJI5GL3IcQ02s8qoRYQ=;
-        b=Py4n80tNb4NzA0X/waRJf1VBefp1hulW2XVqT81Ys1wkQwhqRLu6p4gVLfNlwjx0AJPpRB
-        Z7INnZAZvqWVPD9pgl6e88KWdS/gqLjgUpcs9mIDpELsOEoFRp26W5Aw8+LeUb8LvTqU5O
-        oQk0z2y3Jxv1Tm5BbWw+F7qwzOmoTOQ=
+        bh=CQYcvLtWk8T9zQAjZwhkaiSHuaBfiwn4LQYTrcLQ9f4=;
+        b=Q5MY76FIEwZUmMUaOKA34R5yZWEE3s++fR68hFKyPC9xMqQx8wOhaiQFyvd1WASsvUffQn
+        nVxbMArb304zueNPwBJQUckGoacK4G/XamFNCUyY/4DsKds7dbW90f43f95ntHC3HXfZjJ
+        Z0R4W5e8q4Ke30JbDNwCLWyIeyMSxxQ=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-175-EsPr5lRHNQKd3l15BJ32Vw-1; Mon, 21 Oct 2019 13:24:09 -0400
+ us-mta-171-oqm37ZubNT24yS1VoOnrbQ-1; Mon, 21 Oct 2019 13:24:12 -0400
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2105F47B;
-        Mon, 21 Oct 2019 17:24:07 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 73F9A1800D79;
+        Mon, 21 Oct 2019 17:24:10 +0000 (UTC)
 Received: from t460s.redhat.com (ovpn-116-42.ams2.redhat.com [10.36.116.42])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A6D0460A9F;
-        Mon, 21 Oct 2019 17:24:01 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7A1DF60856;
+        Mon, 21 Oct 2019 17:24:07 +0000 (UTC)
 From:   David Hildenbrand <david@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
         Michal Hocko <mhocko@suse.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
         Oscar Salvador <osalvador@suse.de>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Anshuman Khandual <anshuman.khandual@arm.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>
-Subject: [PATCH v2 1/2] mm/page_alloc.c: Don't set pages PageReserved() when offlining
-Date:   Mon, 21 Oct 2019 19:23:52 +0200
-Message-Id: <20191021172353.3056-2-david@redhat.com>
+        Pingfan Liu <kernelfans@gmail.com>, Qian Cai <cai@lca.pw>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Subject: [PATCH v2 2/2] mm/page_isolation.c: Convert SKIP_HWPOISON to MEMORY_OFFLINE
+Date:   Mon, 21 Oct 2019 19:23:53 +0200
+Message-Id: <20191021172353.3056-3-david@redhat.com>
 In-Reply-To: <20191021172353.3056-1-david@redhat.com>
 References: <20191021172353.3056-1-david@redhat.com>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-MC-Unique: EsPr5lRHNQKd3l15BJ32Vw-1
+X-MC-Unique: oqm37ZubNT24yS1VoOnrbQ-1
 X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: quoted-printable
@@ -74,96 +74,187 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We call __offline_isolated_pages() from __offline_pages() after all
-pages were isolated and are either free (PageBuddy()) or PageHWPoison.
-Nothing can stop us from offlining memory at this point.
+We have two types of users of page isolation:
+1. Memory offlining: Offline memory so it can be unplugged. Memory won't
+=09=09     be touched.
+2. Memory allocation: Allocate memory (e.g., alloc_contig_range()) to
+=09=09      become the owner of the memory and make use of it.
 
-In __offline_isolated_pages() we first set all affected memory sections
-offline (offline_mem_sections(pfn, end_pfn)), to mark the memmap as
-invalid (pfn_to_online_page() will no longer succeed), and then walk over
-all pages to pull the free pages from the free lists (to the isolated
-free lists, to be precise).
+For example, in case we want to offline memory, we can ignore (skip over)
+PageHWPoison() pages, as the memory won't get used. We can allow to
+offline memory. In contrast, we don't want to allow to allocate such
+memory.
 
-Note that re-onlining a memory block will result in the whole memmap
-getting reinitialized, overwriting any old state. We already poision the
-memmap when offlining is complete to find any access to
-stale/uninitialized memmaps.
+Let's generalize the approach so we can special case other types of
+pages we want to skip over in case we offline memory. While at it, also
+pass the same flags to test_pages_isolated().
 
-So, setting the pages PageReserved() is not helpful. The memap is marked
-offline and all pageblocks are isolated. As soon as offline, the memmap
-is stale either way.
-
-This looks like a leftover from ancient times where we initialized the
-memmap when adding memory and not when onlining it (the pages were set
-PageReserved so re-onling would work as expected).
-
-Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Michal Hocko <mhocko@suse.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
 Cc: Oscar Salvador <osalvador@suse.de>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Wei Yang <richard.weiyang@gmail.com>
-Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: Pavel Tatashin <pavel.tatashin@microsoft.com>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Pingfan Liu <kernelfans@gmail.com>
+Cc: Qian Cai <cai@lca.pw>
+Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Mel Gorman <mgorman@techsingularity.net>
+Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
+Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Suggested-by: Michal Hocko <mhocko@suse.com>
 Acked-by: Michal Hocko <mhocko@suse.com>
 Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- mm/memory_hotplug.c | 4 +---
- mm/page_alloc.c     | 5 +----
- 2 files changed, 2 insertions(+), 7 deletions(-)
+ include/linux/page-isolation.h |  4 ++--
+ mm/memory_hotplug.c            |  8 +++++---
+ mm/page_alloc.c                |  4 ++--
+ mm/page_isolation.c            | 12 ++++++------
+ 4 files changed, 15 insertions(+), 13 deletions(-)
 
+diff --git a/include/linux/page-isolation.h b/include/linux/page-isolation.=
+h
+index 1099c2fee20f..6861df759fad 100644
+--- a/include/linux/page-isolation.h
++++ b/include/linux/page-isolation.h
+@@ -30,7 +30,7 @@ static inline bool is_migrate_isolate(int migratetype)
+ }
+ #endif
+=20
+-#define SKIP_HWPOISON=090x1
++#define MEMORY_OFFLINE=090x1
+ #define REPORT_FAILURE=090x2
+=20
+ bool has_unmovable_pages(struct zone *zone, struct page *page, int count,
+@@ -58,7 +58,7 @@ undo_isolate_page_range(unsigned long start_pfn, unsigned=
+ long end_pfn,
+  * Test all pages in [start_pfn, end_pfn) are isolated or not.
+  */
+ int test_pages_isolated(unsigned long start_pfn, unsigned long end_pfn,
+-=09=09=09bool skip_hwpoisoned_pages);
++=09=09=09int isol_flags);
+=20
+ struct page *alloc_migrate_target(struct page *page, unsigned long private=
+);
+=20
 diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 5e6b2a312362..3524e2e1a9df 100644
+index 3524e2e1a9df..561371ead39a 100644
 --- a/mm/memory_hotplug.c
 +++ b/mm/memory_hotplug.c
-@@ -1346,9 +1346,7 @@ do_migrate_range(unsigned long start_pfn, unsigned lo=
-ng end_pfn)
- =09return ret;
+@@ -1149,7 +1149,8 @@ static bool is_pageblock_removable_nolock(unsigned lo=
+ng pfn)
+ =09if (!zone_spans_pfn(zone, pfn))
+ =09=09return false;
+=20
+-=09return !has_unmovable_pages(zone, page, 0, MIGRATE_MOVABLE, SKIP_HWPOIS=
+ON);
++=09return !has_unmovable_pages(zone, page, 0, MIGRATE_MOVABLE,
++=09=09=09=09    MEMORY_OFFLINE);
  }
 =20
--/*
-- * remove from free_area[] and mark all as Reserved.
-- */
-+/* Mark all sections offline and remove all free pages from the buddy. */
- static int
- offline_isolated_pages_cb(unsigned long start, unsigned long nr_pages,
+ /* Checks if this range of memory is likely to be hot-removable. */
+@@ -1364,7 +1365,8 @@ static int
+ check_pages_isolated_cb(unsigned long start_pfn, unsigned long nr_pages,
  =09=09=09void *data)
+ {
+-=09return test_pages_isolated(start_pfn, start_pfn + nr_pages, true);
++=09return test_pages_isolated(start_pfn, start_pfn + nr_pages,
++=09=09=09=09   MEMORY_OFFLINE);
+ }
+=20
+ static int __init cmdline_parse_movable_node(char *p)
+@@ -1475,7 +1477,7 @@ static int __ref __offline_pages(unsigned long start_=
+pfn,
+ =09/* set above range as isolated */
+ =09ret =3D start_isolate_page_range(start_pfn, end_pfn,
+ =09=09=09=09       MIGRATE_MOVABLE,
+-=09=09=09=09       SKIP_HWPOISON | REPORT_FAILURE);
++=09=09=09=09       MEMORY_OFFLINE | REPORT_FAILURE);
+ =09if (ret < 0) {
+ =09=09reason =3D "failure to isolate range";
+ =09=09goto failed_removal;
 diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index ed8884dc0c47..bf6b21f02154 100644
+index bf6b21f02154..e153280bde9a 100644
 --- a/mm/page_alloc.c
 +++ b/mm/page_alloc.c
-@@ -8667,7 +8667,7 @@ __offline_isolated_pages(unsigned long start_pfn, uns=
-igned long end_pfn)
+@@ -8270,7 +8270,7 @@ bool has_unmovable_pages(struct zone *zone, struct pa=
+ge *page, int count,
+ =09=09 * The HWPoisoned page may be not in buddy system, and
+ =09=09 * page_count() is not 0.
+ =09=09 */
+-=09=09if ((flags & SKIP_HWPOISON) && PageHWPoison(page))
++=09=09if ((flags & MEMORY_OFFLINE) && PageHWPoison(page))
+ =09=09=09continue;
+=20
+ =09=09if (__PageMovable(page))
+@@ -8486,7 +8486,7 @@ int alloc_contig_range(unsigned long start, unsigned =
+long end,
+ =09}
+=20
+ =09/* Make sure the range is really isolated. */
+-=09if (test_pages_isolated(outer_start, end, false)) {
++=09if (test_pages_isolated(outer_start, end, 0)) {
+ =09=09pr_info_ratelimited("%s: [%lx, %lx) PFNs busy\n",
+ =09=09=09__func__, outer_start, end);
+ =09=09ret =3D -EBUSY;
+diff --git a/mm/page_isolation.c b/mm/page_isolation.c
+index 89c19c0feadb..04ee1663cdbe 100644
+--- a/mm/page_isolation.c
++++ b/mm/page_isolation.c
+@@ -168,7 +168,8 @@ __first_valid_page(unsigned long pfn, unsigned long nr_=
+pages)
+  * @migratetype:=09Migrate type to set in error recovery.
+  * @flags:=09=09The following flags are allowed (they can be combined in
+  *=09=09=09a bit mask)
+- *=09=09=09SKIP_HWPOISON - ignore hwpoison pages
++ *=09=09=09MEMORY_OFFLINE - isolate to offline (!allocate) memory
++ *=09=09=09=09=09 e.g., skip over PageHWPoison() pages
+  *=09=09=09REPORT_FAILURE - report details about the failure to
+  *=09=09=09isolate the range
+  *
+@@ -257,7 +258,7 @@ void undo_isolate_page_range(unsigned long start_pfn, u=
+nsigned long end_pfn,
+  */
+ static unsigned long
+ __test_page_isolated_in_pageblock(unsigned long pfn, unsigned long end_pfn=
+,
+-=09=09=09=09  bool skip_hwpoisoned_pages)
++=09=09=09=09  int flags)
  {
  =09struct page *page;
- =09struct zone *zone;
--=09unsigned int order, i;
-+=09unsigned int order;
- =09unsigned long pfn;
- =09unsigned long flags;
- =09unsigned long offlined_pages =3D 0;
-@@ -8695,7 +8695,6 @@ __offline_isolated_pages(unsigned long start_pfn, uns=
-igned long end_pfn)
- =09=09 */
- =09=09if (unlikely(!PageBuddy(page) && PageHWPoison(page))) {
+=20
+@@ -274,7 +275,7 @@ __test_page_isolated_in_pageblock(unsigned long pfn, un=
+signed long end_pfn,
+ =09=09=09 * simple way to verify that as VM_BUG_ON(), though.
+ =09=09=09 */
+ =09=09=09pfn +=3D 1 << page_order(page);
+-=09=09else if (skip_hwpoisoned_pages && PageHWPoison(page))
++=09=09else if ((flags & MEMORY_OFFLINE) && PageHWPoison(page))
+ =09=09=09/* A HWPoisoned page cannot be also PageBuddy */
  =09=09=09pfn++;
--=09=09=09SetPageReserved(page);
- =09=09=09offlined_pages++;
- =09=09=09continue;
- =09=09}
-@@ -8709,8 +8708,6 @@ __offline_isolated_pages(unsigned long start_pfn, uns=
-igned long end_pfn)
- =09=09=09pfn, 1 << order, end_pfn);
- #endif
- =09=09del_page_from_free_area(page, &zone->free_area[order]);
--=09=09for (i =3D 0; i < (1 << order); i++)
--=09=09=09SetPageReserved((page+i));
- =09=09pfn +=3D (1 << order);
- =09}
+ =09=09else
+@@ -286,7 +287,7 @@ __test_page_isolated_in_pageblock(unsigned long pfn, un=
+signed long end_pfn,
+=20
+ /* Caller should ensure that requested range is in a single zone */
+ int test_pages_isolated(unsigned long start_pfn, unsigned long end_pfn,
+-=09=09=09bool skip_hwpoisoned_pages)
++=09=09=09int isol_flags)
+ {
+ =09unsigned long pfn, flags;
+ =09struct page *page;
+@@ -308,8 +309,7 @@ int test_pages_isolated(unsigned long start_pfn, unsign=
+ed long end_pfn,
+ =09/* Check all pages are free or marked as ISOLATED */
+ =09zone =3D page_zone(page);
+ =09spin_lock_irqsave(&zone->lock, flags);
+-=09pfn =3D __test_page_isolated_in_pageblock(start_pfn, end_pfn,
+-=09=09=09=09=09=09skip_hwpoisoned_pages);
++=09pfn =3D __test_page_isolated_in_pageblock(start_pfn, end_pfn, isol_flag=
+s);
  =09spin_unlock_irqrestore(&zone->lock, flags);
+=20
+ =09trace_test_pages_isolated(start_pfn, end_pfn, pfn);
 --=20
 2.21.0
 
