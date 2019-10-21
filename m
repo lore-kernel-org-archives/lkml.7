@@ -7,45 +7,42 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52B41CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 06:27:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15B31CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 06:27:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30C862067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 06:27:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E56362067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 06:27:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727311AbfJUG1P (ORCPT
+        id S1727324AbfJUG1Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 02:27:15 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:33233 "EHLO
+        Mon, 21 Oct 2019 02:27:16 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:33218 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727166AbfJUG05 (ORCPT
+        with ESMTP id S1727129AbfJUG0y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 02:26:57 -0400
+        Mon, 21 Oct 2019 02:26:54 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iMR9N-00025i-GO; Mon, 21 Oct 2019 08:26:41 +0200
+        id 1iMR9P-000274-M0; Mon, 21 Oct 2019 08:26:43 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 201CC1C047B;
-        Mon, 21 Oct 2019 08:26:41 +0200 (CEST)
-Date:   Mon, 21 Oct 2019 06:26:40 -0000
-From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 161F91C0494;
+        Mon, 21 Oct 2019 08:26:43 +0200 (CEST)
+Date:   Mon, 21 Oct 2019 06:26:42 -0000
+From:   "tip-bot2 for Adrian Hunter" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] tools headers UAPI: Sync sched.h with the kernel
+Subject: [tip: perf/urgent] perf tools: Fix mode setting in copyfile_mode_ns()
 Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <tip-xqruu8wohwlbc57udg1g0xzx@git.kernel.org>
-References: <tip-xqruu8wohwlbc57udg1g0xzx@git.kernel.org>
+In-Reply-To: <20191007070221.11158-1-adrian.hunter@intel.com>
+References: <20191007070221.11158-1-adrian.hunter@intel.com>
 MIME-Version: 1.0
-Message-ID: <157163920086.29376.11201291375139295425.tip-bot2@tip-bot2>
+Message-ID: <157163920270.29376.13870140679809212692.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -61,85 +58,64 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     5eca1379c0eb06e3908179665230a86d19bd2df7
-Gitweb:        https://git.kernel.org/tip/5eca1379c0eb06e3908179665230a86d19bd2df7
-Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate:    Tue, 15 Oct 2019 12:44:00 -03:00
+Commit-ID:     5a0baf5123236362fda4e9772cc63b7faa16a0df
+Gitweb:        https://git.kernel.org/tip/5a0baf5123236362fda4e9772cc63b7faa16a0df
+Author:        Adrian Hunter <adrian.hunter@intel.com>
+AuthorDate:    Mon, 07 Oct 2019 10:02:21 +03:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Tue, 15 Oct 2019 12:44:00 -03:00
+CommitterDate: Tue, 15 Oct 2019 12:05:18 -03:00
 
-tools headers UAPI: Sync sched.h with the kernel
+perf tools: Fix mode setting in copyfile_mode_ns()
 
-To get the changes in:
+slow_copyfile() opens the file by name, so "write" permissions must not
+be removed in copyfile_mode_ns() before calling slow_copyfile().
 
-  78f6face5af3 ("sched: add kernel-doc for struct clone_args")
-  f14c234b4bc5 ("clone3: switch to copy_struct_from_user()")
+Example:
 
-This file gets rebuilt, but no changes ensues:
+ Before:
 
-   CC       /tmp/build/perf/trace/beauty/clone.o
+  $ sudo chmod +r /proc/kcore
+  $ sudo setcap "cap_sys_admin,cap_sys_ptrace,cap_syslog,cap_sys_rawio=ep" tools/perf/perf
+  $ tools/perf/perf buildid-cache -k /proc/kcore
+  Couldn't add /proc/kcore
 
-This addresses this perf build warning:
+ After:
 
-  Warning: Kernel ABI header at 'tools/include/uapi/linux/sched.h' differs from latest version at 'include/uapi/linux/sched.h'
-  diff -u tools/include/uapi/linux/sched.h include/uapi/linux/sched.h
+  $ sudo chmod +r /proc/kcore
+  $ sudo setcap "cap_sys_admin,cap_sys_ptrace,cap_syslog,cap_sys_rawio=ep" tools/perf/perf
+  $ tools/perf/perf buildid-cache -v -k /proc/kcore
+  kcore added to build-id cache directory /home/ahunter/.debug/[kernel.kcore]/37e340b1b5a7cf4f57ba8de2bc777359588a957f/2019100709562289
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Aleksa Sarai <cyphar@cyphar.com>
-Cc: Christian Brauner <christian.brauner@ubuntu.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-xqruu8wohwlbc57udg1g0xzx@git.kernel.org
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Link: http://lore.kernel.org/lkml/20191007070221.11158-1-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/include/uapi/linux/sched.h | 30 ++++++++++++++++++++++++++++--
- 1 file changed, 28 insertions(+), 2 deletions(-)
+ tools/perf/util/copyfile.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/tools/include/uapi/linux/sched.h b/tools/include/uapi/linux/sched.h
-index b3105ac..99335e1 100644
---- a/tools/include/uapi/linux/sched.h
-+++ b/tools/include/uapi/linux/sched.h
-@@ -33,8 +33,31 @@
- #define CLONE_NEWNET		0x40000000	/* New network namespace */
- #define CLONE_IO		0x80000000	/* Clone io context */
+diff --git a/tools/perf/util/copyfile.c b/tools/perf/util/copyfile.c
+index 3fa0db1..47e03de 100644
+--- a/tools/perf/util/copyfile.c
++++ b/tools/perf/util/copyfile.c
+@@ -101,14 +101,16 @@ static int copyfile_mode_ns(const char *from, const char *to, mode_t mode,
+ 	if (tofd < 0)
+ 		goto out;
  
--/*
-- * Arguments for the clone3 syscall
-+#ifndef __ASSEMBLY__
-+/**
-+ * struct clone_args - arguments for the clone3 syscall
-+ * @flags:       Flags for the new process as listed above.
-+ *               All flags are valid except for CSIGNAL and
-+ *               CLONE_DETACHED.
-+ * @pidfd:       If CLONE_PIDFD is set, a pidfd will be
-+ *               returned in this argument.
-+ * @child_tid:   If CLONE_CHILD_SETTID is set, the TID of the
-+ *               child process will be returned in the child's
-+ *               memory.
-+ * @parent_tid:  If CLONE_PARENT_SETTID is set, the TID of
-+ *               the child process will be returned in the
-+ *               parent's memory.
-+ * @exit_signal: The exit_signal the parent process will be
-+ *               sent when the child exits.
-+ * @stack:       Specify the location of the stack for the
-+ *               child process.
-+ * @stack_size:  The size of the stack for the child process.
-+ * @tls:         If CLONE_SETTLS is set, the tls descriptor
-+ *               is set to tls.
-+ *
-+ * The structure is versioned by size and thus extensible.
-+ * New struct members must go at the end of the struct and
-+ * must be properly 64bit aligned.
-  */
- struct clone_args {
- 	__aligned_u64 flags;
-@@ -46,6 +69,9 @@ struct clone_args {
- 	__aligned_u64 stack_size;
- 	__aligned_u64 tls;
- };
-+#endif
+-	if (fchmod(tofd, mode))
+-		goto out_close_to;
+-
+ 	if (st.st_size == 0) { /* /proc? do it slowly... */
+ 		err = slow_copyfile(from, tmp, nsi);
++		if (!err && fchmod(tofd, mode))
++			err = -1;
+ 		goto out_close_to;
+ 	}
+ 
++	if (fchmod(tofd, mode))
++		goto out_close_to;
 +
-+#define CLONE_ARGS_SIZE_VER0 64 /* sizeof first published struct */
- 
- /*
-  * Scheduling policies
+ 	nsinfo__mountns_enter(nsi, &nsc);
+ 	fromfd = open(from, O_RDONLY);
+ 	nsinfo__mountns_exit(&nsc);
