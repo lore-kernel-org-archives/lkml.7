@@ -2,123 +2,283 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DABECA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:34:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 574F0CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:34:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58EC020659
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:34:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CF9720659
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:34:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728148AbfJUKeJ (ORCPT
+        id S1728177AbfJUKeT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 06:34:09 -0400
-Received: from mail-il1-f199.google.com ([209.85.166.199]:42723 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727517AbfJUKeI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 06:34:08 -0400
-Received: by mail-il1-f199.google.com with SMTP id y4so283359ilg.9
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 03:34:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=xeJD1J3sxHF8HzH+tELeff0MBc2EfUs2+L1MDM5KLIQ=;
-        b=YwPk/15HPCFSS1sdmTArXHZRECAi8M46ySGjfLYRUkQwYT/7yBkI9hDpV1vNQbx/75
-         cX0YzOaWqHPeqsEUazk8Te8/Ys/PQD1ZXFnvMgeeA+JminrR0bZ/ifqedai3BahcJNWW
-         pKBS7h1Kz6cjQeBaPEK7QI5V5UWP8Itqo++joV/vPpdb+A1P/EcoebQLwK//cCS/l/rr
-         8rtM2yWvZbX4HdKK1cQncVoNPvUZwo9ThWC//s1VQ/0662QLnnSZ1MmN+8XanDCotcjL
-         Mivz25COj4QHfks6pXKAd1mNDRwhIRC6ZDrE+BmGwF4qvU7cy6OmYBG5PKoKhl64/PL8
-         DDRA==
-X-Gm-Message-State: APjAAAWzauzDBK3Sg+rWE7JqaAsRU3uQVThsKB8QcZLHZapwn88SmKHK
-        hsJ3gi9nXRo96zOoophZRNm2AUeGxlOAnCSwricuucpmGjm4
-X-Google-Smtp-Source: APXvYqw18cRS9npf3vfFpl5ymyIwbq6jsOFDvL55896DsR/nO1Rv6hMXuKbUUA+nfR6swdzrdTb2Yeu/1ToP7k0y5nfXKYiugIms
+        Mon, 21 Oct 2019 06:34:19 -0400
+Received: from mga14.intel.com ([192.55.52.115]:61519 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727517AbfJUKeS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 06:34:18 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 03:34:17 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,323,1566889200"; 
+   d="scan'208";a="200391630"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga003.jf.intel.com with ESMTP; 21 Oct 2019 03:34:17 -0700
+Received: from [10.226.39.21] (unknown [10.226.39.21])
+        by linux.intel.com (Postfix) with ESMTP id 8F52358029D;
+        Mon, 21 Oct 2019 03:34:14 -0700 (PDT)
+Subject: Re: [PATCH v4 3/3] pci: intel: Add sysfs attributes to configure pcie
+ link
+To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "martin.blumenstingl@googlemail.com" 
+        <martin.blumenstingl@googlemail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "hch@infradead.org" <hch@infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "andriy.shevchenko@intel.com" <andriy.shevchenko@intel.com>,
+        "cheol.yong.kim@intel.com" <cheol.yong.kim@intel.com>,
+        "chuanhua.lei@linux.intel.com" <chuanhua.lei@linux.intel.com>,
+        "qi-ming.wu@intel.com" <qi-ming.wu@intel.com>
+References: <cover.1571638827.git.eswara.kota@linux.intel.com>
+ <d8574605f8e70f41ce1e88ccfb56b63c8f85e4df.1571638827.git.eswara.kota@linux.intel.com>
+ <CH2PR12MB400776877B54F866691CA201DA690@CH2PR12MB4007.namprd12.prod.outlook.com>
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <4af9793c-c0a3-47b2-cb05-ad51d8976029@linux.intel.com>
+Date:   Mon, 21 Oct 2019 18:34:13 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:c:: with SMTP id z12mr2749314jao.105.1571654047830;
- Mon, 21 Oct 2019 03:34:07 -0700 (PDT)
-Date:   Mon, 21 Oct 2019 03:34:07 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000003b1e8005956939f1@google.com>
-Subject: KCSAN: data-race in exit_signals / prepare_signal
-From:   syzbot <syzbot+492a4acccd8fc75ddfd0@syzkaller.appspotmail.com>
-To:     akpm@linux-foundation.org, arnd@arndb.de, christian@brauner.io,
-        deepa.kernel@gmail.com, ebiederm@xmission.com, elver@google.com,
-        guro@fb.com, linux-kernel@vger.kernel.org, oleg@redhat.com,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <CH2PR12MB400776877B54F866691CA201DA690@CH2PR12MB4007.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi Gustavo Pimentel,
 
-syzbot found the following crash on:
+On 10/21/2019 4:40 PM, Gustavo Pimentel wrote:
+> On Mon, Oct 21, 2019 at 7:39:20, Dilip Kota <eswara.kota@linux.intel.com>
+> wrote:
+>
+>> PCIe RC driver on Intel Gateway SoCs have a requirement
+>> of changing link width and speed on the fly.
+>> So add the sysfs attributes to show and store the link
+>> properties.
+>> Add the respective link resize function in pcie DesignWare
+>> framework so that Intel PCIe driver can use during link
+>> width configuration on the fly.
+>>
+>> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+>> ---
+>>   drivers/pci/controller/dwc/pcie-designware.c |   9 +++
+>>   drivers/pci/controller/dwc/pcie-designware.h |   3 +
+>>   drivers/pci/controller/dwc/pcie-intel-gw.c   | 112 ++++++++++++++++++++++++++-
+>>   3 files changed, 123 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+>> index 4c391bfd681a..662fdcb4f2d6 100644
+>> --- a/drivers/pci/controller/dwc/pcie-designware.c
+>> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+>> @@ -474,6 +474,15 @@ int dw_pcie_link_up(struct dw_pcie *pci)
+>>   		(!(val & PCIE_PORT_DEBUG1_LINK_IN_TRAINING)));
+>>   }
+>>   
+>> +void dw_pcie_link_width_resize(struct dw_pcie *pci, u32 lane_width)
+>> +{
+>> +	u32 val;
+>> +
+>> +	val =  dw_pcie_readl_dbi(pci, PCIE_PORT_MULTI_LANE_CTRL);
+>> +	val &= ~(PORT_MLTI_LNK_WDTH_CHNG | PORT_MLTI_LNK_WDTH);
+>> +	val |= PORT_MLTI_LNK_WDTH_CHNG | lane_width;
+>> +	dw_pcie_writel_dbi(pci, PCIE_PORT_MULTI_LANE_CTRL, val);
+>> +}
+>>   
+>>   void dw_pcie_upconfig_setup(struct dw_pcie *pci)
+>>   {
+>> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+>> index 3beac10e4a4c..fcf0442341fd 100644
+>> --- a/drivers/pci/controller/dwc/pcie-designware.h
+>> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+>> @@ -67,6 +67,8 @@
+>>   #define PCIE_MSI_INTR0_STATUS		0x830
+>>   
+>>   #define PCIE_PORT_MULTI_LANE_CTRL	0x8C0
+>> +#define PORT_MLTI_LNK_WDTH		GENMASK(5, 0)
+>> +#define PORT_MLTI_LNK_WDTH_CHNG		BIT(6)
+>>   #define PORT_MLTI_UPCFG_SUPPORT		BIT(7)
+>>   
+>>   #define PCIE_ATU_VIEWPORT		0x900
+>> @@ -282,6 +284,7 @@ void dw_pcie_write_dbi2(struct dw_pcie *pci, u32 reg, size_t size, u32 val);
+>>   u32 dw_pcie_read_atu(struct dw_pcie *pci, u32 reg, size_t size);
+>>   void dw_pcie_write_atu(struct dw_pcie *pci, u32 reg, size_t size, u32 val);
+>>   int dw_pcie_link_up(struct dw_pcie *pci);
+>> +void dw_pcie_link_width_resize(struct dw_pcie *pci, u32 lane_width);
+>>   void dw_pcie_upconfig_setup(struct dw_pcie *pci);
+>>   void dw_pcie_link_speed_change(struct dw_pcie *pci, bool enable);
+>>   void dw_pcie_link_set_n_fts(struct dw_pcie *pci, u32 n_fts);
+>> diff --git a/drivers/pci/controller/dwc/pcie-intel-gw.c b/drivers/pci/controller/dwc/pcie-intel-gw.c
+>> index 9142c70db808..b9be0921671d 100644
+>> --- a/drivers/pci/controller/dwc/pcie-intel-gw.c
+>> +++ b/drivers/pci/controller/dwc/pcie-intel-gw.c
+>> @@ -146,6 +146,22 @@ static void intel_pcie_ltssm_disable(struct intel_pcie_port *lpp)
+>>   	pcie_app_wr_mask(lpp, PCIE_APP_CCR_LTSSM_ENABLE, 0, PCIE_APP_CCR);
+>>   }
+>>   
+>> +static const char *pcie_link_gen_to_str(int gen)
+>> +{
+>> +	switch (gen) {
+>> +	case PCIE_LINK_SPEED_GEN1:
+>> +		return "2.5";
+>> +	case PCIE_LINK_SPEED_GEN2:
+>> +		return "5.0";
+>> +	case PCIE_LINK_SPEED_GEN3:
+>> +		return "8.0";
+>> +	case PCIE_LINK_SPEED_GEN4:
+>> +		return "16.0";
+>> +	default:
+>> +		return "???";
+>> +	}
+>> +}
+>> +
+>>   static void intel_pcie_link_setup(struct intel_pcie_port *lpp)
+>>   {
+>>   	u32 val;
+>> @@ -444,6 +460,91 @@ static int intel_pcie_host_setup(struct intel_pcie_port *lpp)
+>>   	return ret;
+>>   }
+>>   
+>> +static ssize_t pcie_link_status_show(struct device *dev,
+>> +				     struct device_attribute *attr, char *buf)
+>> +{
+>> +	struct intel_pcie_port *lpp = dev_get_drvdata(dev);
+>> +	u32 reg, width, gen;
+>> +
+>> +	reg = pcie_rc_cfg_rd(lpp, PCIE_CAP_OFST + PCI_EXP_LNKCTL);
+>> +	width = FIELD_GET(PCI_EXP_LNKSTA_NLW, reg >> 16);
+>> +	gen = FIELD_GET(PCI_EXP_LNKSTA_CLS, reg >> 16);
+>> +
+>> +	if (gen > lpp->max_speed)
+>> +		return -EINVAL;
+>> +
+>> +	return sprintf(buf, "Port %2u Width x%u Speed %s GT/s\n", lpp->id,
+>> +		       width, pcie_link_gen_to_str(gen));
+>> +}
+>> +static DEVICE_ATTR_RO(pcie_link_status);
+> Dilip please check pci.h there are there already enums and strings
+> relatively to PCIe speed and width, that you can use.
 
-HEAD commit:    d724f94f x86, kcsan: Enable KCSAN for x86
-git tree:       https://github.com/google/ktsan.git kcsan
-console output: https://syzkaller.appspot.com/x/log.txt?x=13eab79f600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=c0906aa620713d80
-dashboard link: https://syzkaller.appspot.com/bug?extid=492a4acccd8fc75ddfd0
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+Yes i can see a global array "pcie_link_speed[]" and a macro 
+PCIE_SPEED2STR[].
+I will update the driver.
+Whereas width enum, it is not required here as directly storing the 
+register value.
+Thanks for pointing it.
 
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+492a4acccd8fc75ddfd0@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KCSAN: data-race in exit_signals / prepare_signal
-
-read to 0xffff888103566064 of 4 bytes by interrupt on cpu 0:
-  sig_task_ignored kernel/signal.c:94 [inline]
-  sig_ignored kernel/signal.c:119 [inline]
-  prepare_signal+0x1f5/0x790 kernel/signal.c:956
-  send_sigqueue+0xc1/0x4b0 kernel/signal.c:1859
-  posix_timer_event kernel/time/posix-timers.c:328 [inline]
-  posix_timer_fn+0x10d/0x230 kernel/time/posix-timers.c:354
-  __run_hrtimer kernel/time/hrtimer.c:1389 [inline]
-  __hrtimer_run_queues+0x288/0x600 kernel/time/hrtimer.c:1451
-  hrtimer_interrupt+0x22a/0x480 kernel/time/hrtimer.c:1509
-  local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1110 [inline]
-  smp_apic_timer_interrupt+0xdc/0x280 arch/x86/kernel/apic/apic.c:1135
-  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
-  arch_local_irq_enable arch/x86/include/asm/paravirt.h:778 [inline]
-  __raw_spin_unlock_irq include/linux/spinlock_api_smp.h:168 [inline]
-  _raw_spin_unlock_irq+0x4e/0x80 kernel/locking/spinlock.c:199
-  spin_unlock_irq include/linux/spinlock.h:388 [inline]
-  get_signal+0x1f4/0x1320 kernel/signal.c:2707
-  do_signal+0x3b/0xc00 arch/x86/kernel/signal.c:815
-  exit_to_usermode_loop+0x250/0x2c0 arch/x86/entry/common.c:159
-  prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
-  syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
-  do_syscall_64+0x2d7/0x2f0 arch/x86/entry/common.c:299
-  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-write to 0xffff888103566064 of 4 bytes by task 7604 on cpu 1:
-  exit_signals+0x13b/0x490 kernel/signal.c:2822
-  do_exit+0x1af/0x18e0 kernel/exit.c:825
-  do_group_exit+0xb4/0x1c0 kernel/exit.c:983
-  __do_sys_exit_group kernel/exit.c:994 [inline]
-  __se_sys_exit_group kernel/exit.c:992 [inline]
-  __x64_sys_exit_group+0x2e/0x30 kernel/exit.c:992
-  do_syscall_64+0xcf/0x2f0 arch/x86/entry/common.c:296
-  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 1 PID: 7604 Comm: syz-executor.4 Not tainted 5.3.0+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-==================================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Regards,
+Dilip
+>
+>> +
+>> +static ssize_t pcie_speed_store(struct device *dev,
+>> +				struct device_attribute *attr,
+>> +				const char *buf, size_t len)
+>> +{
+>> +	struct intel_pcie_port *lpp = dev_get_drvdata(dev);
+>> +	unsigned long val;
+>> +	int ret;
+>> +
+>> +	ret = kstrtoul(buf, 10, &val);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	if (val > lpp->max_speed)
+>> +		return -EINVAL;
+>> +
+>> +	lpp->link_gen = val;
+>> +	intel_pcie_max_speed_setup(lpp);
+>> +	dw_pcie_link_speed_change(&lpp->pci, false);
+>> +	dw_pcie_link_speed_change(&lpp->pci, true);
+>> +
+>> +	return len;
+>> +}
+>> +static DEVICE_ATTR_WO(pcie_speed);
+>> +
+>> +/*
+>> + * Link width change on the fly is not always successful.
+>> + * It also depends on the partner.
+>> + */
+>> +static ssize_t pcie_width_store(struct device *dev,
+>> +				struct device_attribute *attr,
+>> +				const char *buf, size_t len)
+>> +{
+>> +	struct intel_pcie_port *lpp = dev_get_drvdata(dev);
+>> +	unsigned long val;
+>> +	int ret;
+>> +
+>> +	lpp = dev_get_drvdata(dev);
+>> +
+>> +	ret = kstrtoul(buf, 10, &val);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	if (val > lpp->max_width)
+>> +		return -EINVAL;
+>> +
+>> +	/* HW auto bandwidth negotiation must be enabled */
+>> +	pcie_rc_cfg_wr_mask(lpp, PCI_EXP_LNKCTL_HAWD, 0,
+>> +			    PCIE_CAP_OFST + PCI_EXP_LNKCTL);
+>> +	dw_pcie_link_width_resize(&lpp->pci, val);
+>> +
+>> +	return len;
+>> +}
+>> +static DEVICE_ATTR_WO(pcie_width);
+>> +
+>> +static struct attribute *pcie_cfg_attrs[] = {
+>> +	&dev_attr_pcie_link_status.attr,
+>> +	&dev_attr_pcie_speed.attr,
+>> +	&dev_attr_pcie_width.attr,
+>> +	NULL,
+>> +};
+>> +ATTRIBUTE_GROUPS(pcie_cfg);
+>> +
+>> +static int intel_pcie_sysfs_init(struct intel_pcie_port *lpp)
+>> +{
+>> +	return devm_device_add_groups(lpp->pci.dev, pcie_cfg_groups);
+>> +}
+>> +
+>>   static void __intel_pcie_remove(struct intel_pcie_port *lpp)
+>>   {
+>>   	intel_pcie_core_irq_disable(lpp);
+>> @@ -490,8 +591,17 @@ static int intel_pcie_rc_init(struct pcie_port *pp)
+>>   {
+>>   	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+>>   	struct intel_pcie_port *lpp = dev_get_drvdata(pci->dev);
+>> +	int ret;
+>>   
+>> -	return intel_pcie_host_setup(lpp);
+>> +	ret = intel_pcie_host_setup(lpp);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	ret = intel_pcie_sysfs_init(lpp);
+>> +	if (ret)
+>> +		__intel_pcie_remove(lpp);
+>> +
+>> +	return ret;
+>>   }
+>>   
+>>   int intel_pcie_msi_init(struct pcie_port *pp)
+>> -- 
+>> 2.11.0
+>
