@@ -4,59 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B2EBCA9EB0
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:14:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59A48CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:14:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 326DF20B7C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:14:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A9222089C
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:14:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xTBJZmcq"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vx3vntD3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728864AbfJUNOU (ORCPT
+        id S1728899AbfJUNO3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 09:14:20 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:39742 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728840AbfJUNOT (ORCPT
+        Mon, 21 Oct 2019 09:14:29 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:33406 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728840AbfJUNO2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 09:14:19 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9LDE7B7121513;
-        Mon, 21 Oct 2019 08:14:07 -0500
+        Mon, 21 Oct 2019 09:14:28 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9LDEKJ6083939;
+        Mon, 21 Oct 2019 08:14:20 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571663647;
-        bh=f+6GI+LbBw1WuyNQvMxFbFdVBF7LdvDUjpMd4xYGnqM=;
+        s=ti-com-17Q1; t=1571663660;
+        bh=HV6iaivoaFG9onDrZhTj+eWHfIehxFTqG6sv4XHOH80=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=xTBJZmcq3JHguGr+gKHCjoUWXk0AlGOFPaWyzEmaZXij/VNZylV0qxEEftAFZqg9P
-         eNUY65990ua/O0deR3YS35BgOcbqyS3kddeou8HI1AhK/ctRJPS3G6oq645xLiUm/4
-         l3X6RRA3zsd2UoWquoFkpUSpO6EHZLCm5uy+vElk=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9LDDbhm105997
+        b=vx3vntD3GVVm6efCVc5xOZ3unu/awcqin8fki0KiMBfcpeLns31LNr9BY+PJc9l1M
+         JbeFSBs6gLlOs/xzrDpr8aOPF5mIOMb1GiThOrI9OawPGJ5JueD1b1v/7hURrI+pkb
+         9JR7OPkp7yQ8XndeXQU/WFRJ+wxNF40adFjuJX0w=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9LDE5nu044321
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 21 Oct 2019 08:13:37 -0500
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+        Mon, 21 Oct 2019 08:14:05 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 21
- Oct 2019 08:13:27 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ Oct 2019 08:13:55 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 21 Oct 2019 08:13:27 -0500
+ Frontend Transport; Mon, 21 Oct 2019 08:14:04 -0500
 Received: from lta0400828a.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9LDDE7g017365;
-        Mon, 21 Oct 2019 08:13:19 -0500
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9LDDE7f017365;
+        Mon, 21 Oct 2019 08:13:17 -0500
 From:   Roger Quadros <rogerq@ti.com>
 To:     <felipe.balbi@linux.intel.com>, <gregkh@linuxfoundation.org>
 CC:     <pawell@cadence.com>, <peter.chen@nxp.com>, <nsekhar@ti.com>,
         <kurahul@cadence.com>, <linux-usb@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Roger Quadros <rogerq@ti.com>
-Subject: [PATCH v2 2/2] usb: cdns3: Add TI specific wrapper driver
-Date:   Mon, 21 Oct 2019 16:13:05 +0300
-Message-ID: <20191021131305.8689-3-rogerq@ti.com>
+        Roger Quadros <rogerq@ti.com>, Rob Herring <robh@kernel.org>
+Subject: [PATCH v2 1/2] dt-bindings: usb: Add binding for the TI wrapper for Cadence USB3 controller
+Date:   Mon, 21 Oct 2019 16:13:04 +0300
+Message-ID: <20191021131305.8689-2-rogerq@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191021131305.8689-1-rogerq@ti.com>
 References: <20191021131305.8689-1-rogerq@ti.com>
@@ -68,289 +68,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The J721e platform comes with 2 Cadence USB3 controller
-instances. This driver supports the TI specific wrapper
-on this platform.
+TI platforms have a wrapper module around the Cadence USB3
+controller. Add binding information for that.
 
+Cc: Rob Herring <robh@kernel.org>
 Signed-off-by: Roger Quadros <rogerq@ti.com>
 Signed-off-by: Sekhar Nori <nsekhar@ti.com>
 ---
- drivers/usb/cdns3/Kconfig    |  10 ++
- drivers/usb/cdns3/Makefile   |   1 +
- drivers/usb/cdns3/cdns3-ti.c | 236 +++++++++++++++++++++++++++++++++++
- 3 files changed, 247 insertions(+)
- create mode 100644 drivers/usb/cdns3/cdns3-ti.c
+ .../devicetree/bindings/usb/ti,j721e-usb.txt  | 52 +++++++++++++++++++
+ 1 file changed, 52 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/ti,j721e-usb.txt
 
-diff --git a/drivers/usb/cdns3/Kconfig b/drivers/usb/cdns3/Kconfig
-index d0331613a355..2a1e89d12ed9 100644
---- a/drivers/usb/cdns3/Kconfig
-+++ b/drivers/usb/cdns3/Kconfig
-@@ -43,4 +43,14 @@ config USB_CDNS3_PCI_WRAP
- 	  If you choose to build this driver as module it will
- 	  be dynamically linked and module will be called cdns3-pci.ko
- 
-+config USB_CDNS3_TI
-+	tristate "Cadence USB3 support on TI platforms"
-+	depends on ARCH_K3 || COMPILE_TEST
-+	default USB_CDNS3
-+	help
-+	  Say 'Y' or 'M' here if you are building for Texas Instruments
-+	  platforms that contain Cadence USB3 controller core.
-+
-+	  e.g. J721e.
-+
- endif
-diff --git a/drivers/usb/cdns3/Makefile b/drivers/usb/cdns3/Makefile
-index a703547350bb..948e6b88d1a9 100644
---- a/drivers/usb/cdns3/Makefile
-+++ b/drivers/usb/cdns3/Makefile
-@@ -14,3 +14,4 @@ endif
- cdns3-$(CONFIG_USB_CDNS3_HOST)		+= host.o
- 
- obj-$(CONFIG_USB_CDNS3_PCI_WRAP)	+= cdns3-pci-wrap.o
-+obj-$(CONFIG_USB_CDNS3_TI)		+= cdns3-ti.o
-diff --git a/drivers/usb/cdns3/cdns3-ti.c b/drivers/usb/cdns3/cdns3-ti.c
+diff --git a/Documentation/devicetree/bindings/usb/ti,j721e-usb.txt b/Documentation/devicetree/bindings/usb/ti,j721e-usb.txt
 new file mode 100644
-index 000000000000..5541cba71965
+index 000000000000..bac57c26b09b
 --- /dev/null
-+++ b/drivers/usb/cdns3/cdns3-ti.c
-@@ -0,0 +1,236 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/**
-+ * cdns_ti-ti.c - TI specific Glue layer for Cadence USB Controller
-+ *
-+ * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com
-+ */
++++ b/Documentation/devicetree/bindings/usb/ti,j721e-usb.txt
+@@ -0,0 +1,52 @@
++Binding for the TI specific wrapper for the Cadence USBSS-DRD controller
 +
-+#include <linux/bits.h>
-+#include <linux/clk.h>
-+#include <linux/module.h>
-+#include <linux/kernel.h>
-+#include <linux/interrupt.h>
-+#include <linux/platform_device.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/io.h>
-+#include <linux/of_platform.h>
-+#include <linux/pm_runtime.h>
++Required properties:
++  - compatible: Should contain "ti,j721e-usb"
++  - reg: Physical base address and size of the wrappers register area.
++  - power-domains: Should contain a phandle to a PM domain provider node
++                   and an args specifier containing the USB device id
++                   value. This property is as per the binding documentation:
++                   Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
++  - clocks: Clock phandles to usb2_refclk and lpm_clk
++  - clock-names: Should contain "ref" and "lpm"
 +
-+/* USB Wrapper register offsets */
-+#define USBSS_PID		0x0
-+#define	USBSS_W1		0x4
-+#define USBSS_STATIC_CONFIG	0x8
-+#define USBSS_PHY_TEST		0xc
-+#define	USBSS_DEBUG_CTRL	0x10
-+#define	USBSS_DEBUG_INFO	0x14
-+#define	USBSS_DEBUG_LINK_STATE	0x18
-+#define	USBSS_DEVICE_CTRL	0x1c
++Optional properties:
++ - ti,usb2-only: If present, it restricts the controller to USB2.0 mode of
++		 operation. Must be present if USB3 PHY is not available
++		 for USB.
++ - ti,vbus-divider: Should be present if USB VBUS line is connected to the
++		 VBUS pin of the SoC via a 1/3 voltage divider.
 +
-+/* Wrapper 1 register bits */
-+#define USBSS_W1_PWRUP_RST		BIT(0)
-+#define USBSS_W1_OVERCURRENT_SEL	BIT(8)
-+#define USBSS_W1_MODESTRAP_SEL		BIT(9)
-+#define USBSS_W1_OVERCURRENT		BIT(16)
-+#define USBSS_W1_MODESTRAP_MASK		GENMASK(18, 17)
-+#define USBSS_W1_MODESTRAP_SHIFT	17
-+#define USBSS_W1_USB2_ONLY		BIT(19)
++Sub-nodes:
++The USB2 PHY and the Cadence USB3 controller should be the sub-nodes.
 +
-+/* Static config register bits */
-+#define USBSS1_STATIC_PLL_REF_SEL_MASK	GENMASK(8, 5)
-+#define USBSS1_STATIC_PLL_REF_SEL_SHIFT	5
-+#define USBSS1_STATIC_LOOPBACK_MODE_MASK	GENMASK(4, 3)
-+#define USBSS1_STATIC_LOOPBACK_MODE_SHIFT	3
-+#define USBSS1_STATIC_VBUS_SEL_MASK	GENMASK(2, 1)
-+#define USBSS1_STATIC_VBUS_SEL_SHIFT	1
-+#define USBSS1_STATIC_LANE_REVERSE	BIT(0)
++Example:
 +
-+/* Modestrap modes */
-+enum modestrap_mode { USBSS_MODESTRAP_MODE_NONE,
-+		      USBSS_MODESTRAP_MODE_HOST,
-+		      USBSS_MODESTRAP_MODE_PERIPHERAL};
++	ti_usb0: cdns_usb@4104000 {
++		compatible = "ti,j721e-usb";
++		reg = <0x00 0x4104000 0x00 0x100>;
++		power-domains = <&k3_pds 288 TI_SCI_PD_EXCLUSIVE>;
++		clocks = <&k3_clks 288 15>, <&k3_clks 288 3>;
++		clock-names = "ref", "lpm";
++		assigned-clocks = <&k3_clks 288 15>;	/* USB2_REFCLK */
++		assigned-clock-parents = <&k3_clks 288 16>; /* HFOSC0 */
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
 +
-+struct cdns_ti {
-+	struct device *dev;
-+	void __iomem *usbss;
-+	int usb2_only:1;
-+	int vbus_divider:1;
-+	struct clk *usb2_refclk;
-+	struct clk *lpm_clk;
-+};
-+
-+static const int cdns_ti_rate_table[] = {	/* in KHZ */
-+	9600,
-+	10000,
-+	12000,
-+	19200,
-+	20000,
-+	24000,
-+	25000,
-+	26000,
-+	38400,
-+	40000,
-+	58000,
-+	50000,
-+	52000,
-+};
-+
-+static inline u32 cdns_ti_readl(struct cdns_ti *data, u32 offset)
-+{
-+	return readl(data->usbss + offset);
-+}
-+
-+static inline void cdns_ti_writel(struct cdns_ti *data, u32 offset, u32 value)
-+{
-+	writel(value, data->usbss + offset);
-+}
-+
-+static int cdns_ti_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *node = pdev->dev.of_node;
-+	struct cdns_ti *data;
-+	struct resource	*res;
-+	int error;
-+	u32 reg;
-+	int rate_code, i;
-+	unsigned long rate;
-+
-+	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, data);
-+
-+	data->dev = dev;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	data->usbss = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(data->usbss))
-+		return PTR_ERR(data->usbss);
-+
-+	data->usb2_refclk = devm_clk_get(dev, "ref");
-+	if (IS_ERR(data->usb2_refclk)) {
-+		dev_err(dev, "can't get usb2_refclk\n");
-+		return PTR_ERR(data->usb2_refclk);
-+	}
-+
-+	data->lpm_clk = devm_clk_get(dev, "lpm");
-+	if (IS_ERR(data->lpm_clk)) {
-+		dev_err(dev, "can't get lpm_clk\n");
-+		return PTR_ERR(data->lpm_clk);
-+	}
-+
-+	rate = clk_get_rate(data->usb2_refclk);
-+	rate /= 1000;	/* To KHz */
-+	for (i = 0; i < ARRAY_SIZE(cdns_ti_rate_table); i++) {
-+		if (cdns_ti_rate_table[i] == rate)
-+			break;
-+	}
-+
-+	if (i == ARRAY_SIZE(cdns_ti_rate_table)) {
-+		dev_err(dev, "unsupported usb2_refclk rate: %lu KHz\n", rate);
-+		return -EINVAL;
-+	}
-+
-+	rate_code = i;
-+
-+	pm_runtime_enable(dev);
-+	error = pm_runtime_get_sync(dev);
-+	if (error < 0) {
-+		dev_err(dev, "pm_runtime_get_sync failed: %d\n", error);
-+		goto err_get;
-+	}
-+
-+	/* assert RESET */
-+	reg = cdns_ti_readl(data, USBSS_W1);
-+	reg &= ~USBSS_W1_PWRUP_RST;
-+	cdns_ti_writel(data, USBSS_W1, reg);
-+
-+	/* set static config */
-+	reg = cdns_ti_readl(data, USBSS_STATIC_CONFIG);
-+	reg &= ~USBSS1_STATIC_PLL_REF_SEL_MASK;
-+	reg |= rate_code << USBSS1_STATIC_PLL_REF_SEL_SHIFT;
-+
-+	reg &= ~USBSS1_STATIC_VBUS_SEL_MASK;
-+	data->vbus_divider = device_property_read_bool(dev, "ti,vbus-divider");
-+	if (data->vbus_divider)
-+		reg |= 1 << USBSS1_STATIC_VBUS_SEL_SHIFT;
-+
-+	cdns_ti_writel(data, USBSS_STATIC_CONFIG, reg);
-+	reg = cdns_ti_readl(data, USBSS_STATIC_CONFIG);
-+
-+	/* set USB2_ONLY mode if requested */
-+	reg = cdns_ti_readl(data, USBSS_W1);
-+	data->usb2_only = device_property_read_bool(dev, "ti,usb2-only");
-+	if (data->usb2_only)
-+		reg |= USBSS_W1_USB2_ONLY;
-+
-+	/* set default modestrap */
-+	reg |= USBSS_W1_MODESTRAP_SEL;
-+	reg &= ~USBSS_W1_MODESTRAP_MASK;
-+	reg |= USBSS_MODESTRAP_MODE_NONE << USBSS_W1_MODESTRAP_SHIFT;
-+	cdns_ti_writel(data, USBSS_W1, reg);
-+
-+	/* de-assert RESET */
-+	reg |= USBSS_W1_PWRUP_RST;
-+	cdns_ti_writel(data, USBSS_W1, reg);
-+
-+	error = of_platform_populate(node, NULL, NULL, dev);
-+	if (error) {
-+		dev_err(dev, "failed to create children: %d\n", error);
-+		goto err;
-+	}
-+
-+	return 0;
-+
-+err:
-+	pm_runtime_put_sync(data->dev);
-+err_get:
-+	pm_runtime_disable(data->dev);
-+
-+	return error;
-+}
-+
-+static int cdns_ti_remove_core(struct device *dev, void *c)
-+{
-+	struct platform_device *pdev = to_platform_device(dev);
-+
-+	platform_device_unregister(pdev);
-+
-+	return 0;
-+}
-+
-+static int cdns_ti_remove(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+
-+	device_for_each_child(dev, NULL, cdns_ti_remove_core);
-+	pm_runtime_put_sync(dev);
-+	pm_runtime_disable(dev);
-+
-+	platform_set_drvdata(pdev, NULL);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id cdns_ti_of_match[] = {
-+	{ .compatible = "ti,j721e-usb", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, cdns_ti_of_match);
-+
-+static struct platform_driver cdns_ti_driver = {
-+	.probe		= cdns_ti_probe,
-+	.remove		= cdns_ti_remove,
-+	.driver		= {
-+		.name	= "cdns3-ti",
-+		.of_match_table	= cdns_ti_of_match,
-+	},
-+};
-+
-+module_platform_driver(cdns_ti_driver);
-+
-+MODULE_ALIAS("platform:cdns3-ti");
-+MODULE_AUTHOR("Roger Quadros <rogerq@ti.com>");
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("Cadence USB3 TI Glue Layer");
++		usb0: usb@6000000 {
++			compatible = "cdns,usb3";
++			reg = <0x00 0x6000000 0x00 0x10000>,
++			      <0x00 0x6010000 0x00 0x10000>,
++			      <0x00 0x6020000 0x00 0x10000>;
++			reg-names = "otg", "xhci", "dev";
++			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>,	/* irq.0 */
++				     <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>,	/* irq.6 */
++				     <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>;	/* otgirq.0 */
++			interrupt-names = "host",
++					  "peripheral",
++					  "otg";
++			maximum-speed = "super-speed";
++			dr_mode = "otg";
++		};
++	};
 -- 
 Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
 Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
