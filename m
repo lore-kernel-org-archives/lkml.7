@@ -2,65 +2,124 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFC70CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 21:22:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AED7CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 21:24:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A366621783
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 21:22:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1180320B7C
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 21:24:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="OTC8d3ZE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387424AbfJUVWa (ORCPT
+        id S1730367AbfJUVYj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 17:22:30 -0400
-Received: from muru.com ([72.249.23.125]:38764 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726672AbfJUVWa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 17:22:30 -0400
-Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id E98C680CC;
-        Mon, 21 Oct 2019 21:23:03 +0000 (UTC)
-From:   Tony Lindgren <tony@atomide.com>
-To:     linux-omap@vger.kernel.org
-Cc:     "Andrew F . Davis" <afd@ti.com>, Dave Gerlach <d-gerlach@ti.com>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
-        Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] bus: ti-sysc: Use swsup quirks also for am335x musb
-Date:   Mon, 21 Oct 2019 14:22:25 -0700
-Message-Id: <20191021212225.28148-1-tony@atomide.com>
+        Mon, 21 Oct 2019 17:24:39 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:9072 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728943AbfJUVYi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 17:24:38 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dae22190000>; Mon, 21 Oct 2019 14:24:41 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 21 Oct 2019 14:24:37 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 21 Oct 2019 14:24:37 -0700
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 21 Oct
+ 2019 21:24:37 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 21 Oct 2019 21:24:37 +0000
+Received: from blueforge.nvidia.com (Not Verified[10.110.48.28]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5dae22150002>; Mon, 21 Oct 2019 14:24:37 -0700
+From:   John Hubbard <jhubbard@nvidia.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     Keith Busch <keith.busch@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+        <linux-kselftest@vger.kernel.org>,
+        John Hubbard <jhubbard@nvidia.com>
+Subject: [PATCH 1/1] mm/gup_benchmark: fix MAP_HUGETLB case
+Date:   Mon, 21 Oct 2019 14:24:35 -0700
+Message-ID: <20191021212435.398153-2-jhubbard@nvidia.com>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191021212435.398153-1-jhubbard@nvidia.com>
+References: <20191021212435.398153-1-jhubbard@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-NVConfidentiality: public
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1571693081; bh=Ia7+yGVPadcQzuPA7gW008zSE+NH1nISNCbcuj3+bIA=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
+         Content-Transfer-Encoding:Content-Type;
+        b=OTC8d3ZE9fJ0Hb2v8pEfvXND3hp78cAKhSqr+KUCHRl9piPHKBIHMod7VkMRG/V07
+         YiSuKsdFJN/DtpDmHBNAjg0SY/+yw6EZVbEBBRcY5hKDPY2cwJi4Yy17qhEwozgbXp
+         jD2oUyt7AENs2BEp1SMVn3lETH6pAEsDl/oDEcIUTKXYkUka0rUy3UXtxBZdCe2Fhs
+         9YL7rBPNlFbNtFy9br7US89E0IFpJiaTELl5vPfnQioCelddiyfHAyOHRjNZks6g4s
+         lPQfDa1Mgyz+bDNtzAbOYex69TebqWe0OaW+5qZRnZrgQmhswsnaA2NIMik4bxbUW5
+         i3YmawSo4o7Hg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Also on am335x we need the swsup quirks for musb.
+The MAP_HUGETLB ("-H" option) of gup_benchmark fails:
 
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+$ sudo ./gup_benchmark -H
+mmap: Invalid argument
+
+This is because gup_benchmark.c is passing in a file descriptor to
+mmap(), but the fd came from opening up the /dev/zero file. This
+confuses the mmap syscall implementation, which thinks that, if the
+caller did not specify MAP_ANONYMOUS, then the file must be a huge
+page file. So it attempts to verify that the file really is a huge
+page file, as you can see here:
+
+ksys_mmap_pgoff()
+{
+    if (!(flags & MAP_ANONYMOUS)) {
+        retval =3D -EINVAL;
+        if (unlikely(flags & MAP_HUGETLB && !is_file_hugepages(file)))
+            goto out_fput; /* THIS IS WHERE WE END UP */
+
+    else if (flags & MAP_HUGETLB) {
+        ...proceed normally, /dev/zero is ok here...
+
+...and of course is_file_hugepages() returns "false" for the /dev/zero
+file.
+
+The problem is that the user space program, gup_benchmark.c, really just
+wants anonymous memory here. The simplest way to get that is to pass
+MAP_ANONYMOUS whenever MAP_HUGETLB is specified, so that's what this
+patch does.
+
+Cc: Keith Busch <keith.busch@intel.com>
+Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 ---
- drivers/bus/ti-sysc.c | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/testing/selftests/vm/gup_benchmark.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
---- a/drivers/bus/ti-sysc.c
-+++ b/drivers/bus/ti-sysc.c
-@@ -1259,6 +1259,8 @@ static const struct sysc_revision_quirk sysc_revision_quirks[] = {
- 		   SYSC_MODULE_QUIRK_SGX),
- 	SYSC_QUIRK("usb_otg_hs", 0, 0x400, 0x404, 0x408, 0x00000050,
- 		   0xffffffff, SYSC_QUIRK_SWSUP_SIDLE | SYSC_QUIRK_SWSUP_MSTANDBY),
-+	SYSC_QUIRK("usb_otg_hs", 0, 0, 0x10, -1, 0x4ea2080d, 0xffffffff,
-+		   SYSC_QUIRK_SWSUP_SIDLE | SYSC_QUIRK_SWSUP_MSTANDBY),
- 	SYSC_QUIRK("wdt", 0, 0, 0x10, 0x14, 0x502a0500, 0xfffff0f0,
- 		   SYSC_MODULE_QUIRK_WDT),
- 	/* Watchdog on am3 and am4 */
--- 
+diff --git a/tools/testing/selftests/vm/gup_benchmark.c b/tools/testing/sel=
+ftests/vm/gup_benchmark.c
+index cb3fc09645c4..485cf06ef013 100644
+--- a/tools/testing/selftests/vm/gup_benchmark.c
++++ b/tools/testing/selftests/vm/gup_benchmark.c
+@@ -71,7 +71,7 @@ int main(int argc, char **argv)
+ 			flags |=3D MAP_SHARED;
+ 			break;
+ 		case 'H':
+-			flags |=3D MAP_HUGETLB;
++			flags |=3D (MAP_HUGETLB | MAP_ANONYMOUS);
+ 			break;
+ 		default:
+ 			return -1;
+--=20
 2.23.0
+
