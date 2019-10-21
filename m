@@ -2,108 +2,90 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E31CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:56:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C66CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:56:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8108D2067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:56:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571648180;
-	bh=4qS0Y3y/eO2c0yUyv0E2FKYTWHXivXy74JdrTgveybc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=e6KBq9n0NJssL5ji5X8ms8ITU0uRebb3yH/55u/3UED7JT1KrRrI5G9BSgHVjLuFV
-	 LPwxCGub1LD9IxYCiTibZjv9V8dc4dMaKKWDDUXrFQZHzvDIAbSqpbOQSgdoNSWFLY
-	 9hDC7ZJ04ynloB3AIU5z3YPiIAVDYsNF87VOWTUQ=
+	by mail.kernel.org (Postfix) with ESMTP id E52822067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:56:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727268AbfJUI4T (ORCPT
+        id S1727454AbfJUI4X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 04:56:19 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:46113 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726648AbfJUI4S (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 04:56:18 -0400
-Received: by mail-lf1-f65.google.com with SMTP id t8so9382639lfc.13;
-        Mon, 21 Oct 2019 01:56:15 -0700 (PDT)
+        Mon, 21 Oct 2019 04:56:23 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56989 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727331AbfJUI4V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 04:56:21 -0400
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com [209.85.221.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id AAC4E83F4C
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 08:56:21 +0000 (UTC)
+Received: by mail-wr1-f71.google.com with SMTP id a6so4042823wru.1
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 01:56:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+TVhX0pj0cp6PSiJ52MPNmOFMdXEiWzFfisANukiR/A=;
-        b=PzJcr1STgaFqPo9lnBj1xDOoCdd+IaDmTpZKkGoE62joTo/L8d81vrXVGmofFj6Uot
-         nvp3OidK/Hia42ZnzZ9FcDr3sqXCTF/UbXSYxeoEBNoENocg0xBQRAJEB042NJ7kIiTK
-         Kv/uPuW9HWC8FmnYVLN4UGwVqn8HLSzg348y+ZoZrxFJv3UsgnXhQ8m9cBukaSN7G344
-         fy4w6oP4OkIi7jStuWCNqU+tpiW6xBNvukPr5L5gLlkMNxSO9ekYNlanx5mM9cPCpnxn
-         ugGkKXKVBpu7gSXq6xuwZb4dadO3IlcHLMSmFVbzVJ3ePweviIjWBbPTcDG4SzwX8oHt
-         mvnA==
-X-Gm-Message-State: APjAAAUOW2F06NiP0FHmTS4Kdy0dmvHRmCkoA1eybGhcfGf/yEkx6ECB
-        mMISpTFg2nYWG/nmWB5JNOsgUXiq
-X-Google-Smtp-Source: APXvYqzquYpUqEiEGDWjfqxRoITpWOiOqXDPraMRA4C29J5VcB4j+QFSHJXDWaT43iL9bW95n09JWg==
-X-Received: by 2002:a19:e018:: with SMTP id x24mr12198432lfg.191.1571648175037;
-        Mon, 21 Oct 2019 01:56:15 -0700 (PDT)
-Received: from xi.terra (c-51f1e055.07-184-6d6c6d4.bbcust.telenor.se. [85.224.241.81])
-        by smtp.gmail.com with ESMTPSA id c22sm453212lfj.28.2019.10.21.01.56.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 21 Oct 2019 01:56:14 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.92.2)
-        (envelope-from <johan@kernel.org>)
-        id 1iMTUJ-0008Gb-3L; Mon, 21 Oct 2019 10:56:27 +0200
-Date:   Mon, 21 Oct 2019 10:56:27 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Johan Hovold <johan@kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Oliver Neukum <oneukum@suse.com>,
-        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable <stable@vger.kernel.org>
-Subject: Re: [PATCH RFC v2 2/2] USB: ldusb: fix ring-buffer locking
-Message-ID: <20191021085627.GD24768@localhost>
-References: <20191018151955.25135-1-johan@kernel.org>
- <20191018151955.25135-3-johan@kernel.org>
- <20191018185458.GA1191145@kroah.com>
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=gQn5Li/EcmWGQTJyF2DN7cNoKtM74y39k0g3g/XyNac=;
+        b=gsdUA4EijfHWqRUSl8C8BoY7udA8vXEfcjOBfmaEpaBsWzDsHgBHeOVm6z//oLWFlN
+         1JpVo9Oxc+BUmSg2KqWvErmIUoEev9xAzVaEEGJmOgH3WnGRqgLiVqNFeJalomX44xg1
+         3MuI29/4iD9Pqy2Nv1vYpcpU3UNsmPYKpuchLAeUkPlpt/cCzhMysuMxum9tqjO5dCWS
+         tIo3MB7Nhh3qO1TnhK8jpfPc1S1TRwlNMulj81hvtC+QZEu13PRwxY/QTuD1u/UcsFk6
+         AzLaH3eWYWd9vvJSjojpUOl1NJq7XNIh2mbFU7r6/23vHJ3Hx9Mw3uAJV+fh0jT1FWUa
+         XLOA==
+X-Gm-Message-State: APjAAAWtnmWgts6cObfgYvq7j8U5oH/CXIBAc2c4r6KOrFoArDdgr9dt
+        eY+DCCkArURnpMSxhVHIxLqrEcAEQ8LIOFQjqTNronyRmO76JWoOabdPyZSVQwbtJV2dNnv72sp
+        hCaGzc6JXUPHgy04jrPvqCKw5
+X-Received: by 2002:a5d:464f:: with SMTP id j15mr5164424wrs.366.1571648180110;
+        Mon, 21 Oct 2019 01:56:20 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqysKxDXg0I4Kw8rQkZnFYRtY7gmE/enX8CLo4Y5mT4aGF0Vfe7KNufYviTHlKtqR3lwtPQDew==
+X-Received: by 2002:a5d:464f:: with SMTP id j15mr5164400wrs.366.1571648179814;
+        Mon, 21 Oct 2019 01:56:19 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:566:fc24:94f2:2f13? ([2001:b07:6468:f312:566:fc24:94f2:2f13])
+        by smtp.gmail.com with ESMTPSA id c8sm720806wml.44.2019.10.21.01.56.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 21 Oct 2019 01:56:19 -0700 (PDT)
+Subject: Re: [PATCH] KVM: remove redundant code in kvm_arch_vm_ioctl
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Miaohe Lin <linmiaohe@huawei.com>
+Cc:     rkrcmar@redhat.com, sean.j.christopherson@intel.com,
+        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
+        joro@8bytes.org, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1571626376-11357-1-git-send-email-linmiaohe@huawei.com>
+ <alpine.DEB.2.21.1910211015260.1904@nanos.tec.linutronix.de>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <6ad3a479-5015-10c7-3f32-70f3ed1ecf64@redhat.com>
+Date:   Mon, 21 Oct 2019 10:56:21 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191018185458.GA1191145@kroah.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <alpine.DEB.2.21.1910211015260.1904@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 11:54:58AM -0700, Greg Kroah-Hartman wrote:
-> On Fri, Oct 18, 2019 at 05:19:55PM +0200, Johan Hovold wrote:
-> > The custom ring-buffer implementation was merged without any locking
-> > whatsoever, but a spinlock was later added by commit 9d33efd9a791
-> > ("USB: ldusb bugfix").
-> > 
-> > The lock did not cover the loads from the ring-buffer entry after
-> > determining the buffer was non-empty, nor the update of the tail index
-> > once the entry had been processed. The former could lead to stale data
-> > being returned, while the latter could lead to memory corruption on
-> > sufficiently weakly ordered architectures.
+On 21/10/19 10:16, Thomas Gleixner wrote:
+> Can you please get rid of that odd jump label completely?
 > 
-> Ugh.
-> 
-> This almost looks sane, but what's the odds there is some other issue in
-> here as well?  Would it make sense to just convert the code to use the
-> "standard" ring buffer code instead?
+>   		if (irqchip_kernel(kvm))
+> 			r = kvm_vm_ioctl_set_irqchip(kvm, chip);
 
-Yeah, long term that may be the right thing to do, but I wanted a
-minimal fix addressing the issue at hand without having to reimplement
-the driver and fix all other (less-critical) issues in there...
+Keeping the label has the advantage of making the get and set cases a
+bit more similar (the get case has to do a copy_to_user after
+kvm_vm_ioctl_get_irqchip returns).  Unfortunately struct kvm_irqchip is
+quite big (520 bytes) so we don't allocate it on the stack.
 
-For the ring-buffer corruption / info-leak issue, these two patches
-should be sufficient though.
+So I queued Miaohe's patch.
 
-Copying the ring-buffer entry to a temporary buffer while holding the
-lock might still be preferred to avoid having to deal with barrier
-subtleties. But unless someone speaks out against 2/2, I'd just go ahead
-and apply it.
-
-Johan
+Paolo
