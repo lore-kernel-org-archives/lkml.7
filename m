@@ -2,93 +2,91 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3276CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:43:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 855C8CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:44:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 942E220659
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:43:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6653E20659
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:44:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729955AbfJUQnj (ORCPT
+        id S1729964AbfJUQoE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 12:43:39 -0400
-Received: from mga01.intel.com ([192.55.52.88]:59354 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727582AbfJUQnj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 12:43:39 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 09:43:38 -0700
-X-IronPort-AV: E=Sophos;i="5.67,324,1566889200"; 
-   d="scan'208";a="187595740"
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 09:43:38 -0700
-Subject: [PATCH v2] fs/dax: Fix pmd vs pte conflict detection
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     linux-fsdevel@vger.kernel.org
-Cc:     Jeff Smits <jeff.smits@intel.com>,
-        Doug Nelson <doug.nelson@intel.com>, stable@vger.kernel.org,
-        Jan Kara <jack@suse.cz>, Jeff Moyer <jmoyer@redhat.com>,
-        "Matthew Wilcox \(Oracle\)" <willy@infradead.org>,
-        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
-Date:   Mon, 21 Oct 2019 09:29:20 -0700
-Message-ID: <157167532455.3945484.11971474077040503994.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: StGit/0.18-2-gc94f
+        Mon, 21 Oct 2019 12:44:04 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:58092 "EHLO foss.arm.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S1726819AbfJUQoD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 12:44:03 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 859F1175D;
+        Mon, 21 Oct 2019 09:43:47 -0700 (PDT)
+Received: from [10.1.196.105] (unknown [10.1.196.105])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0929D3F71F;
+        Mon, 21 Oct 2019 09:43:43 -0700 (PDT)
+Subject: Re: [PATCH v6 1/2] dt-bindings: edac: arm-dmc520.txt
+To:     Lei Wang <leiwang_git@outlook.com>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "hangl@microsoft.com" <hangl@microsoft.com>,
+        "lewan@microsoft.com" <lewan@microsoft.com>,
+        "ruizhao@microsoft.com" <ruizhao@microsoft.com>,
+        "scott.branden@broadcom.com" <scott.branden@broadcom.com>,
+        "yuqing.shen@broadcom.com" <yuqing.shen@broadcom.com>,
+        "ray.jui@broadcom.com" <ray.jui@broadcom.com>
+References: <BY5PR04MB6599EAA659A53B2331CB812586890@BY5PR04MB6599.namprd04.prod.outlook.com>
+ <20190923161015.GI15355@zn.tnic>
+ <e2b9cd68-abaa-bdcd-cc56-cca285272569@outlook.com>
+ <41637032-a308-9a92-1b49-cb51af2580f8@outlook.com>
+ <BY5PR04MB65996A0CEB37001C763B248C866C0@BY5PR04MB6599.namprd04.prod.outlook.com>
+From:   James Morse <james.morse@arm.com>
+Message-ID: <1ae9a840-d5b6-ccd6-8481-d43665b4411b@arm.com>
+Date:   Mon, 21 Oct 2019 17:43:42 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <BY5PR04MB65996A0CEB37001C763B248C866C0@BY5PR04MB6599.namprd04.prod.outlook.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Users reported a v5.3 performance regression and inability to establish
-huge page mappings. A revised version of the ndctl "dax.sh" huge page
-unit test identifies commit 23c84eb78375 "dax: Fix missed wakeup with
-PMD faults" as the source.
+Hi Lei,
 
-Update get_unlocked_entry() to check for NULL entries before checking
-the entry order, otherwise NULL is misinterpreted as a present pte
-conflict. The 'order' check needs to happen before the locked check as
-an unlocked entry at the wrong order must fallback to lookup the correct
-order.
+On 18/10/2019 21:08, Lei Wang wrote:
+> This thread hasn't got traction from DT owners.
 
-Reported-by: Jeff Smits <jeff.smits@intel.com>
-Reported-by: Doug Nelson <doug.nelson@intel.com>
-Cc: <stable@vger.kernel.org>
-Fixes: 23c84eb78375 ("dax: Fix missed wakeup with PMD faults")
-Reviewed-by: Jan Kara <jack@suse.cz>
-Cc: Jeff Moyer <jmoyer@redhat.com>
-Cc: Matthew Wilcox (Oracle) <willy@infradead.org>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
-Changes in v2:
-- Update the changelog to reflect the user visible effects of the bug
-  (Jeff)
+It looks like your patches didn't make it to the mailing list:
+https://lore.kernel.org/r/BY5PR04MB6599EAA659A53B2331CB812586890@BY5PR04MB6599.namprd04.prod.outlook.com
 
- fs/dax.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+You can search on https://lore.kernel.org/linux-edac/, I can only see the replies from the
+people who received it directly.
 
-diff --git a/fs/dax.c b/fs/dax.c
-index 6bf81f931de3..2cc43cd914eb 100644
---- a/fs/dax.c
-+++ b/fs/dax.c
-@@ -220,10 +220,11 @@ static void *get_unlocked_entry(struct xa_state *xas, unsigned int order)
- 
- 	for (;;) {
- 		entry = xas_find_conflict(xas);
-+		if (!entry || WARN_ON_ONCE(!xa_is_value(entry)))
-+			return entry;
- 		if (dax_entry_order(entry) < order)
- 			return XA_RETRY_ENTRY;
--		if (!entry || WARN_ON_ONCE(!xa_is_value(entry)) ||
--				!dax_is_locked(entry))
-+		if (!dax_is_locked(entry))
- 			return entry;
- 
- 		wq = dax_entry_waitqueue(xas, entry, &ewait.key);
+I can't see anything obvious in the headers that would cause it to get rejected. Did you
+get any bounces/errors from the list?
 
+Depending on how the DT folk work, this may be why you haven't had a response yet. Tools
+like patchwork will depend on the message reaching the list.
+
+
+> James did give ACK before.
+> Should that be good enough?
+
+Nope! You need someone from the maintainer's entry for those files to review it.
+I gave my R-B as what you'd done made sense from the TRM and the driver. The DT folk will
+have a wider view and may have some advice.
+
+
+Thanks,
+
+James
