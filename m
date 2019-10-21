@@ -4,28 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F318CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:29:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3E3DCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:29:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56B6C206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:29:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A53E9206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:29:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729581AbfJUP3B (ORCPT
+        id S1729631AbfJUP3E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 11:29:01 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:55730 "EHLO foss.arm.com"
+        Mon, 21 Oct 2019 11:29:04 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:55778 "EHLO foss.arm.com"
         rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S1727960AbfJUP3A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 11:29:00 -0400
+        id S1729603AbfJUP3D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 11:29:03 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 915001042;
-        Mon, 21 Oct 2019 08:28:35 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9AE4811B3;
+        Mon, 21 Oct 2019 08:28:42 -0700 (PDT)
 Received: from e112269-lin.cambridge.arm.com (e112269-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8F77C3F71F;
-        Mon, 21 Oct 2019 08:28:33 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 974303F71F;
+        Mon, 21 Oct 2019 08:28:40 -0700 (PDT)
 From:   Steven Price <steven.price@arm.com>
 To:     Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
         linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu
@@ -39,9 +38,9 @@ Cc:     Steven Price <steven.price@arm.com>,
         Suzuki K Pouloze <suzuki.poulose@arm.com>,
         Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org,
         linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v7 01/10] KVM: arm64: Document PV-time interface
-Date:   Mon, 21 Oct 2019 16:28:14 +0100
-Message-Id: <20191021152823.14882-2-steven.price@arm.com>
+Subject: [PATCH v7 04/10] KVM: Implement kvm_put_guest()
+Date:   Mon, 21 Oct 2019 16:28:17 +0100
+Message-Id: <20191021152823.14882-5-steven.price@arm.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191021152823.14882-1-steven.price@arm.com>
 References: <20191021152823.14882-1-steven.price@arm.com>
@@ -52,136 +51,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce a paravirtualization interface for KVM/arm64 based on the
-"Arm Paravirtualized Time for Arm-Base Systems" specification DEN 0057A.
-
-This only adds the details about "Stolen Time" as the details of "Live
-Physical Time" have not been fully agreed.
-
-User space can specify a reserved area of memory for the guest and
-inform KVM to populate the memory with information on time that the host
-kernel has stolen from the guest.
-
-A hypercall interface is provided for the guest to interrogate the
-hypervisor's support for this interface and the location of the shared
-memory structures.
+kvm_put_guest() is analogous to put_user() - it writes a single value to
+the guest physical address. The implementation is built upon put_user()
+and so it has the same single copy atomic properties.
 
 Signed-off-by: Steven Price <steven.price@arm.com>
 ---
- Documentation/virt/kvm/arm/pvtime.rst   | 81 +++++++++++++++++++++++++
- Documentation/virt/kvm/devices/vcpu.txt | 14 +++++
- 2 files changed, 95 insertions(+)
- create mode 100644 Documentation/virt/kvm/arm/pvtime.rst
+ include/linux/kvm_host.h | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-diff --git a/Documentation/virt/kvm/arm/pvtime.rst b/Documentation/virt/kvm/arm/pvtime.rst
-new file mode 100644
-index 000000000000..a5ded253e2d4
---- /dev/null
-+++ b/Documentation/virt/kvm/arm/pvtime.rst
-@@ -0,0 +1,81 @@
-+.. SPDX-License-Identifier: GPL-2.0
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index 719fc3e15ea4..9907e45f8875 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -746,6 +746,28 @@ int kvm_write_guest_offset_cached(struct kvm *kvm, struct gfn_to_hva_cache *ghc,
+ 				  unsigned long len);
+ int kvm_gfn_to_hva_cache_init(struct kvm *kvm, struct gfn_to_hva_cache *ghc,
+ 			      gpa_t gpa, unsigned long len);
 +
-+Paravirtualized time support for arm64
-+======================================
++#define __kvm_put_guest(kvm, gfn, offset, value, type)			\
++({									\
++	unsigned long __addr = gfn_to_hva(kvm, gfn);			\
++	type __user *__uaddr = (type __user *)(__addr + offset);	\
++	int __ret = -EFAULT;						\
++									\
++	if (!kvm_is_error_hva(__addr))					\
++		__ret = put_user(value, __uaddr);			\
++	if (!__ret)							\
++		mark_page_dirty(kvm, gfn);				\
++	__ret;								\
++})
 +
-+Arm specification DEN0057/A defines a standard for paravirtualised time
-+support for AArch64 guests:
++#define kvm_put_guest(kvm, gpa, value, type)				\
++({									\
++	gpa_t __gpa = gpa;						\
++	struct kvm *__kvm = kvm;					\
++	__kvm_put_guest(__kvm, __gpa >> PAGE_SHIFT,			\
++			offset_in_page(__gpa), (value), type);		\
++})
 +
-+https://developer.arm.com/docs/den0057/a
-+
-+KVM/arm64 implements the stolen time part of this specification by providing
-+some hypervisor service calls to support a paravirtualized guest obtaining a
-+view of the amount of time stolen from its execution.
-+
-+Two new SMCCC compatible hypercalls are defined:
-+
-+* PV_TIME_FEATURES: 0xC5000020
-+* PV_TIME_ST:       0xC5000021
-+
-+These are only available in the SMC64/HVC64 calling convention as
-+paravirtualized time is not available to 32 bit Arm guests. The existence of
-+the PV_FEATURES hypercall should be probed using the SMCCC 1.1 ARCH_FEATURES
-+mechanism before calling it.
-+
-+PV_TIME_FEATURES
-+    ============= ========    ==========
-+    Function ID:  (uint32)    0xC5000020
-+    PV_call_id:   (uint32)    The function to query for support.
-+                              Currently only PV_TIME_ST is supported.
-+    Return value: (int64)     NOT_SUPPORTED (-1) or SUCCESS (0) if the relevant
-+                              PV-time feature is supported by the hypervisor.
-+    ============= ========    ==========
-+
-+PV_TIME_ST
-+    ============= ========    ==========
-+    Function ID:  (uint32)    0xC5000021
-+    Return value: (int64)     IPA of the stolen time data structure for this
-+                              VCPU. On failure:
-+                              NOT_SUPPORTED (-1)
-+    ============= ========    ==========
-+
-+The IPA returned by PV_TIME_ST should be mapped by the guest as normal memory
-+with inner and outer write back caching attributes, in the inner shareable
-+domain. A total of 16 bytes from the IPA returned are guaranteed to be
-+meaningfully filled by the hypervisor (see structure below).
-+
-+PV_TIME_ST returns the structure for the calling VCPU.
-+
-+Stolen Time
-+-----------
-+
-+The structure pointed to by the PV_TIME_ST hypercall is as follows:
-+
-++-------------+-------------+-------------+----------------------------+
-+| Field       | Byte Length | Byte Offset | Description                |
-++=============+=============+=============+============================+
-+| Revision    |      4      |      0      | Must be 0 for version 1.0  |
-++-------------+-------------+-------------+----------------------------+
-+| Attributes  |      4      |      4      | Must be 0                  |
-++-------------+-------------+-------------+----------------------------+
-+| Stolen time |      8      |      8      | Stolen time in unsigned    |
-+|             |             |             | nanoseconds indicating how |
-+|             |             |             | much time this VCPU thread |
-+|             |             |             | was involuntarily not      |
-+|             |             |             | running on a physical CPU. |
-++-------------+-------------+-------------+----------------------------+
-+
-+All values in the structure are stored little-endian.
-+
-+The structure will be updated by the hypervisor prior to scheduling a VCPU. It
-+will be present within a reserved region of the normal memory given to the
-+guest. The guest should not attempt to write into this memory. There is a
-+structure per VCPU of the guest.
-+
-+It is advisable that one or more 64k pages are set aside for the purpose of
-+these structures and not used for other purposes, this enables the guest to map
-+the region using 64k pages and avoids conflicting attributes with other memory.
-+
-+For the user space interface see Documentation/virt/kvm/devices/vcpu.txt
-+section "3. GROUP: KVM_ARM_VCPU_PVTIME_CTRL".
-+
-diff --git a/Documentation/virt/kvm/devices/vcpu.txt b/Documentation/virt/kvm/devices/vcpu.txt
-index 2b5dab16c4f2..6f3bd64a05b0 100644
---- a/Documentation/virt/kvm/devices/vcpu.txt
-+++ b/Documentation/virt/kvm/devices/vcpu.txt
-@@ -60,3 +60,17 @@ time to use the number provided for a given timer, overwriting any previously
- configured values on other VCPUs.  Userspace should configure the interrupt
- numbers on at least one VCPU after creating all VCPUs and before running any
- VCPUs.
-+
-+3. GROUP: KVM_ARM_VCPU_PVTIME_CTRL
-+Architectures: ARM64
-+
-+3.1 ATTRIBUTE: KVM_ARM_VCPU_PVTIME_IPA
-+Parameters: 64-bit base address
-+Returns: -ENXIO:  Stolen time not implemented
-+         -EEXIST: Base address already set for this VCPU
-+         -EINVAL: Base address not 64 byte aligned
-+
-+Specifies the base address of the stolen time structure for this VCPU. The
-+base address must be 64 byte aligned and exist within a valid guest memory
-+region. See Documentation/virt/kvm/arm/pvtime.txt for more information
-+including the layout of the stolen time structure.
+ int kvm_clear_guest_page(struct kvm *kvm, gfn_t gfn, int offset, int len);
+ int kvm_clear_guest(struct kvm *kvm, gpa_t gpa, unsigned long len);
+ struct kvm_memory_slot *gfn_to_memslot(struct kvm *kvm, gfn_t gfn);
 -- 
 2.20.1
 
