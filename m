@@ -2,114 +2,122 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1491CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 06:15:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ADEFCA9EB9
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 06:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BFA22084B
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 06:15:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30CF52064B
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 06:16:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NLXY6TdH"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eG9C2g2A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726596AbfJUGPc (ORCPT
+        id S1726913AbfJUGQB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 02:15:32 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39338 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726039AbfJUGPc (ORCPT
+        Mon, 21 Oct 2019 02:16:01 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:42785 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726039AbfJUGQB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 02:15:32 -0400
-Received: by mail-wm1-f67.google.com with SMTP id r141so1837640wme.4
-        for <linux-kernel@vger.kernel.org>; Sun, 20 Oct 2019 23:15:30 -0700 (PDT)
+        Mon, 21 Oct 2019 02:16:01 -0400
+Received: by mail-pg1-f196.google.com with SMTP id f14so7090534pgi.9
+        for <linux-kernel@vger.kernel.org>; Sun, 20 Oct 2019 23:16:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wyeF1rMaUaHqm01fq+szlG0Q/Q/37dlLkcs/fhKj+JU=;
-        b=NLXY6TdHG8Tz04qn7XKMcvdLN/OzoqTYvrB+JSqGhbSGr3rCzaBbRYQdR4no1EY5NL
-         Nh9rCiOB9Og08f19wRWClJFDu0/sS1HKtgYeD23z9WavaGd4NE1QQCGW8pgaYugjj5k8
-         2ETtuu2xsV6k3V2UW5rEbo/g5/Ro5F6Dfiu6pP5pMD+QaVJORHRrHwe8sIvzyRQ7nyDP
-         jeq1vxJ7pypdSO3Ec2jWIw0zBRJyOT5DrUa7sOW2tzW0AmKLRJNb5sdKiVl76Mfb6VFf
-         1fntrhgs76bfmwfvZZGpT+tBafmH1AcMK2MVAeBXgJj+RUvSklAClZI5m15AK4a0NKmO
-         Z0bg==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=z8AislL9bBizOL/3zmH/pFdDSRFzv2U9ezQYDPpf/uY=;
+        b=eG9C2g2A4PaRfDjkuUYycqvHLpwFwwXFoIHPEJB4S4aqUilQqRiRg5/brU94N70PeD
+         +XbbwDmqAiX+M0nZWiPdZ0r1qUm3xvVo2fsi3TL1IMD9cwuZdQeu1BhWWWD3vazDac0O
+         z1Buvm/bypyjVu5q4P3no2LuGvFRpIYNywAetJM8+Gu75G5kIkeStD/j2p7kWv+r2ji8
+         911oMY2QK9mqZi22+AJOBF/2NTC59N97cofnI1NMRIOMHtRMcTjpRrZRIzalyGpKHNhp
+         Gzw/APURFJ/dMAvGQ7oXi5ITYR04qndf6BcxFQOZ1srgtVPMKwqf58nuZdyTkeaSD2O+
+         FPyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wyeF1rMaUaHqm01fq+szlG0Q/Q/37dlLkcs/fhKj+JU=;
-        b=NYHfNQMz19bIa8p6tK0XsIsJcokEdv+qyTG44qYii7Wprkle/OUHYnIh4CMOj2X+bE
-         Y3TEYrWchJJGdBjU1eObizOIgZUSIFjptheYfnUjH9iexB8JV2KP4Nz+pZ47X5WHcJBy
-         tr4fjK/9U4xhX2P/TlfsiXG1p1TF0NX9SKPIO0+V6PBPuA+z7PaRLQjNC35zyZ5OXftC
-         2f2GUs8QcSSI/66Xu/mhzz6yu4ex2VmamZCepU3lNS4fbRArrttI767MhQuYV3gFS+Iw
-         Qwww2j+8O1RGCPcGVcBmA8qs6mumy//pvxkOkoeL0moX6o4RZIf2PNR0b67aLef4KmdU
-         d3LA==
-X-Gm-Message-State: APjAAAUFxGyZATSbpHcJe7jTum8x6xMOHu2PatyKFdtwSK6ivUImF06Y
-        TCCoFWiUoNXfiQSvGFuVgmtnjSHs7TvEAVyQKlcrPw==
-X-Google-Smtp-Source: APXvYqwy6S1XLT1tP+FIkDZSJy0h8vZRZeJmoRt5dOcKFryQnLOFQp/4bIpH+FqX5564F137wX49Gmx6/y/bSuaFgAQ=
-X-Received: by 2002:a7b:c925:: with SMTP id h5mr1828158wml.61.1571638529717;
- Sun, 20 Oct 2019 23:15:29 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=z8AislL9bBizOL/3zmH/pFdDSRFzv2U9ezQYDPpf/uY=;
+        b=SJKeos7l/FXaor3nP00ilhoYD7yZlDQdOAaiC1RRULk2ddUdVkpmcxOQZzBgw8HOLj
+         3hJYBf8+TPC3vwUekXCq/enKYy1YXZNdbRzeyiWk3fI3Xipj/v76b6uuRNib5iY5RhdD
+         9HIgOZlAPQAODKl4sYU0j0IJ1FXqXZytYmIifuBY2G4u6GNvrd01V8hWeTjoW4Pqbtau
+         3HTAkjwmAmbWj3S45Tb4wUkULdoE6tNytZQGUvnZpPergn+icVcdc4GmOth8thwfKK35
+         +miKYXJ8THmavOzPlxWhva6KKkuBE4eMEihB5EQT9Y85OKQRtdjxS4CqQWE2dxpgDRBZ
+         DcJQ==
+X-Gm-Message-State: APjAAAVYdBYQc74HT7hlvVrTlAPi/+50wfOSSWdXtOKC5B8V7Afvh9GQ
+        IQO8gL3lCLA7CLi38+BP79H8
+X-Google-Smtp-Source: APXvYqzq3YMDZBcNbZq7GPKnRRFgy2SO4k0a07WKf/88S3YXLlZv9fCcV5ut+NIOUDsG42YN1kRNVQ==
+X-Received: by 2002:a63:ea48:: with SMTP id l8mr24258354pgk.160.1571638560579;
+        Sun, 20 Oct 2019 23:16:00 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2405:204:700f:8db6:2442:890f:ac37:8127])
+        by smtp.gmail.com with ESMTPSA id a13sm16828601pfg.10.2019.10.20.23.15.55
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 20 Oct 2019 23:15:59 -0700 (PDT)
+Date:   Mon, 21 Oct 2019 11:45:51 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-unisoc@lists.infradead.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Orson Zhai <orsonzhai@gmail.com>
+Subject: Re: [PATCH v2 1/4] dt-bindings: gpio: Add devicetree binding for RDA
+ Micro GPIO controller
+Message-ID: <20191021061551.GA12001@Mani-XPS-13-9360>
+References: <20191015173026.9962-1-manivannan.sadhasivam@linaro.org>
+ <20191015173026.9962-2-manivannan.sadhasivam@linaro.org>
+ <CACRpkdY3OC675EjZ4PYhYxnk1XWh4EO-a3JJBha2rdBttySUNQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20191018161033.261971-1-samitolvanen@google.com> <20191018161033.261971-10-samitolvanen@google.com>
-In-Reply-To: <20191018161033.261971-10-samitolvanen@google.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Mon, 21 Oct 2019 08:15:18 +0200
-Message-ID: <CAKv+Gu_bYk8oudqfxmN5GUYSrTNeCPmz19BNnBn_TqATFPK11g@mail.gmail.com>
-Subject: Re: [PATCH 09/18] trace: disable function graph tracing with SCS
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdY3OC675EjZ4PYhYxnk1XWh4EO-a3JJBha2rdBttySUNQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 18 Oct 2019 at 18:11, Sami Tolvanen <samitolvanen@google.com> wrote:
->
-> With CONFIG_FUNCTION_GRAPH_TRACER, function return addresses are
-> modified in ftrace_graph_caller and prepare_ftrace_return to redirect
-> control flow to ftrace_return_to_handler. This is incompatible with
-> return address protection.
->
-> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+Hi Linus,
 
-How difficult would it be to update the return address on the shadow
-call stack along with the normal one? Not having to disable
-infrastructure that is widely used by the distros would make this a
-lot more palatable in the general case (even if it is Clang only at
-the moment)
+On Wed, Oct 16, 2019 at 02:27:44PM +0200, Linus Walleij wrote:
+> On Tue, Oct 15, 2019 at 7:30 PM Manivannan Sadhasivam
+> <manivannan.sadhasivam@linaro.org> wrote:
+> 
+> > Add YAML devicetree binding for RDA Micro GPIO controller.
+> >
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> 
+> First: this looks awesome to me,
+> 
+> Second: since this is kind of a first... could we move the standard GPIOchip
+> YAML business into a generic gpiochip .yaml file?
+> 
+> We currently only have pl061-gpio.yaml and this would duplicate a lot
+> of the stuff from that yaml file.
+> 
+> If you look at how
+> display/panel/panel-common.yaml
+> is used from say
+> display/panel/ti,nspire.yaml
+> 
+> Could we do something similar and lift out all the generics from
+> gpio-pl061.yaml to
+> gpio-common.yaml
+> and reference that also in the new binding?
+> 
+> If it seems hard, tell me and I can take a stab at it.
+> 
 
+Eventhough I really want to help you here, I'm running out of time
+(and you know why). Let's consider merging this, and I'll come back at
+it later.
 
-> ---
->  kernel/trace/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-> index e08527f50d2a..b7e5e3bfa0f4 100644
-> --- a/kernel/trace/Kconfig
-> +++ b/kernel/trace/Kconfig
-> @@ -161,6 +161,7 @@ config FUNCTION_GRAPH_TRACER
->         depends on HAVE_FUNCTION_GRAPH_TRACER
->         depends on FUNCTION_TRACER
->         depends on !X86_32 || !CC_OPTIMIZE_FOR_SIZE
-> +       depends on ROP_PROTECTION_NONE
->         default y
->         help
->           Enable the kernel to trace a function at both its return
-> --
-> 2.23.0.866.gb869b98d4c-goog
->
+Thanks,
+Mani
+
+> Yours,
+> Linus Walleij
