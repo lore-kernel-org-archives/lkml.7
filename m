@@ -2,720 +2,1540 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6AA7CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:20:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16862CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:21:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DD712070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:20:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Oh8e5EhP"
+	by mail.kernel.org (Postfix) with ESMTP id C32192070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:21:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728097AbfJUKUP (ORCPT
+        id S1728109AbfJUKVK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 06:20:15 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47517 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727831AbfJUKUO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 06:20:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571653211;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=fYrZFHZOW1YUmAoRCKQjGzYd6i7mjDB4UBqk3ydgai0=;
-        b=Oh8e5EhPDQakn/OVQC6Blu1iuUx1XNzGi6H3Ip3ISxOFTzX3iX6S9aUNMiT1DWtG9uw3ON
-        Wl5KkqPte0yWklPCdJr4BpQ++YJNBJiXknYVzLrgsB9ZT3cxXeih+EzjqcnuLMGh9GyGzU
-        4T/eL3LFitwTbkRzFO75CL5f+x1uy34=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-59-DGgyACdxNFywAbDdAHZQfA-1; Mon, 21 Oct 2019 06:20:08 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CA8A55ED;
-        Mon, 21 Oct 2019 10:20:06 +0000 (UTC)
-Received: from [10.72.12.22] (ovpn-12-22.pek2.redhat.com [10.72.12.22])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 686441001B09;
-        Mon, 21 Oct 2019 10:19:54 +0000 (UTC)
-Subject: Re: [RFC 2/2] vhost: IFC VF vdpa layer
-To:     "Zhu, Lingshan" <lingshan.zhu@intel.com>, mst@redhat.com,
-        alex.williamson@redhat.com
-Cc:     linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        netdev@vger.kernel.org, dan.daly@intel.com,
-        cunming.liang@intel.com, tiwei.bie@intel.com, jason.zeng@intel.com,
-        zhiyuan.lv@intel.com
-References: <20191016013050.3918-1-lingshan.zhu@intel.com>
- <20191016013050.3918-3-lingshan.zhu@intel.com>
- <9495331d-3c65-6f49-dcd9-bfdb17054cf0@redhat.com>
- <f65358e9-6728-8260-74f7-176d7511e989@intel.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <1cae60b6-938d-e2df-2dca-fbf545f06853@redhat.com>
-Date:   Mon, 21 Oct 2019 18:19:52 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <f65358e9-6728-8260-74f7-176d7511e989@intel.com>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-MC-Unique: DGgyACdxNFywAbDdAHZQfA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+        Mon, 21 Oct 2019 06:21:10 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:48122 "EHLO foss.arm.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S1727110AbfJUKVK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 06:21:10 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 50EAE493;
+        Mon, 21 Oct 2019 03:20:42 -0700 (PDT)
+Received: from usa.arm.com (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 323D13F718;
+        Mon, 21 Oct 2019 03:20:41 -0700 (PDT)
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     viresh.kumar@linaro.org
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        nico@fluxnic.net, rjw@rjwysocki.net, sudeep.holla@arm.com
+Subject: [RESEND] [PATCH v3 2/5] cpufreq: merge arm_big_little and vexpress-spc
+Date:   Mon, 21 Oct 2019 11:20:34 +0100
+Message-Id: <20191021102034.29462-1-sudeep.holla@arm.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191021024049.uyit2zp24l6jqzf5@vireshk-i7>
+References: <20191021024049.uyit2zp24l6jqzf5@vireshk-i7>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+arm_big_little cpufreq driver was designed as a generic big little
+driver that could be used by any platform and make use of bL switcher.
+Over years alternate solutions have been designed and merged to deal
+with bL/HMP systems like EAS.
 
-On 2019/10/21 =E4=B8=8B=E5=8D=885:53, Zhu, Lingshan wrote:
->
-> On 10/16/2019 6:19 PM, Jason Wang wrote:
->>
->> On 2019/10/16 =E4=B8=8A=E5=8D=889:30, Zhu Lingshan wrote:
->>> This commit introduced IFC VF operations for vdpa, which complys to
->>> vhost_mdev interfaces, handles IFC VF initialization,
->>> configuration and removal.
->>>
->>> Signed-off-by: Zhu Lingshan <lingshan.zhu@intel.com>
->>> ---
->>> =C2=A0 drivers/vhost/ifcvf/ifcvf_main.c | 541=20
->>> +++++++++++++++++++++++++++++++++++++++
->>> =C2=A0 1 file changed, 541 insertions(+)
->>> =C2=A0 create mode 100644 drivers/vhost/ifcvf/ifcvf_main.c
->>>
->>> diff --git a/drivers/vhost/ifcvf/ifcvf_main.c=20
->>> b/drivers/vhost/ifcvf/ifcvf_main.c
->>> new file mode 100644
->>> index 000000000000..c48a29969a85
->>> --- /dev/null
->>> +++ b/drivers/vhost/ifcvf/ifcvf_main.c
->>> @@ -0,0 +1,541 @@
->>> +// SPDX-License-Identifier: GPL-2.0-only
->>> +/*
->>> + * Copyright (C) 2019 Intel Corporation.
->>> + */
->>> +
->>> +#include <linux/interrupt.h>
->>> +#include <linux/module.h>
->>> +#include <linux/mdev.h>
->>> +#include <linux/pci.h>
->>> +#include <linux/sysfs.h>
->>> +
->>> +#include "ifcvf_base.h"
->>> +
->>> +#define VERSION_STRING=C2=A0=C2=A0=C2=A0 "0.1"
->>> +#define DRIVER_AUTHOR=C2=A0=C2=A0=C2=A0 "Intel Corporation"
->>> +#define IFCVF_DRIVER_NAME=C2=A0=C2=A0=C2=A0 "ifcvf"
->>> +
->>> +static irqreturn_t ifcvf_intr_handler(int irq, void *arg)
->>> +{
->>> +=C2=A0=C2=A0=C2=A0 struct vring_info *vring =3D arg;
->>> +
->>> +=C2=A0=C2=A0=C2=A0 if (vring->cb.callback)
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return vring->cb.callback(v=
-ring->cb.private);
->>> +
->>> +=C2=A0=C2=A0=C2=A0 return IRQ_HANDLED;
->>> +}
->>> +
->>> +static u64 ifcvf_mdev_get_features(struct mdev_device *mdev)
->>> +{
->>> +=C2=A0=C2=A0=C2=A0 return IFC_SUPPORTED_FEATURES;
->>
->>
->> I would expect this should be done by querying the hw. Or IFC VF=20
->> can't get any update through its firmware?
->
-> Hi Jason,
->
-> Thanks for your comments, for now driver just support these features.
+Also since no other driver made use of generic arm_big_little cpufreq
+driver except Vexpress SPC, we can merge them together as vexpress-spc
+driver used only on Vexpress TC2(CA15_CA7) platform.
 
+Acked-by: Nicolas Pitre <nico@fluxnic.net>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+---
+ MAINTAINERS                            |   5 +-
+ drivers/cpufreq/Kconfig.arm            |  12 +-
+ drivers/cpufreq/Makefile               |   2 -
+ drivers/cpufreq/arm_big_little.c       | 658 ------------------------
+ drivers/cpufreq/arm_big_little.h       |  43 --
+ drivers/cpufreq/vexpress-spc-cpufreq.c | 660 ++++++++++++++++++++++++-
+ 6 files changed, 651 insertions(+), 729 deletions(-)
+ delete mode 100644 drivers/cpufreq/arm_big_little.c
+ delete mode 100644 drivers/cpufreq/arm_big_little.h
 
-Ok, it should work but less flexible, we can change it in the future.
+Hi Viresh,
 
+Yes bit strange, I do see same issue. However simple patch command works.
+I wonder if there's any magic option to tell this, anyways resending the
+patch as requested.
 
->
->>
->>
->>> +}
->>> +
->>> +static int ifcvf_mdev_set_features(struct mdev_device *mdev, u64=20
->>> features)
->>> +{
->>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_adapter *adapter =3D mdev_get_drvdata(=
-mdev);
->>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_hw *vf =3D IFC_PRIVATE_TO_VF(adapter);
->>> +
->>> +=C2=A0=C2=A0=C2=A0 vf->req_features =3D features;
->>> +
->>> +=C2=A0=C2=A0=C2=A0 return 0;
->>> +}
->>> +
->>> +static u64 ifcvf_mdev_get_vq_state(struct mdev_device *mdev, u16 qid)
->>> +{
->>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_adapter *adapter =3D mdev_get_drvdata(=
-mdev);
->>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_hw *vf =3D IFC_PRIVATE_TO_VF(adapter);
->>> +
->>> +=C2=A0=C2=A0=C2=A0 return vf->vring[qid].last_avail_idx;
->>
->>
->> Does this really work? I'd expect it should be fetched from hw since=20
->> it's an internal state.
-> for now, it's working, we intend to support LM in next version drivers.
+Regards,
+Sudeep
 
-
-I'm not sure I understand here, I don't see any synchronization between=20
-the hardware and last_avail_idx, so last_avail_idx should not change.
-
-Btw, what did "LM" mean :) ?
-
-
->>
->>
->>> +}
->>> +
->>> +static int ifcvf_mdev_set_vq_state(struct mdev_device *mdev, u16=20
->>> qid, u64 num)
->>> +{
->>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_adapter *adapter =3D mdev_get_drvdata(=
-mdev);
->>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_hw *vf =3D IFC_PRIVATE_TO_VF(adapter);
->>> +
->>> +=C2=A0=C2=A0=C2=A0 vf->vring[qid].last_used_idx =3D num;
->>
->>
->> I fail to understand why last_used_idx is needed. It looks to me the=20
->> used idx in the used ring is sufficient.
-> I will remove it.
->>
->>
->>> +=C2=A0=C2=A0=C2=A0 vf->vring[qid].last_avail_idx =3D num;
->>
->>
->> Do we need a synchronization with hw immediately here?
->>
->>
->>> +
->>> +=C2=A0=C2=A0=C2=A0 return 0;
->>> +}
->>> +
->>> +static int ifcvf_mdev_set_vq_address(struct mdev_device *mdev, u16=20
->>> idx,
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u64 desc_area, u64 driv=
-er_area,
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u64 device_area)
->>> +{
->>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_adapter *adapter =3D mdev_get_drvdata(=
-mdev);
->>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_hw *vf =3D IFC_PRIVATE_TO_VF(adapter);
->>> +
->>> +=C2=A0=C2=A0=C2=A0 vf->vring[idx].desc =3D desc_area;
->>> +=C2=A0=C2=A0=C2=A0 vf->vring[idx].avail =3D driver_area;
->>> +=C2=A0=C2=A0=C2=A0 vf->vring[idx].used =3D device_area;
->>> +
->>> +=C2=A0=C2=A0=C2=A0 return 0;
->>> +}
->>> +
->>> +static void ifcvf_mdev_set_vq_num(struct mdev_device *mdev, u16=20
->>> qid, u32 num)
->>> +{
->>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_adapter *adapter =3D mdev_get_drvdata(=
-mdev);
->>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_hw *vf =3D IFC_PRIVATE_TO_VF(adapter);
->>> +
->>> +=C2=A0=C2=A0=C2=A0 vf->vring[qid].size =3D num;
->>> +}
->>> +
->>> +static void ifcvf_mdev_set_vq_ready(struct mdev_device *mdev,
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 u16 qid, bool ready)
->>> +{
->>> +
->>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_adapter *adapter =3D mdev_get_drvdata(=
-mdev);
->>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_hw *vf =3D IFC_PRIVATE_TO_VF(adapter);
->>> +
->>> +=C2=A0=C2=A0=C2=A0 vf->vring[qid].ready =3D ready;
->>> +}
->>> +
->>> +static bool ifcvf_mdev_get_vq_ready(struct mdev_device *mdev, u16 qid)
->>> +{
->>> +
->>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_adapter *adapter =3D mdev_get_drvdata(=
-mdev);
->>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_hw *vf =3D IFC_PRIVATE_TO_VF(adapter);
->>> +
->>> +=C2=A0=C2=A0=C2=A0 return vf->vring[qid].ready;
->>> +}
->>> +
->>> +static void ifcvf_mdev_set_vq_cb(struct mdev_device *mdev, u16 idx,
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct virtio_mdev_callback *cb)
->>> +{
->>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_adapter *adapter =3D mdev_get_drvdata(=
-mdev);
->>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_hw *vf =3D IFC_PRIVATE_TO_VF(adapter);
->>> +
->>> +=C2=A0=C2=A0=C2=A0 vf->vring[idx].cb =3D *cb;
->>> +}
->>> +
->>> +static void ifcvf_mdev_kick_vq(struct mdev_device *mdev, u16 idx)
->>> +{
->>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_adapter *adapter =3D mdev_get_drvdata(=
-mdev);
->>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_hw *vf =3D IFC_PRIVATE_TO_VF(adapter);
->>> +
->>> +=C2=A0=C2=A0=C2=A0 ifcvf_notify_queue(vf, idx);
->>> +}
->>> +
->>> +static u8 ifcvf_mdev_get_status(struct mdev_device *mdev)
->>> +{
->>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_adapter *adapter =3D mdev_get_drvdata(=
-mdev);
->>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_hw *vf =3D IFC_PRIVATE_TO_VF(adapter);
->>> +
->>> +=C2=A0=C2=A0=C2=A0 return vf->status;
->>> +}
->>> +
->>> +static u32 ifcvf_mdev_get_generation(struct mdev_device *mdev)
->>> +{
->>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_adapter *adapter =3D mdev_get_drvdata(=
-mdev);
->>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_hw *vf =3D IFC_PRIVATE_TO_VF(adapter);
->>> +
->>> +=C2=A0=C2=A0=C2=A0 return vf->generation;
->>> +}
->>> +
->>> +static int ifcvf_mdev_get_version(struct mdev_device *mdev)
->>> +{
->>> +=C2=A0=C2=A0=C2=A0 return VIRTIO_MDEV_VERSION;
->>> +}
->>> +
->>> +static u32 ifcvf_mdev_get_device_id(struct mdev_device *mdev)
->>> +{
->>> +=C2=A0=C2=A0=C2=A0 return IFCVF_DEVICE_ID;
->>> +}
->>> +
->>> +static u32 ifcvf_mdev_get_vendor_id(struct mdev_device *mdev)
->>> +{
->>> +=C2=A0=C2=A0=C2=A0 return IFCVF_VENDOR_ID;
->>> +}
->>> +
->>> +static u16 ifcvf_mdev_get_vq_align(struct mdev_device *mdev)
->>> +{
->>> +=C2=A0=C2=A0=C2=A0 return IFCVF_QUEUE_ALIGNMENT;
->>> +}
->>> +
->>> +static int ifcvf_start_datapath(void *private)
->>> +{
->>> +=C2=A0=C2=A0=C2=A0 int i, ret;
->>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_hw *vf =3D IFC_PRIVATE_TO_VF(private);
->>> +
->>> +=C2=A0=C2=A0=C2=A0 for (i =3D 0; i < (IFCVF_MAX_QUEUE_PAIRS * 2); i++)=
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e51a68bf8ca8..710a2e7f47b5 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -4269,14 +4269,13 @@ F:	include/linux/cpufreq.h
+ F:	include/linux/sched/cpufreq.h
+ F:	tools/testing/selftests/cpufreq/
+ 
+-CPU FREQUENCY DRIVERS - ARM BIG LITTLE
++CPU FREQUENCY DRIVERS - VEXPRESS SPC ARM BIG LITTLE
+ M:	Viresh Kumar <viresh.kumar@linaro.org>
+ M:	Sudeep Holla <sudeep.holla@arm.com>
+ L:	linux-pm@vger.kernel.org
+ W:	http://www.arm.com/products/processors/technologies/biglittleprocessing.php
+ S:	Maintained
+-F:	drivers/cpufreq/arm_big_little.h
+-F:	drivers/cpufreq/arm_big_little.c
++F:	drivers/cpufreq/vexpress-spc-cpufreq.c
+ 
+ CPU POWER MONITORING SUBSYSTEM
+ M:	Thomas Renninger <trenn@suse.com>
+diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
+index a905796f7f85..3858d86cf409 100644
+--- a/drivers/cpufreq/Kconfig.arm
++++ b/drivers/cpufreq/Kconfig.arm
+@@ -49,14 +49,6 @@ config ARM_ARMADA_8K_CPUFREQ
+ 
+ 	  If in doubt, say N.
+ 
+-# big LITTLE core layer and glue drivers
+-config ARM_BIG_LITTLE_CPUFREQ
+-	tristate "Generic ARM big LITTLE CPUfreq driver"
+-	depends on ARM_CPU_TOPOLOGY && HAVE_CLK
+-	select PM_OPP
+-	help
+-	  This enables the Generic CPUfreq driver for ARM big.LITTLE platforms.
+-
+ config ARM_SCPI_CPUFREQ
+ 	tristate "SCPI based CPUfreq driver"
+ 	depends on ARM_SCPI_PROTOCOL && COMMON_CLK_SCPI
+@@ -69,7 +61,9 @@ config ARM_SCPI_CPUFREQ
+ 
+ config ARM_VEXPRESS_SPC_CPUFREQ
+ 	tristate "Versatile Express SPC based CPUfreq driver"
+-	depends on ARM_BIG_LITTLE_CPUFREQ && ARCH_VEXPRESS_SPC
++	depends on ARM_CPU_TOPOLOGY && HAVE_CLK
++	depends on ARCH_VEXPRESS_SPC
++	select PM_OPP
+ 	help
+ 	  This add the CPUfreq driver support for Versatile Express
+ 	  big.LITTLE platforms using SPC for power management.
+diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
+index 9a9f5ccd13d9..f6670c4abbb0 100644
+--- a/drivers/cpufreq/Makefile
++++ b/drivers/cpufreq/Makefile
+@@ -47,8 +47,6 @@ obj-$(CONFIG_X86_SFI_CPUFREQ)		+= sfi-cpufreq.o
+ 
+ ##################################################################################
+ # ARM SoC drivers
+-obj-$(CONFIG_ARM_BIG_LITTLE_CPUFREQ)	+= arm_big_little.o
+-
+ obj-$(CONFIG_ARM_ARMADA_37XX_CPUFREQ)	+= armada-37xx-cpufreq.o
+ obj-$(CONFIG_ARM_ARMADA_8K_CPUFREQ)	+= armada-8k-cpufreq.o
+ obj-$(CONFIG_ARM_BRCMSTB_AVS_CPUFREQ)	+= brcmstb-avs-cpufreq.o
+diff --git a/drivers/cpufreq/arm_big_little.c b/drivers/cpufreq/arm_big_little.c
+deleted file mode 100644
+index 7fe52fcddcf1..000000000000
+--- a/drivers/cpufreq/arm_big_little.c
++++ /dev/null
+@@ -1,658 +0,0 @@
+-/*
+- * ARM big.LITTLE Platforms CPUFreq support
+- *
+- * Copyright (C) 2013 ARM Ltd.
+- * Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
+- *
+- * Copyright (C) 2013 Linaro.
+- * Viresh Kumar <viresh.kumar@linaro.org>
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License version 2 as
+- * published by the Free Software Foundation.
+- *
+- * This program is distributed "as is" WITHOUT ANY WARRANTY of any
+- * kind, whether express or implied; without even the implied warranty
+- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+- * GNU General Public License for more details.
+- */
+-
+-#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+-
+-#include <linux/clk.h>
+-#include <linux/cpu.h>
+-#include <linux/cpufreq.h>
+-#include <linux/cpumask.h>
+-#include <linux/cpu_cooling.h>
+-#include <linux/export.h>
+-#include <linux/module.h>
+-#include <linux/mutex.h>
+-#include <linux/of_platform.h>
+-#include <linux/pm_opp.h>
+-#include <linux/slab.h>
+-#include <linux/topology.h>
+-#include <linux/types.h>
+-
+-#include "arm_big_little.h"
+-
+-/* Currently we support only two clusters */
+-#define A15_CLUSTER	0
+-#define A7_CLUSTER	1
+-#define MAX_CLUSTERS	2
+-
+-#ifdef CONFIG_BL_SWITCHER
+-#include <asm/bL_switcher.h>
+-static bool bL_switching_enabled;
+-#define is_bL_switching_enabled()	bL_switching_enabled
+-#define set_switching_enabled(x)	(bL_switching_enabled = (x))
+-#else
+-#define is_bL_switching_enabled()	false
+-#define set_switching_enabled(x)	do { } while (0)
+-#define bL_switch_request(...)		do { } while (0)
+-#define bL_switcher_put_enabled()	do { } while (0)
+-#define bL_switcher_get_enabled()	do { } while (0)
+-#endif
+-
+-#define ACTUAL_FREQ(cluster, freq)  ((cluster == A7_CLUSTER) ? freq << 1 : freq)
+-#define VIRT_FREQ(cluster, freq)    ((cluster == A7_CLUSTER) ? freq >> 1 : freq)
+-
+-static struct thermal_cooling_device *cdev[MAX_CLUSTERS];
+-static const struct cpufreq_arm_bL_ops *arm_bL_ops;
+-static struct clk *clk[MAX_CLUSTERS];
+-static struct cpufreq_frequency_table *freq_table[MAX_CLUSTERS + 1];
+-static atomic_t cluster_usage[MAX_CLUSTERS + 1];
+-
+-static unsigned int clk_big_min;	/* (Big) clock frequencies */
+-static unsigned int clk_little_max;	/* Maximum clock frequency (Little) */
+-
+-static DEFINE_PER_CPU(unsigned int, physical_cluster);
+-static DEFINE_PER_CPU(unsigned int, cpu_last_req_freq);
+-
+-static struct mutex cluster_lock[MAX_CLUSTERS];
+-
+-static inline int raw_cpu_to_cluster(int cpu)
+-{
+-	return topology_physical_package_id(cpu);
+-}
+-
+-static inline int cpu_to_cluster(int cpu)
+-{
+-	return is_bL_switching_enabled() ?
+-		MAX_CLUSTERS : raw_cpu_to_cluster(cpu);
+-}
+-
+-static unsigned int find_cluster_maxfreq(int cluster)
+-{
+-	int j;
+-	u32 max_freq = 0, cpu_freq;
+-
+-	for_each_online_cpu(j) {
+-		cpu_freq = per_cpu(cpu_last_req_freq, j);
+-
+-		if ((cluster == per_cpu(physical_cluster, j)) &&
+-				(max_freq < cpu_freq))
+-			max_freq = cpu_freq;
+-	}
+-
+-	pr_debug("%s: cluster: %d, max freq: %d\n", __func__, cluster,
+-			max_freq);
+-
+-	return max_freq;
+-}
+-
+-static unsigned int clk_get_cpu_rate(unsigned int cpu)
+-{
+-	u32 cur_cluster = per_cpu(physical_cluster, cpu);
+-	u32 rate = clk_get_rate(clk[cur_cluster]) / 1000;
+-
+-	/* For switcher we use virtual A7 clock rates */
+-	if (is_bL_switching_enabled())
+-		rate = VIRT_FREQ(cur_cluster, rate);
+-
+-	pr_debug("%s: cpu: %d, cluster: %d, freq: %u\n", __func__, cpu,
+-			cur_cluster, rate);
+-
+-	return rate;
+-}
+-
+-static unsigned int bL_cpufreq_get_rate(unsigned int cpu)
+-{
+-	if (is_bL_switching_enabled()) {
+-		pr_debug("%s: freq: %d\n", __func__, per_cpu(cpu_last_req_freq,
+-					cpu));
+-
+-		return per_cpu(cpu_last_req_freq, cpu);
+-	} else {
+-		return clk_get_cpu_rate(cpu);
+-	}
+-}
+-
+-static unsigned int
+-bL_cpufreq_set_rate(u32 cpu, u32 old_cluster, u32 new_cluster, u32 rate)
+-{
+-	u32 new_rate, prev_rate;
+-	int ret;
+-	bool bLs = is_bL_switching_enabled();
+-
+-	mutex_lock(&cluster_lock[new_cluster]);
+-
+-	if (bLs) {
+-		prev_rate = per_cpu(cpu_last_req_freq, cpu);
+-		per_cpu(cpu_last_req_freq, cpu) = rate;
+-		per_cpu(physical_cluster, cpu) = new_cluster;
+-
+-		new_rate = find_cluster_maxfreq(new_cluster);
+-		new_rate = ACTUAL_FREQ(new_cluster, new_rate);
+-	} else {
+-		new_rate = rate;
+-	}
+-
+-	pr_debug("%s: cpu: %d, old cluster: %d, new cluster: %d, freq: %d\n",
+-			__func__, cpu, old_cluster, new_cluster, new_rate);
+-
+-	ret = clk_set_rate(clk[new_cluster], new_rate * 1000);
+-	if (!ret) {
+-		/*
+-		 * FIXME: clk_set_rate hasn't returned an error here however it
+-		 * may be that clk_change_rate failed due to hardware or
+-		 * firmware issues and wasn't able to report that due to the
+-		 * current design of the clk core layer. To work around this
+-		 * problem we will read back the clock rate and check it is
+-		 * correct. This needs to be removed once clk core is fixed.
+-		 */
+-		if (clk_get_rate(clk[new_cluster]) != new_rate * 1000)
+-			ret = -EIO;
+-	}
+-
+-	if (WARN_ON(ret)) {
+-		pr_err("clk_set_rate failed: %d, new cluster: %d\n", ret,
+-				new_cluster);
+-		if (bLs) {
+-			per_cpu(cpu_last_req_freq, cpu) = prev_rate;
+-			per_cpu(physical_cluster, cpu) = old_cluster;
+-		}
+-
+-		mutex_unlock(&cluster_lock[new_cluster]);
+-
+-		return ret;
+-	}
+-
+-	mutex_unlock(&cluster_lock[new_cluster]);
+-
+-	/* Recalc freq for old cluster when switching clusters */
+-	if (old_cluster != new_cluster) {
+-		pr_debug("%s: cpu: %d, old cluster: %d, new cluster: %d\n",
+-				__func__, cpu, old_cluster, new_cluster);
+-
+-		/* Switch cluster */
+-		bL_switch_request(cpu, new_cluster);
+-
+-		mutex_lock(&cluster_lock[old_cluster]);
+-
+-		/* Set freq of old cluster if there are cpus left on it */
+-		new_rate = find_cluster_maxfreq(old_cluster);
+-		new_rate = ACTUAL_FREQ(old_cluster, new_rate);
+-
+-		if (new_rate) {
+-			pr_debug("%s: Updating rate of old cluster: %d, to freq: %d\n",
+-					__func__, old_cluster, new_rate);
+-
+-			if (clk_set_rate(clk[old_cluster], new_rate * 1000))
+-				pr_err("%s: clk_set_rate failed: %d, old cluster: %d\n",
+-						__func__, ret, old_cluster);
+-		}
+-		mutex_unlock(&cluster_lock[old_cluster]);
+-	}
+-
+-	return 0;
+-}
+-
+-/* Set clock frequency */
+-static int bL_cpufreq_set_target(struct cpufreq_policy *policy,
+-		unsigned int index)
+-{
+-	u32 cpu = policy->cpu, cur_cluster, new_cluster, actual_cluster;
+-	unsigned int freqs_new;
+-	int ret;
+-
+-	cur_cluster = cpu_to_cluster(cpu);
+-	new_cluster = actual_cluster = per_cpu(physical_cluster, cpu);
+-
+-	freqs_new = freq_table[cur_cluster][index].frequency;
+-
+-	if (is_bL_switching_enabled()) {
+-		if ((actual_cluster == A15_CLUSTER) &&
+-				(freqs_new < clk_big_min)) {
+-			new_cluster = A7_CLUSTER;
+-		} else if ((actual_cluster == A7_CLUSTER) &&
+-				(freqs_new > clk_little_max)) {
+-			new_cluster = A15_CLUSTER;
+-		}
+-	}
+-
+-	ret = bL_cpufreq_set_rate(cpu, actual_cluster, new_cluster, freqs_new);
+-
+-	if (!ret) {
+-		arch_set_freq_scale(policy->related_cpus, freqs_new,
+-				    policy->cpuinfo.max_freq);
+-	}
+-
+-	return ret;
+-}
+-
+-static inline u32 get_table_count(struct cpufreq_frequency_table *table)
+-{
+-	int count;
+-
+-	for (count = 0; table[count].frequency != CPUFREQ_TABLE_END; count++)
+-		;
+-
+-	return count;
+-}
+-
+-/* get the minimum frequency in the cpufreq_frequency_table */
+-static inline u32 get_table_min(struct cpufreq_frequency_table *table)
+-{
+-	struct cpufreq_frequency_table *pos;
+-	uint32_t min_freq = ~0;
+-	cpufreq_for_each_entry(pos, table)
+-		if (pos->frequency < min_freq)
+-			min_freq = pos->frequency;
+-	return min_freq;
+-}
+-
+-/* get the maximum frequency in the cpufreq_frequency_table */
+-static inline u32 get_table_max(struct cpufreq_frequency_table *table)
+-{
+-	struct cpufreq_frequency_table *pos;
+-	uint32_t max_freq = 0;
+-	cpufreq_for_each_entry(pos, table)
+-		if (pos->frequency > max_freq)
+-			max_freq = pos->frequency;
+-	return max_freq;
+-}
+-
+-static int merge_cluster_tables(void)
+-{
+-	int i, j, k = 0, count = 1;
+-	struct cpufreq_frequency_table *table;
+-
+-	for (i = 0; i < MAX_CLUSTERS; i++)
+-		count += get_table_count(freq_table[i]);
+-
+-	table = kcalloc(count, sizeof(*table), GFP_KERNEL);
+-	if (!table)
+-		return -ENOMEM;
+-
+-	freq_table[MAX_CLUSTERS] = table;
+-
+-	/* Add in reverse order to get freqs in increasing order */
+-	for (i = MAX_CLUSTERS - 1; i >= 0; i--) {
+-		for (j = 0; freq_table[i][j].frequency != CPUFREQ_TABLE_END;
+-				j++) {
+-			table[k].frequency = VIRT_FREQ(i,
+-					freq_table[i][j].frequency);
+-			pr_debug("%s: index: %d, freq: %d\n", __func__, k,
+-					table[k].frequency);
+-			k++;
+-		}
+-	}
+-
+-	table[k].driver_data = k;
+-	table[k].frequency = CPUFREQ_TABLE_END;
+-
+-	pr_debug("%s: End, table: %p, count: %d\n", __func__, table, k);
+-
+-	return 0;
+-}
+-
+-static void _put_cluster_clk_and_freq_table(struct device *cpu_dev,
+-					    const struct cpumask *cpumask)
+-{
+-	u32 cluster = raw_cpu_to_cluster(cpu_dev->id);
+-
+-	if (!freq_table[cluster])
+-		return;
+-
+-	clk_put(clk[cluster]);
+-	dev_pm_opp_free_cpufreq_table(cpu_dev, &freq_table[cluster]);
+-	if (arm_bL_ops->free_opp_table)
+-		arm_bL_ops->free_opp_table(cpumask);
+-	dev_dbg(cpu_dev, "%s: cluster: %d\n", __func__, cluster);
+-}
+-
+-static void put_cluster_clk_and_freq_table(struct device *cpu_dev,
+-					   const struct cpumask *cpumask)
+-{
+-	u32 cluster = cpu_to_cluster(cpu_dev->id);
+-	int i;
+-
+-	if (atomic_dec_return(&cluster_usage[cluster]))
+-		return;
+-
+-	if (cluster < MAX_CLUSTERS)
+-		return _put_cluster_clk_and_freq_table(cpu_dev, cpumask);
+-
+-	for_each_present_cpu(i) {
+-		struct device *cdev = get_cpu_device(i);
+-		if (!cdev) {
+-			pr_err("%s: failed to get cpu%d device\n", __func__, i);
+-			return;
+-		}
+-
+-		_put_cluster_clk_and_freq_table(cdev, cpumask);
+-	}
+-
+-	/* free virtual table */
+-	kfree(freq_table[cluster]);
+-}
+-
+-static int _get_cluster_clk_and_freq_table(struct device *cpu_dev,
+-					   const struct cpumask *cpumask)
+-{
+-	u32 cluster = raw_cpu_to_cluster(cpu_dev->id);
+-	int ret;
+-
+-	if (freq_table[cluster])
+-		return 0;
+-
+-	ret = arm_bL_ops->init_opp_table(cpumask);
+-	if (ret) {
+-		dev_err(cpu_dev, "%s: init_opp_table failed, cpu: %d, err: %d\n",
+-				__func__, cpu_dev->id, ret);
+-		goto out;
+-	}
+-
+-	ret = dev_pm_opp_init_cpufreq_table(cpu_dev, &freq_table[cluster]);
+-	if (ret) {
+-		dev_err(cpu_dev, "%s: failed to init cpufreq table, cpu: %d, err: %d\n",
+-				__func__, cpu_dev->id, ret);
+-		goto free_opp_table;
+-	}
+-
+-	clk[cluster] = clk_get(cpu_dev, NULL);
+-	if (!IS_ERR(clk[cluster])) {
+-		dev_dbg(cpu_dev, "%s: clk: %p & freq table: %p, cluster: %d\n",
+-				__func__, clk[cluster], freq_table[cluster],
+-				cluster);
+-		return 0;
+-	}
+-
+-	dev_err(cpu_dev, "%s: Failed to get clk for cpu: %d, cluster: %d\n",
+-			__func__, cpu_dev->id, cluster);
+-	ret = PTR_ERR(clk[cluster]);
+-	dev_pm_opp_free_cpufreq_table(cpu_dev, &freq_table[cluster]);
+-
+-free_opp_table:
+-	if (arm_bL_ops->free_opp_table)
+-		arm_bL_ops->free_opp_table(cpumask);
+-out:
+-	dev_err(cpu_dev, "%s: Failed to get data for cluster: %d\n", __func__,
+-			cluster);
+-	return ret;
+-}
+-
+-static int get_cluster_clk_and_freq_table(struct device *cpu_dev,
+-					  const struct cpumask *cpumask)
+-{
+-	u32 cluster = cpu_to_cluster(cpu_dev->id);
+-	int i, ret;
+-
+-	if (atomic_inc_return(&cluster_usage[cluster]) != 1)
+-		return 0;
+-
+-	if (cluster < MAX_CLUSTERS) {
+-		ret = _get_cluster_clk_and_freq_table(cpu_dev, cpumask);
+-		if (ret)
+-			atomic_dec(&cluster_usage[cluster]);
+-		return ret;
+-	}
+-
+-	/*
+-	 * Get data for all clusters and fill virtual cluster with a merge of
+-	 * both
+-	 */
+-	for_each_present_cpu(i) {
+-		struct device *cdev = get_cpu_device(i);
+-		if (!cdev) {
+-			pr_err("%s: failed to get cpu%d device\n", __func__, i);
+-			return -ENODEV;
+-		}
+-
+-		ret = _get_cluster_clk_and_freq_table(cdev, cpumask);
+-		if (ret)
+-			goto put_clusters;
+-	}
+-
+-	ret = merge_cluster_tables();
+-	if (ret)
+-		goto put_clusters;
+-
+-	/* Assuming 2 cluster, set clk_big_min and clk_little_max */
+-	clk_big_min = get_table_min(freq_table[0]);
+-	clk_little_max = VIRT_FREQ(1, get_table_max(freq_table[1]));
+-
+-	pr_debug("%s: cluster: %d, clk_big_min: %d, clk_little_max: %d\n",
+-			__func__, cluster, clk_big_min, clk_little_max);
+-
+-	return 0;
+-
+-put_clusters:
+-	for_each_present_cpu(i) {
+-		struct device *cdev = get_cpu_device(i);
+-		if (!cdev) {
+-			pr_err("%s: failed to get cpu%d device\n", __func__, i);
+-			return -ENODEV;
+-		}
+-
+-		_put_cluster_clk_and_freq_table(cdev, cpumask);
+-	}
+-
+-	atomic_dec(&cluster_usage[cluster]);
+-
+-	return ret;
+-}
+-
+-/* Per-CPU initialization */
+-static int bL_cpufreq_init(struct cpufreq_policy *policy)
+-{
+-	u32 cur_cluster = cpu_to_cluster(policy->cpu);
+-	struct device *cpu_dev;
+-	int ret;
+-
+-	cpu_dev = get_cpu_device(policy->cpu);
+-	if (!cpu_dev) {
+-		pr_err("%s: failed to get cpu%d device\n", __func__,
+-				policy->cpu);
+-		return -ENODEV;
+-	}
+-
+-	if (cur_cluster < MAX_CLUSTERS) {
+-		int cpu;
+-
+-		cpumask_copy(policy->cpus, topology_core_cpumask(policy->cpu));
+-
+-		for_each_cpu(cpu, policy->cpus)
+-			per_cpu(physical_cluster, cpu) = cur_cluster;
+-	} else {
+-		/* Assumption: during init, we are always running on A15 */
+-		per_cpu(physical_cluster, policy->cpu) = A15_CLUSTER;
+-	}
+-
+-	ret = get_cluster_clk_and_freq_table(cpu_dev, policy->cpus);
+-	if (ret)
+-		return ret;
+-
+-	policy->freq_table = freq_table[cur_cluster];
+-	policy->cpuinfo.transition_latency =
+-				arm_bL_ops->get_transition_latency(cpu_dev);
+-
+-	dev_pm_opp_of_register_em(policy->cpus);
+-
+-	if (is_bL_switching_enabled())
+-		per_cpu(cpu_last_req_freq, policy->cpu) = clk_get_cpu_rate(policy->cpu);
+-
+-	dev_info(cpu_dev, "%s: CPU %d initialized\n", __func__, policy->cpu);
+-	return 0;
+-}
+-
+-static int bL_cpufreq_exit(struct cpufreq_policy *policy)
+-{
+-	struct device *cpu_dev;
+-	int cur_cluster = cpu_to_cluster(policy->cpu);
+-
+-	if (cur_cluster < MAX_CLUSTERS) {
+-		cpufreq_cooling_unregister(cdev[cur_cluster]);
+-		cdev[cur_cluster] = NULL;
+-	}
+-
+-	cpu_dev = get_cpu_device(policy->cpu);
+-	if (!cpu_dev) {
+-		pr_err("%s: failed to get cpu%d device\n", __func__,
+-				policy->cpu);
+-		return -ENODEV;
+-	}
+-
+-	put_cluster_clk_and_freq_table(cpu_dev, policy->related_cpus);
+-	dev_dbg(cpu_dev, "%s: Exited, cpu: %d\n", __func__, policy->cpu);
+-
+-	return 0;
+-}
+-
+-static void bL_cpufreq_ready(struct cpufreq_policy *policy)
+-{
+-	int cur_cluster = cpu_to_cluster(policy->cpu);
+-
+-	/* Do not register a cpu_cooling device if we are in IKS mode */
+-	if (cur_cluster >= MAX_CLUSTERS)
+-		return;
+-
+-	cdev[cur_cluster] = of_cpufreq_cooling_register(policy);
+-}
+-
+-static struct cpufreq_driver bL_cpufreq_driver = {
+-	.name			= "arm-big-little",
+-	.flags			= CPUFREQ_STICKY |
+-					CPUFREQ_HAVE_GOVERNOR_PER_POLICY |
+-					CPUFREQ_NEED_INITIAL_FREQ_CHECK,
+-	.verify			= cpufreq_generic_frequency_table_verify,
+-	.target_index		= bL_cpufreq_set_target,
+-	.get			= bL_cpufreq_get_rate,
+-	.init			= bL_cpufreq_init,
+-	.exit			= bL_cpufreq_exit,
+-	.ready			= bL_cpufreq_ready,
+-	.attr			= cpufreq_generic_attr,
+-};
+-
+-#ifdef CONFIG_BL_SWITCHER
+-static int bL_cpufreq_switcher_notifier(struct notifier_block *nfb,
+-					unsigned long action, void *_arg)
+-{
+-	pr_debug("%s: action: %ld\n", __func__, action);
+-
+-	switch (action) {
+-	case BL_NOTIFY_PRE_ENABLE:
+-	case BL_NOTIFY_PRE_DISABLE:
+-		cpufreq_unregister_driver(&bL_cpufreq_driver);
+-		break;
+-
+-	case BL_NOTIFY_POST_ENABLE:
+-		set_switching_enabled(true);
+-		cpufreq_register_driver(&bL_cpufreq_driver);
+-		break;
+-
+-	case BL_NOTIFY_POST_DISABLE:
+-		set_switching_enabled(false);
+-		cpufreq_register_driver(&bL_cpufreq_driver);
+-		break;
+-
+-	default:
+-		return NOTIFY_DONE;
+-	}
+-
+-	return NOTIFY_OK;
+-}
+-
+-static struct notifier_block bL_switcher_notifier = {
+-	.notifier_call = bL_cpufreq_switcher_notifier,
+-};
+-
+-static int __bLs_register_notifier(void)
+-{
+-	return bL_switcher_register_notifier(&bL_switcher_notifier);
+-}
+-
+-static int __bLs_unregister_notifier(void)
+-{
+-	return bL_switcher_unregister_notifier(&bL_switcher_notifier);
+-}
+-#else
+-static int __bLs_register_notifier(void) { return 0; }
+-static int __bLs_unregister_notifier(void) { return 0; }
+-#endif
+-
+-int bL_cpufreq_register(const struct cpufreq_arm_bL_ops *ops)
+-{
+-	int ret, i;
+-
+-	if (arm_bL_ops) {
+-		pr_debug("%s: Already registered: %s, exiting\n", __func__,
+-				arm_bL_ops->name);
+-		return -EBUSY;
+-	}
+-
+-	if (!ops || !strlen(ops->name) || !ops->init_opp_table ||
+-	    !ops->get_transition_latency) {
+-		pr_err("%s: Invalid arm_bL_ops, exiting\n", __func__);
+-		return -ENODEV;
+-	}
+-
+-	arm_bL_ops = ops;
+-
+-	set_switching_enabled(bL_switcher_get_enabled());
+-
+-	for (i = 0; i < MAX_CLUSTERS; i++)
+-		mutex_init(&cluster_lock[i]);
+-
+-	ret = cpufreq_register_driver(&bL_cpufreq_driver);
+-	if (ret) {
+-		pr_info("%s: Failed registering platform driver: %s, err: %d\n",
+-				__func__, ops->name, ret);
+-		arm_bL_ops = NULL;
+-	} else {
+-		ret = __bLs_register_notifier();
+-		if (ret) {
+-			cpufreq_unregister_driver(&bL_cpufreq_driver);
+-			arm_bL_ops = NULL;
+-		} else {
+-			pr_info("%s: Registered platform driver: %s\n",
+-					__func__, ops->name);
+-		}
+-	}
+-
+-	bL_switcher_put_enabled();
+-	return ret;
+-}
+-EXPORT_SYMBOL_GPL(bL_cpufreq_register);
+-
+-void bL_cpufreq_unregister(const struct cpufreq_arm_bL_ops *ops)
+-{
+-	if (arm_bL_ops != ops) {
+-		pr_err("%s: Registered with: %s, can't unregister, exiting\n",
+-				__func__, arm_bL_ops->name);
+-		return;
+-	}
+-
+-	bL_switcher_get_enabled();
+-	__bLs_unregister_notifier();
+-	cpufreq_unregister_driver(&bL_cpufreq_driver);
+-	bL_switcher_put_enabled();
+-	pr_info("%s: Un-registered platform driver: %s\n", __func__,
+-			arm_bL_ops->name);
+-	arm_bL_ops = NULL;
+-}
+-EXPORT_SYMBOL_GPL(bL_cpufreq_unregister);
+-
+-MODULE_AUTHOR("Viresh Kumar <viresh.kumar@linaro.org>");
+-MODULE_DESCRIPTION("Generic ARM big LITTLE cpufreq driver");
+-MODULE_LICENSE("GPL v2");
+diff --git a/drivers/cpufreq/arm_big_little.h b/drivers/cpufreq/arm_big_little.h
+deleted file mode 100644
+index 88a176e466c8..000000000000
+--- a/drivers/cpufreq/arm_big_little.h
++++ /dev/null
+@@ -1,43 +0,0 @@
+-/*
+- * ARM big.LITTLE platform's CPUFreq header file
+- *
+- * Copyright (C) 2013 ARM Ltd.
+- * Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
+- *
+- * Copyright (C) 2013 Linaro.
+- * Viresh Kumar <viresh.kumar@linaro.org>
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License version 2 as
+- * published by the Free Software Foundation.
+- *
+- * This program is distributed "as is" WITHOUT ANY WARRANTY of any
+- * kind, whether express or implied; without even the implied warranty
+- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+- * GNU General Public License for more details.
+- */
+-#ifndef CPUFREQ_ARM_BIG_LITTLE_H
+-#define CPUFREQ_ARM_BIG_LITTLE_H
+-
+-#include <linux/cpufreq.h>
+-#include <linux/device.h>
+-#include <linux/types.h>
+-
+-struct cpufreq_arm_bL_ops {
+-	char name[CPUFREQ_NAME_LEN];
+-
+-	/*
+-	 * This must set opp table for cpu_dev in a similar way as done by
+-	 * dev_pm_opp_of_add_table().
+-	 */
+-	int (*init_opp_table)(const struct cpumask *cpumask);
+-
+-	/* Optional */
+-	int (*get_transition_latency)(struct device *cpu_dev);
+-	void (*free_opp_table)(const struct cpumask *cpumask);
+-};
+-
+-int bL_cpufreq_register(const struct cpufreq_arm_bL_ops *ops);
+-void bL_cpufreq_unregister(const struct cpufreq_arm_bL_ops *ops);
+-
+-#endif /* CPUFREQ_ARM_BIG_LITTLE_H */
+diff --git a/drivers/cpufreq/vexpress-spc-cpufreq.c b/drivers/cpufreq/vexpress-spc-cpufreq.c
+index 53237289e606..622dc42e42b1 100644
+--- a/drivers/cpufreq/vexpress-spc-cpufreq.c
++++ b/drivers/cpufreq/vexpress-spc-cpufreq.c
+@@ -1,31 +1,660 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+  * Versatile Express SPC CPUFreq Interface driver
+  *
+- * It provides necessary ops to arm_big_little cpufreq driver.
++ * Copyright (C) 2013 - 2019 ARM Ltd.
++ * Sudeep Holla <sudeep.holla@arm.com>
+  *
+- * Copyright (C) 2013 ARM Ltd.
+- * Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License version 2 as
+- * published by the Free Software Foundation.
+- *
+- * This program is distributed "as is" WITHOUT ANY WARRANTY of any
+- * kind, whether express or implied; without even the implied warranty
+- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+- * GNU General Public License for more details.
++ * Copyright (C) 2013 Linaro.
++ * Viresh Kumar <viresh.kumar@linaro.org>
+  */
+ 
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ 
++#include <linux/clk.h>
+ #include <linux/cpu.h>
+ #include <linux/cpufreq.h>
++#include <linux/cpumask.h>
++#include <linux/cpu_cooling.h>
++#include <linux/device.h>
+ #include <linux/module.h>
++#include <linux/mutex.h>
++#include <linux/of_platform.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm_opp.h>
++#include <linux/slab.h>
++#include <linux/topology.h>
+ #include <linux/types.h>
+ 
+-#include "arm_big_little.h"
++struct cpufreq_arm_bL_ops {
++	char name[CPUFREQ_NAME_LEN];
++
++	/*
++	 * This must set opp table for cpu_dev in a similar way as done by
++	 * dev_pm_opp_of_add_table().
++	 */
++	int (*init_opp_table)(const struct cpumask *cpumask);
++
++	/* Optional */
++	int (*get_transition_latency)(struct device *cpu_dev);
++	void (*free_opp_table)(const struct cpumask *cpumask);
++};
++
++/* Currently we support only two clusters */
++#define A15_CLUSTER	0
++#define A7_CLUSTER	1
++#define MAX_CLUSTERS	2
++
++#ifdef CONFIG_BL_SWITCHER
++#include <asm/bL_switcher.h>
++static bool bL_switching_enabled;
++#define is_bL_switching_enabled()	bL_switching_enabled
++#define set_switching_enabled(x)	(bL_switching_enabled = (x))
++#else
++#define is_bL_switching_enabled()	false
++#define set_switching_enabled(x)	do { } while (0)
++#define bL_switch_request(...)		do { } while (0)
++#define bL_switcher_put_enabled()	do { } while (0)
++#define bL_switcher_get_enabled()	do { } while (0)
++#endif
++
++#define ACTUAL_FREQ(cluster, freq)  ((cluster == A7_CLUSTER) ? freq << 1 : freq)
++#define VIRT_FREQ(cluster, freq)    ((cluster == A7_CLUSTER) ? freq >> 1 : freq)
++
++static struct thermal_cooling_device *cdev[MAX_CLUSTERS];
++static const struct cpufreq_arm_bL_ops *arm_bL_ops;
++static struct clk *clk[MAX_CLUSTERS];
++static struct cpufreq_frequency_table *freq_table[MAX_CLUSTERS + 1];
++static atomic_t cluster_usage[MAX_CLUSTERS + 1];
++
++static unsigned int clk_big_min;	/* (Big) clock frequencies */
++static unsigned int clk_little_max;	/* Maximum clock frequency (Little) */
++
++static DEFINE_PER_CPU(unsigned int, physical_cluster);
++static DEFINE_PER_CPU(unsigned int, cpu_last_req_freq);
++
++static struct mutex cluster_lock[MAX_CLUSTERS];
++
++static inline int raw_cpu_to_cluster(int cpu)
++{
++	return topology_physical_package_id(cpu);
++}
++
++static inline int cpu_to_cluster(int cpu)
++{
++	return is_bL_switching_enabled() ?
++		MAX_CLUSTERS : raw_cpu_to_cluster(cpu);
++}
++
++static unsigned int find_cluster_maxfreq(int cluster)
++{
++	int j;
++	u32 max_freq = 0, cpu_freq;
++
++	for_each_online_cpu(j) {
++		cpu_freq = per_cpu(cpu_last_req_freq, j);
++
++		if ((cluster == per_cpu(physical_cluster, j)) &&
++				(max_freq < cpu_freq))
++			max_freq = cpu_freq;
++	}
++
++	pr_debug("%s: cluster: %d, max freq: %d\n", __func__, cluster,
++			max_freq);
++
++	return max_freq;
++}
++
++static unsigned int clk_get_cpu_rate(unsigned int cpu)
++{
++	u32 cur_cluster = per_cpu(physical_cluster, cpu);
++	u32 rate = clk_get_rate(clk[cur_cluster]) / 1000;
++
++	/* For switcher we use virtual A7 clock rates */
++	if (is_bL_switching_enabled())
++		rate = VIRT_FREQ(cur_cluster, rate);
++
++	pr_debug("%s: cpu: %d, cluster: %d, freq: %u\n", __func__, cpu,
++			cur_cluster, rate);
++
++	return rate;
++}
++
++static unsigned int bL_cpufreq_get_rate(unsigned int cpu)
++{
++	if (is_bL_switching_enabled()) {
++		pr_debug("%s: freq: %d\n", __func__, per_cpu(cpu_last_req_freq,
++					cpu));
++
++		return per_cpu(cpu_last_req_freq, cpu);
++	} else {
++		return clk_get_cpu_rate(cpu);
++	}
++}
++
++static unsigned int
++bL_cpufreq_set_rate(u32 cpu, u32 old_cluster, u32 new_cluster, u32 rate)
++{
++	u32 new_rate, prev_rate;
++	int ret;
++	bool bLs = is_bL_switching_enabled();
++
++	mutex_lock(&cluster_lock[new_cluster]);
++
++	if (bLs) {
++		prev_rate = per_cpu(cpu_last_req_freq, cpu);
++		per_cpu(cpu_last_req_freq, cpu) = rate;
++		per_cpu(physical_cluster, cpu) = new_cluster;
++
++		new_rate = find_cluster_maxfreq(new_cluster);
++		new_rate = ACTUAL_FREQ(new_cluster, new_rate);
++	} else {
++		new_rate = rate;
++	}
++
++	pr_debug("%s: cpu: %d, old cluster: %d, new cluster: %d, freq: %d\n",
++			__func__, cpu, old_cluster, new_cluster, new_rate);
++
++	ret = clk_set_rate(clk[new_cluster], new_rate * 1000);
++	if (!ret) {
++		/*
++		 * FIXME: clk_set_rate hasn't returned an error here however it
++		 * may be that clk_change_rate failed due to hardware or
++		 * firmware issues and wasn't able to report that due to the
++		 * current design of the clk core layer. To work around this
++		 * problem we will read back the clock rate and check it is
++		 * correct. This needs to be removed once clk core is fixed.
++		 */
++		if (clk_get_rate(clk[new_cluster]) != new_rate * 1000)
++			ret = -EIO;
++	}
++
++	if (WARN_ON(ret)) {
++		pr_err("clk_set_rate failed: %d, new cluster: %d\n", ret,
++				new_cluster);
++		if (bLs) {
++			per_cpu(cpu_last_req_freq, cpu) = prev_rate;
++			per_cpu(physical_cluster, cpu) = old_cluster;
++		}
++
++		mutex_unlock(&cluster_lock[new_cluster]);
++
++		return ret;
++	}
++
++	mutex_unlock(&cluster_lock[new_cluster]);
++
++	/* Recalc freq for old cluster when switching clusters */
++	if (old_cluster != new_cluster) {
++		pr_debug("%s: cpu: %d, old cluster: %d, new cluster: %d\n",
++				__func__, cpu, old_cluster, new_cluster);
++
++		/* Switch cluster */
++		bL_switch_request(cpu, new_cluster);
++
++		mutex_lock(&cluster_lock[old_cluster]);
++
++		/* Set freq of old cluster if there are cpus left on it */
++		new_rate = find_cluster_maxfreq(old_cluster);
++		new_rate = ACTUAL_FREQ(old_cluster, new_rate);
++
++		if (new_rate) {
++			pr_debug("%s: Updating rate of old cluster: %d, to freq: %d\n",
++					__func__, old_cluster, new_rate);
++
++			if (clk_set_rate(clk[old_cluster], new_rate * 1000))
++				pr_err("%s: clk_set_rate failed: %d, old cluster: %d\n",
++						__func__, ret, old_cluster);
++		}
++		mutex_unlock(&cluster_lock[old_cluster]);
++	}
++
++	return 0;
++}
++
++/* Set clock frequency */
++static int bL_cpufreq_set_target(struct cpufreq_policy *policy,
++		unsigned int index)
++{
++	u32 cpu = policy->cpu, cur_cluster, new_cluster, actual_cluster;
++	unsigned int freqs_new;
++	int ret;
++
++	cur_cluster = cpu_to_cluster(cpu);
++	new_cluster = actual_cluster = per_cpu(physical_cluster, cpu);
++
++	freqs_new = freq_table[cur_cluster][index].frequency;
++
++	if (is_bL_switching_enabled()) {
++		if ((actual_cluster == A15_CLUSTER) &&
++				(freqs_new < clk_big_min)) {
++			new_cluster = A7_CLUSTER;
++		} else if ((actual_cluster == A7_CLUSTER) &&
++				(freqs_new > clk_little_max)) {
++			new_cluster = A15_CLUSTER;
++		}
++	}
++
++	ret = bL_cpufreq_set_rate(cpu, actual_cluster, new_cluster, freqs_new);
++
++	if (!ret) {
++		arch_set_freq_scale(policy->related_cpus, freqs_new,
++				    policy->cpuinfo.max_freq);
++	}
++
++	return ret;
++}
++
++static inline u32 get_table_count(struct cpufreq_frequency_table *table)
++{
++	int count;
++
++	for (count = 0; table[count].frequency != CPUFREQ_TABLE_END; count++)
++		;
++
++	return count;
++}
++
++/* get the minimum frequency in the cpufreq_frequency_table */
++static inline u32 get_table_min(struct cpufreq_frequency_table *table)
++{
++	struct cpufreq_frequency_table *pos;
++	uint32_t min_freq = ~0;
++	cpufreq_for_each_entry(pos, table)
++		if (pos->frequency < min_freq)
++			min_freq = pos->frequency;
++	return min_freq;
++}
++
++/* get the maximum frequency in the cpufreq_frequency_table */
++static inline u32 get_table_max(struct cpufreq_frequency_table *table)
++{
++	struct cpufreq_frequency_table *pos;
++	uint32_t max_freq = 0;
++	cpufreq_for_each_entry(pos, table)
++		if (pos->frequency > max_freq)
++			max_freq = pos->frequency;
++	return max_freq;
++}
++
++static int merge_cluster_tables(void)
++{
++	int i, j, k = 0, count = 1;
++	struct cpufreq_frequency_table *table;
++
++	for (i = 0; i < MAX_CLUSTERS; i++)
++		count += get_table_count(freq_table[i]);
++
++	table = kcalloc(count, sizeof(*table), GFP_KERNEL);
++	if (!table)
++		return -ENOMEM;
++
++	freq_table[MAX_CLUSTERS] = table;
++
++	/* Add in reverse order to get freqs in increasing order */
++	for (i = MAX_CLUSTERS - 1; i >= 0; i--) {
++		for (j = 0; freq_table[i][j].frequency != CPUFREQ_TABLE_END;
++				j++) {
++			table[k].frequency = VIRT_FREQ(i,
++					freq_table[i][j].frequency);
++			pr_debug("%s: index: %d, freq: %d\n", __func__, k,
++					table[k].frequency);
++			k++;
++		}
++	}
++
++	table[k].driver_data = k;
++	table[k].frequency = CPUFREQ_TABLE_END;
++
++	pr_debug("%s: End, table: %p, count: %d\n", __func__, table, k);
++
++	return 0;
++}
++
++static void _put_cluster_clk_and_freq_table(struct device *cpu_dev,
++					    const struct cpumask *cpumask)
++{
++	u32 cluster = raw_cpu_to_cluster(cpu_dev->id);
++
++	if (!freq_table[cluster])
++		return;
++
++	clk_put(clk[cluster]);
++	dev_pm_opp_free_cpufreq_table(cpu_dev, &freq_table[cluster]);
++	if (arm_bL_ops->free_opp_table)
++		arm_bL_ops->free_opp_table(cpumask);
++	dev_dbg(cpu_dev, "%s: cluster: %d\n", __func__, cluster);
++}
++
++static void put_cluster_clk_and_freq_table(struct device *cpu_dev,
++					   const struct cpumask *cpumask)
++{
++	u32 cluster = cpu_to_cluster(cpu_dev->id);
++	int i;
++
++	if (atomic_dec_return(&cluster_usage[cluster]))
++		return;
++
++	if (cluster < MAX_CLUSTERS)
++		return _put_cluster_clk_and_freq_table(cpu_dev, cpumask);
++
++	for_each_present_cpu(i) {
++		struct device *cdev = get_cpu_device(i);
++		if (!cdev) {
++			pr_err("%s: failed to get cpu%d device\n", __func__, i);
++			return;
++		}
++
++		_put_cluster_clk_and_freq_table(cdev, cpumask);
++	}
++
++	/* free virtual table */
++	kfree(freq_table[cluster]);
++}
++
++static int _get_cluster_clk_and_freq_table(struct device *cpu_dev,
++					   const struct cpumask *cpumask)
++{
++	u32 cluster = raw_cpu_to_cluster(cpu_dev->id);
++	int ret;
++
++	if (freq_table[cluster])
++		return 0;
++
++	ret = arm_bL_ops->init_opp_table(cpumask);
++	if (ret) {
++		dev_err(cpu_dev, "%s: init_opp_table failed, cpu: %d, err: %d\n",
++				__func__, cpu_dev->id, ret);
++		goto out;
++	}
++
++	ret = dev_pm_opp_init_cpufreq_table(cpu_dev, &freq_table[cluster]);
++	if (ret) {
++		dev_err(cpu_dev, "%s: failed to init cpufreq table, cpu: %d, err: %d\n",
++				__func__, cpu_dev->id, ret);
++		goto free_opp_table;
++	}
++
++	clk[cluster] = clk_get(cpu_dev, NULL);
++	if (!IS_ERR(clk[cluster])) {
++		dev_dbg(cpu_dev, "%s: clk: %p & freq table: %p, cluster: %d\n",
++				__func__, clk[cluster], freq_table[cluster],
++				cluster);
++		return 0;
++	}
++
++	dev_err(cpu_dev, "%s: Failed to get clk for cpu: %d, cluster: %d\n",
++			__func__, cpu_dev->id, cluster);
++	ret = PTR_ERR(clk[cluster]);
++	dev_pm_opp_free_cpufreq_table(cpu_dev, &freq_table[cluster]);
++
++free_opp_table:
++	if (arm_bL_ops->free_opp_table)
++		arm_bL_ops->free_opp_table(cpumask);
++out:
++	dev_err(cpu_dev, "%s: Failed to get data for cluster: %d\n", __func__,
++			cluster);
++	return ret;
++}
++
++static int get_cluster_clk_and_freq_table(struct device *cpu_dev,
++					  const struct cpumask *cpumask)
++{
++	u32 cluster = cpu_to_cluster(cpu_dev->id);
++	int i, ret;
++
++	if (atomic_inc_return(&cluster_usage[cluster]) != 1)
++		return 0;
++
++	if (cluster < MAX_CLUSTERS) {
++		ret = _get_cluster_clk_and_freq_table(cpu_dev, cpumask);
++		if (ret)
++			atomic_dec(&cluster_usage[cluster]);
++		return ret;
++	}
++
++	/*
++	 * Get data for all clusters and fill virtual cluster with a merge of
++	 * both
++	 */
++	for_each_present_cpu(i) {
++		struct device *cdev = get_cpu_device(i);
++		if (!cdev) {
++			pr_err("%s: failed to get cpu%d device\n", __func__, i);
++			return -ENODEV;
++		}
++
++		ret = _get_cluster_clk_and_freq_table(cdev, cpumask);
++		if (ret)
++			goto put_clusters;
++	}
++
++	ret = merge_cluster_tables();
++	if (ret)
++		goto put_clusters;
++
++	/* Assuming 2 cluster, set clk_big_min and clk_little_max */
++	clk_big_min = get_table_min(freq_table[0]);
++	clk_little_max = VIRT_FREQ(1, get_table_max(freq_table[1]));
++
++	pr_debug("%s: cluster: %d, clk_big_min: %d, clk_little_max: %d\n",
++			__func__, cluster, clk_big_min, clk_little_max);
++
++	return 0;
++
++put_clusters:
++	for_each_present_cpu(i) {
++		struct device *cdev = get_cpu_device(i);
++		if (!cdev) {
++			pr_err("%s: failed to get cpu%d device\n", __func__, i);
++			return -ENODEV;
++		}
++
++		_put_cluster_clk_and_freq_table(cdev, cpumask);
++	}
++
++	atomic_dec(&cluster_usage[cluster]);
++
++	return ret;
++}
++
++/* Per-CPU initialization */
++static int bL_cpufreq_init(struct cpufreq_policy *policy)
++{
++	u32 cur_cluster = cpu_to_cluster(policy->cpu);
++	struct device *cpu_dev;
++	int ret;
++
++	cpu_dev = get_cpu_device(policy->cpu);
++	if (!cpu_dev) {
++		pr_err("%s: failed to get cpu%d device\n", __func__,
++				policy->cpu);
++		return -ENODEV;
++	}
++
++	if (cur_cluster < MAX_CLUSTERS) {
++		int cpu;
++
++		cpumask_copy(policy->cpus, topology_core_cpumask(policy->cpu));
++
++		for_each_cpu(cpu, policy->cpus)
++			per_cpu(physical_cluster, cpu) = cur_cluster;
++	} else {
++		/* Assumption: during init, we are always running on A15 */
++		per_cpu(physical_cluster, policy->cpu) = A15_CLUSTER;
++	}
++
++	ret = get_cluster_clk_and_freq_table(cpu_dev, policy->cpus);
++	if (ret)
++		return ret;
++
++	policy->freq_table = freq_table[cur_cluster];
++	policy->cpuinfo.transition_latency =
++				arm_bL_ops->get_transition_latency(cpu_dev);
++
++	dev_pm_opp_of_register_em(policy->cpus);
++
++	if (is_bL_switching_enabled())
++		per_cpu(cpu_last_req_freq, policy->cpu) = clk_get_cpu_rate(policy->cpu);
++
++	dev_info(cpu_dev, "%s: CPU %d initialized\n", __func__, policy->cpu);
++	return 0;
++}
++
++static int bL_cpufreq_exit(struct cpufreq_policy *policy)
++{
++	struct device *cpu_dev;
++	int cur_cluster = cpu_to_cluster(policy->cpu);
++
++	if (cur_cluster < MAX_CLUSTERS) {
++		cpufreq_cooling_unregister(cdev[cur_cluster]);
++		cdev[cur_cluster] = NULL;
++	}
++
++	cpu_dev = get_cpu_device(policy->cpu);
++	if (!cpu_dev) {
++		pr_err("%s: failed to get cpu%d device\n", __func__,
++				policy->cpu);
++		return -ENODEV;
++	}
++
++	put_cluster_clk_and_freq_table(cpu_dev, policy->related_cpus);
++	dev_dbg(cpu_dev, "%s: Exited, cpu: %d\n", __func__, policy->cpu);
++
++	return 0;
++}
++
++static void bL_cpufreq_ready(struct cpufreq_policy *policy)
++{
++	int cur_cluster = cpu_to_cluster(policy->cpu);
++
++	/* Do not register a cpu_cooling device if we are in IKS mode */
++	if (cur_cluster >= MAX_CLUSTERS)
++		return;
++
++	cdev[cur_cluster] = of_cpufreq_cooling_register(policy);
++}
++
++static struct cpufreq_driver bL_cpufreq_driver = {
++	.name			= "arm-big-little",
++	.flags			= CPUFREQ_STICKY |
++					CPUFREQ_HAVE_GOVERNOR_PER_POLICY |
++					CPUFREQ_NEED_INITIAL_FREQ_CHECK,
++	.verify			= cpufreq_generic_frequency_table_verify,
++	.target_index		= bL_cpufreq_set_target,
++	.get			= bL_cpufreq_get_rate,
++	.init			= bL_cpufreq_init,
++	.exit			= bL_cpufreq_exit,
++	.ready			= bL_cpufreq_ready,
++	.attr			= cpufreq_generic_attr,
++};
++
++#ifdef CONFIG_BL_SWITCHER
++static int bL_cpufreq_switcher_notifier(struct notifier_block *nfb,
++					unsigned long action, void *_arg)
++{
++	pr_debug("%s: action: %ld\n", __func__, action);
++
++	switch (action) {
++	case BL_NOTIFY_PRE_ENABLE:
++	case BL_NOTIFY_PRE_DISABLE:
++		cpufreq_unregister_driver(&bL_cpufreq_driver);
++		break;
++
++	case BL_NOTIFY_POST_ENABLE:
++		set_switching_enabled(true);
++		cpufreq_register_driver(&bL_cpufreq_driver);
++		break;
++
++	case BL_NOTIFY_POST_DISABLE:
++		set_switching_enabled(false);
++		cpufreq_register_driver(&bL_cpufreq_driver);
++		break;
++
++	default:
++		return NOTIFY_DONE;
++	}
++
++	return NOTIFY_OK;
++}
++
++static struct notifier_block bL_switcher_notifier = {
++	.notifier_call = bL_cpufreq_switcher_notifier,
++};
++
++static int __bLs_register_notifier(void)
++{
++	return bL_switcher_register_notifier(&bL_switcher_notifier);
++}
++
++static int __bLs_unregister_notifier(void)
++{
++	return bL_switcher_unregister_notifier(&bL_switcher_notifier);
++}
++#else
++static int __bLs_register_notifier(void) { return 0; }
++static int __bLs_unregister_notifier(void) { return 0; }
++#endif
++
++int bL_cpufreq_register(const struct cpufreq_arm_bL_ops *ops)
++{
++	int ret, i;
++
++	if (arm_bL_ops) {
++		pr_debug("%s: Already registered: %s, exiting\n", __func__,
++				arm_bL_ops->name);
++		return -EBUSY;
++	}
++
++	if (!ops || !strlen(ops->name) || !ops->init_opp_table ||
++	    !ops->get_transition_latency) {
++		pr_err("%s: Invalid arm_bL_ops, exiting\n", __func__);
++		return -ENODEV;
++	}
++
++	arm_bL_ops = ops;
++
++	set_switching_enabled(bL_switcher_get_enabled());
++
++	for (i = 0; i < MAX_CLUSTERS; i++)
++		mutex_init(&cluster_lock[i]);
++
++	ret = cpufreq_register_driver(&bL_cpufreq_driver);
++	if (ret) {
++		pr_info("%s: Failed registering platform driver: %s, err: %d\n",
++				__func__, ops->name, ret);
++		arm_bL_ops = NULL;
++	} else {
++		ret = __bLs_register_notifier();
++		if (ret) {
++			cpufreq_unregister_driver(&bL_cpufreq_driver);
++			arm_bL_ops = NULL;
++		} else {
++			pr_info("%s: Registered platform driver: %s\n",
++					__func__, ops->name);
++		}
++	}
++
++	bL_switcher_put_enabled();
++	return ret;
++}
++
++void bL_cpufreq_unregister(const struct cpufreq_arm_bL_ops *ops)
++{
++	if (arm_bL_ops != ops) {
++		pr_err("%s: Registered with: %s, can't unregister, exiting\n",
++				__func__, arm_bL_ops->name);
++		return;
++	}
++
++	bL_switcher_get_enabled();
++	__bLs_unregister_notifier();
++	cpufreq_unregister_driver(&bL_cpufreq_driver);
++	bL_switcher_put_enabled();
++	pr_info("%s: Un-registered platform driver: %s\n", __func__,
++			arm_bL_ops->name);
++	arm_bL_ops = NULL;
++}
+ 
+ static int ve_spc_init_opp_table(const struct cpumask *cpumask)
  {
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!vf->vring[i].ready)
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bre=
-ak;
->>
->>
->> Looks like error should be returned here?
-> agreed!
->>
->>
->>> +
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!vf->vring[i].size)
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bre=
-ak;
->>> +
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!vf->vring[i].desc || !=
-vf->vring[i].avail ||
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 !vf=
-->vring[i].used)
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bre=
-ak;
->>> +=C2=A0=C2=A0=C2=A0 }
->>> +=C2=A0=C2=A0=C2=A0 vf->nr_vring =3D i;
->>> +
->>> +=C2=A0=C2=A0=C2=A0 ret =3D ifcvf_start_hw(vf);
->>> +=C2=A0=C2=A0=C2=A0 return ret;
->>> +}
->>> +
->>> +static int ifcvf_stop_datapath(void *private)
->>> +{
->>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_hw *vf =3D IFC_PRIVATE_TO_VF(private);
->>> +=C2=A0=C2=A0=C2=A0 int i;
->>> +
->>> +=C2=A0=C2=A0=C2=A0 for (i =3D 0; i < IFCVF_MAX_QUEUES; i++)
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vf->vring[i].cb.callback =
-=3D NULL;
->>
->>
->> Any synchronization is needed for the vq irq handler?
-> I think even we set callback =3D NULL, the code is still there, on-going=
-=20
-> routines would not be effected.
-
-
-Ok I think you mean when ifcvf_stop_hw() return, hardware will not=20
-respond to e.g kick and other events etc.
-
-
->>
->>
->>> +
->>> +=C2=A0=C2=A0=C2=A0 ifcvf_stop_hw(vf);
->>> +
->>> +=C2=A0=C2=A0=C2=A0 return 0;
->>> +}
->>> +
->>> +static void ifcvf_reset_vring(struct ifcvf_adapter *adapter)
->>> +{
->>> +=C2=A0=C2=A0=C2=A0 int i;
->>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_hw *vf =3D IFC_PRIVATE_TO_VF(adapter);
->>> +
->>> +=C2=A0=C2=A0=C2=A0 for (i =3D 0; i < IFCVF_MAX_QUEUE_PAIRS * 2; i++) {
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vf->vring[i].last_used_idx =
-=3D 0;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vf->vring[i].last_avail_idx=
- =3D 0;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vf->vring[i].desc =3D 0;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vf->vring[i].avail =3D 0;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vf->vring[i].used =3D 0;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vf->vring[i].ready =3D 0;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vf->vring->cb.callback =3D =
-NULL;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vf->vring->cb.private =3D N=
-ULL;
->>> +=C2=A0=C2=A0=C2=A0 }
->>> +}
->>> +
->>> +static void ifcvf_mdev_set_status(struct mdev_device *mdev, u8 status)
->>> +{
->>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_adapter *adapter =3D mdev_get_drvdata(=
-mdev);
->>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_hw *vf =3D IFC_PRIVATE_TO_VF(adapter);
->>> +
->>> +=C2=A0=C2=A0=C2=A0 vf->status =3D status;
->>> +
->>> +=C2=A0=C2=A0=C2=A0 if (status =3D=3D 0) {
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ifcvf_stop_datapath(adapter=
-);
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ifcvf_reset_vring(adapter);
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return;
->>> +=C2=A0=C2=A0=C2=A0 }
->>> +
->>> +=C2=A0=C2=A0=C2=A0 if (status & VIRTIO_CONFIG_S_DRIVER_OK) {
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ifcvf_start_datapath(adapte=
-r);
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return;
->>> +=C2=A0=C2=A0=C2=A0 }
->>> +}
->>> +
->>> +static u16 ifcvf_mdev_get_queue_max(struct mdev_device *mdev)
->>> +{
->>> +=C2=A0=C2=A0=C2=A0 return IFCVF_MAX_QUEUES;
->>
->>
->> The name is confusing, it was used to return the maximum queue size.=20
->> In new version of virtio-mdev, the callback was renamed as=20
->> get_vq_num_max().
-> will change that.
->>
->>
->>> +}
->>> +
->>> +static struct virtio_mdev_device_ops ifc_mdev_ops =3D {
->>> +=C2=A0=C2=A0=C2=A0 .get_features=C2=A0 =3D ifcvf_mdev_get_features,
->>> +=C2=A0=C2=A0=C2=A0 .set_features=C2=A0 =3D ifcvf_mdev_set_features,
->>> +=C2=A0=C2=A0=C2=A0 .get_status=C2=A0=C2=A0=C2=A0 =3D ifcvf_mdev_get_st=
-atus,
->>> +=C2=A0=C2=A0=C2=A0 .set_status=C2=A0=C2=A0=C2=A0 =3D ifcvf_mdev_set_st=
-atus,
->>> +=C2=A0=C2=A0=C2=A0 .get_queue_max =3D ifcvf_mdev_get_queue_max,
->>> +=C2=A0=C2=A0=C2=A0 .get_vq_state=C2=A0=C2=A0 =3D ifcvf_mdev_get_vq_sta=
-te,
->>> +=C2=A0=C2=A0=C2=A0 .set_vq_state=C2=A0=C2=A0 =3D ifcvf_mdev_set_vq_sta=
-te,
->>> +=C2=A0=C2=A0=C2=A0 .set_vq_cb=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =3D ifcvf_=
-mdev_set_vq_cb,
->>> +=C2=A0=C2=A0=C2=A0 .set_vq_ready=C2=A0=C2=A0 =3D ifcvf_mdev_set_vq_rea=
-dy,
->>> +=C2=A0=C2=A0=C2=A0 .get_vq_ready=C2=A0=C2=A0=C2=A0 =3D ifcvf_mdev_get_=
-vq_ready,
->>> +=C2=A0=C2=A0=C2=A0 .set_vq_num=C2=A0=C2=A0=C2=A0=C2=A0 =3D ifcvf_mdev_=
-set_vq_num,
->>> +=C2=A0=C2=A0=C2=A0 .set_vq_address =3D ifcvf_mdev_set_vq_address,
->>> +=C2=A0=C2=A0=C2=A0 .kick_vq=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-=3D ifcvf_mdev_kick_vq,
->>> +=C2=A0=C2=A0=C2=A0 .get_generation=C2=A0=C2=A0=C2=A0 =3D ifcvf_mdev_ge=
-t_generation,
->>> +=C2=A0=C2=A0=C2=A0 .get_version=C2=A0=C2=A0=C2=A0 =3D ifcvf_mdev_get_v=
-ersion,
->>> +=C2=A0=C2=A0=C2=A0 .get_device_id=C2=A0=C2=A0=C2=A0 =3D ifcvf_mdev_get=
-_device_id,
->>> +=C2=A0=C2=A0=C2=A0 .get_vendor_id=C2=A0=C2=A0=C2=A0 =3D ifcvf_mdev_get=
-_vendor_id,
->>> +=C2=A0=C2=A0=C2=A0 .get_vq_align=C2=A0=C2=A0=C2=A0 =3D ifcvf_mdev_get_=
-vq_align,
->>> +};
->>
->>
->> set_config/get_config is missing. It looks to me they are not hard,=20
->> just implementing the access to dev_cfg. It's key to make kernel=20
->> virtio driver to work.
->>
->> And in the new version of virito-mdev, features like _F_LOG_ALL=20
->> should be advertised through get_mdev_features.
-> IMHO, currently the driver can work without set/get_config, vhost_mdev=20
-> doesn't call them for now.
-
-
-Yes, but it was required by virtio_mdev for host driver to work, and it=20
-looks to me it's not hard to add them. If possible please add them and=20
-"virtio" type then we can use the ops for both the case of VM and=20
-containers.
-
-
->>
->>
->>> +
->>> +static int ifcvf_init_msix(struct ifcvf_adapter *adapter)
->>> +{
->>> +=C2=A0=C2=A0=C2=A0 int vector, i, ret, irq;
->>> +=C2=A0=C2=A0=C2=A0 struct pci_dev *pdev =3D to_pci_dev(adapter->dev);
->>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_hw *vf =3D &adapter->vf;
->>> +
->>> +=C2=A0=C2=A0=C2=A0 ret =3D pci_alloc_irq_vectors(pdev, IFCVF_MAX_INTR,
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 IFC=
-VF_MAX_INTR, PCI_IRQ_MSIX);
->>> +=C2=A0=C2=A0=C2=A0 if (ret < 0) {
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 IFC_ERR(adapter->dev, "Fail=
-ed to alloc irq vectors.\n");
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
->>> +=C2=A0=C2=A0=C2=A0 }
->>> +
->>> +=C2=A0=C2=A0=C2=A0 for (i =3D 0; i < IFCVF_MAX_QUEUE_PAIRS * 2; i++) {
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vector =3D i + IFCVF_MSI_QU=
-EUE_OFF;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 irq =3D pci_irq_vector(pdev=
-, vector);
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D request_irq(irq, if=
-cvf_intr_handler, 0,
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 pci_name(pdev), &vf->vring[i]);
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret) {
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 IFC=
-_ERR(adapter->dev,
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 "Failed to request irq for vq %d.\n", i);
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret=
-urn ret;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>> +=C2=A0=C2=A0=C2=A0 }
->>
->>
->> Do we need to provide fallback when we can't do per vq MSIX?
-> I think it would be very rarely that can not get enough vectors.
-
-
-Right.
-
-
->>
->>
->>> +
->>> +=C2=A0=C2=A0=C2=A0 return 0;
->>> +}
->>> +
->>> +static void ifcvf_destroy_adapter(struct ifcvf_adapter *adapter)
->>> +{
->>> +=C2=A0=C2=A0=C2=A0 int i, vector, irq;
->>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_hw *vf =3D IFC_PRIVATE_TO_VF(adapter);
->>> +=C2=A0=C2=A0=C2=A0 struct pci_dev *pdev =3D to_pci_dev(adapter->dev);
->>> +
->>> +=C2=A0=C2=A0=C2=A0 for (i =3D 0; i < IFCVF_MAX_QUEUE_PAIRS * 2; i++) {
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vector =3D i + IFCVF_MSI_QU=
-EUE_OFF;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 irq =3D pci_irq_vector(pdev=
-, vector);
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 free_irq(irq, &vf->vring[i]=
-);
->>> +=C2=A0=C2=A0=C2=A0 }
->>> +}
->>> +
->>> +static ssize_t name_show(struct kobject *kobj, struct device *dev,=20
->>> char *buf)
->>> +{
->>> +=C2=A0=C2=A0=C2=A0 const char *name =3D "vhost accelerator (virtio rin=
-g compatible)";
->>> +
->>> +=C2=A0=C2=A0=C2=A0 return sprintf(buf, "%s\n", name);
->>> +}
->>> +MDEV_TYPE_ATTR_RO(name);
->>> +
->>> +static ssize_t device_api_show(struct kobject *kobj, struct device=20
->>> *dev,
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 char *buf)
->>> +{
->>> +=C2=A0=C2=A0=C2=A0 return sprintf(buf, "%s\n", VIRTIO_MDEV_DEVICE_API_=
-STRING);
->>> +}
->>> +MDEV_TYPE_ATTR_RO(device_api);
->>> +
->>> +static ssize_t available_instances_show(struct kobject *kobj,
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct device *dev, char *buf=
-)
->>> +{
->>> +=C2=A0=C2=A0=C2=A0 struct pci_dev *pdev =3D to_pci_dev(dev);
->>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_adapter *adapter =3D pci_get_drvdata(p=
-dev);
->>> +
->>> +=C2=A0=C2=A0=C2=A0 return sprintf(buf, "%d\n", adapter->mdev_count);
->>> +}
->>> +
->>> +MDEV_TYPE_ATTR_RO(available_instances);
->>> +
->>> +static ssize_t type_show(struct kobject *kobj,
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 str=
-uct device *dev, char *buf)
->>> +{
->>> +=C2=A0=C2=A0=C2=A0 return sprintf(buf, "%s\n", "net");
->>> +}
->>> +
->>> +MDEV_TYPE_ATTR_RO(type);
->>> +
->>> +
->>> +static struct attribute *mdev_types_attrs[] =3D {
->>> +=C2=A0=C2=A0=C2=A0 &mdev_type_attr_name.attr,
->>> +=C2=A0=C2=A0=C2=A0 &mdev_type_attr_device_api.attr,
->>> +=C2=A0=C2=A0=C2=A0 &mdev_type_attr_available_instances.attr,
->>> +=C2=A0=C2=A0=C2=A0 &mdev_type_attr_type.attr,
->>> +=C2=A0=C2=A0=C2=A0 NULL,
->>> +};
->>> +
->>> +static struct attribute_group mdev_type_group =3D {
->>> +=C2=A0=C2=A0=C2=A0 .name=C2=A0 =3D "vdpa_virtio",
->>
->>
->> To be consistent, it should be "vhost" or "virtio".
-> agreed!
->>
->>
->>> +=C2=A0=C2=A0=C2=A0 .attrs =3D mdev_types_attrs,
->>> +};
->>> +
->>> +static struct attribute_group *mdev_type_groups[] =3D {
->>> +=C2=A0=C2=A0=C2=A0 &mdev_type_group,
->>> +=C2=A0=C2=A0=C2=A0 NULL,
->>> +};
->>> +
->>> +const struct attribute_group *mdev_dev_groups[] =3D {
->>> +=C2=A0=C2=A0=C2=A0 NULL,
->>> +};
->>> +
->>> +static int ifcvf_mdev_create(struct kobject *kobj, struct=20
->>> mdev_device *mdev)
->>> +{
->>> +=C2=A0=C2=A0=C2=A0 struct device *dev =3D mdev_parent_dev(mdev);
->>> +=C2=A0=C2=A0=C2=A0 struct pci_dev *pdev =3D to_pci_dev(dev);
->>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_adapter *adapter =3D pci_get_drvdata(p=
-dev);
->>> +=C2=A0=C2=A0=C2=A0 int ret =3D 0;
->>> +
->>> +=C2=A0=C2=A0=C2=A0 mutex_lock(&adapter->mdev_lock);
->>> +
->>> +=C2=A0=C2=A0=C2=A0 if (adapter->mdev_count < 1) {
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D -EINVAL;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto out;
->>> +=C2=A0=C2=A0=C2=A0 }
->>> +
->>> +=C2=A0=C2=A0=C2=A0 mdev_set_class_id(mdev, MDEV_ID_VHOST);
->>> +=C2=A0=C2=A0=C2=A0 mdev_set_dev_ops(mdev, &ifc_mdev_ops);
->>> +
->>> +=C2=A0=C2=A0=C2=A0 mdev_set_drvdata(mdev, adapter);
->>> +=C2=A0=C2=A0=C2=A0 mdev_set_iommu_device(mdev_dev(mdev), dev);
->>> +
->>> +=C2=A0=C2=A0=C2=A0 INIT_LIST_HEAD(&adapter->dma_maps);
->>> +=C2=A0=C2=A0=C2=A0 adapter->mdev_count--;
->>> +
->>> +out:
->>> +=C2=A0=C2=A0=C2=A0 mutex_unlock(&adapter->mdev_lock);
->>> +=C2=A0=C2=A0=C2=A0 return ret;
->>> +}
->>> +
->>> +static int ifcvf_mdev_remove(struct mdev_device *mdev)
->>> +{
->>> +=C2=A0=C2=A0=C2=A0 struct device *dev =3D mdev_parent_dev(mdev);
->>> +=C2=A0=C2=A0=C2=A0 struct pci_dev *pdev =3D to_pci_dev(dev);
->>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_adapter *adapter =3D pci_get_drvdata(p=
-dev);
->>> +
->>> +=C2=A0=C2=A0=C2=A0 mutex_lock(&adapter->mdev_lock);
->>> +=C2=A0=C2=A0=C2=A0 adapter->mdev_count++;
->>> +=C2=A0=C2=A0=C2=A0 mutex_unlock(&adapter->mdev_lock);
->>> +
->>> +=C2=A0=C2=A0=C2=A0 return 0;
->>> +}
->>> +
->>> +static struct mdev_parent_ops ifcvf_mdev_fops =3D {
->>> +=C2=A0=C2=A0=C2=A0 .owner=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 =3D THIS_MODULE,
->>> +=C2=A0=C2=A0=C2=A0 .supported_type_groups=C2=A0=C2=A0=C2=A0 =3D mdev_t=
-ype_groups,
->>> +=C2=A0=C2=A0=C2=A0 .mdev_attr_groups=C2=A0=C2=A0=C2=A0 =3D mdev_dev_gr=
-oups,
->>> +=C2=A0=C2=A0=C2=A0 .create=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 =3D ifcvf_mdev_create,
->>> +=C2=A0=C2=A0=C2=A0 .remove=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 =3D ifcvf_mdev_remove,
->>> +};
->>> +
->>> +static int ifcvf_probe(struct pci_dev *pdev, const struct=20
->>> pci_device_id *id)
->>> +{
->>> +=C2=A0=C2=A0=C2=A0 struct device *dev =3D &pdev->dev;
->>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_adapter *adapter;
->>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_hw *vf;
->>> +=C2=A0=C2=A0=C2=A0 int ret, i;
->>> +
->>> +=C2=A0=C2=A0=C2=A0 adapter =3D kzalloc(sizeof(struct ifcvf_adapter), G=
-FP_KERNEL);
->>> +=C2=A0=C2=A0=C2=A0 if (adapter =3D=3D NULL) {
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D -ENOMEM;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto fail;
->>> +=C2=A0=C2=A0=C2=A0 }
->>> +
->>> +=C2=A0=C2=A0=C2=A0 mutex_init(&adapter->mdev_lock);
->>> +=C2=A0=C2=A0=C2=A0 adapter->mdev_count =3D 1;
->>
->>
->> So this is per VF based vDPA implementation, which seems not=20
->> convenient for management.=C2=A0 Anyhow we can control the creation in P=
-F?
->>
->> Thanks
-> the driver scope for now doesn't support that, we can add these=20
-> feature in next releases.
-
-
-Not a must for this series, but to have a better interaction with=20
-management like libvirt, it's better.
-
-Btw, do you have the plan to post PF drivers?
-
-Thanks
-
+@@ -68,4 +697,7 @@ static struct platform_driver ve_spc_cpufreq_platdrv = {
+ };
+ module_platform_driver(ve_spc_cpufreq_platdrv);
+ 
+-MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Viresh Kumar <viresh.kumar@linaro.org>");
++MODULE_AUTHOR("Sudeep Holla <sudeep.holla@arm.com>");
++MODULE_DESCRIPTION("Vexpress SPC ARM big LITTLE cpufreq driver");
++MODULE_LICENSE("GPL v2");
+-- 
+2.17.1
 
