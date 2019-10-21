@@ -2,147 +2,115 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D251CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:27:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F4F5CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:28:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E80EA2084C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:27:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571653641;
-	bh=OB8EEmq7M9s2F15IltrEFSmxXoRA1vIfL6aLQYlWpBs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yE3xsEkCYDqHhyLKbOjuxz7CJt/7Hxw4yYRuJVI8Yk4LIesb4hyC7sGaM5NFPxAfP
-	 19lqKLNn7n11zRdNlNS77wNchc41UrDOjpqe+DxAiB11aQSUlrH0D/fB7u7NuComtG
-	 Znu1Rym8NaOsgCSkzetv8nZoVT1kskIQewehBdh0=
+	by mail.kernel.org (Postfix) with ESMTP id 3FFCD2084C
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:28:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728087AbfJUK1T (ORCPT
+        id S1728115AbfJUK2I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 06:27:19 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40542 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726725AbfJUK1S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 06:27:18 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 60E09B4FC;
-        Mon, 21 Oct 2019 10:27:15 +0000 (UTC)
-Date:   Mon, 21 Oct 2019 12:27:14 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Mel Gorman <mgorman@techsingularity.net>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        Borislav Petkov <bp@alien8.de>, Linux-MM <linux-mm@kvack.org>,
+        Mon, 21 Oct 2019 06:28:08 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:48316 "EHLO foss.arm.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S1726725AbfJUK2H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 06:28:07 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C2CD4493;
+        Mon, 21 Oct 2019 03:27:35 -0700 (PDT)
+Received: from bogus (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 017BE3F718;
+        Mon, 21 Oct 2019 03:27:34 -0700 (PDT)
+Date:   Mon, 21 Oct 2019 11:27:30 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/3] mm, meminit: Recalculate pcpu batch and high limits
- after init completes
-Message-ID: <20191021102714.GH9379@dhcp22.suse.cz>
-References: <20191021094808.28824-1-mgorman@techsingularity.net>
- <20191021094808.28824-2-mgorman@techsingularity.net>
+Subject: Re: [PATCH] cpufreq: flush any pending policy update work scheduled
+ before freeing
+Message-ID: <20191021102730.GA21581@bogus>
+References: <20191017163503.30791-1-sudeep.holla@arm.com>
+ <20191018060247.g5asfuh3kncoj7kl@vireshk-i7>
+ <20191018101924.GA25540@bogus>
+ <4881906.zjS51fuFuv@kreacher>
+ <20191018110632.GB25540@bogus>
+ <20191021021551.bjhf74zeyuqcl4w3@vireshk-i7>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191021094808.28824-2-mgorman@techsingularity.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191021021551.bjhf74zeyuqcl4w3@vireshk-i7>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 21-10-19 10:48:06, Mel Gorman wrote:
-> Deferred memory initialisation updates zone->managed_pages during
-> the initialisation phase but before that finishes, the per-cpu page
-> allocator (pcpu) calculates the number of pages allocated/freed in
-> batches as well as the maximum number of pages allowed on a per-cpu list.
-> As zone->managed_pages is not up to date yet, the pcpu initialisation
-> calculates inappropriately low batch and high values.
-> 
-> This increases zone lock contention quite severely in some cases with the
-> degree of severity depending on how many CPUs share a local zone and the
-> size of the zone. A private report indicated that kernel build times were
-> excessive with extremely high system CPU usage. A perf profile indicated
-> that a large chunk of time was lost on zone->lock contention.
-> 
-> This patch recalculates the pcpu batch and high values after deferred
-> initialisation completes for every populated zone in the system. It
-> was tested on a 2-socket AMD EPYC 2 machine using a kernel compilation
-> workload -- allmodconfig and all available CPUs.
-> 
-> mmtests configuration: config-workload-kernbench-max
-> Configuration was modified to build on a fresh XFS partition.
-> 
-> kernbench
->                                 5.4.0-rc3              5.4.0-rc3
->                                   vanilla           resetpcpu-v2
-> Amean     user-256    13249.50 (   0.00%)    16401.31 * -23.79%*
-> Amean     syst-256    14760.30 (   0.00%)     4448.39 *  69.86%*
-> Amean     elsp-256      162.42 (   0.00%)      119.13 *  26.65%*
-> Stddev    user-256       42.97 (   0.00%)       19.15 (  55.43%)
-> Stddev    syst-256      336.87 (   0.00%)        6.71 (  98.01%)
-> Stddev    elsp-256        2.46 (   0.00%)        0.39 (  84.03%)
-> 
->                    5.4.0-rc3    5.4.0-rc3
->                      vanilla resetpcpu-v2
-> Duration User       39766.24     49221.79
-> Duration System     44298.10     13361.67
-> Duration Elapsed      519.11       388.87
-> 
-> The patch reduces system CPU usage by 69.86% and total build time by
-> 26.65%. The variance of system CPU usage is also much reduced.
-> 
-> Before, this was the breakdown of batch and high values over all zones was.
-> 
->     256               batch: 1
->     256               batch: 63
->     512               batch: 7
->     256               high:  0
->     256               high:  378
->     512               high:  42
-> 
-> 512 pcpu pagesets had a batch limit of 7 and a high limit of 42. After the patch
-> 
->     256               batch: 1
->     768               batch: 63
->     256               high:  0
->     768               high:  378
-> 
-> Cc: stable@vger.kernel.org # v4.1+
-> Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
+On Mon, Oct 21, 2019 at 07:45:51AM +0530, Viresh Kumar wrote:
+> On 18-10-19, 12:06, Sudeep Holla wrote:
+> > Callstack is:
+> >
+> > (cpufreq_notifier_max)
+> > (notifier_call_chain)
+> > (blocking_notifier_call_chain)
+> > (pm_qos_update_target)
+> > (freq_qos_apply)
+> > (freq_qos_remove_request)
+> > (cpufreq_policy_free)
+> > (subsys_interface_unregister)
+> > (cpufreq_unregister_driver)
+>
+> @sudeep: I see that the patch is merged now, but as I said earlier the
+> reasoning isn't clear yet. Please don't stop working on this and lets
+> clean this once and for all.
+>
 
-Acked-by: Michal Hocko <mhocko@suse.com>
+Sure.
 
-> ---
->  mm/page_alloc.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index c0b2e0306720..f972076d0f6b 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -1947,6 +1947,14 @@ void __init page_alloc_init_late(void)
->  	/* Block until all are initialised */
->  	wait_for_completion(&pgdat_init_all_done_comp);
->  
-> +	/*
-> +	 * The number of managed pages has changed due to the initialisation
-> +	 * so the pcpu batch and high limits needs to be updated or the limits
-> +	 * will be artificially small.
-> +	 */
-> +	for_each_populated_zone(zone)
-> +		zone_pcp_update(zone);
-> +
->  	/*
->  	 * We initialized the rest of the deferred pages.  Permanently disable
->  	 * on-demand struct page initialization.
-> -- 
-> 2.16.4
+> What patches were you testing this with? My buggy patches or Rafael's
+> patches as well ? At least with my patches, this can happen due to the
+> other bug where the notifier doesn't get removed (as I said earlier),
+> but once that bug isn't there then this shouldn't happen, else we have
+> another bug in pipeline somewhere and should find it.
+>
 
--- 
-Michal Hocko
-SUSE Labs
+I just tested now with today's linux-pm/bleeding-edge branch.
+And even if I move cancel_work_sync just after freq_qos_remove_notifier,
+it works fine now. It was not the case on Friday.
+
+Is that what you wanted to check or something else ?
+
+Regards,
+Sudeep
+
+-->8
+
+diff --git i/drivers/cpufreq/cpufreq.c w/drivers/cpufreq/cpufreq.c
+index 829a3764df1b..48a224a6b178 100644
+--- i/drivers/cpufreq/cpufreq.c
++++ w/drivers/cpufreq/cpufreq.c
+@@ -1268,6 +1268,9 @@ static void cpufreq_policy_free(struct cpufreq_policy *policy)
+        freq_qos_remove_notifier(&policy->constraints, FREQ_QOS_MIN,
+                                 &policy->nb_min);
+
++       /* Cancel any pending policy->update work before freeing the policy. */
++       cancel_work_sync(&policy->update);
++
+        if (policy->max_freq_req) {
+                /*
+                 * CPUFREQ_CREATE_POLICY notification is sent only after
+@@ -1279,8 +1282,6 @@ static void cpufreq_policy_free(struct cpufreq_policy *policy)
+        }
+
+        freq_qos_remove_request(policy->min_freq_req);
+-       /* Cancel any pending policy->update work before freeing the policy. */
+-       cancel_work_sync(&policy->update);
+        kfree(policy->min_freq_req);
+
+        cpufreq_policy_put_kobj(policy);
+
