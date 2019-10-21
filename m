@@ -2,126 +2,98 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E8D6CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:19:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3032ECA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:20:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF7DF2089C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:19:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02F622089C
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:20:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XmVcOWgh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728909AbfJUNTk (ORCPT
+        id S1728919AbfJUNU4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 09:19:40 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:52420 "EHLO foss.arm.com"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S1728616AbfJUNTk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 09:19:40 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 93F7E493;
-        Mon, 21 Oct 2019 06:19:17 -0700 (PDT)
-Received: from [10.1.194.43] (e112269-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 742083F718;
-        Mon, 21 Oct 2019 06:19:16 -0700 (PDT)
-Subject: Re: [PATCH] drm/panfrost: fix -Wmissing-prototypes warnings
-To:     Yi Wang <wang.yi59@zte.com.cn>, robh@kernel.org
-Cc:     tomeu.vizoso@collabora.com, airlied@linux.ie,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        wang.liang82@zte.com.cn, xue.zhihong@zte.com.cn, up2wing@gmail.com
-References: <1571470094-39589-1-git-send-email-wang.yi59@zte.com.cn>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <8ef85b23-f112-f969-2b3b-2e5e22e868ee@arm.com>
-Date:   Mon, 21 Oct 2019 14:19:15 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 21 Oct 2019 09:20:56 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:46844 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727256AbfJUNU4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 09:20:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571664055;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=B4XWknMJuOuh6KIQuH7ppQMvEXTX2kO1s3vMco8Hg40=;
+        b=XmVcOWgh9FUw9VSs335hS4IRfbXv5sFCP7+vv+4XwA6myZ+A5Ix+NgAk96EmSsjPWNOWr9
+        iYas5cCR4Q71PZYZZzhNaETjwVnY+YUPADcK6UUtG4KhxfKl1E/fRDZI7NM2a/ITkwgkq/
+        1CfM2Q4nvOGTCWIJjAhRL3ej2/ogr4s=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-375-pDIa5xMtMX6HhtaRvjFBrQ-1; Mon, 21 Oct 2019 09:20:50 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3F888800D41;
+        Mon, 21 Oct 2019 13:20:48 +0000 (UTC)
+Received: from treble (ovpn-123-96.rdu2.redhat.com [10.10.123.96])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 47C265B69A;
+        Mon, 21 Oct 2019 13:20:46 +0000 (UTC)
+Date:   Mon, 21 Oct 2019 08:20:44 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Torsten Duwe <duwe@lst.de>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Jiri Kosina <jikos@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Julien Thierry <julien.thierry@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        AKASHI Takahiro <takahiro.akashi@linaro.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Ruslan Bilovol <ruslan.bilovol@gmail.com>,
+        Amit Daniel Kachhap <amit.kachhap@arm.com>,
+        live-patching@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v8 0/5] arm64: ftrace with regs
+Message-ID: <20191021132044.zkzclqtrexryyybl@treble>
+References: <0f8d2e77-7e51-fba8-b179-102318d9ff84@arm.com>
+ <20190311114945.GA5625@lst.de>
+ <20190408153628.GL6139@lakrids.cambridge.arm.com>
+ <20190409175238.GE9255@fuggles.cambridge.arm.com>
+ <CAB=otbRXuDHSmh9NrGYoep=hxOKkXVsy6R84ACZ9xELwNr=4AA@mail.gmail.com>
+ <20190724161500.GG2624@lakrids.cambridge.arm.com>
+ <nycvar.YFH.7.76.1910161341520.13160@cbobk.fhfr.pm>
+ <20191016175841.GF46264@lakrids.cambridge.arm.com>
+ <20191018174100.GC18838@lakrids.cambridge.arm.com>
+ <20191019130135.10de9324@blackhole.lan>
 MIME-Version: 1.0
-In-Reply-To: <1571470094-39589-1-git-send-email-wang.yi59@zte.com.cn>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191019130135.10de9324@blackhole.lan>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-MC-Unique: pDIa5xMtMX6HhtaRvjFBrQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/10/2019 08:28, Yi Wang wrote:
-> We get these warnings when build kernel W=1:
-> drivers/gpu/drm/panfrost/panfrost_perfcnt.c:35:6: warning: no previous prototype for ‘panfrost_perfcnt_clean_cache_done’ [-Wmissing-prototypes]
-> drivers/gpu/drm/panfrost/panfrost_perfcnt.c:40:6: warning: no previous prototype for ‘panfrost_perfcnt_sample_done’ [-Wmissing-prototypes]
-> drivers/gpu/drm/panfrost/panfrost_perfcnt.c:190:5: warning: no previous prototype for ‘panfrost_ioctl_perfcnt_enable’ [-Wmissing-prototypes]
-> drivers/gpu/drm/panfrost/panfrost_perfcnt.c:218:5: warning: no previous prototype for ‘panfrost_ioctl_perfcnt_dump’ [-Wmissing-prototypes]
-> drivers/gpu/drm/panfrost/panfrost_perfcnt.c:250:6: warning: no previous prototype for ‘panfrost_perfcnt_close’ [-Wmissing-prototypes]
-> drivers/gpu/drm/panfrost/panfrost_perfcnt.c:264:5: warning: no previous prototype for ‘panfrost_perfcnt_init’ [-Wmissing-prototypes]
-> drivers/gpu/drm/panfrost/panfrost_perfcnt.c:320:6: warning: no previous prototype for ‘panfrost_perfcnt_fini’ [-Wmissing-prototypes]
-> drivers/gpu/drm/panfrost/panfrost_mmu.c:227:6: warning: no previous prototype for ‘panfrost_mmu_flush_range’ [-Wmissing-prototypes]
-> drivers/gpu/drm/panfrost/panfrost_mmu.c:435:5: warning: no previous prototype for ‘panfrost_mmu_map_fault_addr’ [-Wmissing-prototypes]
-> 
-> For file panfrost_mmu.c, make functions static to fix this.
-> For file panfrost_perfcnt.c, include head file can fix this.
+On Sat, Oct 19, 2019 at 01:01:35PM +0200, Torsten Duwe wrote:
+> All calls going _out_ from the KLP module are newly generated, as part
+> of the KLP module building process, and are thus aware of them being
+> "extern" -- a PLT entry should be generated and accounted for in the
+> KLP module.
 
-Nit: s/head/header/
+Hm... for kpatch-build I assume we may need a GCC plugin to convert
+local calls to global somehow?
 
-> 
-> Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
-
-Looks good, just a few minor style issues (below), with those fixed:
-
-Reviewed-by: Steven Price <steven.price@arm.com>
-
-> ---
->  drivers/gpu/drm/panfrost/panfrost_mmu.c     | 5 +++--
->  drivers/gpu/drm/panfrost/panfrost_perfcnt.c | 1 +
->  2 files changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/panfrost/panfrost_mmu.c b/drivers/gpu/drm/panfrost/panfrost_mmu.c
-> index bdd9905..d0458a5 100644
-> --- a/drivers/gpu/drm/panfrost/panfrost_mmu.c
-> +++ b/drivers/gpu/drm/panfrost/panfrost_mmu.c
-> @@ -224,7 +224,7 @@ static size_t get_pgsize(u64 addr, size_t size)
->  	return SZ_2M;
->  }
->  
-> -void panfrost_mmu_flush_range(struct panfrost_device *pfdev,
-> +static void panfrost_mmu_flush_range(struct panfrost_device *pfdev,
->  			      struct panfrost_mmu *mmu,
->  			      u64 iova, size_t size)
-
-Please align the arguments with the '(' as it was before.
-
->  {
-> @@ -432,7 +432,8 @@ void panfrost_mmu_pgtable_free(struct panfrost_file_priv *priv)
->  
->  #define NUM_FAULT_PAGES (SZ_2M / PAGE_SIZE)
->  
-> -int panfrost_mmu_map_fault_addr(struct panfrost_device *pfdev, int as, u64 addr)
-> +static int panfrost_mmu_map_fault_addr(struct panfrost_device *pfdev, int as,
-> +		u64 addr)
-
-Again, align 'addr' with the '('.
-
->  {
->  	int ret, i;
->  	struct panfrost_gem_object *bo;
-> diff --git a/drivers/gpu/drm/panfrost/panfrost_perfcnt.c b/drivers/gpu/drm/panfrost/panfrost_perfcnt.c
-> index 83c57d3..7493dc0 100644
-> --- a/drivers/gpu/drm/panfrost/panfrost_perfcnt.c
-> +++ b/drivers/gpu/drm/panfrost/panfrost_perfcnt.c
-> @@ -17,6 +17,7 @@
->  #include "panfrost_job.h"
->  #include "panfrost_mmu.h"
->  #include "panfrost_regs.h"
-> +#include "panfrost_perfcnt.h"
-
-Please keep header includes sorted alphabetically.
-
-Thanks,
-
-Steve
-
->  
->  #define COUNTERS_PER_BLOCK		64
->  #define BYTES_PER_COUNTER		4
-> 
+--=20
+Josh
 
