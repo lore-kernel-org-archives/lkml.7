@@ -5,27 +5,27 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2FCDCA9EB0
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 18:00:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70F73CA9EBA
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 18:00:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9B4A20B7C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 18:00:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AED020B7C
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 18:00:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571680856;
-	bh=XM+FygnugCQee4JxAth0vGJ2t52VZLAJMmBqZuGFwU4=;
+	s=default; t=1571680857;
+	bh=XQ27IYNq1NCsCJ5Hnu9hMQycT9ViXaKYc1wjA9/rZZA=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=xhhH1p7GwWz+3Wyy52q2xX7GBi9y5FPNvL2isp2WEXdd1Uzu9tLZbd+QJE+bfsJ6l
-	 R9+4zLqcdSmu8HW3Rw/mc5fisyqYBQA9q7ZTKoK8/ZR0oiXR4S1dzoaCgpiaKpWUxt
-	 FNVaoqSL0IvISmmQOQRcdEPSurBmlNd+eTbJuCP4=
+	b=XgTH1zADLuB6lEjuRH/DJhWkl0u+EB/OyzFbm8HmyT7+E159GrmdZBsseVinq3+Pj
+	 JG4GTnogYHy9ZE2L8ojtq2M5yhAKvnrMWqY002aKu5JR/uFlG7dLheq1aVdVKHOULK
+	 ClEFbpTivvA0qMBjKiIwUZdHMrmiOUjX9f+MWSlQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729757AbfJUSAz (ORCPT
+        id S1729861AbfJUSA4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 14:00:55 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:38986 "EHLO
+        Mon, 21 Oct 2019 14:00:56 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:39018 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728196AbfJUSAz (ORCPT
+        with ESMTP id S1729388AbfJUSAz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 21 Oct 2019 14:00:55 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,32 +34,28 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=uq0cbL+MVqRsyuw0sPQS5GA0v05y+bqGq3kL9K0P2h8=; b=PGEycT3N3lTQ
-        NSSgmXX+NrJZnmMPp0DDgf3TJ5vpiZ60E/A5h7/jh7v9/BlffeXg/8qSJZDhUVO94BoiVkdBKZIA6
-        oHFGZxOgPxsjFb2uNM5ycbXGiYwo6ZffM4e2i8UHOVbaL6uUVM1svJMDhy6F5RQfWvgyT7vK5Cl+k
-        9gRQU=;
+        List-Archive; bh=NBKg7z/RWZPm9A3Z0ZyyZEqHwnPNJzRElLBLEbH7hrs=; b=ppfGIhq/ufNJ
+        R2esk6NDpi5I8o/Z//GhcbYeNbpsuz4J6SzMaUwcPS9CX7DCG6nxq+8RXLXiKDG7gQFgvA75714Zz
+        gCfs3HlRbDUP7EojhMazCdZZe+yx08O5qH/c3Sk4HgR2CgtTqGyO0TAFq3uODGQiLGhFi70Zy3xzm
+        J7Q1Y=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1iMbz5-0004bf-DO; Mon, 21 Oct 2019 18:00:47 +0000
+        id 1iMbz5-0004bq-HG; Mon, 21 Oct 2019 18:00:47 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 8052B2743293; Mon, 21 Oct 2019 19:00:46 +0100 (BST)
+        id E69772741DD1; Mon, 21 Oct 2019 19:00:46 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Maciej Falkowski <m.falkowski@samsung.com>
-Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        Krzysztof Kozlowski <krzk@kernel.org>,
+To:     Stephan Gerhold <stephan@gerhold.net>
+Cc:     alsa-devel@alsa-project.org, Jaroslav Kysela <perex@perex.cz>,
         Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Applied "ASoC: samsung: i2s: Document clocks macros" to the asoc tree
-In-Reply-To: <20190926110219.6144-1-m.szyprowski@samsung.com>
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Takashi Iwai <tiwai@suse.com>
+Subject: Applied "ASoC: msm8916-wcd-analog: Fix RX1 selection in RDAC2 MUX" to the asoc tree
+In-Reply-To: <20191020153007.206070-1-stephan@gerhold.net>
 X-Patchwork-Hint: ignore
-Message-Id: <20191021180046.8052B2743293@ypsilon.sirena.org.uk>
+Message-Id: <20191021180046.E69772741DD1@ypsilon.sirena.org.uk>
 Date:   Mon, 21 Oct 2019 19:00:46 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -68,11 +64,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: samsung: i2s: Document clocks macros
+   ASoC: msm8916-wcd-analog: Fix RX1 selection in RDAC2 MUX
 
 has been applied to the asoc tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.5
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -93,45 +89,54 @@ to this mail.
 Thanks,
 Mark
 
-From 6cc23ed2ceab880e96ad287d9c85b53659050510 Mon Sep 17 00:00:00 2001
-From: Maciej Falkowski <m.falkowski@samsung.com>
-Date: Thu, 26 Sep 2019 13:02:19 +0200
-Subject: [PATCH] ASoC: samsung: i2s: Document clocks macros
+From 9110d1b0e229cebb1ffce0c04db2b22beffd513d Mon Sep 17 00:00:00 2001
+From: Stephan Gerhold <stephan@gerhold.net>
+Date: Sun, 20 Oct 2019 17:30:06 +0200
+Subject: [PATCH] ASoC: msm8916-wcd-analog: Fix RX1 selection in RDAC2 MUX
 
-Document clocks macros with their description
-from 'Documentation/devicetree/bindings/sound/samsung-i2s.txt'
+According to the PM8916 Hardware Register Description,
+CDC_D_CDC_CONN_HPHR_DAC_CTL has only a single bit (RX_SEL)
+to switch between RX1 (0) and RX2 (1). It is not possible to
+disable it entirely to achieve the "ZERO" state.
 
-Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-Link: https://lore.kernel.org/r/20190926110219.6144-1-m.szyprowski@samsung.com
+However, at the moment the "RDAC2 MUX" mixer defines three possible
+values ("ZERO", "RX2" and "RX1"). Setting the mixer to "ZERO"
+actually configures it to RX1. Setting the mixer to "RX1" has
+(seemingly) no effect.
+
+Remove "ZERO" and replace it with "RX1" to fix this.
+
+Fixes: 585e881e5b9e ("ASoC: codecs: Add msm8916-wcd analog codec")
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Acked-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Link: https://lore.kernel.org/r/20191020153007.206070-1-stephan@gerhold.net
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- include/dt-bindings/sound/samsung-i2s.h | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ sound/soc/codecs/msm8916-wcd-analog.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/dt-bindings/sound/samsung-i2s.h b/include/dt-bindings/sound/samsung-i2s.h
-index 77545f14c379..250de0d6c734 100644
---- a/include/dt-bindings/sound/samsung-i2s.h
-+++ b/include/dt-bindings/sound/samsung-i2s.h
-@@ -2,8 +2,14 @@
- #ifndef _DT_BINDINGS_SAMSUNG_I2S_H
- #define _DT_BINDINGS_SAMSUNG_I2S_H
+diff --git a/sound/soc/codecs/msm8916-wcd-analog.c b/sound/soc/codecs/msm8916-wcd-analog.c
+index 667e9f73aba3..e3d311fb510e 100644
+--- a/sound/soc/codecs/msm8916-wcd-analog.c
++++ b/sound/soc/codecs/msm8916-wcd-analog.c
+@@ -306,7 +306,7 @@ struct pm8916_wcd_analog_priv {
+ };
  
--#define CLK_I2S_CDCLK		0
--#define CLK_I2S_RCLK_SRC	1
--#define CLK_I2S_RCLK_PSR	2
-+#define CLK_I2S_CDCLK		0 /* the CDCLK (CODECLKO) gate clock */
-+
-+#define CLK_I2S_RCLK_SRC	1 /* the RCLKSRC mux clock (corresponding to
-+				   * RCLKSRC bit in IISMOD register)
-+				   */
-+
-+#define CLK_I2S_RCLK_PSR	2 /* the RCLK prescaler divider clock
-+				   * (corresponding to the IISPSR register)
-+				   */
+ static const char *const adc2_mux_text[] = { "ZERO", "INP2", "INP3" };
+-static const char *const rdac2_mux_text[] = { "ZERO", "RX2", "RX1" };
++static const char *const rdac2_mux_text[] = { "RX1", "RX2" };
+ static const char *const hph_text[] = { "ZERO", "Switch", };
  
- #endif /* _DT_BINDINGS_SAMSUNG_I2S_H */
+ static const struct soc_enum hph_enum = SOC_ENUM_SINGLE_VIRT(
+@@ -321,7 +321,7 @@ static const struct soc_enum adc2_enum = SOC_ENUM_SINGLE_VIRT(
+ 
+ /* RDAC2 MUX */
+ static const struct soc_enum rdac2_mux_enum = SOC_ENUM_SINGLE(
+-			CDC_D_CDC_CONN_HPHR_DAC_CTL, 0, 3, rdac2_mux_text);
++			CDC_D_CDC_CONN_HPHR_DAC_CTL, 0, 2, rdac2_mux_text);
+ 
+ static const struct snd_kcontrol_new spkr_switch[] = {
+ 	SOC_DAPM_SINGLE("Switch", CDC_A_SPKR_DAC_CTL, 7, 1, 0)
 -- 
 2.20.1
 
