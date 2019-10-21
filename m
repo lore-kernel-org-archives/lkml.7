@@ -2,135 +2,204 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD20CCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:31:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70DE9C47E49
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:34:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0D5320659
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:31:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sNQbgSe6"
+	by mail.kernel.org (Postfix) with ESMTP id 4713F20659
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:34:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728145AbfJUKb4 (ORCPT
+        id S1728059AbfJUKeC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 06:31:56 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45315 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728101AbfJUKby (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 06:31:54 -0400
-Received: by mail-wr1-f67.google.com with SMTP id q13so8334988wrs.12
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 03:31:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=fQUvlL0V3Iz6E4Ap+lDL6E5wl3Ji5YJZ7TElhvimK6s=;
-        b=sNQbgSe6MW9Sf188uOBYTA+NasNjY7oDNNSVRg80tBE27c9oTBKOeTOMBhKbIfSnFo
-         9fkgnUIi2Drnm02trdz8ueWMyzH7rb45BJPDAsHxAC/uVs45kb4m9g09Pvcas5OGWFzf
-         DWH9vGPLNAryoDnEviIkDk+cuhXVfHBR3FK+/IkRRLTVbLQ4eRInplmskDLz0elRyE2X
-         tAAQe/vc0QIYP8i8VqLixnry7C+73poCoC+aSEnJYUbKzt+ax6O/itJJr1sCUStytl3u
-         gbMqKpuJQWKu/lh1fykZ1lIpc5ZxKzp1T0h77Op17uH6xYjSi9/TCYQ9yy8bIxKylSQ4
-         Zq0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fQUvlL0V3Iz6E4Ap+lDL6E5wl3Ji5YJZ7TElhvimK6s=;
-        b=hhIxdJuuxNBu+ptzWz0euCx0rdVzFoa4MBRNv+/Ovx8PXrMvMetp9ZjXb2m73xtXBo
-         RcoFDiwBOtWAC6aBad/9qCsDbp0zmtpRsK0dqowxEvCCl7qxqwDdnbmn437NAbcs/PDY
-         7t4rfWbPu1GV7mp8Y5eZC1RacvCY3Z1hbIf0RtsV6U+w9BRaT4GOvZKJhFkcznjr5eXP
-         vFubViA+CO9RTkA5p2bbQNGodpPYAhYtm9wscETliygBQvhGK5YMFMibtbojJiiGx8W/
-         iC/U0GeLhnYuGUgWyg1xppyVR7CAlczD+lEGjRW/9xbWb7DaYgUQL/B0fdnnvG6e8ZDe
-         1qFg==
-X-Gm-Message-State: APjAAAXb/Y+uxaB3mxejajhJIBOSowvD/515owq5/NcZJhfJxtuAP8Ow
-        gYUqZGGQJGQCgsZS9eUdby6/lQ==
-X-Google-Smtp-Source: APXvYqyy4Oux2tNP8V/BSFAyhpaClSr0k2FeVWZej2dR57qFLk+u7vifjBbJudZPXvQKK+XBBOZNeQ==
-X-Received: by 2002:adf:e702:: with SMTP id c2mr17251611wrm.70.1571653912695;
-        Mon, 21 Oct 2019 03:31:52 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id f143sm27637543wme.40.2019.10.21.03.31.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Oct 2019 03:31:52 -0700 (PDT)
-Date:   Mon, 21 Oct 2019 11:31:50 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Kiran Gunda <kgunda@codeaurora.org>
-Cc:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
-        lee.jones@linaro.org, b.zolnierkie@samsung.com,
-        dri-devel@lists.freedesktop.org, jacek.anaszewski@gmail.com,
-        pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-fbdev@vger.kernel.org
-Subject: Re: [PATCH V8 6/6] backlight: qcom-wled: Add auto string detection
- logic
-Message-ID: <20191021103150.ta7qalltldofouh4@holly.lan>
-References: <1571402009-8706-1-git-send-email-kgunda@codeaurora.org>
- <1571402009-8706-7-git-send-email-kgunda@codeaurora.org>
+        Mon, 21 Oct 2019 06:34:02 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:48434 "EHLO foss.arm.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S1726725AbfJUKeC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 06:34:02 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9F1FA493;
+        Mon, 21 Oct 2019 03:33:32 -0700 (PDT)
+Received: from bogus (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D1D673F718;
+        Mon, 21 Oct 2019 03:33:31 -0700 (PDT)
+Date:   Mon, 21 Oct 2019 11:33:29 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] cpufreq: flush any pending policy update work scheduled
+ before freeing
+Message-ID: <20191021103329.GB21581@bogus>
+References: <20191017163503.30791-1-sudeep.holla@arm.com>
+ <20191018060247.g5asfuh3kncoj7kl@vireshk-i7>
+ <20191018101924.GA25540@bogus>
+ <4881906.zjS51fuFuv@kreacher>
+ <20191018110632.GB25540@bogus>
+ <CAJZ5v0hnvahJ6bu6SEVvavb1kRe=X0wP_JUS26h_d019u5z7PA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1571402009-8706-7-git-send-email-kgunda@codeaurora.org>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <CAJZ5v0hnvahJ6bu6SEVvavb1kRe=X0wP_JUS26h_d019u5z7PA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 06:03:29PM +0530, Kiran Gunda wrote:
-> The auto string detection algorithm checks if the current WLED
-> sink configuration is valid. It tries enabling every sink and
-> checks if the OVP fault is observed. Based on this information
-> it detects and enables the valid sink configuration.
-> Auto calibration will be triggered when the OVP fault interrupts
-> are seen frequently thereby it tries to fix the sink configuration.
-> 
-> The auto-detection also kicks in when the connected LED string
-> of the display-backlight malfunctions (because of damage) and
-> requires the damaged string to be turned off to prevent the
-> complete panel and/or board from being damaged.
-> 
-> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
-> ---
->  drivers/video/backlight/qcom-wled.c | 398 +++++++++++++++++++++++++++++++++++-
->  1 file changed, 392 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/video/backlight/qcom-wled.c b/drivers/video/backlight/qcom-wled.c
-> index 658b1e0..b2e6754 100644
-> --- a/drivers/video/backlight/qcom-wled.c
-> +++ b/drivers/video/backlight/qcom-wled.c
-> @@ -193,7 +216,23 @@ static int wled_module_enable(struct wled *wled, int val)
->  				WLED3_CTRL_REG_MOD_EN,
->  				WLED3_CTRL_REG_MOD_EN_MASK,
->  				val << WLED3_CTRL_REG_MOD_EN_SHIFT);
-> -	return rc;
-> +	if (rc < 0)
-> +		return rc;
-> +
-> +	if (wled->ovp_irq > 0) {
-> +		if (val) {
-> +			/*
-> +			 * Wait for at least 10ms before enabling OVP interrupt
-> +			 * after module enable so that soft start is completed.
-> +			 */
+On Mon, Oct 21, 2019 at 02:14:51AM +0200, Rafael J. Wysocki wrote:
+> On Fri, Oct 18, 2019 at 1:06 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
+> >
+> > On Fri, Oct 18, 2019 at 12:37:51PM +0200, Rafael J. Wysocki wrote:
+> > > On Friday, October 18, 2019 12:19:24 PM CEST Sudeep Holla wrote:
+> > > > On Fri, Oct 18, 2019 at 11:32:47AM +0530, Viresh Kumar wrote:
+> > > > > On 18-10-19, 06:55, Sudeep Holla wrote:
+> > > > > > On Thu, Oct 17, 2019 at 11:26:54PM +0200, Rafael J. Wysocki wrote:
+> > > > > > > On Thu, Oct 17, 2019 at 9:36 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> > > > > > > >
+> > > > > > > > On Thu, Oct 17, 2019 at 6:35 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
+> > > > > > > > >
+> > > > > > > > > dev_pm_qos_remove_request ends calling {max,min}_freq_req QoS notifiers
+> > > > > > > > > which schedule policy update work. It may end up racing with the freeing
+> > > > > > > > > the policy and unregistering the driver.
+> > > > > > > > >
+> > > > > > > > > One possible race is as below where the cpufreq_driver is unregistered
+> > > > > > > > > but the scheduled work gets executed at later stage when cpufreq_driver
+> > > > > > > > > is NULL(i.e. after freeing the policy and driver)
+> > > > > > > > >
+> > > > > > > > > Unable to handle kernel NULL pointer dereference at virtual address 0000001c
+> > > > > > > > > pgd = (ptrval)
+> > > > > > > > > [0000001c] *pgd=80000080204003, *pmd=00000000
+> > > > > > > > > Internal error: Oops: 206 [#1] SMP THUMB2
+> > > > > > > > > Modules linked in:
+> > > > > > > > > CPU: 0 PID: 34 Comm: kworker/0:1 Not tainted 5.4.0-rc3-00006-g67f5a8081a4b #86
+> > > > > > > > > Hardware name: ARM-Versatile Express
+> > > > > > > > > Workqueue: events handle_update
+> > > > > > > > > PC is at cpufreq_set_policy+0x58/0x228
+> > > > > > > > > LR is at dev_pm_qos_read_value+0x77/0xac
+> > > > > > > > > Control: 70c5387d  Table: 80203000  DAC: fffffffd
+> > > > > > > > > Process kworker/0:1 (pid: 34, stack limit = 0x(ptrval))
+> > > > > > > > >         (cpufreq_set_policy) from (refresh_frequency_limits.part.24+0x37/0x48)
+> > > > > > > > >         (refresh_frequency_limits.part.24) from (handle_update+0x2f/0x38)
+> > > > > > > > >         (handle_update) from (process_one_work+0x16d/0x3cc)
+> > > > > > > > >         (process_one_work) from (worker_thread+0xff/0x414)
+> > > > > > > > >         (worker_thread) from (kthread+0xff/0x100)
+> > > > > > > > >         (kthread) from (ret_from_fork+0x11/0x28)
+> > > > > > > > >
+> > > > > > > > > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> > > > > > > > > Cc: Viresh Kumar <viresh.kumar@linaro.org>
+> > > > > > > > > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> > > > > > > > > ---
+> > > > > > > > >  drivers/cpufreq/cpufreq.c | 3 +++
+> > > > > > > > >  1 file changed, 3 insertions(+)
+> > > > > > > > >
+> > > > > > > > > Hi Rafael, Viresh,
+> > > > > > > > >
+> > > > > > > > > This fixed the boot issue I reported[1] on TC2 with bL switcher enabled.
+> > > > > > > > > I have based this patch on -rc3 and not on top of your patches. This
+> > > > > > > > > only fixes the boot issue but I hit the other crashes while continuously
+> > > > > > > > > switching on and off the bL switcher that register/unregister the driver
+> > > > > > > > > Your patch series fixes them. I can based this on top of those if you
+> > > > > > > > > prefer.
+> > > > > > > > >
+> > > > > > > > > Regards,
+> > > > > > > > > Sudeep
+> > > > > > > > >
+> > > > > > > > > [1] https://lore.kernel.org/linux-pm/20191015155735.GA29105@bogus/
+> > > > > > > > >
+> > > > > > > > > diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> > > > > > > > > index c52d6fa32aac..b703c29a84be 100644
+> > > > > > > > > --- a/drivers/cpufreq/cpufreq.c
+> > > > > > > > > +++ b/drivers/cpufreq/cpufreq.c
+> > > > > > > > > @@ -1278,6 +1278,9 @@ static void cpufreq_policy_free(struct cpufreq_policy *policy)
+> > > > > > > > >         }
+> > > > > > > > >
+> > > > > > > > >         dev_pm_qos_remove_request(policy->min_freq_req);
+> > > > > > > > > +       /* flush the pending policy->update work before freeing the policy */
+> > > > > > > > > +       if (work_pending(&policy->update))
+> > > > > > > >
+> > > > > > > > Isn't this racy?
+> > > > > > > >
+> > > > > > > > It still may be running if the pending bit is clear and we still need
+> > > > > > > > to wait for it then, don't we?
+> > > > > > > >
+> > > > > > > > Why don't you do an unconditional flush_work() here?
+> > > > > > >
+> > > > > > > You may as well do a cancel_work_sync() here, because whether or not
+> > > > > > > the last update of the policy happens before it goes away is a matter
+> > > > > > > of timing in any case
+> > > > > >
+> > > > > > In fact that's the first thing I tried to fix the issue I was seeing.
+> > > > > > But I then thought it would be better to complete the update as the PM
+> > > > > > QoS were getting updated back to DEFAULT values for the device. Even
+> > > > > > this works.
+> > > > > >
+> > > > > > What is your preference ? flush_work or cancel_work_sync ? I will
+> > > > > > update accordingly. I may need to do some more testing with
+> > > > > > cancel_work_sync as I just checked that quickly to confirm the race.
+> > > > >
+> > > > > As I said in the other email, this work didn't come as a result of
+> > > > > removal of the qos request from cpufreq core and so must have come
+> > > > > from other thermal or similar events.
+> > > >
+> > > > I don't think so. For sure not because of any thermal events. I didn't
+> > > > have log handy and hence had to wait till I was next to hardware.
+> > > >
+> > > > This is log:
+> > > >  cpufreq: cpufreq_policy_free: dev_pm_qos_remove_request max before
+> > > >  cpufreq: cpufreq_notifier_max: schedule_work(&policy->update)
+> > > >  cpufreq: cpufreq_policy_free: dev_pm_qos_remove_request max after
+> > > >  cpufreq: cpufreq_policy_free: dev_pm_qos_remove_request min before
+> > > >  cpufreq: cpufreq_notifier_min: schedule_work(&policy->update)
+> > > >  cpufreq: cpufreq_policy_free: dev_pm_qos_remove_request min after
+> > > >  cpufreq: cpufreq_policy_free: dev_pm_qos_remove_request max before
+> > > >  cpufreq: cpufreq_notifier_max: schedule_work(&policy->update)
+> > > >  cpufreq: cpufreq_policy_free: dev_pm_qos_remove_request max after
+> > > >  cpufreq: cpufreq_policy_free: dev_pm_qos_remove_request min before
+> > > >  cpufreq: cpufreq_notifier_min: schedule_work(&policy->update)
+> > > >  cpufreq: cpufreq_policy_free: dev_pm_qos_remove_request min after
+> > > >
+> > > > So if I move the call above, it still crashes as the work is getting
+> > > > scheduled later.
+> > >
+> > > OK, please cancel the work after dropping the last request.
+> > >
+> > > We still need to understand what is going on here, but the crash needs to be
+> > > prevented from occurring in the first place IMO.
+> > >
+> > Callstack is:
+> >
+> > (cpufreq_notifier_max)
+> > (notifier_call_chain)
+> > (blocking_notifier_call_chain)
+> > (pm_qos_update_target)
+> > (freq_qos_apply)
+> > (freq_qos_remove_request)
+> > (cpufreq_policy_free)
+> > (subsys_interface_unregister)
+> > (cpufreq_unregister_driver)
+>
+> That may be due to a bug in one of my patches (it's adding one of the
+> notifiers to a wrong list).
+>
 
-Comments should not say what is does (we can read that). It should be
-saying what is weird about the hardware the results in us enabling the
-interrupt in an unusual way.
+Ah that explains, I was wondering what changed as it's working now but
+was not the case when I tried earlier and I had to keep cancel_work_sync
+after dev_pm_qos_remove_request
 
-More like:
+> Please re-test with the current linux-next branch that I've just pushed.
 
-"The hardware generates a storm of spurious OVP interrupts during soft
-start operations so defer enabling the IRQ for 10ms to ensure that
-the soft start is complete."
+Yes, it did that and it now works fine even if I move the cancel_work_sync
+call earlier just after freq_qos_remove_notifier.
 
-Note that I am only guessing that is an spurious interrupt storm that
-caused you to defer the interrupt enable... I don't want to have to
-guess which is why I am asking for a good quality comment!
+If you/Viresh prefer the call to cancel_work_sync to be moved up, that
+should be fine now. I have sent the delta for reference in other reply.
 
-
-Daniel.
+--
+Regards,
+Sudeep
