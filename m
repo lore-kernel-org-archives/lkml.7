@@ -2,92 +2,148 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9720CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C1BCA9EB9
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:38:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B68B82084C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:37:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WnTjY92E"
+	by mail.kernel.org (Postfix) with ESMTP id 0333E2084C
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:38:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728459AbfJULhW (ORCPT
+        id S1728483AbfJULiE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 07:37:22 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:25735 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727889AbfJULhW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 07:37:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571657841;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Vofe0VQns1D/DiFjEtpjmLVshKuMJelezuNzu5bHnE0=;
-        b=WnTjY92ErqFIr/sqcaFnPpe4V9InbgdELKqLcR4Hq9xImm2c7UFOIiphi+iOMAr/f9hc66
-        MoG4ne63mGDjiukCW6B0OLGRlry32BTsIprogAvnfxzQE+mLCInpjEbWWhrkwNvhM57+Ew
-        TLglelxvtimqhGsovNHG7AbUP6rY08E=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-371-9eKivh9JPFea858DYC3R4g-1; Mon, 21 Oct 2019 07:37:17 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8B3F2107AD31;
-        Mon, 21 Oct 2019 11:37:16 +0000 (UTC)
-Received: from [10.40.204.224] (ovpn-204-224.brq.redhat.com [10.40.204.224])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0AB7D5D6A5;
-        Mon, 21 Oct 2019 11:37:14 +0000 (UTC)
-Subject: Re: [PATCH] fs: exFAT read-only driver GPL implementation by Paragon
- Software.
-To:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>,
-        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
-References: <453A1153-9493-4A04-BF66-CE6A572DEBDB@paragon-software.com>
- <20191021111136.adpxjxmmz4p2vud2@pali>
-Cc:     "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-From:   Maurizio Lombardi <mlombard@redhat.com>
-Message-ID: <a4c42aa5-f9b7-4e74-2c11-220d45cb3669@redhat.com>
-Date:   Mon, 21 Oct 2019 13:37:13 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.0
+        Mon, 21 Oct 2019 07:38:04 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:50154 "EHLO foss.arm.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S1727725AbfJULiE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 07:38:04 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1AE0CEBD;
+        Mon, 21 Oct 2019 04:37:32 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 16AFE3F718;
+        Mon, 21 Oct 2019 04:37:29 -0700 (PDT)
+Date:   Mon, 21 Oct 2019 12:37:25 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Torsten Duwe <duwe@lst.de>
+Cc:     Jiri Kosina <jikos@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Julien Thierry <julien.thierry@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        AKASHI Takahiro <takahiro.akashi@linaro.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Ruslan Bilovol <ruslan.bilovol@gmail.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Amit Daniel Kachhap <amit.kachhap@arm.com>,
+        live-patching@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v8 0/5] arm64: ftrace with regs
+Message-ID: <20191021113724.GA56589@lakrids.cambridge.arm.com>
+References: <0f8d2e77-7e51-fba8-b179-102318d9ff84@arm.com>
+ <20190311114945.GA5625@lst.de>
+ <20190408153628.GL6139@lakrids.cambridge.arm.com>
+ <20190409175238.GE9255@fuggles.cambridge.arm.com>
+ <CAB=otbRXuDHSmh9NrGYoep=hxOKkXVsy6R84ACZ9xELwNr=4AA@mail.gmail.com>
+ <20190724161500.GG2624@lakrids.cambridge.arm.com>
+ <nycvar.YFH.7.76.1910161341520.13160@cbobk.fhfr.pm>
+ <20191016175841.GF46264@lakrids.cambridge.arm.com>
+ <20191018174100.GC18838@lakrids.cambridge.arm.com>
+ <20191019130135.10de9324@blackhole.lan>
 MIME-Version: 1.0
-In-Reply-To: <20191021111136.adpxjxmmz4p2vud2@pali>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-MC-Unique: 9eKivh9JPFea858DYC3R4g-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191019130135.10de9324@blackhole.lan>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Oct 19, 2019 at 01:01:35PM +0200, Torsten Duwe wrote:
+> Hi Mark!
 
+Hi Torsten!
+ 
+> On Fri, 18 Oct 2019 18:41:02 +0100 Mark Rutland
+> <mark.rutland@arm.com> wrote:
+> 
+> > In the process of reworking this I spotted some issues that will get
+> > in the way of livepatching. Notably:
+> > 
+> > * When modules can be loaded far away from the kernel, we'll
+> > potentially need a PLT for each function within a module, if each can
+> > be patched to a unique function. Currently we have a fixed number,
+> > which is only sufficient for the two ftrace entry trampolines.
+> > 
+> >   IIUC, the new code being patched in is itself a module, in which
+> > case we'd need a PLT for each function in the main kernel image.
+> 
+> When no live patching is involved, obviously all cases need to have
+> been handled so far. And when a live patching module comes in, there
+> are calls in and out of the new patch code:
+> 
+> Calls going into the live patch are not aware of this. They are caught
+> by an active ftrace intercept, and the actual call into the LP module
+> is done in klp_arch_set_pc, by manipulating the intercept (call site)
+> return address (in case thread lives in the "new world", for
+> completeness' sake). This is an unsigned long write in C.
 
-Dne 21.10.2019 v 13:11 Pali Roh=C3=A1r napsal(a):
-> Are you going to add support also for TexFAT? Or at least for more two
-> FAT tables (like is used in FAT32)?
->=20
+I was under the impression that (at some point) the patch site would be
+patched to call the LP code directly. From the above I understand that's
+not the case, and it will always be directed via the regular ftrace
+entry code -- have I got that right?
 
-Just a small note here, differences between FAT and exFAT:
+Assuming that is the case, that sounds fine to me, and sorry for the
+noise.
 
-1) Contiguous files get a special treatment by exFAT: they do not use the F=
-AT cluster chain.
-2) exFAT doesn't use the FAT to track free space, it uses a bitmap.
+> All calls going _out_ from the KLP module are newly generated, as part
+> of the KLP module building process, and are thus aware of them being
+> "extern" -- a PLT entry should be generated and accounted for in the
+> KLP module.
 
-So, 2 FAT tables are probably not sufficient for recovery, 2 bitmaps are ne=
-eded too.[1]
-Btw, only Windows CE supported this.
+Yup; understood.
 
-[1] http://www.ntfs.com/exfat-allocation-bitmap.htm
+> >   We have a few options here, e.g. changing which memory size model we
+> >   use, or reserving space for a PLT before each function using
+> >   -f patchable-function-entry=N,M.
+> 
+> Nonetheless I'm happy I once added the ,M option here. You never know :)
 
-Maurizio
+Yup; we may have other reasons to need this in future (and I see parisc
+uses this today).
 
+> > * There are windows where backtracing will miss the callsite's caller,
+> >   as its address is not live in the LR or existing chain of frame
+> >   records. Thus we cannot claim to have a reliable stacktrace.
+> > 
+> >   I suspect we'll have to teach the stacktrace code to handle this as
+> > a special-case.
+> 
+> Yes, that's where I had to step back. The unwinder needs to stop where
+> the chain is even questionable. In _all_ cases. Missing only one race
+> condition means a lurking inconsistency.
+
+Sure. I'm calling this out now so that we don't miss this in future.
+I've added comments to the ftrace entry asm to this effect for now.
+
+> OTOH it's not a problem to report "not reliable" when in doubt; the
+> thread in question will then get woken up and unwind itself.
+> It is only an optimisation to let all kernel threads which are
+> guaranteed to not contain any patched functions sleep on.
+
+I just want to make it clear that some care will be needed if/when
+adding CONFIG_HAVE_RELIABLE_STACKTRACE so that we handle this case
+correctly.
+ 
+> >   I'll try to write these up, as similar probably applies to other
+> >   architectures with a link register.
+> 
+> I thought I'd quickly give you my feedback upfront here.
+
+Thanks; it's much appreciated!
+
+Mark.
