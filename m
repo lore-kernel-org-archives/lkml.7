@@ -2,89 +2,90 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96C92CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:52:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B596CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:52:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A9842084C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:52:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571669529;
-	bh=IJjqMzMCR7TlygDWewMfRIRPUgGypokucoRIev+kOmk=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=flvU1JkBpilbuKynHTTmJ3/6nXZcSIBgs5u2iPQJ7EfhwkzSCdZHkbNsvNxBXvopO
-	 9miY1Rgff4UqbdkpelI3jScDLLkNj9K9AhNgFFFG2yiXsNP6CJ2Tqbt7dI5WiAPHkA
-	 ou0ci4R5ybvwWtl/hvZbA+XsoIaFUdjSXrlOLIhk=
+	by mail.kernel.org (Postfix) with ESMTP id 6D43E2053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:52:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728174AbfJUOwI (ORCPT
+        id S1729318AbfJUOwN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 10:52:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46398 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726847AbfJUOwH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 10:52:07 -0400
-Received: from linux-8ccs.suse.cz (ip5f5ade6e.dynamic.kabel-deutschland.de [95.90.222.110])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 625C82053B;
-        Mon, 21 Oct 2019 14:52:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571669527;
-        bh=IJjqMzMCR7TlygDWewMfRIRPUgGypokucoRIev+kOmk=;
-        h=From:To:Cc:Subject:Date:From;
-        b=wg0A2ltHziyYzjzYOHozPCzXve7tDd671rWiPRE4l1UrtfwCZpodTcb/TzyHjcANn
-         CN0vRK14WtL9BX00cIApRFRITUb88Mw8xok/FQx+rMX7pU7OGMVlk0zOUkmkFJmx9m
-         lu7MYFHifZX5Gv69mLD95+NopZWSxVrVKUAZrFYQ=
-From:   Jessica Yu <jeyu@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Matthias Maennich <maennich@google.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Jessica Yu <jeyu@kernel.org>
-Subject: [PATCH] scripts/nsdeps: escape '/' for module source files
-Date:   Mon, 21 Oct 2019 16:51:37 +0200
-Message-Id: <20191021145137.31672-1-jeyu@kernel.org>
-X-Mailer: git-send-email 2.16.4
+        Mon, 21 Oct 2019 10:52:13 -0400
+Received: from andre.telenet-ops.be ([195.130.132.53]:43140 "EHLO
+        andre.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728854AbfJUOwL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 10:52:11 -0400
+Received: from ramsan ([84.194.98.4])
+        by andre.telenet-ops.be with bizsmtp
+        id GErr2100C05gfCL01Erri2; Mon, 21 Oct 2019 16:52:09 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1iMZ2F-00075u-3G; Mon, 21 Oct 2019 16:51:51 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1iMZ2F-0008Fa-0U; Mon, 21 Oct 2019 16:51:51 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     =?UTF-8?q?Breno=20Leit=C3=A3o?= <leitao@debian.org>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Paulo Flabiano Smorigo <pfsmorigo@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S . Miller" <davem@davemloft.net>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        David@rox.of.borg, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Casey Leedom <leedom@chelsio.com>,
+        Shannon Nelson <snelson@pensando.io>,
+        Pensando Drivers <drivers@pensando.io>,
+        Kevin Hilman <khilman@kernel.org>, Nishanth Menon <nm@ti.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-crypto@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        netdev@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 4/5] power: avs: smartreflex: Remove superfluous cast in debugfs_create_file() call
+Date:   Mon, 21 Oct 2019 16:51:48 +0200
+Message-Id: <20191021145149.31657-5-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191021145149.31657-1-geert+renesas@glider.be>
+References: <20191021145149.31657-1-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When doing an out of tree build with O=, the nsdeps script constructs
-the absolute pathname of the module source file so that it can insert
-MODULE_IMPORT_NS statements in the right place. However, ${srctree}
-contains an unescaped path to the source tree, which, when used in a sed
-substitution, makes sed complain:
+There is no need to cast a typed pointer to a void pointer when calling
+a function that accepts the latter.  Remove it, as the cast prevents
+further compiler checks.
 
-++ sed 's/[^ ]* *//home/jeyu/jeyu-linux\/&/g'
-sed: -e expression #1, char 12: unknown option to `s'
-
-The sed substitution command 's' ends prematurely with the forward
-slashes in the pathname, and sed errors out when it encounters the 'h',
-which is an invalid sed substitution option. So use bash in-variable
-substitution to escape all forward slashes for sed.
-
-Signed-off-by: Jessica Yu <jeyu@kernel.org>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- scripts/nsdeps | 2 +-
+ drivers/power/avs/smartreflex.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/scripts/nsdeps b/scripts/nsdeps
-index 3754dac13b31..79f96e596a0b 100644
---- a/scripts/nsdeps
-+++ b/scripts/nsdeps
-@@ -33,7 +33,7 @@ generate_deps() {
- 	if [ ! -f "$ns_deps_file" ]; then return; fi
- 	local mod_source_files=`cat $mod_file | sed -n 1p                      \
- 					      | sed -e 's/\.o/\.c/g'           \
--					      | sed "s/[^ ]* */${srctree}\/&/g"`
-+					      | sed "s/[^ ]* */${srctree//\//\\\/}\/&/g"`
- 	for ns in `cat $ns_deps_file`; do
- 		echo "Adding namespace $ns to module $mod_name (if needed)."
- 		generate_deps_for_ns $ns $mod_source_files
+diff --git a/drivers/power/avs/smartreflex.c b/drivers/power/avs/smartreflex.c
+index 4684e7df833a81e9..5376f3d22f31eade 100644
+--- a/drivers/power/avs/smartreflex.c
++++ b/drivers/power/avs/smartreflex.c
+@@ -905,7 +905,7 @@ static int omap_sr_probe(struct platform_device *pdev)
+ 	sr_info->dbg_dir = debugfs_create_dir(sr_info->name, sr_dbg_dir);
+ 
+ 	debugfs_create_file("autocomp", S_IRUGO | S_IWUSR, sr_info->dbg_dir,
+-			    (void *)sr_info, &pm_sr_fops);
++			    sr_info, &pm_sr_fops);
+ 	debugfs_create_x32("errweight", S_IRUGO, sr_info->dbg_dir,
+ 			   &sr_info->err_weight);
+ 	debugfs_create_x32("errmaxlimit", S_IRUGO, sr_info->dbg_dir,
 -- 
-2.16.4
+2.17.1
 
