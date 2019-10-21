@@ -2,63 +2,73 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD45ECA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:38:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4B70CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:38:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A382214AE
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:38:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB91720679
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:38:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729009AbfJUNiP (ORCPT
+        id S1729024AbfJUNiU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 09:38:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39900 "EHLO mail.kernel.org"
+        Mon, 21 Oct 2019 09:38:20 -0400
+Received: from mga01.intel.com ([192.55.52.88]:42893 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728083AbfJUNiP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 09:38:15 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9394520873;
-        Mon, 21 Oct 2019 13:38:13 +0000 (UTC)
-Date:   Mon, 21 Oct 2019 09:38:12 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, mhiramat@kernel.org,
-        bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, jpoimboe@redhat.com, jeyu@kernel.org
-Subject: Re: [PATCH v4 00/16] Rewrite x86/ftrace to use text_poke (and more)
-Message-ID: <20191021093812.72b071c4@gandalf.local.home>
-In-Reply-To: <20191021090922.GA41231@gmail.com>
-References: <20191018073525.768931536@infradead.org>
-        <20191021090922.GA41231@gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1728812AbfJUNiU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 09:38:20 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 06:38:19 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,323,1566889200"; 
+   d="scan'208";a="209445645"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 21 Oct 2019 06:38:15 -0700
+Received: by lahna (sSMTP sendmail emulation); Mon, 21 Oct 2019 16:38:14 +0300
+Date:   Mon, 21 Oct 2019 16:38:14 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Stuart Hayes <stuart.w.hayes@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Austin Bolen <austin_bolen@dell.com>, keith.busch@intel.com,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, lukas@wunner.de
+Subject: Re: [PATCH v3 1/3] PCI: pciehp: Add support for disabling in-band
+ presence
+Message-ID: <20191021133814.GJ2819@lahna.fi.intel.com>
+References: <20191017193256.3636-1-stuart.w.hayes@gmail.com>
+ <20191017193256.3636-2-stuart.w.hayes@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191017193256.3636-2-stuart.w.hayes@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 21 Oct 2019 11:09:22 +0200
-Ingo Molnar <mingo@kernel.org> wrote:
+On Thu, Oct 17, 2019 at 03:32:54PM -0400, Stuart Hayes wrote:
+> From: Alexandru Gagniuc <mr.nuke.me@gmail.com>
+> 
+> The presence detect state (PDS) is normally a logical or of in-band and
+> out-of-band presence. As of PCIe 4.0, there is the option to disable
+> in-band presence so that the PDS bit always reflects the state of the
+> out-of-band presence.
+> 
+> The recommendation of the PCIe spec is to disable in-band presence
+> whenever supported.
+> 
+> Signed-off-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
 
-> Steve, any objections to this series? If not I'll stick it into 
-> tip:core/kprobes with a tentative v5.5 upstream merge target.
-
-I'm going to be doing work this merge window that is going to be
-directly conflicting with a lot of changes in this series. If one of us
-can simply have a separate branch with just this series based off of
-v5.4-rc3, it would work better.
-
-I could add it to mine, or for you. But I would still need to test this
-in my code first. Peter's last series failed my test suite.
-
--- Steve
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
