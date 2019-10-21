@@ -2,132 +2,212 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA79ACA9EB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:14:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B0BCCA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:14:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FFAD20B7C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:14:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571667269;
-	bh=98/rw92U38HfDyMvYsaewyrwIf2e6BuR1DViSORVjRQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=x3RLd85dF1BiDcACAPCRZP+VLl/r/7BcCT7CK7GLOwgPmBB5+WjIHkDJz5K2wymgs
-	 dSPOx1YKd+uuXIjuAgKS9faUxJ0thXgFymUYW0I1Sz1yHjv0O1kX1g9VzvddyUu6an
-	 ccoMXUHeme5vu87XLfdiI9yme0qRpO9kcwrC9X0w=
+	by mail.kernel.org (Postfix) with ESMTP id CC7CB20882
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:14:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="qwhubt3Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729303AbfJUOO2 (ORCPT
+        id S1729319AbfJUOOd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 10:14:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53972 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727755AbfJUOO1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 10:14:27 -0400
-Received: from linux-8ccs (ip5f5ade6e.dynamic.kabel-deutschland.de [95.90.222.110])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3155B2070B;
-        Mon, 21 Oct 2019 14:14:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571667267;
-        bh=98/rw92U38HfDyMvYsaewyrwIf2e6BuR1DViSORVjRQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MnxJeEFB6wdl44jT4E/5wuvnJNxyRNEna/A9nRCk1jowhbtIlOkjQ3m3U3ICPWxHb
-         jGq1m9zoRNxCngb4XoSQG4AyM1wulqdzFvFYsACPvtcoqewnv6aZU08MLWtnxcRAvr
-         Qzx7knnSRijxzyGwtiwXcrBr/QV0cE8kL6dDlQg8=
-Date:   Mon, 21 Oct 2019 16:14:20 +0200
-From:   Jessica Yu <jeyu@kernel.org>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Miroslav Benes <mbenes@suse.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joe Lawrence <joe.lawrence@redhat.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, mhiramat@kernel.org,
-        bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, jpoimboe@redhat.com,
-        live-patching@vger.kernel.org
-Subject: Re: [PATCH v3 5/6] x86/ftrace: Use text_poke()
-Message-ID: <20191021141419.GB21112@linux-8ccs>
-References: <alpine.LSU.2.21.1910151611000.13169@pobox.suse.cz>
- <88bab814-ea24-ece9-2bc0-7a1e10a62f12@redhat.com>
- <20191015153120.GA21580@linux-8ccs>
- <7e9c7dd1-809e-f130-26a3-3d3328477437@redhat.com>
- <20191015182705.1aeec284@gandalf.local.home>
- <20191016074951.GM2328@hirez.programming.kicks-ass.net>
- <alpine.LSU.2.21.1910161216100.7750@pobox.suse.cz>
- <alpine.LSU.2.21.1910161521010.7750@pobox.suse.cz>
- <20191018130342.GA4625@linux-8ccs>
- <20191018134058.7zyls4746wpa7jy5@pathway.suse.cz>
+        Mon, 21 Oct 2019 10:14:33 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:19877 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729127AbfJUOOd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 10:14:33 -0400
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191021141430epoutp030e4f44111fdfdc9eab69e83b65010d10~Prw400JUx0396703967epoutp03I
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 14:14:30 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191021141430epoutp030e4f44111fdfdc9eab69e83b65010d10~Prw400JUx0396703967epoutp03I
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1571667270;
+        bh=PcRAuDOcHjLHppSatFUnALgrkProkok4O489w5TSF50=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=qwhubt3Zbv7CL4LdyNNNhIgNJ6d2p8CAih3O1bYdvpLwu2NEeOdwHtRenAKuBIx0Q
+         UbeHGz61LojXBbqm4ajRnkXUZ9wyPd2eseTVLKgB52WeH55BL1JMC6cTYjqvbcNiG9
+         i7bXMWSpSlOAKrLnDNWjAk/veMdfnalbOHEJyV3E=
+Received: from epsmges5p1new.samsung.com (unknown [182.195.42.73]) by
+        epcas5p2.samsung.com (KnoxPortal) with ESMTP id
+        20191021141429epcas5p2cf7e3a3fe86191579f733576fb3d154c~Prw3lctit2837128371epcas5p2S;
+        Mon, 21 Oct 2019 14:14:29 +0000 (GMT)
+Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
+        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        50.FF.04647.54DBDAD5; Mon, 21 Oct 2019 23:14:29 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+        20191021141428epcas5p2343617905183e317aaeb5beed17be301~Prw2kmxI_2837128371epcas5p2R;
+        Mon, 21 Oct 2019 14:14:28 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20191021141428epsmtrp2f1d05c6ffcee999e2ccc6a5ec326f845~Prw2j7DEE1778717787epsmtrp2X;
+        Mon, 21 Oct 2019 14:14:28 +0000 (GMT)
+X-AuditID: b6c32a49-72bff70000001227-a7-5dadbd453604
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        A5.AF.03889.34DBDAD5; Mon, 21 Oct 2019 23:14:28 +0900 (KST)
+Received: from pankajdubey02 (unknown [107.111.85.21]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20191021141426epsmtip2d80189b38641ce4076a4d1f85881b759~Prw1VY_zk1037410374epsmtip2H;
+        Mon, 21 Oct 2019 14:14:26 +0000 (GMT)
+From:   "Pankaj Dubey" <pankaj.dubey@samsung.com>
+To:     "'Andrew Murray'" <andrew.murray@arm.com>,
+        "'Anvesh Salveru'" <anvesh.s@samsung.com>
+Cc:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <bhelgaas@google.com>, <gustavo.pimentel@synopsys.com>,
+        <jingoohan1@gmail.com>, <lorenzo.pieralisi@arm.com>
+In-Reply-To: <20191021140424.GR47056@e119886-lin.cambridge.arm.com>
+Subject: RE: [PATCH 2/2] PCI: dwc: Add support to handle ZRX-DC Compliant
+ PHYs
+Date:   Mon, 21 Oct 2019 19:44:25 +0530
+Message-ID: <05b301d58819$d962fa00$8c28ee00$@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20191018134058.7zyls4746wpa7jy5@pathway.suse.cz>
-X-OS:   Linux linux-8ccs 4.12.14-lp150.12.28-default x86_64
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQHofyUpkW9F4esSgqZqrNFszEeXZwD9REAhAfezFTmnJ40NUA==
+Content-Language: en-us
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrIKsWRmVeSWpSXmKPExsWy7bCmpq7r3rWxBv17WS2a/29ntTi7ayGr
+        xZKmDItddzvYLVZ8mclucXnXHDaLs/OOs1m8+f2C3YHDY828NYweO2fdZfdYsKnUo2/LKkaP
+        Lfs/M3p83iQXwBbFZZOSmpNZllqkb5fAlTH1+SOmguVSFQu/SDcwXhDtYuTkkBAwkZjceJO1
+        i5GLQ0hgN6PEriffWEASQgKfGCWOT4mCSHxjlDj/YBIzTMfK/RfYIRJ7GSUamm4wQXS8ZpT4
+        96wYxGYT0Jc492MeK4gtIhAlsfDeVrAVzAIbGCXaVx8ES3AKOEusfNgENlVYIEBi+/Q1YKtZ
+        BFQl5l+9xdbFyMHBK2Ap8WY/O0iYV0BQ4uTMJ2AlzALyEtvfzoE6SEHi59NlrCDlIgJOEu/e
+        CkGUiEu8PHqEHaLkN5vEm92WELaLxLfeVhYIW1ji1fEtUDVSEp/f7WWDsPMlfiwG+ZcLyG5h
+        lJh8fC4rRMJe4sCVOSwgu5gFNCXW79KH2MUn0fv7CRNIWEKAV6KjTQiiWk3i+/MzUFfKSDxs
+        XsoEYXtIfNnRyTiBUXEWksdmIXlsFpIPZiEsW8DIsopRMrWgODc9tdi0wDAvtVyvODG3uDQv
+        XS85P3cTIzghaXnuYJx1zucQowAHoxIPb8GitbFCrIllxZW5hxglOJiVRHjvGACFeFMSK6tS
+        i/Lji0pzUosPMUpzsCiJ805ivRojJJCeWJKanZpakFoEk2Xi4JRqYNwjbn3T9BqTcHsez+pn
+        r5pTLiurbmrYtanL8M5sX+6N8fw7962/aaCl4DH/9M93zauqN7Fe1V2w5qG93NfAuIMrn9Uu
+        Nfz88JXkgZc/y6XErq/JPM9WELycx1On9IxhocL7RSoWqdWr3pX80Hf1fnh7etSjFQXPwkL1
+        U0t+5PUmzdp17Otlo7NKLMUZiYZazEXFiQCashsXRAMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprKIsWRmVeSWpSXmKPExsWy7bCSvK7L3rWxBq8mMlo0/9/OanF210JW
+        iyVNGRa77nawW6z4MpPd4vKuOWwWZ+cdZ7N48/sFuwOHx5p5axg9ds66y+6xYFOpR9+WVYwe
+        W/Z/ZvT4vEkugC2KyyYlNSezLLVI3y6BK2Pq80dMBculKhZ+kW5gvCDaxcjJISFgIrFy/wX2
+        LkYuDiGB3YwSFxrPsEIkZCQmr14BZQtLrPz3HKroJaPEq72/2EASbAL6Eud+zAMrEhGIkvj7
+        +QYLSBGzwDZGiU+75rFBdJxllGh+cAOsg1PAWWLlwyZmEFtYwE/i4dUrYHEWAVWJ+VdvAdkc
+        HLwClhJv9rODhHkFBCVOznzCAhJmFtCTaNvICBJmFpCX2P52DjPEcQoSP58uYwUpERFwknj3
+        VgiiRFzi5dEj7BMYhWchGTQLYdAsJINmIelYwMiyilEytaA4Nz232LDAKC+1XK84Mbe4NC9d
+        Lzk/dxMjOLK0tHYwnjgRf4hRgINRiYf3xJK1sUKsiWXFlbmHGCU4mJVEeO8YAIV4UxIrq1KL
+        8uOLSnNSiw8xSnOwKInzyucfixQSSE8sSc1OTS1ILYLJMnFwSjUwcnnmz3k68ZHtzUtuR29p
+        tedIhp0WW+a52cXmRJkls7HYE4tbe+am5quWFfKzMy1aFSortmC1XYTo5aP2tRP/XUvZmnBI
+        9f/jG8cq6z4KCzj1Z0wK2K0573+kwUNXlQdq3xnirz6cnebSqaaVm+dVv/jj/ZI73JVX+JTP
+        vixeMOu+1pa6vMw9SizFGYmGWsxFxYkAWo4XUKgCAAA=
+X-CMS-MailID: 20191021141428epcas5p2343617905183e317aaeb5beed17be301
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20191021123016epcas5p3ab7100162a8d6d803b117976240f20b4
+References: <CGME20191021123016epcas5p3ab7100162a8d6d803b117976240f20b4@epcas5p3.samsung.com>
+        <1571660993-30329-1-git-send-email-anvesh.s@samsung.com>
+        <20191021140424.GR47056@e119886-lin.cambridge.arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+++ Petr Mladek [18/10/19 15:40 +0200]:
->On Fri 2019-10-18 15:03:42, Jessica Yu wrote:
->> +++ Miroslav Benes [16/10/19 15:29 +0200]:
->> > On Wed, 16 Oct 2019, Miroslav Benes wrote:
->> > Thinking about it more... crazy idea. I think we could leverage these new
->> > ELF .text per vmlinux/module sections for the reinvention I was talking
->> > about. If we teach module loader to relocate (and apply alternatives and
->> > so on, everything in arch-specific module_finalize()) not the whole module
->> > in case of live patch modules, but separate ELF .text sections, it could
->> > solve the issue with late module patching we have. It is a variation on
->> > Steven's idea. When live patch module is loaded, only its section for
->> > present modules would be processed. Then whenever a to-be-patched module
->> > is loaded, its .text section in all present patch module would be
->> > processed.
->> >
->> > The upside is that almost no work would be required on patch modules
->> > creation side. The downside is that klp_modinfo must stay. Module loader
->> > needs to be hacked a lot in both cases. So it remains to be seen which
->> > idea is easier to implement.
->> >
->> > Jessica, do you think it would be feasible?
->>
->> I think that does sound feasible. I'm trying to visualize how that
->> would look. I guess there would need to be various livepatching hooks
->> called during the different stages (apply_relocate_add(),
->> module_finalize(), module_enable_ro/x()).
->>
->> So maybe something like the following?
->>
->> When a livepatch module loads:
->>    apply_relocate_add()
->>        klp hook: apply .klp.rela.$objname relocations *only* for
->>        already loaded modules
->>    module_finalize()
->>        klp hook: apply .klp.arch.$objname changes for already loaded modules
->>    module_enable_ro()
->>        klp hook: only enable ro/x for .klp.text.$objname for already
->>        loaded modules
->
->Just for record. We should also set ro for the not-yet used
->.klp.text.$objname at this stage so that it can't be modified
->easily "by accident".
 
-If we also set ro protection already for .klp.text.$objname for
-not-yet loaded modules, I think this would unfortunately mean we would
-still have to do the protection flipping for late module patching that
-Peter was trying to avoid, right?
 
-That is, we *still* end up having to do the whole module_disable_ro()
--> apply_relocate_add() -> module_finalize() -> module_enable_ro()
-thing for late module patching, except now we've moved that work to
-the module loader instead of in klp_module_coming.. It sounds just as
-complicated as the current way :/
+> -----Original Message-----
+> From: Andrew Murray <andrew.murray@arm.com>
+> Sent: Monday, October 21, 2019 7:34 PM
+> To: Anvesh Salveru <anvesh.s@samsung.com>
+> Cc: linux-pci@vger.kernel.org; linux-kernel@vger.kernel.org;
+> bhelgaas@google.com; gustavo.pimentel@synopsys.com;
+> jingoohan1@gmail.com; lorenzo.pieralisi@arm.com; Pankaj Dubey
+> <pankaj.dubey@samsung.com>
+> Subject: Re: [PATCH 2/2] PCI: dwc: Add support to handle ZRX-DC Compliant
+> PHYs
+> 
+> On Mon, Oct 21, 2019 at 05:59:53PM +0530, Anvesh Salveru wrote:
+> > Many platforms use DesignWare controller but the PHY can be different
+> > in different platforms. If the PHY is compliant is to ZRX-DC
+> > specification
+> 
+> s/is to/to the/
 
-However, I think this complaint would not apply if livepatch switches
-to the one patch module per module model..
+OK
+
+> 
+> > it helps in low power consumption during power states.
+> 
+> s/in low/lower/
+> 
+OK
+> >
+> > If current data rate is 8.0 GT/s or higher and PHY is not compliant to
+> > ZRX-DC specification, then after every 100ms link should transition to
+> > recovery state during the low power states.
+> >
+> > DesignWare controller provides GEN3_ZRXDC_NONCOMPL field in
+> > GEN3_RELATED_OFF to specify about ZRX-DC compliant PHY.
+> >
+> > Platforms with ZRX-DC compliant PHY can set "snps,phy-zrxdc-compliant"
+> > property in controller DT node to specify this property to the
+controller.
+> >
+> > Signed-off-by: Anvesh Salveru <anvesh.s@samsung.com>
+> > Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+> > ---
+> >  drivers/pci/controller/dwc/pcie-designware.c | 7 +++++++
+> > drivers/pci/controller/dwc/pcie-designware.h | 3 +++
+> >  2 files changed, 10 insertions(+)
+> >
+> > diff --git a/drivers/pci/controller/dwc/pcie-designware.c
+> > b/drivers/pci/controller/dwc/pcie-designware.c
+> > index 820488dfeaed..6560d9f765d7 100644
+> > --- a/drivers/pci/controller/dwc/pcie-designware.c
+> > +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> > @@ -556,4 +556,11 @@ void dw_pcie_setup(struct dw_pcie *pci)
+> >  		       PCIE_PL_CHK_REG_CHK_REG_START;
+> >  		dw_pcie_writel_dbi(pci, PCIE_PL_CHK_REG_CONTROL_STATUS,
+> val);
+> >  	}
+> > +
+> > +	if (of_property_read_bool(np, "snps,phy-zrxdc-compliant")) {
+> > +		val = dw_pcie_readl_dbi(pci, PCIE_PORT_GEN3_RELATED);
+> > +		val &= ~PORT_LOGIC_GEN3_ZRXDC_NONCOMPL;
+> > +		dw_pcie_writel_dbi(pci, PCIE_PORT_GEN3_RELATED, val);
+> > +	}
+> > +
+> 
+> Given that this duplicates tegra_pcie_prepare_host in pcie-tegra194.c, can
+we
+> update that driver to adopt this new binding?
+> 
+
+Yes, Thanks for highlighting this. Otherwise I was worried that we have one
+more patch without real user :)
+We will update pcie-tegra194.c driver and post the patch to adopt this
+binding.
+
+> Thanks,
+> 
+> Andrew Murray
+> 
+> >  }
+> > diff --git a/drivers/pci/controller/dwc/pcie-designware.h
+> > b/drivers/pci/controller/dwc/pcie-designware.h
+> > index 5a18e94e52c8..427a55ec43c6 100644
+> > --- a/drivers/pci/controller/dwc/pcie-designware.h
+> > +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> > @@ -60,6 +60,9 @@
+> >  #define PCIE_MSI_INTR0_MASK		0x82C
+> >  #define PCIE_MSI_INTR0_STATUS		0x830
+> >
+> > +#define PCIE_PORT_GEN3_RELATED		0x890
+> > +#define PORT_LOGIC_GEN3_ZRXDC_NONCOMPL		BIT(0)
+> > +
+> >  #define PCIE_ATU_VIEWPORT		0x900
+> >  #define PCIE_ATU_REGION_INBOUND		BIT(31)
+> >  #define PCIE_ATU_REGION_OUTBOUND	0
+> > --
+> > 2.17.1
+> >
 
