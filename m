@@ -2,151 +2,157 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EC92CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:11:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B51FCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:11:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23CEA206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:11:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F179E206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:11:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lyFZeW6r"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Qw/aS0HG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728400AbfJULLl (ORCPT
+        id S1728421AbfJULLo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 07:11:41 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39760 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727685AbfJULLk (ORCPT
+        Mon, 21 Oct 2019 07:11:44 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:41174 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728360AbfJULLm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 07:11:40 -0400
-Received: by mail-wm1-f67.google.com with SMTP id r141so2754029wme.4;
-        Mon, 21 Oct 2019 04:11:38 -0700 (PDT)
+        Mon, 21 Oct 2019 07:11:42 -0400
+Received: by mail-wr1-f67.google.com with SMTP id p4so13460372wrm.8
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 04:11:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=MrGT/ACSXBerqMBFt/M8LBAiQe+lN7qu02ft+PsvJxY=;
-        b=lyFZeW6r4TsnzNcbEe/m/NFXG6lKFUwNTCSl7xgX3quKIW/6P4Cd8V0H4X3vriuOtw
-         wmTpBAtInwGfs5rZMpY15JmfJCU1J0QFGPM2LMvBJ4d0WGIuJ21laUbdy4/oanKPsyYF
-         m2d9mmh11nurPv0GDCjemTZrYEnJhejFxBjUrAVudaF9GKLrFRvcq2Fzw19qFxbxelZl
-         lBLqfjDuRam9LPw7HwQJJm/PLfhIHCRL5zs0E2XAvVQZ/OfT5RRl93qBggui8JMNWQuX
-         J+eRwyRtrDYmtPIyISfXKSYW5IqLQjF+M8awuVe8tu6DUbnb50bWud4ZqeTg/0MLsSZ9
-         Wy2A==
+         :content-disposition:in-reply-to:user-agent;
+        bh=qsofjz6mshTaTSConAGSTps6s034Gbt4rNbvJmgPEqI=;
+        b=Qw/aS0HGq3uA01t/yK2JtENn3tenwrVO/oinZ+LDdFPK4K7lSstYeFd09mmDdBc6jA
+         3BktjSCm9JK61WZrxMyUBtJz729Va8PGXWcVkr9koxvT3rnLTo5fjjcPgUMRhtwZ+3bA
+         sENUFHX9WqL6LaQkdYyAwMeUmEJtYE0uPFHMxp+ONNs5OD7z2cnfd0FAvZEtHHWaU3PO
+         T/bLU0Q43Xa0jrWmnJKSEC0CnvkvdEfZhjLnoiW/kNYB+TzxTiyUc6sJUIcKkUGyRJ63
+         8RbLCwZ4mqIdbyYVvo6/AX+k1Y4rpIlq82KgLKKsNJ/9L/UOMU3VYVlR5FwLDxHqxlmx
+         Lk2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=MrGT/ACSXBerqMBFt/M8LBAiQe+lN7qu02ft+PsvJxY=;
-        b=JA7DpIGHOrKdJjpfFdOJAhIAAivl1DO96WEpm/ZUVVxic8Tihv1iAzz767NOj4wNR/
-         ciAPeImZpwIyNWPrHZEKnOtVyUHroaUbFg77TvUBPdrcSSgKIj1oQZpiRleYqm9SEj/5
-         MxFFLVKDbPRQhL4ck8H3KfmxUz/UV/+AweCOXI5fGDSQUZAwGvJtUdnkAEmHQ2KmIVQ4
-         o6UTrlIC+YlANJGLVztsVfH40idBIebP7RG1YDCkTqKOC0awncR2uDq8BmAJnIYkj0C1
-         Y2xDHenRsVs4ssIR/4z/6aixoFcAxLoi9AUHYbPbuh51L6Gcho8FPcGQL3DThsmOlXPb
-         uzlw==
-X-Gm-Message-State: APjAAAVZgm5eBhZXnjSV1oy67okfAhOgQfzqHQ0cJeIcz4KgBMXYHkBi
-        mJkDprhhhobefXmC+QXlG+1RmEGH
-X-Google-Smtp-Source: APXvYqzIe08wuPcOlwxSpjMFPHKI1mURWTpYejvuwBQjGEW/mo6OWZV4iGI6OLB5sC6dInut3AxOow==
-X-Received: by 2002:a7b:c413:: with SMTP id k19mr20137973wmi.175.1571656298187;
-        Mon, 21 Oct 2019 04:11:38 -0700 (PDT)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id k8sm28731822wrg.15.2019.10.21.04.11.37
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 21 Oct 2019 04:11:37 -0700 (PDT)
-Date:   Mon, 21 Oct 2019 13:11:36 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
-Cc:     "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH] fs: exFAT read-only driver GPL implementation by Paragon
- Software.
-Message-ID: <20191021111136.adpxjxmmz4p2vud2@pali>
-References: <453A1153-9493-4A04-BF66-CE6A572DEBDB@paragon-software.com>
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qsofjz6mshTaTSConAGSTps6s034Gbt4rNbvJmgPEqI=;
+        b=NJjee8guTaQwkq6sWc+Wx+ajxBVkvzIx2ilISuYuk+SyTy5NlTAguc/L5uQI0SAkBK
+         UwtjMtRghAbe7jyYTuVt0LGLeL01Hrre1AvkyLuEn9ei6pRhm4BPkn55KpiMugK441HD
+         fN/IdRWxl4YFalZK2kkftmGkv8DoVQOT+78Tnox4abMrfSyG2G0iE1LfKJGol+s44Gtx
+         hIJPiNUWjv1tutoKlvODk5R1gGxII4/FnBJPLQ/nkwLTNAWI+7AacidWP38MffXOs+fK
+         o60VVK0tZ0EMtctReOKlKctahbFHraUMBKTzgBz6tM66U4GxAovUNYDK+Q1xEk+xiz+o
+         /gmw==
+X-Gm-Message-State: APjAAAXstg/BQgAhYQZ+YopOMsUBuSZKZPob90hj0LsSkq4/I/Bs8Ryz
+        N522TaBQvdVr2rMPBPZH/su0fn3OXevLzw==
+X-Google-Smtp-Source: APXvYqyEz+wOiJ9o9r1cn1J6DkUMs1jnwJCJCpIDNRnyLkmBeyFlC0rvOrNwlbB3d87ARm18YQ94qQ==
+X-Received: by 2002:a05:6000:149:: with SMTP id r9mr14617479wrx.90.1571656300623;
+        Mon, 21 Oct 2019 04:11:40 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id r81sm7985522wme.16.2019.10.21.04.11.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Oct 2019 04:11:39 -0700 (PDT)
+Date:   Mon, 21 Oct 2019 12:11:37 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     arnd@arndb.de, broonie@kernel.org, linus.walleij@linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        baohua@kernel.org, stephan@gerhold.net
+Subject: Re: [PATCH v2 2/9] mfd: cs5535-mfd: Remove mfd_cell->id hack
+Message-ID: <20191021111137.ey6cbrrb2af3wj5i@holly.lan>
+References: <20191021105822.20271-1-lee.jones@linaro.org>
+ <20191021105822.20271-3-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <453A1153-9493-4A04-BF66-CE6A572DEBDB@paragon-software.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20191021105822.20271-3-lee.jones@linaro.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday 18 October 2019 15:18:39 Konstantin Komarov wrote:
-> Recently exFAT filesystem specification has been made public by Microsoft (https://docs.microsoft.com/en-us/windows/win32/fileio/exfat-specification).
-> Having decades of expertise in commercial file systems development, we at Paragon Software GmbH are very excited by Microsoft's decision and now want to make our contribution to the Open Source Community by providing our implementation of exFAT Read-Only (yet!) fs implementation for the Linux Kernel.
-> We are about to prepare the Read-Write support patch as well.
-
-Hi Konstantin! Do you have any plan when you provide also R/W support?
-
-> 'fs/exfat' is implemented accordingly to standard Linux fs development approach with no use/addition of any custom API's.
-> To divide our contribution from 'drivers/staging' submit of Aug'2019, our Kconfig key is "EXFAT_RO_FS"
->
-> Signed-off-by: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
+On Mon, Oct 21, 2019 at 11:58:15AM +0100, Lee Jones wrote:
+> The current implementation abuses the platform 'id' mfd_cell member
+> to index into the correct resources entry.  If we place all cells
+> into their numbered slots, we can cycle through all the cell entries
+> and only process the populated ones which avoids this behaviour.
+> 
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
 > ---
-> MAINTAINERS         |    6 +
-> fs/Kconfig          |    3 +-
-> fs/exfat/Kconfig    |   31 ++
-> fs/exfat/Makefile   |    9 +
-> fs/exfat/bitmap.c   |  117 +++++
-> fs/exfat/cache.c    |  483 ++++++++++++++++++
-> fs/exfat/debug.h    |   69 +++
-> fs/exfat/dir.c      |  610 +++++++++++++++++++++++
-> fs/exfat/exfat.h    |  248 ++++++++++
-> fs/exfat/exfat_fs.h |  388 +++++++++++++++
-> fs/exfat/fatent.c   |   79 +++
-> fs/exfat/file.c     |   93 ++++
-> fs/exfat/inode.c    |  317 ++++++++++++
-> fs/exfat/namei.c    |  154 ++++++
-> fs/exfat/super.c    | 1145 +++++++++++++++++++++++++++++++++++++++++++
-> fs/exfat/upcase.c   |  344 +++++++++++++
-> 16 files changed, 4095 insertions(+), 1 deletion(-)
-> create mode 100644 fs/exfat/Kconfig
-> create mode 100644 fs/exfat/Makefile
-> create mode 100644 fs/exfat/bitmap.c
-> create mode 100644 fs/exfat/cache.c
-> create mode 100644 fs/exfat/debug.h
-> create mode 100644 fs/exfat/dir.c
-> create mode 100644 fs/exfat/exfat.h
-> create mode 100644 fs/exfat/exfat_fs.h
-> create mode 100644 fs/exfat/fatent.c
-> create mode 100644 fs/exfat/file.c
-> create mode 100644 fs/exfat/inode.c
-> create mode 100644 fs/exfat/namei.c
-> create mode 100644 fs/exfat/super.c
-> create mode 100644 fs/exfat/upcase.c
+>  drivers/mfd/cs5535-mfd.c | 31 +++++++++++++------------------
+>  1 file changed, 13 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/mfd/cs5535-mfd.c b/drivers/mfd/cs5535-mfd.c
+> index 2c47afc22d24..9ce6bbcdbda1 100644
+> --- a/drivers/mfd/cs5535-mfd.c
+> +++ b/drivers/mfd/cs5535-mfd.c
+> @@ -62,26 +62,22 @@ static int cs5535_mfd_res_disable(struct platform_device *pdev)
+>  static struct resource cs5535_mfd_resources[NR_BARS];
+>  
+>  static struct mfd_cell cs5535_mfd_cells[] = {
 
-Also have you considered to to re-use fs/fat sources instead? It is
-possible or there is nothing in fs/fat which could be reused or
-refactored/extracted?
+This array is sized from the initializer...
 
-> diff --git a/fs/exfat/super.c b/fs/exfat/super.c
-> new file mode 100644
-> index 000000000000..0705dab3c3fc
-> --- /dev/null
-> +++ b/fs/exfat/super.c
-...
-> +/* inits internal info from on-disk boot sector*/
-> +static int exfat_init_from_boot(struct super_block *sb, struct exfat_boot *boot,
-> +				u64 bytes_per_volume, u32 *root_lcn)
-> +{
-...
-> +	if (boot->fats != 1) {
-> +		hint = "This version of exfat driver does not support TexFat";
-> +		goto out;
-> +	}
+> -	{
+> -		.id = SMB_BAR,
+> +	[SMB_BAR] = {
+>  		.name = "cs5535-smb",
+>  		.num_resources = 1,
+>  		.resources = &cs5535_mfd_resources[SMB_BAR],
+>  	},
+> -	{
+> -		.id = GPIO_BAR,
+> +	[GPIO_BAR] = {
+>  		.name = "cs5535-gpio",
+>  		.num_resources = 1,
+>  		.resources = &cs5535_mfd_resources[GPIO_BAR],
+>  	},
+> -	{
+> -		.id = MFGPT_BAR,
+> +	[MFGPT_BAR] = {
+>  		.name = "cs5535-mfgpt",
+>  		.num_resources = 1,
+>  		.resources = &cs5535_mfd_resources[MFGPT_BAR],
+>  	},
+> -	{
+> -		.id = PMS_BAR,
+> +	[PMS_BAR] = {
+>  		.name = "cs5535-pms",
+>  		.num_resources = 1,
+>  		.resources = &cs5535_mfd_resources[PMS_BAR],
+> @@ -89,8 +85,7 @@ static struct mfd_cell cs5535_mfd_cells[] = {
+>  		.enable = cs5535_mfd_res_enable,
+>  		.disable = cs5535_mfd_res_disable,
+>  	},
+> -	{
+> -		.id = ACPI_BAR,
+> +	[ACPI_BAR] = {
+>  		.name = "cs5535-acpi",
+>  		.num_resources = 1,
+>  		.resources = &cs5535_mfd_resources[ACPI_BAR],
+> @@ -115,16 +110,16 @@ static int cs5535_mfd_probe(struct pci_dev *pdev,
+>  		return err;
+>  
+>  	/* fill in IO range for each cell; subdrivers handle the region */
+> -	for (i = 0; i < ARRAY_SIZE(cs5535_mfd_cells); i++) {
+> -		int bar = cs5535_mfd_cells[i].id;
+> -		struct resource *r = &cs5535_mfd_resources[bar];
+> +	for (i = 0; i < NR_BARS; i++) {
 
-Are you going to add support also for TexFAT? Or at least for more two
-FAT tables (like is used in FAT32)?
+... which means this translation from ARRAY_SIZE() to NR_BARS
+is rather odd.
 
--- 
-Pali Rohár
-pali.rohar@gmail.com
+I don't care whether the array is sized using NR_BARS or the loop
+uses ARRAY_SIZE() but IMHO the loop boundary condition must match
+the array declaration.
+
+With that fixed free to throw the following onto the next rev:
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+
+
+Daniel.
