@@ -2,89 +2,106 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D88CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 17:19:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA802CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 17:19:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E7992086D
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 17:19:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC3872086D
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 17:19:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729488AbfJURT1 (ORCPT
+        id S1729584AbfJURTu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 13:19:27 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48400 "EHLO mx1.redhat.com"
+        Mon, 21 Oct 2019 13:19:50 -0400
+Received: from muru.com ([72.249.23.125]:38582 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728182AbfJURT1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 13:19:27 -0400
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com [209.85.128.69])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C5353806CE
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 17:19:26 +0000 (UTC)
-Received: by mail-wm1-f69.google.com with SMTP id s19so4893541wmj.0
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 10:19:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Ld2sD7K11SrzwjFl9eHxvksw0/zWsi3v0XYvIHwISxY=;
-        b=M5Qz4ZK5FmVwMzT3bNahrl1Q2mGwrjtwPwPjJjR1iFlLEAQBqZO1edmBM1ssLgHrEv
-         utQRCdXPyIH9zCTbyZsrYf3z8/KDh/CSEfKApcqZ9P/Sx5YMOtvYsjOowKGm4tH1zNtM
-         OHc8aH8XHVS/kHNx21pAmGEVw9JDX3g7waelHeC+/VTLd1Vu9MlqxmFH9voxL9byIgId
-         ypplCuOT969DKuUA3yDAzCfMx4HgxwY48i+2f6TPWdcP/MLBXopO7lAwTCzoahM2zjPJ
-         U0wgGJhnO1ykXyuU55Omu3R2ib9/IVuYbCddgjLkfe51i/q8QtGLGxFjM/AEJ9em0FZY
-         DTRQ==
-X-Gm-Message-State: APjAAAVBdJZ+W/0HHIOkUwY8aZWtggA5ZmN0opNADr8LsTzd6mxl5IRZ
-        Mto/yNCJtfWCF7J1P9UKvrahAMZ0X9oksFyRXb/l/7TCYJFOhCCuOsPsKHPWcVbtJk19HAt04eN
-        dLQHnbiyYFbjWwPvulOirwlad
-X-Received: by 2002:adf:f686:: with SMTP id v6mr22337050wrp.141.1571678365526;
-        Mon, 21 Oct 2019 10:19:25 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyiywPmg6NJ1czyf6ouMoCYDpKf4Afn/Dv4XonOBOJn93D/U1NSTqiVTKULCWxKEGXSL0j/KA==
-X-Received: by 2002:adf:f686:: with SMTP id v6mr22337034wrp.141.1571678365267;
-        Mon, 21 Oct 2019 10:19:25 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:847b:6afc:17c:89dd? ([2001:b07:6468:f312:847b:6afc:17c:89dd])
-        by smtp.gmail.com with ESMTPSA id 126sm16138702wma.48.2019.10.21.10.19.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 21 Oct 2019 10:19:24 -0700 (PDT)
-Subject: Re: [PATCH] kvm: clear kvmclock MSR on reset
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     suleiman@google.com, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-References: <1570704617-32285-1-git-send-email-pbonzini@redhat.com>
- <87wod439hq.fsf@vitty.brq.redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <62a31237-8b15-48da-50ef-2649daa20fdb@redhat.com>
-Date:   Mon, 21 Oct 2019 19:19:23 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1727328AbfJURTt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 13:19:49 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 8EBC280CC;
+        Mon, 21 Oct 2019 17:20:22 +0000 (UTC)
+Date:   Mon, 21 Oct 2019 10:19:44 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Adam Ford <aford173@gmail.com>
+Cc:     dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V5 3/3] ARM: logicpd-torpedo-37xx-devkit-28: Reference
+ new DRM panel
+Message-ID: <20191021171944.GA5610@atomide.com>
+References: <20191016135147.7743-1-aford173@gmail.com>
+ <20191016135147.7743-3-aford173@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <87wod439hq.fsf@vitty.brq.redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191016135147.7743-3-aford173@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16/10/19 19:06, Vitaly Kuznetsov wrote:
->>  		/* we verify if the enable bit is set... */
->> +		vcpu->arch.pv_time_enabled = false;
->>  		if (!(data & 1))
->>  			break;
->>  
->>  		if (kvm_gfn_to_hva_cache_init(vcpu->kvm,
->>  		     &vcpu->arch.pv_time, data & ~1ULL,
->>  		     sizeof(struct pvclock_vcpu_time_info)))
->> -			vcpu->arch.pv_time_enabled = false;
->> -		else
->>  			vcpu->arch.pv_time_enabled = true;
+* Adam Ford <aford173@gmail.com> [191016 06:53]:
+> With the removal of the panel-dpi from the omap drivers, the
+> LCD no longer works.  This patch points the device tree to
+> a newly created panel named "logicpd,type28"
+> 
+> Fixes: 8bf4b1621178 ("drm/omap: Remove panel-dpi driver")
+> 
+> Signed-off-by: Adam Ford <aford173@gmail.com>
+> Acked-by: Sam Ravnborg <sam@ravnborg.org>
+> ---
+> V5:  No Change
+> V4:  No Change
+> V3:  No change
+> V2:  Remove legacy 'label' from binding
 
-Yes...
+I'm picking this patch into omap-for-v5.5/dt thanks.
 
-Paolo
+Regards,
+
+Tony
+
+> diff --git a/arch/arm/boot/dts/logicpd-torpedo-37xx-devkit-28.dts b/arch/arm/boot/dts/logicpd-torpedo-37xx-devkit-28.dts
+> index 07ac99b9cda6..cdb89b3e2a9b 100644
+> --- a/arch/arm/boot/dts/logicpd-torpedo-37xx-devkit-28.dts
+> +++ b/arch/arm/boot/dts/logicpd-torpedo-37xx-devkit-28.dts
+> @@ -11,22 +11,6 @@
+>  #include "logicpd-torpedo-37xx-devkit.dts"
+>  
+>  &lcd0 {
+> -
+> -	label = "28";
+> -
+> -	panel-timing {
+> -		clock-frequency = <9000000>;
+> -		hactive = <480>;
+> -		vactive = <272>;
+> -		hfront-porch = <3>;
+> -		hback-porch = <2>;
+> -		hsync-len = <42>;
+> -		vback-porch = <3>;
+> -		vfront-porch = <2>;
+> -		vsync-len = <11>;
+> -		hsync-active = <1>;
+> -		vsync-active = <1>;
+> -		de-active = <1>;
+> -		pixelclk-active = <0>;
+> -	};
+> +	/* To make it work, set CONFIG_OMAP2_DSS_MIN_FCK_PER_PCK=4 */
+> +	compatible = "logicpd,type28";
+>  };
+> -- 
+> 2.17.1
+> 
