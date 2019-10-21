@@ -2,60 +2,113 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24ED6CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 23:21:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D8DAC47E49
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 23:23:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F38AA20882
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 23:21:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D74AB20882
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 23:23:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="MvJcZoV/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730537AbfJUXVv (ORCPT
+        id S1730164AbfJUXXi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 19:21:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40538 "EHLO mail.kernel.org"
+        Mon, 21 Oct 2019 19:23:38 -0400
+Received: from ozlabs.org ([203.11.71.1]:55791 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729270AbfJUXVu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 19:21:50 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728056AbfJUXXi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 19:23:38 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AAA9920882;
-        Mon, 21 Oct 2019 23:21:49 +0000 (UTC)
-Date:   Mon, 21 Oct 2019 19:21:46 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Cong Wang <xiyou.wangcong@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>
-Subject: Re: [PATCH v3] tracing: Introduce trace event injection
-Message-ID: <20191021192146.0d651ce2@oasis.local.home>
-In-Reply-To: <CAM_iQpU3dqvUR0Qp6ZdZrAiyT_t_uFk4K79vcT2Q_-EjqBCGbw@mail.gmail.com>
-References: <20190904211456.31204-1-xiyou.wangcong@gmail.com>
-        <CAM_iQpUiOi8JDBqAtMHii5UHK3D6WQkk_G5DriJ9Y0yTYbWf3Q@mail.gmail.com>
-        <CAM_iQpU3dqvUR0Qp6ZdZrAiyT_t_uFk4K79vcT2Q_-EjqBCGbw@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46xt482CtNz9sCJ;
+        Tue, 22 Oct 2019 10:23:36 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1571700216;
+        bh=C4oVc6nhfpP0gwAm5RIDZx4PF8lbcnlT8tj6E14ZVjo=;
+        h=Date:From:To:Cc:Subject:From;
+        b=MvJcZoV/Kiyf4klBRQI/hUs2tjL4C7Qnl3Xz1brRkGo89HJG9FidZWuZo+QFCKJc1
+         73CJj4Ebxi1qApPf8kYZHT2ej1m059NbwgC/W0D3+JX2B99BE80lss8M4F4IVa4j3H
+         C40qpiFEx/MsVVnKEeeJhwFFVYHQOxFbEttBMvsXa3Q5DX0v3FKIaS0NPuBPxhSuts
+         NghrQwuGC5CzghUmHWPlO8FeiJpFiH4Vvyskdte6GQkBfxqw6l4Ml3ZSiKPvNgYLgj
+         ZBuaYdWjeseU+zhWd5aRa0NQck9JItnGVguredKXmb2ifSqI47lj12rLdcntYmfubq
+         Vgi8PIDziYLgQ==
+Date:   Tue, 22 Oct 2019 10:23:34 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>
+Subject: linux-next: build warning after merge of the thermal tree
+Message-ID: <20191022102334.67e5d3d1@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/osA9fqqRj87OqHUrcHUS7eq";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 21 Oct 2019 13:41:51 -0700
-Cong Wang <xiyou.wangcong@gmail.com> wrote:
+--Sig_/osA9fqqRj87OqHUrcHUS7eq
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> On Mon, Sep 23, 2019 at 2:13 PM Cong Wang <xiyou.wangcong@gmail.com> wrote:
-> >
-> > Hi, Steven
-> >
-> > Any reviews for V3? I've addressed your concern about Kconfig.
-> >  
-> 
-> Ping..
+Hi all,
 
-Sorry, I still haven't forgotten about you. Just trying to deal with
-other fires at the moment.
+After merging the thermal tree, today's linux-next build (x86_64
+allmodconfig) produced this warning:
 
--- Steve
+In file included from drivers/thermal/qcom/tsens-common.c:13:
+drivers/thermal/qcom/tsens-common.c: In function 'tsens_set_interrupt':
+include/linux/regmap.h:87:2: warning: 'index' may be used uninitialized in =
+this function [-Wmaybe-uninitialized]
+   87 |  regmap_field_update_bits_base(field, ~0, val, NULL, false, false)
+      |  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/thermal/qcom/tsens-common.c:183:6: note: 'index' was declared here
+  183 |  u32 index;
+      |      ^~~~~
+In file included from drivers/thermal/qcom/tsens-common.c:13:
+include/linux/regmap.h:87:2: warning: 'index_clear' may be used uninitializ=
+ed in this function [-Wmaybe-uninitialized]
+   87 |  regmap_field_update_bits_base(field, ~0, val, NULL, false, false)
+      |  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/thermal/qcom/tsens-common.c:199:18: note: 'index_clear' was declare=
+d here
+  199 |  u32 index_mask, index_clear;
+      |                  ^~~~~~~~~~~
+drivers/thermal/qcom/tsens-common.c:199:6: warning: 'index_mask' may be use=
+d uninitialized in this function [-Wmaybe-uninitialized]
+  199 |  u32 index_mask, index_clear;
+      |      ^~~~~~~~~~
+
+Introduced by commit
+
+  fbfe1a042cfd ("drivers: thermal: tsens: Add interrupt support")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/osA9fqqRj87OqHUrcHUS7eq
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2uPfYACgkQAVBC80lX
+0GyF1Qf/SkjXmUvy+OXBrKs60P2ju//4Fwdpg23Olc/EZO5r49RAlBlpxg6dxjKM
+zlbAhs8FhVnCnBsC6In80gzOhyVnyd7uj+obmTXucci/GqhgDVZkcbHHS85TZqsD
+Ufc71YOL5kv3na9XG8U4tZ7ObPdjXPdSUA7w9AvdeedBSkM568jA+IEUQLjCvTpJ
+7OF4cBsXrKqUd+fuAbtkxq064PhOFR5Fb9kDVW6/H3Vdw3+L0UaHV2ojZjala1Rb
+Xk+IUbPKMkyeh4VNGKKxGUmVqpnyx3b5J+k+QpiAavzN3ZDqcpjLk2DShNHKG7+S
+MkYffBYY+RAPCi5Oq3UOAN6RFb8X7A==
+=CLEE
+-----END PGP SIGNATURE-----
+
+--Sig_/osA9fqqRj87OqHUrcHUS7eq--
