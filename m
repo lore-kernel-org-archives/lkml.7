@@ -2,134 +2,197 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF427CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:21:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 197AECA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:21:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B411D205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:21:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="yqzJO5yr"
+	by mail.kernel.org (Postfix) with ESMTP id E2D7D20659
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:21:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728629AbfJUMVe (ORCPT
+        id S1728646AbfJUMVm convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 08:21:34 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:38636 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726767AbfJUMVe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 08:21:34 -0400
-Received: by mail-il1-f194.google.com with SMTP id y5so11770439ilb.5
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 05:21:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=wnGtB4lj7QZakI4bXBl4LOnjDVuoS6i9juH0AaPHUsI=;
-        b=yqzJO5yrEuZ0AujBs35LlMVgp6QrGyJjIObeyazkPjRn1j5wQVKWq6ySSs5n6N4uiw
-         w7AvSYJxB4dwHnN4Ik35WPXIfmBuhe7CsdcgDCSBhAMZJYWjhfy5dXSqH5XFQGMRCiL7
-         IDZuf7KHDhV7oNVgFuYj4nLiL3qZQdEK4nrMHqRbpO0nMszqcZGhHNGy/GBtrkmkYzAL
-         yXeyd+jUgvOFi1sZvsBGEwDj2CQv2SACk7Dp90Yp6dxMObXcSZ58Nk2OSFEIQIPF4hSy
-         Xtzxus/dbLmFmsv9pIP40s+WzRnsGXN55Dx17Z3AwLupEnMqRwCTVQozron87CbKuu/n
-         mb5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=wnGtB4lj7QZakI4bXBl4LOnjDVuoS6i9juH0AaPHUsI=;
-        b=F+E7uy5ig1cRr8xXTWJwy7l1WW+5HU3ZvwkQbj1acBpfXHDcMSxQNJsnOXkD3/zK9o
-         4g/6GO8ALVezCYbtj7KL98BsvbMNhH7VZi1cVfd5+WF7dLMDuS55BCRVLdRYWwsG1GwL
-         5t5DOemihOgOyprDI/6Wv8Hwh5zJ5wXfwb9znVntdRhAsWZA/hNqPJOGnqejWBtpQQy7
-         Jtu24nVjla71NL0Z3qtXFvGsiIhlv3k/vZ45f2NgFobR1uiSLzH2eQXUg4oe/uIioByT
-         fWdPQPP1E6Vk6rB0r2xF47vkCmFFwmWrmHWVKgOHqV2GDUvjhPYtSixCkrpMWgmQgr94
-         0Eeg==
-X-Gm-Message-State: APjAAAUhueUCE61+qG594h5CuOBx5AIURuu2RU/pfsWBBYeXexOgC8ZT
-        GXwpHIhln9AqRLUPopCBwCCr7aeic+y3OuT86owb/A==
-X-Google-Smtp-Source: APXvYqxYqbLQZbfxUfYl5IZ0yaJHH03rYbBNlFarkoXOb5pIu+StSQSkslvJykiuWugAbTzjBnKJwDiNY2bcVyEpgSA=
-X-Received: by 2002:a92:410c:: with SMTP id o12mr25941800ila.287.1571660492888;
- Mon, 21 Oct 2019 05:21:32 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191019083556.19466-1-brgl@bgdev.pl> <20191019083556.19466-4-brgl@bgdev.pl>
- <20191021104509.p2bsll3rwe7ica6t@holly.lan>
-In-Reply-To: <20191021104509.p2bsll3rwe7ica6t@holly.lan>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 21 Oct 2019 14:21:21 +0200
-Message-ID: <CAMRc=Md99q+67FAduiixQQs6BVtLXNrC=KbicsuBsB2Jp4O7dw@mail.gmail.com>
-Subject: Re: [PATCH v6 3/9] backlight: gpio: explicitly set the direction of
- the GPIO
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Mon, 21 Oct 2019 08:21:42 -0400
+Received: from shell.v3.sk ([90.176.6.54]:33049 "EHLO shell.v3.sk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728098AbfJUMVm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 08:21:42 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id 99786508C8;
+        Mon, 21 Oct 2019 14:21:39 +0200 (CEST)
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id KH0C48U9DVDR; Mon, 21 Oct 2019 14:21:32 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id 40027508CC;
+        Mon, 21 Oct 2019 14:21:32 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at zimbra.v3.sk
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 80_zaCDjrTu7; Mon, 21 Oct 2019 14:21:30 +0200 (CEST)
+Received: from belphegor (nat-pool-brq-t.redhat.com [213.175.37.10])
+        by zimbra.v3.sk (Postfix) with ESMTPSA id 255FD508C8;
+        Mon, 21 Oct 2019 14:21:30 +0200 (CEST)
+Message-ID: <ba31d7cb894cb44eacee630e56fae647922f3dc2.camel@v3.sk>
+Subject: Re: [PATCH v2 0/9] Simplify MFD Core
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+        Barry Song <baohua@kernel.org>, stephan@gerhold.net,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Daniel Drake <drake@endlessm.com>,
+        James Cameron <quozl@laptop.org>
+Date:   Mon, 21 Oct 2019 14:21:29 +0200
+In-Reply-To: <20191021115339.GF4365@dell>
+References: <20191021105822.20271-1-lee.jones@linaro.org>
+         <CAK8P3a10w9Xg6U8EgUqPLbucP3A0wc9xO_WNG06LxHrsZkZc1g@mail.gmail.com>
+         <e5e7695cc82b4370752f45082be007dbe410c74c.camel@v3.sk>
+         <20191021115339.GF4365@dell>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.34.1 (3.34.1-1.fc31) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pon., 21 pa=C5=BA 2019 o 12:45 Daniel Thompson <daniel.thompson@linaro.org>
-napisa=C5=82(a):
->
-> On Sat, Oct 19, 2019 at 10:35:50AM +0200, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > The GPIO backlight driver currently requests the line 'as is', without
-> > acively setting its direction. This can lead to problems: if the line
-> > is in input mode by default, we won't be able to drive it later when
-> > updating the status and also reading its initial value doesn't make
-> > sense for backlight setting.
-> >
-> > Request the line 'as is' initially, so that we can read its value
-> > without affecting it but then change the direction to output explicitly
-> > when setting the initial brightness.
-> >
-> > Also: check the current direction and only read the value if it's outpu=
-t.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> Intent looks good to me but...
->
-> > ---
-> >  drivers/video/backlight/gpio_backlight.c | 23 ++++++++++++++++++-----
-> >  1 file changed, 18 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/drivers/video/backlight/gpio_backlight.c b/drivers/video/b=
-acklight/gpio_backlight.c
-> > index 3955b513f2f8..a36ac3a45b81 100644
-> > --- a/drivers/video/backlight/gpio_backlight.c
-> > +++ b/drivers/video/backlight/gpio_backlight.c
-> > @@ -25,9 +25,8 @@ struct gpio_backlight {
-> >       int def_value;
-> >  };
-> >
-> > -static int gpio_backlight_update_status(struct backlight_device *bl)
-> > +static int gpio_backlight_get_curr_brightness(struct backlight_device =
-*bl)
->
-> This function does not get the current brightness (e.g. what the
-> hardware is currently doing). Given we've just nuked the function that
-> *did* get the current brightness from the hardware this isn't an
-> acceptable name.
->
-> Would like something like calc_brightness() or get_next_brightness().
->
+On Mon, 2019-10-21 at 12:53 +0100, Lee Jones wrote:
+> On Mon, 21 Oct 2019, Lubomir Rintel wrote:
+> 
+> > On Mon, 2019-10-21 at 13:29 +0200, Arnd Bergmann wrote:
+> > > On Mon, Oct 21, 2019 at 12:58 PM Lee Jones <lee.jones@linaro.org> wrote:
+> > > > MFD currently has one over-complicated user.  CS5535 uses a mixture of
+> > > > cell cloning, reference counting and subsystem-level call-backs to
+> > > > achieve its goal of requesting an IO memory region only once across 3
+> > > > consumers.  The same can be achieved by handling the region centrally
+> > > > during the parent device's .probe() sequence.  Releasing can be handed
+> > > > in a similar way during .remove().
+> > > > 
+> > > > While we're here, take the opportunity to provide some clean-ups and
+> > > > error checking to issues noticed along the way.
+> > > > 
+> > > > This also paves the way for clean cell disabling via Device Tree being
+> > > > discussed at [0]
+> > > > 
+> > > > [0] https://lkml.org/lkml/2019/10/18/612.
+> > > 
+> > > As the CS5535 is primarily used on the OLPC XO1, it would be
+> > > good to have someone test the series on such a machine.
+> > > 
+> > > I've added a few people to Cc that may be able to help test it, or
+> > > know someone who can.
+> > > 
+> > > For the actual patches, see
+> > > https://lore.kernel.org/lkml/20191021105822.20271-1-lee.jones@linaro.org/T/#t
+> > 
+> > Thanks for the pointer. I'd by happy to test this.
+> > 
+> > Which tree do the patches apply to?
+> > Or, better, is there a tree with the patches applied that I could use?
+> 
+> Ideal.  Thank you.
+> 
+> http://git.linaro.org/people/lee.jones/linux.git/log/?h=topic/mfd-remove-clone-cs5535-mfd
 
-Fair enough, the latter sounds good in this case.
+Thanks. My boot attempt ends up in a panic [1]:
 
-Bart
+[    2.090943] cs5535-gpio cs5535-gpio: reserved resource region [io  0x1000-0x10ff]
+[    2.129084] cs5535-mfgpt cs5535-mfgpt: reserved resource region [io  0x1800-0x183f]
+[    2.173457] cs5535-mfgpt cs5535-mfgpt: 8 MFGPT timers available
+[    2.200731] BUG: kernel NULL pointer dereference, address: 00000000
+[    2.210655] #PF: supervisor read access in kernel mode
+[    2.210655] #PF: error_code(0x0000) - not-present page
+[    2.210655] *pde = 00000000 
+[    2.210655] Oops: 0000 [#1] PREEMPT                                                                                                   
+[    2.210655] CPU: 0 PID: 1 Comm: swapper Not tainted 5.4.0-rc3-00013-gd8518b1ac7282 #17                                                
+[    2.210655] Hardware name: OLPC XO/XO, BIOS OLPC Ver 1.00.01 10/16/2019                                                               
+[    2.210655] EIP: strlen+0xb/0x17                                                                                                      
+[    2.210655] Code: c3 55 89 e5 56 89 c6 89 d0 88 c4 ac 38 e0 74 09 84 c0 75 f7 be 01 00 00 00 89 f0 48 5e 5d c3 55 89 e5 83 c9 ff 57 89 c7 31 c0 <f2> ae b8 fe ff ff ff 5f 29 c8 5d c3 85 c9 74 17 55 89 e5 57 89 c7
+[    2.210655] EAX: 00000000 EBX: 00000000 ECX: ffffffff EDX: ffffffff
+[    2.210655] ESI: c0d214a0 EDI: 00000000 EBP: ce487dd8 ESP: ce487dd4
+[    2.210655] DS: 007b ES: 007b FS: 0000 GS: 00e0 SS: 0068 EFLAGS: 00010246
+[    2.210655] CR0: 80050033 CR2: 00000000 CR3: 00e08000 CR4: 00000090
+[    2.210655] Call Trace:
+[    2.210655]  platform_device_alloc+0x11/0xb2
+[    2.210655]  mfd_add_devices+0x3c/0x285
+[    2.210655]  cs5535_mfd_probe+0x95/0x159
+[    2.210655]  ? cs5535_mfd_remove+0x2e/0x2e
+[    2.210655]  pci_device_probe+0x83/0xe9
+[    2.210655]  really_probe+0x16f/0x335
+[    2.210655]  driver_probe_device+0x113/0x148
+[    2.210655]  device_driver_attach+0x2e/0x41
+[    2.210655]  __driver_attach+0xe4/0xee
+[    2.210655]  ? device_driver_attach+0x41/0x41
+[    2.210655]  bus_for_each_dev+0x54/0x81
+[    2.210655]  driver_attach+0x14/0x16
+[    2.210655]  ? device_driver_attach+0x41/0x41
+[    2.210655]  bus_add_driver+0xe9/0x190
+[    2.210655]  ? max8925_i2c_init+0x2a/0x2a
+[    2.210655]  driver_register+0x87/0xb9
+[    2.210655]  ? max8925_i2c_init+0x2a/0x2a
+[    2.210655]  __pci_register_driver+0x37/0x3a
+[    2.210655]  cs5535_mfd_driver_init+0x14/0x16
+[    2.210655]  do_one_initcall+0x78/0x169
+[    2.210655]  ? do_early_param+0x75/0x75
+[    2.210655]  kernel_init_freeable+0xe6/0x16d
+[    2.210655]  ? rest_init+0x8e/0x8e
+[    2.210655]  kernel_init+0x8/0xd5
+[    2.210655]  ret_from_fork+0x2e/0x38
+[    2.210655] Modules linked in:
+[    2.210655] CR2: 0000000000000000
+[    2.210655] ---[ end trace b02c575c8463e16f ]---
+[    2.210655] EIP: strlen+0xb/0x17
+[    2.210655] Code: c3 55 89 e5 56 89 c6 89 d0 88 c4 ac 38 e0 74 09 84 c0 75 f7 be 01 00 00 00 89 f0 48 5e 5d c3 55 89 e5 83 c9 ff 57 89 c7 31 c0 <f2> ae b8 fe ff ff ff 5f 29 c8 5d c3 85 c9 74 17 55 89 e5 57 89 c7
+[    2.210655] EAX: 00000000 EBX: 00000000 ECX: ffffffff EDX: ffffffff
+[    2.210655] ESI: c0d214a0 EDI: 00000000 EBP: ce487dd8 ESP: ce487dd4
+[    2.210655] DS: 007b ES: 007b FS: 0000 GS: 00e0 SS: 0068 EFLAGS: 00010246
+[    2.210655] CR0: 80050033 CR2: 00000000 CR3: 00e08000 CR4: 00000090
+[    4.012823] Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000009
+[    4.022771] Kernel Offset: 0x0 from 0xc0400000 (relocation range: 0xc0000000-0xcf3fffff)
+[    4.022771] ---[ end Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000009 ]---
+
+[1] http://v3.sk/~lkundrak/mfp.txt
+
+Also:
+
+There's a build warning, caused by "x86: olpc: Remove invocation of
+MFD's .enable()/.disable() call-backs" I suppose:
+
+arch/x86/platform/olpc/olpc-xo1-pm.c: In function ‘xo1_pm_probe’:
+arch/x86/platform/olpc/olpc-xo1-pm.c:123:6: warning: unused variable ‘err’ [-Wunused-variable]
+  123 |  int err;
+      |      ^~~
+
+I didn't look further into it. I'm happy to do so if necessary or try
+out a fix.
+
+Take care
+Lubo
+
+> 
+> > > > Lee Jones (9):
+> > > >   mfd: cs5535-mfd: Use PLATFORM_DEVID_* defines and tidy error message
+> > > >   mfd: cs5535-mfd: Remove mfd_cell->id hack
+> > > >   mfd: cs5535-mfd: Request shared IO regions centrally
+> > > >   mfd: cs5535-mfd: Register clients using their own dedicated MFD cell
+> > > >     entries
+> > > >   mfd: mfd-core: Remove mfd_clone_cell()
+> > > >   x86: olpc: Remove invocation of MFD's .enable()/.disable() call-backs
+> > > >   mfd: mfd-core: Protect against NULL call-back function pointer
+> > > >   mfd: mfd-core: Remove usage counting for .{en,dis}able() call-backs
+> > > >   mfd: mfd-core: Move pdev->mfd_cell creation back into mfd_add_device()
+> > > > 
+> > > >  arch/x86/platform/olpc/olpc-xo1-pm.c |   6 --
+> > > >  drivers/mfd/cs5535-mfd.c             | 124 +++++++++++++--------------
+> > > >  drivers/mfd/mfd-core.c               | 113 ++++--------------------
+> > > >  include/linux/mfd/core.h             |  20 -----
+> > > >  4 files changed, 79 insertions(+), 184 deletions(-)
+> > > > 
+
