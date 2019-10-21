@@ -2,140 +2,171 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB243CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 18:08:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F75ECA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 18:08:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B43D820882
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 18:08:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C49120B7C
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 18:08:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KDFjqE17"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729832AbfJUSIA (ORCPT
+        id S1729980AbfJUSID (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 14:08:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39308 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727110AbfJUSIA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 14:08:00 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ADE8B2086D;
-        Mon, 21 Oct 2019 18:07:57 +0000 (UTC)
-Date:   Mon, 21 Oct 2019 14:07:56 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        amit.kachhap@arm.com, ard.biesheuvel@linaro.org,
-        catalin.marinas@arm.com, deller@gmx.de, duwe@suse.de,
-        james.morse@arm.com, jeyu@kernel.org, jpoimboe@redhat.com,
-        jthierry@redhat.com, mingo@redhat.com, peterz@infradead.org,
-        svens@stackframe.org, takahiro.akashi@linaro.org, will@kernel.org
-Subject: Re: [PATCH 1/8] ftrace: add ftrace_init_nop()
-Message-ID: <20191021140756.613a1bac@gandalf.local.home>
-In-Reply-To: <20191021163426.9408-2-mark.rutland@arm.com>
-References: <20191021163426.9408-1-mark.rutland@arm.com>
-        <20191021163426.9408-2-mark.rutland@arm.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 21 Oct 2019 14:08:03 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:43281 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727110AbfJUSIC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 14:08:02 -0400
+Received: by mail-oi1-f193.google.com with SMTP id t84so11821050oih.10;
+        Mon, 21 Oct 2019 11:08:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=UFzcie1Kdy+TQnFgDdcnkE0/mTEbBivghAaYrK9KZs8=;
+        b=KDFjqE171QwDsMriP+7dTO2DolIsNlI3o+umpcWe+vJaAfJkpr5v8KSGySpxTcBNXn
+         c4TU666kawAQS0CxETuCQDHsw4fe0rXc3UL8pvmPugYog99/rb0akaHtkM2OsOdsqV9T
+         pcjxoKlS4V/r7b1YJPXSffHKizDBIrZEZ2ydb0TkvY/sKJnfe8Eos5RAFwqgPWxkdiDI
+         ujpKiV+5rQPmHjde7Lz2P3ojbW8yUqvKkgHRKUXqtv4NOHszg+u+lNFMAqX1KKYpGUrs
+         u76WQkZFpqvEgRfh7fjjJobJhzj63OGh5XJURcA1Bqa941WecDGluQn0j60Go7ZinUh4
+         8VIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UFzcie1Kdy+TQnFgDdcnkE0/mTEbBivghAaYrK9KZs8=;
+        b=OtV4QiWviFf6pkDryAx5Qil6aY321pquatQsBctsii6gLLauaHdrhbzKA8RC7OUaNX
+         uatytr/znck9j1et1oOauhJ8X+fcoou+WysbdUE6EyM62atyGHaREtWsHS3KHZtm70NC
+         f7i0eto1HS2GJDIloKrEkR+xFKeU/SFrMfFnwQDyptwN6cSvMkaEipQLJtQVBCbgEemJ
+         K8AVKCo/WneCo2JVNKDI7/bpYGqF73YBXXZEbkbZjAE4LjmhtXAZB9Q2gM48boUoKShz
+         eWwP55qMvpmnc+2JQfpDZUb6Qyfx3v7n6C2PsuJDK/sqCxzGFgx973jAbBrwRhVFTvDT
+         EH6w==
+X-Gm-Message-State: APjAAAVjVPZ/KJ6OE8Q/tKSZpmLwLiQmtC50zxgWukgNhtGT3ES0oPwA
+        gO2ztExbjKxqkSz6JWNW7co=
+X-Google-Smtp-Source: APXvYqxMuJx275nZoTHfvIzsgLsAMZziiN0W1oqwo4vbRBZBcmabAKtm7+5+R02HNdWQBW6hbSeyZw==
+X-Received: by 2002:aca:1b10:: with SMTP id b16mr20769811oib.110.1571681281993;
+        Mon, 21 Oct 2019 11:08:01 -0700 (PDT)
+Received: from [100.71.96.87] ([143.166.81.254])
+        by smtp.gmail.com with ESMTPSA id v132sm3947565oif.34.2019.10.21.11.08.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 21 Oct 2019 11:08:01 -0700 (PDT)
+Subject: Re: [PATCH v3 2/3] PCI: pciehp: Wait for PDS if in-band presence is
+ disabled
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Austin Bolen <austin_bolen@dell.com>, keith.busch@intel.com,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, lukas@wunner.de
+References: <20191017193256.3636-1-stuart.w.hayes@gmail.com>
+ <20191017193256.3636-3-stuart.w.hayes@gmail.com>
+ <20191021134111.GK2819@lahna.fi.intel.com>
+From:   Stuart Hayes <stuart.w.hayes@gmail.com>
+Message-ID: <2ba3b9ea-488b-91ea-ba41-0602efaa21f4@gmail.com>
+Date:   Mon, 21 Oct 2019 13:08:00 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20191021134111.GK2819@lahna.fi.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 21 Oct 2019 17:34:19 +0100
-Mark Rutland <mark.rutland@arm.com> wrote:
 
-> Architectures may need to perform special initialization of ftrace
-> callsites, and today they do so by special-casing ftrace_make_nop() when
-> the expected branch address is MCOUNT_ADDR. In some cases (e.g. for
-> patchable-function-entry), we don't have an mcount-like symbol and don't
-> want a synthetic MCOUNT_ADDR, but we may need to perform some
-> initialization of callsites.
+
+On 10/21/19 8:41 AM, Mika Westerberg wrote:
+> On Thu, Oct 17, 2019 at 03:32:55PM -0400, Stuart Hayes wrote:
+>> From: Alexandru Gagniuc <mr.nuke.me@gmail.com>
+>>
+>> When inband presence is disabled, PDS may come up at any time, or not
+>> at all. PDS being low may indicate that the card is still mating, and
+>> we could expect contact bounce to bring down the link as well.
+>>
+>> It is reasonable to assume that most cards will mate in a hotplug slot
+>> in about a second. Thus, when we know PDS only reflects out-of-band
+>> presence, it's worthwhile to wait the extra second or so to make sure
+>> the card is properly mated before loading the driver, and to prevent
+>> the hotplug code from disabling a device if the presence detect change
+>> goes active after the device is enabled.
+>>
+>> Signed-off-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
+>> Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
 > 
-> To make it possible to separate initialization from runtime
-> modification, and to handle cases without an mcount-like symbol, this
-> patch adds an optional ftrace_init_nop() function that architectures can
-> implement, which does not pass a branch address.
+> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 > 
-> Where an architecture does not provide ftrace_init_nop(), we will fall
-> back to the existing behaviour of calling ftrace_make_nop() with
-> MCOUNT_ADDR.
+> One nit below.
 > 
-> At the same time, ftrace_code_disable() is renamed to
-> ftrace_code_init_disabled() to make it clearer that it is intended to
-> intialize a callsite into a disabled state, and is not for disabling a
-> callsite that has been runtime enabled.
-
-To make the name even better, let's just rename it to:
-
- ftrace_nop_initialization()
-
-I think that may be the best description for it.
-
+>> ---
+>> v2:
+>>   replace while(true) loop with do...while
+>> v3
+>>   remove unused variable declaration (pds)
+>>   modify text of warning message
+>>
+>>  drivers/pci/hotplug/pciehp_hpc.c | 19 +++++++++++++++++++
+>>  1 file changed, 19 insertions(+)
+>>
+>> diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+>> index dc109d521f30..02eb811a014f 100644
+>> --- a/drivers/pci/hotplug/pciehp_hpc.c
+>> +++ b/drivers/pci/hotplug/pciehp_hpc.c
+>> @@ -242,6 +242,22 @@ static bool pci_bus_check_dev(struct pci_bus *bus, int devfn)
+>>  	return found;
+>>  }
+>>  
+>> +static void pcie_wait_for_presence(struct pci_dev *pdev)
+>> +{
+>> +	int timeout = 1250;
+>> +	u16 slot_status;
+>> +
+>> +	do {
+>> +		pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &slot_status);
+>> +		if (!!(slot_status & PCI_EXP_SLTSTA_PDS))
 > 
-> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Torsten Duwe <duwe@suse.de>
-> ---
->  kernel/trace/ftrace.c | 13 ++++++++++---
->  1 file changed, 10 insertions(+), 3 deletions(-)
+> It is more readable if you write it like:
 > 
-> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> index f296d89be757..afd7e210e595 100644
-> --- a/kernel/trace/ftrace.c
-> +++ b/kernel/trace/ftrace.c
-> @@ -2493,15 +2493,22 @@ struct dyn_ftrace *ftrace_rec_iter_record(struct ftrace_rec_iter *iter)
->  	return &iter->pg->records[iter->index];
->  }
->  
-> +#ifndef ftrace_init_nop
-> +static int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec)
-> +{
-> +	return ftrace_make_nop(mod, rec, MCOUNT_ADDR);
-> +}
-> +#endif
+> 		if (slot_status & PCI_EXP_SLTSTA_PDS)
+> 
 
-Can you place the above in the ftrace.h header. That's where that would
-belong.
+I agree, it is more readable, and the double bang shouldn't be needed for an 
+"if" condition.  Thanks.
 
-#ifndef ftrace_init_nop
-struct module;
-static inline int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec)
-{
-	return ftrace_make_nop(mod, rec, MCOUNT_ADDR);
-}
-#endif
-
--- Steve
-
-> +
->  static int
-> -ftrace_code_disable(struct module *mod, struct dyn_ftrace *rec)
-> +ftrace_code_init_disabled(struct module *mod, struct dyn_ftrace *rec)
->  {
->  	int ret;
->  
->  	if (unlikely(ftrace_disabled))
->  		return 0;
->  
-> -	ret = ftrace_make_nop(mod, rec, MCOUNT_ADDR);
-> +	ret = ftrace_init_nop(mod, rec);
->  	if (ret) {
->  		ftrace_bug_type = FTRACE_BUG_INIT;
->  		ftrace_bug(ret, rec);
-> @@ -2943,7 +2950,7 @@ static int ftrace_update_code(struct module *mod, struct ftrace_page *new_pgs)
->  			 * to the NOP instructions.
->  			 */
->  			if (!__is_defined(CC_USING_NOP_MCOUNT) &&
-> -			    !ftrace_code_disable(mod, p))
-> +			    !ftrace_code_init_disabled(mod, p))
->  				break;
->  
->  			update_cnt++;
-
+>> +			return;
+>> +		msleep(10);
+>> +		timeout -= 10;
+>> +	} while (timeout > 0);
+>> +
+>> +	pci_info(pdev, "Timeout waiting for Presence Detect state to be set\n");
+>> +}
+>> +
+>>  int pciehp_check_link_status(struct controller *ctrl)
+>>  {
+>>  	struct pci_dev *pdev = ctrl_dev(ctrl);
+>> @@ -251,6 +267,9 @@ int pciehp_check_link_status(struct controller *ctrl)
+>>  	if (!pcie_wait_for_link(pdev, true))
+>>  		return -1;
+>>  
+>> +	if (ctrl->inband_presence_disabled)
+>> +		pcie_wait_for_presence(pdev);
+>> +
+>>  	found = pci_bus_check_dev(ctrl->pcie->port->subordinate,
+>>  					PCI_DEVFN(0, 0));
+>>  
+>> -- 
+>> 2.18.1
