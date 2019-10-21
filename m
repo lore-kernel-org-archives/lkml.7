@@ -7,52 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8A9BCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:39:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F030FCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:39:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C93321783
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:39:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC2C8214B2
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:39:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571665140;
-	bh=0ZXePMfFtOMKmPrnY+D4JgmIn+h6ZV2J/BeW8xctlsU=;
+	s=default; t=1571665144;
+	bh=xzApfnoMwyzTOY8NwLwXKWpLOgUTV8y/zOoEY27LB9w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OPuRT0gRCXUqoqJvn/3HteEufkyo/uL1abSIt6dXhFGTyheW0RV1n9LfSxAipK9g9
-	 4JO6AZ+ngpWb9dYmNYT5y8jC0/Z/cX2nNK+yNVTix9uZxdi0F9bdcWBFPGb0At6Yy3
-	 RQe6Un5TRI83Cmn6AjOG2FFf0U+VHYACArsmYTUY=
+	b=hAKZXgx85wU8vy9mUhQv8/XulifaJ8sSvhmSL/MYjB8qViyDzH/gwVH5k/lF2DFIt
+	 2YhjpP01Ke/QMoVkD7tu77/OLLc9wD/for5nMoVdBUsYB+S/PHN1qI6352eOyfF6tT
+	 3W7jNu2Qu36rIW8gvhqpkBcX0HoUrNXI1ufqxubI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729124AbfJUNi7 (ORCPT
+        id S1729132AbfJUNjD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 09:38:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40400 "EHLO mail.kernel.org"
+        Mon, 21 Oct 2019 09:39:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728872AbfJUNi6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 09:38:58 -0400
+        id S1728076AbfJUNjB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 09:39:01 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D73A21928;
-        Mon, 21 Oct 2019 13:38:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22FC02166E;
+        Mon, 21 Oct 2019 13:38:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571665137;
-        bh=0ZXePMfFtOMKmPrnY+D4JgmIn+h6ZV2J/BeW8xctlsU=;
+        s=default; t=1571665140;
+        bh=xzApfnoMwyzTOY8NwLwXKWpLOgUTV8y/zOoEY27LB9w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M3L5YYblANRmu3AVttvHd9DpJbb2DmUjoYqMWlIvL1dJogsdbjMtk64qbgErFuHRT
-         QtoJ7xTCbIRI+h4RBY4te34qJkfEu+hA+rzlFJCw1CBQ85/4fgnUSCo3hNGNbhrNHN
-         VSpwc1Y4oMKTFsVaxNf8Rx1vh5pItajVU8T0Tsy8=
+        b=s2sesAqbwPf89M+nYMFoc6n16Q4qnRQaV1pigy+cTWVpWFIV+QdwZzLw9Ldc0JQWp
+         UCk9F1UBcvYeb+rly9/4PoAufezxityIlUL+dJJLzaupSZMLrHke4+udpnooiyLRl+
+         olcAoZvXUA3rir+EhkT5AamzP4ehRQwTZgCaT1UQ=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Leo Yan <leo.yan@linaro.org>,
+        Jin Yao <yao.jin@linux.intel.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 05/57] perf test: Avoid infinite loop for task exit case
-Date:   Mon, 21 Oct 2019 10:37:42 -0300
-Message-Id: <20191021133834.25998-6-acme@kernel.org>
+Subject: [PATCH 06/57] perf report: Add warning when libunwind not compiled in
+Date:   Mon, 21 Oct 2019 10:37:43 -0300
+Message-Id: <20191021133834.25998-7-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191021133834.25998-1-acme@kernel.org>
 References: <20191021133834.25998-1-acme@kernel.org>
@@ -63,61 +64,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leo Yan <leo.yan@linaro.org>
+From: Jin Yao <yao.jin@linux.intel.com>
 
-When executing the task exit testing case, perf gets stuck in an endless
-loop this case and doesn't return back on Arm64 Juno board.
+We received a user report that call-graph DWARF mode was enabled in
+'perf record' but 'perf report' didn't unwind the callstack correctly.
+The reason was, libunwind was not compiled in.
 
-After digging into this issue, since Juno board has Arm's big.LITTLE
-CPUs, thus the PMUs are not compatible between the big CPUs and little
-CPUs.  This leads to a PMU event that cannot be enabled properly when
-the traced task is migrated from one variant's CPU to another variant.
-Finally, the test case runs into infinite loop for cannot read out any
-event data after return from polling.
+We can use 'perf -vv' to check the compiled libraries but it would be
+valuable to report a warning to user directly (especially valuable for
+a perf newbie).
 
-Eventually, we need to work out formal solution to allow PMU events can
-be freely migrated from one CPU variant to another, but this is a
-difficult task and a different topic.  This patch tries to fix the Perf
-test case to avoid infinite loop, when the testing detects 1000 times
-retrying for reading empty events, it will directly bail out and return
-failure.  This allows the Perf tool can continue its other test cases.
+The warning is:
 
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Warning:
+Please install libunwind development packages during the perf build.
+
+Both TUI and stdio are supported.
+
+Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/20191011091942.29841-2-leo.yan@linaro.org
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lore.kernel.org/lkml/20191011022122.26369-1-yao.jin@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/task-exit.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ tools/perf/builtin-report.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/tools/perf/tests/task-exit.c b/tools/perf/tests/task-exit.c
-index 19fa7cb429fd..adaff9044331 100644
---- a/tools/perf/tests/task-exit.c
-+++ b/tools/perf/tests/task-exit.c
-@@ -54,6 +54,7 @@ int test__task_exit(struct test *test __maybe_unused, int subtest __maybe_unused
- 	struct perf_cpu_map *cpus;
- 	struct perf_thread_map *threads;
- 	struct mmap *md;
-+	int retry_count = 0;
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index aae0e57c60fb..7accaf8ef689 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -399,6 +399,13 @@ static int report__setup_sample_type(struct report *rep)
+ 				PERF_SAMPLE_BRANCH_ANY))
+ 		rep->nonany_branch_mode = true;
  
- 	signal(SIGCHLD, sig_handler);
- 
-@@ -133,6 +134,13 @@ int test__task_exit(struct test *test __maybe_unused, int subtest __maybe_unused
- out_init:
- 	if (!exited || !nr_exit) {
- 		evlist__poll(evlist, -1);
++#ifndef HAVE_LIBUNWIND_SUPPORT
++	if (dwarf_callchain_users) {
++		ui__warning("Please install libunwind development packages "
++			    "during the perf build.\n");
++	}
++#endif
 +
-+		if (retry_count++ > 1000) {
-+			pr_debug("Failed after retrying 1000 times\n");
-+			err = -1;
-+			goto out_free_maps;
-+		}
-+
- 		goto retry;
- 	}
+ 	return 0;
+ }
  
 -- 
 2.21.0
