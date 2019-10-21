@@ -2,122 +2,171 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94D20CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:22:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 513E0CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:23:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 683E820684
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:22:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Lb+r+yCu"
+	by mail.kernel.org (Postfix) with ESMTP id 3096620684
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:23:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727586AbfJUJWc (ORCPT
+        id S1727664AbfJUJXP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 05:22:32 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:54196 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726725AbfJUJWc (ORCPT
+        Mon, 21 Oct 2019 05:23:15 -0400
+Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:34137 "EHLO
+        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726181AbfJUJXP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 05:22:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=A0scbkaqHhEh8rvyWJWor/5edVTtxyhXMs8x1A+/lKQ=; b=Lb+r+yCu6S7QyMLyVhmPphsls
-        ANciRLCm+5uPZkne6QUTcuxqQrSBpipkQXCcIIjo7YhFdpP5CI4QtJLkxnG53cOU6jUTj593gZUL+
-        16aSxAzpv64+MG5lidtvxgei9zFkloV/VrefG37Z55aOWSGI/TBUFqCM2MXz2OkEa+iPRnQmNDgm7
-        FLcpFRfYz9g1USdo/wn6Q4C+RkR9prz+sbVF2HS7B/5+ygo5DJ2CGGAyl0n181jPpVYC+noGKfw0u
-        7fBQaHATwZ+z8/7HAU05XlAxLb8oEMueOXzFY07hRJ3sh20nq2Ndo9mjfa78fDduMGUIc375U7kAi
-        TFxfi5oKQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iMTt5-0001Hg-JU; Mon, 21 Oct 2019 09:22:04 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id F2F5A300EBF;
-        Mon, 21 Oct 2019 11:21:01 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 063AB2022BA0B; Mon, 21 Oct 2019 11:21:59 +0200 (CEST)
-Date:   Mon, 21 Oct 2019 11:21:58 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        mhiramat@kernel.org, bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, jpoimboe@redhat.com, jeyu@kernel.org
-Subject: Re: [PATCH v4 03/16] x86/alternatives,jump_label: Provide better
- text_poke() batching interface
-Message-ID: <20191021092158.GA1800@hirez.programming.kicks-ass.net>
-References: <20191018073525.768931536@infradead.org>
- <20191018074634.113249026@infradead.org>
- <20191021084802.GA825@gmail.com>
+        Mon, 21 Oct 2019 05:23:15 -0400
+Received: from [192.168.2.10] ([46.9.232.237])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id MTu4iTW0no1ZhMTu7iLJFS; Mon, 21 Oct 2019 11:23:12 +0200
+Subject: Re: [PATCH v4 5/5] media: platform: Add jpeg dec/enc feature
+To:     Xia Jiang <xia.jiang@mediatek.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rick Chang <rick.chang@mediatek.com>
+Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Tomasz Figa <tfiga@chromium.org>, srv_heupstream@mediatek.com
+References: <20191017084033.28299-1-xia.jiang@mediatek.com>
+ <20191017084033.28299-6-xia.jiang@mediatek.com>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <a2e66e05-3248-de84-85d5-b0c7e5a080f1@xs4all.nl>
+Date:   Mon, 21 Oct 2019 11:23:04 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191021084802.GA825@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191017084033.28299-6-xia.jiang@mediatek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfBX4zeKC12ZrwQYD4Gu8nAfraoHeArJMkY6+EytbDESkYZwL6hzOhZZRpN2YyL28a5MldlJJB6nzlYnXGUNRb7ceJWpA4Bk5MBEjoV8Cs0hst2h/Odk1
+ 8Fs5shOYHZeh9crSahooaj6fyj5giPN1NR0ua8fsM4j2SJwGbq+Z04izzsDSeA9G75THtWPR9wZ9xuodA8Y2K4GP4qxRLA+d8KK2hgpq3aA5vlcL5dFFcnOT
+ 5RhOUJVG8LVKln4G80UITRtvYlVx7SpFsUlTYiJKhM19UwVwyPF34gQJrolTJ6eOA14NxOfnbyLF/xUI3437ir1cBaWCO+vp953B2MAGjD3hIjLd4289ABGQ
+ e9T0QwmXqzaHf0SF/TvGAoipbEIARzMmlgXJ0r6y7hMuhb6P+Hcl/KN00Il/jKpSQIJG0sQ5zwwQ+qsWEuwf9MORMov7slZNwpxy67OpF1ULkJA+Z1rSroKH
+ vuq5UPBjFs4R/60nTOtD7vGNdLbvxZAoiYePq5WrR4REefK/dV+1OGtFMN/Dw76g19gVwBucg7QJatLmhPQbzxGcvj7gMZIXiioAr4k63NMzQA2W22x1W108
+ N0G/gIO4wEFQa3Mwgl8SjAifKowzwWwY7Cud+zqZshZM5NxoBhK/2pMjOMN5Cq7k7I4=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 10:48:02AM +0200, Ingo Molnar wrote:
-> 
-> * Peter Zijlstra <peterz@infradead.org> wrote:
-> 
-> > --- a/arch/x86/kernel/jump_label.c
-> > +++ b/arch/x86/kernel/jump_label.c
-> > @@ -35,18 +35,19 @@ static void bug_at(unsigned char *ip, in
-> >  	BUG();
-> >  }
-> >  
-> > -static void __jump_label_set_jump_code(struct jump_entry *entry,
-> > -				       enum jump_label_type type,
-> > -				       union jump_code_union *code,
-> > -				       int init)
-> > +static const void *
-> > +__jump_label_set_jump_code(struct jump_entry *entry, enum jump_label_type type, int init)
-> >  {
-> > +	static union jump_code_union code; /* relies on text_mutex */
-> >  	const unsigned char default_nop[] = { STATIC_KEY_INIT_NOP };
-> >  	const unsigned char *ideal_nop = ideal_nops[NOP_ATOMIC5];
-> >  	const void *expect;
-> >  	int line;
-> >  
-> > -	code->jump = 0xe9;
-> > -	code->offset = jump_entry_target(entry) -
-> > +	lockdep_assert_held(&text_mutex);
-> > +
-> > +	code.jump = JMP32_INSN_OPCODE;
-> > +	code.offset = jump_entry_target(entry) -
-> >  		       (jump_entry_code(entry) + JUMP_LABEL_NOP_SIZE);
-> >  
-> >  	if (init) {
-> > @@ -54,23 +55,23 @@ static void __jump_label_set_jump_code(s
-> >  	} else if (type == JUMP_LABEL_JMP) {
-> >  		expect = ideal_nop; line = __LINE__;
-> >  	} else {
-> > -		expect = code->code; line = __LINE__;
-> > +		expect = code.code; line = __LINE__;
-> 
-> Side note: the whole 'line' logic looked weird to me and it obsfuscates 
-> the logic a bit, and I had to look it up to see what it's about: 
-> improving the debug output of text-patching crashes.
-> 
-> How about something like the below on top of your queue? We have %phD 
-> that can nicely print instructions in hex.
+Hi Xia,
 
-I have a patch like that somewhere; see here:
+Some comments about the selection code:
 
-  https://lkml.kernel.org/r/20191007090012.00469193.6@infradead.org
+On 10/17/19 10:40 AM, Xia Jiang wrote:
+> Add mtk jpeg encode v4l2 driver based on jpeg decode, because that jpeg
+> decode and encode have great similarities with function operation.
+> 
+> Signed-off-by: Xia Jiang <xia.jiang@mediatek.com>
+> ---
+> v4: split mtk_jpeg_try_fmt_mplane() to two functions, one for encoder,
+>     one for decoder.
+>     split mtk_jpeg_set_default_params() to two functions, one for
+>     encoder, one for decoder.
+>     add cropping support for encoder in g/s_selection ioctls.
+>     change exif mode support by using V4L2_JPEG_ACTIVE_MARKER_APP1.
+>     change MTK_JPEG_MAX_WIDTH/MTK_JPEG_MAX_HEIGH from 8192 to 65535 by
+>     specification.
+>     move width shifting operation behind aligning operation in
+>     mtk_jpeg_try_enc_fmt_mplane() for bug fix.
+>     fix user abuseing data_offset issue for DMABUF in
+>     mtk_jpeg_set_enc_src().
+>     fix kbuild warings: change MTK_JPEG_MIN_HEIGHT/MTK_JPEG_MAX_HEIGHT
+>                         and MTK_JPEG_MIN_WIDTH/MTK_JPEG_MAX_WIDTH from
+>                         'int' type to 'unsigned int' type.
+>                         fix msleadingly indented of 'else'.
+> 
+> v3: delete Change-Id.
+>     only test once handler->error after the last v4l2_ctrl_new_std().
+>     seperate changes of v4l2-ctrls.c and v4l2-controls.h to new patch.
+> 
+> v2: fix compliance test fail, check created buffer size in driver.
+> ---
+>  drivers/media/platform/mtk-jpeg/Makefile      |   5 +-
+>  .../media/platform/mtk-jpeg/mtk_jpeg_core.c   | 731 +++++++++++++++---
+>  .../media/platform/mtk-jpeg/mtk_jpeg_core.h   | 123 ++-
+>  .../media/platform/mtk-jpeg/mtk_jpeg_dec_hw.h |   7 +-
+>  .../media/platform/mtk-jpeg/mtk_jpeg_enc_hw.c | 175 +++++
+>  .../media/platform/mtk-jpeg/mtk_jpeg_enc_hw.h |  60 ++
+>  .../platform/mtk-jpeg/mtk_jpeg_enc_reg.h      |  49 ++
+>  7 files changed, 1004 insertions(+), 146 deletions(-)
+>  create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_enc_hw.c
+>  create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_enc_hw.h
+>  create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_enc_reg.h
+> 
 
-But yes, the __LINE__ thing is mostly about identifying which case it is
-and I suppose we can infer that when we have the expected text printed
-too.
+<snip>
+
+> @@ -455,11 +679,19 @@ static int mtk_jpeg_g_selection(struct file *file, void *priv,
+>  				struct v4l2_selection *s)
+>  {
+>  	struct mtk_jpeg_ctx *ctx = mtk_jpeg_fh_to_ctx(priv);
+> +	struct mtk_jpeg_dev *jpeg = ctx->jpeg;
+>  
+> -	if (s->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
+> +	if (jpeg->mode == MTK_JPEG_ENC && s->type != V4L2_BUF_TYPE_VIDEO_OUTPUT)
+> +		return -EINVAL;
+> +
+> +	if (jpeg->mode == MTK_JPEG_DEC &&
+> +	    s->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
+>  		return -EINVAL;
+>  
+>  	switch (s->target) {
+> +	case V4L2_SEL_TGT_CROP:
+> +	case V4L2_SEL_TGT_CROP_BOUNDS:
+> +	case V4L2_SEL_TGT_CROP_DEFAULT:
+
+This is wrong...
+
+>  	case V4L2_SEL_TGT_COMPOSE:
+>  	case V4L2_SEL_TGT_COMPOSE_DEFAULT:
+>  		s->r.width = ctx->out_q.w;
+> @@ -484,11 +716,17 @@ static int mtk_jpeg_s_selection(struct file *file, void *priv,
+>  				struct v4l2_selection *s)
+>  {
+>  	struct mtk_jpeg_ctx *ctx = mtk_jpeg_fh_to_ctx(priv);
+> +	struct mtk_jpeg_dev *jpeg = ctx->jpeg;
+>  
+> -	if (s->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
+> +	if (jpeg->mode == MTK_JPEG_ENC && s->type != V4L2_BUF_TYPE_VIDEO_OUTPUT)
+> +		return -EINVAL;
+> +
+> +	if (jpeg->mode == MTK_JPEG_DEC &&
+> +	    s->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
+>  		return -EINVAL;
+>  
+>  	switch (s->target) {
+> +	case V4L2_SEL_TGT_CROP:
+
+...and so is this.
+
+The decoder only supports COMPOSE, the encoder only supports CROP.
+
+This signals support for both cropping and composition for both encoder and
+decoder, and that's wrong. You can see this in the compliance output as well:
+it says that both cropping and composition are 'OK', meaning that both features
+are implemented.
+
+It also claims that the decoder supports scaling. Is that correct? Is there a
+scaler in the JPEG decoder? Usually codecs do not have a scaler.
+
+Regards,
+
+	Hans
+
+>  	case V4L2_SEL_TGT_COMPOSE:
+>  		s->r.left = 0;
+>  		s->r.top = 0;
+> @@ -658,10 +896,92 @@ static void mtk_jpeg_set_queue_data(struct mtk_jpeg_ctx *ctx,
+>  		 param->dec_w, param->dec_h);
+>  }
+
+
