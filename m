@@ -2,138 +2,180 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62856CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:04:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58E7CCA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:05:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39E802084B
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:04:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 253BD2084B
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:05:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="xhngFmRQ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QHw2XtXl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729178AbfJUPEx (ORCPT
+        id S1729297AbfJUPFD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 11:04:53 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:39689 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726289AbfJUPEx (ORCPT
+        Mon, 21 Oct 2019 11:05:03 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:54471 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726289AbfJUPFC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 11:04:53 -0400
-Received: by mail-io1-f65.google.com with SMTP id a1so16286203ioc.6
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 08:04:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=tWhc5uJs7MS/OG9cE4Cx7yK7L1yYTVuLaTuL5bFFTEk=;
-        b=xhngFmRQQM1D4pq9bIoMfnS+5fCAmX6gmyeEmFG0ukm7A7X0Mje5muv4Cv+HO0X3bx
-         jJXPVKEIDEe6ncTL0EP1ySuuHhrcDkueCwaJeAfTxOizLMwsd/lcBjMM2tRAtmO+XU6L
-         Kxs9a51GuYICueb/prnKL3irvHY/Oep5zyBDgTE8hJXOT9LKJj7RU3FeoJ8r6miomECA
-         cKhvvKHTcbBvaC/SPe6eRJUq347iOvczH/2CWTMkX7ZkORrw+6iE6Sc1q/NXgP4e1YLr
-         jFwwB8iLe+zBTK3brgT8rnJcQhJrBvxbU9krMWtmEedSGWLFa6iT5eQaY7DrZvE0HL/g
-         6J4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=tWhc5uJs7MS/OG9cE4Cx7yK7L1yYTVuLaTuL5bFFTEk=;
-        b=IxyWMVbipl4GEvd8od+/2FLZGOwYorOwN42m6Et/x1sf7iatWx959og7eoMo+9j4Wx
-         9BtG5eUgi8eXqHK20W7ext74M+pnnJBOCygGEd3bMZw56SSPXD9zdHnh5coxhbqBLVEr
-         3c++M9Gel2YXN/Xd3diPxJzb1DErzua8GY0+x2BGu/RZWT4nO6NYzZpOF0+dOYOD3CPQ
-         Z8SUujoiTcYYb8sqlhqEyJ0cbfuwdVCe6ly+SxMZEfgXtFBuVYiSpGTMAMDXGF0ZRbrI
-         PJL8Klif+2mXSO6o4oGR6oyKN3y5otoF6lwrysQ/o2rx4FdcLD2+ZZWbUGwSU4LgwXMA
-         cH2Q==
-X-Gm-Message-State: APjAAAVf45xy+twMP40WzZKjcgYOYVMbyILrH8KLSD1y6VaawbFMvDUw
-        5CToJm7pH+Cciiw4YU90qi4qJyP9s6KRyb9z/ofVkg==
-X-Google-Smtp-Source: APXvYqyZtkP6PxsU3UaMQpu8AZwU/DkiQJeu4K/7glTT1ZkinSdT651Fwq7T77GW8oGg2nJltTvYwYQlVaCp648B1hU=
-X-Received: by 2002:a05:6602:10f:: with SMTP id s15mr11394239iot.220.1571670290816;
- Mon, 21 Oct 2019 08:04:50 -0700 (PDT)
+        Mon, 21 Oct 2019 11:05:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571670301;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=F3BfVv34fW0s+KkLvwZNYYapPq9uHXB2pFFeBbUFt3o=;
+        b=QHw2XtXlEx7Rffj6kXA2jbfp9Yar1x2Zt5ZcXoeYBvaPX+hc1G8aq1GkcvEEmklznAb0Ee
+        pnWxy1EXVykfaMZh+va5IKsbc3QKW/x1+YV3YQc8eJ6mTcUzPh2C2vRm3AYi4B+Zr0/Fu3
+        enCZ48+iH/ud78kQHUdxmTzvX8EjJk4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-331-lD2VJkQrNuejKQQJMKdfKQ-1; Mon, 21 Oct 2019 11:04:57 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EDC091005500;
+        Mon, 21 Oct 2019 15:04:53 +0000 (UTC)
+Received: from [10.36.118.81] (unknown [10.36.118.81])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2A40E60C83;
+        Mon, 21 Oct 2019 15:04:50 +0000 (UTC)
+Subject: Re: [PATCH v1 2/2] mm/page_isolation.c: Convert SKIP_HWPOISON to
+ MEMORY_OFFLINE
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Oscar Salvador <osalvador@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Pingfan Liu <kernelfans@gmail.com>, Qian Cai <cai@lca.pw>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>
+References: <20191021141927.10252-1-david@redhat.com>
+ <20191021141927.10252-3-david@redhat.com>
+ <20191021150237.GU9379@dhcp22.suse.cz>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat GmbH
+Message-ID: <bed9336d-3bff-b7e3-dfba-42506a274858@redhat.com>
+Date:   Mon, 21 Oct 2019 17:04:50 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-References: <20191006053916.8849-1-brgl@bgdev.pl>
-In-Reply-To: <20191006053916.8849-1-brgl@bgdev.pl>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 21 Oct 2019 17:04:39 +0200
-Message-ID: <CAMRc=Me3Q=67fCDrFM38LAGXCd+apJybLYVfyrfwmwYa5L1CmQ@mail.gmail.com>
-Subject: Re: [PATCH v3 0/8] drivers: add new variants of devm_platform_ioremap_resource()
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     linux-doc <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191021150237.GU9379@dhcp22.suse.cz>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-MC-Unique: lD2VJkQrNuejKQQJMKdfKQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-niedz., 6 pa=C5=BA 2019 o 07:39 Bartosz Golaszewski <brgl@bgdev.pl> napisa=
-=C5=82(a):
->
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> The new devm_platform_ioremap_resource() helper has now been widely
-> adopted and used in many drivers. Users of the write-combined ioremap()
-> variants could benefit from the same code shrinkage. This series provides
-> a write-combined version of devm_platform_ioremap_resource() and uses it =
-in a
-> relevant driver with the assumption that - just like was the case
-> previously - a coccinelle script will be developed to ease the transition
-> for others.
->
-> There are also users of platform_get_resource_byname() who call
-> devm_ioremap_resource() next, so provide another variant that they can us=
-e
-> together with two examples.
->
-> v1 -> v2:
-> - dropped everything related to nocache ioremap as this is going away
->
-> v2 -> v3:
-> - don't call platform_get_resource() as an argument of devm_ioremap_resou=
-rce(),
->   it actually decreases readability
-> - add devm_platform_ioremap_resource_byname() as another variant
->
-> Bartosz Golaszewski (8):
->   Documentation: devres: add missing entry for
->     devm_platform_ioremap_resource()
->   lib: devres: prepare devm_ioremap_resource() for more variants
->   lib: devres: provide devm_ioremap_resource_wc()
->   drivers: platform: provide devm_platform_ioremap_resource_wc()
->   misc: sram: use devm_platform_ioremap_resource_wc()
->   drivers: provide devm_platform_ioremap_resource_byname()
->   gpio: mvebu: use devm_platform_ioremap_resource_byname()
->   gpio: tegra186: use devm_platform_ioremap_resource_byname()
->
->  .../driver-api/driver-model/devres.rst        |  4 ++
->  drivers/base/platform.c                       | 39 +++++++++++-
->  drivers/gpio/gpio-mvebu.c                     | 19 +++---
->  drivers/gpio/gpio-tegra186.c                  |  4 +-
->  drivers/misc/sram.c                           | 28 +++------
->  include/linux/device.h                        |  2 +
->  include/linux/platform_device.h               |  6 ++
->  lib/devres.c                                  | 62 +++++++++++++------
->  8 files changed, 108 insertions(+), 56 deletions(-)
->
-> --
-> 2.23.0
->
+On 21.10.19 17:02, Michal Hocko wrote:
+> On Mon 21-10-19 16:19:26, David Hildenbrand wrote:
+>> We have two types of users of page isolation:
+>> 1. Memory offlining: Offline memory so it can be unplugged. Memory won't
+>> =09=09     be touched.
+>> 2. Memory allocation: Allocate memory (e.g., alloc_contig_range()) to
+>> =09=09      become the owner of the memory and make use of it.
+>>
+>> For example, in case we want to offline memory, we can ignore (skip over=
+)
+>> PageHWPoison() pages, as the memory won't get used. We can allow to
+>> offline memory. In contrast, we don't want to allow to allocate such
+>> memory.
+>>
+>> Let's generalize the approach so we can special case other types of
+>> pages we want to skip over in case we offline memory. While at it, also
+>> pass the same flags to test_pages_isolated().
+>>
+>> Cc: Michal Hocko <mhocko@suse.com>
+>> Cc: Oscar Salvador <osalvador@suse.de>
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: Anshuman Khandual <anshuman.khandual@arm.com>
+>> Cc: David Hildenbrand <david@redhat.com>
+>> Cc: Pingfan Liu <kernelfans@gmail.com>
+>> Cc: Qian Cai <cai@lca.pw>
+>> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+>> Cc: Dan Williams <dan.j.williams@intel.com>
+>> Cc: Vlastimil Babka <vbabka@suse.cz>
+>> Cc: Mel Gorman <mgorman@techsingularity.net>
+>> Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
+>> Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+>> Suggested-by: Michal Hocko <mhocko@suse.com>
+>> Signed-off-by: David Hildenbrand <david@redhat.com>
+>=20
+> Yes, a highlevel flag makes more sense than requesting specific types of
+> pages to skip over.
+>=20
+> Acked-by: Michal Hocko <mhocko@suse.com>
+>=20
+> Please make the code easier to follow ...
+>> ---
+>>   include/linux/page-isolation.h |  4 ++--
+>>   mm/memory_hotplug.c            |  8 +++++---
+>>   mm/page_alloc.c                |  4 ++--
+>>   mm/page_isolation.c            | 12 ++++++------
+>>   4 files changed, 15 insertions(+), 13 deletions(-)
+>>
+>> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+>> index bf6b21f02154..b44712c7fdd7 100644
+>> --- a/mm/page_alloc.c
+>> +++ b/mm/page_alloc.c
+>> @@ -8270,7 +8270,7 @@ bool has_unmovable_pages(struct zone *zone, struct=
+ page *page, int count,
+>>   =09=09 * The HWPoisoned page may be not in buddy system, and
+>>   =09=09 * page_count() is not 0.
+>>   =09=09 */
+>> -=09=09if ((flags & SKIP_HWPOISON) && PageHWPoison(page))
+>> +=09=09if (flags & MEMORY_OFFLINE && PageHWPoison(page))
+>>   =09=09=09continue;
+>>  =20
+>>   =09=09if (__PageMovable(page))
+> [...]
+>> @@ -257,7 +258,7 @@ void undo_isolate_page_range(unsigned long start_pfn=
+, unsigned long end_pfn,
+>>    */
+>>   static unsigned long
+>>   __test_page_isolated_in_pageblock(unsigned long pfn, unsigned long end=
+_pfn,
+>> -=09=09=09=09  bool skip_hwpoisoned_pages)
+>> +=09=09=09=09  int flags)
+>>   {
+>>   =09struct page *page;
+>>  =20
+>> @@ -274,7 +275,7 @@ __test_page_isolated_in_pageblock(unsigned long pfn,=
+ unsigned long end_pfn,
+>>   =09=09=09 * simple way to verify that as VM_BUG_ON(), though.
+>>   =09=09=09 */
+>>   =09=09=09pfn +=3D 1 << page_order(page);
+>> -=09=09else if (skip_hwpoisoned_pages && PageHWPoison(page))
+>> +=09=09else if (flags & MEMORY_OFFLINE && PageHWPoison(page))
+>>   =09=09=09/* A HWPoisoned page cannot be also PageBuddy */
+>>   =09=09=09pfn++;
+>>   =09=09else
+>=20
+> .. and use parentheses for the flag check.
+>=20
 
-Greg, Arnd,
+Can do if you prefer :)
 
-gentle ping for this. I noticed that some maintainers are complaining
-about being spammed with patches converting old drivers to using
-devm_platform_ioremap_resource() and there's even a patch removing the
-relevant coccinelle script on the list, but I think for new drivers
-these are still useful. Do you want to pick them up for v5.5 (or at
-all)?
+Thanks!
 
-Bart
+I'll resend both patches.
+
+--=20
+
+Thanks,
+
+David / dhildenb
+
