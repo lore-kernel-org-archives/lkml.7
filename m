@@ -2,63 +2,63 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84349CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 06:20:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F65CCA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 06:22:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56168206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 06:20:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D49E5206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 06:22:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h6kY1+sn"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GjbUSEjv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727106AbfJUGU6 (ORCPT
+        id S1726663AbfJUGWB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 02:20:58 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:39614 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726039AbfJUGU5 (ORCPT
+        Mon, 21 Oct 2019 02:22:01 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:55395 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726039AbfJUGWB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 02:20:57 -0400
-Received: by mail-wr1-f65.google.com with SMTP id c6so165646wrm.6
-        for <linux-kernel@vger.kernel.org>; Sun, 20 Oct 2019 23:20:54 -0700 (PDT)
+        Mon, 21 Oct 2019 02:22:01 -0400
+Received: by mail-wm1-f68.google.com with SMTP id g24so2590672wmh.5
+        for <linux-kernel@vger.kernel.org>; Sun, 20 Oct 2019 23:21:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=CdvcOGCYVL+T0dd/Qovdpy0EycQbYWDHOCHJnmgemls=;
-        b=h6kY1+snCa9b1x7e/EgIjsAXXWChcSe7Uw0FjL6G+anKZpluVsnHZlfXHSt09rzA17
-         7QEgstgPbNp7zGit5Kg6IcWlVJCjEQWPZhijlHGqzE9gZYmdrNfkbUvmJSjt7J9BNrVI
-         iBrcqQELNZQolZpgXvm2krI6QCIE+5auETUijcAYUxxeV14FrPjKGIpTjQQ1uW5xGnK2
-         rB//6di6mnksNQgm1xPuAgR98MBRjT/PtPVc/7XVHsjRva7gRDw9sCzJA2LXB2t3ypJ8
-         2klWs/YFyTytVptXjN8BopBVvxJrkKyMYaLh0RglRJd0PZbT5T5vpgEG/gQbOEjzJNvh
-         219Q==
+        bh=uyhVv4N2UiJ3EJxpaNQCWc5NdrhC/9AoAL7jZ85/7b8=;
+        b=GjbUSEjvkAF47IsFWgAUnfSwZ9jZeOmpmmzg8L/6guVX38gCMZuouTdMO5Iji6ewM0
+         ZcqaKKfluXkc0GCek0xGcyop4JHYb97Q/n3Eqc7ah2EKKHr0N7BGDs851PPpZHuHqzCj
+         Az8WGOd2xhVAFxxTDg1R2UqIdUdRXgD25JY9oY8pXU6I6vVvsfZ0aFENdmAVqf4UnUr8
+         lcQmqiLBmmkWCuTPfA0TxotJre4XtMv52V1BrM2hzvGfc4Miftl70l+50k9K9NVhoe2J
+         xX9Fh2F8N7Dj2Pl0njY0mgUTPdAzdCBXsCb1ksBM0pvjzMtLDB5366phzKtAZjRMiTXL
+         ANmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=CdvcOGCYVL+T0dd/Qovdpy0EycQbYWDHOCHJnmgemls=;
-        b=mW4b84x3MCbhxr1hP0dL9EWCbWoGM/UFBSCbVH3lxXa4JAUbWuyh4wTCi5f8G7/Mb0
-         2Vn19zW43iZj/bvVmUJqQ6Vc2oIkFHs4/uJJ8kqIQ7TH17SVj66MjpVsueuQHj9lNJzs
-         MMYfxchz6RcObs3nPwfC+Lf1xVHW4EAQs22Ujd53j9q318gbAMWQTowxmcHz6fuCkQo1
-         Vmd549WAeQkdnveBU0uiZ6u3QaK89mEvf0dRu1q4aHs+otbVYfo5KDVHswSrQtDA0s9Q
-         KnqbLecYXsknQZ4ESpJ4gwuxTEQud4OKzvxl78S/Zuxog6DYWGjZqRaU3bSsuc70ul8Q
-         SYcQ==
-X-Gm-Message-State: APjAAAVnYCjlXTd8xjzt7vtYA4VJvEzKaG0MlQ6deTfmpY+ivUMKF6BD
-        SjLI7PPI0foGiqm2GvJkRNfZaqjbqPs3NrFP4yGsWQ==
-X-Google-Smtp-Source: APXvYqy24wsGU0Cj+4SmHZlaSf1uaZpL2g4+f87/+EJ/1iZO4TCaFGyxMrU8YBrf0ThCHUcVzuLjkwXTWadLECQwLMk=
-X-Received: by 2002:a5d:43c9:: with SMTP id v9mr11140606wrr.200.1571638854218;
- Sun, 20 Oct 2019 23:20:54 -0700 (PDT)
+        bh=uyhVv4N2UiJ3EJxpaNQCWc5NdrhC/9AoAL7jZ85/7b8=;
+        b=Jrt87ALWP9NYLCnx+UsBbnl2vKVpFYBV80CdFI6rM3EQpKCh8ORpfm70V5Yh5y0uTw
+         4oaE0ZABgDNlNZecJS6l1fB4Yl3rnyf/VNWGQ3heHkJ9KxP/X7NB9XR9jhoScVHbctJV
+         4Ppc3d8lD/tzGP8PahzcUB1+orj43tkEcCeaU59ucZEkLKKeoHd7gIDeWHIJWZquUzXR
+         2oFiP0P1beQ6SrxWifevwoE2QVBaCt5TxS4dZXd7/P2NfcW9jnkwzgTS9aKCyZDZVk+V
+         iLCT+8vfvXIcVYc6Cl8Nj5M34E7d3nUPYvlQYhlPe7F7btB1BPa6YL0jCF5znEHvk+bo
+         5vRg==
+X-Gm-Message-State: APjAAAUTBriTmDVlVbQTURUH7lycqIUbA0Ddt+WZSiuNJY8JEeCACU7v
+        YS1N5NniQ5hdfajRyQBkyPtHAUGJ23IaRdLIGBkZfg==
+X-Google-Smtp-Source: APXvYqx9wfbsml6zIZvtLXulYaMSgitt7ok8Qfrnv+GkD+c5R91Idi9S9ZV+WgZk06tMxv4wXfJaROot0zqVv9/hG5E=
+X-Received: by 2002:a7b:c925:: with SMTP id h5mr1847720wml.61.1571638919306;
+ Sun, 20 Oct 2019 23:21:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191018161033.261971-1-samitolvanen@google.com> <20191018161033.261971-15-samitolvanen@google.com>
-In-Reply-To: <20191018161033.261971-15-samitolvanen@google.com>
+References: <20191018161033.261971-1-samitolvanen@google.com> <20191018161033.261971-17-samitolvanen@google.com>
+In-Reply-To: <20191018161033.261971-17-samitolvanen@google.com>
 From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Mon, 21 Oct 2019 08:20:43 +0200
-Message-ID: <CAKv+Gu-kMzsot5KSPSo_iMsuzcv8J1R5RLT9uGjuzJsxCVUPPg@mail.gmail.com>
-Subject: Re: [PATCH 14/18] arm64: efi: restore x18 if it was corrupted
+Date:   Mon, 21 Oct 2019 08:21:48 +0200
+Message-ID: <CAKv+Gu-88USO+fbjBgj35B4fUQ7A_t9nHO_swyN=T1q1G2wViA@mail.gmail.com>
+Subject: Re: [PATCH 16/18] arm64: kprobes: fix kprobes without CONFIG_KRETPROBES
 To:     Sami Tolvanen <samitolvanen@google.com>
 Cc:     Will Deacon <will@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
@@ -80,35 +80,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Fri, 18 Oct 2019 at 18:11, Sami Tolvanen <samitolvanen@google.com> wrote:
 >
-> If we detect a corrupted x18 and SCS is enabled, restore the register
-> before jumping back to instrumented code.
+> This allows CONFIG_KRETPROBES to be disabled without disabling
+> kprobes entirely.
 >
-
-You'll have to elaborate a bit here and explain that this is
-sufficient, given that we run EFI runtime services with interrupts
-enabled.
-
 > Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+
+Can we make kretprobes work with the shadow call stack instead?
+
 > ---
->  arch/arm64/kernel/efi-rt-wrapper.S | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
+>  arch/arm64/kernel/probes/kprobes.c | 2 ++
+>  1 file changed, 2 insertions(+)
 >
-> diff --git a/arch/arm64/kernel/efi-rt-wrapper.S b/arch/arm64/kernel/efi-rt-wrapper.S
-> index 3fc71106cb2b..945744f16086 100644
-> --- a/arch/arm64/kernel/efi-rt-wrapper.S
-> +++ b/arch/arm64/kernel/efi-rt-wrapper.S
-> @@ -34,5 +34,10 @@ ENTRY(__efi_rt_asm_wrapper)
->         ldp     x29, x30, [sp], #32
->         b.ne    0f
->         ret
-> -0:     b       efi_handle_corrupted_x18        // tail call
-> +0:
-> +#ifdef CONFIG_SHADOW_CALL_STACK
-> +       /* Restore x18 before returning to instrumented code. */
-> +       mov     x18, x2
+> diff --git a/arch/arm64/kernel/probes/kprobes.c b/arch/arm64/kernel/probes/kprobes.c
+> index c4452827419b..98230ae979ca 100644
+> --- a/arch/arm64/kernel/probes/kprobes.c
+> +++ b/arch/arm64/kernel/probes/kprobes.c
+> @@ -551,6 +551,7 @@ void __kprobes __used *trampoline_probe_handler(struct pt_regs *regs)
+>         return (void *)orig_ret_address;
+>  }
+>
+> +#ifdef CONFIG_KRETPROBES
+>  void __kprobes arch_prepare_kretprobe(struct kretprobe_instance *ri,
+>                                       struct pt_regs *regs)
+>  {
+> @@ -564,6 +565,7 @@ int __kprobes arch_trampoline_kprobe(struct kprobe *p)
+>  {
+>         return 0;
+>  }
 > +#endif
-> +       b       efi_handle_corrupted_x18        // tail call
->  ENDPROC(__efi_rt_asm_wrapper)
+>
+>  int __init arch_init_kprobes(void)
+>  {
 > --
 > 2.23.0.866.gb869b98d4c-goog
 >
