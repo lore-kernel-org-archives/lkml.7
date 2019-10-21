@@ -2,102 +2,115 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74688CA9EBA
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:28:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30A5CCA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:29:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4989920B7C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:28:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571646534;
-	bh=5UOyBnC5qla2Rd1+pYVADdaJfxPTcdJGTel4r+Yxuog=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MawtmPEERY3jqTNjgD52QFfK+/Th6upnB1X63NccFyooODZlVjcDg89NqWi/oxQxs
-	 /8Wby5rp16Zds7P09Nr4bNR979u6ME9qgpG4K2KbgWCO83BKn1BkzDzHYs2ROVkXpX
-	 EZV+CKMnqN+iJXL+wmeEMplMJfiHy63+lsArn5fA=
+	by mail.kernel.org (Postfix) with ESMTP id 00DB42064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:29:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="EN18lOlF";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="YX/zFkIG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727810AbfJUI2x (ORCPT
+        id S1727829AbfJUI30 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 04:28:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54242 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727730AbfJUI2w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 04:28:52 -0400
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        Mon, 21 Oct 2019 04:29:26 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:45200 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727471AbfJUI30 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 04:29:26 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id E9CBE60790; Mon, 21 Oct 2019 08:29:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571646565;
+        bh=lEYF4JRB9NiiBUTl4iJbN9bqjIYPYN8SKd3G8bvgP1A=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=EN18lOlF5rMt2tBxNGzHoEuiVJouK0G0y10D4MtuTk7FcSbKhwScBfUFhBuT9dFEN
+         S06BM8G6x/CrsSKZnmg5ix6DxjchcXogpCTxsjjiwmFH9Yh4sOeJo6+9riNeKY0U+j
+         KbA8qAvmj7zl0JZ8HMb4vYnv/ypiRW1NAu0ttyG8=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A6A220B7C;
-        Mon, 21 Oct 2019 08:28:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571646531;
-        bh=5UOyBnC5qla2Rd1+pYVADdaJfxPTcdJGTel4r+Yxuog=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DOPtSxlfKJe68UfzwzA1J62LFSHqUxUIij1wLL+OcwzzHCfun3lfi+kwOIksB5aed
-         fzKJDdP80n2pE7Tb8vs1Zvobf2IkmKTTGfxe01e9LnH+xY6Xeb3iQXggjJ7IIIft/e
-         lQASS48XFHg6/kPmhQ5WS3lvdNgXdqtRY+hQaQlU=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Shuah Khan <shuah@kernel.org>
-Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jaswinder.singh@linaro.org,
-        =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio.lopez@collabora.co.uk>
-Subject: [BUGFIX PATCH v2 5/5] selftests: sync: Fix cast warnings on arm
-Date:   Mon, 21 Oct 2019 17:28:47 +0900
-Message-Id: <157164652761.17692.731770786837445849.stgit@devnote2>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <157164647813.17692.3834082082658965225.stgit@devnote2>
-References: <157164647813.17692.3834082082658965225.stgit@devnote2>
-User-Agent: StGit/0.17.1-dirty
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7399C60610;
+        Mon, 21 Oct 2019 08:29:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571646564;
+        bh=lEYF4JRB9NiiBUTl4iJbN9bqjIYPYN8SKd3G8bvgP1A=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=YX/zFkIGiPbhVwhwNeiAFuWkFBqgEvdmW1achZW7fpR3+R9mLM/uNODeoA3wOSt8T
+         8le/c4sDJnY437Wi6DnrQsG2KXI+NPcOuX5qip74GvaRamCyOa53bJ8SldE8846Q8y
+         3Y4g6NAbxHfKQHkhgskPzIkRs6vbWoV3OhQpWiRc=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7399C60610
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Chris Chiu <chiu@endlessm.com>
+Cc:     Jes Sorensen <Jes.Sorensen@gmail.com>,
+        David Miller <davem@davemloft.net>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Linux Upstreaming Team <linux@endlessm.com>
+Subject: Re: [PATCH v2] rtl8xxxu: fix RTL8723BU connection failure issue after warm reboot
+References: <20191016015408.11091-1-chiu@endlessm.com>
+        <CAB4CAwen5y7Z4GU7YgpVafyGexxaMDLzrZ949t9p+LiZ9TxAPA@mail.gmail.com>
+        <CAB4CAwcW5JGtZQy+=vugx5rRYMycWoCSSdDc6nwhunqTtqoQaA@mail.gmail.com>
+Date:   Mon, 21 Oct 2019 11:29:19 +0300
+In-Reply-To: <CAB4CAwcW5JGtZQy+=vugx5rRYMycWoCSSdDc6nwhunqTtqoQaA@mail.gmail.com>
+        (Chris Chiu's message of "Mon, 21 Oct 2019 10:26:48 +0800")
+Message-ID: <874l02wlgg.fsf@kamboji.qca.qualcomm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix warnings on __u64 and pointer translation on arm and
-other 32bit architectures. Since the pointer is 32bits on
-those archs, we should not directly cast those types.
+Chris Chiu <chiu@endlessm.com> writes:
 
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Emilio López <emilio.lopez@collabora.co.uk>
----
- tools/testing/selftests/sync/sync.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+> On Thu, Oct 17, 2019 at 10:26 AM Chris Chiu <chiu@endlessm.com> wrote:
+>>
+>> On Wed, Oct 16, 2019 at 9:54 AM Chris Chiu <chiu@endlessm.com> wrote:
+>> >
+>> > The RTL8723BU has problems connecting to AP after each warm reboot.
+>> > Sometimes it returns no scan result, and in most cases, it fails
+>> > the authentication for unknown reason. However, it works totally
+>> > fine after cold reboot.
+>> >
+>> > Compare the value of register SYS_CR and SYS_CLK_MAC_CLK_ENABLE
+>> > for cold reboot and warm reboot, the registers imply that the MAC
+>> > is already powered and thus some procedures are skipped during
+>> > driver initialization. Double checked the vendor driver, it reads
+>> > the SYS_CR and SYS_CLK_MAC_CLK_ENABLE also but doesn't skip any
+>> > during initialization based on them. This commit only tells the
+>> > RTL8723BU to do full initialization without checking MAC status.
+>> >
+>> > Signed-off-by: Chris Chiu <chiu@endlessm.com>
+>> Signed-off-by: Jes Sorensen <Jes.Sorensen@gmail.com>
+>>
+>> Sorry, I forgot to add Jes.
+>>
+>> Chris
+>> > ---
+>> >
+>> > Note:
+>> >   v2: fix typo of commit message
+>> >
+>> >
+>
+> Gentle ping. Cheers.
 
-diff --git a/tools/testing/selftests/sync/sync.c b/tools/testing/selftests/sync/sync.c
-index f3d599f249b9..7741c0518d18 100644
---- a/tools/testing/selftests/sync/sync.c
-+++ b/tools/testing/selftests/sync/sync.c
-@@ -109,7 +109,7 @@ static struct sync_file_info *sync_file_info(int fd)
- 			return NULL;
- 		}
- 
--		info->sync_fence_info = (uint64_t)fence_info;
-+		info->sync_fence_info = (uint64_t)(unsigned long)fence_info;
- 
- 		err = ioctl(fd, SYNC_IOC_FILE_INFO, info);
- 		if (err < 0) {
-@@ -124,7 +124,7 @@ static struct sync_file_info *sync_file_info(int fd)
- 
- static void sync_file_info_free(struct sync_file_info *info)
- {
--	free((void *)info->sync_fence_info);
-+	free((void *)(unsigned long)info->sync_fence_info);
- 	free(info);
- }
- 
-@@ -152,7 +152,7 @@ int sync_fence_count_with_status(int fd, int status)
- 	if (!info)
- 		return -1;
- 
--	fence_info = (struct sync_fence_info *)info->sync_fence_info;
-+	fence_info = (struct sync_fence_info *)(unsigned long)info->sync_fence_info;
- 	for (i = 0 ; i < info->num_fences ; i++) {
- 		if (fence_info[i].status == status)
- 			count++;
+To reduce email please avoid pinging like this, it has been only five
+days since you submitted this version and this is not a 24/7 service. I
+have documented how you can follow the status from patchwork:
 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches#checking_state_of_patches_from_patchwork
+
+-- 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
