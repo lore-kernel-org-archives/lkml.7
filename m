@@ -2,233 +2,148 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15747CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:29:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14964CA9EB0
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:30:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E06EF206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:29:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC4E1206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:30:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V+qU0bqH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729821AbfJUP3s (ORCPT
+        id S1729738AbfJUPaS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 11:29:48 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:55762 "EHLO foss.arm.com"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S1727211AbfJUP3B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 11:29:01 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 61193105A;
-        Mon, 21 Oct 2019 08:28:40 -0700 (PDT)
-Received: from e112269-lin.cambridge.arm.com (e112269-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5EF083F71F;
-        Mon, 21 Oct 2019 08:28:38 -0700 (PDT)
-From:   Steven Price <steven.price@arm.com>
-To:     Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu
-Cc:     Steven Price <steven.price@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Pouloze <suzuki.poulose@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v7 03/10] KVM: arm64: Implement PV_TIME_FEATURES call
-Date:   Mon, 21 Oct 2019 16:28:16 +0100
-Message-Id: <20191021152823.14882-4-steven.price@arm.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191021152823.14882-1-steven.price@arm.com>
-References: <20191021152823.14882-1-steven.price@arm.com>
+        Mon, 21 Oct 2019 11:30:18 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:30545 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726332AbfJUPaS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 11:30:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571671817;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=/5ELIDEIebRNcnRQXVHraCqPbkLQCcB1TSIjkZQvLZ8=;
+        b=V+qU0bqHnt7S91YXsCJfjvHN/WBOjXwwRR5SkK9RAWpduQiV50RXVI6rYxvw1u0ihdYn2t
+        mf//4QKSgsr/m9wuCWpPIRqgyMmcZ+oajk6hABgcCOvkA/+ohsREh32cnltELMVWp2q6g1
+        iQDB5Hqk4vNg1p3hDVIdwBuo6NO9Ylg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-264-oMNytNEGOv-stwXfhXkQgw-1; Mon, 21 Oct 2019 11:30:13 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A080B1005500;
+        Mon, 21 Oct 2019 15:30:12 +0000 (UTC)
+Received: from rhp50.localdomain (ovpn-120-56.rdu2.redhat.com [10.10.120.56])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B0CE360A9F;
+        Mon, 21 Oct 2019 15:30:11 +0000 (UTC)
+From:   Mark Salter <msalter@redhat.com>
+To:     Tom Lendacky <thomas.lendacky@amd.com>,
+        Gary Hook <gary.hook@amd.com>
+Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S . Miller" <davem@davemloft.net>
+Subject: [PATCH] crypto: ccp - fix uninitialized list head
+Date:   Mon, 21 Oct 2019 11:29:49 -0400
+Message-Id: <20191021152949.17532-1-msalter@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MC-Unique: oMNytNEGOv-stwXfhXkQgw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This provides a mechanism for querying which paravirtualized time
-features are available in this hypervisor.
+A NULL-pointer dereference was reported in fedora bz#1762199 while
+reshaping a raid6 array after adding a fifth drive to an existing
+array.
 
-Also add the header file which defines the ABI for the paravirtualized
-time features we're about to add.
+[   47.343549] md/raid:md0: raid level 6 active with 3 out of 5 devices, al=
+gorithm 2
+[   47.804017] md0: detected capacity change from 0 to 7885289422848
+[   47.822083] Unable to handle kernel read from unreadable memory at virtu=
+al address 0000000000000000
+...
+[   47.940477] CPU: 1 PID: 14210 Comm: md0_raid6 Tainted: G        W       =
+  5.2.18-200.fc30.aarch64 #1
+[   47.949594] Hardware name: AMD Overdrive/Supercharger/To be filled by O.=
+E.M., BIOS ROD1002C 04/08/2016
+[   47.958886] pstate: 00400085 (nzcv daIf +PAN -UAO)
+[   47.963668] pc : __list_del_entry_valid+0x2c/0xa8
+[   47.968366] lr : ccp_tx_submit+0x84/0x168 [ccp]
+[   47.972882] sp : ffff00001369b970
+[   47.976184] x29: ffff00001369b970 x28: ffff00001369bdb8
+[   47.981483] x27: 00000000ffffffff x26: ffff8003b758af70
+[   47.986782] x25: ffff8003b758b2d8 x24: ffff8003e6245818
+[   47.992080] x23: 0000000000000000 x22: ffff8003e62450c0
+[   47.997379] x21: ffff8003dfd6add8 x20: 0000000000000003
+[   48.002678] x19: ffff8003e6245100 x18: 0000000000000000
+[   48.007976] x17: 0000000000000000 x16: 0000000000000000
+[   48.013274] x15: 0000000000000000 x14: 0000000000000000
+[   48.018572] x13: ffff7e000ef83a00 x12: 0000000000000001
+[   48.023870] x11: ffff000010eff998 x10: 00000000000019a0
+[   48.029169] x9 : 0000000000000000 x8 : ffff8003e6245180
+[   48.034467] x7 : 0000000000000000 x6 : 000000000000003f
+[   48.039766] x5 : 0000000000000040 x4 : ffff8003e0145080
+[   48.045064] x3 : dead000000000200 x2 : 0000000000000000
+[   48.050362] x1 : 0000000000000000 x0 : ffff8003e62450c0
+[   48.055660] Call trace:
+[   48.058095]  __list_del_entry_valid+0x2c/0xa8
+[   48.062442]  ccp_tx_submit+0x84/0x168 [ccp]
+[   48.066615]  async_tx_submit+0x224/0x368 [async_tx]
+[   48.071480]  async_trigger_callback+0x68/0xfc [async_tx]
+[   48.076784]  ops_run_biofill+0x178/0x1e8 [raid456]
+[   48.081566]  raid_run_ops+0x248/0x818 [raid456]
+[   48.086086]  handle_stripe+0x864/0x1208 [raid456]
+[   48.090781]  handle_active_stripes.isra.0+0xb0/0x278 [raid456]
+[   48.096604]  raid5d+0x378/0x618 [raid456]
+[   48.100602]  md_thread+0xa0/0x150
+[   48.103905]  kthread+0x104/0x130
+[   48.107122]  ret_from_fork+0x10/0x18
+[   48.110686] Code: d2804003 f2fbd5a3 eb03003f 54000320 (f9400021)
+[   48.116766] ---[ end trace 23f390a527f7ad77 ]---
 
-Signed-off-by: Steven Price <steven.price@arm.com>
+ccp_tx_submit is passed a dma_async_tx_descriptor which is contained in
+a ccp_dma_desc and adds it to a ccp channel's pending list:
+
+=09list_del(&desc->entry);
+=09list_add_tail(&desc->entry, &chan->pending);
+
+The problem is that desc->entry may be uninitialized in the
+async_trigger_callback path where the descriptor was gotten
+from ccp_prep_dma_interrupt which got it from ccp_alloc_dma_desc
+which doesn't initialize the desc->entry list head. So, just
+initialize the list head to avoid the problem.
+
+Reported-by: Sahaj Sarup <sahajsarup@gmail.com>
+Signed-off-by: Mark Salter <msalter@redhat.com>
 ---
- arch/arm/include/asm/kvm_host.h      |  6 ++++++
- arch/arm64/include/asm/kvm_host.h    |  2 ++
- arch/arm64/include/asm/pvclock-abi.h | 17 +++++++++++++++++
- arch/arm64/kvm/Makefile              |  1 +
- include/linux/arm-smccc.h            | 14 ++++++++++++++
- virt/kvm/arm/hypercalls.c            |  8 +++++++-
- virt/kvm/arm/pvtime.c                | 21 +++++++++++++++++++++
- 7 files changed, 68 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm64/include/asm/pvclock-abi.h
- create mode 100644 virt/kvm/arm/pvtime.c
+ drivers/crypto/ccp/ccp-dmaengine.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/include/asm/kvm_host.h b/arch/arm/include/asm/kvm_host.h
-index 8a37c8e89777..5a0c3569ebde 100644
---- a/arch/arm/include/asm/kvm_host.h
-+++ b/arch/arm/include/asm/kvm_host.h
-@@ -7,6 +7,7 @@
- #ifndef __ARM_KVM_HOST_H__
- #define __ARM_KVM_HOST_H__
- 
-+#include <linux/arm-smccc.h>
- #include <linux/errno.h>
- #include <linux/types.h>
- #include <linux/kvm_types.h>
-@@ -323,6 +324,11 @@ static inline int kvm_arch_vm_ioctl_check_extension(struct kvm *kvm, long ext)
- int kvm_perf_init(void);
- int kvm_perf_teardown(void);
- 
-+static inline long kvm_hypercall_pv_features(struct kvm_vcpu *vcpu)
-+{
-+	return SMCCC_RET_NOT_SUPPORTED;
-+}
-+
- void kvm_mmu_wp_memory_region(struct kvm *kvm, int slot);
- 
- struct kvm_vcpu *kvm_mpidr_to_vcpu(struct kvm *kvm, unsigned long mpidr);
-diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-index f656169db8c3..93b46d9526d0 100644
---- a/arch/arm64/include/asm/kvm_host.h
-+++ b/arch/arm64/include/asm/kvm_host.h
-@@ -478,6 +478,8 @@ void handle_exit_early(struct kvm_vcpu *vcpu, struct kvm_run *run,
- int kvm_perf_init(void);
- int kvm_perf_teardown(void);
- 
-+long kvm_hypercall_pv_features(struct kvm_vcpu *vcpu);
-+
- void kvm_set_sei_esr(struct kvm_vcpu *vcpu, u64 syndrome);
- 
- struct kvm_vcpu *kvm_mpidr_to_vcpu(struct kvm *kvm, unsigned long mpidr);
-diff --git a/arch/arm64/include/asm/pvclock-abi.h b/arch/arm64/include/asm/pvclock-abi.h
-new file mode 100644
-index 000000000000..c4f1c0a0789c
---- /dev/null
-+++ b/arch/arm64/include/asm/pvclock-abi.h
-@@ -0,0 +1,17 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* Copyright (C) 2019 Arm Ltd. */
-+
-+#ifndef __ASM_PVCLOCK_ABI_H
-+#define __ASM_PVCLOCK_ABI_H
-+
-+/* The below structure is defined in ARM DEN0057A */
-+
-+struct pvclock_vcpu_stolen_time {
-+	__le32 revision;
-+	__le32 attributes;
-+	__le64 stolen_time;
-+	/* Structure must be 64 byte aligned, pad to that size */
-+	u8 padding[48];
-+} __packed;
-+
-+#endif
-diff --git a/arch/arm64/kvm/Makefile b/arch/arm64/kvm/Makefile
-index 73dce4d47d47..5ffbdc39e780 100644
---- a/arch/arm64/kvm/Makefile
-+++ b/arch/arm64/kvm/Makefile
-@@ -14,6 +14,7 @@ kvm-$(CONFIG_KVM_ARM_HOST) += $(KVM)/kvm_main.o $(KVM)/coalesced_mmio.o $(KVM)/e
- kvm-$(CONFIG_KVM_ARM_HOST) += $(KVM)/arm/arm.o $(KVM)/arm/mmu.o $(KVM)/arm/mmio.o
- kvm-$(CONFIG_KVM_ARM_HOST) += $(KVM)/arm/psci.o $(KVM)/arm/perf.o
- kvm-$(CONFIG_KVM_ARM_HOST) += $(KVM)/arm/hypercalls.o
-+kvm-$(CONFIG_KVM_ARM_HOST) += $(KVM)/arm/pvtime.o
- 
- kvm-$(CONFIG_KVM_ARM_HOST) += inject_fault.o regmap.o va_layout.o
- kvm-$(CONFIG_KVM_ARM_HOST) += hyp.o hyp-init.o handle_exit.o
-diff --git a/include/linux/arm-smccc.h b/include/linux/arm-smccc.h
-index df01a8579034..92e0046ce7a7 100644
---- a/include/linux/arm-smccc.h
-+++ b/include/linux/arm-smccc.h
-@@ -45,6 +45,7 @@
- #define ARM_SMCCC_OWNER_SIP		2
- #define ARM_SMCCC_OWNER_OEM		3
- #define ARM_SMCCC_OWNER_STANDARD	4
-+#define ARM_SMCCC_OWNER_STANDARD_HYP	5
- #define ARM_SMCCC_OWNER_TRUSTED_APP	48
- #define ARM_SMCCC_OWNER_TRUSTED_APP_END	49
- #define ARM_SMCCC_OWNER_TRUSTED_OS	50
-@@ -318,5 +319,18 @@ asmlinkage void __arm_smccc_hvc(unsigned long a0, unsigned long a1,
- #define SMCCC_RET_NOT_SUPPORTED			-1
- #define SMCCC_RET_NOT_REQUIRED			-2
- 
-+/* Paravirtualised time calls (defined by ARM DEN0057A) */
-+#define ARM_SMCCC_HV_PV_TIME_FEATURES				\
-+	ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL,			\
-+			   ARM_SMCCC_SMC_64,			\
-+			   ARM_SMCCC_OWNER_STANDARD_HYP,	\
-+			   0x20)
-+
-+#define ARM_SMCCC_HV_PV_TIME_ST					\
-+	ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL,			\
-+			   ARM_SMCCC_SMC_64,			\
-+			   ARM_SMCCC_OWNER_STANDARD_HYP,	\
-+			   0x21)
-+
- #endif /*__ASSEMBLY__*/
- #endif /*__LINUX_ARM_SMCCC_H*/
-diff --git a/virt/kvm/arm/hypercalls.c b/virt/kvm/arm/hypercalls.c
-index f875241bd030..97ea8b133e77 100644
---- a/virt/kvm/arm/hypercalls.c
-+++ b/virt/kvm/arm/hypercalls.c
-@@ -12,7 +12,7 @@
- int kvm_hvc_call_handler(struct kvm_vcpu *vcpu)
- {
- 	u32 func_id = smccc_get_function(vcpu);
--	u32 val = SMCCC_RET_NOT_SUPPORTED;
-+	long val = SMCCC_RET_NOT_SUPPORTED;
- 	u32 feature;
- 
- 	switch (func_id) {
-@@ -48,8 +48,14 @@ int kvm_hvc_call_handler(struct kvm_vcpu *vcpu)
- 				break;
- 			}
- 			break;
-+		case ARM_SMCCC_HV_PV_TIME_FEATURES:
-+			val = SMCCC_RET_SUCCESS;
-+			break;
- 		}
- 		break;
-+	case ARM_SMCCC_HV_PV_TIME_FEATURES:
-+		val = kvm_hypercall_pv_features(vcpu);
-+		break;
- 	default:
- 		return kvm_psci_call(vcpu);
- 	}
-diff --git a/virt/kvm/arm/pvtime.c b/virt/kvm/arm/pvtime.c
-new file mode 100644
-index 000000000000..8d0fad671dcf
---- /dev/null
-+++ b/virt/kvm/arm/pvtime.c
-@@ -0,0 +1,21 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (C) 2019 Arm Ltd.
-+
-+#include <linux/arm-smccc.h>
-+
-+#include <kvm/arm_hypercalls.h>
-+
-+long kvm_hypercall_pv_features(struct kvm_vcpu *vcpu)
-+{
-+	u32 feature = smccc_get_arg1(vcpu);
-+	long val = SMCCC_RET_NOT_SUPPORTED;
-+
-+	switch (feature) {
-+	case ARM_SMCCC_HV_PV_TIME_FEATURES:
-+		val = SMCCC_RET_SUCCESS;
-+		break;
-+	}
-+
-+	return val;
-+}
-+
--- 
-2.20.1
+diff --git a/drivers/crypto/ccp/ccp-dmaengine.c b/drivers/crypto/ccp/ccp-dm=
+aengine.c
+index a54f9367a580..0770a83bf1a5 100644
+--- a/drivers/crypto/ccp/ccp-dmaengine.c
++++ b/drivers/crypto/ccp/ccp-dmaengine.c
+@@ -342,6 +342,7 @@ static struct ccp_dma_desc *ccp_alloc_dma_desc(struct c=
+cp_dma_chan *chan,
+ =09desc->tx_desc.flags =3D flags;
+ =09desc->tx_desc.tx_submit =3D ccp_tx_submit;
+ =09desc->ccp =3D chan->ccp;
++=09INIT_LIST_HEAD(&desc->entry);
+ =09INIT_LIST_HEAD(&desc->pending);
+ =09INIT_LIST_HEAD(&desc->active);
+ =09desc->status =3D DMA_IN_PROGRESS;
+--=20
+2.21.0
 
