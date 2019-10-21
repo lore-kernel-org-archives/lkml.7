@@ -2,128 +2,104 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF080CA9EB0
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:12:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AEACCA9EB0
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:14:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A640C2089C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:12:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D409F20B7C
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:13:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XbW1uAJb"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Mje5a2I0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728722AbfJUNMA (ORCPT
+        id S1728807AbfJUNN6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 09:12:00 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:53290 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727256AbfJUNMA (ORCPT
+        Mon, 21 Oct 2019 09:13:58 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:33272 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726767AbfJUNN6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 09:12:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=jloJkGKa7vU+GU78XngxyOagGSBHzTSvvyehxGuzF5c=; b=XbW1uAJbpB7Sb+2QkV/fEj2KI
-        mwRsqffCphhzWGJAzmvRSmqNsSgHYdImobSU0mUktzxMjKgE9WOaGdTunQmagUIDvHU5B1sED51Il
-        fhvuQHQG42qqbRVMwG2PskDmbHzxtR4NYqAgIgyPoR9hGC5hENFNc1wC8papO6TLm0TiMFyvZPdbG
-        eyV+7SBXWwI9ABlwd+O8ccWdI+qjpQLSvKj64lDUgeVTqWcs1zXucrlWT5z76d5dgMromovv+sNU0
-        4nzYkSY1ADiksK8kJiPYk30BRWfqUC0vikL0foLTRbIMhmlDe/XSKrAqV3bsRWtbWgLtDiS4wSH+Q
-        5mYXBq0PQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iMXTU-0001v0-3e; Mon, 21 Oct 2019 13:11:52 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D78F9300EBF;
-        Mon, 21 Oct 2019 15:10:52 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id EF4B220D9A729; Mon, 21 Oct 2019 15:11:49 +0200 (CEST)
-Date:   Mon, 21 Oct 2019 15:11:49 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>, linux@rasmusvillemoes.dk,
-        cyphar@cyphar.com, keescook@chromium.org,
-        christian.brauner@ubuntu.com
-Subject: Re: linux-next: Tree for Oct 18 (objtool)
-Message-ID: <20191021131149.GA19358@hirez.programming.kicks-ass.net>
-References: <20191018180300.090dbcb9@canb.auug.org.au>
- <40de4e26-450e-b932-3d73-e833c8aeaa2e@infradead.org>
- <20191021123549.GC1817@hirez.programming.kicks-ass.net>
+        Mon, 21 Oct 2019 09:13:58 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9LDDlPM083649;
+        Mon, 21 Oct 2019 08:13:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1571663627;
+        bh=cPzbl8QdR5RPkbPtIl/OHqd294nktWDjC5XGUzJXtfk=;
+        h=From:To:CC:Subject:Date;
+        b=Mje5a2I08a3EnqbRuhagvIhfjbmWlTepzH9IDor/7qo9OGEM6AMUw+e0dw/xAopfs
+         GzBcfcXDMAMZcJ0LUn28MQoRMcmRCx+ZH7mJxtSszkJat4Hz4dPiCXsh6O4KL18xCS
+         DOqLB3DraauH02vwbS070Tqm95TjeanLxeEHqnUo=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9LDDlwA106359
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 21 Oct 2019 08:13:47 -0500
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 21
+ Oct 2019 08:13:37 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 21 Oct 2019 08:13:37 -0500
+Received: from lta0400828a.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9LDDE7e017365;
+        Mon, 21 Oct 2019 08:13:14 -0500
+From:   Roger Quadros <rogerq@ti.com>
+To:     <felipe.balbi@linux.intel.com>, <gregkh@linuxfoundation.org>
+CC:     <pawell@cadence.com>, <peter.chen@nxp.com>, <nsekhar@ti.com>,
+        <kurahul@cadence.com>, <linux-usb@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Roger Quadros <rogerq@ti.com>
+Subject: [PATCH v2 0/2] usb: cdns3: Add TI wrapper
+Date:   Mon, 21 Oct 2019 16:13:03 +0300
+Message-ID: <20191021131305.8689-1-rogerq@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191021123549.GC1817@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 02:35:49PM +0200, Peter Zijlstra wrote:
-> On Fri, Oct 18, 2019 at 08:33:11AM -0700, Randy Dunlap wrote:
-> > On 10/18/19 12:03 AM, Stephen Rothwell wrote:
-> > > Hi all,
-> > > 
-> > > Changes since 20191017:
-> > > 
-> > 
-> > on x86_64:
-> > lib/usercopy.o: warning: objtool: check_zeroed_user()+0x35f: call to __ubsan_handle_shift_out_of_bounds() with UACCESS enabled
-> 
-> Blergh... I suppose the below will fix that. I'm a bit conflicted on it
-> though, the alternative is annotating more ubsan crud.
+Hi,
 
-By popular request; here's that alternative. Completely untested :-)
+Texas Instruments SoCs have a wrapper module around the Cadence
+USB3 core. It takes care of clocking and powering the core and providing
+initial configuration to the core.
 
----
- lib/ubsan.c           | 5 ++++-
- tools/objtool/check.c | 1 +
- 2 files changed, 5 insertions(+), 1 deletion(-)
+This series adds the driver for the TI wrapper and associated DT binding
+document. This is for -next kernel. Thanks.
 
-diff --git a/lib/ubsan.c b/lib/ubsan.c
-index 39d5952c4273..0dce3ff45b5b 100644
---- a/lib/ubsan.c
-+++ b/lib/ubsan.c
-@@ -359,9 +359,10 @@ void __ubsan_handle_shift_out_of_bounds(struct shift_out_of_bounds_data *data,
- 	struct type_descriptor *lhs_type = data->lhs_type;
- 	char rhs_str[VALUE_LENGTH];
- 	char lhs_str[VALUE_LENGTH];
-+	unsigned long flags = user_access_save();
- 
- 	if (suppress_report(&data->location))
--		return;
-+		goto out;
- 
- 	ubsan_prologue(&data->location);
- 
-@@ -387,6 +388,8 @@ void __ubsan_handle_shift_out_of_bounds(struct shift_out_of_bounds_data *data,
- 			lhs_type->type_name);
- 
- 	ubsan_epilogue();
-+out:
-+	user_access_restore(flags);
- }
- EXPORT_SYMBOL(__ubsan_handle_shift_out_of_bounds);
- 
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 543c068096b1..4768d91c6d68 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -482,6 +482,7 @@ static const char *uaccess_safe_builtin[] = {
- 	"ubsan_type_mismatch_common",
- 	"__ubsan_handle_type_mismatch",
- 	"__ubsan_handle_type_mismatch_v1",
-+	"__ubsan_handle_shift_out_of_bounds",
- 	/* misc */
- 	"csum_partial_copy_generic",
- 	"__memcpy_mcsafe",
+cheers,
+-roger
+
+Changelog:
+
+v2:
+- dt-binding fixes to address Rob's comments
+	- convert dt-binding document name to DT schema
+	- get rid of bootstrap properties
+	- fix DT example
+
+Roger Quadros (2):
+  dt-bindings: usb: Add binding for the TI wrapper for Cadence USB3
+    controller
+  usb: cdns3: Add TI specific wrapper driver
+
+ .../devicetree/bindings/usb/ti,j721e-usb.txt  |  52 ++++
+ drivers/usb/cdns3/Kconfig                     |  10 +
+ drivers/usb/cdns3/Makefile                    |   1 +
+ drivers/usb/cdns3/cdns3-ti.c                  | 236 ++++++++++++++++++
+ 4 files changed, 299 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/ti,j721e-usb.txt
+ create mode 100644 drivers/usb/cdns3/cdns3-ti.c
+
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
