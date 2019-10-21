@@ -2,102 +2,90 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8418C47E49
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:01:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 780AFCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:03:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C89F820700
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:01:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C4302067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:03:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="agj7WKKC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728321AbfJUMA7 (ORCPT
+        id S1728389AbfJUMDR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 08:00:59 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52692 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728083AbfJUMA7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 08:00:59 -0400
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Mon, 21 Oct 2019 08:03:17 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:31522 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727962AbfJUMDQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 08:03:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571659396;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=kmgPAC7W/5410XjvqZWnihFBmhF2Kg+1698CXHy3Bl0=;
+        b=agj7WKKCjg+duhMoxNSyEKTWJMt9zAMNdL8Hwx+DiLK3qOV0Tk2SpgVuANvLLIR3sPQy4b
+        k2hfAIPm7EvOQcdm5LFcCrQXVWinyPemuaZ044jSjfW9GnwyGOdgius/jaxSVpBskif4Iv
+        BNnBMfwJk6XhUzDcfi4YUU7L/srYaqA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-251-oxBS3Ss1NUKGY8SDNye1Wg-1; Mon, 21 Oct 2019 08:01:14 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 50CBB83F4C
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 12:00:59 +0000 (UTC)
-Received: by mail-qk1-f197.google.com with SMTP id t1so6381015qkm.0
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 05:00:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=d3fNeTrb8zczujjHnQNEjI0XuAROR+Pj6w/x2dFfu/8=;
-        b=d4d5m0Vg/PDgs27jWjN5bcgKsFk+hc8OXpd3JMu4wKtZzOIFm6wxv9+lD9L5pfnEBG
-         3QMjOk9qwpCh1f83H+QpsPQ1F0rMpOXYTB4A69t4qYAEqO3Gkx9wtGylE/12uwhsm0ps
-         57zxE2DGlhuGUlEOfbnpEbl3wWSqA8DgHJSee0tDc2zEKwCWgrJDnCIhgZMYwzNuyCtV
-         w2nqENSqvM73uqujL2BYt8HxvSW+OySm4PXOIk2IglzYNQl5K633O9QfhWqMcT9BE7g/
-         agkdZiWS8wjxYO+8ThwoDIeUYSJkD6jaQ1Q/yIPa8Lm7TntWhYYoBHeKimoFPPU182r+
-         r7uw==
-X-Gm-Message-State: APjAAAXR1lf2itsAn9qdGpYawVPFAegyNsVvneg+2AC5o0VAIN6qmv7S
-        Zo+sJOtHOLf+WsQrlXC9M0h+Mku4YFuc0wz6WR7LWA64YyoqRl8YCnjDSB2qrCbq938NdA7TE5C
-        6EihCFBePFOqfE/ckBb6AIM/lD9sgWA7NNdg4d68L
-X-Received: by 2002:a05:620a:16b9:: with SMTP id s25mr22668512qkj.102.1571659258421;
-        Mon, 21 Oct 2019 05:00:58 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxLKUy/SzC+Ir3UqXb3Coc4vgrt7sjwm3oLMxhXO6j4sAHWuzrRvXNIFYbci0UPZXZOe/I7+Lh9FVGm0cooVzg=
-X-Received: by 2002:a05:620a:16b9:: with SMTP id s25mr22668481qkj.102.1571659258106;
- Mon, 21 Oct 2019 05:00:58 -0700 (PDT)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 033BC100550E;
+        Mon, 21 Oct 2019 12:01:13 +0000 (UTC)
+Received: from [10.40.204.224] (ovpn-204-224.brq.redhat.com [10.40.204.224])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EDE7B167A3;
+        Mon, 21 Oct 2019 12:01:10 +0000 (UTC)
+Subject: Re: [PATCH] fs: exFAT read-only driver GPL implementation by Paragon
+ Software.
+To:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>
+References: <453A1153-9493-4A04-BF66-CE6A572DEBDB@paragon-software.com>
+ <20191021111136.adpxjxmmz4p2vud2@pali>
+ <a4c42aa5-f9b7-4e74-2c11-220d45cb3669@redhat.com>
+ <20191021114556.lk2zkha57xmav7xz@pali>
+Cc:     Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+From:   Maurizio Lombardi <mlombard@redhat.com>
+Message-ID: <bcc406b7-d8ed-475d-d5d7-16b97ec40022@redhat.com>
+Date:   Mon, 21 Oct 2019 14:01:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.0
 MIME-Version: 1.0
-References: <20191016144449.24646-1-kherbst@redhat.com> <20191021114017.GY2819@lahna.fi.intel.com>
-In-Reply-To: <20191021114017.GY2819@lahna.fi.intel.com>
-From:   Karol Herbst <kherbst@redhat.com>
-Date:   Mon, 21 Oct 2019 14:00:46 +0200
-Message-ID: <CACO55tt2iGcySugTAb1khEYpiGoq6Os3upG5fGq+0PbE2gyyeQ@mail.gmail.com>
-Subject: Re: [PATCH v3] pci: prevent putting nvidia GPUs into lower device
- states on certain intel bridges
-To:     Mika Westerberg <mika.westerberg@intel.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lyude Paul <lyude@redhat.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191021114556.lk2zkha57xmav7xz@pali>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-MC-Unique: oxBS3Ss1NUKGY8SDNye1Wg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 1:40 PM Mika Westerberg
-<mika.westerberg@intel.com> wrote:
->
-> Hi Karol,
->
-> Sorry for commenting late, I just came back from vacation.
->
-> On Wed, Oct 16, 2019 at 04:44:49PM +0200, Karol Herbst wrote:
-> > Fixes state transitions of Nvidia Pascal GPUs from D3cold into higher device
-> > states.
-> >
-> > v2: convert to pci_dev quirk
-> >     put a proper technical explanation of the issue as a in-code comment
-> > v3: disable it only for certain combinations of intel and nvidia hardware
-> >
-> > Signed-off-by: Karol Herbst <kherbst@redhat.com>
-> > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > Cc: Lyude Paul <lyude@redhat.com>
-> > Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
-> > Cc: Mika Westerberg <mika.westerberg@intel.com>
-> > Cc: linux-pci@vger.kernel.org
-> > Cc: linux-pm@vger.kernel.org
-> > Cc: dri-devel@lists.freedesktop.org
-> > Cc: nouveau@lists.freedesktop.org
-> > ---
-> >  drivers/pci/pci.c    | 11 ++++++++++
-> >  drivers/pci/quirks.c | 52 ++++++++++++++++++++++++++++++++++++++++++++
->
-> I may be missing something but why you can't do this in the nouveau
-> driver itself?
 
-What do you mean precisely? Move the quirk into nouveau, but keep the
-changes to pci core?
+
+Dne 21.10.2019 v 13:45 Pali Roh=C3=A1r napsal(a):
+> They are represented by one member
+> in boot sector structure).
+>=20
+>> Btw, only Windows CE supported this.
+>=20
+> Is this information based on some real tests? Or just from marketing or
+> Microsoft's information? (I would really like to know definite answer in
+> this area).
+
+I admit I have read it on Microsoft's exFAT documentation, unfortunately
+I don't have a WinCE device to test if it's really true.
+
+
+Maurizio
+
