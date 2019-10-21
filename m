@@ -2,89 +2,131 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22165CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 01:43:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB7BFCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 02:06:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E431A218BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 01:43:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85175222C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 02:06:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="kQ2XDAO1"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b6jF/1TC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726834AbfJUBns (ORCPT
+        id S1726833AbfJUCG3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 20 Oct 2019 21:43:48 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:53072 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726718AbfJUBnr (ORCPT
+        Sun, 20 Oct 2019 22:06:29 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:33895 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726725AbfJUCG3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 20 Oct 2019 21:43:47 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 442FD806A8;
-        Mon, 21 Oct 2019 14:43:45 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1571622225;
-        bh=b3bnFzbf3TgftQnfn5vIsLWzOb143SfhFz8wgRbgD1E=;
-        h=From:To:Cc:Subject:Date;
-        b=kQ2XDAO1JL+wMLGPDEXPOQq2TAG5+7xyxnA9ir2L4XJQ5cEKQxI5U176rTm6Zf3x7
-         s9Te9/IdQll6lblS5AYM0EicBLH7EG3CWqXBmsFGry9feWNCb2EolaAMxYLMgOd9vc
-         yMgNqbuZKMspl4qukzgP2cYVPn0HWVLTjXOmE+VUWoO008rA5cNAIYaoX3UpVy/1lF
-         DGbhfbU7HfVOlDSaR9h2Bf7Pfn7dsTBwvr3PnlElNB2mHjteDD5OzXuLkFoU6fhWvZ
-         xHPLjWvP1bZd7GrlhRnVY/e43VdGRUghuBV00KSVhy7/ltbOYaBne7taXmTvt9J1Ht
-         J7G72lhsm3u9g==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5dad0d4b0000>; Mon, 21 Oct 2019 14:43:44 +1300
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
-        by smtp (Postfix) with ESMTP id 3388613EED4;
-        Mon, 21 Oct 2019 14:43:44 +1300 (NZDT)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-        id 0E931280059; Mon, 21 Oct 2019 14:43:40 +1300 (NZDT)
-From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
-To:     corbet@lwn.net
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        trivial@kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH] docs: ioctl: fix typo
-Date:   Mon, 21 Oct 2019 14:43:36 +1300
-Message-Id: <20191021014336.14030-1-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.23.0
+        Sun, 20 Oct 2019 22:06:29 -0400
+Received: by mail-pg1-f195.google.com with SMTP id k20so6775813pgi.1
+        for <linux-kernel@vger.kernel.org>; Sun, 20 Oct 2019 19:06:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+yWlFQ3j7MPCBznXsMHQtwJpyH73frvubd7zQPjGqcQ=;
+        b=b6jF/1TCbvWbam16ICWlejQoSAC8+hg+CuxDEnF4riYF5Sq4SSUC+vktJEEOp4GwaL
+         R+MVDsuCHRmEkMhueRjh3U4t/xHsfmYAd5Yomv9TltCGadViASJLNsaikB20jqDJxi8n
+         dWVfgkI6OxuV8SrTlzu1UxF84Waqf0ymzK7EjZVebV+jJvqaIuMIp0TTrl4wcLkRQ1cg
+         JRDHJR3HLRAy4g02+T82IvW12A/CAQAGYnqhqse9BnW+Z7pg+VV47mmjQ77JfilZzDiA
+         +4QoCJLF0pzaHnplp75PudT0JDggsOSIJ3OGCzqSRGkdb8VVyWjD0Hk6gS3A5uCtXRqZ
+         bMQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+yWlFQ3j7MPCBznXsMHQtwJpyH73frvubd7zQPjGqcQ=;
+        b=mHFFHeK3q6UyG0ETj8lHK3lHHkp+FshO+HHn7L4FLUlSSbB2QNJkUiy23SCqyeya3u
+         /ziZthCB2AVlajloUoGsm4Y0LMUNNQvws5Dq1WtuwX9A08U9vMzfdkPzhnrxATaXIgEr
+         TZlwZS4b+pY3jywPREql7CgxoPtzsrwa3U6sU7dbB0T/4xN5Y9/YMUuFbHxbBETe5Kal
+         0oqfesETuiECrAGNQka4QihHJ9oBgHzy4zRzUW6gKn79fEH4MXH9IWjyFPIaUaeBLgac
+         no2RINvY+GUPGcqgF4Lqk63lemxCssIzrC4xSqXA9vgVuq8HtGJmBgLhRa9z6N58oP/4
+         RhSw==
+X-Gm-Message-State: APjAAAX9GnpfnyV3uUfOXDDL5S36VczOfqM2BxWDMdTk8mYA5fZtcaiG
+        l5pd62Htd6YR2JzZw5KvrFtI0w==
+X-Google-Smtp-Source: APXvYqx+O4q4hmJUC+1LMJIMJc8cEyhGSOZvO9jUQMs0EyVIEpjKc4vVl0VNeQL6Dp2g1H3xO8GA+g==
+X-Received: by 2002:a63:b644:: with SMTP id v4mr7468971pgt.249.1571623588138;
+        Sun, 20 Oct 2019 19:06:28 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id k23sm12553705pgi.49.2019.10.20.19.06.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 20 Oct 2019 19:06:26 -0700 (PDT)
+Date:   Sun, 20 Oct 2019 19:06:24 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Chris Goldsworthy <cgoldswo@codeaurora.org>
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        stable@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] of: reserved_mem: add missing of_node_put() for proper
+ ref-counting
+Message-ID: <20191021020624.GE4500@tuxbook-pro>
+References: <1571536644-13840-1-git-send-email-cgoldswo@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1571536644-13840-1-git-send-email-cgoldswo@codeaurora.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"pointres" should be "pointers".
+On Sat 19 Oct 18:57 PDT 2019, Chris Goldsworthy wrote:
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
----
- Documentation/ioctl/botching-up-ioctls.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Commit d698a388146c ("of: reserved-memory: ignore disabled memory-region
+> nodes") added an early return in of_reserved_mem_device_init_by_idx(), but
+> didn't call of_node_put() on a device_node whose ref-count was incremented
+> in the call to of_parse_phandle() preceding the early exit.
+> 
+> Fixes: d698a388146c ("of: reserved-memory: ignore disabled memory-region nodes")
+> Signed-off-by: Chris Goldsworthy <cgoldswo@codeaurora.org>
+> To: Rob Herring <robh+dt@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> Cc: stable@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-arm-msm@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
 
-diff --git a/Documentation/ioctl/botching-up-ioctls.rst b/Documentation/i=
-octl/botching-up-ioctls.rst
-index ac697fef3545..2d4829b2fb09 100644
---- a/Documentation/ioctl/botching-up-ioctls.rst
-+++ b/Documentation/ioctl/botching-up-ioctls.rst
-@@ -46,7 +46,7 @@ will need to add a 32-bit compat layer:
-    conversion or worse, fiddle the raw __u64 through your code since tha=
-t
-    diminishes the checking tools like sparse can provide. The macro
-    u64_to_user_ptr can be used in the kernel to avoid warnings about int=
-egers
--   and pointres of different sizes.
-+   and pointers of different sizes.
-=20
-=20
- Basics
---=20
-2.23.0
+Cc stable@ is used to assist in making sure your patch is backported to
+stable kernels, other than that the purpose Cc here is to indicate that
+specific people have been requested to comment on your patch.
 
+So please skip these from the commit message in the future (for this
+one, wait and see if Rob is willing to trim them as he applies the
+patch).
+
+
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+Regards,
+Bjorn
+
+> ---
+>  drivers/of/of_reserved_mem.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
+> index 7989703..6bd610e 100644
+> --- a/drivers/of/of_reserved_mem.c
+> +++ b/drivers/of/of_reserved_mem.c
+> @@ -324,8 +324,10 @@ int of_reserved_mem_device_init_by_idx(struct device *dev,
+>  	if (!target)
+>  		return -ENODEV;
+>  
+> -	if (!of_device_is_available(target))
+> +	if (!of_device_is_available(target)) {
+> +		of_node_put(target);
+>  		return 0;
+> +	}
+>  
+>  	rmem = __find_rmem(target);
+>  	of_node_put(target);
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
