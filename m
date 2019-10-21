@@ -2,1188 +2,390 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B0F9CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:37:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F80CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:37:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 084D920656
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:37:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2A4720656
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:37:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="mmdqi+xU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729370AbfJUOg6 (ORCPT
+        id S1729398AbfJUOhC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 10:36:58 -0400
-Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:28994 "EHLO
-        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726987AbfJUOgy (ORCPT
+        Mon, 21 Oct 2019 10:37:02 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:33722 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729376AbfJUOhA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 10:36:54 -0400
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 21 Oct 2019 20:00:39 +0530
-IronPort-SDR: a0Ii4OYeCg1O82cvaraOx7VVZLZNJjNpj6tMf/C1Qj81j2XPQH8IHQNzMCd1wuBjtXvDt6JbEw
- 9y6y2Z8A2H+mJAUbAb5RPd7f37WVzy9ivjMHjqfyNQkmEafiuYp8mtNA66peMLB4q7NCHjGh0y
- GX3QqFIcpu53679R1E++NiuAahKCuiE+6CMNpmTQkiEyJfnhfjLOGa+ytF8/bb9IbmZgV2hELS
- PjXk124BPxdQNJL7BaDVvhfY4Q5EHp0JCOnO6LbKowEFvhh+M+RKkcWlctYO42n1ewLIjSLKk8
- HiRJ2PjXmAtg4UHp1lP25a8D
-Received: from rampraka-linux.qualcomm.com ([10.206.25.221])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 21 Oct 2019 20:00:39 +0530
-Received: by rampraka-linux.qualcomm.com (Postfix, from userid 2305851)
-        id CA4D6329D; Mon, 21 Oct 2019 20:00:37 +0530 (IST)
-From:   Ram Prakash Gupta <rampraka@codeaurora.org>
-To:     asutoshd@codeaurora.org, stummala@codeaurora.org,
-        sayalil@codeaurora.org, rampraka@codeaurora.org,
-        vbadigan@codeaurora.org, cang@codeaurora.org, ppvk@codeaurora.org,
-        adrian.hunter@intel.com, ulf.hansson@linaro.org,
-        robh+dt@kernel.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     Sujit Reddy Thumma <sthumma@codeaurora.org>,
-        Talel Shenhar <tatias@codeaurora.org>,
-        Ritesh Harjani <riteshh@codeaurora.org>,
-        "Bao D. Nguyen" <nguyenb@codeaurora.org>
-Subject: [RFC 2/6] mmc: core: Add core scaling support in driver
-Date:   Mon, 21 Oct 2019 19:59:33 +0530
-Message-Id: <1571668177-3766-3-git-send-email-rampraka@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1571668177-3766-1-git-send-email-rampraka@codeaurora.org>
-References: <1571668177-3766-1-git-send-email-rampraka@codeaurora.org>
+        Mon, 21 Oct 2019 10:37:00 -0400
+Received: by mail-oi1-f196.google.com with SMTP id a15so11251838oic.0
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 07:36:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=F9M8Eq89OF/FPeByyM9BDWeTQ0wWGwKwWZ709udKuf4=;
+        b=mmdqi+xUFgKK08dkzQsoc11aXrAJuhn0nF6L1prsVq03E8plmTthHHqsjfDcT3UyKZ
+         0YxgqjJZ5nd5BTaz9XqohkJyFgxnAbBvuj+i70yYZpx/VnXGxHjfIdGkIpgPnPzRwL0o
+         wLUinJIU+eF5XnMozmAjwfRYSHVQ+ETlZ1I6UtmzUEkY1MWYCORmvIHXtCrW234fu/z0
+         YIXYW8/QsFcr2BLipcO83fjqzpQ2BQwzM97JNT177OjUxiHjTuNuGSlS/bbj6wzrf5sG
+         2jGWbDfHObwTnS8Bfn3B9+M2YK5J2B5MDZwb+9j1Qs6ifa4T/Xn2ybverAUD59ozWMki
+         B6gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=F9M8Eq89OF/FPeByyM9BDWeTQ0wWGwKwWZ709udKuf4=;
+        b=ijnrduvlO3SLjLtf61dQN+ftaHInc1mPgUgbGQsKh8564huyiDUe8gSIQT+tmgTjyE
+         Sl3jvCamiQ/SQU1kMbLrKM6nrh1yLEq5IfG61ng9CJnQulHiLQ+/5ef1CfOmiwpfhh8C
+         h+MzaAQdxipTe8GnVBWjmpWrgjKrNEtmZjqDgkAPQ4CvjV2RAyrrWJl9GaIdDjOdLoaF
+         ZG2rmNj4yV3BJPvCLJcEL+3CTvAWaiettg0eopbw+ZEwNH1llrr45wRUQD3KhsxWjaVz
+         s9gYt3fx/lhRTau7idWyWclsE8Q8oHP7SL7P8iHxgzHiJ3YxIFyz1oJYV3fCmFb7i2F+
+         Zruw==
+X-Gm-Message-State: APjAAAU0JTIfNA/r0vh6EagVcN5WX7GVwKdV6KXJCgauhzEayE1t057n
+        9LwvxmHgr0wH7xq8NnDIrbUHHXXwZISFKaUw6hL7EQ==
+X-Google-Smtp-Source: APXvYqypD0zKNpAb9ujIPFwAQ6WrMDcQk5bMysdXYGPjK87PkHpwNn9wzZBFBkfPzsRtDemL+uytcUMGDrlHGrHfxHE=
+X-Received: by 2002:a54:4e83:: with SMTP id c3mr19803161oiy.170.1571668618065;
+ Mon, 21 Oct 2019 07:36:58 -0700 (PDT)
+MIME-Version: 1.0
+References: <cover.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
+ <f8f8c323d378244afe4e94f48c0a94bb296cbbe0.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
+ <CAMpxmJWXQccY8HsM6MXYBW8KC0U+7iOk+Ve-4nk=cpa=Zuk1cg@mail.gmail.com> <3ae3507649f2e9a66053a99b4a71e29786fc3d34.camel@fi.rohmeurope.com>
+In-Reply-To: <3ae3507649f2e9a66053a99b4a71e29786fc3d34.camel@fi.rohmeurope.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Mon, 21 Oct 2019 16:36:47 +0200
+Message-ID: <CAMpxmJVABg-UAzZtaQKu5ADBhi1P7CNArmstxHi5ZfdPiSKyYw@mail.gmail.com>
+Subject: Re: [RFC PATCH 10/13] gpio: bd71828: Initial support for ROHM BD71828
+ PMIC GPIOs
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Cc:     "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding clock scaling support in clock scaling driver.
+pon., 21 pa=C5=BA 2019 o 09:00 Vaittinen, Matti
+<Matti.Vaittinen@fi.rohmeurope.com> napisa=C5=82(a):
+>
+> Hello Bartosz,
+>
+> Thanks for reading this through! I'll rework this patch during this
+> week :)
+>
+> On Thu, 2019-10-17 at 14:45 +0200, Bartosz Golaszewski wrote:
+> > czw., 17 pa=C5=BA 2019 o 11:53 Matti Vaittinen
+> > <matti.vaittinen@fi.rohmeurope.com> napisa=C5=82(a):
+> > > ROHM BD71828 PMIC contains 4 pins which can be configured by OTP
+> > > to be used for general purposes. First 3 can be used as outputs
+> > > and 4.th pin can be used as input. Allow them to be controlled
+> > > via GPIO framework.
+> > >
+> > > The driver assumes all of the pins are configured as GPIOs and
+> > > rusts that the reserved pins in other OTP configurations are
+> > > excluded from control using "gpio-reserved-ranges" device tree
+> > > property (or left untouched by GPIO users).
+> > >
+> > > Typical use for 4.th pin (input) is to use it as HALL sensor
+> > > input so that this pin state is toggled when HALL sensor detects
+> > > LID position change (from close to open or open to close). PMIC
+> > > HW implements some extra logic which allows PMIC to power-up the
+> > > system when this pin is toggled. Please see the data sheet for
+> > > details of GPIO options which can be selcted by OTP settings.
+> > >
+> > > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> > >
+> > > +++ b/drivers/gpio/gpio-bd71828.c
+> > > @@ -0,0 +1,161 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +// Copyright (C) 2018 ROHM Semiconductors
+> > > +// gpio-bd71828.c ROHM BD71828 gpio driver
+> >
+> > I don't think the name of the source file is needed here.
+>
+> I Agree.
+>
+> >
+> > > +
+> > > +#include <linux/gpio/driver.h>
+> > > +#include <linux/mfd/rohm-bd71828.h>
+> > > +#include <linux/module.h>
+> > > +#include <linux/platform_device.h>
+> > > +#include <linux/regmap.h>
+> > > +
+> > > +#define OUT 0
+> > > +#define IN 1
+> >
+> > If you really want to define those, please use a common prefix for
+> > all
+> > symbols in the driver.
+>
+> I prefer defining them because I always need to check the meaning of
+> these values. My brains just refuse from remembering which value is
+> used for in and which for out. I will add the prefix even though the
+> scope of these defines is limited to this file :)
+>
+> >
+> > > +#define GPIO_OUT_REG(off) (BD71828_REG_GPIO_CTRL1 + (off))
+> > > +#define HALL_GPIO_OFFSET 3
+> > > +
+> > > +struct bd71828_gpio {
+> > > +       struct rohm_regmap_dev chip;
+> > > +       struct gpio_chip gpio;
+> > > +};
+> > > +
+> > > +static void bd71828_gpio_set(struct gpio_chip *chip, unsigned int
+> > > offset,
+> > > +                            int value)
+> > > +{
+> > > +       int ret;
+> > > +       struct bd71828_gpio *bdgpio =3D gpiochip_get_data(chip);
+> > > +       u8 val =3D (value) ? BD71828_GPIO_OUT_HI :
+> > > BD71828_GPIO_OUT_LO;
+> > > +
+> > > +       if (offset =3D=3D HALL_GPIO_OFFSET)
+> > > +               return;
+> >
+> > Can you add a comment here saying that this pin can only be used as
+> > input? Otherwise this information is only available in the commit
+> > message.
+>
+> Sure thing. I thought the comment in get_direction was sufficient but
+> you are correct - it's nice to see this limitation also here.
+>
+> > > +
+> > > +       ret =3D regmap_update_bits(bdgpio->chip.regmap,
+> > > GPIO_OUT_REG(offset),
+> > > +                                BD71828_GPIO_OUT_MASK, val);
+> > > +       if (ret)
+> > > +               dev_err(bdgpio->chip.dev, "Could not set gpio to
+> > > %d\n", value);
+> > > +}
+> > > +
+> > > +static int bd71828_gpio_get(struct gpio_chip *chip, unsigned int
+> > > offset)
+> > > +{
+> > > +       int ret;
+> > > +       unsigned int val;
+> > > +       struct bd71828_gpio *bdgpio =3D gpiochip_get_data(chip);
+> > > +
+> > > +       if (offset =3D=3D HALL_GPIO_OFFSET)
+> > > +               ret =3D regmap_read(bdgpio->chip.regmap,
+> > > BD71828_REG_IO_STAT,
+> > > +                                 &val);
+> > > +       else
+> > > +               ret =3D regmap_read(bdgpio->chip.regmap,
+> > > GPIO_OUT_REG(offset),
+> > > +                                 &val);
+> > > +       if (!ret)
+> > > +               ret =3D (val & BD71828_GPIO_OUT_MASK);
+> > > +
+> > > +       return ret;
+> > > +}
+> > > +
+> > > +static int bd71828_gpio_set_config(struct gpio_chip *chip,
+> > > unsigned int offset,
+> > > +                                  unsigned long config)
+> > > +{
+> > > +       struct bd71828_gpio *bdgpio =3D gpiochip_get_data(chip);
+> > > +
+> > > +       if (offset =3D=3D HALL_GPIO_OFFSET)
+> > > +               return -ENOTSUPP;
+> > > +
+> > > +       switch (pinconf_to_config_param(config)) {
+> > > +       case PIN_CONFIG_DRIVE_OPEN_DRAIN:
+> > > +               return regmap_update_bits(bdgpio->chip.regmap,
+> > > +                                         GPIO_OUT_REG(offset),
+> > > +                                         BD71828_GPIO_DRIVE_MASK,
+> > > +                                         BD71828_GPIO_OPEN_DRAIN);
+> > > +       case PIN_CONFIG_DRIVE_PUSH_PULL:
+> > > +               return regmap_update_bits(bdgpio->chip.regmap,
+> > > +                                         GPIO_OUT_REG(offset),
+> > > +                                         BD71828_GPIO_DRIVE_MASK,
+> > > +                                         BD71828_GPIO_PUSH_PULL);
+> > > +       default:
+> > > +               break;
+> > > +       }
+> > > +       return -ENOTSUPP;
+> > +}+static int bd71828_get_direction(struct gpio_chip *chip, unsigned
+> > int offset)
+> > > +{
+> > > +       /*
+> > > +        * Pin usage is selected by OTP data. We can't read it
+> > > runtime. Hence
+> > > +        * we trust that if the pin is not excluded by "gpio-
+> > > reserved-ranges"
+> > > +        * the OTP configuration is set to OUT. (Other pins but
+> > > HALL input pin
+> > > +        * on BD71828 can't really be used for general purpose
+> > > input - input
+> > > +        * states are used for specific cases like regulator
+> > > control or
+> > > +        * PMIC_ON_REQ.
+> > > +        */
+> > > +       if (offset =3D=3D HALL_GPIO_OFFSET)
+> > > +               return IN;
+> > > +
+> > > +       return OUT;
+> > > +}
+> > > +
+> > > +static int bd71828_gpio_parse_dt(struct device *dev,
+> > > +                                struct bd71828_gpio *bdgpio)
+> > > +{
+> > > +       /*
+> > > +        * TBD: See if we need some implementation to mark some
+> > > PINs as
+> > > +        * not controllable based on DT info or if core can handle
+> > > +        * "gpio-reserved-ranges" and exclude them from control
+> > > +        */
+> > > +       return 0;
+> > > +}
+> >
+> > Please don't implement empty functions. Just add this comment next to
+> > gpiochip's initialization...
+>
+> Yep. I should have cleaned this before sending even this. Thanks for
+> pointing it out!
+>
+> >
+> >
+> > > +
+> > > +       bdgpio->chip.dev =3D &pdev->dev;
+> > > +       bdgpio->gpio.parent =3D pdev->dev.parent;
+> > > +       bdgpio->gpio.label =3D "bd71828-gpio";
+> > > +       bdgpio->gpio.owner =3D THIS_MODULE;
+> > > +       bdgpio->gpio.get_direction =3D bd71828_get_direction;
+> > > +       bdgpio->gpio.set_config =3D bd71828_gpio_set_config;
+> > > +       bdgpio->gpio.can_sleep =3D true;
+> > > +       bdgpio->gpio.get =3D bd71828_gpio_get;
+> > > +       bdgpio->gpio.set =3D bd71828_gpio_set;
+> >
+> > Not implementing direction_output() and direction_input() here will
+> > results in warnings from the GPIO framework: for instance you
+> > implement set() but not direction_output(). I'd say: just add those
+> > callbacks and return an error if they're called for invalid lines
+> > (for
+> > instance: direction_output() being called for line 3).
+>
+> Ok. I will implement dummy functions.
+>
+> But out of the curiosity - why the GPIO core emits the warnings if
+> these are not implemented? I think the core should not require "no-
+> operation" functions to be implemented for pins which don't support
+> both of the directions. GPIO core could only emit warning if it needs
+> to set direction to something the HW does not support. That would avoid
+> adding the dummy functions to all of the drivers, right?
+>
 
-Signed-off-by: Sujit Reddy Thumma <sthumma@codeaurora.org>
-Signed-off-by: Talel Shenhar <tatias@codeaurora.org>
-Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
-Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
-Signed-off-by: Ritesh Harjani <riteshh@codeaurora.org>
-Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Signed-off-by: Bao D. Nguyen <nguyenb@codeaurora.org>
-Signed-off-by: Can Guo <cang@codeaurora.org>
-Signed-off-by: Sayali Lokhande <sayalil@codeaurora.org>
-Co-Developed-by: Ram Prakash Gupta <rampraka@codeaurora.org>
-Signed-off-by: Ram Prakash Gupta <rampraka@codeaurora.org>
----
- drivers/mmc/core/core.c | 769 ++++++++++++++++++++++++++++++++++++++++++++++++
- drivers/mmc/core/core.h |  17 ++
- drivers/mmc/core/mmc.c  | 192 ++++++++++++
- drivers/mmc/core/sd.c   |  54 ++++
- 4 files changed, 1032 insertions(+)
+I looked at the code again and it seems I was wrong. If we don't have
+direction_input() or direction_output() we check the actual direction
+with get_direction() before emitting any warnings and if there's no
+direction_output(), but line is in input mode then all's fine. In
+other words: false alarm, and you can keep it this way.
 
-diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
-index 2211273..f0c233c 100644
---- a/drivers/mmc/core/core.c
-+++ b/drivers/mmc/core/core.c
-@@ -11,6 +11,7 @@
- #include <linux/init.h>
- #include <linux/interrupt.h>
- #include <linux/completion.h>
-+#include <linux/devfreq.h>
- #include <linux/device.h>
- #include <linux/delay.h>
- #include <linux/pagemap.h>
-@@ -39,6 +40,7 @@
- #include "card.h"
- #include "bus.h"
- #include "host.h"
-+#include "queue.h"
- #include "sdio_bus.h"
- #include "pwrseq.h"
- 
-@@ -109,6 +111,773 @@ static inline void mmc_should_fail_request(struct mmc_host *host,
- 
- #endif /* CONFIG_FAIL_MMC_REQUEST */
- 
-+static bool mmc_is_data_request(struct mmc_request *mmc_request)
-+{
-+	switch (mmc_request->cmd->opcode) {
-+	case MMC_READ_SINGLE_BLOCK:
-+	case MMC_READ_MULTIPLE_BLOCK:
-+	case MMC_WRITE_BLOCK:
-+	case MMC_WRITE_MULTIPLE_BLOCK:
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
-+
-+static void mmc_clk_scaling_start_busy(struct mmc_host *host, bool lock_needed)
-+{
-+	struct mmc_devfeq_clk_scaling *clk_scaling = &host->clk_scaling;
-+
-+	if (!clk_scaling->enable)
-+		return;
-+
-+	if (lock_needed)
-+		spin_lock_bh(&clk_scaling->lock);
-+
-+	clk_scaling->start_busy = ktime_get();
-+	clk_scaling->is_busy_started = true;
-+
-+	if (lock_needed)
-+		spin_unlock_bh(&clk_scaling->lock);
-+}
-+
-+static void mmc_clk_scaling_stop_busy(struct mmc_host *host, bool lock_needed)
-+{
-+	struct mmc_devfeq_clk_scaling *clk_scaling = &host->clk_scaling;
-+
-+	if (!clk_scaling->enable)
-+		return;
-+
-+	if (lock_needed)
-+		spin_lock_bh(&clk_scaling->lock);
-+
-+	if (!clk_scaling->is_busy_started) {
-+		WARN_ON(1);
-+		goto out;
-+	}
-+
-+	clk_scaling->total_busy_time_us +=
-+		ktime_to_us(ktime_sub(ktime_get(),
-+			clk_scaling->start_busy));
-+	pr_debug("%s: accumulated busy time is %lu usec\n",
-+		mmc_hostname(host), clk_scaling->total_busy_time_us);
-+	clk_scaling->is_busy_started = false;
-+
-+out:
-+	if (lock_needed)
-+		spin_unlock_bh(&clk_scaling->lock);
-+}
-+
-+/* mmc_cqe_clk_scaling_start_busy() - start busy timer for data requests
-+ * @host: pointer to mmc host structure
-+ * @lock_needed: flag indication if locking is needed
-+ *
-+ * This function starts the busy timer in case it was not already started.
-+ */
-+void mmc_cqe_clk_scaling_start_busy(struct mmc_queue *mq,
-+			struct mmc_host *host, bool lock_needed)
-+{
-+	unsigned long flags;
-+
-+	if (!host->clk_scaling.enable)
-+		return;
-+
-+	if (lock_needed)
-+		spin_lock_irqsave(&host->clk_scaling.lock, flags);
-+
-+	if (!host->clk_scaling.is_busy_started &&
-+			!(mq->cqe_busy & MMC_CQE_DCMD_BUSY)) {
-+		host->clk_scaling.start_busy = ktime_get();
-+		host->clk_scaling.is_busy_started = true;
-+	}
-+
-+	if (lock_needed)
-+		spin_unlock_irqrestore(&host->clk_scaling.lock, flags);
-+}
-+EXPORT_SYMBOL(mmc_cqe_clk_scaling_start_busy);
-+
-+/**
-+ * mmc_cqe_clk_scaling_stop_busy() - stop busy timer for last data requests
-+ * @host: pointer to mmc host structure
-+ * @lock_needed: flag indication if locking is needed
-+ *
-+ * This function stops the busy timer in case it is the last data request.
-+ * In case the current request is not the last one, the busy time till
-+ * now will be accumulated and the counter will be restarted.
-+ */
-+void mmc_cqe_clk_scaling_stop_busy(struct mmc_host *host,
-+	bool lock_needed, bool is_cqe_dcmd)
-+{
-+	unsigned int cqe_active_reqs = 0;
-+
-+	if (!host->clk_scaling.enable)
-+		return;
-+
-+	cqe_active_reqs = atomic_read(&host->active_reqs);
-+
-+	/*
-+	 * This gets invoked from CQE completion path which is hard IRQ context
-+	 * So use spin_lock() instread of spin_lock_irqsave()
-+	 */
-+	if (lock_needed)
-+		spin_lock(&host->clk_scaling.lock);
-+
-+	/*
-+	 *  For CQ mode: In completion of DCMD request, start busy time in
-+	 *  case of pending data requests
-+	 */
-+	if (is_cqe_dcmd) {
-+		if (cqe_active_reqs && !host->clk_scaling.is_busy_started) {
-+			host->clk_scaling.is_busy_started = true;
-+			host->clk_scaling.start_busy = ktime_get();
-+		}
-+		goto out;
-+	}
-+
-+	host->clk_scaling.total_busy_time_us +=
-+		ktime_to_us(ktime_sub(ktime_get(),
-+			host->clk_scaling.start_busy));
-+
-+	if (cqe_active_reqs) {
-+		host->clk_scaling.is_busy_started = true;
-+		host->clk_scaling.start_busy = ktime_get();
-+	} else {
-+		host->clk_scaling.is_busy_started = false;
-+	}
-+out:
-+	if (lock_needed)
-+		spin_unlock(&host->clk_scaling.lock);
-+
-+}
-+EXPORT_SYMBOL(mmc_cqe_clk_scaling_stop_busy);
-+
-+/**
-+ * mmc_can_scale_clk() - Check clock scaling capability
-+ * @host: pointer to mmc host structure
-+ */
-+bool mmc_can_scale_clk(struct mmc_host *host)
-+{
-+	if (!host) {
-+		pr_err("bad host parameter\n");
-+		WARN_ON(1);
-+		return false;
-+	}
-+
-+	return host->caps2 & MMC_CAP2_CLK_SCALE;
-+}
-+EXPORT_SYMBOL(mmc_can_scale_clk);
-+
-+static int mmc_devfreq_get_dev_status(struct device *dev,
-+		struct devfreq_dev_status *status)
-+{
-+	struct mmc_host *host = container_of(dev, struct mmc_host, class_dev);
-+	struct mmc_devfeq_clk_scaling *clk_scaling;
-+	unsigned long flags;
-+
-+	if (!host) {
-+		pr_err("bad host parameter\n");
-+		WARN_ON(1);
-+		return -EINVAL;
-+	}
-+
-+	clk_scaling = &host->clk_scaling;
-+
-+	if (!clk_scaling->enable)
-+		return 0;
-+
-+	spin_lock_irqsave(&host->clk_scaling.lock, flags);
-+
-+	/* accumulate the busy time of ongoing work */
-+	memset(status, 0, sizeof(*status));
-+	if (clk_scaling->is_busy_started) {
-+		if (host->cqe_on) {
-+			/* the "busy-timer" will be restarted in case there
-+			 * are pending data requests
-+			 */
-+			mmc_cqe_clk_scaling_stop_busy(host, false, false);
-+		} else {
-+			mmc_clk_scaling_stop_busy(host, false);
-+			mmc_clk_scaling_start_busy(host, false);
-+		}
-+	}
-+
-+	status->busy_time = clk_scaling->total_busy_time_us;
-+	status->total_time = ktime_to_us(ktime_sub(ktime_get(),
-+		clk_scaling->measure_interval_start));
-+	clk_scaling->total_busy_time_us = 0;
-+	status->current_frequency = clk_scaling->curr_freq;
-+	clk_scaling->measure_interval_start = ktime_get();
-+
-+	pr_debug("%s: status: load = %lu%% - total_time=%lu busy_time = %lu, clk=%lu\n",
-+		mmc_hostname(host),
-+		(status->busy_time*100)/status->total_time,
-+		status->total_time, status->busy_time,
-+		status->current_frequency);
-+
-+	spin_unlock_irqrestore(&host->clk_scaling.lock, flags);
-+
-+	return 0;
-+}
-+
-+static bool mmc_is_valid_state_for_clk_scaling(struct mmc_host *host)
-+{
-+	struct mmc_card *card = host->card;
-+	u32 status;
-+
-+	/*
-+	 * If the current partition type is RPMB, clock switching may not
-+	 * work properly as sending tuning command (CMD21) is illegal in
-+	 * this mode.
-+	 */
-+	if (!card || (mmc_card_mmc(card) &&
-+			(card->part_curr == EXT_CSD_PART_CONFIG_ACC_RPMB)))
-+		return false;
-+
-+	if (mmc_send_status(card, &status)) {
-+		pr_err("%s: Get card status fail\n", mmc_hostname(card->host));
-+		return false;
-+	}
-+
-+	return R1_CURRENT_STATE(status) == R1_STATE_TRAN;
-+}
-+
-+int mmc_clk_update_freq(struct mmc_host *host,
-+		unsigned long freq, enum mmc_load state)
-+{
-+	int err = 0;
-+
-+	if (!host) {
-+		pr_err("bad host parameter\n");
-+		WARN_ON(1);
-+		return -EINVAL;
-+	}
-+
-+	/* make sure the card supports the frequency we want */
-+	if (unlikely(freq > host->card->clk_scaling_highest)) {
-+		freq = host->card->clk_scaling_highest;
-+		pr_warn("%s: %s: High freq was overridden to %lu\n",
-+				mmc_hostname(host), __func__,
-+				host->card->clk_scaling_highest);
-+	}
-+
-+	if (unlikely(freq < host->card->clk_scaling_lowest)) {
-+		freq = host->card->clk_scaling_lowest;
-+		pr_warn("%s: %s: Low freq was overridden to %lu\n",
-+			mmc_hostname(host), __func__,
-+			host->card->clk_scaling_lowest);
-+	}
-+
-+	if (freq == host->clk_scaling.curr_freq)
-+		goto out;
-+
-+	if (host->cqe_on) {
-+		err = host->cqe_ops->cqe_wait_for_idle(host);
-+		if (err) {
-+			pr_err("%s: %s: CQE went in recovery path\n",
-+				mmc_hostname(host), __func__);
-+			goto out;
-+		}
-+		host->cqe_ops->cqe_off(host);
-+	}
-+
-+	if (!mmc_is_valid_state_for_clk_scaling(host)) {
-+		pr_debug("%s: invalid state for clock scaling - skipping\n",
-+			mmc_hostname(host));
-+		goto out;
-+	}
-+
-+	err = host->bus_ops->change_bus_speed(host, &freq);
-+	if (!err)
-+		host->clk_scaling.curr_freq = freq;
-+	else
-+		pr_err("%s: %s: failed (%d) at freq=%lu\n",
-+			mmc_hostname(host), __func__, err, freq);
-+
-+	/*
-+	 * CQE would be enabled as part of CQE issueing path
-+	 * So no need to unhalt it explicitly
-+	 */
-+
-+out:
-+	return err;
-+}
-+EXPORT_SYMBOL(mmc_clk_update_freq);
-+
-+static int mmc_devfreq_set_target(struct device *dev,
-+				unsigned long *freq, u32 devfreq_flags)
-+{
-+	struct mmc_host *host = container_of(dev, struct mmc_host, class_dev);
-+	struct mmc_devfeq_clk_scaling *clk_scaling;
-+	int err = 0;
-+	int abort;
-+	unsigned long pflags = current->flags;
-+	unsigned long flags;
-+
-+	/* Ensure scaling would happen even in memory pressure conditions */
-+	current->flags |= PF_MEMALLOC;
-+
-+	if (!(host && freq)) {
-+		pr_err("%s: unexpected host/freq parameter\n", __func__);
-+		err = -EINVAL;
-+		goto out;
-+	}
-+
-+	clk_scaling = &host->clk_scaling;
-+
-+	if (!clk_scaling->enable)
-+		goto out;
-+
-+	pr_debug("%s: target freq = %lu (%s)\n", mmc_hostname(host),
-+		*freq, current->comm);
-+
-+	spin_lock_irqsave(&clk_scaling->lock, flags);
-+	if (clk_scaling->target_freq == *freq ||
-+		clk_scaling->skip_clk_scale_freq_update) {
-+		spin_unlock_irqrestore(&clk_scaling->lock, flags);
-+		goto out;
-+	}
-+
-+	clk_scaling->need_freq_change = true;
-+	clk_scaling->target_freq = *freq;
-+	clk_scaling->state = *freq < clk_scaling->curr_freq ?
-+		MMC_LOAD_LOW : MMC_LOAD_HIGH;
-+	spin_unlock_irqrestore(&clk_scaling->lock, flags);
-+
-+	if (!clk_scaling->is_suspended && host->ios.clock)
-+		abort = __mmc_claim_host(host, NULL,
-+				&clk_scaling->devfreq_abort);
-+	else
-+		goto out;
-+
-+	if (abort)
-+		goto out;
-+
-+	/*
-+	 * In case we were able to claim host there is no need to
-+	 * defer the frequency change. It will be done now
-+	 */
-+	clk_scaling->need_freq_change = false;
-+
-+	err = mmc_clk_update_freq(host, *freq, clk_scaling->state);
-+	if (err && err != -EAGAIN)
-+		pr_err("%s: clock scale to %lu failed with error %d\n",
-+			mmc_hostname(host), *freq, err);
-+	else
-+		pr_debug("%s: clock change to %lu finished successfully (%s)\n",
-+			mmc_hostname(host), *freq, current->comm);
-+
-+	mmc_release_host(host);
-+out:
-+	current_restore_flags(pflags, PF_MEMALLOC);
-+	return err;
-+}
-+
-+/**
-+ * mmc_deferred_scaling() - scale clocks from data path (mmc thread context)
-+ * @host: pointer to mmc host structure
-+ *
-+ * This function does clock scaling in case "need_freq_change" flag was set
-+ * by the clock scaling logic.
-+ */
-+void mmc_deferred_scaling(struct mmc_host *host)
-+{
-+	unsigned long target_freq;
-+	int err;
-+	struct mmc_devfeq_clk_scaling clk_scaling;
-+	unsigned long flags;
-+
-+	if (!host->clk_scaling.enable)
-+		return;
-+
-+	spin_lock_irqsave(&host->clk_scaling.lock, flags);
-+
-+	if (!host->clk_scaling.need_freq_change) {
-+		spin_unlock_irqrestore(&host->clk_scaling.lock, flags);
-+		return;
-+	}
-+
-+	atomic_inc(&host->clk_scaling.devfreq_abort);
-+	target_freq = host->clk_scaling.target_freq;
-+	/*
-+	 * Store the clock scaling state while the lock is acquired so that
-+	 * if devfreq context modifies clk_scaling, it will get reflected only
-+	 * in the next deferred scaling check.
-+	 */
-+	clk_scaling = host->clk_scaling;
-+	host->clk_scaling.need_freq_change = false;
-+	spin_unlock_irqrestore(&host->clk_scaling.lock, flags);
-+
-+	pr_debug("%s: doing deferred frequency change (%lu) (%s)\n",
-+				mmc_hostname(host),
-+				target_freq, current->comm);
-+
-+	err = mmc_clk_update_freq(host, target_freq,
-+		clk_scaling.state);
-+	if (err && err != -EAGAIN)
-+		pr_err("%s: failed on deferred scale clocks (%d)\n",
-+			mmc_hostname(host), err);
-+	else
-+		pr_debug("%s: clocks were successfully scaled to %lu (%s)\n",
-+			mmc_hostname(host),
-+			target_freq, current->comm);
-+	atomic_dec(&host->clk_scaling.devfreq_abort);
-+}
-+EXPORT_SYMBOL(mmc_deferred_scaling);
-+
-+static int mmc_devfreq_create_freq_table(struct mmc_host *host)
-+{
-+	int i;
-+	struct mmc_devfeq_clk_scaling *clk_scaling = &host->clk_scaling;
-+
-+	pr_debug("%s: supported: lowest=%lu, highest=%lu\n",
-+		mmc_hostname(host),
-+		host->card->clk_scaling_lowest,
-+		host->card->clk_scaling_highest);
-+
-+	/*
-+	 * Create the frequency table and initialize it with default values.
-+	 * Initialize it with platform specific frequencies if the frequency
-+	 * table supplied by platform driver is present, otherwise initialize
-+	 * it with min and max frequencies supported by the card.
-+	 */
-+	if (!clk_scaling->freq_table) {
-+		if (clk_scaling->pltfm_freq_table_sz)
-+			clk_scaling->freq_table_sz =
-+				clk_scaling->pltfm_freq_table_sz;
-+		else
-+			clk_scaling->freq_table_sz = 2;
-+
-+		clk_scaling->freq_table = kcalloc(
-+			clk_scaling->freq_table_sz,
-+			sizeof(*(clk_scaling->freq_table)), GFP_KERNEL);
-+		if (!clk_scaling->freq_table)
-+			return -ENOMEM;
-+
-+		if (clk_scaling->pltfm_freq_table) {
-+			memcpy(clk_scaling->freq_table,
-+				clk_scaling->pltfm_freq_table,
-+				(clk_scaling->pltfm_freq_table_sz *
-+				sizeof(*(clk_scaling->pltfm_freq_table))));
-+		} else {
-+			pr_debug("%s: no frequency table defined -  setting default\n",
-+				mmc_hostname(host));
-+			clk_scaling->freq_table[0] =
-+				host->card->clk_scaling_lowest;
-+			clk_scaling->freq_table[1] =
-+				host->card->clk_scaling_highest;
-+			goto out;
-+		}
-+	}
-+
-+	if (host->card->clk_scaling_lowest >
-+		clk_scaling->freq_table[0])
-+		pr_debug("%s: frequency table undershot possible freq\n",
-+			mmc_hostname(host));
-+
-+	for (i = 0; i < clk_scaling->freq_table_sz; i++) {
-+		if (clk_scaling->freq_table[i] <=
-+			host->card->clk_scaling_highest)
-+			continue;
-+		clk_scaling->freq_table[i] =
-+			host->card->clk_scaling_highest;
-+		clk_scaling->freq_table_sz = i + 1;
-+		pr_debug("%s: frequency table overshot possible freq (%d)\n",
-+				mmc_hostname(host), clk_scaling->freq_table[i]);
-+		break;
-+	}
-+
-+out:
-+	/**
-+	 * devfreq requires unsigned long type freq_table while the
-+	 * freq_table in clk_scaling is un32. Here allocates an individual
-+	 * memory space for it and release it when exit clock scaling.
-+	 */
-+	clk_scaling->devfreq_profile.freq_table =  kcalloc(
-+			clk_scaling->freq_table_sz,
-+			sizeof(*(clk_scaling->devfreq_profile.freq_table)),
-+			GFP_KERNEL);
-+	if (!clk_scaling->devfreq_profile.freq_table) {
-+		kfree(clk_scaling->freq_table);
-+		return -ENOMEM;
-+	}
-+	clk_scaling->devfreq_profile.max_state = clk_scaling->freq_table_sz;
-+
-+	for (i = 0; i < clk_scaling->freq_table_sz; i++) {
-+		clk_scaling->devfreq_profile.freq_table[i] =
-+			clk_scaling->freq_table[i];
-+		pr_debug("%s: freq[%d] = %u\n",
-+			mmc_hostname(host), i, clk_scaling->freq_table[i]);
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * mmc_init_devfreq_clk_scaling() - Initialize clock scaling
-+ * @host: pointer to mmc host structure
-+ *
-+ * Initialize clock scaling for supported hosts. It is assumed that the caller
-+ * ensure clock is running at maximum possible frequency before calling this
-+ * function. Shall use struct devfreq_simple_ondemand_data to configure
-+ * governor.
-+ */
-+int mmc_init_clk_scaling(struct mmc_host *host)
-+{
-+	int err;
-+	struct devfreq *devfreq;
-+
-+	if (!host || !host->card) {
-+		pr_err("%s: unexpected host/card parameters\n",
-+			__func__);
-+		return -EINVAL;
-+	}
-+
-+	if (!mmc_can_scale_clk(host) ||
-+		!host->bus_ops->change_bus_speed) {
-+		pr_debug("%s: clock scaling is not supported\n",
-+			mmc_hostname(host));
-+		return 0;
-+	}
-+
-+	pr_debug("registering %s dev (%pK) to devfreq\n",
-+		mmc_hostname(host),
-+		mmc_classdev(host));
-+
-+	if (host->clk_scaling.devfreq) {
-+		pr_err("%s: dev is already registered for dev %pK\n",
-+			mmc_hostname(host),
-+			mmc_dev(host));
-+		return -EPERM;
-+	}
-+	spin_lock_init(&host->clk_scaling.lock);
-+	atomic_set(&host->clk_scaling.devfreq_abort, 0);
-+	host->clk_scaling.curr_freq = host->ios.clock;
-+	host->clk_scaling.need_freq_change = false;
-+	host->clk_scaling.is_busy_started = false;
-+
-+	host->clk_scaling.devfreq_profile.polling_ms =
-+		host->clk_scaling.polling_delay_ms;
-+	host->clk_scaling.devfreq_profile.get_dev_status =
-+		mmc_devfreq_get_dev_status;
-+	host->clk_scaling.devfreq_profile.target = mmc_devfreq_set_target;
-+	host->clk_scaling.devfreq_profile.initial_freq = host->ios.clock;
-+
-+	host->clk_scaling.ondemand_gov_data.upthreshold =
-+		host->clk_scaling.upthreshold;
-+	host->clk_scaling.ondemand_gov_data.downdifferential =
-+		host->clk_scaling.upthreshold - host->clk_scaling.downthreshold;
-+
-+	err = mmc_devfreq_create_freq_table(host);
-+	if (err) {
-+		pr_err("%s: fail to create devfreq frequency table\n",
-+			mmc_hostname(host));
-+		return err;
-+	}
-+
-+	dev_pm_opp_add(mmc_classdev(host),
-+		host->clk_scaling.devfreq_profile.freq_table[0], 0);
-+	dev_pm_opp_add(mmc_classdev(host),
-+		host->clk_scaling.devfreq_profile.freq_table[1], 0);
-+
-+	pr_debug("%s: adding devfreq with: upthreshold=%u downthreshold=%u polling=%u\n",
-+		mmc_hostname(host),
-+		host->clk_scaling.ondemand_gov_data.upthreshold,
-+		host->clk_scaling.ondemand_gov_data.downdifferential,
-+		host->clk_scaling.devfreq_profile.polling_ms);
-+
-+	devfreq = devfreq_add_device(
-+		mmc_classdev(host),
-+		&host->clk_scaling.devfreq_profile,
-+		"simple_ondemand",
-+		&host->clk_scaling.ondemand_gov_data);
-+
-+	if (IS_ERR(devfreq)) {
-+		pr_err("%s: unable to register with devfreq\n",
-+			mmc_hostname(host));
-+		dev_pm_opp_remove(mmc_classdev(host),
-+			host->clk_scaling.devfreq_profile.freq_table[0]);
-+		dev_pm_opp_remove(mmc_classdev(host),
-+			host->clk_scaling.devfreq_profile.freq_table[1]);
-+		return PTR_ERR(devfreq);
-+	}
-+
-+	host->clk_scaling.devfreq = devfreq;
-+	pr_debug("%s: clk scaling is enabled for device %s (%pK) with devfreq %pK (clock = %uHz)\n",
-+		mmc_hostname(host),
-+		dev_name(mmc_classdev(host)),
-+		mmc_classdev(host),
-+		host->clk_scaling.devfreq,
-+		host->ios.clock);
-+
-+	host->clk_scaling.enable = true;
-+
-+	return err;
-+}
-+EXPORT_SYMBOL(mmc_init_clk_scaling);
-+
-+/**
-+ * mmc_suspend_clk_scaling() - suspend clock scaling
-+ * @host: pointer to mmc host structure
-+ *
-+ * This API will suspend devfreq feature for the specific host.
-+ * The statistics collected by mmc will be cleared.
-+ * This function is intended to be called by the pm callbacks
-+ * (e.g. runtime_suspend, suspend) of the mmc device
-+ */
-+int mmc_suspend_clk_scaling(struct mmc_host *host)
-+{
-+	int err;
-+
-+	if (!host) {
-+		WARN(1, "bad host parameter\n");
-+		return -EINVAL;
-+	}
-+
-+	if (!mmc_can_scale_clk(host) || !host->clk_scaling.enable ||
-+			host->clk_scaling.is_suspended)
-+		return 0;
-+
-+	if (!host->clk_scaling.devfreq) {
-+		pr_err("%s: %s: no devfreq is assosiated with this device\n",
-+			mmc_hostname(host), __func__);
-+		return -EPERM;
-+	}
-+
-+	atomic_inc(&host->clk_scaling.devfreq_abort);
-+	wake_up(&host->wq);
-+	err = devfreq_suspend_device(host->clk_scaling.devfreq);
-+	if (err) {
-+		pr_err("%s: %s: failed to suspend devfreq\n",
-+			mmc_hostname(host), __func__);
-+		return err;
-+	}
-+	host->clk_scaling.is_suspended = true;
-+
-+	host->clk_scaling.total_busy_time_us = 0;
-+
-+	pr_debug("%s: devfreq was removed\n", mmc_hostname(host));
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(mmc_suspend_clk_scaling);
-+
-+/**
-+ * mmc_resume_clk_scaling() - resume clock scaling
-+ * @host: pointer to mmc host structure
-+ *
-+ * This API will resume devfreq feature for the specific host.
-+ * This API is intended to be called by the pm callbacks
-+ * (e.g. runtime_suspend, suspend) of the mmc device
-+ */
-+int mmc_resume_clk_scaling(struct mmc_host *host)
-+{
-+	int err = 0;
-+	u32 max_clk_idx = 0;
-+	u32 devfreq_max_clk = 0;
-+	u32 devfreq_min_clk = 0;
-+
-+	if (!host) {
-+		WARN(1, "bad host parameter\n");
-+		return -EINVAL;
-+	}
-+
-+	if (!mmc_can_scale_clk(host))
-+		return 0;
-+
-+	/*
-+	 * If clock scaling is already exited when resume is called, like
-+	 * during mmc shutdown, it is not an error and should not fail the
-+	 * API calling this.
-+	 */
-+	if (!host->clk_scaling.devfreq) {
-+		pr_warn("%s: %s: no devfreq is assosiated with this device\n",
-+			mmc_hostname(host), __func__);
-+		return 0;
-+	}
-+
-+	atomic_set(&host->clk_scaling.devfreq_abort, 0);
-+
-+	max_clk_idx = host->clk_scaling.freq_table_sz - 1;
-+	devfreq_max_clk = host->clk_scaling.freq_table[max_clk_idx];
-+	devfreq_min_clk = host->clk_scaling.freq_table[0];
-+
-+	host->clk_scaling.curr_freq = devfreq_max_clk;
-+	if (host->ios.clock < host->clk_scaling.freq_table[max_clk_idx])
-+		host->clk_scaling.curr_freq = devfreq_min_clk;
-+	host->clk_scaling.target_freq = host->clk_scaling.curr_freq;
-+
-+	err = devfreq_resume_device(host->clk_scaling.devfreq);
-+	if (err) {
-+		pr_err("%s: %s: failed to resume devfreq (%d)\n",
-+			mmc_hostname(host), __func__, err);
-+	} else {
-+		host->clk_scaling.is_suspended = false;
-+		pr_debug("%s: devfreq resumed\n", mmc_hostname(host));
-+	}
-+
-+	return err;
-+}
-+EXPORT_SYMBOL(mmc_resume_clk_scaling);
-+
-+/**
-+ * mmc_exit_devfreq_clk_scaling() - Disable clock scaling
-+ * @host: pointer to mmc host structure
-+ *
-+ * Disable clock scaling permanently.
-+ */
-+int mmc_exit_clk_scaling(struct mmc_host *host)
-+{
-+	int err;
-+
-+	if (!host) {
-+		pr_err("%s: bad host parameter\n", __func__);
-+		WARN_ON(1);
-+		return -EINVAL;
-+	}
-+
-+	if (!mmc_can_scale_clk(host))
-+		return 0;
-+
-+	if (!host->clk_scaling.devfreq) {
-+		pr_err("%s: %s: no devfreq is assosiated with this device\n",
-+			mmc_hostname(host), __func__);
-+		return -EPERM;
-+	}
-+
-+	err = mmc_suspend_clk_scaling(host);
-+	if (err) {
-+		pr_err("%s: %s: fail to suspend clock scaling (%d)\n",
-+			mmc_hostname(host), __func__,  err);
-+		return err;
-+	}
-+
-+	err = devfreq_remove_device(host->clk_scaling.devfreq);
-+	if (err) {
-+		pr_err("%s: remove devfreq failed (%d)\n",
-+			mmc_hostname(host), err);
-+		return err;
-+	}
-+
-+	dev_pm_opp_remove(mmc_classdev(host),
-+		host->clk_scaling.devfreq_profile.freq_table[0]);
-+	dev_pm_opp_remove(mmc_classdev(host),
-+		host->clk_scaling.devfreq_profile.freq_table[1]);
-+
-+	kfree(host->clk_scaling.devfreq_profile.freq_table);
-+
-+	host->clk_scaling.devfreq = NULL;
-+	atomic_set(&host->clk_scaling.devfreq_abort, 1);
-+
-+	kfree(host->clk_scaling.freq_table);
-+	host->clk_scaling.freq_table = NULL;
-+
-+	pr_debug("%s: devfreq was removed\n", mmc_hostname(host));
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(mmc_exit_clk_scaling);
-+
-+
- static inline void mmc_complete_cmd(struct mmc_request *mrq)
- {
- 	if (mrq->cap_cmd_during_tfr && !completion_done(&mrq->cmd_completion))
-diff --git a/drivers/mmc/core/core.h b/drivers/mmc/core/core.h
-index 328c78d..2abf75a 100644
---- a/drivers/mmc/core/core.h
-+++ b/drivers/mmc/core/core.h
-@@ -14,6 +14,7 @@
- struct mmc_host;
- struct mmc_card;
- struct mmc_request;
-+struct mmc_queue;
- 
- #define MMC_CMD_RETRIES        3
- 
-@@ -29,6 +30,7 @@ struct mmc_bus_ops {
- 	int (*shutdown)(struct mmc_host *);
- 	int (*hw_reset)(struct mmc_host *);
- 	int (*sw_reset)(struct mmc_host *);
-+	int (*change_bus_speed)(struct mmc_host *host, unsigned long *freq);
- };
- 
- void mmc_attach_bus(struct mmc_host *host, const struct mmc_bus_ops *ops);
-@@ -57,6 +59,8 @@ int mmc_select_drive_strength(struct mmc_card *card, unsigned int max_dtr,
- void mmc_power_cycle(struct mmc_host *host, u32 ocr);
- void mmc_set_initial_state(struct mmc_host *host);
- u32 mmc_vddrange_to_ocrmask(int vdd_min, int vdd_max);
-+int mmc_clk_update_freq(struct mmc_host *host,
-+		unsigned long freq, enum mmc_load state);
- 
- static inline void mmc_delay(unsigned int ms)
- {
-@@ -87,6 +91,19 @@ static inline void mmc_delay(unsigned int ms)
- void mmc_add_card_debugfs(struct mmc_card *card);
- void mmc_remove_card_debugfs(struct mmc_card *card);
- 
-+extern bool mmc_can_scale_clk(struct mmc_host *host);
-+extern int mmc_init_clk_scaling(struct mmc_host *host);
-+extern int mmc_suspend_clk_scaling(struct mmc_host *host);
-+extern int mmc_resume_clk_scaling(struct mmc_host *host);
-+extern int mmc_exit_clk_scaling(struct mmc_host *host);
-+extern void mmc_deferred_scaling(struct mmc_host *host);
-+extern void mmc_cqe_clk_scaling_start_busy(struct mmc_queue *mq,
-+	struct mmc_host *host, bool lock_needed);
-+extern void mmc_cqe_clk_scaling_stop_busy(struct mmc_host *host,
-+			bool lock_needed, bool is_cqe_dcmd);
-+
-+extern unsigned long mmc_get_max_frequency(struct mmc_host *host);
-+
- int mmc_execute_tuning(struct mmc_card *card);
- int mmc_hs200_to_hs400(struct mmc_card *card);
- int mmc_hs400_to_hs200(struct mmc_card *card);
-diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
-index c880489..c9fccfc 100644
---- a/drivers/mmc/core/mmc.c
-+++ b/drivers/mmc/core/mmc.c
-@@ -1539,6 +1539,198 @@ static int mmc_hs200_tuning(struct mmc_card *card)
- 	return mmc_execute_tuning(card);
- }
- 
-+static int mmc_select_hs_ddr52(struct mmc_host *host)
-+{
-+	int err;
-+
-+	mmc_select_hs(host->card);
-+	err = mmc_select_bus_width(host->card);
-+	if (err < 0) {
-+		pr_err("%s: %s: select_bus_width failed(%d)\n",
-+			mmc_hostname(host), __func__, err);
-+		return err;
-+	}
-+
-+	err = mmc_select_hs_ddr(host->card);
-+	mmc_set_clock(host, MMC_HIGH_52_MAX_DTR);
-+
-+	return err;
-+}
-+
-+/*
-+ * Scale down from HS400 to HS in order to allow frequency change.
-+ * This is needed for cards that doesn't support changing frequency in HS400
-+ */
-+static int mmc_scale_low(struct mmc_host *host, unsigned long freq)
-+{
-+	int err = 0;
-+
-+	mmc_set_timing(host, MMC_TIMING_LEGACY);
-+	mmc_set_clock(host, MMC_HIGH_26_MAX_DTR);
-+
-+	if (host->clk_scaling.lower_bus_speed_mode &
-+	    MMC_SCALING_LOWER_DDR52_MODE) {
-+		err = mmc_select_hs_ddr52(host);
-+		if (err)
-+			pr_err("%s: %s: failed to switch to DDR52: err: %d\n",
-+			       mmc_hostname(host), __func__, err);
-+		else
-+			return err;
-+	}
-+
-+	err = mmc_select_hs(host->card);
-+	if (err) {
-+		pr_err("%s: %s: scaling low: failed (%d)\n",
-+		       mmc_hostname(host), __func__, err);
-+		return err;
-+	}
-+
-+	err = mmc_select_bus_width(host->card);
-+	if (err < 0) {
-+		pr_err("%s: %s: select_bus_width failed(%d)\n",
-+			mmc_hostname(host), __func__, err);
-+		return err;
-+	}
-+
-+	mmc_set_clock(host, freq);
-+
-+	return 0;
-+}
-+
-+/*
-+ * Scale UP from HS to HS200/H400
-+ */
-+static int mmc_scale_high(struct mmc_host *host)
-+{
-+	int err = 0;
-+
-+	if (mmc_card_ddr52(host->card)) {
-+		mmc_set_timing(host, MMC_TIMING_LEGACY);
-+		mmc_set_clock(host, MMC_HIGH_26_MAX_DTR);
-+	}
-+
-+	if (!host->card->ext_csd.strobe_support) {
-+		if (!(host->card->mmc_avail_type & EXT_CSD_CARD_TYPE_HS200)) {
-+			pr_err("%s: %s: card does not support HS200\n",
-+				mmc_hostname(host), __func__);
-+			WARN_ON(1);
-+			return -EPERM;
-+		}
-+
-+		err = mmc_select_hs200(host->card);
-+		if (err) {
-+			pr_err("%s: %s: selecting HS200 failed (%d)\n",
-+				mmc_hostname(host), __func__, err);
-+			return err;
-+		}
-+
-+		mmc_set_bus_speed(host->card);
-+
-+		err = mmc_hs200_tuning(host->card);
-+		if (err) {
-+			pr_err("%s: %s: hs200 tuning failed (%d)\n",
-+				mmc_hostname(host), __func__, err);
-+			return err;
-+		}
-+
-+		if (!(host->card->mmc_avail_type & EXT_CSD_CARD_TYPE_HS400)) {
-+			pr_debug("%s: card does not support HS400\n",
-+				mmc_hostname(host));
-+			return 0;
-+		}
-+	}
-+
-+	err = mmc_select_hs400(host->card);
-+	if (err) {
-+		pr_err("%s: %s: select hs400 failed (%d)\n",
-+			mmc_hostname(host), __func__, err);
-+		return err;
-+	}
-+
-+	return 0;
-+}
-+
-+static int mmc_set_clock_bus_speed(struct mmc_card *card, unsigned long freq)
-+{
-+	int err = 0;
-+
-+	if (freq == MMC_HS200_MAX_DTR)
-+		err = mmc_scale_high(card->host);
-+	else
-+		err = mmc_scale_low(card->host, freq);
-+
-+	return err;
-+}
-+
-+static inline unsigned long mmc_ddr_freq_accommodation(unsigned long freq)
-+{
-+	if (freq == MMC_HIGH_DDR_MAX_DTR)
-+		return freq;
-+
-+	return freq/2;
-+}
-+
-+/**
-+ * mmc_change_bus_speed() - Change MMC card bus frequency at runtime
-+ * @host: pointer to mmc host structure
-+ * @freq: pointer to desired frequency to be set
-+ *
-+ * Change the MMC card bus frequency at runtime after the card is
-+ * initialized. Callers are expected to make sure of the card's
-+ * state (DATA/RCV/TRANSFER) before changing the frequency at runtime.
-+ *
-+ * If the frequency to change is greater than max. supported by card,
-+ * *freq is changed to max. supported by card. If it is less than min.
-+ * supported by host, *freq is changed to min. supported by host.
-+ * Host is assumed to be calimed while calling this funciton.
-+ */
-+static int mmc_change_bus_speed(struct mmc_host *host, unsigned long *freq)
-+{
-+	int err = 0;
-+	struct mmc_card *card;
-+	unsigned long actual_freq;
-+
-+	card = host->card;
-+
-+	if (!card || !freq) {
-+		err = -EINVAL;
-+		goto out;
-+	}
-+	actual_freq = *freq;
-+
-+	WARN_ON(!host->claimed);
-+
-+	/*
-+	 * For scaling up/down HS400 we'll need special handling,
-+	 * for other timings we can simply do clock frequency change
-+	 */
-+	if (mmc_card_hs400(card) ||
-+		(!mmc_card_hs200(host->card) && *freq == MMC_HS200_MAX_DTR)) {
-+		err = mmc_set_clock_bus_speed(card, *freq);
-+		if (err) {
-+			pr_err("%s: %s: failed (%d)to set bus and clock speed (freq=%lu)\n",
-+				mmc_hostname(host), __func__, err, *freq);
-+			goto out;
-+		}
-+	} else if (mmc_card_hs200(host->card)) {
-+		mmc_set_clock(host, *freq);
-+		err = mmc_hs200_tuning(host->card);
-+		if (err) {
-+			pr_warn("%s: %s: tuning execution failed %d\n",
-+				mmc_hostname(card->host),
-+				__func__, err);
-+			mmc_set_clock(host, host->clk_scaling.curr_freq);
-+		}
-+	} else {
-+		if (mmc_card_ddr52(host->card))
-+			actual_freq = mmc_ddr_freq_accommodation(*freq);
-+		mmc_set_clock(host, actual_freq);
-+	}
-+
-+out:
-+	return err;
-+}
-+
- /*
-  * Handle the detection and initialisation of a card.
-  *
-diff --git a/drivers/mmc/core/sd.c b/drivers/mmc/core/sd.c
-index fe914ff..fc78c09 100644
---- a/drivers/mmc/core/sd.c
-+++ b/drivers/mmc/core/sd.c
-@@ -592,6 +592,60 @@ static int sd_set_current_limit(struct mmc_card *card, u8 *status)
- 	return 0;
- }
- 
-+/**
-+ * mmc_sd_change_bus_speed() - Change SD card bus frequency at runtime
-+ * @host: pointer to mmc host structure
-+ * @freq: pointer to desired frequency to be set
-+ *
-+ * Change the SD card bus frequency at runtime after the card is
-+ * initialized. Callers are expected to make sure of the card's
-+ * state (DATA/RCV/TRANSFER) beforing changing the frequency at runtime.
-+ *
-+ * If the frequency to change is greater than max. supported by card,
-+ * *freq is changed to max. supported by card and if it is less than min.
-+ * supported by host, *freq is changed to min. supported by host.
-+ */
-+static int mmc_sd_change_bus_speed(struct mmc_host *host, unsigned long *freq)
-+{
-+	int err = 0;
-+	struct mmc_card *card;
-+
-+	/*
-+	 * Assign card pointer after claiming host to avoid race
-+	 * conditions that may arise during removal of the card.
-+	 */
-+	card = host->card;
-+
-+	/* sanity checks */
-+	if (!card || !freq) {
-+		err = -EINVAL;
-+		goto out;
-+	}
-+
-+	mmc_set_clock(host, (unsigned int) (*freq));
-+
-+	if (!mmc_host_is_spi(card->host) && mmc_card_uhs(card)
-+			&& card->host->ops->execute_tuning) {
-+		/*
-+		 * We try to probe host driver for tuning for any
-+		 * frequency, it is host driver responsibility to
-+		 * perform actual tuning only when required.
-+		 */
-+		err = card->host->ops->execute_tuning(card->host,
-+				MMC_SEND_TUNING_BLOCK);
-+		if (err) {
-+			pr_warn("%s: %s: tuning execution failed %d. Restoring to previous clock %lu\n",
-+				   mmc_hostname(card->host), __func__, err,
-+				   host->clk_scaling.curr_freq);
-+			mmc_set_clock(host, host->clk_scaling.curr_freq);
-+		}
-+	}
-+
-+out:
-+	return err;
-+}
-+
-+
- /*
-  * UHS-I specific initialization procedure
-  */
--- 
-1.9.1
+> >
+> > > +       bdgpio->gpio.base =3D -1;
+> > > +       bdgpio->gpio.ngpio =3D 4;
+> > > +#ifdef CONFIG_OF_GPIO
+> >
+> > This is not needed - for CONFIG_OF_GPIO disabled the parent of_node
+> > will be NULL.
+>
+> Right. Thanks.
+>
+> > > +       bdgpio->gpio.of_node =3D pdev->dev.parent->of_node;
+> > > +#endif
+> > > +       bdgpio->chip.regmap =3D bd71828->regmap;
+> > > +
+> > > +       ret =3D devm_gpiochip_add_data(&pdev->dev, &bdgpio->gpio,
+> > > +                                    bdgpio);
+> > > +       if (ret)
+> > > +               dev_err(&pdev->dev, "gpio_init: Failed to add
+> > > bd71828-gpio\n");
+> >
+> > Since there aren't many places where this function can fail, you can
+> > directly return devm_gpiochip_add_data() here.
+>
+> Ok.
+>
+> > > +
+> > > +       return ret;
+> > > +}
+> > > +
+> > > +static struct platform_driver bd71828_gpio =3D {
+> > > +       .driver =3D {
+> > > +               .name =3D "bd71828-gpio"
+> > > +       },
+> > > +       .probe =3D bd71828_probe,
+> > > +};
+> > > +
+> > > +module_platform_driver(bd71828_gpio);
+> > > +
+> > > +MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> > > ");
+> > > +MODULE_DESCRIPTION("BD71828 voltage regulator driver");
+> > > +MODULE_LICENSE("GPL");
+> >
+> > Don't you need a MODULE_ALIAS() here since this is an MFD sub-module?
+>
+> I must admit I don't know the details of how module loading is done. I
+> used system where modules are load by scripts. (I guess the module
+> alias could be used to allow automatic module loading [by udev?])
+>
+> Can you please educate me - If I add module aliases matching the sub-
+> device name given in in MFD cell - should the sub module loading be
+> automatic when MFD driver gets probed? For some reason I didn't get
+> that working on my test bed. Or maybe I misunderstood something.
+>
 
+If the gpio module is a sub-node on the device tree than you may need
+to use a sub-compatible to get the module loaded by udev.
+
+Bart
+
+> Eg, this should be enough for GPIO sub-module to be also load:
+>
+> MFD:
+> static struct mfd_cell bd71828_mfd_cells[] =3D {
+>         { .name =3D "bd71828-pmic", },
+>         { .name =3D "bd71828-gpio", },
+> ...
+> ret =3D devm_mfd_add_devices(&i2c->dev, PLATFORM_DEVID_AUTO,
+>                            bd71828_mfd_cells,
+>                            ARRAY_SIZE(bd71828_mfd_cells), NULL, 0,
+>                            regmap_irq_get_domain(irq_data));
+>
+> GPIO driver:
+> MODULE_ALIAS("platform:bd71828-gpio");
+>
+> I had the sub-devices probed even without the MODULE_ALIAS - but manual
+> loading is required. I will gladly add the alias if it should enable
+> the automatic module loading.
+>
+> Br,
+>         Matti Vaittinen
+>
