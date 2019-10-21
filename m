@@ -2,160 +2,107 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07668CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:54:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F7ECA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:55:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C479620830
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:54:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571651694;
-	bh=pwHFNv5WDHR0sm60/XRjrekzzcaxWPVm1eGnmHPT+nM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=J2SL/Jqh4ra6kzHRcqIABuPz/ETIquFykGx5vBLokHDt3/OAHAgGk9YvUu9g0nMJ5
-	 iOZccWOdbwxYqOI2mKmTCixMGAegAFbPXSKC/Z67JNmUDvOwlDdg/z69UqN/lKFEUK
-	 A1IT7sgyllHjt8nZE7nKGPhWhc2pcDQ07h1i+tNM=
+	by mail.kernel.org (Postfix) with ESMTP id 454E1214AE
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:55:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728014AbfJUJyx (ORCPT
+        id S1728022AbfJUJzM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 05:54:53 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:46009 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727986AbfJUJyw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 05:54:52 -0400
-Received: by mail-lj1-f196.google.com with SMTP id q64so12556617ljb.12;
-        Mon, 21 Oct 2019 02:54:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2ioAE/lCbaDrBdD3/67QZ6qtkIsHP6zYZBRbnhn/xwg=;
-        b=j+p1sKTVDy2L5WN6rZftyUjjFaVETwIaG8orrxsgNdJoAv4FZmcK8HaCIyXoWICoXP
-         YthOYHOMORvqYh4ErQLdcqU/mr5OC7K4SJLXOZlDLVVrTp5A/ienw7kQ0VgFgNIvMS2E
-         Y8aqzv5raB/1QsuJ5PpW9fWd/6zEqrec4hkbbbGO5HlKh3QSRpPvBluk9RaCZOFjFrr6
-         x2lXEUNL3FCmXKQJnbLeOVaFQoAjnx1/aYzg19mAspGlvOSlxho/y9Fy01115ZdqutDr
-         e4qEMQI9Xf/ktHr9GZzrrsXpaWH0xtv90wJUWyZE/Hh2HS5YvX02kqhMW1WDcLaveH59
-         vTGA==
-X-Gm-Message-State: APjAAAWL0D5wtlvFmWsRw/6CFVbaczsPxqr9OuZF59b6lrO8AvgoOW9+
-        rtDl2rtcTdJbTbcXdz1E2nc=
-X-Google-Smtp-Source: APXvYqwrLwkvwRh+ERVZri6+UvM2xfVCKPFTVDTPNLnM2AZOQEhfldYGPge2KvWGIkSk8YD190DGdQ==
-X-Received: by 2002:a2e:81da:: with SMTP id s26mr13975715ljg.192.1571651689431;
-        Mon, 21 Oct 2019 02:54:49 -0700 (PDT)
-Received: from xi.terra (c-51f1e055.07-184-6d6c6d4.bbcust.telenor.se. [85.224.241.81])
-        by smtp.gmail.com with ESMTPSA id c69sm11510092ljf.32.2019.10.21.02.54.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 21 Oct 2019 05:55:12 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:47492 "EHLO foss.arm.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S1727469AbfJUJzL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 05:55:11 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 269CA15EC;
         Mon, 21 Oct 2019 02:54:48 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.92.2)
-        (envelope-from <johan@kernel.org>)
-        id 1iMUOy-00005x-If; Mon, 21 Oct 2019 11:55:01 +0200
-Date:   Mon, 21 Oct 2019 11:55:00 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     Johan Hovold <johan@kernel.org>, Rob Clark <robdclark@gmail.com>,
-        Sean Paul <sean@poorly.run>,
-        Fabien Dessenne <fabien.dessenne@st.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        David Airlie <airlied@linux.ie>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-s390@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH 0/4] treewide: fix interrupted release
-Message-ID: <20191021095500.GE24768@localhost>
-References: <20191010131333.23635-1-johan@kernel.org>
- <20191010135043.GA16989@phenom.ffwll.local>
- <20191011093633.GD27819@localhost>
- <20191014084847.GD11828@phenom.ffwll.local>
- <20191014161326.GO13531@localhost>
- <20191015140726.GN11828@phenom.ffwll.local>
+Received: from [10.163.1.2] (unknown [10.163.1.2])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7E20F3F718;
+        Mon, 21 Oct 2019 02:54:39 -0700 (PDT)
+Subject: Re: [PATCH V9 2/2] arm64/mm: Enable memory hot remove
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     mark.rutland@arm.com, david@redhat.com, linux-mm@kvack.org,
+        arunks@codeaurora.org, cpandya@codeaurora.org, ira.weiny@intel.com,
+        will@kernel.org, steven.price@arm.com, valentin.schneider@arm.com,
+        suzuki.poulose@arm.com, Robin.Murphy@arm.com, broonie@kernel.org,
+        cai@lca.pw, ard.biesheuvel@arm.com, dan.j.williams@intel.com,
+        linux-arm-kernel@lists.infradead.org, osalvador@suse.de,
+        steve.capper@arm.com, logang@deltatee.com,
+        linux-kernel@vger.kernel.org, James Morse <james.morse@arm.com>,
+        akpm@linux-foundation.org, mgorman@techsingularity.net
+References: <1570609308-15697-1-git-send-email-anshuman.khandual@arm.com>
+ <1570609308-15697-3-git-send-email-anshuman.khandual@arm.com>
+ <20191010113433.GI28269@mbp> <f51cdb20-ddc4-4fb7-6c45-791d2e1e690c@arm.com>
+ <20191018094825.GD19734@arrakis.emea.arm.com>
+ <f5581644-42b7-097e-6a86-ba7db9d0b544@arm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <6b5c96fe-cb3c-d0c2-e1f4-6ecd34be62a5@arm.com>
+Date:   Mon, 21 Oct 2019 15:25:08 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191015140726.GN11828@phenom.ffwll.local>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <f5581644-42b7-097e-6a86-ba7db9d0b544@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 04:07:26PM +0200, Daniel Vetter wrote:
-> On Mon, Oct 14, 2019 at 06:13:26PM +0200, Johan Hovold wrote:
-> > On Mon, Oct 14, 2019 at 10:48:47AM +0200, Daniel Vetter wrote:
 
-> > > Do you have a legit usecase for interruptible sleeps in fops->release?
-> > 
-> > The tty layer depends on this for example when waiting for buffered
-> > writes to complete (something which may never happen when using flow
-> > control).
-> > 
-> > > I'm not even sure killable is legit in there, since it's an fd, not a
-> > > process context ...
-> > 
-> > It will be run in process context in many cases, and for ttys we're good
-> > AFAICT.
+
+On 10/21/2019 03:23 PM, Anshuman Khandual wrote:
 > 
-> Huh, read it a bit, all the ->shutdown callbacks have void return type.
-> But there's indeed interruptible sleeps in there. Doesn't this break
-> userspace that expects that a close() actually flushes the tty?
-
-This behaviour has been there since "forever" so the problem is rather
-the other way round; changing it now might break user space.
-
-> Imo if you're ->release callbacks feels like it should do a wait to
-> guaranteed something userspace expects, then doing a
-> wait_interruptible/killable feels like a bug. Or alternatively, the wait
-> isn't really needed in the first place.
-
-Posix says that the final tty close should cause any output to be sent.
-And as mentioned before, due to flow control this may never finish. So
-for usability reasons, you want to be able to interrupt that final
-close, while removing the flush completely would break applications
-currently expecting output to be flushed.
-
-Also note that we have an interface for controlling how long to wait for
-data to be sent (typically 30 s by default, but can be set to wait
-forever).
-
-> > > > The return value from release() is ignored by vfs, and adding a splat in
-> > > > __fput() to catch these buggy drivers might be overkill.
-> > > 
-> > > Ime once you have a handful of instances of a broken pattern, creating a
-> > > check for it (under a debug option only ofc) is very much justified.
-> > > Otherwise they just come back to life like the undead, all the time. And
-> > > there's a _lot_ of fops->release callbacks in the kernel.
-> > 
-> > Yeah, you have a point.
-> > 
-> > But take tty again as an example, the close tty operation called from
-> > release() is declared void so there's no propagated return value for vfs
-> > to check.
-> > 
-> > It may even be better to fix up the 100 or so callbacks potentially
-> > returning non-zero and make fops->release void so that the compiler
-> > would help us catch any future bugs and also serve as a hint for
-> > developers that returning errnos from fops->release is probably not
-> > what you want to do.
-> > 
-> > But that's a lot of churn of course.
+> On 10/18/2019 03:18 PM, Catalin Marinas wrote:
+>> On Fri, Oct 11, 2019 at 08:26:32AM +0530, Anshuman Khandual wrote:
+>>> On 10/10/2019 05:04 PM, Catalin Marinas wrote:
+>>>> Mark Rutland mentioned at some point that, as a preparatory patch to
+>>>> this series, we'd need to make sure we don't hot-remove memory already
+>>>> given to the kernel at boot. Any plans here?
+>>> Hmm, this series just enables platform memory hot remove as required from
+>>> generic memory hotplug framework. The path here is triggered either from
+>>> remove_memory() or __remove_memory() which takes physical memory range
+>>> arguments like (nid, start, size) and do the needful. arch_remove_memory()
+>>> should never be required to test given memory range for anything including
+>>> being part of the boot memory.
+>> Assuming arch_remove_memory() doesn't (cannot) check, is there a risk on
+> Platform can definitely enumerate boot memory ranges. But checking on it in
+> arch_remove_memory() which deals with actual procedural details might not be
+> ideal IMHO. Refusing a requested removal attempt should have been done up in
+> the call chain. This will require making generic hot plug reject any removal
+> request which falls within enumerated boot memory. IFAICS currently there is
+> no generic way to remember which memory came as part of the boot process.
+> Probably be a new MEMBLOCK flag will do.
 > 
-> Hm indeed ->release has int as return type. I guess that's needed for
-> file I/O errno and similar stuff ...
+>> arm64 that, for example, one removes memory available at boot and then
+>> kexecs a new kernel? Does the kexec tool present the new kernel with the
+>> original memory map?
+> I dont know, probably James can help here. But as I had mentioned earlier,
+> the callers of remove_memory() should be able to control that. ACPI should
+> definitely be aware about which ranges were part of boot memory and refrain
+> from removing any subset, if the platform is known to have problems with
+> any subsequent kexec operation because the way boot memory map get used.
 > 
-> Still void return value doesn't catch funny stuff like doing interruptible
-> waits and occasionally failing if you have a process that likes to use
-> signals and also uses some library somewhere to do something. In graphics
-> we have that, with Xorg loving signals for various things.
+> Though I am not much aware about kexec internals, it should inherit the
+> memory state at given point in time accommodating all previous memory hot
+> and remove operations. As an example cloud environment scenario, memory
+> resources might have increased or decreased during a guest lifetime, so
+> when the guest needs to have new OS image why should not it have all the
+> memory ? I dont know if it's feasible for the guest to expect previous hot
+> add or remove operations to be played again after the kexec.
+> 
+> There is another fundamental question here. Is there a notion of a minimum
+> subset of boot memory which cannot be hot removed no matter what ? If yes,
+> how that is being conveyed to the kernel currently ?
+> 
+> The point is that all these need to be established between ACPI, EFI and
+> kernel. AFAICS this problem is for MM subsystem (including the platform
 
-Right, but since there arguable are legitimate uses for interruptible
-sleep at release(), I don't see how we can catch that at runtime.
-
-Johan
+s/is for/is not for/          ^^^^^^^^^^
