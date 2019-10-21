@@ -2,110 +2,89 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47FC6CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:13:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A8FCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:14:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 181DC2084B
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:13:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eGOPTNEG"
+	by mail.kernel.org (Postfix) with ESMTP id 3167F2084B
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:14:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729211AbfJUPNO (ORCPT
+        id S1729437AbfJUPOT convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 11:13:14 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:27926 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728035AbfJUPNN (ORCPT
+        Mon, 21 Oct 2019 11:14:19 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:42578 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727355AbfJUPOS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 11:13:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571670792;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=9m1JAnv4mnGiHWE5XVxTiN/BZXEbmBpVMZpn5edtEMY=;
-        b=eGOPTNEGDWG5k1M11Rfu+o/5qDaUtYmhiaal58WkVw6up4wDV8ic7dRr9KmvvEC2Tbpas3
-        9fwsZgXWaLBXgGuFYPwUzgclDWM0NE77T8djEjSfcnBx3Tw/d3rK8nOn2agJ/MC9PNTNpQ
-        mjswzeeyYX0ugoNU5dBARwjIkvX/atA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-164-CJcfCod7N-6B-1vo_0UIPg-1; Mon, 21 Oct 2019 11:13:08 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 01EB4107AD31;
-        Mon, 21 Oct 2019 15:13:06 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.44])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 7AC2160A9F;
-        Mon, 21 Oct 2019 15:12:56 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Mon, 21 Oct 2019 17:13:05 +0200 (CEST)
-Date:   Mon, 21 Oct 2019 17:12:55 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     linux-kernel@vger.kernel.org, Florian Weimer <fweimer@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>, libc-alpha@sourceware.org,
-        David Howells <dhowells@redhat.com>,
-        Jann Horn <jannh@google.com>, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Shuah Khan <shuah@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Roman Gushchin <guro@fb.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        linux-kselftest@vger.kernel.org, linux-api@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] clone3: add CLONE_CLEAR_SIGHAND
-Message-ID: <20191021151255.GA3459@redhat.com>
-References: <20191014104538.3096-1-christian.brauner@ubuntu.com>
- <20191021144633.GA2720@redhat.com>
-MIME-Version: 1.0
-In-Reply-To: <20191021144633.GA2720@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-MC-Unique: CJcfCod7N-6B-1vo_0UIPg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+        Mon, 21 Oct 2019 11:14:18 -0400
+Received: from marcel-macbook.fritz.box (p4FEFC197.dip0.t-ipconnect.de [79.239.193.151])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 1DA90CECC4;
+        Mon, 21 Oct 2019 17:23:16 +0200 (CEST)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3594.4.19\))
+Subject: Re: [PATCHv2 4/4] Bluetooth: btwilink: drop superseded driver
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <20191020205901.56bafijk7cu3rpaj@earth.universe>
+Date:   Mon, 21 Oct 2019 17:14:15 +0200
+Cc:     Tony Lindgren <tony@atomide.com>, Adam Ford <aford173@gmail.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        linux-bluetooth@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@collabora.com
+Content-Transfer-Encoding: 8BIT
+Message-Id: <AC376F8D-77F3-4497-94D1-FE25A5ED9337@holtmann.org>
+References: <20191003134147.9458-1-sre@kernel.org>
+ <20191003134147.9458-5-sre@kernel.org>
+ <BC1F82AC-2988-4BC6-99EA-1C9F9289E582@holtmann.org>
+ <20191020205901.56bafijk7cu3rpaj@earth.universe>
+To:     Sebastian Reichel <sre@kernel.org>
+X-Mailer: Apple Mail (2.3594.4.19)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/21, Oleg Nesterov wrote:
->
-> On 10/14, Christian Brauner wrote:
-> >
-> > The child helper process on Linux posix_spawn must ensure that no signa=
-l
-> > handlers are enabled, so the signal disposition must be either SIG_DFL
-> > or SIG_IGN. However, it requires a sigprocmask to obtain the current
-> > signal mask and at least _NSIG sigaction calls to reset the signal
-> > handlers for each posix_spawn call
->
-> Plus the caller has to block/unblock all signals around clone(VM|VFORK).
-       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Hi Sebastian,
 
-just in case... I meant that posix_spawn() has to block/unblock, not its
-caller.
+>>> All users of this driver have been converted to the serdev based
+>>> hci_ll driver. The unused driver can be safely dropped now.
+>>> 
+>>> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+>>> ---
+>>> drivers/bluetooth/Kconfig    |  11 --
+>>> drivers/bluetooth/Makefile   |   1 -
+>>> drivers/bluetooth/btwilink.c | 337 -----------------------------------
+>>> 3 files changed, 349 deletions(-)
+>>> delete mode 100644 drivers/bluetooth/btwilink.c
+>> 
+>> patch has been applied to bluetooth-next tree.
+>> 
+>> However what I really like to see is that you re-introduce a
+>> btwilink driver that is purely serdev based and doesn’t rely on
+>> any hci_uart/hci_ldisc code. A clean serdev only driver is that
+>> best and easier to maintain long term.
+> 
+> So basically move the serdev implementation from hci_ll.c into its
+> own driver and make hci_ll hci_uart based only? That effectively
+> means, that we have two implementations of the protocol. I don't
+> think this will improve maintainability, since then bugs needs to
+> be fixed in two places? Note, that we have a couple of drivers
+> with serdev+hci_uart by now:
+> 
+> for file in $(grep -l serdev drivers/bluetooth/hci_*c) ; grep -l hci_uart_register_proto "${file}"
+> hci_bcm.c
+> hci_h5.c
+> hci_ldisc.c
+> hci_ll.c
+> hci_mrvl.c
+> hci_qca.c
 
-> Can this justify the new CLONE_ flag? Honestly, I have no idea. But the
-> patch is simple and looks technically correct to me. FWIW,
->=20
-> Reviewed-by: Oleg Nesterov <oleg@redhat.com>
+I would like to have something similar to btmtkuart.c which is a pure serdev driver that doesn’t depend on any hci_ldisc.c framework. If we have this, then we would just drop hci_ll.c from the kernel and focus on the serdev only version. As noted, there is no need for any other driver at that point since everything is probed anyway. Users will not even notice the difference.
+
+Regards
+
+Marcel
 
