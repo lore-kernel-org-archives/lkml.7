@@ -2,152 +2,152 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 880FFCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 17:01:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20694CA9EB0
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 17:02:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DD1F20882
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 17:01:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC3122064B
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 17:02:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JKTVSLuH"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fyyccYOp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728235AbfJURBt (ORCPT
+        id S1728316AbfJURCf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 13:01:49 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:45243 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726276AbfJURBs (ORCPT
+        Mon, 21 Oct 2019 13:02:35 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:45316 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726847AbfJURCf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 13:01:48 -0400
-Received: by mail-io1-f68.google.com with SMTP id c25so16753459iot.12
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 10:01:48 -0700 (PDT)
+        Mon, 21 Oct 2019 13:02:35 -0400
+Received: by mail-pf1-f193.google.com with SMTP id y72so8780390pfb.12
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 10:02:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Y5hH+T0qVG92b2pjQ4AGR2b9Tlv1rtQ6rkilTn0xjxo=;
-        b=JKTVSLuHreGlK+DNaNPXgQFU0MjZAlChAWNGTb49EArjloGdlj7S8IJ6yzHT5E49dN
-         IxXGQOucKaaEtVznUcwZsLZbqnqbdocCACK35ndCwhr+xU2A21HKdBFo0FkyvxH+c4Wc
-         ShyHrwYGag5kIluIoGhTUSVvb4jcks7TMbQvU=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=WE3loKlrNVB/ZMokowzJvbTFMxvuhMb9YXaUOyOSVIs=;
+        b=fyyccYOpIWitmKoEpx17UlocsclWwBqBrNxi4Zk+T8JDNAl2JlzmcZmEqpCdkJsk+A
+         6FLWxS6PA1P57yXjZB1JZj20O6IXVTN44FOn56ac2YMQ9lC3S5pWcs8qld6gPWggq2ZJ
+         sGcB81xleT4y0FhrF55ZvOitoNpDFpfeS92wAPQu5WW1Np1Hzy8RNLm5CJERHWW/pzkb
+         L6ZKWYIlJLS96pLUMFF1XkeMEDBir6K0ka0dCT8legbjLmOKIMDOf6FEhouWcp/zSaFM
+         C8e98AaEkIqFQ7r0sTQEBRI91VnMIr7Xb4zv1dev8m0pRJuzOApa17tk1U/Z8gdinEeU
+         sJsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Y5hH+T0qVG92b2pjQ4AGR2b9Tlv1rtQ6rkilTn0xjxo=;
-        b=QoVkz+yZn0oVozmM1s4DmAo0zmEKd9FjeQ7+KC2ITRX5VkIdE6FMP/5By96ki4xkTK
-         plrySopfXEesOdhjwZ5vc6lpuLok2ZwzO4GO9UHatBJlHVi0fOGHVfQlNwtfRNbdPJpC
-         8L6QxnF2Qpop5StAGwJEWHkl5/hJBDOFMD8YOErLXt8+fgZfhWRdy3LyoZ/NJE3UoHeM
-         TuSNC5tJH09bjf9Xh1G4m+n+YtuJ9U6PmZQ/Y1TUB9NIKf6J2Kwx+qOaN71+5TFPt2xD
-         SqTNRecxso7vOOZzh5+7dbBrkzaxI5daCYWXQOiKmiQU9B+hDAbOyYWXeOr4MCYpHZLA
-         PD+w==
-X-Gm-Message-State: APjAAAVfSY4XS/ZNXHtTF8W32s8wkpaYj8D+PAGQXL1+YAVX/fPFT95X
-        l7ILBhbuxO5tyDfcf5l8uP93R5J5OwE=
-X-Google-Smtp-Source: APXvYqw1KiSJgwSR5gWuxe/Dt2irE5j5i4vo5bkJqGcfklvRlaqrhBTIKwf+KyJe5er6+qVrJqsqug==
-X-Received: by 2002:a05:6602:119:: with SMTP id s25mr22859924iot.111.1571677307000;
-        Mon, 21 Oct 2019 10:01:47 -0700 (PDT)
-Received: from mail-io1-f54.google.com (mail-io1-f54.google.com. [209.85.166.54])
-        by smtp.gmail.com with ESMTPSA id l21sm5088152iok.87.2019.10.21.10.01.46
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 21 Oct 2019 10:01:46 -0700 (PDT)
-Received: by mail-io1-f54.google.com with SMTP id 1so5463730iou.4
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 10:01:46 -0700 (PDT)
-X-Received: by 2002:a02:b691:: with SMTP id i17mr23172933jam.132.1571677305848;
- Mon, 21 Oct 2019 10:01:45 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=WE3loKlrNVB/ZMokowzJvbTFMxvuhMb9YXaUOyOSVIs=;
+        b=nDZYxvxrqvBhGPpznrp9tT375Gdx9oiU4zHPOWGS0ymIMrEcJ8/mcSB0JIrd0NlyLA
+         IMtiW8vqT1fUtE/eDtSSwwspMTED49A4ec39mmpIZl6nKc3J56G8oxVx4S3SeTYj1PLL
+         5ICentYntN/pwPU0bBpthumMnl3ZCU9EvvkV5ejjgmcY7NY4Rn6EPF/CazYf65V2FIKX
+         CHvQButtUHG8uM/AYAkV3Z8oHhqrhre2Qp3qT825MbzotrbbZSd8IkuFo8BDdDSDmoFv
+         yZQdUDSaCyS5e6ko4uSm+bOaiml42HwXGP35hLaC6u4X4rPMd27jBd3f4Lo/helvPa3m
+         EW8g==
+X-Gm-Message-State: APjAAAUKbaUstFliBtXNdaKOwSpq4eimCLsf8fNwljRUwPiYBiBjc6iD
+        viAa9A+AONtJ57R8yjleCamEUQ==
+X-Google-Smtp-Source: APXvYqxkx0Ib7ad028RoCwLeMm+LVxnLlHQ02O1StO4rrIWDGonLkK0q6NhUDcJMB4WjucYPNuOHiw==
+X-Received: by 2002:a63:ed4b:: with SMTP id m11mr19218482pgk.24.1571677354239;
+        Mon, 21 Oct 2019 10:02:34 -0700 (PDT)
+Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id 18sm18824808pfp.100.2019.10.21.10.02.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Oct 2019 10:02:33 -0700 (PDT)
+Date:   Mon, 21 Oct 2019 10:02:31 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     linus.walleij@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Subject: Re: [PATCH] pinctrl: qcom: sc7180: Add missing tile info in
+ SDC_QDSD_PINGROUP/UFS_RESET
+Message-ID: <20191021170231.GK571@minitux>
+References: <20191021141507.24066-1-rnayak@codeaurora.org>
 MIME-Version: 1.0
-References: <20191021101057.23861-1-daniel.thompson@linaro.org>
-In-Reply-To: <20191021101057.23861-1-daniel.thompson@linaro.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 21 Oct 2019 10:01:34 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=X9ESYnfWJLR1gsLwswBsTkbEh1-C7ki3=3AgFzUKkn3g@mail.gmail.com>
-Message-ID: <CAD=FV=X9ESYnfWJLR1gsLwswBsTkbEh1-C7ki3=3AgFzUKkn3g@mail.gmail.com>
-Subject: Re: [PATCH v2] kdb: Avoid array subscript warnings on non-SMP builds
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     Jason Wessel <jason.wessel@windriver.com>,
-        kgdb-bugreport@lists.sourceforge.net,
-        LKML <linux-kernel@vger.kernel.org>,
-        Patch Tracking <patches@linaro.org>,
-        kbuild test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191021141507.24066-1-rnayak@codeaurora.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Mon 21 Oct 07:15 PDT 2019, Rajendra Nayak wrote:
 
-On Mon, Oct 21, 2019 at 3:11 AM Daniel Thompson
-<daniel.thompson@linaro.org> wrote:
->
-> Recent versions of gcc (reported on gcc-7.4) issue array subscript
-> warnings for builds where SMP is not enabled.
->
-> kernel/debug/debug_core.c: In function 'kdb_dump_stack_on_cpu':
-> kernel/debug/debug_core.c:452:17: warning: array subscript is outside array
-> +bounds [-Warray-bounds]
->      if (!(kgdb_info[cpu].exception_state & DCPU_IS_SLAVE)) {
->            ~~~~~~~~~^~~~~
->    kernel/debug/debug_core.c:469:33: warning: array subscript is outside array
-> +bounds [-Warray-bounds]
->      kgdb_info[cpu].exception_state |= DCPU_WANT_BT;
->    kernel/debug/debug_core.c:470:18: warning: array subscript is outside array
-> +bounds [-Warray-bounds]
->      while (kgdb_info[cpu].exception_state & DCPU_WANT_BT)
->
-> There is no bug here but there is scope to improve the code
-> generation for non-SMP systems (whilst also silencing the warning).
->
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Fixes: 2277b492582d ("kdb: Fix stack crawling on 'running' CPUs that aren't the master")
-> Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
+> The SDC_QDSD_PINGROUP/UFS_RESET macros are missing the .tile info needed to
+> calculate the right register offsets. Adding them here and also
+> adjusting the offsets accordingly.
+> 
+> Fixes: f2ae04c45b1a ("pinctrl: qcom: Add SC7180 pinctrl driver")
+> 
+> Reported-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
 > ---
->
-> Notes:
->     Changes in v2:
->
->      - Moved the IS_ENABLED(CONFIG_SMP) test to the first (slightly easier
->        to read the code, improves code generation a little)
->      - Sent out as a proper patch e-mail ;-)
->
->  kernel/debug/debug_core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
-> index 70e86b4b4932..2b7c9b67931d 100644
-> --- a/kernel/debug/debug_core.c
-> +++ b/kernel/debug/debug_core.c
-> @@ -444,7 +444,7 @@ int dbg_remove_all_break(void)
->  #ifdef CONFIG_KGDB_KDB
->  void kdb_dump_stack_on_cpu(int cpu)
->  {
-> -       if (cpu == raw_smp_processor_id()) {
-> +       if (cpu == raw_smp_processor_id() || !IS_ENABLED(CONFIG_SMP)) {
+>  drivers/pinctrl/qcom/pinctrl-sc7180.c | 18 ++++++++++--------
+>  1 file changed, 10 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/qcom/pinctrl-sc7180.c b/drivers/pinctrl/qcom/pinctrl-sc7180.c
+> index 6399c8a2bc22..d6cfad7417b1 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-sc7180.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-sc7180.c
+> @@ -77,6 +77,7 @@ enum {
+>  		.intr_cfg_reg = 0,			\
+>  		.intr_status_reg = 0,			\
+>  		.intr_target_reg = 0,			\
+> +		.tile = SOUTH,				\
+>  		.mux_bit = -1,				\
+>  		.pull_bit = pull,			\
+>  		.drv_bit = drv,				\
+> @@ -102,6 +103,7 @@ enum {
+>  		.intr_cfg_reg = 0,			\
+>  		.intr_status_reg = 0,			\
+>  		.intr_target_reg = 0,			\
+> +		.tile = SOUTH,				\
+>  		.mux_bit = -1,				\
+>  		.pull_bit = 3,				\
+>  		.drv_bit = 0,				\
+> @@ -1087,14 +1089,14 @@ static const struct msm_pingroup sc7180_groups[] = {
+>  	[116] = PINGROUP(116, WEST, qup04, qup04, _, _, _, _, _, _, _),
+>  	[117] = PINGROUP(117, WEST, dp_hot, _, _, _, _, _, _, _, _),
+>  	[118] = PINGROUP(118, WEST, _, _, _, _, _, _, _, _, _),
+> -	[119] = UFS_RESET(ufs_reset, 0x97f000),
+> -	[120] = SDC_QDSD_PINGROUP(sdc1_rclk, 0x97a000, 15, 0),
+> -	[121] = SDC_QDSD_PINGROUP(sdc1_clk, 0x97a000, 13, 6),
+> -	[122] = SDC_QDSD_PINGROUP(sdc1_cmd, 0x97a000, 11, 3),
+> -	[123] = SDC_QDSD_PINGROUP(sdc1_data, 0x97a000, 9, 0),
+> -	[124] = SDC_QDSD_PINGROUP(sdc2_clk, 0x97b000, 14, 6),
+> -	[125] = SDC_QDSD_PINGROUP(sdc2_cmd, 0x97b000, 11, 3),
+> -	[126] = SDC_QDSD_PINGROUP(sdc2_data, 0x97b000, 9, 0),
+> +	[119] = UFS_RESET(ufs_reset, 0x7f000),
+> +	[120] = SDC_QDSD_PINGROUP(sdc1_rclk, 0x7a000, 15, 0),
 
-At first I thought maybe your code would be less efficient than:
+PS. There's no drive-strength control of the rclk and I presume that's
+why this is just specified as 0. It would be good if pinctrl-msm was
+improved to be able to handle pins with bias, but no drive-strength
+control and then this updated.
 
-  if (!IS_ENABLED(CONFIG_SMP) || cpu == raw_smp_processor_id())
+But we should merge this patch as is.
 
-...since the compiler would be still be required to "call"
-raw_smp_processor_id() in the non-SMP case.  ...but then I realized
-that seems to be a macro in the non-SMP case and just resolves to 0.
-...so while the compiler would still be "required" to execute the
-first part of the if test, it should be able to realize that it's a
-no-op.
+Regards,
+Bjorn
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-
--Doug
-
-
-
-
->                 dump_stack();
->                 return;
->         }
-> --
-> 2.21.0
->
+> +	[121] = SDC_QDSD_PINGROUP(sdc1_clk, 0x7a000, 13, 6),
+> +	[122] = SDC_QDSD_PINGROUP(sdc1_cmd, 0x7a000, 11, 3),
+> +	[123] = SDC_QDSD_PINGROUP(sdc1_data, 0x7a000, 9, 0),
+> +	[124] = SDC_QDSD_PINGROUP(sdc2_clk, 0x7b000, 14, 6),
+> +	[125] = SDC_QDSD_PINGROUP(sdc2_cmd, 0x7b000, 11, 3),
+> +	[126] = SDC_QDSD_PINGROUP(sdc2_data, 0x7b000, 9, 0),
+>  };
+>  
+>  static const struct msm_pinctrl_soc_data sc7180_pinctrl = {
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
+> 
