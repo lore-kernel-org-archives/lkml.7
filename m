@@ -2,60 +2,60 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49859CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:36:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65593CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:36:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B050214B2
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:36:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BD46214B2
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:36:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LCE4IgXY"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BjSuOJtK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728332AbfJUKgQ (ORCPT
+        id S1728347AbfJUKgU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 06:36:16 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:41582 "EHLO
+        Mon, 21 Oct 2019 06:36:20 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:35927 "EHLO
         mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728308AbfJUKgL (ORCPT
+        with ESMTP id S1728324AbfJUKgQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 06:36:11 -0400
-Received: by mail-pg1-f194.google.com with SMTP id t3so7545114pga.8
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 03:36:11 -0700 (PDT)
+        Mon, 21 Oct 2019 06:36:16 -0400
+Received: by mail-pg1-f194.google.com with SMTP id 23so7558734pgk.3
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 03:36:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :in-reply-to:references;
-        bh=OduEoDNss3AClsOVOILgd3QefK3f48yVM80qRgfoc6I=;
-        b=LCE4IgXYNcL1m1VOeylfBui8KVijCrII8487VyiwvEfW40NyjW8qu2EgExyW4J/7mz
-         vPgsQtbeUXljiHns5B6jnN3PheCdbJ3Nmt6M9Em72WHKtTnTVrbgAo4+2hVYuUsDG7nG
-         NoAoiInr1+s5gZ5EF3xS26bBKYf5GipeO/AuZh9AR5inz6s2ALimAZBY50qJOQ0Owo3V
-         QxKDAWmGpQ5/IHyJ+y5RubsOPzU1y2nU4FxXyE1wr1lwVCv1ClhtZML7bP/Cqmop8y0+
-         1BwejyOfLrmCgGzaAxuu1G/VdI4Vmrv5NJ+8wOzZ4zWRunIXpnLnouvpDMsF/mYExgXX
-         H1Ag==
+        bh=2IiRgiTM6F9vxDGGzT2NtAOpx6JcpVZXk6Y75BALIx4=;
+        b=BjSuOJtK3drQAP8E7EwmzkokCuHGKPJ357gj1CcflWKavwzbuGvGoPsEavjboOpPSn
+         t79OVYbPbAK2TUQ/bbC3InUym6paGm7OZbppRpSb0VzwnLrRkmeoHlX9IN8DtUlpYWU9
+         Gm3NOAYISoPAFq1TSYaZXr3bjGcnKEgn3UR11mlwYpB9ptJ0QTh2D7iQFOgu5A0IVwp2
+         vx6q4T/uhXGj9YOwwe5fj3GhV/pt8gViBuzzG0rNT/fJIWhdLBu7251pq0X8/Bor1nG3
+         RexJMFNN6rxZOoQGNr9x5uc2BXJ3Hv9Ezt68ET2UqG9gXXHd0ChHK2+QPf4rv+cEYAWv
+         6Eyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:in-reply-to:references;
-        bh=OduEoDNss3AClsOVOILgd3QefK3f48yVM80qRgfoc6I=;
-        b=NGwthKDj36aGo/DKfuol+UJaut21ZQvQ3Qxmwp4yavWvUnuTuBWtnBaOZ+QyO6Wixm
-         a2X5ZLuwQa1w9c+y/mkc912tOunoobyNoWPcFbP63xbnJPBkbs4Yr0zM9MiRbw5K8ll5
-         XzeE9ERM2JYYL9qyxgH2Ug0/p05fgkwJaCFPgLt+0PH6spKlU2F+bDVx9T+EM1i0WPIP
-         oVB8qG7z6JrgpA28R0W1VS+fz0IrINkJt/emueqWZE1Aqe84h1aSGo9NbyhhAMcRodJP
-         QkAIOYC9DlpK276lTnh6Jo3VdRMWqZLRVq0qqw8+4QvaS6PeXmTGWY5DXh/gpll25yRu
-         Zi7w==
-X-Gm-Message-State: APjAAAW/+tMuKWfp6EZRaxs0/icpja7UKjUrCwvxUHqA6VQPL9KLq8Vu
-        QWas674fgT3MJhJxAo3bh3rzcCeBEirvkg==
-X-Google-Smtp-Source: APXvYqycQTj+QhwBKEywkZypXg3RK4vljEXGT5VhZKd6LjB0yUOh2sfc5+n042hNk59RHfelztI9Cg==
-X-Received: by 2002:a17:90a:eace:: with SMTP id ev14mr28630132pjb.57.1571654170884;
-        Mon, 21 Oct 2019 03:36:10 -0700 (PDT)
+        bh=2IiRgiTM6F9vxDGGzT2NtAOpx6JcpVZXk6Y75BALIx4=;
+        b=rI/WQKrEkn45cVLtMmvJm8SzgqtayeKgR8tm4lgHB5fP8fGBaB+eyj3RsvbCgzchkw
+         irXSrEw5pCUcLdH7Ek0z3FmEtEZgB+Ysi8uiucWtPCKJa6CWM1knxyY1faIxUVBPMh0K
+         t2TKmrLqW0+5TSCTLy0IiJlyHJ1+HFoKLn2YxWt1zvrRY0C1DNBwwT92jqZtmlEaJ83r
+         8A6APfLKiSQvVWkzEgmpC3AOObBVCbYQ1+5DX6hyYfpx5EtD0CjVj+oB8i+6EEByzadS
+         PHfwWMHvEsu0CvpyDgXNyHB10PTBMSJw+Oih9pceduSFy3bW+49JJI8YGD2f+WGK4z0C
+         ZCXQ==
+X-Gm-Message-State: APjAAAXA1/XUNxyaYdFD2ujsMdkfsnkRCfcRL2xUiOjD7J+yfRT4eEYw
+        O9m7LjnnwdMFvLyAubM0lOdsW5GkceI6Sg==
+X-Google-Smtp-Source: APXvYqw1fEzQjhS+g3UEeDIGHuYnFx7WoBGPaKuPP90vouHu1+lQZ3qQaJbJvcyEOagIJpn0waN5kw==
+X-Received: by 2002:a63:f743:: with SMTP id f3mr25362784pgk.410.1571654174769;
+        Mon, 21 Oct 2019 03:36:14 -0700 (PDT)
 Received: from localhost ([49.248.62.222])
-        by smtp.gmail.com with ESMTPSA id x10sm13478847pgl.53.2019.10.21.03.36.09
+        by smtp.gmail.com with ESMTPSA id v9sm14754293pfe.109.2019.10.21.03.36.13
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 21 Oct 2019 03:36:10 -0700 (PDT)
+        Mon, 21 Oct 2019 03:36:14 -0700 (PDT)
 From:   Amit Kucheria <amit.kucheria@linaro.org>
 To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         bjorn.andersson@linaro.org, edubezval@gmail.com, agross@kernel.org,
@@ -66,9 +66,9 @@ To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         Rob Herring <robh+dt@kernel.org>,
         Zhang Rui <rui.zhang@intel.com>
 Cc:     devicetree@vger.kernel.org
-Subject: [PATCH v6 08/15] arm64: dts: sdm845: thermal: Add interrupt support
-Date:   Mon, 21 Oct 2019 16:05:27 +0530
-Message-Id: <5a96df48e546576f90081bbde218e7cff88ae8ce.1571652874.git.amit.kucheria@linaro.org>
+Subject: [PATCH v6 09/15] arm64: dts: msm8996: thermal: Add interrupt support
+Date:   Mon, 21 Oct 2019 16:05:28 +0530
+Message-Id: <b42e18096b81abaaabe1822e75f1882781467c71.1571652874.git.amit.kucheria@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1571652874.git.amit.kucheria@linaro.org>
 References: <cover.1571652874.git.amit.kucheria@linaro.org>
@@ -82,29 +82,28 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 Register upper-lower interrupts for each of the two tsens controllers.
 
 Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 ---
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 4 ++++
+ arch/arm64/boot/dts/qcom/msm8996.dtsi | 4 ++++
  1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index f406a4340b05e..0990d5761860a 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -2950,6 +2950,8 @@
- 			reg = <0 0x0c263000 0 0x1ff>, /* TM */
- 			      <0 0x0c222000 0 0x1ff>; /* SROT */
+diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+index 87f4d9c1b0d4c..4ca2e7b44559c 100644
+--- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+@@ -591,6 +591,8 @@
+ 			reg = <0x4a9000 0x1000>, /* TM */
+ 			      <0x4a8000 0x1000>; /* SROT */
  			#qcom,sensors = <13>;
-+			interrupts = <GIC_SPI 506 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 458 IRQ_TYPE_LEVEL_HIGH>;
 +			interrupt-names = "uplow";
  			#thermal-sensor-cells = <1>;
  		};
  
-@@ -2958,6 +2960,8 @@
- 			reg = <0 0x0c265000 0 0x1ff>, /* TM */
- 			      <0 0x0c223000 0 0x1ff>; /* SROT */
+@@ -599,6 +601,8 @@
+ 			reg = <0x4ad000 0x1000>, /* TM */
+ 			      <0x4ac000 0x1000>; /* SROT */
  			#qcom,sensors = <8>;
-+			interrupts = <GIC_SPI 507 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>;
 +			interrupt-names = "uplow";
  			#thermal-sensor-cells = <1>;
  		};
