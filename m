@@ -4,143 +4,193 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6FC0CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:31:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37DF9CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:32:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4F2B20640
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:31:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BFE320640
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:32:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728991AbfJUOb4 convert rfc822-to-8bit (ORCPT
+        id S1729207AbfJUOcP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 10:31:56 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57680 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727140AbfJUOb4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 10:31:56 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 2197DC138;
-        Mon, 21 Oct 2019 14:31:53 +0000 (UTC)
-Date:   Mon, 21 Oct 2019 16:32:08 +0200
-From:   Jean Delvare <jdelvare@suse.de>
-To:     "Erwan Velu" <erwanaliasr1@gmail.com>
-Cc:     "Robert P. J. Day" <rpjday@crashcourse.ca>,
-        "Erwan Velu" <e.velu@criteo.com>,
-        "Changbin Du" <changbin.du@intel.com>,
-        "Boris Brezillon" <bbrezillon@kernel.org>,
-        "Mauro Carvalho Chehab" <mchehab+samsung@kernel.org>,
-        "Jens Wiklander" <jens.wiklander@linaro.org>,
-        "Sumit Garg" <sumit.garg@linaro.org>,
-        "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
-        "Michal Marek" <michal.lkml@markovi.net>,
-        "Mattias Jacobsson" <2pi@mok.nu>,
-        "Masahiro Yamada" <yamada.masahiro@socionext.com>,
-        <linux-kbuild@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/3] firmware/dmi_scan: Add dmi_save_release to save
- releases fields
-Message-ID: <20191021163208.5cd03d59@endymion>
-In-Reply-To: <20190918094323.17515-1-e.velu@criteo.com>
-References: <20190918094323.17515-1-e.velu@criteo.com>
-Organization: SUSE Linux
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+        Mon, 21 Oct 2019 10:32:15 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:54318 "EHLO foss.arm.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S1728083AbfJUOcO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 10:32:14 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A76D51007;
+        Mon, 21 Oct 2019 07:31:49 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1E8703F71F;
+        Mon, 21 Oct 2019 07:31:48 -0700 (PDT)
+Date:   Mon, 21 Oct 2019 15:31:47 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Pankaj Dubey <pankaj.dubey@samsung.com>
+Cc:     'Anvesh Salveru' <anvesh.s@samsung.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bhelgaas@google.com,
+        gustavo.pimentel@synopsys.com, jingoohan1@gmail.com,
+        lorenzo.pieralisi@arm.com
+Subject: Re: [PATCH 2/2] PCI: dwc: Add support to handle ZRX-DC Compliant PHYs
+Message-ID: <20191021143147.GU47056@e119886-lin.cambridge.arm.com>
+References: <CGME20191021123016epcas5p3ab7100162a8d6d803b117976240f20b4@epcas5p3.samsung.com>
+ <1571660993-30329-1-git-send-email-anvesh.s@samsung.com>
+ <20191021140424.GR47056@e119886-lin.cambridge.arm.com>
+ <05b301d58819$d962fa00$8c28ee00$@samsung.com>
+ <20191021141714.GT47056@e119886-lin.cambridge.arm.com>
+ <05b801d5881b$981b2cf0$c85186d0$@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <05b801d5881b$981b2cf0$c85186d0$@samsung.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Erwan,
-
-Sorry for the late answer.
-
-On Wed, 18 Sep 2019 11:43:19 +0200, Erwan Velu wrote:
-> In DMI type 0, there is several fields that encodes a release.
-
-is -> are
-encodes -> encode
-
-> The dmi_save_release() function have the logic to check if the field is valid.
-> If so, it reports the actual value.
+On Mon, Oct 21, 2019 at 07:56:55PM +0530, Pankaj Dubey wrote:
 > 
-> Signed-off-by: Erwan Velu <e.velu@criteo.com>
-> ---
->  drivers/firmware/dmi_scan.c | 26 ++++++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
+> 
+> > -----Original Message-----
+> > From: Andrew Murray <andrew.murray@arm.com>
+> > Sent: Monday, October 21, 2019 7:47 PM
+> > To: Pankaj Dubey <pankaj.dubey@samsung.com>
+> > Cc: 'Anvesh Salveru' <anvesh.s@samsung.com>; linux-pci@vger.kernel.org;
+> > linux-kernel@vger.kernel.org; bhelgaas@google.com;
+> > gustavo.pimentel@synopsys.com; jingoohan1@gmail.com;
+> > lorenzo.pieralisi@arm.com
+> > Subject: Re: [PATCH 2/2] PCI: dwc: Add support to handle ZRX-DC Compliant
+> > PHYs
+> > 
+> > On Mon, Oct 21, 2019 at 07:44:25PM +0530, Pankaj Dubey wrote:
+> > >
+> > >
+> > > > -----Original Message-----
+> > > > From: Andrew Murray <andrew.murray@arm.com>
+> > > > Sent: Monday, October 21, 2019 7:34 PM
+> > > > To: Anvesh Salveru <anvesh.s@samsung.com>
+> > > > Cc: linux-pci@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > > > bhelgaas@google.com; gustavo.pimentel@synopsys.com;
+> > > > jingoohan1@gmail.com; lorenzo.pieralisi@arm.com; Pankaj Dubey
+> > > > <pankaj.dubey@samsung.com>
+> > > > Subject: Re: [PATCH 2/2] PCI: dwc: Add support to handle ZRX-DC
+> > > > Compliant PHYs
+> > > >
+> > > > On Mon, Oct 21, 2019 at 05:59:53PM +0530, Anvesh Salveru wrote:
+> > > > > Many platforms use DesignWare controller but the PHY can be
+> > > > > different in different platforms. If the PHY is compliant is to
+> > > > > ZRX-DC specification
+> > > >
+> > > > s/is to/to the/
+> > >
+> > > OK
+> > >
+> > > >
+> > > > > it helps in low power consumption during power states.
+> > > >
+> > > > s/in low/lower/
+> > > >
+> > > OK
+> > > > >
+> > > > > If current data rate is 8.0 GT/s or higher and PHY is not
+> > > > > compliant to ZRX-DC specification, then after every 100ms link
+> > > > > should transition to recovery state during the low power states.
+> > > > >
+> > > > > DesignWare controller provides GEN3_ZRXDC_NONCOMPL field in
+> > > > > GEN3_RELATED_OFF to specify about ZRX-DC compliant PHY.
+> > > > >
+> > > > > Platforms with ZRX-DC compliant PHY can set
+> "snps,phy-zrxdc-compliant"
+> > > > > property in controller DT node to specify this property to the
+> > > controller.
+> > > > >
+> > > > > Signed-off-by: Anvesh Salveru <anvesh.s@samsung.com>
+> > > > > Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+> > > > > ---
+> > > > >  drivers/pci/controller/dwc/pcie-designware.c | 7 +++++++
+> > > > > drivers/pci/controller/dwc/pcie-designware.h | 3 +++
+> > > > >  2 files changed, 10 insertions(+)
+> > > > >
+> > > > > diff --git a/drivers/pci/controller/dwc/pcie-designware.c
+> > > > > b/drivers/pci/controller/dwc/pcie-designware.c
+> > > > > index 820488dfeaed..6560d9f765d7 100644
+> > > > > --- a/drivers/pci/controller/dwc/pcie-designware.c
+> > > > > +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> > > > > @@ -556,4 +556,11 @@ void dw_pcie_setup(struct dw_pcie *pci)
+> > > > >  		       PCIE_PL_CHK_REG_CHK_REG_START;
+> > > > >  		dw_pcie_writel_dbi(pci,
+> PCIE_PL_CHK_REG_CONTROL_STATUS,
+> > > > val);
+> > > > >  	}
+> > > > > +
+> > > > > +	if (of_property_read_bool(np, "snps,phy-zrxdc-compliant")) {
+> > > > > +		val = dw_pcie_readl_dbi(pci,
+> PCIE_PORT_GEN3_RELATED);
+> > > > > +		val &= ~PORT_LOGIC_GEN3_ZRXDC_NONCOMPL;
+> > > > > +		dw_pcie_writel_dbi(pci, PCIE_PORT_GEN3_RELATED,
+> val);
+> > > > > +	}
+> > > > > +
+> > > >
+> > > > Given that this duplicates tegra_pcie_prepare_host in
+> > > > pcie-tegra194.c, can
+> > > we
+> > > > update that driver to adopt this new binding?
+> > > >
+> > >
+> > > Yes, Thanks for highlighting this. Otherwise I was worried that we
+> > > have one more patch without real user :)
+> > 
+> > Indeed :|
+> > 
+> > Though besides Tegra, is there any other reason you are adding this?
+> > 
+> 
+> Yes. We have one internal PCIe RC driver (which we can't disclose/upstream
+> right now) has this issue and currently we are handling it using this DT
+> binding. So we would like to upstream common code, so other platform's
+> driver can use this.
 
-This patch introduces a warning:
+Ah, I understand.
 
-drivers/firmware/dmi_scan.c:185:20: warning: ‘dmi_save_release’ defined but not used [-Wunused-function]
- static void __init dmi_save_release(const struct dmi_header *dm, int slot,
-                    ^~~~~~~~~~~~~~~~
+Thanks,
 
-because you add a static function with no user. I understand that you
-add a use later in the series, but it's not OK to introduce a warning
-even if temporary. It also makes little sense to split the changes that
-way as there is no way to cherry-pick one of the patches without the
-rest. And it makes things more difficult to review too, as I can't
-possibly judge if this function if right without also seeing where is
-will be called and how.
+Andrew Murray
 
-So, please merge all the changes into a single patch.
-
-> diff --git a/drivers/firmware/dmi_scan.c b/drivers/firmware/dmi_scan.c
-> index 35ed56b9c34f..202bd2c69d0f 100644
-> --- a/drivers/firmware/dmi_scan.c
-> +++ b/drivers/firmware/dmi_scan.c
-> @@ -181,6 +181,32 @@ static void __init dmi_save_ident(const struct dmi_header *dm, int slot,
->  	dmi_ident[slot] = p;
->  }
->  
-> +static void __init dmi_save_release(const struct dmi_header *dm, int slot,
-> +		int index)
-> +{
-> +	const u8 *d;
-> +	char *s;
-> +
-> +	// If the table doesn't have the field, let's return
-
-Please stick to C89-style comments (/* */) as used everywhere else in
-this file.
-
-> +	if (dmi_ident[slot] || dm->length < index)
-> +		return;
-> +
-> +	d = (u8 *) dm + index;
-> +
-> +	// As per the specification,
-> +	// if the system doesn't have the field, the value is FF
-> +	if (d[0] == 0xFF)
-> +		return;
-
-That's not exactly what the specification says. It says:
-
-"If the system does not support the use of [the System BIOS Major
-Release] field, the value is 0FFh for both this field and the System
-BIOS Minor Release field." So unused is when both fields are 0xFF. You
-can't test them independently.
-
-Same goes for the Embedded Controller Firmware Release fields, even if
-it is worded differently, the logic is the same.
-
-> +
-> +	s = dmi_alloc(4);
-> +	if (!s)
-> +		return;
-> +
-> +	sprintf(s, "%u", d[0]);
-> +
-> +	dmi_ident[slot] = s;
-> +}
-> +
->  static void __init dmi_save_uuid(const struct dmi_header *dm, int slot,
->  		int index)
->  {
-
-
--- 
-Jean Delvare
-SUSE L3 Support
+> 
+> > > We will update pcie-tegra194.c driver and post the patch to adopt this
+> > > binding.
+> > 
+> > It's much appreciated.
+> > 
+> > Andrew Murray
+> > 
+> > >
+> > > > Thanks,
+> > > >
+> > > > Andrew Murray
+> > > >
+> > > > >  }
+> > > > > diff --git a/drivers/pci/controller/dwc/pcie-designware.h
+> > > > > b/drivers/pci/controller/dwc/pcie-designware.h
+> > > > > index 5a18e94e52c8..427a55ec43c6 100644
+> > > > > --- a/drivers/pci/controller/dwc/pcie-designware.h
+> > > > > +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> > > > > @@ -60,6 +60,9 @@
+> > > > >  #define PCIE_MSI_INTR0_MASK		0x82C
+> > > > >  #define PCIE_MSI_INTR0_STATUS		0x830
+> > > > >
+> > > > > +#define PCIE_PORT_GEN3_RELATED		0x890
+> > > > > +#define PORT_LOGIC_GEN3_ZRXDC_NONCOMPL		BIT(0)
+> > > > > +
+> > > > >  #define PCIE_ATU_VIEWPORT		0x900
+> > > > >  #define PCIE_ATU_REGION_INBOUND		BIT(31)
+> > > > >  #define PCIE_ATU_REGION_OUTBOUND	0
+> > > > > --
+> > > > > 2.17.1
+> > > > >
+> > >
+> 
