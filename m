@@ -2,122 +2,167 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3503BCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:42:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADA43CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:42:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08AA3214AE
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:42:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8157D20679
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:42:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571665352;
-	bh=J6Zp9vw2aOghXwEqEY4sWy9WTHVCUoT+JyG7aFs5tQk=;
+	s=default; t=1571665355;
+	bh=CrHWuSYieCnWgLn1FrU4vSBdhvAzrmV0vb7wsK1WyzY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=POqm/P1vGKmQRk7k/DO1YdBXolencMl5QXkIGo0N12Yeqk2MfGEnOq4QgllOAtVyU
-	 JPSLfHELk29MNC81lugEwHtWsD4VhJ6K5aGpJT9ZMboILQ7iHDjV3uH2wXpqSKXy7X
-	 9uZIW094BDxwwzkjBWNwIbSkfNlvYoaHqfHN7jQk=
+	b=wt9nIp0DNQAsXCJU3Ecm4/WaN9TrrVZE62gaa5ez1oyH3fcbGZJjZK83wmssL2X+E
+	 Wy6wloFCy9v6c6Xn6gPY97radsu07myXcQhFQ7vvIENVU8gVb6vnPjGltefwmBOg9p
+	 a9F9Or+x71fnzVLJsRLSEwtR12Z3rhk1C7oFcK0E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729541AbfJUNkk (ORCPT
+        id S1729523AbfJUNkf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 09:40:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42422 "EHLO mail.kernel.org"
+        Mon, 21 Oct 2019 09:40:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42308 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728989AbfJUNkh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 09:40:37 -0400
+        id S1728979AbfJUNkb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 09:40:31 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BE902173B;
-        Mon, 21 Oct 2019 13:40:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6EB821929;
+        Mon, 21 Oct 2019 13:40:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571665236;
-        bh=J6Zp9vw2aOghXwEqEY4sWy9WTHVCUoT+JyG7aFs5tQk=;
+        s=default; t=1571665230;
+        bh=CrHWuSYieCnWgLn1FrU4vSBdhvAzrmV0vb7wsK1WyzY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A+hdQ7oJ8rn476GKAttXVfcHKvCvb5e+jFCZHIcg6C/x13pVufO5NwL9RoPEK2Jbq
-         njox2oKgGSuDPkQFthZ3D4/rw2DmCU4zvJjQarPWdVu1WKLKXJCl0Az5ZyjBU8le0A
-         APqYVy7/8vq/3Cgap9u7kd/tP0KG9PkwvfIl8AAU=
+        b=V7GI2KPox2MqxjFWfsb+lmVCJi6fneqiX9TGx81a0xvKP1HUZdeuoQz/0RyAKzvbP
+         9/e0dhAQmwUH8jR5ii5MAIqbVJEOy3bVdCZjjaLrTvoLIo5XaNmVa+35lYVWFZYVP0
+         28nMCikdAobXL0WB9x8Wy2Tc9+n6c444LZZ94h2c=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        David Ahern <dsahern@gmail.com>,
-        =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= 
-        <lclaudio@redhat.com>
-Subject: [PATCH 36/57] libbeauty: Introduce syscall_arg__strtoul_strarray()
-Date:   Mon, 21 Oct 2019 10:38:13 -0300
-Message-Id: <20191021133834.25998-37-acme@kernel.org>
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
+        linux-trace-devel@vger.kernel.org
+Subject: [PATCH 34/57] perf scripting engines: Iterate on tep event arrays directly
+Date:   Mon, 21 Oct 2019 10:38:11 -0300
+Message-Id: <20191021133834.25998-35-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191021133834.25998-1-acme@kernel.org>
 References: <20191021133834.25998-1-acme@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-To go from strarrays strings to its indexes.
+Instead of calling a useless (and broken) helper function to get the
+next event of a tep event array, just get the array directly and iterate
+over it.
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
+Note, the broken part was from trace_find_next_event() which after this
+will no longer be used, and can be removed.
+
+Committer notes:
+
+This fixes a segfault when generating python scripts from perf.data
+files with multiple tracepoint events, i.e. the following use case is
+fixed by this patch:
+
+  # perf record -e sched:* sleep 1
+  [ perf record: Woken up 31 times to write data ]
+  [ perf record: Captured and wrote 0.031 MB perf.data (9 samples) ]
+  # perf script -g python
+  Segmentation fault (core dumped)
+  #
+
+Reported-by: Daniel Bristot de Oliveira <bristot@redhat.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-wta0qvo207z27huib2c4ijxq@git.kernel.org
+Cc: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+Cc: linux-trace-devel@vger.kernel.org
+Link: http://lkml.kernel.org/r/20191017153733.630cd5eb@gandalf.local.home
+Link: http://lore.kernel.org/lkml/20191017210636.061448713@goodmis.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-trace.c       | 6 ++++++
- tools/perf/trace/beauty/beauty.h | 3 +++
- 2 files changed, 9 insertions(+)
+ tools/perf/util/scripting-engines/trace-event-perl.c   | 8 ++++++--
+ tools/perf/util/scripting-engines/trace-event-python.c | 9 +++++++--
+ 2 files changed, 13 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 3502417dc7f2..0294b17ed510 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -535,6 +535,11 @@ static size_t syscall_arg__scnprintf_strarray(char *bf, size_t size,
+diff --git a/tools/perf/util/scripting-engines/trace-event-perl.c b/tools/perf/util/scripting-engines/trace-event-perl.c
+index 15961854ba67..741f040648b5 100644
+--- a/tools/perf/util/scripting-engines/trace-event-perl.c
++++ b/tools/perf/util/scripting-engines/trace-event-perl.c
+@@ -539,10 +539,11 @@ static int perl_stop_script(void)
  
- #define SCA_STRARRAY syscall_arg__scnprintf_strarray
- 
-+bool syscall_arg__strtoul_strarray(char *bf, size_t size, struct syscall_arg *arg, u64 *ret)
-+{
-+	return strarray__strtoul(arg->parm, bf, size, ret);
-+}
-+
- size_t syscall_arg__scnprintf_strarray_flags(char *bf, size_t size, struct syscall_arg *arg)
+ static int perl_generate_script(struct tep_handle *pevent, const char *outfile)
  {
- 	return strarray__scnprintf_flags(arg->parm, bf, size, arg->show_string_prefix, arg->val);
-@@ -824,6 +829,7 @@ static size_t syscall_arg__scnprintf_getrandom_flags(char *bf, size_t size,
++	int i, not_first, count, nr_events;
++	struct tep_event **all_events;
+ 	struct tep_event *event = NULL;
+ 	struct tep_format_field *f;
+ 	char fname[PATH_MAX];
+-	int not_first, count;
+ 	FILE *ofp;
  
- #define STRARRAY(name, array) \
- 	  { .scnprintf	= SCA_STRARRAY, \
-+	    .strtoul	= STUL_STRARRAY, \
- 	    .parm	= &strarray__##array, }
+ 	sprintf(fname, "%s.pl", outfile);
+@@ -603,8 +604,11 @@ sub print_backtrace\n\
+ }\n\n\
+ ");
  
- #define STRARRAY_FLAGS(name, array) \
-diff --git a/tools/perf/trace/beauty/beauty.h b/tools/perf/trace/beauty/beauty.h
-index 232b64d70096..1b8a30e5dcf9 100644
---- a/tools/perf/trace/beauty/beauty.h
-+++ b/tools/perf/trace/beauty/beauty.h
-@@ -122,6 +122,9 @@ unsigned long syscall_arg__val(struct syscall_arg *arg, u8 idx);
- size_t syscall_arg__scnprintf_strarray_flags(char *bf, size_t size, struct syscall_arg *arg);
- #define SCA_STRARRAY_FLAGS syscall_arg__scnprintf_strarray_flags
++	nr_events = tep_get_events_count(pevent);
++	all_events = tep_list_events(pevent, TEP_EVENT_SORT_ID);
  
-+bool syscall_arg__strtoul_strarray(char *bf, size_t size, struct syscall_arg *arg, u64 *ret);
-+#define STUL_STRARRAY syscall_arg__strtoul_strarray
+-	while ((event = trace_find_next_event(pevent, event))) {
++	for (i = 0; all_events && i < nr_events; i++) {
++		event = all_events[i];
+ 		fprintf(ofp, "sub %s::%s\n{\n", event->system, event->name);
+ 		fprintf(ofp, "\tmy (");
+ 
+diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
+index 5d341efc3237..93c03b39cd9c 100644
+--- a/tools/perf/util/scripting-engines/trace-event-python.c
++++ b/tools/perf/util/scripting-engines/trace-event-python.c
+@@ -1687,10 +1687,11 @@ static int python_stop_script(void)
+ 
+ static int python_generate_script(struct tep_handle *pevent, const char *outfile)
+ {
++	int i, not_first, count, nr_events;
++	struct tep_event **all_events;
+ 	struct tep_event *event = NULL;
+ 	struct tep_format_field *f;
+ 	char fname[PATH_MAX];
+-	int not_first, count;
+ 	FILE *ofp;
+ 
+ 	sprintf(fname, "%s.py", outfile);
+@@ -1735,7 +1736,11 @@ static int python_generate_script(struct tep_handle *pevent, const char *outfile
+ 	fprintf(ofp, "def trace_end():\n");
+ 	fprintf(ofp, "\tprint(\"in trace_end\")\n\n");
+ 
+-	while ((event = trace_find_next_event(pevent, event))) {
++	nr_events = tep_get_events_count(pevent);
++	all_events = tep_list_events(pevent, TEP_EVENT_SORT_ID);
 +
- size_t syscall_arg__scnprintf_x86_irq_vectors(char *bf, size_t size, struct syscall_arg *arg);
- #define SCA_X86_IRQ_VECTORS syscall_arg__scnprintf_x86_irq_vectors
- 
++	for (i = 0; all_events && i < nr_events; i++) {
++		event = all_events[i];
+ 		fprintf(ofp, "def %s__%s(", event->system, event->name);
+ 		fprintf(ofp, "event_name, ");
+ 		fprintf(ofp, "context, ");
 -- 
 2.21.0
 
