@@ -2,118 +2,86 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06996CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:58:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12CEBCA9EB9
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:58:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6628206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:58:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571648316;
-	bh=HfuKQhR9m5s4aT9bAlUb721xryitD0Rls9WoOoE/hQc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TFEG1mFxT0i4WAPPG0YfQpi9cFdkWm5oFulUTBXsxpE2LeU62m9K5tJ8flYa7a15Q
-	 UyiDz6m0elZVZS3uN3q7wwB0LhA7q3Ba8wtYPu9a1MBbYe9JtwbfDQjvUGsAKhHk7n
-	 44RQuSJKxLS/QQeZ5A3VgL6avOz+W5OTLhBi6IeI=
+	by mail.kernel.org (Postfix) with ESMTP id DD280206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:58:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727397AbfJUI6f (ORCPT
+        id S1727515AbfJUI6u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 04:58:35 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:50294 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726181AbfJUI6f (ORCPT
+        Mon, 21 Oct 2019 04:58:50 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:41435 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726181AbfJUI6t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 04:58:35 -0400
-Received: by mail-wm1-f67.google.com with SMTP id q13so2264666wmj.0
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 01:58:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=sMl0RIrFxIHdsJG6JoCqFkrVqi6mHCo1NGESZx0zkH0=;
-        b=r9lSF+9mg/YYYy257m+Vjc6FCvdsjEnldufxWcpFe/FCJkkKJ7h9HEbWtIkG56OFNQ
-         unnUsuY6wpI7nLRkWEB6hGPVq3uJsAzgGoKqrUxk2Nm1Fr27DO6IGYnkaiybzNOPnuQi
-         I1n70hi2EML+fUhz0TGu415iL/VJLEy8du77LsdYl84VqMbA0b9t2W8tI+euoYvw+Ig+
-         DouMDB4TC1OoLCFxJCv/X6W0HT/LZYAzOhernKRee5578h5hlpAtzlZovVNAF3WZnp4D
-         EJYR+o6S+ERH0WUcSHIfzIcNT0ZqURCamVzHGyk6+n4p6cFE+G9Y9Qsx5KUrlgaXyu0/
-         WyQA==
+        Mon, 21 Oct 2019 04:58:49 -0400
+Received: by mail-oi1-f195.google.com with SMTP id g81so10371292oib.8;
+        Mon, 21 Oct 2019 01:58:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sMl0RIrFxIHdsJG6JoCqFkrVqi6mHCo1NGESZx0zkH0=;
-        b=C9qIUp07OdZC1Pb1svwTm0eA2acaMpUSikkIyJRGm/Wi29lxoadELlDZgdJp3sv34Q
-         wVKaOZGkgw0q6PJGokoTVCoAcZ9AG0fUaPOB1HzlxubYJshyzJYYcuedGxbjvDdvQczd
-         4Xj7VUIKtPAaVNrqjcnE70q/pC0H/OmWz0ZACqkRMs/YvalFp+eTuLjTNoVIM5QUNBzN
-         eboO+O05ZrZnhlGXbmq34iBq00b2Ppol9MTMA5ZPvJuzgXp7+ShTxTS2wAicccY5yYbi
-         9ku6zti15DjyVApL+1YOwVwP8lFhjSBoEbVdp0Z18kjB5n5hUIAJdAPimHHS5LTm5G14
-         oFew==
-X-Gm-Message-State: APjAAAV33Qf4KgNCJbe+YvrfFRB4d8iRJC56DflFKQNF8RkFhLhs+5Aa
-        OjuZ3bydHkuhkNwt/6gTgtE=
-X-Google-Smtp-Source: APXvYqyHf7oNAFQc1sbWzbEbk53/qqmHEG366UXdwF/FsRCPop8dtpOvtTQdKGziW1mqLwxLu/kTvw==
-X-Received: by 2002:a1c:a657:: with SMTP id p84mr5079989wme.35.1571648313492;
-        Mon, 21 Oct 2019 01:58:33 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id y1sm17235496wrw.6.2019.10.21.01.58.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Oct 2019 01:58:32 -0700 (PDT)
-Date:   Mon, 21 Oct 2019 10:58:30 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        mhiramat@kernel.org, bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, jpoimboe@redhat.com, jeyu@kernel.org
-Subject: Re: [PATCH v4 09/16] x86/alternative: Remove text_poke_loc::len
-Message-ID: <20191021085830.GA102207@gmail.com>
-References: <20191018073525.768931536@infradead.org>
- <20191018074634.457534206@infradead.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vHm5aiCWjBZcDp2Bwl98Azy6P0t6W/KZgM3mvJs8JD4=;
+        b=ZV3Bud0mmUT1cxtK3ujeXQI9iGze9x0C+kulL2OlKjZCwBj1VaLusKcV/8rmZsNoGe
+         R7/Jv8bxP1HluI4U4VhvmPq6Xt+fwtHjiMWt6Jbe28bTnyB45IGrDickAidEx0o2F+bk
+         gFTCzmp8lv/3j2H/f9JQVydJjx7a4tCzum8ktQS8XfZfyUdp3y1hwAqqLrf6DZXOmlYx
+         YBAct2Xy7r4Dd5aqZQUQqXoWg9X7P3IcOH6GJo3EOpz9/1TsTT0WgDjuzTgnNQhg0rVJ
+         +JC7kYnk+XF92LouA6xeOqGTghCyjxnRIx6Xip0LcWLyHx8YUJ74LOXu7meEJKJBoKYd
+         hm4A==
+X-Gm-Message-State: APjAAAVk0BkgNdTeNmxtScGyLcxaKMa4p70vvY3wpx/q1qg2yZNSE1F9
+        ME4YHapnPcQMC+L1GbM8x9wjWH7p6lnfWCXe+praTa1o
+X-Google-Smtp-Source: APXvYqyXTokJWyBMaZ88VOmxihiwckill/n3woDR/VvkpjBpxZoQqjk2dhcSLUIPO7UaBfRoPXVw4wI5oluDYGAEBbM=
+X-Received: by 2002:aca:4bd2:: with SMTP id y201mr18811305oia.102.1571648328675;
+ Mon, 21 Oct 2019 01:58:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191018074634.457534206@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191016085548.105703-1-jacopo+renesas@jmondi.org> <20191016085548.105703-8-jacopo+renesas@jmondi.org>
+In-Reply-To: <20191016085548.105703-8-jacopo+renesas@jmondi.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 21 Oct 2019 10:58:37 +0200
+Message-ID: <CAMuHMdW-JYTRAi86NF4sFq-qSqrYkK9HTteRbRC8QUKjeKs+9Q@mail.gmail.com>
+Subject: Re: [PATCH v6 7/8] arm64: dts: renesas: Add CMM units to Gen3 SoCs
+To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Simon Horman <horms@verge.net.au>,
+        Ulrich Hecht <uli+renesas@fpond.eu>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Oct 16, 2019 at 10:55 AM Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
+> Add CMM units to Renesas R-Car Gen3 SoC that support it, and reference them
+> from the Display Unit they are connected to.
+>
+> Sort the 'vsps', 'renesas,cmm' and 'status' properties in the DU unit
+> consistently in all the involved DTS.
+>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 
-* Peter Zijlstra <peterz@infradead.org> wrote:
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v5.5.
 
->  	 * Second step: update all but the first byte of the patched range.
->  	 */
->  	for (do_sync = 0, i = 0; i < nr_entries; i++) {
-> -		if (tp[i].len - sizeof(int3) > 0) {
-> +		int len = text_opcode_size(tp[i].opcode);
-> +
-> +		if (len - sizeof(int3) > 0) {
->  			text_poke((char *)tp[i].addr + sizeof(int3),
->  				  (const char *)tp[i].text + sizeof(int3),
-> -				  tp[i].len - sizeof(int3));
-> +				  len - sizeof(int3));
->  			do_sync++;
->  		}
+Gr{oetje,eeting}s,
 
-Readability side note: 'sizeof(int3)' is a really weird way to write '1' 
-and I had to double check it's not measuring the size of some larger 
-entity.
+                        Geert
 
-I think it might make sense to just break out INT3_SIZE from 
-arch/x86/kernel/kprobes/opt.c into a header, rename it to INS_INT3_SIZE 
-and define it to 1, because the opt.c use is pretty obfuscated as well:
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-  #define INT3_SIZE sizeof(kprobe_opcode_t)
-
-Where kprobe_opcode_t is u8 on x86 (and won't ever be anything else).
-
-?
-
-Thanks,
-
-	Ingo
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
