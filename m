@@ -2,151 +2,220 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA3FACA9EB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:07:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDA47CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:08:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC1772084B
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:07:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A33CE20B7C
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:08:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571670487;
+	bh=uOOHIkxfhvis0C/Go5PYneNloCdkzG4Y0N0DZM+N+/A=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=P0TbAWKMjJMpFgm5f1rmERRvCiw4idNeudhg4urxVuWsPM8sRf05Ez73OY+bMghJX
+	 m4LM45Sp1/0L/Dl/YTMMFic7pYekPKJzt6/v8QxGM0zRQpfsNKGTGFFja7VXWjnuji
+	 AWZvYj9Nc9QaQmbIo9qb+yVnuvrp5Vu/DHNy4tVc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729505AbfJUPH0 (ORCPT
+        id S1729515AbfJUPIG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 11:07:26 -0400
-Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:44137 "EHLO
-        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726289AbfJUPH0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 11:07:26 -0400
-Received: from [192.168.2.10] ([46.9.232.237])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id MZHDiVloqo1ZhMZHGiMvzP; Mon, 21 Oct 2019 17:07:23 +0200
-Subject: Re: [PATCH v4 5/6] media: sun4i: Add H3 deinterlace driver
-To:     =?UTF-8?Q?Jernej_=c5=a0krabec?= <jernej.skrabec@siol.net>
-Cc:     mripard@kernel.org, wens@csie.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, mchehab@kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-References: <20191017183738.68069-1-jernej.skrabec@siol.net>
- <20191017183738.68069-6-jernej.skrabec@siol.net>
- <8137fbb3-036a-95e4-2642-5dd46fb55eb9@xs4all.nl>
- <2174547.3yqp6rY4Nl@jernej-laptop>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <639e09c3-05fa-a724-3aa2-2ccff1a2fe84@xs4all.nl>
-Date:   Mon, 21 Oct 2019 17:07:19 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 21 Oct 2019 11:08:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57936 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726289AbfJUPIG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 11:08:06 -0400
+Received: from mail-yw1-f52.google.com (mail-yw1-f52.google.com [209.85.161.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 786C221872;
+        Mon, 21 Oct 2019 15:08:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571670484;
+        bh=uOOHIkxfhvis0C/Go5PYneNloCdkzG4Y0N0DZM+N+/A=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=MPG7ILQ4e6be5KuAsiCnX1NmDuX6hHYkUG3FY++76EvtLs8mWZgamXGWV9An86R4q
+         GXjJHkKJFFxLGnnO0hSxGhM8zigbrkvwJHA++tx7aKVHA71hZTI/+yojzkMyfAlG+f
+         Lzp/gPdUt6216tBHK+sUHd5Xj8YUs4dXflVIV6hg=
+Received: by mail-yw1-f52.google.com with SMTP id w140so5028314ywd.0;
+        Mon, 21 Oct 2019 08:08:04 -0700 (PDT)
+X-Gm-Message-State: APjAAAUdzAS9O8P4qEswUGrXGhEQ4EgrNMG0xJPJzcXmeC1rk0UprjVU
+        4kBMpNX5zT2up4I7XQ1+zhJpIOzY6x8l2uNpyw==
+X-Google-Smtp-Source: APXvYqzM/HACTdPRONivWDLf+Xt0qQcSVJ0ofJX0zbPQQ2RaSyY7sqAVya8zdW6qm7MUHKRoyN92+rIluy5rmGOrrYc=
+X-Received: by 2002:a0d:d307:: with SMTP id v7mr5750789ywd.507.1571670483603;
+ Mon, 21 Oct 2019 08:08:03 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <2174547.3yqp6rY4Nl@jernej-laptop>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4wfFRz55vFgFmmN16VEl2p90YpBldoYxHQhxpRVwKRxADvI0/JBsbOV/lC/XxZEKnfUPEkaIcrZM/k4X6nZVMFWYIJfuPAN03wfLG4i6PLA/RIuKx6juhU
- QFhkEgsD81UazLmgoT1XpmidTziJPJgp8UHjCjuQIZzGXWHNMcHm6KrgH0nhRNCZTNFxtBMdgRXPdHLMQMc3eQSQ9Jo6OBQpB0k+2HL2LkYdBW483FnVpBSt
- vaRK0rSjKP5mmX8ii4mReYRvi9kv/ZwWwwl95wyS0BRyuAmbn3Ji2L/zf3it/uV9fElKLnNuU8sqiG+nhFJXQbdnMxLaKI5GCu7cSS7zxniR5Kff5bMHEO//
- kkJjQfLLe3KbF0U0biV6AMS6VfxUu68V13OvnxrwMvcNDmD1M81b0nZOs/N5mkwtk3aPLuUEuUQ5Xmmsc/l1AojtcrUsd0JaBQ/Gyr842/C2f+QKZ9izj/Ct
- lk1eMXdXROYYsOKet6K5xakejQLZbg5d0sZdIKhPiRaXBwtWwlDdj++BbAA=
+References: <cover.1571424390.git.hns@goldelico.com> <f0fb68dc7bc027e5e911721852f6bc6fa2d77a63.1571424390.git.hns@goldelico.com>
+In-Reply-To: <f0fb68dc7bc027e5e911721852f6bc6fa2d77a63.1571424390.git.hns@goldelico.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 21 Oct 2019 10:07:51 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+obsTSU3iP1wm_3-FsAJ4Mxiz0NbMY1_h5NeFn67Sj+A@mail.gmail.com>
+Message-ID: <CAL_Jsq+obsTSU3iP1wm_3-FsAJ4Mxiz0NbMY1_h5NeFn67Sj+A@mail.gmail.com>
+Subject: Re: [PATCH 1/7] dt-bindings: gpu: pvrsgx: add initial bindings
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/21/19 4:47 PM, Jernej Škrabec wrote:
-> Dne ponedeljek, 21. oktober 2019 ob 13:13:20 CEST je Hans Verkuil napisal(a):
->> On 10/17/19 8:37 PM, Jernej Skrabec wrote:
->>> Allwinner H3 SoC contains deinterlace unit, which has several modes of
->>> operation - bypass, weave, bob and mixed (advanced) mode. I don't know
->>> how mixed mode works, but according to Allwinner it gives best results,
->>> so they use it exclusively. Currently this mode is also hardcoded here.
->>>
->>> For each interleaved frame queued, this driver produces 2 deinterlaced
->>> frames. Deinterlaced frames are based on 2 consequtive output buffers,
->>> except for the first 2, where same output buffer is given to peripheral
->>> as current and previous.
->>>
->>> There is no documentation for this core, so register layout and fixed
->>> values were taken from BSP driver.
->>>
->>> I'm not sure if maximum size of the image unit is capable to process is
->>> governed by size of "flag" buffers, frequency or it really is some HW
->>> limitation. Currently driver can process full HD image in ~15ms (7.5ms
->>> for each capture buffer), which allows to process 1920x1080@60i video
->>> smoothly in real time.
->>>
->>> Acked-by: Maxime Ripard <mripard@kernel.org>
->>> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
->>> ---
->>>
->>>  MAINTAINERS                                   |    7 +
->>>  drivers/media/platform/Kconfig                |   12 +
->>>  drivers/media/platform/sunxi/Makefile         |    1 +
->>>  .../media/platform/sunxi/sun8i-di/Makefile    |    2 +
->>>  .../media/platform/sunxi/sun8i-di/sun8i-di.c  | 1028 +++++++++++++++++
->>>  .../media/platform/sunxi/sun8i-di/sun8i-di.h  |  237 ++++
->>>  6 files changed, 1287 insertions(+)
->>>  create mode 100644 drivers/media/platform/sunxi/sun8i-di/Makefile
->>>  create mode 100644 drivers/media/platform/sunxi/sun8i-di/sun8i-di.c
->>>  create mode 100644 drivers/media/platform/sunxi/sun8i-di/sun8i-di.h
->>>
->>> diff --git a/MAINTAINERS b/MAINTAINERS
->>> index c7b48525822a..c375455125fb 100644
->>> --- a/MAINTAINERS
->>> +++ b/MAINTAINERS
->>> @@ -4646,6 +4646,13 @@ M:	"Maciej W. Rozycki" <macro@linux-mips.org>
->>>
->>>  S:	Maintained
->>>  F:	drivers/net/fddi/defxx.*
->>>
->>> +DEINTERLACE DRIVERS FOR ALLWINNER H3
->>> +M:	Jernej Skrabec <jernej.skrabec@siol.net>
->>> +L:	linux-media@vger.kernel.org
->>> +T:	git git://linuxtv.org/media_tree.git
->>> +S:	Maintained
->>> +F:	drivers/media/platform/sunxi/sun8i-di/
->>
->> This is missing the bindings file added in the previous patch.
-> 
-> Well, I listed Maxime and Chen-Yu as binding maintainers in patch 4, so that's 
-> why I didn't include it here. If you think I should be maintainer of that 
-> binding too, I can change that. I took sun6i-csi as example where binding 
-> maintainers are Maxime and Chen-Yu and driver maintainer is Yong Deng.
+On Fri, Oct 18, 2019 at 1:46 PM H. Nikolaus Schaller <hns@goldelico.com> wrote:
+>
+> The Imagination PVR/SGX GPU is part of several SoC from
+> multiple vendors, e.g. TI OMAP, Ingenic JZ4780, Intel Poulsbo
+> and others.
+>
+> Here we describe how the SGX processor is interfaced to
+> the SoC (registers, interrupt etc.).
+>
+> Clock, Reset and power management should be handled
+> by the parent node.
 
-Normally, whoever maintains the driver also maintains the corresponding bindings
-documentation. It doesn't make much sense to have different people maintain it.
+That's TI specific.
 
-I see that the 'maintainers:' tag is now a valid way of describing maintainers.
-But it doesn't appear to be read by scripts/get_maintainer.pl AFAICS.
+>
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> ---
+>  .../devicetree/bindings/gpu/img,pvrsgx.txt    | 76 +++++++++++++++++++
+>  1 file changed, 76 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpu/img,pvrsgx.txt
 
-So unless I am wrong about that I think it still should be added to MAINTAINERS.
-It's certainly done for other drivers (grep yaml MAINTAINERS).
+Please make this DT schema format.
 
-In my view you should include yourself as maintainer of this bindings doc, and
-add it to the MAINTAINERS file.
+> diff --git a/Documentation/devicetree/bindings/gpu/img,pvrsgx.txt b/Documentation/devicetree/bindings/gpu/img,pvrsgx.txt
+> new file mode 100644
+> index 000000000000..4ad87c075791
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpu/img,pvrsgx.txt
+> @@ -0,0 +1,76 @@
+> +Imagination PVR/SGX GPU
+> +
+> +Only the Imagination SGX530, SGX540 and SGX544 GPUs are currently covered by this binding.
+> +
+> +Required properties:
+> +- compatible:  Should be one of
+> +               "img,sgx530-121", "img,sgx530", "ti,omap-omap3-sgx530-121";
+> +                 - BeagleBoard ABC, OpenPandora 600MHz
+> +               "img,sgx530-125", "img,sgx530", "ti,omap-omap3-sgx530-125";
+> +                 - BeagleBoard XM, GTA04, OpenPandora 1GHz
+> +               "img,sgx530-125", "img,sgx530", "ti,omap-am3517-sgx530-125";
+> +               "img,sgx530-125", "img,sgx530", "ti,omap-am335x-sgx530-125";
+> +                 - BeagleBone Black
+> +               "img,sgx540-120", "img,sgx540", "ti,omap-omap4-sgx540-120";
+> +                 - Pandaboard (ES)
+> +               "img,sgx544-112", "img,sgx544", "ti,omap-omap4-sgx544-112";
+> +               "img,sgx544-116", "img,sgx544", "ti,omap-omap5-sgx544-116";
+> +                 - OMAP5 UEVM, Pyra Handheld
+> +               "img,sgx544-116", "img,sgx544", "ti,omap-dra7-sgx544-116";
 
-Regards,
+The order here is wrong. Should be most specific first.
 
-	Hans
+Drop 'omap-' from the compatible.
 
-> 
-> Best regards,
-> Jernej
-> 
->>
->> Regards,
->>
->> 	Hans
->>
->>> +
->>>
->>>  DELL SMBIOS DRIVER
->>>  M:	Pali Rohár <pali.rohar@gmail.com>
->>>  M:	Mario Limonciello <mario.limonciello@dell.com>
-> 
-> 
-> 
-> 
+> +
+> +               For further study:
+> +                       "ti,omap-am3517-sgx530-?"
+> +                       "ti,omap-am43xx-sgx530-?"
+> +                       "ti,ti43xx-sgx"
+> +                       "ti,ti81xx-sgx"
+> +                       "img,jz4780-sgx5??-?"
+> +                       "intel,poulsbo-sgx?"
+> +                       "intel,cedarview-sgx?"
+> +                       "sunxi,sgx-544-?" - Banana-Pi-M3 (Allwinner A83T)
 
+Just drop these.
+
+> +
+> +               The "ti,omap..." entries are needed temporarily to handle SoC
+> +               specific builds of the kernel module.
+> +
+> +               In the long run, only the "img,sgx..." entry should suffice
+> +               to match a generic driver for all architectures and driver
+> +               code can dynamically find out on which SoC it is running.
+
+Drop this. Which compatible an OS matches on is not relevant to the
+binding. And 'temporarily' is wrong as the SoC specific compatible
+strings are what are used for handling errata or other integration
+specific things.
+
+> +
+> +
+> +- reg:         Physical base addresses and lengths of the register areas.
+
+How many?
+
+> +- reg-names:   Names for the register areas.
+
+If only 1 as the example suggests, then you don't need this.
+
+> +- interrupts:  The interrupt numbers.
+> +
+> +Optional properties:
+> +- timer:       the timer to be used by the driver.
+
+Needs a better description and vendor prefix at least.
+
+Why is this needed rather than using the OS's timers?
+
+> +- img,cores:   number of cores. Defaults to <1>.
+
+Not discoverable?
+
+> +
+> +/ {
+> +       ocp {
+> +               sgx_module: target-module@56000000 {
+
+This is TI specific and this binding covers other chips in theory at
+least. This part is outside the scope
+
+> +                       compatible = "ti,sysc-omap4", "ti,sysc";
+> +                       reg = <0x5600fe00 0x4>,
+> +                             <0x5600fe10 0x4>;
+
+How does it work that these registers overlap the GPU registers?
+
+> +                       reg-names = "rev", "sysc";
+> +                       ti,sysc-midle = <SYSC_IDLE_FORCE>,
+> +                                       <SYSC_IDLE_NO>,
+> +                                       <SYSC_IDLE_SMART>;
+> +                       ti,sysc-sidle = <SYSC_IDLE_FORCE>,
+> +                                       <SYSC_IDLE_NO>,
+> +                                       <SYSC_IDLE_SMART>;
+> +                       clocks = <&gpu_clkctrl OMAP5_GPU_CLKCTRL 0>;
+> +                       clock-names = "fck";
+> +                       #address-cells = <1>;
+> +                       #size-cells = <1>;
+> +                       ranges = <0 0x56000000 0x2000000>;
+> +
+> +                       sgx@fe00 {
+
+gpu@...
+
+
+
+> +                               compatible = "img,sgx544-116", "img,sgx544", "ti,omap-omap5-sgx544-116";
+> +                               reg = <0xfe00 0x200>;
+> +                               reg-names = "sgx";
+> +                               interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
+> +                               timer = <&timer11>;
+> +                               img,cores = <2>;
+> +                       };
+> +               };
+> +       };
+> +};
+> --
+> 2.19.1
+>
