@@ -2,117 +2,102 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F789CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:00:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8418C47E49
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:01:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 539EC20640
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:00:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bFg8OOv+"
+	by mail.kernel.org (Postfix) with ESMTP id C89F820700
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:01:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728143AbfJUMAl (ORCPT
+        id S1728321AbfJUMA7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 08:00:41 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:48825 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726767AbfJUMAk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 08:00:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571659239;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=kM1ipbW/NO3Ed+8uSTRI6lzRbVyT5XdIRw7D6wPdv/w=;
-        b=bFg8OOv+CASYiqAFat3ZjUx3CZ5hMCZSRwGxP63Shxg+YFD2HU2RheVyYRAxPD/0GVl6+6
-        xdrbe39NrjxHiNscLNGVnT412qqRaAHoYC1Bvts6W7lNElg0BR8vO367PSZNgVXDMKviYc
-        uVMB+AyHv4xIeeRyhPB7YqQezoHq9P8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-377-Y0FPjqH6PhiULItWA-_CgA-1; Mon, 21 Oct 2019 08:00:36 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 21 Oct 2019 08:00:59 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:52692 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728083AbfJUMA7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 08:00:59 -0400
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 57D682B7;
-        Mon, 21 Oct 2019 12:00:34 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.44])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 7A48D60CD0;
-        Mon, 21 Oct 2019 12:00:31 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Mon, 21 Oct 2019 14:00:33 +0200 (CEST)
-Date:   Mon, 21 Oct 2019 14:00:30 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     syzbot <syzbot+492a4acccd8fc75ddfd0@syzkaller.appspotmail.com>,
-        akpm@linux-foundation.org, arnd@arndb.de, christian@brauner.io,
-        deepa.kernel@gmail.com, ebiederm@xmission.com, elver@google.com,
-        guro@fb.com, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, will@kernel.org
-Subject: Re: KCSAN: data-race in exit_signals / prepare_signal
-Message-ID: <20191021120029.GA24935@redhat.com>
-References: <0000000000003b1e8005956939f1@google.com>
- <20191021111920.frmc3njkha4c3a72@wittgenstein>
+        by mx1.redhat.com (Postfix) with ESMTPS id 50CBB83F4C
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 12:00:59 +0000 (UTC)
+Received: by mail-qk1-f197.google.com with SMTP id t1so6381015qkm.0
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 05:00:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=d3fNeTrb8zczujjHnQNEjI0XuAROR+Pj6w/x2dFfu/8=;
+        b=d4d5m0Vg/PDgs27jWjN5bcgKsFk+hc8OXpd3JMu4wKtZzOIFm6wxv9+lD9L5pfnEBG
+         3QMjOk9qwpCh1f83H+QpsPQ1F0rMpOXYTB4A69t4qYAEqO3Gkx9wtGylE/12uwhsm0ps
+         57zxE2DGlhuGUlEOfbnpEbl3wWSqA8DgHJSee0tDc2zEKwCWgrJDnCIhgZMYwzNuyCtV
+         w2nqENSqvM73uqujL2BYt8HxvSW+OySm4PXOIk2IglzYNQl5K633O9QfhWqMcT9BE7g/
+         agkdZiWS8wjxYO+8ThwoDIeUYSJkD6jaQ1Q/yIPa8Lm7TntWhYYoBHeKimoFPPU182r+
+         r7uw==
+X-Gm-Message-State: APjAAAXR1lf2itsAn9qdGpYawVPFAegyNsVvneg+2AC5o0VAIN6qmv7S
+        Zo+sJOtHOLf+WsQrlXC9M0h+Mku4YFuc0wz6WR7LWA64YyoqRl8YCnjDSB2qrCbq938NdA7TE5C
+        6EihCFBePFOqfE/ckBb6AIM/lD9sgWA7NNdg4d68L
+X-Received: by 2002:a05:620a:16b9:: with SMTP id s25mr22668512qkj.102.1571659258421;
+        Mon, 21 Oct 2019 05:00:58 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxLKUy/SzC+Ir3UqXb3Coc4vgrt7sjwm3oLMxhXO6j4sAHWuzrRvXNIFYbci0UPZXZOe/I7+Lh9FVGm0cooVzg=
+X-Received: by 2002:a05:620a:16b9:: with SMTP id s25mr22668481qkj.102.1571659258106;
+ Mon, 21 Oct 2019 05:00:58 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191021111920.frmc3njkha4c3a72@wittgenstein>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: Y0FPjqH6PhiULItWA-_CgA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+References: <20191016144449.24646-1-kherbst@redhat.com> <20191021114017.GY2819@lahna.fi.intel.com>
+In-Reply-To: <20191021114017.GY2819@lahna.fi.intel.com>
+From:   Karol Herbst <kherbst@redhat.com>
+Date:   Mon, 21 Oct 2019 14:00:46 +0200
+Message-ID: <CACO55tt2iGcySugTAb1khEYpiGoq6Os3upG5fGq+0PbE2gyyeQ@mail.gmail.com>
+Subject: Re: [PATCH v3] pci: prevent putting nvidia GPUs into lower device
+ states on certain intel bridges
+To:     Mika Westerberg <mika.westerberg@intel.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lyude Paul <lyude@redhat.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        nouveau <nouveau@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/21, Christian Brauner wrote:
+On Mon, Oct 21, 2019 at 1:40 PM Mika Westerberg
+<mika.westerberg@intel.com> wrote:
 >
-> This traces back to Oleg fixing a race between a group stop and a thread
-> exiting before it notices that it has a pending signal or is in the middl=
-e of
-> do_exit() already, causing group stop to get wacky.
-> The original commit to fix this race is
-> commit d12619b5ff56 ("fix group stop with exit race") which took sighand
-> lock before setting PF_EXITING on the thread.
-
-Not really... sig_task_ignored() didn't check task->flags until the recent
-33da8e7c81 ("signal: Allow cifs and drbd to receive their terminating signa=
-ls").
-But I think this doesn't matter, see below.
-
-> If the race really matters and given how tsk->flags is currently accessed
-> everywhere the simple fix for now might be:
+> Hi Karol,
 >
-> diff --git a/kernel/signal.c b/kernel/signal.c
-> index c4da1ef56fdf..cf61e044c4cc 100644
-> --- a/kernel/signal.c
-> +++ b/kernel/signal.c
-> @@ -2819,7 +2819,9 @@ void exit_signals(struct task_struct *tsk)
->         cgroup_threadgroup_change_begin(tsk);
+> Sorry for commenting late, I just came back from vacation.
 >
->         if (thread_group_empty(tsk) || signal_group_exit(tsk->signal)) {
-> +               spin_lock_irq(&tsk->sighand->siglock);
->                 tsk->flags |=3D PF_EXITING;
-> +               spin_unlock_irq(&tsk->sighand->siglock);
+> On Wed, Oct 16, 2019 at 04:44:49PM +0200, Karol Herbst wrote:
+> > Fixes state transitions of Nvidia Pascal GPUs from D3cold into higher device
+> > states.
+> >
+> > v2: convert to pci_dev quirk
+> >     put a proper technical explanation of the issue as a in-code comment
+> > v3: disable it only for certain combinations of intel and nvidia hardware
+> >
+> > Signed-off-by: Karol Herbst <kherbst@redhat.com>
+> > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > Cc: Lyude Paul <lyude@redhat.com>
+> > Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
+> > Cc: Mika Westerberg <mika.westerberg@intel.com>
+> > Cc: linux-pci@vger.kernel.org
+> > Cc: linux-pm@vger.kernel.org
+> > Cc: dri-devel@lists.freedesktop.org
+> > Cc: nouveau@lists.freedesktop.org
+> > ---
+> >  drivers/pci/pci.c    | 11 ++++++++++
+> >  drivers/pci/quirks.c | 52 ++++++++++++++++++++++++++++++++++++++++++++
+>
+> I may be missing something but why you can't do this in the nouveau
+> driver itself?
 
-Well, exit_signals() tries to avoid ->siglock in this case....
-
-But this doesn't matter. IIUC the problem is not that exit_signals() sets
-PF_EXITING, the problem is that it writes to tsk->flags and kasan detects
-the data race.
-
-For example, freezable_schedule() which sets PF_FREEZER_SKIP can equally
-"race" with sig_task_ignored() or with ANY other code which checks this
-task's flags.
-
-I think this is WONTFIX.
-
-Oleg.
-
+What do you mean precisely? Move the quirk into nouveau, but keep the
+changes to pci core?
