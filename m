@@ -2,123 +2,83 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39632CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:11:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A18ACA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:11:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B99320684
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:11:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z67VptU0"
+	by mail.kernel.org (Postfix) with ESMTP id 7930A21929
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:11:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727944AbfJUKLK (ORCPT
+        id S1727989AbfJUKL2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 06:11:10 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:33119 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726767AbfJUKLJ (ORCPT
+        Mon, 21 Oct 2019 06:11:28 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:42943 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726767AbfJUKL1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 06:11:09 -0400
-Received: by mail-wm1-f65.google.com with SMTP id 6so1001672wmf.0
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 03:11:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ejY+9Vm9aWJOs97zrA807+W9n/23O9nYbfu1WQqsyN4=;
-        b=Z67VptU0dpTYTmG3ohv8pDSd0+CsFi7qspyxYHYbGvD4wdiRDK3vqJVHPZPaqGXGOm
-         uiLYWy/FZwE/YhpSsGe+Sl426PcGkC6fMRTzwDAHXswSlrMcjOkTambq8295/tCALvGN
-         rKKL5+SWYo8AmXf6bCtgIPSZ2htVNwBaq/RYG1N2EpqnkLXR1qUvuOSfxPAs8j7Wf7kD
-         3ll16iGmFYL4xgfA8RE0S8f7n+faLm8GMFfaXf3OxL6zXNAX5JcGExaSdX2c1FHiTUTH
-         qMKjwTektqUZvXtXiNWR0tqZbofdwnfpfpP7aVIwRxsGnEe4DScDdboA2uBjKM8tZt8Q
-         6KiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ejY+9Vm9aWJOs97zrA807+W9n/23O9nYbfu1WQqsyN4=;
-        b=LVF3ne7Z2uLcjyBJ8EZhConz2C0XeeAC2FNFF5ewGLoT9ZTygyZ7Vnzmi9XXrTpRx/
-         Xq7u9/31Qp+lR0j3FLWCge0OVqqGJWJ5Gk4vEHGzKXm4qSDOh02af9grn5Ef2b1uXqNY
-         i5w0z3AYXhFTfDqL++8tPTHujX5c7ySALi8SA4yBCYdUvU3ctMADIqZ7Bt+du6f4j/cP
-         Ytvrh4vqwME8w8kEH/db5tbG6zT9O6Uv+zBn9VtS0hpBqRoLl3d5WsMNHSWqs4EI92E7
-         UbK7FwWlhtmniOF3BvdPcXsPSJ1SMw7E5u/yTZnQJjvggTpWEdoCH/do+p6kTX01+y6G
-         4oTw==
-X-Gm-Message-State: APjAAAVuatymDRTq897GwNUtR5bImt2Ed9ph+t0rVTqRNwHDeNWmfq3U
-        uBQCCZJFr8m6DokIc+itcXjPEQ==
-X-Google-Smtp-Source: APXvYqz6f/D7+PFLZCxKK/K5eWFiAXnAStPWGTZJu/8oCjOA5TUh20GOlE1d4q4CuQdJrKGrqV6Xcg==
-X-Received: by 2002:a1c:2884:: with SMTP id o126mr20068584wmo.153.1571652667359;
-        Mon, 21 Oct 2019 03:11:07 -0700 (PDT)
-Received: from wychelm.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id j63sm15978535wmj.46.2019.10.21.03.11.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Oct 2019 03:11:06 -0700 (PDT)
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Douglas Anderson <dianders@chromium.org>,
-        Jason Wessel <jason.wessel@windriver.com>
-Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
-        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-        patches@linaro.org, kbuild test robot <lkp@intel.com>
-Subject: [PATCH v2] kdb: Avoid array subscript warnings on non-SMP builds
-Date:   Mon, 21 Oct 2019 11:10:56 +0100
-Message-Id: <20191021101057.23861-1-daniel.thompson@linaro.org>
-X-Mailer: git-send-email 2.21.0
+        Mon, 21 Oct 2019 06:11:27 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iMUes-0006Rv-S9; Mon, 21 Oct 2019 12:11:26 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iMUes-0004zR-93; Mon, 21 Oct 2019 12:11:26 +0200
+Date:   Mon, 21 Oct 2019 12:11:26 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Adam Ford <aford173@gmail.com>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pwm@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: pwm_bl on i.MX6Q broken on 5.4-RC1+
+Message-ID: <20191021101126.tw5bjyp76rbxudgj@pengutronix.de>
+References: <CAHCN7xJSz+QhOb4vE6b67jh5jnSOHnw79EyX8RW91TqPkD__Lw@mail.gmail.com>
+ <20191020182428.76l3ob4sxblrjr4m@core.my.home>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191020182428.76l3ob4sxblrjr4m@core.my.home>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Recent versions of gcc (reported on gcc-7.4) issue array subscript
-warnings for builds where SMP is not enabled.
+Hello Ondřej,
 
-kernel/debug/debug_core.c: In function 'kdb_dump_stack_on_cpu':
-kernel/debug/debug_core.c:452:17: warning: array subscript is outside array
-+bounds [-Warray-bounds]
-     if (!(kgdb_info[cpu].exception_state & DCPU_IS_SLAVE)) {
-           ~~~~~~~~~^~~~~
-   kernel/debug/debug_core.c:469:33: warning: array subscript is outside array
-+bounds [-Warray-bounds]
-     kgdb_info[cpu].exception_state |= DCPU_WANT_BT;
-   kernel/debug/debug_core.c:470:18: warning: array subscript is outside array
-+bounds [-Warray-bounds]
-     while (kgdb_info[cpu].exception_state & DCPU_WANT_BT)
+On Sun, Oct 20, 2019 at 08:24:28PM +0200, Ondřej Jirman wrote:
+> On Wed, Oct 16, 2019 at 02:55:54PM -0500, Adam Ford wrote:
+> > I have an i.MX6Q with an LCD and PWM controlled backlight.  On 5.4-RC1
+> > through the current master (16 Oct 2019), the backlight does not come
+> > on by default.  I can get it come on by manually setting the
+> > brightness, but any video activity seems to blank the screen again
+> > until I change the brightness again.
+> 
+> You might want to check PWM driver that's used on your SoC. I had a similar
+> breakage on Allwinner SoCs, and it was caused by a broken get_state callback.
+> The problem was there for a long time and it was only exposed by the commit you
+> bisected to.
 
-There is no bug here but there is scope to improve the code
-generation for non-SMP systems (whilst also silencing the warning).
+I added Adam to the recipents of the Thread "backlight: pwm_bl:
+configure pwm only once per backlight toggle" here on this list. In this
+thread the problem is analysed and it's a bit different than for sun4i.
+I assume we don't need to follow up on this report given the discussion
+is already ongoing elsewhere.
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Fixes: 2277b492582d ("kdb: Fix stack crawling on 'running' CPUs that aren't the master")
-Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
----
+Best regards
+Uwe
 
-Notes:
-    Changes in v2:
-    
-     - Moved the IS_ENABLED(CONFIG_SMP) test to the first (slightly easier
-       to read the code, improves code generation a little)
-     - Sent out as a proper patch e-mail ;-)
-
- kernel/debug/debug_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
-index 70e86b4b4932..2b7c9b67931d 100644
---- a/kernel/debug/debug_core.c
-+++ b/kernel/debug/debug_core.c
-@@ -444,7 +444,7 @@ int dbg_remove_all_break(void)
- #ifdef CONFIG_KGDB_KDB
- void kdb_dump_stack_on_cpu(int cpu)
- {
--	if (cpu == raw_smp_processor_id()) {
-+	if (cpu == raw_smp_processor_id() || !IS_ENABLED(CONFIG_SMP)) {
- 		dump_stack();
- 		return;
- 	}
---
-2.21.0
-
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
