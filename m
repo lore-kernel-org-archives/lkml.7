@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFECDCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:21:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F40D8CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:21:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82A1920700
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:21:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CABA420640
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:21:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QzsodSJf"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qjQmbbIT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729346AbfJUOVS (ORCPT
+        id S1729404AbfJUOVU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 10:21:18 -0400
-Received: from mail-wm1-f74.google.com ([209.85.128.74]:57374 "EHLO
-        mail-wm1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726289AbfJUOVR (ORCPT
+        Mon, 21 Oct 2019 10:21:20 -0400
+Received: from mail-wm1-f73.google.com ([209.85.128.73]:34483 "EHLO
+        mail-wm1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729313AbfJUOVT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 10:21:17 -0400
-Received: by mail-wm1-f74.google.com with SMTP id m68so1266960wme.7
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 07:21:14 -0700 (PDT)
+        Mon, 21 Oct 2019 10:21:19 -0400
+Received: by mail-wm1-f73.google.com with SMTP id o128so7419904wmo.1
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 07:21:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=on4/idiV9oaS/IR8jAQI0iaB3VMV3aTStZbS/UnOUko=;
-        b=QzsodSJfTcR+ufqqv1YzNohzVZCaQ7UjuI6sf6P3JxkLy/VaKISnvfhqy/SV2K8Okg
-         nXE/UkzqGS2/YiDOPKl1JFSPo/QWUEVJzmDfpzuMfmxNaqv2rCAp+crVEmFOnt5daDvQ
-         k+rxVHnbCAaPLOoGc5SrR0Nb8ASM5vyqAsHV0eJWsRkHrZ5gh4zlcYlb6vZO86yFLIea
-         UcorsSOze5s/hpxbrw0m/p/UzugFY1mn+SuMcSNTcLFOX+Phs0KYIqZzd2d3SZRU9Fzs
-         UWOjREsxJ9lsVgNCnOfN/w/iXJgFgPyBvcKUH+yelrCCYUtIVGAwXRqAivnA5PWWPZoW
-         Um4Q==
+        bh=jJrAgqlpvuBPJgHHfjlb9pSf3SBUtlgCGQgAJchUub0=;
+        b=qjQmbbITFUt2D/FTw+FbgTnQYQD1w10My5T/IQ/ls1RkPXwiuwPGovJl6qEe2ePCXJ
+         JkZj1F7AuI5MgGcG9DC9rsXYuADo6uF+tq6+pJTBYZ5ol8Vl2pNI3ATKlQkIAG9eZmK3
+         xsK7Od75N9arZD5gNyXYEgxS4qF2hgHB1o7hLYtpFYj3+HpaTvP+4tz2IKriAMg3mV3G
+         qaqFVouJq9HuV9ICRw3rACqT7d/K9PW62QDwWGfUZ0FhgwZNOcYhvF4ScIT2I+iB0awN
+         ueJv0uTk9L0sxi4kAQLZ1W8cCDr3IIfT1uRpwDDua1vb1AFXo1nLap3/qkrvEp8s/4Va
+         xt5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=on4/idiV9oaS/IR8jAQI0iaB3VMV3aTStZbS/UnOUko=;
-        b=ekoXxobn/lLYR9OIueap7ikkDeSG24eQ6OaPFA519MZotQF57psY0FTj/bJ99fvF/E
-         wqgMlfyQG6Vm/aBdSYtgiB0a8zmYaTMbq7clHVvVmaiF0uzYwt/HDpp19XJ4Ydx0rj/9
-         tuY2z3fdqype8rKYVBHBUP9azQUTTApfFEjOlV8B0G+qKJjykC94wx13IlCwovYbuxY/
-         pIweecuZOo7SRna9iZ8ty+XXMcR4U/j0C72n/UCUDgvLl2TwoGtayWrvXWD3fTjLMoje
-         G0wJvkN6i6Q0R+YinMQcYhyO8n2BKo8jtyW64SasDtFU1FKijphrvHbbWgz1+flz0wHh
-         FHWQ==
-X-Gm-Message-State: APjAAAVs9K4h+p+Yy2sXLe2DZOQiiaId2Vkhyx2nkFnHeT+eprZ8i+In
-        8+TgYMWMp4r93iIC9bYX73hw6yShhDk/kYGG
-X-Google-Smtp-Source: APXvYqx8/1/VpRgkzTaXT7elbGdj8wMsh9ChrrFJHVEeMNfKAo3+ORHj0vkDBDkeawbudSZib3uXrRMAw0yDwmZX
-X-Received: by 2002:adf:8289:: with SMTP id 9mr21260326wrc.0.1571667673653;
- Mon, 21 Oct 2019 07:21:13 -0700 (PDT)
-Date:   Mon, 21 Oct 2019 16:20:58 +0200
+        bh=jJrAgqlpvuBPJgHHfjlb9pSf3SBUtlgCGQgAJchUub0=;
+        b=CE/Q1CK+SmLub83G1C+kUb3YMomwT1pMzoZ9tYo0EgGp+QGGbveYfWGrmpcUQBKQQz
+         V3lIiqj07E7nwQ6hQ9QJ1BkafqqO+SWIeZjM2yEQOJvNbNw4i92gQ7Sr7d3oOskjg4BG
+         /dPP69BaFZUrYFRHopUSmlmwAWggQhK0fV9e2p59C7ET3o2D+I7PwAN78nxhbx+mgaCP
+         HWSb5RkvlwM49INHfJsF7iNxjefYVCeSNVpLS/XRby0i9eQs4JJtOtDDqWz0rm1CsFLL
+         DcXjjPfofOxDeRiTQjKIzimuGIY8xVQXjLXKc3Sf9Ec6dgFR1lt1Rb4Pagf0AL6aLxj9
+         /pNA==
+X-Gm-Message-State: APjAAAXyWX3cJFUT3rNmoW39DqFdOIOoz6dFggXM5PoLrUr4rv17xWE+
+        fjhgx0yELe3ChS72sy0SmYw6lE6LxAwT6vTD
+X-Google-Smtp-Source: APXvYqwdd7t7IaswdXyXqA5kjVNYhyBSPsRl+F3RcDqT8xR7RAGjsPpuXPlsZ6sBEqwNKnhes7lh55vTla8gEiIU
+X-Received: by 2002:a05:6000:11c4:: with SMTP id i4mr19839228wrx.277.1571667676755;
+ Mon, 21 Oct 2019 07:21:16 -0700 (PDT)
+Date:   Mon, 21 Oct 2019 16:20:59 +0200
 In-Reply-To: <cover.1571667489.git.andreyknvl@google.com>
-Message-Id: <665578f904484069bb6100fb20283b22a046ad9b.1571667489.git.andreyknvl@google.com>
+Message-Id: <4ae9e68ebca02f08a93ac61fe065057c9a01f0a8.1571667489.git.andreyknvl@google.com>
 Mime-Version: 1.0
 References: <cover.1571667489.git.andreyknvl@google.com>
 X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
-Subject: [PATCH v2 1/2] USB: dummy-hcd: increase max number of devices to 32
+Subject: [PATCH v2 2/2] USB: dummy-hcd: use usb_urb_dir_in instead of usb_pipein
 From:   Andrey Konovalov <andreyknvl@google.com>
 To:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -76,32 +76,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When fuzzing the USB subsystem with syzkaller, we currently use 8 testing
-processes within one VM. To isolate testing processes from one another it
-is desirable to assign a dedicated USB bus to each of those, which means
-we need at least 8 Dummy UDC/HCD devices.
-
-This patch increases the maximum number of Dummy UDC/HCD devices to 32
-(more than 8 in case we need more of them in the future).
+Commit fea3409112a9 ("USB: add direction bit to urb->transfer_flags") has
+added a usb_urb_dir_in() helper function that can be used to determine
+the direction of the URB. With that patch USB_DIR_IN control requests with
+wLength == 0 are considered out requests by real USB HCDs. This patch
+changes dummy-hcd to use the usb_urb_dir_in() helper to match that
+behavior.
 
 Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 ---
- drivers/usb/gadget/udc/dummy_hcd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/gadget/udc/dummy_hcd.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/usb/gadget/udc/dummy_hcd.c b/drivers/usb/gadget/udc/dummy_hcd.c
-index 3d499d93c083..a8f1e5707c14 100644
+index a8f1e5707c14..4c9d1e49d5ed 100644
 --- a/drivers/usb/gadget/udc/dummy_hcd.c
 +++ b/drivers/usb/gadget/udc/dummy_hcd.c
-@@ -2725,7 +2725,7 @@ static struct platform_driver dummy_hcd_driver = {
- };
+@@ -1321,7 +1321,7 @@ static int dummy_perform_transfer(struct urb *urb, struct dummy_request *req,
+ 	u32 this_sg;
+ 	bool next_sg;
  
- /*-------------------------------------------------------------------------*/
--#define MAX_NUM_UDC	2
-+#define MAX_NUM_UDC	32
- static struct platform_device *the_udc_pdev[MAX_NUM_UDC];
- static struct platform_device *the_hcd_pdev[MAX_NUM_UDC];
+-	to_host = usb_pipein(urb->pipe);
++	to_host = usb_urb_dir_in(urb);
+ 	rbuf = req->req.buf + req->req.actual;
  
+ 	if (!urb->num_sgs) {
+@@ -1409,7 +1409,7 @@ static int transfer(struct dummy_hcd *dum_hcd, struct urb *urb,
+ 
+ 		/* FIXME update emulated data toggle too */
+ 
+-		to_host = usb_pipein(urb->pipe);
++		to_host = usb_urb_dir_in(urb);
+ 		if (unlikely(len == 0))
+ 			is_short = 1;
+ 		else {
+@@ -1830,7 +1830,7 @@ static void dummy_timer(struct timer_list *t)
+ 
+ 		/* find the gadget's ep for this request (if configured) */
+ 		address = usb_pipeendpoint (urb->pipe);
+-		if (usb_pipein(urb->pipe))
++		if (usb_urb_dir_in(urb))
+ 			address |= USB_DIR_IN;
+ 		ep = find_endpoint(dum, address);
+ 		if (!ep) {
+@@ -2385,7 +2385,7 @@ static inline ssize_t show_urb(char *buf, size_t size, struct urb *urb)
+ 			s = "?";
+ 			break;
+ 		 } s; }),
+-		ep, ep ? (usb_pipein(urb->pipe) ? "in" : "out") : "",
++		ep, ep ? (usb_urb_dir_in(urb) ? "in" : "out") : "",
+ 		({ char *s; \
+ 		switch (usb_pipetype(urb->pipe)) { \
+ 		case PIPE_CONTROL: \
 -- 
 2.23.0.866.gb869b98d4c-goog
 
