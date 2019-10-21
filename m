@@ -2,132 +2,91 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 773E8CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:31:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E92E9CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:32:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56AF42089C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:31:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B94682089C
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:32:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WAB+IVuK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728440AbfJULbm (ORCPT
+        id S1728456AbfJULcN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 07:31:42 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4696 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727685AbfJULbl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 07:31:41 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id DC82232381C44C0CE0B9;
-        Mon, 21 Oct 2019 19:31:39 +0800 (CST)
-Received: from [127.0.0.1] (10.177.251.225) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Mon, 21 Oct 2019
- 19:31:32 +0800
-To:     <catalin.marinas@arm.com>, <will@kernel.org>,
-        <kstewart@linuxfoundation.org>, <", sudeep.holla"@arm.com>,
-        <gregkh@linuxfoundation.org>, <yeyunfeng@huawei.com>,
-        <lorenzo.pieralisi@arm.com>, <tglx@linutronix.de>,
-        <David.Laight@ACULAB.COM>, <mark.rutland@arm.com>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        <hushiyuan@huawei.com>, <wuyun.wu@huawei.com>,
-        <linfeilong@huawei.com>
-From:   Yunfeng Ye <yeyunfeng@huawei.com>
-Subject: [PATCH v6] arm64: psci: Reduce the waiting time for
- cpu_psci_cpu_kill()
-Message-ID: <0842431c-fa15-2ba1-ae6d-c1fea157941f@huawei.com>
-Date:   Mon, 21 Oct 2019 19:31:21 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 21 Oct 2019 07:32:13 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43736 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727685AbfJULcN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 07:32:13 -0400
+Received: by mail-wr1-f65.google.com with SMTP id c2so8302568wrr.10;
+        Mon, 21 Oct 2019 04:32:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=dmRonkI3afpK0imoXn1gq5xR7xj6dy0LkZHT5B+WJK4=;
+        b=WAB+IVuKri7jyIS+XrkdoQjF/G1NPV05XAIxTDCvTQWJKxQzUkQgo2hySIbm2mQM0W
+         JExD82SpklgFPYFn/C0cyfEwjnkn3bTM/i9fzxcMFiCT9nYtCUXvRowCdR1KMFuYQE5n
+         Ee6XfNvGgmykJ3mdNEQ68xHCLwARAQCEeFkvqGxzO4Y4wzFS9DDuMBt/wOcb6odAeky5
+         KVJKGsryqDF6E0edd0XHPOvRfdZgotLjgd5yf9xDAGrgrUBbNZNmcwd/LqLPNignYlrr
+         YU2aSXwoqmNZ1Qs1UCcHASroQAQAuQ57sTmuWGbxZEbAa8ePKRJplh5UdrXmI1wzAc65
+         9SZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=dmRonkI3afpK0imoXn1gq5xR7xj6dy0LkZHT5B+WJK4=;
+        b=YZZdJICk/kWCqq1LqEnAkGS67R1S3KCu5EUtqqOxaXj4Ln+uiQRRmMKd1gYuOZeTHg
+         NFzPlmkR7+0vCtR9NtVlzvz1os0tZKZ3yeihkxDO+ar2lpSZb3AkmvXy0yuqJPcQwYSa
+         ojDkq4pThkKzDkQ+TOCSIqbDWBR8VYYDzha8lndp16+cU2a3guPDKLGco5mWgRp3pWrt
+         Tz3q6a5JT+FShxLtd3mOGvWvqTgHoUZAT/fRcgdXYhatEMM0VaHNcArjUMSuJiGjToWH
+         gtp78PI1cviIvFTrCI2IWKHJPvd2/oZvololysqwl3gWXoDJ9OX/ZrhAlvxYgp3R1/zr
+         3r5w==
+X-Gm-Message-State: APjAAAWABCLC9FD4JDSUsxkPWNMsLl99F0C7/nnyHT7Dvg+0YxhGYLA4
+        4gcq45G+8q6ZA/D6Pp6y6U1gOK6Sgx6Kuls6Z+s13jg2El4=
+X-Google-Smtp-Source: APXvYqz+ZPbQLozAQPGPER0WaspvJJddEsUd8jsTQ7g1P2xNiYmNSqmTPpYmSVUbh64hlbHHCu7ymudOIHJcBIQ34/g=
+X-Received: by 2002:a5d:5544:: with SMTP id g4mr892556wrw.72.1571657531203;
+ Mon, 21 Oct 2019 04:32:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.251.225]
-X-CFilter-Loop: Reflected
+References: <453A1153-9493-4A04-BF66-CE6A572DEBDB@paragon-software.com>
+ <CAFLxGvyFBGiDab4wxWidjRyDgWkHVfigVsHiRDB4swpB3G+hvQ@mail.gmail.com>
+ <20191021105409.32okvzbslxmcjdze@pali> <0877502e-8369-9cfd-36e8-5a4798260cd4@redhat.com>
+ <20191021111357.q2lg2g43y7hrddqi@pali>
+In-Reply-To: <20191021111357.q2lg2g43y7hrddqi@pali>
+From:   Richard Weinberger <richard.weinberger@gmail.com>
+Date:   Mon, 21 Oct 2019 13:31:59 +0200
+Message-ID: <CAFLxGvyWtWUm81-qyQ-F20bt1pL7_C6rRsCzO84QSLs=gxMDAg@mail.gmail.com>
+Subject: Re: [PATCH] fs: exFAT read-only driver GPL implementation by Paragon Software.
+To:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
+Cc:     Maurizio Lombardi <mlombard@redhat.com>,
+        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In cases like suspend-to-disk and suspend-to-ram, a large number of CPU
-cores need to be shut down. At present, the CPU hotplug operation is
-serialised, and the CPU cores can only be shut down one by one. In this
-process, if PSCI affinity_info() does not return LEVEL_OFF quickly,
-cpu_psci_cpu_kill() needs to wait for 10ms. If hundreds of CPU cores
-need to be shut down, it will take a long time.
+On Mon, Oct 21, 2019 at 1:13 PM Pali Roh=C3=A1r <pali.rohar@gmail.com> wrot=
+e:
+> On Monday 21 October 2019 13:08:07 Maurizio Lombardi wrote:
+> > Dne 21.10.2019 v 12:54 Pali Roh=C3=A1r napsal(a):
+> Maurizio, thank you for reference! I have not caught this Samsung
+> activity yet! So we now we have +1 for count of exFAT drivers.
 
-Normally, there is no need to wait 10ms in cpu_psci_cpu_kill(). So
-change the wait interval from 10 ms to max 1 ms and use usleep_range()
-instead of msleep() for more accurate timer.
+This is how I counted three exfat drivers.
+1. staging/exfat (old samsung driver)
+2. sdfat (new samsung dirver)
+3. paragon read-only
 
-In addition, reducing the time interval will increase the messages
-output, so remove the "Retry ..." message, instead, track time and
-output to the the sucessful message.
-
-Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
-Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
----
-v5 -> v6:
- - add "Reviewed-by:"
-
-v4 -> v5:
- - track time instead of loop counter
-
-v3 -> v4:
- - using time_before(jiffies, timeout) to check
- - update the comment as review suggest
-
-v2 -> v3:
- - update the comment
- - remove the busy-wait logic, modify the loop logic and output message
-
-v1 -> v2:
- - use usleep_range() instead of udelay() after waiting for a while
-
- arch/arm64/kernel/psci.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
-
-diff --git a/arch/arm64/kernel/psci.c b/arch/arm64/kernel/psci.c
-index c9f72b2665f1..43ae4e0c968f 100644
---- a/arch/arm64/kernel/psci.c
-+++ b/arch/arm64/kernel/psci.c
-@@ -81,7 +81,8 @@ static void cpu_psci_cpu_die(unsigned int cpu)
-
- static int cpu_psci_cpu_kill(unsigned int cpu)
- {
--	int err, i;
-+	int err;
-+	unsigned long start, end;
-
- 	if (!psci_ops.affinity_info)
- 		return 0;
-@@ -91,16 +92,18 @@ static int cpu_psci_cpu_kill(unsigned int cpu)
- 	 * while it is dying. So, try again a few times.
- 	 */
-
--	for (i = 0; i < 10; i++) {
-+	start = jiffies;
-+	end = start + msecs_to_jiffies(100);
-+	do {
- 		err = psci_ops.affinity_info(cpu_logical_map(cpu), 0);
- 		if (err == PSCI_0_2_AFFINITY_LEVEL_OFF) {
--			pr_info("CPU%d killed.\n", cpu);
-+			pr_info("CPU%d killed (polled %d ms)\n", cpu,
-+				jiffies_to_msecs(jiffies - start));
- 			return 0;
- 		}
-
--		msleep(10);
--		pr_info("Retrying again to check for CPU kill\n");
--	}
-+		usleep_range(100, 1000);
-+	} while (time_before(jiffies, end));
-
- 	pr_warn("CPU%d may not have shut down cleanly (AFFINITY_INFO reports %d)\n",
- 			cpu, err);
--- 
-2.7.4.3
-
+--=20
+Thanks,
+//richard
