@@ -2,174 +2,174 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF3DCA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 06:00:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ECBFCA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 06:00:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60FC62089C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 06:00:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D814221479
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 06:00:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LO2LGnn5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727174AbfJUGAB (ORCPT
+        id S1727282AbfJUGAH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 02:00:01 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:35763 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726081AbfJUGAA (ORCPT
+        Mon, 21 Oct 2019 02:00:07 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:41584 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727194AbfJUGAG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 02:00:00 -0400
-Received: by mail-wr1-f68.google.com with SMTP id l10so11903983wrb.2
-        for <linux-kernel@vger.kernel.org>; Sun, 20 Oct 2019 22:59:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=4pVRsWxXoNBJ8DZ4LnU+6HuXrrAG6ENHjv7dXMaiaIQ=;
-        b=dzzq3L4diiBrSL0UmnYahBeFLuClAJt7bggnP7TCnHM8RW4M5cBlxbBBrlhwA/3Gxw
-         xnbzIq5vllsTYy0jrQTq4vTH4ckZ3Xk4i2X5z3NQtnRlVr0N5A6vyoHN6hWuxruw7xnM
-         SNZAkdyY9OKgJ9U/Unzhu3JWtabk2BDG9wTgfh+pCCT/vMe6VS6sef7VTr0uvUPrpq2a
-         grLh+tw5MKSMDzX9dyyGxx1R06NmknOF4TaADuiElS8RSb4OOudmI6OGbUD3tGeCClVk
-         EOX7A+X3bfli9kcxQTo2CwXOShcO3S5gsVnkdx4e2Cg/Gh00q3U5tWsJdz6D3kcl6wO+
-         y4Wg==
-X-Gm-Message-State: APjAAAXFF+yXsZTaRw6QikF+MhQl/n2e4f4UITrVF03c4gBBXbgMuB8W
-        psWgDs9G8EdflgJcf4klL9VZuc3wNEk=
-X-Google-Smtp-Source: APXvYqw4PiIMxm4FgE+4e4u3WrZC72h/A3HtDa+izxGkPDXSn/ZJ2OYArtymKSlme9+bP8Q0oha28w==
-X-Received: by 2002:adf:f087:: with SMTP id n7mr4063528wro.1.1571637597517;
-        Sun, 20 Oct 2019 22:59:57 -0700 (PDT)
-Received: from ?IPv6:2a0b:e7c0:0:107::49? ([2a0b:e7c0:0:107::49])
-        by smtp.gmail.com with ESMTPSA id y13sm21139607wrg.8.2019.10.20.22.59.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 20 Oct 2019 22:59:56 -0700 (PDT)
-Subject: Re: [PATCH v2] tty: rocket: reduce stack usage
-To:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org
-References: <20191018161712.27807-1-sudipm.mukherjee@gmail.com>
-From:   Jiri Slaby <jslaby@suse.com>
-Autocrypt: addr=jslaby@suse.com; prefer-encrypt=mutual; keydata=
- mQINBE6S54YBEACzzjLwDUbU5elY4GTg/NdotjA0jyyJtYI86wdKraekbNE0bC4zV+ryvH4j
- rrcDwGs6tFVrAHvdHeIdI07s1iIx5R/ndcHwt4fvI8CL5PzPmn5J+h0WERR5rFprRh6axhOk
- rSD5CwQl19fm4AJCS6A9GJtOoiLpWn2/IbogPc71jQVrupZYYx51rAaHZ0D2KYK/uhfc6neJ
- i0WqPlbtIlIrpvWxckucNu6ZwXjFY0f3qIRg3Vqh5QxPkojGsq9tXVFVLEkSVz6FoqCHrUTx
- wr+aw6qqQVgvT/McQtsI0S66uIkQjzPUrgAEtWUv76rM4ekqL9stHyvTGw0Fjsualwb0Gwdx
- ReTZzMgheAyoy/umIOKrSEpWouVoBt5FFSZUyjuDdlPPYyPav+hpI6ggmCTld3u2hyiHji2H
- cDpcLM2LMhlHBipu80s9anNeZhCANDhbC5E+NZmuwgzHBcan8WC7xsPXPaiZSIm7TKaVoOcL
- 9tE5aN3jQmIlrT7ZUX52Ff/hSdx/JKDP3YMNtt4B0cH6ejIjtqTd+Ge8sSttsnNM0CQUkXps
- w98jwz+Lxw/bKMr3NSnnFpUZaxwji3BC9vYyxKMAwNelBCHEgS/OAa3EJoTfuYOK6wT6nadm
- YqYjwYbZE5V/SwzMbpWu7Jwlvuwyfo5mh7w5iMfnZE+vHFwp/wARAQABtBxKaXJpIFNsYWJ5
- IDxqc2xhYnlAc3VzZS5jb20+iQI4BBMBAgAiBQJOkujrAhsDBgsJCAcDAgYVCAIJCgsEFgID
- AQIeAQIXgAAKCRC9JbEEBrRwSc1VD/9CxnyCYkBrzTfbi/F3/tTstr3cYOuQlpmufoEjCIXx
- PNnBVzP7XWPaHIUpp5tcweG6HNmHgnaJScMHHyG83nNAoCEPihyZC2ANQjgyOcnzDOnW2Gzf
- 8v34FDQqj8CgHulD5noYBrzYRAss6K42yUxUGHOFI1Ky1602OCBRtyJrMihio0gNuC1lE4YZ
- juGZEU6MYO1jKn8QwGNpNKz/oBs7YboU7bxNTgKrxX61cSJuknhB+7rHOQJSXdY02Tt31R8G
- diot+1lO/SoB47Y0Bex7WGTXe13gZvSyJkhZa5llWI/2d/s1aq5pgrpMDpTisIpmxFx2OEkb
- jM95kLOs/J8bzostEoEJGDL4u8XxoLnOEjWyT82eKkAe4j7IGQlA9QQR2hCMsBdvZ/EoqTcd
- SqZSOto9eLQkjZLz0BmeYIL8SPkgnVAJ/FEK44NrHUGzjzdkE7a0jNvHt8ztw6S+gACVpysi
- QYo2OH8hZGaajtJ8mrgN2Lxg7CpQ0F6t/N1aa/+A2FwdRw5sHBqA4PH8s0Apqu66Q94YFzzu
- 8OWkSPLgTjtyZcez79EQt02u8xH8dikk7API/PYOY+462qqbahpRGaYdvloaw7tOQJ224pWJ
- 4xePwtGyj4raAeczOcBQbKKW6hSH9iz7E5XUdpJqO3iZ9psILk5XoyO53wwhsLgGcrkCDQRO
- kueGARAAz5wNYsv5a9z1wuEDY5dn+Aya7s1tgqN+2HVTI64F3l6Yg753hF8UzTZcVMi3gzHC
- ECvKGwpBBwDiJA2V2RvJ6+Jis8paMtONFdPlwPaWlbOv4nHuZfsidXkk7PVCr4/6clZggGNQ
- qEjTe7Hz2nnwJiKXbhmnKfYXlxftT6KdjyUkgHAs8Gdz1nQCf8NWdQ4P7TAhxhWdkAoOIhc4
- OQapODd+FnBtuL4oCG0c8UzZ8bDZVNR/rYgfNX54FKdqbM84FzVewlgpGjcUc14u5Lx/jBR7
- ttZv07ro88Ur9GR6o1fpqSQUF/1V+tnWtMQoDIna6p/UQjWiVicQ2Tj7TQgFr4Fq8ZDxRb10
- Zbeds+t+45XlRS9uexJDCPrulJ2sFCqKWvk3/kf3PtUINDR2G4k228NKVN/aJQUGqCTeyaWf
- fU9RiJU+sw/RXiNrSL2q079MHTWtN9PJdNG2rPneo7l0axiKWIk7lpSaHyzBWmi2Arj/nuHf
- Maxpc708aCecB2p4pUhNoVMtjUhKD4+1vgqiWKI6OsEyZBRIlW2RRcysIwJ648MYejvf1dzv
- mVweUa4zfIQH/+G0qPKmtst4t/XLjE/JN54XnOD/TO1Fk0pmJyASbHJQ0EcecEodDHPWP6bM
- fQeNlm1eMa7YosnXwbTurR+nPZk+TYPndbDf1U0j8n0AEQEAAYkCHwQYAQIACQUCTpLnhgIb
- DAAKCRC9JbEEBrRwSTe1EACA74MWlvIhrhGWd+lxbXsB+elmL1VHn7Ovj3qfaMf/WV3BE79L
- 5A1IDyp0AGoxv1YjgE1qgA2ByDQBLjb0yrS1ppYqQCOSQYBPuYPVDk+IuvTpj/4rN2v3R5RW
- d6ozZNRBBsr4qHsnCYZWtEY2pCsOT6BE28qcbAU15ORMq0nQ/yNh3s/WBlv0XCP1gvGOGf+x
- UiE2YQEsGgjs8v719sguok8eADBbfmumerh/8RhPKRuTWxrXdNq/pu0n7hA6Btx7NYjBnnD8
- lV8Qlb0lencEUBXNFDmdWussMAlnxjmKhZyb30m1IgjFfG30UloZzUGCyLkr/53JMovAswmC
- IHNtXHwb58Ikn1i2U049aFso+WtDz4BjnYBqCL1Y2F7pd8l2HmDqm2I4gubffSaRHiBbqcSB
- lXIjJOrd6Q66u5+1Yv32qk/nOL542syYtFDH2J5wM2AWvfjZH1tMOVvVMu5Fv7+0n3x/9shY
- ivRypCapDfcWBGGsbX5eaXpRfInaMTGaU7wmWO44Z5diHpmQgTLOrN9/MEtdkK6OVhAMVenI
- w1UnZnA+ZfaZYShi5oFTQk3vAz7/NaA5/bNHCES4PcDZw7Y/GiIh/JQR8H1JKZ99or9LjFeg
- HrC8YQ1nzkeDfsLtYM11oC3peHa5AiXLmCuSC9ammQ3LhkfET6N42xTu2A==
-Message-ID: <afe485c6-7816-96dd-f301-1c0797e8b7ce@suse.com>
-Date:   Mon, 21 Oct 2019 07:59:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Mon, 21 Oct 2019 02:00:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571637605;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=dDGATv3pDDt35nGamPbAiYICPiIcyMTX5D3TlrrxwFE=;
+        b=LO2LGnn5bRC+I8oL6PHluwuY2ZZehUCoevjG1bH6OmWvnyj+wt9HPHvILfcfEX03XlLQSd
+        YoV/Ki8wD3EZt8gCKH8TZAuKFC9IzydJSZ1w7L8Ih7oBa+3qYGkFtQduDt27T8MzvZWteH
+        HfvRSt1CwYSbO7+6/gMxLsj1G1sLypA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-78-NR0dB1IIOm-f7cm23buKPw-1; Mon, 21 Oct 2019 02:00:01 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9F351100551E;
+        Mon, 21 Oct 2019 05:59:57 +0000 (UTC)
+Received: from [10.72.12.209] (ovpn-12-209.pek2.redhat.com [10.72.12.209])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1919360606;
+        Mon, 21 Oct 2019 05:59:23 +0000 (UTC)
+Subject: Re: [PATCH V4 5/6] virtio: introduce a mdev based transport
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        maxime.coquelin@redhat.com, cunming.liang@intel.com,
+        zhihong.wang@intel.com, rob.miller@broadcom.com,
+        xiao.w.wang@intel.com, haotian.wang@sifive.com,
+        zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
+        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
+        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
+        farman@linux.ibm.com, pasic@linux.ibm.com, sebott@linux.ibm.com,
+        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
+        gor@linux.ibm.com, borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
+        stefanha@redhat.com
+References: <20191017104836.32464-1-jasowang@redhat.com>
+ <20191017104836.32464-6-jasowang@redhat.com>
+ <20191018162007.31631039.cohuck@redhat.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <2bb5645b-5c46-9cae-0571-65c302f51cf2@redhat.com>
+Date:   Mon, 21 Oct 2019 13:59:23 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20191018161712.27807-1-sudipm.mukherjee@gmail.com>
-Content-Type: text/plain; charset=iso-8859-2
+In-Reply-To: <20191018162007.31631039.cohuck@redhat.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MC-Unique: NR0dB1IIOm-f7cm23buKPw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18. 10. 19, 18:17, Sudip Mukherjee wrote:
-> The build of xtensa allmodconfig gives warning of:
-> In function 'get_ports.isra.0':
-> warning: the frame size of 1040 bytes is larger than 1024 bytes
-> 
-> Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
 
-Acked-by: Jiri Slaby <jslaby@suse.cz>
-
-Thanks.
-
-> v2: check faliure of kzalloc
-> 
->  drivers/tty/rocket.c | 32 +++++++++++++++++++-------------
->  1 file changed, 19 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/tty/rocket.c b/drivers/tty/rocket.c
-> index 5ba6816ebf81..fbaa4ec85560 100644
-> --- a/drivers/tty/rocket.c
-> +++ b/drivers/tty/rocket.c
-> @@ -1222,22 +1222,28 @@ static int set_config(struct tty_struct *tty, struct r_port *info,
->   */
->  static int get_ports(struct r_port *info, struct rocket_ports __user *retports)
->  {
-> -	struct rocket_ports tmp;
-> -	int board;
-> +	struct rocket_ports *tmp;
-> +	int board, ret = 0;
->  
-> -	memset(&tmp, 0, sizeof (tmp));
-> -	tmp.tty_major = rocket_driver->major;
-> +	tmp = kzalloc(sizeof(*tmp), GFP_KERNEL);
-> +	if (!tmp)
-> +		return -ENOMEM;
-> +
-> +	tmp->tty_major = rocket_driver->major;
->  
->  	for (board = 0; board < 4; board++) {
-> -		tmp.rocketModel[board].model = rocketModel[board].model;
-> -		strcpy(tmp.rocketModel[board].modelString, rocketModel[board].modelString);
-> -		tmp.rocketModel[board].numPorts = rocketModel[board].numPorts;
-> -		tmp.rocketModel[board].loadrm2 = rocketModel[board].loadrm2;
-> -		tmp.rocketModel[board].startingPortNumber = rocketModel[board].startingPortNumber;
-> -	}
-> -	if (copy_to_user(retports, &tmp, sizeof (*retports)))
-> -		return -EFAULT;
-> -	return 0;
-> +		tmp->rocketModel[board].model = rocketModel[board].model;
-> +		strcpy(tmp->rocketModel[board].modelString,
-> +		       rocketModel[board].modelString);
-> +		tmp->rocketModel[board].numPorts = rocketModel[board].numPorts;
-> +		tmp->rocketModel[board].loadrm2 = rocketModel[board].loadrm2;
-> +		tmp->rocketModel[board].startingPortNumber =
-> +			rocketModel[board].startingPortNumber;
-> +	}
-> +	if (copy_to_user(retports, tmp, sizeof(*retports)))
-> +		ret = -EFAULT;
-> +	kfree(tmp);
-> +	return ret;
->  }
->  
->  static int reset_rm2(struct r_port *info, void __user *arg)
-> 
+On 2019/10/18 =E4=B8=8B=E5=8D=8810:20, Cornelia Huck wrote:
+> On Thu, 17 Oct 2019 18:48:35 +0800
+> Jason Wang <jasowang@redhat.com> wrote:
+>
+>> This patch introduces a new mdev transport for virtio. This is used to
+>> use kernel virtio driver to drive the mediated device that is capable
+>> of populating virtqueue directly.
+>>
+>> A new virtio-mdev driver will be registered to the mdev bus, when a
+>> new virtio-mdev device is probed, it will register the device with
+>> mdev based config ops. This means it is a software transport between
+>> mdev driver and mdev device. The transport was implemented through
+>> device specific ops which is a part of mdev_parent_ops now.
+>>
+>> Signed-off-by: Jason Wang <jasowang@redhat.com>
+>> ---
+>>   drivers/virtio/Kconfig       |   7 +
+>>   drivers/virtio/Makefile      |   1 +
+>>   drivers/virtio/virtio_mdev.c | 409 +++++++++++++++++++++++++++++++++++
+>>   3 files changed, 417 insertions(+)
+> (...)
+>
+>> +static int virtio_mdev_probe(struct device *dev)
+>> +{
+>> +=09struct mdev_device *mdev =3D mdev_from_dev(dev);
+>> +=09const struct virtio_mdev_device_ops *ops =3D mdev_get_dev_ops(mdev);
+>> +=09struct virtio_mdev_device *vm_dev;
+>> +=09int rc;
+>> +
+>> +=09vm_dev =3D devm_kzalloc(dev, sizeof(*vm_dev), GFP_KERNEL);
+>> +=09if (!vm_dev)
+>> +=09=09return -ENOMEM;
+>> +
+>> +=09vm_dev->vdev.dev.parent =3D dev;
+>> +=09vm_dev->vdev.dev.release =3D virtio_mdev_release_dev;
+>> +=09vm_dev->vdev.config =3D &virtio_mdev_config_ops;
+>> +=09vm_dev->mdev =3D mdev;
+>> +=09INIT_LIST_HEAD(&vm_dev->virtqueues);
+>> +=09spin_lock_init(&vm_dev->lock);
+>> +
+>> +=09vm_dev->version =3D ops->get_mdev_features(mdev);
+>> +=09if (vm_dev->version !=3D VIRTIO_MDEV_F_VERSION_1) {
+>> +=09=09dev_err(dev, "VIRTIO_MDEV_F_VERSION_1 is mandatory\n");
+>> +=09=09return -ENXIO;
+>> +=09}
+> Hm, so how is that mdev features interface supposed to work? If
+> VIRTIO_MDEV_F_VERSION_1 is a bit, I would expect this code to test for
+> its presence, and not for identity.
 
 
--- 
-js
-suse labs
+This should be used by driver to detect the which sets of functions and=20
+their semantics that could be provided by the device. E.g when driver=20
+support both version 2 and version 1 but device only support version 1,=20
+driver can switch to use version 1. Btw, Is there a easy way for to test=20
+its presence or do you mean doing sanity testing on existence of the=20
+mandatory ops that provided by the device?
+
+
+>
+> What will happen if we come up with a version 2? If this is backwards
+> compatible, will both version 2 and version 1 be set?
+
+
+Yes, I think so, and version 2 should be considered as some extensions=20
+of version 1. If it's completely, it should use a new class id.
+
+Thanks
+
+
+>
+>> +
+>> +=09vm_dev->vdev.id.device =3D ops->get_device_id(mdev);
+>> +=09if (vm_dev->vdev.id.device =3D=3D 0)
+>> +=09=09return -ENODEV;
+>> +
+>> +=09vm_dev->vdev.id.vendor =3D ops->get_vendor_id(mdev);
+>> +=09rc =3D register_virtio_device(&vm_dev->vdev);
+>> +=09if (rc)
+>> +=09=09put_device(dev);
+>> +=09else
+>> +=09=09dev_set_drvdata(dev, vm_dev);
+>> +
+>> +=09return rc;
+>> +}
+> (...)
+
