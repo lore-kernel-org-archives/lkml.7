@@ -4,367 +4,92 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73974CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:37:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B1EFCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:37:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A51920656
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:37:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33F1520640
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:37:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729230AbfJUOgw (ORCPT
+        id S1729446AbfJUOh4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 10:36:52 -0400
-Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:30511 "EHLO
-        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726955AbfJUOgw (ORCPT
+        Mon, 21 Oct 2019 10:37:56 -0400
+Received: from xavier.telenet-ops.be ([195.130.132.52]:54268 "EHLO
+        xavier.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727322AbfJUOhz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 10:36:52 -0400
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 21 Oct 2019 20:00:43 +0530
-IronPort-SDR: RM22F5kNPP3g5ZlDAHwZuId7j9Cc7qvf6swxUmy+W6o9o5aq7X9Ou0mTAMxxyATPuifh4xbLRr
- Jol8x2or1AZao+cRlqxDO4Epwgq/Z+c6Gyp4BljuAeUOKDnVbeucZqn/M3pTJ8dGir3Jcv1kYs
- d1jIvbGg+vdy0UCoDsL38fF4zyZreSnlbAgs+9cn7xvBedow0oq+IpBT3EQNh5tIue4tqrPLov
- NXVa3CyLsl8EBoITP/TzhjyPJhQaHYdcAtfz51jwhvRtKulfoKNpsT3wQXBDYGK45MMfX8sYnk
- vHpKL0VwWmP1//ob+DjW3OQs
-Received: from rampraka-linux.qualcomm.com ([10.206.25.221])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 21 Oct 2019 20:00:42 +0530
-Received: by rampraka-linux.qualcomm.com (Postfix, from userid 2305851)
-        id 7BF69329D; Mon, 21 Oct 2019 20:00:41 +0530 (IST)
-From:   Ram Prakash Gupta <rampraka@codeaurora.org>
-To:     asutoshd@codeaurora.org, stummala@codeaurora.org,
-        sayalil@codeaurora.org, rampraka@codeaurora.org,
-        vbadigan@codeaurora.org, cang@codeaurora.org, ppvk@codeaurora.org,
-        adrian.hunter@intel.com, ulf.hansson@linaro.org,
-        robh+dt@kernel.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     Sujit Reddy Thumma <sthumma@codeaurora.org>,
-        Talel Shenhar <tatias@codeaurora.org>,
-        Ritesh Harjani <riteshh@codeaurora.org>,
-        "Bao D. Nguyen" <nguyenb@codeaurora.org>
-Subject: [RFC 4/6] mmc: core: Add debugfs entries for scaling support
-Date:   Mon, 21 Oct 2019 19:59:35 +0530
-Message-Id: <1571668177-3766-5-git-send-email-rampraka@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1571668177-3766-1-git-send-email-rampraka@codeaurora.org>
-References: <1571668177-3766-1-git-send-email-rampraka@codeaurora.org>
+        Mon, 21 Oct 2019 10:37:55 -0400
+Received: from ramsan ([84.194.98.4])
+        by xavier.telenet-ops.be with bizsmtp
+        id GEdo2100C05gfCL01Edox6; Mon, 21 Oct 2019 16:37:54 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1iMYoe-0007cx-CY; Mon, 21 Oct 2019 16:37:48 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1iMYoe-0003ma-AN; Mon, 21 Oct 2019 16:37:48 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Jaehoon Chung <jh80.chung@samsung.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Johannes Berg <johannes@sipsolutions.net>
+Cc:     linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 1/7] debugfs: Add debugfs_create_xul() for hexadecimal unsigned long
+Date:   Mon, 21 Oct 2019 16:37:36 +0200
+Message-Id: <20191021143742.14487-2-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191021143742.14487-1-geert+renesas@glider.be>
+References: <20191021143742.14487-1-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add debugfs entries for scaling support.
+The existing debugfs_create_ulong() function supports objects of
+type "unsigned long", which are 32-bit or 64-bit depending on the
+platform, in decimal form.  To format objects in hexadecimal, various
+debugfs_create_x*() functions exist, but all of them take fixed-size
+types.
 
-Signed-off-by: Sujit Reddy Thumma <sthumma@codeaurora.org>
-Signed-off-by: Talel Shenhar <tatias@codeaurora.org>
-Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
-Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
-Signed-off-by: Ritesh Harjani <riteshh@codeaurora.org>
-Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Signed-off-by: Bao D. Nguyen <nguyenb@codeaurora.org>
-Signed-off-by: Can Guo <cang@codeaurora.org>
-Signed-off-by: Sayali Lokhande <sayalil@codeaurora.org>
-Co-Developed-by: Ram Prakash Gupta <rampraka@codeaurora.org>
-Signed-off-by: Ram Prakash Gupta <rampraka@codeaurora.org>
+Add a debugfs helper for "unsigned long" objects in hexadecimal format.
+This avoids the need for users to open-code the same, or introduce
+bugs when casting the value pointer to "u32 *" or "u64 *" to call
+debugfs_create_x{32,64}().
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- drivers/mmc/core/debugfs.c |  90 ++++++++++++++++++++++++++
- drivers/mmc/core/host.c    | 153 +++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 243 insertions(+)
+ include/linux/debugfs.h | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/mmc/core/debugfs.c b/drivers/mmc/core/debugfs.c
-index 09e0c76..a9f1e3f 100644
---- a/drivers/mmc/core/debugfs.c
-+++ b/drivers/mmc/core/debugfs.c
-@@ -222,6 +222,81 @@ static int mmc_clock_opt_set(void *data, u64 val)
- DEFINE_SIMPLE_ATTRIBUTE(mmc_clock_fops, mmc_clock_opt_get, mmc_clock_opt_set,
- 	"%llu\n");
+diff --git a/include/linux/debugfs.h b/include/linux/debugfs.h
+index 33690949b45d6904..d7b2aebcc277d65e 100644
+--- a/include/linux/debugfs.h
++++ b/include/linux/debugfs.h
+@@ -356,4 +356,14 @@ static inline ssize_t debugfs_write_file_bool(struct file *file,
  
-+static int mmc_scale_get(void *data, u64 *val)
+ #endif
+ 
++static inline void debugfs_create_xul(const char *name, umode_t mode,
++				      struct dentry *parent,
++				      unsigned long *value)
 +{
-+	struct mmc_host *host = data;
-+
-+	*val = host->clk_scaling.curr_freq;
-+
-+	return 0;
-+}
-+
-+static int mmc_scale_set(void *data, u64 val)
-+{
-+	int err = 0;
-+	struct mmc_host *host = data;
-+
-+	mmc_claim_host(host);
-+
-+	/* change frequency from sysfs manually */
-+	err = mmc_clk_update_freq(host, val, host->clk_scaling.state);
-+	if (err == -EAGAIN)
-+		err = 0;
-+	else if (err)
-+		pr_err("%s: clock scale to %llu failed with error %d\n",
-+			mmc_hostname(host), val, err);
++	if (sizeof(*value) == sizeof(u32))
++		debugfs_create_x32(name, mode, parent, (u32 *)value);
 +	else
-+		pr_debug("%s: clock change to %llu finished successfully (%s)\n",
-+			mmc_hostname(host), val, current->comm);
-+
-+	mmc_release_host(host);
-+
-+	return err;
++		debugfs_create_x64(name, mode, parent, (u64 *)value);
 +}
 +
-+DEFINE_SIMPLE_ATTRIBUTE(mmc_scale_fops, mmc_scale_get, mmc_scale_set,
-+	"%llu\n");
-+
-+static int mmc_max_clock_get(void *data, u64 *val)
-+{
-+	struct mmc_host *host = data;
-+
-+	if (!host)
-+		return -EINVAL;
-+
-+	*val = host->f_max;
-+
-+	return 0;
-+}
-+
-+static int mmc_max_clock_set(void *data, u64 val)
-+{
-+	struct mmc_host *host = data;
-+	int err = -EINVAL;
-+	unsigned long freq = val;
-+	unsigned int old_freq;
-+
-+	if (!host || (val < host->f_min))
-+		goto out;
-+
-+	mmc_claim_host(host);
-+	if (host->bus_ops && host->bus_ops->change_bus_speed) {
-+		old_freq = host->f_max;
-+		host->f_max = freq;
-+
-+		err = host->bus_ops->change_bus_speed(host, &freq);
-+
-+		if (err)
-+			host->f_max = old_freq;
-+	}
-+	mmc_release_host(host);
-+out:
-+	return err;
-+}
-+
-+DEFINE_SIMPLE_ATTRIBUTE(mmc_max_clock_fops, mmc_max_clock_get,
-+		mmc_max_clock_set, "%llu\n");
-+
- void mmc_add_host_debugfs(struct mmc_host *host)
- {
- 	struct dentry *root;
-@@ -235,6 +310,19 @@ void mmc_add_host_debugfs(struct mmc_host *host)
- 	debugfs_create_file("clock", S_IRUSR | S_IWUSR, root, host,
- 			    &mmc_clock_fops);
- 
-+	if (!debugfs_create_file("max_clock", 0600, root, host,
-+		&mmc_max_clock_fops))
-+		goto err_node;
-+
-+	if (!debugfs_create_file("scale", 0600, root, host,
-+		&mmc_scale_fops))
-+		goto err_node;
-+
-+	if (!debugfs_create_bool("skip_clk_scale_freq_update",
-+		0600, root,
-+		&host->clk_scaling.skip_clk_scale_freq_update))
-+		goto err_node;
-+
- #ifdef CONFIG_FAIL_MMC_REQUEST
- 	if (fail_request)
- 		setup_fault_attr(&fail_default_attr, fail_request);
-@@ -242,6 +330,8 @@ void mmc_add_host_debugfs(struct mmc_host *host)
- 	fault_create_debugfs_attr("fail_mmc_request", root,
- 				  &host->fail_mmc_request);
  #endif
-+err_node:
-+	return;
- }
- 
- void mmc_remove_host_debugfs(struct mmc_host *host)
-diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
-index 9138041..c5b904b 100644
---- a/drivers/mmc/core/host.c
-+++ b/drivers/mmc/core/host.c
-@@ -522,6 +522,154 @@ struct mmc_host *mmc_alloc_host(int extra, struct device *dev)
- 
- EXPORT_SYMBOL(mmc_alloc_host);
- 
-+static ssize_t enable_show(struct device *dev,
-+		struct device_attribute *attr, char *buf)
-+{
-+	struct mmc_host *host = cls_dev_to_mmc_host(dev);
-+
-+	if (!host)
-+		return -EINVAL;
-+
-+	return snprintf(buf, PAGE_SIZE, "%d\n", mmc_can_scale_clk(host));
-+}
-+
-+static ssize_t enable_store(struct device *dev,
-+		struct device_attribute *attr, const char *buf, size_t count)
-+{
-+	struct mmc_host *host = cls_dev_to_mmc_host(dev);
-+	unsigned long value;
-+
-+	if (!host || !host->card || kstrtoul(buf, 0, &value))
-+		return -EINVAL;
-+
-+	mmc_get_card(host->card, NULL);
-+
-+	if (!value) {
-+		/* Suspend the clock scaling and mask host capability */
-+		if (host->clk_scaling.enable)
-+			mmc_suspend_clk_scaling(host);
-+		host->clk_scaling.enable = false;
-+		host->caps2 &= ~MMC_CAP2_CLK_SCALE;
-+		host->clk_scaling.state = MMC_LOAD_HIGH;
-+		/* Set to max. frequency when disabling */
-+		mmc_clk_update_freq(host, host->card->clk_scaling_highest,
-+					host->clk_scaling.state);
-+	} else if (value) {
-+		/* Unmask host capability and resume scaling */
-+		host->caps2 |= MMC_CAP2_CLK_SCALE;
-+		if (!host->clk_scaling.enable) {
-+			host->clk_scaling.enable = true;
-+			mmc_resume_clk_scaling(host);
-+		}
-+	}
-+
-+	mmc_put_card(host->card, NULL);
-+
-+	return count;
-+}
-+
-+static ssize_t up_threshold_show(struct device *dev,
-+		struct device_attribute *attr, char *buf)
-+{
-+	struct mmc_host *host = cls_dev_to_mmc_host(dev);
-+
-+	if (!host)
-+		return -EINVAL;
-+
-+	return snprintf(buf, PAGE_SIZE, "%d\n", host->clk_scaling.upthreshold);
-+}
-+
-+#define MAX_PERCENTAGE	100
-+static ssize_t up_threshold_store(struct device *dev,
-+		struct device_attribute *attr, const char *buf, size_t count)
-+{
-+	struct mmc_host *host = cls_dev_to_mmc_host(dev);
-+	unsigned long value;
-+
-+	if (!host || kstrtoul(buf, 0, &value) || (value > MAX_PERCENTAGE))
-+		return -EINVAL;
-+
-+	host->clk_scaling.upthreshold = value;
-+
-+	pr_debug("%s: clkscale_up_thresh set to %lu\n",
-+			mmc_hostname(host), value);
-+	return count;
-+}
-+
-+static ssize_t down_threshold_show(struct device *dev,
-+		struct device_attribute *attr, char *buf)
-+{
-+	struct mmc_host *host = cls_dev_to_mmc_host(dev);
-+
-+	if (!host)
-+		return -EINVAL;
-+
-+	return snprintf(buf, PAGE_SIZE, "%d\n",
-+			host->clk_scaling.downthreshold);
-+}
-+
-+static ssize_t down_threshold_store(struct device *dev,
-+		struct device_attribute *attr, const char *buf, size_t count)
-+{
-+	struct mmc_host *host = cls_dev_to_mmc_host(dev);
-+	unsigned long value;
-+
-+	if (!host || kstrtoul(buf, 0, &value) || (value > MAX_PERCENTAGE))
-+		return -EINVAL;
-+
-+	host->clk_scaling.downthreshold = value;
-+
-+	pr_debug("%s: clkscale_down_thresh set to %lu\n",
-+			mmc_hostname(host), value);
-+	return count;
-+}
-+
-+static ssize_t polling_interval_show(struct device *dev,
-+		struct device_attribute *attr, char *buf)
-+{
-+	struct mmc_host *host = cls_dev_to_mmc_host(dev);
-+
-+	if (!host)
-+		return -EINVAL;
-+
-+	return snprintf(buf, PAGE_SIZE, "%lu milliseconds\n",
-+			host->clk_scaling.polling_delay_ms);
-+}
-+
-+static ssize_t polling_interval_store(struct device *dev,
-+		struct device_attribute *attr, const char *buf, size_t count)
-+{
-+	struct mmc_host *host = cls_dev_to_mmc_host(dev);
-+	unsigned long value;
-+
-+	if (!host || kstrtoul(buf, 0, &value))
-+		return -EINVAL;
-+
-+	host->clk_scaling.polling_delay_ms = value;
-+
-+	pr_debug("%s: clkscale_polling_delay_ms set to %lu\n",
-+			mmc_hostname(host), value);
-+	return count;
-+}
-+
-+DEVICE_ATTR_RW(enable);
-+DEVICE_ATTR_RW(polling_interval);
-+DEVICE_ATTR_RW(up_threshold);
-+DEVICE_ATTR_RW(down_threshold);
-+
-+static struct attribute *clk_scaling_attrs[] = {
-+	&dev_attr_enable.attr,
-+	&dev_attr_up_threshold.attr,
-+	&dev_attr_down_threshold.attr,
-+	&dev_attr_polling_interval.attr,
-+	NULL,
-+};
-+
-+static struct attribute_group clk_scaling_attr_grp = {
-+	.name = "clk_scaling",
-+	.attrs = clk_scaling_attrs,
-+};
-+
- /**
-  *	mmc_add_host - initialise host hardware
-  *	@host: mmc host
-@@ -551,6 +699,10 @@ int mmc_add_host(struct mmc_host *host)
- #ifdef CONFIG_DEBUG_FS
- 	mmc_add_host_debugfs(host);
- #endif
-+	err = sysfs_create_group(&host->class_dev.kobj, &clk_scaling_attr_grp);
-+	if (err)
-+		pr_err("%s: failed to create clk scale sysfs group with err %d\n",
-+				__func__, err);
- 
- 	mmc_start_host(host);
- 	mmc_register_pm_notifier(host);
-@@ -577,6 +729,7 @@ void mmc_remove_host(struct mmc_host *host)
- 	mmc_remove_host_debugfs(host);
- #endif
- 
-+	sysfs_remove_group(&host->class_dev.kobj, &clk_scaling_attr_grp);
- 	device_del(&host->class_dev);
- 
- 	led_trigger_unregister_simple(host->led);
 -- 
-1.9.1
+2.17.1
 
