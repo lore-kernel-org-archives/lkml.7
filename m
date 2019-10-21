@@ -2,90 +2,141 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67A66CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:08:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6FF8C47E49
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:09:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E8A4214AE
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:08:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8B802077C
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:09:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571674195;
+	bh=yAFVLkxjq0Sx/TKG/3FFK7vmvO0S13xxudXXKeP8cls=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=UOJAncbhzvymtqNvgI7T/0vIcrEnOImZ9AZi2WjBq3rFELNdP2Ypd8N9QqV+yzWl3
+	 fmO0OdjB1lazPwZcScvBPRdP0+6LQGeirxmjvWwX0zR7VCshOI2tHgdpvztcdvpEoq
+	 kR50S9H2WWsqyRjp/Fz3eB8kW55gC8NDID/P7le4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729933AbfJUQIX (ORCPT
+        id S1729417AbfJUQJy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 12:08:23 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:38911 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729905AbfJUQIW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 12:08:22 -0400
-Received: from 162-237-133-238.lightspeed.rcsntx.sbcglobal.net ([162.237.133.238] helo=elm)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <tyhicks@canonical.com>)
-        id 1iMaEF-0000sX-Ga; Mon, 21 Oct 2019 16:08:19 +0000
-Date:   Mon, 21 Oct 2019 11:08:14 -0500
-From:   Tyler Hicks <tyhicks@canonical.com>
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
-        John Johansen <john.johansen@canonical.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] apparmor: Fix use-after-free in aa_audit_rule_init
-Message-ID: <20191021160814.GC12140@elm>
-References: <20191021154533.GB12140@elm>
- <20191021160532.7719-1-navid.emamdoost@gmail.com>
+        Mon, 21 Oct 2019 12:09:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35514 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726289AbfJUQJy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 12:09:54 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 665D3205C9;
+        Mon, 21 Oct 2019 16:09:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571674193;
+        bh=yAFVLkxjq0Sx/TKG/3FFK7vmvO0S13xxudXXKeP8cls=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=UJLPRlaUWuFmpX+NxO/8w1KbZGIRH4d0ob9OZ1lhjvd7SyHzsvySc7DcUoLh3ZXTn
+         Y4bB/59GrW2t07f4+eAY985zcRpPVQES2Ejwytla7wMFbkuUQssn5Q6uidZG7iDJvg
+         Hs6/5hZyZQF2qN0iZ6oZsMsmW7I2rVXRZxU5NdH0=
+Date:   Mon, 21 Oct 2019 11:09:52 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Dominik Brodowski <linux@dominikbrodowski.net>
+Cc:     linux-pci@vger.kernel.org, "Michael ." <keltoiboy@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Trevor Jacobs <trevor_jacobs@aol.com>,
+        Kris Cleveland <tridentperfusion@yahoo.com>,
+        Jeff <bluerocksaddles@willitsonline.com>,
+        Morgan Klym <moklym@gmail.com>
+Subject: Re: PCI device function not being enumerated [Was: PCMCIA not
+ working on Panasonic Toughbook CF-29]
+Message-ID: <20191021160952.GA229204@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191021160532.7719-1-navid.emamdoost@gmail.com>
+In-Reply-To: <20191020090800.GA2778@light.dominikbrodowski.net>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-10-21 11:05:31, Navid Emamdoost wrote:
-> In the implementation of aa_audit_rule_init(), when aa_label_parse()
-> fails the allocated memory for rule is released using
-> aa_audit_rule_free(). But after this release, the return statement
-> tries to access the label field of the rule which results in
-> use-after-free. Before releasing the rule, copy errNo and return it
-> after release.
+On Sun, Oct 20, 2019 at 11:08:00AM +0200, Dominik Brodowski wrote:
+> On the basis of the additional information (thanks), there might be a
+> more specific path to investigate: It is that the PCI code does not
+> enumerate the second cardbus bridge PCI function in the more recent 4.19
+> kernel compared to the anvient (and working) 2.6 kernel.
 > 
-> Fixes: 52e8c38001d8 ("apparmor: Fix memory leak of rule on error exit path")
-> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-
-Reviewed-by: Tyler Hicks <tyhicks@canonical.com>
-
-Thanks!
-
-Tyler
-
-> ---
-> Changes in v3:
-> 	-- applied Tyler Hicks recommendation on err initialization.
+> Namely, only one CardBus bridge is recognized
 > 
->  security/apparmor/audit.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> ...
+> 06:01.0 CardBus bridge: Ricoh Co Ltd RL5c476 II (rev 8b)
+> 06:01.1 SD Host controller: Ricoh Co Ltd R5C822 SD/SDIO/MMC/MS/MSPro Host Adapter (rev 11)
+> 06:02.0 Network controller: Intel Corporation PRO/Wireless 2915ABG [Calexico2] Network Connection (rev 05)
+> ...
 > 
-> diff --git a/security/apparmor/audit.c b/security/apparmor/audit.c
-> index 5a98661a8b46..597732503815 100644
-> --- a/security/apparmor/audit.c
-> +++ b/security/apparmor/audit.c
-> @@ -197,8 +197,9 @@ int aa_audit_rule_init(u32 field, u32 op, char *rulestr, void **vrule)
->  	rule->label = aa_label_parse(&root_ns->unconfined->label, rulestr,
->  				     GFP_KERNEL, true, false);
->  	if (IS_ERR(rule->label)) {
-> +		int err = PTR_ERR(rule->label);
->  		aa_audit_rule_free(rule);
-> -		return PTR_ERR(rule->label);
-> +		return err;
->  	}
->  
->  	*vrule = rule;
-> -- 
-> 2.17.1
+> instead of the two which really should be present:
 > 
+> ...
+> 06:01.0 CardBus bridge: Ricoh Co Ltd RL5c476 II (rev 8b)
+> 06:01.1 CardBus bridge: Ricoh Co Ltd RL5c476 II (rev 8b)
+> 06:01.2 SD Host controller: Ricoh Co Ltd R5C822 SD/SDIO/MMC/MS/MSPro Host Adapter (rev 11)
+> 06:02.0 Network controller: Intel Corporation PRO/Wireless 2915ABG [Calexico2] Network Connection (rev 05)
+> ...
+> 
+> To the PCI folks: any idea on what may cause the second cardbus bridge PCI
+> device function to be missed? Are there any command line options the users
+> who reported this issue[*] may try?
+
+Thanks for the report.  Could you try disabling
+ricoh_mmc_fixup_rl5c476(), e.g., with the patch below (this is based
+on v5.4-rc1, but you can use v4.9 if that's easier for you)?  This
+isn't a fix; it's just something that looks like it might be related.
+
+> [*] For more information, see this thread:
+> 	https://lore.kernel.org/lkml/CAFjuqNi+knSb9WVQOahCVFyxsiqoGgwoM7Z1aqDBebNzp_-jYw@mail.gmail.com/
+
+
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 320255e5e8f8..7a1e1a242506 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -3036,38 +3036,6 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_HINT, 0x0020, quirk_hotplug_bridge);
+  * #1, and this will confuse the PCI core.
+  */
+ #ifdef CONFIG_MMC_RICOH_MMC
+-static void ricoh_mmc_fixup_rl5c476(struct pci_dev *dev)
+-{
+-	u8 write_enable;
+-	u8 write_target;
+-	u8 disable;
+-
+-	/*
+-	 * Disable via CardBus interface
+-	 *
+-	 * This must be done via function #0
+-	 */
+-	if (PCI_FUNC(dev->devfn))
+-		return;
+-
+-	pci_read_config_byte(dev, 0xB7, &disable);
+-	if (disable & 0x02)
+-		return;
+-
+-	pci_read_config_byte(dev, 0x8E, &write_enable);
+-	pci_write_config_byte(dev, 0x8E, 0xAA);
+-	pci_read_config_byte(dev, 0x8D, &write_target);
+-	pci_write_config_byte(dev, 0x8D, 0xB7);
+-	pci_write_config_byte(dev, 0xB7, disable | 0x02);
+-	pci_write_config_byte(dev, 0x8E, write_enable);
+-	pci_write_config_byte(dev, 0x8D, write_target);
+-
+-	pci_notice(dev, "proprietary Ricoh MMC controller disabled (via CardBus function)\n");
+-	pci_notice(dev, "MMC cards are now supported by standard SDHCI controller\n");
+-}
+-DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_RICOH, PCI_DEVICE_ID_RICOH_RL5C476, ricoh_mmc_fixup_rl5c476);
+-DECLARE_PCI_FIXUP_RESUME_EARLY(PCI_VENDOR_ID_RICOH, PCI_DEVICE_ID_RICOH_RL5C476, ricoh_mmc_fixup_rl5c476);
+-
+ static void ricoh_mmc_fixup_r5c832(struct pci_dev *dev)
+ {
+ 	u8 write_enable;
