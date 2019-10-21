@@ -2,72 +2,130 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED9D4CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:21:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5BE8CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:24:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB70820679
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:21:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2CBF20679
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:24:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728250AbfJULVx (ORCPT
+        id S1728365AbfJULY5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 07:21:53 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:49738 "EHLO foss.arm.com"
+        Mon, 21 Oct 2019 07:24:57 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:49806 "EHLO foss.arm.com"
         rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S1726767AbfJULVx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 07:21:53 -0400
+        id S1727433AbfJULY5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 07:24:57 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 77069EBD;
-        Mon, 21 Oct 2019 04:21:18 -0700 (PDT)
-Received: from bogus (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8F10E3F718;
-        Mon, 21 Oct 2019 04:21:16 -0700 (PDT)
-Date:   Mon, 21 Oct 2019 12:21:14 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Yunfeng Ye <yeyunfeng@huawei.com>
-Cc:     catalin.marinas@arm.com, will@kernel.org,
-        kstewart@linuxfoundation.org, gregkh@linuxfoundation.org,
-        lorenzo.pieralisi@arm.com, tglx@linutronix.de,
-        David.Laight@ACULAB.COM, mark.rutland@arm.com,
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 82EBEEBD;
+        Mon, 21 Oct 2019 04:24:22 -0700 (PDT)
+Received: from [10.1.194.43] (e112269-lin.cambridge.arm.com [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A1F893F718;
+        Mon, 21 Oct 2019 04:24:20 -0700 (PDT)
+Subject: Re: [PATCH v6 05/10] KVM: arm64: Support stolen time reporting via
+ shared structure
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        kvm@vger.kernel.org, Suzuki K Pouloze <suzuki.poulose@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-doc@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        linux-kernel@vger.kernel.org, James Morse <james.morse@arm.com>,
         linux-arm-kernel@lists.infradead.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        hushiyuan@huawei.com, wuyun.wu@huawei.com, linfeilong@huawei.com,
-        Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v5] arm64: psci: Reduce the waiting time for
- cpu_psci_cpu_kill()
-Message-ID: <20191021112114.GC21581@bogus>
-References: <710429cc-4d88-b7c3-b068-5459cf8133b5@huawei.com>
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Will Deacon <will@kernel.org>, kvmarm@lists.cs.columbia.edu,
+        Julien Thierry <julien.thierry.kdev@gmail.com>
+References: <20191011125930.40834-1-steven.price@arm.com>
+ <20191011125930.40834-6-steven.price@arm.com> <86eez9yoog.wl-maz@kernel.org>
+ <1bb10eb5-0fe8-57c9-3b67-9b3661a73d29@arm.com>
+ <cc639f743d621198ef02f880089bb54d@www.loen.fr>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <89a8002f-a9b0-1864-a568-36285eb2c485@arm.com>
+Date:   Mon, 21 Oct 2019 12:24:19 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <710429cc-4d88-b7c3-b068-5459cf8133b5@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <cc639f743d621198ef02f880089bb54d@www.loen.fr>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 06:52:16PM +0800, Yunfeng Ye wrote:
-> In cases like suspend-to-disk and suspend-to-ram, a large number of CPU
-> cores need to be shut down. At present, the CPU hotplug operation is
-> serialised, and the CPU cores can only be shut down one by one. In this
-> process, if PSCI affinity_info() does not return LEVEL_OFF quickly,
-> cpu_psci_cpu_kill() needs to wait for 10ms. If hundreds of CPU cores
-> need to be shut down, it will take a long time.
+On 21/10/2019 11:40, Marc Zyngier wrote:
+> On 2019-10-21 11:21, Steven Price wrote:
+>> On 19/10/2019 12:12, Marc Zyngier wrote:
+>>> On Fri, 11 Oct 2019 13:59:25 +0100,
+>>> Steven Price <steven.price@arm.com> wrote:
+>>>>
+>>>> Implement the service call for configuring a shared structure between a
+>>>> VCPU and the hypervisor in which the hypervisor can write the time
+>>>> stolen from the VCPU's execution time by other tasks on the host.
+>>>>
+>>>> User space allocates memory which is placed at an IPA also chosen by
+>>>> user
+>>>> space. The hypervisor then updates the shared structure using
+>>>> kvm_put_guest() to ensure single copy atomicity of the 64-bit value
+>>>> reporting the stolen time in nanoseconds.
+>>>>
+>>>> Whenever stolen time is enabled by the guest, the stolen time
+>>>> counter is
+>>>> reset.
+>>>>
+>>>> The stolen time itself is retrieved from the sched_info structure
+>>>> maintained by the Linux scheduler code. We enable SCHEDSTATS when
+>>>> selecting KVM Kconfig to ensure this value is meaningful.
+>>>>
+>>>> Signed-off-by: Steven Price <steven.price@arm.com>
+>>>> ---
+>>>>  arch/arm/include/asm/kvm_host.h   | 20 +++++++++++
+>>>>  arch/arm64/include/asm/kvm_host.h | 21 +++++++++++-
+>>>>  arch/arm64/kvm/Kconfig            |  1 +
+>>>>  include/linux/kvm_types.h         |  2 ++
+>>>>  virt/kvm/arm/arm.c                | 11 ++++++
+>>>>  virt/kvm/arm/hypercalls.c         |  3 ++
+>>>>  virt/kvm/arm/pvtime.c             | 56 +++++++++++++++++++++++++++++++
+>>>>  7 files changed, 113 insertions(+), 1 deletion(-)
 > 
-> Normally, there is no need to wait 10ms in cpu_psci_cpu_kill(). So
-> change the wait interval from 10 ms to max 1 ms and use usleep_range()
-> instead of msleep() for more accurate timer.
+> [...]
 > 
-> In addition, reducing the time interval will increase the messages
-> output, so remove the "Retry ..." message, instead, track time and
-> output to the the successful message.
+>>>> +long kvm_hypercall_stolen_time(struct kvm_vcpu *vcpu)
+>>>
+>>> Why long? If that's a base address, then it is either a phys_addr_t or
+>>> a gpa_t. I'd suggest you move the error check to the caller.
+>>
+>> This is a bit more tricky. It's a long because that's the declared type
+>> of the SMCCC return in kvm_hvc_call_handler(). I can't (easily) move the
+>> code into kvm_hvc_call_handler() because that is compiled for arm (as
+>> well as arm64) and we don't have the definitions for stolen time there.
+>> The best option I could come up with is to have a dummy stub for arm and
+>> use generic types for this function.
+>>
+>> This means we need a type which can contain both a gpa_t and the
+>> SMCCC_RET_NOT_SUPPORTED error code.
+>>
+>> I'm open to alternative suggestions on how to make this work.
+> 
+> My suggestion would be to always return a gpa_t from this function, and
+> change the 32bit stub for kvm_hypercall_stolen_time() to always return
+> GPA_INVALID.
 
-Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
+Ok, fair enough. Although it ends up with this strange looking fragment
+in kvm_hvc_call_handler():
 
---
-Regards,
-Sudeep
+	case ARM_SMCCC_HV_PV_TIME_ST:
+		gpa = kvm_init_stolen_time(vcpu);
+		if (gpa != GPA_INVALID)
+			val = gpa;
+		break;
+
+But I agree the gpa_t return type is clearer.
+
+Thanks,
+
+Steve
