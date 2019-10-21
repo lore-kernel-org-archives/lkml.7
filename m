@@ -2,111 +2,104 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A886CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 19:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81B9DCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 19:29:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B6EA205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 19:28:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571686138;
-	bh=aL519NiYCbs7aj+hNkciLs7n+wrEjTqYqKNI1l5QCAM=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=cNwnTN6OzTAdGW4X8jDbBZxtzm1hxDL99hJZ/6SQtW7TpmAqnZBakbgTi32nCT34h
-	 q6S36XvH2stgyi/drd+Sp06v8qWEDp/NdX9E9VW+spEOYvXJttrafd1OMGalkr1hfg
-	 6v7TwLA34H4YjSsc5EPnsRUQRsDXz0qk7xktxKDY=
+	by mail.kernel.org (Postfix) with ESMTP id 60356205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 19:29:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729997AbfJUT25 (ORCPT
+        id S1730096AbfJUT3u convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 15:28:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58054 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728375AbfJUT25 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 15:28:57 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97543205ED;
-        Mon, 21 Oct 2019 19:28:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571686136;
-        bh=aL519NiYCbs7aj+hNkciLs7n+wrEjTqYqKNI1l5QCAM=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=sMH4Csq9dBDHCKtTWRpR3hDjvXzW8duYFGeq1M984poBAFdjZ9OjMxIaLqGidbAMS
-         hsryK3KEsHntoMDQGMiP4jimYIGln/4CQZfmhLvnmWICsIWDu+dlvnWy10R1ZP0J/u
-         0lHczooeberiJ8lt4QRhv51tMzK7M0QlAlkLNn5Q=
-Subject: =?UTF-8?Q?Re=3a_=5bPATCH=5d_usbip=3a=c2=a0Fix_free_of_unallocated_m?=
- =?UTF-8?Q?emory_in_vhci_tx?=
-To:     Julia Lawall <julia.lawall@lip6.fr>,
-        Suwan Kim <suwan.kim027@gmail.com>
-Cc:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, valentina.manea.m@gmail.com,
-        kbuild test robot <lkp@intel.com>, shuah <shuah@kernel.org>
-References: <20191021142414.27164-1-suwan.kim027@gmail.com>
- <alpine.DEB.2.21.1910211706240.2877@hadrien>
-From:   shuah <shuah@kernel.org>
-Message-ID: <936d4cf8-cd5a-a297-8298-e9bc5d3c193d@kernel.org>
-Date:   Mon, 21 Oct 2019 13:28:54 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 21 Oct 2019 15:29:50 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:57153 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727211AbfJUT3t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 15:29:49 -0400
+Received: from mail-qt1-f182.google.com ([209.85.160.182]) by
+ mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MwwqB-1i7Bp90UQN-00yTKm; Mon, 21 Oct 2019 21:29:48 +0200
+Received: by mail-qt1-f182.google.com with SMTP id o25so9463601qtr.5;
+        Mon, 21 Oct 2019 12:29:47 -0700 (PDT)
+X-Gm-Message-State: APjAAAXxG3PwcfRI3eLtJ+5+/ni+CU0R/KBbA+CH2mR93Dr70yh2q6o5
+        HYoj9rKV7RJBlESQY+vIkFofRwVypTXpEG/YFac=
+X-Google-Smtp-Source: APXvYqxjZ7hRce7aTLzsiguJU9kzIisgOu1fuNnnsvsKuS64oRa2BWzO+E2SzpQf094lq5mjR4yUh0g+513/L1lQ7gY=
+X-Received: by 2002:aed:3c67:: with SMTP id u36mr25957878qte.142.1571686186839;
+ Mon, 21 Oct 2019 12:29:46 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1910211706240.2877@hadrien>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20191006053916.8849-1-brgl@bgdev.pl> <CAMRc=Me3Q=67fCDrFM38LAGXCd+apJybLYVfyrfwmwYa5L1CmQ@mail.gmail.com>
+ <CAK8P3a3tUg4SBtO0xb2GAHfegp23WF4TLymzqFfra2-fGLRO7w@mail.gmail.com> <CAMRc=Me8g2gFiag0UQwuu4UZONcowQw900+MUbGF+4-E0z09Zg@mail.gmail.com>
+In-Reply-To: <CAMRc=Me8g2gFiag0UQwuu4UZONcowQw900+MUbGF+4-E0z09Zg@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 21 Oct 2019 21:29:30 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a2mh+Eh+W1GFL2Mi5R3t55SRwWyXW_iBxXB-nBhdCO8LA@mail.gmail.com>
+Message-ID: <CAK8P3a2mh+Eh+W1GFL2Mi5R3t55SRwWyXW_iBxXB-nBhdCO8LA@mail.gmail.com>
+Subject: Re: [PATCH v3 0/8] drivers: add new variants of devm_platform_ioremap_resource()
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-doc <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Christoph Hellwig <hch@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Provags-ID: V03:K1:z1euxHiRdhARy27mW0ZCeOjUtQqaADtxQBbiIbswc1h5rWIJCDb
+ AzGbjoaXc6kfdylbqmWJskmXCTA2mSziVKpvRaQP/eU1cpiCDgoEq8gWyNr6zhtxWu3hv+k
+ KU17nThTf03b+7RUdI06k6KeOYLdPYDqil/+68rFfWVqGKoQZON9DBmXvuKiTVwxrK/MSpG
+ 2BjyEzKtGh877wG2d4Kjw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:cAUK04/pw78=:+ery2poVEwEVB0Bq1qvzIA
+ hZVv6D6mFYFB8n3iQ30yxdLLoKi6rvXZme6AKDUuJUUbiJr+tdPofys3PtZOGEqYKHscHJXPo
+ Aym2hvYJZ7U2Rb1YSfS18x70IpD0LbESYXZ9sidwD0chwzsjrYuuSfTsBlNIAgPu64bJ/OoE7
+ w6caZsP6xmSa7DrbfqjbE+Q8xpnkZ+Pqc91i0L7eiqny4OZTBj7hJkevcaRhRY7716swyimnG
+ S1DHudU9D06GIFFRex4q2jAc3HKShN1BszDv7ZjFAdSHZc8LZJ4NvizAthgvGuUBMN1QgpFa6
+ mGJGFX8OPjZ3K9IhD/yaEWWx0mC3DsM0Y5W1loZAOAXlyEjEHYnBum3KlYqApzPOVt18o4X36
+ /WkZ/eil0gCpIFrC0bUIDj9Xo0OhB2ARMws5lYenzYASoI9Wd+S4JMb6TaB98OrS1kpoGSj96
+ YzpF944VJ+EWQr4dRWEDmvOYC1+Q8nPZRbZnbj+MAMst1YeEFs6YklcFkSqs/zpwvEnCoePfs
+ t9hlZnPu6DAaSLTPOVHRl3PRd1FiWep+eFYT4qAVpOKXzkXhEnJrDgUbiw34u8xTTiSuMuA0x
+ XNrDzzQDtSrlySGHf0G5uIlzQeV3T1yyt5aIAIjMbI2GwcvhJbV+QY++zlIsO22UqYM6TKsvV
+ RY+GhDUUkZ537HsGM+zA3spyBPco4awW4ytdMNgvEXzLJ4F5kpjDvTNnzT97LnVExanjM9lfz
+ rVD77eSnN6XbwRObYdjudVW5kcA4t+BfBAMDClOi6y89NdpWE+yW127jqNxZ1ZvSCeWjPe8C+
+ rmk+2s3+Z+eXbvDuJ+yYsT6MXB30lGeWMym32qJAp/n/3isZBvnO/zWXvjCWOlUIX4xL+PnIB
+ WDjnnGtFphIMKe8B31jQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/21/19 9:08 AM, Julia Lawall wrote:
-> 
-> 
-> On Mon, 21 Oct 2019, Suwan Kim wrote:
-> 
->> iso_buffer should be set to NULL after use and free in the while loop.
->> In the case of isochronous URB in the while loop, iso_buffer is
->> allocated and after sending it to server, buffer is deallocated. And
->> then, if the next URB in the while loop is not a isochronous pipe,
->> iso_buffer still holds the previously deallocated buffer address and
->> kfree tries to free wrong buffer address.
->>
->> Fixes: ea44d190764b (“usbip: Implement SG support to vhci-hcd and stub driver”)
->> Reported-by: kbuild test robot <lkp@intel.com>
->> Reported-by: Julia Lawall <julia.lawall@lip6.fr>
->> Signed-off-by: Suwan Kim <suwan.kim027@gmail.com>
->> ---
->>   drivers/usb/usbip/vhci_tx.c | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/drivers/usb/usbip/vhci_tx.c b/drivers/usb/usbip/vhci_tx.c
->> index c3803785f6ef..b290e810d11b 100644
->> --- a/drivers/usb/usbip/vhci_tx.c
->> +++ b/drivers/usb/usbip/vhci_tx.c
->> @@ -73,6 +73,7 @@ static int vhci_send_cmd_submit(struct vhci_device *vdev)
->>   		memset(&pdu_header, 0, sizeof(pdu_header));
->>   		memset(&msg, 0, sizeof(msg));
->>   		memset(&iov, 0, sizeof(iov));
->> +		iso_buffer = NULL;
-> 
-> Somehow I would have put it after the kfree, since the kfree makes the
-> value invalid.  iso_buffer is already initialized to NULL for the first
-> iteration.  If you want to put the setting to NULL at the top of the loop,
-> maybe the = NULL in the first line should be removed.
-> 
+On Mon, Oct 21, 2019 at 6:29 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> pon., 21 paź 2019 o 17:53 Arnd Bergmann <arnd@arndb.de> napisał(a):
+> > On Mon, Oct 21, 2019 at 5:04 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> > > gentle ping for this. I noticed that some maintainers are complaining
+> > > about being spammed with patches converting old drivers to using
+> > > devm_platform_ioremap_resource() and there's even a patch removing the
+> > > relevant coccinelle script on the list, but I think for new drivers
+> > > these are still useful. Do you want to pick them up for v5.5 (or at
+> > > all)?
+> >
+> > I think this series is useful and we should merge it. Are there any
+> > remaining dependencies or conflicts with Christoph Hellwig's recent
+> > __ioremap rework? If there are, I would prioritize his work and maybe
+> > delay this one by another merge window, otherwise please add
+> > my Reviewed-by to all patches and resend them for Greg to pick
+> > up (provided he has no objections).
+>
+> Is Christoph's work in next? The series doesn't apply cleanly on next,
+> I needed to fix a couple conflicts. What branch should I rebase it on
+> before resending?
 
-It makes sense to clear it after kfree() on line 150.
+Not sure, maybe Christoph can comment.
 
-This kfree() and clearing iso_buffer are necessary only for
-PIPE_ISOCHRONOUS case.
+Your patches would best go through the char-misc tree and be based
+on top of that, for Christoph's I think the idea is to have some go
+through the architecture maintainer trees, and have whatever is
+left go through my asm-generic tree.
 
-Please add a comment above that this is for isoc case.
-
-thanks,
--- Shuah
-
-
+      Arnd
