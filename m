@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 944D4CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:36:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FD0ECA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:36:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66A5D2067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:36:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 272A62067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:36:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S9EG7QY/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dfN7WGSg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728383AbfJUKg3 (ORCPT
+        id S1728398AbfJUKgd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 06:36:29 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:35957 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728371AbfJUKg0 (ORCPT
+        Mon, 21 Oct 2019 06:36:33 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:34733 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728126AbfJUKga (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 06:36:26 -0400
-Received: by mail-pf1-f193.google.com with SMTP id y22so8180547pfr.3
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 03:36:26 -0700 (PDT)
+        Mon, 21 Oct 2019 06:36:30 -0400
+Received: by mail-pf1-f196.google.com with SMTP id b128so8190071pfa.1
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 03:36:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :in-reply-to:references;
-        bh=iVqqU2LAVSCsGxONMpzjN5OaSzKTS+PP+RlrbsDHeMo=;
-        b=S9EG7QY/ZgkmqHhRziKbvL3c/VYqOHXyxeTbUYe3phmidMNW6VBcGWA5qYT94oVvwV
-         FcDAXIrZHnwKaZPodf4BPLNtpvyHt05p/WPYzzGomf3ic9a1bgRqcT47c3YQX1kTBzTP
-         TPm2ahWz0pTsWGK1/SUEJ7Eq8+CeuaX+8RSWgQaP+HdnHfbZfdDo2skD2ZdD0OnEMidt
-         mKa3+5D7lLpBUC5WYONM+bjVgGtcN/CH+LHb3+baXgPFR+unyWMICbOgLOWfzCi/Od3z
-         +zswnyNg6Q+4KhQqLJbYtWR5WeASo8JWdwRweB759Abf+83GPYHQHcfBc+UQYlQBDpIa
-         FLoA==
+        bh=raRv91SuwpaXlGeT2wU6HLI9/SHJRwKCyqG5FDUj7WM=;
+        b=dfN7WGSgkXXOa/URlH/ad/gRg6gnfjIsMBdB5HASF7KGk6e3vgPOKuBUdrQonzvxbl
+         ZabWSM5RBGxt9NZhV2CYQS7Re/oJH5LHCS76bWGl3dYzeWFKFBemK6203svGG9zzeErK
+         R7SubW3IktLLP9997uvwDu5MDI/8VHhY0dVMH+OBFiRIeKkawfreLDLFufFg++ep0JJu
+         8aTHfZcuchruuOfibLzKpvpmuCJQOD9bfiZHBFbS7MXOhnnwVBPG41CS9RisyJfs2Dui
+         lLPGF0KkbdVE34XIzLU+DIbaUYZBrC2+83vdWkUscpdsWoFc7H15PLXEPR/klZ1ea5qr
+         NC9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:in-reply-to:references;
-        bh=iVqqU2LAVSCsGxONMpzjN5OaSzKTS+PP+RlrbsDHeMo=;
-        b=jIynyJ8n49ur8RDRXK5hqLIk3DrpiyxVOo8L/iDOyQyiZUR5TqcUHOUay7+GaW9Ghk
-         QCqcXs7hKa2diXoWMD19TlHE1d8kcyHUpqhMTGFEjvI0YJGsGpehj0Bz9ExV2GRIcfmO
-         ZPJL17gC0n4oXS1pz5Vka7xHuYouWRdIvMFJeZxQANVpso+MZtG3In2RiXg1ZVNlNAB2
-         /09tu4SdvpLjyaIA6p67gfrkyDHeXlX9Dz2eAFmw3xYT9Hd5sB3aNwbFgQUn0H9jzUpx
-         LK4NADpPF/QEPBvIg23w8hjDrbP6WckW61RB6Eti4KatZ8g/Vu++qrrXgQrrViFWzG4h
-         EYWQ==
-X-Gm-Message-State: APjAAAVF9x7Brgjgw9ai4Ijl49TAD+fDZ4aDEGK1yC27x/+ZDFEEsPYr
-        ptKDj5ceUY1PyACdVVPl8zIJvgo6+NENSA==
-X-Google-Smtp-Source: APXvYqzEHGDZ6oIR4ZkTsgaawzrSiWXv0qd13sPs8zKa+jMYleM9/V8ML0gtBkC0Oq7Pc4bCnCZdKw==
-X-Received: by 2002:a63:cc4a:: with SMTP id q10mr11017952pgi.221.1571654185644;
-        Mon, 21 Oct 2019 03:36:25 -0700 (PDT)
+        bh=raRv91SuwpaXlGeT2wU6HLI9/SHJRwKCyqG5FDUj7WM=;
+        b=fW3IfojY9OcFnJKzMJdI8Xmtj5GSgZyNnHPKGxreYhuef3CobEZC1gLNcZAlQGf/0s
+         8pHdtDfJUpppczpLyiLq53n/109e9YN9F80EHihvpeKplkbZ2ZtcgQOfCPz7nm9VZhEK
+         a0cDNtg3M9mpkcOmaciPz9i3ELCzDR+LzS6KGwpmVITNp5D8kh1wuP7X55EyBJhdLS/Z
+         4Vxk8dd62ENkqwrbIHOSDrHVyun/68/Jt+B/drrBr1mHB0KUhmjhrn4I3L+kARUj4yG+
+         PiWgVrpRBOK4Vnsrb4+LSzucFKzfg9WjddiWzUY0YgWG8820IcXVTGDILfxPYTPhQVXz
+         E8lA==
+X-Gm-Message-State: APjAAAU+7otTlo/gGOsWg7kfYQI7TMghU2oWZxIeY1sT2nOM3pB6WCq1
+        RwWFmDagnnu3aFKkNsuyogphiJt5r/NoNA==
+X-Google-Smtp-Source: APXvYqwCpYHYXSMroItXhbGj9D6u5ioe8pubcuLdwxrRirA+DapJicFWgsOu+QaSERbHJmDVv7rX+g==
+X-Received: by 2002:a17:90a:86c7:: with SMTP id y7mr26839634pjv.82.1571654189240;
+        Mon, 21 Oct 2019 03:36:29 -0700 (PDT)
 Received: from localhost ([49.248.62.222])
-        by smtp.gmail.com with ESMTPSA id e192sm15379176pfh.83.2019.10.21.03.36.24
+        by smtp.gmail.com with ESMTPSA id y22sm13192289pjn.12.2019.10.21.03.36.28
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 21 Oct 2019 03:36:25 -0700 (PDT)
+        Mon, 21 Oct 2019 03:36:28 -0700 (PDT)
 From:   Amit Kucheria <amit.kucheria@linaro.org>
 To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         bjorn.andersson@linaro.org, edubezval@gmail.com, agross@kernel.org,
@@ -66,9 +66,9 @@ To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         Rob Herring <robh+dt@kernel.org>,
         Zhang Rui <rui.zhang@intel.com>
 Cc:     devicetree@vger.kernel.org
-Subject: [PATCH v6 12/15] arm: dts: msm8974: thermal: Add interrupt support
-Date:   Mon, 21 Oct 2019 16:05:31 +0530
-Message-Id: <a2a70ff28e72a14b163a9a9b93ef474ab0836398.1571652874.git.amit.kucheria@linaro.org>
+Subject: [PATCH v6 13/15] arm64: dts: msm8916: thermal: Add interrupt support
+Date:   Mon, 21 Oct 2019 16:05:32 +0530
+Message-Id: <88eff964b708c8aff57b24370d2e14389ace09e9.1571652874.git.amit.kucheria@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1571652874.git.amit.kucheria@linaro.org>
 References: <cover.1571652874.git.amit.kucheria@linaro.org>
@@ -82,19 +82,18 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 Register upper-lower interrupt for the tsens controller.
 
 Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-Tested-by: Brian Masney <masneyb@onstation.org>
 ---
- arch/arm/boot/dts/qcom-msm8974.dtsi | 2 ++
+ arch/arm64/boot/dts/qcom/msm8916.dtsi | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
-index 33c534370fd5c..c1a3a7d7161cd 100644
---- a/arch/arm/boot/dts/qcom-msm8974.dtsi
-+++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
-@@ -531,6 +531,8 @@
- 			nvmem-cells = <&tsens_calib>, <&tsens_backup>;
- 			nvmem-cell-names = "calib", "calib_backup";
- 			#qcom,sensors = <11>;
+diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+index 8686e101905cc..807f86a4535e0 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+@@ -816,6 +816,8 @@
+ 			nvmem-cells = <&tsens_caldata>, <&tsens_calsel>;
+ 			nvmem-cell-names = "calib", "calib_sel";
+ 			#qcom,sensors = <5>;
 +			interrupts = <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>;
 +			interrupt-names = "uplow";
  			#thermal-sensor-cells = <1>;
