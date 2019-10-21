@@ -2,95 +2,140 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51A61CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:57:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2ABECA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 17:01:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E84D2064B
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:57:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9F2E2064B
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 17:01:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="AaBrSS8M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727976AbfJUQ5R (ORCPT
+        id S1727700AbfJURBT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 12:57:17 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:58462 "EHLO foss.arm.com"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S1726672AbfJUQ5Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 12:57:16 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E63D31715;
-        Mon, 21 Oct 2019 09:56:53 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3FF163F71F;
-        Mon, 21 Oct 2019 09:56:52 -0700 (PDT)
-Date:   Mon, 21 Oct 2019 17:56:50 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com,
-        kernel-hardening@lists.openwall.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 13/18] arm64: preserve x18 when CPU is suspended
-Message-ID: <20191021165649.GE56589@lakrids.cambridge.arm.com>
-References: <20191018161033.261971-1-samitolvanen@google.com>
- <20191018161033.261971-14-samitolvanen@google.com>
+        Mon, 21 Oct 2019 13:01:19 -0400
+Received: from mail-eopbgr10071.outbound.protection.outlook.com ([40.107.1.71]:59201
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726276AbfJURBT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 13:01:19 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UuD9nOQTGBgNA2HxSTrwHK7aXrtTr6Nl/sHnD1RSnoPDq/nsMBN5emkAD6eLwZCT+nIfWNh+MqrB/LDL5hpxsOMPyr8EWCMWYurMzdXEGIYDTQ1qCdFpYQRlgM77KO5rCsqTkFfl27vRF1jx3x971hjpHU7BrOyzQ3tMEWs7GkNqIukk4AnVlSyqLnlyV9rqMANtQBGVePGoNTnq/ro7q52DqGXT4Obfv+75/70Gi/gU7keo7nnVGYu6MeRYje7U5yQL3qADSFNaf7SknnQYknGxQUL1m30rvlnbTUXgJJqgIEgvYPcx00gKlwytz/P0f5QbEwZLneBK4Vh62TEOMA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mLIJtnw8uKzC3ORSaXQE6LC73AaD5r/KgOU1uqdNJDY=;
+ b=aY71RpYdS6DGkqgghFBJOvzyhgw2ptRlCNjblOt3FZqppiRteCkiKWJUBLO/iPZMLqF/8uPmeqtTCNDNV0qJiXWus5Fdd1yC/g08RFoiR9u0kCIsRJfzBYiX/2TShPVNOLrQUbukOADfsbybqpXzvqvW/MAL1b+GzopjCVMg4GK0ACq3ebgDCwDviweNazzZt7baKh9k6yuD+ffIttZoelPMB9Uw5tDKgt0N/sqw2QVqRWi8RrD/koVHKSregV04VujNZykWwdcpXPGz9bVuVt5sjUPyjqkx15OJefFR409lq7jWhv/HCSEx1enC1RL/DPf1Z1qagr8h1lr8g+stPA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mLIJtnw8uKzC3ORSaXQE6LC73AaD5r/KgOU1uqdNJDY=;
+ b=AaBrSS8MnOwpHEdt1VIMuOoRxF4n+p3tfh00ZcwkPnlSppKBh1k0b92w6hHry4/KJkRdGprY581Uz7h08KWKOMEb6XGlxnuTplXrs8K2d02ISb6l1Hjd5QTb+/sSe14OM4Z4Sufi7qrP5IVTAd334PpXFpFm3tkWu9iQRePgGT0=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) by
+ VI1PR05MB4751.eurprd05.prod.outlook.com (20.176.5.24) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2367.24; Mon, 21 Oct 2019 17:01:15 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::75ae:b00b:69d8:3db0]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::75ae:b00b:69d8:3db0%7]) with mapi id 15.20.2347.029; Mon, 21 Oct 2019
+ 17:01:15 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Matteo Croce <mcroce@redhat.com>
+CC:     Joe Perches <joe@perches.com>, Doug Ledford <dledford@redhat.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Potnuri Bharat Teja <bharat@chelsio.com>
+Subject: Re: linux-next: Fixes tag needs some work in the rdma-fixes tree
+Thread-Topic: linux-next: Fixes tag needs some work in the rdma-fixes tree
+Thread-Index: AQHVh+L3TKVLX91rm0q8yD/5yy/ydKdlLgGAgAAG3YCAAAa0AIAAFu+A
+Date:   Mon, 21 Oct 2019 17:01:15 +0000
+Message-ID: <20191021170111.GB6285@mellanox.com>
+References: <20191021184128.601ff09d@canb.auug.org.au>
+ <c4377d50c8a30ae292cd7886909238ce4fb56ee5.camel@redhat.com>
+ <20191021151507.GD25164@mellanox.com>
+ <CAGnkfhzCuCUBG++QRTZbsUyFr8orq059Be7AvyL+_V9Smz7J3g@mail.gmail.com>
+In-Reply-To: <CAGnkfhzCuCUBG++QRTZbsUyFr8orq059Be7AvyL+_V9Smz7J3g@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BN7PR10CA0030.namprd10.prod.outlook.com
+ (2603:10b6:406:bc::43) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:44::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [142.162.113.180]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 734223a7-b09d-4378-1cbc-08d75648486f
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: VI1PR05MB4751:
+x-microsoft-antispam-prvs: <VI1PR05MB47519357B3A5FE98F6AE387ACF690@VI1PR05MB4751.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0197AFBD92
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(39860400002)(136003)(396003)(376002)(189003)(199004)(14454004)(11346002)(446003)(86362001)(33656002)(1076003)(25786009)(6916009)(81156014)(8936002)(8676002)(81166006)(478600001)(64756008)(66556008)(66446008)(66476007)(66946007)(486006)(66066001)(186003)(5660300002)(386003)(256004)(476003)(2616005)(26005)(102836004)(6506007)(71190400001)(76176011)(52116002)(99286004)(71200400001)(3846002)(7736002)(305945005)(6116002)(6486002)(4326008)(6246003)(36756003)(229853002)(6512007)(6436002)(2906002)(54906003)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB4751;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 1PYPxFp9mWs9X4BM25laXLekwWIb9NBXsNWQRQWf3FVw+BvGWB5G5R7XFaeNbflv9uq5cMxqO0UgwsSlZwkYLOgs8vWYciIlrIXIOUjOO2axtph1BNya6cT4oL87iZMzUvWN5fN4XyZlkOQ2DLW0l7VLtswlfqQmUy0lrYN+v5nxBFLn3NZCvAapd5l8kg+2BZ/h3WCSs1yLSlKV7qyN1xINITyFk1cexwqs8paVKn7xl0mBznvORtP8CekHPjXtWmejUtZtfaTaIdeuDE7J9eQBcdp9m09fM3G2GiPCsN3aeHewsznHmmdBNsKOJszU0D8soxJtmI8g6o5nSqy7FbKCr8ZmPqGHbC6+xi23fDICUIMAGfLr7qJ5mx8xNQoaPdXi3rEpaRbWPC9Dzi6sC2JBb2dMGaeB7viA35hMC4fs+lF6e2s3V0t8wdAKJDqd
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <319F531358C7844886670E6C2D23931C@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191018161033.261971-14-samitolvanen@google.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 734223a7-b09d-4378-1cbc-08d75648486f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Oct 2019 17:01:15.1648
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: MhCxQ+QG9FMNt45pCRfPHKIgjt+B4CoVMvC2I/rUnE4WlzpIdq7GVtawIkvb2Pyro8TTwG/zulEhWT0N+hBapQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4751
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 09:10:28AM -0700, Sami Tolvanen wrote:
-> Don't lose the current task's shadow stack when the CPU is suspended.
-> 
-> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-> ---
->  arch/arm64/mm/proc.S | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/arch/arm64/mm/proc.S b/arch/arm64/mm/proc.S
-> index fdabf40a83c8..9a8bd4bc8549 100644
-> --- a/arch/arm64/mm/proc.S
-> +++ b/arch/arm64/mm/proc.S
-> @@ -73,6 +73,9 @@ alternative_endif
->  	stp	x8, x9, [x0, #48]
->  	stp	x10, x11, [x0, #64]
->  	stp	x12, x13, [x0, #80]
-> +#ifdef CONFIG_SHADOW_CALL_STACK
-> +	stp	x18, xzr, [x0, #96]
-> +#endif
+On Mon, Oct 21, 2019 at 05:39:06PM +0200, Matteo Croce wrote:
+> > I thought I saw that checkpatch was checking this now?
+> >
+> > commit a8dd86bf746256fbf68f82bc13356244c5ad8efa
+> > Author: Matteo Croce <mcroce@redhat.com>
+> > Date:   Wed Sep 25 16:46:38 2019 -0700
+> >
+> >     checkpatch.pl: warn on invalid commit id
+> >
+> > Maybe that check should also check that enough hash is provided and
+> > other details like the correct subject line?
+> >
+> > I also use a check that builds the fixes line from the commit id and
+> > requires it to be the same as the patch provided. This catches all
+> > sorts of wrong fixes lines, and sometimes git even recommends 13 chars
+> > :\
+> >
+> > Jason
+>=20
+> Hi,
+>=20
+> actually I just call git_commit_info() which checks for validness.
+> I could also check that the hash is at least 12 digits, would be very eas=
+y.
 
-This should have a corresponding change to cpu_suspend_ctx in
-<asm/suspend.h>. Otherwise we're corrupting a portion of the stack.
+IMHO you should do
 
-Mark.
+  git log --abbrev=3D12 -1 --format=3D'Fixes: %h (\"%s\")'
 
->  	ret
->  ENDPROC(cpu_do_suspend)
->  
-> @@ -89,6 +92,9 @@ ENTRY(cpu_do_resume)
->  	ldp	x9, x10, [x0, #48]
->  	ldp	x11, x12, [x0, #64]
->  	ldp	x13, x14, [x0, #80]
-> +#ifdef CONFIG_SHADOW_CALL_STACK
-> +	ldp	x18, x19, [x0, #96]
-> +#endif
->  	msr	tpidr_el0, x2
->  	msr	tpidrro_el0, x3
->  	msr	contextidr_el1, x4
-> -- 
-> 2.23.0.866.gb869b98d4c-goog
-> 
+And check that the provided fixes line matches the above output
+exactly, or nearly exactly. People do lots of funny things to fixes
+lines..
+
+Jason
