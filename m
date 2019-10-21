@@ -2,505 +2,298 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AED2CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:09:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54AA5CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:11:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DADF620873
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:09:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Gojpe3os"
+	by mail.kernel.org (Postfix) with ESMTP id 3404D20873
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:11:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727021AbfJUJJb (ORCPT
+        id S1727318AbfJUJLy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 05:09:31 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:34002 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726987AbfJUJJ3 (ORCPT
+        Mon, 21 Oct 2019 05:11:54 -0400
+Received: from lucky1.263xmail.com ([211.157.147.134]:57260 "EHLO
+        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726181AbfJUJLx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 05:09:29 -0400
-Received: by mail-qk1-f195.google.com with SMTP id f18so11243947qkm.1
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 02:09:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=guXRRoZLi7jDyATnz1qUsi0KITTgal2IWEFqGAsLHnQ=;
-        b=Gojpe3osML3zGxMsS3sQhYyuaKqUFMMw7lQy4+XYpI27VRx998GolicAdSkir8lLRa
-         weTDhP0pxgJLwxIzUjjyibIbuJkJTyUQ8+WG8KPsmRAVrar/8pysd8THcSw+CHJWFsKO
-         KyAi5e0VpoYI1OetcMswIAXYBQPRFMgMsg8AM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=guXRRoZLi7jDyATnz1qUsi0KITTgal2IWEFqGAsLHnQ=;
-        b=BiimuH6sxEFxzFqMPqQWoyUlWK8s7P0DtOOFjrUY2Ywh6L2z7ZiGKXWqi93G/UYIaG
-         Yv6qJOksgWJU4az3T3lx40Dp3wV9nICypX5hZkaPqf4stf7/DhXVkwDPPxUFAmuax6Nc
-         8LDtPJ7A8+9W2Y+0o+42GJKhn4hqqyk9+7We554F7wYfzz7l++DmqhwPW6b20C3mqtwB
-         mIXgM+CnP7gAhP84leAe2MA6TILoRc7g2bo8YNsGOw4P4WIIECdt0aj7LUM2w7JG4b2L
-         fGqoG9qlQFcj41Ai+90fBdeWTVzouIfL6WOby4zd+7nw5/Gg9xqEM1Paop3MMSU6ZBiY
-         1dHg==
-X-Gm-Message-State: APjAAAXlai5elueBNHiN/A6kf/nk/NLTf9m7k04fZLEJ8/b0EjC5y3HQ
-        0Kx1urnh1MulprjIOc8UOpXLbAhBj06OBuoL29QZTg==
-X-Google-Smtp-Source: APXvYqyoPdgcDPMlKznf08MKHuqYsGx9XSMKrebx4zksukPQijF4grIMZZfpqOwIwCvr6WYgtd9Vd9xwyjpwe8lurZ8=
-X-Received: by 2002:a37:71c7:: with SMTP id m190mr19655875qkc.478.1571648967881;
- Mon, 21 Oct 2019 02:09:27 -0700 (PDT)
+        Mon, 21 Oct 2019 05:11:53 -0400
+Received: from localhost (unknown [192.168.167.13])
+        by lucky1.263xmail.com (Postfix) with ESMTP id 2C41047C0C;
+        Mon, 21 Oct 2019 17:09:27 +0800 (CST)
+X-MAIL-GRAY: 1
+X-MAIL-DELIVERY: 0
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-SKE-CHECKED: 1
+X-ABS-CHECKED: 1
+Received: from [172.16.12.67] (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P14676T139991093077760S1571648966711348_;
+        Mon, 21 Oct 2019 17:09:27 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <dcec87c863f149527207a6b7e5b402df>
+X-RL-SENDER: andy.yan@rock-chips.com
+X-SENDER: yxj@rock-chips.com
+X-LOGIN-NAME: andy.yan@rock-chips.com
+X-FST-TO: huangtao@rock-chips.com
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+Subject: Re: [PATCH 1/2] arm64: dts: rockchip: Add core dts for RK3308 SOC
+To:     Heiko Stuebner <heiko@sntech.de>
+Cc:     kever.yang@rock-chips.com, linux-rockchip@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        robh+dt@kernel.org, devicetree@vger.kernel.org,
+        tony.xie@rock-chips.com, huangtao@rock-chips.com
+References: <20191017030242.32219-1-andy.yan@rock-chips.com>
+ <20191017030449.32289-1-andy.yan@rock-chips.com> <5242916.cCMrPAA6xQ@phil>
+From:   Andy Yan <andy.yan@rock-chips.com>
+Message-ID: <35a37c31-0e28-1900-1e50-d6b7dc78266b@rock-chips.com>
+Date:   Mon, 21 Oct 2019 17:09:26 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <1571313682-28900-1-git-send-email-sheetal.tigadoli@broadcom.com>
- <1571313682-28900-2-git-send-email-sheetal.tigadoli@broadcom.com> <20191017121640.3a3436da@cakuba.netronome.com>
-In-Reply-To: <20191017121640.3a3436da@cakuba.netronome.com>
-From:   Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>
-Date:   Mon, 21 Oct 2019 14:41:40 +0530
-Message-ID: <CAFD6DHg7J68jHSmNEft7czS+w9pqO8FnjB0a4Ubr5jAUh8Tmdg@mail.gmail.com>
-Subject: Re: [PATCH V2 1/3] firmware: broadcom: add OP-TEE based BNXT f/w manager
-To:     Jakub Kicinski <jakub.kicinski@netronome.com>
-Cc:     =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Rajan Vaja <rajan.vaja@xilinx.com>,
-        Scott Branden <scott.branden@broadcom.com>,
-        Ray Jui <ray.jui@broadcom.com>,
-        Vikram Prakash <vikram.prakash@broadcom.com>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Michael Chan <michael.chan@broadcom.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vikas Gupta <vikas.gupta@broadcom.com>,
-        Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        tee-dev@lists.linaro.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <5242916.cCMrPAA6xQ@phil>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jakub,
+Hi Heiko:
 
-Thanks for your comments.
+Thanks for your kindly review.
 
-On Fri, Oct 18, 2019 at 12:46 AM Jakub Kicinski
-<jakub.kicinski@netronome.com> wrote:
+On 10/18/19 7:30 AM, Heiko Stuebner wrote:
+> Hi Andy,
 >
-> On Thu, 17 Oct 2019 17:31:20 +0530, Sheetal Tigadoli wrote:
-> > From: Vikas Gupta <vikas.gupta@broadcom.com>
-> >
-> > This driver registers on TEE bus to interact with OP-TEE based
-> > BNXT firmware management modules
-> >
-> > Signed-off-by: Vikas Gupta <vikas.gupta@broadcom.com>
-> > Signed-off-by: Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>
-> > ---
-> >  drivers/firmware/broadcom/Kconfig             |   8 +
-> >  drivers/firmware/broadcom/Makefile            |   1 +
-> >  drivers/firmware/broadcom/tee_bnxt_fw.c       | 283 ++++++++++++++++++++++++++
-> >  include/linux/firmware/broadcom/tee_bnxt_fw.h |  14 ++
-> >  4 files changed, 306 insertions(+)
-> >  create mode 100644 drivers/firmware/broadcom/tee_bnxt_fw.c
-> >  create mode 100644 include/linux/firmware/broadcom/tee_bnxt_fw.h
-> >
-> > diff --git a/drivers/firmware/broadcom/Kconfig b/drivers/firmware/broadcom/Kconfig
-> > index d03ed8e..79505ad 100644
-> > --- a/drivers/firmware/broadcom/Kconfig
-> > +++ b/drivers/firmware/broadcom/Kconfig
-> > @@ -22,3 +22,11 @@ config BCM47XX_SPROM
-> >         In case of SoC devices SPROM content is stored on a flash used by
-> >         bootloader firmware CFE. This driver provides method to ssb and bcma
-> >         drivers to read SPROM on SoC.
-> > +
-> > +config TEE_BNXT_FW
-> > +     bool "Broadcom BNXT firmware manager"
-> > +     depends on (ARCH_BCM_IPROC && OPTEE) || COMPILE_TEST
-> > +     default ARCH_BCM_IPROC
-> > +     help
-> > +       This module help to manage firmware on Broadcom BNXT device. The module
-> > +       registers on tee bus and invoke calls to manage firmware on BNXT device.
-> > diff --git a/drivers/firmware/broadcom/Makefile b/drivers/firmware/broadcom/Makefile
-> > index 72c7fdc..17c5061 100644
-> > --- a/drivers/firmware/broadcom/Makefile
-> > +++ b/drivers/firmware/broadcom/Makefile
-> > @@ -1,3 +1,4 @@
-> >  # SPDX-License-Identifier: GPL-2.0-only
-> >  obj-$(CONFIG_BCM47XX_NVRAM)          += bcm47xx_nvram.o
-> >  obj-$(CONFIG_BCM47XX_SPROM)          += bcm47xx_sprom.o
-> > +obj-$(CONFIG_TEE_BNXT_FW)            += tee_bnxt_fw.o
-> > diff --git a/drivers/firmware/broadcom/tee_bnxt_fw.c b/drivers/firmware/broadcom/tee_bnxt_fw.c
-> > new file mode 100644
-> > index 0000000..1e1e54c
-> > --- /dev/null
-> > +++ b/drivers/firmware/broadcom/tee_bnxt_fw.c
-> > @@ -0,0 +1,283 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Copyright 2019 Broadcom.
-> > + */
-> > +
-> > +#include <linux/kernel.h>
-> > +#include <linux/module.h>
-> > +#include <linux/slab.h>
-> > +#include <linux/tee_drv.h>
-> > +#include <linux/uuid.h>
-> > +
-> > +#include <linux/firmware/broadcom/tee_bnxt_fw.h>
-> > +
-> > +#define MAX_SHM_MEM_SZ       SZ_4M
-> > +
-> > +#define MAX_TEE_PARAM_ARRY_MEMB              4
-> > +
-> > +#define HANDLE_ERROR(ret, tee_ret, cmd)                                      \
-> > +do {                                                                 \
-> > +     if ((ret < 0) || (tee_ret != 0)) {                              \
+> Am Donnerstag, 17. Oktober 2019, 05:04:49 CEST schrieb Andy Yan:
 >
-> The parenthesis should be around macro parameters.
+>> +	psci {
+>> +		compatible = "arm,psci-1.0";
+>> +		method = "smc";
+>> +	};
+> Please also provide a ATF implementation for the rk3308 :-)
+> [Not a requirement for getting this merged, but it would be
+> really cool to have sources for the full stack]
+
+
+Tony's team has the plan to do it.
+
+>> +
+>> +	ramoops_mem: ramoops_mem {
+>> +		reg = <0x0 0x110000 0x0 0xf0000>;
+>> +		reg-names = "ramoops_mem";
+>> +	};
+>> +
+>> +	ramoops: ramoops {
+>> +		compatible = "ramoops";
+>> +		record-size = <0x0 0x30000>;
+>> +		console-size = <0x0 0xc0000>;
+>> +		ftrace-size = <0x0 0x00000>;
+>> +		pmsg-size = <0x0 0x00000>;
+>> +		memory-region = <&ramoops_mem>;
+>> +	};
+> I think ramoops are more a per-board thing, like for the evb.
+> As they'll require cooperation with bootloaders to not mangle that
+> memory area. For this please also coordinate with Kever because
+> I somehow remember we have u-boot sometimes at 0x100000.
 >
->         if ((ret) < 0 || (tee_ret) != 0) {
->
-> || has low priority
->
-> > +             dev_err(pvt_data.dev,                                   \
-> > +                     #cmd " invoke failed TEE err: %x, ret:%x\n",    \
-> > +                     tee_ret, ret);                                  \
-> > +             return -EINVAL;                                         \
->
-> macros shouldn't change control flow, return statements in macros are
-> bad
-Will remove the macro HANDLE_ERROR
+I removed it in V2.
+>> +	grf: grf@ff000000 {
+>> +		compatible = "rockchip,rk3308-grf", "syscon", "simple-mfd";
+> Please add a patch adding the rockchip,rk3308-grf compatible to
+> Documentation/devicetree/bindings/soc/rockchip/grf.txt
+
+
+Done
 
 >
-> > +     }                                                               \
-> > +} while (0)
-> > +
-> > +enum ta_cmd {
-> > +     /*
-> > +      * TA_CMD_BNXT_FASTBOOT - boot bnxt device by copying f/w into sram
-> > +      *
-> > +      *      param[0] unused
-> > +      *      param[1] unused
-> > +      *      param[2] unused
-> > +      *      param[3] unused
-> > +      *
-> > +      * Result:
-> > +      *      TEE_SUCCESS - Invoke command success
-> > +      *      TEE_ERROR_ITEM_NOT_FOUND - Corrupt f/w image found on memory
-> > +      */
-> > +     TA_CMD_BNXT_FASTBOOT = 0,
-> > +
-> > +     /*
-> > +      * TA_CMD_BNXT_COPY_COREDUMP - copy the core dump into shm
-> > +      *
-> > +      *      param[0] (in value) - value.a: offset, data to be copied from
-> > +      *                            value.b: size of the data
-> > +      *      param[1] unused
-> > +      *      param[2] unused
-> > +      *      param[3] unused
-> > +      *
-> > +      * Result:
-> > +      *      TEE_SUCCESS - Invoke command success
-> > +      *      TEE_ERROR_BAD_PARAMETERS - Incorrect input param
-> > +      *      TEE_ERROR_ITEM_NOT_FOUND - Corrupt core dump
-> > +      */
-> > +     TA_CMD_BNXT_COPY_COREDUMP = 3,
-> > +};
-> > +
-> > +/**
-> > + * struct tee_bnxt_fw_private - OP-TEE bnxt private data
-> > + * @dev:             OP-TEE based bnxt device.
-> > + * @ctx:             OP-TEE context handler.
-> > + * @session_id:              TA session identifier.
-> > + */
-> > +struct tee_bnxt_fw_private {
-> > +     struct device *dev;
-> > +     struct tee_context *ctx;
-> > +     u32 session_id;
-> > +     struct tee_shm *fw_shm_pool;
-> > +};
-> > +
-> > +static struct tee_bnxt_fw_private pvt_data;
-> > +
-> > +static inline void prepare_args(int cmd,
+>> +		reg = <0x0 0xff000000 0x0 0x10000>;
+>> +
+>> +		reboot-mode {
+>> +			compatible = "syscon-reboot-mode";
+>> +			offset = <0x500>;
+>> +			mode-bootloader = <BOOT_BL_DOWNLOAD>;
+>> +			mode-loader = <BOOT_BL_DOWNLOAD>;
+>> +			mode-normal = <BOOT_NORMAL>;
+>> +			mode-recovery = <BOOT_RECOVERY>;
+>> +			mode-fastboot = <BOOT_FASTBOOT>;
+>> +		};
+>> +	};
+>> +
+>> +	detect_grf: syscon@ff00b000 {
+>> +		compatible = "syscon", "simple-mfd";
+> 	compatible = "rockchip,rk3308-detect-grf", "syscon"
+> + add the rk3308-detect-grf to the binding
+Done
+>> +		reg = <0x0 0xff00b000 0x0 0x1000>;
+>> +		#address-cells = <1>;
+>> +		#size-cells = <1>;
+>> +	};
+>> +
+>> +	core_grf: syscon@ff00c000 {
+>> +		compatible = "syscon", "simple-mfd";
+> same as detect_grf
+Done
 >
-> No static inlines in .c files, please, the compiler will know what to
-> inline.
-Will change this to static function.
+>> +		reg = <0x0 0xff00c000 0x0 0x1000>;
+>> +		#address-cells = <1>;
+>> +		#size-cells = <1>;
+>> +
+>> +	};
+>> +
+>> +	i2c0: i2c@ff040000 {
+>> +		compatible = "rockchip,rk3399-i2c";
+> 	compatible = "rockchip,rk3308-i2c", "rockchip,rk3399-i2c";
+> Same for all i2c controllers.
+Done
+>
+>> +		reg = <0x0 0xff040000 0x0 0x1000>;
+>> +		clocks = <&cru SCLK_I2C0>, <&cru PCLK_I2C0>;
+>> +		clock-names = "i2c", "pclk";
+>> +		interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
+>> +		pinctrl-names = "default";
+>> +		pinctrl-0 = <&i2c0_xfer>;
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +		status = "disabled";
+>> +	};
+>
+>> +	spi0: spi@ff120000 {
+>> +		compatible = "rockchip,rk3308-spi", "rockchip,rk3066-spi";
+>> +		reg = <0x0 0xff120000 0x0 0x1000>;
+>> +		interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +		clocks = <&cru SCLK_SPI0>, <&cru PCLK_SPI0>;
+>> +		clock-names = "spiclk", "apb_pclk";
+>> +		dmas = <&dmac0 0>, <&dmac0 1>;
+>> +		dma-names = "tx", "rx";
+>> +		pinctrl-names = "default", "high_speed";
+> there is no high_speed pinctrl defined for the Rockchip spi driver
+> in mainline, so this part should go away in a first step.
+> Same for the other spi controllers.
+>
+Removed
+>> +		pinctrl-0 = <&spi0_clk &spi0_csn0 &spi0_miso &spi0_mosi>;
+>> +		pinctrl-1 = <&spi0_clk_hs &spi0_csn0 &spi0_miso_hs &spi0_mosi_hs>;
+>> +		status = "disabled";
+>> +	};
+>
+>> +	rktimer: rktimer@ff1a0000 {
+>> +		compatible = "rockchip,rk3288-timer";
+> 	compatible = "rockchip,rk3308-timer", "rockchip,rk3288-timer";
+Done
+>
+>> +		reg = <0x0 0xff1a0000 0x0 0x20>;
+>> +		interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
+>> +		clocks = <&cru PCLK_TIMER>, <&cru SCLK_TIMER0>;
+>> +		clock-names = "pclk", "timer";
+>> +	};
+>
+>
+>> +	amba {
+>> +		compatible = "arm,amba-bus";
+> compatible = "simple-bus";
+
+Done
+>> +		#address-cells = <2>;
+>> +		#size-cells = <2>;
+>> +		ranges;
+>> +
+>> +		dmac0: dma-controller@ff2c0000 {
+>> +			compatible = "arm,pl330", "arm,primecell";
+>> +			reg = <0x0 0xff2c0000 0x0 0x4000>;
+>> +			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
+>> +				     <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
+>> +			#dma-cells = <1>;
+>> +			clocks = <&cru ACLK_DMAC0>;
+>> +			clock-names = "apb_pclk";
+>> +			peripherals-req-type-burst;
+> peripherals-req-type-burst is undocumented so likely some change to the
+> dma driver not yet upstream?
+
+
+  not upstream， so i remove it.
+
+>> +		};
+>> +
+>> +		dmac1: dma-controller@ff2d0000 {
+>> +			compatible = "arm,pl330", "arm,primecell";
+>> +			reg = <0x0 0xff2d0000 0x0 0x4000>;
+>> +			interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
+>> +				     <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
+>> +			#dma-cells = <1>;
+>> +			clocks = <&cru ACLK_DMAC1>;
+>> +			clock-names = "apb_pclk";
+>> +			peripherals-req-type-burst;
+>> +		};
+>> +	};
+>> +
+>> +	i2s_2ch_0: i2s@ff350000 {
+>> +		compatible = "rockchip,rk3308-i2s", "rockchip,rk3066-i2s";
+>> +		reg = <0x0 0xff350000 0x0 0x1000>;
+>> +		interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
+>> +		clocks = <&cru SCLK_I2S0_2CH>, <&cru HCLK_I2S0_2CH>;
+>> +		clock-names = "i2s_clk", "i2s_hclk";
+>> +		dmas = <&dmac1 8>, <&dmac1 9>;
+>> +		dma-names = "tx", "rx";
+>> +		resets = <&cru SRST_I2S0_2CH_M>, <&cru SRST_I2S0_2CH_H>;
+>> +		reset-names = "reset-m", "reset-h";
+> These resets don't seem to be defined in driver or binding?
+> Same for other i2s
+
+
+Remove in v2
 
 >
-> > +                             struct tee_ioctl_invoke_arg *inv_arg,
+>> +		pinctrl-names = "default";
+>> +		pinctrl-0 = <&i2s_2ch_0_sclk
+>> +			     &i2s_2ch_0_lrck
+>> +			     &i2s_2ch_0_sdi
+>> +			     &i2s_2ch_0_sdo>;
+>> +		status = "disabled";
+>> +	};
 >
-> inv usually means invalid, please rename to arg
-Ok.
+>> +
+>> +	mac: ethernet@ff4e0000 {
+>> +		compatible = "rockchip,rk3308-mac";
+> Was this support to the network driver already submitted?
+> Because I wasn't able to find it in the gmac driver.
+
+
+I remove mac in v2.
 
 >
-> > +                             struct tee_param *param)
-> > +{
-> > +     memset(inv_arg, 0, sizeof(*inv_arg));
-> > +     memset(param, 0, (MAX_TEE_PARAM_ARRY_MEMB * sizeof(*param)));
+>> +		reg = <0x0 0xff4e0000 0x0 0x10000>;
+>> +		rockchip,grf = <&grf>;
+>> +		interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
+>> +		interrupt-names = "macirq";
+>> +		clocks = <&cru SCLK_MAC>, <&cru SCLK_MAC_RX_TX>,
+>> +			 <&cru SCLK_MAC_RX_TX>, <&cru SCLK_MAC_REF>,
+>> +			 <&cru SCLK_MAC>, <&cru ACLK_MAC>,
+>> +			 <&cru PCLK_MAC>, <&cru SCLK_MAC_RMII>;
+>> +		clock-names = "stmmaceth", "mac_clk_rx",
+>> +			      "mac_clk_tx", "clk_mac_ref",
+>> +			      "clk_mac_refout", "aclk_mac",
+>> +			      "pclk_mac", "clk_mac_speed";
+>> +		phy-mode = "rmii";
+>> +		pinctrl-names = "default";
+>> +		pinctrl-0 = <&rmii_pins &mac_refclk_12ma>;
+>> +		resets = <&cru SRST_MAC_A>;
+>> +		reset-names = "stmmaceth";
+>> +		status = "disabled";
+>> +	};
 >
-> array_size(), outer parens unnecessary
-Ok.
+> Heiko
+>
+>
+>
+>
 
->
-> > +
-> > +     inv_arg->func = cmd;
-> > +     inv_arg->session = pvt_data.session_id;
-> > +     inv_arg->num_params = MAX_TEE_PARAM_ARRY_MEMB;
-> > +
-> > +     /* Fill invoke cmd params */
-> > +     switch (cmd) {
-> > +     case TA_CMD_BNXT_COPY_COREDUMP:
-> > +             param[0].attr = TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT;
-> > +             param[0].u.memref.shm = pvt_data.fw_shm_pool;
-> > +             param[0].u.memref.size = MAX_SHM_MEM_SZ;
-> > +             param[0].u.memref.shm_offs = 0;
-> > +             param[1].attr = TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_INPUT;
-> > +             break;
-> > +     case TA_CMD_BNXT_FASTBOOT:
-> > +     default:
-> > +             /* Nothing to do */
-> > +             break;
-> > +     }
-> > +}
-> > +
-> > +/**
-> > + * tee_bnxt_fw_load() - Load the bnxt firmware
-> > + *               Uses an OP-TEE call to start a secure
-> > + *               boot process.
-> > + * Returns 0 on success, negative errno otherwise.
-> > + */
-> > +int tee_bnxt_fw_load(void)
->
-> This is a little strange. This function takes no parameters, so how
-> does this thing know where to load the firmware? Is it not possible
-> to have two devices that'd both require FW?
-This function invokes command to optee pta, which is aware of where to load
-the firmware and we don't have multiple devices
 
->
-> > +{
-> > +     int ret = 0;
-> > +     struct tee_ioctl_invoke_arg inv_arg;
-> > +     struct tee_param param[MAX_TEE_PARAM_ARRY_MEMB];
-> > +
-> > +     if (!pvt_data.ctx)
-> > +             return -ENODEV;
-> > +
-> > +     prepare_args(TA_CMD_BNXT_FASTBOOT, &inv_arg, param);
-> > +
-> > +     ret = tee_client_invoke_func(pvt_data.ctx, &inv_arg, param);
-> > +     HANDLE_ERROR(ret, inv_arg.ret, TA_CMD_BNXT_FASTBOOT);
-> > +
-> > +     return 0;
-> > +}
-> > +EXPORT_SYMBOL(tee_bnxt_fw_load);
-> > +
-> > +/**
-> > + * tee_bnxt_copy_coredump() - Copy coredump from the allocated memory
-> > + *                       Uses an OP-TEE call to copy coredump
-> > + * @buf:     desintation buffer where core dump is copied into
-> > + * @offset:  offset from the base address of core dump area
-> > + * @size:    size of the dump
-> > + *
-> > + * Returns 0 on success, negative errno otherwise.
-> > + */
-> > +int tee_bnxt_copy_coredump(void *buf, u32 offset, u32 size)
-> > +{
-> > +     struct tee_ioctl_invoke_arg inv_arg;
-> > +     struct tee_param param[MAX_TEE_PARAM_ARRY_MEMB];
-> > +     void *core_data;
-> > +     u32 rbytes = size;
-> > +     u32 nbytes = 0;
-> > +     int ret = 0;
-> > +
-> > +     if (!pvt_data.ctx)
-> > +             return -ENODEV;
-> > +
-> > +     if (!buf)
-> > +             return -EINVAL;
->
-> Generally we don't check args like that in the kernel, callers should
-> not be broken.
-Ok. will remove
-
->
-> > +     prepare_args(TA_CMD_BNXT_COPY_COREDUMP, &inv_arg, param);
-> > +
-> > +     while (rbytes)  {
-> > +             nbytes = rbytes;
-> > +
-> > +             nbytes = min_t(u32, rbytes, param[0].u.memref.size);
-> > +
-> > +             /* Fill additional invoke cmd params */
-> > +             param[1].u.value.a = offset;
-> > +             param[1].u.value.b = nbytes;
->
-> But the doc above says param 1 is unused
-will update the doc/enum description
-
->
-> > +             ret = tee_client_invoke_func(pvt_data.ctx, &inv_arg, param);
-> > +             HANDLE_ERROR(ret, inv_arg.ret, TA_CMD_BNXT_COPY_COREDUMP);
-> > +
-> > +             core_data = tee_shm_get_va(pvt_data.fw_shm_pool, 0);
-> > +             if (IS_ERR(core_data)) {
-> > +                     dev_err(pvt_data.dev, "tee_shm_get_va failed\n");
-> > +                     return PTR_ERR(core_data);
-> > +             }
-> > +
-> > +             memcpy(buf, core_data, nbytes);
-> > +
-> > +             rbytes -= nbytes;
-> > +             buf += nbytes;
-> > +             offset += nbytes;
-> > +     }
-> > +
-> > +     return 0;
-> > +}
-> > +EXPORT_SYMBOL(tee_bnxt_copy_coredump);
-> > +
-> > +static int optee_ctx_match(struct tee_ioctl_version_data *ver, const void *data)
-> > +{
-> > +     if (ver->impl_id == TEE_IMPL_ID_OPTEE)
-> > +             return 1;
-> > +     else
-> > +             return 0;
->
-> Also known as return ver->impl_id == TEE_IMPL_ID_OPTEE; ...
-Ok.
-
->
-> > +}
-> > +
-> > +static int tee_bnxt_fw_probe(struct device *dev)
-> > +{
-> > +     struct tee_client_device *bnxt_device = to_tee_client_device(dev);
-> > +     int ret, err = -ENODEV;
-> > +     struct tee_ioctl_open_session_arg sess_arg;
-> > +     struct tee_shm *fw_shm_pool;
-> > +
-> > +     memset(&sess_arg, 0, sizeof(sess_arg));
-> > +
-> > +     /* Open context with TEE driver */
-> > +     pvt_data.ctx = tee_client_open_context(NULL, optee_ctx_match, NULL,
-> > +                                            NULL);
-> > +     if (IS_ERR(pvt_data.ctx))
-> > +             return -ENODEV;
-> > +
-> > +     /* Open session with Bnxt load Trusted App */
-> > +     memcpy(sess_arg.uuid, bnxt_device->id.uuid.b, TEE_IOCTL_UUID_LEN);
-> > +     sess_arg.clnt_login = TEE_IOCTL_LOGIN_PUBLIC;
-> > +     sess_arg.num_params = 0;
-> > +
-> > +     ret = tee_client_open_session(pvt_data.ctx, &sess_arg, NULL);
-> > +     if ((ret < 0) || (sess_arg.ret != 0)) {
->
-> parens unnecessary
-Will remove parens
-
->
-> > +             dev_err(dev, "tee_client_open_session failed, err: %x\n",
-> > +                     sess_arg.ret);
-> > +             err = -EINVAL;
-> > +             goto out_ctx;
-> > +     }
-> > +     pvt_data.session_id = sess_arg.session;
-> > +
-> > +     pvt_data.dev = dev;
-> > +
-> > +     fw_shm_pool = tee_shm_alloc(pvt_data.ctx, MAX_SHM_MEM_SZ,
-> > +                                 TEE_SHM_MAPPED | TEE_SHM_DMA_BUF);
-> > +     if (IS_ERR(fw_shm_pool)) {
-> > +             tee_client_close_context(pvt_data.ctx);
-> > +             dev_err(pvt_data.dev, "tee_shm_alloc failed\n");
-> > +             err = PTR_ERR(fw_shm_pool);
-> > +             goto out_sess;
-> > +     }
-> > +
-> > +     pvt_data.fw_shm_pool = fw_shm_pool;
-> > +
-> > +     return 0;
-> > +
-> > +out_sess:
-> > +     tee_client_close_session(pvt_data.ctx, pvt_data.session_id);
-> > +out_ctx:
-> > +     tee_client_close_context(pvt_data.ctx);
-> > +
-> > +     return err;
-> > +}
-> > +
-> > +static int tee_bnxt_fw_remove(struct device *dev)
-> > +{
-> > +     tee_client_close_session(pvt_data.ctx, pvt_data.session_id);
-> > +     tee_client_close_context(pvt_data.ctx);
-> > +     pvt_data.ctx = NULL;
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static const struct tee_client_device_id tee_bnxt_fw_id_table[] = {
-> > +     {UUID_INIT(0x6272636D, 0x2019, 0x0716,
-> > +                 0x42, 0x43, 0x4D, 0x5F, 0x53, 0x43, 0x48, 0x49)},
-> > +     {}
-> > +};
-> > +
-> > +MODULE_DEVICE_TABLE(tee, tee_bnxt_fw_id_table);
-> > +
-> > +static struct tee_client_driver tee_bnxt_fw_driver = {
-> > +     .id_table       = tee_bnxt_fw_id_table,
-> > +     .driver         = {
-> > +             .name           = KBUILD_MODNAME,
-> > +             .bus            = &tee_bus_type,
-> > +             .probe          = tee_bnxt_fw_probe,
-> > +             .remove         = tee_bnxt_fw_remove,
-> > +     },
-> > +};
-> > +
-> > +static int __init tee_bnxt_fw_mod_init(void)
-> > +{
-> > +     return driver_register(&tee_bnxt_fw_driver.driver);
-> > +}
-> > +
-> > +static void __exit tee_bnxt_fw_mod_exit(void)
-> > +{
-> > +     driver_unregister(&tee_bnxt_fw_driver.driver);
-> > +}
-> > +
-> > +module_init(tee_bnxt_fw_mod_init);
-> > +module_exit(tee_bnxt_fw_mod_exit);
->
-> Someone should add a module_tee_driver macro, perhaps?
-Not clear on this comment
-
->
-> > +MODULE_AUTHOR("Broadcom");
->
-> I think you can forego the author macro is it's a company.
-will update it to individual
-
->
-> > +MODULE_DESCRIPTION("Broadcom bnxt firmware manager");
-> > +MODULE_LICENSE("GPL v2");
-> > diff --git a/include/linux/firmware/broadcom/tee_bnxt_fw.h b/include/linux/firmware/broadcom/tee_bnxt_fw.h
-> > new file mode 100644
-> > index 0000000..f24c82d
-> > --- /dev/null
-> > +++ b/include/linux/firmware/broadcom/tee_bnxt_fw.h
-> > @@ -0,0 +1,14 @@
-> > +/* SPDX-License-Identifier: BSD-2-Clause */
-> > +/*
-> > + * Copyright 2019 Broadcom.
-> > + */
-> > +
-> > +#ifndef _BROADCOM_TEE_BNXT_FW_H
-> > +#define _BROADCOM_TEE_BNXT_FW_H
-> > +
-> > +#include <linux/types.h>
-> > +
-> > +int tee_bnxt_fw_load(void);
-> > +int tee_bnxt_copy_coredump(void *buf, u32 offset, u32 size);
-> > +
-> > +#endif /* _BROADCOM_TEE_BNXT_FW_H */
->
