@@ -2,95 +2,164 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72A84CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:19:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABF6ACA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:20:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E42820873
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:19:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571671141;
-	bh=pZPt95h86j2DHhnebWftea1csHW0nl72tOQFiaF7e7s=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=cbjPTecqGoGxFF3YbgyNBKkhC93umXkB3V13YI+bTtIjnTaAU9xDCsSCkPEfWKUe+
-	 AiYLxD4oGUS9iHiJW30gqo1D2LKrGUe9endgwKMaIL++nt86pTmatMrnuZiPf+hjqQ
-	 puZ1KF5XR+ntFkGqTJw4uw5uyIbyl+U483fneI2g=
+	by mail.kernel.org (Postfix) with ESMTP id 7E2332084B
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:20:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sJUTMuk4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729258AbfJUPTA (ORCPT
+        id S1728176AbfJUPT7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 11:19:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32880 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726289AbfJUPS7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 11:18:59 -0400
-Received: from localhost.localdomain (unknown [194.230.155.217])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 630512084B;
-        Mon, 21 Oct 2019 15:18:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571671139;
-        bh=pZPt95h86j2DHhnebWftea1csHW0nl72tOQFiaF7e7s=;
-        h=From:To:Cc:Subject:Date:From;
-        b=B+V5q5QOX1c1zdAcO+okPLxM00nUGbUp/oXP1f+mDySsn0k+0Oj7M+RxFdLWyYgpI
-         l0d6LFMNu9gjvDJarn1j3+DhSHNH0rV6RQmhvYtfi/9UtpTeac83PnxpulmStAiFE6
-         kUjEzAZSQjPsWvX23l+UNISYTzMdxvnP40evQXJM=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH] dt-bindings: display: st,stm32-dsi: Fix white spaces
-Date:   Mon, 21 Oct 2019 17:18:47 +0200
-Message-Id: <20191021151847.13891-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        Mon, 21 Oct 2019 11:19:59 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:38719 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726289AbfJUPT7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 11:19:59 -0400
+Received: by mail-il1-f194.google.com with SMTP id y5so12354750ilb.5;
+        Mon, 21 Oct 2019 08:19:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xLL1nfViFXwf0+HwQK45ez+OrC2Byurm1xesO5A4nM4=;
+        b=sJUTMuk44mxHc3/Wn/RyybUNxbnVUiSb8MwC55wMO5kKb+AeXBTfYBVbY3tV6ek3ea
+         2qY8JvVnVwxeEnru7hY4DySpMHx2u0sL4gaq1Cip3OtAv1QD4jhJOsf0nJMqWNaKtmyp
+         IhjtPbGCzBJfNI2tK3bCCVY2drCyjYAcH4aat0rjI8QjSp75Q8yWYeTSovJLuv0i6YYn
+         2lrs5NGanGtaA3BPkXR/Dk9yzss/CdiD0FApa2QY1ywzvLOomaU2SIW/dkqBUcNYczGc
+         5Zw7QQPsrkibcLQvDq1lU+AT0GwzcwNZXRXAZzYEJkZMBC0DSR+RzaLigJf0aHfdPF5O
+         5Fzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xLL1nfViFXwf0+HwQK45ez+OrC2Byurm1xesO5A4nM4=;
+        b=tyaqaSWFF2FdxqmylLDB5GznOrWL6HHZq7rivchZhemheKYaJ5jszvN9fEzKbTZX+t
+         GTYyEAc1jqbVVQ3pi87FXRs3Mmu7Jwr5dF9HT7U/ZlVqSb+YnrgNznXn2bwE/nxbFSu8
+         3teDlEr3HKSqpNpGB45CMVRRmASLAuRpvNut8oKZpaK0bzTKBulBvfcjqMm6jRVwqeIH
+         OQveh8kAfiHqZiL90KKtxFM+QRp91bO4q4uSTsLKGvtMN31zZ6AF7Uf1kd83hz/0pLhI
+         7MvqAejRJJf4W/McmhcU8fh+jVe3PJm4J/MLp55LJRSqH65co8GBATMyZvhIm8UIpv8B
+         wG8g==
+X-Gm-Message-State: APjAAAVXWo1hzeJ+KIagjGHEzdZ0qkbbxJlRUfbku4WFWaSvSiQxfskZ
+        RxEeBy1kmIxOO9ZzUfPyXhA+qtQVRewqaKaLOVOAug==
+X-Google-Smtp-Source: APXvYqziZ1lgVHlpifILbY1zB7ipIQCb3zhLo1MSYbA47FVGtC8RXqYUvdhlht6pMel3T3WWGEZCSEFfMyrKl3OGTWc=
+X-Received: by 2002:a92:1d51:: with SMTP id d78mr4143077ild.166.1571671198082;
+ Mon, 21 Oct 2019 08:19:58 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191019210616.41199-1-jeffrey.l.hugo@gmail.com> <20191020062816.GE1669@tuxbook-pro>
+In-Reply-To: <20191020062816.GE1669@tuxbook-pro>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Mon, 21 Oct 2019 09:19:47 -0600
+Message-ID: <CAOCk7NpvXb3zBAM1DQng3sQWgWXc5AP2vo=i+gX0mQtA2W7QWg@mail.gmail.com>
+Subject: Re: [PATCH] tty: serial: msm_serial: Fix flow control
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        jslaby@suse.com, MSM <linux-arm-msm@vger.kernel.org>,
+        linux-serial@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove unneeded indentation in blank line and space at end of line.
+On Sun, Oct 20, 2019 at 12:28 AM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> On Sat 19 Oct 14:06 PDT 2019, Jeffrey Hugo wrote:
+>
+> > hci_qca interfaces to the wcn3990 via a uart_dm on the msm8998 mtp and
+> > Lenovo Miix 630 laptop.  As part of initializing the wcn3990, hci_qca
+> > disables flow, configures the uart baudrate, and then reenables flow - at
+> > which point an event is expected to be received over the uart from the
+> > wcn3990.  It is observed that this event comes after the baudrate change
+> > but before hci_qca re-enables flow. This is unexpected, and is a result of
+> > msm_reset() being broken.
+> >
+> > According to the uart_dm hardware documentation, it is recommended that
+> > automatic hardware flow control be enabled by setting RX_RDY_CTL.  Auto
+> > hw flow control will manage RFR based on the configured watermark.  When
+> > there is space to receive data, the hw will assert RFR.  When the watermark
+> > is hit, the hw will de-assert RFR.
+> >
+> > The hardware documentation indicates that RFR can me manually managed via
+> > CR when RX_RDY_CTL is not set.  SET_RFR asserts RFR, and RESET_RFR
+> > de-asserts RFR.
+> >
+> > msm_reset() is broken because after resetting the hardware, it
+> > unconditionally asserts RFR via SET_RFR.  This enables flow regardless of
+> > the current configuration, and would undo a previous flow disable
+> > operation.  It should instead de-assert RFR via RESET_RFR to block flow
+> > until the hardware is reconfigured.  msm_serial should rely on the client
+> > to specify that flow should be enabled, either via mctrl() or the termios
+> > structure, and only assert RFR in response to those triggers.
+> >
+>
+> I traced msm_reset() and msm_set_mctrl() and I get the following:
+>        swapper/0-1     [000] d..1     3.091726: msm_set_mctrl: msm_set_mctrl() reset rfr
+>        swapper/0-1     [000] d..1     3.117046: msm_set_mctrl: msm_set_mctrl() reset rfr
+>        swapper/0-1     [000] d..1     3.125484: msm_set_termios: msm_reset() set rfr
+>        swapper/0-1     [003] d..1     4.491430: msm_set_termios: msm_reset() set rfr
+>        swapper/0-1     [003] d..1     4.491733: msm_set_mctrl: msm_set_mctrl() auto rfr
+>            login-313   [001] d..1    78.010785: msm_set_mctrl: msm_set_mctrl() reset rfr
+>            login-313   [001] d..1    78.011007: msm_set_termios: msm_reset() set rfr
+>            login-313   [001] d..1    78.011021: msm_set_mctrl: msm_set_mctrl() auto rfr
+>            login-313   [001] d..1    78.063330: msm_set_termios: msm_reset() set rfr
+>            login-313   [001] d..1    78.063641: msm_set_termios: msm_reset() set rfr
+>
+> So while your change does make sense for BT, wouldn't this mean that
+> with your patch and a 4-pin UART for the console I would end this dance
+> with receive flow blocked?
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- Documentation/devicetree/bindings/display/st,stm32-dsi.yaml  | 2 +-
- Documentation/devicetree/bindings/display/st,stm32-ltdc.yaml | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+No.  I don't think it occurred to you to consider how RX_RDY_CTL
+factors into this.  RX_RDY_CTL allows the hardware to enable flow when
+the hardware determines it is able to receive data.  RX_RDY_CTL gets
+set in mctrl, and set_termios - essentially when the uart client has
+indicated flow can be enabled.
 
-diff --git a/Documentation/devicetree/bindings/display/st,stm32-dsi.yaml b/Documentation/devicetree/bindings/display/st,stm32-dsi.yaml
-index de6c99198cbe..3be76d15bf6c 100644
---- a/Documentation/devicetree/bindings/display/st,stm32-dsi.yaml
-+++ b/Documentation/devicetree/bindings/display/st,stm32-dsi.yaml
-@@ -108,7 +108,7 @@ examples:
-         resets = <&rcc DSI_R>;
-         reset-names = "apb";
-         phy-dsi-supply = <&reg18>;
--        
-+
-         #address-cells = <1>;
-         #size-cells = <0>;
- 
-diff --git a/Documentation/devicetree/bindings/display/st,stm32-ltdc.yaml b/Documentation/devicetree/bindings/display/st,stm32-ltdc.yaml
-index a40197ab281e..bf8ad916e9b0 100644
---- a/Documentation/devicetree/bindings/display/st,stm32-ltdc.yaml
-+++ b/Documentation/devicetree/bindings/display/st,stm32-ltdc.yaml
-@@ -37,7 +37,7 @@ properties:
-   port:
-     type: object
-     description:
--      "Video port for DPI RGB output. 
-+      "Video port for DPI RGB output.
-       ltdc has one video port with up to 2 endpoints:
-       - for external dpi rgb panel or bridge, using gpios.
-       - for internal dpi input of the MIPI DSI host controller.
--- 
-2.17.1
+Even though the console is a 2 wire console on msm8998, the driver
+will go through the same flow.  I verified that RX_RDY_CTL is set on
+the console uart after boot, so we won't end up with flow blocked.
 
+However, this does bring up another issue.  RX_RDY_CTL doesn't get
+unset in msm_reset.  RESET_RX will disable the rx path in the
+hardware, and prevent RX_RDY_CTL from being active, but the rx path is
+enabled in set_baud_rate() before RX_RDY_CTL can be masked out in
+set_termios, so there may be a small window where flow can
+inadvertently enabled.  I'll spin a v2 that also unsets RX_RDY_CTL in
+msm_reset().
+
+>
+> Regards,
+> Bjorn
+>
+> > Fixes: 04896a77a97b ("msm_serial: serial driver for MSM7K onboard serial peripheral.")
+> > Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> > ---
+> >  drivers/tty/serial/msm_serial.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/tty/serial/msm_serial.c b/drivers/tty/serial/msm_serial.c
+> > index 3657a24913fc..aedabf7646f1 100644
+> > --- a/drivers/tty/serial/msm_serial.c
+> > +++ b/drivers/tty/serial/msm_serial.c
+> > @@ -987,7 +987,7 @@ static void msm_reset(struct uart_port *port)
+> >       msm_write(port, UART_CR_CMD_RESET_ERR, UART_CR);
+> >       msm_write(port, UART_CR_CMD_RESET_BREAK_INT, UART_CR);
+> >       msm_write(port, UART_CR_CMD_RESET_CTS, UART_CR);
+> > -     msm_write(port, UART_CR_CMD_SET_RFR, UART_CR);
+> > +     msm_write(port, UART_CR_CMD_RESET_RFR, UART_CR);
+> >
+> >       /* Disable DM modes */
+> >       if (msm_port->is_uartdm)
+> > --
+> > 2.17.1
+> >
