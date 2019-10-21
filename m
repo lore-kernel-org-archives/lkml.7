@@ -2,164 +2,107 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7794CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 07:05:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D0D0CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 07:10:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B06E82089C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 07:05:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CA8520830
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 07:10:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727426AbfJUHFr convert rfc822-to-8bit (ORCPT
+        id S1727330AbfJUHKM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 03:05:47 -0400
-Received: from tyo162.gate.nec.co.jp ([114.179.232.162]:48478 "EHLO
-        tyo162.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726072AbfJUHFr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 03:05:47 -0400
-Received: from mailgate02.nec.co.jp ([114.179.233.122])
-        by tyo162.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x9L75X5d015633
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Mon, 21 Oct 2019 16:05:33 +0900
-Received: from mailsv02.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
-        by mailgate02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x9L75XAx018806;
-        Mon, 21 Oct 2019 16:05:33 +0900
-Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
-        by mailsv02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x9L75Wvl020457;
-        Mon, 21 Oct 2019 16:05:33 +0900
-Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.151] [10.38.151.151]) by mail01b.kamome.nec.co.jp with ESMTP id BT-MMP-9685657; Mon, 21 Oct 2019 16:04:41 +0900
-Received: from BPXM23GP.gisp.nec.co.jp ([10.38.151.215]) by
- BPXC23GP.gisp.nec.co.jp ([10.38.151.151]) with mapi id 14.03.0439.000; Mon,
- 21 Oct 2019 16:04:40 +0900
-From:   Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-To:     Oscar Salvador <osalvador@suse.de>
-CC:     "mhocko@kernel.org" <mhocko@kernel.org>,
-        "mike.kravetz@oracle.com" <mike.kravetz@oracle.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH v2 09/16] mm,hwpoison: Unify THP handling for hard
- and soft offline
-Thread-Topic: [RFC PATCH v2 09/16] mm,hwpoison: Unify THP handling for hard
- and soft offline
-Thread-Index: AQHVhPZEHfGD3bd9MkGP7p/dXrA8ladkGtAA
-Date:   Mon, 21 Oct 2019 07:04:40 +0000
-Message-ID: <20191021070439.GC9037@hori.linux.bs1.fc.nec.co.jp>
-References: <20191017142123.24245-1-osalvador@suse.de>
- <20191017142123.24245-10-osalvador@suse.de>
-In-Reply-To: <20191017142123.24245-10-osalvador@suse.de>
-Accept-Language: en-US, ja-JP
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.34.125.96]
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-ID: <ACAC5400327B2B44B0993E28BA42104F@gisp.nec.co.jp>
-Content-Transfer-Encoding: 8BIT
+        Mon, 21 Oct 2019 03:10:12 -0400
+Received: from mga07.intel.com ([134.134.136.100]:63002 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726819AbfJUHKL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 03:10:11 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 00:10:10 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,322,1566889200"; 
+   d="scan'208";a="200345721"
+Received: from lingshan-mobl5.ccr.corp.intel.com (HELO [10.238.129.136]) ([10.238.129.136])
+  by orsmga003.jf.intel.com with ESMTP; 21 Oct 2019 00:10:07 -0700
+Subject: Re: [RFC 0/2] Intel IFC VF driver for vdpa
+To:     Jason Wang <jasowang@redhat.com>,
+        Zhu Lingshan <lingshan.zhu@linux.intel.com>, mst@redhat.com,
+        alex.williamson@redhat.com
+Cc:     linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, dan.daly@intel.com,
+        cunming.liang@intel.com, tiwei.bie@intel.com, jason.zeng@intel.com,
+        zhiyuan.lv@intel.com
+References: <20191016013050.3918-1-lingshan.zhu@intel.com>
+ <37503c7d-c07d-e584-0b6f-3733d2ad1dc7@linux.intel.com>
+ <47befa11-c943-42f7-85c9-01b12f497182@redhat.com>
+From:   "Zhu, Lingshan" <lingshan.zhu@intel.com>
+Message-ID: <7a6bc3bf-000c-72de-d2cb-05779de9a7ec@intel.com>
+Date:   Mon, 21 Oct 2019 15:10:07 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.0
 MIME-Version: 1.0
-X-TM-AS-MML: disable
+In-Reply-To: <47befa11-c943-42f7-85c9-01b12f497182@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 04:21:16PM +0200, Oscar Salvador wrote:
-> Place the THP's page handling in a helper and use it
-> from both hard and soft-offline machinery, so we get rid
-> of some duplicated code.
-> 
-> Signed-off-by: Oscar Salvador <osalvador@suse.de>
-> ---
->  mm/memory-failure.c | 48 ++++++++++++++++++++++--------------------------
->  1 file changed, 22 insertions(+), 26 deletions(-)
-> 
-> diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-> index 836d671fb74f..37b230b8cfe7 100644
-> --- a/mm/memory-failure.c
-> +++ b/mm/memory-failure.c
-> @@ -1066,6 +1066,25 @@ static int identify_page_state(unsigned long pfn, struct page *p,
->  	return page_action(ps, p, pfn);
->  }
->  
-> +static int try_to_split_thp_page(struct page *page, const char *msg)
-> +{
-> +	lock_page(page);
-> +	if (!PageAnon(page) || unlikely(split_huge_page(page))) {
-> +		unsigned long pfn = page_to_pfn(page);
-> +
-> +		unlock_page(page);
-> +		if (!PageAnon(page))
-> +			pr_info("%s: %#lx: non anonymous thp\n", msg, pfn);
-> +		else
-> +			pr_info("%s: %#lx: thp split failed\n", msg, pfn);
-> +		put_page(page);
-> +		return -EBUSY;
-> +	}
-> +	unlock_page(page);
-> +
-> +	return 0;
-> +}
-> +
->  static int memory_failure_hugetlb(unsigned long pfn, int flags)
->  {
->  	struct page *p = pfn_to_page(pfn);
-> @@ -1288,21 +1307,8 @@ int memory_failure(unsigned long pfn, int flags)
->  	}
->  
->  	if (PageTransHuge(hpage)) {
-> -		lock_page(p);
-> -		if (!PageAnon(p) || unlikely(split_huge_page(p))) {
-> -			unlock_page(p);
-> -			if (!PageAnon(p))
-> -				pr_err("Memory failure: %#lx: non anonymous thp\n",
-> -					pfn);
-> -			else
-> -				pr_err("Memory failure: %#lx: thp split failed\n",
-> -					pfn);
-> -			if (TestClearPageHWPoison(p))
-> -				num_poisoned_pages_dec();
-> -			put_page(p);
-> +		if (try_to_split_thp_page(p, "Memory Failure") < 0)
->  			return -EBUSY;
 
-Although this is not a cleanup thing, this failure path means that
-hwpoison is handled (PG_hwpoison is marked), so action_result() should
-be called.  I'll add a patch for this later.
+On 10/16/2019 4:26 PM, Jason Wang wrote:
+>
+> On 2019/10/16 上午9:36, Zhu Lingshan wrote:
+>> failed to send to kvm list, resend, sorry for the inconvenience.
+>>
+>> THanks,
+>> BR
+>> Zhu Lingshan
+>>
+>> On 10/16/2019 9:30 AM, Zhu Lingshan wrote:
+>>> Hi all:
+>>>   This series intends to introduce Intel IFC VF NIC driver for Vhost
+>>> Data Plane Acceleration.
+>>>   Here comes two main parts, one is ifcvf_base layer, which handles
+>>> hardware operations. The other is ifcvf_main layer handles VF
+>>> initialization, configuration and removal, which depends on
+>>> and complys to vhost_mdev https://lkml.org/lkml/2019/9/26/15
+>>>   This is a first RFC try, please help review.
+>
+>
+> It would be helpful if yon can describe which kinds of test that has 
+> been done for this series.
+>
+> Thanks
+>
+Hi Jason,
 
-Anyway, this cleanup patch looks fine to me.
+It passed ping and netperf tests（two VMs, each has one ifc vf backed 
+mdev nic）, I will mention this in next cover letter Thanks!
 
-Acked-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-
-> -		}
-> -		unlock_page(p);
->  		VM_BUG_ON_PAGE(!page_count(p), p);
->  		hpage = compound_head(p);
->  	}
-> @@ -1801,19 +1807,9 @@ static int soft_offline_in_use_page(struct page *page)
->  	int mt;
->  	struct page *hpage = compound_head(page);
->  
-> -	if (!PageHuge(page) && PageTransHuge(hpage)) {
-> -		lock_page(page);
-> -		if (!PageAnon(page) || unlikely(split_huge_page(page))) {
-> -			unlock_page(page);
-> -			if (!PageAnon(page))
-> -				pr_info("soft offline: %#lx: non anonymous thp\n", page_to_pfn(page));
-> -			else
-> -				pr_info("soft offline: %#lx: thp split failed\n", page_to_pfn(page));
-> -			put_page(page);
-> +	if (!PageHuge(page) && PageTransHuge(hpage))
-> +		if (try_to_split_thp_page(page, "soft offline") < 0)
->  			return -EBUSY;
-> -		}
-> -		unlock_page(page);
-> -	}
->  
->  	/*
->  	 * Setting MIGRATE_ISOLATE here ensures that the page will be linked
-> -- 
-> 2.12.3
-> 
-> 
+BR
+Zhu Lingshan
+>>>   Thanks!
+>>> BR
+>>> Zhu Lingshan
+>>>
+>>>
+>>> Zhu Lingshan (2):
+>>>    vhost: IFC VF hardware operation layer
+>>>    vhost: IFC VF vdpa layer
+>>>
+>>>   drivers/vhost/ifcvf/ifcvf_base.c | 390 ++++++++++++++++++++++++++++
+>>>   drivers/vhost/ifcvf/ifcvf_base.h | 137 ++++++++++
+>>>   drivers/vhost/ifcvf/ifcvf_main.c | 541 
+>>> +++++++++++++++++++++++++++++++++++++++
+>>>   3 files changed, 1068 insertions(+)
+>>>   create mode 100644 drivers/vhost/ifcvf/ifcvf_base.c
+>>>   create mode 100644 drivers/vhost/ifcvf/ifcvf_base.h
+>>>   create mode 100644 drivers/vhost/ifcvf/ifcvf_main.c
+>>>
