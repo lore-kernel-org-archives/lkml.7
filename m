@@ -2,149 +2,109 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 792AFCA9EB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 19:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95F59CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 19:37:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52B482084B
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 19:37:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64C252084B
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 19:37:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="I6TerTOv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UddYj1I1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730195AbfJUThW (ORCPT
+        id S1730206AbfJUThz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 15:37:22 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:52456 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728819AbfJUThW (ORCPT
+        Mon, 21 Oct 2019 15:37:55 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:45477 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727211AbfJUThz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 15:37:22 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9LJbIVl071354;
-        Mon, 21 Oct 2019 14:37:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571686638;
-        bh=i9LJ27pFEl9eAdyUHDNy3hfMcfXRi+oOQMoXFA0UpIQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=I6TerTOvqXDfwlDExbAWCSDSQr3gWeaF/6cRAUpS0s+ORb7/u/XsjudhX1KfGXAjX
-         JdUrOyiOeswalCle1womPZyT+JWP4nAex7zPopiuDn2c1C8n/htvGy1o2r6pxiblKH
-         J/B6t+GZAit06ZmCACCZH2dGBuVpqRTBB+zkaGAs=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9LJb368052287
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 21 Oct 2019 14:37:03 -0500
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 21
- Oct 2019 14:36:53 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 21 Oct 2019 14:36:53 -0500
-Received: from [10.250.35.43] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9LJb2t3027583;
-        Mon, 21 Oct 2019 14:37:02 -0500
-Subject: Re: [PATCH 2/3] dt: power: Add the bq2515x family dt bindings
-To:     Sebastian Reichel <sre@kernel.org>
-CC:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20190930143137.21624-1-dmurphy@ti.com>
- <20190930143137.21624-2-dmurphy@ti.com>
- <20191020123014.trvn5auxbv6ftngj@earth.universe>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <1fcb9257-464f-060d-c8bb-085fe72fdf35@ti.com>
-Date:   Mon, 21 Oct 2019 14:36:25 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 21 Oct 2019 15:37:55 -0400
+Received: by mail-qt1-f195.google.com with SMTP id c21so22866436qtj.12;
+        Mon, 21 Oct 2019 12:37:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:message-id:from:to:cc:subject:in-reply-to:references
+         :mime-version:content-disposition:content-transfer-encoding;
+        bh=OvR7qZTN7z+OQITB5g0tsZqaN65/2chZfmtHixddV6M=;
+        b=UddYj1I13Df1ib5gS+cO7AEnjxjMACvGxxpBFhhPxy6aqTFoOVSCk004bJPWlHaLol
+         3uJCaoZcyXgFrmMm7tudkLK2Quk00vEFpX4tZxfs9EddWODhyi4QYAF9vfAgko3fA05O
+         XZlJVqhV/mX/Q1OtpWPvVeDGdc28+TEuMXp8ODlb547QQlJfHi82vuoOzUImN/K7arlt
+         /SDIe/0ngQLnMDPFOIouSz/l9PaLE9tix0sHw2o/+m42TMI7cN79WjyC6mLbxebyrr0o
+         6a2N6vaskyLWDNwYub8jJTCZ36/bBsbAQwWlnz1Dv4dUgA2eXScEPG0w0HXwfWS7DMxK
+         OynA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:from:to:cc:subject:in-reply-to
+         :references:mime-version:content-disposition
+         :content-transfer-encoding;
+        bh=OvR7qZTN7z+OQITB5g0tsZqaN65/2chZfmtHixddV6M=;
+        b=UWz3Lgj4CFuxVXTHQyGHMe5kgJ4RAgLzncTaHrujA1RZjjlxxdp8G14ue+YuBHCI47
+         2ZTGyhnjMF0cgn01iaGbXRBwIJ2VMpGVP226ZS6hfvFsn/yuZySirxKqJgwHKSOCI/pY
+         cyCY2UHlbn0Dy/o13q+lbT+v1n4vS8NHRM15REHM2pcxH6VQ4v4HczhjEus+1SyCZnhG
+         zd2LsC7hNCsd/ubdtkTEtcgBKxprBerruniNDfCWcxbxCVx7WkJP/8VLFXFgUELhN07l
+         1+jHK8rlerUJGGECOtQD1q11raALnek7F7KxPpaUr4nYngu4j0X51Iix+fSkjTFxgroD
+         zh7w==
+X-Gm-Message-State: APjAAAVbB8NUn0mjkHAAmuiOxj+LKaba8PjJH4Hf9D1IJhmzX9AxezbT
+        CNGAWKA97BtWQdl9N/F5ioJAGD/Q
+X-Google-Smtp-Source: APXvYqz989ocNhooAn2C9jPnGfPL+Ya9E4GvReVSsCzgSht22ZfFT6OEq4NiSmYUnUZJZGauM9QoHA==
+X-Received: by 2002:ac8:2c86:: with SMTP id 6mr25828203qtw.317.1571686673828;
+        Mon, 21 Oct 2019 12:37:53 -0700 (PDT)
+Received: from localhost (modemcable249.105-163-184.mc.videotron.ca. [184.163.105.249])
+        by smtp.gmail.com with ESMTPSA id z5sm7851619qkl.101.2019.10.21.12.37.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Oct 2019 12:37:53 -0700 (PDT)
+Date:   Mon, 21 Oct 2019 15:37:52 -0400
+Message-ID: <20191021153752.GB90634@t480s.localdomain>
+From:   Vivien Didelot <vivien.didelot@gmail.com>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH net-next 05/16] net: dsa: use ports list to setup switches
+In-Reply-To: <20191021124902.GF16084@lunn.ch>
+References: <20191020031941.3805884-1-vivien.didelot@gmail.com>
+ <20191020031941.3805884-6-vivien.didelot@gmail.com>
+ <21738767-7e98-6c4c-ba1c-bea29142d481@gmail.com>
+ <20191021124902.GF16084@lunn.ch>
 MIME-Version: 1.0
-In-Reply-To: <20191020123014.trvn5auxbv6ftngj@earth.universe>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sebastian
+On Mon, 21 Oct 2019 14:49:02 +0200, Andrew Lunn <andrew@lunn.ch> wrote:
+> On Sun, Oct 20, 2019 at 07:42:15PM -0700, Florian Fainelli wrote:
+> > 
+> > 
+> > On 10/19/2019 8:19 PM, Vivien Didelot wrote:
+> > > Use the new ports list instead of iterating over switches and their
+> > > ports when setting up the switches and their ports.
+> > > 
+> > > At the same time, provide setup states and messages for ports and
+> > > switches as it is done for the trees.
+> > 
+> > Humm, that becomes quite noisy, would it make sense to have those
+> > messages only for non-user ports that are not already visible because
+> > they do not have a net_device?
+> 
+> I agree, it looks noise. Maybe change them to _dbg()?
+>  
+> > If you have multiple switches in a fabric, it might be convenient to use
+> > dev_info(dp->ds->dev, ...) to print your message so you can clearly
+> > identify which port belongs to which switch, which becomes even more
+> > important as it is all flattened thanks to lists now. What do you think?
+> 
+> I do think it needs to identify both the dst and the ds.
 
-On 10/20/19 7:30 AM, Sebastian Reichel wrote:
-> Hi Dan,
->
-> On Mon, Sep 30, 2019 at 09:31:36AM -0500, Dan Murphy wrote:
->> Add the bindings for the bq25150 and bq25155 500mA
->>   charging IC from Texas Instruments.
->>
->> Datasheet:
->> http://www.ti.com/lit/ds/symlink/bq25150.pdf
->> http://www.ti.com/lit/ds/symlink/bq25155.pdf
->>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> ---
->>   .../bindings/power/supply/bq2515x.txt         | 48 +++++++++++++++++++
-> This should use the new YAML binding style.
-
-
-Ack
-
-
->
->>   1 file changed, 48 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/power/supply/bq2515x.txt
->>
->> diff --git a/Documentation/devicetree/bindings/power/supply/bq2515x.txt b/Documentation/devicetree/bindings/power/supply/bq2515x.txt
->> new file mode 100644
->> index 000000000000..98203ab53d44
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/power/supply/bq2515x.txt
->> @@ -0,0 +1,48 @@
->> +Binding for TI bq25150 500-mA Linear charger
->> +
->> +The BQ25150 is a highly integrated battery charge management IC that integrates
->> +the most common functions for wearable devices, namely a charger, an
->> +output voltage rail, ADC for battery and system monitoring, and
->> +push-button controller.
->> +
->> +Required Properties:
->> +	- compatible: Should contain one of the following:
->> +		"ti,bq25150"
->> +		"ti,bq25155"
->> +	- reg: int I2c address 0x6b
->> +	- #address-cells: 1;
->> +	- #size-cells: = 0;
->> +
->> +Optional Properties:
->> +	- ti,battery-regulation-voltage: integer, maximum charging voltage in mV.
->> +		Values range from 3600->4600mV
->> +	- ti,charge-current: integer, maximum charging current in mA.
->> +		Values range from 50->600mA
-> Those values should be in uV and uA. Also the values basically
-> describe the dumb battery, so please use this binding:
->
-> Documentation/devicetree/bindings/power/supply/battery.txt
-
-Ack
+It is noise indeed and doesn't add much value, I'll remove them.
 
 
->
->> +	- reset-gpios: GPIO used for Master reset
->> +	- low-power-gpios: GPIO used for low power mode of IC.
->> +	- charge-enable-gpios: GPIO used to turn on and off charging.
->> +	- pg-gpios: GPIO used for connecting the bq2515x device PG (Power Good)
->> +		pin.  This pin should be used if possible as this is the
->> +		recommended way to obtain the charger's input PG state.
->> +		If this pin is not specified a software-based approach for PG
->> +		detection is used.
->> +
->> +Example
->> +bq25150@6b {
-> charger@6b
-
-Ack
-
-Dan
-
+Thanks,
+Vivien
