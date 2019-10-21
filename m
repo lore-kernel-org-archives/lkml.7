@@ -2,148 +2,97 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C5E6CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:19:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 159DACA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:20:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0914A20640
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:19:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D727920640
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:20:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571646051;
+	bh=hGEXmo3gWHNdYvsyhcJf295cLVFl9GYDu9vcj/Wl/HA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=iyEtCCNVxCQXV1Irb3ctTvyEWOugV5W9bUbwuJ1iRqYHlOXDK9pvFPzZvDd1Ppdko
+	 tyHlyedw56tJyKj0cKWdksmMKQaZM3/K5BL3vtJB0fMmUW2K8EPIK5wuirgkFJZnGM
+	 VjmVMmHxtLkWrwBxp1s8qKi+bEPG8zI4rfDwm1X8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727681AbfJUITu (ORCPT
+        id S1727675AbfJUIUu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 04:19:50 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:58115 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727122AbfJUITu (ORCPT
+        Mon, 21 Oct 2019 04:20:50 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:45396 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726480AbfJUIUu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 04:19:50 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iMSuo-0001Aa-1T; Mon, 21 Oct 2019 10:19:46 +0200
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iMSun-0008Pf-Bn; Mon, 21 Oct 2019 10:19:45 +0200
-Date:   Mon, 21 Oct 2019 10:19:45 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Robert Jones <rjones@gateworks.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] ARM: dt: add lsm9ds1 iio imu/magn support to gw553x
-Message-ID: <20191021081945.o7knknxacm6uvd3c@pengutronix.de>
-References: <20191018232124.4126-1-rjones@gateworks.com>
+        Mon, 21 Oct 2019 04:20:50 -0400
+Received: by mail-oi1-f195.google.com with SMTP id o205so10276729oib.12;
+        Mon, 21 Oct 2019 01:20:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hGEXmo3gWHNdYvsyhcJf295cLVFl9GYDu9vcj/Wl/HA=;
+        b=KXgjaPFOqg8Z0L6/LL1AX6c1xSqNm7fFxMIWCQGQKYEUC7GE8+mH5z1tN1vPTSE3xT
+         oIjJXZ5zizpAN7Xt3Gi9eTr4zsg5FEU0KiQ8VHJMfPbFIb35fnWrzVfLHKP/6ziEtEwT
+         Tg+1ryPXRyoUuQq/Qy8RVREr54wqqESilJ6t51DKjnO3pJ67426emaV48DTZwdAYVXod
+         qNvUHoGRBvHF41yuPGRC8brz4iUxbnmg3N8usHXRhRfSw6jqHkP5DtnUsczZS2hyGtMU
+         Sb67rqDzIL4gA9MHebkdA/UoicFzO4AI2BjHxY5/L+ixKit4U2s6SBexwyiolQDmMrOG
+         puew==
+X-Gm-Message-State: APjAAAXX9i3sI7bcLcF9Rv7O5dg8gyEFSHUzM+6b3NpW92K/mUiqBxc0
+        uf2sPnKDCM948u9tFyxSF6z0UeTy7qijs/3UMz1BDA==
+X-Google-Smtp-Source: APXvYqyB48oXt5Oyi+FmosIyChlhsJQqJvoY7Kvo+kO4MYVtaBkHX8AnMaaDE/llDjngql2hE3EYQipYpIZE7hTR/0o=
+X-Received: by 2002:aca:d405:: with SMTP id l5mr17102856oig.115.1571646049356;
+ Mon, 21 Oct 2019 01:20:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191018232124.4126-1-rjones@gateworks.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 10:16:17 up 156 days, 14:34, 97 users,  load average: 0.07, 0.08,
- 0.08
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <20191017163503.30791-1-sudeep.holla@arm.com> <20191018060247.g5asfuh3kncoj7kl@vireshk-i7>
+ <20191018101924.GA25540@bogus> <4881906.zjS51fuFuv@kreacher>
+ <20191018110632.GB25540@bogus> <20191021021551.bjhf74zeyuqcl4w3@vireshk-i7>
+In-Reply-To: <20191021021551.bjhf74zeyuqcl4w3@vireshk-i7>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 21 Oct 2019 10:20:38 +0200
+Message-ID: <CAJZ5v0jts=uE63vQ9ApP1GMPVzF6Ap4r5b6BP1q3urx5YzBPUA@mail.gmail.com>
+Subject: Re: [PATCH] cpufreq: flush any pending policy update work scheduled
+ before freeing
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Sudeep Holla <sudeep.holla@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robert,
+On Mon, Oct 21, 2019 at 4:15 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 18-10-19, 12:06, Sudeep Holla wrote:
+> > Callstack is:
+> >
+> > (cpufreq_notifier_max)
+> > (notifier_call_chain)
+> > (blocking_notifier_call_chain)
+> > (pm_qos_update_target)
+> > (freq_qos_apply)
+> > (freq_qos_remove_request)
+> > (cpufreq_policy_free)
+> > (subsys_interface_unregister)
+> > (cpufreq_unregister_driver)
+>
+> @sudeep: I see that the patch is merged now, but as I said earlier the
+> reasoning isn't clear yet. Please don't stop working on this and lets
+> clean this once and for all.
+>
+> What patches were you testing this with? My buggy patches or Rafael's
+> patches as well ? At least with my patches, this can happen due to the
+> other bug where the notifier doesn't get removed (as I said earlier),
+> but once that bug isn't there then this shouldn't happen, else we have
+> another bug in pipeline somewhere and should find it.
 
-same here, don't name it 'ARM: dt: ...' instead name it 'ARM: dts: imx:
-ventana: ..' or 'ARM: dts: imx: imx6qdl-gw553x: ..'.
+Right.
 
-On 19-10-18 16:21, Robert Jones wrote:
-> Add one node for the accel/gyro i2c device and another for the separate
-> magnetometer device in the lsm9ds1.
-> 
-> Signed-off-by: Robert Jones <rjones@gateworks.com>
-> ---
->  arch/arm/boot/dts/imx6qdl-gw553x.dtsi | 31 +++++++++++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/imx6qdl-gw553x.dtsi b/arch/arm/boot/dts/imx6qdl-gw553x.dtsi
-> index a106689..55e6922 100644
-> --- a/arch/arm/boot/dts/imx6qdl-gw553x.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl-gw553x.dtsi
-> @@ -173,6 +173,25 @@
->  	pinctrl-0 = <&pinctrl_i2c2>;
->  	status = "okay";
->  
-> +	lsm9ds1_ag@6a {
-> +		compatible = "st,lsm9ds1-imu";
-
-Didn't found this compatible string.
-
-> +		reg = <0x6a>;
-> +		st,drdy-int-pin = <1>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_acc_gyro>;
-> +		interrupt-parent = <&gpio7>;
-> +		interrupts = <13 IRQ_TYPE_LEVEL_HIGH>;
-> +	};
-> +
-> +	lsm9ds1_m@1c {
-> +		compatible = "st,lsm9ds1-magn";
-> +		reg = <0x1c>;
-
-Nodes are sorted according their i2c-addresses.
-
-Regards,
-  Marco
-
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_mag>;
-> +		interrupt-parent = <&gpio1>;
-> +		interrupts = <2 IRQ_TYPE_EDGE_RISING>;
-> +	};
-> +
->  	ltc3676: pmic@3c {
->  		compatible = "lltc,ltc3676";
->  		reg = <0x3c>;
-> @@ -462,6 +481,18 @@
->  		>;
->  	};
->  
-> +	pinctrl_acc_gyro: acc_gyrogrp {
-> +		fsl,pins = <
-> +			MX6QDL_PAD_GPIO_18__GPIO7_IO13		0x1b0b0
-> +		>;
-> +	};
-> +
-> +	pinctrl_mag: maggrp {
-> +		fsl,pins = <
-> +			MX6QDL_PAD_GPIO_2__GPIO1_IO02		0x1b0b0
-> +		>;
-> +	};
-> +
->  	pinctrl_pps: ppsgrp {
->  		fsl,pins = <
->  			MX6QDL_PAD_ENET_RXD1__GPIO1_IO26	0x1b0b1
-> -- 
-> 2.9.2
-> 
-> 
-> 
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+I have found one already which should be fixed in my current
+linux-next branch, so testing that in particular would be appreciated.
