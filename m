@@ -2,148 +2,87 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAEA3CA9EB0
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F013ACA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:45:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 812BD2053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:43:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571669030;
-	bh=4tucuf7nmKqmOHZr8VTJCYuBSVagd0+Lf0FuQZjv800=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=acZSVXkaBOduOQLdLIgYTrtV/gxVcecZmK7B1r5HBHRn3Ml5N6mjX/kYsG1TY5rbZ
-	 pfoDl2Ga3sFmgf5V6y8vhKHk3G4tys0d/AIe/ylEskxNZWmOl/0d2Z7arwIy8hOvW7
-	 6xdVD0A5qxc5E219hgUIkFmO1Ov8o3DrNBsiNYO4=
+	by mail.kernel.org (Postfix) with ESMTP id BF15C2053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:45:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="A08jDv+V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728167AbfJUOnt (ORCPT
+        id S1728191AbfJUOpC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 10:43:49 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40534 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727822AbfJUOnt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 10:43:49 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 6D9E6B794;
-        Mon, 21 Oct 2019 14:43:46 +0000 (UTC)
-Date:   Mon, 21 Oct 2019 16:43:45 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Oscar Salvador <osalvador@suse.de>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>
-Subject: Re: [PATCH v1 1/2] mm/page_alloc.c: Don't set pages PageReserved()
- when offlining
-Message-ID: <20191021144345.GT9379@dhcp22.suse.cz>
-References: <20191021141927.10252-1-david@redhat.com>
- <20191021141927.10252-2-david@redhat.com>
+        Mon, 21 Oct 2019 10:45:02 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:38800 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727049AbfJUOpC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 10:45:02 -0400
+Received: by mail-ot1-f66.google.com with SMTP id e11so11198469otl.5
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 07:45:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nXKBAnyH4k8+RtijsexqxpoxgeB4fhcJobwvx31LMho=;
+        b=A08jDv+Vol6PvOoXT/M++kzuwcxp91LiBFYVYM8EPNPJr69L5QUHqGuyp6zGv7tyF9
+         6FX/3oF06Fh+suEw+xQCGVLXW/2yTptC75eQ4/Bbh3WX6Ds/b0M7cf50hvpynQ5ibr4v
+         gyYdRFItY3w55CEltwtFaefj+WsgXARJ5YWtFuxW73BsZK0zpcCSH1MoB0rLRv8RqmVt
+         qiaRQW1K0uEwRHT9/yan1nEhEFofsZXJYLXFQRs8G0Luo67GpvQH6OEE/XLvxxr7bbTv
+         RWxGf3MhxbRyjvhxwa7eDi1zMvw+87+x9G1yJ+8txjhDZ6FYAZefo+3fNI8vS/AdDEne
+         vqOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nXKBAnyH4k8+RtijsexqxpoxgeB4fhcJobwvx31LMho=;
+        b=aee2tWZ/K9v61Z2aouEM8WxqdcuBFespb6A99RiXuRFus7JK10TFVerPLNkSlEHe7t
+         7J5DYzoDz+lFEF4/9kl9G/vuRoE1lrpAGH+WD7PtFXWrcI+40SNxnF/04L6NqI37nlpW
+         MQXbAAmq/40BhLnSNj/NPoR/8MsW/FMqTErZmweVTCkuMn49dkI9ITDNOy8PKtFLl0y1
+         eivyTEbW+8MWgpSopmcvwnFxSa1/I0oQVrOZrpCWYdsK5uHw70VwSCFpPXzHcV4Qvyig
+         Y98zvYXo2ocliHpDWuqMVwkuKtRlNzWDFTZ3tucMKn4i2dmmZL0CrQXEy29yahfyudDq
+         3zUQ==
+X-Gm-Message-State: APjAAAWZ5Aq5RkkcHj8XHVgqVe8+k3pXf2bZliai0zrebG5Lk/juIAbL
+        5346GHDWMyYx8TdWKIZegChdO4Wkrk1l7tbEHn78kA==
+X-Google-Smtp-Source: APXvYqxBK0s4meOHW5S/bgvSxL00+aVLbFSn/xa462jwXlzSuPi3v0iK8imKwTC8RSn2iFmHXyu4Ls1dS51GrTPHPKE=
+X-Received: by 2002:a9d:7c92:: with SMTP id q18mr19206153otn.363.1571669101455;
+ Mon, 21 Oct 2019 07:45:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191021141927.10252-2-david@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <157150237973.3940076.12626102230619807187.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <x495zkii9o5.fsf@segfault.boston.devel.redhat.com>
+In-Reply-To: <x495zkii9o5.fsf@segfault.boston.devel.redhat.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 21 Oct 2019 07:44:51 -0700
+Message-ID: <CAPcyv4j66KoivrNRpOrqwrVtsOP5fSWKPqcHx_dDf1czy=f3qQ@mail.gmail.com>
+Subject: Re: [PATCH] fs/dax: Fix pmd vs pte conflict detection
+To:     Jeff Moyer <jmoyer@redhat.com>
+Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Jeff Smits <jeff.smits@intel.com>,
+        Doug Nelson <doug.nelson@intel.com>,
+        stable <stable@vger.kernel.org>, Jan Kara <jack@suse.cz>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 21-10-19 16:19:25, David Hildenbrand wrote:
-> We call __offline_isolated_pages() from __offline_pages() after all
-> pages were isolated and are either free (PageBuddy()) or PageHWPoison.
-> Nothing can stop us from offlining memory at this point.
-> 
-> In __offline_isolated_pages() we first set all affected memory sections
-> offline (offline_mem_sections(pfn, end_pfn)), to mark the memmap as
-> invalid (pfn_to_online_page() will no longer succeed), and then walk over
-> all pages to pull the free pages from the free lists (to the isolated
-> free lists, to be precise).
-> 
-> Note that re-onlining a memory block will result in the whole memmap
-> getting reinitialized, overwriting any old state. We already poision the
-> memmap when offlining is complete to find any access to
-> stale/uninitialized memmaps.
-> 
-> So, setting the pages PageReserved() is not helpful. The memap is marked
-> offline and all pageblocks are isolated. As soon as offline, the memmap
-> is stale either way.
-> 
-> This looks like a leftover from ancient times where we initialized the
-> memmap when adding memory and not when onlining it (the pages were set
-> PageReserved so re-onling would work as expected).
-> 
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Cc: Mel Gorman <mgorman@techsingularity.net>
-> Cc: Mike Rapoport <rppt@linux.ibm.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Wei Yang <richard.weiyang@gmail.com>
-> Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> Cc: Anshuman Khandual <anshuman.khandual@arm.com>
-> Cc: Pavel Tatashin <pavel.tatashin@microsoft.com>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
+On Mon, Oct 21, 2019 at 5:07 AM Jeff Moyer <jmoyer@redhat.com> wrote:
+>
+> Dan Williams <dan.j.williams@intel.com> writes:
+>
+> > Check for NULL entries before checking the entry order, otherwise NULL
+> > is misinterpreted as a present pte conflict. The 'order' check needs to
+> > happen before the locked check as an unlocked entry at the wrong order
+> > must fallback to lookup the correct order.
+>
+> Please include the user-visible effects of the problem in the changelog.
+>
 
-Acked-by: Michal Hocko <mhocko@suse.com>
-
-We still set PageReserved before onlining pages and that one should be
-good to go as well (memmap_init_zone).
-Thanks!
-
-There is a comment above offline_isolated_pages_cb that should be
-removed as well.
-
-> ---
->  mm/page_alloc.c | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
-> 
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index ed8884dc0c47..bf6b21f02154 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -8667,7 +8667,7 @@ __offline_isolated_pages(unsigned long start_pfn, unsigned long end_pfn)
->  {
->  	struct page *page;
->  	struct zone *zone;
-> -	unsigned int order, i;
-> +	unsigned int order;
->  	unsigned long pfn;
->  	unsigned long flags;
->  	unsigned long offlined_pages = 0;
-> @@ -8695,7 +8695,6 @@ __offline_isolated_pages(unsigned long start_pfn, unsigned long end_pfn)
->  		 */
->  		if (unlikely(!PageBuddy(page) && PageHWPoison(page))) {
->  			pfn++;
-> -			SetPageReserved(page);
->  			offlined_pages++;
->  			continue;
->  		}
-> @@ -8709,8 +8708,6 @@ __offline_isolated_pages(unsigned long start_pfn, unsigned long end_pfn)
->  			pfn, 1 << order, end_pfn);
->  #endif
->  		del_page_from_free_area(page, &zone->free_area[order]);
-> -		for (i = 0; i < (1 << order); i++)
-> -			SetPageReserved((page+i));
->  		pfn += (1 << order);
->  	}
->  	spin_unlock_irqrestore(&zone->lock, flags);
-> -- 
-> 2.21.0
-> 
-
--- 
-Michal Hocko
-SUSE Labs
+Yup, I noticed that right after sending.
