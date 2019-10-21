@@ -2,222 +2,316 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5911CCA9EB0
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:46:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 591FCCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:47:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 242B12089C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:46:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CFFE20B7C
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:47:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HE5jNR0m"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="kVUTvCeN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728750AbfJUMqh (ORCPT
+        id S1728443AbfJUMrb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 08:46:37 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:36829 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727256AbfJUMqg (ORCPT
+        Mon, 21 Oct 2019 08:47:31 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:41793 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727959AbfJUMrb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 08:46:36 -0400
-Received: by mail-wm1-f68.google.com with SMTP id c22so3544712wmd.1
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 05:46:35 -0700 (PDT)
+        Mon, 21 Oct 2019 08:47:31 -0400
+Received: by mail-io1-f67.google.com with SMTP id r144so3841710iod.8
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 05:47:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=oxlugiViiQE3cSKhufhby1ti8KNom5JSbs6PQgpr2f4=;
-        b=HE5jNR0m/8rCwUemPzMdlN05lJ+BtFDbrnxh1nyjX6n4kA0QGZCHW0p8ybDWYI2Fyl
-         SSW3rtr0Xx8IOJ7EmV6C1jYIWURaAevNwN+YRk+XxTvVLNomfz1+tTejV7v4yv2zddpq
-         5LztFvZNYJHd/rTBr1EXQ3ZM/5kG25+ixWmEwz2o9x54YrmW5P+JlketwitxX/0rxG1B
-         0IKlkOgXQoZ1eqKUQ1zL4WjlcOIGRb6Lqp+2GNbadLJjTRccTE5jIe1ompVqCxVHAPlh
-         G2NSWukRHIGZYd4GXkcmWePz/hzTZfrF6yRAIS5f3gDiEI6us0xiNDRFYf4s+AExOzIf
-         py1g==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=j8P+PMqsbgTEkUUXtRMl9tg90RLO2oVTHLSSpP0L1Ds=;
+        b=kVUTvCeN6PMLc530aewm7qJZuU4ZF+RiaIJPn6GAE/1e6xAEOD1OklyPEhACcreYU5
+         X63xk0Gag6Htsxk8F8BRiUwqxXt3tQCsBwSZOJAs85ebSh07SqpwXPu/iebMBBiZCVBS
+         Q0h51oFSL5L4Pbauc7bj49VxX1z3j4BNaEI6ozDs7e/KYdeqlPXJJuar3DSBb7ThuSvz
+         BePr9q7pQJ93/o+cEGU73jxcan3VjF3n897/xZ5YGqOngCcyfO+jxPk3qjolaHQVC1oV
+         16itQI4PAg9Qgn0f4+idrS+d1pd9QWY0TbFyXu1bJRB5rfi5Iv+U1bFjWN4duJt9Ze/g
+         2q3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=oxlugiViiQE3cSKhufhby1ti8KNom5JSbs6PQgpr2f4=;
-        b=IDhavDuSdDQrsw9QnNA7Lcul5LKGMVnPdrU/omKcnO+KxMeqQq+j6pIidfxSgz92GZ
-         WQgKkqtBegI3ySHhB26C3RS5bg6D6ghEq7Bo65aXIbtgwwqdyPC1jFNJhblihmm6mj+m
-         IvMa9mBDgY709FqS4ll2XfI8TF1R3jPgpO8g6RelK6AGVW1LPYmIvhbW8NQ0RS7z1Cfj
-         p/BlSaVgLZh+s7LYF+Rtdfd9c2PoHz4fpljI2LGxMDfvkDIsXc74l0HK6i6cQXP+/CiH
-         4x/WldMaUlnVC4ulDKPBTjPyFQpo5FzBV4UCqvi1Vr/46jRrwWhud4jffuP9fMxgHsY9
-         TTbQ==
-X-Gm-Message-State: APjAAAWyvy09cFA41U/pkxupthzGTuOg26Nz3OpFWvgktAqgkNUgrmqI
-        w4Ana/MOw0h/xylZUKalX4806w==
-X-Google-Smtp-Source: APXvYqzN83CIOvU7h1VI/upm+FMF8KlXoDHQuZQPMn0sUbaplEuqAC9iJ5IdsyG4SkF4yRVs8RanRg==
-X-Received: by 2002:a1c:1f14:: with SMTP id f20mr5765595wmf.147.1571661994201;
-        Mon, 21 Oct 2019 05:46:34 -0700 (PDT)
-Received: from dell ([95.149.164.99])
-        by smtp.gmail.com with ESMTPSA id z1sm14850654wrn.57.2019.10.21.05.46.33
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 21 Oct 2019 05:46:33 -0700 (PDT)
-Date:   Mon, 21 Oct 2019 13:46:32 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     arnd@arndb.de, broonie@kernel.org, linus.walleij@linaro.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        baohua@kernel.org, stephan@gerhold.net
-Subject: Re: [PATCH v2 3/9] mfd: cs5535-mfd: Request shared IO regions
- centrally
-Message-ID: <20191021124632.GH4365@dell>
-References: <20191021105822.20271-1-lee.jones@linaro.org>
- <20191021105822.20271-4-lee.jones@linaro.org>
- <20191021122606.5q22j6wtyslwljco@holly.lan>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=j8P+PMqsbgTEkUUXtRMl9tg90RLO2oVTHLSSpP0L1Ds=;
+        b=lusXbXaIxItYJXu4TncwLiBt9ZAVSAFim/4oF5npOoiAwGn4p9CgUscX5F3fbSmi5l
+         f95I9hJsdrzWYyl2tOluFYx6IPvTgnaywBrpRS/+BwOk++Yw5GZ8H66ymPAx8mGHDc1U
+         8jGH944ptxt9MlcL61DPVVMgU1ZMXrFXEMq+/A1/KyF8E/175xSRtcUPx5aipwKhTz+9
+         d+AvcCXYG/Mp/MUbOc5EimsrWwf9eHegiN/L2XQvs9WVSempNGVtqpyYjOEUzfzSDixa
+         g9tq+lDQhqLu9QUVSlnCO5/JFPXB5B7Wbhe9PJK6pOiAxdV5N4ryIKZ+onygoZO/TRNC
+         h/pg==
+X-Gm-Message-State: APjAAAV15w3olo3WizgSYL14W9oHkbRA/c+f6RuXBaUU+nMfBhewH30U
+        9wiaQyXZfayk+5G3jBshropAkaUSfbfibGV916Oq3A==
+X-Google-Smtp-Source: APXvYqwn2KFCAeiVocdM7OpYEIXzmjfhzptuh44F+JsJTYnkiE8RUXwHzCNcS51fN5EvDj6Eb/6DjIBMgrXwZMdZSuc=
+X-Received: by 2002:a02:7b0d:: with SMTP id q13mr21070757jac.114.1571662049582;
+ Mon, 21 Oct 2019 05:47:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191021122606.5q22j6wtyslwljco@holly.lan>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20191007024131.22708-1-brgl@bgdev.pl> <20191012143722.7cb7015d@archlinux>
+In-Reply-To: <20191012143722.7cb7015d@archlinux>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 21 Oct 2019 14:47:18 +0200
+Message-ID: <CAMRc=MekOWGKo4eJ69ifV+MG5==PetPpb87Amrqm_x95sjFiGQ@mail.gmail.com>
+Subject: Re: [PATCH v2] iio: pressure: bmp280: use devm action and remove
+ labels from probe
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 21 Oct 2019, Daniel Thompson wrote:
+sob., 12 pa=C5=BA 2019 o 15:37 Jonathan Cameron <jic23@kernel.org> napisa=
+=C5=82(a):
+>
+> On Mon,  7 Oct 2019 04:41:31 +0200
+> Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >
+> > We can drop some duplicate code if we use devm_action for disabling
+> > regulators and pm and the managed variant of iio_device_register().
+> >
+> > This allows us to completely remove all remove() callbacks from both
+> > i2c and spi code.
+> >
+> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> This is on top of the bulk regulator patch which is awaiting precusors
+> getting to my upstream.  I'll hold this one as well on that.
+>
+> If it looks like I've forgotten it then give me a poke.
+>
 
-> On Mon, Oct 21, 2019 at 11:58:16AM +0100, Lee Jones wrote:
-> > Prior to this patch, IO regions were requested via an MFD subsytem-level
-> > .enable() call-back and similarly released by a .disable() call-back.
-> > Double requests/releases were avoided by a centrally handled usage count
-> > mechanism.
-> > 
-> > This complexity can all be avoided by handling IO regions only once during
-> > .probe() and .remove() of the parent device.  Since this is the only
-> > legitimate user of the aforementioned usage count mechanism, this patch
-> > will allow it to be removed from MFD core in subsequent steps.
-> > 
-> > Suggested-by: Daniel Thompson <daniel.thompson@linaro.org>
-> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Hi Jonathan,
+
+gentle poke after v5.4-rc4. Only one of the three patches is in next
+so far, the one using bulk regulators is missing too besides this one.
+
+Best regards,
+Bartosz Golaszewski
+
+> Thanks,
+>
+> Jonathan
+>
 > > ---
-> >  drivers/mfd/cs5535-mfd.c | 72 +++++++++++++++++-----------------------
-> >  1 file changed, 30 insertions(+), 42 deletions(-)
-> > 
-> > diff --git a/drivers/mfd/cs5535-mfd.c b/drivers/mfd/cs5535-mfd.c
-> > index 9ce6bbcdbda1..053e33447808 100644
-> > --- a/drivers/mfd/cs5535-mfd.c
-> > +++ b/drivers/mfd/cs5535-mfd.c
-> > @@ -27,38 +27,6 @@ enum cs5535_mfd_bars {
-> >  	NR_BARS,
-> >  };
-> >  
-> > -static int cs5535_mfd_res_enable(struct platform_device *pdev)
+> > v1 -> v2:
+> > - squash the patches using devm_iio_device_register() and devm_action
+> >   to keep the changes bisectable
+> >
+> >  drivers/iio/pressure/bmp280-core.c | 62 +++++++++++++++---------------
+> >  drivers/iio/pressure/bmp280-i2c.c  |  6 ---
+> >  drivers/iio/pressure/bmp280-spi.c  |  6 ---
+> >  drivers/iio/pressure/bmp280.h      |  1 -
+> >  4 files changed, 30 insertions(+), 45 deletions(-)
+> >
+> > diff --git a/drivers/iio/pressure/bmp280-core.c b/drivers/iio/pressure/=
+bmp280-core.c
+> > index c2988dbdb1a7..79254dd26dfd 100644
+> > --- a/drivers/iio/pressure/bmp280-core.c
+> > +++ b/drivers/iio/pressure/bmp280-core.c
+> > @@ -984,6 +984,22 @@ static int bmp085_fetch_eoc_irq(struct device *dev=
+,
+> >       return 0;
+> >  }
+> >
+> > +static void bmp280_pm_disable(void *data)
+> > +{
+> > +     struct device *dev =3D data;
+> > +
+> > +     pm_runtime_get_sync(dev);
+> > +     pm_runtime_put_noidle(dev);
+> > +     pm_runtime_disable(dev);
+> > +}
+> > +
+> > +static void bmp280_regulators_disable(void *data)
+> > +{
+> > +     struct regulator_bulk_data *supplies =3D data;
+> > +
+> > +     regulator_bulk_disable(BMP280_NUM_SUPPLIES, supplies);
+> > +}
+> > +
+> >  int bmp280_common_probe(struct device *dev,
+> >                       struct regmap *regmap,
+> >                       unsigned int chip,
+> > @@ -1055,6 +1071,11 @@ int bmp280_common_probe(struct device *dev,
+> >               return ret;
+> >       }
+> >
+> > +     ret =3D devm_add_action_or_reset(dev, bmp280_regulators_disable,
+> > +                                    data->supplies);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> >       /* Wait to make sure we started up properly */
+> >       usleep_range(data->start_up_time, data->start_up_time + 100);
+> >
+> > @@ -1069,17 +1090,16 @@ int bmp280_common_probe(struct device *dev,
+> >       data->regmap =3D regmap;
+> >       ret =3D regmap_read(regmap, BMP280_REG_ID, &chip_id);
+> >       if (ret < 0)
+> > -             goto out_disable_regulators;
+> > +             return ret;
+> >       if (chip_id !=3D chip) {
+> >               dev_err(dev, "bad chip id: expected %x got %x\n",
+> >                       chip, chip_id);
+> > -             ret =3D -EINVAL;
+> > -             goto out_disable_regulators;
+> > +             return -EINVAL;
+> >       }
+> >
+> >       ret =3D data->chip_info->chip_config(data);
+> >       if (ret < 0)
+> > -             goto out_disable_regulators;
+> > +             return ret;
+> >
+> >       dev_set_drvdata(dev, indio_dev);
+> >
+> > @@ -1093,14 +1113,14 @@ int bmp280_common_probe(struct device *dev,
+> >               if (ret < 0) {
+> >                       dev_err(data->dev,
+> >                               "failed to read calibration coefficients\=
+n");
+> > -                     goto out_disable_regulators;
+> > +                     return ret;
+> >               }
+> >       } else if (chip_id =3D=3D BMP280_CHIP_ID || chip_id =3D=3D BME280=
+_CHIP_ID) {
+> >               ret =3D bmp280_read_calib(data, &data->calib.bmp280, chip=
+_id);
+> >               if (ret < 0) {
+> >                       dev_err(data->dev,
+> >                               "failed to read calibration coefficients\=
+n");
+> > -                     goto out_disable_regulators;
+> > +                     return ret;
+> >               }
+> >       }
+> >
+> > @@ -1112,7 +1132,7 @@ int bmp280_common_probe(struct device *dev,
+> >       if (irq > 0 || (chip_id  =3D=3D BMP180_CHIP_ID)) {
+> >               ret =3D bmp085_fetch_eoc_irq(dev, name, irq, data);
+> >               if (ret)
+> > -                     goto out_disable_regulators;
+> > +                     return ret;
+> >       }
+> >
+> >       /* Enable runtime PM */
+> > @@ -1127,36 +1147,14 @@ int bmp280_common_probe(struct device *dev,
+> >       pm_runtime_use_autosuspend(dev);
+> >       pm_runtime_put(dev);
+> >
+> > -     ret =3D iio_device_register(indio_dev);
+> > +     ret =3D devm_add_action_or_reset(dev, bmp280_pm_disable, dev);
+> >       if (ret)
+> > -             goto out_runtime_pm_disable;
+> > -
+> > -     return 0;
+> > +             return ret;
+> >
+> > -out_runtime_pm_disable:
+> > -     pm_runtime_get_sync(data->dev);
+> > -     pm_runtime_put_noidle(data->dev);
+> > -     pm_runtime_disable(data->dev);
+> > -out_disable_regulators:
+> > -     regulator_bulk_disable(BMP280_NUM_SUPPLIES, data->supplies);
+> > -     return ret;
+> > +     return devm_iio_device_register(dev, indio_dev);
+> >  }
+> >  EXPORT_SYMBOL(bmp280_common_probe);
+> >
+> > -int bmp280_common_remove(struct device *dev)
 > > -{
-> > -	struct resource *res;
+> > -     struct iio_dev *indio_dev =3D dev_get_drvdata(dev);
+> > -     struct bmp280_data *data =3D iio_priv(indio_dev);
 > > -
-> > -	res = platform_get_resource(pdev, IORESOURCE_IO, 0);
-> > -	if (!res) {
-> > -		dev_err(&pdev->dev, "can't fetch device resource info\n");
-> > -		return -EIO;
-> > -	}
+> > -     iio_device_unregister(indio_dev);
+> > -     pm_runtime_get_sync(data->dev);
+> > -     pm_runtime_put_noidle(data->dev);
+> > -     pm_runtime_disable(data->dev);
+> > -     regulator_bulk_disable(BMP280_NUM_SUPPLIES, data->supplies);
+> > -     return 0;
+> > -}
+> > -EXPORT_SYMBOL(bmp280_common_remove);
 > > -
-> > -	if (!request_region(res->start, resource_size(res), DRV_NAME)) {
-> > -		dev_err(&pdev->dev, "can't request region\n");
-> > -		return -EIO;
-> > -	}
-> > -
-> > -	return 0;
+> >  #ifdef CONFIG_PM
+> >  static int bmp280_runtime_suspend(struct device *dev)
+> >  {
+> > diff --git a/drivers/iio/pressure/bmp280-i2c.c b/drivers/iio/pressure/b=
+mp280-i2c.c
+> > index acd9a3784fb4..3109c8e2cc11 100644
+> > --- a/drivers/iio/pressure/bmp280-i2c.c
+> > +++ b/drivers/iio/pressure/bmp280-i2c.c
+> > @@ -38,11 +38,6 @@ static int bmp280_i2c_probe(struct i2c_client *clien=
+t,
+> >                                  client->irq);
+> >  }
+> >
+> > -static int bmp280_i2c_remove(struct i2c_client *client)
+> > -{
+> > -     return bmp280_common_remove(&client->dev);
 > > -}
 > > -
-> > -static int cs5535_mfd_res_disable(struct platform_device *pdev)
+> >  static const struct acpi_device_id bmp280_acpi_i2c_match[] =3D {
+> >       {"BMP0280", BMP280_CHIP_ID },
+> >       {"BMP0180", BMP180_CHIP_ID },
+> > @@ -82,7 +77,6 @@ static struct i2c_driver bmp280_i2c_driver =3D {
+> >               .pm =3D &bmp280_dev_pm_ops,
+> >       },
+> >       .probe          =3D bmp280_i2c_probe,
+> > -     .remove         =3D bmp280_i2c_remove,
+> >       .id_table       =3D bmp280_i2c_id,
+> >  };
+> >  module_i2c_driver(bmp280_i2c_driver);
+> > diff --git a/drivers/iio/pressure/bmp280-spi.c b/drivers/iio/pressure/b=
+mp280-spi.c
+> > index 9d57b7a3b134..625b86878ad8 100644
+> > --- a/drivers/iio/pressure/bmp280-spi.c
+> > +++ b/drivers/iio/pressure/bmp280-spi.c
+> > @@ -86,11 +86,6 @@ static int bmp280_spi_probe(struct spi_device *spi)
+> >                                  spi->irq);
+> >  }
+> >
+> > -static int bmp280_spi_remove(struct spi_device *spi)
 > > -{
-> > -	struct resource *res;
-> > -
-> > -	res = platform_get_resource(pdev, IORESOURCE_IO, 0);
-> > -	if (!res) {
-> > -		dev_err(&pdev->dev, "can't fetch device resource info\n");
-> > -		return -EIO;
-> > -	}
-> > -
-> > -	release_region(res->start, resource_size(res));
-> > -	return 0;
+> > -     return bmp280_common_remove(&spi->dev);
 > > -}
 > > -
-> >  static struct resource cs5535_mfd_resources[NR_BARS];
-> >  
-> >  static struct mfd_cell cs5535_mfd_cells[] = {
-> > @@ -81,17 +49,11 @@ static struct mfd_cell cs5535_mfd_cells[] = {
-> >  		.name = "cs5535-pms",
-> >  		.num_resources = 1,
-> >  		.resources = &cs5535_mfd_resources[PMS_BAR],
-> > -
-> > -		.enable = cs5535_mfd_res_enable,
-> > -		.disable = cs5535_mfd_res_disable,
-> >  	},
-> >  	[ACPI_BAR] = {
-> >  		.name = "cs5535-acpi",
-> >  		.num_resources = 1,
-> >  		.resources = &cs5535_mfd_resources[ACPI_BAR],
-> > -
-> > -		.enable = cs5535_mfd_res_enable,
-> > -		.disable = cs5535_mfd_res_disable,
-> >  	},
+> >  static const struct of_device_id bmp280_of_spi_match[] =3D {
+> >       { .compatible =3D "bosch,bmp085", },
+> >       { .compatible =3D "bosch,bmp180", },
+> > @@ -118,7 +113,6 @@ static struct spi_driver bmp280_spi_driver =3D {
+> >       },
+> >       .id_table =3D bmp280_spi_id,
+> >       .probe =3D bmp280_spi_probe,
+> > -     .remove =3D bmp280_spi_remove,
 > >  };
-> >  
-> > @@ -109,7 +71,6 @@ static int cs5535_mfd_probe(struct pci_dev *pdev,
-> >  	if (err)
-> >  		return err;
-> >  
-> > -	/* fill in IO range for each cell; subdrivers handle the region */
-> >  	for (i = 0; i < NR_BARS; i++) {
-> >  		struct mfd_cell *cell = &cs5535_mfd_cells[i];
-> >  		struct resource *r = &cs5535_mfd_resources[i];
-> > @@ -122,22 +83,47 @@ static int cs5535_mfd_probe(struct pci_dev *pdev,
-> >  		r->end = pci_resource_end(pdev, i);
-> >  	}
-> >  
-> > +	err = pci_request_region(pdev, PMS_BAR, DRV_NAME);
-> > +	if (err) {
-> > +		dev_err(&pdev->dev, "Failed to request PMS_BAR's IO region\n");
-> > +		goto err_disable;
-> > +	}
-> > +
-> >  	err = mfd_add_devices(&pdev->dev, PLATFORM_DEVID_NONE, cs5535_mfd_cells,
-> >  			      ARRAY_SIZE(cs5535_mfd_cells), NULL, 0, NULL);
-> >  	if (err) {
-> >  		dev_err(&pdev->dev,
-> >  			"Failed to add CS5532 sub-devices: %d\n", err);
-> > -		goto err_disable;
-> > +		goto err_release_pms;
-> >  	}
-> >  
-> > -	if (machine_is_olpc())
-> > -		mfd_clone_cell("cs5535-acpi", olpc_acpi_clones, ARRAY_SIZE(olpc_acpi_clones));
-> > +	if (machine_is_olpc()) {
-> > +		err = pci_request_region(pdev, ACPI_BAR, DRV_NAME);
-> > +		if (err) {
-> > +			dev_err(&pdev->dev,
-> > +				"Failed to request ACPI_BAR's IO region\n");
-> > +			goto err_remove_devices;
-> > +		}
-> > +
-> > +		err = mfd_clone_cell("cs5535-acpi", olpc_acpi_clones,
-> > +				     ARRAY_SIZE(olpc_acpi_clones));
-> > +		if (err) {
-> > +			dev_err(&pdev->dev, "Failed to clone MFD cell\n");
-> > +			goto err_release_acpi;
-> > +		}
-> > +	}
-> 
-> Making the request_region() conditional on machine_is_olpc() seems to be
-> best on the assumption that the cs5535-acpi is not otherwise used.
-> 
-> I suspect the assumption is true but you have to combine knowledge from
-> several bits of code to figure that out.
-
-It is not used.
-
-Will reply to your other comment.
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+> >  module_spi_driver(bmp280_spi_driver);
+> >
+> > diff --git a/drivers/iio/pressure/bmp280.h b/drivers/iio/pressure/bmp28=
+0.h
+> > index eda50ef65706..57ba0e85db91 100644
+> > --- a/drivers/iio/pressure/bmp280.h
+> > +++ b/drivers/iio/pressure/bmp280.h
+> > @@ -112,7 +112,6 @@ int bmp280_common_probe(struct device *dev,
+> >                       unsigned int chip,
+> >                       const char *name,
+> >                       int irq);
+> > -int bmp280_common_remove(struct device *dev);
+> >
+> >  /* PM ops */
+> >  extern const struct dev_pm_ops bmp280_dev_pm_ops;
+>
