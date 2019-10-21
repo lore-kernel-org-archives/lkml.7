@@ -2,126 +2,134 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4304DCA9EB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 21:07:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 742D2CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 21:09:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 173112086D
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 21:07:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4765E2086D
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 21:09:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="R87V6UQ5"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UAJXca0/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730273AbfJUVHk (ORCPT
+        id S1730328AbfJUVJF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 17:07:40 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:37347 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726672AbfJUVHk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 17:07:40 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Mon, 21 Oct 2019 17:09:05 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:38735 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726672AbfJUVJE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 17:09:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571692143;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=K0Z8W68yUa9mRK8rnH8TTdSxHMIbym3Dqs881H5tBwI=;
+        b=UAJXca0/2SDyA0wZL842Wdm+LnHc1+ygksrOAUsVNSpmht0uZDi2fada1GTwCAeWtv4cwj
+        uGG6wtzOZgK1ZOfxN+3b2iFYldmpoN8FijrnnSmKZMkHNBkV8qOK+C2enFm5OybH8n7jWK
+        iljhNOYhTePX3RAP4hmHK0I2VB51ffQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-46-xLZ80fs2M_WVBBw0tFv9FA-1; Mon, 21 Oct 2019 17:08:59 -0400
+X-MC-Unique: xLZ80fs2M_WVBBw0tFv9FA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46xq3C3xCSz9sP3;
-        Tue, 22 Oct 2019 08:07:35 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1571692056;
-        bh=pWe9VsFRQMV5crZi/BoRRCzFy5+IboAIVfcQQ7DGp6I=;
-        h=Date:From:To:Cc:Subject:From;
-        b=R87V6UQ5J80OIucGaxPcct/zIiRHB+oJ9qkCTXaR//sKBknUHeiz3UQEnYY6cycLn
-         jeSO2Wi75FKTeB70cbBai93HvgZBmdgyWhNnuN9z1oB87kamQIKUZCE3cniN3p1gnk
-         A8Dg2TZkakoPgYXYJcyF/sFi1LMmYhV+4djbYokQtti/Ksur/Qwi4Id8Al0ChQ/Yi4
-         6aJmLG115oV26NwrUkkHpTl07RXlxg7HWColy41iLpSAk9vOaTwZW0U9qDCXgYd4So
-         2GZXT5f02+QVKeCpyv7vPZ9LtSIcrwDvht8T73xVowfjsPVYiteUH0oR+5v1kZvHXS
-         FY8UjJcS2YdVw==
-Date:   Tue, 22 Oct 2019 08:07:34 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Guillem Jover <guillem@hadrons.org>
-Subject: linux-next: build warning after merge of the drm-misc-fixes tree
-Message-ID: <20191022080734.41955464@canb.auug.org.au>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2928D1800D79;
+        Mon, 21 Oct 2019 21:08:57 +0000 (UTC)
+Received: from linux-ws.nc.xsintricity.com (ovpn-112-37.rdu2.redhat.com [10.10.112.37])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 819B35C207;
+        Mon, 21 Oct 2019 21:08:54 +0000 (UTC)
+Message-ID: <113038cde3f1335ba9bf4d66f22f0a536b70ef1f.camel@redhat.com>
+Subject: Re: [PATCH] RDMA/hns: Fix build error again
+From:   Doug Ledford <dledford@redhat.com>
+To:     Arnd Bergmann <arnd@arndb.de>, Lijun Ou <oulijun@huawei.com>,
+        "Wei Hu(Xavier)" <xavier.huwei@huawei.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Hulk Robot <hulkci@huawei.com>, YueHaibing <yuehaibing@huawei.com>,
+        Shaobo Xu <xushaobo2@huawei.com>,
+        Shamir Rabinovitch <shamir.rabinovitch@oracle.com>,
+        Xi Wang <wangxi11@huawei.com>, Tao Tian <tiantao6@huawei.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Mon, 21 Oct 2019 17:08:51 -0400
+In-Reply-To: <20191007211826.3361202-1-arnd@arndb.de>
+References: <20191007211826.3361202-1-arnd@arndb.de>
+Organization: Red Hat, Inc.
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/7+Mx3FL7wh_1DROrLXtWV4P";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Mimecast-Spam-Score: 0
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-xdJ3eT+RkUC2bnG5G+ko"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/7+Mx3FL7wh_1DROrLXtWV4P
-Content-Type: text/plain; charset=US-ASCII
+--=-xdJ3eT+RkUC2bnG5G+ko
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+On Mon, 2019-10-07 at 23:18 +0200, Arnd Bergmann wrote:
+> This is not the first attempt to fix building random configurations,
+> unfortunately the attempt in commit a07fc0bb483e ("RDMA/hns: Fix build
+> error") caused a new problem when CONFIG_INFINIBAND_HNS_HIP06=3Dm
+> and CONFIG_INFINIBAND_HNS_HIP08=3Dy:
+>=20
+> drivers/infiniband/hw/hns/hns_roce_main.o:(.rodata+0xe60): undefined
+> reference to `__this_module'
+>=20
+> Revert commits a07fc0bb483e ("RDMA/hns: Fix build error") and
+> a3e2d4c7e766 ("RDMA/hns: remove obsolete Kconfig comment") to get
+> back to the previous state, then fix the issues described there
+> differently, by adding more specific dependencies: INFINIBAND_HNS
+> can now only be built-in if at least one of HNS or HNS3 are
+> built-in, and the individual back-ends are only available if
+> that code is reachable from the main driver.
+>=20
+> Fixes: a07fc0bb483e ("RDMA/hns: Fix build error")
+> Fixes: a3e2d4c7e766 ("RDMA/hns: remove obsolete Kconfig comment")
+> Fixes: dd74282df573 ("RDMA/hns: Initialize the PCI device for hip08
+> RoCE")
+> Fixes: 08805fdbeb2d ("RDMA/hns: Split hw v1 driver from hns roce
+> driver")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-After merging the drm-misc-fixes tree, today's linux-next build (powerpc
-ppc64_defconfig) produced this warning:
-
-In file included from include/uapi/linux/posix_types.h:5,
-                 from include/uapi/linux/types.h:14,
-                 from include/linux/types.h:6,
-                 from include/linux/limits.h:6,
-                 from include/linux/kernel.h:7,
-                 from fs/aio.c:14:
-fs/aio.c: In function '__do_compat_sys_io_pgetevents':
-include/linux/stddef.h:8:14: warning: initialization of 'unsigned int' from=
- 'void *' makes integer from pointer without a cast [-Wint-conversion]
-    8 | #define NULL ((void *)0)
-      |              ^
-fs/aio.c:2196:38: note: in expansion of macro 'NULL'
- 2196 |  struct __compat_aio_sigset ksig =3D { NULL, };
-      |                                      ^~~~
-include/linux/stddef.h:8:14: note: (near initialization for 'ksig.sigmask')
-    8 | #define NULL ((void *)0)
-      |              ^
-fs/aio.c:2196:38: note: in expansion of macro 'NULL'
- 2196 |  struct __compat_aio_sigset ksig =3D { NULL, };
-      |                                      ^~~~
-fs/aio.c: In function '__do_compat_sys_io_pgetevents_time64':
-include/linux/stddef.h:8:14: warning: initialization of 'unsigned int' from=
- 'void *' makes integer from pointer without a cast [-Wint-conversion]
-    8 | #define NULL ((void *)0)
-      |              ^
-fs/aio.c:2231:38: note: in expansion of macro 'NULL'
- 2231 |  struct __compat_aio_sigset ksig =3D { NULL, };
-      |                                      ^~~~
-include/linux/stddef.h:8:14: note: (near initialization for 'ksig.sigmask')
-    8 | #define NULL ((void *)0)
-      |              ^
-fs/aio.c:2231:38: note: in expansion of macro 'NULL'
- 2231 |  struct __compat_aio_sigset ksig =3D { NULL, };
-      |                                      ^~~~
-
-Introduced by commit
-
-  de80166a573d ("aio: Fix io_pgetevents() struct __compat_aio_sigset layout=
-")
+This fix looks reasonable, but since I can't test this at all, and I'm
+personally tired of trying and failing to fix this issue, I need to ask
+if you've tried all the permutations for this just to confirm it works
+in all valid cases?
 
 --=20
-Cheers,
-Stephen Rothwell
+Doug Ledford <dledford@redhat.com>
+    GPG KeyID: B826A3330E572FDD
+    Fingerprint =3D AE6B 1BDA 122B 23B4 265B  1274 B826 A333 0E57 2FDD
 
---Sig_/7+Mx3FL7wh_1DROrLXtWV4P
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+--=-xdJ3eT+RkUC2bnG5G+ko
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2uHhYACgkQAVBC80lX
-0GzAWQgAghqJx0OCN3Zexk2nGXPMhdOhx7kvE/o/p1ktaIlP5yR3YCiVvvBxr66I
-FPnka6qfPHPwHSiDi8364tABAyezb+YpKKGMk1DkFjhmHPo8ST0/WloTYz3+PjF8
-JpXpii+n/Z7/lp1oLh8ZeXxxyng9DS0viDC0Xctr2H6Hp5efXTcJIFBATfCtAcaa
-ewlckCUY4T3e2J/BUVRzwY5ZzgkJZ02u8Whkm0r2KXG+XJmSEgA5Y6KrU6YN0BoR
-SJ0i8tkFCTD1i3oBdFbROWlEyEH482mbJX7Uo5JIUs64VTyhopYPIH+WR2EmqQ02
-Vs+ulLLAiuz7RUXQRTPEKEWehG1QKg==
-=gXoK
+iQIzBAABCAAdFiEErmsb2hIrI7QmWxJ0uCajMw5XL90FAl2uHmQACgkQuCajMw5X
+L91tVQ/9FAENQf09oJLkU4SWaKcw3v/yjdgKyHgQT8JXUeDA43uoSE75p0aHninr
+uyo7+nqCmvOXRMsrINbDAR+FfsVC1kNsqLXx0QJcTztVTCNfkXgHjn8X6c2CT/fi
+6HupawhqmuklQO95W+MHijE/ej3qeBKTHOZIYsG1B0uTTQeSHU0PNlji7Cf/AcZr
+nK1+8PHs1cxtM+aWjFRbQNXcL/pslrXcdYWJIoXHylXkBkjDH/OzIN8hzW8XfAa5
+hSlmEMA6H/YsnUjOn7mKk18dgAm0tPSAGemDx3zv3j0vlJUOussfRU8t1DdOmR0r
+nnRVsxF62Hrz0a3xQ0S3YSctv2dEzsAPno1fIWcAuqK5su93/kN9YcbLu98IPQ1o
+2jMycnjtL7vEEzitbIwmcNXZ9Zl6pja9BhXMK34uEYRh/CIEqQt+esuhGNt3Kkua
+jy+FRmgCxshvFVN234XFWHtgXuGPehciYR26lRFsGJlIxMResn6ENWPHXVcze4Ot
+sVaHalxqElFmmEBW/p3JXp2GHSefrlndMpofIDTuRTudT2Q/t0ECVroknfDsmWNX
+28rEqfGtUuHWeQr/zzV3SFVSMeo7tGhoSKAXy0e3rNuARvpzld9nM4M7SWdy4vkV
+1pt7QmRU8g/OuXzsoQfRh087YxKHdFSjLtk3E/ZVvJmwsd/TTk0=
+=lpPZ
 -----END PGP SIGNATURE-----
 
---Sig_/7+Mx3FL7wh_1DROrLXtWV4P--
+--=-xdJ3eT+RkUC2bnG5G+ko--
+
