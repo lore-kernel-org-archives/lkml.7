@@ -2,102 +2,677 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52959C47E49
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:29:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96B6ECA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:31:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25E122084C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:29:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571653787;
-	bh=k+fKVfyYreCqp6G4mH8/WCYlH0xNk9lCGA13oSnsVP4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Y0ZxK+EF1/aPH/Cu8iIbo8uzkc0Bg7fV11nDB33M4VwiX5QTP8Ejl6Y85iW5ZlXDA
-	 +XvriCFR5UrnUxN4Fo4I1T4fMKY9iIFnbb1jhIE/Fpg9VgbQ/7qUFkitRIpErONdRV
-	 evEoEDJ0GranbcKk+v8E8ocUaOGILIwOY4/fUaHE=
+	by mail.kernel.org (Postfix) with ESMTP id 5DD9920659
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:31:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727968AbfJUK3q (ORCPT
+        id S1728099AbfJUKbx convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 06:29:46 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:33152 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726725AbfJUK3p (ORCPT
+        Mon, 21 Oct 2019 06:31:53 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.52]:28605 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727990AbfJUKbx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 06:29:45 -0400
-Received: by mail-ed1-f66.google.com with SMTP id c4so9613695edl.0;
-        Mon, 21 Oct 2019 03:29:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=T2kiEHki8gQHRbb/hKRBiHJ6jSiOvzHioA7z3T6/JhE=;
-        b=r6+bYWMk2bg9608wUl6DHhQuVxPRo7PUaHrJ1ndG8JBUdZ/52CMfjcfXpoteYdPsj6
-         muS8jjsqeGw10kLv1lm1U1Nk3xmoesGAo/1OZDLYIYK05P0CM00q7S2SzFIclLKvQsoP
-         2wjWnqbQtOaddQXCIotoek1JauUYXGHEHsE1BUmP0jznan+8ijD7A/qKmi7KV2HaHFyx
-         HZHIqGpyDk1YM8oe6ns7JMle4Vv+iK1skxWHxsOlK5zVzhAWf19//jXSm+tqBfrQVhAB
-         6Wu5SDMAhaN3EcRj9gNd78nG6mX4opcIMzOLHI6heLO7gMWk0Fzq2iv45K4GUnHHSoEt
-         ebbw==
-X-Gm-Message-State: APjAAAWb8wjhiSnU0kajsR1e+A//XMOr7UenCO0wA3bnVqNJcC4iKHSh
-        sL/gIX0MpLoyVEfMZx3F8Lw=
-X-Google-Smtp-Source: APXvYqybsb4F9xNYHToK1I85K/GHqBT18pPOXA/5ILN5589Myyx73mLaxb72wmS/sAZ2T26vfuEd+w==
-X-Received: by 2002:aa7:da4f:: with SMTP id w15mr24017636eds.26.1571653784220;
-        Mon, 21 Oct 2019 03:29:44 -0700 (PDT)
-Received: from pi3 ([194.230.155.217])
-        by smtp.googlemail.com with ESMTPSA id j5sm629045edj.62.2019.10.21.03.29.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Oct 2019 03:29:43 -0700 (PDT)
-Date:   Mon, 21 Oct 2019 12:29:41 +0200
-From:   "krzk@kernel.org" <krzk@kernel.org>
-To:     Schrempf Frieder <frieder.schrempf@kontron.de>
-Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 02/10] ARM: dts: Add support for two more Kontron SoMs
- N6311 and N6411
-Message-ID: <20191021102941.GB1934@pi3>
-References: <20191016150622.21753-1-frieder.schrempf@kontron.de>
- <20191016150622.21753-3-frieder.schrempf@kontron.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191016150622.21753-3-frieder.schrempf@kontron.de>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Mon, 21 Oct 2019 06:31:53 -0400
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDVCbXA4Ewxc="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 44.28.1 DYNA|AUTH)
+        with ESMTPSA id R0b2a8v9LAVVJYg
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Mon, 21 Oct 2019 12:31:31 +0200 (CEST)
+Content-Type: text/plain; charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: [Letux-kernel] [PATCH 5/5] rtc: rtc-rc5t583: add ricoh rc5t619 RTC driver
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20191021101528.GU3125@piout.net>
+Date:   Mon, 21 Oct 2019 12:31:30 +0200
+Cc:     Andreas Kemnade <andreas@kemnade.info>, linux-rtc@vger.kernel.org,
+        a.zummo@towertech.it,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stefan@agner.ch, b.galvani@gmail.com, phh@phh.me,
+        lee.jones@linaro.org,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <F16BC3B8-5497-4A7D-AC88-4DB221038519@goldelico.com>
+References: <20191021054104.26155-1-andreas@kemnade.info> <20191021054104.26155-6-andreas@kemnade.info> <20191021101528.GU3125@piout.net>
+To:     alexandre.belloni@bootlin.com
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 03:07:21PM +0000, Schrempf Frieder wrote:
-> From: Frieder Schrempf <frieder.schrempf@kontron.de>
-> 
-> The N6311 and the N6411 SoM are similar to the Kontron N6310 SoM.
-> They are pin-compatible, but feature a larger RAM and NAND flash
-> (512MiB instead of 256MiB). Further, the N6411 has an i.MX6ULL SoC,
-> instead of an i.MX6UL.
-> 
-> Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-> ---
->  .../boot/dts/imx6ul-kontron-n6311-som.dtsi    | 40 +++++++++++++++++++
->  .../boot/dts/imx6ull-kontron-n6411-som.dtsi   | 40 +++++++++++++++++++
->  2 files changed, 80 insertions(+)
->  create mode 100644 arch/arm/boot/dts/imx6ul-kontron-n6311-som.dtsi
->  create mode 100644 arch/arm/boot/dts/imx6ull-kontron-n6411-som.dtsi
-> 
+Just a meta-comment...
 
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Am 21.10.2019 um 12:15 schrieb Alexandre Belloni <alexandre.belloni@bootlin.com>:
+> 
+> Hi,
+> 
+> The subject line is weird, how is it related to rc5t583?
+> 
+> On 21/10/2019 07:41:04+0200, Andreas Kemnade wrote:
+>> config RTC_DRV_S35390A
+>> 	tristate "Seiko Instruments S-35390A"
+>> 	select BITREVERSE
+>> diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
+>> index 6b09c21dc1b6..1d0673fd0954 100644
+>> --- a/drivers/rtc/Makefile
+>> +++ b/drivers/rtc/Makefile
+>> @@ -136,6 +136,7 @@ obj-$(CONFIG_RTC_DRV_PXA)	+= rtc-pxa.o
+>> obj-$(CONFIG_RTC_DRV_R7301)	+= rtc-r7301.o
+>> obj-$(CONFIG_RTC_DRV_R9701)	+= rtc-r9701.o
+>> obj-$(CONFIG_RTC_DRV_RC5T583)	+= rtc-rc5t583.o
+>> +obj-$(CONFIG_RTC_DRV_RC5T619)	+= rtc-rc5t619.o
+>> obj-$(CONFIG_RTC_DRV_RK808)	+= rtc-rk808.o
+>> obj-$(CONFIG_RTC_DRV_RP5C01)	+= rtc-rp5c01.o
+>> obj-$(CONFIG_RTC_DRV_RS5C313)	+= rtc-rs5c313.o
+>> diff --git a/drivers/rtc/rtc-rc5t619.c b/drivers/rtc/rtc-rc5t619.c
+>> new file mode 100644
+>> index 000000000000..311788ff0723
+>> --- /dev/null
+>> +++ b/drivers/rtc/rtc-rc5t619.c
+>> @@ -0,0 +1,476 @@
+>> +// SPDX-License-Identifier: GPL-2.0+
+>> +/*
+>> + * drivers/rtc/rtc-ricoh619.c
+>> + *
+>> + * Real time clock driver for RICOH R5T619 power management chip.
+>> + *
+>> + * Copyright (C) 2019 Andreas Kemnade
+>> + *
+>> + * Based on code
+>> + *  Copyright (C) 2012-2014 RICOH COMPANY,LTD
+>> + *
+>> + * Based on code
+>> + *  Copyright (C) 2011 NVIDIA Corporation
+> 
+> Based on is not useful.
 
-Best regards,
-Krzysztof
+Yes, it is difficult to track what the real contribution was
+and what is left over.
 
+On the other hand it is IMHO fair to attribute those who have
+spent time to save ours.
+
+What would be a better way for attribution?
+
+> 
+>> + */
+>> +
+>> +/* #define debug		1 */
+>> +/* #define verbose_debug	1 */
+>> +
+> 
+> No dead code please.
+> 
+>> +#include <linux/kernel.h>
+>> +#include <linux/device.h>
+>> +#include <linux/errno.h>
+>> +#include <linux/init.h>
+>> +#include <linux/module.h>
+>> +#include <linux/mfd/rn5t618.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/regmap.h>
+>> +#include <linux/bcd.h>
+>> +#include <linux/rtc.h>
+>> +#include <linux/slab.h>
+>> +#include <linux/irqdomain.h>
+>> +
+>> +struct rc5t619_rtc {
+>> +	int			irq;
+>> +	struct rtc_device	*rtc;
+>> +	struct rn5t618 *rn5t618;
+>> +};
+>> +
+>> +#define CTRL1_ALARM_ENABLED 0x40
+>> +#define CTRL1_24HR 0x20
+>> +#define CTRL1_PERIODIC_MASK 0xf
+>> +
+>> +#define CTRL2_PON 0x10
+>> +#define CTRL2_ALARM_STATUS 0x80
+>> +#define CTRL2_CTFG 0x4
+>> +#define CTRL2_CTC 0x1
+>> +
+>> +static int rc5t619_rtc_periodic_disable(struct device *dev)
+>> +{
+>> +	struct rc5t619_rtc *rtc = dev_get_drvdata(dev);
+>> +	int err;
+>> +
+>> +	/* disable function */
+>> +	err = regmap_update_bits(rtc->rn5t618->regmap,
+>> +			RN5T618_RTC_CTRL1, CTRL1_PERIODIC_MASK, 0);
+>> +	if (err < 0)
+>> +		return err;
+>> +
+>> +	/* clear alarm flag and CTFG */
+>> +	err = regmap_update_bits(rtc->rn5t618->regmap, RN5T618_RTC_CTRL2,
+>> +			CTRL2_ALARM_STATUS | CTRL2_CTFG | CTRL2_CTC, 0);
+>> +	if (err < 0)
+>> +		return err;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int rc5t619_rtc_clk_adjust(struct device *dev, uint8_t clk)
+>> +{
+>> +	struct rc5t619_rtc *rtc = dev_get_drvdata(dev);
+>> +
+>> +	return regmap_write(rtc->rn5t618->regmap, RN5T618_RTC_ADJUST, clk);
+> 
+> Is it useful to have a function for a single regmap_write?
+
+I'd say yes. It is wrapping all regmap accesses in getter/setter functions
+whose name describes what it is setting. And it may do type conversion.
+IMHO this makes code better readable and maintainable.
+And a good compiler may even decide to inline this.
+
+> 
+> Also what is that adjusting? If this is adding/removing clock cycles,
+> you need to use .set_offset and .read_offset.
+> 
+>> +}
+>> +
+>> +static int rc5t619_rtc_pon_get_clr(struct device *dev, uint8_t *pon_f)
+>> +{
+>> +	struct rc5t619_rtc *rtc = dev_get_drvdata(dev);
+>> +	int err;
+>> +	unsigned int reg_data;
+>> +
+>> +	err = regmap_read(rtc->rn5t618->regmap, RN5T618_RTC_CTRL2, &reg_data);
+>> +	if (err < 0)
+>> +		return err;
+>> +
+>> +	if (reg_data & CTRL2_PON) {
+>> +		*pon_f = 1;
+>> +		/* clear VDET PON */
+>> +		reg_data &= ~(CTRL2_PON | CTRL2_CTC | 0x4a);	/* 0101-1011 */
+>> +		reg_data |= 0x20;	/* 0010-0000 */
+> 
+> Is it possible to have more defines for those magic values?
+> 
+>> +		err = regmap_write(rtc->rn5t618->regmap, RN5T618_RTC_CTRL2,
+>> +					reg_data);
+>> +	} else {
+>> +		*pon_f = 0;
+>> +	}
+>> +
+>> +	return err;
+>> +}
+>> +
+>> +/* 0-12hour, 1-24hour */
+>> +static int rc5t619_rtc_24hour_mode_set(struct device *dev, int mode)
+>> +{
+>> +	struct rc5t619_rtc *rtc = dev_get_drvdata(dev);
+>> +
+>> +	return regmap_update_bits(rtc->rn5t618->regmap, RN5T618_RTC_CTRL1,
+>> +			CTRL1_24HR, mode ? CTRL1_24HR : 0);
+> 
+> Is it useful to have a function for a single regmap_update_bits?
+
+Same as above. I can immediately understand
+
+	r = rc5t619_rtc_24hour_mode_set(dev, MODE_SOMETHING);
+
+somewhere else in code but deciphering 
+
+	r = regmap_update_bits(rtc->rn5t618->regmap, RN5T618_RTC_CTRL1,
+				CTRL1_24HR, mode ? CTRL1_24HR : 0);
+
+spread over several places is probably difficult.
+
+> 
+>> +}
+>> +
+>> +
+>> +static int rc5t619_rtc_read_time(struct device *dev, struct rtc_time *tm)
+>> +{
+>> +	struct rc5t619_rtc *rtc = dev_get_drvdata(dev);
+>> +	u8 buff[7];
+>> +	int err;
+>> +	int cent_flag;
+>> +
+>> +	err = regmap_bulk_read(rtc->rn5t618->regmap, RN5T618_RTC_SECONDS,
+>> +				buff, sizeof(buff));
+>> +	if (err < 0) {
+>> +		dev_err(dev, "failed to read time: %d\n", err);
+> 
+> Please reconsider adding so many strings in the driver, they add almost
+> no value but will increase the kernel memory footprint.
+
+You mean removing error messages is better than taking some footprint?
+
+> 
+>> +		return err;
+>> +	}
+>> +
+>> +	if (buff[5] & 0x80)
+> A define for the century bit would be good.
+> 
+>> +		cent_flag = 1;
+>> +	else
+>> +		cent_flag = 0;
+>> +
+>> +	buff[5] = buff[5] & 0x1f;		/* bit5 19_20 */
+> 
+> This assignment is unnecessary, you can mask the value when using it.
+> 
+> Is the RTC 1900-2099 or 2000-2199? Please include the ouput of rtc-range
+> in the commit log:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/abelloni/rtc-tools.git/tree/rtc-range.c
+> 
+>> +
+>> +	tm->tm_sec  = bcd2bin(buff[0]);
+>> +	tm->tm_min  = bcd2bin(buff[1]);
+>> +	tm->tm_hour = bcd2bin(buff[2]);		/* bit5 PA_H20 */
+>> +	tm->tm_wday = bcd2bin(buff[3]);
+>> +	tm->tm_mday = bcd2bin(buff[4]);
+>> +	tm->tm_mon  = bcd2bin(buff[5]) - 1;	/* back to system 0-11 */
+>> +	tm->tm_year = bcd2bin(buff[6]) + 100 * cent_flag;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int rc5t619_rtc_set_time(struct device *dev, struct rtc_time *tm)
+>> +{
+>> +	struct rc5t619_rtc *rtc = dev_get_drvdata(dev);
+>> +	u8 buff[7];
+>> +	int err;
+>> +	int cent_flag;
+>> +
+>> +	if (tm->tm_year >= 100)
+>> +		cent_flag = 1;
+>> +	else
+>> +		cent_flag = 0;
+>> +
+>> +	tm->tm_mon = tm->tm_mon + 1;
+> 
+> This assignment is not necessary.
+> 
+>> +	buff[0] = bin2bcd(tm->tm_sec);
+>> +	buff[1] = bin2bcd(tm->tm_min);
+>> +	buff[2] = bin2bcd(tm->tm_hour);
+>> +	buff[3] = bin2bcd(tm->tm_wday);
+>> +	buff[4] = bin2bcd(tm->tm_mday);
+>> +	buff[5] = bin2bcd(tm->tm_mon);		/* system set 0-11 */
+>> +	buff[6] = bin2bcd(tm->tm_year - cent_flag * 100);
+>> +
+>> +	if (cent_flag)
+>> +		buff[5] |= 0x80;
+>> +
+>> +	err = regmap_bulk_write(rtc->rn5t618->regmap, RN5T618_RTC_SECONDS,
+>> +				buff, sizeof(buff));
+>> +	if (err < 0) {
+>> +		dev_err(dev, "failed to program new time: %d\n", err);
+>> +		return err;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int rc5t619_rtc_alarm_is_enabled(struct device *dev,  uint8_t *enabled)
+>> +{
+>> +	struct rc5t619_rtc *rtc = dev_get_drvdata(dev);
+>> +	int err;
+>> +	unsigned int reg_data;
+>> +
+>> +	err = regmap_read(rtc->rn5t618->regmap, RN5T618_RTC_CTRL1, &reg_data);
+>> +	if (err) {
+>> +		dev_err(dev, "read RTC_CTRL1 error %d\n", err);
+>> +		*enabled = 0;
+> 
+> Is it necessary to set enabled here?
+
+Well, in case of error it is probably more safe to assume it is *not* enabled
+that keeping the random value passed by the caller of this function.
+
+> 
+>> +	} else {
+>> +		if (reg_data & CTRL1_ALARM_ENABLED)
+>> +			*enabled = 1;
+>> +		else
+>> +			*enabled = 0;
+>> +	}
+>> +
+>> +	return err;
+>> +}
+>> +
+>> +/* 0-disable, 1-enable */
+>> +static int rc5t619_rtc_alarm_enable(struct device *dev, unsigned int enabled)
+>> +{
+>> +	struct rc5t619_rtc *rtc = dev_get_drvdata(dev);
+>> +	int err;
+> 
+> err is not necessary.
+> 
+>> +
+>> +	err = regmap_update_bits(rtc->rn5t618->regmap,
+>> +			RN5T618_RTC_CTRL1,
+>> +			CTRL1_ALARM_ENABLED,
+>> +			enabled ? CTRL1_ALARM_ENABLED : 0);
+>> +	if (err < 0)
+>> +		return err;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int rc5t619_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alrm)
+>> +{
+>> +	struct rc5t619_rtc *rtc = dev_get_drvdata(dev);
+>> +	u8 buff[6];
+>> +	unsigned int buff_cent;
+>> +	int err;
+>> +	int cent_flag;
+>> +	unsigned int enabled_flag;
+>> +
+>> +	err = regmap_read(rtc->rn5t618->regmap, RN5T618_RTC_MONTH, &buff_cent);
+>> +	if (err < 0) {
+>> +		dev_err(dev, "failed to read time: %d\n", err);
+>> +		return err;
+>> +	}
+>> +
+>> +	if (buff_cent & 0x80)
+>> +		cent_flag = 1;
+>> +	else
+>> +		cent_flag = 0;
+>> +
+>> +	err = regmap_bulk_read(rtc->rn5t618->regmap, RN5T618_RTC_ALARM_Y_SEC,
+>> +				buff, sizeof(buff));
+>> +	if (err)
+>> +		return err;
+>> +
+>> +	err = regmap_read(rtc->rn5t618->regmap, RN5T618_RTC_CTRL1,
+>> +				&enabled_flag);
+>> +	if (err)
+>> +		return err;
+>> +
+>> +	if (enabled_flag & CTRL1_ALARM_ENABLED)
+>> +		enabled_flag = 1;
+> 
+> Why don't you set alrm->enabled directly here?
+> 
+> alrm->enabled = !!(enabled_flag & CTRL1_ALARM_ENABLED);
+> 
+>> +	else
+>> +		enabled_flag = 0;
+>> +
+>> +
+>> +	buff[3] = buff[3] & 0x3f;
+>> +
+>> +	alrm->time.tm_sec  = bcd2bin(buff[0]);
+>> +	alrm->time.tm_min  = bcd2bin(buff[1]);
+>> +	alrm->time.tm_hour = bcd2bin(buff[2]);
+>> +	alrm->time.tm_mday = bcd2bin(buff[3]);
+>> +	alrm->time.tm_mon  = bcd2bin(buff[4]) - 1;
+>> +	alrm->time.tm_year = bcd2bin(buff[5]) + 100 * cent_flag;
+>> +	alrm->enabled = enabled_flag;
+>> +	dev_dbg(dev, "read alarm: %d/%d/%d %d:%d:%d\n",
+> 
+> Use %ptR
+> 
+>> +		(alrm->time.tm_mon), alrm->time.tm_mday, alrm->time.tm_year,
+>> +		 alrm->time.tm_hour, alrm->time.tm_min, alrm->time.tm_sec);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int rc5t619_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alrm)
+>> +{
+>> +	struct rc5t619_rtc *rtc = dev_get_drvdata(dev);
+>> +	u8 buff[6];
+>> +	int err;
+>> +	int cent_flag;
+>> +
+>> +	err = 0;
+>> +	rc5t619_rtc_alarm_enable(dev, 0);
+> 
+> This may fail
+> 
+>> +	if (rtc->irq == -1)
+>> +		return -EIO;
+> 
+> This has to be -EINVAL to get UIE emulation working.
+> 
+>> +
+>> +	if (alrm->enabled == 0)
+>> +		return 0;
+>> +
+>> +	if (alrm->time.tm_year >= 100)
+>> +		cent_flag = 1;
+>> +	else
+>> +		cent_flag = 0;
+>> +
+>> +	alrm->time.tm_mon += 1;
+>> +	buff[0] = bin2bcd(alrm->time.tm_sec);
+>> +	buff[1] = bin2bcd(alrm->time.tm_min);
+>> +	buff[2] = bin2bcd(alrm->time.tm_hour);
+>> +	buff[3] = bin2bcd(alrm->time.tm_mday);
+>> +	buff[4] = bin2bcd(alrm->time.tm_mon);
+>> +	buff[5] = bin2bcd(alrm->time.tm_year - 100 * cent_flag);
+>> +	buff[3] |= 0x80;	/* set DAL_EXT */
+> 
+> This bit needs a define.
+> 
+>> +
+>> +	err = regmap_bulk_write(rtc->rn5t618->regmap, RN5T618_RTC_ALARM_Y_SEC,
+>> +				buff, sizeof(buff));
+>> +	if (err) {
+>> +		dev_err(dev, "unable to set alarm: %d\n", err);
+>> +		return -EBUSY;
+> 
+> Why EBUSY?
+> 
+>> +	}
+>> +
+>> +	rc5t619_rtc_alarm_enable(dev, alrm->enabled);
+> 
+> This may fail.
+> 
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct rtc_class_ops rc5t619_rtc_ops = {
+>> +	.read_time	= rc5t619_rtc_read_time,
+>> +	.set_time	= rc5t619_rtc_set_time,
+>> +	.set_alarm	= rc5t619_rtc_set_alarm,
+>> +	.read_alarm	= rc5t619_rtc_read_alarm,
+>> +	.alarm_irq_enable = rc5t619_rtc_alarm_enable,
+>> +};
+>> +
+>> +static int rc5t619_rtc_alarm_flag_clr(struct device *dev)
+>> +{
+>> +	struct rc5t619_rtc *rtc = dev_get_drvdata(dev);
+>> +
+>> +	/* clear alarm-D status bits.*/
+>> +	return regmap_update_bits(rtc->rn5t618->regmap,
+>> +				RN5T618_RTC_CTRL2,
+>> +				CTRL2_ALARM_STATUS | CTRL2_CTC, 0);
+>> +}
+>> +
+>> +static irqreturn_t rc5t619_rtc_irq(int irq, void *data)
+>> +{
+>> +	struct device *dev = data;
+>> +	struct rc5t619_rtc *rtc = dev_get_drvdata(dev);
+>> +
+>> +	rc5t619_rtc_alarm_flag_clr(dev);
+>> +
+>> +	rtc_update_irq(rtc->rtc, 1, RTC_IRQF | RTC_AF);
+>> +	return IRQ_HANDLED;
+>> +}
+>> +
+>> +
+>> +static int rc5t619_rtc_probe(struct platform_device *pdev)
+>> +{
+>> +	struct device *dev = &pdev->dev;
+>> +	struct rn5t618 *rn5t618 = dev_get_drvdata(pdev->dev.parent);
+>> +	struct rc5t619_rtc *rtc;
+>> +	uint8_t pon_flag, alarm_flag;
+>> +	int err;
+>> +
+>> +	rtc = devm_kzalloc(dev, sizeof(*rtc), GFP_KERNEL);
+>> +	if (IS_ERR(rtc)) {
+>> +		err = PTR_ERR(rtc);
+>> +		dev_err(&pdev->dev, "no enough memory for rc5t619_rtc using\n");
+>> +		return -ENOMEM;
+>> +	}
+>> +
+>> +	rtc->rn5t618 = rn5t618;
+>> +
+>> +	dev_set_drvdata(dev, rtc);
+>> +	rtc->irq = -1;
+>> +
+>> +	if (rn5t618->irq_data)
+>> +		rtc->irq = regmap_irq_get_virq(rn5t618->irq_data,
+>> +				RN5T618_IRQ_RTC);
+>> +
+>> +	if (rtc->irq  < 0) {
+>> +		dev_err(dev, "no irq specified, wakeup is disabled\n");
+>> +		rtc->irq = -1;
+>> +	}
+>> +
+>> +	/* get interrupt flag */
+>> +	err = rc5t619_rtc_alarm_is_enabled(dev, &alarm_flag);
+>> +	if (err)
+>> +		return err;
+>> +
+>> +	/* get PON flag */
+>> +	err = rc5t619_rtc_pon_get_clr(&pdev->dev, &pon_flag);
+>> +	if (err) {
+>> +		dev_err(&pdev->dev, "get PON flag error: %d\n", err);
+>> +		return err;
+>> +	}
+>> +
+>> +	/* using 24h-mode */
+>> +	err = rc5t619_rtc_24hour_mode_set(&pdev->dev, 1);
+>> +
+> 
+> Doesn't that corrupt the time if the RTC was previously set in 12h-mode?
+> 
+> 
+>> +	/* disable rtc periodic function */
+>> +	err = rc5t619_rtc_periodic_disable(&pdev->dev);
+>> +	if (err) {
+>> +		dev_err(&pdev->dev, "disable rtc periodic int: %d\n", err);
+>> +		return err;
+>> +	}
+>> +
+>> +	/* clearing RTC Adjust register */
+>> +	err = rc5t619_rtc_clk_adjust(&pdev->dev, 0);
+>> +	if (err) {
+>> +		dev_err(&pdev->dev, "unable to program RTC_ADJUST: %d\n", err);
+>> +		return err;
+>> +	}
+>> +
+>> +	/* disable interrupt */
+>> +	err = rc5t619_rtc_alarm_enable(&pdev->dev, 0);
+>> +	if (err) {
+>> +		dev_err(&pdev->dev, "disable alarm interrupt: %d\n", err);
+>> +		return err;
+>> +	}
+>> +
+>> +	if (pon_flag) {
+>> +		alarm_flag = 0;
+>> +		err = rc5t619_rtc_alarm_flag_clr(&pdev->dev);
+>> +		if (err) {
+>> +			dev_err(&pdev->dev,
+>> +				"pon=1 clear alarm flag error: %d\n", err);
+>> +			return err;
+>> +		}
+>> +	}
+>> +
+>> +	device_init_wakeup(&pdev->dev, 1);
+> 
+> Do you want to do that even without an irq?
+> 
+>> +
+>> +	rtc->rtc = devm_rtc_device_register(&pdev->dev, pdev->name,
+>> +				       &rc5t619_rtc_ops, THIS_MODULE);
+>> +
+> 
+> Please use devm_rtc_allocate_device and rtc_register_device
+> 
+>> +	if (IS_ERR(rtc->rtc)) {
+>> +		err = PTR_ERR(rtc->rtc);
+>> +		dev_err(dev, "RTC device register: err %d\n", err);
+>> +		return err;
+>> +	}
+>> +
+>> +	/* set interrupt and enable it */
+>> +	if (rtc->irq != -1) {
+>> +		err = devm_request_threaded_irq(&pdev->dev, rtc->irq, NULL,
+>> +						rc5t619_rtc_irq,
+>> +						IRQF_ONESHOT,
+>> +						"rtc-rc5t619",
+>> +						&pdev->dev);
+>> +		if (err < 0) {
+>> +			dev_err(&pdev->dev, "request IRQ:%d fail\n", rtc->irq);
+>> +			rtc->irq = -1;
+>> +
+>> +			err = rc5t619_rtc_alarm_enable(&pdev->dev, 0);
+>> +			if (err)
+>> +				return err;
+>> +
+>> +		} else {
+>> +			/* enable wake */
+>> +			enable_irq_wake(rtc->irq);
+>> +			/* enable alarm_d */
+>> +			err = rc5t619_rtc_alarm_enable(&pdev->dev, alarm_flag);
+>> +			if (err) {
+>> +				dev_err(&pdev->dev, "failed rtc setup\n");
+>> +				return -EBUSY;
+>> +			}
+>> +		}
+>> +	} else {
+>> +		/* system don't want to using alarm interrupt, so close it */
+>> +		err = rc5t619_rtc_alarm_enable(&pdev->dev, 0);
+>> +		if (err) {
+>> +			dev_err(&pdev->dev, "disable rtc alarm error\n");
+>> +			return err;
+>> +		}
+>> +
+>> +		dev_err(&pdev->dev, "ricoh61x interrupt is disabled\n");
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int rc5t619_rtc_remove(struct platform_device *pdev)
+>> +{
+>> +	rc5t619_rtc_alarm_enable(&pdev->dev, 0);
+> 
+> If the PMIC can be used to start the platform, you probably don't want
+> to disable the alarm here. Even if it doesn't, is it actually useful to
+> disable the alarm?
+> 
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static struct platform_driver rc5t619_rtc_driver = {
+>> +	.driver	= {
+>> +		.name	= "rc5t619-rtc",
+>> +	},
+>> +	.probe	= rc5t619_rtc_probe,
+>> +	.remove	= rc5t619_rtc_remove,
+>> +};
+>> +
+>> +module_platform_driver(rc5t619_rtc_driver);
+>> +MODULE_ALIAS("platform:rc5t619-rtc");
+>> +MODULE_DESCRIPTION("RICOH RC5T619 RTC driver");
+>> +MODULE_LICENSE("GPL");
+>> -- 
+>> 2.11.0
+>> 
+
+BR,
+Nikolaus
