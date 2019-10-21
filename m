@@ -2,399 +2,261 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BE7ECA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:22:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C70DECA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:23:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 360602084C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:22:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 889F42084C
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:23:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=verimatrix.com header.i=@verimatrix.com header.b="KtM/kEfh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727992AbfJUKWd (ORCPT
+        id S1728057AbfJUKXi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 06:22:33 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:48162 "EHLO foss.arm.com"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S1727990AbfJUKWc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 06:22:32 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 480B7CA3;
-        Mon, 21 Oct 2019 03:22:03 -0700 (PDT)
-Received: from [10.1.194.43] (e112269-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CDC833F718;
-        Mon, 21 Oct 2019 03:22:00 -0700 (PDT)
-Subject: Re: [PATCH v6 05/10] KVM: arm64: Support stolen time reporting via
- shared structure
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Suzuki K Pouloze <suzuki.poulose@arm.com>,
-        linux-doc@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        linux-kernel@vger.kernel.org, James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Will Deacon <will@kernel.org>, kvmarm@lists.cs.columbia.edu,
-        linux-arm-kernel@lists.infradead.org
-References: <20191011125930.40834-1-steven.price@arm.com>
- <20191011125930.40834-6-steven.price@arm.com> <86eez9yoog.wl-maz@kernel.org>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <1bb10eb5-0fe8-57c9-3b67-9b3661a73d29@arm.com>
-Date:   Mon, 21 Oct 2019 11:21:59 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 21 Oct 2019 06:23:38 -0400
+Received: from mail-eopbgr770057.outbound.protection.outlook.com ([40.107.77.57]:46053
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727328AbfJUKXh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 06:23:37 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EsJQpvtO4capHiUpytHatOj9pgBhM0wgb28DACRljX7U1C/E7eA4V+sDsXvYN9x7LoUsp/jGeExav5U6NE3SXm+RElKaAmPOyLz0NgIOlBF50MkIzC+BFamJG6WUCKslSEJC9fbX/QVcxXolCLGEacN1vDGPuxYquChQwiV31CYxeCC/nVvN9+Te0vfgZ9zJBZnRrRkHdOaZtuAZIDxCnqypxBVIXFJdv2c69Uq9N3gnrcxswdnj4DZIf6N+o6m1uUApTjN+7vP3mjG1jZcBrc8GyXgIIVtGil97GqPuxtuB5j+HDxGXwqwdZBmoJCk8VzSG4dqsInFv2r/qdNwpgg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/5eUZp6JzuHcHAyv5xCqnq5+JMeZGICotQn5K0+faAk=;
+ b=KBxAliZM1rjcyAGbsVChNzxsZBwRNWzEWaJI//CgwNxCnVR9b3lAXg0IBo+Agy0IqXCCT1TfLU15FSo49ZYO5tzLonxDMo3+PxM/ELDiUTk+4AjwLokiArIJeJN3mQrAxLtn4b8gDbsLRDpG9TGCCBFUZDjHAXHLZOjpAET8ka7VcwK844G10jgjfJ4qSHFvCli7GPXPyTuALD4bfHM2MpXKyRK0bb351uGh3+iaSCYciLLqD/IU0dBC+2mObDU5ZBd5utZ26tb41oapHZ+HDmV4g32+zg84zEeQ5CijnlAoJWg7pZsm1jClAs29B+cYiizwwTbvYxX4bnOGOuhptQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=verimatrix.com; dmarc=pass action=none
+ header.from=verimatrix.com; dkim=pass header.d=verimatrix.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=verimatrix.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/5eUZp6JzuHcHAyv5xCqnq5+JMeZGICotQn5K0+faAk=;
+ b=KtM/kEfhEWB5yV5qONaS3tsPpozijphzKclD0JraGk7m2p8QqSvJuLt1lXGfhAIFLTn0l0r29uKJAqbeTLd5/eil/DK74awVMpmr0GeWitE94dkgxaAviaJN47s0tgX4IZCdCi7SfwkamdMEcee0q78jtM5VBUUqt4BdT0CgqJE=
+Received: from MN2PR20MB2973.namprd20.prod.outlook.com (52.132.172.86) by
+ MN2PR20MB3005.namprd20.prod.outlook.com (52.132.174.79) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.16; Mon, 21 Oct 2019 10:23:32 +0000
+Received: from MN2PR20MB2973.namprd20.prod.outlook.com
+ ([fe80::b986:4f02:3206:31e4]) by MN2PR20MB2973.namprd20.prod.outlook.com
+ ([fe80::b986:4f02:3206:31e4%7]) with mapi id 15.20.2347.029; Mon, 21 Oct 2019
+ 10:23:32 +0000
+From:   Pascal Van Leeuwen <pvanleeuwen@verimatrix.com>
+To:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
+        "linux-kernel@lists.codethink.co.uk" 
+        <linux-kernel@lists.codethink.co.uk>
+CC:     Antoine Tenart <antoine.tenart@bootlin.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] crypto: inside-secure - fix type of buffer in
+ eip197_write_firmware
+Thread-Topic: [PATCH] crypto: inside-secure - fix type of buffer in
+ eip197_write_firmware
+Thread-Index: AQHVhBfWMp/OQ1W3YkiqzB+SEDRBb6dfDogAgAAvRhCABaqlQA==
+Date:   Mon, 21 Oct 2019 10:23:32 +0000
+Message-ID: <MN2PR20MB29732240A7D7ECE5BA80E474CA690@MN2PR20MB2973.namprd20.prod.outlook.com>
+References: <20191016114945.30451-1-ben.dooks@codethink.co.uk>  
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pvanleeuwen@verimatrix.com; 
+x-originating-ip: [188.204.2.113]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 05a5a4eb-f546-4d44-4ef0-08d75610b978
+x-ms-traffictypediagnostic: MN2PR20MB3005:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <MN2PR20MB3005F99D362BE0168205E5FBCA690@MN2PR20MB3005.namprd20.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:534;
+x-forefront-prvs: 0197AFBD92
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39850400004)(136003)(376002)(366004)(346002)(189003)(199004)(13464003)(64756008)(8676002)(2906002)(9686003)(66476007)(53546011)(8936002)(76116006)(66446008)(102836004)(66556008)(6506007)(26005)(74316002)(76176011)(99286004)(7696005)(186003)(81156014)(33656002)(81166006)(25786009)(486006)(476003)(478600001)(3846002)(6116002)(4326008)(305945005)(7736002)(6246003)(52536014)(5660300002)(66946007)(446003)(110136005)(6436002)(316002)(229853002)(14454004)(66066001)(71190400001)(86362001)(71200400001)(256004)(14444005)(2501003)(55016002)(54906003)(15974865002)(18886075002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR20MB3005;H:MN2PR20MB2973.namprd20.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: verimatrix.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 8cjbwv5ou0OA+0wb7jv+82Ntnd3DcpoN6hpbheqvgfjp546mQ4F9FcTnUDyBT2iZFhzw9Ld9xc7iM6lcqRCgCKuU7R4NXfyf6Yh19HQyvxED5BvcjbbvDKkcn7liXVqsNdUbUQttdO7APD+OL9xKz+AlSx/RoW+QlPUqLRCZ7wsD6xkzTDG55FiV6chrohN5Qv6lwBPIKTTOfRj2jJaXiXxCVZGrp4LFFBBRDSyQb73zP/Cj8BYxcNv1/Iekj4Sou1AOQJoHy3xLHZAus1n+h++O+GpL4VR1ecNSQvkE1blnW8/sWLSWPjoFiZ6ZEHW80d6S4plDQ524yKM/RDQ/9sk6v1GVUP3TXoY3XW40GFVwV9srcrKefZEl3Sz2BPWHXeGKW+D6ireefj9OYoKVaBjrv5NgBZ1DJK7S3IoJaAk=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <86eez9yoog.wl-maz@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: verimatrix.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 05a5a4eb-f546-4d44-4ef0-08d75610b978
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Oct 2019 10:23:32.6769
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: dcb260f9-022d-4495-8602-eae51035a0d0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 28nOnlujFF92ppnlmfhpbTfqUi6+5jc9dlHgKl7pn2bUBjZrcWssQAN7xQG8EDD8Awz/wJfoWarC9H3VXKZbxKjSxnuGmwK8gGgzBVtyBLY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR20MB3005
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/10/2019 12:12, Marc Zyngier wrote:
-> On Fri, 11 Oct 2019 13:59:25 +0100,
-> Steven Price <steven.price@arm.com> wrote:
->>
->> Implement the service call for configuring a shared structure between a
->> VCPU and the hypervisor in which the hypervisor can write the time
->> stolen from the VCPU's execution time by other tasks on the host.
->>
->> User space allocates memory which is placed at an IPA also chosen by user
->> space. The hypervisor then updates the shared structure using
->> kvm_put_guest() to ensure single copy atomicity of the 64-bit value
->> reporting the stolen time in nanoseconds.
->>
->> Whenever stolen time is enabled by the guest, the stolen time counter is
->> reset.
->>
->> The stolen time itself is retrieved from the sched_info structure
->> maintained by the Linux scheduler code. We enable SCHEDSTATS when
->> selecting KVM Kconfig to ensure this value is meaningful.
->>
->> Signed-off-by: Steven Price <steven.price@arm.com>
->> ---
->>  arch/arm/include/asm/kvm_host.h   | 20 +++++++++++
->>  arch/arm64/include/asm/kvm_host.h | 21 +++++++++++-
->>  arch/arm64/kvm/Kconfig            |  1 +
->>  include/linux/kvm_types.h         |  2 ++
->>  virt/kvm/arm/arm.c                | 11 ++++++
->>  virt/kvm/arm/hypercalls.c         |  3 ++
->>  virt/kvm/arm/pvtime.c             | 56 +++++++++++++++++++++++++++++++
->>  7 files changed, 113 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/arm/include/asm/kvm_host.h b/arch/arm/include/asm/kvm_host.h
->> index 5a0c3569ebde..5c401482d62d 100644
->> --- a/arch/arm/include/asm/kvm_host.h
->> +++ b/arch/arm/include/asm/kvm_host.h
->> @@ -39,6 +39,7 @@
->>  	KVM_ARCH_REQ_FLAGS(0, KVM_REQUEST_WAIT | KVM_REQUEST_NO_WAKEUP)
->>  #define KVM_REQ_IRQ_PENDING	KVM_ARCH_REQ(1)
->>  #define KVM_REQ_VCPU_RESET	KVM_ARCH_REQ(2)
->> +#define KVM_REQ_RECORD_STEAL	KVM_ARCH_REQ(3)
->>  
->>  DECLARE_STATIC_KEY_FALSE(userspace_irqchip_in_use);
->>  
->> @@ -329,6 +330,25 @@ static inline long kvm_hypercall_pv_features(struct kvm_vcpu *vcpu)
->>  	return SMCCC_RET_NOT_SUPPORTED;
->>  }
->>  
->> +static inline long kvm_hypercall_stolen_time(struct kvm_vcpu *vcpu)
->> +{
->> +	return SMCCC_RET_NOT_SUPPORTED;
->> +}
->> +
->> +static inline int kvm_update_stolen_time(struct kvm_vcpu *vcpu, bool init)
->> +{
->> +	return -ENOTSUPP;
->> +}
->> +
->> +static inline void kvm_arm_pvtime_vcpu_init(struct kvm_vcpu_arch *vcpu_arch)
->> +{
->> +}
->> +
->> +static inline bool kvm_arm_is_pvtime_enabled(struct kvm_vcpu_arch *vcpu_arch)
->> +{
->> +	return false;
->> +}
->> +
->>  void kvm_mmu_wp_memory_region(struct kvm *kvm, int slot);
->>  
->>  struct kvm_vcpu *kvm_mpidr_to_vcpu(struct kvm *kvm, unsigned long mpidr);
->> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
->> index 93b46d9526d0..1697e63f6dd8 100644
->> --- a/arch/arm64/include/asm/kvm_host.h
->> +++ b/arch/arm64/include/asm/kvm_host.h
->> @@ -44,6 +44,7 @@
->>  	KVM_ARCH_REQ_FLAGS(0, KVM_REQUEST_WAIT | KVM_REQUEST_NO_WAKEUP)
->>  #define KVM_REQ_IRQ_PENDING	KVM_ARCH_REQ(1)
->>  #define KVM_REQ_VCPU_RESET	KVM_ARCH_REQ(2)
->> +#define KVM_REQ_RECORD_STEAL	KVM_ARCH_REQ(3)
->>  
->>  DECLARE_STATIC_KEY_FALSE(userspace_irqchip_in_use);
->>  
->> @@ -338,8 +339,14 @@ struct kvm_vcpu_arch {
->>  	/* True when deferrable sysregs are loaded on the physical CPU,
->>  	 * see kvm_vcpu_load_sysregs and kvm_vcpu_put_sysregs. */
->>  	bool sysregs_loaded_on_cpu;
->> -};
->>  
->> +	/* Guest PV state */
->> +	struct {
->> +		u64 steal;
->> +		u64 last_steal;
->> +		gpa_t base;
->> +	} steal;
->> +};
-> 
-> nit: Please keep an empty line at the end of the structure.
-> 
->>  /* Pointer to the vcpu's SVE FFR for sve_{save,load}_state() */
->>  #define vcpu_sve_pffr(vcpu) ((void *)((char *)((vcpu)->arch.sve_state) + \
->>  				      sve_ffr_offset((vcpu)->arch.sve_max_vl)))
->> @@ -479,6 +486,18 @@ int kvm_perf_init(void);
->>  int kvm_perf_teardown(void);
->>  
->>  long kvm_hypercall_pv_features(struct kvm_vcpu *vcpu);
->> +long kvm_hypercall_stolen_time(struct kvm_vcpu *vcpu);
->> +int kvm_update_stolen_time(struct kvm_vcpu *vcpu, bool init);
->> +
->> +static inline void kvm_arm_pvtime_vcpu_init(struct kvm_vcpu_arch *vcpu_arch)
->> +{
->> +	vcpu_arch->steal.base = GPA_INVALID;
->> +}
->> +
->> +static inline bool kvm_arm_is_pvtime_enabled(struct kvm_vcpu_arch *vcpu_arch)
->> +{
->> +	return (vcpu_arch->steal.base != GPA_INVALID);
->> +}
->>  
->>  void kvm_set_sei_esr(struct kvm_vcpu *vcpu, u64 syndrome);
->>  
->> diff --git a/arch/arm64/kvm/Kconfig b/arch/arm64/kvm/Kconfig
->> index a67121d419a2..d8b88e40d223 100644
->> --- a/arch/arm64/kvm/Kconfig
->> +++ b/arch/arm64/kvm/Kconfig
->> @@ -39,6 +39,7 @@ config KVM
->>  	select IRQ_BYPASS_MANAGER
->>  	select HAVE_KVM_IRQ_BYPASS
->>  	select HAVE_KVM_VCPU_RUN_PID_CHANGE
->> +	select SCHEDSTATS
->>  	---help---
->>  	  Support hosting virtualized guest machines.
->>  	  We don't support KVM with 16K page tables yet, due to the multiple
->> diff --git a/include/linux/kvm_types.h b/include/linux/kvm_types.h
->> index bde5374ae021..1c88e69db3d9 100644
->> --- a/include/linux/kvm_types.h
->> +++ b/include/linux/kvm_types.h
->> @@ -35,6 +35,8 @@ typedef unsigned long  gva_t;
->>  typedef u64            gpa_t;
->>  typedef u64            gfn_t;
->>  
->> +#define GPA_INVALID	(~(gpa_t)0)
->> +
->>  typedef unsigned long  hva_t;
->>  typedef u64            hpa_t;
->>  typedef u64            hfn_t;
->> diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
->> index 86c6aa1cb58e..5d3059aeadb1 100644
->> --- a/virt/kvm/arm/arm.c
->> +++ b/virt/kvm/arm/arm.c
->> @@ -40,6 +40,10 @@
->>  #include <asm/kvm_coproc.h>
->>  #include <asm/sections.h>
->>  
->> +#include <kvm/arm_hypercalls.h>
->> +#include <kvm/arm_pmu.h>
->> +#include <kvm/arm_psci.h>
->> +
->>  #ifdef REQUIRES_VIRT
->>  __asm__(".arch_extension	virt");
->>  #endif
->> @@ -351,6 +355,8 @@ int kvm_arch_vcpu_init(struct kvm_vcpu *vcpu)
->>  
->>  	kvm_arm_reset_debug_ptr(vcpu);
->>  
->> +	kvm_arm_pvtime_vcpu_init(&vcpu->arch);
->> +
->>  	return kvm_vgic_vcpu_init(vcpu);
->>  }
->>  
->> @@ -380,6 +386,8 @@ void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
->>  	kvm_vcpu_load_sysregs(vcpu);
->>  	kvm_arch_vcpu_load_fp(vcpu);
->>  	kvm_vcpu_pmu_restore_guest(vcpu);
->> +	if (kvm_arm_is_pvtime_enabled(&vcpu->arch))
->> +		kvm_make_request(KVM_REQ_RECORD_STEAL, vcpu);
->>  
->>  	if (single_task_running())
->>  		vcpu_clear_wfe_traps(vcpu);
->> @@ -645,6 +653,9 @@ static void check_vcpu_requests(struct kvm_vcpu *vcpu)
->>  		 * that a VCPU sees new virtual interrupts.
->>  		 */
->>  		kvm_check_request(KVM_REQ_IRQ_PENDING, vcpu);
->> +
->> +		if (kvm_check_request(KVM_REQ_RECORD_STEAL, vcpu))
->> +			kvm_update_stolen_time(vcpu, false);
->>  	}
->>  }
->>  
->> diff --git a/virt/kvm/arm/hypercalls.c b/virt/kvm/arm/hypercalls.c
->> index 97ea8b133e77..5c333a64390e 100644
->> --- a/virt/kvm/arm/hypercalls.c
->> +++ b/virt/kvm/arm/hypercalls.c
->> @@ -56,6 +56,9 @@ int kvm_hvc_call_handler(struct kvm_vcpu *vcpu)
->>  	case ARM_SMCCC_HV_PV_TIME_FEATURES:
->>  		val = kvm_hypercall_pv_features(vcpu);
->>  		break;
->> +	case ARM_SMCCC_HV_PV_TIME_ST:
->> +		val = kvm_hypercall_stolen_time(vcpu);
->> +		break;
->>  	default:
->>  		return kvm_psci_call(vcpu);
->>  	}
->> diff --git a/virt/kvm/arm/pvtime.c b/virt/kvm/arm/pvtime.c
->> index 8d0fad671dcf..a90f1b4ebd13 100644
->> --- a/virt/kvm/arm/pvtime.c
->> +++ b/virt/kvm/arm/pvtime.c
->> @@ -3,8 +3,45 @@
->>  
->>  #include <linux/arm-smccc.h>
->>  
->> +#include <asm/pvclock-abi.h>
->> +
->>  #include <kvm/arm_hypercalls.h>
->>  
->> +int kvm_update_stolen_time(struct kvm_vcpu *vcpu, bool init)
->> +{
->> +	struct kvm *kvm = vcpu->kvm;
->> +	u64 steal;
->> +	u64 steal_le;
-> 
-> This should be __le64.
-> 
->> +	u64 offset;
->> +	int idx;
->> +	u64 base = vcpu->arch.steal.base;
->> +
->> +	if (base == GPA_INVALID)
->> +		return -ENOTSUPP;
->> +
->> +	/* Let's do the local bookkeeping */
->> +	steal = vcpu->arch.steal.steal;
->> +	steal += current->sched_info.run_delay - vcpu->arch.steal.last_steal;
->> +	vcpu->arch.steal.last_steal = current->sched_info.run_delay;
->> +	vcpu->arch.steal.steal = steal;
->> +
->> +	steal_le = cpu_to_le64(steal);
->> +	idx = srcu_read_lock(&kvm->srcu);
->> +	if (init) {
->> +		struct pvclock_vcpu_stolen_time init_values = {
->> +			.revision = 0,
->> +			.attributes = 0
-> 
-> nit: 0 is the default initialiser.
-> 
->> +		};
->> +		kvm_write_guest(kvm, base, &init_values,
->> +				sizeof(init_values));
->> +	}
-> 
-> I'm not convinced by this init phase right in the middle of the normal
-> path. It looks ugly, and it'd be better if moved out of line. I'd
-> suggest:
-> 
-> static void kvm_init_stolen_time(struct kvm_vcpu *vcpu)
-> {
-> 	struct pvclock_vcpu_stolen_time init_values = { };
-> 
-> 	vcpu->arch.steal.steal = 0;
-> 	vcpu->arch.steal.last_steal = current->sched_info.run_delay;
-> 
-> 	idx = srcu_read_lock(&kvm->srcu);
-> 	kvm_write_guest(kvm, base, &init_values, sizeof(init_values));
-> 	srcu_read_unlock(&kvm->srcu, idx);
-> }
-> 
-> and change the two callers accordingly. Or even better, move this code
-> to the hypercall handling function, because that's where it actually
-> belongs.
+> -----Original Message-----
+> From: Pascal Van Leeuwen
+> Sent: Thursday, October 17, 2019 9:46 PM
+> To: 'Ben Dooks (Codethink)' <ben.dooks@codethink.co.uk>; 'linux-kernel@li=
+sts.codethink.co.uk'
+> <linux-kernel@lists.codethink.co.uk>
+> Cc: 'Antoine Tenart' <antoine.tenart@bootlin.com>; 'Herbert Xu' <herbert@=
+gondor.apana.org.au>;
+> 'David S. Miller' <davem@davemloft.net>; 'linux-crypto@vger.kernel.org' <=
+linux-
+> crypto@vger.kernel.org>; 'linux-kernel@vger.kernel.org' <linux-kernel@vge=
+r.kernel.org>
+> Subject: RE: [PATCH] crypto: inside-secure - fix type of buffer in eip197=
+_write_firmware
+>=20
+> > -----Original Message-----
+> > From: Pascal Van Leeuwen
+> > Sent: Thursday, October 17, 2019 7:14 PM
+> > To: 'Ben Dooks (Codethink)' <ben.dooks@codethink.co.uk>; linux-
+> > kernel@lists.codethink.co.uk
+> > Cc: Antoine Tenart <antoine.tenart@bootlin.com>; Herbert Xu
+> > <herbert@gondor.apana.org.au>; David S. Miller <davem@davemloft.net>; l=
+inux-
+> > crypto@vger.kernel.org; linux-kernel@vger.kernel.org
+> > Subject: RE: [PATCH] crypto: inside-secure - fix type of buffer in eip1=
+97_write_firmware
+> >
+> > > -----Original Message-----
+> > > From: linux-crypto-owner@vger.kernel.org <linux-crypto-owner@vger.ker=
+nel.org> On Behalf
+> > Of Ben
+> > > Dooks (Codethink)
+> > > Sent: Wednesday, October 16, 2019 1:50 PM
+> > > To: linux-kernel@lists.codethink.co.uk
+> > > Cc: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>; Antoine Tenart
+> > > <antoine.tenart@bootlin.com>; Herbert Xu <herbert@gondor.apana.org.au=
+>; David S. Miller
+> > > <davem@davemloft.net>; linux-crypto@vger.kernel.org; linux-kernel@vge=
+r.kernel.org
+> > > Subject: [PATCH] crypto: inside-secure - fix type of buffer in eip197=
+_write_firmware
+> > >
+> > > In eip197_write_firmware() the firmware buffer is sent using
+> > > writel(be32_to_cpu(),,,) this produces a number of warnings.
+> > >
+> > > Note, should this really be cpu_to_be32()  ?
+> > >
+> > No, it should certainly not be cpu_to_be32() since the HW itself is mos=
+t
+> > definitely little endian, so that would not make sense to me.
+>
+Never mind that. While looking into more endianness related sparse issues,
+I realised that the HW register access is actually configured to match the
+CPU endianness. So the CPU will not need to swap bytes when accessing the
+hardware registers.
+(Technically, the hardware _is_ little endian but our slave interface
+contains byte swapping logic that is enabled for big-endian CPU's ...)
 
-Ok, it does add a little bit of duplicated code. But it also gets rid of
-the boolean argument that I never liked. As you suggest I might as well
-move this into kvm_hypercall_stolen_time().
+> >
+> > Actually, I don't think either solution would be correct on a big-endia=
+n
+> > CPU. But I don't have any big-endian CPU available to test that theory.
+> >
+> > What I believe must happen is that the bytes must *always* be swapped
+> > here, regardless of the endianness of the CPU. And with a little-endian
+> > CPU, be32_to_cpu() coincidentally always does that.
+> >
+> > Basically, what we need here is: read a dword (32 bits) from the memory
+> > subsystem and write it back to the memory subsystem with bytes reversed=
+.
+> >
+> > Does the kernel have any dedicated function for just always swapping?
+> >
+>=20
+> After some more thought on the train home:
+>=20
+> I think the correct construct would be cpu_to_le32(be32_to_cpu(data[i]))
+> This would correctly reflect that the data is read from big-endian
+> memory and subsequently written to little-endian "memory" (aka the EIP).
+> It also fits in nicely with your other changes. Could you work that into
+> a patch v2? Then I would ack it (after testing).
+>=20
+Since the HW slave ifc is configured to match the CPU endianness, the
+cpu_to_le32() I suggested should NOT be performed and the code is fine as
+it was.
 
->> +	offset = offsetof(struct pvclock_vcpu_stolen_time, stolen_time);
->> +	kvm_put_guest(kvm, base + offset, steal_le, u64);
->> +	srcu_read_unlock(&kvm->srcu, idx);
->> +
->> +	return 0;
->> +}
->> +
->>  long kvm_hypercall_pv_features(struct kvm_vcpu *vcpu)
->>  {
->>  	u32 feature = smccc_get_arg1(vcpu);
->> @@ -12,6 +49,7 @@ long kvm_hypercall_pv_features(struct kvm_vcpu *vcpu)
->>  
->>  	switch (feature) {
->>  	case ARM_SMCCC_HV_PV_TIME_FEATURES:
->> +	case ARM_SMCCC_HV_PV_TIME_ST:
->>  		val = SMCCC_RET_SUCCESS;
->>  		break;
->>  	}
->> @@ -19,3 +57,21 @@ long kvm_hypercall_pv_features(struct kvm_vcpu *vcpu)
->>  	return val;
->>  }
->>  
->> +long kvm_hypercall_stolen_time(struct kvm_vcpu *vcpu)
-> 
-> Why long? If that's a base address, then it is either a phys_addr_t or
-> a gpa_t. I'd suggest you move the error check to the caller.
+> > Anyway: NACK on this patch for now due to this.
+> >
+Apologies for the mistake and inconvenience. Correction:
+Acked-by: Pascal van Leeuwen <pvanleeuwen@verimatrix.com>
 
-This is a bit more tricky. It's a long because that's the declared type
-of the SMCCC return in kvm_hvc_call_handler(). I can't (easily) move the
-code into kvm_hvc_call_handler() because that is compiled for arm (as
-well as arm64) and we don't have the definitions for stolen time there.
-The best option I could come up with is to have a dummy stub for arm and
-use generic types for this function.
 
-This means we need a type which can contain both a gpa_t and the
-SMCCC_RET_NOT_SUPPORTED error code.
+> > > drivers/crypto/inside-secure/safexcel.c:306:17: warning: cast to rest=
+ricted __be32
+> > > drivers/crypto/inside-secure/safexcel.c:306:17: warning: cast to rest=
+ricted __be32
+> > > drivers/crypto/inside-secure/safexcel.c:306:17: warning: cast to rest=
+ricted __be32
+> > > drivers/crypto/inside-secure/safexcel.c:306:17: warning: cast to rest=
+ricted __be32
+> > > drivers/crypto/inside-secure/safexcel.c:306:17: warning: cast to rest=
+ricted __be32
+> > > drivers/crypto/inside-secure/safexcel.c:306:17: warning: cast to rest=
+ricted __be32
+> > >
+> > > Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+> > > ---
+> > > Cc: Antoine Tenart <antoine.tenart@bootlin.com>
+> > > Cc: Herbert Xu <herbert@gondor.apana.org.au>
+> > > Cc: "David S. Miller" <davem@davemloft.net>
+> > > Cc: linux-crypto@vger.kernel.org
+> > > Cc: linux-kernel@vger.kernel.org
+> > > ---
+> > >  drivers/crypto/inside-secure/safexcel.c | 6 +++---
+> > >  1 file changed, 3 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/drivers/crypto/inside-secure/safexcel.c b/drivers/crypto=
+/inside-
+> > secure/safexcel.c
+> > > index 223d1bfdc7e6..dd33f6dda295 100644
+> > > --- a/drivers/crypto/inside-secure/safexcel.c
+> > > +++ b/drivers/crypto/inside-secure/safexcel.c
+> > > @@ -298,13 +298,13 @@ static void eip197_init_firmware(struct safexce=
+l_crypto_priv
+> > *priv)
+> > >  static int eip197_write_firmware(struct safexcel_crypto_priv *priv,
+> > >  				  const struct firmware *fw)
+> > >  {
+> > > -	const u32 *data =3D (const u32 *)fw->data;
+> > > +	const __be32 *data =3D (const __be32 *)fw->data;
+> > >  	int i;
+> > >
+> > >  	/* Write the firmware */
+> > > -	for (i =3D 0; i < fw->size / sizeof(u32); i++)
+> > > +	for (i =3D 0; i < fw->size / sizeof(__be32); i++)
+> > >  		writel(be32_to_cpu(data[i]),
+> > > -		       priv->base + EIP197_CLASSIFICATION_RAMS + i * sizeof(u32));
+> > > +		       priv->base + EIP197_CLASSIFICATION_RAMS + i * sizeof(__be32=
+));
+> > >
+> > >  	/* Exclude final 2 NOPs from size */
+> > >  	return i - EIP197_FW_TERMINAL_NOPS;
+> > > --
+> > > 2.23.0
+> >
+> > Regards,
+> > Pascal van Leeuwen
+> > Silicon IP Architect, Multi-Protocol Engines @ Verimatrix
+> > www.insidesecure.com
+>=20
+> Regards,
+> Pascal van Leeuwen
+> Silicon IP Architect, Multi-Protocol Engines @ Verimatrix
+> www.insidesecure.com
 
-I'm open to alternative suggestions on how to make this work.
-
-Thanks,
-
-Steve
-
->> +{
->> +	int err;
->> +
->> +	/*
->> +	 * Start counting stolen time from the time the guest requests
->> +	 * the feature enabled.
->> +	 */
->> +	vcpu->arch.steal.steal = 0;
->> +	vcpu->arch.steal.last_steal = current->sched_info.run_delay;
->> +
->> +	err = kvm_update_stolen_time(vcpu, true);
->> +
->> +	if (err)
->> +		return SMCCC_RET_NOT_SUPPORTED;
->> +
->> +	return vcpu->arch.steal.base;
->> +}
->> -- 
->> 2.20.1
->>
->>
-> 
-> Thanks,
-> 
-> 	M.
-> 
-
+Regards,
+Pascal van Leeuwen
+Silicon IP Architect, Multi-Protocol Engines @ Verimatrix
+www.insidesecure.com
