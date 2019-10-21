@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ABDECA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 05:13:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 355A9CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 05:13:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66EBA20700
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 05:13:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 031EA20700
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 05:13:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="d7rfDVx1"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IpXSAZrQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726984AbfJUFNd (ORCPT
+        id S1727159AbfJUFNj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 01:13:33 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:35709 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726424AbfJUFNb (ORCPT
+        Mon, 21 Oct 2019 01:13:39 -0400
+Received: from mail-pf1-f172.google.com ([209.85.210.172]:34308 "EHLO
+        mail-pf1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726971AbfJUFNf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 01:13:31 -0400
-Received: by mail-pf1-f194.google.com with SMTP id 205so7642889pfw.2
-        for <linux-kernel@vger.kernel.org>; Sun, 20 Oct 2019 22:13:30 -0700 (PDT)
+        Mon, 21 Oct 2019 01:13:35 -0400
+Received: by mail-pf1-f172.google.com with SMTP id b128so7658529pfa.1
+        for <linux-kernel@vger.kernel.org>; Sun, 20 Oct 2019 22:13:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=kxuv0f9vOfK2s9wwSd8PriCXWXssg5riIxFhbRkkPeY=;
-        b=d7rfDVx19nYMPFoWYy6LWgYvxHrd559t1aLDXmjt1LNgHHvLHkPq0r51HAhMr/SQ3W
-         ucndnncxJnVamc0eG4GU5mp6htegLeMA+KM/oBefBgOsN70npE98yxOAQVP0HdF9udZO
-         nKf8HW3iMJ7UDpao4eJpoVpToZTnHtst/Rlcqaki9kM+f6AnpNM98H5GPtV5/zBNqokR
-         B7t7aVuT46rmlb8P95eRROBrd6xoPxAfdJoQId1e1jEZauFm/ghzrZD5d8HPoCHt/60n
-         61wIbuhf++qLmATR6TGWW/OnqFf/DE0utqUBY9ss/3jHjG4hvptTOt1cBGC6ZhUV86Jw
-         52DA==
+        bh=kvDc0uUJGCnwA7GY5pu/Q7fyT9GvLtGHqVn8OAGcFSk=;
+        b=IpXSAZrQi1U3dCdd41bFl+3B7klyHdmWOyXilVE4HuEnE1TXuL/fq7AH/0inBdnojJ
+         bAg7C6XUkCrUDQrVv7kiu8Bw2JcFo/9k9FFw6maqEUnI2FRYPTUv+CBsbmR4rpm7Liih
+         z/5GLdipmIw62xvBLpB5swKyaUJwwVY6rV7pQCYZDa1Wf5vdV2b52iNA3sdbJQ9W0khG
+         Idu+ice0gtO4l4hT7mXmEac6kIvRRuziTIp24GreKrxeGfMy38EHf/1deTtgCDS5opMX
+         eQjVRKHmI/x2aigpkDLsLXW/rSpbpYW4EyUXCa1XzbDZG3d3NaTM6LTi/4l+luc9IxWb
+         K4EA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=kxuv0f9vOfK2s9wwSd8PriCXWXssg5riIxFhbRkkPeY=;
-        b=CVUPFYGyS+zjVNOfUeRAK1ogM32rDKf+p43/XrvHcVCbIuC37yYYne5uriiTWVisN+
-         nAoNJ5KnSHmIaIl0oX5/mSSIoLbHZP0xx0xXNCE8I17KmUEY3ewvrPJlRRAL3rEnVVIa
-         wE/d14G9vA5pitfCePighFodCf6sTGzNXRW/5gp7bSbJjppqj1lCSBD/UFB9hVFuzFG9
-         hrPXH6J/4RAokjojOLpdwTgkb7e9X4j1oNbt1XCHsnCKXThb8LzjqRN85//MhLCxExsz
-         t4ylyZKYWGpmZ7uzF/otj/sTzm8pExbIJYqw1V/oFVKx4ScKTLV0lno6ZQxv4xZStS5Q
-         xFTw==
-X-Gm-Message-State: APjAAAURXS+2lThXKOiuEmwGG/XbteXumPmcGv2ljKn438IMiLDYbIG9
-        /r9wZNP8LZMulhd3umG0LXZ0FA==
-X-Google-Smtp-Source: APXvYqxZoKJ1squvEwBcTcjexvcywOHoilKGzHRG9uuD81Bq1fLgoxgZtMzTcmVkb0/jfR/NSWjKNQ==
-X-Received: by 2002:a63:3f86:: with SMTP id m128mr10755485pga.404.1571634810030;
-        Sun, 20 Oct 2019 22:13:30 -0700 (PDT)
+        bh=kvDc0uUJGCnwA7GY5pu/Q7fyT9GvLtGHqVn8OAGcFSk=;
+        b=Y2Msr4Y06a+hEidI5EmsduUSasZhExT1yvJqBNSMDdJ6Dkqm10it577OxO315ZKE4t
+         xeB68nH6+F+PUFFEtslhfkdqzFsV+f/kThV++Bbq0+Uq1UZMsCq4iz4grRWCZWrH77UN
+         bYX2i85vgGY9uXeVUhDyYX7VWsrSOAiGACpntz9WluPksSvQnxF4WINZ5AvhgFTeG+w3
+         d8ERd1p3NF6lfa2x0xTIctS68oD9ZmGPOwAgUa7XhovBPx5b8mtjU6cDevb0GAVmo/gZ
+         7OjTgZoZ39V+47+unSX5obeEq9wxmQ/lUCMC+Rv4V0emn+mvUYIrgJn8QikNDH9I7srq
+         QjAQ==
+X-Gm-Message-State: APjAAAV+Aq5st+039FJ8G4J2Yniirj46wuA8kmwVgyK9olUdLzb9qJDA
+        Th+QsO5VGDh64l3KohMJIbhETw==
+X-Google-Smtp-Source: APXvYqznjcTk2jL0uxR4wwA5KVwXIFEUzOmzXjaYGmsqAFMBCB07xswg9znLYx7szIle5xdnW4WOsg==
+X-Received: by 2002:a63:5848:: with SMTP id i8mr17607043pgm.217.1571634814081;
+        Sun, 20 Oct 2019 22:13:34 -0700 (PDT)
 Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id h68sm15716862pfb.149.2019.10.20.22.13.28
+        by smtp.gmail.com with ESMTPSA id h68sm15716862pfb.149.2019.10.20.22.13.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 20 Oct 2019 22:13:28 -0700 (PDT)
+        Sun, 20 Oct 2019 22:13:33 -0700 (PDT)
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>
 Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 03/11] arm64: dts: qcom: msm8996: Move regulator consumers to db820c
-Date:   Sun, 20 Oct 2019 22:13:14 -0700
-Message-Id: <20191021051322.297560-4-bjorn.andersson@linaro.org>
+Subject: [PATCH 06/11] arm64: dts: qcom: db820c: Sort all nodes
+Date:   Sun, 20 Oct 2019 22:13:17 -0700
+Message-Id: <20191021051322.297560-7-bjorn.andersson@linaro.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191021051322.297560-1-bjorn.andersson@linaro.org>
 References: <20191021051322.297560-1-bjorn.andersson@linaro.org>
@@ -74,35 +74,356 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Supplies for the various components in the SoC depends on board layout,
-so move the supply definitions to db820c.dtsi instead of carrying them
-in the platform dtsi.
+Sort all nodes in db820c.dtsi based on address, then name.
 
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi | 44 ++++++++++++++++++++
- arch/arm64/boot/dts/qcom/msm8996.dtsi        | 44 --------------------
- 2 files changed, 44 insertions(+), 44 deletions(-)
+ arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi | 336 +++++++++----------
+ 1 file changed, 168 insertions(+), 168 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-index 44ec3eb1c8e8..21e029afb27b 100644
+index aed34a461b19..99990a139938 100644
 --- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
 +++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-@@ -142,6 +142,10 @@
- 	status = "okay";
+@@ -124,6 +124,18 @@
+ 	};
  };
  
-+&camss {
-+	vdda-supply = <&pm8994_l2>;
++&blsp1_i2c2 {
++	/* On Low speed expansion */
++	label = "LS-I2C0";
++	status = "okay";
 +};
 +
- &sdhc2 {
- 	/* External SD card */
- 	pinctrl-names = "default", "sleep";
-@@ -155,10 +159,28 @@
- 
- &ufsphy {
++&blsp1_spi0 {
++	/* On Low speed expansion */
++	label = "LS-SPI0";
++	status = "okay";
++};
++
+ &blsp1_uart1 {
+ 	label = "BT-UART";
  	status = "okay";
+@@ -141,6 +153,24 @@
+ 	};
+ };
+ 
++&blsp2_i2c0 {
++	/* On High speed expansion */
++	label = "HS-I2C2";
++	status = "okay";
++};
++
++&blsp2_i2c1 {
++	/* On Low speed expansion */
++	label = "LS-I2C1";
++	status = "okay";
++};
++
++&blsp2_spi5 {
++	/* On High speed expansion */
++	label = "HS-SPI1";
++	status = "okay";
++};
++
+ &blsp2_uart1 {
+ 	label = "LS-UART1";
+ 	status = "okay";
+@@ -157,75 +187,49 @@
+ 	pinctrl-1 = <&blsp2_uart2_4pins_sleep>;
+ };
+ 
+-&blsp1_i2c2 {
+-	/* On Low speed expansion */
+-	label = "LS-I2C0";
+-	status = "okay";
++&camss {
++	vdda-supply = <&pm8994_l2>;
+ };
+ 
+-&blsp2_i2c1 {
+-	/* On Low speed expansion */
+-	label = "LS-I2C1";
++&hdmi {
+ 	status = "okay";
+-};
+ 
+-&blsp1_spi0 {
+-	/* On Low speed expansion */
+-	label = "LS-SPI0";
+-	status = "okay";
+-};
++	pinctrl-names = "default", "sleep";
++	pinctrl-0 = <&hdmi_hpd_active &hdmi_ddc_active>;
++	pinctrl-1 = <&hdmi_hpd_suspend &hdmi_ddc_suspend>;
+ 
+-&blsp2_i2c0 {
+-	/* On High speed expansion */
+-	label = "HS-I2C2";
+-	status = "okay";
++	core-vdda-supply = <&pm8994_l12>;
++	core-vcc-supply = <&pm8994_s4>;
+ };
+ 
+-&blsp2_spi5 {
+-	/* On High speed expansion */
+-	label = "HS-SPI1";
++&hdmi_phy {
+ 	status = "okay";
+-};
+ 
+-&camss {
+-	vdda-supply = <&pm8994_l2>;
++	vddio-supply = <&pm8994_l12>;
++	vcca-supply = <&pm8994_l28>;
++	#phy-cells = <0>;
+ };
+ 
+-&sdhc2 {
+-	/* External SD card */
+-	pinctrl-names = "default", "sleep";
+-	pinctrl-0 = <&sdc2_clk_on &sdc2_cmd_on &sdc2_data_on &sdc2_cd_on>;
+-	pinctrl-1 = <&sdc2_clk_off &sdc2_cmd_off &sdc2_data_off &sdc2_cd_off>;
+-	cd-gpios = <&msmgpio 38 0x1>;
+-	vmmc-supply = <&pm8994_l21>;
+-	vqmmc-supply = <&pm8994_l13>;
++&hsusb_phy1 {
+ 	status = "okay";
++
++	vdda-pll-supply = <&pm8994_l12>;
++	vdda-phy-dpdm-supply = <&pm8994_l24>;
+ };
+ 
+-&ufsphy {
++&hsusb_phy2 {
+ 	status = "okay";
+ 
+-	vdda-phy-supply = <&pm8994_l28>;
+ 	vdda-pll-supply = <&pm8994_l12>;
+-
+-	vdda-phy-max-microamp = <18380>;
+-	vdda-pll-max-microamp = <9440>;
+-
+-	vddp-ref-clk-supply = <&pm8994_l25>;
+-	vddp-ref-clk-max-microamp = <100>;
+-	vddp-ref-clk-always-on;
++	vdda-phy-dpdm-supply = <&pm8994_l24>;
+ };
+ 
+-&ufshc {
++&mdp {
+ 	status = "okay";
++};
+ 
+-	vcc-supply = <&pm8994_l20>;
+-	vccq-supply = <&pm8994_l25>;
+-	vccq2-supply = <&pm8994_s4>;
+-
+-	vcc-max-microamp = <600000>;
+-	vccq-max-microamp = <450000>;
+-	vccq2-max-microamp = <450000>;
++&mdss {
++	status = "okay";
+ };
+ 
+ &msmgpio {
+@@ -382,6 +386,32 @@
+ 		"NC"; /* GPIO_149 */
+ };
+ 
++&pcie0 {
++	status = "okay";
++	perst-gpio = <&msmgpio 35 GPIO_ACTIVE_LOW>;
++	vddpe-3v3-supply = <&wlan_en>;
++	vdda-supply = <&pm8994_l28>;
++};
++
++&pcie1 {
++	status = "okay";
++	perst-gpio = <&msmgpio 130 GPIO_ACTIVE_LOW>;
++	vdda-supply = <&pm8994_l28>;
++};
++
++&pcie2 {
++	status = "okay";
++	perst-gpio = <&msmgpio 114 GPIO_ACTIVE_LOW>;
++	vdda-supply = <&pm8994_l28>;
++};
++
++&pcie_phy {
++	status = "okay";
++
++	vdda-phy-supply = <&pm8994_l28>;
++	vdda-pll-supply = <&pm8994_l12>;
++};
++
+ &pm8994_gpios {
+ 	gpio-line-names =
+ 		"NC",
+@@ -434,114 +464,6 @@
+ 		"NC";
+ };
+ 
+-&pcie_phy {
+-	status = "okay";
+-
+-	vdda-phy-supply = <&pm8994_l28>;
+-	vdda-pll-supply = <&pm8994_l12>;
+-};
+-
+-&usb3phy {
+-	status = "okay";
+-
+-	vdda-phy-supply = <&pm8994_l28>;
+-	vdda-pll-supply = <&pm8994_l12>;
+-
+-};
+-
+-&hsusb_phy1 {
+-	status = "okay";
+-
+-	vdda-pll-supply = <&pm8994_l12>;
+-	vdda-phy-dpdm-supply = <&pm8994_l24>;
+-};
+-
+-&hsusb_phy2 {
+-	status = "okay";
+-
+-	vdda-pll-supply = <&pm8994_l12>;
+-	vdda-phy-dpdm-supply = <&pm8994_l24>;
+-};
+-
+-&usb3 {
+-	status = "okay";
+-	extcon = <&usb3_id>;
+-
+-	dwc3@6a00000 {
+-		extcon = <&usb3_id>;
+-		dr_mode = "otg";
+-	};
+-};
+-
+-&usb2 {
+-	status = "okay";
+-	extcon = <&usb2_id>;
+-
+-	dwc3@7600000 {
+-		extcon = <&usb2_id>;
+-		dr_mode = "otg";
+-		maximum-speed = "high-speed";
+-	};
+-};
+-
+-&pcie0 {
+-	status = "okay";
+-	perst-gpio = <&msmgpio 35 GPIO_ACTIVE_LOW>;
+-	vddpe-3v3-supply = <&wlan_en>;
+-	vdda-supply = <&pm8994_l28>;
+-};
+-
+-&pcie1 {
+-	status = "okay";
+-	perst-gpio = <&msmgpio 130 GPIO_ACTIVE_LOW>;
+-	vdda-supply = <&pm8994_l28>;
+-};
+-
+-&pcie2 {
+-	status = "okay";
+-	perst-gpio = <&msmgpio 114 GPIO_ACTIVE_LOW>;
+-	vdda-supply = <&pm8994_l28>;
+-};
+-
+-&wcd9335 {
+-	clock-names = "mclk", "slimbus";
+-	clocks = <&div1_mclk>,
+-		 <&rpmcc RPM_SMD_BB_CLK1>;
+-
+-	vdd-buck-supply = <&pm8994_s4>;
+-	vdd-buck-sido-supply = <&pm8994_s4>;
+-	vdd-tx-supply = <&pm8994_s4>;
+-	vdd-rx-supply = <&pm8994_s4>;
+-	vdd-io-supply = <&pm8994_s4>;
+-};
+-
+-&mdss {
+-	status = "okay";
+-};
+-
+-&mdp {
+-	status = "okay";
+-};
+-
+-&hdmi_phy {
+-	status = "okay";
+-
+-	vddio-supply = <&pm8994_l12>;
+-	vcca-supply = <&pm8994_l28>;
+-	#phy-cells = <0>;
+-};
+-
+-&hdmi {
+-	status = "okay";
+-
+-	pinctrl-names = "default", "sleep";
+-	pinctrl-0 = <&hdmi_hpd_active &hdmi_ddc_active>;
+-	pinctrl-1 = <&hdmi_hpd_suspend &hdmi_ddc_suspend>;
+-
+-	core-vdda-supply = <&pm8994_l12>;
+-	core-vcc-supply = <&pm8994_s4>;
+-};
+-
+ &rpm_requests {
+ 	pm8994-regulators {
+ 		compatible = "qcom,rpm-pm8994-regulators";
+@@ -698,18 +620,15 @@
+ 	};
+ };
+ 
+-&spmi_bus {
+-	pmic@0 {
+-		pon@800 {
+-			resin {
+-				compatible = "qcom,pm8941-resin";
+-				interrupts = <0x0 0x8 1 IRQ_TYPE_EDGE_BOTH>;
+-				debounce = <15625>;
+-				bias-pull-up;
+-				linux,code = <KEY_VOLUMEDOWN>;
+-			};
+-		};
+-	};
++&sdhc2 {
++	/* External SD card */
++	pinctrl-names = "default", "sleep";
++	pinctrl-0 = <&sdc2_clk_on &sdc2_cmd_on &sdc2_data_on &sdc2_cd_on>;
++	pinctrl-1 = <&sdc2_clk_off &sdc2_cmd_off &sdc2_data_off &sdc2_cd_off>;
++	cd-gpios = <&msmgpio 38 0x1>;
++	vmmc-supply = <&pm8994_l21>;
++	vqmmc-supply = <&pm8994_l13>;
++	status = "okay";
+ };
+ 
+ &sound {
+@@ -783,3 +702,84 @@
+ 		};
+ 	};
+ };
++
++&spmi_bus {
++	pmic@0 {
++		pon@800 {
++			resin {
++				compatible = "qcom,pm8941-resin";
++				interrupts = <0x0 0x8 1 IRQ_TYPE_EDGE_BOTH>;
++				debounce = <15625>;
++				bias-pull-up;
++				linux,code = <KEY_VOLUMEDOWN>;
++			};
++		};
++	};
++};
++
++&ufsphy {
++	status = "okay";
 +
 +	vdda-phy-supply = <&pm8994_l28>;
 +	vdda-pll-supply = <&pm8994_l12>;
@@ -113,10 +434,10 @@ index 44ec3eb1c8e8..21e029afb27b 100644
 +	vddp-ref-clk-supply = <&pm8994_l25>;
 +	vddp-ref-clk-max-microamp = <100>;
 +	vddp-ref-clk-always-on;
- };
- 
- &ufshc {
- 	status = "okay";
++};
++
++&ufshc {
++	status = "okay";
 +
 +	vcc-supply = <&pm8994_l20>;
 +	vccq-supply = <&pm8994_l25>;
@@ -125,198 +446,48 @@ index 44ec3eb1c8e8..21e029afb27b 100644
 +	vcc-max-microamp = <600000>;
 +	vccq-max-microamp = <450000>;
 +	vccq2-max-microamp = <450000>;
- };
- 
- &msmgpio {
-@@ -369,18 +391,31 @@
- 
- &pcie_phy {
- 	status = "okay";
++};
++
++&usb2 {
++	status = "okay";
++	extcon = <&usb2_id>;
++
++	dwc3@7600000 {
++		extcon = <&usb2_id>;
++		dr_mode = "otg";
++		maximum-speed = "high-speed";
++	};
++};
++
++&usb3 {
++	status = "okay";
++	extcon = <&usb3_id>;
++
++	dwc3@6a00000 {
++		extcon = <&usb3_id>;
++		dr_mode = "otg";
++	};
++};
++
++&usb3phy {
++	status = "okay";
 +
 +	vdda-phy-supply = <&pm8994_l28>;
 +	vdda-pll-supply = <&pm8994_l12>;
- };
- 
- &usb3phy {
- 	status = "okay";
 +
-+	vdda-phy-supply = <&pm8994_l28>;
-+	vdda-pll-supply = <&pm8994_l12>;
++};
 +
- };
- 
- &hsusb_phy1 {
- 	status = "okay";
-+
-+	vdda-pll-supply = <&pm8994_l12>;
-+	vdda-phy-dpdm-supply = <&pm8994_l24>;
- };
- 
- &hsusb_phy2 {
- 	status = "okay";
-+
-+	vdda-pll-supply = <&pm8994_l12>;
-+	vdda-phy-dpdm-supply = <&pm8994_l24>;
- };
- 
- &usb3 {
-@@ -408,22 +443,31 @@
- 	status = "okay";
- 	perst-gpio = <&msmgpio 35 GPIO_ACTIVE_LOW>;
- 	vddpe-3v3-supply = <&wlan_en>;
-+	vdda-supply = <&pm8994_l28>;
- };
- 
- &pcie1 {
- 	status = "okay";
- 	perst-gpio = <&msmgpio 130 GPIO_ACTIVE_LOW>;
-+	vdda-supply = <&pm8994_l28>;
- };
- 
- &pcie2 {
- 	status = "okay";
- 	perst-gpio = <&msmgpio 114 GPIO_ACTIVE_LOW>;
-+	vdda-supply = <&pm8994_l28>;
- };
- 
- &wcd9335 {
- 	clock-names = "mclk", "slimbus";
- 	clocks = <&div1_mclk>,
- 		 <&rpmcc RPM_SMD_BB_CLK1>;
++&wcd9335 {
++	clock-names = "mclk", "slimbus";
++	clocks = <&div1_mclk>,
++		 <&rpmcc RPM_SMD_BB_CLK1>;
 +
 +	vdd-buck-supply = <&pm8994_s4>;
 +	vdd-buck-sido-supply = <&pm8994_s4>;
 +	vdd-tx-supply = <&pm8994_s4>;
 +	vdd-rx-supply = <&pm8994_s4>;
 +	vdd-io-supply = <&pm8994_s4>;
- };
- 
- &mdss {
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index 36f161547aa6..a297d3223161 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -1322,16 +1322,6 @@
- 			reg-names = "phy_mem";
- 			#phy-cells = <0>;
- 
--			vdda-phy-supply = <&pm8994_l28>;
--			vdda-pll-supply = <&pm8994_l12>;
--
--			vdda-phy-max-microamp = <18380>;
--			vdda-pll-max-microamp = <9440>;
--
--			vddp-ref-clk-supply = <&pm8994_l25>;
--			vddp-ref-clk-max-microamp = <100>;
--			vddp-ref-clk-always-on;
--
- 			clock-names = "ref_clk_src", "ref_clk";
- 			clocks = <&rpmcc RPM_SMD_LN_BB_CLK>,
- 				 <&gcc GCC_UFS_CLKREF_CLK>;
-@@ -1347,14 +1337,6 @@
- 			phys = <&ufsphy>;
- 			phy-names = "ufsphy";
- 
--			vcc-supply = <&pm8994_l20>;
--			vccq-supply = <&pm8994_l25>;
--			vccq2-supply = <&pm8994_s4>;
--
--			vcc-max-microamp = <600000>;
--			vccq-max-microamp = <450000>;
--			vccq2-max-microamp = <450000>;
--
- 			power-domains = <&gcc UFS_GDSC>;
- 
- 			clock-names =
-@@ -1456,9 +1438,6 @@
- 				<&gcc GCC_PCIE_CLKREF_CLK>;
- 			clock-names = "aux", "cfg_ahb", "ref";
- 
--			vdda-phy-supply = <&pm8994_l28>;
--			vdda-pll-supply = <&pm8994_l12>;
--
- 			resets = <&gcc GCC_PCIE_PHY_BCR>,
- 				<&gcc GCC_PCIE_PHY_COM_BCR>,
- 				<&gcc GCC_PCIE_PHY_COM_NOCSR_BCR>;
-@@ -1518,9 +1497,6 @@
- 				<&gcc GCC_USB3_CLKREF_CLK>;
- 			clock-names = "aux", "cfg_ahb", "ref";
- 
--			vdda-phy-supply = <&pm8994_l28>;
--			vdda-pll-supply = <&pm8994_l12>;
--
- 			resets = <&gcc GCC_USB3_PHY_BCR>,
- 				<&gcc GCC_USB3PHY_PHY_BCR>;
- 			reset-names = "phy", "common";
-@@ -1547,9 +1523,6 @@
- 				<&gcc GCC_RX1_USB2_CLKREF_CLK>;
- 			clock-names = "cfg_ahb", "ref";
- 
--			vdda-pll-supply = <&pm8994_l12>;
--			vdda-phy-dpdm-supply = <&pm8994_l24>;
--
- 			resets = <&gcc GCC_QUSB2PHY_PRIM_BCR>;
- 			nvmem-cells = <&qusb2p_hstx_trim>;
- 			status = "disabled";
-@@ -1564,9 +1537,6 @@
- 				<&gcc GCC_RX2_USB2_CLKREF_CLK>;
- 			clock-names = "cfg_ahb", "ref";
- 
--			vdda-pll-supply = <&pm8994_l12>;
--			vdda-phy-dpdm-supply = <&pm8994_l24>;
--
- 			resets = <&gcc GCC_QUSB2PHY_SEC_BCR>;
- 			nvmem-cells = <&qusb2s_hstx_trim>;
- 			status = "disabled";
-@@ -1770,7 +1740,6 @@
- 				"vfe1_stream",
- 				"vfe_ahb",
- 				"vfe_axi";
--			vdda-supply = <&pm8994_l2>;
- 			iommus = <&vfe_smmu 0>,
- 				 <&vfe_smmu 1>,
- 				 <&vfe_smmu 2>,
-@@ -1882,9 +1851,6 @@
- 				pinctrl-0 = <&pcie0_clkreq_default &pcie0_perst_default &pcie0_wake_default>;
- 				pinctrl-1 = <&pcie0_clkreq_sleep &pcie0_perst_default &pcie0_wake_sleep>;
- 
--
--				vdda-supply = <&pm8994_l28>;
--
- 				linux,pci-domain = <0>;
- 
- 				clocks = <&gcc GCC_PCIE_0_PIPE_CLK>,
-@@ -1937,8 +1903,6 @@
- 				pinctrl-0 = <&pcie1_clkreq_default &pcie1_perst_default &pcie1_wake_default>;
- 				pinctrl-1 = <&pcie1_clkreq_sleep &pcie1_perst_default &pcie1_wake_sleep>;
- 
--
--				vdda-supply = <&pm8994_l28>;
- 				linux,pci-domain = <1>;
- 
- 				clocks = <&gcc GCC_PCIE_1_PIPE_CLK>,
-@@ -1990,8 +1954,6 @@
- 				pinctrl-0 = <&pcie2_clkreq_default &pcie2_perst_default &pcie2_wake_default>;
- 				pinctrl-1 = <&pcie2_clkreq_sleep &pcie2_perst_default &pcie2_wake_sleep >;
- 
--				vdda-supply = <&pm8994_l28>;
--
- 				linux,pci-domain = <2>;
- 				clocks = <&gcc GCC_PCIE_2_PIPE_CLK>,
- 					<&gcc GCC_PCIE_2_AUX_CLK>,
-@@ -2056,12 +2018,6 @@
- 
- 					slim-ifc-dev  = <&tasha_ifd>;
- 
--					vdd-buck-supply = <&pm8994_s4>;
--					vdd-buck-sido-supply = <&pm8994_s4>;
--					vdd-tx-supply = <&pm8994_s4>;
--					vdd-rx-supply = <&pm8994_s4>;
--					vdd-io-supply = <&pm8994_s4>;
--
- 					#sound-dai-cells = <1>;
- 				};
- 			};
++};
 -- 
 2.23.0
 
