@@ -2,65 +2,132 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47CB2CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:06:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BB9ACA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:06:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28CEC20679
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:06:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4626020679
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:06:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728767AbfJUNGH (ORCPT
+        id S1728873AbfJUNGt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 09:06:07 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36694 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727256AbfJUNGG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 09:06:06 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 6148DB63D;
-        Mon, 21 Oct 2019 13:06:05 +0000 (UTC)
-Date:   Mon, 21 Oct 2019 15:06:05 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Laurence Oberman <loberman@redhat.com>,
-        Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        Michal Hocko <mhocko@suse.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] Test softlockup
-Message-ID: <20191021130604.yucvx2u5z6db6olm@pathway.suse.cz>
-References: <20190819104732.20966-1-pmladek@suse.com>
- <20190819104732.20966-4-pmladek@suse.com>
- <20191021124518.GF1817@hirez.programming.kicks-ass.net>
+        Mon, 21 Oct 2019 09:06:49 -0400
+Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:59834 "EHLO
+        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728792AbfJUNGs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 09:06:48 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R421e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07487;MF=zhiyuan2048@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0Tfo8Fxn_1571663202;
+Received: from houzhiyuandeMacBook-Pro.local(mailfrom:zhiyuan2048@linux.alibaba.com fp:SMTPD_---0Tfo8Fxn_1571663202)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 21 Oct 2019 21:06:43 +0800
+Subject: Re: [PATCH net] net: sched: act_mirred: drop skb's dst_entry in
+ ingress redirection
+To:     Eyal Birger <eyal.birger@gmail.com>
+Cc:     Cong Wang <xiyou.wangcong@gmail.com>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        "David S . Miller" <davem@davemloft.net>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, shmulik.ladkani@gmail.com
+References: <20191012071620.8595-1-zhiyuan2048@linux.alibaba.com>
+ <CAM_iQpVkTb6Qf9J-PuXJoQTZa5ojN_oun64SMv9Kji7tZkxSyA@mail.gmail.com>
+ <e2bd3004-9f4b-f3ce-1214-2140f0b7cc61@linux.alibaba.com>
+ <20191016151307.40f63896@jimi>
+ <e16cfafe-059c-3106-835e-d32b7bb5ba61@linux.alibaba.com>
+ <20191019002502.0519ea9b@jimi>
+From:   Zhiyuan Hou <zhiyuan2048@linux.alibaba.com>
+Message-ID: <5e9f0ae7-d31e-a428-9780-b6b7130f73f8@linux.alibaba.com>
+Date:   Mon, 21 Oct 2019 21:06:42 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191021124518.GF1817@hirez.programming.kicks-ass.net>
-User-Agent: NeoMutt/20170912 (1.9.0)
+In-Reply-To: <20191019002502.0519ea9b@jimi>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 2019-10-21 14:45:18, Peter Zijlstra wrote:
-> On Mon, Aug 19, 2019 at 12:47:32PM +0200, Petr Mladek wrote:
-> > Trigger busy loop by:
-> > $> cat /proc/version
-> > 
-> > Stop the busy loop by:
-> > $> cat /proc/consoles
-> > 
-> > The code also shows the first touch*watchdog() function that hides
-> > softlockup on a "well known" location.
-> 
-> This seems like a terrible interface...
 
-Ah, this was just a patch for testing. It was not meant to be applied.
-I am sorry for confusion.
+On 2019/10/19 5:25 上午, Eyal Birger wrote:
+> Hi,
+>
+> On Fri, 18 Oct 2019 00:33:53 +0800
+> Zhiyuan Hou <zhiyuan2048@linux.alibaba.com> wrote:
+>
+>> On 2019/10/16 8:13 下午, Eyal Birger wrote:
+>>> Hi,
+>>>
+>>> On Wed, 16 Oct 2019 01:22:01 +0800
+>>> Zhiyuan Hou <zhiyuan2048@linux.alibaba.com> wrote:
+>>>   
+>>>> On 2019/10/15 1:57 上午, Cong Wang wrote:
+>>>>> On Sat, Oct 12, 2019 at 12:16 AM Zhiyuan Hou
+>>>>> <zhiyuan2048@linux.alibaba.com> wrote:
+>>>>>> diff --git a/net/sched/act_mirred.c b/net/sched/act_mirred.c
+>>>>>> index 9ce073a05414..6108a64c0cd5 100644
+>>>>>> --- a/net/sched/act_mirred.c
+>>>>>> +++ b/net/sched/act_mirred.c
+>>>>>> @@ -18,6 +18,7 @@
+>>>>>>     #include <linux/gfp.h>
+>>>>>>     #include <linux/if_arp.h>
+>>>>>>     #include <net/net_namespace.h>
+>>>>>> +#include <net/dst.h>
+>>>>>>     #include <net/netlink.h>
+>>>>>>     #include <net/pkt_sched.h>
+>>>>>>     #include <net/pkt_cls.h>
+>>>>>> @@ -298,8 +299,10 @@ static int tcf_mirred_act(struct sk_buff
+>>>>>> *skb, const struct tc_action *a,
+>>>>>>
+>>>>>>            if (!want_ingress)
+>>>>>>                    err = dev_queue_xmit(skb2);
+>>>>>> -       else
+>>>>>> +       else {
+>>>>>> +               skb_dst_drop(skb2);
+>>>>>>                    err = netif_receive_skb(skb2);
+>>>>>> +       }
+>>>>> Good catch!
+>>> Indeed! Thanks for fixing this!
+>>>   
+>>>>> I don't want to be picky, but it seems this is only needed
+>>>>> when redirecting from egress to ingress, right? That is,
+>>>>> ingress to ingress, or ingress to egress is okay? If not,
+>>>>> please fix all the cases while you are on it?
+>>>> Sure. But I think this patch is also needed when redirecting from
+>>>> ingress to ingress. Because we cannot assure that a skb has null
+>>>> dst in ingress redirection path. For example, if redirecting a skb
+>>>> from loopback's ingress to other device's ingress, the skb will
+>>>> take a dst.
+>>>>
+>>>> As commit logs point out, skb with valid dst cannot be made routing
+>>>> decision in following process. original dst may cause skb loss or
+>>>> other unexpected behavior.
+>>> On the other hand, removing the dst on ingress-to-ingress
+>>> redirection may remove LWT information on incoming packets, which
+>>> may be undesired.
+>> Sorry, I do not understand why lwt information is needed on
+>> ingress-to-ingress redirection. lwt is used on output path, isn't it?
+>> Can you please give more information?
+> On rx path tunnelled packets parameters received on a collect_md tunnel device
+> are kept in a metadata dst. See ip_tunnel_rcv() 'tun_dst' parameter.
+>
+> The rx metadata dst can be matched by a number of mechanisms like routing
+> rules, eBPF, OVS, and netfilter.
+Yes, you are right. Thanks for your explanations.
 
-Best Regards,
-Petr
+The metadata dst should not be removed in redirection path and also
+does not affect L3's routing decision.
+
+Maybe we can add a following check to solve it before removing a dst,
+what do you think?
+
+   if (skb_valid_dst(skb2))
+       skb_dst_drop(sbk2);
+>
+> Eyal.
