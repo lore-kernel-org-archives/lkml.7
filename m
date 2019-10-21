@@ -2,276 +2,161 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB1ACA9EB0
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:20:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49390CA9EB0
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1B3A2089C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:20:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571671223;
-	bh=nbD/xN9E0NOEQev6bZPtgeSvlXjsM38xYXZf9XPf6K0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=q7dVEftw0T7LJyHpk3rrJl+YNcOJ2YV8a4l7pQvyiNL243PR9R5B3yM8/w2GZhYqq
-	 Bf1LwIR5gULqM02BpCEMaWWFYR2E522S2F1dCVGF0AsTWstiG7aGEktxrzvjFvh9LJ
-	 7+KTEYSbj0x/BELgoTo0Hg5Cz48Bsctck25OfL1c=
+	by mail.kernel.org (Postfix) with ESMTP id 1F00D2089C
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:20:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="Ym+th3Qn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729420AbfJUPUX (ORCPT
+        id S1729477AbfJUPUy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 11:20:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35190 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726847AbfJUPUW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 11:20:22 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71EEB2084B;
-        Mon, 21 Oct 2019 15:20:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571671221;
-        bh=nbD/xN9E0NOEQev6bZPtgeSvlXjsM38xYXZf9XPf6K0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=FDIwjTr6OuzGTDBVQIbiCn2fzZIXQx/WdcGXMNT/q13a2X9hV4fyKL9thpvYiHXQX
-         BlcsKH485Fdzi03ZiY5Zxiqi79YFlMUaEPs+bvJGxKuzTJgHcShrWzhwSgjyBqYfae
-         aKhxv7O2jj/7xTsSbUZ12lNOozaJTH/MJ5Z4sggs=
-Date:   Mon, 21 Oct 2019 16:20:16 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Dan Robertson <dan@dlrobertson.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        devicetree <devicetree@vger.kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH v4 2/2] iio: (bma400) add driver for the BMA400
-Message-ID: <20191021162016.531e6a2e@archlinux>
-In-Reply-To: <20191019024351.GB8593@nessie>
-References: <20191018031848.18538-1-dan@dlrobertson.com>
-        <20191018031848.18538-3-dan@dlrobertson.com>
-        <CAHp75VfMW0fvmO9jGTnQumJ9Sm-SgNL0ohjSR4qRQY365aeMBw@mail.gmail.com>
-        <20191019024351.GB8593@nessie>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 21 Oct 2019 11:20:54 -0400
+Received: from mail-eopbgr30121.outbound.protection.outlook.com ([40.107.3.121]:16389
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726847AbfJUPUy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 11:20:54 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RpB3mIPsi8s3jBl1ZMERJOHM0VCFASgH7ObwLKttHTVm6uHmYHqf01Diod4FG0iQDW8n4SabLpou4+awyXzQd/1vKpav4X6e/kfP+zZXx5Z+c1F/MFUWnECyqVvf30BXWgrQMP7EOenkE2rE9qWQX88QdMS7tfgKbeYkeL4OkSYUem+mWeTipf3ADeMHLJEa/S+OtavO77MGbvrzHQKwbTCYyWtGY0gzJttYrunbNEmVsSqBQYNwdoLZu2uZwNUQXaFn67iYbSmIBWbe2baHHyAAQ8jt1iaFDwamuLNq5VMKJoQDGSmHwf3dOXPnOsdyeJtvvSS/UzAUaItI9lkLww==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=76ShwPSz2IqcgJODhwTIqS3Hj9czJddBBjiNKAfdNvQ=;
+ b=aTIC+4pSu4sKiVMCg0+cuyjQL/ogHG1xJuVwjE/Z6FUm9Ay7WqX+uJQSgzpxX3ASvvH+IFYLCjCPpnQITI/Sn6k3Eoslcmxp+Pn6z4gm0TS0RG7ziMv9Mdqfgu0+8n1nIAo/cb/0KNHaX0xDGE76dUIaS3iqNVRYKgnAxF2H1v7sDi1GkiUxGymvbJapKs64Jp8Y4x0zWAtUNwVBTHpypcwR8b28qZ+YUp+buTGhWftR5155OxsXyIN2RlteZ1mx6wVhuF4bCtFkYkM2BgHReSV93pjB9epleW8DobXvHhaVgDhfORR2Z65usiaBfw4ZqMxjAU/JBKSJbJDtVASTdQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
+ dkim=pass header.d=axentia.se; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=76ShwPSz2IqcgJODhwTIqS3Hj9czJddBBjiNKAfdNvQ=;
+ b=Ym+th3QnW4XtDGi8kfR16HE5C7oHW4gnjs4RUISaZS/4AWvfrniLEbWuyFxkEBRj1INT7IKlRA8fe3onUCj+btf6w50PaiWQJETNJOEaA6uujCYXsW5Md7E4sqmFPkWAZGKYkaq0cwZmGxPvckBmAzdbjkQwrOk9xLxgdANrBsw=
+Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com (52.134.66.158) by
+ DB3PR0202MB3435.eurprd02.prod.outlook.com (52.134.65.156) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.21; Mon, 21 Oct 2019 15:20:45 +0000
+Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com
+ ([fe80::c5b8:6014:87a4:1afe]) by DB3PR0202MB3434.eurprd02.prod.outlook.com
+ ([fe80::c5b8:6014:87a4:1afe%7]) with mapi id 15.20.2347.029; Mon, 21 Oct 2019
+ 15:20:44 +0000
+From:   Peter Rosin <peda@axentia.se>
+To:     "Eugen.Hristev@microchip.com" <Eugen.Hristev@microchip.com>,
+        "wsa@the-dreams.de" <wsa@the-dreams.de>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "Ludovic.Desroches@microchip.com" <Ludovic.Desroches@microchip.com>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+CC:     "Nicolas.Ferre@microchip.com" <Nicolas.Ferre@microchip.com>
+Subject: Re: [PATCH v5 3/9] i2c: add support for filters optional properties
+Thread-Topic: [PATCH v5 3/9] i2c: add support for filters optional properties
+Thread-Index: AQHVaHpW6NWckaLWlEK4ND0k79ASNKdldToA
+Date:   Mon, 21 Oct 2019 15:20:44 +0000
+Message-ID: <d7172480-0ba3-3412-aebf-353bfe8d6f66@axentia.se>
+References: <1568189911-31641-1-git-send-email-eugen.hristev@microchip.com>
+ <1568189911-31641-4-git-send-email-eugen.hristev@microchip.com>
+In-Reply-To: <1568189911-31641-4-git-send-email-eugen.hristev@microchip.com>
+Accept-Language: en-US, sv-SE
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+x-originating-ip: [213.112.138.100]
+x-clientproxiedby: HE1PR0902CA0016.eurprd09.prod.outlook.com
+ (2603:10a6:3:e5::26) To DB3PR0202MB3434.eurprd02.prod.outlook.com
+ (2603:10a6:8:5::30)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peda@axentia.se; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c754882a-b071-4299-ac44-08d7563a3dde
+x-ms-traffictypediagnostic: DB3PR0202MB3435:
+x-microsoft-antispam-prvs: <DB3PR0202MB3435005AB262E2F422C5D1C2BC690@DB3PR0202MB3435.eurprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0197AFBD92
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39830400003)(346002)(396003)(136003)(376002)(366004)(199004)(189003)(11346002)(7736002)(31686004)(8936002)(71200400001)(71190400001)(508600001)(31696002)(5660300002)(446003)(86362001)(316002)(476003)(2616005)(305945005)(3846002)(25786009)(7416002)(6116002)(256004)(14444005)(486006)(2906002)(76176011)(52116002)(2501003)(6436002)(58126008)(229853002)(66476007)(66556008)(64756008)(66446008)(99286004)(66066001)(110136005)(65806001)(6486002)(66946007)(36756003)(6512007)(14454004)(26005)(2201001)(81166006)(81156014)(186003)(102836004)(6246003)(53546011)(386003)(65956001)(6506007)(4326008)(8676002)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:DB3PR0202MB3435;H:DB3PR0202MB3434.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: axentia.se does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: kNrx0wY9c9k6i0NWt0s75nCLUdA/Mynbt5QUpjaCJgrRsyEBOJCUi03dWaQa5bThZ1BGlz2R3pn7Kvz6iwhkVcEY20nqCJwVq0/4OgIQ4OvO6p1mhgtob/n2NDhNx7AVN7rPNeGrjGaSs7Q/zXJIL/KgqGtNcP/V9zP0Msod7BfXZ/Om54Fb9J/uHUhD9PUqp6JvYI7OGh30AX2sd2hsgMfPyzsEdoZBPA7sZEUzjo7pZB2z8dUBi5TRpg4bM/7mOPCxI+KVODRRHDYa254AACDwfCpGjNid4BuW3N9eJlYbKiU7V1R/E+qJyO1GwHtwgvMXKKJSAQr2zJuQ1SQJb/GpDHkk0ngROEDtw78twvoGUdjzCY2W0ohlcXHKkU03jYS5i+I8KF9XxuCeXf+v1CjF71b6Jc+hT5P5QYHZSK+DkX/ldB+v9xkC46AnCIFf
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <6E26C7A80CEE0D4A864CA97F250362B5@eurprd02.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: axentia.se
+X-MS-Exchange-CrossTenant-Network-Message-Id: c754882a-b071-4299-ac44-08d7563a3dde
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Oct 2019 15:20:44.6237
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: xDMbMiuCutJ1QtJiuQUjyCOz16iOAVxg2mYN66hGFEXJyqegeyEi437VAzJj4MVO
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB3435
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 19 Oct 2019 02:43:51 +0000
-Dan Robertson <dan@dlrobertson.com> wrote:
-
-> On Fri, Oct 18, 2019 at 10:23:38AM +0300, Andy Shevchenko wrote:
-> > On Fri, Oct 18, 2019 at 6:44 AM Dan Robertson <dan@dlrobertson.com> wrote:  
-> > > + * bma400.h - Register constants and other forward declarations
-> > > + *            needed by the bma400 sources.  
-> >
-> > Including file name in the file is not the best practice. Imagine if
-> > by some reason we will need to rename it (to support more sensors, for
-> > example, and reflect it by replacing 00 -> 0x).
-> > So, please, remove here and everywhere else.  
-> 
-> That makes sense.
-> 
-> > > +#define BMA400_TWO_BITS_MASK    0x03
-> > > +#define BMA400_LP_OSR_MASK      0x60
-> > > +#define BMA400_NP_OSR_MASK      0x30
-> > > +#define BMA400_ACC_ODR_MASK     0x0f
-> > > +#define BMA400_ACC_SCALE_MASK   0xc0  
-> > 
-> > GENMASK()
-> > (Don't forget to include bits.h for it)  
-> 
-> Thanks.
-> 
-> > > +static const int bma400_scale_table[] = {
-> > > +       0, 38344,
-> > > +       0, 76590,
-> > > +       0, 153277,  
-> >   
-> > > +       0, 306457  
-> > 
-> > Better to leave comma here. It doesn't matter for this device, but
-> > make of use the better practices.  
-> > > +};  
-> > 
-> > Also, I'm wondering why values are not exactly multiply by 2. Is in DS
-> > of the chip any explanation for this?  
-> 
-> It would be a multiply by 2. I tried to follow the bma180 driver here, but I'm
-> starting to think that may be the wrong approach.
-
-I'll guess that, like so many accelerometers this one has documentation
-in terms of 'g'.  Which is bonkers at g isn't a constant... g_0 is but no
-datasheet ever seems to note that distinction.  Oh well. So these
-are rounded to nearest value in m/s^2...  To be honest, the sensor
-noise levels are usual such that this level of precision really
-doesn't matter. 
-
-> 
-> > > +static const int bma400_osr_table[] = { 0, 1, 3 };  
-> >   
-> > > +/* See the ACC_CONFIG1 section of the datasheet */
-> > > +static const int bma400_sample_freqs[] = {
-> > > +       12,  500000,
-> > > +       25,  0,
-> > > +       50,  0,
-> > > +       100, 0,
-> > > +       200, 0,
-> > > +       400, 0,
-> > > +       800, 0,
-> > > +};  
-> > 
-> > This can be replaced by a formula(s).  
-> 
-> Yeah I think I can implement the get, set, and read functions for sample_freq
-> with a formula, but the scale and sample frequency tables are needed by the
-> implementation of read_avail. A implementation of read_avail with a range and
-> a step would be ideal, but I couldn't find any documentation on implementing
-> read_avail where the step value of the range is a multiple. Please correct
-> me if I've missed something.
-
-Indeed. We've only defined it as being fixed intervals.
-I'm not keen to expand the options for the userspace interface any
-further.  
-
-You could compute the values at startup and store it in your state structure
-I think (or compute them on demand, but you'd need to have the space somewhere
-non volatile).
-
-> 
-> Note that this applies to the scale table as well.
-> 
-> > > +struct bma400_sample_freq {
-> > > +       int hz;
-> > > +       int uhz;
-> > > +};  
-> > 
-> > I'm wondering why above table is not using this struct.  
-> 
-> Originally it did, but I changed this in the second version when I added support
-> for iio_info read_avail to try to be a little closer to other implementations of
-> iio_read avail.
-> 
-> > > +const struct regmap_config bma400_regmap_config = {
-> > > +       .reg_bits = 8,
-> > > +       .val_bits = 8,
-> > > +       .max_register = BMA400_CMD_REG,
-> > > +       .cache_type = REGCACHE_RBTREE,
-> > > +       .writeable_reg = bma400_is_writable_reg,
-> > > +       .volatile_reg = bma400_is_volatile_reg,
-> > > +};  
-> >   
-> > > +EXPORT_SYMBOL(bma400_regmap_config);  
-> > 
-> > Why? And why it's not _GPL?  
-> 
-> This is used by the bma400_i2c module.
-
-Which is licensed as GPL v2, so I don't follow why this isn't
-_GPL either.
-
-> 
-> > > +       int ret;
-> > > +       int host_temp;
-> > > +       unsigned int raw_temp;  
-> > 
-> > Better reversed xmas tree order.  
-> 
-> Sounds good.
-> 
-> >   
-> > > +               if (idx + 1 >= ARRAY_SIZE(bma400_sample_freqs)) {  
-> > 
-> > Why do you need this churn with +1 and = ?  
-> 
-> Since we've "flattened" the array of sample frequency we need to ensure that the
-> Hz (bma400_sample_freqs[idx]) and uHz (bma400_sample_freqs[idx + 1]) are both
-> valid. This will be negated in the next version as I'll switch to a formula.
-> Instead I'll ensure the returned ODR value is not above 0x0b.
-> 
-> > > +                       dev_err(data->dev, "sample freq index is too high");
-> > > +                       ret = -EINVAL;
-> > > +                       goto error;
-> > > +               }  
-> > 
-> >   
-> > > +       for (i = 0; i + 1 < ARRAY_SIZE(bma400_sample_freqs); i += 2) {  
-> > 
-> > Using defined struct will guarantee you to have always 2x members in
-> > the array. So, drop this arithmetic churn.  
-> 
-> I should be able to figure out how to use a formula here, but I see where you're
-> coming from and I agree.
-> 
-> > > +       if (ret < 0) {
-> > > +               dev_err(data->dev, "Failed to read chip id register: %x!", ret);  
-> > 
-> > %x for returned error code is too hackerish.  
-> 
-> Makes sense. I'll change this in the update.
-> 
-> > > +               return ret;  
-> >   
-> > > +       } else if (val != BMA400_ID_REG_VAL) {  
-> > 
-> > Redundant 'else'  
-> 
-> > > +               dev_err(data->dev, "CHIP ID MISMATCH: %x!", ret);  
-> > 
-> > Hacker detected!  
-> 
-> :)
-> 
-> > > +               return -ENODEV;
-> > > +       }  
-> >   
-> > > +               /*
-> > > +                * TODO: The datasheet waits 1500us here in the example, but
-> > > +                * lists 2/ODR as the wakeup time.
-> > > +                */
-> > > +               usleep_range(1500, 20000);  
-> > 
-> > These range values are too sparse. Usually the second one is less than
-> > first one * 2.
-> > Fix it now.  
-> 
-> Good to know. I'll fix this in the update.
-> 
-> > > +EXPORT_SYMBOL(bma400_probe);  
-> > 
-> > Why is not GPL?  
-> 
-> Ah, saw in the docs "GPL" means GPL-2.0.
-
-So guess you are fine with making these all GPL exports then :)
-
-> 
-> >   
-> > > +EXPORT_SYMBOL(bma400_remove);  
-> > 
-> > Ditto.  
-> 
-> This symbol is used in bma400_i2c.
-> 
-> > 
-> > P.S. I probably missed some places with the same mistake as commented
-> > above. Please address all places in the code where my comments are
-> > applicable.  
-> 
-> Noted. Thanks for the feedback!
-> 
-> Cheers,
-> 
->  - Dan
-Thanks,
-
-Jonathan.
+T24gMjAxOS0wOS0xMSAxMDoyNCwgRXVnZW4uSHJpc3RldkBtaWNyb2NoaXAuY29tIHdyb3RlOg0K
+PiBGcm9tOiBFdWdlbiBIcmlzdGV2IDxldWdlbi5ocmlzdGV2QG1pY3JvY2hpcC5jb20+DQo+IA0K
+PiBpMmMtZGlnaXRhbC1maWx0ZXItd2lkdGgtbnM6DQo+IFRoaXMgb3B0aW9uYWwgdGltaW5nIHBy
+b3BlcnR5IHNwZWNpZmllcyB0aGUgd2lkdGggb2YgdGhlIHNwaWtlcyBvbiB0aGUgaTJjDQo+IGxp
+bmVzIChpbiBucykgdGhhdCBjYW4gYmUgZmlsdGVyZWQgb3V0IGJ5IGJ1aWx0LWluIGRpZ2l0YWwg
+ZmlsdGVycyB3aGljaCBhcmUNCj4gZW1iZWRkZWQgaW4gc29tZSBpMmMgY29udHJvbGxlcnMuDQo+
+IGkyYy1hbmFsb2ctZmlsdGVyLWN1dG9mZi1mcmVxdWVuY3k6DQo+IFRoaXMgb3B0aW9uYWwgdGlt
+aW5nIHByb3BlcnR5IHNwZWNpZmllcyB0aGUgY3V0b2ZmIGZyZXF1ZW5jeSBvZiBhIGxvdy1wYXNz
+DQo+IGFuYWxvZyBmaWx0ZXIgYnVpbHQtaW4gaTJjIGNvbnRyb2xsZXJzLiBUaGlzIGxvdyBwYXNz
+IGZpbHRlciBpcyB1c2VkIHRvIGZpbHRlcg0KPiBvdXQgaGlnaCBmcmVxdWVuY3kgbm9pc2Ugb24g
+dGhlIGkyYyBsaW5lcy4gU3BlY2lmaWVkIGluIEh6Lg0KPiBJbmNsdWRlIHRoZXNlIHByb3BlcnRp
+ZXMgaW4gdGhlIHRpbWluZ3Mgc3RydWN0dXJlIGFuZCByZWFkIHRoZW0gYXMgaW50ZWdlcnMuDQo+
+IA0KPiBTaWduZWQtb2ZmLWJ5OiBFdWdlbiBIcmlzdGV2IDxldWdlbi5ocmlzdGV2QG1pY3JvY2hp
+cC5jb20+DQo+IC0tLQ0KPiAgZHJpdmVycy9pMmMvaTJjLWNvcmUtYmFzZS5jIHwgNiArKysrKysN
+Cj4gIGluY2x1ZGUvbGludXgvaTJjLmggICAgICAgICB8IDYgKysrKysrDQo+ICAyIGZpbGVzIGNo
+YW5nZWQsIDEyIGluc2VydGlvbnMoKykNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2kyYy9p
+MmMtY29yZS1iYXNlLmMgYi9kcml2ZXJzL2kyYy9pMmMtY29yZS1iYXNlLmMNCj4gaW5kZXggOWM0
+NDBmYS4uYzlmY2IxNiAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9pMmMvaTJjLWNvcmUtYmFzZS5j
+DQo+ICsrKyBiL2RyaXZlcnMvaTJjL2kyYy1jb3JlLWJhc2UuYw0KPiBAQCAtMTY1OCw2ICsxNjU4
+LDEyIEBAIHZvaWQgaTJjX3BhcnNlX2Z3X3RpbWluZ3Moc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1
+Y3QgaTJjX3RpbWluZ3MgKnQsIGJvb2wgdXNlX2RlDQo+ICAJCXQtPnNkYV9mYWxsX25zID0gdC0+
+c2NsX2ZhbGxfbnM7DQo+ICANCj4gIAlkZXZpY2VfcHJvcGVydHlfcmVhZF91MzIoZGV2LCAiaTJj
+LXNkYS1ob2xkLXRpbWUtbnMiLCAmdC0+c2RhX2hvbGRfbnMpOw0KPiArDQo+ICsJZGV2aWNlX3By
+b3BlcnR5X3JlYWRfdTMyKGRldiwgImkyYy1kaWdpdGFsLWZpbHRlci13aWR0aC1ucyIsDQo+ICsJ
+CQkJICZ0LT5kaWdpdGFsX2ZpbHRlcl93aWR0aF9ucyk7DQo+ICsNCj4gKwlkZXZpY2VfcHJvcGVy
+dHlfcmVhZF91MzIoZGV2LCAiaTJjLWFuYWxvZy1maWx0ZXItY3V0b2ZmLWZyZXF1ZW5jeSIsDQo+
+ICsJCQkJICZ0LT5hbmFsb2dfZmlsdGVyX2N1dG9mZl9mcmVxX2h6KTsNCj4gIH0NCj4gIEVYUE9S
+VF9TWU1CT0xfR1BMKGkyY19wYXJzZV9md190aW1pbmdzKTsNCj4gIA0KPiBkaWZmIC0tZ2l0IGEv
+aW5jbHVkZS9saW51eC9pMmMuaCBiL2luY2x1ZGUvbGludXgvaTJjLmgNCj4gaW5kZXggZmE1NTUy
+Yy4uMjZjZTE0MyAxMDA2NDQNCj4gLS0tIGEvaW5jbHVkZS9saW51eC9pMmMuaA0KPiArKysgYi9p
+bmNsdWRlL2xpbnV4L2kyYy5oDQo+IEBAIC01NzUsNiArNTc1LDEwIEBAIHN0cnVjdCBpMmNfbG9j
+a19vcGVyYXRpb25zIHsNCj4gICAqIEBzY2xfaW50X2RlbGF5X25zOiB0aW1lIElQIGNvcmUgYWRk
+aXRpb25hbGx5IG5lZWRzIHRvIHNldHVwIFNDTCBpbiBucw0KPiAgICogQHNkYV9mYWxsX25zOiB0
+aW1lIFNEQSBzaWduYWwgdGFrZXMgdG8gZmFsbCBpbiBuczsgdChmKSBpbiB0aGUgSTJDIHNwZWNp
+ZmljYXRpb24NCj4gICAqIEBzZGFfaG9sZF9uczogdGltZSBJUCBjb3JlIGFkZGl0aW9uYWxseSBu
+ZWVkcyB0byBob2xkIFNEQSBpbiBucw0KPiArICogQGRpZ2l0YWxfZmlsdGVyX3dpZHRoX25zOiB3
+aWR0aCBpbiBucyBvZiBzcGlrZXMgb24gaTJjIGxpbmVzIHRoYXQgdGhlIElQIGNvcmUNCj4gKyAq
+CQkJICAgICBkaWdpdGFsIGZpbHRlciBjYW4gZmlsdGVyIG91dA0KPiArICogQGFuYWxvZ19maWx0
+ZXJfY3V0b2ZmX2ZyZXFfaHo6IHRocmVzaG9sZCBmcmVxdWVuY3kgZm9yIHRoZSBsb3cgcGFzcyBJ
+UCBjb3JlDQo+ICsJCQkgICAgICBhbmFsb2cgZmlsdGVyDQoNClRoZSBpbmRlbnRhdGlvbiBpcyBh
+IGxpdHRsZSBiaXQgZXhjZXNzaXZlIGFuZCBhbHNvIG9mZi4gT3RoZXIgY29tbWVudHMgaW4gdGhl
+DQpmaWxlIGp1c3QgdXNlcyBhIHNpbmdsZSB0YWIgYWZ0ZXIgdGhlIGFzdGVyaXNrIGluIHRoaXMg
+c2NlbmFyaW8uIEFsc28sIHRoZSBsYXN0DQpvZiB0aGUgbmV3IGxpbmVzIGlzIG1pc3NpbmcgdGhh
+dCBsZWFkaW5nIGFzdGVyaXNrLg0KDQpDaGVlcnMsDQpQZXRlcg0KDQo+ICAgKi8NCj4gIHN0cnVj
+dCBpMmNfdGltaW5ncyB7DQo+ICAJdTMyIGJ1c19mcmVxX2h6Ow0KPiBAQCAtNTgzLDYgKzU4Nyw4
+IEBAIHN0cnVjdCBpMmNfdGltaW5ncyB7DQo+ICAJdTMyIHNjbF9pbnRfZGVsYXlfbnM7DQo+ICAJ
+dTMyIHNkYV9mYWxsX25zOw0KPiAgCXUzMiBzZGFfaG9sZF9uczsNCj4gKwl1MzIgZGlnaXRhbF9m
+aWx0ZXJfd2lkdGhfbnM7DQo+ICsJdTMyIGFuYWxvZ19maWx0ZXJfY3V0b2ZmX2ZyZXFfaHo7DQo+
+ICB9Ow0KPiAgDQo+ICAvKioNCj4gDQoNCg==
