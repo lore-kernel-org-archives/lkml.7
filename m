@@ -2,69 +2,57 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F330CA9EB0
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:44:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 219EFCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:44:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EAF6214AE
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:44:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F273120B7C
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:44:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729661AbfJUPoH (ORCPT
+        id S1729702AbfJUPoK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 11:44:07 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:49026 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726289AbfJUPoH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 11:44:07 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 4C2A82344871C2782850;
-        Mon, 21 Oct 2019 23:44:02 +0800 (CST)
-Received: from linux-ibm.site (10.175.102.37) by
- DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 21 Oct 2019 23:43:53 +0800
-From:   zhong jiang <zhongjiang@huawei.com>
-To:     <sre@kernel.org>
-CC:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <zhongjiang@huawei.com>
-Subject: [PATCH] power: supply: cpcap-charger: Make cpcap_charger_voltage_to_regval static
-Date:   Mon, 21 Oct 2019 23:40:07 +0800
-Message-ID: <1571672407-58950-1-git-send-email-zhongjiang@huawei.com>
-X-Mailer: git-send-email 1.7.12.4
+        Mon, 21 Oct 2019 11:44:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52522 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726289AbfJUPoJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 11:44:09 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01E7C20873;
+        Mon, 21 Oct 2019 15:44:07 +0000 (UTC)
+Date:   Mon, 21 Oct 2019 11:44:06 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Prateek Sood <prsood@codeaurora.org>
+Cc:     mingo@redhat.com, linux-kernel@vger.kernel.org,
+        kaushalk@codeaurora.org, Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>
+Subject: Re: [PATCH] trace: fix race in perf_trace_buf initialization
+Message-ID: <20191021114406.15b6ee88@gandalf.local.home>
+In-Reply-To: <59d02ee4-5329-5cfd-1fc2-790d99fe4b0d@codeaurora.org>
+References: <1571120245-4186-1-git-send-email-prsood@codeaurora.org>
+        <20191018171216.3e446f1e@gandalf.local.home>
+        <59d02ee4-5329-5cfd-1fc2-790d99fe4b0d@codeaurora.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.102.37]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The GCC complains the following case when compiling kernel.
+On Mon, 21 Oct 2019 10:12:43 +0530
+Prateek Sood <prsood@codeaurora.org> wrote:
 
-drivers/power/supply/cpcap-charger.c:563:5: warning: symbol 'cpcap_charger_voltage_to_regval' was not declared. Should it be static?
+> Hi Song,
+> 
+> Could you please help in this query.
 
-Signed-off-by: zhong jiang <zhongjiang@huawei.com>
----
- drivers/power/supply/cpcap-charger.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I have it ready to go to Linus. I'll wait a few hours, and if I don't
+hear anything I'll send it out.
 
-diff --git a/drivers/power/supply/cpcap-charger.c b/drivers/power/supply/cpcap-charger.c
-index 40d96b8..c0d452e 100644
---- a/drivers/power/supply/cpcap-charger.c
-+++ b/drivers/power/supply/cpcap-charger.c
-@@ -560,7 +560,7 @@ static void cpcap_charger_update_state(struct cpcap_charger_ddata *ddata,
- 	dev_dbg(ddata->dev, "state: %s\n", status);
- }
- 
--int cpcap_charger_voltage_to_regval(int voltage)
-+static int cpcap_charger_voltage_to_regval(int voltage)
- {
- 	int offset;
- 
--- 
-1.7.12.4
-
+-- Steve
