@@ -2,156 +2,69 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C92BCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F330CA9EB0
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:44:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E53CF20873
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:43:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kSbOVSxR"
+	by mail.kernel.org (Postfix) with ESMTP id 7EAF6214AE
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:44:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729386AbfJUPng (ORCPT
+        id S1729661AbfJUPoH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 11:43:36 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:38356 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728793AbfJUPng (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 11:43:36 -0400
-Received: by mail-oi1-f195.google.com with SMTP id d140so7123271oib.5
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 08:43:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cnXjVYkeWXq+gubvSOjcYVnZzqsBIZ+DNJdYhPS5/D8=;
-        b=kSbOVSxROO2ODHZOo0AzN65grokopehSUbmYsECSJU6VZS+Nr1cw7LV6r4iAcc7N6Q
-         wzllLP+X0DveM8FqCCuVinvCaP3XnL9YCqdDKRLIgt+rSBWXCJrhGRJSCwEj6KftUioO
-         0G2RZFY6J41AyIPK9sMmrPMRorNfiZZJTp5ufyuGPVmC6KiDrg62GQx+BfeYcb0Dnk00
-         e/caau408WrMpaj5r51qcXRJcyfgpkFW4QXzy07SHQAOJOIGjTVSNPCX9FqYnJLFZw+a
-         lxjcEwL/AFpSmr/jX73HRWC155IV+n6XsiPCIITIqBSlVnEH5R1A+3H+uOSRpVi6DTHo
-         g2Dg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cnXjVYkeWXq+gubvSOjcYVnZzqsBIZ+DNJdYhPS5/D8=;
-        b=BoY1xtCyAYNt1oo4+d+Lzz+K0RTRvVWvFUkQuU3hTiE06PBAlw0+unMbN4ikHKADGa
-         lEYSYeii5d9q/MZMwYGgl9RtIc9KpcNePFXtOybL/iQQAnRLY3sxIzGPjVCS97CgFTDM
-         bYLF5xbgT5ol1JtlPiakALWZGpxC5at7Tcrt3B9wnnHC7sngffexJ04uOK1HI+dUDZoX
-         XUKDKYMyIKbHqSz7I7Lo842HDKSygMNFnPk55dT9XmSekI/7IBQF4xV8dx9mj1B0luhE
-         z9I1pXbRL5TLkC07D6dnppAYw3SyLYs1sJQCjsYqDZ6cnBb8rrCxQgFXaqrFJBZlq6pA
-         kYfA==
-X-Gm-Message-State: APjAAAUOHTUt2ZXXV4E/0sMkvxCUsYq3OYRoBviPTPw2ZwHSYpeTVlCV
-        sFAmnHB5hhHTR4vBWb6ByEv/8d/yjcfaYjPH3EgPHQ==
-X-Google-Smtp-Source: APXvYqxc1yCRq3k+cvMu1sAucXV2pLfdg+Ismk5+9IUGxVHljKC2H3cX5Rq52uV7mrAoht13w5nwv0u1z0tu95TtZcU=
-X-Received: by 2002:aca:f492:: with SMTP id s140mr20094795oih.83.1571672614698;
- Mon, 21 Oct 2019 08:43:34 -0700 (PDT)
+        Mon, 21 Oct 2019 11:44:07 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:49026 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726289AbfJUPoH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 11:44:07 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 4C2A82344871C2782850;
+        Mon, 21 Oct 2019 23:44:02 +0800 (CST)
+Received: from linux-ibm.site (10.175.102.37) by
+ DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
+ 14.3.439.0; Mon, 21 Oct 2019 23:43:53 +0800
+From:   zhong jiang <zhongjiang@huawei.com>
+To:     <sre@kernel.org>
+CC:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <zhongjiang@huawei.com>
+Subject: [PATCH] power: supply: cpcap-charger: Make cpcap_charger_voltage_to_regval static
+Date:   Mon, 21 Oct 2019 23:40:07 +0800
+Message-ID: <1571672407-58950-1-git-send-email-zhongjiang@huawei.com>
+X-Mailer: git-send-email 1.7.12.4
 MIME-Version: 1.0
-References: <20191017141305.146193-1-elver@google.com> <20191017141305.146193-3-elver@google.com>
- <CACT4Y+b9VYz0wji085hvg3ZMMv6FR_WGc_NcEZETSOvME6hYOQ@mail.gmail.com>
-In-Reply-To: <CACT4Y+b9VYz0wji085hvg3ZMMv6FR_WGc_NcEZETSOvME6hYOQ@mail.gmail.com>
-From:   Marco Elver <elver@google.com>
-Date:   Mon, 21 Oct 2019 17:43:22 +0200
-Message-ID: <CANpmjNPyxjjkRigstizGLh4rQKhY8JVUzD-6sJLYf62KB77F5w@mail.gmail.com>
-Subject: Re: [PATCH v2 2/8] objtool, kcsan: Add KCSAN runtime functions to whitelist
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Alexander Potapenko <glider@google.com>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Borislav Petkov <bp@alien8.de>, Daniel Axtens <dja@axtens.net>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        David Howells <dhowells@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-efi@vger.kernel.org,
-        "open list:KERNEL BUILD + fi..." <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.175.102.37]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 21 Oct 2019 at 17:15, Dmitry Vyukov <dvyukov@google.com> wrote:
->
-> On Thu, Oct 17, 2019 at 4:13 PM Marco Elver <elver@google.com> wrote:
-> >
-> > This patch adds KCSAN runtime functions to the objtool whitelist.
-> >
-> > Signed-off-by: Marco Elver <elver@google.com>
-> > ---
-> >  tools/objtool/check.c | 17 +++++++++++++++++
-> >  1 file changed, 17 insertions(+)
-> >
-> > diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-> > index 044c9a3cb247..d1acc867b43c 100644
-> > --- a/tools/objtool/check.c
-> > +++ b/tools/objtool/check.c
-> > @@ -466,6 +466,23 @@ static const char *uaccess_safe_builtin[] = {
-> >         "__asan_report_store4_noabort",
-> >         "__asan_report_store8_noabort",
-> >         "__asan_report_store16_noabort",
-> > +       /* KCSAN */
-> > +       "__kcsan_check_watchpoint",
-> > +       "__kcsan_setup_watchpoint",
-> > +       /* KCSAN/TSAN out-of-line */
->
-> There is no TSAN in-line instrumentation.
+The GCC complains the following case when compiling kernel.
 
-Done @ v3.
+drivers/power/supply/cpcap-charger.c:563:5: warning: symbol 'cpcap_charger_voltage_to_regval' was not declared. Should it be static?
 
-> > +       "__tsan_func_entry",
-> > +       "__tsan_func_exit",
-> > +       "__tsan_read_range",
->
-> There is also __tsan_write_range(), right? Isn't it safer to add it right away?
+Signed-off-by: zhong jiang <zhongjiang@huawei.com>
+---
+ drivers/power/supply/cpcap-charger.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Added all missing functions for v3.
+diff --git a/drivers/power/supply/cpcap-charger.c b/drivers/power/supply/cpcap-charger.c
+index 40d96b8..c0d452e 100644
+--- a/drivers/power/supply/cpcap-charger.c
++++ b/drivers/power/supply/cpcap-charger.c
+@@ -560,7 +560,7 @@ static void cpcap_charger_update_state(struct cpcap_charger_ddata *ddata,
+ 	dev_dbg(ddata->dev, "state: %s\n", status);
+ }
+ 
+-int cpcap_charger_voltage_to_regval(int voltage)
++static int cpcap_charger_voltage_to_regval(int voltage)
+ {
+ 	int offset;
+ 
+-- 
+1.7.12.4
 
-Many thanks for the comments!
-
-
-> > +       "__tsan_read1",
-> > +       "__tsan_read2",
-> > +       "__tsan_read4",
-> > +       "__tsan_read8",
-> > +       "__tsan_read16",
-> > +       "__tsan_write1",
-> > +       "__tsan_write2",
-> > +       "__tsan_write4",
-> > +       "__tsan_write8",
-> > +       "__tsan_write16",
-> >         /* KCOV */
-> >         "write_comp_data",
-> >         "__sanitizer_cov_trace_pc",
-> > --
-> > 2.23.0.866.gb869b98d4c-goog
-> >
