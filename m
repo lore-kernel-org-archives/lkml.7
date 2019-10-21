@@ -2,73 +2,131 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ED0DCA9EB9
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 07:54:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F77BCA9EB9
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 07:54:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4E6920830
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 07:54:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D18C420830
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 07:54:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uqet+7F2"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="oqf8LRw+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727563AbfJUHym (ORCPT
+        id S1727590AbfJUHyx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 03:54:42 -0400
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:40289 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727097AbfJUHym (ORCPT
+        Mon, 21 Oct 2019 03:54:53 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43215 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727479AbfJUHyw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 03:54:42 -0400
-Received: by mail-yw1-f68.google.com with SMTP id a67so897969ywg.7;
-        Mon, 21 Oct 2019 00:54:40 -0700 (PDT)
+        Mon, 21 Oct 2019 03:54:52 -0400
+Received: by mail-wr1-f65.google.com with SMTP id c2so7439877wrr.10
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 00:54:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JBVuE8K9W/3pxAwfls/F5yOqBVEqnXszhPJ6M1UNYG0=;
-        b=Uqet+7F24Q1tOm9DIKQjjvLXpJBP9QLA0kh3AMgf6wIdgGsPAUGUUkM50I6RCmPePV
-         1X7xzxKxqm+s4xccoTN6VoBwGx7c5CYfF1HNaXh9S1MFO3nhkekRv823J9mHkmdJ39Aj
-         DZxwlDDu+6cMWvLUiw0PAkBk8ULtpZ70aNGMkEA+U1ecrCAC1dgEPlj3fZA4wb7doldo
-         Ze6LqeGY8Dcd2ofP+NOqA8ebljsctoGa0pSqnn6oiLz3f9Wem8J/vRCq1COzHZgmJ/kG
-         1f5Jw4/i/CWCY1jBYigObq2/TKbWsN1O8jpkTigcFBdwkYxGQAF93UO1DYHDEhX4V29N
-         MZ8A==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=72pYb4l2fMKweOJ3niofsL2Dbilv36pH7MR65o3ftaU=;
+        b=oqf8LRw+TDH5j0LqqOJWUtTpVcOIzGj7szug0ewxV+/mwoX2bZL+5f3vBThVD/h3uh
+         GqooIdlPP5AGr0UPQ6sobDpyUyNzlnI83ziYSQZt9uT1Px14NTc7v+3D9fznh0ewpqM7
+         f6EgRBnbrpJUtW8PHA9LbjGpNHjx5oaK3ZfQ+Ip75B+Sf3sUM443MiJaNWwfrMgmNndw
+         BlWh+Z0TRxvMloRfZ7bA6sUT2Qtz0ppxfEyb3kwsvKQy/qj/oZw4lbL9cXh/oq3FpGCM
+         OygFjqlQWKavvud5Oa0rFIXjshZ8WSUQG1dZ01KeR2ezrOlYuzJA34mAtufIO0oLozqP
+         u7hg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JBVuE8K9W/3pxAwfls/F5yOqBVEqnXszhPJ6M1UNYG0=;
-        b=Gfl2kwnmbnekXkNwUEQ2l9ZxOLrvwYsSXPQcR4WOwHdWfxlfNu0GzVbg6OJvJDVD1L
-         MJkO2fpbzeqdCceMRLdUPxE1bYWfsGFX/TB8zzFvjYFXkjERmUz5bNOW9EYtvBcbLbPG
-         aoe881p7OFeAuRKaB172gflCbegX+6Dcldi2p4SoYX74eDY/LupmDDBvNcGbNNgtONDk
-         363iuiZCAjbesKsnc8kHAhTd6QIHTNrt7cRljmXAt0m36AlQqwD3d8ZCnmbRSgzMGi2r
-         lpmZ0j7rJCZj5rKpqSs2Zx8zaHeajb0NiAM5rkn48jJbYOvmhq4Z+Jn666g+QmvSwnfH
-         FHkQ==
-X-Gm-Message-State: APjAAAX+67mP1Cm2FC1LANzePx2pYdTtpPPYxGGFYXtQrbMRvKpV3F4w
-        im7a+Vn+U/QhKgS0coIoliO7ZD9nHTEenIjd6zY=
-X-Google-Smtp-Source: APXvYqw2rrZymNE7C0Sfak2nEH+hw3LBLB0hXG+7oGr94LfmguTGJYUMGFKQrC/KyXkfpCHTVTUqS9PhGFcdzmFO7FY=
-X-Received: by 2002:a81:4320:: with SMTP id q32mr15689502ywa.464.1571644479753;
- Mon, 21 Oct 2019 00:54:39 -0700 (PDT)
+        h=x-gm-message-state:subject:to:references:from:openpgp:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=72pYb4l2fMKweOJ3niofsL2Dbilv36pH7MR65o3ftaU=;
+        b=CMkKbQOkflFKSjErWirRWwNuXUv9sGXcuj7nMeTLMO4OrFdBXIOdqEoFrN6vCd/Cjv
+         mQbfwHQ+xMxqWnjdebi3LSYnAD0S31l78nkF4zUM2JwQPAjgMb7dIf6IuRnXtVNC0spv
+         EYQlWYIgMswHmVua2FsL09/ELyoIggKDp09lS/kY3JNYPyhdvv8u8VKuiT/bFA1hKaw/
+         Z0J8UE3CsMYrlBAUVNiBTQbDQZtkMrg80/mRz3cOUHwlBk2agF4lxpUE7reH1zywSjq2
+         RcGV5mbyMOTbrqIiXEF+xIytD/IdCm5YU120ukS9R6ZmLjHEJwhN+r1iEWrZeVV6GFF6
+         gX6w==
+X-Gm-Message-State: APjAAAWjIejc5/KW254zC3cOfLBsXlusn9TKvrKjpNblWSUQoBSmNZ6Q
+        o3gfXNK6y9JKnwvz+KQu4ckuVaNYyaXTBg==
+X-Google-Smtp-Source: APXvYqxjgSplbuVQE31KeNQ9Zuhsdg0bEgG9pqlV8/umWnmNCONojV5OxHcVHVy3/9gmCgpzQ6zOvA==
+X-Received: by 2002:a5d:5227:: with SMTP id i7mr9324998wra.39.1571644489759;
+        Mon, 21 Oct 2019 00:54:49 -0700 (PDT)
+Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id f8sm13503742wmb.37.2019.10.21.00.54.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 21 Oct 2019 00:54:49 -0700 (PDT)
+Subject: Re: [PATCH] soc: amlogic: meson-gx-socinfo: Fix S905D3 ID for VIM3L
+To:     Christian Hewitt <christianshewitt@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <1571634295-20154-1-git-send-email-christianshewitt@gmail.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ ZaTUOEkgIor5losDrePdPgE=
+Organization: Baylibre
+Message-ID: <f5b6f47b-2a2d-a0c5-b777-9e4cb39ecf1d@baylibre.com>
+Date:   Mon, 21 Oct 2019 09:54:48 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191021073819.18181-1-candlesea@gmail.com>
-In-Reply-To: <20191021073819.18181-1-candlesea@gmail.com>
-From:   Candle Sun <candlesea@gmail.com>
-Date:   Mon, 21 Oct 2019 15:54:28 +0800
-Message-ID: <CAPnx3XP2MrEZT+BAzW3-Ve9ekzvPzcj6wvzeC8VRHhCyo59XpQ@mail.gmail.com>
-Subject: Re: [PATCH v3] HID: core: check whether usage page item is after
- usage id item
-To:     Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     =?UTF-8?B?57+f5LqsIChPcnNvbiBaaGFpKQ==?= <orson.zhai@unisoc.com>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Candle Sun <candle.sun@unisoc.com>,
-        Nianfu Bai <nianfu.bai@unisoc.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1571634295-20154-1-git-send-email-christianshewitt@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -76,214 +134,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi,
 
+On 21/10/2019 07:04, Christian Hewitt wrote:
+> Chip on the board is S905D3 not S905X3.
+> 
+> Fixes: 1d7c541b8a5b ("soc: amlogic: meson-gx-socinfo: Add S905X3 ID for VIM3L")
+> 
+> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+> ---
+>  drivers/soc/amlogic/meson-gx-socinfo.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/soc/amlogic/meson-gx-socinfo.c b/drivers/soc/amlogic/meson-gx-socinfo.c
+> index 87ed558..e612dae 100644
+> --- a/drivers/soc/amlogic/meson-gx-socinfo.c
+> +++ b/drivers/soc/amlogic/meson-gx-socinfo.c
+> @@ -69,7 +69,7 @@ static const struct meson_gx_package_id {
+>  	{ "S922X", 0x29, 0x40, 0xf0 },
+>  	{ "A311D", 0x29, 0x10, 0xf0 },
+>  	{ "S905X3", 0x2b, 0x5, 0xf },
+> -	{ "S905X3", 0x2b, 0xb0, 0xf2 },
+> +	{ "S905D3", 0x2b, 0xb0, 0xf2 },
 
-On Mon, Oct 21, 2019 at 3:38 PM Candle Sun <candlesea@gmail.com> wrote:
->
-> From: Candle Sun <candle.sun@unisoc.com>
->
-> Upstream commit 58e75155009c ("HID: core: move Usage Page concatenation
-> to Main item") adds support for Usage Page item after Usage ID items
-> (such as keyboards manufactured by Primax).
->
-> Usage Page concatenation in Main item works well for following report
-> descriptor patterns:
->
->     USAGE_PAGE (Keyboard)                   05 07
->     USAGE_MINIMUM (Keyboard LeftControl)    19 E0
->     USAGE_MAXIMUM (Keyboard Right GUI)      29 E7
->     LOGICAL_MINIMUM (0)                     15 00
->     LOGICAL_MAXIMUM (1)                     25 01
->     REPORT_SIZE (1)                         75 01
->     REPORT_COUNT (8)                        95 08
->     INPUT (Data,Var,Abs)                    81 02
->
-> -------------
->
->     USAGE_MINIMUM (Keyboard LeftControl)    19 E0
->     USAGE_MAXIMUM (Keyboard Right GUI)      29 E7
->     LOGICAL_MINIMUM (0)                     15 00
->     LOGICAL_MAXIMUM (1)                     25 01
->     REPORT_SIZE (1)                         75 01
->     REPORT_COUNT (8)                        95 08
->     USAGE_PAGE (Keyboard)                   05 07
->     INPUT (Data,Var,Abs)                    81 02
->
-> But it makes the parser act wrong for the following report
-> descriptor pattern(such as some Gamepads):
->
->     USAGE_PAGE (Button)                     05 09
->     USAGE (Button 1)                        09 01
->     USAGE (Button 2)                        09 02
->     USAGE (Button 4)                        09 04
->     USAGE (Button 5)                        09 05
->     USAGE (Button 7)                        09 07
->     USAGE (Button 8)                        09 08
->     USAGE (Button 14)                       09 0E
->     USAGE (Button 15)                       09 0F
->     USAGE (Button 13)                       09 0D
->     USAGE_PAGE (Consumer Devices)           05 0C
->     USAGE (Back)                            0a 24 02
->     USAGE (HomePage)                        0a 23 02
->     LOGICAL_MINIMUM (0)                     15 00
->     LOGICAL_MAXIMUM (1)                     25 01
->     REPORT_SIZE (1)                         75 01
->     REPORT_COUNT (11)                       95 0B
->     INPUT (Data,Var,Abs)                    81 02
->
-> With Usage Page concatenation in Main item, parser recognizes all the
-> 11 Usages as consumer keys, it is not the HID device's real intention.
->
-> This patch adds usage_page_last to flag whether Usage Page is after
-> Usage ID items. usage_page_last is false default, it is set as true
-> once Usage Page item is encountered and is reverted by next Usage ID
-> item.
->
-> Usage Page concatenation on the currently defined Usage Page will do
-> firstly in Local parsing when Usage ID items encountered.
->
-> When Main item is parsing, concatenation will do again with last
-> defined Usage Page if usage_page_last flag is true.
->
-> Signed-off-by: Candle Sun <candle.sun@unisoc.com>
-> Signed-off-by: Nianfu Bai <nianfu.bai@unisoc.com>
-> ---
-> Changes in v3:
-> - Rework the GET_COMPLETE_USAGE macro as static complete_usage()
->   function
-> - Add some code comments for usage_page_last
->
-> Changes in v2:
-> - Update patch title
-> - Add GET_COMPLETE_USAGE macro
-> - Change the logic of checking whether to concatenate usage page again
->   in main parsing
-> ---
->  drivers/hid/hid-core.c | 42 +++++++++++++++++++++++++++++++++++++-----
->  include/linux/hid.h    |  1 +
->  2 files changed, 38 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
-> index 3eaee2c37931..779b7798dae8 100644
-> --- a/drivers/hid/hid-core.c
-> +++ b/drivers/hid/hid-core.c
-> @@ -211,6 +211,18 @@ static unsigned hid_lookup_collection(struct hid_parser *parser, unsigned type)
->         return 0; /* we know nothing about this usage type */
->  }
->
-> +/*
-> + * Concatenate usage which defines 16 bits or less with the
-> + * currently defined usage page to form a 32 bit usage
-> + */
-> +
-> +static void complete_usage(struct hid_parser *parser, unsigned int index)
-> +{
-> +       parser->local.usage[index] &= 0xFFFF;
-> +       parser->local.usage[index] |=
-> +               (parser->global.usage_page & 0xFFFF) << 16;
-> +}
-> +
->  /*
->   * Add a usage to the temporary parser table.
->   */
-> @@ -221,7 +233,18 @@ static int hid_add_usage(struct hid_parser *parser, unsigned usage, u8 size)
->                 hid_err(parser->device, "usage index exceeded\n");
->                 return -1;
->         }
-> -       parser->local.usage[parser->local.usage_index] = usage;
-> +
-> +       /*
-> +        * If Usage item only includes usage id, concatenate it with
-> +        * currently defined usage page and clear usage_page_last flag
-> +        */
-> +       if (size <= 2) {
-> +               parser->local.usage_page_last = false;
-> +               complete_usage(parser, parser->local.usage_index);
-> +       } else {
-> +               parser->local.usage[parser->local.usage_index] = usage;
-> +       }
-> +
->         parser->local.usage_size[parser->local.usage_index] = size;
->         parser->local.collection_index[parser->local.usage_index] =
->                 parser->collection_stack_ptr ?
-> @@ -366,6 +389,8 @@ static int hid_parser_global(struct hid_parser *parser, struct hid_item *item)
->
->         case HID_GLOBAL_ITEM_TAG_USAGE_PAGE:
->                 parser->global.usage_page = item_udata(item);
-> +               /* Regard Usage Page is after Usage ID items */
-> +               parser->local.usage_page_last = true;
->                 return 0;
->
->         case HID_GLOBAL_ITEM_TAG_LOGICAL_MINIMUM:
-> @@ -543,13 +568,20 @@ static int hid_parser_local(struct hid_parser *parser, struct hid_item *item)
->   * usage value."
->   */
->
-> -static void hid_concatenate_usage_page(struct hid_parser *parser)
-> +static void hid_concatenate_last_usage_page(struct hid_parser *parser)
->  {
->         int i;
->
-> +       /*
-> +        * Concatenate usage page again only on detecting some Usage Page
-> +        * is really after Usage ID items
-> +        */
-> +       if (!parser->local.usage_page_last)
-> +               return;
-> +
->         for (i = 0; i < parser->local.usage_index; i++)
->                 if (parser->local.usage_size[i] <= 2)
-> -                       parser->local.usage[i] += parser->global.usage_page << 16;
-> +                       complete_usage(parser, i);
->  }
->
->  /*
-> @@ -561,7 +593,7 @@ static int hid_parser_main(struct hid_parser *parser, struct hid_item *item)
->         __u32 data;
->         int ret;
->
-> -       hid_concatenate_usage_page(parser);
-> +       hid_concatenate_last_usage_page(parser);
->
->         data = item_udata(item);
->
-> @@ -772,7 +804,7 @@ static int hid_scan_main(struct hid_parser *parser, struct hid_item *item)
->         __u32 data;
->         int i;
->
-> -       hid_concatenate_usage_page(parser);
-> +       hid_concatenate_last_usage_page(parser);
->
->         data = item_udata(item);
->
-> diff --git a/include/linux/hid.h b/include/linux/hid.h
-> index cd41f209043f..2e0ea2f7ec5c 100644
-> --- a/include/linux/hid.h
-> +++ b/include/linux/hid.h
-> @@ -412,6 +412,7 @@ struct hid_local {
->         unsigned usage_minimum;
->         unsigned delimiter_depth;
->         unsigned delimiter_branch;
-> +       bool usage_page_last;      /* whether usage page is after usage id */
+Why is the mask 0xf2 ? What is reported in dmesg ?
+
+>  	{ "A113L", 0x2c, 0x0, 0xf8 },
 >  };
->
+>  
+> 
 
-Hi Benjamin,
-Here I still use the usage_page_last flag, not using following method
-you provided in v2:
+Neil
 
-if ((parser->local.usage[parser->local.usage_index - 1] &
-HID_USAGE_PAGE) >> 16 == usage_page)
-              return 0;
-
-Because last usage maybe one Extended Usage, some logic for checking
-it should be added.
-It will make the code obscure. Using one more member in struct
-hid_local is straightforward
-and maybe better.
-
-Candle
-
->  /*
-> --
-> 2.17.1
->
