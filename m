@@ -2,119 +2,184 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6115BCA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 06:33:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38C8ACA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 06:36:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04E7A20700
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 06:33:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EBB720700
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 06:36:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=narfation.org header.i=@narfation.org header.b="syXmfz8m"
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="N5X5La6o";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="hkiVp87X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbfJUGdE (ORCPT
+        id S1726964AbfJUGgg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 02:33:04 -0400
-Received: from dvalin.narfation.org ([213.160.73.56]:33178 "EHLO
-        dvalin.narfation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726039AbfJUGdD (ORCPT
+        Mon, 21 Oct 2019 02:36:36 -0400
+Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:59134 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726039AbfJUGgf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 02:33:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=narfation.org;
-        s=20121; t=1571639580;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=f8Na+LpUnC8JqDzImVYyMaPGE+qt4/Ni60vqdp8XrY8=;
-        b=syXmfz8mKLUBM1cGhnWNvHBYSh0aKWq8MhW/asgTnjdfU2L/PxVDQdDyu8YF9k8y+pIyqs
-        aSOIA4lTT3JstP8wWxFKYMQSLs0G1pUAyzE7YQJbs7sWyjV/hmLMWDJBbI0k2REkQ4xrKw
-        T6nQAzCRX3HKyfei2AOTJuAUT71rS1E=
-From:   Sven Eckelmann <sven@narfation.org>
-To:     syzbot <syzbot+7dd2da51d8ae6f990403@syzkaller.appspotmail.com>
-Cc:     a@unstable.cc, b.a.t.m.a.n@lists.open-mesh.org,
-        davem@davemloft.net, linux-kernel@vger.kernel.org,
-        mareklindner@neomailbox.ch, netdev@vger.kernel.org,
-        sw@simonwunderlich.de, syzkaller-bugs@googlegroups.com
-Subject: Re: general protection fault in batadv_iv_ogm_queue_add
-Date:   Mon, 21 Oct 2019 08:32:27 +0200
-Message-ID: <2128256.8pjUZaGXEE@bentobox>
-In-Reply-To: <000000000000ccde8d059564d93d@google.com>
-References: <000000000000ccde8d059564d93d@google.com>
+        Mon, 21 Oct 2019 02:36:35 -0400
+Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
+        by mx0b-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9L6XbXD029570;
+        Sun, 20 Oct 2019 23:36:27 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type; s=proofpoint;
+ bh=r5eFgyGOC0ImaVwGK4I9koALcmz1cOgfXR7cAk2FaeI=;
+ b=N5X5La6oKOLTCIPRFo9phkf5H5hzSnx24/0hnQXzLT/TrYVkbfHTMT2N0pmYMjvq9bUD
+ BjbumOlfxdDvRLN6ITkPDZWXuHSPuZxRoNkGqNsEFi0zU7ygg1dt9veYDBNT74N5wfwM
+ 8jtudiEn7Cyuil7rH5Iu5C3nk/PY2Y76qi5J+fwtppuGY848ezmSpopEnBMQJaKGvrhL
+ K0LKMaT0+tNlBpMoXp9l4RplfZrEKuhLtMZdqvGk5NeBQwmtpZJxDRA8jF6lDrmVWTUb
+ mHjCvu+wjp3uUuboZOIW7b8k7lUv1NHjLwWXv9K+gqzx50tyQUCCqhN1UPa7OVv+zr58 5g== 
+Received: from nam02-sn1-obe.outbound.protection.outlook.com (mail-sn1nam02lp2059.outbound.protection.outlook.com [104.47.36.59])
+        by mx0b-0014ca01.pphosted.com with ESMTP id 2vqx2x590v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 20 Oct 2019 23:36:27 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=X253Csi6byFyzu/2l8ekDqmM0+BQDspFUT3QzrKvkhNFeKJyK9FNjRTZr/Zl9PAWqwuqcTMLh93C72potSBxuUeKqn+YLB4A9+ZJXc1E/DnlckuJ4oWWECVw3TAjFyMtoDlZHyRp3b50c1cD2kyueuXmIIxDaIuFNcqX6/AMKScvL3wicmVDvr58pNJtC59f+Rl52IEYdDSvjZswOuhJOUXiCFT+4wgFp7B8JSwOh8VPTDt3vaEQ1RuelFj1eXf1dTW0IUvA0MWIKP2GgLcR4+1WT1DpxEezMGszjY2L/IGUm00pnK86SjRSWEZer+5nG8LspZQPDzElfgvjWucqcg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=r5eFgyGOC0ImaVwGK4I9koALcmz1cOgfXR7cAk2FaeI=;
+ b=NKj9+AfS3liKJ867UX0gDK33XAxwxm3x7qsok/qRP6TRElLNVBKW3WfaxZ9jUeB58HxJ1DCNcFlYyrynITmgEywYfd3XdfqJVLY9ZPi76Z5009SVVG31Uei5wPXaB3nTwcRFfkqYYH9tbiE0OqhEyRYIKQg0/BidVXm6B8pP+U+OcRIUoJigwpy+xbNDIflprIJTCCIA6jekFLYHBO5Pz/vfBzn8SWwv/FHs+UhP26QfW0KvVfkDSz972qZK82xBx0J94yjUrGz3F9BEDsEoboKzlABt6bSTa00TsdC/RP/N0VvZpvHpbauukVc+FNaJmfJxFBREB3wTocPOJrJN2g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
+ is 158.140.1.28) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=cadence.com;
+ dmarc=fail (p=none sp=none pct=100) action=none header.from=cadence.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=r5eFgyGOC0ImaVwGK4I9koALcmz1cOgfXR7cAk2FaeI=;
+ b=hkiVp87XNECQaKgNxY3V6mnTKdVbAcZabqs/U4CACzOGpadeqTByvX9b+vMnz1djf2yNT5WnkO8T94Yrnbo0SQ5LSi6ycf/Mf0cZtbM8CoUtLhvzvm9u/c5/p+N1AwLRAoRo3PLCmj9I1RStf6OZBKqYyXqjCfPrO2YjRzUnZ9Y=
+Received: from CY1PR07CA0021.namprd07.prod.outlook.com
+ (2a01:111:e400:c60a::31) by BYAPR07MB5941.namprd07.prod.outlook.com
+ (2603:10b6:a03:133::11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2367.20; Mon, 21 Oct
+ 2019 06:36:24 +0000
+Received: from BY2NAM05FT046.eop-nam05.prod.protection.outlook.com
+ (2a01:111:f400:7e52::205) by CY1PR07CA0021.outlook.office365.com
+ (2a01:111:e400:c60a::31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2367.20 via Frontend
+ Transport; Mon, 21 Oct 2019 06:36:24 +0000
+Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
+ cadence.com discourages use of 158.140.1.28 as permitted sender)
+Received: from sjmaillnx2.cadence.com (158.140.1.28) by
+ BY2NAM05FT046.mail.protection.outlook.com (10.152.100.183) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2387.9 via Frontend Transport; Mon, 21 Oct 2019 06:36:24 +0000
+Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
+        by sjmaillnx2.cadence.com (8.14.4/8.14.4) with ESMTP id x9L6aK0Q030521
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Sun, 20 Oct 2019 23:36:23 -0700
+X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
+Received: from maileu3.global.cadence.com (10.160.88.99) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3; Mon, 21 Oct 2019 08:36:20 +0200
+Received: from lvlogina.cadence.com (10.165.176.102) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Mon, 21 Oct 2019 08:36:19 +0200
+Received: from lvlogina.cadence.com (localhost.localdomain [127.0.0.1])
+        by lvlogina.cadence.com (8.14.4/8.14.4) with ESMTP id x9L6aJ1d007113;
+        Mon, 21 Oct 2019 07:36:19 +0100
+Received: (from jpawar@localhost)
+        by lvlogina.cadence.com (8.14.4/8.14.4/Submit) id x9L6aI2W007105;
+        Mon, 21 Oct 2019 07:36:18 +0100
+From:   Jayshri Pawar <jpawar@cadence.com>
+To:     <linux-usb@vger.kernel.org>
+CC:     <gregkh@linuxfoundation.org>, <felipe.balbi@linux.intel.com>,
+        <heikki.krogerus@linux.intel.com>, <rogerq@ti.com>,
+        <linux-kernel@vger.kernel.org>, <jbergsagel@ti.com>,
+        <nsekhar@ti.com>, <nm@ti.com>, <peter.chen@nxp.com>,
+        <kurahul@cadence.com>, <pawell@cadence.com>, <sparmar@cadence.com>,
+        <jpawar@cadence.com>
+Subject: [PATCH] usb: gadget: f_tcm: Provide support to get alternate setting in tcm function
+Date:   Mon, 21 Oct 2019 07:35:00 +0100
+Message-ID: <1571639700-5656-1-git-send-email-jpawar@cadence.com>
+X-Mailer: git-send-email 1.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart3485240.qhH8nyTcuX"; micalg="pgp-sha512"; protocol="application/pgp-signature"
+Content-Type: text/plain
+X-OrganizationHeadersPreserved: maileu3.global.cadence.com
+X-EOPAttributedMessage: 0
+X-Forefront-Antispam-Report: CIP:158.140.1.28;IPV:CAL;SCL:-1;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(346002)(136003)(39860400002)(376002)(36092001)(199004)(189003)(26826003)(305945005)(478600001)(7636002)(2906002)(42186006)(7416002)(47776003)(87636003)(50226002)(50466002)(316002)(2351001)(4326008)(26005)(5660300002)(16586007)(356004)(6666004)(14444005)(5024004)(2616005)(6916009)(51416003)(76130400001)(486006)(107886003)(246002)(126002)(476003)(36756003)(86362001)(8936002)(70586007)(70206006)(54906003)(48376002)(8676002)(426003)(336012)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR07MB5941;H:sjmaillnx2.cadence.com;FPR:;SPF:SoftFail;LANG:en;PTR:corp.cadence.com;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 7ed936c8-af50-45df-662b-08d755f0fe46
+X-MS-TrafficTypeDiagnostic: BYAPR07MB5941:
+X-Microsoft-Antispam-PRVS: <BYAPR07MB5941B491BA9E21E3A76E826DC1690@BYAPR07MB5941.namprd07.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4303;
+X-Forefront-PRVS: 0197AFBD92
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: m1oF0SGRE3KgfLahm7xJre/ZK/IoBjm/S7KS0Gu8TOzcR+/F5iC1GMmf3oIHstqDhGN8bROh2OEBiuYaopI3KnNC06NEYXM/xpW5RYnrX50UHJ9wuygO3Q1o3WYAq42iladZZWLUHPhgQUU0zw8U4wWjg+Vi9sB5KZomTDRUO9A6Aw7O3JLZfin7VlUh8A08SKS54K1eLF8HqULkqlZ+9jKF0onSWmisQFNStvhokYJnUWqfyYPPAIqjImhnbB9KglD2tVsUjmUS4jVdo/uBttki/gON8k4snZvfk49WpCLm5GdCuqyNpsvvQAYo8QOxuZSh/7oi5cj4WH56+HqI4JnwWs4v0Taj4qQkAifRlqlxOP3bR4XOkFXyRWGN/9I84jCDoSGld2OAoiw8OWWOwwTVTHcaiIqYyx4MzvNRdP1R+zVyVP1igs9y+kEuRkb1wCtuEp5kYrJ2Hmh7nPybEw==
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Oct 2019 06:36:24.2512
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7ed936c8-af50-45df-662b-08d755f0fe46
+X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[158.140.1.28];Helo=[sjmaillnx2.cadence.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR07MB5941
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-21_02:2019-10-18,2019-10-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 mlxlogscore=380
+ bulkscore=0 clxscore=1011 phishscore=0 adultscore=0 spamscore=0
+ suspectscore=3 malwarescore=0 priorityscore=1501 lowpriorityscore=0
+ mlxscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1908290000 definitions=main-1910210059
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---nextPart3485240.qhH8nyTcuX
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Providing tcm_get_alt in tcm function to support Bulk only protocol and
+USB Attached SCSI protocol
 
-On Monday, 21 October 2019 07:21:06 CEST syzbot wrote:
-[...]
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+7dd2da51d8ae6f990403@syzkaller.appspotmail.com
-> 
-> kasan: CONFIG_KASAN_INLINE enabled
-> kasan: GPF could be caused by NULL-ptr deref or user memory access
-> general protection fault: 0000 [#1] PREEMPT SMP KASAN
-> CPU: 0 PID: 4256 Comm: kworker/u4:0 Not tainted 5.4.0-rc3+ #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-> Google 01/01/2011
-> Workqueue: bat_events batadv_iv_send_outstanding_bat_ogm_packet
-> RIP: 0010:batadv_iv_ogm_queue_add+0x49/0x1120  
-> net/batman-adv/bat_iv_ogm.c:605
-> Code: 48 89 75 b8 48 89 4d c0 4c 89 45 b0 44 89 4d d0 e8 fc 02 46 fa 48 8d  
-> 7b 03 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 04 02 48  
-> 89 fa 83 e2 07 38 d0 7f 08 84 c0 0f 85 18 0d 00 00
-> RSP: 0018:ffff88805d2cfb80 EFLAGS: 00010246
-> RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffff888092284000
-> RDX: 0000000000000000 RSI: ffffffff872d1214 RDI: 0000000000000003
-> RBP: ffff88805d2cfc18 R08: ffff888092284000 R09: 0000000000000001
-> R10: ffffed100ba59f77 R11: 0000000000000003 R12: dffffc0000000000
-> R13: ffffed101245080e R14: ffff888092284000 R15: 0000000100051cf6
-> FS:  0000000000000000(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00000000200002c0 CR3: 00000000a421b000 CR4: 00000000001426f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->   batadv_iv_ogm_schedule+0xb0b/0xe50 net/batman-adv/bat_iv_ogm.c:813
->   batadv_iv_send_outstanding_bat_ogm_packet+0x580/0x760  
-> net/batman-adv/bat_iv_ogm.c:1675
+Signed-off-by: Jayshri Pawar <jpawar@cadence.com>
+---
+ drivers/usb/gadget/function/f_tcm.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-I am guessing that the fix for this is queued up since a while at 
- https://git.open-mesh.org/linux-merge.git/commit/40e220b4218bb3d278e5e8cc04ccdfd1c7ff8307
-
-Kind regards,
-	Sven
---nextPart3485240.qhH8nyTcuX
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEF10rh2Elc9zjMuACXYcKB8Eme0YFAl2tUPsACgkQXYcKB8Em
-e0ZceA/+OtAsNK+rKyCKhKluFI1maGPynDOVKdN3fkopRfC6pfxPDtjyvU6R4fbH
-3XYTc6dQ8UBVltpEJ/0cNHCxuaEUjNRYM7rT3a+SD52ge/vJdIR1SdPpVY7UaQj9
-plnFQBF7vSR/YoEfsXLyCFg1S/m237HGU4antFgJ7eNXgx/zSgKZ7tsXnaIDVbsP
-iWsr+PXJ5RQzWDubFfDpJSyvCQn0XPztypLZRKsfa+bo73PqGn3WEWsA/I/QKwTu
-7xUbIWtWEzqciX43489rtkAY2SvoeZAYPckXDs/D2udpdGEVJOLZ4xJCyDpVVfyR
-+qm1au5OnHtKg4nMmyi60YLAmh+VN0t2E0GgByabgp7PQ6rgYIEB00Q2Muys1Mhn
-agZ6Z9s4u118mjof9f8eJ1tv1Sx2aRRK+wBOvuOeb6tpoXSDqMV+YZP5TtZ9zETg
-NN63hkKvbrhUYucyxWfkRI6x6pwbZHh3MoggT+34ShO/gzZdZV3S6IgDPpRhPYaL
-Sjhno54NZ84oROcswA6b0gF2T/WD46ebZXxwjN0BIoThQX0U2fk/Hq4sCzTc0Fdt
-7R3yK1SWI/yxLf2MHRqSm8MK066xj92gckB4VU8riRjUIbU+nt4mmTzRgdvXvsyY
-UnrIIU0H3QSx+v56qHpFsFID5wu5BKjm2vKgrokmd9dSokXUSJs=
-=GRad
------END PGP SIGNATURE-----
-
---nextPart3485240.qhH8nyTcuX--
-
-
+diff --git a/drivers/usb/gadget/function/f_tcm.c b/drivers/usb/gadget/function/f_tcm.c
+index 7f01f78b1d23..36504931b2d1 100644
+--- a/drivers/usb/gadget/function/f_tcm.c
++++ b/drivers/usb/gadget/function/f_tcm.c
+@@ -846,7 +846,7 @@ static void uasp_set_alt(struct f_uas *fu)
+ 
+ 	fu->flags = USBG_IS_UAS;
+ 
+-	if (gadget->speed == USB_SPEED_SUPER)
++	if (gadget->speed >= USB_SPEED_SUPER)
+ 		fu->flags |= USBG_USE_STREAMS;
+ 
+ 	config_ep_by_speed(gadget, f, fu->ep_in);
+@@ -2093,6 +2093,16 @@ static void tcm_delayed_set_alt(struct work_struct *wq)
+ 	usb_composite_setup_continue(fu->function.config->cdev);
+ }
+ 
++static int tcm_get_alt(struct usb_function *f, unsigned intf)
++{
++	if (intf == bot_intf_desc.bInterfaceNumber)
++		return USB_G_ALT_INT_BBB;
++	if (intf == uasp_intf_desc.bInterfaceNumber)
++		return USB_G_ALT_INT_UAS;
++
++	return -EOPNOTSUPP;
++}
++
+ static int tcm_set_alt(struct usb_function *f, unsigned intf, unsigned alt)
+ {
+ 	struct f_uas *fu = to_f_uas(f);
+@@ -2300,6 +2310,7 @@ static struct usb_function *tcm_alloc(struct usb_function_instance *fi)
+ 	fu->function.bind = tcm_bind;
+ 	fu->function.unbind = tcm_unbind;
+ 	fu->function.set_alt = tcm_set_alt;
++	fu->function.get_alt = tcm_get_alt;
+ 	fu->function.setup = tcm_setup;
+ 	fu->function.disable = tcm_disable;
+ 	fu->function.free_func = tcm_free;
+-- 
+2.20.1
 
