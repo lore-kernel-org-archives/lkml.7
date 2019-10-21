@@ -2,120 +2,92 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37ED1CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 18:36:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D0B1CA9EB0
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 18:37:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 196692084C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 18:36:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF31D2084C
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 18:37:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571683060;
+	bh=Iji0ZrvGtLnp4Kz3FmOVje587Ddd4Tf4uooYHZttELE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=dy7KwV/PVcuB5sdeb9bx3fvQCK40mMenR+m27E6KL75rqymepOGbhCWQMp0mUCYd3
+	 u8md+A30EXbybNOc+OzdAOOIwvHvAI8NFKXlohNlJt/7JrS0QtGULR4n8aXXPkCGzi
+	 ouK4DKl5vZOLdUfoy/J0HW68bXd3/FGOo+FICfqE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729734AbfJUSgi (ORCPT
+        id S1729953AbfJUShj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 14:36:38 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:46705 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726672AbfJUSgh (ORCPT
+        Mon, 21 Oct 2019 14:37:39 -0400
+Received: from inca-roads.misterjones.org ([213.251.177.50]:43560 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728056AbfJUShi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 14:36:37 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1iMcXb-0004yt-Pa; Mon, 21 Oct 2019 20:36:27 +0200
-Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ore@pengutronix.de>)
-        id 1iMcXZ-000580-DT; Mon, 21 Oct 2019 20:36:25 +0200
-Date:   Mon, 21 Oct 2019 20:36:25 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Chris Snook <chris.snook@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        James Hogan <jhogan@kernel.org>,
-        Jay Cliburn <jcliburn@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, Russell King <linux@armlinux.org.uk>
-Subject: Re: [PATCH v3 4/5] net: dsa: add support for Atheros AR9331 TAG
- format
-Message-ID: <20191021183625.bmapf4bliaisluad@pengutronix.de>
-References: <20191021053811.19818-1-o.rempel@pengutronix.de>
- <20191021053811.19818-5-o.rempel@pengutronix.de>
- <20191021154900.GF17002@lunn.ch>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191021154900.GF17002@lunn.ch>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 20:14:24 up 157 days, 32 min, 97 users,  load average: 0.00, 0.02,
- 0.00
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Mon, 21 Oct 2019 14:37:38 -0400
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=big-swifty.misterjones.org)
+        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
+        (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iMcYb-0001bb-Dx; Mon, 21 Oct 2019 20:37:29 +0200
+Date:   Mon, 21 Oct 2019 19:37:27 +0100
+Message-ID: <864l02ymfs.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Steven Price <steven.price@arm.com>
+Cc:     Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?UTF-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Pouloze <suzuki.poulose@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 00/10] arm64: Stolen time support
+In-Reply-To: <20191021152823.14882-1-steven.price@arm.com>
+References: <20191021152823.14882-1-steven.price@arm.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: steven.price@arm.com, will@kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, catalin.marinas@arm.com, pbonzini@redhat.com, rkrcmar@redhat.com, linux@armlinux.org.uk, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, mark.rutland@arm.com, kvm@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 05:49:00PM +0200, Andrew Lunn wrote:
-> > +static struct sk_buff *ar9331_tag_rcv(struct sk_buff *skb,
-> > +				      struct net_device *ndev,
-> > +				      struct packet_type *pt)
-> > +{
-> > +	u8 ver, port;
-> > +	u16 hdr;
-> > +
-> > +	if (unlikely(!pskb_may_pull(skb, AR9331_HDR_LEN)))
-> > +		return NULL;
-> > +
-> > +	hdr = le16_to_cpu(*(__le16 *)skb_mac_header(skb));
-> > +
-> > +	ver = FIELD_GET(AR9331_HDR_VERSION_MASK, hdr);
-> > +	if (unlikely(ver != AR9331_HDR_VERSION)) {
-> > +		netdev_warn_once(ndev, "%s:%i wrong header version 0x%2x\n",
-> > +				 __func__, __LINE__, hdr);
-> > +		return NULL;
-> > +	}
-> > +
-> > +	if (unlikely(hdr & AR9331_HDR_FROM_CPU)) {
-> > +		netdev_warn_once(ndev, "%s:%i packet should not be from cpu 0x%2x\n",
-> > +				 __func__, __LINE__, hdr);
-> > +		return NULL;
-> > +	}
-> > +
-> > +	skb_pull(skb, AR9331_HDR_LEN);
-> > +	skb_set_mac_header(skb, -ETH_HLEN);
+On Mon, 21 Oct 2019 16:28:13 +0100,
+Steven Price <steven.price@arm.com> wrote:
 > 
-> No other tag driver calls skb_set_mac_header().  Also, the -ETH_HLEN
-> looks odd, give you have just pulled off AR9331_HDR_LEN?
+> This series add support for paravirtualized time for arm64 guests and
+> KVM hosts following the specification in Arm's document DEN 0057A:
+> 
+> https://developer.arm.com/docs/den0057/a
+> 
+> It implements support for stolen time, allowing the guest to
+> identify time when it is forcibly not executing.
+> 
+> Note that Live Physical Time (LPT) which was previously part of the
+> above specification has now been removed.
+> 
+> Also available as a git tree:
+> git://linux-arm.org/linux-sp.git stolen_time/v7
 
-Hm.. is it corrected somewhere else? Any way, B.T.M.A.N need a proper
-value ant it seems to work correctly. So I remove it.
+I've provisionally applied this series on its own branch, and merged
+it into kvmarm/next. It's not a done deal though, as I'd like Will or
+Catalin's Ack on patches #9 and #10, as well as Russell's Ack for #9.
 
-> What other tag drivers use is skb_pull_rcsum().
+Thanks,
 
-It is build in switch and internal Ethernet controller do not set csum. There is
-nothing to recalculate... on other hand, it adds no overhead. So, I have
-nothing against it. Are there other arguments?
+        M.
 
-Regards,
-Oleksij
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Jazz is not dead, it just smells funny.
