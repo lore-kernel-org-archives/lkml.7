@@ -2,91 +2,132 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA32CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:35:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50572CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:36:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A03B7205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:35:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 266582064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:36:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WtfeZ/g3"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="xaNK+bSm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728607AbfJUMfZ (ORCPT
+        id S1728382AbfJUMgX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 08:35:25 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:40545 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726767AbfJUMfY (ORCPT
+        Mon, 21 Oct 2019 08:36:23 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:55790 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726767AbfJUMgW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 08:35:24 -0400
-Received: by mail-pl1-f196.google.com with SMTP id d22so6565859pll.7
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 05:35:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aFSoQzruwDjvkM2UWGpQtdqo3XZFLgQ/imuRyHJ84/w=;
-        b=WtfeZ/g3228cf5xLw6dlCTjipQ97ZzTgXJNeAcjXFaXaKr5vD08JruOKMf72Q2/+bc
-         LcVs33B3N+Z3qov+NTX/S9bs0MfCu0lQ9aAPEhKmOkh7gSlUfD+ELQKAFqKkPxI5ZLhi
-         /NiPLjrZBjaCbKeUoe2mg0ZYAAOMQdcmcTkEzAD61MD5kyQ0jviYU8x8psNZj1qNEKCV
-         XHPfDbFrQMrHBnEhh5qcWpmjQLFvCi85+yGnk3KjKgTiDSRAsXv9hxk6Sxr4GROmxTjS
-         2B1nnzM5tmUjurS1GInwut89mpoAVEZyvikAEnrawh7ijDY7Kaik4LDz3C4e6dZ3IFOD
-         oEIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aFSoQzruwDjvkM2UWGpQtdqo3XZFLgQ/imuRyHJ84/w=;
-        b=abFghH4rKWmOM4Yax/6GHz64O2zoEiuNl6Qkiw6blH/iZfvTR/RiIfaNNJYZRPMTFG
-         Ma3qKK/WMWFc0c7Nihl8+KXCRcqc6sHYEjqLBsODfYYg6GRUgWyyE/z2OYvQkRAYNk+y
-         uz7ezpG6zKq+1p2H5kzCFJodEG84AkIfGhIp0dLcklvJvWbwF9seaVn2Jn5jWnyuUMNP
-         3GvKnjsFi+8FJ1Yu81yolnqPAQVuFneI5bBV1nJKYyXGXaJNpQJBhTqMvjAg20aIkryo
-         ol3jMDb/otoH0zx+s8tKoT9hnDzpZu3zwxEBChZB5If9+ZKfvo8DgCtjh1B3sCErSDj0
-         c6AQ==
-X-Gm-Message-State: APjAAAU13KekdEM2h3kMZLaX53KeM227bsndHOSHWQdkuvC/c6+38b+o
-        4vADjSDHe2+hq+I1H0AzI4RENqqf6OFhO7Moyb7INA==
-X-Google-Smtp-Source: APXvYqyv+kk9HcTiXQ61zU6olrRj4Z09puxOfgt1J1jMXxquXGcBRlgvwcyd+eLX0VyQLJoRGmKGBXLgaaVtM7jB7c0=
-X-Received: by 2002:a17:902:6b45:: with SMTP id g5mr24084586plt.336.1571661323722;
- Mon, 21 Oct 2019 05:35:23 -0700 (PDT)
+        Mon, 21 Oct 2019 08:36:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=kzNw9AJwFphfNGOQaTkaa4fB2KpsEPpAX8/rrHD5/dI=; b=xaNK+bSmI5Z8KEmTxBj9AFoOe
+        KNPDi+fHfrsNBBxYC8nReHQOfdL9QkGNAzs8+5Eix4bCuF08JIBagKp25j1SC+7Aa/wG3HVIvyPhX
+        t186JBbrrAuHRioD7t3gjO3ZCXHo6mFaifvvicdngqhaKtKiuTTGJGkgPMeM8QTJGIg3eJrurcMHf
+        qeiy73Zw0DQo2cV7pc2qdP+i/ePdP0eJ+ZBCdCV96/z4BzC2NWLOiWzdYPecFHQdvCvtETh5h1vgB
+        qiheet7c1W0GC+xqc5X+tQ3TIZpm3qEz82OrYywR1uNaNUHL2ajSIMiZEZcpBpjQavXBQfiDqHu1u
+        /RI+CTuxg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iMWuf-0004Pn-3h; Mon, 21 Oct 2019 12:35:53 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 66DDC303DA1;
+        Mon, 21 Oct 2019 14:34:52 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id E07CE201BAD9A; Mon, 21 Oct 2019 14:35:49 +0200 (CEST)
+Date:   Mon, 21 Oct 2019 14:35:49 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>, linux@rasmusvillemoes.dk,
+        cyphar@cyphar.com, keescook@chromium.org,
+        christian.brauner@ubuntu.com
+Subject: Re: linux-next: Tree for Oct 18 (objtool)
+Message-ID: <20191021123549.GC1817@hirez.programming.kicks-ass.net>
+References: <20191018180300.090dbcb9@canb.auug.org.au>
+ <40de4e26-450e-b932-3d73-e833c8aeaa2e@infradead.org>
 MIME-Version: 1.0
-References: <7a9d6e35873d52ec0ab1e6b9827d9299a1f4fb0d.1571409250.git.andreyknvl@google.com>
- <20191018180652.GA1186697@kroah.com>
-In-Reply-To: <20191018180652.GA1186697@kroah.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Mon, 21 Oct 2019 14:35:12 +0200
-Message-ID: <CAAeHK+xk6xo_+D_0xiS-=aP_chaGmeq1kNc0Rdg-KLkXL=h6sA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] USB: dummy-hcd: increase max number of devices to 32
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     USB list <linux-usb@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Felipe Balbi <balbi@kernel.org>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        "Jacky . Cao @ sony . com" <Jacky.Cao@sony.com>,
-        Dmitry Vyukov <dvyukov@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <40de4e26-450e-b932-3d73-e833c8aeaa2e@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 8:07 PM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Fri, Oct 18, 2019 at 04:55:56PM +0200, Andrey Konovalov wrote:
-> > This patch increases the maximum number of Dummy UDC/HCD devices to 32.
->
-> Yes, that is a good description of _what_ the patch does, but it does
-> not tell us _why_ you want to do that.
+On Fri, Oct 18, 2019 at 08:33:11AM -0700, Randy Dunlap wrote:
+> On 10/18/19 12:03 AM, Stephen Rothwell wrote:
+> > Hi all,
+> > 
+> > Changes since 20191017:
+> > 
+> 
+> on x86_64:
+> lib/usercopy.o: warning: objtool: check_zeroed_user()+0x35f: call to __ubsan_handle_shift_out_of_bounds() with UACCESS enabled
 
-Will do in v2, thanks!
+Blergh... I suppose the below will fix that. I'm a bit conflicted on it
+though, the alternative is annotating more ubsan crud.
 
-> Also, no signed-off-by, are you sure you ran your patches through
-> scripts/checkpatch.pl before sending it out?  It's a good idea to do
-> so...
+---
+ lib/usercopy.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
-Sorry, missed this, I thought the patch is small enough to not do that :)
+diff --git a/lib/usercopy.c b/lib/usercopy.c
+index cbb4d9ec00f2..9c5245778dfd 100644
+--- a/lib/usercopy.c
++++ b/lib/usercopy.c
+@@ -49,21 +49,28 @@ EXPORT_SYMBOL(_copy_to_user);
+  */
+ int check_zeroed_user(const void __user *from, size_t size)
+ {
++	unsigned long head_mask, tail_mask;
+ 	unsigned long val;
+-	uintptr_t align = (uintptr_t) from % sizeof(unsigned long);
++	uintptr_t align;
+ 
+ 	if (unlikely(size == 0))
+ 		return 1;
+ 
+-	from -= align;
+-	size += align;
++	align = (uintptr_t) from % sizeof(unsigned long);
++	if (align) {
++		from -= align;
++		size += align;
++		head_mask = ~aligned_byte_mask(align);
++	}
++
++	tail_mask = aligned_byte_mask(size % sizeof(unsigned long));
+ 
+ 	if (!user_access_begin(from, size))
+ 		return -EFAULT;
+ 
+ 	unsafe_get_user(val, (unsigned long __user *) from, err_fault);
+ 	if (align)
+-		val &= ~aligned_byte_mask(align);
++		val &= head_mask;
+ 
+ 	while (size > sizeof(unsigned long)) {
+ 		if (unlikely(val))
+@@ -76,7 +83,7 @@ int check_zeroed_user(const void __user *from, size_t size)
+ 	}
+ 
+ 	if (size < sizeof(unsigned long))
+-		val &= aligned_byte_mask(size);
++		val &= tail_mask;
+ 
+ done:
+ 	user_access_end();
