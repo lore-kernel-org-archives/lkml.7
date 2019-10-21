@@ -2,70 +2,65 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAAC4CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 21:22:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFC70CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 21:22:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFB192084C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 21:22:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A366621783
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 21:22:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387407AbfJUVWA convert rfc822-to-8bit (ORCPT
+        id S2387424AbfJUVWa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 17:22:00 -0400
-Received: from mga01.intel.com ([192.55.52.88]:16597 "EHLO mga01.intel.com"
+        Mon, 21 Oct 2019 17:22:30 -0400
+Received: from muru.com ([72.249.23.125]:38764 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726672AbfJUVWA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 17:22:00 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 14:21:59 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,324,1566889200"; 
-   d="scan'208";a="398796611"
-Received: from vcostago-desk1.jf.intel.com (HELO vcostago-desk1) ([10.54.70.82])
-  by fmsmga006.fm.intel.com with ESMTP; 21 Oct 2019 14:21:59 -0700
-From:   Vinicius Costa Gomes <vinicius.gomes@intel.com>
-To:     Yi Wang <wang.yi59@zte.com.cn>, jhs@mojatatu.com
-Cc:     xiyou.wangcong@gmail.com, jiri@resnulli.us, davem@davemloft.net,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn, up2wing@gmail.com,
-        wang.liang82@zte.com.cn
-Subject: Re: [PATCH] net: sched: taprio: fix -Wmissing-prototypes warnings
-In-Reply-To: <1571658424-4273-1-git-send-email-wang.yi59@zte.com.cn>
-References: <1571658424-4273-1-git-send-email-wang.yi59@zte.com.cn>
-Date:   Mon, 21 Oct 2019 14:23:08 -0700
-Message-ID: <877e4xztc3.fsf@linux.intel.com>
+        id S1726672AbfJUVWa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 17:22:30 -0400
+Received: from hillo.muru.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTP id E98C680CC;
+        Mon, 21 Oct 2019 21:23:03 +0000 (UTC)
+From:   Tony Lindgren <tony@atomide.com>
+To:     linux-omap@vger.kernel.org
+Cc:     "Andrew F . Davis" <afd@ti.com>, Dave Gerlach <d-gerlach@ti.com>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
+        Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] bus: ti-sysc: Use swsup quirks also for am335x musb
+Date:   Mon, 21 Oct 2019 14:22:25 -0700
+Message-Id: <20191021212225.28148-1-tony@atomide.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Also on am335x we need the swsup quirks for musb.
 
-Yi Wang <wang.yi59@zte.com.cn> writes:
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+---
+ drivers/bus/ti-sysc.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> We get one warnings when build kernel W=1:
-> net/sched/sch_taprio.c:1155:6: warning: no previous prototype for ‘taprio_offload_config_changed’ [-Wmissing-prototypes]
->
-> Make the function static to fix this.
->
-> Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
-> ---
-
-This looks like it should be directed to net-next.
-
-When you re-send it for net-next, feel free to add my:
-
-Acked-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-
-
-Cheers,
---
-Vinicius
+diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
+--- a/drivers/bus/ti-sysc.c
++++ b/drivers/bus/ti-sysc.c
+@@ -1259,6 +1259,8 @@ static const struct sysc_revision_quirk sysc_revision_quirks[] = {
+ 		   SYSC_MODULE_QUIRK_SGX),
+ 	SYSC_QUIRK("usb_otg_hs", 0, 0x400, 0x404, 0x408, 0x00000050,
+ 		   0xffffffff, SYSC_QUIRK_SWSUP_SIDLE | SYSC_QUIRK_SWSUP_MSTANDBY),
++	SYSC_QUIRK("usb_otg_hs", 0, 0, 0x10, -1, 0x4ea2080d, 0xffffffff,
++		   SYSC_QUIRK_SWSUP_SIDLE | SYSC_QUIRK_SWSUP_MSTANDBY),
+ 	SYSC_QUIRK("wdt", 0, 0, 0x10, 0x14, 0x502a0500, 0xfffff0f0,
+ 		   SYSC_MODULE_QUIRK_WDT),
+ 	/* Watchdog on am3 and am4 */
+-- 
+2.23.0
