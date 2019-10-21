@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90540CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:36:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63166CA9EB0
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:36:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66FCF214B2
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:36:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 393A720659
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:36:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m844zhng"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S8Bihem9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728357AbfJUKgW (ORCPT
+        id S1728369AbfJUKg0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 06:36:22 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:42276 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728340AbfJUKgT (ORCPT
+        Mon, 21 Oct 2019 06:36:26 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:35302 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728360AbfJUKgX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 06:36:19 -0400
-Received: by mail-pf1-f195.google.com with SMTP id q12so8162654pff.9
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 03:36:19 -0700 (PDT)
+        Mon, 21 Oct 2019 06:36:23 -0400
+Received: by mail-pg1-f193.google.com with SMTP id c8so2739580pgb.2
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 03:36:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :in-reply-to:references;
-        bh=QjsxaA91mEwEtCjMqajdkCWO8TyKKmvK1rye+wLjlGg=;
-        b=m844zhngeP6JmRlLw3Q9yAiYZVqDDiNowu3C0CL8lrG5BXKUahbeMsaww7iO0ty/za
-         fdtGtKxaLgoykDPHWOWk5i6kx0Sh3TN/NUb3L/ijSG3akcBVehElk9CQm8G9cyQyd3N/
-         r4BKGlQMdEACKR37SKoqApGxIeMST/1CDK/9ExvDKbPmWac8ZF8McT89JAxGLj7cDFYC
-         /XZ5t6W5H7MsMzAASJRW4uZVR4XALG2ulxlNsaUiRdr8UUD0okq0fcUctBMQk/b/N1nC
-         LjvBmWHEXbXx5EvaRbbsjeM5mTYO1VUyNPA2sdiF8G5iaVTOF1plngFLm6+jd6qXYTy6
-         AEQg==
+        bh=vAk0yGeiCW4SKIjJnq+f9xqPKX6m5wwJtivbwF55fLs=;
+        b=S8Bihem9RpDcOyr4KCVSnTKgeUfPM47uXgFRw0WH/pp1ZI/CGMgOaRarY4+jS8r4gS
+         PZpQcWGZJydjFrJx+3/rQeLATVNn+cjQP78gMtCe7O3pARui+qlMs6eRZJgxCjP2i+S9
+         zexPLrcg0i73kjZjwihN4Bei1fNq1WVTYQ5v0l6Q7AhZjLbA7OTGd6eZNsBQFLIl0P6z
+         MuP6Jc07fhAxSwYpluUMayVoKIkd89LX0INf8iTC0i3POAmGNGI0l9R2lIvdBYXAixEL
+         U7Bfklp9rj0e4JB2/ZjWLoYflbAl246lin6/JZsAc6eGDBUKkoJem52JZkMxarUnsSqw
+         HkQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:in-reply-to:references;
-        bh=QjsxaA91mEwEtCjMqajdkCWO8TyKKmvK1rye+wLjlGg=;
-        b=Ui+Znz8nkvQW5WEsPvecoh3MTVIm8tIPJzyt6C6fuUY6S3CThL2pz9DjuQQzh9lr+E
-         yKlhw0e4M6y7xO7wLeDLxY+40LB22yEbS5xr9/aQhwpMFW0t7mfDykTyEHVbnyfXos+i
-         bpsRvT/tZupYd98eE/3GxlP+ssMXkT+8R9iUgCl1hlXep35MBIFxrVgZ8HvBvakv9/sx
-         FG/7LvyGCnEBnPRGgrNamekQOAUcNEET8CeaF04xRUhZWJhd1t5kCzOSXN85VOjq13ZZ
-         wVOaM+7eGuSS6nvXD+kiOjNYSjEIV9vs7i9/iCfTNgrbU3davKLnO/XfDu9c/LUEgJSE
-         08Eg==
-X-Gm-Message-State: APjAAAVzCOZDyP4MPRfzbN7+ibbtNcEo6xGPe5yZz7TLzFDyDJyHEqOs
-        i8QE3nPuc9VDHAEcM8urWnockJL/EK1m8w==
-X-Google-Smtp-Source: APXvYqy3A8C9r4CuE6DrW3r1dKAtN3bno4gt1UEh08PPn6ctTudHq+Irk12K+SPNnG1bjix7ZB6FyA==
-X-Received: by 2002:a63:82:: with SMTP id 124mr26253814pga.112.1571654178595;
-        Mon, 21 Oct 2019 03:36:18 -0700 (PDT)
+        bh=vAk0yGeiCW4SKIjJnq+f9xqPKX6m5wwJtivbwF55fLs=;
+        b=FWQeXYjGbbRK3IO46vwC4Ne/tBJSRO2EF9De02mSppsPRuGtngte7pFRVmqF5orggE
+         goqjWFg6lgARXh0qLtUmOWhrIDPmNL1IreB78YC/V0VyA9r/s9vYwafkHCsM+IRiwkXV
+         y5jY2x92lCJKNE5OjUo2JXZilrBb/wW9BsVl7Huga2LR8PuWrTdiA1mI3jGrcmhPmlCX
+         dH9AuxWlVeW2mpqVxXI1/NzhkWxnjjqhsyOC/VJlDkn9UEeerxyZFTBUZWvu5iujdY8H
+         0bsje8sOEMRt78KkQ7ne6Wo/6KGWg6r04MXfffOKRqF0iZUe/ODct2WI8E8x92/W1ucq
+         QAYQ==
+X-Gm-Message-State: APjAAAU97dhvmp9FQMTBaYzs1OIzjYv3TCENYCdJOLpGlfvHkaR5u0Bs
+        WEAJ4nusgax7CWtQ9tmiGvfZ6PNGB6CrDw==
+X-Google-Smtp-Source: APXvYqw5wwC5YcvuabWh6R87MJJua4G4qRlb7eFz5yGtKtbysUKwbLA8bUKJcPJmbaNuXHSaejJowg==
+X-Received: by 2002:a63:7d53:: with SMTP id m19mr25458922pgn.450.1571654182214;
+        Mon, 21 Oct 2019 03:36:22 -0700 (PDT)
 Received: from localhost ([49.248.62.222])
-        by smtp.gmail.com with ESMTPSA id q143sm15543184pfq.103.2019.10.21.03.36.17
+        by smtp.gmail.com with ESMTPSA id 19sm14665031pjd.23.2019.10.21.03.36.21
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 21 Oct 2019 03:36:17 -0700 (PDT)
+        Mon, 21 Oct 2019 03:36:21 -0700 (PDT)
 From:   Amit Kucheria <amit.kucheria@linaro.org>
 To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         bjorn.andersson@linaro.org, edubezval@gmail.com, agross@kernel.org,
@@ -66,9 +66,9 @@ To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         Rob Herring <robh+dt@kernel.org>,
         Zhang Rui <rui.zhang@intel.com>
 Cc:     devicetree@vger.kernel.org
-Subject: [PATCH v6 10/15] arm64: dts: msm8998: thermal: Add interrupt support
-Date:   Mon, 21 Oct 2019 16:05:29 +0530
-Message-Id: <2735b57bb1e9477926bfef6f6b8ff84b926f5a1b.1571652874.git.amit.kucheria@linaro.org>
+Subject: [PATCH v6 11/15] arm64: dts: qcs404: thermal: Add interrupt support
+Date:   Mon, 21 Oct 2019 16:05:30 +0530
+Message-Id: <63d6b0b8bba0d217c2f7bb4240c587ead933b6be.1571652874.git.amit.kucheria@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1571652874.git.amit.kucheria@linaro.org>
 References: <cover.1571652874.git.amit.kucheria@linaro.org>
@@ -79,34 +79,21 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Register upper-lower interrupts for each of the two tsens controllers.
+Register upper-lower interrupt for the tsens controller.
 
 Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/msm8998.dtsi | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/qcom/qcs404.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-index c6f81431983ee..489d631a96104 100644
---- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-@@ -816,8 +816,9 @@
- 			compatible = "qcom,msm8998-tsens", "qcom,tsens-v2";
- 			reg = <0x010ab000 0x1000>, /* TM */
- 			      <0x010aa000 0x1000>; /* SROT */
--
- 			#qcom,sensors = <14>;
-+			interrupts = <GIC_SPI 458 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "uplow";
- 			#thermal-sensor-cells = <1>;
- 		};
- 
-@@ -825,8 +826,9 @@
- 			compatible = "qcom,msm8998-tsens", "qcom,tsens-v2";
- 			reg = <0x010ae000 0x1000>, /* TM */
- 			      <0x010ad000 0x1000>; /* SROT */
--
- 			#qcom,sensors = <8>;
+diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+index a97eeb4569c00..b6a4e60739362 100644
+--- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
++++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+@@ -290,6 +290,8 @@
+ 			nvmem-cells = <&tsens_caldata>;
+ 			nvmem-cell-names = "calib";
+ 			#qcom,sensors = <10>;
 +			interrupts = <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>;
 +			interrupt-names = "uplow";
  			#thermal-sensor-cells = <1>;
