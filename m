@@ -2,82 +2,103 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B64FCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:21:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0ABDC47E49
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:22:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E29DD2070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:21:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C74342084C
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:22:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571653322;
+	bh=ldV1AAAsdREXDXeQW+llqEafSolwVY1a907bgC7rUUc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nM6rvkM6gQ8G1bY5x3PNPU6an4dOjVrFUOEIDUNZHeqVCz7jgTio2Xn2CVT/bvAj4
+	 9oOodYfAcuOu0zWQmDGq5y9RxOJpf1kIS5f28+hEYDvuuGtFHPtaGSNzYOBxfxLtbr
+	 KEkS4EhOLrHIEGuYdAJkZEThPi/zQQcRT27L95Ww=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728171AbfJUKV0 (ORCPT
+        id S1728175AbfJUKWB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 06:21:26 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:37272 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726725AbfJUKVY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 06:21:24 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 7689C200123;
-        Mon, 21 Oct 2019 12:21:22 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 7A129200A5F;
-        Mon, 21 Oct 2019 12:21:17 +0200 (CEST)
-Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 1190D402F0;
-        Mon, 21 Oct 2019 18:21:10 +0800 (SGT)
-From:   Yinbo Zhu <yinbo.zhu@nxp.com>
-To:     Li Yang <leoyang.li@nxp.com>, Felipe Balbi <balbi@kernel.org>
-Cc:     yinbo.zhu@nxp.com, xiaobo.xie@nxp.com, jiafei.pan@nxp.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, Ran Wang <ran.wang_1@nxp.com>,
-        Nikhil Badola <nikhil.badola@freescale.com>
-Subject: [PATCH v1] usb: gadget: Correct NULL pointer checking in fsl gadget
-Date:   Mon, 21 Oct 2019 18:21:53 +0800
-Message-Id: <20191021102153.16435-3-yinbo.zhu@nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191021102153.16435-1-yinbo.zhu@nxp.com>
-References: <20191021102153.16435-1-yinbo.zhu@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Mon, 21 Oct 2019 06:22:01 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:34698 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726725AbfJUKWB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 06:22:01 -0400
+Received: by mail-ed1-f68.google.com with SMTP id b72so624815edf.1;
+        Mon, 21 Oct 2019 03:21:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NTXwyuKPtae41ucu10e0jfWsFbRgsyPTHworMEWDZyQ=;
+        b=pb+E/4ap3q0bRrAJk5CIzfayBk+FbTM76eQBLlXweruslA5z5v6RTjvoWXC5iXK07l
+         qLYgS/FhmXMS0L8uO2p+tPpK8Oi5G3JR12ZQjyMRfZzVeuUy2sN/r739tOko6v+upw+k
+         DRwwOR3QmieoUVm2juw8G0dI0deuzS/UYqRjkVmn0GKsC0N/kVw3snhbE9CepEQUxLkz
+         ncCs6awHyV6eCYzucufd2CT2kU8TmYDOQUgxPYzuyHlIvRnJmNn3EACkSlDIv4DtVXMh
+         0UpveYp4YQZL3Pco6qKaSpFGTXOYQZvAHX0vhYoYaBH4Y/fdQPlBt1uT5/ZCerV7n6i7
+         ljTg==
+X-Gm-Message-State: APjAAAXROgvpXeoiMZr8v0cKQUue1Gwygm1Yp23S41t8CmAGIowu0xY5
+        n2KZhx/1SPmcysCy/40kEGE=
+X-Google-Smtp-Source: APXvYqwXeK2/2BY3ORkuBAxMultEP+lVNX/1OoZXMoqOvq9xllY1syL/7QofFUXQ2efCb4ja3MbPsQ==
+X-Received: by 2002:a50:ec0f:: with SMTP id g15mr24142459edr.59.1571653317618;
+        Mon, 21 Oct 2019 03:21:57 -0700 (PDT)
+Received: from pi3 ([194.230.155.217])
+        by smtp.googlemail.com with ESMTPSA id ay16sm181628edb.47.2019.10.21.03.21.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Oct 2019 03:21:56 -0700 (PDT)
+Date:   Mon, 21 Oct 2019 12:21:54 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Maciej Falkowski <m.falkowski@samsung.com>
+Subject: Re: [PATCH v2] dt-bindings: sound: Convert Samsung Exynos Odroid
+ XU3/XU4 audio complex to dt-schema
+Message-ID: <20191021102154.GA1903@pi3>
+References: <CGME20191017100534eucas1p1407cf6ef5606d6bd6a4140502cc95984@eucas1p1.samsung.com>
+ <20191017100529.4183-1-m.szyprowski@samsung.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191017100529.4183-1-m.szyprowski@samsung.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikhil Badola <nikhil.badola@freescale.com>
+On Thu, Oct 17, 2019 at 12:05:29PM +0200, Marek Szyprowski wrote:
+> From: Maciej Falkowski <m.falkowski@samsung.com>
+> 
+> Convert Samsung Exynos Odroid XU3/XU4 audio complex with MAX98090 codec
+> to newer dt-schema format.
+> 
+> 'clocks' property is unneeded in the bindings and is left undefined in 'properties'.
+> 
+> 'samsung,audio-widgets' and 'samsung,audio-routing' are optional from driver
+> perspective and they are set as unrequired.
+> 
+> Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
+> [mszyprow: reordered non-standard properties]
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
+>  .../bindings/sound/samsung,odroid.txt         | 54 -----------
+>  .../bindings/sound/samsung,odroid.yaml        | 91 +++++++++++++++++++
+>  2 files changed, 91 insertions(+), 54 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/sound/samsung,odroid.txt
+>  create mode 100644 Documentation/devicetree/bindings/sound/samsung,odroid.yaml
 
-Correct NULL pointer checking for endpoint descriptor
-before it gets dereferenced
+Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Signed-off-by: Nikhil Badola <nikhil.badola@freescale.com>
-Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
-Reviewed-by: Peter Chen <peter.chen@nxp.com>
----
- drivers/usb/gadget/udc/fsl_udc_core.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/usb/gadget/udc/fsl_udc_core.c b/drivers/usb/gadget/udc/fsl_udc_core.c
-index 381fdff12d4e..980cb1382851 100644
---- a/drivers/usb/gadget/udc/fsl_udc_core.c
-+++ b/drivers/usb/gadget/udc/fsl_udc_core.c
-@@ -1052,10 +1052,11 @@ static int fsl_ep_fifo_status(struct usb_ep *_ep)
- 	u32 bitmask;
- 	struct ep_queue_head *qh;
- 
--	ep = container_of(_ep, struct fsl_ep, ep);
--	if (!_ep || (!ep->ep.desc && ep_index(ep) != 0))
-+	if (!_ep || _ep->desc || !(_ep->desc->bEndpointAddress&0xF))
- 		return -ENODEV;
- 
-+	ep = container_of(_ep, struct fsl_ep, ep);
-+
- 	udc = (struct fsl_udc *)ep->udc;
- 
- 	if (!udc->driver || udc->gadget.speed == USB_SPEED_UNKNOWN)
--- 
-2.17.1
+Best regards,
+Krzysztof
 
