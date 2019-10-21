@@ -2,226 +2,101 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 340A1CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:17:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4725CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:18:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B67E207FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:17:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3A4A20640
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:18:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727703AbfJUIRO convert rfc822-to-8bit (ORCPT
+        id S1727626AbfJUIS5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 04:17:14 -0400
-Received: from tyo162.gate.nec.co.jp ([114.179.232.162]:38047 "EHLO
-        tyo162.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725972AbfJUIRN (ORCPT
+        Mon, 21 Oct 2019 04:18:57 -0400
+Received: from mailgate1.rohmeurope.com ([178.15.145.194]:61500 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725972AbfJUIS5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 04:17:13 -0400
-Received: from mailgate01.nec.co.jp ([114.179.233.122])
-        by tyo162.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x9L8GtuI017043
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Mon, 21 Oct 2019 17:16:55 +0900
-Received: from mailsv02.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
-        by mailgate01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x9L8GtY5015611;
-        Mon, 21 Oct 2019 17:16:55 +0900
-Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
-        by mailsv02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x9L8EIaa018392;
-        Mon, 21 Oct 2019 17:16:55 +0900
-Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.147] [10.38.151.147]) by mail03.kamome.nec.co.jp with ESMTP id BT-MMP-79913; Mon, 21 Oct 2019 16:45:35 +0900
-Received: from BPXM23GP.gisp.nec.co.jp ([10.38.151.215]) by
- BPXC19GP.gisp.nec.co.jp ([10.38.151.147]) with mapi id 14.03.0439.000; Mon,
- 21 Oct 2019 16:45:34 +0900
-From:   Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-To:     Oscar Salvador <osalvador@suse.de>
-CC:     "mhocko@kernel.org" <mhocko@kernel.org>,
-        "mike.kravetz@oracle.com" <mike.kravetz@oracle.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH v2 10/16] mm,hwpoison: Rework soft offline for free
- pages
-Thread-Topic: [RFC PATCH v2 10/16] mm,hwpoison: Rework soft offline for free
- pages
-Thread-Index: AQHVhPYxuKrdanK4Pk2pyFsBlimO86dkJj2A
-Date:   Mon, 21 Oct 2019 07:45:33 +0000
-Message-ID: <20191021074533.GA10507@hori.linux.bs1.fc.nec.co.jp>
-References: <20191017142123.24245-1-osalvador@suse.de>
- <20191017142123.24245-11-osalvador@suse.de>
-In-Reply-To: <20191017142123.24245-11-osalvador@suse.de>
-Accept-Language: en-US, ja-JP
-Content-Language: ja-JP
+        Mon, 21 Oct 2019 04:18:57 -0400
+X-Greylist: delayed 901 seconds by postgrey-1.27 at vger.kernel.org; Mon, 21 Oct 2019 04:18:55 EDT
+X-AuditID: c0a8fbf4-183ff70000001fa6-9f-5dad66691d4b
+Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id B0.5E.08102.9666DAD5; Mon, 21 Oct 2019 10:03:53 +0200 (CEST)
+Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
+ WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
+ 14.03.0439.000; Mon, 21 Oct 2019 10:03:42 +0200
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "dmurphy@ti.com" <dmurphy@ti.com>
+CC:     "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>
+Subject: Re: [RFC PATCH 12/13] dt-bindings: mfd: Document ROHM BD71282
+ bindings
+Thread-Topic: [RFC PATCH 12/13] dt-bindings: mfd: Document ROHM BD71282
+ bindings
+Thread-Index: AQHVhNEGlzssJjrQoU6zmYO2K0h2bqdewESAgAXgtIA=
+Date:   Mon, 21 Oct 2019 08:03:42 +0000
+Message-ID: <b8914c554e09c92b5a4602435fd60e314922a9c5.camel@fi.rohmeurope.com>
+References: <cover.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
+         <05841ff33ea166bc6934456a492adc3c67a90670.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
+         <1d2bc596-0329-d090-2e8d-037c8cad0585@ti.com>
+In-Reply-To: <1d2bc596-0329-d090-2e8d-037c8cad0585@ti.com>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-originating-ip: [10.34.125.96]
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-ID: <A00B02FA1827904C9C12E61048EDFF8B@gisp.nec.co.jp>
-Content-Transfer-Encoding: 8BIT
+x-originating-ip: [213.255.186.46]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <60A86E1DF0440C4BA4E5F28A4D53E8FA@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-TM-AS-MML: disable
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Ta0gUURiGOXN3a2LatD3ahdroftnsxqnsRgRjP0INEgLTMafdLd2V2VW0
+        /hhhpXYx6IJDuiLaxUvapmSmWKZmWyRL6hZpthVFkkZoiRnVjGPpr/Oe837v93w/vsPg+l4q
+        hLHanKJkExKNlI54cGPUvdJ6qCJmdeHbFajY20mjUwPXaDSU7yHQJf8HCrman5Mo52k1iV7X
+        VBGo93sLQD86TmPo4q/rGPp25g2J7rh+AfSi7iqFar7cAqi1rINCJT4vhq6WtBHI69mFejwt
+        FMpsaKbR767bxPYgvrygHPBfX2bSfEH5Mf6e3EPz7tIsiu/uqqf4xy/vYvyVghGMv1E2TPOD
+        7rkRuv1TwuIFZ+peq9lm2ho3xVLUfZJOlsm0U+26DHCazAYBDOTWwXNnvYrWMXquC8DW6x6g
+        XdoAfNc3iGUDhqG4MJj9ilYDgdwBeM37kFJrcG6Yhn1yzpgxg4uEraPtpFYUBYff5FKa3gRL
+        z/8hVE1wC+HH6stA1Sy3B57z5Y3DOgAc8vaPGQFK4HKna6wR4ObArIwBTNU4Z4Duj8PjY3Ow
+        uL4d13QQ/Pz+9/i7ETaM+Al1aJxbCivrTJrcDluHDmtd5sOLOX5aG2E6fJL3gcgFM+VJAHki
+        LE+E5UlheVK4EJClACYJ1kSz4BRDV0liyirJbklSjoP2JDfQFmaoFvxpCm8CGAOaQDCDGYNY
+        m6k8Rj8t3p6QbhEcllgpJVF0NAHI4MZAtnt1RYyeTRDSj4qS/Z81iyGMBnax/0KMnlNZR0Qx
+        WZT+ubMZxgjZgINKcLokmsW0Q9ZE54SNMQFqc11IoEO0JYiSkOK0xKrbEetQ1kO1pircx6LK
+        dSQLScqrFvWA5Uzu5/winGnOLynC9YTNbhNDDKwrTinl1FJLiu0/qA8YGGCcwfYmKO5U5df8
+        79OnIDAFURZcpiKcwoQVkgGC49IPx204O1qT2b8biRu3rDRHkFVVC5JPFIeFGr4W765nuVeG
+        zX5n447IJSa7IPSYukR6IG0kevDn2+WGqNDB6HbvvJuf8NQ2Pq9zT38Gueb50eMHZFOqr3JW
+        QaR3p6/wkePdttpn4Wtbsr4t2tVI4EeKXOt95poL4WtK9lXfNxIOixC6DJccwl/439tc8gMA
+        AA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 04:21:17PM +0200, Oscar Salvador wrote:
-> When trying to soft-offline a free page, we need to first take it off
-> the buddy allocator.
-> Once we know is out of reach, we can safely flag it as poisoned.
-> 
-> take_page_off_buddy will be used to take a page meant to be poisoned
-> off the buddy allocator.
-> take_page_off_buddy calls break_down_buddy_pages, which splits a
-> higher-order page in case our page belongs to one.
-> 
-> Once the page is under our control, we call page_set_poison to set it
-
-I guess you mean page_handle_poison here.
-
-> as poisoned and grab a refcount on it.
-> 
-> Signed-off-by: Oscar Salvador <osalvador@suse.de>
-> ---
->  mm/memory-failure.c | 20 +++++++++++-----
->  mm/page_alloc.c     | 68 +++++++++++++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 82 insertions(+), 6 deletions(-)
-> 
-> diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-> index 37b230b8cfe7..1d986580522d 100644
-> --- a/mm/memory-failure.c
-> +++ b/mm/memory-failure.c
-> @@ -78,6 +78,15 @@ EXPORT_SYMBOL_GPL(hwpoison_filter_dev_minor);
->  EXPORT_SYMBOL_GPL(hwpoison_filter_flags_mask);
->  EXPORT_SYMBOL_GPL(hwpoison_filter_flags_value);
->  
-> +extern bool take_page_off_buddy(struct page *page);
-> +
-> +static void page_handle_poison(struct page *page)
-
-hwpoison is a separate idea from page poisoning, so maybe I think
-it's better to be named like page_handle_hwpoison().
-
-> +{
-> +	SetPageHWPoison(page);
-> +	page_ref_inc(page);
-> +	num_poisoned_pages_inc();
-> +}
-> +
->  static int hwpoison_filter_dev(struct page *p)
->  {
->  	struct address_space *mapping;
-> @@ -1830,14 +1839,13 @@ static int soft_offline_in_use_page(struct page *page)
->  
->  static int soft_offline_free_page(struct page *page)
->  {
-> -	int rc = dissolve_free_huge_page(page);
-> +	int rc = -EBUSY;
->  
-> -	if (!rc) {
-> -		if (set_hwpoison_free_buddy_page(page))
-> -			num_poisoned_pages_inc();
-> -		else
-> -			rc = -EBUSY;
-> +	if (!dissolve_free_huge_page(page) && take_page_off_buddy(page)) {
-> +		page_handle_poison(page);
-> +		rc = 0;
->  	}
-> +
->  	return rc;
->  }
->  
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index cd1dd0712624..255df0c76a40 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -8632,6 +8632,74 @@ bool is_free_buddy_page(struct page *page)
->  
->  #ifdef CONFIG_MEMORY_FAILURE
->  /*
-> + * Break down a higher-order page in sub-pages, and keep our target out of
-> + * buddy allocator.
-> + */
-> +static void break_down_buddy_pages(struct zone *zone, struct page *page,
-> +				   struct page *target, int low, int high,
-> +				   struct free_area *area, int migratetype)
-> +{
-> +	unsigned long size = 1 << high;
-> +	struct page *current_buddy, *next_page;
-> +
-> +	while (high > low) {
-> +		area--;
-> +		high--;
-> +		size >>= 1;
-> +
-> +		if (target >= &page[size]) {
-> +			next_page = page + size;
-> +			current_buddy = page;
-> +		} else {
-> +			next_page = page;
-> +			current_buddy = page + size;
-> +		}
-> +
-> +		if (set_page_guard(zone, current_buddy, high, migratetype))
-> +			continue;
-> +
-> +		if (current_buddy != target) {
-> +			add_to_free_area(current_buddy, area, migratetype);
-> +			set_page_order(current_buddy, high);
-> +			page = next_page;
-> +		}
-> +	}
-> +}
-> +
-> +/*
-> + * Take a page that will be marked as poisoned off the buddy allocator.
-> + */
-> +bool take_page_off_buddy(struct page *page)
-> + {
-> +	struct zone *zone = page_zone(page);
-> +	unsigned long pfn = page_to_pfn(page);
-> +	unsigned long flags;
-> +	unsigned int order;
-> +	bool ret = false;
-> +
-> +	spin_lock_irqsave(&zone->lock, flags);
-> +	for (order = 0; order < MAX_ORDER; order++) {
-> +		struct page *page_head = page - (pfn & ((1 << order) - 1));
-> +		int buddy_order = page_order(page_head);
-> +		struct free_area *area = &(zone->free_area[buddy_order]);
-> +
-> +		if (PageBuddy(page_head) && buddy_order >= order) {
-> +			unsigned long pfn_head = page_to_pfn(page_head);
-> +			int migratetype = get_pfnblock_migratetype(page_head,
-> +		                                                   pfn_head);
-> +
-> +			del_page_from_free_area(page_head, area);
-> +			break_down_buddy_pages(zone, page_head, page, 0,
-> +		                               buddy_order, area, migratetype);
-> +			ret = true;
-> +		        break;
-
-indent with whitespace?
-And you can find a few more coding style warning with checkpatch.pl.
-
-BTW, if we consider to make unpoison mechanism to keep up with the
-new semantics, we will need the reverse operation of take_page_off_buddy().
-Do you think that that part will come with a separate work?
-
-Thanks,
-Naoya Horiguchi
-
-> +		 }
-> +	}
-> +	spin_unlock_irqrestore(&zone->lock, flags);
-> +	return ret;
-> + }
-> +
-> +/*
->   * Set PG_hwpoison flag if a given page is confirmed to be a free page.  This
->   * test is performed under the zone lock to prevent a race against page
->   * allocation.
-> -- 
-> 2.12.3
-> 
-> 
+VGhhbmtzIERhbiwNCg0KT24gVGh1LCAyMDE5LTEwLTE3IGF0IDA5OjE4IC0wNTAwLCBEYW4gTXVy
+cGh5IHdyb3RlOg0KPiBNYXR0DQoNCkJ5IHRoZSB3YXksIGl0cyBNYXR0aSA7KQ0KDQo+IE9uIDEw
+LzE3LzE5IDQ6NTUgQU0sIE1hdHRpIFZhaXR0aW5lbiB3cm90ZToNCj4gPiBST0hNIEJENzE4Mjgg
+UG93ZXIgbWFuYWdlbWVudCBJQyBpbnRlZ3JhdGVzIDcgYnVjayBjb252ZXJ0ZXJzLCA3DQo+ID4g
+TERPcywNCj4gPiBhIHJlYWwtdGltZSBjbG9jayAoUlRDKSwgMyBHUE8vcmVndWxhdG9yIGNvbnRy
+b2wgcGlucywgSEFMTCBpbnB1dA0KPiA+IHBpbg0KPiA+IGFuZCBhIDMyLjc2OCBrSHogY2xvY2sg
+Z2F0ZS4NCj4gPiANCj4gPiBEb2N1bWVudCB0aGUgZHQgYmluZGluZ3MgZHJpdmVycyBhcmUgdXNp
+bmcuDQo+IA0KPiBUaGlzIHNob3VsZCBiZSBwYXRjaCAxIG9mIFgNCg0KSSB3aWxsIHJlYmFzZSA6
+KQ0KDQpCciwNCglNYXR0aSBWYWl0dGluZW4NCg==
