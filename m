@@ -2,80 +2,91 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A30A8CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:23:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4856ACA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:23:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8227420640
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:23:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24EE820640
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:23:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727733AbfJUIXR (ORCPT
+        id S1727717AbfJUIXv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 04:23:17 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:33664 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726199AbfJUIXQ (ORCPT
+        Mon, 21 Oct 2019 04:23:51 -0400
+Received: from mail-sh.amlogic.com ([58.32.228.43]:57276 "EHLO
+        mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726199AbfJUIXv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 04:23:16 -0400
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iMSy0-0004QQ-CI; Mon, 21 Oct 2019 10:23:04 +0200
-Date:   Mon, 21 Oct 2019 10:23:03 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Christoph Hellwig <hch@lst.de>
-cc:     Arnd Bergmann <arnd@arndb.de>, Guo Ren <guoren@kernel.org>,
-        Michal Simek <monstr@monstr.eu>,
-        Greentime Hu <green.hu@gmail.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Guan Xuetao <gxt@pku.edu.cn>, x86@kernel.org,
-        linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        nios2-dev@lists.rocketboards.org, openrisc@lists.librecores.org,
-        linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        linux-mtd@lists.infradead.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 08/21] x86: clean up ioremap
-In-Reply-To: <20191017174554.29840-9-hch@lst.de>
-Message-ID: <alpine.DEB.2.21.1910211019540.1904@nanos.tec.linutronix.de>
-References: <20191017174554.29840-1-hch@lst.de> <20191017174554.29840-9-hch@lst.de>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 21 Oct 2019 04:23:51 -0400
+Received: from [10.18.29.227] (10.18.29.227) by mail-sh.amlogic.com
+ (10.18.11.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Mon, 21 Oct
+ 2019 16:23:57 +0800
+Subject: Re: [PATCH] mmc: fix mmc dma operation
+To:     Neil Armstrong <narmstrong@baylibre.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Kevin Hilman <khilman@baylibre.com>
+CC:     Nan Li <nan.li@amlogic.com>, Jerome Brunet <jbrunet@baylibre.com>,
+        <linux-amlogic@lists.infradead.org>, <linux-mmc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Victor Wan <victor.wan@amlogic.com>
+References: <1571637541-119016-1-git-send-email-jianxin.pan@amlogic.com>
+ <fc1f61e1-b156-11e6-3f21-c498d2f0a8c6@baylibre.com>
+From:   Jianxin Pan <jianxin.pan@amlogic.com>
+Message-ID: <a322d35b-28de-acb9-842c-ac64ba40e9b8@amlogic.com>
+Date:   Mon, 21 Oct 2019 16:23:57 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <fc1f61e1-b156-11e6-3f21-c498d2f0a8c6@baylibre.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.18.29.227]
+X-ClientProxiedBy: mail-sh.amlogic.com (10.18.11.5) To mail-sh.amlogic.com
+ (10.18.11.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 17 Oct 2019, Christoph Hellwig wrote:
+Hi Neil,
 
-Please change the subject to:
+Thanks for the review, I will update the subject and commit message in the next version.
 
-       x86/mm: Cleanup ioremap()
+On 2019/10/21 15:57, Neil Armstrong wrote:
+> Hi,
+> 
+> Thanks for the fix.
+> 
+> First, you should add "mmc: meson-gx:" in the subject.
+> 
+> On 21/10/2019 07:59, Jianxin Pan wrote:
+>> From: Nan Li <nan.li@amlogic.com>
+>>
+>> In MMC dma transfer, the region requested by dma_map_sg() may be released
+>> by dma_unmap_sg() before the transfer is completed.
+>>
+>> Put the unmap operation in front of mmc_request_done() to avoid this.
+> 
+> 
+> You should add a "Fixes:" tag so it can be backported on stable kernels.
+> 
+>>
+>> Signed-off-by: Nan Li <nan.li@amlogic.com>
+>> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
+>> ---
+>>  drivers/mmc/host/meson-gx-mmc.c | 15 ++++++++-------
+>>  1 file changed, 8 insertions(+), 7 deletions(-)
+>>
+[...]
+>>  }
+>>  
+>>  static void meson_mmc_read_resp(struct mmc_host *mmc, struct mmc_command *cmd)
+>>
+> Neil
+> 
+> .
+> 
 
-> Use ioremap as the main implemented function, and defined
-
-ioremap() please
-
-s/defined/define/
-
-> ioremap_nocache to it as a deprecated alias.
-
-ioremap_nocache() as a deprecated alias of ioremap().
-
-Aside of that this lacks any form of rationale. Please add some WHY to it.
-
-Should this go with your larger series or can this be picked up
-independently?
-
-Thanks,
-
-	tglx
