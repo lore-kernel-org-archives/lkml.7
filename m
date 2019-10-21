@@ -2,99 +2,106 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 756C0CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:08:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6587ACA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:08:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49ED9206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:08:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AR0Ji90M"
+	by mail.kernel.org (Postfix) with ESMTP id 3C47820B7C
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:08:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571656115;
+	bh=tBYGme/3FWzm/ih6xspHcVw+dNmojtv6QL8gPcuU85U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aaToM2g6LZfLQv/VJIo9A7RdiQf84ts7TG8zUyKiArAhEmi+7HAHDgwMoNmQccnAB
+	 bTnDknH8tKggD4Z6OVt6OoW2wp4V0WpUowB2zbUCsBg+GA+0mlW+sLYWH00p3OnmPV
+	 HVMO9MCjAOM91B4xXnmO9tfJIkY3XwZVIblA0gyI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728371AbfJULIQ (ORCPT
+        id S1728387AbfJULIe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 07:08:16 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:58908 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727433AbfJULIP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 07:08:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571656094;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/m6iR+lAGe4oWRdWBbbxaVLhAtZ0rF+yJWWCBo2VUQY=;
-        b=AR0Ji90MP+RQX7cImW5E3LCqQ5Bg8ureKOZxD0zlIzqnldlCw5c27JiXuwk9pOiv7m9UV9
-        Jy7VPk3MME1to/9um/o6kSVfbpHqKuiVNx18gsY87dQHzSnFok9ilh4Ow8ngjzDAhunRX6
-        QtZFlGIEWVSe4LItrpbHpGH1OQGcYC4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-235-66Y5VWh_OvypLh4oG7bHRg-1; Mon, 21 Oct 2019 07:08:11 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 21 Oct 2019 07:08:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46920 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727433AbfJULId (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 07:08:33 -0400
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0C925107AD31;
-        Mon, 21 Oct 2019 11:08:10 +0000 (UTC)
-Received: from [10.40.204.224] (ovpn-204-224.brq.redhat.com [10.40.204.224])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 48E3E5D6A5;
-        Mon, 21 Oct 2019 11:08:08 +0000 (UTC)
-Subject: Re: [PATCH] fs: exFAT read-only driver GPL implementation by Paragon
- Software.
-To:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>,
-        Richard Weinberger <richard.weinberger@gmail.com>
-References: <453A1153-9493-4A04-BF66-CE6A572DEBDB@paragon-software.com>
- <CAFLxGvyFBGiDab4wxWidjRyDgWkHVfigVsHiRDB4swpB3G+hvQ@mail.gmail.com>
- <20191021105409.32okvzbslxmcjdze@pali>
-Cc:     Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-From:   Maurizio Lombardi <mlombard@redhat.com>
-Message-ID: <0877502e-8369-9cfd-36e8-5a4798260cd4@redhat.com>
-Date:   Mon, 21 Oct 2019 13:08:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.0
+        by mail.kernel.org (Postfix) with ESMTPSA id B7BEF206C2;
+        Mon, 21 Oct 2019 11:08:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571656113;
+        bh=tBYGme/3FWzm/ih6xspHcVw+dNmojtv6QL8gPcuU85U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=noXYuhgt63hGzvfq+0yDhuJIIJuOJGuJCtc1uk6QM3wFsLHmp6Hzb7cuu47Mlkx1S
+         R1Ki2UTzEUlaHXqCO9R+VpFc/ZT0DR1QVqRh1KZLTLguIqySKkkF3PbOvW/OfglIep
+         1qtIvZNMbkvvBNOZxxdXbzJDWuJtcJshi9w/oXB8=
+Date:   Mon, 21 Oct 2019 13:08:30 +0200
+From:   Maxime Ripard <mripard@kernel.org>
+To:     megous@megous.com
+Cc:     linux-sunxi@googlegroups.com,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 2/4] phy: allwinner: add phy driver for USB3 PHY on
+ Allwinner H6 SoC
+Message-ID: <20191021110830.74m4ys7mvztb4nqs@gilmour>
+References: <20191020134229.1216351-1-megous@megous.com>
+ <20191020134229.1216351-3-megous@megous.com>
 MIME-Version: 1.0
-In-Reply-To: <20191021105409.32okvzbslxmcjdze@pali>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-MC-Unique: 66Y5VWh_OvypLh4oG7bHRg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="wkap5bf7ph4ddhpj"
+Content-Disposition: inline
+In-Reply-To: <20191020134229.1216351-3-megous@megous.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--wkap5bf7ph4ddhpj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Dne 21.10.2019 v 12:54 Pali Roh=C3=A1r napsal(a):
-> Plus there is new version of
-> this out-of-tree Samsung's exfat driver called sdfat which can be found
-> in some Android phones.=20
+On Sun, Oct 20, 2019 at 03:42:27PM +0200, megous@megous.com wrote:
+> From: Icenowy Zheng <icenowy@aosc.io>
+>
+> Allwinner H6 SoC contains a USB3 PHY (with USB2 DP/DM lines also
+> controlled).
+>
+> Add a driver for it.
+>
+> The register operations in this driver is mainly extracted from the BSP
+> USB3 driver.
+>
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> Reviewed-by: Chen-Yu Tsai <wens@csie.org>
 
-[...]
+Acked-by: Maxime Ripard <mripard@kernel.org>
 
->=20
-> About that one implementation from Samsung, which was recently merged
-> into staging tree, more people wrote that code is in horrible state and
-> probably it should not have been merged. That implementation has
-> all-one-one driver FAT12, FAT16, FAT32 and exFAT which basically
-> duplicate current kernel fs/fat code.
->=20
-> Quick look at this Konstantin's patch, it looks like that code is not in
-> such bad state as staging one. It has only exFAT support (no FAT32) but
-> there is no write support (yet).
+Maxime
 
-But, AFAIK, Samsung is preparing a patch that will replace the current
-staging driver with their newer sdfat driver that also has write support.
+--wkap5bf7ph4ddhpj
+Content-Type: application/pgp-signature; name="signature.asc"
 
-https://marc.info/?l=3Dlinux-fsdevel&m=3D156985252507812&w=3D2
+-----BEGIN PGP SIGNATURE-----
 
-Maurizio
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXa2RrgAKCRDj7w1vZxhR
+xUVEAP0UwD5i2m60iQ3FP1B5X7mKnqw6PlzwMDnX4NC+gEbFrQD9Fbgi5TtiREt4
+HRfbtIC6fTm7SkAMo6JU0iYU/DEpTQw=
+=SIZy
+-----END PGP SIGNATURE-----
 
+--wkap5bf7ph4ddhpj--
