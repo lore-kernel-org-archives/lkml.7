@@ -2,110 +2,159 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74B2CCA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:37:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DC82CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:38:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DD78214AE
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:37:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1497A214AE
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:38:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571647101;
+	bh=2jgYq72qYxvken8k9IgR5GhzlPu/0qzZrI36kMKmJI4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=CaWLr9JlWGgdxigexpRsG4IEX78lh00LMRIhb3ZDna2XJYUJRPLGMcK4YGP71i1kT
+	 QuzI8iq/zPnwO5zdA/R86XYZNA9fuXqUvI65Mac359XBwP0MGhrmfJC29G+brcjMqu
+	 BTomLU5GDWbT3kIn0AFF7SEfXH/3J1qotbwSvuqg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727422AbfJUIhe (ORCPT
+        id S1727576AbfJUIiU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 04:37:34 -0400
-Received: from a.mx.secunet.com ([62.96.220.36]:52558 "EHLO a.mx.secunet.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726181AbfJUIhd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 04:37:33 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by a.mx.secunet.com (Postfix) with ESMTP id ADFFA204E0;
-        Mon, 21 Oct 2019 10:37:32 +0200 (CEST)
-X-Virus-Scanned: by secunet
-Received: from a.mx.secunet.com ([127.0.0.1])
-        by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id zNGTWRgXWIcU; Mon, 21 Oct 2019 10:37:32 +0200 (CEST)
-Received: from mail-essen-01.secunet.de (mail-essen-01.secunet.de [10.53.40.204])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by a.mx.secunet.com (Postfix) with ESMTPS id 44981200A0;
-        Mon, 21 Oct 2019 10:37:32 +0200 (CEST)
-Received: from gauss2.secunet.de (10.182.7.193) by mail-essen-01.secunet.de
- (10.53.40.204) with Microsoft SMTP Server id 14.3.439.0; Mon, 21 Oct 2019
- 10:37:28 +0200
-Received: by gauss2.secunet.de (Postfix, from userid 1000)      id 43CC531800D5;
- Mon, 21 Oct 2019 10:37:31 +0200 (CEST)
-Date:   Mon, 21 Oct 2019 10:37:31 +0200
-From:   Steffen Klassert <steffen.klassert@secunet.com>
-To:     Tom Rix <trix@redhat.com>
-CC:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] xfrm : lock input tasklet skb queue
-Message-ID: <20191021083731.GK15862@gauss3.secunet.de>
-References: <CACVy4SVuw0Qbjiv6PLRn1symoxGzyBMZx2F5O23+jGZG6WHuYA@mail.gmail.com>
+        Mon, 21 Oct 2019 04:38:20 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:37106 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726648AbfJUIiT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 04:38:19 -0400
+Received: by mail-ot1-f68.google.com with SMTP id k32so10290143otc.4;
+        Mon, 21 Oct 2019 01:38:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Isdqq0Ubh24QJiFJ2l26RYaK1W86JQo/S0O5rntTFZ0=;
+        b=Z0TWIWcDFOQa1mesVbE2AV3RFGqL/hqwyU2Kg6KuPVvSfYXID05T9Lq8Gk3tE21XLz
+         Lqxr/dIn1eN5vAla+SYfeNc1MDjotOOO9dk20OHs9aIxNv/OfA1FO2ZBvbM1oM7pgL4I
+         cTF6PMvIVpVv9c7k/6WKB6NBlOvFj8N3gZ6bMN6q6ANZ9+nKeHWJoee807tQf5hMX6kB
+         gAbAQkv3wB+0tIVNtoj4r3qKuC6VWincHXSZDV6fPSm5K0/GuqoapTxT/8bihEdXK4Hw
+         ZPEcLyrz8SQ8uYjOKXYePjVABAWgi0gHnVupXEDuV5aXEtBYQzKxtVUMfOYwfOlDqCx1
+         jEjQ==
+X-Gm-Message-State: APjAAAVfWsfD2y5pccTvY3T37yyWHHJCppKbszvdbiwnsTNp0pd1eR44
+        WKOquBeAI+CmwqVRvhduRGmBoiM8S6NqdWGd5ZE=
+X-Google-Smtp-Source: APXvYqzxJsJuV6BUauy4Sb2At789fmamDYr15BmrQGLKIW7qtsWxPoUU1OE8Ucyvvce+T2vjIx84kc60si7Pd9H8+Xs=
+X-Received: by 2002:a05:6830:1e69:: with SMTP id m9mr17885485otr.262.1571647098420;
+ Mon, 21 Oct 2019 01:38:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <CACVy4SVuw0Qbjiv6PLRn1symoxGzyBMZx2F5O23+jGZG6WHuYA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
+References: <20191021034927.19300-1-ran.wang_1@nxp.com>
+In-Reply-To: <20191021034927.19300-1-ran.wang_1@nxp.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 21 Oct 2019 10:38:07 +0200
+Message-ID: <CAJZ5v0hO5Jtr_kyBbCawYc+fS0JQGcU-xfhS9S7DKiFQYJSJvQ@mail.gmail.com>
+Subject: Re: [PATCH v7 1/3] PM: wakeup: Add routine to help fetch wakeup
+ source object.
+To:     Ran Wang <ran.wang_1@nxp.com>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Rob Herring <robh+dt@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Pavel Machek <pavel@ucw.cz>, Li Biwen <biwen.li@nxp.com>,
+        Len Brown <len.brown@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Oct 20, 2019 at 08:46:10AM -0700, Tom Rix wrote:
-> On PREEMPT_RT_FULL while running netperf, a corruption
-> of the skb queue causes an oops.
-> 
-> This appears to be caused by a race condition here
->         __skb_queue_tail(&trans->queue, skb);
->         tasklet_schedule(&trans->tasklet);
-> Where the queue is changed before the tasklet is locked by
-> tasklet_schedule.
-> 
-> The fix is to use the skb queue lock.
-> 
-> Signed-off-by: Tom Rix <trix@redhat.com>
+On Mon, Oct 21, 2019 at 5:49 AM Ran Wang <ran.wang_1@nxp.com> wrote:
+>
+> Some user might want to go through all registered wakeup sources
+> and doing things accordingly. For example, SoC PM driver might need to
+> do HW programming to prevent powering down specific IP which wakeup
+> source depending on. So add this API to help walk through all registered
+> wakeup source objects on that list and return them one by one.
+>
+> Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+> Tested-by: Leonard Crestez <leonard.crestez@nxp.com>
 > ---
->  net/xfrm/xfrm_input.c | 11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
-> 
-> diff --git a/net/xfrm/xfrm_input.c b/net/xfrm/xfrm_input.c
-> index 9b599ed66d97..226dead86828 100644
-> --- a/net/xfrm/xfrm_input.c
-> +++ b/net/xfrm/xfrm_input.c
-> @@ -758,12 +758,16 @@ static void xfrm_trans_reinject(unsigned long data)
->      struct xfrm_trans_tasklet *trans = (void *)data;
->      struct sk_buff_head queue;
->      struct sk_buff *skb;
-> +    unsigned long flags;
-> 
->      __skb_queue_head_init(&queue);
-> +    spin_lock_irqsave(&trans->queue.lock, flags);
->      skb_queue_splice_init(&trans->queue, &queue);
-> 
->      while ((skb = __skb_dequeue(&queue)))
->          XFRM_TRANS_SKB_CB(skb)->finish(dev_net(skb->dev), NULL, skb);
-> +
-> +    spin_unlock_irqrestore(&trans->queue.lock, flags);
->  }
-> 
->  int xfrm_trans_queue(struct sk_buff *skb,
-> @@ -771,15 +775,20 @@ int xfrm_trans_queue(struct sk_buff *skb,
->                     struct sk_buff *))
->  {
->      struct xfrm_trans_tasklet *trans;
-> +    unsigned long flags;
-> 
->      trans = this_cpu_ptr(&xfrm_trans_tasklet);
-> +    spin_lock_irqsave(&trans->queue.lock, flags);
+> Change in v7:
+>         - Remove define of member *dev in wake_irq to fix conflict with commit
+>         c8377adfa781 ("PM / wakeup: Show wakeup sources stats in sysfs"), user
+>         will use ws->dev->parent instead.
+>         - Remove '#include <linux/of_device.h>' because it is not used.
+>
+> Change in v6:
+>         - Add wakeup_source_get_star() and wakeup_source_get_stop() to aligned
+>         with wakeup_sources_stats_seq_start/nex/stop.
+>
+> Change in v5:
+>         - Update commit message, add decription of walk through all wakeup
+>         source objects.
+>         - Add SCU protection in function wakeup_source_get_next().
+>         - Rename wakeup_source member 'attached_dev' to 'dev' and move it up
+>         (before wakeirq).
+>
+> Change in v4:
+>         - None.
+>
+> Change in v3:
+>         - Adjust indentation of *attached_dev;.
+>
+> Change in v2:
+>         - None.
+>
+>  drivers/base/power/wakeup.c | 37 +++++++++++++++++++++++++++++++++++++
+>  include/linux/pm_wakeup.h   |  3 +++
+>  2 files changed, 40 insertions(+)
+>
+> diff --git a/drivers/base/power/wakeup.c b/drivers/base/power/wakeup.c
+> index 5817b51..dee1b09 100644
+> --- a/drivers/base/power/wakeup.c
+> +++ b/drivers/base/power/wakeup.c
+> @@ -248,6 +248,43 @@ void wakeup_source_unregister(struct wakeup_source *ws)
+>  EXPORT_SYMBOL_GPL(wakeup_source_unregister);
+>
+>  /**
+> + * wakeup_source_get_star - Begin a walk on wakeup source list
 
-As you can see above 'trans' is per cpu, so a spinlock
-is not needed here. Also this does not run in hard
-interrupt context, so irqsave is also not needed.
-I don't see how this can fix anything.
+The "get" in the name suggests acquiring a reference of some kind
+which doesn't happen here.
 
-Can you please explain that race a bit more detailed?
+What about renaming it to wakeup_sources_walk_start()?
 
+> + * @srcuidx: Lock index allocated for this caller.
+> + */
+> +struct wakeup_source *wakeup_source_get_start(int *srcuidx)
+
+I don't quite like the calling convention here with passing an int
+pointer to get the SRCU index back.
+
+What about splitting this into, say, wakeup_sources_read_lock() (that
+will return the SRCU index) and wakeup_sources_walk_start() (that will
+return the first list entry)?
+
+Then, you could do something like
+
+idx = wakeup_sources_read_lock();
+
+ws = wakeup_sources_walk_start();
+while (ws) {
+
+        stuff
+
+        ws = wakeup_sources_walk_next();
+}
+
+wakeup_sources_read_unlock(idx);
+
+Or even define for_each_wakeup_source(ws) as
+
+    for (ws = wakeup_sources_walk_start(); ws; ws = wakeup_sources_walk_next())
+
+and use that under a _read_lock()/_read_unlock() pair?
