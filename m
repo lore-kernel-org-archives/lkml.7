@@ -2,161 +2,113 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B622BCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:19:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 116E1C47E49
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:20:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89C6320873
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:19:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=piap.pl header.i=@piap.pl header.b="hR8kZEAI"
+	by mail.kernel.org (Postfix) with ESMTP id CB9D920882
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:20:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571660405;
+	bh=yov1v9b0C0IRRHNbP0eVrTQYdtxXGoQsTcmejymZ3Wg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lZH+SHRKiXC59GnB0D7wmyBbIrs1cLO/+lAROpHjV3mf6pTXSzNASZnGka58UKNpt
+	 Eev/EJX/D3kOUj+rHUs6syduRFcprAHEs5N6U+IQFwFQL1WaS9kJVQQa9xvkuXMDbd
+	 VH+yUcR2BLrbLw80d+n/2YAYkJKxgkvfXbucDXR4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728615AbfJUMTK (ORCPT
+        id S1728595AbfJUMUE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 08:19:10 -0400
-Received: from ni.piap.pl ([195.187.100.5]:48172 "EHLO ni.piap.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728540AbfJUMTJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 08:19:09 -0400
-Received: from t19.piap.pl (OSB1819.piap.pl [10.0.9.19])
-        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ni.piap.pl (Postfix) with ESMTPSA id 8F1E7443597;
-        Mon, 21 Oct 2019 14:11:31 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 ni.piap.pl 8F1E7443597
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=piap.pl; s=mail;
-        t=1571659891; bh=2l3g9AQNQvoNkKc40D1gZPWvLVs7AjrMyGTdwvpiyJo=;
-        h=From:To:Cc:Subject:Date:From;
-        b=hR8kZEAIxIvs7So3Xp8ANP/+MxjRK9eNSwNzAsIfbz4WyTzOfezCPLNASVzEbjKE/
-         Xmgf6XaIHh+QVaam4MXqyTCBgkFPrOD/s0rj5y+NPltuyessadSQT9ZDpelTGbhdIA
-         kpb9cfzTBUWcVrbuoVt77n/RWsRRfubcxySgma+Y=
-From:   khalasa@piap.pl (Krzysztof =?utf-8?Q?Ha=C5=82asa?=)
-To:     Johannes Berg <johannes@sipsolutions.net>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: 802.11n IBSS: wlan0 stops receiving packets due to aggregation after sender reboot
-Date:   Mon, 21 Oct 2019 14:11:30 +0200
-Message-ID: <m34l02mh71.fsf@t19.piap.pl>
+        Mon, 21 Oct 2019 08:20:04 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39002 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728345AbfJUMUE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 08:20:04 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id D3B73B35C;
+        Mon, 21 Oct 2019 12:20:02 +0000 (UTC)
+Date:   Mon, 21 Oct 2019 14:20:02 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+Cc:     Oscar Salvador <osalvador@suse.de>,
+        "mike.kravetz@oracle.com" <mike.kravetz@oracle.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH v2 02/16] mm,madvise: call soft_offline_page()
+ without MF_COUNT_INCREASED
+Message-ID: <20191021122002.GM9379@dhcp22.suse.cz>
+References: <20191017142123.24245-1-osalvador@suse.de>
+ <20191017142123.24245-3-osalvador@suse.de>
+ <20191018115227.GL5017@dhcp22.suse.cz>
+ <20191021070254.GB8782@hori.linux.bs1.fc.nec.co.jp>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-KLMS-Rule-ID: 4
-X-KLMS-Message-Action: skipped
-X-KLMS-AntiSpam-Status: not scanned, whitelist
-X-KLMS-AntiPhishing: not scanned, whitelist
-X-KLMS-AntiVirus: Kaspersky Security 8.0 for Linux Mail Server, version 8.0.1.721, not scanned, whitelist
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191021070254.GB8782@hori.linux.bs1.fc.nec.co.jp>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Johannes,
+On Mon 21-10-19 07:02:55, Naoya Horiguchi wrote:
+> On Fri, Oct 18, 2019 at 01:52:27PM +0200, Michal Hocko wrote:
+> > On Thu 17-10-19 16:21:09, Oscar Salvador wrote:
+> > > From: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+> > > 
+> > > The call to get_user_pages_fast is only to get the pointer to a struct
+> > > page of a given address, pinning it is memory-poisoning handler's job,
+> > > so drop the refcount grabbed by get_user_pages_fast
+> > > 
+> > > Signed-off-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+> > > Signed-off-by: Oscar Salvador <osalvador@suse.de>
+> > > ---
+> > >  mm/madvise.c | 24 ++++++++++++------------
+> > >  1 file changed, 12 insertions(+), 12 deletions(-)
+> > > 
+> > > diff --git a/mm/madvise.c b/mm/madvise.c
+> > > index 2be9f3fdb05e..89ed9a22ff4f 100644
+> > > --- a/mm/madvise.c
+> > > +++ b/mm/madvise.c
+> > > @@ -878,16 +878,24 @@ static int madvise_inject_error(int behavior,
+> > >  		 */
+> > >  		order = compound_order(compound_head(page));
+> > >  
+> > > -		if (PageHWPoison(page)) {
+> > > -			put_page(page);
+> > > +		/*
+> > > +		 * The get_user_pages_fast() is just to get the pfn of the
+> > > +		 * given address, and the refcount has nothing to do with
+> > > +		 * what we try to test, so it should be released immediately.
+> > > +		 * This is racy but it's intended because the real hardware
+> > > +		 * errors could happen at any moment and memory error handlers
+> > > +		 * must properly handle the race.
+> > > +		 */
+> > > +		put_page(page);
+> > > +
+> > > +		if (PageHWPoison(page))
+> > >  			continue;
+> > > -		}
+> > >  
+> > >  		if (behavior == MADV_SOFT_OFFLINE) {
+> > >  			pr_info("Soft offlining pfn %#lx at process virtual address %#lx\n",
+> > >  					pfn, start);
+> > >  
+> > > -			ret = soft_offline_page(page, MF_COUNT_INCREASED);
+> > > +			ret = soft_offline_page(page, 0);
+> > 
+> > What does prevent this struct page to go away completely?
+> 
+> Nothing does it.  Memory error handler tries to pin by itself and
+> then determines what state the page is in now.
 
-it seems I've encountered a bug in mac80211 RX aggregation handler.
-The hw is a pair of stations using AR9580 (PCI ID 168c:0033) PCIe
-adapters. Linux 5.4-rc4.
-The driver shows the chip is Atheros AR9300 Rev:4.
-I'm using (on both ends):
-	iw wlan0 set type ibss
-	ip link set wlan0 up
-	iw dev wlan0 ibss join $ESSID $FREQ HT20
-
-The problem manifests itself after one of the stations is restarted
-(or the ath9k driver is reloaded, or a station is out of range for
-some time etc).
-It appears that the mac80211 RX aggregation code sets a new aggregation
-"session" at the remote station's request, but the head_seq_num
-(the sequence number the receiver expects to receive) isn't reset.
-I've added some debugging code to ___ieee80211_start_rx_ba_session()
-and ieee80211_sta_manage_reorder_buf() and it produced the following:
-
-Both stations boot and join the IBSS, packets get through:
-[   61.123131] AGG RX OK: ssn 1
-[   61.125346] SEQ OK: 1 vs 1
-[   61.125484] SEQ OK: 2 vs 2
-[   62.100841] SEQ OK: 3 vs 3
-...
-[  180.124210] SEQ OK: 130 vs 130
-[  181.123888] SEQ OK: 131 vs 131
-[  182.126046] SEQ OK: 132 vs 132
-
-Now I'm rebooting the remote station. It joins IBSS, packets can be seen
-on mon0 monitoring interface (on the local station), but they aren't
-arriving on wlan0:
-
-[  192.131102] SEQ BAD: 0 vs 133
-[  192.151243] AGG RX no change - OK: ssn 1
-[  192.242760] SEQ BAD: 1 vs 133
-[  193.133819] SEQ BAD: 2 vs 133
-[  193.272802] SEQ BAD: 3 vs 133
-...
-[  421.272374] SEQ BAD: 130 vs 133
-[  421.303630] SEQ BAD: 131 vs 133
-[  422.327924] SEQ BAD: 132 vs 133
-
-Then the sequence number catches up and the communication is
-reestablished:
-[  423.167023] SEQ OK: 133 vs 133
-[  423.169061] SEQ OK: 134 vs 134
-[  423.351618] SEQ OK: 135 vs 135
-
-I'll attach a patch in a separate mail but I'm not sure if it's
-the optimal fix - one packet (the "SEQ BAD: 0 vs 133) is still dropped,
-and I guess it won't work if the sender decides to not request
-aggregation anymore.
-
-Comments?
-
-The debugging code:
---- a/net/mac80211/agg-rx.c
-+++ b/net/mac80211/agg-rx.c
-@@ -354,9 +354,10 @@ void ___ieee80211_start_rx_ba_session(struct sta_info =
-*sta,
- 			 */
- 			rcu_read_lock();
- 			tid_rx =3D rcu_dereference(sta->ampdu_mlme.tid_rx[tid]);
--			if (tid_rx && tid_rx->timeout =3D=3D timeout)
-+			if (tid_rx && tid_rx->timeout =3D=3D timeout) {
- 				status =3D WLAN_STATUS_SUCCESS;
--			else
-+				printk(KERN_DEBUG "AGG RX no change - OK: ssn %u\n", start_seq_num);
-+			} else
- 				status =3D WLAN_STATUS_REQUEST_DECLINED;
- 			rcu_read_unlock();
- 			goto end;
-@@ -434,6 +437,7 @@ void ___ieee80211_start_rx_ba_session(struct sta_info *=
-sta,
- 	tid_agg_rx->tid =3D tid;
- 	tid_agg_rx->sta =3D sta;
- 	status =3D WLAN_STATUS_SUCCESS;
-+	printk(KERN_DEBUG "AGG RX OK: ssn %u\n", start_seq_num);
-=20
- 	/* activate it for RX */
- 	rcu_assign_pointer(sta->ampdu_mlme.tid_rx[tid], tid_agg_rx);
---- a/net/mac80211/rx.c
-+++ b/net/mac80211/rx.c
-@@ -1298,9 +1298,11 @@ static bool ieee80211_sta_manage_reorder_buf(struct =
-ieee80211_sub_if_data *sdata
-=20
- 	/* frame with out of date sequence number */
- 	if (ieee80211_sn_less(mpdu_seq_num, head_seq_num)) {
-+		printk(KERN_DEBUG "SEQ BAD: %u vs %u\n", mpdu_seq_num, head_seq_num);
- 		dev_kfree_skb(skb);
- 		goto out;
--	}
-+	} else
-+		printk(KERN_DEBUG "SEQ OK: %u vs %u\n", mpdu_seq_num, head_seq_num);
-=20
- 	/*
- 	 * If frame the sequence number exceeds our buffering window
-
---=20
-Krzysztof Ha=C5=82asa
-
-=C5=81UKASIEWICZ Research Network
-Industrial Research Institute for Automation and Measurements PIAP
-Al. Jerozolimskie 202, 02-486 Warsaw, Poland
+OK, but the page is not pinned by this context so it can go away at any
+time, right? Or do I miss your point? Who would be the Error handler
+context in this case?
+-- 
+Michal Hocko
+SUSE Labs
