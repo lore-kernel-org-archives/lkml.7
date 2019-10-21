@@ -4,33 +4,32 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B526FCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:38:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FCD5CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:38:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A77820659
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:38:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 678CB20640
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:38:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729557AbfJUOi1 (ORCPT
+        id S1729583AbfJUOif (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 10:38:27 -0400
-Received: from albert.telenet-ops.be ([195.130.137.90]:49120 "EHLO
-        albert.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729403AbfJUOh4 (ORCPT
+        Mon, 21 Oct 2019 10:38:35 -0400
+Received: from michel.telenet-ops.be ([195.130.137.88]:57610 "EHLO
+        michel.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729405AbfJUOh4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 21 Oct 2019 10:37:56 -0400
 Received: from ramsan ([84.194.98.4])
-        by albert.telenet-ops.be with bizsmtp
-        id GEdo2100D05gfCL06EdoBj; Mon, 21 Oct 2019 16:37:54 +0200
+        by michel.telenet-ops.be with bizsmtp
+        id GEdo2100S05gfCL06Edorm; Mon, 21 Oct 2019 16:37:54 +0200
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1iMYoe-0007dG-HN; Mon, 21 Oct 2019 16:37:48 +0200
+        id 1iMYoe-0007cz-DO; Mon, 21 Oct 2019 16:37:48 +0200
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1iMYoe-0003mr-Fi; Mon, 21 Oct 2019 16:37:48 +0200
+        id 1iMYoe-0003mc-C6; Mon, 21 Oct 2019 16:37:48 +0200
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Ludovic Desroches <ludovic.desroches@microchip.com>,
@@ -45,9 +44,9 @@ Cc:     linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 7/7] mmc: dw_mmc: Remove superfluous cast in debugfs_create_u32() call
-Date:   Mon, 21 Oct 2019 16:37:42 +0200
-Message-Id: <20191021143742.14487-8-geert+renesas@glider.be>
+Subject: [PATCH 2/7] mac80211: Use debugfs_create_xul() helper
+Date:   Mon, 21 Oct 2019 16:37:37 +0200
+Message-Id: <20191021143742.14487-3-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191021143742.14487-1-geert+renesas@glider.be>
 References: <20191021143742.14487-1-geert+renesas@glider.be>
@@ -56,27 +55,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"dw_mci.state" is an enum, which is compatible with u32, so there is no
-need to cast its address, preventing further compiler checks.
+Use the new debugfs_create_xul() helper instead of open-coding the same
+operation.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- drivers/mmc/host/dw_mmc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/mac80211/debugfs_sta.c | 17 +++--------------
+ 1 file changed, 3 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
-index b4c4a9cd6365f122..fc9d4d000f97e434 100644
---- a/drivers/mmc/host/dw_mmc.c
-+++ b/drivers/mmc/host/dw_mmc.c
-@@ -176,7 +176,7 @@ static void dw_mci_init_debugfs(struct dw_mci_slot *slot)
+diff --git a/net/mac80211/debugfs_sta.c b/net/mac80211/debugfs_sta.c
+index c8ad20c28c438dab..ca34dcdac8c0bd4d 100644
+--- a/net/mac80211/debugfs_sta.c
++++ b/net/mac80211/debugfs_sta.c
+@@ -928,12 +928,7 @@ STA_OPS(he_capa);
+ 		sta->debugfs_dir, sta, &sta_ ##name## _ops);
  
- 	debugfs_create_file("regs", S_IRUSR, root, host, &dw_mci_regs_fops);
- 	debugfs_create_file("req", S_IRUSR, root, slot, &dw_mci_req_fops);
--	debugfs_create_u32("state", S_IRUSR, root, (u32 *)&host->state);
-+	debugfs_create_u32("state", S_IRUSR, root, &host->state);
- 	debugfs_create_xul("pending_events", S_IRUSR, root,
- 			   &host->pending_events);
- 	debugfs_create_xul("completed_events", S_IRUSR, root,
+ #define DEBUGFS_ADD_COUNTER(name, field)				\
+-	if (sizeof(sta->field) == sizeof(u32))				\
+-		debugfs_create_u32(#name, 0400, sta->debugfs_dir,	\
+-			(u32 *) &sta->field);				\
+-	else								\
+-		debugfs_create_u64(#name, 0400, sta->debugfs_dir,	\
+-			(u64 *) &sta->field);
++	debugfs_create_ulong(#name, 0400, sta->debugfs_dir, &sta->field);
+ 
+ void ieee80211_sta_debugfs_add(struct sta_info *sta)
+ {
+@@ -978,14 +973,8 @@ void ieee80211_sta_debugfs_add(struct sta_info *sta)
+ 				    NL80211_EXT_FEATURE_AIRTIME_FAIRNESS))
+ 		DEBUGFS_ADD(airtime);
+ 
+-	if (sizeof(sta->driver_buffered_tids) == sizeof(u32))
+-		debugfs_create_x32("driver_buffered_tids", 0400,
+-				   sta->debugfs_dir,
+-				   (u32 *)&sta->driver_buffered_tids);
+-	else
+-		debugfs_create_x64("driver_buffered_tids", 0400,
+-				   sta->debugfs_dir,
+-				   (u64 *)&sta->driver_buffered_tids);
++	debugfs_create_xul("driver_buffered_tids", 0400, sta->debugfs_dir,
++			   &sta->driver_buffered_tids);
+ 
+ 	drv_sta_add_debugfs(local, sdata, &sta->sta, sta->debugfs_dir);
+ }
 -- 
 2.17.1
 
