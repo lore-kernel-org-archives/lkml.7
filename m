@@ -2,275 +2,212 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A95FCCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:00:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E006CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:01:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 658E62084C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:00:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rH50oxGv"
+	by mail.kernel.org (Postfix) with ESMTP id 3EEB82084C
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:01:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728288AbfJULAh (ORCPT
+        id S1728336AbfJULBb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 07:00:37 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:41362 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727685AbfJULAg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 07:00:36 -0400
-Received: by mail-pg1-f194.google.com with SMTP id t3so7585789pga.8;
-        Mon, 21 Oct 2019 04:00:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=bml2ohPl+TEtE7cvI/k3U0HwqRVRFAgjYn/m5+++BOA=;
-        b=rH50oxGvqdcgjU0FIN/6seNr6VVBvfVPpI88c4Zskpi9tvmn8Q+6xyZSSiSf3J0i+F
-         hSOIS+G8JnNxwL7oJ+YrTY7D3FXBFdgcS9V0oFL184T7AF2E+nCG54rI3zquOxA/JZdk
-         vta76Vfgo/ulDWgHf9GEtxwN0XrsbfrwITCtk+R48VBfkxW0vKp+pETWi3L416ZgkXeh
-         tGU739TlipssHnRZO3dtuamaPIMC8QYk/OkuVRfTDI2uTVnQ/2ayhXYwdJOGwwsylHb1
-         Pxn9QiZDCYo1ty+YDsVGa2B+vEnOo6/HTQfBjhJP4llbKHKCz3ZSv4OonlHWlMigkC6O
-         ujOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bml2ohPl+TEtE7cvI/k3U0HwqRVRFAgjYn/m5+++BOA=;
-        b=Qj2LD1yqhu76HZvrkOy5Ud7cy3tFY+LWngfb2xyZqdY4psT7QBem2aus8mS9GIr7yr
-         yD7GUqx1i2N5HZDzoUZ6xsp0tAQ4g++LjOfQ6ctykwIkefgv45FR9mvNdpP4mxOKo7B+
-         29q4C/BjkdFuWan2FuMH8QIfpyJU5qUWMOW2l+VwFKHL8/pqIjLp4pLaplDeC5ffBBJS
-         SCLNtjnKgirjHUltd3OwUzBzj9pm94651LnZLZkZw4nEsL1KzIKGBTqhs2Cz9+L4D9Kj
-         MnbrdaxJto9DZgmiMzRiQCSU0KkkfLogfas3Y/oSLLHES8QxuB04Dv24mWrZrVJajhQ9
-         beaw==
-X-Gm-Message-State: APjAAAX72gTU2ttT0XhRMUJMPH3v0gMBctoJcl723ozzxTNa8W3rHBj5
-        pSDKtloxhYjCJGzBN6qWsSM=
-X-Google-Smtp-Source: APXvYqwzAKNNV+sWFU7PTNz/ZolO+9NQDgWYN+XxVkQSkaQ9uZVjO3zjnsx50ESK9kekGNueAsu9Bw==
-X-Received: by 2002:a17:90a:ad95:: with SMTP id s21mr28140373pjq.11.1571655635336;
-        Mon, 21 Oct 2019 04:00:35 -0700 (PDT)
-Received: from localhost.localdomain ([163.152.162.99])
-        by smtp.gmail.com with ESMTPSA id y22sm13278443pjn.12.2019.10.21.04.00.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Oct 2019 04:00:34 -0700 (PDT)
-Date:   Mon, 21 Oct 2019 20:00:29 +0900
-From:   Suwan Kim <suwan.kim027@gmail.com>
-To:     Julia Lawall <julia.lawall@lip6.fr>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
-        shuah@kernel.org
-Subject: Re: drivers/usb/usbip/vhci_tx.c:150:8-18: ERROR: reference preceded
- by free on line 150 (fwd)
-Message-ID: <20191021110029.GB2471@localhost.localdomain>
-References: <alpine.DEB.2.21.1910191946510.5888@hadrien>
- <20191021094342.GA2471@localhost.localdomain>
- <alpine.DEB.2.21.1910211147110.2877@hadrien>
+        Mon, 21 Oct 2019 07:01:31 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:49206 "EHLO foss.arm.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S1727058AbfJULBa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 07:01:30 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3E950CA3;
+        Mon, 21 Oct 2019 04:00:53 -0700 (PDT)
+Received: from [10.1.194.43] (e112269-lin.cambridge.arm.com [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2C77D3F718;
+        Mon, 21 Oct 2019 04:00:51 -0700 (PDT)
+Subject: Re: [PATCH v6 07/10] KVM: arm64: Provide VCPU attributes for stolen
+ time
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Suzuki K Pouloze <suzuki.poulose@arm.com>,
+        linux-doc@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        linux-kernel@vger.kernel.org, James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Will Deacon <will@kernel.org>, kvmarm@lists.cs.columbia.edu,
+        linux-arm-kernel@lists.infradead.org
+References: <20191011125930.40834-1-steven.price@arm.com>
+ <20191011125930.40834-8-steven.price@arm.com> <86d0etynxv.wl-maz@kernel.org>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <28b3a004-b951-72fb-35fe-1f58673e6e93@arm.com>
+Date:   Mon, 21 Oct 2019 12:00:49 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1910211147110.2877@hadrien>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <86d0etynxv.wl-maz@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 11:47:36AM +0200, Julia Lawall wrote:
+On 19/10/2019 12:28, Marc Zyngier wrote:
+> On Fri, 11 Oct 2019 13:59:27 +0100,
+> Steven Price <steven.price@arm.com> wrote:
+>>
+>> Allow user space to inform the KVM host where in the physical memory
+>> map the paravirtualized time structures should be located.
+>>
+>> User space can set an attribute on the VCPU providing the IPA base
+>> address of the stolen time structure for that VCPU. This must be
+>> repeated for every VCPU in the VM.
+>>
+>> The address is given in terms of the physical address visible to
+>> the guest and must be 64 byte aligned. The guest will discover the
+>> address via a hypercall.
+>>
+>> Signed-off-by: Steven Price <steven.price@arm.com>
+>> ---
+>>  arch/arm64/include/asm/kvm_host.h |  7 +++++
+>>  arch/arm64/include/uapi/asm/kvm.h |  2 ++
+>>  arch/arm64/kvm/guest.c            |  9 ++++++
+>>  include/uapi/linux/kvm.h          |  2 ++
+>>  virt/kvm/arm/pvtime.c             | 47 +++++++++++++++++++++++++++++++
+>>  5 files changed, 67 insertions(+)
+>>
+>> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+>> index 1697e63f6dd8..6af16b29a41f 100644
+>> --- a/arch/arm64/include/asm/kvm_host.h
+>> +++ b/arch/arm64/include/asm/kvm_host.h
+>> @@ -489,6 +489,13 @@ long kvm_hypercall_pv_features(struct kvm_vcpu *vcpu);
+>>  long kvm_hypercall_stolen_time(struct kvm_vcpu *vcpu);
+>>  int kvm_update_stolen_time(struct kvm_vcpu *vcpu, bool init);
+>>  
+>> +int kvm_arm_pvtime_set_attr(struct kvm_vcpu *vcpu,
+>> +			    struct kvm_device_attr *attr);
+>> +int kvm_arm_pvtime_get_attr(struct kvm_vcpu *vcpu,
+>> +			    struct kvm_device_attr *attr);
+>> +int kvm_arm_pvtime_has_attr(struct kvm_vcpu *vcpu,
+>> +			    struct kvm_device_attr *attr);
+>> +
+>>  static inline void kvm_arm_pvtime_vcpu_init(struct kvm_vcpu_arch *vcpu_arch)
+>>  {
+>>  	vcpu_arch->steal.base = GPA_INVALID;
+>> diff --git a/arch/arm64/include/uapi/asm/kvm.h b/arch/arm64/include/uapi/asm/kvm.h
+>> index 67c21f9bdbad..cff1ba12c768 100644
+>> --- a/arch/arm64/include/uapi/asm/kvm.h
+>> +++ b/arch/arm64/include/uapi/asm/kvm.h
+>> @@ -323,6 +323,8 @@ struct kvm_vcpu_events {
+>>  #define KVM_ARM_VCPU_TIMER_CTRL		1
+>>  #define   KVM_ARM_VCPU_TIMER_IRQ_VTIMER		0
+>>  #define   KVM_ARM_VCPU_TIMER_IRQ_PTIMER		1
+>> +#define KVM_ARM_VCPU_PVTIME_CTRL	2
+>> +#define   KVM_ARM_VCPU_PVTIME_IPA	0
+>>  
+>>  /* KVM_IRQ_LINE irq field index values */
+>>  #define KVM_ARM_IRQ_VCPU2_SHIFT		28
+>> diff --git a/arch/arm64/kvm/guest.c b/arch/arm64/kvm/guest.c
+>> index dfd626447482..d3ac9d2fd405 100644
+>> --- a/arch/arm64/kvm/guest.c
+>> +++ b/arch/arm64/kvm/guest.c
+>> @@ -858,6 +858,9 @@ int kvm_arm_vcpu_arch_set_attr(struct kvm_vcpu *vcpu,
+>>  	case KVM_ARM_VCPU_TIMER_CTRL:
+>>  		ret = kvm_arm_timer_set_attr(vcpu, attr);
+>>  		break;
+>> +	case KVM_ARM_VCPU_PVTIME_CTRL:
+>> +		ret = kvm_arm_pvtime_set_attr(vcpu, attr);
+>> +		break;
+>>  	default:
+>>  		ret = -ENXIO;
+>>  		break;
+>> @@ -878,6 +881,9 @@ int kvm_arm_vcpu_arch_get_attr(struct kvm_vcpu *vcpu,
+>>  	case KVM_ARM_VCPU_TIMER_CTRL:
+>>  		ret = kvm_arm_timer_get_attr(vcpu, attr);
+>>  		break;
+>> +	case KVM_ARM_VCPU_PVTIME_CTRL:
+>> +		ret = kvm_arm_pvtime_get_attr(vcpu, attr);
+>> +		break;
+>>  	default:
+>>  		ret = -ENXIO;
+>>  		break;
+>> @@ -898,6 +904,9 @@ int kvm_arm_vcpu_arch_has_attr(struct kvm_vcpu *vcpu,
+>>  	case KVM_ARM_VCPU_TIMER_CTRL:
+>>  		ret = kvm_arm_timer_has_attr(vcpu, attr);
+>>  		break;
+>> +	case KVM_ARM_VCPU_PVTIME_CTRL:
+>> +		ret = kvm_arm_pvtime_has_attr(vcpu, attr);
+>> +		break;
+>>  	default:
+>>  		ret = -ENXIO;
+>>  		break;
+>> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+>> index 52641d8ca9e8..a540c8357049 100644
+>> --- a/include/uapi/linux/kvm.h
+>> +++ b/include/uapi/linux/kvm.h
+>> @@ -1227,6 +1227,8 @@ enum kvm_device_type {
+>>  #define KVM_DEV_TYPE_ARM_VGIC_ITS	KVM_DEV_TYPE_ARM_VGIC_ITS
+>>  	KVM_DEV_TYPE_XIVE,
+>>  #define KVM_DEV_TYPE_XIVE		KVM_DEV_TYPE_XIVE
+>> +	KVM_DEV_TYPE_ARM_PV_TIME,
+>> +#define KVM_DEV_TYPE_ARM_PV_TIME	KVM_DEV_TYPE_ARM_PV_TIME
+>>  	KVM_DEV_TYPE_MAX,
+>>  };
+>>  
+>> diff --git a/virt/kvm/arm/pvtime.c b/virt/kvm/arm/pvtime.c
+>> index a90f1b4ebd13..9dc466861e1e 100644
+>> --- a/virt/kvm/arm/pvtime.c
+>> +++ b/virt/kvm/arm/pvtime.c
+>> @@ -2,7 +2,9 @@
+>>  // Copyright (C) 2019 Arm Ltd.
+>>  
+>>  #include <linux/arm-smccc.h>
+>> +#include <linux/kvm_host.h>
+>>  
+>> +#include <asm/kvm_mmu.h>
+>>  #include <asm/pvclock-abi.h>
+>>  
+>>  #include <kvm/arm_hypercalls.h>
+>> @@ -75,3 +77,48 @@ long kvm_hypercall_stolen_time(struct kvm_vcpu *vcpu)
+>>  
+>>  	return vcpu->arch.steal.base;
+>>  }
+>> +
+>> +int kvm_arm_pvtime_set_attr(struct kvm_vcpu *vcpu,
+>> +			    struct kvm_device_attr *attr)
+>> +{
+>> +	u64 __user *user = (u64 __user *)attr->addr;
+>> +	u64 ipa;
+>> +
+>> +	if (attr->attr != KVM_ARM_VCPU_PVTIME_IPA)
+>> +		return -ENXIO;
+>> +
+>> +	if (get_user(ipa, user))
+>> +		return -EFAULT;
+>> +	if (!IS_ALIGNED(ipa, 64))
+>> +		return -EINVAL;
+>> +	if (vcpu->arch.steal.base != GPA_INVALID)
+>> +		return -EEXIST;
+>> +	vcpu->arch.steal.base = ipa;
 > 
+> And what if this IPA doesn't point to any memslot? I understand that
+> everything will still work (kvm_put_user()) will handle the mishap,
+> but it makes it hard for userspace to know that something is wrong.
 > 
-> On Mon, 21 Oct 2019, Suwan Kim wrote:
-> 
-> > On Sat, Oct 19, 2019 at 07:49:29PM +0200, Julia Lawall wrote:
-> > > Is it guaranteed that if usb_pipetype(urb->pipe) == PIPE_ISOCHRONOUS (line
-> > > 123) is true on one iteration, then it will be true on all iterations? If
-> > > not, then it could be good to set iso_buffer to NULL after the kfree on
-> > > line 150.
-> > >
-> >
-> > It is not always true on all iteration because URB on each iteration
-> > can have different type of pipe. So, I think you are right.
-> > Thanks for reporting this.
-> >
-> > I think it seems better to move the declaration of
-> > usbip_iso_packet_descriptor into the while loop.
-> >
-> > Could you send a patch to Shuah? Or should I send?
-> 
-> If you could take care of ti, that would be great.  Thanks.
-> 
+> Is there any problem in mandating that the corresponding memslot
+> already has been created, and enforcing this check?
 
-Ok. I will send a patch :)
+No that could be done. As you mentioned nothing bad will happen (to the
+host) if this is wrong, so I didn't see the need to enforce that the
+memory is setup first. And the check will be pretty weak because nothing
+stop the memslot vanishing after the check. But I guess this might make
+it easier to figure out what has gone wrong in user space, and we can
+always remove this ordering restriction in future if necessary. So I'll
+add a check for now.
 
-Regards
-Suwan Kim
+Thanks,
 
-> julia
-> 
-> >
-> > Regards
-> > Suwan Kim
-> >
-> > > julia
-> > >
-> > > ---------- Forwarded message ----------
-> > > Date: Sun, 20 Oct 2019 01:40:11 +0800
-> > > From: kbuild test robot <lkp@intel.com>
-> > > To: kbuild@lists.01.org
-> > > Cc: Julia Lawall <julia.lawall@lip6.fr>
-> > > Subject: drivers/usb/usbip/vhci_tx.c:150:8-18: ERROR: reference preceded by free
-> > >      on line 150
-> > >
-> > > CC: kbuild-all@lists.01.org
-> > > CC: linux-kernel@vger.kernel.org
-> > > CC: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-> > >
-> > > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> > > head:   998d75510e373aab5644d777d3b058312d550159
-> > > commit: ea44d190764b4422af4d1c29eaeb9e69e353b406 usbip: Implement SG support to vhci-hcd and stub driver
-> > > date:   7 weeks ago
-> > > :::::: branch date: 7 hours ago
-> > > :::::: commit date: 7 weeks ago
-> > >
-> > > If you fix the issue, kindly add following tag
-> > > Reported-by: kbuild test robot <lkp@intel.com>
-> > > Reported-by: Julia Lawall <julia.lawall@lip6.fr>
-> > >
-> > > >> drivers/usb/usbip/vhci_tx.c:150:8-18: ERROR: reference preceded by free on line 150
-> > >    drivers/usb/usbip/vhci_tx.c:159:7-17: ERROR: reference preceded by free on line 150
-> > >
-> > > # https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=ea44d190764b4422af4d1c29eaeb9e69e353b406
-> > > git remote add linus https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-> > > git remote update linus
-> > > git checkout ea44d190764b4422af4d1c29eaeb9e69e353b406
-> > > vim +150 drivers/usb/usbip/vhci_tx.c
-> > >
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   51
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   52  static int vhci_send_cmd_submit(struct vhci_device *vdev)
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   53  {
-> > > ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   54  	struct usbip_iso_packet_descriptor *iso_buffer = NULL;
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   55  	struct vhci_priv *priv = NULL;
-> > > ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   56  	struct scatterlist *sg;
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   57
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   58  	struct msghdr msg;
-> > > ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   59  	struct kvec *iov;
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   60  	size_t txsize;
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   61
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   62  	size_t total_size = 0;
-> > > ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   63  	int iovnum;
-> > > ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   64  	int err = -ENOMEM;
-> > > ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   65  	int i;
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   66
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   67  	while ((priv = dequeue_from_priv_tx(vdev)) != NULL) {
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   68  		int ret;
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   69  		struct urb *urb = priv->urb;
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   70  		struct usbip_header pdu_header;
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   71
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   72  		txsize = 0;
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   73  		memset(&pdu_header, 0, sizeof(pdu_header));
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   74  		memset(&msg, 0, sizeof(msg));
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   75  		memset(&iov, 0, sizeof(iov));
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   76
-> > > 8272d099d05f7a drivers/usb/usbip/vhci_tx.c     Shuah Khan         2017-12-18   77  		usbip_dbg_vhci_tx("setup txdata urb seqnum %lu\n",
-> > > 8272d099d05f7a drivers/usb/usbip/vhci_tx.c     Shuah Khan         2017-12-18   78  				  priv->seqnum);
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   79
-> > > ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   80  		if (urb->num_sgs && usb_pipeout(urb->pipe))
-> > > ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   81  			iovnum = 2 + urb->num_sgs;
-> > > ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   82  		else
-> > > ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   83  			iovnum = 3;
-> > > ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   84
-> > > ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   85  		iov = kcalloc(iovnum, sizeof(*iov), GFP_KERNEL);
-> > > ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   86  		if (!iov) {
-> > > ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   87  			usbip_event_add(&vdev->ud, SDEV_EVENT_ERROR_MALLOC);
-> > > ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   88  			return -ENOMEM;
-> > > ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   89  		}
-> > > ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   90
-> > > ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   91  		if (urb->num_sgs)
-> > > ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   92  			urb->transfer_flags |= URB_DMA_MAP_SG;
-> > > ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   93
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   94  		/* 1. setup usbip_header */
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   95  		setup_cmd_submit_pdu(&pdu_header, urb);
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   96  		usbip_header_correct_endian(&pdu_header, 1);
-> > > ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   97  		iovnum = 0;
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   98
-> > > ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   99  		iov[iovnum].iov_base = &pdu_header;
-> > > ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  100  		iov[iovnum].iov_len  = sizeof(pdu_header);
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  101  		txsize += sizeof(pdu_header);
-> > > ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  102  		iovnum++;
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  103
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  104  		/* 2. setup transfer buffer */
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  105  		if (!usb_pipein(urb->pipe) && urb->transfer_buffer_length > 0) {
-> > > ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  106  			if (urb->num_sgs &&
-> > > ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  107  				      !usb_endpoint_xfer_isoc(&urb->ep->desc)) {
-> > > ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  108  				for_each_sg(urb->sg, sg, urb->num_sgs, i) {
-> > > ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  109  					iov[iovnum].iov_base = sg_virt(sg);
-> > > ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  110  					iov[iovnum].iov_len = sg->length;
-> > > ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  111  					iovnum++;
-> > > ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  112  				}
-> > > ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  113  			} else {
-> > > ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  114  				iov[iovnum].iov_base = urb->transfer_buffer;
-> > > ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  115  				iov[iovnum].iov_len  =
-> > > ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  116  						urb->transfer_buffer_length;
-> > > ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  117  				iovnum++;
-> > > ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  118  			}
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  119  			txsize += urb->transfer_buffer_length;
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  120  		}
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  121
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  122  		/* 3. setup iso_packet_descriptor */
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  123  		if (usb_pipetype(urb->pipe) == PIPE_ISOCHRONOUS) {
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  124  			ssize_t len = 0;
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  125
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  126  			iso_buffer = usbip_alloc_iso_desc_pdu(urb, &len);
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  127  			if (!iso_buffer) {
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  128  				usbip_event_add(&vdev->ud,
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  129  						SDEV_EVENT_ERROR_MALLOC);
-> > > ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  130  				goto err_iso_buffer;
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  131  			}
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  132
-> > > ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  133  			iov[iovnum].iov_base = iso_buffer;
-> > > ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  134  			iov[iovnum].iov_len  = len;
-> > > ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  135  			iovnum++;
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  136  			txsize += len;
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  137  		}
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  138
-> > > ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  139  		ret = kernel_sendmsg(vdev->ud.tcp_socket, &msg, iov, iovnum,
-> > > ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  140  				     txsize);
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  141  		if (ret != txsize) {
-> > > 1a4b6f66285785 drivers/staging/usbip/vhci_tx.c matt mooney        2011-05-19  142  			pr_err("sendmsg failed!, ret=%d for %zd\n", ret,
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  143  			       txsize);
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  144  			usbip_event_add(&vdev->ud, VDEV_EVENT_ERROR_TCP);
-> > > ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  145  			err = -EPIPE;
-> > > ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  146  			goto err_tx;
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  147  		}
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  148
-> > > ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  149  		kfree(iov);
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09 @150  		kfree(iso_buffer);
-> > > b8868e45c5f895 drivers/staging/usbip/vhci_tx.c Brian G. Merrell   2009-07-21  151  		usbip_dbg_vhci_tx("send txdata\n");
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  152
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  153  		total_size += txsize;
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  154  	}
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  155
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  156  	return total_size;
-> > > ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  157
-> > > ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  158  err_tx:
-> > > ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  159  	kfree(iso_buffer);
-> > > ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  160  err_iso_buffer:
-> > > ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  161  	kfree(iov);
-> > > ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  162
-> > > ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  163  	return err;
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  164  }
-> > > 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  165
-> > >
-> > > :::::: The code at line 150 was first introduced by commit
-> > > :::::: 04679b3489e048cd5dae79e050a3afed8e4e42b6 Staging: USB/IP: add client driver
-> > >
-> > > :::::: TO: Takahiro Hirofuchi <hirofuchi@users.sourceforge.net>
-> > > :::::: CC: Greg Kroah-Hartman <gregkh@suse.de>
-> > >
-> > > ---
-> > > 0-DAY kernel test infrastructure                Open Source Technology Center
-> > > https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
-> >
+Steve
