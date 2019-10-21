@@ -2,321 +2,108 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06405CA9EB0
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:33:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94214CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:34:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB98B2084B
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:33:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571675589;
-	bh=qDPaRx40y17YObQNSDMzSABKHqukVZssvQsf3oQmrg0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Vi83strmm/f/po8zW4hvw68RvGEH3vOTFKVb9LxQCOW0MSv80bQ5bmZDjivhJgTJa
-	 s1YuBok16oeB2D9F3fZqH4wNe87iHZB+2N/Sx8SX53y5enVhOckwObJAWUkN4JE405
-	 PWh/xtn3X4AWFF4h4zbJ0V88Jvu1kuXI1i7cQv6k=
+	by mail.kernel.org (Postfix) with ESMTP id 67EBD217D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:34:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728639AbfJUQdI (ORCPT
+        id S1727607AbfJUQe5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 12:33:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41752 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727101AbfJUQdI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 12:33:08 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 528D8205ED;
-        Mon, 21 Oct 2019 16:33:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571675586;
-        bh=qDPaRx40y17YObQNSDMzSABKHqukVZssvQsf3oQmrg0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=hHTkS6DbkZMGdx5b7qC495MnAWe+i8TqnUNgyxmxL3Q3f+/Fz2ud3DsFvlvyjq7My
-         3vFlFr3K11VE/TlY2KO4gxfyMAkVMuOdtVlLZLXBr1prImUpwHLhL6qSqsYKBWVwmL
-         9kKnFpplSiR5lwkToiNCUBlj1O69pgSxL1Q3knQA=
-Date:   Mon, 21 Oct 2019 17:33:01 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Gwendal Grignou <gwendal@chromium.org>
-Cc:     briannorris@chromium.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, lee.jones@linaro.org, bleung@chromium.org,
-        enric.balletbo@collabora.com, dianders@chromium.org,
-        groeck@chromium.org, fabien.lahoudere@collabora.com,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-Subject: Re: [PATCH v2 13/18] iio: cros_ec: Move function description to .c
- file
-Message-ID: <20191021173301.3f7b3268@archlinux>
-In-Reply-To: <20191021055403.67849-14-gwendal@chromium.org>
-References: <20191021055403.67849-1-gwendal@chromium.org>
-        <20191021055403.67849-14-gwendal@chromium.org>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Mon, 21 Oct 2019 12:34:57 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:57502 "EHLO foss.arm.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S1726289AbfJUQe4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 12:34:56 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D6A8E46A;
+        Mon, 21 Oct 2019 09:34:33 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 99E3E3F71F;
+        Mon, 21 Oct 2019 09:34:31 -0700 (PDT)
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     amit.kachhap@arm.com, ard.biesheuvel@linaro.org,
+        catalin.marinas@arm.com, deller@gmx.de, duwe@suse.de,
+        james.morse@arm.com, jeyu@kernel.org, jpoimboe@redhat.com,
+        jthierry@redhat.com, mark.rutland@arm.com, mingo@redhat.com,
+        peterz@infradead.org, rostedt@goodmis.org, svens@stackframe.org,
+        takahiro.akashi@linaro.org, will@kernel.org
+Subject: [PATCH 0/8] arm64: ftrace cleanup + FTRACE_WITH_REGS
+Date:   Mon, 21 Oct 2019 17:34:18 +0100
+Message-Id: <20191021163426.9408-1-mark.rutland@arm.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 20 Oct 2019 22:53:58 -0700
-Gwendal Grignou <gwendal@chromium.org> wrote:
+Hi,
 
-> To prevent comment rot, move function description to
-> cros_ec_sensors_core.c.
-> 
-> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
-Great thanks.
+This series is a reworked version of Torsten's v8 FTRACE_WITH_REGS
+series [1]. I've tried to rework the existing code in preparatory
+patches so that the patchable-function-entry bits slot in with fewer
+surprises. This version is based on v5.4-rc3, and can be found in my
+arm64/ftrace-with-regs branch [2].
 
-Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+I've added an (optional) ftrace_init_nop(), which the core code uses to
+initialize callsites. This allows us to avoid a synthetic MCOUNT_ADDR
+symbol, and more cleanly separates the one-time initialization of the
+callsite from dynamic NOP<->CALL modification. Architectures which don't
+implement this get the existing ftrace_make_nop() with MCOUNT_ADDR.
 
-> ---
-> New in v2.
-> 
->  .../cros_ec_sensors/cros_ec_sensors_core.c    | 69 ++++++++++++++++
->  .../linux/iio/common/cros_ec_sensors_core.h   | 80 -------------------
->  2 files changed, 69 insertions(+), 80 deletions(-)
-> 
-> diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> index 81a7f692de2f3..4acb8b7310d43 100644
-> --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> @@ -83,6 +83,14 @@ static void get_default_min_max_freq(enum motionsensor_type type,
->  	}
->  }
->  
-> +/**
-> + * cros_ec_sensors_core_init() - basic initialization of the core structure
-> + * @pdev:		platform device created for the sensors
-> + * @indio_dev:		iio device structure of the device
-> + * @physical_device:	true if the device refers to a physical device
-> + *
-> + * Return: 0 on success, -errno on failure.
-> + */
->  int cros_ec_sensors_core_init(struct platform_device *pdev,
->  			      struct iio_dev *indio_dev,
->  			      bool physical_device)
-> @@ -160,6 +168,16 @@ int cros_ec_sensors_core_init(struct platform_device *pdev,
->  }
->  EXPORT_SYMBOL_GPL(cros_ec_sensors_core_init);
->  
-> +/**
-> + * cros_ec_motion_send_host_cmd() - send motion sense host command
-> + * @st:		pointer to state information for device
-> + * @opt_length:	optional length to reduce the response size, useful on the data
-> + *		path. Otherwise, the maximal allowed response size is used
-> + *
-> + * When called, the sub-command is assumed to be set in param->cmd.
-> + *
-> + * Return: 0 on success, -errno on failure.
-> + */
->  int cros_ec_motion_send_host_cmd(struct cros_ec_sensors_core_state *state,
->  				 u16 opt_length)
->  {
-> @@ -422,6 +440,14 @@ int cros_ec_sensors_read_lpc(struct iio_dev *indio_dev,
->  }
->  EXPORT_SYMBOL_GPL(cros_ec_sensors_read_lpc);
->  
-> +/**
-> + * cros_ec_sensors_read_cmd() - retrieve data using the EC command protocol
-> + * @indio_dev:	pointer to IIO device
-> + * @scan_mask:	bitmap of the sensor indices to scan
-> + * @data:	location to store data
-> + *
-> + * Return: 0 on success, -errno on failure.
-> + */
->  int cros_ec_sensors_read_cmd(struct iio_dev *indio_dev,
->  			     unsigned long scan_mask, s16 *data)
->  {
-> @@ -446,6 +472,18 @@ int cros_ec_sensors_read_cmd(struct iio_dev *indio_dev,
->  }
->  EXPORT_SYMBOL_GPL(cros_ec_sensors_read_cmd);
->  
-> +/**
-> + * cros_ec_sensors_capture() - the trigger handler function
-> + * @irq:	the interrupt number.
-> + * @p:		a pointer to the poll function.
-> + *
-> + * On a trigger event occurring, if the pollfunc is attached then this
-> + * handler is called as a threaded interrupt (and hence may sleep). It
-> + * is responsible for grabbing data from the device and pushing it into
-> + * the associated buffer.
-> + *
-> + * Return: IRQ_HANDLED
-> + */
->  irqreturn_t cros_ec_sensors_capture(int irq, void *p)
->  {
->  	struct iio_poll_func *pf = p;
-> @@ -481,6 +519,16 @@ irqreturn_t cros_ec_sensors_capture(int irq, void *p)
->  }
->  EXPORT_SYMBOL_GPL(cros_ec_sensors_capture);
->  
-> +/**
-> + * cros_ec_sensors_core_read() - function to request a value from the sensor
-> + * @st:		pointer to state information for device
-> + * @chan:	channel specification structure table
-> + * @val:	will contain one element making up the returned value
-> + * @val2:	will contain another element making up the returned value
-> + * @mask:	specifies which values to be requested
-> + *
-> + * Return:	the type of value returned by the device
-> + */
->  int cros_ec_sensors_core_read(struct cros_ec_sensors_core_state *st,
->  			  struct iio_chan_spec const *chan,
->  			  int *val, int *val2, long mask)
-> @@ -521,6 +569,17 @@ int cros_ec_sensors_core_read(struct cros_ec_sensors_core_state *st,
->  }
->  EXPORT_SYMBOL_GPL(cros_ec_sensors_core_read);
->  
-> +/**
-> + * cros_ec_sensors_core_read_avail() - get available values
-> + * @indio_dev:		pointer to state information for device
-> + * @chan:	channel specification structure table
-> + * @vals:	list of available values
-> + * @type:	type of data returned
-> + * @length:	number of data returned in the array
-> + * @mask:	specifies which values to be requested
-> + *
-> + * Return:	an error code, IIO_AVAIL_RANGE or IIO_AVAIL_LIST
-> + */
->  int cros_ec_sensors_core_read_avail(struct iio_dev *indio_dev,
->  				    struct iio_chan_spec const *chan,
->  				    const int **vals,
-> @@ -542,6 +601,16 @@ int cros_ec_sensors_core_read_avail(struct iio_dev *indio_dev,
->  }
->  EXPORT_SYMBOL_GPL(cros_ec_sensors_core_read_avail);
->  
-> +/**
-> + * cros_ec_sensors_core_write() - function to write a value to the sensor
-> + * @st:		pointer to state information for device
-> + * @chan:	channel specification structure table
-> + * @val:	first part of value to write
-> + * @val2:	second part of value to write
-> + * @mask:	specifies which values to write
-> + *
-> + * Return:	the type of value returned by the device
-> + */
->  int cros_ec_sensors_core_write(struct cros_ec_sensors_core_state *st,
->  			       struct iio_chan_spec const *chan,
->  			       int val, int val2, long mask)
-> diff --git a/include/linux/iio/common/cros_ec_sensors_core.h b/include/linux/iio/common/cros_ec_sensors_core.h
-> index bb331e6356a9c..0af918978f975 100644
-> --- a/include/linux/iio/common/cros_ec_sensors_core.h
-> +++ b/include/linux/iio/common/cros_ec_sensors_core.h
-> @@ -79,95 +79,25 @@ struct cros_ec_sensors_core_state {
->  	int frequencies[3];
->  };
->  
-> -/**
-> - * cros_ec_sensors_read_lpc() - retrieve data from EC shared memory
-> - * @indio_dev:	pointer to IIO device
-> - * @scan_mask:	bitmap of the sensor indices to scan
-> - * @data:	location to store data
-> - *
-> - * This is the safe function for reading the EC data. It guarantees that the
-> - * data sampled was not modified by the EC while being read.
-> - *
-> - * Return: 0 on success, -errno on failure.
-> - */
->  int cros_ec_sensors_read_lpc(struct iio_dev *indio_dev, unsigned long scan_mask,
->  			     s16 *data);
->  
-> -/**
-> - * cros_ec_sensors_read_cmd() - retrieve data using the EC command protocol
-> - * @indio_dev:	pointer to IIO device
-> - * @scan_mask:	bitmap of the sensor indices to scan
-> - * @data:	location to store data
-> - *
-> - * Return: 0 on success, -errno on failure.
-> - */
->  int cros_ec_sensors_read_cmd(struct iio_dev *indio_dev, unsigned long scan_mask,
->  			     s16 *data);
->  
->  struct platform_device;
-> -/**
-> - * cros_ec_sensors_core_init() - basic initialization of the core structure
-> - * @pdev:		platform device created for the sensors
-> - * @indio_dev:		iio device structure of the device
-> - * @physical_device:	true if the device refers to a physical device
-> - *
-> - * Return: 0 on success, -errno on failure.
-> - */
->  int cros_ec_sensors_core_init(struct platform_device *pdev,
->  			      struct iio_dev *indio_dev, bool physical_device);
->  
-> -/**
-> - * cros_ec_sensors_capture() - the trigger handler function
-> - * @irq:	the interrupt number.
-> - * @p:		a pointer to the poll function.
-> - *
-> - * On a trigger event occurring, if the pollfunc is attached then this
-> - * handler is called as a threaded interrupt (and hence may sleep). It
-> - * is responsible for grabbing data from the device and pushing it into
-> - * the associated buffer.
-> - *
-> - * Return: IRQ_HANDLED
-> - */
->  irqreturn_t cros_ec_sensors_capture(int irq, void *p);
->  
-> -/**
-> - * cros_ec_motion_send_host_cmd() - send motion sense host command
-> - * @st:		pointer to state information for device
-> - * @opt_length:	optional length to reduce the response size, useful on the data
-> - *		path. Otherwise, the maximal allowed response size is used
-> - *
-> - * When called, the sub-command is assumed to be set in param->cmd.
-> - *
-> - * Return: 0 on success, -errno on failure.
-> - */
->  int cros_ec_motion_send_host_cmd(struct cros_ec_sensors_core_state *st,
->  				 u16 opt_length);
->  
-> -/**
-> - * cros_ec_sensors_core_read() - function to request a value from the sensor
-> - * @st:		pointer to state information for device
-> - * @chan:	channel specification structure table
-> - * @val:	will contain one element making up the returned value
-> - * @val2:	will contain another element making up the returned value
-> - * @mask:	specifies which values to be requested
-> - *
-> - * Return:	the type of value returned by the device
-> - */
->  int cros_ec_sensors_core_read(struct cros_ec_sensors_core_state *st,
->  			      struct iio_chan_spec const *chan,
->  			      int *val, int *val2, long mask);
->  
-> -/**
-> - * cros_ec_sensors_core_read_avail() - get available values
-> - * @indio_dev:		pointer to state information for device
-> - * @chan:	channel specification structure table
-> - * @vals:	list of available values
-> - * @type:	type of data returned
-> - * @length:	number of data returned in the array
-> - * @mask:	specifies which values to be requested
-> - *
-> - * Return:	an error code, IIO_AVAIL_RANGE or IIO_AVAIL_LIST
-> - */
->  int cros_ec_sensors_core_read_avail(struct iio_dev *indio_dev,
->  				    struct iio_chan_spec const *chan,
->  				    const int **vals,
-> @@ -175,16 +105,6 @@ int cros_ec_sensors_core_read_avail(struct iio_dev *indio_dev,
->  				    int *length,
->  				    long mask);
->  
-> -/**
-> - * cros_ec_sensors_core_write() - function to write a value to the sensor
-> - * @st:		pointer to state information for device
-> - * @chan:	channel specification structure table
-> - * @val:	first part of value to write
-> - * @val2:	second part of value to write
-> - * @mask:	specifies which values to write
-> - *
-> - * Return:	the type of value returned by the device
-> - */
->  int cros_ec_sensors_core_write(struct cros_ec_sensors_core_state *st,
->  			       struct iio_chan_spec const *chan,
->  			       int val, int val2, long mask);
+I've moved the module PLT initialization to module load time, which
+simplifies runtime callsite modification. This also means that we don't
+transitently mark the module text RW, and will allow for the removal of
+module_disable_ro().
+
+Since the last posting, parisc gained ftrace support using
+patchable-function-entry. I've made the handling of module callsite
+locations common in kernel/module.c with a new FTRACE_CALLSITE_SECTION
+definition, and removed the newly redundant bits from arch/parisc.
+
+Thanks,
+Mark.
+
+[1] https://lore.kernel.org/r/20190208150826.44EBC68DD2@newverein.lst.de
+[2] git://git.kernel.org/pub/scm/linux/kernel/git/mark/linux.git arm64/ftrace-with-regs
+
+Mark Rutland (7):
+  ftrace: add ftrace_init_nop()
+  module/ftrace: handle patchable-function-entry
+  arm64: module: rework special section handling
+  arm64: module/ftrace: intialize PLT at load time
+  arm64: insn: add encoder for MOV (register)
+  arm64: asm-offsets: add S_FP
+  arm64: ftrace: minimize ifdeffery
+
+Torsten Duwe (1):
+  arm64: implement ftrace with regs
+
+ arch/arm64/Kconfig               |   2 +
+ arch/arm64/Makefile              |   5 ++
+ arch/arm64/include/asm/ftrace.h  |  23 +++++++
+ arch/arm64/include/asm/insn.h    |   3 +
+ arch/arm64/include/asm/module.h  |   2 +-
+ arch/arm64/kernel/asm-offsets.c  |   1 +
+ arch/arm64/kernel/entry-ftrace.S | 140 +++++++++++++++++++++++++++++++++++++--
+ arch/arm64/kernel/ftrace.c       | 123 ++++++++++++++++++++--------------
+ arch/arm64/kernel/insn.c         |  13 ++++
+ arch/arm64/kernel/module-plts.c  |   3 +-
+ arch/arm64/kernel/module.c       |  57 +++++++++++++---
+ arch/parisc/Makefile             |   1 -
+ arch/parisc/kernel/module.c      |  10 ++-
+ arch/parisc/kernel/module.lds    |   7 --
+ include/linux/ftrace.h           |   5 ++
+ kernel/module.c                  |   2 +-
+ kernel/trace/ftrace.c            |  13 +++-
+ 17 files changed, 330 insertions(+), 80 deletions(-)
+ delete mode 100644 arch/parisc/kernel/module.lds
+
+-- 
+2.11.0
 
