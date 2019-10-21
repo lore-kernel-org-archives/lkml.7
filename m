@@ -2,91 +2,115 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A94FCA9EAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 03:27:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9747CA9EAB
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 03:32:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7816621835
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 03:27:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F92821897
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 03:32:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B7CTcHee"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726927AbfJUD1J (ORCPT
+        id S1726916AbfJUDcZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 20 Oct 2019 23:27:09 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:50310 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726778AbfJUD1I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 20 Oct 2019 23:27:08 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id A9459FE1304850AFE75A;
-        Mon, 21 Oct 2019 11:27:06 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.56) by
- DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 21 Oct 2019 11:26:58 +0800
-From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
-To:     <netdev@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     yuqi jin <jinyuqi@huawei.com>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Shaokun Zhang <zhangshaokun@hisilicon.com>
-Subject: [PATCH v2] net: stmmac: Fix the problem of tso_xmit
-Date:   Mon, 21 Oct 2019 11:27:34 +0800
-Message-ID: <1571628454-29550-1-git-send-email-zhangshaokun@hisilicon.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <0b6b3394-f9f0-2804-0665-fe914ad2cdea@gmail.com>
-References: <0b6b3394-f9f0-2804-0665-fe914ad2cdea@gmail.com>
+        Sun, 20 Oct 2019 23:32:25 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:33998 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726778AbfJUDcZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 20 Oct 2019 23:32:25 -0400
+Received: by mail-pg1-f193.google.com with SMTP id k20so6892971pgi.1
+        for <linux-kernel@vger.kernel.org>; Sun, 20 Oct 2019 20:32:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=5isXOORphLUvrMfHKnVOGpBGKkTOkoPX8pGWFrNDV6M=;
+        b=B7CTcHeewVhJ8PJ4T2Xy3W1oc8teseNmlcEKmJwiOSX+AE9BBht8hxCbvmNba1BtW/
+         HT5JSKMoaSwpjq1oi1p7ccQkdFNx4MpnzTCmSGY1iqYDQ17kmoUZn1PRp5z8onrgvalO
+         O6ZCyAm/1leCWkg7LleltdNnpTqBtFu5AqwB1eRAyKUQL1l/hRTQg8X0tMjo/CrLpCbe
+         I/7hLc1cON111+NEaqITzUiryaGr2dKwUWvQgLqeKaJj+10cGjJAT303SwSdIt5kqaiq
+         PFhla/rFdW0+7cmsVBNdFvX98tkdYqpcVbjYTU4chE0PJ9yer5n9mCf+PKN4K5VSGdxh
+         yeRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5isXOORphLUvrMfHKnVOGpBGKkTOkoPX8pGWFrNDV6M=;
+        b=KE1RLPNjAAMA4eNXgIAyWvfLYq1WDomIVUNwKJQc6xEbF/Aj3rgeNZ/i1ivxt7+lZB
+         /uu86NbypHh0TGpxgFq/fhjbM6eNQRFFvmdhqiOgFzJb9z2/DgyrLfzLt2NxWCNajVWP
+         /7UGKIu7HlO0UsHlmqyme6v4YfFjSRXE98G5YLMwcfZnjYfce+yApgufXZZYRFD8+sQe
+         UAmwx4T0zkPmZDfPF2vgXY9t8a/4c8tetqP8uAmCSbRFV76oDpNfnhaGxgfvb9ZfNL3U
+         OyJaRPZrudlGEw7hoFsRqgSSLXC7NDKY9Im37rGDvDNsisizspKXPtdDmUHWPwx8WWiW
+         vz2A==
+X-Gm-Message-State: APjAAAXD7Flzb9CCfpwWkjYjZD63/fqMG5fG4dGyAeQtkd+ukmf1oIrg
+        G+A+0BrcQ4oHvUXZHgsSsVmKHQ==
+X-Google-Smtp-Source: APXvYqwr234z/kcG49JDU513eFxregAt47Pn/yB3FCwYgKG5t1iFFWQ3JJdHNv7eru9GzZvT1Us3BQ==
+X-Received: by 2002:aa7:8046:: with SMTP id y6mr19860568pfm.222.1571628744255;
+        Sun, 20 Oct 2019 20:32:24 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id i6sm13809128pfq.20.2019.10.20.20.32.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 20 Oct 2019 20:32:22 -0700 (PDT)
+Date:   Sun, 20 Oct 2019 20:32:20 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Rishabh Bhatnagar <rishabhb@codeaurora.org>,
+        Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCHv2 0/3] Add LLCC support for SC7180 SoC
+Message-ID: <20191021033220.GG4500@tuxbook-pro>
+References: <cover.1571484439.git.saiprakash.ranjan@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.56]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1571484439.git.saiprakash.ranjan@codeaurora.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yuqi jin <jinyuqi@huawei.com>
+On Sat 19 Oct 04:37 PDT 2019, Sai Prakash Ranjan wrote:
 
-When the address width of DMA is greater than 32, the packet header occupies
-a BD descriptor. The starting address of the data should be added to the
-header length.
+> LLCC behaviour is controlled by the configuration data set
+> in the llcc-qcom driver, add the same for SC7180 SoC.
+> Also convert the existing bindings to json-schema and add
+> the compatible for SC7180 SoC.
+> 
 
-Fixes: a993db88d17d ("net: stmmac: Enable support for > 32 Bits addressing in XGMAC")
-Cc: Eric Dumazet <eric.dumazet@gmail.com>
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: Jose Abreu <joabreu@synopsys.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Signed-off-by: yuqi jin <jinyuqi@huawei.com>
-Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
----
-Changes in v2: 
-    -- Address Eric's comment: add the Fixes tag
+Thanks for the patches and thanks for the review Stephen. Series applied
 
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 1 +
- 1 file changed, 1 insertion(+)
+Regards,
+Bjorn
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 3dfd04e0506a..4e9c848c67cc 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -2995,6 +2995,7 @@ static netdev_tx_t stmmac_tso_xmit(struct sk_buff *skb, struct net_device *dev)
- 	} else {
- 		stmmac_set_desc_addr(priv, first, des);
- 		tmp_pay_len = pay_len;
-+		des += proto_hdr_len;
- 	}
- 
- 	stmmac_tso_allocator(priv, des, tmp_pay_len, (nfrags == 0), queue);
--- 
-2.7.4
-
+> v2:
+>  * Convert bindings to YAML and add compatible for SC7180
+>  * Address Stephen's comments on const
+> 
+> Sai Prakash Ranjan (2):
+>   dt-bindings: msm: Convert LLCC bindings to YAML
+>   dt-bindings: msm: Add LLCC for SC7180
+> 
+> Vivek Gautam (1):
+>   soc: qcom: llcc: Add configuration data for SC7180
+> 
+>  .../devicetree/bindings/arm/msm/qcom,llcc.txt | 41 --------------
+>  .../bindings/arm/msm/qcom,llcc.yaml           | 55 +++++++++++++++++++
+>  drivers/soc/qcom/llcc-qcom.c                  | 15 ++++-
+>  3 files changed, 69 insertions(+), 42 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
+>  create mode 100644 Documentation/devicetree/bindings/arm/msm/qcom,llcc.yaml
+> 
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
+> 
