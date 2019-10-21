@@ -2,83 +2,184 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A18ACA9EB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:11:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87881CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:13:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7930A21929
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:11:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DF2220684
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:13:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VzqovNX1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727989AbfJUKL2 (ORCPT
+        id S1728000AbfJUKNr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 06:11:28 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:42943 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726767AbfJUKL1 (ORCPT
+        Mon, 21 Oct 2019 06:13:47 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:40725 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727572AbfJUKNn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 06:11:27 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iMUes-0006Rv-S9; Mon, 21 Oct 2019 12:11:26 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iMUes-0004zR-93; Mon, 21 Oct 2019 12:11:26 +0200
-Date:   Mon, 21 Oct 2019 12:11:26 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Adam Ford <aford173@gmail.com>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pwm@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: pwm_bl on i.MX6Q broken on 5.4-RC1+
-Message-ID: <20191021101126.tw5bjyp76rbxudgj@pengutronix.de>
-References: <CAHCN7xJSz+QhOb4vE6b67jh5jnSOHnw79EyX8RW91TqPkD__Lw@mail.gmail.com>
- <20191020182428.76l3ob4sxblrjr4m@core.my.home>
+        Mon, 21 Oct 2019 06:13:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571652822;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=X10UFs7tuPUPd3D+40Rh0JtzksdyNoor8tHqygg664s=;
+        b=VzqovNX1kVyNEwPu5L4CM2VOP8igO0KlQYVs3lnk4BhYL26zxXUVbVBKMCHB0dLvuwWFGa
+        kUjeqO3cT1wqtG86g5HYOt+qxEdBbokRKINfA2KmLI4lTx2ZLEIzF/ozdAnXtlYwyBUUAl
+        FFpb4zmKpPfk/X9jNeuCIQVPVcHcAv4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-151-L7NxpIXqPOmlWs4WJm5E6w-1; Mon, 21 Oct 2019 06:13:38 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DE1ED800D49;
+        Mon, 21 Oct 2019 10:13:34 +0000 (UTC)
+Received: from [10.72.12.22] (ovpn-12-22.pek2.redhat.com [10.72.12.22])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3A0AB5D70E;
+        Mon, 21 Oct 2019 10:13:03 +0000 (UTC)
+Subject: Re: [PATCH V4 5/6] virtio: introduce a mdev based transport
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        maxime.coquelin@redhat.com, cunming.liang@intel.com,
+        zhihong.wang@intel.com, rob.miller@broadcom.com,
+        xiao.w.wang@intel.com, haotian.wang@sifive.com,
+        zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
+        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
+        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
+        farman@linux.ibm.com, pasic@linux.ibm.com, sebott@linux.ibm.com,
+        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
+        gor@linux.ibm.com, borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
+        stefanha@redhat.com
+References: <20191017104836.32464-1-jasowang@redhat.com>
+ <20191017104836.32464-6-jasowang@redhat.com>
+ <20191018162007.31631039.cohuck@redhat.com>
+ <2bb5645b-5c46-9cae-0571-65c302f51cf2@redhat.com>
+ <20191021113607.16b26d9d.cohuck@redhat.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <1aa59fea-cae5-6303-4a94-51493d5748ba@redhat.com>
+Date:   Mon, 21 Oct 2019 18:13:02 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191020182428.76l3ob4sxblrjr4m@core.my.home>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20191021113607.16b26d9d.cohuck@redhat.com>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-MC-Unique: L7NxpIXqPOmlWs4WJm5E6w-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Ondřej,
 
-On Sun, Oct 20, 2019 at 08:24:28PM +0200, Ondřej Jirman wrote:
-> On Wed, Oct 16, 2019 at 02:55:54PM -0500, Adam Ford wrote:
-> > I have an i.MX6Q with an LCD and PWM controlled backlight.  On 5.4-RC1
-> > through the current master (16 Oct 2019), the backlight does not come
-> > on by default.  I can get it come on by manually setting the
-> > brightness, but any video activity seems to blank the screen again
-> > until I change the brightness again.
-> 
-> You might want to check PWM driver that's used on your SoC. I had a similar
-> breakage on Allwinner SoCs, and it was caused by a broken get_state callback.
-> The problem was there for a long time and it was only exposed by the commit you
-> bisected to.
+On 2019/10/21 =E4=B8=8B=E5=8D=885:36, Cornelia Huck wrote:
+> On Mon, 21 Oct 2019 13:59:23 +0800
+> Jason Wang <jasowang@redhat.com> wrote:
+>
+>> On 2019/10/18 =E4=B8=8B=E5=8D=8810:20, Cornelia Huck wrote:
+>>> On Thu, 17 Oct 2019 18:48:35 +0800
+>>> Jason Wang <jasowang@redhat.com> wrote:
+>>>  =20
+>>>> This patch introduces a new mdev transport for virtio. This is used to
+>>>> use kernel virtio driver to drive the mediated device that is capable
+>>>> of populating virtqueue directly.
+>>>>
+>>>> A new virtio-mdev driver will be registered to the mdev bus, when a
+>>>> new virtio-mdev device is probed, it will register the device with
+>>>> mdev based config ops. This means it is a software transport between
+>>>> mdev driver and mdev device. The transport was implemented through
+>>>> device specific ops which is a part of mdev_parent_ops now.
+>>>>
+>>>> Signed-off-by: Jason Wang <jasowang@redhat.com>
+>>>> ---
+>>>>    drivers/virtio/Kconfig       |   7 +
+>>>>    drivers/virtio/Makefile      |   1 +
+>>>>    drivers/virtio/virtio_mdev.c | 409 ++++++++++++++++++++++++++++++++=
++++
+>>>>    3 files changed, 417 insertions(+)
+>>> (...)
+>>>  =20
+>>>> +static int virtio_mdev_probe(struct device *dev)
+>>>> +{
+>>>> +=09struct mdev_device *mdev =3D mdev_from_dev(dev);
+>>>> +=09const struct virtio_mdev_device_ops *ops =3D mdev_get_dev_ops(mdev=
+);
+>>>> +=09struct virtio_mdev_device *vm_dev;
+>>>> +=09int rc;
+>>>> +
+>>>> +=09vm_dev =3D devm_kzalloc(dev, sizeof(*vm_dev), GFP_KERNEL);
+>>>> +=09if (!vm_dev)
+>>>> +=09=09return -ENOMEM;
+>>>> +
+>>>> +=09vm_dev->vdev.dev.parent =3D dev;
+>>>> +=09vm_dev->vdev.dev.release =3D virtio_mdev_release_dev;
+>>>> +=09vm_dev->vdev.config =3D &virtio_mdev_config_ops;
+>>>> +=09vm_dev->mdev =3D mdev;
+>>>> +=09INIT_LIST_HEAD(&vm_dev->virtqueues);
+>>>> +=09spin_lock_init(&vm_dev->lock);
+>>>> +
+>>>> +=09vm_dev->version =3D ops->get_mdev_features(mdev);
+>>>> +=09if (vm_dev->version !=3D VIRTIO_MDEV_F_VERSION_1) {
+>>>> +=09=09dev_err(dev, "VIRTIO_MDEV_F_VERSION_1 is mandatory\n");
+>>>> +=09=09return -ENXIO;
+>>>> +=09}
+>>> Hm, so how is that mdev features interface supposed to work? If
+>>> VIRTIO_MDEV_F_VERSION_1 is a bit, I would expect this code to test for
+>>> its presence, and not for identity.
+>>
+>> This should be used by driver to detect the which sets of functions and
+>> their semantics that could be provided by the device. E.g when driver
+>> support both version 2 and version 1 but device only support version 1,
+>> driver can switch to use version 1. Btw, Is there a easy way for to test
+>> its presence or do you mean doing sanity testing on existence of the
+>> mandatory ops that provided by the device?
+> What I meant was something like:
+>
+> features =3D ops->get_mdev_features(mdev);
+> if (features & VIRTIO_MDEV_F_VERSION_1)
+> =09vm_dev->version =3D 1;
+> else
+> =09//moan about missing support for version 1
+>
+> Can there be class id specific extra features, or is this only for core
+> features? If the latter, maybe also do something like
+>
+> supported_features =3D ORED_LIST_OF_FEATURES;
+> if (features & ~supported_features)
+> =09//moan about extra feature bits
 
-I added Adam to the recipents of the Thread "backlight: pwm_bl:
-configure pwm only once per backlight toggle" here on this list. In this
-thread the problem is analysed and it's a bit different than for sun4i.
-I assume we don't need to follow up on this report given the discussion
-is already ongoing elsewhere.
 
-Best regards
-Uwe
+Consider driver can claim to support a list of ids, so I this it's former.
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Will do as what you proposed.
+
+Thanks
+
+
+>
+>>
+>>> What will happen if we come up with a version 2? If this is backwards
+>>> compatible, will both version 2 and version 1 be set?
+>>
+>> Yes, I think so, and version 2 should be considered as some extensions
+>> of version 1. If it's completely, it should use a new class id.
+> Ok, that makes sense.
+>
+
