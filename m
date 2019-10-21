@@ -2,90 +2,149 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7817ECA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:04:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90546CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:06:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52BB620679
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:04:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D93720679
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:06:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728837AbfJUNE2 (ORCPT
+        id S1728856AbfJUNGH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 09:04:28 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34558 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727256AbfJUNE1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 09:04:27 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 1C783B504;
-        Mon, 21 Oct 2019 13:04:26 +0000 (UTC)
-Date:   Mon, 21 Oct 2019 15:04:25 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Laurence Oberman <loberman@redhat.com>,
-        Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        Michal Hocko <mhocko@suse.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] watchdog/softlockup: Preserve original timestamp
- when touching watchdog externally
-Message-ID: <20191021130425.ewiegm2425hkydb3@pathway.suse.cz>
-References: <20190819104732.20966-1-pmladek@suse.com>
- <20190819104732.20966-2-pmladek@suse.com>
- <20191021124214.GD1817@hirez.programming.kicks-ass.net>
+        Mon, 21 Oct 2019 09:06:07 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:59098 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727322AbfJUNGH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 09:06:07 -0400
+Received: from [213.220.153.21] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iMXMB-0007Nx-7n; Mon, 21 Oct 2019 13:04:19 +0000
+Date:   Mon, 21 Oct 2019 15:04:18 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
+        bsingharora@gmail.com, dvyukov@google.com, elver@google.com,
+        parri.andrea@gmail.com, stable@vger.kernel.org,
+        syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: [PATCH v6] taskstats: fix data-race
+Message-ID: <20191021130417.5yi7pxpigsydz5po@wittgenstein>
+References: <20191009114809.8643-1-christian.brauner@ubuntu.com>
+ <20191021113327.22365-1-christian.brauner@ubuntu.com>
+ <efaecf5d-b528-24ba-1955-e1b190ece98c@rasmusvillemoes.dk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191021124214.GD1817@hirez.programming.kicks-ass.net>
-User-Agent: NeoMutt/20170912 (1.9.0)
+In-Reply-To: <efaecf5d-b528-24ba-1955-e1b190ece98c@rasmusvillemoes.dk>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 2019-10-21 14:42:14, Peter Zijlstra wrote:
-> On Mon, Aug 19, 2019 at 12:47:30PM +0200, Petr Mladek wrote:
-> > Some bug report included the same softlockups in flush_tlb_kernel_range()
-> > in regular intervals. Unfortunately was not clear if there was a progress
-> > or not.
+On Mon, Oct 21, 2019 at 02:19:01PM +0200, Rasmus Villemoes wrote:
+> On 21/10/2019 13.33, Christian Brauner wrote:
+> > The first approach used smp_load_acquire() and smp_store_release().
+> > However, after having discussed this it seems that the data dependency
+> > for kmem_cache_alloc() would be fixed by WRITE_ONCE().
+> > Furthermore, the smp_load_acquire() would only manage to order the stats
+> > check before the thread_group_empty() check. So it seems just using
+> > READ_ONCE() and WRITE_ONCE() will do the job and I wanted to bring this
+> > up for discussion at least.
 > > 
-> > The situation can be simulated with a simply busy loop:
+> > /* v6 */
+> > - Christian Brauner <christian.brauner@ubuntu.com>:
+> >   - bring up READ_ONCE()/WRITE_ONCE() approach for discussion
+> > ---
+> >  kernel/taskstats.c | 26 +++++++++++++++-----------
+> >  1 file changed, 15 insertions(+), 11 deletions(-)
 > > 
-> > 	while (true)
-> > 	      cpu_relax();
-> > 
-> > The softlockup detector produces:
-> > 
-> > [  168.277520] watchdog: BUG: soft lockup - CPU#1 stuck for 22s! [cat:4865]
-> > [  196.277604] watchdog: BUG: soft lockup - CPU#1 stuck for 22s! [cat:4865]
-> > [  236.277522] watchdog: BUG: soft lockup - CPU#1 stuck for 23s! [cat:4865]
-> > 
-> > One would expect only one softlockup report or several reports with
-> > an increased duration.
+> > diff --git a/kernel/taskstats.c b/kernel/taskstats.c
+> > index 13a0f2e6ebc2..111bb4139aa2 100644
+> > --- a/kernel/taskstats.c
+> > +++ b/kernel/taskstats.c
+> > @@ -554,25 +554,29 @@ static int taskstats_user_cmd(struct sk_buff *skb, struct genl_info *info)
+> >  static struct taskstats *taskstats_tgid_alloc(struct task_struct *tsk)
+> >  {
+> >  	struct signal_struct *sig = tsk->signal;
+> > -	struct taskstats *stats;
+> > +	struct taskstats *stats_new, *stats;
+> >  
+> > -	if (sig->stats || thread_group_empty(tsk))
+> > -		goto ret;
+> > +	/* Pairs with WRITE_ONCE() below. */
+> > +	stats = READ_ONCE(sig->stats);
+> > +	if (stats || thread_group_empty(tsk))
+> > +		return stats;
+> >  
+> >  	/* No problem if kmem_cache_zalloc() fails */
+> > -	stats = kmem_cache_zalloc(taskstats_cache, GFP_KERNEL);
+> > +	stats_new = kmem_cache_zalloc(taskstats_cache, GFP_KERNEL);
+> >  
+> >  	spin_lock_irq(&tsk->sighand->siglock);
+> > -	if (!sig->stats) {
+> > -		sig->stats = stats;
+> > -		stats = NULL;
+> > +	if (!stats) {
+> > +		stats = stats_new;
+> > +		/* Pairs with READ_ONCE() above. */
+> > +		WRITE_ONCE(sig->stats, stats_new);
+> > +		stats_new = NULL;
 > 
-> Let's just say our expectations differ.
-> 
-> > The result is that each softlockup is reported only once unless
-> > another process get scheduled:
-> > 
-> > [  320.248948] watchdog: BUG: soft lockup - CPU#2 stuck for 26s! [cat:4916]
-> 
-> Which would greatly confuse me; as the above would have me think the
-> situation got resolved (no more lockups reported) even though it is
-> still very much stuck there.
-> 
-> IOW, I don't see how this makes anything better. You're removing
-> information.
+> No idea about the memory ordering issues, but don't you need to
+> load/check sig->stats again? Otherwise it seems that two threads might
+> both see !sig->stats, both allocate a stats_new, and both
+> unconditionally in turn assign their stats_new to sig->stats. Then the
+> first assignment ends up becoming a memory leak (and any writes through
+> that pointer done by the caller end up in /dev/null...)
 
-The 2nd patch brings back the regular report but with correctly
-counted time (stuck for XXs).
+Trigger hand too fast. I guess you're thinking sm like:
 
-I split it into two patches because I was not sure what would be
-preferred behavior. I prefer the regular reports as well.
-
-Best Regards,
-Petr
+diff --git a/kernel/taskstats.c b/kernel/taskstats.c
+index 13a0f2e6ebc2..c4e1ed11e785 100644
+--- a/kernel/taskstats.c
++++ b/kernel/taskstats.c
+@@ -554,25 +554,27 @@ static int taskstats_user_cmd(struct sk_buff *skb, struct genl_info *info)
+ static struct taskstats *taskstats_tgid_alloc(struct task_struct *tsk)
+ {
+ 	struct signal_struct *sig = tsk->signal;
+-	struct taskstats *stats;
++	struct taskstats *stats_new, *stats;
+ 
+-	if (sig->stats || thread_group_empty(tsk))
+-		goto ret;
++	stats = READ_ONCE(sig->stats);
++	if (stats || thread_group_empty(tsk))
++		return stats;
+ 
+-	/* No problem if kmem_cache_zalloc() fails */
+-	stats = kmem_cache_zalloc(taskstats_cache, GFP_KERNEL);
++	stats_new = kmem_cache_zalloc(taskstats_cache, GFP_KERNEL);
+ 
+ 	spin_lock_irq(&tsk->sighand->siglock);
+-	if (!sig->stats) {
+-		sig->stats = stats;
+-		stats = NULL;
++	stats = READ_ONCE(sig->stats);
++	if (!stats) {
++		stats = stats_new;
++		WRITE_ONCE(sig->stats, stats_new);
++		stats_new = NULL;
+ 	}
+ 	spin_unlock_irq(&tsk->sighand->siglock);
+ 
+-	if (stats)
+-		kmem_cache_free(taskstats_cache, stats);
+-ret:
+-	return sig->stats;
++	if (stats_new)
++		kmem_cache_free(taskstats_cache, stats_new);
++
++	return stats;
+ }
