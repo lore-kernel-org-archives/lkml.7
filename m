@@ -2,106 +2,129 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCFE3CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:59:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8257CA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:01:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F9E5206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:59:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gkO7kkIL"
+	by mail.kernel.org (Postfix) with ESMTP id 9891F20873
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:01:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571648471;
+	bh=1MWW0WMs1RVszpMCHXzRp5JKVc+mgc0hNgP/XmatUUc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SmkSmaknPRw35uxyHfoK2he6KoADJ67yVnC717nvGRX+PH03TJVQNuS7hc8NbfsPC
+	 cmWQVZeFcyfNwBQG89rdn5jzM6E36gL75ujMUji6ckt6GoGErc8O6osSDPV+oF1XtH
+	 CqK2EmKXDZwoYliOH+JdluOeJU6/MujHMq6DxOzk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727479AbfJUI74 (ORCPT
+        id S1727227AbfJUJBK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 04:59:56 -0400
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:40880 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726955AbfJUI74 (ORCPT
+        Mon, 21 Oct 2019 05:01:10 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:36868 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726648AbfJUJBK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 04:59:56 -0400
-Received: by mail-ua1-f67.google.com with SMTP id i13so3568782uaq.7
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 01:59:55 -0700 (PDT)
+        Mon, 21 Oct 2019 05:01:10 -0400
+Received: by mail-wr1-f65.google.com with SMTP id e11so4221985wrv.4
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 02:01:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GkOKxxpsGK/80WlQWwLBXhyhiD8tMwT8+Cgd/zEVlCY=;
-        b=gkO7kkILMDe7OJ4KFmrFBHJ2ZE1ERHJD1rmFfjWKt4iYJxpHRjQFsR5YmbgdNoGqlQ
-         RdqhZ7g1SOnR99RsgsurMaDeuGuzGcZGnOM6/vbC+m6YDrcDI/s+R8iHEGq/225QMv8S
-         BNZ/5z2RSQfjyt6mFh+ARMFUOGF2p256asXG6RXH0R59A4tV+/MZqC6SY5jO4oihmr9y
-         1eHwV9hExJcsM7prdU8uLUGv5oQHJxgUqafgwkM7tTOBW915Z5QczaoSas68EUPMrsrG
-         gvYdDZ4+MvCf7GPMJbdM09rRUuZAGetP38SPMjYDuyKgnNF4BEXhkJrMAmoTE6trglqn
-         IIkA==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Ddm/tCcahKMa28WllyS8WVT+c+v/f7HZP2ZaqorwXAI=;
+        b=QbcfiFC8PZ9zxxr1cKwbTejpJBiN57xE4H5f4Z5A/PLQPOGRLkOZcJgcZvrMMtfY+i
+         rnq7brnj7Z1Q4EVEjJ3tl1BENFEz3x2hGW2qD0iw5vZJDVep2t1LFMNuj5E8n4TR18uq
+         KqFi7BCluaV+vvpOikCBDaYlX0RNz6sCKU+zInH+qYHoOJGqv5eB5EPOJXE1KWiD8kra
+         7oV2/XGHlCvAWUgvKKePStyrlD8zbBjFvaOHOgNj6exiYGSx43oLO6H0DXp5VmaBbXFL
+         Z9caSwPbszbSS5Bw7mCOPx6b1rxT4nsbAFVs69PPLzsALthMov+sZem5krMhELOKJNhF
+         O0ig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GkOKxxpsGK/80WlQWwLBXhyhiD8tMwT8+Cgd/zEVlCY=;
-        b=iTo9kuwMZji8aq8kjf06EuB4Sz1iwWE90v+7kPYIc0qcKbvlM9N0elFNlDFncZabwx
-         kgVCXmjWrglvHJWkXmkWkZUGBOXfx2TKkpFUtAfdZ4wBbe0XSkhwS0oHi1DtGv4eRHU7
-         SJA8tMdzTFY3Fgp3pJ7UNwnUHLN+CUCQ4KvGFBFZ1ZC6FoljZ7GjTQ+suGpyM5+SR/m7
-         nApabkuZH8AkT18d5MbPSkqOVf1gd7EKg131hpzgg1nleUkftrzndFKSxC5dyQNgjpF3
-         8EzZCMfVMBxz2sXTT1BBQv9YE+zPXgpm3eKx9R+dM6GSsIlTVs8NJQ9Rb7UdoXtSdZhG
-         WxSg==
-X-Gm-Message-State: APjAAAW5fN4BqQ520vPOmrolaW/ltmkKVyKIQb1yuVUSxGH+7D9Suk5O
-        U4yLc2xUtNwViAeVI+qffI73VCTS0FHoiaMnsL/xvw==
-X-Google-Smtp-Source: APXvYqy1skCw5iA/y67UrQPP3MAZhJ04h3rF2rtlEMmZQVVO3ryPl7j+34VyGLMMcpvzuCqueqM59hhRx1AvMlcjFdo=
-X-Received: by 2002:ab0:2015:: with SMTP id v21mr12191265uak.94.1571648394900;
- Mon, 21 Oct 2019 01:59:54 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Ddm/tCcahKMa28WllyS8WVT+c+v/f7HZP2ZaqorwXAI=;
+        b=l2w9VoZBw20q5xpx1IzxsAR3y2t7aDiAZQLDxpn+WOgRU6JZ9zyUGJ0czwJhrVvVd4
+         v73K+WHCz3aT6uaa50qqVC19DesOhxLSLWXhs78GUSB7dKeTRErjhh1uY2nxsinYq0O/
+         l5IUtyE8kdaUP7uKm4TW+0IMoFSPpWMHs0phYf/6UjbQv5NQmOGEGLw+jXYa7ic83XfO
+         /nZdX2Qe09ejUozvQe6dVCtDjPVbTkep4ybc1YSish5gq7qN91cSBULAXWO2FUH5IQ7S
+         N3DBz1+eeGfphXMUdxSN/RoOS4PFx3SwxD2HbBJ+/6HEpRzcqsQtoueHyKoOe0c+Q3fD
+         f/2g==
+X-Gm-Message-State: APjAAAXeFAZiofUFKV2ZIi9QXy4Q5kFvCUNIZ1kMrlpNQZdg7rUIKrAS
+        aE77vmccVOekGxDksDe/Bgo=
+X-Google-Smtp-Source: APXvYqxg7I/KgcDM+d9sokdu5Xj0yobFxal1lnnmagJ6UOqh7jHyDw7SVXOZ1dfiv81jD7nZA3FZNA==
+X-Received: by 2002:a5d:60ce:: with SMTP id x14mr3563996wrt.294.1571648467833;
+        Mon, 21 Oct 2019 02:01:07 -0700 (PDT)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id t123sm18844798wma.40.2019.10.21.02.01.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Oct 2019 02:01:07 -0700 (PDT)
+Date:   Mon, 21 Oct 2019 11:01:04 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+        mhiramat@kernel.org, bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, jpoimboe@redhat.com, jeyu@kernel.org
+Subject: Re: [PATCH v4 10/16] x86/alternative: Shrink text_poke_loc
+Message-ID: <20191021090104.GB102207@gmail.com>
+References: <20191018073525.768931536@infradead.org>
+ <20191018074634.514629541@infradead.org>
 MIME-Version: 1.0
-References: <cover.1571387352.git.amit.kucheria@linaro.org>
- <66d8ae593ce7936a5f492d0c6855c1ac225b64ee.1571387352.git.amit.kucheria@linaro.org>
- <20191021080811.GA54219@gmail.com>
-In-Reply-To: <20191021080811.GA54219@gmail.com>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Mon, 21 Oct 2019 14:29:43 +0530
-Message-ID: <CAHLCerOcdnSTppKRm2vi6V8E7vyVWvwDakaQcnXnnDVqKDXmBA@mail.gmail.com>
-Subject: Re: [PATCH v4 4/6] cpufreq: Initialize cpufreq-dt driver earlier
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Taniya Das <tdas@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>, ilina@codeaurora.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Ben Segall <bsegall@google.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Mel Gorman <mgorman@suse.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Linux PM list <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191018074634.514629541@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 1:38 PM Ingo Molnar <mingo@kernel.org> wrote:
->
->
-> * Amit Kucheria <amit.kucheria@linaro.org> wrote:
->
-> > This allows HW drivers that depend on cpufreq-dt to initialise earlier.
->
-> My obsessive-compulsive in-brain spellchecker noticed that the title says
-> 'initialize' (US spelling), while the comment uses 'initialise' (UK
-> spelling). Just in case this is not some post-Brexit expression of
-> cross-Atlantic friendliness you might want to fix it. :)
 
-Naah, its just my confused brain that grew up learning British
-English, then spent enough time in US to pick up some of that too. I
-think it is a form of selective spelling blindness :-)
+* Peter Zijlstra <peterz@infradead.org> wrote:
 
-Will fix.
+> Employ the fact that all text must be within a s32 displacement of one
+> another to shrink the text_poke_loc::addr field. Make it relative to
+> _stext.
+> 
+> This then shrinks struct text_poke_loc to 16 bytes, and consequently
+> increases TP_VEC_MAX from 170 to 256.
+> 
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+>  arch/x86/kernel/alternative.c |   23 ++++++++++++++---------
+>  1 file changed, 14 insertions(+), 9 deletions(-)
+> 
+> --- a/arch/x86/kernel/alternative.c
+> +++ b/arch/x86/kernel/alternative.c
+> @@ -937,7 +937,7 @@ static void do_sync_core(void *info)
+>  }
+>  
+>  struct text_poke_loc {
+> -	void *addr;
+> +	s32 rel_addr; /* addr := _stext + rel_addr */
+>  	s32 rel32;
+>  	u8 opcode;
+>  	const u8 text[POKE_MAX_OPCODE_SIZE];
+> @@ -948,13 +948,18 @@ static struct bp_patching_desc {
+>  	int nr_entries;
+>  } bp_patching;
+>  
+> +static inline void *text_poke_addr(struct text_poke_loc *tp)
+> +{
+> +	return _stext + tp->rel_addr;
+> +}
+
+So won't this complicate the life of the big-address-space gcc model 
+build patches that for purposes of module randomization are spreading the 
+kernel and modules all across the 64-bit address space, where they might 
+not necessarily end up within a ~2GB window?
+
+Nothing upstream yet, but I remember such patches ...
+
+Thanks,
+
+	Ingo
