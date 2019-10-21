@@ -2,138 +2,91 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 554B6CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 22:35:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E0E4CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 22:40:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AE8D2067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 22:35:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B18C20873
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 22:40:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="NSXU+gzw"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="O/CXUAVG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730447AbfJUWf2 (ORCPT
+        id S1730425AbfJUWkE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 18:35:28 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:41833 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729620AbfJUWf1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 18:35:27 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46xs0P6DhKz9sNx;
-        Tue, 22 Oct 2019 09:35:17 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1571697324;
-        bh=mWwMU/9afAxY94ma+WI7D78i4ILv7tb5kzG4pD4tg5I=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=NSXU+gzwt+tayzDS06y1MWmNgE5tcmk8TyT6woIw7h4dXu+3PSdvC7PlM1uVjD6sn
-         gWIeJOjcjJbPAB7Bbdjlev4l6oIKaMwEpg0VrSLFKH1qhyL/BkOclSWMlFdkJnO4SZ
-         hEzlIkF9p86Ot8ZcxxpEwW7KhEhrspuiLDOJGm08SLB1b8poL4CjmvfptBUeqHcBM1
-         TgBlMS70rNzVwtWTmiYx0O2lPpAGDw7ZsgGtrLF1/n3DdsX/49rRPuw4QDr8wR2rxt
-         H9SN+iyuH5GxSIyrSI/qR5QAKd1i7KkjpatoSjNg+unc+RLTm66eb+NAbB/LGFL7nv
-         ttOsJuu1xMOQw==
-Date:   Tue, 22 Oct 2019 09:35:12 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Al Viro <viro@ZenIV.linux.org.uk>
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Guillem Jover <guillem@hadrons.org>
-Subject: linux-next: build warning after merge of the vfs-fixes tree
-Message-ID: <20191022093512.4317a715@canb.auug.org.au>
-In-Reply-To: <20191022080734.41955464@canb.auug.org.au>
-References: <20191022080734.41955464@canb.auug.org.au>
+        Mon, 21 Oct 2019 18:40:04 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:34897 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729620AbfJUWkD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 18:40:03 -0400
+Received: by mail-vs1-f68.google.com with SMTP id k15so1051892vsp.2
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 15:40:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+ZsNsXP4OTYt0YNh6qKFB6AFECQX69mBiPpRVt9SfH0=;
+        b=O/CXUAVGNYcy3a5ZMEhvYVIsdUWMdntI32aa1fCXHK7oi6GQtdX8twOyCLRtqHcLw6
+         am1b9fbswrT9o98uh5aDlhm1tPvl0Av/XEHc7jFDFc/FekuKFDvkdmrzLXsS+cBmnejP
+         w+a/gseGa6WnbCp/yH1KdCdxNLv/Q43LbeRO19wQ0C6JCREDYSId7agxszZ/KRyBe4dS
+         rBqaj2BEFPuwjg8K2IaN+ZdQ2/V18uW5p+D3bRRAW5ncrEsKECvCEFR63WSYX3IplWb4
+         GYGuiM7vUIXmh+zLMMdnpEno7Jg6V7tjnP6+5fo5a94md98f+1ELrfUwmGcSvu34YKiS
+         XHeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+ZsNsXP4OTYt0YNh6qKFB6AFECQX69mBiPpRVt9SfH0=;
+        b=LRZ432uQkVzyF1z82vbxgB446QbsulDDNGg7CYs+OGhfOeV5//zD2gdwjtA78lFHCK
+         TxBKSkn9bkGg7dcycNHK0Mm9Xs0OCIiyS1JFgBrnWdKBgE80qApFIEC8bApIr7urs+Xx
+         TczaTjuWqrx8xTByfb4JwtBlc2ZzQh85P0/K3pRUc5j53luaPIChLbUb9PnhZry3/rib
+         mJ7dB9LHcjyPIN1GKyoXUHTQEkwc2p+8ZLtGhgqGIpooMFGF8abTbmwXx9YXvy2WgfQ7
+         tozlETmLopCaqe74zPDr7VzcM5vzNNp7fK7jwbVHMrasRRHNRAaL8kt5A6yManxSVaB2
+         Vz2A==
+X-Gm-Message-State: APjAAAXyzwfgOVOoNU0mqEoSUyJeQdsOj4ZTke3PHubliC2alCX2/mY9
+        yaSKT5FyblQQOvZkoVEjzutbi3wE9rkQ+KmV0XiVFg==
+X-Google-Smtp-Source: APXvYqy582En+heI5MQp3ZrQQ6f6MZJsAwNRRmtRSRpMZCKNBzLSU+/wxNeKwJ1tJAW4E2Y1xYNHr6jWiAAsx2LVJZQ=
+X-Received: by 2002:a67:ed8b:: with SMTP id d11mr100849vsp.104.1571697602070;
+ Mon, 21 Oct 2019 15:40:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/+MnaRVg7=hrPm6q/bC3wrLW";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20191018161033.261971-1-samitolvanen@google.com>
+ <20191018161033.261971-15-samitolvanen@google.com> <CAKv+Gu-kMzsot5KSPSo_iMsuzcv8J1R5RLT9uGjuzJsxCVUPPg@mail.gmail.com>
+In-Reply-To: <CAKv+Gu-kMzsot5KSPSo_iMsuzcv8J1R5RLT9uGjuzJsxCVUPPg@mail.gmail.com>
+From:   Sami Tolvanen <samitolvanen@google.com>
+Date:   Mon, 21 Oct 2019 15:39:50 -0700
+Message-ID: <CABCJKuf-tXu2ZhBMCYTHP3BU8g1i-0GGd7+YvyTDUc1kH2iZvA@mail.gmail.com>
+Subject: Re: [PATCH 14/18] arm64: efi: restore x18 if it was corrupted
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/+MnaRVg7=hrPm6q/bC3wrLW
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Sun, Oct 20, 2019 at 11:20 PM Ard Biesheuvel
+<ard.biesheuvel@linaro.org> wrote:
+> You'll have to elaborate a bit here and explain that this is
+> sufficient, given that we run EFI runtime services with interrupts
+> enabled.
 
-Hi all,
+I can add a note about this in v2. This is called with preemption
+disabled and we have a separate interrupt shadow stack, so as far as I
+can tell, this should be sufficient. Did you have concerns about this?
 
-[Some people didn't get this due to a typo]
-
-This should have been reported against the vfs-fixes tree, sorry.
-
-On Tue, 22 Oct 2019 08:07:34 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> After merging the drm-misc-fixes tree, today's linux-next build (powerpc
-> ppc64_defconfig) produced this warning:
->=20
-> In file included from include/uapi/linux/posix_types.h:5,
->                  from include/uapi/linux/types.h:14,
->                  from include/linux/types.h:6,
->                  from include/linux/limits.h:6,
->                  from include/linux/kernel.h:7,
->                  from fs/aio.c:14:
-> fs/aio.c: In function '__do_compat_sys_io_pgetevents':
-> include/linux/stddef.h:8:14: warning: initialization of 'unsigned int' fr=
-om 'void *' makes integer from pointer without a cast [-Wint-conversion]
->     8 | #define NULL ((void *)0)
->       |              ^
-> fs/aio.c:2196:38: note: in expansion of macro 'NULL'
->  2196 |  struct __compat_aio_sigset ksig =3D { NULL, };
->       |                                      ^~~~
-> include/linux/stddef.h:8:14: note: (near initialization for 'ksig.sigmask=
-')
->     8 | #define NULL ((void *)0)
->       |              ^
-> fs/aio.c:2196:38: note: in expansion of macro 'NULL'
->  2196 |  struct __compat_aio_sigset ksig =3D { NULL, };
->       |                                      ^~~~
-> fs/aio.c: In function '__do_compat_sys_io_pgetevents_time64':
-> include/linux/stddef.h:8:14: warning: initialization of 'unsigned int' fr=
-om 'void *' makes integer from pointer without a cast [-Wint-conversion]
->     8 | #define NULL ((void *)0)
->       |              ^
-> fs/aio.c:2231:38: note: in expansion of macro 'NULL'
->  2231 |  struct __compat_aio_sigset ksig =3D { NULL, };
->       |                                      ^~~~
-> include/linux/stddef.h:8:14: note: (near initialization for 'ksig.sigmask=
-')
->     8 | #define NULL ((void *)0)
->       |              ^
-> fs/aio.c:2231:38: note: in expansion of macro 'NULL'
->  2231 |  struct __compat_aio_sigset ksig =3D { NULL, };
->       |                                      ^~~~
->=20
-> Introduced by commit
->=20
->   de80166a573d ("aio: Fix io_pgetevents() struct __compat_aio_sigset layo=
-ut")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/+MnaRVg7=hrPm6q/bC3wrLW
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2uMqAACgkQAVBC80lX
-0GzBEgf/QWY36zyJyHAo2qQe3OGW0vXOK8hxxdovUAtn32TYMjpgSpYEj3mcMY3z
-5Y1LiS5m6Z59wE2Jmlf853f4iNqCgncILtBPEpfG8aZ617hjzkEVmAc6PuWsPPfi
-/xfghH6wX4803L2gAXZxfLkw/8fvtteJ+Ol7btC9ZZVHRjc/duYF66qdRcmjxNn/
-a7t8VJyw7fj0KYHp2sKfDl8adFeWT74ZrfoXnIkfCvRB7sGj69NDW6KxjPL/CTa5
-n4oa57uL2ACZsbmmRrVUzMjKaMBKbzN4X4x2s+9qT6be1a9xTzEOSiVS1655yXTh
-/4nteu4PV9+hJO7ACTKRv/Qdc07A8Q==
-=edIx
------END PGP SIGNATURE-----
-
---Sig_/+MnaRVg7=hrPm6q/bC3wrLW--
+Sami
