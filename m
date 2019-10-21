@@ -2,166 +2,213 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D911ACA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:31:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5247DCA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:32:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B581B206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:31:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A724206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:32:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IaF4ypP3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727608AbfJUJbu (ORCPT
+        id S1727636AbfJUJcW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 05:31:50 -0400
-Received: from regular1.263xmail.com ([211.150.70.203]:51874 "EHLO
-        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726725AbfJUJbu (ORCPT
+        Mon, 21 Oct 2019 05:32:22 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:45405 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726725AbfJUJcW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 05:31:50 -0400
-Received: from localhost (unknown [192.168.167.209])
-        by regular1.263xmail.com (Postfix) with ESMTP id B8DB1428;
-        Mon, 21 Oct 2019 17:31:38 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-SKE-CHECKED: 1
-X-ABS-CHECKED: 1
-Received: from localhost.localdomain (unknown [14.18.236.69])
-        by smtp.263.net (postfix) whith ESMTP id P469T140195813033728S1571650292121018_;
-        Mon, 21 Oct 2019 17:31:39 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <6d3ea6ca7491250ed483a3c849e1089c>
-X-RL-SENDER: yili@winhong.com
-X-SENDER: yili@winhong.com
-X-LOGIN-NAME: yili@winhong.com
-X-FST-TO: yili@winhong.com
-X-SENDER-IP: 14.18.236.69
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-From:   Yi Li <yili@winhong.com>
-Cc:     yili@winhong.com, Yi Li <yilikernel@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Changbin Du <changbin.du@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH] perf tools: Use of the macro IS_ERR_OR_NULL
-Date:   Mon, 21 Oct 2019 17:29:33 +0800
-Message-Id: <1571650178-15686-1-git-send-email-yili@winhong.com>
-X-Mailer: git-send-email 2.7.5
+        Mon, 21 Oct 2019 05:32:22 -0400
+Received: by mail-wr1-f65.google.com with SMTP id q13so8093667wrs.12
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 02:32:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=AAXNz7vVHfFXnP1eEpy3LNCgCSK23fgU+35qD5p60UI=;
+        b=IaF4ypP3bMxI0JR5MZ2sfcBnNn1CxW3GIB4oe34nHE++QPiW/s00/4aWEyKteEL2JX
+         gyoTI5kEW8/42IoZ11vscCKjqEaL4yNDXFIUtuc+PsRn9NxtzI0kOQ0aYN00K4JM51N8
+         Y6XY2mOtL97V6wZ1146/iQd1c7/tCJmmJmweoNxlpkLyjLRgECMnyh1q3gLF4TbCY1AX
+         v3bw1EeW5iIAsUUZCVWzEaTODzPtAkKARC4R0wKtr6px1AzIoecy2Ugtft2pT5OYdBaq
+         46mM0XASD5ncywecJ76HF5XTCbZvjDORFIYrDShC8v5fb0kZ75lCKmxQ8x0fSg5tLd+F
+         tYBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=AAXNz7vVHfFXnP1eEpy3LNCgCSK23fgU+35qD5p60UI=;
+        b=IC0CsyaudKHn8PNPtH+VpAFu69S1rjv8a2jnlMXiwN8ZfBqzsB14sjgwOVi3V9NCah
+         hKSBHdpIY+iJXbV1UxSSqEgT4NQJJXF1K2pOWmB4/DzUl80mrEeNk7NCx3MYsbBazrr/
+         wSllbNra3473elIMV8Lu6i8aV25XgQMfSJOMvfFlnrfhO8YnA+on1hUqc0NXnc+EHiLi
+         kYF9A4tJGcx4+lAc+R75qU6jxtzGhD7nNEIWbCf8WRrRamZle6TMllNet4MDngyjAVeM
+         LheSgE0J1GnAUepkZaVg3WyblIC5PsuOg8SHWQEohl/SyFirLR5FjwYzOk9FQSmGFLBD
+         c8wQ==
+X-Gm-Message-State: APjAAAUcCGO0EAh3cZJf4bFsapLLKEoiNoSJoQo4gliYxT9mcKljaVD9
+        OqAnlm55wm0KCcNEM8tAfbDwkfZKMSo=
+X-Google-Smtp-Source: APXvYqwP6mKIl38iChJ4LAdJ9oa6iPRZPGV59hK/v1mpi95I+8DB8H+5eb3ZIUA9Xb5lwwMAVL8xjg==
+X-Received: by 2002:adf:aacc:: with SMTP id i12mr18844723wrc.15.1571650339339;
+        Mon, 21 Oct 2019 02:32:19 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id z15sm14617882wrr.19.2019.10.21.02.32.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 21 Oct 2019 02:32:18 -0700 (PDT)
+Subject: Re: [PATCH 2/2] ASoC: msm8916-wcd-analog: Add earpiece
+To:     Stephan Gerhold <stephan@gerhold.net>,
+        Mark Brown <broonie@kernel.org>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org
+References: <20191020153007.206070-1-stephan@gerhold.net>
+ <20191020153007.206070-2-stephan@gerhold.net>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <d24a3c05-b5c5-1fd2-b10d-281f99d5e585@linaro.org>
+Date:   Mon, 21 Oct 2019 10:32:17 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <20191020153007.206070-2-stephan@gerhold.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yi Li <yilikernel@gmail.com>
-
-This patch introduces the use of the macro IS_ERR_OR_NULL in place of
-tests for NULL and IS_ERR.
-
-The following Coccinelle semantic patch was used for making the change:
-
-@@
-expression e;
-@@
-
-- !e || IS_ERR(e)
-+ IS_ERR_OR_NULL(e)
- || ...
-
-Signed-off-by: Yi Li <yilikernel@gmail.com>
----
- tools/perf/util/bpf-loader.c   | 13 +++++++------
- tools/perf/util/parse-events.c |  2 +-
- 2 files changed, 8 insertions(+), 7 deletions(-)
-
-diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
-index 10c187b..b14d224 100644
---- a/tools/perf/util/bpf-loader.c
-+++ b/tools/perf/util/bpf-loader.c
-@@ -426,7 +426,7 @@ preproc_gen_prologue(struct bpf_program *prog, int n,
- 	size_t prologue_cnt = 0;
- 	int i, err;
- 
--	if (IS_ERR(priv) || !priv || priv->is_tp)
-+	if (IS_ERR_OR_NULL(priv) || priv->is_tp)
- 		goto errout;
- 
- 	pev = &priv->pev;
-@@ -578,7 +578,7 @@ static int hook_load_preprocessor(struct bpf_program *prog)
- 	bool need_prologue = false;
- 	int err, i;
- 
--	if (IS_ERR(priv) || !priv) {
-+	if (IS_ERR_OR_NULL(priv)) {
- 		pr_debug("Internal error when hook preprocessor\n");
- 		return -BPF_LOADER_ERRNO__INTERNAL;
- 	}
-@@ -650,8 +650,9 @@ int bpf__probe(struct bpf_object *obj)
- 			goto out;
- 
- 		priv = bpf_program__priv(prog);
--		if (IS_ERR(priv) || !priv) {
--			err = PTR_ERR(priv);
-+		if (IS_ERR_OR_NULL(priv)) {
-+			pr_debug("bpf: failed to get private field\n");
-+			err = -BPF_LOADER_ERRNO__INTERNAL;
- 			goto out;
- 		}
- 
-@@ -701,7 +702,7 @@ int bpf__unprobe(struct bpf_object *obj)
- 		struct bpf_prog_priv *priv = bpf_program__priv(prog);
- 		int i;
- 
--		if (IS_ERR(priv) || !priv || priv->is_tp)
-+		if (IS_ERR_OR_NULL(priv) || priv->is_tp)
- 			continue;
- 
- 		for (i = 0; i < priv->pev.ntevs; i++) {
-@@ -759,7 +760,7 @@ int bpf__foreach_event(struct bpf_object *obj,
- 		struct perf_probe_event *pev;
- 		int i, fd;
- 
--		if (IS_ERR(priv) || !priv) {
-+		if (IS_ERR_OR_NULL(priv)) {
- 			pr_debug("bpf: failed to get private field\n");
- 			return -BPF_LOADER_ERRNO__INTERNAL;
- 		}
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index b5e2ade..609c31f 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -690,7 +690,7 @@ int parse_events_load_bpf_obj(struct parse_events_state *parse_state,
- 	struct __add_bpf_event_param param = {parse_state, list, head_config};
- 	static bool registered_unprobe_atexit = false;
- 
--	if (IS_ERR(obj) || !obj) {
-+	if (IS_ERR_OR_NULL(obj)) {
- 		snprintf(errbuf, sizeof(errbuf),
- 			 "Internal error: load bpf obj with NULL");
- 		err = -EINVAL;
--- 
-2.7.5
 
 
+On 20/10/2019 16:30, Stephan Gerhold wrote:
+> PM8916 supports an earpiece as another (small) speaker.
+> The earpiece is routed through RX MIX1 similarly to
+> the headphones, except that RDAC2 MUX is set to RX1.
+> 
+> Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
 
+
+Looks good to me.
+
+Acked-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+
+> ---
+> This patch is based on code from the downstream driver
+> (msm8x16-wcd.c, [1]) with some cleanup.
+> 
+> This enables the earpiece on the Samsung Galaxy A5 (2015),
+> which has recently gained mainline support in [2].
+> 
+> [1]: https://source.codeaurora.org/quic/la/kernel/msm-3.10/tree/sound/soc/codecs/msm8x16-wcd.c?h=LA.BR.1.2.9.1-02310-8x16.0
+> [2]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=1329c1ab0730b521e6cd3051c56a2ff3d55f21e6
+> ---
+>   sound/soc/codecs/msm8916-wcd-analog.c | 54 ++++++++++++++++++++++++++-
+>   1 file changed, 52 insertions(+), 2 deletions(-)
+> 
+> diff --git a/sound/soc/codecs/msm8916-wcd-analog.c b/sound/soc/codecs/msm8916-wcd-analog.c
+> index e3d311fb510e..f53235be77d9 100644
+> --- a/sound/soc/codecs/msm8916-wcd-analog.c
+> +++ b/sound/soc/codecs/msm8916-wcd-analog.c
+> @@ -228,6 +228,10 @@
+>   #define CDC_A_RX_EAR_CTL			(0xf19E)
+>   #define RX_EAR_CTL_SPK_VBAT_LDO_EN_MASK		BIT(0)
+>   #define RX_EAR_CTL_SPK_VBAT_LDO_EN_ENABLE	BIT(0)
+> +#define RX_EAR_CTL_PA_EAR_PA_EN_MASK		BIT(6)
+> +#define RX_EAR_CTL_PA_EAR_PA_EN_ENABLE		BIT(6)
+> +#define RX_EAR_CTL_PA_SEL_MASK			BIT(7)
+> +#define RX_EAR_CTL_PA_SEL			BIT(7)
+>   
+>   #define CDC_A_SPKR_DAC_CTL		(0xf1B0)
+>   #define SPKR_DAC_CTL_DAC_RESET_MASK	BIT(4)
+> @@ -312,6 +316,7 @@ static const char *const hph_text[] = { "ZERO", "Switch", };
+>   static const struct soc_enum hph_enum = SOC_ENUM_SINGLE_VIRT(
+>   					ARRAY_SIZE(hph_text), hph_text);
+>   
+> +static const struct snd_kcontrol_new ear_mux = SOC_DAPM_ENUM("EAR_S", hph_enum);
+>   static const struct snd_kcontrol_new hphl_mux = SOC_DAPM_ENUM("HPHL", hph_enum);
+>   static const struct snd_kcontrol_new hphr_mux = SOC_DAPM_ENUM("HPHR", hph_enum);
+>   
+> @@ -685,6 +690,34 @@ static int pm8916_wcd_analog_enable_spk_pa(struct snd_soc_dapm_widget *w,
+>   	return 0;
+>   }
+>   
+> +static int pm8916_wcd_analog_enable_ear_pa(struct snd_soc_dapm_widget *w,
+> +					    struct snd_kcontrol *kcontrol,
+> +					    int event)
+> +{
+> +	struct snd_soc_component *component = snd_soc_dapm_to_component(w->dapm);
+> +
+> +	switch (event) {
+> +	case SND_SOC_DAPM_PRE_PMU:
+> +		snd_soc_component_update_bits(component, CDC_A_RX_EAR_CTL,
+> +				    RX_EAR_CTL_PA_SEL_MASK, RX_EAR_CTL_PA_SEL);
+> +		break;
+> +	case SND_SOC_DAPM_POST_PMU:
+> +		snd_soc_component_update_bits(component, CDC_A_RX_EAR_CTL,
+> +				    RX_EAR_CTL_PA_EAR_PA_EN_MASK,
+> +				    RX_EAR_CTL_PA_EAR_PA_EN_ENABLE);
+> +		break;
+> +	case SND_SOC_DAPM_POST_PMD:
+> +		snd_soc_component_update_bits(component, CDC_A_RX_EAR_CTL,
+> +				    RX_EAR_CTL_PA_EAR_PA_EN_MASK, 0);
+> +		/* Delay to reduce ear turn off pop */
+> +		usleep_range(7000, 7100);
+> +		snd_soc_component_update_bits(component, CDC_A_RX_EAR_CTL,
+> +				    RX_EAR_CTL_PA_SEL_MASK, 0);
+> +		break;
+> +	}
+> +	return 0;
+> +}
+> +
+>   static const struct reg_default wcd_reg_defaults_2_0[] = {
+>   	{CDC_A_RX_COM_OCP_CTL, 0xD1},
+>   	{CDC_A_RX_COM_OCP_COUNT, 0xFF},
+> @@ -801,12 +834,20 @@ static const struct snd_soc_dapm_route pm8916_wcd_analog_audio_map[] = {
+>   	{"PDM_TX", NULL, "A_MCLK2"},
+>   	{"A_MCLK2", NULL, "A_MCLK"},
+>   
+> +	/* Earpiece (RX MIX1) */
+> +	{"EAR", NULL, "EAR_S"},
+> +	{"EAR_S", "Switch", "EAR PA"},
+> +	{"EAR PA", NULL, "RX_BIAS"},
+> +	{"EAR PA", NULL, "HPHL DAC"},
+> +	{"EAR PA", NULL, "HPHR DAC"},
+> +	{"EAR PA", NULL, "EAR CP"},
+> +
+>   	/* Headset (RX MIX1 and RX MIX2) */
+>   	{"HEADPHONE", NULL, "HPHL PA"},
+>   	{"HEADPHONE", NULL, "HPHR PA"},
+>   
+> -	{"HPHL PA", NULL, "EAR_HPHL_CLK"},
+> -	{"HPHR PA", NULL, "EAR_HPHR_CLK"},
+> +	{"HPHL DAC", NULL, "EAR_HPHL_CLK"},
+> +	{"HPHR DAC", NULL, "EAR_HPHR_CLK"},
+>   
+>   	{"CP", NULL, "NCP_CLK"},
+>   
+> @@ -847,11 +888,20 @@ static const struct snd_soc_dapm_widget pm8916_wcd_analog_dapm_widgets[] = {
+>   	SND_SOC_DAPM_INPUT("AMIC1"),
+>   	SND_SOC_DAPM_INPUT("AMIC3"),
+>   	SND_SOC_DAPM_INPUT("AMIC2"),
+> +	SND_SOC_DAPM_OUTPUT("EAR"),
+>   	SND_SOC_DAPM_OUTPUT("HEADPHONE"),
+>   
+>   	/* RX stuff */
+>   	SND_SOC_DAPM_SUPPLY("INT_LDO_H", SND_SOC_NOPM, 1, 0, NULL, 0),
+>   
+> +	SND_SOC_DAPM_PGA_E("EAR PA", SND_SOC_NOPM,
+> +			   0, 0, NULL, 0,
+> +			   pm8916_wcd_analog_enable_ear_pa,
+> +			   SND_SOC_DAPM_PRE_PMU | SND_SOC_DAPM_POST_PMU |
+> +			   SND_SOC_DAPM_PRE_PMD | SND_SOC_DAPM_POST_PMD),
+> +	SND_SOC_DAPM_MUX("EAR_S", SND_SOC_NOPM, 0, 0, &ear_mux),
+> +	SND_SOC_DAPM_SUPPLY("EAR CP", CDC_A_NCP_EN, 4, 0, NULL, 0),
+> +
+>   	SND_SOC_DAPM_PGA("HPHL PA", CDC_A_RX_HPH_CNP_EN, 5, 0, NULL, 0),
+>   	SND_SOC_DAPM_MUX("HPHL", SND_SOC_NOPM, 0, 0, &hphl_mux),
+>   	SND_SOC_DAPM_MIXER("HPHL DAC", CDC_A_RX_HPH_L_PA_DAC_CTL, 3, 0, NULL,
+> 
