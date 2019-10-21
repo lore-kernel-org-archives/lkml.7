@@ -2,111 +2,152 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89EDDCA9EB0
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 20:49:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88D2CCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 20:50:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A2BD2084C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 20:49:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571690958;
-	bh=qC8cchkpfcx4MIC8fYmBTExkB3AuQjmcXkE0wh02A/g=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=a0I2lfFONZX2DWtWOGyE3FRaB54B8lV1D3uBGVK6jGLvJtJAqQv/d+IcUz1SrPCbF
-	 JFYPk2uVRASQ9vnkb1dQrKJ4XkboJZzsz/RSdYGFgy5GWDc3SM8qImiI6DicRUHUTT
-	 Byq53Hgqq0CFPhckeKwH4XmFcDdBYtFZRtanWmq0=
+	by mail.kernel.org (Postfix) with ESMTP id 5922D207FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 20:50:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IKzJgQDK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730321AbfJUUtR (ORCPT
+        id S1730340AbfJUUu0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 16:49:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45356 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730052AbfJUUtQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 16:49:16 -0400
-Received: from ebiggers-linuxstation.mtv.corp.google.com (unknown [104.132.1.77])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7C72207FC;
-        Mon, 21 Oct 2019 20:49:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571690956;
-        bh=qC8cchkpfcx4MIC8fYmBTExkB3AuQjmcXkE0wh02A/g=;
-        h=From:To:Cc:Subject:Date:From;
-        b=vckhmIDNmI0N+PRcC5b+qiJwNqfxel2AZI6Eb2vcnaF9EjCU4QMQmsczLggDOaokc
-         DxdtPrTrlzOkKyQT0d/0WKGT/Uyyeg6xSeed5Ps3q5IA+i8ax1v+8U5LNwtxMcNcb2
-         kxaSLVS+S5+b8G0tK79JupK3B2xJ67Poiycqqiis=
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     linux-fscrypt@vger.kernel.org
-Cc:     "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] fscrypt: avoid data race on fscrypt_mode::logged_impl_name
-Date:   Mon, 21 Oct 2019 13:49:03 -0700
-Message-Id: <20191021204903.56528-1-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
+        Mon, 21 Oct 2019 16:50:26 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:35886 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728914AbfJUUuZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 16:50:25 -0400
+Received: by mail-pg1-f196.google.com with SMTP id 23so8529752pgk.3;
+        Mon, 21 Oct 2019 13:50:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=6iAk5MDCFpJbqBCPdQ4j/TZZ0opaOqLSGbfv8Ew9ypQ=;
+        b=IKzJgQDKfy4GjkgeuRNsJSl5hNaeVpYrDO2SYzytWEepQnbGV6rsI5toxxKjRh5PMT
+         6VI9ggnj/ScLYKy6pOj7UsMmsdyJqUDfk65cVGHoFsYcuPw6FL+lxDfj0ZkvgapU/D47
+         D79vRQ5zcNJAF/MOc4OND3w18GIJc3O37Sr1/OJt357GrJjnHeBMOcCN+Ik2NUux7gR8
+         1QlO/NddImG5mVXTR+eOteBu6fwHOU0+/McGVLMWGoUUsVJMJsmYNPHIBUakmLxzgIvO
+         69t5m/ClfZQBckYX9nQxZP7Tt5ouOSXJB99FatQBfjZRPULLarNvz5dVghQNJ3YzGPMr
+         6Afw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=6iAk5MDCFpJbqBCPdQ4j/TZZ0opaOqLSGbfv8Ew9ypQ=;
+        b=j1z0lRJ5yrHyEKNr1HXFVqgy6CtN4WZ20YqnrQH963mOe8FRe4Kw++UsWZMrucJ/j3
+         3imPSfJqiseK7wLFhbCLMJ85Htq85J7YC5gcq80PT20sxF1TNkNjrHVS6Zi6JEivrfB+
+         33BGG0/zn+Nw6wYiQuH2/rlbnsyhDUrY6BnK+jDBGJ5bzcWKBPbSaYp45sX6bA4mJSZb
+         C/SrjSypPHWkrmSUJTskon6SkXN+tzVquqchVHQfNxjn0+0GmWefmi57HQyATJx7KT4H
+         CSn7AZnrZw1WF5qJbWuQIm8JAmYDDgT9LNRgbHADt/HlBMvzd36+VXkRLNGn8jVPKAM6
+         yjBA==
+X-Gm-Message-State: APjAAAXO6UoF1YIrH2C3KAq/lWfjMphXo1pP5zaH0DafGxdOWx/fGBMv
+        M4tbakVLEBJQUJTNQNpZzkq4O5L/+a5ofXRUBeI=
+X-Google-Smtp-Source: APXvYqwR5Li3X+63Jbdq8RTCNIFmXKFocUABThMsrd3+729Wa1Lg00Ac4jqQtaDsNFZgSF7SHKLTezOqLfVNWc4y1V0=
+X-Received: by 2002:a17:90a:c48:: with SMTP id u8mr109443pje.16.1571691024729;
+ Mon, 21 Oct 2019 13:50:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191012071620.8595-1-zhiyuan2048@linux.alibaba.com>
+ <CAM_iQpVkTb6Qf9J-PuXJoQTZa5ojN_oun64SMv9Kji7tZkxSyA@mail.gmail.com>
+ <e2bd3004-9f4b-f3ce-1214-2140f0b7cc61@linux.alibaba.com> <20191016151307.40f63896@jimi>
+ <e16cfafe-059c-3106-835e-d32b7bb5ba61@linux.alibaba.com> <20191019002502.0519ea9b@jimi>
+In-Reply-To: <20191019002502.0519ea9b@jimi>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Mon, 21 Oct 2019 13:50:13 -0700
+Message-ID: <CAM_iQpW-y=Xo08AqYaGUWB8G7zdTimk8zXdHcsqYQir5AyPJJw@mail.gmail.com>
+Subject: Re: [PATCH net] net: sched: act_mirred: drop skb's dst_entry in
+ ingress redirection
+To:     Eyal Birger <eyal.birger@gmail.com>
+Cc:     Zhiyuan Hou <zhiyuan2048@linux.alibaba.com>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        "David S . Miller" <davem@davemloft.net>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Shmulik Ladkani <shmulik.ladkani@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+On Fri, Oct 18, 2019 at 2:25 PM Eyal Birger <eyal.birger@gmail.com> wrote:
+>
+> Hi,
+>
+> On Fri, 18 Oct 2019 00:33:53 +0800
+> Zhiyuan Hou <zhiyuan2048@linux.alibaba.com> wrote:
+>
+> > On 2019/10/16 8:13 =E4=B8=8B=E5=8D=88, Eyal Birger wrote:
+> > > Hi,
+> > >
+> > > On Wed, 16 Oct 2019 01:22:01 +0800
+> > > Zhiyuan Hou <zhiyuan2048@linux.alibaba.com> wrote:
+> > >
+> > >> On 2019/10/15 1:57 =E4=B8=8A=E5=8D=88, Cong Wang wrote:
+> > >>> On Sat, Oct 12, 2019 at 12:16 AM Zhiyuan Hou
+> > >>> <zhiyuan2048@linux.alibaba.com> wrote:
+> > >>>> diff --git a/net/sched/act_mirred.c b/net/sched/act_mirred.c
+> > >>>> index 9ce073a05414..6108a64c0cd5 100644
+> > >>>> --- a/net/sched/act_mirred.c
+> > >>>> +++ b/net/sched/act_mirred.c
+> > >>>> @@ -18,6 +18,7 @@
+> > >>>>    #include <linux/gfp.h>
+> > >>>>    #include <linux/if_arp.h>
+> > >>>>    #include <net/net_namespace.h>
+> > >>>> +#include <net/dst.h>
+> > >>>>    #include <net/netlink.h>
+> > >>>>    #include <net/pkt_sched.h>
+> > >>>>    #include <net/pkt_cls.h>
+> > >>>> @@ -298,8 +299,10 @@ static int tcf_mirred_act(struct sk_buff
+> > >>>> *skb, const struct tc_action *a,
+> > >>>>
+> > >>>>           if (!want_ingress)
+> > >>>>                   err =3D dev_queue_xmit(skb2);
+> > >>>> -       else
+> > >>>> +       else {
+> > >>>> +               skb_dst_drop(skb2);
+> > >>>>                   err =3D netif_receive_skb(skb2);
+> > >>>> +       }
+> > >>> Good catch!
+> > > Indeed! Thanks for fixing this!
+> > >
+> > >>> I don't want to be picky, but it seems this is only needed
+> > >>> when redirecting from egress to ingress, right? That is,
+> > >>> ingress to ingress, or ingress to egress is okay? If not,
+> > >>> please fix all the cases while you are on it?
+> > >> Sure. But I think this patch is also needed when redirecting from
+> > >> ingress to ingress. Because we cannot assure that a skb has null
+> > >> dst in ingress redirection path. For example, if redirecting a skb
+> > >> from loopback's ingress to other device's ingress, the skb will
+> > >> take a dst.
+> > >>
+> > >> As commit logs point out, skb with valid dst cannot be made routing
+> > >> decision in following process. original dst may cause skb loss or
+> > >> other unexpected behavior.
+> > > On the other hand, removing the dst on ingress-to-ingress
+> > > redirection may remove LWT information on incoming packets, which
+> > > may be undesired.
+> > Sorry, I do not understand why lwt information is needed on
+> > ingress-to-ingress redirection. lwt is used on output path, isn't it?
+> > Can you please give more information?
+>
+> On rx path tunnelled packets parameters received on a collect_md tunnel d=
+evice
+> are kept in a metadata dst. See ip_tunnel_rcv() 'tun_dst' parameter.
+>
+> The rx metadata dst can be matched by a number of mechanisms like routing
+> rules, eBPF, OVS, and netfilter.
 
-The access to logged_impl_name is technically a data race, which tools
-like KCSAN could complain about in the future.  See:
-https://github.com/google/ktsan/wiki/READ_ONCE-and-WRITE_ONCE
+Should this meta information be kept when redirecting? The dest device
+may be a non-tunnel device, so I don't know if it is still useful when
+for non-tunnel devices.
 
-Fix by using xchg(), which also ensures that only one thread does the
-logging.
-
-This also required switching from bool to int, to avoid a build error on
-the RISC-V architecture which doesn't implement xchg on bytes.
-
-Signed-off-by: Eric Biggers <ebiggers@google.com>
----
- fs/crypto/fscrypt_private.h | 2 +-
- fs/crypto/keysetup.c        | 6 ++----
- 2 files changed, 3 insertions(+), 5 deletions(-)
-
-diff --git a/fs/crypto/fscrypt_private.h b/fs/crypto/fscrypt_private.h
-index dacf8fcbac3be..d9a3e8614049f 100644
---- a/fs/crypto/fscrypt_private.h
-+++ b/fs/crypto/fscrypt_private.h
-@@ -435,7 +435,7 @@ struct fscrypt_mode {
- 	const char *cipher_str;
- 	int keysize;
- 	int ivsize;
--	bool logged_impl_name;
-+	int logged_impl_name;
- };
- 
- static inline bool
-diff --git a/fs/crypto/keysetup.c b/fs/crypto/keysetup.c
-index b03b33643e4b2..28bc2da9be3c7 100644
---- a/fs/crypto/keysetup.c
-+++ b/fs/crypto/keysetup.c
-@@ -81,15 +81,13 @@ struct crypto_skcipher *fscrypt_allocate_skcipher(struct fscrypt_mode *mode,
- 			    mode->cipher_str, PTR_ERR(tfm));
- 		return tfm;
- 	}
--	if (unlikely(!mode->logged_impl_name)) {
-+	if (!xchg(&mode->logged_impl_name, 1)) {
- 		/*
- 		 * fscrypt performance can vary greatly depending on which
- 		 * crypto algorithm implementation is used.  Help people debug
- 		 * performance problems by logging the ->cra_driver_name the
--		 * first time a mode is used.  Note that multiple threads can
--		 * race here, but it doesn't really matter.
-+		 * first time a mode is used.
- 		 */
--		mode->logged_impl_name = true;
- 		pr_info("fscrypt: %s using implementation \"%s\"\n",
- 			mode->friendly_name,
- 			crypto_skcipher_alg(tfm)->base.cra_driver_name);
--- 
-2.23.0.866.gb869b98d4c-goog
-
+Thanks.
