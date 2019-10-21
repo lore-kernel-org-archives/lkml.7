@@ -2,116 +2,199 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B355FCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:09:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F642CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:11:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 858562084C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:09:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA56A2070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:11:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="zgDfAzKx"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="g7ops0Z6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729291AbfJUOJe (ORCPT
+        id S1728995AbfJUOLT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 10:09:34 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:56670 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727344AbfJUOJd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 10:09:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=eGE87WasWvAZRrliofAskcX6jOVuVTgdyEc8K2kaY9E=; b=zgDfAzKxJll3WnPmislBw4XlD
-        jvA92XRULfcDJU2Wc2VcX2mmnQYAkO29N/ZaXZULMlwY/T+zsSojytnCQhOYhd/JUIi0P6luvqP8X
-        sPTPlKdQSe+F11Qap2TMrxmIezEHa+gpuhUtHETlK2UZmP6HEL6rIUM3TPIw4ZJV2pujfhc9G/Pdm
-        HBzx4aEKxynzo+mQnu/1VnGaHWsBlMIvI3OowVJ5wGe4OTlTswauQfzqgXyGx6bF3NYlkLV8YpDHH
-        x1AoNa+S00Hx1OumvMrqYyACCW5SmWznuXU5zIOz4+yKfz5xcuyYIwJZ3IXEKVA1bpgobJ55SBHfM
-        Uz612X0Bg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iMYND-0005k7-JC; Mon, 21 Oct 2019 14:09:28 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Mon, 21 Oct 2019 10:11:19 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:34312 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728096AbfJUOLT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 10:11:19 -0400
+Received: from zn.tnic (p2E584653.dip0.t-ipconnect.de [46.88.70.83])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id F1D1D301124;
-        Mon, 21 Oct 2019 16:08:28 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 15C52238D26BD; Mon, 21 Oct 2019 16:09:26 +0200 (CEST)
-Date:   Mon, 21 Oct 2019 16:09:26 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Laurence Oberman <loberman@redhat.com>,
-        Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        Michal Hocko <mhocko@suse.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] watchdog/softlockup: Report the same softlockup
- regularly
-Message-ID: <20191021140926.GH1817@hirez.programming.kicks-ass.net>
-References: <20190819104732.20966-1-pmladek@suse.com>
- <20190819104732.20966-3-pmladek@suse.com>
- <20191021124339.GE1817@hirez.programming.kicks-ass.net>
- <20191021134038.fz2cdpxrd3p3yhb7@pathway.suse.cz>
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 9A2AB1EC0A91;
+        Mon, 21 Oct 2019 16:11:17 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1571667077;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=a2bggndZ0RE+j7gX/jhzN6ElN77ti8vwT0063HW7Cyo=;
+        b=g7ops0Z6z1w7Phc9JJ3NVpOwk9Uvgu3Pm7GrxPnWuWJ3FxbQWbYyeM++C56B/iKJV9K3Lx
+        q67f+DlUrzhZJ+Nzv1xFZ9nXG6IX6C2hxH/Ht0kR/ZdV1pZOf4Ct4vCgay62ZExc6UCTT8
+        rhVC8JZMAVoMMujOVTwNfGOA3fdw/hs=
+Date:   Mon, 21 Oct 2019 16:10:38 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     tip-bot2 for Jiri Slaby <tip-bot2@linutronix.de>,
+        linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
+        Jiri Slaby <jslaby@suse.cz>, "H. Peter Anvin" <hpa@zytor.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        linux-arch@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH] x86/ftrace: Get rid of function_hook
+Message-ID: <20191021141038.GC7014@zn.tnic>
+References: <20191011115108.12392-22-jslaby@suse.cz>
+ <157141622788.29376.4016565749507481510.tip-bot2@tip-bot2>
+ <20191018124800.0a7006bb@gandalf.local.home>
+ <20191018124956.764ac42e@gandalf.local.home>
+ <20191018171354.GB20368@zn.tnic>
+ <20191018133735.77e90e36@gandalf.local.home>
+ <20191018194856.GC20368@zn.tnic>
+ <20191018163125.346e078d@gandalf.local.home>
+ <20191019073424.GA27353@zn.tnic>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191021134038.fz2cdpxrd3p3yhb7@pathway.suse.cz>
+In-Reply-To: <20191019073424.GA27353@zn.tnic>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 03:40:38PM +0200, Petr Mladek wrote:
-> On Mon 2019-10-21 14:43:39, Peter Zijlstra wrote:
-> > On Mon, Aug 19, 2019 at 12:47:31PM +0200, Petr Mladek wrote:
-> > > Softlockup report means that there is no progress on the given CPU. It
-> > > might be a "short" affair where the system gets recovered. But often
-> > > the system stops being responsive and need to get rebooted.
-> > > 
-> > > The softlockup might be root of the problems or just a symptom. It might
-> > > be a deadlock, livelock, or often repeated state.
-> > > 
-> > > Regular reports help to distinguish different situations. Fortunately,
-> > > the watchdog is finally able to show correct information how long
-> > > softlockup_fn() was not scheduled.
-> > > 
-> > > Report before this patch:
-> > > 
-> > > [  320.248948] watchdog: BUG: soft lockup - CPU#2 stuck for 26s! [cat:4916]
-> > > 
-> > > And after this patch:
-> > > 
-> > > [  480.372418] watchdog: BUG: soft lockup - CPU#2 stuck for 26s! [cat:4943]
-> > > [  508.372359] watchdog: BUG: soft lockup - CPU#2 stuck for 52s! [cat:4943]
-> > > [  548.372359] watchdog: BUG: soft lockup - CPU#2 stuck for 89s! [cat:4943]
-> > > [  576.372351] watchdog: BUG: soft lockup - CPU#2 stuck for 115s! [cat:4943]
-> > > 
-> > > Note that the horrible code never really worked before the accounting
-> > > was fixed. The last working timestamp was regularly lost by the many
-> > > touch*watchdog() calls.
-> > 
-> > So what's the point of patch 1? Just confusing people?
-> 
-> I was not sure what was the expected behavior. The code actually
-> looked like only the first report was wanted. But it probably never
-> worked that way.
+From: Borislav Petkov <bp@suse.de>
 
-Not that I can remember at least :-) I normally don't bother with the
-actual time, and if I do then I look at the printk timestamps to figure
-out how long thing've been stuck.
+function_hook is used as a better name than the default __fentry__
+which is the profiling counter which gcc adds before every function's
+prologue. Thus, it is not called from C and cannot have the same
+semantics as a pure C function - it saves/restores regs so that a C
+function can be called.
 
-But this is indeed nicer..
+Drop the function_hook symbol and use __fentry__ directly for better
+alignment with gcc's documentation.
 
-> Should I squash the two patches and send it again, please?
+Switch the marking to SYM_CODE_START/_END which is reserved for
+non-standard, special functions.
 
-Probably makes sense to squash it. That also avoids having to ever
-expose that ugleh :-)
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Jiri Slaby <jslaby@suse.cz>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: linux-doc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86@kernel.org
+---
+ Documentation/asm-annotations.rst |  4 ++--
+ arch/x86/kernel/ftrace_32.S       |  8 +++-----
+ arch/x86/kernel/ftrace_64.S       | 13 ++++++-------
+ 3 files changed, 11 insertions(+), 14 deletions(-)
 
+diff --git a/Documentation/asm-annotations.rst b/Documentation/asm-annotations.rst
+index 29ccd6e61fe5..f55c2bb74d00 100644
+--- a/Documentation/asm-annotations.rst
++++ b/Documentation/asm-annotations.rst
+@@ -117,9 +117,9 @@ This section covers ``SYM_FUNC_*`` and ``SYM_CODE_*`` enumerated above.
+   So in most cases, developers should write something like in the following
+   example, having some asm instructions in between the macros, of course::
+ 
+-    SYM_FUNC_START(function_hook)
++    SYM_FUNC_START(memset)
+         ... asm insns ...
+-    SYM_FUNC_END(function_hook)
++    SYM_FUNC_END(memset)
+ 
+   In fact, this kind of annotation corresponds to the now deprecated ``ENTRY``
+   and ``ENDPROC`` macros.
+diff --git a/arch/x86/kernel/ftrace_32.S b/arch/x86/kernel/ftrace_32.S
+index 8ed1f5d371f0..77be7e7e5e59 100644
+--- a/arch/x86/kernel/ftrace_32.S
++++ b/arch/x86/kernel/ftrace_32.S
+@@ -12,18 +12,16 @@
+ #include <asm/frame.h>
+ #include <asm/asm-offsets.h>
+ 
+-# define function_hook	__fentry__
+-EXPORT_SYMBOL(__fentry__)
+-
+ #ifdef CONFIG_FRAME_POINTER
+ # define MCOUNT_FRAME			1	/* using frame = true  */
+ #else
+ # define MCOUNT_FRAME			0	/* using frame = false */
+ #endif
+ 
+-SYM_FUNC_START(function_hook)
++SYM_CODE_START(__fentry__)
+ 	ret
+-SYM_FUNC_END(function_hook)
++SYM_CODE_END(__fentry__)
++EXPORT_SYMBOL(__fentry__)
+ 
+ SYM_CODE_START(ftrace_caller)
+ 
+diff --git a/arch/x86/kernel/ftrace_64.S b/arch/x86/kernel/ftrace_64.S
+index 69c8d1b9119e..3029fe4f8547 100644
+--- a/arch/x86/kernel/ftrace_64.S
++++ b/arch/x86/kernel/ftrace_64.S
+@@ -14,9 +14,6 @@
+ 	.code64
+ 	.section .entry.text, "ax"
+ 
+-# define function_hook	__fentry__
+-EXPORT_SYMBOL(__fentry__)
+-
+ #ifdef CONFIG_FRAME_POINTER
+ /* Save parent and function stack frames (rip and rbp) */
+ #  define MCOUNT_FRAME_SIZE	(8+16*2)
+@@ -132,9 +129,10 @@ EXPORT_SYMBOL(__fentry__)
+ 
+ #ifdef CONFIG_DYNAMIC_FTRACE
+ 
+-SYM_FUNC_START(function_hook)
++SYM_CODE_START(__fentry__)
+ 	retq
+-SYM_FUNC_END(function_hook)
++SYM_CODE_END(__fentry__)
++EXPORT_SYMBOL(__fentry__)
+ 
+ SYM_FUNC_START(ftrace_caller)
+ 	/* save_mcount_regs fills in first two parameters */
+@@ -248,7 +246,7 @@ SYM_FUNC_END(ftrace_regs_caller)
+ 
+ #else /* ! CONFIG_DYNAMIC_FTRACE */
+ 
+-SYM_FUNC_START(function_hook)
++SYM_CODE_START(__fentry__)
+ 	cmpq $ftrace_stub, ftrace_trace_function
+ 	jnz trace
+ 
+@@ -279,7 +277,8 @@ trace:
+ 	restore_mcount_regs
+ 
+ 	jmp fgraph_trace
+-SYM_FUNC_END(function_hook)
++SYM_CODE_END(__fentry__)
++EXPORT_SYMBOL(__fentry__)
+ #endif /* CONFIG_DYNAMIC_FTRACE */
+ 
+ #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+-- 
+2.21.0
+
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
