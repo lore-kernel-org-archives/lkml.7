@@ -2,146 +2,102 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBC9FCA9EB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 18:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB8DCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 18:22:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A32BE20873
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 18:19:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21FCA20640
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 18:22:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dce21xf3"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="XmU7ZkYx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729809AbfJUSTP (ORCPT
+        id S1730038AbfJUSWh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 14:19:15 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:37258 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727017AbfJUSTP (ORCPT
+        Mon, 21 Oct 2019 14:22:37 -0400
+Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.82]:22262 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727110AbfJUSWg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 14:19:15 -0400
-Received: by mail-oi1-f195.google.com with SMTP id i16so11896454oie.4;
-        Mon, 21 Oct 2019 11:19:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=GhRRKX0fxrsZsxuGGvSqETLa9jJ6bP3uK2nviMUaww8=;
-        b=dce21xf3wyCRXQ6e5Tq/YbqDUOR1ILOJCmTNPC6DLdfR32wZK+ceOx2QuGlRM+BhuZ
-         62JDTgvaCFyBrGOrC1m2pRwPEkLkbBV0m3L1zxtCS1hDV5y6UCfWcN9LCTqcbbyh3UEt
-         t61Q8dS3YoGxtBbGEbkTHiJYkxeomTxFrTDQYjwgt8nHdMM3sYQweKFVzFUbKiENuhJe
-         5YhxU1DcWk7LBzAoM7sso5lLUdlxQMJ7sy6tkuN3zMwf2ygG9PWQerdNP7Y+IHB/BgSn
-         Gk7dXeW3DgxafGXgq6EbvnHzNIP1jvkOMjVn/zjt8RSkF8zGEHPEskmxIbJOFUuG0KWO
-         9B3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GhRRKX0fxrsZsxuGGvSqETLa9jJ6bP3uK2nviMUaww8=;
-        b=kZXP/VAHN4G52hYirYVTziDzWk4uWHYPEbp4gplbnxILM7UIccSYe66sv8CHBvhWrm
-         mHppL+yRlJZ2XpfFfir87u5w6p5tWeDQ16CD+tjw+XQou1gB8DkzxS6XN7llxk1qKm0+
-         BdD1jH8whbxxSfdNHz7yJgcijTi/SoeNyuO8JTvSfpZDWILqZ4Ku0ltR0bNrEzVrVDsi
-         bXWqDrCD9qFu2AhyMPyOZkBJAj6cF0+bGNtJOnCd0/fF7TZR2F9ui2hOySaT9jj/xjps
-         WvdXaZv8cNgbUvZld11XrYIFzSRN2fJqFWlU0H2RttRju/GPr87le4e+LCgOHOz7NPD3
-         B27Q==
-X-Gm-Message-State: APjAAAX2OXwlbsWvu8G5vWWtop2hDXbYGJ1gch7vADUxK8slu1f3eiU2
-        7H+iJmPL1PrqWK60b41Dq3w=
-X-Google-Smtp-Source: APXvYqw+dmlB6g/B6OjNDClm1dwW3Ewl8TIrKVG8Rkn/D5hzQbkJJc8ZUPzperBrsW07E0rICGUBUg==
-X-Received: by 2002:aca:4155:: with SMTP id o82mr18894534oia.103.1571681954130;
-        Mon, 21 Oct 2019 11:19:14 -0700 (PDT)
-Received: from [100.71.96.87] ([143.166.81.254])
-        by smtp.gmail.com with ESMTPSA id t82sm4002463oie.12.2019.10.21.11.19.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 21 Oct 2019 11:19:13 -0700 (PDT)
-Subject: Re: [PATCH v3 3/3] PCI: pciehp: Add dmi table for in-band presence
- disabled
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Austin Bolen <austin_bolen@dell.com>, keith.busch@intel.com,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, lukas@wunner.de
-References: <20191017193256.3636-1-stuart.w.hayes@gmail.com>
- <20191017193256.3636-4-stuart.w.hayes@gmail.com>
- <20191021134729.GL2819@lahna.fi.intel.com>
-From:   Stuart Hayes <stuart.w.hayes@gmail.com>
-Message-ID: <f4ace3ab-1b39-8a82-4cb6-a7a5d3bfbc72@gmail.com>
-Date:   Mon, 21 Oct 2019 13:19:12 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20191021134729.GL2819@lahna.fi.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 21 Oct 2019 14:22:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1571682152;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=ESbJhDnm5bjuVodC9kh4h0sdAOT1wrM2a4p9lLw+WMU=;
+        b=XmU7ZkYxfp33BkQgcl5YpwmrWOM3l9F4xslYbs0zMYcPe1FXsqxa3XsANba9HChcWM
+        4cZ0ZHMZdtIuY8sVtIzzS9lqfLLABXmNe3wvcbzP/ozh5hH9UI2vAifvvWsF6PpFkgPa
+        af7eo60FnAsUhj6NkntPeV3aEl6f1iELqirCKW7anm1T0OUlb5RRRC5CWwjVqR+HXumx
+        rc6lN7ZBZlqyr1hpXGSoAuH7cDwcn3UYriAHPqVPh110ZL6SOhqs81FdQixc1LXzw1pr
+        iaK9jWwik10QrAdrWZjDzEIJ5b3WItr3nK395plCbUZV7lzgu0+Vil3ikaEmYIlirdiM
+        1xRA==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDVCbXA4Ewxc="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 44.28.1 DYNA|AUTH)
+        with ESMTPSA id R0b2a8v9LIMGM7B
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Mon, 21 Oct 2019 20:22:16 +0200 (CEST)
+Content-Type: text/plain; charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: [PATCH 3/9] DTS: ARM: pandora-common: define wl1251 as child node of mmc3
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20191021171321.GZ5610@atomide.com>
+Date:   Mon, 21 Oct 2019 20:22:15 +0200
+Cc:     =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        David Sterba <dsterba@suse.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mmc@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com, stable@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <0C476142-BC54-4950-8B7A-A422ABC2AEB9@goldelico.com>
+References: <cover.1571430329.git.hns@goldelico.com> <58c57f194e35b2a055a58081a0ea0d3ffcd07b6d.1571430329.git.hns@goldelico.com> <20191021171321.GZ5610@atomide.com>
+To:     Tony Lindgren <tony@atomide.com>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+> Am 21.10.2019 um 19:13 schrieb Tony Lindgren <tony@atomide.com>:
+>=20
+> * H. Nikolaus Schaller <hns@goldelico.com> [191018 20:28]:
+>> Since v4.7 the dma initialization requires that there is a
+>> device tree property for "rx" and "tx" channels which is
+>> not provided by the pdata-quirks initialization.
+>>=20
+>> By conversion of the mmc3 setup to device tree this will
+>> finally allows to remove the OpenPandora wlan specific omap3
+>> data-quirks.
+>>=20
+>> Fixes: 81eef6ca9201 ("mmc: omap_hsmmc: Use dma_request_chan() for =
+requesting DMA channel")
+>=20
+> Here you have the subject line the wrong way around,
+> please update it to start with "ARM: dts: ...".
 
-On 10/21/19 8:47 AM, Mika Westerberg wrote:
-> On Thu, Oct 17, 2019 at 03:32:56PM -0400, Stuart Hayes wrote:
->> Some systems have in-band presence detection disabled for hot-plug PCI
->> slots, but do not report this in the slot capabilities 2 (SLTCAP2) register.
->> On these systems, presence detect can become active well after the link is
->> reported to be active, which can cause the slots to be disabled after a
->> device is connected.
->>
->> Add a dmi table to flag these systems as having in-band presence disabled.
->>
->> Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
->> ---
->>  drivers/pci/hotplug/pciehp_hpc.c | 14 ++++++++++++++
->>  1 file changed, 14 insertions(+)
->>
->> diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
->> index 02eb811a014f..4d377a2a62ce 100644
->> --- a/drivers/pci/hotplug/pciehp_hpc.c
->> +++ b/drivers/pci/hotplug/pciehp_hpc.c
->> @@ -14,6 +14,7 @@
->>  
->>  #define dev_fmt(fmt) "pciehp: " fmt
->>  
->> +#include <linux/dmi.h>
->>  #include <linux/kernel.h>
->>  #include <linux/types.h>
->>  #include <linux/jiffies.h>
->> @@ -26,6 +27,16 @@
->>  #include "../pci.h"
->>  #include "pciehp.h"
->>  
->> +static const struct dmi_system_id inband_presence_disabled_dmi_table[] = {
->> +	{
->> +		.ident = "Dell System",
->> +		.matches = {
->> +			DMI_MATCH(DMI_OEM_STRING, "Dell System"),
-> 
-> Sorry if this has been discussed previously already but isn't this going
-> to apply on all Dell systems, not just the affected ones? Is this the
-> intention?
-> 
+Ok.
 
-Yes, that is the intention. Applying this just makes the hotplug code wait for 
-the presence detect bit to be set before proceeding, which ideally wouldn't hurt 
-anything--for devices that don't have inband presence detect disabled, presence
-detect should already be up when the code in patch 2/3 starts to wait for it.
-
-The only issue should be with broken hotplug implementations that don't ever 
-bring presence detect active (these apparently exist)--but even those would still 
-work, they would just take an extra second to come up.
-
-On the other hand, a number of Dell systems have (and will have) NVMe 
-implementations that have inband presence detect disabled (but they won't have
-the new bit implemented to report that), and they don't work correctly without 
-this.
