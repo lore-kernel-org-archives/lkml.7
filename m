@@ -2,142 +2,106 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 464E8CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:45:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAE3FCA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:46:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 173992166E
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:45:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571658334;
-	bh=kXNR3wT0/UVOuL9IMKXFJQDaSuOBaG3FsYDFFGkst5o=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=XVXjOsY7A7CJkz3X+6fJtJMtMBk4dCUVSrwJ+sD29p/2lvPsreNTegl6Bo9XCCqc3
-	 m3bqqUqKaZvop8hFEOVwUvi9NvE8fKqVwZMqRA/HOf+opiim3f40BDDnA/a/WXh4dE
-	 7BYMT5T23/fkH7IBD2diYL7nNdnKnPeeXwEVWLmg=
+	by mail.kernel.org (Postfix) with ESMTP id B0B6F20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:46:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="udbYnAFz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728626AbfJULpc (ORCPT
+        id S1728640AbfJULqA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 07:45:32 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:34803 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727725AbfJULpc (ORCPT
+        Mon, 21 Oct 2019 07:46:00 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:37898 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727962AbfJULqA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 07:45:32 -0400
-Received: by mail-lj1-f194.google.com with SMTP id j19so12968727lja.1
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 04:45:31 -0700 (PDT)
+        Mon, 21 Oct 2019 07:46:00 -0400
+Received: by mail-wm1-f66.google.com with SMTP id 3so12453178wmi.3;
+        Mon, 21 Oct 2019 04:45:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Dwxj+uOUwiu2R0WFfBHrgW9ls+QdQwTPDol7q0pKZ3g=;
-        b=DiJhkOHHFUpKDOyxqHB4vaKmVpAstfvhXZIH4GkcCFzoF5QWbnyBOFNNm6UpRicVgI
-         nEoYUkbP8FlO//n5TfoPf37YJpVoTBQsy12/8bfGZf9e+74Opqtm7XODV/VV7FRUaCYG
-         SETbygzuap2Mr/iVlQcyZCqAWCkC1rtzVkHhE=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=U1IQDTvaARLaVd24Zh1gpxsP2o000LM9KsLDvNwZvKQ=;
+        b=udbYnAFz3mD3r3OJh4xHUpdLPntC2rn4pFfjH00JZZ95zXQ0TSvGeadqdngti7yNIW
+         27MmJWPjyi+NdwWWrKVEKKrNJWRKvB6j7i7JymGAs43sQXsg9oMy5v7Ni9hN8ewjXdX/
+         TMpjxI0C8FcNJP5K0x8lU1XFTpFPS82GCjZ/hemdfR5ybFaqZI1F/Uf304m8WPZa2RAn
+         mh0lBHvie4hMRxls50k9uAqAxYv+uJXoUWG04gGGSXU6vX6RqDc5uy4o+0cwEnAreSvt
+         YKhbjdJrnIOauaFHucVeNOUQjmfQnxHzSyJmi3xFh6LR9YngDl4HMdZGuWfsgxI9fh+K
+         lw8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Dwxj+uOUwiu2R0WFfBHrgW9ls+QdQwTPDol7q0pKZ3g=;
-        b=uHdsD7K1D4nBYzUZ83JbEeU7xZvQW5GpEgk7fr816EabelPG9eSWMF6yjGqHimV1Wr
-         6sIkay0JX+94Qn4R0trmDyDCm74/gVPx2FtsqoJdVvoJkSs/HwZWUr391ZQS9L10DdAk
-         VLNzAzCGMJm/0BjS0ffEqaPoDeHSt95zY7afilyZihD+JUQkTNkvtrLgUXqzcJwrKSdV
-         Z6lzXu6W95TxkUakbMq24hAIzBZuxjuIf5VSUnK5c5CxT2BCxXaKey39teTKP4L3IYkD
-         zGzCNj9vF587BJxEFKcVGn1v48AHGE6B+n/aKqQ3lV/v9FImtP8/TFjOAbysNyFkyxML
-         eiEQ==
-X-Gm-Message-State: APjAAAVPrMRgSMUf/AF5RieCkMNjilcw4MgsLRKNAROEFOVAl8i7gTRD
-        mjkMDY4Ml87WwcXnw35MR9iADHDiqhdolw==
-X-Google-Smtp-Source: APXvYqyyX04l88SbnqYWVMsLXQlUIpE4qUWOcB5TcIM+9Hd1KCb622jE+DZ7ZJrPSr/7EztN47qytw==
-X-Received: by 2002:a2e:9cc9:: with SMTP id g9mr14308079ljj.178.1571658329087;
-        Mon, 21 Oct 2019 04:45:29 -0700 (PDT)
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com. [209.85.208.178])
-        by smtp.gmail.com with ESMTPSA id 10sm1622035lfy.57.2019.10.21.04.45.27
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 21 Oct 2019 04:45:27 -0700 (PDT)
-Received: by mail-lj1-f178.google.com with SMTP id j19so12968543lja.1
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 04:45:27 -0700 (PDT)
-X-Received: by 2002:a2e:9848:: with SMTP id e8mr14847939ljj.148.1571658327338;
- Mon, 21 Oct 2019 04:45:27 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=U1IQDTvaARLaVd24Zh1gpxsP2o000LM9KsLDvNwZvKQ=;
+        b=J4PqtAW+KdbhOmrPN3KhU9M8YnruRC+Wcs36aDUJ0BuKE5J6ZDdVajuFIRExlE1WnS
+         6e3TCfUxteY57BYo94UIgXqwYUKnEdn6XHFh861H/SUZSCsWNFJhPZgMLHo7z0pf08RR
+         S3pW/OKrW2qhDvywMkPd2gSBvl04P/x2PvkAo1xjrf/eNf0mRLkJ+oenWHo19hUKj2XQ
+         UAxIru477MYJNLGjxOMdkYJRCX+6HNFJU6pEuohgYjBlW22elZpOqXUODl8VkqX/DkrG
+         P25e/JX1NZ8jKMLUrkE80NDP+P/keltpgMcsn27m2Gtsyc9Y2BiaKw2+0u/BmpIG0KeW
+         Zqnw==
+X-Gm-Message-State: APjAAAW4wipKcEwuN+o0koLuY85DAiFr4yg1oFChL5iDFv35V85BCk4c
+        7XQE4e1a9Scg7ZsP7ziqqQw=
+X-Google-Smtp-Source: APXvYqxC5UL9u14Na2lUyp+kQoJTcCXOoxOAUG3UCJ3rO8yKGOC8uc0v2t5Cx4sGQYBIOx7EkapfFQ==
+X-Received: by 2002:a1c:f210:: with SMTP id s16mr17178705wmc.24.1571658358398;
+        Mon, 21 Oct 2019 04:45:58 -0700 (PDT)
+Received: from pali ([2a02:2b88:2:1::5cc6:2f])
+        by smtp.gmail.com with ESMTPSA id c16sm986112wrw.32.2019.10.21.04.45.57
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 21 Oct 2019 04:45:57 -0700 (PDT)
+Date:   Mon, 21 Oct 2019 13:45:56 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+To:     Maurizio Lombardi <mlombard@redhat.com>
+Cc:     Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH] fs: exFAT read-only driver GPL implementation by Paragon
+ Software.
+Message-ID: <20191021114556.lk2zkha57xmav7xz@pali>
+References: <453A1153-9493-4A04-BF66-CE6A572DEBDB@paragon-software.com>
+ <20191021111136.adpxjxmmz4p2vud2@pali>
+ <a4c42aa5-f9b7-4e74-2c11-220d45cb3669@redhat.com>
 MIME-Version: 1.0
-References: <20191017234348.wcbbo2njexn7ixpk@willie-the-truck>
- <CAHk-=wjPZYxiTs3F0Vbrd3kRizJGq-rQ_jqH1+8XR9Ai_kBoXg@mail.gmail.com>
- <20191018174153.slpmkvsz45hb6cts@willie-the-truck> <CAHk-=whmtB98b8=YL2b8HzPKRadk2A9pL0aasmvgebhePrDP9w@mail.gmail.com>
- <20191021064658.GB22042@gmail.com>
-In-Reply-To: <20191021064658.GB22042@gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 21 Oct 2019 07:45:11 -0400
-X-Gmail-Original-Message-ID: <CAHk-=wgxm_w-BCEuBOFnRpTwQuCYwMtsDNz3cW0MDGEmQZTUGg@mail.gmail.com>
-Message-ID: <CAHk-=wgxm_w-BCEuBOFnRpTwQuCYwMtsDNz3cW0MDGEmQZTUGg@mail.gmail.com>
-Subject: Re: [GIT PULL] arm64: Fixes for -rc4
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM Kernel Mailing List 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a4c42aa5-f9b7-4e74-2c11-220d45cb3669@redhat.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 2:47 AM Ingo Molnar <mingo@kernel.org> wrote:
->
-> I think at least once I ran into that and sent you a 'slightly wrong'
-> diffstat - and maybe there's also been a few cases where you noticed
-> diffstats that didn't match your merge result, double checked it yourself
-> and didn't complain about it because you knew that this is a "git
-> request-pull" artifact?
+On Monday 21 October 2019 13:37:13 Maurizio Lombardi wrote:
+> So, 2 FAT tables are probably not sufficient for recovery, 2 bitmaps are needed too.
 
-Right. If I see a diffstat that doesn't match, I just look at what a
-non-merged diffstat would have looked like, and if that matches I know
-what happened.
+Yes, I know. But code which I referred check both number of fat tables
+and number of allocation bitmaps (as they are represented by one member
+in boot sector structure).
 
-There are other reasons why diffstats won't match, of course. Like me
-just having merged part of the same commits from another source (or
-multiple trees applying the same patch). So it's not _just_ due to
-multiple merge bases that the mis-match can happen.
+> Btw, only Windows CE supported this.
 
-> Most of the time I notice it like Will did because the diffstat is
-> obviously weird and it's good to check pull requests a second (and a
-> third :-) time as well, but it's possible to have relatively small
-> distances between the merge bases where the diffstat doesn't look
-> 'obviously' bogus and mistakes can slip through.
+Is this information based on some real tests? Or just from marketing or
+Microsoft's information? (I would really like to know definite answer in
+this area).
 
-Yup.
+Because Microsoft says one thing in their FAT32 specification, second
+thing described in their FAT implementation and thing thing is how it is
+really implemented (in fatfast.sys kernel driver which is open source).
 
-> Anyway, a small Git feature request: it would be super useful if "git
-> request-pull" output was a bit more dependable and at least warned about
-> this and didn't include what is, from the viewpoint of the person doing
-> the merge, a bogus diffstat.
+So I would be really careful about how MS's exfat.sys implementation is
+working.
 
-Well, warning for it would be fairly simple. Giving the "right" result
-isn't simple, though, since the merge might need manual fixup to
-succeed.
-
-The warning you can check yourself: just do
-
-    git merge-base --all upstream mybranch
-
-and if you get more than one result, you know you are in the situation
-where a diff from the merge base might not work (it *might* work, but
-probably won't).
-
-You can play around with it yourself, of course. Look at the
-git-request-puill.sh script, it says something like this:
-
-  merge_base=$(git merge-base $baserev $headrev) ||
-  die "fatal: No commits in common between $base and $head"
-
-and you could add something like
-
-  all_merge_bases="$(git merge-base --all $baserev $headrev)"
-
-and then add a warning if "all_merge_bases" doesn't match "merge_base".
-
-                Linus
+-- 
+Pali Rohár
+pali.rohar@gmail.com
