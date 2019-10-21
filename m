@@ -2,225 +2,257 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A29E6CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:33:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C02BCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:34:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69098205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:33:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 691B7205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:34:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WfE3aEL3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728671AbfJUMdc convert rfc822-to-8bit (ORCPT
+        id S1728681AbfJUMd7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 08:33:32 -0400
-Received: from know-smtprelay-omc-10.server.virginmedia.net ([80.0.253.74]:50728
-        "EHLO know-smtprelay-omc-10.server.virginmedia.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727322AbfJUMdb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 08:33:31 -0400
-Received: from mail0.xen.dingwall.me.uk ([82.47.84.47])
-        by cmsmtp with ESMTPA
-        id MWsKi0yyFKVO9MWsKip0Cv; Mon, 21 Oct 2019 13:33:29 +0100
-X-Originating-IP: [82.47.84.47]
-X-Authenticated-User: james.dingwall@blueyonder.co.uk
-X-Spam: 0
-X-Authority: v=2.3 cv=SNZsqtnH c=1 sm=1 tr=0 a=0bfgdX8EJi0Cr9X0x0jFDA==:117
- a=0bfgdX8EJi0Cr9X0x0jFDA==:17 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
- a=kj9zAlcOel0A:10 a=xqWC_Br6kY4A:10 a=XobE76Q3jBoA:10 a=5IRWAbXhAAAA:8
- a=VwQbUJbxAAAA:8 a=iox4zFpeAAAA:8 a=907pBkEe21BXfl7TWG8A:9
- a=NzyhpIbpEjKdpzvW:21 a=1Hgw8yryt1ruglim:21 a=CjuIK1q_8ugA:10
- a=xo7gz2vLY8DhO4BdlxfM:22 a=AjGcO6oz07-iQ99wixmX:22 a=WzC6qhA0u3u7Ye7llzcV:22
-Received: from localhost (localhost [IPv6:::1])
-        by mail0.xen.dingwall.me.uk (Postfix) with ESMTP id 00282120BFC;
-        Mon, 21 Oct 2019 12:33:30 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at dingwall.me.uk
-Received: from mail0.xen.dingwall.me.uk ([127.0.0.1])
-        by localhost (mail0.xen.dingwall.me.uk [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Pfs9_cuZbyTg; Mon, 21 Oct 2019 12:33:30 +0000 (UTC)
-Received: from behemoth.dingwall.me.uk (behemoth.dingwall.me.uk [IPv6:2001:470:695c:302::c0a8:105])
-        by dingwall.me.uk (Postfix) with ESMTP id ABAA1120BF9;
-        Mon, 21 Oct 2019 12:33:30 +0000 (UTC)
-Received: by behemoth.dingwall.me.uk (Postfix, from userid 1000)
-        id 7E790109F29; Mon, 21 Oct 2019 12:33:30 +0000 (UTC)
-Date:   Mon, 21 Oct 2019 12:33:30 +0000
-From:   James Dingwall <james@dingwall.me.uk>
-To:     linux-kernel@vger.kernel.org
-Cc:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Juergen Gross <jgross@suse.com>, xen-devel@lists.xenproject.org
-Subject: Re: [PATCH] xen/xenbus: fix self-deadlock after killing user process
-Message-ID: <20191021123330.GA5706@dingwall.me.uk>
-References: <20191001150355.25365-1-jgross@suse.com>
+        Mon, 21 Oct 2019 08:33:59 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35055 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727322AbfJUMd6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 08:33:58 -0400
+Received: by mail-wr1-f68.google.com with SMTP id l10so13357520wrb.2
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 05:33:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=igdzMZW8PEVq+rP0kfzN3gxYjw1q6KE8RoNmwlvNgqk=;
+        b=WfE3aEL32Zi1ro2hTyQ62/OxFK0sTG/jK8eWXYlj3sB7EbvRJft+ElmkFRMFrCrAPV
+         inr+egfBHoR09V11729xXvbMdlcLSk8hWODchpL6JXNr3FZ2GEEBjVRqiwr8zgBLpSmk
+         7gvLOxJ4aon6iYWL2Kax9Mqim/4pXiWWLZbQZVpPG3Zp8QpLbYZwgU297qqUgK3egsAS
+         v1q13riJaYZRUs40T45+jQ/ZCH15JbmxbeCO00LPf5WcJ8n83rxOeieLUfx+pT7G4wRO
+         SgasXY00ZP/GBwL0qInWjdB7e++T95xLQ/sflEUdr9VwdLdXFNkaysJbZ6F9OtihJjgD
+         291A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=igdzMZW8PEVq+rP0kfzN3gxYjw1q6KE8RoNmwlvNgqk=;
+        b=rdYKIm5Yi7xpEgD1KMP8awHx5/mKjuSacaCJiV1jJL+8bDKi67IZzGkjsT4QM+EoCH
+         U3DAAFRXsIJkbX5ys5DeZjCE3U1EuyDPHfYy9on8SbaVAyXdVtA8fPHnDAhMnJY3bjaP
+         b4bIhzo+92K5gZFJ1c/U310wNGcLLyLzewoROVHwLEQUTnLEe/AR1EXH4baa2hARTgB0
+         /LCFnmyFyUeTUo51XfVZDPHdEFJ6sJa8D+hLNdfJLoybJ4TJfpmycz2gTdd+Gios20ui
+         nRFd0AbsrJpThB7YLmSf8LkGf3Q6m3L840RPMohY85q7EAU2qe/GUogjZOfO5hzQMegn
+         Kbfg==
+X-Gm-Message-State: APjAAAVLr0F/QY0Lwgg0jrrZv/vfG2V1HplMMmrS2JNrIKiBi2sIpmRK
+        p0HH7Ap7qm27qiUpQKKJ2c9SnzPAXmokQQ==
+X-Google-Smtp-Source: APXvYqx1eTPmS8T+6lx0EnxAAUUL879nCRShMAODGRComRx1+OUZGuCpabLH5079HLTPSpfzNCmvfg==
+X-Received: by 2002:adf:cc90:: with SMTP id p16mr5128175wrj.377.1571661235701;
+        Mon, 21 Oct 2019 05:33:55 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id z1sm14813211wrn.57.2019.10.21.05.33.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Oct 2019 05:33:55 -0700 (PDT)
+Date:   Mon, 21 Oct 2019 13:33:53 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     arnd@arndb.de, broonie@kernel.org, linus.walleij@linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        baohua@kernel.org, stephan@gerhold.net
+Subject: Re: [PATCH v2 8/9] mfd: mfd-core: Remove usage counting for
+ .{en,dis}able() call-backs
+Message-ID: <20191021123353.nhb2ynq6d52skoif@holly.lan>
+References: <20191021105822.20271-1-lee.jones@linaro.org>
+ <20191021105822.20271-9-lee.jones@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20191001150355.25365-1-jgross@suse.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-CMAE-Envelope: MS4wfMU382LZGaPL7Hs2AGds5U9IK64NwsYvJvBHHo+Q2dFg/amxtVUWWs02w8+VlVIhUiOdt60LUNhO3c/ffFoYRZ7mmuh5jEQ86vMm19r351W5SPxjoMF7
- r8O/gPNyhCldHxeItvlbpaASuqEl3nuQ5m0kF1MQ7OzxBblYoxRTwKZOCByHFVz6CNx26jwrjUpBCVs4WgKZH4qoESK/hOfZNXQIvZmcldks4G1WNVWS1bra
- +9ByZwIqaCyPV13aTsy6oGZm2i08jfDTwfNOUX/UKly6J9p7WFcyF0CGNjVlTvy1KFOkpplCiHut7SMjKk6/xEXlvGySzbDXdYk8ZZYsGXI=
+In-Reply-To: <20191021105822.20271-9-lee.jones@linaro.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 01, 2019 at 05:03:55PM +0200, Juergen Gross wrote:
-> In case a user process using xenbus has open transactions and is killed
-> e.g. via ctrl-C the following cleanup of the allocated resources might
-> result in a deadlock due to trying to end a transaction in the xenbus
-> worker thread:
+On Mon, Oct 21, 2019 at 11:58:21AM +0100, Lee Jones wrote:
+> The MFD implementation for reference counting was complex and unnecessary.
+> There was only one bona fide user which has now been converted to handle
+> the process in a different way. Any future resource protection, shared
+> enablement functions should be handed by the parent device, rather than
+> through the MFD subsystem API.
 > 
-> [ 2551.474706] INFO: task xenbus:37 blocked for more than 120 seconds.
-> [ 2551.492215]       Tainted: P           OE     5.0.0-29-generic #5
-> [ 2551.510263] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-> [ 2551.528585] xenbus          D    0    37      2 0x80000080
-> [ 2551.528590] Call Trace:
-> [ 2551.528603]  __schedule+0x2c0/0x870
-> [ 2551.528606]  ? _cond_resched+0x19/0x40
-> [ 2551.528632]  schedule+0x2c/0x70
-> [ 2551.528637]  xs_talkv+0x1ec/0x2b0
-> [ 2551.528642]  ? wait_woken+0x80/0x80
-> [ 2551.528645]  xs_single+0x53/0x80
-> [ 2551.528648]  xenbus_transaction_end+0x3b/0x70
-> [ 2551.528651]  xenbus_file_free+0x5a/0x160
-> [ 2551.528654]  xenbus_dev_queue_reply+0xc4/0x220
-> [ 2551.528657]  xenbus_thread+0x7de/0x880
-> [ 2551.528660]  ? wait_woken+0x80/0x80
-> [ 2551.528665]  kthread+0x121/0x140
-> [ 2551.528667]  ? xb_read+0x1d0/0x1d0
-> [ 2551.528670]  ? kthread_park+0x90/0x90
-> [ 2551.528673]  ret_from_fork+0x35/0x40
-> 
-> Fix this by doing the cleanup via a workqueue instead.
-> 
-> Reported-by: James Dingwall <james@dingwall.me.uk>
-> Fixes: fd8aa9095a95c ("xen: optimize xenbus driver for multiple concurrent xenstore accesses")
-> Cc: <stable@vger.kernel.org> # 4.11
-> Signed-off-by: Juergen Gross <jgross@suse.com>
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+
 > ---
->  drivers/xen/xenbus/xenbus_dev_frontend.c | 20 ++++++++++++++++++--
->  1 file changed, 18 insertions(+), 2 deletions(-)
+>  drivers/mfd/mfd-core.c   | 57 +++++++---------------------------------
+>  include/linux/mfd/core.h |  2 --
+>  2 files changed, 9 insertions(+), 50 deletions(-)
 > 
-> diff --git a/drivers/xen/xenbus/xenbus_dev_frontend.c b/drivers/xen/xenbus/xenbus_dev_frontend.c
-> index 08adc590f631..597af455a522 100644
-> --- a/drivers/xen/xenbus/xenbus_dev_frontend.c
-> +++ b/drivers/xen/xenbus/xenbus_dev_frontend.c
-> @@ -55,6 +55,7 @@
->  #include <linux/string.h>
->  #include <linux/slab.h>
->  #include <linux/miscdevice.h>
-> +#include <linux/workqueue.h>
+> diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
+> index 90b43b44a15a..5d56015baeeb 100644
+> --- a/drivers/mfd/mfd-core.c
+> +++ b/drivers/mfd/mfd-core.c
+> @@ -26,53 +26,31 @@ static struct device_type mfd_dev_type = {
+>  int mfd_cell_enable(struct platform_device *pdev)
+>  {
+>  	const struct mfd_cell *cell = mfd_get_cell(pdev);
+> -	int err = 0;
 >  
->  #include <xen/xenbus.h>
->  #include <xen/xen.h>
-> @@ -116,6 +117,8 @@ struct xenbus_file_priv {
->  	wait_queue_head_t read_waitq;
+>  	if (!cell->enable) {
+>  		dev_dbg(&pdev->dev, "No .enable() call-back registered\n");
+>  		return 0;
+>  	}
 >  
->  	struct kref kref;
-> +
-> +	struct work_struct wq;
->  };
+> -	/* only call enable hook if the cell wasn't previously enabled */
+> -	if (atomic_inc_return(cell->usage_count) == 1)
+> -		err = cell->enable(pdev);
+> -
+> -	/* if the enable hook failed, decrement counter to allow retries */
+> -	if (err)
+> -		atomic_dec(cell->usage_count);
+> -
+> -	return err;
+> +	return cell->enable(pdev);
+>  }
+>  EXPORT_SYMBOL(mfd_cell_enable);
 >  
->  /* Read out any raw xenbus messages queued up. */
-> @@ -300,14 +303,14 @@ static void watch_fired(struct xenbus_watch *watch,
->  	mutex_unlock(&adap->dev_data->reply_mutex);
+>  int mfd_cell_disable(struct platform_device *pdev)
+>  {
+>  	const struct mfd_cell *cell = mfd_get_cell(pdev);
+> -	int err = 0;
+>  
+>  	if (!cell->enable) {
+>  		dev_dbg(&pdev->dev, "No .disable() call-back registered\n");
+>  		return 0;
+>  	}
+>  
+> -	/* only disable if no other clients are using it */
+> -	if (atomic_dec_return(cell->usage_count) == 0)
+> -		err = cell->disable(pdev);
+> -
+> -	/* if the disable hook failed, increment to allow retries */
+> -	if (err)
+> -		atomic_inc(cell->usage_count);
+> -
+> -	/* sanity check; did someone call disable too many times? */
+> -	WARN_ON(atomic_read(cell->usage_count) < 0);
+> -
+> -	return err;
+> +	return cell->disable(pdev);
+>  }
+>  EXPORT_SYMBOL(mfd_cell_disable);
+>  
+>  static int mfd_platform_add_cell(struct platform_device *pdev,
+> -				 const struct mfd_cell *cell,
+> -				 atomic_t *usage_count)
+> +				 const struct mfd_cell *cell)
+>  {
+>  	if (!cell)
+>  		return 0;
+> @@ -81,7 +59,6 @@ static int mfd_platform_add_cell(struct platform_device *pdev,
+>  	if (!pdev->mfd_cell)
+>  		return -ENOMEM;
+>  
+> -	pdev->mfd_cell->usage_count = usage_count;
+>  	return 0;
 >  }
 >  
-> -static void xenbus_file_free(struct kref *kref)
-> +static void xenbus_worker(struct work_struct *wq)
+> @@ -144,7 +121,7 @@ static inline void mfd_acpi_add_device(const struct mfd_cell *cell,
+>  #endif
+>  
+>  static int mfd_add_device(struct device *parent, int id,
+> -			  const struct mfd_cell *cell, atomic_t *usage_count,
+> +			  const struct mfd_cell *cell,
+>  			  struct resource *mem_base,
+>  			  int irq_base, struct irq_domain *domain)
 >  {
->  	struct xenbus_file_priv *u;
->  	struct xenbus_transaction_holder *trans, *tmp;
->  	struct watch_adapter *watch, *tmp_watch;
->  	struct read_buffer *rb, *tmp_rb;
+> @@ -206,7 +183,7 @@ static int mfd_add_device(struct device *parent, int id,
+>  			goto fail_alias;
+>  	}
 >  
-> -	u = container_of(kref, struct xenbus_file_priv, kref);
-> +	u = container_of(wq, struct xenbus_file_priv, wq);
+> -	ret = mfd_platform_add_cell(pdev, cell, usage_count);
+> +	ret = mfd_platform_add_cell(pdev, cell);
+>  	if (ret)
+>  		goto fail_alias;
 >  
->  	/*
->  	 * No need for locking here because there are no other users,
-> @@ -333,6 +336,18 @@ static void xenbus_file_free(struct kref *kref)
->  	kfree(u);
+> @@ -296,16 +273,9 @@ int mfd_add_devices(struct device *parent, int id,
+>  {
+>  	int i;
+>  	int ret;
+> -	atomic_t *cnts;
+> -
+> -	/* initialize reference counting for all cells */
+> -	cnts = kcalloc(n_devs, sizeof(*cnts), GFP_KERNEL);
+> -	if (!cnts)
+> -		return -ENOMEM;
+>  
+>  	for (i = 0; i < n_devs; i++) {
+> -		atomic_set(&cnts[i], 0);
+> -		ret = mfd_add_device(parent, id, cells + i, cnts + i, mem_base,
+> +		ret = mfd_add_device(parent, id, cells + i, mem_base,
+>  				     irq_base, domain);
+>  		if (ret)
+>  			goto fail;
+> @@ -316,17 +286,15 @@ int mfd_add_devices(struct device *parent, int id,
+>  fail:
+>  	if (i)
+>  		mfd_remove_devices(parent);
+> -	else
+> -		kfree(cnts);
+> +
+>  	return ret;
+>  }
+>  EXPORT_SYMBOL(mfd_add_devices);
+>  
+> -static int mfd_remove_devices_fn(struct device *dev, void *c)
+> +static int mfd_remove_devices_fn(struct device *dev, void *data)
+>  {
+>  	struct platform_device *pdev;
+>  	const struct mfd_cell *cell;
+> -	atomic_t **usage_count = c;
+>  
+>  	if (dev->type != &mfd_dev_type)
+>  		return 0;
+> @@ -337,20 +305,13 @@ static int mfd_remove_devices_fn(struct device *dev, void *c)
+>  	regulator_bulk_unregister_supply_alias(dev, cell->parent_supplies,
+>  					       cell->num_parent_supplies);
+>  
+> -	/* find the base address of usage_count pointers (for freeing) */
+> -	if (!*usage_count || (cell->usage_count < *usage_count))
+> -		*usage_count = cell->usage_count;
+> -
+>  	platform_device_unregister(pdev);
+>  	return 0;
 >  }
 >  
-> +static void xenbus_file_free(struct kref *kref)
-> +{
-> +	struct xenbus_file_priv *u;
-> +
-> +	/*
-> +	 * We might be called in xenbus_thread().
-> +	 * Use workqueue to avoid deadlock.
-> +	 */
-> +	u = container_of(kref, struct xenbus_file_priv, kref);
-> +	schedule_work(&u->wq);
-> +}
-> +
->  static struct xenbus_transaction_holder *xenbus_get_transaction(
->  	struct xenbus_file_priv *u, uint32_t tx_id)
+>  void mfd_remove_devices(struct device *parent)
 >  {
-> @@ -650,6 +665,7 @@ static int xenbus_file_open(struct inode *inode, struct file *filp)
->  	INIT_LIST_HEAD(&u->watches);
->  	INIT_LIST_HEAD(&u->read_buffers);
->  	init_waitqueue_head(&u->read_waitq);
-> +	INIT_WORK(&u->wq, xenbus_worker);
+> -	atomic_t *cnts = NULL;
+> -
+> -	device_for_each_child_reverse(parent, &cnts, mfd_remove_devices_fn);
+> -	kfree(cnts);
+> +	device_for_each_child_reverse(parent, NULL, mfd_remove_devices_fn);
+>  }
+>  EXPORT_SYMBOL(mfd_remove_devices);
 >  
->  	mutex_init(&u->reply_mutex);
->  	mutex_init(&u->msgbuffer_mutex);
+> diff --git a/include/linux/mfd/core.h b/include/linux/mfd/core.h
+> index bd8c0e089164..919f09fb07b7 100644
+> --- a/include/linux/mfd/core.h
+> +++ b/include/linux/mfd/core.h
+> @@ -30,8 +30,6 @@ struct mfd_cell {
+>  	const char		*name;
+>  	int			id;
+>  
+> -	/* refcounting for multiple drivers to use a single cell */
+> -	atomic_t		*usage_count;
+>  	int			(*enable)(struct platform_device *dev);
+>  	int			(*disable)(struct platform_device *dev);
+>  
 > -- 
-> 2.16.4
+> 2.17.1
 > 
-
-We have been having some crashes with an Ubuntu 5.0.0-31 kernel with 
-this patch and thanks to the pstore fix "x86/xen: Return from panic 
-notifier" we caught the oops below.  It seems to be in the same area of 
-code as this patch but I'm unsure if it is directly related to this 
-change or a secondary issue.  From the logs collected I can see this 
-happened while there were several parallel `xl create` process running 
-but so I have not been able to reproduce this in a test script but 
-perhaps the trace will give some clues.
-
-Thanks,
-James
-
-
-<4>[53626.726580] ------------[ cut here ]------------
-<2>[53626.726583] kernel BUG at /build/slowfs/ubuntu-bionic/mm/slub.c:305!
-<4>[53626.739554] invalid opcode: 0000 [#1] SMP NOPTI
-<4>[53626.751119] CPU: 0 PID: 38 Comm: xenwatch Tainted: P           OE     5.0.0-31-generic #33~18.04.1z1
-<4>[53626.763015] Hardware name: HPE ProLiant DL380 Gen10/ProLiant DL380 Gen10, BIOS U30 02/02/2019
-<4>[53626.775100] RIP: e030:__slab_free+0x188/0x330
-<4>[53626.787708] Code: 90 48 89 c7 e8 89 5d da ff 66 90 f0 49 0f ba 2c 24 00 72 68 4d 3b 6c 24 20 74 11 49 0f ba 34 24 00 e8 8c 5d da ff 66 90 eb a9 <0f> 0b 49 3b 5c 24 28 75 e8 48 8b 45 88 49 89 4c 24 28 49 89 44 24
-<4>[53626.813409] RSP: e02b:ffffc900463f7c80 EFLAGS: 00010246
-<4>[53626.826151] RAX: ffff8881601c20a8 RBX: 00000000820001a3 RCX: ffff8881601c20a8
-<4>[53626.838346] RDX: ffff8881601c20a8 RSI: ffffea0005807080 RDI: ffff888251403c80
-<4>[53626.850414] RBP: ffffc900463f7d20 R08: 0000000000000001 R09: ffffffff81624f37
-<4>[53626.862624] R10: 0000000000000001 R11: f000000000000000 R12: ffffea0005807080
-<4>[53626.874710] R13: ffff8881601c20a8 R14: ffff888251403c80 R15: ffff8881601c20a8
-<4>[53626.886608] FS:  00007f67b9858c00(0000) GS:ffff888255a00000(0000) knlGS:0000000000000000
-<4>[53626.898607] CS:  e030 DS: 0000 ES: 0000 CR0: 0000000080050033
-<4>[53626.910735] CR2: 0000565111fc81a0 CR3: 0000000d5b4d2000 CR4: 0000000000040660
-<4>[53626.923103] Call Trace:
-<4>[53626.934868]  ? xs_talkv+0x138/0x2b0
-<4>[53626.946469]  ? xenbus_transaction_start+0x47/0x50
-<4>[53626.958450]  kfree+0x169/0x180
-<4>[53626.969983]  ? kfree+0x169/0x180
-<4>[53626.981443]  xenbus_transaction_start+0x47/0x50
-<4>[53626.993042]  __xenbus_switch_state.part.2+0x33/0x120
-<4>[53627.004445]  xenbus_switch_state+0x18/0x20
-<4>[53627.015851]  frontend_changed+0xde/0x5b0 [xen_blkback]
-<4>[53627.027411]  xenbus_otherend_changed+0x10a/0x120
-<4>[53627.038657]  frontend_changed+0x10/0x20
-<4>[53627.049830]  xenwatch_thread+0xc4/0x160
-<4>[53627.060987]  ? wait_woken+0x80/0x80
-<4>[53627.071858]  kthread+0x121/0x140
-<4>[53627.082558]  ? find_watch+0x40/0x40
-<4>[53627.093339]  ? kthread_park+0xb0/0xb0
-<4>[53627.103779]  ret_from_fork+0x35/0x40
-<4>[53627.114200] Modules linked in: bridge stp llc xt_addrtype xt_owner xt_multiport xt_hl xt_tcpudp xt_conntrack xt_NFLOG ip6table_mangle iptable_mangle ip6table_nat nf_nat_ipv6 iptable_nat nf_nat_ipv4 nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 ip6table_filter ip6_tables iptable_filter bpfilter nfnetlink_log nfnetlink intel_rapl nfit intel_powerclamp crct10dif_pclmul crc32_pclmul ghash_clmulni_intel aesni_intel aes_x86_64 crypto_simd cryptd glue_helper intel_rapl_perf ttm drm_kms_helper drm i2c_algo_bit ipmi_ssif fb_sys_fops syscopyarea sysfillrect sysimgblt hpilo lpc_ich mei_me mei ipmi_si acpi_tad ipmi_devintf ipmi_msghandler acpi_power_meter ioatdma mac_hid dca sch_fq_codel xen_pciback xen_netback xen_blkback xen_gntalloc xen_gntdev xen_evtchn drbd lru_cache xenfs xen_privcmd ip_tables x_tables autofs4 dm_mirror dm_region_hash dm_log raid10 raid1 raid0 multipath linear dm_raid raid456 async_raid6_recov async_memcpy async_pq async_xor async_tx xor raid6_pq libcrc32c usbhid
-  hid_generic
-<4>[53627.114230]  hid zfs(POE) zunicode(PO) zavl(PO) icp(POE) zcommon(POE) znvpair(POE) spl(O) efi_pstore aufs uas usb_storage tg3 ahci libahci wmi
-<4>[53627.235116] ---[ end trace 796b6d237837988d ]---
-
