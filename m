@@ -2,144 +2,124 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFBB7CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:54:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A197ECA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:55:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A76A0214AE
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:54:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 750942089C
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:55:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UKrh8fzj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729153AbfJUNyX (ORCPT
+        id S1729172AbfJUNy7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 09:54:23 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38436 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729128AbfJUNyW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 09:54:22 -0400
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 10D5F81DE1
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 13:54:22 +0000 (UTC)
-Received: by mail-qt1-f200.google.com with SMTP id j5so14152199qtn.10
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 06:54:22 -0700 (PDT)
+        Mon, 21 Oct 2019 09:54:59 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:50558 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728670AbfJUNy7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 09:54:59 -0400
+Received: by mail-wm1-f66.google.com with SMTP id q13so3399047wmj.0
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 06:54:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=YfrF7IJCoSFUkCGUAvDZfm/QH+GScBQlRpFMLC7/CCw=;
+        b=UKrh8fzjyktCEqi/F04owSaxlJ2AZ8i3jwaIV0RIt3p3RVR8RhAiwQVPlgWyNEgWwz
+         KN7aJVtURbbQXJ27msli6uh0OETcJ0SUblyrov9WRGsJn1z2aWECGIEA7L3vJ4lKI6Jl
+         qhiHya6gh2LYjfoF9IISi7dvI1RZ50/h4yIiybWKXEpqwftMG6PGuPN5+mrUjWavI2Y2
+         PNEZyFSr/34Lw7IsLn2N/hN1C+rRNXyuvxHmZM+GLvtkoXEkSugEY80fYkzlVkrWRzxt
+         eWPEfzW/V/PqlxCHyWj3fbPcW34bc/4ViqXDqTKEVitpepFxWOVp2++9lhhufkhgfDZI
+         oRpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Q2G1xusxf4dns3pndHNTvCsxrH/ysqq3dgJVBnbwKIs=;
-        b=mEJa+zBaopmdEjKaMQKZ+rWQTMtOSogoYmC6JZB3glqr+HXKQj+6/4FE2xDHx/PjlD
-         FZeWTEjNsn+4Tghv0MxXGozDYh7aI5aNUT/MTm4Tx70aGMDeqKxst7iQWJTUjI7AwaYL
-         YlbOBkUyCYNDM7vB84da9TBvM9c377AcErhNfsXc/CxESnQA4BSNmA2lmGzUwANPwvRS
-         TKT9pAxIv7PZFJBG6gqSzNnAs/46P5Uvx54Uarq/qrrlwmLcu8bZil74VmThtWi1kZVS
-         qfNEuNH0jcdcWzKnTZpNSS0UMxyLLVHmUSUFRtCVD5yM020LCE95Jdcmt7dDMLnHaqbz
-         G0aA==
-X-Gm-Message-State: APjAAAX/88SsWNfqrmSipb5fmiR2cexK/ivcQNUOlK4LiXHSDGjadvvH
-        OmW4rW08lPURD+zyGaI8df1RBVf0z8hH0PBURz6YZJIUsGtAW0Dt7glWBsMvdoLvfIfhVYYoh+4
-        roalIm3IRhfgwtywI8UMrDOEUEteas9nAs1Vn5TyN
-X-Received: by 2002:ac8:664b:: with SMTP id j11mr24827251qtp.137.1571666061245;
-        Mon, 21 Oct 2019 06:54:21 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxkFGgGdHL5wN4wh/Zt1E39qBLM+0KoKUb4VD7Jy4sRN04D/L8vg7pR474/ZE01oLpPOfhqewZ/sebaQYyV838=
-X-Received: by 2002:ac8:664b:: with SMTP id j11mr24827222qtp.137.1571666060943;
- Mon, 21 Oct 2019 06:54:20 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=YfrF7IJCoSFUkCGUAvDZfm/QH+GScBQlRpFMLC7/CCw=;
+        b=rnnsdP8xDN3ea5TTVetIBG4GOi+Mj8vtafTTK8CMb7Z+mWmj7w4gU4fRj0cCjJ5OGJ
+         Qt75P/bn0aUZCxwh1m+8xDCuGyZG+hCHYgshUD6FnCTfqelatlF+Wn3Dzj8W+68Wjf+l
+         7dGxuii2PC2BbCdxdsOjcYDzsQyM+XnLpR2PuM5xoJzgSXCa7i7LIbLU+whf3MZpmUya
+         tYXgjgQ8ydxPFzt556sg45sVOnUDUw0Uo5YFOYZoar0NdJ5tkTlXfjWchhL6vrApe0Ma
+         DDGVUvaEFkXKsbGenKvpacGBNhk0/tR3JGm+bV5CApBnf85nAgOmatI4veyVt7iEiA/l
+         KLlg==
+X-Gm-Message-State: APjAAAVLSiJk0NYaaxvCxZoMad34qAZueqL+XyKWM+BuvhHneaG+W/dI
+        ZV6C5M7D4GWoPEHb1j7lgcU=
+X-Google-Smtp-Source: APXvYqxp5pgNj/pXVy53CJJH88s1cn3K7BwZ8VWDUkBFog6CuuX4N2M+wKnXg4KLNqU31gBHWuJGyQ==
+X-Received: by 2002:a05:600c:2:: with SMTP id g2mr18808922wmc.163.1571666096952;
+        Mon, 21 Oct 2019 06:54:56 -0700 (PDT)
+Received: from [10.83.36.153] ([217.173.96.166])
+        by smtp.gmail.com with ESMTPSA id c16sm1359147wrw.32.2019.10.21.06.54.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 21 Oct 2019 06:54:56 -0700 (PDT)
+Subject: Re: [PATCH -next RESEND] Documentation/admin-guide: fix sysctl Sphinx
+ warning
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dmitry Safonov <dima@arista.com>
+References: <c5fed83a-d105-4142-8607-4b06ebadf0e8@infradead.org>
+From:   Dmitry Safonov <0x7f454c46@gmail.com>
+Message-ID: <c1442b1f-c90e-0604-bb50-f71a16e8b335@gmail.com>
+Date:   Mon, 21 Oct 2019 14:54:50 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-References: <CACO55ttOJaXKWmKQQbMAQRJHLXF-VtNn58n4BZhFKYmAdfiJjA@mail.gmail.com>
- <20191016213722.GA72810@google.com> <CACO55tuXck7vqGVLmMBGFg6A2pr3h8koRuvvWHLNDH8XvBVxew@mail.gmail.com>
- <20191021133328.GI2819@lahna.fi.intel.com>
-In-Reply-To: <20191021133328.GI2819@lahna.fi.intel.com>
-From:   Karol Herbst <kherbst@redhat.com>
-Date:   Mon, 21 Oct 2019 15:54:09 +0200
-Message-ID: <CACO55tujUZr+rKkyrkfN+wkNOJWdNEVhVc-eZ3RCXJD+G1z=7A@mail.gmail.com>
-Subject: Re: [PATCH v3] pci: prevent putting nvidia GPUs into lower device
- states on certain intel bridges
-To:     Mika Westerberg <mika.westerberg@intel.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lyude Paul <lyude@redhat.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        Linux ACPI Mailing List <linux-acpi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <c5fed83a-d105-4142-8607-4b06ebadf0e8@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 3:33 PM Mika Westerberg
-<mika.westerberg@intel.com> wrote:
->
-> On Wed, Oct 16, 2019 at 11:48:22PM +0200, Karol Herbst wrote:
-> > On Wed, Oct 16, 2019 at 11:37 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > >
-> > > [+cc linux-acpi]
-> > >
-> > > On Wed, Oct 16, 2019 at 09:18:32PM +0200, Karol Herbst wrote:
-> > > > but setting the PCI_DEV_FLAGS_NO_D3 flag does prevent using the
-> > > > platform means of putting the device into D3cold, right? That's
-> > > > actually what should still happen, just the D3hot step should be
-> > > > skipped.
-> > >
-> > > If I understand correctly, when we put a device in D3cold on an ACPI
-> > > system, we do something like this:
-> > >
-> > >   pci_set_power_state(D3cold)
-> > >     if (PCI_DEV_FLAGS_NO_D3)
-> > >       return 0                                   <-- nothing at all if quirked
-> > >     pci_raw_set_power_state
-> > >       pci_write_config_word(PCI_PM_CTRL, D3hot)  <-- set to D3hot
-> > >     __pci_complete_power_transition(D3cold)
-> > >       pci_platform_power_transition(D3cold)
-> > >         platform_pci_set_power_state(D3cold)
-> > >           acpi_pci_set_power_state(D3cold)
-> > >             acpi_device_set_power(ACPI_STATE_D3_COLD)
-> > >               ...
-> > >                 acpi_evaluate_object("_OFF")     <-- set to D3cold
-> > >
-> > > I did not understand the connection with platform (ACPI) power
-> > > management from your patch.  It sounds like you want this entire path
-> > > except that you want to skip the PCI_PM_CTRL write?
-> > >
-> >
-> > exactly. I am running with this workaround for a while now and never
-> > had any fails with it anymore. The GPU gets turned off correctly and I
-> > see the same power savings, just that the GPU can be powered on again.
-> >
-> > > That seems like something Rafael should weigh in on.  I don't know
-> > > why we set the device to D3hot with PCI_PM_CTRL before using the ACPI
-> > > methods, and I don't know what the effect of skipping that is.  It
-> > > seems a little messy to slice out this tiny piece from the middle, but
-> > > maybe it makes sense.
-> > >
-> >
-> > afaik when I was talking with others in the past about it, Windows is
-> > doing that before using ACPI calls, but maybe they have some similar
-> > workarounds for certain intel bridges as well? I am sure it affects
-> > more than the one I am blacklisting here, but I rather want to check
-> > each device before blacklisting all kabylake and sky lake bridges (as
-> > those are the ones were this issue can be observed).
-> >
-> > Sadly we had no luck getting any information about such workaround out
-> > of Nvidia or Intel.
->
-> I really would like to provide you more information about such
-> workaround but I'm not aware of any ;-) I have not seen any issues like
-> this when D3cold is properly implemented in the platform.  That's why
-> I'm bit skeptical that this has anything to do with specific Intel PCIe
-> ports. More likely it is some power sequence in the _ON/_OFF() methods
-> that is run differently on Windows.
+Hi Randy,
 
-yeah.. maybe. I really don't know what's the actual root cause. I just
-know that with this workaround it works perfectly fine on my and some
-other systems it was tested on. Do you know who would be best to
-approach to get proper documentation about those methods and what are
-the actual prerequisites of those methods?
+On 10/21/19 3:44 AM, Randy Dunlap wrote:
+> From: Randy Dunlap <rdunlap@infradead.org>
+> 
+> Fix Sphinx warning when building Documentation:
+> 
+> Documentation/admin-guide/sysctl/kernel.rst:397: WARNING: Title underline too short.
+> 
+> hung_task_interval_warnings:
+> ===================
 
-We kind of tried with Nvidia, but maybe having a more specific
-question would help here... I will try to bring that issue up the next
-time with them.
+Thanks for the patch!
+
+I'm in process of reworking the patch in akpm according to reviews,
+I will incorporate your change in next version.
+
+> 
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Dmitry Safonov <dima@arista.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Ingo Molnar <mingo@kernel.org>
+> ---
+>  Documentation/admin-guide/sysctl/kernel.rst |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> --- linux-next-20191018.orig/Documentation/admin-guide/sysctl/kernel.rst
+> +++ linux-next-20191018/Documentation/admin-guide/sysctl/kernel.rst
+> @@ -394,7 +394,7 @@ This file shows up if CONFIG_DETECT_HUNG
+>  
+>  
+>  hung_task_interval_warnings:
+> -===================
+> +============================
+>  
+>  The same as hung_task_warnings, but set the number of interval
+>  warnings to be issued about detected hung tasks during check
+> 
+> 
+
+Thanks,
+          Dmitry
