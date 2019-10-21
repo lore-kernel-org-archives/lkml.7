@@ -2,97 +2,103 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAF63CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 07:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26E15CA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 07:41:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 811162086D
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 07:41:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="NWqlGQoA"
+	by mail.kernel.org (Postfix) with ESMTP id 043AB2086D
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 07:41:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727530AbfJUHld (ORCPT
+        id S1727550AbfJUHlp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 03:41:33 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:53711 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727144AbfJUHld (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 03:41:33 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46xT960h1Nz9sP3;
-        Mon, 21 Oct 2019 18:41:30 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1571643690;
-        bh=FoiT9fnunc6OkHkSYgQ7azeifK6FkObdjYd+oh0it6Q=;
-        h=Date:From:To:Cc:Subject:From;
-        b=NWqlGQoANpYCLVCWtWIW2a6jamEt7ydE7cNC/gNXxCVAIxVkgIbdJTGf+OJvMEUSv
-         UfzRZlkMkX87VWhDFQNU5krzc+pQxzqrXmCwtzzVq0b7mfbeDBTIz9Yd8ZI4/m94sg
-         iBMWbijFlfJ8cZNPHt3Q/H5N+dHwrOm0pGPusvQqhNkUcjVMdvJBk/wqR9aRWg8hiT
-         JDr8nZsNkwFGD1bc8d1QLmDxUbtSj3lZJQNYKDpaPjQGqP7p9SHvAUIO+PHsYvASWH
-         pOFY00k1q6RhObq8hIThSLDWaBMgVMSX8JtXLpMNFyLf0322rvJlD7h/Y9HAyQiCV+
-         OPBdmnaqgPDZw==
-Date:   Mon, 21 Oct 2019 18:41:28 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Potnuri Bharat Teja <bharat@chelsio.com>
-Subject: linux-next: Fixes tag needs some work in the rdma-fixes tree
-Message-ID: <20191021184128.601ff09d@canb.auug.org.au>
+        Mon, 21 Oct 2019 03:41:45 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:57508 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727144AbfJUHlp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 03:41:45 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9L7biT3110095
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 03:41:44 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2vs721ub2w-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 03:41:44 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <hbathini@linux.ibm.com>;
+        Mon, 21 Oct 2019 08:41:42 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 21 Oct 2019 08:41:38 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9L7fbum9502946
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 21 Oct 2019 07:41:37 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8502E4C040;
+        Mon, 21 Oct 2019 07:41:37 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D6E9C4C059;
+        Mon, 21 Oct 2019 07:41:35 +0000 (GMT)
+Received: from [9.85.68.191] (unknown [9.85.68.191])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 21 Oct 2019 07:41:35 +0000 (GMT)
+Subject: Re: [PATCH v2 3/4] Documentation/ABI: mark /sys/kernel/fadump_* sysfs
+ files deprecated
+To:     Sourabh Jain <sourabhjain@linux.ibm.com>, mpe@ellerman.id.au
+Cc:     corbet@lwn.net, mahesh@linux.vnet.ibm.com,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@ozlabs.org
+References: <20191018130557.2217-1-sourabhjain@linux.ibm.com>
+ <20191018130557.2217-4-sourabhjain@linux.ibm.com>
+From:   Hari Bathini <hbathini@linux.ibm.com>
+Date:   Mon, 21 Oct 2019 13:11:34 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/BsDK.lSjkBl=4C119vws36T";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20191018130557.2217-4-sourabhjain@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19102107-0020-0000-0000-0000037BCA91
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19102107-0021-0000-0000-000021D1FF80
+Message-Id: <f69daa7b-ddb3-8190-c409-28a22c504fed@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-21_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=986 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910210071
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/BsDK.lSjkBl=4C119vws36T
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
 
-In commit
+On 18/10/19 6:35 PM, Sourabh Jain wrote:
+> The /sys/kernel/fadump_* sysfs files are replicated under
 
-  612e0486ad08 ("iw_cxgb4: fix ECN check on the passive accept")
+[...]
 
-Fixes tag
+> +Note: The following FADump sysfs files are deprecated.
+> +
+> +    Deprecated                       Alternative
+> +    -------------------------------------------------------------------------------
+> +    /sys/kernel/fadump_enabled           /sys/kernel/fadump/fadump_enabled
+> +    /sys/kernel/fadump_registered        /sys/kernel/fadump/fadump_registered
+> +    /sys/kernel/fadump_release_mem       /sys/kernel/fadump/fadump_release_mem
 
-  Fixes: 92e7ae7172 ("iw_cxgb4: Choose appropriate hw mtu index and ISS for=
- iWARP connections")
+/sys/kernel/fadump/* looks tidy instead of /sys/kernel/fadump/fadump_* 
+I mean, /sys/kernel/fadump/fadump_enabled => /sys/kernel/fadump/enabled and such..
 
-has these problem(s):
+- Hari
 
-  - SHA1 should be at least 12 digits long
-    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
-    or later) just making sure it is not set (or set to "auto").
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/BsDK.lSjkBl=4C119vws36T
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2tYSgACgkQAVBC80lX
-0GzbEQf/SNbWGWz/Ci7V84XoZkrrRn5ZHjKXEUci6ioLJCdmW+UtOGCe/M3/c2S3
-NCcpurZntmYjclj9qkPQm9NKB+aCUzzaktTJDZILEaeD9WNf9paolsg3LCmUHan3
-q1zGDN2/RPuEjk9rjymyqwQX/lG33NcF7c8yHnaE4hEFnZuKDCw/oeUoN6ttKq6e
-y1p38Hi+iQqAWQSGzW8ZJVu0NaNuiTMLT5KbwVwZyTonWdY55pgpuouABNq0890Y
-PFX4hA+hykqtSB8pDCFOhF4KDE5qnhlxyTt3JOkM07lPPQhUZU8D4f5nmEDM0HaI
-YmkmaHquSutnHR1RpphZRLge7miukQ==
-=8KHo
------END PGP SIGNATURE-----
-
---Sig_/BsDK.lSjkBl=4C119vws36T--
