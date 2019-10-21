@@ -2,154 +2,186 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E73BCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 19:01:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 747FECA9EB0
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 19:03:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03E052064B
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 19:01:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 436EF2086D
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 19:03:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="dXC9wpXP"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="b3tQuHZe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730097AbfJUTBC (ORCPT
+        id S1730120AbfJUTDD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 15:01:02 -0400
-Received: from mout.web.de ([212.227.17.11]:48129 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730026AbfJUTBC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 15:01:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1571684444;
-        bh=E9JnthHTX95IhhGDDKvUesddTu58VlOGnTwXioVWz68=;
-        h=X-UI-Sender-Class:To:From:Subject:Cc:Date;
-        b=dXC9wpXPDFvaz4Sm/0U0n/LG+Rymv6glc21q0wFts94hQXooyZPRZPfsIKAN0l3K/
-         RGXwiO8PbSNHxdR8/EzaBzOKvaVHcxozYH52F7+yjZoCZGPfqJg+9BXMynFdBLYCou
-         wBRw0KbV6zNHZPnghnlmKmQExJ6ss5vCMwmCwT7I=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.135.106.164]) by smtp.web.de (mrweb103
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MQelV-1iSWC913E5-00U1iU; Mon, 21
- Oct 2019 21:00:44 +0200
-To:     linux-doc@vger.kernel.org, netdev@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Nicholas Mc Guire <hofrat@osadl.org>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Subject: sysfs.txt: Checking the documentation status for the directory layout
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-Message-ID: <5781c1ca-1558-48f0-84f1-678985832eed@web.de>
-Date:   Mon, 21 Oct 2019 21:00:34 +0200
+        Mon, 21 Oct 2019 15:03:03 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:33224 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727211AbfJUTDC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 15:03:02 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9LIxJYD091924;
+        Mon, 21 Oct 2019 19:02:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=WPm6ksNVKuUPres28dmOnwW/E7lwkBzoIiqD3p9+fOw=;
+ b=b3tQuHZe4LZMbrfZPa3X7I1reh0ZReMoZBOVz9Q7OVe3hZMZ4u/BxeAL3vBcrz+g9e77
+ xFnCo8pcKJ3qRikVTYvjB0M27aOguojA7DOTVp1Ei6xmXRofHVzRZqUjDVtdR0/vXwI7
+ Jouy02MSr7s+Nmm2oEHhNYNtaU7V9NmP6yohCtIWbzwgRH7fskIj8wPQ3l6slg3Df4e4
+ Z6MsAAy2oYsqZqXLR1Yp5BL3BapudFMN/yQbpQhNt5xxphzROMPwEhQygofchW8ymFao
+ 3GZVNo4HEy5qza2q0ZDMjN6gv9Jd6/5kwh4GFcwjHa13VZk6pWt0xDHpWLdhhyPGu2CN Cw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2vqu4qhm0e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 21 Oct 2019 19:02:50 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9LIvXmG040833;
+        Mon, 21 Oct 2019 19:02:49 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2vrcnas1vv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 21 Oct 2019 19:02:49 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9LJ2m3G032738;
+        Mon, 21 Oct 2019 19:02:48 GMT
+Received: from [192.168.1.222] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 21 Oct 2019 12:02:48 -0700
+Subject: Re: [PATCH v6 5/9] hugetlb: disable region_add file_region coalescing
+To:     Mina Almasry <almasrymina@google.com>
+Cc:     shuah@kernel.org, rientjes@google.com, shakeelb@google.com,
+        gthelen@google.com, akpm@linux-foundation.org,
+        khalid.aziz@oracle.com, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
+        cgroups@vger.kernel.org, aneesh.kumar@linux.vnet.ibm.com,
+        mkoutny@suse.com
+References: <20191013003024.215429-1-almasrymina@google.com>
+ <20191013003024.215429-5-almasrymina@google.com>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <982efbbc-f795-5819-83a8-7d328537e070@oracle.com>
+Date:   Mon, 21 Oct 2019 12:02:46 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+ Thunderbird/68.1.1
 MIME-Version: 1.0
+In-Reply-To: <20191013003024.215429-5-almasrymina@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:acHw5VN4paUC2wbACFW68PCnIbeWkc2czjkqq4SSCtkAhx+Sa9U
- TD3TUm4U8Ehifvgo+W6h4Ku5640TfbkqFCAtMM+9KvXC0yQrx5xkpcJIcngdUo8CCWl/ZaA
- TMH8QCHwWPDIn0568fn4DBgzkwm1oL8YGvt4sFfQvqjtuhq1igtFLzM+FUSRveW277f9lmq
- qzE3N4hvK8I6RwqHvdM7g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:I2K9kI3dMxI=:zN5mptROEanvfHNZ6nyQIH
- CszkddXYyTAk0kdVh9AAy25t3lylzVxsgnIsMTPsBnYpxkFybywhs/lV4WRCIhevzCmkYEEgI
- 1WKpZXNr0v4LUZJwzKF7i6yCphe7XYSYrrt+dM2amNCSZ7mmPEOD46udJM/l0ficnxQDforUv
- 9OkdqA10bDfo0g9NnNgusLvTo24rykMvQjIbYCNUNOBOx+bC2HNtKtziAA49hjx20Z2VfvrTT
- DUwUMxQGExvSvmZ/J7FoyIKscebx6Nlc6AWTTRbgv/u/ZCNEophSft86mMP65X1EqSgsXp8u8
- cFpeg/8UEQmG+VYnAdhKgnzLO9MtoSTjDbSLwDaJB1OB00t+sRgjil4IwMQIw/bo1HmBx01fx
- AqHDrOWnQd85uLhKJHDM+HLmwpYofKFNqf7TqiW+2esVXDgRbjkWcN0WyP79XoMMQxM0l6yZo
- s77voNE9SF5ndmdssRqmWvRc67hKmysNzOWfGWPrEcN1fYtsniTn/fa5rxBOAvixGRUxU54z4
- 0aHp2ZKYqVZ9X4SXN3vqI3JztIaTXyY2oZrcHkytgZuEkqJ1dWk5btLtJ0f7BNTbTw25vqXnj
- htk4wQAQTl7weqhUaJgxPlxk5tvatY902VgwXHChFmP0PcOx2Fx2ib2oaIBT4zJtql1NT2oz6
- JfMlC7e3Qsm9jvOf47N41Ev3noLa8hs56WJsYdODf6CEDMJQ+xYRUaVfs2DnQV9nABwDBLXqg
- mc1qTTGljx/7K2T7aBykW5ohCaA+R1lVPB7XimKFOgqQp6JC2QMauoeFZB8MhDi4sXj4zEj4M
- FzO+ME0CUFeeWYz4r/Dxdz0g5uvNAvU8UtBuVkthz5zihFPqkZzJGhtwlLRrYMzMIZ3g6WUAV
- CZ5LDySIp9p6oofT3t56hzn0j/kxixm+54E7cRLmiEZV0LWYuTLTHe+zh837V6Lcc5Xf1MJkr
- dsLfgBPvpFOw0nttLkkT9edeV8RK8HOgPlup47mBx0lWe3UiMSrwYQ4Jj6WA8oUV4hb0FaRJx
- HCvkhNLZX5W0QWuCNd4TbYgfbtSdzzxIZl+ZUcVkILJKGto1N4fqLWbjZ6YFC0BwAOPTCHSlC
- 5zoAB3V9mEjWiACaHGI35Ry8nVtTYjMDs+LWX9Jb12++KRd4s2HRS/gHKd+IvqQkit4+1/MMN
- zWmyqDPVRMRn/rzPTowHzygQ6GyhBYaSQ8BpqSyj6KfOXPXTynqurAgOtxPAEgt2YJL+2J1o8
- p3UhODwjyG40tLrpj1Nrap6zGDvwFXE7QAtwB5a2V0jrbErFT1lt9bn59bKg=
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9417 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910210183
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9417 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910210183
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 10/12/19 5:30 PM, Mina Almasry wrote:
+> A follow up patch in this series adds hugetlb cgroup uncharge info the
+> file_region entries in resv->regions. The cgroup uncharge info may
+> differ for different regions, so they can no longer be coalesced at
+> region_add time. So, disable region coalescing in region_add in this
+> patch.
+> 
+> Behavior change:
+> 
+> Say a resv_map exists like this [0->1], [2->3], and [5->6].
+> 
+> Then a region_chg/add call comes in region_chg/add(f=0, t=5).
+> 
+> Old code would generate resv->regions: [0->5], [5->6].
+> New code would generate resv->regions: [0->1], [1->2], [2->3], [3->5],
+> [5->6].
+> 
+> Special care needs to be taken to handle the resv->adds_in_progress
+> variable correctly. In the past, only 1 region would be added for every
+> region_chg and region_add call. But now, each call may add multiple
+> regions, so we can no longer increment adds_in_progress by 1 in region_chg,
+> or decrement adds_in_progress by 1 after region_add or region_abort. Instead,
+> region_chg calls add_reservation_in_range() to count the number of regions
+> needed and allocates those, and that info is passed to region_add and
+> region_abort to decrement adds_in_progress correctly.
+> 
+> Signed-off-by: Mina Almasry <almasrymina@google.com>
+> 
+> ---
+> 
+> Changes in v6:
+> - Fix bug in number of region_caches allocated by region_chg
+> 
+> ---
+>  mm/hugetlb.c | 256 +++++++++++++++++++++++++++++----------------------
+>  1 file changed, 147 insertions(+), 109 deletions(-)
+> 
+> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> index 4a60d7d44b4c3..f9c1947925bb9 100644
+> --- a/mm/hugetlb.c
+> +++ b/mm/hugetlb.c
+<snip>
+> -static long region_chg(struct resv_map *resv, long f, long t)
+> +static long region_chg(struct resv_map *resv, long f, long t,
+> +		       long *out_regions_needed)
+>  {
+> +	struct file_region *trg = NULL;
+>  	long chg = 0;
+> 
+> +	/* Allocate the maximum number of regions we're going to need for this
+> +	 * reservation. The maximum number of regions we're going to need is
+> +	 * (t - f) / 2 + 1, which corresponds to a region with alternating
+> +	 * reserved and unreserved pages.
+> +	 */
+> +	*out_regions_needed = (t - f) / 2 + 1;
+> +
+>  	spin_lock(&resv->lock);
+> -retry_locked:
+> -	resv->adds_in_progress++;
+> +
+> +	resv->adds_in_progress += *out_regions_needed;
+> 
+>  	/*
+>  	 * Check for sufficient descriptors in the cache to accommodate
+>  	 * the number of in progress add operations.
+>  	 */
+> -	if (resv->adds_in_progress > resv->region_cache_count) {
+> -		struct file_region *trg;
+> -
+> -		VM_BUG_ON(resv->adds_in_progress - resv->region_cache_count > 1);
+> +	while (resv->region_cache_count < resv->adds_in_progress) {
+>  		/* Must drop lock to allocate a new descriptor. */
+> -		resv->adds_in_progress--;
+>  		spin_unlock(&resv->lock);
+> -
+>  		trg = kmalloc(sizeof(*trg), GFP_KERNEL);
+>  		if (!trg)
+>  			return -ENOMEM;
+> @@ -393,9 +395,9 @@ static long region_chg(struct resv_map *resv, long f, long t)
+>  		spin_lock(&resv->lock);
+>  		list_add(&trg->link, &resv->region_cache);
+>  		resv->region_cache_count++;
+> -		goto retry_locked;
+>  	}
 
-I have taken another look also at this text file.
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/D=
-ocumentation/filesystems/sysfs.txt?id=3Da6fcdcd94927a1b24dea6a9951ffa7c645=
-45ecfb#n276
 
-The following information is provided at the moment.
+I know that I suggested allocating the worst case number of entries, but this
+is going to be too much of a hit for existing hugetlbfs users.  It is not
+uncommon for DBs to have a shared areas in excess of 1TB mapped by hugetlbfs.
+With this new scheme, the above while loop will allocate over a half million
+file region entries and end up only using one.
 
-=E2=80=A6
-Top Level Directory Layout
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-The sysfs directory arrangement exposes the relationship of kernel
-data structures.
-=E2=80=A6
-firmware/
-net/
-fs/
-=E2=80=A6
-TODO: Finish this section.
-=E2=80=A6
-
-
-The directory =E2=80=9C/sys/net=E2=80=9D is not listed on my Linux 5.x sys=
-tem.
-Will this documentation get an update?
-
-Regards,
-Markus
+I think we need to step back and come up with a different approach.  Let me
+give it some more thought before throwing out ideas that may waste more of
+your time.  Sorry.
+-- 
+Mike Kravetz
