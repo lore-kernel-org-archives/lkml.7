@@ -2,141 +2,267 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6FF8C47E49
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:09:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A47EC47E49
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:11:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8B802077C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:09:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB616205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:11:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571674195;
-	bh=yAFVLkxjq0Sx/TKG/3FFK7vmvO0S13xxudXXKeP8cls=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=UOJAncbhzvymtqNvgI7T/0vIcrEnOImZ9AZi2WjBq3rFELNdP2Ypd8N9QqV+yzWl3
-	 fmO0OdjB1lazPwZcScvBPRdP0+6LQGeirxmjvWwX0zR7VCshOI2tHgdpvztcdvpEoq
-	 kR50S9H2WWsqyRjp/Fz3eB8kW55gC8NDID/P7le4=
+	s=default; t=1571674261;
+	bh=9vUKs8pCzKFuQ7qoUJr6IKkD/Ix0T+CpovzK7sscdoY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=qsL3pGQOPnKZdmgPOqhEZkQjPsQz8qi3+yJDDEoGJWHanzXKDQVfcDJAwE+D9Qpsz
+	 mZ6SZITijuoN9ExcIBt2+z2ymJRxTNk4SzYDU25HkywkDa+p3c8ymq9zEijkkbDT6i
+	 +Af1RF0kN1+/FBEKqRCaUI4klvmcDBDyPefYa9sk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729417AbfJUQJy (ORCPT
+        id S1729694AbfJUQLA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 12:09:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35514 "EHLO mail.kernel.org"
+        Mon, 21 Oct 2019 12:11:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726289AbfJUQJy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 12:09:54 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726847AbfJUQK7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 12:10:59 -0400
+Received: from localhost.localdomain (unknown [194.230.155.217])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 665D3205C9;
-        Mon, 21 Oct 2019 16:09:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C85F20B7C;
+        Mon, 21 Oct 2019 16:02:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571674193;
-        bh=yAFVLkxjq0Sx/TKG/3FFK7vmvO0S13xxudXXKeP8cls=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=UJLPRlaUWuFmpX+NxO/8w1KbZGIRH4d0ob9OZ1lhjvd7SyHzsvySc7DcUoLh3ZXTn
-         Y4bB/59GrW2t07f4+eAY985zcRpPVQES2Ejwytla7wMFbkuUQssn5Q6uidZG7iDJvg
-         Hs6/5hZyZQF2qN0iZ6oZsMsmW7I2rVXRZxU5NdH0=
-Date:   Mon, 21 Oct 2019 11:09:52 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Dominik Brodowski <linux@dominikbrodowski.net>
-Cc:     linux-pci@vger.kernel.org, "Michael ." <keltoiboy@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Trevor Jacobs <trevor_jacobs@aol.com>,
-        Kris Cleveland <tridentperfusion@yahoo.com>,
-        Jeff <bluerocksaddles@willitsonline.com>,
-        Morgan Klym <moklym@gmail.com>
-Subject: Re: PCI device function not being enumerated [Was: PCMCIA not
- working on Panasonic Toughbook CF-29]
-Message-ID: <20191021160952.GA229204@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191020090800.GA2778@light.dominikbrodowski.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        s=default; t=1571673743;
+        bh=9vUKs8pCzKFuQ7qoUJr6IKkD/Ix0T+CpovzK7sscdoY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=YnuG4tgpME3kPNjXMpUARMsvb9tqSSpIBym0ehdPKylfYMgiqTnXeo27b5jdwh9dq
+         qlPWNYYo7/4HpfxKy1fzneHlbFxhhI5aYIHBVsgbpVpZ8Yz2PkRaBWPAY7U+tvf0qO
+         wKup6EQVUm2LRfxMmfeWS9uEP6d4M11xqW+icQ0U=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-tegra@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        linux-rockchip@lists.infradead.org,
+        linux-riscv@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH v4 2/2] dt-bindings: pwm: Convert Samsung PWM bindings to json-schema
+Date:   Mon, 21 Oct 2019 18:02:07 +0200
+Message-Id: <20191021160207.18026-2-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191021160207.18026-1-krzk@kernel.org>
+References: <20191021160207.18026-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Oct 20, 2019 at 11:08:00AM +0200, Dominik Brodowski wrote:
-> On the basis of the additional information (thanks), there might be a
-> more specific path to investigate: It is that the PCI code does not
-> enumerate the second cardbus bridge PCI function in the more recent 4.19
-> kernel compared to the anvient (and working) 2.6 kernel.
-> 
-> Namely, only one CardBus bridge is recognized
-> 
-> ...
-> 06:01.0 CardBus bridge: Ricoh Co Ltd RL5c476 II (rev 8b)
-> 06:01.1 SD Host controller: Ricoh Co Ltd R5C822 SD/SDIO/MMC/MS/MSPro Host Adapter (rev 11)
-> 06:02.0 Network controller: Intel Corporation PRO/Wireless 2915ABG [Calexico2] Network Connection (rev 05)
-> ...
-> 
-> instead of the two which really should be present:
-> 
-> ...
-> 06:01.0 CardBus bridge: Ricoh Co Ltd RL5c476 II (rev 8b)
-> 06:01.1 CardBus bridge: Ricoh Co Ltd RL5c476 II (rev 8b)
-> 06:01.2 SD Host controller: Ricoh Co Ltd R5C822 SD/SDIO/MMC/MS/MSPro Host Adapter (rev 11)
-> 06:02.0 Network controller: Intel Corporation PRO/Wireless 2915ABG [Calexico2] Network Connection (rev 05)
-> ...
-> 
-> To the PCI folks: any idea on what may cause the second cardbus bridge PCI
-> device function to be missed? Are there any command line options the users
-> who reported this issue[*] may try?
+Convert Samsung PWM (S3C, S5P and Exynos SoCs) bindings to DT schema
+format using json-schema.
 
-Thanks for the report.  Could you try disabling
-ricoh_mmc_fixup_rl5c476(), e.g., with the patch below (this is based
-on v5.4-rc1, but you can use v4.9 if that's easier for you)?  This
-isn't a fix; it's just something that looks like it might be related.
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
 
-> [*] For more information, see this thread:
-> 	https://lore.kernel.org/lkml/CAFjuqNi+knSb9WVQOahCVFyxsiqoGgwoM7Z1aqDBebNzp_-jYw@mail.gmail.com/
+---
 
+Changes since v3:
+1. Add reviewed-by.
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 320255e5e8f8..7a1e1a242506 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -3036,38 +3036,6 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_HINT, 0x0020, quirk_hotplug_bridge);
-  * #1, and this will confuse the PCI core.
-  */
- #ifdef CONFIG_MMC_RICOH_MMC
--static void ricoh_mmc_fixup_rl5c476(struct pci_dev *dev)
--{
--	u8 write_enable;
--	u8 write_target;
--	u8 disable;
+Changes since v2:
+1. Add additionalProperties: false.
+
+Changes since v1:
+1. Indent example with four spaces (more readable),
+2. Fix samsung,pwm-outputs after review,
+3. Remove double-quotes from clock names.
+---
+ .../devicetree/bindings/pwm/pwm-samsung.txt   |  51 --------
+ .../devicetree/bindings/pwm/pwm-samsung.yaml  | 109 ++++++++++++++++++
+ 2 files changed, 109 insertions(+), 51 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-samsung.txt
+ create mode 100644 Documentation/devicetree/bindings/pwm/pwm-samsung.yaml
+
+diff --git a/Documentation/devicetree/bindings/pwm/pwm-samsung.txt b/Documentation/devicetree/bindings/pwm/pwm-samsung.txt
+deleted file mode 100644
+index 5538de9c2007..000000000000
+--- a/Documentation/devicetree/bindings/pwm/pwm-samsung.txt
++++ /dev/null
+@@ -1,51 +0,0 @@
+-* Samsung PWM timers
 -
--	/*
--	 * Disable via CardBus interface
--	 *
--	 * This must be done via function #0
--	 */
--	if (PCI_FUNC(dev->devfn))
--		return;
+-Samsung SoCs contain PWM timer blocks which can be used for system clock source
+-and clock event timers, as well as to drive SoC outputs with PWM signal. Each
+-PWM timer block provides 5 PWM channels (not all of them can drive physical
+-outputs - see SoC and board manual).
 -
--	pci_read_config_byte(dev, 0xB7, &disable);
--	if (disable & 0x02)
--		return;
+-Be aware that the clocksource driver supports only uniprocessor systems.
 -
--	pci_read_config_byte(dev, 0x8E, &write_enable);
--	pci_write_config_byte(dev, 0x8E, 0xAA);
--	pci_read_config_byte(dev, 0x8D, &write_target);
--	pci_write_config_byte(dev, 0x8D, 0xB7);
--	pci_write_config_byte(dev, 0xB7, disable | 0x02);
--	pci_write_config_byte(dev, 0x8E, write_enable);
--	pci_write_config_byte(dev, 0x8D, write_target);
+-Required properties:
+-- compatible : should be one of following:
+-    samsung,s3c2410-pwm - for 16-bit timers present on S3C24xx SoCs
+-    samsung,s3c6400-pwm - for 32-bit timers present on S3C64xx SoCs
+-    samsung,s5p6440-pwm - for 32-bit timers present on S5P64x0 SoCs
+-    samsung,s5pc100-pwm - for 32-bit timers present on S5PC100, S5PV210,
+-			  Exynos4210 rev0 SoCs
+-    samsung,exynos4210-pwm - for 32-bit timers present on Exynos4210,
+-                          Exynos4x12, Exynos5250 and Exynos5420 SoCs
+-- reg: base address and size of register area
+-- interrupts: list of timer interrupts (one interrupt per timer, starting at
+-  timer 0)
+-- clock-names: should contain all following required clock names:
+-    - "timers" - PWM base clock used to generate PWM signals,
+-  and any subset of following optional clock names:
+-    - "pwm-tclk0" - first external PWM clock source,
+-    - "pwm-tclk1" - second external PWM clock source.
+-  Note that not all IP variants allow using all external clock sources.
+-  Refer to SoC documentation to learn which clock source configurations
+-  are available.
+-- clocks: should contain clock specifiers of all clocks, which input names
+-  have been specified in clock-names property, in same order.
+-- #pwm-cells: should be 3. See pwm.txt in this directory for a description of
+-  the cells format. The only third cell flag supported by this binding is
+-  PWM_POLARITY_INVERTED.
 -
--	pci_notice(dev, "proprietary Ricoh MMC controller disabled (via CardBus function)\n");
--	pci_notice(dev, "MMC cards are now supported by standard SDHCI controller\n");
--}
--DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_RICOH, PCI_DEVICE_ID_RICOH_RL5C476, ricoh_mmc_fixup_rl5c476);
--DECLARE_PCI_FIXUP_RESUME_EARLY(PCI_VENDOR_ID_RICOH, PCI_DEVICE_ID_RICOH_RL5C476, ricoh_mmc_fixup_rl5c476);
+-Optional properties:
+-- samsung,pwm-outputs: list of PWM channels used as PWM outputs on particular
+-    platform - an array of up to 5 elements being indices of PWM channels
+-    (from 0 to 4), the order does not matter.
 -
- static void ricoh_mmc_fixup_r5c832(struct pci_dev *dev)
- {
- 	u8 write_enable;
+-Example:
+-	pwm@7f006000 {
+-		compatible = "samsung,s3c6400-pwm";
+-		reg = <0x7f006000 0x1000>;
+-		interrupt-parent = <&vic0>;
+-		interrupts = <23>, <24>, <25>, <27>, <28>;
+-		clocks = <&clock 67>;
+-		clock-names = "timers";
+-		samsung,pwm-outputs = <0>, <1>;
+-		#pwm-cells = <3>;
+-	}
+diff --git a/Documentation/devicetree/bindings/pwm/pwm-samsung.yaml b/Documentation/devicetree/bindings/pwm/pwm-samsung.yaml
+new file mode 100644
+index 000000000000..ea7f32905172
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pwm/pwm-samsung.yaml
+@@ -0,0 +1,109 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pwm/pwm-samsung.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Samsung SoC PWM timers
++
++maintainers:
++  - Thierry Reding <thierry.reding@gmail.com>
++  - Krzysztof Kozlowski <krzk@kernel.org>
++
++description: |+
++  Samsung SoCs contain PWM timer blocks which can be used for system clock source
++  and clock event timers, as well as to drive SoC outputs with PWM signal. Each
++  PWM timer block provides 5 PWM channels (not all of them can drive physical
++  outputs - see SoC and board manual).
++
++  Be aware that the clocksource driver supports only uniprocessor systems.
++
++allOf:
++  - $ref: pwm.yaml#
++
++properties:
++  compatible:
++    enum:
++      - samsung,s3c2410-pwm             # 16-bit, S3C24xx
++      - samsung,s3c6400-pwm             # 32-bit, S3C64xx
++      - samsung,s5p6440-pwm             # 32-bit, S5P64x0
++      - samsung,s5pc100-pwm             # 32-bit, S5PC100, S5PV210, Exynos4210 rev0 SoCs
++      - samsung,exynos4210-pwm          # 32-bit, Exynos
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    minItems: 1
++    maxItems: 3
++
++  clock-names:
++    description: |
++      Should contain all following required clock names:
++      - "timers" - PWM base clock used to generate PWM signals,
++      and any subset of following optional clock names:
++      - "pwm-tclk0" - first external PWM clock source,
++      - "pwm-tclk1" - second external PWM clock source.
++      Note that not all IP variants allow using all external clock sources.
++      Refer to SoC documentation to learn which clock source configurations
++      are available.
++    oneOf:
++      - items:
++        - const: timers
++      - items:
++        - const: timers
++        - const: pwm-tclk0
++      - items:
++        - const: timers
++        - const: pwm-tclk1
++      - items:
++        - const: timers
++        - const: pwm-tclk0
++        - const: pwm-tclk1
++
++  interrupts:
++    description:
++      One interrupt per timer, starting at timer 0.
++    minItems: 1
++    maxItems: 5
++
++  "#pwm-cells":
++    description:
++      The only third cell flag supported by this binding
++      is PWM_POLARITY_INVERTED.
++    const: 3
++
++  samsung,pwm-outputs:
++    description:
++      A list of PWM channels used as PWM outputs on particular platform.
++      It is an array of up to 5 elements being indices of PWM channels
++      (from 0 to 4), the order does not matter.
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32-array
++      - uniqueItems: true
++      - items:
++          minimum: 0
++          maximum: 4
++
++required:
++  - clocks
++  - clock-names
++  - compatible
++  - interrupts
++  - "#pwm-cells"
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    pwm@7f006000 {
++        compatible = "samsung,s3c6400-pwm";
++        reg = <0x7f006000 0x1000>;
++        interrupt-parent = <&vic0>;
++        interrupts = <23>, <24>, <25>, <27>, <28>;
++        clocks = <&clock 67>;
++        clock-names = "timers";
++        samsung,pwm-outputs = <0>, <1>;
++        #pwm-cells = <3>;
++    };
+-- 
+2.17.1
+
