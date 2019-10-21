@@ -2,127 +2,153 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9230CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 18:08:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 672CDCA9EB0
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 18:08:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8CED20882
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 18:08:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 352DA2086D
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 18:08:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="OH+QEsF7"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZMBnR2U2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730030AbfJUSIG (ORCPT
+        id S1730086AbfJUSIX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 14:08:06 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.52]:35936 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729878AbfJUSIE (ORCPT
+        Mon, 21 Oct 2019 14:08:23 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:33637 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728353AbfJUSIW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 14:08:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1571681282;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=qQ6zV65O4QTCFnYrPW5AcyzqoTnREY7XPbgJ3s1IDW8=;
-        b=OH+QEsF7qliA4AI9mvrnicGWFLMcpuY9MqzuAT7wW1sa+9GRkIx1vaVlSIbfhMBMv0
-        NS3/R2t97sq1iP1MJmGf20rkY9S3BMwUYAhsDKNxMD55NNt4f5tsm6CGOhBeoDqiVWqg
-        vXZfuPoPYF7Uhl21FK6i9d/73TExoANaC6RynmClpWDpadd66hjnX9OrioTdY7rfNio4
-        aLr4Tg3urEHez4D9kZV8rV9GXCzW42jtu5ahFuRjmuqhhf4rOaqbzNuUecCpFtGCJhnn
-        tfsNdV/WtxciK7Y+MifqSv+y+m/5RANFDMSQGaP32r6aM09ILJAuizAGWeFEPffg3KxA
-        5yUQ==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDVCbXA4Ewxc="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 44.28.1 DYNA|AUTH)
-        with ESMTPSA id R0b2a8v9LI7xM5P
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Mon, 21 Oct 2019 20:07:59 +0200 (CEST)
-Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [PATCH 1/7] dt-bindings: gpu: pvrsgx: add initial bindings
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <20191021172557.GB5610@atomide.com>
-Date:   Mon, 21 Oct 2019 20:07:59 +0200
-Cc:     Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <C6CD5A50-7F0A-4F56-ABB9-CAEDF7E47A5D@goldelico.com>
-References: <cover.1571424390.git.hns@goldelico.com> <f0fb68dc7bc027e5e911721852f6bc6fa2d77a63.1571424390.git.hns@goldelico.com> <CAL_Jsq+obsTSU3iP1wm_3-FsAJ4Mxiz0NbMY1_h5NeFn67Sj+A@mail.gmail.com> <CEA29A3B-4116-4FE3-8E18-0C97353688DC@goldelico.com> <20191021172557.GB5610@atomide.com>
-To:     Tony Lindgren <tony@atomide.com>
-X-Mailer: Apple Mail (2.3124)
+        Mon, 21 Oct 2019 14:08:22 -0400
+Received: by mail-qt1-f193.google.com with SMTP id r5so22469108qtd.0
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 11:08:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4x966FzqbSx/OKh4p5Ft123ZasqylypjRFf91DAyyOA=;
+        b=ZMBnR2U2u4X68MXVm+8rsMwA+4duw05rldsVrPC4uH+6neLc/Y761o+A+e0P8mDu+F
+         utweRWpB6iBzQPfEHGUPjFwESRMWYH1GX9VMij+Gzp5M6maRvvwBN4Bq2X01XUN62Dw5
+         ToEe4Pv9IucB7UOv46I1/6GfMkaEGz+vfbqj0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4x966FzqbSx/OKh4p5Ft123ZasqylypjRFf91DAyyOA=;
+        b=TmoW9Sq34OTH3SR6H5lW6L56paC0S64MFr1P/wvoP+CNsjdwu0FkN9x4cAB7Atpry/
+         kKa0N6f7KQE2PugDojuFujL6du6Vv3qrwEs6wS+SgVvKc1DbPo/ZtAtb6FMH93NxK/G+
+         Gno/LVV7nLS9pLvme+/byq5MDc3CLJwDzZddu70uNk7MnHMDPNaGEoVCnoWyayNWDbme
+         kxwyh5AIX/cw8UTokP/FS3pDluXrjiX/4vK0ecq82/v76/kI5Tw7L1eRg2GotBY0HsLi
+         KMU5ogcZTFSKyCbL5TXANAYDS6zHrBOGZ1RfxKeq2YeItaqHUlgucSEvqPe51GfFcMZG
+         opLw==
+X-Gm-Message-State: APjAAAU6sZbSbNTjVqOJYoI5fnac2Bn8eztWw/LTBZek2OGLW3co7GVT
+        Pdw7GTDGOhQYMcjkKrgY6dDx0n8ck/M=
+X-Google-Smtp-Source: APXvYqzDlS69/6Yfsm1XCGDz8VS7zVRTO2wBc6EQWMEK+ZeX2yjIw+vWoDoXLZO5oL2icYLO8r6pKQ==
+X-Received: by 2002:ac8:7692:: with SMTP id g18mr26614434qtr.127.1571681300895;
+        Mon, 21 Oct 2019 11:08:20 -0700 (PDT)
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com. [209.85.160.171])
+        by smtp.gmail.com with ESMTPSA id r7sm8109376qkf.124.2019.10.21.11.08.19
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 21 Oct 2019 11:08:20 -0700 (PDT)
+Received: by mail-qt1-f171.google.com with SMTP id e14so2636474qto.1
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 11:08:19 -0700 (PDT)
+X-Received: by 2002:ac8:529a:: with SMTP id s26mr25589910qtn.238.1571681299254;
+ Mon, 21 Oct 2019 11:08:19 -0700 (PDT)
+MIME-Version: 1.0
+References: <20180521164222.149896-1-briannorris@chromium.org>
+ <20191021161113.GZ3125@piout.net> <CA+ASDXOXSKoRcuRWZ1FGNcioFKSiazXGxOvMv5=px_pn46vJbw@mail.gmail.com>
+ <20191021174809.GA3125@piout.net>
+In-Reply-To: <20191021174809.GA3125@piout.net>
+From:   Brian Norris <briannorris@chromium.org>
+Date:   Mon, 21 Oct 2019 11:08:08 -0700
+X-Gmail-Original-Message-ID: <CA+ASDXMarBG5C1Kz42B9i_iVZ1=i6GgH9Yja2cdmSueKD_As_g@mail.gmail.com>
+Message-ID: <CA+ASDXMarBG5C1Kz42B9i_iVZ1=i6GgH9Yja2cdmSueKD_As_g@mail.gmail.com>
+Subject: Re: [PATCH] rtc: report time-retrieval errors when updating alarm
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Alessandro Zummo <a.zummo@towertech.it>, linux-rtc@vger.kernel.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Jeffy Chen <jeffy.chen@rock-chips.com>,
+        Matthias Kaehlcke <mka@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Oct 21, 2019 at 10:48 AM Alexandre Belloni
+<alexandre.belloni@bootlin.com> wrote:
+> On 21/10/2019 10:20:08-0700, Brian Norris wrote:
+> > Hi Alexandre!
+> >
+> > On Mon, Oct 21, 2019 at 9:11 AM Alexandre Belloni
+> > <alexandre.belloni@bootlin.com> wrote:
+> > > On 21/05/2018 09:42:22-0700, Brian Norris wrote:
+> > > > __rtc_read_time() can fail (e.g., if the RTC uses an unreliable medium).
+> > > > When it does, we don't report the error, but instead calculate a
+> > > > 1-second alarm based on the potentially-garbage 'tm' (in practice,
+> > > > __rtc_read_time() zeroes out the time first, so it's likely to still be
+> > > > all 0).
+> > > >
+> > > > Let's propagate the error instead.
+> > > >
+> > >
+> > > I submitted
+> > > https://lore.kernel.org/linux-rtc/20191021155631.3342-2-alexandre.belloni@bootlin.com/T/#u
+> > > to solve this after looking at all the implication checking the return
+> > > value of __rtc_read_time had.
+> >
+> > Only about a year and a half late, nice!
+>
+> I know, right? :) The fact is that this is not a common issue or at
+> least, I didn't have any report that this was causing real problems in
+> the field. So it ended up being one of the longest standing patch in
+> patchwork...
 
-> Am 21.10.2019 um 19:25 schrieb Tony Lindgren <tony@atomide.com>:
->=20
-> * H. Nikolaus Schaller <hns@goldelico.com> [191021 15:46]:
->>> Am 21.10.2019 um 17:07 schrieb Rob Herring <robh+dt@kernel.org>:
->>> On Fri, Oct 18, 2019 at 1:46 PM H. Nikolaus Schaller =
-<hns@goldelico.com> wrote:
->>>> +Optional properties:
->>>> +- timer:       the timer to be used by the driver.
->>>=20
->>> Needs a better description and vendor prefix at least.
->>=20
->> I am not yet sure if it is vendor specific or if all
->> SGX implementations need some timer.
->>=20
->>>=20
->>> Why is this needed rather than using the OS's timers?
->>=20
->> Because nobody understands the current (out of tree and
->> planned for staging) driver well enough what the timer
->> is doing. It is currently hard coded that some omap refer
->> to timer7 and others use timer11.
->=20
-> Just configure it in the driver based on the compatible
-> value to keep it out of the dts. It's best to stick to
-> standard bindings.
+I suppose I could have put specific examples in here: the Rockchip
+RK3399-based Gru family of Chromebooks
+(arch/arm64/boot/dts/rockchip/rk3399-gru-{kevin,bob,scarlet}*.dts) use
+the Chrome OS EC-based RTC (drivers/rtc/rtc-cros-ec.c), and the EC
+protocol is prone to occasional errors. So we definitely have a
+concrete case where this problem can be tickled. I guess I was too
+terse in summarizing that as "if the RTC uses an unreliable medium"?
 
-IMHO leads to ugly code... Since the timer is not part of
-the SGX IPR module but one of the OMAP timers it is sort
-of hardware connection that can be chosen a little arbitrarily.
+As for the actual symptoms: this was part of a variety of problems
+that resulted in seeing interrupt storms from our EC/RTC when running
+`hwclock -r`. I believe there were other patches that were more
+critical to resolving the worst symptoms, but this error was noticed
+along the way. If you care to read more, you can see our downstream
+kernel patches here, when we first handled this problem:
 
-This is the main reason why I think adding it to a device tree
-source so that a board that really requires to use a timer
-for a different purpose, can reassign it. This is not possible
-if we hard-code that into the driver by scanning for
-compatible. In that case the driver must check board compatible
-names...
+https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1067442
+https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1066984
+https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1069546
 
-But if we gain a better understanding of its role in the driver
-(does it really need a dedicated timer and for what and which
-properties the timer must have) we can probably replace it.
+Unfortunately, the bug links are private (they were dealing with
+partner/factory issues), so you can only glean the implicit
+information from the code. And since this was over a year ago, my
+memory is a little fuzzy on what exactly the source of the interrupt
+storm was...
 
->=20
->>>> +- img,cores:   number of cores. Defaults to <1>.
->>>=20
->>> Not discoverable?
->>=20
->> Not sure if it is. This is probably available in undocumented
->> registers of the sgx.
->=20
-> This too, and whatever non-standrd other properities
-> you might have.
+> >Fortunately we have a decent
+> > (albeit time-consuming) process for rebasing our downstream patches in
+> > Chrome OS kernels...
+> >
+>
+> Do you need that patch backported to LTS kernels?
 
-Here it is a feature of the SGX IPR of the SoC, i.e.
-describes that the hardware has one or two cores.
+Eh, I dunno. If anything that'll just cause us merge troubles (but not
+too much) on our Chrome OS kernels, which already carry my patch. But
+if there are any non-Chrome-OS users of these Chromebooks (there are)
+that are seeing this problem (I'm not sure), they might appreciate it.
 
-BR,
-NIkolaus
+By the way, I wonder if your patch actually deserves a "Reported-by".
+I suppose I also left off Jeffy as the reporter, but it would be:
 
+Reported-by: Jeffy Chen <jeffy.chen@rock-chips.com>
+Reported-by: Brian Norris <briannorris@chromium.org>
+
+Brian
