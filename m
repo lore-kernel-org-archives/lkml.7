@@ -2,266 +2,344 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A948ACA9EB9
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:00:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE6D0CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:03:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 772CE20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:00:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88BD72089C
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:03:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727624AbfJUIAp (ORCPT
+        id S1727516AbfJUIDA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 04:00:45 -0400
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:60674 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727110AbfJUIAp (ORCPT
+        Mon, 21 Oct 2019 04:03:00 -0400
+Received: from mail-sz.amlogic.com ([211.162.65.117]:54755 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725972AbfJUIC7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 04:00:45 -0400
-X-AuditID: c0a8fbf4-199ff70000001fa6-78-5dad65aac789
-Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 68.4E.08102.AA56DAD5; Mon, 21 Oct 2019 10:00:42 +0200 (CEST)
-Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
- WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
- 14.03.0439.000; Mon, 21 Oct 2019 10:00:30 +0200
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "dmurphy@ti.com" <dmurphy@ti.com>
-CC:     "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>
-Subject: Re: [RFC PATCH 11/13] led: bd71828: Support LED outputs on ROHM
- BD71828 PMIC
-Thread-Topic: [RFC PATCH 11/13] led: bd71828: Support LED outputs on ROHM
- BD71828 PMIC
-Thread-Index: AQHVhNDGb/Fi3H2tI0CugiKcGY+PyKdevIMAgAXjkIA=
-Date:   Mon, 21 Oct 2019 08:00:29 +0000
-Message-ID: <fbd4960b219099b7a48ef24019ba829f866edb3b.camel@fi.rohmeurope.com>
-References: <cover.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
-         <af1fb3e010d5f34502d354369b88fa28639f587d.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
-         <c1e41315-42ad-fb9b-c9db-8b07d4293166@ti.com>
-In-Reply-To: <c1e41315-42ad-fb9b-c9db-8b07d4293166@ti.com>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [213.255.186.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <68977C8FA51E58498BF971492F9EF9F4@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        Mon, 21 Oct 2019 04:02:59 -0400
+Received: from [10.28.19.63] (10.28.19.63) by mail-sz.amlogic.com (10.28.11.5)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Mon, 21 Oct
+ 2019 16:03:07 +0800
+Subject: Re: [PATCH v2 3/4] watchdog: add meson secure watchdog driver
+To:     Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Qianggui Song <qianggui.song@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Jian Hu <jian.hu@amlogic.com>,
+        <linux-watchdog@vger.kernel.org>,
+        <linux-amlogic@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1571387622-35132-1-git-send-email-xingyu.chen@amlogic.com>
+ <1571387622-35132-4-git-send-email-xingyu.chen@amlogic.com>
+ <7397f6db-1dc8-3abd-41ff-2e47323c7ffa@roeck-us.net>
+From:   Xingyu Chen <xingyu.chen@amlogic.com>
+Message-ID: <bfc892af-1cd3-1437-75b2-5ba2b7913284@amlogic.com>
+Date:   Mon, 21 Oct 2019 16:03:07 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA01TbUxTVxjOuff03kP1LsdS5Mg2szVZpjOT4kd2Ygzxj9sd2QiJbiOLFa9w
-        pSC05LYojh/C4hdIGJtszCpglCqhVaGOII2YrQGn1aCNCBJBUjVGjNGoCCEy8Z5VhV/nOc/H
-        +5wf70G8aURIQnkOt6o5lAKLYIR/N79s+7xFPWmz+toE2hS5IdK9j4+LdKw+DOnv0XsCbezu
-        NdD9l/8y0FvtrZCOvOgBdLxvH0drp05w9GnVbQM90zgF6PXgYYG2PzoF6AVfn0C9AxGOHvZe
-        hDQSXkuHwz0C3d3VLdJX/W1wTYLsb/AD+cnN3aLc4C+VOz3DohxoqRDkof5zgvzvzQ5OrmuY
-        5ORm34QoPw8szDD+OGf1ZsW9bV1eriM5ddMc+2B7J1d0Kr9korxeLAPXcitBHCJ4Bbnx83mx
-        EhiRCfcD0ljhg7HLRUAuP/MbKgFCAl5NKgdFFjDjjeR45B+BeXg8KZL7BwOQCfH4B/Lc8+SN
-        KZNcaK3mWdaMV5Fnf3zJaIg/Id4HvwiMlnA68Q8uYrQJ9wESOvAVw3G6+3zLHZ5hgD8kFWWP
-        OYZ5nEgC9ycMsTdj0nTuKh/DCWT07qs3vIV0TUYhG8/jxeR0MDkWXUM6+q7BGP6Y1O6P/v9I
-        Cc8jlw7egzVgvmdWg2cm7ZmV9sxKe2aljwBDCyCFSl5BruJWU5ZqavFSzWkv1I9sZ2EAxBZm
-        7CyYDn0dAhwCIbAAcZYEyZHst5ne2+zM2WFXXPYsrbhAdYUAQbzFLA1ZT9pMUo6y4ydVc76V
-        3kfQkih9Gv3VZsKsa6uqFqnaW/UDhCxEisvWg/M0NVct2ZJX4J6RORTHhhuTzC7VkaNqSrHb
-        nsW2I8ulrweT5uq9JTms11WkFOpsLBoGS1DNaP1RHnXXe4/yJuhwOtSkRKlxk27FzGovdrwr
-        eggSEbDESyNs0Fz917yb81Cv4PQK3wIfq3ArM1JSGfh+4hvj+On1/8HsI82RLWhZVal1w7IX
-        mePbO1KDy0/IPWdrPzqQFq0+Vtp7tzUj/8p3ndV7gsvd0yvTa5xd9oW7wtZH3/bCzMXHVvWk
-        Hdpa/udT65VwXTlMOVNq+2Kgf8nAzrHta71D8XVp03cW/ZaVOmUexVz+YFUGzg7uSR+eLG+y
-        QJddSfmM11zKaxfgJybyAwAA
+In-Reply-To: <7397f6db-1dc8-3abd-41ff-2e47323c7ffa@roeck-us.net>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.28.19.63]
+X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
+ (10.28.11.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8gRGFuLA0KDQpUaGFua3MgZm9yIHRha2luZyB0aGUgdGltZSB0byBjaGVjayBteSBkcml2
-ZXIgOikgSSB0cnVseSBhcHByZWNpYXRlIGFsbA0KdGhlIGhlbHAhDQoNCkEgImZ1bmRhbWVudGFs
-IHF1ZXN0aW9uIiByZWdhcmRpbmcgdGhlc2UgcmV2aWV3IGNvbW1lbnRzIGlzIHdoZXRoZXIgSQ0K
-c2hvdWxkIGFkZCBEVCBlbnRyaWVzIGZvciB0aGVzZSBMRURzIG9yIG5vdC4gSSB0aG91Z2h0IEkg
-c2hvdWxkbid0IGJ1dA0KSSB3b3VsZCBsaWtlIHRvIGdldCBhIGNvbW1lbnQgZnJvbSBSb2IgcmVn
-YXJkaW5nIGl0Lg0KDQpPbiBUaHUsIDIwMTktMTAtMTcgYXQgMDk6MDQgLTA1MDAsIERhbiBNdXJw
-aHkgd3JvdGU6DQo+IE1hdHQNCj4gDQo+IE9uIDEwLzE3LzE5IDQ6NTMgQU0sIE1hdHRpIFZhaXR0
-aW5lbiB3cm90ZToNCj4gPiBST0hNIEJENzE4MjggcG93ZXIgbWFuYWdlbWVudCBJQyBoYXMgdHdv
-IExFRCBvdXRwdXRzIGZvciBjaGFyZ2UNCj4gPiBzdGF0dXMNCj4gPiBhbmQgYnV0dG9uIHByZXNz
-aW5nIGluZGljYXRpb25zLiBUaGUgTEVEIG91dHB1dHMgY2FuIGFsc28gYmUgZm9yY2VkDQo+ID4g
-YnMgU1cgc28gYWRkIGRyaXZlciBhbGxvd2luZyB0byB1c2UgdGhlc2UgTEVEcyBmb3Igb3RoZXIN
-Cj4gPiBpbmRpY2F0aW9ucw0KPiBzL2JzL2J5DQo+ID4gYXMgd2VsbC4NCj4gPiANCj4gPiBMZWRz
-IGFyZSBjb250cm9sbGVkIGJ5IFNXIHVzaW5nICdGb3JjZSBPTicgYml0cy4gUGxlYXNlIG5vdGUg
-dGhlDQo+ID4gY29uc3RyYWlucyBtZW50aW9uZWQgaW4gZGF0YS1zaGVldDoNCj4gPiAxLiBJZiBv
-bmUgTEVEIGlzIGZvcmNlZCBPTiAtIHRoZW4gYWxzbyB0aGUgb3RoZXIgTEVEIGlzIGZvcmNlZC4N
-Cj4gPiAJPT4gWW91IGNhbid0IHVzZSBTVyBjb250cm9sIHRvIGZvcmNlIE9OIG9uZSBMRUQgYW5k
-IGFsbG93IEhXDQo+ID4gCSAgIHRvIGNvbnRyb2wgdGhlIG90aGVyLg0KPiA+IDIuIFlvdSBjYW4n
-dCBmb3JjZSBib3RoIExFRHMgT0ZGLiBJZiB0aGUgRk9SQ0UgYml0IGZvciBib3RoIExFRCdzDQo+
-ID4gaXMNCj4gPiAgICAgemVybywgdGhlbiBMRURzIGFyZSBjb250cm9sbGVkIGJ5IEhXIGFuZCBp
-bmRpY2F0ZQ0KPiA+IGJ1dHRvbi9jaGFyZ2VyDQo+ID4gICAgIHN0YXRlcyBhcyBleHBsYWluZWQg
-aW4gZGF0YS1zaGVldC4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBNYXR0aSBWYWl0dGluZW4g
-PG1hdHRpLnZhaXR0aW5lbkBmaS5yb2htZXVyb3BlLmNvbT4NCj4gPiAtLS0NCj4gPiAgIGRyaXZl
-cnMvbGVkcy9LY29uZmlnICAgICAgICB8IDEwICsrKysNCj4gPiAgIGRyaXZlcnMvbGVkcy9NYWtl
-ZmlsZSAgICAgICB8ICAxICsNCj4gPiAgIGRyaXZlcnMvbGVkcy9sZWRzLWJkNzE4MjguYyB8IDk3
-DQo+ID4gKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KPiA+ICAgMyBmaWxl
-cyBjaGFuZ2VkLCAxMDggaW5zZXJ0aW9ucygrKQ0KPiA+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRy
-aXZlcnMvbGVkcy9sZWRzLWJkNzE4MjguYw0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJz
-L2xlZHMvS2NvbmZpZyBiL2RyaXZlcnMvbGVkcy9LY29uZmlnDQo+ID4gaW5kZXggYjBmZGVlZjEw
-YmQ5Li5lYzU5ZjI4YmNiMzkgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9sZWRzL0tjb25maWcN
-Cj4gPiArKysgYi9kcml2ZXJzL2xlZHMvS2NvbmZpZw0KPiA+IEBAIC01MjksNiArNTI5LDE2IEBA
-IGNvbmZpZyBMRURTX0JEMjgwMg0KPiA+ICAgCSAgVGhpcyBvcHRpb24gZW5hYmxlcyBzdXBwb3J0
-IGZvciBCRDI4MDJHVSBSR0IgTEVEIGRyaXZlciBjaGlwcw0KPiA+ICAgCSAgYWNjZXNzZWQgdmlh
-IHRoZSBJMkMgYnVzLg0KPiA+ICAgDQo+ID4gK2NvbmZpZyBMRURTX0JENzE4MjgNCj4gPiArCXRy
-aXN0YXRlICJMRUQgZHJpdmVyIGZvciBMRUQgcGlucyBvbiBST0hNIEJENzE4MjggUE1JQyINCj4g
-PiArCWRlcGVuZHMgb24gTEVEU19DTEFTUw0KPiBkb2Vzbid0IHRoaXMgaGF2ZSBhIGRlcGVuZGVu
-Y3kgb24gTUZEX1JPSE1fQkQ3MTgyOA0KPiA+ICsJZGVwZW5kcyBvbiBJMkMNCj4gPiArCWhlbHAN
-Cj4gPiArCSAgVGhpcyBvcHRpb24gZW5hYmxlcyBzdXBwb3J0IGZvciBMRUQgb3V0cHV0cyBsb2Nh
-dGVkIG9uIFJPSE0NCj4gPiArCSAgIEJENzE4MjggcG93ZXIgbWFuYWdlbWVudCBJQy4gUk9ITSBC
-RDcxODI4IGhhcyB0d28gbGVkIG91dHB1dA0KPiA+IHBpbnMNCj4gPiArCSAgIHdoaWNoIGNhbiBi
-ZSBsZWZ0IHRvIGluZGljYXRlIEhXIHN0YXRlcyBvciBjb250cm9sbGVkIGJ5IFNXLg0KPiA+IFNh
-eQ0KPiA+ICsJICAgeWVzIGhlcmUgaWYgeW91IHdhbnQgdG8gZW5hYmxlIFNXIGNvbnRyb2wgZm9y
-IHRoZXNlIExFRHMuDQo+ID4gKw0KPiANCj4gQWRkIG1vZHVsZSBzdGF0ZW1lbnQNCg0KV2hhdCBp
-cyB0aGUgbW9kdWxlIHN0YXRlbWVudD8gRG8geW91IG1lYW4gdGhlICdpZiB5b3UgY29tcGlsZSB0
-aGlzIGFzIGENCm1vZHVsZSBpdCB3aWxsIGJlIGNhbGxlZCBibGFoYmxhaCcgb3IgJ2Nob29zZSBN
-IHRvIGJsYWhibGFoJz8NCg0KSSd2ZSBuZXZlciB1bmRlcnN0b29kIHdoeSBzb21lIGVudHJpZXMg
-aGF2ZSB0aG9zZSBzdGF0ZW1lbnRzLiAnQ2hvb3NlDQpNJyBzdHVmZiBpcyBoZWxwIGZvciBjb25m
-aWcgc3lzdGVtIC0gd2h5IHNob3VsZCBlYWNoIG1vZHVsZSBleHBsYWluIGhvdw0KdG8gdXNlIGNv
-bmZpZ3M/IFRoaXMgaW5mb3JtYXRpb24gc2hvdWxkIGJlIGluIG1vcmUgZ2VuZXJpYw0KZG9jdW1l
-bnRhdGlvbi4gRnVydGhlcm1vcmUsIHRoZSAndHJpc3RhdGUnIHRoZXJlIGFscmVhZHkgc2F5cyB5
-b3UgY2FuDQpjb21waWxlIHRoaXMgYXMgYSBtb2R1bGUuIE1vZHVsZSBuYW1lIG9uIHRoZSBvdGhl
-ciBoYW5kIHJlYWxseSBpcw0KbW9kdWxlJ3MgcHJvcGVydHkgYnV0IGl0IG1heSB3ZWxsIGNoYW5n
-ZSBpZiBvbmUgY2hhbmdlcyB0aGUgbmFtZSBvZiB0aGUNCmZpbGUuIFRoYXQgc2hvdWxkIG5vdCBy
-ZXF1aXJlIGNoYW5nZSBpbiBLQ29uZmlnLiBGdXJ0aGVybW9yZSwgd2hlcmUgZG8NCnlvdSBuZWVk
-IHRoZSBtb2R1bGUgbmFtZT8gQW5kIGlmIHlvdSByZWFsbHkgbmVlZCB0aGUgbW9kdWxlIG5hbWUg
-eW91DQpzaG91bGQgY2hlY2sgdGhlIGNvbmZpZyBuYW1lIGZyb20gTWFrZWZpbGUgdG8gYmUgc3Vy
-ZSAtIG1vZHVsZS9maWxlDQpuYW1lcyBpbiBjb21tZW50cyBvciBkb2NzIHRlbmQgdG8gZ2V0IG91
-dGRhdGVkLg0KDQpBZnRlciBhbGwgdGhpcyBiZWluZyBzYWlkIC0gSSBjYW4gYWRkIGFueSBib2ls
-ZXJwbGF0ZSB0ZXh0IGluIEtDb25maWcNCmlmIG5lY2Vzc2FyeSAtIEkganVzdCBzZWUgemVybyBi
-ZW5lZml0IGZyb20gdGhpcy4gQW5kIGlmIHlvdSBkaWRuJ3QNCm1lYW4gdGhpcyAtIGNhbiB5b3Ug
-dGhlbiBwbGVhc2UgdGVsbCBtZSB3aGF0IGlzIHRoZSBtb2R1bGUgc3RhdGVtZW50Pw0KDQo+ID4g
-ICBjb25maWcgTEVEU19JTlRFTF9TUzQyMDANCj4gPiAgIAl0cmlzdGF0ZSAiTEVEIGRyaXZlciBm
-b3IgSW50ZWwgTkFTIFNTNDIwMCBzZXJpZXMiDQo+ID4gICAJZGVwZW5kcyBvbiBMRURTX0NMQVNT
-DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbGVkcy9NYWtlZmlsZSBiL2RyaXZlcnMvbGVkcy9N
-YWtlZmlsZQ0KPiA+IGluZGV4IDQxZmIwNzNhMzljMS4uMmE4ZjZhOGU0YzdjIDEwMDY0NA0KPiA+
-IC0tLSBhL2RyaXZlcnMvbGVkcy9NYWtlZmlsZQ0KPiA+ICsrKyBiL2RyaXZlcnMvbGVkcy9NYWtl
-ZmlsZQ0KPiA+IEBAIC0xNSw2ICsxNSw3IEBAIG9iai0kKENPTkZJR19MRURTX0FOMzAyNTlBKQkJ
-Kz0NCj4gPiBsZWRzLWFuMzAyNTlhLm8NCj4gPiAgIG9iai0kKENPTkZJR19MRURTX0JDTTYzMjgp
-CQkrPSBsZWRzLWJjbTYzMjgubw0KPiA+ICAgb2JqLSQoQ09ORklHX0xFRFNfQkNNNjM1OCkJCSs9
-IGxlZHMtYmNtNjM1OC5vDQo+ID4gICBvYmotJChDT05GSUdfTEVEU19CRDI4MDIpCQkrPSBsZWRz
-LWJkMjgwMi5vDQo+ID4gK29iai0kKENPTkZJR19MRURTX0JENzE4MjgpCQkrPSBsZWRzLWJkNzE4
-Mjgubw0KPiA+ICAgb2JqLSQoQ09ORklHX0xFRFNfQ1BDQVApCQkrPSBsZWRzLWNwY2FwLm8NCj4g
-PiAgIG9iai0kKENPTkZJR19MRURTX0xPQ09NTykJCSs9IGxlZHMtbG9jb21vLm8NCj4gPiAgIG9i
-ai0kKENPTkZJR19MRURTX0xNMzUzMCkJCSs9IGxlZHMtbG0zNTMwLm8NCj4gPiBkaWZmIC0tZ2l0
-IGEvZHJpdmVycy9sZWRzL2xlZHMtYmQ3MTgyOC5jIGIvZHJpdmVycy9sZWRzL2xlZHMtDQo+ID4g
-YmQ3MTgyOC5jDQo+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwMDAw
-MDAuLjI0Mjc2MTk0NDRmNQ0KPiA+IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi9kcml2ZXJzL2xl
-ZHMvbGVkcy1iZDcxODI4LmMNCj4gPiBAQCAtMCwwICsxLDk3IEBADQo+ID4gKy8vIFNQRFgtTGlj
-ZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wDQo+ID4gKy8vIENvcHlyaWdodCAoQykgMjAxOSBST0hN
-IFNlbWljb25kdWN0b3JzDQo+ID4gKw0KPiA+ICsjaW5jbHVkZSA8bGludXgvZGV2aWNlLmg+DQo+
-ID4gKyNpbmNsdWRlIDxsaW51eC9lcnIuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L2tlcm5lbC5o
-Pg0KPiA+ICsjaW5jbHVkZSA8bGludXgvbGVkcy5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgvbWZk
-L3JvaG0tYmQ3MTgyOC5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgvbW9kdWxlLmg+DQo+ID4gKyNp
-bmNsdWRlIDxsaW51eC9wbGF0Zm9ybV9kZXZpY2UuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L3Jl
-Z21hcC5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgvc2xhYi5oPg0KPiA+ICsNCj4gPiArI2RlZmlu
-ZSBCRDcxODI4X0xFRF9UT19EQVRBKGwpICgobCktPmlkID09IElEX0dSRUVOX0xFRCA/IFwNCj4g
-PiArCWNvbnRhaW5lcl9vZigobCksIHN0cnVjdCBiZDcxODI4X2xlZHMsIGdyZWVuKSA6IFwNCj4g
-PiArCWNvbnRhaW5lcl9vZigobCksIHN0cnVjdCBiZDcxODI4X2xlZHMsIGFtYmVyKSkNCj4gDQo+
-IEkgZG9uJ3QgdGhpbmsgd2Ugc2hvdWxkIGJlIGRlZmluaW5nIHRoZSBjb2xvciBhcyB0aGUgdmFy
-aWFibGUuIFRoZSANCj4gb3V0cHV0cyBjYW4gZHJpdmUgYW55IGNvbG9yIExFRC4NCg0KSSB1c2Vk
-IHRoZSBjb2xvcnMgbWVudGlvbmVkIGluIEJENzE4MjggZGF0YS1zaGVldC4gSXQgaXMgdHJ1ZSBz
-b21lb25lDQptaWdodCB1c2UgZGlmZmVyZW50IExFRHMgb24gdGhlaXIgYm9hcmQgYnV0IGF0IGxl
-YXN0IHRoaXMgbmFtaW5nIGFsbG93cw0Kb25lIHRvIG1hdGNoIHRoZSBvdXRwdXQgdG8gb25lIGlu
-IGRhdGEtc2hlZXQuIEkgY2FuIGFkZCBjb21tZW50DQpleHBsYWluaW5nIHRoaXMgaWYgeW91IHRo
-aW4gaXQncyB3b3J0aCBtZW50aW9uaW5nLg0KDQo+ID4gKw0KPiA+ICtlbnVtIHsNCj4gPiArCUlE
-X0dSRUVOX0xFRCwNCj4gPiArCUlEX0FNQkVSX0xFRCwNCj4gPiArCUlEX05NQlJfT0YsDQo+ID4g
-K307DQo+ID4gKw0KPiANCj4gUGxlYXNlIHVzZSB0aGUgY29sb3JfaWQgaW4gbGludXgvaW5jbHVk
-ZS9kdC1iaW5kaW5ncy9sZWRzL2NvbW1vbi5oDQoNCk1heWJlIEkgc2hvdWxkIG5vdCBpbmNsdWRl
-IGFueXRoaW5nIGZyb20gZHQtYmluZGluZ3MgaWYgSSBkb24ndCB1c2UgRFQNCmZvciB0aGlzIHN1
-Yi1kZXZpY2U/IChQbGVhc2Ugc2VlIHRoZSBjb21tZW50cyBiZWxvdykuDQoNCj4gPiArc3RydWN0
-IGJkNzE4MjhfbGVkIHsNCj4gPiArCWludCBpZDsNCj4gPiArCXN0cnVjdCBsZWRfY2xhc3NkZXYg
-bDsNCj4gPiArCXU4IGZvcmNlX21hc2s7DQo+ID4gK307DQo+ID4gKw0KPiA+ICtzdHJ1Y3QgYmQ3
-MTgyOF9sZWRzIHsNCj4gPiArCXN0cnVjdCByb2htX3JlZ21hcF9kZXYgKmJkNzE4Mjg7DQo+ID4g
-KwlzdHJ1Y3QgYmQ3MTgyOF9sZWQgZ3JlZW47DQo+ID4gKwlzdHJ1Y3QgYmQ3MTgyOF9sZWQgYW1i
-ZXI7DQo+ID4gK307DQo+ID4gKw0KPiA+ICtzdGF0aWMgaW50IGJkNzE4MjhfbGVkX2JyaWdodG5l
-c3Nfc2V0KHN0cnVjdCBsZWRfY2xhc3NkZXYNCj4gPiAqbGVkX2NkZXYsDQo+ID4gKwkJCQkgICAg
-ICBlbnVtIGxlZF9icmlnaHRuZXNzIHZhbHVlKQ0KPiA+ICt7DQo+ID4gKwlzdHJ1Y3QgYmQ3MTgy
-OF9sZWQgKmwgPSBjb250YWluZXJfb2YobGVkX2NkZXYsIHN0cnVjdA0KPiA+IGJkNzE4MjhfbGVk
-LCBsKTsNCj4gPiArCXN0cnVjdCBiZDcxODI4X2xlZHMgKmRhdGE7DQo+ID4gKwl1bnNpZ25lZCBp
-bnQgdmFsID0gQkQ3MTgyOF9MRURfT0ZGOw0KPiA+ICsNCj4gPiArCWRhdGEgPSBCRDcxODI4X0xF
-RF9UT19EQVRBKGwpOw0KPiA+ICsJaWYgKHZhbHVlICE9IExFRF9PRkYpDQo+ID4gKwkJdmFsID0g
-QkQ3MTgyOF9MRURfT047DQo+ID4gKw0KPiA+ICsJcmV0dXJuIHJlZ21hcF91cGRhdGVfYml0cyhk
-YXRhLT5iZDcxODI4LT5yZWdtYXAsDQo+ID4gQkQ3MTgyOF9SRUdfTEVEX0NUUkwsDQo+ID4gKwkJ
-CSAgICBsLT5mb3JjZV9tYXNrLCB2YWwpOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICtzdGF0aWMgaW50
-IGJkNzE4MjhfbGVkX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ID4gK3sN
-Cj4gPiArCXN0cnVjdCByb2htX3JlZ21hcF9kZXYgKmJkNzE4Mjg7DQo+ID4gKwlzdHJ1Y3QgYmQ3
-MTgyOF9sZWRzICpsOw0KPiA+ICsJc3RydWN0IGJkNzE4MjhfbGVkICpnLCAqYTsNCj4gPiArCXN0
-YXRpYyBjb25zdCBjaGFyICpHTkFNRSA9ICJiZDcxODI4LWdyZWVuLWxlZCI7DQo+ID4gKwlzdGF0
-aWMgY29uc3QgY2hhciAqQU5BTUUgPSAiYmQ3MTgyOC1hbWJlci1sZWQiOw0KPiBUaGUgTEVEIGNs
-YXNzIGNyZWF0ZXMgdGhlIG5hbWUgaXQgY2FuIGdldCBpdCBmcm9tIHRoZSBEVC4NCg0KSSBkaWQg
-bm90IGFkZCBEVCBub2RlIGZvciBMRURzIGFzIEkgdGhvdWdodCB0aGlzIGlzIHByZWZlcnJlZCB3
-YXkgd2hlbg0KdGhlcmUgaXMgbm90IG11Y2ggSFcgaW5mb3JtYXRpb24gdG8gYnJpbmcgZnJvbSBE
-VC4gSSBhbSBub3Qgc3VyZSBhcw0KcHJldmlvdXMgUE1JQ3MgSSBkaWQgZHJpdmVycyBmb3IgZGlk
-bid0IGhhdmUgTEVEcyB0aG91Z2guIEN1cnJlbnRseQ0KdGhpcyBpcyBhIE1GRCBzdWItZGV2aWNl
-IGFuZCBnZXRzIG5vIGRhdGEgZnJvbSBEVC4gQWN0dWFsbHkgdGhlIGRyaXZlcg0KY3Jhc2hlZCB3
-aGVuIEkgZmlyc3QgZGlkbid0IGV4cGxpY2l0bHkgZ2l2ZSB0aGVzZSBuYW1lcy4NCg0KDQoNCj4g
-PiArCWludCByZXQ7DQo+ID4gKw0KPiA+ICsJcHJfaW5mbygiYmQ3MTgyOCBMRUQgZHJpdmVyIHBy
-b2JlZFxuIik7DQphcyBhIGNvbW1lbnQgZnJvbSBteXNlbGYgLSB0aGlzIHByaW50IHNob3VsZCBi
-ZSBlbGltaW5hdGVkIG9yIGJ5DQptaW5pbXVtIGNvbnZlcnRlZCB0byBkZXZfZGJnLg0KDQo+ID4g
-Kw0KPiA+ICsJYmQ3MTgyOCA9IGRldl9nZXRfZHJ2ZGF0YShwZGV2LT5kZXYucGFyZW50KTsNCj4g
-PiArCWwgPSBkZXZtX2t6YWxsb2MoJnBkZXYtPmRldiwgc2l6ZW9mKCpsKSwgR0ZQX0tFUk5FTCk7
-DQo+ID4gKwlpZiAoIWwpDQo+ID4gKwkJcmV0dXJuIC1FTk9NRU07DQo+ID4gKwlsLT5iZDcxODI4
-ID0gYmQ3MTgyODsNCj4gPiArCWEgPSAmbC0+YW1iZXI7DQo+ID4gKwlnID0gJmwtPmdyZWVuOw0K
-PiA+ICsJYS0+aWQgPSBJRF9BTUJFUl9MRUQ7DQo+ID4gKwlnLT5pZCA9IElEX0dSRUVOX0xFRDsN
-Cj4gPiArCWEtPmZvcmNlX21hc2sgPSBCRDcxODI4X01BU0tfTEVEX0FNQkVSOw0KPiA+ICsJZy0+
-Zm9yY2VfbWFzayA9IEJENzE4MjhfTUFTS19MRURfR1JFRU47DQo+ID4gKw0KPiA+ICsJYS0+bC5u
-YW1lID0gQU5BTUU7DQo+ID4gKwlnLT5sLm5hbWUgPSBHTkFNRTsNCj4gPiArCWEtPmwuYnJpZ2h0
-bmVzc19zZXRfYmxvY2tpbmcgPSBiZDcxODI4X2xlZF9icmlnaHRuZXNzX3NldDsNCj4gPiArCWct
-PmwuYnJpZ2h0bmVzc19zZXRfYmxvY2tpbmcgPSBiZDcxODI4X2xlZF9icmlnaHRuZXNzX3NldDsN
-Cj4gPiArDQo+ID4gKwlyZXQgPSBkZXZtX2xlZF9jbGFzc2Rldl9yZWdpc3RlcigmcGRldi0+ZGV2
-LCAmZy0+bCk7DQo+ID4gKwlpZiAocmV0KQ0KPiA+ICsJCXJldHVybiByZXQ7DQo+ID4gKw0KPiA+
-ICsJcmV0dXJuIGRldm1fbGVkX2NsYXNzZGV2X3JlZ2lzdGVyKCZwZGV2LT5kZXYsICZhLT5sKTsN
-Cj4gPiArfQ0KPiA+ICsNCj4gDQo+IFRoaXMgbG9va3MgZGlmZmVyZW50LiAgTm90IHN1cmUgd2h5
-IHlvdSByZWdpc3RlciBib3RoIExFRHMgaW4gdGhpcw0KPiBwcm9iZS4NCj4gDQo+IFlvdSBjYW4g
-dXNlIHRoZSBEVCB0byBkZWZpbmUgYm90aCBMRURzIGFuZCB0aGVuIGVhY2ggd2lsbCBiZSBwcm9i
-ZWQNCj4gYW5kIA0KPiByZWdpc3RlcmVkIHNlcGFyYXRlbHkuDQoNCkFzIEkgbWVudGlvbmVkIGFi
-b3ZlLCB0aGlzIGRyaXZlciBpcyBjdXJyZW50bHkgbm90IHVzaW5nIERUIGF0IGFsbC4NClJlYXNv
-biB3aHkgaXQgZG9lcyBub3QgaXMgdGhhdCBJIGRpZG4ndCBrbm93IGFsbCB0aGUgTEVEcyBhcmUg
-dXN1YWxseQ0KaGF2aW5nIG93biBEVCBlbnRyaWVzL2RyaXZlcnMuDQoNCkJ1dCB0aGVyZSBpcyBh
-Y3R1YWxseSByZWFzb24gZm9yIGJ1bmRsaW5nIHRoZSBMRURzIHRvIHNhbWUgZHJpdmVyLiBXaGF0
-DQppcyBub3Qgc2hvd24gaW4gZHJpdmVyIGlzIHRoYXQgTEVEcyBjYW4gYmUgY29udHJvbGxlZCBi
-eSBQTUlDIHN0YXRlDQptYWNoaW5lIHNvIHRoYXQgdGhleSBhcmUgaW5kaWNhdGluZyBjaGFyZ2Vy
-IHN0YXRlcy4gT3RoZXIgb3B0aW9uIGlzDQpkcml2aW5nIExFRHMgdXNpbmcgdGhpcyBkcml2ZXIg
-LSBidXQgZm9yY2luZyBvbmUgb2YgdGhlIExFRHMgd2lsbCBjYXVzZQ0KYWxzbyB0aGUgb3RoZXIg
-TEVEIHRvIGJlIHVuZGVyIFNXIGNvbnRyb2wuIEVnLCBvbmUgY2FuJ3QgY29udHJvbCBqdXN0DQpz
-aW5nbGUgTEVEIHVzaW5nIFNXLCBpdHMgYm90aCBvZiB0aGVtIG9yIG5vbmUuDQoNCj4gDQo+IFRo
-aXMgaXMgaG93IGl0IGlzIGNvbW1vbmx5IGRvbmUuDQo+IA0KPiBZb3UgY2FuIHJlZmVyZW5jZSB0
-aGUgTE0zNjI3NCBsZWQgZHJpdmVyIGFzIHRoaXMgaXMgYSBNRkQgZGV2aWNlIHRvDQo+IHRoZSAN
-Cj4gdGktbG11LmMgaW4gdGhlIE1GRCBkaXJlY3RvcnkuDQoNClRoYW5rcyBmb3IgcG9pbnRpbmcg
-dGhpcyBvdXQuIEkgd2lsbCBnbGFkbHkgc2VlIGhvdyBvdGhlcnMgaGF2ZSBpdA0KaW1wbGVtZW50
-ZWQhIEkganVzdCB3b3VsZCBsaWtlIHRvIGtub3cgaWYgdGhlIERUIGJpbmRpbmcgaXMgcmVhbGx5
-IGENCm11c3Q/IEluIHRoaXMgY2FzZSBJIGFtIHVuc3VyZSB3aGF0IExFRCByZWxhdGVkIGV4dHJh
-IGluZm9ybWF0aW9uIHdlDQpjb3VsZCByZWFsbHkgZ2l2ZSBmcm9tIERUIChmb3IgdGhpcyBzcGVj
-aWZpYyBkZXZpY2UpLg0KDQpJIGp1c3QgY2hlY2tlZCB0aGUgbG0zNjI3NCB5b3UgbWVudGlvbmVk
-LiBJIHNlZSB0aGF0IGFsc28gbG0zNjI3NCBkbw0KcGFyc2UgdGhlIGR0IGFuZCBzZXQgdGhlIG5h
-bWUgaXRzZWxmIChzbyBtYXliZSB0aGUgbGVkX2NsYXNzIGlzIG5vdA0KZG9pbmcgdGhpcyBhZnRl
-ciBhbGw/KSAtIGFsdGhvdWdoIHRoZSBuYW1lIHNldHRpbmcgY29kZSBpbiBsbTM2Mjc0IGlzIGEN
-CmJpdCBwZWN1bGlhciBhcyBpdCBsb29wcyB0aHJvdWdoIGFsbCBjaGlsZCBub2RlcyBhbmQgb3Zl
-cndyaXRlcyB0aGUgb2xkDQpuYW1lIGlmIGl0IGZpbmRzIG1vcmUgdGhhbiBvbmUgImxhYmVsIiBw
-cm9wZXJ0aWVzIGZyb20gbm9kZXMgKGlmIEkgcmVhZA0KdGhlIGNvZGUgY29ycmVjdGx5KS4NCg0K
-SW4gYW55IGNhc2UgSSBhbSB1bnN1cmUgd2hhdCBpcyB0aGUgYmVuZWZpdCBmcm9tIHVzaW5nIERU
-IGFuZCBhZGRpbmcNCnRoZSBEVCBwYXJzaW5nIGNvZGUgZm9yIHRoaXMgUE1JQydzIExFRHMuIEkg
-Y291bGQgdW5kZXJzdGFuZCBEVCB1c2FnZQ0KaWYgTEVEIGNsYXNzIGhhbmRsZWQgZHQgcGFyc2lu
-ZyBhbmQgaWYgdGhlcmUgd2FzIHNvbWV0aGluZyB0byBjb25maWd1cmUNCmluIEJENzE4MjggTEVE
-cyAtIGJ1dCBJIHNlZSBubyBzdWNoIGJlbmVmaXRzIGluIHRoaXMgY2FzZS4NCg0KQmVzdCBSZWdh
-cmRzDQoJTWF0dGkgVmFpdHRpbmVuDQoNCg0KDQo=
+Hi, Guenter
+
+On 2019/10/21 0:56, Guenter Roeck wrote:
+> On 10/18/19 1:33 AM, Xingyu Chen wrote:
+>> The watchdog controller on the Meson-A/C series SoCs is moved to secure
+>> world, watchdog operation needs to be done in secure EL3 mode via ATF,
+>> Non-secure world can call SMC instruction to trap to AFT for watchdog
+>> operation.
+>>
+>> Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
+>> ---
+>>   drivers/watchdog/Kconfig         |  17 ++++
+>>   drivers/watchdog/Makefile        |   1 +
+>>   drivers/watchdog/meson_sec_wdt.c | 187 
+>> +++++++++++++++++++++++++++++++++++++++
+>>   3 files changed, 205 insertions(+)
+>>   create mode 100644 drivers/watchdog/meson_sec_wdt.c
+>>
+>> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+>> index 58e7c10..e84be42 100644
+>> --- a/drivers/watchdog/Kconfig
+>> +++ b/drivers/watchdog/Kconfig
+>> @@ -826,6 +826,23 @@ config MESON_GXBB_WATCHDOG
+>>         To compile this driver as a module, choose M here: the
+>>         module will be called meson_gxbb_wdt.
+>> +config MESON_SEC_WATCHDOG
+>> +    tristate "Amlogic Meson Secure watchdog support"
+>> +    depends on MESON_SM
+>> +    depends on ARCH_MESON || COMPILE_TEST
+> 
+> This dependency is pointless. MESON_SM already depends on ARCH_MESON,
+> thus specifying "COMPILE_TEST" here adds no value but only
+> creates confusion.
+Thanks for your analysis, perhaps i should remove the line below.
+- depends on ARCH_MESON || COMPILE_TEST
+
+Is it ok to modify code above like this ?
+> 
+>> +    select WATCHDOG_CORE
+>> +    help
+>> +      The watchdog controller on the Meson-A/C series SoCs is moved to
+>> +      secure world, watchdog operation needs to be done in secure EL3
+>> +      mode via ATF, non-secure world can call SMC instruction to trap
+>> +      to ATF for the watchdog operation.
+>> +
+>> +      Say Y here if watchdog controller on Meson SoCs is located in
+>> +      secure world.
+>> +
+>> +      To compile this driver as a module, choose M here: the
+>> +      module will be called meson_sec_wdt.
+>> +
+>>   config MESON_WATCHDOG
+>>       tristate "Amlogic Meson SoCs watchdog support"
+>>       depends on ARCH_MESON || COMPILE_TEST
+>> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
+>> index 2ee352b..5e6b73d 100644
+>> --- a/drivers/watchdog/Makefile
+>> +++ b/drivers/watchdog/Makefile
+>> @@ -78,6 +78,7 @@ obj-$(CONFIG_QCOM_WDT) += qcom-wdt.o
+>>   obj-$(CONFIG_BCM_KONA_WDT) += bcm_kona_wdt.o
+>>   obj-$(CONFIG_TEGRA_WATCHDOG) += tegra_wdt.o
+>>   obj-$(CONFIG_MESON_GXBB_WATCHDOG) += meson_gxbb_wdt.o
+>> +obj-$(CONFIG_MESON_SEC_WATCHDOG) += meson_sec_wdt.o
+>>   obj-$(CONFIG_MESON_WATCHDOG) += meson_wdt.o
+>>   obj-$(CONFIG_MEDIATEK_WATCHDOG) += mtk_wdt.o
+>>   obj-$(CONFIG_DIGICOLOR_WATCHDOG) += digicolor_wdt.o
+>> diff --git a/drivers/watchdog/meson_sec_wdt.c 
+>> b/drivers/watchdog/meson_sec_wdt.c
+>> new file mode 100644
+>> index 00000000..86bd87c
+>> --- /dev/null
+>> +++ b/drivers/watchdog/meson_sec_wdt.c
+>> @@ -0,0 +1,187 @@
+>> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+>> +/*
+>> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
+>> + * Author: Xingyu Chen <xingyu.chen@amlogic.com>
+>> + *
+>> + */
+>> +#include <linux/err.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/types.h>
+>> +#include <linux/watchdog.h>
+>> +#include <linux/firmware/meson/meson_sm.h>
+>> +
+>> +#define MESON_SIP_WDT_DISABLE        0x1
+>> +#define MESON_SIP_WDT_ENABLE        0x2
+>> +#define MESON_SIP_WDT_PING        0x3
+>> +#define MESON_SIP_WDT_INIT        0x4
+>> +#define MESON_SIP_WDT_RESETNOW        0x5
+>> +#define MESON_SIP_WDT_SETTIMEOUT    0x6
+>> +#define MESON_SIP_WDT_GETTIMELEFT    0x7
+>> +
+>> +#define DEFAULT_TIMEOUT            30 /* seconds */
+>> +
+>> +/*
+>> + * Watchdog timer tick is set to 1ms in secfw side, and tick count is
+>> + * stored in the bit[16-31] of WATCHDOG_CNT register, so the maximum
+>> + * timeout value is 0xffff ms.
+>> + */
+>> +#define MAX_TIMEOUT_MS            0xFFFF
+>> +
+>> +struct meson_sec_wdt {
+>> +    struct watchdog_device wdt_dev;
+>> +    struct meson_sm_firmware *fw;
+>> +};
+>> +
+>> +static int meson_sec_wdt_start(struct watchdog_device *wdt_dev)
+>> +{
+>> +    struct meson_sec_wdt *data = watchdog_get_drvdata(wdt_dev);
+>> +
+>> +    return meson_sm_call(data->fw, SM_WATCHDOG_OPS, NULL,
+>> +                 MESON_SIP_WDT_ENABLE, 0, 0, 0, 0);
+>> +}
+>> +
+>> +static int meson_sec_wdt_stop(struct watchdog_device *wdt_dev)
+>> +{
+>> +    struct meson_sec_wdt *data = watchdog_get_drvdata(wdt_dev);
+>> +
+>> +    return meson_sm_call(data->fw, SM_WATCHDOG_OPS, NULL,
+>> +                 MESON_SIP_WDT_DISABLE, 0, 0, 0, 0);
+>> +}
+>> +
+>> +static int meson_sec_wdt_ping(struct watchdog_device *wdt_dev)
+>> +{
+>> +    struct meson_sec_wdt *data = watchdog_get_drvdata(wdt_dev);
+>> +
+>> +    return meson_sm_call(data->fw, SM_WATCHDOG_OPS, NULL,
+>> +                 MESON_SIP_WDT_PING, 0, 0, 0, 0);
+>> +}
+>> +
+>> +static int meson_sec_wdt_set_timeout(struct watchdog_device *wdt_dev,
+>> +                     unsigned int timeout)
+>> +{
+>> +    struct meson_sec_wdt *data = watchdog_get_drvdata(wdt_dev);
+>> +
+>> +    wdt_dev->timeout = timeout;
+>> +
+>> +    return meson_sm_call(data->fw, SM_WATCHDOG_OPS, NULL,
+>> +                 MESON_SIP_WDT_SETTIMEOUT,
+>> +                 wdt_dev->timeout, 0, 0, 0);
+>> +}
+>> +
+>> +static unsigned int meson_sec_wdt_get_timeleft(struct watchdog_device 
+>> *wdt_dev)
+>> +{
+>> +    int ret;
+>> +    unsigned int timeleft;
+>> +    struct meson_sec_wdt *data = watchdog_get_drvdata(wdt_dev);
+>> +
+>> +    ret = meson_sm_call(data->fw, SM_WATCHDOG_OPS, &timeleft,
+>> +                MESON_SIP_WDT_GETTIMELEFT, 0, 0, 0, 0);
+>> +
+>> +    if (ret)
+>> +        return ret;
+> 
+> Meh, that doesn't work. I just realized that the return type is unsigned,
+> so returning a negative error code is pointless. Guess we'll have to
+> live with returning 0 in this case after all. I wonder if we should
+> fix the API and return an integer (with negative error code), but that
+> is a different question.
+Thanks for your review.
+
+IMO, if returning an integer, and the value which copy to user buf 
+should be formatted with %d instead of %u (see timeleft_show), it will 
+cause the max value of timeleft is reduced from 4294967295 to 
+2147483647. but i'am not sure whether it will bring risk.
+
+So i also think returning 0 may be better in this case.
+> 
+> Sorry for the confusion - I should have noticed that before.
+> 
+>> +
+>> +    return timeleft;
+>> +}
+>> +
+>> +static const struct watchdog_ops meson_sec_wdt_ops = {
+>> +    .start = meson_sec_wdt_start,
+>> +    .stop = meson_sec_wdt_stop,
+>> +    .ping = meson_sec_wdt_ping,
+>> +    .set_timeout = meson_sec_wdt_set_timeout,
+>> +    .get_timeleft = meson_sec_wdt_get_timeleft,
+>> +};
+>> +
+>> +static const struct watchdog_info meson_sec_wdt_info = {
+>> +    .identity = "Meson Secure Watchdog Timer",
+>> +    .options = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | 
+>> WDIOF_MAGICCLOSE,
+>> +};
+>> +
+>> +static int __maybe_unused meson_sec_wdt_resume(struct device *dev)
+>> +{
+>> +    struct meson_sec_wdt *data = dev_get_drvdata(dev);
+>> +
+>> +    if (watchdog_active(&data->wdt_dev))
+>> +        return meson_sec_wdt_start(&data->wdt_dev);
+>> +
+>> +    return 0;
+>> +}
+>> +
+>> +static int __maybe_unused meson_sec_wdt_suspend(struct device *dev)
+>> +{
+>> +    struct meson_sec_wdt *data = dev_get_drvdata(dev);
+>> +
+>> +    if (watchdog_active(&data->wdt_dev))
+>> +        return meson_sec_wdt_stop(&data->wdt_dev);
+>> +
+>> +    return 0;
+>> +}
+>> +
+>> +static const struct dev_pm_ops meson_sec_wdt_pm_ops = {
+>> +    SET_SYSTEM_SLEEP_PM_OPS(meson_sec_wdt_suspend, meson_sec_wdt_resume)
+>> +};
+>> +
+>> +static const struct of_device_id meson_sec_wdt_dt_ids[] = {
+>> +     { .compatible = "amlogic,meson-sec-wdt", },
+>> +     { /* sentinel */ },
+>> +};
+>> +MODULE_DEVICE_TABLE(of, meson_sec_wdt_dt_ids);
+>> +
+>> +static int meson_sec_wdt_probe(struct platform_device *pdev)
+>> +{
+>> +    struct device *dev = &pdev->dev;
+>> +    struct meson_sec_wdt *data;
+>> +    struct device_node *sm_np;
+>> +    int ret;
+>> +
+>> +    data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
+>> +    if (!data)
+>> +        return -ENOMEM;
+>> +
+>> +    sm_np = of_parse_phandle(pdev->dev.of_node, "secure-monitor", 0);
+>> +    if (!sm_np) {
+>> +        dev_err(&pdev->dev, "no secure-monitor node\n");
+>> +        return -EINVAL;
+>> +    }
+>> +
+>> +    data->fw = meson_sm_get(sm_np);
+>> +    of_node_put(sm_np);
+>> +    if (!data->fw)
+>> +        return -EPROBE_DEFER;
+>> +
+>> +    platform_set_drvdata(pdev, data);
+>> +
+>> +    data->wdt_dev.parent = dev;
+>> +    data->wdt_dev.info = &meson_sec_wdt_info;
+>> +    data->wdt_dev.ops = &meson_sec_wdt_ops;
+>> +    data->wdt_dev.max_hw_heartbeat_ms = MAX_TIMEOUT_MS;
+>> +    data->wdt_dev.min_timeout = 1;
+>> +    data->wdt_dev.timeout = DEFAULT_TIMEOUT;
+>> +    watchdog_set_drvdata(&data->wdt_dev, data);
+>> +
+>> +    ret = meson_sm_call(data->fw, SM_WATCHDOG_OPS, NULL,
+>> +                MESON_SIP_WDT_INIT,
+>> +                data->wdt_dev.timeout, 0, 0, 0);
+>> +    if (ret)
+>> +        return ret;
+>> +
+>> +    watchdog_stop_on_reboot(&data->wdt_dev);
+>> +
+>> +    return devm_watchdog_register_device(dev, &data->wdt_dev);
+>> +}
+>> +
+>> +static struct platform_driver meson_sec_wdt_driver = {
+>> +    .probe    = meson_sec_wdt_probe,
+>> +    .driver = {
+>> +        .name = "meson-sec-wdt",
+>> +        .pm = &meson_sec_wdt_pm_ops,
+>> +        .of_match_table    = meson_sec_wdt_dt_ids,
+>> +    },
+>> +};
+>> +
+>> +module_platform_driver(meson_sec_wdt_driver);
+>> +
+>> +MODULE_AUTHOR("Xingyu Chen <xingyu.chen@amlogic.com>");
+>> +MODULE_DESCRIPTION("Amlogic Secure Watchdog Timer Driver");
+>> +MODULE_LICENSE("Dual MIT/GPL");
+>>
+> 
+> .
+> 
