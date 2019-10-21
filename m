@@ -2,184 +2,110 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2E60CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:24:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 918A6CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:24:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF7E720882
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:24:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 622FA2089C
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:24:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="fzDD2u5a"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="inbN/c7b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729452AbfJUPYA (ORCPT
+        id S1729591AbfJUPYQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 11:24:00 -0400
-Received: from mail-eopbgr40101.outbound.protection.outlook.com ([40.107.4.101]:11453
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727140AbfJUPYA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 11:24:00 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jC8hkpDEVIBf4ubqsjy0iX01/ZU2kSs8n1ZTj/ji5ZNCIvv66l2D/c5nYQQ2BMLsR3tDhgNHn/TaEkU04FlN9D62v/b6jkTHY0JHk1eRAudk6TxIWgLVFO4Dma/MHFbk8LZKTdPdKor8mTzcBqwnVMNqsOVNdjCuRtNNyj6b95SRdiG/9906r0jE9YKqZcBYSH0/KRVVqCPs1d2ZqGo2R/x1APb7nIoiddtG4skAUJBF793+/14Smv6S5tBRVtLVDCBNhnbxkNGhBBCKHax8C20/gQYI057sI5DX8H0SWG3gtCC3PDFsn1W1CtJLKh8v2dTz0pxhbyMMkgtmkrqC1A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rx6kOuyc4Ro67mNwa4n9HD0kzfxFP2ooqXnUoypIvHQ=;
- b=dRc5jgRnP3hlElKmsQWg9/GCfNfce0jWtuADj+YeLs5gr+2xG9Ok+drRcPqWzl3sZzQw3xtW63dyKaqJL8OyAF1aNeEx9NRDcUi4A6OjfyYMq5awUXtTIhXq+dKhD2kttsRUsX1OEK98rBRFmkr8dNj+kBAWkmfPVjYa/FQa60mm1vb4IZMmVkKLsKU8QgsQZJyFZxbgIMsd7w0bwQviyzPPsXfLd/fMXkmerF1I1+C9F/INoQaXM+qRJaA87TIKHRywrrCBZHYC7T9szsH13EUc06qZriztzlYChBIl9lMZSh58f9RycAyhiSIE7LvHcJIEgU7zBZSn7Xq1ilfMBQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
- dkim=pass header.d=axentia.se; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rx6kOuyc4Ro67mNwa4n9HD0kzfxFP2ooqXnUoypIvHQ=;
- b=fzDD2u5aRXAute0K6/4EeocrMjvoO69WoMsL52No+LF7FPokCjsfSr+3Yg7UKNW/UYRGey+dIqy4b2SRtKHFAtNkaiX9pYF7lvZuVWywROTL7M2r88QRuhTM99G7hEnfI07U7krFpePJFhqwJutEtVD4ts6pj0Z79Bq2e2IqZFw=
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com (52.134.66.158) by
- DB3PR0202MB3435.eurprd02.prod.outlook.com (52.134.65.156) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.21; Mon, 21 Oct 2019 15:23:15 +0000
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::c5b8:6014:87a4:1afe]) by DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::c5b8:6014:87a4:1afe%7]) with mapi id 15.20.2347.029; Mon, 21 Oct 2019
- 15:23:15 +0000
-From:   Peter Rosin <peda@axentia.se>
-To:     Wolfram Sang <wsa@the-dreams.de>,
-        "Eugen.Hristev@microchip.com" <Eugen.Hristev@microchip.com>
-CC:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "Ludovic.Desroches@microchip.com" <Ludovic.Desroches@microchip.com>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "Nicolas.Ferre@microchip.com" <Nicolas.Ferre@microchip.com>
-Subject: Re: [PATCH v5 0/9] i2c: add support for filters
-Thread-Topic: [PATCH v5 0/9] i2c: add support for filters
-Thread-Index: AQHVaHpLr7113TR4Hk2itVe9BFeajadO9gMAgBZqJ4CAABXHgA==
-Date:   Mon, 21 Oct 2019 15:23:15 +0000
-Message-ID: <f5bd0c1f-9a72-6661-146b-ef5de77e31ff@axentia.se>
-References: <1568189911-31641-1-git-send-email-eugen.hristev@microchip.com>
- <c17182ac-67dd-d11f-5daf-066bf446b969@microchip.com>
- <20191021140515.GC26782@ninjato>
-In-Reply-To: <20191021140515.GC26782@ninjato>
-Accept-Language: en-US, sv-SE
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-x-originating-ip: [213.112.138.100]
-x-clientproxiedby: HE1PR07CA0034.eurprd07.prod.outlook.com
- (2603:10a6:7:66::20) To DB3PR0202MB3434.eurprd02.prod.outlook.com
- (2603:10a6:8:5::30)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peda@axentia.se; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ec7f5e47-6753-432f-46e0-08d7563a97e1
-x-ms-traffictypediagnostic: DB3PR0202MB3435:
-x-microsoft-antispam-prvs: <DB3PR0202MB34353FA956C351DE96B30572BC690@DB3PR0202MB3435.eurprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 0197AFBD92
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39830400003)(346002)(396003)(136003)(376002)(366004)(199004)(189003)(11346002)(7736002)(31686004)(8936002)(71200400001)(71190400001)(508600001)(31696002)(5660300002)(446003)(86362001)(316002)(476003)(2616005)(305945005)(3846002)(25786009)(7416002)(6116002)(256004)(14444005)(486006)(2906002)(76176011)(52116002)(2501003)(6436002)(58126008)(229853002)(66476007)(66556008)(64756008)(66446008)(99286004)(66066001)(110136005)(65806001)(54906003)(6486002)(66946007)(36756003)(6512007)(14454004)(26005)(81166006)(81156014)(186003)(102836004)(6246003)(4001150100001)(53546011)(386003)(65956001)(6506007)(4326008)(8676002);DIR:OUT;SFP:1102;SCL:1;SRVR:DB3PR0202MB3435;H:DB3PR0202MB3434.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: axentia.se does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: pWuxGBn7XG4yM+XRDcuNA6uQV2R9rqrWZFoSen+1zMWiegUU8TS0Oi9iS1F3KPF7I73E2u7p7IsaBxYFXVzRQ28xtnhjrXKO29DOgfBk1JHBdAG491iuKX6Ls5vprySq2TZVSlq5HWYAtb9PLt1AwG+/heNEjlmnpLrNEtughdhGiQcgZ6VwRRSuoibm4t8OV5s1eKxiy9vHn0sae07UHjtfP5M6xvBahCpbw0crNfd+t/4HX58lIg9+0YfEEVH1fQCihApZ99fKIJHpM0WKzXO5LaA2bZ77fhwOg424i9/9FKSvvw2cBcAQzuBKphtlO+WUHdL5GIPb2yYzx5uTjIG+CYnB1uuCkqSgwE0o2l39ZPH7HG412CDiGoTl18zUksAPNjHwIQceR/R7sc2uzRo5ptwndHvqhbFtGrlAts++9HOaia1V/BoXRhvktL6q
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="Windows-1252"
-Content-ID: <542A5BB2F1351346977B834EB3C11628@eurprd02.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: axentia.se
-X-MS-Exchange-CrossTenant-Network-Message-Id: ec7f5e47-6753-432f-46e0-08d7563a97e1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Oct 2019 15:23:15.3938
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 546Ctu3x6wdXrmmTcp/2Pd2JUwyCfmDKIbZrO++SlVOT1TPMI85NgE3ijiiYqSb9
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB3435
+        Mon, 21 Oct 2019 11:24:16 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:37833 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728052AbfJUPYQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 11:24:16 -0400
+Received: by mail-io1-f65.google.com with SMTP id 1so5047085iou.4;
+        Mon, 21 Oct 2019 08:24:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=3P+aBDo0ELSsFt8nCKFHScePQc27b2VSrL87S+QPBsU=;
+        b=inbN/c7buo+FoE6Dk6EAnrg8ORKRrFdixSmEroAn9vkrHOGV2OF7X+KnCKCLDz1FBo
+         Op0aI8hSOoy5A7ciprqD8+Ss8WrJY15q5EQ/YuoWkA96CyKkwV3AwVzPX3k0UDTvj/Vx
+         oMhkhmTj1RTF9zzZwALy4yLUi/N0u+/l+weT/H81oKL2vSYCpjep5E25XQW2rbvC/qXH
+         bI2WnZ2KrzBkf68EBgJEH6LLC5o44cfZf6a2wFWFNhs7tN5XMHPPWSzAeOa8Ltr4yl/7
+         DTChh4sLLiEZvmjbG/2hv0inoeTsnvW3W9acY5hFc7wyH+eyfg7P6gcQNH6ths7h1dxr
+         ydFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=3P+aBDo0ELSsFt8nCKFHScePQc27b2VSrL87S+QPBsU=;
+        b=KNSkd3pZIPsSs0k7RERiy8QiTozoQ+rXzUMgfk/YOfw+JUJNMNTRASHZtMiASzs+QE
+         jIiLDF1Q/kZeiRa2GUoygAxG0SRtJcgfbJ+551OA3ZMCcUnjtMLkKzNJlhEcm9QjTXtB
+         ss3eMrStTKPnN/kizNx32ty6OTz23aH6dwKWPq8fW1nHLcmsiwqyT5ftY2M19hxvERVf
+         qHJCTVwi4ilOQwCsO3RjWLwooT69gP1KhqhIKswfSHGlSVcWrI1vSlhDcDW47+WHsv+o
+         00St0aiEIcRYad3mm1nPsHheyUpzpaaC7D+pDd4eLBqKMhDK3oW/3HAGiB6CnM35mYZc
+         no4w==
+X-Gm-Message-State: APjAAAXxUOBg4fNBemXT3Zl5q/uXAwIy6Te2AyOgWEsG8lYn3VLixWPC
+        U6weM3HZwbcartC91HJYUrE=
+X-Google-Smtp-Source: APXvYqwqC3FNN0SgZe4VhLQX6Z6RdX7ParI/Or2Bl+4oBAvPlu2BndYD4qtUpntFEl3ejY72uMnUPg==
+X-Received: by 2002:a5d:8185:: with SMTP id u5mr15715116ion.147.1571671453827;
+        Mon, 21 Oct 2019 08:24:13 -0700 (PDT)
+Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
+        by smtp.googlemail.com with ESMTPSA id n123sm3872105iod.62.2019.10.21.08.24.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Oct 2019 08:24:13 -0700 (PDT)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+To:     john.johansen@canonical.com
+Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] apparmor: Fix use-after-free in aa_audit_rule_init
+Date:   Mon, 21 Oct 2019 10:23:47 -0500
+Message-Id: <20191021152348.3906-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <57b61298-cbeb-f0ff-c6ba-b8f64d5d0287@canonical.com>
+References: <57b61298-cbeb-f0ff-c6ba-b8f64d5d0287@canonical.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-10-21 16:05, Wolfram Sang wrote:
-> On Mon, Oct 07, 2019 at 07:53:21AM +0000, Eugen.Hristev@microchip.com wro=
-te:
->>
->>
->> On 11.09.2019 11:24, Eugen Hristev - M18282 wrote:
->>> From: Eugen Hristev <eugen.hristev@microchip.com>
->>>
->>> Hello,
->>>
->>> This series adds support for analog and digital filters for i2c control=
-lers
->>>
->>> This series is based on the series:
->>> [PATCH v2 0/9] i2c: at91: filters support for at91 SoCs
->>> and later
->>> [PATCH v4 0/9] i2c: add support for filters
->>> and enhanced to add the bindings for all controllers plus an extra bind=
-ings
->>> for the width of the spikes in nanoseconds (digital filters) and cut-of=
-f
->>> frequency (analog filters)
->>>
->>> First, bindings are created for
->>> 'i2c-analog-filter'
->>> 'i2c-digital-filter'
->>> 'i2c-digital-filter-width-ns'
->>> 'i2c-analog-filter-cutoff-frequency'
->>>
->>> The support is added in the i2c core to retrieve filter width/cutoff fr=
-equency
->>> and add it to the timings structure.
->>> Next, the at91 driver is enhanced for supporting digital filter, advanc=
-ed
->>> digital filter (with selectable spike width) and the analog filter.
->>>
->>> Finally the device tree for two boards are modified to make use of the
->>> new properties.
->>>
->>> This series is the result of the comments on the ML in the direction
->>> requested: to make the bindings globally available for i2c drivers.
->>>
->>> Changes in v5:
->>> - renamed i2c-filter-width-ns to i2c-digital-filter-width-ns as this
->>> is applicable only to digital filter
->>> - created new binding i2c-digital-filter-width-ns for analog filters.
->>
->> Hello Wolfram and Peter,
->>
->> Are you happy with the changes in this version? I haven't heard from you=
-=20
->> since this latest update.
->> I am interested to know if anymore changes are required or maybe we can=
-=20
->> move further with this support.
->=20
-> So, I had a look now and I am happy. I will give Peter one more day to
-> comment, otherwise I'll apply it tomorrow.
+In the implementation of aa_audit_rule_init(), when aa_label_parse()
+fails the allocated memory for rule is released using
+aa_audit_rule_free(). But after this release, the return statement
+tries to access the label field of the rule which results in
+use-after-free. Before releasing the rule, copy errNo and return it
+after release.
 
-I had another read-through and only found one nit which is in a separate
-message. You can add
+Fixes: 52e8c38001d8 ("apparmor: Fix memory leak of rule on error exit path")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+---
+Changes in v2:
+	-- Fix typo in description
+	-- move err definition inside the if statement.
 
-Reviewed-by: Peter Rosin <peda@axentia.se>
+ security/apparmor/audit.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-for the whole series.
-
-Cheers,
-Peter
-
-> Thanks for your patience and keeping at it!
->=20
+diff --git a/security/apparmor/audit.c b/security/apparmor/audit.c
+index 5a98661a8b46..334065302fb6 100644
+--- a/security/apparmor/audit.c
++++ b/security/apparmor/audit.c
+@@ -197,8 +197,9 @@ int aa_audit_rule_init(u32 field, u32 op, char *rulestr, void **vrule)
+ 	rule->label = aa_label_parse(&root_ns->unconfined->label, rulestr,
+ 				     GFP_KERNEL, true, false);
+ 	if (IS_ERR(rule->label)) {
++		int err = rule->label;
+ 		aa_audit_rule_free(rule);
+-		return PTR_ERR(rule->label);
++		return PTR_ERR(err);
+ 	}
+ 
+ 	*vrule = rule;
+-- 
+2.17.1
 
