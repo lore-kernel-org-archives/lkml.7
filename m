@@ -2,189 +2,137 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 835CACA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:13:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00A98CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:14:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2914A205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:13:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C86D8205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:14:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="WI3RzQXU"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p59UqSQ7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728548AbfJUMNz (ORCPT
+        id S1728566AbfJUMON (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 08:13:55 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:40361 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728538AbfJUMNy (ORCPT
+        Mon, 21 Oct 2019 08:14:13 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:40161 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728322AbfJUMON (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 08:13:54 -0400
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20191021121352epoutp0166981b28593ed944b485686dab95618d~PqHji5N_I0675106751epoutp012
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 12:13:52 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20191021121352epoutp0166981b28593ed944b485686dab95618d~PqHji5N_I0675106751epoutp012
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1571660032;
-        bh=IO3ukgqRMSs5HK7E5ErftQstNvRbP6iQqkoooqC05YU=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=WI3RzQXU+oT9fDSOsey1vJ3z+3O5bHF+XP1oju1lqDfmXGM3nAHJDz0Inn/bxgVln
-         m18hzfJNyk7Hsb93YukqRFVWZv9CR2Vurwj3F7hLoRWsJySGS38jWVhXvqBmJ+8rKE
-         c6BASP12vqcLKnW5SqmO3MKEAUZ7WAZ9QNIAX74U=
-Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
-        epcas5p1.samsung.com (KnoxPortal) with ESMTP id
-        20191021121351epcas5p13ef60321fe49e17a3b527b6b0758b0eb~PqHjHSFGq1391813918epcas5p1l;
-        Mon, 21 Oct 2019 12:13:51 +0000 (GMT)
-Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
-        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        76.B8.04480.FF0ADAD5; Mon, 21 Oct 2019 21:13:51 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-        20191021121350epcas5p3313e54a3bc5c8600c52a6db299893f78~PqHieWDCw2562125621epcas5p3D;
-        Mon, 21 Oct 2019 12:13:50 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20191021121350epsmtrp21c0fb01e88a9a1b608b6a547ab25a28e~PqHidg0CO2033120331epsmtrp2B;
-        Mon, 21 Oct 2019 12:13:50 +0000 (GMT)
-X-AuditID: b6c32a4b-cbbff70000001180-82-5dada0ff2a7a
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        C2.00.04081.EF0ADAD5; Mon, 21 Oct 2019 21:13:50 +0900 (KST)
-Received: from ubuntu.sa.corp.samsungelectronics.net (unknown
-        [107.108.83.125]) by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20191021121348epsmtip1c366be94b1f5180dae6dd06ecf441435~PqHgSjX1e1119511195epsmtip1K;
-        Mon, 21 Oct 2019 12:13:48 +0000 (GMT)
-From:   Pankaj Sharma <pankj.sharma@samsung.com>
-To:     linux-can@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     wg@grandegger.com, mkl@pengutronix.de, davem@davemloft.net,
-        eugen.hristev@microchip.com, ludovic.desroches@microchip.com,
-        pankaj.dubey@samsung.com, rcsekar@samsung.com,
-        jhofstee@victronenergy.com, simon.horman@netronome.com,
-        Pankaj Sharma <pankj.sharma@samsung.com>,
-        Sriram Dash <sriram.dash@samsung.com>
-Subject: [PATCH v2] can: m_can: add support for handling arbitration error
-Date:   Mon, 21 Oct 2019 17:43:36 +0530
-Message-Id: <1571660016-29726-1-git-send-email-pankj.sharma@samsung.com>
-X-Mailer: git-send-email 2.7.4
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpjleLIzCtJLcpLzFFi42LZdlhTQ/f/grWxBhsnq1nMOd/CYnHgx3EW
-        ixXv97FarPo+ldni8q45bBYv1l5ntVi/aAqLxbEFYhaLtn5ht1jedZ/ZYtaFHawWN3ZyWtxY
-        z26x9N5OVgc+jy0rbzJ5fLx0m9Hjzo+ljB7Tux8ye/T/NfDo27KK0ePzJjmPSQc/sAdwRHHZ
-        pKTmZJalFunbJXBlnNo+kblgpmjFlx/trA2M5wS7GDk5JARMJJqe72LrYuTiEBLYzSix/t01
-        KOcTo8S8J30sEM43Rom+5x9Zuxg5wFoO7SuBiO9llDi1+jsjhNPCJDHhx0N2kLlsAnoSl95P
-        ZgOxRQRCJZb1TmAFKWIW2MMksXb6arCEsICXxIwzx8FsFgFViWt7ljCC2LwCHhJ79u9igzhQ
-        TuLmuU5mkGYJgTNsEp3vJrNCJFwk1r5/wg5hC0u8Or4FypaS+PxuL1RztsTC3f0sEGdXSLTN
-        EIYI20scuDIHLMwsoCmxfpc+SJhZgE+i9/cTJohqXomONiGIajWJqU/fMULYMhJ3Hm2GGu4h
-        8frNPLBjhARiJZa+P842gVFmFsLQBYyMqxglUwuKc9NTi00LjPNSy/WKE3OLS/PS9ZLzczcx
-        glOHlvcOxk3nfA4xCnAwKvHwOkxfEyvEmlhWXJl7iFGCg1lJhPeOwdpYId6UxMqq1KL8+KLS
-        nNTiQ4zSHCxK4ryTWK/GCAmkJ5akZqemFqQWwWSZODilGhjjP1yQXaQ31y3x2n/OC5/nXaoP
-        +Lluq3JjbMz7mDSzpWdnbbMUuPL2wAfv07NUHuQcdjR78Sxqs7Gn7tSeA6FNE3RE1dg9Zduf
-        5Lwt8st33Hqb6/vphfK6+xvXLZSrzjnWFdoUeYRxwgcH3e8B1gyyF4/YMl73tuEtLPoqf/qb
-        o9iuWQ2vvq5XYinOSDTUYi4qTgQAZU62DxkDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrOLMWRmVeSWpSXmKPExsWy7bCSnO6/BWtjDY52GFjMOd/CYnHgx3EW
-        ixXv97FarPo+ldni8q45bBYv1l5ntVi/aAqLxbEFYhaLtn5ht1jedZ/ZYtaFHawWN3ZyWtxY
-        z26x9N5OVgc+jy0rbzJ5fLx0m9Hjzo+ljB7Tux8ye/T/NfDo27KK0ePzJjmPSQc/sAdwRHHZ
-        pKTmZJalFunbJXBlnNo+kblgpmjFlx/trA2M5wS7GDk4JARMJA7tK+li5OQQEtjNKNHe7QsR
-        lpFY/LkaJCwhICyx8t9zdoiSJiaJNfdlQGw2AT2JS+8ns4HYIgLhEjsndDF1MXJxMAucYJI4
-        9uMuK0hCWMBLYsaZ42BFLAKqEtf2LGEEsXkFPCT27N/FBrFATuLmuU7mCYw8CxgZVjFKphYU
-        56bnFhsWGOallusVJ+YWl+al6yXn525iBAenluYOxstL4g8xCnAwKvHwOkxfEyvEmlhWXJl7
-        iFGCg1lJhPeOwdpYId6UxMqq1KL8+KLSnNTiQ4zSHCxK4rxP845FCgmkJ5akZqemFqQWwWSZ
-        ODilGhgTzZ5e6Z1XJH9n2kp7u5+Xlnaetn5+jG3fhJrkLSEmgVXVpjdin82cuq4s86Lspcwt
-        flPdOb7bc32e2bch7MXHe5qFQhN9big0RfRZqb2M/FxTv3Nvu4P/inJmLvGrAmc/WKlfyT/3
-        NmJfzCSNuQ9WWFlZcfrusWXNCZvtOjXK4Aqv7xr2L/+UWIozEg21mIuKEwHx7U4MSgIAAA==
-X-CMS-MailID: 20191021121350epcas5p3313e54a3bc5c8600c52a6db299893f78
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20191021121350epcas5p3313e54a3bc5c8600c52a6db299893f78
-References: <CGME20191021121350epcas5p3313e54a3bc5c8600c52a6db299893f78@epcas5p3.samsung.com>
+        Mon, 21 Oct 2019 08:14:13 -0400
+Received: by mail-wr1-f65.google.com with SMTP id o28so13699068wro.7
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 05:14:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=7jxHvlIH/GHF2NGpOLWHwkTRpolnPbX/bJ9AbQhHZ50=;
+        b=p59UqSQ7ok5T84ox4VFBup57p/nWydONjxf/yNkt7WFcO4wBEmH+YWZ+pQ6Xd9sjdE
+         gSUIbcE9ffJQyI/0jl2S6ISp+GqiCmZ4CwtinHAkZf3ssil2Cwd6xHNN922f8P6xmbJM
+         1A7w4V4M4aiTNuhFnQdbTE7z3a0w/dAevMvbtl1SHXmxhWzi6KF9O2CXkLIuoQfkfoVZ
+         3UyWrMyNdhTb3JGhDiNqUStJdxz5TF+KqxiY1i2V32UCm4MEszjBdPKhce7iMZSsKThJ
+         n3wht5xCgM8UzqK/jPTh998UCkiYDCDp3nlKnmBkv+6TTkmV/t5UKE5TBBS9ixIRcHNr
+         xDCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7jxHvlIH/GHF2NGpOLWHwkTRpolnPbX/bJ9AbQhHZ50=;
+        b=cPkOgQIt4aOg8jR0QR5j3FYjrmoAjVUdHNKQM91YiNIAYGRgOyzozTnePb4cVSqCmR
+         Y7p0YI9ADgA8Wq53G+SdyIZwqVrgrBe6axF3wfgDxJp8x9pAA+LvVLR1EcRbthKQojxY
+         kutR74i2wy5VR5PQm7EJJO8GKT/Kj6HPoUEUaMhPmAvnTzNc3oaqo0H9GRJO7njlQJu4
+         F31uD6uYsinBjnaz0SyJxpvpehDFM5o2UUAkWRzGduccFuB/rv3cV8SEr+md9vSfyeQk
+         bNjHQzACqXlOjetgdRrwAId61KZv9zYnSUD5fSxECUeCkSYCfn+ymGuZxLwahYlQCBWk
+         xjJw==
+X-Gm-Message-State: APjAAAV3ogsnJxq5pM3G7BsrFcQ5WCedZYTZI8WKyxl5gwn3JOuIkIY+
+        SGe9kQfxpbBVnpx0HVtUunLFWcU/Rc0=
+X-Google-Smtp-Source: APXvYqwTt8mxKUqo1qn5DUbfyQDPqC2LuHol4HuaS/wKQN/yN5gkLQelG0gG10cVmYyY/ZB7AYYyLw==
+X-Received: by 2002:adf:ea86:: with SMTP id s6mr18677166wrm.397.1571660051249;
+        Mon, 21 Oct 2019 05:14:11 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id l18sm18941821wrn.48.2019.10.21.05.14.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 21 Oct 2019 05:14:10 -0700 (PDT)
+Subject: Re: [PATCH v2 02/11] mfd: wcd934x: add support to wcd9340/wcd9341
+ codec
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     robh@kernel.org, broonie@kernel.org, linus.walleij@linaro.org,
+        vinod.koul@linaro.org, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        spapothi@codeaurora.org, bgoswami@codeaurora.org,
+        linux-gpio@vger.kernel.org
+References: <20191018001849.27205-1-srinivas.kandagatla@linaro.org>
+ <20191018001849.27205-3-srinivas.kandagatla@linaro.org>
+ <20191021104611.GZ4365@dell>
+ <1af8a875-8f55-6b7e-4204-ecedc1608889@linaro.org>
+ <20191021114520.GD4365@dell>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <38dde3d9-8d7e-7dc0-7cba-137b43cea9d1@linaro.org>
+Date:   Mon, 21 Oct 2019 13:14:09 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20191021114520.GD4365@dell>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Bosch MCAN hardware (3.1.0 and above) supports interrupt flag to
-detect Protocol error in arbitration phase.
 
-Transmit error statistics is currently not updated from the MCAN driver.
-Protocol error in arbitration phase is a TX error and the network
-statistics should be updated accordingly.
 
-The member "tx_error" of "struct net_device_stats" should be incremented
-as arbitration is a transmit protocol error. Also "arbitration_lost" of
-"struct can_device_stats" should be incremented to report arbitration
-lost.
+On 21/10/2019 12:45, Lee Jones wrote:
+> On Mon, 21 Oct 2019, Srinivas Kandagatla wrote:
+> 
+>> Thanks Lee for taking time to review.
+>>
+>> I agree with most of the style related comments, will fix them in next
+>> version. For others I have replied it inline.
+> 
+> [...]
+> 
+>>>> +static int wcd934x_slim_status(struct slim_device *sdev,
+>>>> +			       enum slim_device_status status)
+>>>> +{
+>>>> +	struct device *dev = &sdev->dev;
+>>>> +	struct wcd934x_data *wcd;
+>>>> +	int ret;
+>>>
+>>> This is semantically odd!  Why are you doing most of the
+>>> initialisation and bring-up in 'status' and not 'probe'.  Seems
+>>> broken to me.
+>>
+>> SLIMBus device will not be in a state to communicate before enumeration (at
+>> probe), so all the device initialization is done in status callback where it
+>> is ready for communication.
+> 
+> Why do we need the device to be up *before* calling probe?
+> 
 
-Signed-off-by: Pankaj Sharma <pankj.sharma@samsung.com>
-Signed-off-by: Sriram Dash <sriram.dash@samsung.com>
----
+To Initialize the device.
+And SLIMbus device registers access can not be done before enumeration.
 
-changes in v2:
-- common m_can_ prefix for is_protocol_err function
-- handling stats even if the allocation of the skb fails
-- resolving build errors on net-next branch
 
- drivers/net/can/m_can/m_can.c | 37 +++++++++++++++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
+>> This is same with SoundWire Bus as well!
+> 
+> [...]
+> 
+>>>> +	struct device *dev;
+>>>> +	struct clk *extclk;
+>>>> +	struct regmap *regmap;
+>>>> +	struct slim_device *sdev;
+>>>
+>>> You don't need 'sdev' and 'dev'.
+>>
+>> slim_device instance (sdev) is required by audio codec driver to allocate
+>> stream runtime.
+> 
+> You can extrapolate one from the other.
+That is possible to do! I can give that a try and see in next version!
 
-diff --git a/drivers/net/can/m_can/m_can.c b/drivers/net/can/m_can/m_can.c
-index 75e7490c4299..a736297a875f 100644
---- a/drivers/net/can/m_can/m_can.c
-+++ b/drivers/net/can/m_can/m_can.c
-@@ -778,6 +778,38 @@ static inline bool is_lec_err(u32 psr)
- 	return psr && (psr != LEC_UNUSED);
- }
- 
-+static inline bool m_can_is_protocol_err(u32 irqstatus)
-+{
-+	return irqstatus & IR_ERR_LEC_31X;
-+}
-+
-+static int m_can_handle_protocol_error(struct net_device *dev, u32 irqstatus)
-+{
-+	struct net_device_stats *stats = &dev->stats;
-+	struct m_can_classdev *cdev = netdev_priv(dev);
-+	struct can_frame *cf;
-+	struct sk_buff *skb;
-+
-+	/* propagate the error condition to the CAN stack */
-+	skb = alloc_can_err_skb(dev, &cf);
-+	if (unlikely(!skb)) {
-+		netdev_dbg(dev, "allocation of skb failed\n");
-+		stats->tx_errors++;
-+		return 0;
-+	}
-+	if (cdev->version >= 31 && (irqstatus & IR_PEA)) {
-+		netdev_dbg(dev, "Protocol error in Arbitration fail\n");
-+		stats->tx_errors++;
-+		cdev->can.can_stats.arbitration_lost++;
-+		cf->can_id |= CAN_ERR_LOSTARB;
-+		cf->data[0] |= CAN_ERR_LOSTARB_UNSPEC;
-+	}
-+
-+	netif_receive_skb(skb);
-+
-+	return 1;
-+}
-+
- static int m_can_handle_bus_errors(struct net_device *dev, u32 irqstatus,
- 				   u32 psr)
- {
-@@ -792,6 +824,11 @@ static int m_can_handle_bus_errors(struct net_device *dev, u32 irqstatus,
- 	    is_lec_err(psr))
- 		work_done += m_can_handle_lec_err(dev, psr & LEC_UNUSED);
- 
-+	/* handle protocol errors in arbitration phase */
-+	if ((cdev->can.ctrlmode & CAN_CTRLMODE_BERR_REPORTING) &&
-+	    m_can_is_protocol_err(irqstatus))
-+		work_done += m_can_handle_protocol_error(dev, irqstatus);
-+
- 	/* other unproccessed error interrupts */
- 	m_can_handle_other_err(dev, irqstatus);
- 
--- 
-2.17.1
-
+> 
