@@ -2,128 +2,96 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF6ABCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:52:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B0DECA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:53:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7CE92084C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:52:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAFBC2084C
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:53:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571655185;
+	bh=vR9XEaMi7TLXC56PpEUV67so/BvHCnADajU0Dcf+bjc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VjEYaxmbvrWe3OE48HXf2C6AIZI6QIv7K8NiEMJDOrcu3IFZ7W+jGNAEG8iVChJfU
+	 ji7h2clrhFcgr4SbzoBhOG/QwJwDIjCFXHGbinAYuHT0lwYGfPO0QYKKlI/LcIhnml
+	 0FnSaaTu79G2ViGBv6QmlLU/F+4DvvR/THU8GnHk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728002AbfJUKws (ORCPT
+        id S1728217AbfJUKxD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 06:52:48 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4740 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726767AbfJUKws (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 06:52:48 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 7B0CC45A7532B2973BD4;
-        Mon, 21 Oct 2019 18:52:43 +0800 (CST)
-Received: from [127.0.0.1] (10.177.251.225) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Mon, 21 Oct 2019
- 18:52:36 +0800
-To:     <catalin.marinas@arm.com>, <will@kernel.org>,
-        <kstewart@linuxfoundation.org>, <sudeep.holla@arm.com>,
-        <gregkh@linuxfoundation.org>, <yeyunfeng@huawei.com>,
-        <lorenzo.pieralisi@arm.com>, <tglx@linutronix.de>,
-        <David.Laight@ACULAB.COM>, <mark.rutland@arm.com>
-From:   Yunfeng Ye <yeyunfeng@huawei.com>
-Subject: [PATCH v5] arm64: psci: Reduce the waiting time for
- cpu_psci_cpu_kill()
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        <hushiyuan@huawei.com>, <wuyun.wu@huawei.com>,
-        <linfeilong@huawei.com>
-Message-ID: <710429cc-4d88-b7c3-b068-5459cf8133b5@huawei.com>
-Date:   Mon, 21 Oct 2019 18:52:16 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 21 Oct 2019 06:53:03 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:36508 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726767AbfJUKxD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 06:53:03 -0400
+Received: by mail-ed1-f66.google.com with SMTP id h2so9655015edn.3;
+        Mon, 21 Oct 2019 03:53:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1TgtWs4DJV+Q7PKm3m20XxcpK+EeU8BJOWEpeeqxE5M=;
+        b=uGe9mqCoXb7TLZRTqC7aL2cTHY4se14+w0cwxDoo0HWRf/Vy9xhy1xWR7cjc/x7mk3
+         YMzuDDnge/gY4nxTwo5qtFvpAegRhpNG8XFcwjxlboCY0BV442A7KHuo3ufaM8b/GeEF
+         MGNpdESC4abNmVX8WA82hCNmGFYvsu/PN8elCC5J8l++kjXC8V315HhdD6oz9vNtbZed
+         /9L+ITfDVUYGD9H/pHqKhjV5G2tMysLLVi/2ZpQ9I/PttqvvvHg5M11o9QkBN4FA8CZL
+         GCkq5J57I47s+vFKo+2JwbRBqURVr9bHOp4Ww2ihb+PwgPs/dOqsHlaKyoiEBp03tKto
+         ZyJQ==
+X-Gm-Message-State: APjAAAWNRcPut/SDJMoLEVCeLdWs+7M08TDm5Sv8TVB0cits0TqSpD7S
+        uMQe+Hq0J0dxDf/v1n26L7E=
+X-Google-Smtp-Source: APXvYqyn3T6TPNnfeaVJZoBwWoGAgZgv5UKwL8hq/5/+A3Y7v6R5GsY3E9ElucI70tnAiJFoFzuFZg==
+X-Received: by 2002:a50:ee12:: with SMTP id g18mr23842734eds.114.1571655181681;
+        Mon, 21 Oct 2019 03:53:01 -0700 (PDT)
+Received: from pi3 ([194.230.155.217])
+        by smtp.googlemail.com with ESMTPSA id a3sm594352edk.51.2019.10.21.03.53.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Oct 2019 03:53:01 -0700 (PDT)
+Date:   Mon, 21 Oct 2019 12:52:58 +0200
+From:   "krzk@kernel.org" <krzk@kernel.org>
+To:     Schrempf Frieder <frieder.schrempf@kontron.de>
+Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 05/10] ARM: dts: imx6ul-kontron-n6x1x: Add 'chosen' node
+ with 'stdout-path'
+Message-ID: <20191021105258.GA2089@pi3>
+References: <20191016150622.21753-1-frieder.schrempf@kontron.de>
+ <20191016150622.21753-6-frieder.schrempf@kontron.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.251.225]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191016150622.21753-6-frieder.schrempf@kontron.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In cases like suspend-to-disk and suspend-to-ram, a large number of CPU
-cores need to be shut down. At present, the CPU hotplug operation is
-serialised, and the CPU cores can only be shut down one by one. In this
-process, if PSCI affinity_info() does not return LEVEL_OFF quickly,
-cpu_psci_cpu_kill() needs to wait for 10ms. If hundreds of CPU cores
-need to be shut down, it will take a long time.
+On Wed, Oct 16, 2019 at 03:07:28PM +0000, Schrempf Frieder wrote:
+> From: Frieder Schrempf <frieder.schrempf@kontron.de>
+> 
+> The Kontron N6x1x SoMs all use uart4 as a debug serial interface.
+> Therefore we set in the 'chosen' node.
+> 
+> Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+> ---
+>  arch/arm/boot/dts/imx6ul-kontron-n6x1x-som-common.dtsi | 6 ++++++
+>  1 file changed, 6 insertions(+)
 
-Normally, there is no need to wait 10ms in cpu_psci_cpu_kill(). So
-change the wait interval from 10 ms to max 1 ms and use usleep_range()
-instead of msleep() for more accurate timer.
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-In addition, reducing the time interval will increase the messages
-output, so remove the "Retry ..." message, instead, track time and
-output to the the sucessful message.
-
-Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
----
-v4 -> v5:
- - track time instead of loop counter
-
-v3 -> v4:
- - using time_before(jiffies, timeout) to check
- - update the comment as review suggest
-
-v2 -> v3:
- - update the comment
- - remove the busy-wait logic, modify the loop logic and output message
-
-v1 -> v2:
- - use usleep_range() instead of udelay() after waiting for a while
-
- arch/arm64/kernel/psci.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
-
-diff --git a/arch/arm64/kernel/psci.c b/arch/arm64/kernel/psci.c
-index c9f72b2665f1..43ae4e0c968f 100644
---- a/arch/arm64/kernel/psci.c
-+++ b/arch/arm64/kernel/psci.c
-@@ -81,7 +81,8 @@ static void cpu_psci_cpu_die(unsigned int cpu)
-
- static int cpu_psci_cpu_kill(unsigned int cpu)
- {
--	int err, i;
-+	int err;
-+	unsigned long start, end;
-
- 	if (!psci_ops.affinity_info)
- 		return 0;
-@@ -91,16 +92,18 @@ static int cpu_psci_cpu_kill(unsigned int cpu)
- 	 * while it is dying. So, try again a few times.
- 	 */
-
--	for (i = 0; i < 10; i++) {
-+	start = jiffies;
-+	end = start + msecs_to_jiffies(100);
-+	do {
- 		err = psci_ops.affinity_info(cpu_logical_map(cpu), 0);
- 		if (err == PSCI_0_2_AFFINITY_LEVEL_OFF) {
--			pr_info("CPU%d killed.\n", cpu);
-+			pr_info("CPU%d killed (polled %d ms)\n", cpu,
-+				jiffies_to_msecs(jiffies - start));
- 			return 0;
- 		}
-
--		msleep(10);
--		pr_info("Retrying again to check for CPU kill\n");
--	}
-+		usleep_range(100, 1000);
-+	} while (time_before(jiffies, end));
-
- 	pr_warn("CPU%d may not have shut down cleanly (AFFINITY_INFO reports %d)\n",
- 			cpu, err);
--- 
-2.7.4.3
+Best regards,
+Krzysztof
 
