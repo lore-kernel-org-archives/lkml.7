@@ -2,103 +2,138 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0ABDC47E49
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:22:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F14BCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:22:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C74342084C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:22:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571653322;
-	bh=ldV1AAAsdREXDXeQW+llqEafSolwVY1a907bgC7rUUc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nM6rvkM6gQ8G1bY5x3PNPU6an4dOjVrFUOEIDUNZHeqVCz7jgTio2Xn2CVT/bvAj4
-	 9oOodYfAcuOu0zWQmDGq5y9RxOJpf1kIS5f28+hEYDvuuGtFHPtaGSNzYOBxfxLtbr
-	 KEkS4EhOLrHIEGuYdAJkZEThPi/zQQcRT27L95Ww=
+	by mail.kernel.org (Postfix) with ESMTP id E72AE2084C
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:22:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YwX8sdlK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728175AbfJUKWB (ORCPT
+        id S1728192AbfJUKWH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 06:22:01 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:34698 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726725AbfJUKWB (ORCPT
+        Mon, 21 Oct 2019 06:22:07 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:32996 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727968AbfJUKWH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 06:22:01 -0400
-Received: by mail-ed1-f68.google.com with SMTP id b72so624815edf.1;
-        Mon, 21 Oct 2019 03:21:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=NTXwyuKPtae41ucu10e0jfWsFbRgsyPTHworMEWDZyQ=;
-        b=pb+E/4ap3q0bRrAJk5CIzfayBk+FbTM76eQBLlXweruslA5z5v6RTjvoWXC5iXK07l
-         qLYgS/FhmXMS0L8uO2p+tPpK8Oi5G3JR12ZQjyMRfZzVeuUy2sN/r739tOko6v+upw+k
-         DRwwOR3QmieoUVm2juw8G0dI0deuzS/UYqRjkVmn0GKsC0N/kVw3snhbE9CepEQUxLkz
-         ncCs6awHyV6eCYzucufd2CT2kU8TmYDOQUgxPYzuyHlIvRnJmNn3EACkSlDIv4DtVXMh
-         0UpveYp4YQZL3Pco6qKaSpFGTXOYQZvAHX0vhYoYaBH4Y/fdQPlBt1uT5/ZCerV7n6i7
-         ljTg==
-X-Gm-Message-State: APjAAAXROgvpXeoiMZr8v0cKQUue1Gwygm1Yp23S41t8CmAGIowu0xY5
-        n2KZhx/1SPmcysCy/40kEGE=
-X-Google-Smtp-Source: APXvYqwXeK2/2BY3ORkuBAxMultEP+lVNX/1OoZXMoqOvq9xllY1syL/7QofFUXQ2efCb4ja3MbPsQ==
-X-Received: by 2002:a50:ec0f:: with SMTP id g15mr24142459edr.59.1571653317618;
-        Mon, 21 Oct 2019 03:21:57 -0700 (PDT)
-Received: from pi3 ([194.230.155.217])
-        by smtp.googlemail.com with ESMTPSA id ay16sm181628edb.47.2019.10.21.03.21.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Oct 2019 03:21:56 -0700 (PDT)
-Date:   Mon, 21 Oct 2019 12:21:54 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Maciej Falkowski <m.falkowski@samsung.com>
-Subject: Re: [PATCH v2] dt-bindings: sound: Convert Samsung Exynos Odroid
- XU3/XU4 audio complex to dt-schema
-Message-ID: <20191021102154.GA1903@pi3>
-References: <CGME20191017100534eucas1p1407cf6ef5606d6bd6a4140502cc95984@eucas1p1.samsung.com>
- <20191017100529.4183-1-m.szyprowski@samsung.com>
+        Mon, 21 Oct 2019 06:22:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571653325;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=WOCT7wly6KfhuOArDnM97rOlSlf5dicr3quLe5triaA=;
+        b=YwX8sdlK51KtNkNSfj3iFY1teH25gy60xd+NFVxdg8LD50oRUsZFMqbGKegjjq4LP8524l
+        59UNgMAW9Rq9ZLV+OxTGO/hNMBzUvSHkkpQuNLQ/eLdxIF03U2xHBMnLcPbpX4UnP9dHJt
+        Cu4JK+L4SaHJiF8+Sf89U0fA6uvPo6w=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-322-mVNupHU-OimsifvQ82L67A-1; Mon, 21 Oct 2019 06:22:02 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 14CFC1005500;
+        Mon, 21 Oct 2019 10:22:01 +0000 (UTC)
+Received: from [10.72.12.22] (ovpn-12-22.pek2.redhat.com [10.72.12.22])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8C574104F1;
+        Mon, 21 Oct 2019 10:21:51 +0000 (UTC)
+Subject: Re: [RFC 1/2] vhost: IFC VF hardware operation layer
+To:     "Zhu, Lingshan" <lingshan.zhu@intel.com>, mst@redhat.com,
+        alex.williamson@redhat.com
+Cc:     linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, dan.daly@intel.com,
+        cunming.liang@intel.com, tiwei.bie@intel.com, jason.zeng@intel.com,
+        zhiyuan.lv@intel.com
+References: <20191016013050.3918-1-lingshan.zhu@intel.com>
+ <20191016013050.3918-2-lingshan.zhu@intel.com>
+ <2d711b6b-3bdc-afaa-8110-beebd6c5a896@redhat.com>
+ <32d4c431-24f2-f9f0-8573-268abc7bb71c@intel.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <0fe6eb76-85a7-a1cb-5b11-8edb01dd65c7@redhat.com>
+Date:   Mon, 21 Oct 2019 18:21:50 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191017100529.4183-1-m.szyprowski@samsung.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <32d4c431-24f2-f9f0-8573-268abc7bb71c@intel.com>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-MC-Unique: mVNupHU-OimsifvQ82L67A-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 12:05:29PM +0200, Marek Szyprowski wrote:
-> From: Maciej Falkowski <m.falkowski@samsung.com>
-> 
-> Convert Samsung Exynos Odroid XU3/XU4 audio complex with MAX98090 codec
-> to newer dt-schema format.
-> 
-> 'clocks' property is unneeded in the bindings and is left undefined in 'properties'.
-> 
-> 'samsung,audio-widgets' and 'samsung,audio-routing' are optional from driver
-> perspective and they are set as unrequired.
-> 
-> Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
-> [mszyprow: reordered non-standard properties]
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> ---
->  .../bindings/sound/samsung,odroid.txt         | 54 -----------
->  .../bindings/sound/samsung,odroid.yaml        | 91 +++++++++++++++++++
->  2 files changed, 91 insertions(+), 54 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/sound/samsung,odroid.txt
->  create mode 100644 Documentation/devicetree/bindings/sound/samsung,odroid.yaml
 
-Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+On 2019/10/21 =E4=B8=8B=E5=8D=885:57, Zhu, Lingshan wrote:
+>
+> On 10/16/2019 4:45 PM, Jason Wang wrote:
+>>
+>> On 2019/10/16 =E4=B8=8A=E5=8D=889:30, Zhu Lingshan wrote:
+>>> + */
+>>> +#define IFCVF_TRANSPORT_F_START 28
+>>> +#define IFCVF_TRANSPORT_F_END=C2=A0=C2=A0 34
+>>> +
+>>> +#define IFC_SUPPORTED_FEATURES \
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ((1ULL << VIRTIO_NET_F_MAC)=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | \
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (1ULL << VIRTIO_F_ANY=
+_LAYOUT)=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+| \
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (1ULL << VIRTIO_F_VER=
+SION_1) | \
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (1ULL << VHOST_F_LOG_=
+ALL)=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | \
+>>
+>>
+>> Let's avoid using VHOST_F_LOG_ALL, using the get_mdev_features()=20
+>> instead.
+> Thanks, I will remove VHOST_F_LOG_ALL
+>>
+>>
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (1ULL << VIRTIO_NET_F=
+_GUEST_ANNOUNCE)=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | \
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (1ULL << VIRTIO_NET_F=
+_CTRL_VQ)=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ | \
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (1ULL << VIRTIO_NET_F=
+_STATUS)=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+| \
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (1ULL << VIRTIO_NET_F=
+_MRG_RXBUF)) /* not fully supported */
+>>
+>>
+>> Why not having VIRTIO_F_IOMMU_PLATFORM and VIRTIO_F_ORDER_PLATFORM?
+>
+> I will add VIRTIO_F_ORDER_PLATFORM, for VIRTIO_F_IOMMU_PLATFORM, if we=20
+> add this bit, QEMU may enable viommu, can cause troubles in LM
 
-Best regards,
-Krzysztof
+
+Qemu has mature support of vIOMMU support for VFIO device, it can shadow=20
+IO page tables and setup them through DMA ioctl of vfio containers. Any=20
+issue you saw here?
+
+Btw, to test them quickly, you can implement set_config/get_config and=20
+test them through virtio-mdev/kernel drivers as well.
+
+Thanks
+
+
+> (through we don't support LM in this version driver)
+>
+> Thanks,
+> BR
+> Zhu Lingshan
+>>
+>> Thanks
+>>
 
