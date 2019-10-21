@@ -2,132 +2,73 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E78D9CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:47:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1938FCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:48:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C12112053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:47:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDBDB20640
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:48:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="e2c8tnig"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728257AbfJUOrs convert rfc822-to-8bit (ORCPT
+        id S1727935AbfJUOsn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 10:47:48 -0400
-Received: from mailoutvs56.siol.net ([185.57.226.247]:52165 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726289AbfJUOrs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 10:47:48 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id 9BF3452273D;
-        Mon, 21 Oct 2019 16:47:44 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at psrvmta09.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta09.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id 3LVhTk5es8hh; Mon, 21 Oct 2019 16:47:44 +0200 (CEST)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id 334C352273A;
-        Mon, 21 Oct 2019 16:47:44 +0200 (CEST)
-Received: from jernej-laptop.localnet (cpe-86-58-59-25.static.triera.net [86.58.59.25])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Postfix) with ESMTPA id C25E052273D;
-        Mon, 21 Oct 2019 16:47:43 +0200 (CEST)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     mripard@kernel.org, wens@csie.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, mchehab@kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: Re: [PATCH v4 5/6] media: sun4i: Add H3 deinterlace driver
-Date:   Mon, 21 Oct 2019 16:47:43 +0200
-Message-ID: <2174547.3yqp6rY4Nl@jernej-laptop>
-In-Reply-To: <8137fbb3-036a-95e4-2642-5dd46fb55eb9@xs4all.nl>
-References: <20191017183738.68069-1-jernej.skrabec@siol.net> <20191017183738.68069-6-jernej.skrabec@siol.net> <8137fbb3-036a-95e4-2642-5dd46fb55eb9@xs4all.nl>
+        Mon, 21 Oct 2019 10:48:43 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:40360 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726289AbfJUOsm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 10:48:42 -0400
+Received: from zn.tnic (p2E584653.dip0.t-ipconnect.de [46.88.70.83])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6C8131EC0A91;
+        Mon, 21 Oct 2019 16:48:41 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1571669321;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=pjWIkpLMK5mOQ/gGlbRrndfhCTK5s+2xhpspK++UbSM=;
+        b=e2c8tnig01lPq62gUfXKUHeRqstVfvf8bmZDOdtPP+21mq0A7rp6OB3qsFKSyxodq+hry7
+        YMgdR/5h9ebNCzjzYIzN0sDaGc5NR0PJEjAN4P7G3q6Lw4Tu/RSMvN80Fag+eEXSjx+aJc
+        Zxa8y4wUfTY3NzlAS4dCQyfkK15iTJQ=
+Date:   Mon, 21 Oct 2019 16:48:07 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
+Cc:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/6] AMD64 EDAC: Check for nodes without memory, etc.
+Message-ID: <20191021144807.GE7014@zn.tnic>
+References: <20191018153114.39378-1-Yazen.Ghannam@amd.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191018153114.39378-1-Yazen.Ghannam@amd.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dne ponedeljek, 21. oktober 2019 ob 13:13:20 CEST je Hans Verkuil napisal(a):
-> On 10/17/19 8:37 PM, Jernej Skrabec wrote:
-> > Allwinner H3 SoC contains deinterlace unit, which has several modes of
-> > operation - bypass, weave, bob and mixed (advanced) mode. I don't know
-> > how mixed mode works, but according to Allwinner it gives best results,
-> > so they use it exclusively. Currently this mode is also hardcoded here.
-> > 
-> > For each interleaved frame queued, this driver produces 2 deinterlaced
-> > frames. Deinterlaced frames are based on 2 consequtive output buffers,
-> > except for the first 2, where same output buffer is given to peripheral
-> > as current and previous.
-> > 
-> > There is no documentation for this core, so register layout and fixed
-> > values were taken from BSP driver.
-> > 
-> > I'm not sure if maximum size of the image unit is capable to process is
-> > governed by size of "flag" buffers, frequency or it really is some HW
-> > limitation. Currently driver can process full HD image in ~15ms (7.5ms
-> > for each capture buffer), which allows to process 1920x1080@60i video
-> > smoothly in real time.
-> > 
-> > Acked-by: Maxime Ripard <mripard@kernel.org>
-> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > ---
-> > 
-> >  MAINTAINERS                                   |    7 +
-> >  drivers/media/platform/Kconfig                |   12 +
-> >  drivers/media/platform/sunxi/Makefile         |    1 +
-> >  .../media/platform/sunxi/sun8i-di/Makefile    |    2 +
-> >  .../media/platform/sunxi/sun8i-di/sun8i-di.c  | 1028 +++++++++++++++++
-> >  .../media/platform/sunxi/sun8i-di/sun8i-di.h  |  237 ++++
-> >  6 files changed, 1287 insertions(+)
-> >  create mode 100644 drivers/media/platform/sunxi/sun8i-di/Makefile
-> >  create mode 100644 drivers/media/platform/sunxi/sun8i-di/sun8i-di.c
-> >  create mode 100644 drivers/media/platform/sunxi/sun8i-di/sun8i-di.h
-> > 
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index c7b48525822a..c375455125fb 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -4646,6 +4646,13 @@ M:	"Maciej W. Rozycki" <macro@linux-mips.org>
-> > 
-> >  S:	Maintained
-> >  F:	drivers/net/fddi/defxx.*
-> > 
-> > +DEINTERLACE DRIVERS FOR ALLWINNER H3
-> > +M:	Jernej Skrabec <jernej.skrabec@siol.net>
-> > +L:	linux-media@vger.kernel.org
-> > +T:	git git://linuxtv.org/media_tree.git
-> > +S:	Maintained
-> > +F:	drivers/media/platform/sunxi/sun8i-di/
+On Fri, Oct 18, 2019 at 03:31:25PM +0000, Ghannam, Yazen wrote:
+> From: Yazen Ghannam <yazen.ghannam@amd.com>
 > 
-> This is missing the bindings file added in the previous patch.
-
-Well, I listed Maxime and Chen-Yu as binding maintainers in patch 4, so that's 
-why I didn't include it here. If you think I should be maintainer of that 
-binding too, I can change that. I took sun6i-csi as example where binding 
-maintainers are Maxime and Chen-Yu and driver maintainer is Yong Deng.
-
-Best regards,
-Jernej
-
+> Hi Boris,
 > 
-> Regards,
-> 
-> 	Hans
-> 
-> > +
-> > 
-> >  DELL SMBIOS DRIVER
-> >  M:	Pali Rohár <pali.rohar@gmail.com>
-> >  M:	Mario Limonciello <mario.limonciello@dell.com>
+> This set contains the next revision of the RFC patches I included with
+> the last AMD64 EDAC updates. I dropped the RFC tags, and I added a
+> couple of new patches.
 
+Yah, looks pretty much good, modulo the minor things I commented on
+earlier.
 
+Thx.
 
+-- 
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
