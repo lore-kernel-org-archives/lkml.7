@@ -2,99 +2,97 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E62CCA9EB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:45:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70DA0CA9EB0
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:46:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44CF320873
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:45:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EEED20873
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:46:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729745AbfJUPpo (ORCPT
+        id S1729759AbfJUPqZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 11:45:44 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:37835 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726847AbfJUPpn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 11:45:43 -0400
-Received: from 162-237-133-238.lightspeed.rcsntx.sbcglobal.net ([162.237.133.238] helo=elm)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <tyhicks@canonical.com>)
-        id 1iMZsI-0001pK-3G; Mon, 21 Oct 2019 15:45:38 +0000
-Date:   Mon, 21 Oct 2019 10:45:34 -0500
-From:   Tyler Hicks <tyhicks@canonical.com>
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     john.johansen@canonical.com, emamd001@umn.edu, smccaman@umn.edu,
-        kjlu@umn.edu, James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] apparmor: Fix use-after-free in aa_audit_rule_init
-Message-ID: <20191021154533.GB12140@elm>
-References: <57b61298-cbeb-f0ff-c6ba-b8f64d5d0287@canonical.com>
- <20191021152348.3906-1-navid.emamdoost@gmail.com>
+        Mon, 21 Oct 2019 11:46:25 -0400
+Received: from mga06.intel.com ([134.134.136.31]:15381 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727101AbfJUPqY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 11:46:24 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 08:46:11 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,324,1566889200"; 
+   d="scan'208";a="209463506"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 21 Oct 2019 08:46:07 -0700
+Received: by lahna (sSMTP sendmail emulation); Mon, 21 Oct 2019 18:46:06 +0300
+Date:   Mon, 21 Oct 2019 18:46:06 +0300
+From:   Mika Westerberg <mika.westerberg@intel.com>
+To:     Karol Herbst <kherbst@redhat.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lyude Paul <lyude@redhat.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        Linux ACPI Mailing List <linux-acpi@vger.kernel.org>
+Subject: Re: [PATCH v3] pci: prevent putting nvidia GPUs into lower device
+ states on certain intel bridges
+Message-ID: <20191021154606.GT2819@lahna.fi.intel.com>
+References: <CACO55ttOJaXKWmKQQbMAQRJHLXF-VtNn58n4BZhFKYmAdfiJjA@mail.gmail.com>
+ <20191016213722.GA72810@google.com>
+ <CACO55tuXck7vqGVLmMBGFg6A2pr3h8koRuvvWHLNDH8XvBVxew@mail.gmail.com>
+ <20191021133328.GI2819@lahna.fi.intel.com>
+ <CACO55tujUZr+rKkyrkfN+wkNOJWdNEVhVc-eZ3RCXJD+G1z=7A@mail.gmail.com>
+ <20191021140852.GM2819@lahna.fi.intel.com>
+ <CACO55tvp6n2ahizwhc70xRJ1uTohs2ep962vwtHGQK-MkcLmsw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191021152348.3906-1-navid.emamdoost@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CACO55tvp6n2ahizwhc70xRJ1uTohs2ep962vwtHGQK-MkcLmsw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-10-21 10:23:47, Navid Emamdoost wrote:
-> In the implementation of aa_audit_rule_init(), when aa_label_parse()
-> fails the allocated memory for rule is released using
-> aa_audit_rule_free(). But after this release, the return statement
-> tries to access the label field of the rule which results in
-> use-after-free. Before releasing the rule, copy errNo and return it
-> after release.
+On Mon, Oct 21, 2019 at 04:49:09PM +0200, Karol Herbst wrote:
+> On Mon, Oct 21, 2019 at 4:09 PM Mika Westerberg
+> <mika.westerberg@intel.com> wrote:
+> >
+> > On Mon, Oct 21, 2019 at 03:54:09PM +0200, Karol Herbst wrote:
+> > > > I really would like to provide you more information about such
+> > > > workaround but I'm not aware of any ;-) I have not seen any issues like
+> > > > this when D3cold is properly implemented in the platform.  That's why
+> > > > I'm bit skeptical that this has anything to do with specific Intel PCIe
+> > > > ports. More likely it is some power sequence in the _ON/_OFF() methods
+> > > > that is run differently on Windows.
+> > >
+> > > yeah.. maybe. I really don't know what's the actual root cause. I just
+> > > know that with this workaround it works perfectly fine on my and some
+> > > other systems it was tested on. Do you know who would be best to
+> > > approach to get proper documentation about those methods and what are
+> > > the actual prerequisites of those methods?
+> >
+> > Those should be documented in the ACPI spec. Chapter 7 should explain
+> > power resources and the device power methods in detail.
 > 
-> Fixes: 52e8c38001d8 ("apparmor: Fix memory leak of rule on error exit path")
+> either I looked up the wrong spec or the documentation isn't really
+> saying much there.
 
-Ugh! I'm not sure what I was thinking when I authored that patch. :/
+Well it explains those methods, _PSx, _PRx and _ON()/_OFF(). In case of
+PCIe device you also want to check PCIe spec. PCIe 5.0 section 5.8 "PCI
+Function Power State Transitions" has a picture about the supported
+power state transitions and there we can find that function must be in
+D3hot before it can be transitioned into D3cold so if the _OFF() for
+example blindly assumes that the device is in D0 when it is called, it
+is a bug in the BIOS.
 
-> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-> ---
-> Changes in v2:
-> 	-- Fix typo in description
-> 	-- move err definition inside the if statement.
-> 
->  security/apparmor/audit.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/security/apparmor/audit.c b/security/apparmor/audit.c
-> index 5a98661a8b46..334065302fb6 100644
-> --- a/security/apparmor/audit.c
-> +++ b/security/apparmor/audit.c
-> @@ -197,8 +197,9 @@ int aa_audit_rule_init(u32 field, u32 op, char *rulestr, void **vrule)
->  	rule->label = aa_label_parse(&root_ns->unconfined->label, rulestr,
->  				     GFP_KERNEL, true, false);
->  	if (IS_ERR(rule->label)) {
-> +		int err = rule->label;
-
-Since rule->label is a pointer, I'd like to see this:
-
- int err = PTR_ERR(rule->label);
-
->  		aa_audit_rule_free(rule);
-> -		return PTR_ERR(rule->label);
-> +		return PTR_ERR(err);
-
-This line would change to:
-
- return err;
-
-
-Tyler
-
->  	}
->  
->  	*vrule = rule;
-> -- 
-> 2.17.1
-> 
+BTW, where can I find acpidump of such system?
