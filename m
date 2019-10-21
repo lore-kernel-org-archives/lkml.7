@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60B79CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:58:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BDBFCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:58:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37BD92084C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:58:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F6A32084C
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:58:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O2gJBDIt"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cTeiB4Qc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728350AbfJUK6f (ORCPT
+        id S1728364AbfJUK6h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 06:58:35 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:51177 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728250AbfJUK6d (ORCPT
+        Mon, 21 Oct 2019 06:58:37 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:35561 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728287AbfJUK6g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 06:58:33 -0400
-Received: by mail-wm1-f66.google.com with SMTP id q13so2740389wmj.0
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 03:58:30 -0700 (PDT)
+        Mon, 21 Oct 2019 06:58:36 -0400
+Received: by mail-wr1-f65.google.com with SMTP id l10so12992728wrb.2
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 03:58:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=skmII0RjDFD6SFbyT8IGszhWT77ReZDZIQ2EcDM2hGg=;
-        b=O2gJBDIt/uu3D3HrGWT7bdvLhDBGsgkK+oKb1wgbr874atEZbtzgTb8tFMtu8f/0R6
-         DqH9iU2QQIsK7OyqVEb3An+lKaclKzQvZwQ/cjdA3GiRoKszuxJb5p9srbdXf89RCJmo
-         qpwCM28UgKws0pbdkgaxpwhS8W9n+q0Yn0uGsj+fB5S2t2AA9m8Mx8LifNoureM40/ss
-         CQPAx86Vv5QabLz+CB7Y/c4SgIwxO1/6zKvo5bnGXcSYEYTp6iLO+gK4sWphMt/NfFor
-         NR/+JYtiap6aqa7V0py2HEeSMWxcnmxz//1mXU17TOnqGHkOvcjvGRD5mVzQfPt6aqlY
-         ufEQ==
+        bh=aRIsIrxJRG4WGhOzej9X0cMyz5OqcLFYkbUiKyLomGE=;
+        b=cTeiB4QcI/9D1UCeh1hzV+1od3PVVBhQlL72xj03bVUzMnwFnJarkT3Uqedx1NfBAs
+         VYsdVW/U+jL6mmMApxUm7s8EdbLDQ34lDiQMVyO9e5xbSkHQ92Y3/3wKHbOlES7D+Q9a
+         AKRv2JAi+ZPKpEzpS6yO7Nf7cRoCEXJebv27MfESjaxI9K2IO1OZJRf3ShNdo2GSHebK
+         6VZoPHGPCibQycGVei+Ls5x1pYadk/6OK3pre7jjZbewtrAt0cEbQ59GI1uCS7ri9dRb
+         foXS/X1MFU+gZDuV21M+EN9A04hTB6AvIaaOWnpSGeDfWgQNuXi0Xg3Ned6IUGuMXaRC
+         bjtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=skmII0RjDFD6SFbyT8IGszhWT77ReZDZIQ2EcDM2hGg=;
-        b=rljpBIIkBrKGt1SNShNEqTI5gfrQVLiBLGopdyY6/jwwNwtfLlqo3vuA0OR0dK0q7m
-         lZWLq7nR/8usRlNjXAEHU0+fG0uNMExl0ACH5P0ubfo6zCrmoMvyezSJANplJ82DabDt
-         HKAPP3BpofJJGsL+NW+xx25GdQDS+Rra+enGvIL9lBq3O5UiGhYLMcJWjfH6lJpd7tEg
-         lReKIRDLU4jbmiMeyQr8H6jQyDEgN6wEkyH6tlngkFyXorNyfVa8LpwkqiMOsfByxsBw
-         iuCTRO+PA2WMamrppQ3DTvnjasrMgi5XpZxWAedcs+PyxTBMOe7JFDZmaw9VDQ6RZ9ON
-         iGQw==
-X-Gm-Message-State: APjAAAXzDXKDawsyI6hyfHEFE6cCqc9SLRi8bBMPS3XD+f+Be+mClRYF
-        Jm9jElP1QOxWNobwuR3i4k4y0Q==
-X-Google-Smtp-Source: APXvYqz3U3MGv8VHAO1I2eIglmjVZ+mPUIWrzgDEdGlAlL0T5JpQMoPplNl1K4VOBbZfJbY965PkdQ==
-X-Received: by 2002:a1c:a9cb:: with SMTP id s194mr2818850wme.92.1571655509326;
-        Mon, 21 Oct 2019 03:58:29 -0700 (PDT)
+        bh=aRIsIrxJRG4WGhOzej9X0cMyz5OqcLFYkbUiKyLomGE=;
+        b=AMuVirigt5A/YFoo5PMrccNLVMNrrKg9Z/W/mv1pgYtssT182/1pBbjyk0qvEJChmz
+         0AHgrwtjKX1zWaPYMyT1SLGWa2nTkIQ/3hO+Ig0U/OYoyYeZ9jzWKYHhUFDxCDppPZIe
+         E3FTwHPqefATqrIg8xq5s1Yx5In8OtAj/SOMCSE40n6yAySof7QkEeHrY1+DTuVDpp+i
+         e9e1MVVFhlQCnxZesrTu/AoVPFtdu9/cOhhzKC/mowp3wuZe6Efl6ejeXFG3PHBKEz8k
+         JgAe1J/ItL6J/d0zNDTvyVIEIJq1p9TZJMpYevtYdAZ9LrukkgA2wDX0doKJ4CNxINix
+         BXFw==
+X-Gm-Message-State: APjAAAX2Ze1+/4xACW3+7swcm8SjUXoYRK5Pwz5BX7Y5flb8bhzlcSKT
+        EPXYIGzfPnMY9BpBH6sPhvD2lg==
+X-Google-Smtp-Source: APXvYqwoMZ0Xrjo13bXEBEaHCm4InAmzMPniweiB+Wqxda5ESkJaOgUQJn/z4SYHvFyxum1/utelgg==
+X-Received: by 2002:a5d:5401:: with SMTP id g1mr9448965wrv.54.1571655514185;
+        Mon, 21 Oct 2019 03:58:34 -0700 (PDT)
 Received: from localhost.localdomain ([95.149.164.99])
-        by smtp.gmail.com with ESMTPSA id q22sm12544289wmj.31.2019.10.21.03.58.28
+        by smtp.gmail.com with ESMTPSA id q22sm12544289wmj.31.2019.10.21.03.58.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Oct 2019 03:58:28 -0700 (PDT)
+        Mon, 21 Oct 2019 03:58:33 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     daniel.thompson@linaro.org, arnd@arndb.de, broonie@kernel.org,
         linus.walleij@linaro.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         baohua@kernel.org, stephan@gerhold.net,
         Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v2 4/9] mfd: cs5535-mfd: Register clients using their own dedicated MFD cell entries
-Date:   Mon, 21 Oct 2019 11:58:17 +0100
-Message-Id: <20191021105822.20271-5-lee.jones@linaro.org>
+Subject: [PATCH v2 9/9] mfd: mfd-core: Move pdev->mfd_cell creation back into mfd_add_device()
+Date:   Mon, 21 Oct 2019 11:58:22 +0100
+Message-Id: <20191021105822.20271-10-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191021105822.20271-1-lee.jones@linaro.org>
 References: <20191021105822.20271-1-lee.jones@linaro.org>
@@ -72,58 +72,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CS5535 is the only user of mfd_clone_cell().  It makes more sense to
-register child devices in the traditional way and remove the quite
-bespoke mfd_clone_cell() call from the MFD API.
+Most of the complexity of mfd_platform_add_cell() has been removed. The
+only functionality left duplicates cell memory into the child's platform
+device. Since it's only a few lines, moving it to the main thread and
+removing the superfluous function makes sense.
 
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/mfd/cs5535-mfd.c | 24 ++++++++++++++++++------
- 1 file changed, 18 insertions(+), 6 deletions(-)
+ drivers/mfd/mfd-core.c | 21 ++++-----------------
+ 1 file changed, 4 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/mfd/cs5535-mfd.c b/drivers/mfd/cs5535-mfd.c
-index 053e33447808..96a99ac13384 100644
---- a/drivers/mfd/cs5535-mfd.c
-+++ b/drivers/mfd/cs5535-mfd.c
-@@ -57,9 +57,17 @@ static struct mfd_cell cs5535_mfd_cells[] = {
- 	},
- };
+diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
+index 5d56015baeeb..849dbe3798b0 100644
+--- a/drivers/mfd/mfd-core.c
++++ b/drivers/mfd/mfd-core.c
+@@ -49,19 +49,6 @@ int mfd_cell_disable(struct platform_device *pdev)
+ }
+ EXPORT_SYMBOL(mfd_cell_disable);
  
--static const char *olpc_acpi_clones[] = {
--	"olpc-xo1-pm-acpi",
--	"olpc-xo1-sci-acpi"
-+static struct mfd_cell cs5535_olpc_mfd_cells[] = {
-+	{
-+		.name = "olpc-xo1-pm-acpi",
-+		.num_resources = 1,
-+		.resources = &cs5535_mfd_resources[ACPI_BAR],
-+	},
-+	{
-+		.name = "olpc-xo1-sci-acpi",
-+		.num_resources = 1,
-+		.resources = &cs5535_mfd_resources[ACPI_BAR],
-+	},
- };
+-static int mfd_platform_add_cell(struct platform_device *pdev,
+-				 const struct mfd_cell *cell)
+-{
+-	if (!cell)
+-		return 0;
+-
+-	pdev->mfd_cell = kmemdup(cell, sizeof(*cell), GFP_KERNEL);
+-	if (!pdev->mfd_cell)
+-		return -ENOMEM;
+-
+-	return 0;
+-}
+-
+ #if IS_ENABLED(CONFIG_ACPI)
+ static void mfd_acpi_add_device(const struct mfd_cell *cell,
+ 				struct platform_device *pdev)
+@@ -141,6 +128,10 @@ static int mfd_add_device(struct device *parent, int id,
+ 	if (!pdev)
+ 		goto fail_alloc;
  
- static int cs5535_mfd_probe(struct pci_dev *pdev,
-@@ -105,10 +113,14 @@ static int cs5535_mfd_probe(struct pci_dev *pdev,
- 			goto err_remove_devices;
- 		}
- 
--		err = mfd_clone_cell("cs5535-acpi", olpc_acpi_clones,
--				     ARRAY_SIZE(olpc_acpi_clones));
-+		err = mfd_add_devices(&pdev->dev, PLATFORM_DEVID_NONE,
-+				      cs5535_olpc_mfd_cells,
-+				      ARRAY_SIZE(cs5535_olpc_mfd_cells),
-+				      NULL, 0, NULL);
- 		if (err) {
--			dev_err(&pdev->dev, "Failed to clone MFD cell\n");
-+			dev_err(&pdev->dev,
-+				"Failed to add CS5532 OLPC sub-devices: %d\n",
-+				err);
- 			goto err_release_acpi;
- 		}
++	pdev->mfd_cell = kmemdup(cell, sizeof(*cell), GFP_KERNEL);
++	if (!pdev->mfd_cell)
++		goto fail_device;
++
+ 	res = kcalloc(cell->num_resources, sizeof(*res), GFP_KERNEL);
+ 	if (!res)
+ 		goto fail_device;
+@@ -183,10 +174,6 @@ static int mfd_add_device(struct device *parent, int id,
+ 			goto fail_alias;
  	}
+ 
+-	ret = mfd_platform_add_cell(pdev, cell);
+-	if (ret)
+-		goto fail_alias;
+-
+ 	for (r = 0; r < cell->num_resources; r++) {
+ 		res[r].name = cell->resources[r].name;
+ 		res[r].flags = cell->resources[r].flags;
 -- 
 2.17.1
 
