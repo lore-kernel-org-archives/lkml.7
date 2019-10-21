@@ -2,452 +2,289 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FF5BCA9EAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 03:41:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 684EACA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 03:42:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E183621928
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 03:41:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EF4221928
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 03:42:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jscOCbkj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727165AbfJUDll (ORCPT
+        id S1727172AbfJUDmR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 20 Oct 2019 23:41:41 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:58991 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727105AbfJUDli (ORCPT
+        Sun, 20 Oct 2019 23:42:17 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:34166 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726977AbfJUDmR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 20 Oct 2019 23:41:38 -0400
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x9L3fYsJ014799, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTITCAS11.realtek.com.tw[172.21.6.12])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x9L3fYsJ014799
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 21 Oct 2019 11:41:34 +0800
-Received: from fc30.localdomain (172.21.177.156) by RTITCAS11.realtek.com.tw
- (172.21.6.12) with Microsoft SMTP Server id 14.3.468.0; Mon, 21 Oct 2019
- 11:41:33 +0800
-From:   Hayes Wang <hayeswang@realtek.com>
-To:     <netdev@vger.kernel.org>
-CC:     <nic_swsd@realtek.com>, <linux-kernel@vger.kernel.org>,
-        <pmalani@chromium.org>, <grundler@chromium.org>,
-        Hayes Wang <hayeswang@realtek.com>
-Subject: [PATCH net-next 4/4] r8152: support firmware of PHY NC for RTL8153A
-Date:   Mon, 21 Oct 2019 11:41:13 +0800
-Message-ID: <1394712342-15778-334-Taiwan-albertk@realtek.com>
-X-Mailer: Microsoft Office Outlook 11
-In-Reply-To: <1394712342-15778-330-Taiwan-albertk@realtek.com>
-References: <1394712342-15778-330-Taiwan-albertk@realtek.com>
+        Sun, 20 Oct 2019 23:42:17 -0400
+Received: by mail-ot1-f67.google.com with SMTP id m19so9813733otp.1;
+        Sun, 20 Oct 2019 20:42:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=WwNptKCIXL03KfSFCpNDwIbTOrNecFxUXSvyhNwAF1o=;
+        b=jscOCbkjE3LquQhr7FG795+BMFTVVG2o+MrpONMzll+dZHgml9UVKKywOM11jtVQ9G
+         G0pPHO2D3Z4goJjzQDJ6mVayZFO/XQKpUr4B6p2iB/9Rw5sEeHBLKhxCi+1s2TiK0ZnC
+         yqb30CTY6qgDCosbTHPdxUOr7Ak2of3UwhDe7s0vzy9s2fSZEnpiCa1HioM/50qWoBYO
+         lZeJbjYC3pitteLMVAgUjiteaXTHrkQB1kNYha/0moX96pzJorblUYGiNaP8gYbt0yqL
+         +k05oWfsViznKQSKY7ZU+chTOqQsDaJAQ9X4Vs+3S+DqBnPhuiejy7NLL0gmo+id2jRb
+         wF5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=WwNptKCIXL03KfSFCpNDwIbTOrNecFxUXSvyhNwAF1o=;
+        b=cThitBYbjmi6OXCYUvszGd/wRFwHDH+tTFncIQRZIedKwn41o/F+wiuzQT6T64ZJ2h
+         TipjmFGRmoOr5fB0f3W3+tyxhmWlqBfGaA9FKoC8TkFvF90zQYjpNrfICqMZ82y7QEv7
+         TsPFkJYrWaY5WjhbyE6kF8tfTo7BXKJNb4kHAYTW9vQub65u3du13wDODafRjZ/UUDER
+         uQkFg3uZPgcLg/yDLnXpX57/KF5jWkHVS7cDWeSA4HpwqcOvnuToY+Dfgy8eMRLeK9yz
+         nV/jeBUvCPTQI9bKcKUGSEv5Sf3eCdPfW1CBZUIQa6EqE8qDYirWtv+vbgAeCKdzT6XL
+         nXJg==
+X-Gm-Message-State: APjAAAVNtPmx716+X7ArJuuS8FEhhCWhVbfbud477PdICCtcQpAQq4Ru
+        GDi9pNxYlDb2l3e/2HQUyt+lGU7GEHXSgh4XQcU=
+X-Google-Smtp-Source: APXvYqwbDxAiumFveeAyDjAcA3RuuZXJIQxgx57k3J8A7n30HzjoSDQpOnDmk3kxMRr3wyH5kUdKJVwmYd9QxetBhXo=
+X-Received: by 2002:a9d:3ec:: with SMTP id f99mr15783897otf.353.1571629334258;
+ Sun, 20 Oct 2019 20:42:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [172.21.177.156]
+References: <20190810052829.6032-1-tiny.windzz@gmail.com> <20190810052829.6032-9-tiny.windzz@gmail.com>
+ <CA+E=qVfp-rProxOwX__J6jM-pZ9g_SmeuOCOgvC_5DJVQw4OGw@mail.gmail.com>
+ <CAEExFWubLqtPZ=ZKJTCb6x2-PeYebXb3sr-t-XvtrLJTRiUU1A@mail.gmail.com>
+ <CA+E=qVf9V9iTvCfXXyjqKeviCJOvYpKUO8qw6cQsKqoaRmdKYQ@mail.gmail.com>
+ <20190813200623.2dmxcwibuyolnuhh@core.my.home> <CA+E=qVd-hz68VhL0n+3-HDNua2QsT0dOVY9mRjhb5e5+tBW5Fg@mail.gmail.com>
+ <CAEExFWueWPOvXoE+zj67DuKWeamcLgawfOxanfPp6Jyo9Envzg@mail.gmail.com>
+In-Reply-To: <CAEExFWueWPOvXoE+zj67DuKWeamcLgawfOxanfPp6Jyo9Envzg@mail.gmail.com>
+From:   Vasily Khoruzhick <anarsoul@gmail.com>
+Date:   Sun, 20 Oct 2019 20:41:48 -0700
+Message-ID: <CA+E=qVchu9=Qjp9k3QxQ-Dd1oKnfTKQan7AZfbA5k3qk-1N+6A@mail.gmail.com>
+Subject: Re: [PATCH v5 08/18] thermal: sun8i: support mod clocks
+To:     Frank Lee <tiny.windzz@gmail.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Jonathan.Cameron@huawei.com,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        rui.zhang@intel.com, "David S. Miller" <davem@davemloft.net>,
+        arm-linux <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Support the firmware of PHY NC which is used to fix the issue found
-for PHY. Currently, only RTL_VER_04, RTL_VER_05, and RTL_VER_06 need
-it.
+On Sun, Aug 25, 2019 at 9:14 AM Frank Lee <tiny.windzz@gmail.com> wrote:
+>
+> HI Vasily,
 
-The order of loading PHY firmware would be
+Hi Yangtao,
 
-	RTL_FW_PHY_START
-	RTL_FW_PHY_NC
-	RTL_FW_PHY_STOP
+Sorry for the late reply,
 
-The RTL_FW_PHY_START/RTL_FW_PHY_STOP are used to lock/unlock the PHY,
-and set/clear the patch key from the firmware file.
+> On Wed, Aug 14, 2019 at 11:01 AM Vasily Khoruzhick <anarsoul@gmail.com> w=
+rote:
+> >
+> > On Tue, Aug 13, 2019 at 1:06 PM Ond=C5=99ej Jirman <megous@megous.com> =
+wrote:
+> > >
+> > > On Mon, Aug 12, 2019 at 04:54:15PM -0700, Vasily Khoruzhick wrote:
+> > > > On Mon, Aug 12, 2019 at 4:46 PM Frank Lee <tiny.windzz@gmail.com> w=
+rote:
+> > > > >
+> > > > > HI Vasily,
+> > > > >
+> > > > > On Sat, Aug 10, 2019 at 2:17 PM Vasily Khoruzhick <anarsoul@gmail=
+.com> wrote:
+> > > > > >
+> > > > > > On Fri, Aug 9, 2019 at 10:31 PM Yangtao Li <tiny.windzz@gmail.c=
+om> wrote:
+> > > > > > >
+> > > > > > > H3 has extra clock, so introduce something in ths_thermal_chi=
+p/ths_device
+> > > > > > > and adds the process of the clock.
+> > > > > > >
+> > > > > > > This is pre-work for supprt it.
+> > > > > > >
+> > > > > > > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> > > > > > > ---
+> > > > > > >  drivers/thermal/sun8i_thermal.c | 17 ++++++++++++++++-
+> > > > > > >  1 file changed, 16 insertions(+), 1 deletion(-)
+> > > > > > >
+> > > > > > > diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/therma=
+l/sun8i_thermal.c
+> > > > > > > index b934bc81eba7..6f4294c2aba7 100644
+> > > > > > > --- a/drivers/thermal/sun8i_thermal.c
+> > > > > > > +++ b/drivers/thermal/sun8i_thermal.c
+> > > > > > > @@ -54,6 +54,7 @@ struct tsensor {
+> > > > > > >  };
+> > > > > > >
+> > > > > > >  struct ths_thermal_chip {
+> > > > > > > +       bool            has_mod_clk;
+> > > > > > >         int             sensor_num;
+> > > > > > >         int             offset;
+> > > > > > >         int             scale;
+> > > > > > > @@ -69,6 +70,7 @@ struct ths_device {
+> > > > > > >         struct regmap                           *regmap;
+> > > > > > >         struct reset_control                    *reset;
+> > > > > > >         struct clk                              *bus_clk;
+> > > > > > > +       struct clk                              *mod_clk;
+> > > > > > >         struct tsensor                          sensor[MAX_SE=
+NSOR_NUM];
+> > > > > > >  };
+> > > > > > >
+> > > > > > > @@ -274,6 +276,12 @@ static int sun8i_ths_resource_init(struc=
+t ths_device *tmdev)
+> > > > > > >         if (IS_ERR(tmdev->bus_clk))
+> > > > > > >                 return PTR_ERR(tmdev->bus_clk);
+> > > > > > >
+> > > > > > > +       if (tmdev->chip->has_mod_clk) {
+> > > > > > > +               tmdev->mod_clk =3D devm_clk_get(&pdev->dev, "=
+mod");
+> > > > > > > +               if (IS_ERR(tmdev->mod_clk))
+> > > > > > > +                       return PTR_ERR(tmdev->mod_clk);
+> > > > > > > +       }
+> > > > > > > +
+> > > > > > >         ret =3D reset_control_deassert(tmdev->reset);
+> > > > > > >         if (ret)
+> > > > > > >                 return ret;
+> > > > > > > @@ -282,12 +290,18 @@ static int sun8i_ths_resource_init(stru=
+ct ths_device *tmdev)
+> > > > > > >         if (ret)
+> > > > > > >                 goto assert_reset;
+> > > > > > >
+> > > > > > > -       ret =3D sun50i_ths_calibrate(tmdev);
+> > > > > > > +       ret =3D clk_prepare_enable(tmdev->mod_clk);
+> > > > > >
+> > > > > > You have to set rate of modclk before enabling it since you can=
+'t rely
+> > > > > > on whatever bootloader left for you.
+> > > > > >
+> > > > > > Also I found that parameters you're using for PC_TEMP_PERIOD, A=
+CQ0 and
+> > > > > > ACQ1 are too aggressive and may result in high interrupt rate t=
+o the
+> > > > > > point when it may stall RCU. I changed driver a bit to use para=
+ms from
+> > > > > > Philipp Rossak's work (modclk set to 4MHz, PC_TEMP_PERIOD is 7,=
+ ACQ0
+> > > > > > is 255, ACQ1 is 63) and it fixed RCU stalls for me, see [1] for
+> > > > > > details.
+> > > > >
+> > > > > Why is the RCU stall happening, is it caused by a deadlock?
+> > > > > Can you provide log information and your configuration?
+> > > > > I am a bit curious.
+> > > >
+> > > > It's not deadlock, I believe it just can't handle that many interru=
+pts
+> > > > when running at lowest CPU frequency. Even with Philipp's settings
+> > > > there's ~20 interrupts a second from ths. I don't remember how many
+> > > > interrupts were there with your settings.
+> > > >
+> > > > Unfortunately there's nothing interesting in backtraces, I'm using
+> > > > Pine64-LTS board.
+> > >
+> > > Recently there was a similar issue, with buggy CCU driver that caused
+> > > CIR interrupts being fired constantly, and it also resulted in RCU
+> > > stalls. Looks like a comon cause of RCU stalls.
+> > >
+> > > THS timing settings probably need to be made specific to the SoC, bec=
+ause
+> > > I noticed that the same settings lead to wildly different timings on
+> > > different SoCs.
+> > >
+> > > It would be good to measure how often ths interrupt fires with this d=
+river
+> > > on various SoCs.
+> > >
+> > > 20 times a second and more sounds like overkill. I'd expect a useful
+> > > range to be at most 5-10 times a second. That should be enough to sto=
+p
+> > > overheating the SoC due to suddenly increased load, even without a
+> > > heatsink.
+> >
+> > Note that A64 has 3 sensors and each sensor has individual interrupt,
+> > so technically it's 6-7 interrupts per sensor per second
+>
+> You only need to increase the value of the period to reduce the number
+> of interrupts.
+> Can you test the relationship between the period and the number of interr=
+upts
+> when the mod clock does not change and stays 24M?
 
-Signed-off-by: Hayes Wang <hayeswang@realtek.com>
----
- drivers/net/usb/r8152.c | 284 +++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 282 insertions(+), 2 deletions(-)
+I played a bit with your settings and 24M,
 
-diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
-index ab57c672c4ca..d3c30ccc8577 100644
---- a/drivers/net/usb/r8152.c
-+++ b/drivers/net/usb/r8152.c
-@@ -187,6 +187,7 @@
- #define OCP_PHY_STATE		0xa708		/* nway state for 8153 */
- #define OCP_PHY_PATCH_STAT	0xb800
- #define OCP_PHY_PATCH_CMD	0xb820
-+#define OCP_PHY_LOCK		0xb82e
- #define OCP_ADC_IOFFSET		0xbcfc
- #define OCP_ADC_CFG		0xbc06
- #define OCP_SYSCLK_CFG		0xc416
-@@ -197,6 +198,7 @@
- #define SRAM_10M_AMP1		0x8080
- #define SRAM_10M_AMP2		0x8082
- #define SRAM_IMPEDANCE		0x8084
-+#define SRAM_PHY_LOCK		0xb82e
- 
- /* PLA_RCR */
- #define RCR_AAP			0x00000001
-@@ -577,6 +579,9 @@ enum spd_duplex {
- /* OCP_PHY_PATCH_CMD */
- #define PATCH_REQUEST		BIT(4)
- 
-+/* OCP_PHY_LOCK */
-+#define PATCH_LOCK		BIT(0)
-+
- /* OCP_ADC_CFG */
- #define CKADSEL_L		0x0100
- #define ADC_EN			0x0080
-@@ -601,6 +606,9 @@ enum spd_duplex {
- /* SRAM_IMPEDANCE */
- #define RX_DRIVING_MASK		0x6000
- 
-+/* SRAM_PHY_LOCK */
-+#define PHY_PATCH_LOCK		0x0001
-+
- /* MAC PASSTHRU */
- #define AD_MASK			0xfee0
- #define BND_MASK		0x0004
-@@ -905,10 +913,65 @@ struct fw_mac {
- 	char info[0];
- } __packed;
- 
-+/**
-+ * struct fw_phy_patch_key - a firmware block used by RTL_FW_PHY_START.
-+ *	This is used to set patch key when loading the firmware of PHY.
-+ * @key_reg: the register to write the patch key.
-+ * @key_data: patch key.
-+ */
-+struct fw_phy_patch_key {
-+	struct fw_block blk_hdr;
-+	__le16 key_reg;
-+	__le16 key_data;
-+	__le32 reserved;
-+} __packed;
-+
-+/**
-+ * struct fw_phy_nc - a firmware block used by RTL_FW_PHY_NC.
-+ *	The layout of the firmware block is:
-+ *	<struct fw_phy_nc> + <info> + <firmware data>.
-+ * @fw_offset: offset of the firmware binary data. The start address of
-+ *	the data would be the address of struct fw_phy_nc + @fw_offset.
-+ * @fw_reg: the register to load the firmware. Depends on chip.
-+ * @ba_reg: the register to write the base address. Depends on chip.
-+ * @ba_data: base address. Depends on chip.
-+ * @patch_en_addr: the register of enabling patch mode. Depends on chip.
-+ * @patch_en_value: patch mode enabled mask. Depends on the firmware.
-+ * @mode_reg: the regitster of switching the mode.
-+ * @mod_pre: the mode needing to be set before loading the firmware.
-+ * @mod_post: the mode to be set when finishing to load the firmware.
-+ * @bp_start: the start register of break points. Depends on chip.
-+ * @bp_num: the break point number which needs to be set for this firmware.
-+ *	Depends on the firmware.
-+ * @bp: break points. Depends on firmware.
-+ * @info: additional information for debugging, and is followed by the
-+ *	binary data of firmware.
-+ */
-+struct fw_phy_nc {
-+	struct fw_block blk_hdr;
-+	__le16 fw_offset;
-+	__le16 fw_reg;
-+	__le16 ba_reg;
-+	__le16 ba_data;
-+	__le16 patch_en_addr;
-+	__le16 patch_en_value;
-+	__le16 mode_reg;
-+	__le16 mode_pre;
-+	__le16 mode_post;
-+	__le16 reserved;
-+	__le16 bp_start;
-+	__le16 bp_num;
-+	__le16 bp[4];
-+	char info[0];
-+} __packed;
-+
- enum rtl_fw_type {
- 	RTL_FW_END = 0,
- 	RTL_FW_PLA,
- 	RTL_FW_USB,
-+	RTL_FW_PHY_START,
-+	RTL_FW_PHY_STOP,
-+	RTL_FW_PHY_NC,
- };
- 
- enum rtl_version {
-@@ -3424,6 +3487,114 @@ static int r8153_patch_request(struct r8152 *tp, bool request)
- 	}
- }
- 
-+static int r8153_pre_ram_code(struct r8152 *tp, u16 key_addr, u16 patch_key)
-+{
-+	if (r8153_patch_request(tp, true)) {
-+		dev_err(&tp->intf->dev, "patch request fail\n");
-+		return -ETIME;
-+	}
-+
-+	sram_write(tp, key_addr, patch_key);
-+	sram_write(tp, SRAM_PHY_LOCK, PHY_PATCH_LOCK);
-+
-+	return 0;
-+}
-+
-+static int r8153_post_ram_code(struct r8152 *tp, u16 key_addr)
-+{
-+	u16 data;
-+
-+	sram_write(tp, 0x0000, 0x0000);
-+
-+	data = ocp_reg_read(tp, OCP_PHY_LOCK);
-+	data &= ~PATCH_LOCK;
-+	ocp_reg_write(tp, OCP_PHY_LOCK, data);
-+
-+	sram_write(tp, key_addr, 0x0000);
-+
-+	r8153_patch_request(tp, false);
-+
-+	ocp_write_word(tp, MCU_TYPE_PLA, PLA_OCP_GPHY_BASE, tp->ocp_base);
-+
-+	return 0;
-+}
-+
-+static bool rtl8152_is_fw_phy_nc_ok(struct r8152 *tp, struct fw_phy_nc *phy)
-+{
-+	u32 length;
-+	u16 fw_offset, fw_reg, ba_reg, patch_en_addr, mode_reg, bp_start;
-+	bool rc = false;
-+
-+	switch (tp->version) {
-+	case RTL_VER_04:
-+	case RTL_VER_05:
-+	case RTL_VER_06:
-+		fw_reg = 0xa014;
-+		ba_reg = 0xa012;
-+		patch_en_addr = 0xa01a;
-+		mode_reg = 0xb820;
-+		bp_start = 0xa000;
-+		break;
-+	default:
-+		goto out;
-+	}
-+
-+	fw_offset = __le16_to_cpu(phy->fw_offset);
-+	if (fw_offset < sizeof(*phy)) {
-+		dev_err(&tp->intf->dev, "fw_offset too small\n");
-+		goto out;
-+	}
-+
-+	length = __le32_to_cpu(phy->blk_hdr.length);
-+	if (length < fw_offset) {
-+		dev_err(&tp->intf->dev, "invalid fw_offset\n");
-+		goto out;
-+	}
-+
-+	length -= __le16_to_cpu(phy->fw_offset);
-+	if (!length || (length & 1)) {
-+		dev_err(&tp->intf->dev, "invalid block length\n");
-+		goto out;
-+	}
-+
-+	if (__le16_to_cpu(phy->fw_reg) != fw_reg) {
-+		dev_err(&tp->intf->dev, "invalid register to load firmware\n");
-+		goto out;
-+	}
-+
-+	if (__le16_to_cpu(phy->ba_reg) != ba_reg) {
-+		dev_err(&tp->intf->dev, "invalid base address register\n");
-+		goto out;
-+	}
-+
-+	if (__le16_to_cpu(phy->patch_en_addr) != patch_en_addr) {
-+		dev_err(&tp->intf->dev,
-+			"invalid patch mode enabled register\n");
-+		goto out;
-+	}
-+
-+	if (__le16_to_cpu(phy->mode_reg) != mode_reg) {
-+		dev_err(&tp->intf->dev,
-+			"invalid register to switch the mode\n");
-+		goto out;
-+	}
-+
-+	if (__le16_to_cpu(phy->bp_start) != bp_start) {
-+		dev_err(&tp->intf->dev,
-+			"invalid start register of break point\n");
-+		goto out;
-+	}
-+
-+	if (__le16_to_cpu(phy->bp_num) > 4) {
-+		dev_err(&tp->intf->dev, "invalid break point number\n");
-+		goto out;
-+	}
-+
-+	rc = true;
-+out:
-+	return rc;
-+}
-+
- static bool rtl8152_is_fw_mac_ok(struct r8152 *tp, struct fw_mac *mac)
- {
- 	u16 fw_reg, bp_ba_addr, bp_en_addr, bp_start, fw_offset;
-@@ -3600,6 +3771,9 @@ static long rtl8152_check_firmware(struct r8152 *tp, struct rtl_fw *rtl_fw)
- 	const struct firmware *fw = rtl_fw->fw;
- 	struct fw_header *fw_hdr = (struct fw_header *)fw->data;
- 	struct fw_mac *pla = NULL, *usb = NULL;
-+	struct fw_phy_patch_key *start = NULL;
-+	struct fw_phy_nc *phy_nc = NULL;
-+	struct fw_block *stop = NULL;
- 	long ret = -EFAULT;
- 	int i;
- 
-@@ -3626,7 +3800,7 @@ static long rtl8152_check_firmware(struct r8152 *tp, struct rtl_fw *rtl_fw)
- 		case RTL_FW_END:
- 			if (__le32_to_cpu(block->length) != sizeof(*block))
- 				goto fail;
--			goto success;
-+			goto fw_end;
- 		case RTL_FW_PLA:
- 			if (pla) {
- 				dev_err(&tp->intf->dev,
-@@ -3654,6 +3828,57 @@ static long rtl8152_check_firmware(struct r8152 *tp, struct rtl_fw *rtl_fw)
- 					"check USB firmware failed\n");
- 				goto fail;
- 			}
-+			break;
-+		case RTL_FW_PHY_START:
-+			if (start || phy_nc || stop) {
-+				dev_err(&tp->intf->dev,
-+					"check PHY_START fail\n");
-+				goto fail;
-+			}
-+
-+			if (__le32_to_cpu(block->length) != sizeof(*start)) {
-+				dev_err(&tp->intf->dev,
-+					"Invalid length for PHY_START\n");
-+				goto fail;
-+			}
-+
-+			start = (struct fw_phy_patch_key *)block;
-+			break;
-+		case RTL_FW_PHY_STOP:
-+			if (stop || !start) {
-+				dev_err(&tp->intf->dev,
-+					"Check PHY_STOP fail\n");
-+				goto fail;
-+			}
-+
-+			if (__le32_to_cpu(block->length) != sizeof(*block)) {
-+				dev_err(&tp->intf->dev,
-+					"Invalid length for PHY_STOP\n");
-+				goto fail;
-+			}
-+
-+			stop = block;
-+			break;
-+		case RTL_FW_PHY_NC:
-+			if (!start || stop) {
-+				dev_err(&tp->intf->dev,
-+					"check PHY_NC fail\n");
-+				goto fail;
-+			}
-+
-+			if (phy_nc) {
-+				dev_err(&tp->intf->dev,
-+					"multiple PHY NC encountered\n");
-+				goto fail;
-+			}
-+
-+			phy_nc = (struct fw_phy_nc *)block;
-+			if (!rtl8152_is_fw_phy_nc_ok(tp, phy_nc)) {
-+				dev_err(&tp->intf->dev,
-+					"check PHY NC firmware failed\n");
-+				goto fail;
-+			}
-+
- 			break;
- 		default:
- 			dev_warn(&tp->intf->dev, "Unknown type %u is found\n",
-@@ -3665,12 +3890,52 @@ static long rtl8152_check_firmware(struct r8152 *tp, struct rtl_fw *rtl_fw)
- 		i += ALIGN(__le32_to_cpu(block->length), 8);
- 	}
- 
--success:
-+fw_end:
-+	if ((phy_nc || start) && !stop) {
-+		dev_err(&tp->intf->dev, "without PHY_STOP\n");
-+		goto fail;
-+	}
-+
- 	return 0;
- fail:
- 	return ret;
- }
- 
-+static void rtl8152_fw_phy_nc_apply(struct r8152 *tp, struct fw_phy_nc *phy)
-+{
-+	u16 mode_reg, bp_index;
-+	u32 length, i, num;
-+	__le16 *data;
-+
-+	mode_reg = __le16_to_cpu(phy->mode_reg);
-+	sram_write(tp, mode_reg, __le16_to_cpu(phy->mode_pre));
-+	sram_write(tp, __le16_to_cpu(phy->ba_reg),
-+		   __le16_to_cpu(phy->ba_data));
-+
-+	length = __le32_to_cpu(phy->blk_hdr.length);
-+	length -= __le16_to_cpu(phy->fw_offset);
-+	num = length / 2;
-+	data = (__le16 *)((u8 *)phy + __le16_to_cpu(phy->fw_offset));
-+
-+	ocp_reg_write(tp, OCP_SRAM_ADDR, __le16_to_cpu(phy->fw_reg));
-+	for (i = 0; i < num; i++)
-+		ocp_reg_write(tp, OCP_SRAM_DATA, __le16_to_cpu(data[i]));
-+
-+	sram_write(tp, __le16_to_cpu(phy->patch_en_addr),
-+		   __le16_to_cpu(phy->patch_en_value));
-+
-+	bp_index = __le16_to_cpu(phy->bp_start);
-+	num = __le16_to_cpu(phy->bp_num);
-+	for (i = 0; i < num; i++) {
-+		sram_write(tp, bp_index, __le16_to_cpu(phy->bp[i]));
-+		bp_index += 2;
-+	}
-+
-+	sram_write(tp, mode_reg, __le16_to_cpu(phy->mode_post));
-+
-+	dev_dbg(&tp->intf->dev, "successfully applied %s\n", phy->info);
-+}
-+
- static void rtl8152_fw_mac_apply(struct r8152 *tp, struct fw_mac *mac)
- {
- 	u16 bp_en_addr, bp_index, type, bp_num, fw_ver_reg;
-@@ -3737,6 +4002,8 @@ static void rtl8152_apply_firmware(struct r8152 *tp)
- 	struct rtl_fw *rtl_fw = &tp->rtl_fw;
- 	const struct firmware *fw = rtl_fw->fw;
- 	struct fw_header *fw_hdr = (struct fw_header *)fw->data;
-+	struct fw_phy_patch_key *key;
-+	u16 key_addr = 0;
- 	int i;
- 
- 	if (IS_ERR_OR_NULL(rtl_fw->fw))
-@@ -3755,6 +4022,19 @@ static void rtl8152_apply_firmware(struct r8152 *tp)
- 		case RTL_FW_USB:
- 			rtl8152_fw_mac_apply(tp, (struct fw_mac *)block);
- 			break;
-+		case RTL_FW_PHY_START:
-+			key = (struct fw_phy_patch_key *)block;
-+			key_addr = __le16_to_cpu(key->key_reg);
-+			r8153_pre_ram_code(tp, key_addr,
-+					   __le16_to_cpu(key->key_data));
-+			break;
-+		case RTL_FW_PHY_STOP:
-+			WARN_ON(!key_addr);
-+			r8153_post_ram_code(tp, key_addr);
-+			break;
-+		case RTL_FW_PHY_NC:
-+			rtl8152_fw_phy_nc_apply(tp, (struct fw_phy_nc *)block);
-+			break;
- 		default:
- 			break;
- 		}
--- 
-2.21.0
+with PERIOD =3D 57 I get 26 interrupts / second
+with 87 - 18 interrupts / second
+with 116 - 12-15 interrupts / second.
 
+I think we should use 116 for A64 since with it we get reasonable
+number of ths interrupts in a second.
+
+Regards,
+Vasily
+
+> Thx.
+> Yangtao
+>
+> >
+> > > regards,
+> > >         o.
+> > >
+> > > > > Thx,
+> > > > > Yangtao
+> > > > >
+> > > > > >
+> > > > > > [1] https://github.com/anarsoul/linux-2.6/commit/46b8bb0fe2ccd1=
+cd88fa9181a2ecbf79e8d513b2
+> > > > > >
+> > > > > >
+> > > > > > >         if (ret)
+> > > > > > >                 goto bus_disable;
+> > > > > > >
+> > > > > > > +       ret =3D sun50i_ths_calibrate(tmdev);
+> > > > > > > +       if (ret)
+> > > > > > > +               goto mod_disable;
+> > > > > > > +
+> > > > > > >         return 0;
+> > > > > > >
+> > > > > > > +mod_disable:
+> > > > > > > +       clk_disable_unprepare(tmdev->mod_clk);
+> > > > > > >  bus_disable:
+> > > > > > >         clk_disable_unprepare(tmdev->bus_clk);
+> > > > > > >  assert_reset:
+> > > > > > > @@ -395,6 +409,7 @@ static int sun8i_ths_remove(struct platfo=
+rm_device *pdev)
+> > > > > > >  {
+> > > > > > >         struct ths_device *tmdev =3D platform_get_drvdata(pde=
+v);
+> > > > > > >
+> > > > > > > +       clk_disable_unprepare(tmdev->mod_clk);
+> > > > > > >         clk_disable_unprepare(tmdev->bus_clk);
+> > > > > > >         reset_control_assert(tmdev->reset);
+> > > > > > >
+> > > > > > > --
+> > > > > > > 2.17.1
+> > > > > > >
+> > > > > > >
+> > > > > > > _______________________________________________
+> > > > > > > linux-arm-kernel mailing list
+> > > > > > > linux-arm-kernel@lists.infradead.org
+> > > > > > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> > > >
+> > > > _______________________________________________
+> > > > linux-arm-kernel mailing list
+> > > > linux-arm-kernel@lists.infradead.org
+> > > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
