@@ -7,41 +7,45 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18EBBCA9EB0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:03:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 254EFCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:04:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE1CD20656
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:03:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBB0D20882
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:03:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730670AbfJVAD4 (ORCPT
+        id S2387415AbfJVAD6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 20:03:56 -0400
+        Mon, 21 Oct 2019 20:03:58 -0400
 Received: from Galois.linutronix.de ([193.142.43.55]:38895 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730620AbfJVADy (ORCPT
+        with ESMTP id S1730646AbfJVADz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 20:03:54 -0400
+        Mon, 21 Oct 2019 20:03:55 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iMgxU-0004Hi-4l; Tue, 22 Oct 2019 01:19:28 +0200
+        id 1iMgxR-0004FY-93; Tue, 22 Oct 2019 01:19:25 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 3252C1C04E3;
-        Tue, 22 Oct 2019 01:19:20 +0200 (CEST)
-Date:   Mon, 21 Oct 2019 23:19:19 -0000
-From:   "tip-bot2 for Andi Kleen" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 0FD921C04DF;
+        Tue, 22 Oct 2019 01:19:18 +0200 (CEST)
+Date:   Mon, 21 Oct 2019 23:19:17 -0000
+From:   "tip-bot2 for Jin Yao" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf evlist: Fix fix for freed id arrays
-Cc:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+Subject: [tip: perf/core] perf report: Add warning when libunwind not compiled in
+Cc:     Jin Yao <yao.jin@linux.intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <20191011182140.8353-2-andi@firstfloor.org>
-References: <20191011182140.8353-2-andi@firstfloor.org>
+In-Reply-To: <20191011022122.26369-1-yao.jin@linux.intel.com>
+References: <20191011022122.26369-1-yao.jin@linux.intel.com>
 MIME-Version: 1.0
-Message-ID: <157169995980.29376.12960960296127455918.tip-bot2@tip-bot2>
+Message-ID: <157169995752.29376.8635056089307609328.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -57,42 +61,57 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     5a40e1994815ab09c59614c6a13d94eef55d1a7f
-Gitweb:        https://git.kernel.org/tip/5a40e1994815ab09c59614c6a13d94eef55d1a7f
-Author:        Andi Kleen <ak@linux.intel.com>
-AuthorDate:    Fri, 11 Oct 2019 11:21:40 -07:00
+Commit-ID:     800d3f561659b5436f8c57e7c26dd1f6928b5615
+Gitweb:        https://git.kernel.org/tip/800d3f561659b5436f8c57e7c26dd1f6928b5615
+Author:        Jin Yao <yao.jin@linux.intel.com>
+AuthorDate:    Fri, 11 Oct 2019 10:21:22 +08:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitterDate: Tue, 15 Oct 2019 08:36:22 -03:00
 
-perf evlist: Fix fix for freed id arrays
+perf report: Add warning when libunwind not compiled in
 
-In the earlier fix for the memory overrun of id arrays I managed to typo
-the wrong event in the fix.
+We received a user report that call-graph DWARF mode was enabled in
+'perf record' but 'perf report' didn't unwind the callstack correctly.
+The reason was, libunwind was not compiled in.
 
-Of course we need to close the current event in the loop, not the
-original failing event.
+We can use 'perf -vv' to check the compiled libraries but it would be
+valuable to report a warning to user directly (especially valuable for
+a perf newbie).
 
-The same test case as in the original patch still passes.
+The warning is:
 
-Fixes: 7834fa948beb ("perf evlist: Fix access of freed id arrays")
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Warning:
+Please install libunwind development packages during the perf build.
+
+Both TUI and stdio are supported.
+
+Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
-Link: http://lore.kernel.org/lkml/20191011182140.8353-2-andi@firstfloor.org
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lore.kernel.org/lkml/20191011022122.26369-1-yao.jin@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/evlist.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/builtin-report.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 21b77ef..8793b4e 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -1599,7 +1599,7 @@ struct evsel *perf_evlist__reset_weak_group(struct evlist *evsel_list,
- 			is_open = false;
- 		if (c2->leader == leader) {
- 			if (is_open)
--				perf_evsel__close(&evsel->core);
-+				perf_evsel__close(&c2->core);
- 			c2->leader = c2;
- 			c2->core.nr_members = 0;
- 		}
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index aae0e57..7accaf8 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -399,6 +399,13 @@ static int report__setup_sample_type(struct report *rep)
+ 				PERF_SAMPLE_BRANCH_ANY))
+ 		rep->nonany_branch_mode = true;
+ 
++#ifndef HAVE_LIBUNWIND_SUPPORT
++	if (dwarf_callchain_users) {
++		ui__warning("Please install libunwind development packages "
++			    "during the perf build.\n");
++	}
++#endif
++
+ 	return 0;
+ }
+ 
