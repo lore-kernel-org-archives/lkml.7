@@ -2,175 +2,136 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F23BACA9EB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 17:58:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2FCDCA9EB0
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 18:00:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C83C62089C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 17:58:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="kgdXI8kM"
+	by mail.kernel.org (Postfix) with ESMTP id C9B4A20B7C
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 18:00:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571680856;
+	bh=XM+FygnugCQee4JxAth0vGJ2t52VZLAJMmBqZuGFwU4=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=xhhH1p7GwWz+3Wyy52q2xX7GBi9y5FPNvL2isp2WEXdd1Uzu9tLZbd+QJE+bfsJ6l
+	 R9+4zLqcdSmu8HW3Rw/mc5fisyqYBQA9q7ZTKoK8/ZR0oiXR4S1dzoaCgpiaKpWUxt
+	 FNVaoqSL0IvISmmQOQRcdEPSurBmlNd+eTbJuCP4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728228AbfJUR6j (ORCPT
+        id S1729757AbfJUSAz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 13:58:39 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.50]:30941 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726672AbfJUR6j (ORCPT
+        Mon, 21 Oct 2019 14:00:55 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:38986 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728196AbfJUSAz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 13:58:39 -0400
-X-Greylist: delayed 4673 seconds by postgrey-1.27 at vger.kernel.org; Mon, 21 Oct 2019 13:58:36 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1571680715;
-        s=strato-dkim-0002; d=gerhold.net;
-        h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=7Tt2/ZNQjHF0N5Lrq1Ad+3gwdMvPJoAGmvLCcfodlfQ=;
-        b=kgdXI8kM7dnsvZYxUWeoKUBSw48Myqbhjd1dHyhGcEL97UES3Ezs+tRrxXB6ibULiO
-        AAJaEMS9xVDOD8kSt+Gok35o58SBtuR7aXjxe/ItTB/sq6BhHu9lNspcMobqKC6TIR5B
-        P+AOXzESQZoF09QMXDoaokrNn69wVk1UhazzM47KN2OB6tVoMwVuJ3Cg7nJWxm+y5T6/
-        EQWsjE5iDJocE9cBD36RFDsm0MxgfZB5K7DPyluBz4AOI5nnC/xNqoJzTqCIwy3Bzchh
-        yu4+oDHBZ3MRQO9JbSJ/+CurI/YYqq+CJVX4MgQhKob4kKbNabKHmijrML8mgp1i1qkZ
-        1MtQ==
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u266EZF6ORJDdfTYstM="
-X-RZG-CLASS-ID: mo00
-Received: from gerhold.net
-        by smtp.strato.de (RZmta 44.28.1 AUTH)
-        with ESMTPSA id 409989v9LHwVR2m
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Mon, 21 Oct 2019 19:58:31 +0200 (CEST)
-Date:   Mon, 21 Oct 2019 19:58:18 +0200
-From:   Stephan Gerhold <stephan@gerhold.net>
-To:     Sean Paul <sean@poorly.run>
-Cc:     Rob Clark <robdclark@gmail.com>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, Hai Li <hali@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Nikita Travkin <nikitos.tr@gmail.com>
-Subject: Re: [PATCH] drm/msm/dsi: Implement qcom,dsi-phy-regulator-ldo-mode
- for 28nm PHY
-Message-ID: <20191021175727.GA86689@gerhold.net>
-References: <20191021163425.83697-1-stephan@gerhold.net>
- <20191021174719.GC85762@art_vandelay>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191021174719.GC85762@art_vandelay>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        Mon, 21 Oct 2019 14:00:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=uq0cbL+MVqRsyuw0sPQS5GA0v05y+bqGq3kL9K0P2h8=; b=PGEycT3N3lTQ
+        NSSgmXX+NrJZnmMPp0DDgf3TJ5vpiZ60E/A5h7/jh7v9/BlffeXg/8qSJZDhUVO94BoiVkdBKZIA6
+        oHFGZxOgPxsjFb2uNM5ycbXGiYwo6ZffM4e2i8UHOVbaL6uUVM1svJMDhy6F5RQfWvgyT7vK5Cl+k
+        9gRQU=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iMbz5-0004bf-DO; Mon, 21 Oct 2019 18:00:47 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 8052B2743293; Mon, 21 Oct 2019 19:00:46 +0100 (BST)
+From:   Mark Brown <broonie@kernel.org>
+To:     Maciej Falkowski <m.falkowski@samsung.com>
+Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Mark Brown <broonie@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Applied "ASoC: samsung: i2s: Document clocks macros" to the asoc tree
+In-Reply-To: <20190926110219.6144-1-m.szyprowski@samsung.com>
+X-Patchwork-Hint: ignore
+Message-Id: <20191021180046.8052B2743293@ypsilon.sirena.org.uk>
+Date:   Mon, 21 Oct 2019 19:00:46 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 01:47:19PM -0400, Sean Paul wrote:
-> On Mon, Oct 21, 2019 at 06:34:25PM +0200, Stephan Gerhold wrote:
-> > The DSI PHY regulator supports two regulator modes: LDO and DCDC.
-> > This mode can be selected using the "qcom,dsi-phy-regulator-ldo-mode"
-> > device tree property.
-> > 
-> > However, at the moment only the 20nm PHY driver actually implements
-> > that option. Add a check in the 28nm PHY driver to program the
-> > registers correctly for LDO mode.
-> > 
-> > Tested-by: Nikita Travkin <nikitos.tr@gmail.com> # l8150
-> > Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-> > ---
-> > This is needed to make the display work on Longcheer L8150,
-> > which has recently gained mainline support in:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/qcom/linux.git/commit/?id=16e8e8072108426029f0c16dff7fbe77fae3df8f
-> > 
-> > This patch is based on code from the downstream kernel:
-> > https://source.codeaurora.org/quic/la/kernel/msm-3.10/tree/drivers/video/msm/mdss/msm_mdss_io_8974.c?h=LA.BR.1.2.9.1-02310-8x16.0#n152
-> > 
-> > The LDO regulator configuration is taken from msm8916-qrd.dtsi:
-> > https://source.codeaurora.org/quic/la/kernel/msm-3.10/tree/arch/arm/boot/dts/qcom/msm8916-qrd.dtsi?h=LA.BR.1.2.9.1-02310-8x16.0#n56
-> > ---
-> >  drivers/gpu/drm/msm/dsi/phy/dsi_phy_28nm.c | 22 ++++++++++++++++++++--
-> >  1 file changed, 20 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_28nm.c b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_28nm.c
-> > index b3f678f6c2aa..4579e6de4532 100644
-> > --- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_28nm.c
-> > +++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_28nm.c
-> > @@ -48,6 +48,25 @@ static void dsi_28nm_phy_regulator_ctrl(struct msm_dsi_phy *phy, bool enable)
-> >  		return;
-> >  	}
-> >  
-> > +	if (phy->regulator_ldo_mode) {
-> > +		u32 ldo_ctrl;
-> > +
-> > +		if (phy->cfg->type == MSM_DSI_PHY_28NM_LP)
-> > +			ldo_ctrl = 0x05;
-> > +		else
-> > +			ldo_ctrl = 0x0d;
-> > +
-> > +		dsi_phy_write(base + REG_DSI_28nm_PHY_REGULATOR_CTRL_0, 0x0);
-> > +		dsi_phy_write(base + REG_DSI_28nm_PHY_REGULATOR_CAL_PWR_CFG, 0);
-> > +		dsi_phy_write(base + REG_DSI_28nm_PHY_REGULATOR_CTRL_5, 0x7);
-> > +		dsi_phy_write(base + REG_DSI_28nm_PHY_REGULATOR_CTRL_3, 0);
-> > +		dsi_phy_write(base + REG_DSI_28nm_PHY_REGULATOR_CTRL_2, 0x1);
-> > +		dsi_phy_write(base + REG_DSI_28nm_PHY_REGULATOR_CTRL_1, 0x1);
-> > +		dsi_phy_write(base + REG_DSI_28nm_PHY_REGULATOR_CTRL_4, 0x20);
-> > +		dsi_phy_write(phy->base + REG_DSI_28nm_PHY_LDO_CNTRL, ldo_ctrl);
-> > +		return;
-> > +	}
-> 
-> nit: Since this has minimal overlap with DCDC mode, I think it would read better
-> if you split this into 2 functions:
-> dsi_28nm_phy_regulator_enable_dcdc() and dsi_28nm_phy_regulator_enable_ldo()
-> 
-> So regulator_ctrl would look like:
-> 
-> static void dsi_28nm_phy_regulator_ctrl(struct msm_dsi_phy *phy, bool enable)
-> {
-> 	void __iomem *base = phy->reg_base;
-> 
-> 	if (!enable) {
-> 		dsi_phy_write(base + REG_DSI_28nm_PHY_REGULATOR_CAL_PWR_CFG, 0);
-> 		return;
-> 	}
-> 
-> 	if (phy->regulator_ldo_mode)
->                 dsi_28nm_phy_regulator_enable_ldo()
->         else
->                 dsi_28nm_phy_regulator_enable_dcdc()
-> }
-> 
+The patch
 
-I implemented it similar to dsi_phy_20nm.c [1], which looks like:
+   ASoC: samsung: i2s: Document clocks macros
 
-static void dsi_20nm_phy_regulator_ctrl(struct msm_dsi_phy *phy, bool enable)
-{
-	void __iomem *base = phy->reg_base;
+has been applied to the asoc tree at
 
-	if (!enable) {
-		dsi_phy_write(base + REG_DSI_20nm_PHY_REGULATOR_CAL_PWR_CFG, 0);
-		return;
-	}
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.5
 
-	if (phy->regulator_ldo_mode) {
-		dsi_phy_write(phy->base + REG_DSI_20nm_PHY_LDO_CNTRL, 0x1d);
-		return;
-	}
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-	/* non LDO mode */
-	dsi_phy_write(base + REG_DSI_20nm_PHY_REGULATOR_CTRL_1, 0x03);
-	dsi_phy_write(base + REG_DSI_20nm_PHY_REGULATOR_CTRL_2, 0x03);
-	dsi_phy_write(base + REG_DSI_20nm_PHY_REGULATOR_CTRL_3, 0x00);
-	dsi_phy_write(base + REG_DSI_20nm_PHY_REGULATOR_CTRL_4, 0x20);
-	dsi_phy_write(base + REG_DSI_20nm_PHY_REGULATOR_CAL_PWR_CFG, 0x01);
-	dsi_phy_write(phy->base + REG_DSI_20nm_PHY_LDO_CNTRL, 0x00);
-	dsi_phy_write(base + REG_DSI_20nm_PHY_REGULATOR_CTRL_0, 0x03);
-}
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-I guess it looks better for the 20nm PHY driver since it writes only a
-single register in LDO mode rather than the full regulator
-configuration.
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-I'll update my patch and send a v2. Thanks for the suggestion!
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-[1]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/gpu/drm/msm/dsi/phy/dsi_phy_20nm.c#n42
+Thanks,
+Mark
+
+From 6cc23ed2ceab880e96ad287d9c85b53659050510 Mon Sep 17 00:00:00 2001
+From: Maciej Falkowski <m.falkowski@samsung.com>
+Date: Thu, 26 Sep 2019 13:02:19 +0200
+Subject: [PATCH] ASoC: samsung: i2s: Document clocks macros
+
+Document clocks macros with their description
+from 'Documentation/devicetree/bindings/sound/samsung-i2s.txt'
+
+Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+Link: https://lore.kernel.org/r/20190926110219.6144-1-m.szyprowski@samsung.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ include/dt-bindings/sound/samsung-i2s.h | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
+
+diff --git a/include/dt-bindings/sound/samsung-i2s.h b/include/dt-bindings/sound/samsung-i2s.h
+index 77545f14c379..250de0d6c734 100644
+--- a/include/dt-bindings/sound/samsung-i2s.h
++++ b/include/dt-bindings/sound/samsung-i2s.h
+@@ -2,8 +2,14 @@
+ #ifndef _DT_BINDINGS_SAMSUNG_I2S_H
+ #define _DT_BINDINGS_SAMSUNG_I2S_H
+ 
+-#define CLK_I2S_CDCLK		0
+-#define CLK_I2S_RCLK_SRC	1
+-#define CLK_I2S_RCLK_PSR	2
++#define CLK_I2S_CDCLK		0 /* the CDCLK (CODECLKO) gate clock */
++
++#define CLK_I2S_RCLK_SRC	1 /* the RCLKSRC mux clock (corresponding to
++				   * RCLKSRC bit in IISMOD register)
++				   */
++
++#define CLK_I2S_RCLK_PSR	2 /* the RCLK prescaler divider clock
++				   * (corresponding to the IISPSR register)
++				   */
+ 
+ #endif /* _DT_BINDINGS_SAMSUNG_I2S_H */
+-- 
+2.20.1
+
