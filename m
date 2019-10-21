@@ -2,92 +2,83 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68CAAC47E49
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 06:38:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C408CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 06:39:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3453520700
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 06:38:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="NA7CNWgz"
+	by mail.kernel.org (Postfix) with ESMTP id 4F11220700
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 06:39:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727215AbfJUGiE (ORCPT
+        id S1727218AbfJUGjc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 02:38:04 -0400
-Received: from ozlabs.org ([203.11.71.1]:39725 "EHLO ozlabs.org"
+        Mon, 21 Oct 2019 02:39:32 -0400
+Received: from mga01.intel.com ([192.55.52.88]:14496 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726039AbfJUGiD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 02:38:03 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46xRlq5DRJz9sCJ;
-        Mon, 21 Oct 2019 17:37:59 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1571639881;
-        bh=XktV3NlRSHiniUdNWuVIgg4Y59blnoGaitX8xTsoFPw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=NA7CNWgz/Sr/K7AhTHQxZw/x94WWBM3xvAu7SeFNCWTGtR8a0Y70Nk+dWS+VVBZli
-         5/JKKJfSA/lmCuP4jZyltrOHZu4C9pCmq23ffVBTQ8Z4G9pc/8NkWz9UY7MrgJcSGL
-         0r2Bx0bQLh6wCePDanHlrNcRNI5RZA1VpGE50TL9/dRyA/uTwMDJXaaSwe5BGMAdbz
-         btShCcjFB8ew5hHwWE5WmlxyLucqZhHdcsL51cGDbUDvxNCq5gYaGbQ1Kk+CyGpyHs
-         F071vOmRS/U2o60Wd8/HoWRuqYuXNR5v00Mdwom3g5ZQvX8lw4iE14t6Qr8k4Phjel
-         v77USXyUsC0EA==
-Date:   Mon, 21 Oct 2019 17:37:58 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the tip tree
-Message-ID: <20191021173758.5f983161@canb.auug.org.au>
-In-Reply-To: <20191021055141.GA2973@gmail.com>
-References: <20191021131342.404551d7@canb.auug.org.au>
-        <20191021055141.GA2973@gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/We7Ci/A68c1HZU=ORjDfR+T";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        id S1726039AbfJUGjb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 02:39:31 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Oct 2019 23:39:31 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,322,1566889200"; 
+   d="scan'208";a="209378615"
+Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
+  by fmsmga001.fm.intel.com with ESMTP; 20 Oct 2019 23:39:28 -0700
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+To:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        lorenzo.pieralisi@arm.com, andrew.murray@arm.com, robh@kernel.org,
+        martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
+        hch@infradead.org, devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com, Dilip Kota <eswara.kota@linux.intel.com>
+Subject: [PATCH v4 0/3] PCI: Add Intel PCIe Driver and respective dt-binding yaml file
+Date:   Mon, 21 Oct 2019 14:39:17 +0800
+Message-Id: <cover.1571638827.git.eswara.kota@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/We7Ci/A68c1HZU=ORjDfR+T
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Intel PCIe is synopsys based controller utilizes the Designware
+framework for host initialization and intel application
+specific register configurations.
 
-Hi Ingo,
+Changes on v4:
+	Add lane resizing API in PCIe DesignWare driver.
+	Intel PCIe driver uses it for lane resizing which
+	 is being exposed through sysfs attributes.
+	Add Intel PCIe sysfs attributes is in separate patch.
+	Address review comments given on v3.
 
-On Mon, 21 Oct 2019 07:51:41 +0200 Ingo Molnar <mingo@kernel.org> wrote:
->
-> Hm, that was a weird merge mishap - sorry about that, should go away in=20
-> the next -next iteration.
+Changes on v3:
+	Compared to v2, map_irq() patch is removed as it is no longer
+	  required for Intel PCIe driver. Intel PCIe driver does platform
+	  specific interrupt configuration during core initialization. So
+	  changed the subject line too.
+	Address v2 review comments for DT binding and PCIe driver
 
-Thanks.
---=20
-Cheers,
-Stephen Rothwell
+Dilip Kota (3):
+  dt-bindings: PCI: intel: Add YAML schemas for the PCIe RC controller
+  dwc: PCI: intel: PCIe RC controller driver
+  pci: intel: Add sysfs attributes to configure pcie link
 
---Sig_/We7Ci/A68c1HZU=ORjDfR+T
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+ .../devicetree/bindings/pci/intel-gw-pcie.yaml     | 135 ++++
+ drivers/pci/controller/dwc/Kconfig                 |  10 +
+ drivers/pci/controller/dwc/Makefile                |   1 +
+ drivers/pci/controller/dwc/pcie-designware.c       |  43 ++
+ drivers/pci/controller/dwc/pcie-designware.h       |  15 +
+ drivers/pci/controller/dwc/pcie-intel-gw.c         | 700 +++++++++++++++
+ include/uapi/linux/pci_regs.h                      |   1 +
+ 7 files changed, 905 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
+ create mode 100644 drivers/pci/controller/dwc/pcie-intel-gw.c
 
------BEGIN PGP SIGNATURE-----
+-- 
+2.11.0
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2tUkYACgkQAVBC80lX
-0GxRCAf+J6WGy0DQlHkobo27pdA3C5KvPNDauRIAHFWnTD1ybED8d7prz5E8N7ou
-C1GgCSE8mxxyI/iwJGgnNtOy0NnESo4DiQF7eO4dGg+XcUWheOEkCYq+Qq08IuoK
-KF/8e0soj2I0CoEBuBws3tmv9E2+HX9QLXlupXNLYH00b9MbDjzrNZOu79tlswk8
-65l5bCVj8V6YkcQgz81OrDoq5ycPQdBRrTj4A/FkBKuw6lgypVC6gFVWOjnSRMHl
-pbBsWC+TMtSj26C90MiLn81v0fFWMVHOQ4XYS42BSlVu3uUHbLstHau4GhVz5DLA
-bbB9Ho/hEgcQgPC22YhLsvYYcEz2rA==
-=/69l
------END PGP SIGNATURE-----
-
---Sig_/We7Ci/A68c1HZU=ORjDfR+T--
