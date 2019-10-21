@@ -2,112 +2,159 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5910CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 18:11:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74478CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 18:16:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 969B220873
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 18:11:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4430220873
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 18:16:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="tUM3lE38"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="ffLm16wM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729986AbfJUSLh (ORCPT
+        id S1729785AbfJUSQw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 14:11:37 -0400
-Received: from gateway30.websitewelcome.com ([192.185.197.25]:44764 "EHLO
-        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727211AbfJUSLh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 14:11:37 -0400
-X-Greylist: delayed 1301 seconds by postgrey-1.27 at vger.kernel.org; Mon, 21 Oct 2019 14:11:36 EDT
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway30.websitewelcome.com (Postfix) with ESMTP id 275D435422
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 12:49:48 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id MboSiKZqnOdBHMboSig39H; Mon, 21 Oct 2019 12:49:48 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=mnkunLEF23UbiKstBGeBSKdC/co/nIvZTCOX/NZlbww=; b=tUM3lE38Ag01bD4YI89LCWIkMh
-        /iA+bY0K0sithlPdbdStN0PDu25sb/avL8AlbdrA32oPewpKZicCe4GhwAOG7fwAZEtZmCsezatIF
-        bZ5nqIaQPnizANZDFU8wAyREhzMsQ9wPRBWwyOIF8NdSzpjuHWFmKV9DQEfwttUkp9HcdpeFSvgBZ
-        NJi9+/i6Wyw1eOEdwaurDIFIty0dbIzxr+nkiWFzLDWo/Xlp5xaP3T+juJprPiSUdJEkNertbINah
-        RRGHv/GlKgUW/Bu5z5c3i6m6wilxdZdv/W19BR6RZlIn6i6eB3PyQTA7kcbvzDpb+MAbaiTwPULqt
-        WTr+a2YA==;
-Received: from [187.192.22.73] (port=33626 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1iMboQ-000AL9-QC; Mon, 21 Oct 2019 12:49:47 -0500
-Date:   Mon, 21 Oct 2019 12:49:37 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Sebastian Reichel <sre@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] power: supply: ab8500_charger: Fix inconsistent IS_ERR and
- PTR_ERR
-Message-ID: <20191021174937.GA17424@embeddedor>
+        Mon, 21 Oct 2019 14:16:52 -0400
+Received: from mail-eopbgr810079.outbound.protection.outlook.com ([40.107.81.79]:34272
+        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727767AbfJUSQw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 14:16:52 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RhSanYzXvwg/DZmuVGwHoR79RJPM/B0JiDOhOAcZaodW/6PQd4NdxSqptvxiBE1QAxvq6QQNAywFx5ib7YuVF9KPEufmAK78aqZXTU6JFsmL+V0BM73VRpBU6va/ZsAGIPpg64djKaVXCu91TNZ+3sNARIp2R5izMQpXrYmL6i9dMVJay98J7A7mtL54/tS1QvdXKswir3mhm/Bo0Mar1X5BHsUqoj3VQ0HZXI0CLYEF6Fb6SA+rGE7o23UhWy3v8wHdMIpP182mDnmg/HDT5x5CWMlqm3A73ZgPmDWy/DBzVnL9zvgJt2H7AHsc2vXiTbgPpAwKrG6rb0g5j/hj0w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RRc1WrujN5kJ3TYU4P01saYk01F9Bw75zeFqiI4CDSU=;
+ b=NSHBkS14DSj/R+Z84MpoqzmOWNo+gEz7kA1L7jT1BHoxJJACsEeWO3WphKTLn+CuOA/R7rRMiOrcQP10W5MMvA0bkxJiEb0xLVtWYIBiV7CezQpvoXS+8SnA+IkRDgJir5a77bRk5eu3Ms1QPGRXCL4BZvitj7gtTHi5WkUMxLAjr5hXnzPfWxqchmb3dNERFZ3dzN4yw2+0drH4phJSMaRxE66C0g3OU7vYAi2MXd+Joo4cCOTgYVmh5ZiPnDAG3weLgj29wlAryaEJ2SAblF0On4LwvletIQy+8svMd+9C7/3/efvcBIUwPMcE+0t1xUcYg50tD/0XALGfNOzu8w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RRc1WrujN5kJ3TYU4P01saYk01F9Bw75zeFqiI4CDSU=;
+ b=ffLm16wM58W6VJzAXlNSP4N15uLUGcEL+LHUkpS5PD9rieREGWA4rHztSObS3wJJVgxM8eLqARCJkafD4jygGAZb/3G2c0ZQ+hdI8e31NhwvxSPfacYPwBfPdBU3dNjErNkJuKP9hR+YanPsUL/0nmIRzD/6Yoso9bRVwJNuBSg=
+Received: from DM6PR12MB2682.namprd12.prod.outlook.com (20.176.118.13) by
+ DM6PR12MB3804.namprd12.prod.outlook.com (10.255.173.29) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.19; Mon, 21 Oct 2019 18:16:48 +0000
+Received: from DM6PR12MB2682.namprd12.prod.outlook.com
+ ([fe80::80:cb81:4a0e:a36]) by DM6PR12MB2682.namprd12.prod.outlook.com
+ ([fe80::80:cb81:4a0e:a36%3]) with mapi id 15.20.2367.022; Mon, 21 Oct 2019
+ 18:16:48 +0000
+From:   "Singh, Brijesh" <brijesh.singh@amd.com>
+To:     David Rientjes <rientjes@google.com>,
+        "Kalra, Ashish" <Ashish.Kalra@amd.com>
+CC:     "Singh, Brijesh" <brijesh.singh@amd.com>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        "Hook, Gary" <Gary.Hook@amd.com>,
+        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "allison@lohutok.net" <allison@lohutok.net>,
+        "info@metux.net" <info@metux.net>,
+        "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: Re: [PATCH] crypto: ccp - Retry SEV INIT command in case of integrity
+ check failure.
+Thread-Topic: [PATCH] crypto: ccp - Retry SEV INIT command in case of
+ integrity check failure.
+Thread-Index: AQHVhTsiVAXVZvJHqE+F84WTgpVS9KdhrHEAgAPAfIA=
+Date:   Mon, 21 Oct 2019 18:16:48 +0000
+Message-ID: <29887804-ecab-ae83-8d3f-52ea83e44b4e@amd.com>
+References: <20191017223459.64281-1-Ashish.Kalra@amd.com>
+ <alpine.DEB.2.21.1910190156210.140416@chino.kir.corp.google.com>
+In-Reply-To: <alpine.DEB.2.21.1910190156210.140416@chino.kir.corp.google.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SN6PR06CA0005.namprd06.prod.outlook.com
+ (2603:10b6:805:8e::18) To DM6PR12MB2682.namprd12.prod.outlook.com
+ (2603:10b6:5:42::13)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=brijesh.singh@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [165.204.77.1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 037887d9-b2f1-47aa-3a51-08d75652d682
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: DM6PR12MB3804:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR12MB38048E06148278D31C040F50E5690@DM6PR12MB3804.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 0197AFBD92
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(376002)(396003)(136003)(39860400002)(199004)(189003)(8936002)(54906003)(478600001)(31696002)(71190400001)(71200400001)(8676002)(66556008)(66476007)(66446008)(64756008)(31686004)(316002)(86362001)(66066001)(66946007)(81156014)(81166006)(6636002)(14454004)(110136005)(25786009)(6512007)(7416002)(446003)(3846002)(2906002)(486006)(99286004)(36756003)(14444005)(256004)(5660300002)(11346002)(2616005)(6436002)(6486002)(229853002)(4326008)(476003)(26005)(76176011)(186003)(6246003)(7736002)(102836004)(53546011)(6506007)(386003)(52116002)(305945005)(6116002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3804;H:DM6PR12MB2682.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: vFeydfWMRRzbKTgZNGeNyNPfoh0zNstXqZwksGVNkozBtRgzeawR1hPAIIs5c85b19y7uIusONHhLHkrfSeheUxTxtT/YOMXe/mMFwzrtSAWj959SL84XVV9kb43HzDLz8r/oyA8fDYeffUj0AZKj7ZSE46TwpWVwVLrIyavqCLfIysTc48UcuGDhdyZG0SKhdFJoog85cd9HQF6hBx+P7FSiD7NP3ChpJuOcnFRUIOcUe1z5nJcKh6aZxG7WwQRH12T5ecHft0ksyv97sPmHtQNjtV5E0+rxIcaXOKaLsCuzqIHD8oS6Gdq/BRRMhb9BGTgsMVOGrZKSSdjzCpcoYvsdQxUcMP4wmE+hfXOAuBrmF1pAQ9LgNlLDLosY5X9dp4kH2Wl+mLS9Up6MFHk5Z+7mBtDoIv/fBy8mdX+T7c=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <777077A0761C7646BDBB320395BA0C30@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.192.22.73
-X-Source-L: No
-X-Exim-ID: 1iMboQ-000AL9-QC
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [187.192.22.73]:33626
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 5
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 037887d9-b2f1-47aa-3a51-08d75652d682
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Oct 2019 18:16:48.5628
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: XMk0pQOeAgLeyKYB2Awl3LX5Wb8CQwuzEZ7x9nHilUpdjwXk2/yTRyyVULrl5+KYo6KZaMqF/QTxFaOdxOOgnA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3804
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix inconsistent IS_ERR and PTR_ERR in ab8500_charger_probe().
-
-The proper pointer to be passed as argument is di->adc_main_charger_c
-
-This bug was detected with the help of Coccinelle.
-
-Fixes: 97ab78bac5d0 ("power: supply: ab8500_charger: Convert to IIO ADC")
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/power/supply/ab8500_charger.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/power/supply/ab8500_charger.c b/drivers/power/supply/ab8500_charger.c
-index ff2bb4411a22..8a0f9d769690 100644
---- a/drivers/power/supply/ab8500_charger.c
-+++ b/drivers/power/supply/ab8500_charger.c
-@@ -3393,7 +3393,7 @@ static int ab8500_charger_probe(struct platform_device *pdev)
- 		if (PTR_ERR(di->adc_main_charger_c) == -ENODEV)
- 			return -EPROBE_DEFER;
- 		dev_err(&pdev->dev, "failed to get ADC main charger current\n");
--		return PTR_ERR(di->adc_main_charger_v);
-+		return PTR_ERR(di->adc_main_charger_c);
- 	}
- 	di->adc_vbus_v = devm_iio_channel_get(&pdev->dev, "vbus_v");
- 	if (IS_ERR(di->adc_vbus_v)) {
--- 
-2.23.0
-
+DQoNCk9uIDEwLzE5LzE5IDM6NTkgQU0sIERhdmlkIFJpZW50amVzIHdyb3RlOg0KPiBPbiBUaHUs
+IDE3IE9jdCAyMDE5LCBLYWxyYSwgQXNoaXNoIHdyb3RlOg0KPiANCj4+IEZyb206IEFzaGlzaCBL
+YWxyYSA8YXNoaXNoLmthbHJhQGFtZC5jb20+DQo+Pg0KPj4gU0VWIElOSVQgY29tbWFuZCBsb2Fk
+cyB0aGUgU0VWIHJlbGF0ZWQgcGVyc2lzdGVudCBkYXRhIGZyb20gTlZTDQo+PiBhbmQgaW5pdGlh
+bGl6ZXMgdGhlIHBsYXRmb3JtIGNvbnRleHQuIFRoZSBmaXJtd2FyZSB2YWxpZGF0ZXMgdGhlDQo+
+PiBwZXJzaXN0ZW50IHN0YXRlLiBJZiB2YWxpZGF0aW9uIGZhaWxzLCB0aGUgZmlybXdhcmUgd2ls
+bCByZXNldA0KPj4gdGhlIHBlcnNpc2VudCBzdGF0ZSBhbmQgcmV0dXJuIGFuIGludGVncml0eSBj
+aGVjayBmYWlsdXJlIHN0YXR1cy4NCj4+DQo+PiBBdCB0aGlzIHBvaW50LCBhIHN1YnNlcXVlbnQg
+SU5JVCBjb21tYW5kIHNob3VsZCBzdWNjZWVkLCBzbyByZXRyeQ0KPj4gdGhlIGNvbW1hbmQuIFRo
+ZSBJTklUIGNvbW1hbmQgcmV0cnkgaXMgb25seSBkb25lIGR1cmluZyBkcml2ZXINCj4+IGluaXRp
+YWxpemF0aW9uLg0KPj4NCj4+IEFkZGl0aW9uYWwgZW51bXMgYWxvbmcgd2l0aCBTRVZfUkVUX1NF
+Q1VSRV9EQVRBX0lOVkFMSUQgYXJlIGFkZGVkDQo+PiB0byBzZXZfcmV0X2NvZGUgdG8gbWFpbnRh
+aW4gY29udGludWl0eSBhbmQgcmVsZXZhbmNlIG9mIGVudW0gdmFsdWVzLg0KPj4NCj4+IFNpZ25l
+ZC1vZmYtYnk6IEFzaGlzaCBLYWxyYSA8YXNoaXNoLmthbHJhQGFtZC5jb20+DQo+PiAtLS0NCj4+
+ICAgZHJpdmVycy9jcnlwdG8vY2NwL3BzcC1kZXYuYyB8IDEyICsrKysrKysrKysrKw0KPj4gICBp
+bmNsdWRlL3VhcGkvbGludXgvcHNwLXNldi5oIHwgIDMgKysrDQo+PiAgIDIgZmlsZXMgY2hhbmdl
+ZCwgMTUgaW5zZXJ0aW9ucygrKQ0KPj4NCj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2NyeXB0by9j
+Y3AvcHNwLWRldi5jIGIvZHJpdmVycy9jcnlwdG8vY2NwL3BzcC1kZXYuYw0KPj4gaW5kZXggNmIx
+N2QxNzllZjhhLi5mOTMxOGQ0NDgyZjIgMTAwNjQ0DQo+PiAtLS0gYS9kcml2ZXJzL2NyeXB0by9j
+Y3AvcHNwLWRldi5jDQo+PiArKysgYi9kcml2ZXJzL2NyeXB0by9jY3AvcHNwLWRldi5jDQo+PiBA
+QCAtMTA2NCw2ICsxMDY0LDE4IEBAIHZvaWQgcHNwX3BjaV9pbml0KHZvaWQpDQo+PiAgIA0KPj4g
+ICAJLyogSW5pdGlhbGl6ZSB0aGUgcGxhdGZvcm0gKi8NCj4+ICAgCXJjID0gc2V2X3BsYXRmb3Jt
+X2luaXQoJmVycm9yKTsNCj4+ICsJaWYgKHJjICYmIChlcnJvciA9PSBTRVZfUkVUX1NFQ1VSRV9E
+QVRBX0lOVkFMSUQpKSB7DQo+PiArCQkvKg0KPj4gKwkJICogSU5JVCBjb21tYW5kIHJldHVybmVk
+IGFuIGludGVncml0eSBjaGVjayBmYWlsdXJlDQo+PiArCQkgKiBzdGF0dXMgY29kZSwgbWVhbmlu
+ZyB0aGF0IGZpcm13YXJlIGxvYWQgYW5kDQo+PiArCQkgKiB2YWxpZGF0aW9uIG9mIFNFViByZWxh
+dGVkIHBlcnNpc3RlbnQgZGF0YSBoYXMNCj4+ICsJCSAqIGZhaWxlZCBhbmQgcGVyc2lzdGVudCBz
+dGF0ZSBoYXMgYmVlbiBlcmFzZWQuDQo+PiArCQkgKiBSZXRyeWluZyBJTklUIGNvbW1hbmQgaGVy
+ZSBzaG91bGQgc3VjY2VlZC4NCj4+ICsJCSAqLw0KPj4gKwkJZGV2X2RiZyhzcC0+ZGV2LCAiU0VW
+OiByZXRyeWluZyBJTklUIGNvbW1hbmQiKTsNCj4+ICsJCXJjID0gc2V2X3BsYXRmb3JtX2luaXQo
+JmVycm9yKTsNCj4+ICsJfQ0KPj4gKw0KPj4gICAJaWYgKHJjKSB7DQo+PiAgIAkJZGV2X2Vycihz
+cC0+ZGV2LCAiU0VWOiBmYWlsZWQgdG8gSU5JVCBlcnJvciAlI3hcbiIsIGVycm9yKTsNCj4+ICAg
+CQlyZXR1cm47DQo+IA0KPiBDdXJpb3VzIHdoeSB0aGlzIGlzbid0IGRvbmUgaW4gX19zZXZfcGxh
+dGZvcm1faW5pdF9sb2NrZWQoKSBzaW5jZQ0KPiBzZXZfcGxhdGZvcm1faW5pdCgpIGNhbiBiZSBj
+YWxsZWQgd2hlbiBsb2FkaW5nIHRoZSBrdm0gbW9kdWxlIGFuZCB0aGUgc2FtZQ0KPiBpbml0IGZh
+aWx1cmUgY2FuIGhhcHBlbiB0aGF0IHdheS4NCj4gDQoNClRoZSBGVyBpbml0aWFsaXphdGlvbiAo
+YWthIFBMQVRGT1JNX0lOSVQpIGlzIGNhbGxlZCBpbiB0aGUgZm9sbG93aW5nDQpjb2RlIHBhdGhz
+Og0KDQoxLiBEdXJpbmcgc3lzdGVtIGJvb3QgdXANCg0KYW5kDQoNCjIuIEFmdGVyIHRoZSBwbGF0
+Zm9ybSByZXNldCBjb21tYW5kIGlzIGlzc3VlZA0KDQpUaGUgcGF0Y2ggdGFrZXMgY2FyZSBvZiAj
+MS4gQmFzZWQgb24gdGhlIHNwZWMsIHBsYXRmb3JtIHJlc2V0IGNvbW1hbmQNCnNob3VsZCBlcmFz
+ZSB0aGUgcGVyc2lzdGVudCBkYXRhIGFuZCB0aGUgUExBVEZPUk1fSU5JVCBzaG91bGQgKm5vdCog
+ZmFpbA0Kd2l0aCBTRVZfUkVUX1NFQ1VSRV9EQVRBX0lOVkFMSUQgZXJyb3IgY29kZS4gU28sIEkg
+YW0gbm90IGFibGUgdG8gc2VlDQphbnkgIHN0cm9uZyByZWFzb24gdG8gbW92ZSB0aGUgcmV0cnkg
+Y29kZSBpbg0KX19zZXZfcGxhdGZvcm1faW5pdF9sb2NrZWQoKS4NCg0KdGhhbmtzDQo=
