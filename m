@@ -2,344 +2,167 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE6D0CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:03:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1740ACA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:05:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88BD72089C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:03:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECCF120684
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:05:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727516AbfJUIDA (ORCPT
+        id S1727580AbfJUIFc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 04:03:00 -0400
-Received: from mail-sz.amlogic.com ([211.162.65.117]:54755 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725972AbfJUIC7 (ORCPT
+        Mon, 21 Oct 2019 04:05:32 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:33625 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727297AbfJUIFc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 04:02:59 -0400
-Received: from [10.28.19.63] (10.28.19.63) by mail-sz.amlogic.com (10.28.11.5)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Mon, 21 Oct
- 2019 16:03:07 +0800
-Subject: Re: [PATCH v2 3/4] watchdog: add meson secure watchdog driver
-To:     Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Qianggui Song <qianggui.song@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Jian Hu <jian.hu@amlogic.com>,
-        <linux-watchdog@vger.kernel.org>,
-        <linux-amlogic@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1571387622-35132-1-git-send-email-xingyu.chen@amlogic.com>
- <1571387622-35132-4-git-send-email-xingyu.chen@amlogic.com>
- <7397f6db-1dc8-3abd-41ff-2e47323c7ffa@roeck-us.net>
-From:   Xingyu Chen <xingyu.chen@amlogic.com>
-Message-ID: <bfc892af-1cd3-1437-75b2-5ba2b7913284@amlogic.com>
-Date:   Mon, 21 Oct 2019 16:03:07 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 21 Oct 2019 04:05:32 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iMSfM-000875-Se; Mon, 21 Oct 2019 10:03:48 +0200
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iMSfC-00081S-2X; Mon, 21 Oct 2019 10:03:38 +0200
+Date:   Mon, 21 Oct 2019 10:03:38 +0200
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-input@vger.kernel.org, Alexander Shiyan <shc_work@mail.ru>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Allison Randal <allison@lohutok.net>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Brian Masney <masneyb@onstation.org>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Enrico Weigelt <info@metux.net>, Eric Anholt <eric@anholt.net>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Jacky Bai <ping.bai@nxp.com>, Jeff LaBundy <jeff@labundy.com>,
+        Jilayne Lovejoy <opensource@jilayne.com>,
+        Jonathan Bakker <xc-racer2@live.ca>,
+        Luca Weiss <luca@z3ntu.xyz>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Martin Kepplinger <martink@posteo.de>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Miloslav Trmac <mitr@volny.cz>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Pavel Machek <pavel@ucw.cz>,
+        =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>,
+        Richard Fontana <rfontana@redhat.com>,
+        Ronald =?iso-8859-1?Q?Tschal=E4r?= <ronald@innovation.ch>,
+        Stefan Agner <stefan@agner.ch>,
+        Steve Winslow <swinslow@gmail.com>,
+        Sven Van Asbroeck <TheSven73@gmail.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/22] Stop using input_polled_dev in polling drivers
+Message-ID: <20191021080338.prrraz5h7sykxz6e@pengutronix.de>
+References: <20191017204217.106453-1-dmitry.torokhov@gmail.com>
+ <20191018084403.GR32742@smile.fi.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <7397f6db-1dc8-3abd-41ff-2e47323c7ffa@roeck-us.net>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.28.19.63]
-X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
- (10.28.11.5)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191018084403.GR32742@smile.fi.intel.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 10:02:38 up 156 days, 14:20, 97 users,  load average: 0.14, 0.13,
+ 0.10
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Guenter
+On 19-10-18 11:44, Andy Shevchenko wrote:
+> On Thu, Oct 17, 2019 at 01:41:54PM -0700, Dmitry Torokhov wrote:
+> > Input devices now support polling mode natively (via input_setup_polling
+> > API), and input_polled_dev implementation is going away. This series
+> > switches drivers found in drivers/input to the new scheme.
+> > 
+> 
+> For all I have been Cc'ed
+> Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-On 2019/10/21 0:56, Guenter Roeck wrote:
-> On 10/18/19 1:33 AM, Xingyu Chen wrote:
->> The watchdog controller on the Meson-A/C series SoCs is moved to secure
->> world, watchdog operation needs to be done in secure EL3 mode via ATF,
->> Non-secure world can call SMC instruction to trap to AFT for watchdog
->> operation.
->>
->> Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
->> ---
->>   drivers/watchdog/Kconfig         |  17 ++++
->>   drivers/watchdog/Makefile        |   1 +
->>   drivers/watchdog/meson_sec_wdt.c | 187 
->> +++++++++++++++++++++++++++++++++++++++
->>   3 files changed, 205 insertions(+)
->>   create mode 100644 drivers/watchdog/meson_sec_wdt.c
->>
->> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
->> index 58e7c10..e84be42 100644
->> --- a/drivers/watchdog/Kconfig
->> +++ b/drivers/watchdog/Kconfig
->> @@ -826,6 +826,23 @@ config MESON_GXBB_WATCHDOG
->>         To compile this driver as a module, choose M here: the
->>         module will be called meson_gxbb_wdt.
->> +config MESON_SEC_WATCHDOG
->> +    tristate "Amlogic Meson Secure watchdog support"
->> +    depends on MESON_SM
->> +    depends on ARCH_MESON || COMPILE_TEST
-> 
-> This dependency is pointless. MESON_SM already depends on ARCH_MESON,
-> thus specifying "COMPILE_TEST" here adds no value but only
-> creates confusion.
-Thanks for your analysis, perhaps i should remove the line below.
-- depends on ARCH_MESON || COMPILE_TEST
+Same for me
+Acked-by: Marco Felsch <m.felsch@pengutronix.de> 
 
-Is it ok to modify code above like this ?
+> > 
+> > Dmitry Torokhov (21):
+> >   Input: raspberrypi-ts - switch to using polled mode of input devices
+> >   Input: sur40 - switch to using polled mode of input devices
+> >   Input: ts4800-ts - switch to using polled mode of input devices
+> >   Input: tsc6507x-ts - switch to using polled mode of input devices
+> >   Input: adc-keys - switch to using polled mode of input devices
+> >   Input: clps711x-keypad - switch to using polled mode of input devices
+> >   Input: jornada680_kbd - switch to using polled mode of input devices
+> >   Input: gpio_keys_polled - switch to using polled mode of input devices
+> >   Input: apanel - switch to using polled mode of input devices
+> >   Input: wistron_btns - switch to using polled mode of input devices
+> >   Input: cobalt_btns - convert to use managed resources
+> >   Input: cobalt_btns - switch to using polled mode of input devices
+> >   Input: sgi_btns - switch to using managed resources
+> >   Input: sgi_btns - switch to using polled mode of input devices
+> >   Input: rb532_button - switch to using managed resources
+> >   Input: rb532_button - switch to using polled mode of input devices
+> >   Input: gpio_decoder - switch to using polled mode of input devices
+> >   Input: mma8450 - switch to using polled mode of input devices
+> >   Input: bma150 - switch to using polled mode of input devices
+> >   Input: kxtj9 - switch to using managed resources
+> >   Input: kxtj9 - switch to using polled mode of input devices
+> > 
+> > Jonathan Bakker (1):
+> >   Input: bma150 - use managed resources helpers
+> > 
+> >  drivers/input/keyboard/Kconfig             |   4 -
+> >  drivers/input/keyboard/adc-keys.c          |  36 ++--
+> >  drivers/input/keyboard/clps711x-keypad.c   |  70 +++----
+> >  drivers/input/keyboard/gpio_keys_polled.c  |  65 +++---
+> >  drivers/input/keyboard/jornada680_kbd.c    |  37 ++--
+> >  drivers/input/misc/Kconfig                 |  15 --
+> >  drivers/input/misc/apanel.c                | 153 ++++++--------
+> >  drivers/input/misc/bma150.c                | 190 +++++------------
+> >  drivers/input/misc/cobalt_btns.c           |  73 +++----
+> >  drivers/input/misc/gpio_decoder.c          |  42 ++--
+> >  drivers/input/misc/kxtj9.c                 | 224 ++++++---------------
+> >  drivers/input/misc/mma8450.c               | 101 +++++-----
+> >  drivers/input/misc/rb532_button.c          |  48 ++---
+> >  drivers/input/misc/sgi_btns.c              |  54 ++---
+> >  drivers/input/misc/wistron_btns.c          |  51 ++---
+> >  drivers/input/touchscreen/Kconfig          |   4 -
+> >  drivers/input/touchscreen/raspberrypi-ts.c |  38 ++--
+> >  drivers/input/touchscreen/sur40.c          |  92 +++++----
+> >  drivers/input/touchscreen/tps6507x-ts.c    |  36 ++--
+> >  drivers/input/touchscreen/ts4800-ts.c      |  68 ++++---
+> >  20 files changed, 557 insertions(+), 844 deletions(-)
+> > 
+> > -- 
+> > 2.23.0.866.gb869b98d4c-goog
+> > 
 > 
->> +    select WATCHDOG_CORE
->> +    help
->> +      The watchdog controller on the Meson-A/C series SoCs is moved to
->> +      secure world, watchdog operation needs to be done in secure EL3
->> +      mode via ATF, non-secure world can call SMC instruction to trap
->> +      to ATF for the watchdog operation.
->> +
->> +      Say Y here if watchdog controller on Meson SoCs is located in
->> +      secure world.
->> +
->> +      To compile this driver as a module, choose M here: the
->> +      module will be called meson_sec_wdt.
->> +
->>   config MESON_WATCHDOG
->>       tristate "Amlogic Meson SoCs watchdog support"
->>       depends on ARCH_MESON || COMPILE_TEST
->> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
->> index 2ee352b..5e6b73d 100644
->> --- a/drivers/watchdog/Makefile
->> +++ b/drivers/watchdog/Makefile
->> @@ -78,6 +78,7 @@ obj-$(CONFIG_QCOM_WDT) += qcom-wdt.o
->>   obj-$(CONFIG_BCM_KONA_WDT) += bcm_kona_wdt.o
->>   obj-$(CONFIG_TEGRA_WATCHDOG) += tegra_wdt.o
->>   obj-$(CONFIG_MESON_GXBB_WATCHDOG) += meson_gxbb_wdt.o
->> +obj-$(CONFIG_MESON_SEC_WATCHDOG) += meson_sec_wdt.o
->>   obj-$(CONFIG_MESON_WATCHDOG) += meson_wdt.o
->>   obj-$(CONFIG_MEDIATEK_WATCHDOG) += mtk_wdt.o
->>   obj-$(CONFIG_DIGICOLOR_WATCHDOG) += digicolor_wdt.o
->> diff --git a/drivers/watchdog/meson_sec_wdt.c 
->> b/drivers/watchdog/meson_sec_wdt.c
->> new file mode 100644
->> index 00000000..86bd87c
->> --- /dev/null
->> +++ b/drivers/watchdog/meson_sec_wdt.c
->> @@ -0,0 +1,187 @@
->> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
->> +/*
->> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
->> + * Author: Xingyu Chen <xingyu.chen@amlogic.com>
->> + *
->> + */
->> +#include <linux/err.h>
->> +#include <linux/module.h>
->> +#include <linux/of.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/types.h>
->> +#include <linux/watchdog.h>
->> +#include <linux/firmware/meson/meson_sm.h>
->> +
->> +#define MESON_SIP_WDT_DISABLE        0x1
->> +#define MESON_SIP_WDT_ENABLE        0x2
->> +#define MESON_SIP_WDT_PING        0x3
->> +#define MESON_SIP_WDT_INIT        0x4
->> +#define MESON_SIP_WDT_RESETNOW        0x5
->> +#define MESON_SIP_WDT_SETTIMEOUT    0x6
->> +#define MESON_SIP_WDT_GETTIMELEFT    0x7
->> +
->> +#define DEFAULT_TIMEOUT            30 /* seconds */
->> +
->> +/*
->> + * Watchdog timer tick is set to 1ms in secfw side, and tick count is
->> + * stored in the bit[16-31] of WATCHDOG_CNT register, so the maximum
->> + * timeout value is 0xffff ms.
->> + */
->> +#define MAX_TIMEOUT_MS            0xFFFF
->> +
->> +struct meson_sec_wdt {
->> +    struct watchdog_device wdt_dev;
->> +    struct meson_sm_firmware *fw;
->> +};
->> +
->> +static int meson_sec_wdt_start(struct watchdog_device *wdt_dev)
->> +{
->> +    struct meson_sec_wdt *data = watchdog_get_drvdata(wdt_dev);
->> +
->> +    return meson_sm_call(data->fw, SM_WATCHDOG_OPS, NULL,
->> +                 MESON_SIP_WDT_ENABLE, 0, 0, 0, 0);
->> +}
->> +
->> +static int meson_sec_wdt_stop(struct watchdog_device *wdt_dev)
->> +{
->> +    struct meson_sec_wdt *data = watchdog_get_drvdata(wdt_dev);
->> +
->> +    return meson_sm_call(data->fw, SM_WATCHDOG_OPS, NULL,
->> +                 MESON_SIP_WDT_DISABLE, 0, 0, 0, 0);
->> +}
->> +
->> +static int meson_sec_wdt_ping(struct watchdog_device *wdt_dev)
->> +{
->> +    struct meson_sec_wdt *data = watchdog_get_drvdata(wdt_dev);
->> +
->> +    return meson_sm_call(data->fw, SM_WATCHDOG_OPS, NULL,
->> +                 MESON_SIP_WDT_PING, 0, 0, 0, 0);
->> +}
->> +
->> +static int meson_sec_wdt_set_timeout(struct watchdog_device *wdt_dev,
->> +                     unsigned int timeout)
->> +{
->> +    struct meson_sec_wdt *data = watchdog_get_drvdata(wdt_dev);
->> +
->> +    wdt_dev->timeout = timeout;
->> +
->> +    return meson_sm_call(data->fw, SM_WATCHDOG_OPS, NULL,
->> +                 MESON_SIP_WDT_SETTIMEOUT,
->> +                 wdt_dev->timeout, 0, 0, 0);
->> +}
->> +
->> +static unsigned int meson_sec_wdt_get_timeleft(struct watchdog_device 
->> *wdt_dev)
->> +{
->> +    int ret;
->> +    unsigned int timeleft;
->> +    struct meson_sec_wdt *data = watchdog_get_drvdata(wdt_dev);
->> +
->> +    ret = meson_sm_call(data->fw, SM_WATCHDOG_OPS, &timeleft,
->> +                MESON_SIP_WDT_GETTIMELEFT, 0, 0, 0, 0);
->> +
->> +    if (ret)
->> +        return ret;
+> -- 
+> With Best Regards,
+> Andy Shevchenko
 > 
-> Meh, that doesn't work. I just realized that the return type is unsigned,
-> so returning a negative error code is pointless. Guess we'll have to
-> live with returning 0 in this case after all. I wonder if we should
-> fix the API and return an integer (with negative error code), but that
-> is a different question.
-Thanks for your review.
+> 
+> 
 
-IMO, if returning an integer, and the value which copy to user buf 
-should be formatted with %d instead of %u (see timeleft_show), it will 
-cause the max value of timeleft is reduced from 4294967295 to 
-2147483647. but i'am not sure whether it will bring risk.
-
-So i also think returning 0 may be better in this case.
-> 
-> Sorry for the confusion - I should have noticed that before.
-> 
->> +
->> +    return timeleft;
->> +}
->> +
->> +static const struct watchdog_ops meson_sec_wdt_ops = {
->> +    .start = meson_sec_wdt_start,
->> +    .stop = meson_sec_wdt_stop,
->> +    .ping = meson_sec_wdt_ping,
->> +    .set_timeout = meson_sec_wdt_set_timeout,
->> +    .get_timeleft = meson_sec_wdt_get_timeleft,
->> +};
->> +
->> +static const struct watchdog_info meson_sec_wdt_info = {
->> +    .identity = "Meson Secure Watchdog Timer",
->> +    .options = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | 
->> WDIOF_MAGICCLOSE,
->> +};
->> +
->> +static int __maybe_unused meson_sec_wdt_resume(struct device *dev)
->> +{
->> +    struct meson_sec_wdt *data = dev_get_drvdata(dev);
->> +
->> +    if (watchdog_active(&data->wdt_dev))
->> +        return meson_sec_wdt_start(&data->wdt_dev);
->> +
->> +    return 0;
->> +}
->> +
->> +static int __maybe_unused meson_sec_wdt_suspend(struct device *dev)
->> +{
->> +    struct meson_sec_wdt *data = dev_get_drvdata(dev);
->> +
->> +    if (watchdog_active(&data->wdt_dev))
->> +        return meson_sec_wdt_stop(&data->wdt_dev);
->> +
->> +    return 0;
->> +}
->> +
->> +static const struct dev_pm_ops meson_sec_wdt_pm_ops = {
->> +    SET_SYSTEM_SLEEP_PM_OPS(meson_sec_wdt_suspend, meson_sec_wdt_resume)
->> +};
->> +
->> +static const struct of_device_id meson_sec_wdt_dt_ids[] = {
->> +     { .compatible = "amlogic,meson-sec-wdt", },
->> +     { /* sentinel */ },
->> +};
->> +MODULE_DEVICE_TABLE(of, meson_sec_wdt_dt_ids);
->> +
->> +static int meson_sec_wdt_probe(struct platform_device *pdev)
->> +{
->> +    struct device *dev = &pdev->dev;
->> +    struct meson_sec_wdt *data;
->> +    struct device_node *sm_np;
->> +    int ret;
->> +
->> +    data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
->> +    if (!data)
->> +        return -ENOMEM;
->> +
->> +    sm_np = of_parse_phandle(pdev->dev.of_node, "secure-monitor", 0);
->> +    if (!sm_np) {
->> +        dev_err(&pdev->dev, "no secure-monitor node\n");
->> +        return -EINVAL;
->> +    }
->> +
->> +    data->fw = meson_sm_get(sm_np);
->> +    of_node_put(sm_np);
->> +    if (!data->fw)
->> +        return -EPROBE_DEFER;
->> +
->> +    platform_set_drvdata(pdev, data);
->> +
->> +    data->wdt_dev.parent = dev;
->> +    data->wdt_dev.info = &meson_sec_wdt_info;
->> +    data->wdt_dev.ops = &meson_sec_wdt_ops;
->> +    data->wdt_dev.max_hw_heartbeat_ms = MAX_TIMEOUT_MS;
->> +    data->wdt_dev.min_timeout = 1;
->> +    data->wdt_dev.timeout = DEFAULT_TIMEOUT;
->> +    watchdog_set_drvdata(&data->wdt_dev, data);
->> +
->> +    ret = meson_sm_call(data->fw, SM_WATCHDOG_OPS, NULL,
->> +                MESON_SIP_WDT_INIT,
->> +                data->wdt_dev.timeout, 0, 0, 0);
->> +    if (ret)
->> +        return ret;
->> +
->> +    watchdog_stop_on_reboot(&data->wdt_dev);
->> +
->> +    return devm_watchdog_register_device(dev, &data->wdt_dev);
->> +}
->> +
->> +static struct platform_driver meson_sec_wdt_driver = {
->> +    .probe    = meson_sec_wdt_probe,
->> +    .driver = {
->> +        .name = "meson-sec-wdt",
->> +        .pm = &meson_sec_wdt_pm_ops,
->> +        .of_match_table    = meson_sec_wdt_dt_ids,
->> +    },
->> +};
->> +
->> +module_platform_driver(meson_sec_wdt_driver);
->> +
->> +MODULE_AUTHOR("Xingyu Chen <xingyu.chen@amlogic.com>");
->> +MODULE_DESCRIPTION("Amlogic Secure Watchdog Timer Driver");
->> +MODULE_LICENSE("Dual MIT/GPL");
->>
-> 
-> .
-> 
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
