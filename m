@@ -2,39 +2,39 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CD38CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:25:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75C62CA9EB0
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:25:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34F5C2084B
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:25:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E1472084B
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:25:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729485AbfJUQZb (ORCPT
+        id S1729717AbfJUQZe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 12:25:31 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:33120 "EHLO huawei.com"
+        Mon, 21 Oct 2019 12:25:34 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:36432 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728375AbfJUQZ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 12:25:28 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id E182BFD05BB0DD40C6F4;
-        Tue, 22 Oct 2019 00:25:24 +0800 (CST)
+        id S1729493AbfJUQZd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 12:25:33 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 0E4D28CD12A34CCC4AF9;
+        Tue, 22 Oct 2019 00:25:30 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.58) by
  DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.439.0; Tue, 22 Oct 2019 00:25:17 +0800
+ 14.3.439.0; Tue, 22 Oct 2019 00:25:21 +0800
 From:   John Garry <john.garry@huawei.com>
 To:     <jejb@linux.vnet.ibm.com>, <martin.petersen@oracle.com>
 CC:     <linux-scsi@vger.kernel.org>, <linuxarm@huawei.com>,
         <linux-kernel@vger.kernel.org>,
-        Xiang Chen <chenxiang66@hisilicon.com>,
+        Luo Jiaxing <luojiaxing@huawei.com>,
         "John Garry" <john.garry@huawei.com>
-Subject: [PATCH 03/18] scsi: hisi_sas: use wait_for_completion_timeout() when clearing ITCT
-Date:   Tue, 22 Oct 2019 00:22:00 +0800
-Message-ID: <1571674935-108326-4-git-send-email-john.garry@huawei.com>
+Subject: [PATCH 16/18] scsi: hisi_sas: Add ability to have multiple debugfs dumps
+Date:   Tue, 22 Oct 2019 00:22:13 +0800
+Message-ID: <1571674935-108326-17-git-send-email-john.garry@huawei.com>
 X-Mailer: git-send-email 2.8.1
 In-Reply-To: <1571674935-108326-1-git-send-email-john.garry@huawei.com>
 References: <1571674935-108326-1-git-send-email-john.garry@huawei.com>
@@ -47,186 +47,264 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiang Chen <chenxiang66@hisilicon.com>
+From: Luo Jiaxing <luojiaxing@huawei.com>
 
-When injecting 2bit ecc errors, it will cause confusion inside SAS
-controller which needs host reset to recover it. If a device is gone at
-the same times inject 2bit ecc errors, we may not receive the ITCT
-interrupt so it will wait for completion in clear_itct_v3_hw() all the
-time. And host reset will also not occur because it can't require
-hisi_hba->sem, so the system will be suspended.
+We use the module parameter debugfs_dump_count to manage the upper limit
+of the memory block for multiple dumps.
 
-To solve the issue, use wait_for_completion_timeout() instead of
-wait_for_completion(), and also don't mark the gone device as
-SAS_PHY_UNUSED when device gone.
-
-Signed-off-by: Xiang Chen <chenxiang66@hisilicon.com>
+Signed-off-by: Luo Jiaxing <luojiaxing@huawei.com>
 Signed-off-by: John Garry <john.garry@huawei.com>
 ---
- drivers/scsi/hisi_sas/hisi_sas.h       |  5 +++--
- drivers/scsi/hisi_sas/hisi_sas_main.c  |  8 ++++++--
- drivers/scsi/hisi_sas/hisi_sas_v1_hw.c |  6 ++++--
- drivers/scsi/hisi_sas/hisi_sas_v2_hw.c | 13 ++++++++++---
- drivers/scsi/hisi_sas/hisi_sas_v3_hw.c | 13 ++++++++++---
- 5 files changed, 33 insertions(+), 12 deletions(-)
+ drivers/scsi/hisi_sas/hisi_sas.h      |  5 +-
+ drivers/scsi/hisi_sas/hisi_sas_main.c | 73 ++++++++++++++++-----------
+ 2 files changed, 45 insertions(+), 33 deletions(-)
 
 diff --git a/drivers/scsi/hisi_sas/hisi_sas.h b/drivers/scsi/hisi_sas/hisi_sas.h
-index 720c4d6be939..83232e8472fb 100644
+index bdd4aa7ed730..72823222e08f 100644
 --- a/drivers/scsi/hisi_sas/hisi_sas.h
 +++ b/drivers/scsi/hisi_sas/hisi_sas.h
-@@ -84,6 +84,7 @@
- #define HISI_SAS_PROT_MASK (HISI_SAS_DIF_PROT_MASK | HISI_SAS_DIX_PROT_MASK)
+@@ -451,12 +451,11 @@ struct hisi_hba {
+ 	struct hisi_sas_debugfs_iost_cache debugfs_iost_cache[HISI_SAS_MAX_DEBUGFS_DUMP];
+ 	struct hisi_sas_debugfs_itct_cache debugfs_itct_cache[HISI_SAS_MAX_DEBUGFS_DUMP];
  
- #define HISI_SAS_WAIT_PHYUP_TIMEOUT 20
-+#define CLEAR_ITCT_TIMEOUT	20
+-	u64 debugfs_timestamp;
+-
++	u64 debugfs_timestamp[HISI_SAS_MAX_DEBUGFS_DUMP];
++	int debugfs_dump_index;
+ 	struct dentry *debugfs_dir;
+ 	struct dentry *debugfs_dump_dentry;
+ 	struct dentry *debugfs_bist_dentry;
+-	bool debugfs_snapshot;
+ };
  
- struct hisi_hba;
- 
-@@ -296,8 +297,8 @@ struct hisi_sas_hw {
- 	void (*phy_set_linkrate)(struct hisi_hba *hisi_hba, int phy_no,
- 			struct sas_phy_linkrates *linkrates);
- 	enum sas_linkrate (*phy_get_max_linkrate)(void);
--	void (*clear_itct)(struct hisi_hba *hisi_hba,
--			    struct hisi_sas_device *dev);
-+	int (*clear_itct)(struct hisi_hba *hisi_hba,
-+			  struct hisi_sas_device *dev);
- 	void (*free_device)(struct hisi_sas_device *sas_dev);
- 	int (*get_wideport_bitmap)(struct hisi_hba *hisi_hba, int port_id);
- 	void (*dereg_device)(struct hisi_hba *hisi_hba,
+ /* Generic HW DMA host memory structures */
 diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
-index ceba1016b77f..621eebbeacd6 100644
+index 57723b0fc025..f6ee8db6298f 100644
 --- a/drivers/scsi/hisi_sas/hisi_sas_main.c
 +++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
-@@ -1045,6 +1045,7 @@ static void hisi_sas_dev_gone(struct domain_device *device)
- 	struct hisi_sas_device *sas_dev = device->lldd_dev;
- 	struct hisi_hba *hisi_hba = dev_to_hisi_hba(device);
- 	struct device *dev = hisi_hba->dev;
-+	int ret = 0;
- 
- 	dev_info(dev, "dev[%d:%x] is gone\n",
- 		 sas_dev->device_id, sas_dev->dev_type);
-@@ -1056,13 +1057,16 @@ static void hisi_sas_dev_gone(struct domain_device *device)
- 
- 		hisi_sas_dereg_device(hisi_hba, device);
- 
--		hisi_hba->hw->clear_itct(hisi_hba, sas_dev);
-+		ret = hisi_hba->hw->clear_itct(hisi_hba, sas_dev);
- 		device->lldd_dev = NULL;
- 	}
- 
- 	if (hisi_hba->hw->free_device)
- 		hisi_hba->hw->free_device(sas_dev);
--	sas_dev->dev_type = SAS_PHY_UNUSED;
-+
-+	/* Don't mark it as SAS_PHY_UNUSED if failed to clear ITCT */
-+	if (!ret)
-+		sas_dev->dev_type = SAS_PHY_UNUSED;
- 	sas_dev->sas_device = NULL;
- 	up(&hisi_hba->sem);
- }
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c
-index b861a0f14c9d..3af53cc42bd6 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c
-@@ -531,8 +531,8 @@ static void setup_itct_v1_hw(struct hisi_hba *hisi_hba,
- 				(0xff00ULL << ITCT_HDR_REJ_OPEN_TL_OFF));
- }
- 
--static void clear_itct_v1_hw(struct hisi_hba *hisi_hba,
--			      struct hisi_sas_device *sas_dev)
-+static int clear_itct_v1_hw(struct hisi_hba *hisi_hba,
-+			    struct hisi_sas_device *sas_dev)
+@@ -2697,10 +2697,11 @@ struct dentry *hisi_sas_debugfs_dir;
+ static void hisi_sas_debugfs_snapshot_cq_reg(struct hisi_hba *hisi_hba)
  {
- 	u64 dev_id = sas_dev->device_id;
- 	struct hisi_sas_itct *itct = &hisi_hba->itct[dev_id];
-@@ -551,6 +551,8 @@ static void clear_itct_v1_hw(struct hisi_hba *hisi_hba,
- 	qw0 = le64_to_cpu(itct->qw0);
- 	qw0 &= ~ITCT_HDR_VALID_MSK;
- 	itct->qw0 = cpu_to_le64(qw0);
-+
-+	return 0;
- }
- 
- static int reset_hw_v1_hw(struct hisi_hba *hisi_hba)
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
-index 8e96a257e439..61b1e2693b08 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
-@@ -974,13 +974,14 @@ static void setup_itct_v2_hw(struct hisi_hba *hisi_hba,
- 					(0x1ULL << ITCT_HDR_RTOLT_OFF));
- }
- 
--static void clear_itct_v2_hw(struct hisi_hba *hisi_hba,
--			      struct hisi_sas_device *sas_dev)
-+static int clear_itct_v2_hw(struct hisi_hba *hisi_hba,
-+			    struct hisi_sas_device *sas_dev)
- {
- 	DECLARE_COMPLETION_ONSTACK(completion);
- 	u64 dev_id = sas_dev->device_id;
- 	struct hisi_sas_itct *itct = &hisi_hba->itct[dev_id];
- 	u32 reg_val = hisi_sas_read32(hisi_hba, ENT_INT_SRC3);
-+	struct device *dev = hisi_hba->dev;
+ 	int queue_entry_size = hisi_hba->hw->complete_hdr_size;
++	int dump_index = hisi_hba->debugfs_dump_index;
  	int i;
  
- 	sas_dev->completion = &completion;
-@@ -990,13 +991,19 @@ static void clear_itct_v2_hw(struct hisi_hba *hisi_hba,
- 		hisi_sas_write32(hisi_hba, ENT_INT_SRC3,
- 				 ENT_INT_SRC3_ITC_INT_MSK);
- 
-+	/* need to set register twice to clear ITCT for v2 hw */
- 	for (i = 0; i < 2; i++) {
- 		reg_val = ITCT_CLR_EN_MSK | (dev_id & ITCT_DEV_MSK);
- 		hisi_sas_write32(hisi_hba, ITCT_CLR, reg_val);
--		wait_for_completion(sas_dev->completion);
-+		if (!wait_for_completion_timeout(sas_dev->completion,
-+						 CLEAR_ITCT_TIMEOUT * HZ)) {
-+			dev_warn(dev, "failed to clear ITCT\n");
-+			return -ETIMEDOUT;
-+		}
- 
- 		memset(itct, 0, sizeof(struct hisi_sas_itct));
- 	}
-+	return 0;
+ 	for (i = 0; i < hisi_hba->queue_count; i++)
+-		memcpy(hisi_hba->debugfs_cq[0][i].complete_hdr,
++		memcpy(hisi_hba->debugfs_cq[dump_index][i].complete_hdr,
+ 		       hisi_hba->complete_hdr[i],
+ 		       HISI_SAS_QUEUE_SLOTS * queue_entry_size);
  }
- 
- static void free_device_v2_hw(struct hisi_sas_device *sas_dev)
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-index cc594937fa8d..19a8cfeb8f6e 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-@@ -795,13 +795,14 @@ static void setup_itct_v3_hw(struct hisi_hba *hisi_hba,
- 					(0x1ULL << ITCT_HDR_RTOLT_OFF));
- }
- 
--static void clear_itct_v3_hw(struct hisi_hba *hisi_hba,
--			      struct hisi_sas_device *sas_dev)
-+static int clear_itct_v3_hw(struct hisi_hba *hisi_hba,
-+			    struct hisi_sas_device *sas_dev)
+@@ -2708,13 +2709,14 @@ static void hisi_sas_debugfs_snapshot_cq_reg(struct hisi_hba *hisi_hba)
+ static void hisi_sas_debugfs_snapshot_dq_reg(struct hisi_hba *hisi_hba)
  {
- 	DECLARE_COMPLETION_ONSTACK(completion);
- 	u64 dev_id = sas_dev->device_id;
- 	struct hisi_sas_itct *itct = &hisi_hba->itct[dev_id];
- 	u32 reg_val = hisi_sas_read32(hisi_hba, ENT_INT_SRC3);
-+	struct device *dev = hisi_hba->dev;
+ 	int queue_entry_size = sizeof(struct hisi_sas_cmd_hdr);
++	int dump_index = hisi_hba->debugfs_dump_index;
+ 	int i;
  
- 	sas_dev->completion = &completion;
+ 	for (i = 0; i < hisi_hba->queue_count; i++) {
+ 		struct hisi_sas_cmd_hdr *debugfs_cmd_hdr, *cmd_hdr;
+ 		int j;
  
-@@ -814,8 +815,14 @@ static void clear_itct_v3_hw(struct hisi_hba *hisi_hba,
- 	reg_val = ITCT_CLR_EN_MSK | (dev_id & ITCT_DEV_MSK);
- 	hisi_sas_write32(hisi_hba, ITCT_CLR, reg_val);
+-		debugfs_cmd_hdr = hisi_hba->debugfs_dq[0][i].hdr;
++		debugfs_cmd_hdr = hisi_hba->debugfs_dq[dump_index][i].hdr;
+ 		cmd_hdr = hisi_hba->cmd_hdr[i];
  
--	wait_for_completion(sas_dev->completion);
-+	if (!wait_for_completion_timeout(sas_dev->completion,
-+					 CLEAR_ITCT_TIMEOUT * HZ)) {
-+		dev_warn(dev, "failed to clear ITCT\n");
-+		return -ETIMEDOUT;
-+	}
+ 		for (j = 0; j < HISI_SAS_QUEUE_SLOTS; j++)
+@@ -2725,6 +2727,7 @@ static void hisi_sas_debugfs_snapshot_dq_reg(struct hisi_hba *hisi_hba)
+ 
+ static void hisi_sas_debugfs_snapshot_port_reg(struct hisi_hba *hisi_hba)
+ {
++	int dump_index = hisi_hba->debugfs_dump_index;
+ 	const struct hisi_sas_debugfs_reg *port =
+ 		hisi_hba->hw->debugfs_reg_port;
+ 	int i, phy_cnt;
+@@ -2732,7 +2735,7 @@ static void hisi_sas_debugfs_snapshot_port_reg(struct hisi_hba *hisi_hba)
+ 	u32 *databuf;
+ 
+ 	for (phy_cnt = 0; phy_cnt < hisi_hba->n_phy; phy_cnt++) {
+-		databuf = hisi_hba->debugfs_port_reg[0][phy_cnt].data;
++		databuf = hisi_hba->debugfs_port_reg[dump_index][phy_cnt].data;
+ 		for (i = 0; i < port->count; i++, databuf++) {
+ 			offset = port->base_off + 4 * i;
+ 			*databuf = port->read_port_reg(hisi_hba, phy_cnt,
+@@ -2743,7 +2746,8 @@ static void hisi_sas_debugfs_snapshot_port_reg(struct hisi_hba *hisi_hba)
+ 
+ static void hisi_sas_debugfs_snapshot_global_reg(struct hisi_hba *hisi_hba)
+ {
+-	u32 *databuf = hisi_hba->debugfs_regs[0][DEBUGFS_GLOBAL].data;
++	int dump_index = hisi_hba->debugfs_dump_index;
++	u32 *databuf = hisi_hba->debugfs_regs[dump_index][DEBUGFS_GLOBAL].data;
+ 	const struct hisi_sas_hw *hw = hisi_hba->hw;
+ 	const struct hisi_sas_debugfs_reg *global =
+ 			hw->debugfs_reg_array[DEBUGFS_GLOBAL];
+@@ -2755,7 +2759,8 @@ static void hisi_sas_debugfs_snapshot_global_reg(struct hisi_hba *hisi_hba)
+ 
+ static void hisi_sas_debugfs_snapshot_axi_reg(struct hisi_hba *hisi_hba)
+ {
+-	u32 *databuf = hisi_hba->debugfs_regs[0][DEBUGFS_AXI].data;
++	int dump_index = hisi_hba->debugfs_dump_index;
++	u32 *databuf = hisi_hba->debugfs_regs[dump_index][DEBUGFS_AXI].data;
+ 	const struct hisi_sas_hw *hw = hisi_hba->hw;
+ 	const struct hisi_sas_debugfs_reg *axi =
+ 			hw->debugfs_reg_array[DEBUGFS_AXI];
+@@ -2768,7 +2773,8 @@ static void hisi_sas_debugfs_snapshot_axi_reg(struct hisi_hba *hisi_hba)
+ 
+ static void hisi_sas_debugfs_snapshot_ras_reg(struct hisi_hba *hisi_hba)
+ {
+-	u32 *databuf = hisi_hba->debugfs_regs[0][DEBUGFS_RAS].data;
++	int dump_index = hisi_hba->debugfs_dump_index;
++	u32 *databuf = hisi_hba->debugfs_regs[dump_index][DEBUGFS_RAS].data;
+ 	const struct hisi_sas_hw *hw = hisi_hba->hw;
+ 	const struct hisi_sas_debugfs_reg *ras =
+ 			hw->debugfs_reg_array[DEBUGFS_RAS];
+@@ -2781,8 +2787,9 @@ static void hisi_sas_debugfs_snapshot_ras_reg(struct hisi_hba *hisi_hba)
+ 
+ static void hisi_sas_debugfs_snapshot_itct_reg(struct hisi_hba *hisi_hba)
+ {
+-	void *cachebuf = hisi_hba->debugfs_itct_cache[0].cache;
+-	void *databuf = hisi_hba->debugfs_itct[0].itct;
++	int dump_index = hisi_hba->debugfs_dump_index;
++	void *cachebuf = hisi_hba->debugfs_itct_cache[dump_index].cache;
++	void *databuf = hisi_hba->debugfs_itct[dump_index].itct;
+ 	struct hisi_sas_itct *itct;
+ 	int i;
+ 
+@@ -2799,9 +2806,10 @@ static void hisi_sas_debugfs_snapshot_itct_reg(struct hisi_hba *hisi_hba)
+ 
+ static void hisi_sas_debugfs_snapshot_iost_reg(struct hisi_hba *hisi_hba)
+ {
++	int dump_index = hisi_hba->debugfs_dump_index;
+ 	int max_command_entries = HISI_SAS_MAX_COMMANDS;
+-	void *cachebuf = hisi_hba->debugfs_iost_cache[0].cache;
+-	void *databuf = hisi_hba->debugfs_iost[0].iost;
++	void *cachebuf = hisi_hba->debugfs_iost_cache[dump_index].cache;
++	void *databuf = hisi_hba->debugfs_iost[dump_index].iost;
+ 	struct hisi_sas_iost *iost;
+ 	int i;
+ 
+@@ -3195,6 +3203,7 @@ static const struct file_operations hisi_sas_debugfs_itct_cache_fops = {
+ static void hisi_sas_debugfs_create_files(struct hisi_hba *hisi_hba)
+ {
+ 	u64 *debugfs_timestamp;
++	int dump_index = hisi_hba->debugfs_dump_index;
+ 	struct dentry *dump_dentry;
+ 	struct dentry *dentry;
+ 	char name[256];
+@@ -3202,17 +3211,18 @@ static void hisi_sas_debugfs_create_files(struct hisi_hba *hisi_hba)
+ 	int c;
+ 	int d;
+ 
+-	debugfs_timestamp = &hisi_hba->debugfs_timestamp;
+-	/* Create dump dir inside device dir */
+-	dump_dentry = debugfs_create_dir("dump", hisi_hba->debugfs_dir);
+-	hisi_hba->debugfs_dump_dentry = dump_dentry;
++	snprintf(name, 256, "%d", dump_index);
 +
- 	memset(itct, 0, sizeof(struct hisi_sas_itct));
-+	return 0;
- }
++	dump_dentry = debugfs_create_dir(name, hisi_hba->debugfs_dump_dentry);
++
++	debugfs_timestamp = &hisi_hba->debugfs_timestamp[dump_index];
  
- static void dereg_device_v3_hw(struct hisi_hba *hisi_hba,
+ 	debugfs_create_u64("timestamp", 0400, dump_dentry,
+ 			   debugfs_timestamp);
+ 
+ 	debugfs_create_file("global", 0400, dump_dentry,
+-			    &hisi_hba->debugfs_regs[0][DEBUGFS_GLOBAL],
+-			    &hisi_sas_debugfs_global_fops);
++			   &hisi_hba->debugfs_regs[dump_index][DEBUGFS_GLOBAL],
++			   &hisi_sas_debugfs_global_fops);
+ 
+ 	/* Create port dir and files */
+ 	dentry = debugfs_create_dir("port", dump_dentry);
+@@ -3220,7 +3230,7 @@ static void hisi_sas_debugfs_create_files(struct hisi_hba *hisi_hba)
+ 		snprintf(name, 256, "%d", p);
+ 
+ 		debugfs_create_file(name, 0400, dentry,
+-				    &hisi_hba->debugfs_port_reg[0][p],
++				    &hisi_hba->debugfs_port_reg[dump_index][p],
+ 				    &hisi_sas_debugfs_port_fops);
+ 	}
+ 
+@@ -3230,7 +3240,7 @@ static void hisi_sas_debugfs_create_files(struct hisi_hba *hisi_hba)
+ 		snprintf(name, 256, "%d", c);
+ 
+ 		debugfs_create_file(name, 0400, dentry,
+-				    &hisi_hba->debugfs_cq[0][c],
++				    &hisi_hba->debugfs_cq[dump_index][c],
+ 				    &hisi_sas_debugfs_cq_fops);
+ 	}
+ 
+@@ -3240,32 +3250,32 @@ static void hisi_sas_debugfs_create_files(struct hisi_hba *hisi_hba)
+ 		snprintf(name, 256, "%d", d);
+ 
+ 		debugfs_create_file(name, 0400, dentry,
+-				    &hisi_hba->debugfs_dq[0][d],
++				    &hisi_hba->debugfs_dq[dump_index][d],
+ 				    &hisi_sas_debugfs_dq_fops);
+ 	}
+ 
+ 	debugfs_create_file("iost", 0400, dump_dentry,
+-			    &hisi_hba->debugfs_iost[0],
++			    &hisi_hba->debugfs_iost[dump_index],
+ 			    &hisi_sas_debugfs_iost_fops);
+ 
+ 	debugfs_create_file("iost_cache", 0400, dump_dentry,
+-			    &hisi_hba->debugfs_iost_cache[0],
++			    &hisi_hba->debugfs_iost_cache[dump_index],
+ 			    &hisi_sas_debugfs_iost_cache_fops);
+ 
+ 	debugfs_create_file("itct", 0400, dump_dentry,
+-			    &hisi_hba->debugfs_itct[0],
++			    &hisi_hba->debugfs_itct[dump_index],
+ 			    &hisi_sas_debugfs_itct_fops);
+ 
+ 	debugfs_create_file("itct_cache", 0400, dump_dentry,
+-			    &hisi_hba->debugfs_itct_cache[0],
++			    &hisi_hba->debugfs_itct_cache[dump_index],
+ 			    &hisi_sas_debugfs_itct_cache_fops);
+ 
+ 	debugfs_create_file("axi", 0400, dump_dentry,
+-			    &hisi_hba->debugfs_regs[0][DEBUGFS_AXI],
++			    &hisi_hba->debugfs_regs[dump_index][DEBUGFS_AXI],
+ 			    &hisi_sas_debugfs_axi_fops);
+ 
+ 	debugfs_create_file("ras", 0400, dump_dentry,
+-			    &hisi_hba->debugfs_regs[0][DEBUGFS_RAS],
++			    &hisi_hba->debugfs_regs[dump_index][DEBUGFS_RAS],
+ 			    &hisi_sas_debugfs_ras_fops);
+ 
+ 	return;
+@@ -3296,8 +3306,7 @@ static ssize_t hisi_sas_debugfs_trigger_dump_write(struct file *file,
+ 	struct hisi_hba *hisi_hba = file->f_inode->i_private;
+ 	char buf[8];
+ 
+-	/* A bit racy, but don't care too much since it's only debugfs */
+-	if (hisi_hba->debugfs_snapshot)
++	if (hisi_hba->debugfs_dump_index >= hisi_sas_debugfs_dump_count)
+ 		return -EFAULT;
+ 
+ 	if (count > 8)
+@@ -3700,13 +3709,17 @@ void hisi_sas_debugfs_work_handler(struct work_struct *work)
+ 	struct hisi_hba *hisi_hba =
+ 		container_of(work, struct hisi_hba, debugfs_work);
+ 	u64 timestamp = local_clock() / NSEC_PER_MSEC;
++	struct device *dev = hisi_hba->dev;
++	int debugfs_dump_index = hisi_hba->debugfs_dump_index;
+ 
+-	hisi_hba->debugfs_timestamp = timestamp;
+-	if (hisi_hba->debugfs_snapshot)
++	hisi_hba->debugfs_timestamp[debugfs_dump_index] = timestamp;
++	if (debugfs_dump_index >= hisi_sas_debugfs_dump_count) {
++		dev_warn(dev, "dump count exceeded!\n");
+ 		return;
+-	hisi_hba->debugfs_snapshot = true;
++	}
+ 
+ 	hisi_sas_debugfs_snapshot_regs(hisi_hba);
++	hisi_hba->debugfs_dump_index++;
+ }
+ EXPORT_SYMBOL_GPL(hisi_sas_debugfs_work_handler);
+ 
 -- 
 2.17.1
 
