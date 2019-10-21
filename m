@@ -2,105 +2,203 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB934CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 00:14:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9752ECA9EA0
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 00:15:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC2FF218BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 00:14:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64615218BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 00:15:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571616906;
+	bh=0dlM9hCtT8nSppypeG/pPQBMx7LP+tzZb/cOvsstYv0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=uDKeBkjOoIxmZgzTuV9B0ioyPLlX9uNEXiG9vd/GBvcKhqAe1tupYruVqBovQfKIY
+	 Hz6Phr/Kdz1J0+bMvppA1XpYKnehHQEcE1ZjfhELRg2XdWkVzIIIilSKyTJCLRQtrc
+	 ZGUOEUDnovsWalpgo0nwkpOinL6+e6dFCKP4OTKg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbfJUAOG convert rfc822-to-8bit (ORCPT
+        id S1726795AbfJUAPF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 20 Oct 2019 20:14:06 -0400
-Received: from mxszcu.zte.com.cn ([210.21.236.131]:30260 "EHLO mxct.zte.com.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726576AbfJUAOG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 20 Oct 2019 20:14:06 -0400
-X-Greylist: delayed 949 seconds by postgrey-1.27 at vger.kernel.org; Sun, 20 Oct 2019 20:14:05 EDT
-Received: from mse-fl2.zte.com.cn (unknown [10.30.14.239])
-        by Forcepoint Email with ESMTPS id DA3A3E7E4B382DB64841;
-        Mon, 21 Oct 2019 07:58:04 +0800 (CST)
-Received: from notes_smtp.zte.com.cn (notessmtp.zte.com.cn [10.30.1.239])
-        by mse-fl2.zte.com.cn with ESMTP id x9KNvpgJ066673;
-        Mon, 21 Oct 2019 07:57:51 +0800 (GMT-8)
-        (envelope-from wang.yi59@zte.com.cn)
-Received: from fox-host8.localdomain ([10.74.120.8])
-          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
-          with ESMTP id 2019102107473211-44142 ;
-          Mon, 21 Oct 2019 07:47:32 +0800 
-From:   Yi Wang <wang.yi59@zte.com.cn>
-To:     paulmck@kernel.org
-Cc:     josh@joshtriplett.org, rostedt@goodmis.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        joel@joelfernandes.org, rcu@vger.kernel.org,
-        linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
-        wang.yi59@zte.com.cn, up2wing@gmail.com, wang.liang82@zte.com.cn
-Subject: [PATCH] rcu/rcu_segcblist: fix -Wmissing-prototypes warnings
-Date:   Mon, 21 Oct 2019 07:49:55 +0800
-Message-Id: <1571615395-3657-1-git-send-email-wang.yi59@zte.com.cn>
-X-Mailer: git-send-email 1.8.3.1
+        Sun, 20 Oct 2019 20:15:05 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:41663 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726576AbfJUAPF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 20 Oct 2019 20:15:05 -0400
+Received: by mail-ot1-f65.google.com with SMTP id g13so9487620otp.8;
+        Sun, 20 Oct 2019 17:15:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fq+vYEfQuv8rpJrOTJ9oLC4H1EvdrOj9GHc0KwJV19w=;
+        b=lJmI0QBhhqAIpBOLFfYR+Tm7MhZs1tvTp8ipfadWgUyCTLEi/V/hY8BrIc+42s8Nzn
+         3xb/4Izj83oo6wPq1AU9utt+ghVkeRagYyXcpvD59jao8Noh+u1WTXHVLVtjrQd4bUDp
+         PuTUl6hKLU2NNKCsEd0//pTw/nUGWFypSb5lfzyC3aj6Qps54A7fTeWUmemIE7ZR0lhS
+         6CRK68/xOkGzxvvaFpuyCSf5AInhtBfNNJzrQYA9H7v10VPTCta1rr1qev2To+zug3Iw
+         7kvs8uS3tKUixQZiyMQKXU4+atjMyiO8YegFZc1y8xZDRq0f95lWEeRjVJzDZtgW1270
+         kj4w==
+X-Gm-Message-State: APjAAAXeR4UFtjhe/Fd3dh59qJQqhMEdGnobGAUWH2NQbKtqkS09151S
+        HTRK/Gilw6r2J3t/xrsOdyEk5glv5T6EhsdERnY=
+X-Google-Smtp-Source: APXvYqx/9Ny5dMXopObXoVn5Fx157H12CJIPbT82pFBL84O2+vxj9f5PxQ2rhV4EeXEM1v8hcF/AieUs8iMckw+9RiQ=
+X-Received: by 2002:a9d:5a0f:: with SMTP id v15mr16863262oth.266.1571616903535;
+ Sun, 20 Oct 2019 17:15:03 -0700 (PDT)
 MIME-Version: 1.0
-X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
- 21, 2013) at 2019-10-21 07:47:32,
-        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
- 2019-10-21 07:57:52
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-X-MAIL: mse-fl2.zte.com.cn x9KNvpgJ066673
+References: <20191017163503.30791-1-sudeep.holla@arm.com> <20191018060247.g5asfuh3kncoj7kl@vireshk-i7>
+ <20191018101924.GA25540@bogus> <4881906.zjS51fuFuv@kreacher> <20191018110632.GB25540@bogus>
+In-Reply-To: <20191018110632.GB25540@bogus>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 21 Oct 2019 02:14:51 +0200
+Message-ID: <CAJZ5v0hnvahJ6bu6SEVvavb1kRe=X0wP_JUS26h_d019u5z7PA@mail.gmail.com>
+Subject: Re: [PATCH] cpufreq: flush any pending policy update work scheduled
+ before freeing
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We get these warnings when build kernel W=1:
-kernel/rcu/rcu_segcblist.c:91:6: warning: no previous prototype for ‘rcu_segcblist_set_len’ [-Wmissing-prototypes]
-kernel/rcu/rcu_segcblist.c:107:6: warning: no previous prototype for ‘rcu_segcblist_add_len’ [-Wmissing-prototypes]
-kernel/rcu/rcu_segcblist.c:137:6: warning: no previous prototype for ‘rcu_segcblist_xchg_len’ [-Wmissing-prototypes]
+On Fri, Oct 18, 2019 at 1:06 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
+>
+> On Fri, Oct 18, 2019 at 12:37:51PM +0200, Rafael J. Wysocki wrote:
+> > On Friday, October 18, 2019 12:19:24 PM CEST Sudeep Holla wrote:
+> > > On Fri, Oct 18, 2019 at 11:32:47AM +0530, Viresh Kumar wrote:
+> > > > On 18-10-19, 06:55, Sudeep Holla wrote:
+> > > > > On Thu, Oct 17, 2019 at 11:26:54PM +0200, Rafael J. Wysocki wrote:
+> > > > > > On Thu, Oct 17, 2019 at 9:36 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> > > > > > >
+> > > > > > > On Thu, Oct 17, 2019 at 6:35 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
+> > > > > > > >
+> > > > > > > > dev_pm_qos_remove_request ends calling {max,min}_freq_req QoS notifiers
+> > > > > > > > which schedule policy update work. It may end up racing with the freeing
+> > > > > > > > the policy and unregistering the driver.
+> > > > > > > >
+> > > > > > > > One possible race is as below where the cpufreq_driver is unregistered
+> > > > > > > > but the scheduled work gets executed at later stage when cpufreq_driver
+> > > > > > > > is NULL(i.e. after freeing the policy and driver)
+> > > > > > > >
+> > > > > > > > Unable to handle kernel NULL pointer dereference at virtual address 0000001c
+> > > > > > > > pgd = (ptrval)
+> > > > > > > > [0000001c] *pgd=80000080204003, *pmd=00000000
+> > > > > > > > Internal error: Oops: 206 [#1] SMP THUMB2
+> > > > > > > > Modules linked in:
+> > > > > > > > CPU: 0 PID: 34 Comm: kworker/0:1 Not tainted 5.4.0-rc3-00006-g67f5a8081a4b #86
+> > > > > > > > Hardware name: ARM-Versatile Express
+> > > > > > > > Workqueue: events handle_update
+> > > > > > > > PC is at cpufreq_set_policy+0x58/0x228
+> > > > > > > > LR is at dev_pm_qos_read_value+0x77/0xac
+> > > > > > > > Control: 70c5387d  Table: 80203000  DAC: fffffffd
+> > > > > > > > Process kworker/0:1 (pid: 34, stack limit = 0x(ptrval))
+> > > > > > > >         (cpufreq_set_policy) from (refresh_frequency_limits.part.24+0x37/0x48)
+> > > > > > > >         (refresh_frequency_limits.part.24) from (handle_update+0x2f/0x38)
+> > > > > > > >         (handle_update) from (process_one_work+0x16d/0x3cc)
+> > > > > > > >         (process_one_work) from (worker_thread+0xff/0x414)
+> > > > > > > >         (worker_thread) from (kthread+0xff/0x100)
+> > > > > > > >         (kthread) from (ret_from_fork+0x11/0x28)
+> > > > > > > >
+> > > > > > > > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> > > > > > > > Cc: Viresh Kumar <viresh.kumar@linaro.org>
+> > > > > > > > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> > > > > > > > ---
+> > > > > > > >  drivers/cpufreq/cpufreq.c | 3 +++
+> > > > > > > >  1 file changed, 3 insertions(+)
+> > > > > > > >
+> > > > > > > > Hi Rafael, Viresh,
+> > > > > > > >
+> > > > > > > > This fixed the boot issue I reported[1] on TC2 with bL switcher enabled.
+> > > > > > > > I have based this patch on -rc3 and not on top of your patches. This
+> > > > > > > > only fixes the boot issue but I hit the other crashes while continuously
+> > > > > > > > switching on and off the bL switcher that register/unregister the driver
+> > > > > > > > Your patch series fixes them. I can based this on top of those if you
+> > > > > > > > prefer.
+> > > > > > > >
+> > > > > > > > Regards,
+> > > > > > > > Sudeep
+> > > > > > > >
+> > > > > > > > [1] https://lore.kernel.org/linux-pm/20191015155735.GA29105@bogus/
+> > > > > > > >
+> > > > > > > > diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> > > > > > > > index c52d6fa32aac..b703c29a84be 100644
+> > > > > > > > --- a/drivers/cpufreq/cpufreq.c
+> > > > > > > > +++ b/drivers/cpufreq/cpufreq.c
+> > > > > > > > @@ -1278,6 +1278,9 @@ static void cpufreq_policy_free(struct cpufreq_policy *policy)
+> > > > > > > >         }
+> > > > > > > >
+> > > > > > > >         dev_pm_qos_remove_request(policy->min_freq_req);
+> > > > > > > > +       /* flush the pending policy->update work before freeing the policy */
+> > > > > > > > +       if (work_pending(&policy->update))
+> > > > > > >
+> > > > > > > Isn't this racy?
+> > > > > > >
+> > > > > > > It still may be running if the pending bit is clear and we still need
+> > > > > > > to wait for it then, don't we?
+> > > > > > >
+> > > > > > > Why don't you do an unconditional flush_work() here?
+> > > > > >
+> > > > > > You may as well do a cancel_work_sync() here, because whether or not
+> > > > > > the last update of the policy happens before it goes away is a matter
+> > > > > > of timing in any case
+> > > > >
+> > > > > In fact that's the first thing I tried to fix the issue I was seeing.
+> > > > > But I then thought it would be better to complete the update as the PM
+> > > > > QoS were getting updated back to DEFAULT values for the device. Even
+> > > > > this works.
+> > > > >
+> > > > > What is your preference ? flush_work or cancel_work_sync ? I will
+> > > > > update accordingly. I may need to do some more testing with
+> > > > > cancel_work_sync as I just checked that quickly to confirm the race.
+> > > >
+> > > > As I said in the other email, this work didn't come as a result of
+> > > > removal of the qos request from cpufreq core and so must have come
+> > > > from other thermal or similar events.
+> > >
+> > > I don't think so. For sure not because of any thermal events. I didn't
+> > > have log handy and hence had to wait till I was next to hardware.
+> > >
+> > > This is log:
+> > >  cpufreq: cpufreq_policy_free: dev_pm_qos_remove_request max before
+> > >  cpufreq: cpufreq_notifier_max: schedule_work(&policy->update)
+> > >  cpufreq: cpufreq_policy_free: dev_pm_qos_remove_request max after
+> > >  cpufreq: cpufreq_policy_free: dev_pm_qos_remove_request min before
+> > >  cpufreq: cpufreq_notifier_min: schedule_work(&policy->update)
+> > >  cpufreq: cpufreq_policy_free: dev_pm_qos_remove_request min after
+> > >  cpufreq: cpufreq_policy_free: dev_pm_qos_remove_request max before
+> > >  cpufreq: cpufreq_notifier_max: schedule_work(&policy->update)
+> > >  cpufreq: cpufreq_policy_free: dev_pm_qos_remove_request max after
+> > >  cpufreq: cpufreq_policy_free: dev_pm_qos_remove_request min before
+> > >  cpufreq: cpufreq_notifier_min: schedule_work(&policy->update)
+> > >  cpufreq: cpufreq_policy_free: dev_pm_qos_remove_request min after
+> > >
+> > > So if I move the call above, it still crashes as the work is getting
+> > > scheduled later.
+> >
+> > OK, please cancel the work after dropping the last request.
+> >
+> > We still need to understand what is going on here, but the crash needs to be
+> > prevented from occurring in the first place IMO.
+> >
+> Callstack is:
+>
+> (cpufreq_notifier_max)
+> (notifier_call_chain)
+> (blocking_notifier_call_chain)
+> (pm_qos_update_target)
+> (freq_qos_apply)
+> (freq_qos_remove_request)
+> (cpufreq_policy_free)
+> (subsys_interface_unregister)
+> (cpufreq_unregister_driver)
 
-Commit eda669a6a2c5 ("rcu/nocb: Atomic ->len field in rcu_segcblist
-structure") introduced this, and make the functions static to fix
-them.
+That may be due to a bug in one of my patches (it's adding one of the
+notifiers to a wrong list).
 
-Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
----
- kernel/rcu/rcu_segcblist.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/kernel/rcu/rcu_segcblist.c b/kernel/rcu/rcu_segcblist.c
-index 495c58c..cbc87b8 100644
---- a/kernel/rcu/rcu_segcblist.c
-+++ b/kernel/rcu/rcu_segcblist.c
-@@ -88,7 +88,7 @@ struct rcu_head *rcu_cblist_dequeue(struct rcu_cblist *rclp)
- }
- 
- /* Set the length of an rcu_segcblist structure. */
--void rcu_segcblist_set_len(struct rcu_segcblist *rsclp, long v)
-+static void rcu_segcblist_set_len(struct rcu_segcblist *rsclp, long v)
- {
- #ifdef CONFIG_RCU_NOCB_CPU
- 	atomic_long_set(&rsclp->len, v);
-@@ -104,7 +104,7 @@ void rcu_segcblist_set_len(struct rcu_segcblist *rsclp, long v)
-  * This increase is fully ordered with respect to the callers accesses
-  * both before and after.
-  */
--void rcu_segcblist_add_len(struct rcu_segcblist *rsclp, long v)
-+static void rcu_segcblist_add_len(struct rcu_segcblist *rsclp, long v)
- {
- #ifdef CONFIG_RCU_NOCB_CPU
- 	smp_mb__before_atomic(); /* Up to the caller! */
-@@ -134,7 +134,7 @@ void rcu_segcblist_inc_len(struct rcu_segcblist *rsclp)
-  * with the actual number of callbacks on the structure.  This exchange is
-  * fully ordered with respect to the callers accesses both before and after.
-  */
--long rcu_segcblist_xchg_len(struct rcu_segcblist *rsclp, long v)
-+static long rcu_segcblist_xchg_len(struct rcu_segcblist *rsclp, long v)
- {
- #ifdef CONFIG_RCU_NOCB_CPU
- 	return atomic_long_xchg(&rsclp->len, v);
--- 
-1.8.3.1
-
+Please re-test with the current linux-next branch that I've just pushed.
