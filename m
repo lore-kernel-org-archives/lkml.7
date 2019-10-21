@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F78CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B5BCCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:40:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 057EE21872
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:40:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D9F421A4A
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:40:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571665203;
-	bh=4F+42j2uRaytgggMA8FTxB05z1lZ6ltMnzNWkmjsaBw=;
+	s=default; t=1571665206;
+	bh=RJ2JKF7aHbIXXe6fl+8TR4g4jjPM+fC+GP7eMON11ao=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mOxHkvDTNZCH3XTylqOi92PYswhWdw7o6/Bd6O9f0gJQBIH9OGtHWeEgBElrz5uj+
-	 Nxf9pLiIANiLMP5sa+KceF0fU6YD+7y/l1PgDVEq/PXM6oldv1HfUaqmTy5OAhKbNg
-	 /MgWHC01MZ70uPNIEKSHWC92oHJK3X9vV+U8YFWw=
+	b=gwHWbtFrDoqM3Yo0h6WNTUcf8aZV+V3lOUW5keM/2yln+kTSxyo/SXDLiG+rZkjzO
+	 Dg565ABqkr7KP1Eo6SoQKEmv8fQn+bCTAi/rE5+Ti7APEJosGYSc+8mE4w6+pYyW4B
+	 pb/pMMZivlO3MJ6baxjEG/9iQOrhCtJntVRW0OT4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728926AbfJUNkB (ORCPT
+        id S1729028AbfJUNkF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 09:40:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41628 "EHLO mail.kernel.org"
+        Mon, 21 Oct 2019 09:40:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41690 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729366AbfJUNj7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 09:39:59 -0400
+        id S1729387AbfJUNkC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 09:40:02 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1947121BE5;
-        Mon, 21 Oct 2019 13:39:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 176F221783;
+        Mon, 21 Oct 2019 13:39:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571665198;
-        bh=4F+42j2uRaytgggMA8FTxB05z1lZ6ltMnzNWkmjsaBw=;
+        s=default; t=1571665201;
+        bh=RJ2JKF7aHbIXXe6fl+8TR4g4jjPM+fC+GP7eMON11ao=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RjRz6knflWdL4V9pshprAKjgzJJJ1rh0fxRGdRVk9kEdsTL3/m1HG7XnWLYgLrzyX
-         nCy/jaSlEe/w5di8P8Cs4RIAM+BM/G+vllgPg2xpGxXxJqp0w2rRCTDfx0kTAygwwQ
-         wPJ1y9LLYIH9QsX7aCC4EIhDy2gsANDdE3JlpXIU=
+        b=rbX23Qj2fXZirrFAhYEv3m/Uz6PlPSyVaO4qH2swy/MGOqL1Yy5DW3zAsxkHA47C/
+         shhhv0KKHY8CKYoIQm90U2F4fNN8pq5kP/xQzAKaSBBYdPd5dsXpyW/22SuuBWjj4/
+         U4vOVnNySJX64juDx7ZmNC9/YSJTN0LOz0xvOWC8=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -51,9 +51,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         David Ahern <dsahern@gmail.com>,
         =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= 
         <lclaudio@redhat.com>
-Subject: [PATCH 23/57] tools arch x86: Grab a copy of the file containing the IRQ vector defines
-Date:   Mon, 21 Oct 2019 10:38:00 -0300
-Message-Id: <20191021133834.25998-24-acme@kernel.org>
+Subject: [PATCH 24/57] libbeauty: Add a generator for x86's IRQ vectors -> strings
+Date:   Mon, 21 Oct 2019 10:38:01 -0300
+Message-Id: <20191021133834.25998-25-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191021133834.25998-1-acme@kernel.org>
 References: <20191021133834.25998-1-acme@kernel.org>
@@ -67,8 +67,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-We'll use it to generate a table and then convert the irq_vectors:*
-tracepoint 'vector' arg in things like perf trace, script, etc.
+We'll wire this up with the 'vector' arg in irq_vectors:*, etc:
+
+Just run it straight away and check what it produces:
+
+  $ tools/perf/trace/beauty/tracepoints/x86_irq_vectors.sh
+  static const char *x86_irq_vectors[] = {
+  	[0x02] = "NMI",
+  	[0x12] = "MCE",
+  	[0x20] = "IRQ_MOVE_CLEANUP",
+  	[0x80] = "IA32_SYSCALL",
+  	[0xec] = "LOCAL_TIMER",
+  	[0xed] = "HYPERV_STIMER0",
+  	[0xee] = "HYPERV_REENLIGHTENMENT",
+  	[0xef] = "MANAGED_IRQ_SHUTDOWN",
+  	[0xf0] = "POSTED_INTR_NESTED",
+  	[0xf1] = "POSTED_INTR_WAKEUP",
+  	[0xf2] = "POSTED_INTR",
+  	[0xf3] = "HYPERVISOR_CALLBACK",
+  	[0xf4] = "DEFERRED_ERROR",
+  	[0xf6] = "IRQ_WORK",
+  	[0xf7] = "X86_PLATFORM_IPI",
+  	[0xf8] = "REBOOT",
+  	[0xf9] = "THRESHOLD_APIC",
+  	[0xfa] = "THERMAL_APIC",
+  	[0xfb] = "CALL_FUNCTION_SINGLE",
+  	[0xfc] = "CALL_FUNCTION",
+  	[0xfd] = "RESCHEDULE",
+  	[0xfe] = "ERROR_APIC",
+  	[0xff] = "SPURIOUS_APIC",
+  };
+  $
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
@@ -76,178 +105,46 @@ Cc: David Ahern <dsahern@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-z7gi058lzhnrm32slevg3xod@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-cpl1pa7kkwn0llufi5qw4li8@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/arch/x86/include/asm/irq_vectors.h | 146 +++++++++++++++++++++++
- tools/perf/check-headers.sh              |   1 +
- 2 files changed, 147 insertions(+)
- create mode 100644 tools/arch/x86/include/asm/irq_vectors.h
+ .../beauty/tracepoints/x86_irq_vectors.sh     | 27 +++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+ create mode 100755 tools/perf/trace/beauty/tracepoints/x86_irq_vectors.sh
 
-diff --git a/tools/arch/x86/include/asm/irq_vectors.h b/tools/arch/x86/include/asm/irq_vectors.h
-new file mode 100644
-index 000000000000..889f8b1b5b7f
+diff --git a/tools/perf/trace/beauty/tracepoints/x86_irq_vectors.sh b/tools/perf/trace/beauty/tracepoints/x86_irq_vectors.sh
+new file mode 100755
+index 000000000000..f920003723b3
 --- /dev/null
-+++ b/tools/arch/x86/include/asm/irq_vectors.h
-@@ -0,0 +1,146 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _ASM_X86_IRQ_VECTORS_H
-+#define _ASM_X86_IRQ_VECTORS_H
++++ b/tools/perf/trace/beauty/tracepoints/x86_irq_vectors.sh
+@@ -0,0 +1,27 @@
++#!/bin/sh
++# SPDX-License-Identifier: LGPL-2.1
++# (C) 2019, Arnaldo Carvalho de Melo <acme@redhat.com>
 +
-+#include <linux/threads.h>
-+/*
-+ * Linux IRQ vector layout.
-+ *
-+ * There are 256 IDT entries (per CPU - each entry is 8 bytes) which can
-+ * be defined by Linux. They are used as a jump table by the CPU when a
-+ * given vector is triggered - by a CPU-external, CPU-internal or
-+ * software-triggered event.
-+ *
-+ * Linux sets the kernel code address each entry jumps to early during
-+ * bootup, and never changes them. This is the general layout of the
-+ * IDT entries:
-+ *
-+ *  Vectors   0 ...  31 : system traps and exceptions - hardcoded events
-+ *  Vectors  32 ... 127 : device interrupts
-+ *  Vector  128         : legacy int80 syscall interface
-+ *  Vectors 129 ... LOCAL_TIMER_VECTOR-1
-+ *  Vectors LOCAL_TIMER_VECTOR ... 255 : special interrupts
-+ *
-+ * 64-bit x86 has per CPU IDT tables, 32-bit has one shared IDT table.
-+ *
-+ * This file enumerates the exact layout of them:
-+ */
++if [ $# -ne 1 ] ; then
++	arch_x86_header_dir=tools/arch/x86/include/asm/
++else
++	arch_x86_header_dir=$1
++fi
 +
-+#define NMI_VECTOR			0x02
-+#define MCE_VECTOR			0x12
++x86_irq_vectors=${arch_x86_header_dir}/irq_vectors.h
 +
-+/*
-+ * IDT vectors usable for external interrupt sources start at 0x20.
-+ * (0x80 is the syscall vector, 0x30-0x3f are for ISA)
-+ */
-+#define FIRST_EXTERNAL_VECTOR		0x20
++# FIRST_EXTERNAL_VECTOR is not that useful, find what is its number
++# and then replace whatever is using it and that is useful, which at
++# the time of writing of this script was: IRQ_MOVE_CLEANUP_VECTOR.
 +
-+/*
-+ * Reserve the lowest usable vector (and hence lowest priority)  0x20 for
-+ * triggering cleanup after irq migration. 0x21-0x2f will still be used
-+ * for device interrupts.
-+ */
-+#define IRQ_MOVE_CLEANUP_VECTOR		FIRST_EXTERNAL_VECTOR
++first_external_regex='^#define[[:space:]]+FIRST_EXTERNAL_VECTOR[[:space:]]+(0x[[:xdigit:]]+)$'
++first_external_vector=$(egrep ${first_external_regex} ${x86_irq_vectors} | sed -r "s/${first_external_regex}/\1/g")
 +
-+#define IA32_SYSCALL_VECTOR		0x80
++printf "static const char *x86_irq_vectors[] = {\n"
++regex='^#define[[:space:]]+([[:alnum:]_]+)_VECTOR[[:space:]]+(0x[[:xdigit:]]+)$'
++sed -r "s/FIRST_EXTERNAL_VECTOR/${first_external_vector}/g" ${x86_irq_vectors} | \
++egrep ${regex} | \
++	sed -r "s/${regex}/\2 \1/g" | sort -n | \
++	xargs printf "\t[%s] = \"%s\",\n"
++printf "};\n\n"
 +
-+/*
-+ * Vectors 0x30-0x3f are used for ISA interrupts.
-+ *   round up to the next 16-vector boundary
-+ */
-+#define ISA_IRQ_VECTOR(irq)		(((FIRST_EXTERNAL_VECTOR + 16) & ~15) + irq)
-+
-+/*
-+ * Special IRQ vectors used by the SMP architecture, 0xf0-0xff
-+ *
-+ *  some of the following vectors are 'rare', they are merged
-+ *  into a single vector (CALL_FUNCTION_VECTOR) to save vector space.
-+ *  TLB, reschedule and local APIC vectors are performance-critical.
-+ */
-+
-+#define SPURIOUS_APIC_VECTOR		0xff
-+/*
-+ * Sanity check
-+ */
-+#if ((SPURIOUS_APIC_VECTOR & 0x0F) != 0x0F)
-+# error SPURIOUS_APIC_VECTOR definition error
-+#endif
-+
-+#define ERROR_APIC_VECTOR		0xfe
-+#define RESCHEDULE_VECTOR		0xfd
-+#define CALL_FUNCTION_VECTOR		0xfc
-+#define CALL_FUNCTION_SINGLE_VECTOR	0xfb
-+#define THERMAL_APIC_VECTOR		0xfa
-+#define THRESHOLD_APIC_VECTOR		0xf9
-+#define REBOOT_VECTOR			0xf8
-+
-+/*
-+ * Generic system vector for platform specific use
-+ */
-+#define X86_PLATFORM_IPI_VECTOR		0xf7
-+
-+/*
-+ * IRQ work vector:
-+ */
-+#define IRQ_WORK_VECTOR			0xf6
-+
-+#define UV_BAU_MESSAGE			0xf5
-+#define DEFERRED_ERROR_VECTOR		0xf4
-+
-+/* Vector on which hypervisor callbacks will be delivered */
-+#define HYPERVISOR_CALLBACK_VECTOR	0xf3
-+
-+/* Vector for KVM to deliver posted interrupt IPI */
-+#ifdef CONFIG_HAVE_KVM
-+#define POSTED_INTR_VECTOR		0xf2
-+#define POSTED_INTR_WAKEUP_VECTOR	0xf1
-+#define POSTED_INTR_NESTED_VECTOR	0xf0
-+#endif
-+
-+#define MANAGED_IRQ_SHUTDOWN_VECTOR	0xef
-+
-+#if IS_ENABLED(CONFIG_HYPERV)
-+#define HYPERV_REENLIGHTENMENT_VECTOR	0xee
-+#define HYPERV_STIMER0_VECTOR		0xed
-+#endif
-+
-+#define LOCAL_TIMER_VECTOR		0xec
-+
-+#define NR_VECTORS			 256
-+
-+#ifdef CONFIG_X86_LOCAL_APIC
-+#define FIRST_SYSTEM_VECTOR		LOCAL_TIMER_VECTOR
-+#else
-+#define FIRST_SYSTEM_VECTOR		NR_VECTORS
-+#endif
-+
-+/*
-+ * Size the maximum number of interrupts.
-+ *
-+ * If the irq_desc[] array has a sparse layout, we can size things
-+ * generously - it scales up linearly with the maximum number of CPUs,
-+ * and the maximum number of IO-APICs, whichever is higher.
-+ *
-+ * In other cases we size more conservatively, to not create too large
-+ * static arrays.
-+ */
-+
-+#define NR_IRQS_LEGACY			16
-+
-+#define CPU_VECTOR_LIMIT		(64 * NR_CPUS)
-+#define IO_APIC_VECTOR_LIMIT		(32 * MAX_IO_APICS)
-+
-+#if defined(CONFIG_X86_IO_APIC) && defined(CONFIG_PCI_MSI)
-+#define NR_IRQS						\
-+	(CPU_VECTOR_LIMIT > IO_APIC_VECTOR_LIMIT ?	\
-+		(NR_VECTORS + CPU_VECTOR_LIMIT)  :	\
-+		(NR_VECTORS + IO_APIC_VECTOR_LIMIT))
-+#elif defined(CONFIG_X86_IO_APIC)
-+#define	NR_IRQS				(NR_VECTORS + IO_APIC_VECTOR_LIMIT)
-+#elif defined(CONFIG_PCI_MSI)
-+#define NR_IRQS				(NR_VECTORS + CPU_VECTOR_LIMIT)
-+#else
-+#define NR_IRQS				NR_IRQS_LEGACY
-+#endif
-+
-+#endif /* _ASM_X86_IRQ_VECTORS_H */
-diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
-index 93c46d38024e..48290a0c917c 100755
---- a/tools/perf/check-headers.sh
-+++ b/tools/perf/check-headers.sh
-@@ -28,6 +28,7 @@ arch/x86/include/asm/disabled-features.h
- arch/x86/include/asm/required-features.h
- arch/x86/include/asm/cpufeatures.h
- arch/x86/include/asm/inat_types.h
-+arch/x86/include/asm/irq_vectors.h
- arch/x86/include/asm/msr-index.h
- arch/x86/include/uapi/asm/prctl.h
- arch/x86/lib/x86-opcode-map.txt
 -- 
 2.21.0
 
