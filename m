@@ -2,162 +2,194 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC772CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:39:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51A88CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:42:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2A1B20B7C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:39:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2800220873
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:42:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RsGzK6In"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EwmNb7cX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729671AbfJUPjs (ORCPT
+        id S1729637AbfJUPl7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 11:39:48 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:44814 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729525AbfJUPjq (ORCPT
+        Mon, 21 Oct 2019 11:41:59 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:41443 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729447AbfJUPl6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 11:39:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571672385;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=KNM74lKwor++3p/QkpWqlSPILubN2KPghaH2BaE3A2s=;
-        b=RsGzK6In6llShLdog5mTL5jcK+/0oUbNpZUgvwSfpnqVZexWwridc/w+CviQq/a7AGTuxk
-        jhJQKToPmrf+Bwu1mziYzegsNbj/egx8zrISsIuFM8P7LtIE854HGUtcpfSkkGK+Pu4F5j
-        8m5QNnY1FUcGDgLwVIfRkhR7gOXgkJs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-151-87RuL3t6OnmdiKWVp34qag-1; Mon, 21 Oct 2019 11:39:41 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8F01A1800D79;
-        Mon, 21 Oct 2019 15:39:39 +0000 (UTC)
-Received: from [10.36.118.81] (unknown [10.36.118.81])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0FC1C60126;
-        Mon, 21 Oct 2019 15:39:36 +0000 (UTC)
-Subject: Re: [PATCH v1 1/2] mm/page_alloc.c: Don't set pages PageReserved()
- when offlining
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Oscar Salvador <osalvador@suse.de>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>
-References: <20191021141927.10252-1-david@redhat.com>
- <20191021141927.10252-2-david@redhat.com>
- <20191021144345.GT9379@dhcp22.suse.cz>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat GmbH
-Message-ID: <b6a392c9-1cb8-321e-b7ba-d483d928a3cc@redhat.com>
-Date:   Mon, 21 Oct 2019 17:39:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Mon, 21 Oct 2019 11:41:58 -0400
+Received: by mail-io1-f68.google.com with SMTP id r144so4605993iod.8;
+        Mon, 21 Oct 2019 08:41:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yrezMpUPTuyBffQXpwXrXBC3vhqskF147L+22Fn98BU=;
+        b=EwmNb7cXzst/x89vU6zX83MOOZymhv4R7vncUF7z1tLKjEQC3olmiUnfQla3diTAaY
+         CwxGnWNj4NsBN6ZUzZjBq3ozYbikY1usGQPjjJNT2B6tGiIVTS7QPbyrtamOV8SKH2B6
+         XvM4vy8QY6L3spvc+y6BPseinBCXbXoxo5IezrWm6zw8bIpeoh87tqkE9cj1BEs2gGVs
+         aZGDKqPxfiP4VYqbsGB8dgHSbhD5NDYAIF8tT+X3o3dPr7iF4gr6lCXXFCR5y2eOOMi6
+         BlypA8VwHZxFc8HlZYhZEycLpi+Ml42Mz2S9+ief8wwwPHOzEt3YT9lVze8zUoiUqG2P
+         PGSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yrezMpUPTuyBffQXpwXrXBC3vhqskF147L+22Fn98BU=;
+        b=ZCGEwIH74dAJ8s2mYvJFciE/Q6pKYJwDZY0s/APbgfPAnlYdb5X1aJG6U/YF7uplko
+         L913PkEyk7TUF2mW1dVWE5zegOb+FlwLkWv2D0b6ISSE8XUxf10rdDAbtllHXwpusJyG
+         CUWrdcp7hAAF+h6AIExWb2zRG3kygGKIvhwCSeYyjaU/dem8VkYyoOEx7CeJdZDLGPLY
+         FZFqf1BNWB8tAfmRcCedTarpDrBEogCOACBGMoGynD0Ne9Y7IeYBl3wY2myq+nrO5tzK
+         UcGJIzGF2sz2falQtRqPhfghisjusJP3sbaKpi8v/GM6qYyLDYco4rMEfYw6fww1nbJA
+         zE0Q==
+X-Gm-Message-State: APjAAAUljxGL95LmGz3AE61khV27J9biz6kt/8qeRiHk2+cestMpJSWx
+        PSxnXhAA7eq1BNRB4S33Hepy++dhagr09ClXGlw=
+X-Google-Smtp-Source: APXvYqzSsz0JCUb9Vzflc4VEP6hwCRnJcMI8hMtnlwZ2QZkCnUzhMTr7V+XY5wal8xMfpEGVzAt4PglUUBLaMwmHu0g=
+X-Received: by 2002:a6b:7417:: with SMTP id s23mr17364283iog.221.1571672516254;
+ Mon, 21 Oct 2019 08:41:56 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191021144345.GT9379@dhcp22.suse.cz>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-MC-Unique: 87RuL3t6OnmdiKWVp34qag-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+References: <20191007131649.1768-1-linux.amoon@gmail.com> <20191007131649.1768-6-linux.amoon@gmail.com>
+ <CAFBinCAoJLZj9Kh+SfF4Q+0OCzac2+huon_BU=Q3yE7Fu38U3w@mail.gmail.com>
+ <7hsgo4cgeg.fsf@baylibre.com> <CANAwSgRfcFa6uBNtpqz6y=9Uwsa4gcp_4tDD+Chhg4SynJCq0Q@mail.gmail.com>
+ <CAFBinCA6ZoeR4m4bhj08HF1DqxY1qB5mygpaQCGbo3d8M+Wr9Q@mail.gmail.com>
+ <CANAwSgSeYTnUkLnjw-RORw76Fyj3_WT0cdM9D0vFsY8g=9L94Q@mail.gmail.com>
+ <1jwode9lba.fsf@starbuckisacylon.baylibre.com> <CANAwSgSoK4X3_QbO3YpZRXNTpPJ+zVeid=w93f14Eyk8Dd32EQ@mail.gmail.com>
+ <CAFBinCBdwqxA2kLMAA9gtOcXevYK-J4x12odHwpQOAWakgWiEg@mail.gmail.com>
+ <CANAwSgRs2DUXwvhJD5qpXg04qEdP_Nt-wQqRbD2FpY2SWnHpAA@mail.gmail.com> <1a98c5f0-de8a-53bc-cfb7-c9b3255667c6@baylibre.com>
+In-Reply-To: <1a98c5f0-de8a-53bc-cfb7-c9b3255667c6@baylibre.com>
+From:   Anand Moon <linux.amoon@gmail.com>
+Date:   Mon, 21 Oct 2019 21:11:45 +0530
+Message-ID: <CANAwSgRD-Vd-D1H5cDYMyTLRMfzdkrFuiy4KfXYt6S+0goF-2w@mail.gmail.com>
+Subject: Re: [RFCv1 5/5] arm64/ARM: configs: Change CONFIG_PWM_MESON from m to y
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-amlogic@lists.infradead.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21.10.19 16:43, Michal Hocko wrote:
-> On Mon 21-10-19 16:19:25, David Hildenbrand wrote:
->> We call __offline_isolated_pages() from __offline_pages() after all
->> pages were isolated and are either free (PageBuddy()) or PageHWPoison.
->> Nothing can stop us from offlining memory at this point.
->>
->> In __offline_isolated_pages() we first set all affected memory sections
->> offline (offline_mem_sections(pfn, end_pfn)), to mark the memmap as
->> invalid (pfn_to_online_page() will no longer succeed), and then walk ove=
-r
->> all pages to pull the free pages from the free lists (to the isolated
->> free lists, to be precise).
->>
->> Note that re-onlining a memory block will result in the whole memmap
->> getting reinitialized, overwriting any old state. We already poision the
->> memmap when offlining is complete to find any access to
->> stale/uninitialized memmaps.
->>
->> So, setting the pages PageReserved() is not helpful. The memap is marked
->> offline and all pageblocks are isolated. As soon as offline, the memmap
->> is stale either way.
->>
->> This looks like a leftover from ancient times where we initialized the
->> memmap when adding memory and not when onlining it (the pages were set
->> PageReserved so re-onling would work as expected).
->>
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> Cc: Michal Hocko <mhocko@suse.com>
->> Cc: Vlastimil Babka <vbabka@suse.cz>
->> Cc: Oscar Salvador <osalvador@suse.de>
->> Cc: Mel Gorman <mgorman@techsingularity.net>
->> Cc: Mike Rapoport <rppt@linux.ibm.com>
->> Cc: Dan Williams <dan.j.williams@intel.com>
->> Cc: Wei Yang <richard.weiyang@gmail.com>
->> Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>
->> Cc: Anshuman Khandual <anshuman.khandual@arm.com>
->> Cc: Pavel Tatashin <pavel.tatashin@microsoft.com>
->> Signed-off-by: David Hildenbrand <david@redhat.com>
->=20
-> Acked-by: Michal Hocko <mhocko@suse.com>
->=20
-> We still set PageReserved before onlining pages and that one should be
-> good to go as well (memmap_init_zone).
-> Thanks!
+Hi Neil,
 
-memmap_init_zone() is called when onlining memory. There, set all pages=20
-to reserved right now (on context =3D=3D MEMMAP_HOTPLUG). We clear=20
-PG_reserved when onlining a page to the buddy (e.g.,=20
-generic_online_page). If we would online a memory block with holes, we=20
-would want to keep all such pages (!pfn_valid()) set to reserved. Also,=20
-there might be other side effects.
+On Mon, 21 Oct 2019 at 19:55, Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> Hi Anand,
+>
+> On 21/10/2019 16:11, Anand Moon wrote:
+> > Hi Martin,
+> >
+> > On Fri, 18 Oct 2019 at 23:40, Martin Blumenstingl
+> > <martin.blumenstingl@googlemail.com> wrote:
+> >>
+> >> Hi Anand,
+> >>
+> >> On Fri, Oct 18, 2019 at 4:04 PM Anand Moon <linux.amoon@gmail.com> wrote:
+> >> [...]
+> >>>> Next step it to try narrow down the clock causing the issue.
+> >>>> Remove clk_ignore_unused from the command line and add CLK_INGORE_UNUSED
+> >>>> to the flag of some clocks your clock controller (g12a I think) until
+> >>>>
+> >>>> The peripheral clock gates already have this flag (something we should
+> >>>> fix someday) so don't bother looking there.
+> >>>>
+> >>>> Most likely the source of the pwm is getting disabled between the
+> >>>> late_init call and the probe of the PWM module. Since the pwm is already
+> >>>> active (w/o a driver), gating the clock source shuts dowm the power to
+> >>>> the cores.
+> >>>>
+> >>>> Looking a the possible inputs in pwm driver, I'd bet on fdiv4.
+> >>>>
+> >>>
+> >>> I had give this above steps a try but with little success.
+> >>> I am still looking into this much close.
+> >> it's not clear to me if you have only tested with the PWM and/or
+> >> FCLK_DIV4 clocks. can you please describe what you have tested so far?
+> >>
+> > Sorry for delayed response.
+> >
+> > I had just looked into clk related to SD_EMMC_A/B/C,
+> > with adding CLK_IGNORE/CRITICAL.
+> > Also looked into clk_summary for eMMC and microSD card,
+> > to identify the root cause, but I failed to move ahead.
+> >
+> >> for reference - my way of debugging this in the past was:
+> >> 1. add some printks to clk_disable_unused_subtree (right after the
+> >> clk_core_is_enabled check) to see which clocks are being disabled
+> >> 2. add CLK_IGNORE_UNUSED or CLK_IS_CRITICAL to the clocks which are
+> >> being disabled based on the information from step #1
+> >> 3. (at some point I had a working kernel with lots of clocks with
+> >> CLK_IGNORE_UNUSED/CLK_IS_CRITICAL)
+> >> 4. start dropping the CLK_IGNORE_UNUSED/CLK_IS_CRITICAL flags again
+> >> until you have traced it down to the clocks that are the actual issue
+> >> (so far I always had only one clock which caused issues, but it may be
+> >> multiple)
+> >> 5. investigate (and/or ask on the mailing list, Amlogic developers are
+> >> reading the mails here as well) for the few clocks from step #4
+> >>
+> >
+> > Thanks for you valuable suggestion. I have your patch to debug this
+> > [0]  https://patchwork.kernel.org/patch/9725921/mbox/
+> >
+> > So from the fist step I could identify that all the clk were getting closed
+> > after some core cpu clk was failing. Here is the log.
+> >
+> > step1: [1] https://pastebin.com/p13F9HGG
+> >
+> > so I marked these clk as CLK_IGNORE_UNUSED and finally
+> > I made it to boot using microSD card.
+> >
+> > After this just I converted these CLK to CLK_IS_CRITICAL
+> > as mostly these are used the CPU clk for now.
+> > Here is boot log successful for as of now.
+> >
+> > Finally: [2]  https://pastebin.com/qB6pMyGQ
+> >
+> > I know clk maintainer are against marking flags as *CLK_IS_CRITICAL*
+> > But this is just the step to move ahead.
+>
+> Thanks for the extensive debug.
+>
+> >
+> > Attach is my local clk and dts patch.Just for testing.
+> > [3] clk_critical.patch
+>
+>
+> Could you test with only the following changes:
+> diff --git a/drivers/clk/meson/g12a.c b/drivers/clk/meson/g12a.c
+> index ea4c791f106d..f49f5463363e 100644
+> --- a/drivers/clk/meson/g12a.c
+> +++ b/drivers/clk/meson/g12a.c
+> @@ -298,6 +298,7 @@ static struct clk_regmap g12a_fclk_div2 = {
+>                         &g12a_fclk_div2_div.hw
+>                 },
+>                 .num_parents = 1,
+> +               .flags = CLK_IS_CRITICAL,
+>         },
+>  };
+>
+> @@ -672,7 +673,7 @@ static struct clk_regmap g12b_cpub_clk = {
+>                         &g12a_sys_pll.hw
+>                 },
+>                 .num_parents = 2,
+> -               .flags = CLK_SET_RATE_PARENT,
+> +               .flags = CLK_SET_RATE_PARENT | CLK_IS_CRITICAL,
+>         },
+>  };
+>
 
-So it might not be that easy to remove. A cleanup that I have on my list=20
-is to disallow offlining memory blocks with holes. This implies that we=20
-will never online memory blocks with holes. This allows for some=20
-cleanups in the onlining/offlining code. For example, it would allow to=20
-get rid of this PG_reserved initialization.
+Yes these changes work at my end,
+I want to narrow down my changes, this looks pretty good.
 
-I don't think that we have to support offlining memory blocks with=20
-holes. This can only be bootmem (never hotplugged memory), where the=20
-chance for this to work is in my opinion already not too good.
-
-What's your opinion on this?
-
->=20
-> There is a comment above offline_isolated_pages_cb that should be
-> removed as well.
-
-Right, I'll convert that comment
-
-"Mark all sections offline and remove all free pages from the buddy."
-
-Thanks!
-
-
---=20
-
-Thanks,
-
-David / dhildenb
-
+Best Regards
+-Anand
