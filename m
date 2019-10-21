@@ -2,127 +2,217 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63C2DCA9EB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 880E5CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:35:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3ADF42084B
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:35:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=pensando.io header.i=@pensando.io header.b="ZvioHrwP"
+	by mail.kernel.org (Postfix) with ESMTP id 57E752084B
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:35:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729553AbfJUQfL (ORCPT
+        id S1729625AbfJUQfM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 21 Oct 2019 12:35:12 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:57598 "EHLO foss.arm.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S1729567AbfJUQfL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 21 Oct 2019 12:35:11 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:40235 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729433AbfJUQfH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 12:35:07 -0400
-Received: by mail-pg1-f193.google.com with SMTP id 15so2777979pgt.7
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 09:35:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=pensando.io; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=YQ2SYzDjclp6+UMcXfMKe/dCfkknHxuiGOrHRSVn0cA=;
-        b=ZvioHrwPqgA32sqk/ZfXl+AIKFsddUO2tNAqbJtu4tCcRANhGvReU9J0qCrPtBX4dr
-         XyEFxDF3rI4Skd8uu+tW37bMnIbIfeVll6YP9QPsiv1m3u9UI7Hz50C/EOmQGDDvJxjt
-         MNnpf3ALOQX+wn100d4q49rWpqL/dLYkEvAbPydL+TGXqu4wUlet2YAblmsMtkne7qnv
-         mFnrVk537e3SRZLOSIfp5DZTMcRh1T3I7huUyEOh7iplVBe4IuwO1byLK+LTz8AIzALW
-         g8HnTvBYEWL7IAty6Tx+yooX0qDMEelsrde2cgdpkGApf9pCWxxWG6Loqrv6o3ZIrYoi
-         o0cQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=YQ2SYzDjclp6+UMcXfMKe/dCfkknHxuiGOrHRSVn0cA=;
-        b=jvMidIC9NVI6Mrh4AAf94UKC9ibzSXsmt3FJt7iLOLP3DWlyqGTfUwrODMNDJIYwsP
-         N2T+a2xzMEDLhFpjLXErW7JZj1iHf9I5v9cWBs76y26Pv1N43Lf5SbPhm9kF3hVjEKx/
-         i3IVk7WxJJtQJaeKY3tcscM1k/NDAkantFgL3UdIVs9+SFWM6STegZ8CaF+89OidA/JM
-         Fc6vN652f4Z5rR4lqRrnZmJ0W2dZThnu4qlwyqLNfbQEG6HRwM4FlRqwrb44wNHypdr0
-         mmkmWUsJXGfNmphkYYG79kQwWYva8yGf0lFfefGd2z1EJl1ZIJm/QNIvEd5WMCNAS1r8
-         Wq9A==
-X-Gm-Message-State: APjAAAW81N7skRWZMgEsiSMsx61kzGk+U/nlBkai1QGojKJI2hUr2TMW
-        jP+kDMJqxfNt/tfBq5WS5qwm8bKU2xXQtomE
-X-Google-Smtp-Source: APXvYqwmyNu50+FxrTO6V6IulFup1S67xnT8cj+dbepaT4niD1qSPIKhFvBy+c/p26nJk53uezcFig==
-X-Received: by 2002:a63:ad0d:: with SMTP id g13mr26250877pgf.407.1571675706632;
-        Mon, 21 Oct 2019 09:35:06 -0700 (PDT)
-Received: from Shannons-MacBook-Pro.local (static-50-53-47-17.bvtn.or.frontiernet.net. [50.53.47.17])
-        by smtp.gmail.com with ESMTPSA id e4sm16610297pff.22.2019.10.21.09.35.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 21 Oct 2019 09:35:05 -0700 (PDT)
-Subject: Re: [PATCH 5/5] ionic: Use debugfs_create_bool() to export bool
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        =?UTF-8?Q?Breno_Leit=c3=a3o?= <leitao@debian.org>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Paulo Flabiano Smorigo <pfsmorigo@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S . Miller" <davem@davemloft.net>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        David@rox.of.borg, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Casey Leedom <leedom@chelsio.com>,
-        Pensando Drivers <drivers@pensando.io>,
-        Kevin Hilman <khilman@kernel.org>, Nishanth Menon <nm@ti.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-crypto@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        netdev@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191021145149.31657-1-geert+renesas@glider.be>
- <20191021145149.31657-6-geert+renesas@glider.be>
-From:   Shannon Nelson <snelson@pensando.io>
-Message-ID: <aeebbd5f-6100-2780-ef1c-6b1c261c9d23@pensando.io>
-Date:   Mon, 21 Oct 2019 09:35:03 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191021145149.31657-6-geert+renesas@glider.be>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1636211D4;
+        Mon, 21 Oct 2019 09:34:46 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id D1B883F71F;
+        Mon, 21 Oct 2019 09:34:43 -0700 (PDT)
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     amit.kachhap@arm.com, ard.biesheuvel@linaro.org,
+        catalin.marinas@arm.com, deller@gmx.de, duwe@suse.de,
+        james.morse@arm.com, jeyu@kernel.org, jpoimboe@redhat.com,
+        jthierry@redhat.com, mark.rutland@arm.com, mingo@redhat.com,
+        peterz@infradead.org, rostedt@goodmis.org, svens@stackframe.org,
+        takahiro.akashi@linaro.org, will@kernel.org
+Subject: [PATCH 4/8] arm64: module/ftrace: intialize PLT at load time
+Date:   Mon, 21 Oct 2019 17:34:22 +0100
+Message-Id: <20191021163426.9408-5-mark.rutland@arm.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20191021163426.9408-1-mark.rutland@arm.com>
+References: <20191021163426.9408-1-mark.rutland@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/21/19 7:51 AM, Geert Uytterhoeven wrote:
-> Currently bool ionic_cq.done_color is exported using
-> debugfs_create_u8(), which requires a cast, preventing further compiler
-> checks.
->
-> Fix this by switching to debugfs_create_bool(), and dropping the cast.
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Currently we lazily-initialize a module's ftrace PLT at runtime when we
+install the first ftrace call. To do so we have to apply a number of
+sanity checks, transiently mark the module text as RW, and perform an
+IPI as part of handling Neoverse-N1 erratum #1542419.
 
-Acked-by: Shannon Nelson <snelson@pensando.io>
+We only expect the ftrace trampoline to point at ftrace_caller() (AKA
+FTRACE_ADDR), so let's simplify all of this by intializing the PLT at
+module load time, before the module loader marks the module RO and
+performs the intial I-cache maintenance for the module.
 
-> ---
->   drivers/net/ethernet/pensando/ionic/ionic_debugfs.c | 3 +--
->   1 file changed, 1 insertion(+), 2 deletions(-)
->
-> diff --git a/drivers/net/ethernet/pensando/ionic/ionic_debugfs.c b/drivers/net/ethernet/pensando/ionic/ionic_debugfs.c
-> index bc03cecf80cc9eb4..5beba915f69d12dd 100644
-> --- a/drivers/net/ethernet/pensando/ionic/ionic_debugfs.c
-> +++ b/drivers/net/ethernet/pensando/ionic/ionic_debugfs.c
-> @@ -170,8 +170,7 @@ void ionic_debugfs_add_qcq(struct ionic_lif *lif, struct ionic_qcq *qcq)
->   	debugfs_create_x64("base_pa", 0400, cq_dentry, &cq->base_pa);
->   	debugfs_create_u32("num_descs", 0400, cq_dentry, &cq->num_descs);
->   	debugfs_create_u32("desc_size", 0400, cq_dentry, &cq->desc_size);
-> -	debugfs_create_u8("done_color", 0400, cq_dentry,
-> -			  (u8 *)&cq->done_color);
-> +	debugfs_create_bool("done_color", 0400, cq_dentry, &cq->done_color);
->   
->   	debugfs_create_file("tail", 0400, cq_dentry, cq, &cq_tail_fops);
->   
+Thus we can rely on the module having been correctly intialized, and can
+simplify the runtime work necessary to install an ftrace call in a
+module. This will also allow for the removal of module_disable_ro().
+
+Tested by forcing ftrace_make_call() to use the module PLT, and then
+loading up a module after setting up ftrace with:
+
+| echo ":mod:<module-name>" > set_ftrace_filter;
+| echo function > current_tracer;
+| modprobe <module-name>
+
+Since FTRACE_ADDR is only defined when CONFIG_DYNAMIC_FTRACE is
+selected, we wrap its use along with most of module_init_ftrace_plt()
+with ifdeffery rather than using IS_ENABLED().
+
+Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: James Morse <james.morse@arm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Will Deacon <will@kernel.org>
+---
+ arch/arm64/kernel/ftrace.c | 55 ++++++++++++----------------------------------
+ arch/arm64/kernel/module.c | 32 +++++++++++++++++----------
+ 2 files changed, 35 insertions(+), 52 deletions(-)
+
+diff --git a/arch/arm64/kernel/ftrace.c b/arch/arm64/kernel/ftrace.c
+index 06e56b470315..822718eafdb4 100644
+--- a/arch/arm64/kernel/ftrace.c
++++ b/arch/arm64/kernel/ftrace.c
+@@ -73,10 +73,22 @@ int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
+ 
+ 	if (offset < -SZ_128M || offset >= SZ_128M) {
+ #ifdef CONFIG_ARM64_MODULE_PLTS
+-		struct plt_entry trampoline, *dst;
+ 		struct module *mod;
+ 
+ 		/*
++		 * There is only one ftrace trampoline per module. For now,
++		 * this is not a problem since on arm64, all dynamic ftrace
++		 * invocations are routed via ftrace_caller(). This will need
++		 * to be revisited if support for multiple ftrace entry points
++		 * is added in the future, but for now, the pr_err() below
++		 * deals with a theoretical issue only.
++		 */
++		if (addr != FTRACE_ADDR) {
++			pr_err("ftrace: far branches to multiple entry points unsupported inside a single module\n");
++			return -EINVAL;
++		}
++
++		/*
+ 		 * On kernels that support module PLTs, the offset between the
+ 		 * branch instruction and its target may legally exceed the
+ 		 * range of an ordinary relative 'bl' opcode. In this case, we
+@@ -93,46 +105,7 @@ int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
+ 		if (WARN_ON(!mod))
+ 			return -EINVAL;
+ 
+-		/*
+-		 * There is only one ftrace trampoline per module. For now,
+-		 * this is not a problem since on arm64, all dynamic ftrace
+-		 * invocations are routed via ftrace_caller(). This will need
+-		 * to be revisited if support for multiple ftrace entry points
+-		 * is added in the future, but for now, the pr_err() below
+-		 * deals with a theoretical issue only.
+-		 *
+-		 * Note that PLTs are place relative, and plt_entries_equal()
+-		 * checks whether they point to the same target. Here, we need
+-		 * to check if the actual opcodes are in fact identical,
+-		 * regardless of the offset in memory so use memcmp() instead.
+-		 */
+-		dst = mod->arch.ftrace_trampoline;
+-		trampoline = get_plt_entry(addr, dst);
+-		if (memcmp(dst, &trampoline, sizeof(trampoline))) {
+-			if (plt_entry_is_initialized(dst)) {
+-				pr_err("ftrace: far branches to multiple entry points unsupported inside a single module\n");
+-				return -EINVAL;
+-			}
+-
+-			/* point the trampoline to our ftrace entry point */
+-			module_disable_ro(mod);
+-			*dst = trampoline;
+-			module_enable_ro(mod, true);
+-
+-			/*
+-			 * Ensure updated trampoline is visible to instruction
+-			 * fetch before we patch in the branch. Although the
+-			 * architecture doesn't require an IPI in this case,
+-			 * Neoverse-N1 erratum #1542419 does require one
+-			 * if the TLB maintenance in module_enable_ro() is
+-			 * skipped due to rodata_enabled. It doesn't seem worth
+-			 * it to make it conditional given that this is
+-			 * certainly not a fast-path.
+-			 */
+-			flush_icache_range((unsigned long)&dst[0],
+-					   (unsigned long)&dst[1]);
+-		}
+-		addr = (unsigned long)dst;
++		addr = (unsigned long)mod->arch.ftrace_trampoline;
+ #else /* CONFIG_ARM64_MODULE_PLTS */
+ 		return -EINVAL;
+ #endif /* CONFIG_ARM64_MODULE_PLTS */
+diff --git a/arch/arm64/kernel/module.c b/arch/arm64/kernel/module.c
+index 763a86d52fef..5f5bc3b94da7 100644
+--- a/arch/arm64/kernel/module.c
++++ b/arch/arm64/kernel/module.c
+@@ -9,6 +9,7 @@
+ 
+ #include <linux/bitops.h>
+ #include <linux/elf.h>
++#include <linux/ftrace.h>
+ #include <linux/gfp.h>
+ #include <linux/kasan.h>
+ #include <linux/kernel.h>
+@@ -485,24 +486,33 @@ static const Elf_Shdr *find_section(const Elf_Ehdr *hdr,
+ 	return NULL;
+ }
+ 
++int module_init_ftrace_plt(const Elf_Ehdr *hdr,
++			   const Elf_Shdr *sechdrs,
++			   struct module *mod)
++{
++#if defined(CONFIG_ARM64_MODULE_PLTS) && defined(CONFIG_DYNAMIC_FTRACE)
++	const Elf_Shdr *s;
++	struct plt_entry *plt;
++
++	s = find_section(hdr, sechdrs, ".text.ftrace_trampoline");
++	if (!s)
++		return -ENOEXEC;
++
++	plt = (void *)s->sh_addr;
++	*plt = get_plt_entry(FTRACE_ADDR, plt);
++	mod->arch.ftrace_trampoline = plt;
++#endif
++	return 0;
++}
++
+ int module_finalize(const Elf_Ehdr *hdr,
+ 		    const Elf_Shdr *sechdrs,
+ 		    struct module *me)
+ {
+ 	const Elf_Shdr *s;
+-
+ 	s = find_section(hdr, sechdrs, ".altinstructions");
+ 	if (s)
+ 		apply_alternatives_module((void *)s->sh_addr, s->sh_size);
+ 
+-#ifdef CONFIG_ARM64_MODULE_PLTS
+-	if (IS_ENABLED(CONFIG_DYNAMIC_FTRACE)) {
+-		s = find_section(hdr, sechdrs, ".text.ftrace_trampoline");
+-		if (!s)
+-			return -ENOEXEC;
+-		me->arch.ftrace_trampoline = (void *)s->sh_addr;
+-	}
+-#endif
+-
+-	return 0;
++	return module_init_ftrace_plt(hdr, sechdrs, me);
+ }
+-- 
+2.11.0
 
