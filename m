@@ -7,54 +7,51 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF45BCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 23:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12BE9C47E49
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 23:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 896AA20882
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 23:20:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E549820882
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 23:20:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730572AbfJUXUA (ORCPT
+        id S1730613AbfJUXUB convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 19:20:00 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:38297 "EHLO
+        Mon, 21 Oct 2019 19:20:01 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:38266 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730556AbfJUXTB (ORCPT
+        with ESMTP id S1730420AbfJUXS5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 19:19:01 -0400
+        Mon, 21 Oct 2019 19:18:57 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iMgwr-0003qQ-5O; Tue, 22 Oct 2019 01:18:49 +0200
+        id 1iMgwp-0003pV-IH; Tue, 22 Oct 2019 01:18:47 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 8606E1C0086;
-        Tue, 22 Oct 2019 01:18:48 +0200 (CEST)
-Date:   Mon, 21 Oct 2019 23:18:47 -0000
-From:   "tip-bot2 for Jiri Olsa" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id CFFA41C0086;
+        Tue, 22 Oct 2019 01:18:46 +0200 (CEST)
+Date:   Mon, 21 Oct 2019 23:18:46 -0000
+From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] libperf: Add pr_err() macro
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
+Subject: [tip: perf/core] perf trace: Use strtoul for the fcntl 'cmd' argument
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
         Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>,
+        Luis =?utf-8?q?Cl=C3=A1udio_Gon=C3=A7alves?= 
+        <lclaudio@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <20191017105918.20873-11-jolsa@kernel.org>
-References: <20191017105918.20873-11-jolsa@kernel.org>
+In-Reply-To: <tip-mob96wyzri4r3rvyigqfjv0a@git.kernel.org>
+References: <tip-mob96wyzri4r3rvyigqfjv0a@git.kernel.org>
 MIME-Version: 1.0
-Message-ID: <157169992791.29376.3655092802607172757.tip-bot2@tip-bot2>
+Message-ID: <157169992630.29376.7406698007090638319.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8BIT
 X-Linutronix-Spam-Score: -1.0
 X-Linutronix-Spam-Level: -
 X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
@@ -65,64 +62,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     dcc6854215f115efcbd79368bc07099c41de0b6c
-Gitweb:        https://git.kernel.org/tip/dcc6854215f115efcbd79368bc07099c41de0b6c
-Author:        Jiri Olsa <jolsa@kernel.org>
-AuthorDate:    Thu, 17 Oct 2019 12:59:18 +02:00
+Commit-ID:     82c38338e0850a01057960efc94c6130f1a0fdde
+Gitweb:        https://git.kernel.org/tip/82c38338e0850a01057960efc94c6130f1a0fdde
+Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
+AuthorDate:    Fri, 18 Oct 2019 15:44:42 -03:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Sat, 19 Oct 2019 15:35:01 -03:00
+CommitterDate: Sat, 19 Oct 2019 15:35:02 -03:00
 
-libperf: Add pr_err() macro
+perf trace: Use strtoul for the fcntl 'cmd' argument
 
-And missing include for "perf/core.h" header, which provides LIBPERF_*
-debug levels and add missing pr_err() support.
+Since its values are in two ranges of values we ended up codifying it
+using a 'struct strarrays', so now hook it up with STUL_STRARRAYS so
+that we can do:
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
+  # perf trace -e syscalls:*enter_fcntl --filter=cmd==SETLK||cmd==SETLKW
+     0.000 sssd_kcm/19021 syscalls:sys_enter_fcntl(fd: 13</var/lib/sss/secrets/secrets.ldb>, cmd: SETLK, arg: 0x7ffcf0a4dee0)
+     1.523 sssd_kcm/19021 syscalls:sys_enter_fcntl(fd: 13</var/lib/sss/secrets/secrets.ldb>, cmd: SETLK, arg: 0x7ffcf0a4de90)
+     1.629 sssd_kcm/19021 syscalls:sys_enter_fcntl(fd: 13</var/lib/sss/secrets/secrets.ldb>, cmd: SETLK, arg: 0x7ffcf0a4de90)
+     2.711 sssd_kcm/19021 syscalls:sys_enter_fcntl(fd: 13</var/lib/sss/secrets/secrets.ldb>, cmd: SETLK, arg: 0x7ffcf0a4de70)
+  ^C#
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Brendan Gregg <brendan.d.gregg@gmail.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Link: http://lore.kernel.org/lkml/20191017105918.20873-11-jolsa@kernel.org
+Link: https://lkml.kernel.org/n/tip-mob96wyzri4r3rvyigqfjv0a@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/lib/include/perf/core.h | 1 +
- tools/perf/lib/internal.h          | 3 +++
- 2 files changed, 4 insertions(+)
+ tools/perf/builtin-trace.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/lib/include/perf/core.h b/tools/perf/lib/include/perf/core.h
-index 2a80e4b..a3f6d68 100644
---- a/tools/perf/lib/include/perf/core.h
-+++ b/tools/perf/lib/include/perf/core.h
-@@ -9,6 +9,7 @@
- #endif
- 
- enum libperf_print_level {
-+	LIBPERF_ERR,
- 	LIBPERF_WARN,
- 	LIBPERF_INFO,
- 	LIBPERF_DEBUG,
-diff --git a/tools/perf/lib/internal.h b/tools/perf/lib/internal.h
-index 37db745..2c27e15 100644
---- a/tools/perf/lib/internal.h
-+++ b/tools/perf/lib/internal.h
-@@ -2,6 +2,8 @@
- #ifndef __LIBPERF_INTERNAL_H
- #define __LIBPERF_INTERNAL_H
- 
-+#include <perf/core.h>
-+
- void libperf_print(enum libperf_print_level level,
- 		   const char *format, ...)
- 	__attribute__((format(printf, 2, 3)));
-@@ -11,6 +13,7 @@ do {                            \
- 	libperf_print(level, "libperf: " fmt, ##__VA_ARGS__);     \
- } while (0)
- 
-+#define pr_err(fmt, ...)        __pr(LIBPERF_ERR, fmt, ##__VA_ARGS__)
- #define pr_warning(fmt, ...)    __pr(LIBPERF_WARN, fmt, ##__VA_ARGS__)
- #define pr_info(fmt, ...)       __pr(LIBPERF_INFO, fmt, ##__VA_ARGS__)
- #define pr_debug(fmt, ...)      __pr(LIBPERF_DEBUG, fmt, ##__VA_ARGS__)
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 265ea87..72ef3b3 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -894,7 +894,8 @@ static struct syscall_fmt syscall_fmts[] = {
+ 	{ .name	    = "fchownat",
+ 	  .arg = { [0] = { .scnprintf = SCA_FDAT, /* fd */ }, }, },
+ 	{ .name	    = "fcntl",
+-	  .arg = { [1] = { .scnprintf = SCA_FCNTL_CMD, /* cmd */
++	  .arg = { [1] = { .scnprintf = SCA_FCNTL_CMD,  /* cmd */
++			   .strtoul   = STUL_STRARRAYS,
+ 			   .parm      = &strarrays__fcntl_cmds_arrays,
+ 			   .show_zero = true, },
+ 		   [2] = { .scnprintf =  SCA_FCNTL_ARG, /* arg */ }, }, },
