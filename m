@@ -2,80 +2,145 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D346CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:45:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C54CA9EB0
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:45:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFACF20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:45:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A68520656
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:45:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L2nU+xgC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728601AbfJULpI convert rfc822-to-8bit (ORCPT
+        id S1728614AbfJULpZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 07:45:08 -0400
-Received: from mxhk.zte.com.cn ([63.217.80.70]:32320 "EHLO mxhk.zte.com.cn"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728258AbfJULpI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 07:45:08 -0400
-Received: from mse-fl1.zte.com.cn (unknown [10.30.14.238])
-        by Forcepoint Email with ESMTPS id 2B0DD870B525E6AC6AFD;
-        Mon, 21 Oct 2019 19:45:06 +0800 (CST)
-Received: from notes_smtp.zte.com.cn (notes_smtp.zte.com.cn [10.30.1.239])
-        by mse-fl1.zte.com.cn with ESMTP id x9LBigDo090126;
-        Mon, 21 Oct 2019 19:44:42 +0800 (GMT-8)
-        (envelope-from wang.yi59@zte.com.cn)
-Received: from fox-host8.localdomain ([10.74.120.8])
-          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
-          with ESMTP id 2019102119444801-57393 ;
-          Mon, 21 Oct 2019 19:44:48 +0800 
-From:   Yi Wang <wang.yi59@zte.com.cn>
-To:     jhs@mojatatu.com
-Cc:     xiyou.wangcong@gmail.com, jiri@resnulli.us, davem@davemloft.net,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn, up2wing@gmail.com,
-        wang.liang82@zte.com.cn
-Subject: [PATCH] net: sched: taprio: fix -Wmissing-prototypes warnings
-Date:   Mon, 21 Oct 2019 19:47:04 +0800
-Message-Id: <1571658424-4273-1-git-send-email-wang.yi59@zte.com.cn>
-X-Mailer: git-send-email 1.8.3.1
+        Mon, 21 Oct 2019 07:45:25 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:51697 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728605AbfJULpY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 07:45:24 -0400
+Received: by mail-wm1-f68.google.com with SMTP id q70so5775566wme.1
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 04:45:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=umMsATXlWgFAfcuZOGKS3dhZXdI24Lzqqx5ELSjQOWM=;
+        b=L2nU+xgCbN5LtkAhVSUAyqXKpaIpDb2NbqaWZD/9o/EUs39LUEO2TGEXCZnz/+1GMK
+         vmYJLj9mwZ8wqiG/kirdJIyY//VurXZfTQCPxCtOY9IL1skWqhSDbep7FMWDaLf13PQ/
+         K/qp+YDO47tUKlxjf4r2zecpRPk3YMUhUEBQLnU3Q0XHC57ZyUaPxmpuZHIIAQIzaN+r
+         Y/Xqo9jpEBUc0N9HPFcmvN3EWnuoZGNRmYXpqVEg0baVbVZf+XMCdVLcukyYbTdNbr2J
+         T9Lw2o/kyFrxYKTVufYqj0aVqDHuuCSO2Xl0SadOAKJWb8w3occPpbjoyIxp+cJPLyhh
+         MHfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=umMsATXlWgFAfcuZOGKS3dhZXdI24Lzqqx5ELSjQOWM=;
+        b=BI5P8Ux7BrTGsKXtsEe2KsRjSY7p2jZgX73SF6tfMP/PhOuXoXgU910irq3SA4/yzv
+         eVhKJpPHqF7Rme2EBqI0/Nr1ws6FAv+1klEjroMRY0arFmcdaPBs9lzq3K0HYUbojCMW
+         V3OgA/vRJ2Zr2MJX6pcilrPjui5vUDch5HMeA13oET+AsSQAOphNSuRf9R9OhHmoGUnQ
+         R0pj2aeZ9nvr/1yoZScmd4CONN5Ix3kIlvnbOgUXPhd2TmIgCrhW7DWzPYgSJ4qUnLuV
+         /pmos0Qj90RlnnF4HVF87/PzKWCnbl9fGKdj2uEjJXQVURA/9Jh1/EZUKb1kcBtuGpei
+         vLqg==
+X-Gm-Message-State: APjAAAUtBz6AzyJCNqxWoOmcffbFFfFRSNGTdV0HUQ7OK9KI3ed4ADM6
+        InVXqDPp4vF3n2XXAwUvSrDs4A==
+X-Google-Smtp-Source: APXvYqxEr92jhtBT1uFAamq5FfTEOFtNLr64Fwysmfw5liFBfPgdTxylfL+k5nkA5UswqABKpIGI9A==
+X-Received: by 2002:a1c:6a07:: with SMTP id f7mr6276449wmc.124.1571658322488;
+        Mon, 21 Oct 2019 04:45:22 -0700 (PDT)
+Received: from dell ([95.149.164.99])
+        by smtp.gmail.com with ESMTPSA id o4sm24943791wre.91.2019.10.21.04.45.21
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 21 Oct 2019 04:45:22 -0700 (PDT)
+Date:   Mon, 21 Oct 2019 12:45:20 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     robh@kernel.org, broonie@kernel.org, linus.walleij@linaro.org,
+        vinod.koul@linaro.org, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        spapothi@codeaurora.org, bgoswami@codeaurora.org,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2 02/11] mfd: wcd934x: add support to wcd9340/wcd9341
+ codec
+Message-ID: <20191021114520.GD4365@dell>
+References: <20191018001849.27205-1-srinivas.kandagatla@linaro.org>
+ <20191018001849.27205-3-srinivas.kandagatla@linaro.org>
+ <20191021104611.GZ4365@dell>
+ <1af8a875-8f55-6b7e-4204-ecedc1608889@linaro.org>
 MIME-Version: 1.0
-X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
- 21, 2013) at 2019-10-21 19:44:48,
-        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
- 2019-10-21 19:44:44
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-X-MAIL: mse-fl1.zte.com.cn x9LBigDo090126
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1af8a875-8f55-6b7e-4204-ecedc1608889@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We get one warnings when build kernel W=1:
-net/sched/sch_taprio.c:1155:6: warning: no previous prototype for ‘taprio_offload_config_changed’ [-Wmissing-prototypes]
+On Mon, 21 Oct 2019, Srinivas Kandagatla wrote:
 
-Make the function static to fix this.
+> Thanks Lee for taking time to review.
+> 
+> I agree with most of the style related comments, will fix them in next
+> version. For others I have replied it inline.
 
-Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
----
- net/sched/sch_taprio.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+[...]
 
-diff --git a/net/sched/sch_taprio.c b/net/sched/sch_taprio.c
-index 6719a65..2121187 100644
---- a/net/sched/sch_taprio.c
-+++ b/net/sched/sch_taprio.c
-@@ -1152,7 +1152,7 @@ void taprio_offload_free(struct tc_taprio_qopt_offload *offload)
-  * offload state (PENDING, ACTIVE, INACTIVE) so it can be visible in dump().
-  * This is left as TODO.
-  */
--void taprio_offload_config_changed(struct taprio_sched *q)
-+static void taprio_offload_config_changed(struct taprio_sched *q)
- {
- 	struct sched_gate_list *oper, *admin;
- 
+> > > +static int wcd934x_bring_up(struct wcd934x_data *wcd)
+> > > +{
+> > > +	struct regmap *rm = wcd->regmap;
+> > 
+> > It's much more common to use 'regmap' or 'map'.
+> 
+> Only reason to make it short here is to save some lines!
+> If you prefer regmap, I will add that in next version!
+
+I doubt it'd save many (any?) lines.
+
+[...]
+
+> > > +static int wcd934x_slim_status(struct slim_device *sdev,
+> > > +			       enum slim_device_status status)
+> > > +{
+> > > +	struct device *dev = &sdev->dev;
+> > > +	struct wcd934x_data *wcd;
+> > > +	int ret;
+> > 
+> > This is semantically odd!  Why are you doing most of the
+> > initialisation and bring-up in 'status' and not 'probe'.  Seems
+> > broken to me.
+> 
+> SLIMBus device will not be in a state to communicate before enumeration (at
+> probe), so all the device initialization is done in status callback where it
+> is ready for communication.
+
+Why do we need the device to be up *before* calling probe?
+
+> This is same with SoundWire Bus as well!
+
+[...]
+
+> > > +	struct device *dev;
+> > > +	struct clk *extclk;
+> > > +	struct regmap *regmap;
+> > > +	struct slim_device *sdev;
+> > 
+> > You don't need 'sdev' and 'dev'.
+> 
+> slim_device instance (sdev) is required by audio codec driver to allocate
+> stream runtime.
+
+You can extrapolate one from the other.
+
 -- 
-1.8.3.1
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
