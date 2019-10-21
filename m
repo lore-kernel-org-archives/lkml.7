@@ -2,204 +2,123 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70DE9C47E49
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:34:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DABECA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:34:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4713F20659
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:34:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58EC020659
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:34:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728059AbfJUKeC (ORCPT
+        id S1728148AbfJUKeJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 06:34:02 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:48434 "EHLO foss.arm.com"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S1726725AbfJUKeC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 06:34:02 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9F1FA493;
-        Mon, 21 Oct 2019 03:33:32 -0700 (PDT)
-Received: from bogus (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D1D673F718;
-        Mon, 21 Oct 2019 03:33:31 -0700 (PDT)
-Date:   Mon, 21 Oct 2019 11:33:29 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] cpufreq: flush any pending policy update work scheduled
- before freeing
-Message-ID: <20191021103329.GB21581@bogus>
-References: <20191017163503.30791-1-sudeep.holla@arm.com>
- <20191018060247.g5asfuh3kncoj7kl@vireshk-i7>
- <20191018101924.GA25540@bogus>
- <4881906.zjS51fuFuv@kreacher>
- <20191018110632.GB25540@bogus>
- <CAJZ5v0hnvahJ6bu6SEVvavb1kRe=X0wP_JUS26h_d019u5z7PA@mail.gmail.com>
+        Mon, 21 Oct 2019 06:34:09 -0400
+Received: from mail-il1-f199.google.com ([209.85.166.199]:42723 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727517AbfJUKeI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 06:34:08 -0400
+Received: by mail-il1-f199.google.com with SMTP id y4so283359ilg.9
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 03:34:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=xeJD1J3sxHF8HzH+tELeff0MBc2EfUs2+L1MDM5KLIQ=;
+        b=YwPk/15HPCFSS1sdmTArXHZRECAi8M46ySGjfLYRUkQwYT/7yBkI9hDpV1vNQbx/75
+         cX0YzOaWqHPeqsEUazk8Te8/Ys/PQD1ZXFnvMgeeA+JminrR0bZ/ifqedai3BahcJNWW
+         pKBS7h1Kz6cjQeBaPEK7QI5V5UWP8Itqo++joV/vPpdb+A1P/EcoebQLwK//cCS/l/rr
+         8rtM2yWvZbX4HdKK1cQncVoNPvUZwo9ThWC//s1VQ/0662QLnnSZ1MmN+8XanDCotcjL
+         Mivz25COj4QHfks6pXKAd1mNDRwhIRC6ZDrE+BmGwF4qvU7cy6OmYBG5PKoKhl64/PL8
+         DDRA==
+X-Gm-Message-State: APjAAAWzauzDBK3Sg+rWE7JqaAsRU3uQVThsKB8QcZLHZapwn88SmKHK
+        hsJ3gi9nXRo96zOoophZRNm2AUeGxlOAnCSwricuucpmGjm4
+X-Google-Smtp-Source: APXvYqw18cRS9npf3vfFpl5ymyIwbq6jsOFDvL55896DsR/nO1Rv6hMXuKbUUA+nfR6swdzrdTb2Yeu/1ToP7k0y5nfXKYiugIms
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0hnvahJ6bu6SEVvavb1kRe=X0wP_JUS26h_d019u5z7PA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Received: by 2002:a05:6638:c:: with SMTP id z12mr2749314jao.105.1571654047830;
+ Mon, 21 Oct 2019 03:34:07 -0700 (PDT)
+Date:   Mon, 21 Oct 2019 03:34:07 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000003b1e8005956939f1@google.com>
+Subject: KCSAN: data-race in exit_signals / prepare_signal
+From:   syzbot <syzbot+492a4acccd8fc75ddfd0@syzkaller.appspotmail.com>
+To:     akpm@linux-foundation.org, arnd@arndb.de, christian@brauner.io,
+        deepa.kernel@gmail.com, ebiederm@xmission.com, elver@google.com,
+        guro@fb.com, linux-kernel@vger.kernel.org, oleg@redhat.com,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 02:14:51AM +0200, Rafael J. Wysocki wrote:
-> On Fri, Oct 18, 2019 at 1:06 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
-> >
-> > On Fri, Oct 18, 2019 at 12:37:51PM +0200, Rafael J. Wysocki wrote:
-> > > On Friday, October 18, 2019 12:19:24 PM CEST Sudeep Holla wrote:
-> > > > On Fri, Oct 18, 2019 at 11:32:47AM +0530, Viresh Kumar wrote:
-> > > > > On 18-10-19, 06:55, Sudeep Holla wrote:
-> > > > > > On Thu, Oct 17, 2019 at 11:26:54PM +0200, Rafael J. Wysocki wrote:
-> > > > > > > On Thu, Oct 17, 2019 at 9:36 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> > > > > > > >
-> > > > > > > > On Thu, Oct 17, 2019 at 6:35 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
-> > > > > > > > >
-> > > > > > > > > dev_pm_qos_remove_request ends calling {max,min}_freq_req QoS notifiers
-> > > > > > > > > which schedule policy update work. It may end up racing with the freeing
-> > > > > > > > > the policy and unregistering the driver.
-> > > > > > > > >
-> > > > > > > > > One possible race is as below where the cpufreq_driver is unregistered
-> > > > > > > > > but the scheduled work gets executed at later stage when cpufreq_driver
-> > > > > > > > > is NULL(i.e. after freeing the policy and driver)
-> > > > > > > > >
-> > > > > > > > > Unable to handle kernel NULL pointer dereference at virtual address 0000001c
-> > > > > > > > > pgd = (ptrval)
-> > > > > > > > > [0000001c] *pgd=80000080204003, *pmd=00000000
-> > > > > > > > > Internal error: Oops: 206 [#1] SMP THUMB2
-> > > > > > > > > Modules linked in:
-> > > > > > > > > CPU: 0 PID: 34 Comm: kworker/0:1 Not tainted 5.4.0-rc3-00006-g67f5a8081a4b #86
-> > > > > > > > > Hardware name: ARM-Versatile Express
-> > > > > > > > > Workqueue: events handle_update
-> > > > > > > > > PC is at cpufreq_set_policy+0x58/0x228
-> > > > > > > > > LR is at dev_pm_qos_read_value+0x77/0xac
-> > > > > > > > > Control: 70c5387d  Table: 80203000  DAC: fffffffd
-> > > > > > > > > Process kworker/0:1 (pid: 34, stack limit = 0x(ptrval))
-> > > > > > > > >         (cpufreq_set_policy) from (refresh_frequency_limits.part.24+0x37/0x48)
-> > > > > > > > >         (refresh_frequency_limits.part.24) from (handle_update+0x2f/0x38)
-> > > > > > > > >         (handle_update) from (process_one_work+0x16d/0x3cc)
-> > > > > > > > >         (process_one_work) from (worker_thread+0xff/0x414)
-> > > > > > > > >         (worker_thread) from (kthread+0xff/0x100)
-> > > > > > > > >         (kthread) from (ret_from_fork+0x11/0x28)
-> > > > > > > > >
-> > > > > > > > > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> > > > > > > > > Cc: Viresh Kumar <viresh.kumar@linaro.org>
-> > > > > > > > > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> > > > > > > > > ---
-> > > > > > > > >  drivers/cpufreq/cpufreq.c | 3 +++
-> > > > > > > > >  1 file changed, 3 insertions(+)
-> > > > > > > > >
-> > > > > > > > > Hi Rafael, Viresh,
-> > > > > > > > >
-> > > > > > > > > This fixed the boot issue I reported[1] on TC2 with bL switcher enabled.
-> > > > > > > > > I have based this patch on -rc3 and not on top of your patches. This
-> > > > > > > > > only fixes the boot issue but I hit the other crashes while continuously
-> > > > > > > > > switching on and off the bL switcher that register/unregister the driver
-> > > > > > > > > Your patch series fixes them. I can based this on top of those if you
-> > > > > > > > > prefer.
-> > > > > > > > >
-> > > > > > > > > Regards,
-> > > > > > > > > Sudeep
-> > > > > > > > >
-> > > > > > > > > [1] https://lore.kernel.org/linux-pm/20191015155735.GA29105@bogus/
-> > > > > > > > >
-> > > > > > > > > diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> > > > > > > > > index c52d6fa32aac..b703c29a84be 100644
-> > > > > > > > > --- a/drivers/cpufreq/cpufreq.c
-> > > > > > > > > +++ b/drivers/cpufreq/cpufreq.c
-> > > > > > > > > @@ -1278,6 +1278,9 @@ static void cpufreq_policy_free(struct cpufreq_policy *policy)
-> > > > > > > > >         }
-> > > > > > > > >
-> > > > > > > > >         dev_pm_qos_remove_request(policy->min_freq_req);
-> > > > > > > > > +       /* flush the pending policy->update work before freeing the policy */
-> > > > > > > > > +       if (work_pending(&policy->update))
-> > > > > > > >
-> > > > > > > > Isn't this racy?
-> > > > > > > >
-> > > > > > > > It still may be running if the pending bit is clear and we still need
-> > > > > > > > to wait for it then, don't we?
-> > > > > > > >
-> > > > > > > > Why don't you do an unconditional flush_work() here?
-> > > > > > >
-> > > > > > > You may as well do a cancel_work_sync() here, because whether or not
-> > > > > > > the last update of the policy happens before it goes away is a matter
-> > > > > > > of timing in any case
-> > > > > >
-> > > > > > In fact that's the first thing I tried to fix the issue I was seeing.
-> > > > > > But I then thought it would be better to complete the update as the PM
-> > > > > > QoS were getting updated back to DEFAULT values for the device. Even
-> > > > > > this works.
-> > > > > >
-> > > > > > What is your preference ? flush_work or cancel_work_sync ? I will
-> > > > > > update accordingly. I may need to do some more testing with
-> > > > > > cancel_work_sync as I just checked that quickly to confirm the race.
-> > > > >
-> > > > > As I said in the other email, this work didn't come as a result of
-> > > > > removal of the qos request from cpufreq core and so must have come
-> > > > > from other thermal or similar events.
-> > > >
-> > > > I don't think so. For sure not because of any thermal events. I didn't
-> > > > have log handy and hence had to wait till I was next to hardware.
-> > > >
-> > > > This is log:
-> > > >  cpufreq: cpufreq_policy_free: dev_pm_qos_remove_request max before
-> > > >  cpufreq: cpufreq_notifier_max: schedule_work(&policy->update)
-> > > >  cpufreq: cpufreq_policy_free: dev_pm_qos_remove_request max after
-> > > >  cpufreq: cpufreq_policy_free: dev_pm_qos_remove_request min before
-> > > >  cpufreq: cpufreq_notifier_min: schedule_work(&policy->update)
-> > > >  cpufreq: cpufreq_policy_free: dev_pm_qos_remove_request min after
-> > > >  cpufreq: cpufreq_policy_free: dev_pm_qos_remove_request max before
-> > > >  cpufreq: cpufreq_notifier_max: schedule_work(&policy->update)
-> > > >  cpufreq: cpufreq_policy_free: dev_pm_qos_remove_request max after
-> > > >  cpufreq: cpufreq_policy_free: dev_pm_qos_remove_request min before
-> > > >  cpufreq: cpufreq_notifier_min: schedule_work(&policy->update)
-> > > >  cpufreq: cpufreq_policy_free: dev_pm_qos_remove_request min after
-> > > >
-> > > > So if I move the call above, it still crashes as the work is getting
-> > > > scheduled later.
-> > >
-> > > OK, please cancel the work after dropping the last request.
-> > >
-> > > We still need to understand what is going on here, but the crash needs to be
-> > > prevented from occurring in the first place IMO.
-> > >
-> > Callstack is:
-> >
-> > (cpufreq_notifier_max)
-> > (notifier_call_chain)
-> > (blocking_notifier_call_chain)
-> > (pm_qos_update_target)
-> > (freq_qos_apply)
-> > (freq_qos_remove_request)
-> > (cpufreq_policy_free)
-> > (subsys_interface_unregister)
-> > (cpufreq_unregister_driver)
->
-> That may be due to a bug in one of my patches (it's adding one of the
-> notifiers to a wrong list).
->
+Hello,
 
-Ah that explains, I was wondering what changed as it's working now but
-was not the case when I tried earlier and I had to keep cancel_work_sync
-after dev_pm_qos_remove_request
+syzbot found the following crash on:
 
-> Please re-test with the current linux-next branch that I've just pushed.
+HEAD commit:    d724f94f x86, kcsan: Enable KCSAN for x86
+git tree:       https://github.com/google/ktsan.git kcsan
+console output: https://syzkaller.appspot.com/x/log.txt?x=13eab79f600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=c0906aa620713d80
+dashboard link: https://syzkaller.appspot.com/bug?extid=492a4acccd8fc75ddfd0
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-Yes, it did that and it now works fine even if I move the cancel_work_sync
-call earlier just after freq_qos_remove_notifier.
+Unfortunately, I don't have any reproducer for this crash yet.
 
-If you/Viresh prefer the call to cancel_work_sync to be moved up, that
-should be fine now. I have sent the delta for reference in other reply.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+492a4acccd8fc75ddfd0@syzkaller.appspotmail.com
 
---
-Regards,
-Sudeep
+==================================================================
+BUG: KCSAN: data-race in exit_signals / prepare_signal
+
+read to 0xffff888103566064 of 4 bytes by interrupt on cpu 0:
+  sig_task_ignored kernel/signal.c:94 [inline]
+  sig_ignored kernel/signal.c:119 [inline]
+  prepare_signal+0x1f5/0x790 kernel/signal.c:956
+  send_sigqueue+0xc1/0x4b0 kernel/signal.c:1859
+  posix_timer_event kernel/time/posix-timers.c:328 [inline]
+  posix_timer_fn+0x10d/0x230 kernel/time/posix-timers.c:354
+  __run_hrtimer kernel/time/hrtimer.c:1389 [inline]
+  __hrtimer_run_queues+0x288/0x600 kernel/time/hrtimer.c:1451
+  hrtimer_interrupt+0x22a/0x480 kernel/time/hrtimer.c:1509
+  local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1110 [inline]
+  smp_apic_timer_interrupt+0xdc/0x280 arch/x86/kernel/apic/apic.c:1135
+  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
+  arch_local_irq_enable arch/x86/include/asm/paravirt.h:778 [inline]
+  __raw_spin_unlock_irq include/linux/spinlock_api_smp.h:168 [inline]
+  _raw_spin_unlock_irq+0x4e/0x80 kernel/locking/spinlock.c:199
+  spin_unlock_irq include/linux/spinlock.h:388 [inline]
+  get_signal+0x1f4/0x1320 kernel/signal.c:2707
+  do_signal+0x3b/0xc00 arch/x86/kernel/signal.c:815
+  exit_to_usermode_loop+0x250/0x2c0 arch/x86/entry/common.c:159
+  prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
+  syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
+  do_syscall_64+0x2d7/0x2f0 arch/x86/entry/common.c:299
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+write to 0xffff888103566064 of 4 bytes by task 7604 on cpu 1:
+  exit_signals+0x13b/0x490 kernel/signal.c:2822
+  do_exit+0x1af/0x18e0 kernel/exit.c:825
+  do_group_exit+0xb4/0x1c0 kernel/exit.c:983
+  __do_sys_exit_group kernel/exit.c:994 [inline]
+  __se_sys_exit_group kernel/exit.c:992 [inline]
+  __x64_sys_exit_group+0x2e/0x30 kernel/exit.c:992
+  do_syscall_64+0xcf/0x2f0 arch/x86/entry/common.c:296
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 1 PID: 7604 Comm: syz-executor.4 Not tainted 5.3.0+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
