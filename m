@@ -2,458 +2,144 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 752BACA9EB0
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:07:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3D8CCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:07:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BC38214AE
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:07:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571674048;
-	bh=B4z4L5dg3zQci25i2RDidWCCYpN8/MazyUCz4kx1yZY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=jCirIhmkYcVK8KBsks9WSgkITIfAVKCnQmdcp1UPqabN1s6e/TuT6KEBvfasdliFb
-	 vEfcY3JNxSjRe5Sbn7fHSCku3XOxc9OShUtETSb1QKDcdARf1aPOCHmJxahhIsdTRr
-	 v8hmNlQrqsLB+KF43uSrTHNui0TOj04+qsEbMoxs=
+	by mail.kernel.org (Postfix) with ESMTP id 85E15205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:07:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gsVR6Jy4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729844AbfJUQH1 (ORCPT
+        id S1729864AbfJUQHj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 12:07:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34658 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726332AbfJUQH1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 12:07:27 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 21 Oct 2019 12:07:39 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:52739 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726289AbfJUQHj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 12:07:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571674057;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=KQPZRRCGMG7fJgu4hP+seA8pXPu83oas54mRg6x4AJ0=;
+        b=gsVR6Jy4NxMWOjvjep4hNYbJRwVCDHmFPtq17hpGQtKRmS6M/PR51KLTunVHNftnlY9YOL
+        A2ovt3kZwPPpC50gZ8JVpQrsnZYmah5ddorGBqAkHClzTkaF0z9yMDTOtRfHw78I5dl4JU
+        4H0dha0sUfcifVEwwnCAIxie0KMxcRw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-200-JbfJO3oRMX-KAL7iRsVTIg-1; Mon, 21 Oct 2019 12:07:34 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00281205C9;
-        Mon, 21 Oct 2019 16:07:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571674045;
-        bh=B4z4L5dg3zQci25i2RDidWCCYpN8/MazyUCz4kx1yZY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=O76bq1XsoMiLbNW6CUzvLsBn8spuSg5XnBj6b8exW70phgRuKMU4zoscOmnSFmJ5W
-         AvFkeal9rl45tIrhEalVaT2TBEhUAOWda9it/toOXyNK46NTDVqEF2bg36BhWVqMUt
-         45ck/PTqwJocpbFveDiR2nfO+HKdkRFS6s0vGTA4=
-Date:   Mon, 21 Oct 2019 17:07:19 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Gwendal Grignou <gwendal@chromium.org>
-Cc:     briannorris@chromium.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, lee.jones@linaro.org, bleung@chromium.org,
-        enric.balletbo@collabora.com, dianders@chromium.org,
-        groeck@chromium.org, fabien.lahoudere@collabora.com,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        Enrico Granata <egranata@chromium.org>
-Subject: Re: [PATCH v2 07/18] platform: chrome: cros_ec: handle MKBP more
- events flag
-Message-ID: <20191021170719.09f1e5c2@archlinux>
-In-Reply-To: <20191021055403.67849-8-gwendal@chromium.org>
-References: <20191021055403.67849-1-gwendal@chromium.org>
-        <20191021055403.67849-8-gwendal@chromium.org>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 716BB100550E;
+        Mon, 21 Oct 2019 16:07:32 +0000 (UTC)
+Received: from krava (unknown [10.43.17.61])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 777F919481;
+        Mon, 21 Oct 2019 16:07:30 +0000 (UTC)
+Date:   Mon, 21 Oct 2019 18:07:29 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     "Jin, Yao" <yao.jin@linux.intel.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+Subject: Re: [PATCH v2 3/5] perf report: Sort by sampled cycles percent per
+ block for stdio
+Message-ID: <20191021160729.GF32718@krava>
+References: <20191015053350.13909-1-yao.jin@linux.intel.com>
+ <20191015053350.13909-4-yao.jin@linux.intel.com>
+ <20191015084102.GA10951@krava>
+ <6882f3ae-0f8d-5a01-7fd5-5b9f9c93f9ac@linux.intel.com>
+ <20191016101543.GC15580@krava>
+ <456b8e97-dc50-449c-9999-0bddef0e9c4c@linux.intel.com>
+ <20191016125325.GA10222@krava>
+ <2a16a22e-5bdd-949b-480f-1c0956e13c14@linux.intel.com>
+ <20191021140439.GE32718@krava>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20191021140439.GE32718@krava>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-MC-Unique: JbfJO3oRMX-KAL7iRsVTIg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 20 Oct 2019 22:53:52 -0700
-Gwendal Grignou <gwendal@chromium.org> wrote:
+On Mon, Oct 21, 2019 at 04:04:39PM +0200, Jiri Olsa wrote:
+> On Mon, Oct 21, 2019 at 02:56:57PM +0800, Jin, Yao wrote:
+>=20
+> SNIP
+>=20
+> > > > Does it seem like what the c2c does?
+> > >=20
+> > > well c2c has its own data output with multiline column titles,
+> > > hence it has its own separate dimension stuff, but your code
+> > > output is within the standard perf report right? single column
+> > > output.. why couldn't you use just sort_entry ?
+> > >=20
+> > > jirka
+> > >=20
+> >=20
+> > Hi Jiri,
+> >=20
+> > I've being thinking how to use sort_entry but I have some troubles.
+> >=20
+> > In v2, I used "struct perf_hpp_fmt" to pass extra argument. For example=
+,
+> >=20
+> > static int64_t block_cycles_cov_sort(struct perf_hpp_fmt *fmt,
+> > =09=09=09=09     struct hist_entry *left,
+> > =09=09=09=09     struct hist_entry *right)
+> > {
+> > =09struct block_fmt *block_fmt =3D container_of(fmt, ...);
+> > =09struct report *rep =3D block_fmt->rep;
+> > =09...
+> > }
+> >=20
+> > But if I just use sort_entry, I can't pass extra argument (it's not a g=
+ood
+> > idea to add more fields in struct hist_entry).
+> >=20
+> > int64_t sort__xxx_sort(struct hist_entry *left,
+> > =09=09       struct hist_entry *right)
+> >=20
+> > And for entry print it's similar, I can't pass extra argument in.
+> >=20
+> > In v2,
+> > static int block_cycles_pct_entry(struct perf_hpp_fmt *fmt,
+> > =09=09=09=09  struct perf_hpp *hpp,
+> > =09=09=09=09  struct hist_entry *he)
+> > {
+> > =09struct block_fmt *block_fmt =3D container_of(fmt,...);
+> > =09struct report *rep =3D block_fmt->rep;
+> > =09...
+> > }
+> >=20
+> > But for se_snprintf, I can't pass extra argument in.
+> >=20
+> > hist_entry__xxx_snprintf(struct hist_entry *he, char *bf,
+> > =09=09=09 size_t size, unsigned int width)
+> >=20
+> > That's why I feel headache for just using the sort_entry. :(
+>=20
+> you might be right, I just want to omit another field output framework ;-=
+)=20
+> I'm checking on this and will let you know if I find some way
 
-> From: Enrico Granata <egranata@chromium.org>
-> 
-> The ChromeOS EC has support for signaling to the host that
-> a single IRQ can serve multiple MKBP (Matrix KeyBoard Protocol)
-> events.
-> 
-> Doing this serves an optimization purpose, as it minimizes the
-> number of round-trips into the interrupt handling machinery, and
-> it proves beneficial to sensor timestamping as it keeps the desired
-> synchronization of event times between the two processors.
-> 
-> This patch adds kernel support for this EC feature, allowing the
-> ec_irq to loop until all events have been served.
-> 
-> Signed-off-by: Enrico Granata <egranata@chromium.org>
-> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
-A few superficial bits inline.
+ok, because it's based on branch data the sort entry would not be
+convenient.. I'm sending some other comments for the patch
 
-Jonathan
-> ---
-> Changes in v2:
->   Process flag inside cros_ec_get_next_event, clean flag from event.
->   Introduce public function cros_ec_handle_event(), use it in rpmsg and
->     ishtp transport layer.
->   Remplace dev_info with dev_dbg, call only once.
-> 
->  drivers/platform/chrome/cros_ec.c           | 35 +++++++--
->  drivers/platform/chrome/cros_ec_ishtp.c     |  8 +-
->  drivers/platform/chrome/cros_ec_lpc.c       | 15 +++-
->  drivers/platform/chrome/cros_ec_proto.c     | 81 +++++++++++++--------
->  drivers/platform/chrome/cros_ec_rpmsg.c     | 23 ++----
->  include/linux/platform_data/cros_ec_proto.h | 12 ++-
->  6 files changed, 110 insertions(+), 64 deletions(-)
-> 
-> diff --git a/drivers/platform/chrome/cros_ec.c b/drivers/platform/chrome/cros_ec.c
-> index 9b19f50572313..eb7f60140e2c1 100644
-> --- a/drivers/platform/chrome/cros_ec.c
-> +++ b/drivers/platform/chrome/cros_ec.c
-> @@ -40,13 +40,24 @@ static irqreturn_t ec_irq_handler(int irq, void *data)
->  	return IRQ_WAKE_THREAD;
->  }
->  
-> -static irqreturn_t ec_irq_thread(int irq, void *data)
-> +/**
-> + * cros_ec_handle_event - process and forward pending events on EC
-run kernel-doc generation over the files after adding kernel doc.
-
-It needs to be a complete and this one doesn't document the parameter.
-
-> + *
-> + * Call this function in a loop when the kernel is notified that the EC has
-> + * pending events.
-> + *
-> + * Returns true if more events are still pending and this function should be
-> + * called again.
-> + */
-> +bool cros_ec_handle_event(struct cros_ec_device *ec_dev)
->  {
-> -	struct cros_ec_device *ec_dev = data;
-> -	bool wake_event = true;
-> +	bool wake_event;
-> +	bool ec_has_more_events;
->  	int ret;
->  
-> -	ret = cros_ec_get_next_event(ec_dev, &wake_event);
-> +	ret = cros_ec_get_next_event(ec_dev,
-> +			&wake_event,
-> +			&ec_has_more_events);
-
-	ret = cros_ec_get_next_event(ec_dev, &wake_event, &ec_has_more_events);
-
-Seems to be under 80 chars (just!)
->  
->  	/*
->  	 * Signal only if wake host events or any interrupt if
-> @@ -59,6 +70,20 @@ static irqreturn_t ec_irq_thread(int irq, void *data)
->  	if (ret > 0)
->  		blocking_notifier_call_chain(&ec_dev->event_notifier,
->  					     0, ec_dev);
-> +
-> +	return ec_has_more_events;
-> +}
-> +EXPORT_SYMBOL(cros_ec_handle_event);
-> +
-> +static irqreturn_t ec_irq_thread(int irq, void *data)
-> +{
-> +	struct cros_ec_device *ec_dev = data;
-> +	bool ec_has_more_events;
-> +
-> +	do {
-> +		ec_has_more_events = cros_ec_handle_event(ec_dev);
-> +	} while (ec_has_more_events);
-> +
->  	return IRQ_HANDLED;
->  }
->  
-> @@ -273,7 +298,7 @@ EXPORT_SYMBOL(cros_ec_suspend);
->  static void cros_ec_report_events_during_suspend(struct cros_ec_device *ec_dev)
->  {
->  	while (ec_dev->mkbp_event_supported &&
-> -	       cros_ec_get_next_event(ec_dev, NULL) > 0)
-> +	       cros_ec_get_next_event(ec_dev, NULL, NULL) > 0)
->  		blocking_notifier_call_chain(&ec_dev->event_notifier,
->  					     1, ec_dev);
->  }
-> diff --git a/drivers/platform/chrome/cros_ec_ishtp.c b/drivers/platform/chrome/cros_ec_ishtp.c
-> index 5c848f22b44b4..e5996821d08b3 100644
-> --- a/drivers/platform/chrome/cros_ec_ishtp.c
-> +++ b/drivers/platform/chrome/cros_ec_ishtp.c
-> @@ -136,11 +136,11 @@ static void ish_evt_handler(struct work_struct *work)
->  	struct ishtp_cl_data *client_data =
->  		container_of(work, struct ishtp_cl_data, work_ec_evt);
->  	struct cros_ec_device *ec_dev = client_data->ec_dev;
-> +	bool ec_has_more_events;
->  
-> -	if (cros_ec_get_next_event(ec_dev, NULL) > 0) {
-> -		blocking_notifier_call_chain(&ec_dev->event_notifier,
-> -					     0, ec_dev);
-> -	}
-> +	do {
-> +		ec_has_more_events = cros_ec_handle_event(ec_dev);
-> +	} while (ec_has_more_events);
->  }
->  
->  /**
-> diff --git a/drivers/platform/chrome/cros_ec_lpc.c b/drivers/platform/chrome/cros_ec_lpc.c
-> index 3c77496e164da..7d2db3d2b094a 100644
-> --- a/drivers/platform/chrome/cros_ec_lpc.c
-> +++ b/drivers/platform/chrome/cros_ec_lpc.c
-> @@ -312,13 +312,20 @@ static int cros_ec_lpc_readmem(struct cros_ec_device *ec, unsigned int offset,
->  static void cros_ec_lpc_acpi_notify(acpi_handle device, u32 value, void *data)
->  {
->  	struct cros_ec_device *ec_dev = data;
-> +	bool ec_has_more_events;
-> +	int ret;
->  
->  	ec_dev->last_event_time = cros_ec_get_time_ns();
->  
-> -	if (ec_dev->mkbp_event_supported &&
-> -	    cros_ec_get_next_event(ec_dev, NULL) > 0)
-> -		blocking_notifier_call_chain(&ec_dev->event_notifier, 0,
-> -					     ec_dev);
-> +	if (ec_dev->mkbp_event_supported)
-> +		do {
-> +			ret = cros_ec_get_next_event(ec_dev, NULL,
-> +					&ec_has_more_events);
-> +			if (ret > 0)
-> +				blocking_notifier_call_chain(
-> +						&ec_dev->event_notifier, 0,
-> +						ec_dev);
-> +		} while (ec_has_more_events);
->  
->  	if (value == ACPI_NOTIFY_DEVICE_WAKE)
->  		pm_system_wakeup();
-> diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
-> index 2357c717399ad..17d6f36a576d1 100644
-> --- a/drivers/platform/chrome/cros_ec_proto.c
-> +++ b/drivers/platform/chrome/cros_ec_proto.c
-> @@ -456,7 +456,10 @@ int cros_ec_query_all(struct cros_ec_device *ec_dev)
->  	if (ret < 0 || ver_mask == 0)
->  		ec_dev->mkbp_event_supported = 0;
->  	else
-> -		ec_dev->mkbp_event_supported = 1;
-> +		ec_dev->mkbp_event_supported = fls(ver_mask);
-> +
-> +	dev_dbg(ec_dev->dev, "MKBP support version %u\n",
-> +		ec_dev->mkbp_event_supported - 1);
->  
->  	/* Probe if host sleep v1 is supported for S0ix failure detection. */
->  	ret = cros_ec_get_host_command_version_mask(ec_dev,
-> @@ -569,6 +572,7 @@ EXPORT_SYMBOL(cros_ec_cmd_xfer_status);
->  
->  static int get_next_event_xfer(struct cros_ec_device *ec_dev,
->  			       struct cros_ec_command *msg,
-> +			       struct ec_response_get_next_event_v1 *event,
->  			       int version, uint32_t size)
->  {
->  	int ret;
-> @@ -581,7 +585,7 @@ static int get_next_event_xfer(struct cros_ec_device *ec_dev,
->  	ret = cros_ec_cmd_xfer(ec_dev, msg);
->  	if (ret > 0) {
->  		ec_dev->event_size = ret - 1;
-> -		memcpy(&ec_dev->event_data, msg->data, ret);
-> +		ec_dev->event_data = *event;
->  	}
->  
->  	return ret;
-> @@ -589,30 +593,26 @@ static int get_next_event_xfer(struct cros_ec_device *ec_dev,
->  
->  static int get_next_event(struct cros_ec_device *ec_dev)
->  {
-> -	u8 buffer[sizeof(struct cros_ec_command) + sizeof(ec_dev->event_data)];
-> -	struct cros_ec_command *msg = (struct cros_ec_command *)&buffer;
-> -	static int cmd_version = 1;
-> -	int ret;
-> +	struct {
-> +		struct cros_ec_command msg;
-> +		struct ec_response_get_next_event_v1 event;
-> +	} __packed buf;
-> +	struct cros_ec_command *msg = &buf.msg;
-> +	struct ec_response_get_next_event_v1 *event = &buf.event;
-> +	const int cmd_version = ec_dev->mkbp_event_supported - 1;
->  
-> +	memset(msg, 0, sizeof(*msg));
->  	if (ec_dev->suspended) {
->  		dev_dbg(ec_dev->dev, "Device suspended.\n");
->  		return -EHOSTDOWN;
->  	}
->  
-> -	if (cmd_version == 1) {
-> -		ret = get_next_event_xfer(ec_dev, msg, cmd_version,
-> -				sizeof(struct ec_response_get_next_event_v1));
-> -		if (ret < 0 || msg->result != EC_RES_INVALID_VERSION)
-> -			return ret;
-> -
-> -		/* Fallback to version 0 for future send attempts */
-> -		cmd_version = 0;
-> -	}
-> -
-> -	ret = get_next_event_xfer(ec_dev, msg, cmd_version,
-> +	if (cmd_version == 0)
-> +		return get_next_event_xfer(ec_dev, msg, event, 0,
->  				  sizeof(struct ec_response_get_next_event));
->  
-> -	return ret;
-> +	return get_next_event_xfer(ec_dev, msg, event, cmd_version,
-> +				sizeof(struct ec_response_get_next_event_v1));
->  }
->  
->  static int get_keyboard_state_event(struct cros_ec_device *ec_dev)
-> @@ -639,32 +639,55 @@ static int get_keyboard_state_event(struct cros_ec_device *ec_dev)
->   * @ec_dev: Device to fetch event from.
->   * @wake_event: Pointer to a bool set to true upon return if the event might be
->   *              treated as a wake event. Ignored if null.
-> + * @has_more_events: Pointer to bool set to true if more than one event is
-> + *              pending.
-> + *              Some EC will set this flag to indicate cros_ec_get_next_event()
-> + *              can be called multiple times in a row.
-> + *              It is an optimization to prevent issuing a EC command for
-> + *              nothing or wait for another interrupt from the EC to process
-> + *              the next message.
-> + *              Ignored if null.
->   *
->   * Return: negative error code on errors; 0 for no data; or else number of
->   * bytes received (i.e., an event was retrieved successfully). Event types are
->   * written out to @ec_dev->event_data.event_type on success.
->   */
-> -int cros_ec_get_next_event(struct cros_ec_device *ec_dev, bool *wake_event)
-> +int cros_ec_get_next_event(struct cros_ec_device *ec_dev,
-> +			   bool *wake_event,
-> +			   bool *has_more_events)
->  {
->  	u8 event_type;
->  	u32 host_event;
->  	int ret;
->  
-> -	if (!ec_dev->mkbp_event_supported) {
-> -		ret = get_keyboard_state_event(ec_dev);
-> -		if (ret <= 0)
-> -			return ret;
-> +	/*
-> +	 * Default value for wake_event.
-> +	 * Wake up on keyboard event, wake up for spurious interrupt or link
-> +	 * error to the EC.
-> +	 */
-> +	if (wake_event)
-> +		*wake_event = true;
->  
-> -		if (wake_event)
-> -			*wake_event = true;
-> +	/*
-> +	 * Default value for has_more_events.
-> +	 * EC will raise another interrupt if AP does not process all events
-> +	 * anyway.
-> +	 */
-> +	if (has_more_events)
-> +		*has_more_events = false;
->  
-> -		return ret;
-> -	}
-> +	if (!ec_dev->mkbp_event_supported)
-> +		return get_keyboard_state_event(ec_dev);
->  
->  	ret = get_next_event(ec_dev);
->  	if (ret <= 0)
->  		return ret;
->  
-> +	if (has_more_events)
-> +		*has_more_events = ec_dev->event_data.event_type &
-> +			EC_MKBP_HAS_MORE_EVENTS;
-> +	ec_dev->event_data.event_type &= EC_MKBP_EVENT_TYPE_MASK;
-> +
->  	if (wake_event) {
->  		event_type = ec_dev->event_data.event_type;
->  		host_event = cros_ec_get_host_event(ec_dev);
-> @@ -679,11 +702,7 @@ int cros_ec_get_next_event(struct cros_ec_device *ec_dev, bool *wake_event)
->  		else if (host_event &&
->  			 !(host_event & ec_dev->host_event_wake_mask))
->  			*wake_event = false;
-> -		/* Consider all other events as wake events. */
-> -		else
-> -			*wake_event = true;
->  	}
-> -
->  	return ret;
->  }
->  EXPORT_SYMBOL(cros_ec_get_next_event);
-> diff --git a/drivers/platform/chrome/cros_ec_rpmsg.c b/drivers/platform/chrome/cros_ec_rpmsg.c
-> index 0c3738c3244d8..7aa3be42d8e3f 100644
-> --- a/drivers/platform/chrome/cros_ec_rpmsg.c
-> +++ b/drivers/platform/chrome/cros_ec_rpmsg.c
-> @@ -140,25 +140,14 @@ static void
->  cros_ec_rpmsg_host_event_function(struct work_struct *host_event_work)
->  {
->  	struct cros_ec_rpmsg *ec_rpmsg = container_of(host_event_work,
-> -						      struct cros_ec_rpmsg,
-> -						      host_event_work);
-> +			struct cros_ec_rpmsg,
-> +			host_event_work);
-
-Why?  Should be aligned with opening brackets where possible and it was.
-
->  	struct cros_ec_device *ec_dev = dev_get_drvdata(&ec_rpmsg->rpdev->dev);
-> -	bool wake_event = true;
-> -	int ret;
-> -
-> -	ret = cros_ec_get_next_event(ec_dev, &wake_event);
-> -
-> -	/*
-> -	 * Signal only if wake host events or any interrupt if
-> -	 * cros_ec_get_next_event() returned an error (default value for
-> -	 * wake_event is true)
-> -	 */
-> -	if (wake_event && device_may_wakeup(ec_dev->dev))
-> -		pm_wakeup_event(ec_dev->dev, 0);
-> +	bool ec_has_more_events;
->  
-> -	if (ret > 0)
-> -		blocking_notifier_call_chain(&ec_dev->event_notifier,
-> -					     0, ec_dev);
-> +	do {
-> +		ec_has_more_events = cros_ec_handle_event(ec_dev);
-> +	} while (ec_has_more_events);
->  }
->  
->  static int cros_ec_rpmsg_callback(struct rpmsg_device *rpdev, void *data,
-> diff --git a/include/linux/platform_data/cros_ec_proto.h b/include/linux/platform_data/cros_ec_proto.h
-> index b183024fef1f6..e238930ae9670 100644
-> --- a/include/linux/platform_data/cros_ec_proto.h
-> +++ b/include/linux/platform_data/cros_ec_proto.h
-> @@ -116,7 +116,9 @@ struct cros_ec_command {
->   *            code.
->   * @pkt_xfer: Send packet to EC and get response.
->   * @lock: One transaction at a time.
-> - * @mkbp_event_supported: True if this EC supports the MKBP event protocol.
-> + * @mkbp_event_supported: 0 if MKBP not supported. Otherwise its value is
-> + *                        the maximum supported version of the MKBP host event
-> + *                        command + 1.
->   * @host_sleep_v1: True if this EC supports the sleep v1 command.
->   * @event_notifier: Interrupt event notifier for transport devices.
->   * @event_data: Raw payload transferred with the MKBP event.
-> @@ -156,7 +158,7 @@ struct cros_ec_device {
->  	int (*pkt_xfer)(struct cros_ec_device *ec,
->  			struct cros_ec_command *msg);
->  	struct mutex lock;
-> -	bool mkbp_event_supported;
-> +	u8 mkbp_event_supported;
->  	bool host_sleep_v1;
->  	struct blocking_notifier_head event_notifier;
->  
-> @@ -205,7 +207,9 @@ int cros_ec_unregister(struct cros_ec_device *ec_dev);
->  
->  int cros_ec_query_all(struct cros_ec_device *ec_dev);
->  
-> -int cros_ec_get_next_event(struct cros_ec_device *ec_dev, bool *wake_event);
-> +int cros_ec_get_next_event(struct cros_ec_device *ec_dev,
-> +			   bool *wake_event,
-> +			   bool *has_more_events);
->  
->  u32 cros_ec_get_host_event(struct cros_ec_device *ec_dev);
->  
-> @@ -213,6 +217,8 @@ int cros_ec_check_features(struct cros_ec_dev *ec, int feature);
->  
->  int cros_ec_get_sensor_count(struct cros_ec_dev *ec);
->  
-> +bool cros_ec_handle_event(struct cros_ec_device *ec_dev);
-> +
->  /**
->   * cros_ec_get_time_ns - Return time in ns.
->   *
+thanks,
+jirka
 
