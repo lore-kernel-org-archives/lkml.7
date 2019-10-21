@@ -2,129 +2,88 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4948CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 21:43:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE61CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 21:51:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A9A12084B
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 21:43:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="M6jMXJhS"
+	by mail.kernel.org (Postfix) with ESMTP id CE2EC20659
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 21:51:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730426AbfJUVnf (ORCPT
+        id S1730385AbfJUVvY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 17:43:35 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:35131 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730254AbfJUVnf (ORCPT
+        Mon, 21 Oct 2019 17:51:24 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:57965 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726672AbfJUVvY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 17:43:35 -0400
-Received: by mail-lj1-f193.google.com with SMTP id m7so14961823lji.2
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 14:43:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3yz2dDg8kGKHe/KdmAKuB5h5HlI7viBlMhf6Er7BmAc=;
-        b=M6jMXJhStx2J2smoc8sUROKqUvSiOe5Uxj5ERKAEVzwJYa5cP7pIzHeAKS7YO9gLc3
-         MaqfYdj0WEeUXTOpSlmDKllBFzoTaJ6P668rEXvy94XLvzpjGE2cBhhQNcEk4Kdyw0Mt
-         Kg0M+iRdEMz8wYYxs7LWbQtC8vkFING0gIIVNLfSu8fG7ZMZScQhvsSVpFENGRf6RbaX
-         cR2F7O+EjUPP3v7Q8Hgndvid1seaw0TjAQHGIuB2FoYVwHLg8yWM0vZNPM+pgPbEFQdP
-         0l3L+5cxJqH5JpmWETeZzb8mkstpAWFkBEQ8QVSR4oOZ5cVX30LKSvSFOvgN6e52scUf
-         +Qqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3yz2dDg8kGKHe/KdmAKuB5h5HlI7viBlMhf6Er7BmAc=;
-        b=DOjCAA7l+uk4nqBhnrP5hqLWaOeXRZsixvkHr7dda32w1boPH1nfPawpONiWhJEdmF
-         dn/zX0M5n95joU2HarQfXx1bXKGlKihgxV85hiG2GaHNLUZH9AXt1wQiCAumS6LJ2iGD
-         4rHi3yUtcMqTka6WcxuH//lMgmwVFLkYAHd8HutbJII/5EdkSNUZbT0ruhnjtvOTvFdY
-         nMsFk5H2804BPH2LoY+MwAm1qnngKzNf6+fIaH/f4gSyrCJwMQSl5xV/7qNr0VeBwTf1
-         bZ0C5zA3dXMYReZ9FQXuvmKS+sgKMSFHygr+dbe+EKaOm/0aE/uz2bKU8VTUcbzcX+ym
-         EMKA==
-X-Gm-Message-State: APjAAAWhe9FQrdqTPN68WlTB9Vdkth9v9PwRyJCCzuQXkFt20TqAdSOB
-        ADihr+jy3Re1ezgXK5/8z/XGjZ+DOOBqYy5sWM5Z
-X-Google-Smtp-Source: APXvYqxUgm3nz/WJuxpRqi/1IdOlAjmH3+7y1lZ1RFxqYiIzBI4/RatsbfN1YCcMEpwspzpdbR1CFm/s2iPvH9CTx4Y=
-X-Received: by 2002:a2e:1b52:: with SMTP id b79mr16459510ljb.225.1571694212743;
- Mon, 21 Oct 2019 14:43:32 -0700 (PDT)
+        Mon, 21 Oct 2019 17:51:24 -0400
+Received: from mail-qt1-f169.google.com ([209.85.160.169]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MO9vD-1igozb3mZt-00OaQg; Mon, 21 Oct 2019 23:51:23 +0200
+Received: by mail-qt1-f169.google.com with SMTP id c21so23531280qtj.12;
+        Mon, 21 Oct 2019 14:51:22 -0700 (PDT)
+X-Gm-Message-State: APjAAAUl7miOQVJ8Ll78JbJ+jD05nbDzQ1XaTLJeoiKXCAEjxtSGOjos
+        wZ9gOAhoHQrEzzaeC6Und2fOJR57zeAvg1++ELI=
+X-Google-Smtp-Source: APXvYqyCN/qhmnUIWj6me414cr7Lci1nlxK5T+JI9OkdD86mKnXDdgrN/TkcUpyVgN/kbH0IRPf1xC1GwdOsBCLgrHc=
+X-Received: by 2002:ac8:6956:: with SMTP id n22mr3434qtr.7.1571694681728; Mon,
+ 21 Oct 2019 14:51:21 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1568834524.git.rgb@redhat.com> <214163d11a75126f610bcedfad67a4d89575dc77.1568834525.git.rgb@redhat.com>
- <20191019013904.uevmrzbmztsbhpnh@madcap2.tricolour.ca> <CAHC9VhRPygA=LsHLUqv+K=ouAiPFJ6fb2_As=OT-_zB7kGc_aQ@mail.gmail.com>
- <20191021213824.6zti5ndxu7sqs772@madcap2.tricolour.ca>
-In-Reply-To: <20191021213824.6zti5ndxu7sqs772@madcap2.tricolour.ca>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Mon, 21 Oct 2019 17:43:21 -0400
-Message-ID: <CAHC9VhRdNXsY4neJpSoNyJoAVEoiEc2oW5kSscF99tjmoQAxFA@mail.gmail.com>
-Subject: Re: [PATCH ghak90 V7 20/21] audit: add capcontid to set contid
- outside init_user_ns
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
-        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
-        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
-        nhorman@tuxdriver.com, Dan Walsh <dwalsh@redhat.com>,
-        mpatel@redhat.com
+References: <20191007211826.3361202-1-arnd@arndb.de> <113038cde3f1335ba9bf4d66f22f0a536b70ef1f.camel@redhat.com>
+In-Reply-To: <113038cde3f1335ba9bf4d66f22f0a536b70ef1f.camel@redhat.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 21 Oct 2019 23:51:05 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a071AHaN0Jb9dX5c3syQZZPgaR9bX3V3nseDTsPvgDWGg@mail.gmail.com>
+Message-ID: <CAK8P3a071AHaN0Jb9dX5c3syQZZPgaR9bX3V3nseDTsPvgDWGg@mail.gmail.com>
+Subject: Re: [PATCH] RDMA/hns: Fix build error again
+To:     Doug Ledford <dledford@redhat.com>
+Cc:     Lijun Ou <oulijun@huawei.com>,
+        "Wei Hu(Xavier)" <xavier.huwei@huawei.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Hulk Robot <hulkci@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Shaobo Xu <xushaobo2@huawei.com>,
+        Shamir Rabinovitch <shamir.rabinovitch@oracle.com>,
+        Xi Wang <wangxi11@huawei.com>, Tao Tian <tiantao6@huawei.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:pq1XGZ0b4uEi1Gr86mcw4diuty+KPz3mEOcebYLD0+Gpq66s9zb
+ O1/te0ZqWiVSOXZc6AaQycnw12lBXUpiztuw3z60B7xO/17FY82vOwTLmEy2CKF3zWQBVE7
+ reoFCl4LBtjnemo/RngtnQcF0sKrFbY+Ixbii9HC/mefi+LD0+TisYdI8ZADJPO+zSzbYBi
+ ilHlmkeSIgTRic7jhAovQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:dTPv17pHJM8=:xJAx6WTTXT7hSkm+vwwqVE
+ C2ZQdty5BIA9Zk8jk5jgThUH23Yjh5GFyN/RDct3vx32pAvGThP8/JvVehVEDYSCR2dTnmS2L
+ Mz6QW8aUNRrwXmZApttV4FP1+bCfhIQWVxeInHWR0ncItrDQLlxlEvG9TLJblCy+ii0G+cRsa
+ etgvxPp+45d1Yl3EdJhIbl1NoJQh7/0t4cXvqI0vNvOS6ELMya4W5o5kPugvBpWz3v5trxPh6
+ lBKpMsDiSWVrx9g+KvFJw91RnIBleoJ5iX7GNn6Etp7Tpw8LnqK4vyiJsTf0lgBY9uEisGg7i
+ uL8P34VPa8R9zGl0Ri38QLPZG8MdenDG7N4FahYakD7eGDx+migtONaHtSeG/ONtXaX3O31JL
+ hb2C9HPguxO+J7jbvWh8wbtAiQZgx4/wDvUznEFiaJ/4takTXUTn55Sbdy5pbyATLQ31Vqx7y
+ dMQ/gFxSKirURFtN/OxGduK5pF2UrnEQ4GEVBhvCd0bit3Kbre+VWS9rTxP2qDYmK1OJpk/wB
+ pSuXZBKipas9RaqyesckF1oni4ltKUcNT/PG9t/9jpiDDcSjP5I38YSqQm/q7JLo6aIRHxzgn
+ yO/fkFNj/H0Kq6JYdmmbq73F69FdazQEBioXZ/DU5Qp30fBU7z8uTEKzGu2Ak0h8KoRCoIYmZ
+ BUuDq23G1Dv2AFXlhYHQqTECUhxzQIA6YWyKlfvPQEk4T61jeAKVst3hQ30P2MpNlpF2ILLiB
+ puax3yxuMin6qS0jo+kvgMA0BbCvjdJhaXqV/Twn/AnV13eiVzm/ajRa9QUCxQ80mnuEgL07B
+ 9RL6mNWV82jAqj2JxShNusqf84JrMjwUrVgtLzPMrlSlOiDVeAyrN7+YgWlCANUK1D4RqO8i2
+ 3vGXsrVRDhCCbIGCgELQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 5:38 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> On 2019-10-21 15:53, Paul Moore wrote:
-> > On Fri, Oct 18, 2019 at 9:39 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > On 2019-09-18 21:22, Richard Guy Briggs wrote:
-> > > > Provide a mechanism similar to CAP_AUDIT_CONTROL to explicitly give a
-> > > > process in a non-init user namespace the capability to set audit
-> > > > container identifiers.
-> > > >
-> > > > Use audit netlink message types AUDIT_GET_CAPCONTID 1027 and
-> > > > AUDIT_SET_CAPCONTID 1028.  The message format includes the data
-> > > > structure:
-> > > > struct audit_capcontid_status {
-> > > >         pid_t   pid;
-> > > >         u32     enable;
-> > > > };
-> > >
-> > > Paul, can I get a review of the general idea here to see if you're ok
-> > > with this way of effectively extending CAP_AUDIT_CONTROL for the sake of
-> > > setting contid from beyond the init user namespace where capable() can't
-> > > reach and ns_capable() is meaningless for these purposes?
-> >
-> > I think my previous comment about having both the procfs and netlink
-> > interfaces apply here.  I don't see why we need two different APIs at
-> > the start; explain to me why procfs isn't sufficient.  If the argument
-> > is simply the desire to avoid mounting procfs in the container, how
-> > many container orchestrators can function today without a valid /proc?
+On Mon, Oct 21, 2019 at 11:09 PM Doug Ledford <dledford@redhat.com> wrote:
 >
-> Ok, sorry, I meant to address that question from a previous patch
-> comment at the same time.
->
-> It was raised by Eric Biederman that the proc filesystem interface for
-> audit had its limitations and he had suggested an audit netlink
-> interface made more sense.
+> This fix looks reasonable, but since I can't test this at all, and I'm
+> personally tired of trying and failing to fix this issue, I need to ask
+> if you've tried all the permutations for this just to confirm it works
+> in all valid cases?
 
-I'm sure you've got it handy, so I'm going to be lazy and ask: archive
-pointer to Eric's comments?  Just a heads-up, I'm really *not* a fan
-of using the netlink interface for this, so unless Eric presents a
-super compelling reason for why we shouldn't use procfs I'm inclined
-to stick with /proc.
+I'm fairly sure I would have found them all by now: Since I sent this
+patch I built 4680 randconfig kernels, 293 of which had some HNS
+driver enabled.
 
-> The intent was to switch to the audit netlink interface for contid,
-> capcontid and to add the audit netlink interface for loginuid and
-> sessionid while deprecating the proc interface for loginuid and
-> sessionid.  This was alluded to in the cover letter, but not very clear,
-> I'm afraid.  I have patches to remove the contid and loginuid/sessionid
-> interfaces in another tree which is why I had forgotten to outline that
-> plan more explicitly in the cover letter.
+I also like to think that I spent more time to think it through in theory.
 
--- 
-paul moore
-www.paul-moore.com
+      Arnd
