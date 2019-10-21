@@ -2,306 +2,145 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F80CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:44:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF523CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:45:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EC1420882
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:44:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A1DD20882
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:45:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="SBC1Jrc1"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="lV+lXHa4";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="ATwrGvXl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728322AbfJUMoz (ORCPT
+        id S1728896AbfJUMpA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 08:44:55 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:35073 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728839AbfJUMom (ORCPT
+        Mon, 21 Oct 2019 08:45:00 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:23418 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728839AbfJUMo6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 08:44:42 -0400
-Received: by mail-wm1-f66.google.com with SMTP id 14so5992592wmu.0
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 05:44:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=rhQapm9fDV832oC+He0CVqLo8g+PxtpKOAzMRPE4ljA=;
-        b=SBC1Jrc19lIVahzliJlzcj/Hnqij4S94myxcPHBLA9zEUlN/GVXeoylmryNVMXOrJP
-         AMqM0TmWJeJ2jnwQW5jjozOzz85wMSTmu/qeq19DwD6Fe83klABDaLc5I1muCg+3552A
-         vBesukBR5YimyIIQuiQXj1aNW2bq1gtZkE7uDt2/axaLuQhQ5lDwT//z+kxpqfi7SOwJ
-         B842g6llfCc43wexMtAHB2ULxyKqFl21aSlroUBkH/M6PxtxIlmFCxKcB97pcNaMrdDF
-         U3T/VM2Pst7QUmtjBV0UHZLgvoenozdv3WjwfO8QDqoX+pREdnixx5AsqR6iw3jab1hf
-         xanA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=rhQapm9fDV832oC+He0CVqLo8g+PxtpKOAzMRPE4ljA=;
-        b=IeG7u5wgeAqozVHnr30KN3cWjXfPJ5MHotXgLV9WycJiPPYxAw50HDq5h+a2qDQA1V
-         XonGHCKvEXUxn4oCqJ4ujdvukJGvSLjEH5JUv762wok2e5gPdZuXypWszrmhOGi1kjEu
-         KvPqrLjyKFOMTinGMhHkyZfvvVWbzxm3mo/u6IOK1DXRDPDYi8vrcbDNJdh/pfSG9i+z
-         jb+0Gf7liMxOBi7lqAK/7AWhwp37ezdgltBj/esiYcDbs4PzsKSIGaewWIU8AConQaNw
-         oFYWlsvokCemTLLdlF5tJ7eHIOTlI++m49ZULYeK67V902A+Cbz6vA5erpfLoOVZF3BP
-         MB2A==
-X-Gm-Message-State: APjAAAWrOTNnmMZdXt0U/vzkFkVQYoHuJJDVslRSUMXQx2NqvG6XrXi8
-        YAPR1TrIr8G2TxJpRYH9xVCFJg==
-X-Google-Smtp-Source: APXvYqy97iy8LODbmza0VVhEd9vUSnqiJRhFbIOhJEubSikBBqKyqGMAsMgyja4luXC1VK6jdC7/kw==
-X-Received: by 2002:a7b:cc07:: with SMTP id f7mr18270855wmh.56.1571661879823;
-        Mon, 21 Oct 2019 05:44:39 -0700 (PDT)
-Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
-        by smtp.gmail.com with ESMTPSA id a17sm10216150wmb.8.2019.10.21.05.44.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Oct 2019 05:44:39 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v4 5/6] dt-bindings: mfd: max77650: convert the binding document to yaml
-Date:   Mon, 21 Oct 2019 14:44:27 +0200
-Message-Id: <20191021124428.2541-6-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191021124428.2541-1-brgl@bgdev.pl>
-References: <20191021124428.2541-1-brgl@bgdev.pl>
+        Mon, 21 Oct 2019 08:44:58 -0400
+Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
+        by m0001303.ppops.net (8.16.0.42/8.16.0.42) with SMTP id x9LCgG6n004167;
+        Mon, 21 Oct 2019 05:44:43 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=facebook;
+ bh=J5MeVyfVel8cVfh+SfsDfVUsttEEUiSZR5Ukd/USneQ=;
+ b=lV+lXHa46jOUA2ShSbbum3a5IoHy7s7ZhREFh+b93AICKv6/QWPyFC70H4tcbzjassau
+ Hy8tZ/3YoGzzKASS72Bfg8+hNWAx1dhbAzOHCw+NwL5pWdBhhzDdBy84BBUR+iZwDeOC
+ ujlUBDlN74uoCxe4mJl4unNxeHz3FYVzXYg= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by m0001303.ppops.net with ESMTP id 2vqx5nprvq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Mon, 21 Oct 2019 05:44:43 -0700
+Received: from ash-exhub202.TheFacebook.com (2620:10d:c0a8:83::6) by
+ ash-exhub101.TheFacebook.com (2620:10d:c0a8:82::e) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 21 Oct 2019 05:44:42 -0700
+Received: from NAM03-BY2-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.36.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Mon, 21 Oct 2019 05:44:42 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GvlO51nJ/ItlKDT0AOmI0pzZJtP3k7Ku/T0cTe6e1Rl/egqhNf2t3FsRIpX04UFMtySyy8SSrmBE4hJuCFVi2RZAExe+f83ZgvgYJVMew4cnYYKsIGVpLBM8wOSZRHY6N9YCQ2jvHc4BT79K+BbEDgTB5R70tSnMs6hVd8Y2erZLzc4GWranbwggwZkcl3qnyVi+aDDV+lIGqBTu0NWYlDY4RV/TiWNb27UggPrtnzOa6h7dNMl4xbtLNDn+u01+/ViIR7EYyAZx3QUUIjQR6MDLJjxlKJgLOIbwzhp9iHJyYMFUvUvDtWmLzQexGSzFY+fvjQgI40R0xtw6gp7NBA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=J5MeVyfVel8cVfh+SfsDfVUsttEEUiSZR5Ukd/USneQ=;
+ b=ejedRgtXr/dBRh24Jvm4CS+D5W8IrDeL4guReCQC/wpJeOXrQEuJ+oblSsP2EQ5mprmo9SMvvlApd+3Fx+u9E7F93+XH+ObnVVVxWOADZQu2RwD6QiS5Gb+LnoCosi6RYvgWS4livwum3yus1LXFxssGea7qQQAlGuqE0YBNncM1Lr2oe+IdA5FH8vjf9fsnnJMZZVCv86CAj4r0q9EieM5Xi38FBQmnuvEjRhxBqTPaviDBN9kJpVYByh/QlrvCrooHK4cgX0J9y7ir7/7bbWsqijsDEBhLYHX2rhDsd1gFFdHdB2U+mn1ixDI5pYR5kG0TOmfYcwSHAha8S1MGUA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=J5MeVyfVel8cVfh+SfsDfVUsttEEUiSZR5Ukd/USneQ=;
+ b=ATwrGvXlT81OcZ7gvihzMgGMKAlt68Bk9sUJPktUh7B9q616OIRz2i85oN12Og+ZG7df4A4m8hg42f5VgN2fp+1AQrf8GN2r77w017f3oIpiMUIERMEwEQDQTkC0ofSbD9N/5Zvw9HwJvKnfh5pjpxnasmY+PGXKgwmRAifzxb0=
+Received: from SN6PR15MB2446.namprd15.prod.outlook.com (52.135.65.158) by
+ SN6PR15MB2432.namprd15.prod.outlook.com (52.135.65.156) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.17; Mon, 21 Oct 2019 12:44:41 +0000
+Received: from SN6PR15MB2446.namprd15.prod.outlook.com
+ ([fe80::e9d6:fc37:61e0:8ce7]) by SN6PR15MB2446.namprd15.prod.outlook.com
+ ([fe80::e9d6:fc37:61e0:8ce7%6]) with mapi id 15.20.2367.019; Mon, 21 Oct 2019
+ 12:44:40 +0000
+From:   Chris Mason <clm@fb.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+CC:     Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.cz>,
+        "Linux Next Mailing List" <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: cleanup the btrfs trees
+Thread-Topic: linux-next: cleanup the btrfs trees
+Thread-Index: AQHVhvki2vG5CW5Pikyn5VxTCuj+nKdlDKQA
+Date:   Mon, 21 Oct 2019 12:44:40 +0000
+Message-ID: <EF03F1BE-6060-48C3-B6AA-409F9355A52B@fb.com>
+References: <20191020144731.20bc0633@canb.auug.org.au>
+In-Reply-To: <20191020144731.20bc0633@canb.auug.org.au>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: MailMate (1.10r5443)
+x-clientproxiedby: MN2PR12CA0005.namprd12.prod.outlook.com
+ (2603:10b6:208:a8::18) To SN6PR15MB2446.namprd15.prod.outlook.com
+ (2603:10b6:805:24::30)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c091:480::a8a6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 28feb4f8-f9be-4b62-9330-08d756247093
+x-ms-traffictypediagnostic: SN6PR15MB2432:
+x-microsoft-antispam-prvs: <SN6PR15MB24326EA4FBF8ECC6E9F75FF7D3690@SN6PR15MB2432.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0197AFBD92
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(396003)(366004)(376002)(346002)(39860400002)(199004)(189003)(53754006)(229853002)(316002)(54906003)(6116002)(2906002)(86362001)(446003)(6486002)(4744005)(6916009)(5660300002)(11346002)(486006)(476003)(2616005)(66946007)(46003)(305945005)(7736002)(71190400001)(71200400001)(50226002)(81156014)(8676002)(52116002)(256004)(8936002)(81166006)(64756008)(66476007)(66556008)(66446008)(25786009)(33656002)(6246003)(4326008)(14454004)(99286004)(478600001)(6512007)(6506007)(53546011)(6436002)(76176011)(386003)(186003)(102836004)(36756003);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR15MB2432;H:SN6PR15MB2446.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: tsFv10+ebPclp1BzCPCtFhcgzXUP9pZkEQCMEhtSf38wweLD+ct73McS4TdfevvhFhJ88PaleVrvZ5fwPUKzBhIBk/ZfEaCWY28EVMlvuFTl1uVP4JLISqVd4auzYLD+gZunrFwtDBxOh5qCT9iGdmWYHqTFUQVdT8u2v+1f/z+VQGeqv6YLqzCNLYADZGczpi7R9RcO91NSMY6smzLuIvOmG4XcalUqx6s81vpZD2uMJdvZJrwOw4RMgH0i1O0Bi7Ld4X0IlzwSOErqKX3nk4/Z7Sdt/IFePPbH9UyEzXDHa3D5UobCOUQyi3HxakRyqtlNMh5JGrMRn36J4UyEXNE4ww+H2dNj5J/n2873Em/OKMQCVptlCpgaPJ5mwdpki0QJ5WKpwnGgIIoiJf2H179YRxaRpOLAHuwWJGcYSzxYI8+tn+laSbMYVkQ74pk0
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-Network-Message-Id: 28feb4f8-f9be-4b62-9330-08d756247093
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Oct 2019 12:44:40.6993
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: umQYZ+D9Q7uOpfrWL703RMzYNdu50zdehDUG4lihirSBYFHeax/wA0d1nmVtl8cj
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR15MB2432
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-21_04:2019-10-21,2019-10-21 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 clxscore=1011
+ phishscore=0 mlxscore=0 impostorscore=0 malwarescore=0 spamscore=0
+ lowpriorityscore=0 adultscore=0 suspectscore=0 mlxlogscore=905
+ priorityscore=1501 bulkscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-1908290000 definitions=main-1910210123
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On 19 Oct 2019, at 23:47, Stephen Rothwell wrote:
 
-Convert the binding document for MAX77650 core MFD module to YAML.
+> Hi all,
+>
+> The btrfs tree
+> (git://git.kernel.org/pub/scm/linux/kernel/git/mason/linux-btrfs.git#next=
+)
+> has not bee updated in more than a year, so I have removed it and then
+> renamed the btrfs-kdave tree to btrfs.  I hope this is OK and if any
+> other changes are needed, please let me know.
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- .../devicetree/bindings/mfd/max77650.txt      |  46 ------
- .../devicetree/bindings/mfd/max77650.yaml     | 149 ++++++++++++++++++
- 2 files changed, 149 insertions(+), 46 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/mfd/max77650.txt
- create mode 100644 Documentation/devicetree/bindings/mfd/max77650.yaml
 
-diff --git a/Documentation/devicetree/bindings/mfd/max77650.txt b/Documentation/devicetree/bindings/mfd/max77650.txt
-deleted file mode 100644
-index b529d8d19335..000000000000
---- a/Documentation/devicetree/bindings/mfd/max77650.txt
-+++ /dev/null
-@@ -1,46 +0,0 @@
--MAX77650 ultra low-power PMIC from Maxim Integrated.
--
--Required properties:
---------------------
--- compatible:		Must be "maxim,max77650"
--- reg:			I2C device address.
--- interrupts:		The interrupt on the parent the controller is
--			connected to.
--- interrupt-controller: Marks the device node as an interrupt controller.
--- #interrupt-cells:	Must be <2>.
--
--- gpio-controller:	Marks the device node as a gpio controller.
--- #gpio-cells:		Must be <2>. The first cell is the pin number and
--			the second cell is used to specify the gpio active
--			state.
--
--Optional properties:
----------------------
--gpio-line-names:	Single string containing the name of the GPIO line.
--
--The GPIO-controller module is represented as part of the top-level PMIC
--node. The device exposes a single GPIO line.
--
--For device-tree bindings of other sub-modules (regulator, power supply,
--LEDs and onkey) refer to the binding documents under the respective
--sub-system directories.
--
--For more details on GPIO bindings, please refer to the generic GPIO DT
--binding document <devicetree/bindings/gpio/gpio.txt>.
--
--Example:
----------
--
--	pmic@48 {
--		compatible = "maxim,max77650";
--		reg = <0x48>;
--
--		interrupt-controller;
--		interrupt-parent = <&gpio2>;
--		#interrupt-cells = <2>;
--		interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
--
--		gpio-controller;
--		#gpio-cells = <2>;
--		gpio-line-names = "max77650-charger";
--	};
-diff --git a/Documentation/devicetree/bindings/mfd/max77650.yaml b/Documentation/devicetree/bindings/mfd/max77650.yaml
-new file mode 100644
-index 000000000000..4a70f875a6eb
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/max77650.yaml
-@@ -0,0 +1,149 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mfd/max77650.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: MAX77650 ultra low-power PMIC from Maxim Integrated.
-+
-+maintainers:
-+  - Bartosz Golaszewski <bgolaszewski@baylibre.com>
-+
-+description: |
-+  MAX77650 is an ultra-low power PMIC providing battery charging and power
-+  supply for low-power IoT and wearable applications.
-+
-+  The GPIO-controller module is represented as part of the top-level PMIC
-+  node. The device exposes a single GPIO line.
-+
-+  For device-tree bindings of other sub-modules (regulator, power supply,
-+  LEDs and onkey) refer to the binding documents under the respective
-+  sub-system directories.
-+
-+properties:
-+  compatible:
-+    const: maxim,max77650
-+
-+  reg:
-+    description:
-+      I2C device address.
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  interrupt-controller: true
-+
-+  "#interrupt-cells":
-+    const: 2
-+    description:
-+      The first cell is the IRQ number, the second cell is the trigger type.
-+
-+  gpio-controller: true
-+
-+  "#gpio-cells":
-+    const: 2
-+    description:
-+      The first cell is the pin number and the second cell is used to specify
-+      the gpio active state.
-+
-+  gpio-line-names:
-+    maxItems: 1
-+    description:
-+      Single string containing the name of the GPIO line.
-+
-+  regulators:
-+    $ref: ../regulator/max77650-regulator.yaml
-+
-+  charger:
-+    $ref: ../power/supply/max77650-charger.yaml
-+
-+  leds:
-+    $ref: ../leds/leds-max77650.yaml
-+
-+  onkey:
-+    $ref: ../input/max77650-onkey.yaml
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - interrupt-controller
-+  - "#interrupt-cells"
-+  - gpio-controller
-+  - "#gpio-cells"
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/input/linux-event-codes.h>
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        pmic@48 {
-+            compatible = "maxim,max77650";
-+            reg = <0x48>;
-+
-+            interrupt-controller;
-+            interrupt-parent = <&gpio2>;
-+            #interrupt-cells = <2>;
-+            interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
-+
-+            gpio-controller;
-+            #gpio-cells = <2>;
-+            gpio-line-names = "max77650-charger";
-+
-+            regulators {
-+                compatible = "maxim,max77650-regulator";
-+
-+                max77650_ldo: regulator@0 {
-+                    regulator-compatible = "ldo";
-+                    regulator-name = "max77650-ldo";
-+                    regulator-min-microvolt = <1350000>;
-+                    regulator-max-microvolt = <2937500>;
-+                };
-+
-+                max77650_sbb0: regulator@1 {
-+                    regulator-compatible = "sbb0";
-+                    regulator-name = "max77650-sbb0";
-+                    regulator-min-microvolt = <800000>;
-+                    regulator-max-microvolt = <1587500>;
-+                };
-+            };
-+
-+            charger {
-+                compatible = "maxim,max77650-charger";
-+                input-voltage-min-microvolt = <4200000>;
-+                input-current-limit-microamp = <285000>;
-+            };
-+
-+            leds {
-+                compatible = "maxim,max77650-led";
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+
-+                led@0 {
-+                    reg = <0>;
-+                    label = "blue:usr0";
-+                };
-+
-+                led@1 {
-+                    reg = <1>;
-+                    label = "red:usr1";
-+                    linux,default-trigger = "heartbeat";
-+                };
-+
-+                led@2 {
-+                    reg = <2>;
-+                    label = "green:usr2";
-+                };
-+            };
-+
-+            onkey {
-+                compatible = "maxim,max77650-onkey";
-+                linux,code = <KEY_END>;
-+                maxim,onkey-slide;
-+            };
-+        };
-+    };
--- 
-2.23.0
+Thanks Stephen
 
+-chris
