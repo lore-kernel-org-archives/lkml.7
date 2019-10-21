@@ -2,136 +2,133 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D611CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 19:13:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97ECBCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 19:18:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BBB02084C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 19:13:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D13F20873
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 19:18:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571685513;
+	bh=KGbSpSp30S+VknEhIwJ75Fx8/9bT/ERf1/DefzSZqPo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Qdeh7kn+nqFF+ID6zCBDUFcjFgCNSMn+RXKhgkrXipzgNjBJNydwFMAqVGLmOWpgB
+	 37KQzDkIBuzMFQ74UTVkq5Qsya/pxPMuOO+67tDZNKoayzZnZFkyo/FZjimZv9evOn
+	 5c/89MRSwG9/W8Vi6bkUNYP1hwPHqp8RxLeGEAzM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730036AbfJUTNv (ORCPT
+        id S1729924AbfJUTSc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 15:13:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53846 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728543AbfJUTNv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 15:13:51 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 369742084C;
-        Mon, 21 Oct 2019 19:13:50 +0000 (UTC)
-Date:   Mon, 21 Oct 2019 15:13:48 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Prateek Sood <prsood@codeaurora.org>
-Subject: Re: [GIT PULL] tracing: A couple of minor fixes
-Message-ID: <20191021151348.3a231f04@gandalf.local.home>
-In-Reply-To: <20191021124508.203ccdb3@gandalf.local.home>
-References: <20191021124508.203ccdb3@gandalf.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 21 Oct 2019 15:18:32 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:56598 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727211AbfJUTSc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 15:18:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=fevudOnh+qzvyYwh4cgGYP8coU0hdIEQmL6Wxn7ZTEg=; b=N76+hKEGeIU1JCoaLW7rvByeS
+        YLsvc+Hj24W7EQuukOz/azQ6lKzgjauLi2Rg3LswQe4mWjBPLWiCi6MUJX/wNKyC9GBUZeq0lla1C
+        pW7tiBPz87HWQcNYfCx7/OiSV2X16AZf9avJkOfy0gBP5Atm/EerUikGLypIRU7O3Y9Wk=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iMdC7-0004iU-3E; Mon, 21 Oct 2019 19:18:19 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 3E0E6274301C; Mon, 21 Oct 2019 20:18:18 +0100 (BST)
+Date:   Mon, 21 Oct 2019 20:18:18 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Dave Martin <Dave.Martin@arm.com>
+Cc:     Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
+        Paul Elliott <paul.elliott@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Amit Kachhap <amit.kachhap@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-arch@vger.kernel.org, Eugene Syromiatnikov <esyr@redhat.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Andrew Jones <drjones@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        Florian Weimer <fweimer@redhat.com>,
+        linux-kernel@vger.kernel.org, Sudakshina Das <sudi.das@arm.com>,
+        Suzuki Poulose <suzuki.poulose@arm.com>
+Subject: Re: [PATCH v2 04/12] arm64: docs: cpu-feature-registers: Document
+ ID_AA64PFR1_EL1
+Message-ID: <20191021191818.GH4691@sirena.co.uk>
+References: <1570733080-21015-1-git-send-email-Dave.Martin@arm.com>
+ <1570733080-21015-5-git-send-email-Dave.Martin@arm.com>
+ <87zhi7l8qz.fsf@linaro.org>
+ <20191011145148.GK27757@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="3ecMC0kzqsE2ddMN"
+Content-Disposition: inline
+In-Reply-To: <20191011145148.GK27757@arm.com>
+X-Cookie: Why are you so hard to ignore?
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 21 Oct 2019 12:45:08 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> Linus,
-> 
+--3ecMC0kzqsE2ddMN
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Hi Linus,
+On Fri, Oct 11, 2019 at 03:51:49PM +0100, Dave Martin wrote:
+> On Fri, Oct 11, 2019 at 02:19:48PM +0100, Alex Benn=E9e wrote:
 
-Please hold off on this. Someone just pointed out to me that one of the
-change logs has a bunch of crap attached to it that shouldn't be
-committed.
+> > > -  4) ID_AA64ISAR1_EL1 - Instruction set attribute register 1
+> > > +  5) ID_AA64ISAR1_EL1 - Instruction set attribute register 1
 
-I need to rebase (just the change logs, so no retesting is needed).
+> > If I'm not mistaken .rst has support for auto-enumeration if the #
+> > character is used. That might reduce the pain of re-numbering in future.
 
-I'll go and delete this tag and create a new (different one) when
-ready.
+> Ack, though it would be good to go one better and generate this document
+> from the cpufeature.c tables (or from some common source).  The numbers
+> are relatively easy to maintain -- remembering to update the document
+> at all seems the bigger maintenance headache right now.
 
--- Steve
+I agree, it'd be better if the table were autogenerated.  Having tried
+doing the modification to # it does mean that the document looks a bit
+weird when viewing it as a text file in the kernel source which TBH is
+how I suspect a lot of people will view it so given the infrequency with
+which new registers are added I'm not sure it's worth it.
 
+> I think this particular patch is superseded by similar fixes from other
+> people, just not in torvalds/master yet.
 
-> Two minor fixes:
-> 
->  - A race in perf trace initialization (missing mutexes)
-> 
->  - Minor fix to represent gfp_t in synthetic events as properly signed
-> 
-> 
-> Please pull the latest trace-v5.4-rc3 tree, which can be found at:
-> 
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git
-> trace-v5.4-rc3
-> 
-> Tag SHA1: 46467c95be6062b0c66aae0efbab5746bee09f1e
-> Head SHA1: 668993e5696ddc5db01940d66818c7c038895893
-> 
-> 
-> Prateek Sood (1):
->       tracing: Fix race in perf_trace_buf initialization
-> 
-> Zhengjun Xing (1):
->       tracing: Fix "gfp_t" format for synthetic events
-> 
-> ----
->  kernel/trace/trace_event_perf.c  | 4 ++++
->  kernel/trace/trace_events_hist.c | 2 ++
->  2 files changed, 6 insertions(+)
-> ---------------------------
-> diff --git a/kernel/trace/trace_event_perf.c b/kernel/trace/trace_event_perf.c
-> index 0892e38ed6fb..a9dfa04ffa44 100644
-> --- a/kernel/trace/trace_event_perf.c
-> +++ b/kernel/trace/trace_event_perf.c
-> @@ -272,9 +272,11 @@ int perf_kprobe_init(struct perf_event *p_event, bool is_retprobe)
->  		goto out;
->  	}
->  
-> +	mutex_lock(&event_mutex);
->  	ret = perf_trace_event_init(tp_event, p_event);
->  	if (ret)
->  		destroy_local_trace_kprobe(tp_event);
-> +	mutex_unlock(&event_mutex);
->  out:
->  	kfree(func);
->  	return ret;
-> @@ -282,8 +284,10 @@ int perf_kprobe_init(struct perf_event *p_event, bool is_retprobe)
->  
->  void perf_kprobe_destroy(struct perf_event *p_event)
->  {
-> +	mutex_lock(&event_mutex);
->  	perf_trace_event_close(p_event);
->  	perf_trace_event_unreg(p_event);
-> +	mutex_unlock(&event_mutex);
->  
->  	destroy_local_trace_kprobe(p_event->tp_event);
->  }
-> diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-> index 57648c5aa679..7482a1466ebf 100644
-> --- a/kernel/trace/trace_events_hist.c
-> +++ b/kernel/trace/trace_events_hist.c
-> @@ -679,6 +679,8 @@ static bool synth_field_signed(char *type)
->  {
->  	if (str_has_prefix(type, "u"))
->  		return false;
-> +	if (strcmp(type, "gfp_t") == 0)
-> +		return false;
->  
->  	return true;
->  }
+Nor in -next for the minute :/
 
+--3ecMC0kzqsE2ddMN
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2uBHkACgkQJNaLcl1U
+h9CU9wf9F4phS5RToa697wMpl5IT66Ka+2pom9TzQtuEDZYe1rqKq7cqKCbnaY0Y
+x2dqlS9LHXFtoqM27/GnP1X4IdK8YJl3lczLRHJnAeswjpgk3txBSslzq8EWZvnU
+TWwB3eDgHxSAEu5GAaVK90KjSR/hgDGUvgleTcBgdU5XJu2iE9BmzFCre9u9XVVO
+CFMXc12UFptoL/1rTnmUFv53ID8h5fkGMjlhsGjNR7wPXEzfGL2V7v7hBF6kua1O
+fga+W6QX0cZQ4vq27s9waSqGa89+rll2gDdQeACnJLjeicaXJcdWuAj/ehE7FfSc
+woSKnKCeyeeDQb96nUkXRP4IxbyhfQ==
+=9lxj
+-----END PGP SIGNATURE-----
+
+--3ecMC0kzqsE2ddMN--
