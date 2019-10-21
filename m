@@ -2,97 +2,147 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64870CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:27:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D251CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:27:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 375EA2084C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:27:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sRZ9HnDb"
+	by mail.kernel.org (Postfix) with ESMTP id E80EA2084C
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:27:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571653641;
+	bh=OB8EEmq7M9s2F15IltrEFSmxXoRA1vIfL6aLQYlWpBs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yE3xsEkCYDqHhyLKbOjuxz7CJt/7Hxw4yYRuJVI8Yk4LIesb4hyC7sGaM5NFPxAfP
+	 19lqKLNn7n11zRdNlNS77wNchc41UrDOjpqe+DxAiB11aQSUlrH0D/fB7u7NuComtG
+	 Znu1Rym8NaOsgCSkzetv8nZoVT1kskIQewehBdh0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727972AbfJUK1Q (ORCPT
+        id S1728087AbfJUK1T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 06:27:16 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:34874 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726725AbfJUK1P (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 06:27:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=U8nciGtDPR4VxMqPCT0G6y87PJTC0sr+Cxw7PQD89NI=; b=sRZ9HnDb/2i4iXMIzwRA4KF+p
-        kGmGwrhBT6EGup3ekX3UJDATVFG3mE/GAbVSWm4OMDW/NvG6TAv4VRKPx5VjE8oMOPlods8efqEAj
-        Pp4xN8C7mw4jwADlxFDdNi8v/UUHEY2tg3sDmgu3VAh+5m3i3etI6nDS9ir0Dfh88JlO2Rb+MVZBn
-        igBtHqp5bhNm7Pn9rpFq0EArHmpLe0nXwtAtqyza4O0/U5WzM4P7a4Yk0TeDLnWPi5jDUiEFRqES3
-        KkatcvY7OkCcl/htuI7zlaYfujfPEX/Tj737MSa2aKvFyfEVk0HGh03+xxLkC+EGD92tCiMEV19ld
-        QIR92/pfA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iMUu6-0003Dj-5f; Mon, 21 Oct 2019 10:27:10 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 71AD3301124;
-        Mon, 21 Oct 2019 12:26:09 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 897562022BA17; Mon, 21 Oct 2019 12:27:06 +0200 (CEST)
-Date:   Mon, 21 Oct 2019 12:27:06 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>,
-        Song Liu <songliubraving@fb.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 1/4] perf/core,x86: introduce sync_task_ctx() method
- at struct pmu
-Message-ID: <20191021102706.GE1800@hirez.programming.kicks-ass.net>
-References: <0b20a07f-d074-d3da-7551-c9a4a94fe8e3@linux.intel.com>
- <c75134ef-b71b-c080-8ee1-c09fb9fae764@linux.intel.com>
+        Mon, 21 Oct 2019 06:27:19 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40542 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726725AbfJUK1S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 06:27:18 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 60E09B4FC;
+        Mon, 21 Oct 2019 10:27:15 +0000 (UTC)
+Date:   Mon, 21 Oct 2019 12:27:14 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Matt Fleming <matt@codeblueprint.co.uk>,
+        Borislav Petkov <bp@alien8.de>, Linux-MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/3] mm, meminit: Recalculate pcpu batch and high limits
+ after init completes
+Message-ID: <20191021102714.GH9379@dhcp22.suse.cz>
+References: <20191021094808.28824-1-mgorman@techsingularity.net>
+ <20191021094808.28824-2-mgorman@techsingularity.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c75134ef-b71b-c080-8ee1-c09fb9fae764@linux.intel.com>
+In-Reply-To: <20191021094808.28824-2-mgorman@techsingularity.net>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 12:42:44PM +0300, Alexey Budankov wrote:
-> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-> index 61448c19a132..60bf17af69f0 100644
-> --- a/include/linux/perf_event.h
-> +++ b/include/linux/perf_event.h
-> @@ -409,6 +409,13 @@ struct pmu {
->  	 */
->  	size_t				task_ctx_size;
+On Mon 21-10-19 10:48:06, Mel Gorman wrote:
+> Deferred memory initialisation updates zone->managed_pages during
+> the initialisation phase but before that finishes, the per-cpu page
+> allocator (pcpu) calculates the number of pages allocated/freed in
+> batches as well as the maximum number of pages allowed on a per-cpu list.
+> As zone->managed_pages is not up to date yet, the pcpu initialisation
+> calculates inappropriately low batch and high values.
+> 
+> This increases zone lock contention quite severely in some cases with the
+> degree of severity depending on how many CPUs share a local zone and the
+> size of the zone. A private report indicated that kernel build times were
+> excessive with extremely high system CPU usage. A perf profile indicated
+> that a large chunk of time was lost on zone->lock contention.
+> 
+> This patch recalculates the pcpu batch and high values after deferred
+> initialisation completes for every populated zone in the system. It
+> was tested on a 2-socket AMD EPYC 2 machine using a kernel compilation
+> workload -- allmodconfig and all available CPUs.
+> 
+> mmtests configuration: config-workload-kernbench-max
+> Configuration was modified to build on a fresh XFS partition.
+> 
+> kernbench
+>                                 5.4.0-rc3              5.4.0-rc3
+>                                   vanilla           resetpcpu-v2
+> Amean     user-256    13249.50 (   0.00%)    16401.31 * -23.79%*
+> Amean     syst-256    14760.30 (   0.00%)     4448.39 *  69.86%*
+> Amean     elsp-256      162.42 (   0.00%)      119.13 *  26.65%*
+> Stddev    user-256       42.97 (   0.00%)       19.15 (  55.43%)
+> Stddev    syst-256      336.87 (   0.00%)        6.71 (  98.01%)
+> Stddev    elsp-256        2.46 (   0.00%)        0.39 (  84.03%)
+> 
+>                    5.4.0-rc3    5.4.0-rc3
+>                      vanilla resetpcpu-v2
+> Duration User       39766.24     49221.79
+> Duration System     44298.10     13361.67
+> Duration Elapsed      519.11       388.87
+> 
+> The patch reduces system CPU usage by 69.86% and total build time by
+> 26.65%. The variance of system CPU usage is also much reduced.
+> 
+> Before, this was the breakdown of batch and high values over all zones was.
+> 
+>     256               batch: 1
+>     256               batch: 63
+>     512               batch: 7
+>     256               high:  0
+>     256               high:  378
+>     512               high:  42
+> 
+> 512 pcpu pagesets had a batch limit of 7 and a high limit of 42. After the patch
+> 
+>     256               batch: 1
+>     768               batch: 63
+>     256               high:  0
+>     768               high:  378
+> 
+> Cc: stable@vger.kernel.org # v4.1+
+> Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
+
+Acked-by: Michal Hocko <mhocko@suse.com>
+
+> ---
+>  mm/page_alloc.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index c0b2e0306720..f972076d0f6b 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -1947,6 +1947,14 @@ void __init page_alloc_init_late(void)
+>  	/* Block until all are initialised */
+>  	wait_for_completion(&pgdat_init_all_done_comp);
 >  
 > +	/*
-> +	 * PMU specific parts of task perf event context (i.e. ctx->task_ctx_data)
-> +	 * can be synchronized using this function. See Intel LBR callstack support
-> +	 * implementation and Perf core context switch handling callbacks for usage
-> +	 * examples.
-
-You're forgetting to mark this: Optional
-
+> +	 * The number of managed pages has changed due to the initialisation
+> +	 * so the pcpu batch and high limits needs to be updated or the limits
+> +	 * will be artificially small.
 > +	 */
+> +	for_each_populated_zone(zone)
+> +		zone_pcp_update(zone);
+> +
+>  	/*
+>  	 * We initialized the rest of the deferred pages.  Permanently disable
+>  	 * on-demand struct page initialization.
+> -- 
+> 2.16.4
 
-> +	void (*sync_task_ctx)		(void *one, void *another);
-
-The traditional argment names for context switching functions are prev
-and next.
+-- 
+Michal Hocko
+SUSE Labs
