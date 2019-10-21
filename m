@@ -2,126 +2,138 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56E23CA9EB0
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:21:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00ACDCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:23:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E3D82084B
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:21:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8BA22053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:23:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="ayXC65dy"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Skk3cYPI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727670AbfJUPVr (ORCPT
+        id S1728881AbfJUPXp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 11:21:47 -0400
-Received: from mail.andi.de1.cc ([85.214.55.253]:49222 "EHLO mail.andi.de1.cc"
+        Mon, 21 Oct 2019 11:23:45 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:63214 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728044AbfJUPVq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 11:21:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Type:MIME-Version:References:
-        In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ive50pzx0WvHvVBcHs4Tzw6cThZ+6wdZ4fZseJxKh6Y=; b=ayXC65dyk+YOSvIqBmmJY2x7V
-        TWyVZxCtI01zsfw8AMN+8dQ+LYmDlCY3KB+73mt7MI2Vge8+mDP4wN2edfxFs3eE9vYplJfCXX5Xx
-        Nxh/VXE1kITiMjPNGqK6LiU9HvidAyB0U85G4md1nV1yt5NED5oEsyuPiEThoNfI1i2a8=;
-Received: from ip-109-41-64-49.web.vodafone.de ([109.41.64.49] helo=localhost)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1iMZV8-0001G7-Rs; Mon, 21 Oct 2019 17:21:43 +0200
-Received: from [::1] (helo=localhost)
-        by eeepc with esmtp (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1iMZV5-0001HV-EV; Mon, 21 Oct 2019 17:21:39 +0200
-Date:   Mon, 21 Oct 2019 17:20:55 +0200
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Stefan Agner <stefan@agner.ch>, lee.jones@linaro.org,
-        a.zummo@towertech.it, linux-kernel@vger.kernel.org,
-        linux-rtc@vger.kernel.org, phh@phh.me, b.galvani@gmail.com,
-        letux-kernel@openphoenux.org
-Subject: Re: [PATCH 5/5] rtc: rtc-rc5t583: add ricoh rc5t619 RTC driver
-Message-ID: <20191021172055.2fa66549@kemnade.info>
-In-Reply-To: <20191021135028.GV3125@piout.net>
-References: <20191021054104.26155-1-andreas@kemnade.info>
-        <20191021054104.26155-6-andreas@kemnade.info>
-        <d59b7e21112ac96a2d88ae623eb523fc@agner.ch>
-        <20191021135028.GV3125@piout.net>
-X-Mailer: Claws Mail 3.14.1 (GTK+ 2.24.31; i686-pc-linux-gnu)
+        id S1726847AbfJUPXp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 11:23:45 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 46xgQL1gnpz9tyv5;
+        Mon, 21 Oct 2019 17:23:38 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=Skk3cYPI; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 0oLWw6VBcru1; Mon, 21 Oct 2019 17:23:38 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 46xgQL0Xwsz9tyv4;
+        Mon, 21 Oct 2019 17:23:38 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1571671418; bh=nm0UPQIaAz9eXoUIEZbDmlT9s/fOientiagkm7/79CU=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Skk3cYPIGnFSMihmQlheRa3z/IOC/tmfS1U8+JeB7nQ26lsXGHlUGpqJpOVPKEDNA
+         x0EFrq7w6gMb5hmhMWXTx2aWBboHBLsJvmzE+nAlOArBN6SErIbFu54Ck7MJXz2f7Q
+         U4HrIEBt2eV5Wo+/INlnh1l+kTjje6HT8WMBBS8I=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 371118BB21;
+        Mon, 21 Oct 2019 17:23:43 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id FqiSqnIpHT5m; Mon, 21 Oct 2019 17:23:43 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id B7BFE8B8FE;
+        Mon, 21 Oct 2019 17:23:42 +0200 (CEST)
+Subject: Re: [PATCH] lib/vdso: Make clock_getres() POSIX compliant again
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Andreas Schwab <schwab@linux-m68k.org>
+Cc:     Nathan Lynch <nathanl@linux.ibm.com>,
+        "linuxppc-dev@ozlabs.org" <linuxppc-dev@ozlabs.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>
+References: <0fc22a08-31d9-e4d1-557e-bf5b482a9a20__6444.28012180782$1571503753$gmane$org@c-s.fr>
+ <87v9skcznp.fsf@igel.home> <ed65e4c6-2fe0-2f5c-f667-5a81b19eb073@c-s.fr>
+ <87tv83zqt1.fsf@hase.home> <b64c367b-d1e5-bf26-d452-145c0be6e30a@c-s.fr>
+ <alpine.DEB.2.21.1910201243580.2090@nanos.tec.linutronix.de>
+ <875zkjipra.fsf@igel.home>
+ <alpine.DEB.2.21.1910201731070.2090@nanos.tec.linutronix.de>
+ <87r237h01a.fsf@igel.home>
+ <alpine.DEB.2.21.1910202145160.2090@nanos.tec.linutronix.de>
+ <87eez7glre.fsf@igel.home>
+ <alpine.DEB.2.21.1910211202260.1904@nanos.tec.linutronix.de>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <fb552fd1-99e4-0685-c41f-3e4e0efc46ec@c-s.fr>
+Date:   Mon, 21 Oct 2019 17:23:42 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/uCseBc73aLEs0S5AZO0JIAC"; protocol="application/pgp-signature"
+In-Reply-To: <alpine.DEB.2.21.1910211202260.1904@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/uCseBc73aLEs0S5AZO0JIAC
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, 21 Oct 2019 15:50:28 +0200
-Alexandre Belloni <alexandre.belloni@bootlin.com> wrote:
 
-> On 21/10/2019 15:19:09+0200, Stefan Agner wrote:
-> > On 2019-10-21 07:41, Andreas Kemnade wrote: =20
-> > > Add an RTC driver for the RTC device on Ricoh MFD rc5t619,
-> > > which is implemented as a variant of rn5t618
-> > >=20
-> > > Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-> > > ---
-> > >  drivers/rtc/Kconfig       |  10 +
-> > >  drivers/rtc/Makefile      |   1 +
-> > >  drivers/rtc/rtc-rc5t619.c | 476 ++++++++++++++++++++++++++++++++++++=
-++++++++++ =20
-> >=20
-> > Parts of this driver look very similar to drivers/rtc/rtc-rc5t583.c. Can
-> > it maybe shared?
-> >  =20
->=20
-> If this could be done it would be better. I can't find any public
-> datasheet though...
->=20
-at least they have different alarm configurations, The rc5t619 can specify
-alarm in seconds, the rc5t583 not but has other alarm configurations which
-are not present in the rn5t619 (judging by the lack of unused registers whe=
-re
-thoes information could be filled in).=20
+Le 21/10/2019 à 12:07, Thomas Gleixner a écrit :
+> A recent commit removed the NULL pointer check from the clock_getres()
+> implementation causing a test case to fault.
+> 
+> POSIX requires an explicit NULL pointer check for clock_getres() aside of
+> the validity check of the clock_id argument for obscure reasons.
+> 
+> Add it back for both 32bit and 64bit.
+> 
+> Note, this is only a partial revert of the offending commit which does not
+> bring back the broken fallback invocation in the the 32bit compat
+> implementations of clock_getres() and clock_gettime().
+> 
+> Fixes: a9446a906f52 ("lib/vdso/32: Remove inconsistent NULL pointer checks")
+> Reported-by: Andreas Schwab <schwab@linux-m68k.org>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
-Register addresses do not match.
-Some details seem to be the same like century flag.
-Interestingly the rc5t583 driver does not care about 12h/24h mode.
-So there is a bug there.=20
+Tested-by: Christophe Leroy <christophe.leroy@c-s.fr>
 
-Regards,
-Andreas
-
---Sig_/uCseBc73aLEs0S5AZO0JIAC
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAl2tzNcACgkQl4jFM1s/
-ye+ZuQ//fgwnaZghXCAjYyw0akgrJV9QoXWIwpcFg3jaD8MlWr3W6ykUn8iN2rZh
-dyolY1S7hFMI7asXpyW4DyI30AQ81fdEbivD3XeBYGWkWxm9/gmeSjyHyg5D3Qhm
-5HtJnaBL+7ejSyi8bDp8cc01ayYfbI6RlBdTxl0tqN50yRiPkgoDaf37d6GDt6Nk
-RfrD7W9UuXXDcHBXyimVK2QOx5Z1MPoCHXSa60tW1Mnv91ygut7C+b+lfKdwCHOC
-Edf4atI1gBAzog6/miUMmpqmqZr3d0bPJNx/wyOHqF0ERq76b2LYu1HIPj0Fpm1M
-ZxpcgqOmrwoWSYggbWOF9KLe1zldRWShJnUObAn9Nz0iSLu3byvexhLhz+/d8qVu
-ojbOFDeIXhl1PosjEVwyRlmmaJPRW7Lq7eodTFZTMUd9wKvt5Ih+6MCmXAVMFYeD
-9Wb1rkzzAt0JZR489SaXFpdXtYtlkYnkuTb712j0o7LzYqIkk0Bz9EiInJJLPcPH
-AgCwQMVG7BWi/d2HDBmHXb97vsuZeJcOjfYpe442Fl8zaT47vUHc28UHjseor8hy
-ZkBEUIQFlWlBGObgdowziC5tBrUjks3Ez8Oo43rqxKDACs2SJuWvfJPlHieeWS6H
-OHIMic6DjQLCZNH4bGcJpU7F5QiffqsFe/wZKiEluauiPACxl3M=
-=URg8
------END PGP SIGNATURE-----
-
---Sig_/uCseBc73aLEs0S5AZO0JIAC--
+> Cc: stable@vger.kernel.org
+> ---
+>   lib/vdso/gettimeofday.c |    9 +++++----
+>   1 file changed, 5 insertions(+), 4 deletions(-)
+> 
+> --- a/lib/vdso/gettimeofday.c
+> +++ b/lib/vdso/gettimeofday.c
+> @@ -214,9 +214,10 @@ int __cvdso_clock_getres_common(clockid_
+>   		return -1;
+>   	}
+>   
+> -	res->tv_sec = 0;
+> -	res->tv_nsec = ns;
+> -
+> +	if (likely(res)) {
+> +		res->tv_sec = 0;
+> +		res->tv_nsec = ns;
+> +	}
+>   	return 0;
+>   }
+>   
+> @@ -245,7 +246,7 @@ static __maybe_unused int
+>   		ret = clock_getres_fallback(clock, &ts);
+>   #endif
+>   
+> -	if (likely(!ret)) {
+> +	if (likely(!ret && res)) {
+>   		res->tv_sec = ts.tv_sec;
+>   		res->tv_nsec = ts.tv_nsec;
+>   	}
+> 
