@@ -2,194 +2,288 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E286CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 07:54:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ED0DCA9EB9
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 07:54:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA5BB20830
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 07:54:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4E6920830
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 07:54:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Pdoqibss"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uqet+7F2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727520AbfJUHyL (ORCPT
+        id S1727563AbfJUHym (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 03:54:11 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:39019 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727097AbfJUHyL (ORCPT
+        Mon, 21 Oct 2019 03:54:42 -0400
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:40289 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727097AbfJUHym (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 03:54:11 -0400
-Received: by mail-qt1-f196.google.com with SMTP id t8so2070385qtc.6
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 00:54:10 -0700 (PDT)
+        Mon, 21 Oct 2019 03:54:42 -0400
+Received: by mail-yw1-f68.google.com with SMTP id a67so897969ywg.7;
+        Mon, 21 Oct 2019 00:54:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=/SqswiV+O4l/WvPEZbqOyv+SpkidW7GtfPPAGcnNlro=;
-        b=PdoqibssSlcMEEQ53CZ63eSRrYmPPLnkZDMZgGBmCq5XvIiOyzCrFVp2mH91akpnfZ
-         gEImjUchoVdcoLkPHA5pGkYsyP3OOLmQUHsAA+FajIY1SdJBPd2Y6ilhoZ2IF6BSHN/k
-         RQ2ZVCJthANygHVlre85PgooluSH3fXTKIiJn0dxBu/yVeBbBWb/i6FdcsEdlg0eaOo8
-         XiE7xmf80lZepuPdFZOQVScbputOjAOZc1nFz6Z6vV+m6wE4oCuUtti/9S0w6lfxcAS2
-         wDOAT2u37OGmy0LdRckKPAeGFfyKnfdWOFWssWed2ECiV3hWlnbJ0upJGvBDrqwk9G/a
-         jMyA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JBVuE8K9W/3pxAwfls/F5yOqBVEqnXszhPJ6M1UNYG0=;
+        b=Uqet+7F24Q1tOm9DIKQjjvLXpJBP9QLA0kh3AMgf6wIdgGsPAUGUUkM50I6RCmPePV
+         1X7xzxKxqm+s4xccoTN6VoBwGx7c5CYfF1HNaXh9S1MFO3nhkekRv823J9mHkmdJ39Aj
+         DZxwlDDu+6cMWvLUiw0PAkBk8ULtpZ70aNGMkEA+U1ecrCAC1dgEPlj3fZA4wb7doldo
+         Ze6LqeGY8Dcd2ofP+NOqA8ebljsctoGa0pSqnn6oiLz3f9Wem8J/vRCq1COzHZgmJ/kG
+         1f5Jw4/i/CWCY1jBYigObq2/TKbWsN1O8jpkTigcFBdwkYxGQAF93UO1DYHDEhX4V29N
+         MZ8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/SqswiV+O4l/WvPEZbqOyv+SpkidW7GtfPPAGcnNlro=;
-        b=XtXRyj8D8t14P5Js/6uIQksuHoY0pYmPw9Grb0Vzx5kYqHW03BMcrij7tLo1s03oSJ
-         wlp9F5ebR4djMNsblq5eCsWEZ6LSja3DGdwuqwAcJgGdqJUhQhwhgNf+b7eHb38e9U+N
-         oj2HvLhTEzi5gFu+tol7SnT4Jp2VRcyC/EcBd8/7i075AaENo08OE2Xcn/OiofsPNtz/
-         1k2Mv5YJtwf0FdQ3O5Gt1rCChqbS3KAS/DQSch3O0Zs5kLafhKnLvKIA+QnaCRdg8vsz
-         ipw6Cq5800V35329Ez8li5UDwjVMA+GK37y2wG9hIosspqHDF3mxnsLoIUGu+Nyt4ArJ
-         /vUQ==
-X-Gm-Message-State: APjAAAWEHXGH1fX+0OKRz1to5uI1/qK7Qw4MabgFTwqHQwxktDI8DT63
-        hLCGvxrmoc+25wexG58xGnXz/A==
-X-Google-Smtp-Source: APXvYqxXFnUuUGy2rdlJn3kk74MWvYkCwvjrVlZKb6XlgQHfBpNTrQ1QorGkABOnqq8px3qVJc7Exg==
-X-Received: by 2002:ac8:6890:: with SMTP id m16mr23414431qtq.227.1571644449713;
-        Mon, 21 Oct 2019 00:54:09 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s (li937-157.members.linode.com. [45.56.119.157])
-        by smtp.gmail.com with ESMTPSA id 64sm7257589qkk.63.2019.10.21.00.54.03
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 21 Oct 2019 00:54:08 -0700 (PDT)
-Date:   Mon, 21 Oct 2019 15:53:59 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>, Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Brajeswar Ghosh <brajeswar.linux@gmail.com>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Song Liu <songliubraving@fb.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 3/3] perf tests: Disable bp_signal testing for arm64
-Message-ID: <20191021075359.GA26243@leoy-ThinkPad-X240s>
-References: <20191018085531.6348-1-leo.yan@linaro.org>
- <20191018085531.6348-3-leo.yan@linaro.org>
- <20191018175919.GC1797@kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JBVuE8K9W/3pxAwfls/F5yOqBVEqnXszhPJ6M1UNYG0=;
+        b=Gfl2kwnmbnekXkNwUEQ2l9ZxOLrvwYsSXPQcR4WOwHdWfxlfNu0GzVbg6OJvJDVD1L
+         MJkO2fpbzeqdCceMRLdUPxE1bYWfsGFX/TB8zzFvjYFXkjERmUz5bNOW9EYtvBcbLbPG
+         aoe881p7OFeAuRKaB172gflCbegX+6Dcldi2p4SoYX74eDY/LupmDDBvNcGbNNgtONDk
+         363iuiZCAjbesKsnc8kHAhTd6QIHTNrt7cRljmXAt0m36AlQqwD3d8ZCnmbRSgzMGi2r
+         lpmZ0j7rJCZj5rKpqSs2Zx8zaHeajb0NiAM5rkn48jJbYOvmhq4Z+Jn666g+QmvSwnfH
+         FHkQ==
+X-Gm-Message-State: APjAAAX+67mP1Cm2FC1LANzePx2pYdTtpPPYxGGFYXtQrbMRvKpV3F4w
+        im7a+Vn+U/QhKgS0coIoliO7ZD9nHTEenIjd6zY=
+X-Google-Smtp-Source: APXvYqw2rrZymNE7C0Sfak2nEH+hw3LBLB0hXG+7oGr94LfmguTGJYUMGFKQrC/KyXkfpCHTVTUqS9PhGFcdzmFO7FY=
+X-Received: by 2002:a81:4320:: with SMTP id q32mr15689502ywa.464.1571644479753;
+ Mon, 21 Oct 2019 00:54:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191018175919.GC1797@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20191021073819.18181-1-candlesea@gmail.com>
+In-Reply-To: <20191021073819.18181-1-candlesea@gmail.com>
+From:   Candle Sun <candlesea@gmail.com>
+Date:   Mon, 21 Oct 2019 15:54:28 +0800
+Message-ID: <CAPnx3XP2MrEZT+BAzW3-Ve9ekzvPzcj6wvzeC8VRHhCyo59XpQ@mail.gmail.com>
+Subject: Re: [PATCH v3] HID: core: check whether usage page item is after
+ usage id item
+To:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     =?UTF-8?B?57+f5LqsIChPcnNvbiBaaGFpKQ==?= <orson.zhai@unisoc.com>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Candle Sun <candle.sun@unisoc.com>,
+        Nianfu Bai <nianfu.bai@unisoc.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 02:59:19PM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Fri, Oct 18, 2019 at 04:55:31PM +0800, Leo Yan escreveu:
-> > As there have several discussions for enabling Perf breakpoint signal
-> > testing on arm64 platform; arm64 needs to rely on single-step to execute
-> > the breakpointed instruction and then reinstall the breakpoint exception
-> > handler.  But if hook the breakpoint with a signal, the signal handler
-> > will do the stepping rather than the breakpointed instruction, this
-> > causes infinite loops as below:
-> > 
-> >          Kernel space              |            Userspace
-> > -----------------------------------|--------------------------------
-> >                                    |  __test_function() -> hit
-> > 				   |                       breakpoint
-> >   breakpoint_handler()             |
-> >     `-> user_enable_single_step()  |
-> >   do_signal()                      |
-> >                                    |  sig_handler() -> Step one
-> > 				   |                instruction and
-> > 				   |                trap to kernel
-> >   single_step_handler()            |
-> >     `-> reinstall_suspended_bps()  |
-> >                                    |  __test_function() -> hit
-> > 				   |     breakpoint again and
-> > 				   |     repeat up flow infinitely
-> > 
-> > As Will Deacon mentioned [1]: "that we require the overflow handler to
-> > do the stepping on arm/arm64, which is relied upon by GDB/ptrace. The
-> > hw_breakpoint code is a complete disaster so my preference would be to
-> > rip out the perf part and just implement something directly in ptrace,
-> > but it's a pretty horrible job".  Though Will commented this on arm
-> > architecture, but the comment also can apply on arm64 architecture.
-> > 
-> > For complete information, I searched online and found a few years back,
-> > Wang Nan sent one patch 'arm64: Store breakpoint single step state into
-> > pstate' [2]; the patch tried to resolve this issue by avoiding single
-> > stepping in signal handler and defer to enable the signal stepping when
-> > return to __test_function().  The fixing was not merged due to the
-> > concern for missing to handle different usage cases.
-> > 
-> > Based on the info, the most feasible way is to skip Perf breakpoint
-> > signal testing for arm64 and this could avoid the duplicate
-> > investigation efforts when people see the failure.  This patch skips
-> > this case on arm64 platform, which is same with arm architecture.
-> 
-> Ok, applying,
+Hi,
 
-Thanks a lot, Arnaldo.
 
-@Will, @Mark Rultland, very appreciate if you have time to review this
-patch and welcome any comments or suggestions!  It's good you could
-confirm this patch so have more confidence for it.
+On Mon, Oct 21, 2019 at 3:38 PM Candle Sun <candlesea@gmail.com> wrote:
+>
+> From: Candle Sun <candle.sun@unisoc.com>
+>
+> Upstream commit 58e75155009c ("HID: core: move Usage Page concatenation
+> to Main item") adds support for Usage Page item after Usage ID items
+> (such as keyboards manufactured by Primax).
+>
+> Usage Page concatenation in Main item works well for following report
+> descriptor patterns:
+>
+>     USAGE_PAGE (Keyboard)                   05 07
+>     USAGE_MINIMUM (Keyboard LeftControl)    19 E0
+>     USAGE_MAXIMUM (Keyboard Right GUI)      29 E7
+>     LOGICAL_MINIMUM (0)                     15 00
+>     LOGICAL_MAXIMUM (1)                     25 01
+>     REPORT_SIZE (1)                         75 01
+>     REPORT_COUNT (8)                        95 08
+>     INPUT (Data,Var,Abs)                    81 02
+>
+> -------------
+>
+>     USAGE_MINIMUM (Keyboard LeftControl)    19 E0
+>     USAGE_MAXIMUM (Keyboard Right GUI)      29 E7
+>     LOGICAL_MINIMUM (0)                     15 00
+>     LOGICAL_MAXIMUM (1)                     25 01
+>     REPORT_SIZE (1)                         75 01
+>     REPORT_COUNT (8)                        95 08
+>     USAGE_PAGE (Keyboard)                   05 07
+>     INPUT (Data,Var,Abs)                    81 02
+>
+> But it makes the parser act wrong for the following report
+> descriptor pattern(such as some Gamepads):
+>
+>     USAGE_PAGE (Button)                     05 09
+>     USAGE (Button 1)                        09 01
+>     USAGE (Button 2)                        09 02
+>     USAGE (Button 4)                        09 04
+>     USAGE (Button 5)                        09 05
+>     USAGE (Button 7)                        09 07
+>     USAGE (Button 8)                        09 08
+>     USAGE (Button 14)                       09 0E
+>     USAGE (Button 15)                       09 0F
+>     USAGE (Button 13)                       09 0D
+>     USAGE_PAGE (Consumer Devices)           05 0C
+>     USAGE (Back)                            0a 24 02
+>     USAGE (HomePage)                        0a 23 02
+>     LOGICAL_MINIMUM (0)                     15 00
+>     LOGICAL_MAXIMUM (1)                     25 01
+>     REPORT_SIZE (1)                         75 01
+>     REPORT_COUNT (11)                       95 0B
+>     INPUT (Data,Var,Abs)                    81 02
+>
+> With Usage Page concatenation in Main item, parser recognizes all the
+> 11 Usages as consumer keys, it is not the HID device's real intention.
+>
+> This patch adds usage_page_last to flag whether Usage Page is after
+> Usage ID items. usage_page_last is false default, it is set as true
+> once Usage Page item is encountered and is reverted by next Usage ID
+> item.
+>
+> Usage Page concatenation on the currently defined Usage Page will do
+> firstly in Local parsing when Usage ID items encountered.
+>
+> When Main item is parsing, concatenation will do again with last
+> defined Usage Page if usage_page_last flag is true.
+>
+> Signed-off-by: Candle Sun <candle.sun@unisoc.com>
+> Signed-off-by: Nianfu Bai <nianfu.bai@unisoc.com>
+> ---
+> Changes in v3:
+> - Rework the GET_COMPLETE_USAGE macro as static complete_usage()
+>   function
+> - Add some code comments for usage_page_last
+>
+> Changes in v2:
+> - Update patch title
+> - Add GET_COMPLETE_USAGE macro
+> - Change the logic of checking whether to concatenate usage page again
+>   in main parsing
+> ---
+>  drivers/hid/hid-core.c | 42 +++++++++++++++++++++++++++++++++++++-----
+>  include/linux/hid.h    |  1 +
+>  2 files changed, 38 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
+> index 3eaee2c37931..779b7798dae8 100644
+> --- a/drivers/hid/hid-core.c
+> +++ b/drivers/hid/hid-core.c
+> @@ -211,6 +211,18 @@ static unsigned hid_lookup_collection(struct hid_parser *parser, unsigned type)
+>         return 0; /* we know nothing about this usage type */
+>  }
+>
+> +/*
+> + * Concatenate usage which defines 16 bits or less with the
+> + * currently defined usage page to form a 32 bit usage
+> + */
+> +
+> +static void complete_usage(struct hid_parser *parser, unsigned int index)
+> +{
+> +       parser->local.usage[index] &= 0xFFFF;
+> +       parser->local.usage[index] |=
+> +               (parser->global.usage_page & 0xFFFF) << 16;
+> +}
+> +
+>  /*
+>   * Add a usage to the temporary parser table.
+>   */
+> @@ -221,7 +233,18 @@ static int hid_add_usage(struct hid_parser *parser, unsigned usage, u8 size)
+>                 hid_err(parser->device, "usage index exceeded\n");
+>                 return -1;
+>         }
+> -       parser->local.usage[parser->local.usage_index] = usage;
+> +
+> +       /*
+> +        * If Usage item only includes usage id, concatenate it with
+> +        * currently defined usage page and clear usage_page_last flag
+> +        */
+> +       if (size <= 2) {
+> +               parser->local.usage_page_last = false;
+> +               complete_usage(parser, parser->local.usage_index);
+> +       } else {
+> +               parser->local.usage[parser->local.usage_index] = usage;
+> +       }
+> +
+>         parser->local.usage_size[parser->local.usage_index] = size;
+>         parser->local.collection_index[parser->local.usage_index] =
+>                 parser->collection_stack_ptr ?
+> @@ -366,6 +389,8 @@ static int hid_parser_global(struct hid_parser *parser, struct hid_item *item)
+>
+>         case HID_GLOBAL_ITEM_TAG_USAGE_PAGE:
+>                 parser->global.usage_page = item_udata(item);
+> +               /* Regard Usage Page is after Usage ID items */
+> +               parser->local.usage_page_last = true;
+>                 return 0;
+>
+>         case HID_GLOBAL_ITEM_TAG_LOGICAL_MINIMUM:
+> @@ -543,13 +568,20 @@ static int hid_parser_local(struct hid_parser *parser, struct hid_item *item)
+>   * usage value."
+>   */
+>
+> -static void hid_concatenate_usage_page(struct hid_parser *parser)
+> +static void hid_concatenate_last_usage_page(struct hid_parser *parser)
+>  {
+>         int i;
+>
+> +       /*
+> +        * Concatenate usage page again only on detecting some Usage Page
+> +        * is really after Usage ID items
+> +        */
+> +       if (!parser->local.usage_page_last)
+> +               return;
+> +
+>         for (i = 0; i < parser->local.usage_index; i++)
+>                 if (parser->local.usage_size[i] <= 2)
+> -                       parser->local.usage[i] += parser->global.usage_page << 16;
+> +                       complete_usage(parser, i);
+>  }
+>
+>  /*
+> @@ -561,7 +593,7 @@ static int hid_parser_main(struct hid_parser *parser, struct hid_item *item)
+>         __u32 data;
+>         int ret;
+>
+> -       hid_concatenate_usage_page(parser);
+> +       hid_concatenate_last_usage_page(parser);
+>
+>         data = item_udata(item);
+>
+> @@ -772,7 +804,7 @@ static int hid_scan_main(struct hid_parser *parser, struct hid_item *item)
+>         __u32 data;
+>         int i;
+>
+> -       hid_concatenate_usage_page(parser);
+> +       hid_concatenate_last_usage_page(parser);
+>
+>         data = item_udata(item);
+>
+> diff --git a/include/linux/hid.h b/include/linux/hid.h
+> index cd41f209043f..2e0ea2f7ec5c 100644
+> --- a/include/linux/hid.h
+> +++ b/include/linux/hid.h
+> @@ -412,6 +412,7 @@ struct hid_local {
+>         unsigned usage_minimum;
+>         unsigned delimiter_depth;
+>         unsigned delimiter_branch;
+> +       bool usage_page_last;      /* whether usage page is after usage id */
+>  };
+>
 
-Thanks,
-Leo Yan
+Hi Benjamin,
+Here I still use the usage_page_last flag, not using following method
+you provided in v2:
 
-> - Arnaldo
->  
-> > [1] https://lkml.org/lkml/2018/11/15/205
-> > [2] https://lkml.org/lkml/2015/12/23/477
-> > 
-> > Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> > ---
-> >  tools/perf/tests/bp_signal.c | 15 ++++++---------
-> >  1 file changed, 6 insertions(+), 9 deletions(-)
-> > 
-> > diff --git a/tools/perf/tests/bp_signal.c b/tools/perf/tests/bp_signal.c
-> > index c1c2c13de254..166f411568a5 100644
-> > --- a/tools/perf/tests/bp_signal.c
-> > +++ b/tools/perf/tests/bp_signal.c
-> > @@ -49,14 +49,6 @@ asm (
-> >  	"__test_function:\n"
-> >  	"incq (%rdi)\n"
-> >  	"ret\n");
-> > -#elif defined (__aarch64__)
-> > -extern void __test_function(volatile long *ptr);
-> > -asm (
-> > -	".globl __test_function\n"
-> > -	"__test_function:\n"
-> > -	"str x30, [x0]\n"
-> > -	"ret\n");
-> > -
-> >  #else
-> >  static void __test_function(volatile long *ptr)
-> >  {
-> > @@ -302,10 +294,15 @@ bool test__bp_signal_is_supported(void)
-> >  	 * stepping into the SIGIO handler and getting stuck on the
-> >  	 * breakpointed instruction.
-> >  	 *
-> > +	 * Since arm64 has the same issue with arm for the single-step
-> > +	 * handling, this case also gets suck on the breakpointed
-> > +	 * instruction.
-> > +	 *
-> >  	 * Just disable the test for these architectures until these
-> >  	 * issues are resolved.
-> >  	 */
-> > -#if defined(__powerpc__) || defined(__s390x__) || defined(__arm__)
-> > +#if defined(__powerpc__) || defined(__s390x__) || defined(__arm__) || \
-> > +    defined(__aarch64__)
-> >  	return false;
-> >  #else
-> >  	return true;
-> > -- 
-> > 2.17.1
-> 
-> -- 
-> 
-> - Arnaldo
+if ((parser->local.usage[parser->local.usage_index - 1] &
+HID_USAGE_PAGE) >> 16 == usage_page)
+              return 0;
+
+Because last usage maybe one Extended Usage, some logic for checking
+it should be added.
+It will make the code obscure. Using one more member in struct
+hid_local is straightforward
+and maybe better.
+
+Candle
+
+>  /*
+> --
+> 2.17.1
+>
