@@ -2,53 +2,76 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BEAFCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 02:44:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31831CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 02:46:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D77992190F
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 02:44:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9DA62089C
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 02:46:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tDJD4MSK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aH0WYxbD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727054AbfJUCor (ORCPT
+        id S1726976AbfJUCqR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 20 Oct 2019 22:44:47 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:44096 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726819AbfJUCor (ORCPT
+        Sun, 20 Oct 2019 22:46:17 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:46720 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726764AbfJUCqQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 20 Oct 2019 22:44:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=rC6gSXEIYzPJ8RDbWxn7d8O48Lkwu1i0Wg5ua9cjhrc=; b=tDJD4MSK4qTRpeO8q1mGy7g24
-        F2tnNVzdQudSjEiRN/+/bxJ3dWrsKwBVfqCF5mmBSs/TlEwcUakx4AvTYkRhcly8oxNOKmXgJsBbw
-        VmCdAJumA7KAFmaB5j4uIu9X1Rwf8FvO6sW2+rF95/MBtJWg6Our4z4Ry03cWaSNLxXstzN1SfKSu
-        5TLu4h95M0da0PNI1n1h50x9eTsWBzfKXX0wcWhweeoJOTZLl6W8wtYnE7UdPPMcjmBvAEvCs9m1X
-        3g4nP0vzkQw0f+uC1ojV0K7QUM9DeMpPGE0YbHsEkAHksAGBpOadZrxBv8aFWP+ts7S80K1M9iHI9
-        BaX6UcT0Q==;
-Received: from [2601:1c0:6280:3f0::9ef4]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iMNgb-0003hM-Oo; Mon, 21 Oct 2019 02:44:45 +0000
-To:     LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@redhat.com>
-Cc:     Dmitry Safonov <dima@arista.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH -next RESEND] Documentation/admin-guide: fix sysctl Sphinx
- warning
-Message-ID: <c5fed83a-d105-4142-8607-4b06ebadf0e8@infradead.org>
-Date:   Sun, 20 Oct 2019 19:44:45 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Sun, 20 Oct 2019 22:46:16 -0400
+Received: by mail-pf1-f196.google.com with SMTP id q5so7424573pfg.13;
+        Sun, 20 Oct 2019 19:46:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=DTpTVkESn2vrQ+FsIrJTz16bCNnqcqqTMFT1dR0+ZsM=;
+        b=aH0WYxbDf/0OBoHNaXb2q5bVYzYHKGTipxNLaDcvWqq/6nttgpVGsjoXuANiNg/Xif
+         FZmOudKgonGJ5H+MCNLmhRJAbrAEzJFwkbnCRGyP/SDpJ18wNQ/Ierf5auqi8oNWCO3J
+         oy/EeZzhda+jjygYXSq12jSvTmrDnNyOvarWnQqFPwvz6lXY7vT1bo8IjJcZ+k9I2YkY
+         c3u0uGe3+Lc8B5k23t9OOWw8OHFjH/zhxUSbfUbKlCzrJtqmzcduB9Ep85U+mmFZ9mUk
+         v+Abi8OK70ZNSpKDmF7xSyNRN4NcIuxGz8f9XlA1Wj5lAXfMPWu0FtqC/E6VOAbGSkvD
+         WjJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=DTpTVkESn2vrQ+FsIrJTz16bCNnqcqqTMFT1dR0+ZsM=;
+        b=EMmFUlU4NEUouSnw5xJJxrtI42uk0RFHqBtEVhRBXLQsAvwtR5b3XO9JK+Zg+QMuno
+         l6bAuoiJnSogUXr2VN6nl6PnzS2OOEHTT1gygGHEztliCaRALl9z6hxA0YgHH27yo/wl
+         /9SA3nPIyheJUlgS8EYn9tL3SO4mLwA70UQgEA/6V9pnXDlEZeXQGua5mx6vvUQWlyR0
+         nR5pwVpSe5Ekw2v3634PgmLJmQlLIQtS7DQJPHWgzBOzCS9atD1zcnkDvDDMONdrdtsi
+         upXxneMKqI58KJrZ2AN2UNPYzMCdQg17jp4bNlMVSUFJ8zkQNlxClINbBaoHgSKA3esW
+         x3MQ==
+X-Gm-Message-State: APjAAAUeQbx6YsLq9WPAQqBOQkVbRJ5U7L+O0AIcyChkTSjKDw1st9g6
+        N3UpVyBnNfgEdBhBv37hZ/shesik
+X-Google-Smtp-Source: APXvYqwxZkm32dsiZf6s0HGpxEOe099f71kxaIYpWQjZ3n43WfUuzh8CMTPG+OdaDvCYJMLZyyYTIQ==
+X-Received: by 2002:a62:60c6:: with SMTP id u189mr20352460pfb.4.1571625975586;
+        Sun, 20 Oct 2019 19:46:15 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id q6sm16416016pgn.44.2019.10.20.19.46.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 20 Oct 2019 19:46:14 -0700 (PDT)
+Subject: Re: [PATCH net-next 09/16] net: dsa: use ports list to find first CPU
+ port
+To:     Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        netdev@vger.kernel.org
+References: <20191020031941.3805884-1-vivien.didelot@gmail.com>
+ <20191020031941.3805884-10-vivien.didelot@gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <c6b2502b-e06c-8589-3f41-97962e1130bd@gmail.com>
+Date:   Sun, 20 Oct 2019 19:46:13 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
+In-Reply-To: <20191020031941.3805884-10-vivien.didelot@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -57,33 +80,14 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
-
-Fix Sphinx warning when building Documentation:
-
-Documentation/admin-guide/sysctl/kernel.rst:397: WARNING: Title underline too short.
-
-hung_task_interval_warnings:
-===================
-
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Dmitry Safonov <dima@arista.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Ingo Molnar <mingo@kernel.org>
----
- Documentation/admin-guide/sysctl/kernel.rst |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- linux-next-20191018.orig/Documentation/admin-guide/sysctl/kernel.rst
-+++ linux-next-20191018/Documentation/admin-guide/sysctl/kernel.rst
-@@ -394,7 +394,7 @@ This file shows up if CONFIG_DETECT_HUNG
- 
- 
- hung_task_interval_warnings:
--===================
-+============================
- 
- The same as hung_task_warnings, but set the number of interval
- warnings to be issued about detected hung tasks during check
 
 
+On 10/19/2019 8:19 PM, Vivien Didelot wrote:
+> Use the new ports list instead of iterating over switches and their
+> ports when looking up the first CPU port in the tree.
+> 
+> Signed-off-by: Vivien Didelot <vivien.didelot@gmail.com>
+
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
