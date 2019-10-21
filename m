@@ -2,151 +2,196 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A909ECA9EB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:56:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2751CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:56:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E84320656
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:56:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE9DE2064B
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:56:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="h3JmjnZQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729108AbfJUO43 (ORCPT
+        id S1729334AbfJUO4g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 10:56:29 -0400
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:51512 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727040AbfJUO43 (ORCPT
+        Mon, 21 Oct 2019 10:56:36 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:36427 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729258AbfJUO4f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 10:56:29 -0400
-X-AuditID: c0a8fbf4-183ff70000001fa6-18-5dadc719495a
-Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id D1.D0.08102.917CDAD5; Mon, 21 Oct 2019 16:56:25 +0200 (CEST)
-Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
- WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
- 14.03.0439.000; Mon, 21 Oct 2019 16:56:12 +0200
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>
-CC:     "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>
-Subject: Re: [RFC PATCH 10/13] gpio: bd71828: Initial support for ROHM
- BD71828 PMIC GPIOs
-Thread-Topic: [RFC PATCH 10/13] gpio: bd71828: Initial support for ROHM
- BD71828 PMIC GPIOs
-Thread-Index: AQHVhNC0M8qm8vzoP0yjRB+AhWv9dadepj4AgAXpHQCAAH9rgIAABXqA
-Date:   Mon, 21 Oct 2019 14:56:11 +0000
-Message-ID: <63a9fca56dbc174bf2c26eb602ba1c0c057488b0.camel@fi.rohmeurope.com>
-References: <cover.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
-         <f8f8c323d378244afe4e94f48c0a94bb296cbbe0.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
-         <CAMpxmJWXQccY8HsM6MXYBW8KC0U+7iOk+Ve-4nk=cpa=Zuk1cg@mail.gmail.com>
-         <3ae3507649f2e9a66053a99b4a71e29786fc3d34.camel@fi.rohmeurope.com>
-         <CAMpxmJVABg-UAzZtaQKu5ADBhi1P7CNArmstxHi5ZfdPiSKyYw@mail.gmail.com>
-In-Reply-To: <CAMpxmJVABg-UAzZtaQKu5ADBhi1P7CNArmstxHi5ZfdPiSKyYw@mail.gmail.com>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [82.203.142.98]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <C87ABB7EB9CD9C49908822B6FEB2A7F0@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        Mon, 21 Oct 2019 10:56:35 -0400
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20191021145633epoutp0250ec3df9b474d4ac1879786578984669~PsVmg7LOB1992619926epoutp02-
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 14:56:33 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20191021145633epoutp0250ec3df9b474d4ac1879786578984669~PsVmg7LOB1992619926epoutp02-
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1571669793;
+        bh=+fwHAlORDs9KHULyJD+9+LZLSdj4VooLG0tQObW3l6M=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=h3JmjnZQvQkUPKky5bsLTnxRN/wyrsQKmoOYSZNVRCQGvymNh3bZQAxXOa+IyxYFg
+         MMIZvo13slyeCcTUQDzRifGI9p/fzM1YxAz7bpeLw09KlPlKWPVTbKwOGbZ7uQcpFn
+         1q+CXa0mnkJh/NhS9D9EfnxYA47v90ipBysZc53U=
+Received: from epsmges5p1new.samsung.com (unknown [182.195.42.73]) by
+        epcas5p4.samsung.com (KnoxPortal) with ESMTP id
+        20191021145632epcas5p4d2fd737aa7b5f3b76f3ed7c4b6cef27e~PsVlWxQkP2081220812epcas5p4w;
+        Mon, 21 Oct 2019 14:56:32 +0000 (GMT)
+Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
+        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        79.52.04647.027CDAD5; Mon, 21 Oct 2019 23:56:32 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+        20191021145631epcas5p35e11280d6dfe45f86ed5cebd4993e6e0~PsVk050PV2106721067epcas5p3P;
+        Mon, 21 Oct 2019 14:56:31 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20191021145631epsmtrp16bae074059a39e386e3aa43eb2bb6263~PsVk0KlSf1793517935epsmtrp1Z;
+        Mon, 21 Oct 2019 14:56:31 +0000 (GMT)
+X-AuditID: b6c32a49-743ff70000001227-76-5dadc7202b3f
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        AE.90.03889.F17CDAD5; Mon, 21 Oct 2019 23:56:31 +0900 (KST)
+Received: from pankajdubey02 (unknown [107.111.85.21]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20191021145630epsmtip13ca3f50e4302c59a5cb259141fb6d7bd~PsVjVAFXj3275232752epsmtip1O;
+        Mon, 21 Oct 2019 14:56:29 +0000 (GMT)
+From:   "Pankaj Dubey" <pankaj.dubey@samsung.com>
+To:     "'Andrew Murray'" <andrew.murray@arm.com>,
+        "'Anvesh Salveru'" <anvesh.s@samsung.com>
+Cc:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <bhelgaas@google.com>,
+        <gustavo.pimentel@synopsys.com>, <jingoohan1@gmail.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>
+In-Reply-To: <20191021141541.GS47056@e119886-lin.cambridge.arm.com>
+Subject: RE: [PATCH 1/2] dt-bindings: PCI: designware: Add binding for
+ ZRX-DC PHY property
+Date:   Mon, 21 Oct 2019 20:26:28 +0530
+Message-ID: <05ba01d5881f$b98989a0$2c9c9ce0$@samsung.com>
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA02TbUwTWRSGc2em08tHzVDBXupKwhhiXCPqasyNuoY/a8ZojMZENyJhBxlp
-        FVqcaRU00e5m/aoYMYofFQrbgAJFXboiajBqBaworlUsEItKRI2Iui74FYk6w6Dw6773vuc9
-        z/lxLiT1j2gjNFtsgmjhs1k6krpc+al2avy1k2nT3wVn4fLgPS3e+eq4Fg+UtFC4qLuHxqWN
-        tzR4z40zGny/7m8KP3zbBPC7tl0EPjh4gsBvCh5o8D+lgwDfvVBM47q+UwA3e9toXNEeJHBx
-        RYDCwZZfcFdLE423X2zU4s+hWioljqtx1wDudcd2Leeu2cKdd3VpOV/1bpoLhxpo7lpHPcEd
-        dn8kuErvey3X70tYGrkqal4Gb9u43JxlmTb/tyhTaVkI5Dom5p3xnCIcoIB1ggiImFno6aXb
-        lBNEQj0TAuj+2VZSvQQA6va/1jgBhDQzDzk7tUoglpmLXrbfJBRNMi6I9noTFD2WSUXFtR2U
-        WrMa9fU/HtYLUP2BclLRFJOEGpyPhvromCVo38s/aJX1kUDhoqKhoghmGep3lw2FATMB7Xa8
-        GoYZkO/pe406NYPKG/4lVR2Hnj/+PDQnYhLRm8poRZLMZHT6wjQ1mYLqap5Qqk5EB/d0D48Q
-        g64f7aEKwTjXKIBrJO0alXaNSrtGpcuAphqgHN6cncXbhBnJomBPFq2mHPlYY83xAXVjBs6B
-        L/6FfkBA4AfxkGDjdIb6k2n6MRnWzHwTL5nSRXu2IPkBgiQbqwtPlz1dJp+/WRCt36zxkGIN
-        uknd+9P0jMJaLwi5gvjN/QFCFulAsxyMEYUsIW+tOds2YhMwQmkeaYyVBEumIPJ2myldWY90
-        Sd4PxYqWua1NClfK5XPkVzXaAqbAwuclHhI2llR4SD1lsVoEo0EXUEoZpdRkt3wH9QIDBOxY
-        XVhxo+Vv871Pr4wgZIQ33qsgbPyIZXSAwj8DUkpiPtH1IqqJS/YUtq9JyPqJnf1X3bptgYJn
-        Zpu9jwv3ZkjLc5v/m2kPbfWkLjpS+f+hHl9BAjzwIt3nIGI7Sye0Ldi0ImnwU97iXSt9VTFz
-        qtxL9s+88vN1aiC44aKlNaMq9cPVzdXOkqudFb/e/HLnxDFj39v43w/v8Glt51hKMvEzfiRF
-        if8K25O4F/MDAAA=
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQIRMLiuZPZOXyo/l4tw66QvoFQK5QJ9zQNRAnN1mOWmxkuucA==
+Content-Language: en-us
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SWUwTURSGuZ2ZzlApjgXksASxRhFUFgPJSFRQNKlrSHwjgDQyApGW2rL6
+        xB6sIgS3UBZBNtk0kgqKEnCENCoUFZHECEpECaAvYlhUrAxTIm/fPef85/x/cilMxhGuVII6
+        mdWqlYlysQRvf+bttcvT1Brlb56WMDmWDoIZ6KwmmNrseOZWr5lgOkcLSObOz1KSGeosFzMD
+        lSYxUzfyWsTkdfWSoRJFS2ULUjwyjJKKqrYURVvTRbHiirEJKYzds0gx2+YRTkZI9sayiQmp
+        rNZvf4wkvqo/m9CUuaS/5MxYJupx1CNbCuhAmLw7Q/Asox8jWCqW6pFkmX8gMGbliYTHHIJr
+        mfPkquJz7k1caHQhaOY+koJ8BkGTxYNnMe0H5oXKlbWOdARUjz1YYYweR9D4xIdnWzoMLGOV
+        Ip4d6Egw/unDecbprfDe2IrpEUVJ6T3QNRvMl6X0BnheOoELazZBx/dyTPDjCYtf6q2nDkLh
+        4JxYmHGGqb5ekvcJdBG5bG3cKjgEN/SfxAI7wLTJaA3mClNF+VZOgoWaEkwQ5yK4aqoghEYI
+        9Lwtx3lzGO0N9zr9hGP2UPh7QsSXgZZCQb5MmN4G85P91rPuMJ5TJxJYARWGYbwYbTasiWZY
+        E82wJoLh/7EqhDchF1ajU8WxuiBNgJpN89UpVboUdZzvmSRVG1r5WT5HHiKD+TiHaArJ7aSa
+        261RMkKZqstQcQgoTO4o/eC/XJLGKjMusNqk09qURFbHITcKlztLS4jhSBkdp0xmz7GshtWu
+        dkWUrWsmag8s9FUHE1/HyjYelltk3fez+6O73wztOJpnS3k2b29J58IskBO32+1y9KSqYUrC
+        Xtpp7879zQ8vO1sftP6dnYZLK3hhs++XNqpjojEm8vq6SCeHk6EjC/MhLZmL6qxJWcMr+pDX
+        +ehvo/rB2qcNJ7glh1M1chuvA6nHOKctpnA5rotXBvhgWp3yH/wdlkdVAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrKIsWRmVeSWpSXmKPExsWy7bCSnK788bWxBksfK1o0/9/OanF210JW
+        iyVNGRbzj5xjtdh1t4PdYsWXmewWl3fNYbM4O+84m8XS6xeZLFr3HmF34PJYM28No8fOWXfZ
+        PRZsKvXYtKqTzaNvyypGjy37PzN6fN4kF8AexWWTkpqTWZZapG+XwJWx4EwTa8FsyYrTh84x
+        NzAeEOli5OSQEDCReNwynQXEFhLYzSjx+6IVRFxGYvLqFawQtrDEyn/P2bsYuYBqXjJKrJi2
+        lAkkwSagL3HuxzywIhGBKIm/n2+wgBQxgxRNmrWSBaLjLKPE9n13wFZwCjhL/L83D6xbGKjj
+        5pOrYHEWAVWJW1vWMncxcnDwClhK7P0MdgWvgKDEyZlPWEDCzAJ6Em0bGUHCzALyEtvfzmGG
+        OE5B4ufTZVA3OEn0nv/GBlEjLvHy6BH2CYzCs5BMmoUwaRaSSbOQdCxgZFnFKJlaUJybnlts
+        WGCUl1quV5yYW1yal66XnJ+7iREceVpaOxhPnIg/xCjAwajEw3tiydpYIdbEsuLK3EOMEhzM
+        SiK8dwyAQrwpiZVVqUX58UWlOanFhxilOViUxHnl849FCgmkJ5akZqemFqQWwWSZODilGhhD
+        FkctbLhsWmxVuD0iRKHGwS3WRfDFBPs/Cq9sg67JLp++8c2Mls5kbq82262rQ/ZM4aps0jtf
+        cclpbnht3JI5csfurlp4Vqoo3UGewTRXfk1bstS1WTwx+6K0uOJ81vnzOVX//i97ZNmizMrO
+        eR/KzTep8EYfOcax8eUVh7UJVl+8xb/+/aTEUpyRaKjFXFScCAAFamPGuAIAAA==
+X-CMS-MailID: 20191021145631epcas5p35e11280d6dfe45f86ed5cebd4993e6e0
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20191021122630epcas5p32bd92762c4304035cad5c1822d96e304
+References: <CGME20191021122630epcas5p32bd92762c4304035cad5c1822d96e304@epcas5p3.samsung.com>
+        <1571660755-30270-1-git-send-email-anvesh.s@samsung.com>
+        <20191021141541.GS47056@e119886-lin.cambridge.arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhhbmtzIGFnYWluIEJhcnQgPSkNCg0KDQpPbiBNb24sIDIwMTktMTAtMjEgYXQgMTY6MzYgKzAy
-MDAsIEJhcnRvc3ogR29sYXN6ZXdza2kgd3JvdGU6DQo+IHBvbi4sIDIxIHBhxbogMjAxOSBvIDA5
-OjAwIFZhaXR0aW5lbiwgTWF0dGkNCj4gPE1hdHRpLlZhaXR0aW5lbkBmaS5yb2htZXVyb3BlLmNv
-bT4gbmFwaXNhxYIoYSk6DQo+ID4gSGVsbG8gQmFydG9zeiwNCj4gPiANCj4gPiArDQo+ID4gPiA+
-ICsgICAgICAgYmRncGlvLT5jaGlwLmRldiA9ICZwZGV2LT5kZXY7DQo+ID4gPiA+ICsgICAgICAg
-YmRncGlvLT5ncGlvLnBhcmVudCA9IHBkZXYtPmRldi5wYXJlbnQ7DQo+ID4gPiA+ICsgICAgICAg
-YmRncGlvLT5ncGlvLmxhYmVsID0gImJkNzE4MjgtZ3BpbyI7DQo+ID4gPiA+ICsgICAgICAgYmRn
-cGlvLT5ncGlvLm93bmVyID0gVEhJU19NT0RVTEU7DQo+ID4gPiA+ICsgICAgICAgYmRncGlvLT5n
-cGlvLmdldF9kaXJlY3Rpb24gPSBiZDcxODI4X2dldF9kaXJlY3Rpb247DQo+ID4gPiA+ICsgICAg
-ICAgYmRncGlvLT5ncGlvLnNldF9jb25maWcgPSBiZDcxODI4X2dwaW9fc2V0X2NvbmZpZzsNCj4g
-PiA+ID4gKyAgICAgICBiZGdwaW8tPmdwaW8uY2FuX3NsZWVwID0gdHJ1ZTsNCj4gPiA+ID4gKyAg
-ICAgICBiZGdwaW8tPmdwaW8uZ2V0ID0gYmQ3MTgyOF9ncGlvX2dldDsNCj4gPiA+ID4gKyAgICAg
-ICBiZGdwaW8tPmdwaW8uc2V0ID0gYmQ3MTgyOF9ncGlvX3NldDsNCj4gPiA+IA0KPiA+ID4gTm90
-IGltcGxlbWVudGluZyBkaXJlY3Rpb25fb3V0cHV0KCkgYW5kIGRpcmVjdGlvbl9pbnB1dCgpIGhl
-cmUNCj4gPiA+IHdpbGwNCj4gPiA+IHJlc3VsdHMgaW4gd2FybmluZ3MgZnJvbSB0aGUgR1BJTyBm
-cmFtZXdvcms6IGZvciBpbnN0YW5jZSB5b3UNCj4gPiA+IGltcGxlbWVudCBzZXQoKSBidXQgbm90
-IGRpcmVjdGlvbl9vdXRwdXQoKS4gSSdkIHNheToganVzdCBhZGQNCj4gPiA+IHRob3NlDQo+ID4g
-PiBjYWxsYmFja3MgYW5kIHJldHVybiBhbiBlcnJvciBpZiB0aGV5J3JlIGNhbGxlZCBmb3IgaW52
-YWxpZCBsaW5lcw0KPiA+ID4gKGZvcg0KPiA+ID4gaW5zdGFuY2U6IGRpcmVjdGlvbl9vdXRwdXQo
-KSBiZWluZyBjYWxsZWQgZm9yIGxpbmUgMykuDQo+ID4gDQo+ID4gT2suIEkgd2lsbCBpbXBsZW1l
-bnQgZHVtbXkgZnVuY3Rpb25zLg0KPiA+IA0KPiA+IEJ1dCBvdXQgb2YgdGhlIGN1cmlvc2l0eSAt
-IHdoeSB0aGUgR1BJTyBjb3JlIGVtaXRzIHRoZSB3YXJuaW5ncyBpZg0KPiA+IHRoZXNlIGFyZSBu
-b3QgaW1wbGVtZW50ZWQ/IEkgdGhpbmsgdGhlIGNvcmUgc2hvdWxkIG5vdCByZXF1aXJlICJuby0N
-Cj4gPiBvcGVyYXRpb24iIGZ1bmN0aW9ucyB0byBiZSBpbXBsZW1lbnRlZCBmb3IgcGlucyB3aGlj
-aCBkb24ndCBzdXBwb3J0DQo+ID4gYm90aCBvZiB0aGUgZGlyZWN0aW9ucy4gR1BJTyBjb3JlIGNv
-dWxkIG9ubHkgZW1pdCB3YXJuaW5nIGlmIGl0DQo+ID4gbmVlZHMNCj4gPiB0byBzZXQgZGlyZWN0
-aW9uIHRvIHNvbWV0aGluZyB0aGUgSFcgZG9lcyBub3Qgc3VwcG9ydC4gVGhhdCB3b3VsZA0KPiA+
-IGF2b2lkDQo+ID4gYWRkaW5nIHRoZSBkdW1teSBmdW5jdGlvbnMgdG8gYWxsIG9mIHRoZSBkcml2
-ZXJzLCByaWdodD8NCj4gPiANCj4gDQo+IEkgbG9va2VkIGF0IHRoZSBjb2RlIGFnYWluIGFuZCBp
-dCBzZWVtcyBJIHdhcyB3cm9uZy4gSWYgd2UgZG9uJ3QgaGF2ZQ0KPiBkaXJlY3Rpb25faW5wdXQo
-KSBvciBkaXJlY3Rpb25fb3V0cHV0KCkgd2UgY2hlY2sgdGhlIGFjdHVhbCBkaXJlY3Rpb24NCj4g
-d2l0aCBnZXRfZGlyZWN0aW9uKCkgYmVmb3JlIGVtaXR0aW5nIGFueSB3YXJuaW5ncyBhbmQgaWYg
-dGhlcmUncyBubw0KPiBkaXJlY3Rpb25fb3V0cHV0KCksIGJ1dCBsaW5lIGlzIGluIGlucHV0IG1v
-ZGUgdGhlbiBhbGwncyBmaW5lLiBJbg0KPiBvdGhlciB3b3JkczogZmFsc2UgYWxhcm0sIGFuZCB5
-b3UgY2FuIGtlZXAgaXQgdGhpcyB3YXkuDQoNClRoYW5rcyBmb3IgY2xhcmlmeWluZyB0aGlzIC0g
-aXQgbWFrZXMgc2Vuc2UgOikgSSB3b250IGNoYW5nZSB0aGlzIHRoZW4uDQoNCj4gPiA+IERvbid0
-IHlvdSBuZWVkIGEgTU9EVUxFX0FMSUFTKCkgaGVyZSBzaW5jZSB0aGlzIGlzIGFuIE1GRCBzdWIt
-DQo+ID4gPiBtb2R1bGU/DQo+ID4gDQo+ID4gSSBtdXN0IGFkbWl0IEkgZG9uJ3Qga25vdyB0aGUg
-ZGV0YWlscyBvZiBob3cgbW9kdWxlIGxvYWRpbmcgaXMNCj4gPiBkb25lLiBJDQo+ID4gdXNlZCBz
-eXN0ZW0gd2hlcmUgbW9kdWxlcyBhcmUgbG9hZCBieSBzY3JpcHRzLiAoSSBndWVzcyB0aGUgbW9k
-dWxlDQo+ID4gYWxpYXMgY291bGQgYmUgdXNlZCB0byBhbGxvdyBhdXRvbWF0aWMgbW9kdWxlIGxv
-YWRpbmcgW2J5IHVkZXY/XSkNCj4gPiANCj4gPiBDYW4geW91IHBsZWFzZSBlZHVjYXRlIG1lIC0g
-SWYgSSBhZGQgbW9kdWxlIGFsaWFzZXMgbWF0Y2hpbmcgdGhlDQo+ID4gc3ViLQ0KPiA+IGRldmlj
-ZSBuYW1lIGdpdmVuIGluIGluIE1GRCBjZWxsIC0gc2hvdWxkIHRoZSBzdWIgbW9kdWxlIGxvYWRp
-bmcgYmUNCj4gPiBhdXRvbWF0aWMgd2hlbiBNRkQgZHJpdmVyIGdldHMgcHJvYmVkPyBGb3Igc29t
-ZSByZWFzb24gSSBkaWRuJ3QgZ2V0DQo+ID4gdGhhdCB3b3JraW5nIG9uIG15IHRlc3QgYmVkLiBP
-ciBtYXliZSBJIG1pc3VuZGVyc3Rvb2Qgc29tZXRoaW5nLg0KPiA+IA0KPiANCj4gSWYgdGhlIGdw
-aW8gbW9kdWxlIGlzIGEgc3ViLW5vZGUgb24gdGhlIGRldmljZSB0cmVlIHRoYW4geW91IG1heSBu
-ZWVkDQo+IHRvIHVzZSBhIHN1Yi1jb21wYXRpYmxlIHRvIGdldCB0aGUgbW9kdWxlIGxvYWRlZCBi
-eSB1ZGV2Lg0KDQpKdXN0IGZvdW5kIG91dCB0aGF0IHRoZSBsYXN0IHVwZGF0ZSBicm9rZSBteSB0
-ZXN0IGJlZCBJMkMgY29tcGxldGVseS4NCkknbGwgZXhwZXJpbWVudCB3aXRoIHRoZSBNT0RVTEVf
-QUxJQVMgd2hlbiBJIGdldCBteSBib2FyZCBydW5uaW5nLi4uDQoNCkkgZG9uJ3Qgd2FudCB0byBh
-ZGQgb3duIERUIG5vZGUgZm9yIGdwaW8gKGFuZCBhbGwgb3RoZXIgc3ViIGRldmljZXMpLg0KVGhh
-dCBzaG91bGRuJ3QgYmUgbmVlZGVkLiBJdCByZWFsbHkgc2hvdWxkIGJlIGVub3VnaCB0byBraWNr
-IHRoZSBNRkQNCnBhcnQgZnJvbSBEVCB1c2luZyB0aGUgY29tcGF0aWJsZSAtIHN1YmRldmljZXMg
-c2hvdWxkIGJlIGxvYWQgYnkgTUZEDQp3aXRob3V0IGhhdmluZyBvd24gRFQgY29tcGF0aWJsZXMg
-Zm9yIHRoZW0uIEJ1dCBJJ2xsIHNlZSBob3cgdGhpcyB3b3Jrcw0Kb3V0IC0gdGhhbmtzIQ0KDQpC
-ciwNCglNYXR0aSBWYWl0dGluZW4NCg==
+
+
+> -----Original Message-----
+> From: Andrew Murray <andrew.murray@arm.com>
+> Sent: Monday, October 21, 2019 7:46 PM
+> To: Anvesh Salveru <anvesh.s@samsung.com>
+> Cc: linux-pci@vger.kernel.org; devicetree@vger.kernel.org; linux-
+> kernel@vger.kernel.org; bhelgaas@google.com;
+> gustavo.pimentel@synopsys.com; jingoohan1@gmail.com; robh+dt@kernel.org;
+> mark.rutland@arm.com; Pankaj Dubey <pankaj.dubey@samsung.com>
+> Subject: Re: [PATCH 1/2] dt-bindings: PCI: designware: Add binding for
+ZRX-DC
+> PHY property
+> 
+> On Mon, Oct 21, 2019 at 05:55:55PM +0530, Anvesh Salveru wrote:
+> > Add support for ZRX-DC compliant PHYs. If PHY is not compliant to
+> > ZRX-DC specification, then after every 100ms link should transition to
+> > recovery state during the low power states which increases power
+> consumption.
+> >
+> > Platforms with ZRX-DC compliant PHY can use "snps,phy-zrxdc-compliant"
+> > property in DesignWare controller DT node.
+> >
+> > Signed-off-by: Anvesh Salveru <anvesh.s@samsung.com>
+> > Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+> > ---
+> >  Documentation/devicetree/bindings/pci/designware-pcie.txt | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> > b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> > index 78494c4050f7..9507ac38ac89 100644
+> > --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> > +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> > @@ -38,6 +38,8 @@ Optional properties:
+> >     for data corruption. CDM registers include standard PCIe
+configuration
+> >     space registers, Port Logic registers, DMA and iATU (internal
+Address
+> >     Translation Unit) registers.
+> > +- snps,phy-zrxdc-compliant: This property is needed if phy complies
+> > +with the
+> 
+> Strictly speaking, this is a property of the phy - not the controller that
+uses it.
+> 
+> If I understand correctly, there are some DW based PCI controllers that
+use a
+> phandle reference in DT to a Phy (such as fsl,imx6q-pcie.txt). Therefore
+it feels
+> like this is in the wrong place. Is there a reason this isn't described in
+the Phy?
+>
+
+Yes, from HW point of view this is a property of the PHY. As PHY is the one
+which is ZRXDC compliant or non-compliant. 
+But as the DW controller programming needs to be altered for handling such
+phys, so we added it as a DT binding of DW controller driver. 
+Also it might be possible that, some other PCIe controller (other than
+DesignWare), do not have any such provision in controller H/W and they
+expect PHY itself should expose some SFR to handle such scenario. In such
+cases it is straight-forward to add this binding as part of PHY node.
+
+We can add this as part of PHY binding, but in that case we will end up
+checking PHY binding in DWC driver via PHY nodes which seems little a bit of
+hack. 
+
+Do you have any other better approach to handle this? 
+ 
+> Thanks,
+> 
+> Andrew Murray
+> 
+> > +  ZRX-DC specification.
+> >  RC mode:
+> >  - num-viewport: number of view ports configured in hardware. If a
+platform
+> >    does not specify it, the driver assumes 2.
+> > --
+> > 2.17.1
+> >
+
