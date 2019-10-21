@@ -2,147 +2,149 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79238CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 22:56:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 598C9CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 22:58:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58DAD2089C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 22:56:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 323682084C
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 22:58:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730483AbfJUW4u (ORCPT
+        id S1730523AbfJUW6o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 18:56:50 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:37968 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730350AbfJUW4u (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 18:56:50 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iMgbD-0003Sn-Ma; Tue, 22 Oct 2019 00:56:28 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D17D51C0086;
-        Tue, 22 Oct 2019 00:56:26 +0200 (CEST)
-Date:   Mon, 21 Oct 2019 22:56:26 -0000
-From:   "tip-bot2 for Thomas Hellstrom" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/cpu/vmware: Fix platform detection VMWARE_PORT macro
-Cc:     Thomas Hellstrom <thellstrom@vmware.com>,
-        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        Mon, 21 Oct 2019 18:58:44 -0400
+Received: from mga14.intel.com ([192.55.52.115]:50811 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730405AbfJUW6n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 18:58:43 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 15:58:43 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,325,1566889200"; 
+   d="scan'208";a="209539352"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
+  by fmsmga001.fm.intel.com with ESMTP; 21 Oct 2019 15:58:43 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paul Mackerras <paulus@ozlabs.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
+Cc:     kvm-ppc@vger.kernel.org, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-In-Reply-To: <20191021172403.3085-3-thomas_os@shipmail.org>
-References: <20191021172403.3085-3-thomas_os@shipmail.org>
+Subject: [PATCH] KVM: Add separate helper for putting borrowed reference to kvm
+Date:   Mon, 21 Oct 2019 15:58:42 -0700
+Message-Id: <20191021225842.23941-1-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Message-ID: <157169858645.29376.17154756298339377463.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/urgent branch of tip:
+Add a new helper, kvm_put_kvm_no_destroy(), to handle putting a borrowed
+reference[*] to the VM when installing a new file descriptor fails.  KVM
+expects the refcount to remain valid in this case, as the in-progress
+ioctl() has an explicit reference to the VM.  The primary motiviation
+for the helper is to document that the 'kvm' pointer is still valid
+after putting the borrowed reference, e.g. to document that doing
+mutex(&kvm->lock) immediately after putting a ref to kvm isn't broken.
 
-Commit-ID:     6fee2a0be0ecae939d4b6cd8297d88b5cbb61654
-Gitweb:        https://git.kernel.org/tip/6fee2a0be0ecae939d4b6cd8297d88b5cbb61654
-Author:        Thomas Hellstrom <thellstrom@vmware.com>
-AuthorDate:    Mon, 21 Oct 2019 19:24:03 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 22 Oct 2019 00:51:44 +02:00
+[*] When exposing a new object to userspace via a file descriptor, e.g.
+    a new vcpu, KVM grabs a reference to itself (the VM) prior to making
+    the object visible to userspace to avoid prematurely freeing the VM
+    in the scenario where userspace immediately closes file descriptor.
 
-x86/cpu/vmware: Fix platform detection VMWARE_PORT macro
-
-The platform detection VMWARE_PORT macro uses the VMWARE_HYPERVISOR_PORT
-definition, but expects it to be an integer. However, when it was moved
-to the new vmware.h include file, it was changed to be a string to better
-fit into the VMWARE_HYPERCALL set of macros. This obviously breaks the
-platform detection VMWARE_PORT functionality.
-
-Change the VMWARE_HYPERVISOR_PORT and VMWARE_HYPERVISOR_PORT_HB
-definitions to be integers, and use __stringify() for their stringified
-form when needed.
-
-Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
-Cc: Borislav Petkov <bp@suse.de>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Fixes: b4dd4f6e3648 ("Add a header file for hypercall definitions")
-Link: https://lkml.kernel.org/r/20191021172403.3085-3-thomas_os@shipmail.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/include/asm/vmware.h | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ arch/powerpc/kvm/book3s_64_mmu_hv.c |  2 +-
+ arch/powerpc/kvm/book3s_64_vio.c    |  2 +-
+ include/linux/kvm_host.h            |  1 +
+ virt/kvm/kvm_main.c                 | 16 ++++++++++++++--
+ 4 files changed, 17 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/include/asm/vmware.h b/arch/x86/include/asm/vmware.h
-index 3caac90..ac9fc51 100644
---- a/arch/x86/include/asm/vmware.h
-+++ b/arch/x86/include/asm/vmware.h
-@@ -4,6 +4,7 @@
+diff --git a/arch/powerpc/kvm/book3s_64_mmu_hv.c b/arch/powerpc/kvm/book3s_64_mmu_hv.c
+index 9a75f0e1933b..68678e31c84c 100644
+--- a/arch/powerpc/kvm/book3s_64_mmu_hv.c
++++ b/arch/powerpc/kvm/book3s_64_mmu_hv.c
+@@ -2000,7 +2000,7 @@ int kvm_vm_ioctl_get_htab_fd(struct kvm *kvm, struct kvm_get_htab_fd *ghf)
+ 	ret = anon_inode_getfd("kvm-htab", &kvm_htab_fops, ctx, rwflag | O_CLOEXEC);
+ 	if (ret < 0) {
+ 		kfree(ctx);
+-		kvm_put_kvm(kvm);
++		kvm_put_kvm_no_destroy(kvm);
+ 		return ret;
+ 	}
  
- #include <asm/cpufeatures.h>
- #include <asm/alternative.h>
-+#include <linux/stringify.h>
+diff --git a/arch/powerpc/kvm/book3s_64_vio.c b/arch/powerpc/kvm/book3s_64_vio.c
+index 5834db0a54c6..883a66e76638 100644
+--- a/arch/powerpc/kvm/book3s_64_vio.c
++++ b/arch/powerpc/kvm/book3s_64_vio.c
+@@ -317,7 +317,7 @@ long kvm_vm_ioctl_create_spapr_tce(struct kvm *kvm,
+ 	if (ret >= 0)
+ 		list_add_rcu(&stt->list, &kvm->arch.spapr_tce_tables);
+ 	else
+-		kvm_put_kvm(kvm);
++		kvm_put_kvm_no_destroy(kvm);
  
- /*
-  * The hypercall definitions differ in the low word of the %edx argument
-@@ -20,8 +21,8 @@
-  */
+ 	mutex_unlock(&kvm->lock);
  
- /* Old port-based version */
--#define VMWARE_HYPERVISOR_PORT    "0x5658"
--#define VMWARE_HYPERVISOR_PORT_HB "0x5659"
-+#define VMWARE_HYPERVISOR_PORT    0x5658
-+#define VMWARE_HYPERVISOR_PORT_HB 0x5659
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index 719fc3e15ea4..90a2102605ef 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -622,6 +622,7 @@ void kvm_exit(void);
  
- /* Current vmcall / vmmcall version */
- #define VMWARE_HYPERVISOR_HB   BIT(0)
-@@ -29,7 +30,7 @@
+ void kvm_get_kvm(struct kvm *kvm);
+ void kvm_put_kvm(struct kvm *kvm);
++void kvm_put_kvm_no_destroy(struct kvm *kvm);
  
- /* The low bandwidth call. The low word of edx is presumed clear. */
- #define VMWARE_HYPERCALL						\
--	ALTERNATIVE_2("movw $" VMWARE_HYPERVISOR_PORT ", %%dx; "	\
-+	ALTERNATIVE_2("movw $" __stringify(VMWARE_HYPERVISOR_PORT) ", %%dx; " \
- 		      "inl (%%dx), %%eax",				\
- 		      "vmcall", X86_FEATURE_VMCALL,			\
- 		      "vmmcall", X86_FEATURE_VMW_VMMCALL)
-@@ -39,7 +40,8 @@
-  * HB and OUT bits set.
-  */
- #define VMWARE_HYPERCALL_HB_OUT						\
--	ALTERNATIVE_2("movw $" VMWARE_HYPERVISOR_PORT_HB ", %%dx; rep outsb", \
-+	ALTERNATIVE_2("movw $" __stringify(VMWARE_HYPERVISOR_PORT_HB) ", %%dx; " \
-+		      "rep outsb",					\
- 		      "vmcall", X86_FEATURE_VMCALL,			\
- 		      "vmmcall", X86_FEATURE_VMW_VMMCALL)
+ static inline struct kvm_memslots *__kvm_memslots(struct kvm *kvm, int as_id)
+ {
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index 67ef3f2e19e8..b8534c6b8cf6 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -772,6 +772,18 @@ void kvm_put_kvm(struct kvm *kvm)
+ }
+ EXPORT_SYMBOL_GPL(kvm_put_kvm);
  
-@@ -48,7 +50,8 @@
-  * HB bit set.
-  */
- #define VMWARE_HYPERCALL_HB_IN						\
--	ALTERNATIVE_2("movw $" VMWARE_HYPERVISOR_PORT_HB ", %%dx; rep insb", \
-+	ALTERNATIVE_2("movw $" __stringify(VMWARE_HYPERVISOR_PORT_HB) ", %%dx; " \
-+		      "rep insb",					\
- 		      "vmcall", X86_FEATURE_VMCALL,			\
- 		      "vmmcall", X86_FEATURE_VMW_VMMCALL)
- #endif
++/*
++ * Used to put a reference that was taken on behalf of an object associated
++ * with a user-visible file descriptor, e.g. a vcpu or device, if installation
++ * of the new file descriptor fails and the reference cannot be transferred to
++ * its final owner.  In such cases, the caller is still actively using @kvm and
++ * will fail miserably if the refcount unexpectedly hits zero.
++ */
++void kvm_put_kvm_no_destroy(struct kvm *kvm)
++{
++	WARN_ON(refcount_dec_and_test(&kvm->users_count));
++}
++EXPORT_SYMBOL_GPL(kvm_put_kvm_no_destroy);
+ 
+ static int kvm_vm_release(struct inode *inode, struct file *filp)
+ {
+@@ -2679,7 +2691,7 @@ static int kvm_vm_ioctl_create_vcpu(struct kvm *kvm, u32 id)
+ 	kvm_get_kvm(kvm);
+ 	r = create_vcpu_fd(vcpu);
+ 	if (r < 0) {
+-		kvm_put_kvm(kvm);
++		kvm_put_kvm_no_destroy(kvm);
+ 		goto unlock_vcpu_destroy;
+ 	}
+ 
+@@ -3117,7 +3129,7 @@ static int kvm_ioctl_create_device(struct kvm *kvm,
+ 	kvm_get_kvm(kvm);
+ 	ret = anon_inode_getfd(ops->name, &kvm_device_fops, dev, O_RDWR | O_CLOEXEC);
+ 	if (ret < 0) {
+-		kvm_put_kvm(kvm);
++		kvm_put_kvm_no_destroy(kvm);
+ 		mutex_lock(&kvm->lock);
+ 		list_del(&dev->vm_node);
+ 		mutex_unlock(&kvm->lock);
+-- 
+2.22.0
+
