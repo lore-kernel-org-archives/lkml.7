@@ -2,79 +2,104 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDCC9CA9EB0
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 19:32:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20EF8CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 19:34:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8121205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 19:32:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8122205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 19:34:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vESnDQab"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730168AbfJUTcw (ORCPT
+        id S1730127AbfJUTeA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 15:32:52 -0400
-Received: from smtprelay0176.hostedemail.com ([216.40.44.176]:44375 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728056AbfJUTcv (ORCPT
+        Mon, 21 Oct 2019 15:34:00 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:39914 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726672AbfJUTeA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 15:32:51 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 1505D18224089;
-        Mon, 21 Oct 2019 19:32:50 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: deer20_35a6d87dcf03f
-X-Filterd-Recvd-Size: 1851
-Received: from XPS-9350 (cpe-23-242-70-174.socal.res.rr.com [23.242.70.174])
-        (Authenticated sender: joe@perches.com)
-        by omf10.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 21 Oct 2019 19:32:48 +0000 (UTC)
-Message-ID: <16d819ded0c1edb46af8914a26cad479aac176e9.camel@perches.com>
-Subject: Re: linux-next: Fixes tag needs some work in the rdma-fixes tree
-From:   Joe Perches <joe@perches.com>
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Matteo Croce <mcroce@redhat.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Potnuri Bharat Teja <bharat@chelsio.com>
-Date:   Mon, 21 Oct 2019 12:32:47 -0700
-In-Reply-To: <20191021173921.GD6285@mellanox.com>
-References: <20191021184128.601ff09d@canb.auug.org.au>
-         <c4377d50c8a30ae292cd7886909238ce4fb56ee5.camel@redhat.com>
-         <20191021151507.GD25164@mellanox.com>
-         <CAGnkfhzCuCUBG++QRTZbsUyFr8orq059Be7AvyL+_V9Smz7J3g@mail.gmail.com>
-         <20191021170111.GB6285@mellanox.com>
-         <CAGnkfhwsczOBLMZSJ0pWm=L3bMqgd4mWNitpZB3-NwjFN+fYDA@mail.gmail.com>
-         <20191021171153.GC6285@mellanox.com>
-         <d3a389360982c9d2730e6b29eb96523a562483ac.camel@perches.com>
-         <20191021173921.GD6285@mellanox.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.32.1-2 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Mon, 21 Oct 2019 15:34:00 -0400
+Received: by mail-wr1-f67.google.com with SMTP id c6so3100832wrm.6
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 12:33:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=5WndJUXXgXPHwhCLRr7+0pwnLZl+9kPbswD/C+BOyJg=;
+        b=vESnDQabBipv8xjPoc+wa2ekTjGtmzxFa4h6bCF3qeMKKFfZeqXR4+nvEHRA0fFcSR
+         IJQUqHM4+kKmbaxbkL91blNgMn7VdxdRCJPaslroCFq6gdNvHasjYj9xlJFRlmmQcMSD
+         +aerwVR89midy5FIYroHDoufpZsTi+pJ95BB2dMJidfzs5ZhJllBhkHii6DT1C5X3hxD
+         bb0JfJwsvxLjTJfxbF2uYUCH73ZyON4IokveiL1tCoGjLTabJDxX3/DxYpKfB7DVyjBM
+         IYDhULdiPp2gnyz54wgU6nbdHUPcMqmvC8r8LCTX/die87VBjodMjERvyZ9MKOYWFlTg
+         pJmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=5WndJUXXgXPHwhCLRr7+0pwnLZl+9kPbswD/C+BOyJg=;
+        b=F7cbbPcriyySbF6stpdbby3bP5tX5gdiNBEbpBnXomKa1bLFNUiaJhoPFsewpno2xZ
+         IqPJeyGRZB56iEwpqvgH8zgOFo15V+3Tz/QHa0sM8I/sZ6cIRZ/DDE0OUsSYzgB+quLr
+         iDrOmFvxSDDzQsPnDpHQG9hltTpfjqoP5wPgpR5GWIq9iZzuwZfoPtNPIZpJTi/i/9Tu
+         fiwz8wfd3eJJXBLYtE0nleI/af3/n5fz1CsPIkYyaW8Ho0Sy8PGKCW9fu9Eioanwbks6
+         J/KCf74lDyBKFPXt/A0JdMIjrfmD7aboaqZhXO+yN65JC39HaNykqZBWfvMy51cxnLsv
+         WpNg==
+X-Gm-Message-State: APjAAAUr5aWQl3F8oe61lRZTbyfcmMFoR9G1nyz8g0vsH/B6IF/5rFOQ
+        pE7gs7H/Uw1BQNUajYR2QQM=
+X-Google-Smtp-Source: APXvYqzS5vgQy/FpbUE4Fmk+Rt3w4YTqGQCYR/5WDy7njSYsMCPb0vmcAPYauVMXqpLPNZsg0LNACw==
+X-Received: by 2002:a05:6000:1051:: with SMTP id c17mr20608149wrx.124.1571686438805;
+        Mon, 21 Oct 2019 12:33:58 -0700 (PDT)
+Received: from mail.broadcom.com ([192.19.231.250])
+        by smtp.gmail.com with ESMTPSA id 79sm24394580wmb.7.2019.10.21.12.33.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Oct 2019 12:33:58 -0700 (PDT)
+From:   Kamal Dasu <kdasu.kdev@gmail.com>
+To:     linux-mtd@lists.infradead.org
+Cc:     bcm-kernel-feedback-list@broadcom.com,
+        linux-kernel@vger.kernel.org, Kamal Dasu <kdasu.kdev@gmail.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+Subject: [PATCH] mtd: set mtd partition panic write flag
+Date:   Mon, 21 Oct 2019 15:32:52 -0400
+Message-Id: <20191021193343.41320-1-kdasu.kdev@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-10-21 at 17:39 +0000, Jason Gunthorpe wrote:
-> Maybe output format and then parse it to check the min
-> length and verify the subject?
+Check mtd panic write flag and set the mtd partition panic
+write flag so that low level drivers can use it to take
+required action to ensure oops data gets written to assigned
+mtd partition.
 
-I'm not too worried about that for now.
-12 should still be good for quite awhile...
+Fixes: 9f897bfdd8 ("mtd: Add flag to indicate panic_write")
+Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
+---
+ drivers/mtd/mtdpart.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-$ git log --abbrev=1 --format='%h' --no-merges  | \
-  awk '{print length($1);}' | sort -n | uniq -c
-     90 5
- 463746 6
- 320183 7
-  26244 8
-   1683 9
-    118 10
-      6 11
-
+diff --git a/drivers/mtd/mtdpart.c b/drivers/mtd/mtdpart.c
+index 7328c066c5ba..b4f6479abeda 100644
+--- a/drivers/mtd/mtdpart.c
++++ b/drivers/mtd/mtdpart.c
+@@ -159,6 +159,10 @@ static int part_panic_write(struct mtd_info *mtd, loff_t to, size_t len,
+ 		size_t *retlen, const u_char *buf)
+ {
+ 	struct mtd_part *part = mtd_to_part(mtd);
++
++	if (mtd->oops_panic_write)
++		part->parent->oops_panic_write = true;
++
+ 	return part->parent->_panic_write(part->parent, to + part->offset, len,
+ 					  retlen, buf);
+ }
+-- 
+2.17.1
 
