@@ -7,59 +7,51 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 916DFCA9EB0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:04:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D8A5CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:04:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C7A220656
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:04:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A40520656
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:04:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730818AbfJVAEx (ORCPT
+        id S1730833AbfJVAE4 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 20:04:53 -0400
+        Mon, 21 Oct 2019 20:04:56 -0400
 Received: from Galois.linutronix.de ([193.142.43.55]:38895 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730730AbfJVAEv (ORCPT
+        with ESMTP id S1730774AbfJVAEx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 20:04:51 -0400
+        Mon, 21 Oct 2019 20:04:53 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iMgwy-0003vi-9L; Tue, 22 Oct 2019 01:18:56 +0200
+        id 1iMgx7-000436-UD; Tue, 22 Oct 2019 01:19:06 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 73CCC1C047B;
-        Tue, 22 Oct 2019 01:18:55 +0200 (CEST)
-Date:   Mon, 21 Oct 2019 23:18:54 -0000
-From:   "tip-bot2 for Leo Yan" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 3730C1C04D3;
+        Tue, 22 Oct 2019 01:19:04 +0200 (CEST)
+Date:   Mon, 21 Oct 2019 23:19:03 -0000
+From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf tests bp_account: Add dedicated checking helper
- is_supported()
-Cc:     Leo Yan <leo.yan@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Brajeswar Ghosh <brajeswar.linux@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        Will Deacon <will@kernel.org>,
+Subject: [tip: perf/core] perf trace: Hook the 'vec' tracepoint argument with
+ the x86 IRQ vectors scnprintf/strtoul
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>,
+        Luis =?utf-8?q?Cl=C3=A1udio_Gon=C3=A7alves?= 
+        <lclaudio@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <20191018085531.6348-2-leo.yan@linaro.org>
-References: <20191018085531.6348-2-leo.yan@linaro.org>
+In-Reply-To: <tip-wer4cwbbqub3o7sa8h1j3uzb@git.kernel.org>
+References: <tip-wer4cwbbqub3o7sa8h1j3uzb@git.kernel.org>
 MIME-Version: 1.0
-Message-ID: <157169993489.29376.15623628756764296019.tip-bot2@tip-bot2>
+Message-ID: <157169994385.29376.7726590102304461873.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8BIT
 X-Linutronix-Spam-Score: -1.0
 X-Linutronix-Spam-Level: -
 X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
@@ -70,93 +62,91 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     e533eadf6596451880f518949cbb964dbd6189ae
-Gitweb:        https://git.kernel.org/tip/e533eadf6596451880f518949cbb964dbd6189ae
-Author:        Leo Yan <leo.yan@linaro.org>
-AuthorDate:    Fri, 18 Oct 2019 16:55:30 +08:00
+Commit-ID:     df604bfda6f550f088e1cffcd098bfec0eee9cdf
+Gitweb:        https://git.kernel.org/tip/df604bfda6f550f088e1cffcd098bfec0eee9cdf
+Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
+AuthorDate:    Tue, 15 Oct 2019 16:50:13 -03:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Sat, 19 Oct 2019 15:35:01 -03:00
+CommitterDate: Tue, 15 Oct 2019 16:50:13 -03:00
 
-perf tests bp_account: Add dedicated checking helper is_supported()
+perf trace: Hook the 'vec' tracepoint argument with the x86 IRQ vectors scnprintf/strtoul
 
-The arm architecture supports breakpoint accounting but it doesn't
-support breakpoint overflow signal handling.  The current code uses the
-same checking helper, thus it disables both testings (bp_account and
-bp_signal) for arm platform.
+Ended up only being useful when filtering multiple irq_vectors
+tracepoints, as we end up having a tracepoint for each of the entries,
+i.e.:
 
-For handling two testings separately, this patch adds a dedicated
-checking helper is_supported() for breakpoint accounting testing, thus
-it allows supporting breakpoint accounting testing on arm platform; the
-old helper test__bp_signal_is_supported() is only used to checking for
-breakpoint overflow signal testing.
+This will always come with the "RESCHEDULE_VECTOR" in the 'vector' arg:
 
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
+  # perf trace --max-events 8 -e irq_vectors:reschedule*
+     0.000 cc1/29067 irq_vectors:reschedule_entry(vector: RESCHEDULE)
+     0.004 cc1/29067 irq_vectors:reschedule_exit(vector: RESCHEDULE)
+     0.553 cc1/29067 irq_vectors:reschedule_entry(vector: RESCHEDULE)
+     0.556 cc1/29067 irq_vectors:reschedule_exit(vector: RESCHEDULE)
+     1.182 cc1/29067 irq_vectors:reschedule_entry(vector: RESCHEDULE)
+     1.185 cc1/29067 irq_vectors:reschedule_exit(vector: RESCHEDULE)
+     1.203 :29052/29052 irq_vectors:reschedule_entry(vector: RESCHEDULE)
+     1.206 :29052/29052 irq_vectors:reschedule_exit(vector: RESCHEDULE)
+  #
+
+While filtering that value will produce nothing:
+
+  # perf trace --max-events 8 -e irq_vectors:reschedule* --filter="vector != RESCHEDULE"
+  ^C#
+
+Maybe it'll be useful for those other tracepoints:
+
+  # perf list irq_vectors:vector_*
+
+  List of pre-defined events (to be used in -e):
+
+    irq_vectors:vector_activate                        [Tracepoint event]
+    irq_vectors:vector_alloc                           [Tracepoint event]
+    irq_vectors:vector_alloc_managed                   [Tracepoint event]
+    irq_vectors:vector_clear                           [Tracepoint event]
+    irq_vectors:vector_config                          [Tracepoint event]
+    irq_vectors:vector_deactivate                      [Tracepoint event]
+    irq_vectors:vector_free_moved                      [Tracepoint event]
+    irq_vectors:vector_reserve                         [Tracepoint event]
+    irq_vectors:vector_reserve_managed                 [Tracepoint event]
+    irq_vectors:vector_setup                           [Tracepoint event]
+    irq_vectors:vector_teardown                        [Tracepoint event]
+    irq_vectors:vector_update                          [Tracepoint event]
+  #
+
+But since we have it done, keep it.
+
+This at least served to teach me that all those irq vectors have a entry
+and an exit tracepoint that I can then use just like with
+raw_syscalls:sys_{enter,exit}, i.e. pair them, use just a
+trace__irq_vectors_entry() + trace__irq_vectors_exit() and use the
+'vector' arg as I use the 'syscall id' one for syscalls.
+
+Then the default for 'perf trace' will include irq_vectors in addition
+to syscalls.
+
 Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Brajeswar Ghosh <brajeswar.linux@gmail.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Souptick Joarder <jrdr.linux@gmail.com>
-Cc: Will Deacon <will@kernel.org>
-Link: http://lore.kernel.org/lkml/20191018085531.6348-2-leo.yan@linaro.org
+Link: https://lkml.kernel.org/n/tip-wer4cwbbqub3o7sa8h1j3uzb@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/bp_account.c   | 16 ++++++++++++++++
- tools/perf/tests/builtin-test.c |  2 +-
- tools/perf/tests/tests.h        |  1 +
- 3 files changed, 18 insertions(+), 1 deletion(-)
+ tools/perf/builtin-trace.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/tests/bp_account.c b/tools/perf/tests/bp_account.c
-index 52ff7a4..d0b9353 100644
---- a/tools/perf/tests/bp_account.c
-+++ b/tools/perf/tests/bp_account.c
-@@ -188,3 +188,19 @@ int test__bp_accounting(struct test *test __maybe_unused, int subtest __maybe_un
- 
- 	return bp_accounting(wp_cnt, share);
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 58bbe85..e71605c 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -1528,7 +1528,8 @@ static int syscall__alloc_arg_fmts(struct syscall *sc, int nr_args)
  }
-+
-+bool test__bp_account_is_supported(void)
-+{
-+	/*
-+	 * PowerPC and S390 do not support creation of instruction
-+	 * breakpoints using the perf_event interface.
-+	 *
-+	 * Just disable the test for these architectures until these
-+	 * issues are resolved.
-+	 */
-+#if defined(__powerpc__) || defined(__s390x__)
-+	return false;
-+#else
-+	return true;
-+#endif
-+}
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index 55774ba..8b286e9 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -121,7 +121,7 @@ static struct test generic_tests[] = {
- 	{
- 		.desc = "Breakpoint accounting",
- 		.func = test__bp_accounting,
--		.is_supported = test__bp_signal_is_supported,
-+		.is_supported = test__bp_account_is_supported,
- 	},
- 	{
- 		.desc = "Watchpoint",
-diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-index 72912eb..9837b6e 100644
---- a/tools/perf/tests/tests.h
-+++ b/tools/perf/tests/tests.h
-@@ -111,6 +111,7 @@ int test__map_groups__merge_in(struct test *t, int subtest);
- int test__time_utils(struct test *t, int subtest);
  
- bool test__bp_signal_is_supported(void);
-+bool test__bp_account_is_supported(void);
- bool test__wp_is_supported(void);
+ static struct syscall_arg_fmt syscall_arg_fmts__by_name[] = {
+-	{ .name = "msr", .scnprintf = SCA_X86_MSR, .strtoul = STUL_X86_MSR, }
++	{ .name = "msr",	.scnprintf = SCA_X86_MSR,	  .strtoul = STUL_X86_MSR,	   },
++	{ .name = "vector",	.scnprintf = SCA_X86_IRQ_VECTORS, .strtoul = STUL_X86_IRQ_VECTORS, },
+ };
  
- #if defined(__arm__) || defined(__aarch64__)
+ static int syscall_arg_fmt__cmp(const void *name, const void *fmtp)
