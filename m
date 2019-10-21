@@ -4,79 +4,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6092CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 23:55:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDA68CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 23:56:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACFF92070C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 23:55:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AD502070C
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 23:56:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730463AbfJUXzj convert rfc822-to-8bit (ORCPT
+        id S1730495AbfJUX4s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 19:55:39 -0400
-Received: from out1.zte.com.cn ([202.103.147.172]:52268 "EHLO mxct.zte.com.cn"
+        Mon, 21 Oct 2019 19:56:48 -0400
+Received: from mga07.intel.com ([134.134.136.100]:63371 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730180AbfJUXzj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 19:55:39 -0400
-Received: from mse-fl1.zte.com.cn (unknown [10.30.14.238])
-        by Forcepoint Email with ESMTPS id C2F8075B92D3F24D26F4;
-        Tue, 22 Oct 2019 07:55:36 +0800 (CST)
-Received: from notes_smtp.zte.com.cn (notessmtp.zte.com.cn [10.30.1.239])
-        by mse-fl1.zte.com.cn with ESMTP id x9LNtId7050475;
-        Tue, 22 Oct 2019 07:55:18 +0800 (GMT-8)
-        (envelope-from wang.yi59@zte.com.cn)
-Received: from fox-host8.localdomain ([10.74.120.8])
-          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
-          with ESMTP id 2019102207552806-63452 ;
-          Tue, 22 Oct 2019 07:55:28 +0800 
-From:   Yi Wang <wang.yi59@zte.com.cn>
-To:     vinicius.gomes@intel.com, jhs@mojatatu.com
-Cc:     xiyou.wangcong@gmail.com, jiri@resnulli.us, davem@davemloft.net,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn, up2wing@gmail.com,
-        wang.liang82@zte.com.cn
-Subject: [RESEND][PATCH net-next] net: sched: taprio: fix -Wmissing-prototypes warnings
-Date:   Tue, 22 Oct 2019 07:57:42 +0800
-Message-Id: <1571702262-25929-1-git-send-email-wang.yi59@zte.com.cn>
-X-Mailer: git-send-email 1.8.3.1
+        id S1728819AbfJUX4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 19:56:48 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 16:56:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,325,1566889200"; 
+   d="scan'208";a="222630834"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
+  by fmsmga004.fm.intel.com with ESMTP; 21 Oct 2019 16:56:47 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, x86@kernel.org
+Cc:     "H. Peter Anvin" <hpa@zytor.com>, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>, kvm@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: [PATCH v2 02/16] x86/mce: WARN once if IA32_FEATURE_CONTROL MSR is left unlocked
+Date:   Mon, 21 Oct 2019 16:56:42 -0700
+Message-Id: <20191021235642.418-1-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20191021234632.32363-1-sean.j.christopherson@intel.com>
+References: <20191021234632.32363-1-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
-X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
- 21, 2013) at 2019-10-22 07:55:28,
-        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
- 2019-10-22 07:55:20
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-X-MAIL: mse-fl1.zte.com.cn x9LNtId7050475
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We get one warnings when build kernel W=1:
-net/sched/sch_taprio.c:1155:6: warning: no previous prototype for ‘taprio_offload_config_changed’ [-Wmissing-prototypes]
+WARN if the IA32_FEATURE_CONTROL MSR is somehow left unlocked now that
+CPU initialization unconditionally locks the MSR.
 
-Make the function static to fix this.
-
-Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
-Acked-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc: Wanpeng Li <wanpengli@tencent.com>
+Cc: Jim Mattson <jmattson@google.com>
+Cc: kvm@vger.kernel.org
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- net/sched/sch_taprio.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kernel/cpu/mce/intel.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/net/sched/sch_taprio.c b/net/sched/sch_taprio.c
-index 6719a65..2121187 100644
---- a/net/sched/sch_taprio.c
-+++ b/net/sched/sch_taprio.c
-@@ -1152,7 +1152,7 @@ void taprio_offload_free(struct tc_taprio_qopt_offload *offload)
-  * offload state (PENDING, ACTIVE, INACTIVE) so it can be visible in dump().
-  * This is left as TODO.
-  */
--void taprio_offload_config_changed(struct taprio_sched *q)
-+static void taprio_offload_config_changed(struct taprio_sched *q)
- {
- 	struct sched_gate_list *oper, *admin;
+diff --git a/arch/x86/kernel/cpu/mce/intel.c b/arch/x86/kernel/cpu/mce/intel.c
+index 88cd9598fa57..1008f14b803b 100644
+--- a/arch/x86/kernel/cpu/mce/intel.c
++++ b/arch/x86/kernel/cpu/mce/intel.c
+@@ -117,11 +117,10 @@ static bool lmce_supported(void)
+ 	 * generate a #GP fault.
+ 	 */
+ 	rdmsrl(MSR_IA32_FEATURE_CONTROL, tmp);
+-	if ((tmp & (FEATURE_CONTROL_LOCKED | FEATURE_CONTROL_LMCE)) ==
+-		   (FEATURE_CONTROL_LOCKED | FEATURE_CONTROL_LMCE))
+-		return true;
++	if (WARN_ON_ONCE(!(tmp & FEATURE_CONTROL_LOCKED)))
++		return false;
  
+-	return false;
++	return tmp & FEATURE_CONTROL_LMCE;
+ }
+ 
+ bool mce_intel_cmci_poll(void)
 -- 
-1.8.3.1
+2.22.0
 
