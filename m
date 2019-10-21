@@ -2,32 +2,33 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B753C47E49
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:54:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE291CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:54:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D684F2070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:54:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B9EB2070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:54:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727951AbfJUJyl (ORCPT
+        id S1727984AbfJUJyq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 05:54:41 -0400
-Received: from mga01.intel.com ([192.55.52.88]:27943 "EHLO mga01.intel.com"
+        Mon, 21 Oct 2019 05:54:46 -0400
+Received: from mga14.intel.com ([192.55.52.115]:59071 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727323AbfJUJyl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 05:54:41 -0400
+        id S1727323AbfJUJyp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 05:54:45 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 02:54:41 -0700
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 02:54:44 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.67,323,1566889200"; 
-   d="scan'208";a="209409910"
+   d="scan'208";a="209297070"
 Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
-  by fmsmga001.fm.intel.com with ESMTP; 21 Oct 2019 02:54:38 -0700
+  by orsmga002.jf.intel.com with ESMTP; 21 Oct 2019 02:54:42 -0700
 From:   "Ramuthevar,Vadivel MuruganX" 
         <vadivel.muruganx.ramuthevar@linux.intel.com>
 To:     kishon@ti.com
@@ -36,61 +37,98 @@ Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
         peter.harliman.liem@intel.com,
         vadivel.muruganx.ramuthevar@linux.intel.com
-Subject: [PATCH v6 0/2] phy: intel,lgm-emmc-phy: Add support for eMMC PHY on Intel LGM SoC
-Date:   Mon, 21 Oct 2019 17:54:34 +0800
-Message-Id: <20191021095436.50303-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: [PATCH v6 1/2] dt-bindings: phy: intel-emmc-phy: Add YAML schema for LGM eMMC PHY
+Date:   Mon, 21 Oct 2019 17:54:35 +0800
+Message-Id: <20191021095436.50303-2-vadivel.muruganx.ramuthevar@linux.intel.com>
 X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20191021095436.50303-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+References: <20191021095436.50303-1-vadivel.muruganx.ramuthevar@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
- Rebased to kernel verson 5.4 
+From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
 
-dt-bindings: phy: intel-emmc-phy: Add YAML schema for LGM eMMC PHY
-changes in v6:
-   - cobined comaptible strings
-   - added as contiguous and can be a single entry for reg properties
-changes in v5:
-   - earlier Review-by tag given by Rob
-   - rework done with syscon parent node.
+Add a YAML schema to use the host controller driver with the
+eMMC PHY on Intel's Lightning Mountain SoC.
 
- changes in v4:
-   - As per Rob's review: validate 5.2 and 5.3
-   - drop unrelated items.
-
- changes in v3:
-   - resolve 'make dt_binding_check' warnings
-
- changes in v2:
-   As per Rob Herring review comments, the following updates
-  - change GPL-2.0 -> (GPL-2.0-only OR BSD-2-Clause)
-  - filename is the compatible string plus .yaml
-  - LGM: Lightning Mountain
-  - update maintainer
-  - add intel,syscon under property list
-  - keep one example instead of two
-
-phy: intel-lgm-emmc: Add support for eMMC PHY
-  No changes from  patchV5 
- 
-Ramuthevar Vadivel Murugan (2):
-  dt-bindings: phy: intel-emmc-phy: Add YAML schema for LGM eMMC PHY
-	
-  phy: intel-lgm-emmc: Add support for eMMC PHY
-
- .../bindings/phy/intel,lgm-emmc-phy.yaml           |  63 +++++
- drivers/phy/Kconfig                                |   1 +
- drivers/phy/Makefile                               |   1 +
- drivers/phy/intel/Kconfig                          |   9 +
- drivers/phy/intel/Makefile                         |   2 +
- drivers/phy/intel/phy-intel-emmc.c                 | 283 +++++++++++++++++++++
- 6 files changed, 359 insertions(+)
+Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+---
+---
+ .../bindings/phy/intel,lgm-emmc-phy.yaml           | 63 ++++++++++++++++++++++
+ 1 file changed, 63 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
- create mode 100644 drivers/phy/intel/Kconfig
- create mode 100644 drivers/phy/intel/Makefile
- create mode 100644 drivers/phy/intel/phy-intel-emmc.c
 
+diff --git a/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml b/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
+new file mode 100644
+index 000000000000..bc1285be31f9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
+@@ -0,0 +1,63 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/phy/intel,lgm-emmc-phy.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Intel Lightning Mountain(LGM) eMMC PHY Device Tree Bindings
++
++maintainers:
++  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
++
++description: Bindings for eMMC PHY on Intel's Lightning Mountain SoC, syscon
++  node is used to reference the base address of eMMC phy registers.
++
++select:
++  properties:
++    compatible:
++      items:
++       - const: intel,lgm-syscon
++       - const: intel,lgm-emmc-phy
++
++    reg:
++      maxItems: 1
++
++  required:
++    - compatible
++    - reg
++
++properties:
++  "#phy-cells":
++    const: 0
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    maxItems: 1
++
++required:
++  - "#phy-cells"
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++
++examples:
++  - |
++    sysconf: chiptop@e0200000 {
++      compatible = "intel,lgm-syscon";
++      reg = <0xe0200000 0x100>;
++
++      emmc-phy: emmc-phy {
++        compatible = "intel,lgm-emmc-phy";
++        reg = <0x00a8 0x10>;
++        clocks = <&emmc>;
++        clock-names = "emmcclk";
++        #phy-cells = <0>;
++      };
++    };
++...
 -- 
 2.11.0
 
