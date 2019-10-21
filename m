@@ -2,114 +2,158 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E646BCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 18:05:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D31ECA9EB0
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 18:05:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B636D2173B
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 18:05:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571681130;
-	bh=0CPJIU1rMIOyGYW8ZKtjAoM8g4H4SToVEeMTsL9SeOQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=01OUPlgPYXlF7yy13UUz2QYhS1MDvdpCVKzXYzPw0OCnpoPzVpdr6tAIVG2SVns4S
-	 jQD9QaGm5MjMhclrKMNYn33MFrJYJkwkq4C/B71xJR9IMpY/ZEn/LNYWbWYEcqHYKK
-	 hzfwa+3gaerlj5wG7QmoStOhTK9ZNtrmZvBdyMQw=
+	by mail.kernel.org (Postfix) with ESMTP id 4AC0020B7C
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 18:05:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JYurzqC/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730068AbfJUSF3 (ORCPT
+        id S1730078AbfJUSFk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 14:05:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38332 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730054AbfJUSF1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 14:05:27 -0400
-Received: from localhost.localdomain (unknown [194.230.155.217])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86BBE20B7C;
-        Mon, 21 Oct 2019 18:05:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571681127;
-        bh=0CPJIU1rMIOyGYW8ZKtjAoM8g4H4SToVEeMTsL9SeOQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OhO3+gZ/Flb+yd21IPeK1WThLsplFx5zNC9VKGSJMJitEOeFANYtyZfHXWH4Y1NWh
-         8JdltN9eMwkFvz0IErvQKIfpBcrl4wiQduz2abHB6uf6EI7sj42CuNP9/Y9PWtZRRx
-         sM1fuBY1F+5JvRyb9ikYrxmAhv2eptbuMlFfnolc=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
-        arm@kernel.org, soc@kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL 3/5] ARM: dts: exynos: memory DMC driver bindings for v5.5
-Date:   Mon, 21 Oct 2019 20:04:53 +0200
-Message-Id: <20191021180453.29455-6-krzk@kernel.org>
+        Mon, 21 Oct 2019 14:05:40 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:35673 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729966AbfJUSFj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 14:05:39 -0400
+Received: by mail-pf1-f195.google.com with SMTP id 205so8905322pfw.2;
+        Mon, 21 Oct 2019 11:05:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=tcCpwL0onfR06sWsqvX6mF6jQdr+eQVyW0yto6K7hG4=;
+        b=JYurzqC/VqEbhO/X3sS6Q14PnepMCPoiZ5ZXdzu6bk5bYu5tB0nwyEFf3Zya4K1jp5
+         RqpNk7QJQQvThq3Utlro5P6uUs2R2uWwYRFPDlFmtgqmboFh9oo1noVBDxfk0vAjNLNC
+         HsIAaGynDWSXQWeBRwtBQQaIJGc8TdmbzmFxNO867q5hrGPNUB6Of6PqbX1etW1fzW3L
+         qojXAc9r70oZX68lQsvFBoS03JHH6WQBaMEl1IoPX2BhpyEX2+Uayv0gUbJc0iwWZkr0
+         LZ4jDN6ChgAt29dhn7RVuetRAsNkEzSlYpgJfIrUpiCIee45Y4mvku80XdPSGOQKArr0
+         w4aA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=tcCpwL0onfR06sWsqvX6mF6jQdr+eQVyW0yto6K7hG4=;
+        b=TSjSpA/99peGINwZbh1tIY/Sj0PmUD+sQjRWSIm4ZJmgAT/lCnGOhlvUBDrUFoznus
+         b04EHvmM9aitnOoEIZKP1Bk/Ap2qfD4h0x4XtJfEhfJTVbbPU5FNyIroDgHyqSEm+48j
+         o7y3MqdF5WwDtuXzGxgYXIx5Uuku+3mBkfaYM2jbvl/JPSvKE4uv/eZdHcBrWSNnl9Y8
+         S+KnJs/hcQT7Y18CHTcgQzCHllAIbB9tQ1vlqhTx7/Cf8/m76ZqJeL90fxBxNRJVMPs9
+         WOY5FVb/5PHJC7DydgVrQ+A2XU5qE8qKDuKj194C96xEtl4WuqC2GFaUAv8sZxLdBV77
+         qILw==
+X-Gm-Message-State: APjAAAVAlmPj7qJT1N5PcZF/8bi5hqbptzH5wTonODCUOJt3+gpyBskb
+        rK0KkEsMeFq6UwFSH1Xaizg=
+X-Google-Smtp-Source: APXvYqwShECGrMgtkCZNkbBpxSyUczjEot2rIP9v1Pq9qwXKdamaT6TFjN9i9tI8xzvwNdYjP+hFIA==
+X-Received: by 2002:a62:ae06:: with SMTP id q6mr24352444pff.96.1571681138284;
+        Mon, 21 Oct 2019 11:05:38 -0700 (PDT)
+Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id b4sm13929276pju.16.2019.10.21.11.05.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Oct 2019 11:05:37 -0700 (PDT)
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+To:     a.hajda@samsung.com, narmstrong@baylibre.com,
+        Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
+        jernej.skrabec@siol.net, airlied@linux.ie, daniel@ffwll.ch,
+        bjorn.andersson@linaro.org
+Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [PATCH] drm/bridge: ti-sn65dsi86: Decouple DP output lanes from DSI input lanes
+Date:   Mon, 21 Oct 2019 11:05:32 -0700
+Message-Id: <20191021180532.31210-1-jeffrey.l.hugo@gmail.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191021180453.29455-1-krzk@kernel.org>
-References: <20191021180453.29455-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Based on work by Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Topic branch/pull for DMC driver bindings/DTS. Patchset had many iterations
-on mailing lists and waited for very long.
+The bridge can be configured to use 1, 2, or 4 DP lanes.  This
+configuration is independent of the input DSI lanes.  Right now, the
+driver assumes that there is 1:1 mapping of input lanes to output lanes
+which is not correct and does not work for manu devices such as the
+Lenovo Miix 630 and Lenovo Yoga C630 laptops.
 
-Best regards,
-Krzysztof
+Instead, configure the DP output lanes based on the connection information
+to the panel, if available.
 
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+---
+ drivers/gpu/drm/bridge/ti-sn65dsi86.c | 27 +++++++++++++++++++++++----
+ 1 file changed, 23 insertions(+), 4 deletions(-)
 
-The following changes since commit 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c:
+diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+index 43abf01ebd4c..1afdc3d5d541 100644
+--- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
++++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+@@ -100,6 +100,7 @@ struct ti_sn_bridge {
+ 	struct drm_panel		*panel;
+ 	struct gpio_desc		*enable_gpio;
+ 	struct regulator_bulk_data	supplies[SN_REGULATOR_SUPPLY_NUM];
++	int				dp_lanes;
+ };
+ 
+ static const struct regmap_range ti_sn_bridge_volatile_ranges[] = {
+@@ -444,7 +445,7 @@ static void ti_sn_bridge_set_dsi_dp_rate(struct ti_sn_bridge *pdata)
+ 	regmap_write(pdata->regmap, SN_DSIA_CLK_FREQ_REG, val);
+ 
+ 	/* set DP data rate */
+-	dp_rate_mhz = ((bit_rate_mhz / pdata->dsi->lanes) * DP_CLK_FUDGE_NUM) /
++	dp_rate_mhz = ((bit_rate_mhz / pdata->dp_lanes) * DP_CLK_FUDGE_NUM) /
+ 							DP_CLK_FUDGE_DEN;
+ 	for (i = 0; i < ARRAY_SIZE(ti_sn_bridge_dp_rate_lut) - 1; i++)
+ 		if (ti_sn_bridge_dp_rate_lut[i] > dp_rate_mhz)
+@@ -504,8 +505,8 @@ static void ti_sn_bridge_enable(struct drm_bridge *bridge)
+ 	regmap_update_bits(pdata->regmap, SN_DSI_LANES_REG,
+ 			   CHA_DSI_LANES_MASK, val);
+ 
+-	/* DP lane config */
+-	val = DP_NUM_LANES(pdata->dsi->lanes - 1);
++	/* DP lane config - 4 lanes are encoded with the value "3" */
++	val = DP_NUM_LANES(pdata->dp_lanes == 4 ? 3 : pdata->dp_lanes);
+ 	regmap_update_bits(pdata->regmap, SN_SSC_CONFIG_REG, DP_NUM_LANES_MASK,
+ 			   val);
+ 
+@@ -699,7 +700,10 @@ static int ti_sn_bridge_probe(struct i2c_client *client,
+ 			      const struct i2c_device_id *id)
+ {
+ 	struct ti_sn_bridge *pdata;
+-	int ret;
++	int ret, len;
++	struct device_node *endpoint;
++	struct property *prop;
++
+ 
+ 	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C)) {
+ 		DRM_ERROR("device doesn't support I2C\n");
+@@ -727,6 +731,21 @@ static int ti_sn_bridge_probe(struct i2c_client *client,
+ 		return ret;
+ 	}
+ 
++	endpoint = of_graph_get_endpoint_by_regs(pdata->dev->of_node, 1, -1);
++	prop = of_find_property(endpoint, "data-lanes", &len);
++	if (!prop) {
++		DRM_DEBUG("failed to find dp lane mapping, using default\n");
++		pdata->dp_lanes = 1;
++	} else {
++		pdata->dp_lanes = len / sizeof(u32);
++		if (pdata->dp_lanes < 1 || pdata->dp_lanes > 4 ||
++		    pdata->dp_lanes == 3) {
++			DRM_ERROR("bad number of dp lanes: %d\n",
++				  pdata->dp_lanes);
++			return -EINVAL;
++		}
++	}
++
+ 	dev_set_drvdata(&client->dev, pdata);
+ 
+ 	pdata->enable_gpio = devm_gpiod_get(pdata->dev, "enable",
+-- 
+2.17.1
 
-  Linux 5.4-rc1 (2019-09-30 10:35:40 -0700)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git tags/samsung-dt-dmc-5.5
-
-for you to fetch changes up to 41f277be1d028e64fb8d5e91a7ce74df600bde54:
-
-  dt-bindings: memory-controllers: exynos5422-dmc: Correct example syntax and memory region (2019-10-06 17:54:28 +0200)
-
-----------------------------------------------------------------
-Samsung DTS changes for DMC driver for v5.5
-
-Add bindings and update device tree sources of Exynos5422 platforms with
-new Dynamic Memory Controller nodes and properties.
-
-----------------------------------------------------------------
-Krzysztof Kozlowski (1):
-      dt-bindings: memory-controllers: exynos5422-dmc: Correct example syntax and memory region
-
-Lukasz Luba (9):
-      dt-bindings: ddr: Rename lpddr2 directory
-      dt-bindings: ddr: Add bindings for LPDDR3 memories
-      dt-bindings: memory-controllers: Add Exynos5422 DMC device description
-      ARM: dts: exynos: Add syscon compatible to clock controller on Exynos542x
-      ARM: dts: exynos: Add DMC device to Exynos5422 and Odroid XU3-family boards
-      dt-bindings: ddr: Add bindings for Samsung LPDDR3 memories
-      dt-bindings: memory-controllers: exynos5422-dmc: Add interrupt mode
-      ARM: dts: exynos: Extend mapped region for DMC on Exynos5422
-      ARM: dts: exynos: Add interrupts to DMC controller in Exynos5422
-
- .../bindings/{lpddr2 => ddr}/lpddr2-timings.txt    |   0
- .../devicetree/bindings/{lpddr2 => ddr}/lpddr2.txt |   2 +-
- .../devicetree/bindings/ddr/lpddr3-timings.txt     |  58 ++++++++++
- Documentation/devicetree/bindings/ddr/lpddr3.txt   | 101 ++++++++++++++++++
- .../bindings/memory-controllers/exynos5422-dmc.txt |  84 +++++++++++++++
- arch/arm/boot/dts/exynos5420.dtsi                  |  76 ++++++++++++-
- arch/arm/boot/dts/exynos5422-odroid-core.dtsi      | 117 +++++++++++++++++++++
- arch/arm/boot/dts/exynos5800.dtsi                  |   2 +-
- 8 files changed, 437 insertions(+), 3 deletions(-)
- rename Documentation/devicetree/bindings/{lpddr2 => ddr}/lpddr2-timings.txt (100%)
- rename Documentation/devicetree/bindings/{lpddr2 => ddr}/lpddr2.txt (96%)
- create mode 100644 Documentation/devicetree/bindings/ddr/lpddr3-timings.txt
- create mode 100644 Documentation/devicetree/bindings/ddr/lpddr3.txt
- create mode 100644 Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
