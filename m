@@ -2,137 +2,166 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96AD4CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:14:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C40DACA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:14:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 705E4214AE
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:14:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F80A20873
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:14:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="RXzCveYb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727880AbfJUJN7 (ORCPT
+        id S1727894AbfJUJOJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 05:13:59 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:33964 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727328AbfJUJNW (ORCPT
+        Mon, 21 Oct 2019 05:14:09 -0400
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:33785 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727152AbfJUJOJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 05:13:22 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iMTk2-0005JN-Nj; Mon, 21 Oct 2019 11:12:42 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 538951C0092;
-        Mon, 21 Oct 2019 11:12:42 +0200 (CEST)
-Date:   Mon, 21 Oct 2019 09:12:42 -0000
-From:   "tip-bot2 for Vincent Guittot" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched/fair: Use utilization to select misfit task
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Ben Segall <bsegall@google.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mel Gorman <mgorman@suse.de>, Mike Galbraith <efault@gmx.de>,
-        Morten.Rasmussen@arm.com, Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>, hdanton@sina.com,
-        parth@linux.ibm.com, pauld@redhat.com, quentin.perret@arm.com,
-        riel@surriel.com, srikar@linux.vnet.ibm.com,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <1571405198-27570-9-git-send-email-vincent.guittot@linaro.org>
-References: <1571405198-27570-9-git-send-email-vincent.guittot@linaro.org>
+        Mon, 21 Oct 2019 05:14:09 -0400
+Received-SPF: Pass (esa2.microchip.iphmx.com: domain of
+  Eugen.Hristev@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
+  envelope-from="Eugen.Hristev@microchip.com";
+  x-sender="Eugen.Hristev@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa2.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
+  envelope-from="Eugen.Hristev@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa2.microchip.iphmx.com; spf=Pass smtp.mailfrom=Eugen.Hristev@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: HI5qgrkZ+8vAenkWfmjt1iNkmiXexHwCDjvwS5G2vNiqShJ1c0eNifSqhjuPDjJUS5KdilccYM
+ hNPWiLJhSMC3zY3ilD6V6BH4SNOA5h18EBFhpvCkXQccjVCstXPhm8VFxiRJuSGxUa3jxmWrFk
+ ZjZ6u9nKl+WxXFTkjwQwZp5Bzds31OG7S4kOsWg3M3J+s61qutY6J5treocRk1gecZwIE+Xef7
+ ajMOhYGsKoLRvyD258se7o3hjBGgHucXY2vsQRvPPzda5zJMa8o+422PrxHzRjpeuRCQf/t/Da
+ CrY=
+X-IronPort-AV: E=Sophos;i="5.67,323,1566889200"; 
+   d="scan'208";a="53431029"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 21 Oct 2019 02:14:08 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 21 Oct 2019 02:14:07 -0700
+Received: from NAM01-BN3-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Mon, 21 Oct 2019 02:14:07 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EiWRdOKSCUH82kFr7uLnWI9m39Uv1tQ91S2D88oWsZ2FVrXp3yyzpwUO05WBnQoamFbQM2p8LqQZxsB1kSbXL/JGZ7WG/Q4ZFTlfcnOkJ0YfSHiaC/IXq8FlR0ffEemejFbMFnOi1AfMG8SekcMxJOxVxdDuXalaZOkQ6weVGOlX/qYhn+iH1k4bF6AJiZdkABmjICOunOrZgGL9uDnv4dyJCTue5YCwJZFNZOONkftdbM9sRiAIJuDQNgBut/Hde9kwfEKnGUHLQ63r0vn5RVZBe6b9iV0k3p3NkJjXE0bbtpJAUcBYrb+XocPhnl7d6p6WDFXYQ4rpuI9Mu6PYGg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OwagQRiB6L5mkNmqgjI3QAt79NN9Bh20rRQ7Fgcccww=;
+ b=nO0of1jaPtqovXfmVXvVNHVkUO50K2FF+pHE/F/fuYh2XGZzWX/J0FPSZLcUGriab4FXngIogupXI4pqHfXgEDMwNMEWL0COxCpax3X2VE8DCAxEka4keRvQ5nUFn+VccMkVE6fANhzoyuuNe0VjfzHmWixDrwHkM+vMf3jXHNm1dw5e1eXkeTqlhLaiYE9TCOjz1UXwrEntspMqDM21UondwRtiLHtSApTf/rJm9kKkFWQ3aVn969BRyGnElLlLvgUiBa2Xme7Jl0b/se8/UHSAIptJm7PGxYhM81CJlUp/zOC3DN1UmbxQDzLGUoVLe4CPUcRHLw3LhBy2MsleVQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OwagQRiB6L5mkNmqgjI3QAt79NN9Bh20rRQ7Fgcccww=;
+ b=RXzCveYbQ36M0HFW6AqRpIhG1ZJKQqbBjtZrb36kyTKbUn+jUQRy0xsAGHb3Zs0BLamaqQbPGYEsggAZ4oUZqPK/OgiS8FoQpdu25u+dTKXjBbIOq0r5Fs2GUpBWGuXCaK7ShUCtweT+Fo7NtbvIw9GdgaBj85Go6qYl2TC2VJo=
+Received: from MWHPR11MB1248.namprd11.prod.outlook.com (10.169.235.138) by
+ MWHPR11MB1551.namprd11.prod.outlook.com (10.172.54.147) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2367.20; Mon, 21 Oct 2019 09:14:05 +0000
+Received: from MWHPR11MB1248.namprd11.prod.outlook.com
+ ([fe80::a96a:d3d4:a05b:b88]) by MWHPR11MB1248.namprd11.prod.outlook.com
+ ([fe80::a96a:d3d4:a05b:b88%2]) with mapi id 15.20.2347.029; Mon, 21 Oct 2019
+ 09:14:05 +0000
+From:   <Eugen.Hristev@microchip.com>
+To:     <wim@linux-watchdog.org>, <linux@roeck-us.net>,
+        <robh+dt@kernel.org>, <Nicolas.Ferre@microchip.com>,
+        <alexandre.belloni@bootlin.com>, <linux-watchdog@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <Eugen.Hristev@microchip.com>
+Subject: [PATCH v2 1/2] dt-bindings: watchdog: sama5d4_wdt: add
+ microchip,sam9x60-wdt compatible
+Thread-Topic: [PATCH v2 1/2] dt-bindings: watchdog: sama5d4_wdt: add
+ microchip,sam9x60-wdt compatible
+Thread-Index: AQHVh+/j8oG3HVW4rU62VaHGXhzu2A==
+Date:   Mon, 21 Oct 2019 09:14:05 +0000
+Message-ID: <1571648890-15140-1-git-send-email-eugen.hristev@microchip.com>
+Accept-Language: en-US, ro-RO
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: VI1PR0701CA0042.eurprd07.prod.outlook.com
+ (2603:10a6:800:90::28) To MWHPR11MB1248.namprd11.prod.outlook.com
+ (2603:10b6:300:27::10)
+x-mailer: git-send-email 2.7.4
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [94.177.32.156]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d0f0f018-2c48-457e-99ee-08d756070563
+x-ms-traffictypediagnostic: MWHPR11MB1551:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MWHPR11MB155133F9B9F266262D363E70E8690@MWHPR11MB1551.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:669;
+x-forefront-prvs: 0197AFBD92
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(366004)(376002)(136003)(39860400002)(396003)(199004)(189003)(71200400001)(71190400001)(5660300002)(110136005)(99286004)(14454004)(2906002)(2501003)(316002)(478600001)(186003)(386003)(25786009)(52116002)(26005)(6506007)(102836004)(7736002)(305945005)(256004)(14444005)(6116002)(3846002)(81166006)(81156014)(66476007)(66946007)(66066001)(4744005)(8676002)(2616005)(66446008)(2201001)(86362001)(64756008)(66556008)(4326008)(107886003)(6436002)(6486002)(8936002)(6512007)(50226002)(476003)(486006)(36756003)(142933001);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR11MB1551;H:MWHPR11MB1248.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 49OVuRvGNLjwTSe9JMxNNosTCfLxZ5oju/ZsCdAiq+hPzjysgHH4V5iPLq1Zj95L492ulaOYCH7N7eSzn6onn+Kd7WnAjI38CJcsSDkQBZA2IHuuUcRtmXBezdRDcH/TPc5BpDNwvC4XBWHuTXWKhXn1Exwk90qMMV5M7CD2oKnvY5cJexNglGINq0Z/JXy2AwhZxO3meXoEcQb/mX8f5sbsIdf9Angmrgrmd7zwp3Bc5Q9vbitYqUpfBC/5OiieTLqEwJAAgKSm5ai8fWzer9Da5dUAP42FDBHfGlxdg+r+3Y9i4mBYLh6JNaSvXZzgr/+ZKSRHTcgy/ilZHrf39FonW0we7vWeKDxNJRmNXzvzq9pHa9e+Hf0tpvl6UPGQEfxPDJY9PxrkB+XuACc9Wls8UqfR/nKmRlBQJrpRy0xkvmuZKddJ1WYKJeYbTmTN
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Message-ID: <157164916215.29376.14056001196691062623.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+X-MS-Exchange-CrossTenant-Network-Message-Id: d0f0f018-2c48-457e-99ee-08d756070563
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Oct 2019 09:14:05.5276
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: FOS7bD5uF9A7fwrGwHG5Q//nPccgndRcqK42ZeU1bu5/Xh4MfTwNo/kQAJfkeFvVxhI8JC0QP3yajohPZXjXSrIyRSnfCS4uFnkf99uyYOw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1551
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the sched/core branch of tip:
+From: Eugen Hristev <eugen.hristev@microchip.com>
 
-Commit-ID:     c63be7be59de65d12ff7b4329acea99cf734d6de
-Gitweb:        https://git.kernel.org/tip/c63be7be59de65d12ff7b4329acea99cf734d6de
-Author:        Vincent Guittot <vincent.guittot@linaro.org>
-AuthorDate:    Fri, 18 Oct 2019 15:26:35 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Mon, 21 Oct 2019 09:40:54 +02:00
+The Atmel sama5d4_wdt needs to be compatible with microchip,sam9x60-wdt
+The sama5d4_wdt driver is updated to work with both hardware blocks
+(sama5d4/sama5d2 and sam9x60 based blocks)
 
-sched/fair: Use utilization to select misfit task
-
-Utilization is used to detect a misfit task but the load is then used to
-select the task on the CPU which can lead to select a small task with
-high weight instead of the task that triggered the misfit migration.
-
-Check that task can't fit the CPU's capacity when selecting the misfit
-task instead of using the load.
-
-Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-Acked-by: Valentin Schneider <valentin.schneider@arm.com>
-Cc: Ben Segall <bsegall@google.com>
-Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: Juri Lelli <juri.lelli@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mel Gorman <mgorman@suse.de>
-Cc: Mike Galbraith <efault@gmx.de>
-Cc: Morten.Rasmussen@arm.com
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: hdanton@sina.com
-Cc: parth@linux.ibm.com
-Cc: pauld@redhat.com
-Cc: quentin.perret@arm.com
-Cc: riel@surriel.com
-Cc: srikar@linux.vnet.ibm.com
-Link: https://lkml.kernel.org/r/1571405198-27570-9-git-send-email-vincent.guittot@linaro.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
 ---
- kernel/sched/fair.c | 11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
+ Documentation/devicetree/bindings/watchdog/atmel-sama5d4-wdt.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index f489f60..1fd6f39 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -7408,13 +7408,8 @@ static int detach_tasks(struct lb_env *env)
- 			break;
- 
- 		case migrate_misfit:
--			load = task_h_load(p);
--
--			/*
--			 * Load of misfit task might decrease a bit since it has
--			 * been recorded. Be conservative in the condition.
--			 */
--			if (load/2 < env->imbalance)
-+			/* This is not a misfit task */
-+			if (task_fits_capacity(p, capacity_of(env->src_cpu)))
- 				goto next;
- 
- 			env->imbalance = 0;
-@@ -8358,7 +8353,7 @@ static inline void calculate_imbalance(struct lb_env *env, struct sd_lb_stats *s
- 	if (busiest->group_type == group_misfit_task) {
- 		/* Set imbalance to allow misfit tasks to be balanced. */
- 		env->migration_type = migrate_misfit;
--		env->imbalance = busiest->group_misfit_task_load;
-+		env->imbalance = 1;
- 		return;
- 	}
- 
+diff --git a/Documentation/devicetree/bindings/watchdog/atmel-sama5d4-wdt.t=
+xt b/Documentation/devicetree/bindings/watchdog/atmel-sama5d4-wdt.txt
+index 4fec1e3..44727fc 100644
+--- a/Documentation/devicetree/bindings/watchdog/atmel-sama5d4-wdt.txt
++++ b/Documentation/devicetree/bindings/watchdog/atmel-sama5d4-wdt.txt
+@@ -1,7 +1,7 @@
+ * Atmel SAMA5D4 Watchdog Timer (WDT) Controller
+=20
+ Required properties:
+-- compatible: "atmel,sama5d4-wdt"
++- compatible: "atmel,sama5d4-wdt" or "microchip,sam9x60-wdt"
+ - reg: base physical address and length of memory mapped region.
+=20
+ Optional properties:
+--=20
+2.7.4
+
