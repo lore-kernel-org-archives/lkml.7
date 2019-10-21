@@ -2,165 +2,329 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2529DCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:41:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94298CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:42:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA6A920659
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:41:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t4IhAqsC"
+	by mail.kernel.org (Postfix) with ESMTP id 54E1F20882
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:42:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571676133;
+	bh=DfTynszqvoZRv/OJ2qgpqzKgL6B0egi+I5el6+zThHQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=li0m2Q1Uk8tDTwfVIPMj28HZlGgfCEGz7s9bhfhXJ+jKI/jomv+pFlmEl8uRgbZIy
+	 8X0NYPTkbwgtRQMH8g/GFEcLhIQunGi1fXzyXJcRX/IbUO86b+WRPBwYkI9vaPPZ2A
+	 YB+/YTWwXR3EL8Yysv8V6MQbfeyxMvSmtlRJYiWc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729589AbfJUQlz (ORCPT
+        id S1729730AbfJUQmM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 12:41:55 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:36912 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726672AbfJUQlz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 12:41:55 -0400
-Received: by mail-ed1-f65.google.com with SMTP id r4so10542927edy.4
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 09:41:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=M/o0goaWJLys/gIo+qekQ2YO6+mZygC853sq2iuUgSE=;
-        b=t4IhAqsClCx3MJz9Q8vxqpp8QzZPELVOaPVKN3b4Jau/Mc/iwFLVFkTQhTe+SWKP2P
-         Jn0HO12657boE5CX/YnIZ43suK3EuKLdQC1SOHx+qH9TXxT2qdybYZbwiZMa+aAzd+GB
-         sZqlGkgQY2uApwr3wsIwETKjn1WVofOHKZO1PmGCwFgui6hD3Xukp5DbslhcrBtoUa2d
-         3p+QqrRAtBD0tFEhsuJktHMdH2C3yJCHRaPWCB/7BZd/lct1snDc3dra1ICb/oF47hgg
-         HS5sNleOsDuScsCm8zOz4BJ9QYli73tD3MQUXaR7AnEvhwgdo/CrH7KX4Wc8vStKtZuE
-         I+Hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=M/o0goaWJLys/gIo+qekQ2YO6+mZygC853sq2iuUgSE=;
-        b=p+7xdFRL+55yGkglJmrxU8HKlwe5w5pZkhSew9eDtq4sibQVB1GJ/7+i4zIGQgnGm2
-         OdV71SobmugJye8g8a1n9X0wrw4FlQiHN3Ts+/BRP6F7FPHXwdu/eXSdBZv9beCOA324
-         BUkCV01cLBNTLTH6LzUKRRZ2SWd4XD/iicT7rnA/yIcTeaC+vlf/DCuv6A3exV05PZ9t
-         oSXL/yaoPOMenYWZjelax9oQqGMOBh/9MDJzdA0R/bY69uLLiuV62RR3X+h6e5pL87fw
-         0VIJ9/ZQ/ZzsLyfbr4wUI/bJLvBFB+ar1kjEjAaV4UNJSiWtNz1dbkvRuxp8ny57e5i+
-         FgDQ==
-X-Gm-Message-State: APjAAAXkwm8hrNCZdDlyAppmHp7uHwllK6Wl7/8KA5fy0DMUQzErQkwo
-        aaL2xIbdKRIltldXyYhT13om/xHq
-X-Google-Smtp-Source: APXvYqzvibtXuZr+c+mGDJiPFjO0z4DiInPo39atHGuVOcneDxJcFAwkPdBfP8LGZAmn61qgoh9Dqw==
-X-Received: by 2002:a05:6402:21d6:: with SMTP id bi22mr25629794edb.19.1571676113147;
-        Mon, 21 Oct 2019 09:41:53 -0700 (PDT)
-Received: from [10.67.50.53] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id a22sm258813edv.7.2019.10.21.09.41.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 21 Oct 2019 09:41:52 -0700 (PDT)
-Subject: Re: [PATCH] mtd: rawnand: brcmnand: Fix sparse warning in
- has_flash_dma()
-To:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Brian Norris <computersforpeace@gmail.com>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        "open list:BROADCOM STB NAND FLASH DRIVER" 
-        <linux-mtd@lists.infradead.org>,
-        "open list:BROADCOM STB NAND FLASH DRIVER" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20191018233844.23838-1-f.fainelli@gmail.com>
- <20191019113824.15fa4f52@xps13>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <747887ef-224b-8d4b-0165-4d043c8b87f5@gmail.com>
-Date:   Mon, 21 Oct 2019 09:41:46 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 21 Oct 2019 12:42:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44560 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726672AbfJUQmM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 12:42:12 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1C0920659;
+        Mon, 21 Oct 2019 16:42:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571676130;
+        bh=DfTynszqvoZRv/OJ2qgpqzKgL6B0egi+I5el6+zThHQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ghhWxQGZra3W5b7FRwXTVSjMu4x6oPG8zpQ4/XdNXneBuBnpUTnalXG9r8cfx0PUS
+         EAY/73j+EdOIanS7Pw8qKeFS0euFChzsWCdK9WPNWBWb3ZMX1SjMlDfn5lBW/9gBaA
+         ODAxOzKBpSZfocdJaOWmb8/dedFQavMsGSUzwAxE=
+Date:   Mon, 21 Oct 2019 17:42:04 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Gwendal Grignou <gwendal@chromium.org>
+Cc:     briannorris@chromium.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, lee.jones@linaro.org, bleung@chromium.org,
+        enric.balletbo@collabora.com, dianders@chromium.org,
+        groeck@chromium.org, fabien.lahoudere@collabora.com,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
+Subject: Re: [PATCH v2 16/18] iio: cros_ec: Expose hwfifo_timeout
+Message-ID: <20191021174204.2d8620b2@archlinux>
+In-Reply-To: <20191021055403.67849-17-gwendal@chromium.org>
+References: <20191021055403.67849-1-gwendal@chromium.org>
+        <20191021055403.67849-17-gwendal@chromium.org>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20191019113824.15fa4f52@xps13>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/19/19 2:39 AM, Miquel Raynal wrote:
-> Hi Florian,
-> 
-> Florian Fainelli <f.fainelli@gmail.com> wrote on Fri, 18 Oct 2019
-> 16:38:44 -0700:
-> 
->> Sparse rightfully complained about has_flash_dma():
->> +drivers/mtd/nand/brcmnand/brcmnand.c:951:40: warning: Using plain integer as NULL pointer [sparse]
-> 
-> I don't get why would sparse complain about this... Anyway I prefer
-> the !!(<pointer>) alternative if you don't mind. Otherwise the "!=
-> NULL" comparison feels wrong.
+On Sun, 20 Oct 2019 22:54:01 -0700
+Gwendal Grignou <gwendal@chromium.org> wrote:
 
-I did not read the sparse complaint correctly and mixed up two issues
-(one downstream, one upstream) there is still one that is legitimately
-reported by sparse and that will be fixed in a v2, thanks.
--- 
-Florian
+> Expose EC minimal interrupt period through buffer/hwfifo_timeout:
+> - Maximal timeout is limited to 65s.
+> - When timeout for all sensors is set to 0, EC will not send events,
+>   even if the sensor sampling rate is greater than 0.
+> - curr_sample_rate is no more, the pm functions have been removed.
+> 
+> Rename frequency to sampling_frequency to match IIO ABI.
+> 
+> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
+
+I'm keen to see this change, but what is your feeling on the likelihood
+anyone will notice that we just changed the ABI for these devices?
+Normally I let that go on for cases like this where we are bringing
+it inline with the 'correct' ABI..
+
+Assuming that's fine,
+
+Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
+> Changes in v2:
+> - Register fifo_attributes in sensors drivers that previously advertise
+>   that feature.
+> 
+> 
+>  .../common/cros_ec_sensors/cros_ec_sensors.c  |  4 +-
+>  .../cros_ec_sensors/cros_ec_sensors_core.c    | 95 ++++++++++++++-----
+>  drivers/iio/light/cros_ec_light_prox.c        |  6 +-
+>  drivers/iio/pressure/cros_ec_baro.c           |  6 +-
+>  .../linux/iio/common/cros_ec_sensors_core.h   |  4 +-
+>  5 files changed, 85 insertions(+), 30 deletions(-)
+> 
+> diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
+> index 2eb4bb254fbde..8c57a3ade78ed 100644
+> --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
+> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
+> @@ -236,6 +236,9 @@ static int cros_ec_sensors_probe(struct platform_device *pdev)
+>  	if (ret)
+>  		return ret;
+>  
+> +	iio_buffer_set_attrs(indio_dev->buffer,
+> +			cros_ec_sensor_fifo_attributes);
+> +
+>  	indio_dev->info = &ec_sensors_info;
+>  	state = iio_priv(indio_dev);
+>  	for (channel = state->channels, i = CROS_EC_SENSOR_X;
+> @@ -247,7 +250,6 @@ static int cros_ec_sensors_probe(struct platform_device *pdev)
+>  			BIT(IIO_CHAN_INFO_CALIBSCALE);
+>  		channel->info_mask_shared_by_all =
+>  			BIT(IIO_CHAN_INFO_SCALE) |
+> -			BIT(IIO_CHAN_INFO_FREQUENCY) |
+>  			BIT(IIO_CHAN_INFO_SAMP_FREQ);
+>  		channel->info_mask_shared_by_all_available =
+>  			BIT(IIO_CHAN_INFO_SAMP_FREQ);
+> diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> index e89c355bb4b35..92128c67a166e 100644
+> --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> @@ -11,6 +11,7 @@
+>  #include <linux/iio/common/cros_ec_sensors_core.h>
+>  #include <linux/iio/iio.h>
+>  #include <linux/iio/kfifo_buf.h>
+> +#include <linux/iio/sysfs.h>
+>  #include <linux/iio/trigger_consumer.h>
+>  #include <linux/iio/triggered_buffer.h>
+>  #include <linux/kernel.h>
+> @@ -84,6 +85,77 @@ static void get_default_min_max_freq(enum motionsensor_type type,
+>  	}
+>  }
+>  
+> +static int cros_ec_sensor_set_ec_rate(struct cros_ec_sensors_core_state *st,
+> +				      int rate)
+> +{
+> +	int ret;
+> +
+> +	if (rate > U16_MAX)
+> +		rate = U16_MAX;
+> +
+> +	mutex_lock(&st->cmd_lock);
+> +	st->param.cmd = MOTIONSENSE_CMD_EC_RATE;
+> +	st->param.ec_rate.data = rate;
+> +	ret = cros_ec_motion_send_host_cmd(st, 0);
+> +	mutex_unlock(&st->cmd_lock);
+> +	return ret;
+> +}
+> +
+> +static ssize_t cros_ec_sensor_set_report_latency(struct device *dev,
+> +					      struct device_attribute *attr,
+> +					      const char *buf, size_t len)
+> +{
+> +	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
+> +	struct cros_ec_sensors_core_state *st = iio_priv(indio_dev);
+> +	int integer, fract, ret;
+> +	int latency;
+> +
+> +	ret = iio_str_to_fixpoint(buf, 100000, &integer, &fract);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* EC rate is in ms. */
+> +	latency = integer * 1000 + fract / 1000;
+> +	ret = cros_ec_sensor_set_ec_rate(st, latency);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return len;
+> +}
+> +
+> +static ssize_t cros_ec_sensor_get_report_latency(struct device *dev,
+> +					      struct device_attribute *attr,
+> +					      char *buf)
+> +{
+> +	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
+> +	struct cros_ec_sensors_core_state *st = iio_priv(indio_dev);
+> +	int latency, ret;
+> +
+> +	mutex_lock(&st->cmd_lock);
+> +	st->param.cmd = MOTIONSENSE_CMD_EC_RATE;
+> +	st->param.ec_rate.data = EC_MOTION_SENSE_NO_VALUE;
+> +
+> +	ret = cros_ec_motion_send_host_cmd(st, 0);
+> +	latency = st->resp->ec_rate.ret;
+> +	mutex_unlock(&st->cmd_lock);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return sprintf(buf, "%d.%06u\n",
+> +		       latency / 1000,
+> +		       (latency % 1000) * 1000);
+> +}
+> +
+> +static IIO_DEVICE_ATTR(hwfifo_timeout, 0644,
+> +		       cros_ec_sensor_get_report_latency,
+> +		       cros_ec_sensor_set_report_latency, 0);
+> +
+> +const struct attribute *cros_ec_sensor_fifo_attributes[] = {
+> +	&iio_dev_attr_hwfifo_timeout.dev_attr.attr,
+> +	NULL,
+> +};
+> +EXPORT_SYMBOL_GPL(cros_ec_sensor_fifo_attributes);
+> +
+>  int cros_ec_sensors_push_data(
+>  		struct iio_dev *indio_dev,
+>  		s16 *data,
+> @@ -609,18 +681,6 @@ int cros_ec_sensors_core_read(struct cros_ec_sensors_core_state *st,
+>  
+>  	switch (mask) {
+>  	case IIO_CHAN_INFO_SAMP_FREQ:
+> -		st->param.cmd = MOTIONSENSE_CMD_EC_RATE;
+> -		st->param.ec_rate.data =
+> -			EC_MOTION_SENSE_NO_VALUE;
+> -
+> -		ret = cros_ec_motion_send_host_cmd(st, 0);
+> -		if (ret)
+> -			break;
+> -
+> -		*val = st->resp->ec_rate.ret;
+> -		ret = IIO_VAL_INT;
+> -		break;
+> -	case IIO_CHAN_INFO_FREQUENCY:
+>  		st->param.cmd = MOTIONSENSE_CMD_SENSOR_ODR;
+>  		st->param.sensor_odr.data =
+>  			EC_MOTION_SENSE_NO_VALUE;
+> @@ -690,7 +750,7 @@ int cros_ec_sensors_core_write(struct cros_ec_sensors_core_state *st,
+>  	int ret;
+>  
+>  	switch (mask) {
+> -	case IIO_CHAN_INFO_FREQUENCY:
+> +	case IIO_CHAN_INFO_SAMP_FREQ:
+>  		st->param.cmd = MOTIONSENSE_CMD_SENSOR_ODR;
+>  		st->param.sensor_odr.data = val;
+>  
+> @@ -699,15 +759,6 @@ int cros_ec_sensors_core_write(struct cros_ec_sensors_core_state *st,
+>  
+>  		ret = cros_ec_motion_send_host_cmd(st, 0);
+>  		break;
+> -	case IIO_CHAN_INFO_SAMP_FREQ:
+> -		st->param.cmd = MOTIONSENSE_CMD_EC_RATE;
+> -		st->param.ec_rate.data = val;
+> -
+> -		ret = cros_ec_motion_send_host_cmd(st, 0);
+> -		if (ret)
+> -			break;
+> -		st->curr_sampl_freq = val;
+> -		break;
+>  	default:
+>  		ret = -EINVAL;
+>  		break;
+> diff --git a/drivers/iio/light/cros_ec_light_prox.c b/drivers/iio/light/cros_ec_light_prox.c
+> index 6bac02cdd898a..059aaddc91fd8 100644
+> --- a/drivers/iio/light/cros_ec_light_prox.c
+> +++ b/drivers/iio/light/cros_ec_light_prox.c
+> @@ -183,6 +183,9 @@ static int cros_ec_light_prox_probe(struct platform_device *pdev)
+>  	if (ret)
+>  		return ret;
+>  
+> +	iio_buffer_set_attrs(indio_dev->buffer,
+> +			cros_ec_sensor_fifo_attributes);
+> +
+>  	indio_dev->info = &cros_ec_light_prox_info;
+>  	state = iio_priv(indio_dev);
+>  	state->core.type = state->core.resp->info.type;
+> @@ -191,8 +194,7 @@ static int cros_ec_light_prox_probe(struct platform_device *pdev)
+>  
+>  	/* Common part */
+>  	channel->info_mask_shared_by_all =
+> -		BIT(IIO_CHAN_INFO_SAMP_FREQ) |
+> -		BIT(IIO_CHAN_INFO_FREQUENCY);
+> +		BIT(IIO_CHAN_INFO_SAMP_FREQ);
+>  	channel->info_mask_shared_by_all_available =
+>  		BIT(IIO_CHAN_INFO_SAMP_FREQ);
+>  	channel->scan_type.realbits = CROS_EC_SENSOR_BITS;
+> diff --git a/drivers/iio/pressure/cros_ec_baro.c b/drivers/iio/pressure/cros_ec_baro.c
+> index fb7daeb4b29f9..e933a1bb64d4b 100644
+> --- a/drivers/iio/pressure/cros_ec_baro.c
+> +++ b/drivers/iio/pressure/cros_ec_baro.c
+> @@ -139,6 +139,9 @@ static int cros_ec_baro_probe(struct platform_device *pdev)
+>  	if (ret)
+>  		return ret;
+>  
+> +	iio_buffer_set_attrs(indio_dev->buffer,
+> +			cros_ec_sensor_fifo_attributes);
+> +
+>  	indio_dev->info = &cros_ec_baro_info;
+>  	state = iio_priv(indio_dev);
+>  	state->core.type = state->core.resp->info.type;
+> @@ -148,8 +151,7 @@ static int cros_ec_baro_probe(struct platform_device *pdev)
+>  	channel->info_mask_separate = BIT(IIO_CHAN_INFO_RAW);
+>  	channel->info_mask_shared_by_all =
+>  		BIT(IIO_CHAN_INFO_SCALE) |
+> -		BIT(IIO_CHAN_INFO_SAMP_FREQ) |
+> -		BIT(IIO_CHAN_INFO_FREQUENCY);
+> +		BIT(IIO_CHAN_INFO_SAMP_FREQ);
+>  	channel->scan_type.realbits = CROS_EC_SENSOR_BITS;
+>  	channel->scan_type.storagebits = CROS_EC_SENSOR_BITS;
+>  	channel->scan_type.shift = 0;
+> diff --git a/include/linux/iio/common/cros_ec_sensors_core.h b/include/linux/iio/common/cros_ec_sensors_core.h
+> index db3da7ffcc376..387ca9e61dac8 100644
+> --- a/include/linux/iio/common/cros_ec_sensors_core.h
+> +++ b/include/linux/iio/common/cros_ec_sensors_core.h
+> @@ -51,7 +51,6 @@ typedef irqreturn_t (*cros_ec_sensors_capture_t)(int irq, void *p);
+>   *				the timestamp. The timestamp is always last and
+>   *				is always 8-byte aligned.
+>   * @read_ec_sensors_data:	function used for accessing sensors values
+> - * @cuur_sampl_freq:		current sampling period
+>   */
+>  struct cros_ec_sensors_core_state {
+>  	struct cros_ec_device *ec;
+> @@ -74,8 +73,6 @@ struct cros_ec_sensors_core_state {
+>  	int (*read_ec_sensors_data)(struct iio_dev *indio_dev,
+>  				    unsigned long scan_mask, s16 *data);
+>  
+> -	int curr_sampl_freq;
+> -
+>  	/* Table of known available frequencies : 0, Min and Max in mHz */
+>  	int frequencies[3];
+>  };
+> @@ -118,5 +115,6 @@ int cros_ec_sensors_core_write(struct cros_ec_sensors_core_state *st,
+>  
+>  /* List of extended channel specification for all sensors */
+>  extern const struct iio_chan_spec_ext_info cros_ec_sensors_ext_info[];
+> +extern const struct attribute *cros_ec_sensor_fifo_attributes[];
+>  
+>  #endif  /* __CROS_EC_SENSORS_CORE_H */
+
