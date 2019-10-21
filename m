@@ -2,160 +2,106 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D010CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 02:14:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DE6DCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 02:15:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30D2F21897
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 02:14:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 009292084B
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 02:15:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jQVWXTnb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726917AbfJUCOi (ORCPT
+        id S1726878AbfJUCP4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 20 Oct 2019 22:14:38 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:41066 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726845AbfJUCOi (ORCPT
+        Sun, 20 Oct 2019 22:15:56 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:36014 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726715AbfJUCP4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 20 Oct 2019 22:14:38 -0400
-Received: from mail-il1-f199.google.com ([209.85.166.199])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <alex.hung@canonical.com>)
-        id 1iMNDQ-0007MT-MC
-        for linux-kernel@vger.kernel.org; Mon, 21 Oct 2019 02:14:36 +0000
-Received: by mail-il1-f199.google.com with SMTP id a17so1419397ilb.20
-        for <linux-kernel@vger.kernel.org>; Sun, 20 Oct 2019 19:14:36 -0700 (PDT)
+        Sun, 20 Oct 2019 22:15:56 -0400
+Received: by mail-pf1-f195.google.com with SMTP id y22so7407023pfr.3
+        for <linux-kernel@vger.kernel.org>; Sun, 20 Oct 2019 19:15:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=K7Q4LZifGL7VHvZw/Cjerl4FYJxwkVtMy+33DYa6tmU=;
+        b=jQVWXTnbLFCmmP1dE9F9kegEBWgp/9HIGqCxhdYO10WPo85dD8zOiecS2ZMt0ynGYS
+         3PmBtO5nvq49dWEJOlBWkq5C3jN1/3o93F547Cg6ta5nDjIzic6Hr95jAA3TYfmi5p4E
+         +apQjSARDiGALO4Ktig2vugQ5BTCoZmDXA2gU6qTmwzAveZKBPZzsXc/l1sS97zqQ5j8
+         Yy9R1JEe57xqjY7ekFZbdWaeRLP0rSDXKRZnX//XcGQArgFzCM8GyLVDPzcRF2sndFWP
+         tGX2ifR1s1zeBVGNGoTPYIar/wucytN+ZI1relNUQr+xDWeCAyZFKtSTresLaDVVoCMd
+         3RHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BnluuLx7N5FU6R1K0tIitcyLNhQag0yWZU1ygvdJBl4=;
-        b=KI9/lLonNDw53lEL+Izi0BLGppF2S61fEKBdFxV25i6neBQ0pQlyeW8vir6SDQmxqF
-         4qi/aJumoYWqnfSM7ic3EovDsXHU1TNJ4nKwcjGq7ekI/rCXLg7RVsG7oy7xd0oL+EIb
-         c30F1TyapzensvP5kUPtt0Cxlf3ZofGIXNb+AsbH+sYG2FZDxfbP8vTW0PE1SeNg6qqQ
-         8qlNTUzGTGpZh3KZdhGEtjfhod+mA3SXHgwx0kdWydWtx2BhP6caMgHSJ4cTyqZLkAH6
-         AVimJuKAZOohZuhb3jSNY52a9h5zRxUm0k6WcfdjWjQqMVNVJBFdBn2tW7Zl1Ikw383Y
-         t9SQ==
-X-Gm-Message-State: APjAAAWRUDcroJVwoCoBOPpTnAYbI06f0WJuruBY9g4SCNshOe9CNMGT
-        yBqEiyiQWOze1kCAlrgOaOKiV8Wxqay7Sc3A4+xKCdlSankLq4rOr4FhQBHladZYjDzQ4rxG0z/
-        azUoo3KqZ61PKL2CrKqIofQVbqL98uixvNSQqXXywm+l2n3SCzLBJLx+byg==
-X-Received: by 2002:a6b:e20f:: with SMTP id z15mr768960ioc.199.1571624075666;
-        Sun, 20 Oct 2019 19:14:35 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxfgJ3t7vqgICblfa3NVl6kSA7Md5mj/NPEb9Mqkp3Oi93uOwzfRxJ2gDaqQ9Rhf5GlAlggXH16Bna+cOgAtvk=
-X-Received: by 2002:a6b:e20f:: with SMTP id z15mr768950ioc.199.1571624075361;
- Sun, 20 Oct 2019 19:14:35 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=K7Q4LZifGL7VHvZw/Cjerl4FYJxwkVtMy+33DYa6tmU=;
+        b=I4swOC+Elp1q9WAF7oSfhSwUN2rB4UznKUuqasbR1A7x4QLWpqrCs5aF9vQQnSdWng
+         HUG+1XfJuuUsdZsUCMm5YFcwK9V90NpbtDto2m5KuIJx5cvkG4TWU0zczmhnZoZTML8r
+         eZjXwZHtNgcDfplP2aoZ7LO3EL0tYNORyrJz9z9zJOKsgfd1wXJ8nCzZ1jGjcMJdkR7q
+         rOKNjxJHwxnKVkZfo6GaPXtKiyXh+euAamgUi1ZAaBAl0wiwXP6PVq9Bol7to7IAdhFk
+         hvL12EX4qcdBW74cRVQk6xIWpBF4N8pwJN0pvDpHybg1nKm/DMsZsi1LzBilFPwikNNK
+         iGGQ==
+X-Gm-Message-State: APjAAAW96Yt1MRrSmf6T8kBRUKETurwnKlBlUjEZj/LDZ+V4VYikfZnO
+        RPk8wpSzefvIESlZD6oqV5sArA==
+X-Google-Smtp-Source: APXvYqzelopchHc5kd7KDiVDWvBUvBXKfv2ziRjbolBOmcK/p4njnjkRPIHp6rGh8Xa6eQ1PQTSMTw==
+X-Received: by 2002:a17:90a:fb85:: with SMTP id cp5mr25789957pjb.19.1571624155496;
+        Sun, 20 Oct 2019 19:15:55 -0700 (PDT)
+Received: from localhost ([122.172.151.112])
+        by smtp.gmail.com with ESMTPSA id p189sm14070465pfp.163.2019.10.20.19.15.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 20 Oct 2019 19:15:53 -0700 (PDT)
+Date:   Mon, 21 Oct 2019 07:45:51 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] cpufreq: flush any pending policy update work scheduled
+ before freeing
+Message-ID: <20191021021551.bjhf74zeyuqcl4w3@vireshk-i7>
+References: <20191017163503.30791-1-sudeep.holla@arm.com>
+ <20191018060247.g5asfuh3kncoj7kl@vireshk-i7>
+ <20191018101924.GA25540@bogus>
+ <4881906.zjS51fuFuv@kreacher>
+ <20191018110632.GB25540@bogus>
 MIME-Version: 1.0
-References: <20190814213118.28473-1-kherbst@redhat.com> <2215840.qs0dBhReda@kreacher>
- <CACO55ttC-o9bKU7nHNcfjm2YnffiupQ7UHUt7BYL3fu+yEyTbw@mail.gmail.com> <5228680.jBuKzensJx@kreacher>
-In-Reply-To: <5228680.jBuKzensJx@kreacher>
-From:   Alex Hung <alex.hung@canonical.com>
-Date:   Sun, 20 Oct 2019 20:14:23 -0600
-Message-ID: <CAJ=jquZLU2=yxayGCs=XGghxdMMre6qAWRY0Q4VErjBGqeWdjQ@mail.gmail.com>
-Subject: Re: [Nouveau] [PATCH 1/7] Revert "ACPI / OSI: Add OEM _OSI string to
- enable dGPU direct output"
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Karol Herbst <kherbst@redhat.com>, Dave Airlie <airlied@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Dave Airlie <airlied@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191018110632.GB25540@bogus>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We have done some tests on three of Intel + nVidia configuration
-systems with OEM _OSI strings removed - while some bugs are still
-observed, ex. one out of three has suspend/resume issues, no system
-crashes were observed - the biggest issue that worries us.
+On 18-10-19, 12:06, Sudeep Holla wrote:
+> Callstack is:
+> 
+> (cpufreq_notifier_max)
+> (notifier_call_chain)
+> (blocking_notifier_call_chain)
+> (pm_qos_update_target)
+> (freq_qos_apply)
+> (freq_qos_remove_request)
+> (cpufreq_policy_free)
+> (subsys_interface_unregister)
+> (cpufreq_unregister_driver)
 
-The positive results give us confident to ack the removal of the OEM
-_OSI strings. While our tests were not able to cover all possible I+N
-systems, we are sure we can fix issues along the way. If there aren't
-systems that cannot be fixed without these OEM _OSI strings, these
-strings should probably enable with DMI quirks (possible future
-patches) so they won't affect others.
+@sudeep: I see that the patch is merged now, but as I said earlier the
+reasoning isn't clear yet. Please don't stop working on this and lets
+clean this once and for all.
 
-Acked-by: Alex Hung <alex.hung@canonical.com>
-
-
-
-
-On Thu, Sep 5, 2019 at 10:26 AM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
->
-> On Thursday, September 5, 2019 5:51:23 PM CEST Karol Herbst wrote:
-> > is there any update on the testing with my patches? On the hardware I
-> > had access to those patches helped, but I can't know if it also helped
-> > on the hardware for which those workarounds where actually added.
->
-> Alex Hung and Mario need to answer this question I think.
->
-> > On Mon, Aug 19, 2019 at 11:52 AM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
-> > >
-> > > On Thursday, August 15, 2019 12:47:35 AM CEST Dave Airlie wrote:
-> > > > On Thu, 15 Aug 2019 at 07:31, Karol Herbst <kherbst@redhat.com> wrote:
-> > > > >
-> > > > > This reverts commit 28586a51eea666d5531bcaef2f68e4abbd87242c.
-> > > > >
-> > > > > The original commit message didn't even make sense. AMD _does_ support it and
-> > > > > it works with Nouveau as well.
-> > > > >
-> > > > > Also what was the issue being solved here? No references to any bugs and not
-> > > > > even explaining any issue at all isn't the way we do things.
-> > > > >
-> > > > > And even if it means a muxed design, then the fix is to make it work inside the
-> > > > > driver, not adding some hacky workaround through ACPI tricks.
-> > > > >
-> > > > > And what out of tree drivers do or do not support we don't care one bit anyway.
-> > > > >
-> > > >
-> > > > I think the reverts should be merged via Rafael's tree as the original
-> > > > patches went in via there, and we should get them in asap.
-> > > >
-> > > > Acked-by: Dave Airlie <airlied@redhat.com>
-> > >
-> > > The _OSI strings are to be dropped when all of the needed support is there in
-> > > drivers, so they should go away along with the requisite driver changes.
-> > >
-> >
-> > that goes beside the point. firmware level workarounds for GPU driver
-> > issues were pushed without consulting with upstream GPU developers.
-> > That's something which shouldn't have happened in the first place. And
-> > yes, I am personally annoyed by the fact, that people know about
-> > issues, but instead of contacting the proper persons and working on a
-> > proper fix, we end up with stupid firmware level workarounds. I can't
-> > see why we ever would have wanted such workarounds in the first place.
-> >
-> > And I would be much happier if the next time something like that comes
-> > up, that the drm mailing list will be contacted as well or somebody
-> > involved.
-> >
-> > We could have also just disable the feature inside the driver (and
-> > probably we should have done that a long time ago, so that is
-> > essentially our fault, but still....)
-> >
-> > > I'm all for dropping then when that's the case, so please feel free to add ACKs
-> > > from me to the patches in question at that point.
-> > >
-> > > Cheers,
-> > > Rafael
-> > >
-> > >
-> > >
-> >
->
->
->
->
-
+What patches were you testing this with? My buggy patches or Rafael's
+patches as well ? At least with my patches, this can happen due to the
+other bug where the notifier doesn't get removed (as I said earlier),
+but once that bug isn't there then this shouldn't happen, else we have
+another bug in pipeline somewhere and should find it.
 
 -- 
-Cheers,
-Alex Hung
+viresh
