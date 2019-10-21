@@ -2,103 +2,88 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26E15CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 07:41:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CFE9CA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 07:42:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 043AB2086D
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 07:41:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE05A2086D
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 07:42:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727550AbfJUHlp (ORCPT
+        id S1727561AbfJUHmc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 03:41:45 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:57508 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727144AbfJUHlp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 03:41:45 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9L7biT3110095
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 03:41:44 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2vs721ub2w-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 03:41:44 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <hbathini@linux.ibm.com>;
-        Mon, 21 Oct 2019 08:41:42 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 21 Oct 2019 08:41:38 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9L7fbum9502946
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 21 Oct 2019 07:41:37 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8502E4C040;
-        Mon, 21 Oct 2019 07:41:37 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D6E9C4C059;
-        Mon, 21 Oct 2019 07:41:35 +0000 (GMT)
-Received: from [9.85.68.191] (unknown [9.85.68.191])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 21 Oct 2019 07:41:35 +0000 (GMT)
-Subject: Re: [PATCH v2 3/4] Documentation/ABI: mark /sys/kernel/fadump_* sysfs
- files deprecated
-To:     Sourabh Jain <sourabhjain@linux.ibm.com>, mpe@ellerman.id.au
-Cc:     corbet@lwn.net, mahesh@linux.vnet.ibm.com,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@ozlabs.org
-References: <20191018130557.2217-1-sourabhjain@linux.ibm.com>
- <20191018130557.2217-4-sourabhjain@linux.ibm.com>
-From:   Hari Bathini <hbathini@linux.ibm.com>
-Date:   Mon, 21 Oct 2019 13:11:34 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191018130557.2217-4-sourabhjain@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19102107-0020-0000-0000-0000037BCA91
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19102107-0021-0000-0000-000021D1FF80
-Message-Id: <f69daa7b-ddb3-8190-c409-28a22c504fed@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-21_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=986 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910210071
+        Mon, 21 Oct 2019 03:42:32 -0400
+Received: from out1.zte.com.cn ([202.103.147.172]:16466 "EHLO mxct.zte.com.cn"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727144AbfJUHmc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 03:42:32 -0400
+Received: from mse-fl2.zte.com.cn (unknown [10.30.14.239])
+        by Forcepoint Email with ESMTPS id B356A5866CCA1754A0D9;
+        Mon, 21 Oct 2019 15:42:12 +0800 (CST)
+Received: from notes_smtp.zte.com.cn (notes_smtp.zte.com.cn [10.30.1.239])
+        by mse-fl2.zte.com.cn with ESMTP id x9L7fnOk005313;
+        Mon, 21 Oct 2019 15:41:49 +0800 (GMT-8)
+        (envelope-from wang.yi59@zte.com.cn)
+Received: from fox-host8.localdomain ([10.74.120.8])
+          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
+          with ESMTP id 2019102115415257-53030 ;
+          Mon, 21 Oct 2019 15:41:52 +0800 
+From:   Yi Wang <wang.yi59@zte.com.cn>
+To:     tglx@linutronix.de
+Cc:     linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
+        wang.yi59@zte.com.cn, up2wing@gmail.com, wang.liang82@zte.com.cn
+Subject: [PATCH] posix-cpu-timers: fix two trivial comments
+Date:   Mon, 21 Oct 2019 15:44:12 +0800
+Message-Id: <1571643852-21848-1-git-send-email-wang.yi59@zte.com.cn>
+X-Mailer: git-send-email 1.8.3.1
+X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
+ 21, 2013) at 2019-10-21 15:41:52,
+        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
+ 2019-10-21 15:41:49,
+        Serialize complete at 2019-10-21 15:41:49
+X-MAIL: mse-fl2.zte.com.cn x9L7fnOk005313
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Commit b7be4ef1365d ("posix-cpu-timers: Switch thread group sampling to
+array") and commit 001f7971433a ("posix-cpu-timers: Make expiry checks
+array based") made some modification on parameters of function
+thread_group_sample_cputime() and task_cputimers_expired(), but forgot
+to modify the comment.
 
+This patch can fix this.
 
-On 18/10/19 6:35 PM, Sourabh Jain wrote:
-> The /sys/kernel/fadump_* sysfs files are replicated under
+Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
+---
+ kernel/time/posix-cpu-timers.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-[...]
-
-> +Note: The following FADump sysfs files are deprecated.
-> +
-> +    Deprecated                       Alternative
-> +    -------------------------------------------------------------------------------
-> +    /sys/kernel/fadump_enabled           /sys/kernel/fadump/fadump_enabled
-> +    /sys/kernel/fadump_registered        /sys/kernel/fadump/fadump_registered
-> +    /sys/kernel/fadump_release_mem       /sys/kernel/fadump/fadump_release_mem
-
-/sys/kernel/fadump/* looks tidy instead of /sys/kernel/fadump/fadump_* 
-I mean, /sys/kernel/fadump/fadump_enabled => /sys/kernel/fadump/enabled and such..
-
-- Hari
+diff --git a/kernel/time/posix-cpu-timers.c b/kernel/time/posix-cpu-timers.c
+index 92a4319..617b919 100644
+--- a/kernel/time/posix-cpu-timers.c
++++ b/kernel/time/posix-cpu-timers.c
+@@ -266,7 +266,7 @@ static void update_gt_cputime(struct task_cputime_atomic *cputime_atomic,
+ /**
+  * thread_group_sample_cputime - Sample cputime for a given task
+  * @tsk:	Task for which cputime needs to be started
+- * @iimes:	Storage for time samples
++ * @samples:	Storage for time samples
+  *
+  * Called from sys_getitimer() to calculate the expiry time of an active
+  * timer. That means group cputime accounting is already active. Called
+@@ -1031,7 +1031,7 @@ static void posix_cpu_timer_rearm(struct k_itimer *timer)
+ /**
+  * task_cputimers_expired - Check whether posix CPU timers are expired
+  *
+- * @samples:	Array of current samples for the CPUCLOCK clocks
++ * @sample:	Array of current samples for the CPUCLOCK clocks
+  * @pct:	Pointer to a posix_cputimers container
+  *
+  * Returns true if any member of @samples is greater than the corresponding
+-- 
+1.8.3.1
 
