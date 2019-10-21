@@ -2,116 +2,205 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38A03CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:37:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B95CC47E49
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:38:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 099D02067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:37:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="S5YUav6l"
+	by mail.kernel.org (Postfix) with ESMTP id DED002067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:38:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728128AbfJUKhz (ORCPT
+        id S1728214AbfJUKiJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 06:37:55 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:54916 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726725AbfJUKhz (ORCPT
+        Mon, 21 Oct 2019 06:38:09 -0400
+Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:35437 "EHLO
+        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726725AbfJUKiJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 06:37:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=SssMt3eW+z2CI/cFwTW6F4urVB4aoQtUGwnCYEoR8S8=; b=S5YUav6lX2y7FicsXrF472bcD
-        7uN1twe01t6mQLAE4MQeWkDKroNbo6lU9ZfaVYxdnvPaepkYXyJZyrz1tvP4/TY7JVUVlVpB5L4hz
-        nDR3rFT3w6T6N986DiM6TfRKFUEUbDB7z8F/OotjqsozHXwX6m2PrX7L1jTUbHjEv/HpiagBRBZ/f
-        w3tEnXdNNOHhcpbXG74zBjgzIb5wBO/YcFgCizHQyvofDlQPSc03nygNQCGnvcgm/vmjdRJVbtdCT
-        Q3p96IA1hI4f73xMh6v4VPdoCLTnfpUUnF6iEmtNSA4qXPQKKhfQ8YOZyju+uOz1IQxTL1dGJI3EJ
-        tAYDkFjzQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iMV4O-0002pL-2t; Mon, 21 Oct 2019 10:37:48 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 19247300EBF;
-        Mon, 21 Oct 2019 12:36:48 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 27D942022BA17; Mon, 21 Oct 2019 12:37:45 +0200 (CEST)
-Date:   Mon, 21 Oct 2019 12:37:45 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>,
-        Song Liu <songliubraving@fb.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 4/4] perf/core,x86: synchronize PMU task contexts on
- optimized context switches
-Message-ID: <20191021103745.GF1800@hirez.programming.kicks-ass.net>
-References: <0b20a07f-d074-d3da-7551-c9a4a94fe8e3@linux.intel.com>
- <f3253a36-c174-8051-a462-9728ef721766@linux.intel.com>
- <20191021075942.GA8809@gmail.com>
+        Mon, 21 Oct 2019 06:38:09 -0400
+Received: from [192.168.2.10] ([46.9.232.237])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id MV4diU1Tdo1ZhMV4giLfb1; Mon, 21 Oct 2019 12:38:06 +0200
+Subject: Re: [Patch 07/19] media: ti-vpe: cal: add CSI2 PHY LDO errata support
+To:     Benoit Parrot <bparrot@ti.com>, Rob Herring <robh+dt@kernel.org>
+Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jyri Sarha <jsarha@ti.com>
+References: <20191018153437.20614-1-bparrot@ti.com>
+ <20191018153437.20614-8-bparrot@ti.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <68dbd926-0e37-93f7-e03e-def4b4146d32@xs4all.nl>
+Date:   Mon, 21 Oct 2019 12:38:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191021075942.GA8809@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191018153437.20614-8-bparrot@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfN7I+pVfMgIkvnB5EwZLFJ0MzMPcjgiwikp5JFhEn8sQI3ONVzWrvTz1WXmzHqV32dd4F71xp6LHS8hxF4BjyMGFnGWLPZj+McnqgS56vq8S4Bh7FRGF
+ azKBb52I+vN9gcbpc55rg0mhDafJYNqZWU6iBAh8/agM8cKH8aNp+QISlX5n1eMN87PuBq3vCtUkZ35NYta7W7tx59fugU/ozRxMXV5p4T8m7hNNkRgU/5B1
+ 2hJ9cl6y+exwcglLLHA6iB9+ZUYaQeJFAohkJVQ5zAyDankwfjUCloFx9XNQTlr1LYEWiJwPDV6VuJ8fw2jlltQ7f42ztQrt0m01A2lwTbo=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 09:59:42AM +0200, Ingo Molnar wrote:
+On 10/18/19 5:34 PM, Benoit Parrot wrote:
+> Apply Errata i913 every time the functional clock is enabled.
+> This should take care of suspend/resume case as well.
 > 
-> * Alexey Budankov <alexey.budankov@linux.intel.com> wrote:
+> Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> Signed-off-by: Jyri Sarha <jsarha@ti.com>
+> ---
+>  drivers/media/platform/ti-vpe/cal.c      | 56 +++++++++++++++++++++++-
+>  drivers/media/platform/ti-vpe/cal_regs.h | 27 ++++++++++++
+>  2 files changed, 82 insertions(+), 1 deletion(-)
 > 
-> > +			/*
-> > +			 * PMU specific parts of task perf context may require
-> > +			 * additional synchronization, at least for proper Intel
-> > +			 * LBR callstack data profiling;
-> > +			 */
-> > +			pmu->sync_task_ctx(ctx->task_ctx_data,
-> > +					   next_ctx->task_ctx_data);
+> diff --git a/drivers/media/platform/ti-vpe/cal.c b/drivers/media/platform/ti-vpe/cal.c
+> index 62aeedb705e9..3cbc4dca6de8 100644
+> --- a/drivers/media/platform/ti-vpe/cal.c
+> +++ b/drivers/media/platform/ti-vpe/cal.c
+> @@ -284,6 +284,13 @@ static struct cal_data dra72x_cal_data = {
+>  	.flags = 0,
+>  };
+>  
+> +static struct cal_data dra72x_es1_cal_data = {
+> +	.csi2_phy_core = dra72x_cal_csi_phy,
+> +	.num_csi2_phy = ARRAY_SIZE(dra72x_cal_csi_phy),
+> +
+> +	.flags = DRA72_CAL_PRE_ES2_LDO_DISABLE,
+> +};
+> +
+>  /*
+>   * there is one cal_dev structure in the driver, it is shared by
+>   * all instances.
+> @@ -569,9 +576,52 @@ static void cal_get_hwinfo(struct cal_dev *dev)
+>  		hwinfo);
+>  }
+>  
+> +/*
+> + *   Errata i913: CSI2 LDO Needs to be disabled when module is powered on
+> + *
+> + *   Enabling CSI2 LDO shorts it to core supply. It is crucial the 2 CSI2
+> + *   LDOs on the device are disabled if CSI-2 module is powered on
+> + *   (0x4845 B304 | 0x4845 B384 [28:27] = 0x1) or in ULPS (0x4845 B304
+> + *   | 0x4845 B384 [28:27] = 0x2) mode. Common concerns include: high
+> + *   current draw on the module supply in active mode.
+> + *
+> + *   Errata does not apply when CSI-2 module is powered off
+> + *   (0x4845 B304 | 0x4845 B384 [28:27] = 0x0).
+> + *
+> + * SW Workaround:
+> + *	Set the following register bits to disable the LDO,
+> + *	which is essentially CSI2 REG10 bit 6:
+> + *
+> + *		Core 0:  0x4845 B828 = 0x0000 0040
+> + *		Core 1:  0x4845 B928 = 0x0000 0040
+> + */
+> +static void i913_errata(struct cal_dev *dev, unsigned int port)
+> +{
+> +	u32 reg10 = reg_read(dev->cc[port], CAL_CSI2_PHY_REG10);
+> +
+> +	set_field(&reg10, CAL_CSI2_PHY_REG0_HSCLOCKCONFIG_DISABLE,
+> +		  CAL_CSI2_PHY_REG10_I933_LDO_DISABLE_MASK);
+> +
+> +	cal_dbg(1, dev, "CSI2_%d_REG10 = 0x%08x\n", port, reg10);
+> +	reg_write(dev->cc[port], CAL_CSI2_PHY_REG10, reg10);
+> +}
+> +
+>  static inline int cal_runtime_get(struct cal_dev *dev)
+
+I'd drop the 'inline' here. It doesn't seem appropriate anymore since this
+function is now more complex.
+
+Regards,
+
+	Hans
+
+>  {
+> -	return pm_runtime_get_sync(&dev->pdev->dev);
+> +	int r;
+> +
+> +	r = pm_runtime_get_sync(&dev->pdev->dev);
+> +
+> +	if (dev->flags & DRA72_CAL_PRE_ES2_LDO_DISABLE) {
+> +		/*
+> +		 * Apply errata on both port eveytime we (re-)enable
+> +		 * the clock
+> +		 */
+> +		i913_errata(dev, 0);
+> +		i913_errata(dev, 1);
+> +	}
+> +
+> +	return r;
+>  }
+>  
+>  static inline void cal_runtime_put(struct cal_dev *dev)
+> @@ -2071,6 +2121,10 @@ static const struct of_device_id cal_of_match[] = {
+>  		.compatible = "ti,dra72-cal",
+>  		.data = (void *)&dra72x_cal_data,
+>  	},
+> +	{
+> +		.compatible = "ti,dra72-pre-es2-cal",
+> +		.data = (void *)&dra72x_es1_cal_data,
+> +	},
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(of, cal_of_match);
+> diff --git a/drivers/media/platform/ti-vpe/cal_regs.h b/drivers/media/platform/ti-vpe/cal_regs.h
+> index 68cfc922b422..78d6f015c9ea 100644
+> --- a/drivers/media/platform/ti-vpe/cal_regs.h
+> +++ b/drivers/media/platform/ti-vpe/cal_regs.h
+> @@ -10,6 +10,30 @@
+>  #ifndef __TI_CAL_REGS_H
+>  #define __TI_CAL_REGS_H
+>  
+> +/*
+> + * struct cal_dev.flags possibilities
+> + *
+> + * DRA72_CAL_PRE_ES2_LDO_DISABLE:
+> + *   Errata i913: CSI2 LDO Needs to be disabled when module is powered on
+> + *
+> + *   Enabling CSI2 LDO shorts it to core supply. It is crucial the 2 CSI2
+> + *   LDOs on the device are disabled if CSI-2 module is powered on
+> + *   (0x4845 B304 | 0x4845 B384 [28:27] = 0x1) or in ULPS (0x4845 B304
+> + *   | 0x4845 B384 [28:27] = 0x2) mode. Common concerns include: high
+> + *   current draw on the module supply in active mode.
+> + *
+> + *   Errata does not apply when CSI-2 module is powered off
+> + *   (0x4845 B304 | 0x4845 B384 [28:27] = 0x0).
+> + *
+> + * SW Workaround:
+> + *	Set the following register bits to disable the LDO,
+> + *	which is essentially CSI2 REG10 bit 6:
+> + *
+> + *		Core 0:  0x4845 B828 = 0x0000 0040
+> + *		Core 1:  0x4845 B928 = 0x0000 0040
+> + */
+> +#define DRA72_CAL_PRE_ES2_LDO_DISABLE BIT(0)
+> +
+>  #define CAL_NUM_CSI2_PORTS		2
+>  
+>  /* CAL register offsets */
+> @@ -71,6 +95,7 @@
+>  #define CAL_CSI2_PHY_REG0		0x000
+>  #define CAL_CSI2_PHY_REG1		0x004
+>  #define CAL_CSI2_PHY_REG2		0x008
+> +#define CAL_CSI2_PHY_REG10		0x028
+>  
+>  /* CAL Control Module Core Camerrx Control register offsets */
+>  #define CM_CTRL_CORE_CAMERRX_CONTROL	0x000
+> @@ -458,6 +483,8 @@
+>  #define CAL_CSI2_PHY_REG1_CLOCK_MISS_DETECTOR_STATUS_SUCCESS		0
+>  #define CAL_CSI2_PHY_REG1_RESET_DONE_STATUS_MASK		GENMASK(29, 28)
+>  
+> +#define CAL_CSI2_PHY_REG10_I933_LDO_DISABLE_MASK		BIT_MASK(6)
+> +
+>  #define CAL_CSI2_PHY_REG2_CCP2_SYNC_PATTERN_MASK		GENMASK(23, 0)
+>  #define CAL_CSI2_PHY_REG2_TRIGGER_CMD_RXTRIGESC3_MASK		GENMASK(25, 24)
+>  #define CAL_CSI2_PHY_REG2_TRIGGER_CMD_RXTRIGESC2_MASK		GENMASK(27, 26)
 > 
-> Firstly, I'm pretty sure you never run this on a CPU where 
-> pmu->sync_task_ctx is NULL, right? ;-)
-> 
-> Secondly, even on Intel CPUs in many cases we'll just call into a ~2 deep 
-> function pointer based call hierarchy, just to find that nothing needs to 
-
-See prototype here for getting rid of at least one layer of indirect
-calls:
-
-  https://lkml.kernel.org/r/20191007083831.26880701.6@infradead.org
-
-> be done, because there's no LBR call stack maintained:
-> 
-> +       if (!one || !another)
-> +               return;
-> 
-> So while it's technically a layering violation, it might make sense to 
-> elevate this check to the generic layer and say that synchronization 
-> calls by the core layer will always provide two valid pointers?
-
-Alternatively we can write the thing like:
-
-	if (pmu->swap_task_ctx)
-		pmu->swap_task_ctx(ctx, next_ctx)
-	else
-		swap(ctx->task_ctx_data, next_ctx->task_ctx_data);
-
 
