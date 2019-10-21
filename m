@@ -2,170 +2,164 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E594ECA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:21:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 723C4CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:22:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFA5E20640
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:21:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FEFE20640
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:22:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="lcqCvTk2"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="b15R4qU/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727714AbfJUIVx (ORCPT
+        id S1727677AbfJUIWf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 04:21:53 -0400
-Received: from mail-eopbgr680082.outbound.protection.outlook.com ([40.107.68.82]:42564
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726289AbfJUIVx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 04:21:53 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=K2wMGhoFGwN4lRqbVvjfFQp3GEsTzf3tSOca2D3Xdh5UTY8Uy/qPddqoGASPfJDgH6KHkUc9ru54NyWxsdpV0FnEfhxx2XhmxmgfYX0DSfQ7gp1ooYkdbnEyqgAxC4lzXzbWAFdwdKzcKaPJFZ3n4CcQsBAOgYh+xadiLvObFFEDgF6xHrzCefk+jWvxsbKh5I7EoEi+FuQnsOlLcErhUoCLJgFWiGqSjmp4iryu0bY+HMGOFeXIG+/L2W1KulvwvXWSNABbp7q5zrYyHhVVOas+BhhjIvfWe3LgJJo/C00LJ3oGQboC/SFW5TIl40alqA6OTaMTKlfV0NejDq+EyQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iy8jLzROzCX9GJqVkVZTjAOMSMUpi+0GYak3vKUJAMQ=;
- b=HOnVyqHBNYZguutamFqWtz8hmthhJ2jCyI+ezho+70Yr63iejfIxpT+iTUqxKT95gwgE5XUM7VMtHwbFEhsPoTFDb4LNiL5lCOE5jjEQGUXsgpJbvUtMoVnqqJQNcOzN3IrppoqAc0zpP92ad/VefNmXkpYUuuWo4kPSUazPwBTmnJPoXQrRl29sN0IyciXDn0Gn0QePG02IYh8kgpDx9y4RFIluG3SFKXuCQwYQeyHNd1fGbMp3mAjgDFBIIQEhzBpoDmkBVqTtGitb+atmgSEUmJtP/0tCiVprIHOcAJWzF3ncTJ6S3DITvcd1FWrlHVmWsjSFYLZow95b3OkUbQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
- dkim=pass header.d=silabs.com; arc=none
+        Mon, 21 Oct 2019 04:22:35 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:34738 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726199AbfJUIWe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 04:22:34 -0400
+Received: by mail-wr1-f68.google.com with SMTP id t16so7654739wrr.1
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 01:22:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iy8jLzROzCX9GJqVkVZTjAOMSMUpi+0GYak3vKUJAMQ=;
- b=lcqCvTk2y3+YCpKLvgC85rYvDYa3FWKY+8ZdpnO2n55M1m5QUkEmxd3y4z6ZaFNbntvUHcWQRCX/iUcX4TdVi/L4xKpRQ9YxjV2RdTVW0g9fZbNyP+HuvbO5lUsh3wXJQEsIAIaEfWizWL6O0FM6o1wC/JyVwAv84r5SZYGzv4s=
-Received: from MN2PR11MB4063.namprd11.prod.outlook.com (10.255.180.22) by
- MN2PR11MB3949.namprd11.prod.outlook.com (10.255.181.82) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.19; Mon, 21 Oct 2019 08:21:46 +0000
-Received: from MN2PR11MB4063.namprd11.prod.outlook.com
- ([fe80::ac8c:fc55:d1e2:465f]) by MN2PR11MB4063.namprd11.prod.outlook.com
- ([fe80::ac8c:fc55:d1e2:465f%5]) with mapi id 15.20.2347.028; Mon, 21 Oct 2019
- 08:21:46 +0000
-From:   Jerome Pouiller <Jerome.Pouiller@silabs.com>
-To:     "driverdev-devel@linuxdriverproject.org" 
-        <driverdev-devel@linuxdriverproject.org>
-CC:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Jules Irenge <jbi.octave@gmail.com>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "outreachy-kernel@googlegroups.com" 
-        <outreachy-kernel@googlegroups.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v1 1/5] staging: wfx: fix warnings of no space is
- necessary
-Thread-Topic: [PATCH v1 1/5] staging: wfx: fix warnings of no space is
- necessary
-Thread-Index: AQHVhoaXW9ETEAkC20KZ2rlidgS3oadiBNmAgAK/PwA=
-Date:   Mon, 21 Oct 2019 08:21:45 +0000
-Message-ID: <4583183.OhVBZdlllx@pc-42>
-References: <20191019140719.2542-1-jbi.octave@gmail.com>
- <20191019140719.2542-2-jbi.octave@gmail.com> <20191019142443.GH24678@kadam>
-In-Reply-To: <20191019142443.GH24678@kadam>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Jerome.Pouiller@silabs.com; 
-x-originating-ip: [37.71.187.125]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: caceab67-1e54-409d-398a-08d755ffb667
-x-ms-traffictypediagnostic: MN2PR11MB3949:
-x-microsoft-antispam-prvs: <MN2PR11MB3949630B814E417EC0143D8293690@MN2PR11MB3949.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0197AFBD92
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(39850400004)(366004)(396003)(136003)(376002)(346002)(189003)(199004)(446003)(478600001)(6436002)(66574012)(476003)(486006)(6486002)(11346002)(71200400001)(71190400001)(5660300002)(229853002)(99286004)(256004)(6916009)(14454004)(5640700003)(8676002)(6246003)(7736002)(81156014)(305945005)(25786009)(4326008)(81166006)(9686003)(6512007)(76176011)(2351001)(8936002)(66946007)(66476007)(66556008)(76116006)(6506007)(91956017)(102836004)(3846002)(6116002)(66066001)(64756008)(2906002)(66446008)(186003)(26005)(316002)(54906003)(86362001)(33716001)(2501003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB3949;H:MN2PR11MB4063.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: silabs.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: U7KeoZ22FeGnlf63/GfCZroUI6JjjhdqSWhYdJ23QchbvdUFqOKBJBJqgUpZErvMs6ALd0+bd4U/RdMgcaxnKb143K8Z6YLYw1NPM/gflMhXV4uIYhHxEjt6kiNUhxOd9Z3GdsimjDX369Zm1SiZrmRUfmukEDeeWZIel2Diu4Nq90t4LzxodzX4ftu/dvynW8AkRx4XILXvDWXyc+nFdLrn2bfAWqd65Ta2o97PIyDYvYmdtJayDrVaNxmd/UgvgAQo4x+RyxdQlbuqJWqlOS/D8IiIwqZiloTN5+3icte8CSVl5it8vRSdKEnBDKyFGy5QWLFnDeMtbos1Un4/SaS+c/8xndB6Jd7hOOuNUfWFQCQBAD3ZaRqaoMNUar0oE6ygcgpBTJxgn0fxTZiZjipRxW0zZ1fKDWtaiHHPAww=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <736FEC0722E0284582AD517F5E17B446@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=p4b0S+rSUdExawknYnPEdrH70wxnzRDH8rK9g/QHRHw=;
+        b=b15R4qU/W01wcelTGjdUdXNtoIoUMyaUUBM/JVE16d66NZOfq/ERBvgmKuRJLwHNVZ
+         fHAoJcgAfswDADrKFHvcxOyjUcriRcDTQU29YGaLaFe3XyJ5KajsbcpaEgAOGIpyWJeN
+         bE1avIjEHMuDo/q5R5v7rmnnCwDPd/GYPk2dQCnD3Lb2LGt3uYoh5eXORiXJSAhW12Od
+         /m9ApPCLDfJeKsDAqUW+jOZF7emzHQvjpW1t4ZDOUdpeGdr3UWBOwobqrcm0cHYV/D9t
+         INNGqG5Hsosa3QdyL6J4zS89UxWGE4uzM5ll9yExlidZ9H71iwxHAVzviRp17h3TfsfJ
+         ht5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:openpgp:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=p4b0S+rSUdExawknYnPEdrH70wxnzRDH8rK9g/QHRHw=;
+        b=adiV2iR88ND6nLahnVNw+zNWwcxBAptQ+1xKR0BB/ccEf/YAFOHQaIWYdydFIM1OEh
+         q4r79nK9Wsy0utoDEm7v2FsqsBlnTza5GMDnhlUdfLObbOnwPqV5AI+tAv5sjRL3gqEb
+         hKDLdAdXsDyHvUdD6ZKyCzbm+IH2LKI+6exVa+DkBU+T8cKbbCfMrvSkfpuKRb247Myj
+         ZSRSmcXP1EPsrlMdIMllGssjXek6fPdRzYyRZfir3tIyfd2bxDICII+w8t1C5yjdGYI3
+         viRe5AQSDZEnwnAz/hLEMrxkm/c9v7CH/Na5RuYm5svSR5Idvyxk53NQQviEsqlTxiyp
+         PU1w==
+X-Gm-Message-State: APjAAAVQb9Yvivvmq2ZB+xQTywbcDQrOY1wPYpmiFjB/qSpolgsLHqhl
+        doXaH2lDbi7UUVY9Kf+NbQ38TcVer/21Uw==
+X-Google-Smtp-Source: APXvYqzpZiMoyCo757L6iVge6sfOoO380VCWlpCTAfJGMyH6dM1STMcvheK0pc0SEiNI45WQ04iSoQ==
+X-Received: by 2002:a5d:46cb:: with SMTP id g11mr19581095wrs.346.1571646150318;
+        Mon, 21 Oct 2019 01:22:30 -0700 (PDT)
+Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id j63sm15666612wmj.46.2019.10.21.01.22.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 21 Oct 2019 01:22:29 -0700 (PDT)
+Subject: Re: [PATCH v2] soc: amlogic: meson-gx-socinfo: Fix S905D3 ID for
+ VIM3L
+To:     Christian Hewitt <christianshewitt@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <1571646004-21269-1-git-send-email-christianshewitt@gmail.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ ZaTUOEkgIor5losDrePdPgE=
+Organization: Baylibre
+Message-ID: <7d8e80b5-0b37-691a-3375-6a37cc774a95@baylibre.com>
+Date:   Mon, 21 Oct 2019 10:22:29 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-OriginatorOrg: silabs.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: caceab67-1e54-409d-398a-08d755ffb667
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Oct 2019 08:21:45.9635
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 54dbd822-5231-4b20-944d-6f4abcd541fb
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ZGdwcgt4LSB67Z1uH0rqZcJcKwm3nkZGgwU7SJc9jJuLj25pRfsihzCULTMXvG5t9MyPU/TZSjWvRPxhb2YxKQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB3949
+In-Reply-To: <1571646004-21269-1-git-send-email-christianshewitt@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Saturday 19 October 2019 16:24:43 CEST Dan Carpenter wrote:
-> On Sat, Oct 19, 2019 at 03:07:15PM +0100, Jules Irenge wrote:
-> > diff --git a/drivers/staging/wfx/bh.c b/drivers/staging/wfx/bh.c
-> > index 3355183fc86c..573216b08042 100644
-> > --- a/drivers/staging/wfx/bh.c
-> > +++ b/drivers/staging/wfx/bh.c
-> > @@ -69,13 +69,13 @@ static int rx_helper(struct wfx_dev *wdev, size_t r=
-ead_len, int *is_cnf)
-> >       if (wfx_data_read(wdev, skb->data, alloc_len))
-> >               goto err;
-> >
-> > -     piggyback =3D le16_to_cpup((u16 *) (skb->data + alloc_len - 2));
-> > +     piggyback =3D le16_to_cpup((u16 *)(skb->data + alloc_len - 2));
-> >       _trace_piggyback(piggyback, false);
-> >
-> > -     hif =3D (struct hif_msg *) skb->data;
-> > +     hif =3D (struct hif_msg *)skb->data;
-> >       WARN(hif->encrypted & 0x1, "unsupported encryption type");
-> >       if (hif->encrypted =3D=3D 0x2) {
-> > -             if (wfx_sl_decode(wdev, (void *) hif)) {
-> > +             if (wfx_sl_decode(wdev, (void *)hif)) {
->=20
-> In the future you may want to go through and remove the (void *) casts.
-> It's not required here.
->=20
-> > diff --git a/drivers/staging/wfx/bus_spi.c b/drivers/staging/wfx/bus_sp=
-i.c
-> > index f65f7d75e731..effd07957753 100644
-> > --- a/drivers/staging/wfx/bus_spi.c
-> > +++ b/drivers/staging/wfx/bus_spi.c
-> > @@ -90,7 +90,7 @@ static int wfx_spi_copy_to_io(void *priv, unsigned in=
-t addr,
-> >       struct wfx_spi_priv *bus =3D priv;
-> >       u16 regaddr =3D (addr << 12) | (count / 2);
-> >       // FIXME: use a bounce buffer
-> > -     u16 *src16 =3D (void *) src;
-> > +     u16 *src16 =3D (void *)src;
->=20
-> Here we are just getting rid of the constness.  Apparently we are doing
-> that so we can modify it without GCC pointing out the bug!!  I don't
-> know the code but this seems very wrong.
+On 21/10/2019 10:20, Christian Hewitt wrote:
+> Chip on the board is S905D3 not S905X3:
+> 
+> [    0.098998] soc soc0: Amlogic Meson SM1 (S905D3) Revision 2b:c (b0:2) Detected
+> 
+> Change from v1: use 0xf0 mask instead of 0xf2 as advised by Neil Armstrong.
+> 
+> Fixes: 1d7c541b8a5b ("soc: amlogic: meson-gx-socinfo: Add S905X3 ID for VIM3L")
+> 
+> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+> ---
+>  drivers/soc/amlogic/meson-gx-socinfo.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/soc/amlogic/meson-gx-socinfo.c b/drivers/soc/amlogic/meson-gx-socinfo.c
+> index 87ed558..01fc0d2 100644
+> --- a/drivers/soc/amlogic/meson-gx-socinfo.c
+> +++ b/drivers/soc/amlogic/meson-gx-socinfo.c
+> @@ -69,7 +69,7 @@ static const struct meson_gx_package_id {
+>  	{ "S922X", 0x29, 0x40, 0xf0 },
+>  	{ "A311D", 0x29, 0x10, 0xf0 },
+>  	{ "S905X3", 0x2b, 0x5, 0xf },
+> -	{ "S905X3", 0x2b, 0xb0, 0xf2 },
+> +	{ "S905D3", 0x2b, 0xb0, 0xf0 },
+>  	{ "A113L", 0x2c, 0x0, 0xf8 },
+>  };
+>  
+> 
 
-Hello Dan, Jules,
-
-Indeed, this code should be improved.
-
-Each u16 from src is byte-swapped before to be sent to SPI and restored
-before to return from the function:
-
-	for (i =3D 0; i < count / 2; i++)
-		swab16s(&src16[i]);
-	[...]
-	spi_sync(bus->func, &m);
-   [...]
-	for (i =3D 0; i < count / 2; i++)
-		swab16s(&src16[i]);
-
-So, src is same than original, but it is not const.
-
-This is exactly the purpose of the FIXME just before the cast: "use a
-bounce buffer". However, I did not yet make this change because I worry
-about a possible performance penalty.
-
---=20
-J=E9r=F4me Pouiller
-
+Acked-by: Neil Armstrong <narmstrong@baylibre.com>
