@@ -2,83 +2,85 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D52D6CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 19:39:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D804CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 19:41:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B318B20882
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 19:39:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DED6F20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 19:41:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730057AbfJUTjz (ORCPT
+        id S1730188AbfJUTlF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 15:39:55 -0400
-Received: from outbound-smtp05.blacknight.com ([81.17.249.38]:41153 "EHLO
-        outbound-smtp05.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726672AbfJUTjz (ORCPT
+        Mon, 21 Oct 2019 15:41:05 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:43933 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727211AbfJUTlF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 15:39:55 -0400
-Received: from mail.blacknight.com (pemlinmail03.blacknight.ie [81.17.254.16])
-        by outbound-smtp05.blacknight.com (Postfix) with ESMTPS id 8BE2F985A8
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 20:39:53 +0100 (IST)
-Received: (qmail 14816 invoked from network); 21 Oct 2019 19:39:53 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.19.210])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 21 Oct 2019 19:39:53 -0000
-Date:   Mon, 21 Oct 2019 20:39:51 +0100
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Michal Hocko <mhocko@suse.com>, Vlastimil Babka <vbabka@suse.cz>,
+        Mon, 21 Oct 2019 15:41:05 -0400
+Received: from [213.220.153.21] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iMdY4-0005aw-QX; Mon, 21 Oct 2019 19:41:00 +0000
+Date:   Mon, 21 Oct 2019 21:40:59 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, Florian Weimer <fweimer@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>, libc-alpha@sourceware.org,
+        David Howells <dhowells@redhat.com>,
+        Jann Horn <jannh@google.com>, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Shuah Khan <shuah@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Elena Reshetova <elena.reshetova@intel.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        Borislav Petkov <bp@alien8.de>, Linux-MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        lkp@intel.com
-Subject: [PATCH] mm, meminit: Recalculate pcpu batch and high limits after
- init completes -fix
-Message-ID: <20191021193951.GB3016@techsingularity.net>
-References: <20191021094808.28824-1-mgorman@techsingularity.net>
- <20191021094808.28824-2-mgorman@techsingularity.net>
+        Roman Gushchin <guro@fb.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        linux-kselftest@vger.kernel.org, linux-api@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] clone3: add CLONE_CLEAR_SIGHAND
+Message-ID: <20191021194058.pwgiyu4za2srdfau@wittgenstein>
+References: <20191014104538.3096-1-christian.brauner@ubuntu.com>
+ <20191021144633.GA2720@redhat.com>
+ <20191021151255.GA3459@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191021094808.28824-2-mgorman@techsingularity.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191021151255.GA3459@redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-LKP reported the following build problem from two hunks that did not
-survive the reshuffling of the series reordering.
+On Mon, Oct 21, 2019 at 05:12:55PM +0200, Oleg Nesterov wrote:
+> On 10/21, Oleg Nesterov wrote:
+> >
+> > On 10/14, Christian Brauner wrote:
+> > >
+> > > The child helper process on Linux posix_spawn must ensure that no signal
+> > > handlers are enabled, so the signal disposition must be either SIG_DFL
+> > > or SIG_IGN. However, it requires a sigprocmask to obtain the current
+> > > signal mask and at least _NSIG sigaction calls to reset the signal
+> > > handlers for each posix_spawn call
+> >
+> > Plus the caller has to block/unblock all signals around clone(VM|VFORK).
+>        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 
+> just in case... I meant that posix_spawn() has to block/unblock, not its
+> caller.
 
- ld: mm/page_alloc.o: in function `page_alloc_init_late':
- mm/page_alloc.c:1956: undefined reference to `zone_pcp_update'
+Yeah, I think that is what's currently happening.
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
----
- mm/page_alloc.c | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 4179376bb336..e9926bf77463 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -8524,7 +8524,6 @@ void free_contig_range(unsigned long pfn, unsigned int nr_pages)
- 	WARN(count != 0, "%d pages are still in use!\n", count);
- }
- 
--#ifdef CONFIG_MEMORY_HOTPLUG
- /*
-  * The zone indicated has a new number of managed_pages; batch sizes and percpu
-  * page high values need to be recalulated.
-@@ -8535,7 +8534,6 @@ void __meminit zone_pcp_update(struct zone *zone)
- 	__zone_pcp_update(zone);
- 	mutex_unlock(&pcp_batch_high_lock);
- }
--#endif
- 
- void zone_pcp_reset(struct zone *zone)
- {
+Christian
