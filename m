@@ -2,106 +2,148 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 393F8CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 02:27:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD929CA9EB0
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 02:27:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DD9D20679
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 02:27:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B370720679
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 02:27:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="GdHGOI6F"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HBXUvt04"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726992AbfJUC1B (ORCPT
+        id S1727015AbfJUC1k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 20 Oct 2019 22:27:01 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:36439 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726791AbfJUC1A (ORCPT
+        Sun, 20 Oct 2019 22:27:40 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:37904 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726996AbfJUC1k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 20 Oct 2019 22:27:00 -0400
-Received: by mail-qk1-f196.google.com with SMTP id y189so11103965qkc.3
-        for <linux-kernel@vger.kernel.org>; Sun, 20 Oct 2019 19:27:00 -0700 (PDT)
+        Sun, 20 Oct 2019 22:27:40 -0400
+Received: by mail-pg1-f194.google.com with SMTP id w3so6792799pgt.5
+        for <linux-kernel@vger.kernel.org>; Sun, 20 Oct 2019 19:27:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jrxW9Qmajz62yvUJquj+KTYfgTaCJqtVwxFo17SjfJg=;
-        b=GdHGOI6FA40Cf/+MypBS3AhVeJaxk7piMbLSXh4snwlYbYQSyU4qdtsk5NWw4Is4MW
-         8CEOyhdLdJn1MUYeul4rYdmLKibTOfIZF5eVj45+tBaOQoJ7gKr+9twnE9J0ZylXTLKW
-         Oek1sYfiGGf7cKBCKkYsQ2l/1rEJ44mUZi3A8zstu2qW+bf0vpRv5d1byuJG5tPFOJ/F
-         PKn/EcFXsFyaUeBczL3W71GZZXnSW+QtvjGYzRHTnWKAhrm6W7y7GAfyhmz5IXICxg6v
-         NTy1rCcmjFtdsqV+iqw2s2ysWcElHOwdIOOG2lWrbNPvH8xBNneEGZO5MuurM78HUbOH
-         +EwA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+XgAS3p3ETrEIu1jjk49WnshOluu9ziyQFPp12n3bCU=;
+        b=HBXUvt040GMIEwLCNj0cv5hSZlRkL/uSj5D7wLWdq/dK4otL0nVEbSqZR/yA3O2Og9
+         AGWR8nz33JcyPwt0cVzYqNq50Faf18+z3imXfVGexdoVV7YqaTAx1/VUr9tWFd1T5Cbb
+         Tf3GaNcBURk5SkpU/x/jomYDDMhIfJxW71YTg5rvruJX3ueO8ezhfGPDpZ8h4aBGcFO7
+         kumSOPEltTLr+L4+0n9vUg4CWg75RR45G4UAxyVxqOpn3JU7cI+2DI4kkwOVZWPX+nFt
+         EIZgqQsA7otGwkMKpKWeRDE8Vka9aexA24uKnw1PmWmT0weSSgJHTEGbfcCA0RE8KN8b
+         2ajw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jrxW9Qmajz62yvUJquj+KTYfgTaCJqtVwxFo17SjfJg=;
-        b=RI21O+ZiHhzuZGFvKKWaZSJT5QoUnAAwLQoehEf7UmUd8qxiHBv9zHFh2Jf0Id5TH/
-         V0dNUcZjlkM2ZslM9Oe0fV/XS/WiKX872AAtV4ARRKu8+5kTLeVLPep0zTw26DH+OhQH
-         1iNaWF780SMionE6BPk3izN5OE6ONNMrGMYujtWp7npjAQZR9t/zoIwEWbpPHYunMxPf
-         0Cki64RIgT1H8ioUMXDrghFUTtPDVu98xkkMbYwLWi3xI5e7JYrb2qmod6boZ3tBfGtn
-         bnyeCAB1QpfosXMIiIC5f2cGpbND6w6ItfJpC/nyCjifTfM7xarHTUdusDZqNJjBEUSs
-         GTMg==
-X-Gm-Message-State: APjAAAUFa9n870wcEWKU2bgDsSkdR2WvwMpyt2sh3um1EJoEBIWAsnAt
-        U9Sz4wjC3d3hSB2smymCjnC6qQwKo3bQMK//F1rVgw==
-X-Google-Smtp-Source: APXvYqzLwdW3DA3VpPfKWk5UBNKvFyqUgyR2WjiFtRKl7134YMV086Yowi5kRvOGGSPHNujQzRONodo0XwsojYlg7G8=
-X-Received: by 2002:a37:5f46:: with SMTP id t67mr19441250qkb.220.1571624819419;
- Sun, 20 Oct 2019 19:26:59 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+XgAS3p3ETrEIu1jjk49WnshOluu9ziyQFPp12n3bCU=;
+        b=W8RMLar506+VbwUDt915RjQcy42nalvOe8Z6BcabKgmyjR9xgI4Jb7/glwK7d+vKSj
+         RdyBmgF2aS6KM7ivDAq99Y6OSq6cQQJtT+Wf1nLSBXluaUhcT11JTFGMNqODtlhY6S/s
+         1hzP/8NO4jtnmBcvuQ4ZMWo07KRIFLPh4E7Mcweogl1IpgFRE6BBL+u2mNzJtcupzqc2
+         f/wkOPbq1bLIxhpTWoDhgXvudTJ4wrn0wfB7/V/HgZiDEDsFdMT7MMfGg7wX75ZJ9AU7
+         W+XOSRPQtiSpwb3/011k6LFoEVF3LqVpl9nZaMlkXS13R/JR8b71+I0IVqYgUTimhg3b
+         qFtg==
+X-Gm-Message-State: APjAAAUGzovEZ4mFKBL3l7bXvzmowYA7sNBYeqTm4cB00V3R5xaPZ9Th
+        7FR8U3IGMR2YQeA/rb+f4bWw4Q==
+X-Google-Smtp-Source: APXvYqwgXGc8U+6JV2azREgJVpwvucEYJlBr8fKvxMlwaeCP9tIcS23wt/WioWPY0VSEsf3wqmlSTg==
+X-Received: by 2002:a63:4e52:: with SMTP id o18mr11185515pgl.153.1571624859157;
+        Sun, 20 Oct 2019 19:27:39 -0700 (PDT)
+Received: from localhost ([122.172.151.112])
+        by smtp.gmail.com with ESMTPSA id f17sm20835265pgd.8.2019.10.20.19.27.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 20 Oct 2019 19:27:38 -0700 (PDT)
+Date:   Mon, 21 Oct 2019 07:57:36 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Mark Brown <broonie@kernel.org>, linux-clk@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-rtc@vger.kernel.org,
+        linux-usb@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        alsa-devel@alsa-project.org
+Subject: Re: [PATCH 05/46] ARM: pxa: split up mach/hardware.h
+Message-ID: <20191021022736.yu6unspozqf5634p@vireshk-i7>
+References: <20191018154052.1276506-1-arnd@arndb.de>
+ <20191018154201.1276638-5-arnd@arndb.de>
 MIME-Version: 1.0
-References: <20191016015408.11091-1-chiu@endlessm.com> <CAB4CAwen5y7Z4GU7YgpVafyGexxaMDLzrZ949t9p+LiZ9TxAPA@mail.gmail.com>
-In-Reply-To: <CAB4CAwen5y7Z4GU7YgpVafyGexxaMDLzrZ949t9p+LiZ9TxAPA@mail.gmail.com>
-From:   Chris Chiu <chiu@endlessm.com>
-Date:   Mon, 21 Oct 2019 10:26:48 +0800
-Message-ID: <CAB4CAwcW5JGtZQy+=vugx5rRYMycWoCSSdDc6nwhunqTtqoQaA@mail.gmail.com>
-Subject: Re: [PATCH v2] rtl8xxxu: fix RTL8723BU connection failure issue after
- warm reboot
-To:     Jes Sorensen <Jes.Sorensen@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        David Miller <davem@davemloft.net>
-Cc:     linux-wireless <linux-wireless@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Linux Upstreaming Team <linux@endlessm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191018154201.1276638-5-arnd@arndb.de>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 10:26 AM Chris Chiu <chiu@endlessm.com> wrote:
->
-> On Wed, Oct 16, 2019 at 9:54 AM Chris Chiu <chiu@endlessm.com> wrote:
-> >
-> > The RTL8723BU has problems connecting to AP after each warm reboot.
-> > Sometimes it returns no scan result, and in most cases, it fails
-> > the authentication for unknown reason. However, it works totally
-> > fine after cold reboot.
-> >
-> > Compare the value of register SYS_CR and SYS_CLK_MAC_CLK_ENABLE
-> > for cold reboot and warm reboot, the registers imply that the MAC
-> > is already powered and thus some procedures are skipped during
-> > driver initialization. Double checked the vendor driver, it reads
-> > the SYS_CR and SYS_CLK_MAC_CLK_ENABLE also but doesn't skip any
-> > during initialization based on them. This commit only tells the
-> > RTL8723BU to do full initialization without checking MAC status.
-> >
-> > Signed-off-by: Chris Chiu <chiu@endlessm.com>
-> Signed-off-by: Jes Sorensen <Jes.Sorensen@gmail.com>
->
-> Sorry, I forgot to add Jes.
->
-> Chris
-> > ---
-> >
-> > Note:
-> >   v2: fix typo of commit message
-> >
-> >
+On 18-10-19, 17:41, Arnd Bergmann wrote:
+> The mach/hardware.h is included in lots of places, and it provides
+> three different things on pxa:
+> 
+> - the cpu_is_pxa* macros
+> - an indirect inclusion of mach/addr-map.h
+> - the __REG() and io_pv2() helper macros
+> 
+> Split it up into separate <linux/soc/pxa/cpu.h> and mach/pxa-regs.h
+> headers, then change all the files that use mach/hardware.h to
+> include the exact set of those three headers that they actually
+> need, allowing for further more targeted cleanup.
+> 
+> linux/soc/pxa/cpu.h can remain permanently exported and is now in
+> a global location along with similar headers. pxa-regs.h and
+> addr-map.h are only used in a very small number of drivers now
+> and can be moved to arch/arm/mach-pxa/ directly when those drivers
+> are to pass the necessary data as resources.
+> 
+> Cc: Michael Turquette <mturquette@baylibre.com>
+> Cc: Stephen Boyd <sboyd@kernel.org>
+> Cc: Viresh Kumar <viresh.kumar@linaro.org>
+> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> Cc: Pavel Machek <pavel@ucw.cz>
+> Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> Cc: Dominik Brodowski <linux@dominikbrodowski.net>
+> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: linux-clk@vger.kernel.org
+> Cc: linux-pm@vger.kernel.org
+> Cc: linux-input@vger.kernel.org
+> Cc: linux-leds@vger.kernel.org
+> Cc: linux-mmc@vger.kernel.org
+> Cc: linux-mtd@lists.infradead.org
+> Cc: linux-rtc@vger.kernel.org
+> Cc: linux-usb@vger.kernel.org
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: linux-fbdev@vger.kernel.org
+> Cc: linux-watchdog@vger.kernel.org
+> Cc: alsa-devel@alsa-project.org
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/cpufreq/pxa2xx-cpufreq.c              |  1 +
+>  drivers/cpufreq/pxa3xx-cpufreq.c              |  1 +
 
-Gentle ping. Cheers.
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-Chris
+-- 
+viresh
