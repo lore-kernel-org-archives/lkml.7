@@ -2,172 +2,710 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F895CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:53:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17ECACA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:53:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31E962070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:53:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE1A62070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:53:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727846AbfJUJxX (ORCPT
+        id S1727967AbfJUJxw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 05:53:23 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:47436 "EHLO foss.arm.com"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S1727194AbfJUJxW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 05:53:22 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6B8D715BE;
-        Mon, 21 Oct 2019 02:52:51 -0700 (PDT)
-Received: from [10.163.1.2] (unknown [10.163.1.2])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 613D93F718;
-        Mon, 21 Oct 2019 02:52:43 -0700 (PDT)
-Subject: Re: [PATCH V9 2/2] arm64/mm: Enable memory hot remove
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, akpm@linux-foundation.org,
-        will@kernel.org, mark.rutland@arm.com, david@redhat.com,
-        cai@lca.pw, logang@deltatee.com, cpandya@codeaurora.org,
-        arunks@codeaurora.org, dan.j.williams@intel.com,
-        mgorman@techsingularity.net, osalvador@suse.de,
-        ard.biesheuvel@arm.com, steve.capper@arm.com, broonie@kernel.org,
-        valentin.schneider@arm.com, Robin.Murphy@arm.com,
-        steven.price@arm.com, suzuki.poulose@arm.com, ira.weiny@intel.com,
-        James Morse <james.morse@arm.com>
-References: <1570609308-15697-1-git-send-email-anshuman.khandual@arm.com>
- <1570609308-15697-3-git-send-email-anshuman.khandual@arm.com>
- <20191010113433.GI28269@mbp> <f51cdb20-ddc4-4fb7-6c45-791d2e1e690c@arm.com>
- <20191018094825.GD19734@arrakis.emea.arm.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <f5581644-42b7-097e-6a86-ba7db9d0b544@arm.com>
-Date:   Mon, 21 Oct 2019 15:23:11 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Mon, 21 Oct 2019 05:53:52 -0400
+Received: from mga14.intel.com ([192.55.52.115]:59030 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727951AbfJUJxw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 05:53:52 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 02:53:49 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,323,1566889200"; 
+   d="scan'208";a="196065223"
+Received: from lingshan-mobl5.ccr.corp.intel.com (HELO [10.238.129.136]) ([10.238.129.136])
+  by fmsmga008.fm.intel.com with ESMTP; 21 Oct 2019 02:53:45 -0700
+Subject: Re: [RFC 2/2] vhost: IFC VF vdpa layer
+To:     Jason Wang <jasowang@redhat.com>, mst@redhat.com,
+        alex.williamson@redhat.com
+Cc:     linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, dan.daly@intel.com,
+        cunming.liang@intel.com, tiwei.bie@intel.com, jason.zeng@intel.com,
+        zhiyuan.lv@intel.com
+References: <20191016013050.3918-1-lingshan.zhu@intel.com>
+ <20191016013050.3918-3-lingshan.zhu@intel.com>
+ <9495331d-3c65-6f49-dcd9-bfdb17054cf0@redhat.com>
+From:   "Zhu, Lingshan" <lingshan.zhu@intel.com>
+Message-ID: <f65358e9-6728-8260-74f7-176d7511e989@intel.com>
+Date:   Mon, 21 Oct 2019 17:53:45 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.0
 MIME-Version: 1.0
-In-Reply-To: <20191018094825.GD19734@arrakis.emea.arm.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <9495331d-3c65-6f49-dcd9-bfdb17054cf0@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-
-On 10/18/2019 03:18 PM, Catalin Marinas wrote:
-> On Fri, Oct 11, 2019 at 08:26:32AM +0530, Anshuman Khandual wrote:
->> On 10/10/2019 05:04 PM, Catalin Marinas wrote:
->>> Mark Rutland mentioned at some point that, as a preparatory patch to
->>> this series, we'd need to make sure we don't hot-remove memory already
->>> given to the kernel at boot. Any plans here?
+On 10/16/2019 6:19 PM, Jason Wang wrote:
+>
+> On 2019/10/16 上午9:30, Zhu Lingshan wrote:
+>> This commit introduced IFC VF operations for vdpa, which complys to
+>> vhost_mdev interfaces, handles IFC VF initialization,
+>> configuration and removal.
 >>
->> Hmm, this series just enables platform memory hot remove as required from
->> generic memory hotplug framework. The path here is triggered either from
->> remove_memory() or __remove_memory() which takes physical memory range
->> arguments like (nid, start, size) and do the needful. arch_remove_memory()
->> should never be required to test given memory range for anything including
->> being part of the boot memory.
-> 
-> Assuming arch_remove_memory() doesn't (cannot) check, is there a risk on
-
-Platform can definitely enumerate boot memory ranges. But checking on it in
-arch_remove_memory() which deals with actual procedural details might not be
-ideal IMHO. Refusing a requested removal attempt should have been done up in
-the call chain. This will require making generic hot plug reject any removal
-request which falls within enumerated boot memory. IFAICS currently there is
-no generic way to remember which memory came as part of the boot process.
-Probably be a new MEMBLOCK flag will do.
-
-> arm64 that, for example, one removes memory available at boot and then
-> kexecs a new kernel? Does the kexec tool present the new kernel with the
-> original memory map?
-
-I dont know, probably James can help here. But as I had mentioned earlier,
-the callers of remove_memory() should be able to control that. ACPI should
-definitely be aware about which ranges were part of boot memory and refrain
-from removing any subset, if the platform is known to have problems with
-any subsequent kexec operation because the way boot memory map get used.
-
-Though I am not much aware about kexec internals, it should inherit the
-memory state at given point in time accommodating all previous memory hot
-and remove operations. As an example cloud environment scenario, memory
-resources might have increased or decreased during a guest lifetime, so
-when the guest needs to have new OS image why should not it have all the
-memory ? I dont know if it's feasible for the guest to expect previous hot
-add or remove operations to be played again after the kexec.
-
-There is another fundamental question here. Is there a notion of a minimum
-subset of boot memory which cannot be hot removed no matter what ? If yes,
-how that is being conveyed to the kernel currently ?
-
-The point is that all these need to be established between ACPI, EFI and
-kernel. AFAICS this problem is for MM subsystem (including the platform
-part of it) to solve instead.
-
-> 
-> I can see x86 has CONFIG_FIRMWARE_MEMMAP suggesting that it is used by
-> kexec. try_remove_memory() calls firmware_map_remove() so maybe they
-> solve this problem differently.
-> 
-> Correspondingly, after an arch_add_memory(), do we want a kexec kernel
-> to access it? x86 seems to use the firmware_map_add_hotplug() mechanism.
-
-Hmm, kexec could use it instead on arm64 as well ?
-
-> 
-> Adding James as well for additional comments on kexec scenarios.
-> 
->> IIUC boot memory added to system with memblock_add() lose all it's identity
->> after the system is up and running. In order to reject any attempt to hot
->> remove boot memory, platform needs to remember all those memory that came
->> early in the boot and then scan through it during arch_remove_memory().
+>> Signed-off-by: Zhu Lingshan <lingshan.zhu@intel.com>
+>> ---
+>>   drivers/vhost/ifcvf/ifcvf_main.c | 541 
+>> +++++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 541 insertions(+)
+>>   create mode 100644 drivers/vhost/ifcvf/ifcvf_main.c
 >>
->> Ideally, it is the responsibility of [_]remove_memory() callers like ACPI
->> driver, DAX etc to make sure they never attempt to hot remove a memory
->> range, which never got hot added by them in the first place. Also, unlike
->> /sys/devices/system/memory/probe there is no 'unprobe' interface where the
->> user can just trigger boot memory removal. Hence, unless there is a bug in
->> ACPI, DAX or other callers, there should never be any attempt to hot remove
->> boot memory in the first place.
-> 
-> That's fine if these callers give such guarantees. I just want to make
-> sure someone checked all the possible scenarios for memory hot-remove.
+>> diff --git a/drivers/vhost/ifcvf/ifcvf_main.c 
+>> b/drivers/vhost/ifcvf/ifcvf_main.c
+>> new file mode 100644
+>> index 000000000000..c48a29969a85
+>> --- /dev/null
+>> +++ b/drivers/vhost/ifcvf/ifcvf_main.c
+>> @@ -0,0 +1,541 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +/*
+>> + * Copyright (C) 2019 Intel Corporation.
+>> + */
+>> +
+>> +#include <linux/interrupt.h>
+>> +#include <linux/module.h>
+>> +#include <linux/mdev.h>
+>> +#include <linux/pci.h>
+>> +#include <linux/sysfs.h>
+>> +
+>> +#include "ifcvf_base.h"
+>> +
+>> +#define VERSION_STRING    "0.1"
+>> +#define DRIVER_AUTHOR    "Intel Corporation"
+>> +#define IFCVF_DRIVER_NAME    "ifcvf"
+>> +
+>> +static irqreturn_t ifcvf_intr_handler(int irq, void *arg)
+>> +{
+>> +    struct vring_info *vring = arg;
+>> +
+>> +    if (vring->cb.callback)
+>> +        return vring->cb.callback(vring->cb.private);
+>> +
+>> +    return IRQ_HANDLED;
+>> +}
+>> +
+>> +static u64 ifcvf_mdev_get_features(struct mdev_device *mdev)
+>> +{
+>> +    return IFC_SUPPORTED_FEATURES;
+>
+>
+> I would expect this should be done by querying the hw. Or IFC VF can't 
+> get any update through its firmware?
 
-remove_memory() is a destructive call but without any user interface. So that
-leaves only callers in the kernel which definitely need to know what exactly
-they intent to do. I dont see how this is any different from numerous other
-interfaces which just can mess up memory subsystem if not used appropriately.
+Hi Jason,
 
-There is another reason why the boot memory will be prevented from being hot
-removed. Generally (unless marked as hotpluggable in SRAT table) boot memory
-will never become ZONE_MOVABLE, which could not be isolated and migrated,
-making it impossible hot remove.
+Thanks for your comments, for now driver just support these features.
 
-Just wanted to add one thing about MEMBLOCK_HOTPLUG regions which might have
-come during boot after parsing ACPI SRAT table's ACPI_SRAT_MEM_HOT_PLUGGABLE.
-Corresponding memblock regions are marked with MEMBLOCK_HOTPLUG till buddy
-allocator has been initialized. These flags get cleared entirely on the system
-during memblock_free_all() and those areas eventually become ZONE_MOVABLE.
-
-Even though those ZONE_MOVABLE memory block devices can be hot removed after
-being isolated and offlined first, a remove_memory() caller is required to
-trigger actual hot removal. AFAICS apart from ACPI or other firmware driver,
-there wont be any other remove_memory() caller which will attempt to remove
-boot memory.
-
-Going forward, in case we would want to support hot-remove from hot pluggable
-regions at boot (i.e MEMBLOCK_HOTPLUG from SRAT), we will have to re-introduce
-back reserved page freeing sequence in free_hotplug_page_range() which was
-dropped back in V3 per Mark. The current implementation does a WARN_ON() in
-such cases because it should never happen.
-
-https://lkml.org/lkml/2019/4/17/782
-
-ZONE_DEVICE callers for arch_add_memory() and arch_remove_memory() are straight
-forward (memremap_pages and memunmap_pages), where the address range is contained
-in 'struct dev_pagemap' reducing the chances of an error which could hot-remove
-boot memory.
+>
+>
+>> +}
+>> +
+>> +static int ifcvf_mdev_set_features(struct mdev_device *mdev, u64 
+>> features)
+>> +{
+>> +    struct ifcvf_adapter *adapter = mdev_get_drvdata(mdev);
+>> +    struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
+>> +
+>> +    vf->req_features = features;
+>> +
+>> +    return 0;
+>> +}
+>> +
+>> +static u64 ifcvf_mdev_get_vq_state(struct mdev_device *mdev, u16 qid)
+>> +{
+>> +    struct ifcvf_adapter *adapter = mdev_get_drvdata(mdev);
+>> +    struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
+>> +
+>> +    return vf->vring[qid].last_avail_idx;
+>
+>
+> Does this really work? I'd expect it should be fetched from hw since 
+> it's an internal state.
+for now, it's working, we intend to support LM in next version drivers.
+>
+>
+>> +}
+>> +
+>> +static int ifcvf_mdev_set_vq_state(struct mdev_device *mdev, u16 
+>> qid, u64 num)
+>> +{
+>> +    struct ifcvf_adapter *adapter = mdev_get_drvdata(mdev);
+>> +    struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
+>> +
+>> +    vf->vring[qid].last_used_idx = num;
+>
+>
+> I fail to understand why last_used_idx is needed. It looks to me the 
+> used idx in the used ring is sufficient.
+I will remove it.
+>
+>
+>> +    vf->vring[qid].last_avail_idx = num;
+>
+>
+> Do we need a synchronization with hw immediately here?
+>
+>
+>> +
+>> +    return 0;
+>> +}
+>> +
+>> +static int ifcvf_mdev_set_vq_address(struct mdev_device *mdev, u16 idx,
+>> +                     u64 desc_area, u64 driver_area,
+>> +                     u64 device_area)
+>> +{
+>> +    struct ifcvf_adapter *adapter = mdev_get_drvdata(mdev);
+>> +    struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
+>> +
+>> +    vf->vring[idx].desc = desc_area;
+>> +    vf->vring[idx].avail = driver_area;
+>> +    vf->vring[idx].used = device_area;
+>> +
+>> +    return 0;
+>> +}
+>> +
+>> +static void ifcvf_mdev_set_vq_num(struct mdev_device *mdev, u16 qid, 
+>> u32 num)
+>> +{
+>> +    struct ifcvf_adapter *adapter = mdev_get_drvdata(mdev);
+>> +    struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
+>> +
+>> +    vf->vring[qid].size = num;
+>> +}
+>> +
+>> +static void ifcvf_mdev_set_vq_ready(struct mdev_device *mdev,
+>> +                u16 qid, bool ready)
+>> +{
+>> +
+>> +    struct ifcvf_adapter *adapter = mdev_get_drvdata(mdev);
+>> +    struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
+>> +
+>> +    vf->vring[qid].ready = ready;
+>> +}
+>> +
+>> +static bool ifcvf_mdev_get_vq_ready(struct mdev_device *mdev, u16 qid)
+>> +{
+>> +
+>> +    struct ifcvf_adapter *adapter = mdev_get_drvdata(mdev);
+>> +    struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
+>> +
+>> +    return vf->vring[qid].ready;
+>> +}
+>> +
+>> +static void ifcvf_mdev_set_vq_cb(struct mdev_device *mdev, u16 idx,
+>> +                 struct virtio_mdev_callback *cb)
+>> +{
+>> +    struct ifcvf_adapter *adapter = mdev_get_drvdata(mdev);
+>> +    struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
+>> +
+>> +    vf->vring[idx].cb = *cb;
+>> +}
+>> +
+>> +static void ifcvf_mdev_kick_vq(struct mdev_device *mdev, u16 idx)
+>> +{
+>> +    struct ifcvf_adapter *adapter = mdev_get_drvdata(mdev);
+>> +    struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
+>> +
+>> +    ifcvf_notify_queue(vf, idx);
+>> +}
+>> +
+>> +static u8 ifcvf_mdev_get_status(struct mdev_device *mdev)
+>> +{
+>> +    struct ifcvf_adapter *adapter = mdev_get_drvdata(mdev);
+>> +    struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
+>> +
+>> +    return vf->status;
+>> +}
+>> +
+>> +static u32 ifcvf_mdev_get_generation(struct mdev_device *mdev)
+>> +{
+>> +    struct ifcvf_adapter *adapter = mdev_get_drvdata(mdev);
+>> +    struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
+>> +
+>> +    return vf->generation;
+>> +}
+>> +
+>> +static int ifcvf_mdev_get_version(struct mdev_device *mdev)
+>> +{
+>> +    return VIRTIO_MDEV_VERSION;
+>> +}
+>> +
+>> +static u32 ifcvf_mdev_get_device_id(struct mdev_device *mdev)
+>> +{
+>> +    return IFCVF_DEVICE_ID;
+>> +}
+>> +
+>> +static u32 ifcvf_mdev_get_vendor_id(struct mdev_device *mdev)
+>> +{
+>> +    return IFCVF_VENDOR_ID;
+>> +}
+>> +
+>> +static u16 ifcvf_mdev_get_vq_align(struct mdev_device *mdev)
+>> +{
+>> +    return IFCVF_QUEUE_ALIGNMENT;
+>> +}
+>> +
+>> +static int ifcvf_start_datapath(void *private)
+>> +{
+>> +    int i, ret;
+>> +    struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(private);
+>> +
+>> +    for (i = 0; i < (IFCVF_MAX_QUEUE_PAIRS * 2); i++) {
+>> +        if (!vf->vring[i].ready)
+>> +            break;
+>
+>
+> Looks like error should be returned here?
+agreed!
+>
+>
+>> +
+>> +        if (!vf->vring[i].size)
+>> +            break;
+>> +
+>> +        if (!vf->vring[i].desc || !vf->vring[i].avail ||
+>> +            !vf->vring[i].used)
+>> +            break;
+>> +    }
+>> +    vf->nr_vring = i;
+>> +
+>> +    ret = ifcvf_start_hw(vf);
+>> +    return ret;
+>> +}
+>> +
+>> +static int ifcvf_stop_datapath(void *private)
+>> +{
+>> +    struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(private);
+>> +    int i;
+>> +
+>> +    for (i = 0; i < IFCVF_MAX_QUEUES; i++)
+>> +        vf->vring[i].cb.callback = NULL;
+>
+>
+> Any synchronization is needed for the vq irq handler?
+I think even we set callback = NULL, the code is still there, on-going 
+routines would not be effected.
+>
+>
+>> +
+>> +    ifcvf_stop_hw(vf);
+>> +
+>> +    return 0;
+>> +}
+>> +
+>> +static void ifcvf_reset_vring(struct ifcvf_adapter *adapter)
+>> +{
+>> +    int i;
+>> +    struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
+>> +
+>> +    for (i = 0; i < IFCVF_MAX_QUEUE_PAIRS * 2; i++) {
+>> +        vf->vring[i].last_used_idx = 0;
+>> +        vf->vring[i].last_avail_idx = 0;
+>> +        vf->vring[i].desc = 0;
+>> +        vf->vring[i].avail = 0;
+>> +        vf->vring[i].used = 0;
+>> +        vf->vring[i].ready = 0;
+>> +        vf->vring->cb.callback = NULL;
+>> +        vf->vring->cb.private = NULL;
+>> +    }
+>> +}
+>> +
+>> +static void ifcvf_mdev_set_status(struct mdev_device *mdev, u8 status)
+>> +{
+>> +    struct ifcvf_adapter *adapter = mdev_get_drvdata(mdev);
+>> +    struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
+>> +
+>> +    vf->status = status;
+>> +
+>> +    if (status == 0) {
+>> +        ifcvf_stop_datapath(adapter);
+>> +        ifcvf_reset_vring(adapter);
+>> +        return;
+>> +    }
+>> +
+>> +    if (status & VIRTIO_CONFIG_S_DRIVER_OK) {
+>> +        ifcvf_start_datapath(adapter);
+>> +        return;
+>> +    }
+>> +}
+>> +
+>> +static u16 ifcvf_mdev_get_queue_max(struct mdev_device *mdev)
+>> +{
+>> +    return IFCVF_MAX_QUEUES;
+>
+>
+> The name is confusing, it was used to return the maximum queue size. 
+> In new version of virtio-mdev, the callback was renamed as 
+> get_vq_num_max().
+will change that.
+>
+>
+>> +}
+>> +
+>> +static struct virtio_mdev_device_ops ifc_mdev_ops = {
+>> +    .get_features  = ifcvf_mdev_get_features,
+>> +    .set_features  = ifcvf_mdev_set_features,
+>> +    .get_status    = ifcvf_mdev_get_status,
+>> +    .set_status    = ifcvf_mdev_set_status,
+>> +    .get_queue_max = ifcvf_mdev_get_queue_max,
+>> +    .get_vq_state   = ifcvf_mdev_get_vq_state,
+>> +    .set_vq_state   = ifcvf_mdev_set_vq_state,
+>> +    .set_vq_cb      = ifcvf_mdev_set_vq_cb,
+>> +    .set_vq_ready   = ifcvf_mdev_set_vq_ready,
+>> +    .get_vq_ready    = ifcvf_mdev_get_vq_ready,
+>> +    .set_vq_num     = ifcvf_mdev_set_vq_num,
+>> +    .set_vq_address = ifcvf_mdev_set_vq_address,
+>> +    .kick_vq        = ifcvf_mdev_kick_vq,
+>> +    .get_generation    = ifcvf_mdev_get_generation,
+>> +    .get_version    = ifcvf_mdev_get_version,
+>> +    .get_device_id    = ifcvf_mdev_get_device_id,
+>> +    .get_vendor_id    = ifcvf_mdev_get_vendor_id,
+>> +    .get_vq_align    = ifcvf_mdev_get_vq_align,
+>> +};
+>
+>
+> set_config/get_config is missing. It looks to me they are not hard, 
+> just implementing the access to dev_cfg. It's key to make kernel 
+> virtio driver to work.
+>
+> And in the new version of virito-mdev, features like _F_LOG_ALL should 
+> be advertised through get_mdev_features.
+IMHO, currently the driver can work without set/get_config, vhost_mdev 
+doesn't call them for now.
+>
+>
+>> +
+>> +static int ifcvf_init_msix(struct ifcvf_adapter *adapter)
+>> +{
+>> +    int vector, i, ret, irq;
+>> +    struct pci_dev *pdev = to_pci_dev(adapter->dev);
+>> +    struct ifcvf_hw *vf = &adapter->vf;
+>> +
+>> +    ret = pci_alloc_irq_vectors(pdev, IFCVF_MAX_INTR,
+>> +            IFCVF_MAX_INTR, PCI_IRQ_MSIX);
+>> +    if (ret < 0) {
+>> +        IFC_ERR(adapter->dev, "Failed to alloc irq vectors.\n");
+>> +        return ret;
+>> +    }
+>> +
+>> +    for (i = 0; i < IFCVF_MAX_QUEUE_PAIRS * 2; i++) {
+>> +        vector = i + IFCVF_MSI_QUEUE_OFF;
+>> +        irq = pci_irq_vector(pdev, vector);
+>> +        ret = request_irq(irq, ifcvf_intr_handler, 0,
+>> +                pci_name(pdev), &vf->vring[i]);
+>> +        if (ret) {
+>> +            IFC_ERR(adapter->dev,
+>> +                "Failed to request irq for vq %d.\n", i);
+>> +            return ret;
+>> +        }
+>> +    }
+>
+>
+> Do we need to provide fallback when we can't do per vq MSIX?
+I think it would be very rarely that can not get enough vectors.
+>
+>
+>> +
+>> +    return 0;
+>> +}
+>> +
+>> +static void ifcvf_destroy_adapter(struct ifcvf_adapter *adapter)
+>> +{
+>> +    int i, vector, irq;
+>> +    struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
+>> +    struct pci_dev *pdev = to_pci_dev(adapter->dev);
+>> +
+>> +    for (i = 0; i < IFCVF_MAX_QUEUE_PAIRS * 2; i++) {
+>> +        vector = i + IFCVF_MSI_QUEUE_OFF;
+>> +        irq = pci_irq_vector(pdev, vector);
+>> +        free_irq(irq, &vf->vring[i]);
+>> +    }
+>> +}
+>> +
+>> +static ssize_t name_show(struct kobject *kobj, struct device *dev, 
+>> char *buf)
+>> +{
+>> +    const char *name = "vhost accelerator (virtio ring compatible)";
+>> +
+>> +    return sprintf(buf, "%s\n", name);
+>> +}
+>> +MDEV_TYPE_ATTR_RO(name);
+>> +
+>> +static ssize_t device_api_show(struct kobject *kobj, struct device 
+>> *dev,
+>> +                   char *buf)
+>> +{
+>> +    return sprintf(buf, "%s\n", VIRTIO_MDEV_DEVICE_API_STRING);
+>> +}
+>> +MDEV_TYPE_ATTR_RO(device_api);
+>> +
+>> +static ssize_t available_instances_show(struct kobject *kobj,
+>> +                    struct device *dev, char *buf)
+>> +{
+>> +    struct pci_dev *pdev = to_pci_dev(dev);
+>> +    struct ifcvf_adapter *adapter = pci_get_drvdata(pdev);
+>> +
+>> +    return sprintf(buf, "%d\n", adapter->mdev_count);
+>> +}
+>> +
+>> +MDEV_TYPE_ATTR_RO(available_instances);
+>> +
+>> +static ssize_t type_show(struct kobject *kobj,
+>> +            struct device *dev, char *buf)
+>> +{
+>> +    return sprintf(buf, "%s\n", "net");
+>> +}
+>> +
+>> +MDEV_TYPE_ATTR_RO(type);
+>> +
+>> +
+>> +static struct attribute *mdev_types_attrs[] = {
+>> +    &mdev_type_attr_name.attr,
+>> +    &mdev_type_attr_device_api.attr,
+>> +    &mdev_type_attr_available_instances.attr,
+>> +    &mdev_type_attr_type.attr,
+>> +    NULL,
+>> +};
+>> +
+>> +static struct attribute_group mdev_type_group = {
+>> +    .name  = "vdpa_virtio",
+>
+>
+> To be consistent, it should be "vhost" or "virtio".
+agreed!
+>
+>
+>> +    .attrs = mdev_types_attrs,
+>> +};
+>> +
+>> +static struct attribute_group *mdev_type_groups[] = {
+>> +    &mdev_type_group,
+>> +    NULL,
+>> +};
+>> +
+>> +const struct attribute_group *mdev_dev_groups[] = {
+>> +    NULL,
+>> +};
+>> +
+>> +static int ifcvf_mdev_create(struct kobject *kobj, struct 
+>> mdev_device *mdev)
+>> +{
+>> +    struct device *dev = mdev_parent_dev(mdev);
+>> +    struct pci_dev *pdev = to_pci_dev(dev);
+>> +    struct ifcvf_adapter *adapter = pci_get_drvdata(pdev);
+>> +    int ret = 0;
+>> +
+>> +    mutex_lock(&adapter->mdev_lock);
+>> +
+>> +    if (adapter->mdev_count < 1) {
+>> +        ret = -EINVAL;
+>> +        goto out;
+>> +    }
+>> +
+>> +    mdev_set_class_id(mdev, MDEV_ID_VHOST);
+>> +    mdev_set_dev_ops(mdev, &ifc_mdev_ops);
+>> +
+>> +    mdev_set_drvdata(mdev, adapter);
+>> +    mdev_set_iommu_device(mdev_dev(mdev), dev);
+>> +
+>> +    INIT_LIST_HEAD(&adapter->dma_maps);
+>> +    adapter->mdev_count--;
+>> +
+>> +out:
+>> +    mutex_unlock(&adapter->mdev_lock);
+>> +    return ret;
+>> +}
+>> +
+>> +static int ifcvf_mdev_remove(struct mdev_device *mdev)
+>> +{
+>> +    struct device *dev = mdev_parent_dev(mdev);
+>> +    struct pci_dev *pdev = to_pci_dev(dev);
+>> +    struct ifcvf_adapter *adapter = pci_get_drvdata(pdev);
+>> +
+>> +    mutex_lock(&adapter->mdev_lock);
+>> +    adapter->mdev_count++;
+>> +    mutex_unlock(&adapter->mdev_lock);
+>> +
+>> +    return 0;
+>> +}
+>> +
+>> +static struct mdev_parent_ops ifcvf_mdev_fops = {
+>> +    .owner            = THIS_MODULE,
+>> +    .supported_type_groups    = mdev_type_groups,
+>> +    .mdev_attr_groups    = mdev_dev_groups,
+>> +    .create            = ifcvf_mdev_create,
+>> +    .remove            = ifcvf_mdev_remove,
+>> +};
+>> +
+>> +static int ifcvf_probe(struct pci_dev *pdev, const struct 
+>> pci_device_id *id)
+>> +{
+>> +    struct device *dev = &pdev->dev;
+>> +    struct ifcvf_adapter *adapter;
+>> +    struct ifcvf_hw *vf;
+>> +    int ret, i;
+>> +
+>> +    adapter = kzalloc(sizeof(struct ifcvf_adapter), GFP_KERNEL);
+>> +    if (adapter == NULL) {
+>> +        ret = -ENOMEM;
+>> +        goto fail;
+>> +    }
+>> +
+>> +    mutex_init(&adapter->mdev_lock);
+>> +    adapter->mdev_count = 1;
+>
+>
+> So this is per VF based vDPA implementation, which seems not 
+> convenient for management.  Anyhow we can control the creation in PF?
+>
+> Thanks
+the driver scope for now doesn't support that, we can add these feature 
+in next releases.
+>
+>
+>> +    adapter->dev = dev;
+>> +
+>> +    pci_set_drvdata(pdev, adapter);
+>> +
+>> +    ret = pci_enable_device(pdev);
+>> +    if (ret) {
+>> +        IFC_ERR(adapter->dev, "Failed to enable device.\n");
+>> +        goto free_adapter;
+>> +    }
+>> +
+>> +    ret = pci_request_regions(pdev, IFCVF_DRIVER_NAME);
+>> +    if (ret) {
+>> +        IFC_ERR(adapter->dev, "Failed to request MMIO region.\n");
+>> +        goto disable_device;
+>> +    }
+>> +
+>> +    pci_set_master(pdev);
+>> +
+>> +    ret = ifcvf_init_msix(adapter);
+>> +    if (ret) {
+>> +        IFC_ERR(adapter->dev, "Failed to initialize MSIX.\n");
+>> +        goto free_msix;
+>> +    }
+>> +
+>> +    vf = &adapter->vf;
+>> +    for (i = 0; i < IFCVF_PCI_MAX_RESOURCE; i++) {
+>> +        vf->mem_resource[i].phys_addr = pci_resource_start(pdev, i);
+>> +        vf->mem_resource[i].len = pci_resource_len(pdev, i);
+>> +        if (!vf->mem_resource[i].len) {
+>> +            vf->mem_resource[i].addr = NULL;
+>> +            continue;
+>> +        }
+>> +
+>> +        vf->mem_resource[i].addr = pci_iomap_range(pdev, i, 0,
+>> +                vf->mem_resource[i].len);
+>> +        if (!vf->mem_resource[i].addr) {
+>> +            IFC_ERR(adapter->dev, "Failed to map IO resource %d\n",
+>> +                i);
+>> +            return -1;
+>> +        }
+>> +    }
+>> +
+>> +    if (ifcvf_init_hw(vf, pdev) < 0)
+>> +        return -1;
+>> +
+>> +    ret = mdev_register_device(dev, &ifcvf_mdev_fops);
+>> +    if (ret) {
+>> +        IFC_ERR(adapter->dev,  "Failed to register mdev device\n");
+>> +        goto destroy_adapter;
+>> +    }
+>> +
+>> +    return 0;
+>> +
+>> +destroy_adapter:
+>> +    ifcvf_destroy_adapter(adapter);
+>> +free_msix:
+>> +    pci_free_irq_vectors(pdev);
+>> +    pci_release_regions(pdev);
+>> +disable_device:
+>> +    pci_disable_device(pdev);
+>> +free_adapter:
+>> +    kfree(adapter);
+>> +fail:
+>> +    return ret;
+>> +}
+>> +
+>> +static void ifcvf_remove(struct pci_dev *pdev)
+>> +{
+>> +    struct device *dev = &pdev->dev;
+>> +    struct ifcvf_adapter *adapter = pci_get_drvdata(pdev);
+>> +    struct ifcvf_hw *vf;
+>> +    int i;
+>> +
+>> +    mdev_unregister_device(dev);
+>> +
+>> +    vf = &adapter->vf;
+>> +    for (i = 0; i < IFCVF_PCI_MAX_RESOURCE; i++) {
+>> +        if (vf->mem_resource[i].addr) {
+>> +            pci_iounmap(pdev, vf->mem_resource[i].addr);
+>> +            vf->mem_resource[i].addr = NULL;
+>> +        }
+>> +    }
+>> +
+>> +    ifcvf_destroy_adapter(adapter);
+>> +    pci_free_irq_vectors(pdev);
+>> +
+>> +    pci_release_regions(pdev);
+>> +    pci_disable_device(pdev);
+>> +
+>> +    kfree(adapter);
+>> +}
+>> +
+>> +static struct pci_device_id ifcvf_pci_ids[] = {
+>> +    { PCI_DEVICE_SUB(IFCVF_VENDOR_ID,
+>> +            IFCVF_DEVICE_ID,
+>> +            IFCVF_SUBSYS_VENDOR_ID,
+>> +            IFCVF_SUBSYS_DEVICE_ID) },
+>> +    { 0 },
+>> +};
+>> +MODULE_DEVICE_TABLE(pci, ifcvf_pci_ids);
+>> +
+>> +static struct pci_driver ifcvf_driver = {
+>> +    .name     = IFCVF_DRIVER_NAME,
+>> +    .id_table = ifcvf_pci_ids,
+>> +    .probe    = ifcvf_probe,
+>> +    .remove   = ifcvf_remove,
+>> +};
+>> +
+>> +static int __init ifcvf_init_module(void)
+>> +{
+>> +    int ret;
+>> +
+>> +    ret = pci_register_driver(&ifcvf_driver);
+>> +    return ret;
+>> +}
+>> +
+>> +static void __exit ifcvf_exit_module(void)
+>> +{
+>> +    pci_unregister_driver(&ifcvf_driver);
+>> +}
+>> +
+>> +module_init(ifcvf_init_module);
+>> +module_exit(ifcvf_exit_module);
+>> +
+>> +MODULE_LICENSE("GPL v2");
+>> +MODULE_VERSION(VERSION_STRING);
+>> +MODULE_AUTHOR(DRIVER_AUTHOR);
