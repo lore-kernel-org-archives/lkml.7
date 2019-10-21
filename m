@@ -2,117 +2,327 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EC7BCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:04:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B5CCA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:04:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10EB42084C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:04:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A6652084C
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:04:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729206AbfJUOEq (ORCPT
+        id S1729239AbfJUOEs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 10:04:46 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:53572 "EHLO foss.arm.com"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S1727152AbfJUOEp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 10:04:45 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 677711007;
-        Mon, 21 Oct 2019 07:04:27 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D46CA3F71F;
-        Mon, 21 Oct 2019 07:04:26 -0700 (PDT)
-Date:   Mon, 21 Oct 2019 15:04:25 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Anvesh Salveru <anvesh.s@samsung.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bhelgaas@google.com, gustavo.pimentel@synopsys.com,
-        jingoohan1@gmail.com, lorenzo.pieralisi@arm.com,
-        Pankaj Dubey <pankaj.dubey@samsung.com>
-Subject: Re: [PATCH 2/2] PCI: dwc: Add support to handle ZRX-DC Compliant PHYs
-Message-ID: <20191021140424.GR47056@e119886-lin.cambridge.arm.com>
-References: <CGME20191021123016epcas5p3ab7100162a8d6d803b117976240f20b4@epcas5p3.samsung.com>
- <1571660993-30329-1-git-send-email-anvesh.s@samsung.com>
+        Mon, 21 Oct 2019 10:04:48 -0400
+Received: from mga03.intel.com ([134.134.136.65]:36370 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727152AbfJUOEr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 10:04:47 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 07:04:46 -0700
+X-IronPort-AV: E=Sophos;i="5.67,323,1566889200"; 
+   d="scan'208";a="191121020"
+Received: from likexu-mobl1.ccr.corp.intel.com (HELO [10.249.174.151]) ([10.249.174.151])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/AES256-SHA; 21 Oct 2019 07:04:43 -0700
+Subject: Re: [PATCH v2 4/4] KVM: x86/vPMU: Add lazy mechanism to release
+ perf_event per vPMC
+To:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
+Cc:     peterz@infradead.org, Jim Mattson <jmattson@google.com>,
+        rkrcmar@redhat.com, sean.j.christopherson@intel.com,
+        vkuznets@redhat.com, Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        ak@linux.intel.com, wei.w.wang@intel.com, kan.liang@intel.com,
+        like.xu@intel.com, ehankland@google.com, arbel.moshe@oracle.com,
+        linux-kernel@vger.kernel.org
+References: <20191013091533.12971-1-like.xu@linux.intel.com>
+ <20191013091533.12971-5-like.xu@linux.intel.com>
+ <5eb638a3-5ebe-219a-c975-19808ab702b9@redhat.com>
+From:   Like Xu <like.xu@linux.intel.com>
+Organization: Intel OTC
+Message-ID: <c2979d05-4536-e3b5-e2f6-3e6740c1a82d@linux.intel.com>
+Date:   Mon, 21 Oct 2019 22:04:41 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1571660993-30329-1-git-send-email-anvesh.s@samsung.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+In-Reply-To: <5eb638a3-5ebe-219a-c975-19808ab702b9@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 05:59:53PM +0530, Anvesh Salveru wrote:
-> Many platforms use DesignWare controller but the PHY can be different in
-> different platforms. If the PHY is compliant is to ZRX-DC specification
+Hi Paolo,
 
-s/is to/to the/
+On 2019/10/21 16:45, Paolo Bonzini wrote:
+> On 13/10/19 11:15, Like Xu wrote:
+>> Currently, a host perf_event is created for a vPMC functionality emulation.
+>> It’s unpredictable to determine if a disabled perf_event will be reused.
+>> If they are disabled and are not reused for a considerable period of time,
+>> those obsolete perf_events would increase host context switch overhead that
+>> could have been avoided.
+>>
+>> If the guest doesn't access (set_msr/get_msr/rdpmc) any of the vPMC's MSRs
+>> during an entire vcpu sched time slice, and its independent enable bit of
+>> the vPMC isn't set, we can predict that the guest has finished the use of
+>> this vPMC, and then it's time to release non-reused perf_events in the
+>> first call of vcpu_enter_guest() after the vcpu gets next scheduled in.
+>>
+>> This lazy mechanism delays the event release time to the beginning of the
+>> next scheduled time slice if vPMC's MSRs aren't accessed during this time
+>> slice. If guest comes back to use this vPMC in next time slice, a new perf
+>> event would be re-created via perf_event_create_kernel_counter() as usual.
+>>
+>> Suggested-by: Wei W Wang <wei.w.wang@intel.com>
+>> Signed-off-by: Like Xu <like.xu@linux.intel.com>
+>> ---
+>>   arch/x86/include/asm/kvm_host.h | 15 ++++++++++++
+>>   arch/x86/kvm/pmu.c              | 43 +++++++++++++++++++++++++++++++++
+>>   arch/x86/kvm/pmu.h              |  3 +++
+>>   arch/x86/kvm/pmu_amd.c          | 13 ++++++++++
+>>   arch/x86/kvm/vmx/pmu_intel.c    | 25 +++++++++++++++++++
+>>   arch/x86/kvm/x86.c              | 12 +++++++++
+>>   6 files changed, 111 insertions(+)
+>>
+>> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+>> index 1abbbbae4953..45f9cdae150b 100644
+>> --- a/arch/x86/include/asm/kvm_host.h
+>> +++ b/arch/x86/include/asm/kvm_host.h
+>> @@ -472,6 +472,21 @@ struct kvm_pmu {
+>>   	struct kvm_pmc fixed_counters[INTEL_PMC_MAX_FIXED];
+>>   	struct irq_work irq_work;
+>>   	u64 reprogram_pmi;
+>> +
+>> +	/* for vPMC being set, do not released its perf_event (if any) */
+>> +	u64 lazy_release_ctrl;
+> 
+> Please use DECLARE_BITMAP(lazy_release_ctrl, X86_PMC_IDX_MAX).  I would
+> also rename the bitmap to pmc_in_use.
 
-> it helps in low power consumption during power states.
-
-s/in low/lower/
+Thanks for introducing BITMAP and I would definitely use it if I knew.
 
 > 
-> If current data rate is 8.0 GT/s or higher and PHY is not compliant to
-> ZRX-DC specification, then after every 100ms link should transition to
-> recovery state during the low power states.
+> I know you're just copying what reprogram_pmi does, but that has to be
+> fixed too. :)  I'll send a patch now.
 > 
-> DesignWare controller provides GEN3_ZRXDC_NONCOMPL field in
-> GEN3_RELATED_OFF to specify about ZRX-DC compliant PHY.
+>> +	/*
+>> +	 * The gate to release perf_events not marked in
+>> +	 * lazy_release_ctrl only once in a vcpu time slice.
+>> +	 */
+>> +	bool need_cleanup;
+>> +
+>> +	/*
+>> +	 * The total number of programmed perf_events and it helps to avoid
+>> +	 * redundant check before cleanup if guest don't use vPMU at all.
+>> +	 */
+>> +	u8 event_count;
+>>   };
+>>   
+>>   struct kvm_pmu_ops;
+>> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
+>> index 09d1a03c057c..7ab262f009f6 100644
+>> --- a/arch/x86/kvm/pmu.c
+>> +++ b/arch/x86/kvm/pmu.c
+>> @@ -137,6 +137,7 @@ static void pmc_reprogram_counter(struct kvm_pmc *pmc, u32 type,
+>>   	}
+>>   
+>>   	pmc->perf_event = event;
+>> +	pmc_to_pmu(pmc)->event_count++;
+>>   	clear_bit(pmc->idx, (unsigned long*)&pmc_to_pmu(pmc)->reprogram_pmi);
+>>   }
+>>   
+>> @@ -368,6 +369,7 @@ int kvm_pmu_rdpmc(struct kvm_vcpu *vcpu, unsigned idx, u64 *data)
+>>   	if (!pmc)
+>>   		return 1;
+>>   
+>> +	__set_bit(pmc->idx, (unsigned long *)&pmu->lazy_release_ctrl);
+>>   	*data = pmc_read_counter(pmc) & mask;
+>>   	return 0;
+>>   }
+>> @@ -385,11 +387,13 @@ bool kvm_pmu_is_valid_msr(struct kvm_vcpu *vcpu, u32 msr)
+>>   
+>>   int kvm_pmu_get_msr(struct kvm_vcpu *vcpu, u32 msr, u64 *data)
+>>   {
+>> +	kvm_x86_ops->pmu_ops->update_lazy_release_ctrl(vcpu, msr);
 > 
-> Platforms with ZRX-DC compliant PHY can set "snps,phy-zrxdc-compliant"
-> property in controller DT node to specify this property to the controller.
+> Instead of this new pmu_ops entry, please introduce two separate patches
+> to do the following:
 > 
-> Signed-off-by: Anvesh Salveru <anvesh.s@samsung.com>
-> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
-> ---
->  drivers/pci/controller/dwc/pcie-designware.c | 7 +++++++
->  drivers/pci/controller/dwc/pcie-designware.h | 3 +++
->  2 files changed, 10 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> index 820488dfeaed..6560d9f765d7 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -556,4 +556,11 @@ void dw_pcie_setup(struct dw_pcie *pci)
->  		       PCIE_PL_CHK_REG_CHK_REG_START;
->  		dw_pcie_writel_dbi(pci, PCIE_PL_CHK_REG_CONTROL_STATUS, val);
->  	}
-> +
-> +	if (of_property_read_bool(np, "snps,phy-zrxdc-compliant")) {
-> +		val = dw_pcie_readl_dbi(pci, PCIE_PORT_GEN3_RELATED);
-> +		val &= ~PORT_LOGIC_GEN3_ZRXDC_NONCOMPL;
-> +		dw_pcie_writel_dbi(pci, PCIE_PORT_GEN3_RELATED, val);
-> +	}
-> +
+> 1) rename the existing msr_idx_to_pmc to rdpmc_idx_to_pmc, and
+> is_valid_msr_idx to is_valid_rdpmc_idx (likewise for
+> kvm_pmu_is_valid_msr_idx).
 
-Given that this duplicates tegra_pcie_prepare_host in pcie-tegra194.c, can
-we update that driver to adopt this new binding?
+It looks good to me and I'll apply it.
 
-Thanks,
-
-Andrew Murray
-
->  }
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index 5a18e94e52c8..427a55ec43c6 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -60,6 +60,9 @@
->  #define PCIE_MSI_INTR0_MASK		0x82C
->  #define PCIE_MSI_INTR0_STATUS		0x830
->  
-> +#define PCIE_PORT_GEN3_RELATED		0x890
-> +#define PORT_LOGIC_GEN3_ZRXDC_NONCOMPL		BIT(0)
-> +
->  #define PCIE_ATU_VIEWPORT		0x900
->  #define PCIE_ATU_REGION_INBOUND		BIT(31)
->  #define PCIE_ATU_REGION_OUTBOUND	0
-> -- 
-> 2.17.1
 > 
+> 2) introduce a new callback msr_idx_to_pmc that returns a struct
+> kvm_pmc*, and change kvm_pmu_is_valid_msr to do
+
+For callback msr_idx_to_pmc,
+how do we deal with the input 'MSR_CORE_PERF_FIXED_CTR_CTRL'
+which may return several fixed kvm_pmcs not just one?
+
+> 
+> bool kvm_pmu_is_valid_msr(struct kvm_vcpu *vcpu, u32 msr)
+> {
+>          return (kvm_x86_ops->pmu_ops->msr_idx_to_pmc(vcpu, msr) ||
+> 		kvm_x86_ops->pmu_ops->is_valid_msr(vcpu, msr));
+> }
+> 
+> and AMD can just return false from .is_valid_msr.
+> 
+> Once this change is done, this patch can use simply:
+> 
+> static int kvm_pmu_mark_pmc_in_use(struct kvm_vcpu *vcpu, u32 msr)
+
+s/static int/static void/.
+
+> {
+> 	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
+> 	struct kvm_pmc *pmc = kvm_x86_ops->pmu_ops->msr_idx_to_pmc(vcpu, msr);
+
+We need 'if(pmc)' here.
+
+> 	__set_bit(pmc->idx, pmu->pmc_in_use);
+> }
+> 
+>>   	return kvm_x86_ops->pmu_ops->get_msr(vcpu, msr, data);
+>>   }
+>>   
+>>   int kvm_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>>   {
+>> +	kvm_x86_ops->pmu_ops->update_lazy_release_ctrl(vcpu, msr_info->index);
+>>   	return kvm_x86_ops->pmu_ops->set_msr(vcpu, msr_info);
+>>   }
+>>   
+>> @@ -417,9 +421,48 @@ void kvm_pmu_init(struct kvm_vcpu *vcpu)
+>>   	memset(pmu, 0, sizeof(*pmu));
+>>   	kvm_x86_ops->pmu_ops->init(vcpu);
+>>   	init_irq_work(&pmu->irq_work, kvm_pmi_trigger_fn);
+>> +	pmu->lazy_release_ctrl = 0;
+>> +	pmu->event_count = 0;
+>> +	pmu->need_cleanup = false;
+>>   	kvm_pmu_refresh(vcpu);
+>>   }
+>>   
+>> +static inline bool pmc_speculative_in_use(struct kvm_pmc *pmc)
+>> +{
+>> +	struct kvm_pmu *pmu = pmc_to_pmu(pmc);
+>> +
+>> +	if (pmc_is_fixed(pmc))
+>> +		return fixed_ctrl_field(pmu->fixed_ctr_ctrl,
+>> +			pmc->idx - INTEL_PMC_IDX_FIXED) & 0x3;
+>> +
+>> +	return pmc->eventsel & ARCH_PERFMON_EVENTSEL_ENABLE;
+>> +}
+>> +
+>> +void kvm_pmu_cleanup(struct kvm_vcpu *vcpu)
+>> +{
+>> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
+>> +	struct kvm_pmc *pmc = NULL;
+>> +	u64 bitmask = ~pmu->lazy_release_ctrl;
+> 
+> DECLARE_BITMAP(bitmask, X86_PMC_IDX_MAX);
+> 
+>> +	int i;
+>> +
+>> +	if (!unlikely(pmu->need_cleanup))
+>> +		return;
+>> +
+>> +	/* do cleanup before the first time of running vcpu after sched_in */
+>> +	pmu->need_cleanup = false;
+>> +
+>> +	/* release events for unmarked vPMCs in the last sched time slice */
+>> +	for_each_set_bit(i, (unsigned long *)&bitmask, X86_PMC_IDX_MAX) {
+> 
+> First, you could use for_each_clear_bit instead of inverting.
+> 
+> However, this is iterating unnecessarily through almost all of the 64
+> bits, most of which will not pass pmc_idx_to_pmc.  You can set up a
+> bitmap like
+
+Nice catch and let's trade space for time.
+
+> 
+> 	/* in kvm_pmu_refresh */
+> 	bitmap_set(pmu->all_valid_pmc_idx, 0,
+> 		   pmu->nr_arch_fixed_counters);
+> 	bitmap_set(pmu->all_valid_pmc_idx, INTEL_PMC_IDX_FIXED,
+> 		   pmu->nr_arch_gp_counters);
+> 
+> 	/* on cleanup */
+> 	bitmap_andnot(bitmask, pmu->all_valid_pmc_idx,
+> 		      pmu->pmc_in_use, X86_PMC_IDX_MAX);
+> 
+> 	for_each_set_bit(i, bitmask, X86_PMC_IDX_MAX) {
+> 		...
+> 	}
+> 
+> Note that on 64-bit machines the bitmap_andnot will be compiled to a
+> single "x = y & ~z" expression.
+
+Thanks for your tutorial on bitmap APIs, again.
+
+> 
+>> +		pmc = kvm_x86_ops->pmu_ops->pmc_idx_to_pmc(pmu, i);
+>> +
+>> +		if (pmc && pmc->perf_event && !pmc_speculative_in_use(pmc))
+>> +			pmc_stop_counter(pmc);
+>> +	}
+>> +
+>> +	/* reset vPMC lazy-release bitmap for this sched time slice */
+>> +	pmu->lazy_release_ctrl = 0;
+>> +}
+>> +
+>>   void kvm_pmu_destroy(struct kvm_vcpu *vcpu)
+>>   {
+>>   	kvm_pmu_reset(vcpu);
+>> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+>> index 661e2bf38526..023ea5efb3bb 100644
+>> --- a/arch/x86/kvm/x86.c
+>> +++ b/arch/x86/kvm/x86.c
+>> @@ -8080,6 +8080,14 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+>>   		goto cancel_injection;
+>>   	}
+>>   
+>> +	/*
+>> +	 * vPMU uses a lazy method to release the perf_events created for
+>> +	 * features emulation when the related MSRs weren't accessed during
+>> +	 * last vcpu time slice. Technically, this cleanup check happens on
+>> +	 * the first call of vcpu_enter_guest after the vcpu gets scheduled in.
+>> +	 */
+>> +	kvm_pmu_cleanup(vcpu);
+> 
+> Instead of calling this unconditionally from vcpu_enter_guest, please
+> request KVM_REQ_PMU in kvm_arch_sched_in, and call kvm_pmu_cleanup from
+> kvm_pmu_handle_event.
+
+This proposal does make sense to the name 'kvm_pmu_handle_event' and 
+I'll apply it.
+
+> 
+> Paolo
+> 
+>>   	preempt_disable();
+>>   
+>>   	kvm_x86_ops->prepare_guest_switch(vcpu);
+>> @@ -9415,7 +9423,11 @@ void kvm_arch_vcpu_uninit(struct kvm_vcpu *vcpu)
+>>   
+>>   void kvm_arch_sched_in(struct kvm_vcpu *vcpu, int cpu)
+>>   {
+>> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
+>> +
+>>   	vcpu->arch.l1tf_flush_l1d = true;
+>> +	if (pmu->version && unlikely(pmu->event_count))
+>> +		pmu->need_cleanup = true;
+>>   	kvm_x86_ops->sched_in(vcpu, cpu);
+>>   }
+>>   
+>>
+> 
+> 
+
