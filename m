@@ -2,112 +2,134 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F370CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:46:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC6CCA9EB0
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:46:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35DE220873
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:46:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1583720873
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:46:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZdcZ2Wvk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ro06y3yv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729771AbfJUPq2 (ORCPT
+        id S1729790AbfJUPqc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 11:46:28 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:32135 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729435AbfJUPqZ (ORCPT
+        Mon, 21 Oct 2019 11:46:32 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:35071 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727607AbfJUPqZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 21 Oct 2019 11:46:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571672784;
-        h=from:from:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=2lkud/2TuzM7NRL3rKWrW5AaADyBWycW62jzc8xlk8I=;
-        b=ZdcZ2WvkziNPTXPI48e8tX7DQFUJwnZFHWhu7+xy8VsoZBoaphCeaeEZys5L1LXtKdKV5A
-        sC51eMvMWKvTTHr7+nqDyRaSIw3o+6M53NcQ/1VuSgJPwK6VotP33mQF4s4nqSeP3roAVs
-        cQYcF/8o6EXH1d1QF+ThaftvRcNDAII=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-120-bkuGxsfZNyqjQfSe_fmrHA-1; Mon, 21 Oct 2019 11:46:21 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 445EA47B;
-        Mon, 21 Oct 2019 15:46:19 +0000 (UTC)
-Received: from crecklin.bos.csb (ovpn-125-176.rdu2.redhat.com [10.10.125.176])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 932254144;
-        Mon, 21 Oct 2019 15:46:16 +0000 (UTC)
-Reply-To: crecklin@redhat.com
-Subject: Re: [PATCH] security/keyring: avoid pagefaults in
- keyring_read_iterator
-To:     David Howells <dhowells@redhat.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>, keyrings@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Waiman Long <longman@redhat.com>
-References: <20191018184030.8407-1-crecklin@redhat.com>
- <30309.1571667719@warthog.procyon.org.uk>
-From:   Chris von Recklinghausen <crecklin@redhat.com>
-Organization: Red Hat
-Message-ID: <b8aa0f7c-0a90-efae-9fb7-aa85b19a0d9a@redhat.com>
-Date:   Mon, 21 Oct 2019 11:46:15 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <30309.1571667719@warthog.procyon.org.uk>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-MC-Unique: bkuGxsfZNyqjQfSe_fmrHA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Received: by mail-pl1-f193.google.com with SMTP id c3so6822467plo.2;
+        Mon, 21 Oct 2019 08:46:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=yQ6ni+bd9BJF4Cmm/B3j7HmHOq+jH+Kczpm1ljsEDGM=;
+        b=Ro06y3yv0XUF9A0bdwjh7RIZRubL77EH3UtwhNvN3x7Qx4L4RBVBTFSHcVD5+CUgYS
+         S5BSN7Cip2kcBsu6v41e+4Ef6coS68mMS2AKaJRNHx7ibijPmvLPpqHvb2r09Fm/Mrb7
+         TTBAi7PQHrV9IYaiq+Kgk1yS4eHhwUxKPsICxcqFv5VvP00/3Hz43aEViiAmPxJuHazZ
+         83xO5m32YgRXP2YLa8GX2P4Gri7XDWKgRDAVat2Z0KnR7iGcanBhEQsFvkZ1psXrKfGD
+         0YLyE1wU6IXvKkdoL+KUQqKgYvQgBlknyv2BFvuBeMToVGPYYakDtTPXYSHcmV1cMMc4
+         ogwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=yQ6ni+bd9BJF4Cmm/B3j7HmHOq+jH+Kczpm1ljsEDGM=;
+        b=K7yr3wVb51oKawGVLu5/qV42pE9oUZRd19vSbhwf4txG9df9Q/3zqXNZZ8xpgiv6Mm
+         ggoKSPhc5fsq6vgqFA2REBgBgO4phs8aFRhSp/77DQqGXQZ12pjSwRWJssOjtggjMequ
+         7RdtXJgbpo1wVQ37Kagy8WpU0HVEcmVjvy6dlZhISLXO8znhpXTUgEvcf0jySshfyIZ6
+         N2VfwxI4aZZIEBx1HRMxwAI5RcL0V9cTmFB4CoB5WjRaN+ps7ekdioIBx14bkhiob9D6
+         sjil3n8OCbQWmIAs7zQia6EiKP1HQi+NOJm3c9X5P2l+9Ehz145bDThi99sX1z8gsvc9
+         cz9g==
+X-Gm-Message-State: APjAAAUlPfzZ5e0MJgbZ7jxLHnECeLJK0caHDZTxKv7HrKFkIlE61j2L
+        91CW2vIB2P+wDLOHG4Csv9U=
+X-Google-Smtp-Source: APXvYqy9M6z2BimkonIf2LFzzOLvC/Vr1XfRopL1iRbyH5UFZPwX+og20tyf4pRv7KxoGvPACrLGtg==
+X-Received: by 2002:a17:902:6b05:: with SMTP id o5mr25219969plk.33.1571672784211;
+        Mon, 21 Oct 2019 08:46:24 -0700 (PDT)
+Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id n66sm22805977pfn.90.2019.10.21.08.46.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Oct 2019 08:46:23 -0700 (PDT)
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+To:     agross@kernel.org, bjorn.andersson@linaro.org,
+        gregkh@linuxfoundation.org, jslaby@suse.com
+Cc:     linux-arm-msm@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [PATCH v2] tty: serial: msm_serial: Fix flow control
+Date:   Mon, 21 Oct 2019 08:46:16 -0700
+Message-Id: <20191021154616.25457-1-jeffrey.l.hugo@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/21/2019 10:21 AM, David Howells wrote:
-> Chris von Recklinghausen <crecklin@redhat.com> wrote:
->
->> The put_user call from keyring_read_iterator caused a page fault which
->> attempts to lock mm->mmap_sem and type->lock_class (key->sem) in the rev=
-erse
->> order that keyring_read_iterator did, thus causing the circular locking
->> dependency.
->>
->> Remedy this by using access_ok and __put_user instead of put_user so we'=
-ll
->> return an error instead of faulting in the page.
-> I wonder if it's better to create a kernel buffer outside of the lock in
-> keyctl_read_key().  Hmmm...  The reason I didn't want to do that is that
-> keyrings have don't have limits on the size.  Maybe that's not actually a
-> problem, since 1MiB would be able to hold a list of a quarter of a millio=
-n
-> keys.
->
-> David
->
+hci_qca interfaces to the wcn3990 via a uart_dm on the msm8998 mtp and
+Lenovo Miix 630 laptop.  As part of initializing the wcn3990, hci_qca
+disables flow, configures the uart baudrate, and then reenables flow - at
+which point an event is expected to be received over the uart from the
+wcn3990.  It is observed that this event comes after the baudrate change
+but before hci_qca re-enables flow. This is unexpected, and is a result of
+msm_reset() being broken.
 
-Hi David,
+According to the uart_dm hardware documentation, it is recommended that
+automatic hardware flow control be enabled by setting RX_RDY_CTL.  Auto
+hw flow control will manage RFR based on the configured watermark.  When
+there is space to receive data, the hw will assert RFR.  When the watermark
+is hit, the hw will de-assert RFR.
 
-Thanks for the feedback.
+The hardware documentation indicates that RFR can me manually managed via
+CR when RX_RDY_CTL is not set.  SET_RFR asserts RFR, and RESET_RFR
+de-asserts RFR.
 
-I can try to prototype that, but regardless of where the kernel buffer
-is allocated, the important part is causing the initial pagefault in the
-read path outside the lock so __put_user won't fail due to a valid user
-address but page backing the user address isn't in-core.
+msm_reset() is broken because after resetting the hardware, it
+unconditionally asserts RFR via SET_RFR.  This enables flow regardless of
+the current configuration, and would undo a previous flow disable
+operation.  It should instead de-assert RFR via RESET_RFR to block flow
+until the hardware is reconfigured.  msm_serial should rely on the client
+to specify that flow should be enabled, either via mctrl() or the termios
+structure, and only assert RFR in response to those triggers.
 
-I'll start work on v2.
+Fixes: 04896a77a97b ("msm_serial: serial driver for MSM7K onboard serial peripheral.")
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+---
 
-Thanks,
+v2:
+-mask out RX_RDY_CTL in msm_reset() to close a small race window for RFR
 
-Chris
+ drivers/tty/serial/msm_serial.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/tty/serial/msm_serial.c b/drivers/tty/serial/msm_serial.c
+index 3657a24913fc..00964b6e4ac1 100644
+--- a/drivers/tty/serial/msm_serial.c
++++ b/drivers/tty/serial/msm_serial.c
+@@ -980,6 +980,7 @@ static unsigned int msm_get_mctrl(struct uart_port *port)
+ static void msm_reset(struct uart_port *port)
+ {
+ 	struct msm_port *msm_port = UART_TO_MSM(port);
++	unsigned int mr;
+ 
+ 	/* reset everything */
+ 	msm_write(port, UART_CR_CMD_RESET_RX, UART_CR);
+@@ -987,7 +988,10 @@ static void msm_reset(struct uart_port *port)
+ 	msm_write(port, UART_CR_CMD_RESET_ERR, UART_CR);
+ 	msm_write(port, UART_CR_CMD_RESET_BREAK_INT, UART_CR);
+ 	msm_write(port, UART_CR_CMD_RESET_CTS, UART_CR);
+-	msm_write(port, UART_CR_CMD_SET_RFR, UART_CR);
++	msm_write(port, UART_CR_CMD_RESET_RFR, UART_CR);
++	mr = msm_read(port, UART_MR1);
++	mr &= ~UART_MR1_RX_RDY_CTL;
++	msm_write(port, mr, UART_MR1);
+ 
+ 	/* Disable DM modes */
+ 	if (msm_port->is_uartdm)
+-- 
+2.17.1
 
