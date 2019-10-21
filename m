@@ -2,262 +2,171 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BB32CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 07:38:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C850CA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 07:39:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 284742086D
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 07:38:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mhtFUZYD"
+	by mail.kernel.org (Postfix) with ESMTP id 5C4362086D
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 07:39:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727301AbfJUHit (ORCPT
+        id S1727447AbfJUHjN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 03:38:49 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:46826 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726480AbfJUHit (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 03:38:49 -0400
-Received: by mail-pf1-f194.google.com with SMTP id q5so7852596pfg.13;
-        Mon, 21 Oct 2019 00:38:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=EzHxjxCcrcWxlhbOhJJt2pI5JzN3G5bQJpPRRDe1b54=;
-        b=mhtFUZYDU7p/6USSWWIpO2oDPN2BtQP4Gi8UwQ6U/+OwOc3tNZ9X3UWYWAv+1ZPd3Y
-         Ep4LV+34lZ+bL6btTFlfGl9fDwcw9N4SzOLXrYBdGPVR/T7qmnBRD369Gcukyf7Ts1Zk
-         A1CL6HlqscRL6LaC6ta/BiQhc0wyTVzkQpK7G4VhDAAS7lBeFUU65YYSSCOm6SsmzpS4
-         rFX2T0CxfQLN0MTCNmOE3tPKi9v0Fyss69WOegnupe/EUYecty8rS+eNFm8bsiBfrOCt
-         wBgMbkfk1KeTN3+tOkJoRWpTMTZ+5bNuicWBCf7QqRCA+lCaVOErAWKhZCgCPcG450J9
-         g9sA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=EzHxjxCcrcWxlhbOhJJt2pI5JzN3G5bQJpPRRDe1b54=;
-        b=QRscAnmOX4dN21C2tdBKveCadlnKu35/H4nhpVgNf3Z+0Y7NZq7YHcnu/Rgi31unJm
-         QsJdVihrGCq+3Obcko/MfTSql0PY3WkSLqqF+rJQsFooYcCzzLoWTylcisvjkxBtWD5L
-         Q5IFQ8Jd9Jwe66BMCPs2r9PW+ePLCjKsSh7nELjOgoq+W6fu+Go+JLSHqE01dvu1zW0G
-         3K675/fdxughckcuzHKbrhCk9RXxg7PPXwufQHB9FfQtpmtpgoNE41laLpdwBK5H5wgh
-         feIrWQrcxfDePNm2CKd/70npYBaD0Txj1kjWZMR/EjohGMDV1QEZDuOappWM2gGMRB7y
-         HksQ==
-X-Gm-Message-State: APjAAAVUZFwf30j0EQP47guVLvCoqzNWTgrs4wpDv7ek5ivFwPxlPUWB
-        vtdh4jgavF7WUDXAiQwbcxE=
-X-Google-Smtp-Source: APXvYqxZ4Zy000feFimquQuetvRgWDV76y01WrKxqUcRgqrztaartd1p8WnciGOZzNJyKeR1cow7Sw==
-X-Received: by 2002:a17:90a:c382:: with SMTP id h2mr26197953pjt.110.1571643528196;
-        Mon, 21 Oct 2019 00:38:48 -0700 (PDT)
-Received: from bj04616pcu.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id r30sm14822659pfl.42.2019.10.21.00.38.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Oct 2019 00:38:47 -0700 (PDT)
-From:   Candle Sun <candlesea@gmail.com>
-To:     jikos@kernel.org, benjamin.tissoires@redhat.com,
-        nsaenzjulienne@suse.de
-Cc:     orson.zhai@unisoc.com, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Candle Sun <candle.sun@unisoc.com>,
-        Nianfu Bai <nianfu.bai@unisoc.com>
-Subject: [PATCH v3] HID: core: check whether usage page item is after usage id item
-Date:   Mon, 21 Oct 2019 15:38:19 +0800
-Message-Id: <20191021073819.18181-1-candlesea@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 21 Oct 2019 03:39:13 -0400
+Received: from mga12.intel.com ([192.55.52.136]:2089 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726480AbfJUHjM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 03:39:12 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 00:39:12 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,322,1566889200"; 
+   d="scan'208";a="196036842"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by fmsmga008.fm.intel.com with ESMTP; 21 Oct 2019 00:39:11 -0700
+Cc:     baolu.lu@linux.intel.com
+Subject: Re: [PATCH] iommu/vt-d: Fix panic after kexec -p for kdump
+To:     John Donnelly <john.p.donnelly@oracle.com>,
+        linux-kernel@vger.kernel.org
+References: <4E962E33-4B15-4407-9FF0-3705229D8881@oracle.com>
+ <f30dcef0-4a6f-db89-fde8-048c309a1d9d@linux.intel.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <c8d239c7-61a1-e3a3-50b4-d4856cd759ff@linux.intel.com>
+Date:   Mon, 21 Oct 2019 15:36:43 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <f30dcef0-4a6f-db89-fde8-048c309a1d9d@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Candle Sun <candle.sun@unisoc.com>
+By the way, Joerg Roedel <joro@8bytes.org> is the IOMMU subsystem
+maintainer. If you have a v2, please add his email in the "To" list.
 
-Upstream commit 58e75155009c ("HID: core: move Usage Page concatenation
-to Main item") adds support for Usage Page item after Usage ID items
-(such as keyboards manufactured by Primax).
+You can always use scripts/get_maintainer.pl to check who should the
+patch be sent to. :-)
 
-Usage Page concatenation in Main item works well for following report
-descriptor patterns:
+Best regards,
+Baolu
 
-    USAGE_PAGE (Keyboard)                   05 07
-    USAGE_MINIMUM (Keyboard LeftControl)    19 E0
-    USAGE_MAXIMUM (Keyboard Right GUI)      29 E7
-    LOGICAL_MINIMUM (0)                     15 00
-    LOGICAL_MAXIMUM (1)                     25 01
-    REPORT_SIZE (1)                         75 01
-    REPORT_COUNT (8)                        95 08
-    INPUT (Data,Var,Abs)                    81 02
-
--------------
-
-    USAGE_MINIMUM (Keyboard LeftControl)    19 E0
-    USAGE_MAXIMUM (Keyboard Right GUI)      29 E7
-    LOGICAL_MINIMUM (0)                     15 00
-    LOGICAL_MAXIMUM (1)                     25 01
-    REPORT_SIZE (1)                         75 01
-    REPORT_COUNT (8)                        95 08
-    USAGE_PAGE (Keyboard)                   05 07
-    INPUT (Data,Var,Abs)                    81 02
-
-But it makes the parser act wrong for the following report
-descriptor pattern(such as some Gamepads):
-
-    USAGE_PAGE (Button)                     05 09
-    USAGE (Button 1)                        09 01
-    USAGE (Button 2)                        09 02
-    USAGE (Button 4)                        09 04
-    USAGE (Button 5)                        09 05
-    USAGE (Button 7)                        09 07
-    USAGE (Button 8)                        09 08
-    USAGE (Button 14)                       09 0E
-    USAGE (Button 15)                       09 0F
-    USAGE (Button 13)                       09 0D
-    USAGE_PAGE (Consumer Devices)           05 0C
-    USAGE (Back)                            0a 24 02
-    USAGE (HomePage)                        0a 23 02
-    LOGICAL_MINIMUM (0)                     15 00
-    LOGICAL_MAXIMUM (1)                     25 01
-    REPORT_SIZE (1)                         75 01
-    REPORT_COUNT (11)                       95 0B
-    INPUT (Data,Var,Abs)                    81 02
-
-With Usage Page concatenation in Main item, parser recognizes all the
-11 Usages as consumer keys, it is not the HID device's real intention.
-
-This patch adds usage_page_last to flag whether Usage Page is after
-Usage ID items. usage_page_last is false default, it is set as true
-once Usage Page item is encountered and is reverted by next Usage ID
-item.
-
-Usage Page concatenation on the currently defined Usage Page will do
-firstly in Local parsing when Usage ID items encountered.
-
-When Main item is parsing, concatenation will do again with last
-defined Usage Page if usage_page_last flag is true.
-
-Signed-off-by: Candle Sun <candle.sun@unisoc.com>
-Signed-off-by: Nianfu Bai <nianfu.bai@unisoc.com>
----
-Changes in v3:
-- Rework the GET_COMPLETE_USAGE macro as static complete_usage()
-  function
-- Add some code comments for usage_page_last
-
-Changes in v2:
-- Update patch title
-- Add GET_COMPLETE_USAGE macro
-- Change the logic of checking whether to concatenate usage page again
-  in main parsing
----
- drivers/hid/hid-core.c | 42 +++++++++++++++++++++++++++++++++++++-----
- include/linux/hid.h    |  1 +
- 2 files changed, 38 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
-index 3eaee2c37931..779b7798dae8 100644
---- a/drivers/hid/hid-core.c
-+++ b/drivers/hid/hid-core.c
-@@ -211,6 +211,18 @@ static unsigned hid_lookup_collection(struct hid_parser *parser, unsigned type)
- 	return 0; /* we know nothing about this usage type */
- }
- 
-+/*
-+ * Concatenate usage which defines 16 bits or less with the
-+ * currently defined usage page to form a 32 bit usage
-+ */
-+
-+static void complete_usage(struct hid_parser *parser, unsigned int index)
-+{
-+	parser->local.usage[index] &= 0xFFFF;
-+	parser->local.usage[index] |=
-+		(parser->global.usage_page & 0xFFFF) << 16;
-+}
-+
- /*
-  * Add a usage to the temporary parser table.
-  */
-@@ -221,7 +233,18 @@ static int hid_add_usage(struct hid_parser *parser, unsigned usage, u8 size)
- 		hid_err(parser->device, "usage index exceeded\n");
- 		return -1;
- 	}
--	parser->local.usage[parser->local.usage_index] = usage;
-+
-+	/*
-+	 * If Usage item only includes usage id, concatenate it with
-+	 * currently defined usage page and clear usage_page_last flag
-+	 */
-+	if (size <= 2) {
-+		parser->local.usage_page_last = false;
-+		complete_usage(parser, parser->local.usage_index);
-+	} else {
-+		parser->local.usage[parser->local.usage_index] = usage;
-+	}
-+
- 	parser->local.usage_size[parser->local.usage_index] = size;
- 	parser->local.collection_index[parser->local.usage_index] =
- 		parser->collection_stack_ptr ?
-@@ -366,6 +389,8 @@ static int hid_parser_global(struct hid_parser *parser, struct hid_item *item)
- 
- 	case HID_GLOBAL_ITEM_TAG_USAGE_PAGE:
- 		parser->global.usage_page = item_udata(item);
-+		/* Regard Usage Page is after Usage ID items */
-+		parser->local.usage_page_last = true;
- 		return 0;
- 
- 	case HID_GLOBAL_ITEM_TAG_LOGICAL_MINIMUM:
-@@ -543,13 +568,20 @@ static int hid_parser_local(struct hid_parser *parser, struct hid_item *item)
-  * usage value."
-  */
- 
--static void hid_concatenate_usage_page(struct hid_parser *parser)
-+static void hid_concatenate_last_usage_page(struct hid_parser *parser)
- {
- 	int i;
- 
-+	/*
-+	 * Concatenate usage page again only on detecting some Usage Page
-+	 * is really after Usage ID items
-+	 */
-+	if (!parser->local.usage_page_last)
-+		return;
-+
- 	for (i = 0; i < parser->local.usage_index; i++)
- 		if (parser->local.usage_size[i] <= 2)
--			parser->local.usage[i] += parser->global.usage_page << 16;
-+			complete_usage(parser, i);
- }
- 
- /*
-@@ -561,7 +593,7 @@ static int hid_parser_main(struct hid_parser *parser, struct hid_item *item)
- 	__u32 data;
- 	int ret;
- 
--	hid_concatenate_usage_page(parser);
-+	hid_concatenate_last_usage_page(parser);
- 
- 	data = item_udata(item);
- 
-@@ -772,7 +804,7 @@ static int hid_scan_main(struct hid_parser *parser, struct hid_item *item)
- 	__u32 data;
- 	int i;
- 
--	hid_concatenate_usage_page(parser);
-+	hid_concatenate_last_usage_page(parser);
- 
- 	data = item_udata(item);
- 
-diff --git a/include/linux/hid.h b/include/linux/hid.h
-index cd41f209043f..2e0ea2f7ec5c 100644
---- a/include/linux/hid.h
-+++ b/include/linux/hid.h
-@@ -412,6 +412,7 @@ struct hid_local {
- 	unsigned usage_minimum;
- 	unsigned delimiter_depth;
- 	unsigned delimiter_branch;
-+	bool usage_page_last;      /* whether usage page is after usage id */
- };
- 
- /*
--- 
-2.17.1
-
+On 10/21/19 3:27 PM, Lu Baolu wrote:
+> Hi John,
+> 
+> On 10/18/19 10:17 PM, John Donnelly wrote:
+>> This cures a panic on restart after a kexec -p  operation on 5.3 and 
+>> 5.4 kernels.
+>>
+>> The underlying state of the iommu registers (iommu->flags &
+>> VTD_FLAG_TRANS_PRE_ENABLED) on a restart results in a domain being 
+>> marked as
+>> "DEFER_DEVICE_DOMAIN_INFO" that produces an Oops in identity_mapping().
+>>
+>> [   43.654737] BUG: kernel NULL pointer dereference, address:
+>> 0000000000000056
+>> [   43.655720] #PF: supervisor read access in kernel mode
+>> [   43.655720] #PF: error_code(0x0000) - not-present page
+>> [   43.655720] PGD 0 P4D 0
+>> [   43.655720] Oops: 0000 [#1] SMP PTI
+>> [   43.655720] CPU: 0 PID: 1 Comm: swapper/0 Not tainted
+>> 5.3.2-1940.el8uek.x86_64 #1
+>> [   43.655720] Hardware name: Oracle Corporation ORACLE SERVER
+>> X5-2/ASM,MOTHERBOARD,1U, BIOS 30140300 09/20/2018
+>> [   43.655720] RIP: 0010:iommu_need_mapping+0x29/0xd0
+>> [   43.655720] Code: 00 0f 1f 44 00 00 48 8b 97 70 02 00 00 48 83 fa ff
+>> 74 53 48 8d 4a ff b8 01 00 00 00 48 83 f9 fd 76 01 c3 48 8b 35 7f 58 e0
+>> 01 <48> 39 72 58 75 f2 55 48 89 e5 41 54 53 48 8b 87 28 02 00 00 4c 8b
+>> [   43.655720] RSP: 0018:ffffc9000001b9b0 EFLAGS: 00010246
+>> [   43.655720] RAX: 0000000000000001 RBX: 0000000000001000 RCX:
+>> fffffffffffffffd
+>> [   43.655720] RDX: fffffffffffffffe RSI: ffff8880719b8000 RDI:
+>> ffff8880477460b0
+>> [   43.655720] RBP: ffffc9000001b9e8 R08: 0000000000000000 R09:
+>> ffff888047c01700
+>> [   43.655720] R10: 00002194036fc692 R11: 0000000000000000 R12:
+>> 0000000000000000
+>> [   43.655720] R13: ffff8880477460b0 R14: 0000000000000cc0 R15:
+>> ffff888072d2b558
+>> [   43.655720] FS:  0000000000000000(0000) GS:ffff888071c00000(0000)
+>> knlGS:0000000000000000
+>> [   43.655720] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> [   43.655720] CR2: 0000000000000056 CR3: 000000007440a002 CR4:
+>> 00000000001606b0
+>> [   43.655720] Call Trace:
+>> [   43.655720]  ? intel_alloc_coherent+0x2a/0x180
+>> [   43.655720]  ? __schedule+0x2c2/0x650
+>> [   43.655720]  dma_alloc_attrs+0x8c/0xd0
+>> [   43.655720]  dma_pool_alloc+0xdf/0x200
+>> [   43.655720]  ehci_qh_alloc+0x58/0x130
+>> [   43.655720]  ehci_setup+0x287/0x7ba
+>> [   43.655720]  ? _dev_info+0x6c/0x83
+>> [   43.655720]  ehci_pci_setup+0x91/0x436
+>> [   43.655720]  usb_add_hcd.cold.48+0x1d4/0x754
+>> [   43.655720]  usb_hcd_pci_probe+0x2bc/0x3f0
+>> [   43.655720]  ehci_pci_probe+0x39/0x40
+>> [   43.655720]  local_pci_probe+0x47/0x80
+>> [   43.655720]  pci_device_probe+0xff/0x1b0
+>> [   43.655720]  really_probe+0xf5/0x3a0
+>> [   43.655720]  driver_probe_device+0xbb/0x100
+>> [   43.655720]  device_driver_attach+0x58/0x60
+>> [   43.655720]  __driver_attach+0x8f/0x150
+>> [   43.655720]  ? device_driver_attach+0x60/0x60
+>> [   43.655720]  bus_for_each_dev+0x74/0xb0
+>> [   43.655720]  driver_attach+0x1e/0x20
+>> [   43.655720]  bus_add_driver+0x151/0x1f0
+>> [   43.655720]  ? ehci_hcd_init+0xb2/0xb2
+>> [   43.655720]  ? do_early_param+0x95/0x95
+>> [   43.655720]  driver_register+0x70/0xc0
+>> [   43.655720]  ? ehci_hcd_init+0xb2/0xb2
+>> [   43.655720]  __pci_register_driver+0x57/0x60
+>> [   43.655720]  ehci_pci_init+0x6a/0x6c
+>> [   43.655720]  do_one_initcall+0x4a/0x1fa
+>> [   43.655720]  ? do_early_param+0x95/0x95
+>> [   43.655720]  kernel_init_freeable+0x1bd/0x262
+>> [   43.655720]  ? rest_init+0xb0/0xb0
+>> [   43.655720]  kernel_init+0xe/0x110
+>> [   43.655720]  ret_from_fork+0x24/0x50
+>>
+> 
+> Good catch. Can you please add:
+> 
+> Fixes: 8af46c784ecfe ("iommu/vt-d: Implement is_attach_deferred iommu 
+> ops entry")
+> Cc: stable@vger.kernel.org # v5.3+
+> 
+> With above:
+> 
+> Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
+> 
+> Best regards,
+> Baolu
+> 
+>> Signed-off-by: John Donnelly <john.p.donnelly@oracle.com>
+>> ---
+>> drivers/iommu/intel-iommu.c | 2 +-
+>> 1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+>> index c4e0e4a9ee9e..f83a9a302f8e 100644
+>> --- a/drivers/iommu/intel-iommu.c
+>> +++ b/drivers/iommu/intel-iommu.c
+>> @@ -2783,7 +2783,7 @@ static int identity_mapping(struct device *dev)
+>>     struct device_domain_info *info;
+>>
+>>     info = dev->archdata.iommu;
+>> -    if (info && info != DUMMY_DEVICE_DOMAIN_INFO)
+>> +    if (info && info != DUMMY_DEVICE_DOMAIN_INFO && info != 
+>> DEFER_DEVICE_DOMAIN_INFO)
+>>         return (info->domain == si_domain);
+>>
+>>     return 0;
+>>
+> 
