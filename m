@@ -2,126 +2,107 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E9E4CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 05:44:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE700CA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 05:51:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62F8A206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 05:44:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C002E20700
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 05:51:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571637114;
+	bh=okl0IP+UUdva9F+HbjVx3M33APzFP6EzTDJMTozzZ9c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cKPteVzSBZ+i1hyTQz7E8FFYL/SKcURb4VS2z6AqF3xSGPMLoy5js8igmOdo4kpYr
+	 lRmok2ZFbW4elMM0xVn255REJqpRMzxgHPskWsv4dgO6Zov/w4rJT2F8LMNQudftsr
+	 U77y3tEuspqeTjpq1sbQ+WpGcEWAa3P6hen9BQd0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727045AbfJUFov (ORCPT
+        id S1726893AbfJUFvs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 01:44:51 -0400
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:55702 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725843AbfJUFou (ORCPT
+        Mon, 21 Oct 2019 01:51:48 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:52058 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725970AbfJUFvr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 01:44:50 -0400
-X-Greylist: delayed 902 seconds by postgrey-1.27 at vger.kernel.org; Mon, 21 Oct 2019 01:44:49 EDT
-X-AuditID: c0a8fbf4-183ff70000001fa6-a2-5dad424a3803
-Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id BE.3D.08102.A424DAD5; Mon, 21 Oct 2019 07:29:46 +0200 (CEST)
-Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
- WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
- 14.03.0439.000; Mon, 21 Oct 2019 07:29:36 +0200
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>
-CC:     "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>
-Subject: Re: [RFC PATCH 09/13] mfd: rtc: support RTC on ROHM BD71828 with
- BD70528 driver
-Thread-Topic: [RFC PATCH 09/13] mfd: rtc: support RTC on ROHM BD71828 with
- BD70528 driver
-Thread-Index: AQHVhNCZAuXq65juYU207wWeSYVtU6dee5aAgAAGywCAAANsgIAF8BwA
-Date:   Mon, 21 Oct 2019 05:29:35 +0000
-Message-ID: <ba7453a51bebb2ff4dbb7a3406f1dda511f5f8fa.camel@fi.rohmeurope.com>
-References: <cover.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
-         <9ccc83f3dfd0fd0dc8178adf41b52115f960c45a.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
-         <20191017101225.GB3125@piout.net>
-         <a1aa91f74b41033fed4a7106247f48f9b9f78bd9.camel@fi.rohmeurope.com>
-         <20191017104859.GC3125@piout.net>
-In-Reply-To: <20191017104859.GC3125@piout.net>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [213.255.186.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <3CEC8A4B1B583E42B344FF3C65B0531F@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        Mon, 21 Oct 2019 01:51:47 -0400
+Received: by mail-wm1-f66.google.com with SMTP id q70so4532153wme.1;
+        Sun, 20 Oct 2019 22:51:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=L/UYn5CrH2at9ULvEJ5IrXOEOZvQjLR7/6mrJJUvTjU=;
+        b=H5NpNqC9WwvhLgSpX0Xzaozkt4SvoXDBt41OFlTnC6ovQWpFaPsj4WJnPexT087z50
+         tazNOvIhEvzcW7YlQQsVNQcSCA6kUbpsmX60jDErAT8QEvzxWKfMcsIJr1Z2ZJzLyLAR
+         Mk1i8s2RMd3WuNdgEFym8PDfkeG68pdTvSMfyG3eCn5wTOxsd72kX4f2FkCQsovDmAeS
+         dduhNH/OVMPEl2fO4yVUZLsHKO+HDX0+X4ieSD5SG8dL5JyWTh5T0LuFJgkdKBAs+2Rz
+         C2VAM+1FZZbsfGdKCiWfbn6slSrRLB8hIOq4nWQP94rZZBmnL28LCHMsZvN+uqUBOY0H
+         ZYPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=L/UYn5CrH2at9ULvEJ5IrXOEOZvQjLR7/6mrJJUvTjU=;
+        b=BY0M137Nn8V6I4i3cfbfPTR2JwMzHCig1vTO7jQVBa/RuFWbAWXcqGUnOrXfysZ9pL
+         QhFgqzXjEuMnxysvV3oXFfMZBxbbI8krvESxVzKj/ahPWmiSWZxL5lVzShEqPF+SH/rh
+         Cz8jkU7iiyN+mtufWnI9B91/ELqGnO2uV75G2yTKDrwGhz+47pFjl8kWwdlPnVXMak1e
+         Zk8fJm/8im20P4ho66IhL4bVVpGexEUhsQl6AMO6E+6z+wi24DZQBSPCGVp25SKgzSJT
+         JWN/ptkNe9qRWsra/la/qfc9D+xgbc3mNEyT4hOZFGzDhVbbs1kLX538Xz4evOqNIIQ9
+         zz6Q==
+X-Gm-Message-State: APjAAAUQj6u3yfyS28A8AV1iaMU4aH5SiDUBHpjWzaLED/A+Ttm96oot
+        VHbzE/wqF0sTUUQV/z/SFq0=
+X-Google-Smtp-Source: APXvYqwVgadVQtClL/SxEzlMFAMgO13scenS2Z5MePp084o9rJ3dRJs7X8FFZ/P8PP8wdMzDwQZlMA==
+X-Received: by 2002:a05:600c:22ce:: with SMTP id 14mr17055842wmg.71.1571637105185;
+        Sun, 20 Oct 2019 22:51:45 -0700 (PDT)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id 74sm23258113wrm.92.2019.10.20.22.51.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 20 Oct 2019 22:51:44 -0700 (PDT)
+Date:   Mon, 21 Oct 2019 07:51:41 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the tip tree
+Message-ID: <20191021055141.GA2973@gmail.com>
+References: <20191021131342.404551d7@canb.auug.org.au>
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Ta0wUVxjtnedlcZrLAHLZVpOu8a2ASZtcE22h2maqRo3GmKIrju6URWEX
-        Z3cbqX9ojK0CIYoY4wrrIyAIixRkFRUikkVhjUUQEV8ghZCKrdZHNaZUO8NU4dc933fO+c73
-        47uQFh9wZpjmcCuqQ063cCamqfyfmrlLvqyyJrR3JpCSjps8+fnxCZ68KA4x5ED/IEeOBH9l
-        Se7VOpbcDfzCkL6/WwB52bWbIoUjZRR5mtfLktNHRgC5cb6II4E/TgFyubKLI6W3OihSVNrK
-        kI7QV+R+qIUjuxqDPHnTXcMkRkt+nx9IT3p28ZLPv0M6573PS7UVezjpXncDJ13pOUtJB32v
-        Kam88hUvPa+dvNKUHL5gk+z+fnVaqiP+843h9kB9G8jMjtzedzDAZoMmMQeEQYw+xWeutbE5
-        wARF1A3wg4sdjFG0AnyxoUwrIOTQApxzm9cNUWgR9rX/NKqhUQHEvpM9jE5EomScv3OQNkTr
-        8O3CAtbAX+Oc0kFKn8OgqfhOyza9LaDl+G5v8ahERKcpvPM3TsdhKA4f85WMjgRoEt6T/ZjS
-        MY1icO3QK9ZYGuGShnbawNH44cCb//sW3Pi6f3RlGs3E1efjDWsibu29wBr4E1yY288bK0Tg
-        tkODzF4w0TsuwTvm9o5ze8e5vePcRwFbAXCGnJaeKruVeXGq4olTnfYM7dnszKgFxsW8qAdv
-        m79pBhQEzSAWUpZowRHvt4ofbnLasuyyy56ietIVVzPAkLZECfcSqqyiYJOzflBU5zvqI8hY
-        YoTp/fusItKztipKpqK+Yz+G0IKFO19oxghVSVW2f5eW7h6jKRimDzeZo1yKw6aossdtT9HP
-        I8Wl3YdOTdBynybqua5MOUPrGtYQmA33Piw+TsNgcelxWmQcTodijhFu6FKkS+0ex/ugYRAD
-        gSVSWJyksRO0b/N+zrAWQWkRlbGVeoRbHqPM2SA88Je/Yk1fUvLN/U2mrvVk2tsUpXMtNVTv
-        2f0yd6Bm2azqoSRb1/wfn4mZEQnI1nhi42pz/tSsgbrrwSfCjPa4pPytoc/K/lw4+dHySdUF
-        zI79neW/XxoZXhE4HLxaZM+7fnnfhVPDE//NowuWegLbpnwQ8WxDFb8q/lqPNTp2y7dz6iyM
-        yy7Pm0WrLvk/kST/8vMDAAA=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191021131342.404551d7@canb.auug.org.au>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8gQWxleGFuZHJlLA0KDQpPbiBUaHUsIDIwMTktMTAtMTcgYXQgMTI6NDggKzAyMDAsIEFs
-ZXhhbmRyZSBCZWxsb25pIHdyb3RlOg0KPiBPbiAxNy8xMC8yMDE5IDEwOjM2OjQ0KzAwMDAsIFZh
-aXR0aW5lbiwgTWF0dGkgd3JvdGU6DQo+ID4gSGVsbG8gQWxleGFuZHJlLA0KPiA+IA0KPiA+IFRo
-YW5rcyBmb3IgcXVpY2sgY2hlY2shIEknbGwgYmUgb2ZmIGZvciB0aGUgcmVzdCBvZiB0aGUgd2Vl
-ayBidXQgSQ0KPiA+IHdpbGwNCj4gPiByZS13b3JrIHRoaXMgcGF0Y2ggYXQgbmV4dCB3ZWVrIDop
-IEkgYWdyZWUgd2l0aCB5b3UgcmVnYXJkaW5nIG1vc3QNCj4gPiBvZg0KPiA+IHRoZSBjb21tZW50
-cy4NCj4gPiANCj4gPiA+ID4gKw0KPiA+ID4gPiArDQo+ID4gPiA+ICsvKg0KPiA+ID4gPiArICog
-UlRDIGRlZmluaXRpb25zIHNoYXJlZCBiZXR3ZWVuDQo+ID4gPiA+ICsgKg0KPiA+ID4gPiArICog
-QkQ3MDUyOA0KPiA+ID4gPiArICogYW5kIEJENzE4MjgNCj4gPiA+ID4gKyAqLw0KPiA+ID4gPiAr
-DQo+ID4gPiA+ICsjZGVmaW5lIFJPSE1fQkQxX01BU0tfUlRDX1NFQwkJMHg3Zg0KPiA+ID4gPiAr
-I2RlZmluZSBST0hNX0JEMV9NQVNLX1JUQ19NSU5VVEUJMHg3Zg0KPiA+ID4gPiArI2RlZmluZSBS
-T0hNX0JEMV9NQVNLX1JUQ19IT1VSXzI0SAkweDgwDQo+ID4gPiA+ICsjZGVmaW5lIFJPSE1fQkQx
-X01BU0tfUlRDX0hPVVJfUE0JMHgyMA0KPiA+ID4gPiArI2RlZmluZSBST0hNX0JEMV9NQVNLX1JU
-Q19IT1VSCQkweDNmDQo+ID4gPiA+ICsjZGVmaW5lIFJPSE1fQkQxX01BU0tfUlRDX0RBWQkJMHgz
-Zg0KPiA+ID4gPiArI2RlZmluZSBST0hNX0JEMV9NQVNLX1JUQ19XRUVLCQkweDA3DQo+ID4gPiA+
-ICsjZGVmaW5lIFJPSE1fQkQxX01BU0tfUlRDX01PTlRICQkweDFmDQo+ID4gPiA+ICsjZGVmaW5l
-IFJPSE1fQkQxX01BU0tfUlRDX1lFQVIJCTB4ZmYNCj4gPiA+ID4gKyNkZWZpbmUgUk9ITV9CRDFf
-TUFTS19BTE1fRU4JCTB4Nw0KPiA+ID4gPiArDQo+ID4gPiANCj4gPiA+IEFsbCB0aGF0IHJlbmFt
-aW5nIGlzIGRpc3RyYWN0aW5nIGFuZCB1c2VsZXNzLiBQbGVhc2UgcmVzdWJtaXQNCj4gPiA+IHdp
-dGhvdXQNCj4gPiA+IHJlbmFtaW5nIGRlZmluZXMsIHN0cnVjdHMgYW5kIGZ1bmN0aW9ucyB0byBt
-YWtlIGl0IGVhc2llciB0bw0KPiA+ID4gcmV2aWV3Lg0KPiA+IA0KPiA+IEkgd291bGQgcHJlZmVy
-IHJlbmFtaW5nIGJlY2F1c2UgaXQgbWFrZXMgaXQgY2xlYXJseSB2aXNpYmxlIHdoaWNoDQo+ID4g
-ZGVmaW5lcy9zdHJ1Y3RzL2Z1bmN0aW9ucyBhcmUgY29tbW9uIGZvciBib3RoIFBNSUNzIGFuZCB3
-aGljaCBhcmUNCj4gPiBQTUlDDQo+ID4gc3BlY2lmaWMuIEJ1dCBJIHJlYWxseSB1bmRlcnN0YW5k
-IHRoZSBwcm9ibGVtIG9mIHNwb3R0aW5nIHJlYWwNCj4gPiBjaGFuZ2VzLg0KPiA+IFdvdWxkIGl0
-IGJlIE9rIGlmIEkgZGlkIHJlbmFtaW5nIGluIHNlcGFyYXRlIHBhdGNoIHdoaWNoIGRvZXMgbm90
-DQo+ID4gYnJpbmcNCj4gPiBpbiBhbnkgb3RoZXIgY2hhbmdlcyAtIGFuZCB0aGVuIHRoZSBmdW5j
-dGlvbmFsIGNoYW5nZXMgaW4gc2VwYXJhdGUNCj4gPiBwYXRjaD8NCj4gPiANCj4gDQo+IE5vLCB1
-bmxlc3MgeW91IGNhbiBndWFyYW50ZWUgdGhhdCBhbGwgZnV0dXJlIFBNSUNzIGZyb20gcm9obSBt
-YXRjaGluZw0KPiB0aGUgd2lsZGNhcmQgd2lsbCB1c2UgdGhpcyBkcml2ZXIuDQoNCkFsbHJpZ2h0
-LiBJJ2xsIGF2b2lkIHJlbmFtaW5nIGluIG5leHQgdmVyc2lvbi4NCg0KQnIsDQoJTWF0dGkgVmFp
-dHRpbmVuDQo=
+
+* Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+
+> Hi all,
+> 
+> After merging the tip tree, today's linux-next build (native perf)
+> failed like this:
+> 
+> make: execvp: ./check-headers.sh: Permission denied
+> 
+> Caused by commit
+> 
+>   05f2f277053d ("Merge branch 'x86/core'")
+> 
+> which somehow removed execute permissions from tools/perf/check-headers.sh
+> 
+> I added a commit to reenable execute permissions.
+
+Hm, that was a weird merge mishap - sorry about that, should go away in 
+the next -next iteration.
+
+Thanks,
+
+	Ingo
