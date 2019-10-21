@@ -2,173 +2,89 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88177CA9EB0
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 17:18:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D88CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 17:19:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E8D62089C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 17:18:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571678316;
-	bh=raWePBp3jLVfFdHI3MbBqyLEtynL7RmrxY4VOVMhTJU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=D124AS4MyjOH+1sxDn+bLfkOYZKjL4I+aZRnIWY7XrhrW8jcMuTR23XFvxKbWoJvw
-	 kRFKnWHgj0q8cM0l019+/GN9HMEe03Nb/yts7NmDrxsKb1b2Cf0Pe4vlRgFOmKsynX
-	 IoJsjt1EGbqHq73W7owEpUmrlKxKyXtIfplcqFcw=
+	by mail.kernel.org (Postfix) with ESMTP id 1E7992086D
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 17:19:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728536AbfJURSf (ORCPT
+        id S1729488AbfJURT1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 13:18:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54766 "EHLO mail.kernel.org"
+        Mon, 21 Oct 2019 13:19:27 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48400 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726672AbfJURSf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 13:18:35 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728182AbfJURT1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 13:19:27 -0400
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com [209.85.128.69])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA5DD2086D;
-        Mon, 21 Oct 2019 17:18:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571678314;
-        bh=raWePBp3jLVfFdHI3MbBqyLEtynL7RmrxY4VOVMhTJU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=HhSMD9jbCOt6G5i7uUOPM/sG0LJgLVkAnrnB5MKZPfzF9r1Au3DrRUn+15HJWWG/t
-         1E3lSiH9wuNt373E/FB5ayv5ROT9X/kiGd+OO7n36OElWSaNPvh7I+ZnqqQ6QwEH/G
-         55spOPP6fLU8L+ozw1evM6QJBOy2fSI3TEIHc+W0=
-Date:   Mon, 21 Oct 2019 12:18:32 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Andrew Murray <andrew.murray@arm.com>
-Cc:     Dilip Kota <eswara.kota@linux.intel.com>, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com,
-        robh@kernel.org, martin.blumenstingl@googlemail.com,
-        linux-pci@vger.kernel.org, hch@infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
-        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
-Subject: Re: [PATCH v4 3/3] pci: intel: Add sysfs attributes to configure
- pcie link
-Message-ID: <20191021171832.GA232571@google.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id C5353806CE
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 17:19:26 +0000 (UTC)
+Received: by mail-wm1-f69.google.com with SMTP id s19so4893541wmj.0
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 10:19:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Ld2sD7K11SrzwjFl9eHxvksw0/zWsi3v0XYvIHwISxY=;
+        b=M5Qz4ZK5FmVwMzT3bNahrl1Q2mGwrjtwPwPjJjR1iFlLEAQBqZO1edmBM1ssLgHrEv
+         utQRCdXPyIH9zCTbyZsrYf3z8/KDh/CSEfKApcqZ9P/Sx5YMOtvYsjOowKGm4tH1zNtM
+         OHc8aH8XHVS/kHNx21pAmGEVw9JDX3g7waelHeC+/VTLd1Vu9MlqxmFH9voxL9byIgId
+         ypplCuOT969DKuUA3yDAzCfMx4HgxwY48i+2f6TPWdcP/MLBXopO7lAwTCzoahM2zjPJ
+         U0wgGJhnO1ykXyuU55Omu3R2ib9/IVuYbCddgjLkfe51i/q8QtGLGxFjM/AEJ9em0FZY
+         DTRQ==
+X-Gm-Message-State: APjAAAVBdJZ+W/0HHIOkUwY8aZWtggA5ZmN0opNADr8LsTzd6mxl5IRZ
+        Mto/yNCJtfWCF7J1P9UKvrahAMZ0X9oksFyRXb/l/7TCYJFOhCCuOsPsKHPWcVbtJk19HAt04eN
+        dLQHnbiyYFbjWwPvulOirwlad
+X-Received: by 2002:adf:f686:: with SMTP id v6mr22337050wrp.141.1571678365526;
+        Mon, 21 Oct 2019 10:19:25 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyiywPmg6NJ1czyf6ouMoCYDpKf4Afn/Dv4XonOBOJn93D/U1NSTqiVTKULCWxKEGXSL0j/KA==
+X-Received: by 2002:adf:f686:: with SMTP id v6mr22337034wrp.141.1571678365267;
+        Mon, 21 Oct 2019 10:19:25 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:847b:6afc:17c:89dd? ([2001:b07:6468:f312:847b:6afc:17c:89dd])
+        by smtp.gmail.com with ESMTPSA id 126sm16138702wma.48.2019.10.21.10.19.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 21 Oct 2019 10:19:24 -0700 (PDT)
+Subject: Re: [PATCH] kvm: clear kvmclock MSR on reset
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     suleiman@google.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+References: <1570704617-32285-1-git-send-email-pbonzini@redhat.com>
+ <87wod439hq.fsf@vitty.brq.redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <62a31237-8b15-48da-50ef-2649daa20fdb@redhat.com>
+Date:   Mon, 21 Oct 2019 19:19:23 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191021133849.GQ47056@e119886-lin.cambridge.arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <87wod439hq.fsf@vitty.brq.redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 02:38:50PM +0100, Andrew Murray wrote:
-> On Mon, Oct 21, 2019 at 02:39:20PM +0800, Dilip Kota wrote:
-> > PCIe RC driver on Intel Gateway SoCs have a requirement
-> > of changing link width and speed on the fly.
+On 16/10/19 19:06, Vitaly Kuznetsov wrote:
+>>  		/* we verify if the enable bit is set... */
+>> +		vcpu->arch.pv_time_enabled = false;
+>>  		if (!(data & 1))
+>>  			break;
+>>  
+>>  		if (kvm_gfn_to_hva_cache_init(vcpu->kvm,
+>>  		     &vcpu->arch.pv_time, data & ~1ULL,
+>>  		     sizeof(struct pvclock_vcpu_time_info)))
+>> -			vcpu->arch.pv_time_enabled = false;
+>> -		else
+>>  			vcpu->arch.pv_time_enabled = true;
 
-Please add more details about why this is needed.  Since you're adding
-sysfs files, it sounds like it's not actually the *driver* that needs
-this; it's something in userspace?
+Yes...
 
-The normal scenario is that the hardware negotiates link widths and
-speeds without any software involvement (PCIe r5.0, sec 1.2).
-
-If this is to work around hardware defects, we should try to do that
-inside the kernel because we can't expect userspace to do it reliably.
-
-As Andrew points out below, this all sounds like it should be generic
-rather than Intel-specific.
-
-> > So add the sysfs attributes to show and store the link
-> > properties.
-> > Add the respective link resize function in pcie DesignWare
-> > framework so that Intel PCIe driver can use during link
-> > width configuration on the fly.
-> > ...
-
-> > +static ssize_t pcie_link_status_show(struct device *dev,
-> > +				     struct device_attribute *attr, char *buf)
-> > +{
-> > +	struct intel_pcie_port *lpp = dev_get_drvdata(dev);
-> > +	u32 reg, width, gen;
-> > +
-> > +	reg = pcie_rc_cfg_rd(lpp, PCIE_CAP_OFST + PCI_EXP_LNKCTL);
-> > +	width = FIELD_GET(PCI_EXP_LNKSTA_NLW, reg >> 16);
-> > +	gen = FIELD_GET(PCI_EXP_LNKSTA_CLS, reg >> 16);
-> > +
-> > +	if (gen > lpp->max_speed)
-> > +		return -EINVAL;
-> > +
-> > +	return sprintf(buf, "Port %2u Width x%u Speed %s GT/s\n", lpp->id,
-> > +		       width, pcie_link_gen_to_str(gen));
-> > +}
-> > +static DEVICE_ATTR_RO(pcie_link_status);
-
-We already have generic current_link_speed and current_link_width
-files.
-
-> > +static ssize_t pcie_speed_store(struct device *dev,
-> > +				struct device_attribute *attr,
-> > +				const char *buf, size_t len)
-> > +{
-> > +	struct intel_pcie_port *lpp = dev_get_drvdata(dev);
-> > +	unsigned long val;
-> > +	int ret;
-> > +
-> > +	ret = kstrtoul(buf, 10, &val);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	if (val > lpp->max_speed)
-> > +		return -EINVAL;
-> > +
-> > +	lpp->link_gen = val;
-> > +	intel_pcie_max_speed_setup(lpp);
-> > +	dw_pcie_link_speed_change(&lpp->pci, false);
-> > +	dw_pcie_link_speed_change(&lpp->pci, true);
-> > +
-> > +	return len;
-> > +}
-> > +static DEVICE_ATTR_WO(pcie_speed);
-> > +
-> > +/*
-> > + * Link width change on the fly is not always successful.
-> > + * It also depends on the partner.
-> > + */
-> > +static ssize_t pcie_width_store(struct device *dev,
-> > +				struct device_attribute *attr,
-> > +				const char *buf, size_t len)
-> > +{
-> > +	struct intel_pcie_port *lpp = dev_get_drvdata(dev);
-> > +	unsigned long val;
-> > +	int ret;
-> > +
-> > +	lpp = dev_get_drvdata(dev);
-> > +
-> > +	ret = kstrtoul(buf, 10, &val);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	if (val > lpp->max_width)
-> > +		return -EINVAL;
-> > +
-> > +	/* HW auto bandwidth negotiation must be enabled */
-> > +	pcie_rc_cfg_wr_mask(lpp, PCI_EXP_LNKCTL_HAWD, 0,
-> > +			    PCIE_CAP_OFST + PCI_EXP_LNKCTL);
-> > +	dw_pcie_link_width_resize(&lpp->pci, val);
-> > +
-> > +	return len;
-> > +}
-> > +static DEVICE_ATTR_WO(pcie_width);
-> > +
-> > +static struct attribute *pcie_cfg_attrs[] = {
-> > +	&dev_attr_pcie_link_status.attr,
-> > +	&dev_attr_pcie_speed.attr,
-> > +	&dev_attr_pcie_width.attr,
-> > +	NULL,
-> > +};
-> 
-> Is there a reason that these are limited only to the Intel driver and
-> not the wider set of DWC drivers?
-> 
-> Is there anything specific here about the Intel GW driver?
+Paolo
