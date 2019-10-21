@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BACAECA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:41:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E30CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:41:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F2C02166E
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:41:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E3F821BE5
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:41:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571665263;
-	bh=muH0CLm37RWgXCw9tdoRkRQCcOWFtFZ43VskU7mzloU=;
+	s=default; t=1571665266;
+	bh=/yMYdILkEZpciGS3rhWRI3Vk6HWst0iqEjJYsYFZioc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0p2/xD2Z0cZR6x5de42zSP/qckMkSJswCAb5F6tKFPqvah0DcJlHhaO03ga2xs+d9
-	 wb9EB80xaNK1zZam57qRYmAZRlZEYHNGZPnjiUidfi/2CtgGari0Y4yLA7QGPEs/c3
-	 F59mOh6QdoFZr/xHey1GyrqnPJIqxnBib0kMwIx8=
+	b=mftCeGlLUndNXFikb7HWrGRC/yvYUZ4PJSa8hNkbCc2mKjs/8HbqCLCFJSg85za0a
+	 v7DBv99OYa4ZEEioCrM5AzJqS70pF/4vwZPXu078je/fyKVK3e4LQsWGCLvMxBeN/a
+	 zb2XkOFUaXFi9+DnCgMyq2imNjpFMO8awP01wHZQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729610AbfJUNlB (ORCPT
+        id S1729617AbfJUNlF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 09:41:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42790 "EHLO mail.kernel.org"
+        Mon, 21 Oct 2019 09:41:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729593AbfJUNkz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 09:40:55 -0400
+        id S1729001AbfJUNlA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 09:41:00 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B01B9217D7;
-        Mon, 21 Oct 2019 13:40:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2240D21783;
+        Mon, 21 Oct 2019 13:40:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571665254;
-        bh=muH0CLm37RWgXCw9tdoRkRQCcOWFtFZ43VskU7mzloU=;
+        s=default; t=1571665259;
+        bh=/yMYdILkEZpciGS3rhWRI3Vk6HWst0iqEjJYsYFZioc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jAjZ1tnHd7PmRwzO7RGhm/kKtMDdxMJIwn8rvCuNK3rudi6ZvzW2yj2d9qpisJVur
-         KYXm7OunKNoxH2xTQlr6CQNNU05/PlFmkUbuSQ9a8pkkYb3IDmRurlkk6ncictTLOt
-         sbT/XF8JR7O0eJeurk8Si9inD1bAAGRVDyZmWGVM=
+        b=clFRhUYjybmHd9H6I+nvh3jXC0nFctKgSBRvLrTS7vt5LVbrQ923tHok2KYQxluaQ
+         OCMBvnSiwCNR35NbIDM64C53k6Chi/f319q0fVGDcts2rc7z3z+4IzyGROPGtnyNif
+         SFfISwlJLvtTPNYbvUpxTvf567w37q7+0he7N3bA=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -58,9 +58,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Souptick Joarder <jrdr.linux@gmail.com>,
         Will Deacon <will@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 41/57] perf tests bp_account: Add dedicated checking helper is_supported()
-Date:   Mon, 21 Oct 2019 10:38:18 -0300
-Message-Id: <20191021133834.25998-42-acme@kernel.org>
+Subject: [PATCH 42/57] perf tests: Disable bp_signal testing for arm64
+Date:   Mon, 21 Oct 2019 10:38:19 -0300
+Message-Id: <20191021133834.25998-43-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191021133834.25998-1-acme@kernel.org>
 References: <20191021133834.25998-1-acme@kernel.org>
@@ -73,16 +73,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Leo Yan <leo.yan@linaro.org>
 
-The arm architecture supports breakpoint accounting but it doesn't
-support breakpoint overflow signal handling.  The current code uses the
-same checking helper, thus it disables both testings (bp_account and
-bp_signal) for arm platform.
+As there are several discussions for enabling perf breakpoint signal
+testing on arm64 platform: arm64 needs to rely on single-step to execute
+the breakpointed instruction and then reinstall the breakpoint exception
+handler.  But if we hook the breakpoint with a signal, the signal
+handler will do the stepping rather than the breakpointed instruction,
+this causes infinite loops as below:
 
-For handling two testings separately, this patch adds a dedicated
-checking helper is_supported() for breakpoint accounting testing, thus
-it allows supporting breakpoint accounting testing on arm platform; the
-old helper test__bp_signal_is_supported() is only used to checking for
-breakpoint overflow signal testing.
+         Kernel space              |            Userspace
+  ---------------------------------|--------------------------------
+                                   |  __test_function() -> hit
+				   |                       breakpoint
+  breakpoint_handler()             |
+    `-> user_enable_single_step()  |
+  do_signal()                      |
+                                   |  sig_handler() -> Step one
+				   |                instruction and
+				   |                trap to kernel
+  single_step_handler()            |
+    `-> reinstall_suspended_bps()  |
+                                   |  __test_function() -> hit
+				   |     breakpoint again and
+				   |     repeat up flow infinitely
+
+As Will Deacon mentioned [1]: "that we require the overflow handler to
+do the stepping on arm/arm64, which is relied upon by GDB/ptrace. The
+hw_breakpoint code is a complete disaster so my preference would be to
+rip out the perf part and just implement something directly in ptrace,
+but it's a pretty horrible job".  Though Will commented this on arm
+architecture, but the comment also can apply on arm64 architecture.
+
+For complete information, I searched online and found a few years back,
+Wang Nan sent one patch 'arm64: Store breakpoint single step state into
+pstate' [2]; the patch tried to resolve this issue by avoiding single
+stepping in signal handler and defer to enable the signal stepping when
+return to __test_function().  The fixing was not merged due to the
+concern for missing to handle different usage cases.
+
+Based on the info, the most feasible way is to skip Perf breakpoint
+signal testing for arm64 and this could avoid the duplicate
+investigation efforts when people see the failure.  This patch skips
+this case on arm64 platform, which is same with arm architecture.
+
+[1] https://lkml.org/lkml/2018/11/15/205
+[2] https://lkml.org/lkml/2015/12/23/477
 
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
@@ -97,63 +131,48 @@ Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Song Liu <songliubraving@fb.com>
 Cc: Souptick Joarder <jrdr.linux@gmail.com>
 Cc: Will Deacon <will@kernel.org>
-Link: http://lore.kernel.org/lkml/20191018085531.6348-2-leo.yan@linaro.org
+Link: http://lore.kernel.org/lkml/20191018085531.6348-3-leo.yan@linaro.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/bp_account.c   | 16 ++++++++++++++++
- tools/perf/tests/builtin-test.c |  2 +-
- tools/perf/tests/tests.h        |  1 +
- 3 files changed, 18 insertions(+), 1 deletion(-)
+ tools/perf/tests/bp_signal.c | 15 ++++++---------
+ 1 file changed, 6 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/tests/bp_account.c b/tools/perf/tests/bp_account.c
-index 52ff7a462670..d0b935356274 100644
---- a/tools/perf/tests/bp_account.c
-+++ b/tools/perf/tests/bp_account.c
-@@ -188,3 +188,19 @@ int test__bp_accounting(struct test *test __maybe_unused, int subtest __maybe_un
- 
- 	return bp_accounting(wp_cnt, share);
- }
-+
-+bool test__bp_account_is_supported(void)
-+{
-+	/*
-+	 * PowerPC and S390 do not support creation of instruction
-+	 * breakpoints using the perf_event interface.
+diff --git a/tools/perf/tests/bp_signal.c b/tools/perf/tests/bp_signal.c
+index c1c2c13de254..166f411568a5 100644
+--- a/tools/perf/tests/bp_signal.c
++++ b/tools/perf/tests/bp_signal.c
+@@ -49,14 +49,6 @@ asm (
+ 	"__test_function:\n"
+ 	"incq (%rdi)\n"
+ 	"ret\n");
+-#elif defined (__aarch64__)
+-extern void __test_function(volatile long *ptr);
+-asm (
+-	".globl __test_function\n"
+-	"__test_function:\n"
+-	"str x30, [x0]\n"
+-	"ret\n");
+-
+ #else
+ static void __test_function(volatile long *ptr)
+ {
+@@ -302,10 +294,15 @@ bool test__bp_signal_is_supported(void)
+ 	 * stepping into the SIGIO handler and getting stuck on the
+ 	 * breakpointed instruction.
+ 	 *
++	 * Since arm64 has the same issue with arm for the single-step
++	 * handling, this case also gets suck on the breakpointed
++	 * instruction.
 +	 *
-+	 * Just disable the test for these architectures until these
-+	 * issues are resolved.
-+	 */
-+#if defined(__powerpc__) || defined(__s390x__)
-+	return false;
-+#else
-+	return true;
-+#endif
-+}
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index 55774baffc2a..8b286e9b7549 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -121,7 +121,7 @@ static struct test generic_tests[] = {
- 	{
- 		.desc = "Breakpoint accounting",
- 		.func = test__bp_accounting,
--		.is_supported = test__bp_signal_is_supported,
-+		.is_supported = test__bp_account_is_supported,
- 	},
- 	{
- 		.desc = "Watchpoint",
-diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-index 72912eb473cb..9837b6e93023 100644
---- a/tools/perf/tests/tests.h
-+++ b/tools/perf/tests/tests.h
-@@ -111,6 +111,7 @@ int test__map_groups__merge_in(struct test *t, int subtest);
- int test__time_utils(struct test *t, int subtest);
- 
- bool test__bp_signal_is_supported(void);
-+bool test__bp_account_is_supported(void);
- bool test__wp_is_supported(void);
- 
- #if defined(__arm__) || defined(__aarch64__)
+ 	 * Just disable the test for these architectures until these
+ 	 * issues are resolved.
+ 	 */
+-#if defined(__powerpc__) || defined(__s390x__) || defined(__arm__)
++#if defined(__powerpc__) || defined(__s390x__) || defined(__arm__) || \
++    defined(__aarch64__)
+ 	return false;
+ #else
+ 	return true;
 -- 
 2.21.0
 
