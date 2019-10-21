@@ -2,164 +2,62 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B35CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 06:37:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C652DCA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 06:37:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29E6320700
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 06:37:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="aFJEphDo";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="DYKB6iI3"
+	by mail.kernel.org (Postfix) with ESMTP id 9F1B42089C
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 06:37:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727164AbfJUGhS (ORCPT
+        id S1727190AbfJUGhf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 02:37:18 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:50228 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726039AbfJUGhS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 02:37:18 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id D048860615; Mon, 21 Oct 2019 06:37:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571639836;
-        bh=2vIcvW5geZwE7c5DDapmfwvV6vh9/TkLfY1Sx4zMLV8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=aFJEphDoAi0Z+DTztFIGNOiaxbabvkF+YFNlY2PiCCwGPtJCHVb/3xOFBFL17FebK
-         fBLjqFEQJLNYvpF0Dq+yweNTEw024RBis5BWHwUQ8I0E4bUXnjx2k4v4pcbcTUx3sH
-         q+oSNdNI3nd21briSH5qLs1NNAuvTkPq2XER93ug=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id 6DD8C60615;
-        Mon, 21 Oct 2019 06:37:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571639835;
-        bh=2vIcvW5geZwE7c5DDapmfwvV6vh9/TkLfY1Sx4zMLV8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=DYKB6iI3sNz6j7LBcwsaTnf8FCM+oDegeqf5MeFk4qk42fhnKKNS6rKZu9J/eLd5p
-         MopQOPDo1YkdXXejoyy8xDiyFeElpYwIdsEBG0xPvdRhWkLLfKJqFJDjJi6qi99I6/
-         4clfRCxDN2NxegTaAZfVbB8iRz92ldP06d/Kcvjo=
+        Mon, 21 Oct 2019 02:37:35 -0400
+Received: from mga07.intel.com ([134.134.136.100]:60864 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726039AbfJUGhf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 02:37:35 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Oct 2019 23:37:34 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,322,1566889200"; 
+   d="scan'208";a="397231878"
+Received: from um.fi.intel.com (HELO localhost) ([10.237.72.57])
+  by fmsmga005.fm.intel.com with ESMTP; 20 Oct 2019 23:37:31 -0700
+From:   Alexander Shishkin <alexander.shishkin@linux.intel.com>
+To:     Jiri Olsa <jolsa@kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>
+Cc:     Jan Stancek <jstancek@redhat.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        alexander.shishkin@linux.intel.com
+Subject: Re: [PATCH] perf/x86/intel/pt: Fix base for single entry topa
+In-Reply-To: <20191019220726.12213-1-jolsa@kernel.org>
+References: <20191019220726.12213-1-jolsa@kernel.org>
+Date:   Mon, 21 Oct 2019 09:37:30 +0300
+Message-ID: <87v9si4n9x.fsf@ashishki-desk.ger.corp.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 21 Oct 2019 12:07:15 +0530
-From:   Harish Bandi <c-hbandi@codeaurora.org>
-To:     Matthias Kaehlcke <mka@chromium.org>,
-        Balakrishna Godavarthi <bgodavar@codeaurora.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        linux-arm-msm@vger.kernel.org,
-        linux-bluetooth-owner@vger.kernel.org
-Subject: Re: [PATCH 2/4] Bluetooth: hci_qca: Don't vote for specific voltage
-In-Reply-To: <20191018182205.GA20212@google.com>
-References: <20191018052405.3693555-1-bjorn.andersson@linaro.org>
- <20191018052405.3693555-3-bjorn.andersson@linaro.org>
- <20191018182205.GA20212@google.com>
-Message-ID: <7f9a4de91f364a5f8ce707c8d8a2344d@codeaurora.org>
-X-Sender: c-hbandi@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+ Bala
+Jiri Olsa <jolsa@kernel.org> writes:
 
-On 2019-10-18 23:52, Matthias Kaehlcke wrote:
-> On Thu, Oct 17, 2019 at 10:24:02PM -0700, Bjorn Andersson wrote:
->> Devices with specific voltage requirements should not request voltage
->> from the driver, but instead rely on the system configuration to 
->> define
->> appropriate voltages for each rail.
->> 
->> This ensures that PMIC and board variations are accounted for, 
->> something
->> that the 0.1V range in the hci_qca driver currently tries to address.
->> But on the Lenovo Yoga C630 (with wcn3990) vddch0 is 3.1V, which means
->> the driver will fail to set the voltage.
->> 
->> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
->> ---
->>  drivers/bluetooth/hci_qca.c | 26 ++++++++------------------
->>  1 file changed, 8 insertions(+), 18 deletions(-)
->> 
->> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
->> index c07c529b0d81..54aafcc69d06 100644
->> --- a/drivers/bluetooth/hci_qca.c
->> +++ b/drivers/bluetooth/hci_qca.c
->> @@ -130,8 +130,6 @@ enum qca_speed_type {
->>   */
->>  struct qca_vreg {
->>  	const char *name;
->> -	unsigned int min_uV;
->> -	unsigned int max_uV;
->>  	unsigned int load_uA;
->>  };
->> 
->> @@ -1332,10 +1330,10 @@ static const struct hci_uart_proto qca_proto = 
->> {
->>  static const struct qca_vreg_data qca_soc_data_wcn3990 = {
->>  	.soc_type = QCA_WCN3990,
->>  	.vregs = (struct qca_vreg []) {
->> -		{ "vddio",   1800000, 1900000,  15000  },
->> -		{ "vddxo",   1800000, 1900000,  80000  },
->> -		{ "vddrf",   1300000, 1350000,  300000 },
->> -		{ "vddch0",  3300000, 3400000,  450000 },
->> +		{ "vddio", 15000  },
->> +		{ "vddxo", 80000  },
->> +		{ "vddrf", 300000 },
->> +		{ "vddch0", 450000 },
->>  	},
->>  	.num_vregs = 4,
->>  };
->> @@ -1343,10 +1341,10 @@ static const struct qca_vreg_data 
->> qca_soc_data_wcn3990 = {
->>  static const struct qca_vreg_data qca_soc_data_wcn3998 = {
->>  	.soc_type = QCA_WCN3998,
->>  	.vregs = (struct qca_vreg []) {
->> -		{ "vddio",   1800000, 1900000,  10000  },
->> -		{ "vddxo",   1800000, 1900000,  80000  },
->> -		{ "vddrf",   1300000, 1352000,  300000 },
->> -		{ "vddch0",  3300000, 3300000,  450000 },
->> +		{ "vddio", 10000  },
->> +		{ "vddxo", 80000  },
->> +		{ "vddrf", 300000 },
->> +		{ "vddch0", 450000 },
->>  	},
->>  	.num_vregs = 4,
->>  };
->> @@ -1386,13 +1384,6 @@ static int qca_power_off(struct hci_dev *hdev)
->>  static int qca_enable_regulator(struct qca_vreg vregs,
->>  				struct regulator *regulator)
->>  {
->> -	int ret;
->> -
->> -	ret = regulator_set_voltage(regulator, vregs.min_uV,
->> -				    vregs.max_uV);
->> -	if (ret)
->> -		return ret;
->> -
->>  	return regulator_enable(regulator);
->> 
->>  }
->> @@ -1401,7 +1392,6 @@ static void qca_disable_regulator(struct 
->> qca_vreg vregs,
->>  				  struct regulator *regulator)
->>  {
->>  	regulator_disable(regulator);
->> -	regulator_set_voltage(regulator, 0, vregs.max_uV);
->> 
->>  }
-> 
-> This was brought up multiple times during the initial review, but
-> wasn't addressed.
-> 
-> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+> Jan reported failing ltp test for pt. It looks like the reason
+> is commit 38bb8d77d0b9, that did not keep the TOPA_SHIFT for
+> entry base, adding it back.
+
+Thanks for taking care of that so quickly!
+
+Regards,
+--
+Alex
