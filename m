@@ -2,193 +2,108 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1E5BCA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:11:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89EE4CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:12:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D44C205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:11:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 602C4205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:12:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uSPqSz6w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727662AbfJUILz (ORCPT
+        id S1727673AbfJUIMT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 04:11:55 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:46372 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727399AbfJUILy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 04:11:54 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 2B65D20020B;
-        Mon, 21 Oct 2019 10:11:51 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 227322001DC;
-        Mon, 21 Oct 2019 10:11:47 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 25DE7402B6;
-        Mon, 21 Oct 2019 16:11:42 +0800 (SGT)
-From:   Biwen Li <biwen.li@nxp.com>
-To:     peda@axentia.se, leoyang.li@nxp.com, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Biwen Li <biwen.li@nxp.com>
-Subject: [v4,2/2] i2c: mux: pca954x: support property idle-state
-Date:   Mon, 21 Oct 2019 16:00:48 +0800
-Message-Id: <20191021080048.47189-2-biwen.li@nxp.com>
-X-Mailer: git-send-email 2.9.5
-In-Reply-To: <20191021080048.47189-1-biwen.li@nxp.com>
-References: <20191021080048.47189-1-biwen.li@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Mon, 21 Oct 2019 04:12:19 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:45646 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727047AbfJUIMT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 04:12:19 -0400
+Received: by mail-pf1-f196.google.com with SMTP id y72so7905729pfb.12;
+        Mon, 21 Oct 2019 01:12:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=etsl/+EW28YP7d76R/imarsexm4hcF4u8WBkurY4oJk=;
+        b=uSPqSz6wxUqRn3DR/m569DXHAC54oagCBxpkd7+Smz6qoS3curhM524AFf7hx6gRH9
+         XCOFtH39JYfnEwpoG2xqI+wMSYf/vTnt1WAsaI5rBklhKcugXCk8nwc8YsXAQZppV7Ms
+         3AzS2cfOwd1/5UojwML4hFIyV5CY40YrXzY3JvBPKiH1PT1y1in5zjyM/jUXCpznl3Rz
+         QLn9lR3SAoheGN5pf1Qq9kP2aFFer4Ap2a3yO4FMcyk+qYyyb33m1vt1zYnp9430G1yC
+         EqLc0FB7n6WCzliRdp1OUyxuodthvLeIbuAQ/oicFg5Xety3UDoTvwBmbqo7dl3ikzAp
+         Xoxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=etsl/+EW28YP7d76R/imarsexm4hcF4u8WBkurY4oJk=;
+        b=UkaRjzm3uYvbVGiCbQFtvFJPpY++Pbm6jW2H0mtWE/20xRluQ6neYSOq+w93ViVOHp
+         kNoW3X3XeqNJYlZK3WKMYjlGD7Fh1MruCa8aGf6mbAhdSAxMUfjAtq5ioI3mCK+Futik
+         h5r5mR3VyoN7NLcCXoXM9ehUYOHUxav2igtRLas20ZH1QggZqY9EoMYsW8V+ReqZJaIW
+         2QOvWmRZWzfOvzPcXGwCpGIY6HmCOMByDhzR3QXnrNMZ67gySyfDS1CGvkGxxLUZuxDp
+         SPdns4FwIrFTTkbZ07Bm7WgJPxEvWRt76xb3anlE41ZTv/MT9U2GH3o3pwDwBRpTE3Sm
+         UaMw==
+X-Gm-Message-State: APjAAAWwrAYCyvq7zULyD7Z8kvvz6mvX8jWvA7aLkDViAotcYcF8leBh
+        sKrxxU8kGVnPc8ZzXola1XYbGFpq
+X-Google-Smtp-Source: APXvYqz65u7cCrtYEB1HPJs+GDYOpixixLnDyXAlAbH3oDlDsahqTxWyIhyyhH++pwZTH6yKDVUjWg==
+X-Received: by 2002:a63:ff56:: with SMTP id s22mr24047346pgk.44.1571645536842;
+        Mon, 21 Oct 2019 01:12:16 -0700 (PDT)
+Received: from Asurada (c-73-162-191-63.hsd1.ca.comcast.net. [73.162.191.63])
+        by smtp.gmail.com with ESMTPSA id k8sm11943460pgm.14.2019.10.21.01.12.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 21 Oct 2019 01:12:16 -0700 (PDT)
+Date:   Mon, 21 Oct 2019 01:12:12 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     jdelvare@suse.com, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org, corbet@lwn.net,
+        linux-doc@vger.kernel.org
+Subject: Re: [PATCH] hwmon: (ina3221) Add summation feature support
+Message-ID: <20191021081211.GA5684@Asurada>
+References: <20191016235702.22039-1-nicoleotsuka@gmail.com>
+ <20191020163628.GA16363@roeck-us.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191020163628.GA16363@roeck-us.net>
+User-Agent: Mutt/1.5.22 (2013-10-16)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This supports property idle-state
+On Sun, Oct 20, 2019 at 09:36:28AM -0700, Guenter Roeck wrote:
+> On Wed, Oct 16, 2019 at 04:57:02PM -0700, Nicolin Chen wrote:
+> > This patch implements the summation feature of INA3221, mainly the
+> > SCC (enabling) and SF (warning flag) bits of MASK_ENABLE register,
+> > INA3221_SHUNT_SUM (summation of shunt voltages) register, and the
+> > INA3221_CRIT_SUM (its critical alert setting) register.
+> > 
+> > Although the summation feature allows user to select which channels
+> > to be added to the result, as an initial support, this patch simply
+> > selects all channels by default, with one only condition: all shunt
+> > resistor values need to be the same. This is because the summation
+> > of current channels can be only accurately calculated, using shunt
+> > voltage sum register, if all shunt resistors are equivalent.
+> > 
+> > Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
+> > ---
+> > 
+> > Hi Guenter,
+> > 
+> > I know my previous questions haven't been answered yet, so nodes
+> > for enabling bits aren't decided completely. But this patch only
+> > adds voltage and its current, and we had a conclusion for these
+> > two already last time. So I think we may add them first. Thanks!
+> > 
+> 
+> I don't really like the term "summation", as it is the process of
+> summing things up, not the result. I'll change "summation of" in
+> the documentation to "sum of" and apply the patch.
 
-Signed-off-by: Biwen Li <biwen.li@nxp.com>
----
-Change in v4:
-	- rename function
-	  pca954x_calculate_chan -> pca954x_regval
-
-Change in v3:
-	- update subject and description
-	- add a helper function pca954x_calculate_chan()
-
-Change in v2:
-	- update subject and description
-	- add property idle-state
-
- drivers/i2c/muxes/i2c-mux-pca954x.c | 59 ++++++++++++++++++-----------
- 1 file changed, 36 insertions(+), 23 deletions(-)
-
-diff --git a/drivers/i2c/muxes/i2c-mux-pca954x.c b/drivers/i2c/muxes/i2c-mux-pca954x.c
-index 923aa3a5a3dc..e566c4cd8ba5 100644
---- a/drivers/i2c/muxes/i2c-mux-pca954x.c
-+++ b/drivers/i2c/muxes/i2c-mux-pca954x.c
-@@ -86,7 +86,7 @@ struct pca954x {
- 
- 	u8 last_chan;		/* last register value */
- 	/* MUX_IDLE_AS_IS, MUX_IDLE_DISCONNECT or >= 0 for channel */
--	s8 idle_state;
-+	s32 idle_state;
- 
- 	struct i2c_client *client;
- 
-@@ -229,20 +229,23 @@ static int pca954x_reg_write(struct i2c_adapter *adap,
- 				I2C_SMBUS_BYTE, &dummy);
- }
- 
-+static u8 pca954x_regval(struct pca954x *data, u8 chan)
-+{
-+	/* we make switches look like muxes, not sure how to be smarter */
-+	if (data->chip->muxtype == pca954x_ismux)
-+		return chan | data->chip->enable;
-+	else
-+		return 1 << chan;
-+}
-+
- static int pca954x_select_chan(struct i2c_mux_core *muxc, u32 chan)
- {
- 	struct pca954x *data = i2c_mux_priv(muxc);
- 	struct i2c_client *client = data->client;
--	const struct chip_desc *chip = data->chip;
- 	u8 regval;
- 	int ret = 0;
- 
--	/* we make switches look like muxes, not sure how to be smarter */
--	if (chip->muxtype == pca954x_ismux)
--		regval = chan | chip->enable;
--	else
--		regval = 1 << chan;
--
-+	regval = pca954x_regval(data, (u8)(chan & 0xff));
- 	/* Only select the channel if its different from the last channel */
- 	if (data->last_chan != regval) {
- 		ret = pca954x_reg_write(muxc->parent, client, regval);
-@@ -256,7 +259,7 @@ static int pca954x_deselect_mux(struct i2c_mux_core *muxc, u32 chan)
- {
- 	struct pca954x *data = i2c_mux_priv(muxc);
- 	struct i2c_client *client = data->client;
--	s8 idle_state;
-+	s32 idle_state;
- 
- 	idle_state = READ_ONCE(data->idle_state);
- 	if (idle_state >= 0)
-@@ -402,6 +405,17 @@ static void pca954x_cleanup(struct i2c_mux_core *muxc)
- 	i2c_mux_del_adapters(muxc);
- }
- 
-+static int pca954x_init(struct i2c_client *client, struct pca954x *data)
-+{
-+	if (data->idle_state >= 0) {
-+		data->last_chan = pca954x_regval(data, (u8)(data->idle_state & 0xff));
-+	} else {
-+		/* Disconnect multiplexer */
-+		data->last_chan = 0;
-+	}
-+	return i2c_smbus_write_byte(client, data->last_chan);
-+}
-+
- /*
-  * I2C init/probing/exit functions
-  */
-@@ -411,7 +425,6 @@ static int pca954x_probe(struct i2c_client *client,
- 	struct i2c_adapter *adap = client->adapter;
- 	struct device *dev = &client->dev;
- 	struct device_node *np = dev->of_node;
--	bool idle_disconnect_dt;
- 	struct gpio_desc *gpio;
- 	struct i2c_mux_core *muxc;
- 	struct pca954x *data;
-@@ -462,23 +475,24 @@ static int pca954x_probe(struct i2c_client *client,
- 		}
- 	}
- 
--	/* Write the mux register at addr to verify
-+	data->idle_state = MUX_IDLE_AS_IS;
-+	if (of_property_read_u32(np, "idle-state", &data->idle_state)) {
-+		if (np && of_property_read_bool(np, "i2c-mux-idle-disconnect"))
-+			data->idle_state = MUX_IDLE_DISCONNECT;
-+	}
-+
-+	/*
-+	 * Write the mux register at addr to verify
- 	 * that the mux is in fact present. This also
--	 * initializes the mux to disconnected state.
-+	 * initializes the mux to a channel
-+	 * or disconnected state.
- 	 */
--	if (i2c_smbus_write_byte(client, 0) < 0) {
-+	ret = pca954x_init(client, data);
-+	if (ret < 0) {
- 		dev_warn(dev, "probe failed\n");
- 		return -ENODEV;
- 	}
- 
--	data->last_chan = 0;		   /* force the first selection */
--	data->idle_state = MUX_IDLE_AS_IS;
--
--	idle_disconnect_dt = np &&
--		of_property_read_bool(np, "i2c-mux-idle-disconnect");
--	if (idle_disconnect_dt)
--		data->idle_state = MUX_IDLE_DISCONNECT;
--
- 	ret = pca954x_irq_setup(muxc);
- 	if (ret)
- 		goto fail_cleanup;
-@@ -531,8 +545,7 @@ static int pca954x_resume(struct device *dev)
- 	struct i2c_mux_core *muxc = i2c_get_clientdata(client);
- 	struct pca954x *data = i2c_mux_priv(muxc);
- 
--	data->last_chan = 0;
--	return i2c_smbus_write_byte(client, 0);
-+	return pca954x_init(client, data);
- }
- #endif
- 
--- 
-2.17.1
-
+Thank you!
