@@ -2,461 +2,720 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02AC1CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:20:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6AA7CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:20:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9B7B2084B
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:20:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DD712070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:20:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OFGLzuQn"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Oh8e5EhP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728071AbfJUKUH (ORCPT
+        id S1728097AbfJUKUP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 06:20:07 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:39267 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727831AbfJUKUH (ORCPT
+        Mon, 21 Oct 2019 06:20:15 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47517 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727831AbfJUKUO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 06:20:07 -0400
-Received: by mail-wr1-f65.google.com with SMTP id c6so1050284wrm.6
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 03:20:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=9qOg0hyHvT7VI0+XjvFR/nVuns2MpJQHt/W2vk31HGE=;
-        b=OFGLzuQnZEm3SiLn27R7u3Kurrl5dK/BghyoqQrgcdvkKHLbN/QzM+9EiS+Fcaja3U
-         KuWKGFFaoY0tMEmZXm/Hqbdp9tvUnMJUkMsP44Igi2KtZQRfMmNQhrwo1e+3LVqRXjDF
-         PARTGP3zq9Z6DvqT4PreGnoHMOhPx1e+bUFcV1+FPdlmdGLSJ4Gue+JE4F5YgTWthGvz
-         cJztLQx7VWSqhEOEbxITH5DwMBlHQOczoWrTEHQw2GO+qjwYJsSpoox0Vz1qQS2Les68
-         j8MxwD57j65PYr5h6D7vJ2grY2hJGraSZS4fOaky0NHQiJfZbgwvi5FK/xRvOm8pgQKd
-         Bo7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9qOg0hyHvT7VI0+XjvFR/nVuns2MpJQHt/W2vk31HGE=;
-        b=hNt1Ba5nzoxDZp6ksidWS9A9hy+dzSPL12K4T3KqOcOxWNGk7oQF85CfB+U4h4rWsR
-         /twMZ6I6kF3J/GIYNG1luHpggMMNOYj6Gx/mFEx/2A1F6F4gdnOyr+gte1qi7AdVfSH9
-         zee6NBHeUAHbLoknF4G+ZkR22u6pb7Jp9HsD9rU4m+EE4c5s4QEkUk5XSoOJRLXgyHAd
-         BfvVkt/z9nd67jKIAYhzzfPLhv61Dc5PTwIUpN48sx3jZMo8IFkEhgwghsRlhw132sxw
-         v/QP8Hhf2ieyx2ob7LTLrCOF8VZXCJsM47StovUXteoBObUuCSAGCGW3vwzDpLeWhOus
-         Q92A==
-X-Gm-Message-State: APjAAAVmibpAASG8mYG1s9SYaNyyTCx4osJcsunMUXawMP1aECLYzs3L
-        NNFZoeVli6/YTg8qNEolqOQWSQ==
-X-Google-Smtp-Source: APXvYqyFSTkr20CWn18u4aAFO7Fxo4R+H0u2DRmGOgMD1KUE+G3H5L5n+vfU8SVfs7/yL+VmNmS3fg==
-X-Received: by 2002:adf:b1d1:: with SMTP id r17mr4553983wra.201.1571653201995;
-        Mon, 21 Oct 2019 03:20:01 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id 126sm14864076wma.48.2019.10.21.03.20.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Oct 2019 03:20:01 -0700 (PDT)
-Date:   Mon, 21 Oct 2019 11:19:59 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Kiran Gunda <kgunda@codeaurora.org>
-Cc:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
-        lee.jones@linaro.org, b.zolnierkie@samsung.com,
-        dri-devel@lists.freedesktop.org, jacek.anaszewski@gmail.com,
-        pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-fbdev@vger.kernel.org
-Subject: Re: [PATCH V8 4/6] backlight: qcom-wled: Add support for WLED4
- peripheral.
-Message-ID: <20191021101959.qi5ugkofphaffspj@holly.lan>
-References: <1571402009-8706-1-git-send-email-kgunda@codeaurora.org>
- <1571402009-8706-5-git-send-email-kgunda@codeaurora.org>
+        Mon, 21 Oct 2019 06:20:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571653211;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=fYrZFHZOW1YUmAoRCKQjGzYd6i7mjDB4UBqk3ydgai0=;
+        b=Oh8e5EhPDQakn/OVQC6Blu1iuUx1XNzGi6H3Ip3ISxOFTzX3iX6S9aUNMiT1DWtG9uw3ON
+        Wl5KkqPte0yWklPCdJr4BpQ++YJNBJiXknYVzLrgsB9ZT3cxXeih+EzjqcnuLMGh9GyGzU
+        4T/eL3LFitwTbkRzFO75CL5f+x1uy34=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-59-DGgyACdxNFywAbDdAHZQfA-1; Mon, 21 Oct 2019 06:20:08 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CA8A55ED;
+        Mon, 21 Oct 2019 10:20:06 +0000 (UTC)
+Received: from [10.72.12.22] (ovpn-12-22.pek2.redhat.com [10.72.12.22])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 686441001B09;
+        Mon, 21 Oct 2019 10:19:54 +0000 (UTC)
+Subject: Re: [RFC 2/2] vhost: IFC VF vdpa layer
+To:     "Zhu, Lingshan" <lingshan.zhu@intel.com>, mst@redhat.com,
+        alex.williamson@redhat.com
+Cc:     linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, dan.daly@intel.com,
+        cunming.liang@intel.com, tiwei.bie@intel.com, jason.zeng@intel.com,
+        zhiyuan.lv@intel.com
+References: <20191016013050.3918-1-lingshan.zhu@intel.com>
+ <20191016013050.3918-3-lingshan.zhu@intel.com>
+ <9495331d-3c65-6f49-dcd9-bfdb17054cf0@redhat.com>
+ <f65358e9-6728-8260-74f7-176d7511e989@intel.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <1cae60b6-938d-e2df-2dca-fbf545f06853@redhat.com>
+Date:   Mon, 21 Oct 2019 18:19:52 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1571402009-8706-5-git-send-email-kgunda@codeaurora.org>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <f65358e9-6728-8260-74f7-176d7511e989@intel.com>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: DGgyACdxNFywAbDdAHZQfA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 06:03:27PM +0530, Kiran Gunda wrote:
-> WLED4 peripheral is present on some PMICs like pmi8998 and
-> pm660l. It has a different register map and configurations
-> are also different. Add support for it.
-> 
-> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+On 2019/10/21 =E4=B8=8B=E5=8D=885:53, Zhu, Lingshan wrote:
+>
+> On 10/16/2019 6:19 PM, Jason Wang wrote:
+>>
+>> On 2019/10/16 =E4=B8=8A=E5=8D=889:30, Zhu Lingshan wrote:
+>>> This commit introduced IFC VF operations for vdpa, which complys to
+>>> vhost_mdev interfaces, handles IFC VF initialization,
+>>> configuration and removal.
+>>>
+>>> Signed-off-by: Zhu Lingshan <lingshan.zhu@intel.com>
+>>> ---
+>>> =C2=A0 drivers/vhost/ifcvf/ifcvf_main.c | 541=20
+>>> +++++++++++++++++++++++++++++++++++++++
+>>> =C2=A0 1 file changed, 541 insertions(+)
+>>> =C2=A0 create mode 100644 drivers/vhost/ifcvf/ifcvf_main.c
+>>>
+>>> diff --git a/drivers/vhost/ifcvf/ifcvf_main.c=20
+>>> b/drivers/vhost/ifcvf/ifcvf_main.c
+>>> new file mode 100644
+>>> index 000000000000..c48a29969a85
+>>> --- /dev/null
+>>> +++ b/drivers/vhost/ifcvf/ifcvf_main.c
+>>> @@ -0,0 +1,541 @@
+>>> +// SPDX-License-Identifier: GPL-2.0-only
+>>> +/*
+>>> + * Copyright (C) 2019 Intel Corporation.
+>>> + */
+>>> +
+>>> +#include <linux/interrupt.h>
+>>> +#include <linux/module.h>
+>>> +#include <linux/mdev.h>
+>>> +#include <linux/pci.h>
+>>> +#include <linux/sysfs.h>
+>>> +
+>>> +#include "ifcvf_base.h"
+>>> +
+>>> +#define VERSION_STRING=C2=A0=C2=A0=C2=A0 "0.1"
+>>> +#define DRIVER_AUTHOR=C2=A0=C2=A0=C2=A0 "Intel Corporation"
+>>> +#define IFCVF_DRIVER_NAME=C2=A0=C2=A0=C2=A0 "ifcvf"
+>>> +
+>>> +static irqreturn_t ifcvf_intr_handler(int irq, void *arg)
+>>> +{
+>>> +=C2=A0=C2=A0=C2=A0 struct vring_info *vring =3D arg;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 if (vring->cb.callback)
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return vring->cb.callback(v=
+ring->cb.private);
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 return IRQ_HANDLED;
+>>> +}
+>>> +
+>>> +static u64 ifcvf_mdev_get_features(struct mdev_device *mdev)
+>>> +{
+>>> +=C2=A0=C2=A0=C2=A0 return IFC_SUPPORTED_FEATURES;
+>>
+>>
+>> I would expect this should be done by querying the hw. Or IFC VF=20
+>> can't get any update through its firmware?
+>
+> Hi Jason,
+>
+> Thanks for your comments, for now driver just support these features.
 
-> ---
->  drivers/video/backlight/qcom-wled.c | 255 +++++++++++++++++++++++++++++++++++-
->  1 file changed, 253 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/video/backlight/qcom-wled.c b/drivers/video/backlight/qcom-wled.c
-> index 45eeda4..5386ca9 100644
-> --- a/drivers/video/backlight/qcom-wled.c
-> +++ b/drivers/video/backlight/qcom-wled.c
-> @@ -17,7 +17,7 @@
->  
->  #define WLED3_SINK_REG_BRIGHT_MAX			0xFFF
->  
-> -/* WLED3 control registers */
-> +/* WLED3/WLED4 control registers */
->  #define WLED3_CTRL_REG_MOD_EN				0x46
->  #define  WLED3_CTRL_REG_MOD_EN_MASK			BIT(7)
->  #define  WLED3_CTRL_REG_MOD_EN_SHIFT			7
-> @@ -31,7 +31,7 @@
->  #define WLED3_CTRL_REG_ILIMIT				0x4e
->  #define  WLED3_CTRL_REG_ILIMIT_MASK			GENMASK(2, 0)
->  
-> -/* WLED3 sink registers */
-> +/* WLED3/WLED4 sink registers */
->  #define WLED3_SINK_REG_SYNC				0x47
->  #define  WLED3_SINK_REG_SYNC_CLEAR			0x00
->  
-> @@ -56,6 +56,28 @@
->  #define WLED3_SINK_REG_STR_CABC(n)			(0x66 + (n * 0x10))
->  #define  WLED3_SINK_REG_STR_CABC_MASK			BIT(7)
->  
-> +/* WLED4 specific sink registers */
-> +#define WLED4_SINK_REG_CURR_SINK			0x46
-> +#define  WLED4_SINK_REG_CURR_SINK_MASK			GENMASK(7, 4)
-> +#define  WLED4_SINK_REG_CURR_SINK_SHFT			4
-> +
-> +/* WLED4 specific per-'string' registers below */
-> +#define WLED4_SINK_REG_STR_MOD_EN(n)			(0x50 + (n * 0x10))
-> +#define  WLED4_SINK_REG_STR_MOD_MASK			BIT(7)
-> +
-> +#define WLED4_SINK_REG_STR_FULL_SCALE_CURR(n)		(0x52 + (n * 0x10))
-> +#define  WLED4_SINK_REG_STR_FULL_SCALE_CURR_MASK	GENMASK(3, 0)
-> +
-> +#define WLED4_SINK_REG_STR_MOD_SRC(n)			(0x53 + (n * 0x10))
-> +#define  WLED4_SINK_REG_STR_MOD_SRC_MASK		BIT(0)
-> +#define  WLED4_SINK_REG_STR_MOD_SRC_INT			0x00
-> +#define  WLED4_SINK_REG_STR_MOD_SRC_EXT			0x01
-> +
-> +#define WLED4_SINK_REG_STR_CABC(n)			(0x56 + (n * 0x10))
-> +#define  WLED4_SINK_REG_STR_CABC_MASK			BIT(7)
-> +
-> +#define WLED4_SINK_REG_BRIGHT(n)			(0x57 + (n * 0x10))
-> +
->  struct wled_var_cfg {
->  	const u32 *values;
->  	u32 (*fn)(u32);
-> @@ -90,6 +112,7 @@ struct wled {
->  	struct device *dev;
->  	struct regmap *regmap;
->  	u16 ctrl_addr;
-> +	u16 sink_addr;
->  	u16 max_string_count;
->  	u32 brightness;
->  	u32 max_brightness;
-> @@ -116,6 +139,29 @@ static int wled3_set_brightness(struct wled *wled, u16 brightness)
->  	return 0;
->  }
->  
-> +static int wled4_set_brightness(struct wled *wled, u16 brightness)
-> +{
-> +	int rc, i;
-> +	u16 low_limit = wled->max_brightness * 4 / 1000;
-> +	u8 v[2];
-> +
-> +	/* WLED4's lower limit of operation is 0.4% */
-> +	if (brightness > 0 && brightness < low_limit)
-> +		brightness = low_limit;
-> +
-> +	v[0] = brightness & 0xff;
-> +	v[1] = (brightness >> 8) & 0xf;
-> +
-> +	for (i = 0;  i < wled->cfg.num_strings; ++i) {
-> +		rc = regmap_bulk_write(wled->regmap, wled->sink_addr +
-> +				       WLED4_SINK_REG_BRIGHT(i), v, 2);
-> +		if (rc < 0)
-> +			return rc;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int wled_module_enable(struct wled *wled, int val)
->  {
->  	int rc;
-> @@ -267,6 +313,120 @@ static int wled3_setup(struct wled *wled)
->  	.enabled_strings = {0, 1, 2, 3},
->  };
->  
-> +static int wled4_setup(struct wled *wled)
-> +{
-> +	int rc, temp, i, j;
-> +	u16 addr;
-> +	u8 sink_en = 0;
-> +	u32 sink_cfg = 0;
-> +
-> +	rc = regmap_update_bits(wled->regmap,
-> +				wled->ctrl_addr + WLED3_CTRL_REG_OVP,
-> +				WLED3_CTRL_REG_OVP_MASK, wled->cfg.ovp);
-> +	if (rc < 0)
-> +		return rc;
-> +
-> +	rc = regmap_update_bits(wled->regmap,
-> +				wled->ctrl_addr + WLED3_CTRL_REG_ILIMIT,
-> +				WLED3_CTRL_REG_ILIMIT_MASK,
-> +				wled->cfg.boost_i_limit);
-> +	if (rc < 0)
-> +		return rc;
-> +
-> +	rc = regmap_update_bits(wled->regmap,
-> +				wled->ctrl_addr + WLED3_CTRL_REG_FREQ,
-> +				WLED3_CTRL_REG_FREQ_MASK,
-> +				wled->cfg.switch_freq);
-> +	if (rc < 0)
-> +		return rc;
-> +
-> +	rc = regmap_read(wled->regmap, wled->sink_addr +
-> +			 WLED4_SINK_REG_CURR_SINK, &sink_cfg);
-> +	if (rc < 0)
-> +		return rc;
-> +
-> +	for (i = 0; i < wled->cfg.num_strings; i++) {
-> +		j = wled->cfg.enabled_strings[i];
-> +		temp = j + WLED4_SINK_REG_CURR_SINK_SHFT;
-> +		sink_en |= 1 << temp;
-> +	}
-> +
-> +	if (sink_cfg == sink_en)
-> +		return 0;
-> +
-> +	rc = regmap_update_bits(wled->regmap,
-> +				wled->sink_addr + WLED4_SINK_REG_CURR_SINK,
-> +				WLED4_SINK_REG_CURR_SINK_MASK, 0);
-> +	if (rc < 0)
-> +		return rc;
-> +
-> +	rc = regmap_update_bits(wled->regmap, wled->ctrl_addr +
-> +				WLED3_CTRL_REG_MOD_EN,
-> +				WLED3_CTRL_REG_MOD_EN_MASK, 0);
-> +	if (rc < 0)
-> +		return rc;
-> +
-> +	/* Per sink/string configuration */
-> +	for (i = 0; i < wled->cfg.num_strings; i++) {
-> +		j = wled->cfg.enabled_strings[i];
-> +
-> +		addr = wled->sink_addr +
-> +				WLED4_SINK_REG_STR_MOD_EN(j);
-> +		rc = regmap_update_bits(wled->regmap, addr,
-> +					WLED4_SINK_REG_STR_MOD_MASK,
-> +					WLED4_SINK_REG_STR_MOD_MASK);
-> +		if (rc < 0)
-> +			return rc;
-> +
-> +		addr = wled->sink_addr +
-> +				WLED4_SINK_REG_STR_FULL_SCALE_CURR(j);
-> +		rc = regmap_update_bits(wled->regmap, addr,
-> +					WLED4_SINK_REG_STR_FULL_SCALE_CURR_MASK,
-> +					wled->cfg.string_i_limit);
-> +		if (rc < 0)
-> +			return rc;
-> +
-> +		addr = wled->sink_addr +
-> +				WLED4_SINK_REG_STR_CABC(j);
-> +		rc = regmap_update_bits(wled->regmap, addr,
-> +					WLED4_SINK_REG_STR_CABC_MASK,
-> +					wled->cfg.cabc ?
-> +					WLED4_SINK_REG_STR_CABC_MASK : 0);
-> +		if (rc < 0)
-> +			return rc;
-> +	}
-> +
-> +	rc = regmap_update_bits(wled->regmap, wled->ctrl_addr +
-> +				WLED3_CTRL_REG_MOD_EN,
-> +				WLED3_CTRL_REG_MOD_EN_MASK,
-> +				WLED3_CTRL_REG_MOD_EN_MASK);
-> +	if (rc < 0)
-> +		return rc;
-> +
-> +	rc = regmap_update_bits(wled->regmap,
-> +				wled->sink_addr + WLED4_SINK_REG_CURR_SINK,
-> +				WLED4_SINK_REG_CURR_SINK_MASK, sink_en);
-> +	if (rc < 0)
-> +		return rc;
-> +
-> +	rc = wled_sync_toggle(wled);
-> +	if (rc < 0) {
-> +		dev_err(wled->dev, "Failed to toggle sync reg rc:%d\n", rc);
-> +		return rc;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct wled_config wled4_config_defaults = {
-> +	.boost_i_limit = 4,
-> +	.string_i_limit = 10,
-> +	.ovp = 1,
-> +	.num_strings = 4,
-> +	.switch_freq = 11,
-> +	.cabc = false,
-> +};
-> +
->  static const u32 wled3_boost_i_limit_values[] = {
->  	105, 385, 525, 805, 980, 1260, 1400, 1680,
->  };
-> @@ -276,6 +436,15 @@ static int wled3_setup(struct wled *wled)
->  	.size = ARRAY_SIZE(wled3_boost_i_limit_values),
->  };
->  
-> +static const u32 wled4_boost_i_limit_values[] = {
-> +	105, 280, 450, 620, 970, 1150, 1300, 1500,
-> +};
-> +
-> +static const struct wled_var_cfg wled4_boost_i_limit_cfg = {
-> +	.values = wled4_boost_i_limit_values,
-> +	.size = ARRAY_SIZE(wled4_boost_i_limit_values),
-> +};
-> +
->  static const u32 wled3_ovp_values[] = {
->  	35, 32, 29, 27,
->  };
-> @@ -285,6 +454,15 @@ static int wled3_setup(struct wled *wled)
->  	.size = ARRAY_SIZE(wled3_ovp_values),
->  };
->  
-> +static const u32 wled4_ovp_values[] = {
-> +	31100, 29600, 19600, 18100,
-> +};
-> +
-> +static const struct wled_var_cfg wled4_ovp_cfg = {
-> +	.values = wled4_ovp_values,
-> +	.size = ARRAY_SIZE(wled4_ovp_values),
-> +};
-> +
->  static u32 wled3_num_strings_values_fn(u32 idx)
->  {
->  	return idx + 1;
-> @@ -295,6 +473,11 @@ static u32 wled3_num_strings_values_fn(u32 idx)
->  	.size = 3,
->  };
->  
-> +static const struct wled_var_cfg wled4_num_strings_cfg = {
-> +	.fn = wled3_num_strings_values_fn,
-> +	.size = 4,
-> +};
-> +
->  static u32 wled3_switch_freq_values_fn(u32 idx)
->  {
->  	return 19200 / (2 * (1 + idx));
-> @@ -309,10 +492,24 @@ static u32 wled3_switch_freq_values_fn(u32 idx)
->  	.size = 26,
->  };
->  
-> +static const u32 wled4_string_i_limit_values[] = {
-> +	0, 2500, 5000, 7500, 10000, 12500, 15000, 17500, 20000,
-> +	22500, 25000, 27500, 30000,
-> +};
-> +
-> +static const struct wled_var_cfg wled4_string_i_limit_cfg = {
-> +	.values = wled4_string_i_limit_values,
-> +	.size = ARRAY_SIZE(wled4_string_i_limit_values),
-> +};
-> +
->  static const struct wled_var_cfg wled3_string_cfg = {
->  	.size = 8,
->  };
->  
-> +static const struct wled_var_cfg wled4_string_cfg = {
-> +	.size = 16,
-> +};
-> +
->  static u32 wled_values(const struct wled_var_cfg *cfg, u32 idx)
->  {
->  	if (idx >= cfg->size)
-> @@ -361,6 +558,34 @@ static int wled_configure(struct wled *wled, int version)
->  		},
->  	};
->  
-> +	const struct wled_u32_opts wled4_opts[] = {
-> +		{
-> +			.name = "qcom,current-boost-limit",
-> +			.val_ptr = &cfg->boost_i_limit,
-> +			.cfg = &wled4_boost_i_limit_cfg,
-> +		},
-> +		{
-> +			.name = "qcom,current-limit-microamp",
-> +			.val_ptr = &cfg->string_i_limit,
-> +			.cfg = &wled4_string_i_limit_cfg,
-> +		},
-> +		{
-> +			.name = "qcom,ovp-millivolt",
-> +			.val_ptr = &cfg->ovp,
-> +			.cfg = &wled4_ovp_cfg,
-> +		},
-> +		{
-> +			.name = "qcom,switching-freq",
-> +			.val_ptr = &cfg->switch_freq,
-> +			.cfg = &wled3_switch_freq_cfg,
-> +		},
-> +		{
-> +			.name = "qcom,num-strings",
-> +			.val_ptr = &cfg->num_strings,
-> +			.cfg = &wled4_num_strings_cfg,
-> +		},
-> +	};
-> +
->  	const struct wled_bool_opts bool_opts[] = {
->  		{ "qcom,cs-out", &cfg->cs_out_en, },
->  		{ "qcom,ext-gen", &cfg->ext_gen, },
-> @@ -385,6 +610,22 @@ static int wled_configure(struct wled *wled, int version)
->  		*cfg = wled3_config_defaults;
->  		wled->wled_set_brightness = wled3_set_brightness;
->  		wled->max_string_count = 3;
-> +		wled->sink_addr = wled->ctrl_addr;
-> +		break;
-> +
-> +	case 4:
-> +		u32_opts = wled4_opts;
-> +		size = ARRAY_SIZE(wled4_opts);
-> +		*cfg = wled4_config_defaults;
-> +		wled->wled_set_brightness = wled4_set_brightness;
-> +		wled->max_string_count = 4;
-> +
-> +		prop_addr = of_get_address(dev->of_node, 1, NULL, NULL);
-> +		if (!prop_addr) {
-> +			dev_err(wled->dev, "invalid IO resources\n");
-> +			return -EINVAL;
-> +		}
-> +		wled->sink_addr = be32_to_cpu(*prop_addr);
->  		break;
->  
->  	default:
-> @@ -483,6 +724,14 @@ static int wled_probe(struct platform_device *pdev)
->  		}
->  		break;
->  
-> +	case 4:
-> +		rc = wled4_setup(wled);
-> +		if (rc) {
-> +			dev_err(&pdev->dev, "wled4_setup failed\n");
-> +			return rc;
-> +		}
-> +		break;
-> +
->  	default:
->  		dev_err(wled->dev, "Invalid WLED version\n");
->  		break;
-> @@ -503,6 +752,8 @@ static int wled_probe(struct platform_device *pdev)
->  
->  static const struct of_device_id wled_match_table[] = {
->  	{ .compatible = "qcom,pm8941-wled", .data = (void *)3 },
-> +	{ .compatible = "qcom,pmi8998-wled", .data = (void *)4 },
-> +	{ .compatible = "qcom,pm660l-wled", .data = (void *)4 },
->  	{}
->  };
->  MODULE_DEVICE_TABLE(of, wled_match_table);
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
->  a Linux Foundation Collaborative Project
-> 
+
+Ok, it should work but less flexible, we can change it in the future.
+
+
+>
+>>
+>>
+>>> +}
+>>> +
+>>> +static int ifcvf_mdev_set_features(struct mdev_device *mdev, u64=20
+>>> features)
+>>> +{
+>>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_adapter *adapter =3D mdev_get_drvdata(=
+mdev);
+>>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_hw *vf =3D IFC_PRIVATE_TO_VF(adapter);
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 vf->req_features =3D features;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 return 0;
+>>> +}
+>>> +
+>>> +static u64 ifcvf_mdev_get_vq_state(struct mdev_device *mdev, u16 qid)
+>>> +{
+>>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_adapter *adapter =3D mdev_get_drvdata(=
+mdev);
+>>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_hw *vf =3D IFC_PRIVATE_TO_VF(adapter);
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 return vf->vring[qid].last_avail_idx;
+>>
+>>
+>> Does this really work? I'd expect it should be fetched from hw since=20
+>> it's an internal state.
+> for now, it's working, we intend to support LM in next version drivers.
+
+
+I'm not sure I understand here, I don't see any synchronization between=20
+the hardware and last_avail_idx, so last_avail_idx should not change.
+
+Btw, what did "LM" mean :) ?
+
+
+>>
+>>
+>>> +}
+>>> +
+>>> +static int ifcvf_mdev_set_vq_state(struct mdev_device *mdev, u16=20
+>>> qid, u64 num)
+>>> +{
+>>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_adapter *adapter =3D mdev_get_drvdata(=
+mdev);
+>>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_hw *vf =3D IFC_PRIVATE_TO_VF(adapter);
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 vf->vring[qid].last_used_idx =3D num;
+>>
+>>
+>> I fail to understand why last_used_idx is needed. It looks to me the=20
+>> used idx in the used ring is sufficient.
+> I will remove it.
+>>
+>>
+>>> +=C2=A0=C2=A0=C2=A0 vf->vring[qid].last_avail_idx =3D num;
+>>
+>>
+>> Do we need a synchronization with hw immediately here?
+>>
+>>
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 return 0;
+>>> +}
+>>> +
+>>> +static int ifcvf_mdev_set_vq_address(struct mdev_device *mdev, u16=20
+>>> idx,
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u64 desc_area, u64 driv=
+er_area,
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u64 device_area)
+>>> +{
+>>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_adapter *adapter =3D mdev_get_drvdata(=
+mdev);
+>>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_hw *vf =3D IFC_PRIVATE_TO_VF(adapter);
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 vf->vring[idx].desc =3D desc_area;
+>>> +=C2=A0=C2=A0=C2=A0 vf->vring[idx].avail =3D driver_area;
+>>> +=C2=A0=C2=A0=C2=A0 vf->vring[idx].used =3D device_area;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 return 0;
+>>> +}
+>>> +
+>>> +static void ifcvf_mdev_set_vq_num(struct mdev_device *mdev, u16=20
+>>> qid, u32 num)
+>>> +{
+>>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_adapter *adapter =3D mdev_get_drvdata(=
+mdev);
+>>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_hw *vf =3D IFC_PRIVATE_TO_VF(adapter);
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 vf->vring[qid].size =3D num;
+>>> +}
+>>> +
+>>> +static void ifcvf_mdev_set_vq_ready(struct mdev_device *mdev,
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 u16 qid, bool ready)
+>>> +{
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_adapter *adapter =3D mdev_get_drvdata(=
+mdev);
+>>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_hw *vf =3D IFC_PRIVATE_TO_VF(adapter);
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 vf->vring[qid].ready =3D ready;
+>>> +}
+>>> +
+>>> +static bool ifcvf_mdev_get_vq_ready(struct mdev_device *mdev, u16 qid)
+>>> +{
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_adapter *adapter =3D mdev_get_drvdata(=
+mdev);
+>>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_hw *vf =3D IFC_PRIVATE_TO_VF(adapter);
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 return vf->vring[qid].ready;
+>>> +}
+>>> +
+>>> +static void ifcvf_mdev_set_vq_cb(struct mdev_device *mdev, u16 idx,
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct virtio_mdev_callback *cb)
+>>> +{
+>>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_adapter *adapter =3D mdev_get_drvdata(=
+mdev);
+>>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_hw *vf =3D IFC_PRIVATE_TO_VF(adapter);
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 vf->vring[idx].cb =3D *cb;
+>>> +}
+>>> +
+>>> +static void ifcvf_mdev_kick_vq(struct mdev_device *mdev, u16 idx)
+>>> +{
+>>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_adapter *adapter =3D mdev_get_drvdata(=
+mdev);
+>>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_hw *vf =3D IFC_PRIVATE_TO_VF(adapter);
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 ifcvf_notify_queue(vf, idx);
+>>> +}
+>>> +
+>>> +static u8 ifcvf_mdev_get_status(struct mdev_device *mdev)
+>>> +{
+>>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_adapter *adapter =3D mdev_get_drvdata(=
+mdev);
+>>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_hw *vf =3D IFC_PRIVATE_TO_VF(adapter);
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 return vf->status;
+>>> +}
+>>> +
+>>> +static u32 ifcvf_mdev_get_generation(struct mdev_device *mdev)
+>>> +{
+>>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_adapter *adapter =3D mdev_get_drvdata(=
+mdev);
+>>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_hw *vf =3D IFC_PRIVATE_TO_VF(adapter);
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 return vf->generation;
+>>> +}
+>>> +
+>>> +static int ifcvf_mdev_get_version(struct mdev_device *mdev)
+>>> +{
+>>> +=C2=A0=C2=A0=C2=A0 return VIRTIO_MDEV_VERSION;
+>>> +}
+>>> +
+>>> +static u32 ifcvf_mdev_get_device_id(struct mdev_device *mdev)
+>>> +{
+>>> +=C2=A0=C2=A0=C2=A0 return IFCVF_DEVICE_ID;
+>>> +}
+>>> +
+>>> +static u32 ifcvf_mdev_get_vendor_id(struct mdev_device *mdev)
+>>> +{
+>>> +=C2=A0=C2=A0=C2=A0 return IFCVF_VENDOR_ID;
+>>> +}
+>>> +
+>>> +static u16 ifcvf_mdev_get_vq_align(struct mdev_device *mdev)
+>>> +{
+>>> +=C2=A0=C2=A0=C2=A0 return IFCVF_QUEUE_ALIGNMENT;
+>>> +}
+>>> +
+>>> +static int ifcvf_start_datapath(void *private)
+>>> +{
+>>> +=C2=A0=C2=A0=C2=A0 int i, ret;
+>>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_hw *vf =3D IFC_PRIVATE_TO_VF(private);
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 for (i =3D 0; i < (IFCVF_MAX_QUEUE_PAIRS * 2); i++)=
+ {
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!vf->vring[i].ready)
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bre=
+ak;
+>>
+>>
+>> Looks like error should be returned here?
+> agreed!
+>>
+>>
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!vf->vring[i].size)
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bre=
+ak;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!vf->vring[i].desc || !=
+vf->vring[i].avail ||
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 !vf=
+->vring[i].used)
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bre=
+ak;
+>>> +=C2=A0=C2=A0=C2=A0 }
+>>> +=C2=A0=C2=A0=C2=A0 vf->nr_vring =3D i;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 ret =3D ifcvf_start_hw(vf);
+>>> +=C2=A0=C2=A0=C2=A0 return ret;
+>>> +}
+>>> +
+>>> +static int ifcvf_stop_datapath(void *private)
+>>> +{
+>>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_hw *vf =3D IFC_PRIVATE_TO_VF(private);
+>>> +=C2=A0=C2=A0=C2=A0 int i;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 for (i =3D 0; i < IFCVF_MAX_QUEUES; i++)
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vf->vring[i].cb.callback =
+=3D NULL;
+>>
+>>
+>> Any synchronization is needed for the vq irq handler?
+> I think even we set callback =3D NULL, the code is still there, on-going=
+=20
+> routines would not be effected.
+
+
+Ok I think you mean when ifcvf_stop_hw() return, hardware will not=20
+respond to e.g kick and other events etc.
+
+
+>>
+>>
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 ifcvf_stop_hw(vf);
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 return 0;
+>>> +}
+>>> +
+>>> +static void ifcvf_reset_vring(struct ifcvf_adapter *adapter)
+>>> +{
+>>> +=C2=A0=C2=A0=C2=A0 int i;
+>>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_hw *vf =3D IFC_PRIVATE_TO_VF(adapter);
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 for (i =3D 0; i < IFCVF_MAX_QUEUE_PAIRS * 2; i++) {
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vf->vring[i].last_used_idx =
+=3D 0;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vf->vring[i].last_avail_idx=
+ =3D 0;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vf->vring[i].desc =3D 0;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vf->vring[i].avail =3D 0;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vf->vring[i].used =3D 0;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vf->vring[i].ready =3D 0;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vf->vring->cb.callback =3D =
+NULL;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vf->vring->cb.private =3D N=
+ULL;
+>>> +=C2=A0=C2=A0=C2=A0 }
+>>> +}
+>>> +
+>>> +static void ifcvf_mdev_set_status(struct mdev_device *mdev, u8 status)
+>>> +{
+>>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_adapter *adapter =3D mdev_get_drvdata(=
+mdev);
+>>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_hw *vf =3D IFC_PRIVATE_TO_VF(adapter);
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 vf->status =3D status;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 if (status =3D=3D 0) {
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ifcvf_stop_datapath(adapter=
+);
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ifcvf_reset_vring(adapter);
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return;
+>>> +=C2=A0=C2=A0=C2=A0 }
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 if (status & VIRTIO_CONFIG_S_DRIVER_OK) {
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ifcvf_start_datapath(adapte=
+r);
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return;
+>>> +=C2=A0=C2=A0=C2=A0 }
+>>> +}
+>>> +
+>>> +static u16 ifcvf_mdev_get_queue_max(struct mdev_device *mdev)
+>>> +{
+>>> +=C2=A0=C2=A0=C2=A0 return IFCVF_MAX_QUEUES;
+>>
+>>
+>> The name is confusing, it was used to return the maximum queue size.=20
+>> In new version of virtio-mdev, the callback was renamed as=20
+>> get_vq_num_max().
+> will change that.
+>>
+>>
+>>> +}
+>>> +
+>>> +static struct virtio_mdev_device_ops ifc_mdev_ops =3D {
+>>> +=C2=A0=C2=A0=C2=A0 .get_features=C2=A0 =3D ifcvf_mdev_get_features,
+>>> +=C2=A0=C2=A0=C2=A0 .set_features=C2=A0 =3D ifcvf_mdev_set_features,
+>>> +=C2=A0=C2=A0=C2=A0 .get_status=C2=A0=C2=A0=C2=A0 =3D ifcvf_mdev_get_st=
+atus,
+>>> +=C2=A0=C2=A0=C2=A0 .set_status=C2=A0=C2=A0=C2=A0 =3D ifcvf_mdev_set_st=
+atus,
+>>> +=C2=A0=C2=A0=C2=A0 .get_queue_max =3D ifcvf_mdev_get_queue_max,
+>>> +=C2=A0=C2=A0=C2=A0 .get_vq_state=C2=A0=C2=A0 =3D ifcvf_mdev_get_vq_sta=
+te,
+>>> +=C2=A0=C2=A0=C2=A0 .set_vq_state=C2=A0=C2=A0 =3D ifcvf_mdev_set_vq_sta=
+te,
+>>> +=C2=A0=C2=A0=C2=A0 .set_vq_cb=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =3D ifcvf_=
+mdev_set_vq_cb,
+>>> +=C2=A0=C2=A0=C2=A0 .set_vq_ready=C2=A0=C2=A0 =3D ifcvf_mdev_set_vq_rea=
+dy,
+>>> +=C2=A0=C2=A0=C2=A0 .get_vq_ready=C2=A0=C2=A0=C2=A0 =3D ifcvf_mdev_get_=
+vq_ready,
+>>> +=C2=A0=C2=A0=C2=A0 .set_vq_num=C2=A0=C2=A0=C2=A0=C2=A0 =3D ifcvf_mdev_=
+set_vq_num,
+>>> +=C2=A0=C2=A0=C2=A0 .set_vq_address =3D ifcvf_mdev_set_vq_address,
+>>> +=C2=A0=C2=A0=C2=A0 .kick_vq=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+=3D ifcvf_mdev_kick_vq,
+>>> +=C2=A0=C2=A0=C2=A0 .get_generation=C2=A0=C2=A0=C2=A0 =3D ifcvf_mdev_ge=
+t_generation,
+>>> +=C2=A0=C2=A0=C2=A0 .get_version=C2=A0=C2=A0=C2=A0 =3D ifcvf_mdev_get_v=
+ersion,
+>>> +=C2=A0=C2=A0=C2=A0 .get_device_id=C2=A0=C2=A0=C2=A0 =3D ifcvf_mdev_get=
+_device_id,
+>>> +=C2=A0=C2=A0=C2=A0 .get_vendor_id=C2=A0=C2=A0=C2=A0 =3D ifcvf_mdev_get=
+_vendor_id,
+>>> +=C2=A0=C2=A0=C2=A0 .get_vq_align=C2=A0=C2=A0=C2=A0 =3D ifcvf_mdev_get_=
+vq_align,
+>>> +};
+>>
+>>
+>> set_config/get_config is missing. It looks to me they are not hard,=20
+>> just implementing the access to dev_cfg. It's key to make kernel=20
+>> virtio driver to work.
+>>
+>> And in the new version of virito-mdev, features like _F_LOG_ALL=20
+>> should be advertised through get_mdev_features.
+> IMHO, currently the driver can work without set/get_config, vhost_mdev=20
+> doesn't call them for now.
+
+
+Yes, but it was required by virtio_mdev for host driver to work, and it=20
+looks to me it's not hard to add them. If possible please add them and=20
+"virtio" type then we can use the ops for both the case of VM and=20
+containers.
+
+
+>>
+>>
+>>> +
+>>> +static int ifcvf_init_msix(struct ifcvf_adapter *adapter)
+>>> +{
+>>> +=C2=A0=C2=A0=C2=A0 int vector, i, ret, irq;
+>>> +=C2=A0=C2=A0=C2=A0 struct pci_dev *pdev =3D to_pci_dev(adapter->dev);
+>>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_hw *vf =3D &adapter->vf;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 ret =3D pci_alloc_irq_vectors(pdev, IFCVF_MAX_INTR,
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 IFC=
+VF_MAX_INTR, PCI_IRQ_MSIX);
+>>> +=C2=A0=C2=A0=C2=A0 if (ret < 0) {
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 IFC_ERR(adapter->dev, "Fail=
+ed to alloc irq vectors.\n");
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
+>>> +=C2=A0=C2=A0=C2=A0 }
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 for (i =3D 0; i < IFCVF_MAX_QUEUE_PAIRS * 2; i++) {
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vector =3D i + IFCVF_MSI_QU=
+EUE_OFF;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 irq =3D pci_irq_vector(pdev=
+, vector);
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D request_irq(irq, if=
+cvf_intr_handler, 0,
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 pci_name(pdev), &vf->vring[i]);
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret) {
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 IFC=
+_ERR(adapter->dev,
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 "Failed to request irq for vq %d.\n", i);
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret=
+urn ret;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>>> +=C2=A0=C2=A0=C2=A0 }
+>>
+>>
+>> Do we need to provide fallback when we can't do per vq MSIX?
+> I think it would be very rarely that can not get enough vectors.
+
+
+Right.
+
+
+>>
+>>
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 return 0;
+>>> +}
+>>> +
+>>> +static void ifcvf_destroy_adapter(struct ifcvf_adapter *adapter)
+>>> +{
+>>> +=C2=A0=C2=A0=C2=A0 int i, vector, irq;
+>>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_hw *vf =3D IFC_PRIVATE_TO_VF(adapter);
+>>> +=C2=A0=C2=A0=C2=A0 struct pci_dev *pdev =3D to_pci_dev(adapter->dev);
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 for (i =3D 0; i < IFCVF_MAX_QUEUE_PAIRS * 2; i++) {
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vector =3D i + IFCVF_MSI_QU=
+EUE_OFF;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 irq =3D pci_irq_vector(pdev=
+, vector);
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 free_irq(irq, &vf->vring[i]=
+);
+>>> +=C2=A0=C2=A0=C2=A0 }
+>>> +}
+>>> +
+>>> +static ssize_t name_show(struct kobject *kobj, struct device *dev,=20
+>>> char *buf)
+>>> +{
+>>> +=C2=A0=C2=A0=C2=A0 const char *name =3D "vhost accelerator (virtio rin=
+g compatible)";
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 return sprintf(buf, "%s\n", name);
+>>> +}
+>>> +MDEV_TYPE_ATTR_RO(name);
+>>> +
+>>> +static ssize_t device_api_show(struct kobject *kobj, struct device=20
+>>> *dev,
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 char *buf)
+>>> +{
+>>> +=C2=A0=C2=A0=C2=A0 return sprintf(buf, "%s\n", VIRTIO_MDEV_DEVICE_API_=
+STRING);
+>>> +}
+>>> +MDEV_TYPE_ATTR_RO(device_api);
+>>> +
+>>> +static ssize_t available_instances_show(struct kobject *kobj,
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct device *dev, char *buf=
+)
+>>> +{
+>>> +=C2=A0=C2=A0=C2=A0 struct pci_dev *pdev =3D to_pci_dev(dev);
+>>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_adapter *adapter =3D pci_get_drvdata(p=
+dev);
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 return sprintf(buf, "%d\n", adapter->mdev_count);
+>>> +}
+>>> +
+>>> +MDEV_TYPE_ATTR_RO(available_instances);
+>>> +
+>>> +static ssize_t type_show(struct kobject *kobj,
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 str=
+uct device *dev, char *buf)
+>>> +{
+>>> +=C2=A0=C2=A0=C2=A0 return sprintf(buf, "%s\n", "net");
+>>> +}
+>>> +
+>>> +MDEV_TYPE_ATTR_RO(type);
+>>> +
+>>> +
+>>> +static struct attribute *mdev_types_attrs[] =3D {
+>>> +=C2=A0=C2=A0=C2=A0 &mdev_type_attr_name.attr,
+>>> +=C2=A0=C2=A0=C2=A0 &mdev_type_attr_device_api.attr,
+>>> +=C2=A0=C2=A0=C2=A0 &mdev_type_attr_available_instances.attr,
+>>> +=C2=A0=C2=A0=C2=A0 &mdev_type_attr_type.attr,
+>>> +=C2=A0=C2=A0=C2=A0 NULL,
+>>> +};
+>>> +
+>>> +static struct attribute_group mdev_type_group =3D {
+>>> +=C2=A0=C2=A0=C2=A0 .name=C2=A0 =3D "vdpa_virtio",
+>>
+>>
+>> To be consistent, it should be "vhost" or "virtio".
+> agreed!
+>>
+>>
+>>> +=C2=A0=C2=A0=C2=A0 .attrs =3D mdev_types_attrs,
+>>> +};
+>>> +
+>>> +static struct attribute_group *mdev_type_groups[] =3D {
+>>> +=C2=A0=C2=A0=C2=A0 &mdev_type_group,
+>>> +=C2=A0=C2=A0=C2=A0 NULL,
+>>> +};
+>>> +
+>>> +const struct attribute_group *mdev_dev_groups[] =3D {
+>>> +=C2=A0=C2=A0=C2=A0 NULL,
+>>> +};
+>>> +
+>>> +static int ifcvf_mdev_create(struct kobject *kobj, struct=20
+>>> mdev_device *mdev)
+>>> +{
+>>> +=C2=A0=C2=A0=C2=A0 struct device *dev =3D mdev_parent_dev(mdev);
+>>> +=C2=A0=C2=A0=C2=A0 struct pci_dev *pdev =3D to_pci_dev(dev);
+>>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_adapter *adapter =3D pci_get_drvdata(p=
+dev);
+>>> +=C2=A0=C2=A0=C2=A0 int ret =3D 0;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 mutex_lock(&adapter->mdev_lock);
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 if (adapter->mdev_count < 1) {
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D -EINVAL;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto out;
+>>> +=C2=A0=C2=A0=C2=A0 }
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 mdev_set_class_id(mdev, MDEV_ID_VHOST);
+>>> +=C2=A0=C2=A0=C2=A0 mdev_set_dev_ops(mdev, &ifc_mdev_ops);
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 mdev_set_drvdata(mdev, adapter);
+>>> +=C2=A0=C2=A0=C2=A0 mdev_set_iommu_device(mdev_dev(mdev), dev);
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 INIT_LIST_HEAD(&adapter->dma_maps);
+>>> +=C2=A0=C2=A0=C2=A0 adapter->mdev_count--;
+>>> +
+>>> +out:
+>>> +=C2=A0=C2=A0=C2=A0 mutex_unlock(&adapter->mdev_lock);
+>>> +=C2=A0=C2=A0=C2=A0 return ret;
+>>> +}
+>>> +
+>>> +static int ifcvf_mdev_remove(struct mdev_device *mdev)
+>>> +{
+>>> +=C2=A0=C2=A0=C2=A0 struct device *dev =3D mdev_parent_dev(mdev);
+>>> +=C2=A0=C2=A0=C2=A0 struct pci_dev *pdev =3D to_pci_dev(dev);
+>>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_adapter *adapter =3D pci_get_drvdata(p=
+dev);
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 mutex_lock(&adapter->mdev_lock);
+>>> +=C2=A0=C2=A0=C2=A0 adapter->mdev_count++;
+>>> +=C2=A0=C2=A0=C2=A0 mutex_unlock(&adapter->mdev_lock);
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 return 0;
+>>> +}
+>>> +
+>>> +static struct mdev_parent_ops ifcvf_mdev_fops =3D {
+>>> +=C2=A0=C2=A0=C2=A0 .owner=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 =3D THIS_MODULE,
+>>> +=C2=A0=C2=A0=C2=A0 .supported_type_groups=C2=A0=C2=A0=C2=A0 =3D mdev_t=
+ype_groups,
+>>> +=C2=A0=C2=A0=C2=A0 .mdev_attr_groups=C2=A0=C2=A0=C2=A0 =3D mdev_dev_gr=
+oups,
+>>> +=C2=A0=C2=A0=C2=A0 .create=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 =3D ifcvf_mdev_create,
+>>> +=C2=A0=C2=A0=C2=A0 .remove=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 =3D ifcvf_mdev_remove,
+>>> +};
+>>> +
+>>> +static int ifcvf_probe(struct pci_dev *pdev, const struct=20
+>>> pci_device_id *id)
+>>> +{
+>>> +=C2=A0=C2=A0=C2=A0 struct device *dev =3D &pdev->dev;
+>>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_adapter *adapter;
+>>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_hw *vf;
+>>> +=C2=A0=C2=A0=C2=A0 int ret, i;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 adapter =3D kzalloc(sizeof(struct ifcvf_adapter), G=
+FP_KERNEL);
+>>> +=C2=A0=C2=A0=C2=A0 if (adapter =3D=3D NULL) {
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D -ENOMEM;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto fail;
+>>> +=C2=A0=C2=A0=C2=A0 }
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 mutex_init(&adapter->mdev_lock);
+>>> +=C2=A0=C2=A0=C2=A0 adapter->mdev_count =3D 1;
+>>
+>>
+>> So this is per VF based vDPA implementation, which seems not=20
+>> convenient for management.=C2=A0 Anyhow we can control the creation in P=
+F?
+>>
+>> Thanks
+> the driver scope for now doesn't support that, we can add these=20
+> feature in next releases.
+
+
+Not a must for this series, but to have a better interaction with=20
+management like libvirt, it's better.
+
+Btw, do you have the plan to post PF drivers?
+
+Thanks
+
+
