@@ -2,322 +2,295 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA9E0CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:23:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BAEBCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:25:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5C8C20873
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:23:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="WNtwQkYb"
+	by mail.kernel.org (Postfix) with ESMTP id CAFBE20873
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:25:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571664344;
+	bh=ZhaFyri7A1KDC/fyWajZH2nBZgD2bkb1zm3DEpMhCmI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=j+V1p69h10ru4C+vjheySFDrKpvlmTttHEE5ZaNpgpFXK2FU7nXgKuCwrJcrovSRw
+	 XziheajyImyWM8yr8rlELyn4NFPlM02vEJTvGEE2cR3H3nwFNAfNRJNavnj0Lx6cs3
+	 pdZUl0DGOIj4jndjio2J51Mgt3iDADc6ECNsxgw0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728769AbfJUNX2 (ORCPT
+        id S1728874AbfJUNZn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 09:23:28 -0400
-Received: from mail-wm1-f54.google.com ([209.85.128.54]:53351 "EHLO
-        mail-wm1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727256AbfJUNX2 (ORCPT
+        Mon, 21 Oct 2019 09:25:43 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:35687 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727322AbfJUNZn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 09:23:28 -0400
-Received: by mail-wm1-f54.google.com with SMTP id i16so13318906wmd.3
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 06:23:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=CDpQCC3yQaQMDA2jPXME+EFagP8LNoO6pNZidHidAbs=;
-        b=WNtwQkYbCYYxfHd5g5Gg7/NxW/2r1vdfDzKQVM1p0GqmijVDR7ay0t8fQd49OhlVH8
-         v1xTzmO7RCzs8DIzM+GC1R+O/e9f4IXYhWphWBnRs1g9+uSjZ/UW9LNNQ6R6Xe054ORJ
-         rZW1kH/clT1ugXzyFKnFBKBW/sYlqn3lsi+OjTQ52Ws6u5zyNAJmXuHGRrGD/FU/o34N
-         6VMaoced7C9knxUN7e5A0DpnK4WQdf+FwmTioMRySDT67OUqbhIt1+3pNerW9RgQp6Rt
-         0DUE2wRdqWq04NS2c5o1sne3YLzKdy0wiW05agOS2RdADaTvlKraAjujh/a4cgF4HKUu
-         o6nw==
+        Mon, 21 Oct 2019 09:25:43 -0400
+Received: by mail-ed1-f65.google.com with SMTP id v8so10010957eds.2;
+        Mon, 21 Oct 2019 06:25:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=CDpQCC3yQaQMDA2jPXME+EFagP8LNoO6pNZidHidAbs=;
-        b=ADzi/hglUhscskdXHo9MNyg/2WATC7yaVX7kvqKlMTMsukO3eG5ZifAyIs6D7+1RbU
-         L+qjRaDmUr4biBPuDoxeA7/eLSH4a2tWJdv5xlFqbuSkirlZ0YdM+2jMMGc1hF/QsqDd
-         TtINWoGmg12qrJ5S6Gb1IAWe/bUYYKZTk6rFMpVOKWbXccs/aAyT4Hk0ZX244MIbKGcL
-         zd9DKF92TELseZ4EQ4EOKHaYwLtfBOA683kPlBnL1n24GR7Pp0RXtZVnkR0JPIb5wLW3
-         d7LyGGSEkCTI/jB72ZA9OU3qMMSJYThVKhfKrvKEA1hQ83ewdUML6C3gnGy1Ew9kI/Ci
-         cUHw==
-X-Gm-Message-State: APjAAAVAgg15vuy8UdypAujnhJo9S0Maexr/o68j0QbWM48jadmZ+xNB
-        R3A0F/d8UD0G6HQJilb/7wT/mw==
-X-Google-Smtp-Source: APXvYqzMvhIv/kFvCKgvdmqwvVk+AwoAtWuBDkfvwp/J9cbsOyOGAGd2wS++y4H9TfIXc0XMmtYvFg==
-X-Received: by 2002:a05:600c:3cb:: with SMTP id z11mr17883575wmd.134.1571664204796;
-        Mon, 21 Oct 2019 06:23:24 -0700 (PDT)
-Received: from localhost.localdomain (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id k8sm29169887wrg.15.2019.10.21.06.23.23
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kbWYhDCDbV5qK8VclXFPP6NqeqAgLz5VFjeSpIHBB+s=;
+        b=P0o5J7f463rPShMQQdGTGJS20mF2seoybaOTC4XO+XDKDg6l1fOsb8gqP8MipaHRJh
+         LN00Ug1Tp4PXOAuJrrt/0xNLtrDBFjkRBQBeMHtbW80SsFwb246NudnxChuk8bEkGsC/
+         9V+ZGM9ExrIynBsCe4sajVYLz1/iTrKT7ejfjCkjCCqnZG1qgoAdd9HX4QpZRLeP2C4U
+         F4bNATd+6hI618giXSSP4BOhPgbsM1RxyQ6UpywxSZrrY9v3K2kL6N3WCrYjQLu6Zkel
+         zEykbjdl9LWYPyA5do00IRljzOV3TYWB9tGjh2zKX33/POEBea7PH/G4P1EoJfIWxyI+
+         9O9g==
+X-Gm-Message-State: APjAAAUCQSezwd0rDBE1ZWv26CZXBtwRrPgkUe6m2nByt4w+vETmB3J4
+        33ndeCeeTVIYWNdrwd0GOxI=
+X-Google-Smtp-Source: APXvYqyDVwXcr52I2wsb+Z4RGg4WcltwXXlohYeZzvFP+OKWg5ZNU8oHr/O1UXzcE6xe2rgQ+TiKng==
+X-Received: by 2002:a17:906:2584:: with SMTP id m4mr22390782ejb.287.1571664340356;
+        Mon, 21 Oct 2019 06:25:40 -0700 (PDT)
+Received: from pi3 ([194.230.155.217])
+        by smtp.googlemail.com with ESMTPSA id s4sm344795edt.34.2019.10.21.06.25.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Oct 2019 06:23:24 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     robh+dt@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH] dt-bindings: usb: dwc3: Move Amlogic G12A DWC3 Glue Bindings to YAML schemas
-Date:   Mon, 21 Oct 2019 15:23:22 +0200
-Message-Id: <20191021132322.25256-1-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.22.0
+        Mon, 21 Oct 2019 06:25:39 -0700 (PDT)
+Date:   Mon, 21 Oct 2019 15:25:36 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>,
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: Re: [PATCH v3 01/10] dt-bindings: sram: Convert SRAM bindings to
+ json-schema
+Message-ID: <20191021132536.GA2791@pi3>
+References: <20191002164316.14905-1-krzk@kernel.org>
+ <20191010191240.GA15006@bogus>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191010191240.GA15006@bogus>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that we have the DT validation in place, let's convert the device tree
-bindings for the Amlogic G12A DWC3 Glue Bindings over to a YAML schemas,
-the AXG and GXL glue bindings will be converted later.
+On Thu, Oct 10, 2019 at 02:12:40PM -0500, Rob Herring wrote:
+> On Wed, Oct 02, 2019 at 06:43:07PM +0200, Krzysztof Kozlowski wrote:
+> > Convert generic mmio-sram bindings to DT schema format using
+> > json-schema.  Require the address/size cells to be 1, not equal to root
+> > node.
+> > 
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > 
+> > ---
+> > 
+> > Changes since v2:
+> > 1. Add Rob as maintainer,
+> > 2. Use "contains" for compatible,
+> > 3. Fix address and size cells to 1,
+> > 4. Add maxitems to reg under children,
+> > 5. Remove unneeded string type from label.
+> > 
+> > Changes since v1:
+> > 1. Indent example with four spaces (more readable).
+> > ---
+> >  .../devicetree/bindings/sram/sram.txt         |  80 -----------
+> >  .../devicetree/bindings/sram/sram.yaml        | 134 ++++++++++++++++++
+> >  2 files changed, 134 insertions(+), 80 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/sram/sram.txt
+> >  create mode 100644 Documentation/devicetree/bindings/sram/sram.yaml
+> 
+> 
+> > diff --git a/Documentation/devicetree/bindings/sram/sram.yaml b/Documentation/devicetree/bindings/sram/sram.yaml
+> > new file mode 100644
+> > index 000000000000..a1c1ec2183f2
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/sram/sram.yaml
+> > @@ -0,0 +1,134 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/sram/sram.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Generic on-chip SRAM
+> > +
+> > +maintainers:
+> > +  - Rob Herring <robh@kernel.org>
+> > +
+> > +description: |+
+> > +  Simple IO memory regions to be managed by the genalloc API.
+> > +
+> > +  Each child of the sram node specifies a region of reserved memory. Each
+> > +  child node should use a 'reg' property to specify a specific range of
+> > +  reserved memory.
+> > +
+> > +  Following the generic-names recommended practice, node names should
+> > +  reflect the purpose of the node. Unit address (@<address>) should be
+> > +  appended to the name.
+> > +
+> > +properties:
+> > +  $nodename:
+> > +    pattern: "^sram(@.*)?"
+> > +
+> > +  compatible:
+> > +    contains:
+> > +      enum:
+> > +        - mmio-sram
+> > +        - atmel,sama5d2-securam
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  "#address-cells":
+> > +    const: 1
+> > +
+> > +  "#size-cells":
+> > +    const: 1
+> > +
+> > +  ranges:
+> > +    description:
+> > +      Should translate from local addresses within the sram to bus addresses.
+> > +
+> > +  no-memory-wc:
+> > +    description:
+> > +      The flag indicating, that SRAM memory region has not to be remapped
+> > +      as write combining. WC is used by default.
+> > +    type: boolean
+> > +
+> > +patternProperties:
+> > +  "^([a-z]*-)?sram@[a-f0-9]$":
+> > +    type: object
+> > +    description:
+> > +      Each child of the sram node specifies a region of reserved memory.
+> > +    properties:
+> > +      reg:
+> > +        description:
+> > +          IO mem address range, relative to the SRAM range.
+> > +        maxItems: 1
+> > +
+> > +      compatible:
+> > +        $ref: /schemas/types.yaml#/definitions/string
+> 
+> No need to define the type again. We can say 'maxItems: 1' if we really 
+> want to force it to 1 entry.
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- .../devicetree/bindings/usb/amlogic,dwc3.txt  |  88 ------------
- .../usb/amlogic,meson-g12a-usb-ctrl.yaml      | 132 ++++++++++++++++++
- 2 files changed, 132 insertions(+), 88 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml
+I'll fix it and integrate Samsung compatibles here.
 
-diff --git a/Documentation/devicetree/bindings/usb/amlogic,dwc3.txt b/Documentation/devicetree/bindings/usb/amlogic,dwc3.txt
-index b9f04e617eb7..9a8b631904fd 100644
---- a/Documentation/devicetree/bindings/usb/amlogic,dwc3.txt
-+++ b/Documentation/devicetree/bindings/usb/amlogic,dwc3.txt
-@@ -40,91 +40,3 @@ Example device nodes:
- 				phy-names = "usb2-phy", "usb3-phy";
- 			};
- 		};
--
--Amlogic Meson G12A DWC3 USB SoC Controller Glue
--
--The Amlogic G12A embeds a DWC3 USB IP Core configured for USB2 and USB3
--in host-only mode, and a DWC2 IP Core configured for USB2 peripheral mode
--only.
--
--A glue connects the DWC3 core to USB2 PHYs and optionnaly to an USB3 PHY.
--
--One of the USB2 PHY can be re-routed in peripheral mode to a DWC2 USB IP.
--
--The DWC3 Glue controls the PHY routing and power, an interrupt line is
--connected to the Glue to serve as OTG ID change detection.
--
--Required properties:
--- compatible:	Should be "amlogic,meson-g12a-usb-ctrl"
--- clocks:	a handle for the "USB" clock
--- resets:	a handle for the shared "USB" reset line
--- reg:		The base address and length of the registers
--- interrupts:	the interrupt specifier for the OTG detection
--- phys: 	handle to used PHYs on the system
--	- a <0> phandle can be used if a PHY is not used
--- phy-names:	names of the used PHYs on the system :
--	- "usb2-phy0" for USB2 PHY0 if USBHOST_A port is used
--	- "usb2-phy1" for USB2 PHY1 if USBOTG_B port is used
--	- "usb3-phy0" for USB3 PHY if USB3_0 is used
--- dr_mode:	should be "host", "peripheral", or "otg" depending on
--	the usage and configuration of the OTG Capable port.
--	- "host" and "peripheral" means a fixed Host or Device only connection
--	- "otg" means the port can be used as both Host or Device and
--	  be switched automatically using the OTG ID pin.
--
--Optional properties:
--- vbus-supply:	should be a phandle to the regulator controlling the VBUS
--		power supply when used in OTG switchable mode
--
--Required child nodes:
--
--A child node must exist to represent the core DWC3 IP block. The name of
--the node is not important. The content of the node is defined in dwc3.txt.
--
--A child node must exist to represent the core DWC2 IP block. The name of
--the node is not important. The content of the node is defined in dwc2.txt.
--
--PHY documentation is provided in the following places:
--- Documentation/devicetree/bindings/phy/meson-g12a-usb2-phy.txt
--- Documentation/devicetree/bindings/phy/meson-g12a-usb3-pcie-phy.txt
--
--Example device nodes:
--	usb: usb@ffe09000 {
--			compatible = "amlogic,meson-g12a-usb-ctrl";
--			reg = <0x0 0xffe09000 0x0 0xa0>;
--			interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
--			#address-cells = <2>;
--			#size-cells = <2>;
--			ranges;
--
--			clocks = <&clkc CLKID_USB>;
--			resets = <&reset RESET_USB>;
--
--			dr_mode = "otg";
--
--			phys = <&usb2_phy0>, <&usb2_phy1>,
--			       <&usb3_pcie_phy PHY_TYPE_USB3>;
--			phy-names = "usb2-phy0", "usb2-phy1", "usb3-phy0";
--
--			dwc2: usb@ff400000 {
--				compatible = "amlogic,meson-g12a-usb", "snps,dwc2";
--				reg = <0x0 0xff400000 0x0 0x40000>;
--				interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&clkc CLKID_USB1_DDR_BRIDGE>;
--				clock-names = "ddr";
--				phys = <&usb2_phy1>;
--				dr_mode = "peripheral";
--				g-rx-fifo-size = <192>;
--				g-np-tx-fifo-size = <128>;
--				g-tx-fifo-size = <128 128 16 16 16>;
--			};
--
--			dwc3: usb@ff500000 {
--				compatible = "snps,dwc3";
--				reg = <0x0 0xff500000 0x0 0x100000>;
--				interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
--				dr_mode = "host";
--				snps,dis_u2_susphy_quirk;
--				snps,quirk-frame-length-adjustment;
--			};
--	};
-diff --git a/Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml b/Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml
-new file mode 100644
-index 000000000000..45bcc98ee9a4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml
-@@ -0,0 +1,132 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+# Copyright 2019 BayLibre, SAS
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/usb/amlogic,meson-g12a-usb-ctrl.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Amlogic Meson G12A DWC3 USB SoC Controller Glue
-+
-+maintainers:
-+  - Neil Armstrong <narmstrong@baylibre.com>
-+
-+description: |
-+  The Amlogic G12A embeds a DWC3 USB IP Core configured for USB2 and USB3
-+  in host-only mode, and a DWC2 IP Core configured for USB2 peripheral mode
-+  only.
-+
-+  A glue connects the DWC3 core to USB2 PHYs and optionnaly to an USB3 PHY.
-+
-+  One of the USB2 PHY can be re-routed in peripheral mode to a DWC2 USB IP.
-+
-+  The DWC3 Glue controls the PHY routing and power, an interrupt line is
-+  connected to the Glue to serve as OTG ID change detection.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - amlogic,meson-g12a-usb-ctrl
-+
-+  ranges: true
-+
-+  "#address-cells":
-+    enum: [ 1, 2 ]
-+
-+  "#size-cells":
-+    enum: [ 1, 2 ]
-+
-+  clocks:
-+    minItems: 1
-+
-+  resets:
-+    minItems: 1
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  phy-names:
-+    items:
-+      - const: usb2-phy0 # USB2 PHY0 if USBHOST_A port is used
-+      - const: usb2-phy1 # USB2 PHY1 if USBOTG_B port is used
-+      - const: usb3-phy0 # USB3 PHY if USB3_0 is used
-+
-+  phys:
-+    minItems: 1
-+    maxItems: 3
-+
-+  dr_mode:
-+    enum:
-+      - host # fixed Host connection
-+      - peripheral # fixed Device connection
-+      - otg # Host or Device and switched automatically using the OTG ID pin
-+
-+  power-domains:
-+    maxItems: 1
-+
-+  vbus-supply:
-+    description: VBUS power supply when used in OTG switchable mode
-+    maxItems: 1
-+
-+patternProperties:
-+  "^usb@[0-9a-f]+$":
-+    type: object
-+
-+additionalProperties: false
-+
-+required:
-+  - compatible
-+  - "#address-cells"
-+  - "#size-cells"
-+  - ranges
-+  - clocks
-+  - resets
-+  - reg
-+  - interrupts
-+  - phy-names
-+  - phys
-+  - dr_mode
-+
-+examples:
-+  - |
-+    usb: usb@ffe09000 {
-+          compatible = "amlogic,meson-g12a-usb-ctrl";
-+          reg = <0x0 0xffe09000 0x0 0xa0>;
-+          interrupts = <16>;
-+          #address-cells = <1>;
-+          #size-cells = <1>;
-+          ranges;
-+
-+          clocks = <&clkc_usb>;
-+          resets = <&reset_usb>;
-+
-+          dr_mode = "otg";
-+
-+          phys = <&usb2_phy0>, <&usb2_phy1>, <&usb3_phy0>;
-+          phy-names = "usb2-phy0", "usb2-phy1", "usb3-phy0";
-+
-+          dwc2: usb@ff400000 {
-+              compatible = "amlogic,meson-g12a-usb", "snps,dwc2";
-+              reg = <0xff400000 0x40000>;
-+              interrupts = <31>;
-+              clocks = <&clkc_usb1>;
-+              clock-names = "ddr";
-+              phys = <&usb2_phy1>;
-+              dr_mode = "peripheral";
-+              g-rx-fifo-size = <192>;
-+              g-np-tx-fifo-size = <128>;
-+              g-tx-fifo-size = <128 128 16 16 16>;
-+          };
-+
-+          dwc3: usb@ff500000 {
-+              compatible = "snps,dwc3";
-+              reg = <0xff500000 0x100000>;
-+              interrupts = <30>;
-+              dr_mode = "host";
-+              snps,dis_u2_susphy_quirk;
-+              snps,quirk-frame-length-adjustment;
-+          };
-+    };
-+
--- 
-2.22.0
+> 
+> > +        description:
+> > +          Should contain a vendor specific string in the form
+> > +          <vendor>,[<device>-]<usage>
+> > +
+> > +      pool:
+> > +        description:
+> > +          Indicates that the particular reserved SRAM area is addressable
+> > +          and in use by another device or devices.
+> > +        type: boolean
+> > +
+> > +      export:
+> > +        description:
+> > +          Indicates that the reserved SRAM area may be accessed outside
+> > +          of the kernel, e.g. by bootloader or userspace.
+> > +        type: boolean
+> > +
+> > +      protect-exec:
+> > +        description: |
+> > +          Same as 'pool' above but with the additional constraint that code
+> > +          will be run from the region and that the memory is maintained as
+> > +          read-only, executable during code execution. NOTE: This region must
+> > +          be page aligned on start and end in order to properly allow
+> > +          manipulation of the page attributes.
+> > +        type: boolean
+> > +
+> > +      label:
+> > +        description:
+> > +          The name for the reserved partition, if omitted, the label is taken
+> > +          from the node name excluding the unit address.
+> > +
+> > +      clocks:
+> 
+> Shouldn't this be up one level? Looks like this is the only case 
+> (Marvell and i.MX are the only ones I see with clocks).
 
+Yes, that's a mistake in original bindings.
+
+> 
+> > +        description:
+> > +          A list of phandle and clock specifier pair that controls the
+> > +          single SRAM clock.
+> 
+> maxItems: 1
+
+Yes.
+
+> 
+> > +
+> > +    required:
+> > +      - reg
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - "#address-cells"
+> > +  - "#size-cells"
+> > +  - ranges
+> 
+> Does 'additionalProperties' work here and/or in the child node? I guess 
+> not if we keep some node names.
+
+It seems that it works.
+
+> 
+> > +
+> > +examples:
+> > +  - |
+> > +    sram: sram@5c000000 {
+> > +        compatible = "mmio-sram";
+> > +        reg = <0x5c000000 0x40000>; /* 256 KiB SRAM at address 0x5c000000 */
+> > +
+> > +        #address-cells = <1>;
+> > +        #size-cells = <1>;
+> > +        ranges = <0 0x5c000000 0x40000>;
+> > +
+> > +        smp-sram@100 {
+> > +            compatible = "socvendor,smp-sram";
+> > +            reg = <0x100 0x50>;
+> > +        };
+> > +
+> > +        device-sram@1000 {
+> > +            reg = <0x1000 0x1000>;
+> > +            pool;
+> > +        };
+> > +
+> > +        exported@20000 {
+> 
+> This one doesn't match the pattern. That's fine I guess for dts files, 
+> but examples should be good examples.
+
+Sure.
+
+Best regards,
+Krzysztof
+
+> 
+> > +            reg = <0x20000 0x20000>;
+> > +            export;
+> > +        };
+> > +    };
+> > -- 
+> > 2.17.1
+> > 
