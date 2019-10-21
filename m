@@ -2,273 +2,303 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D59F0CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:11:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B0EDCA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:12:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8866B2084B
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:11:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="Bk92Q6Ye";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="H7DPqVyD"
+	by mail.kernel.org (Postfix) with ESMTP id 6343E2084B
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:12:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729175AbfJUPL6 (ORCPT
+        id S1729326AbfJUPMu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 11:11:58 -0400
-Received: from us03-smtprelay2.synopsys.com ([149.117.87.133]:33470 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727355AbfJUPL5 (ORCPT
+        Mon, 21 Oct 2019 11:12:50 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:36752 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726847AbfJUPMu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 11:11:57 -0400
-Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id F2D2CC27FC;
-        Mon, 21 Oct 2019 15:11:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1571670716; bh=R+GdlVmuHMexEDvATq7GWsV80UL231NA0fnONW4UkPY=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=Bk92Q6YeDWpCvcrurBTULLJ0UJaUU75AgYf4qvlr1sa7bxBbuuB1jK+bzhu73Mlu4
-         MtvnWQl3yC9JbfiuLv06MXv5O3c9EYAWNsyB+zG/LMQk15Z3nDTgv4/YvYAAwGhmnW
-         PP953WFP1g6LqetzzWSUaRu399kVAqT7j27aF15C7LXvvFf+C94AhUmtfwNzafJ3Hu
-         vNR2a6y/dEB2dsucEGheFYSmiMelMEb8a3aJdSIyAqV9H/wHWjAelnqvXaCyLmcIfw
-         KmSveRDlvwOWyVnp3rfdVaBny+/8pP1RudbpsRDun9I9ZC6viFT9iCO2/JpfDw1TZX
-         pS49QwonZN8Yw==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 89F99A005A;
-        Mon, 21 Oct 2019 15:11:55 +0000 (UTC)
-Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Mon, 21 Oct 2019 08:10:29 -0700
-Received: from NAM01-BN3-obe.outbound.protection.outlook.com (10.13.134.195)
- by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Mon, 21 Oct 2019 08:10:28 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=be/RpFe0xgI1maiV6c695KkqAIVX7sfqhIZf2c/lJEEGDCLAzEAK0qE61E3ewsWNLEooZRcGugqY1GNzrcRAPC/Oc/nPXEZvagbiiBoHrSBr9UOGyU/QGFeBAWejc12dl304V24qp/HhTSP4lZ+iWAmgaQtFtMeMkIbW/tl/G9iyflG0HUG7CZ6O5TFTvuh6e0DdxshtBCXD3RHJeQ/qo0elPVNE1j7GkfePuC10w/hn1mmyLsnfXDXIIb2ZaV6n43YikWXEtjxOajHBtAX90F0V1vmneTp7gzN/jAvkQ54xI3MF5kYn9hcgdPADbKF1BsKbTV0QYod7Uj/HTr4mRw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=R+GdlVmuHMexEDvATq7GWsV80UL231NA0fnONW4UkPY=;
- b=J0zitaA/B4CBIYO9Z331UfPPyg0KYJXdZu5dcGhLLCk15xzqtQ9S3iy/TVj4P9FQOaIFDSSsQUrIgVEYWMxLmleW49oaCgxqA7IMUx6Ai2ljQreX5+asl2agAgsShLs2EHN2CSxz1B920x5lnA4wb6dCWqzji71WZ/0RvrwkZ4C5JHgKTR0ryKDAzk1BLdeVdERzbCBq2AyQZ7wDII/zQsyJVKIALg6oSLLKoMhzsGK0xY6MCyjo8qxdlkBUDZd+mXSUiqhenTNMbPgXGw9kK9oZwSQ5rcwhD7CguH1ceJwKd+tnJBHjpy6NGDzmiT/ryu7nRTCVvBgkNbfykqJ6TA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
- dkim=pass header.d=synopsys.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=R+GdlVmuHMexEDvATq7GWsV80UL231NA0fnONW4UkPY=;
- b=H7DPqVyDIdELc5mba2TwfF7HaolUeofJJ+E8zVR4uLrIMbRQ+p8AhZomDXiXajkRygy4ZcRhTfv4CdnHmZXYRNjJ2Ja/aj0IgRhbCh+jkRt5S3HnHsR6Iu42nDQUmlkoWoMX+j8PW/PStTClwrflEjNNBI01GuMxIki+REMBV3M=
-Received: from DM6PR12MB4010.namprd12.prod.outlook.com (10.255.175.83) by
- DM6PR12MB4075.namprd12.prod.outlook.com (10.141.187.72) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2367.24; Mon, 21 Oct 2019 15:10:27 +0000
-Received: from DM6PR12MB4010.namprd12.prod.outlook.com
- ([fe80::89b8:dea4:cfcb:a241]) by DM6PR12MB4010.namprd12.prod.outlook.com
- ([fe80::89b8:dea4:cfcb:a241%7]) with mapi id 15.20.2347.029; Mon, 21 Oct 2019
- 15:10:27 +0000
-From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-To:     Anvesh Salveru <anvesh.s@samsung.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "bhelgaas@google.com" <bhelgaas@google.com>,
-        "gustavo.pimentel@synopsys.com" <Gustavo.Pimentel@synopsys.com>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "andrew.murray@arm.com" <andrew.murray@arm.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        Pankaj Dubey <pankaj.dubey@samsung.com>
-Subject: RE: [PATCH 2/2] PCI: dwc: Add support to handle ZRX-DC Compliant PHYs
-Thread-Topic: [PATCH 2/2] PCI: dwc: Add support to handle ZRX-DC Compliant
- PHYs
-Thread-Index: AQHViAtiAJuDx91zekGrfGCTlvxhCKdlMyng
-Date:   Mon, 21 Oct 2019 15:10:27 +0000
-Message-ID: <DM6PR12MB4010660DBC9071601BE603EFDA690@DM6PR12MB4010.namprd12.prod.outlook.com>
-References: <CGME20191021123016epcas5p3ab7100162a8d6d803b117976240f20b4@epcas5p3.samsung.com>
- <1571660993-30329-1-git-send-email-anvesh.s@samsung.com>
-In-Reply-To: <1571660993-30329-1-git-send-email-anvesh.s@samsung.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: =?utf-8?B?UEcxbGRHRStQR0YwSUc1dFBTSmliMlI1TG5SNGRDSWdjRDBpWXpwY2RYTmxj?=
- =?utf-8?B?bk5jWjNWemRHRjJiMXhoY0hCa1lYUmhYSEp2WVcxcGJtZGNNRGxrT0RRNVlq?=
- =?utf-8?B?WXRNekprTXkwMFlUUXdMVGcxWldVdE5tSTROR0poTWpsbE16VmlYRzF6WjNO?=
- =?utf-8?B?Y2JYTm5MV1U0TTJaallUWmxMV1kwTVRRdE1URmxPUzA1T0RrekxXRTBOR05q?=
- =?utf-8?B?T0dVNVkyWXdObHhoYldVdGRHVnpkRnhsT0RObVkyRTNNQzFtTkRFMExURXha?=
- =?utf-8?B?VGt0T1RnNU15MWhORFJqWXpobE9XTm1NRFppYjJSNUxuUjRkQ0lnYzNvOUlq?=
- =?utf-8?B?STFNaklpSUhROUlqRXpNakUyTVRRME1qSTFORFkxT0RBM05pSWdhRDBpY0ZO?=
- =?utf-8?B?UWQzZHZkbEJJY2todFdrRlFPSHB2TVN0d1UwRldkbWMwUFNJZ2FXUTlJaUln?=
- =?utf-8?B?WW13OUlqQWlJR0p2UFNJeElpQmphVDBpWTBGQlFVRkZVa2hWTVZKVFVsVkdU?=
- =?utf-8?B?a05uVlVGQlFsRktRVUZCWTIxd1pYRkpXV3BXUVdObFFtSmtPSEYxZERRMWVE?=
- =?utf-8?B?UkdkRE41Y1RZemFtdFBRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVaEJRVUZCUTJ0RFFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVWQlFWRkJRa0ZCUVVGRlIwbFplbEZCUVVGQlFVRkJRVUZCUVVGQlFVRktO?=
- =?utf-8?B?RUZCUVVKdFFVZHJRV0puUW1oQlJ6UkJXWGRDYkVGR09FRmpRVUp6UVVkRlFX?=
- =?utf-8?B?Sm5RblZCUjJ0QlltZENia0ZHT0VGa2QwSm9RVWhSUVZwUlFubEJSekJCV1ZG?=
- =?utf-8?B?Q2VVRkhjMEZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUlVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?blFVRkJRVUZCYm1kQlFVRkhXVUZpZDBJeFFVYzBRVnBCUW5sQlNHdEJXSGRD?=
- =?utf-8?B?ZDBGSFJVRmpaMEl3UVVjMFFWcFJRbmxCU0UxQldIZENia0ZIV1VGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFWRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkRRVUZCUVVGQlEyVkJRVUZCV21kQ2RrRklWVUZpWjBKclFV?=
- =?utf-8?B?aEpRV1ZSUW1aQlNFRkJXVkZDZVVGSVVVRmlaMEpzUVVoSlFXTjNRbVpCU0Ux?=
- =?utf-8?B?QldWRkNkRUZJVFVGa1VVSjFRVWRqUVZoM1FtcEJSemhCWW1kQ2JVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUpCUVVGQlFVRkJRVUZCU1VGQlFVRkJRVW8wUVVGQlFtMUJSemhC?=
- =?utf-8?B?WkZGQ2RVRkhVVUZqWjBJMVFVWTRRV05CUW1oQlNFbEJaRUZDZFVGSFZVRmpa?=
- =?utf-8?B?MEo2UVVZNFFXTjNRbWhCUnpCQlkzZENNVUZITkVGYWQwSm1RVWhKUVZwUlFu?=
- =?utf-8?B?cEJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGRlFVRkJRVUZCUVVGQlFXZEJRVUZCUVVGdVow?=
- =?utf-8?B?RkJRVWRaUVdKM1FqRkJSelJCV2tGQ2VVRklhMEZZZDBKM1FVZEZRV05uUWpC?=
- =?utf-8?B?QlJ6UkJXbEZDZVVGSVRVRllkMEo2UVVjd1FXRlJRbXBCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJVVUZCUVVGQlFVRkJRVU5C?=
- =?utf-8?B?UVVGQlFVRkRaVUZCUVVGYVowSjJRVWhWUVdKblFtdEJTRWxCWlZGQ1prRklR?=
- =?utf-8?B?VUZaVVVKNVFVaFJRV0puUW14QlNFbEJZM2RDWmtGSVRVRmtRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUWtGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGSlFVRkJRVUZCU2pSQlFVRkNiVUZIT0VGa1VVSjFRVWRSUVdO?=
- =?utf-8?B?blFqVkJSamhCWTBGQ2FFRklTVUZrUVVKMVFVZFZRV05uUW5wQlJqaEJaRUZD?=
- =?utf-8?B?ZWtGSE1FRlpkMEZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVVkJRVUZCUVVGQlFVRkJaMEZCUVVGQlFXNW5RVUZCUjFsQlluZENN?=
- =?utf-8?B?VUZITkVGYVFVSjVRVWhyUVZoM1FuZEJSMFZCWTJkQ01FRkhORUZhVVVKNVFV?=
- =?utf-8?B?aE5RVmgzUWpGQlJ6QkJXWGRCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZSUVVGQlFVRkJRVUZCUTBGQlFVRkJRVU5sUVVG?=
- =?utf-8?B?QlFWcDNRakJCU0UxQldIZENkMEZJU1VGaWQwSnJRVWhWUVZsM1FqQkJSamhC?=
- =?utf-8?B?WkVGQ2VVRkhSVUZoVVVKMVFVZHJRV0puUW01QlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQ1FVRkJRVUZCUVVGQlFVbEJR?=
- =?utf-8?B?VUZCUVVGS05FRkJRVUo2UVVkRlFXSkJRbXhCU0UxQldIZENhRUZIVFVGWmQw?=
- =?utf-8?B?SjJRVWhWUVdKblFqQkJSamhCWTBGQ2MwRkhSVUZpWjBGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJSVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZuUVVGQlFVRkJibWRCUVVGSVRVRlpVVUp6UVVkVlFXTjNRbVpC?=
- =?utf-8?B?U0VWQlpGRkNka0ZJVVVGYVVVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVZGQlFVRkJRVUZCUVVGRFFVRkJRVUZCUTJWQlFVRkJZM2RDZFVGSVFV?=
- =?utf-8?B?RmpkMEptUVVkM1FXRlJRbXBCUjFWQlltZENla0ZIVlVGWWQwSXdRVWRWUVdO?=
- =?utf-8?B?blFuUkJSamhCVFZGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVSkJRVUZCUVVGQlFVRkJTVUZCUVVGQlFVbzBRVUZC?=
- =?utf-8?B?UW5wQlJ6UkJZMEZDZWtGR09FRmlRVUp3UVVkTlFWcFJRblZCU0UxQldsRkNa?=
- =?utf-8?B?a0ZJVVVGYVVVSjVRVWN3UVZoM1FucEJTRkZCWkZGQ2EwRkhWVUZpWjBJd1FV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZGUVVGQlFVRkJRVUZCUVdkQlFV?=
- =?utf-8?B?RkJRVUZ1WjBGQlFVaFpRVnAzUW1aQlIzTkJXbEZDTlVGSVkwRmlkMEo1UVVk?=
- =?utf-8?B?UlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlVVRkJRVUZC?=
- =?utf-8?Q?QUFBQUNBQUFBQUFBPSIvPjwvbWV0YT4=3D?=
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=gustavo@synopsys.com; 
-x-originating-ip: [83.174.63.141]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8b7e3ef4-0f1e-4706-796f-08d75638ce48
-x-ms-traffictypediagnostic: DM6PR12MB4075:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR12MB407542C38D12FC04CEF89B75DA690@DM6PR12MB4075.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1002;
-x-forefront-prvs: 0197AFBD92
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(136003)(39860400002)(376002)(346002)(366004)(199004)(189003)(305945005)(7736002)(6116002)(3846002)(74316002)(6246003)(4326008)(71200400001)(7696005)(76176011)(71190400001)(99286004)(110136005)(54906003)(316002)(6436002)(9686003)(229853002)(55016002)(2906002)(33656002)(81156014)(478600001)(8676002)(81166006)(8936002)(25786009)(86362001)(2201001)(446003)(14454004)(52536014)(5660300002)(6506007)(53546011)(102836004)(26005)(256004)(2501003)(486006)(66066001)(76116006)(64756008)(66556008)(66476007)(66946007)(66446008)(11346002)(476003)(186003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR12MB4075;H:DM6PR12MB4010.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: fr1ojUU6mD6lCtyvFsFH5XmiV/as7MqotvPcMwH5CcXV3QFTm4LSf0sFytmQ5Vtf0Rc2WKEGDwypY1MvRa3ugAv8xc31kAoFwcseIEqUht9A0GllTSlxRc1BOfZSyodT41KVIIH/IZ3mfJbDO+2Y8s4gVlJ7UEic2s/VBN2Zzic3VPxzI9Ni4RhMOkeEUrk/KqxtSkgpMHCIJIv/AyIjKQsgUTyYbkQtXz42h3IWeaGVbzVBO9NsmtDQ6iZeiT4dJKX0NHpoz98nu1yrKGpaL//Wb6JO72jCmLbC51Ac3AsygTy3Yl2O7p2asZd6iRztkPL6yqa9P17u32Ujd8j68+LSVdAkVGDoaN0W2hJa4yd8mhboSPZ4oVtfC83p+PLhgvedmlZGpshGi9Ujd+Jpugqx/n9O7N9/kSalMita1UtZx2uXFx1Iu9RQ1Rp0Ezu4
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 21 Oct 2019 11:12:50 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 1B6BA28B012
+Subject: Re: [PATCH v2 02/18] mfd: cros_ec: Add sensor_count and make
+ check_features public
+To:     Gwendal Grignou <gwendal@chromium.org>, briannorris@chromium.org,
+        jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, lee.jones@linaro.org, bleung@chromium.org,
+        dianders@chromium.org, groeck@chromium.org,
+        fabien.lahoudere@collabora.com
+Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
+References: <20191021055403.67849-1-gwendal@chromium.org>
+ <20191021055403.67849-3-gwendal@chromium.org>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <fe819ee5-d3ec-ef0e-521e-c2f2fb48b980@collabora.com>
+Date:   Mon, 21 Oct 2019 17:12:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8b7e3ef4-0f1e-4706-796f-08d75638ce48
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Oct 2019 15:10:27.4788
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: DCHVil5CZpqstLQCZXJC/b+jTFM8crGOqRoVHCheZiI0swg8ssMp192ZH9uBL1sTXWdcjvTX+DmciQkwLmF71A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4075
-X-OriginatorOrg: synopsys.com
+In-Reply-To: <20191021055403.67849-3-gwendal@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCBPY3QgMjEsIDIwMTkgYXQgMTM6Mjk6NTMsIEFudmVzaCBTYWx2ZXJ1IDxhbnZlc2gu
-c0BzYW1zdW5nLmNvbT4gDQp3cm90ZToNCg0KPiBNYW55IHBsYXRmb3JtcyB1c2UgRGVzaWduV2Fy
-ZSBjb250cm9sbGVyIGJ1dCB0aGUgUEhZIGNhbiBiZSBkaWZmZXJlbnQgaW4NCj4gZGlmZmVyZW50
-IHBsYXRmb3Jtcy4gSWYgdGhlIFBIWSBpcyBjb21wbGlhbnQgaXMgdG8gWlJYLURDIHNwZWNpZmlj
-YXRpb24NCj4gaXQgaGVscHMgaW4gbG93IHBvd2VyIGNvbnN1bXB0aW9uIGR1cmluZyBwb3dlciBz
-dGF0ZXMuDQo+IA0KPiBJZiBjdXJyZW50IGRhdGEgcmF0ZSBpcyA4LjAgR1QvcyBvciBoaWdoZXIg
-YW5kIFBIWSBpcyBub3QgY29tcGxpYW50IHRvDQo+IFpSWC1EQyBzcGVjaWZpY2F0aW9uLCB0aGVu
-IGFmdGVyIGV2ZXJ5IDEwMG1zIGxpbmsgc2hvdWxkIHRyYW5zaXRpb24gdG8NCj4gcmVjb3Zlcnkg
-c3RhdGUgZHVyaW5nIHRoZSBsb3cgcG93ZXIgc3RhdGVzLg0KPiANCj4gRGVzaWduV2FyZSBjb250
-cm9sbGVyIHByb3ZpZGVzIEdFTjNfWlJYRENfTk9OQ09NUEwgZmllbGQgaW4NCj4gR0VOM19SRUxB
-VEVEX09GRiB0byBzcGVjaWZ5IGFib3V0IFpSWC1EQyBjb21wbGlhbnQgUEhZLg0KPiANCj4gUGxh
-dGZvcm1zIHdpdGggWlJYLURDIGNvbXBsaWFudCBQSFkgY2FuIHNldCAic25wcyxwaHktenJ4ZGMt
-Y29tcGxpYW50Ig0KPiBwcm9wZXJ0eSBpbiBjb250cm9sbGVyIERUIG5vZGUgdG8gc3BlY2lmeSB0
-aGlzIHByb3BlcnR5IHRvIHRoZSBjb250cm9sbGVyLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogQW52
-ZXNoIFNhbHZlcnUgPGFudmVzaC5zQHNhbXN1bmcuY29tPg0KPiBTaWduZWQtb2ZmLWJ5OiBQYW5r
-YWogRHViZXkgPHBhbmthai5kdWJleUBzYW1zdW5nLmNvbT4NCj4gLS0tDQo+ICBkcml2ZXJzL3Bj
-aS9jb250cm9sbGVyL2R3Yy9wY2llLWRlc2lnbndhcmUuYyB8IDcgKysrKysrKw0KPiAgZHJpdmVy
-cy9wY2kvY29udHJvbGxlci9kd2MvcGNpZS1kZXNpZ253YXJlLmggfCAzICsrKw0KPiAgMiBmaWxl
-cyBjaGFuZ2VkLCAxMCBpbnNlcnRpb25zKCspDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9w
-Y2kvY29udHJvbGxlci9kd2MvcGNpZS1kZXNpZ253YXJlLmMgYi9kcml2ZXJzL3BjaS9jb250cm9s
-bGVyL2R3Yy9wY2llLWRlc2lnbndhcmUuYw0KPiBpbmRleCA4MjA0ODhkZmVhZWQuLjY1NjBkOWY3
-NjVkNyAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpZS1kZXNp
-Z253YXJlLmMNCj4gKysrIGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpZS1kZXNpZ253
-YXJlLmMNCj4gQEAgLTU1Niw0ICs1NTYsMTEgQEAgdm9pZCBkd19wY2llX3NldHVwKHN0cnVjdCBk
-d19wY2llICpwY2kpDQo+ICAJCSAgICAgICBQQ0lFX1BMX0NIS19SRUdfQ0hLX1JFR19TVEFSVDsN
-Cj4gIAkJZHdfcGNpZV93cml0ZWxfZGJpKHBjaSwgUENJRV9QTF9DSEtfUkVHX0NPTlRST0xfU1RB
-VFVTLCB2YWwpOw0KPiAgCX0NCj4gKw0KPiArCWlmIChvZl9wcm9wZXJ0eV9yZWFkX2Jvb2wobnAs
-ICJzbnBzLHBoeS16cnhkYy1jb21wbGlhbnQiKSkgew0KPiArCQl2YWwgPSBkd19wY2llX3JlYWRs
-X2RiaShwY2ksIFBDSUVfUE9SVF9HRU4zX1JFTEFURUQpOw0KPiArCQl2YWwgJj0gflBPUlRfTE9H
-SUNfR0VOM19aUlhEQ19OT05DT01QTDsNCj4gKwkJZHdfcGNpZV93cml0ZWxfZGJpKHBjaSwgUENJ
-RV9QT1JUX0dFTjNfUkVMQVRFRCwgdmFsKTsNCj4gKwl9DQo+ICsNCj4gIH0NCj4gZGlmZiAtLWdp
-dCBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtZGVzaWdud2FyZS5oIGIvZHJpdmVy
-cy9wY2kvY29udHJvbGxlci9kd2MvcGNpZS1kZXNpZ253YXJlLmgNCj4gaW5kZXggNWExOGU5NGU1
-MmM4Li40MjdhNTVlYzQzYzYgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIv
-ZHdjL3BjaWUtZGVzaWdud2FyZS5oDQo+ICsrKyBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdj
-L3BjaWUtZGVzaWdud2FyZS5oDQo+IEBAIC02MCw2ICs2MCw5IEBADQo+ICAjZGVmaW5lIFBDSUVf
-TVNJX0lOVFIwX01BU0sJCTB4ODJDDQo+ICAjZGVmaW5lIFBDSUVfTVNJX0lOVFIwX1NUQVRVUwkJ
-MHg4MzANCj4gIA0KPiArI2RlZmluZSBQQ0lFX1BPUlRfR0VOM19SRUxBVEVECQkweDg5MA0KPiAr
-I2RlZmluZSBQT1JUX0xPR0lDX0dFTjNfWlJYRENfTk9OQ09NUEwJCUJJVCgwKQ0KPiArDQo+ICAj
-ZGVmaW5lIFBDSUVfQVRVX1ZJRVdQT1JUCQkweDkwMA0KPiAgI2RlZmluZSBQQ0lFX0FUVV9SRUdJ
-T05fSU5CT1VORAkJQklUKDMxKQ0KPiAgI2RlZmluZSBQQ0lFX0FUVV9SRUdJT05fT1VUQk9VTkQJ
-MA0KPiAtLSANCj4gMi4xNy4xDQoNCg0KQWNrZWQtYnk6IEd1c3Rhdm8gUGltZW50ZWwgPGd1c3Rh
-dm8ucGltZW50ZWxAc3lub3BzeXMuY29tPg0KDQoNCg==
+Hi Gwendal,
+
+Many thanks for the patches, some few comments below.
+
+On 21/10/19 7:53, Gwendal Grignou wrote:
+> Add a new function to return the number of MEMS sensors available in a
+> ChromeOS Embedded Controller.
+> It uses MOTIONSENSE_CMD_DUMP if available or a specific memory map ACPI
+> registers to find out.
+> 
+> Also, make check_features public as it can be useful for other drivers
+> to know what the Embedded Controller supports.
+> 
+> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
+> ---
+> Changes in v2:
+>   Fix spelling in commit message.
+>   Cleanup the case where DUMP command is not supported.
+>   Move code from mfd to platform/chrome/
+> 
+>  drivers/mfd/cros_ec_dev.c                   |  32 ------
+>  drivers/platform/chrome/cros_ec_proto.c     | 116 ++++++++++++++++++++
+>  include/linux/platform_data/cros_ec_proto.h |   5 +
+>  3 files changed, 121 insertions(+), 32 deletions(-)
+> 
+> diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
+> index 6e6dfd6c18711..a35104e35cb4e 100644
+> --- a/drivers/mfd/cros_ec_dev.c
+> +++ b/drivers/mfd/cros_ec_dev.c
+> @@ -112,38 +112,6 @@ static const struct mfd_cell cros_ec_vbc_cells[] = {
+>  	{ .name = "cros-ec-vbc", }
+>  };
+>  
+> -static int cros_ec_check_features(struct cros_ec_dev *ec, int feature)
+> -{
+> -	struct cros_ec_command *msg;
+> -	int ret;
+> -
+> -	if (ec->features[0] == -1U && ec->features[1] == -1U) {
+> -		/* features bitmap not read yet */
+> -		msg = kzalloc(sizeof(*msg) + sizeof(ec->features), GFP_KERNEL);
+> -		if (!msg)
+> -			return -ENOMEM;
+> -
+> -		msg->command = EC_CMD_GET_FEATURES + ec->cmd_offset;
+> -		msg->insize = sizeof(ec->features);
+> -
+> -		ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
+> -		if (ret < 0) {
+> -			dev_warn(ec->dev, "cannot get EC features: %d/%d\n",
+> -				 ret, msg->result);
+> -			memset(ec->features, 0, sizeof(ec->features));
+> -		} else {
+> -			memcpy(ec->features, msg->data, sizeof(ec->features));
+> -		}
+> -
+> -		dev_dbg(ec->dev, "EC features %08x %08x\n",
+> -			ec->features[0], ec->features[1]);
+> -
+> -		kfree(msg);
+> -	}
+> -
+> -	return ec->features[feature / 32] & EC_FEATURE_MASK_0(feature);
+> -}
+> -
+>  static void cros_ec_class_release(struct device *dev)
+>  {
+>  	kfree(to_cros_ec_dev(dev));
+> diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
+> index 7db58771ec77c..2357c717399ad 100644
+> --- a/drivers/platform/chrome/cros_ec_proto.c
+> +++ b/drivers/platform/chrome/cros_ec_proto.c
+> @@ -717,3 +717,119 @@ u32 cros_ec_get_host_event(struct cros_ec_device *ec_dev)
+>  	return host_event;
+>  }
+>  EXPORT_SYMBOL(cros_ec_get_host_event);
+> +
+> +/**
+> + * cros_ec_check_features - Test for the presence of EC features
+> + *
+> + * Call this function to test whether the ChromeOS EC supports a feature.
+> + *
+> + * @ec_dev: EC device: does not have to be connected directly to the AP,
+> + *          can be daisy chained through another device.
+> + * @feature: One of ec_feature_code bit.
+> + * @return: 1 if supported, 0 if not
+
+This is not kernel-doc compliant, check with kernel-doc script.
+
+> + */
+> +int cros_ec_check_features(struct cros_ec_dev *ec, int feature)
+> +{
+> +	struct cros_ec_command *msg;
+> +	int ret;
+> +
+> +	if (ec->features[0] == -1U && ec->features[1] == -1U) {
+> +		/* features bitmap not read yet */
+> +		msg = kzalloc(sizeof(*msg) + sizeof(ec->features), GFP_KERNEL);
+> +		if (!msg)
+> +			return -ENOMEM;
+> +
+> +		msg->command = EC_CMD_GET_FEATURES + ec->cmd_offset;
+> +		msg->insize = sizeof(ec->features);
+> +
+> +		ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
+> +		if (ret < 0) {
+> +			dev_warn(ec->dev, "cannot get EC features: %d/%d\n",
+> +				 ret, msg->result);
+> +			memset(ec->features, 0, sizeof(ec->features));
+> +		} else {
+> +			memcpy(ec->features, msg->data, sizeof(ec->features));
+> +		}
+> +
+> +		dev_dbg(ec->dev, "EC features %08x %08x\n",
+> +			ec->features[0], ec->features[1]);
+> +
+> +		kfree(msg);
+> +	}
+> +
+> +	return ec->features[feature / 32] & EC_FEATURE_MASK_0(feature);
+> +}
+> +EXPORT_SYMBOL_GPL(cros_ec_check_features);
+> +
+> +/**
+> + * Return the number of MEMS sensors supported.
+> + *
+> + * @ec_dev: EC device: does not have to be connected directly to the AP,
+> + *          can be daisy chained through another device.
+> + * Return < 0 in case of error.
+
+Same, this is not kernel-doc compliant, check with kernel-doc script.
+
+> + */
+> +int cros_ec_get_sensor_count(struct cros_ec_dev *ec)
+> +{
+> +	/*
+> +	 * Issue a command to get the number of sensor reported.
+> +	 * If not supported, check for legacy mode.
+> +	 */
+
+I'd prefer have this in the function documentation.
+
+> +	int ret, sensor_count;
+> +	struct ec_params_motion_sense *params;
+> +	struct ec_response_motion_sense *resp;
+> +	struct cros_ec_command *msg;
+> +	struct cros_ec_device *ec_dev = ec->ec_dev;
+> +	u8 status;
+> +
+
+nit: Reverse Christmas tree local variable ordering here please.
+
+> +	msg = kzalloc(sizeof(struct cros_ec_command) +
+
+Better sizeof(*msg)?
+
+> +			max(sizeof(*params), sizeof(*resp)), GFP_KERNEL);
+> +	if (!msg)
+> +		return -ENOMEM;
+> +
+> +	msg->version = 1;
+> +	msg->command = EC_CMD_MOTION_SENSE_CMD + ec->cmd_offset;
+> +	msg->outsize = sizeof(*params);
+> +	msg->insize = sizeof(*resp);
+> +
+> +	params = (struct ec_params_motion_sense *)msg->data;
+> +	params->cmd = MOTIONSENSE_CMD_DUMP;
+> +
+
+
+> +	ret = cros_ec_cmd_xfer(ec->ec_dev, msg);
+> +	if (ret < 0) {
+> +		sensor_count = ret;
+> +	} else if (msg->result != EC_RES_SUCCESS) {
+> +		sensor_count = -EPROTO;
+> +	} else {
+> +		resp = (struct ec_response_motion_sense *)msg->data;
+> +		sensor_count = resp->dump.sensor_count;
+> +	}
+
+Can this be rewritten to?
+
+        sensor_count = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
+        if (sensor_count >= 0) {
+		resp = (struct ec_response_motion_sense *)msg->data;
+		sensor_count = resp->dump.sensor_count;
+        }
+
+> +	kfree(msg);
+> +
+> +	/*
+> +	 * Check legacy mode: Let's find out if sensors are accessible
+> +	 * via LPC interface.
+> +	 */
+> +	if (sensor_count == -EPROTO &&
+> +	    ec->cmd_offset == 0 &&
+> +	    ec_dev->cmd_readmem) {
+> +		ret = ec_dev->cmd_readmem(ec_dev, EC_MEMMAP_ACC_STATUS,
+> +				1, &status);
+> +		if ((ret >= 0) &&
+
+Unnecessary parentheses around 'ret >= 0'
+
+> +		    (status & EC_MEMMAP_ACC_STATUS_PRESENCE_BIT)) {
+
+Unnecessary brackets
+
+> +			/*
+> +			 * We have 2 sensors, one in the lid, one in the base.
+> +			 */
+> +			sensor_count = 2;
+> +		} else {
+> +			/*
+> +			 * EC uses LPC interface and no sensors are presented.
+> +			 */
+> +			sensor_count = 0;
+> +		}
+> +	} else if (sensor_count == -EPROTO) {
+> +		/* EC responded, but does not understand DUMP command. */
+> +		sensor_count = 0;
+> +	}
+> +	return sensor_count;
+> +}
+> +EXPORT_SYMBOL_GPL(cros_ec_get_sensor_count);
+> diff --git a/include/linux/platform_data/cros_ec_proto.h b/include/linux/platform_data/cros_ec_proto.h
+> index 0d4e4aaed37af..f3de0662135d5 100644
+> --- a/include/linux/platform_data/cros_ec_proto.h
+> +++ b/include/linux/platform_data/cros_ec_proto.h
+> @@ -12,6 +12,7 @@
+>  #include <linux/mutex.h>
+>  #include <linux/notifier.h>
+>  
+> +#include <linux/mfd/cros_ec.h>
+
+I am wondering if makes sense move 'struct cros_ec_dev' to cros_ec_proto.h and
+remove definitely include/mfd/cros_ec.h. However this could be a follow up patch.
+
+>  #include <linux/platform_data/cros_ec_commands.h>
+>  
+>  #define CROS_EC_DEV_NAME	"cros_ec"
+> @@ -213,4 +214,8 @@ int cros_ec_get_next_event(struct cros_ec_device *ec_dev, bool *wake_event);
+>  
+>  u32 cros_ec_get_host_event(struct cros_ec_device *ec_dev);
+>  
+> +int cros_ec_check_features(struct cros_ec_dev *ec, int feature);
+> +
+> +int cros_ec_get_sensor_count(struct cros_ec_dev *ec);
+> +
+>  #endif /* __LINUX_CROS_EC_PROTO_H */
+> 
+
+Thanks,
+ Enric
