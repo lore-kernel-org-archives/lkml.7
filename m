@@ -2,120 +2,119 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83530CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 06:54:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AE9ACA9EB9
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 06:56:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 578672089C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 06:54:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FB26205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 06:56:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dFaeHNsc"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="U3D5zsCN";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="HE4ka2nO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727315AbfJUGye (ORCPT
+        id S1727327AbfJUG4F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 02:54:34 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:32968 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727049AbfJUGye (ORCPT
+        Mon, 21 Oct 2019 02:56:05 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:34602 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726480AbfJUG4E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 02:54:34 -0400
-Received: by mail-qk1-f195.google.com with SMTP id 71so7675837qkl.0
-        for <linux-kernel@vger.kernel.org>; Sun, 20 Oct 2019 23:54:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ew+EeWIbh/tqMeE+5rFDb3TmVPvP26ghW75d5Js6Qtw=;
-        b=dFaeHNsclipaWu2ERIrqmeUPM7sosfeU0BP3o+RR59EoFvT67V02FSKj+gA6Ig+HQi
-         neYmaWsW+5c4UwwahGwcd0olDJyoJ7YK6BJGgy7BvesBTzRKGE2/TDt/ukvDG6Q4Djb6
-         oAh6gbE/8bpu0NmQW/RvisFHFsv1NRbu/v0R390zJjwEa8047C8wpC59yOLz7Ss4ue0g
-         wLjDKJtvKATA/L6o77A7A8y39NLlYlOIdjT+Q6QHZ5tCMmyoqy/p4UO9yeAuP1V1LNIz
-         v6B4G8lEgfD+rNZdi+7o0qX0YlsCDoT5S8VULOG6rTYF8dj2G+f7DMHMmYiPRjsJXa8C
-         20SA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ew+EeWIbh/tqMeE+5rFDb3TmVPvP26ghW75d5Js6Qtw=;
-        b=Uwuej8K7+mZcx8aR1gOBZ6knT8kmzgNxG1WwYqui0Lh1S2QJwmSS9uJDW8tdXU6IbA
-         QDsVleMn1949A/qAP63GP6NYV3+nIweeYYf8qIydomct24BmolhtZwmrHNgx23UBLLa9
-         JOHG2O9NyZMtxvwRRYvptWtMtcU9kH144E5dvC1kuL5a83hONV98emWWm1A9kjSTH5Xf
-         6bfX5DwkpJzA/Tp//M3tmWhc9rB48CxqXNB+vGtx10W9QEXGE4iGGrG/aolns8B37g+1
-         NFuaEb82thmALHmaa1sAFX46cnccGlLDwGp9XmF3jjgiBCQOofQblBrQ49mYYsczccyE
-         mW2g==
-X-Gm-Message-State: APjAAAUBNNLi2vAQzu6L/AmcSCoOvkJjdF1bjvbUxgwp4FS/RoM9MO38
-        j3NDbM1rqUj7bPStQUGnBy22etGNSOb24sjSmCYhEg==
-X-Google-Smtp-Source: APXvYqwLGZMm/enYdDvmjkI2LuNStrvFJ67sk4sLbYYSRiSKeDAqgxOHCR1oZsY+eH4nd8nG/upIK48k31arWDpywLY=
-X-Received: by 2002:a37:4a87:: with SMTP id x129mr20543344qka.43.1571640872789;
- Sun, 20 Oct 2019 23:54:32 -0700 (PDT)
+        Mon, 21 Oct 2019 02:56:04 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 1A2B3602F3; Mon, 21 Oct 2019 06:56:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571640964;
+        bh=HbZcuc2feCuqswNNsgAUONfmCbfjCOfKRylYSKs6h9s=;
+        h=From:To:Cc:Subject:Date:From;
+        b=U3D5zsCN+bN77/X+/4HN1BFmIlvKnn+NoR3nx0Bferq2FwiaeH2A1LnISWqbSFiSk
+         j5PRq+1PEU/H+4KGXZ6iZLdHQm6zrKc0+VjlQ35IPovnke/peSmgs+IuN9IkHYYP4r
+         64Gu9ZR8BPmkq9f7NZi4Jz53IuUhODqcsHxbouFQ=
+Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 012C960240;
+        Mon, 21 Oct 2019 06:56:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571640963;
+        bh=HbZcuc2feCuqswNNsgAUONfmCbfjCOfKRylYSKs6h9s=;
+        h=From:To:Cc:Subject:Date:From;
+        b=HE4ka2nOQFSGiYJNieupJTmi6DpQnDtOA1bimQfKX+qeqUuH0UUL2BkqzdRzQsn/3
+         4g07alnJUC0fWOBxAeEbuq6xg25g60kUSN0tqOiXzMVOixr9QsyYZHRAi8gaaUR1Wj
+         SEqZ3Dz7HD1SuCbHu7f+GdOe8odZGUQPbhOI4UBs=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 012C960240
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+To:     agross@kernel.org, robh+dt@kernel.org, bjorn.andersson@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Rajendra Nayak <rnayak@codeaurora.org>
+Subject: [PATCH v2 00/13] Add device tree support for sc7180
+Date:   Mon, 21 Oct 2019 12:25:09 +0530
+Message-Id: <20191021065522.24511-1-rnayak@codeaurora.org>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-References: <000000000000ccde8d059564d93d@google.com> <2128256.8pjUZaGXEE@bentobox>
-In-Reply-To: <2128256.8pjUZaGXEE@bentobox>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Mon, 21 Oct 2019 08:54:21 +0200
-Message-ID: <CACT4Y+b1Fkky4JZUTFpUe0jaUVpo7N59T5XTahjzkmig83Dd6A@mail.gmail.com>
-Subject: Re: general protection fault in batadv_iv_ogm_queue_add
-To:     Sven Eckelmann <sven@narfation.org>
-Cc:     syzbot <syzbot+7dd2da51d8ae6f990403@syzkaller.appspotmail.com>,
-        a@unstable.cc, b.a.t.m.a.n@lists.open-mesh.org,
-        David Miller <davem@davemloft.net>,
-        LKML <linux-kernel@vger.kernel.org>, mareklindner@neomailbox.ch,
-        netdev <netdev@vger.kernel.org>, sw@simonwunderlich.de,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 8:33 AM Sven Eckelmann <sven@narfation.org> wrote:
->
-> On Monday, 21 October 2019 07:21:06 CEST syzbot wrote:
-> [...]
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+7dd2da51d8ae6f990403@syzkaller.appspotmail.com
-> >
-> > kasan: CONFIG_KASAN_INLINE enabled
-> > kasan: GPF could be caused by NULL-ptr deref or user memory access
-> > general protection fault: 0000 [#1] PREEMPT SMP KASAN
-> > CPU: 0 PID: 4256 Comm: kworker/u4:0 Not tainted 5.4.0-rc3+ #0
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> > Google 01/01/2011
-> > Workqueue: bat_events batadv_iv_send_outstanding_bat_ogm_packet
-> > RIP: 0010:batadv_iv_ogm_queue_add+0x49/0x1120
-> > net/batman-adv/bat_iv_ogm.c:605
-> > Code: 48 89 75 b8 48 89 4d c0 4c 89 45 b0 44 89 4d d0 e8 fc 02 46 fa 48 8d
-> > 7b 03 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 04 02 48
-> > 89 fa 83 e2 07 38 d0 7f 08 84 c0 0f 85 18 0d 00 00
-> > RSP: 0018:ffff88805d2cfb80 EFLAGS: 00010246
-> > RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffff888092284000
-> > RDX: 0000000000000000 RSI: ffffffff872d1214 RDI: 0000000000000003
-> > RBP: ffff88805d2cfc18 R08: ffff888092284000 R09: 0000000000000001
-> > R10: ffffed100ba59f77 R11: 0000000000000003 R12: dffffc0000000000
-> > R13: ffffed101245080e R14: ffff888092284000 R15: 0000000100051cf6
-> > FS:  0000000000000000(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > CR2: 00000000200002c0 CR3: 00000000a421b000 CR4: 00000000001426f0
-> > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > Call Trace:
-> >   batadv_iv_ogm_schedule+0xb0b/0xe50 net/batman-adv/bat_iv_ogm.c:813
-> >   batadv_iv_send_outstanding_bat_ogm_packet+0x580/0x760
-> > net/batman-adv/bat_iv_ogm.c:1675
->
-> I am guessing that the fix for this is queued up since a while at
->  https://git.open-mesh.org/linux-merge.git/commit/40e220b4218bb3d278e5e8cc04ccdfd1c7ff8307
->
-> Kind regards,
->         Sven
+This is a collection of a few floating DT patches, and a few new
+ones, adding support for basic peripherals on qualcomm's sc7180 SoC,
+drivers for which are already upstream.
 
-Hi Sven,
+I have marked all as v2 to be consistent.
+Each patch captures the delta if any from v1:
 
-It was fixed based on another syzbot report, let's tell syzbot that
-this is a dup of that other report than:
+All the dts files have a dependency on gcc clock driver patches [1]
+to merge first
 
-#syz dup: KASAN: use-after-free Read in batadv_iv_ogm_queue_add
+[1] https://www.spinics.net/lists/linux-clk/msg41851.html
+
+Kiran Gunda (3):
+  arm64: dts: qcom: sc7180: Add SPMI PMIC arbiter device
+  arm64: dts: qcom: pm6150: Add PM6150/PM6150L PMIC peripherals
+  arm64: dts: qcom: sc7180-idp: Add RPMh regulators
+
+Maulik Shah (4):
+  arm64: dts: qcom: sc7180: Add cmd_db reserved area
+  arm64: dts: qcom: sc7180: Add rpmh-rsc node
+  drivers: irqchip: qcom-pdc: Add irqchip for sc7180
+  arm64: dts: qcom: sc7180: Add pdc interrupt controller
+
+Rajendra Nayak (4):
+  dt-bindings: qcom: Add SC7180 bindings
+  arm64: dts: sc7180: Add minimal dts/dtsi files for SC7180 soc
+  dt-bindings: arm-smmu: update binding for qcom sc7180 SoC
+  dt-bindings: qcom,pdc: Add compatible for sc7180
+
+Taniya Das (1):
+  arm64: dts: qcom: SC7180: Add node for rpmhcc clock driver
+
+Vivek Gautam (1):
+  arm64: dts: sc7180: Add device node for apps_smmu
+
+ .../devicetree/bindings/arm/qcom.yaml         |   2 +
+ .../interrupt-controller/qcom,pdc.txt         |   1 +
+ .../devicetree/bindings/iommu/arm,smmu.txt    |   1 +
+ arch/arm64/boot/dts/qcom/Makefile             |   1 +
+ arch/arm64/boot/dts/qcom/pm6150.dtsi          |  85 ++++
+ arch/arm64/boot/dts/qcom/pm6150l.dtsi         |  47 ++
+ arch/arm64/boot/dts/qcom/sc7180-idp.dts       | 256 ++++++++++
+ arch/arm64/boot/dts/qcom/sc7180.dtsi          | 459 ++++++++++++++++++
+ drivers/irqchip/qcom-pdc.c                    |   1 +
+ 9 files changed, 853 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/pm6150.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/pm6150l.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/sc7180-idp.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/sc7180.dtsi
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
+
