@@ -2,199 +2,98 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78EDACA9EB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:58:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73D3ECA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:59:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 503952173B
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:58:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="YspvTl9o"
+	by mail.kernel.org (Postfix) with ESMTP id 4BE0B2166E
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:59:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729281AbfJUN6X (ORCPT
+        id S1729222AbfJUN7N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 09:58:23 -0400
-Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:16992 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728812AbfJUN6W (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 09:58:22 -0400
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-        by mx0b-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9LDsQgt030658;
-        Mon, 21 Oct 2019 08:58:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type; s=PODMain02222019;
- bh=3e47+2svvldlESGI3TS24HllBKDwYi244Zra1KazakM=;
- b=YspvTl9o/gAS/KBfpjWqcd94oT5WWhjla9Mv3gei2yhmfiaR6Y3rsD2jgIyTAu8KFcqN
- 3WOQWM+P5ubi1Hic3gHYWhZF6uKRHRd2dVeKSd6a5PFcpme+nuHHm4LfwWTU8yVfoBMz
- t3xqIAa2UVNmf17AQHGghSK1n+7hUF/KrKJcAQlaTeyY8kIQg+GmhW2chY3HA/QVcnAv
- R5YOy4UPA8jo5QXWM3USq5ezfqmpIGK00qnjMJP7mRD5Y24r0zdd1b/G0auhCxt+Ap5Z
- yEtFdq+ZDkfl69Tk0Nmkps4h3pqlaUX1RLBv08C92AfwTtBPkAWgqRnXoEQoM7oPVdNa xg== 
-Authentication-Results: ppops.net;
-        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from ediex01.ad.cirrus.com ([87.246.76.36])
-        by mx0b-001ae601.pphosted.com with ESMTP id 2vqxwnjv0v-3
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Mon, 21 Oct 2019 08:58:16 -0500
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Mon, 21 Oct
- 2019 14:58:13 +0100
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
- Transport; Mon, 21 Oct 2019 14:58:13 +0100
-Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id B0FC1448;
-        Mon, 21 Oct 2019 13:58:13 +0000 (UTC)
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     <lee.jones@linaro.org>
-CC:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <patches@opensource.cirrus.com>
-Subject: [PATCH RESEND v4 3/3] mfd: madera: Add support for requesting the supply clocks
-Date:   Mon, 21 Oct 2019 14:58:13 +0100
-Message-ID: <20191021135813.13571-3-ckeepax@opensource.cirrus.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20191021135813.13571-1-ckeepax@opensource.cirrus.com>
-References: <20191021135813.13571-1-ckeepax@opensource.cirrus.com>
+        Mon, 21 Oct 2019 09:59:13 -0400
+Received: from sauhun.de ([88.99.104.3]:47850 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728551AbfJUN7M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 09:59:12 -0400
+Received: from localhost (p54B33572.dip0.t-ipconnect.de [84.179.53.114])
+        by pokefinder.org (Postfix) with ESMTPSA id C76372C0076;
+        Mon, 21 Oct 2019 15:59:10 +0200 (CEST)
+Date:   Mon, 21 Oct 2019 15:59:10 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc:     pierre-yves.mordret@st.com, alain.volmat@st.com,
+        alexandre.torgue@st.com, linux-i2c@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] i2c: i2c-stm32f7: fix a race in slave mode with
+ arbitration loss irq
+Message-ID: <20191021135910.GA26782@ninjato>
+References: <1569919869-3218-1-git-send-email-fabrice.gasnier@st.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-SPF-Result: fail
-X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
- -all
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 adultscore=0 suspectscore=1
- phishscore=0 malwarescore=0 mlxlogscore=887 impostorscore=0 spamscore=0
- bulkscore=0 lowpriorityscore=0 priorityscore=1501 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1908290000
- definitions=main-1910210132
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="+HP7ph2BbKc20aGI"
+Content-Disposition: inline
+In-Reply-To: <1569919869-3218-1-git-send-email-fabrice.gasnier@st.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the ability to get the clock for each clock input pin of the chip
-and enable MCLK2 since that is expected to be a permanently enabled
-32kHz clock.
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
----
- drivers/mfd/madera-core.c       | 27 ++++++++++++++++++++++++++-
- include/linux/mfd/madera/core.h | 11 +++++++++++
- 2 files changed, 37 insertions(+), 1 deletion(-)
+--+HP7ph2BbKc20aGI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/mfd/madera-core.c b/drivers/mfd/madera-core.c
-index 29540cbf75934..a8cfadc1fc01e 100644
---- a/drivers/mfd/madera-core.c
-+++ b/drivers/mfd/madera-core.c
-@@ -450,6 +450,21 @@ int madera_dev_init(struct madera *madera)
- 		       sizeof(madera->pdata));
- 	}
- 
-+	madera->mclk[MADERA_MCLK1].id = "mclk1";
-+	madera->mclk[MADERA_MCLK2].id = "mclk2";
-+	madera->mclk[MADERA_MCLK3].id = "mclk3";
-+
-+	ret = devm_clk_bulk_get_optional(madera->dev, ARRAY_SIZE(madera->mclk),
-+					 madera->mclk);
-+	if (ret) {
-+		dev_err(madera->dev, "Failed to get clocks: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Not using devm_clk_get to prevent breakage of existing DTs */
-+	if (!madera->mclk[MADERA_MCLK2].clk)
-+		dev_warn(madera->dev, "Missing MCLK2, requires 32kHz clock\n");
-+
- 	ret = madera_get_reset_gpio(madera);
- 	if (ret)
- 		return ret;
-@@ -660,13 +675,19 @@ int madera_dev_init(struct madera *madera)
- 	}
- 
- 	/* Init 32k clock sourced from MCLK2 */
-+	ret = clk_prepare_enable(madera->mclk[MADERA_MCLK2].clk);
-+	if (ret) {
-+		dev_err(madera->dev, "Failed to enable 32k clock: %d\n", ret);
-+		goto err_reset;
-+	}
-+
- 	ret = regmap_update_bits(madera->regmap,
- 			MADERA_CLOCK_32K_1,
- 			MADERA_CLK_32K_ENA_MASK | MADERA_CLK_32K_SRC_MASK,
- 			MADERA_CLK_32K_ENA | MADERA_32KZ_MCLK2);
- 	if (ret) {
- 		dev_err(madera->dev, "Failed to init 32k clock: %d\n", ret);
--		goto err_reset;
-+		goto err_clock;
- 	}
- 
- 	pm_runtime_set_active(madera->dev);
-@@ -687,6 +708,8 @@ int madera_dev_init(struct madera *madera)
- 
- err_pm_runtime:
- 	pm_runtime_disable(madera->dev);
-+err_clock:
-+	clk_disable_unprepare(madera->mclk[MADERA_MCLK2].clk);
- err_reset:
- 	madera_enable_hard_reset(madera);
- 	regulator_disable(madera->dcvdd);
-@@ -713,6 +736,8 @@ int madera_dev_exit(struct madera *madera)
- 	 */
- 	pm_runtime_disable(madera->dev);
- 
-+	clk_disable_unprepare(madera->mclk[MADERA_MCLK2].clk);
-+
- 	regulator_disable(madera->dcvdd);
- 	regulator_put(madera->dcvdd);
- 
-diff --git a/include/linux/mfd/madera/core.h b/include/linux/mfd/madera/core.h
-index 7ffa696cce7ca..ad2c138105d4b 100644
---- a/include/linux/mfd/madera/core.h
-+++ b/include/linux/mfd/madera/core.h
-@@ -8,6 +8,7 @@
- #ifndef MADERA_CORE_H
- #define MADERA_CORE_H
- 
-+#include <linux/clk.h>
- #include <linux/gpio/consumer.h>
- #include <linux/interrupt.h>
- #include <linux/mfd/madera/pdata.h>
-@@ -29,6 +30,13 @@ enum madera_type {
- 	CS42L92 = 9,
- };
- 
-+enum {
-+	MADERA_MCLK1,
-+	MADERA_MCLK2,
-+	MADERA_MCLK3,
-+	MADERA_NUM_MCLK
-+};
-+
- #define MADERA_MAX_CORE_SUPPLIES	2
- #define MADERA_MAX_GPIOS		40
- 
-@@ -155,6 +163,7 @@ struct snd_soc_dapm_context;
-  * @irq_dev:		the irqchip child driver device
-  * @irq_data:		pointer to irqchip data for the child irqchip driver
-  * @irq:		host irq number from SPI or I2C configuration
-+ * @mclk:		Structure holding clock supplies
-  * @out_clamp:		indicates output clamp state for each analogue output
-  * @out_shorted:	indicates short circuit state for each analogue output
-  * @hp_ena:		bitflags of enable state for the headphone outputs
-@@ -184,6 +193,8 @@ struct madera {
- 	struct regmap_irq_chip_data *irq_data;
- 	int irq;
- 
-+	struct clk_bulk_data mclk[MADERA_NUM_MCLK];
-+
- 	unsigned int num_micbias;
- 	unsigned int num_childbias[MADERA_MAX_MICBIAS];
- 
--- 
-2.11.0
+On Tue, Oct 01, 2019 at 10:51:09AM +0200, Fabrice Gasnier wrote:
+> When in slave mode, an arbitration loss (ARLO) may be detected before the
+> slave had a chance to detect the stop condition (STOPF in ISR).
+> This is seen when two master + slave adapters switch their roles. It
+> provokes the i2c bus to be stuck, busy as SCL line is stretched.
+> - the I2C_SLAVE_STOP event is never generated due to STOPF flag is set but
+>   don't generate an irq (race with ARLO irq, STOPIE is masked). STOPF flag
+>   remains set until next master xfer (e.g. when STOPIE irq get unmasked).
+>   In this case, completion is generated too early: immediately upon new
+>   transfer request (then it doesn't send all data).
+> - Some data get stuck in TXDR register. As a consequence, the controller
+>   stretches the SCL line: the bus gets busy until a future master transfer
+>   triggers the bus busy / recovery mechanism (this can take time... and
+>   may never happen at all)
+>=20
+> So choice is to let the STOPF being detected by the slave isr handler,
+> to properly handle this stop condition. E.g. don't mask IRQs in error
+> handler, when the slave is running.
+>=20
+> Fixes: 60d609f30de2 ("i2c: i2c-stm32f7: Add slave support")
+>=20
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
 
+Applied to for-current, thanks!
+
+
+--+HP7ph2BbKc20aGI
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl2tuaoACgkQFA3kzBSg
+KbY98A/+L5w+rU+ZlnLyPHs8O2CoyNVWD0XjDnXAYbAwpuCKQBjMjaTmom8/ucQM
+JU86jNaLS9KM3yL8bhXnPiuXit/DXnq484npH49uK+GTVFK7pnVNu/QhBuLJzXPO
+xvO4glb1xpFoNHAA7o16T4EQvK5YfZFmdxcbqPVxNfNOyxIHxwBkb5ZQHQwdVNvq
+8izptQqmRWwm6DUQj5Cnbd3DOghf73SBMarADbzZOIJn2yIKNInWJTw18WY+sj8T
+ayrS0KbcITMSbiArT5on/5Vwv0tM5uPYKilQPUR81YDSpZTidmXRblR04h5MS3or
+j41iqKTldQ1xCBG/V9Z1unE4d3CWtBzGQD55UlBlzkvlV+kFsN8EjkW2Ow4HCIG9
+Xn1NbcBvhidymJe94yGgu+YhUVmj5web+EjqLwZoodofg4fxZXRDWHYE8WMUdB9R
+aYv6JERZJq0TSdr1kfGa2lB1FCzMAvtlyH+nnRQsskYHoVWgco5j/VSHfxnQog8+
+O3Doke9VfMtAyOyYmKdogBD5jeO/iZJGLjE/LVC/jnPYVNI0psVD5ifeT1WZprqU
+5JnzBK5JVMZxFrP20nT6ZBdGWFi9YygUHF7tichu6LAk+lCZddE9g9rHghVwMlwN
+/RjlN9Ada2ceFOp3MzL2R4WORf1WZgAPSjrU2Tpz7CRuy0K4r3M=
+=Kfp4
+-----END PGP SIGNATURE-----
+
+--+HP7ph2BbKc20aGI--
