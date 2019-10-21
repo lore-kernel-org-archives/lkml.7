@@ -4,55 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8004ECA9EB0
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:38:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69A35CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:38:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47BD921783
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:38:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4075821920
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:38:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571665130;
-	bh=h54UrCeTyAZNpYI4zfzYG/EmOT3ZDn//g6SUVu6FPyI=;
+	s=default; t=1571665132;
+	bh=wyMIQwB6+c7JvQjGLADBCeGr3NQMyU5+0gndiNgS1Qg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e6rJ1ge2zrasat/rX2lscSC1pcluu/H39Fm0WytSilPf0DaosXj+OQZt5xWnN5e1l
-	 uH5yJjdr/xehpnWaI2dZkvB6KGeijjo9C1MPkMkhjGYl+OIE4j38vIwARQElsDRPdp
-	 yYpw5vQD8pRWvbMI+2AnpNTfDKDc3HT1LUzjj2kQ=
+	b=gKJ9a5MasRAMsiXAJw0E7BwU204NSSRXE530Ua10sq8eN+6Lmp9QeCLWPO+WCkCwF
+	 l0w1FHkjUbC8iWFLDt8vgTxP6toKhe42WS7KDEeN9lHXrlim9q9HjhLSgmi5Ebnc58
+	 K9r1YueGc/3m8llrJdxIxXDf4XcLm6pNvs0l+7rQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729060AbfJUNit (ORCPT
+        id S1729074AbfJUNiv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 09:38:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40186 "EHLO mail.kernel.org"
+        Mon, 21 Oct 2019 09:38:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40234 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728872AbfJUNis (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 09:38:48 -0400
+        id S1728872AbfJUNiu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 09:38:50 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A52A20873;
-        Mon, 21 Oct 2019 13:38:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61E03217D7;
+        Mon, 21 Oct 2019 13:38:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571665126;
-        bh=h54UrCeTyAZNpYI4zfzYG/EmOT3ZDn//g6SUVu6FPyI=;
+        s=default; t=1571665129;
+        bh=wyMIQwB6+c7JvQjGLADBCeGr3NQMyU5+0gndiNgS1Qg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kbWDGlfoq6vnQ8QCycV7siX24oo4u9ITaKM/vVGZ6fD6cYtNpthR2cL60IuqU932q
-         sG/fiCGYjnyKVs3oODQdTkp4rEBz1bK+ISEmVPBCy7nb327z4uhGNsK2QYt1MWVvw+
-         tii1cMYh1y3SF6akLxVT3C20dvp+5Q4MHjHQIn4M=
+        b=YnggNia7lsxB33X/vXKMPLQwhjSqSFu1e4kwfQFgIcZkdgEHdVIx1g6ITvLxBun4t
+         IK7CTcbI5C32DAMhZ4iuzwmQHox7U5OxTAEjVNO+NhCMmJ9GyisyhhLKu9pPgAY1yi
+         863oHeKli2A4mPUcGj79BKbw8hwyrIcKJqiav1bE=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Andi Kleen <ak@linux.intel.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH 01/57] perf tools: Allow to build with -ltcmalloc
-Date:   Mon, 21 Oct 2019 10:37:38 -0300
-Message-Id: <20191021133834.25998-2-acme@kernel.org>
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 02/57] perf script: Fix --reltime with --time
+Date:   Mon, 21 Oct 2019 10:37:39 -0300
+Message-Id: <20191021133834.25998-3-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191021133834.25998-1-acme@kernel.org>
 References: <20191021133834.25998-1-acme@kernel.org>
@@ -63,133 +60,129 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+From: Andi Kleen <ak@linux.intel.com>
 
-By using "make TCMALLOC=1" you can enable perf to be build for usage
-with libtcmalloc.so (gperftools).
+My earlier patch to just enable --reltime with --time was a little too
+optimistic.  The --time parsing would accept absolute time, which is
+very confusing to the user.
 
-Get heap profile (tools/perf directory):
+Support relative time in --time parsing too. This only works with recent
+perf record that records the first sample time. Otherwise we error out.
 
-  $ <install gperftools>
-  $ make TCMALLOC=1 DEBUG=1
-  $ HEAPPROFILE=/tmp/heapprof ./perf ...
-  $ pprof ./perf /tmp/heapprof.000*
-  (pprof) top
-  Total: 2335.5 MB
-    1735.1  74.3%  74.3%   1735.1  74.3% memdup
-     402.0  17.2%  91.5%    402.0  17.2% zalloc
-     140.2   6.0%  97.5%    145.8   6.2% map__new
-      33.6   1.4%  98.9%     33.6   1.4% symbol__new
-      12.4   0.5%  99.5%     12.4   0.5% alloc_event
-       6.2   0.3%  99.7%      6.2   0.3% nsinfo__new
-       5.5   0.2% 100.0%      5.5   0.2% nsinfo__copy
-       0.3   0.0% 100.0%      0.3   0.0% dso__new
-       0.1   0.0% 100.0%      0.1   0.0% do_read_string
-       0.0   0.0% 100.0%      0.0   0.0% __GI__IO_file_doallocate
-
-See callstack:
-  $ pprof --pdf ./perf /tmp/heapprof.00* > callstack.pdf
-  $ pprof --web ./perf /tmp/heapprof.00*
-
-Committer testing:
-
-Install gperftools, on fedora:
-
-  # dnf install gperftools-devel
-
-Then build:
-
- $ make TCMALLOC=1 DEBUG=1 -C tools/perf O=/tmp/build/perf install-bin
-
-Verify that it linked against the right library:
-
-  $ ldd ~/bin/perf | grep tcma
-	libtcmalloc.so.4 => /lib64/libtcmalloc.so.4 (0x00007fb2953a7000)
-  $
-
-Run 'perf trace' system wide for 1 minute:
-
-  # HEAPPROFILE=/tmp/heapprof perf trace -a sleep 1m
-  <SNIP>
-   59985.524 ( 0.006 ms): Web Content/20354 recvmsg(fd: 9<socket:[1762817]>, msg: 0x7ffee5fdafb0) = -1 EAGAIN (Resource temporarily unavailable)
-   59985.536 ( 0.005 ms): Web Content/20354 recvmsg(fd: 9<socket:[1762817]>, msg: 0x7ffee5fdafc0) = -1 EAGAIN (Resource temporarily unavailable)
-   59981.956 (10.143 ms): SCTP timer/21716  ... [continued]: select())                            = 0 (Timeout)
-   59985.549 (         ): Web Content/20354 poll(ufds: 0x7f1df38af180, nfds: 3, timeout_msecs: 4294967295) ...
-       0.926 (59999.481 ms): sleep/29764  ... [continued]: nanosleep())                           = 0
-   59992.133 (         ): SCTP timer/21716 select(tvp: 0x7ff5bf7fee80)                            ...
-   60000.477 ( 0.009 ms): sleep/29764 close(fd: 1)                                                = 0
-   60000.493 ( 0.005 ms): sleep/29764 close(fd: 2)                                                = 0
-   60000.514 (         ): sleep/29764 exit_group()                                                = ?
-  Dumping heap profile to /tmp/heapprof.0001.heap (Exiting, 3 MB in use)
-[root@quaco ~]#
-
-Install pprof:
-
-  # dnf install pprof
-
-And run it:
-
-  # pprof ~/bin/perf /tmp/heapprof.0001.heap
-  Using local file /root/bin/perf.
-  Using local file /tmp/heapprof.0001.heap.
-  Welcome to pprof!  For help, type 'help'.
-  (pprof) top
-  Total: 4.0 MB
-       1.7  42.0%  42.0%      2.2  54.1% map__new
-       0.9  23.3%  65.3%      0.9  23.3% zalloc
-       0.5  11.4%  76.7%      0.5  11.4% dso__new
-       0.2   5.6%  82.3%      0.3   8.5% trace__sys_enter
-       0.2   4.9%  87.2%      0.2   4.9% __GI___strdup
-       0.2   3.8%  91.0%      0.2   3.8% new_term
-       0.1   2.2%  93.2%      0.4  10.1% __perf_pmu__new_alias
-       0.0   1.0%  94.3%      0.0   1.2% event_read_fields
-       0.0   0.8%  95.1%      0.0   0.8% nsinfo__new
-       0.0   0.7%  95.8%      0.1   3.2% trace__read_syscall_info
-  (pprof)
-
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/20191013151427.11941-2-jolsa@kernel.org
+Fixes: 3714437d3fcc ("perf script: Allow --time with --reltime")
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Link: http://lore.kernel.org/lkml/20191011182140.8353-1-andi@firstfloor.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Makefile.config | 5 +++++
- tools/perf/Makefile.perf   | 2 ++
- 2 files changed, 7 insertions(+)
+ tools/perf/builtin-script.c  |  5 +++--
+ tools/perf/util/time-utils.c | 27 ++++++++++++++++++++++++---
+ tools/perf/util/time-utils.h |  5 +++++
+ 3 files changed, 32 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 063202c53b64..1783427da9b0 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -265,6 +265,11 @@ LDFLAGS += -Wl,-z,noexecstack
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 1c797a948ada..f86c5cce5b2c 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -3864,10 +3864,11 @@ int cmd_script(int argc, const char **argv)
+ 		goto out_delete;
  
- EXTLIBS = -lpthread -lrt -lm -ldl
+ 	if (script.time_str) {
+-		err = perf_time__parse_for_ranges(script.time_str, session,
++		err = perf_time__parse_for_ranges_reltime(script.time_str, session,
+ 						  &script.ptime_range,
+ 						  &script.range_size,
+-						  &script.range_num);
++						  &script.range_num,
++						  reltime);
+ 		if (err < 0)
+ 			goto out_delete;
  
-+ifneq ($(TCMALLOC),)
-+  CFLAGS += -fno-builtin-malloc -fno-builtin-calloc -fno-builtin-realloc -fno-builtin-free
-+  EXTLIBS += -ltcmalloc
-+endif
+diff --git a/tools/perf/util/time-utils.c b/tools/perf/util/time-utils.c
+index 9796a2e43f67..302443921681 100644
+--- a/tools/perf/util/time-utils.c
++++ b/tools/perf/util/time-utils.c
+@@ -458,10 +458,11 @@ bool perf_time__ranges_skip_sample(struct perf_time_interval *ptime_buf,
+ 	return true;
+ }
+ 
+-int perf_time__parse_for_ranges(const char *time_str,
++int perf_time__parse_for_ranges_reltime(const char *time_str,
+ 				struct perf_session *session,
+ 				struct perf_time_interval **ranges,
+-				int *range_size, int *range_num)
++				int *range_size, int *range_num,
++				bool reltime)
+ {
+ 	bool has_percent = strchr(time_str, '%');
+ 	struct perf_time_interval *ptime_range;
+@@ -471,7 +472,7 @@ int perf_time__parse_for_ranges(const char *time_str,
+ 	if (!ptime_range)
+ 		return -ENOMEM;
+ 
+-	if (has_percent) {
++	if (has_percent || reltime) {
+ 		if (session->evlist->first_sample_time == 0 &&
+ 		    session->evlist->last_sample_time == 0) {
+ 			pr_err("HINT: no first/last sample time found in perf data.\n"
+@@ -479,7 +480,9 @@ int perf_time__parse_for_ranges(const char *time_str,
+ 			       "(if '--buildid-all' is enabled, please set '--timestamp-boundary').\n");
+ 			goto error;
+ 		}
++	}
+ 
++	if (has_percent) {
+ 		num = perf_time__percent_parse_str(
+ 				ptime_range, size,
+ 				time_str,
+@@ -492,6 +495,15 @@ int perf_time__parse_for_ranges(const char *time_str,
+ 	if (num < 0)
+ 		goto error_invalid;
+ 
++	if (reltime) {
++		int i;
 +
- ifeq ($(FEATURES_DUMP),)
- include $(srctree)/tools/build/Makefile.feature
- else
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index a099a8a89447..8f1ba986d3bf 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -114,6 +114,8 @@ include ../scripts/utilities.mak
- # Define NO_LIBZSTD if you do not want support of Zstandard based runtime
- # trace compression in record mode.
- #
-+# Define TCMALLOC to enable tcmalloc heap profiling.
-+#
++		for (i = 0; i < num; i++) {
++			ptime_range[i].start += session->evlist->first_sample_time;
++			ptime_range[i].end += session->evlist->first_sample_time;
++		}
++	}
++
+ 	*range_size = size;
+ 	*range_num = num;
+ 	*ranges = ptime_range;
+@@ -504,6 +516,15 @@ int perf_time__parse_for_ranges(const char *time_str,
+ 	return ret;
+ }
  
- # As per kernel Makefile, avoid funny character set dependencies
- unexport LC_ALL
++int perf_time__parse_for_ranges(const char *time_str,
++				struct perf_session *session,
++				struct perf_time_interval **ranges,
++				int *range_size, int *range_num)
++{
++	return perf_time__parse_for_ranges_reltime(time_str, session, ranges,
++					range_size, range_num, false);
++}
++
+ int timestamp__scnprintf_usec(u64 timestamp, char *buf, size_t sz)
+ {
+ 	u64  sec = timestamp / NSEC_PER_SEC;
+diff --git a/tools/perf/util/time-utils.h b/tools/perf/util/time-utils.h
+index 4f42988eb2f7..1142b0bddd5e 100644
+--- a/tools/perf/util/time-utils.h
++++ b/tools/perf/util/time-utils.h
+@@ -26,6 +26,11 @@ bool perf_time__ranges_skip_sample(struct perf_time_interval *ptime_buf,
+ 
+ struct perf_session;
+ 
++int perf_time__parse_for_ranges_reltime(const char *str, struct perf_session *session,
++				struct perf_time_interval **ranges,
++				int *range_size, int *range_num,
++				bool reltime);
++
+ int perf_time__parse_for_ranges(const char *str, struct perf_session *session,
+ 				struct perf_time_interval **ranges,
+ 				int *range_size, int *range_num);
 -- 
 2.21.0
 
