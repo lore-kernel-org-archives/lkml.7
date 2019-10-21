@@ -2,55 +2,56 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=DATE_IN_PAST_12_24,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DATE_IN_PAST_12_24,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20FF8CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:08:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBC36CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:08:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD63220663
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:08:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F51420663
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:08:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="HIgodUMs"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="c3hAboai"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388594AbfJVJIg (ORCPT
+        id S2388615AbfJVJIp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 05:08:36 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:50640 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388565AbfJVJIf (ORCPT
+        Tue, 22 Oct 2019 05:08:45 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:49570 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388519AbfJVJIo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 05:08:35 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9M94JXw156336;
-        Tue, 22 Oct 2019 09:06:27 GMT
+        Tue, 22 Oct 2019 05:08:44 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9M94Dxa173370;
+        Tue, 22 Oct 2019 09:06:58 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id; s=corp-2019-08-05;
- bh=z26nZqDxzBOJ9BRfbSpqDpmsq0mVNNYQLDQL4WWklhc=;
- b=HIgodUMs9ZAbI6mH8+OJx/CTveL/ZDZUlvQ1TK9BjEaPawvfoZ/ZJMPAIHKHTRF5mcs7
- gYIuc8aYW2jcbW44bsg4ROuMW6xqNsp4r1l4ymwWmUfYbUS7HqZWApB30EQ15g7Wb14a
- T2g7VLoL8sS7PWCkZ9LBgPwhutXZc37mDwtHSOPW45gpwV+smSPktILa9iaHAQmpvvHE
- /EBvqORUSoxJDRg0DLAqf3ekx9PD3nkzlxffAJlvd/bSRWbGBZYJdW/z5O4yJuTtCeUD
- C69XyztcMJ+z00Uemi3Jwoeb1r8/GzbJ1Mmp5n1/iJD0pxzxg0vc9EBo7iFuHzj8Q2Br 3A== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2vqtepn899-1
+ subject : date : message-id : in-reply-to : references; s=corp-2019-08-05;
+ bh=qaL3Wn/zckv6LbHPeF9PDceDQSnByrsojCND7DKPF+c=;
+ b=c3hAboaiNU14cMu+NrC89lBPDj8oh8cQyu/dkDQLR/2pHUlPgJL0rmigjQR8qjBqTF2d
+ bhuWjzYYyJVYOkJFHAaPYivzew4Q7xMgNHr0ptTsS5tKXd3IICltZXaISz1TdxULsHh+
+ hSMbMshE972nujNEvrybfAqCJ2fSSEu98joZavahpG5CVkzLfT7XlcNK6wfmVTtskEQW
+ Yvpbr3E0zVgZFzqXCTmgcB3Ol1cvu+AXzYsD4PzM95NrFuRDxonLUquzoqT58ipDgtd1
+ t2VGei2mS34iu4wOfugp3Gdxwz1C6ZRPCXkaeHE7JvRvdGsOA2d7WSuXW5PhnDX4bDyN pg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2vqswtdbq5-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 22 Oct 2019 09:06:27 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9M937NR014871;
-        Tue, 22 Oct 2019 09:06:26 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2vsx2qbb6j-1
+        Tue, 22 Oct 2019 09:06:58 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9M94Gpd078959;
+        Tue, 22 Oct 2019 09:06:58 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2vsp3xqd22-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 22 Oct 2019 09:06:26 +0000
+        Tue, 22 Oct 2019 09:06:57 +0000
 Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9M96H0I006689;
-        Tue, 22 Oct 2019 09:06:21 GMT
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9M96uL5024561;
+        Tue, 22 Oct 2019 09:06:56 GMT
 Received: from z2.cn.oracle.com (/10.182.70.159)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 22 Oct 2019 09:06:17 +0000
+        with ESMTP ; Tue, 22 Oct 2019 09:06:55 +0000
 From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
@@ -61,11 +62,15 @@ Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
         will@kernel.org, linux-hyperv@vger.kernel.org, kvm@vger.kernel.org,
         mikelley@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
         sthemmin@microsoft.com, sashal@kernel.org,
-        Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Subject: [PATCH v7 0/5] Add a unified parameter "nopvspin"
-Date:   Mon, 21 Oct 2019 17:11:11 +0800
-Message-Id: <1571649076-2421-1-git-send-email-zhenzhong.duan@oracle.com>
+        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: [PATCH v7 5/5] x86/hyperv: Mark "hv_nopvspin" parameter obsolete
+Date:   Mon, 21 Oct 2019 17:11:16 +0800
+Message-Id: <1571649076-2421-6-git-send-email-zhenzhong.duan@oracle.com>
 X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1571649076-2421-1-git-send-email-zhenzhong.duan@oracle.com>
+References: <1571649076-2421-1-git-send-email-zhenzhong.duan@oracle.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9417 signatures=668684
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
@@ -73,7 +78,7 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 ma
  engine=8.0.1-1908290000 definitions=main-1910220086
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9417 signatures=668684
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
  definitions=main-1910220086
@@ -82,68 +87,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All the patches have Reviewed-by now, I think v7 could be the final
-version.
+Map "hv_nopvspin" to "nopvspin".
 
-There are cases folks want to disable spinlock optimization for
-debug/test purpose. Xen and hyperv already have parameters "xen_nopvspin"
-and "hv_nopvspin" to support that, but kvm doesn't.
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Stephen Hemminger <sthemmin@microsoft.com>
+Cc: Sasha Levin <sashal@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+---
+ Documentation/admin-guide/kernel-parameters.txt | 6 +++++-
+ arch/x86/hyperv/hv_spinlock.c                   | 4 ++++
+ 2 files changed, 9 insertions(+), 1 deletion(-)
 
-The first patch adds that feature to KVM guest with "nopvspin".
-
-For compatibility reason original parameters "xen_nopvspin" and
-"hv_nopvspin" are retained and marked obsolete.
-
-v7:
-PATCH3: update comment and use goto, add RB              [Vitaly Kuznetsov]
-
-v6:
-PATCH1: add Reviewed-by                                  [Vitaly Kuznetsov]
-PATCH2: change 'pv' to 'PV', add Reviewed-by             [Vitaly Kuznetsov]
-PATCH3: refactor 'if' branch in kvm_spinlock_init()      [Vitaly Kuznetsov]
-
-v5:
-PATCH1: new patch to revert a currently unnecessory commit,
-        code is simpler a bit after that change.         [Boris Ostrovsky]
-PATCH3: fold 'if' statement,add comments on virt_spin_lock_key,
-        reorder with PATCH2 to better reflect dependency                               
-PATCH4: fold 'if' statement, add Reviewed-by             [Boris Ostrovsky]
-PATCH5: add Reviewed-by                                  [Michael Kelley]
-
-v4:
-PATCH1: use variable name nopvspin instead of pvspin and
-        defined it as __initdata, changed print message,
-        updated patch description                     [Sean Christopherson]
-PATCH2: remove Suggested-by, use "kvm-guest:" prefix  [Sean Christopherson]
-PATCH3: make variable nopvsin and xen_pvspin coexist
-        remove Reviewed-by due to code change         [Sean Christopherson]
-PATCH4: make variable nopvsin and hv_pvspin coexist   [Sean Christopherson]
-
-v3:
-PATCH2: Fix indentation
-
-v2:
-PATCH1: pick the print code change into separate PATCH2,
-        updated patch description             [Vitaly Kuznetsov]
-PATCH2: new patch with print code change      [Vitaly Kuznetsov]
-PATCH3: add Reviewed-by                       [Juergen Gross]
-
-Zhenzhong Duan (5):
-  Revert "KVM: X86: Fix setup the virt_spin_lock_key before static key
-    get initialized"
-  x86/kvm: Change print code to use pr_*() format
-  x86/kvm: Add "nopvspin" parameter to disable PV spinlocks
-  xen: Mark "xen_nopvspin" parameter obsolete
-  x86/hyperv: Mark "hv_nopvspin" parameter obsolete
-
- Documentation/admin-guide/kernel-parameters.txt | 14 ++++-
- arch/x86/hyperv/hv_spinlock.c                   |  4 ++
- arch/x86/include/asm/qspinlock.h                |  1 +
- arch/x86/kernel/kvm.c                           | 74 +++++++++++++++----------
- arch/x86/xen/spinlock.c                         |  4 +-
- kernel/locking/qspinlock.c                      |  7 +++
- 6 files changed, 71 insertions(+), 33 deletions(-)
-
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 85059dd..78648bb 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -1436,6 +1436,10 @@
+ 	hv_nopvspin	[X86,HYPER_V] Disables the paravirt spinlock optimizations
+ 				      which allow the hypervisor to 'idle' the
+ 				      guest on lock contention.
++				      This parameter is obsoleted by "nopvspin"
++				      parameter, which has equivalent effect for
++				      HYPER_V platform.
++
+ 
+ 	keep_bootcon	[KNL]
+ 			Do not unregister boot console at start. This is only
+@@ -5335,7 +5339,7 @@
+ 			as generic guest with no PV drivers. Currently support
+ 			XEN HVM, KVM, HYPER_V and VMWARE guest.
+ 
+-	nopvspin	[X86,XEN,KVM]
++	nopvspin	[X86,XEN,KVM,HYPER_V]
+ 			Disables the qspinlock slow path using PV optimizations
+ 			which allow the hypervisor to 'idle' the guest on lock
+ 			contention.
+diff --git a/arch/x86/hyperv/hv_spinlock.c b/arch/x86/hyperv/hv_spinlock.c
+index 07f21a0..47c7d6c 100644
+--- a/arch/x86/hyperv/hv_spinlock.c
++++ b/arch/x86/hyperv/hv_spinlock.c
+@@ -64,6 +64,9 @@ __visible bool hv_vcpu_is_preempted(int vcpu)
+ 
+ void __init hv_init_spinlocks(void)
+ {
++	if (nopvspin)
++		hv_pvspin = false;
++
+ 	if (!hv_pvspin || !apic ||
+ 	    !(ms_hyperv.hints & HV_X64_CLUSTER_IPI_RECOMMENDED) ||
+ 	    !(ms_hyperv.features & HV_X64_MSR_GUEST_IDLE_AVAILABLE)) {
+@@ -82,6 +85,7 @@ void __init hv_init_spinlocks(void)
+ 
+ static __init int hv_parse_nopvspin(char *arg)
+ {
++	pr_notice("\"hv_nopvspin\" is deprecated, please use \"nopvspin\" instead\n");
+ 	hv_pvspin = false;
+ 	return 0;
+ }
 -- 
 1.8.3.1
 
