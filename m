@@ -2,139 +2,101 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 977B2CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:54:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4960ECA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:54:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DEDE2084C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:54:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2031920882
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:54:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UcBj5W9W"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qfF24aXt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728242AbfJUKyP (ORCPT
+        id S1728264AbfJUKy1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 06:54:15 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40900 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726767AbfJUKyP (ORCPT
+        Mon, 21 Oct 2019 06:54:27 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:34936 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726767AbfJUKy0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 06:54:15 -0400
-Received: by mail-wr1-f67.google.com with SMTP id o28so13393460wro.7;
-        Mon, 21 Oct 2019 03:54:12 -0700 (PDT)
+        Mon, 21 Oct 2019 06:54:26 -0400
+Received: by mail-pf1-f195.google.com with SMTP id 205so8203609pfw.2
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 03:54:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=9FLQHlZqrICMBNHhz4Iit7vCKLtonkvMi3q7kFDAN3I=;
-        b=UcBj5W9WfX7D7Ks0S2FbRtur+JEk2c3VJzrZFBwSvNHouo+QM5t3LNOcD7yOCUTvfY
-         5eSfA676M8FhZBwua3d038z9vfLyqDHyCD+b2anwQ/lzmX1Qev+RPhu9/Wgjj1NcJXaL
-         ljBMp4ix3vACqA3X/GnRFP2nIKVWRSOLafYasc9bAGIJl+9+OM6UQgneIMem3+1xhE2F
-         tmT4KLdDYnKrq2FmkQ9ZtW4tcTDvbbeOEK4W1/aE+O918xTe0s7RBI/4BTr9o5PTORdt
-         sm1CHyL1gpBpT8igLNAjY0LxD4o7Os44pi0wCNKCAlUs3zQaCi35M6qLHQoORNDnM7Yt
-         LBHw==
+         :content-disposition:in-reply-to:user-agent;
+        bh=H2t4PKG/eZU3aPmwrkuhhD8Hh2tscnAFAhHGGRBX4YM=;
+        b=qfF24aXttATO4K858iDxMOlawG2W88V2Efd1HhVKFd7Tq7BO/h2cM7JmXZTa5Mwa0n
+         GfyvpWvUQn8jaJqHg2hK8cPDRim5U8SNXlsjoSYVCtedIJMyrVyTmGNQ0sF8JqGcfXhY
+         9u2btxLWxsUmAVw6n8IDr6kds1pz3kXtxNMITR3vegl3bNMahBUcZzG3LfY4wKJ2124X
+         6QJ5n3buU28VZAiUjoyec1z37S4prkbnEpWx5UQm5GS0KfWbdVPaouRS92IGfOU4VNJl
+         NJ1IXxGMZo7fBioOuzrNEe4FnMeYHuB88Jb8a6Kwphhz6o+p5N8Bm2GRX+CUlu7DuCf1
+         wQRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=9FLQHlZqrICMBNHhz4Iit7vCKLtonkvMi3q7kFDAN3I=;
-        b=g2NypHN7dP0qAsW13anEFPnBTk9bbE9s+GWlq229oQ6v0F1E1H+XTKRVCKS6/LsGFf
-         OsdFE8GtxXK7xp9L90h7k0CJtb4arih9D6cNTL3slKSfkI9JxX3dCGzeaZO7PkU4Eooz
-         2CIjulfUXSSTZXb7k0bysO/fr7HPHXw+61SymzfWgJyKDIFCencwZTi8Z2RYM+AjoKD6
-         WPNEsDSp8qCERDYiTUnqZqjO3SzWBOdEWJSGDCtpwkl3WPDgw58fH/EO4l59KWsMoSAG
-         QldXSly3RnP6BbB247s+tmh/lDS+ZbcCl7gpao6N2U1dTX6iffr17OssS9Z/UkEa0llD
-         Ahjw==
-X-Gm-Message-State: APjAAAWb7/oxAYY21xDQhl/atg35b07gN/ho3/csG5b8iVGfYM3ucwji
-        f5OaXaprAW3CrhvFliZMgJU=
-X-Google-Smtp-Source: APXvYqzM917VAbFxVYt9i9ZHbAgfsqtFE6PqBJdfuvVnBqd0xCczbbyqVY6BpiEscXK8T5Q6gBdGzA==
-X-Received: by 2002:adf:e7c9:: with SMTP id e9mr19074932wrn.261.1571655251486;
-        Mon, 21 Oct 2019 03:54:11 -0700 (PDT)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id r27sm25949480wrc.55.2019.10.21.03.54.10
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 21 Oct 2019 03:54:10 -0700 (PDT)
-Date:   Mon, 21 Oct 2019 12:54:09 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     Richard Weinberger <richard.weinberger@gmail.com>
-Cc:     Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH] fs: exFAT read-only driver GPL implementation by Paragon
- Software.
-Message-ID: <20191021105409.32okvzbslxmcjdze@pali>
-References: <453A1153-9493-4A04-BF66-CE6A572DEBDB@paragon-software.com>
- <CAFLxGvyFBGiDab4wxWidjRyDgWkHVfigVsHiRDB4swpB3G+hvQ@mail.gmail.com>
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=H2t4PKG/eZU3aPmwrkuhhD8Hh2tscnAFAhHGGRBX4YM=;
+        b=mcY2WJF7PlrTD1abSoJphNxTU3zqQ+S2Uy6l2J7rGgvgXomBg9EqtJY9nWW89Rb9Sg
+         ijIC1ttPsVxRR2fO60o76bSIzbn8OXav+wjQknG5+g8yBoAQt/la17Sk3Ne9oXCe1Z6C
+         3jPnhwho94YT+r6FxxFPRYQu3Sly+9zYH1t8XWWsK9Z3q6zRoYepb6/nA4ywo2T1UTnz
+         drd1U4h171yfTuoDOf/YlxeTZYTRJ5emEcs2mBMN3XNIWdMrkkwfnKvLK6v6Q0+SMmob
+         umXftmwtgV2jOWQ1dlgA7Yy1lVdA6uz+OIQvH5g6p8n+djcLjsIbVNrHneVu7uAv26n0
+         AbIA==
+X-Gm-Message-State: APjAAAVUBQTaC9KI2d0dXktjoebUQ8SX76UNq6UTgYU28SnqtN4vSs8K
+        xEfMtgUzDHsISUCpTuw9Z8zWT366AeA=
+X-Google-Smtp-Source: APXvYqzc+VIvFaAIr1m5192kISlYR+tFNl07KgG0K9Am2YZM+hvPaKnDaJ6T+4BBNOPsidRHUzrl9w==
+X-Received: by 2002:a63:3044:: with SMTP id w65mr24426425pgw.384.1571655264745;
+        Mon, 21 Oct 2019 03:54:24 -0700 (PDT)
+Received: from localhost ([122.172.151.112])
+        by smtp.gmail.com with ESMTPSA id o60sm15848553pje.21.2019.10.21.03.54.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 21 Oct 2019 03:54:23 -0700 (PDT)
+Date:   Mon, 21 Oct 2019 16:24:19 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, nico@fluxnic.net
+Subject: Re: [PATCH v3 0/5] cpufreq: merge arm big.LITTLE and vexpress-spc
+ drivers
+Message-ID: <20191021105419.ud7he23j2icrwo4w@vireshk-i7>
+References: <20191018103749.11226-1-sudeep.holla@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAFLxGvyFBGiDab4wxWidjRyDgWkHVfigVsHiRDB4swpB3G+hvQ@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20191018103749.11226-1-sudeep.holla@arm.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sunday 20 October 2019 20:08:20 Richard Weinberger wrote:
-> On Sat, Oct 19, 2019 at 10:33 AM Konstantin Komarov
-> <almaz.alexandrovich@paragon-software.com> wrote:
-> >
-> > Recently exFAT filesystem specification has been made public by Microsoft (https://docs.microsoft.com/en-us/windows/win32/fileio/exfat-specification).
-> > Having decades of expertise in commercial file systems development, we at Paragon Software GmbH are very excited by Microsoft's decision and now want to make our contribution to the Open Source Community by providing our implementation of exFAT Read-Only (yet!) fs implementation for the Linux Kernel.
-> > We are about to prepare the Read-Write support patch as well.
-> > 'fs/exfat' is implemented accordingly to standard Linux fs development approach with no use/addition of any custom API's.
-> > To divide our contribution from 'drivers/staging' submit of Aug'2019, our Kconfig key is "EXFAT_RO_FS"
+On 18-10-19, 11:37, Sudeep Holla wrote:
+> Hi,
 > 
-> How is this driver different from the driver in drivers/staging?
-> With the driver in staging and the upcoming driver from Samsung this
-> is driver number
-> three for exfat. ;-\
+> Since vexpress-spc is the sole user of arm_big_little cpufreq driver,
+> there's no point in keeping it separate anymore. I wanted to post these
+> patches for ages but kept postponing for no reason.
+> 
+> Regards,
+> Sudeep
+> 
+> v1->v2:
+> 	- generated the patch using -B that helps to keep delta short
+> 	  for review
+> 	- Split the last patch into 3 different patches to deal with
+> 	  removing bL_ops, debug messages and other code formatting
+> 	  separately
+> 
+> v2->v3:
+> 	- Added Nico's ack
+> 	- Added back blank lines and extra braces as suggested by Viresh
+> 	- Updated copyright year correctly
 
-Hi Richard!
-
-There is vfat+msdos driver for FAT12/16/32 in fs/fat/. Then there is
-modified Samsung exfat driver which was recently merged into staging
-area and supports FAT12/16/32 and exFAT. Plus there is new version of
-this out-of-tree Samsung's exfat driver called sdfat which can be found
-in some Android phones. Based on sdfat sources there is out-of-tree
-exfat-linux [1] driver which seems to have better performance as
-currently merged old modified Samsung's exfat driver into staging. This
-list of available exfat drivers is not complete. There is also fuse
-implementation widely used [2] and some commercial implementations from
-Tuxera [3], Paragon [4], Embedded Access [5] or HCC [6]. As Konstantin
-in his email wrote, implementation which he sent should be one used in
-their commercial Paragon product.
-
-So we have not 3, but at least 6 open source implementations. Plus more
-closed source, commercial.
-
-About that one implementation from Samsung, which was recently merged
-into staging tree, more people wrote that code is in horrible state and
-probably it should not have been merged. That implementation has
-all-one-one driver FAT12, FAT16, FAT32 and exFAT which basically
-duplicate current kernel fs/fat code.
-
-Quick look at this Konstantin's patch, it looks like that code is not in
-such bad state as staging one. It has only exFAT support (no FAT32) but
-there is no write support (yet). For me it looks like that this
-Konstantin's implementation is more closer then one in staging to be
-"primary" exfat implementation for kernel (if write support would be
-provided).
-
-[1] - https://github.com/cryptomilk/kernel-sdfat
-[2] - https://github.com/relan/exfat
-[3] - https://www.tuxera.com/products/tuxera-exfat-embedded/
-[4] - https://www.paragon-software.com/technologies/
-[5] - http://embedded-access.com/exfat-file-system/
-[6] - https://www.hcc-embedded.com/exfat/
+Applied. Thanks.
 
 -- 
-Pali Rohár
-pali.rohar@gmail.com
+viresh
