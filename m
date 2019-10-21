@@ -2,132 +2,92 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11412CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:05:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADFE4CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:06:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E13CE2084C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:05:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FACA2053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:06:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571666768;
+	bh=A3H2VCQJWNsHO0DyeKid1bo5zk+/hVPISlLU+l0Hm64=;
+	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
+	b=NA4eQ9WCreJfcD7it+cEoH+93rwzp+yWWDvoNJfKGCwtmM6JV80/Wf3AArxODTRZU
+	 VxcPdM/iCzCNJJCYWcLPSulTDUutebraIEWpz5X6esja6M7MG31XAlh+aXs9zpzpmV
+	 TIkoQhV+aBjrXzAoU0n3wjRKELwkbr1k4WA4ZMTc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729267AbfJUOFY (ORCPT
+        id S1729069AbfJUOGH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 10:05:24 -0400
-Received: from sauhun.de ([88.99.104.3]:47916 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727152AbfJUOFX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 10:05:23 -0400
-Received: from localhost (p54B33572.dip0.t-ipconnect.de [84.179.53.114])
-        by pokefinder.org (Postfix) with ESMTPSA id CAB422C0076;
-        Mon, 21 Oct 2019 16:05:20 +0200 (CEST)
-Date:   Mon, 21 Oct 2019 16:05:15 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Eugen.Hristev@microchip.com
-Cc:     peda@axentia.se, mark.rutland@arm.com,
-        Ludovic.Desroches@microchip.com, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, alexandre.belloni@bootlin.com,
-        robh+dt@kernel.org, Nicolas.Ferre@microchip.com
-Subject: Re: [PATCH v5 0/9] i2c: add support for filters
-Message-ID: <20191021140515.GC26782@ninjato>
-References: <1568189911-31641-1-git-send-email-eugen.hristev@microchip.com>
- <c17182ac-67dd-d11f-5daf-066bf446b969@microchip.com>
+        Mon, 21 Oct 2019 10:06:07 -0400
+Received: from inca-roads.misterjones.org ([213.251.177.50]:33835 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728098AbfJUOGH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 10:06:07 -0400
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iMYJp-0005GP-K0; Mon, 21 Oct 2019 16:05:57 +0200
+To:     Steven Price <steven.price@arm.com>
+Subject: Re: [PATCH v6 08/10] arm/arm64: Provide a wrapper for SMCCC 1.1 calls
+X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="MnLPg7ZWsaic7Fhd"
-Content-Disposition: inline
-In-Reply-To: <c17182ac-67dd-d11f-5daf-066bf446b969@microchip.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 21 Oct 2019 15:05:57 +0100
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     Will Deacon <will@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <kvmarm@lists.cs.columbia.edu>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?Q?Radim_Kr=C4=8Dm=C3=A1?= =?UTF-8?Q?=C5=99?= 
+        <rkrcmar@redhat.com>, Russell King <linux@armlinux.org.uk>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Pouloze <suzuki.poulose@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>, <kvm@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+In-Reply-To: <890a7909-1083-2e6d-368a-f1d03788f5a1@arm.com>
+References: <20191011125930.40834-1-steven.price@arm.com>
+ <20191011125930.40834-9-steven.price@arm.com>
+ <099040bb979b7cb878a7f489033aacc7@www.loen.fr>
+ <890a7909-1083-2e6d-368a-f1d03788f5a1@arm.com>
+Message-ID: <760679a0a6fef6041b0e7bec8d04d81f@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: steven.price@arm.com, will@kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, catalin.marinas@arm.com, pbonzini@redhat.com, rkrcmar@redhat.com, linux@armlinux.org.uk, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, mark.rutland@arm.com, kvm@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2019-10-21 14:43, Steven Price wrote:
+> On 21/10/2019 12:42, Marc Zyngier wrote:
+>> On 2019-10-11 13:59, Steven Price wrote:
+> [...]
+>> All this should most probably go on top of the SMCCC conduit cleanup 
+>> that
+>> has already been already queued in the arm64 tree (see
+>> arm64/for-next/smccc-conduit-cleanup).
+>
+> Good point, I'll rebase. Are you happy for the entire series to be 
+> based
+> on top of that? i.e. based on commit e6ea46511b1a ("firmware: 
+> arm_sdei:
+> use common SMCCC_CONDUIT_*")
 
---MnLPg7ZWsaic7Fhd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Absolutely. I'll sync with Will and Catalin to get a stable branch that
+includes these commits.
 
-On Mon, Oct 07, 2019 at 07:53:21AM +0000, Eugen.Hristev@microchip.com wrote:
->=20
->=20
-> On 11.09.2019 11:24, Eugen Hristev - M18282 wrote:
-> > From: Eugen Hristev <eugen.hristev@microchip.com>
-> >=20
-> > Hello,
-> >=20
-> > This series adds support for analog and digital filters for i2c control=
-lers
-> >=20
-> > This series is based on the series:
-> > [PATCH v2 0/9] i2c: at91: filters support for at91 SoCs
-> > and later
-> > [PATCH v4 0/9] i2c: add support for filters
-> > and enhanced to add the bindings for all controllers plus an extra bind=
-ings
-> > for the width of the spikes in nanoseconds (digital filters) and cut-off
-> > frequency (analog filters)
-> >=20
-> > First, bindings are created for
-> > 'i2c-analog-filter'
-> > 'i2c-digital-filter'
-> > 'i2c-digital-filter-width-ns'
-> > 'i2c-analog-filter-cutoff-frequency'
-> >=20
-> > The support is added in the i2c core to retrieve filter width/cutoff fr=
-equency
-> > and add it to the timings structure.
-> > Next, the at91 driver is enhanced for supporting digital filter, advanc=
-ed
-> > digital filter (with selectable spike width) and the analog filter.
-> >=20
-> > Finally the device tree for two boards are modified to make use of the
-> > new properties.
-> >=20
-> > This series is the result of the comments on the ML in the direction
-> > requested: to make the bindings globally available for i2c drivers.
-> >=20
-> > Changes in v5:
-> > - renamed i2c-filter-width-ns to i2c-digital-filter-width-ns as this
-> > is applicable only to digital filter
-> > - created new binding i2c-digital-filter-width-ns for analog filters.
->=20
-> Hello Wolfram and Peter,
->=20
-> Are you happy with the changes in this version? I haven't heard from you=
-=20
-> since this latest update.
-> I am interested to know if anymore changes are required or maybe we can=
-=20
-> move further with this support.
+Thanks,
 
-So, I had a look now and I am happy. I will give Peter one more day to
-comment, otherwise I'll apply it tomorrow.
-
-Thanks for your patience and keeping at it!
-
-
---MnLPg7ZWsaic7Fhd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl2tuxsACgkQFA3kzBSg
-KbY6GQ//X5UmvTKTkgT+9BdG4luCpqZEKeKetljuT2RVeGL56TJwBRiOYWymfAa+
-U88PvGx1Q9mmI/E4AvzTAsnwjZiqACFw5n4NG+mWfWmd5H2P7ko6PpgVUL7Lk/0S
-zbP658UBLM1LBHjtDI4n1juS6daxP1m2Z43NaaiskaQFBmvWtPRo5mv0jpDdbYi2
-gMQ2Qo1efHoaBm+bdVu6Z8O71QktM5BhqKgAPxV9vWA0etSNqiDMII9qk9SmpSfE
-4JcqmuAOa0fhDzbc+wKaLZoq3Gk3WiOeTImFHEw5wKZJE80guUBWNiJ2Bl96apQT
-E/+M3VuTnS1VWqkS6w0oJ0lA/un8gf+CtYbZblirG05fv7suBSLGuCe2RZvl9pJM
-t/LHClLyZ/yBcYL9eAeMj1tM14II/rWES1go5UxhukZW2c7Eqep4UOPTtYQg4rwO
-EozMsz3sueMFU5l6llkLW1t+tb8DnLlvlzB6wZtNlLQjL8cYMBfZJrdBy9N0wX1n
-nxWhQVIjer4AluEwqpGXJ0bPDrClRr9zgznUzG4ydGRAKSNHLJ01kvvxgQmTPYr6
-PSCbo+4EZWFVMZNCi0DGWQFeRLCsqoN+NsHhyM0z7wAc6TUbuaviB1qpRq7+ALkp
-GktKG3WXzYEsJmEMiU5ZsJRMC/wIRicGcF7GxqJx1VGO6712MXo=
-=4jBB
------END PGP SIGNATURE-----
-
---MnLPg7ZWsaic7Fhd--
+         M.
+-- 
+Jazz is not dead. It just smells funny...
