@@ -2,79 +2,138 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E54E2CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 20:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C344FCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 20:10:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C497E20873
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 20:10:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93C912084C
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 20:10:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iuWukpnh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730269AbfJUUKZ (ORCPT
+        id S1730303AbfJUUKb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 16:10:25 -0400
-Received: from sauhun.de ([88.99.104.3]:50516 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726672AbfJUUKZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 16:10:25 -0400
-Received: from localhost (x4dbffd67.dyn.telefonica.de [77.191.253.103])
-        by pokefinder.org (Postfix) with ESMTPSA id 870832C0076;
-        Mon, 21 Oct 2019 22:10:23 +0200 (CEST)
-Date:   Mon, 21 Oct 2019 22:10:23 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Chuhong Yuan <hslester96@gmail.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mmc: renesas_sdhi: add checks for pinctrl_lookup_state
-Message-ID: <20191021201022.GA3607@kunai>
-References: <20191018131338.11713-1-hslester96@gmail.com>
- <CAPDyKFoBYchP96hv=7XfTo8CrCSD+KC0h_oFRAsOYT-Lc1SFZQ@mail.gmail.com>
+        Mon, 21 Oct 2019 16:10:31 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:31684 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730286AbfJUUKb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 16:10:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571688629;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=tIRfkARawuYx5E17weGS9sdJ1VOiUwg/d8BMqTS+xF4=;
+        b=iuWukpnhAp5fVoiPpV1ZhizQuaprjNdTX0ggFKuwzBko00BXMW67Q01WxdvcoiCWndl6L+
+        uVjqRtq9QRJGNyPm3XzeDlmRQ+sHpk6TrVga1qTErhVKtJRji1Ww3rFQIfUQ6AhE8TOqjP
+        FuuMLOJxPBN1msbcS4lc7EOfz4xo5aU=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-234-xNJjvuIxMJK-74RHC9vx2w-1; Mon, 21 Oct 2019 16:10:27 -0400
+Received: by mail-wm1-f71.google.com with SMTP id o188so6502207wmo.5
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 13:10:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=SMEGf4c6Ma+Bze2+ZiGp43bjN8huF03EIdt6wvA9wXw=;
+        b=gshM/m8tkFdMOfmLc+EPYK8gxsrVztI+KuANW559T+nA1EibOjkFik4FkH/dYBgphJ
+         Ptgm1pBmFFK+ow0ZaprYoBJxbT5lUqkerkUrMq5XMAlNzeTts4hr3wvLQDwpFRwgj1lz
+         9xLm0+EwZ7/5egBaDTv341CTpGrEfxDOo0YWgXCdI1NWvWTTROqkTmfSylMIKC4gRVLc
+         s1BwObTtUfpByUFeV3OrVxfIShMPmFYSi4kqf4eXomMzSOkSbZH7qOV+7Wpj6DxKO1YT
+         9PPgq5UiZOZRD3kwb1crEHcc9IQ/sXC7HJWmezQpByORGdY8dRepblIz30qICN2arlyw
+         yWfQ==
+X-Gm-Message-State: APjAAAVDpvfWESO4S18VylT8FURA5N4Qa9aAC4EBMmK5i71znCWvSR8l
+        ZNg7G5IM5G/e+6LuGi30jKolool98xR93gRwAb/RJ3oT16hsXdGXW6leKYFtdLwFuTbIVtpU8fm
+        8aCmH640AxoIlbfd5g/yRs0O2
+X-Received: by 2002:a1c:c912:: with SMTP id f18mr8901559wmb.168.1571688626069;
+        Mon, 21 Oct 2019 13:10:26 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqx15FjYZFXXvyV63hNCvlR9L6mdwPxb6AMjC6rMphOyiOSYm40k8lVTtPDL8hhtsd7I1xplIA==
+X-Received: by 2002:a1c:c912:: with SMTP id f18mr8901544wmb.168.1571688625838;
+        Mon, 21 Oct 2019 13:10:25 -0700 (PDT)
+Received: from turbo.teknoraver.net (net-109-115-41-234.cust.vodafonedsl.it. [109.115.41.234])
+        by smtp.gmail.com with ESMTPSA id l18sm20701933wrn.48.2019.10.21.13.10.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Oct 2019 13:10:25 -0700 (PDT)
+From:   Matteo Croce <mcroce@redhat.com>
+To:     netdev@vger.kernel.org
+Cc:     Jay Vosburgh <j.vosburgh@gmail.com>,
+        Veaceslav Falico <vfalico@gmail.com>,
+        Andy Gospodarek <andy@greyhouse.net>,
+        "David S . Miller " <davem@davemloft.net>,
+        Stanislav Fomichev <sdf@google.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Song Liu <songliubraving@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Paul Blakey <paulb@mellanox.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH net-next 1/4] flow_dissector: add meaningful comments
+Date:   Mon, 21 Oct 2019 22:09:45 +0200
+Message-Id: <20191021200948.23775-2-mcroce@redhat.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20191021200948.23775-1-mcroce@redhat.com>
+References: <20191021200948.23775-1-mcroce@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="YZ5djTAD1cGYuMQK"
-Content-Disposition: inline
-In-Reply-To: <CAPDyKFoBYchP96hv=7XfTo8CrCSD+KC0h_oFRAsOYT-Lc1SFZQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MC-Unique: xNJjvuIxMJK-74RHC9vx2w-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Documents two piece of code which can't be understood at a glance.
 
---YZ5djTAD1cGYuMQK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Matteo Croce <mcroce@redhat.com>
+---
+ include/net/flow_dissector.h | 1 +
+ net/core/flow_dissector.c    | 6 ++++++
+ 2 files changed, 7 insertions(+)
 
+diff --git a/include/net/flow_dissector.h b/include/net/flow_dissector.h
+index 90bd210be060..7747af3cc500 100644
+--- a/include/net/flow_dissector.h
++++ b/include/net/flow_dissector.h
+@@ -282,6 +282,7 @@ struct flow_keys {
+ =09struct flow_dissector_key_vlan cvlan;
+ =09struct flow_dissector_key_keyid keyid;
+ =09struct flow_dissector_key_ports ports;
++=09/* 'addrs' must be the last member */
+ =09struct flow_dissector_key_addrs addrs;
+ };
+=20
+diff --git a/net/core/flow_dissector.c b/net/core/flow_dissector.c
+index 7c09d87d3269..affde70dad47 100644
+--- a/net/core/flow_dissector.c
++++ b/net/core/flow_dissector.c
+@@ -1374,6 +1374,9 @@ static inline size_t flow_keys_hash_length(const stru=
+ct flow_keys *flow)
+ {
+ =09size_t diff =3D FLOW_KEYS_HASH_OFFSET + sizeof(flow->addrs);
+ =09BUILD_BUG_ON((sizeof(*flow) - FLOW_KEYS_HASH_OFFSET) % sizeof(u32));
++=09/* flow.addrs MUST be the last member in struct flow_keys because
++=09 * different L3 protocols have different address length
++=09 */
+ =09BUILD_BUG_ON(offsetof(typeof(*flow), addrs) !=3D
+ =09=09     sizeof(*flow) - sizeof(flow->addrs));
+=20
+@@ -1421,6 +1424,9 @@ __be32 flow_get_u32_dst(const struct flow_keys *flow)
+ }
+ EXPORT_SYMBOL(flow_get_u32_dst);
+=20
++/* Sort the source and destination IP (and the ports if the IP are the sam=
+e),
++ * to have consistent hash within the two directions
++ */
+ static inline void __flow_hash_consistentify(struct flow_keys *keys)
+ {
+ =09int addr_diff, i;
+--=20
+2.21.0
 
-> I understand that this is only used for those variants that supports
-> UHS-I via the renesas_sdhi_start_signal_voltage_switch(). Wolfram, is
-> this fine you think?
-
-I'll double check tomorrow.
-
-
---YZ5djTAD1cGYuMQK
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl2uEKoACgkQFA3kzBSg
-KbapZA//fFBrrLLvrg3bAaZ7CuBwPbtyzstjWpD7TY7gdaf29v5TZp4H0ZL2nFAj
-N2NuwXTrPg2mmpxH9sIZoFtB9MxBCyjBnvMEuKKE/8XMsz7SAa8CWwSXdix6a70u
-abCEBGrYlAdYEgJJvbcYUyBY9dnRR/YB6/BnIkpBeDYE5EFBdLviBCN0Cc8oWMaZ
-qYVhAdP+fJyMu8aHh3fM0AfEzd9hNLs5cBh/cyKFSt+ySfO4TwH+3TvP09yL0Ira
-bQ5K3evh/GF6DxYkpMFOxz/MbSAL06IPboB6VCzDsonAXdAYqxGnmRkHWICfYB3h
-4WBQswSIqDM1sMy233maH95MObNKDmcFby17s5j+QdYwwhAui8zadBblTC/WM6o/
-b1WVRoM74PThNpzYQuECXo2UbEYgcgVr192BM+uFTY9RBRfdlFqrtiMMlsfCl0hm
-0qiCt0mv6JadtOFl8tpj1ChZYyC6aObx9zlI1fSJxqJGcsKMTrVAegGF9Lw68zZn
-TtFs/eKVbcaGZwR2yq1nIEtjTla83FjSI1WUn8DKTTGJsBBBw3STZ0qtMZ+RsUZk
-RkbjkPUAukURo9MY8n/zj4qsDZX8h8arq+y+iYd/Agv4hFLDz59uhwwf86U+kTg5
-LhIHgr48cgFmygvlHGFPfYLmyljuec+0X9R55mvCvDpms9PNAJQ=
-=813x
------END PGP SIGNATURE-----
-
---YZ5djTAD1cGYuMQK--
