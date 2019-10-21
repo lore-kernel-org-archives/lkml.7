@@ -2,319 +2,153 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54842CA9EB0
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:50:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B8DFCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:52:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21A3120B7C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:50:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571673001;
-	bh=ZdbTJMpphz2DyRdVeSaDcLbx4qWNr119tOqnk+bZl0E=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=S3JRVKSBd3uMNn18I9aZYkLKZPtrzTv8fCQyO9XVJOWCroKGJBxwWuFS3+ym/n6ak
-	 ZmC/+ImHd5b9ykvxZVaNoS6fQtsWDI+mXu8uqj0/HKYalA4MNP+o5fgpAhNW6dioGu
-	 Fq7lnHhIYKWCaPI8BmZj5FypV7IyhSu4IciBa4Bs=
+	by mail.kernel.org (Postfix) with ESMTP id C54D720873
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:52:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="XPj+XOjk";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="Vp2Fj/rx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729684AbfJUPt7 (ORCPT
+        id S1729364AbfJUPwX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 11:49:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55772 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727607AbfJUPt7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 11:49:59 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDF2C20873;
-        Mon, 21 Oct 2019 15:49:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571672997;
-        bh=ZdbTJMpphz2DyRdVeSaDcLbx4qWNr119tOqnk+bZl0E=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=WdnPJiHLB69q+zppMU3QoyxfUvnxsinUH4fT2socqL3lRo+uLTklVMr2BQXGew/df
-         ODQzdCFhmiHCYadmmoUnO060nWXaMP9+t+4GNMVRVXNSrF/XnZmlvHsdkV4WzIlwj0
-         N5ua87fXnyCghwVU9NfA/uq2nf1+WbLkA9aRaR/M=
-Date:   Mon, 21 Oct 2019 16:49:51 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Gwendal Grignou <gwendal@chromium.org>
-Cc:     briannorris@chromium.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, lee.jones@linaro.org, bleung@chromium.org,
-        enric.balletbo@collabora.com, dianders@chromium.org,
-        groeck@chromium.org, fabien.lahoudere@collabora.com,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-Subject: Re: [PATCH v2 02/18] mfd: cros_ec: Add sensor_count and make
- check_features public
-Message-ID: <20191021164951.0abfaa85@archlinux>
-In-Reply-To: <20191021055403.67849-3-gwendal@chromium.org>
-References: <20191021055403.67849-1-gwendal@chromium.org>
-        <20191021055403.67849-3-gwendal@chromium.org>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 21 Oct 2019 11:52:23 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:47892 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727403AbfJUPwX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 11:52:23 -0400
+Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
+        by m0001303.ppops.net (8.16.0.42/8.16.0.42) with SMTP id x9LFm1RQ017021;
+        Mon, 21 Oct 2019 08:51:25 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=uTdQQbaXJGWl8bjueKDx/70G1inUU71xdDfkSPjSp5Y=;
+ b=XPj+XOjkwktMukmQl9acRlKT+igkLPPFJQeI4JmMUH7rois7PjIpbAGDo350K0qFFYdE
+ ClkArf+N3PAs2rlOzRTBmtIvI6jAODHMipQLTikrvd6pl5npgSaR8f8vmm3Q9i25eks1
+ gQFZvUltDmHNVKTfcUOLqq1p3A0VQqsGFJQ= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by m0001303.ppops.net with ESMTP id 2vqx5nqj6b-5
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Mon, 21 Oct 2019 08:51:24 -0700
+Received: from prn-hub06.TheFacebook.com (2620:10d:c081:35::130) by
+ prn-hub01.TheFacebook.com (2620:10d:c081:35::125) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Mon, 21 Oct 2019 08:51:24 -0700
+Received: from NAM04-SN1-obe.outbound.protection.outlook.com (192.168.54.28)
+ by o365-in.thefacebook.com (192.168.16.30) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Mon, 21 Oct 2019 08:51:24 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Nd3uJKWNn7mL5ciT62BvDM1MI5dFhM7Lfn6/U86WHDTYjPk1XUunrEsuSKuhJr5I70Y28RQgSV/wqlxY3wp8qRJdJ5CnKmX1B+EWsVylZboRF0OVXsAJm6jTiKWmdaECHw6uSV7ADMcrJPsOQ9BtEtSFXOjWdgnE4QNs7tuOZCX57yCuSRp7rJi/RVr7GeHmgtF+8kcXr7EuD1qnkLBLiLXXyBRMVoTxaVDO1tWN5QOJCxot580zLP2WbzejBn1P/XpqQD/d2fvW68CmygheVkyf5OeZRoDeQpCaUtydL1XNuWs7h94vq8Kk7gTIBQyq4YFg9qaW4EolnnrWWhrxzA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uTdQQbaXJGWl8bjueKDx/70G1inUU71xdDfkSPjSp5Y=;
+ b=ffClsvHn8h4cnSuNgnf6GUz8JHfNShV3vAPiRufqWRgPWwoIUhEvmCXeFkwx3MxZHAnTOdeS0AD4JxO4xpYIFxGtAqqD8dYN0Nkk4yZXCIw2hgS3+d9a1g3BoWyHPYBd7FH0/i72M9lgQk4GkpiSlZaMPSU56yKDvOtwxYI2kWTyWeZB+8v8tyPUZRZ1CT0F5CWfOTM5W5SObBYSQM8pqt5wqeT9LblCELcVHe/sbiQCottcUWHSOVlt1MB70msor2XEHTqUchbI6RzGhc4sumUJLPtU4N0VIurPIx/C7OJHMLhmqMUksET/iTh047gjFcwRhYpq0aLx0uMR2wXI7A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uTdQQbaXJGWl8bjueKDx/70G1inUU71xdDfkSPjSp5Y=;
+ b=Vp2Fj/rxCsirrmfYyVEOv3umymwM9++jGD7TCCLgNxAo+Ydvp0yZfDydg2K9avfk8AVcdku0FaMA4SbJYX5i8RsBYhROvShJoeEghLQ8uDgN4fT1E2i/pUaQiCsKskRehmV1CbL+NpjnbkyQkRqwBLugv4pn6aapeNv2pyMl/0g=
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.3.22) by
+ MWHPR15MB1583.namprd15.prod.outlook.com (10.173.235.15) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2367.20; Mon, 21 Oct 2019 15:51:23 +0000
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::fdc8:5546:bace:15f5]) by MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::fdc8:5546:bace:15f5%5]) with mapi id 15.20.2367.022; Mon, 21 Oct 2019
+ 15:51:23 +0000
+From:   Song Liu <songliubraving@fb.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+CC:     Prateek Sood <prsood@codeaurora.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kaushalk@codeaurora.org" <kaushalk@codeaurora.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH] trace: fix race in perf_trace_buf initialization
+Thread-Topic: [PATCH] trace: fix race in perf_trace_buf initialization
+Thread-Index: AQHVhfjE7dIEhO7k+kaJeehh7fcyAKdkiAKAgAC4ygCAAAIIAA==
+Date:   Mon, 21 Oct 2019 15:51:22 +0000
+Message-ID: <B428485E-ADF9-4931-A35E-D2F5C4DC15B9@fb.com>
+References: <1571120245-4186-1-git-send-email-prsood@codeaurora.org>
+ <20191018171216.3e446f1e@gandalf.local.home>
+ <59d02ee4-5329-5cfd-1fc2-790d99fe4b0d@codeaurora.org>
+ <20191021114406.15b6ee88@gandalf.local.home>
+In-Reply-To: <20191021114406.15b6ee88@gandalf.local.home>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3594.4.19)
+x-originating-ip: [2620:10d:c090:180::cf63]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 240ef7cd-10f0-471b-262e-08d7563e85e8
+x-ms-traffictypediagnostic: MWHPR15MB1583:
+x-microsoft-antispam-prvs: <MWHPR15MB1583BC1057C5714634230E62B3690@MWHPR15MB1583.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5236;
+x-forefront-prvs: 0197AFBD92
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(346002)(366004)(136003)(39860400002)(376002)(199004)(189003)(476003)(36756003)(86362001)(6436002)(102836004)(486006)(8936002)(446003)(6246003)(46003)(66446008)(64756008)(14454004)(4744005)(186003)(229853002)(54906003)(76176011)(66946007)(66476007)(99286004)(6512007)(6116002)(8676002)(6486002)(66556008)(50226002)(7736002)(2906002)(305945005)(316002)(76116006)(478600001)(33656002)(71200400001)(71190400001)(6506007)(256004)(5660300002)(81156014)(2616005)(25786009)(53546011)(4326008)(81166006)(11346002)(6916009);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1583;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 6boAMDmwB8tQ9fgDWYuwzP8UH3FZ9ebuf7WS1u1+HMC6Fn1TqO/A91O1dsLYAlGUqzdm4vFVxMv3UEDxyIwf3WOGbZMWFh/SKiXlYKveCr5BeycLQ7mD6ZRmeGkGdr7ce4eKkHviydTD+H+uTC45ZHR1RJZi+iGVW/B7zXyEaS5Le+JTbsnuVY0KS3ztUvoLycnDSXC/d6Q5yHsI/w5LU2pjN2+9Ipvg1l8x3q9u15EOfFqn0ZvVsNijNLbOfMhA5b0MMtcJgebbfCMQ76ZhdlXnY5HXdS7DcOpEoCpH1951EmapEhlfLXP8x4fn7sBe9prwK+mlISQnd7ZcXe00GJILSOW9RlzHfXeYz2JhrZSqmaUpx3yLvVS92V0TlpuSWZWN1Dx8dI/AdGlpwR+4eiuuKmm5xhtDm8c1ZC9DA4QS/HntzlhOR4IMIieAWW2P
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <151FCFDA27C8DF49852F685C28532EFE@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-CrossTenant-Network-Message-Id: 240ef7cd-10f0-471b-262e-08d7563e85e8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Oct 2019 15:51:22.8710
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Scq7c+eONZMwXmSNjnDop2HfTpLJI99CJXQZ67IyZIAIA/kj3BU0HkR89S6wpqu/LylRsvCsEw5JOCKwv8s2vQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1583
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-21_04:2019-10-21,2019-10-21 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 clxscore=1011
+ phishscore=0 mlxscore=0 impostorscore=0 malwarescore=0 spamscore=0
+ lowpriorityscore=0 adultscore=0 suspectscore=0 mlxlogscore=914
+ priorityscore=1501 bulkscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-1908290000 definitions=main-1910210149
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 20 Oct 2019 22:53:47 -0700
-Gwendal Grignou <gwendal@chromium.org> wrote:
-
-> Add a new function to return the number of MEMS sensors available in a
-> ChromeOS Embedded Controller.
-> It uses MOTIONSENSE_CMD_DUMP if available or a specific memory map ACPI
-> registers to find out.
-> 
-> Also, make check_features public as it can be useful for other drivers
-> to know what the Embedded Controller supports.
-> 
-> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
-One refactoring suggestion, though up to you whether you bother.
-+ one kernel-doc formatting issue.
-
-Otherwise seems sane to me, but I don't know the hardware well enough
-to give detailed comments.
-
-Thanks,
-
-Jonathan
-
-> ---
-> Changes in v2:
->   Fix spelling in commit message.
->   Cleanup the case where DUMP command is not supported.
->   Move code from mfd to platform/chrome/
-> 
->  drivers/mfd/cros_ec_dev.c                   |  32 ------
->  drivers/platform/chrome/cros_ec_proto.c     | 116 ++++++++++++++++++++
->  include/linux/platform_data/cros_ec_proto.h |   5 +
->  3 files changed, 121 insertions(+), 32 deletions(-)
-> 
-> diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
-> index 6e6dfd6c18711..a35104e35cb4e 100644
-> --- a/drivers/mfd/cros_ec_dev.c
-> +++ b/drivers/mfd/cros_ec_dev.c
-> @@ -112,38 +112,6 @@ static const struct mfd_cell cros_ec_vbc_cells[] = {
->  	{ .name = "cros-ec-vbc", }
->  };
->  
-> -static int cros_ec_check_features(struct cros_ec_dev *ec, int feature)
-> -{
-> -	struct cros_ec_command *msg;
-> -	int ret;
-> -
-> -	if (ec->features[0] == -1U && ec->features[1] == -1U) {
-> -		/* features bitmap not read yet */
-> -		msg = kzalloc(sizeof(*msg) + sizeof(ec->features), GFP_KERNEL);
-> -		if (!msg)
-> -			return -ENOMEM;
-> -
-> -		msg->command = EC_CMD_GET_FEATURES + ec->cmd_offset;
-> -		msg->insize = sizeof(ec->features);
-> -
-> -		ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
-> -		if (ret < 0) {
-> -			dev_warn(ec->dev, "cannot get EC features: %d/%d\n",
-> -				 ret, msg->result);
-> -			memset(ec->features, 0, sizeof(ec->features));
-> -		} else {
-> -			memcpy(ec->features, msg->data, sizeof(ec->features));
-> -		}
-> -
-> -		dev_dbg(ec->dev, "EC features %08x %08x\n",
-> -			ec->features[0], ec->features[1]);
-> -
-> -		kfree(msg);
-> -	}
-> -
-> -	return ec->features[feature / 32] & EC_FEATURE_MASK_0(feature);
-> -}
-> -
->  static void cros_ec_class_release(struct device *dev)
->  {
->  	kfree(to_cros_ec_dev(dev));
-> diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
-> index 7db58771ec77c..2357c717399ad 100644
-> --- a/drivers/platform/chrome/cros_ec_proto.c
-> +++ b/drivers/platform/chrome/cros_ec_proto.c
-> @@ -717,3 +717,119 @@ u32 cros_ec_get_host_event(struct cros_ec_device *ec_dev)
->  	return host_event;
->  }
->  EXPORT_SYMBOL(cros_ec_get_host_event);
-> +
-> +/**
-> + * cros_ec_check_features - Test for the presence of EC features
-> + *
-> + * Call this function to test whether the ChromeOS EC supports a feature.
-
-I'm fairly sure that's not correct kernel-doc.  Longer description should come
-after the parameters.
-
-> + *
-> + * @ec_dev: EC device: does not have to be connected directly to the AP,
-> + *          can be daisy chained through another device.
-> + * @feature: One of ec_feature_code bit.
-> + * @return: 1 if supported, 0 if not
-> + */
-> +int cros_ec_check_features(struct cros_ec_dev *ec, int feature)
-> +{
-> +	struct cros_ec_command *msg;
-> +	int ret;
-> +
-> +	if (ec->features[0] == -1U && ec->features[1] == -1U) {
-> +		/* features bitmap not read yet */
-> +		msg = kzalloc(sizeof(*msg) + sizeof(ec->features), GFP_KERNEL);
-> +		if (!msg)
-> +			return -ENOMEM;
-> +
-> +		msg->command = EC_CMD_GET_FEATURES + ec->cmd_offset;
-> +		msg->insize = sizeof(ec->features);
-> +
-> +		ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
-> +		if (ret < 0) {
-> +			dev_warn(ec->dev, "cannot get EC features: %d/%d\n",
-> +				 ret, msg->result);
-> +			memset(ec->features, 0, sizeof(ec->features));
-> +		} else {
-> +			memcpy(ec->features, msg->data, sizeof(ec->features));
-> +		}
-> +
-> +		dev_dbg(ec->dev, "EC features %08x %08x\n",
-> +			ec->features[0], ec->features[1]);
-> +
-> +		kfree(msg);
-> +	}
-> +
-> +	return ec->features[feature / 32] & EC_FEATURE_MASK_0(feature);
-> +}
-> +EXPORT_SYMBOL_GPL(cros_ec_check_features);
-> +
-> +/**
-> + * Return the number of MEMS sensors supported.
-> + *
-> + * @ec_dev: EC device: does not have to be connected directly to the AP,
-> + *          can be daisy chained through another device.
-> + * Return < 0 in case of error.
-> + */
-> +int cros_ec_get_sensor_count(struct cros_ec_dev *ec)
-> +{
-> +	/*
-> +	 * Issue a command to get the number of sensor reported.
-> +	 * If not supported, check for legacy mode.
-> +	 */
-> +	int ret, sensor_count;
-> +	struct ec_params_motion_sense *params;
-> +	struct ec_response_motion_sense *resp;
-> +	struct cros_ec_command *msg;
-> +	struct cros_ec_device *ec_dev = ec->ec_dev;
-> +	u8 status;
-> +
-> +	msg = kzalloc(sizeof(struct cros_ec_command) +
-> +			max(sizeof(*params), sizeof(*resp)), GFP_KERNEL);
-> +	if (!msg)
-> +		return -ENOMEM;
-> +
-> +	msg->version = 1;
-> +	msg->command = EC_CMD_MOTION_SENSE_CMD + ec->cmd_offset;
-> +	msg->outsize = sizeof(*params);
-> +	msg->insize = sizeof(*resp);
-> +
-> +	params = (struct ec_params_motion_sense *)msg->data;
-> +	params->cmd = MOTIONSENSE_CMD_DUMP;
-> +
-> +	ret = cros_ec_cmd_xfer(ec->ec_dev, msg);
-> +	if (ret < 0) {
-> +		sensor_count = ret;
-> +	} else if (msg->result != EC_RES_SUCCESS) {
-> +		sensor_count = -EPROTO;
-> +	} else {
-> +		resp = (struct ec_response_motion_sense *)msg->data;
-> +		sensor_count = resp->dump.sensor_count;
-> +	}
-> +	kfree(msg);
-> +
-
-Can we simplify the following flow?  I think the following is the same and
-breaks the individual paths out more clearly to my eyes.
-
-I'm not totally sure this helps unwinding the fairly complex flow here,
-so up to you.
 
 
-	/* could break this up into the good path, and the bad but not EPROTO path... */
-	if (sensor_count != -EPROTO)
-		return sensor_count;
+> On Oct 21, 2019, at 8:44 AM, Steven Rostedt <rostedt@goodmis.org> wrote:
+>=20
+> On Mon, 21 Oct 2019 10:12:43 +0530
+> Prateek Sood <prsood@codeaurora.org> wrote:
+>=20
+>> Hi Song,
+>>=20
+>> Could you please help in this query.
+>=20
+> I have it ready to go to Linus. I'll wait a few hours, and if I don't
+> hear anything I'll send it out.
+>=20
 
-	if (ec->cmd_offset != 0 || ec_dev->cmd_readmem == NULL) {
-		/* EC responded, but does not understand DUMP command. */
-		return 0;
+Sorry for the late response.=20
 
-	ret = ec_dev->cmd_readmem(ec_dev, EC_MEMMAP_ACC_STATUS,
-				1, &status);
-	if (ret < 0)
-		return 0;
+The fix looks good to me.=20
 
-	if (status & EC_MEMMAP_ACC_STATUS_PRESENCE_BIT)
-		/* 2 sensors, one in the lid, one in the base. */
-		return 2;
+Acked-by: Song Liu <songliubraving@fb.com>=20
 
-	else
-		/* EC uses LPC interface and no sensors are presented. */
-		return 0;
-}
-
-> +	/*
-> +	 * Check legacy mode: Let's find out if sensors are accessible
-> +	 * via LPC interface.
-> +	 */
-> +	if (sensor_count == -EPROTO &&
-> +	    ec->cmd_offset == 0 &&
-> +	    ec_dev->cmd_readmem) {
-> +		ret = ec_dev->cmd_readmem(ec_dev, EC_MEMMAP_ACC_STATUS,
-> +				1, &status);
-> +		if ((ret >= 0) &&
-> +		    (status & EC_MEMMAP_ACC_STATUS_PRESENCE_BIT)) {
-> +			/*
-> +			 * We have 2 sensors, one in the lid, one in the base.
-> +			 */
-> +			sensor_count = 2;
-> +		} else {
-> +			/*
-> +			 * EC uses LPC interface and no sensors are presented.
-> +			 */
-> +			sensor_count = 0;
-> +		}
-> +	} else if (sensor_count == -EPROTO) {
-> +		/* EC responded, but does not understand DUMP command. */
-> +		sensor_count = 0;
-> +	}
-> +	return sensor_count;
-> +}
-> +EXPORT_SYMBOL_GPL(cros_ec_get_sensor_count);
-> diff --git a/include/linux/platform_data/cros_ec_proto.h b/include/linux/platform_data/cros_ec_proto.h
-> index 0d4e4aaed37af..f3de0662135d5 100644
-> --- a/include/linux/platform_data/cros_ec_proto.h
-> +++ b/include/linux/platform_data/cros_ec_proto.h
-> @@ -12,6 +12,7 @@
->  #include <linux/mutex.h>
->  #include <linux/notifier.h>
->  
-> +#include <linux/mfd/cros_ec.h>
->  #include <linux/platform_data/cros_ec_commands.h>
->  
->  #define CROS_EC_DEV_NAME	"cros_ec"
-> @@ -213,4 +214,8 @@ int cros_ec_get_next_event(struct cros_ec_device *ec_dev, bool *wake_event);
->  
->  u32 cros_ec_get_host_event(struct cros_ec_device *ec_dev);
->  
-> +int cros_ec_check_features(struct cros_ec_dev *ec, int feature);
-> +
-> +int cros_ec_get_sensor_count(struct cros_ec_dev *ec);
-> +
->  #endif /* __LINUX_CROS_EC_PROTO_H */
 
