@@ -2,207 +2,119 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93B60CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:24:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9622CA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:26:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57F6620684
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:24:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 887AE205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:26:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Hxap7ljD"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WLB/R7g9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727482AbfJUJYl (ORCPT
+        id S1727429AbfJUJ0L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 05:24:41 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:46789 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727017AbfJUJYk (ORCPT
+        Mon, 21 Oct 2019 05:26:11 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:54230 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726725AbfJUJ0L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 05:24:40 -0400
-Received: by mail-ot1-f65.google.com with SMTP id 89so10339798oth.13
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 02:24:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DELCu3OlSAGY6ULseg5/HJriVPHZSLSqlAmQPI5GeFw=;
-        b=Hxap7ljDfVD81M07heYfSLFD2HS9D/dLrnN25mV7jWYSebOfff61JKzGDM8Kdi6RSZ
-         NCWz8mpSzbUXPhRWgG5iphJ5VxhrqD53tLFlf1ZV/fJIMSv/wSuUEjDhZSMeytpGyJ/s
-         LcHGzAfhtsjzFexpxiqtJrbBIKU6B0exOK8QlLKiHB9DM86NGOOZghhCKwhIw+Hs4QGa
-         THkRqd/j+3QcGEmRTpvaUzZf8Vy7fk0/Kg+7G0dhhYUCR9tKordqCFG/22fEdf3lKn4x
-         Km5EonpBbBn0BdpHq9BFLtkOzPgnSwSJtRDLgHBxcshRXtrVfacb3PJqLsIT0N/aE4RU
-         sIwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DELCu3OlSAGY6ULseg5/HJriVPHZSLSqlAmQPI5GeFw=;
-        b=LVeJ9vNMpxolCfnpBplv/h4WC7bT7TAiH8ufQXrLInhIkXpINoL1wDmeulv5/zW1aZ
-         pAbTmNuBGjfIFa/6JkjFc1BM436+Eu6AXhqivgGXK9Sv75QVKyRBbHfCcq2/oa1oGD+3
-         f/xo80EyHzEHfg9y5NoruPVzYysq0D99ofxk9oTKtsBEjiGg51wCaeNR/fk1PPCQR9pl
-         hKS1vyqN0/W/FEy57CUbuRe9prypkUx9u/wvvy7uD7cGBVdv5f15wRfwKy+1dybXLaPp
-         5+v/WwMBu50gW+tACb44kwY3Ey9CLkXNubZRX82myA3IxNUzIn5dxqUdmOvbvJO+WH8S
-         dpFQ==
-X-Gm-Message-State: APjAAAUMQAnkohJUIi6arw6NbRkecygb4LgAErNEk2OqC+BIZtSp3fhs
-        dCmjv25arawVD22BRFKBddyJCQ72rVixVMXSZc1VHjHuM1qUnQ==
-X-Google-Smtp-Source: APXvYqyNe6uu8LVMvmDZSgGvrWnt+hJcoNmoQaGw4YBSrU/2RhEEdK8PfPuRGqpe6mRLNzkgLhwlByZ7gQD0m5eBKGo=
-X-Received: by 2002:a9d:7590:: with SMTP id s16mr17338841otk.2.1571649878890;
- Mon, 21 Oct 2019 02:24:38 -0700 (PDT)
+        Mon, 21 Oct 2019 05:26:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=nz7XHn8Wn9vHGJEsHV8wPOEtsgrcQZ+NF/vEwprloJM=; b=WLB/R7g9wGR4sSGezk+xFo+vB
+        qNo7wsxEmKtjxu5txmX6UJzmR3yRmLcNUXM914HztSHzfgBpmNpf4judsTy3/r4wV3qEI8kWuu4TT
+        2pBiy63Z4Hut0AS5yfueZASN48g6z9iV5rR6zFsVtijo2TUUEEv7eQihEyqIPjYIzN//fG4rm/HDe
+        Wj/vqVnwb8D/LHiwoR/4a6On5KNWDBX+0YTZv3Oa8Yl2OwVKibPNQwFB+jxZ02amU00Ggwp6MSXYh
+        4CiNBoH+8guh5j8HOcNJ9cb8ZnWlBRHOUGL+rkll1ZhXfW/CrF5t9AXlqJOfy9dP5kowmj/PTLd1V
+        Dleff4O8g==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iMTwv-0001Nc-K9; Mon, 21 Oct 2019 09:26:01 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C8EA2301124;
+        Mon, 21 Oct 2019 11:25:02 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D72662022BA0B; Mon, 21 Oct 2019 11:25:59 +0200 (CEST)
+Date:   Mon, 21 Oct 2019 11:25:59 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+        mhiramat@kernel.org, bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, jpoimboe@redhat.com, jeyu@kernel.org
+Subject: Re: [PATCH v4 10/16] x86/alternative: Shrink text_poke_loc
+Message-ID: <20191021092559.GB1800@hirez.programming.kicks-ass.net>
+References: <20191018073525.768931536@infradead.org>
+ <20191018074634.514629541@infradead.org>
+ <20191021090104.GB102207@gmail.com>
 MIME-Version: 1.0
-References: <20191020173010.GA14744@avx2>
-In-Reply-To: <20191020173010.GA14744@avx2>
-From:   Marco Elver <elver@google.com>
-Date:   Mon, 21 Oct 2019 11:24:27 +0200
-Message-ID: <CANpmjNPzkYQjQ1mtJ6-h+6-=igD=GSnN9Sr6B6jpXrH9UJEUxg@mail.gmail.com>
-Subject: Re: [PATCH] proc: fix inode uid/gid writeback race
-To:     Alexey Dobriyan <adobriyan@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191021090104.GB102207@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 20 Oct 2019 at 19:30, Alexey Dobriyan <adobriyan@gmail.com> wrote:
->
-> (euid, egid) pair is snapshotted correctly from task under RCU,
-> but writeback to inode can be done in any order.
->
-> Fix by doing writeback under inode->i_lock where necessary
-> (/proc/* , /proc/*/fd/* , /proc/*/map_files/* revalidate).
->
-> Reported-by: syzbot+e392f8008a294fdf8891@syzkaller.appspotmail.com
-> Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
-> ---
+On Mon, Oct 21, 2019 at 11:01:04AM +0200, Ingo Molnar wrote:
+> 
+> * Peter Zijlstra <peterz@infradead.org> wrote:
+> 
+> > Employ the fact that all text must be within a s32 displacement of one
+> > another to shrink the text_poke_loc::addr field. Make it relative to
+> > _stext.
+> > 
+> > This then shrinks struct text_poke_loc to 16 bytes, and consequently
+> > increases TP_VEC_MAX from 170 to 256.
+> > 
+> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > ---
+> >  arch/x86/kernel/alternative.c |   23 ++++++++++++++---------
+> >  1 file changed, 14 insertions(+), 9 deletions(-)
+> > 
+> > --- a/arch/x86/kernel/alternative.c
+> > +++ b/arch/x86/kernel/alternative.c
+> > @@ -937,7 +937,7 @@ static void do_sync_core(void *info)
+> >  }
+> >  
+> >  struct text_poke_loc {
+> > -	void *addr;
+> > +	s32 rel_addr; /* addr := _stext + rel_addr */
+> >  	s32 rel32;
+> >  	u8 opcode;
+> >  	const u8 text[POKE_MAX_OPCODE_SIZE];
+> > @@ -948,13 +948,18 @@ static struct bp_patching_desc {
+> >  	int nr_entries;
+> >  } bp_patching;
+> >  
+> > +static inline void *text_poke_addr(struct text_poke_loc *tp)
+> > +{
+> > +	return _stext + tp->rel_addr;
+> > +}
+> 
+> So won't this complicate the life of the big-address-space gcc model 
+> build patches that for purposes of module randomization are spreading the 
+> kernel and modules all across the 64-bit address space, where they might 
+> not necessarily end up within a ~2GB window?
+> 
+> Nothing upstream yet, but I remember such patches ...
 
-Thanks!
-
-This certainly fixes the problem of inconsistent uid/gid pair due to
-racing writebacks, as well as the data-race. If that is the only
-purpose of this patch, then from what I see this is fine:
-
-Acked-by: Marco Elver <elver@google.com>
-
-However, there is probably still a more fundamental problem as outlined below.
-
->  fs/proc/base.c     |   25 +++++++++++++++++++++++--
->  fs/proc/fd.c       |    2 +-
->  fs/proc/internal.h |    2 ++
->  3 files changed, 26 insertions(+), 3 deletions(-)
->
-> --- a/fs/proc/base.c
-> +++ b/fs/proc/base.c
-> @@ -1743,6 +1743,25 @@ void task_dump_owner(struct task_struct *task, umode_t mode,
->         *rgid = gid;
->  }
->
-> +/* use if inode is live */
-> +void task_dump_owner_to_inode(struct task_struct *task, umode_t mode,
-> +                             struct inode *inode)
-> +{
-> +       kuid_t uid;
-> +       kgid_t gid;
-> +
-> +       task_dump_owner(task, mode, &uid, &gid);
-> +       /*
-> +        * There is no atomic "change all credentials at once" system call,
-> +        * guaranteeing more than _some_ snapshot from "struct cred" ends up
-> +        * in inode is not possible.
-> +        */
-> +       spin_lock(&inode->i_lock);
-> +       inode->i_uid = uid;
-> +       inode->i_gid = gid;
-> +       spin_unlock(&inode->i_lock);
-
-2 tasks can still race here, and the inconsistent scenario I outlined in
-https://lore.kernel.org/linux-fsdevel/000000000000328b2905951a7667@google.com/
-could still happen I think (although extremely unlikely). Mainly,
-causality may still be violated -- but I may be wrong as I don't know
-the rest of the code (so please be critical of my suggestion).
-
-The problem is that if 2 threads race here, one has snapshotted old
-uid/gid, and the other the new uid/gid. Then it is still possible for
-the old uid/gid to be written back after new uid/gid, which would
-result in this bad scenario:
-
-=== TASK 1 ===
-| seteuid(1000);
-| seteuid(0);
-| stat("/proc/<pid-of-task-1>", &fstat);
-| assert(fstat.st_uid == 0);  // fails
-=== TASK 2 ===
-| stat("/proc/<pid-of-task-1>", ...);
-
-AFAIK it's not something that can easily be fixed without some
-timestamp on the uid/gid pair (timestamp updated after setuid/seteuid
-etc) obtained in the RCU reader critical section. Then in this
-critical section, uid/gid should only be written if the current pair
-in inode is older according to snapshot timestamp.
-
-> +}
-> +
->  struct inode *proc_pid_make_inode(struct super_block * sb,
->                                   struct task_struct *task, umode_t mode)
->  {
-> @@ -1769,6 +1788,7 @@ struct inode *proc_pid_make_inode(struct super_block * sb,
->         if (!ei->pid)
->                 goto out_unlock;
->
-> +       /* fresh inode -- no races */
->         task_dump_owner(task, 0, &inode->i_uid, &inode->i_gid);
->         security_task_to_inode(task, inode);
->
-> @@ -1802,6 +1822,7 @@ int pid_getattr(const struct path *path, struct kstat *stat,
->                          */
->                         return -ENOENT;
->                 }
-> +               /* "struct kstat" is thread local, atomic snapshot is enough */
->                 task_dump_owner(task, inode->i_mode, &stat->uid, &stat->gid);
->         }
->         rcu_read_unlock();
-> @@ -1815,7 +1836,7 @@ int pid_getattr(const struct path *path, struct kstat *stat,
->   */
->  void pid_update_inode(struct task_struct *task, struct inode *inode)
->  {
-> -       task_dump_owner(task, inode->i_mode, &inode->i_uid, &inode->i_gid);
-> +       task_dump_owner_to_inode(task, inode->i_mode, inode);
->
->         inode->i_mode &= ~(S_ISUID | S_ISGID);
->         security_task_to_inode(task, inode);
-> @@ -1990,7 +2011,7 @@ static int map_files_d_revalidate(struct dentry *dentry, unsigned int flags)
->         mmput(mm);
->
->         if (exact_vma_exists) {
-> -               task_dump_owner(task, 0, &inode->i_uid, &inode->i_gid);
-> +               task_dump_owner_to_inode(task, 0, inode);
->
->                 security_task_to_inode(task, inode);
->                 status = 1;
-> --- a/fs/proc/fd.c
-> +++ b/fs/proc/fd.c
-> @@ -101,7 +101,7 @@ static bool tid_fd_mode(struct task_struct *task, unsigned fd, fmode_t *mode)
->  static void tid_fd_update_inode(struct task_struct *task, struct inode *inode,
->                                 fmode_t f_mode)
->  {
-> -       task_dump_owner(task, 0, &inode->i_uid, &inode->i_gid);
-> +       task_dump_owner_to_inode(task, 0, inode);
->
->         if (S_ISLNK(inode->i_mode)) {
->                 unsigned i_mode = S_IFLNK;
-> --- a/fs/proc/internal.h
-> +++ b/fs/proc/internal.h
-> @@ -123,6 +123,8 @@ static inline struct task_struct *get_proc_task(const struct inode *inode)
->
->  void task_dump_owner(struct task_struct *task, umode_t mode,
->                      kuid_t *ruid, kgid_t *rgid);
-> +void task_dump_owner_to_inode(struct task_struct *task, umode_t mode,
-> +                             struct inode *inode);
->
->  unsigned name_to_int(const struct qstr *qstr);
->  /*
+IIRC what they were doing was allow moving the 2G range further out into
+the address space, such that absolute addresses no longer fit in u32 (as
+they do now), but they keep the relative displacement in s32. Otherwise
+we'll end up with PLT entries all over the place. That is, if we break
+the s32 displacement, CALL/JMP.d32 will not longer be able to reach any
+other code and we need intermediate trampolines to help them along,
+which is pretty shit.
