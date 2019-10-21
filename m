@@ -2,127 +2,127 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C742ECA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:35:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63C2DCA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:35:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A669F20873
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:35:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3ADF42084B
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:35:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=pensando.io header.i=@pensando.io header.b="ZvioHrwP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729125AbfJUQfF (ORCPT
+        id S1729553AbfJUQfL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 12:35:05 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:57580 "EHLO foss.arm.com"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S1727805AbfJUQfE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 12:35:04 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 32A7611B3;
-        Mon, 21 Oct 2019 09:34:43 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id EF0613F71F;
-        Mon, 21 Oct 2019 09:34:40 -0700 (PDT)
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     amit.kachhap@arm.com, ard.biesheuvel@linaro.org,
-        catalin.marinas@arm.com, deller@gmx.de, duwe@suse.de,
-        james.morse@arm.com, jeyu@kernel.org, jpoimboe@redhat.com,
-        jthierry@redhat.com, mark.rutland@arm.com, mingo@redhat.com,
-        peterz@infradead.org, rostedt@goodmis.org, svens@stackframe.org,
-        takahiro.akashi@linaro.org, will@kernel.org
-Subject: [PATCH 3/8] arm64: module: rework special section handling
-Date:   Mon, 21 Oct 2019 17:34:21 +0100
-Message-Id: <20191021163426.9408-4-mark.rutland@arm.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20191021163426.9408-1-mark.rutland@arm.com>
-References: <20191021163426.9408-1-mark.rutland@arm.com>
+        Mon, 21 Oct 2019 12:35:11 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:40235 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729433AbfJUQfH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 12:35:07 -0400
+Received: by mail-pg1-f193.google.com with SMTP id 15so2777979pgt.7
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 09:35:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=pensando.io; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=YQ2SYzDjclp6+UMcXfMKe/dCfkknHxuiGOrHRSVn0cA=;
+        b=ZvioHrwPqgA32sqk/ZfXl+AIKFsddUO2tNAqbJtu4tCcRANhGvReU9J0qCrPtBX4dr
+         XyEFxDF3rI4Skd8uu+tW37bMnIbIfeVll6YP9QPsiv1m3u9UI7Hz50C/EOmQGDDvJxjt
+         MNnpf3ALOQX+wn100d4q49rWpqL/dLYkEvAbPydL+TGXqu4wUlet2YAblmsMtkne7qnv
+         mFnrVk537e3SRZLOSIfp5DZTMcRh1T3I7huUyEOh7iplVBe4IuwO1byLK+LTz8AIzALW
+         g8HnTvBYEWL7IAty6Tx+yooX0qDMEelsrde2cgdpkGApf9pCWxxWG6Loqrv6o3ZIrYoi
+         o0cQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=YQ2SYzDjclp6+UMcXfMKe/dCfkknHxuiGOrHRSVn0cA=;
+        b=jvMidIC9NVI6Mrh4AAf94UKC9ibzSXsmt3FJt7iLOLP3DWlyqGTfUwrODMNDJIYwsP
+         N2T+a2xzMEDLhFpjLXErW7JZj1iHf9I5v9cWBs76y26Pv1N43Lf5SbPhm9kF3hVjEKx/
+         i3IVk7WxJJtQJaeKY3tcscM1k/NDAkantFgL3UdIVs9+SFWM6STegZ8CaF+89OidA/JM
+         Fc6vN652f4Z5rR4lqRrnZmJ0W2dZThnu4qlwyqLNfbQEG6HRwM4FlRqwrb44wNHypdr0
+         mmkmWUsJXGfNmphkYYG79kQwWYva8yGf0lFfefGd2z1EJl1ZIJm/QNIvEd5WMCNAS1r8
+         Wq9A==
+X-Gm-Message-State: APjAAAW81N7skRWZMgEsiSMsx61kzGk+U/nlBkai1QGojKJI2hUr2TMW
+        jP+kDMJqxfNt/tfBq5WS5qwm8bKU2xXQtomE
+X-Google-Smtp-Source: APXvYqwmyNu50+FxrTO6V6IulFup1S67xnT8cj+dbepaT4niD1qSPIKhFvBy+c/p26nJk53uezcFig==
+X-Received: by 2002:a63:ad0d:: with SMTP id g13mr26250877pgf.407.1571675706632;
+        Mon, 21 Oct 2019 09:35:06 -0700 (PDT)
+Received: from Shannons-MacBook-Pro.local (static-50-53-47-17.bvtn.or.frontiernet.net. [50.53.47.17])
+        by smtp.gmail.com with ESMTPSA id e4sm16610297pff.22.2019.10.21.09.35.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 21 Oct 2019 09:35:05 -0700 (PDT)
+Subject: Re: [PATCH 5/5] ionic: Use debugfs_create_bool() to export bool
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        =?UTF-8?Q?Breno_Leit=c3=a3o?= <leitao@debian.org>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Paulo Flabiano Smorigo <pfsmorigo@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S . Miller" <davem@davemloft.net>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        David@rox.of.borg, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Casey Leedom <leedom@chelsio.com>,
+        Pensando Drivers <drivers@pensando.io>,
+        Kevin Hilman <khilman@kernel.org>, Nishanth Menon <nm@ti.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-crypto@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        netdev@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191021145149.31657-1-geert+renesas@glider.be>
+ <20191021145149.31657-6-geert+renesas@glider.be>
+From:   Shannon Nelson <snelson@pensando.io>
+Message-ID: <aeebbd5f-6100-2780-ef1c-6b1c261c9d23@pensando.io>
+Date:   Mon, 21 Oct 2019 09:35:03 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20191021145149.31657-6-geert+renesas@glider.be>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When we load a module, we have to perform some special work for a couple
-of named sections. To do this, we iterate over all of the module's
-sections, and perform work for each section we recognize.
+On 10/21/19 7:51 AM, Geert Uytterhoeven wrote:
+> Currently bool ionic_cq.done_color is exported using
+> debugfs_create_u8(), which requires a cast, preventing further compiler
+> checks.
+>
+> Fix this by switching to debugfs_create_bool(), and dropping the cast.
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-To make it easier to handle the unexpected absence of a section, and to
-make the section-specific logic easer to read, let's factor the section
-search into a helper. Similar is already done in the core module loader,
-and other architectures (and ideally we'd unify these in future).
+Acked-by: Shannon Nelson <snelson@pensando.io>
 
-If we expect a module to have an ftrace trampoline section, but it
-doesn't have one, we'll now reject loading the module. When
-ARM64_MODULE_PLTS is selected, any correctly built module should have
-one (and this is assumed by arm64's ftrace PLT code) and the absence of
-such a section implies something has gone wrong at build time.
-
-Subsequent patches will make use of the new helper.
-
-Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-Cc: Ard Bieshsheuvel <ard.biesheuvel@linaro.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: James Morse <james.morse@arm.com>
-Cc: Will Deacon <will@kernel.org>
----
- arch/arm64/kernel/module.c | 35 ++++++++++++++++++++++++++---------
- 1 file changed, 26 insertions(+), 9 deletions(-)
-
-diff --git a/arch/arm64/kernel/module.c b/arch/arm64/kernel/module.c
-index 03ff15bffbb6..763a86d52fef 100644
---- a/arch/arm64/kernel/module.c
-+++ b/arch/arm64/kernel/module.c
-@@ -470,22 +470,39 @@ int apply_relocate_add(Elf64_Shdr *sechdrs,
- 	return -ENOEXEC;
- }
- 
--int module_finalize(const Elf_Ehdr *hdr,
--		    const Elf_Shdr *sechdrs,
--		    struct module *me)
-+static const Elf_Shdr *find_section(const Elf_Ehdr *hdr,
-+				    const Elf_Shdr *sechdrs,
-+				    const char *name)
- {
- 	const Elf_Shdr *s, *se;
- 	const char *secstrs = (void *)hdr + sechdrs[hdr->e_shstrndx].sh_offset;
- 
- 	for (s = sechdrs, se = sechdrs + hdr->e_shnum; s < se; s++) {
--		if (strcmp(".altinstructions", secstrs + s->sh_name) == 0)
--			apply_alternatives_module((void *)s->sh_addr, s->sh_size);
-+		if (strcmp(name, secstrs + s->sh_name) == 0)
-+			return s;
-+	}
-+
-+	return NULL;
-+}
-+
-+int module_finalize(const Elf_Ehdr *hdr,
-+		    const Elf_Shdr *sechdrs,
-+		    struct module *me)
-+{
-+	const Elf_Shdr *s;
-+
-+	s = find_section(hdr, sechdrs, ".altinstructions");
-+	if (s)
-+		apply_alternatives_module((void *)s->sh_addr, s->sh_size);
-+
- #ifdef CONFIG_ARM64_MODULE_PLTS
--		if (IS_ENABLED(CONFIG_DYNAMIC_FTRACE) &&
--		    !strcmp(".text.ftrace_trampoline", secstrs + s->sh_name))
--			me->arch.ftrace_trampoline = (void *)s->sh_addr;
--#endif
-+	if (IS_ENABLED(CONFIG_DYNAMIC_FTRACE)) {
-+		s = find_section(hdr, sechdrs, ".text.ftrace_trampoline");
-+		if (!s)
-+			return -ENOEXEC;
-+		me->arch.ftrace_trampoline = (void *)s->sh_addr;
- 	}
-+#endif
- 
- 	return 0;
- }
--- 
-2.11.0
+> ---
+>   drivers/net/ethernet/pensando/ionic/ionic_debugfs.c | 3 +--
+>   1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/drivers/net/ethernet/pensando/ionic/ionic_debugfs.c b/drivers/net/ethernet/pensando/ionic/ionic_debugfs.c
+> index bc03cecf80cc9eb4..5beba915f69d12dd 100644
+> --- a/drivers/net/ethernet/pensando/ionic/ionic_debugfs.c
+> +++ b/drivers/net/ethernet/pensando/ionic/ionic_debugfs.c
+> @@ -170,8 +170,7 @@ void ionic_debugfs_add_qcq(struct ionic_lif *lif, struct ionic_qcq *qcq)
+>   	debugfs_create_x64("base_pa", 0400, cq_dentry, &cq->base_pa);
+>   	debugfs_create_u32("num_descs", 0400, cq_dentry, &cq->num_descs);
+>   	debugfs_create_u32("desc_size", 0400, cq_dentry, &cq->desc_size);
+> -	debugfs_create_u8("done_color", 0400, cq_dentry,
+> -			  (u8 *)&cq->done_color);
+> +	debugfs_create_bool("done_color", 0400, cq_dentry, &cq->done_color);
+>   
+>   	debugfs_create_file("tail", 0400, cq_dentry, cq, &cq_tail_fops);
+>   
 
