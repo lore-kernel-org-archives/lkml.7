@@ -2,264 +2,228 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DATE_IN_PAST_12_24,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC1E2CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:10:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4987FCA9EB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:10:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEAC5207FC
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:10:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1029620663
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:10:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="An7h5vjN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731419AbfJVJKH (ORCPT
+        id S1731431AbfJVJKl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 05:10:07 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:38983 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731346AbfJVJKH (ORCPT
+        Tue, 22 Oct 2019 05:10:41 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:51350 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731195AbfJVJKk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 05:10:07 -0400
-Received: from aptenodytes (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 0BF77240016;
-        Tue, 22 Oct 2019 09:10:02 +0000 (UTC)
-Date:   Tue, 22 Oct 2019 11:10:02 +0200
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>
-Cc:     mripard@kernel.org, mchehab@kernel.org, hverkuil-cisco@xs4all.nl,
-        gregkh@linuxfoundation.org, wens@csie.org,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] media: cedrus: Fix decoding for some H264 videos
-Message-ID: <20191022091002.GC2651@aptenodytes>
-References: <20191002193553.1633467-1-jernej.skrabec@siol.net>
- <20191002193553.1633467-2-jernej.skrabec@siol.net>
- <20191002215442.GA24151@aptenodytes>
- <1916783.jTTlJIDQL9@jernej-laptop>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="p4qYPpj5QlsIQJ0K"
-Content-Disposition: inline
-In-Reply-To: <1916783.jTTlJIDQL9@jernej-laptop>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        Tue, 22 Oct 2019 05:10:40 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9M94Dxj173370;
+        Tue, 22 Oct 2019 09:08:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references; s=corp-2019-08-05;
+ bh=HCoo6ok9RA6O3qZcaK2ouk33INMKb7EkdhACLh1Q+q8=;
+ b=An7h5vjNpU98UO7VqyCoKDNejxAetnfmbXjybw7S2sv24WyaPO93Yb7mxloIPL6S8tsu
+ Geaa2tkM2ST262Jprlu7nbMwuShJslNvJhwits0Y3FH0UPZFDExUyCtikEwbb5wxBerB
+ oTt0TpO8DTkvpFTMr47cQapIJ0Rfw8bG5YNl/ar7JTcaq0irUDW1E4rIqFvGRqa1+g1D
+ oSe+dMt407Yv1rXGZe4TGAqNOEnYbjTHRnAaYhCb2/ZOe4JRRTwmOobc/Jywzgd3Rydb
+ o30/RMrJOX9+dUlfvwWPPbbsWmZAYugZC4FxJf+vTKWsgbQwXfrRcMvNoaui9t3m9JX+ Mw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2vqswtdc2a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 22 Oct 2019 09:08:46 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9M937Ok047561;
+        Tue, 22 Oct 2019 09:06:46 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2vrc01fjcp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 22 Oct 2019 09:06:45 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9M96fMd006974;
+        Tue, 22 Oct 2019 09:06:42 GMT
+Received: from z2.cn.oracle.com (/10.182.70.159)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 22 Oct 2019 09:06:41 +0000
+From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        pbonzini@redhat.com, rkrcmar@redhat.com,
+        sean.j.christopherson@intel.com, vkuznets@redhat.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        boris.ostrovsky@oracle.com, jgross@suse.com, peterz@infradead.org,
+        will@kernel.org, linux-hyperv@vger.kernel.org, kvm@vger.kernel.org,
+        mikelley@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
+        sthemmin@microsoft.com, sashal@kernel.org,
+        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: [PATCH v7 3/5] x86/kvm: Add "nopvspin" parameter to disable PV spinlocks
+Date:   Mon, 21 Oct 2019 17:11:14 +0800
+Message-Id: <1571649076-2421-4-git-send-email-zhenzhong.duan@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1571649076-2421-1-git-send-email-zhenzhong.duan@oracle.com>
+References: <1571649076-2421-1-git-send-email-zhenzhong.duan@oracle.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9417 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910220086
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9417 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910220086
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+There are cases where a guest tries to switch spinlocks to bare metal
+behavior (e.g. by setting "xen_nopvspin" on XEN platform and
+"hv_nopvspin" on HYPER_V).
 
---p4qYPpj5QlsIQJ0K
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+That feature is missed on KVM, add a new parameter "nopvspin" to disable
+PV spinlocks for KVM guest.
 
-Hi,
+The new 'nopvspin' parameter will also replace Xen and Hyper-V specific
+parameters in future patches.
 
-On Tue 15 Oct 19, 19:16, Jernej =C5=A0krabec wrote:
-> Please understand that I was working on this on and off for almost half a=
- year=20
-> and checked many times all register values. At one point I tried libvdpau-
-> sunxi which has no problem with sample video.  Still, all relevant regist=
-er=20
-> values were the same. In a desperate attempt, I tried with HW header pars=
-ing=20
-> which magically solved the issue. After that, I reused values provided in=
-=20
-> controls and then finally I made minimal solution as suggested in this pa=
-tch.=20
+Define variable nopvsin as global because it will be used in future
+patches as above.
 
-Okay thanks for the details.
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Radim Krcmar <rkrcmar@redhat.com>
+Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc: Wanpeng Li <wanpengli@tencent.com>
+Cc: Jim Mattson <jmattson@google.com>
+Cc: Joerg Roedel <joro@8bytes.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Will Deacon <will@kernel.org>
+---
+ Documentation/admin-guide/kernel-parameters.txt |  5 ++++
+ arch/x86/include/asm/qspinlock.h                |  1 +
+ arch/x86/kernel/kvm.c                           | 34 ++++++++++++++++++++-----
+ kernel/locking/qspinlock.c                      |  7 +++++
+ 4 files changed, 40 insertions(+), 7 deletions(-)
 
-I think I've delayed this for far too long already so I think we should get=
- it
-in without further delay.
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index a84a83f..bd49ed2 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -5334,6 +5334,11 @@
+ 			as generic guest with no PV drivers. Currently support
+ 			XEN HVM, KVM, HYPER_V and VMWARE guest.
+ 
++	nopvspin	[X86,KVM]
++			Disables the qspinlock slow path using PV optimizations
++			which allow the hypervisor to 'idle' the guest on lock
++			contention.
++
+ 	xirc2ps_cs=	[NET,PCMCIA]
+ 			Format:
+ 			<irq>,<irq_mask>,<io>,<full_duplex>,<do_sound>,<lockup_hack>[,<irq2>[,<irq3>[,<irq4>]]]
+diff --git a/arch/x86/include/asm/qspinlock.h b/arch/x86/include/asm/qspinlock.h
+index 444d6fd..d86ab94 100644
+--- a/arch/x86/include/asm/qspinlock.h
++++ b/arch/x86/include/asm/qspinlock.h
+@@ -32,6 +32,7 @@ static __always_inline u32 queued_fetch_set_pending_acquire(struct qspinlock *lo
+ extern void __pv_init_lock_hash(void);
+ extern void __pv_queued_spin_lock_slowpath(struct qspinlock *lock, u32 val);
+ extern void __raw_callee_save___pv_queued_spin_unlock(struct qspinlock *lock);
++extern bool nopvspin;
+ 
+ #define	queued_spin_unlock queued_spin_unlock
+ /**
+diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+index 249f14a..3945aa5 100644
+--- a/arch/x86/kernel/kvm.c
++++ b/arch/x86/kernel/kvm.c
+@@ -825,18 +825,36 @@ __visible bool __kvm_vcpu_is_preempted(long cpu)
+  */
+ void __init kvm_spinlock_init(void)
+ {
+-	/* Does host kernel support KVM_FEATURE_PV_UNHALT? */
+-	if (!kvm_para_has_feature(KVM_FEATURE_PV_UNHALT))
++	/*
++	 * In case host doesn't support KVM_FEATURE_PV_UNHALT there is still an
++	 * advantage of keeping virt_spin_lock_key enabled: virt_spin_lock() is
++	 * preferred over native qspinlock when vCPU is preempted.
++	 */
++	if (!kvm_para_has_feature(KVM_FEATURE_PV_UNHALT)) {
++		pr_info("PV spinlocks disabled, no host support.\n");
+ 		return;
++	}
+ 
++	/*
++	 * Disable PV qspinlock and use native qspinlock when dedicated pCPUs
++	 * are available.
++	 */
+ 	if (kvm_para_has_hint(KVM_HINTS_REALTIME)) {
+-		static_branch_disable(&virt_spin_lock_key);
+-		return;
++		pr_info("PV spinlocks disabled with KVM_HINTS_REALTIME hints.\n");
++		goto out;
+ 	}
+ 
+-	/* Don't use the pvqspinlock code if there is only 1 vCPU. */
+-	if (num_possible_cpus() == 1)
+-		return;
++	if (num_possible_cpus() == 1) {
++		pr_info("PV spinlocks disabled, single CPU.\n");
++		goto out;
++	}
++
++	if (nopvspin) {
++		pr_info("PV spinlocks disabled, forced by \"nopvspin\" parameter.\n");
++		goto out;
++	}
++
++	pr_info("PV spinlocks enabled\n");
+ 
+ 	__pv_init_lock_hash();
+ 	pv_ops.lock.queued_spin_lock_slowpath = __pv_queued_spin_lock_slowpath;
+@@ -849,6 +867,8 @@ void __init kvm_spinlock_init(void)
+ 		pv_ops.lock.vcpu_is_preempted =
+ 			PV_CALLEE_SAVE(__kvm_vcpu_is_preempted);
+ 	}
++out:
++	static_branch_disable(&virt_spin_lock_key);
+ }
+ 
+ #endif	/* CONFIG_PARAVIRT_SPINLOCKS */
+diff --git a/kernel/locking/qspinlock.c b/kernel/locking/qspinlock.c
+index 2473f10..75193d6 100644
+--- a/kernel/locking/qspinlock.c
++++ b/kernel/locking/qspinlock.c
+@@ -580,4 +580,11 @@ void queued_spin_lock_slowpath(struct qspinlock *lock, u32 val)
+ #include "qspinlock_paravirt.h"
+ #include "qspinlock.c"
+ 
++bool nopvspin __initdata;
++static __init int parse_nopvspin(char *arg)
++{
++	nopvspin = true;
++	return 0;
++}
++early_param("nopvspin", parse_nopvspin);
+ #endif
+-- 
+1.8.3.1
 
-The patch apparently no longer applies on top of media/master, but feel free
-to send out a rebased series with:
-
-Acked-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-
-Let's leave out 2/3 though, I think I will submit a series adding the flag
-as indication for the per-slice value in the uAPI and use it in cedrus.
-
-Cheers,
-
-Paul
-
-> >=20
-> > I could try and have a look if you have an available sample for testing=
- the
-> > erroneous case!
->=20
-> Of course: http://jernej.libreelec.tv/videos/h264/test.mkv
->=20
-> >=20
-> > Another minor thing: do you have some idea of whether the udelay call a=
-dds
-> > significant delay in the process?
->=20
-> I didn't notice any issue with it. Do you have any better idea? I just di=
-dn't=20
-> want to make empty loop and udelay is the shortest delay that is provided=
- by=20
-> the kernel API.
->=20
-> Best regards,
-> Jernej
->=20
-> >=20
-> > Cheers and thanks for the patch!
-> >=20
-> > Paul
-> >=20
-> > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > > ---
-> > >=20
-> > >  .../staging/media/sunxi/cedrus/cedrus_h264.c  | 30 +++++++++++++++++=
---
-> > >  .../staging/media/sunxi/cedrus/cedrus_regs.h  |  3 ++
-> > >  2 files changed, 30 insertions(+), 3 deletions(-)
-> > >=20
-> > > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-> > > b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c index
-> > > d6a782703c9b..bd848146eada 100644
-> > > --- a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-> > > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-> > > @@ -6,6 +6,7 @@
-> > >=20
-> > >   * Copyright (c) 2018 Bootlin
-> > >   */
-> > >=20
-> > > +#include <linux/delay.h>
-> > >=20
-> > >  #include <linux/types.h>
-> > > =20
-> > >  #include <media/videobuf2-dma-contig.h>
-> > >=20
-> > > @@ -289,6 +290,28 @@ static void cedrus_write_pred_weight_table(struct
-> > > cedrus_ctx *ctx,>=20
-> > >  	}
-> > > =20
-> > >  }
-> > >=20
-> > > +/*
-> > > + * It turns out that using VE_H264_VLD_OFFSET to skip bits is not
-> > > reliable. In + * rare cases frame is not decoded correctly. However,
-> > > setting offset to 0 and + * skipping appropriate amount of bits with
-> > > flush bits trigger always works. + */
-> > > +static void cedrus_skip_bits(struct cedrus_dev *dev, int num)
-> > > +{
-> > > +	int count =3D 0;
-> > > +
-> > > +	while (count < num) {
-> > > +		int tmp =3D min(num - count, 32);
-> > >=20
-> > > +
-> > > +		cedrus_write(dev, VE_H264_TRIGGER_TYPE,
-> > > +			     VE_H264_TRIGGER_TYPE_FLUSH_BITS |
-> > > +			     VE_H264_TRIGGER_TYPE_N_BITS(tmp));
-> > > +		while (cedrus_read(dev, VE_H264_STATUS) &=20
-> VE_H264_STATUS_VLD_BUSY)
-> > > +			udelay(1);
-> > > +
-> > > +		count +=3D tmp;
-> > > +	}
-> > > +}
-> > > +
-> > >=20
-> > >  static void cedrus_set_params(struct cedrus_ctx *ctx,
-> > > =20
-> > >  			      struct cedrus_run *run)
-> > > =20
-> > >  {
-> > >=20
-> > > @@ -299,12 +322,11 @@ static void cedrus_set_params(struct cedrus_ctx
-> > > *ctx,
-> > >=20
-> > >  	struct vb2_buffer *src_buf =3D &run->src->vb2_buf;
-> > >  	struct cedrus_dev *dev =3D ctx->dev;
-> > >  	dma_addr_t src_buf_addr;
-> > >=20
-> > > -	u32 offset =3D slice->header_bit_size;
-> > > -	u32 len =3D (slice->size * 8) - offset;
-> > > +	u32 len =3D slice->size * 8;
-> > >=20
-> > >  	u32 reg;
-> > >  =09
-> > >  	cedrus_write(dev, VE_H264_VLD_LEN, len);
-> > >=20
-> > > -	cedrus_write(dev, VE_H264_VLD_OFFSET, offset);
-> > > +	cedrus_write(dev, VE_H264_VLD_OFFSET, 0);
-> > >=20
-> > >  	src_buf_addr =3D vb2_dma_contig_plane_dma_addr(src_buf, 0);
-> > >  	cedrus_write(dev, VE_H264_VLD_END,
-> > >=20
-> > > @@ -323,6 +345,8 @@ static void cedrus_set_params(struct cedrus_ctx *=
-ctx,
-> > >=20
-> > >  	cedrus_write(dev, VE_H264_TRIGGER_TYPE,
-> > >  =09
-> > >  		     VE_H264_TRIGGER_TYPE_INIT_SWDEC);
-> > >=20
-> > > +	cedrus_skip_bits(dev, slice->header_bit_size);
-> > > +
-> > >=20
-> > >  	if (((pps->flags & V4L2_H264_PPS_FLAG_WEIGHTED_PRED) &&
-> > >  =09
-> > >  	     (slice->slice_type =3D=3D V4L2_H264_SLICE_TYPE_P ||
-> > >  	    =20
-> > >  	      slice->slice_type =3D=3D V4L2_H264_SLICE_TYPE_SP)) ||
-> > >=20
-> > > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
-> > > b/drivers/staging/media/sunxi/cedrus/cedrus_regs.h index
-> > > 3329f9aaf975..b52926a54025 100644
-> > > --- a/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
-> > > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
-> > > @@ -538,13 +538,16 @@
-> > >=20
-> > >  					=20
-> VE_H264_CTRL_SLICE_DECODE_INT)
-> > > =20
-> > >  #define VE_H264_TRIGGER_TYPE		0x224
-> > >=20
-> > > +#define VE_H264_TRIGGER_TYPE_N_BITS(x)		(((x) & 0x3f) << 8)
-> > >=20
-> > >  #define VE_H264_TRIGGER_TYPE_AVC_SLICE_DECODE	(8 << 0)
-> > >  #define VE_H264_TRIGGER_TYPE_INIT_SWDEC		(7 << 0)
-> > >=20
-> > > +#define VE_H264_TRIGGER_TYPE_FLUSH_BITS		(3 << 0)
-> > >=20
-> > >  #define VE_H264_STATUS			0x228
-> > >  #define VE_H264_STATUS_VLD_DATA_REQ_INT	=09
-> VE_H264_CTRL_VLD_DATA_REQ_INT
-> > >  #define VE_H264_STATUS_DECODE_ERR_INT	=09
-> VE_H264_CTRL_DECODE_ERR_INT
-> > >  #define VE_H264_STATUS_SLICE_DECODE_INT	=09
-> VE_H264_CTRL_SLICE_DECODE_INT
-> > >=20
-> > > +#define VE_H264_STATUS_VLD_BUSY			BIT(8)
-> > >=20
-> > >  #define VE_H264_STATUS_INT_MASK		=09
-> VE_H264_CTRL_INT_MASK
->=20
->=20
->=20
->=20
-
---p4qYPpj5QlsIQJ0K
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl2ux2oACgkQ3cLmz3+f
-v9GxNggAoUPhMks1m1yhI9h7qrbOWuYWwl/SbtO4mnSw6R/3aI6fsdBfNqwnS9lI
-kFIGM1gxkSOjPbgQ0b2U/h1EXCF1OwymUilB9PBVDB1UpaXsKFqDsYpWFVSX8XAC
-BfLuPBNd0SHD+/eS8GMgjAsNbdoTk/cArdrPI6minSnan13GEzaQ43do9VU8rZL+
-Ti24S9Jx8Nr/Y+8Xsk42FyDBElBQdb0MO11QRqIsJ43TJJ9GeWG528T9bWzmCZyV
-Egh6MMu2T4FPWeQ7iTB4DctCGZR1RhxuvF9V45WHFBDmaExEx4Rq24ixXX4X/2pv
-wfmqLhGApSVGcd3OMEmwpwj//gVE/g==
-=PWnD
------END PGP SIGNATURE-----
-
---p4qYPpj5QlsIQJ0K--
