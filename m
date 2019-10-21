@@ -2,91 +2,116 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 855C8CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:44:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F7E4CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:45:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6653E20659
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:44:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DA9520659
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:45:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729964AbfJUQoE (ORCPT
+        id S1729985AbfJUQpL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 12:44:04 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:58092 "EHLO foss.arm.com"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S1726819AbfJUQoD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 12:44:03 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 859F1175D;
-        Mon, 21 Oct 2019 09:43:47 -0700 (PDT)
-Received: from [10.1.196.105] (unknown [10.1.196.105])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0929D3F71F;
-        Mon, 21 Oct 2019 09:43:43 -0700 (PDT)
-Subject: Re: [PATCH v6 1/2] dt-bindings: edac: arm-dmc520.txt
-To:     Lei Wang <leiwang_git@outlook.com>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "hangl@microsoft.com" <hangl@microsoft.com>,
-        "lewan@microsoft.com" <lewan@microsoft.com>,
-        "ruizhao@microsoft.com" <ruizhao@microsoft.com>,
-        "scott.branden@broadcom.com" <scott.branden@broadcom.com>,
-        "yuqing.shen@broadcom.com" <yuqing.shen@broadcom.com>,
-        "ray.jui@broadcom.com" <ray.jui@broadcom.com>
-References: <BY5PR04MB6599EAA659A53B2331CB812586890@BY5PR04MB6599.namprd04.prod.outlook.com>
- <20190923161015.GI15355@zn.tnic>
- <e2b9cd68-abaa-bdcd-cc56-cca285272569@outlook.com>
- <41637032-a308-9a92-1b49-cb51af2580f8@outlook.com>
- <BY5PR04MB65996A0CEB37001C763B248C866C0@BY5PR04MB6599.namprd04.prod.outlook.com>
-From:   James Morse <james.morse@arm.com>
-Message-ID: <1ae9a840-d5b6-ccd6-8481-d43665b4411b@arm.com>
-Date:   Mon, 21 Oct 2019 17:43:42 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 21 Oct 2019 12:45:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45744 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729859AbfJUQpL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 12:45:11 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BB4820659;
+        Mon, 21 Oct 2019 16:45:10 +0000 (UTC)
+Date:   Mon, 21 Oct 2019 12:45:08 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Prateek Sood <prsood@codeaurora.org>
+Subject: [GIT PULL] tracing: A couple of minor fixes
+Message-ID: <20191021124508.203ccdb3@gandalf.local.home>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <BY5PR04MB65996A0CEB37001C763B248C866C0@BY5PR04MB6599.namprd04.prod.outlook.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-GB
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lei,
 
-On 18/10/2019 21:08, Lei Wang wrote:
-> This thread hasn't got traction from DT owners.
+Linus,
 
-It looks like your patches didn't make it to the mailing list:
-https://lore.kernel.org/r/BY5PR04MB6599EAA659A53B2331CB812586890@BY5PR04MB6599.namprd04.prod.outlook.com
+Two minor fixes:
 
-You can search on https://lore.kernel.org/linux-edac/, I can only see the replies from the
-people who received it directly.
+ - A race in perf trace initialization (missing mutexes)
 
-I can't see anything obvious in the headers that would cause it to get rejected. Did you
-get any bounces/errors from the list?
-
-Depending on how the DT folk work, this may be why you haven't had a response yet. Tools
-like patchwork will depend on the message reaching the list.
+ - Minor fix to represent gfp_t in synthetic events as properly signed
 
 
-> James did give ACK before.
-> Should that be good enough?
-
-Nope! You need someone from the maintainer's entry for those files to review it.
-I gave my R-B as what you'd done made sense from the TRM and the driver. The DT folk will
-have a wider view and may have some advice.
+Please pull the latest trace-v5.4-rc3 tree, which can be found at:
 
 
-Thanks,
+  git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git
+trace-v5.4-rc3
 
-James
+Tag SHA1: 46467c95be6062b0c66aae0efbab5746bee09f1e
+Head SHA1: 668993e5696ddc5db01940d66818c7c038895893
+
+
+Prateek Sood (1):
+      tracing: Fix race in perf_trace_buf initialization
+
+Zhengjun Xing (1):
+      tracing: Fix "gfp_t" format for synthetic events
+
+----
+ kernel/trace/trace_event_perf.c  | 4 ++++
+ kernel/trace/trace_events_hist.c | 2 ++
+ 2 files changed, 6 insertions(+)
+---------------------------
+diff --git a/kernel/trace/trace_event_perf.c b/kernel/trace/trace_event_perf.c
+index 0892e38ed6fb..a9dfa04ffa44 100644
+--- a/kernel/trace/trace_event_perf.c
++++ b/kernel/trace/trace_event_perf.c
+@@ -272,9 +272,11 @@ int perf_kprobe_init(struct perf_event *p_event, bool is_retprobe)
+ 		goto out;
+ 	}
+ 
++	mutex_lock(&event_mutex);
+ 	ret = perf_trace_event_init(tp_event, p_event);
+ 	if (ret)
+ 		destroy_local_trace_kprobe(tp_event);
++	mutex_unlock(&event_mutex);
+ out:
+ 	kfree(func);
+ 	return ret;
+@@ -282,8 +284,10 @@ int perf_kprobe_init(struct perf_event *p_event, bool is_retprobe)
+ 
+ void perf_kprobe_destroy(struct perf_event *p_event)
+ {
++	mutex_lock(&event_mutex);
+ 	perf_trace_event_close(p_event);
+ 	perf_trace_event_unreg(p_event);
++	mutex_unlock(&event_mutex);
+ 
+ 	destroy_local_trace_kprobe(p_event->tp_event);
+ }
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index 57648c5aa679..7482a1466ebf 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -679,6 +679,8 @@ static bool synth_field_signed(char *type)
+ {
+ 	if (str_has_prefix(type, "u"))
+ 		return false;
++	if (strcmp(type, "gfp_t") == 0)
++		return false;
+ 
+ 	return true;
+ }
