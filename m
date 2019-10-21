@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F55CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:39:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B34DCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:39:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A848C214AE
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:39:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F31032173B
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:39:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571665181;
-	bh=kDlqqhxo9pbZ856JNlvJVFd+gSQwLxs5OvLPz21HNmE=;
+	s=default; t=1571665186;
+	bh=Rwj/0TzeTdBBfSeXoLYRN52d0cGcmDv2pCCuwnyyM+k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bc+S1Fc5bmQEcQI5ZZz6nA7zsXX6DBu4D0IGYfbxOppU409r2a4jeneNUlLTe2biR
-	 Uwx3zPSSVqvS+tCo1sTRQeiCjelCAXOYBPACN0kACef1dbytT5bvUZhBFdv3IaQWww
-	 D5vQ+q+OR2Zb8OMN7XmwG/TUY4p9POJ1DT2xl2II=
+	b=1X1dON+hITAnmFmTBxDM0c2/+KbLrXZaP69j+J0SOeA9jwZtBZLAogzUqqtkm4IyE
+	 8Fg0UHjs75asc0LqIqMcNQKJNFANUg+e3BdpoksABHqtRSY03UILaWgXEGL0Mlkqhs
+	 oVMmcDvkC/vDg6bGOE6YkASPLk05iwlNZECI99ek=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729310AbfJUNjk (ORCPT
+        id S1729325AbfJUNjo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 09:39:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41228 "EHLO mail.kernel.org"
+        Mon, 21 Oct 2019 09:39:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729295AbfJUNjj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 09:39:39 -0400
+        id S1729312AbfJUNjm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 09:39:42 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5AF6C21BE5;
-        Mon, 21 Oct 2019 13:39:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56D6D21929;
+        Mon, 21 Oct 2019 13:39:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571665177;
-        bh=kDlqqhxo9pbZ856JNlvJVFd+gSQwLxs5OvLPz21HNmE=;
+        s=default; t=1571665180;
+        bh=Rwj/0TzeTdBBfSeXoLYRN52d0cGcmDv2pCCuwnyyM+k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y+ogXMlwU6Y904B8BZEvsd8n/74VmOdBWmwjbV8Ipi+SNFpOfGET6+ZrJ65U974HG
-         LSpvZudw/JKRCLNq0tZAFO5/VwD+xzDDcFJmuEUhopubsHavNUTGE3XmnwJf3kZgvc
-         K1JtAe1XUPneNIXhhZtkX69XV492piglvLhLADS8=
+        b=s2OQGTV/swRWJ8OOyeJUcC/VjsWOlFdarifeCBQoKkcR9b4ryeCTtoXWAOSmnNY10
+         HbIT4qD5RvbH88m6i551OSoxvwj/V9qFFOR7ou6ubL3G/PptOQTkK2OMdd2LdEu6es
+         cnkah6NXNXy7d/MsN8IFlUz7IMvTRqJ1IkrWdQdM=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -46,14 +46,14 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
         David Ahern <dsahern@gmail.com>,
         =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= 
         <lclaudio@redhat.com>
-Subject: [PATCH 17/57] perf trace: Filter own pid to avoid a feedback look in 'perf trace record -a'
-Date:   Mon, 21 Oct 2019 10:37:54 -0300
-Message-Id: <20191021133834.25998-18-acme@kernel.org>
+Subject: [PATCH 18/57] perf trace: Support tracepoint dynamic char arrays
+Date:   Mon, 21 Oct 2019 10:37:55 -0300
+Message-Id: <20191021133834.25998-19-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191021133834.25998-1-acme@kernel.org>
 References: <20191021133834.25998-1-acme@kernel.org>
@@ -67,85 +67,107 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-When doing a system wide 'perf trace record' we need, just like in 'perf
-trace' live mode, to filter out perf trace's own pid, so set up a
-tracepoint filter for the raw_syscalls tracepoints right after adding
-them to the argv array that is set up to then call cmd_record().
+Things like:
 
-Reported-by: Andi Kleen <ak@linux.intel.com>
+  # grep __data_loc /sys/kernel/debug/tracing/events/sched/sched_process_exec/format
+	field:__data_loc char[] filename;	offset:8;	size:4;	signed:1;
+  #
+
+That, at that offset (8) and with that size(8) have an integer that
+contains the real length and offset for the contents of that array.
+
+Now this works:
+
+  # perf trace --max-events 1 -e sched:*exec -a
+     0.000 sed/19441 sched:sched_process_exec(filename: "/usr/bin/sync", pid: 19441 (sync), old_pid: 19441 (sync))
+  #
+
+As when using the libtraceevent based beautifier:
+
+  # perf trace --libtraceevent --max-events 1 -e sched:*exec -a
+     0.000 sync/19463 sched:sched_process_exec(filename=/usr/bin/sync pid=19463 old_pid=19463)
+  #
+
+I.e. that 'filename' is implemented as a dynamic char array.
+
 Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-uysx5w8f2y5ndoln5cq370tv@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-950p0m842fe6n7sxsdwqj5i2@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-trace.c | 24 ++++++++++++++++--------
- 1 file changed, 16 insertions(+), 8 deletions(-)
+ tools/perf/builtin-trace.c       | 19 ++++++++++++++-----
+ tools/perf/trace/beauty/beauty.h |  2 ++
+ 2 files changed, 16 insertions(+), 5 deletions(-)
 
 diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 467e18e6f8ec..cdee22dac2b3 100644
+index cdee22dac2b3..907eaf316f5b 100644
 --- a/tools/perf/builtin-trace.c
 +++ b/tools/perf/builtin-trace.c
-@@ -2796,21 +2796,23 @@ static int trace__record(struct trace *trace, int argc, const char **argv)
- 		"-m", "1024",
- 		"-c", "1",
- 	};
--
-+	pid_t pid = getpid();
-+	char *filter = asprintf__tp_filter_pids(1, &pid);
- 	const char * const sc_args[] = { "-e", };
- 	unsigned int sc_args_nr = ARRAY_SIZE(sc_args);
- 	const char * const majpf_args[] = { "-e", "major-faults" };
- 	unsigned int majpf_args_nr = ARRAY_SIZE(majpf_args);
- 	const char * const minpf_args[] = { "-e", "minor-faults" };
- 	unsigned int minpf_args_nr = ARRAY_SIZE(minpf_args);
-+	int err = -1;
- 
--	/* +1 is for the event string below */
--	rec_argc = ARRAY_SIZE(record_args) + sc_args_nr + 1 +
-+	/* +3 is for the event string below and the pid filter */
-+	rec_argc = ARRAY_SIZE(record_args) + sc_args_nr + 3 +
- 		majpf_args_nr + minpf_args_nr + argc;
- 	rec_argv = calloc(rec_argc + 1, sizeof(char *));
- 
--	if (rec_argv == NULL)
--		return -ENOMEM;
-+	if (rec_argv == NULL || filter == NULL)
-+		goto out_free;
- 
- 	j = 0;
- 	for (i = 0; i < ARRAY_SIZE(record_args); i++)
-@@ -2827,11 +2829,13 @@ static int trace__record(struct trace *trace, int argc, const char **argv)
- 			rec_argv[j++] = "syscalls:sys_enter,syscalls:sys_exit";
- 		else {
- 			pr_err("Neither raw_syscalls nor syscalls events exist.\n");
--			free(rec_argv);
--			return -1;
-+			goto out_free;
- 		}
- 	}
- 
-+	rec_argv[j++] = "--filter";
-+	rec_argv[j++] = filter;
-+
- 	if (trace->trace_pgfaults & TRACE_PFMAJ)
- 		for (i = 0; i < majpf_args_nr; i++)
- 			rec_argv[j++] = majpf_args[i];
-@@ -2843,7 +2847,11 @@ static int trace__record(struct trace *trace, int argc, const char **argv)
- 	for (i = 0; i < (unsigned int)argc; i++)
- 		rec_argv[j++] = argv[i];
- 
--	return cmd_record(j, rec_argv);
-+	err = cmd_record(j, rec_argv);
-+out_free:
-+	free(filter);
-+	free(rec_argv);
-+	return err;
+@@ -563,7 +563,7 @@ static size_t syscall_arg__scnprintf_char_array(char *bf, size_t size, struct sy
+ 	// XXX Hey, maybe for sched:sched_switch prev/next comm fields we can
+ 	//     fill missing comms using thread__set_comm()...
+ 	//     here or in a special syscall_arg__scnprintf_pid_sched_tp...
+-	return scnprintf(bf, size, "\"%-.*s\"", arg->fmt->nr_entries, arg->val);
++	return scnprintf(bf, size, "\"%-.*s\"", arg->fmt->nr_entries ?: arg->len, arg->val);
  }
  
- static size_t trace__fprintf_thread_summary(struct trace *trace, FILE *fp);
+ #define SCA_CHAR_ARRAY syscall_arg__scnprintf_char_array
+@@ -1559,7 +1559,7 @@ syscall_arg_fmt__init_array(struct syscall_arg_fmt *arg, struct tep_format_field
+ 			arg->scnprintf = SCA_PID;
+ 		else if (strcmp(field->type, "umode_t") == 0)
+ 			arg->scnprintf = SCA_MODE_T;
+-		else if ((field->flags & TEP_FIELD_IS_ARRAY) && strstarts(field->type, "char")) {
++		else if ((field->flags & TEP_FIELD_IS_ARRAY) && strstr(field->type, "char")) {
+ 			arg->scnprintf = SCA_CHAR_ARRAY;
+ 			arg->nr_entries = field->arraylen;
+ 		} else if ((strcmp(field->type, "int") == 0 ||
+@@ -2523,10 +2523,19 @@ static size_t trace__fprintf_tp_fields(struct trace *trace, struct evsel *evsel,
+ 		if (syscall_arg.mask & bit)
+ 			continue;
+ 
++		syscall_arg.len = 0;
+ 		syscall_arg.fmt = arg;
+-		if (field->flags & TEP_FIELD_IS_ARRAY)
+-			val = (uintptr_t)(sample->raw_data + field->offset);
+-		else
++		if (field->flags & TEP_FIELD_IS_ARRAY) {
++			int offset = field->offset;
++
++			if (field->flags & TEP_FIELD_IS_DYNAMIC) {
++				offset = format_field__intval(field, sample, evsel->needs_swap);
++				syscall_arg.len = offset >> 16;
++				offset &= 0xffff;
++			}
++
++			val = (uintptr_t)(sample->raw_data + offset);
++		} else
+ 			val = format_field__intval(field, sample, evsel->needs_swap);
+ 		/*
+ 		 * Some syscall args need some mask, most don't and
+diff --git a/tools/perf/trace/beauty/beauty.h b/tools/perf/trace/beauty/beauty.h
+index 77ad80a399fd..0dee0cf4fda8 100644
+--- a/tools/perf/trace/beauty/beauty.h
++++ b/tools/perf/trace/beauty/beauty.h
+@@ -87,6 +87,7 @@ struct syscall_arg_fmt;
+ 
+ /**
+  * @val: value of syscall argument being formatted
++ * @len: for tracepoint dynamic arrays, if fmt->nr_entries == 0, then its not a fixed array, look at arg->len
+  * @args: All the args, use syscall_args__val(arg, nth) to access one
+  * @augmented_args: Extra data that can be collected, for instance, with eBPF for expanding the pathname for open, etc
+  * @augmented_args_size: augmented_args total payload size
+@@ -109,6 +110,7 @@ struct syscall_arg {
+ 	struct thread *thread;
+ 	struct trace  *trace;
+ 	void	      *parm;
++	u16	      len;
+ 	u8	      idx;
+ 	u8	      mask;
+ 	bool	      show_string_prefix;
 -- 
 2.21.0
 
