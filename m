@@ -2,92 +2,76 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D118CCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:16:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 995B7CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:17:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF6022070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:16:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 683CC2070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:17:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="tWPGkhZC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729352AbfJUOQH (ORCPT
+        id S1728954AbfJUORb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 10:16:07 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:53870 "EHLO foss.arm.com"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S1728551AbfJUOQF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 10:16:05 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 71E1E1007;
-        Mon, 21 Oct 2019 07:15:44 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A115B3F71F;
-        Mon, 21 Oct 2019 07:15:43 -0700 (PDT)
-Date:   Mon, 21 Oct 2019 15:15:41 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Anvesh Salveru <anvesh.s@samsung.com>
-Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bhelgaas@google.com,
-        gustavo.pimentel@synopsys.com, jingoohan1@gmail.com,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        Pankaj Dubey <pankaj.dubey@samsung.com>
-Subject: Re: [PATCH 1/2] dt-bindings: PCI: designware: Add binding for ZRX-DC
- PHY property
-Message-ID: <20191021141541.GS47056@e119886-lin.cambridge.arm.com>
-References: <CGME20191021122630epcas5p32bd92762c4304035cad5c1822d96e304@epcas5p3.samsung.com>
- <1571660755-30270-1-git-send-email-anvesh.s@samsung.com>
+        Mon, 21 Oct 2019 10:17:31 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:55596 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727680AbfJUORa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 10:17:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=Jgv/JiY9a5I5w4sH96aTClgjxrSZfSDUHF7+EXcVTKM=; b=tWPGkhZCTIq3v4COdlYxrCK7Ge
+        1tq8PRpOElMfJhEVDHPKZqXZVAi7JnM1xrLdA8kl4H15uYXJzaSD+UqTFCq+oD/skmFU+E0oglD+z
+        Io2xZ2KWlf8aYSA5kh4MBbavhtOj/6zh7B6IBuBr7pFSlS0748XEjH6AnbEvtvWZnnGk=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1iMYUx-0004pX-Fx; Mon, 21 Oct 2019 16:17:27 +0200
+Date:   Mon, 21 Oct 2019 16:17:27 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH net-next 08/16] net: dsa: use ports list to setup
+ multiple master devices
+Message-ID: <20191021141727.GD17002@lunn.ch>
+References: <20191020031941.3805884-1-vivien.didelot@gmail.com>
+ <20191020031941.3805884-9-vivien.didelot@gmail.com>
+ <55f1256b-c1b3-f222-9275-c0cc969a59ab@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1571660755-30270-1-git-send-email-anvesh.s@samsung.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+In-Reply-To: <55f1256b-c1b3-f222-9275-c0cc969a59ab@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 05:55:55PM +0530, Anvesh Salveru wrote:
-> Add support for ZRX-DC compliant PHYs. If PHY is not compliant to ZRX-DC
-> specification, then after every 100ms link should transition to recovery
-> state during the low power states which increases power consumption.
+On Sun, Oct 20, 2019 at 08:03:34PM -0700, Florian Fainelli wrote:
 > 
-> Platforms with ZRX-DC compliant PHY can use "snps,phy-zrxdc-compliant"
-> property in DesignWare controller DT node.
 > 
-> Signed-off-by: Anvesh Salveru <anvesh.s@samsung.com>
-> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
-> ---
->  Documentation/devicetree/bindings/pci/designware-pcie.txt | 2 ++
->  1 file changed, 2 insertions(+)
+> On 10/19/2019 8:19 PM, Vivien Didelot wrote:
+> > Now that we have a potential list of CPU ports, make use of it instead
+> > of only configuring the master device of an unique CPU port.
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> index 78494c4050f7..9507ac38ac89 100644
-> --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> @@ -38,6 +38,8 @@ Optional properties:
->     for data corruption. CDM registers include standard PCIe configuration
->     space registers, Port Logic registers, DMA and iATU (internal Address
->     Translation Unit) registers.
-> +- snps,phy-zrxdc-compliant: This property is needed if phy complies with the
+> Out of your series, this is the only one that has possible side effects
+> to existing set-up in that if you had multiple CPU ports defined, today,
+> we would stop at the first one, whereas now, we will set them all up. I
+> believe this is right way to do it, but have not had time to fire up a
+> test on a BCM7278 w/ bcm_sf2 and this patch series to confirm that, will
+> do that first thing tomorrow morning.
 
-Strictly speaking, this is a property of the phy - not the controller that
-uses it.
+Hi Florian
 
-If I understand correctly, there are some DW based PCI controllers that use
-a phandle reference in DT to a Phy (such as fsl,imx6q-pcie.txt). Therefore
-it feels like this is in the wrong place. Is there a reason this isn't
-described in the Phy?
+The next patch might also change things, finding the first CPU port.
+Is the order of the link list the same as searching the port array?
 
-Thanks,
-
-Andrew Murray
-
-> +  ZRX-DC specification.
->  RC mode:
->  - num-viewport: number of view ports configured in hardware. If a platform
->    does not specify it, the driver assumes 2.
-> -- 
-> 2.17.1
-> 
+   Andrew
