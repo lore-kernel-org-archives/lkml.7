@@ -2,91 +2,91 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD7ACCA9EAE
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 02:47:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11723CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 02:48:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9103021928
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 02:47:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D908721897
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 02:48:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HfBEFd+K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727039AbfJUCri convert rfc822-to-8bit (ORCPT
+        id S1727066AbfJUCst (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 20 Oct 2019 22:47:38 -0400
-Received: from mga14.intel.com ([192.55.52.115]:32375 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726764AbfJUCri (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 20 Oct 2019 22:47:38 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Oct 2019 19:47:37 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,321,1566889200"; 
-   d="scan'208";a="203221302"
-Received: from pgsmsx105.gar.corp.intel.com ([10.221.44.96])
-  by FMSMGA003.fm.intel.com with ESMTP; 20 Oct 2019 19:47:35 -0700
-Received: from pgsmsx108.gar.corp.intel.com ([169.254.8.51]) by
- PGSMSX105.gar.corp.intel.com ([169.254.4.226]) with mapi id 14.03.0439.000;
- Mon, 21 Oct 2019 10:47:34 +0800
-From:   "Lu, Brent" <brent.lu@intel.com>
-To:     "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
-CC:     "Rojewski, Cezary" <cezary.rojewski@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        "Mark Brown" <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        "Zavras, Alexios" <alexios.zavras@intel.com>,
-        "Kuninori Morimoto" <kuninori.morimoto.gx@renesas.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] ASoC: bdw-rt5677: enable runtime channel merge
-Thread-Topic: [PATCH] ASoC: bdw-rt5677: enable runtime channel merge
-Thread-Index: AQHVeQDQJxSKmeHo60W0FoozADL3CqdkfMRQ
-Date:   Mon, 21 Oct 2019 02:47:34 +0000
-Message-ID: <CF33C36214C39B4496568E5578BE70C74031B9FD@PGSMSX108.gar.corp.intel.com>
-References: <1570007072-23049-1-git-send-email-brent.lu@intel.com>
-In-Reply-To: <1570007072-23049-1-git-send-email-brent.lu@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMGUyMDI2MTItNzU0Zi00ZjMzLWE0NWUtZjVjZjhmNDU2MGQ0IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiT1VkQ1ByNGlteHBlOXBhU2l6SU13dnVLSzlFMTNJTGZ6R1ExNWlVbWhXT3ZCUXNoSEFrVHpqQVU5UUE0WUpYZiJ9
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [172.30.20.206]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Sun, 20 Oct 2019 22:48:49 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:33106 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726764AbfJUCst (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 20 Oct 2019 22:48:49 -0400
+Received: by mail-pf1-f196.google.com with SMTP id q10so7466415pfl.0;
+        Sun, 20 Oct 2019 19:48:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=NI2Xsv37vOUaBUcaG6wCqKoYrGVf8BqjdA3KlM+wbbE=;
+        b=HfBEFd+KoCv7cBN56dfksSEEtNzLuuuY9JAeMEn7vbxZ0bDS7T2Jlg/2GRplwgzNZw
+         rbnFu9iunv59cw6eA1IRhBp/h+TVsoxOF1x+DkloM+Ycd4QvgQFwf0aYn4v61kqKQCp4
+         +fCGg+q/dwOKcqo6vWf+s0pNkR9UIOmrJ/6drasKzM8PXjM095OzFOB5uEfg0EFrmekC
+         qFm6DEM894hhYIYCwRZPvhi+STT4rShW3uPek0lh40HPVivyZSDZ+Yel1UnoA4FjLOi0
+         gyFMS6N+ptDTHUUJ7OXszdFnrD+fca/Lu0rPYAvHKiLIdLA6kp+lxwjJcI7UXHdC4VJI
+         WRHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=NI2Xsv37vOUaBUcaG6wCqKoYrGVf8BqjdA3KlM+wbbE=;
+        b=jU0nhkJr+FEge0EUFTyW1y399hmp+BFlDnf3nGWeUuK54ugc0VJyL+/PVrpRuvMai1
+         UUm3GZwmZhUHUtmYbJTE/9Q20oLnTqPkYn3rrteuoDYRPjS+HWqNSBUsM3d75b0adPvG
+         4JlCLX0F3tWrJnzpT7tlwg79iWQGMUIeeeS6l2HU58fPpLo1vaLTS1MjUWdtKVPyEUVm
+         mjruaD0w+ewp7AmMPdME/2CnaBOvtxSwSAUmMG74anKN8SOohDuEjEE+tBLasGK0PAYA
+         uutbx4AIF1ygd6gh21e6RICzwawwfcrnAzPBau5sXUAkfjhHOZyKgLxAP3AYto+AEk0t
+         6mZQ==
+X-Gm-Message-State: APjAAAUGFsVTbrQ4sYoiKz1+jqMGptZcVg3JJ7EYxqVx6fPru4mmv2rk
+        Azgb8M8pF2vZ3zrKlvprbcAL+tBH
+X-Google-Smtp-Source: APXvYqwtLA6yRGpo+zjXr/SUvBZiIygxtNLjyI0m6o7+qELfMMfW76THKDSzP0dRVbIQYHYAJmNp7Q==
+X-Received: by 2002:a65:67c8:: with SMTP id b8mr23074092pgs.121.1571626128410;
+        Sun, 20 Oct 2019 19:48:48 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id bb15sm12479648pjb.2.2019.10.20.19.48.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 20 Oct 2019 19:48:47 -0700 (PDT)
+Subject: Re: [PATCH net-next 11/16] net: dsa: mv88e6xxx: silently skip PVT ops
+To:     Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        netdev@vger.kernel.org
+References: <20191020031941.3805884-1-vivien.didelot@gmail.com>
+ <20191020031941.3805884-12-vivien.didelot@gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <6305a191-0314-f37a-baf3-13e9fae63c88@gmail.com>
+Date:   Sun, 20 Oct 2019 19:48:47 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
+In-Reply-To: <20191020031941.3805884-12-vivien.didelot@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Subject: [PATCH] ASoC: bdw-rt5677: enable runtime channel merge
+
+
+On 10/19/2019 8:19 PM, Vivien Didelot wrote:
+> Since mv88e6xxx_pvt_map is a static helper, no need to return
+> -EOPNOTSUPP if the chip has no PVT, simply silently skip the operation.
 > 
-> In the DAI link "Capture PCM", the FE DAI "Capture Pin" supports 4-channel
-> capture but the BE DAI supports only 2-channel capture. To fix the channel
-> mismatch, we need to enable the runtime channel merge for this DAI link.
-> 
+> Signed-off-by: Vivien Didelot <vivien.didelot@gmail.com>
 
-Hi Pierre,
-
-This patch is for the same issue discussed in the following thread:
-https://patchwork.kernel.org/patch/11134167/
-
-We enable the runtime channel merge for the DMIC DAI instead of adding a
-machine driver constraint. It's working good on chrome's 3.14 branch (which
-requires some backport for the runtime channel merge feature). Please let
-me know if this implementation is correct for the FE/BE mismatch problem.
-Thanks.
-
-
-Regards,
-Brent
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
