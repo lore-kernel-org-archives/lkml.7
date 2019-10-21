@@ -2,86 +2,135 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DATE_IN_PAST_12_24,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13622CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:11:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02908CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:12:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEC24218AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:11:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D45092184C
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:12:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388080AbfJVILb (ORCPT
+        id S2388161AbfJVIMW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 04:11:31 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:43124 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387614AbfJVILb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 04:11:31 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id CA90B8E4C52B6E750235;
-        Tue, 22 Oct 2019 16:11:28 +0800 (CST)
-Received: from [127.0.0.1] (10.177.251.225) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Tue, 22 Oct 2019
- 16:11:23 +0800
-To:     Herbert Xu <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
-        <catalin.marinas@arm.com>, <will@kernel.org>,
-        <ard.biesheuvel@linaro.org>, <linux-crypto@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <hushiyuan@huawei.com>,
-        "linfeilong@huawei.com" <linfeilong@huawei.com>
-From:   Yunfeng Ye <yeyunfeng@huawei.com>
-Subject: [PATCH v3] crypto: arm64/aes-neonbs - add return value of
- skcipher_walk_done() in __xts_crypt()
-Message-ID: <aaf0f585-3a06-8af1-e2f1-ab301e560d49@huawei.com>
-Date:   Tue, 22 Oct 2019 16:11:18 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 22 Oct 2019 04:12:22 -0400
+Received: from mga06.intel.com ([134.134.136.31]:64390 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387614AbfJVIMW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 04:12:22 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Oct 2019 01:12:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,326,1566889200"; 
+   d="scan'208";a="200703479"
+Received: from sqa-gate.sh.intel.com (HELO clx-ap-likexu.tsp.org) ([10.239.48.212])
+  by orsmga003.jf.intel.com with ESMTP; 22 Oct 2019 01:12:19 -0700
+From:   Like Xu <like.xu@linux.intel.com>
+To:     pbonzini@redhat.com, peterz@infradead.org, kvm@vger.kernel.org
+Cc:     like.xu@intel.com, linux-kernel@vger.kernel.org,
+        jmattson@google.com, sean.j.christopherson@intel.com,
+        wei.w.wang@intel.com, kan.liang@intel.com
+Subject: [PATCH v3 0/6] KVM: x86/vPMU: Efficiency optimization by reusing last created perf_event
+Date:   Tue, 22 Oct 2019 00:06:45 +0800
+Message-Id: <20191021160651.49508-1-like.xu@linux.intel.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.251.225]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A warning is found by the static code analysis tool:
-  "Identical condition 'err', second condition is always false"
+This patch series is going to improve vPMU Efficiency for guest which is
+mainly measured by guest NMI handler latency in such as basic perf usages
+[1][2] with hardware PMU. It's not a passthrough solution but based on the
+legacy vPMU implementation.
 
-Fix this by adding return value of skcipher_walk_done().
+With this optimization, the average latency of the guest NMI handler is
+reduced from 104923 ns to 48393 ns (~2.16x speed up on CLX-AP with 5.4-rc4,
+w/ perf_v4_pmi=n). If host disables the watchdog, the minimum latency of
+guest NMI handler could be speed up at ~3413x and in the average at ~786x.
+The run time of workload with perf attached inside the guest could be
+reduced significantly with this optimization.
 
-Fixes: 67cfa5d3b721 ("crypto: arm64/aes-neonbs - implement ciphertext stealing for XTS")
-Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
-Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+The general idea (defined in patch 5/6) is to reuse last created event
+for the same vPMC when the new requested config is the exactly same as the
+current_config (used by last pmc_reprogram_counter()) AND the new event
+period is appropriate and accepted (via perf_event_period() in patch 1/6).
+Before reusing the perf_event, it will be disabled until it's suitable for
+reuse and a hardware counter will be reassigned again to serve vPMC.
+
+If the disabled perf_event is no longer reused, we do a lazy release
+mechanism (defined in patch 6/6) which in a short is to release the
+disabled perf_events in the call of kvm_pmu_handle_event since the vcpu
+gets next scheduled in if guest doesn't WRMSR its MSRs in the last sched
+time slice. In the kvm_arch_sched_in(), KVM_REQ_PMU is requested if the
+pmu->event_count has not been reduced to zero and then do kvm_pmu_cleanup
+only once for a sched time slice to ensure that overhead is very limited.
+
+The first two patches are for perf reviewers and the last four patches
+are for kvm reviewers. Please check each commit for more details and
+share your comments with us.
+
+Thanks,
+Like Xu
+
 ---
-v2 -> v3:
- - add "Acked-by:"
+[1] multiplexing sampling mode usage: perf record  -e \
+`perf list | grep Hardware | grep event |\
+awk '{print $1}' | head -n 10 |tr '\n' ',' | sed 's/,$//' ` ./ftest
+[2] single event count mode usage: perf stat -e branch-misses ./ftest
 
-v1 -> v2:
- - update the subject and comment
- - add return value of skcipher_walk_done()
+---
 
- arch/arm64/crypto/aes-neonbs-glue.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changes in v3:
+- optimize perf_event_pause() for no child event 
+- rename programed_config to programed_config
+- rename lazy_release_ctrl to pmc_in_use
+- rename kvm_pmu_ops callbacks form msr_idx to rdpmc_idx
+- add a new kvm_pmu_ops callback msr_idx_to_pmc
+- use DECLARE_BITMAP to declare bitmap
+- set up a bitmap 'pmu->all_valid_pmc_idx'
+- move kvm_pmu_cleanup to kvm_pmu_handle_event
+- update performance data based on 5.4-rc4 on CLX-AP
 
-diff --git a/arch/arm64/crypto/aes-neonbs-glue.c b/arch/arm64/crypto/aes-neonbs-glue.c
-index ea873b8904c4..e3e27349a9fe 100644
---- a/arch/arm64/crypto/aes-neonbs-glue.c
-+++ b/arch/arm64/crypto/aes-neonbs-glue.c
-@@ -384,7 +384,7 @@ static int __xts_crypt(struct skcipher_request *req, bool encrypt,
- 			goto xts_tail;
+Changes in v2:
+- use perf_event_pause() to disable, read, reset by only one lock;
+- use __perf_event_read_value() after _perf_event_disable();
+- replace bitfields with 'u8 event_count; bool need_cleanup;';
+- refine comments and commit messages;
+- fix two issues reported by kbuild test robot for ARCH=[nds32|sh]
 
- 		kernel_neon_end();
--		skcipher_walk_done(&walk, nbytes);
-+		err = skcipher_walk_done(&walk, nbytes);
- 	}
+v2:
+https://lore.kernel.org/kvm/20191013091533.12971-1-like.xu@linux.intel.com/
 
- 	if (err || likely(!tail))
+v1:
+https://lore.kernel.org/kvm/20190930072257.43352-1-like.xu@linux.intel.com/
+
+Like Xu (6):
+  perf/core: Provide a kernel-internal interface to recalibrate event
+    period
+  perf/core: Provide a kernel-internal interface to pause perf_event
+  KVM: x86/vPMU: Rename pmu_ops callbacks from msr_idx to rdpmc_idx
+  KVM: x86/vPMU: Introduce a new kvm_pmu_ops->msr_idx_to_pmc callback
+  KVM: x86/vPMU: Reuse perf_event to avoid unnecessary
+    pmc_reprogram_counter
+  KVM: x86/vPMU: Add lazy mechanism to release perf_event per vPMC
+
+ arch/x86/include/asm/kvm_host.h |  19 ++++++
+ arch/x86/kvm/pmu.c              | 112 ++++++++++++++++++++++++++++++--
+ arch/x86/kvm/pmu.h              |  23 +++++--
+ arch/x86/kvm/pmu_amd.c          |  24 +++++--
+ arch/x86/kvm/vmx/pmu_intel.c    |  29 +++++++--
+ arch/x86/kvm/x86.c              |   8 ++-
+ include/linux/perf_event.h      |  10 +++
+ kernel/events/core.c            |  46 +++++++++++--
+ 8 files changed, 240 insertions(+), 31 deletions(-)
+
 -- 
-2.7.4.3
+2.21.0
 
