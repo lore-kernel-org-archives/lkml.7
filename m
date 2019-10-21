@@ -2,106 +2,174 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C3F8CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:44:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 251D8CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:44:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAF6420659
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:44:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E667420659
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:44:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="AmvxbgxZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727756AbfJUIoC (ORCPT
+        id S1727768AbfJUIo2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 04:44:02 -0400
-Received: from mail-oln040092066082.outbound.protection.outlook.com ([40.92.66.82]:60899
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727065AbfJUIoC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 04:44:02 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=I+OPCvbxQwoMBTidoz1xuOEISmoXPGVgChpUF9Ou3QARYMSpHsBK8ejnnTmUkjktYaOx2FWFPLoAe//V7/9YPAagCy+6oYJgOSWWSQdS5ToCirkWIlyo7UoWe27Bb0SGD9rzFfkAfd1BJawyjfMt4zJTWhNCWUrz3ytBkNpEv1hYzmMstPVTzrbGzI31A5w61rXtA9H33kXIlwcBxWp2izBB1NxoDxbzNQl2a+ptjeEV4v/IuXztaGbX4DpgS4bAjYNbxRXpCB5oUrMiC6RZhG/JRiVjTpiVefxv0EfjMDM5lAgW1wAz6Jlj55ML0FpfpZJrphT6dQdOHXpe07oZAw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0QB6dNWKygoF4guypCasXlzbcOPHSSammvgW5CV/Tj0=;
- b=cjCbNOdXG5etySX99jkylSm1brxUgOKbd0X5DmuGnFkLqn7q7Gc4bJnUQSUHEc4VpuORPs6jN7/NuzQwWj4vcnLf9So8cTx8jmTlu+RYtwkNFZMB6rPXroPArHhiYIEHwJumsT2LwjscNfcXpKb5W9zLJ/KLMIYHP4MxiqPKxfnZIlMrqB+ZOFQlq1ExKywHLX0l+lyGvKddwCIBONvS7WgqaABqx83oL+8ZMCCw60a5ILrBtqFTyB6ilPUG04Hcspq85G+fpyLnKG+77la3itnbbYro50hnYrPCtNAsF1Gm8n/zekvHZJhwVcZa3CeVN/QMLRJfnzx8E+qmsIx+7w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from DB5EUR01FT048.eop-EUR01.prod.protection.outlook.com
- (10.152.4.57) by DB5EUR01HT214.eop-EUR01.prod.protection.outlook.com
- (10.152.5.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2367.14; Mon, 21 Oct
- 2019 08:43:58 +0000
-Received: from AM0PR0502MB3668.eurprd05.prod.outlook.com (10.152.4.53) by
- DB5EUR01FT048.mail.protection.outlook.com (10.152.5.166) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2367.14 via Frontend Transport; Mon, 21 Oct 2019 08:43:58 +0000
-Received: from AM0PR0502MB3668.eurprd05.prod.outlook.com
- ([fe80::b1e4:568d:bbc:8247]) by AM0PR0502MB3668.eurprd05.prod.outlook.com
- ([fe80::b1e4:568d:bbc:8247%6]) with mapi id 15.20.2347.029; Mon, 21 Oct 2019
- 08:43:58 +0000
-From:   Anatol Belski <weltling@outlook.de>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <yehezkel.bernat@intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        "trivial@kernel.org" <trivial@kernel.org>
-Subject: Re: [PATCH] include/linux/byteorder/generic.h: fix signed/unsigned
- warnings
-Thread-Topic: [PATCH] include/linux/byteorder/generic.h: fix signed/unsigned
- warnings
-Thread-Index: AQHVh2rzQudqiWaARkuhjP20crUqsKdkqXKAgAAfEIA=
-Date:   Mon, 21 Oct 2019 08:43:58 +0000
-Message-ID: <AM0PR0502MB3668CBCDF1C1C3747D02BBFBBA690@AM0PR0502MB3668.eurprd05.prod.outlook.com>
-References: <AM0PR0502MB3668B1A0EC328690DA25E9C6BA6E0@AM0PR0502MB3668.eurprd05.prod.outlook.com>
-         <20191021065245.GH32742@smile.fi.intel.com>
-In-Reply-To: <20191021065245.GH32742@smile.fi.intel.com>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-x-clientproxiedby: AM0PR06CA0053.eurprd06.prod.outlook.com
- (2603:10a6:208:aa::30) To AM0PR0502MB3668.eurprd05.prod.outlook.com
- (2603:10a6:208:19::11)
-x-incomingtopheadermarker: OriginalChecksum:18BFDDB472A3570CA96121E86E8DF5C53A7265AA33E418D970E2CB313C1689B9;UpperCasedChecksum:1157FD1386BDEAF7DFE3CA74B0C4FEE31136CC6A8CA77AF2B3C41BB6AB86AE58;SizeAsReceived:8055;Count:52
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [ejcq5jySr1kI4hMI53s/ekpre4RqsKHBuOUdl7LNtamqH1W+cwcZb1ZfjEGfeKGA]
-x-microsoft-original-message-id: <b673366e4bbde2432a250e196a2556be7faa1527.camel@outlook.de>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 52
-x-eopattributedmessage: 0
-x-ms-traffictypediagnostic: DB5EUR01HT214:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: RhDbtJce7qdluBnaujq88UHb9uinsFJlFNOSk7aXsgVCasULh9/ktcjvZniaYxRPl/iySY1O29Di4oj5kjfv216DDZG+4ZeJRz4lu/grXl6ynCH7GhSfbG/kZ+ZssFI5dcmJrLE/0F/gvhWKoKBAmdLKpxPTCMTfbdXs90zSApB7LYGOg+cYjX6fuwLn6J3Z
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <76D334A49846F64A9DDD3C2F6FA80921@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 21 Oct 2019 04:44:28 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:35804 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726725AbfJUIo2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 04:44:28 -0400
+Received: by mail-lf1-f68.google.com with SMTP id y6so3105583lfj.2
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 01:44:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=8/hi6STco3BJnKtkPIQo5XB037qXP/mO2OC/fnkWZ4g=;
+        b=AmvxbgxZ1nqplWkvkmvLg1S+3doHd3O+FoFnUODtx947C7JXyxKZdKzXZ54IPTFKwQ
+         lk2r4Bw8JpfwR6ikz4X5Wx9JXMLQ4My9AM4ZPqlvln3zkn5qfMycvc54l/mKvx6Oid2k
+         1GATkH6tw5bojR5GlUqxoIyfDpGcdFMFrqv/M=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=8/hi6STco3BJnKtkPIQo5XB037qXP/mO2OC/fnkWZ4g=;
+        b=geHeXmvPoUWaoX/NYQTjiPGjdU7nS1j9ttFMpHK9Xpa+5XKik71O/7hqj8Kl9ET9fP
+         40BozwTJGzJUcVQJZdIfG8PZC2xxdsJ3PqA2yk0Vqvm/deAZSa8c/o2EWpM6gGi6fHPE
+         J1EDGfk+3FIJYeYfzsK9/q68IAblkdMNeqNzsNo8wZ+sconEipdbr8LuqiSHs9vlIcKG
+         TY7B3P2MFB2EiyHSsVkuL5GmT0WdyfsaVrIn+tsLLEVQRuY9G5YBqG6iE6IimLTyQxC/
+         PxvsR6L7WBSibnIO5g0EhbSyqAqL3JdD+ftEYZPJeZZsGlKCy+HVCMRY4Bz5jUgHDv2k
+         qYyw==
+X-Gm-Message-State: APjAAAXtJDdmLBcfIkeV0e6nWph5UuyPYx/gFGAteeQsiYdZdV6ByXi/
+        mE63E1jBKGIj5A3JtJfZup/yFtJPd9pyFHVX
+X-Google-Smtp-Source: APXvYqyrWDcNM6SJ9gZHhTTWqc+blLcYki76oV/4j/OJ5eLQE2mSnwjUq8i2SjuIjDI2gDLu/mZSSg==
+X-Received: by 2002:a19:c518:: with SMTP id w24mr14768885lfe.14.1571647464949;
+        Mon, 21 Oct 2019 01:44:24 -0700 (PDT)
+Received: from [172.16.11.28] ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id i190sm11001603lfi.45.2019.10.21.01.44.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 21 Oct 2019 01:44:24 -0700 (PDT)
+Subject: Re: [PATCH 0/7] towards QE support on ARM
+To:     Li Yang <leoyang.li@nxp.com>
+Cc:     Qiang Zhao <qiang.zhao@nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, Timur Tabi <timur@kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>
+References: <20191018125234.21825-1-linux@rasmusvillemoes.dk>
+ <VE1PR04MB6687DA0268FAF03D3E77A23B8F6C0@VE1PR04MB6687.eurprd04.prod.outlook.com>
+ <e02fa027-9c78-3272-d2d7-7ad2b0ed3ab0@rasmusvillemoes.dk>
+ <CADRPPNREUK1SVxO4P5qb2COn+T04dtYgpVEzrveKUt16hBqAtQ@mail.gmail.com>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <679bf33b-8c05-b77a-0cb2-d79dc5bfbe75@rasmusvillemoes.dk>
+Date:   Mon, 21 Oct 2019 10:44:23 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 83558524-e54e-4a76-9f97-08d75602d00d
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Oct 2019 08:43:58.3927
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB5EUR01HT214
+In-Reply-To: <CADRPPNREUK1SVxO4P5qb2COn+T04dtYgpVEzrveKUt16hBqAtQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksDQoNCk9uIE1vbiwgMjAxOS0xMC0yMSBhdCAwOTo1MiArMDMwMCwgQW5keSBTaGV2Y2hlbmtv
-IHdyb3RlOg0KPiBPbiBTdW4sIE9jdCAyMCwgMjAxOSBhdCAwNToyMjozMFBNICswMDAwLCBBbmF0
-b2wgQmVsc2tpIHdyb3RlOg0KPiA+IEZyb206IEFuYXRvbCBCZWxza2kgPGFuYmVsc2tpQG1pY3Jv
-c29mdC5jb20+DQo+IA0KPiBCZXR0ZXIgdG8gYWRkIGNvbW1pdCBtZXNzYWdlIGV2ZW4gZm9yIHNt
-YWxsIHBhdGNoZXMgbGlrZSB0aGlzLg0KPiBEbyB5b3UgaGF2ZSBjb21waWxlciAvIHNwYXJzZSAv
-IGV0YyB3YXJuaW5nPyBDaXRlIGl0IGhlcmUgYXMgd2VsbCENCj4gDQoNCnllcywgaXQncyAtV3Np
-Z24tY29tcGFyZS4gSSdsbCBzZW5kIGEgZm9sbG93IHVwIHdpdGggYSBiZXR0ZXIgY29tbWl0DQpt
-ZXNzYWdlLg0KDQpUaGFua3MNCg0KQW5hdG9sDQoNCg==
+On 18/10/2019 23.52, Li Yang wrote:
+> On Fri, Oct 18, 2019 at 3:54 PM Rasmus Villemoes
+> <linux@rasmusvillemoes.dk> wrote:
+>>
+>> On 18/10/2019 22.16, Leo Li wrote:
+>>>
+>>>>
+>>>> There have been several attempts in the past few years to allow building the
+>>>> QUICC engine drivers for platforms other than PPC. This is (the beginning of)
+>>>> yet another attempt. I hope I can get someone to pick up these relatively
+>>>> trivial patches (I _think_ they shouldn't change functionality at all), and then
+>>>> I'll continue slowly working towards removing the PPC32 dependency for
+>>>> CONFIG_QUICC_ENGINE.
+>>>
+>>> Hi Rasmus,
+>>>
+>>> I don't fully understand the motivation of this work.  As far as I know the QUICC ENGINE is only used on PowerPC based SoCs.
+>>
+>> Hm, you're not the Leo Li that participated in this thread
+>> <https://lore.kernel.org/lkml/AM3PR04MB11857AE8D2B0BE56121B97D391C90@AM3PR04MB1185.eurprd04.prod.outlook.com/T/#u>?
+> 
+> Oops, I totally forgot about this discussion which is just three years
+> ago.  :)  The QE-HDLC on LS1021a is kind of a special case.
+> 
+>>
+>>
+>>  Can you give an example on how is it used on ARM system?
+>>
+>> LS1021A, for example, which is the one I'm aiming for getting fully
+>> supported in mainline.
+>> <https://www.nxp.com/products/processors-and-microcontrollers/arm-processors/layerscape-communication-process/qoriq-layerscape-1021a-dual-core-communications-processor-with-lcd-controller:LS1021A>
+>>
+>> The forks at https://github.com/qoriq-open-source/linux.git have various
+>> degrees of support (grep for commits saying stuff like "remove PPCisms"
+>> - some versions can be found on
+>> <https://lore.kernel.org/lkml/?q=remove+ppcisms>). Our current kernel is
+>> based on commits from the now-vanished 4.1 branch, and unfortunately at
+>> least the 4.14 branch (LSDK-18.06-V4.14) trivially doesn't build on ARM,
+>> despite the PPC32 dependency having been removed from CONFIG_QUICC_ENGINE.
+> 
+> Can you try the 4.14 branch from a newer LSDK release?  LS1021a should
+> be supported platform on LSDK.  If it is broken, something is wrong.
+
+What newer release? LSDK-18.06-V4.14 is the latest -V4.14 tag at
+https://github.com/qoriq-open-source/linux.git, and identical to the
+linux-4.14 branch. And despite commit 4c33e2d0576b removing the PPC32
+dependency from QUICC_ENGINE, it clearly hasn't been built on arm, since
+back around v4.12, mainline's qe.c grew a call to pvr_version_is which
+is ppc-only. So from that I sort of assumed that NXP had dropped trying
+to support the LS1021A even in their own kernels.
+
+In any case, we have zero interest in running an NXP kernel. Maybe I
+should clarify what I meant by "based on commits from" above: We're
+currently running a mainline 4.14 kernel on LS1021A, with a few patches
+inspired from the NXP 4.1 branch applied on top - but also with some
+manual fixes for e.g. the pvr_version_is() issue. Now we want to move
+that to a 4.19-based kernel (so that it aligns with our MPC8309 platform).
+
+>> This is just some first few steps, and I'm not claiming
+>> that this is sufficient to make the QE drivers build on ARM yet. But I
+>> have a customer with both mpc8309-based and ls1021a-based platforms, and
+>> they want to run the same, as-close-to-mainline-as-possible, kernel on
+>> both. So I will take a piecemeal approach, and try to make sure I don't
+>> break the ppc boards in the process (just building and booting one board
+>> is of course not sufficient, but better than nothing). Once I get to
+>> actually build some of the QE drivers for ARM, I'll of course also test
+>> them.
+> 
+> Understood.  Zhao Qiang also maintains some patches similar to your
+> patchset and I think they are tested on ARM.  But the review of these
+> patches from last submission didn't finish.  It looks like your
+> patches are better divided but not really verified on ARM.  Zhao
+> Qiang's patches are tested but maybe need some final touch for
+> cleaning up.  I will let you guys decide what is the best approach to
+> make this upstreamed.
+
+Yes, as I said, I wanted to try a fresh approach since Zhao
+Qiang's patches seemed to be getting nowhere. Splitting the patches into
+smaller pieces is definitely part of that - for example, the completely
+trivial whitespace fix in patch 1 is to make sure the later coccinelle
+generated patch is precisely that (i.e., a later respin can just rerun
+the coccinelle script, with zero manual fixups). I also want to avoid
+mixing the ppcism cleanups with other things (e.g. replacing some
+of_get_property() by of_property_read_u32()). And the "testing on ARM"
+part comes once I get to actually building on ARM. But there's not much
+point doing all that unless there's some indication that this can be
+applied to some tree that actually feeds into Linus', which is why I
+started with a few trivial patches and precisely to start this discussion.
+
+Rasmus
