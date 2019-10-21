@@ -2,261 +2,204 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C70DECA9EB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:23:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18522CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:24:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 889F42084C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:23:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=verimatrix.com header.i=@verimatrix.com header.b="KtM/kEfh"
+	by mail.kernel.org (Postfix) with ESMTP id E49BD2084C
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:24:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728057AbfJUKXi (ORCPT
+        id S1728077AbfJUKYu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 06:23:38 -0400
-Received: from mail-eopbgr770057.outbound.protection.outlook.com ([40.107.77.57]:46053
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727328AbfJUKXh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 06:23:37 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EsJQpvtO4capHiUpytHatOj9pgBhM0wgb28DACRljX7U1C/E7eA4V+sDsXvYN9x7LoUsp/jGeExav5U6NE3SXm+RElKaAmPOyLz0NgIOlBF50MkIzC+BFamJG6WUCKslSEJC9fbX/QVcxXolCLGEacN1vDGPuxYquChQwiV31CYxeCC/nVvN9+Te0vfgZ9zJBZnRrRkHdOaZtuAZIDxCnqypxBVIXFJdv2c69Uq9N3gnrcxswdnj4DZIf6N+o6m1uUApTjN+7vP3mjG1jZcBrc8GyXgIIVtGil97GqPuxtuB5j+HDxGXwqwdZBmoJCk8VzSG4dqsInFv2r/qdNwpgg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/5eUZp6JzuHcHAyv5xCqnq5+JMeZGICotQn5K0+faAk=;
- b=KBxAliZM1rjcyAGbsVChNzxsZBwRNWzEWaJI//CgwNxCnVR9b3lAXg0IBo+Agy0IqXCCT1TfLU15FSo49ZYO5tzLonxDMo3+PxM/ELDiUTk+4AjwLokiArIJeJN3mQrAxLtn4b8gDbsLRDpG9TGCCBFUZDjHAXHLZOjpAET8ka7VcwK844G10jgjfJ4qSHFvCli7GPXPyTuALD4bfHM2MpXKyRK0bb351uGh3+iaSCYciLLqD/IU0dBC+2mObDU5ZBd5utZ26tb41oapHZ+HDmV4g32+zg84zEeQ5CijnlAoJWg7pZsm1jClAs29B+cYiizwwTbvYxX4bnOGOuhptQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=verimatrix.com; dmarc=pass action=none
- header.from=verimatrix.com; dkim=pass header.d=verimatrix.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=verimatrix.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/5eUZp6JzuHcHAyv5xCqnq5+JMeZGICotQn5K0+faAk=;
- b=KtM/kEfhEWB5yV5qONaS3tsPpozijphzKclD0JraGk7m2p8QqSvJuLt1lXGfhAIFLTn0l0r29uKJAqbeTLd5/eil/DK74awVMpmr0GeWitE94dkgxaAviaJN47s0tgX4IZCdCi7SfwkamdMEcee0q78jtM5VBUUqt4BdT0CgqJE=
-Received: from MN2PR20MB2973.namprd20.prod.outlook.com (52.132.172.86) by
- MN2PR20MB3005.namprd20.prod.outlook.com (52.132.174.79) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.16; Mon, 21 Oct 2019 10:23:32 +0000
-Received: from MN2PR20MB2973.namprd20.prod.outlook.com
- ([fe80::b986:4f02:3206:31e4]) by MN2PR20MB2973.namprd20.prod.outlook.com
- ([fe80::b986:4f02:3206:31e4%7]) with mapi id 15.20.2347.029; Mon, 21 Oct 2019
- 10:23:32 +0000
-From:   Pascal Van Leeuwen <pvanleeuwen@verimatrix.com>
-To:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
-        "linux-kernel@lists.codethink.co.uk" 
-        <linux-kernel@lists.codethink.co.uk>
-CC:     Antoine Tenart <antoine.tenart@bootlin.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] crypto: inside-secure - fix type of buffer in
- eip197_write_firmware
-Thread-Topic: [PATCH] crypto: inside-secure - fix type of buffer in
- eip197_write_firmware
-Thread-Index: AQHVhBfWMp/OQ1W3YkiqzB+SEDRBb6dfDogAgAAvRhCABaqlQA==
-Date:   Mon, 21 Oct 2019 10:23:32 +0000
-Message-ID: <MN2PR20MB29732240A7D7ECE5BA80E474CA690@MN2PR20MB2973.namprd20.prod.outlook.com>
-References: <20191016114945.30451-1-ben.dooks@codethink.co.uk>  
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pvanleeuwen@verimatrix.com; 
-x-originating-ip: [188.204.2.113]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 05a5a4eb-f546-4d44-4ef0-08d75610b978
-x-ms-traffictypediagnostic: MN2PR20MB3005:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <MN2PR20MB3005F99D362BE0168205E5FBCA690@MN2PR20MB3005.namprd20.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:534;
-x-forefront-prvs: 0197AFBD92
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39850400004)(136003)(376002)(366004)(346002)(189003)(199004)(13464003)(64756008)(8676002)(2906002)(9686003)(66476007)(53546011)(8936002)(76116006)(66446008)(102836004)(66556008)(6506007)(26005)(74316002)(76176011)(99286004)(7696005)(186003)(81156014)(33656002)(81166006)(25786009)(486006)(476003)(478600001)(3846002)(6116002)(4326008)(305945005)(7736002)(6246003)(52536014)(5660300002)(66946007)(446003)(110136005)(6436002)(316002)(229853002)(14454004)(66066001)(71190400001)(86362001)(71200400001)(256004)(14444005)(2501003)(55016002)(54906003)(15974865002)(18886075002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR20MB3005;H:MN2PR20MB2973.namprd20.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: verimatrix.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 8cjbwv5ou0OA+0wb7jv+82Ntnd3DcpoN6hpbheqvgfjp546mQ4F9FcTnUDyBT2iZFhzw9Ld9xc7iM6lcqRCgCKuU7R4NXfyf6Yh19HQyvxED5BvcjbbvDKkcn7liXVqsNdUbUQttdO7APD+OL9xKz+AlSx/RoW+QlPUqLRCZ7wsD6xkzTDG55FiV6chrohN5Qv6lwBPIKTTOfRj2jJaXiXxCVZGrp4LFFBBRDSyQb73zP/Cj8BYxcNv1/Iekj4Sou1AOQJoHy3xLHZAus1n+h++O+GpL4VR1ecNSQvkE1blnW8/sWLSWPjoFiZ6ZEHW80d6S4plDQ524yKM/RDQ/9sk6v1GVUP3TXoY3XW40GFVwV9srcrKefZEl3Sz2BPWHXeGKW+D6ireefj9OYoKVaBjrv5NgBZ1DJK7S3IoJaAk=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 21 Oct 2019 06:24:50 -0400
+Received: from wp126.webpack.hosteurope.de ([80.237.132.133]:34158 "EHLO
+        wp126.webpack.hosteurope.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727767AbfJUKYu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 06:24:50 -0400
+Received: from [2003:a:659:3f00:1e6f:65ff:fe31:d1d5] (helo=hermes.fivetechno.de); authenticated
+        by wp126.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        id 1iMUre-00016G-4C; Mon, 21 Oct 2019 12:24:38 +0200
+X-Virus-Scanned: by amavisd-new 2.11.1 using newest ClamAV at
+        linuxbbg.five-lan.de
+Received: from [192.168.34.101] (p5098d998.dip0.t-ipconnect.de [80.152.217.152])
+        (authenticated bits=0)
+        by hermes.fivetechno.de (8.15.2/8.14.5/SuSE Linux 0.8) with ESMTPSA id x9LAOa9m003414
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
+        Mon, 21 Oct 2019 12:24:37 +0200
+From:   Markus Reichl <m.reichl@fivetechno.de>
+Subject: [PATCH] arm64: dts: rockchip: Add LED nodes on rk3399-roc-pc
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Markus Reichl <m.reichl@fivetechno.de>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Autocrypt: addr=m.reichl@fivetechno.de; prefer-encrypt=mutual; keydata=
+ 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
+ eD/Xv4SsK2JTO4nkQYw8
+Organization: five technologies GmbH
+Message-ID: <7d8d85c9-5fde-7943-a6b6-639bca38bdc1@fivetechno.de>
+Date:   Mon, 21 Oct 2019 12:24:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-X-OriginatorOrg: verimatrix.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 05a5a4eb-f546-4d44-4ef0-08d75610b978
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Oct 2019 10:23:32.6769
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: dcb260f9-022d-4495-8602-eae51035a0d0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 28nOnlujFF92ppnlmfhpbTfqUi6+5jc9dlHgKl7pn2bUBjZrcWssQAN7xQG8EDD8Awz/wJfoWarC9H3VXKZbxKjSxnuGmwK8gGgzBVtyBLY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR20MB3005
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="ma6Nskd4tpvP5vsRVUnUWsgiIS2DwbBnW"
+X-bounce-key: webpack.hosteurope.de;m.reichl@fivetechno.de;1571653489;eae68682;
+X-HE-SMSGID: 1iMUre-00016G-4C
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Pascal Van Leeuwen
-> Sent: Thursday, October 17, 2019 9:46 PM
-> To: 'Ben Dooks (Codethink)' <ben.dooks@codethink.co.uk>; 'linux-kernel@li=
-sts.codethink.co.uk'
-> <linux-kernel@lists.codethink.co.uk>
-> Cc: 'Antoine Tenart' <antoine.tenart@bootlin.com>; 'Herbert Xu' <herbert@=
-gondor.apana.org.au>;
-> 'David S. Miller' <davem@davemloft.net>; 'linux-crypto@vger.kernel.org' <=
-linux-
-> crypto@vger.kernel.org>; 'linux-kernel@vger.kernel.org' <linux-kernel@vge=
-r.kernel.org>
-> Subject: RE: [PATCH] crypto: inside-secure - fix type of buffer in eip197=
-_write_firmware
->=20
-> > -----Original Message-----
-> > From: Pascal Van Leeuwen
-> > Sent: Thursday, October 17, 2019 7:14 PM
-> > To: 'Ben Dooks (Codethink)' <ben.dooks@codethink.co.uk>; linux-
-> > kernel@lists.codethink.co.uk
-> > Cc: Antoine Tenart <antoine.tenart@bootlin.com>; Herbert Xu
-> > <herbert@gondor.apana.org.au>; David S. Miller <davem@davemloft.net>; l=
-inux-
-> > crypto@vger.kernel.org; linux-kernel@vger.kernel.org
-> > Subject: RE: [PATCH] crypto: inside-secure - fix type of buffer in eip1=
-97_write_firmware
-> >
-> > > -----Original Message-----
-> > > From: linux-crypto-owner@vger.kernel.org <linux-crypto-owner@vger.ker=
-nel.org> On Behalf
-> > Of Ben
-> > > Dooks (Codethink)
-> > > Sent: Wednesday, October 16, 2019 1:50 PM
-> > > To: linux-kernel@lists.codethink.co.uk
-> > > Cc: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>; Antoine Tenart
-> > > <antoine.tenart@bootlin.com>; Herbert Xu <herbert@gondor.apana.org.au=
->; David S. Miller
-> > > <davem@davemloft.net>; linux-crypto@vger.kernel.org; linux-kernel@vge=
-r.kernel.org
-> > > Subject: [PATCH] crypto: inside-secure - fix type of buffer in eip197=
-_write_firmware
-> > >
-> > > In eip197_write_firmware() the firmware buffer is sent using
-> > > writel(be32_to_cpu(),,,) this produces a number of warnings.
-> > >
-> > > Note, should this really be cpu_to_be32()  ?
-> > >
-> > No, it should certainly not be cpu_to_be32() since the HW itself is mos=
-t
-> > definitely little endian, so that would not make sense to me.
->
-Never mind that. While looking into more endianness related sparse issues,
-I realised that the HW register access is actually configured to match the
-CPU endianness. So the CPU will not need to swap bytes when accessing the
-hardware registers.
-(Technically, the hardware _is_ little endian but our slave interface
-contains byte swapping logic that is enabled for big-endian CPU's ...)
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--ma6Nskd4tpvP5vsRVUnUWsgiIS2DwbBnW
+Content-Type: multipart/mixed; boundary="yJZwcp1Ymsuklh7aGS9WMHUNJ1nnL5i5j";
+ protected-headers="v1"
+From: Markus Reichl <m.reichl@fivetechno.de>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Heiko Stuebner <heiko@sntech.de>, Jagan Teki <jagan@amarulasolutions.com>,
+ Markus Reichl <m.reichl@fivetechno.de>, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+Message-ID: <7d8d85c9-5fde-7943-a6b6-639bca38bdc1@fivetechno.de>
+Subject: [PATCH] arm64: dts: rockchip: Add LED nodes on rk3399-roc-pc
 
-> >
-> > Actually, I don't think either solution would be correct on a big-endia=
-n
-> > CPU. But I don't have any big-endian CPU available to test that theory.
-> >
-> > What I believe must happen is that the bytes must *always* be swapped
-> > here, regardless of the endianness of the CPU. And with a little-endian
-> > CPU, be32_to_cpu() coincidentally always does that.
-> >
-> > Basically, what we need here is: read a dword (32 bits) from the memory
-> > subsystem and write it back to the memory subsystem with bytes reversed=
-.
-> >
-> > Does the kernel have any dedicated function for just always swapping?
-> >
->=20
-> After some more thought on the train home:
->=20
-> I think the correct construct would be cpu_to_le32(be32_to_cpu(data[i]))
-> This would correctly reflect that the data is read from big-endian
-> memory and subsequently written to little-endian "memory" (aka the EIP).
-> It also fits in nicely with your other changes. Could you work that into
-> a patch v2? Then I would ack it (after testing).
->=20
-Since the HW slave ifc is configured to match the CPU endianness, the
-cpu_to_le32() I suggested should NOT be performed and the code is fine as
-it was.
+--yJZwcp1Ymsuklh7aGS9WMHUNJ1nnL5i5j
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
+Content-Transfer-Encoding: quoted-printable
 
-> > Anyway: NACK on this patch for now due to this.
-> >
-Apologies for the mistake and inconvenience. Correction:
-Acked-by: Pascal van Leeuwen <pvanleeuwen@verimatrix.com>
+rk3399-roc-pc has three gpio LEDs, enable them.
+
+Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
+---
+ .../arm64/boot/dts/rockchip/rk3399-roc-pc.dts | 41 +++++++++++++++++++
+ 1 file changed, 41 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts b/arch/arm64/=
+boot/dts/rockchip/rk3399-roc-pc.dts
+index faf60b2a7673..ba52e1053a2d 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
+@@ -28,6 +28,33 @@
+ 		#clock-cells =3D <0>;
+ 	};
+=20
++	leds {
++		compatible =3D "gpio-leds";
++		pinctrl-names =3D "default";
++		pinctrl-0 =3D <&work_led_gpio>, <&diy_led_gpio>, <&yellow_led_gpio>;
++
++		work-led {
++			label =3D "green:work";
++			gpios =3D <&gpio2 RK_PD3 GPIO_ACTIVE_HIGH>;
++			default-state =3D "on";
++			linux,default-trigger =3D "heartbeat";
++		};
++
++		diy-led {
++			label =3D "red:diy";
++			gpios =3D <&gpio0 RK_PB5 GPIO_ACTIVE_HIGH>;
++			default-state =3D "off";
++			linux,default-trigger =3D "mmc1";
++		};
++
++		yellow-led {
++			label =3D "yellow:yellow-led";
++			gpios =3D <&gpio0 RK_PA2 GPIO_ACTIVE_HIGH>;
++			default-state =3D "off";
++			linux,default-trigger =3D "mmc0";
++		};
++	};
++
+ 	sdio_pwrseq: sdio-pwrseq {
+ 		compatible =3D "mmc-pwrseq-simple";
+ 		clocks =3D <&rk808 1>;
+@@ -494,6 +521,20 @@
+ 		};
+ 	};
+=20
++	leds {
++		work_led_gpio: work_led-gpio {
++			rockchip,pins =3D <2 RK_PD3 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++
++		diy_led_gpio: diy_led-gpio {
++			rockchip,pins =3D <0 RK_PB5 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++
++		yellow_led_gpio: yellow_led-gpio {
++			rockchip,pins =3D <0 RK_PA2 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
++
+ 	pmic {
+ 		vsel1_gpio: vsel1-gpio {
+ 			rockchip,pins =3D <1 RK_PC2 RK_FUNC_GPIO &pcfg_pull_down>;
+--=20
+2.20.1
 
 
-> > > drivers/crypto/inside-secure/safexcel.c:306:17: warning: cast to rest=
-ricted __be32
-> > > drivers/crypto/inside-secure/safexcel.c:306:17: warning: cast to rest=
-ricted __be32
-> > > drivers/crypto/inside-secure/safexcel.c:306:17: warning: cast to rest=
-ricted __be32
-> > > drivers/crypto/inside-secure/safexcel.c:306:17: warning: cast to rest=
-ricted __be32
-> > > drivers/crypto/inside-secure/safexcel.c:306:17: warning: cast to rest=
-ricted __be32
-> > > drivers/crypto/inside-secure/safexcel.c:306:17: warning: cast to rest=
-ricted __be32
-> > >
-> > > Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
-> > > ---
-> > > Cc: Antoine Tenart <antoine.tenart@bootlin.com>
-> > > Cc: Herbert Xu <herbert@gondor.apana.org.au>
-> > > Cc: "David S. Miller" <davem@davemloft.net>
-> > > Cc: linux-crypto@vger.kernel.org
-> > > Cc: linux-kernel@vger.kernel.org
-> > > ---
-> > >  drivers/crypto/inside-secure/safexcel.c | 6 +++---
-> > >  1 file changed, 3 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/drivers/crypto/inside-secure/safexcel.c b/drivers/crypto=
-/inside-
-> > secure/safexcel.c
-> > > index 223d1bfdc7e6..dd33f6dda295 100644
-> > > --- a/drivers/crypto/inside-secure/safexcel.c
-> > > +++ b/drivers/crypto/inside-secure/safexcel.c
-> > > @@ -298,13 +298,13 @@ static void eip197_init_firmware(struct safexce=
-l_crypto_priv
-> > *priv)
-> > >  static int eip197_write_firmware(struct safexcel_crypto_priv *priv,
-> > >  				  const struct firmware *fw)
-> > >  {
-> > > -	const u32 *data =3D (const u32 *)fw->data;
-> > > +	const __be32 *data =3D (const __be32 *)fw->data;
-> > >  	int i;
-> > >
-> > >  	/* Write the firmware */
-> > > -	for (i =3D 0; i < fw->size / sizeof(u32); i++)
-> > > +	for (i =3D 0; i < fw->size / sizeof(__be32); i++)
-> > >  		writel(be32_to_cpu(data[i]),
-> > > -		       priv->base + EIP197_CLASSIFICATION_RAMS + i * sizeof(u32));
-> > > +		       priv->base + EIP197_CLASSIFICATION_RAMS + i * sizeof(__be32=
-));
-> > >
-> > >  	/* Exclude final 2 NOPs from size */
-> > >  	return i - EIP197_FW_TERMINAL_NOPS;
-> > > --
-> > > 2.23.0
-> >
-> > Regards,
-> > Pascal van Leeuwen
-> > Silicon IP Architect, Multi-Protocol Engines @ Verimatrix
-> > www.insidesecure.com
->=20
-> Regards,
-> Pascal van Leeuwen
-> Silicon IP Architect, Multi-Protocol Engines @ Verimatrix
-> www.insidesecure.com
 
-Regards,
-Pascal van Leeuwen
-Silicon IP Architect, Multi-Protocol Engines @ Verimatrix
-www.insidesecure.com
+
+
+--yJZwcp1Ymsuklh7aGS9WMHUNJ1nnL5i5j--
+
+--ma6Nskd4tpvP5vsRVUnUWsgiIS2DwbBnW
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAEBCAAdFiEEVKeIeBh0ZWJOldzLOiXeDmsa/bIFAl2th2QACgkQOiXeDmsa
+/bKXBwv7BhRzi03I9j+Me1Zp9yG27lXAQ6FOPpHmt5GJdmFZkpuurRQQ6lBOJmfd
+61KOr6gNYLLVObMeRcZ30gonXE5TK0lLP6mOajtI4YBB0+/4dy3Kwf5qzmtAIaM3
+47NZ9WiTlxR7Oh1ESVFLxGk7exnMq1R0zF2TLafDZxP1vZXcow7aCpgcx8HMgivf
+DN+uAQ8+mMCd3i7heyBrqDUx4oBQamdPF20SpRSfX6oNMmNbO9Vno2ly8JfXBv9O
+1+ThOXF+wVnO5V3Q2OQdHsyZGt3vZDugnbq9RQXjdpJkJfA3rmuGgCgnOcad0+11
+g0kxyU+0il07SuUVfXVZXGraWYZ4WyOpKkOOD5YhWP8cYSK4tOFQlCpeNo/UykHc
+F6bXAwcc8x5naL2J6L4N4hFmGI4I0woqZsTKNX4gHPi30XHf91mJ5n2TatPCquZ0
+Li6fangI5vix3UEMbiFF09g9rKYg2k8v/UiTjYgkj5qMdklM3qgMTToYYq1rm2ay
+yWfVA1OG
+=KTOi
+-----END PGP SIGNATURE-----
+
+--ma6Nskd4tpvP5vsRVUnUWsgiIS2DwbBnW--
