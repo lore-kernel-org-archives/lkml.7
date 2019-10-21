@@ -2,96 +2,228 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACAEECA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 20:26:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FBC2CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 20:29:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 738E12067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 20:26:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F380A2067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 20:28:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C42Mueuz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RHNo45MQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730170AbfJUU0g (ORCPT
+        id S2387399AbfJUU27 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 16:26:36 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:40858 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729388AbfJUU0f (ORCPT
+        Mon, 21 Oct 2019 16:28:59 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:36733 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730052AbfJUU26 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 16:26:35 -0400
-Received: by mail-il1-f193.google.com with SMTP id d83so4808830ilk.7
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 13:26:35 -0700 (PDT)
+        Mon, 21 Oct 2019 16:28:58 -0400
+Received: by mail-io1-f68.google.com with SMTP id b136so17586261iof.3;
+        Mon, 21 Oct 2019 13:28:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=YUr4Z8AVtpytf5hqPhoEfjM2QU/haufjelcazFqZdDI=;
-        b=C42MueuzIG0eurQVvyszFEh1vHQ5Bly/jv8jo9gXLNAv6nVgrF03IlqiBKOpXckont
-         WNtrmzny+GW3nWjHQrtaZ8o6E4KDyBAlJ9DqrLMHPKmrExHB5hCSRG+SEYXnfxC2h/VK
-         XARksHyat0EvVOGKoEBluIgw+fCDmRtCjs2poqSVU9Ngsswgc8jxnjQYiMosovj/SD5X
-         MwzDwywkZLZTrxjrpaKNt7INgtPoRCfNJqTC+1A8l4AXL9mgZlT3Tsg8XfdqEDS5+RF4
-         nCnMnXl76ofcGrZ+FQda6eZhnU7M3bvWGcy3GuN9iJSYIuj/RGkDQSOctYm+KX6BfdQC
-         nz6Q==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=d6Qjgw1Myl3pd7xhfYu5fxr7CWg3brKLe4OgKk4NnfI=;
+        b=RHNo45MQ/BxgzvDPYbFgmQqQcFpQUif7FGVtjKTpyKjXPpYayC3Q8JjW9D1YXORoXZ
+         SPxPPIAybNcp6t4yfBPL53QLmh//M/YU6H8+eTZeIrebXDsefisRECkp2O4sD0HoNMeG
+         WsUFGdjac4KzMikGpbDeBt0xs2LCFT2R2Mk6sDoufmMuIWI2go3FLDID3ImKZkiaDI2o
+         E/DvPSOAtrlQUXf9kYERpak1xE1c5bLZnTrwrmsIc1uRLkjVc25c/jGgwCkzuyHznDQb
+         P5LlE1A0Gr9o2Igy1g1R8Qza9rMiY1Hnij76FK4pR/+4xyM5Gfe2aVxGfqgUtOXbZuKb
+         KezQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=YUr4Z8AVtpytf5hqPhoEfjM2QU/haufjelcazFqZdDI=;
-        b=WDSg7unx2OQQEVaWJxzYxDJzTSUnNOuD/y0nWd1t34xVQu8mHRADQWtZZNsIA+ig8x
-         TnqVim7HUMWyQLjyEyray+JeaZWbgYElwG0ce/rmaTMXs1JBO0Gi/9Z9EyUvu5a+V44d
-         joEQqxXpEbgZLubNVfULzQseBeAhp+jHf61or+SDUX18qvooU3D4ZxpaifY3Oo13hc8e
-         7GdkB4brj4b/RKZSEbc5Cbr03V23c5uUOXK0iM23C6TKofOFZhW44H5ZxxL/XWyHGatY
-         6FTjKdHuudrQZlE4QvZMUBTNRIL8tFWiF71NOnr/JmxqgXwABOYJIPE2CyfYTeLhFyFC
-         4SRA==
-X-Gm-Message-State: APjAAAW97sPKijwxmL2KwTJXywZcAgoLwx5j8EJuKEngpQGYMSCNGKs0
-        MCrmRZbVqr7fC73EON3YJfE=
-X-Google-Smtp-Source: APXvYqxOCcAymeW1sck45BJLBQJ3ERjWLB40X/2QKSPGwqNUoxKzUriQdnqYq3IloP/wdGgZ6UIWTQ==
-X-Received: by 2002:a92:9198:: with SMTP id e24mr5368777ill.184.1571689594969;
-        Mon, 21 Oct 2019 13:26:34 -0700 (PDT)
-Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
-        by smtp.googlemail.com with ESMTPSA id b3sm5941106iln.42.2019.10.21.13.26.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Oct 2019 13:26:34 -0700 (PDT)
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     emamd001@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] clocksource/drivers/davinci: Fix memory leak in davinci_timer_register
-Date:   Mon, 21 Oct 2019 15:26:25 -0500
-Message-Id: <20191021202626.5246-1-navid.emamdoost@gmail.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=d6Qjgw1Myl3pd7xhfYu5fxr7CWg3brKLe4OgKk4NnfI=;
+        b=eBMpq2DBN5qfffiPUDZWsmxSdC4MIjRxYm/WQORWZguJntW/V215zpPAsMgAGJj0Wf
+         UDwE88OjJFArC9+d9fPb+UZrLwUm7QwNAMXPZVoV9StJBQpgEUaQkmCjnzDiRkORKP2O
+         Q1wLo0ol2xEL+UBkP5I+Aj2KRepRIy4o9DQ3zToVpGkoILlbzjg/1T3sdkEHftYcpgY6
+         3pYgTKqeVbtt4ym8o0UrED4S+03OapTWaJVNNbNcGIv2bKEWDvwc6BmO7c6x7mFG+TAy
+         9OjaoIiZJNpPQdN7RC8R9p5vll+10n2/g+znkAlr8POuv2W/CEdZMZgiOQPD8nAEtSgk
+         oucg==
+X-Gm-Message-State: APjAAAVlc1u6DyNxUfHRzqBa8fdkP4RW4J9JeQBvUrNlnUpdVXHTzyc0
+        eDhSslPKEeoy9Nm5yTcoxVQ+gle/1q7usYiaWd8=
+X-Google-Smtp-Source: APXvYqwM2f+dfj4H/KVqp0wga3HX19bNWNB509Lqifaw3bELPmZnTFbqdANNwSujLC4aegWa8Fg/JBLjk7PqKUTaTjE=
+X-Received: by 2002:a02:334e:: with SMTP id k14mr171732jak.19.1571689737526;
+ Mon, 21 Oct 2019 13:28:57 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191021161921.31825-1-jeffrey.l.hugo@gmail.com> <20191021195851.GG20212@google.com>
+In-Reply-To: <20191021195851.GG20212@google.com>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Mon, 21 Oct 2019 14:28:46 -0600
+Message-ID: <CAOCk7NpkStP7MNAPtEPZwe=otZAKFa7YAc-A=+_ad4yy6O_RVQ@mail.gmail.com>
+Subject: Re: [PATCH v2] arm64: dts: qcom: msm8998: Fixup uart3 gpio config for bluetooth
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the impelementation of davinci_timer_register() the allocated memory
-for clockevent should be released if request_irq() fails.
+On Mon, Oct 21, 2019 at 1:58 PM Matthias Kaehlcke <mka@chromium.org> wrote:
+>
+> On Mon, Oct 21, 2019 at 09:19:21AM -0700, Jeffrey Hugo wrote:
+> > It turns out that the wcn3990 can float the gpio lines during bootup, etc
+> > which will result in the uart core thinking there is incoming data.  This
+> > results in the bluetooth stack getting garbage.  By applying a bias to
+> > match what wcn3990 would drive, the issue is corrected.
+> >
+> > Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> > ---
+> >
+> > v2:
+> > -split out pinctrl config by pin
+> >
+> >  .../boot/dts/qcom/msm8998-clamshell.dtsi      | 22 ++++++++++++++++
+> >  arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi     | 22 ++++++++++++++++
+> >  arch/arm64/boot/dts/qcom/msm8998-pins.dtsi    | 25 ++++++++++++++++---
+> >  3 files changed, 65 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/arch/arm64/boot/dts/qcom/msm8998-clamshell.dtsi b/arch/arm64/boot/dts/qcom/msm8998-clamshell.dtsi
+> > index 38a1c2ba5e83..8c9a3e0f3843 100644
+> > --- a/arch/arm64/boot/dts/qcom/msm8998-clamshell.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/msm8998-clamshell.dtsi
+> > @@ -37,6 +37,28 @@
+> >       };
+> >  };
+> >
+> > +&blsp1_uart3_on {
+> > +     rx {
+> > +             /delete-property/ bias-disable;
+> > +             /*
+> > +              * Configure a pull-up on 45 (RX). This is needed to
+> > +              * avoid garbage data when the TX pin of the Bluetooth
+> > +              * module is in tri-state (module powered off or not
+> > +              * driving the signal yet).
+> > +              */
+> > +             bias-pull-up;
+> > +     };
+> > +
+> > +     cts {
+> > +             /delete-property/ bias-disable;
+> > +             /*
+> > +              * Configure a pull-down on 47 (CTS) to match the pull
+> > +              * of the Bluetooth module.
+> > +              */
+> > +             bias-pull-down;
+> > +     };
+> > +};
+> > +
+> >  &qusb2phy {
+> >       status = "okay";
+> >
+> > diff --git a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
+> > index 8adb4969baec..74c14f50b0f6 100644
+> > --- a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
+> > @@ -37,6 +37,28 @@
+> >       };
+> >  };
+> >
+> > +&blsp1_uart3_on {
+> > +     rx {
+> > +             /delete-property/ bias-disable;
+> > +             /*
+> > +              * Configure a pull-up on 45 (RX). This is needed to
+> > +              * avoid garbage data when the TX pin of the Bluetooth
+> > +              * module is in tri-state (module powered off or not
+> > +              * driving the signal yet).
+> > +              */
+> > +             bias-pull-up;
+> > +     };
+> > +
+> > +     cts {
+> > +             /delete-property/ bias-disable;
+> > +             /*
+> > +              * Configure a pull-down on 47 (CTS) to match the pull
+> > +              * of the Bluetooth module.
+> > +              */
+> > +             bias-pull-down;
+> > +     };
+> > +};
+> > +
+> >  &blsp2_uart1 {
+> >       status = "okay";
+> >  };
+> > diff --git a/arch/arm64/boot/dts/qcom/msm8998-pins.dtsi b/arch/arm64/boot/dts/qcom/msm8998-pins.dtsi
+> > index e32d3ab395ea..7c222cbf19d9 100644
+> > --- a/arch/arm64/boot/dts/qcom/msm8998-pins.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/msm8998-pins.dtsi
+> > @@ -77,13 +77,30 @@
+> >       };
+> >
+> >       blsp1_uart3_on: blsp1_uart3_on {
+> > -             mux {
+> > -                     pins = "gpio45", "gpio46", "gpio47", "gpio48";
+> > +             tx {
+> > +                     pins = "gpio45";
+> >                       function = "blsp_uart3_a";
+> > +                     drive-strength = <2>;
+>
+> Should the drive-strength really be configured in the .dtsi
+> of the SoC? I think of it as a board specific property, since it
+> depends on what is on the other end of the UART.
 
-Fixes: 721154f972aa ("clocksource/drivers/davinci: Add support for clockevents")
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
----
- drivers/clocksource/timer-davinci.c | 1 +
- 1 file changed, 1 insertion(+)
+I'm mostly waiting to see what Bjorn would like, but I see some value
+in providing decent, sane defaults to work with to start.  The
+documentation I see indicates that the uart function isn't expected to
+exceed a 2mA sink/source drive.
 
-diff --git a/drivers/clocksource/timer-davinci.c b/drivers/clocksource/timer-davinci.c
-index 62745c962049..910d4d2f0d64 100644
---- a/drivers/clocksource/timer-davinci.c
-+++ b/drivers/clocksource/timer-davinci.c
-@@ -299,6 +299,7 @@ int __init davinci_timer_register(struct clk *clk,
- 			 "clockevent/tim12", clockevent);
- 	if (rv) {
- 		pr_err("Unable to request the clockevent interrupt");
-+		kfree(clockevent);
- 		return rv;
- 	}
- 
--- 
-2.17.1
+>
+> > +                     bias-disable;
+>
+> This seems reasonable since the SoC drives the TX pin.
+>
+> >               };
+> >
+> > -             config {
+> > -                     pins = "gpio45", "gpio46", "gpio47", "gpio48";
+> > +             rx {
+> > +                     pins = "gpio46";
+> > +                     function = "blsp_uart3_a";
+> > +                     drive-strength = <2>;
+>
+> 'drive-strength' shouldn't be needed for an input pin
 
+The hardware always configures a drive strength, its also indicates
+how much the SoC is willing to sink.
+
+>
+> > +                     bias-disable;
+>
+> In case of the input pins I'm not sure if this should/needs to be in
+> the .dtsi of the SoC. If it isn't really needed it would allow to
+> remove the '/delete-property/ bias-disable;' entries in the board
+> files.
+>
+> > +             };
+> > +
+> > +             cts {
+> > +                     pins = "gpio47";
+> > +                     function = "blsp_uart3_a";
+> > +                     drive-strength = <2>;
+>
+> 'drive-strength' shouldn't be needed for an input pin
+>
+> > +                     bias-disable;
+> > +             };
+> > +
+> > +             rfr {
+> > +                     pins = "gpio48";
+> > +                     function = "blsp_uart3_a";
+> >                       drive-strength = <2>;
+> >                       bias-disable;
+> >               };
+> > --
+> > 2.17.1
+> >
