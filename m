@@ -2,116 +2,130 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A34DCC47E49
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:07:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5438CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:08:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AAB8205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:07:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VPFLCqVK"
+	by mail.kernel.org (Postfix) with ESMTP id AF8C52166E
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:08:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728466AbfJUMHq (ORCPT
+        id S1728487AbfJUMIB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 08:07:46 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:28986 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727725AbfJUMHq (ORCPT
+        Mon, 21 Oct 2019 08:08:01 -0400
+Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:51645 "EHLO
+        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728113AbfJUMIB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 08:07:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571659665;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=jZW2w85TwEDR7o6SJHU50uEOcHT5Iw+gP89ZUiYLiLY=;
-        b=VPFLCqVKXG8ryyFxNxlnPORr0JlIJNViViCFzDv37GpQsfm6u2b14Mu74w+Mp3Yo3Tyxqd
-        IB6TIMXo0yvznjnIXbyY8XjtSwNZDNZcaLFD4o+YyYaEHNeoihvIoN0l1pqPXb4d029Gzt
-        Fw5YNRpffwxHOVQobhhADpkGi0K0QYA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-258-tqajfzzvNaaD0mZxWWnBcg-1; Mon, 21 Oct 2019 08:07:41 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1C8EF800D41;
-        Mon, 21 Oct 2019 12:07:40 +0000 (UTC)
-Received: from segfault.boston.devel.redhat.com (segfault.boston.devel.redhat.com [10.19.60.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0CAC25D9E2;
-        Mon, 21 Oct 2019 12:07:38 +0000 (UTC)
-From:   Jeff Moyer <jmoyer@redhat.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-fsdevel@vger.kernel.org, Jeff Smits <jeff.smits@intel.com>,
-        Doug Nelson <doug.nelson@intel.com>, stable@vger.kernel.org,
-        Jan Kara <jack@suse.cz>,
-        "Matthew Wilcox \(Oracle\)" <willy@infradead.org>,
-        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] fs/dax: Fix pmd vs pte conflict detection
-References: <157150237973.3940076.12626102230619807187.stgit@dwillia2-desk3.amr.corp.intel.com>
-X-PGP-KeyID: 1F78E1B4
-X-PGP-CertKey: F6FE 280D 8293 F72C 65FD  5A58 1FF8 A7CA 1F78 E1B4
-Date:   Mon, 21 Oct 2019 08:07:38 -0400
-In-Reply-To: <157150237973.3940076.12626102230619807187.stgit@dwillia2-desk3.amr.corp.intel.com>
-        (Dan Williams's message of "Sat, 19 Oct 2019 09:26:19 -0700")
-Message-ID: <x495zkii9o5.fsf@segfault.boston.devel.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Mon, 21 Oct 2019 08:08:01 -0400
+Received: from [192.168.2.10] ([46.9.232.237])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id MWTbiUbnQo1ZhMWTeiM4Pd; Mon, 21 Oct 2019 14:07:59 +0200
+Subject: Re: [PATCH v2] media: v4l2-ctrl: Add p_def to v4l2_ctrl_config
+To:     Ricardo Ribalda Delgado <ribalda@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191016145512.24747-1-ribalda@kernel.org>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <f8cd7654-15f3-2c89-bcbb-bbebcf0fe649@xs4all.nl>
+Date:   Mon, 21 Oct 2019 14:07:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-MC-Unique: tqajfzzvNaaD0mZxWWnBcg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191016145512.24747-1-ribalda@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfGNYbYd4WHD+U9ete5V61CtzoKvjJdc4GNJ5idAraIX35hv1d6iUboXc174wm355+dQHxzHgZbjmO75+uNrLn5VO5/YkSLMRkl7pXaRDhIm29msrlHyi
+ /YMo1ibJXaFBOpLzkD5SHA4InDwi3JQsycKI52tDRbP4cCzDILJ5SWoaHxVO0b83KScGMTk0/9t4AW/CY9pzB7y+txmb3iKWxM9M6qAnkKSayDouv9T7EU6g
+ poI13sknGSVmnjhH2QRCERBuVEjzZF0hlKZ3wrRPu8dz7XKS4D2KGpLHGAoV8qJk
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan Williams <dan.j.williams@intel.com> writes:
-
-> Check for NULL entries before checking the entry order, otherwise NULL
-> is misinterpreted as a present pte conflict. The 'order' check needs to
-> happen before the locked check as an unlocked entry at the wrong order
-> must fallback to lookup the correct order.
-
-Please include the user-visible effects of the problem in the changelog.
-
-Thanks,
-Jeff
-
->
-> Reported-by: Jeff Smits <jeff.smits@intel.com>
-> Reported-by: Doug Nelson <doug.nelson@intel.com>
-> Cc: <stable@vger.kernel.org>
-> Fixes: 23c84eb78375 ("dax: Fix missed wakeup with PMD faults")
-> Cc: Jan Kara <jack@suse.cz>
-> Cc: Matthew Wilcox (Oracle) <willy@infradead.org>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+On 10/16/19 4:55 PM, Ricardo Ribalda Delgado wrote:
+> This allows setting the default value on compound controls created via
+> v4l2_ctrl_new_custom.
+> 
+> Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
 > ---
->  fs/dax.c |    5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/fs/dax.c b/fs/dax.c
-> index a71881e77204..08160011d94c 100644
-> --- a/fs/dax.c
-> +++ b/fs/dax.c
-> @@ -221,10 +221,11 @@ static void *get_unlocked_entry(struct xa_state *xa=
-s, unsigned int order)
-> =20
->  =09for (;;) {
->  =09=09entry =3D xas_find_conflict(xas);
-> +=09=09if (!entry || WARN_ON_ONCE(!xa_is_value(entry)))
-> +=09=09=09return entry;
->  =09=09if (dax_entry_order(entry) < order)
->  =09=09=09return XA_RETRY_ENTRY;
-> -=09=09if (!entry || WARN_ON_ONCE(!xa_is_value(entry)) ||
-> -=09=09=09=09!dax_is_locked(entry))
-> +=09=09if (!dax_is_locked(entry))
->  =09=09=09return entry;
-> =20
->  =09=09wq =3D dax_entry_waitqueue(xas, entry, &ewait.key);
+>  drivers/media/v4l2-core/v4l2-ctrls.c | 3 ++-
+>  include/media/v4l2-ctrls.h           | 2 ++
+>  2 files changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+> index bf50d37ef6c1..939aa110daa0 100644
+> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
+> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+> @@ -2583,7 +2583,8 @@ struct v4l2_ctrl *v4l2_ctrl_new_custom(struct v4l2_ctrl_handler *hdl,
+>  			type, min, max,
+>  			is_menu ? cfg->menu_skip_mask : step, def,
+>  			cfg->dims, cfg->elem_size,
+> -			flags, qmenu, qmenu_int, ptr_null, priv);
+> +			flags, qmenu, qmenu_int,
+> +			v4l2_ctrl_ptr_create((void *)cfg->p_def), priv);
+
+I don't like this cast. I've been experimenting a bit and this works fine:
+
+#include <stdlib.h>
+#include <stdio.h>
+
+union v4l2_ctrl_ptr {
+        int *p_int;
+        const int *p_int_const;
+};
+
+struct v4l2_ctrl_config {
+        union v4l2_ctrl_ptr p;
+};
+
+static const int i = 5;
+
+static const struct v4l2_ctrl_config c = {
+        .p.p_int_const = &i,
+};
+
+int main(int argc, char **argv)
+{
+        printf("%d\n", *c.p.p_int_const);
+        return 0;
+}
+
+So I would like to see a p_const being added to the union, and I think we
+need a v4l2_ctrl_const_ptr_create() helper.
+
+In a separate patch it would be really nice to replace any uses of .p with
+.p_const where possible to signal that the contents isn't modified.
+
+Regards,
+
+	Hans
+
+>  	if (ctrl)
+>  		ctrl->is_private = cfg->is_private;
+>  	return ctrl;
+> diff --git a/include/media/v4l2-ctrls.h b/include/media/v4l2-ctrls.h
+> index 26205ba3a0a0..d08d19a4ae34 100644
+> --- a/include/media/v4l2-ctrls.h
+> +++ b/include/media/v4l2-ctrls.h
+> @@ -375,6 +375,7 @@ struct v4l2_ctrl_handler {
+>   * @max:	The control's maximum value.
+>   * @step:	The control's step value for non-menu controls.
+>   * @def:	The control's default value.
+> + * @p_def:	The control's default value for compound controls.
+>   * @dims:	The size of each dimension.
+>   * @elem_size:	The size in bytes of the control.
+>   * @flags:	The control's flags.
+> @@ -403,6 +404,7 @@ struct v4l2_ctrl_config {
+>  	s64 max;
+>  	u64 step;
+>  	s64 def;
+> +	const void *p_def;
+>  	u32 dims[V4L2_CTRL_MAX_DIMS];
+>  	u32 elem_size;
+>  	u32 flags;
+> 
 
