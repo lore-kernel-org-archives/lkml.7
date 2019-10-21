@@ -2,105 +2,78 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81EA7CA9EAB
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 03:56:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30FD4C47E49
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 04:15:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5340A2089C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 03:56:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x2DVwu8h"
+	by mail.kernel.org (Postfix) with ESMTP id 9377E21A4A
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 04:05:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727020AbfJUD4J (ORCPT
+        id S1726963AbfJUEFu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 20 Oct 2019 23:56:09 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:45199 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726819AbfJUD4I (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 20 Oct 2019 23:56:08 -0400
-Received: by mail-pg1-f194.google.com with SMTP id r1so6892603pgj.12
-        for <linux-kernel@vger.kernel.org>; Sun, 20 Oct 2019 20:56:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DzN6sUwiXsGiG0QstYd2dvfeg6/B1PwWJvQoun4TY3w=;
-        b=x2DVwu8hxWO/tIGOY+mw63ppGx1pqI/eZFZwCc4QdjzK87vadub6fctBWh8VqjgJ/o
-         5fHfeKOKt1y8Mr9FuqAH/YznIJFYx/ZWwodC+oCkaKcP4cdsupYCE9WxRmzyBJ5QHUFM
-         2ZtT/m+nVjlvMsaAiVil0s77A7AIZVNBqseSHcVcNHmJHAKz5ncfbRyiNOoLSA6JFiUs
-         HVh2lk9CcQeEXtZ3y7WLJFeV4S39T7NDxg7u8MDELtVwoAL8r59vKZGSZHf+6fa4+UMl
-         gn95cPMDGSwgS+YKpdVbYpwWIuNSsQON+qVRdu7W0WWDJ+/QD0A5b7I1pDpgyQhFui/c
-         NEwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DzN6sUwiXsGiG0QstYd2dvfeg6/B1PwWJvQoun4TY3w=;
-        b=uP9o1Q8x6fadkqhMmr2dHRFdhymrTy4elT0IIzz3MTdiBiDnfuZ6VCXnFRF1HAEvyh
-         VTX+97iHM/HGZ1tJAbBFst0zzVBU+8+qpUiEoLDHWGC9pt+ww8Wf5XaY2ld2EkNMnCmP
-         EFk4BqXXaU7KK98rAv2BNI4xxOmxfmooqilBh0TBPvpgWNMYtkRw+z7Ri7qA0ilaUw8P
-         QrCUzCe9aOd8MtnhsFNorEmeksnxWJWmOKOYX3T3rpBBje0jz/qKO3wMTsOamJINPc96
-         +s+c1LF6fLBN5c2d0NNkEILu5VuCIQV4el8iw/+LZeDX9xNwKXRfRPHOO0JZTvaUHLLo
-         42sg==
-X-Gm-Message-State: APjAAAWmI8n4rIXNOqMKa+6qzRGJeP0Gt1bGB1z/FX3DjGQC6S+aBGia
-        T6CMP9zAGkfY4sj4d7rg2+TuZQ==
-X-Google-Smtp-Source: APXvYqz91vILzKwCwMpXw4c4MDum21nEhzA0IzWpvQxk5Xjbqxh2R6MjJYT42v2BMZwkh3wIlyC3CQ==
-X-Received: by 2002:a17:90a:3702:: with SMTP id u2mr26313063pjb.57.1571630167781;
-        Sun, 20 Oct 2019 20:56:07 -0700 (PDT)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id o185sm18760540pfg.136.2019.10.20.20.56.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 20 Oct 2019 20:56:07 -0700 (PDT)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Olof Johansson <olof@lixom.net>,
-        Maxime Ripard <mripard@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Subject: [PATCH] arm64: defconfig: Enable Qualcomm watchdog driver
-Date:   Sun, 20 Oct 2019 20:56:03 -0700
-Message-Id: <20191021035603.4186317-1-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.23.0
+        Mon, 21 Oct 2019 00:05:50 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:37138 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725468AbfJUEFt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 00:05:49 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 2A4A356633E3751C2050;
+        Mon, 21 Oct 2019 12:05:48 +0800 (CST)
+Received: from [127.0.0.1] (10.74.191.121) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Mon, 21 Oct 2019
+ 12:05:44 +0800
+Subject: Re: [PATCH] PCI: Warn about host bridge device when its numa node is
+ NO_NODE
+To:     Christoph Hellwig <hch@infradead.org>
+CC:     <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <mhocko@kernel.org>,
+        <peterz@infradead.org>, <robin.murphy@arm.com>,
+        <geert@linux-m68k.org>, <gregkh@linuxfoundation.org>,
+        <paul.burton@mips.com>
+References: <1571467543-26125-1-git-send-email-linyunsheng@huawei.com>
+ <20191019083431.GA26340@infradead.org>
+From:   Yunsheng Lin <linyunsheng@huawei.com>
+Message-ID: <96b8737d-5fbf-7942-bf10-7521cf954d6e@huawei.com>
+Date:   Mon, 21 Oct 2019 12:05:44 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191019083431.GA26340@infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.191.121]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable the driver for the watchdog found in the application processor
-subsystem on most modern Qualcomm platforms.
+On 2019/10/19 16:34, Christoph Hellwig wrote:
+> On Sat, Oct 19, 2019 at 02:45:43PM +0800, Yunsheng Lin wrote:
+>> +	if (nr_node_ids > 1 && dev_to_node(bus->bridge) == NUMA_NO_NODE)
+>> +		dev_err(bus->bridge, FW_BUG "No node assigned on NUMA capable HW by BIOS. Please contact your vendor for updates.\n");
+>> +
+> 
+> The whole idea of mentioning a BIOS in architeture indepent code doesn't
+> make sense at all.
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+Mentioning the BIOS is to tell user what firmware is broken, so that
+user can report this to their vendor by referring the specific firmware.
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 4591bf1303da..f3d95f77fb0d 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -463,6 +463,7 @@ CONFIG_IMX2_WDT=y
- CONFIG_IMX_SC_WDT=m
- CONFIG_MESON_GXBB_WATCHDOG=m
- CONFIG_MESON_WATCHDOG=m
-+CONFIG_QCOM_WDT=m
- CONFIG_RENESAS_WDT=y
- CONFIG_UNIPHIER_WATCHDOG=y
- CONFIG_BCM2835_WDT=y
--- 
-2.23.0
+It seems we can specific the node through different ways(DT, ACPI, etc).
+
+Is there a better name for mentioning instead of BIOS, or we should do
+the checking and warning in the architeture dependent code?
+
+Or maybe just remove the BIOS from the above log?
+
+Thanks.
+
+> 
+> .
+> 
 
