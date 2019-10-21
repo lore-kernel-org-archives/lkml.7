@@ -2,156 +2,141 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DE68CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 23:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 485FACA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 23:46:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 138AB20882
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 23:28:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="NgmGbovC"
+	by mail.kernel.org (Postfix) with ESMTP id 1EBA320656
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 23:46:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730263AbfJUX2B (ORCPT
+        id S1730276AbfJUXqP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 19:28:01 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:42565 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727953AbfJUX2B (ORCPT
+        Mon, 21 Oct 2019 19:46:15 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:45110 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727264AbfJUXqP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 19:28:01 -0400
-Received: by mail-pg1-f196.google.com with SMTP id f14so8731954pgi.9
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 16:27:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=WzXnfhMMbkyxsbipWZpmDaEvwrJstasCywDAINxmEVo=;
-        b=NgmGbovCPleH2RLmDw5JhoDuEPGz4MOoogHyBtIP6mJ9Dcy6+emNzKGSxU3oVjAx0u
-         A6Thotqa3AC+oXLpkNPc/k8nDI7mEP0DpWfEe9Ug5PITZjO8pgOe6BrQ+HXu7Lna4CyS
-         vxUGrbn74CCKn00pPxuQ+8n+UoCFiicvHSud8wUsy9BVNHvJzV/pJYDRBkhb9QlqjriB
-         0yBuHoBgdESlw55pEH5HDN4TnNcP6PEPc7Zm4zBmz+/mCm9G7uRFDDrbQIxhg6ek1+3Y
-         rOVMVVFfOZa4CyAAMjflAmWWstpYjbWDxsE/u+E0FoZrJ7MkhAPIfM5NO2R14YoizbMq
-         hhAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=WzXnfhMMbkyxsbipWZpmDaEvwrJstasCywDAINxmEVo=;
-        b=K5fI1CzWX0Y0OeQg+sINyw74tqdUh5xTyPyJHPEm7FZneJVNdshkXIRFtuJsVZS5xU
-         xLn2EPz0e3q5NVOqhiDO2mg1wGL3h8AYRWksRwJKYgu3pAENlp6OiDuyQWscv2w5W/WX
-         cTRKgir/fc1Iumcfgd67N4i1ZhPtnwhQgvFmvlm00GY699yCoczu284gGC9VJX4om1/2
-         CVUFvsv4Y6nuNhAXQgCgvVi8euYFgymFnVa+fksl8XUaS+eWFg1PVy3tbj2vYI0QDidG
-         MCUGOpX9HXykYhLzUSE4ATobYAri0dch8JhO1p/AKd+cru04SoMQgrWJhVj11Aq6I5yz
-         BRog==
-X-Gm-Message-State: APjAAAWMoKimnDfEI0+ZNGrd2LkAqH7xneM2JFCDjpvNe9VO2F1csANg
-        JCWk8WdTDCEzjNfZlajVpBSaGg==
-X-Google-Smtp-Source: APXvYqyFbqMB93ePo3KO7ai57nnAORUuMqwIhaAaU+w11quvMl42giRKuGVis1L3zububOtNf/9trg==
-X-Received: by 2002:a63:f743:: with SMTP id f3mr427772pgk.410.1571700478697;
-        Mon, 21 Oct 2019 16:27:58 -0700 (PDT)
-Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
-        by smtp.gmail.com with ESMTPSA id e17sm275837pgg.5.2019.10.21.16.27.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Oct 2019 16:27:58 -0700 (PDT)
-Date:   Mon, 21 Oct 2019 16:27:51 -0700
-From:   Stephen Hemminger <stephen@networkplumber.org>
-To:     Yunsheng Lin <linyunsheng@huawei.com>
-Cc:     <davem@davemloft.net>, <dsahern@gmail.com>, <jiri@mellanox.com>,
-        <allison@lohutok.net>, <mmanning@vyatta.att-mail.com>,
-        <petrm@mellanox.com>, <dcaratti@redhat.com>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC] net: vlan: reverse 4 bytes of vlan header when
- setting initial MTU
-Message-ID: <20191021162751.1ccb251e@hermes.lan>
-In-Reply-To: <1571660763-117936-1-git-send-email-linyunsheng@huawei.com>
-References: <1571660763-117936-1-git-send-email-linyunsheng@huawei.com>
+        Mon, 21 Oct 2019 19:46:15 -0400
+Received: from dread.disaster.area (pa49-180-40-48.pa.nsw.optusnet.com.au [49.180.40.48])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id E32A73629FF;
+        Tue, 22 Oct 2019 10:46:04 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1iMhNE-0007QX-Aa; Tue, 22 Oct 2019 10:46:04 +1100
+Date:   Tue, 22 Oct 2019 10:46:04 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 5/5] fs/xfs: Allow toggle of physical DAX flag
+Message-ID: <20191021234604.GB2681@dread.disaster.area>
+References: <20191020155935.12297-1-ira.weiny@intel.com>
+ <20191020155935.12297-6-ira.weiny@intel.com>
+ <20191021004536.GD8015@dread.disaster.area>
+ <20191021224931.GA25526@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191021224931.GA25526@iweiny-DESK2.sc.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0
+        a=y881pOMu+B+mZdf5UrsJdA==:117 a=y881pOMu+B+mZdf5UrsJdA==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=XobE76Q3jBoA:10
+        a=QyXUC8HyAAAA:8 a=7-415B0cAAAA:8 a=YPogiMHmU-6fRLEyw_MA:9
+        a=z-c3JQe-jSBONlfH:21 a=Z1gFN9eyTm15yBDe:21 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 21 Oct 2019 20:26:03 +0800
-Yunsheng Lin <linyunsheng@huawei.com> wrote:
+On Mon, Oct 21, 2019 at 03:49:31PM -0700, Ira Weiny wrote:
+> On Mon, Oct 21, 2019 at 11:45:36AM +1100, Dave Chinner wrote:
+> > On Sun, Oct 20, 2019 at 08:59:35AM -0700, ira.weiny@intel.com wrote:
+> > > @@ -1232,12 +1233,10 @@ xfs_diflags_to_linux(
+> > >  		inode->i_flags |= S_NOATIME;
+> > >  	else
+> > >  		inode->i_flags &= ~S_NOATIME;
+> > > -#if 0	/* disabled until the flag switching races are sorted out */
+> > >  	if (xflags & FS_XFLAG_DAX)
+> > >  		inode->i_flags |= S_DAX;
+> > >  	else
+> > >  		inode->i_flags &= ~S_DAX;
+> > > -#endif
+> > 
+> > This code has bit-rotted. See xfs_setup_iops(), where we now have a
+> > different inode->i_mapping->a_ops for DAX inodes.
+> 
+> :-(
+> 
+> > 
+> > That, fundamentally, is the issue here - it's not setting/clearing
+> > the DAX flag that is the issue, it's doing a swap of the
+> > mapping->a_ops while there may be other code using that ops
+> > structure.
+> > 
+> > IOWs, if there is any code anywhere in the kernel that
+> > calls an address space op without holding one of the three locks we
+> > hold here (i_rwsem, MMAPLOCK, ILOCK) then it can race with the swap
+> > of the address space operations.
+> > 
+> > By limiting the address space swap to file sizes of zero, we rule
+> > out the page fault path (mmap of a zero length file segv's with an
+> > access beyond EOF on the first read/write page fault, right?).
+> 
+> Yes I checked that and thought we were safe here...
+> 
+> > However, other aops callers that might run unlocked and do the wrong
+> > thing if the aops pointer is swapped between check of the aop method
+> > existing and actually calling it even if the file size is zero?
+> > 
+> > A quick look shows that FIBMAP (ioctl_fibmap())) looks susceptible
+> > to such a race condition with the current definitions of the XFS DAX
+> > aops. I'm guessing there will be others, but I haven't looked
+> > further than this...
+> 
+> I'll check for others and think on what to do about this.  ext4 will have the
+> same problem I think.  :-(
+> 
+> I don't suppose using a single a_ops for both DAX and non-DAX is palatable?
 
-> Currently the MTU of vlan netdevice is set to the same MTU
-> of the lower device, which requires the underlying device
-> to handle it as the comment has indicated:
-> 
-> 	/* need 4 bytes for extra VLAN header info,
-> 	 * hope the underlying device can handle it.
-> 	 */
-> 	new_dev->mtu = real_dev->mtu;
-> 
-> Currently most of the physical netdevs seems to handle above
-> by reversing 2 * VLAN_HLEN for L2 packet len.
-> 
-> But for vlan netdev over vxlan netdev case, the vxlan does not
-> seems to reverse the vlan header for vlan device, which may cause
-> performance degradation because vxlan may emit a packet that
-> exceed the MTU of the physical netdev, and cause the software
-> TSO to happen in ip_finish_output_gso(), software TSO call stack
-> as below:
-> 
->  => ftrace_graph_call
->  => tcp_gso_segment
->  => tcp4_gso_segment
->  => inet_gso_segment
->  => skb_mac_gso_segment
->  => skb_udp_tunnel_segment
->  => udp4_ufo_fragment
->  => inet_gso_segment
->  => skb_mac_gso_segment
->  => __skb_gso_segment
->  => __ip_finish_output
->  => ip_output
->  => ip_local_out
->  => iptunnel_xmit
->  => udp_tunnel_xmit_skb
->  => vxlan_xmit_one
->  => vxlan_xmit
->  => dev_hard_start_xmit
->  => __dev_queue_xmit
->  => dev_queue_xmit
->  => vlan_dev_hard_start_xmit
->  => dev_hard_start_xmit
->  => __dev_queue_xmit
->  => dev_queue_xmit
->  => neigh_resolve_output
->  => ip_finish_output2
->  => __ip_finish_output
->  => ip_output
->  => ip_local_out
->  => __ip_queue_xmit
->  => ip_queue_xmit
->  => __tcp_transmit_skb
->  => tcp_write_xmit
->  => __tcp_push_pending_frames
->  => tcp_push
->  => tcp_sendmsg_locked
->  => tcp_sendmsg
->  => inet_sendmsg
->  => sock_sendmsg
->  => sock_write_iter
->  => new_sync_write
->  => __vfs_write
->  => vfs_write
->  => ksys_write
->  => __arm64_sys_write
->  => el0_svc_common.constprop.0
->  => el0_svc_handler
->  => el0_svc  
-> 
-> This patch set initial MTU of the vlan device to the MTU of the
-> lower device minus vlan header to handle the above case.
-> 
-> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+IMO, no. It means we have to check IS_DAX() in every aops,
+and replicate a bunch of callouts to generic code. i.e this sort of
+thing:
 
-The MTU is visible to user space in many tools, and Linux (and BSD)
-have always treated VLAN header as not part of the MTU. You can't change
-that now.
+	if (aops->method)
+		return aops->method(...)
 
+	/* do something else */
+
+results in us having to replicate that logic as something like:
+
+	if (!IS_DAX)
+		return filesystem_aops_method()
+
+	/* do something else */
+
+Indeed, the calling code may well do the wrong thing if we have
+methods defined just to add IS_DAX() checks to avoid using that
+functionality because the caller now thinks that functionality is
+supported when in fact it isn't.
+
+So it seems to me like an even bigger can of worms to try to use a
+single aops structure for vastly different functionality....
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
