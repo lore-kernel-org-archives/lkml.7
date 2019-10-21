@@ -7,45 +7,49 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC448CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:06:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F4B6CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:06:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB3E52067B
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:06:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7704F2067B
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:06:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387457AbfJVAEG (ORCPT
+        id S1730299AbfJVAG3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 20:04:06 -0400
+        Mon, 21 Oct 2019 20:06:29 -0400
 Received: from Galois.linutronix.de ([193.142.43.55]:38895 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387408AbfJVAED (ORCPT
+        with ESMTP id S1728375AbfJVADs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 20:04:03 -0400
+        Mon, 21 Oct 2019 20:03:48 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iMgxO-0004BA-CV; Tue, 22 Oct 2019 01:19:22 +0200
+        id 1iMgxQ-0004F5-4S; Tue, 22 Oct 2019 01:19:24 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 2D9C01C03AB;
-        Tue, 22 Oct 2019 01:19:14 +0200 (CEST)
-Date:   Mon, 21 Oct 2019 23:19:13 -0000
-From:   "tip-bot2 for Jin Yao" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 5340A1C04DD;
+        Tue, 22 Oct 2019 01:19:17 +0200 (CEST)
+Date:   Mon, 21 Oct 2019 23:19:17 -0000
+From:   "tip-bot2 for Ian Rogers" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf stat: Support --all-kernel/--all-user
-Cc:     Jin Yao <yao.jin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+Subject: [tip: perf/core] perf annotate: Avoid reallocation in objdump parsing
+Cc:     Ian Rogers <irogers@google.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20191011050545.3899-1-yao.jin@linux.intel.com>
-References: <20191011050545.3899-1-yao.jin@linux.intel.com>
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        Stephane Eranian <eranian@google.com>,
+        clang-built-linux@googlegroups.com, Ingo Molnar <mingo@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
+In-Reply-To: <20191010183649.23768-2-irogers@google.com>
+References: <20191010183649.23768-2-irogers@google.com>
 MIME-Version: 1.0
-Message-ID: <157169995374.29376.12797462443376097475.tip-bot2@tip-bot2>
+Message-ID: <157169995703.29376.923567640046514942.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -61,102 +65,112 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     dd071024bf52156eed31deaf511c6e7a82a6f57b
-Gitweb:        https://git.kernel.org/tip/dd071024bf52156eed31deaf511c6e7a82a6f57b
-Author:        Jin Yao <yao.jin@linux.intel.com>
-AuthorDate:    Fri, 11 Oct 2019 13:05:45 +08:00
+Commit-ID:     353dcaa2f979a04f9397306ae3165ccf9fc731df
+Gitweb:        https://git.kernel.org/tip/353dcaa2f979a04f9397306ae3165ccf9fc731df
+Author:        Ian Rogers <irogers@google.com>
+AuthorDate:    Thu, 10 Oct 2019 11:36:45 -07:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Tue, 15 Oct 2019 08:39:42 -03:00
+CommitterDate: Tue, 15 Oct 2019 08:36:22 -03:00
 
-perf stat: Support --all-kernel/--all-user
+perf annotate: Avoid reallocation in objdump parsing
 
-'perf record' has supported --all-kernel / --all-user to configure all
-used events to run in kernel space or run in user space. But 'perf stat'
-doesn't support these options.
+Objdump output is parsed using getline which allocates memory for the
+read. Getline will realloc if the memory is too small, but currently the
+line is always freed after the call.
 
-It would be useful to support these options in 'perf stat' too to keep
-the same semantics available in both tools.
+Simplify parse_objdump_line by performing the reading in symbol__disassemble.
 
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
+Signed-off-by: Ian Rogers <irogers@google.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Jin Yao <yao.jin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/20191011050545.3899-1-yao.jin@linux.intel.com
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: clang-built-linux@googlegroups.com
+Link: http://lore.kernel.org/lkml/20191010183649.23768-2-irogers@google.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-stat.txt |  6 ++++++
- tools/perf/builtin-stat.c              |  6 ++++++
- tools/perf/util/stat.c                 | 10 ++++++++++
- tools/perf/util/stat.h                 |  2 ++
- 4 files changed, 24 insertions(+)
+ tools/perf/util/annotate.c | 26 ++++++++++++++------------
+ 1 file changed, 14 insertions(+), 12 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
-index 930c51c..a9af4e4 100644
---- a/tools/perf/Documentation/perf-stat.txt
-+++ b/tools/perf/Documentation/perf-stat.txt
-@@ -323,6 +323,12 @@ The output is SMI cycles%, equals to (aperf - unhalted core cycles) / aperf
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index 2b856b6..f9c39a7 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -1489,24 +1489,17 @@ annotation_line__print(struct annotation_line *al, struct symbol *sym, u64 start
+  * means that it's not a disassembly line so should be treated differently.
+  * The ops.raw part will be parsed further according to type of the instruction.
+  */
+-static int symbol__parse_objdump_line(struct symbol *sym, FILE *file,
++static int symbol__parse_objdump_line(struct symbol *sym,
+ 				      struct annotate_args *args,
+-				      int *line_nr)
++				      char *line, int *line_nr)
+ {
+ 	struct map *map = args->ms.map;
+ 	struct annotation *notes = symbol__annotation(sym);
+ 	struct disasm_line *dl;
+-	char *line = NULL, *parsed_line, *tmp, *tmp2;
+-	size_t line_len;
++	char *parsed_line, *tmp, *tmp2;
+ 	s64 line_ip, offset = -1;
+ 	regmatch_t match[2];
  
- Users who wants to get the actual value can apply --no-metric-only.
+-	if (getline(&line, &line_len, file) < 0)
+-		return -1;
+-
+-	if (!line)
+-		return -1;
+-
+ 	line_ip = -1;
+ 	parsed_line = strim(line);
  
-+--all-kernel::
-+Configure all used events to run in kernel space.
+@@ -1543,7 +1536,6 @@ static int symbol__parse_objdump_line(struct symbol *sym, FILE *file,
+ 	args->ms.sym  = sym;
+ 
+ 	dl = disasm_line__new(args);
+-	free(line);
+ 	(*line_nr)++;
+ 
+ 	if (dl == NULL)
+@@ -1876,6 +1868,8 @@ static int symbol__disassemble(struct symbol *sym, struct annotate_args *args)
+ 	int lineno = 0;
+ 	int nline;
+ 	pid_t pid;
++	char *line;
++	size_t line_len;
+ 	int err = dso__disassemble_filename(dso, symfs_filename, sizeof(symfs_filename));
+ 
+ 	if (err)
+@@ -1964,18 +1958,26 @@ static int symbol__disassemble(struct symbol *sym, struct annotate_args *args)
+ 		goto out_free_command;
+ 	}
+ 
++	/* Storage for getline. */
++	line = NULL;
++	line_len = 0;
 +
-+--all-user::
-+Configure all used events to run in user space.
+ 	nline = 0;
+ 	while (!feof(file)) {
++		if (getline(&line, &line_len, file) < 0 || !line)
++			break;
 +
- EXAMPLES
- --------
+ 		/*
+ 		 * The source code line number (lineno) needs to be kept in
+ 		 * across calls to symbol__parse_objdump_line(), so that it
+ 		 * can associate it with the instructions till the next one.
+ 		 * See disasm_line__new() and struct disasm_line::line_nr.
+ 		 */
+-		if (symbol__parse_objdump_line(sym, file, args, &lineno) < 0)
++		if (symbol__parse_objdump_line(sym, args, line, &lineno) < 0)
+ 			break;
+ 		nline++;
+ 	}
++	free(line);
  
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 468fc49..c88d4e1 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -803,6 +803,12 @@ static struct option stat_options[] = {
- 	OPT_CALLBACK('M', "metrics", &evsel_list, "metric/metric group list",
- 		     "monitor specified metrics or metric groups (separated by ,)",
- 		     parse_metric_groups),
-+	OPT_BOOLEAN_FLAG(0, "all-kernel", &stat_config.all_kernel,
-+			 "Configure all used events to run in kernel space.",
-+			 PARSE_OPT_EXCLUSIVE),
-+	OPT_BOOLEAN_FLAG(0, "all-user", &stat_config.all_user,
-+			 "Configure all used events to run in user space.",
-+			 PARSE_OPT_EXCLUSIVE),
- 	OPT_END()
- };
- 
-diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-index ebdd130..6822e4f 100644
---- a/tools/perf/util/stat.c
-+++ b/tools/perf/util/stat.c
-@@ -490,6 +490,16 @@ int create_perf_stat_counter(struct evsel *evsel,
- 	if (config->identifier)
- 		attr->sample_type = PERF_SAMPLE_IDENTIFIER;
- 
-+	if (config->all_user) {
-+		attr->exclude_kernel = 1;
-+		attr->exclude_user   = 0;
-+	}
-+
-+	if (config->all_kernel) {
-+		attr->exclude_kernel = 0;
-+		attr->exclude_user   = 1;
-+	}
-+
- 	/*
- 	 * Disabling all counters initially, they will be enabled
- 	 * either manually by us or by kernel via enable_on_exec
-diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-index edbeb2f..081c4a5 100644
---- a/tools/perf/util/stat.h
-+++ b/tools/perf/util/stat.h
-@@ -106,6 +106,8 @@ struct perf_stat_config {
- 	bool			 big_num;
- 	bool			 no_merge;
- 	bool			 walltime_run_table;
-+	bool			 all_kernel;
-+	bool			 all_user;
- 	FILE			*output;
- 	unsigned int		 interval;
- 	unsigned int		 timeout;
+ 	if (nline == 0)
+ 		pr_err("No output from %s\n", command);
