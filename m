@@ -2,120 +2,214 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02C4ACA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:16:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BC94CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:16:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7F80206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:16:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sHFpCGNp"
+	by mail.kernel.org (Postfix) with ESMTP id 235042084C
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:16:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728404AbfJULQA (ORCPT
+        id S1728446AbfJULQb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 07:16:00 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39645 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727831AbfJULQA (ORCPT
+        Mon, 21 Oct 2019 07:16:31 -0400
+Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:59317 "EHLO
+        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727831AbfJULQb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 07:16:00 -0400
-Received: by mail-wr1-f68.google.com with SMTP id c6so1266194wrm.6
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 04:15:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=2kG9pHnFeA6PHcYxK5XIBWye1413OVWPwWivEHaEPxA=;
-        b=sHFpCGNpZUr9EgW9RnN3TQG6R2f+xIbwosYwqG+ENfBMv8io6y7yM2d9N6vNuloJF2
-         HxsM8JQVm/hKyxFPDvsUQXGaHY4ROjy6Fj89QD433kPOxXfb/7rEwMCPth7/2gUXQ8Bm
-         YkJv5oF17JlBd3p9iUSwU+GFDhPdypJMfwxdW2dPs+kk1Run6TuZGTlGR9/p7QxX+jdE
-         exlPcYrTvQt2yTfO//swSHyZZxG6MI/vqlJkUa1nLGYxLW/oHJ10IzKJdv3UdoJm8apA
-         +rxORZO4/MH8sNtfmnCnRjhVXHqmIJr0pCJZtqE0HhllafHa9gmWQSqv4DQf+nBmwPfA
-         oowA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2kG9pHnFeA6PHcYxK5XIBWye1413OVWPwWivEHaEPxA=;
-        b=JWlXoB9b3SBr1xfAeekc7PRVQTCLHgDVepRVkSZ4r71u0M8G1nEmbkKuTBolXD+ZJY
-         c/Y7Y4oCtBEntYKbzrQWzvJu54QRRj1S29MJoMjfox3uzR9NbhDjMyk3JFDy0vpq1PsQ
-         e2MRxgKNANLg6Bevrg+CC5/Czi/Xb29ZfsQ2C0su03k6BU4kKcZ+8YBY+j3k1vlFsCFJ
-         7xOAQ4RffLu+BsJPUm/VBxGvuJY6o12r62zS4KdcYJnNrB/XSP3F6X0QxUwaX+3efVWl
-         jmU+QKehaxy1qsDZz1UUhgwkJl610QPwzbyfMlBxbTDoFcmuMMYWatqLKzD97eTYRkAL
-         2VYQ==
-X-Gm-Message-State: APjAAAWtwP0xKQ/KVtwaK6OefR7VHYTprpc614PJMSkehbtm1mQkQU6V
-        MLCpMJuLFOS1VErimKG43yAAdw==
-X-Google-Smtp-Source: APXvYqxYf6uO9WVXoizzlTpKAqfTaa9EpMyq3rZnnJ4hcxgDGEwowxOByM3u5FsqQHn2e4sOGazs9A==
-X-Received: by 2002:adf:eed2:: with SMTP id a18mr4241896wrp.273.1571656557502;
-        Mon, 21 Oct 2019 04:15:57 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id v6sm17556789wru.72.2019.10.21.04.15.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Oct 2019 04:15:56 -0700 (PDT)
-Date:   Mon, 21 Oct 2019 12:15:55 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     arnd@arndb.de, broonie@kernel.org, linus.walleij@linaro.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        baohua@kernel.org, stephan@gerhold.net
-Subject: Re: [PATCH v2 1/9] mfd: cs5535-mfd: Use PLATFORM_DEVID_* defines and
- tidy error message
-Message-ID: <20191021111555.zsvvdfun3gqhrurw@holly.lan>
-References: <20191021105822.20271-1-lee.jones@linaro.org>
- <20191021105822.20271-2-lee.jones@linaro.org>
+        Mon, 21 Oct 2019 07:16:31 -0400
+Received: from [192.168.2.10] ([46.9.232.237])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id MVfkiUH6Uo1ZhMVfoiLqeg; Mon, 21 Oct 2019 13:16:28 +0200
+Subject: Re: [PATCH v4 0/6] media: Introduce Allwinner H3 deinterlace driver
+To:     Jernej Skrabec <jernej.skrabec@siol.net>, mripard@kernel.org,
+        wens@csie.org
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+References: <20191017183738.68069-1-jernej.skrabec@siol.net>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <8fbb323d-cd36-73cb-2df8-21e2819fa5af@xs4all.nl>
+Date:   Mon, 21 Oct 2019 13:16:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191021105822.20271-2-lee.jones@linaro.org>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191017183738.68069-1-jernej.skrabec@siol.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfMtA5ZUvk5SMyfHDrRDdsscFKWiG0RLda76+iWgeFQobn4VN/CfhpHs5R4tftNnSaA+wIhzE5IJVRc93acbZCex4ojmnDI0q1d2PXBspsHw0nlCoJ1zN
+ Tsd8tUJFP+E+CPII+oQzuFg70xlcL3fyt54UIgA6rdtwk4Tymuuwc3Si1U8+aWn5z+qZWt/Ie4mgYxCrxROd74pQYEHrH+86MYT04Ho1cXiOE2Sm+9WBqr9S
+ vy+Qk5Nwufy5x9gg7I6t8Qf1ntIkW/ndhzbW3dosALWd+CdP4yoFL6atOKyO4rmWq+iC+957ZcCEYYYkgVClLWKfBwgdIoAvP6lN4NKm7rnkBhdm+ZZCp0P8
+ EMhWk1/TjVoCXNMo9i5h4eN3JFybdT6NF7SJLiKKzShsFWvGNDGvCM+jbkoDbQOCEQnh//I3G+RyHTM8C7JU8LHkm9t2MwhSAJDM9AgiYM80g76ZwrgrGKha
+ V20ZRBkd1Z6GGntC7OLeEL9c1zugoq1Vw5EM7GusBDoFMEyR+rm3ZzPFQuM=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 11:58:14AM +0100, Lee Jones wrote:
-> In most contexts '-1' doesn't really mean much to the casual observer.
-> In almost all cases, it's better to use a human readable define.  In
-> this case PLATFORM_DEVID_* defines have already been provided for this
-> purpose.
+Hi Jernej,
+
+I found something odd in the compliance output:
+
+On 10/17/19 8:37 PM, Jernej Skrabec wrote:
+> Starting with H3, Allwinner began to include standalone deinterlace
+> core in multimedia oriented SoCs. This patch series introduces support
+> for it. Note that new SoCs, like H6, have radically different (updated)
+> deinterlace core, which will need a new driver.
 > 
-> While we're here, let's be specific about the 'MFD devices' which
-> failed.  It will help when trying to distinguish which of the 2 sets
-> of sub-devices we actually failed to register.
-
-No objections... but won't the tag added by dev_err() already
-disambiguate?
+> v4l2-compliance report:
+> v4l2-compliance SHA: dece02f862f38d8f866230ca9f1015cb93ddfac4, 32 bits
 > 
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
->  drivers/mfd/cs5535-mfd.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+> Compliance test for sun8i-di device /dev/video0:
 > 
-> diff --git a/drivers/mfd/cs5535-mfd.c b/drivers/mfd/cs5535-mfd.c
-> index f1825c0ccbd0..2c47afc22d24 100644
-> --- a/drivers/mfd/cs5535-mfd.c
-> +++ b/drivers/mfd/cs5535-mfd.c
-> @@ -127,10 +127,11 @@ static int cs5535_mfd_probe(struct pci_dev *pdev,
->  		cs5535_mfd_cells[i].id = 0;
->  	}
->  
-> -	err = mfd_add_devices(&pdev->dev, -1, cs5535_mfd_cells,
-> +	err = mfd_add_devices(&pdev->dev, PLATFORM_DEVID_NONE, cs5535_mfd_cells,
->  			      ARRAY_SIZE(cs5535_mfd_cells), NULL, 0, NULL);
->  	if (err) {
-> -		dev_err(&pdev->dev, "MFD add devices failed: %d\n", err);
-> +		dev_err(&pdev->dev,
-> +			"Failed to add CS5532 sub-devices: %d\n", err);
+> Driver Info:
+>         Driver name      : sun8i-di
+>         Card type        : sun8i-di
+>         Bus info         : platform:sun8i-di
+>         Driver version   : 5.3.0
+>         Capabilities     : 0x84208000
+>                 Video Memory-to-Memory
+>                 Streaming
+>                 Extended Pix Format
+>                 Device Capabilities
+>         Device Caps      : 0x04208000
+>                 Video Memory-to-Memory
+>                 Streaming
+>                 Extended Pix Format
+> 
+> Required ioctls:
+>         test VIDIOC_QUERYCAP: OK
+> 
+> Allow for multiple opens:
+>         test second /dev/video0 open: OK
+>         test VIDIOC_QUERYCAP: OK
+>         test VIDIOC_G/S_PRIORITY: OK
+>         test for unlimited opens: OK
+> 
+> Debug ioctls:
+>         test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+>         test VIDIOC_LOG_STATUS: OK (Not Supported)
+> 
+> Input ioctls:
+>         test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+>         test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+>         test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+>         test VIDIOC_ENUMAUDIO: OK (Not Supported)
+>         test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+>         test VIDIOC_G/S_AUDIO: OK (Not Supported)
+>         Inputs: 0 Audio Inputs: 0 Tuners: 0
+> 
+> Output ioctls:
+>         test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+>         test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+>         test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+>         test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+>         test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+>         Outputs: 0 Audio Outputs: 0 Modulators: 0
+> 
+> Input/Output configuration ioctls:
+>         test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+>         test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+>         test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+>         test VIDIOC_G/S_EDID: OK (Not Supported)
+> 
+> Control ioctls:
+>         test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+>         test VIDIOC_QUERYCTRL: OK (Not Supported)
+>         test VIDIOC_G/S_CTRL: OK (Not Supported)
+>         test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+>         test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+>         test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+>         Standard Controls: 0 Private Controls: 0
+> 
+> Format ioctls:
+>         test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+>         test VIDIOC_G/S_PARM: OK (Not Supported)
+>         test VIDIOC_G_FBUF: OK (Not Supported)
+>         test VIDIOC_G_FMT: OK
+>         test VIDIOC_TRY_FMT: OK
+>         test VIDIOC_S_FMT: OK
+>         test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+>         test Cropping: OK (Not Supported)
+>         test Composing: OK (Not Supported)
+>         test Scaling: OK
 
-                                           ^^^
+This claims that the driver supports scaling, but I don't think that is right.
 
-Typo (and MODULE_DESCRIPTION() says this is a driver for CS5536 too).
-Once that is fixed:
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+More likely the deinterlacing part is what confuses the compliance test.
 
+Can you look in v4l2-test-formats.cpp, function testBasicScaling() where it
+sets node->can_scale to true? And see if this is due to a driver bug, or due
+to a bug in the test?
 
-Daniel.
+Regards,
+
+	Hans
+
+> 
+> Codec ioctls:
+>         test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+>         test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+>         test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+> 
+> Buffer ioctls:
+>         test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+>         test VIDIOC_EXPBUF: OK
+>         test Requests: OK (Not Supported)
+> 
+> Total for sun8i-di device /dev/video0: 44, Succeeded: 44, Failed: 0, Warnings: 0
+> 
+> Please take a look.
+> 
+> Best regards,
+> Jernej
+> 
+> Changes from v3:
+> - added Maxime's a-b tag
+> - moved and fixed Kconfig entry
+> - put clk_set_rate_exclusive() and it's counterpart in PM callbacks
+> 
+> Changes from v2:
+> - added acked-by and review-by tags
+> - fixed schema path in H3 deinterlace binding
+> - moved busy check after format args check
+> 
+> Changes from v1:
+> - updated Maxime's e-mail in DT binding
+> - removed "items" for single item in DT binding
+> - implemented power management
+> - replaced regmap with direct io access
+> - set exclusive clock rate
+> - renamed DEINTERLACE_FRM_CTRL_COEF_CTRL to DEINTERLACE_FRM_CTRL_COEF_ACCESS
+> 
+> Jernej Skrabec (6):
+>   dt-bindings: bus: sunxi: Add H3 MBUS compatible
+>   clk: sunxi-ng: h3: Export MBUS clock
+>   ARM: dts: sunxi: h3/h5: Add MBUS controller node
+>   dt-bindings: media: Add Allwinner H3 Deinterlace binding
+>   media: sun4i: Add H3 deinterlace driver
+>   dts: arm: sun8i: h3: Enable deinterlace unit
+> 
+>  .../bindings/arm/sunxi/sunxi-mbus.txt         |    1 +
+>  .../media/allwinner,sun8i-h3-deinterlace.yaml |   75 ++
+>  MAINTAINERS                                   |    7 +
+>  arch/arm/boot/dts/sun8i-h3.dtsi               |   13 +
+>  arch/arm/boot/dts/sunxi-h3-h5.dtsi            |    9 +
+>  drivers/clk/sunxi-ng/ccu-sun8i-h3.h           |    4 -
+>  drivers/media/platform/Kconfig                |   12 +
+>  drivers/media/platform/sunxi/Makefile         |    1 +
+>  .../media/platform/sunxi/sun8i-di/Makefile    |    2 +
+>  .../media/platform/sunxi/sun8i-di/sun8i-di.c  | 1028 +++++++++++++++++
+>  .../media/platform/sunxi/sun8i-di/sun8i-di.h  |  237 ++++
+>  include/dt-bindings/clock/sun8i-h3-ccu.h      |    2 +-
+>  12 files changed, 1386 insertions(+), 5 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/media/allwinner,sun8i-h3-deinterlace.yaml
+>  create mode 100644 drivers/media/platform/sunxi/sun8i-di/Makefile
+>  create mode 100644 drivers/media/platform/sunxi/sun8i-di/sun8i-di.c
+>  create mode 100644 drivers/media/platform/sunxi/sun8i-di/sun8i-di.h
+> 
+
