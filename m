@@ -7,54 +7,50 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9B11CA9EB0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:05:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E55C8CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:05:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D2822173B
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:05:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C47122166E
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:05:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387564AbfJVAFI (ORCPT
+        id S2387576AbfJVAFJ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 20:05:08 -0400
+        Mon, 21 Oct 2019 20:05:09 -0400
 Received: from Galois.linutronix.de ([193.142.43.55]:38895 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387548AbfJVAFG (ORCPT
+        with ESMTP id S2387534AbfJVAFE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 20:05:06 -0400
+        Mon, 21 Oct 2019 20:05:04 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iMgws-0003qu-CE; Tue, 22 Oct 2019 01:18:50 +0200
+        id 1iMgx6-0003yk-AN; Tue, 22 Oct 2019 01:19:04 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id AD15D1C047B;
-        Tue, 22 Oct 2019 01:18:49 +0200 (CEST)
-Date:   Mon, 21 Oct 2019 23:18:49 -0000
-From:   "tip-bot2 for Jiri Olsa" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id CE7061C0086;
+        Tue, 22 Oct 2019 01:18:58 +0200 (CEST)
+Date:   Mon, 21 Oct 2019 23:18:58 -0000
+From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] libperf: Keep count of failed tests
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>,
+Subject: [tip: perf/core] perf trace: Honour --max-events in processing
+ syscalls:sys_enter_*
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>,
+        Luis =?utf-8?q?Cl=C3=A1udio_Gon=C3=A7alves?= 
+        <lclaudio@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <20191017105918.20873-9-jolsa@kernel.org>
-References: <20191017105918.20873-9-jolsa@kernel.org>
+In-Reply-To: <tip-0ob1dky1a9ijlfrfhxyl40wr@git.kernel.org>
+References: <tip-0ob1dky1a9ijlfrfhxyl40wr@git.kernel.org>
 MIME-Version: 1.0
-Message-ID: <157169992933.29376.15176117865199883044.tip-bot2@tip-bot2>
+Message-ID: <157169993806.29376.8362318761084030080.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8BIT
 X-Linutronix-Spam-Score: -1.0
 X-Linutronix-Spam-Level: -
 X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
@@ -65,138 +61,70 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     301a89f8cf628316eea6c768787a836b63a83439
-Gitweb:        https://git.kernel.org/tip/301a89f8cf628316eea6c768787a836b63a83439
-Author:        Jiri Olsa <jolsa@kernel.org>
-AuthorDate:    Thu, 17 Oct 2019 12:59:16 +02:00
+Commit-ID:     db25bf98a3861225bc0b2138cf665097141c72ee
+Gitweb:        https://git.kernel.org/tip/db25bf98a3861225bc0b2138cf665097141c72ee
+Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
+AuthorDate:    Fri, 18 Oct 2019 11:48:57 -03:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Sat, 19 Oct 2019 15:35:01 -03:00
+CommitterDate: Fri, 18 Oct 2019 12:19:02 -03:00
 
-libperf: Keep count of failed tests
+perf trace: Honour --max-events in processing syscalls:sys_enter_*
 
-Keep the count of failed tests, so we get better output with failures,
-like:
+We were doing this only at the sys_exit syscall tracepoint, as for
+strace-like we count the pair of sys_enter and sys_exit as one event,
+but when asking specifically for a the syscalls:sys_enter_NAME
+tracepoint we need to count each of those as an event.
 
-  # make tests
-  ...
-  running static:
-  - running test-cpumap.c...OK
-  - running test-threadmap.c...OK
-  - running test-evlist.c...FAILED test-evlist.c:53 failed to create evsel2
-  FAILED test-evlist.c:163 failed to create evsel2
-  FAILED test-evlist.c:287 failed count
-    FAILED (3)
-  - running test-evsel.c...OK
-  running dynamic:
-  - running test-cpumap.c...OK
-  - running test-threadmap.c...OK
-  - running test-evlist.c...FAILED test-evlist.c:53 failed to create evsel2
-  FAILED test-evlist.c:163 failed to create evsel2
-  FAILED test-evlist.c:287 failed count
-    FAILED (3)
-  - running test-evsel.c...OK
- ...
+I.e. things like:
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
+  # perf trace --max-events=4 -e syscalls:sys_enter_lseek
+     0.000 pool/2242 syscalls:sys_enter_lseek(fd: 14<anon_inode:[timerfd]>, offset: 0, whence: CUR)
+     0.034 pool/2242 syscalls:sys_enter_lseek(fd: 15<anon_inode:[timerfd]>, offset: 0, whence: CUR)
+     0.051 pool/2242 syscalls:sys_enter_lseek(fd: 16<anon_inode:[timerfd]>, offset: 0, whence: CUR)
+  2307.900 sshd/30800 syscalls:sys_enter_lseek(fd: 3</usr/lib64/libsystemd.so.0.25.0>, offset: 9032, whence: SET)
+  #
+
+Were going on forever, since we only had sys_enter events.
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Link: http://lore.kernel.org/lkml/20191017105918.20873-9-jolsa@kernel.org
+Link: https://lkml.kernel.org/n/tip-0ob1dky1a9ijlfrfhxyl40wr@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/lib/include/internal/tests.h | 20 +++++++++++++++++---
- tools/perf/lib/tests/test-cpumap.c      |  2 +-
- tools/perf/lib/tests/test-evlist.c      |  2 +-
- tools/perf/lib/tests/test-evsel.c       |  2 +-
- tools/perf/lib/tests/test-threadmap.c   |  2 +-
- 5 files changed, 21 insertions(+), 7 deletions(-)
+ tools/perf/builtin-trace.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/lib/include/internal/tests.h b/tools/perf/lib/include/internal/tests.h
-index b7a20cd..2093e88 100644
---- a/tools/perf/lib/include/internal/tests.h
-+++ b/tools/perf/lib/include/internal/tests.h
-@@ -4,14 +4,28 @@
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 0294b17..1aaf7b2 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -2727,12 +2727,6 @@ static int trace__event_handler(struct trace *trace, struct evsel *evsel,
+ 			} else {
+ 				trace__fprintf_tp_fields(trace, evsel, sample, thread, NULL, 0);
+ 			}
+-			++trace->nr_events_printed;
+-
+-			if (evsel->max_events != ULONG_MAX && ++evsel->nr_events_printed == evsel->max_events) {
+-				evsel__disable(evsel);
+-				evsel__close(evsel);
+-			}
+ 		}
+ 	}
  
- #include <stdio.h>
- 
--#define __T_START fprintf(stdout, "- running %s...", __FILE__)
--#define __T_OK    fprintf(stdout, "OK\n")
--#define __T_FAIL  fprintf(stdout, "FAIL\n")
-+int tests_failed;
+@@ -2743,6 +2737,13 @@ newline:
+ 		trace__fprintf_callchain(trace, sample);
+ 	else if (callchain_ret < 0)
+ 		pr_err("Problem processing %s callchain, skipping...\n", perf_evsel__name(evsel));
 +
-+#define __T_START					\
-+do {							\
-+	fprintf(stdout, "- running %s...", __FILE__);	\
-+	fflush(NULL);					\
-+	tests_failed = 0;				\
-+} while (0)
++	++trace->nr_events_printed;
 +
-+#define __T_END								\
-+do {									\
-+	if (tests_failed)						\
-+		fprintf(stdout, "  FAILED (%d)\n", tests_failed);	\
-+	else								\
-+		fprintf(stdout, "OK\n");				\
-+} while (0)
- 
- #define __T(text, cond)                                                          \
- do {                                                                             \
- 	if (!(cond)) {                                                           \
- 		fprintf(stderr, "FAILED %s:%d %s\n", __FILE__, __LINE__, text);  \
-+		tests_failed++;                                                  \
- 		return -1;                                                       \
- 	}                                                                        \
- } while (0)
-diff --git a/tools/perf/lib/tests/test-cpumap.c b/tools/perf/lib/tests/test-cpumap.c
-index aa34c20..c8d4509 100644
---- a/tools/perf/lib/tests/test-cpumap.c
-+++ b/tools/perf/lib/tests/test-cpumap.c
-@@ -26,6 +26,6 @@ int main(int argc, char **argv)
- 	perf_cpu_map__put(cpus);
- 	perf_cpu_map__put(cpus);
- 
--	__T_OK;
-+	__T_END;
++	if (evsel->max_events != ULONG_MAX && ++evsel->nr_events_printed == evsel->max_events) {
++		evsel__disable(evsel);
++		evsel__close(evsel);
++	}
+ out:
+ 	thread__put(thread);
  	return 0;
- }
-diff --git a/tools/perf/lib/tests/test-evlist.c b/tools/perf/lib/tests/test-evlist.c
-index 741bc1b..6d8ebe0 100644
---- a/tools/perf/lib/tests/test-evlist.c
-+++ b/tools/perf/lib/tests/test-evlist.c
-@@ -408,6 +408,6 @@ int main(int argc, char **argv)
- 	test_mmap_thread();
- 	test_mmap_cpus();
- 
--	__T_OK;
-+	__T_END;
- 	return 0;
- }
-diff --git a/tools/perf/lib/tests/test-evsel.c b/tools/perf/lib/tests/test-evsel.c
-index 1b6c428..135722a 100644
---- a/tools/perf/lib/tests/test-evsel.c
-+++ b/tools/perf/lib/tests/test-evsel.c
-@@ -130,6 +130,6 @@ int main(int argc, char **argv)
- 	test_stat_thread();
- 	test_stat_thread_enable();
- 
--	__T_OK;
-+	__T_END;
- 	return 0;
- }
-diff --git a/tools/perf/lib/tests/test-threadmap.c b/tools/perf/lib/tests/test-threadmap.c
-index 8c5f472..7dc4d6f 100644
---- a/tools/perf/lib/tests/test-threadmap.c
-+++ b/tools/perf/lib/tests/test-threadmap.c
-@@ -26,6 +26,6 @@ int main(int argc, char **argv)
- 	perf_thread_map__put(threads);
- 	perf_thread_map__put(threads);
- 
--	__T_OK;
-+	__T_END;
- 	return 0;
- }
