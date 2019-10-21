@@ -2,269 +2,256 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B15FCA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:42:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E92ECA9EB9
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:43:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EF982089C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:42:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46C5D21479
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:43:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E+iTTPv2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727770AbfJUJmL (ORCPT
+        id S1727709AbfJUJnu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 05:42:11 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:33006 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726725AbfJUJmL (ORCPT
+        Mon, 21 Oct 2019 05:43:50 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:34407 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726987AbfJUJnt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 05:42:11 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 5C6B528A5C5
-Subject: Re: [PATCH] pwm: cros-ec: Let cros_ec_pwm_get_state() return the last
- applied state
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        linux-kernel@vger.kernel.org, heiko@sntech.de,
-        dianders@chromium.org, mka@chromium.org, groeck@chromium.org,
-        kernel@collabora.com, bleung@chromium.org,
-        linux-pwm@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
-References: <20191008143432.pbhcqamd6f4qwbqn@pengutronix.de>
- <4f009344-242e-19a7-6872-2c55df086044@collabora.com>
- <20191008203137.s22clq6v2om5ktio@pengutronix.de>
- <53b7d02b-1a2d-11da-fdd0-5378f360d876@collabora.com>
- <20191009095635.yysr33lnwldicyng@holly.lan>
- <20191009101637.gmvghwdvcmfw4yyk@pengutronix.de>
- <20191009104236.ux23ywnhvsym2qcb@holly.lan>
- <20191009112126.slpyxhnuqpiqgmes@pengutronix.de>
- <20191009113540.x6uxo3ryiuf7ql55@holly.lan>
- <49990b56-44f9-7c3c-ce81-ed295895f90a@collabora.com>
- <20191017113552.GC3122066@ulmo>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <bb32d5f8-6915-d5f1-06ba-1cf0da99f6b1@collabora.com>
-Date:   Mon, 21 Oct 2019 11:42:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 21 Oct 2019 05:43:49 -0400
+Received: by mail-pg1-f193.google.com with SMTP id k20so7472284pgi.1;
+        Mon, 21 Oct 2019 02:43:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=cmN8zwVr2SuNtBtISWc5Bh4R5qvw1ehXj7JXCfcJmuc=;
+        b=E+iTTPv2WkO7Sg5DrRrZ+3kq/EdTZW5ya2GSv2KVb+SpwOK95KlIhr70MPO1ZSRSSI
+         q2JFAUNggIuKKqWLRhlVT9vZSVBRETLg4s/kp5XTj/Qqjk8Y86wP6CdR1VRPP++ichgn
+         Nh2ICRJsXqZqMXOBZ3YHyM5AwOa2K1HHn3pwjcjaYOgmFfftQOaenHBzoCgj+/E3dGfr
+         rM4sgRI2NgS+Ucuh24cwKJ2he7NQd/RE7zV7Z7CKxGcwJTuyhqXAm7WPcdWb+2W0GAMe
+         WXezwahge7ydUykNsemHpwvyWfrogiRzphdeaOeOFopUamBh9aNQ0h9DxfnoOqYVqXzt
+         mqJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=cmN8zwVr2SuNtBtISWc5Bh4R5qvw1ehXj7JXCfcJmuc=;
+        b=BU0OZHnefF9tMcZcrHH/qY52+KTfya4gimP6EO2N6XUsOPAuOEnmAqPb15nxKfnrZ0
+         9Sc8nQMnidmOIAzuMadBaQjt7AReysab7Nn1HPdz6+eKdUc1/q5sO3vqkOUF+KSyN0Pm
+         3Nc/lgzBkhIqg/WXwVcHoN1V+Admx+iH/Yek2QglAfSbf04CbpMf4j0DDqCmf6RQ+D5u
+         QS7yryBOqas0mcruml8WJjBn3aYfm5bwUYFnOSR+pjvZMpidXCz4hwuOaBbVkdu3obhe
+         tsXnCmgiA+dYsVgcxSw6fNjXUip39R6xD40DD/xNKScJRmF3xR24K7xxkaN+fmjb2HOS
+         TgBQ==
+X-Gm-Message-State: APjAAAVJ+iI7FfX7vrfd1qiJZHHtDVaumntMI9QMTKlNSxHJ8X2tlvVd
+        GjjWXNUXISVLGbBmkBSh0yo=
+X-Google-Smtp-Source: APXvYqwDcvipzqDP7Y+Jxpfnz7WJXuKBuHk1dgRmX0oj2k+9a8LrMfyS0HCuLT2q4KZPSGDyV3O49g==
+X-Received: by 2002:aa7:9ed2:: with SMTP id r18mr21552878pfq.1.1571651028530;
+        Mon, 21 Oct 2019 02:43:48 -0700 (PDT)
+Received: from localhost.localdomain ([163.152.162.99])
+        by smtp.gmail.com with ESMTPSA id w5sm14195645pfn.96.2019.10.21.02.43.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Oct 2019 02:43:47 -0700 (PDT)
+Date:   Mon, 21 Oct 2019 18:43:42 +0900
+From:   Suwan Kim <suwan.kim027@gmail.com>
+To:     Julia Lawall <julia.lawall@lip6.fr>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
+        shuah@kernel.org
+Subject: Re: drivers/usb/usbip/vhci_tx.c:150:8-18: ERROR: reference preceded
+ by free on line 150 (fwd)
+Message-ID: <20191021094342.GA2471@localhost.localdomain>
+References: <alpine.DEB.2.21.1910191946510.5888@hadrien>
 MIME-Version: 1.0
-In-Reply-To: <20191017113552.GC3122066@ulmo>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1910191946510.5888@hadrien>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thierry,
-On 17/10/19 13:35, Thierry Reding wrote:
-> On Wed, Oct 09, 2019 at 03:47:43PM +0200, Enric Balletbo i Serra wrote:
+On Sat, Oct 19, 2019 at 07:49:29PM +0200, Julia Lawall wrote:
+> Is it guaranteed that if usb_pipetype(urb->pipe) == PIPE_ISOCHRONOUS (line
+> 123) is true on one iteration, then it will be true on all iterations? If
+> not, then it could be good to set iso_buffer to NULL after the kfree on
+> line 150.
+> 
 
-[snip]
+It is not always true on all iteration because URB on each iteration
+can have different type of pipe. So, I think you are right.
+Thanks for reporting this.
 
+I think it seems better to move the declaration of
+usbip_iso_packet_descriptor into the while loop.
+
+Could you send a patch to Shuah? Or should I send?
+
+Regards
+Suwan Kim
+
+> julia
 > 
-> --- >8 ---
-> From 15245e5f0dc02af021451b098df93901c9f49373 Mon Sep 17 00:00:00 2001
-> From: Thierry Reding <thierry.reding@gmail.com>
-> Date: Thu, 17 Oct 2019 13:21:15 +0200
-> Subject: [PATCH] pwm: cros-ec: Cache duty cycle value
+> ---------- Forwarded message ----------
+> Date: Sun, 20 Oct 2019 01:40:11 +0800
+> From: kbuild test robot <lkp@intel.com>
+> To: kbuild@lists.01.org
+> Cc: Julia Lawall <julia.lawall@lip6.fr>
+> Subject: drivers/usb/usbip/vhci_tx.c:150:8-18: ERROR: reference preceded by free
+>      on line 150
 > 
-> The ChromeOS embedded controller doesn't differentiate between disabled
-> and duty cycle being 0. In order not to potentially confuse consumers,
-> cache the duty cycle and return the cached value instead of the real
-> value when the PWM is disabled.
+> CC: kbuild-all@lists.01.org
+> CC: linux-kernel@vger.kernel.org
+> CC: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
 > 
-> Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> head:   998d75510e373aab5644d777d3b058312d550159
+> commit: ea44d190764b4422af4d1c29eaeb9e69e353b406 usbip: Implement SG support to vhci-hcd and stub driver
+> date:   7 weeks ago
+> :::::: branch date: 7 hours ago
+> :::::: commit date: 7 weeks ago
+> 
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Reported-by: Julia Lawall <julia.lawall@lip6.fr>
+> 
+> >> drivers/usb/usbip/vhci_tx.c:150:8-18: ERROR: reference preceded by free on line 150
+>    drivers/usb/usbip/vhci_tx.c:159:7-17: ERROR: reference preceded by free on line 150
+> 
+> # https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=ea44d190764b4422af4d1c29eaeb9e69e353b406
+> git remote add linus https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+> git remote update linus
+> git checkout ea44d190764b4422af4d1c29eaeb9e69e353b406
+> vim +150 drivers/usb/usbip/vhci_tx.c
+> 
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   51
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   52  static int vhci_send_cmd_submit(struct vhci_device *vdev)
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   53  {
+> ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   54  	struct usbip_iso_packet_descriptor *iso_buffer = NULL;
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   55  	struct vhci_priv *priv = NULL;
+> ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   56  	struct scatterlist *sg;
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   57
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   58  	struct msghdr msg;
+> ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   59  	struct kvec *iov;
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   60  	size_t txsize;
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   61
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   62  	size_t total_size = 0;
+> ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   63  	int iovnum;
+> ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   64  	int err = -ENOMEM;
+> ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   65  	int i;
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   66
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   67  	while ((priv = dequeue_from_priv_tx(vdev)) != NULL) {
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   68  		int ret;
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   69  		struct urb *urb = priv->urb;
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   70  		struct usbip_header pdu_header;
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   71
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   72  		txsize = 0;
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   73  		memset(&pdu_header, 0, sizeof(pdu_header));
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   74  		memset(&msg, 0, sizeof(msg));
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   75  		memset(&iov, 0, sizeof(iov));
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   76
+> 8272d099d05f7a drivers/usb/usbip/vhci_tx.c     Shuah Khan         2017-12-18   77  		usbip_dbg_vhci_tx("setup txdata urb seqnum %lu\n",
+> 8272d099d05f7a drivers/usb/usbip/vhci_tx.c     Shuah Khan         2017-12-18   78  				  priv->seqnum);
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   79
+> ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   80  		if (urb->num_sgs && usb_pipeout(urb->pipe))
+> ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   81  			iovnum = 2 + urb->num_sgs;
+> ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   82  		else
+> ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   83  			iovnum = 3;
+> ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   84
+> ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   85  		iov = kcalloc(iovnum, sizeof(*iov), GFP_KERNEL);
+> ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   86  		if (!iov) {
+> ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   87  			usbip_event_add(&vdev->ud, SDEV_EVENT_ERROR_MALLOC);
+> ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   88  			return -ENOMEM;
+> ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   89  		}
+> ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   90
+> ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   91  		if (urb->num_sgs)
+> ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   92  			urb->transfer_flags |= URB_DMA_MAP_SG;
+> ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   93
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   94  		/* 1. setup usbip_header */
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   95  		setup_cmd_submit_pdu(&pdu_header, urb);
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   96  		usbip_header_correct_endian(&pdu_header, 1);
+> ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   97  		iovnum = 0;
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   98
+> ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   99  		iov[iovnum].iov_base = &pdu_header;
+> ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  100  		iov[iovnum].iov_len  = sizeof(pdu_header);
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  101  		txsize += sizeof(pdu_header);
+> ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  102  		iovnum++;
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  103
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  104  		/* 2. setup transfer buffer */
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  105  		if (!usb_pipein(urb->pipe) && urb->transfer_buffer_length > 0) {
+> ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  106  			if (urb->num_sgs &&
+> ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  107  				      !usb_endpoint_xfer_isoc(&urb->ep->desc)) {
+> ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  108  				for_each_sg(urb->sg, sg, urb->num_sgs, i) {
+> ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  109  					iov[iovnum].iov_base = sg_virt(sg);
+> ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  110  					iov[iovnum].iov_len = sg->length;
+> ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  111  					iovnum++;
+> ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  112  				}
+> ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  113  			} else {
+> ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  114  				iov[iovnum].iov_base = urb->transfer_buffer;
+> ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  115  				iov[iovnum].iov_len  =
+> ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  116  						urb->transfer_buffer_length;
+> ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  117  				iovnum++;
+> ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  118  			}
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  119  			txsize += urb->transfer_buffer_length;
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  120  		}
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  121
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  122  		/* 3. setup iso_packet_descriptor */
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  123  		if (usb_pipetype(urb->pipe) == PIPE_ISOCHRONOUS) {
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  124  			ssize_t len = 0;
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  125
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  126  			iso_buffer = usbip_alloc_iso_desc_pdu(urb, &len);
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  127  			if (!iso_buffer) {
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  128  				usbip_event_add(&vdev->ud,
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  129  						SDEV_EVENT_ERROR_MALLOC);
+> ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  130  				goto err_iso_buffer;
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  131  			}
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  132
+> ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  133  			iov[iovnum].iov_base = iso_buffer;
+> ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  134  			iov[iovnum].iov_len  = len;
+> ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  135  			iovnum++;
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  136  			txsize += len;
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  137  		}
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  138
+> ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  139  		ret = kernel_sendmsg(vdev->ud.tcp_socket, &msg, iov, iovnum,
+> ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  140  				     txsize);
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  141  		if (ret != txsize) {
+> 1a4b6f66285785 drivers/staging/usbip/vhci_tx.c matt mooney        2011-05-19  142  			pr_err("sendmsg failed!, ret=%d for %zd\n", ret,
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  143  			       txsize);
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  144  			usbip_event_add(&vdev->ud, VDEV_EVENT_ERROR_TCP);
+> ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  145  			err = -EPIPE;
+> ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  146  			goto err_tx;
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  147  		}
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  148
+> ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  149  		kfree(iov);
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09 @150  		kfree(iso_buffer);
+> b8868e45c5f895 drivers/staging/usbip/vhci_tx.c Brian G. Merrell   2009-07-21  151  		usbip_dbg_vhci_tx("send txdata\n");
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  152
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  153  		total_size += txsize;
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  154  	}
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  155
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  156  	return total_size;
+> ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  157
+> ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  158  err_tx:
+> ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  159  	kfree(iso_buffer);
+> ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  160  err_iso_buffer:
+> ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  161  	kfree(iov);
+> ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  162
+> ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  163  	return err;
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  164  }
+> 04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  165
+> 
+> :::::: The code at line 150 was first introduced by commit
+> :::::: 04679b3489e048cd5dae79e050a3afed8e4e42b6 Staging: USB/IP: add client driver
+> 
+> :::::: TO: Takahiro Hirofuchi <hirofuchi@users.sourceforge.net>
+> :::::: CC: Greg Kroah-Hartman <gregkh@suse.de>
+> 
 > ---
->  drivers/pwm/pwm-cros-ec.c | 58 ++++++++++++++++++++++++++++++++++++---
->  1 file changed, 54 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/pwm/pwm-cros-ec.c b/drivers/pwm/pwm-cros-ec.c
-> index 89497448d217..09c08dee099e 100644
-> --- a/drivers/pwm/pwm-cros-ec.c
-> +++ b/drivers/pwm/pwm-cros-ec.c
-> @@ -25,11 +25,39 @@ struct cros_ec_pwm_device {
->  	struct pwm_chip chip;
->  };
->  
-> +/**
-> + * struct cros_ec_pwm - per-PWM driver data
-> + * @duty_cycle: cached duty cycle
-> + */
-> +struct cros_ec_pwm {
-> +	u16 duty_cycle;
-> +};
-> +
->  static inline struct cros_ec_pwm_device *pwm_to_cros_ec_pwm(struct pwm_chip *c)
->  {
->  	return container_of(c, struct cros_ec_pwm_device, chip);
->  }
->  
-> +static int cros_ec_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
-> +{
-> +	struct cros_ec_pwm *channel;
-> +
-> +	channel = kzalloc(sizeof(*channel), GFP_KERNEL);
-> +	if (!channel)
-> +		return -ENOMEM;
-> +
-> +	pwm_set_chip_data(pwm, channel);
-> +
-> +	return 0;
-> +}
-> +
-> +static void cros_ec_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
-> +{
-> +	struct cros_ec_pwm *channel = pwm_get_chip_data(pwm);
-> +
-> +	kfree(channel);
-> +}
-> +
->  static int cros_ec_pwm_set_duty(struct cros_ec_device *ec, u8 index, u16 duty)
->  {
->  	struct {
-> @@ -96,7 +124,9 @@ static int cros_ec_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->  			     const struct pwm_state *state)
->  {
->  	struct cros_ec_pwm_device *ec_pwm = pwm_to_cros_ec_pwm(chip);
-> -	int duty_cycle;
-> +	struct cros_ec_pwm *channel = pwm_get_chip_data(pwm);
-> +	u16 duty_cycle;
-> +	int ret;
->  
->  	/* The EC won't let us change the period */
->  	if (state->period != EC_PWM_MAX_DUTY)
-> @@ -108,13 +138,20 @@ static int cros_ec_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->  	 */
->  	duty_cycle = state->enabled ? state->duty_cycle : 0;
->  
-> -	return cros_ec_pwm_set_duty(ec_pwm->ec, pwm->hwpwm, duty_cycle);
-> +	ret = cros_ec_pwm_set_duty(ec_pwm->ec, pwm->hwpwm, duty_cycle);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	channel->duty_cycle = state->duty_cycle;
-> +
-> +	return 0;
->  }
->  
->  static void cros_ec_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
->  				  struct pwm_state *state)
->  {
->  	struct cros_ec_pwm_device *ec_pwm = pwm_to_cros_ec_pwm(chip);
-> +	struct cros_ec_pwm *channel = pwm_get_chip_data(pwm);
->  	int ret;
->  
->  	ret = cros_ec_pwm_get_duty(ec_pwm->ec, pwm->hwpwm);
-> @@ -126,8 +163,19 @@ static void cros_ec_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
->  	state->enabled = (ret > 0);
->  	state->period = EC_PWM_MAX_DUTY;
->  
-> -	/* Note that "disabled" and "duty cycle == 0" are treated the same */
-> -	state->duty_cycle = ret;
-> +	/*
-> +	 * Note that "disabled" and "duty cycle == 0" are treated the same. If
-> +	 * the cached duty cycle is not zero, used the cached duty cycle. This
-> +	 * ensures that the configured duty cycle is kept across a disable and
-> +	 * enable operation and avoids potentially confusing consumers.
-> +	 *
-> +	 * For the case of the initial hardware readout, channel->duty_cycle
-> +	 * will be 0 and the actual duty cycle read from the EC is used.
-> +	 */
-> +	if (ret == 0 && channel->duty_cycle > 0)
-> +		state->duty_cycle = channel->duty_cycle;
-> +	else
-> +		state->duty_cycle = ret;
->  }
->  
->  static struct pwm_device *
-> @@ -149,6 +197,8 @@ cros_ec_pwm_xlate(struct pwm_chip *pc, const struct of_phandle_args *args)
->  }
->  
->  static const struct pwm_ops cros_ec_pwm_ops = {
-> +	.request = cros_ec_pwm_request,
-> +	.free = cros_ec_pwm_free,
->  	.get_state	= cros_ec_pwm_get_state,
->  	.apply		= cros_ec_pwm_apply,
->  	.owner		= THIS_MODULE,
-> 
-
-I just tried your approach but I got a NULL pointer dereference while probe. I
-am just back from a week off but I'll be able to dig into it between today and
-tomorrow, just wanted to let you know that the patch doesn't works as is for me.
-
-[   10.128455] Unable to handle kernel NULL pointer dereference at virtual
-address 0000000000000000
-[   10.141895] Mem abort info:
-
-[   10.145090]   ESR = 0x96000004
-
-[   10.148537]   EC = 0x25: DABT (current EL), IL = 32 bits
-
-[   10.154560]   SET = 0, FnV = 0
-
-[   10.157986]   EA = 0, S1PTW = 0
-
-[   10.161548] Data abort info:
-
-[   10.164804]   ISV = 0, ISS = 0x00000004
-
-[   10.169111]   CM = 0, WnR = 0
-
-[   10.172436] user pgtable: 4k pages, 48-bit VAs, pgdp=00000000ed44b000
-
-[   10.179660] [0000000000000000] pgd=0000000000000000
-
-[   10.179669] Internal error: Oops: 96000004 [#1] PREEMPT SMP
-
-[   10.179673] Modules linked in: atmel_mxt_ts(+) rockchip_saradc pwm_cros_ec(+)
-rockchip_thermal pcie_rockchip_host snd_soc_rl6231 ip_tables x_
-tables ipv6 nf_defrag_ipv6
-
-[   10.179694] CPU: 1 PID: 255 Comm: systemd-udevd Not tainted 5.4.0-rc4+ #230
-
-[   10.179696] Hardware name: Google Kevin (DT)
-
-[   10.179700] pstate: 60000005 (nZCv daif -PAN -UAO)
-
-[   10.179714] pc : cros_ec_pwm_get_state+0xcc/0xf8 [pwm_cros_ec]
-
-[   10.179721] lr : cros_ec_pwm_get_state+0x80/0xf8 [pwm_cros_ec]
-
-[   10.247829] sp : ffff800012433810
-
-[   10.251531] x29: ffff800012433810 x28: 0000000200000026
-
-[   10.257469] x27: ffff800012433942 x26: ffff0000ef075010
-
-[   10.263405] x25: ffff800011ca8508 x24: ffff800011e68e30
-
-[   10.269341] x23: 0000000000000000 x22: ffff0000ee273190
-[   10.275278] x21: ffff0000ee2e3240 x20: ffff0000ee2e3270
-[   10.281214] x19: ffff800011bc98c8 x18: 0000000000000003
-[   10.287150] x17: 0000000000000007 x16: 000000000000000e
-[   10.293088] x15: 0000000000000001 x14: 0000000000000019
-[   10.299024] x13: 0000000000000033 x12: 0000000000000018
-[   10.304962] x11: 071c71c71c71c71c x10: 00000000000009d0
-[   10.310379] atmel_mxt_ts 5-004a: Family: 164 Variant: 17 Firmware V2.0.AA
-Objects: 31
-[   10.310901] x9 : ffff800012433490 x8 : ffff0000edb81830
-[   10.310905] x7 : 000000000000011b x6 : 0000000000000001
-[   10.310908] x5 : 0000000000000000 x4 : 0000000000000000
-[   10.310911] x3 : ffff0000edb80e00 x2 : 0000000000000002
-[   10.310914] x1 : 0000000000000000 x0 : 0000000000000000
-[   10.310918] Call trace:
-[   10.310931]  cros_ec_pwm_get_state+0xcc/0xf8 [pwm_cros_ec]
-[   10.310944]  pwmchip_add_with_polarity+0x134/0x290
-[   10.363576]  pwmchip_add+0x24/0x30
-[   10.367383]  cros_ec_pwm_probe+0x13c/0x1cc [pwm_cros_ec]
-[   10.373325]  platform_drv_probe+0x58/0xa8
-[   10.377809]  really_probe+0xe0/0x318
-[   10.381804]  driver_probe_device+0x5c/0xf0
-[   10.386381]  device_driver_attach+0x74/0x80
-
-Thanks,
- Enric
+> 0-DAY kernel test infrastructure                Open Source Technology Center
+> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
