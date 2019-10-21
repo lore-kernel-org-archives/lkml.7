@@ -2,87 +2,121 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E351CA9EB0
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 17:48:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E60C1CA9EB0
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 17:48:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61CD82064B
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 17:48:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBD1D2064B
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 17:48:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WpTmVX3X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729238AbfJURsN (ORCPT
+        id S1729727AbfJURsc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 13:48:13 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:47583 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726672AbfJURsM (ORCPT
+        Mon, 21 Oct 2019 13:48:32 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:45466 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726672AbfJURsc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 13:48:12 -0400
-X-Originating-IP: 86.202.229.42
-Received: from localhost (lfbn-lyo-1-146-42.w86-202.abo.wanadoo.fr [86.202.229.42])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id EACD7240006;
-        Mon, 21 Oct 2019 17:48:09 +0000 (UTC)
-Date:   Mon, 21 Oct 2019 19:48:09 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Brian Norris <briannorris@chromium.org>
-Cc:     Alessandro Zummo <a.zummo@towertech.it>, linux-rtc@vger.kernel.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Jeffy Chen <jeffy.chen@rock-chips.com>,
-        Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH] rtc: report time-retrieval errors when updating alarm
-Message-ID: <20191021174809.GA3125@piout.net>
-References: <20180521164222.149896-1-briannorris@chromium.org>
- <20191021161113.GZ3125@piout.net>
- <CA+ASDXOXSKoRcuRWZ1FGNcioFKSiazXGxOvMv5=px_pn46vJbw@mail.gmail.com>
+        Mon, 21 Oct 2019 13:48:32 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9LHmGXT106697;
+        Mon, 21 Oct 2019 12:48:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1571680096;
+        bh=ZwYCmSJISLlctMkOmdCBQhpfeOM6eOVhv3sn+5wMhWY=;
+        h=From:To:CC:Subject:Date;
+        b=WpTmVX3Xhx8IEeeRylglfqTlBXR1dRX3Lf0Cr3RbgzlveXErmICtDbjHRcosTYFqw
+         3ZNOzzsf80/CR00/DbI5EKzOGBjm42e9w1xCzhw4t+rfghJj4Mv9uh+J6qGqtik84q
+         J73ytbBjte0Jwa2EqCJkxUAWYFKO+pP/NQGpCNsQ=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9LHmGDZ047640
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 21 Oct 2019 12:48:16 -0500
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 21
+ Oct 2019 12:48:16 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 21 Oct 2019 12:48:15 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9LHmEWg111687;
+        Mon, 21 Oct 2019 12:48:15 -0500
+From:   Jean-Jacques Hiblot <jjhiblot@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <tomi.valkeinen@ti.com>, <jjhiblot@ti.com>
+Subject: [PATCH v7 0/2] Subject: [PATCH v7 0/2] leds: Add control of the voltage/current regulator to the LED core
+Date:   Mon, 21 Oct 2019 19:47:49 +0200
+Message-ID: <20191021174751.4421-1-jjhiblot@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+ASDXOXSKoRcuRWZ1FGNcioFKSiazXGxOvMv5=px_pn46vJbw@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/10/2019 10:20:08-0700, Brian Norris wrote:
-> Hi Alexandre!
-> 
-> On Mon, Oct 21, 2019 at 9:11 AM Alexandre Belloni
-> <alexandre.belloni@bootlin.com> wrote:
-> > On 21/05/2018 09:42:22-0700, Brian Norris wrote:
-> > > __rtc_read_time() can fail (e.g., if the RTC uses an unreliable medium).
-> > > When it does, we don't report the error, but instead calculate a
-> > > 1-second alarm based on the potentially-garbage 'tm' (in practice,
-> > > __rtc_read_time() zeroes out the time first, so it's likely to still be
-> > > all 0).
-> > >
-> > > Let's propagate the error instead.
-> > >
-> >
-> > I submitted
-> > https://lore.kernel.org/linux-rtc/20191021155631.3342-2-alexandre.belloni@bootlin.com/T/#u
-> > to solve this after looking at all the implication checking the return
-> > value of __rtc_read_time had.
-> 
-> Only about a year and a half late, nice!
+This series makes it possible for the LED core to manage the power supply
+of a LED. It uses the regulator API to disable/enable the power if when the
+LED is turned on/off.
+This is especially useful in situations where the LED driver/controller is
+not supplying the power.
+Because updating a regulator state can block, it is always a defered job.
 
-I know, right? :) The fact is that this is not a common issue or at
-least, I didn't have any report that this was causing real problems in
-the field. So it ended up being one of the longest standing patch in
-patchwork...
+Note: this series relies on led_cdev->dev->of_node being populated [0]
 
->Fortunately we have a decent
-> (albeit time-consuming) process for rebasing our downstream patches in
-> Chrome OS kernels...
-> 
+[0] https://lkml.org/lkml/2019/10/3/139
 
-Do you need that patch backported to LTS kernels?
+changes in v7:
+- Add sysfs interface to control the auto-off feature
 
+changes in v6:
+- Introduce a new property in DT binding to delay turning OFF the regulator
+  The idea is to keep the regulator ON for some time after the LED is turned
+  off in order to not change the regulator state when the LED is blinking.
+- Use an atomic to track the state of the regulator to ensure consistency.
+- Remove changes in led_set_brightness_sync().
+
+changes in v5:
+- fixed build error in led_set_brightness_sync(). Explain the role of
+  flush__work()
+
+changes in v4:
+- Add a new patch to make led_set_brightness_sync() use
+  led_set_brightness_nosleep() and then wait the work to be done
+- Rework how the core knows how the regulator needs to be updated.
+
+changes in v3:
+- reword device-tree description
+- reword commit log
+- remove regulator updates from functions used in atomic context. If the
+  regulator must be updated, it is defered to a workqueue.
+- Fix led_set_brightness_sync() to work with the non-blocking function
+  __led_set_brightness()
+
+changes in v2:
+- use devm_regulator_get_optional() to avoid using the dummy regulator and
+  do some unnecessary work
+
+Jean-Jacques Hiblot (2):
+  dt-bindings: leds: document the "power-supply" property
+  leds: Add control of the voltage/current regulator to the LED core
+
+ .../devicetree/bindings/leds/common.txt       |  14 ++
+ drivers/leds/led-class.c                      | 156 +++++++++++++++++-
+ drivers/leds/led-core.c                       | 129 ++++++++++++++-
+ drivers/leds/leds.h                           |  18 ++
+ include/linux/leds.h                          |   9 +
+ 5 files changed, 318 insertions(+), 8 deletions(-)
 
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.17.1
+
