@@ -7,54 +7,51 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D06ACA9EB0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:05:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B644CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:05:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 241E62166E
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:05:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 385DB2084C
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:05:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387629AbfJVAFS (ORCPT
+        id S2387641AbfJVAFV convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 20:05:18 -0400
+        Mon, 21 Oct 2019 20:05:21 -0400
 Received: from Galois.linutronix.de ([193.142.43.55]:38895 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387566AbfJVAFQ (ORCPT
+        with ESMTP id S2387615AbfJVAFS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 20:05:16 -0400
+        Mon, 21 Oct 2019 20:05:18 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iMgwv-0003tO-Nk; Tue, 22 Oct 2019 01:18:54 +0200
+        id 1iMgx0-0003xO-QY; Tue, 22 Oct 2019 01:18:59 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 2D3381C0489;
-        Tue, 22 Oct 2019 01:18:53 +0200 (CEST)
-Date:   Mon, 21 Oct 2019 23:18:52 -0000
-From:   "tip-bot2 for Jiri Olsa" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id B02B91C0489;
+        Tue, 22 Oct 2019 01:18:57 +0200 (CEST)
+Date:   Mon, 21 Oct 2019 23:18:57 -0000
+From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] libperf: Move mmap allocation to perf_evlist__mmap_ops::get
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
+Subject: [tip: perf/core] perf trace: Pass a syscall_arg to syscall_arg_fmt->strtoul()
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
         Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>,
+        Luis =?utf-8?q?Cl=C3=A1udio_Gon=C3=A7alves?= 
+        <lclaudio@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <20191017105918.20873-3-jolsa@kernel.org>
-References: <20191017105918.20873-3-jolsa@kernel.org>
+In-Reply-To: <tip-c6mgkjt8ujnc263eld5tb7q3@git.kernel.org>
+References: <tip-c6mgkjt8ujnc263eld5tb7q3@git.kernel.org>
 MIME-Version: 1.0
-Message-ID: <157169993270.29376.15194593020616946024.tip-bot2@tip-bot2>
+Message-ID: <157169993725.29376.72854596027164518.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8BIT
 X-Linutronix-Spam-Score: -1.0
 X-Linutronix-Spam-Level: -
 X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
@@ -65,166 +62,174 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     3805e4f303314c2b53fb217dd8549a5b9eb06b11
-Gitweb:        https://git.kernel.org/tip/3805e4f303314c2b53fb217dd8549a5b9eb06b11
-Author:        Jiri Olsa <jolsa@kernel.org>
-AuthorDate:    Thu, 17 Oct 2019 12:59:10 +02:00
+Commit-ID:     9afec87ec1f832b8a521da42a72b73a44a59949d
+Gitweb:        https://git.kernel.org/tip/9afec87ec1f832b8a521da42a72b73a44a59949d
+Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
+AuthorDate:    Fri, 18 Oct 2019 11:15:55 -03:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Sat, 19 Oct 2019 15:35:01 -03:00
+CommitterDate: Sat, 19 Oct 2019 15:34:48 -03:00
 
-libperf: Move mmap allocation to perf_evlist__mmap_ops::get
+perf trace: Pass a syscall_arg to syscall_arg_fmt->strtoul()
 
-Move allocation of the mmap array into perf_evlist__mmap_ops::get, to
-centralize the mmap allocation.
+With just what we need for the STUL_STRARRAY, i.e. the 'struct strarray'
+pointer to be used, just like with syscall_arg_fmt->scnprintf() for the
+other direction (number -> string).
 
-Also move nr_mmap setup to perf_evlist__mmap_ops so it's centralized and
-shared by both perf and libperf mmap code.
+With this all the strarrays that are associated with syscalls can be
+used with '-e syscalls:sys_enter_SYSCALLNAME --filter', and soon will be
+possible as well to use with the strace-like shorter form, with just the
+syscall names, i.e. something like:
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
+   -e lseek/whence==END/
+
+For now we have to use the longer form:
+
+    # perf trace -e syscalls:sys_enter_lseek
+       0.000 pool/2242 syscalls:sys_enter_lseek(fd: 14<anon_inode:[timerfd]>, offset: 0, whence: CUR)
+       0.031 pool/2242 syscalls:sys_enter_lseek(fd: 15<anon_inode:[timerfd]>, offset: 0, whence: CUR)
+       0.046 pool/2242 syscalls:sys_enter_lseek(fd: 16<anon_inode:[timerfd]>, offset: 0, whence: CUR)
+    5003.528 pool/2242 syscalls:sys_enter_lseek(fd: 14<anon_inode:[timerfd]>, offset: 0, whence: CUR)
+    5003.575 pool/2242 syscalls:sys_enter_lseek(fd: 15<anon_inode:[timerfd]>, offset: 0, whence: CUR)
+    5003.593 pool/2242 syscalls:sys_enter_lseek(fd: 16<anon_inode:[timerfd]>, offset: 0, whence: CUR)
+   10002.017 pool/2242 syscalls:sys_enter_lseek(fd: 14<anon_inode:[timerfd]>, offset: 0, whence: CUR)
+   10002.051 pool/2242 syscalls:sys_enter_lseek(fd: 15<anon_inode:[timerfd]>, offset: 0, whence: CUR)
+   10002.068 pool/2242 syscalls:sys_enter_lseek(fd: 16<anon_inode:[timerfd]>, offset: 0, whence: CUR)
+  ^C# perf trace -e syscalls:sys_enter_lseek --filter="whence!=CUR"
+       0.000 sshd/24476 syscalls:sys_enter_lseek(fd: 3, offset: 9032, whence: SET)
+       0.060 sshd/24476 syscalls:sys_enter_lseek(fd: 3</usr/lib64/libcrypt.so.2.0.0>, offset: 9032, whence: SET)
+       0.187 sshd/24476 syscalls:sys_enter_lseek(fd: 3</usr/lib64/libcrypt.so.2.0.0>, offset: 118632, whence: SET)
+       0.203 sshd/24476 syscalls:sys_enter_lseek(fd: 3</usr/lib64/libcrypt.so.2.0.0>, offset: 118632, whence: SET)
+       0.349 sshd/24476 syscalls:sys_enter_lseek(fd: 3</usr/lib64/libcrypt.so.2.0.0>, offset: 61936, whence: SET)
+  ^C#
+
+And for those curious about what are those lseek(DSO, offset, SET), well, its the loader:
+
+  # perf trace -e syscalls:sys_enter_lseek/max-stack=16/ --filter="whence!=CUR"
+     0.000 sshd/24495 syscalls:sys_enter_lseek(fd: 3</usr/lib64/libgcrypt.so.20.2.5>, offset: 9032, whence: SET)
+                                       __libc_lseek64 (/usr/lib64/ld-2.29.so)
+                                       _dl_map_object (/usr/lib64/ld-2.29.so)
+     0.067 sshd/24495 syscalls:sys_enter_lseek(fd: 3</usr/lib64/libgcrypt.so.20.2.5>, offset: 9032, whence: SET)
+                                       __libc_lseek64 (/usr/lib64/ld-2.29.so)
+                                       _dl_map_object_from_fd (/usr/lib64/ld-2.29.so)
+                                       _dl_map_object (/usr/lib64/ld-2.29.so)
+     0.198 sshd/24495 syscalls:sys_enter_lseek(fd: 3</usr/lib64/libgcrypt.so.20.2.5>, offset: 118632, whence: SET)
+                                       __libc_lseek64 (/usr/lib64/ld-2.29.so)
+                                       _dl_map_object (/usr/lib64/ld-2.29.so)
+     0.219 sshd/24495 syscalls:sys_enter_lseek(fd: 3</usr/lib64/libgcrypt.so.20.2.5>, offset: 118632, whence: SET)
+                                       __libc_lseek64 (/usr/lib64/ld-2.29.so)
+                                       _dl_map_object_from_fd (/usr/lib64/ld-2.29.so)
+                                       _dl_map_object (/usr/lib64/ld-2.29.so)
+  ^C#
+
+:-)
+
+With this we can use strings in strarrays in filters, which allows us to
+reuse all these that are in place for syscalls:
+
+  $ find tools/perf/trace/beauty/ -name "*.c" | xargs grep -w DEFINE_STRARRAY
+  tools/perf/trace/beauty/fcntl.c:	static DEFINE_STRARRAY(fcntl_setlease, "F_");
+  tools/perf/trace/beauty/mmap.c:       static DEFINE_STRARRAY(mmap_flags, "MAP_");
+  tools/perf/trace/beauty/mmap.c:       static DEFINE_STRARRAY(madvise_advices, "MADV_");
+  tools/perf/trace/beauty/sync_file_range.c:       static DEFINE_STRARRAY(sync_file_range_flags, "SYNC_FILE_RANGE_");
+  tools/perf/trace/beauty/socket.c:	static DEFINE_STRARRAY(socket_ipproto, "IPPROTO_");
+  tools/perf/trace/beauty/mount_flags.c:	static DEFINE_STRARRAY(mount_flags, "MS_");
+  tools/perf/trace/beauty/pkey_alloc.c:	static DEFINE_STRARRAY(pkey_alloc_access_rights, "PKEY_");
+  tools/perf/trace/beauty/sockaddr.c:DEFINE_STRARRAY(socket_families, "PF_");
+  tools/perf/trace/beauty/tracepoints/x86_irq_vectors.c:static DEFINE_STRARRAY(x86_irq_vectors, "_VECTOR");
+  tools/perf/trace/beauty/tracepoints/x86_msr.c:static DEFINE_STRARRAY(x86_MSRs, "MSR_");
+  tools/perf/trace/beauty/prctl.c:	static DEFINE_STRARRAY(prctl_options, "PR_");
+  tools/perf/trace/beauty/prctl.c:	static DEFINE_STRARRAY(prctl_set_mm_options, "PR_SET_MM_");
+  tools/perf/trace/beauty/fspick.c:       static DEFINE_STRARRAY(fspick_flags, "FSPICK_");
+  tools/perf/trace/beauty/ioctl.c:	static DEFINE_STRARRAY(ioctl_tty_cmd, "");
+  tools/perf/trace/beauty/ioctl.c:	static DEFINE_STRARRAY(drm_ioctl_cmds, "");
+  tools/perf/trace/beauty/ioctl.c:	static DEFINE_STRARRAY(sndrv_pcm_ioctl_cmds, "");
+  tools/perf/trace/beauty/ioctl.c:	static DEFINE_STRARRAY(sndrv_ctl_ioctl_cmds, "");
+  tools/perf/trace/beauty/ioctl.c:	static DEFINE_STRARRAY(kvm_ioctl_cmds, "");
+  tools/perf/trace/beauty/ioctl.c:	static DEFINE_STRARRAY(vhost_virtio_ioctl_cmds, "");
+  tools/perf/trace/beauty/ioctl.c:	static DEFINE_STRARRAY(vhost_virtio_ioctl_read_cmds, "");
+  tools/perf/trace/beauty/ioctl.c:	static DEFINE_STRARRAY(perf_ioctl_cmds, "");
+  tools/perf/trace/beauty/ioctl.c:	static DEFINE_STRARRAY(usbdevfs_ioctl_cmds, "");
+  tools/perf/trace/beauty/fsmount.c:       static DEFINE_STRARRAY(fsmount_attr_flags, "MOUNT_ATTR_");
+  tools/perf/trace/beauty/renameat.c:       static DEFINE_STRARRAY(rename_flags, "RENAME_");
+  tools/perf/trace/beauty/kcmp.c:	static DEFINE_STRARRAY(kcmp_types, "KCMP_");
+  tools/perf/trace/beauty/move_mount.c:       static DEFINE_STRARRAY(move_mount_flags, "MOVE_MOUNT_");
+  $
+
+Well, some, as the mmap flags are like:
+
+  $ tools/perf/trace/beauty/mmap_flags.sh
+  static const char *mmap_flags[] = {
+  	[ilog2(0x40) + 1] = "32BIT",
+  	[ilog2(0x01) + 1] = "SHARED",
+  	[ilog2(0x02) + 1] = "PRIVATE",
+  	[ilog2(0x10) + 1] = "FIXED",
+  	[ilog2(0x20) + 1] = "ANONYMOUS",
+  	[ilog2(0x008000) + 1] = "POPULATE",
+  	[ilog2(0x010000) + 1] = "NONBLOCK",
+  	[ilog2(0x020000) + 1] = "STACK",
+  	[ilog2(0x040000) + 1] = "HUGETLB",
+  	[ilog2(0x080000) + 1] = "SYNC",
+  	[ilog2(0x100000) + 1] = "FIXED_NOREPLACE",
+  	[ilog2(0x0100) + 1] = "GROWSDOWN",
+  	[ilog2(0x0800) + 1] = "DENYWRITE",
+  	[ilog2(0x1000) + 1] = "EXECUTABLE",
+  	[ilog2(0x2000) + 1] = "LOCKED",
+  	[ilog2(0x4000) + 1] = "NORESERVE",
+  };
+  $
+
+So we'll need a strarray__strtoul_flags() that will break donw the flags
+into tokens separated by '|' before doing the lookup and then go on
+reconstructing the value from, say:
+
+      # perf trace -e syscalls:sys_enter_mmap --filter="flags==PRIVATE|FIXED|DENYWRITE"
+
+into:
+
+      # perf trace -e syscalls:sys_enter_mmap --filter="flags==0x2|0x10|0x0800"
+
+and finally into:
+
+      # perf trace -e syscalls:sys_enter_mmap --filter="flags==0x812"
+
+That is what we see if we don't use the augmented view obtained from:
+
+  # perf trace -e mmap
+  <SNIP>
+  211792.885 procmail/15393 mmap(addr: 0x7fcd11645000, len: 8192, prot: READ, flags: PRIVATE|FIXED|DENYWRITE, fd: 8, off: 0xa000) = 0x7fcd11645000
+  <SNIP>
+
+But plain use tracefs:
+
+        procmail-15559 [000] .... 54557.178262: sys_mmap(addr: 7f5c9bf7a000, len: 9b000, prot: 1, flags: 812, fd: 3, off: a9000)
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Brendan Gregg <brendan.d.gregg@gmail.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Link: http://lore.kernel.org/lkml/20191017105918.20873-3-jolsa@kernel.org
+Link: https://lkml.kernel.org/n/tip-c6mgkjt8ujnc263eld5tb7q3@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/lib/evlist.c  | 42 +++++++++++++++++++++++----------------
- tools/perf/util/evlist.c | 24 ++++++++--------------
- 2 files changed, 34 insertions(+), 32 deletions(-)
+ tools/perf/builtin-trace.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/lib/evlist.c b/tools/perf/lib/evlist.c
-index 854efff..73aac6b 100644
---- a/tools/perf/lib/evlist.c
-+++ b/tools/perf/lib/evlist.c
-@@ -338,10 +338,6 @@ static struct perf_mmap* perf_evlist__alloc_mmap(struct perf_evlist *evlist, boo
- 	int i;
- 	struct perf_mmap *map;
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 1aaf7b2..0e7fc7c 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -3696,7 +3696,11 @@ static int trace__expand_filter(struct trace *trace __maybe_unused, struct evsel
  
--	evlist->nr_mmaps = perf_cpu_map__nr(evlist->cpus);
--	if (perf_cpu_map__empty(evlist->cpus))
--		evlist->nr_mmaps = perf_thread_map__nr(evlist->threads);
--
- 	map = zalloc(evlist->nr_mmaps * sizeof(struct perf_mmap));
- 	if (!map)
- 		return NULL;
-@@ -384,18 +380,22 @@ static void perf_evlist__set_sid_idx(struct perf_evlist *evlist,
- static struct perf_mmap*
- perf_evlist__mmap_cb_get(struct perf_evlist *evlist, bool overwrite, int idx)
- {
--	struct perf_mmap *map = &evlist->mmap[idx];
-+	struct perf_mmap *maps;
- 
--	if (overwrite) {
--		if (!evlist->mmap_ovw) {
--			evlist->mmap_ovw = perf_evlist__alloc_mmap(evlist, true);
--			if (!evlist->mmap_ovw)
--				return NULL;
--		}
--		map = &evlist->mmap_ovw[idx];
-+	maps = overwrite ? evlist->mmap_ovw : evlist->mmap;
+ 			if (fmt->strtoul) {
+ 				u64 val;
+-				if (fmt->strtoul(right, right_size, NULL, &val)) {
++				struct syscall_arg syscall_arg = {
++					.parm = fmt->parm,
++				};
 +
-+	if (!maps) {
-+		maps = perf_evlist__alloc_mmap(evlist, overwrite);
-+		if (!maps)
-+			return NULL;
-+
-+		if (overwrite)
-+			evlist->mmap_ovw = maps;
-+		else
-+			evlist->mmap = maps;
- 	}
- 
--	return map;
-+	return &maps[idx];
- }
- 
- #define FD(e, x, y) (*(int *) xyarray__entry(e->fd, x, y))
-@@ -556,6 +556,17 @@ out_unmap:
- 	return -1;
- }
- 
-+static int perf_evlist__nr_mmaps(struct perf_evlist *evlist)
-+{
-+	int nr_mmaps;
-+
-+	nr_mmaps = perf_cpu_map__nr(evlist->cpus);
-+	if (perf_cpu_map__empty(evlist->cpus))
-+		nr_mmaps = perf_thread_map__nr(evlist->threads);
-+
-+	return nr_mmaps;
-+}
-+
- int perf_evlist__mmap_ops(struct perf_evlist *evlist,
- 			  struct perf_evlist_mmap_ops *ops,
- 			  struct perf_mmap_param *mp)
-@@ -567,10 +578,7 @@ int perf_evlist__mmap_ops(struct perf_evlist *evlist,
- 	if (!ops || !ops->get || !ops->mmap)
- 		return -EINVAL;
- 
--	if (!evlist->mmap)
--		evlist->mmap = perf_evlist__alloc_mmap(evlist, false);
--	if (!evlist->mmap)
--		return -ENOMEM;
-+	evlist->nr_mmaps = perf_evlist__nr_mmaps(evlist);
- 
- 	perf_evlist__for_each_entry(evlist, evsel) {
- 		if ((evsel->attr.read_format & PERF_FORMAT_ID) &&
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 6cda5a3..5cded4e 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -599,9 +599,6 @@ static struct mmap *evlist__alloc_mmap(struct evlist *evlist,
- 	int i;
- 	struct mmap *map;
- 
--	evlist->core.nr_mmaps = perf_cpu_map__nr(evlist->core.cpus);
--	if (perf_cpu_map__empty(evlist->core.cpus))
--		evlist->core.nr_mmaps = perf_thread_map__nr(evlist->core.threads);
- 	map = zalloc(evlist->core.nr_mmaps * sizeof(struct mmap));
- 	if (!map)
- 		return NULL;
-@@ -639,19 +636,21 @@ static struct perf_mmap*
- perf_evlist__mmap_cb_get(struct perf_evlist *_evlist, bool overwrite, int idx)
- {
- 	struct evlist *evlist = container_of(_evlist, struct evlist, core);
--	struct mmap *maps = evlist->mmap;
-+	struct mmap *maps;
- 
--	if (overwrite) {
--		maps = evlist->overwrite_mmap;
-+	maps = overwrite ? evlist->overwrite_mmap : evlist->mmap;
- 
--		if (!maps) {
--			maps = evlist__alloc_mmap(evlist, true);
--			if (!maps)
--				return NULL;
-+	if (!maps) {
-+		maps = evlist__alloc_mmap(evlist, overwrite);
-+		if (!maps)
-+			return NULL;
- 
-+		if (overwrite) {
- 			evlist->overwrite_mmap = maps;
- 			if (evlist->bkw_mmap_state == BKW_MMAP_NOTREADY)
- 				perf_evlist__toggle_bkw_mmap(evlist, BKW_MMAP_RUNNING);
-+		} else {
-+			evlist->mmap = maps;
- 		}
- 	}
- 
-@@ -812,11 +811,6 @@ int evlist__mmap_ex(struct evlist *evlist, unsigned int pages,
- 		.mmap = perf_evlist__mmap_cb_mmap,
- 	};
- 
--	if (!evlist->mmap)
--		evlist->mmap = evlist__alloc_mmap(evlist, false);
--	if (!evlist->mmap)
--		return -ENOMEM;
--
- 	evlist->core.mmap_len = evlist__mmap_size(pages);
- 	pr_debug("mmap size %zuB\n", evlist->core.mmap_len);
- 	mp.core.mask = evlist->core.mmap_len - page_size - 1;
++				if (fmt->strtoul(right, right_size, &syscall_arg, &val)) {
+ 					char *n, expansion[19];
+ 					int expansion_lenght = scnprintf(expansion, sizeof(expansion), "%#" PRIx64, val);
+ 					int expansion_offset = right - new_filter;
