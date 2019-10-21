@@ -2,134 +2,125 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FB58CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:26:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3422CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:26:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBBEF205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:26:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DF24205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:26:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Z970tQQc"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="SNroE+dT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728645AbfJUM0g (ORCPT
+        id S1728667AbfJUM0p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 08:26:36 -0400
-Received: from mailout4.samsung.com ([203.254.224.34]:37978 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727985AbfJUM0g (ORCPT
+        Mon, 21 Oct 2019 08:26:45 -0400
+Received: from ste-pvt-msa2.bahnhof.se ([213.80.101.71]:41773 "EHLO
+        ste-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727685AbfJUM0o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 08:26:36 -0400
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20191021122632epoutp04a28cedebb227b6d28d5cd4dfab958d0c~PqSoCEuOd1843018430epoutp04a
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 12:26:32 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20191021122632epoutp04a28cedebb227b6d28d5cd4dfab958d0c~PqSoCEuOd1843018430epoutp04a
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1571660792;
-        bh=Ib8mQYcAATt7VC/ozZSjbgQ4fyxDkPbivTJaQXT9kTU=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=Z970tQQcAQKqVuiEhEqBw/PoifBpOUJ3dN2dJdLGDYPyH7e8LIfE8GhmBy+BskQ8Z
-         LGEkDTAO2yWdRuZWFKew/0I92Tl6VqJB35+byAmPjSMmICyk1m4r6KKpH2boOsJmq0
-         T157LDJ7dORA1z0hqIHf442jmp8qapjoP2a0Dz3E=
-Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
-        epcas5p4.samsung.com (KnoxPortal) with ESMTP id
-        20191021122631epcas5p441ec4095a56595f6bb88d3065ea8199c~PqSmvKwR42322723227epcas5p4w;
-        Mon, 21 Oct 2019 12:26:31 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        86.F6.04660.7F3ADAD5; Mon, 21 Oct 2019 21:26:31 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-        20191021122630epcas5p32bd92762c4304035cad5c1822d96e304~PqSmDKWob2825528255epcas5p3P;
-        Mon, 21 Oct 2019 12:26:30 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20191021122630epsmtrp1f9091c284304576aa739d5e3e0f35ee5~PqSmCcBig0379003790epsmtrp1F;
-        Mon, 21 Oct 2019 12:26:30 +0000 (GMT)
-X-AuditID: b6c32a4a-5f7ff70000001234-54-5dada3f79b13
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        28.FC.03889.6F3ADAD5; Mon, 21 Oct 2019 21:26:30 +0900 (KST)
-Received: from ubuntu.sa.corp.samsungelectronics.net (unknown
-        [107.108.83.125]) by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20191021122629epsmtip1ddbc1e74c4a1df5055eb035be96e15ca~PqSkfHkg82000820008epsmtip1y;
-        Mon, 21 Oct 2019 12:26:28 +0000 (GMT)
-From:   Anvesh Salveru <anvesh.s@samsung.com>
-To:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     bhelgaas@google.com, gustavo.pimentel@synopsys.com,
-        jingoohan1@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        Anvesh Salveru <anvesh.s@samsung.com>,
-        Pankaj Dubey <pankaj.dubey@samsung.com>
-Subject: [PATCH 1/2] dt-bindings: PCI: designware: Add binding for ZRX-DC
- PHY property
-Date:   Mon, 21 Oct 2019 17:55:55 +0530
-Message-Id: <1571660755-30270-1-git-send-email-anvesh.s@samsung.com>
-X-Mailer: git-send-email 2.7.4
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrDIsWRmVeSWpSXmKPExsWy7bCmpu73xWtjDV7PYrY4u2shq8WSpgyL
-        +UfOsVrsutvBbrHiy0x2i8u75rBZnJ13nM1i6fWLTBaLtn5ht2jde4Tdgctjzbw1jB47Z91l
-        91iwqdRj06pONo++LasYPbbs/8zo8XmTXAB7FJdNSmpOZllqkb5dAldG5+YDTAW7uSpOXZnJ
-        3sD4naOLkZNDQsBEYvftc+wgtpDAbkaJw7u8IOxPjBLf9oRD2N8YJTomisDUX/77kbmLkQso
-        vpdR4sOUo4wQTguTxNTWf0wgVWwC2hI/j+4FmsrBISIQKXG8gRWkhlngFKPEgbPTmEFqhAUi
-        JLYfuQ5WzyKgKnFy3WOwOK+Ai8SCnZNZIbbJSdw81wm2TUJgDZvEv8/vmCESLhI3+h9BFQlL
-        vDq+hR3ClpJ42d8GZedL9N5dCmXXSEy528EIYdtLHLgyhwXkOGYBTYn1u/RBwswCfBK9v58w
-        gYQlBHglOtqEIEwlibaZ1RCNEhKL59+EOsBDYu6sqyyQ8ImVuN86m2UCo8wshJkLGBlXMUqm
-        FhTnpqcWmxYY5aWW6xUn5haX5qXrJefnbmIEpwEtrx2My875HGIU4GBU4uEtWLQ2Vog1say4
-        MvcQowQHs5II7x0DoBBvSmJlVWpRfnxRaU5q8SFGaQ4WJXHeSaxXY4QE0hNLUrNTUwtSi2Cy
-        TBycUg2MmgWvP++2LXybFBemraX6xVAto8dE9/PqHTcTVXN1r15dHb1ZQ8lwTgS/3X3n7dcF
-        GNP7zuWnfjh9eOIiT4Vv1106eyt527rsTnZws7ulmddqyiqkaTyuitI9ynlh/r/Cww9uqLct
-        qT929dXMZUHioSp8OXkp0tVrbFXlj842tGra4qxtp6nEUpyRaKjFXFScCADVRSLP/wIAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrILMWRmVeSWpSXmKPExsWy7bCSnO63xWtjDb7v0LI4u2shq8WSpgyL
-        +UfOsVrsutvBbrHiy0x2i8u75rBZnJ13nM1i6fWLTBaLtn5ht2jde4Tdgctjzbw1jB47Z91l
-        91iwqdRj06pONo++LasYPbbs/8zo8XmTXAB7FJdNSmpOZllqkb5dAldG5+YDTAW7uSpOXZnJ
-        3sD4naOLkZNDQsBE4vLfj8xdjFwcQgK7GSXWXLjKBJGQkPiy9ysbhC0ssfLfc3YQW0igiUli
-        2g0LEJtNQFvi59G9QHEODhGBaIkNr4RA5jALXGKUePl4CytIXFggTOJFVwlIOYuAqsTJdY+Z
-        QWxeAReJBTsns0KMl5O4ea6TeQIjzwJGhlWMkqkFxbnpucWGBUZ5qeV6xYm5xaV56XrJ+bmb
-        GMEBp6W1g/HEifhDjAIcjEo8vA7T18QKsSaWFVfmHmKU4GBWEuG9Y7A2Vog3JbGyKrUoP76o
-        NCe1+BCjNAeLkjivfP6xSCGB9MSS1OzU1ILUIpgsEwenVANjzpujN3693W2hktP2MHmRseSM
-        bX+/BkWXl6/W5PWNi6hwLZy7fsnU0/IzW/iuGmgmr250C/vteT50zj4dg9+3Y3/3tplnh1qu
-        DGUyiXC3j4n5eXPJ9Qe60cl3TP3Elyn7rGtm974lu2nO7CPqLO1ufu5ZBwsE6/g8RPaF3uj0
-        stoWrqZu+02JpTgj0VCLuag4EQACwT8sNAIAAA==
-X-CMS-MailID: 20191021122630epcas5p32bd92762c4304035cad5c1822d96e304
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20191021122630epcas5p32bd92762c4304035cad5c1822d96e304
-References: <CGME20191021122630epcas5p32bd92762c4304035cad5c1822d96e304@epcas5p3.samsung.com>
+        Mon, 21 Oct 2019 08:26:44 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTP id AD8263FA25;
+        Mon, 21 Oct 2019 14:26:41 +0200 (CEST)
+Authentication-Results: ste-pvt-msa2.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=SNroE+dT;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Authentication-Results: ste-ftg-msa2.bahnhof.se (amavisd-new);
+        dkim=pass (1024-bit key) header.d=shipmail.org
+Received: from ste-pvt-msa2.bahnhof.se ([127.0.0.1])
+        by localhost (ste-ftg-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id nCuPe42zSIw2; Mon, 21 Oct 2019 14:26:40 +0200 (CEST)
+Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        (Authenticated sender: mb878879)
+        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id BC6423F9F2;
+        Mon, 21 Oct 2019 14:26:39 +0200 (CEST)
+Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        by mail1.shipmail.org (Postfix) with ESMTPSA id 5AB633600C3;
+        Mon, 21 Oct 2019 14:26:39 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
+        t=1571660799; bh=OGtRnZKF2rFlGU94v3BrboznZRXCvrKJ6F4AewpUHZA=;
+        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
+        b=SNroE+dTvQR/6viwK2eSsMbsIaiZB+b8aybvCdLX9qiW5ECQbFX5ZPxHPEY1dQ9Xf
+         pO81xLj3LURF5zKZCORZJ+BXAiyW8qrk2suz1ss+GmVA5KKxgg9k35ovJNra1DNbl9
+         7uUdHLkOijoSK6maigMotfL+wq9ZKJKKD6dX83hk=
+Subject: Re: dma coherent memory user-space maps
+From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+To:     Christoph Hellwig <hch@infradead.org>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <b811f66d-2353-23c6-c9fa-e279cdb0f832@shipmail.org>
+Organization: VMware Inc.
+Message-ID: <0d59940d-1688-1b22-0524-c257c2401719@shipmail.org>
+Date:   Mon, 21 Oct 2019 14:26:38 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <b811f66d-2353-23c6-c9fa-e279cdb0f832@shipmail.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for ZRX-DC compliant PHYs. If PHY is not compliant to ZRX-DC
-specification, then after every 100ms link should transition to recovery
-state during the low power states which increases power consumption.
+On 10/8/19 2:34 PM, Thomas Hellström (VMware) wrote:
+> Hi, Christoph,
+>
+> Following our previous discussion I wonder if something along the 
+> lines of the following could work / be acceptible
+>
+> typedef unsigned long dma_pfn_t /* Opaque pfn type. Arch dependent. 
+> This could if needed be a struct with a pointer and an offset */
+>
+> /* Similar to vmf_insert_mixed() */
+> vm_fault_t dma_vmf_insert_mixed(struct device *dev,
+>                 struct vm_area_struct *vma,
+>                 unsigned long addr,
+>                 dma_pfn_t dpfn,
+>                 unsigned long attrs);
+>
+> /* Similar to vmf_insert_pfn_pmd() */
+> vm_fault_t dma_vmf_insert_pfn_pmd(struct device *dev,
+>                   struct vm_area_struct *vma,
+>                   unsigned long addr,
+>                   dma_pfn_t dpfn,
+>                   unsigned long attrs);
+>
+> /* Like vmap, but takes struct dma_pfns. */
+> extern void *dma_vmap(struct device *dev,
+>               dma_pfn_t dpfns[],
+>               unsigned int count, unsigned long flags,
+>               unsigned long attrs);
+>
+> /* Obtain struct dma_pfn pointers from a dma coherent allocation */
+> int dma_get_dpfns(struct device *dev, void *cpu_addr, dma_addr_t 
+> dma_addr,
+>           pgoff_t offset, pgoff_t num, dma_pfn_t dpfns[]);
+>
+> I figure, for most if not all architectures we could use an ordinary 
+> pfn as dma_pfn_t, but the dma layer would still have control over how 
+> those pfns are obtained and how they are used in the kernel's mapping 
+> APIs.
+>
+> If so, I could start looking at this, time permitting,  for the cases 
+> where the pfn can be obtained from the kernel address or from 
+> arch_dma_coherent_to_pfn(), and also the needed work to have a 
+> tailored vmap_pfn().
+>
+> Thanks,
+> /Thomas
+>
+>
+Ping?
 
-Platforms with ZRX-DC compliant PHY can use "snps,phy-zrxdc-compliant"
-property in DesignWare controller DT node.
+Thanks,
 
-Signed-off-by: Anvesh Salveru <anvesh.s@samsung.com>
-Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
----
- Documentation/devicetree/bindings/pci/designware-pcie.txt | 2 ++
- 1 file changed, 2 insertions(+)
+Thomas
 
-diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-index 78494c4050f7..9507ac38ac89 100644
---- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
-+++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-@@ -38,6 +38,8 @@ Optional properties:
-    for data corruption. CDM registers include standard PCIe configuration
-    space registers, Port Logic registers, DMA and iATU (internal Address
-    Translation Unit) registers.
-+- snps,phy-zrxdc-compliant: This property is needed if phy complies with the
-+  ZRX-DC specification.
- RC mode:
- - num-viewport: number of view ports configured in hardware. If a platform
-   does not specify it, the driver assumes 2.
--- 
-2.17.1
 
