@@ -2,95 +2,96 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6613FCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 20:20:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACAEECA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 20:26:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40DFF2067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 20:20:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 738E12067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 20:26:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C42Mueuz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730240AbfJUUUr (ORCPT
+        id S1730170AbfJUU0g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 16:20:47 -0400
-Received: from sauhun.de ([88.99.104.3]:50660 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728914AbfJUUUq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 16:20:46 -0400
-Received: from localhost (x4dbffd67.dyn.telefonica.de [77.191.253.103])
-        by pokefinder.org (Postfix) with ESMTPSA id A85552C0076;
-        Mon, 21 Oct 2019 22:20:44 +0200 (CEST)
-Date:   Mon, 21 Oct 2019 22:20:44 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Kamel Bouhara <kamel.bouhara@bootlin.com>
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 2/4] i2c: at91: implement i2c bus recovery
-Message-ID: <20191021202044.GB3607@kunai>
-References: <20191002144658.7718-1-kamel.bouhara@bootlin.com>
- <20191002144658.7718-3-kamel.bouhara@bootlin.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="O5XBE6gyVG5Rl6Rj"
-Content-Disposition: inline
-In-Reply-To: <20191002144658.7718-3-kamel.bouhara@bootlin.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 21 Oct 2019 16:26:36 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:40858 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729388AbfJUU0f (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 16:26:35 -0400
+Received: by mail-il1-f193.google.com with SMTP id d83so4808830ilk.7
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 13:26:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=YUr4Z8AVtpytf5hqPhoEfjM2QU/haufjelcazFqZdDI=;
+        b=C42MueuzIG0eurQVvyszFEh1vHQ5Bly/jv8jo9gXLNAv6nVgrF03IlqiBKOpXckont
+         WNtrmzny+GW3nWjHQrtaZ8o6E4KDyBAlJ9DqrLMHPKmrExHB5hCSRG+SEYXnfxC2h/VK
+         XARksHyat0EvVOGKoEBluIgw+fCDmRtCjs2poqSVU9Ngsswgc8jxnjQYiMosovj/SD5X
+         MwzDwywkZLZTrxjrpaKNt7INgtPoRCfNJqTC+1A8l4AXL9mgZlT3Tsg8XfdqEDS5+RF4
+         nCnMnXl76ofcGrZ+FQda6eZhnU7M3bvWGcy3GuN9iJSYIuj/RGkDQSOctYm+KX6BfdQC
+         nz6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=YUr4Z8AVtpytf5hqPhoEfjM2QU/haufjelcazFqZdDI=;
+        b=WDSg7unx2OQQEVaWJxzYxDJzTSUnNOuD/y0nWd1t34xVQu8mHRADQWtZZNsIA+ig8x
+         TnqVim7HUMWyQLjyEyray+JeaZWbgYElwG0ce/rmaTMXs1JBO0Gi/9Z9EyUvu5a+V44d
+         joEQqxXpEbgZLubNVfULzQseBeAhp+jHf61or+SDUX18qvooU3D4ZxpaifY3Oo13hc8e
+         7GdkB4brj4b/RKZSEbc5Cbr03V23c5uUOXK0iM23C6TKofOFZhW44H5ZxxL/XWyHGatY
+         6FTjKdHuudrQZlE4QvZMUBTNRIL8tFWiF71NOnr/JmxqgXwABOYJIPE2CyfYTeLhFyFC
+         4SRA==
+X-Gm-Message-State: APjAAAW97sPKijwxmL2KwTJXywZcAgoLwx5j8EJuKEngpQGYMSCNGKs0
+        MCrmRZbVqr7fC73EON3YJfE=
+X-Google-Smtp-Source: APXvYqxOCcAymeW1sck45BJLBQJ3ERjWLB40X/2QKSPGwqNUoxKzUriQdnqYq3IloP/wdGgZ6UIWTQ==
+X-Received: by 2002:a92:9198:: with SMTP id e24mr5368777ill.184.1571689594969;
+        Mon, 21 Oct 2019 13:26:34 -0700 (PDT)
+Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
+        by smtp.googlemail.com with ESMTPSA id b3sm5941106iln.42.2019.10.21.13.26.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Oct 2019 13:26:34 -0700 (PDT)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     emamd001@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] clocksource/drivers/davinci: Fix memory leak in davinci_timer_register
+Date:   Mon, 21 Oct 2019 15:26:25 -0500
+Message-Id: <20191021202626.5246-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+In the impelementation of davinci_timer_register() the allocated memory
+for clockevent should be released if request_irq() fails.
 
---O5XBE6gyVG5Rl6Rj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Fixes: 721154f972aa ("clocksource/drivers/davinci: Add support for clockevents")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+---
+ drivers/clocksource/timer-davinci.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-On Wed, Oct 02, 2019 at 04:46:56PM +0200, Kamel Bouhara wrote:
-> Implement i2c bus recovery when slaves devices might hold SDA low.
-> In this case re-assign SCL/SDA to gpios and issue 9 dummy clock pulses
-> until the slave release SDA.
->=20
-> Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
+diff --git a/drivers/clocksource/timer-davinci.c b/drivers/clocksource/timer-davinci.c
+index 62745c962049..910d4d2f0d64 100644
+--- a/drivers/clocksource/timer-davinci.c
++++ b/drivers/clocksource/timer-davinci.c
+@@ -299,6 +299,7 @@ int __init davinci_timer_register(struct clk *clk,
+ 			 "clockevent/tim12", clockevent);
+ 	if (rv) {
+ 		pr_err("Unable to request the clockevent interrupt");
++		kfree(clockevent);
+ 		return rv;
+ 	}
+ 
+-- 
+2.17.1
 
-Setting up the bus_recovery looks OK. However, I don't see any call to
-i2c_recover_bus(), so the bus_recovery is never used. Did you test this
-and see an effect?
-
-Also, I think we should merge this patch "[PATCH v3] i2c: at91: Send bus
-clear command if SCL or SDA is down" into this series. The crucial thing
-for both is when to apply the recovery (at the beginning of a
-transfer!). The rest is "just" that some HW needs a bus_recovery_info
-for pinctrl/GPIO handling (from this patch), while other HW needs a
-bus_recovery_info with a custom recover_bus callback.
-
-Opinions?
-
-
---O5XBE6gyVG5Rl6Rj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl2uExwACgkQFA3kzBSg
-KbYuXQ//eD/q+8apdlyXS/GXAnuUdAWmgKPeAuIOLg3HVjQ9WJ9MRaCMy2l6Luxy
-c8qEFZH5jKzOlqfppnV8t6ff2psZ9uyd48gQdkSKuIGYJNi0WJacBFwL9/2RJUW5
-4Y2LnEBtZ3Y6GdSlipjUsUbxZ0/HJPsbnof5Fx89Qewirua0oSX6m+T13vHlnQnu
-LFL5Y+0sbXxQLjsGLIM9nMqJcvedb9yrK6tOLHhfUD6p5RPWImi9LThJCo+Zx5vt
-GbrpYaqqF4sOz2a//K4sqqJky3l/qBlALjGKaFQfgG4f6Fv8GTSkJYchIViV8wM3
-v7hurVSrejGx0wQF9tlOKLgYeHlUHaEa1JCT+tCx8/Za6Tznej/dwzRcXNdYuF0M
-utpronoEy2pP1KRfmBImI+kbKmmmiwYbscFL/ZihCHdFrrKNw1cBSGZmlL3GPjPb
-RC4ltTteew9D6mQkBmF8jqLvtSM3UFkblqq5vtfKL8Ol/GE2f175tULtpySZiNYQ
-/yelkPgCalYOAWgGQE3YmR7uO4X37U0kebPz47KUaXQjJib4q7AiX3bLzB8eiyzb
-l/UQoR0ZTIFrnBXh5EjAe6MV6ZqlyIIzUTwR18wlN39tcU7dk+htQ7l7K3brGDqG
-iF4Erc1yMFWUMJUTQmgFoV8oSvYE1BxMJVURE5b/Wlv6vk4/U8g=
-=c7Kn
------END PGP SIGNATURE-----
-
---O5XBE6gyVG5Rl6Rj--
