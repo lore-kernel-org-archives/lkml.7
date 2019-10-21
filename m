@@ -2,171 +2,207 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 513E0CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:23:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93B60CA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:24:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3096620684
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:23:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57F6620684
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:24:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Hxap7ljD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727664AbfJUJXP (ORCPT
+        id S1727482AbfJUJYl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 05:23:15 -0400
-Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:34137 "EHLO
-        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726181AbfJUJXP (ORCPT
+        Mon, 21 Oct 2019 05:24:41 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:46789 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727017AbfJUJYk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 05:23:15 -0400
-Received: from [192.168.2.10] ([46.9.232.237])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id MTu4iTW0no1ZhMTu7iLJFS; Mon, 21 Oct 2019 11:23:12 +0200
-Subject: Re: [PATCH v4 5/5] media: platform: Add jpeg dec/enc feature
-To:     Xia Jiang <xia.jiang@mediatek.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rick Chang <rick.chang@mediatek.com>
-Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Tomasz Figa <tfiga@chromium.org>, srv_heupstream@mediatek.com
-References: <20191017084033.28299-1-xia.jiang@mediatek.com>
- <20191017084033.28299-6-xia.jiang@mediatek.com>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <a2e66e05-3248-de84-85d5-b0c7e5a080f1@xs4all.nl>
-Date:   Mon, 21 Oct 2019 11:23:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 21 Oct 2019 05:24:40 -0400
+Received: by mail-ot1-f65.google.com with SMTP id 89so10339798oth.13
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 02:24:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DELCu3OlSAGY6ULseg5/HJriVPHZSLSqlAmQPI5GeFw=;
+        b=Hxap7ljDfVD81M07heYfSLFD2HS9D/dLrnN25mV7jWYSebOfff61JKzGDM8Kdi6RSZ
+         NCWz8mpSzbUXPhRWgG5iphJ5VxhrqD53tLFlf1ZV/fJIMSv/wSuUEjDhZSMeytpGyJ/s
+         LcHGzAfhtsjzFexpxiqtJrbBIKU6B0exOK8QlLKiHB9DM86NGOOZghhCKwhIw+Hs4QGa
+         THkRqd/j+3QcGEmRTpvaUzZf8Vy7fk0/Kg+7G0dhhYUCR9tKordqCFG/22fEdf3lKn4x
+         Km5EonpBbBn0BdpHq9BFLtkOzPgnSwSJtRDLgHBxcshRXtrVfacb3PJqLsIT0N/aE4RU
+         sIwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DELCu3OlSAGY6ULseg5/HJriVPHZSLSqlAmQPI5GeFw=;
+        b=LVeJ9vNMpxolCfnpBplv/h4WC7bT7TAiH8ufQXrLInhIkXpINoL1wDmeulv5/zW1aZ
+         pAbTmNuBGjfIFa/6JkjFc1BM436+Eu6AXhqivgGXK9Sv75QVKyRBbHfCcq2/oa1oGD+3
+         f/xo80EyHzEHfg9y5NoruPVzYysq0D99ofxk9oTKtsBEjiGg51wCaeNR/fk1PPCQR9pl
+         hKS1vyqN0/W/FEy57CUbuRe9prypkUx9u/wvvy7uD7cGBVdv5f15wRfwKy+1dybXLaPp
+         5+v/WwMBu50gW+tACb44kwY3Ey9CLkXNubZRX82myA3IxNUzIn5dxqUdmOvbvJO+WH8S
+         dpFQ==
+X-Gm-Message-State: APjAAAUMQAnkohJUIi6arw6NbRkecygb4LgAErNEk2OqC+BIZtSp3fhs
+        dCmjv25arawVD22BRFKBddyJCQ72rVixVMXSZc1VHjHuM1qUnQ==
+X-Google-Smtp-Source: APXvYqyNe6uu8LVMvmDZSgGvrWnt+hJcoNmoQaGw4YBSrU/2RhEEdK8PfPuRGqpe6mRLNzkgLhwlByZ7gQD0m5eBKGo=
+X-Received: by 2002:a9d:7590:: with SMTP id s16mr17338841otk.2.1571649878890;
+ Mon, 21 Oct 2019 02:24:38 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191017084033.28299-6-xia.jiang@mediatek.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfBX4zeKC12ZrwQYD4Gu8nAfraoHeArJMkY6+EytbDESkYZwL6hzOhZZRpN2YyL28a5MldlJJB6nzlYnXGUNRb7ceJWpA4Bk5MBEjoV8Cs0hst2h/Odk1
- 8Fs5shOYHZeh9crSahooaj6fyj5giPN1NR0ua8fsM4j2SJwGbq+Z04izzsDSeA9G75THtWPR9wZ9xuodA8Y2K4GP4qxRLA+d8KK2hgpq3aA5vlcL5dFFcnOT
- 5RhOUJVG8LVKln4G80UITRtvYlVx7SpFsUlTYiJKhM19UwVwyPF34gQJrolTJ6eOA14NxOfnbyLF/xUI3437ir1cBaWCO+vp953B2MAGjD3hIjLd4289ABGQ
- e9T0QwmXqzaHf0SF/TvGAoipbEIARzMmlgXJ0r6y7hMuhb6P+Hcl/KN00Il/jKpSQIJG0sQ5zwwQ+qsWEuwf9MORMov7slZNwpxy67OpF1ULkJA+Z1rSroKH
- vuq5UPBjFs4R/60nTOtD7vGNdLbvxZAoiYePq5WrR4REefK/dV+1OGtFMN/Dw76g19gVwBucg7QJatLmhPQbzxGcvj7gMZIXiioAr4k63NMzQA2W22x1W108
- N0G/gIO4wEFQa3Mwgl8SjAifKowzwWwY7Cud+zqZshZM5NxoBhK/2pMjOMN5Cq7k7I4=
+References: <20191020173010.GA14744@avx2>
+In-Reply-To: <20191020173010.GA14744@avx2>
+From:   Marco Elver <elver@google.com>
+Date:   Mon, 21 Oct 2019 11:24:27 +0200
+Message-ID: <CANpmjNPzkYQjQ1mtJ6-h+6-=igD=GSnN9Sr6B6jpXrH9UJEUxg@mail.gmail.com>
+Subject: Re: [PATCH] proc: fix inode uid/gid writeback race
+To:     Alexey Dobriyan <adobriyan@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Xia,
-
-Some comments about the selection code:
-
-On 10/17/19 10:40 AM, Xia Jiang wrote:
-> Add mtk jpeg encode v4l2 driver based on jpeg decode, because that jpeg
-> decode and encode have great similarities with function operation.
-> 
-> Signed-off-by: Xia Jiang <xia.jiang@mediatek.com>
+On Sun, 20 Oct 2019 at 19:30, Alexey Dobriyan <adobriyan@gmail.com> wrote:
+>
+> (euid, egid) pair is snapshotted correctly from task under RCU,
+> but writeback to inode can be done in any order.
+>
+> Fix by doing writeback under inode->i_lock where necessary
+> (/proc/* , /proc/*/fd/* , /proc/*/map_files/* revalidate).
+>
+> Reported-by: syzbot+e392f8008a294fdf8891@syzkaller.appspotmail.com
+> Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
 > ---
-> v4: split mtk_jpeg_try_fmt_mplane() to two functions, one for encoder,
->     one for decoder.
->     split mtk_jpeg_set_default_params() to two functions, one for
->     encoder, one for decoder.
->     add cropping support for encoder in g/s_selection ioctls.
->     change exif mode support by using V4L2_JPEG_ACTIVE_MARKER_APP1.
->     change MTK_JPEG_MAX_WIDTH/MTK_JPEG_MAX_HEIGH from 8192 to 65535 by
->     specification.
->     move width shifting operation behind aligning operation in
->     mtk_jpeg_try_enc_fmt_mplane() for bug fix.
->     fix user abuseing data_offset issue for DMABUF in
->     mtk_jpeg_set_enc_src().
->     fix kbuild warings: change MTK_JPEG_MIN_HEIGHT/MTK_JPEG_MAX_HEIGHT
->                         and MTK_JPEG_MIN_WIDTH/MTK_JPEG_MAX_WIDTH from
->                         'int' type to 'unsigned int' type.
->                         fix msleadingly indented of 'else'.
-> 
-> v3: delete Change-Id.
->     only test once handler->error after the last v4l2_ctrl_new_std().
->     seperate changes of v4l2-ctrls.c and v4l2-controls.h to new patch.
-> 
-> v2: fix compliance test fail, check created buffer size in driver.
-> ---
->  drivers/media/platform/mtk-jpeg/Makefile      |   5 +-
->  .../media/platform/mtk-jpeg/mtk_jpeg_core.c   | 731 +++++++++++++++---
->  .../media/platform/mtk-jpeg/mtk_jpeg_core.h   | 123 ++-
->  .../media/platform/mtk-jpeg/mtk_jpeg_dec_hw.h |   7 +-
->  .../media/platform/mtk-jpeg/mtk_jpeg_enc_hw.c | 175 +++++
->  .../media/platform/mtk-jpeg/mtk_jpeg_enc_hw.h |  60 ++
->  .../platform/mtk-jpeg/mtk_jpeg_enc_reg.h      |  49 ++
->  7 files changed, 1004 insertions(+), 146 deletions(-)
->  create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_enc_hw.c
->  create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_enc_hw.h
->  create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_enc_reg.h
-> 
 
-<snip>
+Thanks!
 
-> @@ -455,11 +679,19 @@ static int mtk_jpeg_g_selection(struct file *file, void *priv,
->  				struct v4l2_selection *s)
->  {
->  	struct mtk_jpeg_ctx *ctx = mtk_jpeg_fh_to_ctx(priv);
-> +	struct mtk_jpeg_dev *jpeg = ctx->jpeg;
->  
-> -	if (s->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
-> +	if (jpeg->mode == MTK_JPEG_ENC && s->type != V4L2_BUF_TYPE_VIDEO_OUTPUT)
-> +		return -EINVAL;
-> +
-> +	if (jpeg->mode == MTK_JPEG_DEC &&
-> +	    s->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
->  		return -EINVAL;
->  
->  	switch (s->target) {
-> +	case V4L2_SEL_TGT_CROP:
-> +	case V4L2_SEL_TGT_CROP_BOUNDS:
-> +	case V4L2_SEL_TGT_CROP_DEFAULT:
+This certainly fixes the problem of inconsistent uid/gid pair due to
+racing writebacks, as well as the data-race. If that is the only
+purpose of this patch, then from what I see this is fine:
 
-This is wrong...
+Acked-by: Marco Elver <elver@google.com>
 
->  	case V4L2_SEL_TGT_COMPOSE:
->  	case V4L2_SEL_TGT_COMPOSE_DEFAULT:
->  		s->r.width = ctx->out_q.w;
-> @@ -484,11 +716,17 @@ static int mtk_jpeg_s_selection(struct file *file, void *priv,
->  				struct v4l2_selection *s)
->  {
->  	struct mtk_jpeg_ctx *ctx = mtk_jpeg_fh_to_ctx(priv);
-> +	struct mtk_jpeg_dev *jpeg = ctx->jpeg;
->  
-> -	if (s->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
-> +	if (jpeg->mode == MTK_JPEG_ENC && s->type != V4L2_BUF_TYPE_VIDEO_OUTPUT)
-> +		return -EINVAL;
-> +
-> +	if (jpeg->mode == MTK_JPEG_DEC &&
-> +	    s->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
->  		return -EINVAL;
->  
->  	switch (s->target) {
-> +	case V4L2_SEL_TGT_CROP:
+However, there is probably still a more fundamental problem as outlined below.
 
-...and so is this.
-
-The decoder only supports COMPOSE, the encoder only supports CROP.
-
-This signals support for both cropping and composition for both encoder and
-decoder, and that's wrong. You can see this in the compliance output as well:
-it says that both cropping and composition are 'OK', meaning that both features
-are implemented.
-
-It also claims that the decoder supports scaling. Is that correct? Is there a
-scaler in the JPEG decoder? Usually codecs do not have a scaler.
-
-Regards,
-
-	Hans
-
->  	case V4L2_SEL_TGT_COMPOSE:
->  		s->r.left = 0;
->  		s->r.top = 0;
-> @@ -658,10 +896,92 @@ static void mtk_jpeg_set_queue_data(struct mtk_jpeg_ctx *ctx,
->  		 param->dec_w, param->dec_h);
+>  fs/proc/base.c     |   25 +++++++++++++++++++++++--
+>  fs/proc/fd.c       |    2 +-
+>  fs/proc/internal.h |    2 ++
+>  3 files changed, 26 insertions(+), 3 deletions(-)
+>
+> --- a/fs/proc/base.c
+> +++ b/fs/proc/base.c
+> @@ -1743,6 +1743,25 @@ void task_dump_owner(struct task_struct *task, umode_t mode,
+>         *rgid = gid;
 >  }
+>
+> +/* use if inode is live */
+> +void task_dump_owner_to_inode(struct task_struct *task, umode_t mode,
+> +                             struct inode *inode)
+> +{
+> +       kuid_t uid;
+> +       kgid_t gid;
+> +
+> +       task_dump_owner(task, mode, &uid, &gid);
+> +       /*
+> +        * There is no atomic "change all credentials at once" system call,
+> +        * guaranteeing more than _some_ snapshot from "struct cred" ends up
+> +        * in inode is not possible.
+> +        */
+> +       spin_lock(&inode->i_lock);
+> +       inode->i_uid = uid;
+> +       inode->i_gid = gid;
+> +       spin_unlock(&inode->i_lock);
 
+2 tasks can still race here, and the inconsistent scenario I outlined in
+https://lore.kernel.org/linux-fsdevel/000000000000328b2905951a7667@google.com/
+could still happen I think (although extremely unlikely). Mainly,
+causality may still be violated -- but I may be wrong as I don't know
+the rest of the code (so please be critical of my suggestion).
 
+The problem is that if 2 threads race here, one has snapshotted old
+uid/gid, and the other the new uid/gid. Then it is still possible for
+the old uid/gid to be written back after new uid/gid, which would
+result in this bad scenario:
+
+=== TASK 1 ===
+| seteuid(1000);
+| seteuid(0);
+| stat("/proc/<pid-of-task-1>", &fstat);
+| assert(fstat.st_uid == 0);  // fails
+=== TASK 2 ===
+| stat("/proc/<pid-of-task-1>", ...);
+
+AFAIK it's not something that can easily be fixed without some
+timestamp on the uid/gid pair (timestamp updated after setuid/seteuid
+etc) obtained in the RCU reader critical section. Then in this
+critical section, uid/gid should only be written if the current pair
+in inode is older according to snapshot timestamp.
+
+> +}
+> +
+>  struct inode *proc_pid_make_inode(struct super_block * sb,
+>                                   struct task_struct *task, umode_t mode)
+>  {
+> @@ -1769,6 +1788,7 @@ struct inode *proc_pid_make_inode(struct super_block * sb,
+>         if (!ei->pid)
+>                 goto out_unlock;
+>
+> +       /* fresh inode -- no races */
+>         task_dump_owner(task, 0, &inode->i_uid, &inode->i_gid);
+>         security_task_to_inode(task, inode);
+>
+> @@ -1802,6 +1822,7 @@ int pid_getattr(const struct path *path, struct kstat *stat,
+>                          */
+>                         return -ENOENT;
+>                 }
+> +               /* "struct kstat" is thread local, atomic snapshot is enough */
+>                 task_dump_owner(task, inode->i_mode, &stat->uid, &stat->gid);
+>         }
+>         rcu_read_unlock();
+> @@ -1815,7 +1836,7 @@ int pid_getattr(const struct path *path, struct kstat *stat,
+>   */
+>  void pid_update_inode(struct task_struct *task, struct inode *inode)
+>  {
+> -       task_dump_owner(task, inode->i_mode, &inode->i_uid, &inode->i_gid);
+> +       task_dump_owner_to_inode(task, inode->i_mode, inode);
+>
+>         inode->i_mode &= ~(S_ISUID | S_ISGID);
+>         security_task_to_inode(task, inode);
+> @@ -1990,7 +2011,7 @@ static int map_files_d_revalidate(struct dentry *dentry, unsigned int flags)
+>         mmput(mm);
+>
+>         if (exact_vma_exists) {
+> -               task_dump_owner(task, 0, &inode->i_uid, &inode->i_gid);
+> +               task_dump_owner_to_inode(task, 0, inode);
+>
+>                 security_task_to_inode(task, inode);
+>                 status = 1;
+> --- a/fs/proc/fd.c
+> +++ b/fs/proc/fd.c
+> @@ -101,7 +101,7 @@ static bool tid_fd_mode(struct task_struct *task, unsigned fd, fmode_t *mode)
+>  static void tid_fd_update_inode(struct task_struct *task, struct inode *inode,
+>                                 fmode_t f_mode)
+>  {
+> -       task_dump_owner(task, 0, &inode->i_uid, &inode->i_gid);
+> +       task_dump_owner_to_inode(task, 0, inode);
+>
+>         if (S_ISLNK(inode->i_mode)) {
+>                 unsigned i_mode = S_IFLNK;
+> --- a/fs/proc/internal.h
+> +++ b/fs/proc/internal.h
+> @@ -123,6 +123,8 @@ static inline struct task_struct *get_proc_task(const struct inode *inode)
+>
+>  void task_dump_owner(struct task_struct *task, umode_t mode,
+>                      kuid_t *ruid, kgid_t *rgid);
+> +void task_dump_owner_to_inode(struct task_struct *task, umode_t mode,
+> +                             struct inode *inode);
+>
+>  unsigned name_to_int(const struct qstr *qstr);
+>  /*
