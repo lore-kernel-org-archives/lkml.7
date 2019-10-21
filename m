@@ -2,194 +2,103 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51A88CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:42:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DCD5CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:42:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2800220873
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:42:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EwmNb7cX"
+	by mail.kernel.org (Postfix) with ESMTP id 2371D20873
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:42:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571672523;
+	bh=pe6wXcO3jDuMibDCNI6MAcNzt7uASgB+Lk3Qh7R/3XA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Cu1g8oW8PtuliI+e7BvLChl3I5OqFFJq/v6h1ax53Cci8wWmVfxBRzGjFcvWhGt9+
+	 tFmVBigTDnsyDLtzkbFfp4h2vICyQ+M5DKifgiVANzUNuhpZFABRcoenRY8Qxv6xCh
+	 u2kiTTDg/iHNhfXZnFQp5Y8XyADoGNBpsbXj/N6g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729637AbfJUPl7 (ORCPT
+        id S1729685AbfJUPmB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 11:41:59 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:41443 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729447AbfJUPl6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 11:41:58 -0400
-Received: by mail-io1-f68.google.com with SMTP id r144so4605993iod.8;
-        Mon, 21 Oct 2019 08:41:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yrezMpUPTuyBffQXpwXrXBC3vhqskF147L+22Fn98BU=;
-        b=EwmNb7cXzst/x89vU6zX83MOOZymhv4R7vncUF7z1tLKjEQC3olmiUnfQla3diTAaY
-         CwxGnWNj4NsBN6ZUzZjBq3ozYbikY1usGQPjjJNT2B6tGiIVTS7QPbyrtamOV8SKH2B6
-         XvM4vy8QY6L3spvc+y6BPseinBCXbXoxo5IezrWm6zw8bIpeoh87tqkE9cj1BEs2gGVs
-         aZGDKqPxfiP4VYqbsGB8dgHSbhD5NDYAIF8tT+X3o3dPr7iF4gr6lCXXFCR5y2eOOMi6
-         BlypA8VwHZxFc8HlZYhZEycLpi+Ml42Mz2S9+ief8wwwPHOzEt3YT9lVze8zUoiUqG2P
-         PGSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yrezMpUPTuyBffQXpwXrXBC3vhqskF147L+22Fn98BU=;
-        b=ZCGEwIH74dAJ8s2mYvJFciE/Q6pKYJwDZY0s/APbgfPAnlYdb5X1aJG6U/YF7uplko
-         L913PkEyk7TUF2mW1dVWE5zegOb+FlwLkWv2D0b6ISSE8XUxf10rdDAbtllHXwpusJyG
-         CUWrdcp7hAAF+h6AIExWb2zRG3kygGKIvhwCSeYyjaU/dem8VkYyoOEx7CeJdZDLGPLY
-         FZFqf1BNWB8tAfmRcCedTarpDrBEogCOACBGMoGynD0Ne9Y7IeYBl3wY2myq+nrO5tzK
-         UcGJIzGF2sz2falQtRqPhfghisjusJP3sbaKpi8v/GM6qYyLDYco4rMEfYw6fww1nbJA
-         zE0Q==
-X-Gm-Message-State: APjAAAUljxGL95LmGz3AE61khV27J9biz6kt/8qeRiHk2+cestMpJSWx
-        PSxnXhAA7eq1BNRB4S33Hepy++dhagr09ClXGlw=
-X-Google-Smtp-Source: APXvYqzSsz0JCUb9Vzflc4VEP6hwCRnJcMI8hMtnlwZ2QZkCnUzhMTr7V+XY5wal8xMfpEGVzAt4PglUUBLaMwmHu0g=
-X-Received: by 2002:a6b:7417:: with SMTP id s23mr17364283iog.221.1571672516254;
- Mon, 21 Oct 2019 08:41:56 -0700 (PDT)
+        Mon, 21 Oct 2019 11:42:01 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49392 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727680AbfJUPmA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 11:42:00 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 183E0B392;
+        Mon, 21 Oct 2019 15:41:59 +0000 (UTC)
+Date:   Mon, 21 Oct 2019 17:41:58 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Oscar Salvador <osalvador@suse.de>
+Cc:     n-horiguchi@ah.jp.nec.com, mike.kravetz@oracle.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v2 10/16] mm,hwpoison: Rework soft offline for free
+ pages
+Message-ID: <20191021154158.GV9379@dhcp22.suse.cz>
+References: <20191017142123.24245-1-osalvador@suse.de>
+ <20191017142123.24245-11-osalvador@suse.de>
+ <20191018120615.GM5017@dhcp22.suse.cz>
+ <20191021125842.GA11330@linux>
 MIME-Version: 1.0
-References: <20191007131649.1768-1-linux.amoon@gmail.com> <20191007131649.1768-6-linux.amoon@gmail.com>
- <CAFBinCAoJLZj9Kh+SfF4Q+0OCzac2+huon_BU=Q3yE7Fu38U3w@mail.gmail.com>
- <7hsgo4cgeg.fsf@baylibre.com> <CANAwSgRfcFa6uBNtpqz6y=9Uwsa4gcp_4tDD+Chhg4SynJCq0Q@mail.gmail.com>
- <CAFBinCA6ZoeR4m4bhj08HF1DqxY1qB5mygpaQCGbo3d8M+Wr9Q@mail.gmail.com>
- <CANAwSgSeYTnUkLnjw-RORw76Fyj3_WT0cdM9D0vFsY8g=9L94Q@mail.gmail.com>
- <1jwode9lba.fsf@starbuckisacylon.baylibre.com> <CANAwSgSoK4X3_QbO3YpZRXNTpPJ+zVeid=w93f14Eyk8Dd32EQ@mail.gmail.com>
- <CAFBinCBdwqxA2kLMAA9gtOcXevYK-J4x12odHwpQOAWakgWiEg@mail.gmail.com>
- <CANAwSgRs2DUXwvhJD5qpXg04qEdP_Nt-wQqRbD2FpY2SWnHpAA@mail.gmail.com> <1a98c5f0-de8a-53bc-cfb7-c9b3255667c6@baylibre.com>
-In-Reply-To: <1a98c5f0-de8a-53bc-cfb7-c9b3255667c6@baylibre.com>
-From:   Anand Moon <linux.amoon@gmail.com>
-Date:   Mon, 21 Oct 2019 21:11:45 +0530
-Message-ID: <CANAwSgRD-Vd-D1H5cDYMyTLRMfzdkrFuiy4KfXYt6S+0goF-2w@mail.gmail.com>
-Subject: Re: [RFCv1 5/5] arm64/ARM: configs: Change CONFIG_PWM_MESON from m to y
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-amlogic@lists.infradead.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191021125842.GA11330@linux>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Neil,
+On Mon 21-10-19 14:58:49, Oscar Salvador wrote:
+> On Fri, Oct 18, 2019 at 02:06:15PM +0200, Michal Hocko wrote:
+> > On Thu 17-10-19 16:21:17, Oscar Salvador wrote:
+> > [...]
+> > > +bool take_page_off_buddy(struct page *page)
+> > > + {
+> > > +	struct zone *zone = page_zone(page);
+> > > +	unsigned long pfn = page_to_pfn(page);
+> > > +	unsigned long flags;
+> > > +	unsigned int order;
+> > > +	bool ret = false;
+> > > +
+> > > +	spin_lock_irqsave(&zone->lock, flags);
+> > 
+> > What prevents the page to be allocated in the meantime? Also what about
+> > free pages on the pcp lists? Also the page could be gone by the time you
+> > have reached here.
+> 
+> Nothing prevents the page to be allocated in the meantime.
+> We would just bail out and return -EBUSY to userspace.
+> Since we do not do __anything__ to the page until we are sure we took it off,
+> and it is completely isolated from the memory, there is no danger.
 
-On Mon, 21 Oct 2019 at 19:55, Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> Hi Anand,
->
-> On 21/10/2019 16:11, Anand Moon wrote:
-> > Hi Martin,
-> >
-> > On Fri, 18 Oct 2019 at 23:40, Martin Blumenstingl
-> > <martin.blumenstingl@googlemail.com> wrote:
-> >>
-> >> Hi Anand,
-> >>
-> >> On Fri, Oct 18, 2019 at 4:04 PM Anand Moon <linux.amoon@gmail.com> wrote:
-> >> [...]
-> >>>> Next step it to try narrow down the clock causing the issue.
-> >>>> Remove clk_ignore_unused from the command line and add CLK_INGORE_UNUSED
-> >>>> to the flag of some clocks your clock controller (g12a I think) until
-> >>>>
-> >>>> The peripheral clock gates already have this flag (something we should
-> >>>> fix someday) so don't bother looking there.
-> >>>>
-> >>>> Most likely the source of the pwm is getting disabled between the
-> >>>> late_init call and the probe of the PWM module. Since the pwm is already
-> >>>> active (w/o a driver), gating the clock source shuts dowm the power to
-> >>>> the cores.
-> >>>>
-> >>>> Looking a the possible inputs in pwm driver, I'd bet on fdiv4.
-> >>>>
-> >>>
-> >>> I had give this above steps a try but with little success.
-> >>> I am still looking into this much close.
-> >> it's not clear to me if you have only tested with the PWM and/or
-> >> FCLK_DIV4 clocks. can you please describe what you have tested so far?
-> >>
-> > Sorry for delayed response.
-> >
-> > I had just looked into clk related to SD_EMMC_A/B/C,
-> > with adding CLK_IGNORE/CRITICAL.
-> > Also looked into clk_summary for eMMC and microSD card,
-> > to identify the root cause, but I failed to move ahead.
-> >
-> >> for reference - my way of debugging this in the past was:
-> >> 1. add some printks to clk_disable_unused_subtree (right after the
-> >> clk_core_is_enabled check) to see which clocks are being disabled
-> >> 2. add CLK_IGNORE_UNUSED or CLK_IS_CRITICAL to the clocks which are
-> >> being disabled based on the information from step #1
-> >> 3. (at some point I had a working kernel with lots of clocks with
-> >> CLK_IGNORE_UNUSED/CLK_IS_CRITICAL)
-> >> 4. start dropping the CLK_IGNORE_UNUSED/CLK_IS_CRITICAL flags again
-> >> until you have traced it down to the clocks that are the actual issue
-> >> (so far I always had only one clock which caused issues, but it may be
-> >> multiple)
-> >> 5. investigate (and/or ask on the mailing list, Amlogic developers are
-> >> reading the mails here as well) for the few clocks from step #4
-> >>
-> >
-> > Thanks for you valuable suggestion. I have your patch to debug this
-> > [0]  https://patchwork.kernel.org/patch/9725921/mbox/
-> >
-> > So from the fist step I could identify that all the clk were getting closed
-> > after some core cpu clk was failing. Here is the log.
-> >
-> > step1: [1] https://pastebin.com/p13F9HGG
-> >
-> > so I marked these clk as CLK_IGNORE_UNUSED and finally
-> > I made it to boot using microSD card.
-> >
-> > After this just I converted these CLK to CLK_IS_CRITICAL
-> > as mostly these are used the CPU clk for now.
-> > Here is boot log successful for as of now.
-> >
-> > Finally: [2]  https://pastebin.com/qB6pMyGQ
-> >
-> > I know clk maintainer are against marking flags as *CLK_IS_CRITICAL*
-> > But this is just the step to move ahead.
->
-> Thanks for the extensive debug.
->
-> >
-> > Attach is my local clk and dts patch.Just for testing.
-> > [3] clk_critical.patch
->
->
-> Could you test with only the following changes:
-> diff --git a/drivers/clk/meson/g12a.c b/drivers/clk/meson/g12a.c
-> index ea4c791f106d..f49f5463363e 100644
-> --- a/drivers/clk/meson/g12a.c
-> +++ b/drivers/clk/meson/g12a.c
-> @@ -298,6 +298,7 @@ static struct clk_regmap g12a_fclk_div2 = {
->                         &g12a_fclk_div2_div.hw
->                 },
->                 .num_parents = 1,
-> +               .flags = CLK_IS_CRITICAL,
->         },
->  };
->
-> @@ -672,7 +673,7 @@ static struct clk_regmap g12b_cpub_clk = {
->                         &g12a_sys_pll.hw
->                 },
->                 .num_parents = 2,
-> -               .flags = CLK_SET_RATE_PARENT,
-> +               .flags = CLK_SET_RATE_PARENT | CLK_IS_CRITICAL,
->         },
->  };
->
+Wouldn't it be better to simply check the PageBuddy state after the lock
+has been taken?
 
-Yes these changes work at my end,
-I want to narrow down my changes, this looks pretty good.
+> Since soft-offline is kinda "best effort" mode, it is something like:
+> "Sorry, could not poison the page, try again".
 
-Best Regards
--Anand
+Well, I would disagree here. While madvise is indeed a best effort
+operation please keep in mind that the sole purpose of this interface is
+to allow real MCE behavior. And that operation should better try
+_really_ hard to make sure we try to recover as gracefully as possible.
+
+> Now, thinking about this a bit more, I guess we could be more clever here
+> and call the routine that handles in-use pages if we see that the page
+> was allocated by the time we reach take_page_off_buddy.
+> 
+> About pcp pages, you are right.
+> I thought that we were already handling that case, and we do, but looking closer the
+> call to shake_page() (that among other things spills pcppages into buddy)
+> is performed at a later stage.
+> I think we need to adjust __get_any_page to recognize pcp pages as well.
+
+Yeah, pcp pages are PITA. We cannot really recognize them now. Dropping
+all pcp pages is certainly a way to go but we need to mark the page
+before that happens.
+-- 
+Michal Hocko
+SUSE Labs
