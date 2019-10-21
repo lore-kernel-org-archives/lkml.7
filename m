@@ -2,159 +2,83 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DC82CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:38:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94F72CA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:39:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1497A214AE
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:38:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571647101;
-	bh=2jgYq72qYxvken8k9IgR5GhzlPu/0qzZrI36kMKmJI4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=CaWLr9JlWGgdxigexpRsG4IEX78lh00LMRIhb3ZDna2XJYUJRPLGMcK4YGP71i1kT
-	 QuzI8iq/zPnwO5zdA/R86XYZNA9fuXqUvI65Mac359XBwP0MGhrmfJC29G+brcjMqu
-	 BTomLU5GDWbT3kIn0AFF7SEfXH/3J1qotbwSvuqg=
+	by mail.kernel.org (Postfix) with ESMTP id 72D17214AE
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 08:39:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727576AbfJUIiU (ORCPT
+        id S1727617AbfJUIjQ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 04:38:20 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:37106 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726648AbfJUIiT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 04:38:19 -0400
-Received: by mail-ot1-f68.google.com with SMTP id k32so10290143otc.4;
-        Mon, 21 Oct 2019 01:38:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Isdqq0Ubh24QJiFJ2l26RYaK1W86JQo/S0O5rntTFZ0=;
-        b=Z0TWIWcDFOQa1mesVbE2AV3RFGqL/hqwyU2Kg6KuPVvSfYXID05T9Lq8Gk3tE21XLz
-         Lqxr/dIn1eN5vAla+SYfeNc1MDjotOOO9dk20OHs9aIxNv/OfA1FO2ZBvbM1oM7pgL4I
-         cTF6PMvIVpVv9c7k/6WKB6NBlOvFj8N3gZ6bMN6q6ANZ9+nKeHWJoee807tQf5hMX6kB
-         gAbAQkv3wB+0tIVNtoj4r3qKuC6VWincHXSZDV6fPSm5K0/GuqoapTxT/8bihEdXK4Hw
-         ZPEcLyrz8SQ8uYjOKXYePjVABAWgi0gHnVupXEDuV5aXEtBYQzKxtVUMfOYwfOlDqCx1
-         jEjQ==
-X-Gm-Message-State: APjAAAVfWsfD2y5pccTvY3T37yyWHHJCppKbszvdbiwnsTNp0pd1eR44
-        WKOquBeAI+CmwqVRvhduRGmBoiM8S6NqdWGd5ZE=
-X-Google-Smtp-Source: APXvYqzxJsJuV6BUauy4Sb2At789fmamDYr15BmrQGLKIW7qtsWxPoUU1OE8Ucyvvce+T2vjIx84kc60si7Pd9H8+Xs=
-X-Received: by 2002:a05:6830:1e69:: with SMTP id m9mr17885485otr.262.1571647098420;
- Mon, 21 Oct 2019 01:38:18 -0700 (PDT)
+        Mon, 21 Oct 2019 04:39:16 -0400
+Received: from szxga08-in.huawei.com ([45.249.212.255]:36642 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726227AbfJUIjP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 04:39:15 -0400
+Received: from DGGEMM405-HUB.china.huawei.com (unknown [172.30.72.53])
+        by Forcepoint Email with ESMTP id 0477F4D2FF7C58E08319;
+        Mon, 21 Oct 2019 16:39:13 +0800 (CST)
+Received: from dggeme765-chm.china.huawei.com (10.3.19.111) by
+ DGGEMM405-HUB.china.huawei.com (10.3.20.213) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 21 Oct 2019 16:39:12 +0800
+Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
+ dggeme765-chm.china.huawei.com (10.3.19.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1713.5; Mon, 21 Oct 2019 16:39:12 +0800
+Received: from dggeme763-chm.china.huawei.com ([10.6.66.36]) by
+ dggeme763-chm.china.huawei.com ([10.6.66.36]) with mapi id 15.01.1713.004;
+ Mon, 21 Oct 2019 16:39:12 +0800
+From:   linmiaohe <linmiaohe@huawei.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+CC:     "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "wanpengli@tencent.com" <wanpengli@tencent.com>,
+        "jmattson@google.com" <jmattson@google.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] KVM: remove redundant code in kvm_arch_vm_ioctl
+Thread-Topic: [PATCH] KVM: remove redundant code in kvm_arch_vm_ioctl
+Thread-Index: AdWH6kPXLNyqJ2lVU0Oc7cFVv0sKlA==
+Date:   Mon, 21 Oct 2019 08:39:12 +0000
+Message-ID: <f892609629d7429182ed90422bfd3806@huawei.com>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.184.189.20]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <20191021034927.19300-1-ran.wang_1@nxp.com>
-In-Reply-To: <20191021034927.19300-1-ran.wang_1@nxp.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 21 Oct 2019 10:38:07 +0200
-Message-ID: <CAJZ5v0hO5Jtr_kyBbCawYc+fS0JQGcU-xfhS9S7DKiFQYJSJvQ@mail.gmail.com>
-Subject: Re: [PATCH v7 1/3] PM: wakeup: Add routine to help fetch wakeup
- source object.
-To:     Ran Wang <ran.wang_1@nxp.com>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Rob Herring <robh+dt@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Pavel Machek <pavel@ucw.cz>, Li Biwen <biwen.li@nxp.com>,
-        Len Brown <len.brown@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 5:49 AM Ran Wang <ran.wang_1@nxp.com> wrote:
+
+On Mon, 21 Oct 2019, tglx wrote:
+>On Mon, 21 Oct 2019, Miaohe Lin wrote:
+>> If we reach here with r = 0, we will reassign r = 0 unnecesarry, then 
+>> do the label set_irqchip_out work.
+>> If we reach here with r != 0, then we will do the label work directly. 
+>> So this if statement and r = 0 assignment is redundant.
 >
-> Some user might want to go through all registered wakeup sources
-> and doing things accordingly. For example, SoC PM driver might need to
-> do HW programming to prevent powering down specific IP which wakeup
-> source depending on. So add this API to help walk through all registered
-> wakeup source objects on that list and return them one by one.
+>Can you please get rid of that odd jump label completely?
 >
-> Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
-> Tested-by: Leonard Crestez <leonard.crestez@nxp.com>
-> ---
-> Change in v7:
->         - Remove define of member *dev in wake_irq to fix conflict with commit
->         c8377adfa781 ("PM / wakeup: Show wakeup sources stats in sysfs"), user
->         will use ws->dev->parent instead.
->         - Remove '#include <linux/of_device.h>' because it is not used.
+>  		if (irqchip_kernel(kvm))
+>			r = kvm_vm_ioctl_set_irqchip(kvm, chip);
 >
-> Change in v6:
->         - Add wakeup_source_get_star() and wakeup_source_get_stop() to aligned
->         with wakeup_sources_stats_seq_start/nex/stop.
->
-> Change in v5:
->         - Update commit message, add decription of walk through all wakeup
->         source objects.
->         - Add SCU protection in function wakeup_source_get_next().
->         - Rename wakeup_source member 'attached_dev' to 'dev' and move it up
->         (before wakeirq).
->
-> Change in v4:
->         - None.
->
-> Change in v3:
->         - Adjust indentation of *attached_dev;.
->
-> Change in v2:
->         - None.
->
->  drivers/base/power/wakeup.c | 37 +++++++++++++++++++++++++++++++++++++
->  include/linux/pm_wakeup.h   |  3 +++
->  2 files changed, 40 insertions(+)
->
-> diff --git a/drivers/base/power/wakeup.c b/drivers/base/power/wakeup.c
-> index 5817b51..dee1b09 100644
-> --- a/drivers/base/power/wakeup.c
-> +++ b/drivers/base/power/wakeup.c
-> @@ -248,6 +248,43 @@ void wakeup_source_unregister(struct wakeup_source *ws)
->  EXPORT_SYMBOL_GPL(wakeup_source_unregister);
->
->  /**
-> + * wakeup_source_get_star - Begin a walk on wakeup source list
+>Hmm?
 
-The "get" in the name suggests acquiring a reference of some kind
-which doesn't happen here.
-
-What about renaming it to wakeup_sources_walk_start()?
-
-> + * @srcuidx: Lock index allocated for this caller.
-> + */
-> +struct wakeup_source *wakeup_source_get_start(int *srcuidx)
-
-I don't quite like the calling convention here with passing an int
-pointer to get the SRCU index back.
-
-What about splitting this into, say, wakeup_sources_read_lock() (that
-will return the SRCU index) and wakeup_sources_walk_start() (that will
-return the first list entry)?
-
-Then, you could do something like
-
-idx = wakeup_sources_read_lock();
-
-ws = wakeup_sources_walk_start();
-while (ws) {
-
-        stuff
-
-        ws = wakeup_sources_walk_next();
-}
-
-wakeup_sources_read_unlock(idx);
-
-Or even define for_each_wakeup_source(ws) as
-
-    for (ws = wakeup_sources_walk_start(); ws; ws = wakeup_sources_walk_next())
-
-and use that under a _read_lock()/_read_unlock() pair?
+Sure, thanks for your reply. I will send patch v2 to complete it.
+Thanks again.
