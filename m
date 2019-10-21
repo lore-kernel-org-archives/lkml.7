@@ -2,102 +2,93 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E617CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:18:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AD1ACA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:19:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9E43207FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:18:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="INKY8gja"
+	by mail.kernel.org (Postfix) with ESMTP id 073A1207FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:19:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729315AbfJUOSd (ORCPT
+        id S1729314AbfJUOTC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 10:18:33 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:39538 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727322AbfJUOSc (ORCPT
+        Mon, 21 Oct 2019 10:19:02 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:60327 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727680AbfJUOTC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 10:18:32 -0400
-Received: by mail-pl1-f193.google.com with SMTP id s17so6681679plp.6;
-        Mon, 21 Oct 2019 07:18:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Q7pZ33ZbznXPJtvmD19nVQgQlTsXtZXtBOem8I3QUdY=;
-        b=INKY8gjaHhVN5RG3HbT/ZFNUyfWVhQcYZHqWFfbkpK9LZ5p7mYSFYQoPmdkCcrAyK6
-         kG0/4g4Fv+dYnHMWRYWGWq/UVymZSIHmv0zToJC2nblaxfKjngnYumo/4/Xy4eUeh+Lt
-         THexRIY4u2cdv7wff7dhbBkS6nq7YrxjCAZx6Jc15kvBxO11I0rX3PcdGsl4soLCZXnK
-         3vD/GAmPyFuhCMT7+yJ9pPnkIVQIeOHS5xryoXlgLhvczvh0+dnPVlaYa4VECDtY30Gw
-         Hp+gEe03s0MvPXeHo2h9p89q87r7LyGYIYecLH59qdcbWHaAMf8eokSn3rfqbR/BuQJN
-         0jjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Q7pZ33ZbznXPJtvmD19nVQgQlTsXtZXtBOem8I3QUdY=;
-        b=uKHvO5+Vo/kGbPdNYkh7ZtztrnjZ+b5oqXrRRXn1sX8Ft/BuFnM5y1VPTTfalPDHr4
-         ajsK28/W5LXOlt+GIdA4ZdoMuUSTueIB05r6fqoXPj3OJoT0suQ3Lf9+Yq4oE4YMJ6KV
-         v/NCQHKdn7BMIn0gSFQLjZZri+0mOTg0BJCvu8u/IGQnEakIp+lhFJOmKciqaklKXOHA
-         U6fN944JwrE0lQ/684yMlo7OMHA7Lo8JyY/JQBMsNpZLO0isnE8en8/JSQvGlhPqR7rQ
-         P065PnKT0/JTmIoFG8CNDCKGu1v5xwpd47tWPLVp6EzxjpD78fkpVo3PpcDBMHu7VpuZ
-         D08A==
-X-Gm-Message-State: APjAAAWXIXc9lCfrOq+mOKTmranVndRBIgoHijlM3wmeqL7K9p9p/KOX
-        XFHNVYNoA3AgE1I5TJZ/zdk=
-X-Google-Smtp-Source: APXvYqw1mW2AQvjdOIP7c29+EWwxZggL2XmITz2nkKCN5wF79Uum+vQkU9s7tJDd/aN4/aG+i0+d6w==
-X-Received: by 2002:a17:902:fe0d:: with SMTP id g13mr6890785plj.253.1571667511820;
-        Mon, 21 Oct 2019 07:18:31 -0700 (PDT)
-Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id p189sm16699509pfp.163.2019.10.21.07.18.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Oct 2019 07:18:31 -0700 (PDT)
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-To:     marcel@holtmann.org, johan.hedberg@gmail.com,
-        c-hbandi@codeaurora.org, bgodavar@codeaurora.org
-Cc:     linux-bluetooth@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: [PATCH] Revert "Bluetooth: hci_qca: Add delay for wcn3990 stability"
-Date:   Mon, 21 Oct 2019 07:18:27 -0700
-Message-Id: <20191021141827.11150-1-jeffrey.l.hugo@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 21 Oct 2019 10:19:02 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MPp0l-1iisbC1bz1-00Msup; Mon, 21 Oct 2019 16:18:49 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Roger Quadros <rogerq@ti.com>,
+        Lee Jones <lee.jones@linaro.org>, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] usb: dwc3: select CONFIG_REGMAP_MMIO
+Date:   Mon, 21 Oct 2019 16:18:36 +0200
+Message-Id: <20191021141847.2214613-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:1XpQkbe8LJ1fW5M/Z38m2vIyWeR3kstO+tNSWu9lrKtuEFaceBk
+ uLGFWVDx9RikWXnyd+QM2LgkG2XUG5uVKcSkCkRwDFNzgG2Nbdt8rEqMXqwzUFxjCIVarIq
+ tpSuJJPTmitdJdqzQAbXG66T+dS+L2t0MHJPJ59qrlKWFIFqsj+FwfvLmNCv5ZAKrmrczdb
+ hehdaoQqYQybesxosl+zA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:AvdgeXJsHMo=:RY+zftnZfxose2d0vzyNrN
+ YD0NqDJq6QTs4Az6wctQFCiLd1L/KWwSUWau1JrwAmBcSHWO7NhIY5sLnrG3sKPDOxWat2HcG
+ Qlopehre0YeWu/IuT0BvVJygNB+VTc9E+k22ACNjgOKIjQ1/qVuW0BxJpsJS04+9+0S0XJI6u
+ IpHyScQDy4CAkaps5V86EOcwg1TPsbJWbX6ef1muOeRZFVLjQI0sb8D2afHhK8C0dAwqH/ceQ
+ Ec84iZCBQOUJuM7MOhqh5JrMR8Q2tFnwq4E5s6qZRaGfCWW/L38zF413UbJ+bSeTq+OrLd9+o
+ O+1T8qQ5SjWkA9LNIOjItdFY2SywR2KRbjLZof570FbayJUnesRvwWxjHqU+Z04TwKPpUNqFZ
+ NzRCpU5BAYup2B7Cn5yQmdWNM527SyfMfOxnd9ZLF4yAOBpEDgOlH5pte6f/wMrrFnMg9m41f
+ j8rMl+6tCek2PoRcGlrSRb9xrxz1YB+8G0MnlLsYwFB459Fuke5jT2yECCBzoO6Hqg6yMehSR
+ AgAUiEUxN30k9m32p6pTDuEHLOleJlw6LiUrjeQi6ct2X3b0djH49Mu44wzU8qVllXtmCNTpH
+ TXIhbRpuSfJDbHnTKjZn51+/bACcOLKhKsfdIFpqz8RYObB7DP4hJ5nTWlmyxr5x7vsDI885T
+ nTuV5dk245MLjkRpQB09mCKUlcNjCcbSmW1hNvSaSNr9RqgTSwYVnx+DIE8Lk3n5FpKsdzKvW
+ kZ+iFYy83Cd1zzGi+apc61qQUr+9Jal0ixNsbUTWcNJkNiliaizsIhksj8pIv6bxmoQfZbc8/
+ yN2AomU1N3cm93sqiiqDrBZaBCrE4ZBW0ztYvZBAZ3gfHHnCzz6Aq7C+NBXDubiyLAtLd0KE8
+ ZLCzExAV91BwnXCPDr8w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit cde9dde6e11a5ab54b6462cd46d82878926783bc.
+After many randconfig builds, one configuration caused a link
+error with dwc3-meson-g12a lacking the regmap-mmio code:
 
-The frame reassembly errors were root caused to a transient gpio issue.
-The missing response was root caused to an issue with properly managing
-RFR in the uart driver.  Addressing those root causes occurs outside of
-hci_qca and eliminates the need for the 50ms delay, so remove it.
+drivers/usb/dwc3/dwc3-meson-g12a.o: In function `dwc3_meson_g12a_probe':
+dwc3-meson-g12a.c:(.text+0x9f): undefined reference to `__devm_regmap_init_mmio_clk'
 
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Add the select statement that we have for all other users
+of that dependency.
+
+Fixes: c99993376f72 ("usb: dwc3: Add Amlogic G12A DWC3 glue")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/bluetooth/hci_qca.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/usb/dwc3/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-index 8ae91e0f8102..c591a8ba9d93 100644
---- a/drivers/bluetooth/hci_qca.c
-+++ b/drivers/bluetooth/hci_qca.c
-@@ -1155,10 +1155,8 @@ static int qca_set_speed(struct hci_uart *hu, enum qca_speed_type speed_type)
- 		host_set_baudrate(hu, speed);
- 
- error:
--		if (qca_is_wcn399x(soc_type)) {
--			msleep(50);
-+		if (qca_is_wcn399x(soc_type))
- 			hci_uart_set_flow_control(hu, false);
--		}
- 
- 		if (soc_type == QCA_WCN3990) {
- 			/* Wait for the controller to send the vendor event
+diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
+index 89abc6078703..556a876c7896 100644
+--- a/drivers/usb/dwc3/Kconfig
++++ b/drivers/usb/dwc3/Kconfig
+@@ -102,6 +102,7 @@ config USB_DWC3_MESON_G12A
+        depends on ARCH_MESON || COMPILE_TEST
+        default USB_DWC3
+        select USB_ROLE_SWITCH
++	select REGMAP_MMIO
+        help
+          Support USB2/3 functionality in Amlogic G12A platforms.
+ 	 Say 'Y' or 'M' if you have one such device.
 -- 
-2.17.1
+2.20.0
 
