@@ -2,87 +2,115 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F013ACA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:45:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D2D6CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:45:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF15C2053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:45:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="A08jDv+V"
+	by mail.kernel.org (Postfix) with ESMTP id D1D3520640
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:45:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571669153;
+	bh=zSxr6boC9XHsm0JY6dQGUP4Y+pfXYhmlbUslvFJagHU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CCDSD3x6jPMbfMKQcEiEJAHzo11zwxGojWNu9jJ2N0MKh78UT462GTh9vMctCzc5V
+	 GLnUis4+gZYRGnrcxN3LS49nP0O8pujRzVbgPskYQV0mh3UG6ToU3KXSt/MqSaVTfp
+	 QP5YYJolUNAvQQhU/9UeMRIYaofEg2wVz34o9JTI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728191AbfJUOpC (ORCPT
+        id S1728860AbfJUOpw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 10:45:02 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:38800 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727049AbfJUOpC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 10:45:02 -0400
-Received: by mail-ot1-f66.google.com with SMTP id e11so11198469otl.5
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 07:45:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nXKBAnyH4k8+RtijsexqxpoxgeB4fhcJobwvx31LMho=;
-        b=A08jDv+Vol6PvOoXT/M++kzuwcxp91LiBFYVYM8EPNPJr69L5QUHqGuyp6zGv7tyF9
-         6FX/3oF06Fh+suEw+xQCGVLXW/2yTptC75eQ4/Bbh3WX6Ds/b0M7cf50hvpynQ5ibr4v
-         gyYdRFItY3w55CEltwtFaefj+WsgXARJ5YWtFuxW73BsZK0zpcCSH1MoB0rLRv8RqmVt
-         qiaRQW1K0uEwRHT9/yan1nEhEFofsZXJYLXFQRs8G0Luo67GpvQH6OEE/XLvxxr7bbTv
-         RWxGf3MhxbRyjvhxwa7eDi1zMvw+87+x9G1yJ+8txjhDZ6FYAZefo+3fNI8vS/AdDEne
-         vqOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nXKBAnyH4k8+RtijsexqxpoxgeB4fhcJobwvx31LMho=;
-        b=aee2tWZ/K9v61Z2aouEM8WxqdcuBFespb6A99RiXuRFus7JK10TFVerPLNkSlEHe7t
-         7J5DYzoDz+lFEF4/9kl9G/vuRoE1lrpAGH+WD7PtFXWrcI+40SNxnF/04L6NqI37nlpW
-         MQXbAAmq/40BhLnSNj/NPoR/8MsW/FMqTErZmweVTCkuMn49dkI9ITDNOy8PKtFLl0y1
-         eivyTEbW+8MWgpSopmcvwnFxSa1/I0oQVrOZrpCWYdsK5uHw70VwSCFpPXzHcV4Qvyig
-         Y98zvYXo2ocliHpDWuqMVwkuKtRlNzWDFTZ3tucMKn4i2dmmZL0CrQXEy29yahfyudDq
-         3zUQ==
-X-Gm-Message-State: APjAAAWZ5Aq5RkkcHj8XHVgqVe8+k3pXf2bZliai0zrebG5Lk/juIAbL
-        5346GHDWMyYx8TdWKIZegChdO4Wkrk1l7tbEHn78kA==
-X-Google-Smtp-Source: APXvYqxBK0s4meOHW5S/bgvSxL00+aVLbFSn/xa462jwXlzSuPi3v0iK8imKwTC8RSn2iFmHXyu4Ls1dS51GrTPHPKE=
-X-Received: by 2002:a9d:7c92:: with SMTP id q18mr19206153otn.363.1571669101455;
- Mon, 21 Oct 2019 07:45:01 -0700 (PDT)
+        Mon, 21 Oct 2019 10:45:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41602 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726987AbfJUOpw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 10:45:52 -0400
+Received: from localhost (unknown [107.87.137.115])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A29D12053B;
+        Mon, 21 Oct 2019 14:45:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571669151;
+        bh=zSxr6boC9XHsm0JY6dQGUP4Y+pfXYhmlbUslvFJagHU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wzQU8e0ZUFNA8uAikS25qhU+PVVOE1nVLd8tB20kS4RhTnUBXXeHPWRWyrc6EfC/U
+         3MxufZMwym9OBnJTJHOyQO6DC35w13zixXNgT34vkVW+/WGisLaRsfWiKq9PCWqjMn
+         eR5n3fRA7Hjg+DR0PEPA/XiaRHmax8grcGZk3iAs=
+Date:   Mon, 21 Oct 2019 10:45:48 -0400
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Jaehoon Chung <jh80.chung@samsung.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/7] debugfs: Add debugfs_create_xul() for hexadecimal
+ unsigned long
+Message-ID: <20191021144548.GA41107@kroah.com>
+References: <20191021143742.14487-1-geert+renesas@glider.be>
+ <20191021143742.14487-2-geert+renesas@glider.be>
 MIME-Version: 1.0
-References: <157150237973.3940076.12626102230619807187.stgit@dwillia2-desk3.amr.corp.intel.com>
- <x495zkii9o5.fsf@segfault.boston.devel.redhat.com>
-In-Reply-To: <x495zkii9o5.fsf@segfault.boston.devel.redhat.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 21 Oct 2019 07:44:51 -0700
-Message-ID: <CAPcyv4j66KoivrNRpOrqwrVtsOP5fSWKPqcHx_dDf1czy=f3qQ@mail.gmail.com>
-Subject: Re: [PATCH] fs/dax: Fix pmd vs pte conflict detection
-To:     Jeff Moyer <jmoyer@redhat.com>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Jeff Smits <jeff.smits@intel.com>,
-        Doug Nelson <doug.nelson@intel.com>,
-        stable <stable@vger.kernel.org>, Jan Kara <jack@suse.cz>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191021143742.14487-2-geert+renesas@glider.be>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 5:07 AM Jeff Moyer <jmoyer@redhat.com> wrote:
->
-> Dan Williams <dan.j.williams@intel.com> writes:
->
-> > Check for NULL entries before checking the entry order, otherwise NULL
-> > is misinterpreted as a present pte conflict. The 'order' check needs to
-> > happen before the locked check as an unlocked entry at the wrong order
-> > must fallback to lookup the correct order.
->
-> Please include the user-visible effects of the problem in the changelog.
->
+On Mon, Oct 21, 2019 at 04:37:36PM +0200, Geert Uytterhoeven wrote:
+> The existing debugfs_create_ulong() function supports objects of
+> type "unsigned long", which are 32-bit or 64-bit depending on the
+> platform, in decimal form.  To format objects in hexadecimal, various
+> debugfs_create_x*() functions exist, but all of them take fixed-size
+> types.
+> 
+> Add a debugfs helper for "unsigned long" objects in hexadecimal format.
+> This avoids the need for users to open-code the same, or introduce
+> bugs when casting the value pointer to "u32 *" or "u64 *" to call
+> debugfs_create_x{32,64}().
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  include/linux/debugfs.h | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/include/linux/debugfs.h b/include/linux/debugfs.h
+> index 33690949b45d6904..d7b2aebcc277d65e 100644
+> --- a/include/linux/debugfs.h
+> +++ b/include/linux/debugfs.h
+> @@ -356,4 +356,14 @@ static inline ssize_t debugfs_write_file_bool(struct file *file,
+>  
+>  #endif
+>  
+> +static inline void debugfs_create_xul(const char *name, umode_t mode,
+> +				      struct dentry *parent,
+> +				      unsigned long *value)
+> +{
+> +	if (sizeof(*value) == sizeof(u32))
+> +		debugfs_create_x32(name, mode, parent, (u32 *)value);
+> +	else
+> +		debugfs_create_x64(name, mode, parent, (u64 *)value);
+> +}
 
-Yup, I noticed that right after sending.
+Looks sane, but can you add some kernel-doc comments here so that we can
+pull it into the debugfs documentation?  Also there is debugfs
+documentation in Documentation/filesystems/ so maybe also add this
+there?  I am going to be overhauling the debugfs documentation "soon"
+but it's at the lower part of my todo list, so it will take a while,
+might as well keep it up to date with new stuff added like this so that
+people don't get lost.
+
+thanks,
+
+greg k-h
