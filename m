@@ -2,98 +2,111 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34827CA9EB0
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 20:48:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89EDDCA9EB0
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 20:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02EEE207FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 20:48:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="vBHbGbM2"
+	by mail.kernel.org (Postfix) with ESMTP id 5A2BD2084C
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 20:49:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571690958;
+	bh=qC8cchkpfcx4MIC8fYmBTExkB3AuQjmcXkE0wh02A/g=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=a0I2lfFONZX2DWtWOGyE3FRaB54B8lV1D3uBGVK6jGLvJtJAqQv/d+IcUz1SrPCbF
+	 JFYPk2uVRASQ9vnkb1dQrKJ4XkboJZzsz/RSdYGFgy5GWDc3SM8qImiI6DicRUHUTT
+	 Byq53Hgqq0CFPhckeKwH4XmFcDdBYtFZRtanWmq0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730300AbfJUUsf (ORCPT
+        id S1730321AbfJUUtR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 16:48:35 -0400
-Received: from ozlabs.org ([203.11.71.1]:37709 "EHLO ozlabs.org"
+        Mon, 21 Oct 2019 16:49:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45356 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728914AbfJUUsf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 16:48:35 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1730052AbfJUUtQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 16:49:16 -0400
+Received: from ebiggers-linuxstation.mtv.corp.google.com (unknown [104.132.1.77])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46xpdD5d8Nz9sPT;
-        Tue, 22 Oct 2019 07:48:32 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1571690912;
-        bh=gDF4wkv+s1LYEMnsm7mri2PWEZnHrKXE3Mvc13xEw+M=;
-        h=Date:From:To:Cc:Subject:From;
-        b=vBHbGbM2zmKQUHpHGS8T2EFXEUSa1TZ/+r/zygDt0weJUnH2julWSx5DHsuWphIgM
-         8gXm19ZHfS/EbLNauCW2xxa5Yqy6nW7uFN0sPLdRVTmodvXdZ7c+7NkpgwG7RywS4m
-         6u8eTWEHektE7wgRvWSYgTZDAhk24oDyfI3foPiFH9ntQBkW9vKQS7WXuuszIXeKdh
-         POr1yW5JQKeBh5JQftIGzJ6WNbOPHrUYltn19AZ1qpH8ybT1vglfXIElmnfMbkejKn
-         /bNHRTYcHtMz/UkuxbyAFi0G2TH1M1BTYiFuqrP6rsbxcrd/mMwx3xSsJNpD7QBhY0
-         Bc2hRuGK9E7ng==
-Date:   Tue, 22 Oct 2019 07:48:31 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Trond Myklebust <trondmy@gmail.com>,
-        NFS Mailing List <linux-nfs@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Fixes tag needs some work in the nfs-anna tree
-Message-ID: <20191022074831.7224318f@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id E7C72207FC;
+        Mon, 21 Oct 2019 20:49:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571690956;
+        bh=qC8cchkpfcx4MIC8fYmBTExkB3AuQjmcXkE0wh02A/g=;
+        h=From:To:Cc:Subject:Date:From;
+        b=vckhmIDNmI0N+PRcC5b+qiJwNqfxel2AZI6Eb2vcnaF9EjCU4QMQmsczLggDOaokc
+         DxdtPrTrlzOkKyQT0d/0WKGT/Uyyeg6xSeed5Ps3q5IA+i8ax1v+8U5LNwtxMcNcb2
+         kxaSLVS+S5+b8G0tK79JupK3B2xJ67Poiycqqiis=
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     linux-fscrypt@vger.kernel.org
+Cc:     "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] fscrypt: avoid data race on fscrypt_mode::logged_impl_name
+Date:   Mon, 21 Oct 2019 13:49:03 -0700
+Message-Id: <20191021204903.56528-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/68gQG_2V2_2sR/4huGbTA.T";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/68gQG_2V2_2sR/4huGbTA.T
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: Eric Biggers <ebiggers@google.com>
 
-Hi all,
+The access to logged_impl_name is technically a data race, which tools
+like KCSAN could complain about in the future.  See:
+https://github.com/google/ktsan/wiki/READ_ONCE-and-WRITE_ONCE
 
-In commit
+Fix by using xchg(), which also ensures that only one thread does the
+logging.
 
-  4609f9894ead ("SUNRPC: The TCP back channel mustn't disappear while reque=
-sts are outstanding")
+This also required switching from bool to int, to avoid a build error on
+the RISC-V architecture which doesn't implement xchg on bytes.
 
-Fixes tag
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+---
+ fs/crypto/fscrypt_private.h | 2 +-
+ fs/crypto/keysetup.c        | 6 ++----
+ 2 files changed, 3 insertions(+), 5 deletions(-)
 
-  Fixes: 2ea24497a1b3 ("SUNRPC: RPC callbacks may be split across several..=
-")
+diff --git a/fs/crypto/fscrypt_private.h b/fs/crypto/fscrypt_private.h
+index dacf8fcbac3be..d9a3e8614049f 100644
+--- a/fs/crypto/fscrypt_private.h
++++ b/fs/crypto/fscrypt_private.h
+@@ -435,7 +435,7 @@ struct fscrypt_mode {
+ 	const char *cipher_str;
+ 	int keysize;
+ 	int ivsize;
+-	bool logged_impl_name;
++	int logged_impl_name;
+ };
+ 
+ static inline bool
+diff --git a/fs/crypto/keysetup.c b/fs/crypto/keysetup.c
+index b03b33643e4b2..28bc2da9be3c7 100644
+--- a/fs/crypto/keysetup.c
++++ b/fs/crypto/keysetup.c
+@@ -81,15 +81,13 @@ struct crypto_skcipher *fscrypt_allocate_skcipher(struct fscrypt_mode *mode,
+ 			    mode->cipher_str, PTR_ERR(tfm));
+ 		return tfm;
+ 	}
+-	if (unlikely(!mode->logged_impl_name)) {
++	if (!xchg(&mode->logged_impl_name, 1)) {
+ 		/*
+ 		 * fscrypt performance can vary greatly depending on which
+ 		 * crypto algorithm implementation is used.  Help people debug
+ 		 * performance problems by logging the ->cra_driver_name the
+-		 * first time a mode is used.  Note that multiple threads can
+-		 * race here, but it doesn't really matter.
++		 * first time a mode is used.
+ 		 */
+-		mode->logged_impl_name = true;
+ 		pr_info("fscrypt: %s using implementation \"%s\"\n",
+ 			mode->friendly_name,
+ 			crypto_skcipher_alg(tfm)->base.cra_driver_name);
+-- 
+2.23.0.866.gb869b98d4c-goog
 
-has these problem(s):
-
-  - Subject does not match target commit subject
-    Just use
-	git log -1 --format=3D'Fixes: %h ("%s")'
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/68gQG_2V2_2sR/4huGbTA.T
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2uGZ8ACgkQAVBC80lX
-0GxShwf9HZFLZL0ytbND2qlHxAXWEGH2mDgt6TU/q9XCIaQMqrENoyaerZhWgkXd
-vI3BqIsFB45N80yHcQW6XFyoOCY+fVimH0tso9nZfPHqC7ZuUS35wTG2ZZ1M3XaF
-UJ6w8mZop0nT5kx+A1VVEB8r2Sdl4WrTEmpPZGzapKZqtIets13Lg6jJqN6nmxK6
-fud3wS54fAoMPT9NBYuwZXDO5vhqHK80HTyTMHvDRImu3RpQU9mixmigiIl5mCzC
-Pejdih4VN0cssRLVN2vPgbix3MuqRo6C4uRAHe6Ez97dy+MrHO/H1mxaupeVLtWs
-O3KJrHHeETHXUm2//ednRroGQLMhvA==
-=Cjol
------END PGP SIGNATURE-----
-
---Sig_/68gQG_2V2_2sR/4huGbTA.T--
