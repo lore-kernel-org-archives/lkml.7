@@ -2,106 +2,132 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E004DCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 21:29:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A121CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 21:38:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC9A52084B
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 21:29:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E51CE2089C
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 21:38:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aW5eOUlp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730395AbfJUV3Z (ORCPT
+        id S1730356AbfJUViy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 17:29:25 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:37779 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728943AbfJUV3Z (ORCPT
+        Mon, 21 Oct 2019 17:38:54 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:36590 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730052AbfJUViy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 17:29:25 -0400
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iMfEg-0002d0-Qs; Mon, 21 Oct 2019 23:29:06 +0200
-Date:   Mon, 21 Oct 2019 23:29:05 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        vincenzo.frascino@arm.com, luto@kernel.org,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [RFC PATCH] powerpc/32: Switch VDSO to C implementation.
-In-Reply-To: <8ce3582f7f7da9ff0286ced857e5aa2e5ae6746e.1571662378.git.christophe.leroy@c-s.fr>
-Message-ID: <alpine.DEB.2.21.1910212312520.2078@nanos.tec.linutronix.de>
-References: <8ce3582f7f7da9ff0286ced857e5aa2e5ae6746e.1571662378.git.christophe.leroy@c-s.fr>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 21 Oct 2019 17:38:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571693932;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=0ydo/TL5LDscvwdIxWlFvz3d4kbBSbMTez/KsfHBMEM=;
+        b=aW5eOUlpsUnlhg9LVoJ/+KqAWiJqJJ0rVV6jwt2GiW1hCAwVWjUf/tB/VSbSteyLZKNeGv
+        XmVBldIXztH0/acGET+J7lY4Vmz+5k9KUtq/iStCaNNQUec493rWmVliWRgRZusCYnUZpV
+        0Y4sa4imLjm76BYj9AsSB4X4x1sWPNg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-297-2lBc4Mw4NFGMJ83795y3WA-1; Mon, 21 Oct 2019 17:38:49 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D3658800D41;
+        Mon, 21 Oct 2019 21:38:45 +0000 (UTC)
+Received: from madcap2.tricolour.ca (ovpn-112-19.phx2.redhat.com [10.3.112.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B2D4E1001B20;
+        Mon, 21 Oct 2019 21:38:27 +0000 (UTC)
+Date:   Mon, 21 Oct 2019 17:38:24 -0400
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
+        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
+        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
+        nhorman@tuxdriver.com, Dan Walsh <dwalsh@redhat.com>,
+        mpatel@redhat.com
+Subject: Re: [PATCH ghak90 V7 20/21] audit: add capcontid to set contid
+ outside init_user_ns
+Message-ID: <20191021213824.6zti5ndxu7sqs772@madcap2.tricolour.ca>
+References: <cover.1568834524.git.rgb@redhat.com>
+ <214163d11a75126f610bcedfad67a4d89575dc77.1568834525.git.rgb@redhat.com>
+ <20191019013904.uevmrzbmztsbhpnh@madcap2.tricolour.ca>
+ <CAHC9VhRPygA=LsHLUqv+K=ouAiPFJ6fb2_As=OT-_zB7kGc_aQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <CAHC9VhRPygA=LsHLUqv+K=ouAiPFJ6fb2_As=OT-_zB7kGc_aQ@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: 2lBc4Mw4NFGMJ83795y3WA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 21 Oct 2019, Christophe Leroy wrote:
+On 2019-10-21 15:53, Paul Moore wrote:
+> On Fri, Oct 18, 2019 at 9:39 PM Richard Guy Briggs <rgb@redhat.com> wrote=
+:
+> > On 2019-09-18 21:22, Richard Guy Briggs wrote:
+> > > Provide a mechanism similar to CAP_AUDIT_CONTROL to explicitly give a
+> > > process in a non-init user namespace the capability to set audit
+> > > container identifiers.
+> > >
+> > > Use audit netlink message types AUDIT_GET_CAPCONTID 1027 and
+> > > AUDIT_SET_CAPCONTID 1028.  The message format includes the data
+> > > structure:
+> > > struct audit_capcontid_status {
+> > >         pid_t   pid;
+> > >         u32     enable;
+> > > };
+> >
+> > Paul, can I get a review of the general idea here to see if you're ok
+> > with this way of effectively extending CAP_AUDIT_CONTROL for the sake o=
+f
+> > setting contid from beyond the init user namespace where capable() can'=
+t
+> > reach and ns_capable() is meaningless for these purposes?
+>=20
+> I think my previous comment about having both the procfs and netlink
+> interfaces apply here.  I don't see why we need two different APIs at
+> the start; explain to me why procfs isn't sufficient.  If the argument
+> is simply the desire to avoid mounting procfs in the container, how
+> many container orchestrators can function today without a valid /proc?
 
-> This is a tentative to switch powerpc/32 vdso to generic C implementation.
-> It will likely not work on 64 bits or even build properly at the moment.
-> 
-> powerpc is a bit special for VDSO as well as system calls in the
-> way that it requires setting CR SO bit which cannot be done in C.
-> Therefore, entry/exit and fallback needs to be performed in ASM.
-> 
-> To allow that, C fallbacks just return -1 and the ASM entry point
-> performs the system call when the C function returns -1.
-> 
-> The performance is rather disappoiting. That's most likely all
-> calculation in the C implementation are based on 64 bits math and
-> converted to 32 bits at the very end. I guess C implementation should
-> use 32 bits math like the assembly VDSO does as of today.
+Ok, sorry, I meant to address that question from a previous patch
+comment at the same time.
 
-> gettimeofday:    vdso: 750 nsec/call
-> 
-> gettimeofday:    vdso: 1533 nsec/call
+It was raised by Eric Biederman that the proc filesystem interface for
+audit had its limitations and he had suggested an audit netlink
+interface made more sense.
 
-The only real 64bit math which can matter is the 64bit * 32bit multiply,
-i.e.
+The intent was to switch to the audit netlink interface for contid,
+capcontid and to add the audit netlink interface for loginuid and
+sessionid while deprecating the proc interface for loginuid and
+sessionid.  This was alluded to in the cover letter, but not very clear,
+I'm afraid.  I have patches to remove the contid and loginuid/sessionid
+interfaces in another tree which is why I had forgotten to outline that
+plan more explicitly in the cover letter.
 
-static __always_inline
-u64 vdso_calc_delta(u64 cycles, u64 last, u64 mask, u32 mult)
-{
-        return ((cycles - last) & mask) * mult;
-}
+> paul moore
 
-Everything else is trivial add/sub/shift, which should be roughly the same
-in ASM.
+- RGB
 
-Can you try to replace that with:
-
-static __always_inline
-u64 vdso_calc_delta(u64 cycles, u64 last, u64 mask, u32 mult)
-{
-        u64 ret, delta = ((cycles - last) & mask);
-        u32 dh, dl;
-
-        dl = delta;
-        dh = delta >> 32;
-
-        res = mul_u32_u32(al, mul);
-        if (ah)
-                res += mul_u32_u32(ah, mul) << 32;
-
-        return res;
-}
-
-That's pretty much what __do_get_tspec does in ASM.
-
-Thanks,
-
-	tglx
+--
+Richard Guy Briggs <rgb@redhat.com>
+Sr. S/W Engineer, Kernel Security, Base Operating Systems
+Remote, Ottawa, Red Hat Canada
+IRC: rgb, SunRaycer
+Voice: +1.647.777.2635, Internal: (81) 32635
 
