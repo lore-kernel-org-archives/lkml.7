@@ -2,117 +2,156 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C274DCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:08:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 944B5CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:10:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94CC120684
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:08:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62E5120684
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 10:10:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727975AbfJUKIE (ORCPT
+        id S1727934AbfJUKKE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 06:08:04 -0400
-Received: from mail-oln040092068044.outbound.protection.outlook.com ([40.92.68.44]:61253
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        Mon, 21 Oct 2019 06:10:04 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59080 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727110AbfJUKIE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 06:08:04 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZiXNEjf4Bxue9nT5mbUa8q0k9aI2rrhXQ7s5ZuBEVK/DsH6eKFBByoIe4C3L8EWFKQdEnjOjv/7wU0Yd30E6kz/Oa9zh5uynqJhfoLyX8G40le3B37SQz743/pEcDxikq6heqLSrhapNVoxozCLQLYNwtXKhML7h59z1epZHDvstd1pVHdx6PzCVRtKIU7/pJUU4KAqtpHhJJ+ZpGDDrpwLIRieGcgH/fYT6C+V9jYaUGMEYowaqG4xFedT/iWB4y5/pG+HRZJX6/omscD3rv4wahnoQAnFZfqkpflHECstL3RgTeeap/B9Xzd7ztAbArZlMtJS4KR9qjXsKNP4DDw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=H/zpb5WesklVNArzRUxoeAWG9+gWsDzTmybcOEVhAuY=;
- b=BqIco2IYxC7hTI2v94Cec5RH2aTckk00AwjV+inYbflybKmW6fb1DuvACMeGCufMdfcPJO/Qt7pECJPe7FP7jV14ZrLIdSzCro54udYxqrAAQN2nsItR7XfE12WyxpatgvfwdM0FzihWko8jLLU+TRauM0Dw6DZQRHT2HXgAE+ZR2ZoywupQSstn8bQM6u2wczUMHdIjpP4Jr0y9rRoD0D1DlayowZjY39oRoIaBOVGLc7jqENj4VuWY+KCm7SLYLG7FpC2DKoiWdvypVC/C54WOYjNy/UvXatQjnM0c4dOD9FYDInvj4YpxMks8s1n1ajZ5fhhDct+ImQV6ZjdGkw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from HE1EUR02FT038.eop-EUR02.prod.protection.outlook.com
- (10.152.10.58) by HE1EUR02HT122.eop-EUR02.prod.protection.outlook.com
- (10.152.10.252) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2367.14; Mon, 21 Oct
- 2019 10:08:00 +0000
-Received: from AM0PR0502MB3668.eurprd05.prod.outlook.com (10.152.10.54) by
- HE1EUR02FT038.mail.protection.outlook.com (10.152.11.30) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.2367.14 via Frontend Transport; Mon, 21 Oct 2019 10:08:00 +0000
-Received: from AM0PR0502MB3668.eurprd05.prod.outlook.com
- ([fe80::b1e4:568d:bbc:8247]) by AM0PR0502MB3668.eurprd05.prod.outlook.com
- ([fe80::b1e4:568d:bbc:8247%6]) with mapi id 15.20.2347.029; Mon, 21 Oct 2019
- 10:08:00 +0000
-From:   Anatol Belski <weltling@outlook.de>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        "trivial@kernel.org" <trivial@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: Re: [PATCH v2] include/linux/byteorder/generic.h: fix signed/unsigned
- warnings
-Thread-Topic: [PATCH v2] include/linux/byteorder/generic.h: fix
- signed/unsigned warnings
-Thread-Index: AQHVh/HGZiHBTV97akWCLD86HLHkVadk1r+AgAAIMQA=
-Date:   Mon, 21 Oct 2019 10:08:00 +0000
-Message-ID: <AM0PR0502MB3668F50248ACD5CFA9B74D96BA690@AM0PR0502MB3668.eurprd05.prod.outlook.com>
-References: <AM0PR0502MB366860AC878296E4E76DD223BA690@AM0PR0502MB3668.eurprd05.prod.outlook.com>
-         <20191021093839.GM32742@smile.fi.intel.com>
-In-Reply-To: <20191021093839.GM32742@smile.fi.intel.com>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-x-clientproxiedby: AM3PR07CA0143.eurprd07.prod.outlook.com
- (2603:10a6:207:8::29) To AM0PR0502MB3668.eurprd05.prod.outlook.com
- (2603:10a6:208:19::11)
-x-incomingtopheadermarker: OriginalChecksum:BB107EEB261F87BFD3A07B5976BF653D3F6B70CE2126C93BB88ECEE2811D5672;UpperCasedChecksum:60B5B2AE91D7EBC35951CB58EB5E1FBF4F32EBD7158E8D8D56BE97F1AB487CDD;SizeAsReceived:8109;Count:52
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [afDEJeBRzv8p8q4LzF9xp0cQ0JG9yKSULe+93z9U/t0CSm49E/pcHrpU0EvekqZM]
-x-microsoft-original-message-id: <e398ba2c570f2f58888375fce93bbb78e609e649.camel@outlook.de>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 52
-x-eopattributedmessage: 0
-x-ms-traffictypediagnostic: HE1EUR02HT122:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 8IwdeViGpAE1tDraD8V8NieVI1zU+UeQGw2TY04KEwqxJdkSJ4LlB789aJ6ZC+ELLZ+blQwbp/PBFEkzxzalq1cWZYYJSTsOr2oVg4w4kwL51Qld4g+ONZAcH2n6UKLxCOdCj+1gTqXGztlfxHySdDNcw03ZggIIVKdd+yVti92s0ltwwKbzRFX2hgHlkvsC
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <FB483C52911C584C8A5C69BD99090423@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S1726767AbfJUKKD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 06:10:03 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 7917EB40E;
+        Mon, 21 Oct 2019 10:10:01 +0000 (UTC)
+Subject: Re: [PATCH] scsi: lpfc: Honor module parameter lpfc_use_adisc
+To:     Daniel Wagner <dwagner@suse.de>, linux-scsi@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, James Smart <James.Smart@emulex.com>,
+        Alex Iannicelli <alex.iannicelli@emulex.com>
+References: <20191021100542.24136-1-dwagner@suse.de>
+From:   Hannes Reinecke <hare@suse.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=hare@suse.de; prefer-encrypt=mutual; keydata=
+ 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
+ azzYF4VRJsdl+d0MCaSy8mUh
+Message-ID: <3a6c2cc9-d90e-2f9f-61a9-8c0d46f8d839@suse.de>
+Date:   Mon, 21 Oct 2019 12:10:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 392a1a34-121a-49e5-1cc8-08d7560e8d3e
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Oct 2019 10:08:00.5787
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1EUR02HT122
+In-Reply-To: <20191021100542.24136-1-dwagner@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCAyMDE5LTEwLTIxIGF0IDEyOjM4ICswMzAwLCBBbmR5IFNoZXZjaGVua28gd3JvdGU6
-DQo+IFdlIGhhdmUgZXhwbGljaXRseSBkaXNhYmxlZCB0aGlzIHdhcm5pbmdzIGluIHRoZSBrZXJu
-ZWwgTWFrZWZpbGUuDQo+IEhvdyBkaWQgeW91IGFjaGlldmUgdGhpcz8gKHllcywgSSBrbm93IHRo
-ZSBwb3NzaWJsZSBhbnN3ZXIsIHBlcmhhcHMNCj4gdGhpcyBoYXMgdG8gYmUgbWVudGlvbmVkIGFz
-IHdlbGwpDQpBZGRlZCBXPTEyIHRvIHRoZSBtYWtlIGNvbW1hbmQsIHVzZWQgR0NDIDkuMS4wLiBU
-aGVyZSBhcmUgcXVpdGUgc29tZQ0Kd2FybmluZ3Mgb2YgdGhpcyBhcnQgeWV0LCBzbyB0aGlzIGlz
-IGp1c3QgYSBmaXJzdCBzaG90Lg0KDQpBZGRpdGlvbmFsIGlzc3VlIGknZCBzZWUgaW4gdGhpcyBw
-YXJ0aWN1bGFyIGNhc2UgYWxzbywgdGhhdCBpdGVyYXRpbmcNCnRocm91Z2ggYW4gYXJyYXkgc2hv
-dWxkIHVzZSBzb21lIHVuc2lnbmVkIHRvIGVuc3VyZSB0aGVyZSdzIG5vIHNpZ25lZA0Kb3ZlcmZs
-b3cuIEJ1dCBvdGhlcndpc2UsIGl0J3MgYmV0dGVyIHRvIGZpeCBzaW1pbGFyIGNhc2VzIHRvIHJl
-ZHVjZSB0aGUNCm5vaXNlLg0KDQo+ID4gU2lnbmVkLW9mZi1ieTogQW5hdG9sIEJlbHNraSA8YW5i
-ZWxza2lAbWljcm9zb2Z0LmNvbT4NCj4gPiAtLS0NCj4gDQo+IENoYW5nZWxvZyBpcyBtaXNzaW5n
-Lg0KPiAoTm8gbmVlZCB0byByZXNlbmQganVzdCBmb3IgdGhpcywgaXQncyBmb3IgeW91ciBmdXR1
-cmUgY29udHJpYnV0aW9ucykNCj4gDQpUaGFua3MgZm9yIHBvaW50aW5nIHRvIHRoaXMuIEkgYWxz
-byBwcm9iYWJseSBzaG91bGQgaGF2ZSBhZGRlZCBhIENjOi4NCldpbGwgZ28gdGhyb3VnaCB0aGUg
-c3VibWl0dGluZyBwYXRjaGVzIGRvY3VtZW50IG1vcmUgY2FyZWZ1bGx5Lg0KDQpUaGFua3MhDQoN
-CmFuYXRvbA0KDQo=
+On 10/21/19 12:05 PM, Daniel Wagner wrote:
+> The initial lpfc_desc_set_adisc implementation dea3101e0a5c ("lpfc:
+> add Emulex FC driver version 8.0.28") enabled ADISC if
+> 
+> 	cfg_use_adisc && RSCN_MODE && FCP_2_DEVICE
+> 
+> In commit 92d7f7b0cde3 ("[SCSI] lpfc: NPIV: add NPIV support on top of
+> SLI-3") this changed to
+> 
+> 	(cfg_use_adisc && RSC_MODE) || FCP_2_DEVICE
+> 
+> and later in ffc954936b13 ("[SCSI] lpfc 8.3.13: FC Discovery Fixes and
+> enhancements.") to
+> 
+> 	(cfg_use_adisc && RSC_MODE) || (FCP_2_DEVICe && FCP_TARGET)
+> 
+> A customer reports that after a Devlos, an ADISC failure is logged. It
+> turns out the ADISC flag is set even the user explicitly set
+> lpfc_use_adisc = 0.
+> 
+> [Sat Dec 22 22:55:58 2018] lpfc 0000:82:00.0: 2:(0):0203 Devloss timeout on WWPN 50:01:43:80:12:8e:40:20 NPort x05df00 Data: x82000000 x8 xa
+> [Sat Dec 22 23:08:20 2018] lpfc 0000:82:00.0: 2:(0):2755 ADISC failure DID:05DF00 Status:x9/x70000
+> 
+> Fixes: 92d7f7b0cde3 ("[SCSI] lpfc: NPIV: add NPIV support on top of SLI-3")
+> Cc: James Smart <James.Smart@emulex.com>
+> Cc: Alex Iannicelli <alex.iannicelli@emulex.com>
+> Signed-off-by: Daniel Wagner <dwagner@suse.de>
+> ---
+> Hi,
+> 
+> Unfortunatly, I don't really know all the procotols involved. So this
+> is just a rough guess what is wrong. 
+> 
+> Thanks,
+> Daniel
+> 
+>  drivers/scsi/lpfc/lpfc_nportdisc.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/scsi/lpfc/lpfc_nportdisc.c b/drivers/scsi/lpfc/lpfc_nportdisc.c
+> index cc6b1b0bae83..d27ae84326df 100644
+> --- a/drivers/scsi/lpfc/lpfc_nportdisc.c
+> +++ b/drivers/scsi/lpfc/lpfc_nportdisc.c
+> @@ -940,9 +940,9 @@ lpfc_disc_set_adisc(struct lpfc_vport *vport, struct lpfc_nodelist *ndlp)
+>  
+>  	if (!(vport->fc_flag & FC_PT2PT)) {
+>  		/* Check config parameter use-adisc or FCP-2 */
+> -		if ((vport->cfg_use_adisc && (vport->fc_flag & FC_RSCN_MODE)) ||
+> +		if (vport->cfg_use_adisc && ((vport->fc_flag & FC_RSCN_MODE) ||
+>  		    ((ndlp->nlp_fcp_info & NLP_FCP_2_DEVICE) &&
+> -		     (ndlp->nlp_type & NLP_FCP_TARGET))) {
+> +		     (ndlp->nlp_type & NLP_FCP_TARGET)))) {
+>  			spin_lock_irq(shost->host_lock);
+>  			ndlp->nlp_flag |= NLP_NPR_ADISC;
+>  			spin_unlock_irq(shost->host_lock);
+> 
+Looks reasonable.
+
+Reviewed-by: Hannes Reinecke <hare@sused.de>
+
+Cheers,
+
+Hannes
+-- 
+Dr. Hannes Reinecke		      Teamlead Storage & Networking
+hare@suse.de			                  +49 911 74053 688
+SUSE Software Solutions Germany GmbH, Maxfeldstr. 5, 90409 Nürnberg
+HRB 247165 (AG München), GF: Felix Imendörffer
