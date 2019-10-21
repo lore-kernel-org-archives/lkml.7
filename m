@@ -2,171 +2,161 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75DABCA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:13:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE90CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:13:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C32D21744
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:13:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8CD521744
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:13:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571649230;
+	bh=yqmr6bE4HTCk/kWaRLnlRHb3aZ8M5nE1t+SHzsWkT0c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=lJ6pQjOQVhlbKsizcjIf6nBlIQf7+bXGOSdhWAi0EiD54sbqwsRGIgciW5XIngF6N
+	 /Z8xsDvQ5Q75YmZ3NiLjMyK0GTqSOk7E60wB2lm0n+Anbrcmn7vwXTYywFQ0vy/nhf
+	 0tDk0DwUD8CL6dfUozxT3xo4lsxMwbt2dFINh7gE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727818AbfJUJNq (ORCPT
+        id S1727802AbfJUJNp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 05:13:46 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:33992 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727777AbfJUJNo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 05:13:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37830 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726987AbfJUJNo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 21 Oct 2019 05:13:44 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iMTk3-0005JY-Ne; Mon, 21 Oct 2019 11:12:43 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 545271C0092;
-        Mon, 21 Oct 2019 11:12:43 +0200 (CEST)
-Date:   Mon, 21 Oct 2019 09:12:43 -0000
-From:   "tip-bot2 for Vincent Guittot" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched/fair: Use rq->nr_running when balancing load
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
-        Ben Segall <bsegall@google.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mel Gorman <mgorman@suse.de>, Mike Galbraith <efault@gmx.de>,
-        Morten.Rasmussen@arm.com, Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>, hdanton@sina.com,
-        parth@linux.ibm.com, pauld@redhat.com, quentin.perret@arm.com,
-        riel@surriel.com, srikar@linux.vnet.ibm.com,
-        valentin.schneider@arm.com, Ingo Molnar <mingo@kernel.org>,
-        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
-In-Reply-To: <1571405198-27570-6-git-send-email-vincent.guittot@linaro.org>
-References: <1571405198-27570-6-git-send-email-vincent.guittot@linaro.org>
-MIME-Version: 1.0
-Message-ID: <157164916309.29376.18106664431086525097.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EEF1320873;
+        Mon, 21 Oct 2019 09:13:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571649223;
+        bh=yqmr6bE4HTCk/kWaRLnlRHb3aZ8M5nE1t+SHzsWkT0c=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=dILlMHxsapCwB/RkiKFBJRcDoTVeP8uZtjnYn4j8HijxhFuviJQGK9RLJptUZVwle
+         rvnrlg/U39zZmz9e7H77HIsAXzMEN5hihlW58hLy52HHm+Ms7Lddmy2Cs/TeA0Xfw2
+         af0VNH2gjKVSuPOS00xFIi5Vol9q+2hboQvET6FM=
+Date:   Mon, 21 Oct 2019 18:13:37 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Sami Tolvanen <samitolvanen@google.com>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH 10/18] kprobes: fix compilation without
+ CONFIG_KRETPROBES
+Message-Id: <20191021181337.a1f886fa62b400023c576be0@kernel.org>
+In-Reply-To: <20191018130257.3376e397@gandalf.local.home>
+References: <20191018161033.261971-1-samitolvanen@google.com>
+        <20191018161033.261971-11-samitolvanen@google.com>
+        <20191018130257.3376e397@gandalf.local.home>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the sched/core branch of tip:
+On Fri, 18 Oct 2019 13:02:57 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Commit-ID:     5e23e474431529b7d1480f649ce33d0e9c1b2e48
-Gitweb:        https://git.kernel.org/tip/5e23e474431529b7d1480f649ce33d0e9c1b2e48
-Author:        Vincent Guittot <vincent.guittot@linaro.org>
-AuthorDate:    Fri, 18 Oct 2019 15:26:32 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Mon, 21 Oct 2019 09:40:54 +02:00
+> 
+> Added Masami who's the maintainer of kprobes.
+> 
+> -- Steve
+> 
+> 
+> On Fri, 18 Oct 2019 09:10:25 -0700
+> Sami Tolvanen <samitolvanen@google.com> wrote:
+> 
+> > kprobe_on_func_entry and arch_kprobe_on_func_entry need to be available
+> > even if CONFIG_KRETPROBES is not selected.
 
-sched/fair: Use rq->nr_running when balancing load
+Good catch! Since nowadays all arch supports kretprobes, I've missed to
+test it.
 
-CFS load_balance() only takes care of CFS tasks whereas CPUs can be used by
-other scheduling classes. Typically, a CFS task preempted by an RT or deadline
-task will not get a chance to be pulled by another CPU because
-load_balance() doesn't take into account tasks from other classes.
-Add sum of nr_running in the statistics and use it to detect such
-situations.
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
 
-Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: Ben Segall <bsegall@google.com>
-Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: Juri Lelli <juri.lelli@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mel Gorman <mgorman@suse.de>
-Cc: Mike Galbraith <efault@gmx.de>
-Cc: Morten.Rasmussen@arm.com
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: hdanton@sina.com
-Cc: parth@linux.ibm.com
-Cc: pauld@redhat.com
-Cc: quentin.perret@arm.com
-Cc: riel@surriel.com
-Cc: srikar@linux.vnet.ibm.com
-Cc: valentin.schneider@arm.com
-Link: https://lkml.kernel.org/r/1571405198-27570-6-git-send-email-vincent.guittot@linaro.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- kernel/sched/fair.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+Thank you,
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 76a2aa8..4e7396c 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -7694,6 +7694,7 @@ struct sg_lb_stats {
- 	unsigned long group_load; /* Total load over the CPUs of the group */
- 	unsigned long group_capacity;
- 	unsigned long group_util; /* Total utilization of the group */
-+	unsigned int sum_nr_running; /* Nr of tasks running in the group */
- 	unsigned int sum_h_nr_running; /* Nr of CFS tasks running in the group */
- 	unsigned int idle_cpus;
- 	unsigned int group_weight;
-@@ -7928,7 +7929,7 @@ static inline int sg_imbalanced(struct sched_group *group)
- static inline bool
- group_has_capacity(struct lb_env *env, struct sg_lb_stats *sgs)
- {
--	if (sgs->sum_h_nr_running < sgs->group_weight)
-+	if (sgs->sum_nr_running < sgs->group_weight)
- 		return true;
- 
- 	if ((sgs->group_capacity * 100) >
-@@ -7949,7 +7950,7 @@ group_has_capacity(struct lb_env *env, struct sg_lb_stats *sgs)
- static inline bool
- group_is_overloaded(struct lb_env *env, struct sg_lb_stats *sgs)
- {
--	if (sgs->sum_h_nr_running <= sgs->group_weight)
-+	if (sgs->sum_nr_running <= sgs->group_weight)
- 		return false;
- 
- 	if ((sgs->group_capacity * 100) <
-@@ -8053,6 +8054,8 @@ static inline void update_sg_lb_stats(struct lb_env *env,
- 		sgs->sum_h_nr_running += rq->cfs.h_nr_running;
- 
- 		nr_running = rq->nr_running;
-+		sgs->sum_nr_running += nr_running;
-+
- 		if (nr_running > 1)
- 			*sg_status |= SG_OVERLOAD;
- 
-@@ -8410,13 +8413,13 @@ static inline void calculate_imbalance(struct lb_env *env, struct sd_lb_stats *s
- 		}
- 
- 		if (busiest->group_weight == 1 || sds->prefer_sibling) {
--			unsigned int nr_diff = busiest->sum_h_nr_running;
-+			unsigned int nr_diff = busiest->sum_nr_running;
- 			/*
- 			 * When prefer sibling, evenly spread running tasks on
- 			 * groups.
- 			 */
- 			env->migration_type = migrate_task;
--			lsub_positive(&nr_diff, local->sum_h_nr_running);
-+			lsub_positive(&nr_diff, local->sum_nr_running);
- 			env->imbalance = nr_diff >> 1;
- 			return;
- 		}
-@@ -8580,7 +8583,7 @@ static struct sched_group *find_busiest_group(struct lb_env *env)
- 
- 	/* Try to move all excess tasks to child's sibling domain */
- 	if (sds.prefer_sibling && local->group_type == group_has_spare &&
--	    busiest->sum_h_nr_running > local->sum_h_nr_running + 1)
-+	    busiest->sum_nr_running > local->sum_nr_running + 1)
- 		goto force_balance;
- 
- 	if (busiest->group_type != group_overloaded &&
+> > 
+> > Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+> > ---
+> >  kernel/kprobes.c | 38 +++++++++++++++++++-------------------
+> >  1 file changed, 19 insertions(+), 19 deletions(-)
+> > 
+> > diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> > index 53534aa258a6..b5e20a4669b8 100644
+> > --- a/kernel/kprobes.c
+> > +++ b/kernel/kprobes.c
+> > @@ -1829,6 +1829,25 @@ unsigned long __weak arch_deref_entry_point(void *entry)
+> >  	return (unsigned long)entry;
+> >  }
+> >  
+> > +bool __weak arch_kprobe_on_func_entry(unsigned long offset)
+> > +{
+> > +	return !offset;
+> > +}
+> > +
+> > +bool kprobe_on_func_entry(kprobe_opcode_t *addr, const char *sym, unsigned long offset)
+> > +{
+> > +	kprobe_opcode_t *kp_addr = _kprobe_addr(addr, sym, offset);
+> > +
+> > +	if (IS_ERR(kp_addr))
+> > +		return false;
+> > +
+> > +	if (!kallsyms_lookup_size_offset((unsigned long)kp_addr, NULL, &offset) ||
+> > +						!arch_kprobe_on_func_entry(offset))
+> > +		return false;
+> > +
+> > +	return true;
+> > +}
+> > +
+> >  #ifdef CONFIG_KRETPROBES
+> >  /*
+> >   * This kprobe pre_handler is registered with every kretprobe. When probe
+> > @@ -1885,25 +1904,6 @@ static int pre_handler_kretprobe(struct kprobe *p, struct pt_regs *regs)
+> >  }
+> >  NOKPROBE_SYMBOL(pre_handler_kretprobe);
+> >  
+> > -bool __weak arch_kprobe_on_func_entry(unsigned long offset)
+> > -{
+> > -	return !offset;
+> > -}
+> > -
+> > -bool kprobe_on_func_entry(kprobe_opcode_t *addr, const char *sym, unsigned long offset)
+> > -{
+> > -	kprobe_opcode_t *kp_addr = _kprobe_addr(addr, sym, offset);
+> > -
+> > -	if (IS_ERR(kp_addr))
+> > -		return false;
+> > -
+> > -	if (!kallsyms_lookup_size_offset((unsigned long)kp_addr, NULL, &offset) ||
+> > -						!arch_kprobe_on_func_entry(offset))
+> > -		return false;
+> > -
+> > -	return true;
+> > -}
+> > -
+> >  int register_kretprobe(struct kretprobe *rp)
+> >  {
+> >  	int ret = 0;
+> 
+
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
