@@ -1,159 +1,158 @@
-Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 105D0CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 23:58:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B8C8CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:03:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D408E2070C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 23:58:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AWV3a9By"
+	by mail.kernel.org (Postfix) with ESMTP id CF1D320656
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:03:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730522AbfJUX6F (ORCPT
+        id S1730350AbfJVADe convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 19:58:05 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:39208 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730203AbfJUX6E (ORCPT
+        Mon, 21 Oct 2019 20:03:34 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:38895 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728375AbfJVADe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 19:58:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571702282;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=jFHpgQ9TLUmBzy0U/kWA3ZERfeuL0HrxiFj4Wubq64g=;
-        b=AWV3a9ByvoA21l8Ka8pLkf+tXrh0Jy6L84DwupFsctYruVXKXiMbdEeqF66fXnNkF3+pnF
-        1o02yJDVRe5tRLnl1EkXIUIon6HGWWn7LcN9+CrbJkw2EK3qZsv+4msHBu4a/fGKudkxbt
-        he+J9fy0hSgDxAne21Nf07i191UMF8I=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-290-lF5_pNewONS87t0uNh9mpg-1; Mon, 21 Oct 2019 19:57:58 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4988C80183E;
-        Mon, 21 Oct 2019 23:57:53 +0000 (UTC)
-Received: from madcap2.tricolour.ca (ovpn-112-19.phx2.redhat.com [10.3.112.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id DD1571001DD7;
-        Mon, 21 Oct 2019 23:57:37 +0000 (UTC)
-Date:   Mon, 21 Oct 2019 19:57:34 -0400
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
-        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
-        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
-        nhorman@tuxdriver.com, Dan Walsh <dwalsh@redhat.com>,
-        mpatel@redhat.com
-Subject: Re: [PATCH ghak90 V7 20/21] audit: add capcontid to set contid
- outside init_user_ns
-Message-ID: <20191021235734.mgcjotdqoe73e4ha@madcap2.tricolour.ca>
-References: <cover.1568834524.git.rgb@redhat.com>
- <214163d11a75126f610bcedfad67a4d89575dc77.1568834525.git.rgb@redhat.com>
- <20191019013904.uevmrzbmztsbhpnh@madcap2.tricolour.ca>
- <CAHC9VhRPygA=LsHLUqv+K=ouAiPFJ6fb2_As=OT-_zB7kGc_aQ@mail.gmail.com>
- <20191021213824.6zti5ndxu7sqs772@madcap2.tricolour.ca>
- <CAHC9VhRdNXsY4neJpSoNyJoAVEoiEc2oW5kSscF99tjmoQAxFA@mail.gmail.com>
+        Mon, 21 Oct 2019 20:03:34 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iMgxA-00044K-Eo; Tue, 22 Oct 2019 01:19:08 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id F2CC41C0086;
+        Tue, 22 Oct 2019 01:19:05 +0200 (CEST)
+Date:   Mon, 21 Oct 2019 23:19:05 -0000
+From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: perf/core] libbeauty: Hook up the x86 irq_vectors table generator
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>,
+        Luis =?utf-8?q?Cl=C3=A1udio_Gon=C3=A7alves?= 
+        <lclaudio@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <tip-0p2df4kq1afrxbck4e4ct34r@git.kernel.org>
+References: <tip-0p2df4kq1afrxbck4e4ct34r@git.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CAHC9VhRdNXsY4neJpSoNyJoAVEoiEc2oW5kSscF99tjmoQAxFA@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-MC-Unique: lF5_pNewONS87t0uNh9mpg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+Message-ID: <157169994553.29376.6754649503560413293.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-10-21 17:43, Paul Moore wrote:
-> On Mon, Oct 21, 2019 at 5:38 PM Richard Guy Briggs <rgb@redhat.com> wrote=
-:
-> > On 2019-10-21 15:53, Paul Moore wrote:
-> > > On Fri, Oct 18, 2019 at 9:39 PM Richard Guy Briggs <rgb@redhat.com> w=
-rote:
-> > > > On 2019-09-18 21:22, Richard Guy Briggs wrote:
-> > > > > Provide a mechanism similar to CAP_AUDIT_CONTROL to explicitly gi=
-ve a
-> > > > > process in a non-init user namespace the capability to set audit
-> > > > > container identifiers.
-> > > > >
-> > > > > Use audit netlink message types AUDIT_GET_CAPCONTID 1027 and
-> > > > > AUDIT_SET_CAPCONTID 1028.  The message format includes the data
-> > > > > structure:
-> > > > > struct audit_capcontid_status {
-> > > > >         pid_t   pid;
-> > > > >         u32     enable;
-> > > > > };
-> > > >
-> > > > Paul, can I get a review of the general idea here to see if you're =
-ok
-> > > > with this way of effectively extending CAP_AUDIT_CONTROL for the sa=
-ke of
-> > > > setting contid from beyond the init user namespace where capable() =
-can't
-> > > > reach and ns_capable() is meaningless for these purposes?
-> > >
-> > > I think my previous comment about having both the procfs and netlink
-> > > interfaces apply here.  I don't see why we need two different APIs at
-> > > the start; explain to me why procfs isn't sufficient.  If the argumen=
-t
-> > > is simply the desire to avoid mounting procfs in the container, how
-> > > many container orchestrators can function today without a valid /proc=
-?
-> >
-> > Ok, sorry, I meant to address that question from a previous patch
-> > comment at the same time.
-> >
-> > It was raised by Eric Biederman that the proc filesystem interface for
-> > audit had its limitations and he had suggested an audit netlink
-> > interface made more sense.
->=20
-> I'm sure you've got it handy, so I'm going to be lazy and ask: archive
-> pointer to Eric's comments?  Just a heads-up, I'm really *not* a fan
-> of using the netlink interface for this, so unless Eric presents a
-> super compelling reason for why we shouldn't use procfs I'm inclined
-> to stick with /proc.
+The following commit has been merged into the perf/core branch of tip:
 
-It was actually a video call with Eric and Steve where that was
-recommended, so I can't provide you with any first-hand communication
-about it.  I'll get more details...
+Commit-ID:     f19a85c68cb4d5bb90c587d9390e1ce2716d6160
+Gitweb:        https://git.kernel.org/tip/f19a85c68cb4d5bb90c587d9390e1ce2716d6160
+Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
+AuthorDate:    Tue, 15 Oct 2019 15:48:50 -03:00
+Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitterDate: Tue, 15 Oct 2019 15:48:50 -03:00
 
-So, with that out of the way, could you please comment on the general
-idea of what was intended to be the central idea of this mechanism to be
-able to nest containers beyond the initial user namespace (knowing that
-a /proc interface is available and the audit netlink interface isn't
-necessary for it to work and the latter can be easily removed)?
+libbeauty: Hook up the x86 irq_vectors table generator
 
-> > The intent was to switch to the audit netlink interface for contid,
-> > capcontid and to add the audit netlink interface for loginuid and
-> > sessionid while deprecating the proc interface for loginuid and
-> > sessionid.  This was alluded to in the cover letter, but not very clear=
-,
-> > I'm afraid.  I have patches to remove the contid and loginuid/sessionid
-> > interfaces in another tree which is why I had forgotten to outline that
-> > plan more explicitly in the cover letter.
->=20
-> paul moore
+I.e. after running:
 
-- RGB
+  $ make -C tools/perf O=/tmp/build/perf
 
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
+We end up with:
 
+  $ cat /tmp/build/perf/trace/beauty/generated/x86_arch_irq_vectors_array.c
+  static const char *x86_irq_vectors[] = {
+  	[0x02] = "NMI",
+  	[0x12] = "MCE",
+  	[0x20] = "IRQ_MOVE_CLEANUP",
+  	[0x80] = "IA32_SYSCALL",
+  	[0xec] = "LOCAL_TIMER",
+  	[0xed] = "HYPERV_STIMER0",
+  	[0xee] = "HYPERV_REENLIGHTENMENT",
+  	[0xef] = "MANAGED_IRQ_SHUTDOWN",
+  	[0xf0] = "POSTED_INTR_NESTED",
+  	[0xf1] = "POSTED_INTR_WAKEUP",
+  	[0xf2] = "POSTED_INTR",
+  	[0xf3] = "HYPERVISOR_CALLBACK",
+  	[0xf4] = "DEFERRED_ERROR",
+  	[0xf6] = "IRQ_WORK",
+  	[0xf7] = "X86_PLATFORM_IPI",
+  	[0xf8] = "REBOOT",
+  	[0xf9] = "THRESHOLD_APIC",
+  	[0xfa] = "THERMAL_APIC",
+  	[0xfb] = "CALL_FUNCTION_SINGLE",
+  	[0xfc] = "CALL_FUNCTION",
+  	[0xfd] = "RESCHEDULE",
+  	[0xfe] = "ERROR_APIC",
+  	[0xff] = "SPURIOUS_APIC",
+  };
+  $
+
+Now its just a matter of using it, associating it to tracepoint arguments named
+'vector', all of which can be correctly used with this table, for int args.
+
+At some point we should move tools/perf/trace/beauty to tools/beauty/,
+so that it can be used more generally and even made available externally
+like libbpf, libperf, libtraceevent, etc.
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-0p2df4kq1afrxbck4e4ct34r@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/Makefile.perf | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index 8f1ba98..1cd2944 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -546,6 +546,12 @@ x86_arch_prctl_code_tbl := $(srctree)/tools/perf/trace/beauty/x86_arch_prctl.sh
+ $(x86_arch_prctl_code_array): $(x86_arch_asm_uapi_dir)/prctl.h $(x86_arch_prctl_code_tbl)
+ 	$(Q)$(SHELL) '$(x86_arch_prctl_code_tbl)' $(x86_arch_asm_uapi_dir) > $@
+ 
++x86_arch_irq_vectors_array := $(beauty_outdir)/x86_arch_irq_vectors_array.c
++x86_arch_irq_vectors_tbl := $(srctree)/tools/perf/trace/beauty/tracepoints/x86_irq_vectors.sh
++
++$(x86_arch_irq_vectors_array): $(x86_arch_asm_dir)/irq_vectors.h $(x86_arch_irq_vectors_tbl)
++	$(Q)$(SHELL) '$(x86_arch_irq_vectors_tbl)' $(x86_arch_asm_dir) > $@
++
+ x86_arch_MSRs_array := $(beauty_outdir)/x86_arch_MSRs_array.c
+ x86_arch_MSRs_tbl := $(srctree)/tools/perf/trace/beauty/tracepoints/x86_msr.sh
+ 
+@@ -686,6 +692,7 @@ prepare: $(OUTPUT)PERF-VERSION-FILE $(OUTPUT)common-cmds.h archheaders $(drm_ioc
+ 	$(perf_ioctl_array) \
+ 	$(prctl_option_array) \
+ 	$(usbdevfs_ioctl_array) \
++	$(x86_arch_irq_vectors_array) \
+ 	$(x86_arch_MSRs_array) \
+ 	$(x86_arch_prctl_code_array) \
+ 	$(rename_flags_array) \
+@@ -991,6 +998,7 @@ clean:: $(LIBTRACEEVENT)-clean $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clea
+ 		$(OUTPUT)$(perf_ioctl_array) \
+ 		$(OUTPUT)$(prctl_option_array) \
+ 		$(OUTPUT)$(usbdevfs_ioctl_array) \
++		$(OUTPUT)$(x86_arch_irq_vectors_array) \
+ 		$(OUTPUT)$(x86_arch_MSRs_array) \
+ 		$(OUTPUT)$(x86_arch_prctl_code_array) \
+ 		$(OUTPUT)$(rename_flags_array) \
