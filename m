@@ -2,203 +2,85 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9752ECA9EA0
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 00:15:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FEA4CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 00:26:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64615218BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 00:15:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571616906;
-	bh=0dlM9hCtT8nSppypeG/pPQBMx7LP+tzZb/cOvsstYv0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=uDKeBkjOoIxmZgzTuV9B0ioyPLlX9uNEXiG9vd/GBvcKhqAe1tupYruVqBovQfKIY
-	 Hz6Phr/Kdz1J0+bMvppA1XpYKnehHQEcE1ZjfhELRg2XdWkVzIIIilSKyTJCLRQtrc
-	 ZGUOEUDnovsWalpgo0nwkpOinL6+e6dFCKP4OTKg=
+	by mail.kernel.org (Postfix) with ESMTP id 60C2121A4A
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 00:26:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726795AbfJUAPF (ORCPT
+        id S1726729AbfJUA01 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 20 Oct 2019 20:15:05 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:41663 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726576AbfJUAPF (ORCPT
+        Sun, 20 Oct 2019 20:26:27 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:39633 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726200AbfJUA00 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 20 Oct 2019 20:15:05 -0400
-Received: by mail-ot1-f65.google.com with SMTP id g13so9487620otp.8;
-        Sun, 20 Oct 2019 17:15:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fq+vYEfQuv8rpJrOTJ9oLC4H1EvdrOj9GHc0KwJV19w=;
-        b=lJmI0QBhhqAIpBOLFfYR+Tm7MhZs1tvTp8ipfadWgUyCTLEi/V/hY8BrIc+42s8Nzn
-         3xb/4Izj83oo6wPq1AU9utt+ghVkeRagYyXcpvD59jao8Noh+u1WTXHVLVtjrQd4bUDp
-         PuTUl6hKLU2NNKCsEd0//pTw/nUGWFypSb5lfzyC3aj6Qps54A7fTeWUmemIE7ZR0lhS
-         6CRK68/xOkGzxvvaFpuyCSf5AInhtBfNNJzrQYA9H7v10VPTCta1rr1qev2To+zug3Iw
-         7kvs8uS3tKUixQZiyMQKXU4+atjMyiO8YegFZc1y8xZDRq0f95lWEeRjVJzDZtgW1270
-         kj4w==
-X-Gm-Message-State: APjAAAXeR4UFtjhe/Fd3dh59qJQqhMEdGnobGAUWH2NQbKtqkS09151S
-        HTRK/Gilw6r2J3t/xrsOdyEk5glv5T6EhsdERnY=
-X-Google-Smtp-Source: APXvYqx/9Ny5dMXopObXoVn5Fx157H12CJIPbT82pFBL84O2+vxj9f5PxQ2rhV4EeXEM1v8hcF/AieUs8iMckw+9RiQ=
-X-Received: by 2002:a9d:5a0f:: with SMTP id v15mr16863262oth.266.1571616903535;
- Sun, 20 Oct 2019 17:15:03 -0700 (PDT)
+        Sun, 20 Oct 2019 20:26:26 -0400
+Received: from dread.disaster.area (pa49-180-40-48.pa.nsw.optusnet.com.au [49.180.40.48])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id B1C8A3639AA;
+        Mon, 21 Oct 2019 11:26:22 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1iMLWf-0002md-68; Mon, 21 Oct 2019 11:26:21 +1100
+Date:   Mon, 21 Oct 2019 11:26:21 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     ira.weiny@intel.com
+Cc:     linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 2/5] fs/xfs: Isolate the physical DAX flag from effective
+Message-ID: <20191021002621.GC8015@dread.disaster.area>
+References: <20191020155935.12297-1-ira.weiny@intel.com>
+ <20191020155935.12297-3-ira.weiny@intel.com>
 MIME-Version: 1.0
-References: <20191017163503.30791-1-sudeep.holla@arm.com> <20191018060247.g5asfuh3kncoj7kl@vireshk-i7>
- <20191018101924.GA25540@bogus> <4881906.zjS51fuFuv@kreacher> <20191018110632.GB25540@bogus>
-In-Reply-To: <20191018110632.GB25540@bogus>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 21 Oct 2019 02:14:51 +0200
-Message-ID: <CAJZ5v0hnvahJ6bu6SEVvavb1kRe=X0wP_JUS26h_d019u5z7PA@mail.gmail.com>
-Subject: Re: [PATCH] cpufreq: flush any pending policy update work scheduled
- before freeing
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191020155935.12297-3-ira.weiny@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0
+        a=y881pOMu+B+mZdf5UrsJdA==:117 a=y881pOMu+B+mZdf5UrsJdA==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=XobE76Q3jBoA:10
+        a=QyXUC8HyAAAA:8 a=7-415B0cAAAA:8 a=SKUv1dWzumgnk67EJ3kA:9
+        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 1:06 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
->
-> On Fri, Oct 18, 2019 at 12:37:51PM +0200, Rafael J. Wysocki wrote:
-> > On Friday, October 18, 2019 12:19:24 PM CEST Sudeep Holla wrote:
-> > > On Fri, Oct 18, 2019 at 11:32:47AM +0530, Viresh Kumar wrote:
-> > > > On 18-10-19, 06:55, Sudeep Holla wrote:
-> > > > > On Thu, Oct 17, 2019 at 11:26:54PM +0200, Rafael J. Wysocki wrote:
-> > > > > > On Thu, Oct 17, 2019 at 9:36 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> > > > > > >
-> > > > > > > On Thu, Oct 17, 2019 at 6:35 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
-> > > > > > > >
-> > > > > > > > dev_pm_qos_remove_request ends calling {max,min}_freq_req QoS notifiers
-> > > > > > > > which schedule policy update work. It may end up racing with the freeing
-> > > > > > > > the policy and unregistering the driver.
-> > > > > > > >
-> > > > > > > > One possible race is as below where the cpufreq_driver is unregistered
-> > > > > > > > but the scheduled work gets executed at later stage when cpufreq_driver
-> > > > > > > > is NULL(i.e. after freeing the policy and driver)
-> > > > > > > >
-> > > > > > > > Unable to handle kernel NULL pointer dereference at virtual address 0000001c
-> > > > > > > > pgd = (ptrval)
-> > > > > > > > [0000001c] *pgd=80000080204003, *pmd=00000000
-> > > > > > > > Internal error: Oops: 206 [#1] SMP THUMB2
-> > > > > > > > Modules linked in:
-> > > > > > > > CPU: 0 PID: 34 Comm: kworker/0:1 Not tainted 5.4.0-rc3-00006-g67f5a8081a4b #86
-> > > > > > > > Hardware name: ARM-Versatile Express
-> > > > > > > > Workqueue: events handle_update
-> > > > > > > > PC is at cpufreq_set_policy+0x58/0x228
-> > > > > > > > LR is at dev_pm_qos_read_value+0x77/0xac
-> > > > > > > > Control: 70c5387d  Table: 80203000  DAC: fffffffd
-> > > > > > > > Process kworker/0:1 (pid: 34, stack limit = 0x(ptrval))
-> > > > > > > >         (cpufreq_set_policy) from (refresh_frequency_limits.part.24+0x37/0x48)
-> > > > > > > >         (refresh_frequency_limits.part.24) from (handle_update+0x2f/0x38)
-> > > > > > > >         (handle_update) from (process_one_work+0x16d/0x3cc)
-> > > > > > > >         (process_one_work) from (worker_thread+0xff/0x414)
-> > > > > > > >         (worker_thread) from (kthread+0xff/0x100)
-> > > > > > > >         (kthread) from (ret_from_fork+0x11/0x28)
-> > > > > > > >
-> > > > > > > > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> > > > > > > > Cc: Viresh Kumar <viresh.kumar@linaro.org>
-> > > > > > > > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> > > > > > > > ---
-> > > > > > > >  drivers/cpufreq/cpufreq.c | 3 +++
-> > > > > > > >  1 file changed, 3 insertions(+)
-> > > > > > > >
-> > > > > > > > Hi Rafael, Viresh,
-> > > > > > > >
-> > > > > > > > This fixed the boot issue I reported[1] on TC2 with bL switcher enabled.
-> > > > > > > > I have based this patch on -rc3 and not on top of your patches. This
-> > > > > > > > only fixes the boot issue but I hit the other crashes while continuously
-> > > > > > > > switching on and off the bL switcher that register/unregister the driver
-> > > > > > > > Your patch series fixes them. I can based this on top of those if you
-> > > > > > > > prefer.
-> > > > > > > >
-> > > > > > > > Regards,
-> > > > > > > > Sudeep
-> > > > > > > >
-> > > > > > > > [1] https://lore.kernel.org/linux-pm/20191015155735.GA29105@bogus/
-> > > > > > > >
-> > > > > > > > diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> > > > > > > > index c52d6fa32aac..b703c29a84be 100644
-> > > > > > > > --- a/drivers/cpufreq/cpufreq.c
-> > > > > > > > +++ b/drivers/cpufreq/cpufreq.c
-> > > > > > > > @@ -1278,6 +1278,9 @@ static void cpufreq_policy_free(struct cpufreq_policy *policy)
-> > > > > > > >         }
-> > > > > > > >
-> > > > > > > >         dev_pm_qos_remove_request(policy->min_freq_req);
-> > > > > > > > +       /* flush the pending policy->update work before freeing the policy */
-> > > > > > > > +       if (work_pending(&policy->update))
-> > > > > > >
-> > > > > > > Isn't this racy?
-> > > > > > >
-> > > > > > > It still may be running if the pending bit is clear and we still need
-> > > > > > > to wait for it then, don't we?
-> > > > > > >
-> > > > > > > Why don't you do an unconditional flush_work() here?
-> > > > > >
-> > > > > > You may as well do a cancel_work_sync() here, because whether or not
-> > > > > > the last update of the policy happens before it goes away is a matter
-> > > > > > of timing in any case
-> > > > >
-> > > > > In fact that's the first thing I tried to fix the issue I was seeing.
-> > > > > But I then thought it would be better to complete the update as the PM
-> > > > > QoS were getting updated back to DEFAULT values for the device. Even
-> > > > > this works.
-> > > > >
-> > > > > What is your preference ? flush_work or cancel_work_sync ? I will
-> > > > > update accordingly. I may need to do some more testing with
-> > > > > cancel_work_sync as I just checked that quickly to confirm the race.
-> > > >
-> > > > As I said in the other email, this work didn't come as a result of
-> > > > removal of the qos request from cpufreq core and so must have come
-> > > > from other thermal or similar events.
-> > >
-> > > I don't think so. For sure not because of any thermal events. I didn't
-> > > have log handy and hence had to wait till I was next to hardware.
-> > >
-> > > This is log:
-> > >  cpufreq: cpufreq_policy_free: dev_pm_qos_remove_request max before
-> > >  cpufreq: cpufreq_notifier_max: schedule_work(&policy->update)
-> > >  cpufreq: cpufreq_policy_free: dev_pm_qos_remove_request max after
-> > >  cpufreq: cpufreq_policy_free: dev_pm_qos_remove_request min before
-> > >  cpufreq: cpufreq_notifier_min: schedule_work(&policy->update)
-> > >  cpufreq: cpufreq_policy_free: dev_pm_qos_remove_request min after
-> > >  cpufreq: cpufreq_policy_free: dev_pm_qos_remove_request max before
-> > >  cpufreq: cpufreq_notifier_max: schedule_work(&policy->update)
-> > >  cpufreq: cpufreq_policy_free: dev_pm_qos_remove_request max after
-> > >  cpufreq: cpufreq_policy_free: dev_pm_qos_remove_request min before
-> > >  cpufreq: cpufreq_notifier_min: schedule_work(&policy->update)
-> > >  cpufreq: cpufreq_policy_free: dev_pm_qos_remove_request min after
-> > >
-> > > So if I move the call above, it still crashes as the work is getting
-> > > scheduled later.
-> >
-> > OK, please cancel the work after dropping the last request.
-> >
-> > We still need to understand what is going on here, but the crash needs to be
-> > prevented from occurring in the first place IMO.
-> >
-> Callstack is:
->
-> (cpufreq_notifier_max)
-> (notifier_call_chain)
-> (blocking_notifier_call_chain)
-> (pm_qos_update_target)
-> (freq_qos_apply)
-> (freq_qos_remove_request)
-> (cpufreq_policy_free)
-> (subsys_interface_unregister)
-> (cpufreq_unregister_driver)
+On Sun, Oct 20, 2019 at 08:59:32AM -0700, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
+> 
+> xfs_ioctl_setattr_dax_invalidate() currently checks if the DAX flag is
+> changing as a quick check.
+> 
+> But the implementation mixes the physical (XFS_DIFLAG2_DAX) and
+> effective (S_DAX) DAX flags.
 
-That may be due to a bug in one of my patches (it's adding one of the
-notifiers to a wrong list).
+More nuanced than that.
 
-Please re-test with the current linux-next branch that I've just pushed.
+The idea was that if the mount option was set, clearing the
+per-inode flag would override the mount option. i.e. the mount
+option sets the S_DAX flag at inode instantiation, so using
+FSSETXATTR to ensure the FS_XFLAG_DAX is not set would override the
+mount option setting, giving applications a way of guranteeing they
+aren't using DAX to access the data.
+
+So if the mount option is going to live on, I suspect that we want
+to keep this code as it stands.
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
