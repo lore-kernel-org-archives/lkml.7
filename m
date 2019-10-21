@@ -2,174 +2,138 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76B21CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 17:28:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 398D9CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 17:29:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CC622077C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 17:28:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571678937;
-	bh=Qzg+nSzQSl15mcasjyGbnQQil/A3TPHlMSePYlNANZ8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=YFQIxQFcdKWVKSRbTAKM9dPWe9OlZ2W+O8jcv1I+lPeudGA7UId7S0/tMmag//jSQ
-	 UvRMmbnsp3F73ilIp0YoqDOgNXbu6KBYynxKZz4z7UY0gODpiCHCj1/EUh6RH392IE
-	 FqDGzlq/pj4b4HphvGtmWh2hm8fSkXUI1vnD1UQU=
+	by mail.kernel.org (Postfix) with ESMTP id 0BD5E2077C
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 17:29:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ae0YyAgJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729616AbfJUR24 (ORCPT
+        id S1729804AbfJUR33 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 13:28:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58648 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726819AbfJUR2z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 13:28:55 -0400
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 751D32077C;
-        Mon, 21 Oct 2019 17:28:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571678933;
-        bh=Qzg+nSzQSl15mcasjyGbnQQil/A3TPHlMSePYlNANZ8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=RgGKvjMKa74HImO3uxjYKvw0NK90LMd1NHS62oYJe/PK7d2Wn6sNEjJ/2E2hICDBd
-         XByPz58+kfMLYVHX1NC7mvZsqWf+FPP3777xTm0eCgqua4idWWIpn63aYOk4Fv/Qdf
-         Ey7ZtrC9+zWSUcPXn5OWFVJdxwLias2NyrWVNb6U=
-Received: by mail-qt1-f171.google.com with SMTP id e14so2441067qto.1;
-        Mon, 21 Oct 2019 10:28:53 -0700 (PDT)
-X-Gm-Message-State: APjAAAWE5+HVqury7By6WCJIjedzOM76I1r2t/0LNRK6JID2UPap1e4z
-        diXGGJzTrZjDWD1GeRe6bf5Mn8QxxN8RubV/pw==
-X-Google-Smtp-Source: APXvYqycsWbsOq+RkNJmmVCRQvnEVotA2t3MyLrnXmKMy7TpkH+IaWBEzx0jJADgfZO6JSeE0XNQkDJsPHRfKzk4np8=
-X-Received: by 2002:ac8:70c4:: with SMTP id g4mr12467338qtp.136.1571678932597;
- Mon, 21 Oct 2019 10:28:52 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191005151404.5fc7386f@archlinux> <1571664677-6984-1-git-send-email-gupt21@gmail.com>
-In-Reply-To: <1571664677-6984-1-git-send-email-gupt21@gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 21 Oct 2019 12:28:41 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLoVf4QCYJE_Bak+httr6_bT=iP63waNNiUHz1+PdLhPg@mail.gmail.com>
-Message-ID: <CAL_JsqLoVf4QCYJE_Bak+httr6_bT=iP63waNNiUHz1+PdLhPg@mail.gmail.com>
-Subject: Re: [PATCH v3 2/3] dt-bindings: iio: light: add veml6030 ALS bindings
-To:     Rishi Gupta <gupt21@gmail.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
+        Mon, 21 Oct 2019 13:29:29 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:33813 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726847AbfJUR32 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 13:29:28 -0400
+Received: by mail-ed1-f68.google.com with SMTP id b72so1693119edf.1;
+        Mon, 21 Oct 2019 10:29:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=EYUsjio6mmwd3BPOKV1gElxOC+8ifBzUcmXkyLesSv8=;
+        b=ae0YyAgJUgh6AIFRiID5Nl+4QK8DShggkbfVS8PYIaGxtu/qAcFzyKjMO/p8qXsKdP
+         xsE3a7LDER6KecKte+BWfGfk9zUjp4nSjtrPMxBnPnnRmlqoLgzHdN3t+bv9+MsqrklH
+         x2T49SMy/XPz3wP8nyLMnGJxd1Zg0f2fJRTYKY619pcMW3lNZ7cPonS+nmw5hz5hWV1a
+         irLC0MR832lpALcTxa5tPGzwRr+F2pJA57j3EnfASskNmIDVj2wq39XTykDQl+3ErJ+x
+         4VMzKClR9zmP3QI54kLAjuYi45IZQuuMZYwI2om8wUxTGXA1bIH98wEPO0NaO4t7jUzd
+         N2Aw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=EYUsjio6mmwd3BPOKV1gElxOC+8ifBzUcmXkyLesSv8=;
+        b=siOXxqld2er9woru+2hsK26K5b9QkGXgX7FqG5y8PnzFxTACi8u5ZxJ/25vMh/i+YH
+         LnVTeatq6XtddVXz11q6WJRrgWfuD6B5/b+1nthMDGaY7rgjf53WY1vjZXgsvImf0GfJ
+         EsmLU3N2zOx3hGZrBR+6fxigsYxVjbbqcJE9SDFmpykG5LoZBeSRoXZPpE86SZkeE/rS
+         wi1TYKtF8AN/mJ+DiQNG3r5UqPh6Xap9f5bAzu4wMlFI6M01BWUnJyrcKS9Df4ssPiMX
+         HY72DGGtYSsETjR3f/LIm2muCvQWKqLQeXZZ3ZGRxwu/D9KLzkFZQvnKK4q3pmSrG5ft
+         umbA==
+X-Gm-Message-State: APjAAAVY1wUNd2gUNYCJU0viwbfsvIxGWZ1nZxu3cFKrgCRCPnR7PAEs
+        g6DQ5X4ki13pPA8WmPG94Q==
+X-Google-Smtp-Source: APXvYqwXwzmDl4AWu4PXPmYxSpf0/owrpLJsadNE9k1i9N076cwi3uOZRW/Va9vltJar9N4WB89cvQ==
+X-Received: by 2002:aa7:da96:: with SMTP id q22mr870455eds.278.1571678966846;
+        Mon, 21 Oct 2019 10:29:26 -0700 (PDT)
+Received: from avx2 ([46.53.249.42])
+        by smtp.gmail.com with ESMTPSA id g43sm207790edb.14.2019.10.21.10.29.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 21 Oct 2019 10:29:25 -0700 (PDT)
+Date:   Mon, 21 Oct 2019 20:29:23 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     Joel Savitz <jsavitz@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Fabrizio D'Angelo <Fabrizio_Dangelo@student.uml.edu>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>, alexios.zavras@intel.com,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        linux-fsdevel@vger.kernel.org, fedora-rpi@googlegroups.com
+Subject: Re: [PATCH] fs: proc: Clarify warnings for invalid proc dir names
+Message-ID: <20191021172923.GA5355@avx2>
+References: <20191020221742.5728-1-jsavitz@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191020221742.5728-1-jsavitz@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 8:31 AM Rishi Gupta <gupt21@gmail.com> wrote:
->
-> This commit adds device tree bindings for veml6030 ambient
-> light sensor.
->
-> Signed-off-by: Rishi Gupta <gupt21@gmail.com>
-> ---
-> Changes in v3:
-> * None
->
-> Changes in v2:
-> * Corrected grammatical mistake from 'is' to 'are' in description of bindings
->
->  .../devicetree/bindings/iio/light/veml6030.yaml    | 62 ++++++++++++++++++++++
->  1 file changed, 62 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/light/veml6030.yaml
->
-> diff --git a/Documentation/devicetree/bindings/iio/light/veml6030.yaml b/Documentation/devicetree/bindings/iio/light/veml6030.yaml
-> new file mode 100644
-> index 0000000..969b314
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/light/veml6030.yaml
-> @@ -0,0 +1,62 @@
-> +# SPDX-License-Identifier: GPL-2.0+
+On Sun, Oct 20, 2019 at 06:17:42PM -0400, Joel Savitz wrote:
+> When one attempts to create a directory in /proc with an invalid name,
+> such as one in a subdirectory that doesn't exist, one with a name beyond
+> 256 characters, or a reserved name such as '.' or '..', the kernel
+> throws a warning message that looks like this:
+> 
+> 	[ 7913.252558] name 'invalid_name'
 
-(GPL-2.0-only OR BSD-2-Clause) for new bindings please.
+Yes, the important part is filename:line which uniquely identifies
+the issue.
 
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/light/veml6030.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: VEML6030 Ambient Light Sensor (ALS)
-> +
-> +maintainers:
-> +  - Rishi Gupta <gupt21@gmail.com>
-> +
-> +description: |
-> +  Bindings for the ambient light sensor veml6030 from Vishay
-> +  Semiconductors over an i2c interface.
-> +
-> +  Irrespective of whether interrupt is used or not, application
-> +  can get the ALS and White channel reading from IIO raw interface.
-> +
-> +  If the interrupts are used, application will receive an IIO event
-> +  whenever configured threshold is crossed.
-> +
-> +  Specifications about the sensor can be found at:
-> +    https://www.vishay.com/docs/84366/veml6030.pdf
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - vishay,veml6030
-> +
-> +  reg:
-> +    description:
-> +      I2C address of the device. If the ADDR pin on veml6030
-> +      is pulled up, this address is 0x48. If the ADDR pin is
-> +      pulled down, this address is 0x10.
+> This warning message is nearly the same for all invalid cases, including
+> the removal of a nonexistent directory. This patch clarifies the warning
+> message and differentiates the invalid creation/removal cases so as to
+> allow the user to more quickly understand their mistake.
 
-If you want to define the addresses, then you do:
+> --- a/fs/proc/generic.c
+> +++ b/fs/proc/generic.c
+> @@ -173,7 +173,7 @@ static int __xlate_proc_name(const char *name, struct proc_dir_entry **ret,
+>  		len = next - cp;
+>  		de = pde_subdir_find(de, cp, len);
+>  		if (!de) {
+> -			WARN(1, "name '%s'\n", name);
+> +			WARN(1, "invalid proc dir name '%s'\n", name);
 
-enum:
-  - 0x10 # ADDR pin pulled down
-  - 0x48 # ADDR pin pulled up
+Wrong string anyway, this is nonexistent name, directory or not.
 
-> +    maxItems: 1
+> -		WARN(1, "name len %u\n", qstr.len);
+> +		WARN(1, "invalid proc dir name len %u\n", qstr.len);
+>  		return NULL;
+>  	}
+>  	if (qstr.len == 1 && fn[0] == '.') {
+> -		WARN(1, "name '.'\n");
+> +		WARN(1, "invalid proc dir name '.'\n");
+>  		return NULL;
+>  	}
+>  	if (qstr.len == 2 && fn[0] == '.' && fn[1] == '.') {
+> -		WARN(1, "name '..'\n");
+> +		WARN(1, "invalid proc dir name '..'\n");
+>  		return NULL;
+>  	}
+>  	if (*parent == &proc_root && name_to_int(&qstr) != ~0U) {
+> @@ -402,7 +402,7 @@ static struct proc_dir_entry *__proc_create(struct proc_dir_entry **parent,
+>  		return NULL;
+>  	}
+>  	if (is_empty_pde(*parent)) {
+> -		WARN(1, "attempt to add to permanently empty directory");
+> +		WARN(1, "attempt to add to permanently empty directory in proc");
 
-And drop this.
+"proc" will be spilled over all backtrace.
 
-> +
-> +  interrupts:
-> +    description:
-> +      interrupt mapping for IRQ. Configure with IRQ_TYPE_LEVEL_LOW.
-> +      Refer to interrupt-controller/interrupts.txt for generic
-> +      interrupt client node bindings.
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +    i2c {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        light-sensor@10 {
-> +                compatible = "vishay,veml6030";
-> +                reg = <0x10>;
-> +                interrupts = <12 IRQ_TYPE_LEVEL_LOW>;
-> +        };
-> +    };
-> +...
-> --
-> 2.7.4
->
+> @@ -670,7 +670,7 @@ void remove_proc_entry(const char *name, struct proc_dir_entry *parent)
+>  		rb_erase(&de->subdir_node, &parent->subdir);
+>  	write_unlock(&proc_subdir_lock);
+>  	if (!de) {
+> -		WARN(1, "name '%s'\n", name);
+> +		WARN(1, "unable to remove nonexistent proc dir '%s'\n", name);
+
+I'm not sure if such chatty strings are necessary.
