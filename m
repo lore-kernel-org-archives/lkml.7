@@ -2,293 +2,138 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6602CCA9EB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:11:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C68BDCA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:12:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32B9F2070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:11:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vC+B9XfA"
+	by mail.kernel.org (Postfix) with ESMTP id 9EAF72070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:12:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571667152;
+	bh=clcgHjrxDMuAXRCjN1821UyecuiY1dA5ZM4jCVNJO4o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=O4FXt5cLiXDvOz9yMgzG2T/kp9P2dhBFS3F7r//0gZf/gEaCsV8GvbL8zGlfNKQee
+	 ZaHNI/hRSEt4x1N+A4+0DpWEy4ozW4xONXDWh1IHHpF/HVk2gHLBekpNidnxL6aBIC
+	 NfaUhfzjPOnlAn+c6eFYdjxADOvM0HErrVaZxK8w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729050AbfJUOLr (ORCPT
+        id S1729001AbfJUOMb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 10:11:47 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:42441 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728076AbfJUOLq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 10:11:46 -0400
-Received: by mail-il1-f196.google.com with SMTP id o16so4032656ilq.9;
-        Mon, 21 Oct 2019 07:11:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PjrW/5SskD+8sPt6BPZ8XxiZeheU9jVFZxsNh12g9Z8=;
-        b=vC+B9XfANqrQFOHw4x3PSo6DxLVq9pgqhRyy8/FMDhb2MwI02TG5iYo66jllEXySKU
-         BJivvtSp4QSg+m7DBIsHUQs0taO7Yz9n+SavI00fzj6lWYJ70uj1fDDxFzsRiKLf5Ni6
-         HHBBNHbB70SSadMVDuwjX6FSnl1BLPZLZqGlMvoIi5ExnnenbQYpJafEI0rge3xFoUo5
-         5yBJGYcrT27h+fHACV4j72yYIruEvw5BZFZFmFY+XgSY+acKlUGWGjXzsFgN5OuruPPt
-         DvTVVgdxQruvjtHJYQjSgVZn9GPFMKpOsRN9dTz4pRWRnU9tbcwHuS21oAgWH5kNQkFC
-         cp+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PjrW/5SskD+8sPt6BPZ8XxiZeheU9jVFZxsNh12g9Z8=;
-        b=DL+MG3fiZxc5jgMgHN+ykHv5jkiX7ZjLlTPtpzytPQm8mXCjmKzqkbPc+m9Wa4tiXZ
-         zfan7z/EGlJkIyN07VK0iP5pBItM5rT6D2QiiEmU6LQs6e7NuB8s5u4llHBtsgy5ofZQ
-         l7UeD8uESiqzZtVqBgGikcT3+yeHkY+Sm+GdHWsCllN3c2t2wG2sbE/y2TsQV35rx67V
-         acZkBGLJOm3UfIC0nz03fOrpvOjZQFU8w+OYql0phowNrthcD5LGL7u6KMA2P8f/kiy4
-         MiUYsl1iMAA+XwParzln3Ko8vDdrT0ze5qet2crA0CBdkymgVcEvTqlTnWPBEx5wWG6J
-         6Z4g==
-X-Gm-Message-State: APjAAAXkSGm+/dNcbgetQwkkaNDsZhfsCXIO8Y3fMPlrs6sFrBvsoqwl
-        9pgZzAK3RXJQTizOXp6lJ0SRJlFofbNthZNOgOM=
-X-Google-Smtp-Source: APXvYqxeuHigsAnRBVc/SU84PM+ZFFz5M6oWH5j3i6NUKfOgxMIokeCP8qrGAR4Iyr1erhgn9NBZMGasZgrw6YqhKeQ=
-X-Received: by 2002:a92:7906:: with SMTP id u6mr20294645ilc.75.1571667105558;
- Mon, 21 Oct 2019 07:11:45 -0700 (PDT)
+        Mon, 21 Oct 2019 10:12:31 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45026 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727344AbfJUOMb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 10:12:31 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id EE668BE68;
+        Mon, 21 Oct 2019 14:12:28 +0000 (UTC)
+Date:   Mon, 21 Oct 2019 16:12:28 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Mel Gorman <mgorman@techsingularity.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Matt Fleming <matt@codeblueprint.co.uk>,
+        Borislav Petkov <bp@alien8.de>, Linux-MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/3] mm, meminit: Recalculate pcpu batch and high limits
+ after init completes
+Message-ID: <20191021141228.GR9379@dhcp22.suse.cz>
+References: <20191021094808.28824-1-mgorman@techsingularity.net>
+ <20191021094808.28824-2-mgorman@techsingularity.net>
+ <85A7E76A-0839-4A43-86F3-6847639F9F92@lca.pw>
 MIME-Version: 1.0
-References: <20191007131649.1768-1-linux.amoon@gmail.com> <20191007131649.1768-6-linux.amoon@gmail.com>
- <CAFBinCAoJLZj9Kh+SfF4Q+0OCzac2+huon_BU=Q3yE7Fu38U3w@mail.gmail.com>
- <7hsgo4cgeg.fsf@baylibre.com> <CANAwSgRfcFa6uBNtpqz6y=9Uwsa4gcp_4tDD+Chhg4SynJCq0Q@mail.gmail.com>
- <CAFBinCA6ZoeR4m4bhj08HF1DqxY1qB5mygpaQCGbo3d8M+Wr9Q@mail.gmail.com>
- <CANAwSgSeYTnUkLnjw-RORw76Fyj3_WT0cdM9D0vFsY8g=9L94Q@mail.gmail.com>
- <1jwode9lba.fsf@starbuckisacylon.baylibre.com> <CANAwSgSoK4X3_QbO3YpZRXNTpPJ+zVeid=w93f14Eyk8Dd32EQ@mail.gmail.com>
- <CAFBinCBdwqxA2kLMAA9gtOcXevYK-J4x12odHwpQOAWakgWiEg@mail.gmail.com>
-In-Reply-To: <CAFBinCBdwqxA2kLMAA9gtOcXevYK-J4x12odHwpQOAWakgWiEg@mail.gmail.com>
-From:   Anand Moon <linux.amoon@gmail.com>
-Date:   Mon, 21 Oct 2019 19:41:34 +0530
-Message-ID: <CANAwSgRs2DUXwvhJD5qpXg04qEdP_Nt-wQqRbD2FpY2SWnHpAA@mail.gmail.com>
-Subject: Re: [RFCv1 5/5] arm64/ARM: configs: Change CONFIG_PWM_MESON from m to y
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-amlogic@lists.infradead.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Content-Type: multipart/mixed; boundary="00000000000088532505956c43d2"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <85A7E76A-0839-4A43-86F3-6847639F9F92@lca.pw>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---00000000000088532505956c43d2
-Content-Type: text/plain; charset="UTF-8"
+On Mon 21-10-19 10:01:24, Qian Cai wrote:
+> 
+> 
+> > On Oct 21, 2019, at 5:48 AM, Mel Gorman <mgorman@techsingularity.net> wrote:
+i[...]
+> > diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> > index c0b2e0306720..f972076d0f6b 100644
+> > --- a/mm/page_alloc.c
+> > +++ b/mm/page_alloc.c
+> > @@ -1947,6 +1947,14 @@ void __init page_alloc_init_late(void)
+> > 	/* Block until all are initialised */
+> > 	wait_for_completion(&pgdat_init_all_done_comp);
+> > 
+> > +	/*
+> > +	 * The number of managed pages has changed due to the initialisation
+> > +	 * so the pcpu batch and high limits needs to be updated or the limits
+> > +	 * will be artificially small.
+> > +	 */
+> > +	for_each_populated_zone(zone)
+> > +		zone_pcp_update(zone);
+> > +
+> > 	/*
+> > 	 * We initialized the rest of the deferred pages.  Permanently disable
+> > 	 * on-demand struct page initialization.
+> > -- 
+> > 2.16.4
+> > 
+> > 
+> 
+> Warnings from linux-next,
+> 
+> [   14.265911][  T659] BUG: sleeping function called from invalid context at kernel/locking/mutex.c:935
+> [   14.265992][  T659] in_atomic(): 1, irqs_disabled(): 1, non_block: 0, pid: 659, name: pgdatinit8
+> [   14.266044][  T659] 1 lock held by pgdatinit8/659:
+> [   14.266075][  T659]  #0: c000201ffca87b40 (&(&pgdat->node_size_lock)->rlock){....}, at: deferred_init_memmap+0xc4/0x26c
 
-Hi Martin,
+This is really surprising to say the least. I do not see any spinlock
+held here. Besides that we do sleep in wait_for_completion already.
+Is it possible that the patch has been misplaced? zone_pcp_update is
+called from page_alloc_init_late which is a different context than
+deferred_init_memmap which runs in a separate kthread.
 
-On Fri, 18 Oct 2019 at 23:40, Martin Blumenstingl
-<martin.blumenstingl@googlemail.com> wrote:
->
-> Hi Anand,
->
-> On Fri, Oct 18, 2019 at 4:04 PM Anand Moon <linux.amoon@gmail.com> wrote:
-> [...]
-> > > Next step it to try narrow down the clock causing the issue.
-> > > Remove clk_ignore_unused from the command line and add CLK_INGORE_UNUSED
-> > > to the flag of some clocks your clock controller (g12a I think) until
-> > >
-> > > The peripheral clock gates already have this flag (something we should
-> > > fix someday) so don't bother looking there.
-> > >
-> > > Most likely the source of the pwm is getting disabled between the
-> > > late_init call and the probe of the PWM module. Since the pwm is already
-> > > active (w/o a driver), gating the clock source shuts dowm the power to
-> > > the cores.
-> > >
-> > > Looking a the possible inputs in pwm driver, I'd bet on fdiv4.
-> > >
-> >
-> > I had give this above steps a try but with little success.
-> > I am still looking into this much close.
-> it's not clear to me if you have only tested with the PWM and/or
-> FCLK_DIV4 clocks. can you please describe what you have tested so far?
->
-Sorry for delayed response.
+> [   14.266160][  T659] irq event stamp: 26
+> [   14.266194][  T659] hardirqs last  enabled at (25): [<c000000000950584>] _raw_spin_unlock_irq+0x44/0x80
+> [   14.266246][  T659] hardirqs last disabled at (26): [<c0000000009502ec>] _raw_spin_lock_irqsave+0x3c/0xa0
+> [   14.266299][  T659] softirqs last  enabled at (0): [<c0000000000ff8d0>] copy_process+0x720/0x19b0
+> [   14.266339][  T659] softirqs last disabled at (0): [<0000000000000000>] 0x0
+> [   14.266400][  T659] CPU: 64 PID: 659 Comm: pgdatinit8 Not tainted 5.4.0-rc4-next-20191021 #1
+> [   14.266462][  T659] Call Trace:
+> [   14.266494][  T659] [c00000003d8efae0] [c000000000921cf4] dump_stack+0xe8/0x164 (unreliable)
+> [   14.266538][  T659] [c00000003d8efb30] [c000000000157c54] ___might_sleep+0x334/0x370
+> [   14.266577][  T659] [c00000003d8efbb0] [c00000000094a784] __mutex_lock+0x84/0xb20
+> [   14.266627][  T659] [c00000003d8efcc0] [c000000000954038] zone_pcp_update+0x34/0x64
+> [   14.266677][  T659] [c00000003d8efcf0] [c000000000b9e6bc] deferred_init_memmap+0x1b8/0x26c
+> [   14.266740][  T659] [c00000003d8efdb0] [c000000000149528] kthread+0x1a8/0x1b0
+> [   14.266792][  T659] [c00000003d8efe20] [c00000000000b748] ret_from_kernel_thread+0x5c/0x74
+> [   14.268288][  T659] node 8 initialised, 1879186 pages in 12200ms
+> [   14.268527][  T659] pgdatinit8 (659) used greatest stack depth: 27984 bytes left
+> [   15.589983][  T658] BUG: sleeping function called from invalid context at kernel/locking/mutex.c:935
+> [   15.590041][  T658] in_atomic(): 1, irqs_disabled(): 1, non_block: 0, pid: 658, name: pgdatinit0
+> [   15.590078][  T658] 1 lock held by pgdatinit0/658:
+> [   15.590108][  T658]  #0: c000001fff5c7b40 (&(&pgdat->node_size_lock)->rlock){....}, at: deferred_init_memmap+0xc4/0x26c
+> [   15.590192][  T658] irq event stamp: 18
+> [   15.590224][  T658] hardirqs last  enabled at (17): [<c000000000950654>] _raw_spin_unlock_irqrestore+0x94/0xd0
+> [   15.590283][  T658] hardirqs last disabled at (18): [<c0000000009502ec>] _raw_spin_lock_irqsave+0x3c/0xa0
+> [   15.590332][  T658] softirqs last  enabled at (0): [<c0000000000ff8d0>] copy_process+0x720/0x19b0
+> [   15.590379][  T658] softirqs last disabled at (0): [<0000000000000000>] 0x0
+> [   15.590414][  T658] CPU: 8 PID: 658 Comm: pgdatinit0 Tainted: G        W         5.4.0-rc4-next-20191021 #1
+> [   15.590460][  T658] Call Trace:
+> [   15.590491][  T658] [c00000003d8cfae0] [c000000000921cf4] dump_stack+0xe8/0x164 (unreliable)
+> [   15.590541][  T658] [c00000003d8cfb30] [c000000000157c54] ___might_sleep+0x334/0x370
+> [   15.590588][  T658] [c00000003d8cfbb0] [c00000000094a784] __mutex_lock+0x84/0xb20
+> [   15.590643][  T658] [c00000003d8cfcc0] [c000000000954038] zone_pcp_update+0x34/0x64
+> [   15.590689][  T658] [c00000003d8cfcf0] [c000000000b9e6bc] deferred_init_memmap+0x1b8/0x26c
+> [   15.590739][  T658] [c00000003d8cfdb0] [c000000000149528] kthread+0x1a8/0x1b0
+> [   15.590790][  T658] [c00000003d8cfe20] [c00000000000b748] ret_from_kernel_thread+0x5c/0x74
 
-I had just looked into clk related to SD_EMMC_A/B/C,
-with adding CLK_IGNORE/CRITICAL.
-Also looked into clk_summary for eMMC and microSD card,
-to identify the root cause, but I failed to move ahead.
-
-> for reference - my way of debugging this in the past was:
-> 1. add some printks to clk_disable_unused_subtree (right after the
-> clk_core_is_enabled check) to see which clocks are being disabled
-> 2. add CLK_IGNORE_UNUSED or CLK_IS_CRITICAL to the clocks which are
-> being disabled based on the information from step #1
-> 3. (at some point I had a working kernel with lots of clocks with
-> CLK_IGNORE_UNUSED/CLK_IS_CRITICAL)
-> 4. start dropping the CLK_IGNORE_UNUSED/CLK_IS_CRITICAL flags again
-> until you have traced it down to the clocks that are the actual issue
-> (so far I always had only one clock which caused issues, but it may be
-> multiple)
-> 5. investigate (and/or ask on the mailing list, Amlogic developers are
-> reading the mails here as well) for the few clocks from step #4
->
-
-Thanks for you valuable suggestion. I have your patch to debug this
-[0]  https://patchwork.kernel.org/patch/9725921/mbox/
-
-So from the fist step I could identify that all the clk were getting closed
-after some core cpu clk was failing. Here is the log.
-
-step1: [1] https://pastebin.com/p13F9HGG
-
-so I marked these clk as CLK_IGNORE_UNUSED and finally
-I made it to boot using microSD card.
-
-After this just I converted these CLK to CLK_IS_CRITICAL
-as mostly these are used the CPU clk for now.
-Here is boot log successful for as of now.
-
-Finally: [2]  https://pastebin.com/qB6pMyGQ
-
-I know clk maintainer are against marking flags as *CLK_IS_CRITICAL*
-But this is just the step to move ahead.
-
-Attach is my local clk and dts patch.Just for testing.
-[3] clk_critical.patch
-
-Plz share your thought on this.
-
-> > Well I am not the expert in clk or bus configuration.
-> > but after looking into the datasheet of for clk configuration
-> > I found some bus are not configured correctly.
-> did you find any reason which indicates that the problem is related to a bus?
-> the issues I had were due to clocks not being assigned to their
-> consumers in .dts - that can be anything (from a bus to something
-> different).
->
-
-Yes I feel each core bus should be independent
-as each clk PLL controls these bus.
-
-for example datasheet: *6-5 Clock Connections*
-
-What I feel currently missing with bus are
-clock gating (enable/disable of features).
-clock-controller
-reset-controller
-
-Here is the current overview of bus topology
-using latest u-boot (dm tree).
-
-[4] https://pastebin.com/MZ25bgiP
-
-Bet Regards
--Anand
-
---00000000000088532505956c43d2
-Content-Type: application/octet-stream; name="clk_critical.patch"
-Content-Disposition: attachment; filename="clk_critical.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_k20hls1l0>
-X-Attachment-Id: f_k20hls1l0
-
-ZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvYW1sb2dpYy9tZXNvbi1nMTJiLW9kcm9p
-ZC1uMi5kdHMgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2FtbG9naWMvbWVzb24tZzEyYi1vZHJvaWQt
-bjIuZHRzCmluZGV4IDQyZjE1NDA1NzUwYy4uNGY4ZDg5ZjQ3MmEyIDEwMDY0NAotLS0gYS9hcmNo
-L2FybTY0L2Jvb3QvZHRzL2FtbG9naWMvbWVzb24tZzEyYi1vZHJvaWQtbjIuZHRzCisrKyBiL2Fy
-Y2gvYXJtNjQvYm9vdC9kdHMvYW1sb2dpYy9tZXNvbi1nMTJiLW9kcm9pZC1uMi5kdHMKQEAgLTU0
-LDYgKzU0LDkgQEAKIAkJZ3BpbyA9IDwmZ3Bpb19hbyBHUElPQU9fOCBHUElPX0FDVElWRV9ISUdI
-PjsKIAkJZW5hYmxlLWFjdGl2ZS1oaWdoOwogCQlyZWd1bGF0b3ItYWx3YXlzLW9uOworCisJCS8q
-IEZDODczMS0wOVZGMDVOUlIgKi8KKwkJdmluLXN1cHBseSA9IDwmdmRkYW9fM3YzPjsKIAl9Owog
-CiAJdGZfaW86IGdwaW8tcmVndWxhdG9yLXRmX2lvIHsKQEAgLTY4LDYgKzcxLDggQEAKIAogCQlz
-dGF0ZXMgPSA8MzMwMDAwMCAwPiwKIAkJCSA8MTgwMDAwMCAxPjsKKwkJLyogUlQ5MTc5R0IgKi8K
-KwkJdmluLXN1cHBseSA9IDwmdmNjXzV2PjsKIAl9OwogCiAJZmxhc2hfMXY4OiByZWd1bGF0b3It
-Zmxhc2hfMXY4IHsKQEAgLTQyOSw3ICs0MzQsNiBAQAogCWNkLWdwaW9zID0gPCZncGlvIEdQSU9D
-XzYgR1BJT19BQ1RJVkVfTE9XPjsKIAl2bW1jLXN1cHBseSA9IDwmdGZsYXNoX3ZkZD47CiAJdnFt
-bWMtc3VwcGx5ID0gPCZ0Zl9pbz47Ci0KIH07CiAKIC8qIGVNTUMgKi8KZGlmZiAtLWdpdCBhL2Ry
-aXZlcnMvY2xrL21lc29uL2cxMmEuYyBiL2RyaXZlcnMvY2xrL21lc29uL2cxMmEuYwppbmRleCBi
-M2FmNjFjYzZmYjkuLjgxYzZlMzM2MjFkZiAxMDA2NDQKLS0tIGEvZHJpdmVycy9jbGsvbWVzb24v
-ZzEyYS5jCisrKyBiL2RyaXZlcnMvY2xrL21lc29uL2cxMmEuYwpAQCAtMjgzLDYgKzI4Myw4IEBA
-IHN0YXRpYyBzdHJ1Y3QgY2xrX2ZpeGVkX2ZhY3RvciBnMTJhX2ZjbGtfZGl2Ml9kaXYgPSB7CiAJ
-CS5vcHMgPSAmY2xrX2ZpeGVkX2ZhY3Rvcl9vcHMsCiAJCS5wYXJlbnRfaHdzID0gKGNvbnN0IHN0
-cnVjdCBjbGtfaHcgKltdKSB7ICZnMTJhX2ZpeGVkX3BsbC5odyB9LAogCQkubnVtX3BhcmVudHMg
-PSAxLAorCQkvKiBBbmFuZCAqLworCQkuZmxhZ3MgPSBDTEtfSVNfQ1JJVElDQUwsCiAJfSwKIH07
-CiAKQEAgLTI5OCw2ICszMDAsOCBAQCBzdGF0aWMgc3RydWN0IGNsa19yZWdtYXAgZzEyYV9mY2xr
-X2RpdjIgPSB7CiAJCQkmZzEyYV9mY2xrX2RpdjJfZGl2Lmh3CiAJCX0sCiAJCS5udW1fcGFyZW50
-cyA9IDEsCisJCS8qIEFuYW5kICovCisJCS5mbGFncyA9IENMS19JU19DUklUSUNBTCwKIAl9LAog
-fTsKIApAQCAtMzc1LDcgKzM3OSw3IEBAIHN0YXRpYyBzdHJ1Y3QgY2xrX3JlZ21hcCBnMTJhX2Nw
-dV9jbGtfcHJlbXV4MSA9IHsKIAkJfSwKIAkJLm51bV9wYXJlbnRzID0gMywKIAkJLyogVGhpcyBz
-dWItdHJlZSBpcyB1c2VkIGEgcGFya2luZyBjbG9jayAqLwotCQkuZmxhZ3MgPSBDTEtfU0VUX1JB
-VEVfTk9fUkVQQVJFTlQKKwkJLmZsYWdzID0gQ0xLX1NFVF9SQVRFX05PX1JFUEFSRU5ULAogCX0s
-CiB9OwogCkBAIC02MDQsNyArNjA4LDcgQEAgc3RhdGljIHN0cnVjdCBjbGtfcmVnbWFwIGcxMmJf
-Y3B1Yl9jbGtfcHJlbXV4MSA9IHsKIAkJfSwKIAkJLm51bV9wYXJlbnRzID0gMywKIAkJLyogVGhp
-cyBzdWItdHJlZSBpcyB1c2VkIGEgcGFya2luZyBjbG9jayAqLwotCQkuZmxhZ3MgPSBDTEtfU0VU
-X1JBVEVfTk9fUkVQQVJFTlQsCisJCS5mbGFncyA9IENMS19TRVRfUkFURV9OT19SRVBBUkVOVCB8
-IENMS19JU19DUklUSUNBTCwKIAl9LAogfTsKIApAQCAtNjIyLDYgKzYyNiw4IEBAIHN0YXRpYyBz
-dHJ1Y3QgY2xrX3JlZ21hcCBnMTJiX2NwdWJfY2xrX211eDFfZGl2ID0gewogCQkJJmcxMmJfY3B1
-Yl9jbGtfcHJlbXV4MS5odwogCQl9LAogCQkubnVtX3BhcmVudHMgPSAxLAorCQkvKiBBbmFuZCAq
-LworCQkuZmxhZ3MgPSBDTEtfSVNfQ1JJVElDQUwsCiAJfSwKIH07CiAKQEAgLTY0MSw3ICs2NDcs
-OCBAQCBzdGF0aWMgc3RydWN0IGNsa19yZWdtYXAgZzEyYl9jcHViX2Nsa19wb3N0bXV4MSA9IHsK
-IAkJfSwKIAkJLm51bV9wYXJlbnRzID0gMiwKIAkJLyogVGhpcyBzdWItdHJlZSBpcyB1c2VkIGEg
-cGFya2luZyBjbG9jayAqLwotCQkuZmxhZ3MgPSBDTEtfU0VUX1JBVEVfTk9fUkVQQVJFTlQsCisJ
-CS8qIEFuYW5kICovCisJCS5mbGFncyA9IENMS19TRVRfUkFURV9OT19SRVBBUkVOVCB8IENMS19J
-U19DUklUSUNBTCwKIAl9LAogfTsKIApAQCAtNjgxLDcgKzY4OCw4IEBAIHN0YXRpYyBzdHJ1Y3Qg
-Y2xrX3JlZ21hcCBnMTJiX2NwdWJfY2xrID0gewogCQkJJmcxMmFfc3lzX3BsbC5odwogCQl9LAog
-CQkubnVtX3BhcmVudHMgPSAyLAotCQkuZmxhZ3MgPSBDTEtfU0VUX1JBVEVfUEFSRU5ULAorCQkv
-KiBBbmFuZCAqLworCQkuZmxhZ3MgPSBDTEtfU0VUX1JBVEVfUEFSRU5UIHwgQ0xLX0lTX0NSSVRJ
-Q0FMLAogCX0sCiB9OwogCkBAIC0xMTUxLDYgKzExNTksOCBAQCBzdGF0aWMgc3RydWN0IGNsa19y
-ZWdtYXAgZzEyYl9jcHViX2Nsa19kaXYxNl9lbiA9IHsKIAkJICogVGhpcyBjbG9jayBpcyB1c2Vk
-IHRvIGRlYnVnIHRoZSBjcHVfY2xrIHJhbmdlCiAJCSAqIExpbnV4IHNob3VsZCBub3QgY2hhbmdl
-IGl0IGF0IHJ1bnRpbWUKIAkJICovCisJCS8qIEFuYW5kICovCisJCS5mbGFncyA9IENMS19JR05P
-UkVfVU5VU0VELAogCX0sCiB9OwogCkBAIC0xMTY0LDYgKzExNzQsOCBAQCBzdGF0aWMgc3RydWN0
-IGNsa19maXhlZF9mYWN0b3IgZzEyYV9jcHVfY2xrX2RpdjE2ID0gewogCQkJJmcxMmFfY3B1X2Ns
-a19kaXYxNl9lbi5odwogCQl9LAogCQkubnVtX3BhcmVudHMgPSAxLAorCQkvKiBBbmFuZCAqLwor
-CQkuZmxhZ3MgPSBDTEtfSVNfQ1JJVElDQUwsCiAJfSwKIH07CiAKQEAgLTExNzcsNiArMTE4OSw4
-IEBAIHN0YXRpYyBzdHJ1Y3QgY2xrX2ZpeGVkX2ZhY3RvciBnMTJiX2NwdWJfY2xrX2RpdjE2ID0g
-ewogCQkJJmcxMmJfY3B1Yl9jbGtfZGl2MTZfZW4uaHcKIAkJfSwKIAkJLm51bV9wYXJlbnRzID0g
-MSwKKwkJLyogQW5hbmQgKi8KKwkJLmZsYWdzID0gQ0xLX0lTX0NSSVRJQ0FMLAogCX0sCiB9Owog
-CkBAIC0xMzM2LDYgKzEzNTAsOCBAQCBzdGF0aWMgc3RydWN0IGNsa19maXhlZF9mYWN0b3IgZzEy
-Yl9jcHViX2Nsa19kaXYyID0gewogCQkJJmcxMmJfY3B1Yl9jbGsuaHcKIAkJfSwKIAkJLm51bV9w
-YXJlbnRzID0gMSwKKwkJLyogQW5hbmQgKi8KKwkJLmZsYWdzID0gQ0xLX0lTX0NSSVRJQ0FMLAog
-CX0sCiB9OwogCkBAIC0xMzQ5LDYgKzEzNjUsOCBAQCBzdGF0aWMgc3RydWN0IGNsa19maXhlZF9m
-YWN0b3IgZzEyYl9jcHViX2Nsa19kaXYzID0gewogCQkJJmcxMmJfY3B1Yl9jbGsuaHcKIAkJfSwK
-IAkJLm51bV9wYXJlbnRzID0gMSwKKwkJLyogQW5hbmQgKi8KKwkJLmZsYWdzID0gQ0xLX0lTX0NS
-SVRJQ0FMLAogCX0sCiB9OwogCkBAIC0xMzYyLDYgKzEzODAsOCBAQCBzdGF0aWMgc3RydWN0IGNs
-a19maXhlZF9mYWN0b3IgZzEyYl9jcHViX2Nsa19kaXY0ID0gewogCQkJJmcxMmJfY3B1Yl9jbGsu
-aHcKIAkJfSwKIAkJLm51bV9wYXJlbnRzID0gMSwKKwkJLyogQW5hbmQgKi8KKwkJLmZsYWdzID0g
-Q0xLX0lTX0NSSVRJQ0FMLAogCX0sCiB9OwogCkBAIC0xMzc1LDYgKzEzOTUsOCBAQCBzdGF0aWMg
-c3RydWN0IGNsa19maXhlZF9mYWN0b3IgZzEyYl9jcHViX2Nsa19kaXY1ID0gewogCQkJJmcxMmJf
-Y3B1Yl9jbGsuaHcKIAkJfSwKIAkJLm51bV9wYXJlbnRzID0gMSwKKwkJLyogQW5hbmQgKi8KKwkJ
-LmZsYWdzID0gQ0xLX0lTX0NSSVRJQ0FMLAogCX0sCiB9OwogCkBAIC0xMzg4LDYgKzE0MTAsOCBA
-QCBzdGF0aWMgc3RydWN0IGNsa19maXhlZF9mYWN0b3IgZzEyYl9jcHViX2Nsa19kaXY2ID0gewog
-CQkJJmcxMmJfY3B1Yl9jbGsuaHcKIAkJfSwKIAkJLm51bV9wYXJlbnRzID0gMSwKKwkJLyogQW5h
-bmQgKi8KKwkJLmZsYWdzID0gQ0xLX0lTX0NSSVRJQ0FMLAogCX0sCiB9OwogCkBAIC0xNDAxLDYg
-KzE0MjUsOCBAQCBzdGF0aWMgc3RydWN0IGNsa19maXhlZF9mYWN0b3IgZzEyYl9jcHViX2Nsa19k
-aXY3ID0gewogCQkJJmcxMmJfY3B1Yl9jbGsuaHcKIAkJfSwKIAkJLm51bV9wYXJlbnRzID0gMSwK
-KwkJLyogQW5hbmQgKi8KKwkJLmZsYWdzID0gQ0xLX0lTX0NSSVRJQ0FMLAogCX0sCiB9OwogCkBA
-IC0xNDE0LDYgKzE0NDAsOCBAQCBzdGF0aWMgc3RydWN0IGNsa19maXhlZF9mYWN0b3IgZzEyYl9j
-cHViX2Nsa19kaXY4ID0gewogCQkJJmcxMmJfY3B1Yl9jbGsuaHcKIAkJfSwKIAkJLm51bV9wYXJl
-bnRzID0gMSwKKwkJLyogQW5hbmQgKi8KKwkJLmZsYWdzID0gQ0xLX0lTX0NSSVRJQ0FMLAogCX0s
-CiB9OwogCkBAIC0xNDM4LDYgKzE0NjYsOCBAQCBzdGF0aWMgc3RydWN0IGNsa19yZWdtYXAgZzEy
-Yl9jcHViX2Nsa19hcGJfc2VsID0gewogCQkJJmcxMmJfY3B1Yl9jbGtfZGl2OC5odwogCQl9LAog
-CQkubnVtX3BhcmVudHMgPSA3LAorCQkvKiBBbmFuZCAqLworCQkuZmxhZ3MgPSBDTEtfSVNfQ1JJ
-VElDQUwsCiAJfSwKIH07CiAKQEAgLTE0NTgsNiArMTQ4OCw4IEBAIHN0YXRpYyBzdHJ1Y3QgY2xr
-X3JlZ21hcCBnMTJiX2NwdWJfY2xrX2FwYiA9IHsKIAkJICogVGhpcyBjbG9jayBpcyBzZXQgYnkg
-dGhlIFJPTSBtb25pdG9yIGNvZGUsCiAJCSAqIExpbnV4IHNob3VsZCBub3QgY2hhbmdlIGl0IGF0
-IHJ1bnRpbWUKIAkJICovCisJCS8qIEFuYW5kICovCisJCS5mbGFncyA9IENMS19JU19DUklUSUNB
-TCwKIAl9LAogfTsKIApAQCAtMTQ4MSw2ICsxNTEzLDggQEAgc3RhdGljIHN0cnVjdCBjbGtfcmVn
-bWFwIGcxMmJfY3B1Yl9jbGtfYXRiX3NlbCA9IHsKIAkJCSZnMTJiX2NwdWJfY2xrX2RpdjguaHcK
-IAkJfSwKIAkJLm51bV9wYXJlbnRzID0gNywKKwkJLyogQW5hbmQgKi8KKwkJLmZsYWdzID0gQ0xL
-X0lTX0NSSVRJQ0FMLAogCX0sCiB9OwogCkBAIC0xNTAxLDYgKzE1MzUsOCBAQCBzdGF0aWMgc3Ry
-dWN0IGNsa19yZWdtYXAgZzEyYl9jcHViX2Nsa19hdGIgPSB7CiAJCSAqIFRoaXMgY2xvY2sgaXMg
-c2V0IGJ5IHRoZSBST00gbW9uaXRvciBjb2RlLAogCQkgKiBMaW51eCBzaG91bGQgbm90IGNoYW5n
-ZSBpdCBhdCBydW50aW1lCiAJCSAqLworCQkvKiBBbmFuZCAqLworCQkuZmxhZ3MgPSBDTEtfSVNf
-Q1JJVElDQUwsCiAJfSwKIH07CiAKQEAgLTE1MjQsNiArMTU2MCw4IEBAIHN0YXRpYyBzdHJ1Y3Qg
-Y2xrX3JlZ21hcCBnMTJiX2NwdWJfY2xrX2F4aV9zZWwgPSB7CiAJCQkmZzEyYl9jcHViX2Nsa19k
-aXY4Lmh3CiAJCX0sCiAJCS5udW1fcGFyZW50cyA9IDcsCisJCS8qIEFuYW5kICovCisJCS5mbGFn
-cyA9IENMS19JU19DUklUSUNBTCwKIAl9LAogfTsKIApAQCAtMTU0NCw2ICsxNTgyLDggQEAgc3Rh
-dGljIHN0cnVjdCBjbGtfcmVnbWFwIGcxMmJfY3B1Yl9jbGtfYXhpID0gewogCQkgKiBUaGlzIGNs
-b2NrIGlzIHNldCBieSB0aGUgUk9NIG1vbml0b3IgY29kZSwKIAkJICogTGludXggc2hvdWxkIG5v
-dCBjaGFuZ2UgaXQgYXQgcnVudGltZQogCQkgKi8KKwkJLyogQW5hbmQgKi8KKwkJLmZsYWdzID0g
-Q0xLX0lTX0NSSVRJQ0FMLAogCX0sCiB9OwogCg==
---00000000000088532505956c43d2--
+-- 
+Michal Hocko
+SUSE Labs
