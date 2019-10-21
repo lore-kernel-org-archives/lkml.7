@@ -2,176 +2,117 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B5DCA9EB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 17:13:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D46A4CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 17:17:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F0C02084B
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 17:13:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A71B72086D
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 17:17:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lZRa18Bd"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="I2zxo+ej"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729292AbfJURNz (ORCPT
+        id S1728062AbfJURR1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 13:13:55 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:33262 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726819AbfJURNy (ORCPT
+        Mon, 21 Oct 2019 13:17:27 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:34202 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726289AbfJURR1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 13:13:54 -0400
-Received: by mail-pg1-f193.google.com with SMTP id i76so8203744pgc.0;
-        Mon, 21 Oct 2019 10:13:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Fr8kACGN6fySPtvxuLKztrODPU5WAmzHqgszhCcrPhw=;
-        b=lZRa18BdRZXw1hCTon3pl5U7dib/zzVQkq4D7itZkJskLytwjSVR76mvV/4GM4py8j
-         7rM6ZvwrFgES98p7ZGipRuqlj1lRx6fZHuEBEDLq/mSUUrZp+h36t9zFN0ICOrYM3mzQ
-         AKos16550AVPa4aoBiA9YMAGLIPOLwjk5iX/hTvmYxlcf1HZ0TrNPSdZuzhdLO3H7Qkj
-         5gTAQIapgzO3oeDl6fxK7ZO0M0mqXaRtiARaEvO49Cu29JGxmARlDaiH/J7c119LzmyP
-         zY3M4otrfl0SNs8cDnv9Py1Yihl8o0QOweVLdC82UCtZsHzn5QLS3TcHbh8sV0YQeEGT
-         fKjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Fr8kACGN6fySPtvxuLKztrODPU5WAmzHqgszhCcrPhw=;
-        b=Xg8dhiX27uIq7+ySTQkiGHRU/i78s1O8uzz3jUeQFz40PCZpp56Bm8Nel4hJd8WTl5
-         Q4ORVTOhzVLHV8e/ifuzTRsxpQ9SAGbyFQ79bQLmd2RaKgzhuHG38hlH50mB0/knXywz
-         744IgTurCH4WPwaRcipdmDrwDOTiiJC0HmnpypV03OBVy137dVvOB36beFyVWuK55Y8U
-         se8TnXw1flfh2q6XW/5h1vJq5GzwHGwTurVozei8wMcjh2JX/6gnXmbc0nXyKbcCQ0UQ
-         5msZEskLyGH0yyfqAxH9HKh54KZ94I/hGeXrTdmkoQI2yaQVc21HzDRAMKot5Fjf5CCf
-         w0gg==
-X-Gm-Message-State: APjAAAUqD9CW3AFFSNCQo8i41RQ+7GiyPS/TXwbZ771HUiXKTCmuh4WI
-        SUCBrYl8Pqcy9WX3AorroR8=
-X-Google-Smtp-Source: APXvYqxNnqDS42rf39Iu1oC/V8IK1fpr+At4FvxRSZnGGXewvLvKGT6RnqF6dgBe316zxgEc9ZO1fg==
-X-Received: by 2002:a65:434c:: with SMTP id k12mr27378496pgq.141.1571678033805;
-        Mon, 21 Oct 2019 10:13:53 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id w2sm7631378pgm.18.2019.10.21.10.13.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Oct 2019 10:13:52 -0700 (PDT)
-Date:   Mon, 21 Oct 2019 10:13:50 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Martin Kepplinger <martink@posteo.de>
-Cc:     Dixit Parmar <dixitparmar19@gmail.com>, rydberg@bitmath.org,
-        kuninori.morimoto.gx@renesas.com, robh@kernel.org,
-        matthias.fend@wolfvision.net, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] driver:st1633: fixed multitouch incorrect coordinates
-Message-ID: <20191021171350.GT35946@dtor-ws>
-References: <1566209314-21767-1-git-send-email-dixitparmar19@gmail.com>
- <8cfedf751fc87f5f1c660cfda69d36ce@posteo.de>
- <20191020082919.GB3917@Dixit>
- <9de64de8-7581-808d-e930-315aca05687c@posteo.de>
+        Mon, 21 Oct 2019 13:17:27 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9LHE46M001776;
+        Mon, 21 Oct 2019 17:17:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
+ cc : references : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=OpkRaCWF2qDBVykaI/XxNsWSb7anFkMjeWBRhjnn1YI=;
+ b=I2zxo+ej7j+p1paawN/abGNrusvpJymcnhtFTpvuZ3kK4vU7f9yg0Dg0QEd17iqi5ji9
+ /lmFRM9Ki8mzBx4+OAARaDorxg0rkAOaVnfNeOCMb7YyVDtP44UFy0KwR7ADqGtzcawx
+ 3/ycbQ0MDA4osNdCbxAxz+PqtMvehbmoBLEiXQpJoJGEvpRp3jYw1QEZ6ErTsTbildL8
+ Z7NZXqhGejiOdfoBcZXLLR4UtHSVo1aQtT6nVzOMFLwq4hLTQoXr1c+eaSflfAMH8Y2t
+ 9FxjMKvWDDNHdbatX9NZmZqO+WMcLD+4ul1mb6cXRisPY+qfJNQWKAzuwCa8Lwnn1i8s OA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2vqteph6dg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 21 Oct 2019 17:17:20 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9LH9TcB081920;
+        Mon, 21 Oct 2019 17:17:19 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2vrcmnjbws-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 21 Oct 2019 17:17:19 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9LHHF4m004720;
+        Mon, 21 Oct 2019 17:17:18 GMT
+Received: from [192.168.1.222] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 21 Oct 2019 10:17:14 -0700
+Subject: Re: [PATCH] hugetlbfs: add O_TMPFILE support
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+To:     Piotr Sarna <p.sarna@tlen.pl>
+Cc:     Michal Hocko <mhocko@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, viro@zeniv.linux.org.uk,
+        linux-fsdevel@vger.kernel.org
+References: <22c29acf9c51dae17802e1b05c9e5e4051448c5c.1571129593.git.p.sarna@tlen.pl>
+ <20191015105055.GA24932@dhcp22.suse.cz>
+ <766b4370-ba71-85a2-5a57-ca9ed7dc7870@oracle.com>
+Message-ID: <eb6206ee-eb2e-ffbc-3963-d80eec04119c@oracle.com>
+Date:   Mon, 21 Oct 2019 10:17:13 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9de64de8-7581-808d-e930-315aca05687c@posteo.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <766b4370-ba71-85a2-5a57-ca9ed7dc7870@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9417 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=954
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910210163
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9417 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910210164
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 09:10:23AM +0200, Martin Kepplinger wrote:
-> On 20.10.19 10:29, Dixit Parmar wrote:
-> > Any review comments for this?
-> > Or it should be merged?
-> > 
-> > Thanks.
+On 10/15/19 4:37 PM, Mike Kravetz wrote:
+> On 10/15/19 3:50 AM, Michal Hocko wrote:
+>> On Tue 15-10-19 11:01:12, Piotr Sarna wrote:
+>>> With hugetlbfs, a common pattern for mapping anonymous huge pages
+>>> is to create a temporary file first.
+>>
+>> Really? I though that this is normally done by shmget(SHM_HUGETLB) or
+>> mmap(MAP_HUGETLB). Or maybe I misunderstood your definition on anonymous
+>> huge pages.
+>>
+>>> Currently libraries like
+>>> libhugetlbfs and seastar create these with a standard mkstemp+unlink
+>>> trick,
 > 
-> My comment and tag is there. This fixes multitouch and should be merged.
+> I would guess that much of libhugetlbfs was writen before MAP_HUGETLB
+> was implemented.  So, that is why it does not make (more) use of that
+> option.
+> 
+> The implementation looks to be straight forward.  However, I really do
+> not want to add more functionality to hugetlbfs unless there is specific
+> use case that needs it.
 
-Missed it earlier, sorry. I am applying it, but I wonder if we shoudl
-not do the patch below as I find the version with 2 loop variables quite
-confusing.
+It was not my intention to shut down discussion on this patch.  I was just
+asking if there was a (new) use case for such a change.  I am checking with
+our DB team as I seem to remember them using the create/unlink approach for
+hugetlbfs in one of their upcoming models.  
 
-Thanks.
-
+Is there a new use case you were thinking about?
 -- 
-Dmitry
-
-Input: st1232 - simplify parsing of read buffer
-
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
----
- drivers/input/touchscreen/st1232.c |   50 ++++++++++++++++++------------------
- 1 file changed, 25 insertions(+), 25 deletions(-)
-
-diff --git a/drivers/input/touchscreen/st1232.c b/drivers/input/touchscreen/st1232.c
-index 1139714e72e2..47033ef3749a 100644
---- a/drivers/input/touchscreen/st1232.c
-+++ b/drivers/input/touchscreen/st1232.c
-@@ -57,38 +57,38 @@ static int st1232_ts_read_data(struct st1232_ts_data *ts)
- {
- 	struct st1232_ts_finger *finger = ts->finger;
- 	struct i2c_client *client = ts->client;
--	struct i2c_msg msg[2];
--	int error;
--	int i, y;
- 	u8 start_reg = ts->chip_info->start_reg;
--	u8 *buf = ts->read_buf;
--
--	/* read touchscreen data */
--	msg[0].addr = client->addr;
--	msg[0].flags = 0;
--	msg[0].len = 1;
--	msg[0].buf = &start_reg;
--
--	msg[1].addr = ts->client->addr;
--	msg[1].flags = I2C_M_RD;
--	msg[1].len = ts->read_buf_len;
--	msg[1].buf = buf;
-+	struct i2c_msg msg[] = {
-+		{
-+			.addr	= client->addr,
-+			.len	= sizeof(start_reg),
-+			.buf	= &start_reg,
-+		},
-+		{
-+			.addr	= client->addr,
-+			.flags	= I2C_M_RD,
-+			.len	= ts->read_buf_len,
-+			.buf	= ts->read_buf,
-+		}
-+	};
-+	int ret;
-+	int i;
-+	u8 *buf;
- 
--	error = i2c_transfer(client->adapter, msg, 2);
--	if (error < 0)
--		return error;
-+	ret = i2c_transfer(client->adapter, msg, ARRAY_SIZE(msg));
-+	if (ret != ARRAY_SIZE(msg))
-+		return ret < 0 ? ret : -EIO;
- 
--	for (i = 0, y = 0; i < ts->chip_info->max_fingers; i++, y += 3) {
--		finger[i].is_valid = buf[i + y] >> 7;
-+	for (i = 0; i < ts->chip_info->max_fingers; i++) {
-+		buf = &ts->read_buf[i * 4];
-+		finger[i].is_valid = buf[0] >> 7;
- 		if (finger[i].is_valid) {
--			finger[i].x = ((buf[i + y] & 0x0070) << 4) |
--					buf[i + y + 1];
--			finger[i].y = ((buf[i + y] & 0x0007) << 8) |
--					buf[i + y + 2];
-+			finger[i].x = ((buf[0] & 0x70) << 4) | buf[1];
-+			finger[i].y = ((buf[0] & 0x07) << 8) | buf[2];
- 
- 			/* st1232 includes a z-axis / touch strength */
- 			if (ts->chip_info->have_z)
--				finger[i].t = buf[i + 6];
-+				finger[i].t = ts->read_buf[i + 6];
- 		}
- 	}
- 
+Mike Kravetz
