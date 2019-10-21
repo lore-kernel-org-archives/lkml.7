@@ -2,95 +2,114 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B59CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 22:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78653CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 22:56:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9494A2084C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 22:52:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E47F2084C
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 22:56:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730512AbfJUWwl (ORCPT
+        id S1730461AbfJUW4u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 18:52:41 -0400
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:56174 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730399AbfJUWwl (ORCPT
+        Mon, 21 Oct 2019 18:56:50 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:37967 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730276AbfJUW4t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 18:52:41 -0400
-Received: from dread.disaster.area (pa49-180-40-48.pa.nsw.optusnet.com.au [49.180.40.48])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 0202A363692;
-        Tue, 22 Oct 2019 09:52:35 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1iMgXS-00074h-TR; Tue, 22 Oct 2019 09:52:34 +1100
-Date:   Tue, 22 Oct 2019 09:52:34 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Mike Christie <mchristi@redhat.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-block@vger.kernel.org, martin@urbackup.org,
-        Damien.LeMoal@wdc.com
-Subject: Re: [PATCH] Add prctl support for controlling PF_MEMALLOC V2
-Message-ID: <20191021225234.GC2642@dread.disaster.area>
-References: <20191021214137.8172-1-mchristi@redhat.com>
+        Mon, 21 Oct 2019 18:56:49 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iMgbE-0003So-06; Tue, 22 Oct 2019 00:56:29 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 721F61C03AB;
+        Tue, 22 Oct 2019 00:56:27 +0200 (CEST)
+Date:   Mon, 21 Oct 2019 22:56:27 -0000
+From:   "tip-bot2 for Thomas Hellstrom" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/cpu/vmware: Use the full form of INL in
+ VMWARE_HYPERCALL, for clang/llvm
+Cc:     Sami Tolvanen <samitolvanen@google.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        clang-built-linux@googlegroups.com, Ingo Molnar <mingo@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
+In-Reply-To: <20191021172403.3085-2-thomas_os@shipmail.org>
+References: <20191021172403.3085-2-thomas_os@shipmail.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191021214137.8172-1-mchristi@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=G6BsK5s5 c=1 sm=1 tr=0
-        a=y881pOMu+B+mZdf5UrsJdA==:117 a=y881pOMu+B+mZdf5UrsJdA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=XobE76Q3jBoA:10
-        a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8 a=rSlL4X6sGr0P-yuullEA:9
-        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+Message-ID: <157169858708.29376.13468044937611817754.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 04:41:37PM -0500, Mike Christie wrote:
-> There are several storage drivers like dm-multipath, iscsi, tcmu-runner,
-> amd nbd that have userspace components that can run in the IO path. For
-> example, iscsi and nbd's userspace deamons may need to recreate a socket
-> and/or send IO on it, and dm-multipath's daemon multipathd may need to
-> send IO to figure out the state of paths and re-set them up.
-> 
-> In the kernel these drivers have access to GFP_NOIO/GFP_NOFS and the
-> memalloc_*_save/restore functions to control the allocation behavior,
-> but for userspace we would end up hitting a allocation that ended up
-> writing data back to the same device we are trying to allocate for.
+The following commit has been merged into the x86/urgent branch of tip:
 
-I think this needs to describe the symptoms this results in. i.e.
-that this can result in deadlocking the IO path.
+Commit-ID:     db633a4e0e6eda69b6065e3e106f9ea13a0676c3
+Gitweb:        https://git.kernel.org/tip/db633a4e0e6eda69b6065e3e106f9ea13a0676c3
+Author:        Thomas Hellstrom <thellstrom@vmware.com>
+AuthorDate:    Mon, 21 Oct 2019 19:24:02 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Tue, 22 Oct 2019 00:51:44 +02:00
 
-> This patch allows the userspace deamon to set the PF_MEMALLOC* flags
-> with prctl during their initialization so later allocations cannot
-> calling back into them.
-> 
-> Signed-off-by: Mike Christie <mchristi@redhat.com>
-> ---
+x86/cpu/vmware: Use the full form of INL in VMWARE_HYPERCALL, for clang/llvm
 
-....
-> +	case PR_SET_MEMALLOC:
-> +		if (!capable(CAP_SYS_ADMIN))
-> +			return -EPERM;
+LLVM's assembler doesn't accept the short form INL instruction:
 
-Wouldn't CAP_SYS_RAWIO (because it's required by kernel IO path
-drivers) or CAP_SYS_RESOURCE (controlling memory allocation
-behaviour) be more appropriate here?
+  inl (%%dx)
 
-Which-ever is selected, the use should be added to the list above
-the definition of the capability in include/linux/capability.h...
+but instead insists on the output register to be explicitly specified.
 
-Otherwise looks fine to me.
+This was previously fixed for the VMWARE_PORT macro. Fix it also for
+the VMWARE_HYPERCALL macro.
 
-Cheers,
+Suggested-by: Sami Tolvanen <samitolvanen@google.com>
+Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Borislav Petkov <bp@suse.de>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: clang-built-linux@googlegroups.com
+Fixes: b4dd4f6e3648 ("Add a header file for hypercall definitions")
+Link: https://lkml.kernel.org/r/20191021172403.3085-2-thomas_os@shipmail.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ arch/x86/include/asm/vmware.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+diff --git a/arch/x86/include/asm/vmware.h b/arch/x86/include/asm/vmware.h
+index e00c9e8..3caac90 100644
+--- a/arch/x86/include/asm/vmware.h
++++ b/arch/x86/include/asm/vmware.h
+@@ -29,7 +29,8 @@
+ 
+ /* The low bandwidth call. The low word of edx is presumed clear. */
+ #define VMWARE_HYPERCALL						\
+-	ALTERNATIVE_2("movw $" VMWARE_HYPERVISOR_PORT ", %%dx; inl (%%dx)", \
++	ALTERNATIVE_2("movw $" VMWARE_HYPERVISOR_PORT ", %%dx; "	\
++		      "inl (%%dx), %%eax",				\
+ 		      "vmcall", X86_FEATURE_VMCALL,			\
+ 		      "vmmcall", X86_FEATURE_VMW_VMMCALL)
+ 
