@@ -2,259 +2,258 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FAD7CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A057BCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:39:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33AB221A4A
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:39:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69A932184C
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:39:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571665163;
+	bh=U1kW4rdyp2b7QyM7JeuaGWPn5+6mk5O/NbHdTpN5HEU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=BUHVFl4IyPnkwHrR5JWaaLES8XWIkIWtriGmYuet7qO9s+GQDFUeZz1To44Jk4bNy
+	 IY0RPo+/zpxF9a90yugt5u360IJKFG+vPY7GaRaHbrWW2aJuHrFdYnAJ88fBEWIiZS
+	 XVjIZrrYeiG6vcdlXr8pv3oG78LEyAjGRk+Xqi9k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729194AbfJUNjQ (ORCPT
+        id S1729213AbfJUNjW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 09:39:16 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:52882 "EHLO foss.arm.com"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S1729166AbfJUNjN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 09:39:13 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 68E031007;
-        Mon, 21 Oct 2019 06:38:52 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D49FD3F718;
-        Mon, 21 Oct 2019 06:38:51 -0700 (PDT)
-Date:   Mon, 21 Oct 2019 14:38:50 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Dilip Kota <eswara.kota@linux.intel.com>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lorenzo.pieralisi@arm.com, robh@kernel.org,
-        martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
-        hch@infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
-        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com
-Subject: Re: [PATCH v4 3/3] pci: intel: Add sysfs attributes to configure
- pcie link
-Message-ID: <20191021133849.GQ47056@e119886-lin.cambridge.arm.com>
-References: <cover.1571638827.git.eswara.kota@linux.intel.com>
- <d8574605f8e70f41ce1e88ccfb56b63c8f85e4df.1571638827.git.eswara.kota@linux.intel.com>
+        Mon, 21 Oct 2019 09:39:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40816 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729166AbfJUNjR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 09:39:17 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E40FF21929;
+        Mon, 21 Oct 2019 13:39:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571665156;
+        bh=U1kW4rdyp2b7QyM7JeuaGWPn5+6mk5O/NbHdTpN5HEU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=U1YADSV0F08pSlXvf2A+6RAbuSwckwM5n2DXj0IOKOHrioYHOUuA4sSi+ZRIWijbt
+         SSmtmmqzdOcu8I+R4n912omf5g/rC5XbznT3b+WjSfG7qp1lirDgIBj5uvGAk4dD7v
+         +p7HkjxRM9IkDfO1BjM/N+GqeneaaupC3KKEvZBU=
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Ian Rogers <irogers@google.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        Stephane Eranian <eranian@google.com>,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH 10/57] perf annotate: Don't pipe objdump output through 'expand' command
+Date:   Mon, 21 Oct 2019 10:37:47 -0300
+Message-Id: <20191021133834.25998-11-acme@kernel.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20191021133834.25998-1-acme@kernel.org>
+References: <20191021133834.25998-1-acme@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d8574605f8e70f41ce1e88ccfb56b63c8f85e4df.1571638827.git.eswara.kota@linux.intel.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 02:39:20PM +0800, Dilip Kota wrote:
-> PCIe RC driver on Intel Gateway SoCs have a requirement
-> of changing link width and speed on the fly.
-> So add the sysfs attributes to show and store the link
-> properties.
-> Add the respective link resize function in pcie DesignWare
-> framework so that Intel PCIe driver can use during link
-> width configuration on the fly.
-> 
-> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
-> ---
->  drivers/pci/controller/dwc/pcie-designware.c |   9 +++
->  drivers/pci/controller/dwc/pcie-designware.h |   3 +
->  drivers/pci/controller/dwc/pcie-intel-gw.c   | 112 ++++++++++++++++++++++++++-
->  3 files changed, 123 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> index 4c391bfd681a..662fdcb4f2d6 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -474,6 +474,15 @@ int dw_pcie_link_up(struct dw_pcie *pci)
->  		(!(val & PCIE_PORT_DEBUG1_LINK_IN_TRAINING)));
->  }
->  
-> +void dw_pcie_link_width_resize(struct dw_pcie *pci, u32 lane_width)
-> +{
-> +	u32 val;
-> +
-> +	val =  dw_pcie_readl_dbi(pci, PCIE_PORT_MULTI_LANE_CTRL);
-> +	val &= ~(PORT_MLTI_LNK_WDTH_CHNG | PORT_MLTI_LNK_WDTH);
-> +	val |= PORT_MLTI_LNK_WDTH_CHNG | lane_width;
-> +	dw_pcie_writel_dbi(pci, PCIE_PORT_MULTI_LANE_CTRL, val);
-> +}
->  
->  void dw_pcie_upconfig_setup(struct dw_pcie *pci)
->  {
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index 3beac10e4a4c..fcf0442341fd 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -67,6 +67,8 @@
->  #define PCIE_MSI_INTR0_STATUS		0x830
->  
->  #define PCIE_PORT_MULTI_LANE_CTRL	0x8C0
-> +#define PORT_MLTI_LNK_WDTH		GENMASK(5, 0)
-> +#define PORT_MLTI_LNK_WDTH_CHNG		BIT(6)
->  #define PORT_MLTI_UPCFG_SUPPORT		BIT(7)
->  
->  #define PCIE_ATU_VIEWPORT		0x900
-> @@ -282,6 +284,7 @@ void dw_pcie_write_dbi2(struct dw_pcie *pci, u32 reg, size_t size, u32 val);
->  u32 dw_pcie_read_atu(struct dw_pcie *pci, u32 reg, size_t size);
->  void dw_pcie_write_atu(struct dw_pcie *pci, u32 reg, size_t size, u32 val);
->  int dw_pcie_link_up(struct dw_pcie *pci);
-> +void dw_pcie_link_width_resize(struct dw_pcie *pci, u32 lane_width);
->  void dw_pcie_upconfig_setup(struct dw_pcie *pci);
->  void dw_pcie_link_speed_change(struct dw_pcie *pci, bool enable);
->  void dw_pcie_link_set_n_fts(struct dw_pcie *pci, u32 n_fts);
-> diff --git a/drivers/pci/controller/dwc/pcie-intel-gw.c b/drivers/pci/controller/dwc/pcie-intel-gw.c
-> index 9142c70db808..b9be0921671d 100644
-> --- a/drivers/pci/controller/dwc/pcie-intel-gw.c
-> +++ b/drivers/pci/controller/dwc/pcie-intel-gw.c
-> @@ -146,6 +146,22 @@ static void intel_pcie_ltssm_disable(struct intel_pcie_port *lpp)
->  	pcie_app_wr_mask(lpp, PCIE_APP_CCR_LTSSM_ENABLE, 0, PCIE_APP_CCR);
->  }
->  
-> +static const char *pcie_link_gen_to_str(int gen)
-> +{
-> +	switch (gen) {
-> +	case PCIE_LINK_SPEED_GEN1:
-> +		return "2.5";
-> +	case PCIE_LINK_SPEED_GEN2:
-> +		return "5.0";
-> +	case PCIE_LINK_SPEED_GEN3:
-> +		return "8.0";
-> +	case PCIE_LINK_SPEED_GEN4:
-> +		return "16.0";
-> +	default:
-> +		return "???";
-> +	}
-> +}
-> +
->  static void intel_pcie_link_setup(struct intel_pcie_port *lpp)
->  {
->  	u32 val;
-> @@ -444,6 +460,91 @@ static int intel_pcie_host_setup(struct intel_pcie_port *lpp)
->  	return ret;
->  }
->  
-> +static ssize_t pcie_link_status_show(struct device *dev,
-> +				     struct device_attribute *attr, char *buf)
-> +{
-> +	struct intel_pcie_port *lpp = dev_get_drvdata(dev);
-> +	u32 reg, width, gen;
-> +
-> +	reg = pcie_rc_cfg_rd(lpp, PCIE_CAP_OFST + PCI_EXP_LNKCTL);
-> +	width = FIELD_GET(PCI_EXP_LNKSTA_NLW, reg >> 16);
-> +	gen = FIELD_GET(PCI_EXP_LNKSTA_CLS, reg >> 16);
-> +
-> +	if (gen > lpp->max_speed)
-> +		return -EINVAL;
-> +
-> +	return sprintf(buf, "Port %2u Width x%u Speed %s GT/s\n", lpp->id,
-> +		       width, pcie_link_gen_to_str(gen));
-> +}
-> +static DEVICE_ATTR_RO(pcie_link_status);
-> +
-> +static ssize_t pcie_speed_store(struct device *dev,
-> +				struct device_attribute *attr,
-> +				const char *buf, size_t len)
-> +{
-> +	struct intel_pcie_port *lpp = dev_get_drvdata(dev);
-> +	unsigned long val;
-> +	int ret;
-> +
-> +	ret = kstrtoul(buf, 10, &val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (val > lpp->max_speed)
-> +		return -EINVAL;
-> +
-> +	lpp->link_gen = val;
-> +	intel_pcie_max_speed_setup(lpp);
-> +	dw_pcie_link_speed_change(&lpp->pci, false);
-> +	dw_pcie_link_speed_change(&lpp->pci, true);
-> +
-> +	return len;
-> +}
-> +static DEVICE_ATTR_WO(pcie_speed);
-> +
-> +/*
-> + * Link width change on the fly is not always successful.
-> + * It also depends on the partner.
-> + */
-> +static ssize_t pcie_width_store(struct device *dev,
-> +				struct device_attribute *attr,
-> +				const char *buf, size_t len)
-> +{
-> +	struct intel_pcie_port *lpp = dev_get_drvdata(dev);
-> +	unsigned long val;
-> +	int ret;
-> +
-> +	lpp = dev_get_drvdata(dev);
-> +
-> +	ret = kstrtoul(buf, 10, &val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (val > lpp->max_width)
-> +		return -EINVAL;
-> +
-> +	/* HW auto bandwidth negotiation must be enabled */
-> +	pcie_rc_cfg_wr_mask(lpp, PCI_EXP_LNKCTL_HAWD, 0,
-> +			    PCIE_CAP_OFST + PCI_EXP_LNKCTL);
-> +	dw_pcie_link_width_resize(&lpp->pci, val);
-> +
-> +	return len;
-> +}
-> +static DEVICE_ATTR_WO(pcie_width);
-> +
-> +static struct attribute *pcie_cfg_attrs[] = {
-> +	&dev_attr_pcie_link_status.attr,
-> +	&dev_attr_pcie_speed.attr,
-> +	&dev_attr_pcie_width.attr,
-> +	NULL,
-> +};
+From: Ian Rogers <irogers@google.com>
 
-Is there a reason that these are limited only to the Intel driver and
-not the wider set of DWC drivers?
+Avoiding a pipe allows objdump command failures to surface.  Move to the
+caller of symbol__parse_objdump_line the call to strim that removes
+leading and trailing tabs.  Add a new expand_tabs function that if a tab
+is present allocate a new line in which tabs are expanded.  In
+symbol__parse_objdump_line the line had no leading spaces, so simplify
+the line_ip processing.
 
-Is there anything specific here about the Intel GW driver?
+Signed-off-by: Ian Rogers <irogers@google.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jin Yao <yao.jin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: clang-built-linux@googlegroups.com
+Link: http://lore.kernel.org/lkml/20191010183649.23768-5-irogers@google.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/util/annotate.c | 95 ++++++++++++++++++++++++++++++--------
+ 1 file changed, 76 insertions(+), 19 deletions(-)
 
-Thanks,
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index 0e052e253835..efc5bfef790a 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -1492,35 +1492,24 @@ annotation_line__print(struct annotation_line *al, struct symbol *sym, u64 start
+  */
+ static int symbol__parse_objdump_line(struct symbol *sym,
+ 				      struct annotate_args *args,
+-				      char *line, int *line_nr)
++				      char *parsed_line, int *line_nr)
+ {
+ 	struct map *map = args->ms.map;
+ 	struct annotation *notes = symbol__annotation(sym);
+ 	struct disasm_line *dl;
+-	char *parsed_line, *tmp, *tmp2;
++	char *tmp;
+ 	s64 line_ip, offset = -1;
+ 	regmatch_t match[2];
+ 
+-	line_ip = -1;
+-	parsed_line = strim(line);
+-
+ 	/* /filename:linenr ? Save line number and ignore. */
+ 	if (regexec(&file_lineno, parsed_line, 2, match, 0) == 0) {
+ 		*line_nr = atoi(parsed_line + match[1].rm_so);
+ 		return 0;
+ 	}
+ 
+-	tmp = skip_spaces(parsed_line);
+-	if (*tmp) {
+-		/*
+-		 * Parse hexa addresses followed by ':'
+-		 */
+-		line_ip = strtoull(tmp, &tmp2, 16);
+-		if (*tmp2 != ':' || tmp == tmp2 || tmp2[1] == '\0')
+-			line_ip = -1;
+-	}
+-
+-	if (line_ip != -1) {
++	/* Process hex address followed by ':'. */
++	line_ip = strtoull(parsed_line, &tmp, 16);
++	if (parsed_line != tmp && tmp[0] == ':' && tmp[1] != '\0') {
+ 		u64 start = map__rip_2objdump(map, sym->start),
+ 		    end = map__rip_2objdump(map, sym->end);
+ 
+@@ -1528,7 +1517,7 @@ static int symbol__parse_objdump_line(struct symbol *sym,
+ 		if ((u64)line_ip < start || (u64)line_ip >= end)
+ 			offset = -1;
+ 		else
+-			parsed_line = tmp2 + 1;
++			parsed_line = tmp + 1;
+ 	}
+ 
+ 	args->offset  = offset;
+@@ -1854,6 +1843,67 @@ static int symbol__disassemble_bpf(struct symbol *sym __maybe_unused,
+ }
+ #endif // defined(HAVE_LIBBFD_SUPPORT) && defined(HAVE_LIBBPF_SUPPORT)
+ 
++/*
++ * Possibly create a new version of line with tabs expanded. Returns the
++ * existing or new line, storage is updated if a new line is allocated. If
++ * allocation fails then NULL is returned.
++ */
++static char *expand_tabs(char *line, char **storage, size_t *storage_len)
++{
++	size_t i, src, dst, len, new_storage_len, num_tabs;
++	char *new_line;
++	size_t line_len = strlen(line);
++
++	for (num_tabs = 0, i = 0; i < line_len; i++)
++		if (line[i] == '\t')
++			num_tabs++;
++
++	if (num_tabs == 0)
++		return line;
++
++	/*
++	 * Space for the line and '\0', less the leading and trailing
++	 * spaces. Each tab may introduce 7 additional spaces.
++	 */
++	new_storage_len = line_len + 1 + (num_tabs * 7);
++
++	new_line = malloc(new_storage_len);
++	if (new_line == NULL) {
++		pr_err("Failure allocating memory for tab expansion\n");
++		return NULL;
++	}
++
++	/*
++	 * Copy regions starting at src and expand tabs. If there are two
++	 * adjacent tabs then 'src == i', the memcpy is of size 0 and the spaces
++	 * are inserted.
++	 */
++	for (i = 0, src = 0, dst = 0; i < line_len && num_tabs; i++) {
++		if (line[i] == '\t') {
++			len = i - src;
++			memcpy(&new_line[dst], &line[src], len);
++			dst += len;
++			new_line[dst++] = ' ';
++			while (dst % 8 != 0)
++				new_line[dst++] = ' ';
++			src = i + 1;
++			num_tabs--;
++		}
++	}
++
++	/* Expand the last region. */
++	len = line_len + 1 - src;
++	memcpy(&new_line[dst], &line[src], len);
++	dst += len;
++	new_line[dst] = '\0';
++
++	free(*storage);
++	*storage = new_line;
++	*storage_len = new_storage_len;
++	return new_line;
++
++}
++
+ static int symbol__disassemble(struct symbol *sym, struct annotate_args *args)
+ {
+ 	struct annotation_options *opts = args->options;
+@@ -1916,7 +1966,7 @@ static int symbol__disassemble(struct symbol *sym, struct annotate_args *args)
+ 	err = asprintf(&command,
+ 		 "%s %s%s --start-address=0x%016" PRIx64
+ 		 " --stop-address=0x%016" PRIx64
+-		 " -l -d %s %s -C \"$1\" 2>/dev/null|expand",
++		 " -l -d %s %s -C \"$1\" 2>/dev/null",
+ 		 opts->objdump_path ?: "objdump",
+ 		 opts->disassembler_style ? "-M " : "",
+ 		 opts->disassembler_style ?: "",
+@@ -1963,6 +2013,7 @@ static int symbol__disassemble(struct symbol *sym, struct annotate_args *args)
+ 	nline = 0;
+ 	while (!feof(file)) {
+ 		const char *match;
++		char *expanded_line;
+ 
+ 		if (getline(&line, &line_len, file) < 0 || !line)
+ 			break;
+@@ -1972,13 +2023,19 @@ static int symbol__disassemble(struct symbol *sym, struct annotate_args *args)
+ 		if (match && match[strlen(symfs_filename)] == ':')
+ 			continue;
+ 
++		expanded_line = strim(line);
++		expanded_line = expand_tabs(expanded_line, &line, &line_len);
++		if (!expanded_line)
++			break;
++
+ 		/*
+ 		 * The source code line number (lineno) needs to be kept in
+ 		 * across calls to symbol__parse_objdump_line(), so that it
+ 		 * can associate it with the instructions till the next one.
+ 		 * See disasm_line__new() and struct disasm_line::line_nr.
+ 		 */
+-		if (symbol__parse_objdump_line(sym, args, line, &lineno) < 0)
++		if (symbol__parse_objdump_line(sym, args, expanded_line,
++					       &lineno) < 0)
+ 			break;
+ 		nline++;
+ 	}
+-- 
+2.21.0
 
-Andrew Murray
-
-> +ATTRIBUTE_GROUPS(pcie_cfg);
-> +
-> +static int intel_pcie_sysfs_init(struct intel_pcie_port *lpp)
-> +{
-> +	return devm_device_add_groups(lpp->pci.dev, pcie_cfg_groups);
-> +}
-> +
->  static void __intel_pcie_remove(struct intel_pcie_port *lpp)
->  {
->  	intel_pcie_core_irq_disable(lpp);
-> @@ -490,8 +591,17 @@ static int intel_pcie_rc_init(struct pcie_port *pp)
->  {
->  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->  	struct intel_pcie_port *lpp = dev_get_drvdata(pci->dev);
-> +	int ret;
->  
-> -	return intel_pcie_host_setup(lpp);
-> +	ret = intel_pcie_host_setup(lpp);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = intel_pcie_sysfs_init(lpp);
-> +	if (ret)
-> +		__intel_pcie_remove(lpp);
-> +
-> +	return ret;
->  }
->  
->  int intel_pcie_msi_init(struct pcie_port *pp)
-> -- 
-> 2.11.0
-> 
