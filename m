@@ -2,93 +2,131 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 520ADCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:22:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D962BCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:23:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 195F320640
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:22:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AHcdZDYl"
+	by mail.kernel.org (Postfix) with ESMTP id B3EC420640
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:23:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729014AbfJUOWJ (ORCPT
+        id S1728957AbfJUOXP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 10:22:09 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:42300 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727555AbfJUOWJ (ORCPT
+        Mon, 21 Oct 2019 10:23:15 -0400
+Received: from xavier.telenet-ops.be ([195.130.132.52]:52712 "EHLO
+        xavier.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726289AbfJUOXP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 10:22:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571667728;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=juvjyDj/bXESr8Pj+8TGvYoxpIfnIpsm8+f+H/8UCWM=;
-        b=AHcdZDYlTAh1iWhTBQfQix00XLQu6ecluEQNbfPUrlTsVswhQbSKH5iLrIQhL/9QNiE6wz
-        GhZCoOtjDVvbg7MsjcdWWnfiMR1wu/GrKBfPOc3zi4HceHGXWG3k2Fly+wQxVaayKj6iuz
-        q11INVBLyZvgYgUXLpt97J1NIIHA6is=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-337-C06jtCk6MO2DbhBQzqUQyw-1; Mon, 21 Oct 2019 10:22:07 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BFB4947B;
-        Mon, 21 Oct 2019 14:22:05 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-121-40.rdu2.redhat.com [10.10.121.40])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 39B1E5D717;
-        Mon, 21 Oct 2019 14:22:00 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20191018184030.8407-1-crecklin@redhat.com>
-References: <20191018184030.8407-1-crecklin@redhat.com>
-To:     Chris von Recklinghausen <crecklin@redhat.com>
-Cc:     dhowells@redhat.com,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>, keyrings@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Waiman Long <longman@redhat.com>
-Subject: Re: [PATCH] security/keyring: avoid pagefaults in keyring_read_iterator
-MIME-Version: 1.0
-Content-ID: <30308.1571667719.1@warthog.procyon.org.uk>
-Date:   Mon, 21 Oct 2019 15:21:59 +0100
-Message-ID: <30309.1571667719@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-MC-Unique: C06jtCk6MO2DbhBQzqUQyw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+        Mon, 21 Oct 2019 10:23:15 -0400
+Received: from ramsan ([84.194.98.4])
+        by xavier.telenet-ops.be with bizsmtp
+        id GEPA2100Z05gfCL01EPAGy; Mon, 21 Oct 2019 16:23:13 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1iMYaU-0007oE-Ju; Mon, 21 Oct 2019 16:23:10 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1iMYaU-0007K2-Gm; Mon, 21 Oct 2019 16:23:10 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Joel Stanley <joel@jms.id.au>, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] powerpc/security: Fix debugfs data leak on 32-bit
+Date:   Mon, 21 Oct 2019 16:23:09 +0200
+Message-Id: <20191021142309.28105-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Chris von Recklinghausen <crecklin@redhat.com> wrote:
+"powerpc_security_features" is "unsigned long", i.e. 32-bit or 64-bit,
+depending on the platform (PPC_FSL_BOOK3E or PPC_BOOK3S_64).  Hence
+casting its address to "u64 *", and calling debugfs_create_x64() is
+wrong, and leaks 32-bit of nearby data to userspace on 32-bit platforms.
 
-> The put_user call from keyring_read_iterator caused a page fault which
-> attempts to lock mm->mmap_sem and type->lock_class (key->sem) in the reve=
-rse
-> order that keyring_read_iterator did, thus causing the circular locking
-> dependency.
->=20
-> Remedy this by using access_ok and __put_user instead of put_user so we'l=
-l
-> return an error instead of faulting in the page.
+While all currently defined SEC_FTR_* security feature flags fit in
+32-bit, they all have "ULL" suffixes to make them 64-bit constants.
+Hence fix the leak by changing the type of "powerpc_security_features"
+(and the parameter types of its accessors) to "u64".  This also allows
+to drop the cast.
 
-I wonder if it's better to create a kernel buffer outside of the lock in
-keyctl_read_key().  Hmmm...  The reason I didn't want to do that is that
-keyrings have don't have limits on the size.  Maybe that's not actually a
-problem, since 1MiB would be able to hold a list of a quarter of a million
-keys.
+Fixes: 398af571128fe75f ("powerpc/security: Show powerpc_security_features in debugfs")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+Compile-tested only.
 
-David
+Alternatively, powerpc_security_features could be changed to u32.
+However, that would require using debugfs_create_x32() instead of
+debugfs_create_x64(), which would change the debugfs file formatting
+from "0x%016llx" to "0x%08llx".
+---
+ arch/powerpc/include/asm/security_features.h | 8 ++++----
+ arch/powerpc/kernel/security.c               | 4 ++--
+ 2 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/arch/powerpc/include/asm/security_features.h b/arch/powerpc/include/asm/security_features.h
+index 759597bf0fd867bd..a3e8ecd48dc7ffa0 100644
+--- a/arch/powerpc/include/asm/security_features.h
++++ b/arch/powerpc/include/asm/security_features.h
+@@ -9,7 +9,7 @@
+ #define _ASM_POWERPC_SECURITY_FEATURES_H
+ 
+ 
+-extern unsigned long powerpc_security_features;
++extern u64 powerpc_security_features;
+ extern bool rfi_flush;
+ 
+ /* These are bit flags */
+@@ -24,17 +24,17 @@ void setup_stf_barrier(void);
+ void do_stf_barrier_fixups(enum stf_barrier_type types);
+ void setup_count_cache_flush(void);
+ 
+-static inline void security_ftr_set(unsigned long feature)
++static inline void security_ftr_set(u64 feature)
+ {
+ 	powerpc_security_features |= feature;
+ }
+ 
+-static inline void security_ftr_clear(unsigned long feature)
++static inline void security_ftr_clear(u64 feature)
+ {
+ 	powerpc_security_features &= ~feature;
+ }
+ 
+-static inline bool security_ftr_enabled(unsigned long feature)
++static inline bool security_ftr_enabled(u64 feature)
+ {
+ 	return !!(powerpc_security_features & feature);
+ }
+diff --git a/arch/powerpc/kernel/security.c b/arch/powerpc/kernel/security.c
+index 7cfcb294b11ca7be..2e9a7e20d05c5f79 100644
+--- a/arch/powerpc/kernel/security.c
++++ b/arch/powerpc/kernel/security.c
+@@ -16,7 +16,7 @@
+ #include <asm/setup.h>
+ 
+ 
+-unsigned long powerpc_security_features __read_mostly = SEC_FTR_DEFAULT;
++u64 powerpc_security_features __read_mostly = SEC_FTR_DEFAULT;
+ 
+ enum count_cache_flush_type {
+ 	COUNT_CACHE_FLUSH_NONE	= 0x1,
+@@ -108,7 +108,7 @@ device_initcall(barrier_nospec_debugfs_init);
+ static __init int security_feature_debugfs_init(void)
+ {
+ 	debugfs_create_x64("security_features", 0400, powerpc_debugfs_root,
+-			   (u64 *)&powerpc_security_features);
++			   &powerpc_security_features);
+ 	return 0;
+ }
+ device_initcall(security_feature_debugfs_init);
+-- 
+2.17.1
 
