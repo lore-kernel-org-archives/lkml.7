@@ -2,164 +2,276 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABF6ACA9EB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:20:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB1ACA9EB0
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:20:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E2332084B
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:20:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sJUTMuk4"
+	by mail.kernel.org (Postfix) with ESMTP id D1B3A2089C
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:20:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571671223;
+	bh=nbD/xN9E0NOEQev6bZPtgeSvlXjsM38xYXZf9XPf6K0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=q7dVEftw0T7LJyHpk3rrJl+YNcOJ2YV8a4l7pQvyiNL243PR9R5B3yM8/w2GZhYqq
+	 Bf1LwIR5gULqM02BpCEMaWWFYR2E522S2F1dCVGF0AsTWstiG7aGEktxrzvjFvh9LJ
+	 7+KTEYSbj0x/BELgoTo0Hg5Cz48Bsctck25OfL1c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728176AbfJUPT7 (ORCPT
+        id S1729420AbfJUPUX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 11:19:59 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:38719 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726289AbfJUPT7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 11:19:59 -0400
-Received: by mail-il1-f194.google.com with SMTP id y5so12354750ilb.5;
-        Mon, 21 Oct 2019 08:19:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xLL1nfViFXwf0+HwQK45ez+OrC2Byurm1xesO5A4nM4=;
-        b=sJUTMuk44mxHc3/Wn/RyybUNxbnVUiSb8MwC55wMO5kKb+AeXBTfYBVbY3tV6ek3ea
-         2qY8JvVnVwxeEnru7hY4DySpMHx2u0sL4gaq1Cip3OtAv1QD4jhJOsf0nJMqWNaKtmyp
-         IhjtPbGCzBJfNI2tK3bCCVY2drCyjYAcH4aat0rjI8QjSp75Q8yWYeTSovJLuv0i6YYn
-         2lrs5NGanGtaA3BPkXR/Dk9yzss/CdiD0FApa2QY1ywzvLOomaU2SIW/dkqBUcNYczGc
-         5Zw7QQPsrkibcLQvDq1lU+AT0GwzcwNZXRXAZzYEJkZMBC0DSR+RzaLigJf0aHfdPF5O
-         5Fzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xLL1nfViFXwf0+HwQK45ez+OrC2Byurm1xesO5A4nM4=;
-        b=tyaqaSWFF2FdxqmylLDB5GznOrWL6HHZq7rivchZhemheKYaJ5jszvN9fEzKbTZX+t
-         GTYyEAc1jqbVVQ3pi87FXRs3Mmu7Jwr5dF9HT7U/ZlVqSb+YnrgNznXn2bwE/nxbFSu8
-         3teDlEr3HKSqpNpGB45CMVRRmASLAuRpvNut8oKZpaK0bzTKBulBvfcjqMm6jRVwqeIH
-         OQveh8kAfiHqZiL90KKtxFM+QRp91bO4q4uSTsLKGvtMN31zZ6AF7Uf1kd83hz/0pLhI
-         7MvqAejRJJf4W/McmhcU8fh+jVe3PJm4J/MLp55LJRSqH65co8GBATMyZvhIm8UIpv8B
-         wG8g==
-X-Gm-Message-State: APjAAAVXWo1hzeJ+KIagjGHEzdZ0qkbbxJlRUfbku4WFWaSvSiQxfskZ
-        RxEeBy1kmIxOO9ZzUfPyXhA+qtQVRewqaKaLOVOAug==
-X-Google-Smtp-Source: APXvYqziZ1lgVHlpifILbY1zB7ipIQCb3zhLo1MSYbA47FVGtC8RXqYUvdhlht6pMel3T3WWGEZCSEFfMyrKl3OGTWc=
-X-Received: by 2002:a92:1d51:: with SMTP id d78mr4143077ild.166.1571671198082;
- Mon, 21 Oct 2019 08:19:58 -0700 (PDT)
+        Mon, 21 Oct 2019 11:20:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35190 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726847AbfJUPUW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 11:20:22 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71EEB2084B;
+        Mon, 21 Oct 2019 15:20:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571671221;
+        bh=nbD/xN9E0NOEQev6bZPtgeSvlXjsM38xYXZf9XPf6K0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=FDIwjTr6OuzGTDBVQIbiCn2fzZIXQx/WdcGXMNT/q13a2X9hV4fyKL9thpvYiHXQX
+         BlcsKH485Fdzi03ZiY5Zxiqi79YFlMUaEPs+bvJGxKuzTJgHcShrWzhwSgjyBqYfae
+         aKhxv7O2jj/7xTsSbUZ12lNOozaJTH/MJ5Z4sggs=
+Date:   Mon, 21 Oct 2019 16:20:16 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Dan Robertson <dan@dlrobertson.com>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        devicetree <devicetree@vger.kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH v4 2/2] iio: (bma400) add driver for the BMA400
+Message-ID: <20191021162016.531e6a2e@archlinux>
+In-Reply-To: <20191019024351.GB8593@nessie>
+References: <20191018031848.18538-1-dan@dlrobertson.com>
+        <20191018031848.18538-3-dan@dlrobertson.com>
+        <CAHp75VfMW0fvmO9jGTnQumJ9Sm-SgNL0ohjSR4qRQY365aeMBw@mail.gmail.com>
+        <20191019024351.GB8593@nessie>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20191019210616.41199-1-jeffrey.l.hugo@gmail.com> <20191020062816.GE1669@tuxbook-pro>
-In-Reply-To: <20191020062816.GE1669@tuxbook-pro>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Mon, 21 Oct 2019 09:19:47 -0600
-Message-ID: <CAOCk7NpvXb3zBAM1DQng3sQWgWXc5AP2vo=i+gX0mQtA2W7QWg@mail.gmail.com>
-Subject: Re: [PATCH] tty: serial: msm_serial: Fix flow control
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        jslaby@suse.com, MSM <linux-arm-msm@vger.kernel.org>,
-        linux-serial@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Oct 20, 2019 at 12:28 AM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> On Sat 19 Oct 14:06 PDT 2019, Jeffrey Hugo wrote:
->
-> > hci_qca interfaces to the wcn3990 via a uart_dm on the msm8998 mtp and
-> > Lenovo Miix 630 laptop.  As part of initializing the wcn3990, hci_qca
-> > disables flow, configures the uart baudrate, and then reenables flow - at
-> > which point an event is expected to be received over the uart from the
-> > wcn3990.  It is observed that this event comes after the baudrate change
-> > but before hci_qca re-enables flow. This is unexpected, and is a result of
-> > msm_reset() being broken.
-> >
-> > According to the uart_dm hardware documentation, it is recommended that
-> > automatic hardware flow control be enabled by setting RX_RDY_CTL.  Auto
-> > hw flow control will manage RFR based on the configured watermark.  When
-> > there is space to receive data, the hw will assert RFR.  When the watermark
-> > is hit, the hw will de-assert RFR.
-> >
-> > The hardware documentation indicates that RFR can me manually managed via
-> > CR when RX_RDY_CTL is not set.  SET_RFR asserts RFR, and RESET_RFR
-> > de-asserts RFR.
-> >
-> > msm_reset() is broken because after resetting the hardware, it
-> > unconditionally asserts RFR via SET_RFR.  This enables flow regardless of
-> > the current configuration, and would undo a previous flow disable
-> > operation.  It should instead de-assert RFR via RESET_RFR to block flow
-> > until the hardware is reconfigured.  msm_serial should rely on the client
-> > to specify that flow should be enabled, either via mctrl() or the termios
-> > structure, and only assert RFR in response to those triggers.
-> >
->
-> I traced msm_reset() and msm_set_mctrl() and I get the following:
->        swapper/0-1     [000] d..1     3.091726: msm_set_mctrl: msm_set_mctrl() reset rfr
->        swapper/0-1     [000] d..1     3.117046: msm_set_mctrl: msm_set_mctrl() reset rfr
->        swapper/0-1     [000] d..1     3.125484: msm_set_termios: msm_reset() set rfr
->        swapper/0-1     [003] d..1     4.491430: msm_set_termios: msm_reset() set rfr
->        swapper/0-1     [003] d..1     4.491733: msm_set_mctrl: msm_set_mctrl() auto rfr
->            login-313   [001] d..1    78.010785: msm_set_mctrl: msm_set_mctrl() reset rfr
->            login-313   [001] d..1    78.011007: msm_set_termios: msm_reset() set rfr
->            login-313   [001] d..1    78.011021: msm_set_mctrl: msm_set_mctrl() auto rfr
->            login-313   [001] d..1    78.063330: msm_set_termios: msm_reset() set rfr
->            login-313   [001] d..1    78.063641: msm_set_termios: msm_reset() set rfr
->
-> So while your change does make sense for BT, wouldn't this mean that
-> with your patch and a 4-pin UART for the console I would end this dance
-> with receive flow blocked?
+On Sat, 19 Oct 2019 02:43:51 +0000
+Dan Robertson <dan@dlrobertson.com> wrote:
 
-No.  I don't think it occurred to you to consider how RX_RDY_CTL
-factors into this.  RX_RDY_CTL allows the hardware to enable flow when
-the hardware determines it is able to receive data.  RX_RDY_CTL gets
-set in mctrl, and set_termios - essentially when the uart client has
-indicated flow can be enabled.
-
-Even though the console is a 2 wire console on msm8998, the driver
-will go through the same flow.  I verified that RX_RDY_CTL is set on
-the console uart after boot, so we won't end up with flow blocked.
-
-However, this does bring up another issue.  RX_RDY_CTL doesn't get
-unset in msm_reset.  RESET_RX will disable the rx path in the
-hardware, and prevent RX_RDY_CTL from being active, but the rx path is
-enabled in set_baud_rate() before RX_RDY_CTL can be masked out in
-set_termios, so there may be a small window where flow can
-inadvertently enabled.  I'll spin a v2 that also unsets RX_RDY_CTL in
-msm_reset().
-
->
-> Regards,
-> Bjorn
->
-> > Fixes: 04896a77a97b ("msm_serial: serial driver for MSM7K onboard serial peripheral.")
-> > Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-> > ---
-> >  drivers/tty/serial/msm_serial.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> On Fri, Oct 18, 2019 at 10:23:38AM +0300, Andy Shevchenko wrote:
+> > On Fri, Oct 18, 2019 at 6:44 AM Dan Robertson <dan@dlrobertson.com> wrote:  
+> > > + * bma400.h - Register constants and other forward declarations
+> > > + *            needed by the bma400 sources.  
 > >
-> > diff --git a/drivers/tty/serial/msm_serial.c b/drivers/tty/serial/msm_serial.c
-> > index 3657a24913fc..aedabf7646f1 100644
-> > --- a/drivers/tty/serial/msm_serial.c
-> > +++ b/drivers/tty/serial/msm_serial.c
-> > @@ -987,7 +987,7 @@ static void msm_reset(struct uart_port *port)
-> >       msm_write(port, UART_CR_CMD_RESET_ERR, UART_CR);
-> >       msm_write(port, UART_CR_CMD_RESET_BREAK_INT, UART_CR);
-> >       msm_write(port, UART_CR_CMD_RESET_CTS, UART_CR);
-> > -     msm_write(port, UART_CR_CMD_SET_RFR, UART_CR);
-> > +     msm_write(port, UART_CR_CMD_RESET_RFR, UART_CR);
-> >
-> >       /* Disable DM modes */
-> >       if (msm_port->is_uartdm)
-> > --
-> > 2.17.1
-> >
+> > Including file name in the file is not the best practice. Imagine if
+> > by some reason we will need to rename it (to support more sensors, for
+> > example, and reflect it by replacing 00 -> 0x).
+> > So, please, remove here and everywhere else.  
+> 
+> That makes sense.
+> 
+> > > +#define BMA400_TWO_BITS_MASK    0x03
+> > > +#define BMA400_LP_OSR_MASK      0x60
+> > > +#define BMA400_NP_OSR_MASK      0x30
+> > > +#define BMA400_ACC_ODR_MASK     0x0f
+> > > +#define BMA400_ACC_SCALE_MASK   0xc0  
+> > 
+> > GENMASK()
+> > (Don't forget to include bits.h for it)  
+> 
+> Thanks.
+> 
+> > > +static const int bma400_scale_table[] = {
+> > > +       0, 38344,
+> > > +       0, 76590,
+> > > +       0, 153277,  
+> >   
+> > > +       0, 306457  
+> > 
+> > Better to leave comma here. It doesn't matter for this device, but
+> > make of use the better practices.  
+> > > +};  
+> > 
+> > Also, I'm wondering why values are not exactly multiply by 2. Is in DS
+> > of the chip any explanation for this?  
+> 
+> It would be a multiply by 2. I tried to follow the bma180 driver here, but I'm
+> starting to think that may be the wrong approach.
+
+I'll guess that, like so many accelerometers this one has documentation
+in terms of 'g'.  Which is bonkers at g isn't a constant... g_0 is but no
+datasheet ever seems to note that distinction.  Oh well. So these
+are rounded to nearest value in m/s^2...  To be honest, the sensor
+noise levels are usual such that this level of precision really
+doesn't matter. 
+
+> 
+> > > +static const int bma400_osr_table[] = { 0, 1, 3 };  
+> >   
+> > > +/* See the ACC_CONFIG1 section of the datasheet */
+> > > +static const int bma400_sample_freqs[] = {
+> > > +       12,  500000,
+> > > +       25,  0,
+> > > +       50,  0,
+> > > +       100, 0,
+> > > +       200, 0,
+> > > +       400, 0,
+> > > +       800, 0,
+> > > +};  
+> > 
+> > This can be replaced by a formula(s).  
+> 
+> Yeah I think I can implement the get, set, and read functions for sample_freq
+> with a formula, but the scale and sample frequency tables are needed by the
+> implementation of read_avail. A implementation of read_avail with a range and
+> a step would be ideal, but I couldn't find any documentation on implementing
+> read_avail where the step value of the range is a multiple. Please correct
+> me if I've missed something.
+
+Indeed. We've only defined it as being fixed intervals.
+I'm not keen to expand the options for the userspace interface any
+further.  
+
+You could compute the values at startup and store it in your state structure
+I think (or compute them on demand, but you'd need to have the space somewhere
+non volatile).
+
+> 
+> Note that this applies to the scale table as well.
+> 
+> > > +struct bma400_sample_freq {
+> > > +       int hz;
+> > > +       int uhz;
+> > > +};  
+> > 
+> > I'm wondering why above table is not using this struct.  
+> 
+> Originally it did, but I changed this in the second version when I added support
+> for iio_info read_avail to try to be a little closer to other implementations of
+> iio_read avail.
+> 
+> > > +const struct regmap_config bma400_regmap_config = {
+> > > +       .reg_bits = 8,
+> > > +       .val_bits = 8,
+> > > +       .max_register = BMA400_CMD_REG,
+> > > +       .cache_type = REGCACHE_RBTREE,
+> > > +       .writeable_reg = bma400_is_writable_reg,
+> > > +       .volatile_reg = bma400_is_volatile_reg,
+> > > +};  
+> >   
+> > > +EXPORT_SYMBOL(bma400_regmap_config);  
+> > 
+> > Why? And why it's not _GPL?  
+> 
+> This is used by the bma400_i2c module.
+
+Which is licensed as GPL v2, so I don't follow why this isn't
+_GPL either.
+
+> 
+> > > +       int ret;
+> > > +       int host_temp;
+> > > +       unsigned int raw_temp;  
+> > 
+> > Better reversed xmas tree order.  
+> 
+> Sounds good.
+> 
+> >   
+> > > +               if (idx + 1 >= ARRAY_SIZE(bma400_sample_freqs)) {  
+> > 
+> > Why do you need this churn with +1 and = ?  
+> 
+> Since we've "flattened" the array of sample frequency we need to ensure that the
+> Hz (bma400_sample_freqs[idx]) and uHz (bma400_sample_freqs[idx + 1]) are both
+> valid. This will be negated in the next version as I'll switch to a formula.
+> Instead I'll ensure the returned ODR value is not above 0x0b.
+> 
+> > > +                       dev_err(data->dev, "sample freq index is too high");
+> > > +                       ret = -EINVAL;
+> > > +                       goto error;
+> > > +               }  
+> > 
+> >   
+> > > +       for (i = 0; i + 1 < ARRAY_SIZE(bma400_sample_freqs); i += 2) {  
+> > 
+> > Using defined struct will guarantee you to have always 2x members in
+> > the array. So, drop this arithmetic churn.  
+> 
+> I should be able to figure out how to use a formula here, but I see where you're
+> coming from and I agree.
+> 
+> > > +       if (ret < 0) {
+> > > +               dev_err(data->dev, "Failed to read chip id register: %x!", ret);  
+> > 
+> > %x for returned error code is too hackerish.  
+> 
+> Makes sense. I'll change this in the update.
+> 
+> > > +               return ret;  
+> >   
+> > > +       } else if (val != BMA400_ID_REG_VAL) {  
+> > 
+> > Redundant 'else'  
+> 
+> > > +               dev_err(data->dev, "CHIP ID MISMATCH: %x!", ret);  
+> > 
+> > Hacker detected!  
+> 
+> :)
+> 
+> > > +               return -ENODEV;
+> > > +       }  
+> >   
+> > > +               /*
+> > > +                * TODO: The datasheet waits 1500us here in the example, but
+> > > +                * lists 2/ODR as the wakeup time.
+> > > +                */
+> > > +               usleep_range(1500, 20000);  
+> > 
+> > These range values are too sparse. Usually the second one is less than
+> > first one * 2.
+> > Fix it now.  
+> 
+> Good to know. I'll fix this in the update.
+> 
+> > > +EXPORT_SYMBOL(bma400_probe);  
+> > 
+> > Why is not GPL?  
+> 
+> Ah, saw in the docs "GPL" means GPL-2.0.
+
+So guess you are fine with making these all GPL exports then :)
+
+> 
+> >   
+> > > +EXPORT_SYMBOL(bma400_remove);  
+> > 
+> > Ditto.  
+> 
+> This symbol is used in bma400_i2c.
+> 
+> > 
+> > P.S. I probably missed some places with the same mistake as commented
+> > above. Please address all places in the code where my comments are
+> > applicable.  
+> 
+> Noted. Thanks for the feedback!
+> 
+> Cheers,
+> 
+>  - Dan
+Thanks,
+
+Jonathan.
