@@ -2,63 +2,115 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73036CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:52:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 567B5CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:52:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53A8720B7C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:52:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 352292053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:52:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729439AbfJUOwj (ORCPT
+        id S1729470AbfJUOwu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 10:52:39 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:35115 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727582AbfJUOwi (ORCPT
+        Mon, 21 Oct 2019 10:52:50 -0400
+Received: from xavier.telenet-ops.be ([195.130.132.52]:35708 "EHLO
+        xavier.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728206AbfJUOwK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 10:52:38 -0400
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iMZ2r-0003zO-BK; Mon, 21 Oct 2019 16:52:29 +0200
-Date:   Mon, 21 Oct 2019 16:52:28 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Huacai Chen <chenhc@lemote.com>
-cc:     Andy Lutomirski <luto@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        chenhuacai@gmail.com, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 110/110] lib/vdso: Improve do_hres() and update vdso data
- unconditionally
-In-Reply-To: <1571662320-1280-1-git-send-email-chenhc@lemote.com>
-Message-ID: <alpine.DEB.2.21.1910211648200.1904@nanos.tec.linutronix.de>
-References: <1571662320-1280-1-git-send-email-chenhc@lemote.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Mon, 21 Oct 2019 10:52:10 -0400
+Received: from ramsan ([84.194.98.4])
+        by xavier.telenet-ops.be with bizsmtp
+        id GErr2100B05gfCL01ErrRZ; Mon, 21 Oct 2019 16:52:08 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1iMZ2E-00075h-Vs; Mon, 21 Oct 2019 16:51:50 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1iMZ2E-0008FR-UG; Mon, 21 Oct 2019 16:51:50 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     =?UTF-8?q?Breno=20Leit=C3=A3o?= <leitao@debian.org>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Paulo Flabiano Smorigo <pfsmorigo@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S . Miller" <davem@davemloft.net>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        David@rox.of.borg, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Casey Leedom <leedom@chelsio.com>,
+        Shannon Nelson <snelson@pensando.io>,
+        Pensando Drivers <drivers@pensando.io>,
+        Kevin Hilman <khilman@kernel.org>, Nishanth Menon <nm@ti.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-crypto@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        netdev@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 1/5] crypto: nx - Improve debugfs_create_u{32,64}() handling for atomics
+Date:   Mon, 21 Oct 2019 16:51:45 +0200
+Message-Id: <20191021145149.31657-2-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191021145149.31657-1-geert+renesas@glider.be>
+References: <20191021145149.31657-1-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 21 Oct 2019, Huacai Chen wrote:
-> @@ -50,7 +50,7 @@ static int do_hres(const struct vdso_data *vd, clockid_t clk,
->  		cycles = __arch_get_hw_counter(vd->clock_mode);
->  		ns = vdso_ts->nsec;
->  		last = vd->cycle_last;
-> -		if (unlikely((s64)cycles < 0))
-> +		if (unlikely(cycles == U64_MAX))
->  			return -1;
+Variables of type atomic{,64}_t can be used fine with
+debugfs_create_u{32,64}, when passing a pointer to the embedded counter.
+This allows to get rid of the casts, which prevented compiler checks.
 
-That used to create worse code than the weird (s64) type cast which has the
-same effect. Did you double check that there is no change?
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ drivers/crypto/nx/nx_debugfs.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-Thanks,
+diff --git a/drivers/crypto/nx/nx_debugfs.c b/drivers/crypto/nx/nx_debugfs.c
+index e0d44a5512ab455b..1975bcbee997481e 100644
+--- a/drivers/crypto/nx/nx_debugfs.c
++++ b/drivers/crypto/nx/nx_debugfs.c
+@@ -38,23 +38,23 @@ void nx_debugfs_init(struct nx_crypto_driver *drv)
+ 	drv->dfs_root = root;
+ 
+ 	debugfs_create_u32("aes_ops", S_IRUSR | S_IRGRP | S_IROTH,
+-			   root, (u32 *)&drv->stats.aes_ops);
++			   root, &drv->stats.aes_ops.counter);
+ 	debugfs_create_u32("sha256_ops", S_IRUSR | S_IRGRP | S_IROTH,
+-			   root, (u32 *)&drv->stats.sha256_ops);
++			   root, &drv->stats.sha256_ops.counter);
+ 	debugfs_create_u32("sha512_ops", S_IRUSR | S_IRGRP | S_IROTH,
+-			   root, (u32 *)&drv->stats.sha512_ops);
++			   root, &drv->stats.sha512_ops.counter);
+ 	debugfs_create_u64("aes_bytes", S_IRUSR | S_IRGRP | S_IROTH,
+-			   root, (u64 *)&drv->stats.aes_bytes);
++			   root, &drv->stats.aes_bytes.counter);
+ 	debugfs_create_u64("sha256_bytes", S_IRUSR | S_IRGRP | S_IROTH,
+-			   root, (u64 *)&drv->stats.sha256_bytes);
++			   root, &drv->stats.sha256_bytes.counter);
+ 	debugfs_create_u64("sha512_bytes", S_IRUSR | S_IRGRP | S_IROTH,
+-			   root, (u64 *)&drv->stats.sha512_bytes);
++			   root, &drv->stats.sha512_bytes.counter);
+ 	debugfs_create_u32("errors", S_IRUSR | S_IRGRP | S_IROTH,
+-			   root, (u32 *)&drv->stats.errors);
++			   root, &drv->stats.errors.counter);
+ 	debugfs_create_u32("last_error", S_IRUSR | S_IRGRP | S_IROTH,
+-			   root, (u32 *)&drv->stats.last_error);
++			   root, &drv->stats.last_error.counter);
+ 	debugfs_create_u32("last_error_pid", S_IRUSR | S_IRGRP | S_IROTH,
+-			   root, (u32 *)&drv->stats.last_error_pid);
++			   root, &drv->stats.last_error_pid.counter);
+ }
+ 
+ void
+-- 
+2.17.1
 
-	tglx
