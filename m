@@ -2,148 +2,167 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14964CA9EB0
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:30:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57289CA9EB0
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:31:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC4E1206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:30:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23F80214B2
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:31:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V+qU0bqH"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eW8YSRLU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729738AbfJUPaS (ORCPT
+        id S1729562AbfJUPbl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 11:30:18 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:30545 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726332AbfJUPaS (ORCPT
+        Mon, 21 Oct 2019 11:31:41 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:42814 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729339AbfJUPbk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 11:30:18 -0400
+        Mon, 21 Oct 2019 11:31:40 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571671817;
+        s=mimecast20190719; t=1571671899;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=/5ELIDEIebRNcnRQXVHraCqPbkLQCcB1TSIjkZQvLZ8=;
-        b=V+qU0bqHnt7S91YXsCJfjvHN/WBOjXwwRR5SkK9RAWpduQiV50RXVI6rYxvw1u0ihdYn2t
-        mf//4QKSgsr/m9wuCWpPIRqgyMmcZ+oajk6hABgcCOvkA/+ohsREh32cnltELMVWp2q6g1
-        iQDB5Hqk4vNg1p3hDVIdwBuo6NO9Ylg=
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=3qdocgmdUHdqZl7Kfo7MiqDFe0rPwq+g9dSPJrCbOR4=;
+        b=eW8YSRLUYdIqJ61sXdQh4dqjl7BZlOUY+vGhDEe+LeQLoROk0TBkN9kFbOoSQJsu9WBQDi
+        JcJp4f4vgUoAtNFzaznxCtVHiFCzAG6uHj4nf3STEdm+4cyNPAO6zb34LG71olpo21T5Wq
+        4xu6DGrWwyLHPqBgCH6U6EQUOt5VZhE=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-264-oMNytNEGOv-stwXfhXkQgw-1; Mon, 21 Oct 2019 11:30:13 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+ us-mta-175-VSz7me16NQGt3sdnTvIYmw-1; Mon, 21 Oct 2019 11:31:36 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A080B1005500;
-        Mon, 21 Oct 2019 15:30:12 +0000 (UTC)
-Received: from rhp50.localdomain (ovpn-120-56.rdu2.redhat.com [10.10.120.56])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B0CE360A9F;
-        Mon, 21 Oct 2019 15:30:11 +0000 (UTC)
-From:   Mark Salter <msalter@redhat.com>
-To:     Tom Lendacky <thomas.lendacky@amd.com>,
-        Gary Hook <gary.hook@amd.com>
-Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S . Miller" <davem@davemloft.net>
-Subject: [PATCH] crypto: ccp - fix uninitialized list head
-Date:   Mon, 21 Oct 2019 11:29:49 -0400
-Message-Id: <20191021152949.17532-1-msalter@redhat.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1DFF51005500;
+        Mon, 21 Oct 2019 15:31:19 +0000 (UTC)
+Received: from treble (ovpn-123-96.rdu2.redhat.com [10.10.123.96])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 51DBB60C5D;
+        Mon, 21 Oct 2019 15:31:04 +0000 (UTC)
+Date:   Mon, 21 Oct 2019 10:31:01 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Jessica Yu <jeyu@kernel.org>, Miroslav Benes <mbenes@suse.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joe Lawrence <joe.lawrence@redhat.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, mhiramat@kernel.org,
+        bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, live-patching@vger.kernel.org
+Subject: Re: [PATCH v3 5/6] x86/ftrace: Use text_poke()
+Message-ID: <20191021153101.y6ik56564er6jra5@treble>
+References: <alpine.LSU.2.21.1910151611000.13169@pobox.suse.cz>
+ <88bab814-ea24-ece9-2bc0-7a1e10a62f12@redhat.com>
+ <20191015153120.GA21580@linux-8ccs>
+ <7e9c7dd1-809e-f130-26a3-3d3328477437@redhat.com>
+ <20191015182705.1aeec284@gandalf.local.home>
+ <20191016074951.GM2328@hirez.programming.kicks-ass.net>
+ <alpine.LSU.2.21.1910161216100.7750@pobox.suse.cz>
+ <alpine.LSU.2.21.1910161521010.7750@pobox.suse.cz>
+ <20191018130342.GA4625@linux-8ccs>
+ <20191018134058.7zyls4746wpa7jy5@pathway.suse.cz>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-MC-Unique: oMNytNEGOv-stwXfhXkQgw-1
+In-Reply-To: <20191018134058.7zyls4746wpa7jy5@pathway.suse.cz>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-MC-Unique: VSz7me16NQGt3sdnTvIYmw-1
 X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A NULL-pointer dereference was reported in fedora bz#1762199 while
-reshaping a raid6 array after adding a fifth drive to an existing
-array.
+On Fri, Oct 18, 2019 at 03:40:58PM +0200, Petr Mladek wrote:
+> On Fri 2019-10-18 15:03:42, Jessica Yu wrote:
+> > +++ Miroslav Benes [16/10/19 15:29 +0200]:
+> > > On Wed, 16 Oct 2019, Miroslav Benes wrote:
+> > > Thinking about it more... crazy idea. I think we could leverage these=
+ new
+> > > ELF .text per vmlinux/module sections for the reinvention I was talki=
+ng
+> > > about. If we teach module loader to relocate (and apply alternatives =
+and
+> > > so on, everything in arch-specific module_finalize()) not the whole m=
+odule
+> > > in case of live patch modules, but separate ELF .text sections, it co=
+uld
+> > > solve the issue with late module patching we have. It is a variation =
+on
+> > > Steven's idea. When live patch module is loaded, only its section for
+> > > present modules would be processed. Then whenever a to-be-patched mod=
+ule
+> > > is loaded, its .text section in all present patch module would be
+> > > processed.
+> > >=20
+> > > The upside is that almost no work would be required on patch modules
+> > > creation side. The downside is that klp_modinfo must stay. Module loa=
+der
+> > > needs to be hacked a lot in both cases. So it remains to be seen whic=
+h
+> > > idea is easier to implement.
+> > >=20
+> > > Jessica, do you think it would be feasible?
+> >=20
+> > I think that does sound feasible. I'm trying to visualize how that
+> > would look. I guess there would need to be various livepatching hooks
+> > called during the different stages (apply_relocate_add(),
+> > module_finalize(), module_enable_ro/x()).
+> >=20
+> > So maybe something like the following?
+> >=20
+> > When a livepatch module loads:
+> >    apply_relocate_add()
+> >        klp hook: apply .klp.rela.$objname relocations *only* for
+> >        already loaded modules
+> >    module_finalize()
+> >        klp hook: apply .klp.arch.$objname changes for already loaded mo=
+dules
+> >    module_enable_ro()
+> >        klp hook: only enable ro/x for .klp.text.$objname for already
+> >        loaded modules
+>=20
+> Just for record. We should also set ro for the not-yet used
+> .klp.text.$objname at this stage so that it can't be modified
+> easily "by accident".
+>=20
+>=20
+> > When a to-be-patched module loads:
+> >    apply_relocate_add()
+> >        klp hook: for each patch module that patches the coming
+> >        module, apply .klp.rela.$objname relocations for this object
+> >    module_finalize()
+> >        klp hook: for each patch module that patches the coming
+> >        module, apply .klp.arch.$objname changes for this object
+> >    module_enable_ro()
+> >        klp hook: for each patch module, apply ro/x permissions for
+> >        .klp.text.$objname for this object
+> >=20
+> > Then, in klp_module_coming, we only need to do the callbacks and
+> > enable the patch, and get rid of the module_disable_ro->apply
+> > relocs->module_enable_ro block.
+> >=20
+> > Does that sound like what you had in mind or am I totally off?
+>=20
+> Makes sense to me.
+>=20
+> Well, I wonder if it is really any better from what we have now.
 
-[   47.343549] md/raid:md0: raid level 6 active with 3 out of 5 devices, al=
-gorithm 2
-[   47.804017] md0: detected capacity change from 0 to 7885289422848
-[   47.822083] Unable to handle kernel read from unreadable memory at virtu=
-al address 0000000000000000
-...
-[   47.940477] CPU: 1 PID: 14210 Comm: md0_raid6 Tainted: G        W       =
-  5.2.18-200.fc30.aarch64 #1
-[   47.949594] Hardware name: AMD Overdrive/Supercharger/To be filled by O.=
-E.M., BIOS ROD1002C 04/08/2016
-[   47.958886] pstate: 00400085 (nzcv daIf +PAN -UAO)
-[   47.963668] pc : __list_del_entry_valid+0x2c/0xa8
-[   47.968366] lr : ccp_tx_submit+0x84/0x168 [ccp]
-[   47.972882] sp : ffff00001369b970
-[   47.976184] x29: ffff00001369b970 x28: ffff00001369bdb8
-[   47.981483] x27: 00000000ffffffff x26: ffff8003b758af70
-[   47.986782] x25: ffff8003b758b2d8 x24: ffff8003e6245818
-[   47.992080] x23: 0000000000000000 x22: ffff8003e62450c0
-[   47.997379] x21: ffff8003dfd6add8 x20: 0000000000000003
-[   48.002678] x19: ffff8003e6245100 x18: 0000000000000000
-[   48.007976] x17: 0000000000000000 x16: 0000000000000000
-[   48.013274] x15: 0000000000000000 x14: 0000000000000000
-[   48.018572] x13: ffff7e000ef83a00 x12: 0000000000000001
-[   48.023870] x11: ffff000010eff998 x10: 00000000000019a0
-[   48.029169] x9 : 0000000000000000 x8 : ffff8003e6245180
-[   48.034467] x7 : 0000000000000000 x6 : 000000000000003f
-[   48.039766] x5 : 0000000000000040 x4 : ffff8003e0145080
-[   48.045064] x3 : dead000000000200 x2 : 0000000000000000
-[   48.050362] x1 : 0000000000000000 x0 : ffff8003e62450c0
-[   48.055660] Call trace:
-[   48.058095]  __list_del_entry_valid+0x2c/0xa8
-[   48.062442]  ccp_tx_submit+0x84/0x168 [ccp]
-[   48.066615]  async_tx_submit+0x224/0x368 [async_tx]
-[   48.071480]  async_trigger_callback+0x68/0xfc [async_tx]
-[   48.076784]  ops_run_biofill+0x178/0x1e8 [raid456]
-[   48.081566]  raid_run_ops+0x248/0x818 [raid456]
-[   48.086086]  handle_stripe+0x864/0x1208 [raid456]
-[   48.090781]  handle_active_stripes.isra.0+0xb0/0x278 [raid456]
-[   48.096604]  raid5d+0x378/0x618 [raid456]
-[   48.100602]  md_thread+0xa0/0x150
-[   48.103905]  kthread+0x104/0x130
-[   48.107122]  ret_from_fork+0x10/0x18
-[   48.110686] Code: d2804003 f2fbd5a3 eb03003f 54000320 (f9400021)
-[   48.116766] ---[ end trace 23f390a527f7ad77 ]---
+AFAICT, this would still have a lot of the same problems we have today.
+It has a lot of complexity.  It needs arch-specific livepatch code and
+sections, and introduces special cases in the module code.
 
-ccp_tx_submit is passed a dma_async_tx_descriptor which is contained in
-a ccp_dma_desc and adds it to a ccp channel's pending list:
+I'd much prefer the proposal from LPC to have per-module live patches.
+It's simpler and has less things that can go wrong IMO.
 
-=09list_del(&desc->entry);
-=09list_add_tail(&desc->entry, &chan->pending);
-
-The problem is that desc->entry may be uninitialized in the
-async_trigger_callback path where the descriptor was gotten
-from ccp_prep_dma_interrupt which got it from ccp_alloc_dma_desc
-which doesn't initialize the desc->entry list head. So, just
-initialize the list head to avoid the problem.
-
-Reported-by: Sahaj Sarup <sahajsarup@gmail.com>
-Signed-off-by: Mark Salter <msalter@redhat.com>
----
- drivers/crypto/ccp/ccp-dmaengine.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/crypto/ccp/ccp-dmaengine.c b/drivers/crypto/ccp/ccp-dm=
-aengine.c
-index a54f9367a580..0770a83bf1a5 100644
---- a/drivers/crypto/ccp/ccp-dmaengine.c
-+++ b/drivers/crypto/ccp/ccp-dmaengine.c
-@@ -342,6 +342,7 @@ static struct ccp_dma_desc *ccp_alloc_dma_desc(struct c=
-cp_dma_chan *chan,
- =09desc->tx_desc.flags =3D flags;
- =09desc->tx_desc.tx_submit =3D ccp_tx_submit;
- =09desc->ccp =3D chan->ccp;
-+=09INIT_LIST_HEAD(&desc->entry);
- =09INIT_LIST_HEAD(&desc->pending);
- =09INIT_LIST_HEAD(&desc->active);
- =09desc->status =3D DMA_IN_PROGRESS;
 --=20
-2.21.0
+Josh
 
