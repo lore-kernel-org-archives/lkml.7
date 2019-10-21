@@ -2,109 +2,94 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D661CCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 18:53:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB76CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 18:54:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A95F62086D
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 18:53:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB3982086D
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 18:54:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QnPNSwJc"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="T9zSq7JE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729859AbfJUSxC (ORCPT
+        id S1730037AbfJUSyI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 14:53:02 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:33949 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726672AbfJUSxC (ORCPT
+        Mon, 21 Oct 2019 14:54:08 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:39220 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729894AbfJUSyI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 14:53:02 -0400
-Received: by mail-il1-f194.google.com with SMTP id c12so13058747ilm.1
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 11:53:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=erjZddSV8OJ6M5smw9c8mYfNMrltsPqb9R/cRGyaN38=;
-        b=QnPNSwJcr8M9bndo9lgdcmLVbusenXSGIcEjUnr4XxJVJmJykAZI7KbITLa0Wny0dp
-         O75nQXxEaIslpYQY25szoq/JdGHYOHwfLENyCQafaCGQpkboDYSBTUBnjb1mykSDv6ex
-         ECwvV70Vzbc1ea7co9bTdr6O4Y/zg1+T8+x/zmBKNQB4yqwiG6hnPhyGj0dFXWH/q6aw
-         i2jhZoROVFhgQ4YES6C3GEZ+v+YfgJ1u20OeYRbXcxkwfeaKHaeGDH39qY+EHCBakbdq
-         oatMw7sfoqWm4t4c1e3FWecWIcIewcYzsK9aXdeHhr2gmILAVtQ005k8mOJmFww2EImz
-         AqSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=erjZddSV8OJ6M5smw9c8mYfNMrltsPqb9R/cRGyaN38=;
-        b=Ozz7Znr0ghgYhd5JhlfxuC5nIBKDHafgWQvi/mBWXH/2X119YQ602OoPlaPS3erYr/
-         WNZVRPidLxpRf3+L1OeNY1R5q4LvE+qDlubvf5F6gZ3xI0Mln+0y4FMOSWJHztPtFmrp
-         ZpZrb1DwkofuMEyZONm/SP0XZlznHcpm3uiBW/mLFHCgISJ7paY+6W0IDbmMuo+FfLKv
-         Db+lcUhIHxWP/xqakOLhupeNGUmFiVtoYrZ8/euPStKLVBD8pX0TfoaOxkkMACtsE5/J
-         mzJQtxzRXsuslnLRuYzkWfafynYOdcXvWWQHQyskNRIH4rDoVhmsp457vzhHHEhxDJ1t
-         tuow==
-X-Gm-Message-State: APjAAAWxKty6F4KfgdpEIlIYbuoZaMQZwUPCojb5qkA7AcT+ZVQLBgvK
-        zvtOWbSgv3eSHryAh8vMNck=
-X-Google-Smtp-Source: APXvYqypeFGVtWeXC2SiZVCheTcw8968x/hQ1h8DTaS56XiKXAhVvfj9p7br1QvWn0gwJeR9Eyjt+A==
-X-Received: by 2002:a92:5d88:: with SMTP id e8mr4794924ilg.95.1571683981508;
-        Mon, 21 Oct 2019 11:53:01 -0700 (PDT)
-Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
-        by smtp.googlemail.com with ESMTPSA id i26sm4780063iol.84.2019.10.21.11.53.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Oct 2019 11:53:00 -0700 (PDT)
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     emamd001@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Eric Anholt <eric@anholt.net>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/v3d: Fix memory leak in v3d_submit_cl_ioctl
-Date:   Mon, 21 Oct 2019 13:52:49 -0500
-Message-Id: <20191021185250.26130-1-navid.emamdoost@gmail.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        Mon, 21 Oct 2019 14:54:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=dL6VLOf3YewOp4A2n+mPvAornsHOXwZDiX+c4WejJCs=; b=T9zSq7JE/DYsWS/lzj8lbTRdt
+        k/TK+nhbiOYmvx2Ux59y9zjgho8lwhkM+iyIjj0BNE+Z1GYK0ySuCLsJlWT/corV1yDuPZbw43iox
+        X+IZiWtWTdOagR6ia6Kmtu1xBAkBERg05rl+mc5vYTbVeSPqHSBzcVsEX0SOOTLJrNEQv+3TkhVE3
+        zCKHALDiY8GrU5Mt5DJNG2U/FW+tfyjRoKFCavUYLM80ai2SjaUEUwZl2Yrrsxi8F6b1JObcDPauN
+        x7dm+MNsGqU55XwwYZXReVE7NU8SQidgcpDBFBK3OjqTNGcY8VvzuC+Senx85xqEP/EKUukiKmT4c
+        Os3WFlSTA==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iMcog-0008CC-Vf; Mon, 21 Oct 2019 18:54:06 +0000
+Date:   Mon, 21 Oct 2019 11:54:06 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>, Jiri Kosina <trivial@kernel.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] kernel-doc: trivial improvement for warning message
+Message-ID: <20191021185406.GC9214@bombadil.infradead.org>
+References: <20191020132323.29658-1-changbin.du@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191020132323.29658-1-changbin.du@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the impelementation of v3d_submit_cl_ioctl() there are two memory
-leaks. One is when allocation for bin fails, and the other is when bin
-initialization fails. If kcalloc fails to allocate memory for bin then
-render->base should be put. Also, if v3d_job_init() fails to initialize
-bin->base then allocated memory for bin should be released.
+On Sun, Oct 20, 2019 at 09:23:23PM +0800, Changbin Du wrote:
+> The message "Function parameter or member ..." looks weird.
+> 
+> Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> ---
+>  scripts/kernel-doc | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/scripts/kernel-doc b/scripts/kernel-doc
+> index 81dc91760b23..cd3d2ca52c34 100755
+> --- a/scripts/kernel-doc
+> +++ b/scripts/kernel-doc
+> @@ -1475,8 +1475,13 @@ sub push_parameter($$$$) {
+>  		$parameterdescs{$param} = $undescribed;
+>  
+>  	        if (show_warnings($type, $declaration_name) && $param !~ /\./) {
+> -			print STDERR
+> -			      "${file}:$.: warning: Function parameter or member '$param' not described in '$declaration_name'\n";
+> +			if ($decl_type eq "struct" or $decl_type eq 'union') {
+> +				print STDERR
+> +					"${file}:$.: warning: $decl_type member '$param' not described in '$declaration_name'\n";
+> +			} else {
+> +				print STDERR
+> +					"${file}:$.: warning: $decl_type parameter '$param' not described in '$declaration_name'\n";
+> +			}
+>  			++$warnings;
 
-Fixes: a783a09ee76d ("drm/v3d: Refactor job management.")
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
----
- drivers/gpu/drm/v3d/v3d_gem.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+How about instead ...
 
-diff --git a/drivers/gpu/drm/v3d/v3d_gem.c b/drivers/gpu/drm/v3d/v3d_gem.c
-index 5d80507b539b..19c092d75266 100644
---- a/drivers/gpu/drm/v3d/v3d_gem.c
-+++ b/drivers/gpu/drm/v3d/v3d_gem.c
-@@ -557,13 +557,16 @@ v3d_submit_cl_ioctl(struct drm_device *dev, void *data,
- 
- 	if (args->bcl_start != args->bcl_end) {
- 		bin = kcalloc(1, sizeof(*bin), GFP_KERNEL);
--		if (!bin)
-+		if (!bin) {
-+			v3d_job_put(&render->base);
- 			return -ENOMEM;
-+		}
- 
- 		ret = v3d_job_init(v3d, file_priv, &bin->base,
- 				   v3d_job_free, args->in_sync_bcl);
- 		if (ret) {
- 			v3d_job_put(&render->base);
-+			kfree(bin);
- 			return ret;
- 		}
- 
--- 
-2.17.1
+		if (show_warnings($type, $declaration_name) && $param !~ /\./) {			if ($decl_type eq "struct")
+				$msg = "struct member";
+			elif ($decl_type eq "union")
+				$msg = "union member";
+			else
+				$msg = "function parameter";
+			print STDERR "${file}:$.: warning: $msg '$param' not described in '$declaration_name'\n";
 
+(please excuse my perl, i am not a native speaker)
