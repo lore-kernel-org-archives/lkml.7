@@ -2,177 +2,87 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A74A4CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:36:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABA42CA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:38:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B9E0206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:36:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CfmF4STp"
+	by mail.kernel.org (Postfix) with ESMTP id 8AADF206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:38:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727798AbfJUJgi (ORCPT
+        id S1727720AbfJUJio (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 05:36:38 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:38277 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727101AbfJUJgh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 05:36:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571650596;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=FpZdScR+KHI00mbq34flCWHyvKtJnKCqm7Yan1K0IeI=;
-        b=CfmF4STpp9cTMmDyreZvb4bwNhCtuC97bnNllvBwIXN7QAijTFl9W49fvfqIjIQy7nj7Ge
-        hUw5vJWg2T4Hzp5KQ/HMGX7qXer6ZTud8yIK1UvZMAzIeHbWLw9lJabJ16yXSvwvsp6+C0
-        sXEfM8LYMMZlnn2UhzCNkhuOQMRv3IA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-26-gGQdN0OCO4edN38FnITm1A-1; Mon, 21 Oct 2019 05:36:33 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E66A780183E;
-        Mon, 21 Oct 2019 09:36:25 +0000 (UTC)
-Received: from gondolin (dhcp-192-218.str.redhat.com [10.33.192.218])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 499036012C;
-        Mon, 21 Oct 2019 09:36:09 +0000 (UTC)
-Date:   Mon, 21 Oct 2019 11:36:07 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        maxime.coquelin@redhat.com, cunming.liang@intel.com,
-        zhihong.wang@intel.com, rob.miller@broadcom.com,
-        xiao.w.wang@intel.com, haotian.wang@sifive.com,
-        zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
-        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
-        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
-        farman@linux.ibm.com, pasic@linux.ibm.com, sebott@linux.ibm.com,
-        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
-        stefanha@redhat.com
-Subject: Re: [PATCH V4 5/6] virtio: introduce a mdev based transport
-Message-ID: <20191021113607.16b26d9d.cohuck@redhat.com>
-In-Reply-To: <2bb5645b-5c46-9cae-0571-65c302f51cf2@redhat.com>
-References: <20191017104836.32464-1-jasowang@redhat.com>
-        <20191017104836.32464-6-jasowang@redhat.com>
-        <20191018162007.31631039.cohuck@redhat.com>
-        <2bb5645b-5c46-9cae-0571-65c302f51cf2@redhat.com>
-Organization: Red Hat GmbH
+        Mon, 21 Oct 2019 05:38:44 -0400
+Received: from mga05.intel.com ([192.55.52.43]:10541 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727309AbfJUJio (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 05:38:44 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 02:38:43 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,323,1566889200"; 
+   d="scan'208";a="200379705"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga003.jf.intel.com with ESMTP; 21 Oct 2019 02:38:40 -0700
+Received: from andy by smile with local (Exim 4.92.2)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1iMU99-0002Ct-TE; Mon, 21 Oct 2019 12:38:39 +0300
+Date:   Mon, 21 Oct 2019 12:38:39 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Anatol Belski <weltling@outlook.de>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        "trivial@kernel.org" <trivial@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Subject: Re: [PATCH v2] include/linux/byteorder/generic.h: fix
+ signed/unsigned warnings
+Message-ID: <20191021093839.GM32742@smile.fi.intel.com>
+References: <AM0PR0502MB366860AC878296E4E76DD223BA690@AM0PR0502MB3668.eurprd05.prod.outlook.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-MC-Unique: gGQdN0OCO4edN38FnITm1A-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <AM0PR0502MB366860AC878296E4E76DD223BA690@AM0PR0502MB3668.eurprd05.prod.outlook.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 21 Oct 2019 13:59:23 +0800
-Jason Wang <jasowang@redhat.com> wrote:
+On Mon, Oct 21, 2019 at 09:27:37AM +0000, Anatol Belski wrote:
+> From: Anatol Belski <anbelski@microsoft.com>
+> 
+> This fixes the warnings like below, thrown by GCC
+> 
+> warning: comparison of integer expressions of different signedness: \
+> ‘int’ and ‘size_t’ {aka ‘long unsigned int’} [-Wsign-compare]
+>   195 |  for (i = 0; i < len; i++)
+>       |                ^
 
-> On 2019/10/18 =E4=B8=8B=E5=8D=8810:20, Cornelia Huck wrote:
-> > On Thu, 17 Oct 2019 18:48:35 +0800
-> > Jason Wang <jasowang@redhat.com> wrote:
-> > =20
-> >> This patch introduces a new mdev transport for virtio. This is used to
-> >> use kernel virtio driver to drive the mediated device that is capable
-> >> of populating virtqueue directly.
-> >>
-> >> A new virtio-mdev driver will be registered to the mdev bus, when a
-> >> new virtio-mdev device is probed, it will register the device with
-> >> mdev based config ops. This means it is a software transport between
-> >> mdev driver and mdev device. The transport was implemented through
-> >> device specific ops which is a part of mdev_parent_ops now.
-> >>
-> >> Signed-off-by: Jason Wang <jasowang@redhat.com>
-> >> ---
-> >>   drivers/virtio/Kconfig       |   7 +
-> >>   drivers/virtio/Makefile      |   1 +
-> >>   drivers/virtio/virtio_mdev.c | 409 +++++++++++++++++++++++++++++++++=
-++
-> >>   3 files changed, 417 insertions(+) =20
-> > (...)
-> > =20
-> >> +static int virtio_mdev_probe(struct device *dev)
-> >> +{
-> >> +=09struct mdev_device *mdev =3D mdev_from_dev(dev);
-> >> +=09const struct virtio_mdev_device_ops *ops =3D mdev_get_dev_ops(mdev=
-);
-> >> +=09struct virtio_mdev_device *vm_dev;
-> >> +=09int rc;
-> >> +
-> >> +=09vm_dev =3D devm_kzalloc(dev, sizeof(*vm_dev), GFP_KERNEL);
-> >> +=09if (!vm_dev)
-> >> +=09=09return -ENOMEM;
-> >> +
-> >> +=09vm_dev->vdev.dev.parent =3D dev;
-> >> +=09vm_dev->vdev.dev.release =3D virtio_mdev_release_dev;
-> >> +=09vm_dev->vdev.config =3D &virtio_mdev_config_ops;
-> >> +=09vm_dev->mdev =3D mdev;
-> >> +=09INIT_LIST_HEAD(&vm_dev->virtqueues);
-> >> +=09spin_lock_init(&vm_dev->lock);
-> >> +
-> >> +=09vm_dev->version =3D ops->get_mdev_features(mdev);
-> >> +=09if (vm_dev->version !=3D VIRTIO_MDEV_F_VERSION_1) {
-> >> +=09=09dev_err(dev, "VIRTIO_MDEV_F_VERSION_1 is mandatory\n");
-> >> +=09=09return -ENXIO;
-> >> +=09} =20
-> > Hm, so how is that mdev features interface supposed to work? If
-> > VIRTIO_MDEV_F_VERSION_1 is a bit, I would expect this code to test for
-> > its presence, and not for identity. =20
->=20
->=20
-> This should be used by driver to detect the which sets of functions and=
-=20
-> their semantics that could be provided by the device. E.g when driver=20
-> support both version 2 and version 1 but device only support version 1,=
-=20
-> driver can switch to use version 1. Btw, Is there a easy way for to test=
-=20
-> its presence or do you mean doing sanity testing on existence of the=20
-> mandatory ops that provided by the device?
+We have explicitly disabled this warnings in the kernel Makefile.
+How did you achieve this? (yes, I know the possible answer, perhaps
+this has to be mentioned as well)
 
-What I meant was something like:
+Now I see some inconsistency with this warning between GCC and Clang. Add
+related people to the discussion.
 
-features =3D ops->get_mdev_features(mdev);
-if (features & VIRTIO_MDEV_F_VERSION_1)
-=09vm_dev->version =3D 1;
-else
-=09//moan about missing support for version 1
+> Signed-off-by: Anatol Belski <anbelski@microsoft.com>
+> ---
 
-Can there be class id specific extra features, or is this only for core
-features? If the latter, maybe also do something like
+Changelog is missing.
+(No need to resend just for this, it's for your future contributions)
 
-supported_features =3D ORED_LIST_OF_FEATURES;
-if (features & ~supported_features)
-=09//moan about extra feature bits
+-- 
+With Best Regards,
+Andy Shevchenko
 
->=20
->=20
-> >
-> > What will happen if we come up with a version 2? If this is backwards
-> > compatible, will both version 2 and version 1 be set? =20
->=20
->=20
-> Yes, I think so, and version 2 should be considered as some extensions=20
-> of version 1. If it's completely, it should use a new class id.
-
-Ok, that makes sense.
 
