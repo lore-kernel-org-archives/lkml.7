@@ -2,97 +2,112 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70DA0CA9EB0
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:46:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F370CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:46:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EEED20873
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:46:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35DE220873
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:46:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZdcZ2Wvk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729759AbfJUPqZ (ORCPT
+        id S1729771AbfJUPq2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 21 Oct 2019 11:46:28 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:32135 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729435AbfJUPqZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 21 Oct 2019 11:46:25 -0400
-Received: from mga06.intel.com ([134.134.136.31]:15381 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727101AbfJUPqY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 11:46:24 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 08:46:11 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,324,1566889200"; 
-   d="scan'208";a="209463506"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 21 Oct 2019 08:46:07 -0700
-Received: by lahna (sSMTP sendmail emulation); Mon, 21 Oct 2019 18:46:06 +0300
-Date:   Mon, 21 Oct 2019 18:46:06 +0300
-From:   Mika Westerberg <mika.westerberg@intel.com>
-To:     Karol Herbst <kherbst@redhat.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lyude Paul <lyude@redhat.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        Linux ACPI Mailing List <linux-acpi@vger.kernel.org>
-Subject: Re: [PATCH v3] pci: prevent putting nvidia GPUs into lower device
- states on certain intel bridges
-Message-ID: <20191021154606.GT2819@lahna.fi.intel.com>
-References: <CACO55ttOJaXKWmKQQbMAQRJHLXF-VtNn58n4BZhFKYmAdfiJjA@mail.gmail.com>
- <20191016213722.GA72810@google.com>
- <CACO55tuXck7vqGVLmMBGFg6A2pr3h8koRuvvWHLNDH8XvBVxew@mail.gmail.com>
- <20191021133328.GI2819@lahna.fi.intel.com>
- <CACO55tujUZr+rKkyrkfN+wkNOJWdNEVhVc-eZ3RCXJD+G1z=7A@mail.gmail.com>
- <20191021140852.GM2819@lahna.fi.intel.com>
- <CACO55tvp6n2ahizwhc70xRJ1uTohs2ep962vwtHGQK-MkcLmsw@mail.gmail.com>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571672784;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=2lkud/2TuzM7NRL3rKWrW5AaADyBWycW62jzc8xlk8I=;
+        b=ZdcZ2WvkziNPTXPI48e8tX7DQFUJwnZFHWhu7+xy8VsoZBoaphCeaeEZys5L1LXtKdKV5A
+        sC51eMvMWKvTTHr7+nqDyRaSIw3o+6M53NcQ/1VuSgJPwK6VotP33mQF4s4nqSeP3roAVs
+        cQYcF/8o6EXH1d1QF+ThaftvRcNDAII=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-120-bkuGxsfZNyqjQfSe_fmrHA-1; Mon, 21 Oct 2019 11:46:21 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 445EA47B;
+        Mon, 21 Oct 2019 15:46:19 +0000 (UTC)
+Received: from crecklin.bos.csb (ovpn-125-176.rdu2.redhat.com [10.10.125.176])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 932254144;
+        Mon, 21 Oct 2019 15:46:16 +0000 (UTC)
+Reply-To: crecklin@redhat.com
+Subject: Re: [PATCH] security/keyring: avoid pagefaults in
+ keyring_read_iterator
+To:     David Howells <dhowells@redhat.com>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>, keyrings@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Waiman Long <longman@redhat.com>
+References: <20191018184030.8407-1-crecklin@redhat.com>
+ <30309.1571667719@warthog.procyon.org.uk>
+From:   Chris von Recklinghausen <crecklin@redhat.com>
+Organization: Red Hat
+Message-ID: <b8aa0f7c-0a90-efae-9fb7-aa85b19a0d9a@redhat.com>
+Date:   Mon, 21 Oct 2019 11:46:15 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACO55tvp6n2ahizwhc70xRJ1uTohs2ep962vwtHGQK-MkcLmsw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <30309.1571667719@warthog.procyon.org.uk>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MC-Unique: bkuGxsfZNyqjQfSe_fmrHA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 04:49:09PM +0200, Karol Herbst wrote:
-> On Mon, Oct 21, 2019 at 4:09 PM Mika Westerberg
-> <mika.westerberg@intel.com> wrote:
-> >
-> > On Mon, Oct 21, 2019 at 03:54:09PM +0200, Karol Herbst wrote:
-> > > > I really would like to provide you more information about such
-> > > > workaround but I'm not aware of any ;-) I have not seen any issues like
-> > > > this when D3cold is properly implemented in the platform.  That's why
-> > > > I'm bit skeptical that this has anything to do with specific Intel PCIe
-> > > > ports. More likely it is some power sequence in the _ON/_OFF() methods
-> > > > that is run differently on Windows.
-> > >
-> > > yeah.. maybe. I really don't know what's the actual root cause. I just
-> > > know that with this workaround it works perfectly fine on my and some
-> > > other systems it was tested on. Do you know who would be best to
-> > > approach to get proper documentation about those methods and what are
-> > > the actual prerequisites of those methods?
-> >
-> > Those should be documented in the ACPI spec. Chapter 7 should explain
-> > power resources and the device power methods in detail.
-> 
-> either I looked up the wrong spec or the documentation isn't really
-> saying much there.
+On 10/21/2019 10:21 AM, David Howells wrote:
+> Chris von Recklinghausen <crecklin@redhat.com> wrote:
+>
+>> The put_user call from keyring_read_iterator caused a page fault which
+>> attempts to lock mm->mmap_sem and type->lock_class (key->sem) in the rev=
+erse
+>> order that keyring_read_iterator did, thus causing the circular locking
+>> dependency.
+>>
+>> Remedy this by using access_ok and __put_user instead of put_user so we'=
+ll
+>> return an error instead of faulting in the page.
+> I wonder if it's better to create a kernel buffer outside of the lock in
+> keyctl_read_key().  Hmmm...  The reason I didn't want to do that is that
+> keyrings have don't have limits on the size.  Maybe that's not actually a
+> problem, since 1MiB would be able to hold a list of a quarter of a millio=
+n
+> keys.
+>
+> David
+>
 
-Well it explains those methods, _PSx, _PRx and _ON()/_OFF(). In case of
-PCIe device you also want to check PCIe spec. PCIe 5.0 section 5.8 "PCI
-Function Power State Transitions" has a picture about the supported
-power state transitions and there we can find that function must be in
-D3hot before it can be transitioned into D3cold so if the _OFF() for
-example blindly assumes that the device is in D0 when it is called, it
-is a bug in the BIOS.
+Hi David,
 
-BTW, where can I find acpidump of such system?
+Thanks for the feedback.
+
+I can try to prototype that, but regardless of where the kernel buffer
+is allocated, the important part is causing the initial pagefault in the
+read path outside the lock so __put_user won't fail due to a valid user
+address but page backing the user address isn't in-core.
+
+I'll start work on v2.
+
+Thanks,
+
+Chris
+
