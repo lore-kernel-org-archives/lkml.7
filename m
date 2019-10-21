@@ -2,107 +2,116 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFF91CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 06:08:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A23E7CA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 06:12:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91A6A2084B
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 06:08:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C0BB2084B
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 06:12:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oB1t6MTn"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qTUTQ4ZT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726237AbfJUGIQ (ORCPT
+        id S1726190AbfJUGMk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 02:08:16 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:33929 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726039AbfJUGIQ (ORCPT
+        Mon, 21 Oct 2019 02:12:40 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:44265 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726039AbfJUGMj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 02:08:16 -0400
-Received: by mail-wm1-f67.google.com with SMTP id v3so866739wmh.1
-        for <linux-kernel@vger.kernel.org>; Sun, 20 Oct 2019 23:08:14 -0700 (PDT)
+        Mon, 21 Oct 2019 02:12:39 -0400
+Received: by mail-wr1-f68.google.com with SMTP id z9so12353753wrl.11
+        for <linux-kernel@vger.kernel.org>; Sun, 20 Oct 2019 23:12:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=4/kY4Iuh46NZmdPYDysMt8pq2ZGIAr2/rIRYTWprc/0=;
-        b=oB1t6MTnzf47Ko9MJt4hXHXmaNHS2l9pnu0h4fYYHPxKIGDHcsgPdVyoo/NsSbv1O2
-         uCTLW6kDH+oaDa+OMJSo40Otaxe8aaCJyyKm9bN3s9j4EHVixD6E9soNlalXtzJTWADB
-         DJAKX4ZjYEgZQhvNbjmZOLQGmhA8Tfzz55vmJQ2/davbZjC6n55rh+rbvIs7L5/4FTeh
-         v8rUweDQ7PsWfJKC1LWaVdS5zxkjcbVH9fZsEzb+BaiK8YYGPR1pSrYpSBoj+M+uiEAl
-         Gg2xxpmKbyh4ZnDMCR1dI6pO2bfUnkE9t5szRJWG2hWKS4uYzRdfRc2y2t5fUGvCStDh
-         /nlQ==
+        bh=azBxEHDWCdsU7wz/faY/PPe9l3d9cjGBlYkkkxlsXNw=;
+        b=qTUTQ4ZTdm9DHInhDE6X3VmBqT/KyH/eg44Ie2ZyppNJ+Mq7Gzf0scMCqvZQU3nPkq
+         9RuuuXt9ohJ5GGZ8h2flwhyvHo+h+mwCU3HJf+NkGF1ALj5/Q88VB5OWwPcY/IliqH+l
+         L56F8Nihrbg51/Fsns1XWsTOeLYFw3fUNOlGzbLGBm3uO+epkCWsGR+NC1kxNQYUTroR
+         SzEk6Ha++yb8a85i+5pTuUxz2bAL3RQbU/K5HeDKEBB8dlhFE55Qgv18UJrCUJZZh8vr
+         uJ/G08ebShEM/n6IRWP8xr4T4msq/l2sffgnnJdXZSAWT/ipDYKo74mYhYFdnpTIOzIk
+         VfLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=4/kY4Iuh46NZmdPYDysMt8pq2ZGIAr2/rIRYTWprc/0=;
-        b=TXNuQ9BNCqH+MSt5vGe/VKcrANhb7BKeO5MgC3guWyUYNYez3fWG/V5m14MEZd7fXn
-         MVFxTA1hp0WTJBCG623OiPJMLaa+p5YzldHaDcljgmOLOM1MeJ0zFU3aym0qPGIowE6B
-         X2GGx663+svhSq5tQxDXTwlUpks86OdmDVrzODd9Zm9xK7K+PGJmoTUaJIcO0lw2EVwC
-         aVx7KI8wsGU7ns+I09IqtFdExuiX05IEzv36zxy17B3zdgf97xPXpeC+Ky4zWf5e23Pa
-         /VmXLab0l6Umc9oFlHRJh2tTQFUKq4EsYPWxWhuoR2dXQxfbCeIKhdYpkdhXOI7wijFP
-         sJYA==
-X-Gm-Message-State: APjAAAWBUcuGEfUIDV3ZsOr9+F4z2SOv0TowNwQDENANsdEj5igSE/RH
-        jbZSn2H1Z4im7e9CQ82qiu75uoIskoOu/RExfnR4EA==
-X-Google-Smtp-Source: APXvYqx7XQxrLMJoK6NNdCUXziFruma0esfovBxJGHOWgCA/3qMDBV1vUmG67RGywQZI7SPK2OszFu1whjLRm3Zdceg=
-X-Received: by 2002:a7b:cb54:: with SMTP id v20mr16697896wmj.119.1571638093988;
- Sun, 20 Oct 2019 23:08:13 -0700 (PDT)
+        bh=azBxEHDWCdsU7wz/faY/PPe9l3d9cjGBlYkkkxlsXNw=;
+        b=Mbj1qhwesKYNxUs8PbjZqZptqVM1mqCiFvtv9GJquQri9LKesEHucNw4Ny5180XusH
+         Eg5O7rCLh/tsJcQkP/5UrLdWZ/kYSThxorKKV88tJ/N2E0MAb7dCvvzlubDSjb81Gp7F
+         /vCa6gabhC4r3Zk+f4A/vrfPXOngbTizOCXabJ42+DJeeSKRslD+eTEBzC4aH5KkHIO5
+         XB8/B/ZXGvxgdb5fPktNqFoLnILIfU+Vjxv17Wgf3tXHNQEzIZl8At0H1QJ9zYWq4T4f
+         jcX7ldgN/bB7IntPsPHvA1xIe0MgcG/EVts6TIirLvWvvXyc7evSvP40HDme6h/ohjB5
+         kFMQ==
+X-Gm-Message-State: APjAAAVyr4cjTmOOHrIP4kRQ3N6dEh24uto04cxT2jCeY6aNCq7p2Zk/
+        IBVjFrWFHMjoMh4xdwiAz65Va++Jv1B95pAFBrje50tQ7qs=
+X-Google-Smtp-Source: APXvYqxnJb93TF5nD3jcoXnbupalitg5Dj+VYy2V93E3Z3QMw/jysu5nCOppGEaOWgZsmIzV8081S3I2H2bbczBjiHs=
+X-Received: by 2002:a5d:6b0a:: with SMTP id v10mr17063430wrw.32.1571638357257;
+ Sun, 20 Oct 2019 23:12:37 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191018220525.9042-1-sashal@kernel.org> <20191018220525.9042-63-sashal@kernel.org>
-In-Reply-To: <20191018220525.9042-63-sashal@kernel.org>
+References: <20191018161033.261971-1-samitolvanen@google.com>
+ <20191018161033.261971-6-samitolvanen@google.com> <CAKwvOd=SZ+f6hiLb3_-jytcKMPDZ77otFzNDvbwpOSsNMnifSg@mail.gmail.com>
+ <CABCJKuf1cTHqvAC2hyCWjQbNEdGjx8dtfHGWwEvrEWzv+f7vZg@mail.gmail.com>
+In-Reply-To: <CABCJKuf1cTHqvAC2hyCWjQbNEdGjx8dtfHGWwEvrEWzv+f7vZg@mail.gmail.com>
 From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Mon, 21 Oct 2019 08:08:02 +0200
-Message-ID: <CAKv+Gu_6vzE-Je4G-ZZ=jU1qAWnCcADr7cJ_MG8m+tPzcC0QBw@mail.gmail.com>
-Subject: Re: [PATCH AUTOSEL 4.19 063/100] crypto: arm/aes-ce - add dependency
- on AES library
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>
+Date:   Mon, 21 Oct 2019 08:12:26 +0200
+Message-ID: <CAKv+Gu92eR81+W1iXOXZHWgub-fNPcKaa+NCpGS_Yy4K4=7t+Q@mail.gmail.com>
+Subject: Re: [PATCH 05/18] arm64: kbuild: reserve reg x18 from general
+ allocation by the compiler
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 19 Oct 2019 at 00:07, Sasha Levin <sashal@kernel.org> wrote:
+On Fri, 18 Oct 2019 at 21:00, Sami Tolvanen <samitolvanen@google.com> wrote:
 >
-> From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> On Fri, Oct 18, 2019 at 10:32 AM 'Nick Desaulniers' via Clang Built
+> Linux <clang-built-linux@googlegroups.com> wrote:
+> > > and remove the mention from
+> > > the LL/SC compiler flag override.
+> >
+> > was that cut/dropped from this patch?
+> >
+> > >
+> > > Link: https://patchwork.kernel.org/patch/9836881/
+> >
+> > ^ Looks like it. Maybe it doesn't matter, but if sending a V2, maybe
+> > the commit message to be updated?
 >
-> [ Upstream commit f703964fc66804e6049f2670fc11045aa8359b1a ]
+> True. The original patch is from 2017 and the relevant part of
+> arm64/lib/Makefile no longer exists. I'll update this accordingly.
 >
-> The ARM accelerated AES driver depends on the new AES library for
-> its non-SIMD fallback so express this in its Kconfig declaration.
+> > I like how this does not conditionally reserve it based on the CONFIG
+> > for SCS.  Hopefully later patches don't wrap it, but I haven't looked
+> > through all of them yet.
 >
-> Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> In a later patch x18 is only reserved with SCS. I'm fine with dropping
+> that patch and reserving it always, but wouldn't mind hearing thoughts
+> from the maintainers about this first.
+>
 
-Please drop this, it doesn't belong in -stable.
+Why would you reserve x18 if SCS is disabled? Given that this is a
+choice that is made at code generation time, there is no justification
+for always reserving it, since it will never be used for anything. (Of
+course, this applies to generated code only - .S files should simply
+be updated to avoid x18 altogether)
 
-> ---
->  arch/arm/crypto/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/arch/arm/crypto/Kconfig b/arch/arm/crypto/Kconfig
-> index b8e69fe282b8d..44278f375ae23 100644
-> --- a/arch/arm/crypto/Kconfig
-> +++ b/arch/arm/crypto/Kconfig
-> @@ -89,6 +89,7 @@ config CRYPTO_AES_ARM_CE
->         tristate "Accelerated AES using ARMv8 Crypto Extensions"
->         depends on KERNEL_MODE_NEON
->         select CRYPTO_BLKCIPHER
-> +       select CRYPTO_LIB_AES
->         select CRYPTO_SIMD
->         help
->           Use an implementation of AES in CBC, CTR and XTS modes that uses
-> --
-> 2.20.1
->
+Also, please combine this patch with the one that reserves it
+conditionally, no point in having both in the same series.
