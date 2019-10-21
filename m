@@ -2,228 +2,145 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2B89C47E49
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:32:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EFEECA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:33:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C255E206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:32:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 456B92089C
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:33:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571650407;
+	bh=Ic33NsiY5PhmNhC9qohdkoS2YMou4rOZtpGb9RxHICw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XDY54Ja03fx2/MqqFqrl16VVCW2Duhk1Dd+gwPHCIta2QsTLGPoyzHKdOhNjGLu7t
+	 IfeD3ZHM2QD8Mq5y8+ZsVitxiyBrRPisEOKU43S+JYGPA9rsLO4uF4FU4PgAtcm4Q7
+	 mmKevglYaUZgLU6dan48d20LyqdC19CJKiKhguEg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727734AbfJUJck (ORCPT
+        id S1727762AbfJUJdZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 05:32:40 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:34070 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726725AbfJUJcj (ORCPT
+        Mon, 21 Oct 2019 05:33:25 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:38351 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726977AbfJUJdZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 05:32:39 -0400
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iMU3B-0005rj-Ie; Mon, 21 Oct 2019 11:32:29 +0200
-Date:   Mon, 21 Oct 2019 11:32:29 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Andy Lutomirski <luto@kernel.org>
-cc:     Huacai Chen <chenhc@lemote.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Paul Burton <paul.burton@mips.com>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] lib/vdso: Use __arch_use_vsyscall() to indicate
- fallback
-In-Reply-To: <CALCETrXik5bzj-jQyHgqkzXqhYVJzedyD6WqBS+m+zmzKzCcDQ@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.1910211027540.1904@nanos.tec.linutronix.de>
-References: <1571367619-13573-1-git-send-email-chenhc@lemote.com> <CALCETrWXRgkQOJGRqa_sOLAG2zhjsEX6b86T2VTsNYN9ECRrtA@mail.gmail.com> <CAAhV-H6VkW5-hMOrzAQeyHT4pYGExZR6eTRbPHSPK50GAkigCw@mail.gmail.com> <alpine.DEB.2.21.1910191156240.2098@nanos.tec.linutronix.de>
- <CALCETrXik5bzj-jQyHgqkzXqhYVJzedyD6WqBS+m+zmzKzCcDQ@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 21 Oct 2019 05:33:25 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 3so12012246wmi.3
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 02:33:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=KNp9/6Fc8QVEU83S7ncGj8CBqk2rcFyU35oR9K4OPTw=;
+        b=nvEGyDl5C2CloKqjCcXdBO+fRb9fvRz5H9Ws7Yd2LWvJtym/V+1dMN7lcgEHKqBoYh
+         i24oHdb5xVvtE97Z6KxqSt/P9m4qcXyyHn+FRPgntkjfWm5f1fooF2o9hY7C2XMqNJaX
+         AFcKfTTYAaX7dICWAtwC2KxAlMsjWofFBOuVh004AZjBXqekjAszSr/0CnIXTXew4TnH
+         hb0gYTC0Dxna3F1sCwAvpVEIevaAMdMq51v84+OCDgnMayxn8Q8eHViW4WgCDT8yK96o
+         kXtl/unbb0YadyncZdK7Kb2ppiZKg7NS+Do1mtlKL6np0Eb/yhQ6KyRrcdpTOdONjKUV
+         HHIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KNp9/6Fc8QVEU83S7ncGj8CBqk2rcFyU35oR9K4OPTw=;
+        b=WSD8LfqP2Zo1l+JRaVdtE+Z18dDSInCwJU4aouM3y3Es1Mt9TSHzkCxSnPLAPCyCm8
+         0goDq+0Lf3Jbtr/VEmlSfYzuF2X76me5cxMnP3MOxStQBUUMy6Tx9ylDbYqydG8PLzRw
+         /JN/18DYZxXv68z+F8uHnnGfAK5U3sJ+J2QTpYpkunOk+OlcN4Ajl98b0S0c+hhvj2QC
+         Z9OszDDrLD2yv4g90ALdTG9fHexs7OZdFzSLvNWR87/cIg/hepDlmM9NS9UnlU1/XG5t
+         KbUFaksRHeIdhfthdUKA1nXGYyDCI4F6AwzgKkMoQulsxgW8IXHO2pEVw8w8NurSy5/d
+         y9Zg==
+X-Gm-Message-State: APjAAAUBo25D9nHwzis3Njx8ihTuasxQWwhn/MDmcz0y6vMQC+i00cWw
+        vJb0OQCYh4aLVyE8zBq27nc=
+X-Google-Smtp-Source: APXvYqxiOUCHKi5i5o6nCa/+WD6fgVyPyntQOi3UmfmY7hFpFhcveFs2ECVtO+XNd7WYKeQRhrqN4g==
+X-Received: by 2002:a1c:f401:: with SMTP id z1mr17836153wma.66.1571650403024;
+        Mon, 21 Oct 2019 02:33:23 -0700 (PDT)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id y186sm17942653wmb.41.2019.10.21.02.33.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Oct 2019 02:33:22 -0700 (PDT)
+Date:   Mon, 21 Oct 2019 11:33:19 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+        mhiramat@kernel.org, bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, jpoimboe@redhat.com, jeyu@kernel.org
+Subject: Re: [PATCH v4 10/16] x86/alternative: Shrink text_poke_loc
+Message-ID: <20191021093319.GA34106@gmail.com>
+References: <20191018073525.768931536@infradead.org>
+ <20191018074634.514629541@infradead.org>
+ <20191021090104.GB102207@gmail.com>
+ <20191021092559.GB1800@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191021092559.GB1800@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 20 Oct 2019, Andy Lutomirski wrote:
-> On Sat, Oct 19, 2019 at 3:01 AM Thomas Gleixner <tglx@linutronix.de> wrote:
-> > __arch_use_vsyscall() is a pointless exercise TBH. The VDSO data should be
-> > updated unconditionally so all the trivial interfaces like time() and
-> > getres() just work independently of the functions which depend on the
-> > underlying clocksource.
-> >
-> > This functions have a fallback operation already:
-> >
-> > Let __arch_get_hw_counter() return U64_MAX and the syscall fallback is
-> > invoked.
-> >
+
+* Peter Zijlstra <peterz@infradead.org> wrote:
+
+> On Mon, Oct 21, 2019 at 11:01:04AM +0200, Ingo Molnar wrote:
+> > 
+> > * Peter Zijlstra <peterz@infradead.org> wrote:
+> > 
+> > > Employ the fact that all text must be within a s32 displacement of one
+> > > another to shrink the text_poke_loc::addr field. Make it relative to
+> > > _stext.
+> > > 
+> > > This then shrinks struct text_poke_loc to 16 bytes, and consequently
+> > > increases TP_VEC_MAX from 170 to 256.
+> > > 
+> > > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > > ---
+> > >  arch/x86/kernel/alternative.c |   23 ++++++++++++++---------
+> > >  1 file changed, 14 insertions(+), 9 deletions(-)
+> > > 
+> > > --- a/arch/x86/kernel/alternative.c
+> > > +++ b/arch/x86/kernel/alternative.c
+> > > @@ -937,7 +937,7 @@ static void do_sync_core(void *info)
+> > >  }
+> > >  
+> > >  struct text_poke_loc {
+> > > -	void *addr;
+> > > +	s32 rel_addr; /* addr := _stext + rel_addr */
+> > >  	s32 rel32;
+> > >  	u8 opcode;
+> > >  	const u8 text[POKE_MAX_OPCODE_SIZE];
+> > > @@ -948,13 +948,18 @@ static struct bp_patching_desc {
+> > >  	int nr_entries;
+> > >  } bp_patching;
+> > >  
+> > > +static inline void *text_poke_addr(struct text_poke_loc *tp)
+> > > +{
+> > > +	return _stext + tp->rel_addr;
+> > > +}
+> > 
+> > So won't this complicate the life of the big-address-space gcc model 
+> > build patches that for purposes of module randomization are spreading the 
+> > kernel and modules all across the 64-bit address space, where they might 
+> > not necessarily end up within a ~2GB window?
+> > 
+> > Nothing upstream yet, but I remember such patches ...
 > 
-> My thought was that __arch_get_hw_counter() could return last-1 to
-> indicate failure, which would allow the two checks to be folded into
-> one check.  Or we could continue to use U64_MAX and rely on the fact
-> that (s64)U64_MAX < 0, not worry about the cycle counter overflowing,
-> and letting cycles < last catch it.
+> IIRC what they were doing was allow moving the 2G range further out 
+> into the address space, such that absolute addresses no longer fit in 
+> u32 (as they do now), but they keep the relative displacement in s32. 
+> Otherwise we'll end up with PLT entries all over the place. That is, if 
+> we break the s32 displacement, CALL/JMP.d32 will not longer be able to 
+> reach any other code and we need intermediate trampolines to help them 
+> along, which is pretty shit.
 
-This is not an overflow catch. It's solely to deal with the fact that on
-X86 you can observe (cycles < last) on multi socket systems under rare
-circumstances. Any other architecture does not have that issue AFAIK.
-
-The wraparound of clocksources with a smaller width than 64bit is handled
-by:
-
-    delta = (cycles - last) & mask;
-
-which operates on unsigned values for obvious reasons.
-
-> (And we should change it to return s64 at some point regardless -- all
-> the math is signed, so the underlying types should be too IMO.)
-
-See above. delta is guaranteed to be >= 0 and the mult/shift is not signed
-either. All the base values which are in the VDSO are unsigned as well.
-
-The weird typecast there:
-
-    if ((s64)cycles < 0)
-
-could as well be
-
-    if (cycles == U64_MAX)
-
-but the typecasted version creates better code.
-
-I tried to fold the two operations (see patch below) and on all machines I
-tested on (various generations of Intel and AMD) the result is slower than
-what we have now by a couple of cycles, which is a lot for these functions
-(i.e. between 3-5%). I'm sure I tried that before and ended up with the
-existing code as the fastest variant.
-
-Why? That's subject to speculation :)
+Ok, indeed, that's fair enough.
 
 Thanks,
 
-	tglx
-
-8<----------
- arch/x86/include/asm/vdso/gettimeofday.h |   39 ++++++-------------------------
- lib/vdso/gettimeofday.c                  |   23 +++---------------
- 2 files changed, 13 insertions(+), 49 deletions(-)
-
---- a/arch/x86/include/asm/vdso/gettimeofday.h
-+++ b/arch/x86/include/asm/vdso/gettimeofday.h
-@@ -235,10 +235,14 @@ static u64 vread_hvclock(void)
- }
- #endif
- 
--static inline u64 __arch_get_hw_counter(s32 clock_mode)
-+static inline u64 __arch_get_hw_counter(s32 clock_mode, u64 last, u64 mask)
- {
-+	/*
-+	 * Mask operation is not required as all VDSO clocksources are
-+	 * 64bit wide.
-+	 */
- 	if (clock_mode == VCLOCK_TSC)
--		return (u64)rdtsc_ordered();
-+		return (u64)rdtsc_ordered() - last;
- 	/*
- 	 * For any memory-mapped vclock type, we need to make sure that gcc
- 	 * doesn't cleverly hoist a load before the mode check.  Otherwise we
-@@ -248,13 +252,13 @@ static inline u64 __arch_get_hw_counter(
- #ifdef CONFIG_PARAVIRT_CLOCK
- 	if (clock_mode == VCLOCK_PVCLOCK) {
- 		barrier();
--		return vread_pvclock();
-+		return vread_pvclock() - last;
- 	}
- #endif
- #ifdef CONFIG_HYPERV_TIMER
- 	if (clock_mode == VCLOCK_HVCLOCK) {
- 		barrier();
--		return vread_hvclock();
-+		return vread_hvclock() - last;
- 	}
- #endif
- 	return U64_MAX;
-@@ -265,33 +269,6 @@ static __always_inline const struct vdso
- 	return __vdso_data;
- }
- 
--/*
-- * x86 specific delta calculation.
-- *
-- * The regular implementation assumes that clocksource reads are globally
-- * monotonic. The TSC can be slightly off across sockets which can cause
-- * the regular delta calculation (@cycles - @last) to return a huge time
-- * jump.
-- *
-- * Therefore it needs to be verified that @cycles are greater than
-- * @last. If not then use @last, which is the base time of the current
-- * conversion period.
-- *
-- * This variant also removes the masking of the subtraction because the
-- * clocksource mask of all VDSO capable clocksources on x86 is U64_MAX
-- * which would result in a pointless operation. The compiler cannot
-- * optimize it away as the mask comes from the vdso data and is not compile
-- * time constant.
-- */
--static __always_inline
--u64 vdso_calc_delta(u64 cycles, u64 last, u64 mask, u32 mult)
--{
--	if (cycles > last)
--		return (cycles - last) * mult;
--	return 0;
--}
--#define vdso_calc_delta vdso_calc_delta
--
- #endif /* !__ASSEMBLY__ */
- 
- #endif /* __ASM_VDSO_GETTIMEOFDAY_H */
---- a/lib/vdso/gettimeofday.c
-+++ b/lib/vdso/gettimeofday.c
-@@ -26,34 +26,21 @@
- #include <asm/vdso/gettimeofday.h>
- #endif /* ENABLE_COMPAT_VDSO */
- 
--#ifndef vdso_calc_delta
--/*
-- * Default implementation which works for all sane clocksources. That
-- * obviously excludes x86/TSC.
-- */
--static __always_inline
--u64 vdso_calc_delta(u64 cycles, u64 last, u64 mask, u32 mult)
--{
--	return ((cycles - last) & mask) * mult;
--}
--#endif
--
- static int do_hres(const struct vdso_data *vd, clockid_t clk,
- 		   struct __kernel_timespec *ts)
- {
- 	const struct vdso_timestamp *vdso_ts = &vd->basetime[clk];
--	u64 cycles, last, sec, ns;
-+	u64 delta, sec, ns;
- 	u32 seq;
- 
- 	do {
- 		seq = vdso_read_begin(vd);
--		cycles = __arch_get_hw_counter(vd->clock_mode);
--		ns = vdso_ts->nsec;
--		last = vd->cycle_last;
--		if (unlikely((s64)cycles < 0))
-+		delta = __arch_get_hw_counter(vd->clock_mode, vd->cycle_last,
-+					      vd->mask);
-+		if (unlikely((s64)delta < 0))
- 			return -1;
- 
--		ns += vdso_calc_delta(cycles, last, vd->mask, vd->mult);
-+		ns = vdso_ts->nsec + delta * vd->mult;
- 		ns >>= vd->shift;
- 		sec = vdso_ts->sec;
- 	} while (unlikely(vdso_read_retry(vd, seq)));
-
-
-
-
+	Ingo
