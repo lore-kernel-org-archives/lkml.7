@@ -2,177 +2,119 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37561CA9EB0
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:32:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66B2CCA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:33:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08E4320873
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:32:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571664727;
-	bh=s2MUd+aoyjl0YqHLgnKz/F+K2JCRuYEwU71SYc90uQo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=catZsJeH5eYPL+ArX6xyRcw0ps15xUXmvaY0UPlcaLdp6UQbpc6P+yUgfTJA6v22r
-	 hKdkotd+4k/+OQGH/9gr+7tnrsdRCR+oyIQXhsPUqshDUfqjuH2PNCSHEg55mnnWIO
-	 HWF6dlEgH5uuQhW87cj7m3rj0p3wUX2a76RwfFiI=
+	by mail.kernel.org (Postfix) with ESMTP id 4686420873
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:33:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728933AbfJUNcG (ORCPT
+        id S1728847AbfJUNdn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 09:32:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37892 "EHLO mail.kernel.org"
+        Mon, 21 Oct 2019 09:33:43 -0400
+Received: from mga02.intel.com ([134.134.136.20]:65533 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727322AbfJUNcF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 09:32:05 -0400
-Received: from linux-8ccs (ip5f5ade6e.dynamic.kabel-deutschland.de [95.90.222.110])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58FCA20873;
-        Mon, 21 Oct 2019 13:32:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571664723;
-        bh=s2MUd+aoyjl0YqHLgnKz/F+K2JCRuYEwU71SYc90uQo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fuR0L3DL0hxl0OMguM+cHtAJRljCFNC0Te2vzLkSxdMVcJE5SG5e2nFeFjmsnuq2J
-         m737UxHqdGJTwDdH4HuwO/VZV0xP657x6LTwN3OaxvHtFzH4Bzf4rB1/jLfjGADko1
-         zGP2b549iUmHE1cAxmNNck8Wg48s58PBgUYkkQIU=
-Date:   Mon, 21 Oct 2019 15:31:57 +0200
-From:   Jessica Yu <jeyu@kernel.org>
-To:     Matthias Maennich <maennich@google.com>
-Cc:     linux-kernel@vger.kernel.org, kernel-team@android.com,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Martijn Coenen <maco@android.com>,
-        Lucas De Marchi <lucas.de.marchi@gmail.com>,
-        Shaun Ruffell <sruffell@sruffell.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Will Deacon <will@kernel.org>, linux-kbuild@vger.kernel.org,
-        linux-modules@vger.kernel.org
-Subject: Re: [PATCH v2 0/4] export/modpost: avoid renaming __ksymtab entries
- for symbol namespaces
-Message-ID: <20191021133157.GA21112@linux-8ccs>
-References: <20191010151443.7399-1-maennich@google.com>
- <20191018093143.15997-1-maennich@google.com>
+        id S1727322AbfJUNdn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 09:33:43 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 06:33:32 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,323,1566889200"; 
+   d="scan'208";a="209444857"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 21 Oct 2019 06:33:28 -0700
+Received: by lahna (sSMTP sendmail emulation); Mon, 21 Oct 2019 16:33:28 +0300
+Date:   Mon, 21 Oct 2019 16:33:28 +0300
+From:   Mika Westerberg <mika.westerberg@intel.com>
+To:     Karol Herbst <kherbst@redhat.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lyude Paul <lyude@redhat.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        Linux ACPI Mailing List <linux-acpi@vger.kernel.org>
+Subject: Re: [PATCH v3] pci: prevent putting nvidia GPUs into lower device
+ states on certain intel bridges
+Message-ID: <20191021133328.GI2819@lahna.fi.intel.com>
+References: <CACO55ttOJaXKWmKQQbMAQRJHLXF-VtNn58n4BZhFKYmAdfiJjA@mail.gmail.com>
+ <20191016213722.GA72810@google.com>
+ <CACO55tuXck7vqGVLmMBGFg6A2pr3h8koRuvvWHLNDH8XvBVxew@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191018093143.15997-1-maennich@google.com>
-X-OS:   Linux linux-8ccs 4.12.14-lp150.12.28-default x86_64
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CACO55tuXck7vqGVLmMBGFg6A2pr3h8koRuvvWHLNDH8XvBVxew@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+++ Matthias Maennich [18/10/19 10:31 +0100]:
->The introduction of the symbol namespace patches changed the way symbols are
->named in the ksymtab entries. That caused userland tools to fail (such as
->kmod's depmod). As depmod is used as part of the kernel build it was worth
->having another look whether this name change can be avoided.
->
->The main purpose of this series is to restore the original ksymtab entry names.
->For that to happen and to remove some rough edges around that, the relevant
->parts in modpost got a small refactoring as to when and how namespaces are
->evaluated and set in the symbol struct.
->
->Eventually, the namespace values can be read from __kstrtabns_ entries and
->their corresponding __ksymtab_strings values. That removes the need to carry
->the namespace names within the (anyway unique) symbol name entries.
->
->The last patch of this series is adopted from Masahiro [1]. By allowing 'no
->namespace' to be represented as empty string, large chunks of
->include/linux/export.h could be consolidated. Technically, this last patch is
->not absolutely necessary to fix functionality. It addresses concerns about
->maintainability and readability. While I strongly suggest sending all of the
->patches for 5.4, the last one could possible deferred to the next merge window.
->
->This patch applies to the modules-linus [2] branch.
+On Wed, Oct 16, 2019 at 11:48:22PM +0200, Karol Herbst wrote:
+> On Wed, Oct 16, 2019 at 11:37 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> >
+> > [+cc linux-acpi]
+> >
+> > On Wed, Oct 16, 2019 at 09:18:32PM +0200, Karol Herbst wrote:
+> > > but setting the PCI_DEV_FLAGS_NO_D3 flag does prevent using the
+> > > platform means of putting the device into D3cold, right? That's
+> > > actually what should still happen, just the D3hot step should be
+> > > skipped.
+> >
+> > If I understand correctly, when we put a device in D3cold on an ACPI
+> > system, we do something like this:
+> >
+> >   pci_set_power_state(D3cold)
+> >     if (PCI_DEV_FLAGS_NO_D3)
+> >       return 0                                   <-- nothing at all if quirked
+> >     pci_raw_set_power_state
+> >       pci_write_config_word(PCI_PM_CTRL, D3hot)  <-- set to D3hot
+> >     __pci_complete_power_transition(D3cold)
+> >       pci_platform_power_transition(D3cold)
+> >         platform_pci_set_power_state(D3cold)
+> >           acpi_pci_set_power_state(D3cold)
+> >             acpi_device_set_power(ACPI_STATE_D3_COLD)
+> >               ...
+> >                 acpi_evaluate_object("_OFF")     <-- set to D3cold
+> >
+> > I did not understand the connection with platform (ACPI) power
+> > management from your patch.  It sounds like you want this entire path
+> > except that you want to skip the PCI_PM_CTRL write?
+> >
+> 
+> exactly. I am running with this workaround for a while now and never
+> had any fails with it anymore. The GPU gets turned off correctly and I
+> see the same power savings, just that the GPU can be powered on again.
+> 
+> > That seems like something Rafael should weigh in on.  I don't know
+> > why we set the device to D3hot with PCI_PM_CTRL before using the ACPI
+> > methods, and I don't know what the effect of skipping that is.  It
+> > seems a little messy to slice out this tiny piece from the middle, but
+> > maybe it makes sense.
+> >
+> 
+> afaik when I was talking with others in the past about it, Windows is
+> doing that before using ACPI calls, but maybe they have some similar
+> workarounds for certain intel bridges as well? I am sure it affects
+> more than the one I am blacklisting here, but I rather want to check
+> each device before blacklisting all kabylake and sky lake bridges (as
+> those are the ones were this issue can be observed).
+> 
+> Sadly we had no luck getting any information about such workaround out
+> of Nvidia or Intel.
 
-Hi!
-
-I've applied the first three patches to modules-linus, inbound for -rc5.
-
-Patch 4/4 was agreed to be for 5.5, and will be applied to
-modules-next once I rebase that branch against -rc5.
-
-Thanks!
-
-Jessica
-
->Changes since v2:
-> - restored correct authorship for [4/4]
-> - add missing contributor tags
-> - fixed typos and code style (spaces/tabs)
->
->[1] https://lore.kernel.org/lkml/20190927093603.9140-5-yamada.masahiro@socionext.com/
->[2] https://git.kernel.org/pub/scm/linux/kernel/git/jeyu/linux.git/log/?h=modules-linus
->
->Cc: Jessica Yu <jeyu@kernel.org>
->Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
->Cc: Martijn Coenen <maco@android.com>
->Cc: Lucas De Marchi <lucas.de.marchi@gmail.com>
->Cc: Shaun Ruffell <sruffell@sruffell.net>
->Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->Cc: Will Deacon <will@kernel.org>
->Cc: linux-kbuild@vger.kernel.org
->Cc: linux-modules@vger.kernel.org
->
->
->Masahiro Yamada (1):
->  export: avoid code duplication in include/linux/export.h
->
->Matthias Maennich (3):
->  modpost: delegate updating namespaces to separate function
->  modpost: make updating the symbol namespace explicit
->  symbol namespaces: revert to previous __ksymtab name scheme
->
-> include/linux/export.h | 97 +++++++++++++-----------------------------
-> kernel/module.c        |  2 +-
-> scripts/mod/modpost.c  | 59 ++++++++++++++++---------
-> scripts/mod/modpost.h  |  1 +
-> 4 files changed, 71 insertions(+), 88 deletions(-)
->
->Interdiff against v1:
->diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
->index 7cf0065ac95f..0bf7eab80d9f 100644
->--- a/scripts/mod/modpost.c
->+++ b/scripts/mod/modpost.c
->@@ -357,18 +357,21 @@ static const char *namespace_from_kstrtabns(struct elf_info *info,
->
-> static void sym_update_namespace(const char *symname, const char *namespace)
-> {
->-       struct symbol *s = find_symbol(symname);
->-       /* That symbol should have been created earlier and thus this is
->-        * actually an assertion. */
->-       if (!s) {
->-               merror("Could not update namespace(%s) for symbol %s\n",
->-                      namespace, symname);
->-               return;
->-       }
->-
->-       free(s->namespace);
->-       s->namespace =
->-	       namespace && namespace[0] ? NOFAIL(strdup(namespace)) : NULL;
->+	struct symbol *s = find_symbol(symname);
->+
->+	/*
->+	 * That symbol should have been created earlier and thus this is
->+	 * actually an assertion.
->+	 */
->+	if (!s) {
->+		merror("Could not update namespace(%s) for symbol %s\n",
->+		       namespace, symname);
->+		return;
->+	}
->+
->+	free(s->namespace);
->+	s->namespace =
->+		namespace && namespace[0] ? NOFAIL(strdup(namespace)) : NULL;
-> }
->
-> /**
->-- 
->2.23.0.866.gb869b98d4c-goog
->
+I really would like to provide you more information about such
+workaround but I'm not aware of any ;-) I have not seen any issues like
+this when D3cold is properly implemented in the platform.  That's why
+I'm bit skeptical that this has anything to do with specific Intel PCIe
+ports. More likely it is some power sequence in the _ON/_OFF() methods
+that is run differently on Windows.
