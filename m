@@ -2,129 +2,295 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15C3ECA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 04:44:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA7A8CA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 05:01:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC6E72067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 04:44:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571633063;
-	bh=LVlUwIor1Q0zqTd3c1Z8i6+KPgjp8+NUXpE9o1AUPGg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=c6qhrTCeW7WST/Y+gGT9ubk9xU63Q4ZcNm2JFEkD+gqKKLA7kyWgsmFYYCa4DEZ9O
-	 hYP5lQtKObpqQaQf7gg5LE5AI62cOV70a3Xvw/hXglRZ+IJoXA8ueoYLf9Kv+1poY0
-	 RUnyqj2kPJnzkc5UwakfLn5x7k4myrKH8ou/6rIE=
+	by mail.kernel.org (Postfix) with ESMTP id BF8D320656
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 05:01:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727092AbfJUEoL (ORCPT
+        id S1727034AbfJUFB1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 00:44:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49034 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725827AbfJUEoK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 00:44:10 -0400
-Received: from localhost (unknown [122.167.89.206])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 102972067B;
-        Mon, 21 Oct 2019 04:44:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571633049;
-        bh=LVlUwIor1Q0zqTd3c1Z8i6+KPgjp8+NUXpE9o1AUPGg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=J6WyMO4de+yhu9NJ87JGfUDk+teLPhNjtBP7DfyEfMwcriRxAM0DBKoshvRyAxjT8
-         Rw2crnxAE4eO4ywbrixkkk++fwl0VQ4ay2UipY6mi6JtLiBPAeQ35wGoGk2Gfi2J3p
-         I0GCNmT+kV4uyMNPvoDXLVL7Vqf5oyYwTpo0ocII=
-Date:   Mon, 21 Oct 2019 10:14:05 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     robh@kernel.org, broonie@kernel.org, bgoswami@codeaurora.org,
-        pierre-louis.bossart@linux.intel.com, devicetree@vger.kernel.org,
-        lgirdwood@gmail.com, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, spapothi@codeaurora.org
-Subject: Re: [PATCH v3 2/2] soundwire: qcom: add support for SoundWire
- controller
-Message-ID: <20191021044405.GB2654@vkoul-mobl>
-References: <20191011154423.2506-1-srinivas.kandagatla@linaro.org>
- <20191011154423.2506-3-srinivas.kandagatla@linaro.org>
+        Mon, 21 Oct 2019 01:01:27 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42424 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725886AbfJUFB1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 01:01:27 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id BB36EB236;
+        Mon, 21 Oct 2019 05:01:23 +0000 (UTC)
+Subject: Re: [PATCH v6 10/10] arm64: Retrieve stolen time as paravirtualized
+ guest
+To:     Marc Zyngier <maz@kernel.org>, Steven Price <steven.price@arm.com>
+Cc:     Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Pouloze <suzuki.poulose@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191011125930.40834-1-steven.price@arm.com>
+ <20191011125930.40834-11-steven.price@arm.com> <86a79wzdhk.wl-maz@kernel.org>
+From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Message-ID: <237a3457-bcb3-c9b7-11ef-241b7ccc370e@suse.com>
+Date:   Mon, 21 Oct 2019 07:01:21 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191011154423.2506-3-srinivas.kandagatla@linaro.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <86a79wzdhk.wl-maz@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11-10-19, 16:44, Srinivas Kandagatla wrote:
+On 19.10.19 22:28, Marc Zyngier wrote:
+> On Fri, 11 Oct 2019 13:59:30 +0100,
+> Steven Price <steven.price@arm.com> wrote:
+>>
+>> Enable paravirtualization features when running under a hypervisor
+>> supporting the PV_TIME_ST hypercall.
+>>
+>> For each (v)CPU, we ask the hypervisor for the location of a shared
+>> page which the hypervisor will use to report stolen time to us. We set
+>> pv_time_ops to the stolen time function which simply reads the stolen
+>> value from the shared page for a VCPU. We guarantee single-copy
+>> atomicity using READ_ONCE which means we can also read the stolen
+>> time for another VCPU than the currently running one while it is
+>> potentially being updated by the hypervisor.
+>>
+>> Signed-off-by: Steven Price <steven.price@arm.com>
+>> ---
+>>   .../admin-guide/kernel-parameters.txt         |   6 +-
+>>   arch/arm64/include/asm/paravirt.h             |   9 +-
+>>   arch/arm64/kernel/paravirt.c                  | 148 ++++++++++++++++++
+>>   arch/arm64/kernel/time.c                      |   3 +
+>>   include/linux/cpuhotplug.h                    |   1 +
+>>   5 files changed, 163 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+>> index c7ac2f3ac99f..346b1c7a4afb 100644
+>> --- a/Documentation/admin-guide/kernel-parameters.txt
+>> +++ b/Documentation/admin-guide/kernel-parameters.txt
+>> @@ -3083,9 +3083,9 @@
+>>   			[X86,PV_OPS] Disable paravirtualized VMware scheduler
+>>   			clock and use the default one.
+>>   
+>> -	no-steal-acc	[X86,KVM] Disable paravirtualized steal time accounting.
+>> -			steal time is computed, but won't influence scheduler
+>> -			behaviour
+>> +	no-steal-acc	[X86,KVM,ARM64] Disable paravirtualized steal time
+>> +			accounting. steal time is computed, but won't
+>> +			influence scheduler behaviour
+>>   
+>>   	nolapic		[X86-32,APIC] Do not enable or use the local APIC.
+>>   
+>> diff --git a/arch/arm64/include/asm/paravirt.h b/arch/arm64/include/asm/paravirt.h
+>> index 799d9dd6f7cc..125c26c42902 100644
+>> --- a/arch/arm64/include/asm/paravirt.h
+>> +++ b/arch/arm64/include/asm/paravirt.h
+>> @@ -21,6 +21,13 @@ static inline u64 paravirt_steal_clock(int cpu)
+>>   {
+>>   	return pv_ops.time.steal_clock(cpu);
+>>   }
+>> -#endif
+>> +
+>> +int __init kvm_guest_init(void);
+>> +
+>> +#else
+>> +
+>> +#define kvm_guest_init()
+>> +
+>> +#endif // CONFIG_PARAVIRT
+>>   
+>>   #endif
+>> diff --git a/arch/arm64/kernel/paravirt.c b/arch/arm64/kernel/paravirt.c
+>> index 4cfed91fe256..de73dbec238c 100644
+>> --- a/arch/arm64/kernel/paravirt.c
+>> +++ b/arch/arm64/kernel/paravirt.c
+>> @@ -6,13 +6,161 @@
+>>    * Author: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
+>>    */
+>>   
+>> +#define pr_fmt(fmt) "kvmarm-pv: " fmt
+>> +
+>> +#include <linux/arm-smccc.h>
+>> +#include <linux/cpuhotplug.h>
+>>   #include <linux/export.h>
+>> +#include <linux/io.h>
+>>   #include <linux/jump_label.h>
+>> +#include <linux/printk.h>
+>> +#include <linux/psci.h>
+>> +#include <linux/reboot.h>
+>> +#include <linux/slab.h>
+>>   #include <linux/types.h>
+>> +
+>>   #include <asm/paravirt.h>
+>> +#include <asm/pvclock-abi.h>
+>> +#include <asm/smp_plat.h>
+>>   
+>>   struct static_key paravirt_steal_enabled;
+>>   struct static_key paravirt_steal_rq_enabled;
+>>   
+>>   struct paravirt_patch_template pv_ops;
+>>   EXPORT_SYMBOL_GPL(pv_ops);
+>> +
+>> +struct kvmarm_stolen_time_region {
+>> +	struct pvclock_vcpu_stolen_time *kaddr;
+>> +};
+>> +
+>> +static DEFINE_PER_CPU(struct kvmarm_stolen_time_region, stolen_time_region);
+>> +
+>> +static bool steal_acc = true;
+>> +static int __init parse_no_stealacc(char *arg)
+>> +{
+>> +	steal_acc = false;
+>> +	return 0;
+>> +}
+>> +
+>> +early_param("no-steal-acc", parse_no_stealacc);
+>> +
+>> +/* return stolen time in ns by asking the hypervisor */
+>> +static u64 kvm_steal_clock(int cpu)
+> 
+> This isn't KVM specific.
+> 
+>> +{
+>> +	struct kvmarm_stolen_time_region *reg;
+>> +
+>> +	reg = per_cpu_ptr(&stolen_time_region, cpu);
+>> +	if (!reg->kaddr) {
+>> +		pr_warn_once("stolen time enabled but not configured for cpu %d\n",
+>> +			     cpu);
+>> +		return 0;
+>> +	}
+>> +
+>> +	return le64_to_cpu(READ_ONCE(reg->kaddr->stolen_time));
+>> +}
+>> +
+>> +static int disable_stolen_time_current_cpu(void)
+>> +{
+>> +	struct kvmarm_stolen_time_region *reg;
+>> +
+>> +	reg = this_cpu_ptr(&stolen_time_region);
+>> +	if (!reg->kaddr)
+>> +		return 0;
+>> +
+>> +	memunmap(reg->kaddr);
+>> +	memset(reg, 0, sizeof(*reg));
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int stolen_time_dying_cpu(unsigned int cpu)
+>> +{
+>> +	return disable_stolen_time_current_cpu();
+>> +}
+> 
+> You can merge these two functions, as there is no other caller.
+> 
+>> +
+>> +static int init_stolen_time_cpu(unsigned int cpu)
+>> +{
+>> +	struct kvmarm_stolen_time_region *reg;
+>> +	struct arm_smccc_res res;
+>> +
+>> +	reg = this_cpu_ptr(&stolen_time_region);
+>> +
+>> +	arm_smccc_1_1_invoke(ARM_SMCCC_HV_PV_TIME_ST, &res);
+>> +
+>> +	if ((long)res.a0 < 0)
+>> +		return -EINVAL;
+> 
+> I'd rather you check an actual error code, just in case the memory map
+> starts growing to a point where we have 64bit (I)PAs...
+> 
+>> +
+>> +	reg->kaddr = memremap(res.a0,
+>> +			      sizeof(struct pvclock_vcpu_stolen_time),
+>> +			      MEMREMAP_WB);
+>> +
+>> +	if (!reg->kaddr) {
+>> +		pr_warn("Failed to map stolen time data structure\n");
+>> +		return -ENOMEM;
+>> +	}
+>> +
+>> +	if (le32_to_cpu(reg->kaddr->revision) != 0 ||
+>> +	    le32_to_cpu(reg->kaddr->attributes) != 0) {
+>> +		pr_warn("Unexpected revision or attributes in stolen time data\n");
+> 
+> WARN_ONCE instead? You probably don't want to scream for each and
+> every CPU that boots...
+> 
+>> +		return -ENXIO;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int kvm_arm_init_stolen_time(void)
+>> +{
+>> +	int ret;
+>> +
+>> +	ret = cpuhp_setup_state(CPUHP_AP_ARM_KVMPV_STARTING,
+>> +				"hypervisor/kvmarm/pv:starting",
+>> +				init_stolen_time_cpu, stolen_time_dying_cpu);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +	return 0;
+>> +}
+>> +
+>> +static bool has_kvm_steal_clock(void)
+> 
+> This is not KVM specific either.
+> 
+>> +{
+>> +	struct arm_smccc_res res;
+>> +
+>> +	/* To detect the presence of PV time support we require SMCCC 1.1+ */
+>> +	if (psci_ops.smccc_version < SMCCC_VERSION_1_1)
+>> +		return false;
+>> +
+>> +	arm_smccc_1_1_invoke(ARM_SMCCC_ARCH_FEATURES_FUNC_ID,
+>> +			     ARM_SMCCC_HV_PV_TIME_FEATURES, &res);
+>> +
+>> +	if (res.a0 != SMCCC_RET_SUCCESS)
+>> +		return false;
+>> +
+>> +	arm_smccc_1_1_invoke(ARM_SMCCC_HV_PV_TIME_FEATURES,
+>> +			     ARM_SMCCC_HV_PV_TIME_ST, &res);
+>> +
+>> +	if (res.a0 != SMCCC_RET_SUCCESS)
+>> +		return false;
+>> +
+>> +	return true;
+> 
+> 	return (res.a0 == SMCCC_RET_SUCCESS);
+> 
+>> +}
+>> +
+>> +int __init kvm_guest_init(void)
+> 
+> How about something like pv_time_init() instead? In the guest, this is
+> no way KVM specific, and I still hope for this to work on things like
+> Xen/HyperV/VMware (yeah, I'm foolishly optimistic). All the references
+> to KVM should go, and be replaced by something more generic (after
+> all, you're only implementing the spec, so feel free to call it
+> den0057_* if you really want).
 
-> +static irqreturn_t qcom_swrm_irq_handler(int irq, void *dev_id)
-> +{
-> +	struct qcom_swrm_ctrl *ctrl = dev_id;
-> +	u32 sts, value;
-> +	unsigned long flags;
-> +
-> +	ctrl->reg_read(ctrl, SWRM_INTERRUPT_STATUS, &sts);
-> +
-> +	if (sts & SWRM_INTERRUPT_STATUS_CMD_ERROR) {
-> +		ctrl->reg_read(ctrl, SWRM_CMD_FIFO_STATUS, &value);
-> +		dev_err_ratelimited(ctrl->dev,
-> +				    "CMD error, fifo status 0x%x\n",
-> +				     value);
-> +		ctrl->reg_write(ctrl, SWRM_CMD_FIFO_CMD, 0x1);
-> +	}
-> +
-> +	if ((sts & SWRM_INTERRUPT_STATUS_NEW_SLAVE_ATTACHED) ||
-> +	    sts & SWRM_INTERRUPT_STATUS_CHANGE_ENUM_SLAVE_STATUS)
-> +		schedule_work(&ctrl->slave_work);
+Xen guests already have the needed functionality. On ARM this just needs
+to be hooked up.
 
-we are in irq thread, so why not do the work here rather than schedule
-it?
 
-> +static int qcom_swrm_compute_params(struct sdw_bus *bus)
-> +{
-> +	struct qcom_swrm_ctrl *ctrl = to_qcom_sdw(bus);
-> +	struct sdw_master_runtime *m_rt;
-> +	struct sdw_slave_runtime *s_rt;
-> +	struct sdw_port_runtime *p_rt;
-> +	struct qcom_swrm_port_config *pcfg;
-> +	int i = 0;
-> +
-> +	list_for_each_entry(m_rt, &bus->m_rt_list, bus_node) {
-> +		list_for_each_entry(p_rt, &m_rt->port_list, port_node) {
-> +			pcfg = &ctrl->pconfig[p_rt->num - 1];
-> +			p_rt->transport_params.port_num = p_rt->num;
-> +			p_rt->transport_params.sample_interval = pcfg->si + 1;
-> +			p_rt->transport_params.offset1 = pcfg->off1;
-> +			p_rt->transport_params.offset2 = pcfg->off2;
-> +		}
-> +
-> +		list_for_each_entry(s_rt, &m_rt->slave_rt_list, m_rt_node) {
-> +			list_for_each_entry(p_rt, &s_rt->port_list, port_node) {
-> +				pcfg = &ctrl->pconfig[i];
-> +				p_rt->transport_params.port_num = p_rt->num;
-> +				p_rt->transport_params.sample_interval =
-> +					pcfg->si + 1;
-> +				p_rt->transport_params.offset1 = pcfg->off1;
-> +				p_rt->transport_params.offset2 = pcfg->off2;
-> +				i++;
-> +			}
-
-Can you explain this one, am not sure I understood this. This fn is
-supposed to compute and fill up the params, all I can see is filling up!
-
-> +static const struct snd_soc_dai_ops qcom_swrm_pdm_dai_ops = {
-> +	.hw_params = qcom_swrm_hw_params,
-> +	.prepare = qcom_swrm_prepare,
-> +	.hw_free = qcom_swrm_hw_free,
-> +	.startup = qcom_swrm_startup,
-> +	.shutdown = qcom_swrm_shutdown,
-> +        .set_sdw_stream = qcom_swrm_set_sdw_stream,
-
-why does indent look off to me!
--- 
-~Vinod
+Juergen
