@@ -2,152 +2,177 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91651CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:32:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37561CA9EB0
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:32:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67F6020873
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:32:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tx2/aG5V"
+	by mail.kernel.org (Postfix) with ESMTP id 08E4320873
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:32:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571664727;
+	bh=s2MUd+aoyjl0YqHLgnKz/F+K2JCRuYEwU71SYc90uQo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=catZsJeH5eYPL+ArX6xyRcw0ps15xUXmvaY0UPlcaLdp6UQbpc6P+yUgfTJA6v22r
+	 hKdkotd+4k/+OQGH/9gr+7tnrsdRCR+oyIQXhsPUqshDUfqjuH2PNCSHEg55mnnWIO
+	 HWF6dlEgH5uuQhW87cj7m3rj0p3wUX2a76RwfFiI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728900AbfJUNb7 (ORCPT
+        id S1728933AbfJUNcG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 09:31:59 -0400
-Received: from mail-pf1-f179.google.com ([209.85.210.179]:46803 "EHLO
-        mail-pf1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727322AbfJUNb7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 09:31:59 -0400
-Received: by mail-pf1-f179.google.com with SMTP id q5so8435165pfg.13;
-        Mon, 21 Oct 2019 06:31:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=6TBjAovqEnEPL9uVV/+gWkAn7AsiTJRh7RaEnv55usQ=;
-        b=tx2/aG5V8m4d9lpW+zACp1mkWbb7GUKFwHhv2mscZpInr4DKgYWZCH73CR1/dALmJJ
-         cx0A6QTfYIs6HfVMX7kPU1rTxDfFUraZSwFa8mjIxy61xVfm/vVczjBOaHB7xtd9qsvC
-         bBpF6417d434ACzjbIrei2bZXoDWdnF9JQor9Us4XmtIu/PSE/OI687tsWpqdWx2/TJ2
-         LjOayZfTeOewZmgYjB76+7ScqEIMlNhYWqigt4GybI84XnqlcVMpqWPAsqiJvnkxX293
-         b8ejUiZ0ZjbUd2H9d/hWxgd9RlOC7I0K7rPGSDpUMMachrWqOgPhefZqAqwO/TgvD3Fd
-         FWNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=6TBjAovqEnEPL9uVV/+gWkAn7AsiTJRh7RaEnv55usQ=;
-        b=t9/A18qsTkRQ3+T0jb9liNv+V1OShG2lyHtz06RSPz0r6tW2+JX57rp0XWVW0jBABw
-         tMhZoXz7dMmc1MM7EuafvK9jrs/R3VVS/WMCJWKKHs5TnXd+qPNNI9bgy85wX5HSjyZv
-         g919ohL1AyoUv8bLyqpIhoOoQhra8kOTZQLTlaHGvx3JvaGvpn5739vNkWQ2IeypZKeY
-         bFfDWsDM+yOwRy4uU8Z/eLdhROB9y1LWbw4/NfYsAHZwPxFD5JXGoD54Dc7IfatJgBYW
-         8Aj5gH3DRds/d/ZhMgJXmjjCkVNKqmq/F0JZGhlgM5DuDUbz4x1ptWSZlS5pCUyUPJhj
-         e5cQ==
-X-Gm-Message-State: APjAAAWBq20OAWFtL7+bcirKV8tYVDZPpysmUiPdIC+RB/3l0a2QAjPl
-        Mylk69nxa0hTuwOmn5cH3viURgOXemU=
-X-Google-Smtp-Source: APXvYqwwqf2izADYTak1ztpyH4iez4HFp6zIBOKlLmb9r4aJ5PIADOFq9Hd2YG5eC6eRra68aNfeHg==
-X-Received: by 2002:aa7:8046:: with SMTP id y6mr23200495pfm.178.1571664716898;
-        Mon, 21 Oct 2019 06:31:56 -0700 (PDT)
-Received: from localhost.localdomain ([106.51.104.0])
-        by smtp.gmail.com with ESMTPSA id e184sm17082252pfa.87.2019.10.21.06.31.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 21 Oct 2019 06:31:56 -0700 (PDT)
-From:   Rishi Gupta <gupt21@gmail.com>
-To:     jic23@kernel.org
-Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        gregkh@linuxfoundation.org, tglx@linutronix.de,
-        allison@lohutok.net, alexios.zavras@intel.com, angus@akkea.ca,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rishi Gupta <gupt21@gmail.com>
-Subject: [PATCH v3 3/3] iio: documentation: light: Add veml6030 sysfs documentation
-Date:   Mon, 21 Oct 2019 19:01:45 +0530
-Message-Id: <1571664705-7123-1-git-send-email-gupt21@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <20191005151119.56c65d71@archlinux>
-References: <20191005151119.56c65d71@archlinux>
+        Mon, 21 Oct 2019 09:32:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37892 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727322AbfJUNcF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 09:32:05 -0400
+Received: from linux-8ccs (ip5f5ade6e.dynamic.kabel-deutschland.de [95.90.222.110])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58FCA20873;
+        Mon, 21 Oct 2019 13:32:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571664723;
+        bh=s2MUd+aoyjl0YqHLgnKz/F+K2JCRuYEwU71SYc90uQo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fuR0L3DL0hxl0OMguM+cHtAJRljCFNC0Te2vzLkSxdMVcJE5SG5e2nFeFjmsnuq2J
+         m737UxHqdGJTwDdH4HuwO/VZV0xP657x6LTwN3OaxvHtFzH4Bzf4rB1/jLfjGADko1
+         zGP2b549iUmHE1cAxmNNck8Wg48s58PBgUYkkQIU=
+Date:   Mon, 21 Oct 2019 15:31:57 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Matthias Maennich <maennich@google.com>
+Cc:     linux-kernel@vger.kernel.org, kernel-team@android.com,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Martijn Coenen <maco@android.com>,
+        Lucas De Marchi <lucas.de.marchi@gmail.com>,
+        Shaun Ruffell <sruffell@sruffell.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Will Deacon <will@kernel.org>, linux-kbuild@vger.kernel.org,
+        linux-modules@vger.kernel.org
+Subject: Re: [PATCH v2 0/4] export/modpost: avoid renaming __ksymtab entries
+ for symbol namespaces
+Message-ID: <20191021133157.GA21112@linux-8ccs>
+References: <20191010151443.7399-1-maennich@google.com>
+ <20191018093143.15997-1-maennich@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20191018093143.15997-1-maennich@google.com>
+X-OS:   Linux linux-8ccs 4.12.14-lp150.12.28-default x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver for veml6030 light sensor provides custom sysfs entries
-used to know parameters supported by the driver and to configure
-sensor like setting power saving mode and persistence etc. This
-commit document them.
++++ Matthias Maennich [18/10/19 10:31 +0100]:
+>The introduction of the symbol namespace patches changed the way symbols are
+>named in the ksymtab entries. That caused userland tools to fail (such as
+>kmod's depmod). As depmod is used as part of the kernel build it was worth
+>having another look whether this name change can be avoided.
+>
+>The main purpose of this series is to restore the original ksymtab entry names.
+>For that to happen and to remove some rough edges around that, the relevant
+>parts in modpost got a small refactoring as to when and how namespaces are
+>evaluated and set in the symbol struct.
+>
+>Eventually, the namespace values can be read from __kstrtabns_ entries and
+>their corresponding __ksymtab_strings values. That removes the need to carry
+>the namespace names within the (anyway unique) symbol name entries.
+>
+>The last patch of this series is adopted from Masahiro [1]. By allowing 'no
+>namespace' to be represented as empty string, large chunks of
+>include/linux/export.h could be consolidated. Technically, this last patch is
+>not absolutely necessary to fix functionality. It addresses concerns about
+>maintainability and readability. While I strongly suggest sending all of the
+>patches for 5.4, the last one could possible deferred to the next merge window.
+>
+>This patch applies to the modules-linus [2] branch.
 
-Signed-off-by: Rishi Gupta <gupt21@gmail.com>
----
-Changes in v3:
-* Updated Date from September to October
-* Updated KernelVersion from 5.3.1 to 5.4
-* in_illuminance_period_available is now in events directory
+Hi!
 
-Changes in v2:
-* None
+I've applied the first three patches to modules-linus, inbound for -rc5.
 
- .../ABI/testing/sysfs-bus-iio-light-veml6030       | 49 ++++++++++++++++++++++
- 1 file changed, 49 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-light-veml6030
+Patch 4/4 was agreed to be for 5.5, and will be applied to
+modules-next once I rebase that branch against -rc5.
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-iio-light-veml6030 b/Documentation/ABI/testing/sysfs-bus-iio-light-veml6030
-new file mode 100644
-index 0000000..13cd321
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-bus-iio-light-veml6030
-@@ -0,0 +1,49 @@
-+What:		/sys/bus/iio/devices/iio:deviceX/in_illuminance_psm_available
-+Date:		October 2019
-+KernelVersion:	5.4
-+Contact:	Rishi Gupta <gupt21@gmail.com>
-+Description:
-+		Provides list of valid values that can be used to activate a
-+		particular power saving mode in sensor. For ex; 1 means psm
-+		mode 1 and 2 means psm mode 2 and so on.
-+
-+What:		/sys/bus/iio/devices/iio:deviceX/in_illuminance_psm
-+Date:		October 2019
-+KernelVersion:	5.4
-+Contact:	Rishi Gupta <gupt21@gmail.com>
-+Description:
-+		Writing '1' will activate power saving mode 1 in sensor.
-+		Similarly, 2 is to activate psm mode 2 and so on.
-+
-+What:		/sys/bus/iio/devices/iio:deviceX/events/in_illuminance_period_available
-+Date:		October 2019
-+KernelVersion:	5.4
-+Contact:	Rishi Gupta <gupt21@gmail.com>
-+Description:
-+		List of valid values available in multiples of integration time
-+		for which the light intensity must be above the cutoff level
-+		before interrupt is asserted. This refers to persistence values.
-+
-+What:		/sys/bus/iio/devices/iio:deviceX/events/in_illuminance_thresh_either_period
-+Date:		October 2019
-+KernelVersion:	5.4
-+Contact:	Rishi Gupta <gupt21@gmail.com>
-+Description:
-+		Value in multiple of integration time for which the light intensity must
-+		be above the cutoff level before interrupt is asserted.
-+
-+What:		/sys/bus/iio/devices/iio:deviceX/events/in_illuminance_thresh_rising_value
-+Date:		October 2019
-+KernelVersion:	5.4
-+Contact:	Rishi Gupta <gupt21@gmail.com>
-+Description:
-+		Raw threshold value from 0 to 0xffffffff. An interrupt will be asserted whenever
-+		light intensity is above this value.
-+
-+What:		/sys/bus/iio/devices/iio:deviceX/events/in_illuminance_thresh_falling_value
-+Date:		October 2019
-+KernelVersion:	5.4
-+Contact:	Rishi Gupta <gupt21@gmail.com>
-+Description:
-+		Raw threshold value from 0 to 0xffffffff. An interrupt will be asserted whenever
-+		light intensity is below this value.
--- 
-2.7.4
+Thanks!
 
+Jessica
+
+>Changes since v2:
+> - restored correct authorship for [4/4]
+> - add missing contributor tags
+> - fixed typos and code style (spaces/tabs)
+>
+>[1] https://lore.kernel.org/lkml/20190927093603.9140-5-yamada.masahiro@socionext.com/
+>[2] https://git.kernel.org/pub/scm/linux/kernel/git/jeyu/linux.git/log/?h=modules-linus
+>
+>Cc: Jessica Yu <jeyu@kernel.org>
+>Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+>Cc: Martijn Coenen <maco@android.com>
+>Cc: Lucas De Marchi <lucas.de.marchi@gmail.com>
+>Cc: Shaun Ruffell <sruffell@sruffell.net>
+>Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>Cc: Will Deacon <will@kernel.org>
+>Cc: linux-kbuild@vger.kernel.org
+>Cc: linux-modules@vger.kernel.org
+>
+>
+>Masahiro Yamada (1):
+>  export: avoid code duplication in include/linux/export.h
+>
+>Matthias Maennich (3):
+>  modpost: delegate updating namespaces to separate function
+>  modpost: make updating the symbol namespace explicit
+>  symbol namespaces: revert to previous __ksymtab name scheme
+>
+> include/linux/export.h | 97 +++++++++++++-----------------------------
+> kernel/module.c        |  2 +-
+> scripts/mod/modpost.c  | 59 ++++++++++++++++---------
+> scripts/mod/modpost.h  |  1 +
+> 4 files changed, 71 insertions(+), 88 deletions(-)
+>
+>Interdiff against v1:
+>diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
+>index 7cf0065ac95f..0bf7eab80d9f 100644
+>--- a/scripts/mod/modpost.c
+>+++ b/scripts/mod/modpost.c
+>@@ -357,18 +357,21 @@ static const char *namespace_from_kstrtabns(struct elf_info *info,
+>
+> static void sym_update_namespace(const char *symname, const char *namespace)
+> {
+>-       struct symbol *s = find_symbol(symname);
+>-       /* That symbol should have been created earlier and thus this is
+>-        * actually an assertion. */
+>-       if (!s) {
+>-               merror("Could not update namespace(%s) for symbol %s\n",
+>-                      namespace, symname);
+>-               return;
+>-       }
+>-
+>-       free(s->namespace);
+>-       s->namespace =
+>-	       namespace && namespace[0] ? NOFAIL(strdup(namespace)) : NULL;
+>+	struct symbol *s = find_symbol(symname);
+>+
+>+	/*
+>+	 * That symbol should have been created earlier and thus this is
+>+	 * actually an assertion.
+>+	 */
+>+	if (!s) {
+>+		merror("Could not update namespace(%s) for symbol %s\n",
+>+		       namespace, symname);
+>+		return;
+>+	}
+>+
+>+	free(s->namespace);
+>+	s->namespace =
+>+		namespace && namespace[0] ? NOFAIL(strdup(namespace)) : NULL;
+> }
+>
+> /**
+>-- 
+>2.23.0.866.gb869b98d4c-goog
+>
