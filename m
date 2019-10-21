@@ -2,148 +2,66 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9EF0CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:49:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 165B6CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:50:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9035620873
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:49:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7F11214B2
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:50:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HL1CGUD6"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="uodSl0zq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728795AbfJUMtV (ORCPT
+        id S1728801AbfJUMus (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 08:49:21 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:35033 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728479AbfJUMtV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 08:49:21 -0400
-Received: by mail-pg1-f194.google.com with SMTP id c8so2954492pgb.2;
-        Mon, 21 Oct 2019 05:49:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=+q3Pz7iL34R36Jp34sL215JsL0y1yMeb6aT9y4kfQGo=;
-        b=HL1CGUD6Nz7+su39RPl9DRZCvAkH4cA/DgGsB0v7D7/OojLwQ2HtZTC6R+Y/HKIT/C
-         ArlkbztVJx40v0JIKm0kOqhgtdcuogxNq5NFHTMURWlAz2mvhG85xEQT2lPImT7LMwZc
-         iE9AhrrO7/OvolJVcURhbxbLcGakEtPTgJDJrp9Wc78TJ2fE3mfi/0ute/HbAV+j1v4H
-         pXvppoJXLCdLKfGaL9+8wIGbai6GuK02eCwxSoSebFUEDRvkCWB6yQmXJKF1R0YdsZ4i
-         YmIfzuBWPPEBK37R8y5hh3t5RqTIcGaZZx46oi/ZoJv6fx0NrF7sAuBObkDydd4aAW7Z
-         e9DQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=+q3Pz7iL34R36Jp34sL215JsL0y1yMeb6aT9y4kfQGo=;
-        b=n6QzW0Loz5bisVQ59X89/uIcuxsMUIWKb7Qy1bds8XXQo160WQ7qqvLsDmfS9gxWcb
-         WnBokOIENAa1eo4iFxYRvWudIgxeOomEmCfJTSqyJC6V2WFVAV0V9LrjM6UQ8qKoyeUs
-         h9MQxMl/HO6TADTKCPyCRt5aFcyAlPiNsm5aZwrv/k40NOWix9EOiB/L8lsCD5YPY5Rd
-         H2Gz5+MKAitVx5PxqVEb2TfUkq3Yuusc3V5HcONLHAhGjL/Tt5kAtzOABrGriV7rgfrE
-         QzfhEyUhZLjryiMOQagIQMLarBs9NwBM1ihvwKPgD/iH1NyU4yeVlivz+xWq6y+YGPm+
-         EDUQ==
-X-Gm-Message-State: APjAAAXPud0dDoZx6gF8PhRo5IAPZ+Z/EwNVH5r/dUpna55Xg7TdJFCC
-        xqCTjGQLvl6ESzbEKaGFVfY=
-X-Google-Smtp-Source: APXvYqxossI4aU6pwFJhCfrqbj+HZM5LrpmwZru5RzRY1sbBA19PrYqquaB2cYODlJ4r1w8mqqfQvw==
-X-Received: by 2002:a63:cb4c:: with SMTP id m12mr12957134pgi.58.1571662160373;
-        Mon, 21 Oct 2019 05:49:20 -0700 (PDT)
-Received: from software.domain.org ([66.42.68.162])
-        by smtp.gmail.com with ESMTPSA id b3sm13562285pjp.13.2019.10.21.05.49.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 21 Oct 2019 05:49:19 -0700 (PDT)
-From:   Huacai Chen <chenhc@lemote.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        chenhuacai@gmail.com, linux-kernel@vger.kernel.org,
-        Huacai Chen <chenhc@lemote.com>, stable@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 110/110] lib/vdso: Improve do_hres() and update vdso data unconditionally
-Date:   Mon, 21 Oct 2019 20:52:00 +0800
-Message-Id: <1571662320-1280-1-git-send-email-chenhc@lemote.com>
-X-Mailer: git-send-email 2.7.0
+        Mon, 21 Oct 2019 08:50:48 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:55450 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727685AbfJUMus (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 08:50:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=hCz1XnlwXOazUEksJt+dr0h2g4hMQZittAlRgyU0lQc=; b=uodSl0zqkczf1xnirDYCTK/PWz
+        vpW7kO06uE7Ka2rrteremAzNlU7B7tefPfXKLqndCejH1WfigqSJ3qcG3adbVAtPPtQj9u0nsCM7F
+        mM+b81362LLNPWEtm2Bi3UyZVaNF6SyrmpGrMXrWCdTkmMc70l4x3iLaAXdoBD2YG6uQ=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1iMX91-0004Pe-AJ; Mon, 21 Oct 2019 14:50:43 +0200
+Date:   Mon, 21 Oct 2019 14:50:43 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Vivien Didelot <vivien.didelot@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org
+Subject: Re: [PATCH net-next 06/16] net: dsa: use ports list for routing
+ table setup
+Message-ID: <20191021125043.GG16084@lunn.ch>
+References: <20191020031941.3805884-1-vivien.didelot@gmail.com>
+ <20191020031941.3805884-7-vivien.didelot@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191020031941.3805884-7-vivien.didelot@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In do_hres(), we currently use whether the return value of __arch_get_
-hw_counter() is negative to indicate fallback, but this is not a good
-idea because:
+On Sat, Oct 19, 2019 at 11:19:31PM -0400, Vivien Didelot wrote:
+> Use the new ports list instead of accessing the dsa_switch array
+> of ports when iterating over DSA ports of a switch to set up the
+> routing table.
+> 
+> Signed-off-by: Vivien Didelot <vivien.didelot@gmail.com>
 
-1, ARM64 returns ULL_MAX but MIPS returns 0 when clock_mode is invalid;
-2, For a 64bit counter, a "negative" value of counter is actually valid.
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-It is sure that MIPS has a bug when clock_mode is invalid and should
-return ULL_MAX as ARM64 does (Vincenzo has already submitted a patch).
-But do_hres() can still be improved so we use U64_MAX as the only
-"invalid" return value -- this is still not fully correct, but it is
-the simplest fix and has no problem in most cases (we can hardly see a
-64bit counter overflow).
-
-By the way, currently update_vdso_data() and update_vsyscall_tz() rely
-on __arch_use_vsyscall(), which causes __cvdso_clock_getres() and some
-other functions get wrong results when clock_mode is invalid. So, we
-update vdso data unconditionally.
-
-Fixes: 00b26474c2f1613d7ab894c5 ("lib/vdso: Provide generic VDSO implementation")
-Fixes: 44f57d788e7deecb50484353 ("timekeeping: Provide a generic update_vsyscall() implementation")
-Cc: stable@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Paul Burton <paul.burton@mips.com>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Signed-off-by: Huacai Chen <chenhc@lemote.com>
----
- kernel/time/vsyscall.c  | 9 +++------
- lib/vdso/gettimeofday.c | 2 +-
- 2 files changed, 4 insertions(+), 7 deletions(-)
-
-diff --git a/kernel/time/vsyscall.c b/kernel/time/vsyscall.c
-index 4bc37ac..5ee0f77 100644
---- a/kernel/time/vsyscall.c
-+++ b/kernel/time/vsyscall.c
-@@ -110,8 +110,7 @@ void update_vsyscall(struct timekeeper *tk)
- 	nsec		= nsec + tk->wall_to_monotonic.tv_nsec;
- 	vdso_ts->sec	+= __iter_div_u64_rem(nsec, NSEC_PER_SEC, &vdso_ts->nsec);
- 
--	if (__arch_use_vsyscall(vdata))
--		update_vdso_data(vdata, tk);
-+	update_vdso_data(vdata, tk);
- 
- 	__arch_update_vsyscall(vdata, tk);
- 
-@@ -124,10 +123,8 @@ void update_vsyscall_tz(void)
- {
- 	struct vdso_data *vdata = __arch_get_k_vdso_data();
- 
--	if (__arch_use_vsyscall(vdata)) {
--		vdata[CS_HRES_COARSE].tz_minuteswest = sys_tz.tz_minuteswest;
--		vdata[CS_HRES_COARSE].tz_dsttime = sys_tz.tz_dsttime;
--	}
-+	vdata[CS_HRES_COARSE].tz_minuteswest = sys_tz.tz_minuteswest;
-+	vdata[CS_HRES_COARSE].tz_dsttime = sys_tz.tz_dsttime;
- 
- 	__arch_sync_vdso_data(vdata);
- }
-diff --git a/lib/vdso/gettimeofday.c b/lib/vdso/gettimeofday.c
-index e630e7f..5a31643 100644
---- a/lib/vdso/gettimeofday.c
-+++ b/lib/vdso/gettimeofday.c
-@@ -50,7 +50,7 @@ static int do_hres(const struct vdso_data *vd, clockid_t clk,
- 		cycles = __arch_get_hw_counter(vd->clock_mode);
- 		ns = vdso_ts->nsec;
- 		last = vd->cycle_last;
--		if (unlikely((s64)cycles < 0))
-+		if (unlikely(cycles == U64_MAX))
- 			return -1;
- 
- 		ns += vdso_calc_delta(cycles, last, vd->mask, vd->mult);
--- 
-2.7.0
-
+    Andrew
