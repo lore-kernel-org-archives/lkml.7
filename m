@@ -2,65 +2,103 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 837EDCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:06:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE06ACA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:06:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63D5A20679
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:06:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8426020882
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:06:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UwNJZsGy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729418AbfJUPGA (ORCPT
+        id S1729442AbfJUPGM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 11:06:00 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:41712 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727040AbfJUPF7 (ORCPT
+        Mon, 21 Oct 2019 11:06:12 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:41677 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727040AbfJUPGM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 11:05:59 -0400
-Received: from marcel-macbook.fritz.box (p4FEFC197.dip0.t-ipconnect.de [79.239.193.151])
-        by mail.holtmann.org (Postfix) with ESMTPSA id 9230CCECB0;
-        Mon, 21 Oct 2019 17:14:57 +0200 (CEST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3594.4.19\))
-Subject: Re: [PATCH] Revert "Bluetooth: hci_qca: Add delay for wcn3990
- stability"
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20191021141827.11150-1-jeffrey.l.hugo@gmail.com>
-Date:   Mon, 21 Oct 2019 17:05:57 +0200
-Cc:     Johan Hedberg <johan.hedberg@gmail.com>, c-hbandi@codeaurora.org,
-        bgodavar@codeaurora.org, linux-bluetooth@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 7bit
-Message-Id: <41343F73-DBCE-43BB-84AD-4548F8A66D10@holtmann.org>
-References: <20191021141827.11150-1-jeffrey.l.hugo@gmail.com>
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-X-Mailer: Apple Mail (2.3594.4.19)
+        Mon, 21 Oct 2019 11:06:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571670370;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=w1Uk+G0ifBUIpwhzR5PkBxVjQYIPz5NNh0QhaPcxzII=;
+        b=UwNJZsGyVEyhpALJ8ZBdRBSxf8kquHhMLwZ2dRf7JDmiTcFrW2dp8R9KgssiGNXreZDfw8
+        g1vZ3+lJzrQyW+9mJzu87F0IMas+sds+nzb56zfvs42yf2IgRqu9H5YleaqTNbrjadRhCR
+        nbAHffuWExtgcVv8lU/qi2k/JEDQ4Uc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-253-A_Ae64ZONgmJRM78UBiNUg-1; Mon, 21 Oct 2019 11:06:07 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 381E81005500;
+        Mon, 21 Oct 2019 15:06:05 +0000 (UTC)
+Received: from treble (ovpn-123-96.rdu2.redhat.com [10.10.123.96])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2FCD0608C0;
+        Mon, 21 Oct 2019 15:05:51 +0000 (UTC)
+Date:   Mon, 21 Oct 2019 10:05:49 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Jessica Yu <jeyu@kernel.org>, Miroslav Benes <mbenes@suse.cz>,
+        x86@kernel.org, linux-kernel@vger.kernel.org, mhiramat@kernel.org,
+        bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, live-patching@vger.kernel.org
+Subject: Re: [PATCH v3 5/6] x86/ftrace: Use text_poke()
+Message-ID: <20191021150549.bitgqifqk2tbd3aj@treble>
+References: <20191010172819.GS2328@hirez.programming.kicks-ass.net>
+ <20191011125903.GN2359@hirez.programming.kicks-ass.net>
+ <20191015130739.GA23565@linux-8ccs>
+ <20191015135634.GK2328@hirez.programming.kicks-ass.net>
+ <alpine.LSU.2.21.1910151611000.13169@pobox.suse.cz>
+ <88bab814-ea24-ece9-2bc0-7a1e10a62f12@redhat.com>
+ <20191015153120.GA21580@linux-8ccs>
+ <7e9c7dd1-809e-f130-26a3-3d3328477437@redhat.com>
+ <20191015182705.1aeec284@gandalf.local.home>
+ <20191016074217.GL2328@hirez.programming.kicks-ass.net>
+MIME-Version: 1.0
+In-Reply-To: <20191016074217.GL2328@hirez.programming.kicks-ass.net>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MC-Unique: A_Ae64ZONgmJRM78UBiNUg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jeffrey,
+On Wed, Oct 16, 2019 at 09:42:17AM +0200, Peter Zijlstra wrote:
+> > which are not compatible with livepatching. GCC upstream now has
+> > -flive-patching option, which disables all those interfering optimizati=
+ons.
+>=20
+> Which, IIRC, has a significant performance impact and should thus really
+> not be used...
+>=20
+> If distros ship that crap, I'm going to laugh at them the next time they
+> want a single digit performance improvement because *important*.
 
-> This reverts commit cde9dde6e11a5ab54b6462cd46d82878926783bc.
-> 
-> The frame reassembly errors were root caused to a transient gpio issue.
-> The missing response was root caused to an issue with properly managing
-> RFR in the uart driver.  Addressing those root causes occurs outside of
-> hci_qca and eliminates the need for the 50ms delay, so remove it.
-> 
-> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-> ---
-> drivers/bluetooth/hci_qca.c | 4 +---
-> 1 file changed, 1 insertion(+), 3 deletions(-)
+I have a crazy plan to try to use objtool to detect function changes at
+a binary level, which would hopefully allow us to drop this flag.
 
-patch has been applied to bluetooth-next tree.
+But regardless, I wonder if we enabled this flag prematurely.  We still
+don't have a reasonable way to use it for creating source-based live
+patches upstream, and it should really be optional for CONFIG_LIVEPATCH,
+since kpatch-build doesn't need it.
 
-Regards
-
-Marcel
+--=20
+Josh
 
