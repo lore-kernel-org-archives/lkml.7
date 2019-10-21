@@ -2,128 +2,224 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6572ACA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:29:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC6DCA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:31:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41A0520684
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:29:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19A85214AE
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:31:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="PvVi5E3b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728351AbfJUL3j (ORCPT
+        id S1728395AbfJULbh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 07:29:39 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:60583 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727571AbfJUL3i (ORCPT
+        Mon, 21 Oct 2019 07:31:37 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:54072 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727571AbfJULbh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 07:29:38 -0400
-Received: from mail-qk1-f178.google.com ([209.85.222.178]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1N5FxN-1huhaG0vbB-0117Z8 for <linux-kernel@vger.kernel.org>; Mon, 21 Oct
- 2019 13:29:37 +0200
-Received: by mail-qk1-f178.google.com with SMTP id w2so12229061qkf.2
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 04:29:37 -0700 (PDT)
-X-Gm-Message-State: APjAAAWzRw0iz6yF9ICXqoVGR/pWXGa4DxU28XMBSRVILQA2jbLFdBbd
-        oDEqv3ussACx4PJeAIxmeFaonpDIfILiX4tYlTw=
-X-Google-Smtp-Source: APXvYqyxe91nGj8TKmw2rGsh4WkXsSBsZcCR4p2QMNxSQZJW/Arl7Yt8sn89P2z6gdacP0hRDEnp2Qs0G03JwPJmF9c=
-X-Received: by 2002:a05:620a:4f:: with SMTP id t15mr11058944qkt.286.1571657376091;
- Mon, 21 Oct 2019 04:29:36 -0700 (PDT)
+        Mon, 21 Oct 2019 07:31:37 -0400
+Received: by mail-wm1-f65.google.com with SMTP id i16so12898157wmd.3
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 04:31:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=HROsPL2ByDXym6i/NHIHjJkM5kNiw9jG1m8a8LCeIIQ=;
+        b=PvVi5E3b/QEtjs/7GPTJkHEgTng108xrwCrEq3OeVnQI/O2sSx9Y5Hr8Q8GGsQ0k2c
+         OwivZCXGkcoAyDW3o+/DoYU75IjkTvv2Qpi4X94sUOe+LMSI0rFp0pwmRduwBWfM6qDj
+         KK+spBf+D/bMw2wS+NIGSJTt+0iIVP+gqX5uEuC7cI1X+n1WypYrGryTFXxeI6FTVmEb
+         qlwTGE5oFYvkYi4YEZXNFQ3kq8Aehp1No+gJ9JrI2dYSj+R+rWT7o2z/M8UQSU7wRn2F
+         TsO2LqfKosoQW6t9QnXaMW9J3LCu4QPbJisQNIA/eQ79jMD+g8nih6SrmAFJsQV5H20r
+         aY6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=HROsPL2ByDXym6i/NHIHjJkM5kNiw9jG1m8a8LCeIIQ=;
+        b=pH6pPq7fZi909M2nVkrMpkXO5DaRbFYFeD+vfz1ykg47UgIgnJ5gU+ecgOhF0dt33t
+         54NVZkfjf5/hQr4okNEzjd5Jeo9YRPORZi4f4Yy9UJak6opzRdRYGwP2UJBVyUfA5QkW
+         ea6PsqvnDTJPDTFu7Uw3atMXN/MrtGkGjOsyB+HyWLXjxKc297Ulmq5tVQQw4SQV2bEV
+         VGz2bAXPSFJcrRhzCmgfgvMhZHvk3SsPUrslOsAZxf921C43VcOSeYbB7Bn/a6SD0K8s
+         9B9SU1FpPQgb3udAcBktqxyiT/HPVrGbIGaWYzCmZ2F3bYjng+RNu66W3X9J/PFMKRhE
+         fvXw==
+X-Gm-Message-State: APjAAAVG5fN9ijResvw5MsXeMcKfeDYj+8YI1yslc3K7Hde0mV+d7DG6
+        HHVb8gePjzZAMwQ3idUm+twG4Q==
+X-Google-Smtp-Source: APXvYqz1au/AUOhj6ismuX2RR7PZXMJCNaAO/iedIYnZZsH6iJy5FEzKuwxsm7YEMvrMJQEsfA7hCQ==
+X-Received: by 2002:a05:600c:1107:: with SMTP id b7mr20230104wma.151.1571657494379;
+        Mon, 21 Oct 2019 04:31:34 -0700 (PDT)
+Received: from localhost (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id e3sm13450131wme.39.2019.10.21.04.31.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Oct 2019 04:31:33 -0700 (PDT)
+References: <1571382865-41978-1-git-send-email-jian.hu@amlogic.com> <1571382865-41978-3-git-send-email-jian.hu@amlogic.com>
+User-agent: mu4e 1.3.3; emacs 26.2
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Jian Hu <jian.hu@amlogic.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Kevin Hilman <khilman@baylibre.com>,
+        "Rob Herring" <robh@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Chandle Zou <chandle.zou@amlogic.com>,
+        linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] clk: meson: add support for A1 PLL clock ops
+In-reply-to: <1571382865-41978-3-git-send-email-jian.hu@amlogic.com>
+Date:   Mon, 21 Oct 2019 13:31:32 +0200
+Message-ID: <1jtv82bai3.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-References: <20191021105822.20271-1-lee.jones@linaro.org>
-In-Reply-To: <20191021105822.20271-1-lee.jones@linaro.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 21 Oct 2019 13:29:20 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a10w9Xg6U8EgUqPLbucP3A0wc9xO_WNG06LxHrsZkZc1g@mail.gmail.com>
-Message-ID: <CAK8P3a10w9Xg6U8EgUqPLbucP3A0wc9xO_WNG06LxHrsZkZc1g@mail.gmail.com>
-Subject: Re: [PATCH v2 0/9] Simplify MFD Core
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Barry Song <baohua@kernel.org>, stephan@gerhold.net,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Daniel Drake <drake@endlessm.com>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        James Cameron <quozl@laptop.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:2JfCHba4azJOimTandb6ifbcUYw/cN0hh1p6j+ekjAtBpqDrT8u
- q0y6IQ77cLeCJj3/Pkw8F9rTb54tzGyh65be0svGnYMGK9cY/Siy+qoAg2jtrW46yPfHzrl
- pYYU3GeWkJ1kssZxsjalm2fxAwYitfRfQYrxrkgO7JpGGi3BKJEp8DBNBcA6mwx+Sk3xEOA
- GaNCpeBvs8eRiKne2mzdg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:qkJGr8GjrA4=:F87IxXjb0lVprBne15s/dr
- cTPXK2gvXyxNCa2ef//S0HCIvovjE+nlNRGDl+laPzBbFUMSHYIVHaDMWcUkslcybilXOvW+u
- 4826JtfQ1K8MjzrPmiEdDQwDkRGHG/d+6MuTUati3d1rp6A1kupeV8mV5Mek+qA9EOFZlQd40
- m/8BwZNeWzPUs2moBf3De4UaX7ELRkh8ZO29qHUMLs33GIeaxso57fYo37/0GBYzdPgM23RK6
- cAXZfoHE4WTKEdqAjQnydlsqX0Jwm/v6AauUkwpNdd9OTs1tDDaEIk/KJ6LsXBZYCoHQ+2l8h
- bKiHWDN2UvYOX4fL7MBgNTU5pLwHZry/kDFBSbZlmAyLfg5mAh3xf3f4E2jwF0ROR5/SQq8M+
- cdD0E3FZmVFAm5HBh0VEIRXAK1dhHHUcUVX7MndjMxAUVT7+fSQDWQYlNC7ojjHa9t7yyHy2u
- MbjrrQgha/aikLw7WXhmJwAQyqu0w/o56OLt7vwx8uvx6WwmewXCIMRxsLGi/yF3CXiTfXxcK
- nrtwqXREF93M0kT1ByHLJbSi348bHjiCHJz8tmkgathWKywLZ0N7HM8oGkQRSNqSeYD56dXfV
- M133arMZhINuP8oAT3t8GYYGg215Q91OfdEcefsbQBH/lZEcHN2ML6qL62kRvpIc9Z5mU8oic
- pbO69Oeo3C19QLY8yroQ/1wR52JLZzPb2dvXe3DwJWSakIcFh35a+rctK0CIfAo/FP+ZerbRC
- NfdW8UTpqGjwFc2KfSH2yg4+5ZnQWW6gB0pTZccenR5NX2CIR5SvCrxotkC5ns+lMbYiMcc3o
- RaLNqEiILLRCi60aGegeH02/yxvy7nE/6o7jqnyQz3EchoZ8YvdimBqeKgCr2bSjA25cceeyz
- SI6maFLWcCFB70EG9jqQ==
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 12:58 PM Lee Jones <lee.jones@linaro.org> wrote:
->
-> MFD currently has one over-complicated user.  CS5535 uses a mixture of
-> cell cloning, reference counting and subsystem-level call-backs to
-> achieve its goal of requesting an IO memory region only once across 3
-> consumers.  The same can be achieved by handling the region centrally
-> during the parent device's .probe() sequence.  Releasing can be handed
-> in a similar way during .remove().
->
-> While we're here, take the opportunity to provide some clean-ups and
-> error checking to issues noticed along the way.
->
-> This also paves the way for clean cell disabling via Device Tree being
-> discussed at [0]
->
-> [0] https://lkml.org/lkml/2019/10/18/612.
 
-As the CS5535 is primarily used on the OLPC XO1, it would be
-good to have someone test the series on such a machine.
+On Fri 18 Oct 2019 at 09:14, Jian Hu <jian.hu@amlogic.com> wrote:
 
-I've added a few people to Cc that may be able to help test it, or
-know someone who can.
+> The A1 PLL design is different with previous SoCs. The PLL
+> internal analog modules Power-on sequence is different
+> with previous, and thus requires a strict register sequence to
+> enable the PLL. Unlike the previous series, the maximum frequency
+> is 6G in G12A, for A1 the maximum is 1536M.
+>
+> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
+> ---
+>  drivers/clk/meson/clk-pll.c | 66 ++++++++++++++++++++++++++++++++++++++++-----
+>  drivers/clk/meson/clk-pll.h |  1 +
+>  2 files changed, 61 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/clk/meson/clk-pll.c b/drivers/clk/meson/clk-pll.c
+> index ddb1e56..b440e62 100644
+> --- a/drivers/clk/meson/clk-pll.c
+> +++ b/drivers/clk/meson/clk-pll.c
+> @@ -349,6 +349,56 @@ static void meson_clk_pll_disable(struct clk_hw *hw)
+>  	meson_parm_write(clk->map, &pll->en, 0);
+>  }
+>  
+> +/*
+> + * The A1 design is different with previous SoCs.The PLL
+> + * internal analog modules Power-on sequence is different with
+> + * previous, different PLL has the different sequence, and
+> + * thus requires a strict register sequence to enable the PLL.
+> + * When set a new target frequency, the sequence should keep
+> + * the same with the initial sequence. Unlike the previous series,
+> + * the maximum frequency is 6G in G12A, for A1 the maximum
+> + * is 1536M.
 
-For the actual patches, see
-https://lore.kernel.org/lkml/20191021105822.20271-1-lee.jones@linaro.org/T/#t
+The comment about the max frequency belongs in your a1 driver, not in
+the PLL driver
 
-    Arnd
+> + */
+> +static void meson_params_update_with_init_seq(struct clk_regmap *clk,
+> +				       struct meson_clk_pll_data *pll,
+> +				       unsigned int m, unsigned int n,
+> +				       unsigned int frac)
+> +{
+> +	struct parm *pm = &pll->m;
+> +	struct parm *pn = &pll->n;
+> +	struct parm *pfrac = &pll->frac;
+> +	const struct reg_sequence *init_regs = pll->init_regs;
+> +	unsigned int i, val;
+> +
+> +	for (i = 0; i < pll->init_count; i++) {
+> +		if (pn->reg_off == init_regs[i].reg) {
+> +			/* Clear M N bits and Update M N value */
+> +			val = init_regs[i].def;
+> +			val &= CLRPMASK(pn->width, pn->shift);
+> +			val &= CLRPMASK(pm->width, pm->shift);
+> +			val |= n << pn->shift;
+> +			val |= m << pm->shift;
+> +			regmap_write(clk->map, pn->reg_off, val);
+> +		} else if (MESON_PARM_APPLICABLE(&pll->frac) &&
+> +			   (pfrac->reg_off == init_regs[i].reg)) {
+> +			/* Clear Frac bits and Update Frac value */
+> +			val = init_regs[i].def;
+> +			val &= CLRPMASK(pfrac->width, pfrac->shift);
+> +			val |= frac << pfrac->shift;
+> +			regmap_write(clk->map, pfrac->reg_off, val);
+> +		} else {
+> +			/*
+> +			 * According to the PLL hardware constraint,
+> +			 * the left registers should be setted again.
+> +			 */
+> +			val = init_regs[i].def;
+> +			regmap_write(clk->map, init_regs[i].reg, val);
+> +		}
+> +		if (init_regs[i].delay_us)
+> +			udelay(init_regs[i].delay_us);
+> +	}
 
-> Lee Jones (9):
->   mfd: cs5535-mfd: Use PLATFORM_DEVID_* defines and tidy error message
->   mfd: cs5535-mfd: Remove mfd_cell->id hack
->   mfd: cs5535-mfd: Request shared IO regions centrally
->   mfd: cs5535-mfd: Register clients using their own dedicated MFD cell
->     entries
->   mfd: mfd-core: Remove mfd_clone_cell()
->   x86: olpc: Remove invocation of MFD's .enable()/.disable() call-backs
->   mfd: mfd-core: Protect against NULL call-back function pointer
->   mfd: mfd-core: Remove usage counting for .{en,dis}able() call-backs
->   mfd: mfd-core: Move pdev->mfd_cell creation back into mfd_add_device()
->
->  arch/x86/platform/olpc/olpc-xo1-pm.c |   6 --
->  drivers/mfd/cs5535-mfd.c             | 124 +++++++++++++--------------
->  drivers/mfd/mfd-core.c               | 113 ++++--------------------
->  include/linux/mfd/core.h             |  20 -----
->  4 files changed, 79 insertions(+), 184 deletions(-)
->
-> --
-> 2.17.1
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+So:
+
+1) All the code above this there make the PLL lock, IOW enable the
+PLL. It does not belong in the set_rate() callback but in enable() or
+prepare() maybe.
+
+2) All the above is works but it is a bit over complicated for what it
+does. From the a1_hifi_init_regs I see, all you really need to do is
+  * toggle BIT(6) in CTRL2
+  * toggle BIT(28) in CTRL0 (enable PARM)
+  * toggle BIT(26) in CTRL0
+
+You could use PARM 'rst' for one them and introduce another parm for the
+other one. You would not need to repoke the whole sequence this way.
+
+> +}
+> +
+>  static int meson_clk_pll_set_rate(struct clk_hw *hw, unsigned long rate,
+>  				  unsigned long parent_rate)
+>  {
+> @@ -366,16 +416,20 @@ static int meson_clk_pll_set_rate(struct clk_hw *hw, unsigned long rate,
+>  	if (ret)
+>  		return ret;
+>  
+> +	if (MESON_PARM_APPLICABLE(&pll->frac))
+> +		frac = __pll_params_with_frac(rate, parent_rate, m, n, pll);
+> +
+>  	enabled = meson_parm_read(clk->map, &pll->en);
+>  	if (enabled)
+>  		meson_clk_pll_disable(hw);
+>  
+> -	meson_parm_write(clk->map, &pll->n, n);
+> -	meson_parm_write(clk->map, &pll->m, m);
+> -
+> -	if (MESON_PARM_APPLICABLE(&pll->frac)) {
+> -		frac = __pll_params_with_frac(rate, parent_rate, m, n, pll);
+> -		meson_parm_write(clk->map, &pll->frac, frac);
+> +	if (pll->strict_sequence)
+> +		meson_params_update_with_init_seq(clk, pll, m, n, frac);
+> +	else {
+> +		meson_parm_write(clk->map, &pll->n, n);
+> +		meson_parm_write(clk->map, &pll->m, m);
+> +		if (MESON_PARM_APPLICABLE(&pll->frac))
+> +			meson_parm_write(clk->map, &pll->frac, frac);
+>  	}
+>  
+>  	/* If the pll is stopped, bail out now */
+> diff --git a/drivers/clk/meson/clk-pll.h b/drivers/clk/meson/clk-pll.h
+> index 367efd0..d5789cef 100644
+> --- a/drivers/clk/meson/clk-pll.h
+> +++ b/drivers/clk/meson/clk-pll.h
+> @@ -41,6 +41,7 @@ struct meson_clk_pll_data {
+>  	const struct pll_params_table *table;
+>  	const struct pll_mult_range *range;
+>  	u8 flags;
+> +	bool strict_sequence;
+
+Don't introduce parameter for this We have ops to tune the behavior of
+the clock driver. Properly refactor the code if some of it is common.
+
+>  };
+>  
+>  extern const struct clk_ops meson_clk_pll_ro_ops;
+
