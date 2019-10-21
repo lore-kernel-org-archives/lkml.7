@@ -2,190 +2,193 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A99DECA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:18:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F9CCA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:19:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88174214B2
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:18:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB2E4214B2
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:19:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rjH1nOVB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729853AbfJUQSp (ORCPT
+        id S1729879AbfJUQT1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 12:18:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38246 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728521AbfJUQSk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 12:18:40 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 133D4222BD;
-        Mon, 21 Oct 2019 16:18:39 +0000 (UTC)
-Received: from rostedt by gandalf.local.home with local (Exim 4.92.2)
-        (envelope-from <rostedt@goodmis.org>)
-        id 1iMaOE-0001f6-9J; Mon, 21 Oct 2019 12:18:38 -0400
-Message-Id: <20191021161838.171964708@goodmis.org>
-User-Agent: quilt/0.65
-Date:   Mon, 21 Oct 2019 12:18:00 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>, stable@vger.kernel.org,
-        Song Liu <songliubraving@fb.com>,
-        Prateek Sood <prsood@codeaurora.org>
-Subject: [for-linus][PATCH 2/2] trace: Fix race in perf_trace_buf initialization
-References: <20191021161758.096336406@goodmis.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
+        Mon, 21 Oct 2019 12:19:27 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:32844 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727392AbfJUQT1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 12:19:27 -0400
+Received: by mail-pf1-f193.google.com with SMTP id q10so8747402pfl.0;
+        Mon, 21 Oct 2019 09:19:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=AgWxQZ4IRPSf/JSyL7KFHJ9TZsqQvDPEhQEh1ZQRUDQ=;
+        b=rjH1nOVBojzK7QWfyvjn93+LwnUwjxD8+skcPRcpmQABarnJwzX+5V8tuD2yMcnIlz
+         nXhYsc4lD/L9RADStlvoSLLPTd+cjZLtrDxZKZO8YZtqWb677JtiEx4VVyuWqFCriReH
+         4WERLTW+eyrQgENLfCkdJgBV0vWRFkLfEpASNa2M867u8hYlWFm8+dUUHH9pVI2rWLNb
+         3EkiAyou05Od1F2/QrVHDSb/jBCzz9VbiZsIgNtQ8uN3g4vKPLRJp6vJO4pR9npz2s6X
+         X9sKrAyNQ2UfYFwVjLe0y4IB9Rh6u9SANYFpPhnEGyc8fzHNRSv5IxCgpLlYgF+p6+WX
+         o0hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=AgWxQZ4IRPSf/JSyL7KFHJ9TZsqQvDPEhQEh1ZQRUDQ=;
+        b=pgduNenjA2Q7JcsTDVLVlyYKedbECbMAd0wlk6AEsTt9bcuEmrU+7JitntjA3KIq7k
+         60f4Qj7YN66EN8RRMPnS6KGC2mvo5Uix/KR/9VMRN2MVfb1rBt7p4+ZvbwfPS8xeNSkD
+         ejr99v8D2pAO4Ja2Hi0NDY+ZJhgIK0OI3PNfS0Dk1XTz/9Dz1FVvO8Q0pgYR6GE2aY1D
+         GUlLDRxquPMdd915RShCI8+1lbbXn4+xZZ2/QAHutLakHXA2b/oIjlLxfBP36biWe1qX
+         jXuwkulbMyIGpe+dLgGWRm9LqtvToAKXWXFT2YMY72usbsGmcXUC4shsJdEH3QuRLT8m
+         REGg==
+X-Gm-Message-State: APjAAAVqas8+8T6S6VFXyxje83QApKoOR2jkJ4xhGq9G0piY6KkuW6E9
+        Y1bGAchuLdz6zJykCHNupsM=
+X-Google-Smtp-Source: APXvYqw2sHxzn7oi3MiuOQLkIH028DJIoUhE0XD2KPyTv1Jn6Nd0eE4QisN+GqNllmIie6wDBtjMGQ==
+X-Received: by 2002:aa7:9295:: with SMTP id j21mr24419567pfa.223.1571674766043;
+        Mon, 21 Oct 2019 09:19:26 -0700 (PDT)
+Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id b3sm16720415pfd.125.2019.10.21.09.19.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Oct 2019 09:19:25 -0700 (PDT)
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+To:     agross@kernel.org, bjorn.andersson@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [PATCH v2] arm64: dts: qcom: msm8998: Fixup uart3 gpio config for bluetooth
+Date:   Mon, 21 Oct 2019 09:19:21 -0700
+Message-Id: <20191021161921.31825-1-jeffrey.l.hugo@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Prateek Sood <prsood@codeaurora.org>
+It turns out that the wcn3990 can float the gpio lines during bootup, etc
+which will result in the uart core thinking there is incoming data.  This
+results in the bluetooth stack getting garbage.  By applying a bias to
+match what wcn3990 would drive, the issue is corrected.
 
-[  943.034988] Unable to handle kernel paging request at virtual address 0000003106f2003c
-[  943.043653] Mem abort info:
-[  943.046679]   ESR = 0x96000045
-[  943.050428]   Exception class = DABT (current EL), IL = 32 bits
-[  943.056643]   SET = 0, FnV = 0
-[  943.060168]   EA = 0, S1PTW = 0
-[  943.063449] Data abort info:
-[  943.066474]   ISV = 0, ISS = 0x00000045
-[  943.070856]   CM = 0, WnR = 1
-[  943.074016] user pgtable: 4k pages, 39-bit VAs, pgdp = ffffffc034b9b000
-[  943.081446] [0000003106f2003c] pgd=0000000000000000, pud=0000000000000000
-[  943.088862] Internal error: Oops: 96000045 [#1] PREEMPT SMP
-[  943.141700] Process syz-executor (pid: 18393, stack limit = 0xffffffc093190000)
-[  943.164146] pstate: 80400005 (Nzcv daif +PAN -UAO)
-[  943.169119] pc : __memset+0x20/0x1ac
-[  943.172831] lr : memset+0x3c/0x50
-[  943.176269] sp : ffffffc09319fc50
-
-[  943.557593]  __memset+0x20/0x1ac
-[  943.560953]  perf_trace_buf_alloc+0x140/0x1a0
-[  943.565472]  perf_trace_sys_enter+0x158/0x310
-[  943.569985]  syscall_trace_enter+0x348/0x7c0
-[  943.574413]  el0_svc_common+0x11c/0x368
-[  943.578394]  el0_svc_handler+0x12c/0x198
-[  943.582459]  el0_svc+0x8/0xc
-
-In Ramdumps:
-total_ref_count = 3
-perf_trace_buf = (
-    0x0 -> NULL,
-    0x0 -> NULL,
-    0x0 -> NULL,
-    0x0 -> NULL)
-
-event_call in perf_trace_sys_enter()
-event_call = 0xFFFFFF900CB511D8 -> (
-    list = (next = 0xFFFFFF900CB4E2E0, prev = 0xFFFFFF900CB512B0),
-    class = 0xFFFFFF900CDC8308,
-    name = 0xFFFFFF900CDDA1D8,
-    tp = 0xFFFFFF900CDDA1D8,
-    event = (
-      node = (next = 0x0, pprev = 0xFFFFFF900CB80210),
-      list = (next = 0xFFFFFF900CB512E0, prev = 0xFFFFFF900CB4E310),
-      type = 21,
-      funcs = 0xFFFFFF900CB51130),
-    print_fmt = 0xFFFFFF900CB51150,
-    filter = 0x0,
-    mod = 0x0,
-    data = 0x0,
-    flags = 18,
-    perf_refcount = 1,
-    perf_events = 0xFFFFFF8DB8E54158,
-    prog_array = 0x0,
-    perf_perm = 0x0)
-
-perf_events added on CPU0
-(struct hlist_head *)(0xFFFFFF8DB8E54158+__per_cpu_offset[0]) -> (
-    first = 0xFFFFFFC0980FD0E0 -> (
-      next = 0x0,
-      pprev = 0xFFFFFFBEBFD74158))
-
-Could you please confirm:
-1) the race mentioned below exists or not.
-2) if following patch fixes it.
-
->8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8
-
-A race condition exists while initialiazing perf_trace_buf from
-perf_trace_init() and perf_kprobe_init().
-
-      CPU0                                        CPU1
-perf_trace_init()
-  mutex_lock(&event_mutex)
-    perf_trace_event_init()
-      perf_trace_event_reg()
-        total_ref_count == 0
-	buf = alloc_percpu()
-        perf_trace_buf[i] = buf
-        tp_event->class->reg() //fails       perf_kprobe_init()
-	goto fail                              perf_trace_event_init()
-                                                 perf_trace_event_reg()
-        fail:
-	  total_ref_count == 0
-
-                                                   total_ref_count == 0
-                                                   buf = alloc_percpu()
-                                                   perf_trace_buf[i] = buf
-                                                   tp_event->class->reg()
-                                                   total_ref_count++
-
-          free_percpu(perf_trace_buf[i])
-          perf_trace_buf[i] = NULL
-
-Any subsequent call to perf_trace_event_reg() will observe total_ref_count > 0,
-causing the perf_trace_buf to be NULL always. This can result in perf_trace_buf
-getting accessed from perf_trace_buf_alloc() without being initialized. Acquiring
-event_mutex in perf_kprobe_init() before calling perf_trace_event_init() should
-fix this race.
-
-Link: http://lkml.kernel.org/r/1571120245-4186-1-git-send-email-prsood@codeaurora.org
-
-Cc: stable@vger.kernel.org
-Fixes: e12f03d7031a9 ("perf/core: Implement the 'perf_kprobe' PMU")
-Acked-by: Song Liu <songliubraving@fb.com>
-Signed-off-by: Prateek Sood <prsood@codeaurora.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 ---
- kernel/trace/trace_event_perf.c | 4 ++++
- 1 file changed, 4 insertions(+)
 
-diff --git a/kernel/trace/trace_event_perf.c b/kernel/trace/trace_event_perf.c
-index 0892e38ed6fb..a9dfa04ffa44 100644
---- a/kernel/trace/trace_event_perf.c
-+++ b/kernel/trace/trace_event_perf.c
-@@ -272,9 +272,11 @@ int perf_kprobe_init(struct perf_event *p_event, bool is_retprobe)
- 		goto out;
- 	}
+v2:
+-split out pinctrl config by pin
+
+ .../boot/dts/qcom/msm8998-clamshell.dtsi      | 22 ++++++++++++++++
+ arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi     | 22 ++++++++++++++++
+ arch/arm64/boot/dts/qcom/msm8998-pins.dtsi    | 25 ++++++++++++++++---
+ 3 files changed, 65 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/qcom/msm8998-clamshell.dtsi b/arch/arm64/boot/dts/qcom/msm8998-clamshell.dtsi
+index 38a1c2ba5e83..8c9a3e0f3843 100644
+--- a/arch/arm64/boot/dts/qcom/msm8998-clamshell.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8998-clamshell.dtsi
+@@ -37,6 +37,28 @@
+ 	};
+ };
  
-+	mutex_lock(&event_mutex);
- 	ret = perf_trace_event_init(tp_event, p_event);
- 	if (ret)
- 		destroy_local_trace_kprobe(tp_event);
-+	mutex_unlock(&event_mutex);
- out:
- 	kfree(func);
- 	return ret;
-@@ -282,8 +284,10 @@ int perf_kprobe_init(struct perf_event *p_event, bool is_retprobe)
++&blsp1_uart3_on {
++	rx {
++		/delete-property/ bias-disable;
++		/*
++		 * Configure a pull-up on 45 (RX). This is needed to
++		 * avoid garbage data when the TX pin of the Bluetooth
++		 * module is in tri-state (module powered off or not
++		 * driving the signal yet).
++		 */
++		bias-pull-up;
++	};
++
++	cts {
++		/delete-property/ bias-disable;
++		/*
++		 * Configure a pull-down on 47 (CTS) to match the pull
++		 * of the Bluetooth module.
++		 */
++		bias-pull-down;
++	};
++};
++
+ &qusb2phy {
+ 	status = "okay";
  
- void perf_kprobe_destroy(struct perf_event *p_event)
- {
-+	mutex_lock(&event_mutex);
- 	perf_trace_event_close(p_event);
- 	perf_trace_event_unreg(p_event);
-+	mutex_unlock(&event_mutex);
+diff --git a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
+index 8adb4969baec..74c14f50b0f6 100644
+--- a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
+@@ -37,6 +37,28 @@
+ 	};
+ };
  
- 	destroy_local_trace_kprobe(p_event->tp_event);
- }
++&blsp1_uart3_on {
++	rx {
++		/delete-property/ bias-disable;
++		/*
++		 * Configure a pull-up on 45 (RX). This is needed to
++		 * avoid garbage data when the TX pin of the Bluetooth
++		 * module is in tri-state (module powered off or not
++		 * driving the signal yet).
++		 */
++		bias-pull-up;
++	};
++
++	cts {
++		/delete-property/ bias-disable;
++		/*
++		 * Configure a pull-down on 47 (CTS) to match the pull
++		 * of the Bluetooth module.
++		 */
++		bias-pull-down;
++	};
++};
++
+ &blsp2_uart1 {
+ 	status = "okay";
+ };
+diff --git a/arch/arm64/boot/dts/qcom/msm8998-pins.dtsi b/arch/arm64/boot/dts/qcom/msm8998-pins.dtsi
+index e32d3ab395ea..7c222cbf19d9 100644
+--- a/arch/arm64/boot/dts/qcom/msm8998-pins.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8998-pins.dtsi
+@@ -77,13 +77,30 @@
+ 	};
+ 
+ 	blsp1_uart3_on: blsp1_uart3_on {
+-		mux {
+-			pins = "gpio45", "gpio46", "gpio47", "gpio48";
++		tx {
++			pins = "gpio45";
+ 			function = "blsp_uart3_a";
++			drive-strength = <2>;
++			bias-disable;
+ 		};
+ 
+-		config {
+-			pins = "gpio45", "gpio46", "gpio47", "gpio48";
++		rx {
++			pins = "gpio46";
++			function = "blsp_uart3_a";
++			drive-strength = <2>;
++			bias-disable;
++		};
++
++		cts {
++			pins = "gpio47";
++			function = "blsp_uart3_a";
++			drive-strength = <2>;
++			bias-disable;
++		};
++
++		rfr {
++			pins = "gpio48";
++			function = "blsp_uart3_a";
+ 			drive-strength = <2>;
+ 			bias-disable;
+ 		};
 -- 
-2.23.0
-
+2.17.1
 
