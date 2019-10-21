@@ -2,107 +2,167 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A666CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 21:41:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D19E2CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 21:41:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E0782084B
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 21:41:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7ED8214B2
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 21:41:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lmgKdMSO"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EA8vKtU8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730404AbfJUVlG (ORCPT
+        id S1730419AbfJUVls (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 17:41:06 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:45873 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729388AbfJUVlF (ORCPT
+        Mon, 21 Oct 2019 17:41:48 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:39380 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730069AbfJUVls (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 17:41:05 -0400
-Received: by mail-io1-f65.google.com with SMTP id c25so17776713iot.12;
-        Mon, 21 Oct 2019 14:41:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XU7mKCCl67wX6wKCXpYaHrBkNqaUXbTtN4O3MSvFFZc=;
-        b=lmgKdMSOAM+bakzk/z5MJW384F6nz6yEzpp37fhndMGa54ySe3wiW/MiUDnWHhZBFf
-         F9ul3znyVUrKLaRQgKXsVqhsgxyPpIWVqdVL4O45BP1k4NcI6OcN7/hh8o/+U2kDy+D0
-         VOiqw9now5+oUNAlvOiFiJltQ0tCA5omJ5wWtYJ2l6qf0/6ntWb14QCbrp4NUa6gI+pu
-         QGPPZ5oAUu6MIoNlBIwaZigxfy1e/xwMD0N68Cmize4rHludZec8Fdn3bEUHPX8DCTWP
-         3o1oUDq+PajR8SVd2sCJualvqxQSIvF8BJ0kQ4g6IoJsGMyFgO/Bsfk3znF9cb+mMeAm
-         /Zgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XU7mKCCl67wX6wKCXpYaHrBkNqaUXbTtN4O3MSvFFZc=;
-        b=jvoyXVKm6ticztqQIh2SfiguETlmpVsNCfuejYNQ5+IAdEux9n/GfxjBR0sGYahUGF
-         KwdlB0KHpxc8bRlrHFtBPcBqbl8ovAJN5d0NSIrI/URmRL0WqtNeO167skkPuc99xAbL
-         roSLbqVQklz+WNSlBRBoRpEyVwNiJJHkCn5UXMwmFjE7DDrpUe68c6XF9Y+9tIITgcI2
-         syey9W859eb/dBx12ZKEc8jSiN3LaNW7ZulCWm5RpEuvOY7VUy3yukXWd0KRhV6kTras
-         IgS3WeHs5ca48z9poy9rP7I4F8vAuLqqggLOaFoXU+ni+Ola5hY7FRoQQmMckpxvZodh
-         PJbQ==
-X-Gm-Message-State: APjAAAWI62sF/mq+x8+MStzTsssZuVdK+qzYOSD7rTzVF7SVSBZfhtWI
-        yxjauYtixhhy1IIJxFWQWumRCNeciEqkwENkWUdztA==
-X-Google-Smtp-Source: APXvYqwHmuwaXTie6DRnB7f2lgf//8rF6DjVZSN1QuMVGBJ289l/AcRLZmg8IoEK+iWoZjGbAxoINRhU6b4e60oNXRA=
-X-Received: by 2002:a5e:9245:: with SMTP id z5mr379853iop.205.1571694063141;
- Mon, 21 Oct 2019 14:41:03 -0700 (PDT)
+        Mon, 21 Oct 2019 17:41:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571694106;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=IWeM12SnjaxnROOhjKG0uzMoH/1pwew4flz84hu3l0k=;
+        b=EA8vKtU8iQd2X3J6MWu7z3azMx0YgPt7zpBAms3aKTuzXSvMutK5X7fjnJkQGkeivXxoj9
+        7qCVfB5vLcvURXKOdKaH0RyvV9DvFKYZQIoUh22j9vXdGdcyUtR+V3L9vIxRNJrJ8tFKpp
+        RCodsuiGw5rdWeFvmd0rOBGmhmR1UsE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-270-WEhns1CVOLONzpz_CDZEpg-1; Mon, 21 Oct 2019 17:41:41 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2B3CF2B6;
+        Mon, 21 Oct 2019 21:41:40 +0000 (UTC)
+Received: from rh2.redhat.com (ovpn-123-171.rdu2.redhat.com [10.10.123.171])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D2A8560126;
+        Mon, 21 Oct 2019 21:41:38 +0000 (UTC)
+From:   Mike Christie <mchristi@redhat.com>
+To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-block@vger.kernel.org, martin@urbackup.org,
+        Damien.LeMoal@wdc.com
+Cc:     Mike Christie <mchristi@redhat.com>
+Subject: [PATCH] Add prctl support for controlling PF_MEMALLOC V2
+Date:   Mon, 21 Oct 2019 16:41:37 -0500
+Message-Id: <20191021214137.8172-1-mchristi@redhat.com>
 MIME-Version: 1.0
-References: <20190923135908.23080-1-aford173@gmail.com>
-In-Reply-To: <20190923135908.23080-1-aford173@gmail.com>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Mon, 21 Oct 2019 16:40:52 -0500
-Message-ID: <CAHCN7xLQvYbY_Pu5hQOO8o+1o8CAVvXq_-RM78Q=jYvtLxtmbg@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: Add logicpd-som-lv and logicpd-torpedo to
- OMAP TREE
-To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Cc:     Linux-OMAP <linux-omap@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MC-Unique: WEhns1CVOLONzpz_CDZEpg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 8:59 AM Adam Ford <aford173@gmail.com> wrote:
->
-> The OMAP DEVICE TREE SUPPORT lists a bunch of device tree files
-> with wildcard names using am3*, am4*, am5*, dra7*, and *omap*.
-> Unfortunately, the LogicPD boards do not follow this convention
-> so changes to these boards don't get automatically flagged to
-> route to the omap mailing list.  After consulting with Tony
-> Lindgren, he agreed it made sense to add these boards to the
-> list.
->
-> This patch adds the omap based boards to the omap device tree
-> maintainer list.
->
-> Signed-off-by: Adam Ford <aford173@gmail.com>
+There are several storage drivers like dm-multipath, iscsi, tcmu-runner,
+amd nbd that have userspace components that can run in the IO path. For
+example, iscsi and nbd's userspace deamons may need to recreate a socket
+and/or send IO on it, and dm-multipath's daemon multipathd may need to
+send IO to figure out the state of paths and re-set them up.
 
-Tony,
+In the kernel these drivers have access to GFP_NOIO/GFP_NOFS and the
+memalloc_*_save/restore functions to control the allocation behavior,
+but for userspace we would end up hitting a allocation that ended up
+writing data back to the same device we are trying to allocate for.
 
-Are you ok with this?  I am not sure who to bug, but I am guessing
-whomever it is will want/need your approval too.
+This patch allows the userspace deamon to set the PF_MEMALLOC* flags
+with prctl during their initialization so later allocations cannot
+calling back into them.
 
-adam
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index a50e97a63bc8..0ee89575699c 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -11645,6 +11645,8 @@ F:      arch/arm/boot/dts/*am3*
->  F:     arch/arm/boot/dts/*am4*
->  F:     arch/arm/boot/dts/*am5*
->  F:     arch/arm/boot/dts/*dra7*
-> +F:     arch/arm/boot/dts/logicpd-som-lv*
-> +F:     arch/arm/boot/dts/logicpd-torpedo*
->
->  OMAP DISPLAY SUBSYSTEM and FRAMEBUFFER SUPPORT (DSS2)
->  L:     linux-omap@vger.kernel.org
-> --
-> 2.17.1
->
+Signed-off-by: Mike Christie <mchristi@redhat.com>
+---
+
+V2:
+- Use prctl instead of procfs.
+- Add support for NOFS for fuse.
+- Check permissions.
+
+ include/uapi/linux/prctl.h |  8 +++++++
+ kernel/sys.c               | 44 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 52 insertions(+)
+
+diff --git a/include/uapi/linux/prctl.h b/include/uapi/linux/prctl.h
+index 7da1b37b27aa..6f6b3af6633a 100644
+--- a/include/uapi/linux/prctl.h
++++ b/include/uapi/linux/prctl.h
+@@ -234,4 +234,12 @@ struct prctl_mm_map {
+ #define PR_GET_TAGGED_ADDR_CTRL=09=0956
+ # define PR_TAGGED_ADDR_ENABLE=09=09(1UL << 0)
+=20
++/* Control reclaim behavior when allocating memory */
++#define PR_SET_MEMALLOC=09=09=0957
++#define PR_GET_MEMALLOC=09=09=0958
++#define PR_MEMALLOC_SET_NOIO=09=09(1UL << 0)
++#define PR_MEMALLOC_CLEAR_NOIO=09=09(1UL << 1)
++#define PR_MEMALLOC_SET_NOFS=09=09(1UL << 2)
++#define PR_MEMALLOC_CLEAR_NOFS=09=09(1UL << 3)
++
+ #endif /* _LINUX_PRCTL_H */
+diff --git a/kernel/sys.c b/kernel/sys.c
+index a611d1d58c7d..34fedc9fc7e4 100644
+--- a/kernel/sys.c
++++ b/kernel/sys.c
+@@ -2486,6 +2486,50 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long, a=
+rg2, unsigned long, arg3,
+ =09=09=09return -EINVAL;
+ =09=09error =3D GET_TAGGED_ADDR_CTRL();
+ =09=09break;
++=09case PR_SET_MEMALLOC:
++=09=09if (!capable(CAP_SYS_ADMIN))
++=09=09=09return -EPERM;
++
++=09=09if (arg3 || arg4 || arg5)
++=09=09=09return -EINVAL;
++
++=09=09switch (arg2) {
++=09=09case PR_MEMALLOC_SET_NOIO:
++=09=09=09if (current->flags & PF_MEMALLOC_NOFS)
++=09=09=09=09return -EINVAL;
++
++=09=09=09current->flags |=3D PF_MEMALLOC_NOIO;
++=09=09=09break;
++=09=09case PR_MEMALLOC_CLEAR_NOIO:
++=09=09=09current->flags &=3D ~PF_MEMALLOC_NOIO;
++=09=09=09break;
++=09=09case PR_MEMALLOC_SET_NOFS:
++=09=09=09if (current->flags & PF_MEMALLOC_NOIO)
++=09=09=09=09return -EINVAL;
++
++=09=09=09current->flags |=3D PF_MEMALLOC_NOFS;
++=09=09=09break;
++=09=09case PR_MEMALLOC_CLEAR_NOFS:
++=09=09=09current->flags &=3D ~PF_MEMALLOC_NOFS;
++=09=09=09break;
++=09=09default:
++=09=09=09return -EINVAL;
++=09=09}
++=09=09break;
++=09case PR_GET_MEMALLOC:
++=09=09if (!capable(CAP_SYS_ADMIN))
++=09=09=09return -EPERM;
++
++=09=09if (arg2 || arg3 || arg4 || arg5)
++=09=09=09return -EINVAL;
++
++=09=09if (current->flags & PF_MEMALLOC_NOIO)
++=09=09=09error =3D PR_MEMALLOC_SET_NOIO;
++=09=09else if (current->flags & PF_MEMALLOC_NOFS)
++=09=09=09error =3D PR_MEMALLOC_SET_NOFS;
++=09=09else
++=09=09=09error =3D 0;
++=09=09break;
+ =09default:
+ =09=09error =3D -EINVAL;
+ =09=09break;
+--=20
+2.20.1
+
