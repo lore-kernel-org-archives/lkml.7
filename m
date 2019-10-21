@@ -2,90 +2,99 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C1F3CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:08:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 756C0CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:08:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A691206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:08:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49ED9206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:08:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AR0Ji90M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728341AbfJULIE (ORCPT
+        id S1728371AbfJULIQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 07:08:04 -0400
-Received: from mga17.intel.com ([192.55.52.151]:63298 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727433AbfJULID (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 07:08:03 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 04:08:02 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,323,1566889200"; 
-   d="scan'208";a="187507860"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga007.jf.intel.com with ESMTP; 21 Oct 2019 04:08:02 -0700
-Received: from atirumal-mobl1.amr.corp.intel.com (unknown [10.251.26.228])
-        by linux.intel.com (Postfix) with ESMTP id 5A59058029D;
-        Mon, 21 Oct 2019 04:08:01 -0700 (PDT)
-Subject: Re: [alsa-devel] [PATCH] ASoC: bdw-rt5677: enable runtime channel
- merge
-To:     "Lu, Brent" <brent.lu@intel.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
-Cc:     "Rojewski, Cezary" <cezary.rojewski@intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        "Zavras, Alexios" <alexios.zavras@intel.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <1570007072-23049-1-git-send-email-brent.lu@intel.com>
- <CF33C36214C39B4496568E5578BE70C74031B9FD@PGSMSX108.gar.corp.intel.com>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <63da3995-b807-f9e6-6f09-a90e6b8e8e53@linux.intel.com>
-Date:   Mon, 21 Oct 2019 05:41:55 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.0
+        Mon, 21 Oct 2019 07:08:16 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:58908 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727433AbfJULIP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 07:08:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571656094;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/m6iR+lAGe4oWRdWBbbxaVLhAtZ0rF+yJWWCBo2VUQY=;
+        b=AR0Ji90MP+RQX7cImW5E3LCqQ5Bg8ureKOZxD0zlIzqnldlCw5c27JiXuwk9pOiv7m9UV9
+        Jy7VPk3MME1to/9um/o6kSVfbpHqKuiVNx18gsY87dQHzSnFok9ilh4Ow8ngjzDAhunRX6
+        QtZFlGIEWVSe4LItrpbHpGH1OQGcYC4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-235-66Y5VWh_OvypLh4oG7bHRg-1; Mon, 21 Oct 2019 07:08:11 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0C925107AD31;
+        Mon, 21 Oct 2019 11:08:10 +0000 (UTC)
+Received: from [10.40.204.224] (ovpn-204-224.brq.redhat.com [10.40.204.224])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 48E3E5D6A5;
+        Mon, 21 Oct 2019 11:08:08 +0000 (UTC)
+Subject: Re: [PATCH] fs: exFAT read-only driver GPL implementation by Paragon
+ Software.
+To:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>,
+        Richard Weinberger <richard.weinberger@gmail.com>
+References: <453A1153-9493-4A04-BF66-CE6A572DEBDB@paragon-software.com>
+ <CAFLxGvyFBGiDab4wxWidjRyDgWkHVfigVsHiRDB4swpB3G+hvQ@mail.gmail.com>
+ <20191021105409.32okvzbslxmcjdze@pali>
+Cc:     Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+From:   Maurizio Lombardi <mlombard@redhat.com>
+Message-ID: <0877502e-8369-9cfd-36e8-5a4798260cd4@redhat.com>
+Date:   Mon, 21 Oct 2019 13:08:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.0
 MIME-Version: 1.0
-In-Reply-To: <CF33C36214C39B4496568E5578BE70C74031B9FD@PGSMSX108.gar.corp.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20191021105409.32okvzbslxmcjdze@pali>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-MC-Unique: 66Y5VWh_OvypLh4oG7bHRg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
->> In the DAI link "Capture PCM", the FE DAI "Capture Pin" supports 4-channel
->> capture but the BE DAI supports only 2-channel capture. To fix the channel
->> mismatch, we need to enable the runtime channel merge for this DAI link.
->>
-> 
-> Hi Pierre,
-> 
-> This patch is for the same issue discussed in the following thread:
-> https://patchwork.kernel.org/patch/11134167/
-> 
-> We enable the runtime channel merge for the DMIC DAI instead of adding a
-> machine driver constraint. It's working good on chrome's 3.14 branch (which
-> requires some backport for the runtime channel merge feature). Please let
-> me know if this implementation is correct for the FE/BE mismatch problem.
 
-Sorry, I don't fully understand your points, and it's the first time I 
-see anyone use this .dpcm_merged_chan field for an Intel platform.
+Dne 21.10.2019 v 12:54 Pali Roh=C3=A1r napsal(a):
+> Plus there is new version of
+> this out-of-tree Samsung's exfat driver called sdfat which can be found
+> in some Android phones.=20
 
-If I look at the code I see that the core would limit the number of 
-channels to two. But that code needs the CPU_DAI to use 2 channels, 
-which I don't see. So is this patch self-contained or do we need an 
-additional constraint on the FE?
+[...]
 
-Thanks
--Pierre
+>=20
+> About that one implementation from Samsung, which was recently merged
+> into staging tree, more people wrote that code is in horrible state and
+> probably it should not have been merged. That implementation has
+> all-one-one driver FAT12, FAT16, FAT32 and exFAT which basically
+> duplicate current kernel fs/fat code.
+>=20
+> Quick look at this Konstantin's patch, it looks like that code is not in
+> such bad state as staging one. It has only exFAT support (no FAT32) but
+> there is no write support (yet).
+
+But, AFAIK, Samsung is preparing a patch that will replace the current
+staging driver with their newer sdfat driver that also has write support.
+
+https://marc.info/?l=3Dlinux-fsdevel&m=3D156985252507812&w=3D2
+
+Maurizio
 
