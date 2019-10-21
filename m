@@ -2,115 +2,124 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8CF8CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:53:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66F21CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:54:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A32C20873
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:53:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38782214AE
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:54:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SeQuMJwb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729501AbfJUPxR convert rfc822-to-8bit (ORCPT
+        id S1729588AbfJUPyo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 11:53:17 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:50813 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727355AbfJUPxR (ORCPT
+        Mon, 21 Oct 2019 11:54:44 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:57718 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729395AbfJUPyn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 11:53:17 -0400
-Received: from mail-qt1-f180.google.com ([209.85.160.180]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MVNJ3-1iUWBo31xn-00SOsf; Mon, 21 Oct 2019 17:53:15 +0200
-Received: by mail-qt1-f180.google.com with SMTP id t8so4184343qtc.6;
-        Mon, 21 Oct 2019 08:53:15 -0700 (PDT)
-X-Gm-Message-State: APjAAAVP2VoDFzlJAZhxdAqTL4ra99XvNpLc+t3B5+LJmb26yDba0sPc
-        oEUGePLe4/xO6AYHDQh8bX3PxNIr2iRrR3vShrA=
-X-Google-Smtp-Source: APXvYqxW/Wo5Bc84asv5c2V8xml6VFZ/dYpuW0qFfpij3rPpITkcG/R1Y8CZKUX4MG/FmCrTnqrwGTcR/1dluA38Qi0=
-X-Received: by 2002:ac8:33d4:: with SMTP id d20mr24825177qtb.204.1571673194349;
- Mon, 21 Oct 2019 08:53:14 -0700 (PDT)
+        Mon, 21 Oct 2019 11:54:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571673282;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=nYYBigk1mBDQOVv3cRmHPXRlvdDEVLUfmEpCEsjnHaA=;
+        b=SeQuMJwbCc7deMnQJKd20wRpIjF76vWpSebuL3vB3uKwiqWujW69KUPbsgT5SSuoGdMavY
+        0USG3UszCXGCyvWf6RwD4FeIaytC08bNitg/aUAkMCx/4YTknZzvBoaNXoq3EJ4GcWbjzC
+        SqX6kYZ+agtUeLfV09vDF4ZiKkcv6lk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-196-zBapdSUgNuSypj5z_X7zRQ-1; Mon, 21 Oct 2019 11:54:40 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4D5AC80183E;
+        Mon, 21 Oct 2019 15:54:38 +0000 (UTC)
+Received: from [10.36.118.81] (unknown [10.36.118.81])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E38E360126;
+        Mon, 21 Oct 2019 15:54:35 +0000 (UTC)
+Subject: Re: [PATCH v1 1/2] mm/page_alloc.c: Don't set pages PageReserved()
+ when offlining
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Oscar Salvador <osalvador@suse.de>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>
+References: <20191021141927.10252-1-david@redhat.com>
+ <20191021141927.10252-2-david@redhat.com>
+ <20191021144345.GT9379@dhcp22.suse.cz>
+ <b6a392c9-1cb8-321e-b7ba-d483d928a3cc@redhat.com>
+ <20191021154712.GW9379@dhcp22.suse.cz>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat GmbH
+Message-ID: <91ecb9b7-4271-a3a7-2342-b0afd4c41606@redhat.com>
+Date:   Mon, 21 Oct 2019 17:54:35 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-References: <20191006053916.8849-1-brgl@bgdev.pl> <CAMRc=Me3Q=67fCDrFM38LAGXCd+apJybLYVfyrfwmwYa5L1CmQ@mail.gmail.com>
-In-Reply-To: <CAMRc=Me3Q=67fCDrFM38LAGXCd+apJybLYVfyrfwmwYa5L1CmQ@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 21 Oct 2019 17:52:57 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3tUg4SBtO0xb2GAHfegp23WF4TLymzqFfra2-fGLRO7w@mail.gmail.com>
-Message-ID: <CAK8P3a3tUg4SBtO0xb2GAHfegp23WF4TLymzqFfra2-fGLRO7w@mail.gmail.com>
-Subject: Re: [PATCH v3 0/8] drivers: add new variants of devm_platform_ioremap_resource()
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Christoph Hellwig <hch@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Provags-ID: V03:K1:O+1xiKkIhVGA3v4iWA9n7wtHr31rWwdwVnZlKGiOY3ggLieb24n
- B4RAssGZjx2dLjQpgkfixrW1EbC/pnFrihfBbPqQEstVBe/PfylXH1SdfW8lxyme/vLM+ev
- BThHzJN6FvGA92k5gAsWRQSFbFQNYvNPslgD+B+M/aHoPnKy9aPEhguXqgFn1109WJat16z
- UHk83qwdHoFbvxfDsz/nA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:p3V1hzsLbe4=:fKCoXHiSOWiQa4O4byfOem
- Py7Vzwx/DB/7l3kFqtBbBMjGHOHg6OKikfCx6Delt9aA6oIpSqwqLAbN91dffBEJoUojYcxNy
- +KdTrcWxAh4W33TGZiieWN8ZgPxLPnsf+M5kkXAaqhH/YlFyRtQMRcaCYMwNO6a7NQWm0o34H
- PZ8Y52450vDDUfNl76d/7nxNxpT+mvWpNoMJYTKSKIduhVwv2RcnfheGoy8aAk3ibbYl/+s6X
- JA6VSbjXqPX7sOrm3+s4gPk0hlYUSxEaoxlWPb/ZIFcZjJ0p+YV5e1n40wlK8YXLAztkyFAw+
- c/nZLjUYj5BIxeJ4gqZkywx7cjJwqwFCJFbQ/VdIj5zIav+4hZcF7tHmnx1r2d3z/pVNx6Ufv
- L0P/GrrfIZjieaKeECgcVyJ9o4k6TTCZYtzTAYMxr+xIoFzfpAgENONCnD2Ym8mtH0FQLe5MB
- Roqr8CSPTB9GsnulD8y2jXuZYkkfnB5N9FTLs/T5V5kfSQeWeLgqfP/RLS6i0FrmerniqO8Gn
- aLFgk3J7/RrmoqHuJoT/KgulyCV38qV/rKeS/h4DsvASIit1NkP+t5CB9ZIZ+OeeDAJVaaiJH
- eR97e2WmMHaXe/0tTgf9ZFm9oKbwB4eYW0y+o7SNL/GHC0HYO18aUBFxUqVWWqXu4ytru3Zk9
- iwUzIFaU1tWwsSpGejNme30U4u4DKEQj5u3ilQrUXeniNtSD9JTIP4ah4X2VFfKkb00w9uODj
- MGnKKG5bnb7Ior7q6o8KGDUn+FPYzOny7T2lcrtOEXI0L4QZOnk4kKsXhNhziDCaFCnuXxpgk
- oqAgVYaIhQ0T9wwrzgnKnEkf+uoHCPldGoj+bt2eKdDIvp5uy1Ko0V3mYmawcYySi3SD4d2lY
- P0gcnqoEk3TWq9HWeSDA==
+In-Reply-To: <20191021154712.GW9379@dhcp22.suse.cz>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MC-Unique: zBapdSUgNuSypj5z_X7zRQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 5:04 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> niedz., 6 paź 2019 o 07:39 Bartosz Golaszewski <brgl@bgdev.pl> napisał(a):
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > Bartosz Golaszewski (8):
-> >   Documentation: devres: add missing entry for
-> >     devm_platform_ioremap_resource()
-> >   lib: devres: prepare devm_ioremap_resource() for more variants
-> >   lib: devres: provide devm_ioremap_resource_wc()
-> >   drivers: platform: provide devm_platform_ioremap_resource_wc()
-> >   misc: sram: use devm_platform_ioremap_resource_wc()
-> >   drivers: provide devm_platform_ioremap_resource_byname()
-> >   gpio: mvebu: use devm_platform_ioremap_resource_byname()
-> >   gpio: tegra186: use devm_platform_ioremap_resource_byname()
-> >
-> >  .../driver-api/driver-model/devres.rst        |  4 ++
-> >  drivers/base/platform.c                       | 39 +++++++++++-
-> >  drivers/gpio/gpio-mvebu.c                     | 19 +++---
-> >  drivers/gpio/gpio-tegra186.c                  |  4 +-
-> >  drivers/misc/sram.c                           | 28 +++------
-> >  include/linux/device.h                        |  2 +
-> >  include/linux/platform_device.h               |  6 ++
-> >  lib/devres.c                                  | 62 +++++++++++++------
-> >  8 files changed, 108 insertions(+), 56 deletions(-)
->
-> Greg, Arnd,
->
-> gentle ping for this. I noticed that some maintainers are complaining
-> about being spammed with patches converting old drivers to using
-> devm_platform_ioremap_resource() and there's even a patch removing the
-> relevant coccinelle script on the list, but I think for new drivers
-> these are still useful. Do you want to pick them up for v5.5 (or at
-> all)?
+On 21.10.19 17:47, Michal Hocko wrote:
+> On Mon 21-10-19 17:39:36, David Hildenbrand wrote:
+>> On 21.10.19 16:43, Michal Hocko wrote:
+> [...]
+>>> We still set PageReserved before onlining pages and that one should be
+>>> good to go as well (memmap_init_zone).
+>>> Thanks!
+>>
+>> memmap_init_zone() is called when onlining memory. There, set all pages =
+to
+>> reserved right now (on context =3D=3D MEMMAP_HOTPLUG). We clear PG_reser=
+ved when
+>> onlining a page to the buddy (e.g., generic_online_page). If we would on=
+line
+>> a memory block with holes, we would want to keep all such pages
+>> (!pfn_valid()) set to reserved. Also, there might be other side effects.
+>=20
+> Isn't it sufficient to have those pages in a poisoned state? They are
+> not onlined so their state is basically undefined anyway. I do not see
+> how PageReserved makes this any better.
 
-I think this series is useful and we should merge it. Are there any
-remaining dependencies or conflicts with Christoph Hellwig's recent
-__ioremap rework? If there are, I would prioritize his work and maybe
-delay this one by another merge window, otherwise please add
-my Reviewed-by to all patches and resend them for Greg to pick
-up (provided he has no objections).
+It is what people have been using for a long time. Memory hole ->=20
+PG_reserved. The memmap is valid, but people want to tell "this here is=20
+crap, don't look at it".
 
-        Arnd
+>=20
+> Also is the hole inside a hotplugable memory something we really have to
+> care about. Has anybody actually seen a platform to require that?
+
+That's what I was asking. I can see "support" for this was added=20
+basically right from the beginning. I'd say we rip that out and=20
+cleanup/simplify. I am not aware of a platform that requires this.=20
+Especially, memory holes on DIMMs (detected during boot) seem like an=20
+unlikely thing.
+
+
+--=20
+
+Thanks,
+
+David / dhildenb
+
