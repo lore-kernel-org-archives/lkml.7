@@ -2,236 +2,115 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54EFECA9EA0
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 02:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA4BCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 02:40:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BBBE2190F
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 02:39:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E1032190F
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 02:40:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="j50en5NZ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OA/AFTiK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726990AbfJUCje (ORCPT
+        id S1727003AbfJUCky (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 20 Oct 2019 22:39:34 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:59066 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726816AbfJUCjd (ORCPT
+        Sun, 20 Oct 2019 22:40:54 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:41035 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726830AbfJUCky (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 20 Oct 2019 22:39:33 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9L2Yvpa039960;
-        Mon, 21 Oct 2019 02:37:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=Psg74oKh/arjOIYb1403ZcR5N16uF/73JldehYNO1Ms=;
- b=j50en5NZUnoYy9OpeFR5V2Lp1bRrGYNkADIrQJ6jVCPLV1M0YGtsVwLbbItPVDcDAS2A
- T1XIDk8WAzNo+4rVkNSBnOtS3u3MS5KJKUyKHIl8dfUxqgyCqvHWvkmnsOwOsJs9T1rY
- 3EfiCeyrSE+OcM7t9V40znAR3OB2K5uk8XT2kfiAYvZfFTE/wJjP8RTRbKxOG4PVjDfm
- LkFgvNEm/cjHSJx/Xbh67IZRrZd0UsBLjzg24Eq0inrNmfcpX20YNJzX5Wsx+IlhgWff
- Dy0Su4UOfqcBGD5+SH8AKPP7B1vHP37wEUXe3QeRKou+0loWVdYtKy/nZIfq0a6uW3oB cA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2vqtepcg64-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 21 Oct 2019 02:37:12 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9L2XowL058690;
-        Mon, 21 Oct 2019 02:37:11 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2vrcmkxtrk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 21 Oct 2019 02:37:11 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9L2aqmf020461;
-        Mon, 21 Oct 2019 02:36:58 GMT
-Received: from [192.168.0.247] (/1.180.238.73)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 21 Oct 2019 02:36:52 +0000
-Subject: Re: [PATCH v6 3/5] x86/kvm: Add "nopvspin" parameter to disable PV
- spinlocks
-To:     linux-kernel@vger.kernel.org
-Cc:     vkuznets@redhat.com, linux-hyperv@vger.kernel.org,
-        kvm@vger.kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
-        sthemmin@microsoft.com, sashal@kernel.org, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, pbonzini@redhat.com,
-        rkrcmar@redhat.com, sean.j.christopherson@intel.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        boris.ostrovsky@oracle.com, jgross@suse.com,
-        sstabellini@kernel.org, peterz@infradead.org,
-        Jonathan Corbet <corbet@lwn.net>,
-        "H. Peter Anvin" <hpa@zytor.com>, Will Deacon <will@kernel.org>
-References: <1571102367-31595-1-git-send-email-zhenzhong.duan@oracle.com>
- <1571102367-31595-4-git-send-email-zhenzhong.duan@oracle.com>
-From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <4531b43b-0240-50af-36cc-547ede4363fb@oracle.com>
-Date:   Mon, 21 Oct 2019 10:36:30 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Sun, 20 Oct 2019 22:40:54 -0400
+Received: by mail-pg1-f194.google.com with SMTP id t3so6802913pga.8
+        for <linux-kernel@vger.kernel.org>; Sun, 20 Oct 2019 19:40:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2Bmcm7T/zcyVGhPhSabpZfUntv4i1edeqmeNi4+8NAw=;
+        b=OA/AFTiKFstPFoO/Ct4VVDeh4wnOMLVd+warA3PtSFT+985BDdvHSedeHMQ6jsHjfz
+         3lAfbTQr58ine6Ey7l/xUZcuIpAi3X5ZPe5qCoS0uO3XGOhvhm1KRJHo2qwLo1QQ0pus
+         gt8DOW/ue3q7TzQyJ/xlGWFAWprVEDNYrAUIpx41Nu58/lSYlc8pOHHLhTmz1FwpGX9V
+         pt/taCEuuqHBUFrjah4hZ+/2yF3nL8dJE58kivfgcibws0zJbOjdCeYazSrfnD1ez3wG
+         qXC8dwi23to7Y636OFL1U1r3ClIueqjqpjTdhX/DE+Dn2IoFdUgSTvFIshCKgTsR8YP2
+         Xvew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2Bmcm7T/zcyVGhPhSabpZfUntv4i1edeqmeNi4+8NAw=;
+        b=XAo+RuJxGehAuZ6G9Xx8mKgxvrUbq5m6UZ1C/mafxdZiZhexvmhqJLOA9maN5oM5dC
+         9aDBWvo2BggunnFPu/M3g3FzpFizJpbj6jB8wQrjtRs2uhoiEwvd7W3UfF98RoOlNSaD
+         Fqbpa5eXCP70FRE7sTMAEhUkvLFRIRTCPzN28VSG+j3XZP434cCiN5AwVWUPtG+P18mf
+         3ARY30+KFN5YnaGr67KhleCBah0n8V0lMCHGNApDf2pjR9Lfzge8HK59Jg2z6KkHyy0/
+         vsnCJKBMsaklULAwIGXXfi/O3iKVAX3wlrBKir2AufdluFkZrUXU9s+d8MKUSDLHO33k
+         kL1Q==
+X-Gm-Message-State: APjAAAX/DXBRaweN5rG3EBLtL4ROojSHRbLPiyB9D+8tpR/Lih+hDhxz
+        wR0SNOnfHKC53s1sSJTI80vR0fbwYz4=
+X-Google-Smtp-Source: APXvYqxLx0H3vlInhitEUORpSnDYrwSm3XKCc7L2YZpm1pbtgErYPIS1rZ/LGLGMGdM8wz92rggLBQ==
+X-Received: by 2002:a17:90a:9f44:: with SMTP id q4mr25587101pjv.81.1571625652356;
+        Sun, 20 Oct 2019 19:40:52 -0700 (PDT)
+Received: from localhost ([122.172.151.112])
+        by smtp.gmail.com with ESMTPSA id e14sm13870948pgk.70.2019.10.20.19.40.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 20 Oct 2019 19:40:51 -0700 (PDT)
+Date:   Mon, 21 Oct 2019 08:10:49 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, nico@fluxnic.net
+Subject: Re: [PATCH v3 2/5] cpufreq: merge arm_big_little and vexpress-spc
+Message-ID: <20191021024049.uyit2zp24l6jqzf5@vireshk-i7>
+References: <20191018103749.11226-1-sudeep.holla@arm.com>
+ <20191018103749.11226-3-sudeep.holla@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <1571102367-31595-4-git-send-email-zhenzhong.duan@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9416 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910210021
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9416 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910210021
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191018103749.11226-3-sudeep.holla@arm.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi vitaly
+On 18-10-19, 11:37, Sudeep Holla wrote:
+> +static struct platform_driver ve_spc_cpufreq_platdrv = {
+> +	.driver = {
+> +		.name	= "vexpress-spc-cpufreq",
+> +	},
+> +	.probe		= ve_spc_cpufreq_probe,
+> +	.remove		= ve_spc_cpufreq_remove,
+> +};
+> +module_platform_driver(ve_spc_cpufreq_platdrv);
+>  
+>  MODULE_AUTHOR("Viresh Kumar <viresh.kumar@linaro.org>");
+> -MODULE_DESCRIPTION("Generic ARM big LITTLE cpufreq driver");
+> +MODULE_AUTHOR("Sudeep Holla <sudeep.holla@arm.com>");
+> +MODULE_DESCRIPTION("Vexpress SPC ARM big LITTLE cpufreq driver");
+>  MODULE_LICENSE("GPL v2");
 
-This patch is based on your suggestion on v5, appreciate your further
+Strange. The -B option you used while generating the patch makes it
+fails to get applied om my side with am -3. git doesn't get the rename
+of file properly and shows me this conflict:
 
-review:) Thanks
+  
+  static int ve_spc_init_opp_table(const struct cpumask *cpumask)
+  {
+@@@ -68,4 -697,7 +727,11 @@@ static struct platform_driver ve_spc_cp
+  };
+  module_platform_driver(ve_spc_cpufreq_platdrv);
+  
+++<<<<<<< HEAD
+ +MODULE_LICENSE("GPL");
+++=======
++ MODULE_AUTHOR("Viresh Kumar <viresh.kumar@linaro.org>");
++ MODULE_AUTHOR("Sudeep Holla <sudeep.holla@arm.com>");
++ MODULE_DESCRIPTION("Vexpress SPC ARM big LITTLE cpufreq driver");
++ MODULE_LICENSE("GPL v2");
+++>>>>>>> cpufreq: merge arm_big_little and vexpress-spc
 
-Zhenzhong
+Can you resend this patch (only) without the -B option ?
 
-On 2019/10/15 9:19, Zhenzhong Duan wrote:
-> There are cases where a guest tries to switch spinlocks to bare metal
-> behavior (e.g. by setting "xen_nopvspin" on XEN platform and
-> "hv_nopvspin" on HYPER_V).
->
-> That feature is missed on KVM, add a new parameter "nopvspin" to disable
-> PV spinlocks for KVM guest.
->
-> The new 'nopvspin' parameter will also replace Xen and Hyper-V specific
-> parameters in future patches.
->
-> Define variable nopvsin as global because it will be used in future
-> patches as above.
->
-> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: Radim Krcmar <rkrcmar@redhat.com>
-> Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-> Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
-> Cc: Wanpeng Li <wanpengli@tencent.com>
-> Cc: Jim Mattson <jmattson@google.com>
-> Cc: Joerg Roedel <joro@8bytes.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Will Deacon <will@kernel.org>
-> ---
->   Documentation/admin-guide/kernel-parameters.txt |  5 ++++
->   arch/x86/include/asm/qspinlock.h                |  1 +
->   arch/x86/kernel/kvm.c                           | 34 ++++++++++++++++++++++---
->   kernel/locking/qspinlock.c                      |  7 +++++
->   4 files changed, 43 insertions(+), 4 deletions(-)
->
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index a84a83f..bd49ed2 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -5334,6 +5334,11 @@
->   			as generic guest with no PV drivers. Currently support
->   			XEN HVM, KVM, HYPER_V and VMWARE guest.
->   
-> +	nopvspin	[X86,KVM]
-> +			Disables the qspinlock slow path using PV optimizations
-> +			which allow the hypervisor to 'idle' the guest on lock
-> +			contention.
-> +
->   	xirc2ps_cs=	[NET,PCMCIA]
->   			Format:
->   			<irq>,<irq_mask>,<io>,<full_duplex>,<do_sound>,<lockup_hack>[,<irq2>[,<irq3>[,<irq4>]]]
-> diff --git a/arch/x86/include/asm/qspinlock.h b/arch/x86/include/asm/qspinlock.h
-> index 444d6fd..d86ab94 100644
-> --- a/arch/x86/include/asm/qspinlock.h
-> +++ b/arch/x86/include/asm/qspinlock.h
-> @@ -32,6 +32,7 @@ static __always_inline u32 queued_fetch_set_pending_acquire(struct qspinlock *lo
->   extern void __pv_init_lock_hash(void);
->   extern void __pv_queued_spin_lock_slowpath(struct qspinlock *lock, u32 val);
->   extern void __raw_callee_save___pv_queued_spin_unlock(struct qspinlock *lock);
-> +extern bool nopvspin;
->   
->   #define	queued_spin_unlock queued_spin_unlock
->   /**
-> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-> index 249f14a..e9c76d8 100644
-> --- a/arch/x86/kernel/kvm.c
-> +++ b/arch/x86/kernel/kvm.c
-> @@ -825,18 +825,44 @@ __visible bool __kvm_vcpu_is_preempted(long cpu)
->    */
->   void __init kvm_spinlock_init(void)
->   {
-> -	/* Does host kernel support KVM_FEATURE_PV_UNHALT? */
-> -	if (!kvm_para_has_feature(KVM_FEATURE_PV_UNHALT))
-> +	/*
-> +	 * PV spinlocks is disabled if no host side support, then native
-> +	 * qspinlock will be used. As native qspinlock is a fair lock, there is
-> +	 * lock holder preemption issue using it in a guest, imaging one pCPU
-> +	 * running 10 vCPUs of same guest contending same lock.
-> +	 *
-> +	 * virt_spin_lock() is introduced as an optimization for that scenario
-> +	 * which is enabled by virt_spin_lock_key key. To use that optimization,
-> +	 * virt_spin_lock_key isn't disabled here.
-> +	 */
-> +	if (!kvm_para_has_feature(KVM_FEATURE_PV_UNHALT)) {
-> +		pr_info("PV spinlocks disabled, no host support.\n");
->   		return;
-> +	}
->   
-> +	/*
-> +	 * Disable PV qspinlock and use native qspinlock when dedicated pCPUs
-> +	 * are available.
-> +	 */
->   	if (kvm_para_has_hint(KVM_HINTS_REALTIME)) {
-> +		pr_info("PV spinlocks disabled with KVM_HINTS_REALTIME hints.\n");
-> +		static_branch_disable(&virt_spin_lock_key);
-> +		return;
-> +	}
-> +
-> +	if (num_possible_cpus() == 1) {
-> +		pr_info("PV spinlocks disabled, single CPU.\n");
->   		static_branch_disable(&virt_spin_lock_key);
->   		return;
->   	}
->   
-> -	/* Don't use the pvqspinlock code if there is only 1 vCPU. */
-> -	if (num_possible_cpus() == 1)
-> +	if (nopvspin) {
-> +		pr_info("PV spinlocks disabled, forced by \"nopvspin\" parameter.\n");
-> +		static_branch_disable(&virt_spin_lock_key);
->   		return;
-> +	}
-> +
-> +	pr_info("PV spinlocks enabled\n");
->   
->   	__pv_init_lock_hash();
->   	pv_ops.lock.queued_spin_lock_slowpath = __pv_queued_spin_lock_slowpath;
-> diff --git a/kernel/locking/qspinlock.c b/kernel/locking/qspinlock.c
-> index 2473f10..75193d6 100644
-> --- a/kernel/locking/qspinlock.c
-> +++ b/kernel/locking/qspinlock.c
-> @@ -580,4 +580,11 @@ void queued_spin_lock_slowpath(struct qspinlock *lock, u32 val)
->   #include "qspinlock_paravirt.h"
->   #include "qspinlock.c"
->   
-> +bool nopvspin __initdata;
-> +static __init int parse_nopvspin(char *arg)
-> +{
-> +	nopvspin = true;
-> +	return 0;
-> +}
-> +early_param("nopvspin", parse_nopvspin);
->   #endif
+-- 
+viresh
