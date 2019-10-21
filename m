@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC2DCCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:40:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B254CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:40:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9776A21A4A
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:40:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20629222D0
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 13:40:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571665222;
-	bh=AhTQ91mjdHGp2FjH8J+Zq1ryVKbKGTJxBlPi4naAO6M=;
+	s=default; t=1571665225;
+	bh=sMScS+dWkav3crTEB3WcxpUjEzN6p1rATMIKU/rbgLU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2a90E7acqaCQ6j0JIIb2tYUTuxoujMwsp2YmTT4nA+v6DFTICSZP1ugC711AdheJm
-	 iC0WFhV6vMs8ij9qFPKz6okCcFdJ24hPy3jrFKu+2qZiZ5eZwnS7pALMR567tgx0yt
-	 fj4s6G7fHQmggpYBFm9pYkq1kTgSF8jglk0bXu5I=
+	b=I6OOP5wu2j+ckReJMhxb+UUjhuoOekYDsZVfXb17H8ytyN86YpGr0fW3yJoULNeRW
+	 nphR7mAXzyCAt8T4//A6nUCqr3P/JgEn8Xs7Ad6R8MzCcBAoejs6yc8DIcyHsC5hyB
+	 NNP0nxJl+H4LKL2yE/m5uLT8QmsL8iU9jS9H1ts4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729469AbfJUNkV (ORCPT
+        id S1729484AbfJUNkY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 09:40:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42082 "EHLO mail.kernel.org"
+        Mon, 21 Oct 2019 09:40:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729452AbfJUNkT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 09:40:19 -0400
+        id S1729473AbfJUNkW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 09:40:22 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6708214AE;
-        Mon, 21 Oct 2019 13:40:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BF642173B;
+        Mon, 21 Oct 2019 13:40:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571665218;
-        bh=AhTQ91mjdHGp2FjH8J+Zq1ryVKbKGTJxBlPi4naAO6M=;
+        s=default; t=1571665221;
+        bh=sMScS+dWkav3crTEB3WcxpUjEzN6p1rATMIKU/rbgLU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=upU6tDk/SHTJ0xayc3lgNWl4MkA1mEA7m0M4PwIFo/h2XFc3X6FerVJDUpx9GPBvz
-         YDdRsHhpiNuD4MM9CMKhjzEO8iBqGZpqimWJUxsYz6yxNX0VtvdK1+1fasdxwxMLsl
-         sJiBftJqocVQzmqTVsSeNDpOXw57hWIyVewZI6Ic=
+        b=pONl5bjRlnNc+3cGvF9UTBTeWtj6Lgu9hqBPfyO2WhGcRGk0rKUaX6ch7Cjs6iNgW
+         EBm1QbPPry/fYLHdACXZwurE5dgk5Mrm7O+/VpbCVML5VemHEpJiv76CXJFTW4IcyS
+         Qrcj//KLEqg5uugZt+WlG6LJQQzgwR8Xh7Wg/iNg=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -47,11 +47,12 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
+        David Ahern <dsahern@gmail.com>,
         =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= 
         <lclaudio@redhat.com>
-Subject: [PATCH 30/57] perf trace: Introduce accessors to trace specific evsel->priv
-Date:   Mon, 21 Oct 2019 10:38:07 -0300
-Message-Id: <20191021133834.25998-31-acme@kernel.org>
+Subject: [PATCH 31/57] perf trace: Hide evsel->access further, simplify code
+Date:   Mon, 21 Oct 2019 10:38:08 -0300
+Message-Id: <20191021133834.25998-32-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191021133834.25998-1-acme@kernel.org>
 References: <20191021133834.25998-1-acme@kernel.org>
@@ -65,151 +66,151 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-We're using evsel->priv in syscalls:sys_{enter,exit}_SYSCALL and in
-raw_syscalls:sys_{enter,exit} to cache the offset of the common fields,
-the multiplexor id/syscall_id in the sys_enter case and syscall_id + ret
-for sys_exit.
-
-And for the rest of the tracepoints we use it to have a syscall_arg_fmt
-array to have scnprintf/strtoul for tracepoint args.
-
-So we better clearly mark them with accessors so that we can move to
-having a 'struct evsel_trace' struct for all 'perf trace' specific
-evsel->priv usage.
+Next step will be to have a 'struct evsel_trace' to allow for handling
+the syscalls tracepoints via the strace-like code while reusing parts of
+that code with the other tracepoints, where we don't have things like
+the 'syscall_nr' or 'ret' ((raw_)?syscalls:sys_{enter,exit}(_SYSCALL)?)
+args that we want to cache offsets and have been using evsel->priv for
+that, while for the other tracepoints we'll have just an array of
+'struct syscall_arg_fmt' (i.e. ->scnprint() for number->string and
+->strtoul() string->number conversions and other state those functions
+need).
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: David Ahern <dsahern@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-dcoyxfslg7atz821tz9aupjh@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-fre21jbyoqxmmquxcho7oa0x@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-trace.c | 43 ++++++++++++++++++++++++++++----------
- 1 file changed, 32 insertions(+), 11 deletions(-)
+ tools/perf/builtin-trace.c | 57 +++++++++++++++++++++-----------------
+ 1 file changed, 31 insertions(+), 26 deletions(-)
 
 diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index cafd18466dfa..e0be1df555a2 100644
+index e0be1df555a2..1d2ed2823202 100644
 --- a/tools/perf/builtin-trace.c
 +++ b/tools/perf/builtin-trace.c
-@@ -285,6 +285,27 @@ struct syscall_tp {
- 	};
- };
+@@ -296,6 +296,15 @@ static inline struct syscall_tp *__evsel__syscall_tp(struct evsel *evsel)
+ 	return sc;
+ }
  
-+/*
-+ * Used with raw_syscalls:sys_{enter,exit} and with the
-+ * syscalls:sys_{enter,exit}_SYSCALL tracepoints
-+ */
-+static inline struct syscall_tp *__evsel__syscall_tp(struct evsel *evsel)
++static struct syscall_tp *evsel__syscall_tp(struct evsel *evsel)
 +{
-+	struct syscall_tp *sc = evsel->priv;
++	if (evsel->priv == NULL) {
++		evsel->priv = zalloc(sizeof(struct syscall_tp));
++	}
 +
-+	return sc;
++	return __evsel__syscall_tp(evsel);
 +}
 +
-+/*
-+ * Used with all the other tracepoints.
-+ */
-+static inline struct syscall_arg_fmt *__evsel__syscall_arg_fmt(struct evsel *evsel)
+ /*
+  * Used with all the other tracepoints.
+  */
+@@ -306,6 +315,15 @@ static inline struct syscall_arg_fmt *__evsel__syscall_arg_fmt(struct evsel *evs
+ 	return fmt;
+ }
+ 
++static struct syscall_arg_fmt *evsel__syscall_arg_fmt(struct evsel *evsel)
 +{
-+	struct syscall_arg_fmt *fmt = evsel->priv;
++	if (evsel->priv == NULL) {
++		evsel->priv = calloc(evsel->tp_format->format.nr_fields, sizeof(struct syscall_arg_fmt));
++	}
 +
-+	return fmt;
++	return __evsel__syscall_arg_fmt(evsel);
 +}
 +
  static int perf_evsel__init_tp_uint_field(struct evsel *evsel,
  					  struct tp_field *field,
  					  const char *name)
-@@ -298,7 +319,7 @@ static int perf_evsel__init_tp_uint_field(struct evsel *evsel,
+@@ -346,41 +364,34 @@ static void evsel__delete_priv(struct evsel *evsel)
+ 
+ static int perf_evsel__init_syscall_tp(struct evsel *evsel)
+ {
+-	struct syscall_tp *sc = evsel->priv = malloc(sizeof(struct syscall_tp));
++	struct syscall_tp *sc = evsel__syscall_tp(evsel);
+ 
+-	if (evsel->priv != NULL) {
++	if (sc != NULL) {
+ 		if (perf_evsel__init_tp_uint_field(evsel, &sc->id, "__syscall_nr") &&
+ 		    perf_evsel__init_tp_uint_field(evsel, &sc->id, "nr"))
+-			goto out_delete;
++			return -ENOENT;
+ 		return 0;
+ 	}
+ 
+ 	return -ENOMEM;
+-out_delete:
+-	zfree(&evsel->priv);
+-	return -ENOENT;
  }
  
- #define perf_evsel__init_sc_tp_uint_field(evsel, name) \
--	({ struct syscall_tp *sc = evsel->priv;\
-+	({ struct syscall_tp *sc = __evsel__syscall_tp(evsel);\
- 	   perf_evsel__init_tp_uint_field(evsel, &sc->name, #name); })
+ static int perf_evsel__init_augmented_syscall_tp(struct evsel *evsel, struct evsel *tp)
+ {
+-	struct syscall_tp *sc = evsel->priv = malloc(sizeof(struct syscall_tp));
++	struct syscall_tp *sc = evsel__syscall_tp(evsel);
  
- static int perf_evsel__init_tp_ptr_field(struct evsel *evsel,
-@@ -314,7 +335,7 @@ static int perf_evsel__init_tp_ptr_field(struct evsel *evsel,
+-	if (evsel->priv != NULL) {
++	if (sc != NULL) {
+ 		struct tep_format_field *syscall_id = perf_evsel__field(tp, "id");
+ 		if (syscall_id == NULL)
+ 			syscall_id = perf_evsel__field(tp, "__syscall_nr");
+-		if (syscall_id == NULL)
+-			goto out_delete;
+-		if (__tp_field__init_uint(&sc->id, syscall_id->size, syscall_id->offset, evsel->needs_swap))
+-			goto out_delete;
++		if (syscall_id == NULL ||
++		    __tp_field__init_uint(&sc->id, syscall_id->size, syscall_id->offset, evsel->needs_swap))
++			return -EINVAL;
+ 
+ 		return 0;
+ 	}
+ 
+ 	return -ENOMEM;
+-out_delete:
+-	zfree(&evsel->priv);
+-	return -EINVAL;
  }
- 
- #define perf_evsel__init_sc_tp_ptr_field(evsel, name) \
--	({ struct syscall_tp *sc = evsel->priv;\
-+	({ struct syscall_tp *sc = __evsel__syscall_tp(evsel);\
- 	   perf_evsel__init_tp_ptr_field(evsel, &sc->name, #name); })
- 
- static void evsel__delete_priv(struct evsel *evsel)
-@@ -364,14 +385,14 @@ static int perf_evsel__init_augmented_syscall_tp(struct evsel *evsel, struct evs
  
  static int perf_evsel__init_augmented_syscall_tp_args(struct evsel *evsel)
- {
--	struct syscall_tp *sc = evsel->priv;
-+	struct syscall_tp *sc = __evsel__syscall_tp(evsel);
+@@ -399,20 +410,15 @@ static int perf_evsel__init_augmented_syscall_tp_ret(struct evsel *evsel)
  
- 	return __tp_field__init_ptr(&sc->args, sc->id.offset + sizeof(u64));
+ static int perf_evsel__init_raw_syscall_tp(struct evsel *evsel, void *handler)
+ {
+-	evsel->priv = malloc(sizeof(struct syscall_tp));
+-	if (evsel->priv != NULL) {
++	if (evsel__syscall_tp(evsel) != NULL) {
+ 		if (perf_evsel__init_sc_tp_uint_field(evsel, id))
+-			goto out_delete;
++			return -ENOENT;
+ 
+ 		evsel->handler = handler;
+ 		return 0;
+ 	}
+ 
+ 	return -ENOMEM;
+-
+-out_delete:
+-	zfree(&evsel->priv);
+-	return -ENOENT;
  }
  
- static int perf_evsel__init_augmented_syscall_tp_ret(struct evsel *evsel)
+ static struct evsel *perf_evsel__raw_syscall_newtp(const char *direction, void *handler)
+@@ -1690,11 +1696,10 @@ static int trace__read_syscall_info(struct trace *trace, int id)
+ 
+ static int perf_evsel__init_tp_arg_scnprintf(struct evsel *evsel)
  {
--	struct syscall_tp *sc = evsel->priv;
-+	struct syscall_tp *sc = __evsel__syscall_tp(evsel);
+-	int nr_args = evsel->tp_format->format.nr_fields;
++	struct syscall_arg_fmt *fmt = evsel__syscall_arg_fmt(evsel);
  
- 	return __tp_field__init_uint(&sc->ret, sizeof(u64), sc->id.offset + sizeof(u64), evsel->needs_swap);
- }
-@@ -416,11 +437,11 @@ static struct evsel *perf_evsel__raw_syscall_newtp(const char *direction, void *
- }
+-	evsel->priv = calloc(nr_args, sizeof(struct syscall_arg_fmt));
+-	if (evsel->priv != NULL) {
+-		syscall_arg_fmt__init_array(evsel->priv, evsel->tp_format->format.fields);
++	if (fmt != NULL) {
++		syscall_arg_fmt__init_array(fmt, evsel->tp_format->format.fields);
+ 		return 0;
+ 	}
  
- #define perf_evsel__sc_tp_uint(evsel, name, sample) \
--	({ struct syscall_tp *fields = evsel->priv; \
-+	({ struct syscall_tp *fields = __evsel__syscall_tp(evsel); \
- 	   fields->name.integer(&fields->name, sample); })
- 
- #define perf_evsel__sc_tp_ptr(evsel, name, sample) \
--	({ struct syscall_tp *fields = evsel->priv; \
-+	({ struct syscall_tp *fields = __evsel__syscall_tp(evsel); \
- 	   fields->name.pointer(&fields->name, sample); })
- 
- size_t strarray__scnprintf_suffix(struct strarray *sa, char *bf, size_t size, const char *intfmt, bool show_suffix, int val)
-@@ -2518,7 +2539,7 @@ static size_t trace__fprintf_tp_fields(struct trace *trace, struct evsel *evsel,
- 	char bf[2048];
- 	size_t size = sizeof(bf);
- 	struct tep_format_field *field = evsel->tp_format->format.fields;
--	struct syscall_arg_fmt *arg = evsel->priv;
-+	struct syscall_arg_fmt *arg = __evsel__syscall_arg_fmt(evsel);
- 	size_t printed = 0;
- 	unsigned long val;
- 	u8 bit = 1;
-@@ -3557,7 +3578,7 @@ static int ordered_events__deliver_event(struct ordered_events *oe,
- static struct syscall_arg_fmt *perf_evsel__syscall_arg_fmt(struct evsel *evsel, char *arg)
- {
- 	struct tep_format_field *field;
--	struct syscall_arg_fmt *fmt = evsel->priv;
-+	struct syscall_arg_fmt *fmt = __evsel__syscall_arg_fmt(evsel);
- 
- 	if (evsel->tp_format == NULL || fmt == NULL)
- 		return NULL;
-@@ -4315,12 +4336,12 @@ static int evlist__set_syscall_tp_fields(struct evlist *evlist)
- 			return -1;
- 
- 		if (!strncmp(evsel->tp_format->name, "sys_enter_", 10)) {
--			struct syscall_tp *sc = evsel->priv;
-+			struct syscall_tp *sc = __evsel__syscall_tp(evsel);
- 
- 			if (__tp_field__init_ptr(&sc->args, sc->id.offset + sizeof(u64)))
- 				return -1;
- 		} else if (!strncmp(evsel->tp_format->name, "sys_exit_", 9)) {
--			struct syscall_tp *sc = evsel->priv;
-+			struct syscall_tp *sc = __evsel__syscall_tp(evsel);
- 
- 			if (__tp_field__init_uint(&sc->ret, sizeof(u64), sc->id.offset + sizeof(u64), evsel->needs_swap))
- 				return -1;
-@@ -4856,7 +4877,7 @@ int cmd_trace(int argc, const char **argv)
- init_augmented_syscall_tp:
- 				if (perf_evsel__init_augmented_syscall_tp(evsel, evsel))
- 					goto out;
--				sc = evsel->priv;
-+				sc = __evsel__syscall_tp(evsel);
- 				/*
- 				 * For now with BPF raw_augmented we hook into
- 				 * raw_syscalls:sys_enter and there we get all
 -- 
 2.21.0
 
