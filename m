@@ -2,927 +2,234 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D38DCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:53:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 609B5CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:54:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38E8020679
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:53:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26D5720679
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 12:54:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="aS6EjAE9"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="UEBqzmmE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728752AbfJUMxS (ORCPT
+        id S1728758AbfJUMys (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 08:53:18 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:19423 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727256AbfJUMxR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 08:53:17 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 46xc4k44kjz9ty3t;
-        Mon, 21 Oct 2019 14:53:10 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=aS6EjAE9; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 6ZVJamkS0aWP; Mon, 21 Oct 2019 14:53:10 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 46xc4k1xXlz9ty3r;
-        Mon, 21 Oct 2019 14:53:10 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1571662390; bh=NS3fIgt9eM9gij1zoDxWm/Cklbvi4c+NE6KLmeDBgUk=;
-        h=From:Subject:To:Cc:Date:From;
-        b=aS6EjAE9rbp3ewgrWFiaIeglqXDJv303fDkImFABBOs+rWqm5Gk78DrHbx9EOQwfw
-         Yr9SkU38njoOxnkB7ihU3kFSROD82VstWrI7fF1WIi5sygsBk8p017NjASfyPG7rFt
-         k50h0QX/WT8NCEdtVCmClxNQkz1xC+lkCN6PIsP4=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 150B38B8F5;
-        Mon, 21 Oct 2019 14:53:15 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id Dwy631cL-nS8; Mon, 21 Oct 2019 14:53:14 +0200 (CEST)
-Received: from po16098vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 8582C8B8E0;
-        Mon, 21 Oct 2019 14:53:14 +0200 (CEST)
-Received: by po16098vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 36E8D68DEC; Mon, 21 Oct 2019 12:53:14 +0000 (UTC)
-Message-Id: <8ce3582f7f7da9ff0286ced857e5aa2e5ae6746e.1571662378.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [RFC PATCH] powerpc/32: Switch VDSO to C implementation.
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        vincenzo.frascino@arm.com, tglx@linutronix.de, luto@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Mon, 21 Oct 2019 12:53:14 +0000 (UTC)
+        Mon, 21 Oct 2019 08:54:48 -0400
+Received: from mail-eopbgr720078.outbound.protection.outlook.com ([40.107.72.78]:6851
+        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727985AbfJUMyr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 08:54:47 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EcVfU6gUnW+C7d/BKePVXyvMtevRFNI0IUIk14VWmlmMLCYB8pVkQHnA7Egd1ZYngoBjEmZzj9nevkNhN8xWWa+hw8hOPNAjr5ucZ2L3qxf15tWSrHMCisLPbOmFLiqexY8KaioBxOEzj5aEQZq+B6yME9E9SQuHmDktvOCU/GAWBQu1bikaaea5VZ5cyUgXfdX8F/N3zsCjkiYEzQwUCR5iVeBGstzDyKbiZ+gQY+ivguiih9T5kVoMJzwLjCUisRvOeX5KgUzh0xG6XRoop79igYQTiSac27okARmLlSf6RciCeXzrQyU6fqC84DemE9sHytt3c0ITiFawxGUehw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2Hc1+8wqO8SPrwJhD2uLGNAk0vogNUzux6SVSC0yItE=;
+ b=Z0Ih2PWr7H4p6GXWEuBu7m5GOTw8EjO5lfOasn/fgZKybpWLARQSYYixHvKwd0Mm98ie63rHZkernJ2LYPa8wKhTB5PJNvhQOIlA87c9mj+M+82zVPTRFy/Xz+99TDlVW4v2xqyIMEVbfHV25lS5dZMc1OoYNBbLgw5BjA0HQP6afx7C3Wz8nuU5FSJ5+iuGr8SpOx2j6kb0WaTohQlHA81B8tjeFtor0IwXlYYorU2/28YpflDS9H/S2t/fbur+uGDZlNPVOAdmL/t+OpLW1JQHxCC1WXMQBX9jHvk99R7T2Vuoe7EZjU0iOS5Eh15EynAW/9zCnQ6fWTgbVer3FA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2Hc1+8wqO8SPrwJhD2uLGNAk0vogNUzux6SVSC0yItE=;
+ b=UEBqzmmE1g7LztEmcgTol/k062hsepxcg6m20FEzTblqW9ofCLdYOP/TgqVYFH+baAyI/ZIAAGSSlZgx7p8O3B0/iIfw9BItIrtPQrSlyQSHZets156e5IjfT9B66njSkr/A2XRmoNaKOc0lt1XyeLVPxIaraj4jen6jh6sSpMA=
+Received: from DM6PR12MB2761.namprd12.prod.outlook.com (20.176.118.91) by
+ DM6PR12MB3434.namprd12.prod.outlook.com (20.178.198.205) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2367.24; Mon, 21 Oct 2019 12:54:40 +0000
+Received: from DM6PR12MB2761.namprd12.prod.outlook.com
+ ([fe80::3cea:420e:a297:7537]) by DM6PR12MB2761.namprd12.prod.outlook.com
+ ([fe80::3cea:420e:a297:7537%6]) with mapi id 15.20.2367.022; Mon, 21 Oct 2019
+ 12:54:40 +0000
+From:   "Allen, John" <John.Allen@amd.com>
+To:     "linux-firmware@kernel.org" <linux-firmware@kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>,
+        "Allen, John" <John.Allen@amd.com>
+Subject: [PATCH] linux-firmware: Update AMD cpu microcode
+Thread-Topic: [PATCH] linux-firmware: Update AMD cpu microcode
+Thread-Index: AQHViA6zUUK18LbihUSvVgJcEJCxqw==
+Date:   Mon, 21 Oct 2019 12:54:40 +0000
+Message-ID: <20191021125402.5043-1-john.allen@amd.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SN4PR0501CA0112.namprd05.prod.outlook.com
+ (2603:10b6:803:42::29) To DM6PR12MB2761.namprd12.prod.outlook.com
+ (2603:10b6:5:41::27)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=John.Allen@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.16.4
+x-originating-ip: [165.204.77.1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 59a936c1-a0f4-4c23-d926-08d75625d639
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: DM6PR12MB3434:
+x-ld-processed: 3dd8961f-e488-4e60-8e11-a82d994e183d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR12MB3434084C3FBA10207C7E4BAA9A690@DM6PR12MB3434.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:13;
+x-forefront-prvs: 0197AFBD92
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(39860400002)(346002)(136003)(396003)(376002)(199004)(189003)(305945005)(7736002)(6116002)(3846002)(4326008)(6486002)(52116002)(99286004)(71200400001)(71190400001)(4001150100001)(54906003)(316002)(6436002)(6512007)(5640700003)(36756003)(2906002)(25786009)(50226002)(478600001)(81156014)(15650500001)(6916009)(81166006)(8676002)(8936002)(86362001)(14454004)(1076003)(5660300002)(386003)(6506007)(102836004)(26005)(14444005)(256004)(2616005)(2501003)(66066001)(486006)(64756008)(66556008)(66476007)(66946007)(66446008)(2351001)(476003)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3434;H:DM6PR12MB2761.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: gOlAga89zPCKp13DEPF1Cn1wERHcqB7k3spS5z4EIggSitaZsgcOE3iGcXCcCCd/0sym3x3Rlp9E9OUWG14u8yLfx9+G69Y7FeUPOEaW2TUKMxB9Uk2DzoqymA7JQq0oCwvTQZ2f/mNGvl7VSPFFAu/qL0CnlW578E8XHYRZeiKidVCwmrQ7asX5C1yS0UjK/JyG7SQeJCfTnkwXTtU0/pSiP6sShSROEUt9FcLE3nhmemx0gv/rXVxuod98oLUZHm2meE26WKhrsSK3o2WHCEA1IRZLgL4ihRM6te4ttrnSVb5bk8bPX/ybMoNSXurbbU6x3YoEX99anm7KPLBRqqg66v4HTxppjaDG+wJOjdm5Jo+0GYo9T9+523T3S8uYmxKVmJ845cchIF2bzXBP3QXqTg7f/i6KyRUo03DlYpRapq1oRi5HPtoSjj+OrINj
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 59a936c1-a0f4-4c23-d926-08d75625d639
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Oct 2019 12:54:40.5677
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: EbGF3qXJ/gux493UfEeZ9QGqG9aFrVI3JUUzBnx7mu2K2ohenT+IlABboD91p1E1H5FRzxy6aO6wRqsyvHuwqQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3434
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a tentative to switch powerpc/32 vdso to generic C implementation.
-It will likely not work on 64 bits or even build properly at the moment.
+* Update AMD cpu microcode for processor family 17h
 
-powerpc is a bit special for VDSO as well as system calls in the
-way that it requires setting CR SO bit which cannot be done in C.
-Therefore, entry/exit and fallback needs to be performed in ASM.
+Key Name        =3D AMD Microcode Signing Key (for signing microcode contai=
+ner files only)
+Key ID          =3D F328AE73
+Key Fingerprint =3D FC7C 6C50 5DAF CC14 7183 57CA E4BE 5339 F328 AE73
 
-To allow that, C fallbacks just return -1 and the ASM entry point
-performs the system call when the C function returns -1.
-
-The performance is rather disappoiting. That's most likely all
-calculation in the C implementation are based on 64 bits math and
-converted to 32 bits at the very end. I guess C implementation should
-use 32 bits math like the assembly VDSO does as of today.
-
-With current powerpc/32 ASM VDSO:
-
-gettimeofday:    vdso: 750 nsec/call
-clock-getres-realtime:    vdso: 382 nsec/call
-clock-gettime-realtime:    vdso: 928 nsec/call
-clock-getres-monotonic:    vdso: 382 nsec/call
-clock-gettime-monotonic:    vdso: 1033 nsec/call
-
-Once switched to C implementation:
-
-gettimeofday:    vdso: 1533 nsec/call
-clock-getres-realtime:    vdso: 853 nsec/call
-clock-gettime-realtime:    vdso: 1570 nsec/call
-clock-getres-monotonic:    vdso: 835 nsec/call
-clock-gettime-monotonic:    vdso: 1605 nsec/call
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: John Allen <john.allen@amd.com>
 ---
- arch/powerpc/Kconfig                         |   2 +
- arch/powerpc/include/asm/vdso/gettimeofday.h |  81 ++++++++
- arch/powerpc/include/asm/vdso/vsyscall.h     |  27 +++
- arch/powerpc/include/asm/vdso_datapage.h     |  16 +-
- arch/powerpc/kernel/asm-offsets.c            |  26 +--
- arch/powerpc/kernel/time.c                   |  90 +--------
- arch/powerpc/kernel/vdso.c                   |  19 +-
- arch/powerpc/kernel/vdso32/Makefile          |  19 +-
- arch/powerpc/kernel/vdso32/gettimeofday.S    | 270 ++++++---------------------
- arch/powerpc/kernel/vdso32/vgettimeofday.c   |  32 ++++
- 10 files changed, 233 insertions(+), 349 deletions(-)
- create mode 100644 arch/powerpc/include/asm/vdso/gettimeofday.h
- create mode 100644 arch/powerpc/include/asm/vdso/vsyscall.h
- create mode 100644 arch/powerpc/kernel/vdso32/vgettimeofday.c
+ WHENCE                                 |   2 +-
+ amd-ucode/microcode_amd_fam17h.bin     | Bin 6476 -> 9700 bytes
+ amd-ucode/microcode_amd_fam17h.bin.asc |  21 ++++++++-------------
+ 3 files changed, 9 insertions(+), 14 deletions(-)
 
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 3e56c9c2f16e..a363c5186b82 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -168,6 +168,7 @@ config PPC
- 	select GENERIC_STRNCPY_FROM_USER
- 	select GENERIC_STRNLEN_USER
- 	select GENERIC_TIME_VSYSCALL
-+	select GENERIC_GETTIMEOFDAY
- 	select HAVE_ARCH_AUDITSYSCALL
- 	select HAVE_ARCH_HUGE_VMAP		if PPC_BOOK3S_64 && PPC_RADIX_MMU
- 	select HAVE_ARCH_JUMP_LABEL
-@@ -197,6 +198,7 @@ config PPC
- 	select HAVE_FUNCTION_GRAPH_TRACER
- 	select HAVE_FUNCTION_TRACER
- 	select HAVE_GCC_PLUGINS			if GCC_VERSION >= 50200   # plugin support on gcc <= 5.1 is buggy on PPC
-+	select HAVE_GENERIC_VDSO
- 	select HAVE_HW_BREAKPOINT		if PERF_EVENTS && (PPC_BOOK3S || PPC_8xx)
- 	select HAVE_IDE
- 	select HAVE_IOREMAP_PROT
-diff --git a/arch/powerpc/include/asm/vdso/gettimeofday.h b/arch/powerpc/include/asm/vdso/gettimeofday.h
-new file mode 100644
-index 000000000000..6de875cf4b75
---- /dev/null
-+++ b/arch/powerpc/include/asm/vdso/gettimeofday.h
-@@ -0,0 +1,81 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (C) 2018 ARM Limited
-+ */
-+#ifndef __ASM_VDSO_GETTIMEOFDAY_H
-+#define __ASM_VDSO_GETTIMEOFDAY_H
-+
-+#ifndef __ASSEMBLY__
-+
-+#include <asm/time.h>
-+#include <asm/unistd.h>
-+#include <uapi/linux/time.h>
-+
-+#define __VDSO_USE_SYSCALL		ULLONG_MAX
-+
-+#define VDSO_HAS_CLOCK_GETRES		1
-+
-+#define VDSO_HAS_TIME			1
-+
-+#define VDSO_HAS_32BIT_FALLBACK		1
-+
-+static __always_inline
-+int gettimeofday_fallback(struct __kernel_old_timeval *_tv,
-+			  struct timezone *_tz)
-+{
-+	return -1;
-+}
-+
-+static __always_inline
-+long clock_gettime_fallback(clockid_t _clkid, struct __kernel_timespec *_ts)
-+{
-+	return -1;
-+}
-+
-+static __always_inline
-+int clock_getres_fallback(clockid_t _clkid, struct __kernel_timespec *_ts)
-+{
-+	return -1;
-+}
-+
-+static __always_inline
-+int clock_getres32_fallback(clockid_t clock, struct old_timespec32 *res)
-+{
-+	return -1;
-+}
-+
-+static __always_inline
-+int clock_gettime32_fallback(clockid_t clock, struct old_timespec32 *res)
-+{
-+	return -1;
-+}
-+
-+static __always_inline u64 __arch_get_hw_counter(s32 clock_mode)
-+{
-+	/*
-+	 * clock_mode == 0 implies that vDSO are enabled otherwise
-+	 * fallback on syscall.
-+	 */
-+	if (clock_mode)
-+		return __VDSO_USE_SYSCALL;
-+
-+	return get_tb();
-+}
-+
-+static __always_inline
-+const struct vdso_data *__arch_get_vdso_data(void)
-+{
-+	void *ptr;
-+
-+	asm volatile(
-+		"	bcl	20, 31, .+4;\n"
-+		"	mflr	%0;\n"
-+		"	addi	%0, %0, __kernel_datapage_offset - (.-4);\n"
-+		: "=b"(ptr) : : "lr");
-+
-+	return ptr + *(unsigned long *)ptr;
-+}
-+
-+#endif /* !__ASSEMBLY__ */
-+
-+#endif /* __ASM_VDSO_GETTIMEOFDAY_H */
-diff --git a/arch/powerpc/include/asm/vdso/vsyscall.h b/arch/powerpc/include/asm/vdso/vsyscall.h
-new file mode 100644
-index 000000000000..d12c2298cbb8
---- /dev/null
-+++ b/arch/powerpc/include/asm/vdso/vsyscall.h
-@@ -0,0 +1,27 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __ASM_VDSO_VSYSCALL_H
-+#define __ASM_VDSO_VSYSCALL_H
-+
-+#ifndef __ASSEMBLY__
-+
-+#include <linux/timekeeper_internal.h>
-+#include <asm/vdso_datapage.h>
-+
-+extern struct vdso_arch_data *vdso_arch_data;
-+
-+/*
-+ * Update the vDSO data page to keep in sync with kernel timekeeping.
-+ */
-+static __always_inline
-+struct vdso_data *__powerpc_get_k_vdso_data(void)
-+{
-+	return vdso_arch_data->data;
-+}
-+#define __arch_get_k_vdso_data __powerpc_get_k_vdso_data
-+
-+/* The asm-generic header needs to be included after the definitions above */
-+#include <asm-generic/vdso/vsyscall.h>
-+
-+#endif /* !__ASSEMBLY__ */
-+
-+#endif /* __ASM_VDSO_VSYSCALL_H */
-diff --git a/arch/powerpc/include/asm/vdso_datapage.h b/arch/powerpc/include/asm/vdso_datapage.h
-index c61d59ed3b45..f9b50bc50989 100644
---- a/arch/powerpc/include/asm/vdso_datapage.h
-+++ b/arch/powerpc/include/asm/vdso_datapage.h
-@@ -36,6 +36,7 @@
- 
- #include <linux/unistd.h>
- #include <linux/time.h>
-+#include <vdso/datapage.h>
- 
- #define SYSCALL_MAP_SIZE      ((NR_syscalls + 31) / 32)
- 
-@@ -91,18 +92,9 @@ struct vdso_data {
- /*
-  * And here is the simpler 32 bits version
-  */
--struct vdso_data {
--	__u64 tb_orig_stamp;		/* Timebase at boot		0x30 */
-+struct vdso_arch_data {
-+	struct vdso_data data[CS_BASES];
- 	__u64 tb_ticks_per_sec;		/* Timebase tics / sec		0x38 */
--	__u64 tb_to_xs;			/* Inverse of TB to 2^20	0x40 */
--	__u64 stamp_xsec;		/*				0x48 */
--	__u32 tb_update_count;		/* Timebase atomicity ctr	0x50 */
--	__u32 tz_minuteswest;		/* Minutes west of Greenwich	0x58 */
--	__u32 tz_dsttime;		/* Type of dst correction	0x5C */
--	__s32 wtom_clock_sec;			/* Wall to monotonic clock */
--	__s32 wtom_clock_nsec;
--	struct timespec stamp_xtime;	/* xtime as at tb_orig_stamp */
--	__u32 stamp_sec_fraction;	/* fractional seconds of stamp_xtime */
-    	__u32 syscall_map_32[SYSCALL_MAP_SIZE]; /* map of syscalls */
- 	__u32 dcache_block_size;	/* L1 d-cache block size     */
- 	__u32 icache_block_size;	/* L1 i-cache block size     */
-@@ -112,7 +104,7 @@ struct vdso_data {
- 
- #endif /* CONFIG_PPC64 */
- 
--extern struct vdso_data *vdso_data;
-+extern struct vdso_arch_data *vdso_arch_data;
- 
- #endif /* __ASSEMBLY__ */
- 
-diff --git a/arch/powerpc/kernel/asm-offsets.c b/arch/powerpc/kernel/asm-offsets.c
-index 484f54dab247..88ec3acde094 100644
---- a/arch/powerpc/kernel/asm-offsets.c
-+++ b/arch/powerpc/kernel/asm-offsets.c
-@@ -376,21 +376,12 @@ int main(void)
- #endif /* ! CONFIG_PPC64 */
- 
- 	/* datapage offsets for use by vdso */
--	OFFSET(CFG_TB_ORIG_STAMP, vdso_data, tb_orig_stamp);
--	OFFSET(CFG_TB_TICKS_PER_SEC, vdso_data, tb_ticks_per_sec);
--	OFFSET(CFG_TB_TO_XS, vdso_data, tb_to_xs);
--	OFFSET(CFG_TB_UPDATE_COUNT, vdso_data, tb_update_count);
--	OFFSET(CFG_TZ_MINUTEWEST, vdso_data, tz_minuteswest);
--	OFFSET(CFG_TZ_DSTTIME, vdso_data, tz_dsttime);
--	OFFSET(CFG_SYSCALL_MAP32, vdso_data, syscall_map_32);
--	OFFSET(WTOM_CLOCK_SEC, vdso_data, wtom_clock_sec);
--	OFFSET(WTOM_CLOCK_NSEC, vdso_data, wtom_clock_nsec);
--	OFFSET(STAMP_XTIME, vdso_data, stamp_xtime);
--	OFFSET(STAMP_SEC_FRAC, vdso_data, stamp_sec_fraction);
--	OFFSET(CFG_ICACHE_BLOCKSZ, vdso_data, icache_block_size);
--	OFFSET(CFG_DCACHE_BLOCKSZ, vdso_data, dcache_block_size);
--	OFFSET(CFG_ICACHE_LOGBLOCKSZ, vdso_data, icache_log_block_size);
--	OFFSET(CFG_DCACHE_LOGBLOCKSZ, vdso_data, dcache_log_block_size);
-+	OFFSET(CFG_TB_TICKS_PER_SEC, vdso_arch_data, tb_ticks_per_sec);
-+	OFFSET(CFG_SYSCALL_MAP32, vdso_arch_data, syscall_map_32);
-+	OFFSET(CFG_ICACHE_BLOCKSZ, vdso_arch_data, icache_block_size);
-+	OFFSET(CFG_DCACHE_BLOCKSZ, vdso_arch_data, dcache_block_size);
-+	OFFSET(CFG_ICACHE_LOGBLOCKSZ, vdso_arch_data, icache_log_block_size);
-+	OFFSET(CFG_DCACHE_LOGBLOCKSZ, vdso_arch_data, dcache_log_block_size);
- #ifdef CONFIG_PPC64
- 	OFFSET(CFG_SYSCALL_MAP64, vdso_data, syscall_map_64);
- 	OFFSET(TVAL64_TV_SEC, timeval, tv_sec);
-@@ -401,11 +392,6 @@ int main(void)
- 	OFFSET(TSPC64_TV_NSEC, timespec, tv_nsec);
- 	OFFSET(TSPC32_TV_SEC, old_timespec32, tv_sec);
- 	OFFSET(TSPC32_TV_NSEC, old_timespec32, tv_nsec);
--#else
--	OFFSET(TVAL32_TV_SEC, timeval, tv_sec);
--	OFFSET(TVAL32_TV_USEC, timeval, tv_usec);
--	OFFSET(TSPC32_TV_SEC, timespec, tv_sec);
--	OFFSET(TSPC32_TV_NSEC, timespec, tv_nsec);
- #endif
- 	/* timeval/timezone offsets for use by vdso */
- 	OFFSET(TZONE_TZ_MINWEST, timezone, tz_minuteswest);
-diff --git a/arch/powerpc/kernel/time.c b/arch/powerpc/kernel/time.c
-index 694522308cd5..57bdaf08bafc 100644
---- a/arch/powerpc/kernel/time.c
-+++ b/arch/powerpc/kernel/time.c
-@@ -882,93 +882,6 @@ static notrace u64 timebase_read(struct clocksource *cs)
- 	return (u64)get_tb();
- }
- 
--
--void update_vsyscall(struct timekeeper *tk)
--{
--	struct timespec xt;
--	struct clocksource *clock = tk->tkr_mono.clock;
--	u32 mult = tk->tkr_mono.mult;
--	u32 shift = tk->tkr_mono.shift;
--	u64 cycle_last = tk->tkr_mono.cycle_last;
--	u64 new_tb_to_xs, new_stamp_xsec;
--	u64 frac_sec;
--
--	if (clock != &clocksource_timebase)
--		return;
--
--	xt.tv_sec = tk->xtime_sec;
--	xt.tv_nsec = (long)(tk->tkr_mono.xtime_nsec >> tk->tkr_mono.shift);
--
--	/* Make userspace gettimeofday spin until we're done. */
--	++vdso_data->tb_update_count;
--	smp_mb();
--
--	/*
--	 * This computes ((2^20 / 1e9) * mult) >> shift as a
--	 * 0.64 fixed-point fraction.
--	 * The computation in the else clause below won't overflow
--	 * (as long as the timebase frequency is >= 1.049 MHz)
--	 * but loses precision because we lose the low bits of the constant
--	 * in the shift.  Note that 19342813113834067 ~= 2^(20+64) / 1e9.
--	 * For a shift of 24 the error is about 0.5e-9, or about 0.5ns
--	 * over a second.  (Shift values are usually 22, 23 or 24.)
--	 * For high frequency clocks such as the 512MHz timebase clock
--	 * on POWER[6789], the mult value is small (e.g. 32768000)
--	 * and so we can shift the constant by 16 initially
--	 * (295147905179 ~= 2^(20+64-16) / 1e9) and then do the
--	 * remaining shifts after the multiplication, which gives a
--	 * more accurate result (e.g. with mult = 32768000, shift = 24,
--	 * the error is only about 1.2e-12, or 0.7ns over 10 minutes).
--	 */
--	if (mult <= 62500000 && clock->shift >= 16)
--		new_tb_to_xs = ((u64) mult * 295147905179ULL) >> (clock->shift - 16);
--	else
--		new_tb_to_xs = (u64) mult * (19342813113834067ULL >> clock->shift);
--
--	/*
--	 * Compute the fractional second in units of 2^-32 seconds.
--	 * The fractional second is tk->tkr_mono.xtime_nsec >> tk->tkr_mono.shift
--	 * in nanoseconds, so multiplying that by 2^32 / 1e9 gives
--	 * it in units of 2^-32 seconds.
--	 * We assume shift <= 32 because clocks_calc_mult_shift()
--	 * generates shift values in the range 0 - 32.
--	 */
--	frac_sec = tk->tkr_mono.xtime_nsec << (32 - shift);
--	do_div(frac_sec, NSEC_PER_SEC);
--
--	/*
--	 * Work out new stamp_xsec value for any legacy users of systemcfg.
--	 * stamp_xsec is in units of 2^-20 seconds.
--	 */
--	new_stamp_xsec = frac_sec >> 12;
--	new_stamp_xsec += tk->xtime_sec * XSEC_PER_SEC;
--
--	/*
--	 * tb_update_count is used to allow the userspace gettimeofday code
--	 * to assure itself that it sees a consistent view of the tb_to_xs and
--	 * stamp_xsec variables.  It reads the tb_update_count, then reads
--	 * tb_to_xs and stamp_xsec and then reads tb_update_count again.  If
--	 * the two values of tb_update_count match and are even then the
--	 * tb_to_xs and stamp_xsec values are consistent.  If not, then it
--	 * loops back and reads them again until this criteria is met.
--	 */
--	vdso_data->tb_orig_stamp = cycle_last;
--	vdso_data->stamp_xsec = new_stamp_xsec;
--	vdso_data->tb_to_xs = new_tb_to_xs;
--	vdso_data->wtom_clock_sec = tk->wall_to_monotonic.tv_sec;
--	vdso_data->wtom_clock_nsec = tk->wall_to_monotonic.tv_nsec;
--	vdso_data->stamp_xtime = xt;
--	vdso_data->stamp_sec_fraction = frac_sec;
--	smp_wmb();
--	++(vdso_data->tb_update_count);
--}
--
--void update_vsyscall_tz(void)
--{
--	vdso_data->tz_minuteswest = sys_tz.tz_minuteswest;
--	vdso_data->tz_dsttime = sys_tz.tz_dsttime;
--}
--
- static void __init clocksource_init(void)
- {
- 	struct clocksource *clock;
-@@ -1138,8 +1051,7 @@ void __init time_init(void)
- 		sys_tz.tz_dsttime = 0;
- 	}
- 
--	vdso_data->tb_update_count = 0;
--	vdso_data->tb_ticks_per_sec = tb_ticks_per_sec;
-+	vdso_arch_data->tb_ticks_per_sec = tb_ticks_per_sec;
- 
- 	/* initialise and enable the large decrementer (if we have one) */
- 	set_decrementer_max();
-diff --git a/arch/powerpc/kernel/vdso.c b/arch/powerpc/kernel/vdso.c
-index eae9ddaecbcf..d1e4f3a3a781 100644
---- a/arch/powerpc/kernel/vdso.c
-+++ b/arch/powerpc/kernel/vdso.c
-@@ -17,6 +17,7 @@
- #include <linux/elf.h>
- #include <linux/security.h>
- #include <linux/memblock.h>
-+#include <vdso/datapage.h>
- 
- #include <asm/pgtable.h>
- #include <asm/processor.h>
-@@ -71,10 +72,10 @@ static int vdso_ready;
-  * with it, it will become dynamically allocated
-  */
- static union {
--	struct vdso_data	data;
-+	struct vdso_arch_data	arch_data;
- 	u8			page[PAGE_SIZE];
- } vdso_data_store __page_aligned_data;
--struct vdso_data *vdso_data = &vdso_data_store.data;
-+struct vdso_arch_data *vdso_arch_data = &vdso_data_store.arch_data;
- 
- /* Format of the patch table */
- struct vdso_patch_def
-@@ -661,7 +662,7 @@ static void __init vdso_setup_syscall_map(void)
- 				0x80000000UL >> (i & 0x1f);
- #else /* CONFIG_PPC64 */
- 		if (sys_call_table[i] != sys_ni_syscall)
--			vdso_data->syscall_map_32[i >> 5] |=
-+			vdso_arch_data->syscall_map_32[i >> 5] |=
- 				0x80000000UL >> (i & 0x1f);
- #endif /* CONFIG_PPC64 */
- 	}
-@@ -729,10 +730,10 @@ static int __init vdso_init(void)
- 	vdso64_pages = (&vdso64_end - &vdso64_start) >> PAGE_SHIFT;
- 	DBG("vdso64_kbase: %p, 0x%x pages\n", vdso64_kbase, vdso64_pages);
- #else
--	vdso_data->dcache_block_size = L1_CACHE_BYTES;
--	vdso_data->dcache_log_block_size = L1_CACHE_SHIFT;
--	vdso_data->icache_block_size = L1_CACHE_BYTES;
--	vdso_data->icache_log_block_size = L1_CACHE_SHIFT;
-+	vdso_arch_data->dcache_block_size = L1_CACHE_BYTES;
-+	vdso_arch_data->dcache_log_block_size = L1_CACHE_SHIFT;
-+	vdso_arch_data->icache_block_size = L1_CACHE_BYTES;
-+	vdso_arch_data->icache_log_block_size = L1_CACHE_SHIFT;
- #endif /* CONFIG_PPC64 */
- 
- 
-@@ -775,7 +776,7 @@ static int __init vdso_init(void)
- 		get_page(pg);
- 		vdso32_pagelist[i] = pg;
- 	}
--	vdso32_pagelist[i++] = virt_to_page(vdso_data);
-+	vdso32_pagelist[i++] = virt_to_page(vdso_arch_data);
- 	vdso32_pagelist[i] = NULL;
- #endif
- 
-@@ -792,7 +793,7 @@ static int __init vdso_init(void)
- 	vdso64_pagelist[i] = NULL;
- #endif /* CONFIG_PPC64 */
- 
--	get_page(virt_to_page(vdso_data));
-+	get_page(virt_to_page(vdso_arch_data));
- 
- 	smp_wmb();
- 	vdso_ready = 1;
-diff --git a/arch/powerpc/kernel/vdso32/Makefile b/arch/powerpc/kernel/vdso32/Makefile
-index 06f54d947057..09edcd1a2dc7 100644
---- a/arch/powerpc/kernel/vdso32/Makefile
-+++ b/arch/powerpc/kernel/vdso32/Makefile
-@@ -2,10 +2,17 @@
- 
- # List of files in the vdso, has to be asm only for now
- 
-+ARCH_REL_TYPE_ABS := R_PPC_JUMP_SLOT|R_PPC_GLOB_DAT|R_PPC_ADDR32|R_PPC_ADDR24|R_PPC_ADDR16|R_PPC_ADDR16_LO|R_PPC_ADDR16_HI|R_PPC_ADDR16_HA|R_PPC_ADDR14|R_PPC_ADDR14_BRTAKEN|R_PPC_ADDR14_BRNTAKEN
-+include $(srctree)/lib/vdso/Makefile
-+
- obj-vdso32-$(CONFIG_PPC64) = getcpu.o
- obj-vdso32 = sigtramp.o gettimeofday.o datapage.o cacheflush.o note.o \
- 		$(obj-vdso32-y)
- 
-+ifneq ($(c-gettimeofday-y),)
-+  CFLAGS_vgettimeofday.o += -include $(c-gettimeofday-y)
-+endif
-+
- # Build rules
- 
- ifdef CROSS32_COMPILE
-@@ -38,8 +45,8 @@ CPPFLAGS_vdso32.lds += -P -C -Upowerpc
- $(obj)/vdso32_wrapper.o : $(obj)/vdso32.so
- 
- # link rule for the .so file, .lds has to be first
--$(obj)/vdso32.so.dbg: $(src)/vdso32.lds $(obj-vdso32) FORCE
--	$(call if_changed,vdso32ld)
-+$(obj)/vdso32.so.dbg: $(src)/vdso32.lds $(obj-vdso32) $(obj)/vgettimeofday.o FORCE
-+	$(call if_changed,vdso32ld_and_check)
- 
- # strip rule for the .so file
- $(obj)/%.so: OBJCOPYFLAGS := -S
-@@ -49,12 +56,16 @@ $(obj)/%.so: $(obj)/%.so.dbg FORCE
- # assembly rules for the .S files
- $(obj-vdso32): %.o: %.S FORCE
- 	$(call if_changed_dep,vdso32as)
-+$(obj)/vgettimeofday.o: %.o: %.c FORCE
-+	$(call if_changed_dep,vdso32cc)
- 
- # actual build commands
--quiet_cmd_vdso32ld = VDSO32L $@
--      cmd_vdso32ld = $(VDSOCC) $(c_flags) $(CC32FLAGS) -o $@ -Wl,-T$(filter %.lds,$^) $(filter %.o,$^)
-+quiet_cmd_vdso32ld_and_check = VDSO32L $@
-+      cmd_vdso32ld_and_check = $(VDSOCC) $(c_flags) $(CC32FLAGS) -o $@ -Wl,-T$(filter %.lds,$^) $(filter %.o,$^) ; $(cmd_vdso_check)
- quiet_cmd_vdso32as = VDSO32A $@
-       cmd_vdso32as = $(VDSOCC) $(a_flags) $(CC32FLAGS) -c -o $@ $<
-+quiet_cmd_vdso32cc = VDSO32A $@
-+      cmd_vdso32cc = $(VDSOCC) $(c_flags) $(CC32FLAGS) -c -o $@ $<
- 
- # install commands for the unstripped file
- quiet_cmd_vdso_install = INSTALL $@
-diff --git a/arch/powerpc/kernel/vdso32/gettimeofday.S b/arch/powerpc/kernel/vdso32/gettimeofday.S
-index becd9f8767ed..6f2671101248 100644
---- a/arch/powerpc/kernel/vdso32/gettimeofday.S
-+++ b/arch/powerpc/kernel/vdso32/gettimeofday.S
-@@ -12,15 +12,6 @@
- #include <asm/asm-offsets.h>
- #include <asm/unistd.h>
- 
--/* Offset for the low 32-bit part of a field of long type */
--#ifdef CONFIG_PPC64
--#define LOPART	4
--#define TSPEC_TV_SEC	TSPC64_TV_SEC+LOPART
--#else
--#define LOPART	0
--#define TSPEC_TV_SEC	TSPC32_TV_SEC
--#endif
--
- 	.text
- /*
-  * Exact prototype of gettimeofday
-@@ -30,31 +21,25 @@
-  */
- V_FUNCTION_BEGIN(__kernel_gettimeofday)
-   .cfi_startproc
--	mflr	r12
--  .cfi_register lr,r12
--
--	mr	r10,r3			/* r10 saves tv */
--	mr	r11,r4			/* r11 saves tz */
--	bl	__get_datapage@local	/* get data page */
--	mr	r9, r3			/* datapage ptr in r9 */
--	cmplwi	r10,0			/* check if tv is NULL */
--	beq	3f
--	lis	r7,1000000@ha		/* load up USEC_PER_SEC */
--	addi	r7,r7,1000000@l		/* so we get microseconds in r4 */
--	bl	__do_get_tspec@local	/* get sec/usec from tb & kernel */
--	stw	r3,TVAL32_TV_SEC(r10)
--	stw	r4,TVAL32_TV_USEC(r10)
--
--3:	cmplwi	r11,0			/* check if tz is NULL */
--	beq	1f
--	lwz	r4,CFG_TZ_MINUTEWEST(r9)/* fill tz */
--	lwz	r5,CFG_TZ_DSTTIME(r9)
--	stw	r4,TZONE_TZ_MINWEST(r11)
--	stw	r5,TZONE_TZ_DSTTIME(r11)
--
--1:	mtlr	r12
-+	mflr	r0
-+	stwu	r1, -16(r1)
-+	stw	r0, 20(r1)
-+	stw	r3, 8(r1)
-+	stw	r4, 12(r1)
-+	bl	__c_kernel_gettimeofday
-+	cmpwi	r3, 0
-+	lwz	r0, 20(r1)
-+	mtlr	r0
-+	bne	99f
-+	addi	r1, r1, 16
- 	crclr	cr0*4+so
--	li	r3,0
-+	blr
-+99:
-+	lwz	r3, 8(r1)
-+	lwz	r4, 12(r1)
-+	addi	r1, r1, 16
-+	li	r0, __NR_gettimeofday
-+	sc
- 	blr
-   .cfi_endproc
- V_FUNCTION_END(__kernel_gettimeofday)
-@@ -67,75 +52,24 @@ V_FUNCTION_END(__kernel_gettimeofday)
-  */
- V_FUNCTION_BEGIN(__kernel_clock_gettime)
-   .cfi_startproc
--	/* Check for supported clock IDs */
--	cmpli	cr0,r3,CLOCK_REALTIME
--	cmpli	cr1,r3,CLOCK_MONOTONIC
--	cror	cr0*4+eq,cr0*4+eq,cr1*4+eq
--	bne	cr0,99f
--
--	mflr	r12			/* r12 saves lr */
--  .cfi_register lr,r12
--	mr	r11,r4			/* r11 saves tp */
--	bl	__get_datapage@local	/* get data page */
--	mr	r9,r3			/* datapage ptr in r9 */
--	lis	r7,NSEC_PER_SEC@h	/* want nanoseconds */
--	ori	r7,r7,NSEC_PER_SEC@l
--50:	bl	__do_get_tspec@local	/* get sec/nsec from tb & kernel */
--	bne	cr1,80f			/* not monotonic -> all done */
--
--	/*
--	 * CLOCK_MONOTONIC
--	 */
--
--	/* now we must fixup using wall to monotonic. We need to snapshot
--	 * that value and do the counter trick again. Fortunately, we still
--	 * have the counter value in r8 that was returned by __do_get_xsec.
--	 * At this point, r3,r4 contain our sec/nsec values, r5 and r6
--	 * can be used, r7 contains NSEC_PER_SEC.
--	 */
--
--	lwz	r5,(WTOM_CLOCK_SEC+LOPART)(r9)
--	lwz	r6,WTOM_CLOCK_NSEC(r9)
--
--	/* We now have our offset in r5,r6. We create a fake dependency
--	 * on that value and re-check the counter
--	 */
--	or	r0,r6,r5
--	xor	r0,r0,r0
--	add	r9,r9,r0
--	lwz	r0,(CFG_TB_UPDATE_COUNT+LOPART)(r9)
--        cmpl    cr0,r8,r0		/* check if updated */
--	bne-	50b
--
--	/* Calculate and store result. Note that this mimics the C code,
--	 * which may cause funny results if nsec goes negative... is that
--	 * possible at all ?
--	 */
--	add	r3,r3,r5
--	add	r4,r4,r6
--	cmpw	cr0,r4,r7
--	cmpwi	cr1,r4,0
--	blt	1f
--	subf	r4,r7,r4
--	addi	r3,r3,1
--1:	bge	cr1,80f
--	addi	r3,r3,-1
--	add	r4,r4,r7
--
--80:	stw	r3,TSPC32_TV_SEC(r11)
--	stw	r4,TSPC32_TV_NSEC(r11)
--
--	mtlr	r12
-+	mflr	r0
-+	stwu	r1, -16(r1)
-+	stw	r0, 20(r1)
-+	stw	r3, 8(r1)
-+	stw	r4, 12(r1)
-+	bl	__c_kernel_clock_gettime
-+	cmpwi	r3, 0
-+	lwz	r0, 20(r1)
-+	mtlr	r0
-+	bne	99f
-+	addi	r1, r1, 16
- 	crclr	cr0*4+so
--	li	r3,0
- 	blr
--
--	/*
--	 * syscall fallback
--	 */
- 99:
--	li	r0,__NR_clock_gettime
--  .cfi_restore lr
-+	lwz	r3, 8(r1)
-+	lwz	r4, 12(r1)
-+	addi	r1, r1, 16
-+	li	r0, __NR_clock_gettime
- 	sc
- 	blr
-   .cfi_endproc
-@@ -150,27 +84,24 @@ V_FUNCTION_END(__kernel_clock_gettime)
-  */
- V_FUNCTION_BEGIN(__kernel_clock_getres)
-   .cfi_startproc
--	/* Check for supported clock IDs */
--	cmpwi	cr0,r3,CLOCK_REALTIME
--	cmpwi	cr1,r3,CLOCK_MONOTONIC
--	cror	cr0*4+eq,cr0*4+eq,cr1*4+eq
--	bne	cr0,99f
--
--	li	r3,0
--	cmpli	cr0,r4,0
-+	mflr	r0
-+	stwu	r1, -16(r1)
-+	stw	r0, 20(r1)
-+	stw	r3, 8(r1)
-+	stw	r4, 12(r1)
-+	bl	__c_kernel_clock_getres
-+	cmpwi	r3, 0
-+	lwz	r0, 20(r1)
-+	mtlr	r0
-+	bne	99f
-+	addi	r1, r1, 16
- 	crclr	cr0*4+so
--	beqlr
--	lis	r5,CLOCK_REALTIME_RES@h
--	ori	r5,r5,CLOCK_REALTIME_RES@l
--	stw	r3,TSPC32_TV_SEC(r4)
--	stw	r5,TSPC32_TV_NSEC(r4)
- 	blr
--
--	/*
--	 * syscall fallback
--	 */
- 99:
--	li	r0,__NR_clock_getres
-+	lwz	r3, 8(r1)
-+	lwz	r4, 12(r1)
-+	addi	r1, r1, 16
-+	li	r0, __NR_clock_getres
- 	sc
- 	blr
-   .cfi_endproc
-@@ -185,105 +116,14 @@ V_FUNCTION_END(__kernel_clock_getres)
-  */
- V_FUNCTION_BEGIN(__kernel_time)
-   .cfi_startproc
--	mflr	r12
--  .cfi_register lr,r12
--
--	mr	r11,r3			/* r11 holds t */
--	bl	__get_datapage@local
--	mr	r9, r3			/* datapage ptr in r9 */
--
--	lwz	r3,STAMP_XTIME+TSPEC_TV_SEC(r9)
--
--	cmplwi	r11,0			/* check if t is NULL */
--	beq	2f
--	stw	r3,0(r11)		/* store result at *t */
--2:	mtlr	r12
-+	mflr	r0
-+	stwu	r1, -16(r1)
-+	stw	r0, 20(r1)
-+	bl	__c_kernel_time
-+	lwz	r0, 20(r1)
- 	crclr	cr0*4+so
-+	mtlr	r0
-+	addi	r1, r1, 16
- 	blr
-   .cfi_endproc
- V_FUNCTION_END(__kernel_time)
--
--/*
-- * This is the core of clock_gettime() and gettimeofday(),
-- * it returns the current time in r3 (seconds) and r4.
-- * On entry, r7 gives the resolution of r4, either USEC_PER_SEC
-- * or NSEC_PER_SEC, giving r4 in microseconds or nanoseconds.
-- * It expects the datapage ptr in r9 and doesn't clobber it.
-- * It clobbers r0, r5 and r6.
-- * On return, r8 contains the counter value that can be reused.
-- * This clobbers cr0 but not any other cr field.
-- */
--__do_get_tspec:
--  .cfi_startproc
--	/* Check for update count & load values. We use the low
--	 * order 32 bits of the update count
--	 */
--1:	lwz	r8,(CFG_TB_UPDATE_COUNT+LOPART)(r9)
--	andi.	r0,r8,1			/* pending update ? loop */
--	bne-	1b
--	xor	r0,r8,r8		/* create dependency */
--	add	r9,r9,r0
--
--	/* Load orig stamp (offset to TB) */
--	lwz	r5,CFG_TB_ORIG_STAMP(r9)
--	lwz	r6,(CFG_TB_ORIG_STAMP+4)(r9)
--
--	/* Get a stable TB value */
--2:	MFTBU(r3)
--	MFTBL(r4)
--	MFTBU(r0)
--	cmplw	cr0,r3,r0
--	bne-	2b
--
--	/* Subtract tb orig stamp and shift left 12 bits.
--	 */
--	subfc	r4,r6,r4
--	subfe	r0,r5,r3
--	slwi	r0,r0,12
--	rlwimi.	r0,r4,12,20,31
--	slwi	r4,r4,12
--
--	/*
--	 * Load scale factor & do multiplication.
--	 * We only use the high 32 bits of the tb_to_xs value.
--	 * Even with a 1GHz timebase clock, the high 32 bits of
--	 * tb_to_xs will be at least 4 million, so the error from
--	 * ignoring the low 32 bits will be no more than 0.25ppm.
--	 * The error will just make the clock run very very slightly
--	 * slow until the next time the kernel updates the VDSO data,
--	 * at which point the clock will catch up to the kernel's value,
--	 * so there is no long-term error accumulation.
--	 */
--	lwz	r5,CFG_TB_TO_XS(r9)	/* load values */
--	mulhwu	r4,r4,r5
--	li	r3,0
--
--	beq+	4f			/* skip high part computation if 0 */
--	mulhwu	r3,r0,r5
--	mullw	r5,r0,r5
--	addc	r4,r4,r5
--	addze	r3,r3
--4:
--	/* At this point, we have seconds since the xtime stamp
--	 * as a 32.32 fixed-point number in r3 and r4.
--	 * Load & add the xtime stamp.
--	 */
--	lwz	r5,STAMP_XTIME+TSPEC_TV_SEC(r9)
--	lwz	r6,STAMP_SEC_FRAC(r9)
--	addc	r4,r4,r6
--	adde	r3,r3,r5
--
--	/* We create a fake dependency on the result in r3/r4
--	 * and re-check the counter
--	 */
--	or	r6,r4,r3
--	xor	r0,r6,r6
--	add	r9,r9,r0
--	lwz	r0,(CFG_TB_UPDATE_COUNT+LOPART)(r9)
--        cmplw	cr0,r8,r0		/* check if updated */
--	bne-	1b
--
--	mulhwu	r4,r4,r7		/* convert to micro or nanoseconds */
--
--	blr
--  .cfi_endproc
-diff --git a/arch/powerpc/kernel/vdso32/vgettimeofday.c b/arch/powerpc/kernel/vdso32/vgettimeofday.c
-new file mode 100644
-index 000000000000..9cc39fc60b30
---- /dev/null
-+++ b/arch/powerpc/kernel/vdso32/vgettimeofday.c
-@@ -0,0 +1,32 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * ARM64 userspace implementations of gettimeofday() and similar.
-+ *
-+ * Copyright (C) 2018 ARM Limited
-+ *
-+ */
-+#include <linux/time.h>
-+#include <linux/types.h>
-+
-+int __c_kernel_clock_gettime(clockid_t clock,
-+			   struct old_timespec32 *ts)
-+{
-+	return __cvdso_clock_gettime32(clock, ts);
-+}
-+
-+int __c_kernel_gettimeofday(struct __kernel_old_timeval *tv,
-+			  struct timezone *tz)
-+{
-+	return __cvdso_gettimeofday(tv, tz);
-+}
-+
-+int __c_kernel_clock_getres(clockid_t clock_id,
-+			  struct old_timespec32 *res)
-+{
-+	return __cvdso_clock_getres_time32(clock_id, res);
-+}
-+
-+time_t __c_kernel_time(time_t *time)
-+{
-+	return __cvdso_time(time);
-+}
--- 
-2.13.3
+diff --git a/WHENCE b/WHENCE
+index 8a43386..1d1bb66 100644
+--- a/WHENCE
++++ b/WHENCE
+@@ -3454,7 +3454,7 @@ Version: 2018-05-24
+ File: amd-ucode/microcode_amd_fam16h.bin
+ Version: 2014-10-28
+ File: amd-ucode/microcode_amd_fam17h.bin
+-Version: 2018-11-28
++Version: 2019-10-21
+=20
+ License: Redistributable. See LICENSE.amd-ucode for details
+=20
+diff --git a/amd-ucode/microcode_amd_fam17h.bin b/amd-ucode/microcode_amd_f=
+am17h.bin
+index 8ba3c612e10188a4572ce6b59fa754ceb58c5d0c..8e768d583bd67552aa52f2bf688=
+1e9f59401291c 100644
+GIT binary patch
+delta 3116
+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
+W3WVG{R1GrGyFs6QeS`Gfmi`}4*p_kt
+
+delta 842
+zcmaFjea48(#n+Jm1PmA^N?EZ=3DC~z{VPmGkV@2mWMD|Pa;aITwOj=3D^WSZlAbOJ%Q<l
+z^}67C|JkZ@TeFucUHGy2QTyi4zcmkEEMdB3T3Hp_bH%h*RA2gNcBkB5`GZ^HKC&ew
+z%2sc^x^!3R2e&6?Ie)9BmS1^Txi9c~!-TYFe`jf^npcIpiHI`1ieI>{^qQBu{nIig
+zzeT?%|9Mw`>_>yGOR&aYGqc9|9Y%51y9}q<CtQwp)>-{l{>R&w4<|M65J|aNa(RYj
+z`NM9XjZ3z)xO%xAnADJSoa@ZbYniW?h6FD^BRIiAQ0imVWOHj-j%_akRl65)M(N&i
+zJ7X9#_3-iyx2;)aSJsGj{X5sZ@yMg64<;^k>iQ$dqb&I1R3wxBrOkhMS(tRxg%~)x
+zQjYL2rd{CquQ!=3D<NBJU7=3D`=3DpBpXxkZAJWr#?itwf=3D&HqX?p?WtXR@Jy-ed;>*2(b#
+zy_-{56d5P;3iVGGVcWp?YjQ1{GLS43o;<mRJ!kR(A(hEI9J!MZ3Mo&X!%;GMhNuHj
+zOm*{LQDvsdGq~-Tm{`DSdU!lk8QRrb8W!m9*w4<vpfHDNLE|(977?5L6#{G=3D3q*KQ
+zDzrJ77`P{Ylu(|$g<D~AgM<bzBQQD}co-NY6cpIFCqLwot`BQAxnkRKT&S|sLg49M
+z`;(R&0b!1pmgzm|<<2{>^vmXFfA82&VO6V*5u5(<YMvdFnDAGJ1e=3DnV$<NL6>;3O<
+z7Z!Kz(9*lvx$Stl--&;RTi+;rkv4qwB9l#|X49So$;Dz}G9M*xWO}}GdahK{?<4rx
+z)-mAG4fbntWh&~TaTWFLv!&b@wwJC~dAwt>UiB8O0I}z-#$Rs*Ys4|sb;X~vcABcY
+zGBf<is^i<IOHbU#npnrx^ZLNq)RmV`rCx9rE?!djX<>QP=3D4lsfV!aFPujdzW1zlU2
+zT5!^CP2tvdnP0NLF*lue?k^So&s5)GcF#e`_s-k1{_TsTp0Du#(=3DMEIj;ZV$I5ru%
+zCo>ADvN13q$JXX}fwxSs7}{JYyp?hCJvq0@IijFw0!2w86H;_cJ|iK)iyrjZ0NA@@
+Ag8%>k
+
+diff --git a/amd-ucode/microcode_amd_fam17h.bin.asc b/amd-ucode/microcode_a=
+md_fam17h.bin.asc
+index 9822944..45c986d 100644
+--- a/amd-ucode/microcode_amd_fam17h.bin.asc
++++ b/amd-ucode/microcode_amd_fam17h.bin.asc
+@@ -1,16 +1,11 @@
+ -----BEGIN PGP SIGNATURE-----
+=20
+-iQIzBAABCgAdFiEE15J9K0GJJtx9xI6sDKS4vABH4PkFAlv/CfcACgkQDKS4vABH
+-4PksAhAAmfYROlv/xzR1iPxbxPLo9Cz9rv3iYwqAw8WD4Uum5KJHvkdyvofFWnPF
+-FdH/wB3F6BniA/HxKHw4NoyhiKSqTcSl/RgKPwoSOFxBBUQQZdlkl1w5ta1mwiCu
+-iSDP2+pdbjZmAKhH+GDkixZiECz8J9+oR8SM+VsWI6DopTIymc9mQaOSLV0iPJgX
+-tc8wAw+X9LkpnfSuLGyzg/jHzHa9KWl4ki13ii6h46bdavxVHY39JTCa/Bg2wSXE
+-zM3JFuJdRJJZrJaxcou/USa8l6lZS38x6OgThh3Rqf6O3vlJEpS4HSLB2yqJoDEj
+-GUvoiJTiZLPXM7NT3/t+/lSk2bOHG6h0KqIUda41ZdtksWThgCs+WZmepyXn4StY
+-sOyYMzBP2EqvHaA/FnYeezq5fCHVVLel7SggT8HZg9eYqQO+6rnOcXzuM39v1wm/
+-GM+M4KYzLiHi9+1nVO2MByik21+QMc3EjTxEzyWd95+VzAT2kxxlkZ5cD8cTAfnB
+-ysFNrd1jSBK5MeYBmjUkjTL9xy71rZjGWI61XU5G66h6Vu2XryCkBq/vA35rLnZB
+-GBxq6ZpxdSAD96fdHEJuAaNX0ZvcWyNhvzJHe1dOPmeMHB/+gw1j1j4cUGNhkZ6C
+-okTEcOKwmfOs8soZmkdJvoi/cwzVjy1nvZSkasQ8NfIhOgHZdMw=3D
+-=3DFqUC
++iQEzBAABCAAdFiEE/HxsUF2vzBRxg1fK5L5TOfMornMFAl2to1IACgkQ5L5TOfMo
++rnNaqQf/XL0XBls9ByaVm9uS/SCRTeazSBTByz+C1+rkqoq5iU/GjtREF/FjvpI+
++SsIHXe0u0FSZ9/uFK+TXuOMTuhqX8+QyidmB22yeFT07+5/6jljtX3/InAOYA286
++Op2tvBBfZAMBXoVbdg0mPQnY2ERhiRI7TIDtSWb/YzMYHW3zPdmNUPvGNV7apzWn
++P53Nyg+wriHYNwgXaOGtG2zsdaLWGyROgJP0U26wgwpnY7Yr5ZQBe7kqRkZQ5Cm9
++HajOGfaimt3azJnvxifCZZZGH5LHxUsyqnmmaBDlqDrrPo8rA37PLAyQPnOa209d
++lGjkfff2Ukhhv1I2WGrKarUGaBUXoQ=3D=3D
++=3DzbWl
+ -----END PGP SIGNATURE-----
+--=20
+2.16.4
 
