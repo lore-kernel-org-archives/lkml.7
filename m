@@ -4,38 +4,37 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.8 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54AF0CA9EBA
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 23:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF45BCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 23:20:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3344F20882
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 23:20:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 896AA20882
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 23:20:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730599AbfJUXUB (ORCPT
+        id S1730572AbfJUXUA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 19:20:01 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:38303 "EHLO
+        Mon, 21 Oct 2019 19:20:00 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:38297 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730554AbfJUXTB (ORCPT
+        with ESMTP id S1730556AbfJUXTB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 21 Oct 2019 19:19:01 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iMgwt-0003r3-5F; Tue, 22 Oct 2019 01:18:51 +0200
+        id 1iMgwr-0003qQ-5O; Tue, 22 Oct 2019 01:18:49 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 7DFA31C0489;
-        Tue, 22 Oct 2019 01:18:50 +0200 (CEST)
-Date:   Mon, 21 Oct 2019 23:18:49 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 8606E1C0086;
+        Tue, 22 Oct 2019 01:18:48 +0200 (CEST)
+Date:   Mon, 21 Oct 2019 23:18:47 -0000
 From:   "tip-bot2 for Jiri Olsa" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] libperf: Add tests_mmap_cpus test
+Subject: [tip: perf/core] libperf: Add pr_err() macro
 Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Alexey Budankov <alexey.budankov@linux.intel.com>,
         Andi Kleen <ak@linux.intel.com>,
@@ -44,12 +43,13 @@ Cc:     Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Stephane Eranian <eranian@google.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <20191017105918.20873-8-jolsa@kernel.org>
-References: <20191017105918.20873-8-jolsa@kernel.org>
+In-Reply-To: <20191017105918.20873-11-jolsa@kernel.org>
+References: <20191017105918.20873-11-jolsa@kernel.org>
 MIME-Version: 1.0
-Message-ID: <157169992990.29376.14004930983969917861.tip-bot2@tip-bot2>
+Message-ID: <157169992791.29376.3655092802607172757.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -65,45 +65,19 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     37ac1bbdc31a2007f398b7caf0cbe522f1af9c6c
-Gitweb:        https://git.kernel.org/tip/37ac1bbdc31a2007f398b7caf0cbe522f1af9c6c
+Commit-ID:     dcc6854215f115efcbd79368bc07099c41de0b6c
+Gitweb:        https://git.kernel.org/tip/dcc6854215f115efcbd79368bc07099c41de0b6c
 Author:        Jiri Olsa <jolsa@kernel.org>
-AuthorDate:    Thu, 17 Oct 2019 12:59:15 +02:00
+AuthorDate:    Thu, 17 Oct 2019 12:59:18 +02:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitterDate: Sat, 19 Oct 2019 15:35:01 -03:00
 
-libperf: Add tests_mmap_cpus test
+libperf: Add pr_err() macro
 
-Add mmaping tests that generates prctl call on every cpu validates it
-gets all the related events in ring buffer.
-
-Committer testing:
-
-  # make -C tools/perf/lib tests
-  make: Entering directory '/home/acme/git/perf/tools/perf/lib'
-    LINK     test-cpumap-a
-    LINK     test-threadmap-a
-    LINK     test-evlist-a
-    LINK     test-evsel-a
-    LINK     test-cpumap-so
-    LINK     test-threadmap-so
-    LINK     test-evlist-so
-    LINK     test-evsel-so
-  running static:
-  - running test-cpumap.c...OK
-  - running test-threadmap.c...OK
-  - running test-evlist.c...OK
-  - running test-evsel.c...OK
-  running dynamic:
-  - running test-cpumap.c...OK
-  - running test-threadmap.c...OK
-  - running test-evlist.c...OK
-  - running test-evsel.c...OK
-  make: Leaving directory '/home/acme/git/perf/tools/perf/lib'
-  #
+And missing include for "perf/core.h" header, which provides LIBPERF_*
+debug levels and add missing pr_err() support.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
@@ -112,131 +86,43 @@ Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Stephane Eranian <eranian@google.com>
-Link: http://lore.kernel.org/lkml/20191017105918.20873-8-jolsa@kernel.org
-[ Added _GNU_SOURCE define for sched.h to get sched_[gs]et_affinity
+Link: http://lore.kernel.org/lkml/20191017105918.20873-11-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/lib/tests/test-evlist.c | 98 +++++++++++++++++++++++++++++-
- 1 file changed, 98 insertions(+)
+ tools/perf/lib/include/perf/core.h | 1 +
+ tools/perf/lib/internal.h          | 3 +++
+ 2 files changed, 4 insertions(+)
 
-diff --git a/tools/perf/lib/tests/test-evlist.c b/tools/perf/lib/tests/test-evlist.c
-index 90a1869..741bc1b 100644
---- a/tools/perf/lib/tests/test-evlist.c
-+++ b/tools/perf/lib/tests/test-evlist.c
-@@ -1,4 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
-+#define _GNU_SOURCE // needed for sched.h to get sched_[gs]etaffinity and CPU_(ZERO,SET)
-+#include <sched.h>
- #include <stdio.h>
- #include <stdarg.h>
- #include <unistd.h>
-@@ -299,6 +301,101 @@ static int test_mmap_thread(void)
- 	return 0;
- }
+diff --git a/tools/perf/lib/include/perf/core.h b/tools/perf/lib/include/perf/core.h
+index 2a80e4b..a3f6d68 100644
+--- a/tools/perf/lib/include/perf/core.h
++++ b/tools/perf/lib/include/perf/core.h
+@@ -9,6 +9,7 @@
+ #endif
  
-+static int test_mmap_cpus(void)
-+{
-+	struct perf_evlist *evlist;
-+	struct perf_evsel *evsel;
-+	struct perf_mmap *map;
-+	struct perf_cpu_map *cpus;
-+	struct perf_event_attr attr = {
-+		.type             = PERF_TYPE_TRACEPOINT,
-+		.sample_period    = 1,
-+		.wakeup_watermark = 1,
-+		.disabled         = 1,
-+	};
-+	cpu_set_t saved_mask;
-+	char path[PATH_MAX];
-+	int id, err, cpu, tmp;
-+	union perf_event *event;
-+	int count = 0;
-+
-+	snprintf(path, PATH_MAX, "%s/kernel/debug/tracing/events/syscalls/sys_enter_prctl/id",
-+		 sysfs__mountpoint());
-+
-+	if (filename__read_int(path, &id)) {
-+		fprintf(stderr, "error: failed to get tracepoint id: %s\n", path);
-+		return -1;
-+	}
-+
-+	attr.config = id;
-+
-+	cpus = perf_cpu_map__new(NULL);
-+	__T("failed to create cpus", cpus);
-+
-+	evlist = perf_evlist__new();
-+	__T("failed to create evlist", evlist);
-+
-+	evsel = perf_evsel__new(&attr);
-+	__T("failed to create evsel1", evsel);
-+
-+	perf_evlist__add(evlist, evsel);
-+
-+	perf_evlist__set_maps(evlist, cpus, NULL);
-+
-+	err = perf_evlist__open(evlist);
-+	__T("failed to open evlist", err == 0);
-+
-+	err = perf_evlist__mmap(evlist, 4);
-+	__T("failed to mmap evlist", err == 0);
-+
-+	perf_evlist__enable(evlist);
-+
-+	err = sched_getaffinity(0, sizeof(saved_mask), &saved_mask);
-+	__T("sched_getaffinity failed", err == 0);
-+
-+	perf_cpu_map__for_each_cpu(cpu, tmp, cpus) {
-+		cpu_set_t mask;
-+
-+		CPU_ZERO(&mask);
-+		CPU_SET(cpu, &mask);
-+
-+		err = sched_setaffinity(0, sizeof(mask), &mask);
-+		__T("sched_setaffinity failed", err == 0);
-+
-+		prctl(0, 0, 0, 0, 0);
-+	}
-+
-+	err = sched_setaffinity(0, sizeof(saved_mask), &saved_mask);
-+	__T("sched_setaffinity failed", err == 0);
-+
-+	perf_evlist__disable(evlist);
-+
-+	perf_evlist__for_each_mmap(evlist, map, false) {
-+		if (perf_mmap__read_init(map) < 0)
-+			continue;
-+
-+		while ((event = perf_mmap__read_event(map)) != NULL) {
-+			count++;
-+			perf_mmap__consume(map);
-+		}
-+
-+		perf_mmap__read_done(map);
-+	}
-+
-+	/* calls perf_evlist__munmap/perf_evlist__close */
-+	perf_evlist__delete(evlist);
-+
-+	/*
-+	 * The generated prctl events should match the
-+	 * number of cpus or be bigger (we are system-wide).
-+	 */
-+	__T("failed count", count >= perf_cpu_map__nr(cpus));
-+
-+	perf_cpu_map__put(cpus);
-+
-+	return 0;
-+}
-+
- int main(int argc, char **argv)
- {
- 	__T_START;
-@@ -309,6 +406,7 @@ int main(int argc, char **argv)
- 	test_stat_thread();
- 	test_stat_thread_enable();
- 	test_mmap_thread();
-+	test_mmap_cpus();
+ enum libperf_print_level {
++	LIBPERF_ERR,
+ 	LIBPERF_WARN,
+ 	LIBPERF_INFO,
+ 	LIBPERF_DEBUG,
+diff --git a/tools/perf/lib/internal.h b/tools/perf/lib/internal.h
+index 37db745..2c27e15 100644
+--- a/tools/perf/lib/internal.h
++++ b/tools/perf/lib/internal.h
+@@ -2,6 +2,8 @@
+ #ifndef __LIBPERF_INTERNAL_H
+ #define __LIBPERF_INTERNAL_H
  
- 	__T_OK;
- 	return 0;
++#include <perf/core.h>
++
+ void libperf_print(enum libperf_print_level level,
+ 		   const char *format, ...)
+ 	__attribute__((format(printf, 2, 3)));
+@@ -11,6 +13,7 @@ do {                            \
+ 	libperf_print(level, "libperf: " fmt, ##__VA_ARGS__);     \
+ } while (0)
+ 
++#define pr_err(fmt, ...)        __pr(LIBPERF_ERR, fmt, ##__VA_ARGS__)
+ #define pr_warning(fmt, ...)    __pr(LIBPERF_WARN, fmt, ##__VA_ARGS__)
+ #define pr_info(fmt, ...)       __pr(LIBPERF_INFO, fmt, ##__VA_ARGS__)
+ #define pr_debug(fmt, ...)      __pr(LIBPERF_DEBUG, fmt, ##__VA_ARGS__)
