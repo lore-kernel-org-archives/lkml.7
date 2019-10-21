@@ -2,160 +2,102 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC913CA9EB0
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:17:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E617CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:18:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD69120882
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:17:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9E43207FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 14:18:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="INKY8gja"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728714AbfJUORt (ORCPT
+        id S1729315AbfJUOSd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 10:17:49 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:53940 "EHLO foss.arm.com"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S1729125AbfJUORp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 10:17:45 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A85901007;
-        Mon, 21 Oct 2019 07:17:16 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 20BC33F71F;
-        Mon, 21 Oct 2019 07:17:15 -0700 (PDT)
-Date:   Mon, 21 Oct 2019 15:17:14 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Pankaj Dubey <pankaj.dubey@samsung.com>
-Cc:     'Anvesh Salveru' <anvesh.s@samsung.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bhelgaas@google.com,
-        gustavo.pimentel@synopsys.com, jingoohan1@gmail.com,
-        lorenzo.pieralisi@arm.com
-Subject: Re: [PATCH 2/2] PCI: dwc: Add support to handle ZRX-DC Compliant PHYs
-Message-ID: <20191021141714.GT47056@e119886-lin.cambridge.arm.com>
-References: <CGME20191021123016epcas5p3ab7100162a8d6d803b117976240f20b4@epcas5p3.samsung.com>
- <1571660993-30329-1-git-send-email-anvesh.s@samsung.com>
- <20191021140424.GR47056@e119886-lin.cambridge.arm.com>
- <05b301d58819$d962fa00$8c28ee00$@samsung.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <05b301d58819$d962fa00$8c28ee00$@samsung.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+        Mon, 21 Oct 2019 10:18:33 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:39538 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727322AbfJUOSc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 10:18:32 -0400
+Received: by mail-pl1-f193.google.com with SMTP id s17so6681679plp.6;
+        Mon, 21 Oct 2019 07:18:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Q7pZ33ZbznXPJtvmD19nVQgQlTsXtZXtBOem8I3QUdY=;
+        b=INKY8gjaHhVN5RG3HbT/ZFNUyfWVhQcYZHqWFfbkpK9LZ5p7mYSFYQoPmdkCcrAyK6
+         kG0/4g4Fv+dYnHMWRYWGWq/UVymZSIHmv0zToJC2nblaxfKjngnYumo/4/Xy4eUeh+Lt
+         THexRIY4u2cdv7wff7dhbBkS6nq7YrxjCAZx6Jc15kvBxO11I0rX3PcdGsl4soLCZXnK
+         3vD/GAmPyFuhCMT7+yJ9pPnkIVQIeOHS5xryoXlgLhvczvh0+dnPVlaYa4VECDtY30Gw
+         Hp+gEe03s0MvPXeHo2h9p89q87r7LyGYIYecLH59qdcbWHaAMf8eokSn3rfqbR/BuQJN
+         0jjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Q7pZ33ZbznXPJtvmD19nVQgQlTsXtZXtBOem8I3QUdY=;
+        b=uKHvO5+Vo/kGbPdNYkh7ZtztrnjZ+b5oqXrRRXn1sX8Ft/BuFnM5y1VPTTfalPDHr4
+         ajsK28/W5LXOlt+GIdA4ZdoMuUSTueIB05r6fqoXPj3OJoT0suQ3Lf9+Yq4oE4YMJ6KV
+         v/NCQHKdn7BMIn0gSFQLjZZri+0mOTg0BJCvu8u/IGQnEakIp+lhFJOmKciqaklKXOHA
+         U6fN944JwrE0lQ/684yMlo7OMHA7Lo8JyY/JQBMsNpZLO0isnE8en8/JSQvGlhPqR7rQ
+         P065PnKT0/JTmIoFG8CNDCKGu1v5xwpd47tWPLVp6EzxjpD78fkpVo3PpcDBMHu7VpuZ
+         D08A==
+X-Gm-Message-State: APjAAAWXIXc9lCfrOq+mOKTmranVndRBIgoHijlM3wmeqL7K9p9p/KOX
+        XFHNVYNoA3AgE1I5TJZ/zdk=
+X-Google-Smtp-Source: APXvYqw1mW2AQvjdOIP7c29+EWwxZggL2XmITz2nkKCN5wF79Uum+vQkU9s7tJDd/aN4/aG+i0+d6w==
+X-Received: by 2002:a17:902:fe0d:: with SMTP id g13mr6890785plj.253.1571667511820;
+        Mon, 21 Oct 2019 07:18:31 -0700 (PDT)
+Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id p189sm16699509pfp.163.2019.10.21.07.18.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Oct 2019 07:18:31 -0700 (PDT)
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+To:     marcel@holtmann.org, johan.hedberg@gmail.com,
+        c-hbandi@codeaurora.org, bgodavar@codeaurora.org
+Cc:     linux-bluetooth@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [PATCH] Revert "Bluetooth: hci_qca: Add delay for wcn3990 stability"
+Date:   Mon, 21 Oct 2019 07:18:27 -0700
+Message-Id: <20191021141827.11150-1-jeffrey.l.hugo@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 07:44:25PM +0530, Pankaj Dubey wrote:
-> 
-> 
-> > -----Original Message-----
-> > From: Andrew Murray <andrew.murray@arm.com>
-> > Sent: Monday, October 21, 2019 7:34 PM
-> > To: Anvesh Salveru <anvesh.s@samsung.com>
-> > Cc: linux-pci@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > bhelgaas@google.com; gustavo.pimentel@synopsys.com;
-> > jingoohan1@gmail.com; lorenzo.pieralisi@arm.com; Pankaj Dubey
-> > <pankaj.dubey@samsung.com>
-> > Subject: Re: [PATCH 2/2] PCI: dwc: Add support to handle ZRX-DC Compliant
-> > PHYs
-> > 
-> > On Mon, Oct 21, 2019 at 05:59:53PM +0530, Anvesh Salveru wrote:
-> > > Many platforms use DesignWare controller but the PHY can be different
-> > > in different platforms. If the PHY is compliant is to ZRX-DC
-> > > specification
-> > 
-> > s/is to/to the/
-> 
-> OK
-> 
-> > 
-> > > it helps in low power consumption during power states.
-> > 
-> > s/in low/lower/
-> > 
-> OK
-> > >
-> > > If current data rate is 8.0 GT/s or higher and PHY is not compliant to
-> > > ZRX-DC specification, then after every 100ms link should transition to
-> > > recovery state during the low power states.
-> > >
-> > > DesignWare controller provides GEN3_ZRXDC_NONCOMPL field in
-> > > GEN3_RELATED_OFF to specify about ZRX-DC compliant PHY.
-> > >
-> > > Platforms with ZRX-DC compliant PHY can set "snps,phy-zrxdc-compliant"
-> > > property in controller DT node to specify this property to the
-> controller.
-> > >
-> > > Signed-off-by: Anvesh Salveru <anvesh.s@samsung.com>
-> > > Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
-> > > ---
-> > >  drivers/pci/controller/dwc/pcie-designware.c | 7 +++++++
-> > > drivers/pci/controller/dwc/pcie-designware.h | 3 +++
-> > >  2 files changed, 10 insertions(+)
-> > >
-> > > diff --git a/drivers/pci/controller/dwc/pcie-designware.c
-> > > b/drivers/pci/controller/dwc/pcie-designware.c
-> > > index 820488dfeaed..6560d9f765d7 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-designware.c
-> > > +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> > > @@ -556,4 +556,11 @@ void dw_pcie_setup(struct dw_pcie *pci)
-> > >  		       PCIE_PL_CHK_REG_CHK_REG_START;
-> > >  		dw_pcie_writel_dbi(pci, PCIE_PL_CHK_REG_CONTROL_STATUS,
-> > val);
-> > >  	}
-> > > +
-> > > +	if (of_property_read_bool(np, "snps,phy-zrxdc-compliant")) {
-> > > +		val = dw_pcie_readl_dbi(pci, PCIE_PORT_GEN3_RELATED);
-> > > +		val &= ~PORT_LOGIC_GEN3_ZRXDC_NONCOMPL;
-> > > +		dw_pcie_writel_dbi(pci, PCIE_PORT_GEN3_RELATED, val);
-> > > +	}
-> > > +
-> > 
-> > Given that this duplicates tegra_pcie_prepare_host in pcie-tegra194.c, can
-> we
-> > update that driver to adopt this new binding?
-> > 
-> 
-> Yes, Thanks for highlighting this. Otherwise I was worried that we have one
-> more patch without real user :)
+This reverts commit cde9dde6e11a5ab54b6462cd46d82878926783bc.
 
-Indeed :|
+The frame reassembly errors were root caused to a transient gpio issue.
+The missing response was root caused to an issue with properly managing
+RFR in the uart driver.  Addressing those root causes occurs outside of
+hci_qca and eliminates the need for the 50ms delay, so remove it.
 
-Though besides Tegra, is there any other reason you are adding this?
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+---
+ drivers/bluetooth/hci_qca.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-> We will update pcie-tegra194.c driver and post the patch to adopt this
-> binding.
+diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+index 8ae91e0f8102..c591a8ba9d93 100644
+--- a/drivers/bluetooth/hci_qca.c
++++ b/drivers/bluetooth/hci_qca.c
+@@ -1155,10 +1155,8 @@ static int qca_set_speed(struct hci_uart *hu, enum qca_speed_type speed_type)
+ 		host_set_baudrate(hu, speed);
+ 
+ error:
+-		if (qca_is_wcn399x(soc_type)) {
+-			msleep(50);
++		if (qca_is_wcn399x(soc_type))
+ 			hci_uart_set_flow_control(hu, false);
+-		}
+ 
+ 		if (soc_type == QCA_WCN3990) {
+ 			/* Wait for the controller to send the vendor event
+-- 
+2.17.1
 
-It's much appreciated.
-
-Andrew Murray
-
-> 
-> > Thanks,
-> > 
-> > Andrew Murray
-> > 
-> > >  }
-> > > diff --git a/drivers/pci/controller/dwc/pcie-designware.h
-> > > b/drivers/pci/controller/dwc/pcie-designware.h
-> > > index 5a18e94e52c8..427a55ec43c6 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-designware.h
-> > > +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> > > @@ -60,6 +60,9 @@
-> > >  #define PCIE_MSI_INTR0_MASK		0x82C
-> > >  #define PCIE_MSI_INTR0_STATUS		0x830
-> > >
-> > > +#define PCIE_PORT_GEN3_RELATED		0x890
-> > > +#define PORT_LOGIC_GEN3_ZRXDC_NONCOMPL		BIT(0)
-> > > +
-> > >  #define PCIE_ATU_VIEWPORT		0x900
-> > >  #define PCIE_ATU_REGION_INBOUND		BIT(31)
-> > >  #define PCIE_ATU_REGION_OUTBOUND	0
-> > > --
-> > > 2.17.1
-> > >
-> 
