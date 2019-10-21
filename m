@@ -2,111 +2,155 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69453CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:07:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53BFCCA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:07:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47CAD2089C
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:07:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3322420B7C
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 09:07:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727130AbfJUJHI (ORCPT
+        id S1727313AbfJUJHP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 05:07:08 -0400
-Received: from twhmllg4.macronix.com ([122.147.135.202]:11536 "EHLO
-        TWHMLLG4.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726181AbfJUJHI (ORCPT
+        Mon, 21 Oct 2019 05:07:15 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:55467 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726181AbfJUJHO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 05:07:08 -0400
-Received: from twhfmnt1.mxic.com.tw (twhfm1p2.macronix.com [172.17.20.92])
-        by TWHMLLG4.macronix.com with ESMTP id x9L96xaO034780;
-        Mon, 21 Oct 2019 17:06:59 +0800 (GMT-8)
-        (envelope-from masonccyang@mxic.com.tw)
-Received: from MXML06C.mxic.com.tw (mxml06c.mxic.com.tw [172.17.14.55])
-        by Forcepoint Email with ESMTP id 70FE86F08B94F96178FA;
-        Mon, 21 Oct 2019 17:07:00 +0800 (CST)
-In-Reply-To: <20191021105632.3fa7b3ce@collabora.com>
-References: <1568793387-25199-1-git-send-email-masonccyang@mxic.com.tw> <1568793387-25199-2-git-send-email-masonccyang@mxic.com.tw>
-        <20191007104511.5aa7b8f2@xps13> <20191007112442.783e4fbe@xps13> <OFEDE76FEE.8BC48D9E-ON4825848D.000BCC94-4825848D.000E0643@mxic.com.tw>
-        <20191008170249.06bd45ce@xps13> <OFB4F10613.467EB346-ON48258494.0020403E-48258494.002550A2@LocalDomain>
-        <OF894937F3.4B6774EB-ON4825849A.0027B2DF-4825849A.0028A53F@mxic.com.tw> <20191021094435.78f4b16e@collabora.com>
-        <OF94EDFFB1.AFAD9C25-ON4825849A.002E2815-4825849A.002FB1CE@mxic.com.tw> <20191021105632.3fa7b3ce@collabora.com>
-To:     "Boris Brezillon" <boris.brezillon@collabora.com>
-Cc:     bbrezillon@kernel.org, computersforpeace@gmail.com,
-        dwmw2@infradead.org, frieder.schrempf@kontron.de,
-        gregkh@linuxfoundation.org, juliensu@mxic.com.tw,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        marcel.ziswiler@toradex.com, marek.vasut@gmail.com,
-        "Miquel Raynal" <miquel.raynal@bootlin.com>, richard@nod.at,
-        tglx@linutronix.de, vigneshr@ti.com
-Subject: Re: [PATCH RFC 2/3] mtd: rawnand: Add support Macronix Block Protection
- function
+        Mon, 21 Oct 2019 05:07:14 -0400
+X-Originating-IP: 86.207.98.53
+Received: from localhost (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 5AA8B60009;
+        Mon, 21 Oct 2019 09:07:10 +0000 (UTC)
+Date:   Mon, 21 Oct 2019 11:07:10 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Andreas Kemnade <andreas@kemnade.info>
+Cc:     lee.jones@linaro.org, a.zummo@towertech.it,
+        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org,
+        phh@phh.me, b.galvani@gmail.com, stefan@agner.ch,
+        letux-kernel@openphoenux.org
+Subject: Re: [PATCH 2/5] mfd: rn5t618: add irq support
+Message-ID: <20191021090710.GT3125@piout.net>
+References: <20191021054104.26155-1-andreas@kemnade.info>
+ <20191021054104.26155-3-andreas@kemnade.info>
 MIME-Version: 1.0
-X-KeepSent: B0158E79:2CC08A0A-4825849A:0031CDE3;
- type=4; name=$KeepSent
-X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
-Message-ID: <OFB0158E79.2CC08A0A-ON4825849A.0031CDE3-4825849A.0032153E@mxic.com.tw>
-From:   masonccyang@mxic.com.tw
-Date:   Mon, 21 Oct 2019 17:07:02 +0800
-X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
- 2019/10/21 PM 05:07:00,
-        Serialize complete at 2019/10/21 PM 05:07:00
-Content-Type: text/plain; charset="US-ASCII"
-X-MAIL: TWHMLLG4.macronix.com x9L96xaO034780
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191021054104.26155-3-andreas@kemnade.info>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
-Hi Boris,
+On 21/10/2019 07:41:01+0200, Andreas Kemnade wrote:
+> +#if 0
+> +/*
+> + * REVISIT when implementing charger:
+> + * according to some other implementation it needs special treatment,
+> + * inverted but experiments seem not to confirm that.
+> + */
+> +	[RN5T618_IRQ_CHG] = {
+> +		.reg_offset = 0,
+> +		.mask = (1 << 6),
+> +	}
+> +#endif
 
+Please avoid submitting dead code.
+
+> +};
+> +
+> +static const struct regmap_irq_chip rc5t619_irq_chip = {
+> +	.name = "rc5t619",
+> +	.irqs = rc5t619_irqs,
+> +	.num_irqs = ARRAY_SIZE(rc5t619_irqs),
+> +	.num_regs = 1,
+> +	.status_base = RN5T618_INTMON,
+> +	.mask_base = RN5T618_INTEN,
+> +	.mask_invert = true,
+> +};
+> +
+> +int rn5t618_irq_init(struct rn5t618 *rn5t618)
+> +{
+> +	const struct regmap_irq_chip *irq_chip;
+> +	int ret;
+> +
+> +	if (!rn5t618->chip_irq)
+> +		return 0;
+> +
+> +	switch (rn5t618->variant) {
+> +	case RC5T619:
+> +		irq_chip = &rc5t619_irq_chip;
+> +		break;
+> +
+> +		/* TODO: check irq definitions for other variants */
+> +
+> +	default:
+> +		irq_chip = NULL;
+> +		break;
+> +	}
+> +
+> +	if (!irq_chip) {
+> +		dev_err(rn5t618->dev, "no IRQ definition known for variant\n");
+> +		return -ENOENT;
+> +	}
+> +
+> +	ret = devm_regmap_add_irq_chip(rn5t618->dev, rn5t618->regmap,
+> +				rn5t618->chip_irq,
+> +				IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
+> +				0, irq_chip, &rn5t618->irq_data);
+> +	if (ret != 0) {
+> +		dev_err(rn5t618->dev, "Failed to register IRQ chip\n");
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> diff --git a/include/linux/mfd/rn5t618.h b/include/linux/mfd/rn5t618.h
+> index d62ef48060b5..4d680f34ad2f 100644
+> --- a/include/linux/mfd/rn5t618.h
+> +++ b/include/linux/mfd/rn5t618.h
+> @@ -242,9 +242,27 @@ enum {
+>  	RC5T619,
+>  };
+>  
+> +
+> +/* RN5T618 IRQ definitions */
+> +enum {
+> +	RN5T618_IRQ_SYS,
+> +	RN5T618_IRQ_DCDC,
+> +	RN5T618_IRQ_RTC,
+> +	RN5T618_IRQ_ADC,
+> +	RN5T618_IRQ_GPIO,
+> +	RN5T618_IRQ_CHG,
+> +	RN5T618_NR_IRQS,
+> +};
+> +
+> +
+
+Spurious blank line.
+
+>  struct rn5t618 {
+>  	struct regmap *regmap;
+> +	struct device *dev;
+>  	long variant;
+> +
+> +	int chip_irq;
+> +	struct regmap_irq_chip_data *irq_data;
+>  };
+>  
+> +extern int rn5t618_irq_init(struct rn5t618 *rn5t618);
+>  #endif /* __LINUX_MFD_RN5T618_H */
+> -- 
+> 2.11.0
 > 
-> Assign mtd lock/unlock/is_locked hooks to the generic wrappers in
-> nand_scan_tail():
-> 
->    mtd->_lock = nand_lock;
->    mtd->_unlock = nand_unlock;
->    mtd->_is_locked = nand_is_locked;
-> 
-> Seriously, we've almost implemented the thing for you with all the
-> details we've given. At some point you have to look more closely at how
-> things are done/designed in the NAND framework if you want to
-> contribute core changes. I'm fine giving hints but we're far beyond
-> that point here.
 
-got your point & idea.
-
-thanks a lot for your time & opinions.
-Mason
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information 
-and/or personal data, which is protected by applicable laws. Please be 
-reminded that duplication, disclosure, distribution, or use of this e-mail 
-(and/or its attachments) or any part thereof is prohibited. If you receive 
-this e-mail in error, please notify us immediately and delete this mail as 
-well as its attachment(s) from your system. In addition, please be 
-informed that collection, processing, and/or use of personal data is 
-prohibited unless expressly permitted by personal data protection laws. 
-Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
-
-
-============================================================================
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
