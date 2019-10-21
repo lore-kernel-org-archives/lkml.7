@@ -2,303 +2,110 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B0EDCA9EB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:12:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47FC6CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:13:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6343E2084B
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:12:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 181DC2084B
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 15:13:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eGOPTNEG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729326AbfJUPMu (ORCPT
+        id S1729211AbfJUPNO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 11:12:50 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:36752 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726847AbfJUPMu (ORCPT
+        Mon, 21 Oct 2019 11:13:14 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:27926 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728035AbfJUPNN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 11:12:50 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 1B6BA28B012
-Subject: Re: [PATCH v2 02/18] mfd: cros_ec: Add sensor_count and make
- check_features public
-To:     Gwendal Grignou <gwendal@chromium.org>, briannorris@chromium.org,
-        jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, lee.jones@linaro.org, bleung@chromium.org,
-        dianders@chromium.org, groeck@chromium.org,
-        fabien.lahoudere@collabora.com
-Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-References: <20191021055403.67849-1-gwendal@chromium.org>
- <20191021055403.67849-3-gwendal@chromium.org>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <fe819ee5-d3ec-ef0e-521e-c2f2fb48b980@collabora.com>
-Date:   Mon, 21 Oct 2019 17:12:44 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 21 Oct 2019 11:13:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571670792;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=9m1JAnv4mnGiHWE5XVxTiN/BZXEbmBpVMZpn5edtEMY=;
+        b=eGOPTNEGDWG5k1M11Rfu+o/5qDaUtYmhiaal58WkVw6up4wDV8ic7dRr9KmvvEC2Tbpas3
+        9fwsZgXWaLBXgGuFYPwUzgclDWM0NE77T8djEjSfcnBx3Tw/d3rK8nOn2agJ/MC9PNTNpQ
+        mjswzeeyYX0ugoNU5dBARwjIkvX/atA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-164-CJcfCod7N-6B-1vo_0UIPg-1; Mon, 21 Oct 2019 11:13:08 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 01EB4107AD31;
+        Mon, 21 Oct 2019 15:13:06 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.44])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 7AC2160A9F;
+        Mon, 21 Oct 2019 15:12:56 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Mon, 21 Oct 2019 17:13:05 +0200 (CEST)
+Date:   Mon, 21 Oct 2019 17:12:55 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     linux-kernel@vger.kernel.org, Florian Weimer <fweimer@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>, libc-alpha@sourceware.org,
+        David Howells <dhowells@redhat.com>,
+        Jann Horn <jannh@google.com>, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Shuah Khan <shuah@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Roman Gushchin <guro@fb.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        linux-kselftest@vger.kernel.org, linux-api@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] clone3: add CLONE_CLEAR_SIGHAND
+Message-ID: <20191021151255.GA3459@redhat.com>
+References: <20191014104538.3096-1-christian.brauner@ubuntu.com>
+ <20191021144633.GA2720@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20191021055403.67849-3-gwendal@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20191021144633.GA2720@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MC-Unique: CJcfCod7N-6B-1vo_0UIPg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Gwendal,
+On 10/21, Oleg Nesterov wrote:
+>
+> On 10/14, Christian Brauner wrote:
+> >
+> > The child helper process on Linux posix_spawn must ensure that no signa=
+l
+> > handlers are enabled, so the signal disposition must be either SIG_DFL
+> > or SIG_IGN. However, it requires a sigprocmask to obtain the current
+> > signal mask and at least _NSIG sigaction calls to reset the signal
+> > handlers for each posix_spawn call
+>
+> Plus the caller has to block/unblock all signals around clone(VM|VFORK).
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Many thanks for the patches, some few comments below.
+just in case... I meant that posix_spawn() has to block/unblock, not its
+caller.
 
-On 21/10/19 7:53, Gwendal Grignou wrote:
-> Add a new function to return the number of MEMS sensors available in a
-> ChromeOS Embedded Controller.
-> It uses MOTIONSENSE_CMD_DUMP if available or a specific memory map ACPI
-> registers to find out.
-> 
-> Also, make check_features public as it can be useful for other drivers
-> to know what the Embedded Controller supports.
-> 
-> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
-> ---
-> Changes in v2:
->   Fix spelling in commit message.
->   Cleanup the case where DUMP command is not supported.
->   Move code from mfd to platform/chrome/
-> 
->  drivers/mfd/cros_ec_dev.c                   |  32 ------
->  drivers/platform/chrome/cros_ec_proto.c     | 116 ++++++++++++++++++++
->  include/linux/platform_data/cros_ec_proto.h |   5 +
->  3 files changed, 121 insertions(+), 32 deletions(-)
-> 
-> diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
-> index 6e6dfd6c18711..a35104e35cb4e 100644
-> --- a/drivers/mfd/cros_ec_dev.c
-> +++ b/drivers/mfd/cros_ec_dev.c
-> @@ -112,38 +112,6 @@ static const struct mfd_cell cros_ec_vbc_cells[] = {
->  	{ .name = "cros-ec-vbc", }
->  };
->  
-> -static int cros_ec_check_features(struct cros_ec_dev *ec, int feature)
-> -{
-> -	struct cros_ec_command *msg;
-> -	int ret;
-> -
-> -	if (ec->features[0] == -1U && ec->features[1] == -1U) {
-> -		/* features bitmap not read yet */
-> -		msg = kzalloc(sizeof(*msg) + sizeof(ec->features), GFP_KERNEL);
-> -		if (!msg)
-> -			return -ENOMEM;
-> -
-> -		msg->command = EC_CMD_GET_FEATURES + ec->cmd_offset;
-> -		msg->insize = sizeof(ec->features);
-> -
-> -		ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
-> -		if (ret < 0) {
-> -			dev_warn(ec->dev, "cannot get EC features: %d/%d\n",
-> -				 ret, msg->result);
-> -			memset(ec->features, 0, sizeof(ec->features));
-> -		} else {
-> -			memcpy(ec->features, msg->data, sizeof(ec->features));
-> -		}
-> -
-> -		dev_dbg(ec->dev, "EC features %08x %08x\n",
-> -			ec->features[0], ec->features[1]);
-> -
-> -		kfree(msg);
-> -	}
-> -
-> -	return ec->features[feature / 32] & EC_FEATURE_MASK_0(feature);
-> -}
-> -
->  static void cros_ec_class_release(struct device *dev)
->  {
->  	kfree(to_cros_ec_dev(dev));
-> diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
-> index 7db58771ec77c..2357c717399ad 100644
-> --- a/drivers/platform/chrome/cros_ec_proto.c
-> +++ b/drivers/platform/chrome/cros_ec_proto.c
-> @@ -717,3 +717,119 @@ u32 cros_ec_get_host_event(struct cros_ec_device *ec_dev)
->  	return host_event;
->  }
->  EXPORT_SYMBOL(cros_ec_get_host_event);
-> +
-> +/**
-> + * cros_ec_check_features - Test for the presence of EC features
-> + *
-> + * Call this function to test whether the ChromeOS EC supports a feature.
-> + *
-> + * @ec_dev: EC device: does not have to be connected directly to the AP,
-> + *          can be daisy chained through another device.
-> + * @feature: One of ec_feature_code bit.
-> + * @return: 1 if supported, 0 if not
+> Can this justify the new CLONE_ flag? Honestly, I have no idea. But the
+> patch is simple and looks technically correct to me. FWIW,
+>=20
+> Reviewed-by: Oleg Nesterov <oleg@redhat.com>
 
-This is not kernel-doc compliant, check with kernel-doc script.
-
-> + */
-> +int cros_ec_check_features(struct cros_ec_dev *ec, int feature)
-> +{
-> +	struct cros_ec_command *msg;
-> +	int ret;
-> +
-> +	if (ec->features[0] == -1U && ec->features[1] == -1U) {
-> +		/* features bitmap not read yet */
-> +		msg = kzalloc(sizeof(*msg) + sizeof(ec->features), GFP_KERNEL);
-> +		if (!msg)
-> +			return -ENOMEM;
-> +
-> +		msg->command = EC_CMD_GET_FEATURES + ec->cmd_offset;
-> +		msg->insize = sizeof(ec->features);
-> +
-> +		ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
-> +		if (ret < 0) {
-> +			dev_warn(ec->dev, "cannot get EC features: %d/%d\n",
-> +				 ret, msg->result);
-> +			memset(ec->features, 0, sizeof(ec->features));
-> +		} else {
-> +			memcpy(ec->features, msg->data, sizeof(ec->features));
-> +		}
-> +
-> +		dev_dbg(ec->dev, "EC features %08x %08x\n",
-> +			ec->features[0], ec->features[1]);
-> +
-> +		kfree(msg);
-> +	}
-> +
-> +	return ec->features[feature / 32] & EC_FEATURE_MASK_0(feature);
-> +}
-> +EXPORT_SYMBOL_GPL(cros_ec_check_features);
-> +
-> +/**
-> + * Return the number of MEMS sensors supported.
-> + *
-> + * @ec_dev: EC device: does not have to be connected directly to the AP,
-> + *          can be daisy chained through another device.
-> + * Return < 0 in case of error.
-
-Same, this is not kernel-doc compliant, check with kernel-doc script.
-
-> + */
-> +int cros_ec_get_sensor_count(struct cros_ec_dev *ec)
-> +{
-> +	/*
-> +	 * Issue a command to get the number of sensor reported.
-> +	 * If not supported, check for legacy mode.
-> +	 */
-
-I'd prefer have this in the function documentation.
-
-> +	int ret, sensor_count;
-> +	struct ec_params_motion_sense *params;
-> +	struct ec_response_motion_sense *resp;
-> +	struct cros_ec_command *msg;
-> +	struct cros_ec_device *ec_dev = ec->ec_dev;
-> +	u8 status;
-> +
-
-nit: Reverse Christmas tree local variable ordering here please.
-
-> +	msg = kzalloc(sizeof(struct cros_ec_command) +
-
-Better sizeof(*msg)?
-
-> +			max(sizeof(*params), sizeof(*resp)), GFP_KERNEL);
-> +	if (!msg)
-> +		return -ENOMEM;
-> +
-> +	msg->version = 1;
-> +	msg->command = EC_CMD_MOTION_SENSE_CMD + ec->cmd_offset;
-> +	msg->outsize = sizeof(*params);
-> +	msg->insize = sizeof(*resp);
-> +
-> +	params = (struct ec_params_motion_sense *)msg->data;
-> +	params->cmd = MOTIONSENSE_CMD_DUMP;
-> +
-
-
-> +	ret = cros_ec_cmd_xfer(ec->ec_dev, msg);
-> +	if (ret < 0) {
-> +		sensor_count = ret;
-> +	} else if (msg->result != EC_RES_SUCCESS) {
-> +		sensor_count = -EPROTO;
-> +	} else {
-> +		resp = (struct ec_response_motion_sense *)msg->data;
-> +		sensor_count = resp->dump.sensor_count;
-> +	}
-
-Can this be rewritten to?
-
-        sensor_count = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
-        if (sensor_count >= 0) {
-		resp = (struct ec_response_motion_sense *)msg->data;
-		sensor_count = resp->dump.sensor_count;
-        }
-
-> +	kfree(msg);
-> +
-> +	/*
-> +	 * Check legacy mode: Let's find out if sensors are accessible
-> +	 * via LPC interface.
-> +	 */
-> +	if (sensor_count == -EPROTO &&
-> +	    ec->cmd_offset == 0 &&
-> +	    ec_dev->cmd_readmem) {
-> +		ret = ec_dev->cmd_readmem(ec_dev, EC_MEMMAP_ACC_STATUS,
-> +				1, &status);
-> +		if ((ret >= 0) &&
-
-Unnecessary parentheses around 'ret >= 0'
-
-> +		    (status & EC_MEMMAP_ACC_STATUS_PRESENCE_BIT)) {
-
-Unnecessary brackets
-
-> +			/*
-> +			 * We have 2 sensors, one in the lid, one in the base.
-> +			 */
-> +			sensor_count = 2;
-> +		} else {
-> +			/*
-> +			 * EC uses LPC interface and no sensors are presented.
-> +			 */
-> +			sensor_count = 0;
-> +		}
-> +	} else if (sensor_count == -EPROTO) {
-> +		/* EC responded, but does not understand DUMP command. */
-> +		sensor_count = 0;
-> +	}
-> +	return sensor_count;
-> +}
-> +EXPORT_SYMBOL_GPL(cros_ec_get_sensor_count);
-> diff --git a/include/linux/platform_data/cros_ec_proto.h b/include/linux/platform_data/cros_ec_proto.h
-> index 0d4e4aaed37af..f3de0662135d5 100644
-> --- a/include/linux/platform_data/cros_ec_proto.h
-> +++ b/include/linux/platform_data/cros_ec_proto.h
-> @@ -12,6 +12,7 @@
->  #include <linux/mutex.h>
->  #include <linux/notifier.h>
->  
-> +#include <linux/mfd/cros_ec.h>
-
-I am wondering if makes sense move 'struct cros_ec_dev' to cros_ec_proto.h and
-remove definitely include/mfd/cros_ec.h. However this could be a follow up patch.
-
->  #include <linux/platform_data/cros_ec_commands.h>
->  
->  #define CROS_EC_DEV_NAME	"cros_ec"
-> @@ -213,4 +214,8 @@ int cros_ec_get_next_event(struct cros_ec_device *ec_dev, bool *wake_event);
->  
->  u32 cros_ec_get_host_event(struct cros_ec_device *ec_dev);
->  
-> +int cros_ec_check_features(struct cros_ec_dev *ec, int feature);
-> +
-> +int cros_ec_get_sensor_count(struct cros_ec_dev *ec);
-> +
->  #endif /* __LINUX_CROS_EC_PROTO_H */
-> 
-
-Thanks,
- Enric
