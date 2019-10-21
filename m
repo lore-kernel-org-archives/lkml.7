@@ -2,214 +2,100 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9D3CCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 18:56:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9885CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 18:59:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F95C2086D
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 18:56:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C26552086D
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 18:59:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sHOtziOe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hjrmofze"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729979AbfJUS4i (ORCPT
+        id S1729968AbfJUS7g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 14:56:38 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:41842 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727767AbfJUS4h (ORCPT
+        Mon, 21 Oct 2019 14:59:36 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:38816 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728353AbfJUS7g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 14:56:37 -0400
-Received: by mail-qt1-f193.google.com with SMTP id c17so19676324qtn.8
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 11:56:37 -0700 (PDT)
+        Mon, 21 Oct 2019 14:59:36 -0400
+Received: by mail-oi1-f193.google.com with SMTP id d140so7688657oib.5;
+        Mon, 21 Oct 2019 11:59:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=9ggfZg5m+e/SKbdKVaz+2EJBpB6gy314A1ofRgLtyC4=;
-        b=sHOtziOe/uYeffiWLpBcm7UFdDSyJU2iROHk4d5TPT77JdZC6ulTQIEeVd0IDAK+Mj
-         v6f/dPanvhHNVtVPC0wwBka+LfgPxGul2n/EBp3q1+IpRNizaC5YNYFQl0CYNDVtiKuP
-         78KsdtL9pi78NWPEnU8Yg7nbR9FLIjwCa3ufgb9ifVXVmXMDVRiMc5s3Iqqc/NHL+Num
-         YF18eiS2QbMEJ21MPHyzw0ltO1k47Q7NZLSNbvd9N7ho71er69pIdAuA6ikOn0tIAEOi
-         IGVTKRkA8vL1qYj5ODQJ80XjvifpSOtlWaHnsVN7QkB8/9cP7aPE/UgKlThYKm2EY3cF
-         HPfw==
+        d=gmail.com; s=20161025;
+        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+         :cc;
+        bh=oTI80X6gMyjYQOMp/OT40Ib53Jwx5S7b8ZvaxS8S+Dw=;
+        b=hjrmofze+IcSx9OLGssRiOm0Ic0DDjpMQE3Ly0ygDJyMGDliFrYjrSFTpYyi6QI5LB
+         /3MktAJbodbaD0+1/g+WcTv0FU6uSysF74B1+gE17JwtePBrspmT+gr1N/z+nBXD5XOm
+         e0eHWVtPnVi8c5b6MoIxDJdqfmmse5jSOJmsQ6qQ+pZAHFOJncSdZuw8iFCzXuxb+RyA
+         F3n0eO7flDKSRVpAUfCEI+HwMnBQMF9+3yztkM0fS//RgkRi8/qoh7yzIsWhWYvAQtiP
+         PR1ekdYoQtyBoOb8a08K0dbThgg2EiuYaW4c0D+WFbR/UgwspcTDIDcBuN8g9OIvNMwh
+         DT2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=9ggfZg5m+e/SKbdKVaz+2EJBpB6gy314A1ofRgLtyC4=;
-        b=MvRTKgCesAldBhpwoIC3tQcqzLt0O5MV0QtZxz/7YEoexj8ryXXGHgPqr6sN2ykRfM
-         eeX1tOCmw3PvTn3t/nK2PobXA4Fq1fNb05fcemWQl5U/XPuJ4ShPYeSIkmNnezwfLrW1
-         BPXJ105vvksmgS2yN46YOK+oaFfgg2GY5lFQ8wRmeuz4SKKtGu3tHYHgIWkw1mnoWp/i
-         mfROTZAnG8vC+W6j9FhCxMW4LPJS00ylnulGgeZSNuQgPAa5p7SvE/V1Nxv5RwQ+Ii4m
-         l2+Si1pIcz3AtcwsxmvK00J4GzGJN3y8FgnOcXZBgmr62Cf85n4PwrPPjG+sL2S3m871
-         OEGA==
-X-Gm-Message-State: APjAAAXELFEoiOYv5BkagooFJmQAZkbA2wzUvF3y6KRFCgHifELJRAnu
-        mEAzr3gwekkKEH6yIAFXzoGNU0fJqpCcTC2xYjz9kQ==
-X-Google-Smtp-Source: APXvYqzM2ht6aQS8b98R/FdtvSwcASrmwF7qVZr0vWqwm0jLseX90zX2dbFhJDcHxZFUpOSC9qxx/b5KNY8AotkEAXs=
-X-Received: by 2002:a0c:f702:: with SMTP id w2mr24375953qvn.111.1571684196628;
- Mon, 21 Oct 2019 11:56:36 -0700 (PDT)
+        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+         :message-id:subject:to:cc;
+        bh=oTI80X6gMyjYQOMp/OT40Ib53Jwx5S7b8ZvaxS8S+Dw=;
+        b=Oae6oZML6yGHZCkU7fJJicNs5Ws4nBjWEti+Ek184qDZHl/Vb/ppywDDMKjblpjyqS
+         UOVGdhakTTq4RHaXEfqEBOu9DN/vJ3+O9ZRQEM11y/4xNGGLdmWklcPsPF7FRNd48Spa
+         dLhGFNk4bl8zhkQ1ulz16YAzVJlpnXe26G0FLj/Nwd8RJ4+OTN1rJIu9sP7Wa1MPaiX1
+         J5sPCvAHPTH9mGML7YznKBMyX8VqkbJJJJPleagdssL6CVFHUmhxx92GDy20YMDSk8N8
+         9ycHoUq8S98y50E+2t2fAeAo+YCe8LRHg1PKYeagqWJhSWIlxQuRKX0dX0KhUCF4uF0+
+         sWpw==
+X-Gm-Message-State: APjAAAVB1BoZpIzVcNv3Dbxf62vCh2KucK4jW3kK30P6SIubUT7JStZ/
+        MX8JAe6N3GOu/MqdLE30texcPdlaQ6V9lKHcTh4=
+X-Google-Smtp-Source: APXvYqzbfHlud+FlAXAAcaIr3wj8bignujUbwOwX0dfLtGsI14bJBOaa4keO2vKEACQ+99VSXlB6pzVkeehqh3em8JI=
+X-Received: by 2002:a05:6808:491:: with SMTP id z17mr20331947oid.62.1571684375103;
+ Mon, 21 Oct 2019 11:59:35 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191008124254.2144-1-benjamin.gaignard@st.com>
-In-Reply-To: <20191008124254.2144-1-benjamin.gaignard@st.com>
-From:   Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Date:   Mon, 21 Oct 2019 20:56:25 +0200
-Message-ID: <CA+M3ks6TxRH4XOSn6=m16-f1RVHPuXeXtanruqEmRq2KmmCJuw@mail.gmail.com>
-Subject: Re: [PATCH v2] drm: atomic helper: fix W=1 warnings
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>
+Received: by 2002:a9d:648:0:0:0:0:0 with HTTP; Mon, 21 Oct 2019 11:59:34 -0700 (PDT)
+In-Reply-To: <20191021184701.GA1823@light.dominikbrodowski.net>
+References: <20191020090800.GA2778@light.dominikbrodowski.net>
+ <20191021160952.GA229204@google.com> <CAFjuqNg2BjbxsOeOpoo8FQRwatQHeHKhj01hbwNrSHjz9p3vYw@mail.gmail.com>
+ <20191021184701.GA1823@light.dominikbrodowski.net>
+From:   "Michael ." <keltoiboy@gmail.com>
+Date:   Tue, 22 Oct 2019 05:59:34 +1100
+Message-ID: <CAFjuqNiyS4cd=YEFvn3tLkp5zSPbO2vj8JfHsymUuDyEmLydUA@mail.gmail.com>
+Subject: Re: PCI device function not being enumerated [Was: PCMCIA not working
+ on Panasonic Toughbook CF-29]
+To:     Dominik Brodowski <linux@dominikbrodowski.net>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Trevor Jacobs <trevor_jacobs@aol.com>,
+        Kris Cleveland <tridentperfusion@yahoo.com>,
+        Jeff <bluerocksaddles@willitsonline.com>,
+        Morgan Klym <moklym@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le mer. 9 oct. 2019 =C3=A0 09:13, Benjamin Gaignard
-<benjamin.gaignard@st.com> a =C3=A9crit :
->
-> Few for_each macro set variables that are never used later which led
-> to generate unused-but-set-variable warnings.
-> Add (void)(foo) inside the macros to remove these warnings
->
+Thanks Domunik I'll get onto this and report back the results.
 
-Gentle ping,
-Thanks,
-Benjamin
-
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> ---
->  include/drm/drm_atomic.h | 17 ++++++++++++++---
->  1 file changed, 14 insertions(+), 3 deletions(-)
+On 22/10/2019, Dominik Brodowski <linux@dominikbrodowski.net> wrote:
+> On Tue, Oct 22, 2019 at 05:17:12AM +1100, Michael . wrote:
+>> Thank you Dominik for looking at this for us and passing it on.
+>>
+>> Good morning Bjorn, thank you also for looking into this for us and
+>> thank you for CCing us into this as non of us are on the mailing list.
+>> One question how do we apply this patch or is this for Dominik to try?
 >
-> diff --git a/include/drm/drm_atomic.h b/include/drm/drm_atomic.h
-> index 927e1205d7aa..b6c73fd9f55a 100644
-> --- a/include/drm/drm_atomic.h
-> +++ b/include/drm/drm_atomic.h
-> @@ -693,6 +693,7 @@ void drm_state_dump(struct drm_device *dev, struct dr=
-m_printer *p);
->              (__i)++)                                                    =
-       \
->                 for_each_if ((__state)->connectors[__i].ptr &&           =
-       \
->                              ((connector) =3D (__state)->connectors[__i].=
-ptr,     \
-> +                            (void)(connector) /* Only to avoid unused-bu=
-t-set-variable warning */, \
->                              (old_connector_state) =3D (__state)->connect=
-ors[__i].old_state,      \
->                              (new_connector_state) =3D (__state)->connect=
-ors[__i].new_state, 1))
+> That's for you and/or other users of this hardware; I cannot test this
+> myself, sorry. As to how to apply the patch: you'd need to apply the patch
+> for the linux kernel sources, and then build a custom kernel. Some hints on
+> that (details depend on the distribtion):
 >
-> @@ -714,6 +715,7 @@ void drm_state_dump(struct drm_device *dev, struct dr=
-m_printer *p);
->              (__i)++)                                                    =
-       \
->                 for_each_if ((__state)->connectors[__i].ptr &&           =
-       \
->                              ((connector) =3D (__state)->connectors[__i].=
-ptr,     \
-> +                            (void)(connector) /* Only to avoid unused-bu=
-t-set-variable warning */, \
->                              (old_connector_state) =3D (__state)->connect=
-ors[__i].old_state, 1))
+> 	https://wiki.ubuntu.com/Kernel/BuildYourOwnKernel
+> 	https://wiki.ubuntu.com/KernelTeam/GitKernelBuild
+> 	https://wiki.archlinux.org/index.php/Kernels/Arch_Build_System
+> 	https://kernelnewbies.org/KernelBuild
 >
->  /**
-> @@ -734,7 +736,9 @@ void drm_state_dump(struct drm_device *dev, struct dr=
-m_printer *p);
->              (__i)++)                                                    =
-       \
->                 for_each_if ((__state)->connectors[__i].ptr &&           =
-       \
->                              ((connector) =3D (__state)->connectors[__i].=
-ptr,     \
-> -                            (new_connector_state) =3D (__state)->connect=
-ors[__i].new_state, 1))
-> +                            (void)(connector) /* Only to avoid unused-bu=
-t-set-variable warning */, \
-> +                            (new_connector_state) =3D (__state)->connect=
-ors[__i].new_state, \
-> +                            (void)(new_connector_state) /* Only to avoid=
- unused-but-set-variable warning */, 1))
+> Best,
+> 	Dominik
 >
->  /**
->   * for_each_oldnew_crtc_in_state - iterate over all CRTCs in an atomic u=
-pdate
-> @@ -754,7 +758,9 @@ void drm_state_dump(struct drm_device *dev, struct dr=
-m_printer *p);
->              (__i)++)                                                   \
->                 for_each_if ((__state)->crtcs[__i].ptr &&               \
->                              ((crtc) =3D (__state)->crtcs[__i].ptr,      =
- \
-> +                             (void)(crtc) /* Only to avoid unused-but-se=
-t-variable warning */, \
->                              (old_crtc_state) =3D (__state)->crtcs[__i].o=
-ld_state, \
-> +                            (void)(old_crtc_state) /* Only to avoid unus=
-ed-but-set-variable warning */, \
->                              (new_crtc_state) =3D (__state)->crtcs[__i].n=
-ew_state, 1))
->
->  /**
-> @@ -793,7 +799,9 @@ void drm_state_dump(struct drm_device *dev, struct dr=
-m_printer *p);
->              (__i)++)                                                   \
->                 for_each_if ((__state)->crtcs[__i].ptr &&               \
->                              ((crtc) =3D (__state)->crtcs[__i].ptr,      =
- \
-> -                            (new_crtc_state) =3D (__state)->crtcs[__i].n=
-ew_state, 1))
-> +                            (void)(crtc) /* Only to avoid unused-but-set=
--variable warning */, \
-> +                            (new_crtc_state) =3D (__state)->crtcs[__i].n=
-ew_state, \
-> +                            (void)(new_crtc_state) /* Only to avoid unus=
-ed-but-set-variable warning */, 1))
->
->  /**
->   * for_each_oldnew_plane_in_state - iterate over all planes in an atomic=
- update
-> @@ -813,6 +821,7 @@ void drm_state_dump(struct drm_device *dev, struct dr=
-m_printer *p);
->              (__i)++)                                                   \
->                 for_each_if ((__state)->planes[__i].ptr &&              \
->                              ((plane) =3D (__state)->planes[__i].ptr,    =
- \
-> +                             (void)(plane) /* Only to avoid unused-but-s=
-et-variable warning */, \
->                               (old_plane_state) =3D (__state)->planes[__i=
-].old_state,\
->                               (new_plane_state) =3D (__state)->planes[__i=
-].new_state, 1))
->
-> @@ -873,7 +882,9 @@ void drm_state_dump(struct drm_device *dev, struct dr=
-m_printer *p);
->              (__i)++)                                                   \
->                 for_each_if ((__state)->planes[__i].ptr &&              \
->                              ((plane) =3D (__state)->planes[__i].ptr,    =
- \
-> -                             (new_plane_state) =3D (__state)->planes[__i=
-].new_state, 1))
-> +                             (void)(plane) /* Only to avoid unused-but-s=
-et-variable warning */, \
-> +                             (new_plane_state) =3D (__state)->planes[__i=
-].new_state, \
-> +                             (void)(new_plane_state) /* Only to avoid un=
-used-but-set-variable warning */, 1))
->
->  /**
->   * for_each_oldnew_private_obj_in_state - iterate over all private objec=
-ts in an atomic update
-> --
-> 2.15.0
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
