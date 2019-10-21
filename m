@@ -2,124 +2,120 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06928CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:06:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B934CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:07:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB390206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:06:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571655989;
-	bh=6aIiiW6Oy2Tp3jMHez2uZxsG1cbGxMZp3/IBu+pOkT4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=riVH41YzYp5qQLJ6t8pdtgwF99qdvXv/LYx4G30KbsDwre83BLMH8CvYWxDZO+Bpg
-	 I5dflmbAZnrbIKVEoWIghnBeqkrLL/zkWP+YVdxjGkcOcBmI+dtAgkDsKssPPxY+mz
-	 PTVMcplXgWOGzx9yUVuonWTt6Q7pFUQ4LB0Vnbec=
+	by mail.kernel.org (Postfix) with ESMTP id 4FCB9206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:07:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lx5prVpI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728100AbfJULGQ (ORCPT
+        id S1728221AbfJULHP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 07:06:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45946 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727058AbfJULGQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 07:06:16 -0400
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8679C2084C;
-        Mon, 21 Oct 2019 11:06:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571655975;
-        bh=6aIiiW6Oy2Tp3jMHez2uZxsG1cbGxMZp3/IBu+pOkT4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SmsbcM7ob9APIInCUIWU9pFZGqvQIzlGXwhVv9ndL0rOALynmG1mW1Lk39mqHaJ+Q
-         TQBh/zNq2g+4biDbSzud0mQktKJ4SKk26i2jhm9Z/4ZJi/BOWEEtnOTVilP/UQOxXA
-         fAORWnAKW7DLCV5+MqTkkoIA0Rta9wHUGhHGt0Sg=
-Date:   Mon, 21 Oct 2019 13:06:12 +0200
-From:   Maxime Ripard <mripard@kernel.org>
-To:     megous@megous.com
-Cc:     linux-sunxi@googlegroups.com,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/4] dt-bindings: Add bindings for USB3 phy on Allwinner
- H6
-Message-ID: <20191021110612.55ym4y3m3xko3kpc@gilmour>
-References: <20191020134229.1216351-1-megous@megous.com>
- <20191020134229.1216351-2-megous@megous.com>
+        Mon, 21 Oct 2019 07:07:15 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:38808 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727058AbfJULHP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 07:07:15 -0400
+Received: by mail-io1-f67.google.com with SMTP id u8so15350746iom.5;
+        Mon, 21 Oct 2019 04:07:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=n1+aLy128QQ7U6cUlqcBOvUp4FNAoRlJ7X0gYCNLLqs=;
+        b=Lx5prVpIW3WfSNwmK/1yUOg1NwGefIdVmw3AMLk1OwAkh0F/Ikkmu1hdJyTYRrSKZx
+         ZTVAx6+TyKBcHZFYf7xIFZJLBHGK19Z/bgfCXkq3XmVO5MG1pHaDMVsRDYLutXPktMCt
+         w5AN5ehKujfzQsE2PS/X4JBX/m5Ne4o8nxKGwnYa7LEupj7z8DjRN4x0aLlmG4RBZZBh
+         HFCm62rSxEjdVHFiWJeVbt+lqtOXM8k3qfGeyW39MG5OH1VZQNXwAC00dAeM7gr8FiUb
+         Qj2H2AaR85J8y+kHc47VPO3vOwdUgEqaqHfI8NlKxLR+lf85LJAuVfm2xycDH8h9WZBt
+         GMnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=n1+aLy128QQ7U6cUlqcBOvUp4FNAoRlJ7X0gYCNLLqs=;
+        b=BBLciaVSihQ3OeGZLFHcDgid4Z4O4ehahL2C2DLnYugDl5kuUJoplnVy1SXNM496s3
+         l/4tNmT8y/8DN5QVzSSutR5ltZzywDWCwtS/Trc0ZbFZamyues5b2je6D9bjlDc7H+wx
+         oQP1PvG18sFa91LgtoHzB20wY2WDjJFrpmecz0eTukOz856uscqBidJzeILGoq9uk4yP
+         7VIUseukqKGqkpik5unLMCW9VxWaUputWN+wljnv57NNMSVz3SX2NawFCBTivXv8cKs2
+         pKmankDtR+Q0hGdiWP0w85zGjVuSOl4gT8yRFI1L+J/F/AIcSAeGpjhFnmdjtwlyO7Y/
+         ULsQ==
+X-Gm-Message-State: APjAAAXF/95U8mOv7RIjOESAmnLOYC/8kkTA4Ejo+IY0xpVSudfB0nSc
+        DoX7UQFowKE2/WP+zy9iFiovtbtTOXhzIaP5Gxk=
+X-Google-Smtp-Source: APXvYqxJS0FbQFfzoUfhz3RR8Z3vT75zJ5yamE9bYEK37eDUtbpG03UFr6Kz06usvzDFHokXueWoF3QYO1bPcztKW4Q=
+X-Received: by 2002:a5d:9952:: with SMTP id v18mr20134179ios.58.1571656032438;
+ Mon, 21 Oct 2019 04:07:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ewuc6ubrfgaw6qrn"
-Content-Disposition: inline
-In-Reply-To: <20191020134229.1216351-2-megous@megous.com>
-User-Agent: NeoMutt/20180716
+References: <20191018130507.29893-1-aford173@gmail.com> <712504cb-c0ad-2e3e-bc3b-5cc1b70dd005@ti.com>
+In-Reply-To: <712504cb-c0ad-2e3e-bc3b-5cc1b70dd005@ti.com>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Mon, 21 Oct 2019 06:07:01 -0500
+Message-ID: <CAHCN7xLBY4bCkzEWEgcrdY0SrvMJv4Y2fSzVHO86P9+hUoZi0Q@mail.gmail.com>
+Subject: Re: [PATCH] fbdev/omap: fix max fclk divider for omap36xx
+To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc:     linux-fbdev@vger.kernel.org,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Adam Ford <adam.ford@logicpd.com>,
+        stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---ewuc6ubrfgaw6qrn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Sun, Oct 20, 2019 at 03:42:26PM +0200, megous@megous.com wrote:
-> From: Ondrej Jirman <megous@megous.com>
+On Mon, Oct 21, 2019 at 3:44 AM Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
 >
-> The new Allwinner H6 SoC contains a USB3 PHY that is wired to the
-> external USB3 pins of the SoC.
+> On 18/10/2019 16:05, Adam Ford wrote:
+> > The OMAP36xx and AM/DM37x TRMs say that the maximum divider for DSS fclk
+> > (in CM_CLKSEL_DSS) is 32. Experimentation shows that this is not
+> > correct, and using divider of 32 breaks DSS with a flood or underflows
+> > and sync losts. Dividers up to 31 seem to work fine.
+> >
+> > There is another patch to the DT files to limit the divider correctly,
+> > but as the DSS driver also needs to know the maximum divider to be able
+> > to iteratively find good rates, we also need to do the fix in the DSS
+> > driver.
+> >
+> > Signed-off-by: Adam Ford <aford173@gmail.com>
+> > Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> > Cc: stable@vger.kernel.org # linux-4.4.y only
+> >
+> > diff --git a/drivers/video/fbdev/omap2/dss/dss.c b/drivers/video/fbdev/omap2/dss/dss.c
+> > index 9200a8668b49..a57c3a5f4bf8 100644
+> > --- a/drivers/video/fbdev/omap2/dss/dss.c
+> > +++ b/drivers/video/fbdev/omap2/dss/dss.c
+> > @@ -843,7 +843,7 @@ static const struct dss_features omap34xx_dss_feats = {
+> >   };
+> >
+> >   static const struct dss_features omap3630_dss_feats = {
+> > -     .fck_div_max            =       32,
+> > +     .fck_div_max            =       31,
+> >       .dss_fck_multiplier     =       1,
+> >       .parent_clk_name        =       "dpll4_ck",
+> >       .dpi_select_source      =       &dss_dpi_select_source_omap2_omap3,
+> >
 >
-> Add a device tree binding for the PHY.
+> To clarify, this patch is only for the v4.4 stable, whereas the previous
+> patch was for next merge window and v4.9+ stable. Right?
+
+That is correct.  The patch I did for 4.9+ didn't apply cleanly on
+4.4, so I had to do a separate patch for 4.4.
+
+adam
 >
-> Signed-off-by: Ondrej Jirman <megous@megous.com>
-> ---
->  .../phy/allwinner,sun50i-h6-usb3-phy.yaml     | 47 +++++++++++++++++++
->  1 file changed, 47 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/allwinner,sun50i-h6-usb3-phy.yaml
+> Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
 >
-> diff --git a/Documentation/devicetree/bindings/phy/allwinner,sun50i-h6-usb3-phy.yaml b/Documentation/devicetree/bindings/phy/allwinner,sun50i-h6-usb3-phy.yaml
-> new file mode 100644
-> index 000000000000..2fdc890748db
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/allwinner,sun50i-h6-usb3-phy.yaml
-> @@ -0,0 +1,47 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +# Copyright 2019 Ondrej Jirman <megous@megous.com>
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/phy/allwinner,sun50i-h6-usb3-phy.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Allwinner sun50i USB3 PHY
-
-H6 would be more appropriate here instead of sun50i. There's a bunch
-of sun50i SoCs already, and only one uses it.
-
-With that fixed,
-Acked-by: Maxime Ripard <mripard@kernel.org>
-
-Maxime
-
---ewuc6ubrfgaw6qrn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXa2RJAAKCRDj7w1vZxhR
-xR48AQDAv8g0iblut9ytzfU6bZMgT1D68v8XPkVM2Tm82RTKoAEAn/tXqAEV2OQF
-ePOXBUp1QBOrzVFUJQx03BYGUacvdwI=
-=O92R
------END PGP SIGNATURE-----
-
---ewuc6ubrfgaw6qrn--
+>   Tomi
+>
+> --
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
