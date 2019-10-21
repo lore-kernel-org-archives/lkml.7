@@ -2,146 +2,155 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A414ECA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:26:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE28FCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:26:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76780205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:26:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L8KbCMIZ"
+	by mail.kernel.org (Postfix) with ESMTP id CC587205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 16:26:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730064AbfJUQ0U (ORCPT
+        id S1730082AbfJUQ0W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 12:26:20 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:34880 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729595AbfJUQ0O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 12:26:14 -0400
-Received: by mail-pg1-f194.google.com with SMTP id c8so3300668pgb.2
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 09:26:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=FeEqDDuvyH1j0FkwnEHXEhJ7z7vVV3mb+til5JuVy4E=;
-        b=L8KbCMIZMxP2/ikOEVCaVOtgQiYYSXPdgW250Tq1STkF49vaQk3R5o7/jn3v5ajZbp
-         ydqA0q4Y7eZeucZjxDPT/99FlOAjOoFBxXR+42r+/Rkiey25D2gehkw0tu3RhUlmCKpG
-         o2oUle2jrjk5Q8f35+5xyrFgxajAkboXJop9KDriQvfZyaTxqY8uY3Bazh4lD8gAnlBZ
-         2yU3WuGv0nljF2MGSgD1AkYO3QrFrbykPlnVsu+7xKD+/7ecDGB35eephrOR/tbVALDD
-         1ImzxUDYILfSZGXq51tA24qE+j5WKw/gYMUVr0JgAIjxRFtWuQSpYxx3WYEg9n5T5D6/
-         UjCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FeEqDDuvyH1j0FkwnEHXEhJ7z7vVV3mb+til5JuVy4E=;
-        b=RTE0mJKTQzAiXjqojP/aKVcezJwlEqso2mX/zkRBh4voq8aRT5giQOebDnOCcPVnFY
-         V5+Z260NYaKkTXdzUkOtDqG64usudQOqAZZW1D8DWPv6aJcquLVZUsHxmKXiAkvCLD10
-         AJ+X7ZZ39eX5JfGZh3CtkrBgCtEzm/vgL1G/iC+zCCJ3dfJy4aMByueYfz9F6LxUq1rU
-         PLqmrdDSFBxvmkzDtdUKKrJjvdl4oHi4Yua6QfNa/xj3cEXCXmjscwW8x5eGGNd+ps9g
-         zyx8eenWVMgbEdvxud5nqoAOV1dmgWP0KHo04lpfKbnO4xGFOd/oKks3PZ0t6xyZl6+t
-         MnHw==
-X-Gm-Message-State: APjAAAUaCZckDBaINkuNHbEF4vmNZxuUGREU279I29bfc/IEnGNiCuu/
-        5MnFv0O6MyPcj5sJBjtY+n7y6g==
-X-Google-Smtp-Source: APXvYqy5d6rToN0TKdq5fL7MqUzExsdEL3H+tedaCNY+lPF4cHGJooqBtskg5MACrNiAARL8PJwnqw==
-X-Received: by 2002:a62:b504:: with SMTP id y4mr15005944pfe.40.1571675173480;
-        Mon, 21 Oct 2019 09:26:13 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id x5sm15983429pfi.32.2019.10.21.09.26.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Oct 2019 09:26:12 -0700 (PDT)
-Date:   Mon, 21 Oct 2019 09:26:10 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     agross@kernel.org, gregkh@linuxfoundation.org, jslaby@suse.com,
-        linux-arm-msm@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] tty: serial: msm_serial: Fix flow control
-Message-ID: <20191021162610.GC1204@tuxbook-pro>
-References: <20191021154616.25457-1-jeffrey.l.hugo@gmail.com>
+        Mon, 21 Oct 2019 12:26:22 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:33166 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727303AbfJUQZ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 12:25:29 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 0F7AA335752A7A844510;
+        Tue, 22 Oct 2019 00:25:25 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.58) by
+ DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
+ 14.3.439.0; Tue, 22 Oct 2019 00:25:18 +0800
+From:   John Garry <john.garry@huawei.com>
+To:     <jejb@linux.vnet.ibm.com>, <martin.petersen@oracle.com>
+CC:     <linux-scsi@vger.kernel.org>, <linuxarm@huawei.com>,
+        <linux-kernel@vger.kernel.org>,
+        Luo Jiaxing <luojiaxing@huawei.com>,
+        "John Garry" <john.garry@huawei.com>
+Subject: [PATCH 07/18] scsi: hisi_sas: Add debugfs file structure for DQ
+Date:   Tue, 22 Oct 2019 00:22:04 +0800
+Message-ID: <1571674935-108326-8-git-send-email-john.garry@huawei.com>
+X-Mailer: git-send-email 2.8.1
+In-Reply-To: <1571674935-108326-1-git-send-email-john.garry@huawei.com>
+References: <1571674935-108326-1-git-send-email-john.garry@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191021154616.25457-1-jeffrey.l.hugo@gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.58]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 21 Oct 08:46 PDT 2019, Jeffrey Hugo wrote:
+From: Luo Jiaxing <luojiaxing@huawei.com>
 
-> hci_qca interfaces to the wcn3990 via a uart_dm on the msm8998 mtp and
-> Lenovo Miix 630 laptop.  As part of initializing the wcn3990, hci_qca
-> disables flow, configures the uart baudrate, and then reenables flow - at
-> which point an event is expected to be received over the uart from the
-> wcn3990.  It is observed that this event comes after the baudrate change
-> but before hci_qca re-enables flow. This is unexpected, and is a result of
-> msm_reset() being broken.
-> 
-> According to the uart_dm hardware documentation, it is recommended that
-> automatic hardware flow control be enabled by setting RX_RDY_CTL.  Auto
-> hw flow control will manage RFR based on the configured watermark.  When
-> there is space to receive data, the hw will assert RFR.  When the watermark
-> is hit, the hw will de-assert RFR.
-> 
-> The hardware documentation indicates that RFR can me manually managed via
-> CR when RX_RDY_CTL is not set.  SET_RFR asserts RFR, and RESET_RFR
-> de-asserts RFR.
-> 
-> msm_reset() is broken because after resetting the hardware, it
-> unconditionally asserts RFR via SET_RFR.  This enables flow regardless of
-> the current configuration, and would undo a previous flow disable
-> operation.  It should instead de-assert RFR via RESET_RFR to block flow
-> until the hardware is reconfigured.  msm_serial should rely on the client
-> to specify that flow should be enabled, either via mctrl() or the termios
-> structure, and only assert RFR in response to those triggers.
-> 
-> Fixes: 04896a77a97b ("msm_serial: serial driver for MSM7K onboard serial peripheral.")
-> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Create a file structure which was used to save the memory address and
+DQ pointer for DQ at debugfs. This structure is bound to the corresponding
+debugfs file, it can help callback function of debugfs file to get what it
+need.
 
-Looks good!
+Signed-off-by: Luo Jiaxing <luojiaxing@huawei.com>
+Signed-off-by: John Garry <john.garry@huawei.com>
+---
+ drivers/scsi/hisi_sas/hisi_sas.h      |  7 ++++++-
+ drivers/scsi/hisi_sas/hisi_sas_main.c | 22 ++++++++++++----------
+ 2 files changed, 18 insertions(+), 11 deletions(-)
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+diff --git a/drivers/scsi/hisi_sas/hisi_sas.h b/drivers/scsi/hisi_sas/hisi_sas.h
+index 5b0f08286af7..91c10be3dfb7 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas.h
++++ b/drivers/scsi/hisi_sas/hisi_sas.h
+@@ -328,6 +328,11 @@ struct hisi_sas_debugfs_cq {
+ 	void *complete_hdr;
+ };
+ 
++struct hisi_sas_debugfs_dq {
++	struct hisi_sas_dq *dq;
++	struct hisi_sas_cmd_hdr *hdr;
++};
++
+ struct hisi_hba {
+ 	/* This must be the first element, used by SHOST_TO_SAS_HA */
+ 	struct sas_ha_struct *p;
+@@ -412,7 +417,7 @@ struct hisi_hba {
+ 	u32 *debugfs_regs[DEBUGFS_REGS_NUM];
+ 	u32 *debugfs_port_reg[HISI_SAS_MAX_PHYS];
+ 	struct hisi_sas_debugfs_cq debugfs_cq[HISI_SAS_MAX_QUEUES];
+-	struct hisi_sas_cmd_hdr	*debugfs_cmd_hdr[HISI_SAS_MAX_QUEUES];
++	struct hisi_sas_debugfs_dq debugfs_dq[HISI_SAS_MAX_QUEUES];
+ 	struct hisi_sas_iost *debugfs_iost;
+ 	struct hisi_sas_itct *debugfs_itct;
+ 	u64 *debugfs_iost_cache;
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
+index d2e50d12e075..d28461e65bde 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_main.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
+@@ -2711,10 +2711,10 @@ static void hisi_sas_debugfs_snapshot_dq_reg(struct hisi_hba *hisi_hba)
+ 	int i;
+ 
+ 	for (i = 0; i < hisi_hba->queue_count; i++) {
+-		struct hisi_sas_cmd_hdr	*debugfs_cmd_hdr, *cmd_hdr;
++		struct hisi_sas_cmd_hdr *debugfs_cmd_hdr, *cmd_hdr;
+ 		int j;
+ 
+-		debugfs_cmd_hdr = hisi_hba->debugfs_cmd_hdr[i];
++		debugfs_cmd_hdr = hisi_hba->debugfs_dq[i].hdr;
+ 		cmd_hdr = hisi_hba->cmd_hdr[i];
+ 
+ 		for (j = 0; j < HISI_SAS_QUEUE_SLOTS; j++)
+@@ -3024,9 +3024,8 @@ static const struct file_operations hisi_sas_debugfs_cq_fops = {
+ 
+ static void hisi_sas_dq_show_slot(struct seq_file *s, int slot, void *dq_ptr)
+ {
+-	struct hisi_sas_dq *dq = dq_ptr;
+-	struct hisi_hba *hisi_hba = dq->hisi_hba;
+-	void *cmd_queue = hisi_hba->debugfs_cmd_hdr[dq->id];
++	struct hisi_sas_debugfs_dq *debugfs_dq = dq_ptr;
++	void *cmd_queue = debugfs_dq->hdr;
+ 	__le32 *cmd_hdr = cmd_queue +
+ 		sizeof(struct hisi_sas_cmd_hdr) * slot;
+ 
+@@ -3237,7 +3236,8 @@ static void hisi_sas_debugfs_create_files(struct hisi_hba *hisi_hba)
+ 	for (d = 0; d < hisi_hba->queue_count; d++) {
+ 		snprintf(name, 256, "%d", d);
+ 
+-		debugfs_create_file(name, 0400, dentry, &hisi_hba->dq[d],
++		debugfs_create_file(name, 0400, dentry,
++				    &hisi_hba->debugfs_dq[d],
+ 				    &hisi_sas_debugfs_dq_fops);
+ 	}
+ 
+@@ -3711,7 +3711,7 @@ static void hisi_sas_debugfs_release(struct hisi_hba *hisi_hba)
+ 	devm_kfree(dev, hisi_hba->debugfs_iost);
+ 
+ 	for (i = 0; i < hisi_hba->queue_count; i++)
+-		devm_kfree(dev, hisi_hba->debugfs_cmd_hdr[i]);
++		devm_kfree(dev, hisi_hba->debugfs_dq[i].hdr);
+ 
+ 	for (i = 0; i < hisi_hba->queue_count; i++)
+ 		devm_kfree(dev, hisi_hba->debugfs_cq[i].complete_hdr);
+@@ -3773,11 +3773,13 @@ static int hisi_sas_debugfs_alloc(struct hisi_hba *hisi_hba)
+ 
+ 	sz = sizeof(struct hisi_sas_cmd_hdr) * HISI_SAS_QUEUE_SLOTS;
+ 	for (d = 0; d < hisi_hba->queue_count; d++) {
+-		hisi_hba->debugfs_cmd_hdr[d] =
+-			devm_kmalloc(dev, sz, GFP_KERNEL);
++		struct hisi_sas_debugfs_dq *dq =
++				&hisi_hba->debugfs_dq[d];
+ 
+-		if (!hisi_hba->debugfs_cmd_hdr[d])
++		dq->hdr = devm_kmalloc(dev, sz, GFP_KERNEL);
++		if (!dq->hdr)
+ 			goto fail;
++		dq->dq = &hisi_hba->dq[d];
+ 	}
+ 
+ 	sz = HISI_SAS_MAX_COMMANDS * sizeof(struct hisi_sas_iost);
+-- 
+2.17.1
 
-> ---
-> 
-> v2:
-> -mask out RX_RDY_CTL in msm_reset() to close a small race window for RFR
-> 
->  drivers/tty/serial/msm_serial.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/tty/serial/msm_serial.c b/drivers/tty/serial/msm_serial.c
-> index 3657a24913fc..00964b6e4ac1 100644
-> --- a/drivers/tty/serial/msm_serial.c
-> +++ b/drivers/tty/serial/msm_serial.c
-> @@ -980,6 +980,7 @@ static unsigned int msm_get_mctrl(struct uart_port *port)
->  static void msm_reset(struct uart_port *port)
->  {
->  	struct msm_port *msm_port = UART_TO_MSM(port);
-> +	unsigned int mr;
->  
->  	/* reset everything */
->  	msm_write(port, UART_CR_CMD_RESET_RX, UART_CR);
-> @@ -987,7 +988,10 @@ static void msm_reset(struct uart_port *port)
->  	msm_write(port, UART_CR_CMD_RESET_ERR, UART_CR);
->  	msm_write(port, UART_CR_CMD_RESET_BREAK_INT, UART_CR);
->  	msm_write(port, UART_CR_CMD_RESET_CTS, UART_CR);
-> -	msm_write(port, UART_CR_CMD_SET_RFR, UART_CR);
-> +	msm_write(port, UART_CR_CMD_RESET_RFR, UART_CR);
-> +	mr = msm_read(port, UART_MR1);
-> +	mr &= ~UART_MR1_RX_RDY_CTL;
-> +	msm_write(port, mr, UART_MR1);
->  
->  	/* Disable DM modes */
->  	if (msm_port->is_uartdm)
-> -- 
-> 2.17.1
-> 
