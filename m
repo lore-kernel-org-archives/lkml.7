@@ -2,286 +2,128 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46867CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:25:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6572ACA9EAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:29:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1229720679
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:25:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xqIxF+9M"
+	by mail.kernel.org (Postfix) with ESMTP id 41A0520684
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 11:29:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728474AbfJULZo (ORCPT
+        id S1728351AbfJUL3j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 07:25:44 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:40633 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728455AbfJULZn (ORCPT
+        Mon, 21 Oct 2019 07:29:39 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:60583 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727571AbfJUL3i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 07:25:43 -0400
-Received: by mail-wr1-f65.google.com with SMTP id o28so13510211wro.7
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 04:25:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=IoIwguD84l9TdKOgIJ6k+NaPdGHth76VlXctQ/52GAY=;
-        b=xqIxF+9MYXYRVZPdLb01gQWr+VIugeUrnEUZArwU1V5796KikHPXG/7BUjbJwd7gF+
-         w/8nq4zoTzaZVWIu+E1v11ZYoz0IZ7sCin6eM+yqVVQsvaIIyCFuD0akeBQ0uRNdlZeQ
-         bIEnMYTCF2exPyDpTWHWdrHEoEKvXdos65r+twfdvNwQ11ELrVPgFHVd8LTQoZXK9wkD
-         6pC5KnYwnjtjpFkH4QfsECky8N444Q3u42QT+D/hchoyuIYQo3fgQVdRjUTAp28+D2GF
-         fQydIK48vCnY/6PE+4Hu8t146LAFeUrg60tfRlkdC9phiNuYYbiiNAr+53NgZgb+Z8+D
-         P2Hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=IoIwguD84l9TdKOgIJ6k+NaPdGHth76VlXctQ/52GAY=;
-        b=hApiMivkp+4JlHnlr+QeaOapNQrd92ZeKzwwfXZ5O9wtYVAX/oeTOVRnyOnW+JZy45
-         VLyhfba3oyUHAuSpm8uivFB3ln1fyK+9Ssj5NU2tHi8Nhs6+vxandoxLMph9FiMHqVIN
-         /u68UChRVvnX6QkbzvbzK9ITafx5+vEqS5goEbhglm8CLxBs0s7wTjlYZoXjXmj91579
-         A0Jyr6SyCMrMwCgzkxNKHkUQfV9ZczjzJBsx7R9fcl2wQxqmZ3KjPrUS+04PGQnbGqBV
-         QupfjVQQrI4ogBXbH3DeOIxjr61Z/dJl+ij6GCbA9onn6O3thtF7fLm1WbWuvflCAf2Z
-         TMQw==
-X-Gm-Message-State: APjAAAV37yJF7wVde1GvTPSW9rxV1wcuNJN0eWWcwLN9309MlWnfHuXz
-        nfw4PbFtq1CGvJblKJf45jHWtQ==
-X-Google-Smtp-Source: APXvYqyYjDblvuAXUOiGxRxoOHlR+3MiGcdtPvzyetJP+LpvAsFsDJf8xyDkuzhWJGG5meZW4KEGDg==
-X-Received: by 2002:adf:a50b:: with SMTP id i11mr20423440wrb.308.1571657140501;
-        Mon, 21 Oct 2019 04:25:40 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id a186sm12614204wmd.3.2019.10.21.04.25.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 21 Oct 2019 04:25:39 -0700 (PDT)
-Subject: Re: [PATCH v2 02/11] mfd: wcd934x: add support to wcd9340/wcd9341
- codec
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     robh@kernel.org, broonie@kernel.org, linus.walleij@linaro.org,
-        vinod.koul@linaro.org, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        spapothi@codeaurora.org, bgoswami@codeaurora.org,
-        linux-gpio@vger.kernel.org
-References: <20191018001849.27205-1-srinivas.kandagatla@linaro.org>
- <20191018001849.27205-3-srinivas.kandagatla@linaro.org>
- <20191021104611.GZ4365@dell>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <1af8a875-8f55-6b7e-4204-ecedc1608889@linaro.org>
-Date:   Mon, 21 Oct 2019 12:25:39 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 21 Oct 2019 07:29:38 -0400
+Received: from mail-qk1-f178.google.com ([209.85.222.178]) by
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1N5FxN-1huhaG0vbB-0117Z8 for <linux-kernel@vger.kernel.org>; Mon, 21 Oct
+ 2019 13:29:37 +0200
+Received: by mail-qk1-f178.google.com with SMTP id w2so12229061qkf.2
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 04:29:37 -0700 (PDT)
+X-Gm-Message-State: APjAAAWzRw0iz6yF9ICXqoVGR/pWXGa4DxU28XMBSRVILQA2jbLFdBbd
+        oDEqv3ussACx4PJeAIxmeFaonpDIfILiX4tYlTw=
+X-Google-Smtp-Source: APXvYqyxe91nGj8TKmw2rGsh4WkXsSBsZcCR4p2QMNxSQZJW/Arl7Yt8sn89P2z6gdacP0hRDEnp2Qs0G03JwPJmF9c=
+X-Received: by 2002:a05:620a:4f:: with SMTP id t15mr11058944qkt.286.1571657376091;
+ Mon, 21 Oct 2019 04:29:36 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191021104611.GZ4365@dell>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191021105822.20271-1-lee.jones@linaro.org>
+In-Reply-To: <20191021105822.20271-1-lee.jones@linaro.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 21 Oct 2019 13:29:20 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a10w9Xg6U8EgUqPLbucP3A0wc9xO_WNG06LxHrsZkZc1g@mail.gmail.com>
+Message-ID: <CAK8P3a10w9Xg6U8EgUqPLbucP3A0wc9xO_WNG06LxHrsZkZc1g@mail.gmail.com>
+Subject: Re: [PATCH v2 0/9] Simplify MFD Core
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Barry Song <baohua@kernel.org>, stephan@gerhold.net,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Daniel Drake <drake@endlessm.com>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        James Cameron <quozl@laptop.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:2JfCHba4azJOimTandb6ifbcUYw/cN0hh1p6j+ekjAtBpqDrT8u
+ q0y6IQ77cLeCJj3/Pkw8F9rTb54tzGyh65be0svGnYMGK9cY/Siy+qoAg2jtrW46yPfHzrl
+ pYYU3GeWkJ1kssZxsjalm2fxAwYitfRfQYrxrkgO7JpGGi3BKJEp8DBNBcA6mwx+Sk3xEOA
+ GaNCpeBvs8eRiKne2mzdg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:qkJGr8GjrA4=:F87IxXjb0lVprBne15s/dr
+ cTPXK2gvXyxNCa2ef//S0HCIvovjE+nlNRGDl+laPzBbFUMSHYIVHaDMWcUkslcybilXOvW+u
+ 4826JtfQ1K8MjzrPmiEdDQwDkRGHG/d+6MuTUati3d1rp6A1kupeV8mV5Mek+qA9EOFZlQd40
+ m/8BwZNeWzPUs2moBf3De4UaX7ELRkh8ZO29qHUMLs33GIeaxso57fYo37/0GBYzdPgM23RK6
+ cAXZfoHE4WTKEdqAjQnydlsqX0Jwm/v6AauUkwpNdd9OTs1tDDaEIk/KJ6LsXBZYCoHQ+2l8h
+ bKiHWDN2UvYOX4fL7MBgNTU5pLwHZry/kDFBSbZlmAyLfg5mAh3xf3f4E2jwF0ROR5/SQq8M+
+ cdD0E3FZmVFAm5HBh0VEIRXAK1dhHHUcUVX7MndjMxAUVT7+fSQDWQYlNC7ojjHa9t7yyHy2u
+ MbjrrQgha/aikLw7WXhmJwAQyqu0w/o56OLt7vwx8uvx6WwmewXCIMRxsLGi/yF3CXiTfXxcK
+ nrtwqXREF93M0kT1ByHLJbSi348bHjiCHJz8tmkgathWKywLZ0N7HM8oGkQRSNqSeYD56dXfV
+ M133arMZhINuP8oAT3t8GYYGg215Q91OfdEcefsbQBH/lZEcHN2ML6qL62kRvpIc9Z5mU8oic
+ pbO69Oeo3C19QLY8yroQ/1wR52JLZzPb2dvXe3DwJWSakIcFh35a+rctK0CIfAo/FP+ZerbRC
+ NfdW8UTpqGjwFc2KfSH2yg4+5ZnQWW6gB0pTZccenR5NX2CIR5SvCrxotkC5ns+lMbYiMcc3o
+ RaLNqEiILLRCi60aGegeH02/yxvy7nE/6o7jqnyQz3EchoZ8YvdimBqeKgCr2bSjA25cceeyz
+ SI6maFLWcCFB70EG9jqQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks Lee for taking time to review.
+On Mon, Oct 21, 2019 at 12:58 PM Lee Jones <lee.jones@linaro.org> wrote:
+>
+> MFD currently has one over-complicated user.  CS5535 uses a mixture of
+> cell cloning, reference counting and subsystem-level call-backs to
+> achieve its goal of requesting an IO memory region only once across 3
+> consumers.  The same can be achieved by handling the region centrally
+> during the parent device's .probe() sequence.  Releasing can be handed
+> in a similar way during .remove().
+>
+> While we're here, take the opportunity to provide some clean-ups and
+> error checking to issues noticed along the way.
+>
+> This also paves the way for clean cell disabling via Device Tree being
+> discussed at [0]
+>
+> [0] https://lkml.org/lkml/2019/10/18/612.
 
-I agree with most of the style related comments, will fix them in next 
-version. For others I have replied it inline.
+As the CS5535 is primarily used on the OLPC XO1, it would be
+good to have someone test the series on such a machine.
 
-On 21/10/2019 11:46, Lee Jones wrote:
-> On Fri, 18 Oct 2019, Srinivas Kandagatla wrote:
-> 
->> Qualcomm WCD9340/WCD9341 Codec is a standalone Hi-Fi audio codec IC.
->>
->> This codec has integrated SoundWire controller, pin controller and
->> interrupt controller.
->>
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->> ---
->>   drivers/mfd/Kconfig                   |   8 +
->>   drivers/mfd/Makefile                  |   1 +
->>   drivers/mfd/wcd934x.c                 | 330 ++++++++++++++++
->>   include/linux/mfd/wcd934x/registers.h | 529 ++++++++++++++++++++++++++
->>   include/linux/mfd/wcd934x/wcd934x.h   |  24 ++
->>   5 files changed, 892 insertions(+)
->>   create mode 100644 drivers/mfd/wcd934x.c
->>   create mode 100644 include/linux/mfd/wcd934x/registers.h
->>   create mode 100644 include/linux/mfd/wcd934x/wcd934x.h
->>
->> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
->> index ae24d3ea68ea..ab09862b5996 100644
->> --- a/drivers/mfd/Kconfig
->> +++ b/drivers/mfd/Kconfig
->> @@ -1967,6 +1967,14 @@ config MFD_STMFX
->>   	  additional drivers must be enabled in order to use the functionality
->>   	  of the device.
->>   
+I've added a few people to Cc that may be able to help test it, or
+know someone who can.
 
-[...]
+For the actual patches, see
+https://lore.kernel.org/lkml/20191021105822.20271-1-lee.jones@linaro.org/T/#t
 
->> diff --git a/drivers/mfd/wcd934x.c b/drivers/mfd/wcd934x.c
->> new file mode 100644
->> index 000000000000..bb4d2a6c89bc
->> --- /dev/null
->> +++ b/drivers/mfd/wcd934x.c
->> @@ -0,0 +1,330 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +// Copyright (c) 2019, Linaro Limited
->> +
->> +#include <linux/clk.h>
->> +#include <linux/gpio.h>
->> +#include <linux/interrupt.h>
->> +#include <linux/kernel.h>
->> +#include <linux/mfd/core.h>
->> +#include <linux/mfd/wcd934x/registers.h>
->> +#include <linux/mfd/wcd934x/wcd934x.h>
->> +#include <linux/module.h>
->> +#include <linux/of_gpio.h>
->> +#include <linux/of.h>
->> +#include <linux/of_irq.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/regmap.h>
->> +#include <linux/regulator/consumer.h>
->> +#include <linux/slimbus.h>
->> +
+    Arnd
 
-[...]
-
->> +static int wcd934x_bring_up(struct wcd934x_data *wcd)
->> +{
->> +	struct regmap *rm = wcd->regmap;
-> 
-> It's much more common to use 'regmap' or 'map'.
-
-Only reason to make it short here is to save some lines!
-If you prefer regmap, I will add that in next version!
-
-> 
->> +	u16 id_minor, id_major;
->> +	int ret;
->> +
->> +	ret = regmap_bulk_read(rm, WCD934X_CHIP_TIER_CTRL_CHIP_ID_BYTE0,
->> +			       (u8 *)&id_minor, sizeof(u16));
->> +	if (ret)
->> +		return -EINVAL;
->> +
->> +	ret = regmap_bulk_read(rm, WCD934X_CHIP_TIER_CTRL_CHIP_ID_BYTE2,
->> +			       (u8 *)&id_major, sizeof(u16));
->> +	if (ret)
->> +		return -EINVAL;
->> +
->> +	dev_info(wcd->dev, "wcd934x chip id major 0x%x, minor 0x%x\n",
->> +		 id_major, id_minor);
->> +
->> +	regmap_write(rm, WCD934X_CODEC_RPM_RST_CTL, 0x01);
->> +	regmap_write(rm, WCD934X_SIDO_NEW_VOUT_A_STARTUP, 0x19);
->> +	regmap_write(rm, WCD934X_SIDO_NEW_VOUT_D_STARTUP, 0x15);
->> +	/* Add 1msec delay for VOUT to settle */
->> +	usleep_range(1000, 1100);
->> +	regmap_write(rm, WCD934X_CODEC_RPM_PWR_CDC_DIG_HM_CTL, 0x5);
->> +	regmap_write(rm, WCD934X_CODEC_RPM_PWR_CDC_DIG_HM_CTL, 0x7);
->> +	regmap_write(rm, WCD934X_CODEC_RPM_RST_CTL, 0x3);
->> +	regmap_write(rm, WCD934X_CODEC_RPM_RST_CTL, 0x7);
->> +	regmap_write(rm, WCD934X_CODEC_RPM_PWR_CDC_DIG_HM_CTL, 0x3);
->> +
->> +	return 0;
->> +
-> 
-> Superfluous '\n'.
-> 
->> +}
->> +
->> +static int wcd934x_slim_status(struct slim_device *sdev,
->> +			       enum slim_device_status status)
->> +{
->> +	struct device *dev = &sdev->dev;
->> +	struct wcd934x_data *wcd;
->> +	int ret;
-> 
-> This is semantically odd!  Why are you doing most of the
-> initialisation and bring-up in 'status' and not 'probe'.  Seems
-> broken to me.
-> 
-
-SLIMBus device will not be in a state to communicate before enumeration 
-(at probe), so all the device initialization is done in status callback 
-where it is ready for communication.
-
-This is same with SoundWire Bus as well!
-
->> +	wcd = dev_get_drvdata(dev);
->> +
->> +	switch (status) {
->> +	case SLIM_DEVICE_STATUS_UP:
->> +		wcd->regmap = regmap_init_slimbus(sdev, &wcd934x_regmap_config);
->> +		if (IS_ERR(wcd->regmap)) {
->> +			dev_err(dev, "Error allocating slim regmap\n");
->> +			return PTR_ERR(wcd->regmap);
->> +		}
->> +
->> +		ret = wcd934x_bring_up(wcd);
->> +		if (ret) {
->> +			dev_err(dev, "Error WCD934X bringup: err = %d\n", ret);
-
-
-[...]
-
->> +	return 0;
->> +}
->> +
->> +static void wcd934x_slim_remove(struct slim_device *sdev)
->> +{
->> +	struct wcd934x_data *wcd = dev_get_drvdata(&sdev->dev);
-> 
-> No more clean-up?  Aren't the regulators still enabled?
-> Good point, will add missing regulator disable in next version.
-
->> +	mfd_remove_devices(&sdev->dev);
->> +	kfree(wcd);
->> +}
->> +
-
-[...]
-
->> +#endif
->> diff --git a/include/linux/mfd/wcd934x/wcd934x.h b/include/linux/mfd/wcd934x/wcd934x.h
->> new file mode 100644
->> index 000000000000..d102e211948c
->> --- /dev/null
->> +++ b/include/linux/mfd/wcd934x/wcd934x.h
->> @@ -0,0 +1,24 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
->> +
->> +#ifndef __WCD934X_H__
->> +#define __WCD934X_H__
->> +#include <linux/clk.h>
->> +#include <linux/regulator/consumer.h>
->> +#include <linux/regmap.h>
->> +#include <linux/slimbus.h>
-
-[...]
-
->> +struct wcd934x_data {
->> +	int reset_gpio;
->> +	int irq;
-> 
-> I'd prefer to see the more complex 'struct's at the top.
-> 
->> +	struct device *dev;
->> +	struct clk *extclk;
->> +	struct regmap *regmap;
->> +	struct slim_device *sdev;
-> 
-> You don't need 'sdev' and 'dev'.
-
-slim_device instance (sdev) is required by audio codec driver to 
-allocate stream runtime.
-
-> 
->> +	struct regmap_irq_chip_data *irq_data;
->> +	struct regulator_bulk_data supplies[WCD934X_MAX_SUPPLY];
->> +};
->> +
->> +#endif /* __WCD934X_H__ */
->> +
-> 
+> Lee Jones (9):
+>   mfd: cs5535-mfd: Use PLATFORM_DEVID_* defines and tidy error message
+>   mfd: cs5535-mfd: Remove mfd_cell->id hack
+>   mfd: cs5535-mfd: Request shared IO regions centrally
+>   mfd: cs5535-mfd: Register clients using their own dedicated MFD cell
+>     entries
+>   mfd: mfd-core: Remove mfd_clone_cell()
+>   x86: olpc: Remove invocation of MFD's .enable()/.disable() call-backs
+>   mfd: mfd-core: Protect against NULL call-back function pointer
+>   mfd: mfd-core: Remove usage counting for .{en,dis}able() call-backs
+>   mfd: mfd-core: Move pdev->mfd_cell creation back into mfd_add_device()
+>
+>  arch/x86/platform/olpc/olpc-xo1-pm.c |   6 --
+>  drivers/mfd/cs5535-mfd.c             | 124 +++++++++++++--------------
+>  drivers/mfd/mfd-core.c               | 113 ++++--------------------
+>  include/linux/mfd/core.h             |  20 -----
+>  4 files changed, 79 insertions(+), 184 deletions(-)
+>
+> --
+> 2.17.1
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
