@@ -4,37 +4,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9683ECA9EB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 18:55:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51619CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 18:55:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F4F420B7C
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 18:55:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26B8221906
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 18:55:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732718AbfJVSzN (ORCPT
+        id S2388061AbfJVSze (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 14:55:13 -0400
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:34775 "EHLO
+        Tue, 22 Oct 2019 14:55:34 -0400
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:34787 "EHLO
         smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732322AbfJVSzN (ORCPT
+        with ESMTP id S1727851AbfJVSze (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 14:55:13 -0400
+        Tue, 22 Oct 2019 14:55:34 -0400
 Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 2FDD13C04C1;
-        Tue, 22 Oct 2019 20:55:10 +0200 (CEST)
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 710263C0579;
+        Tue, 22 Oct 2019 20:55:32 +0200 (CEST)
 Received: from smtp1.de.adit-jv.com ([127.0.0.1])
         by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 1Mi11-ba1-B3; Tue, 22 Oct 2019 20:55:04 +0200 (CEST)
+        with ESMTP id Vq_DkLNWpUpD; Tue, 22 Oct 2019 20:55:27 +0200 (CEST)
 Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 4517C3C009D;
-        Tue, 22 Oct 2019 20:55:04 +0200 (CEST)
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 354CC3C009D;
+        Tue, 22 Oct 2019 20:55:27 +0200 (CEST)
 Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
  (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Tue, 22 Oct
- 2019 20:55:03 +0200
+ 2019 20:55:26 +0200
 From:   Eugeniu Rosca <erosca@de.adit-jv.com>
 To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
         Liam Girdwood <lgirdwood@gmail.com>,
@@ -45,12 +44,11 @@ To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
 CC:     Eugeniu Rosca <erosca@de.adit-jv.com>,
         Eugeniu Rosca <roscaeugeniu@gmail.com>,
         Jiada Wang <jiada_wang@mentor.com>,
-        Timo Wischer <twischer@de.adit-jv.com>,
         Andrew Gabbasov <andrew_gabbasov@mentor.com>,
-        <stable@vger.kernel.org>
-Subject: [RESEND PATCH] ASoC: rsnd: dma: fix SSI9 4/5/6/7 busif dma address
-Date:   Tue, 22 Oct 2019 20:54:29 +0200
-Message-ID: <20191022185429.12769-1-erosca@de.adit-jv.com>
+        Timo Wischer <twischer@de.adit-jv.com>
+Subject: [PATCH] ASoC: rsnd: dma: set bus width to data width for monaural data
+Date:   Tue, 22 Oct 2019 20:55:18 +0200
+Message-ID: <20191022185518.12838-1-erosca@de.adit-jv.com>
 X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
@@ -63,51 +61,70 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jiada Wang <jiada_wang@mentor.com>
 
-Currently each SSI unit's busif dma address is calculated by
-following calculation formula:
-0xec540000 + 0x1000 * id + busif / 4 * 0xA000 + busif % 4 * 0x400
+According to R-Car3 HW manual 40.3.3 (Data Format on Audio Local Bus),
+in case of monaural data writing or reading through Audio-DMAC,
+it's always in Left Justified format, so both src and dst
+DMA Bus width should be equal to physical data width.
 
-But according to R-Car3 HW manual 41.1.4 Register Configuration,
-ssi9 4/5/6/7 busif data register address
-(SSI9_4_BUSIF/SSI9_5_BUSIF/SSI9_6_BUSIF/SSI9_7_BUSIF)
-are out of this rule.
+Therefore set src and dst's DMA bus width to:
+ - [monaural case] data width
+ - [non-monaural case] 32bits (as prior applying the patch)
 
-This patch updates the calculation formula to correct
-ssi9 4/5/6/7 busif data register address.
-
-Fixes: 5e45a6fab3b9 ("ASoc: rsnd: dma: Calculate dma address with consider of BUSIF")
-Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
-Signed-off-by: Timo Wischer <twischer@de.adit-jv.com>
-[erosca: minor improvements in commit description]
 Cc: Andrew Gabbasov <andrew_gabbasov@mentor.com>
-Cc: stable@vger.kernel.org # v4.20+
+Cc: Timo Wischer <twischer@de.adit-jv.com>
+Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
 Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
 ---
-
-Originally submitted as https://patchwork.kernel.org/patch/10825513/
-("ASoC: rsnd: dma: fix SSI9 4/5/6/7 busif dma address")
-
----
- sound/soc/sh/rcar/dma.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/soc/sh/rcar/dma.c | 30 ++++++++++++++++++++++++++++--
+ 1 file changed, 28 insertions(+), 2 deletions(-)
 
 diff --git a/sound/soc/sh/rcar/dma.c b/sound/soc/sh/rcar/dma.c
-index 0324a5c39619..28f65eba2bb4 100644
+index 28f65eba2bb4..95aa26d62e4f 100644
 --- a/sound/soc/sh/rcar/dma.c
 +++ b/sound/soc/sh/rcar/dma.c
-@@ -508,10 +508,10 @@ static struct rsnd_mod_ops rsnd_dmapp_ops = {
- #define RDMA_SSI_I_N(addr, i)	(addr ##_reg - 0x00300000 + (0x40 * i) + 0x8)
- #define RDMA_SSI_O_N(addr, i)	(addr ##_reg - 0x00300000 + (0x40 * i) + 0xc)
+@@ -165,14 +165,40 @@ static int rsnd_dmaen_start(struct rsnd_mod *mod,
+ 	struct device *dev = rsnd_priv_to_dev(priv);
+ 	struct dma_async_tx_descriptor *desc;
+ 	struct dma_slave_config cfg = {};
++	enum dma_slave_buswidth buswidth = DMA_SLAVE_BUSWIDTH_4_BYTES;
+ 	int is_play = rsnd_io_is_play(io);
+ 	int ret;
  
--#define RDMA_SSIU_I_N(addr, i, j) (addr ##_reg - 0x00441000 + (0x1000 * (i)) + (((j) / 4) * 0xA000) + (((j) % 4) * 0x400))
-+#define RDMA_SSIU_I_N(addr, i, j) (addr ##_reg - 0x00441000 + (0x1000 * (i)) + (((j) / 4) * 0xA000) + (((j) % 4) * 0x400) - (0x4000 * ((i) / 9) * ((j) / 4)))
- #define RDMA_SSIU_O_N(addr, i, j) RDMA_SSIU_I_N(addr, i, j)
++	/*
++	 * in case of monaural data writing or reading through Audio-DMAC
++	 * data is always in Left Justified format, so both src and dst
++	 * DMA Bus width need to be set equal to physical data width.
++	 */
++	if (rsnd_runtime_channel_original(io) == 1) {
++		struct snd_pcm_runtime *runtime = rsnd_io_to_runtime(io);
++		int bits = snd_pcm_format_physical_width(runtime->format);
++
++		switch (bits) {
++		case 8:
++			buswidth = DMA_SLAVE_BUSWIDTH_1_BYTE;
++			break;
++		case 16:
++			buswidth = DMA_SLAVE_BUSWIDTH_2_BYTES;
++			break;
++		case 32:
++			buswidth = DMA_SLAVE_BUSWIDTH_4_BYTES;
++			break;
++		default:
++			dev_err(dev, "invalid format width %d\n", bits);
++			return -EINVAL;
++		}
++	}
++
+ 	cfg.direction	= is_play ? DMA_MEM_TO_DEV : DMA_DEV_TO_MEM;
+ 	cfg.src_addr	= dma->src_addr;
+ 	cfg.dst_addr	= dma->dst_addr;
+-	cfg.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
+-	cfg.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
++	cfg.src_addr_width = buswidth;
++	cfg.dst_addr_width = buswidth;
  
--#define RDMA_SSIU_I_P(addr, i, j) (addr ##_reg - 0x00141000 + (0x1000 * (i)) + (((j) / 4) * 0xA000) + (((j) % 4) * 0x400))
-+#define RDMA_SSIU_I_P(addr, i, j) (addr ##_reg - 0x00141000 + (0x1000 * (i)) + (((j) / 4) * 0xA000) + (((j) % 4) * 0x400) - (0x4000 * ((i) / 9) * ((j) / 4)))
- #define RDMA_SSIU_O_P(addr, i, j) RDMA_SSIU_I_P(addr, i, j)
- 
- #define RDMA_SRC_I_N(addr, i)	(addr ##_reg - 0x00500000 + (0x400 * i))
+ 	dev_dbg(dev, "%s %pad -> %pad\n",
+ 		rsnd_mod_name(mod),
 -- 
 2.23.0
 
