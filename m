@@ -2,93 +2,192 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4279DCA9EB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:42:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67B5FCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:43:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EEEA2075A
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:42:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ECBC2084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:43:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="D8bfP3dY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731693AbfJVRmg (ORCPT
+        id S1731889AbfJVRnD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 13:42:36 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:52386 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727226AbfJVRmf (ORCPT
+        Tue, 22 Oct 2019 13:43:03 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:42307 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731053AbfJVRnC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 13:42:35 -0400
-Received: from turingmachine.home (unknown [IPv6:2804:431:c7f5:c26b:d711:794d:1c68:5ed3])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: tonyk)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 3523128DB6C;
-        Tue, 22 Oct 2019 18:42:31 +0100 (BST)
-From:   =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>
-To:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     axboe@kernel.dk, kernel@collabora.com, krisman@collabora.com,
-        =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>
-Subject: [PATCH] blk-mq: remove needless goto from blk_mq_get_driver_tag
-Date:   Tue, 22 Oct 2019 14:41:08 -0300
-Message-Id: <20191022174108.15554-1-andrealmeid@collabora.com>
-X-Mailer: git-send-email 2.23.0
+        Tue, 22 Oct 2019 13:43:02 -0400
+Received: by mail-oi1-f193.google.com with SMTP id i185so14918203oif.9
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 10:43:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MHo+bPZ3FyZTrXrvFae5gOHqYffPj0NYcnQ23J1Mtd8=;
+        b=D8bfP3dYb9Xw3Ejz/XW6sJaiJoIzrU0if9m7dseFDXz0GuoQXFZZBSTgbjJU0sjON7
+         CTsIv3bjWf2AvHSPeKOaRXcyEjBAx+URak3jnpv4lulJ/EVuiqqWnNdoWoe554TF/cJ0
+         FU8/9VTLt4e6HnKwcSlzNGR54imzjgAORjvN05VsZdT3aFYiGR+7MO+6zvojPCzmaXQe
+         rqmerCdhyIjHFH+noVK7tj/FkhNO4aAZ0Up4wIhGTOOBiYn85Qd1A+J2olHu9J0wWQTq
+         mFpeecULEnrKhZxONseYGkjQ356U0Iwm1ionhs0PmWk/gwCIyyzyxv1w+qkcqY7dnMsh
+         p2hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MHo+bPZ3FyZTrXrvFae5gOHqYffPj0NYcnQ23J1Mtd8=;
+        b=oAc4iGIcb90FIkBqLihQJkShxv9xUdlKmNebe0Jx/rPri2rXMvtmrcYMrkpYDHcO2W
+         sRzvdRJJr2+NhZDC9enb3vD4jd0M/mxxSLiE5S3pgADWPUMGX7yOjNdtTaSSwAnysLBq
+         980GasgeIcRtP7f3a1ETjywEOcbc2uZwuCQIU9RcD0nPUSUpYVG1cfADyO1/HoCGruXF
+         1qR91AVCDei9LbQID4GjQcEhRuisHIBLJbK7lSpL72IoiRzEJdHStT976pVv1NGuYd/T
+         QE7H0/kJiN90YhGyEuoLyjdMCTR1ZorphUgSvQ3L4G1YXCGNDP9O+KWj6qrVJxdWgtdh
+         uteA==
+X-Gm-Message-State: APjAAAXpUMFghYRXABzvN0bmi+7d3wFlULcmMUnThelTnN48BnoERgcS
+        rNbSlvEa7LV4Idddqfbm+N8CTsw6AriyP8Y+3jMFdw==
+X-Google-Smtp-Source: APXvYqxfVwLHQu/nljm2npVYMv0/xxXLHw8hKdDqlhGb7PXQz9eRPAcgKMk0ub1hWAYFfjq7ip3as3hOP5jSlLN4VGw=
+X-Received: by 2002:aca:f492:: with SMTP id s140mr4056153oih.83.1571766180963;
+ Tue, 22 Oct 2019 10:43:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20191017141305.146193-1-elver@google.com> <20191017141305.146193-2-elver@google.com>
+ <20191022154858.GA13700@redhat.com>
+In-Reply-To: <20191022154858.GA13700@redhat.com>
+From:   Marco Elver <elver@google.com>
+Date:   Tue, 22 Oct 2019 19:42:48 +0200
+Message-ID: <CANpmjNPUT2B3rWaa=5Ee2Xs3HHDaUiBGpG09Q4h9Gemhsp9KFw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/8] kcsan: Add Kernel Concurrency Sanitizer infrastructure
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Alexander Potapenko <glider@google.com>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Borislav Petkov <bp@alien8.de>, Daniel Axtens <dja@axtens.net>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        David Howells <dhowells@redhat.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-efi@vger.kernel.org,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The only usage of the label "done" is when (rq->tag != -1) at the
-begging of the function. Rather than jumping to label, we can just
-remove this label and execute the code at the "if". Besides that,
-the code that would be executed after the label "done" is the return of
-the logical expression (rq->tag != -1) but since we are already inside
-the if, we now that this is true. Remove the label and replace the goto
-with the proper result of the label.
+On Tue, 22 Oct 2019 at 17:49, Oleg Nesterov <oleg@redhat.com> wrote:
+>
+> On 10/17, Marco Elver wrote:
+> >
+> > +     /*
+> > +      * Delay this thread, to increase probability of observing a racy
+> > +      * conflicting access.
+> > +      */
+> > +     udelay(get_delay());
+> > +
+> > +     /*
+> > +      * Re-read value, and check if it is as expected; if not, we infer a
+> > +      * racy access.
+> > +      */
+> > +     switch (size) {
+> > +     case 1:
+> > +             is_expected = expect_value._1 == READ_ONCE(*(const u8 *)ptr);
+> > +             break;
+> > +     case 2:
+> > +             is_expected = expect_value._2 == READ_ONCE(*(const u16 *)ptr);
+> > +             break;
+> > +     case 4:
+> > +             is_expected = expect_value._4 == READ_ONCE(*(const u32 *)ptr);
+> > +             break;
+> > +     case 8:
+> > +             is_expected = expect_value._8 == READ_ONCE(*(const u64 *)ptr);
+> > +             break;
+> > +     default:
+> > +             break; /* ignore; we do not diff the values */
+> > +     }
+> > +
+> > +     /* Check if this access raced with another. */
+> > +     if (!remove_watchpoint(watchpoint)) {
+> > +             /*
+> > +              * No need to increment 'race' counter, as the racing thread
+> > +              * already did.
+> > +              */
+> > +             kcsan_report(ptr, size, is_write, smp_processor_id(),
+> > +                          kcsan_report_race_setup);
+> > +     } else if (!is_expected) {
+> > +             /* Inferring a race, since the value should not have changed. */
+> > +             kcsan_counter_inc(kcsan_counter_races_unknown_origin);
+> > +#ifdef CONFIG_KCSAN_REPORT_RACE_UNKNOWN_ORIGIN
+> > +             kcsan_report(ptr, size, is_write, smp_processor_id(),
+> > +                          kcsan_report_race_unknown_origin);
+> > +#endif
+> > +     }
+>
+> Not sure I understand this code...
+>
+> Just for example. Suppose that task->state = TASK_UNINTERRUPTIBLE, this task
+> does __set_current_state(TASK_RUNNING), another CPU does wake_up_process(task)
+> which does the same UNINTERRUPTIBLE -> RUNNING transition.
+>
+> Looks like, this is the "data race" according to kcsan?
 
-Signed-off-by: André Almeida <andrealmeid@collabora.com>
----
-Hello,
+Yes, they are "data races". They are probably not "race conditions" though.
 
-I've used `blktest` to check if this change add any regression. I have
-used `./check block` and I got the same results with and without this
-patch (a bunch of "passed" and three "not run" because of the virtual
-scsi capabilities). Please let me know if there would be a better way to
-test changes at block stack.
+This is a fair distinction to make, and we never claimed to find "race
+conditions" only -- race conditions are logic bugs that result in bad
+state due to unexpected interleaving of threads. Data races are more
+subtle, and become relevant at the programming language level.
 
-This commit was rebase at linux-block/for-5.5/block.
+In Documentation we summarize: "Informally, two operations conflict if
+they access the same memory location, and at least one of them is a
+write operation. In an execution, two memory operations from different
+threads form a data-race if they conflict, at least one of them is a
+*plain* access (non-atomic), and they are unordered in the
+"happens-before" order according to the LKMM."
+
+KCSAN's goal is to find *data races* according to the LKMM.  Some data
+races are race conditions (usually the more interesting bugs) -- but
+not *all* data races are race conditions. Those are what are usually
+referred to as "benign", but they can still become bugs on the wrong
+arch/compiler combination. Hence, the need to annotate these accesses
+with READ_ONCE, WRITE_ONCE or use atomic_t:
+- https://lwn.net/Articles/793253/
+- https://lwn.net/Articles/799218/
+
+> Hmm. even the "if (!(p->state & state))" check in try_to_wake_up() can trigger
+> kcsan_report() ?
+
+We blacklisted sched (KCSAN_SANITIZE := n   in kernel/sched/Makefile),
+so these data races won't actually be reported.
 
 Thanks,
-	André
----
- block/blk-mq.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+-- Marco
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 8538dc415499..1e067b78ab97 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -1036,7 +1036,7 @@ bool blk_mq_get_driver_tag(struct request *rq)
- 	bool shared;
- 
- 	if (rq->tag != -1)
--		goto done;
-+		return true;
- 
- 	if (blk_mq_tag_is_reserved(data.hctx->sched_tags, rq->internal_tag))
- 		data.flags |= BLK_MQ_REQ_RESERVED;
-@@ -1051,7 +1051,6 @@ bool blk_mq_get_driver_tag(struct request *rq)
- 		data.hctx->tags->rqs[rq->tag] = rq;
- 	}
- 
--done:
- 	return rq->tag != -1;
- }
- 
--- 
-2.23.0
-
+> Oleg.
+>
