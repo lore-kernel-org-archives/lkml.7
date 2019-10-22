@@ -2,175 +2,112 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55AC4CA9EBA
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 20:15:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F1F2CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 20:17:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2570021783
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 20:15:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F5D9214B2
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 20:17:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="KaaLg/bw"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="XjaTB92S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389355AbfJVUPX (ORCPT
+        id S2389361AbfJVURC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 16:15:23 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:34914 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389342AbfJVUPV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 16:15:21 -0400
-Received: by mail-qt1-f196.google.com with SMTP id m15so28843992qtq.2
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 13:15:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=SKH3PcY5YzXD6Qge68ymWg6Ins6ocLR9l5DfPryEBgk=;
-        b=KaaLg/bw88z77buICYAJEe5iw5ThIZJCDvLL4q2RSdmGOXSdlsryIy4UAPdKiR3U1i
-         TnF8jNwIgRKrMzBMH2cBT8Qyy9tg/M9wTtR3Wrx6e/JrVGOp77QhbBjRArE2l/meQdby
-         SOdO/mGWcTubS8kR90ln5IenSVxDk0WPTvDqpdaDO4iRAPQXIssKgsKkCTzxFI7D99tI
-         K/w9BneoewwmdaDHDt5q8QWenhYLUUAhYRi0GJm58lfdROEHZrbuhSNsUmJ7vhrTLZoB
-         TlgRns9OFeILnr1C45VJ/hBfpRmLpXl6WY6/23dwwSlktV02dZHRpDlk39xE/9wyzzJf
-         OKPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=SKH3PcY5YzXD6Qge68ymWg6Ins6ocLR9l5DfPryEBgk=;
-        b=njth46QfQn7vl2AAzuC2CF1x8+E+T/tgREx++/f1vO2qqsaXgf6plBYvuIwrtyze64
-         rozNH0LBedwXjVmc4FN14ov5Jflkc9QkBvsLQIhLx4WZnlbU0u7ATE0udsAQvE0Yc+SM
-         uBGtjaTEvJSY1Dj4j/OCDtwiI7f/vN6/UMVzwaCswoIcA3s6pS/iBE4GIYtsHfBsdHo6
-         j6iMlF/rYIgavh+uwiouNbyzYJbq+3cTr0J6Dz/VYBSKxYIPvv7J/bzM8MlG5jsDH+fE
-         M/Jn+fPbbt8KhTZTPZbOlmGLviNm8p743XOBunOcqh9myYTFQQ4mK+lEyUP/Qvg++4W5
-         xmiQ==
-X-Gm-Message-State: APjAAAVHTPc9x8kamLX5elVtrm5ThigxU2huVfPwTdoScWSounEgpehS
-        1Q+02f9hZIZnjhfWoKtLCXxuvg==
-X-Google-Smtp-Source: APXvYqwgUaBUtrSrtIlAxyDVz2P4+gAp3Nwe5EnwHYyjxxj2PszLHekWjQXPyQk3tbOPUN9yPnbdVQ==
-X-Received: by 2002:a0c:d0e1:: with SMTP id b30mr5126174qvh.197.1571775320721;
-        Tue, 22 Oct 2019 13:15:20 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::3:869e])
-        by smtp.gmail.com with ESMTPSA id e15sm7759814qkm.130.2019.10.22.13.15.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Oct 2019 13:15:20 -0700 (PDT)
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Michal Hocko <mhocko@suse.com>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: [PATCH 2/2] mm: memcontrol: try harder to set a new memory.high
-Date:   Tue, 22 Oct 2019 16:15:18 -0400
-Message-Id: <20191022201518.341216-2-hannes@cmpxchg.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191022201518.341216-1-hannes@cmpxchg.org>
-References: <20191022201518.341216-1-hannes@cmpxchg.org>
+        Tue, 22 Oct 2019 16:17:02 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:46997 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729874AbfJVURC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 16:17:02 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46yPtK3BlHz9sP6;
+        Wed, 23 Oct 2019 07:16:56 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1571775419;
+        bh=RTPPTYXUYCzZqeA94/netQI+yOWjh84Mv67mv4e+xig=;
+        h=Date:From:To:Cc:Subject:From;
+        b=XjaTB92SJ6cr/1QJ4u70J0PqMjIIuOzDHdHSkcWFgwMwynl/o5hrnSFQW57MVf1v2
+         NUXPpjf+MbeUxJK70anbLAA5+xAPAi/eJNdkz8/zBuFLn5BH0vp5DUNukvBQMobhmB
+         rShVFbYGqUeCkg2khzGJv2xcj8vOqGzmgSDLdNEED2k/+jgMjEPI3cR2tTSubuj28D
+         xxyXHxJIpwsn9ktdzGkckPqd4y/UzapCNABii37MD1nzu4NXfV0C+azimFLFFQJXoO
+         7cqpDttIC5NzVpP0meagl578gIouBRUpTRfhGA/hD8GPSq6y74TfBM4PmkgQjSeayP
+         HjZfxB5xQXHBQ==
+Date:   Wed, 23 Oct 2019 07:16:55 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>
+Subject: linux-next: Fixes tags need some work in the tip tree
+Message-ID: <20191023071655.10a9cff5@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/+6MW7=ijh5ct9W0OfKVA8aS";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Setting a memory.high limit below the usage makes almost no effort to
-shrink the cgroup to the new target size.
+--Sig_/+6MW7=ijh5ct9W0OfKVA8aS
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-While memory.high is a "soft" limit that isn't supposed to cause OOM
-situations, we should still try harder to meet a user request through
-persistent reclaim.
+Hi all,
 
-For example, after setting a 10M memory.high on an 800M cgroup full of
-file cache, the usage shrinks to about 350M:
+n commit
 
-+ cat /cgroup/workingset/memory.current
-841568256
-+ echo 10M
-+ cat /cgroup/workingset/memory.current
-355729408
+  6fee2a0be0ec ("x86/cpu/vmware: Fix platform detection VMWARE_PORT macro")
 
-This isn't exactly what the user would expect to happen. Setting the
-value a few more times eventually whittles the usage down to what we
-are asking for:
+Fixes tag
 
-+ echo 10M
-+ cat /cgroup/workingset/memory.current
-104181760
-+ echo 10M
-+ cat /cgroup/workingset/memory.current
-31801344
-+ echo 10M
-+ cat /cgroup/workingset/memory.current
-10440704
+  Fixes: b4dd4f6e3648 ("Add a header file for hypercall definitions")
 
-To improve this, add reclaim retry loops to the memory.high write()
-callback, similar to what we do for memory.max, to make a reasonable
-effort that the usage meets the requested size after the call returns.
+has these problem(s):
 
-Afterwards, a single write() to memory.high is enough in all but
-extreme cases:
+  - Subject does not match target commit subject
+    Just use
+	git log -1 --format=3D'Fixes: %h ("%s")'
 
-+ cat /cgroup/workingset/memory.current
-841609216
-+ echo 10M
-+ cat /cgroup/workingset/memory.current
-10182656
+In commit
 
-Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
----
- mm/memcontrol.c | 30 ++++++++++++++++++++++++------
- 1 file changed, 24 insertions(+), 6 deletions(-)
+  db633a4e0e6e ("x86/cpu/vmware: Use the full form of INL in VMWARE_HYPERCA=
+LL, for clang/llvm")
 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index ff90d4e7df37..8090b4c99ac7 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -6074,7 +6074,8 @@ static ssize_t memory_high_write(struct kernfs_open_file *of,
- 				 char *buf, size_t nbytes, loff_t off)
- {
- 	struct mem_cgroup *memcg = mem_cgroup_from_css(of_css(of));
--	unsigned long nr_pages;
-+	unsigned int nr_retries = MEM_CGROUP_RECLAIM_RETRIES;
-+	bool drained = false;
- 	unsigned long high;
- 	int err;
- 
-@@ -6085,12 +6086,29 @@ static ssize_t memory_high_write(struct kernfs_open_file *of,
- 
- 	memcg->high = high;
- 
--	nr_pages = page_counter_read(&memcg->memory);
--	if (nr_pages > high)
--		try_to_free_mem_cgroup_pages(memcg, nr_pages - high,
--					     GFP_KERNEL, true);
-+	for (;;) {
-+		unsigned long nr_pages = page_counter_read(&memcg->memory);
-+		unsigned long reclaimed;
-+
-+		if (nr_pages <= high)
-+			break;
-+
-+		if (signal_pending(current))
-+			break;
-+
-+		if (!drained) {
-+			drain_all_stock(memcg);
-+			drained = true;
-+			continue;
-+		}
-+
-+		reclaimed = try_to_free_mem_cgroup_pages(memcg, nr_pages - high,
-+							 GFP_KERNEL, true);
-+
-+		if (!reclaimed && !nr_retries--)
-+			break;
-+	}
- 
--	memcg_wb_domain_size_changed(memcg);
- 	return nbytes;
- }
- 
--- 
-2.23.0
+Fixes tag
 
+  Fixes: b4dd4f6e3648 ("Add a header file for hypercall definitions")
+
+has these problem(s):
+
+  - Subject does not match target commit subject
+    Just use
+	git log -1 --format=3D'Fixes: %h ("%s")'
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/+6MW7=ijh5ct9W0OfKVA8aS
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2vY7cACgkQAVBC80lX
+0GyBLgf/SzCt3mnVGNmARfCBVmWasdThc8pAwnUFCY/xay+bPvWzzgKG8G6tFcFB
+72x5pK+fl66f/8bY2iDwFKEV4ZhylkmIwis7G7vvCnuLG9lUG32guExUGyUiocH+
+2TbXJGrwq/vI3lWxywEtq5yED/EWAHNx6RcFtJf9YOmaOHI6AZLwuxjPUUh6pCSk
+ZIBOsUetHk+fcuAQkuDpxt91jguq3p7OGxa6JhfV0grh6KQuh5M+1xjC30YI7axP
+rGWIoplPAnCKdX0d48x+8Zg/lNsNc1FJpNSvZa/5tSUykz9Qi/gGjchGtMsXHOP7
+r1GfxSZWfPRQ7WOfoQlMsjpLvCDS9Q==
+=qUfs
+-----END PGP SIGNATURE-----
+
+--Sig_/+6MW7=ijh5ct9W0OfKVA8aS--
