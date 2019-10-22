@@ -2,186 +2,266 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E84CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:01:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AD7DCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:04:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3105421872
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:01:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F22202084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:04:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="Sacs5uUs"
+	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="UAfqtuBL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733057AbfJVRBS (ORCPT
+        id S1732271AbfJVRED (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 13:01:18 -0400
-Received: from mail-eopbgr720065.outbound.protection.outlook.com ([40.107.72.65]:65312
-        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730768AbfJVRBR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 13:01:17 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=V8XcNa+yjyt1MqU8sO4RME5s6YvHBd5mMmJGsWyslk6Zd+GUuYXxUsgm/H5PIWEqrKfSjcjDaiEgP8ThOy05k+wRWU8SUgLklgTAu+R6vQGMivQnVScoBF4VXaIJbNGSLF4oNsVI5dvMCcTzhcvuqFv6fj3vbS8+jBJNPDTmyskSAX8rzympsKCxsxTjrgyutPW0S2amPYjBv2HkyudpBC6iUStrwYoA3FT0ILVK7mPIo+pbsXlM+W8QpTI6REtd8XKqGOsNU+pbfjvmKWyQ5nVila6jUHrS/AqSbIo8dCAyMXXCoYogEh8uzfXEm1gIukCx9sfTxAzZIr1Ly2qbzA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WU76ojE5cyfLDJ4NzqiIRVsIPhl67djomZGnU4Ca31w=;
- b=OMMLPvE3MChqrc8Gz7ZSv50LKYuEDR0+WYGAIeuFBU3aE5fegjTsfayL6rcQXE5gF95yzrdpF0No2UJ/txye4/lxe7ByFhgsgDr+YCbeHANsqQ/Rcirg8Tyigv8+B4g9fWTtQMM5//MGmOgq0TnCnIxmzk7tg9n1VEPd3+2edPpNB4tVmhGhstK7+gHkKj70l0TO3ReJEOmsFlTuNNduFIbNpimxS40T1zVKd/MNHhjINuhJuHM4sgq8rj4nfw7m2hn+AKZgxX+CkjaANE+hcCriFUcdSDUlNGWrJ6dUQ6MvZ/vGnZ4XDLh/SzUcAvo1yczRl1vi4gVNgQn9n6vJSA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WU76ojE5cyfLDJ4NzqiIRVsIPhl67djomZGnU4Ca31w=;
- b=Sacs5uUs9cuRw21FntbXSwRqM6NOzsGN42dgxkxRwalzGoWHs5ZBVR/IEllFZ8MZKsNvQ6Z1nqPNlMFxSHA6Eez4aKYUkhSt7pcB8EKwzxcNE7XxIHSa1uRFrTHI/OpU6FepoxwhGdZrwiE05xpXEvUFW4OwYjByRmTldqrvz7g=
-Received: from BN7PR02CA0007.namprd02.prod.outlook.com (2603:10b6:408:20::20)
- by DM6PR02MB5354.namprd02.prod.outlook.com (2603:10b6:5:47::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2367.24; Tue, 22 Oct
- 2019 17:00:43 +0000
-Received: from CY1NAM02FT009.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e45::200) by BN7PR02CA0007.outlook.office365.com
- (2603:10b6:408:20::20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2347.16 via Frontend
- Transport; Tue, 22 Oct 2019 17:00:43 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- CY1NAM02FT009.mail.protection.outlook.com (10.152.75.12) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2367.14
- via Frontend Transport; Tue, 22 Oct 2019 17:00:43 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <radhey.shyam.pandey@xilinx.com>)
-        id 1iMxWU-0006Ap-Ea; Tue, 22 Oct 2019 10:00:42 -0700
-Received: from [127.0.0.1] (helo=xsj-smtp-dlp1.xlnx.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <radhey.shyam.pandey@xilinx.com>)
-        id 1iMxWP-0005GT-1M; Tue, 22 Oct 2019 10:00:37 -0700
-Received: from xsj-pvapsmtp01 (smtp.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x9MH0XNG022072;
-        Tue, 22 Oct 2019 10:00:33 -0700
-Received: from [10.140.184.180] (helo=ubuntu)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <radheys@ubuntu>)
-        id 1iMxWK-0005B3-Pg; Tue, 22 Oct 2019 10:00:33 -0700
-Received: by ubuntu (Postfix, from userid 13245)
-        id DA455101132; Tue, 22 Oct 2019 22:30:30 +0530 (IST)
-From:   Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-To:     vkoul@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        dan.j.williams@intel.com, michal.simek@xilinx.com,
-        anirudha.sarangi@xilinx.com, nick.graumann@gmail.com,
-        andrea.merello@gmail.com, appana.durga.rao@xilinx.com,
-        mcgrof@kernel.org
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-Subject: [PATCH -next 5/6] dmaengine: xilinx_dma: Extend dma_config struct to store irq routine handle
-Date:   Tue, 22 Oct 2019 22:30:21 +0530
-Message-Id: <1571763622-29281-6-git-send-email-radhey.shyam.pandey@xilinx.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1571763622-29281-1-git-send-email-radhey.shyam.pandey@xilinx.com>
-References: <1571763622-29281-1-git-send-email-radhey.shyam.pandey@xilinx.com>
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-Result: No--5.725-7.0-31-1
-X-imss-scan-details: No--5.725-7.0-31-1;No--5.725-5.0-31-1
-X-TM-AS-User-Approved-Sender: No;No
-X-TM-AS-Result-Xfilter: Match text exemption rules:No
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(396003)(39860400002)(136003)(189003)(199004)(476003)(2616005)(446003)(103686004)(50226002)(478600001)(81156014)(8936002)(81166006)(8676002)(356004)(6666004)(70206006)(70586007)(126002)(486006)(50466002)(11346002)(186003)(5660300002)(14444005)(26005)(336012)(426003)(47776003)(76176011)(6266002)(305945005)(7416002)(107886003)(4326008)(36756003)(106002)(2906002)(48376002)(16586007)(42186006)(316002)(51416003)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR02MB5354;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
+        Tue, 22 Oct 2019 13:04:03 -0400
+Received: from sonic309-25.consmr.mail.ir2.yahoo.com ([77.238.179.83]:35437
+        "EHLO sonic309-25.consmr.mail.ir2.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730727AbfJVRED (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 13:04:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1571763839; bh=VuQW1HiPC+eEHoR1PotD3z/iRiOV1eI7zvzLjw5e0oo=; h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject; b=UAfqtuBLLNotTv75UbTcW17hvLqCBIrLvGO/j4BdFj8Kf0EI8w5NR8luWJINQiLoEycz0EEbRvPPGZXt5c/nsjKxG9XEbFgDBxNMXzpwRIpMjw2QirwlWe3qCbIBNFWIvA5GnQZIkdyCfA2ekaVPdJtV+ckF8xtWkG7qPLNPHrcguE27pQmqI65TzkSfQv2tgO62MtcEMQCjIfAXPwAvEVityAbUlp3JwIptWxwUVbbMvwqUWVRh2HEffOZV27t0HCdO/jJIxTe50O+QWQBLxNeBHoQWk39qNLSFKcjpeNr1Ez5JeR0wr00Ii02c/V1SwEhuAUZEVTyoIy9EzvBNwg==
+X-YMail-OSG: tuU6hvkVM1nu8.T513hv1Ex8aMA3jddzjMb1NjjSKefhS6opMdjYX34r0DHXqlT
+ jTJhd_YJKxuPr4S2FOewJVNjNXLZ1iGT6TGERwVP9FpT5I50glbK1W.MiMcPxDgqtQIRBIUEGDkh
+ NZPqoDokoSTUf29nH7B.3UI67aWDhcITq937CI4Auq3O8epozqH.uL1nGuFYpKoyGCa82l_XU_J8
+ waNMVWjvnFGGx7ibb7Pcx7OYqI26IlTSqkxaSxiOmuHvUy7e8DghB7fOEcgsWD9q9GIhz1DBozr1
+ ZYojYOJvmA4QFpY9cfF_A6iVvQDx2ZlqvARE9_PZ3PncmauYnIgnf0a21OcnSmXhJXG1J_Nn0VXR
+ OWeICS9lOlL7yDmZWhuZhp1j9DPXUIf156EgBFVZUnMXGPd0322bevT1eECLWvo6ufJbM7g3DhKi
+ Ok8pjSXDnzAVxdLmQwtLLMsLvenn8bD.OjUNntpCW0BSQV7JCqKJp4ZNREP7cGBzEUm4foaCLTZJ
+ HreIXy6D9Ax8l3.jBV4j74Dwm2EEeFHeLmVHEJFWMvsCQUWrrCYsZQgzyQLSowUGZP0yF_iNiDRM
+ .JUzTU6UJMAUzRwhBu9A6AfN97kwRt2CQCMvcKKzKoUZ_Nd9LVYQgwiC67wLvuxniXzLGcXi30ml
+ QUpSeAc_PNJy62YSIDECWJK23xeC6Sun4voy803BqnQw_7U1Uh4crdO4EjaEWpdXLRrR_2VpXUNm
+ RDnky_XWw1hfq2adegvQVgZBkCciJCPu0C6EFt0rC4Xo6s30yufmTTbcIyz3bw6mKBbWG75JE9Sz
+ IZwEoy0GemvQMj9RHj4zpCdjsPADonRpR1B1Eohzc0I51TcWxxUXWdONc1Veom19GZVW2pYYHEmI
+ Zkz82HYPB3iZeoE4exTLwydAm_VvBROnvulwv6Eta4hWIkkakRsXa69b3bmdrRWO2Q6tnyJqsn6r
+ qEZF9Rl_PEPmrB9s0zMcrMCrttnOfRYsBivRTB1i.tL.pHvW1IBf04BeOXGrkGjSDyx6gl610ZMi
+ 4_0YVTcgcUk3NTbuTtQY5llzn2t_8J.z3bz.FSH10lM62Zod7Z2b2WT0yx8W4vZumOKlc7x6C2Jc
+ dcABN0X8y1a9EKxUiJ0lOE8BbwU97tvmxY6hHms69TNdsHubACzXzYN_xGxQVTeK0lKtzNf8ng.e
+ MXEf_4wP657bNedaychGOnbEbksH7cT0VDJXOcGuiM8APR1ZKWSh_COHGnHUSTg9TfFxR6ZrheZy
+ E9XNcbxBSUx46UcBE.Wb02Pjk2RtCI5nOW9aJhao1ncCivVvOE43Ofp.06goJXBYhEzufCqxAOG_
+ TELALH_hc6TKhZjfbbgoEI6zCDvaXuJnreQgyJEViWpLh
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic309.consmr.mail.ir2.yahoo.com with HTTP; Tue, 22 Oct 2019 17:03:59 +0000
+Received: by smtp428.mail.ir2.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 13c3d1b14e4a7c78846e956c04b720a5;
+          Tue, 22 Oct 2019 17:03:54 +0000 (UTC)
+Date:   Wed, 23 Oct 2019 01:03:47 +0800
+From:   Gao Xiang <hsiangkao@aol.com>
+To:     Pratik Shinde <pratikshinde320@gmail.com>
+Cc:     linux-erofs@lists.ozlabs.org, Gao Xiang <gaoxiang25@huawei.com>,
+        yuchao0@huawei.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH-v2] erofs: code for verifying superblock checksum of an
+ erofs image.
+Message-ID: <20191022170340.GA4641@hsiangkao-HP-ZHAN-66-Pro-G1>
+References: <20191022153956.16867-1-pratikshinde320@gmail.com>
+ <20191022163403.GA3201@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <CAGu0czRBfVa+1WPCBYP2JAYRhRBXkn20-YmVw9J3XUbCxw0cNg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 63cdd267-7f3f-412b-2891-08d757115ff0
-X-MS-TrafficTypeDiagnostic: DM6PR02MB5354:
-X-Microsoft-Antispam-PRVS: <DM6PR02MB53548A4BD99512C0389FBDAAC7680@DM6PR02MB5354.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
-X-Forefront-PRVS: 01986AE76B
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: UD9A4z2kc1lQ+EhzEl7IgGpBvMu6LJSm9Z2jheJTtL8NNliULP8MAKBrLH6HEuB5NXwaqeYsh+Z7ijR6mQw4ykpRD+UKInV7Blnhh+At22oaZbdXmD56aIAACUBeHoQNCal8XXpkMkv3Bww7ZHU/fHgCGE6MoJBagvUgkovm5m9ZYDnTZKPEPo83FtFB81uLyP5BQfaYCWqsjo6T8qmEWPMgCfi2ki/4kUywGI5cnKQQigxOvfZjk5FhclE7atAFsEONh5b3sqyQbU+jDqQrCPDUv2cw6xceZIZpo8Zejy+95qC4/ZmA2PalgiB9Yrqg5HsWMWr2VUJ4WWPwWx9l2vGWHJ9GaXbAO0dUJN2O3VcenCdoXrR6RzbjFGq0T/DFtdG1aihp3v9+qxntSfz1aZ0xrBfr1mkQdq3i/i+/hVIAfg/LzGjFcSnuyzRKvq9K
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Oct 2019 17:00:43.0428
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 63cdd267-7f3f-412b-2891-08d757115ff0
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB5354
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGu0czRBfVa+1WPCBYP2JAYRhRBXkn20-YmVw9J3XUbCxw0cNg@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Extend dma_config structure to store irq routine handle. It enables runtime
-handler selection based on xdma_ip_type and serves as preparatory patch for
-adding MCDMA IP support.
+On Tue, Oct 22, 2019 at 10:18:23PM +0530, Pratik Shinde wrote:
+> Hi Gao,
+> 
+> Understood your concern.
+> 
+> Can we do something like :
+> 
+> 1) Allocate one buf of size EROFS_BLKSIZ
+> 2) Read one page at a time into buf(memcpy) .call crc32c for it.
+> 
+> In this way we won't be writing directly into page data and will not do
+> large allocation.
+> What do you think?
 
-Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-Suggested-by: Vinod Koul <vkoul@kernel.org>
----
-Changes since RFC:
-New patch. It serve as a preparatory patch for MCDMA driver support.
----
- drivers/dma/xilinx/xilinx_dma.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+Yes, that is the right way, but the buf is only be used to calc
+the 0th block (super_block), for the rest blocks, no need to do this.
 
-diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
-index 6d45865..25042a9 100644
---- a/drivers/dma/xilinx/xilinx_dma.c
-+++ b/drivers/dma/xilinx/xilinx_dma.c
-@@ -391,6 +391,7 @@ struct xilinx_dma_config {
- 	int (*clk_init)(struct platform_device *pdev, struct clk **axi_clk,
- 			struct clk **tx_clk, struct clk **txs_clk,
- 			struct clk **rx_clk, struct clk **rxs_clk);
-+	irqreturn_t (*irq_handler)(int irq, void *data);
- };
- 
- /**
-@@ -2402,8 +2403,8 @@ static int xilinx_dma_chan_probe(struct xilinx_dma_device *xdev,
- 
- 	/* Request the interrupt */
- 	chan->irq = irq_of_parse_and_map(node, 0);
--	err = request_irq(chan->irq, xilinx_dma_irq_handler, IRQF_SHARED,
--			  "xilinx-dma-controller", chan);
-+	err = request_irq(chan->irq, xdev->dma_config->irq_handler,
-+			  IRQF_SHARED, "xilinx-dma-controller", chan);
- 	if (err) {
- 		dev_err(xdev->dev, "unable to request IRQ %d\n", chan->irq);
- 		return err;
-@@ -2497,16 +2498,19 @@ static struct dma_chan *of_dma_xilinx_xlate(struct of_phandle_args *dma_spec,
- static const struct xilinx_dma_config axidma_config = {
- 	.dmatype = XDMA_TYPE_AXIDMA,
- 	.clk_init = axidma_clk_init,
-+	.irq_handler = xilinx_dma_irq_handler,
- };
- 
- static const struct xilinx_dma_config axicdma_config = {
- 	.dmatype = XDMA_TYPE_CDMA,
- 	.clk_init = axicdma_clk_init,
-+	.irq_handler = xilinx_dma_irq_handler,
- };
- 
- static const struct xilinx_dma_config axivdma_config = {
- 	.dmatype = XDMA_TYPE_VDMA,
- 	.clk_init = axivdma_clk_init,
-+	.irq_handler = xilinx_dma_irq_handler,
- };
- 
- static const struct of_device_id xilinx_dma_of_ids[] = {
--- 
-2.7.4
+buf = kmalloc(EROFS_BLKSIZ);
+memcpy(buf, data);
+dsb->checksum = 0;
+crc = crc32c(0, buf);
+kfree(buf);
 
+for (i = 1; i < nblocks; ++i) {
+   page = get_meta_page(sb, i);
+
+   data = kmap_atomic(page);
+   crc = crc32c(crc, data);
+   kunmap_atomic(data);
+   unlock_page(page);
+   put_page(page);
+}
+...
+
+Or some better approach, but it's not ok to modify page cache directly.
+
+Thanks,
+Gao Xiang
+
+> 
+> --Pratik
+> 
+> On Tue, 22 Oct, 2019, 10:04 PM Gao Xiang, <hsiangkao@aol.com> wrote:
+> 
+> > Hi Pratik,
+> >
+> > Some comments as below...
+> >
+> > On Tue, Oct 22, 2019 at 09:09:56PM +0530, Pratik Shinde wrote:
+> > > Patch for kernel side changes of checksum feature.Used kernel's
+> > > crc32c library for calculating the checksum.
+> > >
+> > > Signed-off-by: Pratik Shinde <pratikshinde320@gmail.com>
+> > > ---
+> > >  fs/erofs/erofs_fs.h |  5 +++--
+> > >  fs/erofs/internal.h |  3 ++-
+> > >  fs/erofs/super.c    | 33 +++++++++++++++++++++++++++++++++
+> > >  3 files changed, 38 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
+> > > index b1ee565..4d8097a 100644
+> > > --- a/fs/erofs/erofs_fs.h
+> > > +++ b/fs/erofs/erofs_fs.h
+> > > @@ -17,6 +17,7 @@
+> > >   */
+> > >  #define EROFS_FEATURE_INCOMPAT_LZ4_0PADDING  0x00000001
+> > >  #define EROFS_ALL_FEATURE_INCOMPAT
+> >  EROFS_FEATURE_INCOMPAT_LZ4_0PADDING
+> > > +#define EROFS_FEATURE_COMPAT_SB_CHKSUM               0x00000001
+> > >
+> > >  /* 128-byte erofs on-disk super block */
+> > >  struct erofs_super_block {
+> > > @@ -37,8 +38,8 @@ struct erofs_super_block {
+> > >       __u8 uuid[16];          /* 128-bit uuid for volume */
+> > >       __u8 volume_name[16];   /* volume name */
+> > >       __le32 feature_incompat;
+> > > -
+> > > -     __u8 reserved2[44];
+> > > +     __le32 chksum_blocks;   /* number of blocks used for checksum */
+> > > +     __u8 reserved2[40];
+> > >  };
+> > >
+> > >  /*
+> > > diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+> > > index 544a453..cec27ca 100644
+> > > --- a/fs/erofs/internal.h
+> > > +++ b/fs/erofs/internal.h
+> > > @@ -86,7 +86,7 @@ struct erofs_sb_info {
+> > >       u8 uuid[16];                    /* 128-bit uuid for volume */
+> > >       u8 volume_name[16];             /* volume name */
+> > >       u32 feature_incompat;
+> > > -
+> > > +     u32 feature_compat;
+> > >       unsigned int mount_opt;
+> > >  };
+> > >
+> > > @@ -426,6 +426,7 @@ static inline void z_erofs_exit_zip_subsystem(void)
+> > {}
+> > >  #endif       /* !CONFIG_EROFS_FS_ZIP */
+> > >
+> > >  #define EFSCORRUPTED    EUCLEAN         /* Filesystem is corrupted */
+> > > +#define EFSBADCRC    EBADMSG         /* Bad crc found */
+> > >
+> > >  #endif       /* __EROFS_INTERNAL_H */
+> > >
+> > > diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+> > > index 0e36949..9cda72d 100644
+> > > --- a/fs/erofs/super.c
+> > > +++ b/fs/erofs/super.c
+> > > @@ -9,6 +9,7 @@
+> > >  #include <linux/statfs.h>
+> > >  #include <linux/parser.h>
+> > >  #include <linux/seq_file.h>
+> > > +#include <linux/crc32c.h>
+> > >  #include "xattr.h"
+> > >
+> > >  #define CREATE_TRACE_POINTS
+> > > @@ -46,6 +47,31 @@ void _erofs_info(struct super_block *sb, const char
+> > *function,
+> > >       va_end(args);
+> > >  }
+> > >
+> > > +static int erofs_validate_sb_chksum(struct erofs_super_block *dsb,
+> > > +                                    struct super_block *sb)
+> > > +{
+> > > +     u32 disk_chksum, nblocks, crc = 0;
+> > > +     void *kaddr;
+> > > +     struct page *page;
+> > > +     int i;
+> > > +
+> > > +     disk_chksum = le32_to_cpu(dsb->checksum);
+> > > +     nblocks = le32_to_cpu(dsb->chksum_blocks);
+> >
+> > We cannot write the page data directly since the page cache should be kept
+> > in
+> > sync with ondisk data (or for read-write fs, if it's claimed as uptodated,
+> > and
+> > it is modified later,  you should mark it dirty, and do writeback then, but
+> > that is not the erofs case.)
+> >
+> > > +     dsb->checksum = 0;
+> > > +     for (i = 0; i < nblocks; i++) {
+> > > +             page = erofs_get_meta_page(sb, i);
+> > > +             if (IS_ERR(page))
+> > > +                     return PTR_ERR(page);
+> > > +             kaddr = kmap(page);
+> >
+> > Here kmap_atomic(page) is better. what I mean is kmap_atomic() in the
+> > caller
+> > erofs_read_superblock(), it should be replaced to kmap() instead.
+> >
+> > > +             crc = crc32c(crc, kaddr, EROFS_BLKSIZ);
+> > > +             kunmap(page);
+> > > +             unlock_page(page);
+> >
+> > need
+> >                 put_page(page);
+> >
+> >
+> > I'm not sure whether I explained quite well, but this patch needs something
+> > to do. I'm now working on demonstrating new XZ algorithm and releasing
+> > erofs-utils v1.0.
+> >
+> > You can give more tries or I will help later. :-)
+> >
+> > Thanks,
+> > Gao Xiang
+> >
+> >
+> > > +     }
+> > > +     if (crc != disk_chksum)
+> > > +             return -EFSBADCRC;
+> > > +     return 0;
+> > > +}
+> > > +
+> > >  static void erofs_inode_init_once(void *ptr)
+> > >  {
+> > >       struct erofs_inode *vi = ptr;
+> > > @@ -121,6 +147,13 @@ static int erofs_read_superblock(struct super_block
+> > *sb)
+> > >               goto out;
+> > >       }
+> > >
+> > > +     if (dsb->feature_compat & EROFS_FEATURE_COMPAT_SB_CHKSUM) {
+> > > +             ret = erofs_validate_sb_chksum(dsb, sb);
+> > > +             if (ret < 0) {
+> > > +                     erofs_err(sb, "super block checksum incorrect");
+> > > +                     goto out;
+> > > +             }
+> > > +     }
+> > >       blkszbits = dsb->blkszbits;
+> > >       /* 9(512 bytes) + LOG_SECTORS_PER_BLOCK == LOG_BLOCK_SIZE */
+> > >       if (blkszbits != LOG_BLOCK_SIZE) {
+> > > --
+> > > 2.9.3
+> > >
+> >
