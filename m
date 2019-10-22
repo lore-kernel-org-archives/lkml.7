@@ -2,92 +2,111 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C65CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 19:01:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15DCCCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 19:01:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0131F21783
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 19:01:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D605C21783
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 19:01:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HDCatmX9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732873AbfJVTBb (ORCPT
+        id S1732892AbfJVTBt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 15:01:31 -0400
-Received: from dcvr.yhbt.net ([64.71.152.64]:53062 "EHLO dcvr.yhbt.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732843AbfJVTB3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 15:01:29 -0400
-Received: from localhost (dcvr.yhbt.net [127.0.0.1])
-        by dcvr.yhbt.net (Postfix) with ESMTP id A57891F4C0;
-        Tue, 22 Oct 2019 19:01:28 +0000 (UTC)
-Date:   Tue, 22 Oct 2019 19:01:27 +0000
-From:   Eric Wong <e@80x24.org>
-To:     Vegard Nossum <vegard.nossum@oracle.com>
-Cc:     Willy Tarreau <w@1wt.eu>, "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Santiago Torres Arias <santiago@nyu.edu>,
-        workflows@vger.kernel.org, Git Mailing List <git@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-Subject: Re: email as a bona fide git transport
-Message-ID: <20191022190127.GA697@dcvr>
-References: <b9fb52b8-8168-6bf0-9a72-1e6c44a281a5@oracle.com>
- <20191016111009.GE13154@1wt.eu>
- <20191016144517.giwip4yuaxtcd64g@LykOS.localdomain>
- <56664222-6c29-09dc-ef78-7b380b113c4a@oracle.com>
- <20191018161547.GG21137@mit.edu>
- <de49fe5e-85cb-9fb0-f9f4-c294d72e356c@oracle.com>
- <20191018191456.GI21137@mit.edu>
- <20191020031716.GA17475@1wt.eu>
- <1a259d8d-b3d1-b64e-07c3-ba143b42c442@oracle.com>
- <de6dd8b5-5c28-d0b2-d3fc-e72a6d643105@oracle.com>
+        Tue, 22 Oct 2019 15:01:49 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:52890 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732843AbfJVTBs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 15:01:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=d9yg4mPEtKS509d8ZBOwLQ1kbG4IoNvuY2GLoSXTaG0=; b=HDCatmX9CuB1exuEpAt6Ae7v2
+        yQy8dzbkcxVmLC+1eJhpPBu8jPsPtskVLQBVx6G2W+Dhk5lROTMwG53RD6S1id6X9FsRJVyXcf640
+        SKaX++rbm7b2SJDw7EHyL+Ar04GWnGRj9ABwh5GzF3DfKo/TVTzW7uULCvveFlFEJIfkwqccO83Ah
+        3HQ+zmG2M1v0Pnu6V1ZPWJElLLfweXvBkF9c4W65HdYFSpJBcGLB19zrBpWurIntk8sBtXVcCPswf
+        D3H5YWKOaPWX9iE144PS8zqigGJF2nLVpSEfopIoZCjCRHd50nK8mmAx4ZZcZIxWSuhClHU1Hd/+u
+        2u7RN0gtQ==;
+Received: from [2601:1c0:6280:3f0::9ef4]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iMzPg-0000Jt-Bd; Tue, 22 Oct 2019 19:01:48 +0000
+Subject: Re: [PATCH] reset: improve of_xlate documentation
+To:     Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-kernel@vger.kernel.org
+Cc:     kernel@pengutronix.de
+References: <20191022163024.17005-1-p.zabel@pengutronix.de>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <64c30c47-454d-40a3-9112-4cda26fc3e79@infradead.org>
+Date:   Tue, 22 Oct 2019 12:01:47 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
+In-Reply-To: <20191022163024.17005-1-p.zabel@pengutronix.de>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <de6dd8b5-5c28-d0b2-d3fc-e72a6d643105@oracle.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Vegard Nossum <vegard.nossum@oracle.com> wrote:
-> I sent v2 of the patches (with metadata _after_ the diff) to the git
-> list here:
+Hi,
+minor fix below:
+
+On 10/22/19 9:30 AM, Philipp Zabel wrote:
+> Mention of_reset_simple_xlate as the default if of_xlate is not set.
 > 
-> https://public-inbox.org/git/20191022114518.32055-1-vegard.nossum@oracle.com/T/#u
+> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> ---
+>  drivers/reset/core.c             | 6 ++++--
+>  include/linux/reset-controller.h | 3 ++-
+>  2 files changed, 6 insertions(+), 3 deletions(-)
 > 
-> As I wrote in there, we could already today start using
+> diff --git a/drivers/reset/core.c b/drivers/reset/core.c
+> index 660e0b07feca..3066f12f70db 100644
+> --- a/drivers/reset/core.c
+> +++ b/drivers/reset/core.c
+> @@ -77,8 +77,10 @@ static const char *rcdev_name(struct reset_controller_dev *rcdev)
+>   * @rcdev: a pointer to the reset controller device
+>   * @reset_spec: reset line specifier as found in the device tree
+>   *
+> - * This simple translation function should be used for reset controllers
+> - * with 1:1 mapping, where reset lines can be indexed by number without gaps.
+> + * This static translation function is be used by default if of_xlate in
+
+                              function is used by default
+
+> + * :c:type:`reset_controller_dev` is not set. It is useful for all reset
+> + * controllers with 1:1 mapping, where reset lines can be indexed by number
+> + * without gaps.
+>   */
+>  static int of_reset_simple_xlate(struct reset_controller_dev *rcdev,
+>  			  const struct of_phandle_args *reset_spec)
+> diff --git a/include/linux/reset-controller.h b/include/linux/reset-controller.h
+> index 984f625d5593..c53626c07e87 100644
+> --- a/include/linux/reset-controller.h
+> +++ b/include/linux/reset-controller.h
+> @@ -62,7 +62,8 @@ struct reset_control_lookup {
+>   * @of_node: corresponding device tree node as phandle target
+>   * @of_reset_n_cells: number of cells in reset line specifiers
+>   * @of_xlate: translation function to translate from specifier as found in the
+> - *            device tree to id as given to the reset control ops
+> + *            device tree to id as given to the reset control ops, defaults
+> + *            to :c:func:`of_reset_simple_xlate`.
+>   * @nr_resets: number of reset controls in this reset controller device
+>   */
+>  struct reset_controller_dev {
 > 
->    git am --message-id
-> 
-> when applying patches and this would provide something that a bot could
-> annotate with git notes pointing to lore/LKML/LWN/whatever. I think that
-> would already be a pretty nice improvement over today's situation.
-> 
-> Sadly, since the beginning of 2018, this was only used for a measly
-> ~0.14% of all non-merge commits in the kernel:
 
---message-id helps provide a concrete reference, yes.  However,
-being able to search for commit subjects in the mail archives is
-already implemented via cgit filter.  An example is here:
 
-https://80x24.org/mirrors/git.git/commit/?id=8da56a484800023a545d7a7c022473f5aa9e720f
-
-The link at "userdiff: fix some corner cases in dts regex" makes a link to:
-
-https://public-inbox.org/git/?x=t&q=%22userdiff:+fix+some+corner+cases+in+dts+regex%22
-(side note: not sure if that "x=t" to expand the whole message is good...)
-
-That link is generated by examples/cgit-commit-filter.lua in the
- public-inbox source:
-
-https://public-inbox.org/meta/1677253/s/?b=examples/cgit-commit-filter.lua
-
-My longer term plan is to be able to use the post-image blob OIDs
-from cgit to generate a search query for public-inbox such as:
-
-https://public-inbox.org/git/?q=dfpost:afc6b5b404+dfpost:072d58b69d+dfpost:4353b8220c+dfpost:333a625c70+dfpost:e187d356f6
-
-Which finds all versions of the userdiff patch posted.  But AFAIK
-there's no easy way to get at blob OIDs from cgit to a Lua filter...
+-- 
+~Randy
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
