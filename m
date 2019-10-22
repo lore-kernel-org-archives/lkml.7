@@ -2,102 +2,112 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E964CCA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:44:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF583CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:45:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C666D21783
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:44:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB03921783
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:45:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388409AbfJVMo6 (ORCPT
+        id S2388565AbfJVMp1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 08:44:58 -0400
-Received: from mga14.intel.com ([192.55.52.115]:45612 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387479AbfJVMo6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 08:44:58 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Oct 2019 05:44:57 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,327,1566889200"; 
-   d="scan'208";a="209665685"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 22 Oct 2019 05:44:54 -0700
-Received: by lahna (sSMTP sendmail emulation); Tue, 22 Oct 2019 15:44:54 +0300
-Date:   Tue, 22 Oct 2019 15:44:53 +0300
-From:   Mika Westerberg <mika.westerberg@intel.com>
-To:     Karol Herbst <kherbst@redhat.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lyude Paul <lyude@redhat.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        Linux ACPI Mailing List <linux-acpi@vger.kernel.org>
-Subject: Re: [PATCH v3] pci: prevent putting nvidia GPUs into lower device
- states on certain intel bridges
-Message-ID: <20191022124453.GK2819@lahna.fi.intel.com>
-References: <CACO55ttOJaXKWmKQQbMAQRJHLXF-VtNn58n4BZhFKYmAdfiJjA@mail.gmail.com>
- <20191016213722.GA72810@google.com>
- <CACO55tuXck7vqGVLmMBGFg6A2pr3h8koRuvvWHLNDH8XvBVxew@mail.gmail.com>
- <20191021133328.GI2819@lahna.fi.intel.com>
- <CACO55tujUZr+rKkyrkfN+wkNOJWdNEVhVc-eZ3RCXJD+G1z=7A@mail.gmail.com>
- <20191021140852.GM2819@lahna.fi.intel.com>
- <CACO55tvp6n2ahizwhc70xRJ1uTohs2ep962vwtHGQK-MkcLmsw@mail.gmail.com>
- <20191021154606.GT2819@lahna.fi.intel.com>
- <CACO55tsGhvG1qapRkdu_j7R534cFa5o=Gv2s4VZDrWUrxjBFwA@mail.gmail.com>
- <CACO55ts7hivYgN7=3bcAjWx2h8FfbR5UiKiOOExYY9m-TGRNfw@mail.gmail.com>
+        Tue, 22 Oct 2019 08:45:27 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:52905 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387479AbfJVMp1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 08:45:27 -0400
+Received: from mail-qk1-f180.google.com ([209.85.222.180]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MS3vJ-1iT6mV3syZ-00TWZZ; Tue, 22 Oct 2019 14:45:25 +0200
+Received: by mail-qk1-f180.google.com with SMTP id 4so16058417qki.6;
+        Tue, 22 Oct 2019 05:45:24 -0700 (PDT)
+X-Gm-Message-State: APjAAAVKVuXD/mdkUexILNImqeP3fGPG3tptMHWHdXkZMyDAT+s6zHJi
+        pVEP+iUo6BJn6KEc7oX66vG8mF1GzbkG1C17Mz4=
+X-Google-Smtp-Source: APXvYqyjciZdavu1JPPPe0N7rFEefMcrTxNfxfTRa9du3KMTgEVclLMbFRHL5tu6WR3npY9i8xQxY+iAtUJmsd/5bVk=
+X-Received: by 2002:a37:a755:: with SMTP id q82mr2720249qke.394.1571748323679;
+ Tue, 22 Oct 2019 05:45:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACO55ts7hivYgN7=3bcAjWx2h8FfbR5UiKiOOExYY9m-TGRNfw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20191021201550.GW26530@ZenIV.linux.org.uk> <20191021225100.17990-1-guillem@hadrons.org>
+In-Reply-To: <20191021225100.17990-1-guillem@hadrons.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 22 Oct 2019 14:45:07 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1OOz2fSgn1YMGxdL+_ZSb5Wc0sAcROfaX=xfJANKpxjQ@mail.gmail.com>
+Message-ID: <CAK8P3a1OOz2fSgn1YMGxdL+_ZSb5Wc0sAcROfaX=xfJANKpxjQ@mail.gmail.com>
+Subject: Re: [PATCH v2] aio: Fix io_pgetevents() struct __compat_aio_sigset layout
+To:     Guillem Jover <guillem@hadrons.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
+        linux-aio <linux-aio@kvack.org>, Christoph Hellwig <hch@lst.de>,
+        Jeff Moyer <jmoyer@redhat.com>,
+        Benjamin LaHaise <bcrl@kvack.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:K4GvhTjBFSXesAG7lBbAkSm70PIPiqjrBqmyNFcH+7pB132R9ZE
+ KwQOJyq0Cox+x9AFBDY2meNYRyv8ImM2SC9Ax/fmCk6bxluncYjPXRBInI1rrKDaldt01sW
+ cHEH46DBelFKALEZMkoJVEyB6f/sCjI1gCR3QyxgbVeuJewr1bpUzfD9RGJk2mUUt7bjKrN
+ fXER3Frmot4PWz9/zq2bw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:GoouX5b415s=:TVfiSSZCtk4Zy+TRdN/NQW
+ XD8VhF+Uo5QOOsBvQp7r6eNF36qGFhEOXukCdzm2+SzFdBc/l2XJ+db/CNPoKgCCsrxI17G7B
+ z7+cNib0LVI0CYX8ORwTsDl6oVKkN1RP9/2YdOcDNjNOA5Y6gGaRpE8XEXLljCfXLOsF3eOUS
+ 0wcjmE25Zw1DzlV8ljBNDw3jixM+iVdqyYyTdTKUr1Irgv1jqMKb8RoD+qchghVOEiosaxkde
+ ZFuTY4ckcCkrsfU/GWeTD79vX1Ar92kbmxm4NtSlxJ8I2nR/up4/UPiFaLcnQQ6Qh8Rl1X3Pz
+ onUMgSMLRxl5Uhw56yPDrbBKNxwLvpoDdCZ3kYJz71zgF+IL2C/f1L4HkfdVYyxyBh43hnJ89
+ MuS7RJvIj9cqdqXhGonUDLtb5M8jW4CZ141wVp/4vnMCGFak//Q5j3vuKnCQk+F76o7hzfPXR
+ NUxsH4hXcV5D25ggrTXfZQWDfrnmtFR6KHFL052bVHlcwV5vr00wna9ICMpeRUmEeRQF9smbJ
+ uaVfKsgKriSuS/abv51ifTXyXSn3Nb3fGlc+vZevgEq+4mJzistBwA6uSUBWysPPcuHrdg0y4
+ 7HWi3aBviurzW4Wm8TycLJ0/X/AbI+MHroe/GDZ1yhGhBh5fYKRLYxi+lNdUcR32DZfM8wH19
+ Lce6nSpXB7BTv9t+5Y/TWOyDSLm7Xcr9KFE/T98UTscxTa0VPjPU0oo9aMh0zgJIlIFpLNx9L
+ dG+KwMZ7Xm0KCdap4pzqEzerlueC7Urc25MrnuL6pIR3WjD+obKnbV7XNeR8PRutqjU/ZzRgq
+ +UJsI4kRfXBWoNySpMo9rD4kCHkVure9sGztl8XOJWhyuSSRKmfnY/Z8CIDmti8+U9bFclRi3
+ IajZzHFaqY+mOBWFEpAA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 11:16:14AM +0200, Karol Herbst wrote:
-> I think there is something I totally forgot about:
-> 
-> When there was never a driver bound to the GPU, and if runtime power
-> management gets enabled on that device, runtime suspend/resume works
-> as expected (I am not 100% sure on if that always works, but I will
-> recheck that).
+On Tue, Oct 22, 2019 at 12:49 AM Guillem Jover <guillem@hadrons.org> wrote:
+>
+> This type is used to pass the sigset_t from userland to the kernel,
+> but it was using the kernel native pointer type for the member
+> representing the compat userland pointer to the userland sigset_t.
+>
+> This messes up the layout, and makes the kernel eat up both the
+> userland pointer and the size into the kernel pointer, and then
+> reads garbage into the kernel sigsetsize. Which makes the sigset_t
+> size consistency check fail, and consequently the syscall always
+> returns -EINVAL.
+>
+> This breaks both libaio and strace on 32-bit userland running on 64-bit
+> kernels. And there are apparently no users in the wild of the current
+> broken layout (at least according to codesearch.debian.org and a brief
+> check over github.com search). So it looks safe to fix this directly
+> in the kernel, instead of either letting userland deal with this
+> permanently with the additional overhead or trying to make the syscall
+> infer what layout userland used, even though this is also being worked
+> around in libaio to temporarily cope with kernels that have not yet
+> been fixed.
+>
+> We use a proper compat_uptr_t instead of a compat_sigset_t pointer.
+>
+> Fixes: 7a074e96dee6 ("aio: implement io_pgetevents")
+> Signed-off-by: Guillem Jover <guillem@hadrons.org>
 
-AFAIK, if there is no driver bound to the PCI device it is left to D0
-regardless of the runtime PM state which could explain why it works in
-that case (it is never put into D3hot).
+When resending a patch that has already been reviewed, please
+add the tags you received so they get picked up into the final
+changeset as well:
 
-I looked at the acpidump you sent and there is one thing that may
-explain the differences between Windows and Linux. Not sure if you were
-aware of this already, though. The power resource PGOF() method has
-this:
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Jeff Moyer <jmoyer@redhat.com>
 
-   If (((OSYS <= 0x07D9) || ((OSYS == 0x07DF) && (_REV == 0x05)))) {
-      ...
-   }  
+Let's make sure this also gets added to stable kernels
 
-If I read it right, the later condition tries to detect Linux which
-fails nowadays but if you have acpi_rev_override in the command line (or
-the machine is listed in acpi_rev_dmi_table) this check passes and does
-some magic which is not clear to me. There is similar in PGON() side
-which is used to turn the device back on.
+Cc: <stable@vger.kernel.org> # v4.18+
 
-You can check what actually happens when _ON()/_OFF() is called by
-passing something like below to the kernel command line:
+Finally (if you like)
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
 
-  acpi.trace_debug_layer=0x80 acpi.trace_debug_level=0x10 acpi.trace_method_name=\_SB.PCI0.PEG0.PG00._ON acpi.trace_state=method
-
-(See also Documentation/firmware-guide/acpi/method-tracing.rst).
-
-Trace goes to system dmesg.
+     Arnd
