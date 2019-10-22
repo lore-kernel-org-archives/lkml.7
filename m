@@ -2,181 +2,226 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7FFECA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 23:25:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E83E5CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 23:25:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACEF9206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 23:25:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4FB92086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 23:25:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YzL3h8hg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389661AbfJVXZe (ORCPT
+        id S2389668AbfJVXZ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 19:25:34 -0400
-Received: from mga03.intel.com ([134.134.136.65]:22135 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727403AbfJVXZd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 19:25:33 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Oct 2019 16:25:33 -0700
-X-IronPort-AV: E=Sophos;i="5.68,218,1569308400"; 
-   d="scan'208";a="281447283"
-Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Oct 2019 16:25:33 -0700
-Message-ID: <2ee2a9fc42f5d0644ae8fbad3bb57fd84bd60583.camel@linux.intel.com>
-Subject: Re: [PATCH v12 3/6] mm: Introduce Reported pages
-From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     kvm@vger.kernel.org, mst@redhat.com, linux-kernel@vger.kernel.org,
-        willy@infradead.org, mhocko@kernel.org, linux-mm@kvack.org,
-        mgorman@techsingularity.net, vbabka@suse.cz,
-        yang.zhang.wz@gmail.com, nitesh@redhat.com, konrad.wilk@oracle.com,
-        david@redhat.com, pagupta@redhat.com, riel@surriel.com,
-        lcapitulino@redhat.com, dave.hansen@intel.com,
-        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
-        dan.j.williams@intel.com, osalvador@suse.de
-Date:   Tue, 22 Oct 2019 16:25:33 -0700
-In-Reply-To: <20191022160347.3559936a0a0a4389cfec455e@linux-foundation.org>
-References: <20191022221223.17338.5860.stgit@localhost.localdomain>
-         <20191022222812.17338.49450.stgit@localhost.localdomain>
-         <20191022160347.3559936a0a0a4389cfec455e@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Tue, 22 Oct 2019 19:25:56 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:53361 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727403AbfJVXZz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 19:25:55 -0400
+Received: by mail-wm1-f68.google.com with SMTP id i13so3844117wmd.3
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 16:25:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WIdjvj3kcTlPGjglhXDelm+EyQ4AXkSZ1XXSBXmy05M=;
+        b=YzL3h8hgvCV4nviJ4p9KC3zaLwubCJcDm3zcroeVzc+KXKo8KJtm9sCz+kMJfcleHe
+         3WdLR48GXsxIkjFl67gQxkAeiMer/wBUQTmup2/9k5Hqb9z+4anezjLWJBPrnrxLQcsN
+         q2lgGmEKQTMUOu5AHutq/xNE8K0f8X82cDl9DB9rhBp2YcpKmN5RQynQJiT1NrUjiEzG
+         y3NBw2iL12HXr/myUYYCEDKqUX2389LSKscBsgvg5q1zpmAOxtkQo+AilaIk/RQF178k
+         bQkoqxA3ti9eFA1nI6QgoL9EgnpS8wewMWVPrMiqP0tQRiiaixVFyqMA/L1+WAWfz7OQ
+         BK2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WIdjvj3kcTlPGjglhXDelm+EyQ4AXkSZ1XXSBXmy05M=;
+        b=R1tElACf/zQNyVK3o6o/1h/EiNyL35LDa2Pr9PE0FuiFVhl5F7b/cOX1a+sPTPl34m
+         f5UKP+S5aH1RZ2LkJmLsNQsGWUFMDtPUrGCuFYZWtpkcuol1INBbhAiYFBS0/5ISLcTN
+         +2cu7XpSGkcb4D4Fqu8SFD73mAfBVvxy0WG618tJR9Wttf6lWa9G8Z07NQlsxxA6jUhP
+         ixPyY0QyOLIopO9y3MhK+Op7nDk6pyNHvKjowwIA+ZPRHC22/3mdLN1pcoHmwZftit0u
+         /5ZFeSznGbkeazM8lqm0SQsIP4T41/JRt1UnZ9oC+HZBPiwi7DsyIJJNsw9Vwll/pwjD
+         0hEA==
+X-Gm-Message-State: APjAAAWzpFqQYMGaT/Ei0WFFt6vtIapc5Ygdw0HWYHyapy7H6soLvC2V
+        zxETBRWMI1FGQA4nKeVcxMP5CtGlGTeo7CmhAF4MeQ==
+X-Google-Smtp-Source: APXvYqwcmIc+w+oSCSoeRsn9sd5KdshyuRDokhhp19P5OCvAWODAVN35HC4A4ljeYB/Zv8kl32TfscZO5lPGHMWhVOs=
+X-Received: by 2002:a1c:2986:: with SMTP id p128mr3248874wmp.173.1571786752358;
+ Tue, 22 Oct 2019 16:25:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <CAA25o9TABY=3C+FQEg8FDyF1rim315G2hmeB1DBWJLn-wG1j0g@mail.gmail.com>
+ <CAJZ5v0gJWxLJTi7TjaRP-3aR3f4VnX1n9dRE_jxdS6e3SM46LQ@mail.gmail.com>
+ <CAA25o9TiaaKGH4ZkOa=FhZW7PdXQ592YZ4q52o-QNx=yFsR4Pw@mail.gmail.com>
+ <CAJZ5v0j7N=o0S1tSwn5DP10oAmb5oN5SsM3jWhs+ZJ2YxMEvnw@mail.gmail.com>
+ <CAA25o9Rd5x7PjFkrhWL-vqfV9uEYKA4K2K=9t1V7TY2OKX+k6g@mail.gmail.com> <CAJZ5v0jDwUi4dU5zjCWuRAYEbg63xJadE=Fdr_OY7UcU82q94w@mail.gmail.com>
+In-Reply-To: <CAJZ5v0jDwUi4dU5zjCWuRAYEbg63xJadE=Fdr_OY7UcU82q94w@mail.gmail.com>
+From:   Luigi Semenzato <semenzato@google.com>
+Date:   Tue, 22 Oct 2019 16:25:40 -0700
+Message-ID: <CAA25o9Spr=h+YHadyRBTpVciH4n-wtsPcKvM10u_RZNHYqYomg@mail.gmail.com>
+Subject: Re: is hibernation usable?
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Geoff Pike <gpike@google.com>, Bas Nowaira <bassem@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-10-22 at 16:03 -0700, Andrew Morton wrote:
-> On Tue, 22 Oct 2019 15:28:12 -0700 Alexander Duyck <alexander.duyck@gmail.com> wrote:
-> 
-> > From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> > 
-> > In order to pave the way for free page reporting in virtualized
-> > environments we will need a way to get pages out of the free lists and
-> > identify those pages after they have been returned. To accomplish this,
-> > this patch adds the concept of a Reported Buddy, which is essentially
-> > meant to just be the Uptodate flag used in conjunction with the Buddy
-> > page type.
-> > 
-> > It adds a set of pointers we shall call "reported_boundary" which
-> > represent the upper boundary between the unreported and reported pages.
-> > The general idea is that in order for a page to cross from one side of the
-> > boundary to the other it will need to verify that it went through the
-> > reporting process. Ultimately a free list has been fully processed when
-> > the boundary has been moved from the tail all they way up to occupying the
-> > first entry in the list. Without this we would have to manually walk the
-> > entire page list until we have find a page that hasn't been reported. In my
-> > testing this adds as much as 18% additional overhead which would make this
-> > unattractive as a solution.
-> > 
-> > One limitation to this approach is that it is essentially a linear search
-> > and in the case of the free lists we can have pages added to either the
-> > head or the tail of the list. In order to place limits on this we only
-> > allow pages to be added before the reported_boundary instead of adding
-> > to the tail itself. An added advantage to this approach is that we should
-> > be reducing the overall memory footprint of the guest as it will be more
-> > likely to recycle warm pages versus trying to allocate the reported pages
-> > that were likely evicted from the guest memory.
-> > 
-> > Since we will only be reporting one zone at a time we keep the boundary
-> > limited to being defined for just the zone we are currently reporting pages
-> > from. Doing this we can keep the number of additional pointers needed quite
-> > small. To flag that the boundaries are in place we use a single bit
-> > in the zone to indicate that reporting and the boundaries are active.
-> > 
-> > We store the index of the boundary pointer used to track the reported page
-> > in the page->index value. Doing this we can avoid unnecessary computation
-> > to determine the index value again. There should be no issues with this as
-> > the value is unused when the page is in the buddy allocator, and is reset
-> > as soon as the page is removed from the free list.
-> 
-> This looks like quite a lot of new code in code MM.  Hence previous
-> "how valuable is this patchset" question!
-> 
-> Some silly trivia which I noticed while perusing:
+On Tue, Oct 22, 2019 at 4:16 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+>
+> On Wed, Oct 23, 2019 at 12:53 AM Luigi Semenzato <semenzato@google.com> wrote:
+> >
+> > On Tue, Oct 22, 2019 at 3:14 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> > >
+> > > On Tue, Oct 22, 2019 at 11:26 PM Luigi Semenzato <semenzato@google.com> wrote:
+> > > >
+> > > > Thank you for the quick reply!
+> > > >
+> > > > On Tue, Oct 22, 2019 at 1:57 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> > > > >
+> > > > > On Tue, Oct 22, 2019 at 10:09 PM Luigi Semenzato <semenzato@google.com> wrote:
+> > > > > >
+> > > > > > Following a thread in linux-pm
+> > > > > > (https://marc.info/?l=linux-mm&m=157012300901871) I have some issues
+> > > > > > that may be of general interest.
+> > > > > >
+> > > > > > 1. To the best of my knowledge, Linux hibernation is guaranteed to
+> > > > > > fail if more than 1/2 of total RAM is in use (for instance, by
+> > > > > > anonymous pages).  My knowledge is based on evidence, experiments,
+> > > > > > code inspection, the thread above, and a comment in
+> > > > > > Documentation/swsusp.txt, copied here:
+> > > > >
+> > > > > So I use it on a regular basis (i.e. every day) on a system that often
+> > > > > has over 50% or RAM in use and it all works.
+> > > > >
+> > > > > I also know about other people using it on a regular basis.
+> > > > >
+> > > > > For all of these users, it is usable.
+> > > > >
+> > > > > >  "Instead, we load the image into unused memory and then atomically
+> > > > > > copy it back to it original location. This implies, of course, a
+> > > > > > maximum image size of half the amount of memory."
+> > > > >
+> > > > > That isn't right any more.  An image that is loaded during resume can,
+> > > > > in fact, be larger than 50% of RAM.  An image that is created during
+> > > > > hibernation, however, cannot.
+> > > >
+> > > > Sorry, I don't understand this.  Are you saying that, for instance,
+> > > > you can resume a 30 GB image on a 32 GB device, but that image could
+> > > > only have been created on a 64 GB device?
+> > >
+> > > Had it been possible to create images larger than 50% of memory during
+> > > hibernation, it would have been possible to load them during resume as
+> > > well.
+> > >
+> > > The resume code doesn't have a 50% of RAM limitation, the image
+> > > creation code does.
+> >
+> > Thanks a lot for the clarifications.
+> >
+> > It is possible that you and I have different definitions of "working
+> > in general".  My main issue ia that I would like image creation (i.e.
+> > entering hibernation) to work with >50% of RAM in use, and I am
+> > extrapolating that other people would like that too.  I can see that
+> > there are many uses where this is not needed though, especially if you
+> > mostly care about resume.
+>
+> Also note that you need to be precise about what ">50% of RAM in use"
+> means.  For example, AFAICS hibernation works just fine for many cases
+> in which MemFree is way below 50% of MemTotal.
 
-I'll try to answer it here.
+Yes, I agree, that's tricky to explain.  Of course here I mean the
+number of "saveable" pages, as defined in hibernate.c, and clearly
+anon pages are always saveable.
 
-My understanding is that this can be very valuable in the case where a
-host is oversubscribing guest memory. What I have seen is that memory
-overcommit can quickly cause certain workloads to take minutes versus just
-seconds depending on the speed at which memory is swapped out and in.
-
-What this patch set is providing is a form of auto-ballooning that allows
-the guest to shink its memory footprint so that it can be packed more
-tightly with other guests, especially in the case where guests are often
-inactive.
-
-> > ...
-> > 
-> > --- a/include/linux/mmzone.h
-> > +++ b/include/linux/mmzone.h
-> > @@ -470,6 +470,14 @@ struct zone {
-> >  	seqlock_t		span_seqlock;
-> >  #endif
-> >  
-> > +#ifdef CONFIG_PAGE_REPORTING
-> > +	/*
-> > +	 * Pointer to reported page tracking statistics array. The size of
-> > +	 * the array is MAX_ORDER - PAGE_REPORTING_MIN_ORDER. NULL when
-> > +	 * unused page reporting is not present.
-> > +	 */
-> > +	unsigned long		*reported_pages;
-> 
-> Dumb question.  Why not
-> 
-> 	unsigned long reported_pages[MAX_ORDER - PAGE_REPORTING_MIN_ORDER];
-
-It was mostly to avoid causing too much change to the zone structure. By
-placing it where I did I was essentially just making use of unused space
-that would have otherwise been padding. In addition, since this is only
-going to be used when in a virtualized environment we keep the size of the
-zone smaller on systems that won't be making use of page reporting.
-
-> > +#endif
-> >  	int initialized;
-> >  
-> >  	/* Write-intensive fields used from the page allocator */
-> > 
-> > ...
-> > 
-> > +#define page_is_reported(_page)	unlikely(PageReported(_page))
-> 
-> page_reported() would be more consistent.
-
-Okay, I can do that.
-
-> > ...
-> > 
-> > +static inline void
-> > +add_page_to_reported_list(struct page *page, struct zone *zone,
-> > +			  unsigned int order, unsigned int mt)
-> > +{
-> > +	/*
-> > +	 * Default to using index 0, this will be updated later if the zone
-> > +	 * is still being processed.
-> > +	 */
-> > +	page->index = 0;
-> > +
-> > +	/* flag page as reported */
-> > +	__SetPageReported(page);
-> > +
-> > +	/* update areated page accounting */
-> > +	zone->reported_pages[order - PAGE_REPORTING_MIN_ORDER]++;
-> 
-> nit.  This is an array, not a list.  The function name is a bit screwy.
-
-Yeah. Maybe I should rename this to mark_page_reported(). I think at some
-point it was updating the reported_boundary so that the page was pulled
-into the list. I gave up on that when we had to start supporting the
-boundary being pulled out from under us. The array is just for tracking
-the statistics and wasn't a consideration in the naming.
-
+> > >
+> > > > > > 2. There's no simple/general workaround.  Rafael suggested on the
+> > > > > > thread "Whatever doesn't fit into 50% of RAM needs to be swapped out
+> > > > > > before hibernation".  This is a good suggestion: I am actually close
+> > > > > > to achieving this using memcgroups, but it's a fair amount of work,
+> > > > > > and a fairly special case.  Not everybody uses memcgroups, and I don't
+> > > > > > know of other reliable ways of forcing swap from user level.
+> > > > >
+> > > > > I don't need to do anything like that.
+> > > >
+> > > > Again, I don't understand.  Why did you make that suggestion then?
+> > > >
+> > > > > hibernate_preallocate_memory() manages to free a sufficient amount of
+> > > > > memory on my system every time.
+> > > >
+> > > > Unfortunately this doesn't work for me.  I may have described a simple
+> > > > experiment: on a 4GB device, create two large processes like this:
+> > > >
+> > > > dd if=/dev/zero bs=1100M count=1 | sleep infinity &
+> > > > dd if=/dev/zero bs=1100M count=1 | sleep infinity &
+> > > >
+> > > > so that more than 50% of TotalMem is used for anonymous pages.  Then
+> > > > echo disk > /sys/power/state fails with ENOMEM.
+> > >
+> > > I guess hibernate_preallocate_memory() is not able to free enough
+> > > memory for itself in that case.
+> > >
+> > > > Is this supposed to work?
+> > >
+> > > Yes, it is, in general.
+> > >
+> > > > Maybe I am doing something wrong?
+> > > > Hibernation works before I create the dd processes.  After I force
+> > > > some of those pages to a separate swap device, hibernation works too,
+> > > > so those pages aren't mlocked or anything.
+> > >
+> > > It looks like you are doing something that is not covered by
+> > > hibernate_preallocate_memory().
+> > >
+> > > > > > 3. A feature that works only when 1/2 of total RAM can be allocated
+> > > > > > is, in my opinion, not usable, except possibly under special
+> > > > > > circumstances, such as mine. Most of the available articles and
+> > > > > > documentation do not mention this important fact (but for the excerpt
+> > > > > > I mentioned, which is not in a prominent position).
+> > > > >
+> > > > > It can be used with over 1/2 of RAM allocated and that is quite easy
+> > > > > to demonstrate.
+> > > > >
+> > > > > Honestly, I'm not sure what your problem is really.
+> > > >
+> > > > I apologize if I am doing something stupid and I should know better
+> > > > before I waste other people's time.  I have been trying to explain
+> > > > these issues as best as I can.  I have a reproducible failure.  I'll
+> > > > be happy to provide any additional detail.
+> > >
+> > > Simply put, hibernation, as implemented today, needs to allocate over
+> > > 50% of RAM (or at least as much as to be able to copy all of the
+> > > non-free pages) for image creation.  If it cannot do that, it will
+> > > fail and you know how to prevent it from allocating enough memory in a
+> > > reproducible way.  AFAICS that's a situation in which every attempt to
+> > > allocate 50% of memory for any other purpose will fail as well.
+> > >
+> > > Frankly, you are first to report this problem, so it arguably is not
+> > > common.  It looks like hibernate_preallocate_memory() may be improved
+> > > to cover that case, but then the question is how much more complicated
+> > > it will have to become for this purpose and whether or not that's
+> > > worth pursuing.
+> >
+> > Right.  I was hoping to discuss that.  Is it easier to do in the
+> > kernel what I am trying to do at user level, i.e. force swap of excess
+> > pages (possibly to a separate device or partition) so that enough
+> > pages are freed up to make hibernate_preallocate_memory always
+> > succeed?
+>
+> It should at least be possible to do that, but it's been a while since
+> I last looked at hibernate_preallocate_memory() etc.
+>
+> > I started reading the swap code, but it is entangled with
+> > page reclaim and I haven't seen a simple solution, neither do I know
+> > if there is one and how long it would take to find it, or code around
+> > it.  (However I haven't looked yet at how it works when memcgroup
+> > limits are lowered---that may give me good ideas).
