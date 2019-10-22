@@ -2,88 +2,208 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19B24CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 20:13:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38CBCCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 20:14:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E460B2184C
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 20:13:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F016F21783
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 20:14:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="Vpzqcwbm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389319AbfJVUNc (ORCPT
+        id S2389320AbfJVUOh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 16:13:32 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:46799 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389303AbfJVUNb (ORCPT
+        Tue, 22 Oct 2019 16:14:37 -0400
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:35720 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387999AbfJVUOh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 16:13:31 -0400
-Received: from mail-qt1-f174.google.com ([209.85.160.174]) by
- mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MSswA-1iRrex3uAw-00UJql for <linux-kernel@vger.kernel.org>; Tue, 22 Oct
- 2019 22:13:30 +0200
-Received: by mail-qt1-f174.google.com with SMTP id t20so28734686qtr.10
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 13:13:29 -0700 (PDT)
-X-Gm-Message-State: APjAAAX3RIKOBuArGOe92sTgorDQDiwDKyvcTa+gqLok9pHfzEZorhAw
-        pv/qrmsGq07wmQ5mkR+JBxWflQb3WUUAppTk0yw=
-X-Google-Smtp-Source: APXvYqwHws2+wdbd8O8mZBRDAI3f/vMQUkU/DX6M5bMx+/92TDs7sn5fYNiZg1DtZYJeC8Fy8qgIRm0PfsfvEwlnrmU=
-X-Received: by 2002:a0c:fde8:: with SMTP id m8mr3823785qvu.4.1571775208879;
- Tue, 22 Oct 2019 13:13:28 -0700 (PDT)
+        Tue, 22 Oct 2019 16:14:37 -0400
+Received: by mail-yb1-f194.google.com with SMTP id i6so5583720ybe.2
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 13:14:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=poorly.run; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=uWT/91UjYG+pRZcitLYG0hQ77Zt8GLqkiDgF5fsNM4I=;
+        b=Vpzqcwbm24NKQ2QXaeqLT9/Ve60BsfofS5RLmhJdZTxTjUvjY/jAw5mWfeiskCTnoh
+         GxSWZWW+83K3fdZoJxz7bgcBm/RjZYUsmcj998XrFrep4sOc0W3cKMPkmvlf5AMYSk9i
+         sx+x7Ot9QNU1Flr+6zsZw34aXN7XCMDADD2F2W+uTtkHcL/YCL2hZ914FWAfRO7+yVeM
+         VJZjXoTgNXB1OY4bo1PQDjjSGMJc7mMEDaZqRsRq9BYer+yArpitWdgE3bypKHWKYk22
+         X7h3nDHBpb51BFX9pWuieF/3BfcHQhp4bu7QF54TrhC13zI9Gev1Rq94OVslw0lAOd2o
+         n5Mw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=uWT/91UjYG+pRZcitLYG0hQ77Zt8GLqkiDgF5fsNM4I=;
+        b=HFALkd6JPFXQ8pWziO29ZfQfW0Ibkg4B8cuIhGSP4FPhzQ3aEQmpCeAP9oCb2M5O05
+         osJA+7PghcoDFR9jaucLzY9Y5ZLiIIaOu5hpKjGCTrcd1TRGLLaKp5TBDcAoKi26YxdQ
+         bd5oxlmKSo5516qynQ3sFWmXFKiaEp1xqYIxY347WIfb8/tKfe+LXE9rTqXnrXDfURX+
+         cVAd4qNmwm0nSDjI4jUn9C517ke3FXKvFwCdDp8EyDtTRotn94IcD64JxI/RpeWyUdT/
+         fca6vJnYTt3YKkSSRu9+LQqPt/BcvDb5Z2hYDHD2qo3iu28p173zbZDkx8Ry4sSZAowL
+         VXkQ==
+X-Gm-Message-State: APjAAAUY3rijMRdkdn07caobIMI8FbNBLB0OUV5M7E9jBldK7YmVyZZe
+        YClQ531ekXs1+kWX0tZeXKda3Q==
+X-Google-Smtp-Source: APXvYqy06XHilaVYrRwLLXfjBU+UN5aAupBO2I09ze4erbjNF8BXYcvlr5hw8S/sn5n/QlrJtYmJ+A==
+X-Received: by 2002:a25:77ce:: with SMTP id s197mr3799322ybc.228.1571775276083;
+        Tue, 22 Oct 2019 13:14:36 -0700 (PDT)
+Received: from localhost ([2620:0:1013:11:89c6:2139:5435:371d])
+        by smtp.gmail.com with ESMTPSA id d191sm210244ywd.71.2019.10.22.13.14.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Oct 2019 13:14:35 -0700 (PDT)
+Date:   Tue, 22 Oct 2019 16:14:35 -0400
+From:   Sean Paul <sean@poorly.run>
+To:     Lyude Paul <lyude@redhat.com>
+Cc:     dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
+        nouveau@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        Juston Li <juston.li@intel.com>,
+        Imre Deak <imre.deak@intel.com>,
+        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= 
+        <ville.syrjala@linux.intel.com>, Harry Wentland <hwentlan@amd.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Sean Paul <sean@poorly.run>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 07/14] drm/dp_mst: Don't forget to update port->input
+ in drm_dp_mst_handle_conn_stat()
+Message-ID: <20191022201435.GD212858@art_vandelay>
+References: <20191022023641.8026-1-lyude@redhat.com>
+ <20191022023641.8026-8-lyude@redhat.com>
 MIME-Version: 1.0
-References: <20191018154052.1276506-1-arnd@arndb.de> <20191018154201.1276638-30-arnd@arndb.de>
- <20191022163913.GV5554@sirena.co.uk>
-In-Reply-To: <20191022163913.GV5554@sirena.co.uk>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 22 Oct 2019 22:13:12 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a0a2EU8mKNGLNoh+fnpNU6X=qgpAv3kOGN5uXv+f63KwA@mail.gmail.com>
-Message-ID: <CAK8P3a0a2EU8mKNGLNoh+fnpNU6X=qgpAv3kOGN5uXv+f63KwA@mail.gmail.com>
-Subject: Re: [PATCH 30/46] SoC: pxa: use pdev resource for FIFO regs
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:Z7gtCbAlZJNUJ5dtscheTnGsImUi59yfxtXxsOnip7nUV+bpUQW
- 5e+n+gxjVe1MEgQ88jaJ6Ps9VZopc+E6mgXTiERvAJWNFrw9il0xmOilt6wOqDR3Q1dJKL6
- MbXjRnwZUSF0pu4JV679XLYtqkw4Q9b0J7IAQzouZeWxHuiOuoYlAaJV+olRYwAVlazRSCt
- QTRFu3YRhrSvUBlJ061+g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:DxOSmeBgJQM=:DNcJtrdP/WV/ixqJ4D7k4n
- +s7wDYln3wavlJlYMX5ujL3MRAlXj//VCEL9TqlfyNt9a2doZKhzcpaAhdQYjmBbDGcrQ55hm
- lHv26TsgvfBqK6A0Wqx2jB46rcvo0MsC1kc2PqYO4UkiWdV7Gr1b4HOFi62KOrP6QWsdAjFI4
- RFW+JWVMIuXYydNuQjNru8f2q4S/znPVNUS9tpS+3Go78i66yu/9XXgR6RkUZ9DbC7LuT+J43
- fE/ylIzVarGk9yHy1BA74qzWUGpd0yMc0cLJa4K4ne5Otw8RlR/76ErCdIHC29B/yPRjxoQFq
- 5F9B/tNu+KVT8DQ0VOUmgLBdokY3lA5yuPUAOZKtbpa8zf60PR9eJNc1qV38vIZVTl5IgxaFB
- xpRe83kfbKlwo1BTqXQx2T0L6jdd2eju6dDIDXZOhEMJIDd9B8aXJBaAskiSqPOv66Z6Yn8KF
- RewU+/Umbz1KLYYmMk/9+c/UPPJ4uQYf7uATjdS7XgSmaaClRhvGHeyOiGo/IwogFHJgvaete
- Qxe4VZ1MY4SN/qXc4VHIJvuBCal4zvraVSDYTm4uepTqJT7KBCb4WPP8TLkYE20QNz+vV8TeR
- FhkTrGThfQzMF4fq2JFJW2lknnTsr+qi/PrZFsdVhz8S9V3w76YLz3pKJQ9+hxRfq7dG8WRIN
- CMRbz73GVnjmqgUJ6jCaYnjAnkCn5yzoY1f+Cu1bcGKs5h+OWp+eXpr931v93H2We0L7uR0pW
- RvhTyC/ZP98hNaakZWGCcofY/P27eukYdcrShU33B/y2ThpU915PktxUEX+2adtptJ+spg/5m
- LffdjlFMyJXnUjdblwi1qkjmBkrHlDx6K8cuvsoVtwa/sisNe6W5yo9qySZGi2S45Q6S10Qfd
- h0SrzERdFWA6Do6BtyFQ==
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191022023641.8026-8-lyude@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 6:39 PM Mark Brown <broonie@kernel.org> wrote:
->
-> On Fri, Oct 18, 2019 at 05:41:45PM +0200, Arnd Bergmann wrote:
-> > The driver currently takes the hardwired FIFO address from
-> > a header file that we want to eliminate. Change it to use
-> > the mmio resource instead and stop including the heare.
->
-> Acked-by: Mark Brown <broonie@kernel.org>
->
-> Please submit patches using subject lines reflecting the style for the
-> subsystem, this makes it easier for people to identify relevant patches.
+On Mon, Oct 21, 2019 at 10:36:02PM -0400, Lyude Paul wrote:
+> This probably hasn't caused any problems up until now since it's
+> probably nearly impossible to encounter this in the wild, however if we
+> were to receive a connection status notification from the MST hub after
+> resume while we're in the middle of reprobing the link addresses for a
+> topology then there's a much larger chance that a port could have
+> changed from being an output port to input port (or vice versa). If we
+> forget to update this bit of information, we'll potentially ignore a
+> valid PDT change on a downstream port because we think it's an input
+> port.
+> 
+> So, make sure we read the input_port field in connection status
+> notifications in drm_dp_mst_handle_conn_stat() to prevent this from
+> happening once we've implemented suspend/resume reprobing.
+> 
+> Cc: Juston Li <juston.li@intel.com>
+> Cc: Imre Deak <imre.deak@intel.com>
+> Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
+> Cc: Harry Wentland <hwentlan@amd.com>
+> Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+> Signed-off-by: Lyude Paul <lyude@redhat.com>
+> Reviewed-by: Sean Paul <sean@poorly.run>
+> ---
+>  drivers/gpu/drm/drm_dp_mst_topology.c | 52 +++++++++++++++++++--------
+>  1 file changed, 38 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
+> index 7bf4db91ff90..c8e218b902ae 100644
+> --- a/drivers/gpu/drm/drm_dp_mst_topology.c
+> +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+> @@ -2079,18 +2079,40 @@ drm_dp_mst_handle_conn_stat(struct drm_dp_mst_branch *mstb,
+>  {
+>  	struct drm_dp_mst_topology_mgr *mgr = mstb->mgr;
+>  	struct drm_dp_mst_port *port;
+> -	int old_ddps;
+> -	bool dowork = false;
+> +	int old_ddps, ret;
+> +	u8 new_pdt;
+> +	bool dowork = false, create_connector = false;
+>  
+>  	port = drm_dp_get_port(mstb, conn_stat->port_number);
+>  	if (!port)
+>  		return;
+>  
+> -	/* Locking is only needed if the port's exposed to userspace */
+> -	if (port->connector)
+> +	if (port->connector) {
+> +		if (!port->input && conn_stat->input_port) {
+> +			/*
+> +			 * We can't remove a connector from an already exposed
+> +			 * port, so just throw the port out and make sure we
+> +			 * reprobe the link address of it's parent MSTB
+> +			 */
+> +			drm_dp_mst_topology_unlink_port(mgr, port);
+> +			mstb->link_address_sent = false;
+> +			dowork = true;
+> +			goto out;
+> +		}
+> +
+> +		/*
+> +		 * Locking is only needed if the port's exposed to userspace
+> +		 */
 
-Fixed, I guess I lost an 'A' somewhere.
+optional nit: this will still fit on one line
 
-      Arnd
+>  		drm_modeset_lock(&mgr->base.lock, NULL);
+> +	} else if (port->input && !conn_stat->input_port) {
+> +		create_connector = true;
+> +		/* Reprobe link address so we get num_sdp_streams */
+> +		mstb->link_address_sent = false;
+> +		dowork = true;
+> +	}
+>  
+>  	old_ddps = port->ddps;
+> +	port->input = conn_stat->input_port;
+>  	port->mcs = conn_stat->message_capability_status;
+>  	port->ldps = conn_stat->legacy_device_plug_status;
+>  	port->ddps = conn_stat->displayport_device_plug_status;
+> @@ -2103,21 +2125,23 @@ drm_dp_mst_handle_conn_stat(struct drm_dp_mst_branch *mstb,
+>  		}
+>  	}
+>  
+> -	if (!port->input) {
+> -		int ret = drm_dp_port_set_pdt(port,
+> -					      conn_stat->peer_device_type);
+> -		if (ret == 1) {
+> -			dowork = true;
+> -		} else if (ret < 0) {
+> -			DRM_ERROR("Failed to change PDT for port %p: %d\n",
+> -				  port, ret);
+> -			dowork = false;
+> -		}
+> +	new_pdt = port->input ? DP_PEER_DEVICE_NONE : conn_stat->peer_device_type;
+> +
+> +	ret = drm_dp_port_set_pdt(port, new_pdt);
+> +	if (ret == 1) {
+> +		dowork = true;
+> +	} else if (ret < 0) {
+> +		DRM_ERROR("Failed to change PDT for port %p: %d\n",
+> +			  port, ret);
+> +		dowork = false;
+>  	}
+>  
+>  	if (port->connector)
+>  		drm_modeset_unlock(&mgr->base.lock);
+> +	else if (create_connector)
+> +		drm_dp_mst_port_add_connector(mstb, port);
+>  
+> +out:
+>  	drm_dp_mst_topology_put_port(port);
+>  	if (dowork)
+>  		queue_work(system_long_wq, &mstb->mgr->work);
+> -- 
+> 2.21.0
+> 
+
+-- 
+Sean Paul, Software Engineer, Google / Chromium OS
