@@ -2,97 +2,164 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E94EBCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:44:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFEE0CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:45:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1268205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:44:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571759099;
-	bh=uB+iJFJC/hVIjUlk10LfhCh+hobudFQOoJDpOyooXkE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=efS3rlssBCPgXk5FlJmLvyTC9LxGixkk+limgV5oO3Ld3JQoRzcY4Bmu/6NLSZ0RL
-	 CJzwEf1sPSmPfWyGijCMBQsUqQOQclP+574yUbVl989D0R0tP6k/pxdRPROX2SWsAL
-	 kVmDs/6aiIoQ5NxZAdgahB3UYE9Bx+7otEnqmAmo=
+	by mail.kernel.org (Postfix) with ESMTP id 8BD0C205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:45:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732559AbfJVPo6 (ORCPT
+        id S1732573AbfJVPpS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 11:44:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45418 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730141AbfJVPo6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 11:44:58 -0400
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3122E2086D;
-        Tue, 22 Oct 2019 15:44:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571759097;
-        bh=uB+iJFJC/hVIjUlk10LfhCh+hobudFQOoJDpOyooXkE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=0BziVt7kpMMygCTcEdjyfaGeXgAdik+wYQr+mPhwRjhwK9RdDv/0DE2OJjmalwuN5
-         idkYV5wqN7EZdY9hmPYt88huqDJJ5U22/UyduRW2Ljhyf1ReDOIR7IbTRp6zXVG9Bm
-         GtHGa8hC2qL8mWvO+kyun5bPmCR68YLbGpLp7CLA=
-Received: by mail-qt1-f182.google.com with SMTP id m15so27521989qtq.2;
-        Tue, 22 Oct 2019 08:44:57 -0700 (PDT)
-X-Gm-Message-State: APjAAAWskgbcnJnJA+8kLVeDctG2H2vnYoB43dzzo8Hm6i/pjN/nZeuT
-        sZIrO21XrO+RD8R3nDArL/aP97kZdnNZcFqasA==
-X-Google-Smtp-Source: APXvYqyov/Zp05P18+muy5bKvbNnTx96qFTjFGR2D/vBSBLHfsdLmzsSiTpHWl1RItE1SuD/noI1iPC3qzBfZ2ox9oc=
-X-Received: by 2002:a0c:ed4f:: with SMTP id v15mr3617404qvq.136.1571759096365;
- Tue, 22 Oct 2019 08:44:56 -0700 (PDT)
-MIME-Version: 1.0
-References: <1571749873-8964-1-git-send-email-gupt21@gmail.com>
-In-Reply-To: <1571749873-8964-1-git-send-email-gupt21@gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 22 Oct 2019 10:44:44 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJ4bGgBBnX2oZ50RaVN36qPZRNS4B7_u0UyqHm30R8SbQ@mail.gmail.com>
-Message-ID: <CAL_JsqJ4bGgBBnX2oZ50RaVN36qPZRNS4B7_u0UyqHm30R8SbQ@mail.gmail.com>
-Subject: Re: [PATCH v5 2/3] dt-bindings: iio: light: add veml6030 ALS bindings
-To:     Rishi Gupta <gupt21@gmail.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>, alexios.zavras@intel.com,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 22 Oct 2019 11:45:18 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47324 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730141AbfJVPpS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 11:45:18 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id AA4ABB44E;
+        Tue, 22 Oct 2019 15:45:15 +0000 (UTC)
+Date:   Tue, 22 Oct 2019 17:45:14 +0200
+Message-ID: <s5hsgnkdbsl.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     syzbot <syzbot+0620f79a1978b1133fd7@syzkaller.appspotmail.com>
+Cc:     <alsa-devel@alsa-project.org>, <andreyknvl@google.com>,
+        <benquike@gmail.com>, <dan.carpenter@oracle.com>, <g@b4.vu>,
+        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <perex@perex.cz>, <rfontana@redhat.com>,
+        <syzkaller-bugs@googlegroups.com>, <tiwai@suse.com>,
+        <yuehaibing@huawei.com>
+Subject: Re: KASAN: slab-out-of-bounds Read in build_audio_procunit
+In-Reply-To: <000000000000df5189059580f8e9@google.com>
+References: <000000000000df5189059580f8e9@google.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 8:11 AM Rishi Gupta <gupt21@gmail.com> wrote:
->
-> This commit adds device tree bindings for veml6030 ambient
-> light sensor.
->
-> Signed-off-by: Rishi Gupta <gupt21@gmail.com>
-> ---
-> Changes in v5:
-> * None
->
-> Changes in v4:
-> * Added enum in reg property
-> * Removed maxItems from reg property
->
-> Changes in v3:
-> * None
->
-> Changes in v2:
-> * Corrected grammatical mistake from 'is' to 'are' in description of bindings
->
->  .../devicetree/bindings/iio/light/veml6030.yaml    | 62 ++++++++++++++++++++++
->  1 file changed, 62 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/light/veml6030.yaml
+On Tue, 22 Oct 2019 16:54:07 +0200,
+syzbot wrote:
+> 
+> Hello,
+> 
+> syzbot found the following crash on:
+> 
+> HEAD commit:    22be26f7 usb-fuzzer: main usb gadget fuzzer driver
+> git tree:       https://github.com/google/kasan.git usb-fuzzer
+> console output: https://syzkaller.appspot.com/x/log.txt?x=103893cf600000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=387eccb7ac68ec5
+> dashboard link: https://syzkaller.appspot.com/bug?extid=0620f79a1978b1133fd7
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16fd6a40e00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1033215f600000
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+0620f79a1978b1133fd7@syzkaller.appspotmail.com
+> 
+> usb 1-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+> usb 1-1: Product: syz
+> usb 1-1: Manufacturer: syz
+> usb 1-1: SerialNumber: syz
+> ==================================================================
+> BUG: KASAN: slab-out-of-bounds in uac_processing_unit_iProcessing
+> include/uapi/linux/usb/audio.h:429 [inline]
+> BUG: KASAN: slab-out-of-bounds in build_audio_procunit+0x1306/0x13f0
+> sound/usb/mixer.c:2436
+> Read of size 1 at addr ffff8881d537c7b7 by task kworker/0:2/101
+> 
+> CPU: 0 PID: 101 Comm: kworker/0:2 Not tainted 5.4.0-rc3+ #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine,
+> BIOS  Google 01/01/2011
+> Workqueue: usb_hub_wq hub_event
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0xca/0x13e lib/dump_stack.c:113
+>  print_address_description.constprop.0+0x36/0x50 mm/kasan/report.c:374
+>  __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:506
+>  kasan_report+0xe/0x20 mm/kasan/common.c:634
+>  uac_processing_unit_iProcessing include/uapi/linux/usb/audio.h:429 [inline]
+>  build_audio_procunit+0x1306/0x13f0 sound/usb/mixer.c:2436
+>  parse_audio_processing_unit sound/usb/mixer.c:2468 [inline]
+>  parse_audio_unit+0x17e9/0x36f0 sound/usb/mixer.c:2757
+>  snd_usb_mixer_controls+0x715/0xb90 sound/usb/mixer.c:3095
+>  snd_usb_create_mixer+0x2b5/0x1890 sound/usb/mixer.c:3445
+>  usb_audio_probe+0xc76/0x2010 sound/usb/card.c:653
+>  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
+>  really_probe+0x281/0x6d0 drivers/base/dd.c:548
+>  driver_probe_device+0x104/0x210 drivers/base/dd.c:721
+>  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
+>  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
+>  __device_attach+0x217/0x360 drivers/base/dd.c:894
+>  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
+>  device_add+0xae6/0x16f0 drivers/base/core.c:2201
+>  usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
+>  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+>  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
+>  really_probe+0x281/0x6d0 drivers/base/dd.c:548
+>  driver_probe_device+0x104/0x210 drivers/base/dd.c:721
+>  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
+>  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
+>  __device_attach+0x217/0x360 drivers/base/dd.c:894
+>  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
+>  device_add+0xae6/0x16f0 drivers/base/core.c:2201
+>  usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
+>  hub_port_connect drivers/usb/core/hub.c:5183 [inline]
+>  hub_port_connect_change drivers/usb/core/hub.c:5323 [inline]
+>  port_event drivers/usb/core/hub.c:5469 [inline]
+>  hub_event+0x1dd0/0x37e0 drivers/usb/core/hub.c:5551
+>  process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
+>  worker_thread+0x96/0xe20 kernel/workqueue.c:2415
+>  kthread+0x318/0x420 kernel/kthread.c:255
+>  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Damn, there was a silly copy&paste error in the validation code.
+The fix patch is below.  I'm going to queue this for the next pull
+request for 5.4.
+
+
+thanks,
+
+Takashi
+
+-- 8< --
+From: Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH] ALSA: usb-audio: Fix copy&paste error in the validator
+
+The recently introduced USB-audio descriptor validator had a stupid
+copy&paste error that may lead to an unexpected overlook of too short
+descriptors for processing and extension units.  It's likely the cause
+of the report triggered by syzkaller fuzzer.  Let's fix it.
+
+Fixes: 57f8770620e9 ("ALSA: usb-audio: More validations of descriptor units")
+Reported-by: syzbot+0620f79a1978b1133fd7@syzkaller.appspotmail.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+---
+ sound/usb/validate.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/sound/usb/validate.c b/sound/usb/validate.c
+index 3c8f73a0eb12..a5e584b60dcd 100644
+--- a/sound/usb/validate.c
++++ b/sound/usb/validate.c
+@@ -75,7 +75,7 @@ static bool validate_processing_unit(const void *p,
+ 
+ 	if (d->bLength < sizeof(*d))
+ 		return false;
+-	len = d->bLength < sizeof(*d) + d->bNrInPins;
++	len = sizeof(*d) + d->bNrInPins;
+ 	if (d->bLength < len)
+ 		return false;
+ 	switch (v->protocol) {
+-- 
+2.16.4
+
