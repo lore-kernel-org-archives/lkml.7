@@ -2,176 +2,160 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E6BCA9EB0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:25:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B01C0CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:31:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F1AB2084C
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:25:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DBAD214B2
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:31:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="LybOpDYC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730409AbfJVAZr (ORCPT
+        id S1730553AbfJVAbx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 20:25:47 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:34314 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728375AbfJVAZq (ORCPT
+        Mon, 21 Oct 2019 20:31:53 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:43369 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730172AbfJVAbw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 20:25:46 -0400
-Received: by mail-oi1-f194.google.com with SMTP id 83so12728481oii.1;
-        Mon, 21 Oct 2019 17:25:45 -0700 (PDT)
+        Mon, 21 Oct 2019 20:31:52 -0400
+Received: by mail-lf1-f66.google.com with SMTP id 21so2622540lft.10
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 17:31:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=h0GVt2WTy7rJoxNXkBhE5EwsIuLJIvkg3xBSTCp/DL0=;
+        b=LybOpDYCwdMtqan/8IAEiTe1HU1VkckWx3ZWV8mYQLe7Zgt30h+PDbxzKfRoufCqkH
+         0EkFoBwphjIuG0KBJWy3nWftmyth2CIbnXZnldK/vgeiQwWfj1mtUGK1rMfSdc8pMB51
+         lf7VBdYib0UpYD8xgV9SkKXFcJ1rLAk3x3XkzcEv6UT4PjcEMrs+38xKBtDDPEr4wvaN
+         nrAA2Vaw/gGZi5/X4YKB9LA2KyU558TO4p4eR/anZndtw+7ofxScQasWigX0VUym23Br
+         QmnrXFogjeYF5LcAqTgL8N2dSA/8hOsDM+71jxxz4Sq9n1e2ooqBXfN+pY0XvKsWJD0b
+         xxxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=HHE4lXB0Szbo7+fcmURF4oO9/wXTXM/IzD0XxCqkq2g=;
-        b=rN/6vj/lEinrxc/Mfeo5mp7SXSN+X/ggrU8JQsZ1J2IfR4gkRQ2crN0/9aVBwnQpYM
-         JveRIzKemg2nU/UjuZsa2qPlKG4sUyMWlAVBCeXqPXWBIL6HkRPgFkYbaJ8xs0BxW04l
-         NFbI9M1Rat5SLNn0Y4P6JHxScClw3+DrXheEP/PR0hFdCziZ3fadXSRFPi+2r4Q3Ls/D
-         4fDZ5niaUkrurgMTGnFb3DoiRZZOl+pcZccODTFYIwLFEUl0zwG6+DtCZmg8/4x1gil1
-         lK4SQVdPkmKKkZi1Jmo5HWFUBywLfuaaxWhWhu1B/g9nJEhowZELJQYyOhcLggHwgnRq
-         Qqgw==
-X-Gm-Message-State: APjAAAWkGvg12eBOXnrYKEBhf7Gf5fpnBO1kH0OsxM5R776EWL8XdGFD
-        JY6I11yAFwJ8IB0RzgXyCQDGlLiKUG8=
-X-Google-Smtp-Source: APXvYqzMFHO5z7QNMQwFtwrgXunDM5Wl8OJV77bp2QoH2FLxNHWcyp6EfARm/GZBvobc4b7zd/qAfw==
-X-Received: by 2002:aca:281a:: with SMTP id 26mr624355oix.130.1571703944859;
-        Mon, 21 Oct 2019 17:25:44 -0700 (PDT)
-Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com. [209.85.167.170])
-        by smtp.gmail.com with ESMTPSA id m50sm577448otc.80.2019.10.21.17.25.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 21 Oct 2019 17:25:44 -0700 (PDT)
-Received: by mail-oi1-f170.google.com with SMTP id d140so8383699oib.5;
-        Mon, 21 Oct 2019 17:25:44 -0700 (PDT)
-X-Received: by 2002:a54:418c:: with SMTP id 12mr648944oiy.154.1571703943863;
- Mon, 21 Oct 2019 17:25:43 -0700 (PDT)
+        bh=h0GVt2WTy7rJoxNXkBhE5EwsIuLJIvkg3xBSTCp/DL0=;
+        b=VnrjCV3SGegO/3ykYjcMadSJ32jUJ+tybY3TinpYsjAxLBrVe8Q/zhnT1L5czD7HQw
+         DlEUirLbQ4Qr7Y9f4S6O0LnJYmHOVKB+KmyDQ3m/o8vvz0pXeKIypMjVwqOyMQBzx0su
+         F0/sStM3TRrwDrRRwkVeIxSErfcMRK0RXvrPn898PZcscSM/JzhlJCZVzq82SZy76dXZ
+         JFCJyLrQVPL6Updt0ZV5G1THYVFFoUhJgJtBlp/NyfD8E+bF6f8bncusdScsZpIr14p0
+         1U1CArZv/stsu0pJovZjJyIAgcSPonJd2ZOPsnUX0V53ieUHZXNKw3wVfsLcVCWW76pj
+         CKTw==
+X-Gm-Message-State: APjAAAUZxbMv9xzukmYR0CTjpHYTpOZNM/bUUbMSRMB2UW4fQ46Q+R2I
+        BBF9tnnVErY9B9v13/ZElxXBOhfuS+btS+S2iLmW
+X-Google-Smtp-Source: APXvYqw+rC5J+Z1nzHkK5AOHTkaVF47i78jP11Oa2nYpceyzoYzjRA6z6reajMuaPiEK48mkulR0rdvsnQt6ylqdK7I=
+X-Received: by 2002:ac2:51b6:: with SMTP id f22mr16411765lfk.175.1571704309449;
+ Mon, 21 Oct 2019 17:31:49 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191021022149.37112-1-peng.ma@nxp.com> <VE1PR04MB66879FD43E7E7E8A9C157F5D8F690@VE1PR04MB6687.eurprd04.prod.outlook.com>
-In-Reply-To: <VE1PR04MB66879FD43E7E7E8A9C157F5D8F690@VE1PR04MB6687.eurprd04.prod.outlook.com>
-From:   Li Yang <leoyang.li@nxp.com>
-Date:   Mon, 21 Oct 2019 19:25:32 -0500
-X-Gmail-Original-Message-ID: <CADRPPNQgft3BP+VdwRSH=tmHEsRkPaGj7FTmmE3ZXX+H4uD4kA@mail.gmail.com>
-Message-ID: <CADRPPNQgft3BP+VdwRSH=tmHEsRkPaGj7FTmmE3ZXX+H4uD4kA@mail.gmail.com>
-Subject: Re: [V2] dmaengine: fsl-edma: Add eDMA support for QorIQ LS1028A platform
-To:     Peng Ma <peng.ma@nxp.com>, "vkoul@kernel.org" <vkoul@kernel.org>,
-        Robin Gong <yibin.gong@nxp.com>
-Cc:     "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "k.kozlowski.k@gmail.com" <k.kozlowski.k@gmail.com>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <cover.1568834524.git.rgb@redhat.com> <214163d11a75126f610bcedfad67a4d89575dc77.1568834525.git.rgb@redhat.com>
+ <20191019013904.uevmrzbmztsbhpnh@madcap2.tricolour.ca> <CAHC9VhRPygA=LsHLUqv+K=ouAiPFJ6fb2_As=OT-_zB7kGc_aQ@mail.gmail.com>
+ <20191021213824.6zti5ndxu7sqs772@madcap2.tricolour.ca> <CAHC9VhRdNXsY4neJpSoNyJoAVEoiEc2oW5kSscF99tjmoQAxFA@mail.gmail.com>
+ <20191021235734.mgcjotdqoe73e4ha@madcap2.tricolour.ca>
+In-Reply-To: <20191021235734.mgcjotdqoe73e4ha@madcap2.tricolour.ca>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Mon, 21 Oct 2019 20:31:37 -0400
+Message-ID: <CAHC9VhSiwnY-+2awxvGeO4a0NgfVkOPd8fzzBVujp=HtjskTuQ@mail.gmail.com>
+Subject: Re: [PATCH ghak90 V7 20/21] audit: add capcontid to set contid
+ outside init_user_ns
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
+        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
+        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
+        nhorman@tuxdriver.com, Dan Walsh <dwalsh@redhat.com>,
+        mpatel@redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 4:57 PM Leo Li <leoyang.li@nxp.com> wrote:
+On Mon, Oct 21, 2019 at 7:58 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> On 2019-10-21 17:43, Paul Moore wrote:
+> > On Mon, Oct 21, 2019 at 5:38 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > > On 2019-10-21 15:53, Paul Moore wrote:
+> > > > On Fri, Oct 18, 2019 at 9:39 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > > > > On 2019-09-18 21:22, Richard Guy Briggs wrote:
+> > > > > > Provide a mechanism similar to CAP_AUDIT_CONTROL to explicitly give a
+> > > > > > process in a non-init user namespace the capability to set audit
+> > > > > > container identifiers.
+> > > > > >
+> > > > > > Use audit netlink message types AUDIT_GET_CAPCONTID 1027 and
+> > > > > > AUDIT_SET_CAPCONTID 1028.  The message format includes the data
+> > > > > > structure:
+> > > > > > struct audit_capcontid_status {
+> > > > > >         pid_t   pid;
+> > > > > >         u32     enable;
+> > > > > > };
+> > > > >
+> > > > > Paul, can I get a review of the general idea here to see if you're ok
+> > > > > with this way of effectively extending CAP_AUDIT_CONTROL for the sake of
+> > > > > setting contid from beyond the init user namespace where capable() can't
+> > > > > reach and ns_capable() is meaningless for these purposes?
+> > > >
+> > > > I think my previous comment about having both the procfs and netlink
+> > > > interfaces apply here.  I don't see why we need two different APIs at
+> > > > the start; explain to me why procfs isn't sufficient.  If the argument
+> > > > is simply the desire to avoid mounting procfs in the container, how
+> > > > many container orchestrators can function today without a valid /proc?
+> > >
+> > > Ok, sorry, I meant to address that question from a previous patch
+> > > comment at the same time.
+> > >
+> > > It was raised by Eric Biederman that the proc filesystem interface for
+> > > audit had its limitations and he had suggested an audit netlink
+> > > interface made more sense.
+> >
+> > I'm sure you've got it handy, so I'm going to be lazy and ask: archive
+> > pointer to Eric's comments?  Just a heads-up, I'm really *not* a fan
+> > of using the netlink interface for this, so unless Eric presents a
+> > super compelling reason for why we shouldn't use procfs I'm inclined
+> > to stick with /proc.
 >
->
->
-> > -----Original Message-----
-> > From: Peng Ma <peng.ma@nxp.com>
-> > Sent: Sunday, October 20, 2019 9:22 PM
-> > To: vkoul@kernel.org
-> > Cc: dan.j.williams@intel.com; Leo Li <leoyang.li@nxp.com>;
-> > k.kozlowski.k@gmail.com; Fabio Estevam <fabio.estevam@nxp.com>;
-> > dmaengine@vger.kernel.org; linux-kernel@vger.kernel.org; Peng Ma
-> > <peng.ma@nxp.com>
-> > Subject: [V2] dmaengine: fsl-edma: Add eDMA support for QorIQ LS1028A
-> > platform
-> >
-> > Our platforms(such as LS1021A, LS1012A, LS1043A, LS1046A, LS1028A) with
-> > below
->
-> You only covered QorIQ SoCs, how about the situation for IMX SoCs?
->
-> > registers(CHCFG0 - CHCFG15) of eDMA as follows:
-> > *-----------------------------------------------------------*
-> > |     Offset   |      OTHERS      |           LS1028A     |
-> > |--------------|--------------------|-----------------------|
-> > |     0x0      |        CHCFG0      |           CHCFG3      |
-> > |--------------|--------------------|-----------------------|
-> > |     0x1      |        CHCFG1      |           CHCFG2      |
-> > |--------------|--------------------|-----------------------|
-> > |     0x2      |        CHCFG2      |           CHCFG1      |
-> > |--------------|--------------------|-----------------------|
-> > |     0x3      |        CHCFG3      |           CHCFG0      |
-> > |--------------|--------------------|-----------------------|
-> > |     ...      |        ......      |           ......      |
-> > |--------------|--------------------|-----------------------|
-> > |     0xC      |        CHCFG12     |           CHCFG15     |
-> > |--------------|--------------------|-----------------------|
-> > |     0xD      |        CHCFG13     |           CHCFG14     |
-> > |--------------|--------------------|-----------------------|
-> > |     0xE      |        CHCFG14     |           CHCFG13     |
-> > |--------------|--------------------|-----------------------|
-> > |     0xF      |        CHCFG15     |           CHCFG12     |
-> > *-----------------------------------------------------------*
-> >
-> > This patch is to improve edma driver to fit LS1028A platform.
-> >
-> > Signed-off-by: Peng Ma <peng.ma@nxp.com>
-> > ---
-> > Changed for V2:
-> >       - Explaining what's the "Our platforms"
-> >
-> >  drivers/dma/fsl-edma-common.c | 12 ++++++++++++
-> >  1 file changed, 12 insertions(+)
-> >
-> > diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-
-> > common.c index b1a7ca9..611186b 100644
-> > --- a/drivers/dma/fsl-edma-common.c
-> > +++ b/drivers/dma/fsl-edma-common.c
-> > @@ -7,6 +7,7 @@
-> >  #include <linux/module.h>
-> >  #include <linux/slab.h>
-> >  #include <linux/dma-mapping.h>
-> > +#include <linux/sys_soc.h>
-> >
-> >  #include "fsl-edma-common.h"
-> >
-> > @@ -42,6 +43,11 @@
-> >
-> >  #define EDMA_TCD             0x1000
-> >
-> > +static struct soc_device_attribute soc_fixup_tuning[] = {
-> > +     { .family = "QorIQ LS1028A"},
-> > +     { },
-> > +};
-> > +
-> >  static void fsl_edma_enable_request(struct fsl_edma_chan *fsl_chan)  {
-> >       struct edma_regs *regs = &fsl_chan->edma->regs; @@ -109,10
-> > +115,16 @@ void fsl_edma_chan_mux(struct fsl_edma_chan *fsl_chan,
-> >       u32 ch = fsl_chan->vchan.chan.chan_id;
-> >       void __iomem *muxaddr;
-> >       unsigned int chans_per_mux, ch_off;
-> > +     int endian_diff[4] = {3, 1, -1, -3};
-> >       u32 dmamux_nr = fsl_chan->edma->drvdata->dmamuxs;
-> >
-> >       chans_per_mux = fsl_chan->edma->n_chans / dmamux_nr;
-> >       ch_off = fsl_chan->vchan.chan.chan_id % chans_per_mux;
-> > +
-> > +     if (!fsl_chan->edma->big_endian &&
-> > +         soc_device_match(soc_fixup_tuning))
-> > +             ch_off += endian_diff[ch_off % 4];
-> > +
->
-> This probably is not the best fix now.  There is a new mux_configure32() API added but it doesn't consider endianness.  How about making it properly taken care of endianness?  And use it to set these registers?
+> It was actually a video call with Eric and Steve where that was
+> recommended, so I can't provide you with any first-hand communication
+> about it.  I'll get more details...
 
-You can ignore this comment.  The mux_configure32() seems to deal with
-a different register layout(32-bit register per CH).
+Yeah, that sort of information really needs to be on the list.
 
-Considering the register per channel is defined as 8-bit in the
-reference manual, the hardware seems to be weird to require
-byte-swapping as if the register is 32-bit.  Probably you can rename
-soc_fixup_tuning something like mux_byte_swap_quirk.
+> So, with that out of the way, could you please comment on the general
+> idea of what was intended to be the central idea of this mechanism to be
+> able to nest containers beyond the initial user namespace (knowing that
+> a /proc interface is available and the audit netlink interface isn't
+> necessary for it to work and the latter can be easily removed)?
 
->
-> >       muxaddr = fsl_chan->edma->muxbase[ch / chans_per_mux];
-> >       slot = EDMAMUX_CHCFG_SOURCE(slot);
-> >
-> > --
-> > 2.9.5
->
+I'm not entirely clear what you are asking about, are you asking why I
+care about nesting container orchestrators?  Simply put, it is not
+uncommon for the LXC/LXD folks to see nested container orchestrators,
+so I felt it was important to support that use case.  When we
+originally started this effort we probably should have done a better
+job reaching out to the LXC/LXD folks, we may have caught this
+earlier.  Regardless, we caught it, and it looks like we are on our
+way to supporting it (that's good).
+
+Are you asking why I prefer the procfs approach to setting/getting the
+audit container ID?  For one, it makes it easier for a LSM to enforce
+the audit container ID operations independent of the other audit
+control APIs.  It also provides a simpler interface for container
+orchestrators.  Both seem like desirable traits as far as I'm
+concerned.
+
+> > > The intent was to switch to the audit netlink interface for contid,
+> > > capcontid and to add the audit netlink interface for loginuid and
+> > > sessionid while deprecating the proc interface for loginuid and
+> > > sessionid.  This was alluded to in the cover letter, but not very clear,
+> > > I'm afraid.  I have patches to remove the contid and loginuid/sessionid
+> > > interfaces in another tree which is why I had forgotten to outline that
+> > > plan more explicitly in the cover letter.
+
+-- 
+paul moore
+www.paul-moore.com
