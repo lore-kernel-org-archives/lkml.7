@@ -7,127 +7,104 @@ X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D9DECA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:37:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E456BCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F10E92084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:37:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B731A20684
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:39:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="aGVHsYgn"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Zua/r/g6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731314AbfJVJg7 (ORCPT
+        id S1731402AbfJVJjb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 05:36:59 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:32801 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730247AbfJVJg7 (ORCPT
+        Tue, 22 Oct 2019 05:39:31 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:59836 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731185AbfJVJjb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 05:36:59 -0400
-Received: by mail-wr1-f65.google.com with SMTP id s1so8477248wro.0
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 02:36:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/YqXqHk50UmDNEMYXTSHPPhm4w8EIzR88JCsr5CRoHs=;
-        b=aGVHsYgnTUvSzWqxkgDanmOAat4LYpbPxLmx2ADBlcbzp7QiYvVsQnpy8U4e9sdlqk
-         r4T+Mtq7tgm0lj8K12o6lyV6AithxP6WkNF/WaL4ZRc7hWiQiKGVft9Y5ktPWjQD7bBm
-         zP/z3wGQr4utEDtjRQmJ3PwIsly2omlqgMho4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=/YqXqHk50UmDNEMYXTSHPPhm4w8EIzR88JCsr5CRoHs=;
-        b=obeiwOUoUrfohM4McgXcoYyOUdbZQr/CxMwgNh3tsNFXSQXdngGznmR+TezVr6DMO8
-         i4MTpV0vkTMOH/9RC3qe9FqYguumS6YW/WOMc/DpTA2ZHKKB6O3ZxJilrZWrTXf8z+zY
-         72+E3VCnKCTTQyojSjZ76hN1h4MsPJTCh/51DWCoTbuN+/+RyWOUAg8p2W92gLCOa0lv
-         WjimziHzrfKlLlil4fxSUkucAXb1O9m6bfM1PqiDwQVCprBwkliybQD50rPvx2zH8P6c
-         nP2MKWW3IJGoA/Y1ajTaThmJl15tuTsPCscC1GbG3RhmT/Utgwv22npCFxxDEZ0g7s/1
-         mj0g==
-X-Gm-Message-State: APjAAAVgTs2TgJNf3gpBnm9fOIbu1DKEmUoLNkOV3KzES2dPHb5wuncc
-        h0Bl/HZBsjAzH5LQ+cKrCBwCvw==
-X-Google-Smtp-Source: APXvYqx+JFyqVszkw5BCqDalJWIVq/o7Yqx3WGohJsD0fVYT2Ap02/oIbKtgTtyZt/Vvwhfl85iaeA==
-X-Received: by 2002:adf:92e7:: with SMTP id 94mr2748992wrn.199.1571737016806;
-        Tue, 22 Oct 2019 02:36:56 -0700 (PDT)
-Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
-        by smtp.gmail.com with ESMTPSA id u26sm18652968wrd.87.2019.10.22.02.36.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Oct 2019 02:36:55 -0700 (PDT)
-Date:   Tue, 22 Oct 2019 11:36:54 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     emamd001@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
-        Eric Anholt <eric@anholt.net>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/v3d: Fix memory leak in v3d_submit_cl_ioctl
-Message-ID: <20191022093654.GF11828@phenom.ffwll.local>
-Mail-Followup-To: Navid Emamdoost <navid.emamdoost@gmail.com>,
-        emamd001@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
-        Eric Anholt <eric@anholt.net>, David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20191021185250.26130-1-navid.emamdoost@gmail.com>
+        Tue, 22 Oct 2019 05:39:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=acThF1bOk9bXuRmVcW3q6i/cux2dGk4YpzGP0gYc/pc=; b=Zua/r/g6FcRHhw875UEh/xUmD
+        b/V3n7hztHkZ0XScW3lFHBsdV3dFEbEBhL3F85pSzU8IK0XIRQ/GEMedqGUcE5hOtbPu+eP8bPQuI
+        VW9jmRfjR/QDyiHImwUqXXTuOZLh5zhCicwiYWPgbbNfcrL8FOBsOd4mOq0PrOjL+7+s8CaPmR0vm
+        gJqgE7AvT6MXd3xwLVw1qHjb+hy265N14PKc6hMxHdRpy1PxvpR5r3lN/Dwt/AWe2ynW9Lh1M2D7R
+        4TYEOLNcxTySA4ni1CTLnH1obO0/YLLWd833j5ah9yvPzo9JATrk1FtcNh2Av3XxcROAyALgyAK07
+        439wjsIHA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iMqdT-0002lX-U5; Tue, 22 Oct 2019 09:39:28 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C557F300EBF;
+        Tue, 22 Oct 2019 11:38:28 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 4E8CF20977B04; Tue, 22 Oct 2019 11:39:26 +0200 (CEST)
+Date:   Tue, 22 Oct 2019 11:39:26 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     kan.liang@linux.intel.com
+Cc:     acme@kernel.org, mingo@kernel.org, linux-kernel@vger.kernel.org,
+        jolsa@kernel.org, namhyung@kernel.org, vitaly.slobodskoy@intel.com,
+        pavel.gerasimov@intel.com, ak@linux.intel.com, eranian@google.com
+Subject: Re: [PATCH V2 01/13] perf/core: Add new branch sample type for LBR
+ TOS
+Message-ID: <20191022093926.GH1800@hirez.programming.kicks-ass.net>
+References: <20191021200314.1613-1-kan.liang@linux.intel.com>
+ <20191021200314.1613-2-kan.liang@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191021185250.26130-1-navid.emamdoost@gmail.com>
-X-Operating-System: Linux phenom 5.2.0-2-amd64 
+In-Reply-To: <20191021200314.1613-2-kan.liang@linux.intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 01:52:49PM -0500, Navid Emamdoost wrote:
-> In the impelementation of v3d_submit_cl_ioctl() there are two memory
-> leaks. One is when allocation for bin fails, and the other is when bin
-> initialization fails. If kcalloc fails to allocate memory for bin then
-> render->base should be put. Also, if v3d_job_init() fails to initialize
-> bin->base then allocated memory for bin should be released.
+On Mon, Oct 21, 2019 at 01:03:02PM -0700, kan.liang@linux.intel.com wrote:
+> From: Kan Liang <kan.liang@linux.intel.com>
 > 
-> Fixes: a783a09ee76d ("drm/v3d: Refactor job management.")
-> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+> In LBR call stack mode, the depth of reconstructed LBR call stack limits
+> to the number of LBR registers. With LBR Top-of-Stack (TOS) information,
+> perf tool may stitch the stacks of two samples. The reconstructed LBR
+> call stack can break the HW limitation.
+> 
+> Add a new branch sample type to retrieve LBR TOS.
+> 
+> Only when the new branch sample type is set, the TOS information is
+> dumped into the PERF_SAMPLE_BRANCH_STACK output.
+> Perf tool should check the attr.branch_sample_type, and apply the
+> corresponding format for PERF_SAMPLE_BRANCH_STACK samples.
+> Otherwise, some user case may be broken. For example, users may parse a
+> perf.data, which include the new branch sample type, with an old version
+> perf tool (without the check). Users probably get incorrect information
+> without any warning.
+> 
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 > ---
->  drivers/gpu/drm/v3d/v3d_gem.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+>  include/linux/perf_event.h      |  4 ++++
+>  include/uapi/linux/perf_event.h | 10 +++++++++-
+>  kernel/events/core.c            | 10 ++++++++++
+>  3 files changed, 23 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/gpu/drm/v3d/v3d_gem.c b/drivers/gpu/drm/v3d/v3d_gem.c
-> index 5d80507b539b..19c092d75266 100644
-> --- a/drivers/gpu/drm/v3d/v3d_gem.c
-> +++ b/drivers/gpu/drm/v3d/v3d_gem.c
-> @@ -557,13 +557,16 @@ v3d_submit_cl_ioctl(struct drm_device *dev, void *data,
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index 61448c19a132..0cebc8ec44fa 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -972,6 +972,10 @@ struct perf_sample_data {
+>  	u64				stack_user_size;
 >  
->  	if (args->bcl_start != args->bcl_end) {
->  		bin = kcalloc(1, sizeof(*bin), GFP_KERNEL);
-> -		if (!bin)
-> +		if (!bin) {
-> +			v3d_job_put(&render->base);
+>  	u64				phys_addr;
+> +
+> +	/* PMU specific data */
+> +	u64				lbr_tos;
+> +
+>  } ____cacheline_aligned;
 
-The job isn't initialized yet, this doesn't work.
-
->  			return -ENOMEM;
-> +		}
->  
->  		ret = v3d_job_init(v3d, file_priv, &bin->base,
->  				   v3d_job_free, args->in_sync_bcl);
->  		if (ret) {
->  			v3d_job_put(&render->base);
-
-v3d_job_put will call kfree, if you chase the callchain long enough (in
-v3d_job_free). So no bug here, this would lead to a double kfree and
-crash.
--Daniel
-
-> +			kfree(bin);
->  			return ret;
->  		}
->  
-> -- 
-> 2.17.1
-> 
-
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Last time you put this in perf_branch_stack, that was a much better
+place. Can't this work now?
