@@ -2,181 +2,167 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71DBCCA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9E73CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:28:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E31A2064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:27:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72FA72064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:28:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="qYNexSVC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731511AbfJVJ1p (ORCPT
+        id S1731517AbfJVJ25 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 05:27:45 -0400
-Received: from mga14.intel.com ([192.55.52.115]:32819 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731229AbfJVJ1p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 05:27:45 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Oct 2019 02:27:43 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,326,1566889200"; 
-   d="scan'208";a="227638156"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga002.fm.intel.com with ESMTP; 22 Oct 2019 02:27:43 -0700
-Received: from [10.226.39.21] (unknown [10.226.39.21])
-        by linux.intel.com (Postfix) with ESMTP id BED79580127;
-        Tue, 22 Oct 2019 02:27:39 -0700 (PDT)
-Subject: Re: [PATCH v4 3/3] pci: intel: Add sysfs attributes to configure pcie
- link
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Andrew Murray <andrew.murray@arm.com>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lorenzo.pieralisi@arm.com, robh@kernel.org,
-        martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
-        hch@infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
-        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com
-References: <20191021171832.GA232571@google.com>
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-Message-ID: <187a1a7d-80bd-a0e9-a0d9-7fc53bff8907@linux.intel.com>
-Date:   Tue, 22 Oct 2019 17:27:38 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 22 Oct 2019 05:28:57 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:57852 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731220AbfJVJ24 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 05:28:56 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9M9SqTD172813;
+        Tue, 22 Oct 2019 09:28:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2019-08-05;
+ bh=IEUB8mW/sHD4ioGVh4YH4gw/5+AJM9/CAlr2e0ygDe4=;
+ b=qYNexSVC8HCPFoLMttIzDhUwFrCmU1DrtF8/bZwh8y1eByk7RbMT0eKLdEmPoLBtf/P1
+ /LHyjVuv8sOP4nKJWfTEwdqOE2oktsCyefSm4NyShAaVxgtsydZx7vYa3mzl47+v6WTc
+ fmCqIAJCli4lKi7EgPt8c7/yL42D8Ia5VIHPov5t1/cIYJLOo8a2e89hoxPkVLKc76Wu
+ MJ6dHi2SuC6kAZyHCCUoaufz0fno8wkwAnX0NK9yFS+NgjhojswajiL/Whuyz/itkt8g
+ /ubj5ClvsfUQPVI8Ts1slyLuwWTFICO4CZzOB9AWfldCwld8E1FvQzejnOTMw0my/Wqz jA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2vqu4qn63p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 22 Oct 2019 09:28:52 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9M9S1da168118;
+        Tue, 22 Oct 2019 09:28:48 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2vsx22bpby-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 22 Oct 2019 09:28:48 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9M9Sk5E015046;
+        Tue, 22 Oct 2019 09:28:47 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 22 Oct 2019 02:28:46 -0700
+Date:   Tue, 22 Oct 2019 12:28:39 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     kbuild@lists.01.org, Suwan Kim <suwan.kim027@gmail.com>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: drivers/usb/usbip/stub_rx.c:505 stub_recv_cmd_submit() error:
+ uninitialized symbol 'nents'.
+Message-ID: <20191022092839.GD10833@kadam>
 MIME-Version: 1.0
-In-Reply-To: <20191021171832.GA232571@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9417 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910220088
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9417 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910220088
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn Helgaas,
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   7d194c2100ad2a6dded545887d02754948ca5241
+commit: ea44d190764b4422af4d1c29eaeb9e69e353b406 usbip: Implement SG support to vhci-hcd and stub driver
+date:   7 weeks ago
 
-On 10/22/2019 1:18 AM, Bjorn Helgaas wrote:
-> On Mon, Oct 21, 2019 at 02:38:50PM +0100, Andrew Murray wrote:
->> On Mon, Oct 21, 2019 at 02:39:20PM +0800, Dilip Kota wrote:
->>> PCIe RC driver on Intel Gateway SoCs have a requirement
->>> of changing link width and speed on the fly.
-> Please add more details about why this is needed.  Since you're adding
-> sysfs files, it sounds like it's not actually the *driver* that needs
-> this; it's something in userspace?
-We have use cases to change the link speed and width on the fly.
-One is EMI check and other is power saving.
-Some battery backed applications have to switch PCIe link from higher 
-GEN to GEN1 and width to x1. During the cases like
-external power supply got disconnected or broken. Once external power 
-supply is connected then switch PCIe link to higher GEN and width.
->
-> The normal scenario is that the hardware negotiates link widths and
-> speeds without any software involvement (PCIe r5.0, sec 1.2).
->
-> If this is to work around hardware defects, we should try to do that
-> inside the kernel because we can't expect userspace to do it reliably.
->
-> As Andrew points out below, this all sounds like it should be generic
-> rather than Intel-specific.
->
->>> So add the sysfs attributes to show and store the link
->>> properties.
->>> Add the respective link resize function in pcie DesignWare
->>> framework so that Intel PCIe driver can use during link
->>> width configuration on the fly.
->>> ...
->>> +static ssize_t pcie_link_status_show(struct device *dev,
->>> +				     struct device_attribute *attr, char *buf)
->>> +{
->>> +	struct intel_pcie_port *lpp = dev_get_drvdata(dev);
->>> +	u32 reg, width, gen;
->>> +
->>> +	reg = pcie_rc_cfg_rd(lpp, PCIE_CAP_OFST + PCI_EXP_LNKCTL);
->>> +	width = FIELD_GET(PCI_EXP_LNKSTA_NLW, reg >> 16);
->>> +	gen = FIELD_GET(PCI_EXP_LNKSTA_CLS, reg >> 16);
->>> +
->>> +	if (gen > lpp->max_speed)
->>> +		return -EINVAL;
->>> +
->>> +	return sprintf(buf, "Port %2u Width x%u Speed %s GT/s\n", lpp->id,
->>> +		       width, pcie_link_gen_to_str(gen));
->>> +}
->>> +static DEVICE_ATTR_RO(pcie_link_status);
-> We already have generic current_link_speed and current_link_width
-> files.
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-Thanks for pointing it. I will remove the pcie_link_status.
+New smatch warnings:
+drivers/usb/usbip/stub_rx.c:505 stub_recv_cmd_submit() error: uninitialized symbol 'nents'.
 
-Regards,
-Dilip
+Old smatch warnings:
+drivers/usb/usbip/stub_rx.c:450 stub_recv_xbuff() error: uninitialized symbol 'ret'.
 
->
->>> +static ssize_t pcie_speed_store(struct device *dev,
->>> +				struct device_attribute *attr,
->>> +				const char *buf, size_t len)
->>> +{
->>> +	struct intel_pcie_port *lpp = dev_get_drvdata(dev);
->>> +	unsigned long val;
->>> +	int ret;
->>> +
->>> +	ret = kstrtoul(buf, 10, &val);
->>> +	if (ret)
->>> +		return ret;
->>> +
->>> +	if (val > lpp->max_speed)
->>> +		return -EINVAL;
->>> +
->>> +	lpp->link_gen = val;
->>> +	intel_pcie_max_speed_setup(lpp);
->>> +	dw_pcie_link_speed_change(&lpp->pci, false);
->>> +	dw_pcie_link_speed_change(&lpp->pci, true);
->>> +
->>> +	return len;
->>> +}
->>> +static DEVICE_ATTR_WO(pcie_speed);
->>> +
->>> +/*
->>> + * Link width change on the fly is not always successful.
->>> + * It also depends on the partner.
->>> + */
->>> +static ssize_t pcie_width_store(struct device *dev,
->>> +				struct device_attribute *attr,
->>> +				const char *buf, size_t len)
->>> +{
->>> +	struct intel_pcie_port *lpp = dev_get_drvdata(dev);
->>> +	unsigned long val;
->>> +	int ret;
->>> +
->>> +	lpp = dev_get_drvdata(dev);
->>> +
->>> +	ret = kstrtoul(buf, 10, &val);
->>> +	if (ret)
->>> +		return ret;
->>> +
->>> +	if (val > lpp->max_width)
->>> +		return -EINVAL;
->>> +
->>> +	/* HW auto bandwidth negotiation must be enabled */
->>> +	pcie_rc_cfg_wr_mask(lpp, PCI_EXP_LNKCTL_HAWD, 0,
->>> +			    PCIE_CAP_OFST + PCI_EXP_LNKCTL);
->>> +	dw_pcie_link_width_resize(&lpp->pci, val);
->>> +
->>> +	return len;
->>> +}
->>> +static DEVICE_ATTR_WO(pcie_width);
->>> +
->>> +static struct attribute *pcie_cfg_attrs[] = {
->>> +	&dev_attr_pcie_link_status.attr,
->>> +	&dev_attr_pcie_speed.attr,
->>> +	&dev_attr_pcie_width.attr,
->>> +	NULL,
->>> +};
->> Is there a reason that these are limited only to the Intel driver and
->> not the wider set of DWC drivers?
->>
->> Is there anything specific here about the Intel GW driver?
+# https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=ea44d190764b4422af4d1c29eaeb9e69e353b406
+git remote add linus https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+git remote update linus
+git checkout ea44d190764b4422af4d1c29eaeb9e69e353b406
+vim +/nents +505 drivers/usb/usbip/stub_rx.c
+
+4d7b5c7f8ad49b drivers/staging/usbip/stub_rx.c Takahiro Hirofuchi 2008-07-09  453  static void stub_recv_cmd_submit(struct stub_device *sdev,
+4d7b5c7f8ad49b drivers/staging/usbip/stub_rx.c Takahiro Hirofuchi 2008-07-09  454  				 struct usbip_header *pdu)
+4d7b5c7f8ad49b drivers/staging/usbip/stub_rx.c Takahiro Hirofuchi 2008-07-09  455  {
+4d7b5c7f8ad49b drivers/staging/usbip/stub_rx.c Takahiro Hirofuchi 2008-07-09  456  	struct stub_priv *priv;
+4d7b5c7f8ad49b drivers/staging/usbip/stub_rx.c Takahiro Hirofuchi 2008-07-09  457  	struct usbip_device *ud = &sdev->ud;
+2d8f4595d1f275 drivers/staging/usbip/stub_rx.c Max Vozeler        2011-01-12  458  	struct usb_device *udev = sdev->udev;
+ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  459  	struct scatterlist *sgl = NULL, *sg;
+ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  460  	void *buffer = NULL;
+ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  461  	unsigned long long buf_len;
+ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  462  	int nents;
+ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  463  	int num_urbs = 1;
+c6688ef9f29762 drivers/usb/usbip/stub_rx.c     Shuah Khan         2017-12-07  464  	int pipe = get_pipe(sdev, pdu);
+ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  465  	int use_sg = pdu->u.cmd_submit.transfer_flags & URB_DMA_MAP_SG;
+ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  466  	int support_sg = 1;
+ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  467  	int np = 0;
+ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  468  	int ret, i;
+4d7b5c7f8ad49b drivers/staging/usbip/stub_rx.c Takahiro Hirofuchi 2008-07-09  469  
+635f545a7e8be7 drivers/usb/usbip/stub_rx.c     Shuah Khan         2017-12-07  470  	if (pipe == -1)
+635f545a7e8be7 drivers/usb/usbip/stub_rx.c     Shuah Khan         2017-12-07  471  		return;
+4d7b5c7f8ad49b drivers/staging/usbip/stub_rx.c Takahiro Hirofuchi 2008-07-09  472  
+4d7b5c7f8ad49b drivers/staging/usbip/stub_rx.c Takahiro Hirofuchi 2008-07-09  473  	priv = stub_priv_alloc(sdev, pdu);
+4d7b5c7f8ad49b drivers/staging/usbip/stub_rx.c Takahiro Hirofuchi 2008-07-09  474  	if (!priv)
+4d7b5c7f8ad49b drivers/staging/usbip/stub_rx.c Takahiro Hirofuchi 2008-07-09  475  		return;
+4d7b5c7f8ad49b drivers/staging/usbip/stub_rx.c Takahiro Hirofuchi 2008-07-09  476  
+ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  477  	buf_len = (unsigned long long)pdu->u.cmd_submit.transfer_buffer_length;
+ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  478  
+ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  479  	/* allocate urb transfer buffer, if needed */
+ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  480  	if (buf_len) {
+ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  481  		if (use_sg) {
+ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  482  			sgl = sgl_alloc(buf_len, GFP_KERNEL, &nents);
+ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  483  			if (!sgl)
+ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  484  				goto err_malloc;
+ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  485  		} else {
+ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  486  			buffer = kzalloc(buf_len, GFP_KERNEL);
+ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  487  			if (!buffer)
+ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  488  				goto err_malloc;
+ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  489  		}
+ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  490  	}
+ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  491  
+ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  492  	/* Check if the server's HCD supports SG */
+ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  493  	if (use_sg && !udev->bus->sg_tablesize) {
+
+Smatch thinks "use_sg" can be true when "buf_len" is zero.  It's hard
+to tell if Smatch is right or wrong without more context...
+
+ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  494  		/*
+ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  495  		 * If the server's HCD doesn't support SG, break a single SG
+ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  496  		 * request into several URBs and map each SG list entry to
+ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  497  		 * corresponding URB buffer. The previously allocated SG
+ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  498  		 * list is stored in priv->sgl (If the server's HCD support SG,
+ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  499  		 * SG list is stored only in urb->sg) and it is used as an
+ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  500  		 * indicator that the server split single SG request into
+ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  501  		 * several URBs. Later, priv->sgl is used by stub_complete() and
+ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  502  		 * stub_send_ret_submit() to reassemble the divied URBs.
+ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  503  		 */
+ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  504  		support_sg = 0;
+ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28 @505  		num_urbs = nents;
+                                                                                                ^^^^^^^^^^^^^^^^
+
+ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  506  		priv->completed_urbs = 0;
+ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  507  		pdu->u.cmd_submit.transfer_flags &= ~URB_DMA_MAP_SG;
+ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  508  	}
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
