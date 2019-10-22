@@ -2,402 +2,148 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA206CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:48:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCC5DCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:50:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 656C62089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:48:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1B1920B7C
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:50:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MIw3OCAW"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A4iePABc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731571AbfJVJsp (ORCPT
+        id S1731578AbfJVJuN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 05:48:45 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:52565 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730312AbfJVJso (ORCPT
+        Tue, 22 Oct 2019 05:50:13 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:43377 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728182AbfJVJuN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 05:48:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571737722;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=PRAOR12JaNY9es9Bx8VnFx8au7NL5fQbM+PyXwndRGQ=;
-        b=MIw3OCAW78vuZhHQ7TvF+bQrvNxohPM5ATAbajhBKs+BCo+aIbubJF95qVjUnmLOHHTnGs
-        nJfpLXSIBJTqqgm3gnixCwcfJRZALCjiv/21s9lmy7mDC44+YMYKDotL+/Tw740cuDAUHQ
-        J2Lfuok3Q68YdXMR1GVTQWoOj7V7+Rs=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-12-J0BsqCP4Pf-RQrr61MY72g-1; Tue, 22 Oct 2019 05:48:41 -0400
-Received: by mail-qk1-f197.google.com with SMTP id x186so16166873qke.13
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 02:48:41 -0700 (PDT)
+        Tue, 22 Oct 2019 05:50:13 -0400
+Received: by mail-qt1-f193.google.com with SMTP id t20so25783798qtr.10
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 02:50:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=1pKTrX81FhdzAfIki4jUWvnUPfKP+6v9OO8kScydDF0=;
+        b=A4iePABcqcKzW0Jsx5m5AuKZlAYa/yCwYHjVO5w/VDutR632E6Lxz/yo0TVuKP8dPF
+         nf6uiFsM5iWThy3GN4b6JHCH0xniroAcuHBbfuf7/UJQtyaPfsmakkjB/WmNZPbKQQZN
+         T1iJgdv2oUgVVgC76UZ05it3fi+1CzGIYHL89j64831ipJPQUJEZPg78Ljs9VL27MZF5
+         7liZANuqi3hgFnNCFta6CTX8DmXmQ5qCZTxXUz8xXA81UzZvbHIlvJbUbnnIJDfjslPg
+         +ZsOefVGxqCLhEYQDCjT9xCdaYG7QVveloxCD90BJpBz+iR+dn2oewAjKRV+ijQngvXw
+         wPQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9pP78e8PS7VCP+PGqOJvtb2re0XLv7PavFO0GY0t0YU=;
-        b=J1ayG7KKNyWcnxWYMPJBU1bOkKPSowAK9Cm8niqv+An5GZJCW+Lq+F27kQte/X8Eu2
-         1R6Xo5k7KBiO6sNKfMsxSntrAqLSuO/b6fu58nN7VGr/88P1b9P6rlm/jY+ly6i69J+m
-         iOlZQWrA0nqBHB23h93Ux6hW08m1OrXH+u2bFUL6oOQQXxRFtDLZhC+ArP3II3iTbF+B
-         IGSkOOOev5DEyNmqA1yl+4sm6igFgOUeatPW+dpOe74StoiDGumMv182Gv/a/RX81NGY
-         vj0BtblwnZYaUvycu6eqXFrhYZGrPycG5wLAumdLw1r0aBnUnd2gRf48xwRmzkUvEGLQ
-         ZoGA==
-X-Gm-Message-State: APjAAAVv+bIIyMlBNDDqPR7I3lYF6w3KsDpwD6SFB6X69JlR3ci9HYZM
-        1LyO45FIMFSJHV7gx95eDjGE1Q44OYynD5HGfK56KU4g4CzUzfUfPUCamYDqGRknVXCNScBDrqt
-        5g4vl46aANne6BcQYPkJOjIOUQ3ag85iiX70pGUvX
-X-Received: by 2002:ac8:75ca:: with SMTP id z10mr806337qtq.260.1571737720793;
-        Tue, 22 Oct 2019 02:48:40 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwgKioRJF0ivUW1HRKd99+gzOt+WW91+HkZO766Vx5SNrosMazF7uNAc8t3J0HkIJgikuVs7aKdhL5dqYHdOH0=
-X-Received: by 2002:ac8:75ca:: with SMTP id z10mr806310qtq.260.1571737720392;
- Tue, 22 Oct 2019 02:48:40 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=1pKTrX81FhdzAfIki4jUWvnUPfKP+6v9OO8kScydDF0=;
+        b=MA2CgYw+4HhSihoRv5WVv+bB3dvHWziyowvIuGaNAtHZoz5Iv6s2lmkl9r0wZjjc4v
+         jM3tu2TMbHVuvrEbAWkZglcQI7FK25audWxV0Qmj+xwL15RXrvbiLsXTENJYT1IXIl7/
+         FqoSeKUbNDyxBvNgziC+g4kN+w1OCyTSmjBpsVG4qBOStImYC2qG46Ai6yWd8bKzDeDg
+         G9zbW5d1ZcakgHlo24IH5KImq52341L0IGdt2+vZycoGiDEV1UZRxw84020Nzc3i+rBU
+         qeYNhx/V18qshJD89YhAa7TaxixKfHcKaJSAy0A8vqVlGBxU6tgxKnRrVvLwA9XeHIN5
+         1X6Q==
+X-Gm-Message-State: APjAAAW32ExKr3tJSJ0naexb6ygkUiF3tC3DcZALRQx4BxOqjYlCLSRj
+        s5Yw99buEyfhHGfwXLn2mh4BitN/F4uDujvNb85Dhw==
+X-Google-Smtp-Source: APXvYqxx6IMMU/KLJpBeqdNZyGovtZ15fbtBGOuH42hcGgm4DSwsIdzP0uePjQ4jb5Y/93B74xMZ6fQvpLRfKqhI1qs=
+X-Received: by 2002:ac8:2ccc:: with SMTP id 12mr2396870qtx.49.1571737811081;
+ Tue, 22 Oct 2019 02:50:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191021073819.18181-1-candlesea@gmail.com> <CAPnx3XP2MrEZT+BAzW3-Ve9ekzvPzcj6wvzeC8VRHhCyo59XpQ@mail.gmail.com>
-In-Reply-To: <CAPnx3XP2MrEZT+BAzW3-Ve9ekzvPzcj6wvzeC8VRHhCyo59XpQ@mail.gmail.com>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Tue, 22 Oct 2019 11:48:28 +0200
-Message-ID: <CAO-hwJ+ObCH_NPJd=Uy5uuVCpGzO7+iCSWnwPkoVt9H+8NHahA@mail.gmail.com>
-Subject: Re: [PATCH v3] HID: core: check whether usage page item is after
- usage id item
-To:     Candle Sun <candlesea@gmail.com>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        =?UTF-8?B?57+f5LqsIChPcnNvbiBaaGFpKQ==?= <orson.zhai@unisoc.com>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Candle Sun <candle.sun@unisoc.com>,
-        Nianfu Bai <nianfu.bai@unisoc.com>
-X-MC-Unique: J0BsqCP4Pf-RQrr61MY72g-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
+References: <20191022102334.67e5d3d1@canb.auug.org.au>
+In-Reply-To: <20191022102334.67e5d3d1@canb.auug.org.au>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Tue, 22 Oct 2019 15:20:00 +0530
+Message-ID: <CAP245DXChLoSUkj49FrYq4HVkcP2pS8=qamWDDUNOg7aygDwpA@mail.gmail.com>
+Subject: Re: linux-next: build warning after merge of the thermal tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Candle,
+(Resending since Gmail mobile client converts email to HTML)
 
-On Mon, Oct 21, 2019 at 9:54 AM Candle Sun <candlesea@gmail.com> wrote:
+Hi Stephen,
+
+On Tue, Oct 22, 2019 at 4:53 AM Stephen Rothwell <sfr@canb.auug.org.au> wro=
+te:
 >
-> Hi,
+> Hi all,
 >
+> After merging the thermal tree, today's linux-next build (x86_64
+> allmodconfig) produced this warning:
 >
-> On Mon, Oct 21, 2019 at 3:38 PM Candle Sun <candlesea@gmail.com> wrote:
-> >
-> > From: Candle Sun <candle.sun@unisoc.com>
-> >
-> > Upstream commit 58e75155009c ("HID: core: move Usage Page concatenation
-> > to Main item") adds support for Usage Page item after Usage ID items
-> > (such as keyboards manufactured by Primax).
-> >
-> > Usage Page concatenation in Main item works well for following report
-> > descriptor patterns:
-> >
-> >     USAGE_PAGE (Keyboard)                   05 07
-> >     USAGE_MINIMUM (Keyboard LeftControl)    19 E0
-> >     USAGE_MAXIMUM (Keyboard Right GUI)      29 E7
-> >     LOGICAL_MINIMUM (0)                     15 00
-> >     LOGICAL_MAXIMUM (1)                     25 01
-> >     REPORT_SIZE (1)                         75 01
-> >     REPORT_COUNT (8)                        95 08
-> >     INPUT (Data,Var,Abs)                    81 02
-> >
-> > -------------
-> >
-> >     USAGE_MINIMUM (Keyboard LeftControl)    19 E0
-> >     USAGE_MAXIMUM (Keyboard Right GUI)      29 E7
-> >     LOGICAL_MINIMUM (0)                     15 00
-> >     LOGICAL_MAXIMUM (1)                     25 01
-> >     REPORT_SIZE (1)                         75 01
-> >     REPORT_COUNT (8)                        95 08
-> >     USAGE_PAGE (Keyboard)                   05 07
-> >     INPUT (Data,Var,Abs)                    81 02
-> >
-> > But it makes the parser act wrong for the following report
-> > descriptor pattern(such as some Gamepads):
-> >
-> >     USAGE_PAGE (Button)                     05 09
-> >     USAGE (Button 1)                        09 01
-> >     USAGE (Button 2)                        09 02
-> >     USAGE (Button 4)                        09 04
-> >     USAGE (Button 5)                        09 05
-> >     USAGE (Button 7)                        09 07
-> >     USAGE (Button 8)                        09 08
-> >     USAGE (Button 14)                       09 0E
-> >     USAGE (Button 15)                       09 0F
-> >     USAGE (Button 13)                       09 0D
-> >     USAGE_PAGE (Consumer Devices)           05 0C
-> >     USAGE (Back)                            0a 24 02
-> >     USAGE (HomePage)                        0a 23 02
-> >     LOGICAL_MINIMUM (0)                     15 00
-> >     LOGICAL_MAXIMUM (1)                     25 01
-> >     REPORT_SIZE (1)                         75 01
-> >     REPORT_COUNT (11)                       95 0B
-> >     INPUT (Data,Var,Abs)                    81 02
-> >
-> > With Usage Page concatenation in Main item, parser recognizes all the
-> > 11 Usages as consumer keys, it is not the HID device's real intention.
-> >
-> > This patch adds usage_page_last to flag whether Usage Page is after
-> > Usage ID items. usage_page_last is false default, it is set as true
-> > once Usage Page item is encountered and is reverted by next Usage ID
-> > item.
-> >
-> > Usage Page concatenation on the currently defined Usage Page will do
-> > firstly in Local parsing when Usage ID items encountered.
-> >
-> > When Main item is parsing, concatenation will do again with last
-> > defined Usage Page if usage_page_last flag is true.
-> >
-> > Signed-off-by: Candle Sun <candle.sun@unisoc.com>
-> > Signed-off-by: Nianfu Bai <nianfu.bai@unisoc.com>
-> > ---
-> > Changes in v3:
-> > - Rework the GET_COMPLETE_USAGE macro as static complete_usage()
-> >   function
-> > - Add some code comments for usage_page_last
-> >
-> > Changes in v2:
-> > - Update patch title
-> > - Add GET_COMPLETE_USAGE macro
-> > - Change the logic of checking whether to concatenate usage page again
-> >   in main parsing
-> > ---
-> >  drivers/hid/hid-core.c | 42 +++++++++++++++++++++++++++++++++++++-----
-> >  include/linux/hid.h    |  1 +
-> >  2 files changed, 38 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
-> > index 3eaee2c37931..779b7798dae8 100644
-> > --- a/drivers/hid/hid-core.c
-> > +++ b/drivers/hid/hid-core.c
-> > @@ -211,6 +211,18 @@ static unsigned hid_lookup_collection(struct hid_p=
-arser *parser, unsigned type)
-> >         return 0; /* we know nothing about this usage type */
-> >  }
-> >
-> > +/*
-> > + * Concatenate usage which defines 16 bits or less with the
-> > + * currently defined usage page to form a 32 bit usage
-> > + */
-> > +
-> > +static void complete_usage(struct hid_parser *parser, unsigned int ind=
-ex)
-> > +{
-> > +       parser->local.usage[index] &=3D 0xFFFF;
-> > +       parser->local.usage[index] |=3D
-> > +               (parser->global.usage_page & 0xFFFF) << 16;
-> > +}
-> > +
-> >  /*
-> >   * Add a usage to the temporary parser table.
-> >   */
-> > @@ -221,7 +233,18 @@ static int hid_add_usage(struct hid_parser *parser=
-, unsigned usage, u8 size)
-> >                 hid_err(parser->device, "usage index exceeded\n");
-> >                 return -1;
-> >         }
-> > -       parser->local.usage[parser->local.usage_index] =3D usage;
-
-This broke my CI, and it turns out that installing the patch on an
-actual laptop, the touchpad, touchscreen were not present, nor any HID
-devices plugged in.
-
-Basically, complete_usage() doesn't append the usage, and now we are
-never assigning a usage to any field.
-
-> > +
-> > +       /*
-> > +        * If Usage item only includes usage id, concatenate it with
-> > +        * currently defined usage page and clear usage_page_last flag
-> > +        */
-> > +       if (size <=3D 2) {
-> > +               parser->local.usage_page_last =3D false;
-> > +               complete_usage(parser, parser->local.usage_index);
-> > +       } else {
-> > +               parser->local.usage[parser->local.usage_index] =3D usag=
-e;
-> > +       }
-> > +
-> >         parser->local.usage_size[parser->local.usage_index] =3D size;
-> >         parser->local.collection_index[parser->local.usage_index] =3D
-> >                 parser->collection_stack_ptr ?
-> > @@ -366,6 +389,8 @@ static int hid_parser_global(struct hid_parser *par=
-ser, struct hid_item *item)
-> >
-> >         case HID_GLOBAL_ITEM_TAG_USAGE_PAGE:
-> >                 parser->global.usage_page =3D item_udata(item);
-> > +               /* Regard Usage Page is after Usage ID items */
-> > +               parser->local.usage_page_last =3D true;
-> >                 return 0;
-> >
-> >         case HID_GLOBAL_ITEM_TAG_LOGICAL_MINIMUM:
-> > @@ -543,13 +568,20 @@ static int hid_parser_local(struct hid_parser *pa=
-rser, struct hid_item *item)
-> >   * usage value."
-> >   */
-> >
-> > -static void hid_concatenate_usage_page(struct hid_parser *parser)
-> > +static void hid_concatenate_last_usage_page(struct hid_parser *parser)
-> >  {
-> >         int i;
-> >
-> > +       /*
-> > +        * Concatenate usage page again only on detecting some Usage Pa=
-ge
-> > +        * is really after Usage ID items
-> > +        */
-> > +       if (!parser->local.usage_page_last)
-> > +               return;
-> > +
-> >         for (i =3D 0; i < parser->local.usage_index; i++)
-> >                 if (parser->local.usage_size[i] <=3D 2)
-> > -                       parser->local.usage[i] +=3D parser->global.usag=
-e_page << 16;
-> > +                       complete_usage(parser, i);
-> >  }
-> >
-> >  /*
-> > @@ -561,7 +593,7 @@ static int hid_parser_main(struct hid_parser *parse=
-r, struct hid_item *item)
-> >         __u32 data;
-> >         int ret;
-> >
-> > -       hid_concatenate_usage_page(parser);
-> > +       hid_concatenate_last_usage_page(parser);
-> >
-> >         data =3D item_udata(item);
-> >
-> > @@ -772,7 +804,7 @@ static int hid_scan_main(struct hid_parser *parser,=
- struct hid_item *item)
-> >         __u32 data;
-> >         int i;
-> >
-> > -       hid_concatenate_usage_page(parser);
-> > +       hid_concatenate_last_usage_page(parser);
-> >
-> >         data =3D item_udata(item);
-> >
-> > diff --git a/include/linux/hid.h b/include/linux/hid.h
-> > index cd41f209043f..2e0ea2f7ec5c 100644
-> > --- a/include/linux/hid.h
-> > +++ b/include/linux/hid.h
-> > @@ -412,6 +412,7 @@ struct hid_local {
-> >         unsigned usage_minimum;
-> >         unsigned delimiter_depth;
-> >         unsigned delimiter_branch;
-> > +       bool usage_page_last;      /* whether usage page is after usage=
- id */
-> >  };
-> >
+> In file included from drivers/thermal/qcom/tsens-common.c:13:
+> drivers/thermal/qcom/tsens-common.c: In function 'tsens_set_interrupt':
+> include/linux/regmap.h:87:2: warning: 'index' may be used uninitialized i=
+n this function [-Wmaybe-uninitialized]
+>    87 |  regmap_field_update_bits_base(field, ~0, val, NULL, false, false=
+)
+>       |  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/thermal/qcom/tsens-common.c:183:6: note: 'index' was declared her=
+e
+>   183 |  u32 index;
+>       |      ^~~~~
+> In file included from drivers/thermal/qcom/tsens-common.c:13:
+> include/linux/regmap.h:87:2: warning: 'index_clear' may be used uninitial=
+ized in this function [-Wmaybe-uninitialized]
+>    87 |  regmap_field_update_bits_base(field, ~0, val, NULL, false, false=
+)
+>       |  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/thermal/qcom/tsens-common.c:199:18: note: 'index_clear' was decla=
+red here
+>   199 |  u32 index_mask, index_clear;
+>       |                  ^~~~~~~~~~~
+> drivers/thermal/qcom/tsens-common.c:199:6: warning: 'index_mask' may be u=
+sed uninitialized in this function [-Wmaybe-uninitialized]
+>   199 |  u32 index_mask, index_clear;
+>       |      ^~~~~~~~~~
 >
-> Hi Benjamin,
-> Here I still use the usage_page_last flag, not using following method
-> you provided in v2:
+> Introduced by commit
 >
-> if ((parser->local.usage[parser->local.usage_index - 1] &
-> HID_USAGE_PAGE) >> 16 =3D=3D usage_page)
->               return 0;
+>   fbfe1a042cfd ("drivers: thermal: tsens: Add interrupt support")
 >
-> Because last usage maybe one Extended Usage, some logic for checking
-> it should be added.
-> It will make the code obscure. Using one more member in struct
-> hid_local is straightforward
-> and maybe better.
 
 
-Still not convinced by this. Please see below for a less intrusive
-patch, which is also shorter.
+What compiler version do you use? Any additional flags to make? I'm
+not seeing this, even with W=3D1.
 
----
-diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
-index 63fdbf09b044..00ea04fb1be3 100644
---- a/drivers/hid/hid-core.c
-+++ b/drivers/hid/hid-core.c
-@@ -211,6 +211,18 @@ static unsigned hid_lookup_collection(struct
-hid_parser *parser, unsigned type)
-     return 0; /* we know nothing about this usage type */
- }
-
-+/*
-+ * Concatenate usage which defines 16 bits or less with the
-+ * currently defined usage page to form a 32 bit usage
-+ */
-+
-+static void complete_usage(struct hid_parser *parser, unsigned int index)
-+{
-+    parser->local.usage[index] &=3D 0xFFFF;
-+    parser->local.usage[index] |=3D
-+        (parser->global.usage_page & 0xFFFF) << 16;
-+}
-+
- /*
-  * Add a usage to the temporary parser table.
-  */
-@@ -222,6 +234,14 @@ static int hid_add_usage(struct hid_parser
-*parser, unsigned usage, u8 size)
-         return -1;
-     }
-     parser->local.usage[parser->local.usage_index] =3D usage;
-+
-+    /*
-+     * If Usage item only includes usage id, concatenate it with
-+     * currently defined usage page
-+     */
-+    if (size <=3D 2)
-+        complete_usage(parser, parser->local.usage_index);
-+
-     parser->local.usage_size[parser->local.usage_index] =3D size;
-     parser->local.collection_index[parser->local.usage_index] =3D
-         parser->collection_stack_ptr ?
-@@ -546,10 +566,28 @@ static int hid_parser_local(struct hid_parser
-*parser, struct hid_item *item)
- static void hid_concatenate_usage_page(struct hid_parser *parser)
- {
-     int i;
-+    uint16_t usage_page, current_page;
-
--    for (i =3D 0; i < parser->local.usage_index; i++)
--        if (parser->local.usage_size[i] <=3D 2)
--            parser->local.usage[i] +=3D parser->global.usage_page << 16;
-+    if (!parser->local.usage_index)
-+        return;
-+
-+    usage_page =3D parser->global.usage_page;
-+
-+    /*
-+     * Concatenate usage page again only if the last declared Usage Page
-+     * has not been already used in the previous Usages
-+     */
-+    for (i =3D parser->local.usage_index - 1; i >=3D 0; i--) {
-+        if (parser->local.usage_size[i] > 2)
-+            /* ignore extended usages */
-+            continue;
-+
-+        current_page =3D parser->local.usage[i] >> 16;
-+        if (current_page =3D=3D usage_page)
-+            break;
-+
-+        complete_usage(parser, i);
-+    }
- }
-
- /*
----
-
-Isn't that better?
-
-I tested this against
-https://gitlab.freedesktop.org/libevdev/hid-tools/merge_requests/58,
-which you kindly submitted and it seems to do the job.
-
-Cheers,
-Benjamin
-
+$ make -k -j`nproc` O=3D~/work/builds/build-x86/ allmodconfig
+$ touch drivers/thermal/qcom/*
+=E2=94=80=E2=94=80=E2=80=A2 amit@matterhorn =E2=80=A2=E2=94=80=E2=94=80=E2=
+=94=80(~/.../sources/linux-amit.git) $ make -k
+-j`nproc` O=3D~/work/builds/build-x86/
+make[1]: Entering directory '/home/amit/work/builds/build-x86'
+  GEN     Makefile
+scripts/kconfig/conf  --syncconfig Kconfig
+  GEN     Makefile
+  DESCEND  objtool
+  CALL    /home/amit/work/sources/linux-amit.git/scripts/atomic/check-atomi=
+cs.sh
+  CALL    /home/amit/work/sources/linux-amit.git/scripts/checksyscalls.sh
+  CHK     include/generated/compile.h
+  CHK     kernel/kheaders_data.tar.xz
+  CC [M]  drivers/thermal/qcom/tsens.o
+  CC [M]  drivers/thermal/qcom/tsens-common.o
+  CC [M]  drivers/thermal/qcom/tsens-v0_1.o
+  CC [M]  drivers/thermal/qcom/tsens-8960.o
+  CC [M]  drivers/thermal/qcom/tsens-v2.o
+  CC [M]  drivers/thermal/qcom/tsens-v1.o
+  CC [M]  drivers/thermal/qcom/qcom-spmi-temp-alarm.o
+  LD [M]  drivers/thermal/qcom/qcom_tsens.o
+  Building modules, stage 2.
+  MODPOST 7437 modules
+Kernel: arch/x86/boot/bzImage is ready  (#3)
+  LD [M]  drivers/thermal/qcom/qcom-spmi-temp-alarm.ko
+  LD [M]  drivers/thermal/qcom/qcom_tsens.ko
+make[1]: Leaving directory '/home/amit/work/builds/build-x86'
