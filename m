@@ -2,132 +2,74 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBC5BCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:11:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1885ECA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:12:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C33B221906
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:11:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Za4hspMt"
+	by mail.kernel.org (Postfix) with ESMTP id E9A1B2184C
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:12:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389218AbfJVNLj (ORCPT
+        id S1732025AbfJVNMd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 09:11:39 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:42316 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732020AbfJVNLi (ORCPT
+        Tue, 22 Oct 2019 09:12:33 -0400
+Received: from imap1.codethink.co.uk ([176.9.8.82]:56112 "EHLO
+        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731754AbfJVNMc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 09:11:38 -0400
-Received: by mail-pf1-f194.google.com with SMTP id q12so10629507pff.9;
-        Tue, 22 Oct 2019 06:11:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=MN/TNI8bhievwfVsfEYoH9ojxY2lOhIiY1YrA76NRdk=;
-        b=Za4hspMtXw5UpWM+KsWuknJr9/56jY0+KReCafnA8AELw0CGxDEx98aMmyRQ6phQYk
-         Z+QukVcjtJIEIW8OQ6HsiqNUwmSU2XDlYHTHn4mMD6YSAJ1FcKrl54uvcg045eGFvg6L
-         Yi+YKryT2cjOhYnB3oOoR95h9cdAZjv8Q83/dqXoJg/SooHgLYEzd5sCSbOLhSgkW58z
-         3EF087HDEPqk6mIPZHbVh8TGepNISLXrNKRklKbN8U28Mk7/KxSvBTMf2K/fuTwtDQuJ
-         65QWXeW4lF7Bfy7IrGiu4Ul871Y8BgIn7xQImfYKVqdFxQ71A63TvaXJzNsSurl9Gbwm
-         2n3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=MN/TNI8bhievwfVsfEYoH9ojxY2lOhIiY1YrA76NRdk=;
-        b=HubBW9BqrsXhjUHHaHqG3wdOvTNAj3HmUQQvfsKZ0kyszWkBsotATIP2mc//OpBidV
-         fN3Famzjpc4NcGKOs6YrXSkUncB4IDZw51Q2wweZoxofQdMoM3kf8lHslvOt1DWuUJPd
-         dC1O4tJ5QxhUruiW1spYCG2ricI5D9LbIKPnxtpghUVNR/ckfCpy6XZb+CYX6SgTeJk2
-         Uu3FdsQftI1MOnXotkaUM+H5bnwgsboKTR5RnIBWtQEkIZq5283YpiTdLjvK74EzsHSX
-         FC/DlzQvbOROnrGIWnriigDlRyps8pTysz28yZJVS7rvPx+RB6v/39id8t6htOdauLPi
-         Nn0A==
-X-Gm-Message-State: APjAAAUgvFDpjhQOv7TE1sP4RAB29+gchHL/1YLk4sml+5x3PcsspHOh
-        AsckxucWJWzTL9YaepomTjn+AK0yi0w=
-X-Google-Smtp-Source: APXvYqxQHwjAgvoTXTtrpwmDoo+sYvTfZpw9uCVDFoLmkhVrfxkFUDbvAq3zIhUfoGd+Zi/ElDFZEw==
-X-Received: by 2002:a17:90a:9104:: with SMTP id k4mr4592526pjo.39.1571749897780;
-        Tue, 22 Oct 2019 06:11:37 -0700 (PDT)
-Received: from localhost.localdomain ([106.51.109.161])
-        by smtp.gmail.com with ESMTPSA id q2sm28407845pfg.144.2019.10.22.06.11.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 22 Oct 2019 06:11:37 -0700 (PDT)
-From:   Rishi Gupta <gupt21@gmail.com>
-To:     jic23@kernel.org
-Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        gregkh@linuxfoundation.org, tglx@linutronix.de,
-        allison@lohutok.net, alexios.zavras@intel.com, angus@akkea.ca,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rishi Gupta <gupt21@gmail.com>
-Subject: [PATCH v5 3/3] iio: documentation: light: Add veml6030 sysfs documentation
-Date:   Tue, 22 Oct 2019 18:41:27 +0530
-Message-Id: <1571749887-9054-1-git-send-email-gupt21@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 22 Oct 2019 09:12:32 -0400
+Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
+        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
+        id 1iMtxb-0002pr-ON; Tue, 22 Oct 2019 14:12:27 +0100
+Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.3)
+        (envelope-from <ben@rainbowdash.codethink.co.uk>)
+        id 1iMtxa-0002zo-Uj; Tue, 22 Oct 2019 14:12:26 +0100
+From:   "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
+To:     linux-kernel@lists.codethink.co.uk
+Cc:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] timers/sched_clock: include local timekeeping.h for missing declarations
+Date:   Tue, 22 Oct 2019 14:12:26 +0100
+Message-Id: <20191022131226.11465-1-ben.dooks@codethink.co.uk>
+X-Mailer: git-send-email 2.23.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver for veml6030 light sensor provides sysfs
-entries like configuring cutoff for interrupt. This
-commit document them.
+Include the timekeeping.h header to get the declaration of the
+sched_clock_{suspend,resume} functions. Fixes the following
+sparse warnings:
 
-Signed-off-by: Rishi Gupta <gupt21@gmail.com>
+kernel/time/sched_clock.c:275:5: warning: symbol 'sched_clock_suspend' was not declared. Should it be static?
+kernel/time/sched_clock.c:286:6: warning: symbol 'sched_clock_resume' was not declared. Should it be static?
+
+Signed-off-by: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
 ---
-Changes in v5:
-* Use ABI/testing/sysfs-bus-iio to document sysfs files for veml6030
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-kernel@vger.kernel.org
+---
+ kernel/time/sched_clock.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Changes in v4:
-* None
-
-Changes in v3:
-* Updated Date from September to October
-* Updated KernelVersion from 5.3.1 to 5.4
-* in_illuminance_period_available is now in events directory
-
-Changes in v2:
-* None
-
- Documentation/ABI/testing/sysfs-bus-iio | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
-index 6804516..a26d532 100644
---- a/Documentation/ABI/testing/sysfs-bus-iio
-+++ b/Documentation/ABI/testing/sysfs-bus-iio
-@@ -753,6 +753,8 @@ What:		/sys/.../events/in_illuminance0_thresh_falling_value
- what:		/sys/.../events/in_illuminance0_thresh_rising_value
- what:		/sys/.../events/in_proximity0_thresh_falling_value
- what:		/sys/.../events/in_proximity0_thresh_rising_value
-+What:		/sys/.../events/in_illuminance_thresh_rising_value
-+What:		/sys/.../events/in_illuminance_thresh_falling_value
- KernelVersion:	2.6.37
- Contact:	linux-iio@vger.kernel.org
- Description:
-@@ -972,6 +974,7 @@ What:		/sys/.../events/in_activity_jogging_thresh_rising_period
- What:		/sys/.../events/in_activity_jogging_thresh_falling_period
- What:		/sys/.../events/in_activity_running_thresh_rising_period
- What:		/sys/.../events/in_activity_running_thresh_falling_period
-+What:		/sys/.../events/in_illuminance_thresh_either_period
- KernelVersion:	2.6.37
- Contact:	linux-iio@vger.kernel.org
- Description:
-@@ -1715,3 +1718,12 @@ Description:
- 		Mass concentration reading of particulate matter in ug / m3.
- 		pmX consists of particles with aerodynamic diameter less or
- 		equal to X micrometers.
+diff --git a/kernel/time/sched_clock.c b/kernel/time/sched_clock.c
+index 142b07619918..dbd69052eaa6 100644
+--- a/kernel/time/sched_clock.c
++++ b/kernel/time/sched_clock.c
+@@ -17,6 +17,8 @@
+ #include <linux/seqlock.h>
+ #include <linux/bitops.h>
+ 
++#include "timekeeping.h"
 +
-+What:		/sys/bus/iio/devices/iio:deviceX/events/in_illuminance_period_available
-+Date:		October 2019
-+KernelVersion:	5.4
-+Contact:	linux-iio@vger.kernel.org
-+Description:
-+		List of valid values available in multiples of integration time
-+		for which the light intensity must be above the threshold level
-+		before interrupt is asserted. This refers to persistence values.
+ /**
+  * struct clock_read_data - data required to read from sched_clock()
+  *
 -- 
-2.7.4
+2.23.0
 
