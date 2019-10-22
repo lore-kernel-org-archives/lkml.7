@@ -2,200 +2,176 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A73ACA9EAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:15:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E6BCA9EB0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:25:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB4922084C
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:15:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F1AB2084C
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:25:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730472AbfJVAPp (ORCPT
+        id S1730409AbfJVAZr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 20:15:45 -0400
-Received: from mga01.intel.com ([192.55.52.88]:27394 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730065AbfJVAPp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 20:15:45 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 17:15:44 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,325,1566889200"; 
-   d="scan'208";a="191289660"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by orsmga008.jf.intel.com with ESMTP; 21 Oct 2019 17:15:44 -0700
-Date:   Mon, 21 Oct 2019 17:15:44 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org
-Cc:     "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-        Borislav Petkov <bp@suse.de>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>, kvm@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
-Subject: Re: [PATCH v2 01/16] x86/intel: Initialize IA32_FEATURE_CONTROL MSR
- at boot
-Message-ID: <20191022001544.GA32518@linux.intel.com>
-References: <20191021234632.32363-1-sean.j.christopherson@intel.com>
- <20191021235423.32733-1-sean.j.christopherson@intel.com>
+        Mon, 21 Oct 2019 20:25:47 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:34314 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728375AbfJVAZq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 20:25:46 -0400
+Received: by mail-oi1-f194.google.com with SMTP id 83so12728481oii.1;
+        Mon, 21 Oct 2019 17:25:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HHE4lXB0Szbo7+fcmURF4oO9/wXTXM/IzD0XxCqkq2g=;
+        b=rN/6vj/lEinrxc/Mfeo5mp7SXSN+X/ggrU8JQsZ1J2IfR4gkRQ2crN0/9aVBwnQpYM
+         JveRIzKemg2nU/UjuZsa2qPlKG4sUyMWlAVBCeXqPXWBIL6HkRPgFkYbaJ8xs0BxW04l
+         NFbI9M1Rat5SLNn0Y4P6JHxScClw3+DrXheEP/PR0hFdCziZ3fadXSRFPi+2r4Q3Ls/D
+         4fDZ5niaUkrurgMTGnFb3DoiRZZOl+pcZccODTFYIwLFEUl0zwG6+DtCZmg8/4x1gil1
+         lK4SQVdPkmKKkZi1Jmo5HWFUBywLfuaaxWhWhu1B/g9nJEhowZELJQYyOhcLggHwgnRq
+         Qqgw==
+X-Gm-Message-State: APjAAAWkGvg12eBOXnrYKEBhf7Gf5fpnBO1kH0OsxM5R776EWL8XdGFD
+        JY6I11yAFwJ8IB0RzgXyCQDGlLiKUG8=
+X-Google-Smtp-Source: APXvYqzMFHO5z7QNMQwFtwrgXunDM5Wl8OJV77bp2QoH2FLxNHWcyp6EfARm/GZBvobc4b7zd/qAfw==
+X-Received: by 2002:aca:281a:: with SMTP id 26mr624355oix.130.1571703944859;
+        Mon, 21 Oct 2019 17:25:44 -0700 (PDT)
+Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com. [209.85.167.170])
+        by smtp.gmail.com with ESMTPSA id m50sm577448otc.80.2019.10.21.17.25.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 21 Oct 2019 17:25:44 -0700 (PDT)
+Received: by mail-oi1-f170.google.com with SMTP id d140so8383699oib.5;
+        Mon, 21 Oct 2019 17:25:44 -0700 (PDT)
+X-Received: by 2002:a54:418c:: with SMTP id 12mr648944oiy.154.1571703943863;
+ Mon, 21 Oct 2019 17:25:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191021235423.32733-1-sean.j.christopherson@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20191021022149.37112-1-peng.ma@nxp.com> <VE1PR04MB66879FD43E7E7E8A9C157F5D8F690@VE1PR04MB6687.eurprd04.prod.outlook.com>
+In-Reply-To: <VE1PR04MB66879FD43E7E7E8A9C157F5D8F690@VE1PR04MB6687.eurprd04.prod.outlook.com>
+From:   Li Yang <leoyang.li@nxp.com>
+Date:   Mon, 21 Oct 2019 19:25:32 -0500
+X-Gmail-Original-Message-ID: <CADRPPNQgft3BP+VdwRSH=tmHEsRkPaGj7FTmmE3ZXX+H4uD4kA@mail.gmail.com>
+Message-ID: <CADRPPNQgft3BP+VdwRSH=tmHEsRkPaGj7FTmmE3ZXX+H4uD4kA@mail.gmail.com>
+Subject: Re: [V2] dmaengine: fsl-edma: Add eDMA support for QorIQ LS1028A platform
+To:     Peng Ma <peng.ma@nxp.com>, "vkoul@kernel.org" <vkoul@kernel.org>,
+        Robin Gong <yibin.gong@nxp.com>
+Cc:     "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "k.kozlowski.k@gmail.com" <k.kozlowski.k@gmail.com>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+Cc Paolo and Radim, who occasionally work on KVM...
+On Mon, Oct 21, 2019 at 4:57 PM Leo Li <leoyang.li@nxp.com> wrote:
+>
+>
+>
+> > -----Original Message-----
+> > From: Peng Ma <peng.ma@nxp.com>
+> > Sent: Sunday, October 20, 2019 9:22 PM
+> > To: vkoul@kernel.org
+> > Cc: dan.j.williams@intel.com; Leo Li <leoyang.li@nxp.com>;
+> > k.kozlowski.k@gmail.com; Fabio Estevam <fabio.estevam@nxp.com>;
+> > dmaengine@vger.kernel.org; linux-kernel@vger.kernel.org; Peng Ma
+> > <peng.ma@nxp.com>
+> > Subject: [V2] dmaengine: fsl-edma: Add eDMA support for QorIQ LS1028A
+> > platform
+> >
+> > Our platforms(such as LS1021A, LS1012A, LS1043A, LS1046A, LS1028A) with
+> > below
+>
+> You only covered QorIQ SoCs, how about the situation for IMX SoCs?
+>
+> > registers(CHCFG0 - CHCFG15) of eDMA as follows:
+> > *-----------------------------------------------------------*
+> > |     Offset   |      OTHERS      |           LS1028A     |
+> > |--------------|--------------------|-----------------------|
+> > |     0x0      |        CHCFG0      |           CHCFG3      |
+> > |--------------|--------------------|-----------------------|
+> > |     0x1      |        CHCFG1      |           CHCFG2      |
+> > |--------------|--------------------|-----------------------|
+> > |     0x2      |        CHCFG2      |           CHCFG1      |
+> > |--------------|--------------------|-----------------------|
+> > |     0x3      |        CHCFG3      |           CHCFG0      |
+> > |--------------|--------------------|-----------------------|
+> > |     ...      |        ......      |           ......      |
+> > |--------------|--------------------|-----------------------|
+> > |     0xC      |        CHCFG12     |           CHCFG15     |
+> > |--------------|--------------------|-----------------------|
+> > |     0xD      |        CHCFG13     |           CHCFG14     |
+> > |--------------|--------------------|-----------------------|
+> > |     0xE      |        CHCFG14     |           CHCFG13     |
+> > |--------------|--------------------|-----------------------|
+> > |     0xF      |        CHCFG15     |           CHCFG12     |
+> > *-----------------------------------------------------------*
+> >
+> > This patch is to improve edma driver to fit LS1028A platform.
+> >
+> > Signed-off-by: Peng Ma <peng.ma@nxp.com>
+> > ---
+> > Changed for V2:
+> >       - Explaining what's the "Our platforms"
+> >
+> >  drivers/dma/fsl-edma-common.c | 12 ++++++++++++
+> >  1 file changed, 12 insertions(+)
+> >
+> > diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-
+> > common.c index b1a7ca9..611186b 100644
+> > --- a/drivers/dma/fsl-edma-common.c
+> > +++ b/drivers/dma/fsl-edma-common.c
+> > @@ -7,6 +7,7 @@
+> >  #include <linux/module.h>
+> >  #include <linux/slab.h>
+> >  #include <linux/dma-mapping.h>
+> > +#include <linux/sys_soc.h>
+> >
+> >  #include "fsl-edma-common.h"
+> >
+> > @@ -42,6 +43,11 @@
+> >
+> >  #define EDMA_TCD             0x1000
+> >
+> > +static struct soc_device_attribute soc_fixup_tuning[] = {
+> > +     { .family = "QorIQ LS1028A"},
+> > +     { },
+> > +};
+> > +
+> >  static void fsl_edma_enable_request(struct fsl_edma_chan *fsl_chan)  {
+> >       struct edma_regs *regs = &fsl_chan->edma->regs; @@ -109,10
+> > +115,16 @@ void fsl_edma_chan_mux(struct fsl_edma_chan *fsl_chan,
+> >       u32 ch = fsl_chan->vchan.chan.chan_id;
+> >       void __iomem *muxaddr;
+> >       unsigned int chans_per_mux, ch_off;
+> > +     int endian_diff[4] = {3, 1, -1, -3};
+> >       u32 dmamux_nr = fsl_chan->edma->drvdata->dmamuxs;
+> >
+> >       chans_per_mux = fsl_chan->edma->n_chans / dmamux_nr;
+> >       ch_off = fsl_chan->vchan.chan.chan_id % chans_per_mux;
+> > +
+> > +     if (!fsl_chan->edma->big_endian &&
+> > +         soc_device_match(soc_fixup_tuning))
+> > +             ch_off += endian_diff[ch_off % 4];
+> > +
+>
+> This probably is not the best fix now.  There is a new mux_configure32() API added but it doesn't consider endianness.  How about making it properly taken care of endianness?  And use it to set these registers?
 
-On Mon, Oct 21, 2019 at 04:54:23PM -0700, Sean Christopherson wrote:
-> Opportunistically initialize IA32_FEATURE_CONTROL MSR to enable VMX when
-> the MSR is left unlocked by BIOS.  Configuring IA32_FEATURE_CONTROL at
-> boot time paves the way for similar enabling of other features, e.g.
-> Software Guard Extensions (SGX).
-> 
-> Temporarily leave equivalent KVM code in place in order to avoid
-> introducing a regression on Centaur and Zhaoxin CPUs, e.g. removing
-> KVM's code would leave the MSR unlocked on those CPUs and would break
-> existing functionality if people are loading kvm_intel on Centaur and/or
-> Zhaoxin.  Defer enablement of the boot-time configuration on Centaur and
-> Zhaoxin to future patches to aid bisection.
-> 
-> Note, Local Machine Check Exceptions (LMCE) are also supported by the
-> kernel and enabled via IA32_FEATURE_CONTROL, but the kernel currently
-> uses LMCE if and and only if the feature is explicitly enable by BIOS.
-> Keep the current behavior to avoid introducing bugs, future patches can
-> opt in to opportunistic enabling if it's deemed desirable to do so.
-> 
-> Always lock IA32_FEATURE_CONTROL if it exists, even if the CPU doesn't
-> support VMX, so that other existing and future kernel code that queries
-> IA32_FEATURE_CONTROL can assume it's locked.
-> 
-> Start from a clean slate when constructing the value to write to
-> IA32_FEATURE_CONTROL, i.e. ignore whatever value BIOS left in the MSR so
-> as not to enable random features or fault on the WRMSR.
-> 
-> Suggested-by: Borislav Petkov <bp@suse.de>
-> Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> Cc: Tony Luck <tony.luck@intel.com>
-> Cc: Vitaly Kuznetsov <vkuznets@redhat.com>,
+You can ignore this comment.  The mux_configure32() seems to deal with
+a different register layout(32-bit register per CH).
 
-Fat fingered a comma when manually editing the patch files :-/
+Considering the register per channel is defined as 8-bit in the
+reference manual, the hardware seems to be weird to require
+byte-swapping as if the register is 32-bit.  Probably you can rename
+soc_fixup_tuning something like mux_byte_swap_quirk.
 
-> Cc: Wanpeng Li <wanpengli@tencent.com>
-> Cc: Jim Mattson <jmattson@google.com>
-> Cc: kvm@vger.kernel.org
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->  arch/x86/Kconfig.cpu                  |  4 ++++
->  arch/x86/kernel/cpu/Makefile          |  1 +
->  arch/x86/kernel/cpu/cpu.h             |  4 ++++
->  arch/x86/kernel/cpu/feature_control.c | 30 +++++++++++++++++++++++++++
->  arch/x86/kernel/cpu/intel.c           |  2 ++
->  5 files changed, 41 insertions(+)
->  create mode 100644 arch/x86/kernel/cpu/feature_control.c
-> 
-> diff --git a/arch/x86/Kconfig.cpu b/arch/x86/Kconfig.cpu
-> index af9c967782f6..aafc14a0abf7 100644
-> --- a/arch/x86/Kconfig.cpu
-> +++ b/arch/x86/Kconfig.cpu
-> @@ -387,6 +387,10 @@ config X86_DEBUGCTLMSR
->  	def_bool y
->  	depends on !(MK6 || MWINCHIPC6 || MWINCHIP3D || MCYRIXIII || M586MMX || M586TSC || M586 || M486SX || M486) && !UML
->  
-> +config X86_FEATURE_CONTROL_MSR
-> +	def_bool y
-> +	depends on CPU_SUP_INTEL
-> +
->  menuconfig PROCESSOR_SELECT
->  	bool "Supported processor vendors" if EXPERT
->  	---help---
-> diff --git a/arch/x86/kernel/cpu/Makefile b/arch/x86/kernel/cpu/Makefile
-> index d7a1e5a9331c..df5ad0cfe3e9 100644
-> --- a/arch/x86/kernel/cpu/Makefile
-> +++ b/arch/x86/kernel/cpu/Makefile
-> @@ -29,6 +29,7 @@ obj-y			+= umwait.o
->  obj-$(CONFIG_PROC_FS)	+= proc.o
->  obj-$(CONFIG_X86_FEATURE_NAMES) += capflags.o powerflags.o
->  
-> +obj-$(CONFIG_X86_FEATURE_CONTROL_MSR) += feature_control.o
->  ifdef CONFIG_CPU_SUP_INTEL
->  obj-y			+= intel.o intel_pconfig.o
->  obj-$(CONFIG_PM)	+= intel_epb.o
-> diff --git a/arch/x86/kernel/cpu/cpu.h b/arch/x86/kernel/cpu/cpu.h
-> index c0e2407abdd6..d2750f53a0cb 100644
-> --- a/arch/x86/kernel/cpu/cpu.h
-> +++ b/arch/x86/kernel/cpu/cpu.h
-> @@ -62,4 +62,8 @@ unsigned int aperfmperf_get_khz(int cpu);
->  
->  extern void x86_spec_ctrl_setup_ap(void);
->  
-> +#ifdef CONFIG_X86_FEATURE_CONTROL_MSR
-> +void init_feature_control_msr(struct cpuinfo_x86 *c);
-> +#endif
-> +
->  #endif /* ARCH_X86_CPU_H */
-> diff --git a/arch/x86/kernel/cpu/feature_control.c b/arch/x86/kernel/cpu/feature_control.c
-> new file mode 100644
-> index 000000000000..57b928e64cf5
-> --- /dev/null
-> +++ b/arch/x86/kernel/cpu/feature_control.c
-> @@ -0,0 +1,30 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#include <linux/tboot.h>
-> +
-> +#include <asm/cpufeature.h>
-> +#include <asm/msr-index.h>
-> +#include <asm/processor.h>
-> +
-> +void init_feature_control_msr(struct cpuinfo_x86 *c)
-> +{
-> +	u64 msr;
-> +
-> +	if (rdmsrl_safe(MSR_IA32_FEATURE_CONTROL, &msr))
-> +		return;
-> +
-> +	if (msr & FEATURE_CONTROL_LOCKED)
-> +		return;
-> +
-> +	/*
-> +	 * Ignore whatever value BIOS left in the MSR to avoid enabling random
-> +	 * features or faulting on the WRMSR.
-> +	 */
-> +	msr = FEATURE_CONTROL_LOCKED;
-> +
-> +	if (cpu_has(c, X86_FEATURE_VMX)) {
-> +		msr |= FEATURE_CONTROL_VMXON_ENABLED_OUTSIDE_SMX;
-> +		if (tboot_enabled())
-> +			msr |= FEATURE_CONTROL_VMXON_ENABLED_INSIDE_SMX;
-> +	}
-> +	wrmsrl(MSR_IA32_FEATURE_CONTROL, msr);
-> +}
-> diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-> index c2fdc00df163..15d59224e2f8 100644
-> --- a/arch/x86/kernel/cpu/intel.c
-> +++ b/arch/x86/kernel/cpu/intel.c
-> @@ -755,6 +755,8 @@ static void init_intel(struct cpuinfo_x86 *c)
->  	/* Work around errata */
->  	srat_detect_node(c);
->  
-> +	init_feature_control_msr(c);
-> +
->  	if (cpu_has(c, X86_FEATURE_VMX))
->  		detect_vmx_virtcap(c);
->  
-> -- 
-> 2.22.0
-> 
+>
+> >       muxaddr = fsl_chan->edma->muxbase[ch / chans_per_mux];
+> >       slot = EDMAMUX_CHCFG_SOURCE(slot);
+> >
+> > --
+> > 2.9.5
+>
