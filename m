@@ -2,130 +2,200 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB82CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:07:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB46CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:07:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9822320663
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:07:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D80821906
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:07:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731396AbfJVJHk (ORCPT
+        id S2388330AbfJVJHy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 05:07:40 -0400
-Received: from smtprelay0193.hostedemail.com ([216.40.44.193]:38322 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731234AbfJVJHk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 05:07:40 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 119F2182CF666;
-        Tue, 22 Oct 2019 09:07:38 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: veil63_252ba08252f48
-X-Filterd-Recvd-Size: 4166
-Received: from XPS-9350.home (unknown [47.151.135.224])
-        (Authenticated sender: joe@perches.com)
-        by omf13.hostedemail.com (Postfix) with ESMTPA;
-        Tue, 22 Oct 2019 09:07:35 +0000 (UTC)
-Message-ID: <a32b6a6b5f48ff0c4685bd417a8fb66229d95033.camel@perches.com>
-Subject: Re: [PATCH 1/7] debugfs: Add debugfs_create_xul() for hexadecimal
- unsigned long
-From:   Joe Perches <joe@perches.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Jaehoon Chung <jh80.chung@samsung.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Linux MMC List <linux-mmc@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        netdev <netdev@vger.kernel.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Tue, 22 Oct 2019 02:07:34 -0700
-In-Reply-To: <CAMuHMdU4OhsK6Jvy406ZCM+OeGcfVB0b7ccsne9KdMZFLf=JqQ@mail.gmail.com>
-References: <20191021143742.14487-1-geert+renesas@glider.be>
-         <20191021143742.14487-2-geert+renesas@glider.be>
-         <0f91839d858fcb03435ebc85e61ee4e75371ff37.camel@perches.com>
-         <CAMuHMdU4OhsK6Jvy406ZCM+OeGcfVB0b7ccsne9KdMZFLf=JqQ@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.32.1-2 
+        Tue, 22 Oct 2019 05:07:54 -0400
+Received: from mga03.intel.com ([134.134.136.65]:25818 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731234AbfJVJHy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 05:07:54 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Oct 2019 02:07:53 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,326,1566889200"; 
+   d="scan'208";a="196377052"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga008.fm.intel.com with ESMTP; 22 Oct 2019 02:07:52 -0700
+Received: from [10.226.39.21] (unknown [10.226.39.21])
+        by linux.intel.com (Postfix) with ESMTP id F2EA9580127;
+        Tue, 22 Oct 2019 02:07:48 -0700 (PDT)
+Subject: Re: [PATCH v4 2/3] dwc: PCI: intel: PCIe RC controller driver
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        lorenzo.pieralisi@arm.com, andrew.murray@arm.com, robh@kernel.org,
+        martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
+        hch@infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com
+References: <20191021171736.GA233393@google.com>
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <0914051f-b726-f15f-7f86-c0b26ff0f04c@linux.intel.com>
+Date:   Tue, 22 Oct 2019 17:07:47 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <20191021171736.GA233393@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-10-22 at 10:03 +0200, Geert Uytterhoeven wrote:
-> Hi Joe,
+Hi Bjorn Helgaas,
 
-Hey again Geert.
-
-> On Mon, Oct 21, 2019 at 5:37 PM Joe Perches <joe@perches.com> wrote:
-> > On Mon, 2019-10-21 at 16:37 +0200, Geert Uytterhoeven wrote:
-> > > The existing debugfs_create_ulong() function supports objects of
-> > > type "unsigned long", which are 32-bit or 64-bit depending on the
-> > > platform, in decimal form.  To format objects in hexadecimal, various
-> > > debugfs_create_x*() functions exist, but all of them take fixed-size
-> > > types.
-> > > 
-> > > Add a debugfs helper for "unsigned long" objects in hexadecimal format.
-> > > This avoids the need for users to open-code the same, or introduce
-> > > bugs when casting the value pointer to "u32 *" or "u64 *" to call
-> > > debugfs_create_x{32,64}().
-> > []
-> > > diff --git a/include/linux/debugfs.h b/include/linux/debugfs.h
-> > []
-> > > @@ -356,4 +356,14 @@ static inline ssize_t debugfs_write_file_bool(struct file *file,
-> > > 
-> > >  #endif
-> > > 
-> > > +static inline void debugfs_create_xul(const char *name, umode_t mode,
-> > > +                                   struct dentry *parent,
-> > > +                                   unsigned long *value)
-> > > +{
-> > > +     if (sizeof(*value) == sizeof(u32))
-> > > +             debugfs_create_x32(name, mode, parent, (u32 *)value);
-> > > +     else
-> > > +             debugfs_create_x64(name, mode, parent, (u64 *)value);
-> > 
-> > trivia: the casts are unnecessary.
-> 
-> They are necessary, in both calls (so using #ifdef as suggested below
-> won't help):
-
-Silly thinko, (I somehow thought the compiler would
-eliminate the code after the branch not taken, but
-of course it has to compile it first...  oops)
-though the #ifdef should work.
-
-> > This might be more sensible using #ifdef
-> > 
-> > static inline void debugfs_create_xul(const char *name, umode_t mode,
-> >                                       struct dentry *parent,
-> >                                       unsigned long *value)
-> > {
-> > #if BITS_PER_LONG == 64
-> >         debugfs_create_x64(name, mode, parent, value);
-> > #else
-> >         debugfs_create_x32(name, mode, parent, value);
-> > #endif
-> > }
-> 
-> ... at the expense of the compiler checking only one branch.
-> 
-> Just like "if (IS_ENABLED(CONFIG_<foo>)" (when possible) is preferred
-> over "#ifdef CONFIG_<foo>" because of compile-coverage, I think using
-> "if" here is better than using "#if".
-
-True if all compilers will always eliminate the unused branch.
+On 10/22/2019 1:17 AM, Bjorn Helgaas wrote:
+> On Mon, Oct 21, 2019 at 02:39:19PM +0800, Dilip Kota wrote:
+>> Add support to PCIe RC controller on Intel Gateway SoCs.
+>> PCIe controller is based of Synopsys DesignWare pci core.
+>>
+>> Intel PCIe driver requires Upconfig support, fast training
+>> sequence configuration and link speed change. So adding the
+>> respective helper functions in the pcie DesignWare framework.
+>> It also programs hardware autonomous speed during speed
+>> configuration so defining it in pci_regs.h.
+>>
+>> +static void intel_pcie_link_setup(struct intel_pcie_port *lpp)
+>> +{
+>> +	u32 val;
+>> +
+>> +	val = pcie_rc_cfg_rd(lpp, PCIE_CAP_OFST + PCI_EXP_LNKCAP);
+>> +	lpp->max_speed = FIELD_GET(PCI_EXP_LNKCAP_SLS, val);
+>> +	lpp->max_width = FIELD_GET(PCI_EXP_LNKCAP_MLW, val);
+>> +
+>> +	val = pcie_rc_cfg_rd(lpp, PCIE_CAP_OFST + PCI_EXP_LNKCTL);
+>> +
+>> +	val &= ~(PCI_EXP_LNKCTL_LD | PCI_EXP_LNKCTL_ASPMC);
+>> +	val |= (PCI_EXP_LNKSTA_SLC << 16) | PCI_EXP_LNKCTL_CCC |
+>> +	       PCI_EXP_LNKCTL_RCB;
+> Link Control is only 16 bits wide, so "PCI_EXP_LNKSTA_SLC << 16"
+> wouldn't make sense.  But I guess you're writing a device-specific
+> register that is not actually the Link Control as documented in PCIe
+> r5.0, sec 7.5.3.7, even though the bits are similar?
+It is not device specific.
+You are correct about register size that pcie spec mentions 
+PCIE_EXP_LNKCTL at 0x10 and PCIE_EXP_LNKSTS at 0x12 each of 2bytes. 
+Accessing 4bytes at offset 0x10 ends up accessing LNK control and status 
+register.
+In Synopsys PCIe controller LINK_CONTROL_LINK_STATUS_REG is of 4bytes 
+size at offset 0x10,
+In both the cases everything is same except the size of the register, so 
+i used PCIE_EXP_LNKCTL macro which is already defined in pci_regs.h
 
 
+>
+> Likewise, PCI_EXP_LNKCTL_RCB is RO for Root Ports, but maybe you're
+> telling the device what it should advertise in its Link Control?
+You are correct, PCI_EXP_LNKCTL_RCB is RO. I will remove it.
+>
+> PCI_EXP_LNKCTL_CCC is RW.  But doesn't it depend on the components on
+> both ends of the link?  Do you know what device is at the other end?
+> I would have assumed that you'd have to start with CCC==0, which
+> should be most conservative, then set CCC=1 only if you know both ends
+> have a common clock.
+PCIe RC and endpoint device are having the common clock so set the CCC=1.
+>
+>> +	pcie_rc_cfg_wr(lpp, val, PCIE_CAP_OFST + PCI_EXP_LNKCTL);
+>> +}
+>> +
+>> +static void intel_pcie_max_speed_setup(struct intel_pcie_port *lpp)
+>> +{
+>> +	u32 reg, val;
+>> +
+>> +	reg = pcie_rc_cfg_rd(lpp, PCIE_CAP_OFST + PCI_EXP_LNKCTL2);
+>> +	switch (lpp->link_gen) {
+>> +	case PCIE_LINK_SPEED_GEN1:
+>> +		reg &= ~PCI_EXP_LNKCTL2_TLS;
+>> +		reg |= PCI_EXP_LNKCTL2_HASD|
+>> +			PCI_EXP_LNKCTL2_TLS_2_5GT;
+>> +		break;
+>> +	case PCIE_LINK_SPEED_GEN2:
+>> +		reg &= ~PCI_EXP_LNKCTL2_TLS;
+>> +		reg |= PCI_EXP_LNKCTL2_HASD|
+>> +			PCI_EXP_LNKCTL2_TLS_5_0GT;
+>> +		break;
+>> +	case PCIE_LINK_SPEED_GEN3:
+>> +		reg &= ~PCI_EXP_LNKCTL2_TLS;
+>> +		reg |= PCI_EXP_LNKCTL2_HASD|
+>> +			PCI_EXP_LNKCTL2_TLS_8_0GT;
+>> +		break;
+>> +	case PCIE_LINK_SPEED_GEN4:
+>> +		reg &= ~PCI_EXP_LNKCTL2_TLS;
+>> +		reg |= PCI_EXP_LNKCTL2_HASD|
+>> +			PCI_EXP_LNKCTL2_TLS_16_0GT;
+>> +		break;
+>> +	default:
+>> +		/* Use hardware capability */
+>> +		val = pcie_rc_cfg_rd(lpp, PCIE_CAP_OFST + PCI_EXP_LNKCAP);
+>> +		val = FIELD_GET(PCI_EXP_LNKCAP_SLS, val);
+>> +		reg &= ~PCI_EXP_LNKCTL2_HASD;
+>> +		reg |= val;
+>> +		break;
+>> +	}
+>> +
+>> +	pcie_rc_cfg_wr(lpp, reg, PCIE_CAP_OFST + PCI_EXP_LNKCTL2);
+>> +	dw_pcie_link_set_n_fts(&lpp->pci, lpp->n_fts);
+> There are other users of of_pci_get_max_link_speed() that look sort of
+> similar to this (dra7xx_pcie_establish_link(),
+> ks_pcie_set_link_speed(), tegra_pcie_prepare_host()).  Do these *need*
+> to be different, or is there something that could be factored out?
+dra7xx_pcie_establish_link() and ks_pcie_set_link_speed() are doing 
+speed configuration for GEN1 and GEN1 &2 respectively.
+
+intel_pcie_max_speed_setup() can be moved to dwc framework and dra7xx and ks_pcie drivers can call.
+
+>
+>> +}
+>> +
+>> +
+>> +
+> Remove extra blank lines here.
+i will remove it.
+>
+>> +static void intel_pcie_port_logic_setup(struct intel_pcie_port *lpp)
+>> ...
+>> +	/* Intel PCIe doesn't configure IO region, so configure
+>> +	 * viewport to not to access IO region during register
+>> +	 * read write operations.
+>> +	 */
+> This comment doesn't describe the code.  Is there supposed to be some
+> code here that configures the viewport?  Where do we tell the viewport
+> not to access IO?
+>
+> I guess maybe this means something like "tell
+> dw_pcie_access_other_conf() not to program an outbound ATU for I/O"?
+> I don't know that structure well enough to write this in a way that
+> makes sense, but this code doesn't look like it's configuring any
+> viewports.
+Yes, you are correct. Telling not to program an outbound ATU for IO.
+I will update the description.
+> Please use usual multi-line comment style, i.e.,
+>
+>    /*
+>     * Intel PCIe ...
+>     */
+Sure, i will correct it.
+
+Thanks for reviewing and providing the valuable inputs!
+Regards,
+Dilip
+
+>> +	pci->num_viewport = data->num_viewport;
+>> +	dev_info(dev, "Intel PCIe Root Complex Port %d init done\n", lpp->id);
+>> +
+>> +	return ret;
+>> +}
