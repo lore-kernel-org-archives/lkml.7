@@ -2,433 +2,70 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 374F8CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:26:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31CCDCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:27:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE8F52084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:26:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e1z1SJv/"
+	by mail.kernel.org (Postfix) with ESMTP id 0E1512084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:27:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732291AbfJVQ0W (ORCPT
+        id S1732376AbfJVQ1D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 12:26:22 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:36548 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731488AbfJVQ0V (ORCPT
+        Tue, 22 Oct 2019 12:27:03 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:33279 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731277AbfJVQ1C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 12:26:21 -0400
-Received: by mail-wr1-f68.google.com with SMTP id w18so18240702wrt.3;
-        Tue, 22 Oct 2019 09:26:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=eMfueehBIZbPRvbot5NVcmWMNha33nIDFO+DQF3Oqko=;
-        b=e1z1SJv/jncmxRx9XNeieAVDenTqhPMpmlIxz66KVdjqbU6g+WzfrTzx4TaM26pejU
-         yKrsfJDFRJx3SRHP7ZL9LbTt5ptsI/hud39gqlFbMVHNb8C8q3j8npoUdV/AHj2uSMyl
-         YXWgce+eRhLdDm6c0B+GBecDltyC5wH5wZnJ+y6/mYZeObRwX3uQZJEx2Pcf0Wc+9P6l
-         qoex//Zv5AVZ588ewat6qlMDloDD1aVBKCyg/rjLvrgAWuSqmsB9LHDQreSl35Ooi8wb
-         +ivTGLVGj7upq+OuRoC6MidPIuAI9kC8tdwjua23yUOM6LIi2UGnF0cMb1QXrQMV5X4B
-         V+gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=eMfueehBIZbPRvbot5NVcmWMNha33nIDFO+DQF3Oqko=;
-        b=jGeUZP67c1EZxiZS7uERMm1eXRtT2FBM31HB1yl47N3ELo8BlQLtnEzqUtoQKs2Xjk
-         7RSAG6Ftv+gfulJUvTsdxEpSCsRIWodOJSlbkUGxrb1J2iGEDa7fhbOZ+PV0GxB+EuKJ
-         LWhbYcO7QRRY5rf/SxZuZctIT5fiQCs7wo5xCa17UNLHah732krjkJeJ+P8W8rXMVqlW
-         vtm/DXxgxt1DdijeKsK/KpiUzqFsPalxNNGRv+mBoPL+aqFgxDa9tGVLtxB1OTFAvBnl
-         A375vzQQ+xQlylegPCEE6ijb2mRvwLRbUx7P5OUFG0xd4TXMq1hxOtbkwkTwSPZHjWOu
-         R/HQ==
-X-Gm-Message-State: APjAAAWqlEwAvQDPa4Ajv4Sx4QxFKBWotc6yQYQJkS13/j/KWPDboC5N
-        EBp0vfkbUN7wl+lLpufcmbgg4EZv
-X-Google-Smtp-Source: APXvYqwJt4B2vg3jWzFx3qVnLtzw2L7NtsXX8vQdJOrcCCY3pESZs7sl/Pqs1FCfnZFsmxqYj87r/Q==
-X-Received: by 2002:a5d:50c2:: with SMTP id f2mr4289511wrt.147.1571761576733;
-        Tue, 22 Oct 2019 09:26:16 -0700 (PDT)
-Received: from [172.30.89.178] (sjewanfw1-nat.mentorg.com. [139.181.7.34])
-        by smtp.gmail.com with ESMTPSA id k8sm36163765wrg.15.2019.10.22.09.26.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 22 Oct 2019 09:26:15 -0700 (PDT)
-Subject: Re: [PATCH v8 5/5] media: imx: Try colorimetry at both sink and
- source pads
-To:     Rui Miguel Silva <rmfrfs@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     linux-media@vger.kernel.org,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20190522010317.23710-1-slongerbeam@gmail.com>
- <20190522010317.23710-6-slongerbeam@gmail.com>
- <20191022014437.GG4947@pendragon.ideasonboard.com> <m3ftjkoqde.fsf@gmail.com>
-From:   Steve Longerbeam <slongerbeam@gmail.com>
-Message-ID: <49778a60-7cf9-0315-f66f-21b47feedb1c@gmail.com>
-Date:   Tue, 22 Oct 2019 09:26:10 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 22 Oct 2019 12:27:02 -0400
+Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.pengutronix.de.)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1iMwzt-00025E-Dd; Tue, 22 Oct 2019 18:27:01 +0200
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     linux-kernel@vger.kernel.org
+Cc:     kernel@pengutronix.de
+Subject: [PATCH] reset: fix of_reset_simple_xlate kerneldoc comment
+Date:   Tue, 22 Oct 2019 18:27:00 +0200
+Message-Id: <20191022162700.8060-1-p.zabel@pengutronix.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <m3ftjkoqde.fsf@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Laurent, Rui,
+The flags parameter never made it into the API, but was erroneously
+included in the kerneldoc comment. Remove it to fix a documentation
+build warning:
 
-Besides field type ANY, the imx7 CSI should probably be dealing with 
-other field type conversions as well. I may be mistaken, but like the 
-imx6, the imx7 does not have the ability to detect whether a captured 
-field is a top field or a bottom field, so it can't support ALTERNATE 
-mode. It should probably capture two consecutive fields and in that case 
-and report seq-tb or seq-bt at its output. Also the imx6 supports 
-interlacing field lines, if that is the case for imx7 it should also 
-support converting ALTERNATE to INTERLACED at its output.
+  ./drivers/reset/core.c:86: warning: Excess function parameter 'flags' description in 'of_reset_simple_xlate'
 
-Steve
+Fixes: 61fc41317666 ("reset: Add reset controller API")
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+---
+ drivers/reset/core.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-
-On 10/22/19 6:34 AM, Rui Miguel Silva wrote:
-> Hi Laurent,
-> On Tue 22 Oct 2019 at 02:44, Laurent Pinchart wrote:
->> Hi Steve,
->>
->> On Tue, May 21, 2019 at 06:03:17PM -0700, Steve Longerbeam wrote:
->>> Retask imx_media_fill_default_mbus_fields() to try colorimetry parameters,
->>> renaming it to to imx_media_try_colorimetry(), and call it at both sink and
->>> source pad try_fmt's. The unrelated check for uninitialized field value is
->>> moved out to appropriate places in each subdev try_fmt.
->>>
->>> The IC now supports Rec.709 and BT.601 Y'CbCr encoding, and both limited
->>> and full range quantization for both YUV and RGB space, so allow those
->>> for pipelines that route through the IC.
->>>
->>> Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
->>> ---
->>> Changes in v7:
->>> - squashed with "media: imx: Allow Rec.709 encoding for IC routes".
->>> - remove the RGB full-range quantization restriction for IC routes.
->>> ---
->>>   drivers/staging/media/imx/imx-ic-prp.c      |  6 +-
->>>   drivers/staging/media/imx/imx-ic-prpencvf.c |  8 +--
->>>   drivers/staging/media/imx/imx-media-csi.c   | 19 +++---
->>>   drivers/staging/media/imx/imx-media-utils.c | 73 ++++++++++-----------
->>>   drivers/staging/media/imx/imx-media-vdic.c  |  5 +-
->>>   drivers/staging/media/imx/imx-media.h       |  5 +-
->>>   drivers/staging/media/imx/imx7-media-csi.c  |  8 +--
->>>   7 files changed, 62 insertions(+), 62 deletions(-)
->>>
->>> diff --git a/drivers/staging/media/imx/imx-ic-prp.c b/drivers/staging/media/imx/imx-ic-prp.c
->>> index 10ffe00f1a54..f87fe0203720 100644
->>> --- a/drivers/staging/media/imx/imx-ic-prp.c
->>> +++ b/drivers/staging/media/imx/imx-ic-prp.c
->>> @@ -193,8 +193,8 @@ static int prp_set_fmt(struct v4l2_subdev *sd,
->>>   			sdformat->format.code = cc->codes[0];
->>>   		}
->>>
->>> -		imx_media_fill_default_mbus_fields(&sdformat->format, infmt,
->>> -						   true);
->>> +		if (sdformat->format.field == V4L2_FIELD_ANY)
->>> +			sdformat->format.field = V4L2_FIELD_NONE;
->>>   		break;
->>>   	case PRP_SRC_PAD_PRPENC:
->>>   	case PRP_SRC_PAD_PRPVF:
->>> @@ -203,6 +203,8 @@ static int prp_set_fmt(struct v4l2_subdev *sd,
->>>   		break;
->>>   	}
->>>
->>> +	imx_media_try_colorimetry(&sdformat->format, true);
->>> +
->>>   	fmt = __prp_get_fmt(priv, cfg, sdformat->pad, sdformat->which);
->>>   	*fmt = sdformat->format;
->>>   out:
->>> diff --git a/drivers/staging/media/imx/imx-ic-prpencvf.c b/drivers/staging/media/imx/imx-ic-prpencvf.c
->>> index e8b36a181ccc..f2fe3c11c70e 100644
->>> --- a/drivers/staging/media/imx/imx-ic-prpencvf.c
->>> +++ b/drivers/staging/media/imx/imx-ic-prpencvf.c
->>> @@ -907,8 +907,6 @@ static void prp_try_fmt(struct prp_priv *priv,
->>>   		/* propagate colorimetry from sink */
->>>   		sdformat->format.colorspace = infmt->colorspace;
->>>   		sdformat->format.xfer_func = infmt->xfer_func;
->>> -		sdformat->format.quantization = infmt->quantization;
->>> -		sdformat->format.ycbcr_enc = infmt->ycbcr_enc;
->>>   	} else {
->>>   		v4l_bound_align_image(&sdformat->format.width,
->>>   				      MIN_W_SINK, MAX_W_SINK, W_ALIGN_SINK,
->>> @@ -916,9 +914,11 @@ static void prp_try_fmt(struct prp_priv *priv,
->>>   				      MIN_H_SINK, MAX_H_SINK, H_ALIGN_SINK,
->>>   				      S_ALIGN);
->>>
->>> -		imx_media_fill_default_mbus_fields(&sdformat->format, infmt,
->>> -						   true);
->>> +		if (sdformat->format.field == V4L2_FIELD_ANY)
->>> +			sdformat->format.field = V4L2_FIELD_NONE;
->>>   	}
->>> +
->>> +	imx_media_try_colorimetry(&sdformat->format, true);
->>>   }
->>>
->>>   static int prp_set_fmt(struct v4l2_subdev *sd,
->>> diff --git a/drivers/staging/media/imx/imx-media-csi.c b/drivers/staging/media/imx/imx-media-csi.c
->>> index 1d248aca40a9..dce4addadff4 100644
->>> --- a/drivers/staging/media/imx/imx-media-csi.c
->>> +++ b/drivers/staging/media/imx/imx-media-csi.c
->>> @@ -1375,9 +1375,15 @@ static void csi_try_field(struct csi_priv *priv,
->>>   	struct v4l2_mbus_framefmt *infmt =
->>>   		__csi_get_fmt(priv, cfg, CSI_SINK_PAD, sdformat->which);
->>>
->>> -	/* no restrictions on sink pad field type */
->>> -	if (sdformat->pad == CSI_SINK_PAD)
->>> +	/*
->>> +	 * no restrictions on sink pad field type except must
->>> +	 * be initialized.
->>> +	 */
->>> +	if (sdformat->pad == CSI_SINK_PAD) {
->>> +		if (sdformat->format.field == V4L2_FIELD_ANY)
->>> +			sdformat->format.field = V4L2_FIELD_NONE;
->>>   		return;
->>> +	}
->>>
->>>   	switch (infmt->field) {
->>>   	case V4L2_FIELD_SEQ_TB:
->>> @@ -1455,8 +1461,6 @@ static void csi_try_fmt(struct csi_priv *priv,
->>>   		/* propagate colorimetry from sink */
->>>   		sdformat->format.colorspace = infmt->colorspace;
->>>   		sdformat->format.xfer_func = infmt->xfer_func;
->>> -		sdformat->format.quantization = infmt->quantization;
->>> -		sdformat->format.ycbcr_enc = infmt->ycbcr_enc;
->>>
->>>   		break;
->>>   	case CSI_SINK_PAD:
->>> @@ -1476,10 +1480,6 @@ static void csi_try_fmt(struct csi_priv *priv,
->>>
->>>   		csi_try_field(priv, cfg, sdformat);
->>>
->>> -		imx_media_fill_default_mbus_fields(
->>> -			&sdformat->format, infmt,
->>> -			priv->active_output_pad == CSI_SRC_PAD_DIRECT);
->>> -
->>>   		/* Reset crop and compose rectangles */
->>>   		crop->left = 0;
->>>   		crop->top = 0;
->>> @@ -1495,6 +1495,9 @@ static void csi_try_fmt(struct csi_priv *priv,
->>>
->>>   		break;
->>>   	}
->>> +
->>> +	imx_media_try_colorimetry(&sdformat->format,
->>> +			priv->active_output_pad == CSI_SRC_PAD_DIRECT);
->>>   }
->>>
->>>   static int csi_set_fmt(struct v4l2_subdev *sd,
->>> diff --git a/drivers/staging/media/imx/imx-media-utils.c b/drivers/staging/media/imx/imx-media-utils.c
->>> index b41842dba5ec..05b63395084e 100644
->>> --- a/drivers/staging/media/imx/imx-media-utils.c
->>> +++ b/drivers/staging/media/imx/imx-media-utils.c
->>> @@ -511,21 +511,18 @@ int imx_media_init_cfg(struct v4l2_subdev *sd,
->>>   EXPORT_SYMBOL_GPL(imx_media_init_cfg);
->>>
->>>   /*
->>> - * Check whether the field and colorimetry parameters in tryfmt are
->>> - * uninitialized, and if so fill them with the values from fmt,
->>> - * or if tryfmt->colorspace has been initialized, all the default
->>> - * colorimetry params can be derived from tryfmt->colorspace.
->>> + * Default the colorspace in tryfmt to SRGB if set to an unsupported
->>> + * colorspace or not initialized. Then set the remaining colorimetry
->>> + * parameters based on the colorspace if they are uninitialized.
->>>    *
->>>    * tryfmt->code must be set on entry.
->>>    *
->>>    * If this format is destined to be routed through the Image Converter,
->>> - * quantization and Y`CbCr encoding must be fixed. The IC expects and
->>> - * produces fixed quantization and Y`CbCr encoding at its input and output
->>> - * (full range for RGB, limited range for YUV, and V4L2_YCBCR_ENC_601).
->>> + * Y`CbCr encoding must be fixed. The IC supports only BT.601 Y`CbCr
->>> + * or Rec.709 Y`CbCr encoding.
->>>    */
->>> -void imx_media_fill_default_mbus_fields(struct v4l2_mbus_framefmt *tryfmt,
->>> -					struct v4l2_mbus_framefmt *fmt,
->>> -					bool ic_route)
->>> +void imx_media_try_colorimetry(struct v4l2_mbus_framefmt *tryfmt,
->>> +			       bool ic_route)
->>>   {
->>>   	const struct imx_media_pixfmt *cc;
->>>   	bool is_rgb = false;
->>> @@ -533,44 +530,46 @@ void imx_media_fill_default_mbus_fields(struct v4l2_mbus_framefmt *tryfmt,
->>>   	cc = imx_media_find_mbus_format(tryfmt->code, CS_SEL_ANY, true);
->>>   	if (!cc)
->>>   		cc = imx_media_find_ipu_format(tryfmt->code, CS_SEL_ANY);
->>> -	if (cc && cc->cs != IPUV3_COLORSPACE_YUV)
->>> +	if (cc && cc->cs == IPUV3_COLORSPACE_RGB)
->>>   		is_rgb = true;
->>>
->>> -	/* fill field if necessary */
->>> -	if (tryfmt->field == V4L2_FIELD_ANY)
->>> -		tryfmt->field = fmt->field;
->> Have you tested this patch on i.MX7 ? It breaks pipeline validation as
->> the field field isn't handled anymore in imx7_csi_try_fmt(), due to the
->> removal if this code.
->>
->> I have a written a fix, I'll prepare a patch.
->>
-> Somehow I missed completely this series. I do not recall it at all.
-> Thanks in advance for your patch Laurent.
->
-> ---
-> Cheers,
-> 	Rui
->
->>> +	switch (tryfmt->colorspace) {
->>> +	case V4L2_COLORSPACE_SMPTE170M:
->>> +	case V4L2_COLORSPACE_REC709:
->>> +	case V4L2_COLORSPACE_JPEG:
->>> +	case V4L2_COLORSPACE_SRGB:
->>> +	case V4L2_COLORSPACE_BT2020:
->>> +	case V4L2_COLORSPACE_OPRGB:
->>> +	case V4L2_COLORSPACE_DCI_P3:
->>> +	case V4L2_COLORSPACE_RAW:
->>> +		break;
->>> +	default:
->>> +		tryfmt->colorspace = V4L2_COLORSPACE_SRGB;
->>> +		break;
->>> +	}
->>> +
->>> +	if (tryfmt->xfer_func == V4L2_XFER_FUNC_DEFAULT)
->>> +		tryfmt->xfer_func =
->>> +			V4L2_MAP_XFER_FUNC_DEFAULT(tryfmt->colorspace);
->>>
->>> -	/* fill colorimetry if necessary */
->>> -	if (tryfmt->colorspace == V4L2_COLORSPACE_DEFAULT) {
->>> -		tryfmt->colorspace = fmt->colorspace;
->>> -		tryfmt->xfer_func = fmt->xfer_func;
->>> -		tryfmt->ycbcr_enc = fmt->ycbcr_enc;
->>> -		tryfmt->quantization = fmt->quantization;
->>> +	if (ic_route) {
->>> +		if (tryfmt->ycbcr_enc != V4L2_YCBCR_ENC_601 &&
->>> +		    tryfmt->ycbcr_enc != V4L2_YCBCR_ENC_709)
->>> +			tryfmt->ycbcr_enc = V4L2_YCBCR_ENC_601;
->>>   	} else {
->>> -		if (tryfmt->xfer_func == V4L2_XFER_FUNC_DEFAULT) {
->>> -			tryfmt->xfer_func =
->>> -				V4L2_MAP_XFER_FUNC_DEFAULT(tryfmt->colorspace);
->>> -		}
->>>   		if (tryfmt->ycbcr_enc == V4L2_YCBCR_ENC_DEFAULT) {
->>>   			tryfmt->ycbcr_enc =
->>>   				V4L2_MAP_YCBCR_ENC_DEFAULT(tryfmt->colorspace);
->>>   		}
->>> -		if (tryfmt->quantization == V4L2_QUANTIZATION_DEFAULT) {
->>> -			tryfmt->quantization =
->>> -				V4L2_MAP_QUANTIZATION_DEFAULT(
->>> -					is_rgb, tryfmt->colorspace,
->>> -					tryfmt->ycbcr_enc);
->>> -		}
->>>   	}
->>>
->>> -	if (ic_route) {
->>> -		tryfmt->quantization = is_rgb ?
->>> -			V4L2_QUANTIZATION_FULL_RANGE :
->>> -			V4L2_QUANTIZATION_LIM_RANGE;
->>> -		tryfmt->ycbcr_enc = V4L2_YCBCR_ENC_601;
->>> -	}
->>> +	if (tryfmt->quantization == V4L2_QUANTIZATION_DEFAULT)
->>> +		tryfmt->quantization =
->>> +			V4L2_MAP_QUANTIZATION_DEFAULT(is_rgb,
->>> +						      tryfmt->colorspace,
->>> +						      tryfmt->ycbcr_enc);
->>>   }
->>> -EXPORT_SYMBOL_GPL(imx_media_fill_default_mbus_fields);
->>> +EXPORT_SYMBOL_GPL(imx_media_try_colorimetry);
->>>
->>>   int imx_media_mbus_fmt_to_pix_fmt(struct v4l2_pix_format *pix,
->>>   				  struct v4l2_rect *compose,
->>> diff --git a/drivers/staging/media/imx/imx-media-vdic.c b/drivers/staging/media/imx/imx-media-vdic.c
->>> index 4487374c9435..fbafd7fb7aeb 100644
->>> --- a/drivers/staging/media/imx/imx-media-vdic.c
->>> +++ b/drivers/staging/media/imx/imx-media-vdic.c
->>> @@ -617,14 +617,13 @@ static void vdic_try_fmt(struct vdic_priv *priv,
->>>   				      &sdformat->format.height,
->>>   				      MIN_H, MAX_H_VDIC, H_ALIGN, S_ALIGN);
->>>
->>> -		imx_media_fill_default_mbus_fields(&sdformat->format, infmt,
->>> -						   true);
->>> -
->>>   		/* input must be interlaced! Choose SEQ_TB if not */
->>>   		if (!V4L2_FIELD_HAS_BOTH(sdformat->format.field))
->>>   			sdformat->format.field = V4L2_FIELD_SEQ_TB;
->>>   		break;
->>>   	}
->>> +
->>> +	imx_media_try_colorimetry(&sdformat->format, true);
->>>   }
->>>
->>>   static int vdic_set_fmt(struct v4l2_subdev *sd,
->>> diff --git a/drivers/staging/media/imx/imx-media.h b/drivers/staging/media/imx/imx-media.h
->>> index 6587aa49e005..23024c9bc887 100644
->>> --- a/drivers/staging/media/imx/imx-media.h
->>> +++ b/drivers/staging/media/imx/imx-media.h
->>> @@ -172,9 +172,8 @@ int imx_media_init_mbus_fmt(struct v4l2_mbus_framefmt *mbus,
->>>   			    const struct imx_media_pixfmt **cc);
->>>   int imx_media_init_cfg(struct v4l2_subdev *sd,
->>>   		       struct v4l2_subdev_pad_config *cfg);
->>> -void imx_media_fill_default_mbus_fields(struct v4l2_mbus_framefmt *tryfmt,
->>> -					struct v4l2_mbus_framefmt *fmt,
->>> -					bool ic_route);
->>> +void imx_media_try_colorimetry(struct v4l2_mbus_framefmt *tryfmt,
->>> +			       bool ic_route);
->>>   int imx_media_mbus_fmt_to_pix_fmt(struct v4l2_pix_format *pix,
->>>   				  struct v4l2_rect *compose,
->>>   				  const struct v4l2_mbus_framefmt *mbus,
->>> diff --git a/drivers/staging/media/imx/imx7-media-csi.c b/drivers/staging/media/imx/imx7-media-csi.c
->>> index a708a0340eb1..6e2f4c3eb24f 100644
->>> --- a/drivers/staging/media/imx/imx7-media-csi.c
->>> +++ b/drivers/staging/media/imx/imx7-media-csi.c
->>> @@ -1003,8 +1003,6 @@ static int imx7_csi_try_fmt(struct imx7_csi *csi,
->>>
->>>   		sdformat->format.colorspace = in_fmt->colorspace;
->>>   		sdformat->format.xfer_func = in_fmt->xfer_func;
->>> -		sdformat->format.quantization = in_fmt->quantization;
->>> -		sdformat->format.ycbcr_enc = in_fmt->ycbcr_enc;
->>>   		break;
->>>   	case IMX7_CSI_PAD_SINK:
->>>   		*cc = imx_media_find_mbus_format(sdformat->format.code,
->>> @@ -1015,14 +1013,14 @@ static int imx7_csi_try_fmt(struct imx7_csi *csi,
->>>   							 false);
->>>   			sdformat->format.code = (*cc)->codes[0];
->>>   		}
->>> -
->>> -		imx_media_fill_default_mbus_fields(&sdformat->format, in_fmt,
->>> -						   false);
->>>   		break;
->>>   	default:
->>>   		return -EINVAL;
->>>   		break;
->>>   	}
->>> +
->>> +	imx_media_try_colorimetry(&sdformat->format, false);
->>> +
->>>   	return 0;
->>>   }
->>>
->>> --
->>> 2.17.1
->>>
+diff --git a/drivers/reset/core.c b/drivers/reset/core.c
+index 213ff40dda11..7c95cafcdf08 100644
+--- a/drivers/reset/core.c
++++ b/drivers/reset/core.c
+@@ -76,7 +76,6 @@ static const char *rcdev_name(struct reset_controller_dev *rcdev)
+  * of_reset_simple_xlate - translate reset_spec to the reset line number
+  * @rcdev: a pointer to the reset controller device
+  * @reset_spec: reset line specifier as found in the device tree
+- * @flags: a flags pointer to fill in (optional)
+  *
+  * This simple translation function should be used for reset controllers
+  * with 1:1 mapping, where reset lines can be indexed by number without gaps.
+-- 
+2.20.1
 
