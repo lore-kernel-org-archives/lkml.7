@@ -4,31 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01144CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 02:01:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65059CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 02:02:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D25452089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 02:01:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 374C2207FC
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 02:02:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387954AbfJVCBz (ORCPT
+        id S2387987AbfJVCCD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 22:01:55 -0400
+        Mon, 21 Oct 2019 22:02:03 -0400
 Received: from mga14.intel.com ([192.55.52.115]:61598 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387617AbfJVB7x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 21:59:53 -0400
+        id S2387601AbfJVB7w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 21:59:52 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 18:59:52 -0700
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 18:59:51 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.67,325,1566889200"; 
-   d="scan'208";a="196293862"
+   d="scan'208";a="196293858"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
-  by fmsmga008.fm.intel.com with ESMTP; 21 Oct 2019 18:59:52 -0700
+  by fmsmga008.fm.intel.com with ESMTP; 21 Oct 2019 18:59:51 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Marc Zyngier <maz@kernel.org>, James Hogan <jhogan@kernel.org>,
         Paul Mackerras <paulus@ozlabs.org>,
@@ -49,9 +48,9 @@ Cc:     James Morse <james.morse@arm.com>,
         linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
         linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
         kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 28/45] KVM: x86: Invoke kvm_vcpu_uninit() immediately prior to freeing vcpu
-Date:   Mon, 21 Oct 2019 18:59:08 -0700
-Message-Id: <20191022015925.31916-29-sean.j.christopherson@intel.com>
+Subject: [PATCH 27/45] KVM: MIPS: Invoke kvm_vcpu_uninit() immediately prior to freeing vcpu
+Date:   Mon, 21 Oct 2019 18:59:07 -0700
+Message-Id: <20191022015925.31916-28-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20191022015925.31916-1-sean.j.christopherson@intel.com>
 References: <20191022015925.31916-1-sean.j.christopherson@intel.com>
@@ -69,22 +68,24 @@ without an associated functional change.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/x86.c | 4 ++--
+ arch/mips/kvm/mips.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 964b3d0c7bc6..9fdfc20f0cc2 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -9091,11 +9091,11 @@ void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu)
- 
- 	kvm_x86_ops->vcpu_free(vcpu);
+diff --git a/arch/mips/kvm/mips.c b/arch/mips/kvm/mips.c
+index 2e14455aec4e..73360e021259 100644
+--- a/arch/mips/kvm/mips.c
++++ b/arch/mips/kvm/mips.c
+@@ -416,13 +416,13 @@ void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu)
+ {
+ 	hrtimer_cancel(&vcpu->arch.comparecount_timer);
  
 -	kvm_vcpu_uninit(vcpu);
 -
- 	free_cpumask_var(vcpu->arch.wbinvd_dirty_mask);
- 	kmem_cache_free(x86_fpu_cache, vcpu->arch.user_fpu);
- 	kmem_cache_free(x86_fpu_cache, vcpu->arch.guest_fpu);
+ 	kvm_mips_dump_stats(vcpu);
+ 
+ 	kvm_mmu_free_memory_caches(vcpu);
+ 	kfree(vcpu->arch.guest_ebase);
+ 	kfree(vcpu->arch.kseg0_commpage);
 +
 +	kvm_vcpu_uninit(vcpu);
  	kmem_cache_free(kvm_vcpu_cache, vcpu);
