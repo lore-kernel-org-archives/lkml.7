@@ -2,132 +2,104 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA82CCA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 07:50:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E54FCA9EB9
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 07:50:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A65820B7C
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 07:50:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E44920B7C
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 07:50:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387926AbfJVHuG (ORCPT
+        id S2388008AbfJVHu2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 03:50:06 -0400
-Received: from spam01.hygon.cn ([110.188.70.11]:57916 "EHLO spam1.hygon.cn"
-        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726978AbfJVHuG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 03:50:06 -0400
-Received: from MK-DB.hygon.cn ([172.23.18.60])
-        by spam1.hygon.cn with ESMTP id x9M7mw2a048343;
-        Tue, 22 Oct 2019 15:48:58 +0800 (GMT-8)
-        (envelope-from fanjinke@hygon.cn)
-Received: from cncheex01.Hygon.cn ([172.23.18.10])
-        by MK-DB.hygon.cn with ESMTP id x9M7mo6S017121;
-        Tue, 22 Oct 2019 15:48:50 +0800 (GMT-8)
-        (envelope-from fanjinke@hygon.cn)
-Received: from bogon.higon.com (172.23.18.44) by cncheex01.Hygon.cn
- (172.23.18.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1466.3; Tue, 22 Oct
- 2019 15:48:55 +0800
-From:   Jinke Fan <fanjinke@hygon.cn>
-To:     <alexandre.belloni@bootlin.com>, <a.zummo@towertech.it>,
-        <puwen@hygon.cn>, <thomas.lendacky@amd.com>, <kim.phillips@amd.com>
-CC:     <linux-rtc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Jinke Fan <fanjinke@hygon.cn>
-Subject: [PATCH v4] rtc: Fix the AltCentury value on AMD/Hygon platform
-Date:   Tue, 22 Oct 2019 15:48:07 +0800
-Message-ID: <20191022074807.32430-1-fanjinke@hygon.cn>
-X-Mailer: git-send-email 2.17.1
+        Tue, 22 Oct 2019 03:50:28 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:44820 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387938AbfJVHu1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 03:50:27 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 05D0D28C273
+Subject: Re: [PATCH 2/2] rtc: cros-ec: let the core handle rtc range
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-rtc@vger.kernel.org
+Cc:     Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        linux-kernel@vger.kernel.org
+References: <20191016201414.30934-1-alexandre.belloni@bootlin.com>
+ <20191016201414.30934-2-alexandre.belloni@bootlin.com>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <e8ad9e0f-e1c1-3d37-192b-1b5b2ad621fb@collabora.com>
+Date:   Tue, 22 Oct 2019 09:50:20 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.23.18.44]
-X-ClientProxiedBy: cncheex02.Hygon.cn (172.23.18.12) To cncheex01.Hygon.cn
- (172.23.18.10)
-X-MAIL: spam1.hygon.cn x9M7mw2a048343
-X-DNSRBL: 
+In-Reply-To: <20191016201414.30934-2-alexandre.belloni@bootlin.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When using following operations:
-date -s "21190910 19:20:00"
-hwclock -w
-to change date from 2019 to 2119 for test, it will fail on Hygon
-Dhyana and AMD Zen CPUs, while the same operations run ok on Intel i7
-platform.
+Hi Alexandre,
 
-MC146818 driver use function mc146818_set_time() to set register
-RTC_FREQ_SELECT(RTC_REG_A)'s bit4-bit6 field which means divider stage
-reset value on Intel platform to 0x7.
+On 16/10/19 22:14, Alexandre Belloni wrote:
+> Let the rtc core check the date/time against the RTC range.
+> 
+> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-While AMD/Hygon RTC_REG_A(0Ah)'s bit4 is defined as DV0 [Reference]:
-DV0 = 0 selects Bank 0, DV0 = 1 selects Bank 1. Bit5-bit6 is defined
-as reserved.
+Tested on few devices just to make sure nothing is broken, the change looks good
+to me and works as expected.
 
-DV0 is set to 1, it will select Bank 1, which will disable AltCentury
-register(0x32) access. As UEFI pass acpi_gbl_FADT.century 0x32
-(AltCentury), the CMOS write will be failed on code:
-CMOS_WRITE(century, acpi_gbl_FADT.century).
+Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
-Correct RTC_REG_A bank select bit(DV0) to 0 on AMD/Hygon CPUs, it will
-enable AltCentury(0x32) register writing and finally setup century as
-expected.
 
-Test results on Intel i7, AMD EPYC(17h) and Hygon machine show that it
-works as expected.
-Compiling for sparc64 and alpha architectures are passed.
-
-Reference:
-https://www.amd.com/system/files/TechDocs/51192_Bolton_FCH_RRG.pdf
-section: 3.13 Real Time Clock (RTC)
-
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Jinke Fan <fanjinke@hygon.cn>
----
-
-v3->v4:
-  - Limited modification to AMD EPYC(17h).
-  - Change the macro RTC_DV0 to RTC_DIV_RESET2.
-  - Make sure save_freq_select's bit4 is cleared.
-
-v2->v3:
-  - Make the changes only relevant to AMD/Hygon.
-
-v1->v2:
-  - Fix the compile errors on sparc64/alpha platform.
-
- drivers/rtc/rtc-mc146818-lib.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/rtc/rtc-mc146818-lib.c b/drivers/rtc/rtc-mc146818-lib.c
-index 2ecd875..df2829d 100644
---- a/drivers/rtc/rtc-mc146818-lib.c
-+++ b/drivers/rtc/rtc-mc146818-lib.c
-@@ -172,7 +172,20 @@ int mc146818_set_time(struct rtc_time *time)
- 	save_control = CMOS_READ(RTC_CONTROL);
- 	CMOS_WRITE((save_control|RTC_SET), RTC_CONTROL);
- 	save_freq_select = CMOS_READ(RTC_FREQ_SELECT);
--	CMOS_WRITE((save_freq_select|RTC_DIV_RESET2), RTC_FREQ_SELECT);
-+
-+#ifdef CONFIG_X86
-+	if ((boot_cpu_data.x86_vendor == X86_VENDOR_AMD &&
-+	     boot_cpu_data.x86 == 0x17) ||
-+	     boot_cpu_data.x86_vendor == X86_VENDOR_HYGON) {
-+		CMOS_WRITE((save_freq_select & (~RTC_DIV_RESET2)),
-+			RTC_FREQ_SELECT);
-+		save_freq_select &= ~RTC_DIV_RESET2;
-+	} else
-+		CMOS_WRITE((save_freq_select | RTC_DIV_RESET2),
-+			RTC_FREQ_SELECT);
-+#else
-+	CMOS_WRITE((save_freq_select | RTC_DIV_RESET2), RTC_FREQ_SELECT);
-+#endif
- 
- #ifdef CONFIG_MACH_DECSTATION
- 	CMOS_WRITE(real_yrs, RTC_DEC_YEAR);
--- 
-2.7.4
-
+> ---
+>  drivers/rtc/rtc-cros-ec.c | 17 +++++++++--------
+>  1 file changed, 9 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/rtc/rtc-cros-ec.c b/drivers/rtc/rtc-cros-ec.c
+> index da209d00731e..d043d30f05bc 100644
+> --- a/drivers/rtc/rtc-cros-ec.c
+> +++ b/drivers/rtc/rtc-cros-ec.c
+> @@ -107,11 +107,7 @@ static int cros_ec_rtc_set_time(struct device *dev, struct rtc_time *tm)
+>  	struct cros_ec_rtc *cros_ec_rtc = dev_get_drvdata(dev);
+>  	struct cros_ec_device *cros_ec = cros_ec_rtc->cros_ec;
+>  	int ret;
+> -	time64_t time;
+> -
+> -	time = rtc_tm_to_time64(tm);
+> -	if (time < 0 || time > U32_MAX)
+> -		return -EINVAL;
+> +	time64_t time = rtc_tm_to_time64(tm);
+>  
+>  	ret = cros_ec_rtc_set(cros_ec, EC_CMD_RTC_SET_VALUE, (u32)time);
+>  	if (ret < 0) {
+> @@ -348,12 +344,17 @@ static int cros_ec_rtc_probe(struct platform_device *pdev)
+>  		return ret;
+>  	}
+>  
+> -	cros_ec_rtc->rtc = devm_rtc_device_register(&pdev->dev, DRV_NAME,
+> -						    &cros_ec_rtc_ops,
+> -						    THIS_MODULE);
+> +	cros_ec_rtc->rtc = devm_rtc_allocate_device(&pdev->dev);
+>  	if (IS_ERR(cros_ec_rtc->rtc))
+>  		return PTR_ERR(cros_ec_rtc->rtc);
+>  
+> +	cros_ec_rtc->rtc->ops = &cros_ec_rtc_ops;
+> +	cros_ec_rtc->rtc->range_max = U32_MAX;
+> +
+> +	ret = rtc_register_device(cros_ec_rtc->rtc);
+> +	if (ret)
+> +		return ret;
+> +
+>  	/* Get RTC events from the EC. */
+>  	cros_ec_rtc->notifier.notifier_call = cros_ec_rtc_event;
+>  	ret = blocking_notifier_chain_register(&cros_ec->event_notifier,
+> 
