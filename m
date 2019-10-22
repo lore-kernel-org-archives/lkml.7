@@ -2,142 +2,139 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE4E5CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:00:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 384D1CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:01:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ECE92064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:00:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C4FE21872
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:01:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ur0a8o+I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388067AbfJVIAy (ORCPT
+        id S2388076AbfJVIBK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 04:00:54 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49322 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387946AbfJVIAy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 04:00:54 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D973AB34B;
-        Tue, 22 Oct 2019 08:00:51 +0000 (UTC)
-Date:   Tue, 22 Oct 2019 10:00:49 +0200
-From:   Oscar Salvador <osalvador@suse.de>
-To:     Naoya Horiguchi <nao.horiguchi@gmail.com>
-Cc:     Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        "mhocko@kernel.org" <mhocko@kernel.org>,
-        "mike.kravetz@oracle.com" <mike.kravetz@oracle.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 17/16] mm,hwpoison: introduce MF_MSG_UNSPLIT_THP
-Message-ID: <20191022080049.GE19060@linux>
-References: <20191017142123.24245-1-osalvador@suse.de>
- <20191017142123.24245-10-osalvador@suse.de>
- <20191021070439.GC9037@hori.linux.bs1.fc.nec.co.jp>
- <20191021095106.GA22933@www9186uo.sakura.ne.jp>
+        Tue, 22 Oct 2019 04:01:10 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:30721 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2387692AbfJVIBJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 04:01:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571731268;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=exMmFKq0WNnl0QaOrDt0fxTmA4dmEn8kGQHFQk7dM8o=;
+        b=Ur0a8o+IMdnt0rhi1oZ3SaBbSq/ZH7ThHCAX6V+01dTFZydFHVpXvldLgMVuaHFSDP6/Wy
+        j27GwANP86EmSVTNUHR/jwRKL/LP2WmKTFseDpcgpny3ecp9vsjX6WTj6kDfgKJoGlG/kJ
+        /hijVSj7efAJBO3yHvCWGuoLbmJEvIw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-198-LzQ9twJJNz6CXGAeHAVkIw-1; Tue, 22 Oct 2019 04:01:04 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6266F107AD31;
+        Tue, 22 Oct 2019 08:01:03 +0000 (UTC)
+Received: from krava (unknown [10.43.17.61])
+        by smtp.corp.redhat.com (Postfix) with SMTP id AC4375C1D4;
+        Tue, 22 Oct 2019 08:01:01 +0000 (UTC)
+Date:   Tue, 22 Oct 2019 10:01:00 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Andi Kleen <andi@firstfloor.org>
+Cc:     acme@kernel.org, linux-kernel@vger.kernel.org, jolsa@kernel.org,
+        eranian@google.com, kan.liang@linux.intel.com,
+        peterz@infradead.org, Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH v2 1/9] perf evsel: Always preserve errno while cleaning
+ up perf_event_open failures
+Message-ID: <20191022080100.GA28177@krava>
+References: <20191020175202.32456-1-andi@firstfloor.org>
+ <20191020175202.32456-2-andi@firstfloor.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <20191020175202.32456-2-andi@firstfloor.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MC-Unique: LzQ9twJJNz6CXGAeHAVkIw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-In-Reply-To: <20191021095106.GA22933@www9186uo.sakura.ne.jp>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 06:51:09PM +0900, Naoya Horiguchi wrote:
-> Here's the one.  So Oscar, If you like, could you append this to
-> your tree in the next spin (with your credit or signed-off-by)?
+On Sun, Oct 20, 2019 at 10:51:54AM -0700, Andi Kleen wrote:
+> From: Andi Kleen <ak@linux.intel.com>
+>=20
+> In some cases when perf_event_open fails, it may do some closes to clean
+> up. In special cases these closes can fail too, which overwrites the
+> errno of the perf_event_open, which is then incorrectly reported.
+>=20
+> Save/restore errno around closes.
+>=20
+> Signed-off-by: Andi Kleen <ak@linux.intel.com>
 
-Sure, I will add it.
+Acked-by: Jiri Olsa <jolsa@kernel.org>
 
-Thanks
+thanks,
+jirka
 
-> 
-> Thanks,
-> Naoya Horiguchi
 > ---
-> From b920f965485f6679ddc27e1a51da5bff7a5cc81a Mon Sep 17 00:00:00 2001
-> From: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-> Date: Mon, 21 Oct 2019 18:42:33 +0900
-> Subject: [PATCH] mm,hwpoison: introduce MF_MSG_UNSPLIT_THP
-> 
-> memory_failure() is supposed to call action_result() when it handles
-> a memory error event, but there's one missing case. So let's add it.
-> 
-> I find that include/ras/ras_event.h has some other MF_MSG_* undefined,
-> so this patch also adds them.
-> 
-> Signed-off-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-> ---
->  include/linux/mm.h      | 1 +
->  include/ras/ras_event.h | 3 +++
->  mm/memory-failure.c     | 5 ++++-
->  3 files changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index 3eba26324ff1..022033cc6782 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -2818,6 +2818,7 @@ enum mf_action_page_type {
->  	MF_MSG_BUDDY,
->  	MF_MSG_BUDDY_2ND,
->  	MF_MSG_DAX,
-> +	MF_MSG_UNSPLIT_THP,
->  	MF_MSG_UNKNOWN,
->  };
->  
-> diff --git a/include/ras/ras_event.h b/include/ras/ras_event.h
-> index 36c5c5e38c1d..0bdbc0d17d2f 100644
-> --- a/include/ras/ras_event.h
-> +++ b/include/ras/ras_event.h
-> @@ -361,6 +361,7 @@ TRACE_EVENT(aer_event,
->  	EM ( MF_MSG_POISONED_HUGE, "huge page already hardware poisoned" )	\
->  	EM ( MF_MSG_HUGE, "huge page" )					\
->  	EM ( MF_MSG_FREE_HUGE, "free huge page" )			\
-> +	EM ( MF_MSG_NON_PMD_HUGE, "non-pmd-sized huge page" )		\
->  	EM ( MF_MSG_UNMAP_FAILED, "unmapping failed page" )		\
->  	EM ( MF_MSG_DIRTY_SWAPCACHE, "dirty swapcache page" )		\
->  	EM ( MF_MSG_CLEAN_SWAPCACHE, "clean swapcache page" )		\
-> @@ -373,6 +374,8 @@ TRACE_EVENT(aer_event,
->  	EM ( MF_MSG_TRUNCATED_LRU, "already truncated LRU page" )	\
->  	EM ( MF_MSG_BUDDY, "free buddy page" )				\
->  	EM ( MF_MSG_BUDDY_2ND, "free buddy page (2nd try)" )		\
-> +	EM ( MF_MSG_DAX, "dax page" )					\
-> +	EM ( MF_MSG_UNSPLIT_THP, "unsplit thp" )			\
->  	EMe ( MF_MSG_UNKNOWN, "unknown page" )
->  
->  /*
-> diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-> index 46ca856703f6..b15086ad8948 100644
-> --- a/mm/memory-failure.c
-> +++ b/mm/memory-failure.c
-> @@ -583,6 +583,7 @@ static const char * const action_page_types[] = {
->  	[MF_MSG_BUDDY]			= "free buddy page",
->  	[MF_MSG_BUDDY_2ND]		= "free buddy page (2nd try)",
->  	[MF_MSG_DAX]			= "dax page",
-> +	[MF_MSG_UNSPLIT_THP]		= "unsplit thp",
->  	[MF_MSG_UNKNOWN]		= "unknown page",
->  };
->  
-> @@ -1361,8 +1362,10 @@ int memory_failure(unsigned long pfn, int flags)
->  	}
->  
->  	if (PageTransHuge(hpage)) {
-> -		if (try_to_split_thp_page(p, "Memory Failure") < 0)
-> +		if (try_to_split_thp_page(p, "Memory Failure") < 0) {
-> +			action_result(pfn, MF_MSG_UNSPLIT_THP, MF_IGNORED);
->  			return -EBUSY;
-> +		}
->  		VM_BUG_ON_PAGE(!page_count(p), p);
->  		hpage = compound_head(p);
->  	}
-> -- 
-> 2.17.1
-> 
+>  tools/perf/util/evsel.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index abc7fda4a0fe..d831038b55f2 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -1574,7 +1574,7 @@ int evsel__open(struct evsel *evsel, struct perf_cp=
+u_map *cpus,
+>  {
+>  =09int cpu, thread, nthreads;
+>  =09unsigned long flags =3D PERF_FLAG_FD_CLOEXEC;
+> -=09int pid =3D -1, err;
+> +=09int pid =3D -1, err, old_errno;
+>  =09enum { NO_CHANGE, SET_TO_MAX, INCREASED_MAX } set_rlimit =3D NO_CHANG=
+E;
+> =20
+>  =09if ((perf_missing_features.write_backward && evsel->core.attr.write_b=
+ackward) ||
+> @@ -1727,8 +1727,8 @@ int evsel__open(struct evsel *evsel, struct perf_cp=
+u_map *cpus,
+>  =09 */
+>  =09if (err =3D=3D -EMFILE && set_rlimit < INCREASED_MAX) {
+>  =09=09struct rlimit l;
+> -=09=09int old_errno =3D errno;
+> =20
+> +=09=09old_errno =3D errno;
+>  =09=09if (getrlimit(RLIMIT_NOFILE, &l) =3D=3D 0) {
+>  =09=09=09if (set_rlimit =3D=3D NO_CHANGE)
+>  =09=09=09=09l.rlim_cur =3D l.rlim_max;
+> @@ -1812,6 +1812,7 @@ int evsel__open(struct evsel *evsel, struct perf_cp=
+u_map *cpus,
+>  =09if (err)
+>  =09=09threads->err_thread =3D thread;
+> =20
+> +=09old_errno =3D errno;
+>  =09do {
+>  =09=09while (--thread >=3D 0) {
+>  =09=09=09close(FD(evsel, cpu, thread));
+> @@ -1819,6 +1820,7 @@ int evsel__open(struct evsel *evsel, struct perf_cp=
+u_map *cpus,
+>  =09=09}
+>  =09=09thread =3D nthreads;
+>  =09} while (--cpu >=3D 0);
+> +=09errno =3D old_errno;
+>  =09return err;
+>  }
+> =20
+> --=20
+> 2.21.0
+>=20
 
--- 
-Oscar Salvador
-SUSE L3
