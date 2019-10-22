@@ -2,139 +2,124 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE12BCA9EB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:01:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 280A2CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:02:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8124E21872
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:01:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="mK/HGwOn"
+	by mail.kernel.org (Postfix) with ESMTP id 07D4020700
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:02:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732112AbfJVPBk (ORCPT
+        id S1732164AbfJVPCH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 11:01:40 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:58523 "EHLO pegase1.c-s.fr"
+        Tue, 22 Oct 2019 11:02:07 -0400
+Received: from muru.com ([72.249.23.125]:38870 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727851AbfJVPBk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 11:01:40 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 46yGtQ22Khz9txrH;
-        Tue, 22 Oct 2019 17:01:34 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=mK/HGwOn; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id tf9_UKd1APc8; Tue, 22 Oct 2019 17:01:34 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 46yGtQ0nv7z9txrG;
-        Tue, 22 Oct 2019 17:01:34 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1571756494; bh=RrCvrC+vbahkBlayl4GBmKoqI4DdfySoV4Y+ZSWbKnA=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=mK/HGwOnLoc0UzzC2Hj9nOwww/MqzapZxeXlaUKpVxWnFhbxfDRXFXb5CDlTnoTgs
-         9AyNCr83Wn15ibyk8SFSbl5DzaqDcNbqGL+1WezDjkz/ImYGcrCus6q2TJxSI9pWum
-         li8+lPLyPP2YzaKBvB7+fF6Ap8VIpgTvQ/VgXZIY=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 948CE8B93A;
-        Tue, 22 Oct 2019 17:01:35 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id GLTFSSb90FVT; Tue, 22 Oct 2019 17:01:35 +0200 (CEST)
-Received: from po16098vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2CBED8B931;
-        Tue, 22 Oct 2019 17:01:35 +0200 (CEST)
-Subject: Re: [PATCH 3/7] soc: fsl: qe: avoid ppc-specific io accessors
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20191018125234.21825-1-linux@rasmusvillemoes.dk>
- <20191018125234.21825-4-linux@rasmusvillemoes.dk>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <6ee121cf-0e3d-4aa0-2593-fcb00995e429@c-s.fr>
-Date:   Tue, 22 Oct 2019 15:01:34 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
+        id S1727152AbfJVPCH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 11:02:07 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 51D4180FA;
+        Tue, 22 Oct 2019 15:02:40 +0000 (UTC)
+Date:   Tue, 22 Oct 2019 08:02:02 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
+Subject: Re: [PATCH 1/7] dt-bindings: gpu: pvrsgx: add initial bindings
+Message-ID: <20191022150202.GJ5610@atomide.com>
+References: <cover.1571424390.git.hns@goldelico.com>
+ <f0fb68dc7bc027e5e911721852f6bc6fa2d77a63.1571424390.git.hns@goldelico.com>
+ <CAL_Jsq+obsTSU3iP1wm_3-FsAJ4Mxiz0NbMY1_h5NeFn67Sj+A@mail.gmail.com>
+ <CEA29A3B-4116-4FE3-8E18-0C97353688DC@goldelico.com>
+ <20191021172557.GB5610@atomide.com>
+ <C6CD5A50-7F0A-4F56-ABB9-CAEDF7E47A5D@goldelico.com>
 MIME-Version: 1.0
-In-Reply-To: <20191018125234.21825-4-linux@rasmusvillemoes.dk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <C6CD5A50-7F0A-4F56-ABB9-CAEDF7E47A5D@goldelico.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 10/18/2019 12:52 PM, Rasmus Villemoes wrote:
-> In preparation for allowing to build QE support for architectures
-> other than PPC, replace the ppc-specific io accessors. Done via
+* H. Nikolaus Schaller <hns@goldelico.com> [191021 18:08]:
 > 
+> > Am 21.10.2019 um 19:25 schrieb Tony Lindgren <tony@atomide.com>:
+> > 
+> > * H. Nikolaus Schaller <hns@goldelico.com> [191021 15:46]:
+> >>> Am 21.10.2019 um 17:07 schrieb Rob Herring <robh+dt@kernel.org>:
+> >>> On Fri, Oct 18, 2019 at 1:46 PM H. Nikolaus Schaller <hns@goldelico.com> wrote:
+> >>>> +Optional properties:
+> >>>> +- timer:       the timer to be used by the driver.
+> >>> 
+> >>> Needs a better description and vendor prefix at least.
+> >> 
+> >> I am not yet sure if it is vendor specific or if all
+> >> SGX implementations need some timer.
+> >> 
+> >>> 
+> >>> Why is this needed rather than using the OS's timers?
+> >> 
+> >> Because nobody understands the current (out of tree and
+> >> planned for staging) driver well enough what the timer
+> >> is doing. It is currently hard coded that some omap refer
+> >> to timer7 and others use timer11.
+> > 
+> > Just configure it in the driver based on the compatible
+> > value to keep it out of the dts. It's best to stick to
+> > standard bindings.
+> 
+> IMHO leads to ugly code... Since the timer is not part of
+> the SGX IPR module but one of the OMAP timers it is sort
+> of hardware connection that can be chosen a little arbitrarily.
+> 
+> This is the main reason why I think adding it to a device tree
+> source so that a board that really requires to use a timer
+> for a different purpose, can reassign it. This is not possible
+> if we hard-code that into the driver by scanning for
+> compatible. In that case the driver must check board compatible
+> names...
+> 
+> But if we gain a better understanding of its role in the driver
+> (does it really need a dedicated timer and for what and which
+> properties the timer must have) we can probably replace it.
 
-This patch is not transparent in terms of performance, functions get 
-changed significantly.
+Well how about just leave out the timer from the binding
+for now, and just carry a patch for it until it is known
+if/why it's really needed?
 
-Before the patch:
+If it's needed, yeah I agree a timer property should be
+used.
 
-00000330 <ucc_fast_enable>:
-  330:	81 43 00 04 	lwz     r10,4(r3)
-  334:	7c 00 04 ac 	hwsync
-  338:	81 2a 00 00 	lwz     r9,0(r10)
-  33c:	0c 09 00 00 	twi     0,r9,0
-  340:	4c 00 01 2c 	isync
-  344:	70 88 00 02 	andi.   r8,r4,2
-  348:	41 82 00 10 	beq     358 <ucc_fast_enable+0x28>
-  34c:	39 00 00 01 	li      r8,1
-  350:	91 03 00 10 	stw     r8,16(r3)
-  354:	61 29 00 10 	ori     r9,r9,16
-  358:	70 88 00 01 	andi.   r8,r4,1
-  35c:	41 82 00 10 	beq     36c <ucc_fast_enable+0x3c>
-  360:	39 00 00 01 	li      r8,1
-  364:	91 03 00 14 	stw     r8,20(r3)
-  368:	61 29 00 20 	ori     r9,r9,32
-  36c:	7c 00 04 ac 	hwsync
-  370:	91 2a 00 00 	stw     r9,0(r10)
-  374:	4e 80 00 20 	blr
+> >>>> +- img,cores:   number of cores. Defaults to <1>.
+> >>> 
+> >>> Not discoverable?
+> >> 
+> >> Not sure if it is. This is probably available in undocumented
+> >> registers of the sgx.
+> > 
+> > This too, and whatever non-standrd other properities
+> > you might have.
+> 
+> Here it is a feature of the SGX IPR of the SoC, i.e.
+> describes that the hardware has one or two cores.
 
-After the patch:
+Here you can have a standard dts binding by putting this
+into driver struct of_device_id match .data. Then when
+somebody figures out how to read that from the hardware,
+it can be just dropped.
 
-0000030c <ucc_fast_enable>:
-  30c:	94 21 ff e0 	stwu    r1,-32(r1)
-  310:	7c 08 02 a6 	mflr    r0
-  314:	bf a1 00 14 	stmw    r29,20(r1)
-  318:	7c 9f 23 78 	mr      r31,r4
-  31c:	90 01 00 24 	stw     r0,36(r1)
-  320:	7c 7e 1b 78 	mr      r30,r3
-  324:	83 a3 00 04 	lwz     r29,4(r3)
-  328:	7f a3 eb 78 	mr      r3,r29
-  32c:	48 00 00 01 	bl      32c <ucc_fast_enable+0x20>
-			32c: R_PPC_REL24	ioread32be
-  330:	73 e9 00 02 	andi.   r9,r31,2
-  334:	41 82 00 10 	beq     344 <ucc_fast_enable+0x38>
-  338:	39 20 00 01 	li      r9,1
-  33c:	91 3e 00 10 	stw     r9,16(r30)
-  340:	60 63 00 10 	ori     r3,r3,16
-  344:	73 e9 00 01 	andi.   r9,r31,1
-  348:	41 82 00 10 	beq     358 <ucc_fast_enable+0x4c>
-  34c:	39 20 00 01 	li      r9,1
-  350:	91 3e 00 14 	stw     r9,20(r30)
-  354:	60 63 00 20 	ori     r3,r3,32
-  358:	80 01 00 24 	lwz     r0,36(r1)
-  35c:	7f a4 eb 78 	mr      r4,r29
-  360:	bb a1 00 14 	lmw     r29,20(r1)
-  364:	7c 08 03 a6 	mtlr    r0
-  368:	38 21 00 20 	addi    r1,r1,32
-  36c:	48 00 00 00 	b       36c <ucc_fast_enable+0x60>
-			36c: R_PPC_REL24	iowrite32be
+Regards,
 
-
-Christophe
+Tony
