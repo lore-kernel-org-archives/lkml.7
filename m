@@ -2,111 +2,234 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32B9ECA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:15:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C87BCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:15:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 096A4214B2
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:15:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0974A20684
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:15:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TFkUSbsN"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UvzBGgeT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732616AbfJVRPA (ORCPT
+        id S1732658AbfJVRPM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 13:15:00 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:43004 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731837AbfJVRPA (ORCPT
+        Tue, 22 Oct 2019 13:15:12 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:33911 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727309AbfJVRPM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 13:15:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571764499;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZnqQpohuKQ9uYTM7VPMOk3S+s+Sz5MTWH/R9yn2bwqA=;
-        b=TFkUSbsNVm4sJEeniTyKuwOl1q6F6Tb9jK4Ixg1Jmc9cQqDY7+7GCEhFZGvbrRhLLmxKa/
-        VFilB51CO47MYlIxEpSRiHhXU1atIWTD+u+8d2+KGatEbWi9Z+1zWf/guIRvwGa4jmGgxn
-        QqrEG0cx+J/M+AYwxlsTGhMUZzdESWU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-40-Jldqq01BOAOUQbEbYa4rKg-1; Tue, 22 Oct 2019 13:14:56 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E80591005509;
-        Tue, 22 Oct 2019 17:14:54 +0000 (UTC)
-Received: from redhat.com (unknown [10.20.6.178])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 557C71001B22;
-        Tue, 22 Oct 2019 17:14:54 +0000 (UTC)
-Date:   Tue, 22 Oct 2019 13:14:52 -0400
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Keith Busch <keith.busch@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 1/1] mm/gup_benchmark: fix MAP_HUGETLB case
-Message-ID: <20191022171452.GA5169@redhat.com>
-References: <20191021212435.398153-1-jhubbard@nvidia.com>
- <20191021212435.398153-2-jhubbard@nvidia.com>
+        Tue, 22 Oct 2019 13:15:12 -0400
+Received: by mail-pg1-f194.google.com with SMTP id k20so10353489pgi.1
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 10:15:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=h50Pi9XwOsR13aFlSA2CGe6nBusqUaN9N1zc7oNb4PM=;
+        b=UvzBGgeTgfAtcXP1FB0br1DsNDcrRyYR4jkC+DfnlzDHvFSyW1tI7nCx2yNZmcj2WN
+         OczJvcdDtpV9pZ8kzRoh3ch4+4iF/jJPOST+cLCokov/O1jMpoGeVFWgAYYLKWKJL8Tp
+         KGYXAAITmrRH1HflOWy1TsC5SzYI26+Io0QS4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=h50Pi9XwOsR13aFlSA2CGe6nBusqUaN9N1zc7oNb4PM=;
+        b=U2sL+MI8pOFNUdBUiFKf+br2+iKdVZAL6tN9Bg3rAY9KQlHGL3jvlwW403A5I6/tlY
+         Yx1itjh4VICQDBkES1a8jjRjgPWs6kbjcpRqcoFRnV74L1AkE7w2g1ddnXdlIPWv2S8q
+         GHxCQlQteixEWRUF0+s8rBVUnd/jWFcys5u9Yoc0oAUY3FsBYwJR+jV9zbi2EphbaWMb
+         5C98eLyrykYSdwCiHASTMmC8EPxQz6oPTICz3G23eOgfdgMLngLlnaFWz58BENGMdpYo
+         es05Nfqm0Rf43kaZ0jF0gG2hu60UGKRwaUzOIzj9DpaeljcCVx6KxWqk61lDzX11aj5P
+         LCuQ==
+X-Gm-Message-State: APjAAAX5I6MegLtpOpVDJ9iwJawBtkh8HsK/xPU40IM9cxUMeNwq+HJj
+        vD2ooI6eboLDOT4Qb6q3meNppw==
+X-Google-Smtp-Source: APXvYqyG0OfMRoG7uYhrblw+12GhEr/VYU+Opf8UClqR725yP7qojPu+4B2BRZRrLrdfm2E1KeELFw==
+X-Received: by 2002:a17:90a:3706:: with SMTP id u6mr6040268pjb.107.1571764510860;
+        Tue, 22 Oct 2019 10:15:10 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id 69sm19915996pgh.47.2019.10.22.10.15.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Oct 2019 10:15:07 -0700 (PDT)
+Date:   Tue, 22 Oct 2019 10:15:05 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Balakrishna Godavarthi <bgodavar@codeaurora.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        linux-arm-msm@vger.kernel.org,
+        linux-bluetooth-owner@vger.kernel.org, hemantg@codeaurora.org,
+        Harish Bandi <c-hbandi@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH 2/4] Bluetooth: hci_qca: Don't vote for specific voltage
+Message-ID: <20191022171505.GK20212@google.com>
+References: <20191018052405.3693555-1-bjorn.andersson@linaro.org>
+ <20191018052405.3693555-3-bjorn.andersson@linaro.org>
+ <20191018182205.GA20212@google.com>
+ <7f9a4de91f364a5f8ce707c8d8a2344d@codeaurora.org>
+ <5bbd8e5bbd832ecdafc7c2d603f10c6c@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <20191021212435.398153-2-jhubbard@nvidia.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-MC-Unique: Jldqq01BOAOUQbEbYa4rKg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+In-Reply-To: <5bbd8e5bbd832ecdafc7c2d603f10c6c@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 02:24:35PM -0700, John Hubbard wrote:
-> The MAP_HUGETLB ("-H" option) of gup_benchmark fails:
->=20
-> $ sudo ./gup_benchmark -H
-> mmap: Invalid argument
->=20
-> This is because gup_benchmark.c is passing in a file descriptor to
-> mmap(), but the fd came from opening up the /dev/zero file. This
-> confuses the mmap syscall implementation, which thinks that, if the
-> caller did not specify MAP_ANONYMOUS, then the file must be a huge
-> page file. So it attempts to verify that the file really is a huge
-> page file, as you can see here:
->=20
-> ksys_mmap_pgoff()
-> {
->     if (!(flags & MAP_ANONYMOUS)) {
->         retval =3D -EINVAL;
->         if (unlikely(flags & MAP_HUGETLB && !is_file_hugepages(file)))
->             goto out_fput; /* THIS IS WHERE WE END UP */
->=20
->     else if (flags & MAP_HUGETLB) {
->         ...proceed normally, /dev/zero is ok here...
->=20
-> ...and of course is_file_hugepages() returns "false" for the /dev/zero
-> file.
->=20
-> The problem is that the user space program, gup_benchmark.c, really just
-> wants anonymous memory here. The simplest way to get that is to pass
-> MAP_ANONYMOUS whenever MAP_HUGETLB is specified, so that's what this
-> patch does.
+On Tue, Oct 22, 2019 at 11:35:43AM +0530, Balakrishna Godavarthi wrote:
+> Hi Matthias, Bjorn andresson,
+> 
+> On 2019-10-21 12:07, Harish Bandi wrote:
+> > + Bala
+> > 
+> > On 2019-10-18 23:52, Matthias Kaehlcke wrote:
+> > > On Thu, Oct 17, 2019 at 10:24:02PM -0700, Bjorn Andersson wrote:
+> > > > Devices with specific voltage requirements should not request voltage
+> > > > from the driver, but instead rely on the system configuration to
+> > > > define
+> > > > appropriate voltages for each rail.
+> > > > 
+> > > > This ensures that PMIC and board variations are accounted for,
+> > > > something
+> > > > that the 0.1V range in the hci_qca driver currently tries to address.
+> > > > But on the Lenovo Yoga C630 (with wcn3990) vddch0 is 3.1V, which
+> > > > means
+> > > > the driver will fail to set the voltage.
+> > > > 
+> > > > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > > > ---
+> > > >  drivers/bluetooth/hci_qca.c | 26 ++++++++------------------
+> > > >  1 file changed, 8 insertions(+), 18 deletions(-)
+> > > > 
+> > > > diff --git a/drivers/bluetooth/hci_qca.c
+> > > > b/drivers/bluetooth/hci_qca.c
+> > > > index c07c529b0d81..54aafcc69d06 100644
+> > > > --- a/drivers/bluetooth/hci_qca.c
+> > > > +++ b/drivers/bluetooth/hci_qca.c
+> > > > @@ -130,8 +130,6 @@ enum qca_speed_type {
+> > > >   */
+> > > >  struct qca_vreg {
+> > > >  	const char *name;
+> > > > -	unsigned int min_uV;
+> > > > -	unsigned int max_uV;
+> > > >  	unsigned int load_uA;
+> > > >  };
+> > > > 
+> > > > @@ -1332,10 +1330,10 @@ static const struct hci_uart_proto
+> > > > qca_proto = {
+> > > >  static const struct qca_vreg_data qca_soc_data_wcn3990 = {
+> > > >  	.soc_type = QCA_WCN3990,
+> > > >  	.vregs = (struct qca_vreg []) {
+> > > > -		{ "vddio",   1800000, 1900000,  15000  },
+> > > > -		{ "vddxo",   1800000, 1900000,  80000  },
+> > > > -		{ "vddrf",   1300000, 1350000,  300000 },
+> > > > -		{ "vddch0",  3300000, 3400000,  450000 },
+> > > > +		{ "vddio", 15000  },
+> > > > +		{ "vddxo", 80000  },
+> > > > +		{ "vddrf", 300000 },
+> > > > +		{ "vddch0", 450000 },
+> > > >  	},
+> > > >  	.num_vregs = 4,
+> > > >  };
+> > > > @@ -1343,10 +1341,10 @@ static const struct qca_vreg_data
+> > > > qca_soc_data_wcn3990 = {
+> > > >  static const struct qca_vreg_data qca_soc_data_wcn3998 = {
+> > > >  	.soc_type = QCA_WCN3998,
+> > > >  	.vregs = (struct qca_vreg []) {
+> > > > -		{ "vddio",   1800000, 1900000,  10000  },
+> > > > -		{ "vddxo",   1800000, 1900000,  80000  },
+> > > > -		{ "vddrf",   1300000, 1352000,  300000 },
+> > > > -		{ "vddch0",  3300000, 3300000,  450000 },
+> > > > +		{ "vddio", 10000  },
+> > > > +		{ "vddxo", 80000  },
+> > > > +		{ "vddrf", 300000 },
+> > > > +		{ "vddch0", 450000 },
+> > > >  	},
+> > > >  	.num_vregs = 4,
+> > > >  };
+> > > > @@ -1386,13 +1384,6 @@ static int qca_power_off(struct hci_dev *hdev)
+> > > >  static int qca_enable_regulator(struct qca_vreg vregs,
+> > > >  				struct regulator *regulator)
+> > > >  {
+> > > > -	int ret;
+> > > > -
+> > > > -	ret = regulator_set_voltage(regulator, vregs.min_uV,
+> > > > -				    vregs.max_uV);
+> > > > -	if (ret)
+> > > > -		return ret;
+> > > > -
+> > > >  	return regulator_enable(regulator);
+> > > > 
+> > > >  }
+> > > > @@ -1401,7 +1392,6 @@ static void qca_disable_regulator(struct
+> > > > qca_vreg vregs,
+> > > >  				  struct regulator *regulator)
+> > > >  {
+> > > >  	regulator_disable(regulator);
+> > > > -	regulator_set_voltage(regulator, 0, vregs.max_uV);
+> > > > 
+> > > >  }
+> > > 
+> > > This was brought up multiple times during the initial review, but
+> > > wasn't addressed.
+> > > 
+> > > Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+> 
+> 
+> yes true PMIC dts regulator should do this.
+> But we have some real time issues observed.
+> 
+> Issue 1:
+> 
+> In PMIC dts node, ASAIK we have three levels of voltages.
+> 
+> 1. Default voltage.
+> 2. Minimum voltage. (mandatory entry)
+> 3. Maximum voltage. (mandatory entry)
+> 
+> Let us assume that the if PMIC regulator dts node supports  defaults voltage
+> to 3.2 Volts and Min  as 3.1 V and max as 3.3V
+> So default operating voltage is 3.1V  when we turn on BT (but according to
+> spec SoC requires min of 3.3V to operate,
+> Might have some functionality failures on end to end testing
 
-This looks wrong, MAP_HUGETLB should only be use to create vma
-for hugetlbfs. If you want anonymous private vma do not set the
-MAP_HUGETLB. If you want huge page inside your anonymous vma
-there is nothing to do at the mmap time, this is the job of the
-transparent huge page code (THP).
+The PMIC regulator shouldn't be configured with the entire range of voltages
+it can generate, but with a range of voltages that is suitable for all its
+consumers.
 
-NAK as misleading
+In other words if BT requires a minimum voltage of 3.3V the minimum voltage
+of the regulator should be at least 3.3V.
 
-Cheers,
-J=E9r=F4me
+> Issue 2:
+> 
+> WCN3990 RF is shared with WiFi, so it also try to turn on the regulators.
+> Wifi driver uses the same approach of restricting to min and max voltages in
+> driver.
+> Let us assume we turned ON BT and CH0 is set to 3.1v (as in your case), Wifi
+> is tuned on now, as its request the CH0 to operate at 3.3 Volts, regulator
+> will fail to set this voltage as BT is operating
+> at CH0 3.1v (assuming max voltage is 3.2v)
+> https://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth-next.git/tree/drivers/net/wireless/ath/ath10k/snoc.c#n39
 
+see above
+
+> Issue 3:
+> 
+> By mistake PMIC has low min or default voltage and high max voltages, that
+> is harm for WNC3990.
+> 
+> I would suggest to restrict the min and max voltages in driver, instead of
+> relaying on PMIC to do this.
+> BTW pmic will do this and doing it in our driver is safer.
+
+What if another device switches the regulator on before BT?
+
+Again, what you describe is a misconfiguration of the regulator and should
+be fixed at its root, instead of implementing unreliable 'safeguards' in each
+and every driver using regulators.
