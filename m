@@ -2,102 +2,94 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01451CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:59:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D10B2CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:59:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1FA02075A
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:59:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8A4E21906
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:59:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571749195;
+	bh=4CPRU2ALG6GtK6+pZ+F3xABl2sxm6yLoW6A4ltcqWtU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=m+JBACy9y/1E7CF8+62hZ1tvwNYMnTTwxm/mnBaov5+DiYMt4GGDlmke+xgCLMT5k
+	 ObiKsQGkveCQZKFLNsm3c1377dF4+vnyK5auO/kTXEkQIBIjbtxj6qNROgUCJJz5jv
+	 aNp/sRKI79isZLA2RFnS0ldhCS0msFWqW/oL+Uxk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389130AbfJVM7u (ORCPT
+        id S2389210AbfJVM7y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 08:59:50 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:51986 "EHLO foss.arm.com"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S1731281AbfJVM7u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 08:59:50 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 19CE1168F;
-        Tue, 22 Oct 2019 05:59:29 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D48AF3F71F;
-        Tue, 22 Oct 2019 05:59:24 -0700 (PDT)
-Date:   Tue, 22 Oct 2019 13:59:22 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Marco Elver <elver@google.com>
-Cc:     akiyks@gmail.com, stern@rowland.harvard.edu, glider@google.com,
-        parri.andrea@gmail.com, andreyknvl@google.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, arnd@arndb.de, boqun.feng@gmail.com,
-        bp@alien8.de, dja@axtens.net, dlustig@nvidia.com,
-        dave.hansen@linux.intel.com, dhowells@redhat.com,
-        dvyukov@google.com, hpa@zytor.com, mingo@redhat.com,
-        j.alglave@ucl.ac.uk, joel@joelfernandes.org, corbet@lwn.net,
-        jpoimboe@redhat.com, luc.maranget@inria.fr, npiggin@gmail.com,
-        paulmck@linux.ibm.com, peterz@infradead.org, tglx@linutronix.de,
-        will@kernel.org, kasan-dev@googlegroups.com,
-        linux-arch@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-efi@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
-Subject: Re: [PATCH v2 8/8] x86, kcsan: Enable KCSAN for x86
-Message-ID: <20191022125921.GD11583@lakrids.cambridge.arm.com>
-References: <20191017141305.146193-1-elver@google.com>
- <20191017141305.146193-9-elver@google.com>
+        Tue, 22 Oct 2019 08:59:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51346 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389143AbfJVM7x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 08:59:53 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A0732075A;
+        Tue, 22 Oct 2019 12:59:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571749192;
+        bh=4CPRU2ALG6GtK6+pZ+F3xABl2sxm6yLoW6A4ltcqWtU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=qd0nYUPsgaG9IQbK11fQUzwXq8mTBGzbDXUTHySjkMY6Isg3AWTNC57qoNvhrhJE3
+         QU5mwzF0qEtRY4mBoO2BgXUMNBl7kBZ+DpM0UhKcORxb/NSXxxULcBPdRqfsiFGVLY
+         9YV20AE4vybz5xwzQNJeySSj3JmCvGA+VTmjSLng=
+Date:   Tue, 22 Oct 2019 07:59:50 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Dilip Kota <eswara.kota@linux.intel.com>
+Cc:     Andrew Murray <andrew.murray@arm.com>, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com,
+        robh@kernel.org, martin.blumenstingl@googlemail.com,
+        linux-pci@vger.kernel.org, hch@infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v4 3/3] pci: intel: Add sysfs attributes to configure
+ pcie link
+Message-ID: <20191022125950.GA133170@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191017141305.146193-9-elver@google.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+In-Reply-To: <187a1a7d-80bd-a0e9-a0d9-7fc53bff8907@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 04:13:05PM +0200, Marco Elver wrote:
-> This patch enables KCSAN for x86, with updates to build rules to not use
-> KCSAN for several incompatible compilation units.
-> 
-> Signed-off-by: Marco Elver <elver@google.com>
-> ---
-> v2:
-> * Document build exceptions where no previous above comment explained
->   why we cannot instrument.
-> ---
->  arch/x86/Kconfig                      | 1 +
->  arch/x86/boot/Makefile                | 2 ++
->  arch/x86/boot/compressed/Makefile     | 2 ++
->  arch/x86/entry/vdso/Makefile          | 3 +++
->  arch/x86/include/asm/bitops.h         | 6 +++++-
->  arch/x86/kernel/Makefile              | 7 +++++++
->  arch/x86/kernel/cpu/Makefile          | 3 +++
->  arch/x86/lib/Makefile                 | 4 ++++
->  arch/x86/mm/Makefile                  | 3 +++
->  arch/x86/purgatory/Makefile           | 2 ++
->  arch/x86/realmode/Makefile            | 3 +++
->  arch/x86/realmode/rm/Makefile         | 3 +++
->  drivers/firmware/efi/libstub/Makefile | 2 ++
->  13 files changed, 40 insertions(+), 1 deletion(-)
+[+cc Rafael, linux-pm, beginning of discussion at
+https://lore.kernel.org/r/d8574605f8e70f41ce1e88ccfb56b63c8f85e4df.1571638827.git.eswara.kota@linux.intel.com]
 
-> diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-> index 0460c7581220..693d0a94b118 100644
-> --- a/drivers/firmware/efi/libstub/Makefile
-> +++ b/drivers/firmware/efi/libstub/Makefile
-> @@ -31,7 +31,9 @@ KBUILD_CFLAGS			:= $(cflags-y) -DDISABLE_BRANCH_PROFILING \
->  				   -D__DISABLE_EXPORTS
->  
->  GCOV_PROFILE			:= n
-> +# Sanitizer runtimes are unavailable and cannot be linked here.
->  KASAN_SANITIZE			:= n
-> +KCSAN_SANITIZE			:= n
->  UBSAN_SANITIZE			:= n
->  OBJECT_FILES_NON_STANDARD	:= y
+On Tue, Oct 22, 2019 at 05:27:38PM +0800, Dilip Kota wrote:
+> On 10/22/2019 1:18 AM, Bjorn Helgaas wrote:
+> > On Mon, Oct 21, 2019 at 02:38:50PM +0100, Andrew Murray wrote:
+> > > On Mon, Oct 21, 2019 at 02:39:20PM +0800, Dilip Kota wrote:
+> > > > PCIe RC driver on Intel Gateway SoCs have a requirement
+> > > > of changing link width and speed on the fly.
+> > Please add more details about why this is needed.  Since you're adding
+> > sysfs files, it sounds like it's not actually the *driver* that needs
+> > this; it's something in userspace?
 
-Not a big deal, but it might make sense to move the EFI stub exception
-to patch 3 since it isn't x86 specific (and will also apply for arm64).
+> We have use cases to change the link speed and width on the fly.
+> One is EMI check and other is power saving.  Some battery backed
+> applications have to switch PCIe link from higher GEN to GEN1 and
+> width to x1. During the cases like external power supply got
+> disconnected or broken. Once external power supply is connected then
+> switch PCIe link to higher GEN and width.
 
-Otherwise this looks good to me.
+That sounds plausible, but of course nothing there is specific to the
+Intel Gateway, so we should implement this generically so it would
+work on all hardware.
 
-Thanks,
-Mark.
+I'm not sure what the interface should look like -- should it be a
+low-level interface as you propose where userspace would have to
+identify each link of interest, or is there some system-wide
+power/performance knob that could tune all links?  Cc'd Rafael and
+linux-pm in case they have ideas.
+
+Bjorn
