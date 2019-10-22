@@ -2,139 +2,127 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C38BCA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:14:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 450BCCA9EB9
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:15:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71BA32184C
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:14:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1993721BE5
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:15:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="docP2kVW"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CGUi+bZ+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388321AbfJVIO1 (ORCPT
+        id S2388280AbfJVIPT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 04:14:27 -0400
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:59546 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388055AbfJVIO1 (ORCPT
+        Tue, 22 Oct 2019 04:15:19 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:42640 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2388061AbfJVIPT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 04:14:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1571732066; x=1603268066;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=uZ1Nc7xFlhZlA6hWP8C46y6MYqzMnnimoCEDMdoW5BA=;
-  b=docP2kVWCzaIyCDL4vdH0+GJWPTf5Eu6ZfKLMr1t7aa+x409A018Ogvt
-   ZhTi4dzq16wSQcTapQ+3SQWIjzpgNRDa0em33a3FbGAgcslOKKVwQbSHZ
-   37UgVzXJrPjN60sUEpbwIzj7RGrH9fRa1wPDjz+4qgowdkjzBgLIcFKDv
-   s=;
-X-IronPort-AV: E=Sophos;i="5.67,326,1566864000"; 
-   d="scan'208";a="425788157"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1d-2c665b5d.us-east-1.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 22 Oct 2019 08:14:24 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1d-2c665b5d.us-east-1.amazon.com (Postfix) with ESMTPS id 0E5F6A22B7;
-        Tue, 22 Oct 2019 08:14:20 +0000 (UTC)
-Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 22 Oct 2019 08:14:20 +0000
-Received: from [10.125.238.52] (10.43.160.153) by EX13D01EUB001.ant.amazon.com
- (10.43.166.194) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Tue, 22 Oct
- 2019 08:14:11 +0000
-Subject: Re: [PATCH v4 1/2] dt-bindings: edac: al-mc-edac: Amazon's Annapurna
- Labs Memory Controller EDAC
-To:     Rob Herring <robh@kernel.org>
-CC:     <maz@kernel.org>, <mark.rutland@arm.com>, <arnd@arndb.de>,
-        <bp@alien8.de>, <mchehab@kernel.org>, <james.morse@arm.com>,
-        <davem@davemloft.net>, <gregkh@linuxfoundation.org>,
-        <paulmck@linux.ibm.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-edac@vger.kernel.org>,
-        <dwmw@amazon.co.uk>, <benh@kernel.crashing.org>,
-        <hhhawa@amazon.com>, <ronenk@amazon.com>, <jonnyc@amazon.com>,
-        <hanochu@amazon.com>, <amirkl@amazon.com>, <barakw@amazon.com>
-References: <1570708454-10784-1-git-send-email-talel@amazon.com>
- <1570708454-10784-2-git-send-email-talel@amazon.com>
- <20191011132904.GA15595@bogus>
-From:   "Shenhar, Talel" <talel@amazon.com>
-Message-ID: <9e1a863c-9523-4e67-b000-4b429ae7616e@amazon.com>
-Date:   Tue, 22 Oct 2019 11:14:05 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+        Tue, 22 Oct 2019 04:15:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571732117;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=8AwgANZ9oDz6D4lqOk6X+wOo3w6oZWgeLO/Mbb7W20g=;
+        b=CGUi+bZ+lYOUEzURb/nyM5w0RJ6OGF3sw3EKBu9ZiWGLGnm6NADY274NzG9xjT87gp7h2a
+        mGHRqmIhLdAquq9PoB+OiMwfkBiNhnVd8PKoEjyLoEQBcRICRtRuciOKD1j3WxPL/9/LAX
+        DUSLKI/oQfy8l8WAUPpfS95kgjMZPpk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-220-TBXAxhgSMVScSIvfMbhVQQ-1; Tue, 22 Oct 2019 04:15:14 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 79DEB1800D6A;
+        Tue, 22 Oct 2019 08:15:11 +0000 (UTC)
+Received: from [10.36.117.11] (ovpn-117-11.ams2.redhat.com [10.36.117.11])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2065819C4F;
+        Tue, 22 Oct 2019 08:15:07 +0000 (UTC)
+Subject: Re: [PATCH v2 0/2] mm: Memory offlining + page isolation cleanups
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Pingfan Liu <kernelfans@gmail.com>, Qian Cai <cai@lca.pw>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Wei Yang <richard.weiyang@gmail.com>
+References: <20191021172353.3056-1-david@redhat.com>
+ <25d3f071-3268-298b-e0c8-9c307d1015fe@redhat.com>
+ <20191022080835.GZ9379@dhcp22.suse.cz>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat GmbH
+Message-ID: <1f56744d-2c22-6c12-8fe8-4a71e791c467@redhat.com>
+Date:   Tue, 22 Oct 2019 10:15:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <20191011132904.GA15595@bogus>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20191022080835.GZ9379@dhcp22.suse.cz>
 Content-Language: en-US
-X-Originating-IP: [10.43.160.153]
-X-ClientProxiedBy: EX13D11UWB001.ant.amazon.com (10.43.161.53) To
- EX13D01EUB001.ant.amazon.com (10.43.166.194)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-MC-Unique: TBXAxhgSMVScSIvfMbhVQQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks Rob,
-
-On 10/11/2019 4:29 PM, Rob Herring wrote:
-> On Thu, Oct 10, 2019 at 02:54:13PM +0300, Talel Shenhar wrote:
->> Document Amazon's Annapurna Labs Memory Controller EDAC SoC binding.
+On 22.10.19 10:08, Michal Hocko wrote:
+> On Tue 22-10-19 08:52:28, David Hildenbrand wrote:
+>> On 21.10.19 19:23, David Hildenbrand wrote:
+>>> Two cleanups that popped up while working on (and discussing) virtio-me=
+m:
+>>>    https://lkml.org/lkml/2019/9/19/463
+>>>
+>>> Tested with DIMMs on x86.
+>>>
+>>> As discussed with michal in v1, I'll soon look into removing the use
+>>> of PG_reserved during memory onlining completely - most probably
+>>> disallowing to offline memory blocks with holes, cleaning up the
+>>> onlining+offlining code.
 >>
->> Signed-off-by: Talel Shenhar <talel@amazon.com>
->> ---
->>   .../bindings/edac/amazon,al-mc-edac.yaml           | 50 ++++++++++++++++++++++
->>   1 file changed, 50 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml b/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
->> new file mode 100644
->> index 00000000..f66b094
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
->> @@ -0,0 +1,50 @@
->> +# SPDX-License-Identifier: GPL-2.0
-> Forgot to mention, please make new bindings (GPL-2.0-only OR BSD-2-Clause).
-ack, shall be part of v5
-> + interrupts:
->> +    maxItems: 2
->> +    items:
->> +      - description: uncorrectable error interrupt
->> +      - description: correctable error interrupt
->> +
->> +  interrupt-names:
->> +    maxItems: 2
->> +    items:
->> +      - const: ue
->> +      - const: ce
-> Now the example fails to build:
->
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.example.dt.yaml:
-> edac@f0080000: interrupt-names: ['ue'] is too short
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.example.dt.yaml:
-> edac@f0080000: interrupts: [[20, 4]] is too short
->
-> You either need to always have the CE irq or add 'minItems: 1' to both.
+>> BTW, I remember that ZONE_DEVICE pages are still required to be set
+>> PG_reserved. That has to be sorted out first.
+>=20
+> Do they?
 
-Indeed adding the minItems to 1 solves this.
+Yes, especially KVM code :/
 
-However, shouldn't it really be 0? interrupts are not mandatory?
+>=20
+>> I remember that somebody was
+>> working on it a while ago but didn't hear about that again. Will look in=
+to
+>> that as well - should be as easy as adding a zone check (if there isn't =
+a
+>> pfn_to_online_page() check already). But of course, there might be speci=
+al
+>> cases ....
+>=20
+> I remember Alexander didn't want to change the PageReserved handling
+> because he was worried about unforeseeable side effects. I have a vague
+> recollection he (or maybe Dan) has promissed some follow up clean ups
+> which didn't seem to materialize.
 
-What is the way to capture this in the new binding?
+I'm looking into it right now, especially the KVM part.
 
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    edac@f0080000 {
-> +      compatible = "amazon,al-mc-edac";
-> +      reg = <0x0 0xf0080000 0x0 0x00010000>;
-> +      interrupt-parent = <&amazon_al_system_fabric>;
-> +      interrupt-names = "ue";
-> +      interrupts = <20 IRQ_TYPE_LEVEL_HIGH>;
-> +    };
-> -- 
-> 2.7.4
->
+--=20
+
+Thanks,
+
+David / dhildenb
+
