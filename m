@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C950CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:36:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF58FCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:36:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3EF220679
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:36:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A592A21872
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:36:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="Fl1qTLhB"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="hD0eu+rm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731317AbfJVIgz (ORCPT
+        id S1731330AbfJVIg6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 04:36:55 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:35948 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731284AbfJVIgs (ORCPT
+        Tue, 22 Oct 2019 04:36:58 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:39322 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731294AbfJVIgs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 22 Oct 2019 04:36:48 -0400
-Received: by mail-wr1-f65.google.com with SMTP id w18so16464379wrt.3
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 01:36:44 -0700 (PDT)
+Received: by mail-wm1-f65.google.com with SMTP id r141so5676692wme.4
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 01:36:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=fJb9zTJUFk5gt04WV606l1pH2Oso/m6U1KjJZ/jsQAQ=;
-        b=Fl1qTLhBQubCYTQvRFZGlqbpTFflj9tu3q08e1MlJzphl6MWRcspjYmiPTZQO2Nj6m
-         L8FuqvAa/MmSqZfgRT8BK0odPTKh92doGHJtbxLFNYQ3Jq2IqO3h+/SX7sLrKDVjoZtO
-         NcsW0dTxbzZRRQW+zVYC1/6FTVbUgWunR1cAtZ3QCODI0ZCAAS2VbKr/ZExzWJTjRnsS
-         KZLvPQUIrnpg2BtCQrB5jK7IDHSB+/Xb4so9Es0sPAL3l52ve8BH3H/ygjsm0WkUjgPo
-         z2OAjaxIvLaCP34M2mpYEXRyVWyNDFawxbs0agydIqrrRAhnwOhSTieVDVfZL8yBb/J3
-         YAug==
+        bh=BBwZAII4c+j90JuEwELJfoaTgwb4BYo/J/e6zDQv4+M=;
+        b=hD0eu+rm2rnCFP73+AbIhyRwxjhgqFh+hxza/N1Idk4VUi0QtJM+GfN7gVPGjp4Z4j
+         YUkIjUCh6x9nODKYqHv9hvjSprCJ99Tc1ygodmf5Oy3gnM2wClvINYUqlylplYGSvlZd
+         eMXOa5fLbLu7NDm6e4U2VJQbpFkgloMODo+Fmpun0J973i9Vd55dDrlWsbC8zAV7prPc
+         aHukaKYQxUSENUEHMncEtx7x/4n3KGxNxRnwfTzL//vvn5oKk99CynyMKx5Mu2+oXmgF
+         GQYRa839XdpCQpq+MGMfkGfbdHXXJvz9W7M6sf+AGI+dYNjDZsbgsvRFuahEdRX4M6hQ
+         tjqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=fJb9zTJUFk5gt04WV606l1pH2Oso/m6U1KjJZ/jsQAQ=;
-        b=o5ia8Km6rABGnCzomArtj0RklbkopNi8v4WeH8/tXQYCcwwON7/JemfcCYbyYO/Bjw
-         61xf6Xe3O9Nz+punB0gYK3Fkp/YIVjPEYxwDH10If9gTJ+jJco0BvpqM9Ikb+W/Oe/VD
-         YVhozn6ycEdUCvQQr3rIGXgBAm10HWeSQih3lhPQV2Nc/JHM9Qzf6gmvWEjDO1QTY7LF
-         Bp6gskVHZ2/NJadNSb3sbgSikQ192bcpOoCNZr/Co5oB/dJOegDbFnWMQkUVvKK6C9gb
-         U2hX3BxkuJcmCv4lGeecy7Ed96gmwiAufgPzAbs8kDrnZs2NAA+56D1O+v6WNPiZ614d
-         3xAA==
-X-Gm-Message-State: APjAAAUruDQbornaioDjUI7zZaduRTI4jkf59jDU9Du7MZG6tmXNJ6ba
-        v/P+gVGk97+bcmuBfQgrk4/l7Q==
-X-Google-Smtp-Source: APXvYqw+u7/kRo/kyLMNI3vyXRrtnO/cCP4ewAM9p5Okg1CflyD/yuwcP6eDPcrZB/Mod7dBy1vY5g==
-X-Received: by 2002:a5d:44c8:: with SMTP id z8mr2324652wrr.66.1571733404239;
-        Tue, 22 Oct 2019 01:36:44 -0700 (PDT)
+        bh=BBwZAII4c+j90JuEwELJfoaTgwb4BYo/J/e6zDQv4+M=;
+        b=X18wOXCvvDvLkPH9n8AOgwpgr0fkVdGcOWXtG1Y463MochKsrT68F9ZQkkj/YJdkZQ
+         WedPcciRG+mgTqc7Et7kMqfC2oCkP3Hzy+nRa9HIYoJGW2tZZtBYFAXBrb7A6VbMhzRs
+         SqV/Rt7IrgmEaqeT+tmJo9BNLYIM1nTELkYSv2zF4PN/7MBNxuUayLvJHyWlBwO81AFZ
+         4HON7mqm2T4jen11vZejffXMMX8BkvLZ9JXIoeF5Zz+2e3CtR6p+EfQKKCAa8j3OSwyb
+         whTVsrifnY9w5pTmbk7MY/jE8n3WekKfcK8zi2zwlNDyg5nKB8swdfSzCeyMZAkWUwn5
+         Zu2g==
+X-Gm-Message-State: APjAAAX1+iTCKefeR7PSfS6ACQSsWs0e9E163WR3lza07JZFtRfFFIXl
+        XqYHgQLiJWjLfemM9C7VuDkpeg==
+X-Google-Smtp-Source: APXvYqxzDA6PjDB8+VXbMfmE9gebpUr/TSL5Jz2YOoPBEyJhJx7o6yy2RVS6GyJDputcJKjnWi9muA==
+X-Received: by 2002:a05:600c:21c8:: with SMTP id x8mr1724605wmj.123.1571733405470;
+        Tue, 22 Oct 2019 01:36:45 -0700 (PDT)
 Received: from localhost.localdomain (amontpellier-652-1-281-69.w109-210.abo.wanadoo.fr. [109.210.96.69])
-        by smtp.gmail.com with ESMTPSA id g17sm17115253wrq.58.2019.10.22.01.36.43
+        by smtp.gmail.com with ESMTPSA id g17sm17115253wrq.58.2019.10.22.01.36.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Oct 2019 01:36:43 -0700 (PDT)
+        Tue, 22 Oct 2019 01:36:44 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Yoshinori Sato <ysato@users.sourceforge.jp>,
         Rich Felker <dalias@libc.org>,
@@ -69,9 +69,9 @@ To:     Yoshinori Sato <ysato@users.sourceforge.jp>,
 Cc:     linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org,
         dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v7 7/9] backlight: gpio: remove unused fields from platform data
-Date:   Tue, 22 Oct 2019 10:36:28 +0200
-Message-Id: <20191022083630.28175-8-brgl@bgdev.pl>
+Subject: [PATCH v7 8/9] backlight: gpio: use a helper variable for &pdev->dev
+Date:   Tue, 22 Oct 2019 10:36:29 +0200
+Message-Id: <20191022083630.28175-9-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191022083630.28175-1-brgl@bgdev.pl>
 References: <20191022083630.28175-1-brgl@bgdev.pl>
@@ -84,30 +84,82 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Remove the platform data fields that nobody uses.
+Instead of dereferencing pdev each time, use a helper variable for
+the associated device pointer.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- include/linux/platform_data/gpio_backlight.h | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/video/backlight/gpio_backlight.c | 23 +++++++++++------------
+ 1 file changed, 11 insertions(+), 12 deletions(-)
 
-diff --git a/include/linux/platform_data/gpio_backlight.h b/include/linux/platform_data/gpio_backlight.h
-index 34179d600360..1a8b5b1946fe 100644
---- a/include/linux/platform_data/gpio_backlight.h
-+++ b/include/linux/platform_data/gpio_backlight.h
-@@ -9,9 +9,6 @@ struct device;
+diff --git a/drivers/video/backlight/gpio_backlight.c b/drivers/video/backlight/gpio_backlight.c
+index ddc7d3b288b7..d6969fae25cd 100644
+--- a/drivers/video/backlight/gpio_backlight.c
++++ b/drivers/video/backlight/gpio_backlight.c
+@@ -78,29 +78,29 @@ static int gpio_backlight_initial_power_state(struct gpio_backlight *gbl)
  
- struct gpio_backlight_platform_data {
- 	struct device *fbdev;
--	int gpio;
--	int def_value;
--	const char *name;
- };
+ static int gpio_backlight_probe(struct platform_device *pdev)
+ {
+-	struct gpio_backlight_platform_data *pdata =
+-		dev_get_platdata(&pdev->dev);
++	struct device *dev = &pdev->dev;
++	struct gpio_backlight_platform_data *pdata = dev_get_platdata(dev);
+ 	struct backlight_properties props;
+ 	struct backlight_device *bl;
+ 	struct gpio_backlight *gbl;
+ 	int ret, init_brightness;
  
- #endif
+-	gbl = devm_kzalloc(&pdev->dev, sizeof(*gbl), GFP_KERNEL);
++	gbl = devm_kzalloc(dev, sizeof(*gbl), GFP_KERNEL);
+ 	if (gbl == NULL)
+ 		return -ENOMEM;
+ 
+-	gbl->dev = &pdev->dev;
++	gbl->dev = dev;
+ 
+ 	if (pdata)
+ 		gbl->fbdev = pdata->fbdev;
+ 
+-	gbl->def_value = device_property_read_bool(&pdev->dev, "default-on");
++	gbl->def_value = device_property_read_bool(dev, "default-on");
+ 
+-	gbl->gpiod = devm_gpiod_get(&pdev->dev, NULL, GPIOD_ASIS);
++	gbl->gpiod = devm_gpiod_get(dev, NULL, GPIOD_ASIS);
+ 	if (IS_ERR(gbl->gpiod)) {
+ 		ret = PTR_ERR(gbl->gpiod);
+ 		if (ret != -EPROBE_DEFER)
+-			dev_err(&pdev->dev,
++			dev_err(dev,
+ 				"Error: The gpios parameter is missing or invalid.\n");
+ 		return ret;
+ 	}
+@@ -108,11 +108,10 @@ static int gpio_backlight_probe(struct platform_device *pdev)
+ 	memset(&props, 0, sizeof(props));
+ 	props.type = BACKLIGHT_RAW;
+ 	props.max_brightness = 1;
+-	bl = devm_backlight_device_register(&pdev->dev, dev_name(&pdev->dev),
+-					&pdev->dev, gbl, &gpio_backlight_ops,
+-					&props);
++	bl = devm_backlight_device_register(dev, dev_name(dev), dev, gbl,
++					    &gpio_backlight_ops, &props);
+ 	if (IS_ERR(bl)) {
+-		dev_err(&pdev->dev, "failed to register backlight\n");
++		dev_err(dev, "failed to register backlight\n");
+ 		return PTR_ERR(bl);
+ 	}
+ 
+@@ -122,7 +121,7 @@ static int gpio_backlight_probe(struct platform_device *pdev)
+ 	init_brightness = gpio_backlight_get_next_brightness(bl);
+ 	ret = gpiod_direction_output(gbl->gpiod, init_brightness);
+ 	if (ret) {
+-		dev_err(&pdev->dev, "failed to set initial brightness\n");
++		dev_err(dev, "failed to set initial brightness\n");
+ 		return ret;
+ 	}
+ 
 -- 
 2.23.0
 
