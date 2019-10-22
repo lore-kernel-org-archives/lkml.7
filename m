@@ -2,39 +2,75 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77401CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:43:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 518FDCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:43:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 587BD21906
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:43:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2682121906
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:43:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="oHGNj3EJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388546AbfJVIn2 (ORCPT
+        id S2388623AbfJVInz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 04:43:28 -0400
-Received: from imap1.codethink.co.uk ([176.9.8.82]:44766 "EHLO
-        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388518AbfJVIn2 (ORCPT
+        Tue, 22 Oct 2019 04:43:55 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:52531 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388549AbfJVIn3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 04:43:28 -0400
-Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
-        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
-        id 1iMplF-0003JS-4F; Tue, 22 Oct 2019 09:43:25 +0100
-Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.3)
-        (envelope-from <ben@rainbowdash.codethink.co.uk>)
-        id 1iMplE-0003Y1-Ee; Tue, 22 Oct 2019 09:43:24 +0100
-From:   "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
-To:     linux-kernel@lists.codethink.co.uk
-Cc:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org
-Subject: [PATCH] cpu-topology: declare parse_acpi_topology in <linux/arch_topology.h>
-Date:   Tue, 22 Oct 2019 09:43:23 +0100
-Message-Id: <20191022084323.13594-1-ben.dooks@codethink.co.uk>
+        Tue, 22 Oct 2019 04:43:29 -0400
+Received: by mail-wm1-f68.google.com with SMTP id r19so16202174wmh.2
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 01:43:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=t38qTDyvCIN9F9VCdUnEGu/RLffByFTv/wX9PAJP8Dc=;
+        b=oHGNj3EJ0Ty7HQmiQAZbNf3l0P/707ITFCQlTvwdXl3FFPMFhHW9BShbgCf39oVQ3c
+         lzRXbdE1ppQABfMJ95Uf3/HCE/YcNaSSNmYUbaofRGyagi9I/4B8/DWAShdzRHmmkI+N
+         XuC3xeTgugOUTS8bycmLpo8uvdXnHggii8OuAlG9ary5wyIpAsb/4sy3xwSEfxi+tapH
+         ZSMCBy6uP3MohrRn3zJeFAlq+N5W3DZwGCyuGnkaAocoX8BD8mgJZPq+YusTKtNGDVEK
+         WdqyWyYOq4aLKeU063ssygetioghbxbBtfu7i78GWLsFbrQzSzZ7XZVWOPRn764lWrme
+         ZHYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=t38qTDyvCIN9F9VCdUnEGu/RLffByFTv/wX9PAJP8Dc=;
+        b=jtnxh2IEcwfUoBjobeZ5pnAHYBxi1yY7jcD1nDGoIXN5EWPGMpFWuilXEAhHyBIrrq
+         beH5UJ8KcDWQM5JoiPcVqutN4J86s77RtuNJsCGKHu7zFaR5oZz9swUCXpdeqvkzD9Dp
+         9lr1DanF+zwsg8GOM+uJ0AcEatOgyT9Zyi+prCKhFwRcFLDHqRKJt5eDw/p5T5UREVhW
+         7KiBisd64NTOLVnNIyOdXujidXsG1Kp9GJ0VjrgZ6RsBBEQnIeKSG52cVvkzkeJ8Tbxk
+         DGFOsd3mmUtE7ioMBer+BjMoHcEBrwvbdk58Psm0x8o8ABj3Zo3BOg0DZZOjptSDh6ZQ
+         aFdw==
+X-Gm-Message-State: APjAAAVGRfkGVS//B810Oa98r8FLfuSR+CCT7MhtMXzsMqx5nmrhUdXE
+        NKX017xFQ9Kx6vFLpwIFadNljw==
+X-Google-Smtp-Source: APXvYqziGeOfTJY/tjRJaq6DIbQhhMJ2O+ETxOZtnm9hsV8gFqOYspSodZCQI2yyNEqrFx4UOjkFBA==
+X-Received: by 2002:a1c:80c7:: with SMTP id b190mr1952384wmd.3.1571733807272;
+        Tue, 22 Oct 2019 01:43:27 -0700 (PDT)
+Received: from localhost.localdomain (amontpellier-652-1-281-69.w109-210.abo.wanadoo.fr. [109.210.96.69])
+        by smtp.gmail.com with ESMTPSA id q25sm477231wra.3.2019.10.22.01.43.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Oct 2019 01:43:26 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [RESEND PATCH v3 4/8] drivers: platform: provide devm_platform_ioremap_resource_wc()
+Date:   Tue, 22 Oct 2019 10:43:14 +0200
+Message-Id: <20191022084318.22256-5-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191022084318.22256-1-brgl@bgdev.pl>
+References: <20191022084318.22256-1-brgl@bgdev.pl>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -42,32 +78,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The parse_acpi_topology() is not declared anywhere which
-causes the following sparse warning:
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-drivers/base/arch_topology.c:522:19: warning: symbol 'parse_acpi_topology' was not declared. Should it be static?
+Provide a write-combined variant of devm_platform_ioremap_resource().
 
-Signed-off-by: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
 ---
-Cc: Sudeep Holla <sudeep.holla@arm.com>
-Cc: linux-kernel@vger.kernel.org
-Cc: gregkh@linuxfoundation.org
----
- include/linux/arch_topology.h | 1 +
- 1 file changed, 1 insertion(+)
+ .../driver-api/driver-model/devres.rst        |  1 +
+ drivers/base/platform.c                       | 19 ++++++++++++++++++-
+ include/linux/platform_device.h               |  3 +++
+ 3 files changed, 22 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/arch_topology.h b/include/linux/arch_topology.h
-index 42f2b5126094..3015ecbb90b1 100644
---- a/include/linux/arch_topology.h
-+++ b/include/linux/arch_topology.h
-@@ -57,6 +57,7 @@ const struct cpumask *cpu_coregroup_mask(int cpu);
- void update_siblings_masks(unsigned int cpu);
- void remove_cpu_topology(unsigned int cpuid);
- void reset_cpu_topology(void);
-+int parse_acpi_topology(void);
- #endif
+diff --git a/Documentation/driver-api/driver-model/devres.rst b/Documentation/driver-api/driver-model/devres.rst
+index e605bb9df6e1..480b78ca3871 100644
+--- a/Documentation/driver-api/driver-model/devres.rst
++++ b/Documentation/driver-api/driver-model/devres.rst
+@@ -318,6 +318,7 @@ IOMAP
+   devm_ioremap_resource() : checks resource, requests memory region, ioremaps
+   devm_ioremap_resource_wc()
+   devm_platform_ioremap_resource() : calls devm_ioremap_resource() for platform device
++  devm_platform_ioremap_resource_wc()
+   devm_iounmap()
+   pcim_iomap()
+   pcim_iomap_regions()	: do request_region() and iomap() on multiple BARs
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index b230beb6ccb4..177010c27516 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -60,6 +60,7 @@ struct resource *platform_get_resource(struct platform_device *dev,
+ }
+ EXPORT_SYMBOL_GPL(platform_get_resource);
  
- #endif /* _LINUX_ARCH_TOPOLOGY_H_ */
++#ifdef CONFIG_HAS_IOMEM
+ /**
+  * devm_platform_ioremap_resource - call devm_ioremap_resource() for a platform
+  *				    device
+@@ -68,7 +69,6 @@ EXPORT_SYMBOL_GPL(platform_get_resource);
+  *        resource management
+  * @index: resource index
+  */
+-#ifdef CONFIG_HAS_IOMEM
+ void __iomem *devm_platform_ioremap_resource(struct platform_device *pdev,
+ 					     unsigned int index)
+ {
+@@ -78,6 +78,23 @@ void __iomem *devm_platform_ioremap_resource(struct platform_device *pdev,
+ 	return devm_ioremap_resource(&pdev->dev, res);
+ }
+ EXPORT_SYMBOL_GPL(devm_platform_ioremap_resource);
++
++/**
++ * devm_platform_ioremap_resource_wc - write-combined variant of
++ *                                     devm_platform_ioremap_resource()
++ *
++ * @pdev: platform device to use both for memory resource lookup as well as
++ *        resource management
++ * @index: resource index
++ */
++void __iomem *devm_platform_ioremap_resource_wc(struct platform_device *pdev,
++						unsigned int index)
++{
++	struct resource *res;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, index);
++	return devm_ioremap_resource_wc(&pdev->dev, res);
++}
+ #endif /* CONFIG_HAS_IOMEM */
+ 
+ static int __platform_get_irq(struct platform_device *dev, unsigned int num)
+diff --git a/include/linux/platform_device.h b/include/linux/platform_device.h
+index f2688404d1cd..74cecb919e5c 100644
+--- a/include/linux/platform_device.h
++++ b/include/linux/platform_device.h
+@@ -57,6 +57,9 @@ platform_find_device_by_driver(struct device *start,
+ extern void __iomem *
+ devm_platform_ioremap_resource(struct platform_device *pdev,
+ 			       unsigned int index);
++extern void __iomem *
++devm_platform_ioremap_resource_wc(struct platform_device *pdev,
++				  unsigned int index);
+ extern int platform_get_irq(struct platform_device *, unsigned int);
+ extern int platform_get_irq_optional(struct platform_device *, unsigned int);
+ extern int platform_irq_count(struct platform_device *);
 -- 
 2.23.0
 
