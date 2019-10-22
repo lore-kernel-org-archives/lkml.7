@@ -2,119 +2,110 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC4CECA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:06:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C055DCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:06:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2E9C214B2
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:06:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CB6320700
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:06:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="IjCNGVD/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rgltDEjt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732179AbfJVPGG (ORCPT
+        id S1732195AbfJVPGW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 11:06:06 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:11144 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725788AbfJVPGG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 11:06:06 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 46yGzZ3WYzz9txrJ;
-        Tue, 22 Oct 2019 17:06:02 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=IjCNGVD/; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id Jh8cJZ18iESD; Tue, 22 Oct 2019 17:06:02 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 46yGzZ0Wppz9txrG;
-        Tue, 22 Oct 2019 17:06:02 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1571756762; bh=ZTTwSzcfyFlbzpNpRSH3QAO6LqI52zwrKBYTswAtHNM=;
-        h=Subject:To:References:From:Date:In-Reply-To:From;
-        b=IjCNGVD/m+/3chtJGoKPuCqnoE/qjdU6NrH1x41xizbG/AhCOYIRQB+QO5vlsJ7/2
-         wqzZ2eWImxNZQ/T4BDEEKb61YVt/OeI3FXDBrXiajTMpFSqXvckl1n+kYp1ejLLCul
-         xWiNhXxkahj2A8m2aG1TrGbwz8FSVKfdFtjxUDFc=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 80D6D8B93A;
-        Tue, 22 Oct 2019 17:06:03 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id JxnfEccYQSsS; Tue, 22 Oct 2019 17:06:03 +0200 (CEST)
-Received: from po16098vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id DAC5A8B931;
-        Tue, 22 Oct 2019 17:06:02 +0200 (CEST)
-Subject: Re: [PATCH 0/7] towards QE support on ARM
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, Timur Tabi <timur@kernel.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-serial@vger.kernel.org
-References: <20191018125234.21825-1-linux@rasmusvillemoes.dk>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <e50640a4-bf6b-9859-2acf-81f4af9c6409@c-s.fr>
-Date:   Tue, 22 Oct 2019 15:06:02 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
+        Tue, 22 Oct 2019 11:06:22 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:35908 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725788AbfJVPGV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 11:06:21 -0400
+Received: by mail-pf1-f195.google.com with SMTP id y22so10840072pfr.3
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 08:06:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=IQrlgH9loWQR27iY8AmaRCSKR358bZ5kDUpR/+gPo88=;
+        b=rgltDEjtrJM+H3tUeFN8nAqWX2kAMCK+ixb/hXDSjuPMm6hdtnUU26Np9ZDIq9obrD
+         EzXTBttHOm1CeXR8RuKVxD2208EcO93+ZrmXWcS5yo5i7SnDZ0ilh6/ne6kQM9j64QgU
+         /baidjqSQSDT4de63aID37SgMPW5Yi8tc830BBPbDuYGrUneN/AKTG+uggnRK9snKh2j
+         wTo5vNmsd3AgeLSYVMh9Rn5V37Y6M62btHI9yWU35ecwbalTVFHKmRn5ii3mOviTWFeu
+         Iv2CDRViz5lHVi1WSR/mMShKKaOZjutoZHEJ+Okf3vSjH9mbMlWkmPzc/qcsYeuolcha
+         OxJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=IQrlgH9loWQR27iY8AmaRCSKR358bZ5kDUpR/+gPo88=;
+        b=Id/sBUQ4BQP+97EO3w2wuenXx5G80cxFacfMVSFGgT8EPZ4L96lxTGzmyqb1TLwqDL
+         CGOj2lCSztGPgDUUbnb82Yvt1CmsTThaGnmx3mRfbvbjLSGBy9in+g1p+ugni54FsMuI
+         lSF252au6kCMQfYDOxYAhmb/kFpWwivtN8mpdiafbmgAehTUDMKwD83Y52Kjiw1xGoi7
+         juxmiv3A7gQ6GjSsJsB/QHzBBDh4sW+5KnSPODGG30Vnqi/TomtNMaWpofOXOFaxzYLO
+         T9tJNzHYl27fWq4Rz8ZcIuYxkCbaGWkTtscFYN/ddVBRXIMS9HEU4+DckWROWSiG88Eb
+         CGcQ==
+X-Gm-Message-State: APjAAAXSZxYGL99zkPnPMmtiPfUZXjfemIs832UkZeu0OpwkLKcpS69A
+        LXR5ziNrBWJt+FxmHeA2tAo=
+X-Google-Smtp-Source: APXvYqwjiNaBXnXOpx6sfoiwSQnl5ZJE+rvz3IL63kNQgF5sIwe31dDdMtaqznhJQg+GquPAND9OAA==
+X-Received: by 2002:a62:6404:: with SMTP id y4mr3581119pfb.170.1571756781213;
+        Tue, 22 Oct 2019 08:06:21 -0700 (PDT)
+Received: from haolee.github.io ([2600:3c01::f03c:91ff:fe02:b162])
+        by smtp.gmail.com with ESMTPSA id r30sm20688247pfl.42.2019.10.22.08.06.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Oct 2019 08:06:20 -0700 (PDT)
+Date:   Tue, 22 Oct 2019 15:06:18 +0000
+From:   Hao Lee <haolee.swjtu@gmail.com>
+To:     akpm@linux-foundation.org
+Cc:     hannes@cmpxchg.org, guro@fb.com, shakeelb@google.com,
+        mhocko@kernel.org, chris@chrisdown.name,
+        yang.shi@linux.alibaba.com, tj@kernel.org, tglx@linutronix.de,
+        linux-kernel@vger.kernel.org, haolee.swjtu@gmail.com
+Subject: [PATCH] mm: fix comments based on per-node memcg
+Message-ID: <20191022150618.GA15519@haolee.github.io>
 MIME-Version: 1.0
-In-Reply-To: <20191018125234.21825-1-linux@rasmusvillemoes.dk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+These comments should be updated as memcg limit enforcement has been moved
+from zones to nodes.
 
+Signed-off-by: Hao Lee <haolee.swjtu@gmail.com>
+---
+ include/linux/memcontrol.h | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-On 10/18/2019 12:52 PM, Rasmus Villemoes wrote:
-> There have been several attempts in the past few years to allow
-> building the QUICC engine drivers for platforms other than PPC. This
-> is (the beginning of) yet another attempt. I hope I can get someone to
-> pick up these relatively trivial patches (I _think_ they shouldn't
-> change functionality at all), and then I'll continue slowly working
-> towards removing the PPC32 dependency for CONFIG_QUICC_ENGINE.
-> 
-> Tested on an MPC8309-derived board.
-> 
-> Rasmus Villemoes (7):
->    soc: fsl: qe: remove space-before-tab
->    soc: fsl: qe: drop volatile qualifier of struct qe_ic::regs
->    soc: fsl: qe: avoid ppc-specific io accessors
->    soc: fsl: qe: replace spin_event_timeout by readx_poll_timeout_atomic
->    serial: make SERIAL_QE depend on PPC32
->    serial: ucc_uart.c: explicitly include asm/cpm.h
->    soc/fsl/qe/qe.h: remove include of asm/cpm.h
+diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+index ae703ea3ef48..12c29f74c02a 100644
+--- a/include/linux/memcontrol.h
++++ b/include/linux/memcontrol.h
+@@ -112,7 +112,7 @@ struct memcg_shrinker_map {
+ };
+ 
+ /*
+- * per-zone information in memory controller.
++ * per-node information in memory controller.
+  */
+ struct mem_cgroup_per_node {
+ 	struct lruvec		lruvec;
+@@ -399,8 +399,7 @@ mem_cgroup_nodeinfo(struct mem_cgroup *memcg, int nid)
+  * @memcg: memcg of the wanted lruvec
+  *
+  * Returns the lru list vector holding pages for a given @node or a given
+- * @memcg and @zone. This can be the node lruvec, if the memory controller
+- * is disabled.
++ * @memcg. This can be the node lruvec, if the memory controller is disabled.
+  */
+ static inline struct lruvec *mem_cgroup_lruvec(struct pglist_data *pgdat,
+ 				struct mem_cgroup *memcg)
+-- 
+2.14.5
 
-Please copy the entire series to linuxppc-dev list. We are missing 5/7 
-and 7/7 (see 
-https://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=137048)
-
-Christophe
-
-> 
->   drivers/soc/fsl/qe/gpio.c     | 30 ++++++++--------
->   drivers/soc/fsl/qe/qe.c       | 44 +++++++++++------------
->   drivers/soc/fsl/qe/qe_ic.c    |  8 ++---
->   drivers/soc/fsl/qe/qe_ic.h    |  2 +-
->   drivers/soc/fsl/qe/qe_io.c    | 40 ++++++++++-----------
->   drivers/soc/fsl/qe/qe_tdm.c   |  8 ++---
->   drivers/soc/fsl/qe/ucc.c      | 12 +++----
->   drivers/soc/fsl/qe/ucc_fast.c | 66 ++++++++++++++++++-----------------
->   drivers/soc/fsl/qe/ucc_slow.c | 38 ++++++++++----------
->   drivers/soc/fsl/qe/usb.c      |  2 +-
->   drivers/tty/serial/Kconfig    |  1 +
->   drivers/tty/serial/ucc_uart.c |  1 +
->   include/soc/fsl/qe/qe.h       |  1 -
->   13 files changed, 126 insertions(+), 127 deletions(-)
-> 
