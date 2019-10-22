@@ -2,134 +2,138 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C339CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:25:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5C4ACA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:26:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D09521783
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:25:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="A/I4g5QG"
+	by mail.kernel.org (Postfix) with ESMTP id 8200B2086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:26:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388667AbfJVNZi (ORCPT
+        id S2388724AbfJVN0M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 09:25:38 -0400
-Received: from gateway33.websitewelcome.com ([192.185.146.119]:28782 "EHLO
-        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728346AbfJVNZg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 09:25:36 -0400
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway33.websitewelcome.com (Postfix) with ESMTP id A7EE3F0394
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 08:25:33 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id MuAHiqyANBnGaMuAHisPuP; Tue, 22 Oct 2019 08:25:33 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=CJG652dXFMSOvZpO2bsuZOAfIU0kqX1SEjlnk/KgB/A=; b=A/I4g5QGMVQyfQCILO2wfnRNR5
-        i15DhF/GIm7zR59Vlu3LIEbuKU9HyNfu/7aYozbHUoaGK97RpM50KwVOmIshqG6fQB6+8BLsjufW8
-        wGC6GSNdXpwoYe+4DYNFZ+histGrFaXGNzIeMa8tkeLGIBkoAjFCMI1qbxx9wl+qZdUaUQWa3Dr/6
-        WxmoiyZ1133Iyqpr20PFnkr7VHNJ/MJxUbuVAZ41Kk1SyJfvHTT/lT29Bt+jtPENyHmwwpFN8sBme
-        Wss1D3a5v6Ke/pT2w8tsbkdmxeLHnS4AoWRdcu8OW0rBarg5AD++cWxQf0WgYZVuww593C8yXHHpd
-        dA4XG8Tw==;
-Received: from [187.192.22.73] (port=51876 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1iMuAF-002fBb-W0; Tue, 22 Oct 2019 08:25:32 -0500
-Date:   Tue, 22 Oct 2019 08:25:22 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Dmitry Vyukov <dvyukov@google.com>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] media: i2c: adv748x: Fix unsafe macros
-Message-ID: <20191022132522.GA12072@embeddedor>
+        Tue, 22 Oct 2019 09:26:12 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:52688 "EHLO foss.arm.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S2387941AbfJVN0M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 09:26:12 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4E4932B;
+        Tue, 22 Oct 2019 06:25:48 -0700 (PDT)
+Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CE9C23F71F;
+        Tue, 22 Oct 2019 06:25:46 -0700 (PDT)
+Subject: Re: [RFC PATCH 1/3] dma-mapping: introduce a new dma api
+ dma_addr_to_phys_addr()
+To:     Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        "hch@lst.de" <hch@lst.de>, "joro@8bytes.org" <joro@8bytes.org>,
+        Ioana Ciocoi Radulescu <ruxandra.radulescu@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>
+Cc:     Leo Li <leoyang.li@nxp.com>,
+        Diana Madalina Craciun <diana.craciun@nxp.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        Madalin-cristian Bucur <madalin.bucur@nxp.com>
+References: <20191022125502.12495-1-laurentiu.tudor@nxp.com>
+ <20191022125502.12495-2-laurentiu.tudor@nxp.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <62561dca-cdd7-fe01-a0c3-7b5971c96e7e@arm.com>
+Date:   Tue, 22 Oct 2019 14:25:45 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.192.22.73
-X-Source-L: No
-X-Exim-ID: 1iMuAF-002fBb-W0
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [187.192.22.73]:51876
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 11
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+In-Reply-To: <20191022125502.12495-2-laurentiu.tudor@nxp.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enclose multiple macro parameters in parentheses in order to
-make such macros safer and fix the Clang warning below:
+On 22/10/2019 13:55, Laurentiu Tudor wrote:
+> From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+> 
+> Introduce a new dma map op called dma_addr_to_phys_addr() that converts
+> a dma address to the physical address backing it up and add wrapper for
+> it.
 
-drivers/media/i2c/adv748x/adv748x-afe.c:452:12: warning: operator '?:'
-has lower precedence than '|'; '|' will be evaluated first
-[-Wbitwise-conditional-parentheses]
+I'd really love it if there was a name which could encapsulate that this 
+is *only* for extreme special cases of constrained descriptors/pagetable 
+entries/etc. where there's simply no practical way to keep track of a 
+CPU address alongside the DMA address, and the only option is this 
+potentially-arbitrarily-complex operation (I mean, on some systems it 
+may end up taking locks and poking hardware).
 
-ret = sdp_clrset(state, ADV748X_SDP_FRP, ADV748X_SDP_FRP_MASK, enable
-? ctrl->val - 1 : 0);
+Either way it's tricky - much as I don't like adding an interface which 
+is ripe for drivers to misuse, I also really don't want hacks like 
+bdf95923086f shoved into other APIs to compensate, so on balance I'd 
+probably consider this proposal ever so slightly the lesser evil.
 
-Fixes: 3e89586a64df ("media: i2c: adv748x: add adv748x driver")
-Reported-by: Dmitry Vyukov <dvyukov@google.com>
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/media/i2c/adv748x/adv748x.h | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+> Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+> ---
+>   include/linux/dma-mapping.h | 21 +++++++++++++++++++++
+>   1 file changed, 21 insertions(+)
+> 
+> diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
+> index 4a1c4fca475a..5965d159c9a9 100644
+> --- a/include/linux/dma-mapping.h
+> +++ b/include/linux/dma-mapping.h
+> @@ -132,6 +132,8 @@ struct dma_map_ops {
+>   	u64 (*get_required_mask)(struct device *dev);
+>   	size_t (*max_mapping_size)(struct device *dev);
+>   	unsigned long (*get_merge_boundary)(struct device *dev);
+> +	phys_addr_t (*dma_addr_to_phys_addr)(struct device *dev,
+> +					     dma_addr_t dma_handle);
 
-diff --git a/drivers/media/i2c/adv748x/adv748x.h b/drivers/media/i2c/adv748x/adv748x.h
-index 5042f9e94aee..fccb388ce179 100644
---- a/drivers/media/i2c/adv748x/adv748x.h
-+++ b/drivers/media/i2c/adv748x/adv748x.h
-@@ -394,10 +394,10 @@ int adv748x_write_block(struct adv748x_state *state, int client_page,
- 
- #define io_read(s, r) adv748x_read(s, ADV748X_PAGE_IO, r)
- #define io_write(s, r, v) adv748x_write(s, ADV748X_PAGE_IO, r, v)
--#define io_clrset(s, r, m, v) io_write(s, r, (io_read(s, r) & ~m) | v)
-+#define io_clrset(s, r, m, v) io_write(s, r, (io_read(s, r) & ~(m)) | (v))
- 
- #define hdmi_read(s, r) adv748x_read(s, ADV748X_PAGE_HDMI, r)
--#define hdmi_read16(s, r, m) (((hdmi_read(s, r) << 8) | hdmi_read(s, r+1)) & m)
-+#define hdmi_read16(s, r, m) (((hdmi_read(s, r) << 8) | hdmi_read(s, (r)+1)) & (m))
- #define hdmi_write(s, r, v) adv748x_write(s, ADV748X_PAGE_HDMI, r, v)
- 
- #define repeater_read(s, r) adv748x_read(s, ADV748X_PAGE_REPEATER, r)
-@@ -405,11 +405,11 @@ int adv748x_write_block(struct adv748x_state *state, int client_page,
- 
- #define sdp_read(s, r) adv748x_read(s, ADV748X_PAGE_SDP, r)
- #define sdp_write(s, r, v) adv748x_write(s, ADV748X_PAGE_SDP, r, v)
--#define sdp_clrset(s, r, m, v) sdp_write(s, r, (sdp_read(s, r) & ~m) | v)
-+#define sdp_clrset(s, r, m, v) sdp_write(s, r, (sdp_read(s, r) & ~(m)) | (v))
- 
- #define cp_read(s, r) adv748x_read(s, ADV748X_PAGE_CP, r)
- #define cp_write(s, r, v) adv748x_write(s, ADV748X_PAGE_CP, r, v)
--#define cp_clrset(s, r, m, v) cp_write(s, r, (cp_read(s, r) & ~m) | v)
-+#define cp_clrset(s, r, m, v) cp_write(s, r, (cp_read(s, r) & ~(m)) | (v))
- 
- #define tx_read(t, r) adv748x_read(t->state, t->page, r)
- #define tx_write(t, r, v) adv748x_write(t->state, t->page, r, v)
--- 
-2.23.0
+I'd be inclined to name the internal callback something a bit snappier 
+like .get_phys_addr.
 
+>   };
+>   
+>   #define DMA_MAPPING_ERROR		(~(dma_addr_t)0)
+> @@ -442,6 +444,19 @@ static inline int dma_mapping_error(struct device *dev, dma_addr_t dma_addr)
+>   	return 0;
+>   }
+>   
+> +static inline phys_addr_t dma_addr_to_phys_addr(struct device *dev,
+> +						dma_addr_t dma_handle)
+> +{
+> +	const struct dma_map_ops *ops = get_dma_ops(dev);
+> +
+> +	if (dma_is_direct(ops))
+> +		return (phys_addr_t)dma_handle;
+
+Well that's not right, is it - remember why you had that namespace 
+collision? ;)
+
+Robin.
+
+> +	else if (ops->dma_addr_to_phys_addr)
+> +		return ops->dma_addr_to_phys_addr(dev, dma_handle);
+> +
+> +	return 0;
+> +}
+> +
+>   void *dma_alloc_attrs(struct device *dev, size_t size, dma_addr_t *dma_handle,
+>   		gfp_t flag, unsigned long attrs);
+>   void dma_free_attrs(struct device *dev, size_t size, void *cpu_addr,
+> @@ -578,6 +593,12 @@ static inline unsigned long dma_get_merge_boundary(struct device *dev)
+>   {
+>   	return 0;
+>   }
+> +
+> +static inline phys_addr_t dma_addr_to_phys_addr(struct device *dev,
+> +						dma_addr_t dma_handle)
+> +{
+> +	return 0;
+> +}
+>   #endif /* CONFIG_HAS_DMA */
+>   
+>   static inline dma_addr_t dma_map_single_attrs(struct device *dev, void *ptr,
+> 
