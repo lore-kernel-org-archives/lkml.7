@@ -2,247 +2,153 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA37CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:30:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C241CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:30:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE7952084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:30:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7104A2184C
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:30:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="p+n5bMtq"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="lI37fSWr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387877AbfJVQaN (ORCPT
+        id S2388655AbfJVQaX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 12:30:13 -0400
-Received: from mail-eopbgr1400134.outbound.protection.outlook.com ([40.107.140.134]:20793
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731132AbfJVQaM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 12:30:12 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=F5iWWxOZhYXbLDXdQPRstLSFk6xGJ4Gd8ggGIaYUWSUZhKsgTm2IDYaB4ZgHKSUCNUQXV3pS+yAazJq/WDbX0pVhQSmxvEhmfCUCrCr2puPil3RQh3wM3hliTt0gMt8W7etDegAPL16APOy0ElbMeYKcQ6oaWbPgWZ4RbR7wfbb2/fvOL9kEebSeURuCqws9W7SUVaOZ885Y0/WZMU+xO6THYzF77wV50zpxapsJvx4YJn3xPBGj7kNWFG+wGXNK2Zq4Xxx3tE2F4qs35Yl0c1NEU7I107dMwWVQJT90JrTD6hCRzH93ck3SU5TaEd+A9UX1AiwAnvdLF/sLmQLpWw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Waue0A9MGOm7F/zoIK/lL9zhB3dxD6Xl2alNYMmy9T8=;
- b=P5MGic66UrAGortAso8vS4M/6zu0pGv+wW8wu5gj6QhhrxgXdqX+ZM1BYrF9OJDES63WJL5W2gyTNaNn6Vo2kFk1QNoeZcI+hDN192X5mH5fMwuLl5+eBkSg6eHp2L7q1dgxCPDYoqV11pRdzsHV++xkn58h8fjp306DJGI8yC1Z0LXTQ5pww8SrC28+7CgLn/kOMaJjWKP1Kgzzw54RiEqs4tmUEoRW9ffxIYr/4jyHjzfx5YQeCueNB9DCz79Ux3mQP3ZGs55v15GSYm3y/LS7xPe4sqy5bO4jjqxU//MaOV0jBST9AsK5LWJU8pgxLR2jz/O/rZq7hA1V1VpAkA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
- header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Waue0A9MGOm7F/zoIK/lL9zhB3dxD6Xl2alNYMmy9T8=;
- b=p+n5bMtqXGZa1OdaPgmWI1/fnqWrWbPOv7kabZpP/MEdx2DUKMhw6r1AD/n5YNnyS+LmckEkUDypdxEiVj82Iar3XAA0re8eTNhX026UW6kHa4YHgocJRHB5NYvKYWtjEzAgkZOxudd5sux6jsfxQ7sgOdsTZtNZpkDsM/cb/vI=
-Received: from TYXPR01MB1775.jpnprd01.prod.outlook.com (52.133.167.146) by
- TYXPR01MB1757.jpnprd01.prod.outlook.com (52.133.165.138) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2367.24; Tue, 22 Oct 2019 16:30:07 +0000
-Received: from TYXPR01MB1775.jpnprd01.prod.outlook.com
- ([fe80::58ec:b6c:485e:19e0]) by TYXPR01MB1775.jpnprd01.prod.outlook.com
- ([fe80::58ec:b6c:485e:19e0%7]) with mapi id 15.20.2347.029; Tue, 22 Oct 2019
- 16:30:07 +0000
-From:   Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-To:     Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-CC:     Sam Ravnborg <sam@ravnborg.org>, Simon Horman <horms@verge.net.au>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        "ebiharaml@si-linux.co.jp" <ebiharaml@si-linux.co.jp>,
-        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Sean Paul <sean@poorly.run>,
-        Andrzej Hajda <a.hajda@samsung.com>
-Subject: RE: [PATCH v3 0/8] Add dual-LVDS panel support to EK874
-Thread-Topic: [PATCH v3 0/8] Add dual-LVDS panel support to EK874
-Thread-Index: AQHVXc+RlrcIOAtYlU6wFCg32X69c6dnL44Q
-Date:   Tue, 22 Oct 2019 16:30:07 +0000
-Message-ID: <TYXPR01MB17753318ECA1556FE53C262AC0680@TYXPR01MB1775.jpnprd01.prod.outlook.com>
-References: <1567017402-5895-1-git-send-email-fabrizio.castro@bp.renesas.com>
-In-Reply-To: <1567017402-5895-1-git-send-email-fabrizio.castro@bp.renesas.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=fabrizio.castro@bp.renesas.com; 
-x-originating-ip: [193.141.220.21]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: c9e063f8-f893-4ee1-4bb0-08d7570d19be
-x-ms-traffictypediagnostic: TYXPR01MB1757:|TYXPR01MB1757:
-x-ms-exchange-purlcount: 1
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <TYXPR01MB1757F605A685CE598F123F67C0680@TYXPR01MB1757.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 01986AE76B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(346002)(136003)(396003)(39860400002)(366004)(199004)(189003)(74316002)(2906002)(7736002)(7696005)(86362001)(6506007)(102836004)(25786009)(305945005)(6436002)(76116006)(66476007)(11346002)(6306002)(7416002)(9686003)(229853002)(53546011)(71190400001)(54906003)(66556008)(99286004)(64756008)(66446008)(76176011)(66946007)(6916009)(55016002)(966005)(6116002)(3846002)(14454004)(316002)(26005)(6246003)(256004)(71200400001)(5660300002)(14444005)(33656002)(44832011)(66066001)(186003)(4326008)(8676002)(52536014)(81166006)(81156014)(8936002)(446003)(486006)(476003)(478600001);DIR:OUT;SFP:1102;SCL:1;SRVR:TYXPR01MB1757;H:TYXPR01MB1775.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
-received-spf: None (protection.outlook.com: bp.renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: fCCyJDt/bkjqo+vBrSJXMRMWN26JsyuWa0BP0oVVrZEzUvBH4zrpdTzXftTnZl+5PFhrejsWPJP2NajkMefNBy67yXHuhytSsfW7fGcb6v2BHOCvQN5NDIHBZMz76D5I/kO0yYyiv6LVMap9HbPfjFpl9Vo5hlnr3gHEZfMTmQNtjrIMj3P90v6eSQY/Mq+2vtz/A3QtafxGmr2kJzvBbXOwrjLOLmYl0oAPtIQCzOd9/dagEpSf2qqNC9be8NLdf0FpUDxxBp0Y8VA5cqHzfHCK3v0mBZfp3RuULcjBNyKJtQ0+r+JtKflTHQK23cNLSTNq3rsTdu1vkFJpdbYY+pakY1dc4NOHIumVFUKUb/UTUZrj+2q4Zdumd7bwAJfbTpGOiKXHlU3zUxZploeydvwfdpSZTbDh6ygWtSWYjlELNV0IUVx8XoqauxO4S9iXSdFd03yL6NV4o5HlEpOgJB0m8gezdhm7aZ68fh0oM0s=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 22 Oct 2019 12:30:23 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:36112 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387873AbfJVQaW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 12:30:22 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9MGSuKD165257;
+        Tue, 22 Oct 2019 16:29:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=aGu1aHzafMqFrU5v6bmC0bZUGDBIxfBU5FS6beFKAV4=;
+ b=lI37fSWrTn9vVdOmdpBjEJGThnaTTpKR11O4uvEIwaQ1/NdWEE/Ipn2i7uVL7rhsQWq8
+ lVm+fj4SJpy0Eejilmx60PyC39LXfx4Cq+TOYyTPJx2pZZBH2FMn9PbsPjsaS02vjIoG
+ 5yPkHfuouWceRyr+vK58Az1dkGkZNBQxdseedeOjvORlw91qbdMIS91ZNgoyNT+dF9Ha
+ LHZgVvtE8gu0KHXv62vxZOHEIOML2gPIcPIs7SqiXD5xwvAN1ZNggzjeYQJO9BmlyRlD
+ UovC5s+xsF+NB3qpOU1q08qoOAGH9F6pC6hOzSfCvp6gR7AN/PSohPROXx3ARZ/LiHs0 iQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2vqu4qqsx7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 22 Oct 2019 16:29:48 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9MGStG0064556;
+        Tue, 22 Oct 2019 16:29:47 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2vt2hdbqb0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 22 Oct 2019 16:29:47 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9MGThJN023491;
+        Tue, 22 Oct 2019 16:29:43 GMT
+Received: from [10.175.28.77] (/10.175.28.77)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 22 Oct 2019 09:29:43 -0700
+Subject: Re: email as a bona fide git transport
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     Willy Tarreau <w@1wt.eu>, Santiago Torres Arias <santiago@nyu.edu>,
+        workflows@vger.kernel.org, Git Mailing List <git@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
+        Eric Wong <e@80x24.org>
+References: <b9fb52b8-8168-6bf0-9a72-1e6c44a281a5@oracle.com>
+ <20191016111009.GE13154@1wt.eu>
+ <20191016144517.giwip4yuaxtcd64g@LykOS.localdomain>
+ <56664222-6c29-09dc-ef78-7b380b113c4a@oracle.com>
+ <20191018161547.GG21137@mit.edu>
+ <de49fe5e-85cb-9fb0-f9f4-c294d72e356c@oracle.com>
+ <20191018191456.GI21137@mit.edu> <20191020031716.GA17475@1wt.eu>
+ <1a259d8d-b3d1-b64e-07c3-ba143b42c442@oracle.com>
+ <de6dd8b5-5c28-d0b2-d3fc-e72a6d643105@oracle.com>
+ <20191022135344.GC23268@mit.edu>
+From:   Vegard Nossum <vegard.nossum@oracle.com>
+Message-ID: <eed119a2-1561-131e-9d3d-d4d5aadee825@oracle.com>
+Date:   Tue, 22 Oct 2019 18:29:34 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c9e063f8-f893-4ee1-4bb0-08d7570d19be
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Oct 2019 16:30:07.2208
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: XbwPj9MMuvp6h2vYg52urkCJKMb/Bih2eblLHRcGmFlXlz3l+PLEup7CGeFhV+Z9EHNiNAP6n+epqwBrLLay29rkDvByj9SdzEgWkVO7lSs=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYXPR01MB1757
+In-Reply-To: <20191022135344.GC23268@mit.edu>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9418 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910220139
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9418 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910220139
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Laurent,
 
-Did you have any time to look into this series?
+On 10/22/19 3:53 PM, Theodore Y. Ts'o wrote:
+> On Tue, Oct 22, 2019 at 02:11:22PM +0200, Vegard Nossum wrote:
+>>
+>> As I wrote in there, we could already today start using
+>>
+>>    git am --message-id
+>>
+>> when applying patches and this would provide something that a bot could
+>> annotate with git notes pointing to lore/LKML/LWN/whatever. I think that
+>> would already be a pretty nice improvement over today's situation.
+>>
+>> Sadly, since the beginning of 2018, this was only used for a measly
+>> ~0.14% of all non-merge commits in the kernel:
+>>
+>> $ git rev-list --count --no-merges --since='2018-01-01' --grep 'Message-Id:
+>> ' linus/master
+>> 178
+> 
+> You might also want to count commits which have a link tag with a
+> Message-Id:
+> 
+> Link: https://lore.kernel.org/r/c3438dad66a34a7d4e7509a5dd64c2326340a52a.1571647180.git.mbobrowski@mbobrowski.org
+> 
+> That's because some kernel developers have been using a hook script like this:
+> 
+> #!/bin/sh
+> # For .git/hooks/applypatch-msg
+> #
+> # You must have the following in .git/config:
+> # [am]
+> #	messageid = true
+> 	
+> . git-sh-setup
+> perl -pi -e 's|^Message-Id:\s*<?([^>]+)>?$|Link: https://lore.kernel.org/r/$1|g;' "$1"
+> test -x "$GIT_DIR/hooks/commit-msg" &&
+> 	exec "$GIT_DIR/hooks/commit-msg" ${1+"$@"}
+> :
+> 
+> .... as we had reached rough consensus that this was the best way to
+> incorprate the message id (since it could made to be a clickable link
+> in tools like gitk, for example).  This rough consensus has only been
+> in place since around the time of the Maintainer's Summit in Lisbon,
+> so uptake is still probably a bit slow.  I'd expect to see a lot more
+> of this in the next merge window, though.
 
-Thanks,
-Fab
+Thanks, I was not aware of this!
 
-> From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Sent: 28 August 2019 19:37
-> Subject: [PATCH v3 0/8] Add dual-LVDS panel support to EK874
->=20
-> Dear All,
->=20
-> this series adds support for dual-LVDS panel IDK-2121WR
-> from Advantech:
-> https://buy.advantech.eu/Displays/Embedded-LCD-Kits-High-Brightness/model=
--IDK-2121WR-K2FHA2E.htm
->=20
-> V3 approaches the problem in a completely different way, we now
-> have two new properties to mark the ports in the DT as receiving
-> even pixels and odd pixels: dual-lvds-even-pixels and dual-lvds-odd-pixel=
-s,
-> which means device drivers should not use bridge specific or panel
-> specific dual_link flags. Also, in this case the DT describes the
-> connection fully.
->=20
-> In order for the solution to be generic, I have exported a new helper
-> (drm_of_lvds_get_dual_link_configuration) to walk the device tree,
-> and figure out if the connection is dual-LVDS. The same helper gives
-> information about the configuration of the connection. If Px is connected
-> to a port expecting even pixels and Py is connected to a port expecting
-> odd pixels, then the helper returns DRM_LVDS_DUAL_LINK_EVEN_ODD_PIXELS
-> (like in the example below), otherwise it returns
-> DRM_LVDS_DUAL_LINK_ODD_EVEN_PIXELS.
->=20
->=20
->  --------            dual-lvds-even-pixels  --------
-> |        |----                         ----|        |
-> |        | Px |---------------------->| Pn |        |
-> |        |----                         ----|        |
-> | SOURCE |           dual-lvds-odd-pixels  |  SINK  |
-> |        |----                         ----|        |
-> |        | Py |---------------------->| Pm |        |
-> |        |----                         ----|        |
->  --------                                   --------
->=20
-> The device driver for the encoder then will work out if with the current
-> wiring the pixels need swapping or not.
->=20
-> The same solution works for both panels and bridges.
->=20
-> Since the DT describes the connection fully, driver
-> drivers/gpu/drm/panel/panel-lvds.c works out-of-the-box, no changes
-> required, however, this implementation opens up a problem with the
-> dt-bindings.
-> Driver drivers/gpu/drm/panel/panel-lvds.c can still be pleased by
-> a port node, but also by a ports node.
-> I have created Documentation/devicetree/bindings/display/bus-timings/lvds=
-.yaml
-> with the idea of including it from panels and bridges dt-bindings
-> supporting dual-LVDS (and of course the dt-bindings for the specific
-> devices should say which port should be marked as what), but file
-> Documentation/devicetree/bindings/display/panel/lvds.yaml formally
-> requires property "port", while with this implementation it should requir=
-e
-> OneOf "port" and "ports", and unfortunately I can't seem to find a neat w=
-ay
-> aroud that, other than creating a new compatible string
-> (e.g. "panel-dual-lvds"), a new dt-binding document for it, and of course=
- adding
-> support for the new compatible string to drivers/gpu/drm/panel/panel-lvds=
-.c.
-> As a result, this series is missing (at least) a patch necessary to fully
-> document the new implementation within
-> Documentation/devicetree/bindings/display/panel/lvds.yaml
->=20
-> Rob, do you have any suggestions? Do you think this idea works ok from a
-> documentation point of view? By the way, I don't really know what I am do=
-ing
-> with the yaml dt-bindings, I hope you won't be horrified by this series :=
--P
->=20
-> I hope I was able to deliver the concept clearly, if not please just ask.
->=20
-> Comments are very much appreciated.
->=20
-> Thanks,
-> Fab
->=20
-> Fabrizio Castro (8):
->   dt-bindings: display: Add bindings for LVDS bus-timings
->   dt-bindings: display: Add idk-2121wr binding
->   drm: Add bus timings helper
->   drm: rcar-du: lvds: Add dual-LVDS panels support
->   drm: bridge: thc63: Do not report input bus mode through bridge
->     timings
->   arm64: dts: renesas: Add EK874 board with idk-2121wr display support
->   [HACK] arm64: dts: renesas: draak: Enable LVDS
->   [HACK] arm64: dts: renesas: draak: Enable LVDS dual-link operation
->=20
->  .../bindings/display/bus-timings/lvds.yaml         |  38 +++++++
->  .../display/panel/advantech,idk-2121wr.yaml        |  90 +++++++++++++++=
-+
->  arch/arm64/boot/dts/renesas/Makefile               |   3 +-
->  .../boot/dts/renesas/r8a774c0-ek874-idk-2121wr.dts | 116 +++++++++++++++=
-++++++
->  arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts     |  21 +++-
->  arch/arm64/boot/dts/renesas/r8a77995-draak.dts     |  26 +++--
->  drivers/gpu/drm/Makefile                           |   3 +-
->  drivers/gpu/drm/bridge/thc63lvd1024.c              |   9 +-
->  drivers/gpu/drm/drm_bus_timings.c                  |  97 +++++++++++++++=
-++
->  drivers/gpu/drm/rcar-du/rcar_lvds.c                | 110 +++++++++++----=
-----
->  include/drm/drm_bridge.h                           |   8 --
->  include/drm/drm_bus_timings.h                      |  21 ++++
->  12 files changed, 473 insertions(+), 69 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/display/bus-timings=
-/lvds.yaml
->  create mode 100644 Documentation/devicetree/bindings/display/panel/advan=
-tech,idk-2121wr.yaml
->  create mode 100644 arch/arm64/boot/dts/renesas/r8a774c0-ek874-idk-2121wr=
-.dts
->  create mode 100644 drivers/gpu/drm/drm_bus_timings.c
->  create mode 100644 include/drm/drm_bus_timings.h
->=20
-> --
-> 2.7.4
+Seems like something that should go in Documentation/maintainer/,
+right?
 
+The figure is much better, 16.7% on all non-merges since 2018-01-01.
+This should help and we can maybe already do some interesting things
+with git notes and lore/public-inbox.
+
+
+Vegard
