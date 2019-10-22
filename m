@@ -2,75 +2,100 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6984CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:27:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADA31CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:28:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96BFB2084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:27:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D6EF2084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:28:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KTr54bVY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732456AbfJVQ1t (ORCPT
+        id S1732547AbfJVQ2N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 12:27:49 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:55927 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731132AbfJVQ1s (ORCPT
+        Tue, 22 Oct 2019 12:28:13 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:55748 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731132AbfJVQ2N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 12:27:48 -0400
-Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.pengutronix.de.)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1iMx0c-00027u-VS; Tue, 22 Oct 2019 18:27:47 +0200
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     linux-kernel@vger.kernel.org
-Cc:     Vivek Gautam <vivek.gautam@codeaurora.org>, kernel@pengutronix.de
-Subject: [PATCH] reset: fix of_reset_control_get_count kerneldoc comment
-Date:   Tue, 22 Oct 2019 18:27:42 +0200
-Message-Id: <20191022162742.9908-1-p.zabel@pengutronix.de>
-X-Mailer: git-send-email 2.20.1
+        Tue, 22 Oct 2019 12:28:13 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9MGS6XL109569;
+        Tue, 22 Oct 2019 11:28:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1571761686;
+        bh=JvsTsVvNKyEdNQmcoKWgQZvfupVu9GC3u5TfI4yGQMM=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=KTr54bVYexkynr4Z7RouTo4jQnbtq7sYxR+gez5C3vs0Jm8GQk/Q0Wm3uCtdw6HDI
+         +ROp7ZMVE86dxBuEzDBRXUo+VDyjSGwaeIICLt0zaC6RLQjV63FKNLFetqvKRkJUn9
+         +awYQorHoibayeRpqbUrO9EzfUfvqD9kD/1nv+Xs=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9MGRpd0078602
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 22 Oct 2019 11:27:51 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 22
+ Oct 2019 11:27:41 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 22 Oct 2019 11:27:41 -0500
+Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with SMTP id x9MGRKBC082935;
+        Tue, 22 Oct 2019 11:27:20 -0500
+Date:   Tue, 22 Oct 2019 11:27:20 -0500
+From:   Benoit Parrot <bparrot@ti.com>
+To:     Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>
+CC:     Rob Herring <robh+dt@kernel.org>, <linux-omap@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [Patch 0/3] ARM: dts: dra7: add vpe nodes
+Message-ID: <20191022162720.yile7i4qwxgbuuou@ti.com>
+References: <20191009175628.20570-1-bparrot@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20191009175628.20570-1-bparrot@ti.com>
+User-Agent: NeoMutt/20171215
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a newline and remove a superfluous kerneldoc marker before the
-of_reset_control_get_count kerneldoc comment, to fix documentation
-build warnings:
+Tony,
 
-  ./drivers/reset/core.c:832: warning: Incorrect use of kernel-doc format:  * of_reset_control_get_count - Count number of resets available with a device
-  ./drivers/reset/core.c:840: warning: Function parameter or member 'node' not described in 'of_reset_control_get_count'
+Ping,
 
-Fixes: 17c82e206d2a ("reset: Add APIs to manage array of resets")
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
----
- drivers/reset/core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+I already had comments from Rob but i would like your feedback before
+sending a v2.
 
-diff --git a/drivers/reset/core.c b/drivers/reset/core.c
-index 7c95cafcdf08..660e0b07feca 100644
---- a/drivers/reset/core.c
-+++ b/drivers/reset/core.c
-@@ -824,9 +824,10 @@ int __device_reset(struct device *dev, bool optional)
- }
- EXPORT_SYMBOL_GPL(__device_reset);
- 
--/**
-+/*
-  * APIs to manage an array of reset controls.
-  */
-+
- /**
-  * of_reset_control_get_count - Count number of resets available with a device
-  *
--- 
-2.20.1
+Regards,
+Benoit
 
+Benoit Parrot <bparrot@ti.com> wrote on Wed [2019-Oct-09 12:56:25 -0500]:
+> This patch series adds the needed clkctrl and ty-sysc nodes for VPE module.
+> We also document the VPE DT bindings.
+> 
+> Benoit Parrot (3):
+>   dt-bindings: media: ti-vpe: Document VPE driver
+>   ARM: dts: dra7: add vpe clkctrl node
+>   ARM: dts: dra7: Add ti-sysc node for VPE
+> 
+>  .../devicetree/bindings/media/ti-vpe.txt      | 48 +++++++++++++++++++
+>  MAINTAINERS                                   |  1 +
+>  arch/arm/boot/dts/dra7-l4.dtsi                | 30 ++++++++++--
+>  arch/arm/boot/dts/dra7xx-clocks.dtsi          | 18 ++++++-
+>  drivers/clk/ti/clk-7xx.c                      |  6 +++
+>  include/dt-bindings/clock/dra7.h              | 10 ++++
+>  6 files changed, 108 insertions(+), 5 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/media/ti-vpe.txt
+> 
+> -- 
+> 2.17.1
+> 
