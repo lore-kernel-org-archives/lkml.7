@@ -2,107 +2,119 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 430ACCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:09:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C2AACA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:11:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 162E521872
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:09:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F39AA21783
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:11:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WXRtanUd"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="bz49JhuL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731971AbfJVOJI (ORCPT
+        id S1731643AbfJVOLZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 10:09:08 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:59504 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727582AbfJVOJI (ORCPT
+        Tue, 22 Oct 2019 10:11:25 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:51038 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727582AbfJVOLZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 10:09:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571753347;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
-        bh=uSxGqEuW52lrWz/8potOYyUverZyGRXQnr3ONuzw9lw=;
-        b=WXRtanUd45HLLJffFxnO2L8OIwb636oOtefPsq/Ag/F7bDeFeEZk/u3ezydCAxnapi6wW3
-        EaVbpaz/hcejDPkf7dpPr864xU9Gxjl84ymDZB6Vzp8J4nSG6LDUOaj674e4KK2yBodBay
-        6OG+9DGFK1JQTcazgEn9tQnOPdDIizE=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-379-NnB6b5-iOEOm0i45E50IwQ-1; Tue, 22 Oct 2019 10:09:04 -0400
-Received: by mail-wr1-f72.google.com with SMTP id 4so5072970wrf.19
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 07:09:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=makMNuKu1ppWLAvCA/QyEUL2D+FfE16R1xUwog6fpcY=;
-        b=Bdw6DYU6/aMDymbbqNeiA7bnnxv0leq0SIpZIWO9Pv2tqWOxhqdmXSETfSsqADbpMH
-         U++alYvFVRtEvk1s7ntQK7knlElJPUYFvMfyKJnUmnSLxtnyudkJDXMtYZkH4N9xINUe
-         Sql6MsLGZjGBgVdKgLAQx4lZj1Cm2qh3KsyFkQlA16reIxcNND9HVKqHs6ChIOXxOGja
-         XM3AInnoKFCRJUE3b4vi0/PPVrTIppbZgMPs/nc31HTIznQUHEH4Wnlo1o2GZQE3FFZT
-         JT08cXDvi8QpIqE5BnJLBcPXJ0dqj9mVjxtX7jDU+zeoqqU1aXqwuEr5BVEbiGmXOw7E
-         BUUg==
-X-Gm-Message-State: APjAAAU68uIET1HENOWcuUduFs+17YRI1ZRREe5IWvOjdMqPP/dfitS1
-        uRqCAVuqMFoEBenmWJkpXoRlotmvhO2Ziit60H3WKID+XXIjMgDpzbeVt1+MJzP8735r4HwppaV
-        qm864xmQIjvzHgs3Db1aWs2C2
-X-Received: by 2002:a1c:64d4:: with SMTP id y203mr3274025wmb.27.1571753343663;
-        Tue, 22 Oct 2019 07:09:03 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzkJgcR6x3vTLahX+BVgNWIDW6o7sVahp6sEE316gNwH/lVfCALUNph0Wv1M5z5/y2k/6tSsQ==
-X-Received: by 2002:a1c:64d4:: with SMTP id y203mr3273996wmb.27.1571753343407;
-        Tue, 22 Oct 2019 07:09:03 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:c0e4:dcf4:b543:ce19? ([2001:b07:6468:f312:c0e4:dcf4:b543:ce19])
-        by smtp.gmail.com with ESMTPSA id z125sm25633535wme.37.2019.10.22.07.09.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Oct 2019 07:09:02 -0700 (PDT)
-Subject: Re: [PATCH v3 6/6] KVM: x86/vPMU: Add lazy mechanism to release
- perf_event per vPMC
-To:     Like Xu <like.xu@linux.intel.com>, kvm@vger.kernel.org
-Cc:     peterz@infradead.org, like.xu@intel.com,
-        linux-kernel@vger.kernel.org, jmattson@google.com,
-        sean.j.christopherson@intel.com, wei.w.wang@intel.com,
-        kan.liang@intel.com
-References: <20191021160651.49508-1-like.xu@linux.intel.com>
- <20191021160651.49508-7-like.xu@linux.intel.com>
- <c17a9d77-2c30-b3c0-4652-57f0b9252f3b@redhat.com>
- <7d46a902-43eb-4693-f481-1c2efd397fbd@linux.intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <d3434a16-07ed-7070-f316-9a2fa072ace0@redhat.com>
-Date:   Tue, 22 Oct 2019 16:09:02 +0200
+        Tue, 22 Oct 2019 10:11:25 -0400
+Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 28709595;
+        Tue, 22 Oct 2019 16:11:23 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1571753483;
+        bh=PmquBevF/cwoHPStIqfgBKlA7tjw1tV0YyybpCNwuqI=;
+        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=bz49JhuLPABaTgAiE4bQhZ0qKHS2/p/HXoqfRkIe7o0jHSSEH9llSp9gmo8WDhr1G
+         KXhhUSN8mHVXYMbsATeAeTZ6NWFDpiUncX73auUfYUyv3b+SD36NmBAeF6j+op90U+
+         mG8HSwWfeuGG1Vb/gLKN5hqhwXsR9WgtFG9MxCk0=
+Reply-To: kieran.bingham+renesas@ideasonboard.com
+Subject: Re: [PATCH] media: i2c: adv748x: Fix unsafe macros
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Dmitry Vyukov <dvyukov@google.com>
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191022132522.GA12072@embeddedor>
+From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Organization: Ideas on Board
+Message-ID: <22780ef3-514e-d013-1da8-9576780fde1c@ideasonboard.com>
+Date:   Tue, 22 Oct 2019 15:11:20 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <7d46a902-43eb-4693-f481-1c2efd397fbd@linux.intel.com>
-Content-Language: en-US
-X-MC-Unique: NnB6b5-iOEOm0i45E50IwQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191022132522.GA12072@embeddedor>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22/10/19 14:00, Like Xu wrote:
->=20
-> Second, the structure of pmu->pmc_in_use is in the following format:
->=20
-> =C2=A0 Intel: [0 .. INTEL_PMC_MAX_GENERIC-1] <=3D> gp counters
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 [INTEL=
-_PMC_IDX_FIXED .. INTEL_PMC_IDX_FIXED + 2] <=3D> fixed
-> =C2=A0 AMD:=C2=A0=C2=A0 [0 .. AMD64_NUM_COUNTERS-1] <=3D> gp counters
+Hi Gustavo,
 
-Sorry---I confused INTEL_PMC_MAX_FIXED and INTEL_PMC_IDX_FIXED.
+On 22/10/2019 14:25, Gustavo A. R. Silva wrote:
+> Enclose multiple macro parameters in parentheses in order to
+> make such macros safer and fix the Clang warning below:
+> 
+> drivers/media/i2c/adv748x/adv748x-afe.c:452:12: warning: operator '?:'
+> has lower precedence than '|'; '|' will be evaluated first
+> [-Wbitwise-conditional-parentheses]
+> 
+> ret = sdp_clrset(state, ADV748X_SDP_FRP, ADV748X_SDP_FRP_MASK, enable
+> ? ctrl->val - 1 : 0);
+> 
+> Fixes: 3e89586a64df ("media: i2c: adv748x: add adv748x driver")
+> Reported-by: Dmitry Vyukov <dvyukov@google.com>
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-The patches look good, I'll give them another look since I obviously
-wasn't very much awake when reviewing them.
+Thanks,
 
-Paolo
+You beat me to posting - but that looks incredibly close (identical I
+think) to the one I had prepared.
+
+Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+
+> ---
+>  drivers/media/i2c/adv748x/adv748x.h | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/media/i2c/adv748x/adv748x.h b/drivers/media/i2c/adv748x/adv748x.h
+> index 5042f9e94aee..fccb388ce179 100644
+> --- a/drivers/media/i2c/adv748x/adv748x.h
+> +++ b/drivers/media/i2c/adv748x/adv748x.h
+> @@ -394,10 +394,10 @@ int adv748x_write_block(struct adv748x_state *state, int client_page,
+>  
+>  #define io_read(s, r) adv748x_read(s, ADV748X_PAGE_IO, r)
+>  #define io_write(s, r, v) adv748x_write(s, ADV748X_PAGE_IO, r, v)
+> -#define io_clrset(s, r, m, v) io_write(s, r, (io_read(s, r) & ~m) | v)
+> +#define io_clrset(s, r, m, v) io_write(s, r, (io_read(s, r) & ~(m)) | (v))
+>  
+>  #define hdmi_read(s, r) adv748x_read(s, ADV748X_PAGE_HDMI, r)
+> -#define hdmi_read16(s, r, m) (((hdmi_read(s, r) << 8) | hdmi_read(s, r+1)) & m)
+> +#define hdmi_read16(s, r, m) (((hdmi_read(s, r) << 8) | hdmi_read(s, (r)+1)) & (m))
+>  #define hdmi_write(s, r, v) adv748x_write(s, ADV748X_PAGE_HDMI, r, v)
+>  
+>  #define repeater_read(s, r) adv748x_read(s, ADV748X_PAGE_REPEATER, r)
+> @@ -405,11 +405,11 @@ int adv748x_write_block(struct adv748x_state *state, int client_page,
+>  
+>  #define sdp_read(s, r) adv748x_read(s, ADV748X_PAGE_SDP, r)
+>  #define sdp_write(s, r, v) adv748x_write(s, ADV748X_PAGE_SDP, r, v)
+> -#define sdp_clrset(s, r, m, v) sdp_write(s, r, (sdp_read(s, r) & ~m) | v)
+> +#define sdp_clrset(s, r, m, v) sdp_write(s, r, (sdp_read(s, r) & ~(m)) | (v))
+>  
+>  #define cp_read(s, r) adv748x_read(s, ADV748X_PAGE_CP, r)
+>  #define cp_write(s, r, v) adv748x_write(s, ADV748X_PAGE_CP, r, v)
+> -#define cp_clrset(s, r, m, v) cp_write(s, r, (cp_read(s, r) & ~m) | v)
+> +#define cp_clrset(s, r, m, v) cp_write(s, r, (cp_read(s, r) & ~(m)) | (v))
+>  
+>  #define tx_read(t, r) adv748x_read(t->state, t->page, r)
+>  #define tx_write(t, r, v) adv748x_write(t->state, t->page, r, v)
+> 
 
