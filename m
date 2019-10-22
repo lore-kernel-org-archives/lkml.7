@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DA12CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 02:03:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C03CCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 02:03:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13D84207FC
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 02:03:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE1CB21D81
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 02:03:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387866AbfJVCD2 (ORCPT
+        id S2387763AbfJVCDg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 22:03:28 -0400
+        Mon, 21 Oct 2019 22:03:36 -0400
 Received: from mga14.intel.com ([192.55.52.115]:61583 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730850AbfJVB7h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 21:59:37 -0400
+        id S1730808AbfJVB7g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 21:59:36 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 18:59:37 -0700
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 18:59:36 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.67,325,1566889200"; 
-   d="scan'208";a="196293773"
+   d="scan'208";a="196293761"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
-  by fmsmga008.fm.intel.com with ESMTP; 21 Oct 2019 18:59:36 -0700
+  by fmsmga008.fm.intel.com with ESMTP; 21 Oct 2019 18:59:35 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Marc Zyngier <maz@kernel.org>, James Hogan <jhogan@kernel.org>,
         Paul Mackerras <paulus@ozlabs.org>,
@@ -49,9 +49,9 @@ Cc:     James Morse <james.morse@arm.com>,
         linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
         linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
         kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 08/45] KVM: x86: Move FPU allocation to common x86 code
-Date:   Mon, 21 Oct 2019 18:58:48 -0700
-Message-Id: <20191022015925.31916-9-sean.j.christopherson@intel.com>
+Subject: [PATCH 06/45] KVM: SVM: Use direct vcpu pointer during vCPU create/free
+Date:   Mon, 21 Oct 2019 18:58:46 -0700
+Message-Id: <20191022015925.31916-7-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20191022015925.31916-1-sean.j.christopherson@intel.com>
 References: <20191022015925.31916-1-sean.j.christopherson@intel.com>
@@ -62,174 +62,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The allocation of FPU structs is identical across VMX and SVM, move it
-to common x86 code.  Somewhat arbitrarily place the allocation so that
-it resides directly above the associated initialization via fx_init(),
-e.g. instead of retaining its position with respect to the overall vcpu
-creation flow.  Although the names names kvm_arch_vcpu_create() and
-kvm_arch_vcpu_init() might suggest otherwise, x86 does not have a clean
-split between 'create' and 'init'.  Allocating the struct immediately
-prior to the first use arguably improves readability *now*, and will
-yield even bigger improvements when kvm_arch_vcpu_init() is removed in
-a future patch.
+Capture the vcpu pointer in a local varaible and replace '&svm->vcpu'
+references with a direct reference to the pointer in anticipation of
+moving bits of the code to common x86 and passing the vcpu pointer into
+svm_create_vcpu(), i.e. eliminate unnecessary noise from future patches.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/svm.c     | 25 +------------------------
- arch/x86/kvm/vmx/vmx.c | 25 +------------------------
- arch/x86/kvm/x86.c     | 21 +++++++++++++++++++++
- 3 files changed, 23 insertions(+), 48 deletions(-)
+ arch/x86/kvm/svm.c | 30 ++++++++++++++++--------------
+ 1 file changed, 16 insertions(+), 14 deletions(-)
 
 diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index bbc5dac9d400..dc4e835f7d46 100644
+index e479ea9bc9da..2f66c52e1b5d 100644
 --- a/arch/x86/kvm/svm.c
 +++ b/arch/x86/kvm/svm.c
-@@ -2151,25 +2151,9 @@ static int svm_create_vcpu(struct kvm *kvm, struct kvm_vcpu *vcpu,
- 	BUILD_BUG_ON(offsetof(struct vcpu_svm, vcpu) != 0);
- 	svm = to_svm(vcpu);
+@@ -2140,6 +2140,7 @@ static int avic_init_vcpu(struct vcpu_svm *svm)
  
--	vcpu->arch.user_fpu = kmem_cache_zalloc(x86_fpu_cache,
--						GFP_KERNEL_ACCOUNT);
--	if (!vcpu->arch.user_fpu) {
--		printk(KERN_ERR "kvm: failed to allocate kvm userspace's fpu\n");
--		err = -ENOMEM;
--		goto out;
--	}
--
--	vcpu->arch.guest_fpu = kmem_cache_zalloc(x86_fpu_cache,
--						 GFP_KERNEL_ACCOUNT);
--	if (!vcpu->arch.guest_fpu) {
--		printk(KERN_ERR "kvm: failed to allocate vcpu's fpu\n");
--		err = -ENOMEM;
--		goto free_user_fpu;
--	}
--
- 	err = kvm_vcpu_init(vcpu, kvm, id);
- 	if (err)
--		goto free_guest_fpu;
-+		return err;
- 
- 	err = -ENOMEM;
- 	page = alloc_page(GFP_KERNEL_ACCOUNT);
-@@ -2225,11 +2209,6 @@ static int svm_create_vcpu(struct kvm *kvm, struct kvm_vcpu *vcpu,
- 	__free_page(page);
- uninit:
- 	kvm_vcpu_uninit(vcpu);
--free_guest_fpu:
--	kmem_cache_free(x86_fpu_cache, vcpu->arch.guest_fpu);
--free_user_fpu:
--	kmem_cache_free(x86_fpu_cache, vcpu->arch.user_fpu);
--out:
- 	return err;
- }
- 
-@@ -2257,8 +2236,6 @@ static void svm_free_vcpu(struct kvm_vcpu *vcpu)
- 	__free_page(virt_to_page(svm->nested.hsave));
- 	__free_pages(virt_to_page(svm->nested.msrpm), MSRPM_ALLOC_ORDER);
- 	kvm_vcpu_uninit(vcpu);
--	kmem_cache_free(x86_fpu_cache, vcpu->arch.user_fpu);
--	kmem_cache_free(x86_fpu_cache, vcpu->arch.guest_fpu);
- }
- 
- static void svm_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 832d8e38acd4..1973029c5c77 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -6691,8 +6691,6 @@ static void vmx_free_vcpu(struct kvm_vcpu *vcpu)
- 	free_loaded_vmcs(vmx->loaded_vmcs);
- 	kfree(vmx->guest_msrs);
- 	kvm_vcpu_uninit(vcpu);
--	kmem_cache_free(x86_fpu_cache, vcpu->arch.user_fpu);
--	kmem_cache_free(x86_fpu_cache, vcpu->arch.guest_fpu);
- }
- 
- static int vmx_create_vcpu(struct kvm *kvm, struct kvm_vcpu *vcpu,
-@@ -6705,25 +6703,9 @@ static int vmx_create_vcpu(struct kvm *kvm, struct kvm_vcpu *vcpu,
- 	BUILD_BUG_ON(offsetof(struct vcpu_vmx, vcpu) != 0);
- 	vmx = to_vmx(vcpu);
- 
--	vcpu->arch.user_fpu = kmem_cache_zalloc(x86_fpu_cache,
--						GFP_KERNEL_ACCOUNT);
--	if (!vcpu->arch.user_fpu) {
--		printk(KERN_ERR "kvm: failed to allocate kvm userspace's fpu\n");
--		err = -ENOMEM;
--		goto out;
--	}
--
--	vcpu->arch.guest_fpu = kmem_cache_zalloc(x86_fpu_cache,
--						 GFP_KERNEL_ACCOUNT);
--	if (!vcpu->arch.guest_fpu) {
--		printk(KERN_ERR "kvm: failed to allocate vcpu's fpu\n");
--		err = -ENOMEM;
--		goto free_user_fpu;
--	}
--
- 	err = kvm_vcpu_init(vcpu, kvm, id);
- 	if (err)
--		goto free_vcpu;
-+		return err;
- 
- 	err = -ENOMEM;
- 
-@@ -6819,11 +6801,6 @@ static int vmx_create_vcpu(struct kvm *kvm, struct kvm_vcpu *vcpu,
- uninit_vcpu:
- 	kvm_vcpu_uninit(vcpu);
- 	free_vpid(vmx->vpid);
--free_vcpu:
--	kmem_cache_free(x86_fpu_cache, vcpu->arch.guest_fpu);
--free_user_fpu:
--	kmem_cache_free(x86_fpu_cache, vcpu->arch.user_fpu);
--out:
- 	return err;
- }
- 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 45b296a9fdbb..777a29b3c38b 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -9017,6 +9017,8 @@ void kvm_arch_vcpu_free(struct kvm_vcpu *vcpu)
- 	kvm_x86_ops->vcpu_free(vcpu);
- 
- 	free_cpumask_var(vcpu->arch.wbinvd_dirty_mask);
-+	kmem_cache_free(x86_fpu_cache, vcpu->arch.user_fpu);
-+	kmem_cache_free(x86_fpu_cache, vcpu->arch.guest_fpu);
- 	kmem_cache_free(kvm_vcpu_cache, vcpu);
- }
- 
-@@ -9371,6 +9373,21 @@ int kvm_arch_vcpu_init(struct kvm_vcpu *vcpu)
- 		goto fail_free_mce_banks;
+ static struct kvm_vcpu *svm_create_vcpu(struct kvm *kvm, unsigned int id)
+ {
++	struct kvm_vcpu *vcpu;
+ 	struct vcpu_svm *svm;
+ 	struct page *page;
+ 	struct page *msrpm_pages;
+@@ -2155,24 +2156,25 @@ static struct kvm_vcpu *svm_create_vcpu(struct kvm *kvm, unsigned int id)
+ 		err = -ENOMEM;
+ 		goto out;
  	}
++	vcpu = &svm->vcpu;
  
+-	svm->vcpu.arch.user_fpu = kmem_cache_zalloc(x86_fpu_cache,
+-						     GFP_KERNEL_ACCOUNT);
+-	if (!svm->vcpu.arch.user_fpu) {
 +	vcpu->arch.user_fpu = kmem_cache_zalloc(x86_fpu_cache,
 +						GFP_KERNEL_ACCOUNT);
 +	if (!vcpu->arch.user_fpu) {
-+		pr_err("kvm: failed to allocate userspace's fpu\n");
-+		r = -ENOMEM;
-+		goto free_wbinvd_dirty_mask;
-+	}
-+
+ 		printk(KERN_ERR "kvm: failed to allocate kvm userspace's fpu\n");
+ 		err = -ENOMEM;
+ 		goto free_partial_svm;
+ 	}
+ 
+-	svm->vcpu.arch.guest_fpu = kmem_cache_zalloc(x86_fpu_cache,
+-						     GFP_KERNEL_ACCOUNT);
+-	if (!svm->vcpu.arch.guest_fpu) {
 +	vcpu->arch.guest_fpu = kmem_cache_zalloc(x86_fpu_cache,
 +						 GFP_KERNEL_ACCOUNT);
 +	if (!vcpu->arch.guest_fpu) {
-+		pr_err("kvm: failed to allocate vcpu's fpu\n");
-+		r = -ENOMEM;
-+		goto free_user_fpu;
-+	}
- 	fx_init(vcpu);
+ 		printk(KERN_ERR "kvm: failed to allocate vcpu's fpu\n");
+ 		err = -ENOMEM;
+ 		goto free_user_fpu;
+ 	}
  
- 	vcpu->arch.guest_xstate_size = XSAVE_HDR_SIZE + XSAVE_HDR_OFFSET;
-@@ -9389,6 +9406,10 @@ int kvm_arch_vcpu_init(struct kvm_vcpu *vcpu)
+-	err = kvm_vcpu_init(&svm->vcpu, kvm, id);
++	err = kvm_vcpu_init(vcpu, kvm, id);
+ 	if (err)
+ 		goto free_svm;
  
- 	return 0;
+@@ -2216,9 +2218,9 @@ static struct kvm_vcpu *svm_create_vcpu(struct kvm *kvm, unsigned int id)
+ 	svm->asid_generation = 0;
+ 	init_vmcb(svm);
  
-+free_user_fpu:
+-	svm_init_osvw(&svm->vcpu);
++	svm_init_osvw(vcpu);
+ 
+-	return &svm->vcpu;
++	return vcpu;
+ 
+ free_page4:
+ 	__free_page(hsave_page);
+@@ -2229,11 +2231,11 @@ static struct kvm_vcpu *svm_create_vcpu(struct kvm *kvm, unsigned int id)
+ free_page1:
+ 	__free_page(page);
+ uninit:
+-	kvm_vcpu_uninit(&svm->vcpu);
++	kvm_vcpu_uninit(vcpu);
+ free_svm:
+-	kmem_cache_free(x86_fpu_cache, svm->vcpu.arch.guest_fpu);
++	kmem_cache_free(x86_fpu_cache, vcpu->arch.guest_fpu);
+ free_user_fpu:
+-	kmem_cache_free(x86_fpu_cache, svm->vcpu.arch.user_fpu);
 +	kmem_cache_free(x86_fpu_cache, vcpu->arch.user_fpu);
-+free_wbinvd_dirty_mask:
-+	free_cpumask_var(vcpu->arch.wbinvd_dirty_mask);
- fail_free_mce_banks:
- 	kfree(vcpu->arch.mce_banks);
- fail_free_lapic:
+ free_partial_svm:
+ 	kmem_cache_free(kvm_vcpu_cache, svm);
+ out:
+@@ -2264,8 +2266,8 @@ static void svm_free_vcpu(struct kvm_vcpu *vcpu)
+ 	__free_page(virt_to_page(svm->nested.hsave));
+ 	__free_pages(virt_to_page(svm->nested.msrpm), MSRPM_ALLOC_ORDER);
+ 	kvm_vcpu_uninit(vcpu);
+-	kmem_cache_free(x86_fpu_cache, svm->vcpu.arch.user_fpu);
+-	kmem_cache_free(x86_fpu_cache, svm->vcpu.arch.guest_fpu);
++	kmem_cache_free(x86_fpu_cache, vcpu->arch.user_fpu);
++	kmem_cache_free(x86_fpu_cache, vcpu->arch.guest_fpu);
+ 	kmem_cache_free(kvm_vcpu_cache, svm);
+ }
+ 
 -- 
 2.22.0
 
