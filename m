@@ -2,157 +2,77 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE541CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:57:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57AE9CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:57:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEE2320640
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:57:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZrQZqDM/"
+	by mail.kernel.org (Postfix) with ESMTP id 26B2720640
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:57:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731250AbfJVI5X (ORCPT
+        id S1731272AbfJVI5h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 04:57:23 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:41247 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731223AbfJVI5X (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 04:57:23 -0400
-Received: by mail-vs1-f65.google.com with SMTP id l2so10795054vsr.8
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 01:57:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=s2KncmuUuzkST0SJuWXi9nSQahdWQWGnhsFKkDCrbOE=;
-        b=ZrQZqDM/6uZMqHcq6Jrzk84v460OZuoA+j4yg8KVF6g/cXJcgjoYKx/7xef20uUG54
-         7//Jf2Ktq7F+0oZtpKtYBt6cmcqVLI+7hs/yeZaQ7WcgKdUb197M9iI4ns0Ay2TNYTdT
-         dHsxxSaPnTCBiEzwyZp3bHA2BifEMBUI79j+OudQvANNBIf1K+LWUKKT8kk3hTcKfsW5
-         wPgt8Tq1dPpJcpU6ESeV5d0/9w2z7weVeiPdU3b/q7kbVEGjBpLmEjiXur42+2TQ1SDS
-         ssmsWzEzKz1kQI92m00QnfDoVm2W0R1SK5ytDmyi+N4cjp9weAITISRGbDdw1PeQJhrf
-         NnqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=s2KncmuUuzkST0SJuWXi9nSQahdWQWGnhsFKkDCrbOE=;
-        b=kl6/S20n+xgFZEeO6m12WzrFsM52TGGyn+8LV4dPPYQU3GQyDnYUa61mOV+V8MD04s
-         8II/FsccY8QKi49H4FGnu/cJH+DxqzPixHlSej7NIZ91wPyURwIoPqNrYuKg2vHeNltS
-         QG1+k78N/neUnZBCKtIEGxK7ZyNLf9BFK7ECD2I4NV90m0dMA8TpxWCPNhfWFwcSFQjS
-         ULNtRRQhcXWUtVhs8W/fIPwLyMKzN2V/8T82693bYiuie39qXE758IPiwu9k1mJb0ta7
-         iYAYMD6xU5vu5ttnUavvnU7cyGPJC79ZcxVGZvhZnJXaYgxFqqvNmaN3l7StaP9OTeQZ
-         r9+A==
-X-Gm-Message-State: APjAAAVn0dXVeKKXmblvKF8JtJJEvBUFyrJZvSt8lO/EZI+RwJ8W2l4s
-        74Cjeq6CNf+gpG9U3ZCuswlB5CFdxq9EG3SMWKrJgQ==
-X-Google-Smtp-Source: APXvYqzk7Pu2o3BNiXte2DnyH90EBqmbScr/BAoGu0ZdVKx0CGqv6wIpK1d1V0WaZS2dbFQWEpVLG/sVjbCZ2UBxVJg=
-X-Received: by 2002:a67:d113:: with SMTP id u19mr1088796vsi.93.1571734642189;
- Tue, 22 Oct 2019 01:57:22 -0700 (PDT)
-MIME-Version: 1.0
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 22 Oct 2019 10:57:10 +0200
-Message-ID: <CACRpkdbiyY9AT5Y8OwMmFgwgvn_DGUFrJVHWbZwyAxnK_bA7HQ@mail.gmail.com>
-Subject: [GIT PULL] pin control fixes for v5.4
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 22 Oct 2019 04:57:37 -0400
+Received: from gate.crashing.org ([63.228.1.57]:42736 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731223AbfJVI5g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 04:57:36 -0400
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x9M8vAi3013910;
+        Tue, 22 Oct 2019 03:57:10 -0500
+Received: (from segher@localhost)
+        by gate.crashing.org (8.14.1/8.14.1/Submit) id x9M8v9Dv013909;
+        Tue, 22 Oct 2019 03:57:09 -0500
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date:   Tue, 22 Oct 2019 03:57:09 -0500
+From:   Segher Boessenkool <segher@kernel.crashing.org>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 3/3] powerpc/prom_init: Use -ffreestanding to avoid a reference to bcmp
+Message-ID: <20191022085709.GI28442@gate.crashing.org>
+References: <20190911182049.77853-1-natechancellor@gmail.com> <20191014025101.18567-1-natechancellor@gmail.com> <20191014025101.18567-4-natechancellor@gmail.com> <20191014093501.GE28442@gate.crashing.org> <CAKwvOdmcUT2A9FG0JD9jd0s=gAavRc_h+RLG6O3mBz4P1FfF8w@mail.gmail.com> <20191014191141.GK28442@gate.crashing.org> <20191018190022.GA1292@ubuntu-m2-xlarge-x86> <20191018200210.GR28442@gate.crashing.org> <20191022051529.GA44041@ubuntu-m2-xlarge-x86>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191022051529.GA44041@ubuntu-m2-xlarge-x86>
+User-Agent: Mutt/1.4.2.3i
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Mon, Oct 21, 2019 at 10:15:29PM -0700, Nathan Chancellor wrote:
+> On Fri, Oct 18, 2019 at 03:02:10PM -0500, Segher Boessenkool wrote:
+> > I think the proper solution is for the kernel to *do* use -ffreestanding,
+> > and then somehow tell the kernel that memcpy etc. are the standard
+> > functions.  A freestanding GCC already requires memcpy, memmove, memset,
+> > memcmp, and sometimes abort to exist and do the standard thing; why cannot
+> > programs then also rely on it to be the standard functions.
+> > 
+> > What exact functions are the reason the kernel does not use -ffreestanding?
+> > Is it just memcpy?  Is more wanted?
+> 
+> I think Linus summarized it pretty well here:
+> 
+> https://lore.kernel.org/lkml/CAHk-=wi-epJZfBHDbKKDZ64us7WkF=LpUfhvYBmZSteO8Q0RAg@mail.gmail.com/
 
-here is a bunch of pin control fixes. I was lagging behind
-on this one, some fixes should have come in earlier,
-sorry about that.
+GCC recognises __builtin_memcpy (or any other __builtin) just fine even
+with -ffreestanding.
 
-Anyways here it is, pretty straight-forward fixes, the Strago
-fix stand out as something serious affecting a lot of
-machines.
+So the kernel wants a warning (or error) whenever a call to one of these
+library functions is generated by the compiler without the user asking
+for it directly (via a __builtin)?  And that is all that is needed for
+the kernel to use -ffreestanding?
 
-Yours,
-Linus Walleij
+That shouldn't be hard.  Anything missing here?
 
-The following changes since commit 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c:
 
-  Linux 5.4-rc1 (2019-09-30 10:35:40 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
-tags/pinctrl-v5.4-2
-
-for you to fetch changes up to d6e7a1a5119c4e719b0d63651f09762d7384bfed:
-
-  pinctrl: aspeed-g6: Rename SD3 to EMMC and rework pin groups
-(2019-10-16 15:58:27 +0200)
-
-----------------------------------------------------------------
-Pin control fixes for v5.4:
-
-- Handle multiple instances of Intel chips without complaining.
-- Restore the Intel Strago DMI workaround
-- Make the Armada 37xx handle pins over 32
-- Fix the polarity of the LED group on Armada 37xx
-- Fix an off-by-one bug in the NS2 driver
-- Fix error path for iproc's platform_get_irq()
-- Fix error path on the STMFX driver
-- Fix a typo in the Berlin AS370 driver
-- Fix up misc errors in the Aspeed 2600 BMC support
-- Fix a stray SPDX tag
-
-----------------------------------------------------------------
-Amelie Delaunay (1):
-      pinctrl: stmfx: fix null pointer on remove
-
-Andrew Jeffery (4):
-      dt-bindings: pinctrl: aspeed-g6: Rework SD3 function and groups
-      pinctrl: aspeed-g6: Sort pins for sanity
-      pinctrl: aspeed-g6: Fix I2C14 SDA description
-      pinctrl: aspeed-g6: Make SIG_DESC_CLEAR() behave intuitively
-
-Andy Shevchenko (1):
-      pinctrl: intel: Allocate IRQ chip dynamic
-
-Chris Packham (1):
-      pinctrl: iproc: allow for error from platform_get_irq()
-
-Dan Carpenter (1):
-      pinctrl: ns2: Fix off by one bugs in ns2_pinmux_enable()
-
-Dmitry Torokhov (1):
-      pinctrl: cherryview: restore Strago DMI workaround for all versions
-
-Jisheng Zhang (1):
-      pinctrl: berlin: as370: fix a typo s/spififib/spdifib
-
-Johnny Huang (3):
-      pinctrl: aspeed-g6: Fix I3C3/I3C4 pinmux configuration
-      pinctrl: aspeed-g6: Fix UART13 group pinmux
-      pinctrl: aspeed-g6: Rename SD3 to EMMC and rework pin groups
-
-Linus Walleij (2):
-      pinctrl: bcm-iproc: Use SPDX header
-      Merge tag 'intel-pinctrl-fixes-v5.4' of
-git://git.kernel.org/.../pinctrl/intel into fixes
-
-Patrick Williams (2):
-      pinctrl: armada-37xx: fix control of pins 32 and up
-      pinctrl: armada-37xx: swap polarity on LED group
-
- .../bindings/pinctrl/aspeed,ast2600-pinctrl.yaml   |  86 +++++++-------
- drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c         | 124 +++++++++------------
- drivers/pinctrl/aspeed/pinmux-aspeed.h             |   3 +-
- drivers/pinctrl/bcm/pinctrl-iproc-gpio.c           |  12 +-
- drivers/pinctrl/bcm/pinctrl-ns2-mux.c              |   4 +-
- drivers/pinctrl/berlin/pinctrl-as370.c             |   2 +-
- drivers/pinctrl/intel/pinctrl-cherryview.c         |   4 -
- drivers/pinctrl/intel/pinctrl-intel.c              |  27 ++---
- drivers/pinctrl/mvebu/pinctrl-armada-37xx.c        |  26 ++---
- drivers/pinctrl/pinctrl-stmfx.c                    |   2 +-
- 10 files changed, 131 insertions(+), 159 deletions(-)
+Segher
