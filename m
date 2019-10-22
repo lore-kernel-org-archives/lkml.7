@@ -2,153 +2,134 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB4EFCA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:23:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A669CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:24:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8199920684
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:23:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1A0420684
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:24:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cBzndCD7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dPLfFB5H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388316AbfJVIXs (ORCPT
+        id S2388370AbfJVIYF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 04:23:48 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:47154 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2388011AbfJVIXs (ORCPT
+        Tue, 22 Oct 2019 04:24:05 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:36882 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388170AbfJVIYF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 04:23:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571732626;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=lrUeBCrSy1rpGB4XosjgjFYUmBasj3OjbX7rli4aJko=;
-        b=cBzndCD7Km3J9t9Js4BdaCWw7a8mzdHHioRfWsH2XEGxGpZXzBSuQDhDpw/9s4NRHCman4
-        uFAe59u/iIhAUdV+JBWoq8s5XuOANkasH0K7Ve/nJ2Dj7m71tGzGDPqzEPd4NS2FnHaMtr
-        Mxaykaknl30P4Rt+SU2jGNxG4harYBw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-206-KflmPS0KNZuP19NIR3W1Vg-1; Tue, 22 Oct 2019 04:23:43 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3AA0B107AD31;
-        Tue, 22 Oct 2019 08:23:41 +0000 (UTC)
-Received: from [10.36.117.11] (ovpn-117-11.ams2.redhat.com [10.36.117.11])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C32A85D6A5;
-        Tue, 22 Oct 2019 08:23:38 +0000 (UTC)
-Subject: Re: [PATCH v1 1/2] mm/page_alloc.c: Don't set pages PageReserved()
- when offlining
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Oscar Salvador <osalvador@suse.de>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>
-References: <20191021141927.10252-1-david@redhat.com>
- <20191021141927.10252-2-david@redhat.com>
- <20191021144345.GT9379@dhcp22.suse.cz>
- <b6a392c9-1cb8-321e-b7ba-d483d928a3cc@redhat.com>
- <20191021154712.GW9379@dhcp22.suse.cz>
- <91ecb9b7-4271-a3a7-2342-b0afd4c41606@redhat.com>
- <20191022082053.GB9379@dhcp22.suse.cz>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat GmbH
-Message-ID: <c9517b78-c38f-4e1b-f8cb-8df67bf106ec@redhat.com>
-Date:   Tue, 22 Oct 2019 10:23:37 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Tue, 22 Oct 2019 04:24:05 -0400
+Received: by mail-pf1-f195.google.com with SMTP id y5so10175566pfo.4
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 01:24:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=CFxsIRuWp0vZOhj5hNfLUpeIE+LAy3dw4lXkf3DFfzY=;
+        b=dPLfFB5HlI1vxlm6xwyWMAkwYK1XgdGYUOsJABhScpDE68bXbwNVmd3f5NAfyNHfjp
+         dLRcCje0HninXq48K2NRwHW9wI6byotZRh0rjqKzTUDIrXHu042N9LIon4kRGTOgAheq
+         QF5DkB+WnNPD0hrMZnBHsMVVSBMrse5N2veykCoaT0JtGFaylXi5ftca8464RZ+XOdYS
+         j20qPsv5rDTHJ/IFNAhrjz33IK0KxyOJoQV3SQ6jvYx4psr5kr9Qj5tCHlBSwsDj1/Gq
+         uS01RuVEx3owJRqM5VwgO2u7NQDj+HJq8cyx4emNGip8Ub04zLl1iJbMEh7Td42LnATW
+         VqVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CFxsIRuWp0vZOhj5hNfLUpeIE+LAy3dw4lXkf3DFfzY=;
+        b=br6bC2BxDuhF6dptxeyFTbewUFW5HBcjlXODZw1oqJ0jSdEIYzMgXV+ONoTmuFDtGK
+         T3RZtHZfh18CY4Qvzz/XpmikbOxsklyTFPCinh2CylsBNiiS692Wgd1m/S9QaAO9Wokz
+         T7ptIvRFuQ52r+JggjJrI0CYn91NHJ2P4X1yVoxjscA9SiBwjuGNZ9Qua6KGXVnsEM+s
+         CipubhBQCQfdT/48VTluqP6eugH+niKs45E0KinG9JBXLQjSwaE6aD+TEYKOBqkt8ybH
+         5p8jS8IeAsoe3CHLDiKNYVdSO0tUXCkhsjIlAUvq0Y063je4eKwsIGxdjEHgKKZIpeN0
+         HOWQ==
+X-Gm-Message-State: APjAAAVpPE4LWqv+X3GJpwZMN92vU4B/R4poClW4Xy1Po0rOIItvtCQH
+        z1lMGh7N50uaKOdL/3K6DNBP0g==
+X-Google-Smtp-Source: APXvYqwh0aapj+IGEAdyDy5qrmKxfmWmhi4mI6YhmF2/pKB2NYd5J2n5ygBLARHWTjZ56Zt5fUPgJg==
+X-Received: by 2002:a62:61c7:: with SMTP id v190mr1966243pfb.47.1571732644743;
+        Tue, 22 Oct 2019 01:24:04 -0700 (PDT)
+Received: from localhost ([122.172.151.112])
+        by smtp.gmail.com with ESMTPSA id y138sm18875546pfb.174.2019.10.22.01.24.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 22 Oct 2019 01:24:03 -0700 (PDT)
+Date:   Tue, 22 Oct 2019 13:54:00 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     rafael.j.wysocki@intel.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
+Subject: Re: [PATCH] cpufreq: imx-cpufreq-dt: Correct i.MX8MN's default speed
+ grade value
+Message-ID: <20191022082400.7dsoo57mt7wfpqs7@vireshk-i7>
+References: <1571719179-23316-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <20191022082053.GB9379@dhcp22.suse.cz>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-MC-Unique: KflmPS0KNZuP19NIR3W1Vg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1571719179-23316-1-git-send-email-Anson.Huang@nxp.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22.10.19 10:20, Michal Hocko wrote:
-> On Mon 21-10-19 17:54:35, David Hildenbrand wrote:
->> On 21.10.19 17:47, Michal Hocko wrote:
->>> On Mon 21-10-19 17:39:36, David Hildenbrand wrote:
->>>> On 21.10.19 16:43, Michal Hocko wrote:
->>> [...]
->>>>> We still set PageReserved before onlining pages and that one should b=
-e
->>>>> good to go as well (memmap_init_zone).
->>>>> Thanks!
->>>>
->>>> memmap_init_zone() is called when onlining memory. There, set all page=
-s to
->>>> reserved right now (on context =3D=3D MEMMAP_HOTPLUG). We clear PG_res=
-erved when
->>>> onlining a page to the buddy (e.g., generic_online_page). If we would =
-online
->>>> a memory block with holes, we would want to keep all such pages
->>>> (!pfn_valid()) set to reserved. Also, there might be other side effect=
-s.
->>>
->>> Isn't it sufficient to have those pages in a poisoned state? They are
->>> not onlined so their state is basically undefined anyway. I do not see
->>> how PageReserved makes this any better.
->>
->> It is what people have been using for a long time. Memory hole ->
->> PG_reserved. The memmap is valid, but people want to tell "this here is
->> crap, don't look at it".
->=20
-> The page is poisoned, right? If yes then setting the reserved bit
-> doesn't make any sense.
+On 22-10-19, 12:39, Anson Huang wrote:
+> i.MX8MN has different speed grade definition compared to
+> i.MX8MQ/i.MX8MM, when fuses are NOT written, the default
+> speed_grade should be set to minimum available OPP defined
+> in DT which is 1.2GHz, the corresponding speed_grade value
+> should be 0xb.
+> 
+> Fixes: 5b8010ba70d5 ("cpufreq: imx-cpufreq-dt: Add i.MX8MN support")
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+>  drivers/cpufreq/imx-cpufreq-dt.c | 20 ++++++++++----------
+>  1 file changed, 10 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/cpufreq/imx-cpufreq-dt.c b/drivers/cpufreq/imx-cpufreq-dt.c
+> index 35db14c..26531f0 100644
+> --- a/drivers/cpufreq/imx-cpufreq-dt.c
+> +++ b/drivers/cpufreq/imx-cpufreq-dt.c
+> @@ -44,19 +44,19 @@ static int imx_cpufreq_dt_probe(struct platform_device *pdev)
+>  	mkt_segment = (cell_value & OCOTP_CFG3_MKT_SEGMENT_MASK) >> OCOTP_CFG3_MKT_SEGMENT_SHIFT;
+>  
+>  	/*
+> -	 * Early samples without fuses written report "0 0" which means
+> -	 * consumer segment and minimum speed grading.
+> -	 *
+> -	 * According to datasheet minimum speed grading is not supported for
+> -	 * consumer parts so clamp to 1 to avoid warning for "no OPPs"
+> +	 * Early samples without fuses written report "0 0" which may NOT
+> +	 * match any OPP defined in DT. So clamp to minimum OPP defined in
+> +	 * DT to avoid warning for "no OPPs".
+>  	 *
+>  	 * Applies to i.MX8M series SoCs.
+>  	 */
+> -	if (mkt_segment == 0 && speed_grade == 0 && (
+> -			of_machine_is_compatible("fsl,imx8mm") ||
+> -			of_machine_is_compatible("fsl,imx8mn") ||
+> -			of_machine_is_compatible("fsl,imx8mq")))
+> -		speed_grade = 1;
+> +	if (mkt_segment == 0 && speed_grade == 0) {
+> +		if (of_machine_is_compatible("fsl,imx8mm") ||
+> +			of_machine_is_compatible("fsl,imx8mq"))
 
-No it's not poisoned AFAIK. It should be initialized - and I remember=20
-that PG_reserved on memory holes is relevant to detect MMIO pages.=20
-(e.g., looking at KVM code ...)
+of_machine_is_compatible should come right below the above
+of_machine_is_compatible here, instead of a leading tab.
 
->=20
->>> Also is the hole inside a hotplugable memory something we really have t=
-o
->>> care about. Has anybody actually seen a platform to require that?
->>
->> That's what I was asking. I can see "support" for this was added basical=
-ly
->> right from the beginning. I'd say we rip that out and cleanup/simplify. =
-I am
->> not aware of a platform that requires this. Especially, memory holes on
->> DIMMs (detected during boot) seem like an unlikely thing.
->=20
-> The thing is that the hotplug development shows ad-hoc decisions
-> throughout the code. It is even worse that it is hard to guess whether
-> some hludges are a result of a careful design or ad-hoc trial and
-> failure approach on setups that never were production. Building on top
-> of that be preserving hacks is not going to improve the situation. So I
-> am perfectly fine to focus on making the most straightforward setups
-> work reliably. Even when there is a risk of breaking some odd setups. We
-> can fix them up later but we would have at least a specific example and
-> document it.
->=20
+> +			speed_grade = 1;
+> +		if (of_machine_is_compatible("fsl,imx8mn"))
+> +			speed_grade = 0xb;
+> +	}
+>  
+>  	supported_hw[0] = BIT(speed_grade);
+>  	supported_hw[1] = BIT(mkt_segment);
+> -- 
+> 2.7.4
 
-Alright, I'll prepare a simple patch that rejects offlining memory with=20
-memory holes. We can apply that and see if anybody screams out loud. If=20
-not, we can clean up that crap.
-
---=20
-
-Thanks,
-
-David / dhildenb
-
+-- 
+viresh
