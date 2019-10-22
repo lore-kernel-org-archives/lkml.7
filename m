@@ -2,181 +2,409 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75D41CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 10:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1B2CCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 10:22:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41D9C21783
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 10:19:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="B1vPM2M7"
+	by mail.kernel.org (Postfix) with ESMTP id A3AAD21783
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 10:22:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731752AbfJVKTX (ORCPT
+        id S1731753AbfJVKWf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 06:19:23 -0400
-Received: from mail-eopbgr30071.outbound.protection.outlook.com ([40.107.3.71]:49120
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727101AbfJVKTX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 06:19:23 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JERnTO8yazUhYcrtw8+b5FtOEdqoyv7UHCrplwxG/j4McrMjCFAhhfL29er+5GlMkzUc8IPzcfK+XsBTNONpDAjbGWTLHU2Zbao1vHWN/wSLw4Ks0GyxJ4ifUKia7CleTw23GM/U+Ki387Eejz1+h08VFyg0bU6rTl06fxOLM+lhl5ebCblnhHtNHKTymCxg05qy3YouQymFJo18bFiZroEdm4INaF5dSRyvuSYd2n3ih4WThJH2cMe80ofHARJtdNBugAbSfE6SSYBmg4z9MDhA8a7qpVrX28V4pWU1vrldmIeu+OXXwgZHThgqZ5LE1D7fP2DdnkEKyULCOrWKfg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jEXo+FgS+06jNMcN7w1IAQzqn9p0BCbKhD/cRBotU90=;
- b=AiQqf3PStOl5gN1UBzRclZI0JUPJPtqIqbnJdSRtGcrycERtXkYJnaRE1BhEs/uC4pT7nZpQd/gHhekgtoClPtb9cC+LPOC2PHoKHSOwaAn3RN2PdyZK93i038iHR1AgxzjZfW6puP51AGYiKNLgz3vdeFLfmw3xq17QV69r4lHk9OopWJD6kdR7UrTl3tjcaaYTS/PsBtUJ771TmdN8jFlv4kBXounL2ZZS02ZQx1dBHazMao1wW7oQutGneu3rgZnjxwjlAt6ReR3akcr+/zqSZU706RmWU+rml/z8xnC8N79ncloWCQTNmGneEPbu1jVTJUenr/GA932dPriQNA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jEXo+FgS+06jNMcN7w1IAQzqn9p0BCbKhD/cRBotU90=;
- b=B1vPM2M7ujx1TMduzkiQ/fweCvlHbcxdpzkbG0nCGcvBQp/eleVyLHOWrsLf8fQwTi9dtfyaw0I00ubp2eiDTDAEstisSWtiTSM5YJL7v0MMMmXaFDZmnUTBh9SPU1Vq9ZKmODjESxl7bU0YNu6ukfPFU/WpL928v2qWrSi0IjU=
-Received: from VI1PR04MB4431.eurprd04.prod.outlook.com (20.177.55.205) by
- VI1PR04MB5055.eurprd04.prod.outlook.com (20.177.48.221) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2367.24; Tue, 22 Oct 2019 10:19:19 +0000
-Received: from VI1PR04MB4431.eurprd04.prod.outlook.com
- ([fe80::7cba:52d6:9ae9:e5bb]) by VI1PR04MB4431.eurprd04.prod.outlook.com
- ([fe80::7cba:52d6:9ae9:e5bb%6]) with mapi id 15.20.2367.022; Tue, 22 Oct 2019
- 10:19:18 +0000
-From:   Peng Ma <peng.ma@nxp.com>
-To:     Anders Roxell <anders.roxell@linaro.org>
-CC:     Vinod Koul <vkoul@kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        Leo Li <leoyang.li@nxp.com>,
+        Tue, 22 Oct 2019 06:22:35 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:43617 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727960AbfJVKWf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 06:22:35 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iMrJ8-0004tM-Gs; Tue, 22 Oct 2019 12:22:30 +0200
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iMrJ7-0008HH-Ew; Tue, 22 Oct 2019 12:22:29 +0200
+Date:   Tue, 22 Oct 2019 12:22:29 +0200
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        broonie@kernel.org, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com
+Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Support Opensource <Support.Opensource@diasemi.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
-Subject: RE: [EXT] Re: [V5 1/2] dmaengine: fsl-dpaa2-qdma: Add the DPDMAI(Data
- Path DMA Interface) support
-Thread-Topic: [EXT] Re: [V5 1/2] dmaengine: fsl-dpaa2-qdma: Add the
- DPDMAI(Data Path DMA Interface) support
-Thread-Index: AQHVdzToZ1j6dYgSekKOe10vHO0HB6deU3YAgAAhjWCACBJZgIAADhxw
-Date:   Tue, 22 Oct 2019 10:19:18 +0000
-Message-ID: <VI1PR04MB443121007853185039A65534ED680@VI1PR04MB4431.eurprd04.prod.outlook.com>
-References: <20190930020440.7754-1-peng.ma@nxp.com>
- <20191017041124.GN2654@vkoul-mobl>
- <AM0PR04MB44207F0EF575C5FB44DA6984ED6D0@AM0PR04MB4420.eurprd04.prod.outlook.com>
- <CADYN=9JkQMawVnLoJ8sXAbV8NB_BK0zQA0PomJ583Agj12r8Cg@mail.gmail.com>
-In-Reply-To: <CADYN=9JkQMawVnLoJ8sXAbV8NB_BK0zQA0PomJ583Agj12r8Cg@mail.gmail.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.ma@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 40bbecdf-e954-433e-e73d-08d756d94c94
-x-ms-traffictypediagnostic: VI1PR04MB5055:|VI1PR04MB5055:
-x-ms-exchange-purlcount: 1
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR04MB505502847B24B1A70C0FE2B0ED680@VI1PR04MB5055.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 01986AE76B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(396003)(346002)(39860400002)(366004)(189003)(199004)(13464003)(316002)(54906003)(2906002)(33656002)(256004)(5024004)(14444005)(25786009)(66066001)(6916009)(71200400001)(71190400001)(7696005)(76176011)(6246003)(6116002)(99286004)(26005)(186003)(4326008)(6506007)(102836004)(9686003)(229853002)(6436002)(305945005)(7736002)(966005)(14454004)(55016002)(3846002)(6306002)(478600001)(74316002)(476003)(486006)(66446008)(11346002)(8936002)(66946007)(76116006)(446003)(66556008)(66476007)(64756008)(52536014)(81166006)(81156014)(86362001)(5660300002)(8676002)(44832011);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5055;H:VI1PR04MB4431.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 0P40TGXdeGg3ejpflfKGKie5YX2GeD5CJo9DpA309esQEbceLlKoE95UIHmqhzzggslG170GETYEOw3aS3pj3gTJM6UfopcxzbD7tmZ80bD1TnqyS2d+SQn174xZnZ0qMlItyZkOVL6EWYBisXpI09C1BKB5/WwCxf/Py391GOMqii+irsOxh87RR98TWRGFEz+iZgEc8+Vg5Rf3mNFsmCOYplaUTOkOz+yo2s9vrtykgee77legAIokne4p8Iu85ygA5MGxZ5gSiR8i09OynwzgOwR3O/ecN+TAGtu3JwoOWgpZVJ86gT6B+6WKeY7+6L1Jcd5+XFUIbIUNimlFoFwMZdJ1YGN3R15czWzlI5BYt/C22ZH9RYdQCD74Arf95fHwGuW+Nt14a2RRYPcNcGckbYF5u0PUlicxSdNHQLt7Mrl1d/vZhgHz8hYeqiWQDw7xEM0/9K5hgwCKz32cFvQixMn0BTzvhT23uQOhONs=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Steve Twiss <stwiss.opensource@diasemi.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>
+Subject: Re: [PATCH 2/5] dt-bindings: mfd: da9062: add regulator voltage
+ selection documentation
+Message-ID: <20191022102229.ma4tayqsxsl52eab@pengutronix.de>
+References: <AM5PR1001MB0994316EA8AD903B2943CE2080820@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <20191002134521.zcree6w4loutjrud@pengutronix.de>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 40bbecdf-e954-433e-e73d-08d756d94c94
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Oct 2019 10:19:18.7274
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 7cWduJgtiNroQNLB6n1bYmjWumZY90XNTWuop2GtS6o3ML6Ew2lUOxavpXgNHx9m
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5055
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191002134521.zcree6w4loutjrud@pengutronix.de>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 12:19:41 up 157 days, 16:37, 97 users,  load average: 0.01, 0.04,
+ 0.02
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQW5kZXJzICYmIFZpb2QsDQoNCkkgc2VudCB2NiBwYXRjaCB0byBmaXggdGhlIGJ1aWxkIGVy
-cm9yLCBwbGVhc2UgY2hlY2suDQpQYXRjaHdvcmsgbGluazoNCmh0dHBzOi8vcGF0Y2h3b3JrLmtl
-cm5lbC5vcmcvcHJvamVjdC9saW51eC1kbWFlbmdpbmUvbGlzdC8/c2VyaWVzPTE5MTM5Nw0KDQpC
-ZXN0IFJlZ2FyZHMsDQpQZW5nDQo+LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj5Gcm9tOiBB
-bmRlcnMgUm94ZWxsIDxhbmRlcnMucm94ZWxsQGxpbmFyby5vcmc+DQo+U2VudDogMjAxOeW5tDEw
-5pyIMjLml6UgMTc6MjcNCj5UbzogUGVuZyBNYSA8cGVuZy5tYUBueHAuY29tPg0KPkNjOiBWaW5v
-ZCBLb3VsIDx2a291bEBrZXJuZWwub3JnPjsgZGFuLmoud2lsbGlhbXNAaW50ZWwuY29tOyBMZW8g
-TGkNCj48bGVveWFuZy5saUBueHAuY29tPjsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsN
-Cj5kbWFlbmdpbmVAdmdlci5rZXJuZWwub3JnDQo+U3ViamVjdDogUmU6IFtFWFRdIFJlOiBbVjUg
-MS8yXSBkbWFlbmdpbmU6IGZzbC1kcGFhMi1xZG1hOiBBZGQgdGhlDQo+RFBETUFJKERhdGEgUGF0
-aCBETUEgSW50ZXJmYWNlKSBzdXBwb3J0DQo+DQo+Q2F1dGlvbjogRVhUIEVtYWlsDQo+DQo+T24g
-VGh1LCAxNyBPY3QgMjAxOSBhdCAwODoxNiwgUGVuZyBNYSA8cGVuZy5tYUBueHAuY29tPiB3cm90
-ZToNCj4+DQo+PiBIaSBWaW5vZCwNCj4+DQo+PiBUaGFua3MgdmVyeSBtdWNoIGZvciB5b3VyIHJl
-cGx5Lg0KPj4NCj4+IEJlc3QgUmVnYXJkcywNCj4+IFBlbmcNCj4+ID4tLS0tLU9yaWdpbmFsIE1l
-c3NhZ2UtLS0tLQ0KPj4gPkZyb206IFZpbm9kIEtvdWwgPHZrb3VsQGtlcm5lbC5vcmc+DQo+PiA+
-U2VudDogMjAxOeW5tDEw5pyIMTfml6UgMTI6MTENCj4+ID5UbzogUGVuZyBNYSA8cGVuZy5tYUBu
-eHAuY29tPg0KPj4gPkNjOiBkYW4uai53aWxsaWFtc0BpbnRlbC5jb207IExlbyBMaSA8bGVveWFu
-Zy5saUBueHAuY29tPjsNCj4+ID5saW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBkbWFlbmdp
-bmVAdmdlci5rZXJuZWwub3JnDQo+PiA+U3ViamVjdDogW0VYVF0gUmU6IFtWNSAxLzJdIGRtYWVu
-Z2luZTogZnNsLWRwYWEyLXFkbWE6IEFkZCB0aGUNCj4+ID5EUERNQUkoRGF0YSBQYXRoIERNQSBJ
-bnRlcmZhY2UpIHN1cHBvcnQNCj4+ID4NCj4+ID5DYXV0aW9uOiBFWFQgRW1haWwNCj4+ID4NCj4+
-ID5PbiAzMC0wOS0xOSwgMDI6MDQsIFBlbmcgTWEgd3JvdGU6DQo+PiA+PiBUaGUgTUMoTWFuYWdl
-bWVudCBDb21wbGV4KSBleHBvcnRzIHRoZSBEUERNQUkoRGF0YSBQYXRoIERNQQ0KPj4gPkludGVy
-ZmFjZSkNCj4+ID4+IG9iamVjdCBhcyBhbiBpbnRlcmZhY2UgdG8gb3BlcmF0ZSB0aGUgRFBBQTIo
-RGF0YSBQYXRoIEFjY2VsZXJhdGlvbg0KPj4gPj4gQXJjaGl0ZWN0dXJlIDIpIHFETUEgRW5naW5l
-LiBUaGUgRFBETUFJIGVuYWJsZXMgc2VuZGluZyBmcmFtZS1iYXNlZA0KPj4gPj4gcmVxdWVzdHMg
-dG8gcURNQSBhbmQgcmVjZWl2aW5nIGJhY2sgY29uZmlybWF0aW9uIHJlc3BvbnNlIG9uDQo+PiA+
-PiB0cmFuc2FjdGlvbiBjb21wbGV0aW9uLCB1dGlsaXppbmcgdGhlIERQQUEyIFFCTWFuKFF1ZXVl
-IE1hbmFnZXIgYW5kDQo+PiA+PiBCdWZmZXIgTWFuYWdlcg0KPj4gPj4gaGFyZHdhcmUpIGluZnJh
-c3RydWN0dXJlLiBEUERNQUkgb2JqZWN0IHByb3ZpZGVzIHVwIHRvIHR3bw0KPj4gPj4gcHJpb3Jp
-dGllcyBmb3IgcHJvY2Vzc2luZyBxRE1BIHJlcXVlc3RzLg0KPj4gPj4gVGhlIGZvbGxvd2luZyBs
-aXN0IHN1bW1hcml6ZXMgdGhlIERQRE1BSSBtYWluIGZlYXR1cmVzIGFuZCBjYXBhYmlsaXRpZXM6
-DQo+PiA+PiAgICAgICAxLiBTdXBwb3J0cyB1cCB0byB0d28gc2NoZWR1bGluZyBwcmlvcml0aWVz
-IGZvciBwcm9jZXNzaW5nDQo+PiA+PiAgICAgICBzZXJ2aWNlIHJlcXVlc3RzLg0KPj4gPj4gICAg
-ICAgLSBFYWNoIERQRE1BSSB0cmFuc21pdCBxdWV1ZSBpcyBtYXBwZWQgdG8gb25lIG9mIHR3byBz
-ZXJ2aWNlDQo+PiA+PiAgICAgICBwcmlvcml0aWVzLCBhbGxvd2luZyBmdXJ0aGVyIHByaW9yaXRp
-emF0aW9uIGluIGhhcmR3YXJlIGJldHdlZW4NCj4+ID4+ICAgICAgIHJlcXVlc3RzIGZyb20gZGlm
-ZmVyZW50IERQRE1BSSBvYmplY3RzLg0KPj4gPj4gICAgICAgMi4gU3VwcG9ydHMgdXAgdG8gdHdv
-IHJlY2VpdmUgcXVldWVzIGZvciBpbmNvbWluZyB0cmFuc2FjdGlvbg0KPj4gPj4gICAgICAgY29t
-cGxldGlvbiBjb25maXJtYXRpb25zLg0KPj4gPj4gICAgICAgLSBFYWNoIERQRE1BSSByZWNlaXZl
-IHF1ZXVlIGlzIG1hcHBlZCB0byBvbmUgb2YgdHdvIHJlY2VpdmUNCj4+ID4+ICAgICAgIHByaW9y
-aXRpZXMsIGFsbG93aW5nIGZ1cnRoZXIgcHJpb3JpdGl6YXRpb24gYmV0d2VlbiBvdGhlcg0KPj4g
-Pj4gICAgICAgaW50ZXJmYWNlcyB3aGVuIGFzc29jaWF0aW5nIHRoZSBEUERNQUkgcmVjZWl2ZSBx
-dWV1ZXMgdG8gRFBJTw0KPj4gPj4gICAgICAgb3IgRFBDT04oRGF0YSBQYXRoIENvbmNlbnRyYXRv
-cikgb2JqZWN0cy4NCj4+ID4+ICAgICAgIDMuIFN1cHBvcnRzIGRpZmZlcmVudCBzY2hlZHVsaW5n
-IG9wdGlvbnMgZm9yIHByb2Nlc3NpbmcgcmVjZWl2ZWQNCj4+ID4+ICAgICAgIHBhY2tldHM6DQo+
-PiA+PiAgICAgICAtIFF1ZXVlcyBjYW4gYmUgY29uZmlndXJlZCBlaXRoZXIgaW4gJ3BhcmtlZCcg
-bW9kZSAoZGVmYXVsdCksDQo+PiA+PiAgICAgICBvciBhdHRhY2hlZCB0byBhIERQSU8gb2JqZWN0
-LCBvciBhdHRhY2hlZCB0byBEUENPTiBvYmplY3QuDQo+PiA+PiAgICAgICA0LiBBbGxvd3MgaW50
-ZXJhY3Rpb24gd2l0aCBvbmUgb3IgbW9yZSBEUElPIG9iamVjdHMgZm9yDQo+PiA+PiAgICAgICBk
-ZXF1ZXVlaW5nL2VucXVldWVpbmcgZnJhbWUgZGVzY3JpcHRvcnMoRkQpIGFuZCBmb3INCj4+ID4+
-ICAgICAgIGFjcXVpcmluZy9yZWxlYXNpbmcgYnVmZmVycy4NCj4+ID4+ICAgICAgIDUuIFN1cHBv
-cnRzIGVuYWJsZSwgZGlzYWJsZSwgYW5kIHJlc2V0IG9wZXJhdGlvbnMuDQo+PiA+Pg0KPj4gPj4g
-QWRkIGRwZG1haSB0byBzdXBwb3J0IHNvbWUgcGxhdGZvcm1zIHdpdGggZHBhYTIgcWRtYSBlbmdp
-bmUuDQo+PiA+DQo+PiA+QXBwbGllZCBib3RoLCB0aGFua3MNCj4NCj5JIHNlZSB0aGlzIGVycm9y
-IHdoZW4gSSdtIGJ1aWxkaW5nLg0KPg0KPldBUk5JTkc6IG1vZHBvc3Q6IG1pc3NpbmcgTU9EVUxF
-X0xJQ0VOU0UoKSBpbg0KPmRyaXZlcnMvZG1hL2ZzbC1kcGFhMi1xZG1hL2RwZG1haS5vDQo+c2Vl
-IGluY2x1ZGUvbGludXgvbW9kdWxlLmggZm9yIG1vcmUgaW5mb3JtYXRpb24NCj5FUlJPUjogImRw
-ZG1haV9lbmFibGUiIFtkcml2ZXJzL2RtYS9mc2wtZHBhYTItcWRtYS9kcGFhMi1xZG1hLmtvXQ0K
-PnVuZGVmaW5lZCENCj5FUlJPUjogImRwZG1haV9zZXRfcnhfcXVldWUiDQo+W2RyaXZlcnMvZG1h
-L2ZzbC1kcGFhMi1xZG1hL2RwYWEyLXFkbWEua29dIHVuZGVmaW5lZCENCj5FUlJPUjogImRwZG1h
-aV9nZXRfdHhfcXVldWUiDQo+W2RyaXZlcnMvZG1hL2ZzbC1kcGFhMi1xZG1hL2RwYWEyLXFkbWEu
-a29dIHVuZGVmaW5lZCENCj5FUlJPUjogImRwZG1haV9nZXRfcnhfcXVldWUiDQo+W2RyaXZlcnMv
-ZG1hL2ZzbC1kcGFhMi1xZG1hL2RwYWEyLXFkbWEua29dIHVuZGVmaW5lZCENCj5FUlJPUjogImRw
-ZG1haV9nZXRfYXR0cmlidXRlcyINCj5bZHJpdmVycy9kbWEvZnNsLWRwYWEyLXFkbWEvZHBhYTIt
-cWRtYS5rb10gdW5kZWZpbmVkIQ0KPkVSUk9SOiAiZHBkbWFpX29wZW4iIFtkcml2ZXJzL2RtYS9m
-c2wtZHBhYTItcWRtYS9kcGFhMi1xZG1hLmtvXQ0KPnVuZGVmaW5lZCENCj5FUlJPUjogImRwZG1h
-aV9jbG9zZSIgW2RyaXZlcnMvZG1hL2ZzbC1kcGFhMi1xZG1hL2RwYWEyLXFkbWEua29dDQo+dW5k
-ZWZpbmVkIQ0KPkVSUk9SOiAiZHBkbWFpX2Rpc2FibGUiIFtkcml2ZXJzL2RtYS9mc2wtZHBhYTIt
-cWRtYS9kcGFhMi1xZG1hLmtvXQ0KPnVuZGVmaW5lZCENCj5FUlJPUjogImRwZG1haV9yZXNldCIg
-W2RyaXZlcnMvZG1hL2ZzbC1kcGFhMi1xZG1hL2RwYWEyLXFkbWEua29dDQo+dW5kZWZpbmVkIQ0K
-Pm1ha2VbMl06ICoqKiBbLi4vc2NyaXB0cy9NYWtlZmlsZS5tb2Rwb3N0Ojk1OiBfX21vZHBvc3Rd
-IEVycm9yIDENCj5tYWtlWzFdOiAqKiogWy9zcnYvc3JjL2tlcm5lbC9uZXh0L01ha2VmaWxlOjEy
-ODI6IG1vZHVsZXNdIEVycm9yIDINCj5tYWtlOiAqKiogW01ha2VmaWxlOjE3OTogc3ViLW1ha2Vd
-IEVycm9yIDINCj5tYWtlOiBUYXJnZXQgJ0ltYWdlJyBub3QgcmVtYWRlIGJlY2F1c2Ugb2YgZXJy
-b3JzLg0KPm1ha2U6IFRhcmdldCAnbW9kdWxlcycgbm90IHJlbWFkZSBiZWNhdXNlIG9mIGVycm9y
-cy4NCj4NCj5hbnkgb3RoZXIgdGhhdCBzZWUgdGhlIHNhbWUgPw0KPg0KPkNoZWVycywNCj5BbmRl
-cnMNCg==
+Hi Linus, Bartosz,
+
+can you have a look on this discussion? I wanna prepare a new version
+and this is still open.
+
+Regards,
+  Marco
+
+On 19-10-02 15:45, Marco Felsch wrote:
+> On 19-09-30 09:53, Adam Thomson wrote:
+> > On 26 September 2019 15:39, Marco Felsch wrote:
+> > 
+> > > On 19-09-26 14:04, Adam Thomson wrote:
+> > > > On 26 September 2019 12:44, Marco Felsch wrote:
+> > > >
+> > > > > On 19-09-26 10:17, Adam Thomson wrote:
+> > > > > > On 26 September 2019 09:10, Marco Felsch wrote:
+> > > > > >
+> > > > > > > On 19-09-25 16:18, Adam Thomson wrote:
+> > > > > > > > On 25 September 2019 16:52, Marco Felsch wrote:
+> > > > > > > >
+> > > > > > > > > Hi Adam,
+> > > > > > > > >
+> > > > > > > > > On 19-09-24 09:23, Adam Thomson wrote:
+> > > > > > > > > > On 17 September 2019 13:43, Marco Felsch wrote:
+> > > > > > > > > >
+> > > > > > > > > > > Add the documentation which describe the voltage selection gpio
+> > > > > > > support.
+> > > > > > > > > > > This property can be applied to each subnode within the
+> > > 'regulators'
+> > > > > > > > > > > node so each regulator can be configured differently.
+> > > > > > > > > > >
+> > > > > > > > > > > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> > > > > > > > > > > ---
+> > > > > > > > > > >  Documentation/devicetree/bindings/mfd/da9062.txt | 9
+> > > +++++++++
+> > > > > > > > > > >  1 file changed, 9 insertions(+)
+> > > > > > > > > > >
+> > > > > > > > > > > diff --git a/Documentation/devicetree/bindings/mfd/da9062.txt
+> > > > > > > > > > > b/Documentation/devicetree/bindings/mfd/da9062.txt
+> > > > > > > > > > > index edca653a5777..9d9820d8177d 100644
+> > > > > > > > > > > --- a/Documentation/devicetree/bindings/mfd/da9062.txt
+> > > > > > > > > > > +++ b/Documentation/devicetree/bindings/mfd/da9062.txt
+> > > > > > > > > > > @@ -66,6 +66,15 @@ Sub-nodes:
+> > > > > > > > > > >    details of individual regulator device can be found in:
+> > > > > > > > > > >    Documentation/devicetree/bindings/regulator/regulator.txt
+> > > > > > > > > > >
+> > > > > > > > > > > +  Optional regulator device-specific properties:
+> > > > > > > > > > > +  - dlg,vsel-sense-gpios : The GPIO reference which should be
+> > > used
+> > > > > by
+> > > > > > > the
+> > > > > > > > > > > +    regulator to switch the voltage between active/suspend
+> > > voltage
+> > > > > > > settings.
+> > > > > > > > > If
+> > > > > > > > > > > +    the signal is active the active-settings are applied else the
+> > > suspend
+> > > > > > > > > > > +    settings are applied. Attention: Sharing the same gpio for other
+> > > > > > > purposes
+> > > > > > > > > > > +    or across multiple regulators is possible but the gpio settings
+> > > must
+> > > > > be
+> > > > > > > the
+> > > > > > > > > > > +    same. Also the gpio phandle must refer to to the dlg,da9062-
+> > > gpio
+> > > > > > > device
+> > > > > > > > > > > +    other gpios are not allowed and make no sense.
+> > > > > > > > > > > +
+> > > > > > > > > >
+> > > > > > > > > > Should we not use the binding names that are defined in 'gpio-
+> > > > > > > regulator.yaml'
+> > > > > > > > > as
+> > > > > > > > > > these seem to be generic and would probably serve the purpose
+> > > here?
+> > > > > > > > >
+> > > > > > > > > Hm.. as the description says:
+> > > > > > > > >
+> > > > > > > > > 8<--------------------------------------------------
+> > > > > > > > > gpios:
+> > > > > > > > >    description: Array of one or more GPIO pins used to select the
+> > > > > > > > >    regulator voltage/current listed in "states".
+> > > > > > > > > 8<--------------------------------------------------
+> > > > > > > > >
+> > > > > > > > > But we don't have a "states" property and we can't select between
+> > > > > > > > > voltage or current.
+> > > > > > > >
+> > > > > > > > Yes I think I was at cross purposes when I made this remark. The
+> > > bindings
+> > > > > there
+> > > > > > > > describe the GPOs that are used to enable/disable and set
+> > > voltage/current
+> > > > > for
+> > > > > > > > regulators and the supported voltage/current levels that can be
+> > > configured
+> > > > > in
+> > > > > > > > this manner. What you're describing is the GPI for DA9061/2. If you look
+> > > at
+> > > > > > > > GPIO handling in existing regulator drivers I believe they all deal with
+> > > > > external
+> > > > > > > > GPOs that are configured to enable/disable and set voltage/current
+> > > limits
+> > > > > > > rather
+> > > > > > > > than the GPI on the PMIC itself. That's why I'm thinking that the
+> > > > > configurations
+> > > > > > > > you're doing here should actually be in a pinctrl or GPIO driver.
+> > > > > > >
+> > > > > > > That's true, the common gpio bindings are from the view of the
+> > > > > > > processor, e.g. which gpio must the processor drive to enable/switch the
+> > > > > > > regualtor. So one reasone more to use a non-common binding.
+> > > > > > >
+> > > > > > > Please take a look on my other comment I made :) I don't use the
+> > > > > > > gpio-alternative function. I use it as an input.
+> > > > > >
+> > > > > > I know in the datasheet this isn't marked as an alternate function specifically
+> > > > > > but to me having regulator control by the chip's own GPI is an alternative
+> > > > > > function for that GPIO pin, in the same way a specific pin can be used for
+> > > > > > SYS_EN or Watchdog control. It's a dedicated purpose rather than being a
+> > > > > normal
+> > > > > > GPI.
+> > > > >
+> > > > > Nope, SYS_EN or Watchdog is a special/alternate function and not a
+> > > > > normal input.
+> > > >
+> > > > Having spoken with our HW team there's essentially no real difference.
+> > >
+> > > So I don't have to configure the gpio to alternate to use it as SYS_EN?
+> > 
+> > Yes you do, but the effect is much the same as manually configuring the GPIO as
+> > input, just that the IC does it for you. The regulator control features could
+> > well have been done in a similar manner. Guess that was a design choice.
+> > 
+> > >
+> > > > >
+> > > > > > See the following as an example of what I'm suggesting:
+> > > > > >
+> > > > > >
+> > > > >
+> > > https://elixir.bootlin.com/linux/latest/source/Documentation/devicetree/bindin
+> > > > > gs/pinctrl/pinctrl-palmas.txt
+> > > > > >
+> > > > > > You could then pass the pinctrl information to the regulator driver and use
+> > > > > > that rather than having device specific bindings for this. That's at least my
+> > > > > > current interpretation of this anyway.
+> > > > >
+> > > > > For me pinctrl decides which function should be assigned to a pin. So in
+> > > > > our case this would be:
+> > > > >   - alternate
+> > > > >   - gpo
+> > > > >   - gpi
+> > > > >
+> > > > > In our use-case it is a gpi..
+> > > >
+> > > > It's not being used as a normal GPI as such. It's being used to enable/disable
+> > > > the regulator so I disagree.
+> > >
+> > > This one is used as voltage-selection. What is a "normal" GPI in your
+> > > point of view?
+> > 
+> > With the voltage selection and enable/disable control the actual work of
+> > handling the GPI state is all done internally in the IC. There is no control
+> > required from SW other than setting of initial direction. For a normal GPI
+> 
+> Thats correct and setting the direction and active levels can be done
+> perfectly by the gpio-interface.
+> 
+> > I would expect SW to be involved in the handling of that GPI state, for example
+> > as part of a bit banging interface.
+> > 
+> > >
+> > > > >
+> > > > > An other reason why pinctrl seems not be the right solution is that the
+> > > > > regulator must be configured to use this gpi. This decision can't be
+> > > > > made globally because each regulator can be configured differently.. For
+> > > > > me its just a local gpio.
+> > > >
+> > > > You'd pass pinctrl information, via DT, to the regulator driver so it can set
+> > > > accordingly. At least that's my take here, unless I'm missing something. The
+> > > > regulator driver would be the consumer and could set the regulator control
+> > > > accordingly.
+> > >
+> > > IMHO this is what I have done. I use the gpi so the regulator is the
+> > > consumer. Since the gpi can be used by several regulators for voltage
+> > > selection or enable/disable action this gpi is marked as shared. If I
+> > > got you right than you would do something like for regulatorX.
+> > >
+> > >   pinctrl-node {
+> > >
+> > >   	gpio2 {
+> > > 		func = "vsel";
+> > > 	}
+> > >   }
+> > >
+> > > But the gpi(o)2 can also be used to enable/disable a regulatorY if I
+> > > understood the datasheet correctly. I other words:
+> > >
+> > >
+> > >
+> > >          +--> Alternate function
+> > >       /
+> > >   ---+   +--> GPI ----> Edge detection ---> more processing
+> > >    |       |                |
+> > >    |       |                +-----> Regulator control
+> > >    |       |                          |
+> > >    \__  __/ \__________  _______
+> > >       \/               \/
+> > >    pinctrl            gpio
+> > >
+> > > This is how I understood the pinctrl use-case. I configure the pin as
+> > > gpio and then the regulator driver consume a gpio.
+> > 
+> > How I see it is that you configure the function through pinctrl as
+> > 'regulator_switch' or 'regulator_vsel' (or whatever name is deemed sensible to
+> 
+> The case is that it can be "muxed" for both at same time so there is no
+> or instead it is a or/and. Depending on the design some regulators can
+> be turned off and some should be switched upon that signal.
+> 
+> > cover the two types of functionality) and then the pinctrl driver code would do
+> > the work of requesting and configuring the relevant GPIO as input so it's no
+> > longer available for use as something else (basically what you do in the
+> > regulator driver right now).
+> 
+> So by this I avoided the user-space to get this gpio and this seems fine
+> to me. What a driver does with a gpio is up to the driver but the gpio
+> shouldn't be reachable from the user-space.
+> 
+> > I believe you can have more than one consumer of a pinctrl pin so it could be
+> > provided to both regulator X and Y to indicate that this is the chosen
+> > functionality of that pin and so the regulator can then be marked as being
+> > controlled by that pin. Using pinctrl also would mean you're using standard
+> > bindings as well rather than something which is device specific.
+> 
+> That seems wrong to me because pinctrl should assign a dedicated function
+> to that pin e.g. regulator_switch or regulator_vsel. But thats wrong as
+> I pointed out above. On the other hand the gpio as the name says is
+> general purpose and each regulator gives the meaning to it.
+> 
+> > > > At the end of the day I'm not the gatekeeper here so I think Mark's input is
+> > > > necessary as he will likely have a view on how this should be done. I appreciate
+> > > > the work you've done here but I want to be sure we have a generic solution
+> > > > as this would also apply to DA9063 and possibly other devices too.
+> > >
+> > > Why should this only apply to da9062 devices? IMHO this property can be
+> > > used by any other dlg pmic as well if it is supported. Comments and suggestions
+> > > are welcome so no worries ;)
+> > 
+> > You're right. You can do the same for DA9063 and other devices potentially. I
+> > would just like to make sure we take the right/agreed approach. Potentially
+> > this could be used in non-Dialog products as well which have similar
+> > functionality.
+> 
+> Yeah, but I think we should consider about that after an other device
+> appears with that funcitonality.
+> 
+> > As I say, Mark is really the gatekeeper so his input is also key in this.
+> 
+> That's right, I added Mark to To.
+> 
+> Regards,
+>   Marco
+> 
+> > 
+> > >
+> > > Regards,
+> > >   Marco
+> > >
+> > > > Have added Mark to the 'To' in this e-mail thread so he might see it.
+> > > > >
+> > > > > Regards,
+> > > > >   Marco
+> > > > >
+> > > > > > >
+> > > > > > > Regards,
+> > > > > > >   Marco
+> > > > > > >
+> > > > > > >
+> > > > > > > > I'd be interested in hearing Mark's view on this though as he has far
+> > > more
+> > > > > > > > experience in this area than I do.
+> > > > > > > >
+> > > > > > > > >
+> > > > > > > > > Regards,
+> > > > > > > > >   Marco
+> > > > > > > > >
+> > > > > > > > > > >  - rtc : This node defines settings required for the Real-Time Clock
+> > > > > > > associated
+> > > > > > > > > > >    with the DA9062. There are currently no entries in this binding,
+> > > > > however
+> > > > > > > > > > >    compatible = "dlg,da9062-rtc" should be added if a node is
+> > > created.
+> > > > > > > > > > > --
+> > > > > > > > > > > 2.20.1
+> > > > > > > > > >
+> > > > > > > > > >
+> > > > > > > > >
+> > > > > > > > > --
+> > > > > > > > > Pengutronix e.K.                           |                             |
+> > > > > > > > > Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> > > > > > > > > Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-
+> > > 0
+> > > > > |
+> > > > > > > > > Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555
+> > > |
+> > > > > > > >
+> > > > > > >
+> > > > > > > --
+> > > > > > > Pengutronix e.K.                           |                             |
+> > > > > > > Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> > > > > > > Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0
+> > > |
+> > > > > > > Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> > > > > >
+> > > > >
+> > > > > --
+> > > > > Pengutronix e.K.                           |                             |
+> > > > > Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> > > > > Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+> > > > > Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> > > >
+> > >
+> > > --
+> > > Pengutronix e.K.                           |                             |
+> > > Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> > > Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+> > > Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> > 
+> 
+> -- 
+> Pengutronix e.K.                           |                             |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> 
+> 
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
