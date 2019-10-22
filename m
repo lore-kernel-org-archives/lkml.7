@@ -6,130 +6,98 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74598CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:31:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 366B3CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:31:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52CE320684
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:31:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08DB320684
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:31:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732391AbfJVPbE (ORCPT
+        id S1732383AbfJVPbD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 11:31:04 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:21136 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732228AbfJVPbC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 11:31:03 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:55422 "EHLO foss.arm.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S1732202AbfJVPbC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 22 Oct 2019 11:31:02 -0400
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 96D3637E80
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 15:31:01 +0000 (UTC)
-Received: by mail-wr1-f70.google.com with SMTP id j14so9029003wrm.6
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 08:31:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=bYuISgCPeW5+MVYfOIxCD24v5h78aw8/fY5c9Ec2zaE=;
-        b=bMULqvMmPv90dO8yrrcA9pNfuA6ZpSKPgEbyNseYcgbvIV0oipqsDzsdFXjDR7hEv4
-         lDYe/LBlDyaOm45XeTmYvujEnlePowIfoKZk7fwR+brxbruV85VH08L4Zs5TJorrvEhj
-         zJrMoDXdiDOoP5SP6kHPFLEZy6FE27yeQzJ/r0OiHyYW3Go90wr3wVWa1adXNKFscP4v
-         SwpUpoUoYl215Rtfp8u5O+AoXVm7F3SHSTnSGeB+obj2dMmeJGA8LvmJP4/TwR8woYBv
-         kjIu50I284hfnbAu6nLavehC5eInR+xkanDWNXyBhMy9+bE7jpAEB/LiO6L8xLjRJuMl
-         h2rA==
-X-Gm-Message-State: APjAAAUxuXQQZIsnJX60zbC+U2+GhKjcL/jKg1h9X6SQvq9rBoToVf3+
-        e8pdDkzywUiwgZv9L0x/c4UbYnbAKF07dPYiipsGatASJ2R/+rS/dg9np0sNqRHfYLwaa7S58Vk
-        bOPAYJuW0rbfr3ZJp5AsglFEg
-X-Received: by 2002:a7b:c4c6:: with SMTP id g6mr3605232wmk.126.1571758260030;
-        Tue, 22 Oct 2019 08:31:00 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzRNIaPW2VC3E0u/tx9jObrvh39A/kSU1/g2oCY4LzK3jFChqIF1uPjGeoTV55xRLqzG4HUGw==
-X-Received: by 2002:a7b:c4c6:: with SMTP id g6mr3605195wmk.126.1571758259666;
-        Tue, 22 Oct 2019 08:30:59 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:c0e4:dcf4:b543:ce19? ([2001:b07:6468:f312:c0e4:dcf4:b543:ce19])
-        by smtp.gmail.com with ESMTPSA id i18sm17512175wrx.14.2019.10.22.08.30.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Oct 2019 08:30:59 -0700 (PDT)
-Subject: Re: [PATCH v2 14/15] KVM: Terminate memslot walks via used_slots
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     James Hogan <jhogan@kernel.org>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Marc Zyngier <maz@kernel.org>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
-References: <20191022003537.13013-1-sean.j.christopherson@intel.com>
- <20191022003537.13013-15-sean.j.christopherson@intel.com>
- <642f73ee-9425-0149-f4f4-f56be9ae5713@redhat.com>
- <20191022152827.GC2343@linux.intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <625e511f-bd35-3b92-0c6d-550c10fc5827@redhat.com>
-Date:   Tue, 22 Oct 2019 17:30:58 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EA786176B;
+        Tue, 22 Oct 2019 08:30:39 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BFBAE3F71A;
+        Tue, 22 Oct 2019 08:30:37 -0700 (PDT)
+Date:   Tue, 22 Oct 2019 16:30:35 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        amit.kachhap@arm.com, ard.biesheuvel@linaro.org,
+        catalin.marinas@arm.com, deller@gmx.de, duwe@suse.de,
+        james.morse@arm.com, jeyu@kernel.org, jpoimboe@redhat.com,
+        jthierry@redhat.com, mingo@redhat.com, peterz@infradead.org,
+        svens@stackframe.org, takahiro.akashi@linaro.org, will@kernel.org
+Subject: Re: [PATCH 1/8] ftrace: add ftrace_init_nop()
+Message-ID: <20191022153035.GB52920@lakrids.cambridge.arm.com>
+References: <20191021163426.9408-1-mark.rutland@arm.com>
+ <20191021163426.9408-2-mark.rutland@arm.com>
+ <20191021140756.613a1bac@gandalf.local.home>
+ <20191022112811.GA11583@lakrids.cambridge.arm.com>
+ <20191022085428.75cfaad6@gandalf.local.home>
 MIME-Version: 1.0
-In-Reply-To: <20191022152827.GC2343@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191022085428.75cfaad6@gandalf.local.home>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22/10/19 17:28, Sean Christopherson wrote:
-> On Tue, Oct 22, 2019 at 04:04:18PM +0200, Paolo Bonzini wrote:
->> On 22/10/19 02:35, Sean Christopherson wrote:
->>> +static inline int kvm_shift_memslots_forward(struct kvm_memslots *slots,
->>> +					     struct kvm_memory_slot *new)
->>> +{
->>> +	struct kvm_memory_slot *mslots = slots->memslots;
->>> +	int i;
->>> +
->>> +	if (WARN_ON_ONCE(slots->id_to_index[new->id] == -1) ||
->>> +	    WARN_ON_ONCE(!slots->used_slots))
->>> +		return -1;
->>> +
->>> +	for (i = slots->id_to_index[new->id]; i < slots->used_slots - 1; i++) {
->>> +		if (new->base_gfn > mslots[i + 1].base_gfn)
->>> +			break;
->>> +
->>> +		WARN_ON_ONCE(new->base_gfn == mslots[i + 1].base_gfn);
->>> +
->>> +		/* Shift the next memslot forward one and update its index. */
->>> +		mslots[i] = mslots[i + 1];
->>> +		slots->id_to_index[mslots[i].id] = i;
->>> +	}
->>> +	return i;
->>> +}
->>> +
->>> +static inline int kvm_shift_memslots_back(struct kvm_memslots *slots,
->>> +					  struct kvm_memory_slot *new,
->>> +					  int start)
->>
->> This new implementation of the insertion sort loses the comments that
->> were there in the old one.  Please keep them as function comments.
+On Tue, Oct 22, 2019 at 08:54:28AM -0400, Steven Rostedt wrote:
+> On Tue, 22 Oct 2019 12:28:11 +0100
+> Mark Rutland <mark.rutland@arm.com> wrote:
+> > > To make the name even better, let's just rename it to:
+> > > 
+> > >  ftrace_nop_initialization()
+> > > 
+> > > I think that may be the best description for it.  
+> > 
+> > Perhaps ftrace_nop_initialize(), so that it's not a noun?
+> > 
+> > I've made it ftrace_nop_initialization() in my branch for now.
 > 
-> I assume you're talking about this blurb in particular?
+> I'm fine with ftrace_nop_initialize().
+
+It's settled, then. :)
+
+[...]
+
+> > | /**
+> > |  * ftrace_init_nop - initialize a nop call site
+> > |  * @mod: module structure if called by module load initialization
+> > |  * @rec: the mcount call site record
 > 
-> 	 * The ">=" is needed when creating a slot with base_gfn == 0,
-> 	 * so that it moves before all those with base_gfn == npages == 0.
+> Perhaps say "mcount/fentry"
 
-Yes, well all of the comments.  You can also keep them in the caller, as
-you prefer.
+This is the exact wording that ftrace_make_nop and ftrace_modify_call
+have. For consistency, I think those should all match.
 
-Paolo
+I can add " (e.g. mcount/fentry)" to all of those if you'd like?
 
+... or leave them all as-is?
+
+> > |  *
+> > |  * This is a very sensitive operation and great care needs
+> > |  * to be taken by the arch.  The operation should carefully
+> > |  * read the location, check to see if what is read is indeed
+> > |  * what we expect it to be, and then on success of the compare,
+> > |  * it should write to the location.
+> > |  *
+> > |  * The code segment at @rec->ip should be as initialized by the
+> 
+> "should be as" is a bit confusing. What about?
+> 
+>  "The code segment at @rec->ip should contain the contents created by
+>   the compiler".
+
+Works for me.
+
+Mark.
