@@ -2,165 +2,213 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82D55CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 23:11:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C9BCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 23:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55ED020684
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 23:11:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A185206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 23:17:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571785878;
-	bh=JjSlb4m7LKOUcgdQA7mlpDxGQQjQIrdM30z6C96PXCA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=AIYYqXDmNEYt8rZBEInyrKI+hPdrPkcCST3ieeViQd6aMYPRTTYdrCk8Ul/F23twd
-	 JvfaTGqxj0doNrwJF9svlspI/JmwsraDv9rSD3cSKVIViSWxSnMHX/6ftMGrKoTJhW
-	 EeYAgkngTxokz1rsiyoWbiPdR0vKFJ2ajHf5Tccs=
+	s=default; t=1571786229;
+	bh=1vkAMPwTHOpnBgGDNz7vAJMdb+BnXCdEtBMcR2I/yco=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=FJtOIjz0HqywnEiiougkdM4yCYA/ZaGqTlHs7Qd8yIDYHn1bZZs1adqSlOXVxi5ka
+	 iHLACYcksPnOOXbIiP8N8efskCxq5TBHzTawO9rIV9BqnDmVjp28/a/HANNyKYYRrH
+	 ChU1Uq3826Tto1uIRgDPLyEN41XZ7DQEJT2R0Az4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733225AbfJVXKs (ORCPT
+        id S2389274AbfJVXQ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 19:10:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41352 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728076AbfJVXKr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 19:10:47 -0400
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F92F20700;
-        Tue, 22 Oct 2019 23:10:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571785846;
-        bh=JjSlb4m7LKOUcgdQA7mlpDxGQQjQIrdM30z6C96PXCA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=SXLHmUcqD7kZJKs+FUFkcCnpAokDjFTxsKxDN2yqwPK6aEvcjnpbzXBvtIcTdpQSY
-         /GIT5cuPzev1z46Gl8Xp4xZhBFmW9ssQdBJfozx68VB4fDJIjPwh7onC4lKKZGH8L/
-         JmIFohHToZpgDWHGA3VRn6cyJk86Bw0k2HDgxSIM=
-Date:   Tue, 22 Oct 2019 16:10:45 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     syzbot <syzbot+667740df862911577d63@syzkaller.appspotmail.com>
-Cc:     hughd@google.com, jglisse@redhat.com,
-        kirill.shutemov@linux.intel.com, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, willy@infradead.org
-Subject: Re: linux-next test error: WARNING in collapse_file
-Message-Id: <20191022161045.3ba1aa9b537455de6c5e4513@linux-foundation.org>
-In-Reply-To: <0000000000000b75de0595878a3e@google.com>
-References: <0000000000000b75de0595878a3e@google.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 22 Oct 2019 19:16:58 -0400
+Received: from mail-oi1-f179.google.com ([209.85.167.179]:45026 "EHLO
+        mail-oi1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727403AbfJVXQ5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 19:16:57 -0400
+Received: by mail-oi1-f179.google.com with SMTP id s71so2871516oih.11;
+        Tue, 22 Oct 2019 16:16:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=o7ny16/mnyqk5KkvAfWXHyW+yD70otI87QA0VLCTMkw=;
+        b=UuoZGqKuzbC0bUtrcpzDgbFcjnh1+c69186xZh75Veey32L1ZZLCFOaTqszVSc4yeb
+         GR+JK4esuiRfNYbOO2Mw4735KubXm/VM4qC62go0Ez2+mj5m+U+GgY63vmH6m4G+WzBY
+         t0HiK2jrZcfDejH3ynWG1MEIHCi4o9fTaGC0TavLzeupKG6ZRTwbBH0t2Ou9Hqr6sd4t
+         ZkhWqlTRILZY6DRUxSTcbNxPOzBqVAA0ELKqN4euU4+gQbleF62lAWiARA6WBfGOIPpU
+         YA/x31ywD8qwihvQeGAOa5qSZvxq55UXyFPpd7BaSrc9E6EWsCq7cRlW9RisApeOWwnp
+         rdjA==
+X-Gm-Message-State: APjAAAXwntdH/dZZk800Dam0iAnnHs3knQOWkeVklweeG8zqIesaIsiF
+        PSH3cN+Jat13R0GjRinu4UIikMt0DdO3WYDErsFteG5P
+X-Google-Smtp-Source: APXvYqxYf8YWXu5+u/mwjWAbrC38MXvHAb1sDdX7TSSBvj5NQHLohbDCObbbjBrsoIqtGSJL4ByZXive0vcGLIwkPdM=
+X-Received: by 2002:a05:6808:9b7:: with SMTP id e23mr752573oig.68.1571786215994;
+ Tue, 22 Oct 2019 16:16:55 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAA25o9TABY=3C+FQEg8FDyF1rim315G2hmeB1DBWJLn-wG1j0g@mail.gmail.com>
+ <CAJZ5v0gJWxLJTi7TjaRP-3aR3f4VnX1n9dRE_jxdS6e3SM46LQ@mail.gmail.com>
+ <CAA25o9TiaaKGH4ZkOa=FhZW7PdXQ592YZ4q52o-QNx=yFsR4Pw@mail.gmail.com>
+ <CAJZ5v0j7N=o0S1tSwn5DP10oAmb5oN5SsM3jWhs+ZJ2YxMEvnw@mail.gmail.com> <CAA25o9Rd5x7PjFkrhWL-vqfV9uEYKA4K2K=9t1V7TY2OKX+k6g@mail.gmail.com>
+In-Reply-To: <CAA25o9Rd5x7PjFkrhWL-vqfV9uEYKA4K2K=9t1V7TY2OKX+k6g@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 23 Oct 2019 01:16:45 +0200
+Message-ID: <CAJZ5v0jDwUi4dU5zjCWuRAYEbg63xJadE=Fdr_OY7UcU82q94w@mail.gmail.com>
+Subject: Re: is hibernation usable?
+To:     Luigi Semenzato <semenzato@google.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Geoff Pike <gpike@google.com>, Bas Nowaira <bassem@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 22 Oct 2019 15:44:12 -0700 syzbot <syzbot+667740df862911577d63@syzkaller.appspotmail.com> wrote:
+On Wed, Oct 23, 2019 at 12:53 AM Luigi Semenzato <semenzato@google.com> wrote:
+>
+> On Tue, Oct 22, 2019 at 3:14 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> >
+> > On Tue, Oct 22, 2019 at 11:26 PM Luigi Semenzato <semenzato@google.com> wrote:
+> > >
+> > > Thank you for the quick reply!
+> > >
+> > > On Tue, Oct 22, 2019 at 1:57 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> > > >
+> > > > On Tue, Oct 22, 2019 at 10:09 PM Luigi Semenzato <semenzato@google.com> wrote:
+> > > > >
+> > > > > Following a thread in linux-pm
+> > > > > (https://marc.info/?l=linux-mm&m=157012300901871) I have some issues
+> > > > > that may be of general interest.
+> > > > >
+> > > > > 1. To the best of my knowledge, Linux hibernation is guaranteed to
+> > > > > fail if more than 1/2 of total RAM is in use (for instance, by
+> > > > > anonymous pages).  My knowledge is based on evidence, experiments,
+> > > > > code inspection, the thread above, and a comment in
+> > > > > Documentation/swsusp.txt, copied here:
+> > > >
+> > > > So I use it on a regular basis (i.e. every day) on a system that often
+> > > > has over 50% or RAM in use and it all works.
+> > > >
+> > > > I also know about other people using it on a regular basis.
+> > > >
+> > > > For all of these users, it is usable.
+> > > >
+> > > > >  "Instead, we load the image into unused memory and then atomically
+> > > > > copy it back to it original location. This implies, of course, a
+> > > > > maximum image size of half the amount of memory."
+> > > >
+> > > > That isn't right any more.  An image that is loaded during resume can,
+> > > > in fact, be larger than 50% of RAM.  An image that is created during
+> > > > hibernation, however, cannot.
+> > >
+> > > Sorry, I don't understand this.  Are you saying that, for instance,
+> > > you can resume a 30 GB image on a 32 GB device, but that image could
+> > > only have been created on a 64 GB device?
+> >
+> > Had it been possible to create images larger than 50% of memory during
+> > hibernation, it would have been possible to load them during resume as
+> > well.
+> >
+> > The resume code doesn't have a 50% of RAM limitation, the image
+> > creation code does.
+>
+> Thanks a lot for the clarifications.
+>
+> It is possible that you and I have different definitions of "working
+> in general".  My main issue ia that I would like image creation (i.e.
+> entering hibernation) to work with >50% of RAM in use, and I am
+> extrapolating that other people would like that too.  I can see that
+> there are many uses where this is not needed though, especially if you
+> mostly care about resume.
 
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    a722f75b Add linux-next specific files for 20191022
-> git tree:       linux-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=126aea5b600000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=32434321999f01e9
-> dashboard link: https://syzkaller.appspot.com/bug?extid=667740df862911577d63
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> 
-> Unfortunately, I don't have any reproducer for this crash yet.
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+667740df862911577d63@syzkaller.appspotmail.com
-> 
-> ------------[ cut here ]------------
-> WARNING: CPU: 1 PID: 1080 at mm/khugepaged.c:1643  
-> collapse_file+0x1f9d/0x4170 mm/khugepaged.c:1643
-> Kernel panic - not syncing: panic_on_warn set ...
-> CPU: 1 PID: 1080 Comm: khugepaged Not tainted 5.4.0-rc4-next-20191022 #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-> Google 01/01/2011
-> Call Trace:
->   __dump_stack lib/dump_stack.c:77 [inline]
->   dump_stack+0x172/0x1f0 lib/dump_stack.c:113
->   panic+0x2e3/0x75c kernel/panic.c:221
->   __warn.cold+0x2f/0x35 kernel/panic.c:582
->   report_bug+0x289/0x300 lib/bug.c:195
->   fixup_bug arch/x86/kernel/traps.c:174 [inline]
->   fixup_bug arch/x86/kernel/traps.c:169 [inline]
->   do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:267
->   do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:286
->   invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-> RIP: 0010:collapse_file+0x1f9d/0x4170 mm/khugepaged.c:1643
-> Code: a1 c0 ff 31 c9 ba 01 00 00 00 4c 89 fe 48 8b bd c0 fe ff ff e8 e4 e9  
-> ec ff e9 b4 fd ff ff 4c 8b bd 88 fe ff ff e8 93 a1 c0 ff <0f> 0b 4c 8b a3  
-> 50 ff ff ff c7 85 80 fe ff ff 00 00 00 00 e9 05 f6
-> RSP: 0018:ffff8880a818fad0 EFLAGS: 00010293
-> RAX: ffff8880a7dd8440 RBX: ffff8880a818fc88 RCX: ffffffff81b2b688
-> RDX: 0000000000000000 RSI: ffffffff81b2b9ad RDI: 0000000000000001
-> RBP: ffff8880a818fcb0 R08: ffff8880a7dd8440 R09: fffff940004942b9
-> R10: fffff940004942b8 R11: ffffea00024a15c7 R12: 0000000000000001
-> R13: ffffea0002383a08 R14: 0000000000000000 R15: ffffea0002338000
->   khugepaged_scan_file mm/khugepaged.c:1881 [inline]
->   khugepaged_scan_mm_slot mm/khugepaged.c:1979 [inline]
->   khugepaged_do_scan mm/khugepaged.c:2063 [inline]
->   khugepaged+0x2da9/0x4360 mm/khugepaged.c:2108
->   kthread+0x361/0x430 kernel/kthread.c:255
->   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Also note that you need to be precise about what ">50% of RAM in use"
+means.  For example, AFAICS hibernation works just fine for many cases
+in which MemFree is way below 50% of MemTotal.
 
-Thanks.  This should be fixed in v4:
+> >
+> > > > > 2. There's no simple/general workaround.  Rafael suggested on the
+> > > > > thread "Whatever doesn't fit into 50% of RAM needs to be swapped out
+> > > > > before hibernation".  This is a good suggestion: I am actually close
+> > > > > to achieving this using memcgroups, but it's a fair amount of work,
+> > > > > and a fairly special case.  Not everybody uses memcgroups, and I don't
+> > > > > know of other reliable ways of forcing swap from user level.
+> > > >
+> > > > I don't need to do anything like that.
+> > >
+> > > Again, I don't understand.  Why did you make that suggestion then?
+> > >
+> > > > hibernate_preallocate_memory() manages to free a sufficient amount of
+> > > > memory on my system every time.
+> > >
+> > > Unfortunately this doesn't work for me.  I may have described a simple
+> > > experiment: on a 4GB device, create two large processes like this:
+> > >
+> > > dd if=/dev/zero bs=1100M count=1 | sleep infinity &
+> > > dd if=/dev/zero bs=1100M count=1 | sleep infinity &
+> > >
+> > > so that more than 50% of TotalMem is used for anonymous pages.  Then
+> > > echo disk > /sys/power/state fails with ENOMEM.
+> >
+> > I guess hibernate_preallocate_memory() is not able to free enough
+> > memory for itself in that case.
+> >
+> > > Is this supposed to work?
+> >
+> > Yes, it is, in general.
+> >
+> > > Maybe I am doing something wrong?
+> > > Hibernation works before I create the dd processes.  After I force
+> > > some of those pages to a separate swap device, hibernation works too,
+> > > so those pages aren't mlocked or anything.
+> >
+> > It looks like you are doing something that is not covered by
+> > hibernate_preallocate_memory().
+> >
+> > > > > 3. A feature that works only when 1/2 of total RAM can be allocated
+> > > > > is, in my opinion, not usable, except possibly under special
+> > > > > circumstances, such as mine. Most of the available articles and
+> > > > > documentation do not mention this important fact (but for the excerpt
+> > > > > I mentioned, which is not in a prominent position).
+> > > >
+> > > > It can be used with over 1/2 of RAM allocated and that is quite easy
+> > > > to demonstrate.
+> > > >
+> > > > Honestly, I'm not sure what your problem is really.
+> > >
+> > > I apologize if I am doing something stupid and I should know better
+> > > before I waste other people's time.  I have been trying to explain
+> > > these issues as best as I can.  I have a reproducible failure.  I'll
+> > > be happy to provide any additional detail.
+> >
+> > Simply put, hibernation, as implemented today, needs to allocate over
+> > 50% of RAM (or at least as much as to be able to copy all of the
+> > non-free pages) for image creation.  If it cannot do that, it will
+> > fail and you know how to prevent it from allocating enough memory in a
+> > reproducible way.  AFAICS that's a situation in which every attempt to
+> > allocate 50% of memory for any other purpose will fail as well.
+> >
+> > Frankly, you are first to report this problem, so it arguably is not
+> > common.  It looks like hibernate_preallocate_memory() may be improved
+> > to cover that case, but then the question is how much more complicated
+> > it will have to become for this purpose and whether or not that's
+> > worth pursuing.
+>
+> Right.  I was hoping to discuss that.  Is it easier to do in the
+> kernel what I am trying to do at user level, i.e. force swap of excess
+> pages (possibly to a separate device or partition) so that enough
+> pages are freed up to make hibernate_preallocate_memory always
+> succeed?
 
+It should at least be possible to do that, but it's been a while since
+I last looked at hibernate_preallocate_memory() etc.
 
-From: Song Liu <songliubraving@fb.com>
-Subject: mmthp-recheck-each-page-before-collapsing-file-thp-v4
-
-Trigger filemap_flush() for PageDirty() case.  This covers one-off
-situation, where the file hasn't been flushed since first write.
-
-Link: http://lkml.kernel.org/r/20191022191006.411277-1-songliubraving@fb.com
-Fixes: 99cb0dbd47a1 ("mm,thp: add read-only THP support for (non-shmem) FS")
-Signed-off-by: Song Liu <songliubraving@fb.com>
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Cc: Hugh Dickins <hughd@google.com>
-Cc: William Kucharski <william.kucharski@oracle.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
----
-
- mm/khugepaged.c |   19 ++++++++++++++-----
- 1 file changed, 14 insertions(+), 5 deletions(-)
-
---- a/mm/khugepaged.c~mmthp-recheck-each-page-before-collapsing-file-thp-v4
-+++ a/mm/khugepaged.c
-@@ -1636,11 +1636,20 @@ static void collapse_file(struct mm_stru
- 			goto out_unlock;
- 		}
- 
--		/*
--		 * khugepaged should not try to collapse dirty pages for
--		 * file THP. Show warning if this somehow happens.
--		 */
--		if (WARN_ON_ONCE(!is_shmem && PageDirty(page))) {
-+		if (!is_shmem && PageDirty(page)) {
-+			/*
-+			 * khugepaged only works on read-only fd, so this
-+			 * page is dirty because it hasn't been flushed
-+			 * since first write. There won't be new dirty
-+			 * pages.
-+			 *
-+			 * Trigger async flush here and hope the writeback
-+			 * is done when khugepaged revisits this page.
-+			 *
-+			 * This is a one-off situation. We are not forcing
-+			 * writeback in loop.
-+			 */
-+			filemap_flush(mapping);
- 			result = SCAN_FAIL;
- 			goto out_unlock;
- 		}
-_
-
+> I started reading the swap code, but it is entangled with
+> page reclaim and I haven't seen a simple solution, neither do I know
+> if there is one and how long it would take to find it, or code around
+> it.  (However I haven't looked yet at how it works when memcgroup
+> limits are lowered---that may give me good ideas).
