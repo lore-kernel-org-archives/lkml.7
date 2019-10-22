@@ -2,155 +2,104 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88248CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:03:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81B26CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:05:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BE5B21872
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:03:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5029E2064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:05:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bUldyGdd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388118AbfJVIDt convert rfc822-to-8bit (ORCPT
+        id S2388122AbfJVIFy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 04:03:49 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:42277 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387614AbfJVIDs (ORCPT
+        Tue, 22 Oct 2019 04:05:54 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:49215 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388019AbfJVIFx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 04:03:48 -0400
-Received: by mail-oi1-f194.google.com with SMTP id i185so13383934oif.9;
-        Tue, 22 Oct 2019 01:03:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=FZ5NqMFCYGmllIJPScGfDyvZnsZelaNfZGPfOky3arY=;
-        b=FyqW0a+oMbfO8s/MDh8ItoobSvBN53PhOlFwLpBkjkvQ1k4uAm1CmcCv/JmkZYTzHg
-         Pb+pF0T3z5yVtBlBIz3cyH5SYKngxJITyXcU+anW9r3RbJXwpIJEsnuVpjAACYerTiF6
-         uKIqSfVJZPuDRvIO8wb2TUPupf1enV/YA5IgnDFGppDAOdkaMXYXdIcD2G+h7r2zheSl
-         rx+H9KWjRUS3XxhEa+u/JHhXF3mpms8iLOtndzdff8XaEwYX3xRFBHCshC2UYmuWWZ9f
-         DZLBN9IcZgsmXbhFVxgsTkI65e+lxsVglUXR/EXTQwOBWPBb40cPwiIlMc1NQJ0f+dKI
-         V5LQ==
-X-Gm-Message-State: APjAAAUjXmC5zkRkk94Y9VWAeJZ/JP/zJQK7tNSt5yjzDB2DAGej8xH/
-        pvWYSPmEMLuAqfZLW4ZmV8xHnG0bfKCfA+x0mRc=
-X-Google-Smtp-Source: APXvYqzUG4qN2828x+balZ7XQHkCN61tn83nKFfVm4V+67gV79RTLeG4Xc/VY2KvLVqNFsT/NQt7RB7hJSVhMG7O6So=
-X-Received: by 2002:a05:6808:3b4:: with SMTP id n20mr1733802oie.131.1571731427705;
- Tue, 22 Oct 2019 01:03:47 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191021143742.14487-1-geert+renesas@glider.be>
- <20191021143742.14487-2-geert+renesas@glider.be> <0f91839d858fcb03435ebc85e61ee4e75371ff37.camel@perches.com>
-In-Reply-To: <0f91839d858fcb03435ebc85e61ee4e75371ff37.camel@perches.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 22 Oct 2019 10:03:36 +0200
-Message-ID: <CAMuHMdU4OhsK6Jvy406ZCM+OeGcfVB0b7ccsne9KdMZFLf=JqQ@mail.gmail.com>
-Subject: Re: [PATCH 1/7] debugfs: Add debugfs_create_xul() for hexadecimal
- unsigned long
-To:     Joe Perches <joe@perches.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Jaehoon Chung <jh80.chung@samsung.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Linux MMC List <linux-mmc@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        netdev <netdev@vger.kernel.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+        Tue, 22 Oct 2019 04:05:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571731552;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=UJBqHCwpIBtwLyrKpDMAXOjT9q0eBo6gpCpHT0A5CYs=;
+        b=bUldyGddilpkePhC+ulhauT+5S354eBhMnziXjg+LK+6M9qmB+l4ZLJWL+phWL9UbMDi/p
+        aQtN2ZEKQ7kmKvIksWJiuqeC6siDpTfjhF/c/tw+K3dwLeI9qaUK6MPpd5QYWroaXMCLgq
+        k/ZLok0pWUBJr6tj6S2YEqlqesVbDxo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-172-yq8PqrZiMIu0kX-iL-wLUw-1; Tue, 22 Oct 2019 04:05:51 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2063F800D4E;
+        Tue, 22 Oct 2019 08:05:50 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-116-43.ams2.redhat.com [10.36.116.43])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2E4865C219;
+        Tue, 22 Oct 2019 08:05:47 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id 7BE489D69; Tue, 22 Oct 2019 10:05:46 +0200 (CEST)
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Gurchetan Singh <gurchetansingh@chromium.org>,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        virtualization@lists.linux-foundation.org (open list:VIRTIO GPU DRIVER),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 1/5] drm/virtio: print a single line with device features
+Date:   Tue, 22 Oct 2019 10:05:42 +0200
+Message-Id: <20191022080546.19769-2-kraxel@redhat.com>
+In-Reply-To: <20191022080546.19769-1-kraxel@redhat.com>
+References: <20191022080546.19769-1-kraxel@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MC-Unique: yq8PqrZiMIu0kX-iL-wLUw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joe,
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+---
+ drivers/gpu/drm/virtio/virtgpu_kms.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-On Mon, Oct 21, 2019 at 5:37 PM Joe Perches <joe@perches.com> wrote:
-> On Mon, 2019-10-21 at 16:37 +0200, Geert Uytterhoeven wrote:
-> > The existing debugfs_create_ulong() function supports objects of
-> > type "unsigned long", which are 32-bit or 64-bit depending on the
-> > platform, in decimal form.  To format objects in hexadecimal, various
-> > debugfs_create_x*() functions exist, but all of them take fixed-size
-> > types.
-> >
-> > Add a debugfs helper for "unsigned long" objects in hexadecimal format.
-> > This avoids the need for users to open-code the same, or introduce
-> > bugs when casting the value pointer to "u32 *" or "u64 *" to call
-> > debugfs_create_x{32,64}().
-> []
-> > diff --git a/include/linux/debugfs.h b/include/linux/debugfs.h
-> []
-> > @@ -356,4 +356,14 @@ static inline ssize_t debugfs_write_file_bool(struct file *file,
-> >
-> >  #endif
-> >
-> > +static inline void debugfs_create_xul(const char *name, umode_t mode,
-> > +                                   struct dentry *parent,
-> > +                                   unsigned long *value)
-> > +{
-> > +     if (sizeof(*value) == sizeof(u32))
-> > +             debugfs_create_x32(name, mode, parent, (u32 *)value);
-> > +     else
-> > +             debugfs_create_x64(name, mode, parent, (u64 *)value);
->
-> trivia: the casts are unnecessary.
+diff --git a/drivers/gpu/drm/virtio/virtgpu_kms.c b/drivers/gpu/drm/virtio/=
+virtgpu_kms.c
+index 0b3cdb0d83b0..2f5773e43557 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_kms.c
++++ b/drivers/gpu/drm/virtio/virtgpu_kms.c
+@@ -155,16 +155,15 @@ int virtio_gpu_init(struct drm_device *dev)
+ #ifdef __LITTLE_ENDIAN
+ =09if (virtio_has_feature(vgdev->vdev, VIRTIO_GPU_F_VIRGL))
+ =09=09vgdev->has_virgl_3d =3D true;
+-=09DRM_INFO("virgl 3d acceleration %s\n",
+-=09=09 vgdev->has_virgl_3d ? "enabled" : "not supported by host");
+-#else
+-=09DRM_INFO("virgl 3d acceleration not supported by guest\n");
+ #endif
+ =09if (virtio_has_feature(vgdev->vdev, VIRTIO_GPU_F_EDID)) {
+ =09=09vgdev->has_edid =3D true;
+-=09=09DRM_INFO("EDID support available.\n");
+ =09}
+=20
++=09DRM_INFO("features: %cvirgl %cedid\n",
++=09=09 vgdev->has_virgl_3d ? '+' : '-',
++=09=09 vgdev->has_edid     ? '+' : '-');
++
+ =09ret =3D virtio_find_vqs(vgdev->vdev, 2, vqs, callbacks, names, NULL);
+ =09if (ret) {
+ =09=09DRM_ERROR("failed to find virt queues\n");
+--=20
+2.18.1
 
-They are necessary, in both calls (so using #ifdef as suggested below
-won't help):
-
-    include/linux/debugfs.h:375:42: error: passing argument 4 of
-‘debugfs_create_x32’ from incompatible pointer type
-[-Werror=incompatible-pointer-types]
-       debugfs_create_x32(name, mode, parent, value);
-                                              ^~~~~
-    include/linux/debugfs.h:114:6: note: expected ‘u32 * {aka unsigned
-int *}’ but argument is of type ‘long unsigned int *’
-     void debugfs_create_x32(const char *name, umode_t mode, struct
-dentry *parent,
-          ^~~~~~~~~~~~~~~~~~
-    include/linux/debugfs.h:377:42: error: passing argument 4 of
-‘debugfs_create_x64’ from incompatible pointer type
-[-Werror=incompatible-pointer-types]
-       debugfs_create_x64(name, mode, parent, value);
-                                              ^~~~~
-    include/linux/debugfs.h:116:6: note: expected ‘u64 * {aka long
-long unsigned int *}’ but argument is of type ‘long unsigned int *’
-     void debugfs_create_x64(const char *name, umode_t mode, struct
-dentry *parent,
-          ^~~~~~~~~~~~~~~~~~
-
-> This might be more sensible using #ifdef
->
-> static inline void debugfs_create_xul(const char *name, umode_t mode,
->                                       struct dentry *parent,
->                                       unsigned long *value)
-> {
-> #if BITS_PER_LONG == 64
->         debugfs_create_x64(name, mode, parent, value);
-> #else
->         debugfs_create_x32(name, mode, parent, value);
-> #endif
-> }
-
-... at the expense of the compiler checking only one branch.
-
-Just like "if (IS_ENABLED(CONFIG_<foo>)" (when possible) is preferred
-over "#ifdef CONFIG_<foo>" because of compile-coverage, I think using
-"if" here is better than using "#if".
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
