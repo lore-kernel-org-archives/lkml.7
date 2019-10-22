@@ -2,179 +2,120 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 117C5CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 05:59:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ECB5CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 06:00:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB1662184C
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 05:59:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gAXkknV0"
+	by mail.kernel.org (Postfix) with ESMTP id 79E392184C
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 06:00:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731153AbfJVF7x (ORCPT
+        id S2387594AbfJVGAI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 01:59:53 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:40274 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731015AbfJVF7w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 01:59:52 -0400
-Received: by mail-pg1-f193.google.com with SMTP id 15so3921426pgt.7
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 22:59:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :in-reply-to:references;
-        bh=shSJXxHkqiOnwVznDt/3eHxUBXqubG/+hrNMGFN/+WI=;
-        b=gAXkknV0IucthKymxPq6B+aWK9aCNWfbX4eYnr4pyGjA0hMdT1OztIzNZPrdJn7u8K
-         Z1ykMhxLWpFO52vL4nSGDmaXBg+yCIt3WUr5hC4LqFjJCh/9miVn2JYz6FDwSHJ5rFXq
-         uKshCmFJeG51cvhsB/FCvyJMaMOR6jdMl+vwmRu0R2fPAZ9dL3hob3qfBhmq39zsre3T
-         aFf99CL7FKDHbIfcWo4UYJrbL26o6TJ2rPcyXlShN2rhCvyM3ZMkNy/3y+oCYI7zs6aX
-         kuLEneqiXs1VLpG6Z9mZMCaID7JPILuVPGFcZMBgpkq+mEdPedz0vjEeUA5z3X2fiZrJ
-         L0mQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:in-reply-to:references;
-        bh=shSJXxHkqiOnwVznDt/3eHxUBXqubG/+hrNMGFN/+WI=;
-        b=cIZWZQ44tvJuYE3TBqL6FVfK+rcfXNXZFyTOhl4moB1p44crVUlUaFq7DTppMiyPzI
-         4mp+cYyUh8+LuKfq1gRglhqiacObl5w8/j8pncGlAcBWczc4/k2IldOMIzeFQWXUAXwR
-         ER42jVHp3JrSAYeK+bYSybUjouDlpSdAMGuicSz/rqEQd4FYq+an8cHyIKqQg4xOyfec
-         s/Oy+EqdAL+7+3xaCzTE7/mcfEEsepPw0mqIXm9DocAbEoArmptKWdusx8NGRl1mYjT3
-         9sBKgWBCLursf0Ip0zotCUHm0fQU64BL0v8nJ+rDsDAgs3OseYLuABuzCKu+5kb7WSex
-         u6Mw==
-X-Gm-Message-State: APjAAAVUCPOeMdpKQpVOsPJ7GCFSCohcSv2hKg9vwq6pNk1dPSsy4g+P
-        nYcRDyVIuyeL5wMqftVTVLRweA==
-X-Google-Smtp-Source: APXvYqzjoLSvUGt8Q1QqZRMMmRg+VMwOLpmfXvYascTlsJAQYMKM43f/kIbY3Q4CvcoWWUgNKGr7HQ==
-X-Received: by 2002:a63:1d60:: with SMTP id d32mr1932366pgm.37.1571723989575;
-        Mon, 21 Oct 2019 22:59:49 -0700 (PDT)
-Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id g35sm16568061pgg.42.2019.10.21.22.59.45
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 21 Oct 2019 22:59:48 -0700 (PDT)
-From:   Baolin Wang <baolin.wang@linaro.org>
-To:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
-        asutoshd@codeaurora.org
-Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com, arnd@arndb.de,
-        linus.walleij@linaro.org, vincent.guittot@linaro.org,
-        baolin.wang@linaro.org, baolin.wang7@gmail.com,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 3/3] mmc: host: sdhci-sprd: Add software queue support
-Date:   Tue, 22 Oct 2019 13:58:57 +0800
-Message-Id: <eea9982c738e90c527de2e92c6f2ca97ac74d97f.1571722391.git.baolin.wang@linaro.org>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <cover.1571722391.git.baolin.wang@linaro.org>
-References: <cover.1571722391.git.baolin.wang@linaro.org>
-In-Reply-To: <cover.1571722391.git.baolin.wang@linaro.org>
-References: <cover.1571722391.git.baolin.wang@linaro.org>
+        Tue, 22 Oct 2019 02:00:08 -0400
+Received: from mga17.intel.com ([192.55.52.151]:54929 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730705AbfJVGAH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 02:00:07 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 23:00:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,326,1566889200"; 
+   d="scan'208";a="187778623"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga007.jf.intel.com with ESMTP; 21 Oct 2019 23:00:06 -0700
+Received: from [10.249.230.171] (abudanko-mobl.ccr.corp.intel.com [10.249.230.171])
+        by linux.intel.com (Postfix) with ESMTP id 3197558029D;
+        Mon, 21 Oct 2019 23:00:02 -0700 (PDT)
+Subject: [PATCH v4 3/4] perf/x86/intel: implement LBR callstacks context
+ synchronization
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>,
+        Song Liu <songliubraving@fb.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <f4662ac9-e72e-d141-bead-da07e29f81e8@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <2bd6306a-9086-60b8-b5c9-4e16f39950d4@linux.intel.com>
+Date:   Tue, 22 Oct 2019 09:00:01 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <f4662ac9-e72e-d141-bead-da07e29f81e8@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add software queue support to improve the performance.
 
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+Implement intel_pmu_lbr_sync_task_ctx() method updating counters
+of the events that requested LBR callstack data on a sample.
+
+The counter can be zero for the case when task context belongs to
+a thread that has just come from a block on a futex and the context
+contains saved (lbr_stack_state == LBR_VALID) LBR register values.
+
+For the values to be restored at LBR registers on the next thread's
+switch-in event it swaps the counter value with the one that is
+expected to be non zero at the previous equivalent task perf event
+context.
+
+Swap operation type ensures the previous task perf event context
+stays consistent with the amount of events that requested LBR
+callstack data on a sample.
+
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 ---
- drivers/mmc/host/Kconfig      |    1 +
- drivers/mmc/host/sdhci-sprd.c |   26 ++++++++++++++++++++++++++
- 2 files changed, 27 insertions(+)
+ arch/x86/events/intel/lbr.c  | 6 ++++++
+ arch/x86/events/perf_event.h | 3 +++
+ 2 files changed, 9 insertions(+)
 
-diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-index efa4019..54b86f6 100644
---- a/drivers/mmc/host/Kconfig
-+++ b/drivers/mmc/host/Kconfig
-@@ -632,6 +632,7 @@ config MMC_SDHCI_SPRD
- 	depends on ARCH_SPRD
- 	depends on MMC_SDHCI_PLTFM
- 	select MMC_SDHCI_IO_ACCESSORS
-+	select MMC_HSQ
- 	help
- 	  This selects the SDIO Host Controller in Spreadtrum
- 	  SoCs, this driver supports R11(IP version: R11P0).
-diff --git a/drivers/mmc/host/sdhci-sprd.c b/drivers/mmc/host/sdhci-sprd.c
-index d07b979..3cc1277 100644
---- a/drivers/mmc/host/sdhci-sprd.c
-+++ b/drivers/mmc/host/sdhci-sprd.c
-@@ -19,6 +19,7 @@
- #include <linux/slab.h>
- 
- #include "sdhci-pltfm.h"
-+#include "mmc_hsq.h"
- 
- /* SDHCI_ARGUMENT2 register high 16bit */
- #define SDHCI_SPRD_ARG2_STUFF		GENMASK(31, 16)
-@@ -379,6 +380,16 @@ static unsigned int sdhci_sprd_get_ro(struct sdhci_host *host)
- 	return 0;
+diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
+index ea54634eabf3..3cf58bcb88af 100644
+--- a/arch/x86/events/intel/lbr.c
++++ b/arch/x86/events/intel/lbr.c
+@@ -417,6 +417,12 @@ static void __intel_pmu_lbr_save(struct x86_perf_task_context *task_ctx)
+ 	cpuc->last_log_id = ++task_ctx->log_id;
  }
  
-+static void sdhci_sprd_request_done(struct sdhci_host *host,
-+				    struct mmc_request *mrq)
++void intel_pmu_lbr_sync_task_ctx(struct x86_perf_task_context *prev,
++				 struct x86_perf_task_context *next)
 +{
-+	/* Validate if the request was from software queue firstly. */
-+	if (mmc_hsq_finalize_request(host->mmc, mrq))
-+		return;
-+
-+	 mmc_request_done(host->mmc, mrq);
++	swap(prev->lbr_callstack_users, next->lbr_callstack_users);
 +}
 +
- static struct sdhci_ops sdhci_sprd_ops = {
- 	.read_l = sdhci_sprd_readl,
- 	.write_l = sdhci_sprd_writel,
-@@ -392,6 +403,7 @@ static unsigned int sdhci_sprd_get_ro(struct sdhci_host *host)
- 	.hw_reset = sdhci_sprd_hw_reset,
- 	.get_max_timeout_count = sdhci_sprd_get_max_timeout_count,
- 	.get_ro = sdhci_sprd_get_ro,
-+	.request_done = sdhci_sprd_request_done,
- };
- 
- static void sdhci_sprd_request(struct mmc_host *mmc, struct mmc_request *mrq)
-@@ -521,6 +533,7 @@ static int sdhci_sprd_probe(struct platform_device *pdev)
+ void intel_pmu_lbr_sched_task(struct perf_event_context *ctx, bool sched_in)
  {
- 	struct sdhci_host *host;
- 	struct sdhci_sprd_host *sprd_host;
-+	struct mmc_hsq *hsq;
- 	struct clk *clk;
- 	int ret = 0;
+ 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+index be78f2765f74..0474ec6f4771 100644
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -1024,6 +1024,9 @@ void intel_pmu_store_pebs_lbrs(struct pebs_lbr *lbr);
  
-@@ -631,6 +644,16 @@ static int sdhci_sprd_probe(struct platform_device *pdev)
+ void intel_ds_init(void);
  
- 	sprd_host->flags = host->flags;
- 
-+	hsq = devm_kzalloc(&pdev->dev, sizeof(*hsq), GFP_KERNEL);
-+	if (!hsq) {
-+		ret = -ENOMEM;
-+		goto err_cleanup_host;
-+	}
++void intel_pmu_lbr_sync_task_ctx(struct x86_perf_task_context *prev,
++				 struct x86_perf_task_context *next);
 +
-+	ret = mmc_hsq_init(hsq, host->mmc);
-+	if (ret)
-+		goto err_cleanup_host;
-+
- 	ret = __sdhci_add_host(host);
- 	if (ret)
- 		goto err_cleanup_host;
-@@ -689,6 +712,7 @@ static int sdhci_sprd_runtime_suspend(struct device *dev)
- 	struct sdhci_host *host = dev_get_drvdata(dev);
- 	struct sdhci_sprd_host *sprd_host = TO_SPRD_HOST(host);
+ void intel_pmu_lbr_sched_task(struct perf_event_context *ctx, bool sched_in);
  
-+	mmc_hsq_suspend(host->mmc);
- 	sdhci_runtime_suspend_host(host);
- 
- 	clk_disable_unprepare(sprd_host->clk_sdio);
-@@ -717,6 +741,8 @@ static int sdhci_sprd_runtime_resume(struct device *dev)
- 		goto clk_disable;
- 
- 	sdhci_runtime_resume_host(host, 1);
-+	mmc_hsq_resume(host->mmc);
-+
- 	return 0;
- 
- clk_disable:
+ u64 lbr_from_signext_quirk_wr(u64 val);
 -- 
-1.7.9.5
+2.20.1
 
