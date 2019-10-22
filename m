@@ -2,128 +2,98 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BBFDCA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 10:50:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6181CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 10:51:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E11402184C
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 10:50:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571741418;
-	bh=HLnoPG4NqtCzOt9lT9Vz7q0mws9WR3wYSYgX18WYPYg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=tMLFwdGhfYeyExdixPwxwa4YAC5BpGAiiJgCbK1kAA98HMxQjELnN7xjRn4NK7h4M
-	 YMnIaCALjGE6iCoD9mihPSUwnFeeBcBrolkWUvLRPxtf3whwPq1BIVpstHhMfirw+s
-	 CoBUhmgzdZdjLLPH61NaLcrn5pMPcOKwIqpkEgMw=
+	by mail.kernel.org (Postfix) with ESMTP id 926922184C
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 10:51:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388566AbfJVKuQ (ORCPT
+        id S2388628AbfJVKvF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 06:50:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50666 "EHLO mail.kernel.org"
+        Tue, 22 Oct 2019 06:51:05 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48094 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388372AbfJVKuQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 06:50:16 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2388372AbfJVKvF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 06:51:05 -0400
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 256A62075A;
-        Tue, 22 Oct 2019 10:50:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571741415;
-        bh=HLnoPG4NqtCzOt9lT9Vz7q0mws9WR3wYSYgX18WYPYg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=E2fDfhbmc4ltqu66OYTH+21FIkF0OiS1Uc1nII2OALDCnQM41KhOnTf6sZ4kASDAH
-         +mec1MmJc4nLevTccIjILEk/vIB/QAm1qQS6tW+R0RMmgXZwZjyB11fEd0Paeftkif
-         CBUxsm0dy/fSz+m6/OCKASeDY9JbtqK4D5ObQJg4=
-Date:   Tue, 22 Oct 2019 11:50:10 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Martin Kepplinger <martink@posteo.de>
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        linux-iio@vger.kernel.org, Chris Healy <cphealy@gmail.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: mma8452: Re-word 'interrupt-names'
- description
-Message-ID: <20191022115010.7957744e@archlinux>
-In-Reply-To: <1a1bdf10-2505-6baf-8030-ce5e0e2b55a9@posteo.de>
-References: <20191022035626.13002-1-andrew.smirnov@gmail.com>
-        <1a1bdf10-2505-6baf-8030-ce5e0e2b55a9@posteo.de>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9B06E4E92A
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 10:51:04 +0000 (UTC)
+Received: by mail-wm1-f70.google.com with SMTP id u17so1710940wmd.3
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 03:51:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=vdKl6DDKIlJEFdLjcPMS36s2s1FJIcIbFPms1LIdy0I=;
+        b=IxEfcWdHXw5jKgHbcwDMhygYzkdxhbUGR+ReFVqWSY+5Nt7TgLsKb87fmhzIy3J/Yw
+         EZvSMiJIrL7M89UBynVCjlTHXp6ni2j71sCgYG7qh1ZncvvUayE+McAo1HsmKFiZT+FY
+         05RYQKSBOlgahF2gs1I2YiJV8rTralBB9xWfuUgr4tTMRFzCS7w9O9Ze1OGnnobnhjGf
+         VKn56q+QqlH8oAp/di2SuuRGyo/RQ899VYks/eTdtcyakoWdSWMn3g9tbchjwimDkTo/
+         JHLX/Ov6sORU5rC1k6SQb+7cg3h5yefKCQy3x/U84Qdg1YGHrvHKJoVzjxH323ITMv20
+         Gp/Q==
+X-Gm-Message-State: APjAAAUK2ZKmFECn7pJho5eoKtG9lhUtKCyPzz4sT95uiqgmsuiIzb4X
+        AGU2eD1a5QBnIMJaoBAaOTJG36ncWsKB7bSCxiP7/Pn8OAfwQN5cOcREY/c5DwWeNq2D1uac0PQ
+        BlinolHF251WSADlCzJ1NG3ye
+X-Received: by 2002:adf:e446:: with SMTP id t6mr2862396wrm.7.1571741463185;
+        Tue, 22 Oct 2019 03:51:03 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwLRJDFeoklnPCvIdpTLdkWG0AASVA51wAqpaeBkfAXh2wTKGAZAwI2bUd5RCu2qeXwOkem1Q==
+X-Received: by 2002:adf:e446:: with SMTP id t6mr2862368wrm.7.1571741462908;
+        Tue, 22 Oct 2019 03:51:02 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:45c:4f58:5841:71b2? ([2001:b07:6468:f312:45c:4f58:5841:71b2])
+        by smtp.gmail.com with ESMTPSA id b62sm25553598wmc.13.2019.10.22.03.51.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Oct 2019 03:51:02 -0700 (PDT)
+Subject: Re: [PATCH v2 05/16] KVM: VMX: Drop initialization of
+ IA32_FEATURE_CONTROL MSR
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org
+Cc:     "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>, kvm@vger.kernel.org
+References: <20191021234632.32363-1-sean.j.christopherson@intel.com>
+ <20191022000820.1854-1-sean.j.christopherson@intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <59cbc79a-fb06-f689-aa24-0ba923783345@redhat.com>
+Date:   Tue, 22 Oct 2019 12:51:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191022000820.1854-1-sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 22 Oct 2019 10:43:09 +0200
-Martin Kepplinger <martink@posteo.de> wrote:
+On 22/10/19 02:08, Sean Christopherson wrote:
+> Remove the code to initialize IA32_FEATURE_CONTROL MSR when KVM is
+> loaded now that the MSR is initialized during boot on all CPUs that
+> support VMX, i.e. can possibly load kvm_intel.
+> 
+> Reviewed-by: Jim Mattson <jmattson@google.com>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/x86/kvm/vmx/vmx.c | 48 +++++++++++++++++-------------------------
+>  1 file changed, 19 insertions(+), 29 deletions(-)
 
-> On 22.10.19 05:56, Andrey Smirnov wrote:
-> > Current wording in the binding documentation doesn't make it 100%
-> > clear that only one of "INT1" and "INT2" will ever be used by the
-> > driver and that specifying both has no advantages. Re-word it to make
-> > this aspect a bit more explicit.
+I am still not sure about this...  Enabling VMX is adding a possible
+attack vector for the kernel, we should not do it unless we plan to do a
+VMXON.  Why is it so important to operate with locked
+IA32_FEATURE_CONTROL (so that KVM can enable VMX and the kernel can
+still enable SGX if desired).
 
-=46rom a quick glance at the datasheet, it appears that the hardware
-is capable of routing different interrupts to different pins, even
-if the driver does not do so.
-
-CTRL_REG5 has 6 different bits to set whether particular blocks have
-their interrupt routed to INT1 or INT2, so it appears to be possible
-to send some each way.
-=20
-A binding is for the hardware not the driver, so if I'm right about this
-the current text is correct and should be left alone.
-
-Thanks,
-
-Jonathan
-
-> >=20
-> > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> > Cc: Chris Healy <cphealy@gmail.com>
-> > Cc: Jonathan Cameron <jic23@kernel.org>
-> > Cc: Hartmut Knaack <knaack.h@gmx.de>
-> > Cc: Lars-Peter Clausen <lars@metafoo.de>
-> > Cc: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-> > Cc: linux-iio@vger.kernel.org
-> > Cc: devicetree@vger.kernel.org
-> > Cc: linux-kernel@vger.kernel.org
-> > ---
-> >  Documentation/devicetree/bindings/iio/accel/mma8452.txt | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/iio/accel/mma8452.txt b/=
-Documentation/devicetree/bindings/iio/accel/mma8452.txt
-> > index e132394375a1..b27b6bee9eb6 100644
-> > --- a/Documentation/devicetree/bindings/iio/accel/mma8452.txt
-> > +++ b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
-> > @@ -17,7 +17,7 @@ Optional properties:
-> > =20
-> >    - interrupts: interrupt mapping for GPIO IRQ
-> > =20
-> > -  - interrupt-names: should contain "INT1" and/or "INT2", the accelero=
-meter's
-> > +  - interrupt-names: should contain "INT1" or "INT2", the acceleromete=
-r's
-> >  		     interrupt line in use.
-> > =20
-> >    - vdd-supply: phandle to the regulator that provides vdd power to th=
-e accelerometer.
-> >  =20
->=20
-> Acked-by: Martin Kepplinger <martink@posteo.de>
->=20
-> thanks,
->=20
->                            martin
->=20
-
+Paolo
