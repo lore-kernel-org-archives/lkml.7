@@ -2,137 +2,134 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46DCBCA9EB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:06:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44DD2CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:08:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 187832184C
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:06:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="akdZEapz"
+	by mail.kernel.org (Postfix) with ESMTP id 20B2120684
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:08:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388164AbfJVIGD (ORCPT
+        id S2388168AbfJVIIJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 04:06:03 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:34989 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388134AbfJVIF5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 04:05:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571731555;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=2rJJiMpAk3KTFb/8+6jAIUN/X+McNBs+lfMw6ea3i+w=;
-        b=akdZEapzk4TdGVJsi27SenSj/8E/9qThWDVH+yMxIorR2XQkdTgkFsouHCwtUI4r+zVlRV
-        4GDCfDG7GmPLLuyqEOXCtKjpmcPjkItw03AIZ0QDwG7ODkmYUNxuOBo2S/1XzG6g9nv7hk
-        1BIX4gtlZ9GiiFHVYD9+zhJqQcuc7ZA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-184-0lXyjkArN3yZ1gZkgNW9Bg-1; Tue, 22 Oct 2019 04:05:52 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1F55180183D;
-        Tue, 22 Oct 2019 08:05:51 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-116-43.ams2.redhat.com [10.36.116.43])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C2F441001B05;
-        Tue, 22 Oct 2019 08:05:50 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id EFAAC9D34; Tue, 22 Oct 2019 10:05:46 +0200 (CEST)
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Gurchetan Singh <gurchetansingh@chromium.org>,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        virtualization@lists.linux-foundation.org (open list:VIRTIO GPU DRIVER),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 5/5] drm/virtio: factor out virtio_gpu_update_dumb_bo
-Date:   Tue, 22 Oct 2019 10:05:46 +0200
-Message-Id: <20191022080546.19769-6-kraxel@redhat.com>
-In-Reply-To: <20191022080546.19769-1-kraxel@redhat.com>
-References: <20191022080546.19769-1-kraxel@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-MC-Unique: 0lXyjkArN3yZ1gZkgNW9Bg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+        Tue, 22 Oct 2019 04:08:09 -0400
+Received: from mga01.intel.com ([192.55.52.88]:56434 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388047AbfJVIII (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 04:08:08 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Oct 2019 01:08:08 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,326,1566889200"; 
+   d="scan'208";a="209620781"
+Received: from kbl.sh.intel.com ([10.239.159.163])
+  by fmsmga001.fm.intel.com with ESMTP; 22 Oct 2019 01:08:06 -0700
+From:   Jin Yao <yao.jin@linux.intel.com>
+To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com
+Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com,
+        Jin Yao <yao.jin@linux.intel.com>
+Subject: [PATCH v3 0/5] perf report: Support sorting all blocks by cycles
+Date:   Tue, 22 Oct 2019 16:07:05 +0800
+Message-Id: <20191022080710.6491-1-yao.jin@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No functional change.
+It would be useful to support sorting for all blocks by the
+sampled cycles percent per block. This is useful to concentrate
+on the globally hottest blocks.
 
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
----
- drivers/gpu/drm/virtio/virtgpu_plane.c | 36 +++++++++++++++-----------
- 1 file changed, 21 insertions(+), 15 deletions(-)
+This patch series implements a new sort option "total_cycles" which
+sorts all blocks by 'Sampled Cycles%'. The 'Sampled Cycles%' is
+block sampled cycles aggregation / total sampled cycles
 
-diff --git a/drivers/gpu/drm/virtio/virtgpu_plane.c b/drivers/gpu/drm/virti=
-o/virtgpu_plane.c
-index 0b5a760bc293..bc4bc4475a8c 100644
---- a/drivers/gpu/drm/virtio/virtgpu_plane.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_plane.c
-@@ -102,6 +102,25 @@ static int virtio_gpu_plane_atomic_check(struct drm_pl=
-ane *plane,
- =09return ret;
- }
-=20
-+static void virtio_gpu_update_dumb_bo(struct virtio_gpu_device *vgdev,
-+=09=09=09=09      struct virtio_gpu_object *bo,
-+=09=09=09=09      struct drm_plane_state *state)
-+{
-+=09struct virtio_gpu_object_array *objs;
-+
-+=09objs =3D virtio_gpu_array_alloc(1);
-+=09if (!objs)
-+=09=09return;
-+=09virtio_gpu_array_add_obj(objs, &bo->base.base);
-+=09virtio_gpu_cmd_transfer_to_host_2d
-+=09=09(vgdev, 0,
-+=09=09 state->src_w >> 16,
-+=09=09 state->src_h >> 16,
-+=09=09 state->src_x >> 16,
-+=09=09 state->src_y >> 16,
-+=09=09 objs, NULL);
-+}
-+
- static void virtio_gpu_primary_plane_update(struct drm_plane *plane,
- =09=09=09=09=09    struct drm_plane_state *old_state)
- {
-@@ -129,21 +148,8 @@ static void virtio_gpu_primary_plane_update(struct drm=
-_plane *plane,
-=20
- =09vgfb =3D to_virtio_gpu_framebuffer(plane->state->fb);
- =09bo =3D gem_to_virtio_gpu_obj(vgfb->base.obj[0]);
--=09if (bo->dumb) {
--=09=09struct virtio_gpu_object_array *objs;
--
--=09=09objs =3D virtio_gpu_array_alloc(1);
--=09=09if (!objs)
--=09=09=09return;
--=09=09virtio_gpu_array_add_obj(objs, vgfb->base.obj[0]);
--=09=09virtio_gpu_cmd_transfer_to_host_2d
--=09=09=09(vgdev, 0,
--=09=09=09 plane->state->src_w >> 16,
--=09=09=09 plane->state->src_h >> 16,
--=09=09=09 plane->state->src_x >> 16,
--=09=09=09 plane->state->src_y >> 16,
--=09=09=09 objs, NULL);
--=09}
-+=09if (bo->dumb)
-+=09=09virtio_gpu_update_dumb_bo(vgdev, bo, plane->state);
-=20
- =09DRM_DEBUG("handle 0x%x, crtc %dx%d+%d+%d, src %dx%d+%d+%d\n",
- =09=09  bo->hw_res_handle,
---=20
-2.18.1
+For example,
+
+perf record -b ./div
+perf report -s total_cycles --stdio
+
+ # To display the perf.data header info, please use --header/--header-only options.
+ #
+ #
+ # Total Lost Samples: 0
+ #
+ # Samples: 2M of event 'cycles'
+ # Event count (approx.): 2753248
+ #
+ # Sampled Cycles%  Sampled Cycles  Avg Cycles%  Avg Cycles                                              [Program Block Range]         Shared Object
+ # ...............  ..............  ...........  ..........  .................................................................  ....................
+ #
+            26.04%            2.8M        0.40%          18                                             [div.c:42 -> div.c:39]                   div
+            15.17%            1.2M        0.16%           7                                 [random_r.c:357 -> random_r.c:380]          libc-2.27.so
+             5.11%          402.0K        0.04%           2                                             [div.c:27 -> div.c:28]                   div
+             4.87%          381.6K        0.04%           2                                     [random.c:288 -> random.c:291]          libc-2.27.so
+             4.53%          381.0K        0.04%           2                                             [div.c:40 -> div.c:40]                   div
+             3.85%          300.9K        0.02%           1                                             [div.c:22 -> div.c:25]                   div
+             3.08%          241.1K        0.02%           1                                           [rand.c:26 -> rand.c:27]          libc-2.27.so
+             3.06%          240.0K        0.02%           1                                     [random.c:291 -> random.c:291]          libc-2.27.so
+             2.78%          215.7K        0.02%           1                                     [random.c:298 -> random.c:298]          libc-2.27.so
+             2.52%          198.3K        0.02%           1                                     [random.c:293 -> random.c:293]          libc-2.27.so
+             2.36%          184.8K        0.02%           1                                           [rand.c:28 -> rand.c:28]          libc-2.27.so
+             2.33%          180.5K        0.02%           1                                     [random.c:295 -> random.c:295]          libc-2.27.so
+             2.28%          176.7K        0.02%           1                                     [random.c:295 -> random.c:295]          libc-2.27.so
+             2.20%          168.8K        0.02%           1                                         [rand@plt+0 -> rand@plt+0]                   div
+             1.98%          158.2K        0.02%           1                                 [random_r.c:388 -> random_r.c:388]          libc-2.27.so
+             1.57%          123.3K        0.02%           1                                             [div.c:42 -> div.c:44]                   div
+             1.44%          116.0K        0.42%          19                                 [random_r.c:357 -> random_r.c:394]          libc-2.27.so
+ ......
+
+This patch series supports both stdio and tui. And also with the supporting
+of --percent-limit.
+
+ v3:
+ ---
+ 1. Move common block info functions to block-info.h/block-info.c
+
+ 2. Remove nasty hack for skipping calculation of column length.
+
+ 3. Some minor cleanup.
+
+ v2:
+ ---
+ Rebase to perf/core branch
+
+Jin Yao (5):
+  perf util: Cleanup and refactor block info functions
+  perf util: Count the total cycles of all samples
+  perf report: Sort by sampled cycles percent per block for stdio
+  perf report: Support --percent-limit for total_cycles
+  perf report: Sort by sampled cycles percent per block for tui
+
+ tools/perf/Documentation/perf-report.txt |  10 +
+ tools/perf/builtin-annotate.c            |   2 +-
+ tools/perf/builtin-diff.c                | 121 +-------
+ tools/perf/builtin-report.c              | 365 ++++++++++++++++++++++-
+ tools/perf/builtin-top.c                 |   3 +-
+ tools/perf/ui/browsers/hists.c           |  62 +++-
+ tools/perf/ui/browsers/hists.h           |   2 +
+ tools/perf/ui/stdio/hist.c               |  29 +-
+ tools/perf/util/Build                    |   1 +
+ tools/perf/util/block-info.c             | 139 +++++++++
+ tools/perf/util/block-info.h             |  45 +++
+ tools/perf/util/hist.c                   |  13 +-
+ tools/perf/util/hist.h                   |  15 +-
+ tools/perf/util/sort.c                   |   5 +
+ tools/perf/util/sort.h                   |   1 +
+ tools/perf/util/symbol.c                 |  22 --
+ tools/perf/util/symbol.h                 |  24 --
+ tools/perf/util/symbol_conf.h            |   1 +
+ 18 files changed, 698 insertions(+), 162 deletions(-)
+ create mode 100644 tools/perf/util/block-info.c
+ create mode 100644 tools/perf/util/block-info.h
+
+-- 
+2.17.1
 
