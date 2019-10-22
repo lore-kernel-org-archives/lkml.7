@@ -5,60 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5027CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:46:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E0BCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:46:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89E1E2084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:46:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C55E20B7C
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:46:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aGCQoxis"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="czPv6bG/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389553AbfJVQqq (ORCPT
+        id S2389576AbfJVQqu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 12:46:46 -0400
-Received: from mail-wm1-f74.google.com ([209.85.128.74]:38377 "EHLO
-        mail-wm1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389537AbfJVQqp (ORCPT
+        Tue, 22 Oct 2019 12:46:50 -0400
+Received: from mail-vs1-f74.google.com ([209.85.217.74]:42551 "EHLO
+        mail-vs1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389555AbfJVQqt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 12:46:45 -0400
-Received: by mail-wm1-f74.google.com with SMTP id i23so1275936wmb.3
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 09:46:44 -0700 (PDT)
+        Tue, 22 Oct 2019 12:46:49 -0400
+Received: by mail-vs1-f74.google.com with SMTP id p6so3912501vsq.9
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 09:46:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=dZqmdJoB3+A49ICzPo96uRSdJyjd5u4IxSZMRZTT8kw=;
-        b=aGCQoxiscmOs4q7I5aIwxy/WLvyyzb4S34dykF8stm150nI0Mg7g+zESFmXDJWDLsf
-         g9sUxrKCxB3EgINvN4U5jZc5Ivkz8fRrFJ3rKj4iHN51povup3qWqaDWi4wGkq9E6mMa
-         D0RHOnyNQg/FaQHBqf1CvRZfHmm7is/+WKRLg4iWrnMivEC/2AO3B4u62zghIer97iMO
-         8lzdwI8EAJPsycgo0jxJ/hMURM48uWgsQJsu/VSnb+yET7PkBWAFr5CImm6g3gO6la79
-         wVRrrBA9MJF1t9HU0b3RoAyhzh+6lZEesOE/38w6DLyOmYOqMA/i3bc7AHiiCOKJqQB0
-         E+tQ==
+        bh=xeTajp2gTwNneRzmHl8dZLgjRVR+or7Oc8/MveRSES4=;
+        b=czPv6bG/woLawvFL6EeJ3IomrWe7WJLXIS8Q5s7BYzv4jeVZUhKcqUrBD6MHE4X3Wy
+         gaVhDh9xU1/SIXHSLB3HhPMakMrFItvpEYLIRd8RhTeumsOEr/W5opNycN3wSNR5Nfq+
+         8Uvg/NpAVip0msYuEOWDd/Xwyy3mpXkakREkO3YQmRdtrusv2aVekVFQ4qy0KchHUYZk
+         +EJV75GDzrZF1ylqrZahxNQZVzB02D9UYp4RkPTJWVv8C3gzX45NJnepvMKF4XDAM3hC
+         Al/gAJqFg/Q7YP5ygCC7hd/ANdsR33IrEuArt2jLW5EYKkKEipmUTt4vKFi6vvM+JTA0
+         rQRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=dZqmdJoB3+A49ICzPo96uRSdJyjd5u4IxSZMRZTT8kw=;
-        b=EkXH8nvBSGble2W+eEioWQ0UNl1Au9JNcY4pcBaD3JMw7PZHIy21imyBLVyTKRB6yp
-         j3xDP6kcirNQwMTRzzqreB7ZsgDVuYIvZ2Ja8bZHKohouI5IdMCkZ2u2AleEOHVIVKe3
-         CQ7AhoB1Mfo+DOuyue1FJFdvsz+UnVkj66GKRrNg+MyDVOP0MtLPGwOmadqawUfRO6Nx
-         WHUk/URWxRKFax5OmeLLcbDiCbc43h/+ym4yZfyclj08Qv2+yRfvNstcPeaE8Grcaeex
-         JcvaR70FKvIiEIU5P99to/77wGPgaImFrFdFF2U2zm33RWsZi80pC9akbl4u9TjAcy4Z
-         zjxw==
-X-Gm-Message-State: APjAAAVn/dX9XljH06UjXQ0FALNW/xV6+WlHKn0nUY9a1hVSt35HPGcL
-        RWAM2Oin9I/YAR52825x/shQgqk1eYzTH0Nz
-X-Google-Smtp-Source: APXvYqyg34S0UvAo3dCHduedIiaciddRbGPGd1ANg2NOZTg0iOc4BttacxusO1zMaQisBx28V0YrLfMfr6aEKg0V
-X-Received: by 2002:adf:e702:: with SMTP id c2mr4203701wrm.70.1571762803843;
- Tue, 22 Oct 2019 09:46:43 -0700 (PDT)
-Date:   Tue, 22 Oct 2019 18:46:32 +0200
+        bh=xeTajp2gTwNneRzmHl8dZLgjRVR+or7Oc8/MveRSES4=;
+        b=MVJzcdc+0SPn8NNIwPCzotvOX5sbUygbJhj5hbzRXhmGCaoKaq+FYCMWDLglMEoFxJ
+         2+P/N5/x9JF2ysZnQALX9AFpxqx50Lgr6f5f+PsVW1CSdipFqiOIfwZHiEPCPqR7XK4J
+         Uqyl3mCFm+R5N+4Z7HYUl6V7O90FvnIUzKWD+Xy1TPAqVJvKB7aXASu20cSnbqiEp3r9
+         f/+yFaRU+Utm6hIXJs4/U5Ek17mYMgg4sLfxFXLsE55PD1hYNWj0k+r365iMF4S3agQf
+         f3S3jH0mdWV10l0AIISXRojnGdfUIQCZj6oKBDIepnx5/kLj5pTIcDFf7RiqycuBhvyM
+         OWZA==
+X-Gm-Message-State: APjAAAVCOs3dOAs6DDhw73o0Zxdr1OMoLPZ9qNTIFre0wfO20kJqAgKu
+        sX1hyFyoEy6/TNtfb5L8/m8Xr+9Uway0+a4k
+X-Google-Smtp-Source: APXvYqztA3K2JUb94+WtUgiu0B8Mrp7aoBsl8U36U8bVoUlttXs4+RNS1hzM4glUCN7mveu0ffdpO/JosmE95cWz
+X-Received: by 2002:ab0:1896:: with SMTP id t22mr2506869uag.82.1571762807067;
+ Tue, 22 Oct 2019 09:46:47 -0700 (PDT)
+Date:   Tue, 22 Oct 2019 18:46:33 +0200
 In-Reply-To: <cover.1571762488.git.andreyknvl@google.com>
-Message-Id: <453d1fe3843d576eeeef6f8536eead59c1e566f3.1571762488.git.andreyknvl@google.com>
+Message-Id: <26e088ae3ebcaa30afe957aeabaa9f0c653df7d0.1571762488.git.andreyknvl@google.com>
 Mime-Version: 1.0
 References: <cover.1571762488.git.andreyknvl@google.com>
 X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
-Subject: [PATCH 2/3] usb, kcov: collect coverage from hub_event
+Subject: [PATCH 3/3] vhost, kcov: collect coverage from vhost_worker
 From:   Andrey Konovalov <andreyknvl@google.com>
 To:     linux-usb@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
@@ -81,49 +81,76 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 This patch adds kcov_remote_start()/kcov_remote_stop() annotations to the
-hub_event() function, which is responsible for processing events on USB
-buses, in particular events that happen during USB device enumeration.
-Since hub_event() is run in a global background kernel thread (see
-Documentation/dev-tools/kcov.rst for details), each USB bus gets a unique
-global handle id from the USB subsystem kcov handle id range. As the
-result kcov can now be used to collect coverage from events that happen on
-a particular USB bus.
+vhost_worker() function, which is responsible for processing vhost works.
+Since vhost_worker() threads are spawned per vhost device instance
+the common kcov handle is used for kcov_remote_start()/stop() annotations
+(see Documentation/dev-tools/kcov.rst for details). As the result kcov can
+now be used to collect coverage from vhost worker threads.
 
 Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 ---
- drivers/usb/core/hub.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/vhost/vhost.c | 6 ++++++
+ drivers/vhost/vhost.h | 1 +
+ 2 files changed, 7 insertions(+)
 
-diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
-index 236313f41f4a..2634976dab3b 100644
---- a/drivers/usb/core/hub.c
-+++ b/drivers/usb/core/hub.c
-@@ -29,6 +29,7 @@
- #include <linux/random.h>
- #include <linux/pm_qos.h>
- #include <linux/kobject.h>
+diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+index 36ca2cf419bf..a5a557c4b67f 100644
+--- a/drivers/vhost/vhost.c
++++ b/drivers/vhost/vhost.c
+@@ -30,6 +30,7 @@
+ #include <linux/sched/signal.h>
+ #include <linux/interval_tree_generic.h>
+ #include <linux/nospec.h>
 +#include <linux/kcov.h>
  
- #include <linux/uaccess.h>
- #include <asm/byteorder.h>
-@@ -5374,6 +5375,8 @@ static void hub_event(struct work_struct *work)
- 	hub_dev = hub->intfdev;
- 	intf = to_usb_interface(hub_dev);
+ #include "vhost.h"
  
-+	kcov_remote_start(kcov_remote_handle_usb(hdev->bus->busnum));
-+
- 	dev_dbg(hub_dev, "state %d ports %d chg %04x evt %04x\n",
- 			hdev->state, hdev->maxchild,
- 			/* NOTE: expects max 15 ports... */
-@@ -5480,6 +5483,8 @@ static void hub_event(struct work_struct *work)
- 	/* Balance the stuff in kick_hub_wq() and allow autosuspend */
- 	usb_autopm_put_interface(intf);
- 	kref_put(&hub->kref, hub_release);
-+
-+	kcov_remote_stop();
+@@ -357,7 +358,9 @@ static int vhost_worker(void *data)
+ 		llist_for_each_entry_safe(work, work_next, node, node) {
+ 			clear_bit(VHOST_WORK_QUEUED, &work->flags);
+ 			__set_current_state(TASK_RUNNING);
++			kcov_remote_start(dev->kcov_handle);
+ 			work->fn(work);
++			kcov_remote_stop();
+ 			if (need_resched())
+ 				schedule();
+ 		}
+@@ -546,6 +549,7 @@ long vhost_dev_set_owner(struct vhost_dev *dev)
+ 
+ 	/* No owner, become one */
+ 	dev->mm = get_task_mm(current);
++	dev->kcov_handle = current->kcov_handle;
+ 	worker = kthread_create(vhost_worker, dev, "vhost-%d", current->pid);
+ 	if (IS_ERR(worker)) {
+ 		err = PTR_ERR(worker);
+@@ -571,6 +575,7 @@ long vhost_dev_set_owner(struct vhost_dev *dev)
+ 	if (dev->mm)
+ 		mmput(dev->mm);
+ 	dev->mm = NULL;
++	dev->kcov_handle = 0;
+ err_mm:
+ 	return err;
  }
+@@ -682,6 +687,7 @@ void vhost_dev_cleanup(struct vhost_dev *dev)
+ 	if (dev->worker) {
+ 		kthread_stop(dev->worker);
+ 		dev->worker = NULL;
++		dev->kcov_handle = 0;
+ 	}
+ 	if (dev->mm)
+ 		mmput(dev->mm);
+diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
+index e9ed2722b633..a123fd70847e 100644
+--- a/drivers/vhost/vhost.h
++++ b/drivers/vhost/vhost.h
+@@ -173,6 +173,7 @@ struct vhost_dev {
+ 	int iov_limit;
+ 	int weight;
+ 	int byte_weight;
++	u64 kcov_handle;
+ };
  
- static const struct usb_device_id hub_id_table[] = {
+ bool vhost_exceeds_weight(struct vhost_virtqueue *vq, int pkts, int total_len);
 -- 
 2.23.0.866.gb869b98d4c-goog
 
