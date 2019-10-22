@@ -2,41 +2,41 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C95CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:56:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EA60CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:57:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B0832075A
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:56:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13E9121872
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:57:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="jcguvE70"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="M7EPGnSe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389201AbfJVM4X (ORCPT
+        id S1731225AbfJVM5U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 08:56:23 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:34370 "EHLO mail.skyhub.de"
+        Tue, 22 Oct 2019 08:57:20 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:34540 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388090AbfJVM4X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 08:56:23 -0400
+        id S1730684AbfJVM5U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 08:57:20 -0400
 Received: from zn.tnic (p200300EC2F0D770050FB97201665E20F.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:7700:50fb:9720:1665:e20f])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A65671EC0C93;
-        Tue, 22 Oct 2019 14:56:21 +0200 (CEST)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A12A91EC0C95;
+        Tue, 22 Oct 2019 14:57:18 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1571748981;
+        t=1571749038;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=ks1D9cpBLbkfWTmP9/zselE/e5+jDjbNzQqZmgKx9es=;
-        b=jcguvE70r76Nwj7LatlqAWnUUBSXLYHwSALouOKz1MzbmbLTOMF7c7RYagsBjyHQAEbdyQ
-        6rTgqhezg/UzWC9hxm21LZBVleeTfGxkeWl7gekr+Nk2Kodh98Qx+SHQ6SfX/WcZU34jUH
-        AZ27Q5fIwPgzzKd/DJ5TMkz0mCfqA9s=
-Date:   Tue, 22 Oct 2019 14:56:15 +0200
+        bh=GTANuafLbPF/Q3/eSyDWz71FojGcGsXaYU5OcWCfmvQ=;
+        b=M7EPGnSeThiY1V+rMPeYdSRV+BtTuVKjJwGa/L0z7r4bhN10WlNmULPVtPle3iBt3Q219d
+        4Ur4m2vqePxii7f50mMHERnn0wNHWKoVLzh7JBZMOgogl9/1M+8QEIugg2UfxH/v3e66Gq
+        vL52fJWczHPd5lhhPRebHCgM5Z86veg=
+Date:   Tue, 22 Oct 2019 14:57:16 +0200
 From:   Borislav Petkov <bp@alien8.de>
 To:     Jiri Slaby <jslaby@suse.cz>
 Cc:     Steven Rostedt <rostedt@goodmis.org>,
@@ -48,10 +48,9 @@ Cc:     Steven Rostedt <rostedt@goodmis.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
         Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH] x86/ftrace: Get rid of function_hook
-Message-ID: <20191022125615.GE31700@zn.tnic>
-References: <157141622788.29376.4016565749507481510.tip-bot2@tip-bot2>
- <20191018124800.0a7006bb@gandalf.local.home>
+Subject: [PATCH -v2] x86/ftrace: Get rid of function_hook
+Message-ID: <20191022125716.GF31700@zn.tnic>
+References: <20191018124800.0a7006bb@gandalf.local.home>
  <20191018124956.764ac42e@gandalf.local.home>
  <20191018171354.GB20368@zn.tnic>
  <20191018133735.77e90e36@gandalf.local.home>
@@ -60,31 +59,145 @@ References: <157141622788.29376.4016565749507481510.tip-bot2@tip-bot2>
  <20191019073424.GA27353@zn.tnic>
  <20191021141038.GC7014@zn.tnic>
  <f8dcb3dd-a8a6-5326-ea4a-bea2eb1c4651@suse.cz>
+ <20191022125615.GE31700@zn.tnic>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <f8dcb3dd-a8a6-5326-ea4a-bea2eb1c4651@suse.cz>
+In-Reply-To: <20191022125615.GE31700@zn.tnic>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 01:38:42PM +0200, Jiri Slaby wrote:
-> On the top of Steven's comment:
-> Acked-by: Jiri Slaby <jslaby@suse.cz>
-> 
-> Thanks for taking care of this while my tooth was causing me pain.
+From: Borislav Petkov <bp@suse.de>
 
-Sure, np. Toothache is yuck.
+History lesson courtesy of Steve:
 
-Ok, so after some back'n'forth yesterday on IRC, I think we agree on
-only renaming function_hook but keeping its SYM_FUNC* annotation so
-that ORC can unwind into it because we're fancy and we do all kinds of
-unwinding from interrupts in ftrace handlers and all that other fun. So
-it needs to know that that thing is a function.
+"When ftrace first was introduced to the kernel, it used gcc's
+mcount profiling mechanism. The mcount mechanism would add a call to
+"mcount" at the start of every function but after the stack frame was
+set up. Later, in gcc 4.6, gcc introduced -mfentry, that would create a
+call to "__fentry__" instead of "mcount", before the stack frame was
+set up. In order to handle both cases, ftrace defined a macro
+"function_hook" that would be either "mcount" or "__fentry__" depending
+on which one was being used.
 
-So here it is as a proper patch as a reply to this message.
+The Linux kernel no longer supports the "mcount" method, thus there's
+no reason to keep the "function_hook" define around. Simply use
+"__fentry__", as there is no ambiguity to the name anymore."
+
+Drop it everywhere.
+
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Jiri Slaby <jslaby@suse.cz>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: linux-doc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86@kernel.org
+---
+ Documentation/asm-annotations.rst |  4 ++--
+ arch/x86/kernel/ftrace_32.S       |  8 +++-----
+ arch/x86/kernel/ftrace_64.S       | 13 ++++++-------
+ 3 files changed, 11 insertions(+), 14 deletions(-)
+
+diff --git a/Documentation/asm-annotations.rst b/Documentation/asm-annotations.rst
+index 29ccd6e61fe5..f55c2bb74d00 100644
+--- a/Documentation/asm-annotations.rst
++++ b/Documentation/asm-annotations.rst
+@@ -117,9 +117,9 @@ This section covers ``SYM_FUNC_*`` and ``SYM_CODE_*`` enumerated above.
+   So in most cases, developers should write something like in the following
+   example, having some asm instructions in between the macros, of course::
+ 
+-    SYM_FUNC_START(function_hook)
++    SYM_FUNC_START(memset)
+         ... asm insns ...
+-    SYM_FUNC_END(function_hook)
++    SYM_FUNC_END(memset)
+ 
+   In fact, this kind of annotation corresponds to the now deprecated ``ENTRY``
+   and ``ENDPROC`` macros.
+diff --git a/arch/x86/kernel/ftrace_32.S b/arch/x86/kernel/ftrace_32.S
+index 8ed1f5d371f0..e8a9f8370112 100644
+--- a/arch/x86/kernel/ftrace_32.S
++++ b/arch/x86/kernel/ftrace_32.S
+@@ -12,18 +12,16 @@
+ #include <asm/frame.h>
+ #include <asm/asm-offsets.h>
+ 
+-# define function_hook	__fentry__
+-EXPORT_SYMBOL(__fentry__)
+-
+ #ifdef CONFIG_FRAME_POINTER
+ # define MCOUNT_FRAME			1	/* using frame = true  */
+ #else
+ # define MCOUNT_FRAME			0	/* using frame = false */
+ #endif
+ 
+-SYM_FUNC_START(function_hook)
++SYM_FUNC_START(__fentry__)
+ 	ret
+-SYM_FUNC_END(function_hook)
++SYM_FUNC_END(__fentry__)
++EXPORT_SYMBOL(__fentry__)
+ 
+ SYM_CODE_START(ftrace_caller)
+ 
+diff --git a/arch/x86/kernel/ftrace_64.S b/arch/x86/kernel/ftrace_64.S
+index 69c8d1b9119e..6e8961ca3605 100644
+--- a/arch/x86/kernel/ftrace_64.S
++++ b/arch/x86/kernel/ftrace_64.S
+@@ -14,9 +14,6 @@
+ 	.code64
+ 	.section .entry.text, "ax"
+ 
+-# define function_hook	__fentry__
+-EXPORT_SYMBOL(__fentry__)
+-
+ #ifdef CONFIG_FRAME_POINTER
+ /* Save parent and function stack frames (rip and rbp) */
+ #  define MCOUNT_FRAME_SIZE	(8+16*2)
+@@ -132,9 +129,10 @@ EXPORT_SYMBOL(__fentry__)
+ 
+ #ifdef CONFIG_DYNAMIC_FTRACE
+ 
+-SYM_FUNC_START(function_hook)
++SYM_FUNC_START(__fentry__)
+ 	retq
+-SYM_FUNC_END(function_hook)
++SYM_FUNC_END(__fentry__)
++EXPORT_SYMBOL(__fentry__)
+ 
+ SYM_FUNC_START(ftrace_caller)
+ 	/* save_mcount_regs fills in first two parameters */
+@@ -248,7 +246,7 @@ SYM_FUNC_END(ftrace_regs_caller)
+ 
+ #else /* ! CONFIG_DYNAMIC_FTRACE */
+ 
+-SYM_FUNC_START(function_hook)
++SYM_FUNC_START(__fentry__)
+ 	cmpq $ftrace_stub, ftrace_trace_function
+ 	jnz trace
+ 
+@@ -279,7 +277,8 @@ trace:
+ 	restore_mcount_regs
+ 
+ 	jmp fgraph_trace
+-SYM_FUNC_END(function_hook)
++SYM_FUNC_END(__fentry__)
++EXPORT_SYMBOL(__fentry__)
+ #endif /* CONFIG_DYNAMIC_FTRACE */
+ 
+ #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+-- 
+2.21.0
+
 
 -- 
 Regards/Gruss,
