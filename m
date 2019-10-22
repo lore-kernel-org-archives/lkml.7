@@ -2,219 +2,106 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A29D6CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 20:08:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1E57CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 20:09:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 595F521783
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 20:08:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D07D21783
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 20:09:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="i2nm7uUu";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="dVjJVN7U"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gEXFnTP6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389098AbfJVUIj (ORCPT
+        id S2389158AbfJVUJZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 16:08:39 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:56784 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387609AbfJVUIj (ORCPT
+        Tue, 22 Oct 2019 16:09:25 -0400
+Received: from mail-wr1-f43.google.com ([209.85.221.43]:38030 "EHLO
+        mail-wr1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388573AbfJVUJZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 16:08:39 -0400
-Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9MK8Hds023421;
-        Tue, 22 Oct 2019 13:08:29 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=kSxBKKs/CV01OvG76EJpyOie2QydFm1ggqmmSisDNmE=;
- b=i2nm7uUuJNSa9jAWC6h8Wqlep677YI2WZ/GblPvUPBYNuupvIhtJrptFE0tTL+KmU4YC
- woW5ru/6S84q+iXUwTczu1jpnm1K6Gn13cCUOf2kJacT/pvcl2EoXVqa7EmdYZW/jO1W
- vI3kJBXWHdJI8+Gs+QuEB1FGCXT/0VkYnlU= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2vrj6sv1ru-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Tue, 22 Oct 2019 13:08:29 -0700
-Received: from ash-exhub203.TheFacebook.com (2620:10d:c0a8:83::5) by
- ash-exhub203.TheFacebook.com (2620:10d:c0a8:83::5) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 22 Oct 2019 13:08:27 -0700
-Received: from NAM01-BY2-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.36.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Tue, 22 Oct 2019 13:08:27 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZQtJa7hmfHdIgeRXaWnOqD2MOGqLJDLSK5OHSC9HfbpuSQnPbxsgvJal4raohsThSsdWwjlFwaGbmB1meSfngH93hrSEBCUM5NxHueMfo0mEN7NRD8gf1CGYTyJrau8tk7uIvmSyNuKtH0p9VVw75NWNWNJL+/mUcjgYO8o3yKPjdjq4kpD47Qx0czhCjECqE8cc1pRvL+gQsUo16oJ9qUG1o+f9iHxv11W9Wt1zpXcBZWMUdnzqpBsZ8/S7CvFH+TPBBx/78mb35sib6s/TVoHfE4fgCNsSd4Kp5NTna2pebr2ax+jTe76CYOPNLhloDRXcsP+o5DTAlD6n5Qt2tA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kSxBKKs/CV01OvG76EJpyOie2QydFm1ggqmmSisDNmE=;
- b=AXP+NK6q3CD9xz6VjYVgUYQDm5pmgfGJ2YpP2arTwg4+cp370Nn9FT80hn2jWBq8UyGASNGddCpurKtZ2sUGvTDWiYe/Nm4fDh10yYPw4eIVq7HpqBid1C7G2lrRBgrDpVOpVnlH6+FJ5JSyg8z2P1ltVJY2Qz/nB2QPZ+kYEM4rYaUYmKDRZIuZlIt4X46HTofidrbladM/u3nmskaeOYgxoBBx4fnrX5X3PGUjSWHx0GD513Zc3UnX+FQc6UgJT6tiPLz7GwaId6lE1GTZZryT/6O08Yd6/Cmdfppt06DmthQ4mzVmKjFE4wQtOQXmlyrlZ6ba2ATuC3r4atmbMQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kSxBKKs/CV01OvG76EJpyOie2QydFm1ggqmmSisDNmE=;
- b=dVjJVN7U0vFlO5PfQTcR/aXQvtWG5MeK1sIvtcPZPLaYdeFpbjSsO+SBr5G83z4B0sIFf1WvTxNquWDFIq99UGi3rtmmlcIwb4c26vP8tPfI5S9RtR1FSYThj0S8INP4YGRITL0kjjzu2mdg98CKASsrlgKKROKAUKss13cwt0Y=
-Received: from BN8PR15MB2626.namprd15.prod.outlook.com (20.179.137.220) by
- BN8PR15MB2898.namprd15.prod.outlook.com (20.178.219.33) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2367.24; Tue, 22 Oct 2019 20:08:23 +0000
-Received: from BN8PR15MB2626.namprd15.prod.outlook.com
- ([fe80::3056:945b:e60e:e2e0]) by BN8PR15MB2626.namprd15.prod.outlook.com
- ([fe80::3056:945b:e60e:e2e0%6]) with mapi id 15.20.2367.022; Tue, 22 Oct 2019
- 20:08:23 +0000
-From:   Roman Gushchin <guro@fb.com>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>
-Subject: Re: [PATCH 7/8] mm: vmscan: split shrink_node() into node part and
- memcgs part
-Thread-Topic: [PATCH 7/8] mm: vmscan: split shrink_node() into node part and
- memcgs part
-Thread-Index: AQHViOfH2m2ZEFsCqUCyP/k19Cd9B6dnFxWA
-Date:   Tue, 22 Oct 2019 20:08:23 +0000
-Message-ID: <20191022200819.GC22721@tower.DHCP.thefacebook.com>
-References: <20191022144803.302233-1-hannes@cmpxchg.org>
- <20191022144803.302233-8-hannes@cmpxchg.org>
-In-Reply-To: <20191022144803.302233-8-hannes@cmpxchg.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: CO2PR04CA0149.namprd04.prod.outlook.com (2603:10b6:104::27)
- To BN8PR15MB2626.namprd15.prod.outlook.com (2603:10b6:408:c7::28)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:200::3:5d4e]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d1907ecf-4874-42fc-c3db-08d7572b9798
-x-ms-traffictypediagnostic: BN8PR15MB2898:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BN8PR15MB28983B799124C0A3E07B7D80BE680@BN8PR15MB2898.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:747;
-x-forefront-prvs: 01986AE76B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(396003)(366004)(136003)(376002)(346002)(189003)(199004)(5660300002)(186003)(476003)(81166006)(6486002)(229853002)(81156014)(8676002)(9686003)(1076003)(256004)(6246003)(11346002)(4326008)(6512007)(478600001)(71190400001)(25786009)(8936002)(14454004)(446003)(6436002)(71200400001)(54906003)(305945005)(66446008)(64756008)(66556008)(6506007)(6116002)(386003)(7736002)(66946007)(46003)(76176011)(99286004)(86362001)(6916009)(102836004)(486006)(2906002)(316002)(52116002)(66476007)(33656002);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR15MB2898;H:BN8PR15MB2626.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: H6WzfsBJwP3cknd9zhdjFF8T0rejgcf18ing/hOU6oEAEHDcizOwz7TfshuJy0AN2pqeFn+/JOM/AFkqfG21l0o3sjDTGe6FYNGVJLf+xfzoyGAYCkMiJgjyh5doYSmc1e86XiPK2HH+EqkqcPdpuAd2HqMXuHISwf2blqQ6gFBGew0spBp67yyM4NBAv1iG3TjYfg3JFHr0Gxcr/G7DfV8KdWDb5H9Snl4b4klNnLUWGeIEeZVT6pIDfyxqqB3NzIMV4IssQeUIjsg1KHWigX2OQN48BGTMlsaqFGsD+noPvd6sfAcQgSgYwQk6RIwF/zyQIZtYPZcrsdFvuWbjEg6XFSysx0aVP/WG52imP5KAHGZq/gFiugm8p4zl8xOesVer9+ocqB6voOmnXYTCPIFgeyDCZ+xVOvVFhO/gUzz674NmA0UJLslAreRGSYNx
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <A5FC583F63CE3C4DB54A3E316B1BE943@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Tue, 22 Oct 2019 16:09:25 -0400
+Received: by mail-wr1-f43.google.com with SMTP id v9so8209432wrq.5
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 13:09:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=UNVZthZu6v3pyXi3jOLBoCHiTliiyCL5CwMvuY+QdZE=;
+        b=gEXFnTP6XUv2nTHtG/e7Y+cBbJB7OGBg8CacRfchlei8vWM9WmtMeaGUqUqHp3V8W3
+         PkMq0tjl2m4mvxnB2/0/20VglzOf0ArWZHvFt74HoVgq85Z0IGTESTOPjOUdcRreyvVo
+         ozdmXq93RhRzfIDS7moCYZVRNO4JI3ljbzpgi9a8M5YxwlTvP/EB6cK0R/xVGFRASmCo
+         Vgkzoc5NejtFBkQGo8Q9GnzDKsWeS32j9ORhXzGrWMLjHgXdTAGJXFrQ/Nia+o1l6wF/
+         hOFd6mm+LvYXcsjzKTGikO7NzilqDBH1+DYwRU5DrrolouIED8HQh37CQhajqEKSL8vj
+         +Gtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=UNVZthZu6v3pyXi3jOLBoCHiTliiyCL5CwMvuY+QdZE=;
+        b=oEdkRXS6MqfbrqYOJHxxgC4NJJ+sgX1RI/bq+PpfEpQLceBbjiB9O/jYWDHBDOWLYH
+         o7NIuP4DZyP8PxQl6oA59+ckH+VQD1UasC2natfj3kHP50K1moa/oyX6uz0D14LSsCG0
+         L3j0FdMAN3JH6BnZzGwjZ9gc+g8MahFtH4Sn6HoC43icOzUShLOjXAcwF6tyMrpq3OS8
+         z8AtgTv/HNHtKy25lE1eu0VS9CGRi759qtaBaY4rRcb1WGFUOkR6cRbaBAPYkv847pAf
+         E89bgteCR8q3V9ifyvJcAlZ/lrNeennve+da0SqQt30B0n+DDoyWWuAB2X+ng1Ug+9NL
+         A0qg==
+X-Gm-Message-State: APjAAAUDMpzwj/7Ru4yjN/24hx8Ti7/AJ9/p/kRoKh44jISyL844NZRR
+        10xrKkrqQTqHWbQgu1TnfQ44+ifZVImzFE66FgsXzcGbPG0=
+X-Google-Smtp-Source: APXvYqwk23L+slAYpZI8F01d1l2rShuyQ+2yKE9OY22oCI0DTojecFhBlDFWvqVqOosDOekG42q5S68KN5YKGHIkNWA=
+X-Received: by 2002:adf:e7c2:: with SMTP id e2mr4981661wrn.29.1571774962099;
+ Tue, 22 Oct 2019 13:09:22 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: d1907ecf-4874-42fc-c3db-08d7572b9798
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Oct 2019 20:08:23.6475
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: EEjlfZKobG2qLWrTK7vKBgrA3iWSrjbvmudPchIAl2uhNYv35tL6Sje7Fa+QDE67
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR15MB2898
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-22_06:2019-10-22,2019-10-22 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 suspectscore=0
- adultscore=0 mlxlogscore=999 clxscore=1015 bulkscore=0 phishscore=0
- malwarescore=0 spamscore=0 mlxscore=0 impostorscore=0 lowpriorityscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1908290000 definitions=main-1910220170
-X-FB-Internal: deliver
+From:   Luigi Semenzato <semenzato@google.com>
+Date:   Tue, 22 Oct 2019 13:09:10 -0700
+Message-ID: <CAA25o9TABY=3C+FQEg8FDyF1rim315G2hmeB1DBWJLn-wG1j0g@mail.gmail.com>
+Subject: is hibernation usable?
+To:     linux-kernel <linux-kernel@vger.kernel.org>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Geoff Pike <gpike@google.com>, Bas Nowaira <bassem@google.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 10:48:02AM -0400, Johannes Weiner wrote:
-> This function is getting long and unwieldy, split out the memcg bits.
->=20
-> The updated shrink_node() handles the generic (node) reclaim aspects:
->   - global vmpressure notifications
->   - writeback and congestion throttling
->   - reclaim/compaction management
->   - kswapd giving up on unreclaimable nodes
->=20
-> It then calls a new shrink_node_memcgs() which handles cgroup specifics:
->   - the cgroup tree traversal
->   - memory.low considerations
->   - per-cgroup slab shrinking callbacks
->   - per-cgroup vmpressure notifications
->=20
-> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
-> ---
->  mm/vmscan.c | 28 ++++++++++++++++++----------
->  1 file changed, 18 insertions(+), 10 deletions(-)
->=20
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index db073b40c432..65baa89740dd 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -2722,18 +2722,10 @@ static bool pgdat_memcg_congested(pg_data_t *pgda=
-t, struct mem_cgroup *memcg)
->  		(memcg && memcg_congested(pgdat, memcg));
->  }
-> =20
-> -static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
-> +static void shrink_node_memcgs(pg_data_t *pgdat, struct scan_control *sc=
-)
->  {
-> -	struct reclaim_state *reclaim_state =3D current->reclaim_state;
->  	struct mem_cgroup *root =3D sc->target_mem_cgroup;
-> -	unsigned long nr_reclaimed, nr_scanned;
-> -	bool reclaimable =3D false;
->  	struct mem_cgroup *memcg;
-> -again:
-> -	memset(&sc->nr, 0, sizeof(sc->nr));
-> -
-> -	nr_reclaimed =3D sc->nr_reclaimed;
-> -	nr_scanned =3D sc->nr_scanned;
-> =20
->  	memcg =3D mem_cgroup_iter(root, NULL, NULL);
->  	do {
-> @@ -2786,6 +2778,22 @@ static bool shrink_node(pg_data_t *pgdat, struct s=
-can_control *sc)
->  			   sc->nr_reclaimed - reclaimed);
-> =20
->  	} while ((memcg =3D mem_cgroup_iter(root, memcg, NULL)));
-> +}
-> +
-> +static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
-> +{
-> +	struct reclaim_state *reclaim_state =3D current->reclaim_state;
-> +	struct mem_cgroup *root =3D sc->target_mem_cgroup;
-> +	unsigned long nr_reclaimed, nr_scanned;
-> +	bool reclaimable =3D false;
-> +
-> +again:
-> +	memset(&sc->nr, 0, sizeof(sc->nr));
-> +
-> +	nr_reclaimed =3D sc->nr_reclaimed;
-> +	nr_scanned =3D sc->nr_scanned;
-> +
-> +	shrink_node_memcgs(pgdat, sc);
-> =20
->  	if (reclaim_state) {
->  		sc->nr_reclaimed +=3D reclaim_state->reclaimed_slab;
-> @@ -2793,7 +2801,7 @@ static bool shrink_node(pg_data_t *pgdat, struct sc=
-an_control *sc)
->  	}
-> =20
->  	/* Record the subtree's reclaim efficiency */
-> -	vmpressure(sc->gfp_mask, sc->target_mem_cgroup, true,
-> +	vmpressure(sc->gfp_mask, root, true,
+Following a thread in linux-pm
+(https://marc.info/?l=linux-mm&m=157012300901871) I have some issues
+that may be of general interest.
 
-Maybe target? Or target_memcg? The word root is associated with the root cg=
-roup.
+1. To the best of my knowledge, Linux hibernation is guaranteed to
+fail if more than 1/2 of total RAM is in use (for instance, by
+anonymous pages).  My knowledge is based on evidence, experiments,
+code inspection, the thread above, and a comment in
+Documentation/swsusp.txt, copied here:
 
-Other than root the patch looks good to me:
+ "Instead, we load the image into unused memory and then atomically
+copy it back to it original location. This implies, of course, a
+maximum image size of half the amount of memory."
 
-Reviewed-by: Roman Gushchin <guro@fb.com>
+2. There's no simple/general workaround.  Rafael suggested on the
+thread "Whatever doesn't fit into 50% of RAM needs to be swapped out
+before hibernation".  This is a good suggestion: I am actually close
+to achieving this using memcgroups, but it's a fair amount of work,
+and a fairly special case.  Not everybody uses memcgroups, and I don't
+know of other reliable ways of forcing swap from user level.
+
+3. A feature that works only when 1/2 of total RAM can be allocated
+is, in my opinion, not usable, except possibly under special
+circumstances, such as mine. Most of the available articles and
+documentation do not mention this important fact (but for the excerpt
+I mentioned, which is not in a prominent position).
+
+Two questions then:
+
+A. Should the documentation be changed to reflect this fact more
+clearly?  I feel that the current situation is a disservice to the
+user community.
+
+B. Would it be worthwhile to improve the hibernation code to remove
+this limitation?  Is this of interest to anybody (other than me)?
+
+Thank you in advance!
