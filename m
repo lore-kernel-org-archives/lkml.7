@@ -2,183 +2,241 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6AB1CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 20:43:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD53BCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 20:45:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7623A2064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 20:43:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D5532064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 20:45:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="pXO9HhSm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732194AbfJVUny (ORCPT
+        id S2388176AbfJVUpD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 16:43:54 -0400
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:47925 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727582AbfJVUny (ORCPT
+        Tue, 22 Oct 2019 16:45:03 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:36281 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732207AbfJVUpD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 16:43:54 -0400
-Received: from dread.disaster.area (pa49-180-40-48.pa.nsw.optusnet.com.au [49.180.40.48])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id AA85A363351;
-        Wed, 23 Oct 2019 07:43:46 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1iN10K-000666-K1; Wed, 23 Oct 2019 07:43:44 +1100
-Date:   Wed, 23 Oct 2019 07:43:44 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Mike Christie <mchristi@redhat.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
-        martin@urbackup.org, Damien.LeMoal@wdc.com
-Subject: Re: [PATCH] Add prctl support for controlling PF_MEMALLOC V2
-Message-ID: <20191022204344.GB2044@dread.disaster.area>
-References: <20191021214137.8172-1-mchristi@redhat.com>
- <20191022112446.GA8213@dhcp22.suse.cz>
- <5DAF2AA0.5030500@redhat.com>
- <20191022163310.GS9379@dhcp22.suse.cz>
+        Tue, 22 Oct 2019 16:45:03 -0400
+Received: by mail-pf1-f194.google.com with SMTP id y22so11383888pfr.3
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 13:45:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=android.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zQi/xJJwAqDZGEt9P00eL5cdkNEDylnd0lg9q6mQJHw=;
+        b=pXO9HhSmD6xovUlEhY0LV4yCUtX33MQ1Wn1DWL/2qiereG48iqg8C1mmGc2vlujR+a
+         TDBIAPtz309ZUIe5vY7r6+cJAuajEJD37Ebb9W6svo2VaftLgZPW8TAZSyeRJK/Pp2P2
+         SHn7Pr4wIV2CNk2Urtv5a151FI4ZdfGVosVrWX3ioYuPb8vKm2wPMnZVvCHqnUTnamX3
+         4Xj5QtKjII58x0mBefkmsPWbXysjM/VPB59grCp69k809dIS2INjD6XqWXBGPa6XyeSD
+         VnJRQZNl3tKLlOk36+BMjBS6XT2KlB0VT3/lu5ayI5SDhkENXmRAXceVeEoraTV0NsKG
+         p4rg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zQi/xJJwAqDZGEt9P00eL5cdkNEDylnd0lg9q6mQJHw=;
+        b=T5DMrADWqwQmSW4WRS8JpaNt1M/Q4qj9HevNQsGE2ken4XAo8TN6bcWm8YsdNJbKfe
+         R3nf8L1EEIuAdol4tt5OcPV0XY+bdB3RAXU858M3498TWlXeRvyeIX5VLeRfUY7F/PVS
+         iLykt4dLJffs2E2ZSwmR5NRqwrKwc10PXQyd5SLt5rezX0JlvsCpGw8FLsUfYni9BTH5
+         57oKVES3kYscaKtr22RRo2Itk6528sBKuxjwjJemK2hu+vvy+n5iDr4AFpZpBirM3KGQ
+         KwrxxduOvJ8785+IPhiuwLALZfIzNiLVzqJhJkAcmSaV0XI2NT/pvrjItwyhCSLEjvP8
+         6KbQ==
+X-Gm-Message-State: APjAAAU6Y8spVraj36Dq1e3Bprhb0B7syU9APJWo7JyGPmBaWp6iCOHe
+        grDYw7MpPwAOl/8lEkXGPIDb3z6Zagegaw==
+X-Google-Smtp-Source: APXvYqz7Lnbo1Tu208xh3nUpXQolvr6tWY9J/kPutn7UlzVjPZoPJnb5iaMDb1wW+Sv9LLRb5h4xvg==
+X-Received: by 2002:aa7:9525:: with SMTP id c5mr6374626pfp.22.1571777101925;
+        Tue, 22 Oct 2019 13:45:01 -0700 (PDT)
+Received: from nebulus.mtv.corp.google.com ([2620:15c:211:200:5404:91ba:59dc:9400])
+        by smtp.gmail.com with ESMTPSA id l184sm19810903pfl.76.2019.10.22.13.45.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Oct 2019 13:45:01 -0700 (PDT)
+From:   Mark Salyzyn <salyzyn@android.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     kernel-team@android.com, Mark Salyzyn <salyzyn@android.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        linux-unionfs@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: [PATCH v14 0/5] overlayfs override_creds=off & nested get xattr fix
+Date:   Tue, 22 Oct 2019 13:44:45 -0700
+Message-Id: <20191022204453.97058-1-salyzyn@android.com>
+X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191022163310.GS9379@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0
-        a=y881pOMu+B+mZdf5UrsJdA==:117 a=y881pOMu+B+mZdf5UrsJdA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=XobE76Q3jBoA:10
-        a=7-415B0cAAAA:8 a=5awdTYTMrUjDONYjdkwA:9 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 06:33:10PM +0200, Michal Hocko wrote:
-> On Tue 22-10-19 11:13:20, Mike Christie wrote:
-> > On 10/22/2019 06:24 AM, Michal Hocko wrote:
-> > > On Mon 21-10-19 16:41:37, Mike Christie wrote:
-> > >> There are several storage drivers like dm-multipath, iscsi, tcmu-runner,
-> > >> amd nbd that have userspace components that can run in the IO path. For
-> > >> example, iscsi and nbd's userspace deamons may need to recreate a socket
-> > >> and/or send IO on it, and dm-multipath's daemon multipathd may need to
-> > >> send IO to figure out the state of paths and re-set them up.
-> > >>
-> > >> In the kernel these drivers have access to GFP_NOIO/GFP_NOFS and the
-> > >> memalloc_*_save/restore functions to control the allocation behavior,
-> > >> but for userspace we would end up hitting a allocation that ended up
-> > >> writing data back to the same device we are trying to allocate for.
-> > > 
-> > > Which code paths are we talking about here? Any ioctl or is this a
-> > > general syscall path? Can we mark the process in a more generic way?
-> > 
-> > It depends on the daemon. The common one for example are iscsi and nbd
-> > need network related calls like sendmsg, recvmsg, socket, etc.
-> > tcmu-runner could need the network ones and also read and write when it
-> > does IO to a FS or device. dm-multipath needs the sg io ioctls.
-> 
-> OK, so there is not a clear kernel entry point that could be explicitly
-> annotated. This would imply a per task context. This is an important
-> information. And I am wondering how those usecases ever worked in the
-> first place. This is not a minor detail.
+Patch series:
 
-They don't work, and we've known it for many years. It's just that
-most of the time they are not run with really low memory. :)
+Mark Salyzyn (5):
+  Add flags option to get xattr method paired to __vfs_getxattr
+  overlayfs: check CAP_DAC_READ_SEARCH before issuing exportfs_decode_fh
+  overlayfs: handle XATTR_NOSECURITY flag for get xattr method
+  overlayfs: internal getxattr operations without sepolicy checking
+  overlayfs: override_creds=off option bypass creator_cred
 
-e.g. loopback devices have long been known to deadlock like this
-buts it's only very recently we gave it PF_MEMALLOC_NOIO protection
-for it's kernel internal read() and write() calls.
+The first four patches address fundamental security issues that should
+be solved regardless of the override_creds=off feature.
 
-> > > E.g. we have PF_LESS_THROTTLE (used by nfsd). It doesn't affect the
-> > > reclaim recursion but it shows a pattern that doesn't really exhibit
-> > > too many internals. Maybe we need PF_IO_FLUSHER or similar?
-> > 
-> > I am not familiar with PF_IO_FLUSHER. If it prevents the recursion
-> > problem then please send me details and I will look into it for the next
-> > posting.
-> 
-> PF_IO_FLUSHER doesn't exist. I just wanted to point out that similarly
-> to PF_LESS_THROTTLE it should be a more high level per task flag rather
-> than something as low level as a direct control of gfp allocation
-> context. PF_LESS_THROTTLE simply tells that the task is a part of the
-> reclaim process and therefore it shouldn't be a subject of a normal
-> throttling - whatever that means.
+The fifth adds the feature depends on these other fixes.
 
-PF_LESS_THROTTLE doesn't do that at all - it really only changes
-limits slightly and doesn't prevent reclaim recursion deadlocks in
-any way.
+By default, all access to the upper, lower and work directories is the
+recorded mounter's MAC and DAC credentials.  The incoming accesses are
+checked against the caller's credentials.
 
-What PF_LESS_THROTTLE was largely intended for is give the process a
-small amount of extra overhead on dirty page throttle limits so that
-if it's a stacked device it won't get throttled before the upper
-filesystem gets throttled.
+If the principles of least privilege are applied for sepolicy, the
+mounter's credentials might not overlap the credentials of the caller's
+when accessing the overlayfs filesystem.  For example, a file that a
+lower DAC privileged caller can execute, is MAC denied to the
+generally higher DAC privileged mounter, to prevent an attack vector.
 
-i.e. the idea is that it's got a -little- bit  more wiggle room
-before things like balance_dirty_pages() stops incoming writes,
-hence allowing writes to the upper filesystems to be throttled first
-before the underlying device that may be cleaning pages.
+We add the option to turn off override_creds in the mount options; all
+subsequent operations after mount on the filesystem will be only the
+caller's credentials.  The module boolean parameter and mount option
+override_creds is also added as a presence check for this "feature",
+existence of /sys/module/overlay/parameters/overlay_creds
 
-NFS uses this in the case of a loopback mount - both the client and
-the server are on the same node, and so the data is double-cached.
-FOr the client to clean it's page, the server has to be able to
-write() the dirty data through balance_dirty_pages, and if we are at
-the dirty page limit then it will block and we effectively deadlock
-the writeback because we can't write the server side page that will
-clean the client side page. So the NFS server is given a higher
-dirty throttle limit by PF_LESS_THROTTLE so it can write when the
-client is throttled.
+Signed-off-by: Mark Salyzyn <salyzyn@android.com>
+Cc: Miklos Szeredi <miklos@szeredi.hu>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Vivek Goyal <vgoyal@redhat.com>
+Cc: Eric W. Biederman <ebiederm@xmission.com>
+Cc: Amir Goldstein <amir73il@gmail.com>
+Cc: Randy Dunlap <rdunlap@infradead.org>
+Cc: Stephen Smalley <sds@tycho.nsa.gov>
+Cc: linux-unionfs@vger.kernel.org
+Cc: linux-doc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 
-The same problem exists for the loopback block device, and it also
-sets PF_LESS_THROTTLE. But because it's a stacked block device
-(unlike the NFS setup) it has actual filesystem memory reclaim
-recursion problems (i.e. lower fs context allocation cleaning upper
-fs pages recursing into upper fs to reclaim pages) and so it also
-sets PF_MEMALLOC_NOIO to prevent these reclaim deadlocks.
+---
+v14:
+- Rejoin, rebase and a few adjustments.
 
-IOWs, the situation with these userspace processes is akin to the
-loopback device, not the "NFS client/NFS server on same host"
-situation. We have lots of evidence of reclaim recursion hangs, but
-very little evidence of balance_dirty_pages() throttling hangs....
+v13:
+- Pull out first patch and try to get it in alone feedback, some
+  Acks, and then <crickets> because people forgot why we were doing i.
 
-> PF_IO_FLUSHER would mean that the user
-> context is a part of the IO path and therefore there are certain reclaim
-> recursion restrictions.
+v12:
+- Restore squished out patch 2 and 3 in the series,
+  then change algorithm to add flags argument.
+  Per-thread flag is a large security surface.
 
-If PF_IO_FLUSHER just maps to PF_LESS_THROTTLE|PF_MEMALLOC_NOIO,
-then I'm not sure we need a new definition. Maybe that's the ptrace
-flag name, but in the kernel we don't need a PF_IO_FLUSHER process
-flag...
+v11:
+- Squish out v10 introduced patch 2 and 3 in the series,
+  then and use per-thread flag instead for nesting.
+- Switch name to ovl_do_vds_getxattr for __vds_getxattr wrapper.
+- Add sb argument to ovl_revert_creds to match future work.
 
-> > >> This patch allows the userspace deamon to set the PF_MEMALLOC* flags
-> > >> with prctl during their initialization so later allocations cannot
-> > >> calling back into them.
-> > > 
-> > > TBH I am not really happy to export these to the userspace. They are
-> > > an internal implementation detail and the userspace shouldn't really
-> > 
-> > They care in these cases, because block/fs drivers must be able to make
-> > forward progress during writes. To meet this guarantee kernel block
-> > drivers use mempools and memalloc/GFP flags.
-> > 
-> > For these userspace components of the block/fs drivers they already do
-> > things normal daemons do not to meet that guarantee like mlock their
-> > memory, disable oom killer, and preallocate resources they have control
-> > over. They have no control over reclaim like the kernel drivers do so
-> > its easy for us to deadlock when memory gets low.
-> 
-> OK, fair enough. How much of a control do they really need though. Is a
-> single PF_IO_FLUSHER as explained above (essentially imply GPF_NOIO
-> context) sufficient?
+v10:
+- Return NULL on CAP_DAC_READ_SEARCH
+- Add __get xattr method to solve sepolicy logging issue
+- Drop unnecessary sys_admin sepolicy checking for administrative
+  driver internal xattr functions.
 
-I think some of these usrspace processes work at the filesystem
-level and so really only need GFP_NOFS allocation (fuse), while
-others work at the block device level (iscsi, nbd) so need GFP_NOIO
-allocation. So there's definitely an argument for providing both...
+v6:
+- Drop CONFIG_OVERLAY_FS_OVERRIDE_CREDS.
+- Do better with the documentation, drop rationalizations.
+- pr_warn message adjusted to report consequences.
 
-Cheers,
+v5:
+- beefed up the caveats in the Documentation
+- Is dependent on
+  "overlayfs: check CAP_DAC_READ_SEARCH before issuing exportfs_decode_fh"
+  "overlayfs: check CAP_MKNOD before issuing vfs_whiteout"
+- Added prwarn when override_creds=off
 
-Dave.
+v4:
+- spelling and grammar errors in text
+
+v3:
+- Change name from caller_credentials / creator_credentials to the
+  boolean override_creds.
+- Changed from creator to mounter credentials.
+- Updated and fortified the documentation.
+- Added CONFIG_OVERLAY_FS_OVERRIDE_CREDS
+
+v2:
+- Forward port changed attr to stat, resulting in a build error.
+- altered commit message.
+
+
+ Documentation/filesystems/locking.rst   |  10 +--
+ Documentation/filesystems/overlayfs.txt |  23 +++++
+ fs/9p/acl.c                             |  51 ++++++-----
+ fs/9p/xattr.c                           |  19 ++--
+ fs/afs/xattr.c                          | 112 +++++++++++-------------
+ fs/btrfs/xattr.c                        |  36 ++++----
+ fs/ceph/xattr.c                         |  17 ++--
+ fs/cifs/xattr.c                         |  72 +++++++--------
+ fs/ecryptfs/crypto.c                    |  20 +++--
+ fs/ecryptfs/inode.c                     |  36 +++++---
+ fs/ecryptfs/mmap.c                      |  39 +++++----
+ fs/erofs/xattr.c                        |   8 +-
+ fs/ext2/xattr_security.c                |  16 ++--
+ fs/ext2/xattr_trusted.c                 |  15 ++--
+ fs/ext2/xattr_user.c                    |  19 ++--
+ fs/ext4/xattr_security.c                |  15 ++--
+ fs/ext4/xattr_trusted.c                 |  15 ++--
+ fs/ext4/xattr_user.c                    |  19 ++--
+ fs/f2fs/xattr.c                         |  42 ++++-----
+ fs/fuse/xattr.c                         |  23 ++---
+ fs/gfs2/xattr.c                         |  18 ++--
+ fs/hfs/attr.c                           |  15 ++--
+ fs/hfsplus/xattr.c                      |  17 ++--
+ fs/hfsplus/xattr_security.c             |  13 ++-
+ fs/hfsplus/xattr_trusted.c              |  13 ++-
+ fs/hfsplus/xattr_user.c                 |  13 ++-
+ fs/jffs2/security.c                     |  16 ++--
+ fs/jffs2/xattr_trusted.c                |  16 ++--
+ fs/jffs2/xattr_user.c                   |  16 ++--
+ fs/jfs/xattr.c                          |  33 ++++---
+ fs/kernfs/inode.c                       |  23 +++--
+ fs/nfs/nfs4proc.c                       |  28 +++---
+ fs/ocfs2/xattr.c                        |  52 +++++------
+ fs/orangefs/xattr.c                     |  19 ++--
+ fs/overlayfs/copy_up.c                  |   2 +-
+ fs/overlayfs/dir.c                      |  17 ++--
+ fs/overlayfs/file.c                     |  20 ++---
+ fs/overlayfs/inode.c                    |  66 +++++++-------
+ fs/overlayfs/namei.c                    |  21 +++--
+ fs/overlayfs/overlayfs.h                |   9 +-
+ fs/overlayfs/ovl_entry.h                |   1 +
+ fs/overlayfs/readdir.c                  |   4 +-
+ fs/overlayfs/super.c                    |  75 +++++++++-------
+ fs/overlayfs/util.c                     |  44 +++++++---
+ fs/posix_acl.c                          |  23 +++--
+ fs/reiserfs/xattr.c                     |   2 +-
+ fs/reiserfs/xattr_security.c            |  22 +++--
+ fs/reiserfs/xattr_trusted.c             |  22 +++--
+ fs/reiserfs/xattr_user.c                |  22 +++--
+ fs/squashfs/xattr.c                     |  10 +--
+ fs/ubifs/xattr.c                        |  33 ++++---
+ fs/xattr.c                              | 112 +++++++++++++++---------
+ fs/xfs/libxfs/xfs_attr.c                |   4 +-
+ fs/xfs/libxfs/xfs_attr.h                |   2 +-
+ fs/xfs/xfs_xattr.c                      |  35 ++++----
+ include/linux/xattr.h                   |  26 ++++--
+ include/uapi/linux/xattr.h              |   7 +-
+ mm/shmem.c                              |  21 +++--
+ net/socket.c                            |  16 ++--
+ security/commoncap.c                    |  29 ++++--
+ security/integrity/evm/evm_main.c       |  13 ++-
+ security/selinux/hooks.c                |  28 ++++--
+ security/smack/smack_lsm.c              |  38 +++++---
+ 63 files changed, 852 insertions(+), 771 deletions(-)
+
 -- 
-Dave Chinner
-david@fromorbit.com
+2.23.0.866.gb869b98d4c-goog
+
