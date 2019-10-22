@@ -2,167 +2,158 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9E73CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D0D2CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:30:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72FA72064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:28:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EFB52064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:30:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="qYNexSVC"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="LdOpa9Ku"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731517AbfJVJ25 (ORCPT
+        id S1731446AbfJVJaH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 05:28:57 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:57852 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731220AbfJVJ24 (ORCPT
+        Tue, 22 Oct 2019 05:30:07 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:43988 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730247AbfJVJaH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 05:28:56 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9M9SqTD172813;
-        Tue, 22 Oct 2019 09:28:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2019-08-05;
- bh=IEUB8mW/sHD4ioGVh4YH4gw/5+AJM9/CAlr2e0ygDe4=;
- b=qYNexSVC8HCPFoLMttIzDhUwFrCmU1DrtF8/bZwh8y1eByk7RbMT0eKLdEmPoLBtf/P1
- /LHyjVuv8sOP4nKJWfTEwdqOE2oktsCyefSm4NyShAaVxgtsydZx7vYa3mzl47+v6WTc
- fmCqIAJCli4lKi7EgPt8c7/yL42D8Ia5VIHPov5t1/cIYJLOo8a2e89hoxPkVLKc76Wu
- MJ6dHi2SuC6kAZyHCCUoaufz0fno8wkwAnX0NK9yFS+NgjhojswajiL/Whuyz/itkt8g
- /ubj5ClvsfUQPVI8Ts1slyLuwWTFICO4CZzOB9AWfldCwld8E1FvQzejnOTMw0my/Wqz jA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2vqu4qn63p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 22 Oct 2019 09:28:52 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9M9S1da168118;
-        Tue, 22 Oct 2019 09:28:48 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 2vsx22bpby-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 22 Oct 2019 09:28:48 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9M9Sk5E015046;
-        Tue, 22 Oct 2019 09:28:47 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 22 Oct 2019 02:28:46 -0700
-Date:   Tue, 22 Oct 2019 12:28:39 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     kbuild@lists.01.org, Suwan Kim <suwan.kim027@gmail.com>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: drivers/usb/usbip/stub_rx.c:505 stub_recv_cmd_submit() error:
- uninitialized symbol 'nents'.
-Message-ID: <20191022092839.GD10833@kadam>
+        Tue, 22 Oct 2019 05:30:07 -0400
+Received: by mail-il1-f196.google.com with SMTP id t5so14746994ilh.10
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 02:30:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=gRw/ujH5u+b+betdi1nevIIXphQLiCiSZDxUemHbO5Y=;
+        b=LdOpa9KudKtIQ1kwtW9TBTIbnrBV/5NDwJYnFxW9fcRQouTABSwSE8KioMNdgsfG7N
+         2PyMKz5c0JbgWMRUMjjnlK4ymZOGwR6QmDjnd+V/uOaVR0FN03WxSx4BcRDaEtUm3Hv9
+         qlgI2ZOPms0DaZl5N9iumojS7tf8rYqvYTJh5+cE9cif3yFh9mG4aQNEH38it05RMUZk
+         5VYiZP94/rSancG4fLtvR0W6zoO/dNeEjIo2xkxkte2BfBwWOs71csXFypYSQ5KCfgYD
+         hT0Cm2eTZfzJuVaA7tBpcmz1V9OgffOifH5VOzcFYPkWpXVww1Qr2IiJBIbZNYOj5JYF
+         mINA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=gRw/ujH5u+b+betdi1nevIIXphQLiCiSZDxUemHbO5Y=;
+        b=FjrxpZondyIJKvrO7Ihg07UiFehYvpGNnz4Y8WagYJ4qtnx3y6bLxGvRMkltRjBswm
+         cwmtBguoklCNJRGRTm97AQAOoEy1TJZXXUgPJb0A1uqo6cbV1YZRZOzAJ65eiPLgTin8
+         5/PpI/BVLxD8CxTMhjFcFHlq3SKCn77h1b82mLHzp3oAecmN3QxasFFKTt4/FzWZPxBT
+         fJm4JicFrM6FnacjlE2Jn71Z301MMV9/3UypGCd8X7LaQ+5LEEyA3/f7r7fBLTrRZ9Dt
+         l5aACxPbn7GrtzaFu2hJa1HjF4NlE70Ais98P+SZmmp+l7uWkaGG45ayNYQlcD5WVkZM
+         ofzA==
+X-Gm-Message-State: APjAAAV1XKlquHZfIu1HshEESi4R4OK9449Lj+xDz+bnnmN4L2BVfxtF
+        x/WUo+lLKbzVxP2eiBcUqZ0i5sN0j50wc3+2LvdD0g==
+X-Google-Smtp-Source: APXvYqwTEhbQMpuSFs84r7ugo4qVLnztGVLVZqVacNzBI0++y9xiHUd6bZtP+cs8fky9bkg68mB86FgAHUkM9Po/7lo=
+X-Received: by 2002:a92:c80b:: with SMTP id v11mr31495749iln.6.1571736605168;
+ Tue, 22 Oct 2019 02:30:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9417 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910220088
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9417 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910220088
+References: <20191022083630.28175-1-brgl@bgdev.pl>
+In-Reply-To: <20191022083630.28175-1-brgl@bgdev.pl>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Tue, 22 Oct 2019 11:29:54 +0200
+Message-ID: <CAMRc=MeyrDZgmHJ+2SMipP7y9NggxiVfkAh4kCLePFWvUku9aQ@mail.gmail.com>
+Subject: Re: [PATCH v7 0/9] backlight: gpio: simplify the driver
+To:     Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jacopo Mondi <jacopo@jmondi.org>
+Cc:     Linux-sh list <linux-sh@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   7d194c2100ad2a6dded545887d02754948ca5241
-commit: ea44d190764b4422af4d1c29eaeb9e69e353b406 usbip: Implement SG support to vhci-hcd and stub driver
-date:   7 weeks ago
+wt., 22 pa=C5=BA 2019 o 10:36 Bartosz Golaszewski <brgl@bgdev.pl> napisa=C5=
+=82(a):
+>
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> While working on my other series related to gpio-backlight[1] I noticed
+> that we could simplify the driver if we made the only user of platform
+> data use GPIO lookups and device properties. This series tries to do
+> that.
+>
+> First two patches contain minor fixes. Third patch makes the driver
+> explicitly drive the GPIO line. Fourth patch adds all necessary data
+> structures to ecovec24. Patch 5/9 unifies much of the code for both
+> pdata and non-pdata cases. Patches 6-7/9 remove unused platform data
+> fields. Last two patches contain additional improvements for the GPIO
+> backlight driver while we're already modifying it.
+>
+> I don't have access to this HW but hopefully this works. Only compile
+> tested.
+>
+> [1] https://lkml.org/lkml/2019/6/25/900
+>
+> v1 -> v2:
+> - rebased on top of v5.3-rc1 and adjusted to the recent changes from Andy
+> - added additional two patches with minor improvements
+>
+> v2 -> v3:
+> - in patch 7/7: used initializers to set values for pdata and dev local v=
+ars
+>
+> v3 -> v4:
+> - rebased on top of v5.4-rc1
+> - removed changes that are no longer relevant after commit ec665b756e6f
+>   ("backlight: gpio-backlight: Correct initial power state handling")
+> - added patch 7/7
+>
+> v4 -> v5:
+> - in patch 7/7: added a comment replacing the name of the function being
+>   pulled into probe()
+>
+> v5 -> v6:
+> - added a patch making the driver explicitly set the direction of the GPI=
+O
+>   to output
+> - added a patch removing a redundant newline
+>
+> v6 -> v7:
+> - renamed the function calculating the new GPIO value for status update
+> - collected more tags
+>
+> Bartosz Golaszewski (9):
+>   backlight: gpio: remove unneeded include
+>   backlight: gpio: remove stray newline
+>   backlight: gpio: explicitly set the direction of the GPIO
+>   sh: ecovec24: add additional properties to the backlight device
+>   backlight: gpio: simplify the platform data handling
+>   sh: ecovec24: don't set unused fields in platform data
+>   backlight: gpio: remove unused fields from platform data
+>   backlight: gpio: use a helper variable for &pdev->dev
+>   backlight: gpio: pull gpio_backlight_initial_power_state() into probe
+>
+>  arch/sh/boards/mach-ecovec24/setup.c         |  33 +++--
+>  drivers/video/backlight/gpio_backlight.c     | 128 +++++++------------
+>  include/linux/platform_data/gpio_backlight.h |   3 -
+>  3 files changed, 69 insertions(+), 95 deletions(-)
+>
+> --
+> 2.23.0
+>
 
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Lee, Daniel, Jingoo,
 
-New smatch warnings:
-drivers/usb/usbip/stub_rx.c:505 stub_recv_cmd_submit() error: uninitialized symbol 'nents'.
+Jacopo is travelling until November 1st and won't be able to test this
+again before this date. Do you think you can pick it up and in case
+anything's broken on SH, we can fix it after v5.5-rc1, so that it
+doesn't miss another merge window?
 
-Old smatch warnings:
-drivers/usb/usbip/stub_rx.c:450 stub_recv_xbuff() error: uninitialized symbol 'ret'.
-
-# https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=ea44d190764b4422af4d1c29eaeb9e69e353b406
-git remote add linus https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-git remote update linus
-git checkout ea44d190764b4422af4d1c29eaeb9e69e353b406
-vim +/nents +505 drivers/usb/usbip/stub_rx.c
-
-4d7b5c7f8ad49b drivers/staging/usbip/stub_rx.c Takahiro Hirofuchi 2008-07-09  453  static void stub_recv_cmd_submit(struct stub_device *sdev,
-4d7b5c7f8ad49b drivers/staging/usbip/stub_rx.c Takahiro Hirofuchi 2008-07-09  454  				 struct usbip_header *pdu)
-4d7b5c7f8ad49b drivers/staging/usbip/stub_rx.c Takahiro Hirofuchi 2008-07-09  455  {
-4d7b5c7f8ad49b drivers/staging/usbip/stub_rx.c Takahiro Hirofuchi 2008-07-09  456  	struct stub_priv *priv;
-4d7b5c7f8ad49b drivers/staging/usbip/stub_rx.c Takahiro Hirofuchi 2008-07-09  457  	struct usbip_device *ud = &sdev->ud;
-2d8f4595d1f275 drivers/staging/usbip/stub_rx.c Max Vozeler        2011-01-12  458  	struct usb_device *udev = sdev->udev;
-ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  459  	struct scatterlist *sgl = NULL, *sg;
-ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  460  	void *buffer = NULL;
-ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  461  	unsigned long long buf_len;
-ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  462  	int nents;
-ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  463  	int num_urbs = 1;
-c6688ef9f29762 drivers/usb/usbip/stub_rx.c     Shuah Khan         2017-12-07  464  	int pipe = get_pipe(sdev, pdu);
-ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  465  	int use_sg = pdu->u.cmd_submit.transfer_flags & URB_DMA_MAP_SG;
-ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  466  	int support_sg = 1;
-ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  467  	int np = 0;
-ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  468  	int ret, i;
-4d7b5c7f8ad49b drivers/staging/usbip/stub_rx.c Takahiro Hirofuchi 2008-07-09  469  
-635f545a7e8be7 drivers/usb/usbip/stub_rx.c     Shuah Khan         2017-12-07  470  	if (pipe == -1)
-635f545a7e8be7 drivers/usb/usbip/stub_rx.c     Shuah Khan         2017-12-07  471  		return;
-4d7b5c7f8ad49b drivers/staging/usbip/stub_rx.c Takahiro Hirofuchi 2008-07-09  472  
-4d7b5c7f8ad49b drivers/staging/usbip/stub_rx.c Takahiro Hirofuchi 2008-07-09  473  	priv = stub_priv_alloc(sdev, pdu);
-4d7b5c7f8ad49b drivers/staging/usbip/stub_rx.c Takahiro Hirofuchi 2008-07-09  474  	if (!priv)
-4d7b5c7f8ad49b drivers/staging/usbip/stub_rx.c Takahiro Hirofuchi 2008-07-09  475  		return;
-4d7b5c7f8ad49b drivers/staging/usbip/stub_rx.c Takahiro Hirofuchi 2008-07-09  476  
-ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  477  	buf_len = (unsigned long long)pdu->u.cmd_submit.transfer_buffer_length;
-ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  478  
-ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  479  	/* allocate urb transfer buffer, if needed */
-ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  480  	if (buf_len) {
-ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  481  		if (use_sg) {
-ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  482  			sgl = sgl_alloc(buf_len, GFP_KERNEL, &nents);
-ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  483  			if (!sgl)
-ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  484  				goto err_malloc;
-ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  485  		} else {
-ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  486  			buffer = kzalloc(buf_len, GFP_KERNEL);
-ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  487  			if (!buffer)
-ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  488  				goto err_malloc;
-ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  489  		}
-ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  490  	}
-ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  491  
-ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  492  	/* Check if the server's HCD supports SG */
-ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  493  	if (use_sg && !udev->bus->sg_tablesize) {
-
-Smatch thinks "use_sg" can be true when "buf_len" is zero.  It's hard
-to tell if Smatch is right or wrong without more context...
-
-ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  494  		/*
-ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  495  		 * If the server's HCD doesn't support SG, break a single SG
-ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  496  		 * request into several URBs and map each SG list entry to
-ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  497  		 * corresponding URB buffer. The previously allocated SG
-ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  498  		 * list is stored in priv->sgl (If the server's HCD support SG,
-ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  499  		 * SG list is stored only in urb->sg) and it is used as an
-ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  500  		 * indicator that the server split single SG request into
-ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  501  		 * several URBs. Later, priv->sgl is used by stub_complete() and
-ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  502  		 * stub_send_ret_submit() to reassemble the divied URBs.
-ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  503  		 */
-ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  504  		support_sg = 0;
-ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28 @505  		num_urbs = nents;
-                                                                                                ^^^^^^^^^^^^^^^^
-
-ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  506  		priv->completed_urbs = 0;
-ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  507  		pdu->u.cmd_submit.transfer_flags &= ~URB_DMA_MAP_SG;
-ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  508  	}
-
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+Bart
