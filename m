@@ -2,76 +2,60 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E322CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:35:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92784CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:35:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F2E6214B2
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:35:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D9BA21872
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:35:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731142AbfJVIfZ (ORCPT
+        id S1731186AbfJVIfp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 04:35:25 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42164 "EHLO mx1.suse.de"
+        Tue, 22 Oct 2019 04:35:45 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4704 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726978AbfJVIfY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 04:35:24 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 9F613B4F5;
-        Tue, 22 Oct 2019 08:35:20 +0000 (UTC)
-Date:   Tue, 22 Oct 2019 10:35:17 +0200
-From:   Oscar Salvador <osalvador@suse.de>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     n-horiguchi@ah.jp.nec.com, mike.kravetz@oracle.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v2 10/16] mm,hwpoison: Rework soft offline for free
- pages
-Message-ID: <20191022083505.GA19708@linux>
-References: <20191017142123.24245-1-osalvador@suse.de>
- <20191017142123.24245-11-osalvador@suse.de>
- <20191018120615.GM5017@dhcp22.suse.cz>
- <20191021125842.GA11330@linux>
- <20191021154158.GV9379@dhcp22.suse.cz>
- <20191022074615.GA19060@linux>
- <20191022082611.GD9379@dhcp22.suse.cz>
+        id S1726978AbfJVIfp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 04:35:45 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id B58507510F0CE3AED697;
+        Tue, 22 Oct 2019 16:35:42 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 22 Oct
+ 2019 16:35:41 +0800
+Subject: Re: [PATCH v2] f2fs: fix to avoid memory leakage in f2fs_listxattr
+To:     Randall Huang <huangrandall@google.com>, <jaegeuk@kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>
+References: <efddfbc3-bd31-b9fb-48de-decb01d01001@huawei.com>
+ <20191018065622.66404-1-huangrandall@google.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <5b27d560-8699-97af-844d-72de8a7a754c@huawei.com>
+Date:   Tue, 22 Oct 2019 16:35:41 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191022082611.GD9379@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191018065622.66404-1-huangrandall@google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 10:26:11AM +0200, Michal Hocko wrote:
-> On Tue 22-10-19 09:46:20, Oscar Salvador wrote:
-> [...]
-> > So, opposite to hard-offline, in soft-offline we do not fiddle with pages
-> > unless we are sure the page is not reachable anymore by any means.
+On 2019/10/18 14:56, Randall Huang wrote:
+> In f2fs_listxattr, there is no boundary check before
+> memcpy e_name to buffer.
+> If the e_name_len is corrupted,
+> unexpected memory contents may be returned to the buffer.
 > 
-> I have to say I do not follow. Is there any _real_ reason for
-> soft-offline to behave differenttly from MCE (hard-offline)?
+> Signed-off-by: Randall Huang <huangrandall@google.com>
 
-Yes.
-Do not take it as 100% true as I read that in some code/Documentation
-a while ago.
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
 
-But I think that it boils down to:
-
-soft-offline: "We have seen some erros in the underlying page, but
-               it is still usable, so we have a chance to keep the
-               the contents (via migration)"
-hard-offline: "The underlying page is dead, we cannot trust it, so
-               we shut it down, killing whoever is holding it
-               along the way".
-
-Am I wrong Naoya?
-
--- 
-Oscar Salvador
-SUSE L3
+Thanks,
