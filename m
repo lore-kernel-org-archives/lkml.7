@@ -2,126 +2,121 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA47FCA9EB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:04:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6856CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:04:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB645218AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:04:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="gUpL5SAI"
+	by mail.kernel.org (Postfix) with ESMTP id 87BB421906
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:04:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389044AbfJVOEW (ORCPT
+        id S2389070AbfJVOEZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 22 Oct 2019 10:04:25 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40824 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388389AbfJVOEW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 22 Oct 2019 10:04:22 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:35144 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388435AbfJVOEW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 10:04:22 -0400
-Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com [209.85.221.69])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 2495DC0D58;
-        Tue, 22 Oct 2019 14:04:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1571753061; bh=PlFMRCj9hMpOe7fD5AdKfYzQfRNkA41VuXOPF/zY0I4=;
-        h=From:To:Cc:Subject:Date:From;
-        b=gUpL5SAIZnWNDGO7a7mPmwl+MZsM4kZ/WNmGkOAhaybPAIxG93H+Md4ylWbSmYM4u
-         G2HeqRFYlpkzD/FtIhHyQAcixWNH/HqEZHT3Xil5C+L6xZJwb7ZDTmy5nA55tajZWc
-         DgnY4zmdYgUwRnJaaA5ifsvMZPC1aslwSzaS10lndy8u+kEQadASEcfzmPNiYP4Dht
-         WIBc1YathvVxpEaLQWHg9/y0O8blWzbxCfnNPH3vWhFd+Q4wz3/iH10m7yxgBTGwZs
-         6oNmYp6EP/Tlxa0gm1rWNAZd1Io4M+FmB495C2Aoj4SoATtLn5P20WrCx6CS3xFxWa
-         okEiGQG5PoYCA==
-Received: from ru20arcgnu1.internal.synopsys.com (ru20arcgnu1.internal.synopsys.com [10.121.9.48])
-        by mailhost.synopsys.com (Postfix) with ESMTP id CA9CDA005D;
-        Tue, 22 Oct 2019 14:04:13 +0000 (UTC)
-From:   Alexey Brodkin <Alexey.Brodkin@synopsys.com>
-To:     linux-snps-arc@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org,
-        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
-        stable@vger.kernel.org
-Subject: [PATCH] ARC: perf: Accommodate big-endian CPU
-Date:   Tue, 22 Oct 2019 17:04:11 +0300
-Message-Id: <20191022140411.10193-1-abrodkin@synopsys.com>
-X-Mailer: git-send-email 2.16.2
+        by mx1.redhat.com (Postfix) with ESMTPS id D44634E93D
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 14:04:21 +0000 (UTC)
+Received: by mail-wr1-f69.google.com with SMTP id 7so9282445wrl.2
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 07:04:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=cI7ihz+0OXiuq2sxX+N5cJBmKtQum9zSe4e7C6PdS6E=;
+        b=cOoIWIFaSGMeFtu5uHyhgO4bv82jir56qXZRZX0KI12T+fA8WJs3659qZOTEiPREOr
+         YUZu57Aipg5TxptyWKe3avgxLIuD4FIDmR7nQKiU8tex6qXKv70Eq1Zjg4P3NPH+5IRo
+         yAVVl6qfI5T+hAOA3A/Fi6S02JKAQhgA32tom8z1/dEezryWl+bS1KeZEZuGzz0tv6l5
+         xQKe57BiZLRZ3E1zi17N8aZFC1KrkNpHE32Z0SS6jVaJ9KwYmHHyNZZEOu8QQ9aqhj3u
+         nC07U6vbnivjY2slRxce0+RqwuUPxE4SFgPDyhXwAHajSiPyyY+NY0X6ZqSxOuhaZF/F
+         ChqQ==
+X-Gm-Message-State: APjAAAXbZz3vPk4SkSlvOud3XK2cgJHfnlYp6Yo4lnvAjWkMds31J1/e
+        SEEWHpP+3IVht2DOAOgXZF+u7QvW2SPnol1Z+vFa3auUyNTuer+EnPKaF3sBnwO0+XuWpjbCEtO
+        PRXkJ8ss1j+WJX2/CN5E+FYBj
+X-Received: by 2002:a1c:4c02:: with SMTP id z2mr1302162wmf.78.1571753060063;
+        Tue, 22 Oct 2019 07:04:20 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzBB+WAq2KC5VOJdeNtgubd6CTAxDm0c28bIfc4NXYNFYsicJIJc7CEyPBTiO7yZbxm83G9Ow==
+X-Received: by 2002:a1c:4c02:: with SMTP id z2mr1302127wmf.78.1571753059747;
+        Tue, 22 Oct 2019 07:04:19 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:c0e4:dcf4:b543:ce19? ([2001:b07:6468:f312:c0e4:dcf4:b543:ce19])
+        by smtp.gmail.com with ESMTPSA id p17sm14939972wrn.4.2019.10.22.07.04.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Oct 2019 07:04:19 -0700 (PDT)
+Subject: Re: [PATCH v2 14/15] KVM: Terminate memslot walks via used_slots
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Marc Zyngier <maz@kernel.org>
+Cc:     David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
+        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
+References: <20191022003537.13013-1-sean.j.christopherson@intel.com>
+ <20191022003537.13013-15-sean.j.christopherson@intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <642f73ee-9425-0149-f4f4-f56be9ae5713@redhat.com>
+Date:   Tue, 22 Oct 2019 16:04:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20191022003537.13013-15-sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-8-letter strings representing ARC perf events are stores in two
-32-bit registers as ASCII characters like that: "IJMP", "IALL", "IJMPTAK" etc.
+On 22/10/19 02:35, Sean Christopherson wrote:
+> +static inline int kvm_shift_memslots_forward(struct kvm_memslots *slots,
+> +					     struct kvm_memory_slot *new)
+> +{
+> +	struct kvm_memory_slot *mslots = slots->memslots;
+> +	int i;
+> +
+> +	if (WARN_ON_ONCE(slots->id_to_index[new->id] == -1) ||
+> +	    WARN_ON_ONCE(!slots->used_slots))
+> +		return -1;
+> +
+> +	for (i = slots->id_to_index[new->id]; i < slots->used_slots - 1; i++) {
+> +		if (new->base_gfn > mslots[i + 1].base_gfn)
+> +			break;
+> +
+> +		WARN_ON_ONCE(new->base_gfn == mslots[i + 1].base_gfn);
+> +
+> +		/* Shift the next memslot forward one and update its index. */
+> +		mslots[i] = mslots[i + 1];
+> +		slots->id_to_index[mslots[i].id] = i;
+> +	}
+> +	return i;
+> +}
+> +
+> +static inline int kvm_shift_memslots_back(struct kvm_memslots *slots,
+> +					  struct kvm_memory_slot *new,
+> +					  int start)
 
-And the same order of bytes in the word is used regardless CPU endianness.
+This new implementation of the insertion sort loses the comments that
+were there in the old one.  Please keep them as function comments.
 
-Which means in case of big-endian CPU core we need to swap bytes to get
-the same order as if it was on little-endian CPU.
-
-Otherwise we're seeing the following error message on boot:
-------------------------->8----------------------
-ARC perf        : 8 counters (32 bits), 40 conditions, [overflow IRQ support]
-sysfs: cannot create duplicate filename '/devices/arc_pct/events/pmji'
-CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.2.18 #3
-Stack Trace:
-  arc_unwind_core+0xd4/0xfc
-  dump_stack+0x64/0x80
-  sysfs_warn_dup+0x46/0x58
-  sysfs_add_file_mode_ns+0xb2/0x168
-  create_files+0x70/0x2a0
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 1 at kernel/events/core.c:12144 perf_event_sysfs_init+0x70/0xa0
-Failed to register pmu: arc_pct, reason -17
-Modules linked in:
-CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.2.18 #3
-Stack Trace:
-  arc_unwind_core+0xd4/0xfc
-  dump_stack+0x64/0x80
-  __warn+0x9c/0xd4
-  warn_slowpath_fmt+0x22/0x2c
-  perf_event_sysfs_init+0x70/0xa0
----[ end trace a75fb9a9837bd1ec ]---
-------------------------->8----------------------
-
-What happens here we're trying to register more than one raw perf event
-with the same name "PMJI". Why? Because ARC perf events are 4 to 8 letters
-and encoded into two 32-bit words. In this particular case we deal with 2
-events:
- * "IJMP____" which counts all jump & branch instructions
- * "IJMPC___" which counts only conditional jumps & branches
-
-Those strings are split in two 32-bit words this way "IJMP" + "____" &
-"IJMP" + "C___" correspondingly. Now if we read them swapped due to CPU core
-being big-endian then we read "PMJI" + "____" & "PMJI" + "___C".
-
-And since we interpret read array of ASCII letters as a null-terminated string
-on big-endian CPU we end up with 2 events of the same name "PMJI".
-
-Signed-off-by: Alexey Brodkin <abrodkin@synopsys.com>
-Cc: stable@vger.kernel.org
----
- arch/arc/kernel/perf_event.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arc/kernel/perf_event.c b/arch/arc/kernel/perf_event.c
-index 861a8aea51f9..661fd842ea97 100644
---- a/arch/arc/kernel/perf_event.c
-+++ b/arch/arc/kernel/perf_event.c
-@@ -614,8 +614,8 @@ static int arc_pmu_device_probe(struct platform_device *pdev)
- 	/* loop thru all available h/w condition indexes */
- 	for (i = 0; i < cc_bcr.c; i++) {
- 		write_aux_reg(ARC_REG_CC_INDEX, i);
--		cc_name.indiv.word0 = read_aux_reg(ARC_REG_CC_NAME0);
--		cc_name.indiv.word1 = read_aux_reg(ARC_REG_CC_NAME1);
-+		cc_name.indiv.word0 = le32_to_cpu(read_aux_reg(ARC_REG_CC_NAME0));
-+		cc_name.indiv.word1 = le32_to_cpu(read_aux_reg(ARC_REG_CC_NAME1));
- 
- 		arc_pmu_map_hw_event(i, cc_name.str);
- 		arc_pmu_add_raw_event_attr(i, cc_name.str);
--- 
-2.16.2
-
+Paolo
