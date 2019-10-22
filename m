@@ -2,154 +2,73 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 428C6CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:40:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DFD7CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:41:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0699020684
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:40:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="QFQcyrHb"
+	by mail.kernel.org (Postfix) with ESMTP id 0E51220684
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:41:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731482AbfJVJk4 (ORCPT
+        id S1731504AbfJVJk7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 05:40:56 -0400
-Received: from mout.web.de ([212.227.15.4]:48199 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730312AbfJVJk4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 05:40:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1571737241;
-        bh=GJEH9DRR2EKHvmf2sT42XdVTXPY+Q+DE2CfuDqJ5IFo=;
-        h=X-UI-Sender-Class:Cc:References:Subject:From:To:Date:In-Reply-To;
-        b=QFQcyrHb3Wp4bxgEtd9GUiNn5t5PAf3uDuZ6Geg1a+o04GIU2IRvjDIpYS/uOXUjR
-         8R5xP/dlHyzv599YchFXexYj0m7p4tFwheNHFET56i4fD21M20U5L/dYWJa3aHtJ1o
-         jDZ1LdCnKG+5GIu67DsWhLJNsWWBQHIdV9yyUqaI=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.132.150.42]) by smtp.web.de (mrweb003
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0MUF50-1iV3sp0YzK-00R2yz; Tue, 22
- Oct 2019 11:40:41 +0200
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org,
-        Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>
-References: <20191021211449.9104-1-navid.emamdoost@gmail.com>
-Subject: Re: [PATCH] drm/nouveau: Fix memory leak in nouveau_bo_alloc
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>, nouveau@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Message-ID: <b523c3a1-75a7-d94a-6cc6-58e8a1ad73cd@web.de>
-Date:   Tue, 22 Oct 2019 11:40:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Tue, 22 Oct 2019 05:40:59 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36710 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730312AbfJVJk6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 05:40:58 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id D3A48B37A;
+        Tue, 22 Oct 2019 09:40:56 +0000 (UTC)
+Date:   Tue, 22 Oct 2019 11:40:54 +0200
+From:   Oscar Salvador <osalvador@suse.de>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     n-horiguchi@ah.jp.nec.com, mike.kravetz@oracle.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v2 11/16] mm,hwpoison: Rework soft offline for in-use
+ pages
+Message-ID: <20191022094049.GA20429@linux>
+References: <20191017142123.24245-1-osalvador@suse.de>
+ <20191017142123.24245-12-osalvador@suse.de>
+ <20191018123901.GN5017@dhcp22.suse.cz>
+ <20191021134846.GB11330@linux>
+ <20191021140619.GQ9379@dhcp22.suse.cz>
+ <20191022075626.GB19060@linux>
+ <20191022083002.GE9379@dhcp22.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <20191021211449.9104-1-navid.emamdoost@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:WvY3CEvOjQh0ldBwwtI83W1iznWfi71az+1lM6fbaMdOEPBE0Pr
- mKybrcuo+tK8z4o/zULE9OUmRow5AglMvYVkmOUR3+WQLRQ+Jzwy4ysn0dwzFNX+8VQu96M
- +kbjsojToKBr+FYcc0M+Pm0WVQ3JSrdDnRy6sDThlJLLszBdxQVXR+uZW6EBoI+aDEoQ4xc
- L4MKJbGyZeaLaLIo5GYCw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:lSdg4XoI/us=:bJvTb1elINsw4nvOhNrNqY
- c4A+rllq+OJEHsQgVSr0atxtM1fHWmey4FdCiMyyuWOw0uZqK2i2ehEzBL1Ezd0V0pQOaSh3L
- hcw3O7zOZ3JOKCv8N2pCRKmgqsPjYq7eqY9ZG6p4gtip/Ujtupbq456Hm/fYoKq2XbWyGCTYH
- NREEAOyIqdfBjMGFs1Y7kCUSH+ULm2cicH5bZRhsnVZHe79JfVKWYiMUG1Di5RG2U1iV/17Fw
- vd8ArfEP6SdJXjU7e1JWMy/OIy73fCQxJ97l92GJ054SsHr3ZQkRdLmfd1bMIpcJDyzIGP1e8
- kGAI5t/iZAJhFqueI90pmGq0jXde/gyoIn9T7YcRp2Dcuj7NgJmBnnzr4GmHfFAlETHqImJu6
- SIYkXXjbawkyHmJgj1XCW4YfomSBjeXjBp4a4+wY5TV+aGIX0xJOr5wQFzr3VUO9PpB3+7uDB
- FIuWJipWLngDga6pBjp7QXRZcXtB5Ik8MFiNPqDDqs3DYijhkON979OLIiH17ggxyulgPBfzC
- lHJQ1GEF55vRzDvau7WiguqFK76xjzp1Fo5wQr1b7lQHzaWXJaXQ3UDiulSpSN3IisVh92ke1
- 397JMEGlojZiAnL18/vO0j8SpH08l5hLA6QHH0A17fwOM25IC+tA1v/epofcmPz7P5PCm0UUd
- bd1YsPLZUTUxn/Zx9LtYQFSDmVJUz/D0PO9sVFwiK8xzEDmEcZMEI5Xa3JI2nUgxREdqABtKo
- 6DyssGpobL42k09gVWIOPA7+FPLoQRiwcRKRw8YWI2xCfTggcla9lkI2j6xd6MDIK+HINEHlg
- 54QcUVWZaqcvcka/0cgZXbDANpL4ys/JiGcnDFmoNhE3eWRXwfZJ/iFfWgQa/3lqj6mzGKWUW
- Pq/2dlCCkbsacugbBpq0pbOKnTJAkNVfAAaUJ31f13hnczr/BR7tuuBpAaGEoqq/+1zZKI3wP
- d/e5GAOWnyBduDnKJybqZU6gac3bgvRfJWIugpkJmkBst1TIKX08hLIUDi9F/koBq+CXpx5Tr
- IcZA19TanFivlIM8Q35DtDjLQvPdfy/0+ncDUKBaOlkJ+yGkLvTlfwFfSqjcXzSKzUyfCgKyM
- 8zQBsBBMM8iWUhzLRJK+ax2REGHmOAnM/BBgcvDtWBsbPsI4L5TThLonCwsFNmaACmKvedCqe
- yzRO9Nj1VqxTSL/N1F/IpQ4PkBIXzdmk3ZREIMIOJETBhzq99riso62oAS5z6r8DtKHTDHvXe
- QHtv9sYrjKsr27yX9n8zVqD60iSlTdl/SL7tDrZEgfizql2qhCINAQPelQkQ=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191022083002.GE9379@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> +++ b/drivers/gpu/drm/nouveau/nouveau_bo.c
-> @@ -276,8 +276,10 @@ nouveau_bo_alloc(struct nouveau_cli *cli, u64 *size=
-, int *align, u32 flags,
->  			break;
->  	}
->
-> -	if (WARN_ON(pi < 0))
-> +	if (WARN_ON(pi < 0)) {
-> +		kfree(nvbo);
->  		return ERR_PTR(-EINVAL);
-> +	}
->
->  	/* Disable compression if suitable settings couldn't be found. */
->  	if (nvbo->comp && !vmm->page[pi].comp) {
+On Tue, Oct 22, 2019 at 10:30:02AM +0200, Michal Hocko wrote:
+> But we have destructors for compound pages. Can we do the heavy lifting
+> there?
 
-This addition looks correct.
-But I would prefer to move such exception handling code to the end of
-this function implementation so that duplicate source code will be reduced=
-.
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/coding-style.rst?id=3D7d194c2100ad2a6dded545887d027549=
-48ca5241#n450
+Yes, we could.
+Actually, I tried that approach, but I thought it was simpler this way.
+Since there is no hurry in this, I will try to take that up again and
+see how it looks.
 
-Regards,
-Markus
+> > > If the page is free then it shouldn't pin the memcg or any other state.
+> > 
+> > Well, it is not really free, as it is not usable, is it?
+> 
+> Sorry I meant to say the page is free from the memcg POV - aka no task
+> from the memcg is holding a reference to it. The page is not usable for
+> anybody, that is true but no particular memcg should pay a price for
+> that. This would mean that random memcgs would end up pinned for ever
+> without a good reason.
+
+Sure, I will re-work that.
+
+-- 
+Oscar Salvador
+SUSE L3
