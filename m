@@ -2,63 +2,64 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C9EFCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 05:07:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 690FFCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 05:09:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45F3A20B7C
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 05:07:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3378720B7C
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 05:09:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="t5XI80Bi"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="UJDKA2KX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731086AbfJVFH6 (ORCPT
+        id S1731116AbfJVFJp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 01:07:58 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39710 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725887AbfJVFH5 (ORCPT
+        Tue, 22 Oct 2019 01:09:45 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:36224 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730978AbfJVFJo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 01:07:57 -0400
-Received: by mail-wm1-f67.google.com with SMTP id r141so5188173wme.4
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 22:07:55 -0700 (PDT)
+        Tue, 22 Oct 2019 01:09:44 -0400
+Received: by mail-wr1-f66.google.com with SMTP id w18so15831698wrt.3
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 22:09:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=brainfault-org.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=bTTMrmciHM4aiFMZR2LK71art6dDZteKsZ9m8QnTfYE=;
-        b=t5XI80Bi4Lrln9mq+PcmKnh/yO/hMUHXGheJlgPjZHmjiOAKjNpjlwjXrH4e/9yOUp
-         mR8jmhWjv/5OpGM8yjQhMT8lwxbmAwBue+sy9/eMu5EVFXjYnAzl3zU2VUOWqfu32NZM
-         Z3zKuEf4f89oQkuqGUuY3+NKXqsGn82fXWfMpOdyot1HwqClZ0rZbi6horJoccoHlqBr
-         kwilw8JQ+36mVE/vxn2gYkr710UiwpoIXu4c7yr5Z6txLx1fUYfbJjV7PbNxFvpZlrFo
-         UqUOOHNXqgUT5BX0UdU1JbK4lADmJtAa4wyL7NBU3sCdNhXQnJrx368cQvjh4NYcUPA4
-         8zGQ==
+        bh=u/quP6H3t0vd+EUHeiV1XtwPAgHpe/L6SdgFukt3v7I=;
+        b=UJDKA2KXuJEpZjuCE7M0A4TYaHJwXeoBaS3iWDPtUSt7GpqUGQrS3O4k6DvdgSb0bN
+         redzX4NV6SW/+egZUr2DuF4GQmoqZw7FDbnKJCBzFeU7rWxVQouA5kFncvAehzf3jKqK
+         gdTnn7FZd+1uzTx9c+42X/rn+kUbhA3rerOGp02RJnWesekdrGx8kquK5lfH4pNSvvKR
+         8hVX21GmgbEXHn5F9CCMPTbdlfTnvqE7OfjMz7MWDEo2qd4NIV6VUFFGdpo6bdcurrUX
+         vG60tTnjBqx+BZ1xWISIV0eIeEvBvPOMyy/oxA+ZGo7xMeMx3TYp231RgISwQayeJOpK
+         MH+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=bTTMrmciHM4aiFMZR2LK71art6dDZteKsZ9m8QnTfYE=;
-        b=E3YiCUoxJHunWFEVn1hLJmBnpsS+1mR6cB/KrqFnxC7OAXecRwhtxYHq//xAtinwMp
-         f9ZE20FpJUhDvjYqv+TJeUvCc+Nj4YwVGFNQtgJmCn/25kKSCMrugFWC1uxnkwlT0vlA
-         tqNtZu2wBNm9vPvCEX4hZhUWzrmX8fJXt4JBW0630zaO6+6hlwEJKf1ru1fT36cK2CQg
-         tQ4SkAKBuOAiwEEW6qNgkUIgBsodinwc1jy8Yw6icX314ZpzPjcoVQhc+WPKYDPkiHIM
-         YhCfRLXh6aDxv+pCaB8Cr1bUh6vYVnBbjm/ZNZFYHz8iFBFZl31gb6pdk0n+FFOhQKeT
-         CmyA==
-X-Gm-Message-State: APjAAAX8LCKV17uDqQTPJRfJpjSoiM+H92fVZOJHHjn2dqzyjF4w4No8
-        btvldb2ZXTEtyYozXqNnYfEQZOHMLLYL8AoFrSD5OA==
-X-Google-Smtp-Source: APXvYqxl6FUWzhNJmV/twRIMg5J5dk1jL54DHL5eRqSLGaUjuAJZJFHphqKMrxpAOmdnSQ0pZAWlWkDR4Yx7NICACVk=
-X-Received: by 2002:a1c:9695:: with SMTP id y143mr1119738wmd.103.1571720874948;
- Mon, 21 Oct 2019 22:07:54 -0700 (PDT)
+        bh=u/quP6H3t0vd+EUHeiV1XtwPAgHpe/L6SdgFukt3v7I=;
+        b=WFhVYGGlvdfGNDT2I5Z3eeirusQR/1yt3pxu6KeaWBcEAEI334ne1Zs707N7Up42gz
+         6KzY/KsV2hxT3tNW9zcs8UPUz7KNDUwnU23HQy62bD+O7/3fBaeACFCQ6LMbPnzWwIVJ
+         zSvPowe925KXzIq84xI+vHsNwN/BGGnIAu0gMJrq8XHCm2u4Ape/rYPybs6hgsvrjCu8
+         CzgNuMf3165XE7pvM/cz/KdmvVBDC2QeM3/cJqEYbF5GLElnVJEQtyfyONfJ2wCPtaue
+         Sc6RuFz1t/Lbub1mgAJrR/+XoxWfJat9UrJsR45ampda3arMf1ijbYenJDQSnY6AURbp
+         NGdQ==
+X-Gm-Message-State: APjAAAX6aw9ilpFpyHrl7sOJgnfLQcCQIKyq4GAB/cj/3Lt7ZVZ2Whr1
+        fQI2YkoOZ30I6DK5ATQA1H1/4sXYMQzRpFF7WrNBfA==
+X-Google-Smtp-Source: APXvYqwZD1j8xJWElPYHYhi9Zjt/MS9g2ikbsI1900bS88lRyEawqVJJ6EO8O2gyxOTlf+Gdd0g0pZutNuTIzTbuOe4=
+X-Received: by 2002:adf:e850:: with SMTP id d16mr1439791wrn.251.1571720981754;
+ Mon, 21 Oct 2019 22:09:41 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191016160649.24622-1-anup.patel@wdc.com> <20191016160649.24622-21-anup.patel@wdc.com>
- <1d2e9514-235e-183e-b4fc-d3becc9ce471@redhat.com>
-In-Reply-To: <1d2e9514-235e-183e-b4fc-d3becc9ce471@redhat.com>
+References: <20191016160649.24622-1-anup.patel@wdc.com> <20191016160649.24622-20-anup.patel@wdc.com>
+ <7381057d-a3f3-e79a-bb2c-b078fc918b1f@redhat.com>
+In-Reply-To: <7381057d-a3f3-e79a-bb2c-b078fc918b1f@redhat.com>
 From:   Anup Patel <anup@brainfault.org>
-Date:   Tue, 22 Oct 2019 10:37:43 +0530
-Message-ID: <CAAhSdy33b=EcNnNP80dNqAEpSOErfXenNXHD0GhC4yYPB7L3Ow@mail.gmail.com>
-Subject: Re: [PATCH v9 20/22] RISC-V: KVM: Fix race-condition in kvm_riscv_vcpu_sync_interrupts()
+Date:   Tue, 22 Oct 2019 10:39:30 +0530
+Message-ID: <CAAhSdy0E02VC0+Qb8Tczcs1YFMdFRRhM2VsGqNu1ZFLmohUAdw@mail.gmail.com>
+Subject: Re: [PATCH v9 19/22] RISC-V: KVM: Remove per-CPU vsip_shadow variable
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Anup Patel <Anup.Patel@wdc.com>,
         Palmer Dabbelt <palmer@sifive.com>,
@@ -80,30 +81,129 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 10:57 PM Paolo Bonzini <pbonzini@redhat.com> wrote:
+On Mon, Oct 21, 2019 at 10:58 PM Paolo Bonzini <pbonzini@redhat.com> wrote:
 >
 > On 16/10/19 18:12, Anup Patel wrote:
-> > +     /* Read current VSIP and VSIE CSRs */
-> > +     vsip = csr_read(CSR_VSIP);
-> > +     csr->vsie = csr_read(CSR_VSIE);
-> > +
-> > +     /* Sync-up VSIP.SSIP bit changes does by Guest */
-> > +     if ((csr->vsip ^ vsip) & (1UL << IRQ_S_SOFT)) {
-> > +             if (!test_and_set_bit(IRQ_S_SOFT, &v->irqs_pending_mask)) {
-> > +                     if (vsip & (1UL << IRQ_S_SOFT))
-> > +                             set_bit(IRQ_S_SOFT, &v->irqs_pending);
-> > +                     else
-> > +                             clear_bit(IRQ_S_SOFT, &v->irqs_pending);
-> > +             }
+> > Currently, we track last value wrote to VSIP CSR using per-CPU
+> > vsip_shadow variable but this easily goes out-of-sync because
+> > Guest can update VSIP.SSIP bit directly.
+> >
+> > To simplify things, we remove per-CPU vsip_shadow variable and
+> > unconditionally write vcpu->arch.guest_csr.vsip to VSIP CSR in
+> > run-loop.
+> >
+> > Signed-off-by: Anup Patel <anup.patel@wdc.com>
 >
-> Looks good, but I wonder if this could just be "csr->vsip =
-> csr_read(CSR_VSIP)", which will be fixed up by flush_interrupts on the
-> next entry.
+> Please squash this and patch 20 into the corresponding patches earlier
+> in the series.
 
-It's not just "csr->vsip = csr_read(CSR_VSIP" because "irqs_pending"
-bitmap has to be in-sync with Guest updates to VSIP because WFI
-trap-n-emulate will check for pending interrupts which in-turn checks
-"irqs_pending" bitmap.
+Sure, I will squash patch20 and patch19 onto patch5.
 
 Regards,
 Anup
+
+
+>
+> Paolo
+>
+> > ---
+> >  arch/riscv/include/asm/kvm_host.h |  3 ---
+> >  arch/riscv/kvm/main.c             |  6 ------
+> >  arch/riscv/kvm/vcpu.c             | 24 +-----------------------
+> >  3 files changed, 1 insertion(+), 32 deletions(-)
+> >
+> > diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/kvm_host.h
+> > index ec1ca4bc98f2..cd86acaed055 100644
+> > --- a/arch/riscv/include/asm/kvm_host.h
+> > +++ b/arch/riscv/include/asm/kvm_host.h
+> > @@ -202,9 +202,6 @@ static inline void kvm_arch_vcpu_uninit(struct kvm_vcpu *vcpu) {}
+> >  static inline void kvm_arch_sched_in(struct kvm_vcpu *vcpu, int cpu) {}
+> >  static inline void kvm_arch_vcpu_block_finish(struct kvm_vcpu *vcpu) {}
+> >
+> > -int kvm_riscv_setup_vsip(void);
+> > -void kvm_riscv_cleanup_vsip(void);
+> > -
+> >  #define KVM_ARCH_WANT_MMU_NOTIFIER
+> >  int kvm_unmap_hva_range(struct kvm *kvm,
+> >                       unsigned long start, unsigned long end);
+> > diff --git a/arch/riscv/kvm/main.c b/arch/riscv/kvm/main.c
+> > index 55df85184241..002301a27d29 100644
+> > --- a/arch/riscv/kvm/main.c
+> > +++ b/arch/riscv/kvm/main.c
+> > @@ -61,17 +61,11 @@ void kvm_arch_hardware_disable(void)
+> >
+> >  int kvm_arch_init(void *opaque)
+> >  {
+> > -     int ret;
+> > -
+> >       if (!riscv_isa_extension_available(NULL, h)) {
+> >               kvm_info("hypervisor extension not available\n");
+> >               return -ENODEV;
+> >       }
+> >
+> > -     ret = kvm_riscv_setup_vsip();
+> > -     if (ret)
+> > -             return ret;
+> > -
+> >       kvm_riscv_stage2_vmid_detect();
+> >
+> >       kvm_info("hypervisor extension available\n");
+> > diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
+> > index fd77cd39dd8c..f1a218d3a8cf 100644
+> > --- a/arch/riscv/kvm/vcpu.c
+> > +++ b/arch/riscv/kvm/vcpu.c
+> > @@ -111,8 +111,6 @@ static void kvm_riscv_vcpu_host_fp_restore(struct kvm_cpu_context *cntx) {}
+> >                                riscv_isa_extension_mask(s) | \
+> >                                riscv_isa_extension_mask(u))
+> >
+> > -static unsigned long __percpu *vsip_shadow;
+> > -
+> >  static void kvm_riscv_reset_vcpu(struct kvm_vcpu *vcpu)
+> >  {
+> >       struct kvm_vcpu_csr *csr = &vcpu->arch.guest_csr;
+> > @@ -765,7 +763,6 @@ int kvm_arch_vcpu_ioctl_set_guest_debug(struct kvm_vcpu *vcpu,
+> >  void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
+> >  {
+> >       struct kvm_vcpu_csr *csr = &vcpu->arch.guest_csr;
+> > -     unsigned long *vsip = raw_cpu_ptr(vsip_shadow);
+> >
+> >       csr_write(CSR_VSSTATUS, csr->vsstatus);
+> >       csr_write(CSR_VSIE, csr->vsie);
+> > @@ -775,7 +772,6 @@ void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
+> >       csr_write(CSR_VSCAUSE, csr->vscause);
+> >       csr_write(CSR_VSTVAL, csr->vstval);
+> >       csr_write(CSR_VSIP, csr->vsip);
+> > -     *vsip = csr->vsip;
+> >       csr_write(CSR_VSATP, csr->vsatp);
+> >
+> >       kvm_riscv_stage2_update_hgatp(vcpu);
+> > @@ -843,26 +839,8 @@ static void kvm_riscv_check_vcpu_requests(struct kvm_vcpu *vcpu)
+> >  static void kvm_riscv_update_vsip(struct kvm_vcpu *vcpu)
+> >  {
+> >       struct kvm_vcpu_csr *csr = &vcpu->arch.guest_csr;
+> > -     unsigned long *vsip = raw_cpu_ptr(vsip_shadow);
+> > -
+> > -     if (*vsip != csr->vsip) {
+> > -             csr_write(CSR_VSIP, csr->vsip);
+> > -             *vsip = csr->vsip;
+> > -     }
+> > -}
+> > -
+> > -int kvm_riscv_setup_vsip(void)
+> > -{
+> > -     vsip_shadow = alloc_percpu(unsigned long);
+> > -     if (!vsip_shadow)
+> > -             return -ENOMEM;
+> >
+> > -     return 0;
+> > -}
+> > -
+> > -void kvm_riscv_cleanup_vsip(void)
+> > -{
+> > -     free_percpu(vsip_shadow);
+> > +     csr_write(CSR_VSIP, csr->vsip);
+> >  }
+> >
+> >  int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *run)
+> >
+>
