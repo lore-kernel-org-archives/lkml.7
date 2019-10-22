@@ -3,144 +3,186 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75D0ACA9EB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 20:34:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73D23CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 20:35:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4627221848
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 20:34:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3646621848
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 20:35:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aGkYnf6z"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="RzPdn86f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389497AbfJVUeo (ORCPT
+        id S1731863AbfJVUfO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 16:34:44 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:36329 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389407AbfJVUeh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 16:34:37 -0400
-Received: by mail-qt1-f195.google.com with SMTP id d17so14264028qto.3
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 13:34:36 -0700 (PDT)
+        Tue, 22 Oct 2019 16:35:14 -0400
+Received: from mail-eopbgr760059.outbound.protection.outlook.com ([40.107.76.59]:62979
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729810AbfJVUfO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 16:35:14 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=R08m2pNNv8J7oEFIVpTBd62bgz8ztAGCoSfktIyetGllnPy5IK1yBYq9akLESEJYbTiz8msUzvroysZnW2vzcEBCZT4HI2z7oirj/qkLr9Lv0l2uQJGZPFO1QUK1jP4H/i91UwAjx2JyIcub2BPfJbyA96BcYw5dme+aYf0ttXl3+U31kevxytWCq/AX/cMXWwViIOcpRicDwCOgqcvolteR3PVI+1gqvyR1esSBJos2VvQftwoTysCGZenYHXjuNz3kGGX9K0HJDkgGEJSsYVL4v25vkEW0qJiwZTLubKpGiKd68seB7F9lkjuBBCFdTsoWl9gqDNadb47MctCXFw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Yq82o3FgHVKRzVw1/5MctqnCCsJnOPGhbY5Y87iN/fc=;
+ b=XKFcHooh+8bBfFcFJBPDurRPXXtzHSQSOoFZN3nAs/Y4xYOQWUL/DGUGNKIrBpnk7vedbTa5SV0j85sLDuSNCuDIpr8V3WwPmDTuTerKUAW8nkwabjjXQwo3/Pv6DGxFi/D7rkHtu3r3C9JvIquTjJOCQWjtWlHD+HwZI0ZNN7QzJ21p+XiinjH/Vt43sitXh7IMJrDvKMWTcspNbgOp/uJ4xxYxL9pDhsvLHxvLya7Y/tpM0qbCeyyFXcAAZzlijwfzGwstsjhCRSRKP2AKfGtNw+XAq7dKm0iUuZvwDj6Oxatf9o6mlCiQKicgiEgd3H6uekrvKCzpUwgAy30lXA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=UTw/C9YOFOt2girMz7/HTweAfnMneRk1SahAwoeEi/8=;
-        b=aGkYnf6z5uRBHSkiivv6AM3qIXlIT5VCPXugOf2w1ms7hIEg+Uz/p4OQDtJ/C/avl2
-         N40dP786qDXUTRM6eF2Xn6o0OQJjAV250vcfoAxxYLL2TS5k18TvLX5TdK8jxS0FoetW
-         h11byvDgqKOwyVDvqkjFFxG3KQUpYzs0UcIwzD83t1lbOWMR8mGPRvTdfmeKHBsY9hsk
-         ChyXQif9WtkMentpyNrEb4QJj2wHAYaOdzrkP550Kqr0182q+oc3tr08V8n/bm9HdKLs
-         NGkdP7VtXme67OU/N6Qun1+Os1vvj0gu4bgzySU8Fnq9h0q9XiBR5sKLDAT0/C6/Ewm3
-         W+ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=UTw/C9YOFOt2girMz7/HTweAfnMneRk1SahAwoeEi/8=;
-        b=GKQC82juiz8IgpW4Xx6YSuL40x+PBvt6F2aANj+XSGN9Qm4qQaZ8mon7mhgYoMBlfy
-         dThomJ/8HDftETHIy7kD74cxSMAbDIP4okpbhlBpex/ipmdwlRIYKjLZ3ctJSv613N5D
-         uCZhazyMFSlpMy7qFocwy3lSdDTehF3n/2dV7Mgb6bdiQtpuROHFrD5QmZnrG2HMIXoX
-         gbT4H90J1RoiWrEiewCV/mjIuFqpxqPjyg/67zwnX4BM5SJbEQJSasouAZFhmt9QJJPZ
-         OBQDDE1RJIL+3x4KRxmiqkfrhJB2nCu2AelajvJ86b6o3t/nArZjahVTz06G7fhp0xq/
-         y1TQ==
-X-Gm-Message-State: APjAAAUQOUAEMLogIBkU1VAJx5VKcY2A6M3G8VgNczeTxVSfcHTGgw9e
-        FUVVDvefCTZCRP21f0IYh39gXA==
-X-Google-Smtp-Source: APXvYqwYMAtRE9EftUJJd2GrfOHrpZzFeCSNibUZXKvtjRPPVOMbJKVKX6Tq9tKu40aVZk1KfnMr9g==
-X-Received: by 2002:a0c:efcd:: with SMTP id a13mr5135070qvt.94.1571776475947;
-        Tue, 22 Oct 2019 13:34:35 -0700 (PDT)
-Received: from Thara-Work-Ubuntu.fios-router.home (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
-        by smtp.googlemail.com with ESMTPSA id r126sm8895038qke.98.2019.10.22.13.34.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 22 Oct 2019 13:34:34 -0700 (PDT)
-From:   Thara Gopinath <thara.gopinath@linaro.org>
-To:     mingo@redhat.com, peterz@infradead.org, ionela.voinescu@arm.com,
-        vincent.guittot@linaro.org, rui.zhang@intel.com,
-        edubezval@gmail.com, qperret@google.com
-Cc:     linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
-        javi.merino@kernel.org, daniel.lezcano@linaro.org
-Subject: [Patch v4 5/6] thermal/cpu-cooling: Update thermal pressure in case of a maximum frequency capping
-Date:   Tue, 22 Oct 2019 16:34:24 -0400
-Message-Id: <1571776465-29763-6-git-send-email-thara.gopinath@linaro.org>
-X-Mailer: git-send-email 2.1.4
-In-Reply-To: <1571776465-29763-1-git-send-email-thara.gopinath@linaro.org>
-References: <1571776465-29763-1-git-send-email-thara.gopinath@linaro.org>
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Yq82o3FgHVKRzVw1/5MctqnCCsJnOPGhbY5Y87iN/fc=;
+ b=RzPdn86fj5yvSui/Dn9sKEkawQaawDSN3nU1+ynltYNmOWxu7lD9iBkTycMwk3jxMTWPpyMzzJAISdSOEsl5A2NIu2ZIBcBf5WSN3yBEWMbzc75lZkBpGsmy+eJGsIzH2wViwkAwy+x+ZG3kEFlFTl62fVfKdkJwAAmjDGdMZEA=
+Received: from BN7PR12MB2628.namprd12.prod.outlook.com (20.176.178.20) by
+ BN7PR12MB2723.namprd12.prod.outlook.com (20.176.177.94) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2387.20; Tue, 22 Oct 2019 20:35:10 +0000
+Received: from BN7PR12MB2628.namprd12.prod.outlook.com
+ ([fe80::2115:dffc:44b6:e53a]) by BN7PR12MB2628.namprd12.prod.outlook.com
+ ([fe80::2115:dffc:44b6:e53a%6]) with mapi id 15.20.2347.029; Tue, 22 Oct 2019
+ 20:35:10 +0000
+From:   "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
+To:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
+CC:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bp@alien8.de" <bp@alien8.de>
+Subject: [PATCH v2 1/6] EDAC/amd64: Make struct amd64_family_type global
+Thread-Topic: [PATCH v2 1/6] EDAC/amd64: Make struct amd64_family_type global
+Thread-Index: AQHViRgyvXbCdcnQ7Uid7ACBemIPaA==
+Date:   Tue, 22 Oct 2019 20:35:09 +0000
+Message-ID: <20191022203448.13962-2-Yazen.Ghannam@amd.com>
+References: <20191022203448.13962-1-Yazen.Ghannam@amd.com>
+In-Reply-To: <20191022203448.13962-1-Yazen.Ghannam@amd.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SN4PR0501CA0024.namprd05.prod.outlook.com
+ (2603:10b6:803:40::37) To BN7PR12MB2628.namprd12.prod.outlook.com
+ (2603:10b6:408:30::20)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Yazen.Ghannam@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [165.204.78.2]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 8aa48e0a-28f7-424d-18a8-08d7572f54cf
+x-ms-traffictypediagnostic: BN7PR12MB2723:
+x-ms-exchange-purlcount: 1
+x-ld-processed: 3dd8961f-e488-4e60-8e11-a82d994e183d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BN7PR12MB272343BCFDCED527778ADD46F8680@BN7PR12MB2723.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2733;
+x-forefront-prvs: 01986AE76B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(39860400002)(366004)(396003)(376002)(199004)(189003)(6306002)(476003)(2616005)(26005)(102836004)(186003)(966005)(6436002)(81166006)(81156014)(52116002)(99286004)(50226002)(6512007)(11346002)(486006)(446003)(8936002)(36756003)(6486002)(305945005)(8676002)(7736002)(2501003)(14454004)(5660300002)(478600001)(4326008)(25786009)(2351001)(316002)(2906002)(54906003)(6116002)(86362001)(256004)(66066001)(1076003)(5640700003)(66946007)(6916009)(6506007)(66476007)(3846002)(66446008)(71190400001)(71200400001)(64756008)(66556008)(386003)(76176011);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR12MB2723;H:BN7PR12MB2628.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: iAKOe4eDL9JpaUInupjmvnYs0T8OXW28DKsNDIE8leLn2XqhyFA7VI4QuiZEIYxqRTHROpP0fnE9Yr9IVviANlLj0vpQ39zL2f8pS04850zvi4CWcLrY0HG5WjKwsBYEG5VcTToqTffuh9LINjzhT0XequjfFRtC8s7GvJlUqa3By/7+Dx2z/eHx57SntNXjLGzm7hqBeZ4TFu06+oHnf0avVcgjlVwW+C49j3+FoxlwfFByDRKomNIiou9VRMCRDi2LgfQwTSAnj7UU97kOS2xGRPHLxNKENVKJH96BR43w/UbFKhl0zmFNOvQ9kfCCKuIBhThWhwRg7PmZCMCr/LnPw5p4mhRZU8aTn0CRJfRNEs0PgKlDbf8hxTVSI5CqQXbKYYg/7Nzetb57K1wUKMojAx8CRfcsj9ehqBIiee900KdjuzMmForklx6XxHAuejc3BAiqTvhce2HC1SnETKumz+WaVGFL50E1/VdgHfc=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8aa48e0a-28f7-424d-18a8-08d7572f54cf
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Oct 2019 20:35:09.7010
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: vFkoY54KAaFROg6KPvQLhdDDMKw9MF4IwLPfBOU+P50+oYOy5bgtnXeOniDmxe7AG3IcMKLEC8CVS/qc9TS9NQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR12MB2723
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thermal governors can request for a cpu's maximum supported frequency
-to be capped in case of an overheat event. This in turn means that the
-maximum capacity available for tasks to run on the particular cpu is
-reduced. Delta between the original maximum capacity and capped
-maximum capacity is known as thermal pressure. Enable cpufreq cooling
-device to update the thermal pressure in event of a capped
-maximum frequency.
+From: Yazen Ghannam <yazen.ghannam@amd.com>
 
-Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+The struct amd64_family_type doesn't change between multiple nodes and
+instances of the modules, so make it global.
+
+Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
 ---
- drivers/thermal/cpu_cooling.c | 31 +++++++++++++++++++++++++++++--
- 1 file changed, 29 insertions(+), 2 deletions(-)
+Link:
+https://lkml.kernel.org/r/20191018153114.39378-2-Yazen.Ghannam@amd.com
 
-diff --git a/drivers/thermal/cpu_cooling.c b/drivers/thermal/cpu_cooling.c
-index 391f397..2e6a979 100644
---- a/drivers/thermal/cpu_cooling.c
-+++ b/drivers/thermal/cpu_cooling.c
-@@ -218,6 +218,23 @@ static u32 cpu_power_to_freq(struct cpufreq_cooling_device *cpufreq_cdev,
+v1 -> v2:
+* No change.
+
+rfc -> v1:
+* New patch based on suggestion from Boris.
+
+ drivers/edac/amd64_edac.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
+index c1d4536ae466..b9a712819c68 100644
+--- a/drivers/edac/amd64_edac.c
++++ b/drivers/edac/amd64_edac.c
+@@ -16,6 +16,8 @@ module_param(ecc_enable_override, int, 0644);
+=20
+ static struct msr __percpu *msrs;
+=20
++static struct amd64_family_type *fam_type;
++
+ /* Per-node stuff */
+ static struct ecc_settings **ecc_stngs;
+=20
+@@ -3278,8 +3280,7 @@ f17h_determine_edac_ctl_cap(struct mem_ctl_info *mci,=
+ struct amd64_pvt *pvt)
+ 	}
  }
- 
- /**
-+ * update_sched_max_capacity - update scheduler about change in cpu
-+ *					max frequency.
-+ * @policy - cpufreq policy whose max frequency is capped.
-+ */
-+static void update_sched_max_capacity(struct cpumask *cpus,
-+				      unsigned int cur_max_freq,
-+				      unsigned int max_freq)
-+{
-+	int cpu;
-+	unsigned long capacity = (cur_max_freq << SCHED_CAPACITY_SHIFT) /
-+				  max_freq;
-+
-+	for_each_cpu(cpu, cpus)
-+		update_thermal_pressure(cpu, capacity);
-+}
-+
-+/**
-  * get_load() - get load for a cpu since last updated
-  * @cpufreq_cdev:	&struct cpufreq_cooling_device for this cpu
-  * @cpu:	cpu number
-@@ -320,6 +337,7 @@ static int cpufreq_set_cur_state(struct thermal_cooling_device *cdev,
- 				 unsigned long state)
+=20
+-static void setup_mci_misc_attrs(struct mem_ctl_info *mci,
+-				 struct amd64_family_type *fam)
++static void setup_mci_misc_attrs(struct mem_ctl_info *mci)
  {
- 	struct cpufreq_cooling_device *cpufreq_cdev = cdev->devdata;
-+	int ret;
- 
- 	/* Request state should be less than max_level */
- 	if (WARN_ON(state > cpufreq_cdev->max_level))
-@@ -331,8 +349,17 @@ static int cpufreq_set_cur_state(struct thermal_cooling_device *cdev,
- 
- 	cpufreq_cdev->cpufreq_state = state;
- 
--	return dev_pm_qos_update_request(&cpufreq_cdev->qos_req,
--				cpufreq_cdev->freq_table[state].frequency);
-+	ret = dev_pm_qos_update_request
-+				(&cpufreq_cdev->qos_req,
-+				 cpufreq_cdev->freq_table[state].frequency);
-+
-+	if (ret > 0)
-+		update_sched_max_capacity
-+				(cpufreq_cdev->policy->cpus,
-+				 cpufreq_cdev->freq_table[state].frequency,
-+				 cpufreq_cdev->policy->cpuinfo.max_freq);
-+
-+	return ret;
- }
- 
- /**
--- 
-2.1.4
+ 	struct amd64_pvt *pvt =3D mci->pvt_info;
+=20
+@@ -3298,7 +3299,7 @@ static void setup_mci_misc_attrs(struct mem_ctl_info =
+*mci,
+=20
+ 	mci->edac_cap		=3D determine_edac_cap(pvt);
+ 	mci->mod_name		=3D EDAC_MOD_STR;
+-	mci->ctl_name		=3D fam->ctl_name;
++	mci->ctl_name		=3D fam_type->ctl_name;
+ 	mci->dev_name		=3D pci_name(pvt->F3);
+ 	mci->ctl_page_to_phys	=3D NULL;
+=20
+@@ -3312,8 +3313,6 @@ static void setup_mci_misc_attrs(struct mem_ctl_info =
+*mci,
+  */
+ static struct amd64_family_type *per_family_init(struct amd64_pvt *pvt)
+ {
+-	struct amd64_family_type *fam_type =3D NULL;
+-
+ 	pvt->ext_model  =3D boot_cpu_data.x86_model >> 4;
+ 	pvt->stepping	=3D boot_cpu_data.x86_stepping;
+ 	pvt->model	=3D boot_cpu_data.x86_model;
+@@ -3420,7 +3419,6 @@ static void compute_num_umcs(void)
+ static int init_one_instance(unsigned int nid)
+ {
+ 	struct pci_dev *F3 =3D node_to_amd_nb(nid)->misc;
+-	struct amd64_family_type *fam_type =3D NULL;
+ 	struct mem_ctl_info *mci =3D NULL;
+ 	struct edac_mc_layer layers[2];
+ 	struct amd64_pvt *pvt =3D NULL;
+@@ -3497,7 +3495,7 @@ static int init_one_instance(unsigned int nid)
+ 	mci->pvt_info =3D pvt;
+ 	mci->pdev =3D &pvt->F3->dev;
+=20
+-	setup_mci_misc_attrs(mci, fam_type);
++	setup_mci_misc_attrs(mci);
+=20
+ 	if (init_csrows(mci))
+ 		mci->edac_cap =3D EDAC_FLAG_NONE;
+--=20
+2.17.1
 
