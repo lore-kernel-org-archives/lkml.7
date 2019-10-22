@@ -2,154 +2,128 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ABA7CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:12:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3241CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:13:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 525E2214B2
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:12:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA56E21872
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:13:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="bp60qwlb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KNj120IA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388982AbfJVMMH (ORCPT
+        id S2388997AbfJVMNM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 08:12:07 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:53088 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388960AbfJVMMG (ORCPT
+        Tue, 22 Oct 2019 08:13:12 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:42464 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388106AbfJVMNM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 08:12:06 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9MC8tCn113199;
-        Tue, 22 Oct 2019 12:11:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : references : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=MFJzMYNcFvDsXyams3WVY/szvOVOHehPEPgrKljIzhc=;
- b=bp60qwlbt9nzMsjtdt9HiuUcE5bkuVIY3/S6BWCxKWwdv9U9/lhQcG/A/+aeudq0GXmH
- nt/k/rQKYyVRl3Ss2EdxNXrTuxxhYNllr6aPxugzRRNupLwst3z50/Z8E6YtnTmlvqOm
- IjNEQiiy1ZlKklOjSEACe05aD4iH1vtIhuZuDXVLsVtgHxUTssn7ldu2ja6F8PdYzw8A
- Qw7FcjPj9U7XU6n02Npi3CrqoZvXgGept8ESk7nljs2C44Gs/uIKqAOFuKT9HO448cbF
- oxve13v/F6Ywc+nulsOX6sJXlfqME/fdUFb9LtKgvYHlrdk1xXqPSYGWUVHlsrMlL+Mf IQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2vqtepp5pt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 22 Oct 2019 12:11:33 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9MC8J4q100829;
-        Tue, 22 Oct 2019 12:11:33 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2vrc01rnte-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 22 Oct 2019 12:11:33 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9MCBVdT031690;
-        Tue, 22 Oct 2019 12:11:31 GMT
-Received: from [10.175.28.77] (/10.175.28.77)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 22 Oct 2019 05:11:31 -0700
-Subject: Re: email as a bona fide git transport
-From:   Vegard Nossum <vegard.nossum@oracle.com>
-To:     Willy Tarreau <w@1wt.eu>, "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     Santiago Torres Arias <santiago@nyu.edu>,
-        workflows@vger.kernel.org, Git Mailing List <git@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
-        Eric Wong <e@80x24.org>
-References: <b9fb52b8-8168-6bf0-9a72-1e6c44a281a5@oracle.com>
- <20191016111009.GE13154@1wt.eu>
- <20191016144517.giwip4yuaxtcd64g@LykOS.localdomain>
- <56664222-6c29-09dc-ef78-7b380b113c4a@oracle.com>
- <20191018161547.GG21137@mit.edu>
- <de49fe5e-85cb-9fb0-f9f4-c294d72e356c@oracle.com>
- <20191018191456.GI21137@mit.edu> <20191020031716.GA17475@1wt.eu>
- <1a259d8d-b3d1-b64e-07c3-ba143b42c442@oracle.com>
-Message-ID: <de6dd8b5-5c28-d0b2-d3fc-e72a6d643105@oracle.com>
-Date:   Tue, 22 Oct 2019 14:11:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 22 Oct 2019 08:13:12 -0400
+Received: by mail-io1-f65.google.com with SMTP id i26so10760096iog.9;
+        Tue, 22 Oct 2019 05:13:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=7VUSL4glh9tdmGltrbXAxLhst/cC64H17TVs7Wd2ISI=;
+        b=KNj120IAsn18ftYPNYtGAMO522hDC71q+lnhMtWOYXoXlDsQo9QgcVuidnJk/ml7tr
+         UbqrQwC1U8wazJ7pHfzxOF7LsixYPLXxRE9/JTcNA33V/m2jTWO+KAELTbrPE8q0D6HW
+         S9+0vi0V/9gTXRujRZeQ8kuvFFrKCsEWVB5YHsGdr//QG36RtI8w7Ivuc3u3oSfL7y0U
+         07cTguxrdcpKQNMzG+oFAzr+Ziun2e0ahAEXELyZvsQxszVck3Pxet4kl1tSkrZdOCHp
+         z0Jy+6K1Gkapib2IaHiK6EzZNdk0P8i9rV92PT0J1kYTE863bAcw/RHuDUMxThwvDmiy
+         imCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=7VUSL4glh9tdmGltrbXAxLhst/cC64H17TVs7Wd2ISI=;
+        b=AHDOiZeYzU4MPkOHoXOO0vH/+DIHujzqaI8diCJGXU4j0MsjLjd/pa4ycqUeNzKgeP
+         saHkRriQTVpqOcKobXdUI6nkDvuYLxDhKYaUSAI0hN9OSQX6iNQJZcyA/Hczcod19V5H
+         WmlbzSjGeQ16xOFnGq2c3M1NndvbeYW0sy8OGE+sN634XkJJcBZKBbLsClTZLs6V8TL4
+         jQwNwCT8y0vICEs0Njv6eOSGz7O6LYZQ/xi3UWHObOAKjDgGAQurWQDdAOvV76ra7+bX
+         SKYeTJ0jA5j7Xt8qxgHo4u09L/UphqL8v5Df99LBhsLqYy1iyis2S/52vV6kEPf8bOhH
+         O05Q==
+X-Gm-Message-State: APjAAAX+Il5atyqjZDHhNPeGO++AoQ1OJipAEPaaVpS/Ra6odzXPzqUa
+        b/XixEDpYwC93152KBqfa3IN1HceH6VHssd9rw0=
+X-Google-Smtp-Source: APXvYqz9BuIKcbppibeFWeJbwe4oRUtRoe+yhYAEZFYke6YfzSl3wycLo6ueyYsgQWQ8Is+1lpwo08JP+zHbKn3n89w=
+X-Received: by 2002:a02:92c9:: with SMTP id c9mr3507699jah.0.1571746391225;
+ Tue, 22 Oct 2019 05:13:11 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1a259d8d-b3d1-b64e-07c3-ba143b42c442@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9417 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910220110
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9417 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910220110
+References: <20190828150037.2640-1-aford173@gmail.com> <20190905230443.GA52127@atomide.com>
+ <CAHCN7xL0fbr=Sv+b=0AuGB1PPhAAFdAFLEd_iBM+ZMTkUw5sHQ@mail.gmail.com>
+ <CAHCN7xL-Gfxe0qF5w7BUsHnyhcNNpmCnchdKErnmiqggXfsLWw@mail.gmail.com>
+ <20190909134033.s26eiurpat3iekse@pali> <20190909163543.GQ52127@atomide.com>
+In-Reply-To: <20190909163543.GQ52127@atomide.com>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Tue, 22 Oct 2019 07:13:00 -0500
+Message-ID: <CAHCN7xJjMNOLT5oPn8CArApM5b2ksPon8eALq=gUi0ZqoLjGHQ@mail.gmail.com>
+Subject: Re: [RFC] ARM: omap3: Enable HWMODS for HW Random Number Generator
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Tero Kristo <t-kristo@ti.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Adam Ford <adam.ford@logicpd.com>,
+        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Paul Walmsley <paul@pwsan.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/20/19 8:28 AM, Vegard Nossum wrote:
-> 
-> On 10/20/19 5:17 AM, Willy Tarreau wrote:
->> On Fri, Oct 18, 2019 at 03:14:56PM -0400, Theodore Y. Ts'o wrote:
->>> On Fri, Oct 18, 2019 at 06:50:51PM +0200, Vegard Nossum wrote:
->>>> The problem I ran into with putting the metadata at the end was
->>>> detecting where the diff ends. A comment in 'git apply' suggested that
->>>> detecting the difference between "--" as a diff/signature separator and
->>>> as part of the diff is nontrivial in the sense that you need to 
->>>> actually
->>>> do some parsing and keep track of hunk sizes.
->>>
->>> Could we cheat by having "git format-patch" add a "Diff-size" in the
->>> header which gives the number of lines in the diff so git am can just
->>> count lines to find the Trailer section?
->>
->> Be careful with this, it starts like this and ends up with non-editable
->> patches. I'd rather have git-am use best-effort detection of the end.
-> 
-> Expect filesystem developers to come up with a format that uses extents ;-)
-> 
->> Also when dealing with stable backports, I've done a lot of
->> "cat foo.diff >> bar.patch" to fixup some patches in which I just had
->> to move some parts around. Having to count lines and edit a counter
->> somewhere is going to become really painful.
-> 
-> I almost have some new patches ready for putting the metadata after the
-> patch using a very bare-bones diff parser (it's actually not that bad),
-> I just need to fix a few corner cases that are causing breakage in the
-> git test suite.
+On Mon, Sep 9, 2019 at 11:35 AM Tony Lindgren <tony@atomide.com> wrote:
+>
+> * Pali Roh=C3=A1r <pali.rohar@gmail.com> [190909 13:41]:
+> > On Monday 09 September 2019 08:37:09 Adam Ford wrote:
+> > > I applied this on 5.3 and it is working.  I assume the same is true i=
+n for-next.
+>
+> Hmm I noticed I stopped getting RNG data after several rmmod modprobe
+> cycles, or several hd /dev/random reads. Anybody else seeing that?
+>
+> > > Do you want to submit a formal patch?  I  can mark it as 'tested-by'
+> > > This really helps speed up the startup sequence on boards with sshd
+> > > because it delays for nearly 80 seconds waiting for entropy without
+> > > the hwrng.
+> >
+> > Hi! When applying a patch, could you please disable this rng for n900?
+> >
+> > In omap3-n900.dts for rng should be status =3D "disabled" (as Tony alre=
+ady
+> > wrote), similarly like for aes.
+>
+> Yeah I'll post a proper patch after -rc1.
 
-I sent v2 of the patches (with metadata _after_ the diff) to the git
-list here:
+Tony,
 
-https://public-inbox.org/git/20191022114518.32055-1-vegard.nossum@oracle.com/T/#u
+I am just following up on this.  Without the HWRNG there are some
+tools and daemons like sshd which wait a long time at startup.  The
+patch you sent really helps speed up the startup time in these cases.
+At least in my case, it shaves 80 seconds off by eliminating the
+delays.
 
-As I wrote in there, we could already today start using
+Do you think you'll have time to post a more formal patch?  If not, I
+can do it.  I just don't know which mailing list is the more
+appropriate.  I was able to verity your patch on a DM3730 and OMAP3530
 
-   git am --message-id
+Thanks,
 
-when applying patches and this would provide something that a bot could
-annotate with git notes pointing to lore/LKML/LWN/whatever. I think that
-would already be a pretty nice improvement over today's situation.
-
-Sadly, since the beginning of 2018, this was only used for a measly
-~0.14% of all non-merge commits in the kernel:
-
-$ git rev-list --count --no-merges --since='2018-01-01' --grep 
-'Message-Id: ' linus/master
-178
-
-$ git rev-list --count --no-merges --since='2018-01-01' linus/master
-130777
-
-So how can we spread the word about --message-id and get maintainers to
-actually use it? I don't suppose it's reasonable to change the 'git am'
-default setting?
+adam
 
 
-Vegard
+>
+> Regards,
+>
+> Tony
