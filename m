@@ -2,94 +2,122 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA6D0CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:33:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F09BCCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:33:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C154321872
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:33:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Rg8YnUWi"
+	by mail.kernel.org (Postfix) with ESMTP id CF08D218AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:33:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389106AbfJVMd3 (ORCPT
+        id S2389120AbfJVMd6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 08:33:29 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:59072 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388095AbfJVMd3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 08:33:29 -0400
-Received: from zn.tnic (p200300EC2F0D77000D5BF9E7EE486C9A.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:7700:d5b:f9e7:ee48:6c9a])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D6CD11EC0C83;
-        Tue, 22 Oct 2019 14:33:27 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1571747608;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=TOK7ihLmgboiz3S90Wstv50WNK+dthXs+4GiX5bvbg8=;
-        b=Rg8YnUWiDfyx9XFAaV3nUX1jtnMyr6trZuSkaxUaDGdrWDKuQsymtSPvwceAn9woRzzfGd
-        k/AuGe49YQxbt7hAHDZMsltsn0Vr0fkExPZT6dP1+9l24acOZum/iLN6wxAvFLG76UAytc
-        NVarrKcoDbiFzxx7o1dZuN4x50tl21w=
-Date:   Tue, 22 Oct 2019 14:33:18 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Lei Wang <leiwang_git@outlook.com>
-Cc:     James Morse <james.morse@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "hangl@microsoft.com" <hangl@microsoft.com>,
-        "lewan@microsoft.com" <lewan@microsoft.com>,
-        "ruizhao@microsoft.com" <ruizhao@microsoft.com>,
-        "scott.branden@broadcom.com" <scott.branden@broadcom.com>,
-        "yuqing.shen@broadcom.com" <yuqing.shen@broadcom.com>,
-        "ray.jui@broadcom.com" <ray.jui@broadcom.com>
-Subject: Re: [PATCH v6 1/2] dt-bindings: edac: arm-dmc520.txt
-Message-ID: <20191022123318.GD31700@zn.tnic>
-References: <BY5PR04MB6599EAA659A53B2331CB812586890@BY5PR04MB6599.namprd04.prod.outlook.com>
- <20190923161015.GI15355@zn.tnic>
- <e2b9cd68-abaa-bdcd-cc56-cca285272569@outlook.com>
- <41637032-a308-9a92-1b49-cb51af2580f8@outlook.com>
- <BY5PR04MB65996A0CEB37001C763B248C866C0@BY5PR04MB6599.namprd04.prod.outlook.com>
- <1ae9a840-d5b6-ccd6-8481-d43665b4411b@arm.com>
- <BY5PR04MB659953E22E846D0BF4384D0086690@BY5PR04MB6599.namprd04.prod.outlook.com>
+        Tue, 22 Oct 2019 08:33:58 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:51226 "EHLO foss.arm.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S2388512AbfJVMd6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 08:33:58 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D49D215BF;
+        Tue, 22 Oct 2019 05:33:36 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5A5DA3F71F;
+        Tue, 22 Oct 2019 05:33:32 -0700 (PDT)
+Date:   Tue, 22 Oct 2019 13:33:30 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Marco Elver <elver@google.com>
+Cc:     akiyks@gmail.com, stern@rowland.harvard.edu, glider@google.com,
+        parri.andrea@gmail.com, andreyknvl@google.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, arnd@arndb.de, boqun.feng@gmail.com,
+        bp@alien8.de, dja@axtens.net, dlustig@nvidia.com,
+        dave.hansen@linux.intel.com, dhowells@redhat.com,
+        dvyukov@google.com, hpa@zytor.com, mingo@redhat.com,
+        j.alglave@ucl.ac.uk, joel@joelfernandes.org, corbet@lwn.net,
+        jpoimboe@redhat.com, luc.maranget@inria.fr, npiggin@gmail.com,
+        paulmck@linux.ibm.com, peterz@infradead.org, tglx@linutronix.de,
+        will@kernel.org, kasan-dev@googlegroups.com,
+        linux-arch@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-efi@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
+Subject: Re: [PATCH v2 7/8] locking/atomics, kcsan: Add KCSAN instrumentation
+Message-ID: <20191022123329.GC11583@lakrids.cambridge.arm.com>
+References: <20191017141305.146193-1-elver@google.com>
+ <20191017141305.146193-8-elver@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <BY5PR04MB659953E22E846D0BF4384D0086690@BY5PR04MB6599.namprd04.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191017141305.146193-8-elver@google.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 05:36:09PM +0000, Lei Wang wrote:
-> Is there some guideline on what email addresses are liked and not
-> liked? Thanks!
+On Thu, Oct 17, 2019 at 04:13:04PM +0200, Marco Elver wrote:
+> This adds KCSAN instrumentation to atomic-instrumented.h.
+> 
+> Signed-off-by: Marco Elver <elver@google.com>
+> ---
+> v2:
+> * Use kcsan_check{,_atomic}_{read,write} instead of
+>   kcsan_check_{access,atomic}.
+> * Introduce __atomic_check_{read,write} [Suggested by Mark Rutland].
+> ---
+>  include/asm-generic/atomic-instrumented.h | 393 +++++++++++-----------
+>  scripts/atomic/gen-atomic-instrumented.sh |  17 +-
+>  2 files changed, 218 insertions(+), 192 deletions(-)
 
-We have a document which talks about mail clients and not so much about
-mail servers:
+The script changes and generated code look fine to me, so FWIW:
 
-https://www.kernel.org/doc/html/latest/process/email-clients.html
+Reviewed-by: Mark Rutland <mark.rutland@arm.com>
 
-but in general, use a linux system to create and send your patches and
-avoid Exchange for patches because it is notorious for mangling them.
+Thanks,
+Mark.
 
-Most kernel people I know use emacs or mutt with an imap account through
-which they shuffle mail with fetchmail etc.
-
-HTH.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+> diff --git a/scripts/atomic/gen-atomic-instrumented.sh b/scripts/atomic/gen-atomic-instrumented.sh
+> index e09812372b17..8b8b2a6f8d68 100755
+> --- a/scripts/atomic/gen-atomic-instrumented.sh
+> +++ b/scripts/atomic/gen-atomic-instrumented.sh
+> @@ -20,7 +20,7 @@ gen_param_check()
+>  	# We don't write to constant parameters
+>  	[ ${type#c} != ${type} ] && rw="read"
+>  
+> -	printf "\tkasan_check_${rw}(${name}, sizeof(*${name}));\n"
+> +	printf "\t__atomic_check_${rw}(${name}, sizeof(*${name}));\n"
+>  }
+>  
+>  #gen_param_check(arg...)
+> @@ -107,7 +107,7 @@ cat <<EOF
+>  #define ${xchg}(ptr, ...)						\\
+>  ({									\\
+>  	typeof(ptr) __ai_ptr = (ptr);					\\
+> -	kasan_check_write(__ai_ptr, ${mult}sizeof(*__ai_ptr));		\\
+> +	__atomic_check_write(__ai_ptr, ${mult}sizeof(*__ai_ptr));		\\
+>  	arch_${xchg}(__ai_ptr, __VA_ARGS__);				\\
+>  })
+>  EOF
+> @@ -148,6 +148,19 @@ cat << EOF
+>  
+>  #include <linux/build_bug.h>
+>  #include <linux/kasan-checks.h>
+> +#include <linux/kcsan-checks.h>
+> +
+> +static inline void __atomic_check_read(const volatile void *v, size_t size)
+> +{
+> +	kasan_check_read(v, size);
+> +	kcsan_check_atomic_read(v, size);
+> +}
+> +
+> +static inline void __atomic_check_write(const volatile void *v, size_t size)
+> +{
+> +	kasan_check_write(v, size);
+> +	kcsan_check_atomic_write(v, size);
+> +}
+>  
+>  EOF
+>  
+> -- 
+> 2.23.0.866.gb869b98d4c-goog
+> 
