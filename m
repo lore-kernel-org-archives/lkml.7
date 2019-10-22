@@ -2,104 +2,119 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A37CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:21:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 746BECA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:21:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1569E21783
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:21:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B48E2084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:21:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PTE3mUKB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FYSzsZif"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389325AbfJVQV4 (ORCPT
+        id S2389388AbfJVQV6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 12:21:56 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:60160 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388850AbfJVQVz (ORCPT
+        Tue, 22 Oct 2019 12:21:58 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:42459 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388850AbfJVQV5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 12:21:55 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9MGLnv5056454;
-        Tue, 22 Oct 2019 11:21:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571761309;
-        bh=DD73lBbCr3Pa+uKFhQsH89wix/dQZe17+r9X7rL61Nk=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=PTE3mUKBxTYrv8vEN29J+VjZgu2ZqG19zMlWGuGWF7kyWTV8K7qApbeAUziO998ND
-         v6HID/tjLT5YDNXXgG1N/o5okKxjg0XAGmprFJU3+ugztHixkZvMwZ4Y5/kBQjljJh
-         jyyJNaTKhd1WLJAgnq6fJrr0dyyjkTRS+DYbs+UQ=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9MGLn94063952
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 22 Oct 2019 11:21:49 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 22
- Oct 2019 11:21:39 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 22 Oct 2019 11:21:39 -0500
-Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with SMTP id x9MGLYN0005740;
-        Tue, 22 Oct 2019 11:21:34 -0500
-Date:   Tue, 22 Oct 2019 11:21:34 -0500
-From:   Benoit Parrot <bparrot@ti.com>
-To:     Tony Lindgren <tony@atomide.com>
-CC:     Tero Kristo <t-kristo@ti.com>, Rob Herring <robh+dt@kernel.org>,
-        <linux-omap@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [Patch 1/3] ARM: dts: am43xx: add support for clkout1 clock
-Message-ID: <20191022162134.fpawonjdjvd5kxza@ti.com>
-References: <20191016184954.14048-1-bparrot@ti.com>
- <20191016184954.14048-2-bparrot@ti.com>
- <20191022154816.GO5610@atomide.com>
+        Tue, 22 Oct 2019 12:21:57 -0400
+Received: by mail-lj1-f196.google.com with SMTP id u4so3719859ljj.9
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 09:21:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WAmIOUJQL3AqxKJr+gmH9vSIN+RyG3cvJyazjbmRq6M=;
+        b=FYSzsZifEEp6JUGLe9YbQHgByfHvJTEvCS5RxjeXhl/zcBa47wVJk1Nd4vV5ZQGNGc
+         +vnOqM8BLGBLLq3HuTODGzsGjjhMNa0xdHy0Zzv/2nk9cvP9IIz9zFQkM7AZp/kHbEZI
+         oB6/JlnMH4hUJUg91uswK28Eh6gIvn49ZJ2nMHtbGz8au+3vSHt7jjoKq2KXfEni4JsG
+         4FAkYIvjnr6ehHLZzZxMYaQvmoHa8DK2BlegJoySoEVdnyAclyJg5xnWhXAu1TxBdAQZ
+         A7pTEq6TgM0TwBGHw4BraQmffd/NjtlHtl5Eit6Qs6pErs4gtnxBOua4OhbPhVhGw+IZ
+         oZQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WAmIOUJQL3AqxKJr+gmH9vSIN+RyG3cvJyazjbmRq6M=;
+        b=hGMdgWFDwdLtdLJKo2Km+2BXb9OJG8Tf9AQ8r9HHEcFQ9IpgSt+FQCxoOJd8JToba9
+         1lOrGYPi9i/iXTbZv1Do4O1YR536AHsSVI8+L6SeZGdHeMEGv82YEsm/xkHcj219ypoY
+         a2MZWpBkIUHTZ/DsoobeObUyg3Dbm9joJueEEnXI6o6JJ+PG7cwOh+HOsbtoctiXRtSe
+         kBgXEfsN2gAKZTtUjpiXVG/floy4ZBSfBFSMjw7r3o1me8awMCdd8EC/pcczEy7chogS
+         9HidC3MxrR2i+9G66BxHoqNzcHPUadLqqhrX3BizM0qN3sSe/oTG9ijSGXaJmTR6wjV0
+         UUxQ==
+X-Gm-Message-State: APjAAAWX3u7TJfygiQHWe1iJoffcJMm/cunLj7Dri85hvvglhvQ7aHcH
+        sB0+fUkk3quOqo+CUsgrKr03Ncwt
+X-Google-Smtp-Source: APXvYqzFVOA6vzn1dAYsPMSZHUGU2XqqWVZIWewYHpxeG9rkDjgIvYd4LBvQMuL6lLiozIMmwnMSbw==
+X-Received: by 2002:a2e:7404:: with SMTP id p4mr6605735ljc.47.1571761315303;
+        Tue, 22 Oct 2019 09:21:55 -0700 (PDT)
+Received: from localhost.localdomain (78-63-27-146.static.zebra.lt. [78.63.27.146])
+        by smtp.gmail.com with ESMTPSA id o13sm7595118ljh.35.2019.10.22.09.21.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Oct 2019 09:21:54 -0700 (PDT)
+From:   David Abdurachmanov <david.abdurachmanov@gmail.com>
+X-Google-Original-From: David Abdurachmanov <david.abdurachmanov@sifive.com>
+To:     Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        "Stefan O'Rear" <sorear2@gmail.com>,
+        David Abdurachmanov <david.abdurachmanov@sifive.com>,
+        Alexandre Ghiti <alex@ghiti.fr>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     david.abdurachmanov@gmail.com
+Subject: [PATCH] riscv: fix fs/proc/kcore.c compilation with sparsemem enabled
+Date:   Tue, 22 Oct 2019 19:21:35 +0300
+Message-Id: <20191022162136.19076-1-david.abdurachmanov@sifive.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20191022154816.GO5610@atomide.com>
-User-Agent: NeoMutt/20171215
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tony Lindgren <tony@atomide.com> wrote on Tue [2019-Oct-22 08:48:16 -0700]:
-> * Benoit Parrot <bparrot@ti.com> [191016 18:47]:
-> > --- a/arch/arm/boot/dts/am43xx-clocks.dtsi
-> > +++ b/arch/arm/boot/dts/am43xx-clocks.dtsi
-> > @@ -704,6 +704,60 @@
-> >  		ti,bit-shift = <8>;
-> >  		reg = <0x2a48>;
-> >  	};
-> > +
-> > +	clkout1_osc_div_ck: clkout1_osc_div_ck {
-> > +		#clock-cells = <0>;
-> > +		compatible = "ti,divider-clock";
-> > +		clocks = <&sys_clkin_ck>;
-> > +		ti,bit-shift = <20>;
-> > +		ti,max-div = <4>;
-> > +		reg = <0x4100>;
-> > +	};
-> 
-> Here too please describe why the clock names are not generic.
+Failed to compile Fedora/RISCV kernel (5.4-rc3+) with sparsemem enabled:
 
-Tero originally had this patch in the kernel so this is somewhat of a
-revert. Since these "clock" were removed. If the name syntax is no longer
-valid for some reason, then I will need a little more informations to
-proceed.
+fs/proc/kcore.c: In function 'read_kcore':
+fs/proc/kcore.c:510:8: error: implicit declaration of function 'kern_addr_valid'; did you mean 'virt_addr_valid'? [-Werror=implicit-function-declaration]
+  510 |    if (kern_addr_valid(start)) {
+      |        ^~~~~~~~~~~~~~~
+      |        virt_addr_valid
 
-Tero, can you assist here?
+Looking at other architectures I don't see kern_addr_valid being guarded by
+CONFIG_FLATMEM.
 
-Benoit
+Fixes: d95f1a542c3d ("RISC-V: Implement sparsemem")
+Signed-off-by: David Abdurachmanov <david.abdurachmanov@sifive.com>
+Tested-by: David Abdurachmanov <david.abdurachmanov@sifive.com>
+---
+ arch/riscv/include/asm/pgtable.h | 2 --
+ 1 file changed, 2 deletions(-)
 
-> 
-> Regards,
-> 
-> Tony
+diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
+index 42292d99cc74..7110879358b8 100644
+--- a/arch/riscv/include/asm/pgtable.h
++++ b/arch/riscv/include/asm/pgtable.h
+@@ -428,9 +428,7 @@ static inline int ptep_clear_flush_young(struct vm_area_struct *vma,
+ #define __pte_to_swp_entry(pte)	((swp_entry_t) { pte_val(pte) })
+ #define __swp_entry_to_pte(x)	((pte_t) { (x).val })
+ 
+-#ifdef CONFIG_FLATMEM
+ #define kern_addr_valid(addr)   (1) /* FIXME */
+-#endif
+ 
+ extern void *dtb_early_va;
+ extern void setup_bootmem(void);
+-- 
+2.21.0
+
