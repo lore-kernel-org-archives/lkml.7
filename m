@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3298FCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:12:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07218CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:12:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0784D20684
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:12:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C21F721928
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:12:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733094AbfJVRMK (ORCPT
+        id S1733108AbfJVRMM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 13:12:10 -0400
+        Tue, 22 Oct 2019 13:12:12 -0400
 Received: from mga01.intel.com ([192.55.52.88]:35587 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733080AbfJVRMH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 13:12:07 -0400
+        id S1733090AbfJVRMJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 13:12:09 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Oct 2019 10:12:07 -0700
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Oct 2019 10:12:08 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,217,1569308400"; 
-   d="scan'208";a="191538274"
+   d="scan'208";a="191538288"
 Received: from labuser-ice-lake-client-platform.jf.intel.com ([10.54.55.125])
-  by orsmga008.jf.intel.com with ESMTP; 22 Oct 2019 10:12:07 -0700
+  by orsmga008.jf.intel.com with ESMTP; 22 Oct 2019 10:12:08 -0700
 From:   kan.liang@linux.intel.com
 To:     peterz@infradead.org, acme@kernel.org, mingo@kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     jolsa@kernel.org, namhyung@kernel.org, vitaly.slobodskoy@intel.com,
         pavel.gerasimov@intel.com, ak@linux.intel.com, eranian@google.com,
         Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V3 06/13] perf header: Support CPU PMU capabilities
-Date:   Tue, 22 Oct 2019 10:11:29 -0700
-Message-Id: <20191022171136.4022-7-kan.liang@linux.intel.com>
+Subject: [PATCH V3 08/13] perf tools: Stitch LBR call stack
+Date:   Tue, 22 Oct 2019 10:11:31 -0700
+Message-Id: <20191022171136.4022-9-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191022171136.4022-1-kan.liang@linux.intel.com>
 References: <20191022171136.4022-1-kan.liang@linux.intel.com>
@@ -47,262 +47,546 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-To stitch LBR call stack, the max LBR information is required. So the
-CPU PMU capabilities information has to be stored in perf header.
+In LBR call stack mode, the depth of reconstructed LBR call stack limits
+to the number of LBR registers.
 
-Add a new feature HEADER_CPU_PMU_CAPS for CPU PMU capabilities.
-Retrieve all CPU PMU capabilities, not just max LBR information.
+  For example, on skylake, the depth of reconstructed LBR call stack is
+  always <= 32.
 
-Add variable max_branches to facilitate future usage.
+  # To display the perf.data header info, please use
+  # --header/--header-only options.
+  #
+  #
+  # Total Lost Samples: 0
+  #
+  # Samples: 6K of event 'cycles'
+  # Event count (approx.): 6487119731
+  #
+  # Children      Self  Command          Shared Object       Symbol
+  # ........  ........  ...............  ..................
+  # ................................
 
-The CPU PMU capabilities information is only useful for LBR call stack
-mode. Clear the feature for perf stat and other perf record mode.
+    99.97%    99.97%  tchain_edit      tchain_edit        [.] f43
+            |
+             --99.64%--f11
+                       f12
+                       f13
+                       f14
+                       f15
+                       f16
+                       f17
+                       f18
+                       f19
+                       f20
+                       f21
+                       f22
+                       f23
+                       f24
+                       f25
+                       f26
+                       f27
+                       f28
+                       f29
+                       f30
+                       f31
+                       f32
+                       f33
+                       f34
+                       f35
+                       f36
+                       f37
+                       f38
+                       f39
+                       f40
+                       f41
+                       f42
+                       f43
 
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
+For a call stack which is deeper than LBR limit, HW will overwrite the
+LBR register with oldest branch. Only partial call stacks can be
+reconstructed.
+
+However, the overwritten LBRs may still be retrieved from previous
+sample. At that moment, HW hasn't overwritten the LBR registers yet.
+Perf tools can stitch those overwritten LBRs on current call stacks to
+get a more complete call stack.
+
+To determine if LBRs can be stitched, perf tools need to compare current
+sample with previous sample.
+- They should have identical LBR records (Same from, to and flags
+  values, and the same physical index of LBR registers).
+- The searching starts from the base-of-stack of current sample.
+
+In struct lbr_stitch, add 'prev_sample' to save the previous sample.
+Add 'prev_lbr_cursor' to save all LBR cursor nodes from previous sample.
+Once perf determines to stitch the previous LBRs, the corresponding LBR
+cursor nodes will be copied to 'lists'.
+The 'lists' is to track the LBR cursor nodes which are going to be
+stitched.
+When the stitching is over, the nodes will not be freed immediately.
+They will be moved to 'free_lists'. Next stitching may reuse the space.
+Both 'lists' and 'free_lists' will be freed when all samples are
+processed.
+
+The 'lbr_stitch_enable' is used to indicate whether enable LBR stitch
+approach, which is disabled by default. The following patch will
+introduce a new option to enable the LBR stitch approach.
+This is because,
+- The stitching approach base on LBR call stack technology. The known
+limitations of LBR call stack technology still apply to the approach,
+e.g. Exception handing such as setjmp/longjmp will have calls/returns
+not match.
+- This approach is not full proof. There can be cases where it creates
+incorrect call stacks from incorrect matches. There is no attempt
+to validate any matches in another way.
+
+However in many common cases with call stack overflows it can recreate
+better call stacks than the default lbr call stack output. So if there
+are problems with LBR overflows, this is a possible workaround.
+
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 ---
- .../Documentation/perf.data-file-format.txt   |  16 +++
- tools/perf/builtin-record.c                   |   3 +
- tools/perf/builtin-stat.c                     |   1 +
- tools/perf/util/env.h                         |   3 +
- tools/perf/util/header.c                      | 110 ++++++++++++++++++
- tools/perf/util/header.h                      |   1 +
- 6 files changed, 134 insertions(+)
+ tools/perf/util/branch.h    |   5 +-
+ tools/perf/util/callchain.h |  12 +-
+ tools/perf/util/machine.c   | 232 +++++++++++++++++++++++++++++++++++-
+ tools/perf/util/thread.c    |   2 +
+ tools/perf/util/thread.h    |  34 ++++++
+ 5 files changed, 280 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf.data-file-format.txt b/tools/perf/Documentation/perf.data-file-format.txt
-index b0152e1095c5..b6472e463284 100644
---- a/tools/perf/Documentation/perf.data-file-format.txt
-+++ b/tools/perf/Documentation/perf.data-file-format.txt
-@@ -373,6 +373,22 @@ struct {
- Indicates that trace contains records of PERF_RECORD_COMPRESSED type
- that have perf_events records in compressed form.
+diff --git a/tools/perf/util/branch.h b/tools/perf/util/branch.h
+index 88e00d268f6f..749fce3675b6 100644
+--- a/tools/perf/util/branch.h
++++ b/tools/perf/util/branch.h
+@@ -34,7 +34,10 @@ struct branch_info {
+ struct branch_entry {
+ 	u64			from;
+ 	u64			to;
+-	struct branch_flags	flags;
++	union {
++		struct branch_flags	flags;
++		u64			flags_value;
++	};
+ };
  
-+	HEADER_CPU_PMU_CAPS = 28,
+ struct branch_stack {
+diff --git a/tools/perf/util/callchain.h b/tools/perf/util/callchain.h
+index 83398e5bbe4b..9708b8640946 100644
+--- a/tools/perf/util/callchain.h
++++ b/tools/perf/util/callchain.h
+@@ -149,7 +149,17 @@ struct callchain_cursor_node {
+ 	u64				branch_from;
+ 	int				nr_loop_iter;
+ 	u64				iter_cycles;
+-	struct callchain_cursor_node	*next;
++	union {
++		struct callchain_cursor_node	*next;
 +
-+	A list of cpu PMU capabilities. The format of data is as below.
-+
-+struct {
-+	u32 nr_cpu_pmu_caps;
-+	{
-+		char	name[];
-+		char	value[];
-+	} [nr_cpu_pmu_caps]
++		/* Indicate valid cursor node for LBR stitch */
++		bool				valid;
++	};
 +};
 +
-+
-+Example:
-+ cpu pmu capabilities: branches=32, max_precise=3, pmu_name=icelake
-+
- 	other bits are reserved and should ignored for now
- 	HEADER_FEAT_BITS	= 256,
++struct stitch_list {
++	struct list_head		node;
++	struct callchain_cursor_node	cursor;
+ };
  
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 2fb83aabbef5..ca0249044355 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -1057,6 +1057,9 @@ static void record__init_features(struct record *rec)
- 	if (!record__comp_enabled(rec))
- 		perf_header__clear_feat(&session->header, HEADER_COMPRESSED);
- 
-+	if (!callchain_param.enabled || (callchain_param.record_mode != CALLCHAIN_LBR))
-+		perf_header__clear_feat(&session->header, HEADER_CPU_PMU_CAPS);
-+
- 	perf_header__clear_feat(&session->header, HEADER_STAT);
- }
- 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index c88d4e118409..ba8aa2560caf 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -1424,6 +1424,7 @@ static void init_features(struct perf_session *session)
- 	perf_header__clear_feat(&session->header, HEADER_TRACING_DATA);
- 	perf_header__clear_feat(&session->header, HEADER_BRANCH_STACK);
- 	perf_header__clear_feat(&session->header, HEADER_AUXTRACE);
-+	perf_header__clear_feat(&session->header, HEADER_CPU_PMU_CAPS);
- }
- 
- static int __cmd_record(int argc, const char **argv)
-diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
-index a3059dc1abe5..dae64e20b280 100644
---- a/tools/perf/util/env.h
-+++ b/tools/perf/util/env.h
-@@ -48,6 +48,7 @@ struct perf_env {
- 	char			*cpuid;
- 	unsigned long long	total_mem;
- 	unsigned int		msr_pmu_type;
-+	unsigned int		max_branches;
- 
- 	int			nr_cmdline;
- 	int			nr_sibling_cores;
-@@ -57,12 +58,14 @@ struct perf_env {
- 	int			nr_memory_nodes;
- 	int			nr_pmu_mappings;
- 	int			nr_groups;
-+	int			nr_cpu_pmu_caps;
- 	char			*cmdline;
- 	const char		**cmdline_argv;
- 	char			*sibling_cores;
- 	char			*sibling_dies;
- 	char			*sibling_threads;
- 	char			*pmu_mappings;
-+	char			*cpu_pmu_caps;
- 	struct cpu_topology_map	*cpu;
- 	struct cpu_cache_level	*caches;
- 	int			 caches_cnt;
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 6c51404fbeef..16274ffd875e 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -1402,6 +1402,39 @@ static int write_compressed(struct feat_fd *ff __maybe_unused,
- 	return do_write(ff, &(ff->ph->env.comp_mmap_len), sizeof(ff->ph->env.comp_mmap_len));
- }
- 
-+static int write_cpu_pmu_caps(struct feat_fd *ff,
-+			      struct evlist *evlist __maybe_unused)
-+{
-+	struct perf_pmu_caps *caps = NULL;
-+	struct perf_pmu *cpu_pmu;
-+	int nr_caps;
-+	int ret;
-+
-+	cpu_pmu = perf_pmu__find("cpu");
-+	if (!cpu_pmu)
-+		return -ENOENT;
-+
-+	nr_caps = perf_pmu__caps_parse(cpu_pmu);
-+	if (nr_caps < 0)
-+		return nr_caps;
-+
-+	ret = do_write(ff, &nr_caps, sizeof(nr_caps));
-+	if (ret < 0)
-+		return ret;
-+
-+	while ((caps = perf_pmu__scan_caps(cpu_pmu, caps))) {
-+		ret = do_write_string(ff, caps->name);
-+		if (ret < 0)
-+			return ret;
-+
-+		ret = do_write_string(ff, caps->value);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	return ret;
-+}
-+
- static void print_hostname(struct feat_fd *ff, FILE *fp)
- {
- 	fprintf(fp, "# hostname : %s\n", ff->ph->env.hostname);
-@@ -1817,6 +1850,28 @@ static void print_compressed(struct feat_fd *ff, FILE *fp)
- 		ff->ph->env.comp_level, ff->ph->env.comp_ratio);
- }
- 
-+static void print_cpu_pmu_caps(struct feat_fd *ff, FILE *fp)
-+{
-+	const char *delimiter = "# cpu pmu capabilities: ";
-+	char *str;
-+	u32 nr_caps;
-+
-+	nr_caps = ff->ph->env.nr_cpu_pmu_caps;
-+	if (!nr_caps) {
-+		fprintf(fp, "# cpu pmu capabilities: not available\n");
-+		return;
-+	}
-+
-+	str = ff->ph->env.cpu_pmu_caps;
-+	while (nr_caps--) {
-+		fprintf(fp, "%s%s", delimiter, str);
-+		delimiter = ", ";
-+		str += strlen(str) + 1;
-+	}
-+
-+	fprintf(fp, "\n");
-+}
-+
- static void print_pmu_mappings(struct feat_fd *ff, FILE *fp)
- {
- 	const char *delimiter = "# pmu mappings: ";
-@@ -2854,6 +2909,60 @@ static int process_compressed(struct feat_fd *ff,
+ struct callchain_cursor {
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index e3e516e30093..d7a1655cb9d1 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -2216,6 +2216,31 @@ static int lbr_callchain_add_kernel_ip(struct thread *thread,
  	return 0;
  }
  
-+static int process_cpu_pmu_caps(struct feat_fd *ff,
-+				void *data __maybe_unused)
++static void save_lbr_cursor_node(struct thread *thread,
++				 struct callchain_cursor *cursor,
++				 int idx)
 +{
-+	char *name, *value;
-+	struct strbuf sb;
-+	u32 nr_caps;
++	struct lbr_stitch *lbr_stitch = thread->lbr_stitch;
 +
-+	if (do_read_u32(ff, &nr_caps))
-+		return -1;
++	if (!lbr_stitch)
++		return;
 +
-+	if (!nr_caps) {
-+		pr_debug("cpu pmu capabilities not available\n");
-+		return 0;
++	if (cursor->pos == cursor->nr) {
++		lbr_stitch->prev_lbr_cursor[idx].valid = false;
++		return;
 +	}
 +
-+	ff->ph->env.nr_cpu_pmu_caps = nr_caps;
++	if (!cursor->curr)
++		cursor->curr = cursor->first;
++	else
++		cursor->curr = cursor->curr->next;
++	memcpy(&lbr_stitch->prev_lbr_cursor[idx], cursor->curr,
++	       sizeof(struct callchain_cursor_node));
 +
-+	if (strbuf_init(&sb, 128) < 0)
-+		return -1;
-+
-+	while (nr_caps--) {
-+		name = do_read_string(ff);
-+		if (!name)
-+			goto error;
-+
-+		value = do_read_string(ff);
-+		if (!value)
-+			goto free_name;
-+
-+		if (strbuf_addf(&sb, "%s=%s", name, value) < 0)
-+			goto free_value;
-+
-+		/* include a NULL character at the end */
-+		if (strbuf_add(&sb, "", 1) < 0)
-+			goto free_value;
-+
-+		if (!strcmp(name, "branches"))
-+			ff->ph->env.max_branches = atoi(value);
-+
-+		free(value);
-+		free(name);
-+	}
-+	ff->ph->env.cpu_pmu_caps = strbuf_detach(&sb, NULL);
-+	return 0;
-+
-+free_value:
-+	free(value);
-+free_name:
-+	free(name);
-+error:
-+	strbuf_release(&sb);
-+	return -1;
++	lbr_stitch->prev_lbr_cursor[idx].valid = true;
++	cursor->pos++;
 +}
 +
- #define FEAT_OPR(n, func, __full_only) \
- 	[HEADER_##n] = {					\
- 		.name	    = __stringify(n),			\
-@@ -2911,6 +3020,7 @@ const struct perf_header_feature_ops feat_ops[HEADER_LAST_FEATURE] = {
- 	FEAT_OPR(BPF_PROG_INFO, bpf_prog_info,  false),
- 	FEAT_OPR(BPF_BTF,       bpf_btf,        false),
- 	FEAT_OPR(COMPRESSED,	compressed,	false),
-+	FEAT_OPR(CPU_PMU_CAPS,	cpu_pmu_caps,	false),
+ static int lbr_callchain_add_lbr_ip(struct thread *thread,
+ 				    struct callchain_cursor *cursor,
+ 				    struct perf_sample *sample,
+@@ -2230,6 +2255,21 @@ static int lbr_callchain_add_lbr_ip(struct thread *thread,
+ 	u64 ip, branch_from = 0;
+ 	int err, i;
+ 
++	/*
++	 * The curr and pos are not used in writing session. They are cleared
++	 * in callchain_cursor_commit() when the writing session is closed.
++	 * Using curr and pos to track the current cursor node.
++	 */
++	if (thread->lbr_stitch) {
++		cursor->curr = NULL;
++		cursor->pos = cursor->nr;
++		if (cursor->nr) {
++			cursor->curr = cursor->first;
++			for (i = 0; i < (int)(cursor->nr - 1); i++)
++				cursor->curr = cursor->curr->next;
++		}
++	}
++
+ 	if (callee) {
+ 		ip = lbr_stack->entries[0].to;
+ 		flags = &lbr_stack->entries[0].flags;
+@@ -2240,6 +2280,20 @@ static int lbr_callchain_add_lbr_ip(struct thread *thread,
+ 		if (err)
+ 			return err;
+ 
++		/*
++		 * The number of cursor node increases.
++		 * Move the current cursor node.
++		 * But does not need to save current cursor node for entry 0.
++		 * It's impossible to stitch the whole LBRs of previous sample.
++		 */
++		if (thread->lbr_stitch && (cursor->pos != cursor->nr)) {
++			if (!cursor->curr)
++				cursor->curr = cursor->first;
++			else
++				cursor->curr = cursor->curr->next;
++			cursor->pos++;
++		}
++
+ 		for (i = 0; i < lbr_nr; i++) {
+ 			ip = lbr_stack->entries[i].from;
+ 			flags = &lbr_stack->entries[i].flags;
+@@ -2248,6 +2302,7 @@ static int lbr_callchain_add_lbr_ip(struct thread *thread,
+ 					       true, flags, NULL, branch_from);
+ 			if (err)
+ 				return err;
++			save_lbr_cursor_node(thread, cursor, i);
+ 		}
+ 	} else {
+ 		for (i = lbr_nr - 1; i >= 0; i--) {
+@@ -2258,6 +2313,7 @@ static int lbr_callchain_add_lbr_ip(struct thread *thread,
+ 					       true, flags, NULL, branch_from);
+ 			if (err)
+ 				return err;
++			save_lbr_cursor_node(thread, cursor, i);
+ 		}
+ 
+ 		ip = lbr_stack->entries[0].to;
+@@ -2273,6 +2329,145 @@ static int lbr_callchain_add_lbr_ip(struct thread *thread,
+ 	return 0;
+ }
+ 
++static int lbr_callchain_add_stitched_lbr_ip(struct thread *thread,
++					     struct callchain_cursor *cursor)
++{
++	struct lbr_stitch *lbr_stitch = thread->lbr_stitch;
++	struct stitch_list *stitch_node;
++	int err;
++
++	struct callchain_cursor_node *cnode;
++
++	list_for_each_entry(stitch_node, &lbr_stitch->lists, node) {
++		cnode = &stitch_node->cursor;
++
++		err = callchain_cursor_append(cursor, cnode->ip, cnode->map,
++					      cnode->sym, cnode->branch,
++					      &cnode->branch_flags,
++					      cnode->nr_loop_iter,
++					      cnode->iter_cycles,
++					      cnode->branch_from,
++					      cnode->srcline);
++		if (err)
++			return err;
++
++	}
++	return 0;
++}
++
++static struct stitch_list *get_stitch_node(struct thread *thread)
++{
++	struct lbr_stitch *lbr_stitch = thread->lbr_stitch;
++	struct stitch_list *stitch_node;
++
++	if (!list_empty(&lbr_stitch->free_lists)) {
++		stitch_node = list_first_entry(&lbr_stitch->free_lists,
++					       struct stitch_list, node);
++		list_del(&stitch_node->node);
++
++		return stitch_node;
++	}
++
++	return malloc(sizeof(struct stitch_list));
++}
++
++static bool has_stitched_lbr(struct thread *thread,
++			     struct perf_sample *cur,
++			     struct perf_sample *prev,
++			     unsigned int max_lbr,
++			     bool callee)
++{
++	struct branch_stack *cur_stack = cur->branch_stack;
++	struct branch_stack *prev_stack = prev->branch_stack;
++	struct lbr_stitch *lbr_stitch = thread->lbr_stitch;
++	int i, j, nr_identical_branches = 0;
++	struct stitch_list *stitch_node;
++	u64 cur_base, distance;
++
++	if (!cur_stack || !prev_stack)
++		return false;
++
++	/* Find the physical index of the base-of-stack for current sample. */
++	cur_base = max_lbr - cur_stack->nr + cur->lbr_tos + 1;
++
++	distance = (prev->lbr_tos > cur_base) ? (prev->lbr_tos - cur_base) :
++					    (max_lbr + prev->lbr_tos - cur_base);
++	/* Previous sample has shorter stack. Nothing can be stitched. */
++	if (distance + 1 > prev_stack->nr)
++		return false;
++
++	/*
++	 * Check if there are identical LBRs between two samples.
++	 * Identicall LBRs must have same from, to and flags values. Also,
++	 * they have to be saved in the same LBR registers (same physical
++	 * index).
++	 *
++	 * Starts from the base-of-stack of current sample.
++	 */
++	for (i = distance, j = cur_stack->nr - 1; (i >= 0) && (j >= 0); i--, j--) {
++		if ((prev_stack->entries[i].from != cur_stack->entries[j].from) ||
++		    (prev_stack->entries[i].to != cur_stack->entries[j].to) ||
++		    (prev_stack->entries[i].flags_value != cur_stack->entries[j].flags_value))
++			break;
++
++		nr_identical_branches++;
++	}
++
++	if (!nr_identical_branches)
++		return false;
++
++	/*
++	 * Save the LBRs between the base-of-stack of previous sample
++	 * and the base-of-stack of current sample into lbr_stitch->lists.
++	 * These LBRs will be stitched later.
++	 */
++	for (i = prev_stack->nr - 1; i > (int)distance; i--) {
++
++		if (!lbr_stitch->prev_lbr_cursor[i].valid)
++			continue;
++
++		stitch_node = get_stitch_node(thread);
++		if (!stitch_node)
++			return false;
++
++		memcpy(&stitch_node->cursor, &lbr_stitch->prev_lbr_cursor[i],
++		       sizeof(struct callchain_cursor_node));
++
++		if (callee)
++			list_add(&stitch_node->node, &lbr_stitch->lists);
++		else
++			list_add_tail(&stitch_node->node, &lbr_stitch->lists);
++	}
++
++	return true;
++}
++
++static bool alloc_lbr_stitch(struct thread *thread, unsigned int max_lbr)
++{
++	if (thread->lbr_stitch)
++		return true;
++
++	thread->lbr_stitch = calloc(1, sizeof(struct lbr_stitch));
++	if (!thread->lbr_stitch)
++		goto err;
++
++	thread->lbr_stitch->prev_lbr_cursor = calloc(max_lbr + 1, sizeof(struct callchain_cursor_node));
++	if (!thread->lbr_stitch->prev_lbr_cursor)
++		goto free_lbr_stitch;
++
++	INIT_LIST_HEAD(&thread->lbr_stitch->lists);
++	INIT_LIST_HEAD(&thread->lbr_stitch->free_lists);
++
++	return true;
++
++free_lbr_stitch:
++	free(thread->lbr_stitch);
++	thread->lbr_stitch = NULL;
++err:
++	pr_warning("Failed to allocate space for stitched LBRs. Disable LBR stitch\n");
++	thread->lbr_stitch_enable = false;
++	return false;
++}
+ /*
+  * Recolve LBR callstack chain sample
+  * Return:
+@@ -2285,10 +2480,14 @@ static int resolve_lbr_callchain_sample(struct thread *thread,
+ 					struct perf_sample *sample,
+ 					struct symbol **parent,
+ 					struct addr_location *root_al,
+-					int max_stack)
++					int max_stack,
++					unsigned int max_lbr)
+ {
+ 	struct ip_callchain *chain = sample->callchain;
+ 	int chain_nr = min(max_stack, (int)chain->nr);
++	bool callee = (callchain_param.order == ORDER_CALLEE);
++	struct lbr_stitch *lbr_stitch;
++	bool stitched_lbr = false;
+ 	int i, err;
+ 
+ 	for (i = 0; i < chain_nr; i++) {
+@@ -2303,7 +2502,21 @@ static int resolve_lbr_callchain_sample(struct thread *thread,
+ 	if (i == chain_nr)
+ 		return 0;
+ 
+-	if (callchain_param.order == ORDER_CALLEE) {
++	if (thread->lbr_stitch_enable && sample->lbr_tos != (-1ULL) &&
++	    (max_lbr > 0) && alloc_lbr_stitch(thread, max_lbr)) {
++		lbr_stitch = thread->lbr_stitch;
++
++		stitched_lbr = has_stitched_lbr(thread, sample,
++						&lbr_stitch->prev_sample,
++						max_lbr, callee);
++		if (!stitched_lbr) {
++			list_replace_init(&lbr_stitch->lists,
++					  &lbr_stitch->free_lists);
++		}
++		memcpy(&lbr_stitch->prev_sample, sample, sizeof(*sample));
++	}
++
++	if (callee) {
+ 		err = lbr_callchain_add_kernel_ip(thread, cursor, sample,
+ 						  parent, root_al, true, i);
+ 		if (err)
+@@ -2312,7 +2525,17 @@ static int resolve_lbr_callchain_sample(struct thread *thread,
+ 					       parent, root_al, true);
+ 		if (err)
+ 			goto error;
++		if (stitched_lbr) {
++			err = lbr_callchain_add_stitched_lbr_ip(thread, cursor);
++			if (err)
++				goto error;
++		}
+ 	} else {
++		if (stitched_lbr) {
++			err = lbr_callchain_add_stitched_lbr_ip(thread, cursor);
++			if (err)
++				goto error;
++		}
+ 		err = lbr_callchain_add_lbr_ip(thread, cursor, sample,
+ 					       parent, root_al, false);
+ 		if (err)
+@@ -2369,8 +2592,11 @@ static int thread__resolve_callchain_sample(struct thread *thread,
+ 		chain_nr = chain->nr;
+ 
+ 	if (perf_evsel__has_branch_callstack(evsel)) {
++		struct perf_env *env = perf_evsel__env(evsel);
++
+ 		err = resolve_lbr_callchain_sample(thread, cursor, sample, parent,
+-						   root_al, max_stack);
++						   root_al, max_stack,
++						   !env ? 0 : env->max_branches);
+ 		if (err)
+ 			return (err < 0) ? err : 0;
+ 	}
+diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
+index b64e9e049636..d3d8758e273e 100644
+--- a/tools/perf/util/thread.c
++++ b/tools/perf/util/thread.c
+@@ -47,6 +47,7 @@ struct thread *thread__new(pid_t pid, pid_t tid)
+ 		thread->tid = tid;
+ 		thread->ppid = -1;
+ 		thread->cpu = -1;
++		thread->lbr_stitch_enable = false;
+ 		INIT_LIST_HEAD(&thread->namespaces_list);
+ 		INIT_LIST_HEAD(&thread->comm_list);
+ 		init_rwsem(&thread->namespaces_lock);
+@@ -110,6 +111,7 @@ void thread__delete(struct thread *thread)
+ 
+ 	exit_rwsem(&thread->namespaces_lock);
+ 	exit_rwsem(&thread->comm_lock);
++	thread__free_stitch_list(thread);
+ 	free(thread);
+ }
+ 
+diff --git a/tools/perf/util/thread.h b/tools/perf/util/thread.h
+index 51bdb9a7af7f..49e5e493fa4c 100644
+--- a/tools/perf/util/thread.h
++++ b/tools/perf/util/thread.h
+@@ -13,6 +13,8 @@
+ #include <strlist.h>
+ #include <intlist.h>
+ #include "rwsem.h"
++#include "event.h"
++#include "callchain.h"
+ 
+ struct addr_location;
+ struct map;
+@@ -20,6 +22,13 @@ struct perf_record_namespaces;
+ struct thread_stack;
+ struct unwind_libunwind_ops;
+ 
++struct lbr_stitch {
++	struct list_head		lists;
++	struct list_head		free_lists;
++	struct perf_sample		prev_sample;
++	struct callchain_cursor_node	*prev_lbr_cursor;
++};
++
+ struct thread {
+ 	union {
+ 		struct rb_node	 rb_node;
+@@ -46,6 +55,10 @@ struct thread {
+ 	struct srccode_state	srccode_state;
+ 	bool			filter;
+ 	int			filter_entry_depth;
++
++	/* LBR call stack stitch */
++	bool			lbr_stitch_enable;
++	struct lbr_stitch	*lbr_stitch;
  };
  
- struct header_print_data {
-diff --git a/tools/perf/util/header.h b/tools/perf/util/header.h
-index ca53a929e9fd..ae8a7108f52b 100644
---- a/tools/perf/util/header.h
-+++ b/tools/perf/util/header.h
-@@ -43,6 +43,7 @@ enum {
- 	HEADER_BPF_PROG_INFO,
- 	HEADER_BPF_BTF,
- 	HEADER_COMPRESSED,
-+	HEADER_CPU_PMU_CAPS,
- 	HEADER_LAST_FEATURE,
- 	HEADER_FEAT_BITS	= 256,
- };
+ struct machine;
+@@ -142,4 +155,25 @@ static inline bool thread__is_filtered(struct thread *thread)
+ 	return false;
+ }
+ 
++static inline void thread__free_stitch_list(struct thread *thread)
++{
++	struct lbr_stitch *lbr_stitch = thread->lbr_stitch;
++	struct stitch_list *pos, *tmp;
++
++	if (!lbr_stitch)
++		return;
++
++	list_for_each_entry_safe(pos, tmp, &lbr_stitch->lists, node) {
++		list_del_init(&pos->node);
++		free(pos);
++	}
++
++	list_for_each_entry_safe(pos, tmp, &lbr_stitch->free_lists, node) {
++		list_del_init(&pos->node);
++		free(pos);
++	}
++	free(lbr_stitch->prev_lbr_cursor);
++	free(thread->lbr_stitch);
++}
++
+ #endif	/* __PERF_THREAD_H */
 -- 
 2.17.1
 
