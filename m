@@ -2,161 +2,118 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 710C8CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 23:37:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73FB7CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 23:37:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 480A12064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 23:37:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C13C2064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 23:37:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="sPfa/q/b"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="UGBdAfxa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389736AbfJVXhS (ORCPT
+        id S2389746AbfJVXhe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 19:37:18 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:35659 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732805AbfJVXhR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 19:37:17 -0400
-Received: by mail-qk1-f194.google.com with SMTP id w2so18077290qkf.2
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 16:37:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=SxDH2MC3dIvDcpX5lxZ6Q3L+W2CwFb0BSjYPclNc+5s=;
-        b=sPfa/q/byWY2+7Hn+C2BJi79zjdBqk3v2vpzotcKzKWgvz/US699VypLShsR1FE0xn
-         HoSmnl4W1yx0Zg47VhWYFvSxTicaWE5BsQJKzqWGxCS5sqBcpBKu38tBh+a8FL1O5Z0+
-         3tl9QFtVs00aX65Mhrj0USlCsm5tksvq0eWdsoCIGZslYTpUs0DkWlf5BXiidjEmyFfm
-         issgcyUzjYqXPY7d9XNi84i8pwmyT+O2TegVTRdypqWP9B/Ez6s+YXxt9mPLHp850Kfr
-         BUlQ0aF4EKpaXoTjtH4a0bxg0KoBU8pZhDHayYemwEEhZZWw74ZaXu38Cqz5THcyfRIm
-         vxkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=SxDH2MC3dIvDcpX5lxZ6Q3L+W2CwFb0BSjYPclNc+5s=;
-        b=l9KsaikP89x5pG0z7meMuwsm2KE1zQKw31FpiNB+hqSijEfw53zlbemRDZLqxoetzi
-         bHJwvJnyAuSIjY/9CZaj5iXERGDDiR5KU3ChfAVXWT1wgx7/yT6YapAzOXNg+EPwJdL8
-         olMQsCqenUEHvB0F+azgNVdr+PlEOUhIKWOajA66WmkXifn0A1mc2ZwSX0svQn9r75Cw
-         Iu5b7A2n7rZLJPDyZ6LNu4TXRA0NgeEhOQYh16twTGiZFYj98elLST0WIHbrWQirZgxl
-         T5V0abgPmNIlUVFAQxsb8JHkSMMUl80q1dtw9TIHa2Be/uZCQXGaJvjJXi5rtoFo3bdi
-         EocA==
-X-Gm-Message-State: APjAAAVEi56xRkGrkwGuzx8WjyesaydKwf40RYyfFow9cmQu3Hkq/eVX
-        MNlqdht1up8FFrgRplEqz5FVpg==
-X-Google-Smtp-Source: APXvYqyGXnv0taqbCbCiK836ll+xYl7pcxtoIWqynv3sh+hDGIqgBnHcejuxoHJWIeEKtwYT3q/BLA==
-X-Received: by 2002:a37:6212:: with SMTP id w18mr6001419qkb.204.1571787430558;
-        Tue, 22 Oct 2019 16:37:10 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::3:869e])
-        by smtp.gmail.com with ESMTPSA id r7sm10300827qkf.124.2019.10.22.16.37.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Oct 2019 16:37:09 -0700 (PDT)
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Shakeel Butt <shakeelb@google.com>, Michal Hocko <mhocko@suse.com>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        cgroups@vger.kernel.org, netdev@vger.kernel.org, kernel-team@fb.com
-Subject: [PATCH] mm: memcontrol: fix network errors from failing __GFP_ATOMIC charges
-Date:   Tue, 22 Oct 2019 19:37:08 -0400
-Message-Id: <20191022233708.365764-1-hannes@cmpxchg.org>
-X-Mailer: git-send-email 2.23.0
+        Tue, 22 Oct 2019 19:37:34 -0400
+Received: from ozlabs.org ([203.11.71.1]:50863 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731847AbfJVXhe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 19:37:34 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46yVKk41tlz9sP3;
+        Wed, 23 Oct 2019 10:37:30 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1571787451;
+        bh=bix38GBS8ziIG4D3rYTWk0p86PfmiZSj/wSR65+5FO4=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=UGBdAfxatgCtF86fvylV99/QFpSVym95XuNMX9oU9VJ/vdOXEBZnaKPrE+RU4NoEa
+         LF4vXTA63Y1NCPpdUeNamISsqi58pKjanBzbMC5w+mv6Tf55QMI+2wCFqXK2Syjo0T
+         NQRBGiuxA5ZKAKARmotaog3inA58Mk1hdtXTzKoRfpM4ptLFMTepUmJaIz6VGujCMr
+         JvoS89CZDSyjig9lE0RuwgLNyYRbrS4GtsUYs+PjySDB7MIt+fV+Zb0KTe5Bs9Rj1X
+         k04YauMfnuq75MflrBRrXCE6uOEpH6Hg+o/k4rkuDybV3a0E+QhbYmFBBHmGJtAzBC
+         spPt9ZtqKX6Bw==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Nayna Jain <nayna@linux.ibm.com>, linuxppc-dev@ozlabs.org,
+        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        Matthew Garret <matthew.garret@nebula.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        George Wilson <gcwilson@linux.ibm.com>,
+        Elaine Palmer <erpalmer@us.ibm.com>,
+        Eric Ricther <erichte@linux.ibm.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Prakhar Srivastava <prsriva02@gmail.com>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Subject: Re: [PATCH v8 1/8] powerpc: detect the secure boot mode of the system
+In-Reply-To: <1571508377-23603-2-git-send-email-nayna@linux.ibm.com>
+References: <1571508377-23603-1-git-send-email-nayna@linux.ibm.com> <1571508377-23603-2-git-send-email-nayna@linux.ibm.com>
+Date:   Wed, 23 Oct 2019 10:37:30 +1100
+Message-ID: <87zhhs5p39.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While upgrading from 4.16 to 5.2, we noticed these allocation errors
-in the log of the new kernel:
+Nayna Jain <nayna@linux.ibm.com> writes:
+> diff --git a/arch/powerpc/kernel/secure_boot.c b/arch/powerpc/kernel/secure_boot.c
+> new file mode 100644
+> index 000000000000..99bba7915629
+> --- /dev/null
+> +++ b/arch/powerpc/kernel/secure_boot.c
+> @@ -0,0 +1,30 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2019 IBM Corporation
+> + * Author: Nayna Jain
+> + */
+> +#include <linux/types.h>
+> +#include <linux/of.h>
+> +#include <asm/secure_boot.h>
+> +
+> +bool is_ppc_secureboot_enabled(void)
+> +{
+> +	struct device_node *node;
+> +	bool enabled = false;
+> +
+> +	node = of_find_compatible_node(NULL, NULL, "ibm,secvar-v1");
 
-[ 8642.253395] SLUB: Unable to allocate memory on node -1, gfp=0xa20(GFP_ATOMIC)
-[ 8642.269170]   cache: tw_sock_TCPv6(960:helper-logs), object size: 232, buffer size: 240, default order: 1, min order: 0
-[ 8642.293009]   node 0: slabs: 5, objs: 170, free: 0
+If this found a node then you have a node with an elevated refcount
+which you need to drop on the way out.
 
-        slab_out_of_memory+1
-        ___slab_alloc+969
-        __slab_alloc+14
-        kmem_cache_alloc+346
-        inet_twsk_alloc+60
-        tcp_time_wait+46
-        tcp_fin+206
-        tcp_data_queue+2034
-        tcp_rcv_state_process+784
-        tcp_v6_do_rcv+405
-        __release_sock+118
-        tcp_close+385
-        inet_release+46
-        __sock_release+55
-        sock_close+17
-        __fput+170
-        task_work_run+127
-        exit_to_usermode_loop+191
-        do_syscall_64+212
-        entry_SYSCALL_64_after_hwframe+68
+> +	if (!of_device_is_available(node)) {
+> +		pr_err("Cannot find secure variable node in device tree; failing to secure state\n");
+> +		goto out;
+> +	}
+> +
+> +	/*
+> +	 * secureboot is enabled if os-secure-enforcing property exists,
+> +	 * else disabled.
+> +	 */
+> +	enabled = of_property_read_bool(node, "os-secure-enforcing");
+> +
+> +out:
 
-accompanied by an increase in machines going completely radio silent
-under memory pressure.
+So here you need:
 
-One thing that changed since 4.16 is e699e2c6a654 ("net, mm: account
-sock objects to kmemcg"), which made these slab caches subject to
-cgroup memory accounting and control.
+	of_node_put(node);
 
-The problem with that is that cgroups, unlike the page allocator, do
-not maintain dedicated atomic reserves. As a cgroup's usage hovers at
-its limit, atomic allocations - such as done during network rx - can
-fail consistently for extended periods of time. The kernel is not able
-to operate under these conditions.
 
-We don't want to revert the culprit patch, because it indeed tracks a
-potentially substantial amount of memory used by a cgroup.
+> +	pr_info("Secure boot mode %s\n", enabled ? "enabled" : "disabled");
+> +	return enabled;
+> +}
 
-We also don't want to implement dedicated atomic reserves for cgroups.
-There is no point in keeping a fixed margin of unused bytes in the
-cgroup's memory budget to accomodate a consumer that is impossible to
-predict - we'd be wasting memory and get into configuration headaches,
-not unlike what we have going with min_free_kbytes. We do this for
-physical mem because we have to, but cgroups are an accounting game.
-
-Instead, account these privileged allocations to the cgroup, but let
-them bypass the configured limit if they have to. This way, we get the
-benefits of accounting the consumed memory and have it exert pressure
-on the rest of the cgroup, but like with the page allocator, we shift
-the burden of reclaimining on behalf of atomic allocations onto the
-regular allocations that can block.
-
-Cc: stable@kernel.org # 4.18+
-Fixes: e699e2c6a654 ("net, mm: account sock objects to kmemcg")
-Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
----
- mm/memcontrol.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 8090b4c99ac7..c7e3e758c165 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -2528,6 +2528,15 @@ static int try_charge(struct mem_cgroup *memcg, gfp_t gfp_mask,
- 		goto retry;
- 	}
- 
-+	/*
-+	 * Memcg doesn't have a dedicated reserve for atomic
-+	 * allocations. But like the global atomic pool, we need to
-+	 * put the burden of reclaim on regular allocation requests
-+	 * and let these go through as privileged allocations.
-+	 */
-+	if (gfp_mask & __GFP_ATOMIC)
-+		goto force;
-+
- 	/*
- 	 * Unlike in global OOM situations, memcg is not in a physical
- 	 * memory shortage.  Allow dying and OOM-killed tasks to
--- 
-2.23.0
-
+cheers
