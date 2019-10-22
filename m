@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B2EACA9EB0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 02:03:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A842DCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 02:03:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF516207FC
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 02:03:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 893AA2084C
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 02:03:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387833AbfJVCDB (ORCPT
+        id S2387438AbfJVCDK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 22:03:01 -0400
+        Mon, 21 Oct 2019 22:03:10 -0400
 Received: from mga14.intel.com ([192.55.52.115]:61583 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387445AbfJVB7m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 21:59:42 -0400
+        id S1730796AbfJVB7k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 21:59:40 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 18:59:42 -0700
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 18:59:39 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.67,325,1566889200"; 
-   d="scan'208";a="196293804"
+   d="scan'208";a="196293791"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
-  by fmsmga008.fm.intel.com with ESMTP; 21 Oct 2019 18:59:41 -0700
+  by fmsmga008.fm.intel.com with ESMTP; 21 Oct 2019 18:59:39 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Marc Zyngier <maz@kernel.org>, James Hogan <jhogan@kernel.org>,
         Paul Mackerras <paulus@ozlabs.org>,
@@ -48,9 +48,9 @@ Cc:     James Morse <james.morse@arm.com>,
         linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
         linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
         kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 14/45] KVM: PPC: e500mc: Move reset of oldpir below call to kvm_vcpu_init()
-Date:   Mon, 21 Oct 2019 18:58:54 -0700
-Message-Id: <20191022015925.31916-15-sean.j.christopherson@intel.com>
+Subject: [PATCH 11/45] KVM: PPC: e500mc: Add build-time assert that vcpu is at offset 0
+Date:   Mon, 21 Oct 2019 18:58:51 -0700
+Message-Id: <20191022015925.31916-12-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20191022015925.31916-1-sean.j.christopherson@intel.com>
 References: <20191022015925.31916-1-sean.j.christopherson@intel.com>
@@ -61,40 +61,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the initialization of oldpir so that the call to kvm_vcpu_init() is
-at the top of kvmppc_core_vcpu_create_e500mc().  oldpir is only use
-when loading/putting a vCPU, which currently cannot be done until after
-kvm_arch_vcpu_create() completes.  Reording the call to kvm_vcpu_init()
-paves the way for moving the invocation to common PPC code.
-
-No functional change intended.
+In preparation for moving vcpu allocation to common PPC code, add an
+explicit, albeit redundant, build-time assert to ensure the vcpu member
+is located at offset 0.  The assert is redundant in the sense that
+kvmppc_core_vcpu_create_e500() contains a functionally identical assert.
+The motiviation for adding the extra assert is to provide visual
+confirmation of the correctness of moving vcpu allocation to common
+code.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/powerpc/kvm/e500mc.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/powerpc/kvm/e500mc.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/arch/powerpc/kvm/e500mc.c b/arch/powerpc/kvm/e500mc.c
-index aea588f73bf7..f2902e612150 100644
+index 318e65c65999..c51f4bb086fd 100644
 --- a/arch/powerpc/kvm/e500mc.c
 +++ b/arch/powerpc/kvm/e500mc.c
-@@ -310,13 +310,13 @@ static int kvmppc_core_vcpu_create_e500mc(struct kvm *kvm, struct kvm_vcpu *vcpu
- 	BUILD_BUG_ON(offsetof(struct kvmppc_vcpu_e500, vcpu) != 0);
- 	vcpu_e500 = to_e500(vcpu);
+@@ -308,6 +308,8 @@ static struct kvm_vcpu *kvmppc_core_vcpu_create_e500mc(struct kvm *kvm,
+ 	struct kvm_vcpu *vcpu;
+ 	int err;
  
--	/* Invalid PIR value -- this LPID dosn't have valid state on any cpu */
--	vcpu->arch.oldpir = 0xffffffff;
--
- 	err = kvm_vcpu_init(vcpu, kvm, id);
- 	if (err)
- 		return err;
- 
-+	/* Invalid PIR value -- this LPID dosn't have valid state on any cpu */
-+	vcpu->arch.oldpir = 0xffffffff;
++	BUILD_BUG_ON(offsetof(struct kvmppc_vcpu_e500, vcpu) != 0);
 +
- 	err = kvmppc_e500_tlb_init(vcpu_e500);
- 	if (err)
- 		goto uninit_vcpu;
+ 	vcpu_e500 = kmem_cache_zalloc(kvm_vcpu_cache, GFP_KERNEL);
+ 	if (!vcpu_e500) {
+ 		err = -ENOMEM;
 -- 
 2.22.0
 
