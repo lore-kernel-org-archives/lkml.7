@@ -2,104 +2,83 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF99ECA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:22:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7954FCA9EB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:22:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B46142086D
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:22:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 505E92086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:22:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388057AbfJVPWM (ORCPT
+        id S2388389AbfJVPW0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 11:22:12 -0400
-Received: from imap1.codethink.co.uk ([176.9.8.82]:60572 "EHLO
-        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731053AbfJVPWM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 11:22:12 -0400
-Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
-        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
-        id 1iMvz4-0006E1-NU; Tue, 22 Oct 2019 16:22:06 +0100
-Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.3)
-        (envelope-from <ben@rainbowdash.codethink.co.uk>)
-        id 1iMvz4-00035O-CL; Tue, 22 Oct 2019 16:22:06 +0100
-From:   "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
-To:     linux-kernel@lists.codethink.co.uk
-Cc:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] net: mvneta: make stub functions static inline
-Date:   Tue, 22 Oct 2019 16:22:05 +0100
-Message-Id: <20191022152205.11815-1-ben.dooks@codethink.co.uk>
-X-Mailer: git-send-email 2.23.0
+        Tue, 22 Oct 2019 11:22:26 -0400
+Received: from mga09.intel.com ([134.134.136.24]:23876 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388081AbfJVPW0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 11:22:26 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Oct 2019 08:22:25 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,216,1569308400"; 
+   d="scan'208";a="196468247"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga008.fm.intel.com with ESMTP; 22 Oct 2019 08:22:24 -0700
+Date:   Tue, 22 Oct 2019 08:22:24 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     James Hogan <jhogan@kernel.org>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Marc Zyngier <maz@kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
+        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 15/15] KVM: Dynamically size memslot array based on
+ number of used slots
+Message-ID: <20191022152223.GB2343@linux.intel.com>
+References: <20191022003537.13013-1-sean.j.christopherson@intel.com>
+ <20191022003537.13013-16-sean.j.christopherson@intel.com>
+ <2609aedc-4fc9-ab92-8877-55c64cf19165@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2609aedc-4fc9-ab92-8877-55c64cf19165@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the CONFIG_MVNET_BA is not set, then make the stub functions
-static inline to avoid trying to export them, and remove hte
-following sparse warnings:
+On Tue, Oct 22, 2019 at 04:04:21PM +0200, Paolo Bonzini wrote:
+> On 22/10/19 02:35, Sean Christopherson wrote:
+> > +	struct kvm_memory_slot memslots[];
+> > +	/*
+> > +	 * WARNING: 'memslots' is dynamically-sized.  It *MUST* be at the end.
+> > +	 */
+> 
+> Isn't that obvious from the flexible array member?
 
-drivers/net/ethernet/marvell/mvneta_bm.h:163:6: warning: symbol 'mvneta_bm_pool_destroy' was not declared. Should it be static?
-drivers/net/ethernet/marvell/mvneta_bm.h:165:6: warning: symbol 'mvneta_bm_bufs_free' was not declared. Should it be static?
-drivers/net/ethernet/marvell/mvneta_bm.h:167:5: warning: symbol 'mvneta_bm_construct' was not declared. Should it be static?
-drivers/net/ethernet/marvell/mvneta_bm.h:168:5: warning: symbol 'mvneta_bm_pool_refill' was not declared. Should it be static?
-drivers/net/ethernet/marvell/mvneta_bm.h:170:23: warning: symbol 'mvneta_bm_pool_use' was not declared. Should it be static?
-drivers/net/ethernet/marvell/mvneta_bm.h:181:18: warning: symbol 'mvneta_bm_get' was not declared. Should it be static?
-drivers/net/ethernet/marvell/mvneta_bm.h:182:6: warning: symbol 'mvneta_bm_put' was not declared. Should it be static?
+Probably.  It's also unnecessary as the compiler (at least as of gcc 5.4)
+will throw an error if it's not at the end.  I think I even verified this
+during development and still decided to leave the obnoxious warning in for
+some reason...
 
-Signed-off-by: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
----
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- drivers/net/ethernet/marvell/mvneta_bm.h | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/net/ethernet/marvell/mvneta_bm.h b/drivers/net/ethernet/marvell/mvneta_bm.h
-index c8425d35c049..9c0c6e20cf80 100644
---- a/drivers/net/ethernet/marvell/mvneta_bm.h
-+++ b/drivers/net/ethernet/marvell/mvneta_bm.h
-@@ -160,14 +160,14 @@ static inline u32 mvneta_bm_pool_get_bp(struct mvneta_bm *priv,
- 			     (bm_pool->id << MVNETA_BM_POOL_ACCESS_OFFS));
- }
- #else
--void mvneta_bm_pool_destroy(struct mvneta_bm *priv,
--			    struct mvneta_bm_pool *bm_pool, u8 port_map) {}
--void mvneta_bm_bufs_free(struct mvneta_bm *priv, struct mvneta_bm_pool *bm_pool,
--			 u8 port_map) {}
--int mvneta_bm_construct(struct hwbm_pool *hwbm_pool, void *buf) { return 0; }
--int mvneta_bm_pool_refill(struct mvneta_bm *priv,
--			  struct mvneta_bm_pool *bm_pool) {return 0; }
--struct mvneta_bm_pool *mvneta_bm_pool_use(struct mvneta_bm *priv, u8 pool_id,
-+static inline void mvneta_bm_pool_destroy(struct mvneta_bm *priv,
-+					  struct mvneta_bm_pool *bm_pool, u8 port_map) {}
-+static inline void mvneta_bm_bufs_free(struct mvneta_bm *priv, struct mvneta_bm_pool *bm_pool,
-+				       u8 port_map) {}
-+static inline int mvneta_bm_construct(struct hwbm_pool *hwbm_pool, void *buf) { return 0; }
-+static inline int mvneta_bm_pool_refill(struct mvneta_bm *priv,
-+					struct mvneta_bm_pool *bm_pool) {return 0; }
-+static inline struct mvneta_bm_pool *mvneta_bm_pool_use(struct mvneta_bm *priv, u8 pool_id,
- 					  enum mvneta_bm_type type, u8 port_id,
- 					  int pkt_size) { return NULL; }
- 
-@@ -178,7 +178,7 @@ static inline void mvneta_bm_pool_put_bp(struct mvneta_bm *priv,
- static inline u32 mvneta_bm_pool_get_bp(struct mvneta_bm *priv,
- 					struct mvneta_bm_pool *bm_pool)
- { return 0; }
--struct mvneta_bm *mvneta_bm_get(struct device_node *node) { return NULL; }
--void mvneta_bm_put(struct mvneta_bm *priv) {}
-+static inline struct mvneta_bm *mvneta_bm_get(struct device_node *node) { return NULL; }
-+static inline void mvneta_bm_put(struct mvneta_bm *priv) {}
- #endif /* CONFIG_MVNETA_BM */
- #endif
--- 
-2.23.0
-
+include/linux/kvm_host.h:436:25: error: flexible array member not at end of struct
+  struct kvm_memory_slot memslots[];
