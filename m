@@ -2,126 +2,902 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 446A9CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 20:20:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4DCDCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 20:24:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 105072184C
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 20:20:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B1DF214B2
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 20:24:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E59v9vBA"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WVOHdLmC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389354AbfJVUUN (ORCPT
+        id S2388893AbfJVUYg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 16:20:13 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:21143 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2388342AbfJVUUM (ORCPT
+        Tue, 22 Oct 2019 16:24:36 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:42148 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388034AbfJVUYg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 16:20:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571775611;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=5mLe5fr4Rcj9l0aGmOkYC8WIu+5iwHZBKsP7Jqa+8JM=;
-        b=E59v9vBAiFixxeeVNaSKU8YAp6q0jLPOYTkGgX4LrlohDdWAH5+AvqKo121wEfvK98utfZ
-        CBnneUVC4jAdb1RsJesg4b7i1OMrNPfPfhAgnMoSemlyU0QK3TU8IpivZltLu1/x4aDQ41
-        wEnAa4BWZ4EqqexTG4iuXQHJzCb1oeQ=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-336-EUzTEBTNPfaosMYHevuZiA-1; Tue, 22 Oct 2019 16:20:09 -0400
-Received: by mail-wr1-f70.google.com with SMTP id 4so5554211wrf.19
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 13:20:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=is3i2Uy6uftQ7uth5vCaIrveGENUjfRXA0+ex4HKooA=;
-        b=fXa0AnbtfjZJbcrJpsjwxwAmmyEbyO20JhaIsQeUEsJwDGmPHqjpAM2CSuyadjcmut
-         7vq1nEbCp9bvkRBkd004dKfzT1Upbquyx3YsUKI9uLW8kAlClz1Ruo6oQQjolByjGofV
-         OJLCkB1X7rFy6zoTyAz9PQADIAyxv1W5fku6GM9xAjxSEqdhxNHWh+YCa7FNfRRy14lY
-         VVVGHDGLUphhKophpUo51zthRUodgDSNdYs8ArxYLSFIZhBAzwmI15Q2dE2F9Up5859R
-         wxcy4/c+VFSBsRxk4Xeb4+AdnOLSp8fgfqFsj9laTPmk/BVytEBogWcsulCnNFw4iV1i
-         y9nA==
-X-Gm-Message-State: APjAAAVF54nVvGJ32oaxlCcUaXDOF9YE+spfOVGSaSBDev6tqcE6Zaxl
-        ov9GR4VajsOUYLwYRoVq0FX24wD54EkGFdHsJWAtFYIRQ5B6U6flmUCW+L/VQD9xgKGQNHM4CwF
-        i06sOx2DQvVFxMoc/YRh7JhEh
-X-Received: by 2002:a1c:7401:: with SMTP id p1mr4378823wmc.144.1571775608164;
-        Tue, 22 Oct 2019 13:20:08 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxQ/5bZv78ma0pjD8AU5HfwQOysVzDzPZjbfOd0cqRpmUniu5vax102hw6wJ0xIPNJD49sytw==
-X-Received: by 2002:a1c:7401:: with SMTP id p1mr4378809wmc.144.1571775607973;
-        Tue, 22 Oct 2019 13:20:07 -0700 (PDT)
-Received: from dhcp-44-196.space.revspace.nl ([2a0e:5700:4:11:6eb:1143:b8be:2b8])
-        by smtp.gmail.com with ESMTPSA id a4sm18478849wmm.10.2019.10.22.13.20.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Oct 2019 13:20:07 -0700 (PDT)
-Subject: Re: [PATCH] reset: fix reset_control_get_exclusive kerneldoc comment
-To:     Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-kernel@vger.kernel.org
-Cc:     kernel@pengutronix.de
-References: <20191022162936.15234-1-p.zabel@pengutronix.de>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <89f5cbc2-77cf-2a19-4ce5-ef487fd94a34@redhat.com>
-Date:   Tue, 22 Oct 2019 22:20:06 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Tue, 22 Oct 2019 16:24:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Eqp/S2ULFEzOFb0uQBTmGTuzhqCrb9pJ5dgmrV/B/X8=; b=WVOHdLmC4oHQW5nGU4X6rhC25
+        YdEro/pvxIlTU0UbuX9GbJS6MRg0llfqM5GliDb7OI6fn7fuj/A8qXfFzO0HEKmcyOnJgifh6OM/Z
+        5u80bhWZyh1GvQQnNY+wO0OKrCOyjMsW+zMBINp7aRGOSL5tOj/db4UAyFubJje3/RX/GsusMi1ZQ
+        eiXFvsu5DLE2xiCl1sBAMyP3KLuZDFduNAc46Zo7AQlrtlNvA2ytodi1VRqeWZ17U2hSTCZwmXnSa
+        +rpNno0tnq71SREsY/g/SU+pHgRnCnlBkkNQF8P4kBMlMdSI/2lzy0Q/FF/KeUZBt3+3FhjZJEAF9
+        M1upjwccA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iN0hJ-0003AR-3C; Tue, 22 Oct 2019 20:24:05 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CB557300EBF;
+        Tue, 22 Oct 2019 22:23:03 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 829AE2653949C; Tue, 22 Oct 2019 22:24:01 +0200 (CEST)
+Date:   Tue, 22 Oct 2019 22:24:01 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, mhiramat@kernel.org,
+        bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, jpoimboe@redhat.com, jeyu@kernel.org
+Subject: Re: [PATCH v4 15/16] module: Move where we mark modules RO,X
+Message-ID: <20191022202401.GO1817@hirez.programming.kicks-ass.net>
+References: <20191018073525.768931536@infradead.org>
+ <20191018074634.801435443@infradead.org>
+ <20191021222110.49044eb5@oasis.local.home>
 MIME-Version: 1.0
-In-Reply-To: <20191022162936.15234-1-p.zabel@pengutronix.de>
-Content-Language: en-US
-X-MC-Unique: EUzTEBTNPfaosMYHevuZiA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191021222110.49044eb5@oasis.local.home>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Mon, Oct 21, 2019 at 10:21:10PM -0400, Steven Rostedt wrote:
+> On Fri, 18 Oct 2019 09:35:40 +0200
+> Peter Zijlstra <peterz@infradead.org> wrote:
+> 
+> > Now that set_all_modules_text_*() is gone, nothing depends on the
+> > relation between ->state = COMING and the protection state anymore.
+> > This enables moving the protection changes later, such that the COMING
+> > notifier callbacks can more easily modify the text.
+> > 
+> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > Cc: Jessica Yu <jeyu@kernel.org>
+> > ---
+> 
+> This triggered the following bug:
+> 
 
-On 10/22/19 6:29 PM, Philipp Zabel wrote:
-> Add missing parentheses to correctly hyperlink the reference to
-> reset_control_get_shared().
->=20
-> Fixes: 0b52297f2288 ("reset: Add support for shared reset controls")
-> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> The trace_event_define_fields_<event>() is defined in
+> include/trace/trace_events.h and is an init function called by the
+> trace_events event_create_dir() via the module notifier:
+> MODULE_STATE_COMING
 
-Thanks, looks good to me:
+The below seems to cure it; and seems to generate identical
+events/*/format output (for my .config, with the exception of ID).
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+It has just one section mismatch report that I'm too tired to look at
+just now.
 
-Regards,
+I'm not particularly proud of the "__function__" hack, but it works :/ I
+couldn't come up with anything else for [uk]probes which seem to have
+dynamic fields and if we're having it then syscall_enter can also make
+use of it, the syscall_metadata crud was going to be ugly otherwise.
 
-Hans
+(also, win on LOC)
 
+---
+ fs/xfs/xfs_trace.h             |   4 +-
+ include/linux/trace_events.h   |  16 ++++++-
+ include/trace/events/filemap.h |   2 +-
+ include/trace/trace_events.h   |  64 ++++++++-----------------
+ kernel/trace/trace.h           |  31 ++++++------
+ kernel/trace/trace_entries.h   |  66 +++++++------------------
+ kernel/trace/trace_events.c    |  20 +++++++-
+ kernel/trace/trace_export.c    | 106 +++++++++++++++--------------------------
+ kernel/trace/trace_kprobe.c    |  12 ++++-
+ kernel/trace/trace_syscalls.c  |  48 +++++++------------
+ kernel/trace/trace_uprobe.c    |   6 ++-
+ 11 files changed, 162 insertions(+), 213 deletions(-)
 
-
-
-> ---
->   include/linux/reset.h | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/include/linux/reset.h b/include/linux/reset.h
-> index e7793fc0fa93..eb597e8aa430 100644
-> --- a/include/linux/reset.h
-> +++ b/include/linux/reset.h
-> @@ -143,7 +143,7 @@ static inline int device_reset_optional(struct device=
- *dev)
->    * If this function is called more than once for the same reset_control=
- it will
->    * return -EBUSY.
->    *
-> - * See reset_control_get_shared for details on shared references to
-> + * See reset_control_get_shared() for details on shared references to
->    * reset-controls.
->    *
->    * Use of id names is optional.
->=20
-
+diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
+index eaae275ed430..53c5485cf2a1 100644
+--- a/fs/xfs/xfs_trace.h
++++ b/fs/xfs/xfs_trace.h
+@@ -218,8 +218,8 @@ DECLARE_EVENT_CLASS(xfs_bmap_class,
+ 	TP_STRUCT__entry(
+ 		__field(dev_t, dev)
+ 		__field(xfs_ino_t, ino)
+-		__field(void *, leaf);
+-		__field(int, pos);
++		__field(void *, leaf)
++		__field(int, pos)
+ 		__field(xfs_fileoff_t, startoff)
+ 		__field(xfs_fsblock_t, startblock)
+ 		__field(xfs_filblks_t, blockcount)
+diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
+index 30a8cdcfd4a4..30782e78b91d 100644
+--- a/include/linux/trace_events.h
++++ b/include/linux/trace_events.h
+@@ -187,6 +187,20 @@ enum trace_reg {
+ 
+ struct trace_event_call;
+ 
++struct trace_event_fields {
++	const char *type;
++	union {
++		struct {
++			const char *name;
++			const int  size;
++			const int  align;
++			const int  is_signed;
++			const int  filter_type;
++		};
++		int (*define_fields)(struct trace_event_call *);
++	};
++};
++
+ struct trace_event_class {
+ 	const char		*system;
+ 	void			*probe;
+@@ -195,7 +209,7 @@ struct trace_event_class {
+ #endif
+ 	int			(*reg)(struct trace_event_call *event,
+ 				       enum trace_reg type, void *data);
+-	int			(*define_fields)(struct trace_event_call *);
++	struct trace_event_fields *fields_array;
+ 	struct list_head	*(*get_fields)(struct trace_event_call *);
+ 	struct list_head	fields;
+ 	int			(*raw_init)(struct trace_event_call *);
+diff --git a/include/trace/events/filemap.h b/include/trace/events/filemap.h
+index ee05db7ee8d2..796053e162d2 100644
+--- a/include/trace/events/filemap.h
++++ b/include/trace/events/filemap.h
+@@ -85,7 +85,7 @@ TRACE_EVENT(file_check_and_advance_wb_err,
+ 		TP_ARGS(file, old),
+ 
+ 		TP_STRUCT__entry(
+-			__field(struct file *, file);
++			__field(struct file *, file)
+ 			__field(unsigned long, i_ino)
+ 			__field(dev_t, s_dev)
+ 			__field(errseq_t, old)
+diff --git a/include/trace/trace_events.h b/include/trace/trace_events.h
+index 4ecdfe2e3580..ca1d2e745a3f 100644
+--- a/include/trace/trace_events.h
++++ b/include/trace/trace_events.h
+@@ -394,22 +394,16 @@ static struct trace_event_functions trace_event_type_funcs_##call = {	\
+ #include TRACE_INCLUDE(TRACE_INCLUDE_FILE)
+ 
+ #undef __field_ext
+-#define __field_ext(type, item, filter_type)				\
+-	ret = trace_define_field(event_call, #type, #item,		\
+-				 offsetof(typeof(field), item),		\
+-				 sizeof(field.item),			\
+-				 is_signed_type(type), filter_type);	\
+-	if (ret)							\
+-		return ret;
++#define __field_ext(_type, _item, _filter_type) {			\
++	.type = #_type, .name = #_item,					\
++	.size = sizeof(_type), .align = __alignof__(_type),		\
++	.is_signed = is_signed_type(_type), .filter_type = _filter_type },
+ 
+ #undef __field_struct_ext
+-#define __field_struct_ext(type, item, filter_type)			\
+-	ret = trace_define_field(event_call, #type, #item,		\
+-				 offsetof(typeof(field), item),		\
+-				 sizeof(field.item),			\
+-				 0, filter_type);			\
+-	if (ret)							\
+-		return ret;
++#define __field_struct_ext(_type, _item, _filter_type) {		\
++	.type = #_type, .name = #_item,					\
++	.size = sizeof(_type), .align = __alignof__(_type),		\
++	0, .filter_type = _filter_type },
+ 
+ #undef __field
+ #define __field(type, item)	__field_ext(type, item, FILTER_OTHER)
+@@ -418,25 +412,16 @@ static struct trace_event_functions trace_event_type_funcs_##call = {	\
+ #define __field_struct(type, item) __field_struct_ext(type, item, FILTER_OTHER)
+ 
+ #undef __array
+-#define __array(type, item, len)					\
+-	do {								\
+-		char *type_str = #type"["__stringify(len)"]";		\
+-		BUILD_BUG_ON(len > MAX_FILTER_STR_VAL);			\
+-		BUILD_BUG_ON(len <= 0);					\
+-		ret = trace_define_field(event_call, type_str, #item,	\
+-				 offsetof(typeof(field), item),		\
+-				 sizeof(field.item),			\
+-				 is_signed_type(type), FILTER_OTHER);	\
+-		if (ret)						\
+-			return ret;					\
+-	} while (0);
++#define __array(_type, _item, _len) {					\
++	.type = #_type"["__stringify(_len)"]", .name = #_item,		\
++	.size = sizeof(_type[_len]), .align = __alignof__(_type),	\
++	.is_signed = is_signed_type(_type), .filter_type = FILTER_OTHER },
+ 
+ #undef __dynamic_array
+-#define __dynamic_array(type, item, len)				       \
+-	ret = trace_define_field(event_call, "__data_loc " #type "[]", #item,  \
+-				 offsetof(typeof(field), __data_loc_##item),   \
+-				 sizeof(field.__data_loc_##item),	       \
+-				 is_signed_type(type), FILTER_OTHER);
++#define __dynamic_array(_type, _item, _len) {				\
++	.type = "__data_loc " #_type "[]", .name = #_item,		\
++	.size = 4, .align = 4,						\
++	.is_signed = is_signed_type(_type), .filter_type = FILTER_OTHER },
+ 
+ #undef __string
+ #define __string(item, src) __dynamic_array(char, item, -1)
+@@ -446,16 +431,9 @@ static struct trace_event_functions trace_event_type_funcs_##call = {	\
+ 
+ #undef DECLARE_EVENT_CLASS
+ #define DECLARE_EVENT_CLASS(call, proto, args, tstruct, func, print)	\
+-static int notrace __init						\
+-trace_event_define_fields_##call(struct trace_event_call *event_call)	\
+-{									\
+-	struct trace_event_raw_##call field;				\
+-	int ret;							\
+-									\
+-	tstruct;							\
+-									\
+-	return ret;							\
+-}
++static struct trace_event_fields trace_event_fields_##call[] = {	\
++	tstruct								\
++	{} };
+ 
+ #undef DEFINE_EVENT
+ #define DEFINE_EVENT(template, name, proto, args)
+@@ -613,7 +591,7 @@ static inline notrace int trace_event_get_offsets_##call(		\
+  *
+  * static struct trace_event_class __used event_class_<template> = {
+  *	.system			= "<system>",
+- *	.define_fields		= trace_event_define_fields_<call>,
++ *	.fields_array		= trace_event_fields_<call>,
+  *	.fields			= LIST_HEAD_INIT(event_class_##call.fields),
+  *	.raw_init		= trace_event_raw_init,
+  *	.probe			= trace_event_raw_event_##call,
+@@ -761,7 +739,7 @@ _TRACE_PERF_PROTO(call, PARAMS(proto));					\
+ static char print_fmt_##call[] = print;					\
+ static struct trace_event_class __used __refdata event_class_##call = { \
+ 	.system			= TRACE_SYSTEM_STRING,			\
+-	.define_fields		= trace_event_define_fields_##call,	\
++	.fields_array		= trace_event_fields_##call,		\
+ 	.fields			= LIST_HEAD_INIT(event_class_##call.fields),\
+ 	.raw_init		= trace_event_raw_init,			\
+ 	.probe			= trace_event_raw_event_##call,		\
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index d685c61085c0..298a7cacf146 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -49,6 +49,9 @@ enum trace_type {
+ #undef __field
+ #define __field(type, item)		type	item;
+ 
++#undef __field_fn
++#define __field_fn(type, item)		type	item;
++
+ #undef __field_struct
+ #define __field_struct(type, item)	__field(type, item)
+ 
+@@ -68,26 +71,22 @@ enum trace_type {
+ #define F_STRUCT(args...)		args
+ 
+ #undef FTRACE_ENTRY
+-#define FTRACE_ENTRY(name, struct_name, id, tstruct, print, filter)	\
++#define FTRACE_ENTRY(name, struct_name, id, tstruct, print)		\
+ 	struct struct_name {						\
+ 		struct trace_entry	ent;				\
+ 		tstruct							\
+ 	}
+ 
+ #undef FTRACE_ENTRY_DUP
+-#define FTRACE_ENTRY_DUP(name, name_struct, id, tstruct, printk, filter)
++#define FTRACE_ENTRY_DUP(name, name_struct, id, tstruct, printk)
+ 
+ #undef FTRACE_ENTRY_REG
+-#define FTRACE_ENTRY_REG(name, struct_name, id, tstruct, print,	\
+-			 filter, regfn) \
+-	FTRACE_ENTRY(name, struct_name, id, PARAMS(tstruct), PARAMS(print), \
+-		     filter)
++#define FTRACE_ENTRY_REG(name, struct_name, id, tstruct, print,	regfn)	\
++	FTRACE_ENTRY(name, struct_name, id, PARAMS(tstruct), PARAMS(print))
+ 
+ #undef FTRACE_ENTRY_PACKED
+-#define FTRACE_ENTRY_PACKED(name, struct_name, id, tstruct, print,	\
+-			    filter)					\
+-	FTRACE_ENTRY(name, struct_name, id, PARAMS(tstruct), PARAMS(print), \
+-		     filter) __packed
++#define FTRACE_ENTRY_PACKED(name, struct_name, id, tstruct, print)	\
++	FTRACE_ENTRY(name, struct_name, id, PARAMS(tstruct), PARAMS(print)) __packed
+ 
+ #include "trace_entries.h"
+ 
+@@ -1899,17 +1898,15 @@ extern void tracing_log_err(struct trace_array *tr,
+ #define internal_trace_puts(str) __trace_puts(_THIS_IP_, str, strlen(str))
+ 
+ #undef FTRACE_ENTRY
+-#define FTRACE_ENTRY(call, struct_name, id, tstruct, print, filter)	\
++#define FTRACE_ENTRY(call, struct_name, id, tstruct, print)	\
+ 	extern struct trace_event_call					\
+ 	__aligned(4) event_##call;
+ #undef FTRACE_ENTRY_DUP
+-#define FTRACE_ENTRY_DUP(call, struct_name, id, tstruct, print, filter)	\
+-	FTRACE_ENTRY(call, struct_name, id, PARAMS(tstruct), PARAMS(print), \
+-		     filter)
++#define FTRACE_ENTRY_DUP(call, struct_name, id, tstruct, print)	\
++	FTRACE_ENTRY(call, struct_name, id, PARAMS(tstruct), PARAMS(print))
+ #undef FTRACE_ENTRY_PACKED
+-#define FTRACE_ENTRY_PACKED(call, struct_name, id, tstruct, print, filter) \
+-	FTRACE_ENTRY(call, struct_name, id, PARAMS(tstruct), PARAMS(print), \
+-		     filter)
++#define FTRACE_ENTRY_PACKED(call, struct_name, id, tstruct, print) \
++	FTRACE_ENTRY(call, struct_name, id, PARAMS(tstruct), PARAMS(print))
+ 
+ #include "trace_entries.h"
+ 
+diff --git a/kernel/trace/trace_entries.h b/kernel/trace/trace_entries.h
+index fc8e97328e54..3e9d81608284 100644
+--- a/kernel/trace/trace_entries.h
++++ b/kernel/trace/trace_entries.h
+@@ -61,15 +61,13 @@ FTRACE_ENTRY_REG(function, ftrace_entry,
+ 	TRACE_FN,
+ 
+ 	F_STRUCT(
+-		__field(	unsigned long,	ip		)
+-		__field(	unsigned long,	parent_ip	)
++		__field_fn(	unsigned long,	ip		)
++		__field_fn(	unsigned long,	parent_ip	)
+ 	),
+ 
+ 	F_printk(" %ps <-- %ps",
+ 		 (void *)__entry->ip, (void *)__entry->parent_ip),
+ 
+-	FILTER_TRACE_FN,
+-
+ 	perf_ftrace_event_register
+ );
+ 
+@@ -84,9 +82,7 @@ FTRACE_ENTRY_PACKED(funcgraph_entry, ftrace_graph_ent_entry,
+ 		__field_desc(	int,		graph_ent,	depth		)
+ 	),
+ 
+-	F_printk("--> %ps (%d)", (void *)__entry->func, __entry->depth),
+-
+-	FILTER_OTHER
++	F_printk("--> %ps (%d)", (void *)__entry->func, __entry->depth)
+ );
+ 
+ /* Function return entry */
+@@ -97,18 +93,16 @@ FTRACE_ENTRY_PACKED(funcgraph_exit, ftrace_graph_ret_entry,
+ 	F_STRUCT(
+ 		__field_struct(	struct ftrace_graph_ret,	ret	)
+ 		__field_desc(	unsigned long,	ret,		func	)
++		__field_desc(	unsigned long,	ret,		overrun	)
+ 		__field_desc(	unsigned long long, ret,	calltime)
+ 		__field_desc(	unsigned long long, ret,	rettime	)
+-		__field_desc(	unsigned long,	ret,		overrun	)
+ 		__field_desc(	int,		ret,		depth	)
+ 	),
+ 
+ 	F_printk("<-- %ps (%d) (start: %llx  end: %llx) over: %d",
+ 		 (void *)__entry->func, __entry->depth,
+ 		 __entry->calltime, __entry->rettime,
+-		 __entry->depth),
+-
+-	FILTER_OTHER
++		 __entry->depth)
+ );
+ 
+ /*
+@@ -137,9 +131,7 @@ FTRACE_ENTRY(context_switch, ctx_switch_entry,
+ 	F_printk("%u:%u:%u  ==> %u:%u:%u [%03u]",
+ 		 __entry->prev_pid, __entry->prev_prio, __entry->prev_state,
+ 		 __entry->next_pid, __entry->next_prio, __entry->next_state,
+-		 __entry->next_cpu),
+-
+-	FILTER_OTHER
++		 __entry->next_cpu)
+ );
+ 
+ /*
+@@ -157,9 +149,7 @@ FTRACE_ENTRY_DUP(wakeup, ctx_switch_entry,
+ 	F_printk("%u:%u:%u  ==+ %u:%u:%u [%03u]",
+ 		 __entry->prev_pid, __entry->prev_prio, __entry->prev_state,
+ 		 __entry->next_pid, __entry->next_prio, __entry->next_state,
+-		 __entry->next_cpu),
+-
+-	FILTER_OTHER
++		 __entry->next_cpu)
+ );
+ 
+ /*
+@@ -183,9 +173,7 @@ FTRACE_ENTRY(kernel_stack, stack_entry,
+ 		 (void *)__entry->caller[0], (void *)__entry->caller[1],
+ 		 (void *)__entry->caller[2], (void *)__entry->caller[3],
+ 		 (void *)__entry->caller[4], (void *)__entry->caller[5],
+-		 (void *)__entry->caller[6], (void *)__entry->caller[7]),
+-
+-	FILTER_OTHER
++		 (void *)__entry->caller[6], (void *)__entry->caller[7])
+ );
+ 
+ FTRACE_ENTRY(user_stack, userstack_entry,
+@@ -203,9 +191,7 @@ FTRACE_ENTRY(user_stack, userstack_entry,
+ 		 (void *)__entry->caller[0], (void *)__entry->caller[1],
+ 		 (void *)__entry->caller[2], (void *)__entry->caller[3],
+ 		 (void *)__entry->caller[4], (void *)__entry->caller[5],
+-		 (void *)__entry->caller[6], (void *)__entry->caller[7]),
+-
+-	FILTER_OTHER
++		 (void *)__entry->caller[6], (void *)__entry->caller[7])
+ );
+ 
+ /*
+@@ -222,9 +208,7 @@ FTRACE_ENTRY(bprint, bprint_entry,
+ 	),
+ 
+ 	F_printk("%ps: %s",
+-		 (void *)__entry->ip, __entry->fmt),
+-
+-	FILTER_OTHER
++		 (void *)__entry->ip, __entry->fmt)
+ );
+ 
+ FTRACE_ENTRY_REG(print, print_entry,
+@@ -239,8 +223,6 @@ FTRACE_ENTRY_REG(print, print_entry,
+ 	F_printk("%ps: %s",
+ 		 (void *)__entry->ip, __entry->buf),
+ 
+-	FILTER_OTHER,
+-
+ 	ftrace_event_register
+ );
+ 
+@@ -254,9 +236,7 @@ FTRACE_ENTRY(raw_data, raw_data_entry,
+ 	),
+ 
+ 	F_printk("id:%04x %08x",
+-		 __entry->id, (int)__entry->buf[0]),
+-
+-	FILTER_OTHER
++		 __entry->id, (int)__entry->buf[0])
+ );
+ 
+ FTRACE_ENTRY(bputs, bputs_entry,
+@@ -269,9 +249,7 @@ FTRACE_ENTRY(bputs, bputs_entry,
+ 	),
+ 
+ 	F_printk("%ps: %s",
+-		 (void *)__entry->ip, __entry->str),
+-
+-	FILTER_OTHER
++		 (void *)__entry->ip, __entry->str)
+ );
+ 
+ FTRACE_ENTRY(mmiotrace_rw, trace_mmiotrace_rw,
+@@ -283,16 +261,14 @@ FTRACE_ENTRY(mmiotrace_rw, trace_mmiotrace_rw,
+ 		__field_desc(	resource_size_t, rw,	phys	)
+ 		__field_desc(	unsigned long,	rw,	value	)
+ 		__field_desc(	unsigned long,	rw,	pc	)
+-		__field_desc(	int, 		rw,	map_id	)
++		__field_desc(	int,		rw,	map_id	)
+ 		__field_desc(	unsigned char,	rw,	opcode	)
+ 		__field_desc(	unsigned char,	rw,	width	)
+ 	),
+ 
+ 	F_printk("%lx %lx %lx %d %x %x",
+ 		 (unsigned long)__entry->phys, __entry->value, __entry->pc,
+-		 __entry->map_id, __entry->opcode, __entry->width),
+-
+-	FILTER_OTHER
++		 __entry->map_id, __entry->opcode, __entry->width)
+ );
+ 
+ FTRACE_ENTRY(mmiotrace_map, trace_mmiotrace_map,
+@@ -304,15 +280,13 @@ FTRACE_ENTRY(mmiotrace_map, trace_mmiotrace_map,
+ 		__field_desc(	resource_size_t, map,	phys	)
+ 		__field_desc(	unsigned long,	map,	virt	)
+ 		__field_desc(	unsigned long,	map,	len	)
+-		__field_desc(	int, 		map,	map_id	)
++		__field_desc(	int,		map,	map_id	)
+ 		__field_desc(	unsigned char,	map,	opcode	)
+ 	),
+ 
+ 	F_printk("%lx %lx %lx %d %x",
+ 		 (unsigned long)__entry->phys, __entry->virt, __entry->len,
+-		 __entry->map_id, __entry->opcode),
+-
+-	FILTER_OTHER
++		 __entry->map_id, __entry->opcode)
+ );
+ 
+ 
+@@ -334,9 +308,7 @@ FTRACE_ENTRY(branch, trace_branch,
+ 	F_printk("%u:%s:%s (%u)%s",
+ 		 __entry->line,
+ 		 __entry->func, __entry->file, __entry->correct,
+-		 __entry->constant ? " CONSTANT" : ""),
+-
+-	FILTER_OTHER
++		 __entry->constant ? " CONSTANT" : "")
+ );
+ 
+ 
+@@ -362,7 +334,5 @@ FTRACE_ENTRY(hwlat, hwlat_entry,
+ 		 __entry->duration,
+ 		 __entry->outer_duration,
+ 		 __entry->nmi_total_ts,
+-		 __entry->nmi_count),
+-
+-	FILTER_OTHER
++		 __entry->nmi_count)
+ );
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index fba87d10f0c1..508b5299d843 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -24,6 +24,7 @@
+ #include <linux/delay.h>
+ 
+ #include <trace/events/sched.h>
++#include <trace/syscall.h>
+ 
+ #include <asm/setup.h>
+ 
+@@ -1990,7 +1991,24 @@ event_create_dir(struct dentry *parent, struct trace_event_file *file)
+ 	 */
+ 	head = trace_get_fields(call);
+ 	if (list_empty(head)) {
+-		ret = call->class->define_fields(call);
++		struct trace_event_fields *field = call->class->fields_array;
++		unsigned int offset = sizeof(struct trace_entry);
++
++		for (; field->type; field++) {
++			if (strcmp(field->type, "__function__") == 0) {
++				ret = field->define_fields(call);
++				break;
++			}
++
++			offset = ALIGN(offset, field->align);
++			ret = trace_define_field(call, field->type, field->name,
++						 offset, field->size,
++						 field->is_signed, field->filter_type);
++			if (ret)
++				break;
++
++			offset += field->size;
++		}
+ 		if (ret < 0) {
+ 			pr_warn("Could not initialize trace point events/%s\n",
+ 				name);
+diff --git a/kernel/trace/trace_export.c b/kernel/trace/trace_export.c
+index 45630a76ed3a..6d64c1c19fd5 100644
+--- a/kernel/trace/trace_export.c
++++ b/kernel/trace/trace_export.c
+@@ -29,10 +29,8 @@ static int ftrace_event_register(struct trace_event_call *call,
+  * function and thus become accesible via perf.
+  */
+ #undef FTRACE_ENTRY_REG
+-#define FTRACE_ENTRY_REG(name, struct_name, id, tstruct, print, \
+-			 filter, regfn) \
+-	FTRACE_ENTRY(name, struct_name, id, PARAMS(tstruct), PARAMS(print), \
+-		     filter)
++#define FTRACE_ENTRY_REG(name, struct_name, id, tstruct, print, regfn) \
++	FTRACE_ENTRY(name, struct_name, id, PARAMS(tstruct), PARAMS(print))
+ 
+ /* not needed for this file */
+ #undef __field_struct
+@@ -41,6 +39,9 @@ static int ftrace_event_register(struct trace_event_call *call,
+ #undef __field
+ #define __field(type, item)				type item;
+ 
++#undef __field_fn
++#define __field_fn(type, item)				type item;
++
+ #undef __field_desc
+ #define __field_desc(type, container, item)		type item;
+ 
+@@ -60,7 +61,7 @@ static int ftrace_event_register(struct trace_event_call *call,
+ #define F_printk(fmt, args...) fmt, args
+ 
+ #undef FTRACE_ENTRY
+-#define FTRACE_ENTRY(name, struct_name, id, tstruct, print, filter)	\
++#define FTRACE_ENTRY(name, struct_name, id, tstruct, print)		\
+ struct ____ftrace_##name {						\
+ 	tstruct								\
+ };									\
+@@ -73,76 +74,46 @@ static void __always_unused ____ftrace_check_##name(void)		\
+ }
+ 
+ #undef FTRACE_ENTRY_DUP
+-#define FTRACE_ENTRY_DUP(name, struct_name, id, tstruct, print, filter)	\
+-	FTRACE_ENTRY(name, struct_name, id, PARAMS(tstruct), PARAMS(print), \
+-		     filter)
++#define FTRACE_ENTRY_DUP(name, struct_name, id, tstruct, print)		\
++	FTRACE_ENTRY(name, struct_name, id, PARAMS(tstruct), PARAMS(print))
+ 
+ #include "trace_entries.h"
+ 
++#undef __field_ext
++#define __field_ext(_type, _item, _filter_type) {			\
++	.type = #_type, .name = #_item,					\
++	.size = sizeof(_type), .align = __alignof__(_type),		\
++	is_signed_type(_type), .filter_type = _filter_type },
++
+ #undef __field
+-#define __field(type, item)						\
+-	ret = trace_define_field(event_call, #type, #item,		\
+-				 offsetof(typeof(field), item),		\
+-				 sizeof(field.item),			\
+-				 is_signed_type(type), filter_type);	\
+-	if (ret)							\
+-		return ret;
++#define __field(_type, _item) __field_ext(_type, _item, FILTER_OTHER)
++
++#undef __field_fn
++#define __field_fn(_type, _item) __field_ext(_type, _item, FILTER_TRACE_FN)
+ 
+ #undef __field_desc
+-#define __field_desc(type, container, item)	\
+-	ret = trace_define_field(event_call, #type, #item,		\
+-				 offsetof(typeof(field),		\
+-					  container.item),		\
+-				 sizeof(field.container.item),		\
+-				 is_signed_type(type), filter_type);	\
+-	if (ret)							\
+-		return ret;
++#define __field_desc(_type, _container, _item) __field_ext(_type, _item, FILTER_OTHER)
+ 
+ #undef __array
+-#define __array(type, item, len)					\
+-	do {								\
+-		char *type_str = #type"["__stringify(len)"]";		\
+-		BUILD_BUG_ON(len > MAX_FILTER_STR_VAL);			\
+-		ret = trace_define_field(event_call, type_str, #item,	\
+-				 offsetof(typeof(field), item),		\
+-				 sizeof(field.item),			\
+-				 is_signed_type(type), filter_type);	\
+-		if (ret)						\
+-			return ret;					\
+-	} while (0);
++#define __array(_type, _item, _len) {					\
++	.type = #_type"["__stringify(_len)"]", .name = #_item,		\
++	.size = sizeof(_type[_len]), .align = __alignof__(_type),	\
++	is_signed_type(_type), .filter_type = FILTER_OTHER },
+ 
+ #undef __array_desc
+-#define __array_desc(type, container, item, len)			\
+-	BUILD_BUG_ON(len > MAX_FILTER_STR_VAL);				\
+-	ret = trace_define_field(event_call, #type "[" #len "]", #item,	\
+-				 offsetof(typeof(field),		\
+-					  container.item),		\
+-				 sizeof(field.container.item),		\
+-				 is_signed_type(type), filter_type);	\
+-	if (ret)							\
+-		return ret;
++#define __array_desc(_type, _container, _item, _len) __array(_type, _item, _len)
+ 
+ #undef __dynamic_array
+-#define __dynamic_array(type, item)					\
+-	ret = trace_define_field(event_call, #type "[]", #item,  \
+-				 offsetof(typeof(field), item),		\
+-				 0, is_signed_type(type), filter_type);\
+-	if (ret)							\
+-		return ret;
++#define __dynamic_array(_type, _item) {					\
++	.type = #_type "[]", .name = #_item,				\
++	.size = 0, .align = __alignof__(_type),				\
++	is_signed_type(_type), .filter_type = FILTER_OTHER },
+ 
+ #undef FTRACE_ENTRY
+-#define FTRACE_ENTRY(name, struct_name, id, tstruct, print, filter)	\
+-static int __init							\
+-ftrace_define_fields_##name(struct trace_event_call *event_call)	\
+-{									\
+-	struct struct_name field;					\
+-	int ret;							\
+-	int filter_type = filter;					\
+-									\
+-	tstruct;							\
+-									\
+-	return ret;							\
+-}
++#define FTRACE_ENTRY(name, struct_name, id, tstruct, print)		\
++static struct trace_event_fields ftrace_event_fields_##name[] = {	\
++	tstruct								\
++	{} };
+ 
+ #include "trace_entries.h"
+ 
+@@ -152,6 +123,9 @@ ftrace_define_fields_##name(struct trace_event_call *event_call)	\
+ #undef __field
+ #define __field(type, item)
+ 
++#undef __field_fn
++#define __field_fn(type, item)
++
+ #undef __field_desc
+ #define __field_desc(type, container, item)
+ 
+@@ -168,12 +142,10 @@ ftrace_define_fields_##name(struct trace_event_call *event_call)	\
+ #define F_printk(fmt, args...) __stringify(fmt) ", "  __stringify(args)
+ 
+ #undef FTRACE_ENTRY_REG
+-#define FTRACE_ENTRY_REG(call, struct_name, etype, tstruct, print, filter,\
+-			 regfn)						\
+-									\
++#define FTRACE_ENTRY_REG(call, struct_name, etype, tstruct, print, regfn) \
+ struct trace_event_class __refdata event_class_ftrace_##call = {	\
+ 	.system			= __stringify(TRACE_SYSTEM),		\
+-	.define_fields		= ftrace_define_fields_##call,		\
++	.fields_array		= ftrace_event_fields_##call,		\
+ 	.fields			= LIST_HEAD_INIT(event_class_ftrace_##call.fields),\
+ 	.reg			= regfn,				\
+ };									\
+@@ -191,9 +163,9 @@ struct trace_event_call __used						\
+ __attribute__((section("_ftrace_events"))) *__event_##call = &event_##call;
+ 
+ #undef FTRACE_ENTRY
+-#define FTRACE_ENTRY(call, struct_name, etype, tstruct, print, filter)	\
++#define FTRACE_ENTRY(call, struct_name, etype, tstruct, print)		\
+ 	FTRACE_ENTRY_REG(call, struct_name, etype,			\
+-			 PARAMS(tstruct), PARAMS(print), filter, NULL)
++			 PARAMS(tstruct), PARAMS(print), NULL)
+ 
+ bool ftrace_event_is_function(struct trace_event_call *call)
+ {
+diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+index 1552a95c743b..618267647885 100644
+--- a/kernel/trace/trace_kprobe.c
++++ b/kernel/trace/trace_kprobe.c
+@@ -1540,10 +1540,18 @@ static inline void init_trace_event_call(struct trace_kprobe *tk)
+ 
+ 	if (trace_kprobe_is_return(tk)) {
+ 		call->event.funcs = &kretprobe_funcs;
+-		call->class->define_fields = kretprobe_event_define_fields;
++		call->class->fields_array = (struct trace_event_fields[]) {
++			{ .type = "__function__",
++			  .define_fields = kretprobe_event_define_fields },
++			{}
++		};
+ 	} else {
+ 		call->event.funcs = &kprobe_funcs;
+-		call->class->define_fields = kprobe_event_define_fields;
++		call->class->fields_array = (struct trace_event_fields[]) {
++			{ .type = "__function__",
++			  .define_fields = kprobe_event_define_fields },
++			{}
++		};
+ 	}
+ 
+ 	call->flags = TRACE_EVENT_FL_KPROBE;
+diff --git a/kernel/trace/trace_syscalls.c b/kernel/trace/trace_syscalls.c
+index fa8fbff736d6..766557a99385 100644
+--- a/kernel/trace/trace_syscalls.c
++++ b/kernel/trace/trace_syscalls.c
+@@ -198,11 +198,10 @@ print_syscall_exit(struct trace_iterator *iter, int flags,
+ 
+ extern char *__bad_type_size(void);
+ 
+-#define SYSCALL_FIELD(type, field, name)				\
+-	sizeof(type) != sizeof(trace.field) ?				\
+-		__bad_type_size() :					\
+-		#type, #name, offsetof(typeof(trace), field),		\
+-		sizeof(trace.field), is_signed_type(type)
++#define SYSCALL_FIELD(_type, _name) {					\
++	.type = #_type, .name = #_name,					\
++	.size = sizeof(_type), .align = __alignof__(_type),		\
++	.is_signed = is_signed_type(_type), .filter_type = FILTER_OTHER }
+ 
+ static int __init
+ __set_enter_print_fmt(struct syscall_metadata *entry, char *buf, int len)
+@@ -269,42 +268,22 @@ static int __init syscall_enter_define_fields(struct trace_event_call *call)
+ {
+ 	struct syscall_trace_enter trace;
+ 	struct syscall_metadata *meta = call->data;
+-	int ret;
+-	int i;
+ 	int offset = offsetof(typeof(trace), args);
+-
+-	ret = trace_define_field(call, SYSCALL_FIELD(int, nr, __syscall_nr),
+-				 FILTER_OTHER);
+-	if (ret)
+-		return ret;
++	int ret, i;
+ 
+ 	for (i = 0; i < meta->nb_args; i++) {
+ 		ret = trace_define_field(call, meta->types[i],
+ 					 meta->args[i], offset,
+ 					 sizeof(unsigned long), 0,
+ 					 FILTER_OTHER);
++		if (ret)
++			break;
+ 		offset += sizeof(unsigned long);
+ 	}
+ 
+ 	return ret;
+ }
+ 
+-static int __init syscall_exit_define_fields(struct trace_event_call *call)
+-{
+-	struct syscall_trace_exit trace;
+-	int ret;
+-
+-	ret = trace_define_field(call, SYSCALL_FIELD(int, nr, __syscall_nr),
+-				 FILTER_OTHER);
+-	if (ret)
+-		return ret;
+-
+-	ret = trace_define_field(call, SYSCALL_FIELD(long, ret, ret),
+-				 FILTER_OTHER);
+-
+-	return ret;
+-}
+-
+ static void ftrace_syscall_enter(void *data, struct pt_regs *regs, long id)
+ {
+ 	struct trace_array *tr = data;
+@@ -513,7 +492,12 @@ struct trace_event_functions exit_syscall_print_funcs = {
+ struct trace_event_class __refdata event_class_syscall_enter = {
+ 	.system		= "syscalls",
+ 	.reg		= syscall_enter_register,
+-	.define_fields	= syscall_enter_define_fields,
++	.fields_array	= (struct trace_event_fields[]) {
++		SYSCALL_FIELD(int, __syscall_nr),
++		{ .type = "__function__",
++		  .define_fields = syscall_enter_define_fields },
++		{}
++	},
+ 	.get_fields	= syscall_get_enter_fields,
+ 	.raw_init	= init_syscall_trace,
+ };
+@@ -521,7 +505,11 @@ struct trace_event_class __refdata event_class_syscall_enter = {
+ struct trace_event_class __refdata event_class_syscall_exit = {
+ 	.system		= "syscalls",
+ 	.reg		= syscall_exit_register,
+-	.define_fields	= syscall_exit_define_fields,
++	.fields_array	= (struct trace_event_fields[]){
++		SYSCALL_FIELD(int, __syscall_nr),
++		SYSCALL_FIELD(long, ret),
++		{}
++	},
+ 	.fields		= LIST_HEAD_INIT(event_class_syscall_exit.fields),
+ 	.raw_init	= init_syscall_trace,
+ };
+diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
+index 352073d36585..9aa866c62354 100644
+--- a/kernel/trace/trace_uprobe.c
++++ b/kernel/trace/trace_uprobe.c
+@@ -1512,7 +1512,11 @@ static inline void init_trace_event_call(struct trace_uprobe *tu)
+ 	struct trace_event_call *call = trace_probe_event_call(&tu->tp);
+ 
+ 	call->event.funcs = &uprobe_funcs;
+-	call->class->define_fields = uprobe_event_define_fields;
++	call->class->fields_array = (struct trace_event_fields[]) {
++		{ .type = "__function__",
++		  .define_fields = uprobe_event_define_fields },
++		{}
++	};
+ 
+ 	call->flags = TRACE_EVENT_FL_UPROBE | TRACE_EVENT_FL_CAP_ANY;
+ 	call->class->reg = trace_uprobe_register;
