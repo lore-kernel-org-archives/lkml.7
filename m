@@ -2,200 +2,154 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AF1ACA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:05:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ABA7CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:12:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38D1821872
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:05:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 525E2214B2
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:12:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pi2vCaoI"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="bp60qwlb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388945AbfJVMFR (ORCPT
+        id S2388982AbfJVMMH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 08:05:17 -0400
-Received: from mail-lj1-f181.google.com ([209.85.208.181]:42028 "EHLO
-        mail-lj1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388246AbfJVMFR (ORCPT
+        Tue, 22 Oct 2019 08:12:07 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:53088 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388960AbfJVMMG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 08:05:17 -0400
-Received: by mail-lj1-f181.google.com with SMTP id u4so2761764ljj.9
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 05:05:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=VGTfUe//Lkyyq1CFsi2Aw+FdHH2W9Ju5Bb6Df3fquDw=;
-        b=pi2vCaoItbcXJ3F6Bo71yn+jXqd3pUZmK66jHNjAkxWt9qjAswyRHIIsKKK72IkTXF
-         /IvctVUS5+Et1kRm85+/fTdAMG6rzkj4+bC/284zs0NqpGElHvrvhM6VtG5Oteyu3d8z
-         X3/6G6g//2ckZ/demrHv7AuYYD7M7xSSbVgMj0XayXZhIwSodnRNmXSaxpCWbszhUD68
-         wQb6DLFyZ+Hj85zp69FgdmjvHHjZuGsYd56eKrruHekeB9s2DSlxgz1TYs2RZPVqBGKj
-         yaiHok3rmXo/vPDzoXU0deh8jdiYvdZaUgncHbfuyUiknG+ebmixBr2n3MkfWfs2FE7w
-         hKcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=VGTfUe//Lkyyq1CFsi2Aw+FdHH2W9Ju5Bb6Df3fquDw=;
-        b=hoJ2+gojh2mlhsENsLaDUx5zhf6AioPWGJuaHi9xWlmDkkZ3FXG2klBf6JxJVtJEVM
-         8tEdCy/YsjdDw1DJp+Q6BaMx/ub5rhIUCBewQY/9iNmxQwUqIB7xWrdUFH/ryzFj7aiy
-         WUm582pYFtlfLh14kiwROcxfVqyEhQaEsV++hTDHjUPAmiLrfw9ZaGpHE8dvFWauKFKg
-         VQCWoNtBxl8GBPiFxacrFPLKu7FCoe2Pzlxu1frLVi3azNNhFfKQOlWPVZuHyWwFhTL8
-         Hi50NP4Lr2d6OkYpCXf1FOEB3KwXsiVUEUC8SCaka4w0Aj2pXZNrJepS1foBQilZfAWl
-         ZTsw==
-X-Gm-Message-State: APjAAAXrJIEm03VBxiGlTwlNzkwrHOy+KUevIuia3Oyi+I28EfHuaUo5
-        UUmKN5Ge+FFBggqJ211NnIEqNg==
-X-Google-Smtp-Source: APXvYqw73VgC0S976eZM9uQqGSZ6Ma0RPqQ57qIGOHoyqFCwxrGlaeFe6OIdIpOCQtqa5/Z8vQsNJA==
-X-Received: by 2002:a2e:9b46:: with SMTP id o6mr2071632ljj.90.1571745914535;
-        Tue, 22 Oct 2019 05:05:14 -0700 (PDT)
-Received: from localhost.localdomain (c-413e70d5.07-21-73746f28.bbcust.telenor.se. [213.112.62.65])
-        by smtp.gmail.com with ESMTPSA id r75sm6940248lff.93.2019.10.22.05.05.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 22 Oct 2019 05:05:12 -0700 (PDT)
-Date:   Tue, 22 Oct 2019 13:10:39 +0200
-From:   Anders Roxell <anders.roxell@linaro.org>
-To:     Peng Ma <peng.ma@nxp.com>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        Leo Li <leoyang.li@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
-Subject: Re: [EXT] Re: [V5 1/2] dmaengine: fsl-dpaa2-qdma: Add the
- DPDMAI(Data Path DMA Interface) support
-Message-ID: <20191022111039.GA8762@localhost.localdomain>
-References: <20190930020440.7754-1-peng.ma@nxp.com>
- <20191017041124.GN2654@vkoul-mobl>
- <AM0PR04MB44207F0EF575C5FB44DA6984ED6D0@AM0PR04MB4420.eurprd04.prod.outlook.com>
- <CADYN=9JkQMawVnLoJ8sXAbV8NB_BK0zQA0PomJ583Agj12r8Cg@mail.gmail.com>
- <VI1PR04MB443121007853185039A65534ED680@VI1PR04MB4431.eurprd04.prod.outlook.com>
+        Tue, 22 Oct 2019 08:12:06 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9MC8tCn113199;
+        Tue, 22 Oct 2019 12:11:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
+ cc : references : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=MFJzMYNcFvDsXyams3WVY/szvOVOHehPEPgrKljIzhc=;
+ b=bp60qwlbt9nzMsjtdt9HiuUcE5bkuVIY3/S6BWCxKWwdv9U9/lhQcG/A/+aeudq0GXmH
+ nt/k/rQKYyVRl3Ss2EdxNXrTuxxhYNllr6aPxugzRRNupLwst3z50/Z8E6YtnTmlvqOm
+ IjNEQiiy1ZlKklOjSEACe05aD4iH1vtIhuZuDXVLsVtgHxUTssn7ldu2ja6F8PdYzw8A
+ Qw7FcjPj9U7XU6n02Npi3CrqoZvXgGept8ESk7nljs2C44Gs/uIKqAOFuKT9HO448cbF
+ oxve13v/F6Ywc+nulsOX6sJXlfqME/fdUFb9LtKgvYHlrdk1xXqPSYGWUVHlsrMlL+Mf IQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2vqtepp5pt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 22 Oct 2019 12:11:33 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9MC8J4q100829;
+        Tue, 22 Oct 2019 12:11:33 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2vrc01rnte-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 22 Oct 2019 12:11:33 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9MCBVdT031690;
+        Tue, 22 Oct 2019 12:11:31 GMT
+Received: from [10.175.28.77] (/10.175.28.77)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 22 Oct 2019 05:11:31 -0700
+Subject: Re: email as a bona fide git transport
+From:   Vegard Nossum <vegard.nossum@oracle.com>
+To:     Willy Tarreau <w@1wt.eu>, "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     Santiago Torres Arias <santiago@nyu.edu>,
+        workflows@vger.kernel.org, Git Mailing List <git@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
+        Eric Wong <e@80x24.org>
+References: <b9fb52b8-8168-6bf0-9a72-1e6c44a281a5@oracle.com>
+ <20191016111009.GE13154@1wt.eu>
+ <20191016144517.giwip4yuaxtcd64g@LykOS.localdomain>
+ <56664222-6c29-09dc-ef78-7b380b113c4a@oracle.com>
+ <20191018161547.GG21137@mit.edu>
+ <de49fe5e-85cb-9fb0-f9f4-c294d72e356c@oracle.com>
+ <20191018191456.GI21137@mit.edu> <20191020031716.GA17475@1wt.eu>
+ <1a259d8d-b3d1-b64e-07c3-ba143b42c442@oracle.com>
+Message-ID: <de6dd8b5-5c28-d0b2-d3fc-e72a6d643105@oracle.com>
+Date:   Tue, 22 Oct 2019 14:11:22 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <VI1PR04MB443121007853185039A65534ED680@VI1PR04MB4431.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <1a259d8d-b3d1-b64e-07c3-ba143b42c442@oracle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9417 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910220110
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9417 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910220110
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-10-22 10:19, Peng Ma wrote:
-> Hi Anders && Viod,
+On 10/20/19 8:28 AM, Vegard Nossum wrote:
 > 
-> I sent v6 patch to fix the build error, please check.
-
-oh I will check, didn't see them when I sent out my email. =/
-
-Cheers,
-Anders
-
-> Patchwork link:
-> https://patchwork.kernel.org/project/linux-dmaengine/list/?series=191397
+> On 10/20/19 5:17 AM, Willy Tarreau wrote:
+>> On Fri, Oct 18, 2019 at 03:14:56PM -0400, Theodore Y. Ts'o wrote:
+>>> On Fri, Oct 18, 2019 at 06:50:51PM +0200, Vegard Nossum wrote:
+>>>> The problem I ran into with putting the metadata at the end was
+>>>> detecting where the diff ends. A comment in 'git apply' suggested that
+>>>> detecting the difference between "--" as a diff/signature separator and
+>>>> as part of the diff is nontrivial in the sense that you need to 
+>>>> actually
+>>>> do some parsing and keep track of hunk sizes.
+>>>
+>>> Could we cheat by having "git format-patch" add a "Diff-size" in the
+>>> header which gives the number of lines in the diff so git am can just
+>>> count lines to find the Trailer section?
+>>
+>> Be careful with this, it starts like this and ends up with non-editable
+>> patches. I'd rather have git-am use best-effort detection of the end.
 > 
-> Best Regards,
-> Peng
-> >-----Original Message-----
-> >From: Anders Roxell <anders.roxell@linaro.org>
-> >Sent: 2019年10月22日 17:27
-> >To: Peng Ma <peng.ma@nxp.com>
-> >Cc: Vinod Koul <vkoul@kernel.org>; dan.j.williams@intel.com; Leo Li
-> ><leoyang.li@nxp.com>; linux-kernel@vger.kernel.org;
-> >dmaengine@vger.kernel.org
-> >Subject: Re: [EXT] Re: [V5 1/2] dmaengine: fsl-dpaa2-qdma: Add the
-> >DPDMAI(Data Path DMA Interface) support
-> >
-> >Caution: EXT Email
-> >
-> >On Thu, 17 Oct 2019 at 08:16, Peng Ma <peng.ma@nxp.com> wrote:
-> >>
-> >> Hi Vinod,
-> >>
-> >> Thanks very much for your reply.
-> >>
-> >> Best Regards,
-> >> Peng
-> >> >-----Original Message-----
-> >> >From: Vinod Koul <vkoul@kernel.org>
-> >> >Sent: 2019年10月17日 12:11
-> >> >To: Peng Ma <peng.ma@nxp.com>
-> >> >Cc: dan.j.williams@intel.com; Leo Li <leoyang.li@nxp.com>;
-> >> >linux-kernel@vger.kernel.org; dmaengine@vger.kernel.org
-> >> >Subject: [EXT] Re: [V5 1/2] dmaengine: fsl-dpaa2-qdma: Add the
-> >> >DPDMAI(Data Path DMA Interface) support
-> >> >
-> >> >Caution: EXT Email
-> >> >
-> >> >On 30-09-19, 02:04, Peng Ma wrote:
-> >> >> The MC(Management Complex) exports the DPDMAI(Data Path DMA
-> >> >Interface)
-> >> >> object as an interface to operate the DPAA2(Data Path Acceleration
-> >> >> Architecture 2) qDMA Engine. The DPDMAI enables sending frame-based
-> >> >> requests to qDMA and receiving back confirmation response on
-> >> >> transaction completion, utilizing the DPAA2 QBMan(Queue Manager and
-> >> >> Buffer Manager
-> >> >> hardware) infrastructure. DPDMAI object provides up to two
-> >> >> priorities for processing qDMA requests.
-> >> >> The following list summarizes the DPDMAI main features and capabilities:
-> >> >>       1. Supports up to two scheduling priorities for processing
-> >> >>       service requests.
-> >> >>       - Each DPDMAI transmit queue is mapped to one of two service
-> >> >>       priorities, allowing further prioritization in hardware between
-> >> >>       requests from different DPDMAI objects.
-> >> >>       2. Supports up to two receive queues for incoming transaction
-> >> >>       completion confirmations.
-> >> >>       - Each DPDMAI receive queue is mapped to one of two receive
-> >> >>       priorities, allowing further prioritization between other
-> >> >>       interfaces when associating the DPDMAI receive queues to DPIO
-> >> >>       or DPCON(Data Path Concentrator) objects.
-> >> >>       3. Supports different scheduling options for processing received
-> >> >>       packets:
-> >> >>       - Queues can be configured either in 'parked' mode (default),
-> >> >>       or attached to a DPIO object, or attached to DPCON object.
-> >> >>       4. Allows interaction with one or more DPIO objects for
-> >> >>       dequeueing/enqueueing frame descriptors(FD) and for
-> >> >>       acquiring/releasing buffers.
-> >> >>       5. Supports enable, disable, and reset operations.
-> >> >>
-> >> >> Add dpdmai to support some platforms with dpaa2 qdma engine.
-> >> >
-> >> >Applied both, thanks
-> >
-> >I see this error when I'm building.
-> >
-> >WARNING: modpost: missing MODULE_LICENSE() in
-> >drivers/dma/fsl-dpaa2-qdma/dpdmai.o
-> >see include/linux/module.h for more information
-> >ERROR: "dpdmai_enable" [drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko]
-> >undefined!
-> >ERROR: "dpdmai_set_rx_queue"
-> >[drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko] undefined!
-> >ERROR: "dpdmai_get_tx_queue"
-> >[drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko] undefined!
-> >ERROR: "dpdmai_get_rx_queue"
-> >[drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko] undefined!
-> >ERROR: "dpdmai_get_attributes"
-> >[drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko] undefined!
-> >ERROR: "dpdmai_open" [drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko]
-> >undefined!
-> >ERROR: "dpdmai_close" [drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko]
-> >undefined!
-> >ERROR: "dpdmai_disable" [drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko]
-> >undefined!
-> >ERROR: "dpdmai_reset" [drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko]
-> >undefined!
-> >make[2]: *** [../scripts/Makefile.modpost:95: __modpost] Error 1
-> >make[1]: *** [/srv/src/kernel/next/Makefile:1282: modules] Error 2
-> >make: *** [Makefile:179: sub-make] Error 2
-> >make: Target 'Image' not remade because of errors.
-> >make: Target 'modules' not remade because of errors.
-> >
-> >any other that see the same ?
-> >
-> >Cheers,
-> >Anders
+> Expect filesystem developers to come up with a format that uses extents ;-)
+> 
+>> Also when dealing with stable backports, I've done a lot of
+>> "cat foo.diff >> bar.patch" to fixup some patches in which I just had
+>> to move some parts around. Having to count lines and edit a counter
+>> somewhere is going to become really painful.
+> 
+> I almost have some new patches ready for putting the metadata after the
+> patch using a very bare-bones diff parser (it's actually not that bad),
+> I just need to fix a few corner cases that are causing breakage in the
+> git test suite.
+
+I sent v2 of the patches (with metadata _after_ the diff) to the git
+list here:
+
+https://public-inbox.org/git/20191022114518.32055-1-vegard.nossum@oracle.com/T/#u
+
+As I wrote in there, we could already today start using
+
+   git am --message-id
+
+when applying patches and this would provide something that a bot could
+annotate with git notes pointing to lore/LKML/LWN/whatever. I think that
+would already be a pretty nice improvement over today's situation.
+
+Sadly, since the beginning of 2018, this was only used for a measly
+~0.14% of all non-merge commits in the kernel:
+
+$ git rev-list --count --no-merges --since='2018-01-01' --grep 
+'Message-Id: ' linus/master
+178
+
+$ git rev-list --count --no-merges --since='2018-01-01' linus/master
+130777
+
+So how can we spread the word about --message-id and get maintainers to
+actually use it? I don't suppose it's reasonable to change the 'git am'
+default setting?
+
+
+Vegard
