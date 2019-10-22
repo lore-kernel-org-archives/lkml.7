@@ -2,124 +2,111 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B4ECA9EB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 10:42:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9722CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 10:47:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46E002184C
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 10:42:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571740972;
-	bh=ZB9rkiPisn/IuTUY/IajVYEn36xXAxtTFPGll20+in0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=xBwKewhII4jqjvZ5D56wMZCiriEZTcFg0fhzmCJPgSyuwv3PwJK77Hqsk4WaYCmd6
-	 E+jRlWiWkfk32uvhjm5MCzDDp6JWN5K1jKxrRUdrq2Rhk+ARiYshqPkvm0Rhi0LkxY
-	 wvSIZz06aFqF8Tso6pCN9qDEtIMLtpyNyjczIwk8=
+	by mail.kernel.org (Postfix) with ESMTP id 803BF2075A
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 10:47:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X22GlBz5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388542AbfJVKmv (ORCPT
+        id S1731879AbfJVKrT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 06:42:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49708 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727101AbfJVKmu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 06:42:50 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F8AF20B7C;
-        Tue, 22 Oct 2019 10:42:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571740969;
-        bh=ZB9rkiPisn/IuTUY/IajVYEn36xXAxtTFPGll20+in0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=OdV5Vo1PSD3rGRuhst7NVuiD22RPXWZYfAgluI/6TQ0nSv5YtjsfwEHFyILMgH03H
-         5e3zfmIUDIBMDD/F18zEZh7DnTsv7tUba/HMK2DwWKXI4kh4ujHtrdtvg706auEyar
-         7CB1lrPekMzC5pIC7hV7/63Cxjb9hlcKcNvCKI0g=
-Date:   Tue, 22 Oct 2019 11:42:43 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Gwendal Grignou <gwendal@chromium.org>
-Cc:     Brian Norris <briannorris@chromium.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Doug Anderson <dianders@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Fabien Lahoudere <fabien.lahoudere@collabora.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>
-Subject: Re: [PATCH v2 10/18] platform: chrome: sensorhub: Add FIFO support
-Message-ID: <20191022114243.1eaf19c1@archlinux>
-In-Reply-To: <CAPUE2uuaFQYXKhn+b6tW6tXWQECeix3pt3+KnMbyXgvx-Qoa1Q@mail.gmail.com>
-References: <20191021055403.67849-1-gwendal@chromium.org>
-        <20191021055403.67849-11-gwendal@chromium.org>
-        <20191021172727.0fa9918e@archlinux>
-        <CAPUE2uuaFQYXKhn+b6tW6tXWQECeix3pt3+KnMbyXgvx-Qoa1Q@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 22 Oct 2019 06:47:19 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:55958 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730197AbfJVKrT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 06:47:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571741237;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
+        bh=HTbnzNCtOppqAIupH8V/pMGxUXq85ReOJIxDUGQeUjo=;
+        b=X22GlBz5gtdVsEusPh2/kOJ0p9r1ASwivX85MZcfv8UcxrGrK10cqQtpH44gSvMLdHejxY
+        OCYve7BJvjse2nGgxAAmtc2RbI5yeN0cGqTWgOTzJU6cXGZVnVNiTp6F8SmBYwXwj4/AI6
+        e526LAt2QxfYvO/XaWk4nDyAvXmuSOI=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-364-3yueXF6FMNK-bhwy1_p3Mg-1; Tue, 22 Oct 2019 06:47:13 -0400
+Received: by mail-wr1-f69.google.com with SMTP id x9so2604194wrq.5
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 03:47:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=8zCq6QLAMRjL/CHEEMgWUvZyUh8kWvlSdVdD6Q6SWo0=;
+        b=gFRSnwg+41cTlf+yYSToGyB7LnL8MbrVPuEIM/nIrZ+z8/Yn6/jQWoPpX7fM0gLZsS
+         jC+lcQACiblHa4xtPVPidJwk8ZJorytjUMBQzkJ1lBvKL6KJpPCZ1j/4Xl2FCdLLTk0F
+         xMmNdZSg/5C3KQT4Sk5T1NEEYEZt2gmPenLYUUpQ9LBHGbXT6yHboaUKJF3oS/J33p71
+         Lkdwsm3UAAL/t9aG4tdK3dtuMZSNmmCqLNFxPvb4ExeHFfI4lJhFRBaIQx4hyVWII7Y0
+         YrtGEJO3d5kYAc8j5bjbi7bvjgPVh5RhsoB9VJDWeG14NFqpTiaf4aiysBbUxowXyJxi
+         //9w==
+X-Gm-Message-State: APjAAAUY3zB1qgjmJnxOYz73ebe7dS6935YtnA1bhBulTamDQSSHfQOc
+        nXT7Ww/e21Y56qbR6Xe4EZfB5/RX45NjEtUmyCLRpoD5kj+D5ng84i1olLIYutPWVkZASCE9mj9
+        m7lviU8kSktRWpT3ve/8r0Vma
+X-Received: by 2002:a05:600c:22d7:: with SMTP id 23mr2363978wmg.31.1571741232405;
+        Tue, 22 Oct 2019 03:47:12 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxmt/TPxoHGsfz2ZLkS3GfXvsQS9YJWhWM+xuxarVHcPZp4Pw3oXisS5P3+nqsdpibJx7RdwA==
+X-Received: by 2002:a05:600c:22d7:: with SMTP id 23mr2363951wmg.31.1571741232110;
+        Tue, 22 Oct 2019 03:47:12 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:45c:4f58:5841:71b2? ([2001:b07:6468:f312:45c:4f58:5841:71b2])
+        by smtp.gmail.com with ESMTPSA id u1sm16024041wmc.38.2019.10.22.03.47.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Oct 2019 03:47:11 -0700 (PDT)
+Subject: Re: [PATCH v3 6/6] KVM: x86/vPMU: Add lazy mechanism to release
+ perf_event per vPMC
+To:     Like Xu <like.xu@linux.intel.com>, peterz@infradead.org,
+        kvm@vger.kernel.org
+Cc:     like.xu@intel.com, linux-kernel@vger.kernel.org,
+        jmattson@google.com, sean.j.christopherson@intel.com,
+        wei.w.wang@intel.com, kan.liang@intel.com
+References: <20191021160651.49508-1-like.xu@linux.intel.com>
+ <20191021160651.49508-7-like.xu@linux.intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <c17a9d77-2c30-b3c0-4652-57f0b9252f3b@redhat.com>
+Date:   Tue, 22 Oct 2019 12:47:11 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20191021160651.49508-7-like.xu@linux.intel.com>
+Content-Language: en-US
+X-MC-Unique: 3yueXF6FMNK-bhwy1_p3Mg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-...
-> > > + * @sensor_hub : Sensor Hub object
-> > > + */
-> > > +int cros_ec_sensorhub_ring_add(struct cros_ec_sensorhub *sensorhub)
-> > > +{
-> > > +     struct cros_ec_dev *ec = sensorhub->ec;
-> > > +     int ret;
-> > > +
-> > > +     /* Retrieve FIFO information */
-> > > +     sensorhub->msg->version = 2;
-> > > +     sensorhub->params->cmd = MOTIONSENSE_CMD_FIFO_INFO;
-> > > +     sensorhub->msg->outsize = 1;
-> > > +     sensorhub->msg->insize =
-> > > +             sizeof(struct ec_response_motion_sense_fifo_info) +
-> > > +             sizeof(u16) * CROS_EC_SENSOR_MAX;
-> > > +
-> > > +     ret = cros_ec_cmd_xfer_status(ec->ec_dev, sensorhub->msg);
-> > > +     if (ret < 0)
-> > > +             return ret;
-> > > +
-> > > +     /*
-> > > +      * Allocate the full fifo.
-> > > +      * We need to copy the whole FIFO to set timestamps properly *
-> > > +      */
-> > > +     sensorhub->fifo_size = sensorhub->resp->fifo_info.size;
-> > > +     sensorhub->ring = devm_kcalloc(sensorhub->dev, sensorhub->fifo_size,
-> > > +                     sizeof(*sensorhub->ring), GFP_KERNEL);
-> > > +     if (!sensorhub->ring)
-> > > +             return -ENOMEM;
-> > > +
-> > > +     sensorhub->fifo_timestamp[CROS_EC_SENSOR_LAST_TS] =
-> > > +             cros_ec_get_time_ns();  
-> >
-> > Hmm. Is the IIO standard timestamp selection attribute being exposed?
-> > If so this is going to be confusing as we aren't obeying the selection
-> > of clock from that..  
-> 
-> You're right, I did not find an elegant solution.
-> cros_ec_get_time_ns() is an inline version of ktime_get_boottime_ns
-> aka iio_get_time_ns( with indio_dev->clock_id set to  CLOCK_BOOTTIME).
-> But I can not call iio_get_time_ns() here, as I don't have a
-> indio_dev. Besides, sensors could have a different
-> current_timestamp_clock attribute. I will convert in the callback
-> routine (cros_ec_sensors_push_data() by adding an offset
-> (iio_get_time_ns(indio_dev) - cros_ec_get_time_ns())
-> >  
+On 21/10/19 18:06, Like Xu wrote:
+> =20
+> +=09=09__set_bit(INTEL_PMC_IDX_FIXED + i, pmu->pmc_in_use);
+>  =09=09reprogram_fixed_counter(pmc, new_ctrl, i);
+>  =09}
+> =20
+> @@ -329,6 +330,11 @@ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
+>  =09    (boot_cpu_has(X86_FEATURE_HLE) || boot_cpu_has(X86_FEATURE_RTM)) =
+&&
+>  =09    (entry->ebx & (X86_FEATURE_HLE|X86_FEATURE_RTM)))
+>  =09=09pmu->reserved_bits ^=3D HSW_IN_TX|HSW_IN_TX_CHECKPOINTED;
+> +
+> +=09bitmap_set(pmu->all_valid_pmc_idx,
+> +=09=090, pmu->nr_arch_gp_counters);
+> +=09bitmap_set(pmu->all_valid_pmc_idx,
+> +=09=09INTEL_PMC_MAX_GENERIC, pmu->nr_arch_fixed_counters);
 
-If you can special case that (perhaps adding some functionality to IIO)
-to not do anything if both are CLOCK_BOOTTIME that would be great.
+The offset needs to be INTEL_PMC_IDX_FIXED for GP counters, and 0 for
+fixed counters, otherwise pmc_in_use and all_valid_pmc_idx are not in sync.
 
-Thanks,
-
-Jonathan
+Paolo
 
