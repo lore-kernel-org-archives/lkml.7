@@ -2,144 +2,171 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78B1DCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:37:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD270CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:37:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EB0021929
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:37:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A827420679
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:37:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="OVaxqkiV"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="giNNnQgA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388362AbfJVIgm (ORCPT
+        id S2388371AbfJVIhb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 04:36:42 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:40539 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731244AbfJVIgk (ORCPT
+        Tue, 22 Oct 2019 04:37:31 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:36035 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731242AbfJVIha (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 04:36:40 -0400
-Received: by mail-wm1-f65.google.com with SMTP id b24so15249691wmj.5
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 01:36:38 -0700 (PDT)
+        Tue, 22 Oct 2019 04:37:30 -0400
+Received: by mail-wr1-f65.google.com with SMTP id w18so16466888wrt.3
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 01:37:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lPnRL6NpoSqZohNp9zgeBMxysYnhgrlrtuMJ1IcmiO4=;
-        b=OVaxqkiV3r66rCJJ/etx7RcDaFZpH+qujz5COsDg5e2kyosZzs1ammXKSMfEvWjVqo
-         5LUTARizfYH78ZKf1AjSkhJ0vaerruSVrLdmnWd1/zJHjTY+TRrXeiUYXKp+Mh0NSrpJ
-         ieQMAoZO59R40dcP9klGlFS/jeZ5AHtdTzMf7i1wsVdXIYsmQEad9sLN2lqxuSfVkAHT
-         jtFE85+X8jX1kAEtQ7n4IB0VXYKse0OXHrwGcPpbLaoY7Ofm1rbcAqCXB0uErCYA/D0a
-         HZJjTK9CEXfvyAbhVNTtWRYxSdiyGshcerExV5YXr8ylFkySuMNC1oQV/N5DrJWJZmHD
-         ycUA==
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xuCgV4YUFYa6Caw2Y7xISyDpnVmWYzdkWcO2116lWE4=;
+        b=giNNnQgAjHNft/0FgO/AAhey9WyM3sxbadX7UZAgHpUwSifwzOZJ53L+/otOLfZy1b
+         HbgoaElE/oR4BlnRE2UoC/++L7XXQOdCTshf8W5PhHihnq/lRnMl+sepQsVLnOMqPfuc
+         Fn5Pj1o0zLvx9mlVr+ApFuiwJwEmfTyGh9RRI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lPnRL6NpoSqZohNp9zgeBMxysYnhgrlrtuMJ1IcmiO4=;
-        b=DAeNwwfbdeNsI7Bhki131GlQL3xcW+4CG7UNAHFSCWnPfEgtP436guc8kfAf0398JW
-         ALSl5bOMrbVTS/5m6VvGmiBag8p6I7hV4iQIkoBbru2n4jkqZj0BbRrev8SnYGM0iM4t
-         eyYhX3OX/m2EqBEh3JLQQmtSOhaf7/fLIDXaFjjSbfULOT41i7ZKB9/iNgjLmO4IeRMa
-         c1s3FnYIlNbUYzyRtoZ+iIprhxGWVS0/876f/uUIt0qMpIWlBTOgFC1Ao21scBjlMT4Z
-         F+C0AZA57INnHzZQJRIegzpwfuXv+eCrjQbLdWcwLQ46sMK/uFK556TJc2v2nU96dupC
-         23GQ==
-X-Gm-Message-State: APjAAAUD1YRWXR/orH1e7r6BRCkfKFtbUlhTvwk458fy4wVe4J2FWaaf
-        DTiFHPYL2Hp3pOnYRWVQyK+7Xw==
-X-Google-Smtp-Source: APXvYqwin7FI5BQUaoLOJ1m7zw/wr3yxBZOmxIPUtoJU2kMR7WARJaTrWbmN83nJqNw4l2Y2RU1QXA==
-X-Received: by 2002:a1c:2cc4:: with SMTP id s187mr1901269wms.166.1571733396580;
-        Tue, 22 Oct 2019 01:36:36 -0700 (PDT)
-Received: from localhost.localdomain (amontpellier-652-1-281-69.w109-210.abo.wanadoo.fr. [109.210.96.69])
-        by smtp.gmail.com with ESMTPSA id g17sm17115253wrq.58.2019.10.22.01.36.35
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=xuCgV4YUFYa6Caw2Y7xISyDpnVmWYzdkWcO2116lWE4=;
+        b=fH9GLxYjr+wFVYi0vBmOzhMq2Jm5Zlu6FZJfD95UNIhtKI3WanuDG3mEUNMwvfyOJI
+         kda+DBnEFpTknAswaeRbansClfXpYDF5auJHPO3nD5a9cB3aaU1KZ/yHnAcJYzmcSIl0
+         UFAqAcW/PDlRlilLDmLb5ukWXsY08x0qdkAOViujFiQFDqjJ8mimpSoIrnYtTSgfVFo4
+         SoDgz5dXVc+Bp7722D6UwsISx/LCtL1sJ3aQWEZDYZ8dWEQHxcFrMD5WXPr/4Mb+FHSa
+         yfMl4sdlu1V1FAVp0TNFfgCC9d0qOCSonYIagZ/1vSgFnFkVowhPV4jrMusdThecIUlG
+         CyNw==
+X-Gm-Message-State: APjAAAUlIj0yFjDq3HOEdlAbKPN6JEBaZT6Pjuh/BpLTBNExYohSPICv
+        mbAdF6B0aW+CA3d/44oHbEUFpg==
+X-Google-Smtp-Source: APXvYqzn4oehIGnlOKvsXHpvbPtT9iSU1nTJNoBE2XJUwT2ImOHs2/TzhEOV5ZcOXZEqgAMK7GYnPw==
+X-Received: by 2002:a5d:6a03:: with SMTP id m3mr420075wru.90.1571733447653;
+        Tue, 22 Oct 2019 01:37:27 -0700 (PDT)
+Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
+        by smtp.gmail.com with ESMTPSA id p12sm4910430wrt.7.2019.10.22.01.37.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Oct 2019 01:36:36 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jacopo Mondi <jacopo@jmondi.org>
-Cc:     linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v7 0/9] backlight: gpio: simplify the driver
-Date:   Tue, 22 Oct 2019 10:36:21 +0200
-Message-Id: <20191022083630.28175-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.23.0
+        Tue, 22 Oct 2019 01:37:26 -0700 (PDT)
+Date:   Tue, 22 Oct 2019 10:37:25 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     airlied@linux.ie, daniel@ffwll.ch, ville.syrjala@linux.intel.com,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH v2] drm: atomic helper: fix W=1 warnings
+Message-ID: <20191022083725.GW11828@phenom.ffwll.local>
+Mail-Followup-To: Benjamin Gaignard <benjamin.gaignard@st.com>,
+        airlied@linux.ie, ville.syrjala@linux.intel.com,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+References: <20191008124254.2144-1-benjamin.gaignard@st.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191008124254.2144-1-benjamin.gaignard@st.com>
+X-Operating-System: Linux phenom 5.2.0-2-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Tue, Oct 08, 2019 at 02:42:54PM +0200, Benjamin Gaignard wrote:
+> Few for_each macro set variables that are never used later which led
+> to generate unused-but-set-variable warnings.
+> Add (void)(foo) inside the macros to remove these warnings
+> 
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
 
-While working on my other series related to gpio-backlight[1] I noticed
-that we could simplify the driver if we made the only user of platform
-data use GPIO lookups and device properties. This series tries to do
-that.
+OCD in me would lean towards annotating all of them, unconditionally, and
+be done. But I guess this works too. Either way:
 
-First two patches contain minor fixes. Third patch makes the driver
-explicitly drive the GPIO line. Fourth patch adds all necessary data
-structures to ecovec24. Patch 5/9 unifies much of the code for both
-pdata and non-pdata cases. Patches 6-7/9 remove unused platform data
-fields. Last two patches contain additional improvements for the GPIO
-backlight driver while we're already modifying it.
-
-I don't have access to this HW but hopefully this works. Only compile
-tested.
-
-[1] https://lkml.org/lkml/2019/6/25/900
-
-v1 -> v2:
-- rebased on top of v5.3-rc1 and adjusted to the recent changes from Andy
-- added additional two patches with minor improvements
-
-v2 -> v3:
-- in patch 7/7: used initializers to set values for pdata and dev local vars
-
-v3 -> v4:
-- rebased on top of v5.4-rc1
-- removed changes that are no longer relevant after commit ec665b756e6f
-  ("backlight: gpio-backlight: Correct initial power state handling")
-- added patch 7/7
-
-v4 -> v5:
-- in patch 7/7: added a comment replacing the name of the function being
-  pulled into probe()
-
-v5 -> v6:
-- added a patch making the driver explicitly set the direction of the GPIO
-  to output
-- added a patch removing a redundant newline
-
-v6 -> v7:
-- renamed the function calculating the new GPIO value for status update
-- collected more tags
-
-Bartosz Golaszewski (9):
-  backlight: gpio: remove unneeded include
-  backlight: gpio: remove stray newline
-  backlight: gpio: explicitly set the direction of the GPIO
-  sh: ecovec24: add additional properties to the backlight device
-  backlight: gpio: simplify the platform data handling
-  sh: ecovec24: don't set unused fields in platform data
-  backlight: gpio: remove unused fields from platform data
-  backlight: gpio: use a helper variable for &pdev->dev
-  backlight: gpio: pull gpio_backlight_initial_power_state() into probe
-
- arch/sh/boards/mach-ecovec24/setup.c         |  33 +++--
- drivers/video/backlight/gpio_backlight.c     | 128 +++++++------------
- include/linux/platform_data/gpio_backlight.h |   3 -
- 3 files changed, 69 insertions(+), 95 deletions(-)
+Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+> ---
+>  include/drm/drm_atomic.h | 17 ++++++++++++++---
+>  1 file changed, 14 insertions(+), 3 deletions(-)
+> 
+> diff --git a/include/drm/drm_atomic.h b/include/drm/drm_atomic.h
+> index 927e1205d7aa..b6c73fd9f55a 100644
+> --- a/include/drm/drm_atomic.h
+> +++ b/include/drm/drm_atomic.h
+> @@ -693,6 +693,7 @@ void drm_state_dump(struct drm_device *dev, struct drm_printer *p);
+>  	     (__i)++)								\
+>  		for_each_if ((__state)->connectors[__i].ptr &&			\
+>  			     ((connector) = (__state)->connectors[__i].ptr,	\
+> +			     (void)(connector) /* Only to avoid unused-but-set-variable warning */, \
+>  			     (old_connector_state) = (__state)->connectors[__i].old_state,	\
+>  			     (new_connector_state) = (__state)->connectors[__i].new_state, 1))
+>  
+> @@ -714,6 +715,7 @@ void drm_state_dump(struct drm_device *dev, struct drm_printer *p);
+>  	     (__i)++)								\
+>  		for_each_if ((__state)->connectors[__i].ptr &&			\
+>  			     ((connector) = (__state)->connectors[__i].ptr,	\
+> +			     (void)(connector) /* Only to avoid unused-but-set-variable warning */, \
+>  			     (old_connector_state) = (__state)->connectors[__i].old_state, 1))
+>  
+>  /**
+> @@ -734,7 +736,9 @@ void drm_state_dump(struct drm_device *dev, struct drm_printer *p);
+>  	     (__i)++)								\
+>  		for_each_if ((__state)->connectors[__i].ptr &&			\
+>  			     ((connector) = (__state)->connectors[__i].ptr,	\
+> -			     (new_connector_state) = (__state)->connectors[__i].new_state, 1))
+> +			     (void)(connector) /* Only to avoid unused-but-set-variable warning */, \
+> +			     (new_connector_state) = (__state)->connectors[__i].new_state, \
+> +			     (void)(new_connector_state) /* Only to avoid unused-but-set-variable warning */, 1))
+>  
+>  /**
+>   * for_each_oldnew_crtc_in_state - iterate over all CRTCs in an atomic update
+> @@ -754,7 +758,9 @@ void drm_state_dump(struct drm_device *dev, struct drm_printer *p);
+>  	     (__i)++)							\
+>  		for_each_if ((__state)->crtcs[__i].ptr &&		\
+>  			     ((crtc) = (__state)->crtcs[__i].ptr,	\
+> +			      (void)(crtc) /* Only to avoid unused-but-set-variable warning */, \
+>  			     (old_crtc_state) = (__state)->crtcs[__i].old_state, \
+> +			     (void)(old_crtc_state) /* Only to avoid unused-but-set-variable warning */, \
+>  			     (new_crtc_state) = (__state)->crtcs[__i].new_state, 1))
+>  
+>  /**
+> @@ -793,7 +799,9 @@ void drm_state_dump(struct drm_device *dev, struct drm_printer *p);
+>  	     (__i)++)							\
+>  		for_each_if ((__state)->crtcs[__i].ptr &&		\
+>  			     ((crtc) = (__state)->crtcs[__i].ptr,	\
+> -			     (new_crtc_state) = (__state)->crtcs[__i].new_state, 1))
+> +			     (void)(crtc) /* Only to avoid unused-but-set-variable warning */, \
+> +			     (new_crtc_state) = (__state)->crtcs[__i].new_state, \
+> +			     (void)(new_crtc_state) /* Only to avoid unused-but-set-variable warning */, 1))
+>  
+>  /**
+>   * for_each_oldnew_plane_in_state - iterate over all planes in an atomic update
+> @@ -813,6 +821,7 @@ void drm_state_dump(struct drm_device *dev, struct drm_printer *p);
+>  	     (__i)++)							\
+>  		for_each_if ((__state)->planes[__i].ptr &&		\
+>  			     ((plane) = (__state)->planes[__i].ptr,	\
+> +			      (void)(plane) /* Only to avoid unused-but-set-variable warning */, \
+>  			      (old_plane_state) = (__state)->planes[__i].old_state,\
+>  			      (new_plane_state) = (__state)->planes[__i].new_state, 1))
+>  
+> @@ -873,7 +882,9 @@ void drm_state_dump(struct drm_device *dev, struct drm_printer *p);
+>  	     (__i)++)							\
+>  		for_each_if ((__state)->planes[__i].ptr &&		\
+>  			     ((plane) = (__state)->planes[__i].ptr,	\
+> -			      (new_plane_state) = (__state)->planes[__i].new_state, 1))
+> +			      (void)(plane) /* Only to avoid unused-but-set-variable warning */, \
+> +			      (new_plane_state) = (__state)->planes[__i].new_state, \
+> +			      (void)(new_plane_state) /* Only to avoid unused-but-set-variable warning */, 1))
+>  
+>  /**
+>   * for_each_oldnew_private_obj_in_state - iterate over all private objects in an atomic update
+> -- 
+> 2.15.0
+> 
 
 -- 
-2.23.0
-
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
