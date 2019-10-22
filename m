@@ -2,141 +2,151 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF9A3CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:35:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B855CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:39:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 828462084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:35:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571765733;
-	bh=Jld/hYcxZXmjGFVuWBdEY4QI+QyPIanxZKbLtqBLGBc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Rp8rF1W1EgCX620W795CHknX/e8Dyb117fRDD4F0BJvdjbW0i5FsA4dyFT3Etc/Kw
-	 I3HA/anMwUrlgoKUO/AfBzyOZlUza3bqlCF8BLpfY+QAsBuJRBrMmb0PrlzHQO5/d3
-	 8mYRTRrNYTYVPIYsl2uawxPHYjSAovq87VE19uZ8=
+	by mail.kernel.org (Postfix) with ESMTP id D8DC42075A
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:39:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="o2eFswaW";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="C6Drrfhh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732296AbfJVRfc (ORCPT
+        id S1730192AbfJVRj3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 13:35:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35486 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725837AbfJVRfc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 13:35:32 -0400
+        Tue, 22 Oct 2019 13:39:29 -0400
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:41415 "EHLO
+        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726569AbfJVRj3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 13:39:29 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.nyi.internal (Postfix) with ESMTP id D7AE922087;
+        Tue, 22 Oct 2019 13:39:27 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Tue, 22 Oct 2019 13:39:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=baQW0mxKH2cZVXvaeNzt6ZclcCk
+        uKhAc2/nHWENB1x8=; b=o2eFswaWfbJMI+SwZ8Mn9QghA7XNSNx4z9xy4eBhXHU
+        AAP95MDPjmUZv71MK+5UmXe/KMjxXL+wUGiM0P7t/ptftHzF2VS2eKQ+h9tDqa3j
+        4BTbTlj7TQv0YG6i1WnOFz5f+A32jBuu78xgLcMnLwIcBxOkiif+LwwvifvCc9sA
+        3sMEVMcD1DyXezqoo3MJnqpfSpz6bXVWALXk/yK+ZXAuTxOVGirgZGBV443Fui1Y
+        vtGRDl2r5S6n0zz0sC6fdH7eEnwTkqoj2GzTVmnCzFDTvB0wwy/3b4/1ufIcETKv
+        woS1E0QOi/07WkyQWAAQxfkF2zBRFxS3dmwAaso2WTA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=baQW0m
+        xKH2cZVXvaeNzt6ZclcCkuKhAc2/nHWENB1x8=; b=C6DrrfhhAGd6Q6neDWk2xr
+        24D078Fa4KMpJZUD+sDWdBBwWDR3Y1KrExTt5UtawLi4EBt0WVXyyVWcI3ZKUbQk
+        7lSfhGIvs4FATvxDCKjwV7IjQNUt1OpoIe3ZxjovPKqale8rCW3Tkw8pdqZUtncG
+        NSQb4Iw77S9CoiEa3KBqjELEXf6o/xa1MekghYuAHYwyWHoCNJNq7SXoshDV+hWu
+        tOPDp382PLTj27CFftAYphjSZA3QO7M8PYGFmOi2RsHUZq42Jp313pvvn+7RRJNy
+        hhPJyqeSvEQWeSCIaIwZcKQnYchEmwl9yg1AhtoLa0E74+y9lQhhk2EDtqqM30Ww
+        ==
+X-ME-Sender: <xms:zj6vXYbK2Fq1Y5VVGxzE177dwwU-lvg0IgBk_VB6w2oDlnv2u-XjTg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrkeejgdduudehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjfgesthdtredttdervdenucfhrhhomhepifhrvghg
+    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecukfhppeduieeirddujedvrdduke
+    eirdehieenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghhrdgtohhm
+    necuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:zj6vXYEYq6S225N6sYZvjimneWVIUil25gVcs2tnxz9WZijlwob--A>
+    <xmx:zj6vXfxwuRWmsZj4xzzgqG05_XPbzw9UIiKNBYZISsl1KQuMInjvFA>
+    <xmx:zj6vXfj2Qckgf5v_yq-s2TxKIOe0g23wXFHtG3YSeE4r5ZWMg4VQOg>
+    <xmx:zz6vXUp0m-MKtt5-PE1bZZenumIXirO2_UoW5RGXL6zzKElZaZopEQ>
 Received: from localhost (mobile-166-172-186-56.mycingular.net [166.172.186.56])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B094320700;
-        Tue, 22 Oct 2019 17:35:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571765730;
-        bh=Jld/hYcxZXmjGFVuWBdEY4QI+QyPIanxZKbLtqBLGBc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KjIZP5hfgFgUn1+Ljz18nxHSEXDVd7I1a8ueHM1nX8sqKYwTPALZAdaZeymD9A5Xk
-         AhqKSe2drZC6ffhxX2VDu2wyGx51R4WPVjG0f6K8p+Z2h7rwP81FZEar+clOopjyBk
-         JWILQvQH0HfCGebHAWRAKurHRkWaeIRbs5Klfa/c=
-Date:   Tue, 22 Oct 2019 13:35:27 -0400
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Jaehoon Chung <jh80.chung@samsung.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Linux MMC List <linux-mmc@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        netdev <netdev@vger.kernel.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/7] debugfs: Add debugfs_create_xul() for hexadecimal
- unsigned long
-Message-ID: <20191022173527.GD230934@kroah.com>
-References: <20191021143742.14487-1-geert+renesas@glider.be>
- <20191021143742.14487-2-geert+renesas@glider.be>
- <0f91839d858fcb03435ebc85e61ee4e75371ff37.camel@perches.com>
- <CAMuHMdU4OhsK6Jvy406ZCM+OeGcfVB0b7ccsne9KdMZFLf=JqQ@mail.gmail.com>
- <a32b6a6b5f48ff0c4685bd417a8fb66229d95033.camel@perches.com>
+        by mail.messagingengine.com (Postfix) with ESMTPA id D2CE180061;
+        Tue, 22 Oct 2019 13:39:25 -0400 (EDT)
+Date:   Tue, 22 Oct 2019 13:39:24 -0400
+From:   Greg KH <greg@kroah.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Arnd Bergmann <arnd@arndb.de>, David Howells <dhowells@redhat.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Tomas Winkler <tomas.winkler@intel.com>
+Subject: Re: linux-next: manual merge of the char-misc tree with the keys tree
+Message-ID: <20191022173924.GG230934@kroah.com>
+References: <20191022133804.32ef6f86@canb.auug.org.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a32b6a6b5f48ff0c4685bd417a8fb66229d95033.camel@perches.com>
+In-Reply-To: <20191022133804.32ef6f86@canb.auug.org.au>
 User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 02:07:34AM -0700, Joe Perches wrote:
-> On Tue, 2019-10-22 at 10:03 +0200, Geert Uytterhoeven wrote:
-> > Hi Joe,
+On Tue, Oct 22, 2019 at 01:38:04PM +1100, Stephen Rothwell wrote:
+> Hi all,
 > 
-> Hey again Geert.
+> Today's linux-next merge of the char-misc tree got conflicts in:
 > 
-> > On Mon, Oct 21, 2019 at 5:37 PM Joe Perches <joe@perches.com> wrote:
-> > > On Mon, 2019-10-21 at 16:37 +0200, Geert Uytterhoeven wrote:
-> > > > The existing debugfs_create_ulong() function supports objects of
-> > > > type "unsigned long", which are 32-bit or 64-bit depending on the
-> > > > platform, in decimal form.  To format objects in hexadecimal, various
-> > > > debugfs_create_x*() functions exist, but all of them take fixed-size
-> > > > types.
-> > > > 
-> > > > Add a debugfs helper for "unsigned long" objects in hexadecimal format.
-> > > > This avoids the need for users to open-code the same, or introduce
-> > > > bugs when casting the value pointer to "u32 *" or "u64 *" to call
-> > > > debugfs_create_x{32,64}().
-> > > []
-> > > > diff --git a/include/linux/debugfs.h b/include/linux/debugfs.h
-> > > []
-> > > > @@ -356,4 +356,14 @@ static inline ssize_t debugfs_write_file_bool(struct file *file,
-> > > > 
-> > > >  #endif
-> > > > 
-> > > > +static inline void debugfs_create_xul(const char *name, umode_t mode,
-> > > > +                                   struct dentry *parent,
-> > > > +                                   unsigned long *value)
-> > > > +{
-> > > > +     if (sizeof(*value) == sizeof(u32))
-> > > > +             debugfs_create_x32(name, mode, parent, (u32 *)value);
-> > > > +     else
-> > > > +             debugfs_create_x64(name, mode, parent, (u64 *)value);
-> > > 
-> > > trivia: the casts are unnecessary.
-> > 
-> > They are necessary, in both calls (so using #ifdef as suggested below
-> > won't help):
+>   samples/Kconfig
+>   samples/Makefile
 > 
-> Silly thinko, (I somehow thought the compiler would
-> eliminate the code after the branch not taken, but
-> of course it has to compile it first...  oops)
-> though the #ifdef should work.
+> between commit:
 > 
-> > > This might be more sensible using #ifdef
-> > > 
-> > > static inline void debugfs_create_xul(const char *name, umode_t mode,
-> > >                                       struct dentry *parent,
-> > >                                       unsigned long *value)
-> > > {
-> > > #if BITS_PER_LONG == 64
-> > >         debugfs_create_x64(name, mode, parent, value);
-> > > #else
-> > >         debugfs_create_x32(name, mode, parent, value);
-> > > #endif
-> > > }
-> > 
-> > ... at the expense of the compiler checking only one branch.
-> > 
-> > Just like "if (IS_ENABLED(CONFIG_<foo>)" (when possible) is preferred
-> > over "#ifdef CONFIG_<foo>" because of compile-coverage, I think using
-> > "if" here is better than using "#if".
+>   0b9c31597d81 ("Add sample notification program")
 > 
-> True if all compilers will always eliminate the unused branch.
+> from the keys tree and commit:
+> 
+>   6859eba4f6fb ("samples: mei: use hostprogs kbuild constructs")
+> 
+> from the char-misc tree.
+> 
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
+> 
+> -- 
+> Cheers,
+> Stephen Rothwell
+> 
+> diff --cc samples/Kconfig
+> index d0761f29ccb0,b663d9d24114..000000000000
+> --- a/samples/Kconfig
+> +++ b/samples/Kconfig
+> @@@ -169,11 -169,11 +169,17 @@@ config SAMPLE_VF
+>   	  as mount API and statx().  Note that this is restricted to the x86
+>   	  arch whilst it accesses system calls that aren't yet in all arches.
+>   
+>  +config SAMPLE_WATCH_QUEUE
+>  +	bool "Build example /dev/watch_queue notification consumer"
+>  +	depends on HEADERS_INSTALL
+>  +	help
+>  +	  Build example userspace program to use the new mount_notify(),
+>  +	  sb_notify() syscalls and the KEYCTL_WATCH_KEY keyctl() function.
+>  +
+> + config SAMPLE_INTEL_MEI
+> + 	bool "Build example program working with intel mei driver"
+> + 	depends on INTEL_MEI
+> + 	help
+> + 	  Build a sample program to work with mei device.
+> + 
+>  -
+>   endif # SAMPLES
+> diff --cc samples/Makefile
+> index a61a39047d02,d6062ab25347..000000000000
+> --- a/samples/Makefile
+> +++ b/samples/Makefile
+> @@@ -20,4 -20,4 +20,5 @@@ obj-$(CONFIG_SAMPLE_TRACE_PRINTK)	+= tr
+>   obj-$(CONFIG_VIDEO_PCI_SKELETON)	+= v4l/
+>   obj-y					+= vfio-mdev/
+>   subdir-$(CONFIG_SAMPLE_VFS)		+= vfs
+>  +subdir-$(CONFIG_SAMPLE_WATCH_QUEUE)	+= watch_queue
+> + obj-$(CONFIG_SAMPLE_INTEL_MEI)		+= mei/
 
-Good ones will, we don't care about bad ones :)
+
+Looks good to me, thanks!
+
+greg k-h
