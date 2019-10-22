@@ -2,411 +2,259 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01777CA9EB0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 02:21:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BD8BCA9EB0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 02:24:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B41E4214B2
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 02:21:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3073F214B2
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 02:24:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="QsZdFqBM"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="bQSpiYvo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730839AbfJVCVS (ORCPT
+        id S1730806AbfJVCY2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 22:21:18 -0400
-Received: from mail-eopbgr140070.outbound.protection.outlook.com ([40.107.14.70]:18761
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        Mon, 21 Oct 2019 22:24:28 -0400
+Received: from mail-eopbgr50040.outbound.protection.outlook.com ([40.107.5.40]:49635
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729573AbfJVCVQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 22:21:16 -0400
+        id S1730271AbfJVCY1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 22:24:27 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JP1b+ojVZQMoWNxyiWgl7Odj1C1+utRKoA2AebHFgnpvxBsAzPTeT1Qo935qFCtzO3/V8E9pmwrn4aAKU/UB/KMEDlLp7SO5ADhMYOL+/phI9WVSYUrh4pgaDmKV3nOPQuBTh92WZmjocb7uA9YZiWRyqj0XUrUxnrDgkBN3m9i31nkVir9/vVjA/Ij9v+BVD5iU84OPpN+lRvjtaPVZoGujch1ww6QD7bmSOa8mTJO82CJZHlNqJ50LhZ/41awXJA7ArKubkJD0yBA2xrcgcyTDscHBDFcVUZpVhJCgGqnadjLWmXoljWMtWMVYKcGk6kLCHHc/t1zIO+aC8Un/Hg==
+ b=bGiEDIOzj8dA2Iv4XsmC1G4tKlaQfNDaVdfKojA4cJ9zA7donSphS03t1rID09M4g6KKRynbz4RN/mkxPJ6SEe5t+5myReDE3E0bAttcmLq2WLyuYT7XdmMdk6VbOuDW6HIdJWl2q9Av5nNDzIFhMqmf2uGp4kB0UzdqxcFJplM2f8haXjh/tUgLbBOPV1J+u2wC7sgk1zWr8NuNIlA4NeZdyMyDKXQNcr5Imvo+bMETWRn4N04lQasERpvrobIg5w/TXDH7yO53bMM5iDi/mb/TaMbz7N6Gq5ycoQvRK0VZRd0e6vRGyiRMKgHl9foYAigsT7yvUzhPluslkXdh+w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FXKhPMz4BNOvM7SiwHzvqLKXme1k2d4cS8DWjnO2y2o=;
- b=j13gqk4Nd90sYqOXPz6GsEsTornNh5Ld3leoLUQ7dvarrCRQ6YKbvOkqLkTgyRfQF0aU4f8qqGpIrTdBf5xdHgG/+pNJpdA1Yz5pKqa+YOX5I+QSPBr2kvOFPBTzfNAhxU9NICgAjnybktI7R2mnjg+FKZVBhqGyfrPaTfo4nt96ApFGAHdD1hRItDzfKLVKYFeMsExPHOU8cOkLgALB2BN7XixckBKnji/U+FLUbkyyncBgHLqL5x5eHplksfRgWbyhEFNL/l2wKj1nXEXnmSJlfO6+H9ZoQ4gz6s0kcMVdsXPoQPf/uk8qSvGaiEIO5/0mLjCYV62jgBrXxQVNyw==
+ bh=RnhuY4VVD78vx+09g5GXuyBV72YGm/E7gIANqxsijww=;
+ b=ayP0T3xyqeRNnxj18PruqqRtHCTmnErotfC/CIuIdmMwyFMhgFo/JOYc3FStSmWDKi0xy6iGHWHH6JCk6UjLHZbAbdlqGZcgQbLXbKUEDThCFREaankq5jwGvrMgFQqg6ryJir04zglpTEx06uKkwiyfEXRubgvVl2uNrqhoBqk4ZAOpYE00v14/lujdq2otDEMp3jk3gVYvByRdCEu/l8BJf1fnibEzJ6uljiy+rqWm4DKNdEa7TCznZojj3WnXh/39MajhT+QhJLbDKNFR92Vq7jbq9DcFouknmJBSj0KfgxMWniw5gWd9IpIBm4yl7D9nB+nPIl5AXXrfq5i+jw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FXKhPMz4BNOvM7SiwHzvqLKXme1k2d4cS8DWjnO2y2o=;
- b=QsZdFqBMnu87opKTH37nk2AuObKTPXXIfrEYSiSWncnP9XhozCqTck1AMJCH2PRrVq+sGLn+WZOlMbKuEtwnNhzMoLg8giVXm5+1ucWnRzPPZFsEULnETmAc1YuB4LuY0t+Kaw19T8PUgSDfw/K7y4brLLU4ng+lqCzZxlPp4sE=
-Received: from VI1PR04MB5327.eurprd04.prod.outlook.com (20.177.51.23) by
- VI1PR04MB3023.eurprd04.prod.outlook.com (10.170.228.29) with Microsoft SMTP
+ bh=RnhuY4VVD78vx+09g5GXuyBV72YGm/E7gIANqxsijww=;
+ b=bQSpiYvoPUOig20/eEyyCeIc1QP4C0nqPBbtRvcmxBdVdG3sx4Wh4vZLuQZbQxovW9VY7Ov/fo6m/bf+YasOOBH3IaaLN1qwl7v7AVTx7P12Qn2ybSwztzKdYnbNwqEW/S9qfEOGqM5yrO3LDpuEyVwtZhY2KZJeDetgPuG4J1U=
+Received: from VE1PR04MB6768.eurprd04.prod.outlook.com (10.255.118.26) by
+ VE1PR04MB6528.eurprd04.prod.outlook.com (20.179.235.146) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2367.21; Tue, 22 Oct 2019 02:21:06 +0000
-Received: from VI1PR04MB5327.eurprd04.prod.outlook.com
- ([fe80::68e3:e1a6:78fd:7133]) by VI1PR04MB5327.eurprd04.prod.outlook.com
- ([fe80::68e3:e1a6:78fd:7133%3]) with mapi id 15.20.2347.029; Tue, 22 Oct 2019
- 02:21:06 +0000
-From:   Peter Chen <peter.chen@nxp.com>
-To:     Roger Quadros <rogerq@ti.com>
-CC:     "felipe.balbi@linux.intel.com" <felipe.balbi@linux.intel.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "pawell@cadence.com" <pawell@cadence.com>,
-        "nsekhar@ti.com" <nsekhar@ti.com>,
-        "kurahul@cadence.com" <kurahul@cadence.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+ 15.20.2347.19; Tue, 22 Oct 2019 02:24:17 +0000
+Received: from VE1PR04MB6768.eurprd04.prod.outlook.com
+ ([fe80::50aa:3111:47b1:82d4]) by VE1PR04MB6768.eurprd04.prod.outlook.com
+ ([fe80::50aa:3111:47b1:82d4%4]) with mapi id 15.20.2367.022; Tue, 22 Oct 2019
+ 02:24:17 +0000
+From:   Qiang Zhao <qiang.zhao@nxp.com>
+To:     Leo Li <leoyang.li@nxp.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+CC:     Timur Tabi <timur@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v2 2/2] usb: cdns3: Add TI specific wrapper driver
-Thread-Topic: [PATCH v2 2/2] usb: cdns3: Add TI specific wrapper driver
-Thread-Index: AQHViBFy3Tm8TrXKnUqPYl+n++pWSKdl7ZoA
-Date:   Tue, 22 Oct 2019 02:21:06 +0000
-Message-ID: <20191022021736.GB26973@b29397-desktop>
-References: <20191021131305.8689-1-rogerq@ti.com>
- <20191021131305.8689-3-rogerq@ti.com>
-In-Reply-To: <20191021131305.8689-3-rogerq@ti.com>
+        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: RE: [PATCH 0/7] towards QE support on ARM
+Thread-Topic: [PATCH 0/7] towards QE support on ARM
+Thread-Index: AQHVhbLuscviMhsVQkGS0n9+bwSiSadg1oMAgAAJ4ICAABDsgIAD2sSAgADhagCAAERzIA==
+Date:   Tue, 22 Oct 2019 02:24:17 +0000
+Message-ID: <VE1PR04MB676825D5709839AEF75ED44C91680@VE1PR04MB6768.eurprd04.prod.outlook.com>
+References: <20191018125234.21825-1-linux@rasmusvillemoes.dk>
+ <VE1PR04MB6687DA0268FAF03D3E77A23B8F6C0@VE1PR04MB6687.eurprd04.prod.outlook.com>
+ <e02fa027-9c78-3272-d2d7-7ad2b0ed3ab0@rasmusvillemoes.dk>
+ <CADRPPNREUK1SVxO4P5qb2COn+T04dtYgpVEzrveKUt16hBqAtQ@mail.gmail.com>
+ <679bf33b-8c05-b77a-0cb2-d79dc5bfbe75@rasmusvillemoes.dk>
+ <CADRPPNSiMUy77Dhxjg03sHDxyZzWf_BP8a5+fCncbynyO_cNGg@mail.gmail.com>
+In-Reply-To: <CADRPPNSiMUy77Dhxjg03sHDxyZzWf_BP8a5+fCncbynyO_cNGg@mail.gmail.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peter.chen@nxp.com; 
-x-originating-ip: [119.31.174.66]
+ smtp.mailfrom=qiang.zhao@nxp.com; 
+x-originating-ip: [119.31.174.73]
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 142f5d62-5163-477f-4eb4-08d756967e67
-x-ms-traffictypediagnostic: VI1PR04MB3023:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <VI1PR04MB302319916AE05D0A65545F948B680@VI1PR04MB3023.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3513;
+x-ms-office365-filtering-correlation-id: 231c9d6f-83c1-43e3-3105-08d75696f068
+x-ms-traffictypediagnostic: VE1PR04MB6528:|VE1PR04MB6528:
+x-ms-exchange-purlcount: 6
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VE1PR04MB65284884814D047223BFD3DD91680@VE1PR04MB6528.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
 x-forefront-prvs: 01986AE76B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(7916004)(376002)(39860400002)(396003)(366004)(346002)(136003)(189003)(199004)(25786009)(1076003)(76176011)(8936002)(7736002)(81166006)(71190400001)(305945005)(71200400001)(966005)(478600001)(81156014)(66066001)(5660300002)(6916009)(26005)(256004)(2906002)(99286004)(8676002)(44832011)(86362001)(33716001)(102836004)(486006)(6116002)(476003)(6436002)(6306002)(229853002)(33656002)(6512007)(9686003)(11346002)(6506007)(446003)(6246003)(45080400002)(6486002)(316002)(53546011)(66946007)(76116006)(91956017)(4326008)(66446008)(64756008)(66556008)(66476007)(14454004)(54906003)(3846002)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB3023;H:VI1PR04MB5327.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(376002)(39860400002)(366004)(396003)(199004)(189003)(13464003)(66066001)(71200400001)(6506007)(476003)(53546011)(71190400001)(99286004)(44832011)(186003)(316002)(26005)(76176011)(102836004)(66946007)(110136005)(8676002)(11346002)(446003)(81156014)(7696005)(76116006)(81166006)(6246003)(305945005)(52536014)(15974865002)(486006)(66446008)(64756008)(25786009)(7736002)(74316002)(33656002)(6306002)(6116002)(966005)(54906003)(55016002)(478600001)(45080400002)(14454004)(3846002)(9686003)(6436002)(8936002)(86362001)(66556008)(66476007)(5660300002)(2906002)(256004)(14444005)(4326008)(229853002);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6528;H:VE1PR04MB6768.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: +a44KePjS7Qd8KrGEiLAKcmuFx8apXBrZ79rlIsE53Bu8xJMX1OqkGstCNc2ImnPZjCPYEp7S+8nKwGN4N/hb+Fd1lGxKfoEX0XKOzoPw07IgG5Nb9Qsbdvh3aXvnX0tTzGBxSF8OupuOTbr+AyG2sU9x7U4J/FDsmpq4RNwhj0sDQX2KeUgBJmIXLcpxKpfxmqonL8OrHx/FT7ywou+mwMRBPJVPa97LSP2RoETTtIafo024u3bckqyOu+59LbLPysI8/F/Kbe4G+7ZB2xMRXaqoxYyAZPKzwLqyGt8q4J/x+RolqVrxfHvi0Xml9Mw/sBq54SDfhHj48cDoMgx3Z93yOtSBIRSnWzAUwxtqLPzMYW/snw4mIp5tG8s9bNnsBhPQQLAQKMBki/cGsg5GRmIGFf3m8doeISi5gZLw/OsijuUzoY6nY6T5dXzkRwfpFI2e9JfAFuNoAQsNNxwEnJ3Hkas/CcGMIfbXXici/s=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <D1F4C92C1526F94183A2DB6F5B711D27@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+x-microsoft-antispam-message-info: fmgQT5W3p3HbuZUb2IHzt/XXA5wr/+WmPjbnFYeFZi/ld1TCVaAdbCPIQ2R94g4zGseHPAZGAfwAeSPMuI76RlaD0pKE3iomaSUK7kQoqvJzbVbCsAmmF0Tc66kBbKJm2Tj9eUnZoAZxoYr8oAGseTUNPkpBaPgwsz3Ttr7k13bR1xYxPLKJc76VzYEIjTFymrzHO2j0mRk8wuBdkf7l5woEUOocEnsUvSRPxd7WwS4VEhrcG7KpTBcoZe+kntIF/Rok0ziactEjC+pWM4bzVbv5x4cU67WtaQ7UGxneKgSDG1Pzs66zLo/9vS2/U3SlmkNmAHBrq89eDuNTS1wCnobieAKb1pI9FwcehDH5A5KpAYg2QWB6/1aro/VnjzKvCiBs6MHnTN3q1/8DD2MhddZZmqW+IW/bANrULV8MzvSYmB7fcSQC1BTk8SSvbCYefOwUk88ZeNVKBeQ5SKR5cHBjgysb0WYzCy6C5aoZ8F4=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 142f5d62-5163-477f-4eb4-08d756967e67
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Oct 2019 02:21:06.1413
+X-MS-Exchange-CrossTenant-Network-Message-Id: 231c9d6f-83c1-43e3-3105-08d75696f068
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Oct 2019 02:24:17.3588
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: v4SViO9ikp3bQOkzV/Jp8ElXsRgiC9GxX5PsA77Ju5sPpQmTUfz8ke8kdImqOV8BDIBpBcVdaVT25SXsqHxjEw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB3023
+X-MS-Exchange-CrossTenant-userprincipalname: AyDgeXoMMkVuntIK07HOrGjMHQ8Xvww3HF3/j9JfWDiN01F+RL8PTfnLA1xedVGimq1Z3y+V4nafvKj0uh+MqA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6528
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19-10-21 16:13:05, Roger Quadros wrote:
-> The J721e platform comes with 2 Cadence USB3 controller
-> instances. This driver supports the TI specific wrapper
-> on this platform.
->=20
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
-> ---
->  drivers/usb/cdns3/Kconfig    |  10 ++
->  drivers/usb/cdns3/Makefile   |   1 +
->  drivers/usb/cdns3/cdns3-ti.c | 236 +++++++++++++++++++++++++++++++++++
->  3 files changed, 247 insertions(+)
->  create mode 100644 drivers/usb/cdns3/cdns3-ti.c
->=20
-> diff --git a/drivers/usb/cdns3/Kconfig b/drivers/usb/cdns3/Kconfig
-> index d0331613a355..2a1e89d12ed9 100644
-> --- a/drivers/usb/cdns3/Kconfig
-> +++ b/drivers/usb/cdns3/Kconfig
-> @@ -43,4 +43,14 @@ config USB_CDNS3_PCI_WRAP
->  	  If you choose to build this driver as module it will
->  	  be dynamically linked and module will be called cdns3-pci.ko
-> =20
-> +config USB_CDNS3_TI
-> +	tristate "Cadence USB3 support on TI platforms"
-> +	depends on ARCH_K3 || COMPILE_TEST
-> +	default USB_CDNS3
-> +	help
-> +	  Say 'Y' or 'M' here if you are building for Texas Instruments
-> +	  platforms that contain Cadence USB3 controller core.
-> +
-> +	  e.g. J721e.
-> +
->  endif
-> diff --git a/drivers/usb/cdns3/Makefile b/drivers/usb/cdns3/Makefile
-> index a703547350bb..948e6b88d1a9 100644
-> --- a/drivers/usb/cdns3/Makefile
-> +++ b/drivers/usb/cdns3/Makefile
-> @@ -14,3 +14,4 @@ endif
->  cdns3-$(CONFIG_USB_CDNS3_HOST)		+=3D host.o
-> =20
->  obj-$(CONFIG_USB_CDNS3_PCI_WRAP)	+=3D cdns3-pci-wrap.o
-> +obj-$(CONFIG_USB_CDNS3_TI)		+=3D cdns3-ti.o
-> diff --git a/drivers/usb/cdns3/cdns3-ti.c b/drivers/usb/cdns3/cdns3-ti.c
-> new file mode 100644
-> index 000000000000..5541cba71965
-> --- /dev/null
-> +++ b/drivers/usb/cdns3/cdns3-ti.c
-> @@ -0,0 +1,236 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/**
-> + * cdns_ti-ti.c - TI specific Glue layer for Cadence USB Controller
-
-cdns3-ti.c
-
-> + *
-> + * Copyright (C) 2019 Texas Instruments Incorporated - https://eur01.saf=
-elinks.protection.outlook.com/?url=3Dhttp%3A%2F%2Fwww.ti.com&amp;data=3D02%=
-7C01%7Cpeter.chen%40nxp.com%7C94aad23d5a294c5cdaf808d75628931c%7C686ea1d3bc=
-2b4c6fa92cd99c5c301635%7C0%7C0%7C637072604595033025&amp;sdata=3DLye5SayAKcq=
-AMaNGbZ%2Fq5OkUZ8IsWMVgGmeh8IhA69M%3D&amp;reserved=3D0
-> + */
-> +
-> +#include <linux/bits.h>
-> +#include <linux/clk.h>
-> +#include <linux/module.h>
-> +#include <linux/kernel.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/dma-mapping.h>
-> +#include <linux/io.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/pm_runtime.h>
-> +
-> +/* USB Wrapper register offsets */
-> +#define USBSS_PID		0x0
-> +#define	USBSS_W1		0x4
-> +#define USBSS_STATIC_CONFIG	0x8
-> +#define USBSS_PHY_TEST		0xc
-> +#define	USBSS_DEBUG_CTRL	0x10
-> +#define	USBSS_DEBUG_INFO	0x14
-> +#define	USBSS_DEBUG_LINK_STATE	0x18
-> +#define	USBSS_DEVICE_CTRL	0x1c
-> +
-> +/* Wrapper 1 register bits */
-> +#define USBSS_W1_PWRUP_RST		BIT(0)
-> +#define USBSS_W1_OVERCURRENT_SEL	BIT(8)
-> +#define USBSS_W1_MODESTRAP_SEL		BIT(9)
-> +#define USBSS_W1_OVERCURRENT		BIT(16)
-> +#define USBSS_W1_MODESTRAP_MASK		GENMASK(18, 17)
-> +#define USBSS_W1_MODESTRAP_SHIFT	17
-> +#define USBSS_W1_USB2_ONLY		BIT(19)
-> +
-> +/* Static config register bits */
-> +#define USBSS1_STATIC_PLL_REF_SEL_MASK	GENMASK(8, 5)
-> +#define USBSS1_STATIC_PLL_REF_SEL_SHIFT	5
-> +#define USBSS1_STATIC_LOOPBACK_MODE_MASK	GENMASK(4, 3)
-> +#define USBSS1_STATIC_LOOPBACK_MODE_SHIFT	3
-> +#define USBSS1_STATIC_VBUS_SEL_MASK	GENMASK(2, 1)
-> +#define USBSS1_STATIC_VBUS_SEL_SHIFT	1
-> +#define USBSS1_STATIC_LANE_REVERSE	BIT(0)
-> +
-> +/* Modestrap modes */
-> +enum modestrap_mode { USBSS_MODESTRAP_MODE_NONE,
-> +		      USBSS_MODESTRAP_MODE_HOST,
-> +		      USBSS_MODESTRAP_MODE_PERIPHERAL};
-> +
-> +struct cdns_ti {
-> +	struct device *dev;
-> +	void __iomem *usbss;
-> +	int usb2_only:1;
-> +	int vbus_divider:1;
-> +	struct clk *usb2_refclk;
-> +	struct clk *lpm_clk;
-> +};
-> +
-> +static const int cdns_ti_rate_table[] =3D {	/* in KHZ */
-> +	9600,
-> +	10000,
-> +	12000,
-> +	19200,
-> +	20000,
-> +	24000,
-> +	25000,
-> +	26000,
-> +	38400,
-> +	40000,
-> +	58000,
-> +	50000,
-> +	52000,
-> +};
-> +
-> +static inline u32 cdns_ti_readl(struct cdns_ti *data, u32 offset)
-> +{
-> +	return readl(data->usbss + offset);
-> +}
-> +
-> +static inline void cdns_ti_writel(struct cdns_ti *data, u32 offset, u32 =
-value)
-> +{
-> +	writel(value, data->usbss + offset);
-> +}
-> +
-> +static int cdns_ti_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev =3D &pdev->dev;
-> +	struct device_node *node =3D pdev->dev.of_node;
-> +	struct cdns_ti *data;
-> +	struct resource	*res;
-> +	int error;
-> +	u32 reg;
-> +	int rate_code, i;
-> +	unsigned long rate;
-> +
-> +	data =3D devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-> +	if (!data)
-> +		return -ENOMEM;
-> +
-> +	platform_set_drvdata(pdev, data);
-> +
-> +	data->dev =3D dev;
-> +
-> +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	data->usbss =3D devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(data->usbss))
-> +		return PTR_ERR(data->usbss);
-> +
-> +	data->usb2_refclk =3D devm_clk_get(dev, "ref");
-> +	if (IS_ERR(data->usb2_refclk)) {
-> +		dev_err(dev, "can't get usb2_refclk\n");
-> +		return PTR_ERR(data->usb2_refclk);
-> +	}
-> +
-> +	data->lpm_clk =3D devm_clk_get(dev, "lpm");
-> +	if (IS_ERR(data->lpm_clk)) {
-> +		dev_err(dev, "can't get lpm_clk\n");
-> +		return PTR_ERR(data->lpm_clk);
-> +	}
-> +
-> +	rate =3D clk_get_rate(data->usb2_refclk);
-> +	rate /=3D 1000;	/* To KHz */
-> +	for (i =3D 0; i < ARRAY_SIZE(cdns_ti_rate_table); i++) {
-> +		if (cdns_ti_rate_table[i] =3D=3D rate)
-> +			break;
-> +	}
-> +
-> +	if (i =3D=3D ARRAY_SIZE(cdns_ti_rate_table)) {
-> +		dev_err(dev, "unsupported usb2_refclk rate: %lu KHz\n", rate);
-> +		return -EINVAL;
-> +	}
-> +
-> +	rate_code =3D i;
-> +
-> +	pm_runtime_enable(dev);
-> +	error =3D pm_runtime_get_sync(dev);
-> +	if (error < 0) {
-> +		dev_err(dev, "pm_runtime_get_sync failed: %d\n", error);
-> +		goto err_get;
-> +	}
-
-Why you don't enable runtime pm at the end of probe?
-
-Peter
-
-> +
-> +	/* assert RESET */
-> +	reg =3D cdns_ti_readl(data, USBSS_W1);
-> +	reg &=3D ~USBSS_W1_PWRUP_RST;
-> +	cdns_ti_writel(data, USBSS_W1, reg);
-> +
-> +	/* set static config */
-> +	reg =3D cdns_ti_readl(data, USBSS_STATIC_CONFIG);
-> +	reg &=3D ~USBSS1_STATIC_PLL_REF_SEL_MASK;
-> +	reg |=3D rate_code << USBSS1_STATIC_PLL_REF_SEL_SHIFT;
-> +
-> +	reg &=3D ~USBSS1_STATIC_VBUS_SEL_MASK;
-> +	data->vbus_divider =3D device_property_read_bool(dev, "ti,vbus-divider"=
-);
-> +	if (data->vbus_divider)
-> +		reg |=3D 1 << USBSS1_STATIC_VBUS_SEL_SHIFT;
-> +
-> +	cdns_ti_writel(data, USBSS_STATIC_CONFIG, reg);
-> +	reg =3D cdns_ti_readl(data, USBSS_STATIC_CONFIG);
-> +
-> +	/* set USB2_ONLY mode if requested */
-> +	reg =3D cdns_ti_readl(data, USBSS_W1);
-> +	data->usb2_only =3D device_property_read_bool(dev, "ti,usb2-only");
-> +	if (data->usb2_only)
-> +		reg |=3D USBSS_W1_USB2_ONLY;
-> +
-> +	/* set default modestrap */
-> +	reg |=3D USBSS_W1_MODESTRAP_SEL;
-> +	reg &=3D ~USBSS_W1_MODESTRAP_MASK;
-> +	reg |=3D USBSS_MODESTRAP_MODE_NONE << USBSS_W1_MODESTRAP_SHIFT;
-> +	cdns_ti_writel(data, USBSS_W1, reg);
-> +
-> +	/* de-assert RESET */
-> +	reg |=3D USBSS_W1_PWRUP_RST;
-> +	cdns_ti_writel(data, USBSS_W1, reg);
-> +
-> +	error =3D of_platform_populate(node, NULL, NULL, dev);
-> +	if (error) {
-> +		dev_err(dev, "failed to create children: %d\n", error);
-> +		goto err;
-> +	}
-> +
-> +	return 0;
-> +
-> +err:
-> +	pm_runtime_put_sync(data->dev);
-> +err_get:
-> +	pm_runtime_disable(data->dev);
-> +
-> +	return error;
-> +}
-> +
-> +static int cdns_ti_remove_core(struct device *dev, void *c)
-> +{
-> +	struct platform_device *pdev =3D to_platform_device(dev);
-> +
-> +	platform_device_unregister(pdev);
-> +
-> +	return 0;
-> +}
-> +
-> +static int cdns_ti_remove(struct platform_device *pdev)
-> +{
-> +	struct device *dev =3D &pdev->dev;
-> +
-> +	device_for_each_child(dev, NULL, cdns_ti_remove_core);
-> +	pm_runtime_put_sync(dev);
-> +	pm_runtime_disable(dev);
-> +
-> +	platform_set_drvdata(pdev, NULL);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id cdns_ti_of_match[] =3D {
-> +	{ .compatible =3D "ti,j721e-usb", },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, cdns_ti_of_match);
-> +
-> +static struct platform_driver cdns_ti_driver =3D {
-> +	.probe		=3D cdns_ti_probe,
-> +	.remove		=3D cdns_ti_remove,
-> +	.driver		=3D {
-> +		.name	=3D "cdns3-ti",
-> +		.of_match_table	=3D cdns_ti_of_match,
-> +	},
-> +};
-> +
-> +module_platform_driver(cdns_ti_driver);
-> +
-> +MODULE_ALIAS("platform:cdns3-ti");
-> +MODULE_AUTHOR("Roger Quadros <rogerq@ti.com>");
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_DESCRIPTION("Cadence USB3 TI Glue Layer");
-> --=20
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
->=20
-
---=20
-
-Thanks,
-Peter Chen=
+T24gTW9uLCBPY3QgMjIsIDIwMTkgYXQgNjoxMSBBTSBMZW8gTGkgd3JvdGUNCj4gLS0tLS1Pcmln
+aW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTGkgWWFuZyA8bGVveWFuZy5saUBueHAuY29tPg0K
+PiBTZW50OiAyMDE55bm0MTDmnIgyMuaXpSA2OjExDQo+IFRvOiBSYXNtdXMgVmlsbGVtb2VzIDxs
+aW51eEByYXNtdXN2aWxsZW1vZXMuZGs+DQo+IENjOiBUaW11ciBUYWJpIDx0aW11ckBrZXJuZWwu
+b3JnPjsgR3JlZyBLcm9haC1IYXJ0bWFuDQo+IDxncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZz47
+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+IGxpbnV4LXNlcmlhbEB2Z2VyLmtlcm5l
+bC5vcmc7IEppcmkgU2xhYnkgPGpzbGFieUBzdXNlLmNvbT47DQo+IGxpbnV4cHBjLWRldkBsaXN0
+cy5vemxhYnMub3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IFFpYW5n
+DQo+IFpoYW8gPHFpYW5nLnpoYW9AbnhwLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCAwLzdd
+IHRvd2FyZHMgUUUgc3VwcG9ydCBvbiBBUk0NCj4gDQo+IE9uIE1vbiwgT2N0IDIxLCAyMDE5IGF0
+IDM6NDYgQU0gUmFzbXVzIFZpbGxlbW9lcw0KPiA8bGludXhAcmFzbXVzdmlsbGVtb2VzLmRrPiB3
+cm90ZToNCj4gPg0KPiA+IE9uIDE4LzEwLzIwMTkgMjMuNTIsIExpIFlhbmcgd3JvdGU6DQo+ID4g
+PiBPbiBGcmksIE9jdCAxOCwgMjAxOSBhdCAzOjU0IFBNIFJhc211cyBWaWxsZW1vZXMNCj4gPiA+
+IDxsaW51eEByYXNtdXN2aWxsZW1vZXMuZGs+IHdyb3RlOg0KPiA+ID4+DQo+ID4gPj4gT24gMTgv
+MTAvMjAxOSAyMi4xNiwgTGVvIExpIHdyb3RlOg0KPiA+ID4+Pg0KPiA+ID4+Pj4NCj4gPiA+Pj4+
+IFRoZXJlIGhhdmUgYmVlbiBzZXZlcmFsIGF0dGVtcHRzIGluIHRoZSBwYXN0IGZldyB5ZWFycyB0
+byBhbGxvdw0KPiA+ID4+Pj4gYnVpbGRpbmcgdGhlIFFVSUNDIGVuZ2luZSBkcml2ZXJzIGZvciBw
+bGF0Zm9ybXMgb3RoZXIgdGhhbiBQUEMuDQo+ID4gPj4+PiBUaGlzIGlzICh0aGUgYmVnaW5uaW5n
+IG9mKSB5ZXQgYW5vdGhlciBhdHRlbXB0LiBJIGhvcGUgSSBjYW4gZ2V0DQo+ID4gPj4+PiBzb21l
+b25lIHRvIHBpY2sgdXAgdGhlc2UgcmVsYXRpdmVseSB0cml2aWFsIHBhdGNoZXMgKEkgX3RoaW5r
+Xw0KPiA+ID4+Pj4gdGhleSBzaG91bGRuJ3QgY2hhbmdlIGZ1bmN0aW9uYWxpdHkgYXQgYWxsKSwg
+YW5kIHRoZW4gSSdsbA0KPiA+ID4+Pj4gY29udGludWUgc2xvd2x5IHdvcmtpbmcgdG93YXJkcyBy
+ZW1vdmluZyB0aGUgUFBDMzIgZGVwZW5kZW5jeSBmb3INCj4gQ09ORklHX1FVSUNDX0VOR0lORS4N
+Cj4gPiA+Pj4NCj4gPiA+Pj4gSGkgUmFzbXVzLA0KPiA+ID4+Pg0KPiA+ID4+PiBJIGRvbid0IGZ1
+bGx5IHVuZGVyc3RhbmQgdGhlIG1vdGl2YXRpb24gb2YgdGhpcyB3b3JrLiAgQXMgZmFyIGFzIEkg
+a25vdw0KPiB0aGUgUVVJQ0MgRU5HSU5FIGlzIG9ubHkgdXNlZCBvbiBQb3dlclBDIGJhc2VkIFNv
+Q3MuDQo+ID4gPj4NCj4gPiA+PiBIbSwgeW91J3JlIG5vdCB0aGUgTGVvIExpIHRoYXQgcGFydGlj
+aXBhdGVkIGluIHRoaXMgdGhyZWFkDQo+ID4gPj4NCj4gPGh0dHBzOi8vZXVyMDEuc2FmZWxpbmtz
+LnByb3RlY3Rpb24ub3V0bG9vay5jb20vP3VybD1odHRwcyUzQSUyRiUyRmxvcmUua2UNCj4gcm5l
+bC5vcmclMkZsa21sJTJGQU0zUFIwNE1CMTE4NTdBRThEMkIwQkU1NjEyMUI5N0QzOTFDOTAlNDBB
+DQo+IE0zUFIwNE1CMTE4NS5ldXJwcmQwNC5wcm9kLm91dGxvb2suY29tJTJGVCUyRiUyM3UmYW1w
+O2RhdGE9MDIlNw0KPiBDMDElN0NxaWFuZy56aGFvJTQwbnhwLmNvbSU3QzFiYThjNTBjMmRiMTRi
+MjJiZWY2MDhkNzU2NzM5ZDgyJQ0KPiA3QzY4NmVhMWQzYmMyYjRjNmZhOTJjZDk5YzVjMzAxNjM1
+JTdDMCU3QzAlN0M2MzcwNzI5MjY4NzcxNzg4DQo+IDc1JmFtcDtzZGF0YT1rNHpNNzVPY3pYd1pG
+JTJCcjllYzRSeGlWUjJhJTJGOEdoU1ptSzcwSllkZEljayUzDQo+IEQmYW1wO3Jlc2VydmVkPTA+
+Pw0KPiA+ID4NCj4gPiA+IE9vcHMsIEkgdG90YWxseSBmb3Jnb3QgYWJvdXQgdGhpcyBkaXNjdXNz
+aW9uIHdoaWNoIGlzIGp1c3QgdGhyZWUNCj4gPiA+IHllYXJzIGFnby4gIDopICBUaGUgUUUtSERM
+QyBvbiBMUzEwMjFhIGlzIGtpbmQgb2YgYSBzcGVjaWFsIGNhc2UuDQo+ID4gPg0KPiA+ID4+DQo+
+ID4gPj4NCj4gPiA+PiAgQ2FuIHlvdSBnaXZlIGFuIGV4YW1wbGUgb24gaG93IGlzIGl0IHVzZWQg
+b24gQVJNIHN5c3RlbT8NCj4gPiA+Pg0KPiA+ID4+IExTMTAyMUEsIGZvciBleGFtcGxlLCB3aGlj
+aCBpcyB0aGUgb25lIEknbSBhaW1pbmcgZm9yIGdldHRpbmcgZnVsbHkNCj4gPiA+PiBzdXBwb3J0
+ZWQgaW4gbWFpbmxpbmUuDQo+ID4gPj4gPGh0dHBzOi8vZXVyMDEuc2FmZWxpbmtzLnByb3RlY3Rp
+b24ub3V0bG9vay5jb20vP3VybD1odHRwcyUzQSUyRiUyRg0KPiA+ID4+DQo+IHd3dy5ueHAuY29t
+JTJGcHJvZHVjdHMlMkZwcm9jZXNzb3JzLWFuZC1taWNyb2NvbnRyb2xsZXJzJTJGYXJtLXByb2MN
+Cj4gPiA+PiBlc3NvcnMlMkZsYXllcnNjYXBlLWNvbW11bmljYXRpb24tcHJvY2VzcyUyRnFvcmlx
+LWxheWVyc2NhcGUtMTAyMWEtDQo+ID4gPj4NCj4gZHVhbC1jb3JlLWNvbW11bmljYXRpb25zLXBy
+b2Nlc3Nvci13aXRoLWxjZC1jb250cm9sbGVyJTNBTFMxMDIxQSZhbQ0KPiA+ID4+DQo+IHA7ZGF0
+YT0wMiU3QzAxJTdDcWlhbmcuemhhbyU0MG54cC5jb20lN0MxYmE4YzUwYzJkYjE0YjIyYmVmNjA4
+ZA0KPiA3NTY3DQo+ID4gPj4NCj4gMzlkODIlN0M2ODZlYTFkM2JjMmI0YzZmYTkyY2Q5OWM1YzMw
+MTYzNSU3QzAlN0MwJTdDNjM3MDcyOTI2OA0KPiA3NzE3ODgNCj4gPiA+Pg0KPiA3NSZhbXA7c2Rh
+dGE9dnFQWVNacUV2NnZDRUl4SnNoTHVBNGduZ2g5SjRJc0ZBUXJUd0pLTWptNCUzRCZhbXA7cg0K
+PiBlcw0KPiA+ID4+IGVydmVkPTA+DQo+ID4gPj4NCj4gPiA+PiBUaGUgZm9ya3MgYXQNCj4gPiA+
+Pg0KPiBodHRwczovL2V1cjAxLnNhZmVsaW5rcy5wcm90ZWN0aW9uLm91dGxvb2suY29tLz91cmw9
+aHR0cHMlM0ElMkYlMkZnaXRodWIuDQo+IGNvbSUyRnFvcmlxLW9wZW4tc291cmNlJTJGbGludXgu
+Z2l0JmFtcDtkYXRhPTAyJTdDMDElN0NxaWFuZy56aGFvJQ0KPiA0MG54cC5jb20lN0MxYmE4YzUw
+YzJkYjE0YjIyYmVmNjA4ZDc1NjczOWQ4MiU3QzY4NmVhMWQzYmMyYjRjNg0KPiBmYTkyY2Q5OWM1
+YzMwMTYzNSU3QzAlN0MwJTdDNjM3MDcyOTI2ODc3MTc4ODc1JmFtcDtzZGF0YT12NGVHDQo+IDRL
+cUdUV1FrUUhwJTJGWWcyT0hDS0lUTFdhT2dINjRKWXBZJTJCMUxpbEElM0QmYW1wO3Jlc2VydmVk
+PTANCj4gaGF2ZSB2YXJpb3VzIGRlZ3JlZXMgb2Ygc3VwcG9ydCAoZ3JlcCBmb3IgY29tbWl0cyBz
+YXlpbmcgc3R1ZmYgbGlrZSAicmVtb3ZlDQo+IFBQQ2lzbXMiDQo+ID4gPj4gLSBzb21lIHZlcnNp
+b25zIGNhbiBiZSBmb3VuZCBvbg0KPiA+ID4+IDxodHRwczovL2V1cjAxLnNhZmVsaW5rcy5wcm90
+ZWN0aW9uLm91dGxvb2suY29tLz91cmw9aHR0cHMlM0ElMkYlMkYNCj4gPiA+Pg0KPiBsb3JlLmtl
+cm5lbC5vcmclMkZsa21sJTJGJTNGcSUzRHJlbW92ZSUyQnBwY2lzbXMmYW1wO2RhdGE9MDIlN0Mw
+DQo+IDElNw0KPiA+ID4+DQo+IENxaWFuZy56aGFvJTQwbnhwLmNvbSU3QzFiYThjNTBjMmRiMTRi
+MjJiZWY2MDhkNzU2NzM5ZDgyJTdDNjg2ZQ0KPiBhMWQzDQo+ID4gPj4NCj4gYmMyYjRjNmZhOTJj
+ZDk5YzVjMzAxNjM1JTdDMCU3QzAlN0M2MzcwNzI5MjY4NzcxNzg4NzUmYW1wO3NkYXQNCj4gYT1p
+MldkS05ITFY2OGExbVRPTVElMkZvTXIweTVlZThlZFMwN3hxNjFNOCUyQnZQVSUzRCZhbXA7cg0K
+PiBlc2VydmVkPTA+KS4gT3VyIGN1cnJlbnQga2VybmVsIGlzIGJhc2VkIG9uIGNvbW1pdHMgZnJv
+bSB0aGUgbm93LXZhbmlzaGVkDQo+IDQuMSBicmFuY2gsIGFuZCB1bmZvcnR1bmF0ZWx5IGF0IGxl
+YXN0IHRoZSA0LjE0IGJyYW5jaCAoTFNESy0xOC4wNi1WNC4xNCkNCj4gdHJpdmlhbGx5IGRvZXNu
+J3QgYnVpbGQgb24gQVJNLCBkZXNwaXRlIHRoZSBQUEMzMiBkZXBlbmRlbmN5IGhhdmluZyBiZWVu
+DQo+IHJlbW92ZWQgZnJvbSBDT05GSUdfUVVJQ0NfRU5HSU5FLg0KPiA+ID4NCj4gPiA+IENhbiB5
+b3UgdHJ5IHRoZSA0LjE0IGJyYW5jaCBmcm9tIGEgbmV3ZXIgTFNESyByZWxlYXNlPyAgTFMxMDIx
+YQ0KPiA+ID4gc2hvdWxkIGJlIHN1cHBvcnRlZCBwbGF0Zm9ybSBvbiBMU0RLLiAgSWYgaXQgaXMg
+YnJva2VuLCBzb21ldGhpbmcgaXMNCj4gd3JvbmcuDQo+ID4NCj4gPiBXaGF0IG5ld2VyIHJlbGVh
+c2U/IExTREstMTguMDYtVjQuMTQgaXMgdGhlIGxhdGVzdCAtVjQuMTQgdGFnIGF0DQo+ID4gaHR0
+cHM6Ly9ldXIwMS5zYWZlbGlua3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0dHBzJTNB
+JTJGJTJGZ2l0aA0KPiA+DQo+IHViLmNvbSUyRnFvcmlxLW9wZW4tc291cmNlJTJGbGludXguZ2l0
+JmFtcDtkYXRhPTAyJTdDMDElN0NxaWFuZy56aGENCj4gbyU0DQo+ID4NCj4gMG54cC5jb20lN0Mx
+YmE4YzUwYzJkYjE0YjIyYmVmNjA4ZDc1NjczOWQ4MiU3QzY4NmVhMWQzYmMyYjRjNmYNCj4gYTky
+Y2Q5OWMNCj4gPg0KPiA1YzMwMTYzNSU3QzAlN0MwJTdDNjM3MDcyOTI2ODc3MTg4ODY4JmFtcDtz
+ZGF0YT12ZG00cVBvVHpmSXBYTA0KPiBtUnJ2MTdFVw0KPiA+IG5veEczbjkxcUVMTUdxdlJoOXdl
+NCUzRCZhbXA7cmVzZXJ2ZWQ9MCwgYW5kIGlkZW50aWNhbCB0byB0aGUNCj4gDQo+IFRoYXQgdHJl
+ZSBoYXMgYmVlbiBhYmFuZG9uZWQgZm9yIGEgd2hpbGUsIHdlIHByb2JhYmx5IHNob3VsZCBzdGF0
+ZSB0aGF0IGluIHRoZQ0KPiBnaXRodWIuICBUaGUgbGF0ZXN0IHRyZWUgY2FuIGJlIGZvdW5kIGF0
+DQo+IGh0dHBzOi8vZXVyMDEuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5jb20vP3VybD1o
+dHRwcyUzQSUyRiUyRnNvdXJjZS4NCj4gY29kZWF1cm9yYS5vcmclMkZleHRlcm5hbCUyRnFvcmlx
+JTJGcW9yaXEtY29tcG9uZW50cyUyRmxpbnV4JTJGJmFtcA0KPiA7ZGF0YT0wMiU3QzAxJTdDcWlh
+bmcuemhhbyU0MG54cC5jb20lN0MxYmE4YzUwYzJkYjE0YjIyYmVmNjA4ZDcNCj4gNTY3MzlkODIl
+N0M2ODZlYTFkM2JjMmI0YzZmYTkyY2Q5OWM1YzMwMTYzNSU3QzAlN0MwJTdDNjM3MDcyOQ0KPiAy
+Njg3NzE4ODg2OCZhbXA7c2RhdGE9Tm9vQkZVV25jZVRHMk9GMjRwQ3VQMEFZZ0tmcjBEZiUyQnRy
+Y0NZNg0KPiBYNkRvZyUzRCZhbXA7cmVzZXJ2ZWQ9MA0KPiANCj4gPiBsaW51eC00LjE0IGJyYW5j
+aC4gQW5kIGRlc3BpdGUgY29tbWl0IDRjMzNlMmQwNTc2YiByZW1vdmluZyB0aGUgUFBDMzINCj4g
+PiBkZXBlbmRlbmN5IGZyb20gUVVJQ0NfRU5HSU5FLCBpdCBjbGVhcmx5IGhhc24ndCBiZWVuIGJ1
+aWx0IG9uIGFybSwNCj4gPiBzaW5jZSBiYWNrIGFyb3VuZCB2NC4xMiwgbWFpbmxpbmUncyBxZS5j
+IGdyZXcgYSBjYWxsIHRvIHB2cl92ZXJzaW9uX2lzDQo+ID4gd2hpY2ggaXMgcHBjLW9ubHkuIFNv
+IGZyb20gdGhhdCBJIHNvcnQgb2YgYXNzdW1lZCB0aGF0IE5YUCBoYWQgZHJvcHBlZA0KPiA+IHRy
+eWluZyB0byBzdXBwb3J0IHRoZSBMUzEwMjFBIGV2ZW4gaW4gdGhlaXIgb3duIGtlcm5lbHMuDQo+
+ID4NCj4gPiBJbiBhbnkgY2FzZSwgd2UgaGF2ZSB6ZXJvIGludGVyZXN0IGluIHJ1bm5pbmcgYW4g
+TlhQIGtlcm5lbC4gTWF5YmUgSQ0KPiA+IHNob3VsZCBjbGFyaWZ5IHdoYXQgSSBtZWFudCBieSAi
+YmFzZWQgb24gY29tbWl0cyBmcm9tIiBhYm92ZTogV2UncmUNCj4gPiBjdXJyZW50bHkgcnVubmlu
+ZyBhIG1haW5saW5lIDQuMTQga2VybmVsIG9uIExTMTAyMUEsIHdpdGggYSBmZXcNCj4gPiBwYXRj
+aGVzIGluc3BpcmVkIGZyb20gdGhlIE5YUCA0LjEgYnJhbmNoIGFwcGxpZWQgb24gdG9wIC0gYnV0
+IGFsc28NCj4gPiB3aXRoIHNvbWUgbWFudWFsIGZpeGVzIGZvciBlLmcuIHRoZSBwdnJfdmVyc2lv
+bl9pcygpIGlzc3VlLiBOb3cgd2UNCj4gPiB3YW50IHRvIG1vdmUgdGhhdCB0byBhIDQuMTktYmFz
+ZWQga2VybmVsIChzbyB0aGF0IGl0IGFsaWducyB3aXRoIG91cg0KPiBNUEM4MzA5IHBsYXRmb3Jt
+KS4NCj4gDQo+IFdlIGFsc28gcHJvdmlkZSA0LjE5IGJhc2VkIGtlcm5lbCBpbiB0aGUgY29kZWF1
+cm9yYSByZXBvLiAgSSB0aGluayBpdCB3aWxsIGJlDQo+IGhlbHBmdWwgdG8gcmV1c2UgcGF0Y2hl
+cyB0aGVyZSBpZiB5b3Ugd2FudCB0byBtYWtlIHlvdXIgb3duIHRyZWUuDQo+IA0KPiA+DQo+ID4g
+Pj4gVGhpcyBpcyBqdXN0IHNvbWUgZmlyc3QgZmV3IHN0ZXBzLCBhbmQgSSdtIG5vdCBjbGFpbWlu
+ZyB0aGF0IHRoaXMNCj4gPiA+PiBpcyBzdWZmaWNpZW50IHRvIG1ha2UgdGhlIFFFIGRyaXZlcnMg
+YnVpbGQgb24gQVJNIHlldC4gQnV0IEkgaGF2ZSBhDQo+ID4gPj4gY3VzdG9tZXIgd2l0aCBib3Ro
+IG1wYzgzMDktYmFzZWQgYW5kIGxzMTAyMWEtYmFzZWQgcGxhdGZvcm1zLCBhbmQNCj4gPiA+PiB0
+aGV5IHdhbnQgdG8gcnVuIHRoZSBzYW1lLCBhcy1jbG9zZS10by1tYWlubGluZS1hcy1wb3NzaWJs
+ZSwga2VybmVsDQo+ID4gPj4gb24gYm90aC4gU28gSSB3aWxsIHRha2UgYSBwaWVjZW1lYWwgYXBw
+cm9hY2gsIGFuZCB0cnkgdG8gbWFrZSBzdXJlDQo+ID4gPj4gSSBkb24ndCBicmVhayB0aGUgcHBj
+IGJvYXJkcyBpbiB0aGUgcHJvY2VzcyAoanVzdCBidWlsZGluZyBhbmQNCj4gPiA+PiBib290aW5n
+IG9uZSBib2FyZCBpcyBvZiBjb3Vyc2Ugbm90IHN1ZmZpY2llbnQsIGJ1dCBiZXR0ZXIgdGhhbg0K
+PiA+ID4+IG5vdGhpbmcpLiBPbmNlIEkgZ2V0IHRvIGFjdHVhbGx5IGJ1aWxkIHNvbWUgb2YgdGhl
+IFFFIGRyaXZlcnMgZm9yDQo+ID4gPj4gQVJNLCBJJ2xsIG9mIGNvdXJzZSBhbHNvIHRlc3QgdGhl
+bS4NCj4gPiA+DQo+ID4gPiBVbmRlcnN0b29kLiAgWmhhbyBRaWFuZyBhbHNvIG1haW50YWlucyBz
+b21lIHBhdGNoZXMgc2ltaWxhciB0byB5b3VyDQo+ID4gPiBwYXRjaHNldCBhbmQgSSB0aGluayB0
+aGV5IGFyZSB0ZXN0ZWQgb24gQVJNLiAgQnV0IHRoZSByZXZpZXcgb2YNCj4gPiA+IHRoZXNlIHBh
+dGNoZXMgZnJvbSBsYXN0IHN1Ym1pc3Npb24gZGlkbid0IGZpbmlzaC4gIEl0IGxvb2tzIGxpa2UN
+Cj4gPiA+IHlvdXIgcGF0Y2hlcyBhcmUgYmV0dGVyIGRpdmlkZWQgYnV0IG5vdCByZWFsbHkgdmVy
+aWZpZWQgb24gQVJNLg0KPiA+ID4gWmhhbyBRaWFuZydzIHBhdGNoZXMgYXJlIHRlc3RlZCBidXQg
+bWF5YmUgbmVlZCBzb21lIGZpbmFsIHRvdWNoIGZvcg0KPiA+ID4gY2xlYW5pbmcgdXAuICBJIHdp
+bGwgbGV0IHlvdSBndXlzIGRlY2lkZSB3aGF0IGlzIHRoZSBiZXN0IGFwcHJvYWNoDQo+ID4gPiB0
+byBtYWtlIHRoaXMgdXBzdHJlYW1lZC4NCj4gPg0KPiA+IFllcywgYXMgSSBzYWlkLCBJIHdhbnRl
+ZCB0byB0cnkgYSBmcmVzaCBhcHByb2FjaCBzaW5jZSBaaGFvIFFpYW5nJ3MNCj4gPiBwYXRjaGVz
+IHNlZW1lZCB0byBiZSBnZXR0aW5nIG5vd2hlcmUuIFNwbGl0dGluZyB0aGUgcGF0Y2hlcyBpbnRv
+DQo+ID4gc21hbGxlciBwaWVjZXMgaXMgZGVmaW5pdGVseSBwYXJ0IG9mIHRoYXQgLSBmb3IgZXhh
+bXBsZSwgdGhlDQo+ID4gY29tcGxldGVseSB0cml2aWFsIHdoaXRlc3BhY2UgZml4IGluIHBhdGNo
+IDEgaXMgdG8gbWFrZSBzdXJlIHRoZSBsYXRlcg0KPiA+IGNvY2NpbmVsbGUgZ2VuZXJhdGVkIHBh
+dGNoIGlzIHByZWNpc2VseSB0aGF0IChpLmUuLCBhIGxhdGVyIHJlc3BpbiBjYW4NCj4gPiBqdXN0
+IHJlcnVuIHRoZSBjb2NjaW5lbGxlIHNjcmlwdCwgd2l0aCB6ZXJvIG1hbnVhbCBmaXh1cHMpLiBJ
+IGFsc28NCj4gPiB3YW50IHRvIGF2b2lkIG1peGluZyB0aGUgcHBjaXNtIGNsZWFudXBzIHdpdGgg
+b3RoZXIgdGhpbmdzIChlLmcuDQo+ID4gcmVwbGFjaW5nIHNvbWUNCj4gPiBvZl9nZXRfcHJvcGVy
+dHkoKSBieSBvZl9wcm9wZXJ0eV9yZWFkX3UzMigpKS4gQW5kIHRoZSAidGVzdGluZyBvbiBBUk0i
+DQo+ID4gcGFydCBjb21lcyBvbmNlIEkgZ2V0IHRvIGFjdHVhbGx5IGJ1aWxkaW5nIG9uIEFSTS4g
+QnV0IHRoZXJlJ3Mgbm90DQo+ID4gbXVjaCBwb2ludCBkb2luZyBhbGwgdGhhdCB1bmxlc3MgdGhl
+cmUncyBzb21lIGluZGljYXRpb24gdGhhdCB0aGlzIGNhbg0KPiA+IGJlIGFwcGxpZWQgdG8gc29t
+ZSB0cmVlIHRoYXQgYWN0dWFsbHkgZmVlZHMgaW50byBMaW51cycsIHdoaWNoIGlzIHdoeQ0KPiA+
+IEkgc3RhcnRlZCB3aXRoIGEgZmV3IHRyaXZpYWwgcGF0Y2hlcyBhbmQgcHJlY2lzZWx5IHRvIHN0
+YXJ0IHRoaXMgZGlzY3Vzc2lvbi4NCj4gDQo+IFJpZ2h0LiAgSSdtIHJlYWxseSBpbnRlcmVzdGVk
+IGluIGdldHRpbmcgdGhpcyBhcHBsaWVkIHRvIG15IHRyZWUgYW5kIG1ha2UgaXQNCj4gdXBzdHJl
+YW0uICBaaGFvIFFpYW5nLCBjYW4geW91IGhlbHAgdG8gcmV2aWV3IFJhc211cydzIHBhdGNoZXMg
+YW5kDQo+IGNvbW1lbnQ/DQoNCkFzIHlvdSBrbm93LCBJIG1haW50YWluZWQgYSBzaW1pbGFyIHBh
+dGNoc2V0IHJlbW92aW5nIFBQQywgYW5kIHNvbWVvbmUgdG9sZCBtZSBxZV9pYyBzaG91bGQgbW92
+ZWQgaW50byBkcml2ZXJzL2lycWNoaXAvLg0KSSBhbHNvIHRob3VnaHQgcWVfaWMgaXMgYSBpbnRl
+cnJ1cHQgY29udHJvbCBkcml2ZXIsIHNob3VsZCBiZSBtb3ZlZCBpbnRvIGRpciBpcnFjaGlwLg0K
+IA0KUmVnYXJkcywNClFpYW5nDQo=
