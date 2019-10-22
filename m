@@ -2,119 +2,88 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4181CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 01:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C90AECA9EAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 01:16:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E77C2084C
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 01:04:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D8652089E
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 01:16:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U24ilZxZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730600AbfJVBEl (ORCPT
+        id S1730172AbfJVBPq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 21:04:41 -0400
-Received: from mga06.intel.com ([134.134.136.31]:2959 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728375AbfJVBEl (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 21:04:41 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 18:04:40 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,325,1566889200"; 
-   d="scan'208";a="209559867"
-Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.239.196.104]) ([10.239.196.104])
-  by fmsmga001.fm.intel.com with ESMTP; 21 Oct 2019 18:04:38 -0700
-Subject: Re: [PATCH v2 3/5] perf report: Sort by sampled cycles percent per
- block for stdio
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-References: <20191015053350.13909-1-yao.jin@linux.intel.com>
- <20191015053350.13909-4-yao.jin@linux.intel.com>
- <20191021160803.GH32718@krava>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <bcc3035b-b50c-231f-23b3-b3f03b2b46a7@linux.intel.com>
-Date:   Tue, 22 Oct 2019 09:04:38 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 21 Oct 2019 21:15:46 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:35099 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727264AbfJVBPq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 21:15:46 -0400
+Received: by mail-pg1-f195.google.com with SMTP id c8so4074289pgb.2
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 18:15:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HPmdbVnkXBdcuF2g6zsawysDd6Gfy8LkQCCWQO/3l40=;
+        b=U24ilZxZ9Bo3Zx1yLdQAYg2irQA8n9O+WueP3mmZO8+FpM6jWhkQNwN2/GZ1QnLhnh
+         vxeBV7f9VucO/cdQosz3rdV2GSUcYLoiiUAztExEHK3YarZUcXbA+sPQ5JCkbzEDtK8a
+         zniQKjEeQj/BHCC5PPN2GtAeTquwylZkyts31Rz9kWj+ek+txWi7aFgp/PHxvFprjLuy
+         J7pgtPeLMfdNeZkXXlPZMHu4pT+tHFGo/uXhgMamuQdmyidmwwMUCTgEGvhAStD1wZmj
+         S6W+MxYgojX5byXhCGbJEYmqxvic58NSgWKzkU5P7BDUpq1k13/rcSvZQIwuWQMlLDtr
+         BYQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HPmdbVnkXBdcuF2g6zsawysDd6Gfy8LkQCCWQO/3l40=;
+        b=nxHDu6mryyFMSp/ER1rklQhAXRtVBDOAl/Lmx12ZkOYsa2Ue39YrF0TD9cPhbMLF2t
+         kP0kPTpCQ6PdGBq75aCW8AYW35SEnXV8RxASRsvlaOOROrgXfcFD1MwrBvilqZ/8BwxJ
+         mjfjoyIgcLpOvOI9kQsiNXl66exSGWL6ko2h3IVQ8QhTrPV/wFAPLq73Rs2H2TdjcWup
+         XRIx0QGp6INNrp41wsNzCQFfjANab5U+D1St9Ke7Pfa3pXDLKijdgY9mhT0QlWX+j7JL
+         AUT0VABps48+ITPJ8IfNydfVfyMLkmv/0k5qRYeb2B1reOm+ov5Mz3o+qV1Dv3b11bwr
+         TCMQ==
+X-Gm-Message-State: APjAAAUJBHqDVqFrd/xjo1O602h7Vdi95G+f8wOuzt13hS6gpDVp8YrH
+        9LUEBK3rtr0lHlcJm7ho6uG1u0g694FScbm+h5lMvA==
+X-Google-Smtp-Source: APXvYqxqileGL9IAimD9SCzpiYufUF1W0QkGwwfdMGRt9c5M8/7kLWXYT7DOcpmijBzX4BOkqsRvWdbaQkxZDrLX1QY=
+X-Received: by 2002:a17:90a:c48:: with SMTP id u8mr1333271pje.16.1571706945651;
+ Mon, 21 Oct 2019 18:15:45 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191021160803.GH32718@krava>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190904211456.31204-1-xiyou.wangcong@gmail.com>
+ <CAM_iQpUiOi8JDBqAtMHii5UHK3D6WQkk_G5DriJ9Y0yTYbWf3Q@mail.gmail.com>
+ <CAM_iQpU3dqvUR0Qp6ZdZrAiyT_t_uFk4K79vcT2Q_-EjqBCGbw@mail.gmail.com> <20191021192146.0d651ce2@oasis.local.home>
+In-Reply-To: <20191021192146.0d651ce2@oasis.local.home>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Mon, 21 Oct 2019 18:15:34 -0700
+Message-ID: <CAM_iQpUe2HD-x9btYBJpL+O+1coRuLBX36qQm5bVwxmYWg8Y_g@mail.gmail.com>
+Subject: Re: [PATCH v3] tracing: Introduce trace event injection
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Oct 21, 2019 at 4:21 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> On Mon, 21 Oct 2019 13:41:51 -0700
+> Cong Wang <xiyou.wangcong@gmail.com> wrote:
+>
+> > On Mon, Sep 23, 2019 at 2:13 PM Cong Wang <xiyou.wangcong@gmail.com> wrote:
+> > >
+> > > Hi, Steven
+> > >
+> > > Any reviews for V3? I've addressed your concern about Kconfig.
+> > >
+> >
+> > Ping..
+>
+> Sorry, I still haven't forgotten about you. Just trying to deal with
+> other fires at the moment.
 
-
-On 10/22/2019 12:08 AM, Jiri Olsa wrote:
-> On Tue, Oct 15, 2019 at 01:33:48PM +0800, Jin Yao wrote:
-> 
-> SNIP
-> 
->> +			cycles += bi->cycles_aggr / bi->num_aggr;
->> +
->> +			he_block = hists__add_entry_block(&bh->block_hists,
->> +							  &al, bi);
->> +			if (!he_block) {
->> +				block_info__put(bi);
->> +				return -1;
->> +			}
->> +		}
->> +	}
->> +
->> +	if (block_cycles)
->> +		*block_cycles += cycles;
->> +
->> +	return 0;
->> +}
->> +
->> +static int resort_cb(struct hist_entry *he, void *arg __maybe_unused)
->> +{
->> +	/* Skip the calculation of column length in output_resort */
->> +	he->filtered = true;
-> 
-> that's a nasty hack ;-) together with setting it back to false just below
-> 
-> why do you want to skip the columns calculation? we could add those columns
-> to the output as well no?
-> 
-> jirka
-> 
-
-The columns calculation for this case causes the crash. The current 
-columns calculation requires some information but we don't provide. So I 
-just want to skip the columns calculation.
-
-OK, I will check how to avoid this nasty hack.
-
-Thanks
-Jin Yao
-
->> +	return 0;
->> +}
->> +
->> +static void hists__clear_filtered(struct hists *hists)
->> +{
->> +	struct rb_node *next = rb_first_cached(&hists->entries);
->> +	struct hist_entry *he;
->> +
->> +	while (next) {
->> +		he = rb_entry(next, struct hist_entry, rb_node);
->> +		he->filtered = false;
->> +		next = rb_next(&he->rb_node);
->> +	}
->> +}
-> 
-> SNIP
-> 
-> jirka
-> 
+Ok. Thanks!
