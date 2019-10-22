@@ -2,124 +2,93 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D2CDCA9EB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:48:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F8E7CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:50:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5412F2084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:48:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="s6UgbS4y"
+	by mail.kernel.org (Postfix) with ESMTP id E50DC2084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:50:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732866AbfJVQs0 (ORCPT
+        id S1729869AbfJVQuM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 12:48:26 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:45700 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731191AbfJVQsZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 12:48:25 -0400
-Received: by mail-ot1-f68.google.com with SMTP id 41so14773287oti.12
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 09:48:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0+6No+BxgIjHWFQl8mEre5geCrP8fi/EeYgiUXvYmaQ=;
-        b=s6UgbS4ygkuYPcJAAz3pNE7NObfVgWrxILYPPMZ64u/k26Tlh6VILXVknF/EVXamYW
-         JfGqLPtKv0uhIS82q3cjRbmSV68r0gXlRmOSju0sYhJbF19LHXbbiaJ1L9AhhaKRTiKP
-         7Nmc/i7KXYTM75gzn8DB3Ffy4pCr6Gj5U2IhXd6VogFuoho9HkbeTx34hgnfHaDpxJ6R
-         F2vb0qYVbMjW7271kotp9FaczmghmLyL0qHzn7+ppM77aAE1H8W4VMzOgeKAVFZVDeIY
-         ZTJYmyN1FW5YCH4xLwCspopHQI0elv9i01FAWMh92jB+mTr1bnUOm41F0QAuqBnvll+T
-         N/Rw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0+6No+BxgIjHWFQl8mEre5geCrP8fi/EeYgiUXvYmaQ=;
-        b=GcfJQFnAdftprOmcOcy5iLaW3/BQtf1NM71OPT5XgJz47fpIwUl7PShmXt7fZvOhvg
-         oU10qLT3YrdN4YtKt+EH9qJp8aMrFJYoNuqoM9WTB/IXa5STroSLM5s8PDKPnvTN8dNj
-         gFLq1vHnVzQcW4t2mvDWpm/3Wz3KTKYvsSjcLLHjwjKFrCKvxrgjazSPu2fElEQxvPYz
-         5qOuzL1c+EiyZ7PVOlMVYhp2t5DLP/HsUGMH7oHilauRLixPIud73f40oRRoOiOZNklW
-         XckRq/nAlIy/x6ev41/3bmtYQ33x6lQz0AtAbT90N/HkOUG1U0nwitK3B7hERGFWz66o
-         GhUA==
-X-Gm-Message-State: APjAAAVpQvM0LnKd9PSZXtA87/sLgneV/GsfOItfpVUvuI6iJehOSAAt
-        Q0c9WdHVCu69p1Z9LQtbmMjAZol/P+CSG6YdP7nDmA==
-X-Google-Smtp-Source: APXvYqwtw7FLGKUJW5VN/z168Ax4kCyZdkZTBUWqQLVn8w1bS74nzE4bXxhqmn24Xtn3tFVuwIDJyV6Rl48d61eRmdU=
-X-Received: by 2002:a9d:2d89:: with SMTP id g9mr3564630otb.126.1571762904646;
- Tue, 22 Oct 2019 09:48:24 -0700 (PDT)
-MIME-Version: 1.0
-References: <157118756627.2063440.9878062995925617180.stgit@dwillia2-desk3.amr.corp.intel.com>
- <157118757175.2063440.9248947575330904096.stgit@dwillia2-desk3.amr.corp.intel.com>
- <CAJZ5v0i-hhasNCD6Ur8VLfrkc+4GOeNXXX_ZNFZjcY6F51ciSQ@mail.gmail.com> <CAJZ5v0j_-iSqiysZiW=J8Y5FCAjnPC7ZvevrLsYhngWr6mT6GQ@mail.gmail.com>
-In-Reply-To: <CAJZ5v0j_-iSqiysZiW=J8Y5FCAjnPC7ZvevrLsYhngWr6mT6GQ@mail.gmail.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 22 Oct 2019 09:48:12 -0700
-Message-ID: <CAPcyv4js1XqSe1kNeWob=ftscYFKQF+04PrKj7XDiEWUWvnMvQ@mail.gmail.com>
-Subject: Re: [PATCH v7 01/12] acpi/numa: Establish a new drivers/acpi/numa/ directory
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Ingo Molnar <mingo@redhat.com>, Len Brown <lenb@kernel.org>,
-        Keith Busch <kbusch@kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
+        Tue, 22 Oct 2019 12:50:12 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:57528 "EHLO foss.arm.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S1726024AbfJVQuL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 12:50:11 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D4F914AE;
+        Tue, 22 Oct 2019 09:49:45 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AEF0D3F71A;
+        Tue, 22 Oct 2019 09:49:43 -0700 (PDT)
+Date:   Tue, 22 Oct 2019 17:49:36 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Sami Tolvanen <samitolvanen@google.com>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
         Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+        Dave Martin <Dave.Martin@arm.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 06/18] add support for Clang's Shadow Call Stack (SCS)
+Message-ID: <20191022164936.GA1451@lakrids.cambridge.arm.com>
+References: <20191018161033.261971-1-samitolvanen@google.com>
+ <20191018161033.261971-7-samitolvanen@google.com>
+ <20191022162826.GC699@lakrids.cambridge.arm.com>
+ <201910220929.ADF807CC@keescook>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <201910220929.ADF807CC@keescook>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 3:02 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> On Fri, Oct 18, 2019 at 11:25 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> >
-> >  On Wed, Oct 16, 2019 at 3:13 AM Dan Williams <dan.j.williams@intel.com> wrote:
-> > >
-> > > Currently hmat.c lives under an "hmat" directory which does not enhance
-> > > the description of the file. The initial motivation for giving hmat.c
-> > > its own directory was to delineate it as mm functionality in contrast to
-> > > ACPI device driver functionality.
-> > >
-> > > As ACPI continues to play an increasing role in conveying
-> > > memory location and performance topology information to the OS take the
-> > > opportunity to co-locate these NUMA relevant tables in a combined
-> > > directory.
-> > >
-> > > numa.c is renamed to srat.c and moved to drivers/acpi/numa/ along with
-> > > hmat.c.
-> > >
-> > > Cc: Len Brown <lenb@kernel.org>
-> > > Cc: Keith Busch <kbusch@kernel.org>
-> > > Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
-> > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> >
-> > Please note that https://patchwork.kernel.org/patch/11078171/ is being
-> > pushed to Linus (it is overdue anyway), so if it is pulled, there will
-> > be a merge conflict with this patch.
-> >
-> > Respin maybe?
->
-> Actually, would you mind it if I took this one into the ACPI tree right away?
->
-> There's https://patchwork.kernel.org/patch/11198373/ queued up that,
-> again, will clash with it.
->
-> Also, there is the generic Initiator proximity domains series from
-> Jonathan depending on it and I would like to move forward with that
-> one if there are no objections.
+On Tue, Oct 22, 2019 at 09:30:53AM -0700, Kees Cook wrote:
+> On Tue, Oct 22, 2019 at 05:28:27PM +0100, Mark Rutland wrote:
+> > On Fri, Oct 18, 2019 at 09:10:21AM -0700, Sami Tolvanen wrote:
+> > > +ifdef CONFIG_SHADOW_CALL_STACK
+> > > +KBUILD_CFLAGS	+= -fsanitize=shadow-call-stack
+> > > +DISABLE_SCS	:= -fno-sanitize=shadow-call-stack
+> > > +export DISABLE_SCS
+> > > +endif
+> > 
+> > I think it would be preferable to follow the example of CC_FLAGS_FTRACE
+> > so that this can be filtered out, e.g.
+> > 
+> > ifdef CONFIG_SHADOW_CALL_STACK
+> > CFLAGS_SCS := -fsanitize=shadow-call-stack
+>   ^^^ was this meant to be CC_FLAGS_SCS here
+> 
+> > KBUILD_CFLAGS += $(CFLAGS_SCS)
+>                      ^^^ and here?
 
-Given Ard has acked all the EFI core and ARM changes can we proceed
-with merging the EFI Specific Purpose Memory series through Rafael's
-tree? It would need acks from x86 maintainers.
+Whoops; yes in both cases...
+
+> > export CC_FLAGS_SCS
+> > endif
+> > 
+> > ... with removal being:
+> > 
+> > CFLAGS_REMOVE := $(CC_FLAGS_SCS)
+> > 
+> > ... or:
+> > 
+> > CFLAGS_REMOVE_obj.o := $(CC_FLAGS_SCS)
+> > 
+> > That way you only need to define the flags once, so the enable and
+> > disable falgs remain in sync by construction.
+            ^^^^^ "flags" here, too.
+
+Mark.
