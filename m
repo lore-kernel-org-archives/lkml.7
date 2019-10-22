@@ -2,89 +2,144 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDF52CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:29:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20ABDCA9EB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:31:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C417B20700
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:29:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC4F0205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:31:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hH+8tRk9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731977AbfJVO3f (ORCPT
+        id S1730040AbfJVObZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 10:29:35 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:49051 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727582AbfJVO3f (ORCPT
+        Tue, 22 Oct 2019 10:31:25 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:57895 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726955AbfJVObZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 10:29:35 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1M4aA4-1iLGzz0HRu-001liB; Tue, 22 Oct 2019 16:29:17 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        Pascal van Leeuwen <pvanleeuwen@verimatrix.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Pascal van Leeuwen <pascalvanl@gmail.com>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] crypto: inside-secure - select CONFIG_CRYPTO_SM3
-Date:   Tue, 22 Oct 2019 16:28:58 +0200
-Message-Id: <20191022142914.1803322-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Tue, 22 Oct 2019 10:31:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571754684;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=uQINK4WAab2a12o9SHlK/upMXG8ZGLD6Q9Wbn9V1iMw=;
+        b=hH+8tRk9V1z6FMZbYVcThekFC9ViWQgz0MdULNXdgg3HTJMKlML4sywFdbVjWKn3gfXlhk
+        dC/H5gVIS+1MzTBI4Jib50u+cm8Wxtnp1DqkDkv31U8af8FhC6tEkpmwfAohsrtH3whstb
+        Yo0JU/fXzTZPBqU8/0RNYSKPAndM3Mw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-371-SjCmvh6LOxCAPrxBPRs7jQ-1; Tue, 22 Oct 2019 10:31:20 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 308C61005500;
+        Tue, 22 Oct 2019 14:31:18 +0000 (UTC)
+Received: from treble (ovpn-124-213.rdu2.redhat.com [10.10.124.213])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C6353608C0;
+        Tue, 22 Oct 2019 14:31:09 +0000 (UTC)
+Date:   Tue, 22 Oct 2019 09:31:07 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Miroslav Benes <mbenes@suse.cz>
+Cc:     Jessica Yu <jeyu@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joe Lawrence <joe.lawrence@redhat.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, mhiramat@kernel.org,
+        bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, live-patching@vger.kernel.org,
+        pmladek@suse.com
+Subject: Re: [PATCH v3 5/6] x86/ftrace: Use text_poke()
+Message-ID: <20191022143107.xkymboxgcgojc5b5@treble>
+References: <alpine.LSU.2.21.1910151611000.13169@pobox.suse.cz>
+ <88bab814-ea24-ece9-2bc0-7a1e10a62f12@redhat.com>
+ <20191015153120.GA21580@linux-8ccs>
+ <7e9c7dd1-809e-f130-26a3-3d3328477437@redhat.com>
+ <20191015182705.1aeec284@gandalf.local.home>
+ <20191016074951.GM2328@hirez.programming.kicks-ass.net>
+ <alpine.LSU.2.21.1910161216100.7750@pobox.suse.cz>
+ <alpine.LSU.2.21.1910161521010.7750@pobox.suse.cz>
+ <20191018130342.GA4625@linux-8ccs>
+ <alpine.LSU.2.21.1910221022590.28918@pobox.suse.cz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:00l9iabADIFv0wAIPdDsoqreZmhnf5ZQlT3ow6IK35a8pvNICt8
- XVH66v2tQRNqX6ON0AMdv5CU/eW/AltE68a3R3WzliJTlaum9Q2wYfV6Td0gNvLDoproGUf
- y1Yi8OzafJ8edAWmw2mwJbccaUOg/WB99qxKQo+CvDotisUWUwMVOnkpQnTvFFwrKnWkPWz
- qS4lH5QEcfOo0mXYiXrAA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:wALEfJkSU58=:Q1pqyhJ7LK+r/v38AXJ3AR
- NCGwe02DvJxpbujy8KHCT7xkrDMXgNhbHpPbSsDP7OzMKmH/fCtp/1VJXDoEvNMTEZ28nJwE5
- hn31CZMhee5FrRmoQHHzgT4XL5I8EywBclsM0D6gUprTjSvrcQboHUbsX6UwHVTOHOr+oLp5m
- SQk9Q7eY6FU9fUaXfY/mon9c9vUCGNzRrNORvS+VAz65QJxYCJk9+C8Nk9B1HdQ9+lWROq5Vv
- vHtI2K7nYV1vGHJZ2ZUeDNMxq4FhFljwx58bnSJkkYqQ62c2pn5SitgWNlMmpOA7zIWHkvbL7
- o0y8xhc3FkrMcFVjlvfBVQOzcWZcg5b3N+ck/e3H3E8dP7Dj3Bj3gSzzfLfDosn/pftERc4Bo
- 8c6JppWHpu6u8VLvIzvVbskv1UbiInrv4WfOmT5XDBP8l8a4qEymOKW9emWHHYChIu2StMiSi
- EmCXgYSfyFQXmzqeYesCYNWXFM21VOt5kwwz8+y3YViBXVtVOz27O/vSaOJDaqRi/mTQxvsch
- RHtkfGrhAth85dTMRufU9YwYUCtwgtptTKYUtt0MRtCDCZMFW0EGoczXahATVSwFYDyaCo2SA
- My7H0hKTEBKx8ZNSKYXM2RDPxVgIeWcNOg4avOESo12r0cnRLtBYSIvv72AYE7GpdBew+1E4Z
- M9rFvW1pUm0r8PrM4tO1tNjhZNDaJc/7V+hEzpcKp8BTzurAkRIWVcbkWZB4jBS2jQ9oQ/moU
- iBz/BxsSYpsJCJ1PU/jLRxCeh5mUqLLv76bNly4KhL01tnO1yZ+Ul/kHA5YcT1zua50tfMieP
- N0fHQ1Omw36fowds5aO2roCPx3co4+krap3w0bpf+8bQkxE009Ciibw65Mr4Q9f21C8bd+sFw
- kqSj0lPUFKBsfEVDWYEg==
+In-Reply-To: <alpine.LSU.2.21.1910221022590.28918@pobox.suse.cz>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MC-Unique: SjCmvh6LOxCAPrxBPRs7jQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Without this symbol, the safexcel driver causes a link error:
+On Tue, Oct 22, 2019 at 10:27:49AM +0200, Miroslav Benes wrote:
+> > Does that sound like what you had in mind or am I totally off?
+>=20
+> Sort of. What I had in mind was that we could get rid of all special .klp=
+=20
+> ELF section if module loader guarantees that only sections for loaded=20
+> modules are processed. Then .klp.rela.$objname is not needed and proper=
+=20
+> .rela.text.$objname (or whatever its text section is named) should be=20
+> sufficient. The same for the rest (.klp.arch).
 
-drivers/crypto/inside-secure/safexcel_hash.o: In function `safexcel_ahash_final':
-safexcel_hash.c:(.text+0x3c4): undefined reference to `sm3_zero_message_hash'
+If I understand correctly, using kvm as an example to-be-patched module,
+we'd have:
 
-Fixes: 0f2bc13181ce ("crypto: inside-secure - Added support for basic SM3 ahash")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/crypto/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+  .text.kvm
+  .rela.text.kvm
+  .altinstructions.kvm
+  .rela.altinstructions.kvm
+  __jump_table.kvm
+  .rela__jump_table.kvm
 
-diff --git a/drivers/crypto/Kconfig b/drivers/crypto/Kconfig
-index 357e230769c8..1ca8d9a15f2a 100644
---- a/drivers/crypto/Kconfig
-+++ b/drivers/crypto/Kconfig
-@@ -753,6 +753,7 @@ config CRYPTO_DEV_SAFEXCEL
- 	select CRYPTO_SHA512
- 	select CRYPTO_CHACHA20POLY1305
- 	select CRYPTO_SHA3
-+	select CRYPTO_SM3
- 	help
- 	  This driver interfaces with the SafeXcel EIP-97 and EIP-197 cryptographic
- 	  engines designed by Inside Secure. It currently accelerates DES, 3DES and
--- 
-2.20.0
+etc.  i.e. any "special" sections would need to be renamed.
+
+Is that right?
+
+But also I think *any* sections which need relocations would need to be
+renamed, for example:
+
+  .rodata.kvm
+  .rela.rodata.kvm
+  .orc_unwind_ip.kvm
+  .rela.orc_unwind_ip.kvm
+
+
+It's an interesting idea.
+
+We'd have to be careful about ordering issues.  For example, there are
+module-specific jump labels stored in mod->jump_entries.  Right now
+that's just a pointer to the module's __jump_table section.  With late
+module patching, when kvm is loaded we'd have to insert the klp module's
+__jump_table.kvm entries into kvm's mod->jump_entries list somehow.
+
+Presumably we'd also have that issue for other sections.  Handling that
+_might_ be as simple as just hacking up find_module_sections() to
+re-allocate sections and append "patched sections" to them.
+
+But then you still have to worry about when to apply the relocations.
+If you apply them before patching the sections, then relative
+relocations would have the wrong values.  If you apply them after, then
+you have to figure out where the appended relocations are.
+
+And if we allow unpatching then we'd presumably have to be able to
+remove entries from the module specific section lists.
+
+So I get the feeling a lot of complexity would creep in.  Even just
+thinking about it requires more mental gymnastics than the
+one-patch-per-module idea, so I view that as a bad sign.
+
+--=20
+Josh
 
