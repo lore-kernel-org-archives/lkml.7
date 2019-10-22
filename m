@@ -2,129 +2,120 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD00CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 20:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31C77CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 21:01:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B7B820679
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 20:57:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571777856;
-	bh=S04ZlW5Bh/Rx9nSwj4USgImeX73NryQhhWigjmwqgvg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=bt/pn9r00hxcbIHcQk/DIY4N3zRHw+BP/Qij0/QImDreswg0c53vjBHk+unz6FLzi
-	 D+O4Hy2evPQl+btmz/eg1J6h+JIePFlGMHcn8c9rrkUHkb6pN+Py5AejDflbmYvKwU
-	 evqiBLeTFhtJvFwzfhIrhrqeW2+W1FOpIlsdbzJU=
+	by mail.kernel.org (Postfix) with ESMTP id 0777420B7C
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 21:01:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731545AbfJVU5e (ORCPT
+        id S1732018AbfJVVBW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 16:57:34 -0400
-Received: from mail-oi1-f178.google.com ([209.85.167.178]:42050 "EHLO
-        mail-oi1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725874AbfJVU5d (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 16:57:33 -0400
-Received: by mail-oi1-f178.google.com with SMTP id i185so15427374oif.9;
-        Tue, 22 Oct 2019 13:57:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GptL/7TorSVDMwb9IC9D0CwrTWrvmemL9jOU1eTDxRw=;
-        b=TMmwQrogi0BSNwcV728fP3AUXRLbPOzcZnNesImOvgrdKQr2OmZoUksW6B5CWBJler
-         E53YRSajr5xyoAh5asmDCyQuhFn15nG+aGx6Arlx2sh+nuLBPVXgKJ7zuQmhUdiHloC5
-         H3mNYZlwplIbGAJ6p5lMLu5O2hcmi7lS/YPWKOW5HVaFN4h6XwqIr3o2mq0tdzAg5huB
-         b1ZdRgM6bXUH75wIgHUl8x909+phRrsKnntNOCGwynV9dcdv6R5THUN1y+2Tcd4NggIc
-         ZST26Kcbly1DA/C0OGpSLwHIYXfrRf/Lpese6Wp1ItElEwnkRWeOFy4/mGBBTwdDwP2y
-         Whhw==
-X-Gm-Message-State: APjAAAXKXcsnwCRpDWX5MNn4Fp63UOZJLM7d9H4D9zyqN4XxKSn5YyHU
-        NaWxfKUz/plmZyJ+fIJkoxdiIYqztskXQK58A9A=
-X-Google-Smtp-Source: APXvYqyk1WrrJhEEyw6GsXZ8C6TlqsHNqLGEfbQ3hHFtSJ/9IiDbsVm4p9PwtvKBd2rEdvAJP5SZ7QtPICfg441YKK4=
-X-Received: by 2002:aca:5885:: with SMTP id m127mr4777280oib.110.1571777852342;
- Tue, 22 Oct 2019 13:57:32 -0700 (PDT)
+        Tue, 22 Oct 2019 17:01:22 -0400
+Received: from mga12.intel.com ([192.55.52.136]:15244 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730146AbfJVVBW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 17:01:22 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Oct 2019 14:01:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,217,1569308400"; 
+   d="scan'208";a="196569094"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga008.fm.intel.com with ESMTP; 22 Oct 2019 14:01:21 -0700
+Date:   Tue, 22 Oct 2019 14:01:20 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, x86@kernel.org, pbonzini@redhat.com,
+        rkrcmar@redhat.com, vkuznets@redhat.com, wanpengli@tencent.com,
+        jmattson@google.com, joro@8bytes.org, boris.ostrovsky@oracle.com,
+        jgross@suse.com, peterz@infradead.org, will@kernel.org,
+        linux-hyperv@vger.kernel.org, kvm@vger.kernel.org,
+        mikelley@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
+        sthemmin@microsoft.com, sashal@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH v7 2/5] x86/kvm: Change print code to use pr_*() format
+Message-ID: <20191022210120.GQ2343@linux.intel.com>
+References: <1571649076-2421-1-git-send-email-zhenzhong.duan@oracle.com>
+ <1571649076-2421-3-git-send-email-zhenzhong.duan@oracle.com>
 MIME-Version: 1.0
-References: <CAA25o9TABY=3C+FQEg8FDyF1rim315G2hmeB1DBWJLn-wG1j0g@mail.gmail.com>
-In-Reply-To: <CAA25o9TABY=3C+FQEg8FDyF1rim315G2hmeB1DBWJLn-wG1j0g@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 22 Oct 2019 22:57:20 +0200
-Message-ID: <CAJZ5v0gJWxLJTi7TjaRP-3aR3f4VnX1n9dRE_jxdS6e3SM46LQ@mail.gmail.com>
-Subject: Re: is hibernation usable?
-To:     Luigi Semenzato <semenzato@google.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Geoff Pike <gpike@google.com>, Bas Nowaira <bassem@google.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1571649076-2421-3-git-send-email-zhenzhong.duan@oracle.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 10:09 PM Luigi Semenzato <semenzato@google.com> wrote:
->
-> Following a thread in linux-pm
-> (https://marc.info/?l=linux-mm&m=157012300901871) I have some issues
-> that may be of general interest.
->
-> 1. To the best of my knowledge, Linux hibernation is guaranteed to
-> fail if more than 1/2 of total RAM is in use (for instance, by
-> anonymous pages).  My knowledge is based on evidence, experiments,
-> code inspection, the thread above, and a comment in
-> Documentation/swsusp.txt, copied here:
+On Mon, Oct 21, 2019 at 05:11:13PM +0800, Zhenzhong Duan wrote:
+> pr_*() is preferred than printk(KERN_* ...), after change all the print
+> in arch/x86/kernel/kvm.c will have "kvm_guest: xxx" style.
+> 
+> No functional change.
+> 
+> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: Radim Krcmar <rkrcmar@redhat.com>
+> Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+> Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+> Cc: Wanpeng Li <wanpengli@tencent.com>
+> Cc: Jim Mattson <jmattson@google.com>
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> ---
+>  arch/x86/kernel/kvm.c | 30 ++++++++++++++++--------------
+>  1 file changed, 16 insertions(+), 14 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+> index 3bc6a266..249f14a 100644
+> --- a/arch/x86/kernel/kvm.c
+> +++ b/arch/x86/kernel/kvm.c
+> @@ -7,6 +7,8 @@
+>   *   Authors: Anthony Liguori <aliguori@us.ibm.com>
+>   */
+>  
+> +#define pr_fmt(fmt) "kvm_guest: " fmt
 
-So I use it on a regular basis (i.e. every day) on a system that often
-has over 50% or RAM in use and it all works.
+Sort of a silly nit, especially since I suggested kvm_guest...
 
-I also know about other people using it on a regular basis.
+What about using kvm-guest instead of kvm_guest to be consistent with
+kvm-clock, the other prolific logger in a KVM guest.
 
-For all of these users, it is usable.
+E.g.
 
->  "Instead, we load the image into unused memory and then atomically
-> copy it back to it original location. This implies, of course, a
-> maximum image size of half the amount of memory."
+  kvm-clock: cpu 1, msr 551e041, secondary cpu clock
+  kvm-guest: setup async PF for cpu 1
+  kvm-guest: stealtime: cpu 1, msr 277695f40
+  kvm-clock: cpu 2, msr 551e081, secondary cpu clock
+  kvm-guest: setup async PF for cpu 2
+  kvm-guest: stealtime: cpu 2, msr 277715f40
+  kvm-clock: cpu 3, msr 551e0c1, secondary cpu clock
+  kvm-guest: setup async PF for cpu 3
+  kvm-guest: stealtime: cpu 3, msr 277795f40
+  kvm-clock: cpu 4, msr 551e101, secondary cpu clock
+  
+instead of
 
-That isn't right any more.  An image that is loaded during resume can,
-in fact, be larger than 50% of RAM.  An image that is created during
-hibernation, however, cannot.
-
-> 2. There's no simple/general workaround.  Rafael suggested on the
-> thread "Whatever doesn't fit into 50% of RAM needs to be swapped out
-> before hibernation".  This is a good suggestion: I am actually close
-> to achieving this using memcgroups, but it's a fair amount of work,
-> and a fairly special case.  Not everybody uses memcgroups, and I don't
-> know of other reliable ways of forcing swap from user level.
-
-I don't need to do anything like that.
-
-hibernate_preallocate_memory() manages to free a sufficient amount of
-memory on my system every time.
-
-> 3. A feature that works only when 1/2 of total RAM can be allocated
-> is, in my opinion, not usable, except possibly under special
-> circumstances, such as mine. Most of the available articles and
-> documentation do not mention this important fact (but for the excerpt
-> I mentioned, which is not in a prominent position).
-
-It can be used with over 1/2 of RAM allocated and that is quite easy
-to demonstrate.
-
-Honestly, I'm not sure what your problem is really.
-
-> Two questions then:
->
-> A. Should the documentation be changed to reflect this fact more
-> clearly?  I feel that the current situation is a disservice to the
-> user community.
-
-Propose changes.
-
-> B. Would it be worthwhile to improve the hibernation code to remove
-> this limitation?  Is this of interest to anybody (other than me)?
-
-Again, propose specific changes.
+  kvm-clock: cpu 1, msr 551e041, secondary cpu clock
+  kvm_guest: setup async PF for cpu 1
+  kvm_guest: stealtime: cpu 1, msr 277695f40
+  kvm-clock: cpu 2, msr 551e081, secondary cpu clock
+  kvm_guest: setup async PF for cpu 2
+  kvm_guest: stealtime: cpu 2, msr 277715f40
+  kvm-clock: cpu 3, msr 551e0c1, secondary cpu clock
+  kvm_guest: setup async PF for cpu 3
+  kvm_guest: stealtime: cpu 3, msr 277795f40
+  kvm-clock: cpu 4, msr 551e101, secondary cpu clock
