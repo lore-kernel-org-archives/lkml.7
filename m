@@ -2,121 +2,148 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE282CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:05:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDA58CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:06:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EB5B21783
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:05:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C500B21906
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:06:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dQSQd8zv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389157AbfJVOFA (ORCPT
+        id S2388139AbfJVOGl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 10:05:00 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54290 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388191AbfJVOE6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 10:04:58 -0400
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com [209.85.128.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B8208C0021D7
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 14:04:57 +0000 (UTC)
-Received: by mail-wm1-f71.google.com with SMTP id z5so4495388wma.5
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 07:04:57 -0700 (PDT)
+        Tue, 22 Oct 2019 10:06:41 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:40332 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727582AbfJVOGk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 10:06:40 -0400
+Received: by mail-qt1-f194.google.com with SMTP id o49so19090145qta.7;
+        Tue, 22 Oct 2019 07:06:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=sHs2QlhxbBkINZWNWfLKn7toSRHDRtAjO+pu/W5oZEw=;
+        b=dQSQd8zvq44JjJnas5gkyT5ZaMzsJTMqzIIN148V+8hv85hrKwU+zj8JrDLPyXSdif
+         zRloFwPsMvDEODBLgvr3a8aU2D8kN/k59FU15NF7CS0RtLaWtog5pW5jZQ6DIaooIMgy
+         EcSxbdLmkeL4UgrN4Unz7fHfLtxpmMGZQLQcaJpQyCqeI+hTj7H4VG2YKfsgtD49HKE2
+         LknFWZIpbyAdg0qu0TZ0GiJAys2u2+MzNx15bxD8az7B6zACrkl50NS++A0kyDyaFDYA
+         7efqODlPKgBgmxIQRj5gnv+DMaqb7KTKd0dWOIYHxH8p/x3Navcf00+tZLJXS9P9mvj4
+         j1og==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GRXx0prZyWf8Ie3WBmFM/bIRv9+8DKKzcw/xRf9RZ/k=;
-        b=kOjUQ5PNQ5MbBZkhOCMHlRLO1cs9tbqpROuldXMn5PW9yocBNIXk9d9UnmRZqebDAr
-         rXpMJ0tgLCC2chfpeZb9kHU3HmYqaL7Gqocdy/6DUE8MvVFpFJGz8QaTEUaHNdQXRnqG
-         28djvW9s2NXvR6ZSIV/rCBSic5xGhLd86aeaJcuej+IFP1zs3H6bp437Ak9F4ZAYVZov
-         gg0FeRsAHrtFfhIYrIVU5RAgraWwmYhiKyZSpvsLZdkAxyzgMVXxrrIPEU/3l2CiyBoo
-         pnZoTpZaLTy5DD8/TJJ/5zrUFkVbcW84A5TPVbz1Zj+e8zZCi6x3Gg8pzXLjony3jRNf
-         4BqA==
-X-Gm-Message-State: APjAAAVdgvoTZ4xAiXHhwtnaYUCFptjfNC7hCR31mtrQsoGrMfg7JMTN
-        lQLz0DItDC1W45/vH0YPtc/v7xAMeHh3jUF1TZyITnEPYAtxBLWStoZVyNHcyAzLKwY6BRpt6RT
-        2wqVqF3icVmSDgNgO8dTZ4uZh
-X-Received: by 2002:a1c:7e57:: with SMTP id z84mr3319575wmc.84.1571753096251;
-        Tue, 22 Oct 2019 07:04:56 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwWqRcFVSe00YfZqVULXyrnOBOt0DAtwntm2KhRrr6N6A/cSYud38QIAc8/I73DEBmlFbuFZw==
-X-Received: by 2002:a1c:7e57:: with SMTP id z84mr3319555wmc.84.1571753095982;
-        Tue, 22 Oct 2019 07:04:55 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:c0e4:dcf4:b543:ce19? ([2001:b07:6468:f312:c0e4:dcf4:b543:ce19])
-        by smtp.gmail.com with ESMTPSA id b196sm11755492wmd.24.2019.10.22.07.04.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Oct 2019 07:04:55 -0700 (PDT)
-Subject: Re: [PATCH v2 00/15] KVM: Dynamically size memslot arrays
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Marc Zyngier <maz@kernel.org>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
-References: <20191022003537.13013-1-sean.j.christopherson@intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <129444cc-5211-5b60-15fc-0f0fe998f023@redhat.com>
-Date:   Tue, 22 Oct 2019 16:04:54 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sHs2QlhxbBkINZWNWfLKn7toSRHDRtAjO+pu/W5oZEw=;
+        b=QNwBmshhIYnwhFZdR60Y1hWExa7UMVaRh5c2IB2xeqVX7PATSsXKcs6ao7ILUXCwQ9
+         Nb8m7klSh+bBAJHdoSU66St23bQsq0zeQjRUGP7Jvktrfgg2yb50YxMZ81uoEy1z1/qp
+         ba7nLKjGAkOnAV/nzGKXRO66uRBhHJHoqeIUzXQTS0ae/xapooELzCBKylq+B2NMmOG5
+         J77Nx0sxmAiF1zNxTI1+kAarlI6ZFPdjr1pZadzfzHSx+fm1YEsD/kZSb+K0YoRFA+En
+         QV+gl/C+pEuPixQzl1Y8Uws3FLTI04OHYg9x73xyp05UaLyFIsN4pomMPLI2LosuT9lK
+         DNwQ==
+X-Gm-Message-State: APjAAAXecgLyqlL+1wOannSSOArRGorVowh2anCU1QcOWjbweFxguqKc
+        rPYSGJ8e9BbwAu4z9dcqwds=
+X-Google-Smtp-Source: APXvYqygfBqxEFPNJIXaP/QrHWQzCuZsQXrnLgNtmuWg9S65iYxDR5QdCFZUXUmf0bttAcOU+7mXOg==
+X-Received: by 2002:ac8:4243:: with SMTP id r3mr3365473qtm.329.1571753199574;
+        Tue, 22 Oct 2019 07:06:39 -0700 (PDT)
+Received: from smtp.gmail.com (gwcrusp.semfio.usp.br. [143.107.150.86])
+        by smtp.gmail.com with ESMTPSA id q8sm3970384qta.31.2019.10.22.07.06.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Oct 2019 07:06:39 -0700 (PDT)
+Date:   Tue, 22 Oct 2019 11:06:33 -0300
+From:   Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Dragos Bogdan <dragos.bogdan@analog.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        devicetree@vger.kernel.org, kernel-usp@googlegroups.com
+Subject: Re: [PATCH v2 2/2] dt-bindings: iio: adc: Add DT docs for AD7292
+Message-ID: <20191022140604.ovmooly47qax2sms@smtp.gmail.com>
+References: <20191016025220.td3xb7oxlfkznxl6@smtp.gmail.com>
+ <20191017191152.GA11222@bogus>
+ <20191019150652.h6bkfz2w2ohemvwy@smtp.gmail.com>
+ <CAL_JsqKqgko02KstmytNNUUF0-QR7rpMF4dV=X55N=TnDahd+Q@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191022003537.13013-1-sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqKqgko02KstmytNNUUF0-QR7rpMF4dV=X55N=TnDahd+Q@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22/10/19 02:35, Sean Christopherson wrote:
-> The end goal of this series is to dynamically size the memslot array so
-> that KVM allocates memory based on the number of memslots in use, as
-> opposed to unconditionally allocating memory for the maximum number of
-> memslots.  On x86, each memslot consumes 88 bytes, and so with 2 address
-> spaces of 512 memslots, each VM consumes ~90k bytes for the memslots.
-> E.g. given a VM that uses a total of 30 memslots, dynamic sizing reduces
-> the memory footprint from 90k to ~2.6k bytes.
-> 
-> The changes required to support dynamic sizing are relatively small,
-> e.g. are essentially contained in patches 12/13 and 13/13.  Patches 1-11
-> clean up the memslot code, which has gotten quite crusy, especially
-> __kvm_set_memory_region().  The clean up is likely not strictly necessary
-> to switch to dynamic sizing, but I didn't have a remotely reasonable
-> level of confidence in the correctness of the dynamic sizing without first
-> doing the clean up.
-> 
-> Testing, especially non-x86 platforms, would be greatly appreciated.  The
-> non-x86 changes are for all intents and purposes untested, e.g. I compile
-> tested pieces of the code by copying them into x86, but that's it.  In
-> theory, the vast majority of the functional changes are arch agnostic, in
-> theory...
-> 
-> v2:
->   - Split "Drop kvm_arch_create_memslot()" into three patches to move
->     minor functional changes to standalone patches [Janosch].
->   - Rebase to latest kvm/queue (f0574a1cea5b, "KVM: x86: fix ...")
->   - Collect an Acked-by and a Reviewed-by
+Hi,
 
-I only have some cosmetic changes on patches 14-15.  Let's wait for
-testing results.
+I ran the DTC and CHECK for AD7292 schema however, the target '__build'
+did not run due to errors found in regulator/fixed-regulator.yaml and
+arm/allwinner,sun4i-a10-csi.yaml.
 
-Paolo
+I recall seeing something about the maxItems requirement over regulator
+supplies being changed on the iio mailing list, so I updated my repo
+locally, cloned and reinstalled the dt-schema toolset. However, I still
+can't make it go through the '__build' target.
+
+Python 3.7.5rc1 is my default python and I got the following pip3
+packages installed:
+
+ruamel.yaml        0.16.5
+ruamel.yaml.clib   0.2.0
+rfc3987            1.3.8
+jsonschema         3.0.1
+dtschema           0.0.1  at $HOME/<iio repo dir>/dt-schema
+
+Debian Bullseye packages installed:
+python3-yaml/testing,now 5.1.2-1
+libyaml-dev/testing,now 0.2.2-1
+
+I was only able to run DTC after installing the libyaml-dev package, so
+I think it might be worth to add it to the project dependencies at
+https://github.com/robherring/dt-schema.
+
+apt-get install libyaml-dev
+
+Thanks,
+Marcelo
+
+On 10/20, Rob Herring wrote:
+> On Sat, Oct 19, 2019 at 10:07 AM Marcelo Schmitt
+> <marcelo.schmitt1@gmail.com> wrote:
+> >
+> > Hi Rob
+> >
+> > Thanks for the review.
+> >
+> > I'm having some trouble with the DTC.
+> > I installed the DT tool from https://github.com/robherring/dt-schema.
+> > Running make -k dt_binding_check goes through all the checks (CHKDT), producing
+> > the .example.dts files but then gives errors like:
+> >
+> >   DTC     Documentation/devicetree/bindings/arm/calxeda.example.dt.yaml
+> > FATAL ERROR: Unknown output format "yaml"
+> > make[1]: *** [scripts/Makefile.lib:314: Documentation/devicetree/bindings/arm/calxeda.example.dt.yaml] Error 1
+> > make[1]: *** Deleting file 'Documentation/devicetree/bindings/arm/calxeda.example.dt.yaml'
+> >
+> > My pip3 installation has:
+> > jsonschema jsonschema-3.1.2.dev6+g0d827f3
+> > rfc3987 1.3.8
+> >
+> > $HOME/.local/bin is listed in my shell's PATH variable.
+> >
+> > I was trying to follow the documentation at:
+> > Documentation/devicetree/writing-schema.rst
+> >
+> > Are there any other DTC dependencies that I am missing?
+> 
+> Yes, libyaml. See Documentation/devicetree/writing-schema.rst.
+> 
+> Rob
