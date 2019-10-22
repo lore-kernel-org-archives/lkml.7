@@ -2,85 +2,85 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FCFDCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:10:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A23CCA9EB9
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:12:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CBDB214B2
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:10:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5EE6214B2
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:12:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732212AbfJVPKv (ORCPT
+        id S1732227AbfJVPMA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 11:10:51 -0400
-Received: from mail-pf1-f171.google.com ([209.85.210.171]:37523 "EHLO
-        mail-pf1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732181AbfJVPKu (ORCPT
+        Tue, 22 Oct 2019 11:12:00 -0400
+Received: from imap1.codethink.co.uk ([176.9.8.82]:60275 "EHLO
+        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725788AbfJVPMA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 11:10:50 -0400
-Received: by mail-pf1-f171.google.com with SMTP id y5so10834102pfo.4
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 08:10:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=8AwEM/obC8LRWaCg0EJY39OUdBAOiIs+mtoo3/7ay7o=;
-        b=oWMrIoiG55dXJYm0EdOBLLFuAcygYsLDfiabqgVcwRw0FfUtUasnvCueLqywJ0BuMW
-         WNL25K7gjefv6u2x/idC6Le2ncnW3QSAwp+BBoFtwamcO5q/Klor1/u72mTYhTELiuSz
-         k7xI9rmxy8iRxiRExF+JQUJk2dpE/j94P51gmpCPhSQLVcI25pVqYPS6REHN4g7REbi3
-         dSBzMLOcAL00noXAI4AEvn8FuLtxUlwCpGOXaPlQebDz5kN9qPKBAPZ1Q5wAnj+vzFdo
-         MsGvmDv77x+GBczo5kkNA8A/+WiBr3M/rNczA+wo49KK+KbrqmzjfgfMCiJKaheTGEOX
-         idhg==
-X-Gm-Message-State: APjAAAW0F/MmRE8mitMVlJhZQvCALHOHlqXySULksfr0VilxYeJiAdXa
-        GokMYBBqiTudgPvAWakmumvUJw==
-X-Google-Smtp-Source: APXvYqwpcdig5U0KlygiWr/07ufZuXhgsDfX0+P8KVKTiRMi0+u8a5sKyE5qZZmPdgiu+6Nh3jLGkg==
-X-Received: by 2002:aa7:9156:: with SMTP id 22mr4907293pfi.246.1571757049387;
-        Tue, 22 Oct 2019 08:10:49 -0700 (PDT)
-Received: from localhost ([12.206.222.5])
-        by smtp.gmail.com with ESMTPSA id t12sm15557832pjq.18.2019.10.22.08.10.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Oct 2019 08:10:48 -0700 (PDT)
-Date:   Tue, 22 Oct 2019 08:10:48 -0700 (PDT)
-X-Google-Original-Date: Tue, 22 Oct 2019 08:10:42 PDT (-0700)
-Subject:     Re: PCI/MSI: Remove the PCI_MSI_IRQ_DOMAIN architecture whitelist
-In-Reply-To: <995f625b-1f56-6d97-ba99-9a4298e9dd37@xilinx.com>
-CC:     Christoph Hellwig <hch@infradead.org>, michal.simek@xilinx.com,
-        helgaas@kernel.org, tony.luck@intel.com, fenghua.yu@intel.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, bhelgaas@google.com, will@kernel.org,
-        Greg KH <gregkh@linuxfoundation.org>,
-        kstewart@linuxfoundation.org, pbonzini@redhat.com,
-        firoz.khan@linaro.org, yamada.masahiro@socionext.com,
-        longman@redhat.com, mingo@kernel.org, peterz@infradead.org,
-        linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-pci@vger.kernel.org
-From:   Palmer Dabbelt <palmer@sifive.com>
-To:     michal.simek@xilinx.com
-Message-ID: <mhng-d42f23ae-e51f-49cd-9533-a4c793cd70fe@palmer-si-x1e>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Tue, 22 Oct 2019 11:12:00 -0400
+Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
+        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
+        id 1iMvpF-0005yl-81; Tue, 22 Oct 2019 16:11:57 +0100
+Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.3)
+        (envelope-from <ben@rainbowdash.codethink.co.uk>)
+        id 1iMvpE-0001ZO-Sa; Tue, 22 Oct 2019 16:11:56 +0100
+From:   "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
+To:     linux-kernel@lists.codethink.co.uk
+Cc:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] pinctrl: amd: fix __iomem annotation in amd_gpio_irq_handler()
+Date:   Tue, 22 Oct 2019 16:11:54 +0100
+Message-Id: <20191022151154.5986-1-ben.dooks@codethink.co.uk>
+X-Mailer: git-send-email 2.23.0
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 17 Oct 2019 23:20:09 PDT (-0700), michal.simek@xilinx.com wrote:
-> Hi,
->
-> On 17. 10. 19 20:19, Palmer Dabbelt wrote:
->> This came up in the context of the microblaze port, where a patch was
->> recently posted to extend the whitelist.
->
-> I hoped you were aware about this discussion we have with Christoph.
-> https://lkml.org/lkml/2019/10/8/682
->
-> It means 1/3 and 2/3 should be replaced by mandatory-y and I expect
-> msi.h can be removed from architecture Kbuild too.
+The regs pointer in amd_gpio_irq_handler() should have __iomem
+on it, so add that to fix the following sparse warnings:
 
-I'd missed it, but that seems like a better way to do it.  I'm going to assume 
-you guys are going to handle this, so feel free to drop my patch set.
+drivers/pinctrl/pinctrl-amd.c:555:14: warning: incorrect type in assignment (different address spaces)
+drivers/pinctrl/pinctrl-amd.c:555:14:    expected unsigned int [usertype] *regs
+drivers/pinctrl/pinctrl-amd.c:555:14:    got void [noderef] <asn:2> *base
+drivers/pinctrl/pinctrl-amd.c:563:34: warning: incorrect type in argument 1 (different address spaces)
+drivers/pinctrl/pinctrl-amd.c:563:34:    expected void const volatile [noderef] <asn:2> *addr
+drivers/pinctrl/pinctrl-amd.c:563:34:    got unsigned int [usertype] *
+drivers/pinctrl/pinctrl-amd.c:580:34: warning: incorrect type in argument 1 (different address spaces)
+drivers/pinctrl/pinctrl-amd.c:580:34:    expected void const volatile [noderef] <asn:2> *addr
+drivers/pinctrl/pinctrl-amd.c:580:34:    got unsigned int [usertype] *
+drivers/pinctrl/pinctrl-amd.c:587:25: warning: incorrect type in argument 2 (different address spaces)
+drivers/pinctrl/pinctrl-amd.c:587:25:    expected void volatile [noderef] <asn:2> *addr
+drivers/pinctrl/pinctrl-amd.c:587:25:    got unsigned int [usertype] *
 
-Thanks!
+Signed-off-by: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
+---
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/pinctrl/pinctrl-amd.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
+index 2c61141519f8..eab078244a4c 100644
+--- a/drivers/pinctrl/pinctrl-amd.c
++++ b/drivers/pinctrl/pinctrl-amd.c
+@@ -540,7 +540,8 @@ static irqreturn_t amd_gpio_irq_handler(int irq, void *dev_id)
+ 	irqreturn_t ret = IRQ_NONE;
+ 	unsigned int i, irqnr;
+ 	unsigned long flags;
+-	u32 *regs, regval;
++	u32 __iomem *regs;
++	u32  regval;
+ 	u64 status, mask;
+ 
+ 	/* Read the wake status */
+-- 
+2.23.0
+
