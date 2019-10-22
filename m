@@ -2,114 +2,75 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9D63CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 10:32:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CDC8CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 10:33:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78968218AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 10:32:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571740343;
-	bh=BBu2NmvdVb1QtTKj1PLuJSKNxaY/KN55w4CVevFLVBo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JoHjz71comE1Tk7dhUUg2gBbbMYu1z7HTNJ03ralGHhQ7tU2gkVSWi7iS/fjX5mQD
-	 8UdUZS+KO2dmt79VafDYUWUGX0CTnXwwtbdmGvTE+rdNrVid5zCv9XjPSZmlGxxhzW
-	 cI6EI2IMvBX9QUZHg6Tm4QValJbOhHGgTvV9adAg=
+	by mail.kernel.org (Postfix) with ESMTP id 3DCF321872
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 10:33:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731857AbfJVKcW (ORCPT
+        id S1731869AbfJVKda (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 06:32:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47538 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727101AbfJVKcV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 06:32:21 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BBB620B7C;
-        Tue, 22 Oct 2019 10:32:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571740341;
-        bh=BBu2NmvdVb1QtTKj1PLuJSKNxaY/KN55w4CVevFLVBo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KajojXmq4Opns6SbxaWXEo4/LI9mHBWmmp1W2aXPlozLc7kp6IXqE+gekpYO1rBBh
-         Lo3B4lTD3EkEg/8b2eTtKD0FyYK4bfLHiO9C1j8sNAxnDv/1KbiBJsZSxivB9ZdJ8X
-         RuK1hXqqdI+mNnwERHTL1PW0DZUUgSyTfsDLBJaY=
-Date:   Tue, 22 Oct 2019 11:32:13 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Dave Martin <Dave.Martin@arm.com>,
-        Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
-        Paul Elliott <paul.elliott@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        Amit Kachhap <amit.kachhap@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        linux-arch@vger.kernel.org, Eugene Syromiatnikov <esyr@redhat.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Andrew Jones <drjones@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        Florian Weimer <fweimer@redhat.com>,
-        linux-kernel@vger.kernel.org, Sudakshina Das <sudi.das@arm.com>,
-        Suzuki Poulose <suzuki.poulose@arm.com>
-Subject: Re: [PATCH v2 04/12] arm64: docs: cpu-feature-registers: Document
- ID_AA64PFR1_EL1
-Message-ID: <20191022103212.GA17035@willie-the-truck>
-References: <1570733080-21015-1-git-send-email-Dave.Martin@arm.com>
- <1570733080-21015-5-git-send-email-Dave.Martin@arm.com>
- <87zhi7l8qz.fsf@linaro.org>
- <20191011145148.GK27757@arm.com>
- <20191021191818.GH4691@sirena.co.uk>
+        Tue, 22 Oct 2019 06:33:30 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36092 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730197AbfJVKda (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 06:33:30 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 76520B34A;
+        Tue, 22 Oct 2019 10:33:28 +0000 (UTC)
+Date:   Tue, 22 Oct 2019 12:33:25 +0200
+From:   Oscar Salvador <osalvador@suse.de>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     n-horiguchi@ah.jp.nec.com, mike.kravetz@oracle.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v2 10/16] mm,hwpoison: Rework soft offline for free
+ pages
+Message-ID: <20191022103319.GA21736@linux>
+References: <20191017142123.24245-11-osalvador@suse.de>
+ <20191018120615.GM5017@dhcp22.suse.cz>
+ <20191021125842.GA11330@linux>
+ <20191021154158.GV9379@dhcp22.suse.cz>
+ <20191022074615.GA19060@linux>
+ <20191022082611.GD9379@dhcp22.suse.cz>
+ <20191022083505.GA19708@linux>
+ <20191022092256.GH9379@dhcp22.suse.cz>
+ <20191022095852.GB20429@linux>
+ <20191022102457.GJ9379@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191021191818.GH4691@sirena.co.uk>
+In-Reply-To: <20191022102457.GJ9379@dhcp22.suse.cz>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 08:18:18PM +0100, Mark Brown wrote:
-> On Fri, Oct 11, 2019 at 03:51:49PM +0100, Dave Martin wrote:
-> > On Fri, Oct 11, 2019 at 02:19:48PM +0100, Alex Bennée wrote:
-> 
-> > > > -  4) ID_AA64ISAR1_EL1 - Instruction set attribute register 1
-> > > > +  5) ID_AA64ISAR1_EL1 - Instruction set attribute register 1
-> 
-> > > If I'm not mistaken .rst has support for auto-enumeration if the #
-> > > character is used. That might reduce the pain of re-numbering in future.
-> 
-> > Ack, though it would be good to go one better and generate this document
-> > from the cpufeature.c tables (or from some common source).  The numbers
-> > are relatively easy to maintain -- remembering to update the document
-> > at all seems the bigger maintenance headache right now.
-> 
-> I agree, it'd be better if the table were autogenerated.  Having tried
-> doing the modification to # it does mean that the document looks a bit
-> weird when viewing it as a text file in the kernel source which TBH is
-> how I suspect a lot of people will view it so given the infrequency with
-> which new registers are added I'm not sure it's worth it.
-> 
-> > I think this particular patch is superseded by similar fixes from other
-> > people, just not in torvalds/master yet.
-> 
-> Nor in -next for the minute :/
+On Tue, Oct 22, 2019 at 12:24:57PM +0200, Michal Hocko wrote:
+> Yes, that makes a perfect sense. What I am saying that the migration
+> (aka trying to recover) is the main and only difference. The soft
+> offline should poison page tables when not able to migrate as well
+> IIUC.
 
-Which patch is missing? The only other one on my radar is "docs/arm64:
-cpu-feature-registers: Documents missing visible fields" which is currently
-in -next as a8613e7070e7. "similar fixes from other people" isn't very
-specific :(
+Yeah, I see your point.
+I do not really why soft-offline strived so much to left the page
+untouched unless it was able to content the problem.
 
-Will
+Note that if we start now to poison pages even if we could not 
+content them (in soft-offline mode), that is a big and visible user
+change.
+
+Not saying it is wrong, but something to consider.
+
+Anyway, I would like to put that aside as a follow-up
+rework after this one, as this one already changes quite
+some things.
+
+-- 
+Oscar Salvador
+SUSE L3
