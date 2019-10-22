@@ -2,67 +2,95 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 337C7CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:43:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C92C9CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:48:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 094C72089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:43:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E7C0214B2
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:48:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="W8C2Bseb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730428AbfJVAnN (ORCPT
+        id S2387429AbfJVAr6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 20:43:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60728 "EHLO mail.kernel.org"
+        Mon, 21 Oct 2019 20:47:58 -0400
+Received: from ozlabs.org ([203.11.71.1]:58757 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727953AbfJVAnN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 20:43:13 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2387404AbfJVAr5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 20:47:57 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3FAC82089E;
-        Tue, 22 Oct 2019 00:43:12 +0000 (UTC)
-Date:   Mon, 21 Oct 2019 20:43:10 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH 3/3] x86/ftrace: Use text_poke()
-Message-ID: <20191021204310.3c26f730@oasis.local.home>
-In-Reply-To: <CAADnVQJ0cWYPY-+FhZoqUZ8p1k1FiDsO5jhXiQdcCPmd1UeCyQ@mail.gmail.com>
-References: <20190827180622.159326993@infradead.org>
-        <20190827181147.166658077@infradead.org>
-        <aaffb32f-6ca9-f9e3-9b1a-627125c563ed@redhat.com>
-        <20191002182106.GC4643@worktop.programming.kicks-ass.net>
-        <20191003181045.7fb1a5b3@gandalf.local.home>
-        <20191004112237.GA19463@hirez.programming.kicks-ass.net>
-        <20191004094228.5a5774fe@gandalf.local.home>
-        <CAADnVQJ0cWYPY-+FhZoqUZ8p1k1FiDsO5jhXiQdcCPmd1UeCyQ@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46xvxQ6YpBz9sNx;
+        Tue, 22 Oct 2019 11:47:54 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1571705275;
+        bh=WOPh2oZi7opzkS/Fh2BInhUc/0MNYstmOLktzbUmneY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=W8C2BsebC9f19xnbvMQDMWVXo/lQ5s1s8Alca+5HsZiHD7Hd6SqMvjH5thmrQRfrB
+         VoZHDbqDhbxyfTSmLCkikr8a5vlUaTWPWqjAi7RO/jGn8ZNGwvLJXH9Vtnwx4mXr8A
+         sx99TTKrjHFdPR7Ffo5GqbKV08vJuXU7rGXyahQSypPLufTdT8HLxEH1OClUno45eQ
+         nkw/jhYu5A1sCyB8OIOuMRHbpsXb0dFkLnHaNeVuccRRFnXcYdwa2eVJM2U39zUOoU
+         bKjHgjJl+W+SyXeyENgrBCR96sV9fCnNbtLhFHJ55/u61LVo3QFwGlXuBt65WoKy60
+         E8etV5JeBJFMw==
+Date:   Tue, 22 Oct 2019 11:47:37 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Chaotian Jing <chaotian.jing@mediatek.com>
+Subject: linux-next: build warning after merge of the mmc tree
+Message-ID: <20191022114737.0fd6211c@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/FRxtKUTFHLLeKOmOpCRJFTw";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 21 Oct 2019 17:36:54 -0700
-Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
+--Sig_/FRxtKUTFHLLeKOmOpCRJFTw
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-> What is the status of this set ?
-> Steven, did you apply it ?
+After merging the mmc tree, today's linux-next build (arm
+multi_v7_defconfig) produced this warning:
 
-There's still bugs to figure out.
+drivers/mmc/core/block.c: In function '__mmc_blk_ioctl_cmd':
+drivers/mmc/core/block.c:500:6: warning: unused variable 'status' [-Wunused=
+-variable]
+  500 |  u32 status =3D 0;
+      |      ^~~~~~
 
--- Steve
+Introduced by commit
 
+  05224f7e4975 ("mmc: block: Add CMD13 polling for MMC IOCTLS with R1B resp=
+onse")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/FRxtKUTFHLLeKOmOpCRJFTw
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2uUaoACgkQAVBC80lX
+0GwF+Qf/d9XDmmZd054hStri66HiXZDkInsBYHA8odNqGwvB2BuEXfy6a7u9Jm1L
+REuCsUDBvHiCPDlCgTMF2Wci/UIgF8x1rlqeFmYP5UFulFiYKdXE3Vbg12NE8h/C
+TImBSQ9mjuqo+0zQYGf3yGPJqhAt1fRkFQe0DuN/gh/l34TXZi8o8j83TriULVRN
+KhYYU/ESEJEwpMR7mlSA9wt+RcsJy8N/FCIM5USZSPBzsQ5RqWgxBs/mAPYfSARO
+KUNuQZ7nmy4UyWMNr1M4xsnTfvrErCYUuwZ+Ai7hhtQ2r3zZCDzFTUYsJe7jDNAR
+sSlfRdPe5JfuwDJ7PPMbDQg5raFbMQ==
+=t5vp
+-----END PGP SIGNATURE-----
+
+--Sig_/FRxtKUTFHLLeKOmOpCRJFTw--
