@@ -2,160 +2,125 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0FF6CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:27:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF63CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:27:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B78072064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:27:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E409A2089E
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:27:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tETdSgEZ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LQGpiNGR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731371AbfJVJ10 (ORCPT
+        id S1731475AbfJVJ1b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 05:27:26 -0400
-Received: from mail-lj1-f172.google.com ([209.85.208.172]:36837 "EHLO
-        mail-lj1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731229AbfJVJ10 (ORCPT
+        Tue, 22 Oct 2019 05:27:31 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:56372 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731229AbfJVJ1b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 05:27:26 -0400
-Received: by mail-lj1-f172.google.com with SMTP id v24so16392829ljj.3
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 02:27:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=T9L8jGHiyeAbKVH3+eeYDr6SmphM8zhAv3MB0FnWhlI=;
-        b=tETdSgEZGXBa+oNwO4Xq0Qkcc04mCbE2OQZv7G/SFHrTzYMbS2UiqshYOlqxUqogyd
-         XdU1gCB+El8o045uP6HPzhLIH567KG9rtt5dXNGaQw0+TQBmxgjz7gRsQAJNrFcRX7wA
-         99ZDIlbDebHdg2P/s+oH/H0UlXq1kS0ONAdhG8IEk88kSnaua92WgyxPniM67G0pwVjk
-         ByuY5kCC1Qt1Wz33TJekx8A2fH4uGzbmQlGyk1k7d7OSryShZxvVOLItpxbrZf7m3m98
-         pfO1cfzkexZ+shxUOi7NSuHLCI+u0lZVht14xAJphB7Kt7CEbnu/BKOczqYHCklq0JJu
-         Jz7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=T9L8jGHiyeAbKVH3+eeYDr6SmphM8zhAv3MB0FnWhlI=;
-        b=JcCXc1lSzncxUHrFoYjuSVWnZvf8q7veb+k6fit14QIiFyuiEYkWnjxzcNpz/8wSR6
-         q9GzAPMlr7vvqUXd+eid4BW4DoUtLjsWum/opuvdPeZUmUvspJASPlTTD1qyXy3ZjI12
-         yIfAqXuOLijNHrz9W6+RERUm2x1ZZ03QMLdIofmAua6yDxZR2V3ylFg4vZtzpQHmTdBx
-         JCdJlPJqhS9B/cRwdiA0S7nQHgNIq+NB8FZhIodMkky9YZ8KTlBCrU6wEMkNcrf6ds2r
-         GJtkZsNbtxw6MRJB0fCLnr2SSvDzgbrwW1/moqSpr2iVwzrNo5LbgOvefpszEfBSlefS
-         BHDQ==
-X-Gm-Message-State: APjAAAUlpDYWJ/dLZrUn0POFkWA/Wm7/eBYzG98lR6Lxne7aC+iWHjsd
-        +VXlD8cAx/RGeuB/LJjInOT95wgin74b/+zMt5Ko0Q==
-X-Google-Smtp-Source: APXvYqy8z7iSzq4oSiQyTstd4CoQLRTdUMxQ/fJueKzRPVMDu9UORzwo7WdQv7uhY6ESEHo1thAJtNn8wPWYJTbXz+0=
-X-Received: by 2002:a05:651c:237:: with SMTP id z23mr18783819ljn.214.1571736444355;
- Tue, 22 Oct 2019 02:27:24 -0700 (PDT)
+        Tue, 22 Oct 2019 05:27:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571736449;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=4RFIlZRmmV3hFstILOKd0/m47lPLMEdxfpFwPiVzbAs=;
+        b=LQGpiNGRUecBB+i1RZ9yYjetebKzMvgNUucKdR7gSAJFslG6zEoRx5OHnZxZM/LjdXDuRK
+        dPmoJnHv0um0rtm2qKaxX4fkIx9sMcRkQmoa1oMxI1tXWLAZ7J8a/80xSu3BrgST675PRk
+        HzCObZQokKi/N2x3j+hlLMnmU5hx0cg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-86-jgijt8P-Pyexl-3Jlz0aeQ-1; Tue, 22 Oct 2019 05:27:24 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 992E51800E01;
+        Tue, 22 Oct 2019 09:27:22 +0000 (UTC)
+Received: from [10.36.117.11] (ovpn-117-11.ams2.redhat.com [10.36.117.11])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 621B85C22C;
+        Tue, 22 Oct 2019 09:27:19 +0000 (UTC)
+Subject: Re: [PATCH v2 0/2] mm: Memory offlining + page isolation cleanups
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Pingfan Liu <kernelfans@gmail.com>, Qian Cai <cai@lca.pw>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Wei Yang <richard.weiyang@gmail.com>
+References: <20191021172353.3056-1-david@redhat.com>
+ <25d3f071-3268-298b-e0c8-9c307d1015fe@redhat.com>
+ <20191022080835.GZ9379@dhcp22.suse.cz>
+ <1f56744d-2c22-6c12-8fe8-4a71e791c467@redhat.com>
+ <20191022082131.GC9379@dhcp22.suse.cz>
+ <de39873c-ae55-88ed-0b4e-4f67a75ef81c@redhat.com>
+ <20191022091431.GG9379@dhcp22.suse.cz>
+ <68d6da35-276c-0491-99ea-8249dee8fd1d@redhat.com>
+ <20191022092454.GI9379@dhcp22.suse.cz>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat GmbH
+Message-ID: <8f5a1d58-6b1a-eef3-b482-ff113425fa65@redhat.com>
+Date:   Tue, 22 Oct 2019 11:27:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-References: <20190930020440.7754-1-peng.ma@nxp.com> <20191017041124.GN2654@vkoul-mobl>
- <AM0PR04MB44207F0EF575C5FB44DA6984ED6D0@AM0PR04MB4420.eurprd04.prod.outlook.com>
-In-Reply-To: <AM0PR04MB44207F0EF575C5FB44DA6984ED6D0@AM0PR04MB4420.eurprd04.prod.outlook.com>
-From:   Anders Roxell <anders.roxell@linaro.org>
-Date:   Tue, 22 Oct 2019 11:27:13 +0200
-Message-ID: <CADYN=9JkQMawVnLoJ8sXAbV8NB_BK0zQA0PomJ583Agj12r8Cg@mail.gmail.com>
-Subject: Re: [EXT] Re: [V5 1/2] dmaengine: fsl-dpaa2-qdma: Add the DPDMAI(Data
- Path DMA Interface) support
-To:     Peng Ma <peng.ma@nxp.com>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        Leo Li <leoyang.li@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191022092454.GI9379@dhcp22.suse.cz>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MC-Unique: jgijt8P-Pyexl-3Jlz0aeQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 17 Oct 2019 at 08:16, Peng Ma <peng.ma@nxp.com> wrote:
->
-> Hi Vinod,
->
-> Thanks very much for your reply.
->
-> Best Regards,
-> Peng
-> >-----Original Message-----
-> >From: Vinod Koul <vkoul@kernel.org>
-> >Sent: 2019=E5=B9=B410=E6=9C=8817=E6=97=A5 12:11
-> >To: Peng Ma <peng.ma@nxp.com>
-> >Cc: dan.j.williams@intel.com; Leo Li <leoyang.li@nxp.com>;
-> >linux-kernel@vger.kernel.org; dmaengine@vger.kernel.org
-> >Subject: [EXT] Re: [V5 1/2] dmaengine: fsl-dpaa2-qdma: Add the DPDMAI(Da=
-ta
-> >Path DMA Interface) support
-> >
-> >Caution: EXT Email
-> >
-> >On 30-09-19, 02:04, Peng Ma wrote:
-> >> The MC(Management Complex) exports the DPDMAI(Data Path DMA
-> >Interface)
-> >> object as an interface to operate the DPAA2(Data Path Acceleration
-> >> Architecture 2) qDMA Engine. The DPDMAI enables sending frame-based
-> >> requests to qDMA and receiving back confirmation response on
-> >> transaction completion, utilizing the DPAA2 QBMan(Queue Manager and
-> >> Buffer Manager
-> >> hardware) infrastructure. DPDMAI object provides up to two priorities
-> >> for processing qDMA requests.
-> >> The following list summarizes the DPDMAI main features and capabilitie=
-s:
-> >>       1. Supports up to two scheduling priorities for processing
-> >>       service requests.
-> >>       - Each DPDMAI transmit queue is mapped to one of two service
-> >>       priorities, allowing further prioritization in hardware between
-> >>       requests from different DPDMAI objects.
-> >>       2. Supports up to two receive queues for incoming transaction
-> >>       completion confirmations.
-> >>       - Each DPDMAI receive queue is mapped to one of two receive
-> >>       priorities, allowing further prioritization between other
-> >>       interfaces when associating the DPDMAI receive queues to DPIO
-> >>       or DPCON(Data Path Concentrator) objects.
-> >>       3. Supports different scheduling options for processing received
-> >>       packets:
-> >>       - Queues can be configured either in 'parked' mode (default),
-> >>       or attached to a DPIO object, or attached to DPCON object.
-> >>       4. Allows interaction with one or more DPIO objects for
-> >>       dequeueing/enqueueing frame descriptors(FD) and for
-> >>       acquiring/releasing buffers.
-> >>       5. Supports enable, disable, and reset operations.
-> >>
-> >> Add dpdmai to support some platforms with dpaa2 qdma engine.
-> >
-> >Applied both, thanks
+On 22.10.19 11:24, Michal Hocko wrote:
+> On Tue 22-10-19 11:17:24, David Hildenbrand wrote:
+>> On 22.10.19 11:14, Michal Hocko wrote:
+>>> On Tue 22-10-19 10:32:11, David Hildenbrand wrote:
+>>> [...]
+>>>> E.g., arch/x86/kvm/mmu.c:kvm_is_mmio_pfn()
+>>>
+>>> Thanks for these references. I am not really familiar with kvm so I
+>>> cannot really comment on the specific code but I am wondering why
+>>> it simply doesn't check for ZONE_DEVICE explicitly? Also we do care
+>>> about holes in RAM (from the early boot), those should be reserved
+>>> already AFAIR. So we are left with hotplugged memory with holes and
+>>> I am not really sure we should bother with this until there is a clear
+>>> usecase in sight.
+>>
+>> Well, checking for ZONE_DEVICE is only possible if you have an initializ=
+ed
+>> memmap. And that is not guaranteed when you start mapping random stuff i=
+nto
+>> your guest via /dev/mem.
+>=20
+> Yes, I can understand that part but checking PageReserved on an
+> uninitialized memmap is pointless as well. So if you can test for it you
 
-I see this error when I'm building.
+That's why I add pfn_to_online_page() :)
 
-WARNING: modpost: missing MODULE_LICENSE() in
-drivers/dma/fsl-dpaa2-qdma/dpdmai.o
-see include/linux/module.h for more information
-ERROR: "dpdmai_enable" [drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko] undefined=
-!
-ERROR: "dpdmai_set_rx_queue"
-[drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko] undefined!
-ERROR: "dpdmai_get_tx_queue"
-[drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko] undefined!
-ERROR: "dpdmai_get_rx_queue"
-[drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko] undefined!
-ERROR: "dpdmai_get_attributes"
-[drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko] undefined!
-ERROR: "dpdmai_open" [drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko] undefined!
-ERROR: "dpdmai_close" [drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko] undefined!
-ERROR: "dpdmai_disable" [drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko] undefine=
-d!
-ERROR: "dpdmai_reset" [drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko] undefined!
-make[2]: *** [../scripts/Makefile.modpost:95: __modpost] Error 1
-make[1]: *** [/srv/src/kernel/next/Makefile:1282: modules] Error 2
-make: *** [Makefile:179: sub-make] Error 2
-make: Target 'Image' not remade because of errors.
-make: Target 'modules' not remade because of errors.
+> can very well test for ZONE_DEVICE as well. PageReserved -> ZONE_DEVICE
+> is a terrible assumption.
+Indeed, it is. But there are more parts in the kernel that I'll be=20
+fixing. Stay tuned.
 
-any other that see the same ?
+--=20
 
-Cheers,
-Anders
+Thanks,
+
+David / dhildenb
+
