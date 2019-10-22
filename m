@@ -2,211 +2,94 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72E4DCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:07:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2C1FCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:08:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3843A20B7C
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:07:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HFFVFrQY"
+	by mail.kernel.org (Postfix) with ESMTP id 797F120B7C
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:08:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732620AbfJVQHp (ORCPT
+        id S1732644AbfJVQIV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 12:07:45 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:57016 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726702AbfJVQHo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 12:07:44 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9MG1hM9045898;
-        Tue, 22 Oct 2019 11:01:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571760103;
-        bh=LZyB5uaXD1KikcWwUwkOFBR1+mNt4OjW/LVueBf2enQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=HFFVFrQYbEFsaJNzAPzULxvygJJDUHpOS+7uOC4yPs9BMAE6reZOu4JxtrU+64e8T
-         B1Y8S4qx7xrza5DzuTptqUFgIFC/jXzrz4WoUdIoo6ErVwYEGoqh49CZHjKI2pn8mQ
-         6jry/4LsMznIMIO3GVH5A5n6zTjLnIJWn8yvbw6E=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9MG1hJQ079926
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 22 Oct 2019 11:01:43 -0500
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 22
- Oct 2019 11:01:33 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 22 Oct 2019 11:01:42 -0500
-Received: from [156.117.59.23] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9MG1ggo078978;
-        Tue, 22 Oct 2019 11:01:42 -0500
-Subject: Re: [PATCH v13 0/5] DMA-BUF Heaps (destaging ION)
-To:     Neil Armstrong <narmstrong@baylibre.com>,
-        John Stultz <john.stultz@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>
-CC:     Hillf Danton <hdanton@sina.com>,
-        Vincent Donnefort <Vincent.Donnefort@arm.com>,
-        Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        Liam Mark <lmark@codeaurora.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        <dri-devel@lists.freedesktop.org>,
-        Hridya Valsaraju <hridya@google.com>,
-        Sudipto Paul <Sudipto.Paul@arm.com>,
-        Pratik Patel <pratikp@codeaurora.org>
-References: <20191021190310.85221-1-john.stultz@linaro.org>
- <be7286c7-3e67-4ffb-73b1-2622391d7c15@baylibre.com>
-From:   "Andrew F. Davis" <afd@ti.com>
-Message-ID: <0e22ffb9-10ac-821b-2f32-a3d8304ca072@ti.com>
-Date:   Tue, 22 Oct 2019 11:01:42 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <be7286c7-3e67-4ffb-73b1-2622391d7c15@baylibre.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Tue, 22 Oct 2019 12:08:21 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57828 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731436AbfJVQIV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 12:08:21 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 6F008B289;
+        Tue, 22 Oct 2019 16:08:19 +0000 (UTC)
+Date:   Tue, 22 Oct 2019 18:08:19 +0200
+Message-ID: <s5hpniodaq4.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Aaron Ma <aaron.ma@canonical.com>
+Cc:     <perex@perex.cz>, <kailang@realtek.com>, <hui.wang@canonical.com>,
+        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ALSA: hda/realtek - Fix 2 front mics of codec 0x623
+In-Reply-To: <20191022153855.14368-1-aaron.ma@canonical.com>
+References: <20191022153855.14368-1-aaron.ma@canonical.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/22/19 3:21 AM, Neil Armstrong wrote:
-> Hi John,
+On Tue, 22 Oct 2019 17:38:55 +0200,
+Aaron Ma wrote:
 > 
-> On 21/10/2019 21:03, John Stultz wrote:
->> Lucky number 13! :)
->>
->> Last week in v12 I had re-added some symbol exports to support
->> later patches I have pending to enable loading heaps from
->> modules. He reminded me that back around v3 (its been awhile!) I
->> had removed those exports due to concerns about the fact that we
->> don't support module removal.
->>
->> So I'm respinning the patches, removing the exports again. I'll
->> submit a patch to re-add them in a later series enabling moduels
->> which can be reviewed indepently.
->>
->> With that done, lets get on to the boilerplate!
->>
->> The patchset implements per-heap devices which can be opened
->> directly and then an ioctl is used to allocate a dmabuf from the
->> heap.
->>
->> The interface is similar, but much simpler then IONs, only
->> providing an ALLOC ioctl.
->>
->> Also, I've provided relatively simple system and cma heaps.
->>
->> I've booted and tested these patches with AOSP on the HiKey960
->> using the kernel tree here:
->>   https://git.linaro.org/people/john.stultz/android-dev.git/log/?h=dev/dma-buf-heap
+> These 2 ThinkCentres installed a new realtek codec ID 0x623,
+> it has 2 front mics with the same location on pin 0x18 and 0x19.
 > 
-> Do you have a 4.19 tree with the changes ? I tried but the xarray idr replacement
-> is missing... so I can't test with our android-amlogic-bmeson-4.19 tree.
+> Apply fixup ALC283_FIXUP_HEADSET_MIC to change 1 front mic
+> location to right, then pulseaudio can handle them.
+> One "Front Mic" and one "Mic" will be shown, and audio output works
+> fine.
 > 
+> Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
+
+I'd like to have Kailang's review about the new codec before
+applying.
+
+Kailang, could you take a look?
 
 
-Just a note, we switched to xarray around v4 time frame of this series,
-so you may be able to find the IDR based code and plug it in for a 4.19
-port.
+thanks,
 
-Andrew
+Takashi
 
-
-> If you can provide, I'll be happy to test the serie and the gralloc changes.
+> ---
+>  sound/pci/hda/patch_realtek.c | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> Neil
-> 
->>
->> And the userspace changes here:
->>   https://android-review.googlesource.com/c/device/linaro/hikey/+/909436
->>
->> Compared to ION, this patchset is missing the system-contig,
->> carveout and chunk heaps, as I don't have a device that uses
->> those, so I'm unable to do much useful validation there.
->> Additionally we have no upstream users of chunk or carveout,
->> and the system-contig has been deprecated in the common/andoid-*
->> kernels, so this should be ok.
->>
->> I've also removed the stats accounting, since any such
->> accounting should be implemented by dma-buf core or the heaps
->> themselves.
->>
->> New in v13:
->> * Re-remove symbol exports, per discussion with Brian. I'll
->>   resubmit these separately in a later patch so they can be
->>   independently reviewed
->>
->> thanks
->> -john
->>
->> Cc: Laura Abbott <labbott@redhat.com>
->> Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
->> Cc: Sumit Semwal <sumit.semwal@linaro.org>
->> Cc: Liam Mark <lmark@codeaurora.org>
->> Cc: Pratik Patel <pratikp@codeaurora.org>
->> Cc: Brian Starkey <Brian.Starkey@arm.com>
->> Cc: Vincent Donnefort <Vincent.Donnefort@arm.com>
->> Cc: Sudipto Paul <Sudipto.Paul@arm.com>
->> Cc: Andrew F. Davis <afd@ti.com>
->> Cc: Christoph Hellwig <hch@infradead.org>
->> Cc: Chenbo Feng <fengc@google.com>
->> Cc: Alistair Strachan <astrachan@google.com>
->> Cc: Hridya Valsaraju <hridya@google.com>
->> Cc: Hillf Danton <hdanton@sina.com>
->> Cc: dri-devel@lists.freedesktop.org
->>
->>
->>
->> Andrew F. Davis (1):
->>   dma-buf: Add dma-buf heaps framework
->>
->> John Stultz (4):
->>   dma-buf: heaps: Add heap helpers
->>   dma-buf: heaps: Add system heap to dmabuf heaps
->>   dma-buf: heaps: Add CMA heap to dmabuf heaps
->>   kselftests: Add dma-heap test
->>
->>  MAINTAINERS                                   |  18 ++
->>  drivers/dma-buf/Kconfig                       |  11 +
->>  drivers/dma-buf/Makefile                      |   2 +
->>  drivers/dma-buf/dma-heap.c                    | 269 ++++++++++++++++++
->>  drivers/dma-buf/heaps/Kconfig                 |  14 +
->>  drivers/dma-buf/heaps/Makefile                |   4 +
->>  drivers/dma-buf/heaps/cma_heap.c              | 178 ++++++++++++
->>  drivers/dma-buf/heaps/heap-helpers.c          | 268 +++++++++++++++++
->>  drivers/dma-buf/heaps/heap-helpers.h          |  55 ++++
->>  drivers/dma-buf/heaps/system_heap.c           | 124 ++++++++
->>  include/linux/dma-heap.h                      |  59 ++++
->>  include/uapi/linux/dma-heap.h                 |  55 ++++
->>  tools/testing/selftests/dmabuf-heaps/Makefile |   9 +
->>  .../selftests/dmabuf-heaps/dmabuf-heap.c      | 238 ++++++++++++++++
->>  14 files changed, 1304 insertions(+)
->>  create mode 100644 drivers/dma-buf/dma-heap.c
->>  create mode 100644 drivers/dma-buf/heaps/Kconfig
->>  create mode 100644 drivers/dma-buf/heaps/Makefile
->>  create mode 100644 drivers/dma-buf/heaps/cma_heap.c
->>  create mode 100644 drivers/dma-buf/heaps/heap-helpers.c
->>  create mode 100644 drivers/dma-buf/heaps/heap-helpers.h
->>  create mode 100644 drivers/dma-buf/heaps/system_heap.c
->>  create mode 100644 include/linux/dma-heap.h
->>  create mode 100644 include/uapi/linux/dma-heap.h
->>  create mode 100644 tools/testing/selftests/dmabuf-heaps/Makefile
->>  create mode 100644 tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
->>
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+> index b000b36ac3c6..c34d8b435f58 100644
+> --- a/sound/pci/hda/patch_realtek.c
+> +++ b/sound/pci/hda/patch_realtek.c
+> @@ -7186,6 +7186,8 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+>  	SND_PCI_QUIRK(0x17aa, 0x312f, "ThinkCentre Station", ALC294_FIXUP_LENOVO_MIC_LOCATION),
+>  	SND_PCI_QUIRK(0x17aa, 0x313c, "ThinkCentre Station", ALC294_FIXUP_LENOVO_MIC_LOCATION),
+>  	SND_PCI_QUIRK(0x17aa, 0x3151, "ThinkCentre Station", ALC283_FIXUP_HEADSET_MIC),
+> +	SND_PCI_QUIRK(0x17aa, 0x3178, "ThinkCentre Station", ALC283_FIXUP_HEADSET_MIC),
+> +	SND_PCI_QUIRK(0x17aa, 0x3176, "ThinkCentre Station", ALC283_FIXUP_HEADSET_MIC),
+>  	SND_PCI_QUIRK(0x17aa, 0x3902, "Lenovo E50-80", ALC269_FIXUP_DMIC_THINKPAD_ACPI),
+>  	SND_PCI_QUIRK(0x17aa, 0x3977, "IdeaPad S210", ALC283_FIXUP_INT_MIC),
+>  	SND_PCI_QUIRK(0x17aa, 0x3978, "Lenovo B50-70", ALC269_FIXUP_DMIC_THINKPAD_ACPI),
+> @@ -9187,6 +9189,7 @@ static const struct hda_device_id snd_hda_id_realtek[] = {
+>  	HDA_CODEC_ENTRY(0x10ec0298, "ALC298", patch_alc269),
+>  	HDA_CODEC_ENTRY(0x10ec0299, "ALC299", patch_alc269),
+>  	HDA_CODEC_ENTRY(0x10ec0300, "ALC300", patch_alc269),
+> +	HDA_CODEC_ENTRY(0x10ec0623, "ALC623", patch_alc269),
+>  	HDA_CODEC_REV_ENTRY(0x10ec0861, 0x100340, "ALC660", patch_alc861),
+>  	HDA_CODEC_ENTRY(0x10ec0660, "ALC660-VD", patch_alc861vd),
+>  	HDA_CODEC_ENTRY(0x10ec0861, "ALC861", patch_alc861),
+> -- 
+> 2.17.1
 > 
