@@ -2,113 +2,144 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE8E4CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:39:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B9DDCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:40:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A420C218AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:39:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yuptn+Xp"
+	by mail.kernel.org (Postfix) with ESMTP id 195A7218AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:40:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731322AbfJVMj4 (ORCPT
+        id S1731395AbfJVMkS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 08:39:56 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:32864 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726978AbfJVMj4 (ORCPT
+        Tue, 22 Oct 2019 08:40:18 -0400
+Received: from relay4-d.mail.gandi.net ([217.70.183.196]:59879 "EHLO
+        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726978AbfJVMkR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 08:39:56 -0400
-Received: by mail-wr1-f68.google.com with SMTP id s1so9142011wro.0;
-        Tue, 22 Oct 2019 05:39:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IEqiM8atHxIH0UKIQukfFYbPpj8bV/qswpYiJzDBnHM=;
-        b=Yuptn+Xp3pzaviOf1YxWnObsNNLNBlUMB5/hGbYF3C52rbNCi4WDbPc3AhB/Za6yJF
-         a1IsjGOP5g6s2UrUYasbp1X2Eo7KBDE6vA9bmTPf1EuIct5L475O6LV6BynQz90AozVx
-         XSbq6sQd2Ol2yPAWOy8rRYdBh4d/TOgkwe35GEm7DMKLnJTWcEY1t9KIsDstZBWqrnpg
-         J9f8d2jkRCR/+vXXxPfC8iTGQ98sHlOLyoNgXCEFO03/K76nENZDkX+eZdDlCM25vxjJ
-         VhRQNsPh1LqUKaNasvMpJAJ+UiAnNTv62rMisyFtCtrL/XiO5Hpy8txCAG0V4vZa11gg
-         dXqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IEqiM8atHxIH0UKIQukfFYbPpj8bV/qswpYiJzDBnHM=;
-        b=lkw2hroA+QEKZOIpXDfCtCYF2ZPhUf+d/M4m3EgoRCqUX9rKmKbMBvqYPdn/e2j/3h
-         shwHiiKQD/cP4jOZ/8mdgmy7JWjUhpPTDaFefJADS4kB9q3DRVzVaNoaqNyU+MGUypR8
-         fuooqsMsN5NRqSpeOnuqOWmlOz4Vk/pVWgEK+PfFtm2YL/EtfkPsWLq0uZX53n5utPkK
-         64ES9MiCVimGieOWruA0BxsMaanHIGLd5dXtoLBaTL8MbW1A4kbaYF17SSRLAf5R8ZCO
-         hiUWG0O3u0+tZbmfQPnQfrThl7qTHORDu2X5hr/TwTBcH+UoNp/UxKHw9IEC2iyMUUIh
-         kk+g==
-X-Gm-Message-State: APjAAAVgwmHZz+USx9wRcDY8zzb+stq8EunP0nNtE8+dQpkp8GPgnXHB
-        t1cSlaU52/k9q2C74KICAqARmnv3lh0sA/+ReRI=
-X-Google-Smtp-Source: APXvYqzmx0gQXGcCYVFgILHBvA3ZLu3gjr/gPD4qkrCi98W3sz9AeZuH2TREtsOFsdfX9mKCmYxiaees0zzNDltevIs=
-X-Received: by 2002:adf:ecc7:: with SMTP id s7mr3298507wro.305.1571747993646;
- Tue, 22 Oct 2019 05:39:53 -0700 (PDT)
+        Tue, 22 Oct 2019 08:40:17 -0400
+X-Originating-IP: 86.250.200.211
+Received: from aptenodytes (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 1D666E0005;
+        Tue, 22 Oct 2019 12:40:13 +0000 (UTC)
+Date:   Tue, 22 Oct 2019 14:40:12 +0200
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com,
+        Chen-Yu Tsai <wens@csie.org>,
+        Maxime Ripard <mripard@bootlin.com>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v8 3/3] media: cedrus: Add HEVC/H.265 decoding support
+Message-ID: <20191022124012.GD2651@aptenodytes>
+References: <20190927143411.141526-1-paul.kocialkowski@bootlin.com>
+ <20190927143411.141526-4-paul.kocialkowski@bootlin.com>
+ <20191017095751.5a229051@coco.lan>
 MIME-Version: 1.0
-References: <20191022111806.23143-1-colin.king@canonical.com>
-In-Reply-To: <20191022111806.23143-1-colin.king@canonical.com>
-From:   AngeloGioacchino Del Regno <kholk11@gmail.com>
-Date:   Tue, 22 Oct 2019 14:39:42 +0200
-Message-ID: <CAK7fi1a8CiX=HVqhZSmQJdcjF1X_kdHFDwJhEpYJUcdPTcbMQA@mail.gmail.com>
-Subject: Re: [PATCH][next] thermal: qcom: tsens-v1: fix kfree of a non-pointer value
-To:     Colin King <colin.king@canonical.com>
-Cc:     Amit Kucheria <amit.kucheria@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-pm@vger.kernel.org, MSM <linux-arm-msm@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="B4IIlcmfBL/1gGOG"
+Content-Disposition: inline
+In-Reply-To: <20191017095751.5a229051@coco.lan>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Il giorno mar 22 ott 2019 alle ore 13:18 Colin King
-<colin.king@canonical.com> ha scritto:
->
-> From: Colin Ian King <colin.king@canonical.com>
->
-> Currently the kfree of pointer qfprom_cdata is kfreeing an
-> error value that has been cast to a pointer rather than a
-> valid address.  Fix this by removing the kfree.
->
-> Fixes: 95ededc17e4e ("thermal: qcom: tsens-v1: Add support for MSM8956 and MSM8976")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  drivers/thermal/qcom/tsens-v1.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
->
-> diff --git a/drivers/thermal/qcom/tsens-v1.c b/drivers/thermal/qcom/tsens-v1.c
-> index 2d1077b64887..bd2ddb684a45 100644
-> --- a/drivers/thermal/qcom/tsens-v1.c
-> +++ b/drivers/thermal/qcom/tsens-v1.c
-> @@ -240,10 +240,8 @@ static int calibrate_8976(struct tsens_priv *priv)
->         u32 *qfprom_cdata;
->
->         qfprom_cdata = (u32 *)qfprom_read(priv->dev, "calib");
-> -       if (IS_ERR(qfprom_cdata)) {
-> -               kfree(qfprom_cdata);
-> +       if (IS_ERR(qfprom_cdata))
->                 return PTR_ERR(qfprom_cdata);
-> -       }
->
->         mode = (qfprom_cdata[4] & MSM8976_CAL_SEL_MASK);
->         dev_dbg(priv->dev, "calibration mode is %d\n", mode);
-> --
-> 2.20.1
->
 
-I confirm that was one stupid mistake. I was about to send the same patch, and I
-can confirm that this fix is working. Tested on my Xperia X Compact.
+--B4IIlcmfBL/1gGOG
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Tested-by: AngeloGioacchino Del Regno <kholk11@gmail.com>
+Hi Mauro and thanks for the review,
+
+On Thu 17 Oct 19, 09:57, Mauro Carvalho Chehab wrote:
+> Em Fri, 27 Sep 2019 16:34:11 +0200
+> Paul Kocialkowski <paul.kocialkowski@bootlin.com> escreveu:
+>=20
+> > This introduces support for HEVC/H.265 to the Cedrus VPU driver, with
+> > both uni-directional and bi-directional prediction modes supported.
+> >=20
+> > Field-coded (interlaced) pictures, custom quantization matrices and
+> > 10-bit output are not supported at this point.
+> >=20
+> > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> > ---
+>=20
+> ...
+>=20
+> > +		unsigned int ctb_size_luma =3D
+> > +			1 << log2_max_luma_coding_block_size;
+>=20
+> Shifts like this is a little scary. "1" constant is signed. So, if
+> log2_max_luma_coding_block_size is 31, the above logic has undefined
+> behavior. Different archs and C compilers may handle it on different
+> ways.
+
+I wasn't aware that it was the case, thanks for bringing this to light!
+I'll make it 1UL then.
+
+> > +#define VE_DEC_H265_LOW_ADDR_PRIMARY_CHROMA(a) \
+> > +	(((a) << 24) & GENMASK(31, 24))
+>=20
+> Same applies here and on other similar macros. You need to enforce
+> (a) to be unsigned, as otherwise the behavior is undefined.
+>=20
+> Btw, this is a recurrent pattern on this file. I would define a
+> macro, e. g. something like:
+>=20
+> 	#define MASK_BITS_AND_SHIFT(v, high, low) \
+> 		((UL(v) << low) & GENMASK(high, low))
+>=20
+> And use it for all similar patterns here.
+
+Sounds good! I find that the reverse wording (SHIFT_AND_MASK_BITS) would be
+a bit more explicit since the shift happens prior to the mask.
+
+Also we probably need to have parenthesis around "low", right?
+
+> The best would be to include such macro at linux/bits.h, although some
+> upstream discussion is required.
+>=20
+> So, for now, let's add it at this header file, but work upstream
+> to have it merged there.
+
+Understood, I'll include it in that header for now and send a separate patch
+for inclusion in linux/bits.h (apparently the preprocessor doesn't care abo=
+ut
+redefinitions so we can just remove the cedrus fashion once the common one =
+is
+in).
+
+What do you think?
+
+Cheers,
+
+Paul
+
+--B4IIlcmfBL/1gGOG
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl2u+KwACgkQ3cLmz3+f
+v9Gz+wf/Zm7r1AZpv5lPzfcsaQXWOZk4HXntSACtkvGv3E/mgOtN8S/SrT59MQ6V
+MPfJ2aBH5JhDiv6NIW1vFwhvx8gJ8P8Dshl2I8I/qzAzoqLGjBQe3Hod/tpq0ZFe
+tqiIhujaADacV9qCeOl4aBWfcVDdIznZZ8RilXQT/Bl98912LWpEmy8rMmNEVxGe
+JM+mnw7gDZfuRHDmAR/IXAMYcN1mF9m8t49liAvEWSesEUKTPuTkejZAffiUAY4o
+FAvYoNMOrX9+l1j+tRgdDSO9Kg8XuF6rh0ATqaiOnu2sg+AcDPBXozHa8KuJX9dl
+8tN1aQb0gn+lwL9XRnCNEvjHzYFveA==
+=ev27
+-----END PGP SIGNATURE-----
+
+--B4IIlcmfBL/1gGOG--
