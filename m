@@ -2,101 +2,112 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10475CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 18:51:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9683ECA9EB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 18:55:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA7DA21872
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 18:51:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571770312;
-	bh=JLKY4p3jHs9fqd4jxmjrvPPbmVC1gbK3HhHdLaqS7us=;
-	h=In-Reply-To:References:To:From:Cc:Subject:Date:List-ID:From;
-	b=XCFHAXpepic3/Ehwrbl23XPuZUckKNUArEUqme765F7PZWPgaAiuryBhbS5UC2Owt
-	 p7FckliS7QNfS0C8LnZWqR0dIkT8L30K5T0Pv7QgZtMTFMv1wOPmbmcFRf6j+vWJYW
-	 4iv7RYoC0N0bt/m6SppVRG7grcz5tVcrP+e4yfz0=
+	by mail.kernel.org (Postfix) with ESMTP id 6F4F420B7C
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 18:55:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732816AbfJVSvv (ORCPT
+        id S1732718AbfJVSzN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 14:51:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39222 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732322AbfJVSvv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 14:51:51 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 22 Oct 2019 14:55:13 -0400
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:34775 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732322AbfJVSzN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 14:55:13 -0400
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 2FDD13C04C1;
+        Tue, 22 Oct 2019 20:55:10 +0200 (CEST)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 1Mi11-ba1-B3; Tue, 22 Oct 2019 20:55:04 +0200 (CEST)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B09B20B7C;
-        Tue, 22 Oct 2019 18:51:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571770310;
-        bh=JLKY4p3jHs9fqd4jxmjrvPPbmVC1gbK3HhHdLaqS7us=;
-        h=In-Reply-To:References:To:From:Cc:Subject:Date:From;
-        b=LcUNPao93iqN1tG14CLpe1QxgcGEB4ySV+YwReDsToMIPy39TaU2mnTaoM4f/eOnM
-         2I1hb9GB05J4u2Ty11jYwWrtPI4ERZWcaB3X3eu2c0CZDj6rsakZHc9qLeQBfyj0CT
-         cbhTLUNjpXYjMo8gouX+mI/0E0BzWWaykWSvBRes=
-Content-Type: text/plain; charset="utf-8"
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 4517C3C009D;
+        Tue, 22 Oct 2019 20:55:04 +0200 (CEST)
+Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Tue, 22 Oct
+ 2019 20:55:03 +0200
+From:   Eugeniu Rosca <erosca@de.adit-jv.com>
+To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, <alsa-devel@alsa-project.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>,
+        Jiada Wang <jiada_wang@mentor.com>,
+        Timo Wischer <twischer@de.adit-jv.com>,
+        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
+        <stable@vger.kernel.org>
+Subject: [RESEND PATCH] ASoC: rsnd: dma: fix SSI9 4/5/6/7 busif dma address
+Date:   Tue, 22 Oct 2019 20:54:29 +0200
+Message-ID: <20191022185429.12769-1-erosca@de.adit-jv.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20191022071153.21118-1-kishon@ti.com>
-References: <20191022071153.21118-1-kishon@ti.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Michael Turquette <mturquette@baylibre.com>
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCH] clk: Fix memory leak in clk_unregister()
-User-Agent: alot/0.8.1
-Date:   Tue, 22 Oct 2019 11:51:49 -0700
-Message-Id: <20191022185150.9B09B20B7C@mail.kernel.org>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.72.93.184]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Kishon Vijay Abraham I (2019-10-22 00:11:53)
-> Memory allocated in alloc_clk() for 'struct clk' and
-> 'const char *con_id' while invoking clk_register() is never freed
-> in clk_unregister(), resulting in kmemleak showing the following
-> backtrace.
->=20
->   backtrace:
->     [<00000000546f5dd0>] kmem_cache_alloc+0x18c/0x270
->     [<0000000073a32862>] alloc_clk+0x30/0x70
->     [<0000000082942480>] __clk_register+0xc8/0x760
->     [<000000005c859fca>] devm_clk_register+0x54/0xb0
->     [<00000000868834a8>] 0xffff800008c60950
->     [<00000000d5a80534>] platform_drv_probe+0x50/0xa0
->     [<000000001b3889fc>] really_probe+0x108/0x348
->     [<00000000953fa60a>] driver_probe_device+0x58/0x100
->     [<0000000008acc17c>] device_driver_attach+0x6c/0x90
->     [<0000000022813df3>] __driver_attach+0x84/0xc8
->     [<00000000448d5443>] bus_for_each_dev+0x74/0xc8
->     [<00000000294aa93f>] driver_attach+0x20/0x28
->     [<00000000e5e52626>] bus_add_driver+0x148/0x1f0
->     [<000000001de21efc>] driver_register+0x60/0x110
->     [<00000000af07c068>] __platform_driver_register+0x40/0x48
->     [<0000000060fa80ee>] 0xffff800008c66020
->=20
-> Fix it here.
+From: Jiada Wang <jiada_wang@mentor.com>
 
-Do you have some Fixes tag for this? Looks OK to me, but I wonder if we
-should also assign hw->clk to NULL after unregister frees it. There are
-probably other problems around unregistration and reference counting
-that we haven't found so far so I'm worried this doesn't solve all the
-problems by just freeing the clk pointer.
+Currently each SSI unit's busif dma address is calculated by
+following calculation formula:
+0xec540000 + 0x1000 * id + busif / 4 * 0xA000 + busif % 4 * 0x400
 
-For example, anything referencing the clk pointer freed here will now
-start trying to dereference freed memory. For most cases we've replaced
-struct clk with struct clk_core in the clk framework so I hope this
-pointer isn't used very much at all. A quick grep shows that it is
-returned from clk_get_parent() and __clk_lookup(). We really need to
-kill off __clk_lookup() and replace it with something else, and
-clk_get_parent() needs to generate a different clk and have callers call
-clk_put() on the returned pointer. Long story short I think this is OK!
+But according to R-Car3 HW manual 41.1.4 Register Configuration,
+ssi9 4/5/6/7 busif data register address
+(SSI9_4_BUSIF/SSI9_5_BUSIF/SSI9_6_BUSIF/SSI9_7_BUSIF)
+are out of this rule.
+
+This patch updates the calculation formula to correct
+ssi9 4/5/6/7 busif data register address.
+
+Fixes: 5e45a6fab3b9 ("ASoc: rsnd: dma: Calculate dma address with consider of BUSIF")
+Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+Signed-off-by: Timo Wischer <twischer@de.adit-jv.com>
+[erosca: minor improvements in commit description]
+Cc: Andrew Gabbasov <andrew_gabbasov@mentor.com>
+Cc: stable@vger.kernel.org # v4.20+
+Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+---
+
+Originally submitted as https://patchwork.kernel.org/patch/10825513/
+("ASoC: rsnd: dma: fix SSI9 4/5/6/7 busif dma address")
+
+---
+ sound/soc/sh/rcar/dma.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/sound/soc/sh/rcar/dma.c b/sound/soc/sh/rcar/dma.c
+index 0324a5c39619..28f65eba2bb4 100644
+--- a/sound/soc/sh/rcar/dma.c
++++ b/sound/soc/sh/rcar/dma.c
+@@ -508,10 +508,10 @@ static struct rsnd_mod_ops rsnd_dmapp_ops = {
+ #define RDMA_SSI_I_N(addr, i)	(addr ##_reg - 0x00300000 + (0x40 * i) + 0x8)
+ #define RDMA_SSI_O_N(addr, i)	(addr ##_reg - 0x00300000 + (0x40 * i) + 0xc)
+ 
+-#define RDMA_SSIU_I_N(addr, i, j) (addr ##_reg - 0x00441000 + (0x1000 * (i)) + (((j) / 4) * 0xA000) + (((j) % 4) * 0x400))
++#define RDMA_SSIU_I_N(addr, i, j) (addr ##_reg - 0x00441000 + (0x1000 * (i)) + (((j) / 4) * 0xA000) + (((j) % 4) * 0x400) - (0x4000 * ((i) / 9) * ((j) / 4)))
+ #define RDMA_SSIU_O_N(addr, i, j) RDMA_SSIU_I_N(addr, i, j)
+ 
+-#define RDMA_SSIU_I_P(addr, i, j) (addr ##_reg - 0x00141000 + (0x1000 * (i)) + (((j) / 4) * 0xA000) + (((j) % 4) * 0x400))
++#define RDMA_SSIU_I_P(addr, i, j) (addr ##_reg - 0x00141000 + (0x1000 * (i)) + (((j) / 4) * 0xA000) + (((j) % 4) * 0x400) - (0x4000 * ((i) / 9) * ((j) / 4)))
+ #define RDMA_SSIU_O_P(addr, i, j) RDMA_SSIU_I_P(addr, i, j)
+ 
+ #define RDMA_SRC_I_N(addr, i)	(addr ##_reg - 0x00500000 + (0x400 * i))
+-- 
+2.23.0
 
