@@ -4,30 +4,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32317CA9EB0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 02:00:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B41AACA9EAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 02:00:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 125FE2084C
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 02:00:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9486D2084C
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 02:00:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387807AbfJVCAH (ORCPT
+        id S2387796AbfJVCAG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 22:00:07 -0400
+        Mon, 21 Oct 2019 22:00:06 -0400
 Received: from mga14.intel.com ([192.55.52.115]:61609 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387672AbfJVB76 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 21:59:58 -0400
+        id S2387650AbfJVB74 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 21:59:56 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 18:59:57 -0700
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 18:59:54 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.67,325,1566889200"; 
-   d="scan'208";a="196293889"
+   d="scan'208";a="196293875"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
-  by fmsmga008.fm.intel.com with ESMTP; 21 Oct 2019 18:59:57 -0700
+  by fmsmga008.fm.intel.com with ESMTP; 21 Oct 2019 18:59:54 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Marc Zyngier <maz@kernel.org>, James Hogan <jhogan@kernel.org>,
         Paul Mackerras <paulus@ozlabs.org>,
@@ -48,9 +49,9 @@ Cc:     James Morse <james.morse@arm.com>,
         linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
         linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
         kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 35/45] KVM: s390: Manually invoke vcpu setup during kvm_arch_vcpu_create()
-Date:   Mon, 21 Oct 2019 18:59:15 -0700
-Message-Id: <20191022015925.31916-36-sean.j.christopherson@intel.com>
+Subject: [PATCH 31/45] KVM: Unexport kvm_vcpu_cache and kvm_{un}init_vcpu()
+Date:   Mon, 21 Oct 2019 18:59:11 -0700
+Message-Id: <20191022015925.31916-32-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20191022015925.31916-1-sean.j.christopherson@intel.com>
 References: <20191022015925.31916-1-sean.j.christopherson@intel.com>
@@ -61,55 +62,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rename kvm_arch_vcpu_setup() to kvm_s390_vcpu_setup() and manually call
-the new function during kvm_arch_vcpu_create().  Define an empty
-kvm_arch_vcpu_setup() as it's still required for compilation.  This
-is effectively a nop as kvm_arch_vcpu_create() and kvm_arch_vcpu_setup()
-are called back-to-back by common KVM code.  Obsoleting
-kvm_arch_vcpu_setup() paves the way for its removal.
-
-Note, gmap_remove() is now called if setup fails, as s390 was previously
-freeing it via kvm_arch_vcpu_destroy(), which is called by common KVM
-code if kvm_arch_vcpu_setup() fails.
-
-No functional change intended.
+Unexport kvm_vcpu_cache and kvm_{un}init_vcpu() and make them static
+now that they are referenced only in kvm_main.c.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/s390/kvm/kvm-s390.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ include/linux/kvm_host.h | 4 ----
+ virt/kvm/kvm_main.c      | 9 +++------
+ 2 files changed, 3 insertions(+), 10 deletions(-)
 
-diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-index 1e4f3b9ad031..3e3d242d6630 100644
---- a/arch/s390/kvm/kvm-s390.c
-+++ b/arch/s390/kvm/kvm-s390.c
-@@ -2935,6 +2935,11 @@ static void kvm_s390_vcpu_setup_model(struct kvm_vcpu *vcpu)
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index 8559d0448d0b..c36379824408 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -157,8 +157,6 @@ static inline bool is_error_page(struct page *page)
+ #define KVM_USERSPACE_IRQ_SOURCE_ID		0
+ #define KVM_IRQFD_RESAMPLE_IRQ_SOURCE_ID	1
+ 
+-extern struct kmem_cache *kvm_vcpu_cache;
+-
+ extern struct mutex kvm_lock;
+ extern struct list_head vm_list;
+ 
+@@ -585,8 +583,6 @@ static inline int kvm_vcpu_get_idx(struct kvm_vcpu *vcpu)
+ 	      memslot < slots->memslots + KVM_MEM_SLOTS_NUM && memslot->npages;\
+ 		memslot++)
+ 
+-int kvm_vcpu_init(struct kvm_vcpu *vcpu, struct kvm *kvm, unsigned id);
+-void kvm_vcpu_uninit(struct kvm_vcpu *vcpu);
+ void kvm_vcpu_destroy(struct kvm_vcpu *vcpu);
+ 
+ void vcpu_load(struct kvm_vcpu *vcpu);
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index fb526bd55664..1d84ae0e3893 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -103,8 +103,7 @@ static cpumask_var_t cpus_hardware_enabled;
+ static int kvm_usage_count;
+ static atomic_t hardware_enable_failed;
+ 
+-struct kmem_cache *kvm_vcpu_cache;
+-EXPORT_SYMBOL_GPL(kvm_vcpu_cache);
++static struct kmem_cache *kvm_vcpu_cache;
+ 
+ static __read_mostly struct preempt_ops kvm_preempt_ops;
+ 
+@@ -288,7 +287,7 @@ void kvm_reload_remote_mmus(struct kvm *kvm)
+ 	kvm_make_all_cpus_request(kvm, KVM_REQ_MMU_RELOAD);
  }
  
- int kvm_arch_vcpu_setup(struct kvm_vcpu *vcpu)
-+{
-+	return 0;
-+}
-+
-+static int kvm_s390_vcpu_setup(struct kvm_vcpu *vcpu)
+-int kvm_vcpu_init(struct kvm_vcpu *vcpu, struct kvm *kvm, unsigned id)
++static int kvm_vcpu_init(struct kvm_vcpu *vcpu, struct kvm *kvm, unsigned id)
  {
- 	int rc = 0;
+ 	struct page *page;
+ 	int r;
+@@ -326,9 +325,8 @@ int kvm_vcpu_init(struct kvm_vcpu *vcpu, struct kvm *kvm, unsigned id)
+ fail:
+ 	return r;
+ }
+-EXPORT_SYMBOL_GPL(kvm_vcpu_init);
  
-@@ -3073,8 +3078,14 @@ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
- 		 vcpu->arch.sie_block);
- 	trace_kvm_s390_create_vcpu(id, vcpu, vcpu->arch.sie_block);
+-void kvm_vcpu_uninit(struct kvm_vcpu *vcpu)
++static void kvm_vcpu_uninit(struct kvm_vcpu *vcpu)
+ {
+ 	/*
+ 	 * no need for rcu_read_lock as VCPU_RUN is the only place that
+@@ -339,7 +337,6 @@ void kvm_vcpu_uninit(struct kvm_vcpu *vcpu)
+ 	kvm_arch_vcpu_uninit(vcpu);
+ 	free_page((unsigned long)vcpu->run);
+ }
+-EXPORT_SYMBOL_GPL(kvm_vcpu_uninit);
  
-+	rc = kvm_s390_vcpu_setup(vcpu);
-+	if (rc)
-+		goto out_ucontrol_uninit;
- 	return 0;
- 
-+out_ucontrol_uninit:
-+	if (kvm_is_ucontrol(vcpu->kvm))
-+		gmap_remove(vcpu->arch.gmap);
- out_free_sie_block:
- 	free_page((unsigned long)(vcpu->arch.sie_block));
- 	return rc;
+ void kvm_vcpu_destroy(struct kvm_vcpu *vcpu)
+ {
 -- 
 2.22.0
 
