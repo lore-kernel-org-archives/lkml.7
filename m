@@ -2,160 +2,136 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 037CBCA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:59:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BCE2CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:01:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8C2921906
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:59:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C788218AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:01:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732137AbfJVN72 (ORCPT
+        id S2388093AbfJVOBc convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 09:59:28 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40764 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732006AbfJVN72 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 09:59:28 -0400
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com [209.85.221.69])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 38E96BB9CB
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 13:59:27 +0000 (UTC)
-Received: by mail-wr1-f69.google.com with SMTP id k10so184193wrl.22
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 06:59:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Dlx0qR6qGoizUuI3jCS47jEOZVwYOv8dJ62/TjyH9Xs=;
-        b=knprj6fm3/ENFjhN/RGtNe269KuEbdOZ8LS/lQuSo5KK2f03s8GFzhZu6CB4uozzLa
-         Q/iZim3adJ7vfvmuXCKQ9zha3kGQHEVa0tC1gL+xPcR/FSTLccx6m3mm0cWf6Qqk4hGn
-         AHrVmrc+QyL1MPH3/qHd1YNKk6hZNuuRiNyTwyLrPZu7nAk8MnqQRRZxgXeVngJr9ziU
-         v5EEOkQwbVrdtOBNC/zFDtHm/KHqUFkBe92jzm9uTofCRg9NJdh3K0Z5uQ54o3u6/fr/
-         66K7XncwQWYtwo1JZCdDvM36Ztf3E0AR1vcDB5muaZmLO5QWe961+syyJpQ2VAFjSd2l
-         2BxA==
-X-Gm-Message-State: APjAAAWqOzlItSlM9Fz0WPhpetSX8G1Td/vu9NYRop63A6tKDg21BR9u
-        GPExtxhovnh8PsfCrAtgwxV/o5uNLnSNYaYIDN3vgQo9jMGiEZUkr9yoe5NY26wNd1zOJvOK2pU
-        LjsjVoCsSVHnqI2uC/9JmVimr
-X-Received: by 2002:adf:9ec7:: with SMTP id b7mr3690729wrf.221.1571752765668;
-        Tue, 22 Oct 2019 06:59:25 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzzdoYw58nkYxoG/VDS1/LYhdqcebVxQ/IRP7wL/K4uxfwmYmVxn6Yd5KXoTPuPOxmY6ROAMw==
-X-Received: by 2002:adf:9ec7:: with SMTP id b7mr3690694wrf.221.1571752765319;
-        Tue, 22 Oct 2019 06:59:25 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:c0e4:dcf4:b543:ce19? ([2001:b07:6468:f312:c0e4:dcf4:b543:ce19])
-        by smtp.gmail.com with ESMTPSA id l14sm2833445wrr.37.2019.10.22.06.59.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Oct 2019 06:59:24 -0700 (PDT)
-Subject: Re: [PATCH v2 00/15] KVM: Dynamically size memslot arrays
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Marc Zyngier <maz@kernel.org>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
-        Marc Zyngier <Marc.Zyngier@arm.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-References: <20191022003537.13013-1-sean.j.christopherson@intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <15624ac3-6a43-29c8-8d07-23779454f9e6@redhat.com>
-Date:   Tue, 22 Oct 2019 15:59:23 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 22 Oct 2019 10:01:32 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:60191 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727805AbfJVOBc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 10:01:32 -0400
+Received: from mail-qk1-f173.google.com ([209.85.222.173]) by
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1Ml6Vg-1hbmf00qzM-00lVCj; Tue, 22 Oct 2019 16:01:30 +0200
+Received: by mail-qk1-f173.google.com with SMTP id u184so16330124qkd.4;
+        Tue, 22 Oct 2019 07:01:29 -0700 (PDT)
+X-Gm-Message-State: APjAAAXylN35vLp7LcKQWl1mf/SQRyJQ+Jhfx/+/q50VBkwkAbUAvipI
+        gNDSSJZLA0cTPMgfqe6gRRGBTM0Cjfe+mrVbDZM=
+X-Google-Smtp-Source: APXvYqzNJSBsmzArUiJoxHmomaDqQtkgb7eiZl33ieH3Pnwwm1/FZ2lXqT+Z19UoP0NfH21IBu5WdckCCzmNgI5QFYQ=
+X-Received: by 2002:a37:a50f:: with SMTP id o15mr1985123qke.3.1571752888552;
+ Tue, 22 Oct 2019 07:01:28 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191022003537.13013-1-sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191010202802.1132272-1-arnd@arndb.de> <20191010203043.1241612-1-arnd@arndb.de>
+ <20191010203043.1241612-11-arnd@arndb.de> <20191011055149.4dudr4tk2znpt65u@pengutronix.de>
+In-Reply-To: <20191011055149.4dudr4tk2znpt65u@pengutronix.de>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 22 Oct 2019 16:01:12 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1st8gR7u+8-oyP6HrzZdmrzhq7PRonYuz0a5O8rfKaSA@mail.gmail.com>
+Message-ID: <CAK8P3a1st8gR7u+8-oyP6HrzZdmrzhq7PRonYuz0a5O8rfKaSA@mail.gmail.com>
+Subject: Re: [PATCH 11/36] ARM: s5pv210: split from plat-samsung
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Sangbeom Kim <sbkim73@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        "moderated list:ARM/SAMSUNG EXYNOS ARM ARCHITECTURES" 
+        <linux-samsung-soc@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, Olof Johansson <olof@lixom.net>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        linux-serial@vger.kernel.org,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Provags-ID: V03:K1:Hv7SAjdeGUOuU0McebMKe8pPPZg0PjMGWOl/Urvv+a4u20VCEki
+ BFcgNMzF1Ce2YeJaDkJj/8e1qZD+QsK9q7XCqvXzzhWPfq25ha/TveFndkJVh3L2f/jhBlx
+ JciffjQ98mgELP72Tjk9qG3zcowbLTUYNBfBre1jKWUn5R768dPB81VhbT5M0AnUbkgzJYs
+ ZewkdgDUCJWp7CJE7usUg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:hRmFgw04pHw=:GuyhHbXPjvHIFHW4LRgnKZ
+ JUUU3xWSamtSYw54My8YFjIeR73SnkKRIsMIAdVCUi9rvsNxaJDcJxRYNlfLkI9DzpPfqpQTA
+ I7G1r69BMop3/1BDwtYEmRW0ol67cpVwD/kRph1WTOrhogNP4yfHwpwAygty8a9J5EPEFMil9
+ KWPpH/57iFFSeaJ2YSuFIPyWMBBLQl++b3TSh0BHi/XCSUDfvpjhqMgO4R1ah5Jw6OWW4lHMu
+ wHzuHnAmBRT9HCPxwqvPkFsKoJ1IkKua7U8vB/6Pt2WkXimrVAhOKtzbeh+tQnF5aArHzooI2
+ BKkzGzuHxPakyMObe5/QrkDyKv89Rg1fE1Tjf2oCbGlQXVnxUPsgKK6hM9Ocm7HgKQY4sdfBG
+ /B2HCfkNZwHUdK6ZWvg84yx54x5BvnSLxf8zXn78HzDm+IsVlr1PDezP3mgrfXj3zQK+h+l7G
+ Glkjok+W2Nb8gODf1HZ31B3Yw8cStsgywOo2itc9dTJ2hFqEvHrGQA0urUm+7j/uW0JJ6MsQ+
+ bC9PCelDGsrVTiO2ViP/Lpam7+ce0lYliOJv1EkYMITtMm//AcupeTwf0O/j9mghlw2gSMgdL
+ ezJMy71zKCYvT99BZzOgTJuaUEOtzv9Eu0ZzW5YJaI1iZZ2mMr4uA00vDupp4Q8dQfW5k3RHY
+ 6k4TnW4N/haFxfLXHSwFbv9quv8KHVwTWLUXy9ygc3odU+r+hpSfgfAPD/wYDJlCHDLu7X0LF
+ l4A+x3+t3SGQHn8iI91phMXHlOW5YMGjvfVpPrU6aJZzSJWKOCAewYLuFBiF6C7SiNgfB7jbe
+ 2Pq0cXaLg4l7xTsen5u4CNRbXmq2yYggxPCbU73Fyk5nVz+3xg8cIrHy/l7DmXg1wfM444Q9S
+ tU94dcFtWb1hgiPPpMyw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22/10/19 02:35, Sean Christopherson wrote:
-> The end goal of this series is to dynamically size the memslot array so
-> that KVM allocates memory based on the number of memslots in use, as
-> opposed to unconditionally allocating memory for the maximum number of
-> memslots.  On x86, each memslot consumes 88 bytes, and so with 2 address
-> spaces of 512 memslots, each VM consumes ~90k bytes for the memslots.
-> E.g. given a VM that uses a total of 30 memslots, dynamic sizing reduces
-> the memory footprint from 90k to ~2.6k bytes.
-> 
-> The changes required to support dynamic sizing are relatively small,
-> e.g. are essentially contained in patches 12/13 and 13/13.  Patches 1-11
-> clean up the memslot code, which has gotten quite crusy, especially
-> __kvm_set_memory_region().  The clean up is likely not strictly necessary
-> to switch to dynamic sizing, but I didn't have a remotely reasonable
-> level of confidence in the correctness of the dynamic sizing without first
-> doing the clean up.
-> 
-> Testing, especially non-x86 platforms, would be greatly appreciated.  The
-> non-x86 changes are for all intents and purposes untested, e.g. I compile
-> tested pieces of the code by copying them into x86, but that's it.  In
-> theory, the vast majority of the functional changes are arch agnostic, in
-> theory...
-> 
-> v2:
->   - Split "Drop kvm_arch_create_memslot()" into three patches to move
->     minor functional changes to standalone patches [Janosch].
->   - Rebase to latest kvm/queue (f0574a1cea5b, "KVM: x86: fix ...")
->   - Collect an Acked-by and a Reviewed-by
-> 
-> Sean Christopherson (15):
->   KVM: Reinstall old memslots if arch preparation fails
->   KVM: Don't free new memslot if allocation of said memslot fails
->   KVM: PPC: Move memslot memory allocation into prepare_memory_region()
->   KVM: x86: Allocate memslot resources during prepare_memory_region()
->   KVM: Drop kvm_arch_create_memslot()
->   KVM: Explicitly free allocated-but-unused dirty bitmap
->   KVM: Refactor error handling for setting memory region
->   KVM: Move setting of memslot into helper routine
->   KVM: Move memslot deletion to helper function
->   KVM: Simplify kvm_free_memslot() and all its descendents
->   KVM: Clean up local variable usage in __kvm_set_memory_region()
->   KVM: Provide common implementation for generic dirty log functions
->   KVM: Ensure validity of memslot with respect to kvm_get_dirty_log()
->   KVM: Terminate memslot walks via used_slots
->   KVM: Dynamically size memslot array based on number of used slots
-> 
->  arch/mips/include/asm/kvm_host.h      |   2 +-
->  arch/mips/kvm/mips.c                  |  68 +---
->  arch/powerpc/include/asm/kvm_ppc.h    |  14 +-
->  arch/powerpc/kvm/book3s.c             |  22 +-
->  arch/powerpc/kvm/book3s_hv.c          |  36 +-
->  arch/powerpc/kvm/book3s_pr.c          |  20 +-
->  arch/powerpc/kvm/booke.c              |  17 +-
->  arch/powerpc/kvm/powerpc.c            |  13 +-
->  arch/s390/include/asm/kvm_host.h      |   2 +-
->  arch/s390/kvm/kvm-s390.c              |  21 +-
->  arch/x86/include/asm/kvm_page_track.h |   3 +-
->  arch/x86/kvm/page_track.c             |  15 +-
->  arch/x86/kvm/x86.c                    | 100 ++---
->  include/linux/kvm_host.h              |  48 +--
->  virt/kvm/arm/arm.c                    |  47 +--
->  virt/kvm/arm/mmu.c                    |  18 +-
->  virt/kvm/kvm_main.c                   | 546 ++++++++++++++++----------
->  17 files changed, 467 insertions(+), 525 deletions(-)
-> 
+On Fri, Oct 11, 2019 at 7:51 AM Uwe Kleine-König
+<u.kleine-koenig@pengutronix.de> wrote:
+>
+> On Thu, Oct 10, 2019 at 10:29:55PM +0200, Arnd Bergmann wrote:
+> > These can be build completely independently, so split
+> > the two Kconfig symbols.
+> >
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>
+> I'd mention the two symbols' names you're working on in the commit log.
+> I guess it's about PLAT_SAMSUNG and ARCH_S5PV210. And I wouldn't call it
+> "split" which IMHO suggests there was only one symbol before.
+>
+> Maybe:
+>
+>         Don't imply PLAT_SAMSUNG if ARCH_S5PV210 is enabled
+>
+> would be a better subject line?
 
-Christian, Marc, Paul, can you help testing patches 1-13?
+Ok, changed to
 
-Thanks,
+ARM: s5pv210: don't imply CONFIG_PLAT_SAMSUNG
+
+> > @@ -235,7 +235,6 @@ machine-$(CONFIG_PLAT_SPEAR)              += spear
+> >  # by CONFIG_* macro name.
+> >  plat-$(CONFIG_ARCH_OMAP)     += omap
+> >  plat-$(CONFIG_ARCH_S3C64XX)  += samsung
+> > -plat-$(CONFIG_ARCH_S5PV210)  += samsung
+>
+> Would it make more sense to make this
+>
+>         plat-$(PLAT_SAMSUNG) += samsung
+>
+> (in a separate patch)? Hmm, it seems there is no plat-y for
+> PLAT_S3C24XX=y builds. Is this intended? If yes, the directory name
+> containing "samsung" suggests something that seems untrue.
+
+By the end of the series, the plat-samsung directory is completely
+removed (folded into mach-s3c), so that would only add more
+churn for the same result I think.
+
+     Arnd
