@@ -2,117 +2,97 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 430ACCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 06:59:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9612CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 07:09:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 140FD21783
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 06:59:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hbyPJZlx"
+	by mail.kernel.org (Postfix) with ESMTP id AA68220B7C
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 07:09:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731051AbfJVG7W (ORCPT
+        id S2387895AbfJVHJS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 02:59:22 -0400
-Received: from mail-vk1-f193.google.com ([209.85.221.193]:43986 "EHLO
-        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731023AbfJVG7V (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 02:59:21 -0400
-Received: by mail-vk1-f193.google.com with SMTP id i21so1301710vka.10
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 23:59:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=48GsjoJkha+FkK4BjEpjxR+SeBNRB+aPyJf6ECBpNI8=;
-        b=hbyPJZlxSdwm88myuhdtJEWIniVP1HiyEFgnExhI8LirSFCoAssFt32rZiA6ATyVm1
-         RfPrjPXMTCjoAwM+OIdY+RZmtVg+qMxVFAFdE1sSNExUcHfa5QU/axOjkyW9NIhXAnMw
-         12HfGq8+/d7D00ifWT3bp1gIIGhSCTcWH+AOmyLfDPf2pm+QQayGYH6BM5PnZcao+fGx
-         EN2Ht1omTOCmgsUVR6YVT2YLw5ezM3kXz8KQFgXSzvnivqvBoEff2XKL34V5JzZ7ygvs
-         6ovL3ZC5dP+zoCqhRdoblDoZCU9DAwv3bVwBcsq87BrFkpXHAkgA+4tHyuorekroJaA5
-         kHPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=48GsjoJkha+FkK4BjEpjxR+SeBNRB+aPyJf6ECBpNI8=;
-        b=IPPMIN80eeIeb4whjkJ2u59Rhq2ATtRJfsEfGQj7GxZCoaxaSHbc+M4pB7vJtMsbV/
-         /zJXc0rM0jVv3bDaF5FvXahpJ9I9FjsEvNykVI1hVz5I4gkLfig6ZAxcMreC1P/Fah1+
-         Mk77tPESjm2Ug/M3URZ09yzW/ruo5mGvZg3+CAI1Ha/CgUL6O2dnuz+vPE8+fPRhdxMc
-         B4XpZmawITcRh96FJbK7UKfYKJmJ3aiG1D1C3FeS1O6CxmvAE7qo/wT/b5leLYeQgTYU
-         kT+A6H+A8dj6qA0B3/12MJx3JLOe4MAw+yE7ll1fGwDLUNih6yZRdBj5+jTT2SDO+xnG
-         3B2Q==
-X-Gm-Message-State: APjAAAUReropq4Je9vPwPK3vlSfQAdf+KCetjiRZ6lIwFcNofnMtsbk0
-        4ZKkEq/zuPX+LEWGZzo9lM8PQOhgjN+OZNru9l/XWA==
-X-Google-Smtp-Source: APXvYqyQp/ZBzqbnbb99OA7AcxXgKHIl2AlPbDn895oCL9HPi5AEBH3Op7dbJ+nVlsWjQf3q2l3n/Tbcy8/XA0+cyS0=
-X-Received: by 2002:a1f:a293:: with SMTP id l141mr1033147vke.43.1571727560670;
- Mon, 21 Oct 2019 23:59:20 -0700 (PDT)
+        Tue, 22 Oct 2019 03:09:18 -0400
+Received: from mx-out.tlen.pl ([193.222.135.175]:41051 "EHLO mx-out.tlen.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387548AbfJVHJS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 03:09:18 -0400
+Received: (wp-smtpd smtp.tlen.pl 17107 invoked from network); 22 Oct 2019 09:09:14 +0200
+Received: from unknown (HELO localhost.localdomain) (p.sarna@o2.pl@[31.179.144.84])
+          (envelope-sender <p.sarna@tlen.pl>)
+          by smtp.tlen.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
+          for <linux-fsdevel@vger.kernel.org>; 22 Oct 2019 09:09:14 +0200
+Subject: Re: [PATCH] hugetlbfs: add O_TMPFILE support
+To:     Mike Kravetz <mike.kravetz@oracle.com>
+Cc:     Michal Hocko <mhocko@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, viro@zeniv.linux.org.uk,
+        linux-fsdevel@vger.kernel.org
+References: <22c29acf9c51dae17802e1b05c9e5e4051448c5c.1571129593.git.p.sarna@tlen.pl>
+ <20191015105055.GA24932@dhcp22.suse.cz>
+ <766b4370-ba71-85a2-5a57-ca9ed7dc7870@oracle.com>
+ <eb6206ee-eb2e-ffbc-3963-d80eec04119c@oracle.com>
+From:   Piotr Sarna <p.sarna@tlen.pl>
+Message-ID: <c0415816-2682-7bf5-2c82-43c3a8941a54@tlen.pl>
+Date:   Tue, 22 Oct 2019 09:09:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <cover.1571510481.git.hns@goldelico.com> <9bd4c0bb0df26523d7f5265cdb06d86d63dafba8.1571510481.git.hns@goldelico.com>
- <20191021143008.GS5610@atomide.com> <3FDBE28F-B2C5-4EDE-905C-687F601462B6@goldelico.com>
- <20191021171104.GY5610@atomide.com>
-In-Reply-To: <20191021171104.GY5610@atomide.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 22 Oct 2019 08:58:44 +0200
-Message-ID: <CAPDyKFryqo3wF-GphhytNqrDL4rbZ7Qou1Ki3e2_5w-yh2o=uw@mail.gmail.com>
-Subject: Re: [PATCH v2 07/11] omap: remove old hsmmc.[ch] and in Makefile
-To:     Tony Lindgren <tony@atomide.com>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Kalle Valo <kvalo@codeaurora.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <eb6206ee-eb2e-ffbc-3963-d80eec04119c@oracle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-WP-MailID: 8456cf0fa81a268f78de0931459eaf0a
+X-WP-AV: skaner antywirusowy Poczty o2
+X-WP-SPAM: NO 0000000 [kZNs]                               
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-- Trimmed cc-list (could be a good idea for next submission as well)
+On 10/21/19 7:17 PM, Mike Kravetz wrote:
+> On 10/15/19 4:37 PM, Mike Kravetz wrote:
+>> On 10/15/19 3:50 AM, Michal Hocko wrote:
+>>> On Tue 15-10-19 11:01:12, Piotr Sarna wrote:
+>>>> With hugetlbfs, a common pattern for mapping anonymous huge pages
+>>>> is to create a temporary file first.
+>>>
+>>> Really? I though that this is normally done by shmget(SHM_HUGETLB) or
+>>> mmap(MAP_HUGETLB). Or maybe I misunderstood your definition on anonymous
+>>> huge pages.
+>>>
+>>>> Currently libraries like
+>>>> libhugetlbfs and seastar create these with a standard mkstemp+unlink
+>>>> trick,
+>>
+>> I would guess that much of libhugetlbfs was writen before MAP_HUGETLB
+>> was implemented.  So, that is why it does not make (more) use of that
+>> option.
+>>
+>> The implementation looks to be straight forward.  However, I really do
+>> not want to add more functionality to hugetlbfs unless there is specific
+>> use case that needs it.
+> 
+> It was not my intention to shut down discussion on this patch.  I was just
+> asking if there was a (new) use case for such a change.  I am checking with
+> our DB team as I seem to remember them using the create/unlink approach for
+> hugetlbfs in one of their upcoming models.
+> 
+> Is there a new use case you were thinking about?
+> 
 
-On Mon, 21 Oct 2019 at 19:11, Tony Lindgren <tony@atomide.com> wrote:
->
-> * H. Nikolaus Schaller <hns@goldelico.com> [191021 17:08]:
-> >
-> > > Am 21.10.2019 um 16:30 schrieb Tony Lindgren <tony@atomide.com>:
-> > >
-> > > * H. Nikolaus Schaller <hns@goldelico.com> [191019 18:43]:
-> > >> --- a/arch/arm/mach-omap2/Makefile
-> > >> +++ b/arch/arm/mach-omap2/Makefile
-> > >> @@ -216,7 +216,6 @@ obj-$(CONFIG_MACH_NOKIA_N8X0)          += board-n8x0.o
-> > >>
-> > >> # Platform specific device init code
-> > >>
-> > >> -omap-hsmmc-$(CONFIG_MMC_OMAP_HS)  := hsmmc.o
-> > >> obj-y                                      += $(omap-hsmmc-m) $(omap-hsmmc-y)
-> > >
-> > > The related obj-y line can go now too, right?
-> >
-> > Yes, I think so. It is a construction that I have never seen before :)
-> > Therefore I did not recognize that it is related.
-> >
-> > > And looks like common.h also has struct omap2_hsmmc_info
-> > > so maybe check by grepping for hsmmc_info to see it's gone.
-> >
-> > Yes, it is just a forward-declaration of the struct name with
-> > no user anywhere.
-> >
-> > Scheduled for v3.
-> >
-> > BTW: should this series go through your tree since it is an
-> > omap machine?
->
-> Or MMC tree as that's where the code change really are.
+Oh, I indeed thought it was a shutdown. The use case I was thinking 
+about was in Seastar, where the create+unlink trick is used for creating 
+temporary files (in a generic way, not only for hugetlbfs). I simply 
+intended to migrate it to a newer approach - O_TMPFILE. However,
+for the specific case of hugetlbfs it indeed makes more sense to skip it 
+and use mmap's MAP_HUGETLB, so perhaps it's not worth it to patch a 
+perfectly good and stable file system just to provide a semi-useful flag 
+support. My implementation of tmpfile for hugetlbfs is straightforward 
+indeed, but the MAP_HUGETLB argument made me realize that it may not be 
+worth the trouble - especially that MAP_HUGETLB is here since 2.6 and 
+O_TMPFILE was introduced around v3.11, so the mmap way looks more portable.
 
-I am okay with that. I will have a look at the series and provide some comments.
-
-Kind regards
-Uffe
+tldr: I'd be very happy to get my patch accepted, but the use case I had 
+in mind can be easily solved with MAP_HUGETLB, so I don't insist.
