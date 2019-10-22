@@ -2,179 +2,227 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F5BCCA9EA0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A67B7CA9EB7
 	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 22:53:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0CC520700
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 22:53:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7814121925
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 22:53:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="nm1fpnsK";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="MaYxYp/8"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z0s18jwW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389286AbfJVWxL (ORCPT
+        id S2389594AbfJVWxQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 18:53:11 -0400
-Received: from esa3.hgst.iphmx.com ([216.71.153.141]:5393 "EHLO
-        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731850AbfJVWxL (ORCPT
+        Tue, 22 Oct 2019 18:53:16 -0400
+Received: from mail-wr1-f41.google.com ([209.85.221.41]:41801 "EHLO
+        mail-wr1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731850AbfJVWxP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 18:53:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1571784790; x=1603320790;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=FjTK4ZGG6bODJRuV/Ub4IgTxvO6ifw+hrS6fz6rb0Dg=;
-  b=nm1fpnsKmptPpkr66vqQc3QhGoYr2xIuCDKjJOH6Y5KXWpL2VDGtoQSm
-   7Um7KqdvvAzVy2ETpEh/lItLAQ4i7buf1Z/KaoDcEFK0jItcA3yPFGANM
-   Aid5tzkUrIWdiHwLlNIavwezJgtK5NY0Wt2N7fBEmIxfCAI7jxwXKz0Rs
-   gHaHXKs2NNScUIuJAg016D3YXTI9t9Gef4WIb9jgVMM/+hPHaij14Me79
-   hj9u5S4w1ByQwmw6H7SWwmSUXXHfqbeQaRHqPd/dQn8dDQnSRg/1ocAgH
-   WYPnGdJ93/Exzch91P0sLL7DRAKvEqWeoIJiLzBJz3vep3wTvlv1ax8JD
-   g==;
-IronPort-SDR: JJhqZ+bGKN6/+1twYEODm8HX3j8xxZlxlSytBL6iGaDo6F8fTgkIrZc9zWfieLQKwmIP7z0ea3
- VMNQNkiUbx16PAkSEB/57venQBf9Cn7/p6iiWt1OHa2iJ/NAgyDrTl4//cl+5WmrMmMEApdGmo
- TCUOikxn/ranBwtl6Y4RghEFcdQimzn1xnSmPOqhMCLLZTYPS0lgKEWVtKB5ViXI9UTx/+3vsQ
- FEDb2ifJU7xIymjCGGCwSsoAF48qU4bstZgj4Q9afoeRvup29eHTAV9PwQRmlk0oWy+YCFHQpL
- Wv0=
-X-IronPort-AV: E=Sophos;i="5.68,218,1569254400"; 
-   d="scan'208";a="125529643"
-Received: from mail-sn1nam04lp2059.outbound.protection.outlook.com (HELO NAM04-SN1-obe.outbound.protection.outlook.com) ([104.47.44.59])
-  by ob1.hgst.iphmx.com with ESMTP; 23 Oct 2019 06:53:09 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bW/v4RnPLSa4y3XI7e8YyELdbKOWBqTGUlVvPpS1pWrONEO0yjsthURLnEcP0HuMgpI78JaRsm6jC68kL6K8inn6cRraINAS82WYy1nlD/7FgfmVg5oUopIr61hCaMWdV9v5/6NJH7XrR/b8ehaMh2py3O3ADColS+9v4Tc8OOel6Qy7EfGDM1AS8RIEVEzg9B9TPzF+qY7v3yT7jiDz+S76MiAT68SyL+J3mWO94HLl+3NszcfPNBYmBPXA8PZCVp5zDnlU2FukDr2kEvn9qnru4SCcoo5x5cEM9ZF6LAHxqFhxPHHINsSLaKrPea+DXrqw40Xqash19Q4I06p0GQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FjTK4ZGG6bODJRuV/Ub4IgTxvO6ifw+hrS6fz6rb0Dg=;
- b=Pdi5AcmS2jYaz7mNG0SvJKoR0qebsT1VjzDw6nlXaQr42v2s+orNbIq+e8bdJHFeTl7A3cNWR/XkajKUADh//fldhXBFqTZjX6ooJuXfaE8QQuiyB8OXH2gweUk2CnC93S4mdoNZBcO88TH38aDkl5rMkte41yHtrQTYHZ8LPb3g3pHx1nHZRqopZE5VASP3ORIqMJjYENuBF14Bp4A/3Pvz9mICippaa7mD1xsa6otPvsdUlbnAM3Q4SUquzaoqcyOitJUma7g/pK2gjXB8H4N4skbY9prO4Zo6bKa6GheuF+VznSX3ka7EHqSqp2/acp2lgPve93oP7+jHtOr+4w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
+        Tue, 22 Oct 2019 18:53:15 -0400
+Received: by mail-wr1-f41.google.com with SMTP id p4so19850891wrm.8
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 15:53:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FjTK4ZGG6bODJRuV/Ub4IgTxvO6ifw+hrS6fz6rb0Dg=;
- b=MaYxYp/8dyq3Xxuz6jUAVhcgQ9EttdDLuenVqUv2T4zKTIf0ed5zTaR6WHCP9Sw7Lo+ebhHcII9F2t1naToztgl+8Bk82JGnd/CjX4oUhghBl4pcAbrq2j9FB5FhPzlYrRq6HvTAxGZFn79B0IOOMWK0GkkI4EVWceSXBBqcJXM=
-Received: from BYAPR04MB4901.namprd04.prod.outlook.com (52.135.232.206) by
- BYAPR04MB4935.namprd04.prod.outlook.com (52.135.235.94) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2367.24; Tue, 22 Oct 2019 22:53:05 +0000
-Received: from BYAPR04MB4901.namprd04.prod.outlook.com
- ([fe80::4933:8361:f5e3:a6c6]) by BYAPR04MB4901.namprd04.prod.outlook.com
- ([fe80::4933:8361:f5e3:a6c6%4]) with mapi id 15.20.2347.029; Tue, 22 Oct 2019
- 22:53:05 +0000
-From:   Alistair Francis <Alistair.Francis@wdc.com>
-To:     "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
-        Anup Patel <Anup.Patel@wdc.com>
-CC:     "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "rkir@google.com" <rkir@google.com>,
-        "hch@infradead.org" <hch@infradead.org>,
-        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-        "anup@brainfault.org" <anup@brainfault.org>,
-        "palmer@sifive.com" <palmer@sifive.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/2] RISC-V: defconfig: Enable Goldfish RTC driver
-Thread-Topic: [PATCH v2 2/2] RISC-V: defconfig: Enable Goldfish RTC driver
-Thread-Index: AQHVc2vLFlE68F2kkUyeFzcwcqAG+qdXYO6AgAKZbICADTsXgIAAOUoA
-Date:   Tue, 22 Oct 2019 22:53:05 +0000
-Message-ID: <17db4a6244d09abf867daf2a6c10de6a5cd58c89.camel@wdc.com>
-References: <20190925063706.56175-3-anup.patel@wdc.com>
-         <mhng-edb410db-fdd1-46f6-84c3-ae3b843f7e3a@palmer-si-x1c4>
-         <MN2PR04MB606160F5306A5F3C5D97FB788D900@MN2PR04MB6061.namprd04.prod.outlook.com>
-         <alpine.DEB.2.21.9999.1910221213490.28831@viisi.sifive.com>
-In-Reply-To: <alpine.DEB.2.21.9999.1910221213490.28831@viisi.sifive.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Alistair.Francis@wdc.com; 
-x-originating-ip: [199.255.44.250]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 35d6e10a-9ba9-4636-7cfc-08d7574299e5
-x-ms-traffictypediagnostic: BYAPR04MB4935:
-x-ms-exchange-purlcount: 1
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR04MB4935B3FB2BFEAE357AE9C7E990680@BYAPR04MB4935.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 01986AE76B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(136003)(346002)(396003)(39860400002)(376002)(13464003)(199004)(189003)(3846002)(6486002)(14454004)(6116002)(446003)(478600001)(966005)(229853002)(66946007)(66556008)(66476007)(2501003)(6636002)(54906003)(110136005)(6436002)(316002)(66446008)(64756008)(76116006)(25786009)(71190400001)(71200400001)(186003)(486006)(11346002)(2616005)(476003)(2906002)(6506007)(102836004)(305945005)(256004)(99286004)(4326008)(66066001)(6512007)(26005)(14444005)(6246003)(53546011)(76176011)(7736002)(6306002)(81166006)(8676002)(8936002)(81156014)(118296001)(5660300002)(4001150100001)(86362001)(36756003);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR04MB4935;H:BYAPR04MB4901.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Hbiy2aiDJipRpSY3rLRo255EwBb9Lw/GwDptCySudoW8l2M8VB2qsPtjsAu6hQL+7qpmTyRktZD10HhsWx1eLkFUPW/ZGZq1XY2xKZIJXkFtUOBdagrUEmECc/PwGAeL+gsRSHqwqzKGvNcZW1OVneOz8o3NunvtwUx+FE8yFbCkkMhHaaGC0ori4X3Wi5wAqu3u7n2tH2v+TFXaX/LDJ16jp6i++omtsD0oKQibcC4jO2i2aOIMYFbqTZt3Iw5nDcHttHd67hCtU08NaPKoihfB8eatnQFv7cTuDhOS7pg9wXMOExKG/wYC9D7RIOxwqSIiYqj+xaXW0zHLxFj4aQmRNDnOA+toeysU7Oec/ZKQTF/6n2BpGIhCDUxXJa/CUqh9y5DkbDzlgmLCSLZB7SoCJefH7ubEFwjtWV03VwzkYzJdBUOBCSsza3Axa7D/nrHuv3JVv4VULwderqPpT5I4QH+G7rjnskLOReDj8Hw=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <29F97478FE661D4EA94B7D9C01C67C61@namprd04.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nUbl/7U4fkEGLyjIs78RxKgsdpcQ3o0lLUl8H+Jr9fo=;
+        b=Z0s18jwW3kbE5NWQ3W8bKGguxVnDjsqpJGhS7fN7Ammppo4JXdzz0GkGHUGgx5aQwE
+         5tWCMcJWBeRNjlpeXo7CbLHBdKtpJA2+RDI4eDBtefKonwUi5v2y6rvt/MUsFvosmBBI
+         GJcvKJ2QcgyX+Bm3RgYpxE89WWLn4zaQixEp76MbsSBCT02xbGtYmOC7JNp2b+8bUAYM
+         wr2v5dFIirlH2kTxowx7o1/pEfy51SR9TY5JPKJvtR49ahKE4+NBicMjVbDQgCNRkzB+
+         DcrVMo5AT0gVLIjtuOQpzoCeiuV5WaRof5a/7rAHGv1w5rQ8Nqu2uz+l5Qf0Npd+LWcQ
+         UvUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nUbl/7U4fkEGLyjIs78RxKgsdpcQ3o0lLUl8H+Jr9fo=;
+        b=JbtHUh3RPjlXhGw0kQjp8we0xAxOVXU5tSwmWPCN7S4ivRCl7lhfY3a3O9MdgaBIW+
+         v9a6y6ma4EnM9rGJ5pFGkmeVSowhPGDImCUOooJykPQUOwZv70qVfJnl5iLcggCkEw1E
+         z2O0p5WKfF3cCqIkWsrWFUVt/UMc02wRA4kgNgEES5VGCPSMqKsHuAi4mvFD21OKo7EA
+         RCTv/maQ8ey31WQBjqGiyqwK27b7uWeM/FfteJa26+kDvtQ/+yaSJ0YSFfalKr6ujSmi
+         WP9oEYZYSp9PhAGan1xdcZAw5hLA9OcPJXRrrT7pvAMOXnnBH948X+lyZvtb6tdy2+yx
+         Zflw==
+X-Gm-Message-State: APjAAAU12sv5NTdG+spWB0466bbBM+iG13SJwRb5oV3h/lILIe8l2swg
+        20+Dsq33U4yWzFluxZxtNMMfhsvz5zVRIe3R7hoHDQ==
+X-Google-Smtp-Source: APXvYqxJzXoVmDdiBFZrDuTeagPuEgSlmfWkj3gU16VmvlXrjMrhYgIk9hD2xImjQLLoqOeNb8137WlwJzp5QESm7Yo=
+X-Received: by 2002:a5d:674f:: with SMTP id l15mr5899718wrw.80.1571784792413;
+ Tue, 22 Oct 2019 15:53:12 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 35d6e10a-9ba9-4636-7cfc-08d7574299e5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Oct 2019 22:53:05.5937
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: rZ2rjrU/V6qIKHKf3r1kqPTUjk+YToMYKOb7269RXa3t/UlnTLV7YLTAD5UI0IeZgxuMW6DjKGHtRi9Ja+gyju+1c23KfHatG7QWowGtTKY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB4935
+References: <CAA25o9TABY=3C+FQEg8FDyF1rim315G2hmeB1DBWJLn-wG1j0g@mail.gmail.com>
+ <CAJZ5v0gJWxLJTi7TjaRP-3aR3f4VnX1n9dRE_jxdS6e3SM46LQ@mail.gmail.com>
+ <CAA25o9TiaaKGH4ZkOa=FhZW7PdXQ592YZ4q52o-QNx=yFsR4Pw@mail.gmail.com> <CAJZ5v0j7N=o0S1tSwn5DP10oAmb5oN5SsM3jWhs+ZJ2YxMEvnw@mail.gmail.com>
+In-Reply-To: <CAJZ5v0j7N=o0S1tSwn5DP10oAmb5oN5SsM3jWhs+ZJ2YxMEvnw@mail.gmail.com>
+From:   Luigi Semenzato <semenzato@google.com>
+Date:   Tue, 22 Oct 2019 15:53:00 -0700
+Message-ID: <CAA25o9Rd5x7PjFkrhWL-vqfV9uEYKA4K2K=9t1V7TY2OKX+k6g@mail.gmail.com>
+Subject: Re: is hibernation usable?
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Geoff Pike <gpike@google.com>, Bas Nowaira <bassem@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDE5LTEwLTIyIGF0IDEyOjIzIC0wNzAwLCBQYXVsIFdhbG1zbGV5IHdyb3RlOg0K
-PiBPbiBNb24sIDE0IE9jdCAyMDE5LCBBbnVwIFBhdGVsIHdyb3RlOg0KPiANCj4gPiA+IC0tLS0t
-T3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gPiBGcm9tOiBQYWxtZXIgRGFiYmVsdCA8cGFsbWVy
-QHNpZml2ZS5jb20+DQo+ID4gPiBTZW50OiBTYXR1cmRheSwgT2N0b2JlciAxMiwgMjAxOSAxMTow
-OSBQTQ0KPiA+ID4gVG86IEFudXAgUGF0ZWwgPEFudXAuUGF0ZWxAd2RjLmNvbT4NCj4gPiA+IENj
-OiBQYXVsIFdhbG1zbGV5IDxwYXVsLndhbG1zbGV5QHNpZml2ZS5jb20+OyANCj4gPiA+IGFvdUBl
-ZWNzLmJlcmtlbGV5LmVkdTsNCj4gPiA+IEdyZWcgS0ggPGdyZWdraEBsaW51eGZvdW5kYXRpb24u
-b3JnPjsgcmtpckBnb29nbGUuY29tOyBBdGlzaA0KPiA+ID4gUGF0cmENCj4gPiA+IDxBdGlzaC5Q
-YXRyYUB3ZGMuY29tPjsgQWxpc3RhaXIgRnJhbmNpcyA8QWxpc3RhaXIuRnJhbmNpc0B3ZGMuY29t
-DQo+ID4gPiA+Ow0KPiA+ID4gQ2hyaXN0b3BoIEhlbGx3aWcgPGhjaEBpbmZyYWRlYWQub3JnPjsg
-YW51cEBicmFpbmZhdWx0Lm9yZzsNCj4gPiA+IGxpbnV4LQ0KPiA+ID4gcmlzY3ZAbGlzdHMuaW5m
-cmFkZWFkLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgQW51cA0KPiA+ID4gUGF0
-ZWwNCj4gPiA+IDxBbnVwLlBhdGVsQHdkYy5jb20+DQo+ID4gPiBTdWJqZWN0OiBSZTogW1BBVENI
-IHYyIDIvMl0gUklTQy1WOiBkZWZjb25maWc6IEVuYWJsZSBHb2xkZmlzaA0KPiA+ID4gUlRDIGRy
-aXZlcg0KPiA+ID4gDQo+ID4gPiBPbiBUdWUsIDI0IFNlcCAyMDE5IDIzOjM4OjA4IFBEVCAoLTA3
-MDApLCBBbnVwIFBhdGVsIHdyb3RlOg0KPiA+ID4gPiBXZSBoYXZlIEdvbGRmaXNoIFJUQyBkZXZp
-Y2UgYXZhaWxhYmxlIG9uIFFFTVUgUklTQy1WIHZpcnQNCj4gPiA+ID4gbWFjaGluZQ0KPiA+ID4g
-PiBoZW5jZSBlbmFibGUgcmVxdWlyZWQgZHJpdmVyIGluIFJWMzIgYW5kIFJWNjQgZGVmY29uZmln
-cy4NCj4gDQo+IE15IHVuZGVyc3RhbmRpbmcgaXMgdGhhdCB0aGUgR29sZGZpc2ggc3VwcG9ydCBp
-cyBzdGlsbCB1bmRlciANCj4gZGlzY3Vzc2lvbiBvbiB0aGUgUUVNVSBzaWRlIGFuZCBpc24ndCBt
-ZXJnZWQgeWV0IC0gaXMgdGhhdCBhY2N1cmF0ZT8NCj4gDQo+IGh0dHBzOi8vbGlzdHMuZ251Lm9y
-Zy9hcmNoaXZlL2h0bWwvcWVtdS1kZXZlbC8yMDE5LTEwL21zZzA0OTA0Lmh0bWwNCj4gDQo+ID4g
-PiBSZXZpZXdlZC1ieTogUGFsbWVyIERhYmJlbHQgPHBhbG1lckBzaWZpdmUuY29tPg0KPiA+ID4g
-DQo+ID4gPiBJSVJDIHRoZXJlIHdhcyBzdXBwb3NlZCB0byBiZSBhIGZvbGxvdy11cCB0byB5b3Vy
-IFFFTVUgcGF0Y2ggc2V0DQo+ID4gPiB0byByZWJhc2UNCj4gPiA+IGl0IG9uIHRvcCBvZiBhIHJl
-ZmFjdG9yaW5nIG9mIHRoZWlyIFJUQyBjb2RlLCBidXQgSSBkb24ndCBzZWUgaXQNCj4gPiA+IGlu
-IG15IGluYm94LiAgTE1LDQo+ID4gPiBpZiBJIG1pc3NlZCBpdCwgYXMgUUVNVSdzIHNvZnQgZnJl
-ZXplIGlzIGluIGEgZmV3IHdlZWtzIGFuZCBJJ2QNCj4gPiA+IGxpa2UgdG8gbWFrZQ0KPiA+ID4g
-c3VyZSBJIGdldCBldmVyeXRoaW5nIGluLg0KPiA+IA0KPiA+IEkgd2FzIGhvcGluZyBmb3IgUUVN
-VSBSVEMgcmVmYWN0b3JpbmcgdG8gYmUgbWVyZ2VkIHNvb24gYnV0IGl0IGhhcw0KPiA+IG5vdA0K
-PiA+IGhhcHBlbmVkIHNvIGZhci4gSSB3aWxsIHdhaXQgY291cGxlIG9mIG1vcmUgZGF5cyB0aGVu
-IHNlbmQgdjMgb2YNCj4gPiBRRU1VDQo+ID4gcGF0Y2hlcy4NCj4gDQo+IFRoZSBwYXRjaCBsb29r
-cyBmaW5lIHRvIG1lLCBidXQgbGV0J3Mgd2FpdCB1bnRpbCB0aGUgdW5kZXJseWluZw0KPiBzdXBw
-b3J0IA0KPiBhY3R1YWxseSBhcHBlYXJzIG9uIHRoZSBRRU1VICJoYXJkd2FyZSIuICBDb3VsZCB5
-b3UgcmVzZW5kIG9uY2UNCj4gdGhhdCdzIA0KPiBoYXBwZW5lZD8NCg0KSSB0aGluayBpdCBtYWtl
-c2Ugc2Vuc2UgZm9yIHRoaXMgdG8gZ28gaW50byBMaW51eCBmaXJzdC4NCg0KVGhlIFFFTVUgcGF0
-Y2hlcyBhcmUgZ29pbmcgdG8gYmUgYWNjZXB0ZWQsIGp1c3Qgc29tZSBuaXQgcGlja2luZyB0byBk
-bw0KZmlyc3QgOikNCg0KQWZ0ZXIgdGhhdCB3ZSBoYXZlIHRvIHdhaXQgZm9yIGEgUFIgYW5kIHRo
-ZW4gYSBRRU1VIHJlbGVhc2UgdW50aWwgbW9zdA0KcGVvcGxlIHdpbGwgc2VlIHRoZSBjaGFuZ2Ug
-aW4gUUVNVS4gSW4gdGhhdCB0aW1lIExpbnV4IDUuNCB3aWxsIGJlDQpyZWxlYXNlZCwgaWYgdGhp
-cyBjYW4gbWFrZSBpdCBpbnRvIDUuNCB0aGVuIGV2ZXJ5b25lIHVzaW5nIDUuNCB3aWxsIGdldA0K
-dGhlIG5ldyBSVEMgYXMgc29vbiBhcyB0aGV5IHVwZ3JhZGUgUUVNVSAoUUVNVSBwcm92aWRlcyB0
-aGUgZGV2aWNlDQp0cmVlKS4gSWYgdGhpcyBoYXMgdG8gd2FpdCB1bnRpbCBRRU1VIGhhcyBzdXBw
-b3J0IHRoZW4gaXQgd29uJ3QgYmUNCnN1cHBvcnRlZCBmb3IgdXNlcnMgdW50aWwgZXZlbiBsYXRl
-ci4NCg0KVXNlcnMgYXJlIGdlbmVyYWxseSBzbG93IHRvIHVwZGF0ZSBrZXJuZWxzIChidWlsZHJv
-b3QgaXMgc3RpbGwgdXNpbmcNCjUuMSBieSBkZWZhdWx0IGZvciBleGFtcGxlKSBzbyB0aGUgc29v
-bmVyIGNoYW5nZXMgbGlrZSB0aGlzIGdvIGluIHRoZQ0KYmV0dGVyLg0KDQpBbGlzdGFpcg0KDQo+
-IA0KPiB0aGFua3MsDQo+IA0KPiAtIFBhdWwNCg==
+On Tue, Oct 22, 2019 at 3:14 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+>
+> On Tue, Oct 22, 2019 at 11:26 PM Luigi Semenzato <semenzato@google.com> wrote:
+> >
+> > Thank you for the quick reply!
+> >
+> > On Tue, Oct 22, 2019 at 1:57 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> > >
+> > > On Tue, Oct 22, 2019 at 10:09 PM Luigi Semenzato <semenzato@google.com> wrote:
+> > > >
+> > > > Following a thread in linux-pm
+> > > > (https://marc.info/?l=linux-mm&m=157012300901871) I have some issues
+> > > > that may be of general interest.
+> > > >
+> > > > 1. To the best of my knowledge, Linux hibernation is guaranteed to
+> > > > fail if more than 1/2 of total RAM is in use (for instance, by
+> > > > anonymous pages).  My knowledge is based on evidence, experiments,
+> > > > code inspection, the thread above, and a comment in
+> > > > Documentation/swsusp.txt, copied here:
+> > >
+> > > So I use it on a regular basis (i.e. every day) on a system that often
+> > > has over 50% or RAM in use and it all works.
+> > >
+> > > I also know about other people using it on a regular basis.
+> > >
+> > > For all of these users, it is usable.
+> > >
+> > > >  "Instead, we load the image into unused memory and then atomically
+> > > > copy it back to it original location. This implies, of course, a
+> > > > maximum image size of half the amount of memory."
+> > >
+> > > That isn't right any more.  An image that is loaded during resume can,
+> > > in fact, be larger than 50% of RAM.  An image that is created during
+> > > hibernation, however, cannot.
+> >
+> > Sorry, I don't understand this.  Are you saying that, for instance,
+> > you can resume a 30 GB image on a 32 GB device, but that image could
+> > only have been created on a 64 GB device?
+>
+> Had it been possible to create images larger than 50% of memory during
+> hibernation, it would have been possible to load them during resume as
+> well.
+>
+> The resume code doesn't have a 50% of RAM limitation, the image
+> creation code does.
+
+Thanks a lot for the clarifications.
+
+It is possible that you and I have different definitions of "working
+in general".  My main issue ia that I would like image creation (i.e.
+entering hibernation) to work with >50% of RAM in use, and I am
+extrapolating that other people would like that too.  I can see that
+there are many uses where this is not needed though, especially if you
+mostly care about resume.
+
+>
+> > > > 2. There's no simple/general workaround.  Rafael suggested on the
+> > > > thread "Whatever doesn't fit into 50% of RAM needs to be swapped out
+> > > > before hibernation".  This is a good suggestion: I am actually close
+> > > > to achieving this using memcgroups, but it's a fair amount of work,
+> > > > and a fairly special case.  Not everybody uses memcgroups, and I don't
+> > > > know of other reliable ways of forcing swap from user level.
+> > >
+> > > I don't need to do anything like that.
+> >
+> > Again, I don't understand.  Why did you make that suggestion then?
+> >
+> > > hibernate_preallocate_memory() manages to free a sufficient amount of
+> > > memory on my system every time.
+> >
+> > Unfortunately this doesn't work for me.  I may have described a simple
+> > experiment: on a 4GB device, create two large processes like this:
+> >
+> > dd if=/dev/zero bs=1100M count=1 | sleep infinity &
+> > dd if=/dev/zero bs=1100M count=1 | sleep infinity &
+> >
+> > so that more than 50% of TotalMem is used for anonymous pages.  Then
+> > echo disk > /sys/power/state fails with ENOMEM.
+>
+> I guess hibernate_preallocate_memory() is not able to free enough
+> memory for itself in that case.
+>
+> > Is this supposed to work?
+>
+> Yes, it is, in general.
+>
+> > Maybe I am doing something wrong?
+> > Hibernation works before I create the dd processes.  After I force
+> > some of those pages to a separate swap device, hibernation works too,
+> > so those pages aren't mlocked or anything.
+>
+> It looks like you are doing something that is not covered by
+> hibernate_preallocate_memory().
+>
+> > > > 3. A feature that works only when 1/2 of total RAM can be allocated
+> > > > is, in my opinion, not usable, except possibly under special
+> > > > circumstances, such as mine. Most of the available articles and
+> > > > documentation do not mention this important fact (but for the excerpt
+> > > > I mentioned, which is not in a prominent position).
+> > >
+> > > It can be used with over 1/2 of RAM allocated and that is quite easy
+> > > to demonstrate.
+> > >
+> > > Honestly, I'm not sure what your problem is really.
+> >
+> > I apologize if I am doing something stupid and I should know better
+> > before I waste other people's time.  I have been trying to explain
+> > these issues as best as I can.  I have a reproducible failure.  I'll
+> > be happy to provide any additional detail.
+>
+> Simply put, hibernation, as implemented today, needs to allocate over
+> 50% of RAM (or at least as much as to be able to copy all of the
+> non-free pages) for image creation.  If it cannot do that, it will
+> fail and you know how to prevent it from allocating enough memory in a
+> reproducible way.  AFAICS that's a situation in which every attempt to
+> allocate 50% of memory for any other purpose will fail as well.
+>
+> Frankly, you are first to report this problem, so it arguably is not
+> common.  It looks like hibernate_preallocate_memory() may be improved
+> to cover that case, but then the question is how much more complicated
+> it will have to become for this purpose and whether or not that's
+> worth pursuing.
+
+Right.  I was hoping to discuss that.  Is it easier to do in the
+kernel what I am trying to do at user level, i.e. force swap of excess
+pages (possibly to a separate device or partition) so that enough
+pages are freed up to make hibernate_preallocate_memory always
+succeed?  I started reading the swap code, but it is entangled with
+page reclaim and I haven't seen a simple solution, neither do I know
+if there is one and how long it would take to find it, or code around
+it.  (However I haven't looked yet at how it works when memcgroup
+limits are lowered---that may give me good ideas).
+
+Thanks!
+
+
+>
+> > >
+> > > > Two questions then:
+> > > >
+> > > > A. Should the documentation be changed to reflect this fact more
+> > > > clearly?  I feel that the current situation is a disservice to the
+> > > > user community.
+> > >
+> > > Propose changes.
+> >
+> > Sure, after we resolve the above questions.
+> >
+> > > > B. Would it be worthwhile to improve the hibernation code to remove
+> > > > this limitation?  Is this of interest to anybody (other than me)?
+> > >
+> > > Again, propose specific changes.
