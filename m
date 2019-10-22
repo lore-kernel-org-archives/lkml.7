@@ -2,156 +2,211 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 119F5CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:13:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE184CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:13:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D99B321872
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:13:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AF4620B7C
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:13:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GGodo4xa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389295AbfJVQNZ (ORCPT
+        id S2389324AbfJVQNb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 12:13:25 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59826 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732216AbfJVQNX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 12:13:23 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 6FFBBB388;
-        Tue, 22 Oct 2019 16:13:21 +0000 (UTC)
-From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
-To:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 5/5] MIPS: SGI-IP27: reduce ARC usage to a minimum
-Date:   Tue, 22 Oct 2019 18:13:15 +0200
-Message-Id: <20191022161315.4194-5-tbogendoerfer@suse.de>
-X-Mailer: git-send-email 2.16.4
-In-Reply-To: <20191022161315.4194-1-tbogendoerfer@suse.de>
-References: <20191022161315.4194-1-tbogendoerfer@suse.de>
+        Tue, 22 Oct 2019 12:13:31 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:42714 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2389310AbfJVQN2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 12:13:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571760807;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=TCw08GQg2fbzaBC8SDGKOVDBqyM+OtQZLQZFHMAIIEc=;
+        b=GGodo4xa+ApfC2DwUJNHDFNHd/e8w7qMYC1x9JJU4b08G4U8mG8WLMPFUHUxYadPbu5ej/
+        RGEhf/AEOZQuhgvRsU+LfJBIc3+CYFdzrexEAYQhtDKfILqgWGhWCi3NPWzELWFZtGx8CJ
+        Kj5qJEUYqRik/EpGx5K3en2sJCeI1sE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-362-DSKNdaqiOa6Zbume7Z6VPg-1; Tue, 22 Oct 2019 12:13:23 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1F8891005500;
+        Tue, 22 Oct 2019 16:13:22 +0000 (UTC)
+Received: from [10.10.123.180] (ovpn-123-180.rdu2.redhat.com [10.10.123.180])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 068B210027A4;
+        Tue, 22 Oct 2019 16:13:20 +0000 (UTC)
+Subject: Re: [PATCH] Add prctl support for controlling PF_MEMALLOC V2
+To:     Michal Hocko <mhocko@kernel.org>
+References: <20191021214137.8172-1-mchristi@redhat.com>
+ <20191022112446.GA8213@dhcp22.suse.cz>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-block@vger.kernel.org, martin@urbackup.org,
+        Damien.LeMoal@wdc.com
+From:   Mike Christie <mchristi@redhat.com>
+Message-ID: <5DAF2AA0.5030500@redhat.com>
+Date:   Tue, 22 Oct 2019 11:13:20 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.6.0
+MIME-Version: 1.0
+In-Reply-To: <20191022112446.GA8213@dhcp22.suse.cz>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: DSKNdaqiOa6Zbume7Z6VPg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-IP27 uses ARC prom only for parsing prom arguments and has a hack
-for IP27 to make the ARC code behave. By introducing config symbol
-ARC_CMDLINE_ONLY IP27 only drags in ARC cmdline parsing and does
-everything else in IP27 specific code.
+On 10/22/2019 06:24 AM, Michal Hocko wrote:
+> On Mon 21-10-19 16:41:37, Mike Christie wrote:
+>> There are several storage drivers like dm-multipath, iscsi, tcmu-runner,
+>> amd nbd that have userspace components that can run in the IO path. For
+>> example, iscsi and nbd's userspace deamons may need to recreate a socket
+>> and/or send IO on it, and dm-multipath's daemon multipathd may need to
+>> send IO to figure out the state of paths and re-set them up.
+>>
+>> In the kernel these drivers have access to GFP_NOIO/GFP_NOFS and the
+>> memalloc_*_save/restore functions to control the allocation behavior,
+>> but for userspace we would end up hitting a allocation that ended up
+>> writing data back to the same device we are trying to allocate for.
+>=20
+> Which code paths are we talking about here? Any ioctl or is this a
+> general syscall path? Can we mark the process in a more generic way?
 
-Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
----
- arch/mips/Kconfig              |  4 ++++
- arch/mips/fw/arc/Makefile      |  4 ++++
- arch/mips/fw/arc/identify.c    | 10 ----------
- arch/mips/sgi-ip27/ip27-init.c | 14 ++++++++++++++
- 4 files changed, 22 insertions(+), 10 deletions(-)
+It depends on the daemon. The common one for example are iscsi and nbd
+need network related calls like sendmsg, recvmsg, socket, etc.
+tcmu-runner could need the network ones and also read and write when it
+does IO to a FS or device. dm-multipath needs the sg io ioctls.
 
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index 2ef3129cc4ad..376d0ec0d1d6 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -674,6 +674,7 @@ config SGI_IP27
- 	select ARCH_SPARSEMEM_ENABLE
- 	select FW_ARC
- 	select FW_ARC64
-+	select ARC_CMDLINE_ONLY
- 	select BOOT_ELF64
- 	select DEFAULT_SGI_PARTITION
- 	select SYS_HAS_EARLY_PRINTK
-@@ -1377,6 +1378,9 @@ config MIPS_L1_CACHE_SHIFT
- config HAVE_STD_PC_SERIAL_PORT
- 	bool
- 
-+config ARC_CMDLINE_ONLY
-+	bool
-+
- config ARC_CONSOLE
- 	bool "ARC console support"
- 	depends on SGI_IP22 || SGI_IP28 || (SNI_RM && CPU_LITTLE_ENDIAN)
-diff --git a/arch/mips/fw/arc/Makefile b/arch/mips/fw/arc/Makefile
-index 3cc82d7fe548..64d685efcc77 100644
---- a/arch/mips/fw/arc/Makefile
-+++ b/arch/mips/fw/arc/Makefile
-@@ -3,8 +3,12 @@
- # Makefile for the ARC prom monitor library routines under Linux.
- #
- 
-+ifdef CONFIG_ARC_CMDLINE_ONLY
-+lib-y				+= cmdline.o
-+else
- lib-y				+= cmdline.o env.o file.o identify.o init.o \
- 				   misc.o
-+endif
- 
- lib-$(CONFIG_ARC_MEMORY)	+= memory.o
- lib-$(CONFIG_ARC_CONSOLE)	+= arc_con.o
-diff --git a/arch/mips/fw/arc/identify.c b/arch/mips/fw/arc/identify.c
-index 7530c7b2fd39..5527e0f54079 100644
---- a/arch/mips/fw/arc/identify.c
-+++ b/arch/mips/fw/arc/identify.c
-@@ -31,10 +31,6 @@ static struct smatch mach_table[] = {
- 		.arcname	= "SGI-IP22",
- 		.liname		= "SGI Indy",
- 		.flags		= PROM_FLAG_ARCS,
--	}, {
--		.arcname	= "SGI-IP27",
--		.liname		= "SGI Origin",
--		.flags		= PROM_FLAG_ARCS,
- 	}, {
- 		.arcname	= "SGI-IP28",
- 		.liname		= "SGI IP28",
-@@ -103,13 +99,7 @@ void __init prom_identify_arch(void)
- 	 */
- 	p = ArcGetChild(PROM_NULL_COMPONENT);
- 	if (p == NULL) {
--#ifdef CONFIG_SGI_IP27
--		/* IP27 PROM misbehaves, seems to not implement ARC
--		   GetChild().	So we just assume it's an IP27.	 */
--		iname = "SGI-IP27";
--#else
- 		iname = "Unknown";
--#endif
- 	} else
- 		iname = (char *) (long) p->iname;
- 
-diff --git a/arch/mips/sgi-ip27/ip27-init.c b/arch/mips/sgi-ip27/ip27-init.c
-index d160fb219d6d..971aa0d5d534 100644
---- a/arch/mips/sgi-ip27/ip27-init.c
-+++ b/arch/mips/sgi-ip27/ip27-init.c
-@@ -13,9 +13,11 @@
- #include <linux/mm.h>
- #include <linux/export.h>
- #include <linux/cpumask.h>
-+#include <asm/bootinfo.h>
- #include <asm/cpu.h>
- #include <asm/io.h>
- #include <asm/pgtable.h>
-+#include <asm/sgialib.h>
- #include <asm/time.h>
- #include <asm/sn/types.h>
- #include <asm/sn/sn0/addrs.h>
-@@ -160,3 +162,15 @@ void __init plat_mem_setup(void)
- 	ioport_resource.end = ~0UL;
- 	set_io_port_base(IO_BASE);
- }
-+
-+const char *get_system_type(void)
-+{
-+	return "SGI Origin";
-+}
-+
-+void __init prom_init(void)
-+{
-+	prom_init_cmdline(fw_arg0, (LONG *)fw_arg1);
-+	prom_meminit();
-+}
-+
--- 
-2.16.4
+
+> E.g. we have PF_LESS_THROTTLE (used by nfsd). It doesn't affect the
+> reclaim recursion but it shows a pattern that doesn't really exhibit
+> too many internals. Maybe we need PF_IO_FLUSHER or similar?
+
+I am not familiar with PF_IO_FLUSHER. If it prevents the recursion
+problem then please send me details and I will look into it for the next
+posting.
+
+>=20
+>> This patch allows the userspace deamon to set the PF_MEMALLOC* flags
+>> with prctl during their initialization so later allocations cannot
+>> calling back into them.
+>=20
+> TBH I am not really happy to export these to the userspace. They are
+> an internal implementation detail and the userspace shouldn't really
+
+They care in these cases, because block/fs drivers must be able to make
+forward progress during writes. To meet this guarantee kernel block
+drivers use mempools and memalloc/GFP flags.
+
+For these userspace components of the block/fs drivers they already do
+things normal daemons do not to meet that guarantee like mlock their
+memory, disable oom killer, and preallocate resources they have control
+over. They have no control over reclaim like the kernel drivers do so
+its easy for us to deadlock when memory gets low.
+
+> care. So if this is really necessary then we need a very good argumnets
+> and documentation to make the usage clear.
+> =20
+>> Signed-off-by: Mike Christie <mchristi@redhat.com>
+>> ---
+>>
+>> V2:
+>> - Use prctl instead of procfs.
+>> - Add support for NOFS for fuse.
+>> - Check permissions.
+>>
+>>  include/uapi/linux/prctl.h |  8 +++++++
+>>  kernel/sys.c               | 44 ++++++++++++++++++++++++++++++++++++++
+>>  2 files changed, 52 insertions(+)
+>>
+>> diff --git a/include/uapi/linux/prctl.h b/include/uapi/linux/prctl.h
+>> index 7da1b37b27aa..6f6b3af6633a 100644
+>> --- a/include/uapi/linux/prctl.h
+>> +++ b/include/uapi/linux/prctl.h
+>> @@ -234,4 +234,12 @@ struct prctl_mm_map {
+>>  #define PR_GET_TAGGED_ADDR_CTRL=09=0956
+>>  # define PR_TAGGED_ADDR_ENABLE=09=09(1UL << 0)
+>> =20
+>> +/* Control reclaim behavior when allocating memory */
+>> +#define PR_SET_MEMALLOC=09=09=0957
+>> +#define PR_GET_MEMALLOC=09=09=0958
+>> +#define PR_MEMALLOC_SET_NOIO=09=09(1UL << 0)
+>> +#define PR_MEMALLOC_CLEAR_NOIO=09=09(1UL << 1)
+>> +#define PR_MEMALLOC_SET_NOFS=09=09(1UL << 2)
+>> +#define PR_MEMALLOC_CLEAR_NOFS=09=09(1UL << 3)
+>> +
+>>  #endif /* _LINUX_PRCTL_H */
+>> diff --git a/kernel/sys.c b/kernel/sys.c
+>> index a611d1d58c7d..34fedc9fc7e4 100644
+>> --- a/kernel/sys.c
+>> +++ b/kernel/sys.c
+>> @@ -2486,6 +2486,50 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long=
+, arg2, unsigned long, arg3,
+>>  =09=09=09return -EINVAL;
+>>  =09=09error =3D GET_TAGGED_ADDR_CTRL();
+>>  =09=09break;
+>> +=09case PR_SET_MEMALLOC:
+>> +=09=09if (!capable(CAP_SYS_ADMIN))
+>> +=09=09=09return -EPERM;
+>> +
+>> +=09=09if (arg3 || arg4 || arg5)
+>> +=09=09=09return -EINVAL;
+>> +
+>> +=09=09switch (arg2) {
+>> +=09=09case PR_MEMALLOC_SET_NOIO:
+>> +=09=09=09if (current->flags & PF_MEMALLOC_NOFS)
+>> +=09=09=09=09return -EINVAL;
+>> +
+>> +=09=09=09current->flags |=3D PF_MEMALLOC_NOIO;
+>> +=09=09=09break;
+>> +=09=09case PR_MEMALLOC_CLEAR_NOIO:
+>> +=09=09=09current->flags &=3D ~PF_MEMALLOC_NOIO;
+>> +=09=09=09break;
+>> +=09=09case PR_MEMALLOC_SET_NOFS:
+>> +=09=09=09if (current->flags & PF_MEMALLOC_NOIO)
+>> +=09=09=09=09return -EINVAL;
+>> +
+>> +=09=09=09current->flags |=3D PF_MEMALLOC_NOFS;
+>> +=09=09=09break;
+>> +=09=09case PR_MEMALLOC_CLEAR_NOFS:
+>> +=09=09=09current->flags &=3D ~PF_MEMALLOC_NOFS;
+>> +=09=09=09break;
+>> +=09=09default:
+>> +=09=09=09return -EINVAL;
+>> +=09=09}
+>> +=09=09break;
+>> +=09case PR_GET_MEMALLOC:
+>> +=09=09if (!capable(CAP_SYS_ADMIN))
+>> +=09=09=09return -EPERM;
+>> +
+>> +=09=09if (arg2 || arg3 || arg4 || arg5)
+>> +=09=09=09return -EINVAL;
+>> +
+>> +=09=09if (current->flags & PF_MEMALLOC_NOIO)
+>> +=09=09=09error =3D PR_MEMALLOC_SET_NOIO;
+>> +=09=09else if (current->flags & PF_MEMALLOC_NOFS)
+>> +=09=09=09error =3D PR_MEMALLOC_SET_NOFS;
+>> +=09=09else
+>> +=09=09=09error =3D 0;
+>> +=09=09break;
+>>  =09default:
+>>  =09=09error =3D -EINVAL;
+>>  =09=09break;
+>> --=20
+>> 2.20.1
+>>
+>=20
 
