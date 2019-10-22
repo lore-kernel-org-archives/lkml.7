@@ -2,88 +2,168 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 711B7CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:00:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBAABCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:00:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F20D214B2
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:00:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A22A220B7C
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:00:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="IzmdYdhL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732683AbfJVRAi (ORCPT
+        id S1732985AbfJVRAo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 13:00:38 -0400
-Received: from ms.lwn.net ([45.79.88.28]:47660 "EHLO ms.lwn.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730363AbfJVRAi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 13:00:38 -0400
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 8268037B;
-        Tue, 22 Oct 2019 17:00:37 +0000 (UTC)
-Date:   Tue, 22 Oct 2019 11:00:36 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Thierry Reding <treding@nvidia.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Lee Jones <lee.jones@linaro.org>, kernel@pengutronix.de
-Subject: Re: [RFC] docs: add a reset controller chapter to the driver API
- docs
-Message-ID: <20191022110036.5c2edc05@lwn.net>
-In-Reply-To: <20191022164547.22632-1-p.zabel@pengutronix.de>
-References: <20191022164547.22632-1-p.zabel@pengutronix.de>
-Organization: LWN.net
+        Tue, 22 Oct 2019 13:00:44 -0400
+Received: from mail-eopbgr730089.outbound.protection.outlook.com ([40.107.73.89]:18334
+        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730363AbfJVRAn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 13:00:43 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aBlZtfNwPEGQN4/wRpv8wU0tngcoVhNG85XjK70Toyj38ydwxtjBTTB3/TCJshiULKF7NdB1pbAFesMSc91CSQ3zzfL61er0BBihDN7HGH/IRtCE7tRLXBWX4yZRJnBiWFDhP6B9+RwLzevgp9YFOHRhfT/0cmeAVnmvzWVyniBGuPBWzhgPstj3pFQ/nMJ3/ee3ggbHJ8pGMiVHuAhKZEqoXBzzJqR9GmwkWCuhbwOCK53Gq+0RmmH8pWbjyLENVhfBNgWGUzC79Y6kB7MBw0VvOxzZ9OEKRVL/z/WrLuaWO12XKy2utRGvbn1wVUs5o9WDctChVoZXhZdX1sVtBg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZZe1J+kjAxace7Y02lfa3AlwKrWulwj4LpqjO5RicqE=;
+ b=UqUQoB9oo1mErJDvyC95UibPzKQdMbm5NCYW/FZlkAKKuc0BvK8s9IYlm9VnDtGvvTwFM58a6p8r2R1cUKZ4InT+ZCLyx9mmuVpVrvll7TcZKLuXWCbysL4XGy7E/OHCM1si0nA4BvXV9G5uKwyK5piE+N8CGRvwn0cn5lSU4euZpAoihT4oFbiV3MnQ+wtrz17bEKblE4FekCP+ggnetID0oS9jJrOg7GxdVdtT+sRDrlne2a00XUIpbxY7GmltCKyopQyC3EgezjEVZEEyJ1zqf8JZpFykVtLMknXgMhNYSfCF1EcQ7OCiI2Fn04kGwxXkZhLy2waVid+u+InCXQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZZe1J+kjAxace7Y02lfa3AlwKrWulwj4LpqjO5RicqE=;
+ b=IzmdYdhLjnaNK1KUHfMdx63eZGYxgUPid1/QbIb0uje1dcQW6p75LGeJzeFxU9SUQuVIKc19bjIVxTcam7TFHv55s+ZPhRP/Q7+1NtnA9dg8XwFbN5i0kQlUzeGu7Bb5+MMcWq07TmWys03X599MJvZbJpoMw44Sm61omtL0iDU=
+Received: from BN7PR02CA0004.namprd02.prod.outlook.com (2603:10b6:408:20::17)
+ by DM6PR02MB6236.namprd02.prod.outlook.com (2603:10b6:5:1d1::26) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2347.16; Tue, 22 Oct
+ 2019 17:00:39 +0000
+Received: from SN1NAM02FT017.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e44::201) by BN7PR02CA0004.outlook.office365.com
+ (2603:10b6:408:20::17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2347.23 via Frontend
+ Transport; Tue, 22 Oct 2019 17:00:39 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ SN1NAM02FT017.mail.protection.outlook.com (10.152.72.115) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2367.14
+ via Frontend Transport; Tue, 22 Oct 2019 17:00:39 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <radhey.shyam.pandey@xilinx.com>)
+        id 1iMxWQ-0006Aj-So; Tue, 22 Oct 2019 10:00:38 -0700
+Received: from [127.0.0.1] (helo=xsj-smtp-dlp1.xlnx.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <radhey.shyam.pandey@xilinx.com>)
+        id 1iMxWL-0005CE-L5; Tue, 22 Oct 2019 10:00:33 -0700
+Received: from xsj-pvapsmtp01 (maildrop.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x9MH0Wac022056;
+        Tue, 22 Oct 2019 10:00:32 -0700
+Received: from [10.140.184.180] (helo=ubuntu)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <radheys@ubuntu>)
+        id 1iMxWJ-00059c-IY; Tue, 22 Oct 2019 10:00:31 -0700
+Received: by ubuntu (Postfix, from userid 13245)
+        id C537710112C; Tue, 22 Oct 2019 22:30:30 +0530 (IST)
+From:   Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+To:     vkoul@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        dan.j.williams@intel.com, michal.simek@xilinx.com,
+        anirudha.sarangi@xilinx.com, nick.graumann@gmail.com,
+        andrea.merello@gmail.com, appana.durga.rao@xilinx.com,
+        mcgrof@kernel.org
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+Subject: [PATCH -next 2/6] dt-bindings: dmaengine: xilinx_dma: Fix formatting and style
+Date:   Tue, 22 Oct 2019 22:30:18 +0530
+Message-Id: <1571763622-29281-3-git-send-email-radhey.shyam.pandey@xilinx.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1571763622-29281-1-git-send-email-radhey.shyam.pandey@xilinx.com>
+References: <1571763622-29281-1-git-send-email-radhey.shyam.pandey@xilinx.com>
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-Result: No--5.034-7.0-31-1
+X-imss-scan-details: No--5.034-7.0-31-1;No--5.034-5.0-31-1
+X-TM-AS-User-Approved-Sender: No;No
+X-TM-AS-Result-Xfilter: Match text exemption rules:No
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(136003)(39860400002)(396003)(189003)(199004)(486006)(336012)(26005)(51416003)(8676002)(11346002)(305945005)(107886003)(76176011)(446003)(6266002)(426003)(16586007)(106002)(8936002)(5660300002)(36756003)(4326008)(316002)(50226002)(2906002)(186003)(42186006)(81166006)(81156014)(47776003)(6666004)(48376002)(7416002)(476003)(356004)(50466002)(2616005)(70206006)(70586007)(126002)(478600001)(103686004)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR02MB6236;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 4a0f761e-4245-4a11-35ea-08d757115db2
+X-MS-TrafficTypeDiagnostic: DM6PR02MB6236:
+X-Microsoft-Antispam-PRVS: <DM6PR02MB6236620C4C3944A8C170A291C7680@DM6PR02MB6236.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:549;
+X-Forefront-PRVS: 01986AE76B
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: hVaasdJe+W7FycCy51iUGGTJnB9Xrinm9H/4UUKFK1ARaVG9zfQsHahVwHAIYgumexXwUuA6wAYBrkeXbOuw1jnT3eL/bJsgPNupJe2tlJePvsiLnHkC4QrC50i7pEqnWu1/V0w68Ke/IJFrqnoSQa1su6WiFgx4GzJOxusFYd37qxq4rNODKHMydWiwcxpLYuwNEXFRd+9eOZL0dqKFLsqTi6CBG14GyE7SX447VXdanfMa9UWQlosMUfkpvbPIi23kmeIw0u1HETRVJxJ6jORQAt5lXzmdwJyXZ5BzjPUd2HiwZYc+vofd2DFujSpUXg1xc4hcNL53ZUIOi9YMtBCOrK+qpI1Ei+Pma5jrnUtumKRwv/bPoWnwBnPZZMstQrkh5BrMgEnh+vBAx2pSVOsUWppZGC74Oldw0Kbx7h8smUptEqTZqMU4Ks25RlSm
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Oct 2019 17:00:39.3104
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4a0f761e-4245-4a11-35ea-08d757115db2
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB6236
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 22 Oct 2019 18:45:47 +0200
-Philipp Zabel <p.zabel@pengutronix.de> wrote:
+Trivial formatting(keep compatible string one per line, caps change etc).
+It doesn't modify the content of the binding.
 
-> Add initial reset controller API documentation. This is mostly indented
-> to describe the concepts to users of the consumer API, and to tie the
-> kerneldoc comments we already have into the driver API documentation.
-> 
-> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+---
+Changes since RFC:
+New patch. Trivial formatting (compatible string one per line) as
+suggested by Rob in MCDMA RFC series.
+---
+ Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-One quick comment...
+diff --git a/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt b/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
+index 99d06f9..d4ba1cb 100644
+--- a/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
++++ b/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
+@@ -12,8 +12,10 @@ Xilinx AXI CDMA engine, it does transfers between memory-mapped source
+ address and a memory-mapped destination address.
+ 
+ Required properties:
+-- compatible: Should be "xlnx,axi-vdma-1.00.a" or "xlnx,axi-dma-1.00.a" or
+-	      "xlnx,axi-cdma-1.00.a""
++- compatible: Should be one of-
++		"xlnx,axi-vdma-1.00.a"
++		"xlnx,axi-dma-1.00.a"
++		"xlnx,axi-cdma-1.00.a"
+ - #dma-cells: Should be <1>, see "dmas" property below
+ - reg: Should contain VDMA registers location and length.
+ - xlnx,addrwidth: Should be the vdma addressing size in bits(ex: 32 bits).
+@@ -29,7 +31,7 @@ Required properties:
+ 			   "m_axis_mm2s_aclk", "s_axis_s2mm_aclk"
+ 	For CDMA:
+ 	Required elements: "s_axi_lite_aclk", "m_axi_aclk"
+-	FOR AXIDMA:
++	For AXIDMA:
+ 	Required elements: "s_axi_lite_aclk"
+ 	Optional elements: "m_axi_mm2s_aclk", "m_axi_s2mm_aclk",
+ 			   "m_axi_sg_aclk"
+-- 
+2.7.4
 
->  Documentation/driver-api/index.rst |   1 +
->  Documentation/driver-api/reset.rst | 217 +++++++++++++++++++++++++++++
->  2 files changed, 218 insertions(+)
->  create mode 100644 Documentation/driver-api/reset.rst
-> 
-
-[...]
-
-> +Shared and exclusive resets
-> +---------------------------
-> +
-> +The reset controller API provides either reference counted deassertion and
-> +assertion or direct, exclusive control.
-> +The distinction between shared and exclusive reset controls is made at the time
-> +the reset control is requested, either via :c:func:`devm_reset_control_get_shared`
-> +or via :c:func:`devm_reset_control_get_exclusive`.
-
-:c:func: isn't needed anymore, and is actively discouraged - the function
-references will be linked anyway.  So just say function() rather than
-:c:func:`function` everywhere, please.
-
-Thanks,
-
-jon
