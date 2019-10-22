@@ -6,37 +6,57 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98B16CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:52:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2532ACA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:53:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78957214B2
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:52:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06174214B2
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:53:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388727AbfJVPwX (ORCPT
+        id S2388777AbfJVPxb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 11:52:23 -0400
-Received: from mga03.intel.com ([134.134.136.65]:53569 "EHLO mga03.intel.com"
+        Tue, 22 Oct 2019 11:53:31 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53804 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387675AbfJVPwX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 11:52:23 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Oct 2019 08:52:21 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,216,1569308400"; 
-   d="scan'208";a="196476114"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by fmsmga008.fm.intel.com with ESMTP; 22 Oct 2019 08:52:20 -0700
-Date:   Tue, 22 Oct 2019 08:52:20 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
+        id S2387888AbfJVPxb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 11:53:31 -0400
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com [209.85.221.69])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5AFC583F42
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 15:53:30 +0000 (UTC)
+Received: by mail-wr1-f69.google.com with SMTP id 92so4034976wro.14
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 08:53:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=JG+rDaiZPjv/G30aIXSiabMNCIhXTu4D3139P64uM1U=;
+        b=IhKzwdBC4Rwrx3od6zl4oKzYzwgJhp5XCnJDp/Zz4IPw1NTa6ItVTmCOZufAXg8GgI
+         Xf6D3WYjiBuB0lR0T9gpm1LDN18fCTBQjBrUcmC6FsJwiIkRNNC1PqFE9DFKzDdY1ZSX
+         Gq2oylgnQKV5/EQaL4AKrZolhgZ3A9JE3TEkQn+bu6/Nb81Lqe/iD7RT4buUHUCMpcbT
+         DjDMZP6OnHKwyV+H7UZcK/bPuX+9RRgZu4fFX5Z7OhTM/G180a09DO5fCEzw3Eiv/Ab6
+         uKOl1pD8xQZmixvRlPK8bvIwtRDLh9kQigOYO/FpFYlnTdJAwsQxgoJeStUL1ZVrroEH
+         v4cw==
+X-Gm-Message-State: APjAAAX3hpwsmH8GhY6IsyApWCl0rDfxBEacNrY37Z4dENeNs2qEpYER
+        7ROOji84x52qiPakL7DAzg4ZUAKetjr1T/9hNPWqsn6cF3e92li+3vLXIQ92tgzGEk+AGG4jlP7
+        2EiiqvLGvMLoCTeEr2OEGb2nj
+X-Received: by 2002:a1c:c90c:: with SMTP id f12mr3515222wmb.97.1571759608919;
+        Tue, 22 Oct 2019 08:53:28 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqz6V+VvQ3ZIcj/uWsxd5zvt1LhKvigbB1GL0YOeGKZ2oispvsSJTapzUQJ7s70S4Bt0HGQCSQ==
+X-Received: by 2002:a1c:c90c:: with SMTP id f12mr3515188wmb.97.1571759608659;
+        Tue, 22 Oct 2019 08:53:28 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:c0e4:dcf4:b543:ce19? ([2001:b07:6468:f312:c0e4:dcf4:b543:ce19])
+        by smtp.gmail.com with ESMTPSA id t123sm24286579wma.40.2019.10.22.08.53.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Oct 2019 08:53:28 -0700 (PDT)
+Subject: Re: [PATCH v2 14/15] KVM: Terminate memslot walks via used_slots
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
 Cc:     James Hogan <jhogan@kernel.org>,
         Paul Mackerras <paulus@ozlabs.org>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
         Janosch Frank <frankja@linux.ibm.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
         Marc Zyngier <maz@kernel.org>,
         David Hildenbrand <david@redhat.com>,
         Cornelia Huck <cohuck@redhat.com>,
@@ -50,79 +70,35 @@ Cc:     James Hogan <jhogan@kernel.org>,
         linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
         kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 14/15] KVM: Terminate memslot walks via used_slots
-Message-ID: <20191022155220.GD2343@linux.intel.com>
 References: <20191022003537.13013-1-sean.j.christopherson@intel.com>
  <20191022003537.13013-15-sean.j.christopherson@intel.com>
  <642f73ee-9425-0149-f4f4-f56be9ae5713@redhat.com>
  <20191022152827.GC2343@linux.intel.com>
  <625e511f-bd35-3b92-0c6d-550c10fc5827@redhat.com>
+ <20191022155220.GD2343@linux.intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <5c61c094-ee32-4dcf-b3ae-092eba0159c5@redhat.com>
+Date:   Tue, 22 Oct 2019 17:53:27 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <625e511f-bd35-3b92-0c6d-550c10fc5827@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20191022155220.GD2343@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 05:30:58PM +0200, Paolo Bonzini wrote:
-> On 22/10/19 17:28, Sean Christopherson wrote:
-> > On Tue, Oct 22, 2019 at 04:04:18PM +0200, Paolo Bonzini wrote:
-> >> On 22/10/19 02:35, Sean Christopherson wrote:
-> >>> +static inline int kvm_shift_memslots_forward(struct kvm_memslots *slots,
-> >>> +					     struct kvm_memory_slot *new)
-> >>> +{
-> >>> +	struct kvm_memory_slot *mslots = slots->memslots;
-> >>> +	int i;
-> >>> +
-> >>> +	if (WARN_ON_ONCE(slots->id_to_index[new->id] == -1) ||
-> >>> +	    WARN_ON_ONCE(!slots->used_slots))
-> >>> +		return -1;
-> >>> +
-> >>> +	for (i = slots->id_to_index[new->id]; i < slots->used_slots - 1; i++) {
-> >>> +		if (new->base_gfn > mslots[i + 1].base_gfn)
-> >>> +			break;
-> >>> +
-> >>> +		WARN_ON_ONCE(new->base_gfn == mslots[i + 1].base_gfn);
-> >>> +
-> >>> +		/* Shift the next memslot forward one and update its index. */
-> >>> +		mslots[i] = mslots[i + 1];
-> >>> +		slots->id_to_index[mslots[i].id] = i;
-> >>> +	}
-> >>> +	return i;
-> >>> +}
-> >>> +
-> >>> +static inline int kvm_shift_memslots_back(struct kvm_memslots *slots,
-> >>> +					  struct kvm_memory_slot *new,
-> >>> +					  int start)
-> >>
-> >> This new implementation of the insertion sort loses the comments that
-> >> were there in the old one.  Please keep them as function comments.
-> > 
-> > I assume you're talking about this blurb in particular?
-> > 
-> > 	 * The ">=" is needed when creating a slot with base_gfn == 0,
-> > 	 * so that it moves before all those with base_gfn == npages == 0.
+On 22/10/19 17:52, Sean Christopherson wrote:
 > 
-> Yes, well all of the comments.  You can also keep them in the caller, as
-> you prefer.
+> Anyways, I'm not at all opposed to adding comments, just want to make sure
+> I'm not forgetting something.  If it's ok with you, I'll comment the code
+> and/or functions and reply here to refine them without having to respin
+> the whole series.
 
-The primary function comment is still there, the only other comment that I
-dropped was the second half of the above comment:
+Yes, I agree this is better.
 
-	 *
-	 * On the other hand, if new->npages is zero, the above loop has
-	 * already left i pointing to the beginning of the empty part of
-	 * mslots, and the ">=" would move the hole backwards in this
-	 * case---which is wrong.  So skip the loop when deleting a slot.
-	 */
-
-Which doesn't carry forward very well.  Is there another comment I'm
-overlooking?
-
-Anyways, I'm not at all opposed to adding comments, just want to make sure
-I'm not forgetting something.  If it's ok with you, I'll comment the code
-and/or functions and reply here to refine them without having to respin
-the whole series.
+Paolo
