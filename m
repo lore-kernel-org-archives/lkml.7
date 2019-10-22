@@ -2,181 +2,170 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B23CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 11:23:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9695ECA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 11:24:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8675321783
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 11:23:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C79C21783
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 11:24:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571743491;
+	bh=RxIvZmZ4winCrLc4Nk5sN1bnC6Gb4ZQ2WWKAzi9Pwo0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=e6M+IAp25H2CBo/AMrGRli3yBPcEycJ7ZQbTP86yJ/mIvz7UyzPBM8VURt7BM3qnK
+	 CwJL8ogYNA+E+BLuRCkrKCMfdTQXTGImGohBAhdDgmib34JgA4BUmo+fWOIhb67i0X
+	 YPIc+vxmsmazCMw4hOhiweEssJ3i9fkWc1ojvUbU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388021AbfJVLXk (ORCPT
+        id S2388430AbfJVLYu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 07:23:40 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57976 "EHLO mx1.suse.de"
+        Tue, 22 Oct 2019 07:24:50 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60080 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387405AbfJVLXk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 07:23:40 -0400
+        id S2387645AbfJVLYu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 07:24:50 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 4AB83BA67;
-        Tue, 22 Oct 2019 11:23:37 +0000 (UTC)
-Message-ID: <1956a2c8f4911b2a7e2ba3c53506c0f06efb93f8.camel@suse.de>
-Subject: Re: [PATCH v6 3/4] arm64: use both ZONE_DMA and ZONE_DMA32
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Qian Cai <cai@lca.pw>, catalin.marinas@arm.com
-Cc:     f.fainelli@gmail.com, mbrugger@suse.com, marc.zyngier@arm.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-mm@kvack.org, Rob Herring <robh+dt@kernel.org>,
-        linux-rpi-kernel@lists.infradead.org, m.szyprowski@samsung.com,
-        Robin Murphy <Robin.Murphy@arm.com>, phill@raspberrypi.org,
-        will@kernel.org, Christoph Hellwig <hch@lst.de>,
-        linux-arm-kernel@lists.infradead.org, wahrenst@gmx.net
-Date:   Tue, 22 Oct 2019 13:23:32 +0200
-In-Reply-To: <AA6D37F1-A1B3-4EC4-8620-007095168BC7@lca.pw>
-References: <6703f8dab4a21fe4e1049f8f224502e1733bf72c.camel@suse.de>
-         <A1A8EEF0-2273-4338-B4D8-D9B1328484B4@lca.pw>
-         <9208de061fe2b9ee7b74206b3cd52cc116e43ac0.camel@suse.de>
-         <AA6D37F1-A1B3-4EC4-8620-007095168BC7@lca.pw>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-ZViq16FRQSdNTssKSEjh"
-User-Agent: Evolution 3.34.1 
+        by mx1.suse.de (Postfix) with ESMTP id 55868BA3D;
+        Tue, 22 Oct 2019 11:24:47 +0000 (UTC)
+Date:   Tue, 22 Oct 2019 13:24:46 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Mike Christie <mchristi@redhat.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-block@vger.kernel.org, martin@urbackup.org,
+        Damien.LeMoal@wdc.com
+Subject: Re: [PATCH] Add prctl support for controlling PF_MEMALLOC V2
+Message-ID: <20191022112446.GA8213@dhcp22.suse.cz>
+References: <20191021214137.8172-1-mchristi@redhat.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191021214137.8172-1-mchristi@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon 21-10-19 16:41:37, Mike Christie wrote:
+> There are several storage drivers like dm-multipath, iscsi, tcmu-runner,
+> amd nbd that have userspace components that can run in the IO path. For
+> example, iscsi and nbd's userspace deamons may need to recreate a socket
+> and/or send IO on it, and dm-multipath's daemon multipathd may need to
+> send IO to figure out the state of paths and re-set them up.
+> 
+> In the kernel these drivers have access to GFP_NOIO/GFP_NOFS and the
+> memalloc_*_save/restore functions to control the allocation behavior,
+> but for userspace we would end up hitting a allocation that ended up
+> writing data back to the same device we are trying to allocate for.
 
---=-ZViq16FRQSdNTssKSEjh
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Which code paths are we talking about here? Any ioctl or is this a
+general syscall path? Can we mark the process in a more generic way?
+E.g. we have PF_LESS_THROTTLE (used by nfsd). It doesn't affect the
+reclaim recursion but it shows a pattern that doesn't really exhibit
+too many internals. Maybe we need PF_IO_FLUSHER or similar?
 
-On Mon, 2019-10-21 at 16:36 -0400, Qian Cai wrote:
-> I managed to get more information here,
->=20
-> [    0.000000] cma: dma_contiguous_reserve(limit c0000000)
-> [    0.000000] cma: dma_contiguous_reserve: reserving 64 MiB for global a=
-rea
-> [    0.000000] cma: cma_declare_contiguous(size 0x0000000004000000, base
-> 0x0000000000000000, limit 0x00000000c0000000 alignment 0x0000000000000000=
-)
-> [    0.000000] cma: Failed to reserve 512 MiB
->=20
-> Full dmesg:
->=20
-> https://cailca.github.io/files/dmesg.txt
+> This patch allows the userspace deamon to set the PF_MEMALLOC* flags
+> with prctl during their initialization so later allocations cannot
+> calling back into them.
 
-OK I got it, reproduced it too.
+TBH I am not really happy to export these to the userspace. They are
+an internal implementation detail and the userspace shouldn't really
+care. So if this is really necessary then we need a very good argumnets
+and documentation to make the usage clear.
+ 
+> Signed-off-by: Mike Christie <mchristi@redhat.com>
+> ---
+> 
+> V2:
+> - Use prctl instead of procfs.
+> - Add support for NOFS for fuse.
+> - Check permissions.
+> 
+>  include/uapi/linux/prctl.h |  8 +++++++
+>  kernel/sys.c               | 44 ++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 52 insertions(+)
+> 
+> diff --git a/include/uapi/linux/prctl.h b/include/uapi/linux/prctl.h
+> index 7da1b37b27aa..6f6b3af6633a 100644
+> --- a/include/uapi/linux/prctl.h
+> +++ b/include/uapi/linux/prctl.h
+> @@ -234,4 +234,12 @@ struct prctl_mm_map {
+>  #define PR_GET_TAGGED_ADDR_CTRL		56
+>  # define PR_TAGGED_ADDR_ENABLE		(1UL << 0)
+>  
+> +/* Control reclaim behavior when allocating memory */
+> +#define PR_SET_MEMALLOC			57
+> +#define PR_GET_MEMALLOC			58
+> +#define PR_MEMALLOC_SET_NOIO		(1UL << 0)
+> +#define PR_MEMALLOC_CLEAR_NOIO		(1UL << 1)
+> +#define PR_MEMALLOC_SET_NOFS		(1UL << 2)
+> +#define PR_MEMALLOC_CLEAR_NOFS		(1UL << 3)
+> +
+>  #endif /* _LINUX_PRCTL_H */
+> diff --git a/kernel/sys.c b/kernel/sys.c
+> index a611d1d58c7d..34fedc9fc7e4 100644
+> --- a/kernel/sys.c
+> +++ b/kernel/sys.c
+> @@ -2486,6 +2486,50 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
+>  			return -EINVAL;
+>  		error = GET_TAGGED_ADDR_CTRL();
+>  		break;
+> +	case PR_SET_MEMALLOC:
+> +		if (!capable(CAP_SYS_ADMIN))
+> +			return -EPERM;
+> +
+> +		if (arg3 || arg4 || arg5)
+> +			return -EINVAL;
+> +
+> +		switch (arg2) {
+> +		case PR_MEMALLOC_SET_NOIO:
+> +			if (current->flags & PF_MEMALLOC_NOFS)
+> +				return -EINVAL;
+> +
+> +			current->flags |= PF_MEMALLOC_NOIO;
+> +			break;
+> +		case PR_MEMALLOC_CLEAR_NOIO:
+> +			current->flags &= ~PF_MEMALLOC_NOIO;
+> +			break;
+> +		case PR_MEMALLOC_SET_NOFS:
+> +			if (current->flags & PF_MEMALLOC_NOIO)
+> +				return -EINVAL;
+> +
+> +			current->flags |= PF_MEMALLOC_NOFS;
+> +			break;
+> +		case PR_MEMALLOC_CLEAR_NOFS:
+> +			current->flags &= ~PF_MEMALLOC_NOFS;
+> +			break;
+> +		default:
+> +			return -EINVAL;
+> +		}
+> +		break;
+> +	case PR_GET_MEMALLOC:
+> +		if (!capable(CAP_SYS_ADMIN))
+> +			return -EPERM;
+> +
+> +		if (arg2 || arg3 || arg4 || arg5)
+> +			return -EINVAL;
+> +
+> +		if (current->flags & PF_MEMALLOC_NOIO)
+> +			error = PR_MEMALLOC_SET_NOIO;
+> +		else if (current->flags & PF_MEMALLOC_NOFS)
+> +			error = PR_MEMALLOC_SET_NOFS;
+> +		else
+> +			error = 0;
+> +		break;
+>  	default:
+>  		error = -EINVAL;
+>  		break;
+> -- 
+> 2.20.1
+> 
 
-Here are the relevant logs:
-
-	[    0.000000]   DMA      [mem 0x00000000802f0000-0x00000000bfffffff]
-	[    0.000000]   DMA32    [mem 0x00000000c0000000-0x00000000ffffffff]
-	[    0.000000]   Normal   [mem 0x0000000100000000-0x00000097fcffffff]
-
-As you can see ZONE_DMA spans from 0x00000000802f0000-0x00000000bfffffff wh=
-ich
-is slightly smaller than 1GB.
-
-	[    0.000000] crashkernel reserved: 0x000000009fe00000 - 0x00000000bfe000=
-00 (512 MB)
-
-Here crashkernel reserved 512M in ZONE_DMA.
-
-	[    0.000000] cma: Failed to reserve 512 MiB
-
-CMA tried to allocate 512M in ZONE_DMA which fails as there is no enough sp=
-ace.
-Makes sense.
-
-A fix could be moving crashkernel reservations after CMA and then if unable=
- to
-fit in ZONE_DMA try ZONE_DMA32 before bailing out. Maybe it's a little over=
- the
-top, yet although most devices will be fine with ZONE_DMA32, the RPi4 needs
-crashkernel to be reserved in ZONE_DMA.
-
-My knowledge of Kdump is limited, so I'd love to see what Catalin has to sa=
-y.
-Here's a tested patch of what I'm proposing:
-
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index 120c26af916b..49f3c3a34ae2 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -76,6 +76,7 @@ phys_addr_t arm64_dma32_phys_limit __ro_after_init;
- static void __init reserve_crashkernel(void)
- {
-        unsigned long long crash_base, crash_size;
-+       phys_addr_t limit =3D arm64_dma_phys_limit;
-        int ret;
-
-        ret =3D parse_crashkernel(boot_command_line, memblock_phys_mem_size=
-(),
-@@ -86,11 +87,14 @@ static void __init reserve_crashkernel(void)
-
-        crash_size =3D PAGE_ALIGN(crash_size);
-
-+again:
-        if (crash_base =3D=3D 0) {
-                /* Current arm64 boot protocol requires 2MB alignment */
--               crash_base =3D memblock_find_in_range(0, ARCH_LOW_ADDRESS_L=
-IMIT,
--                               crash_size, SZ_2M);
--               if (crash_base =3D=3D 0) {
-+               crash_base =3D memblock_find_in_range(0, limit, crash_size,
-SZ_2M);
-+               if (!crash_base && limit =3D=3D arm64_dma_phys_limit) {
-+                       limit =3D arm64_dma32_phys_limit;
-+                       goto again;
-+               } else if (!crash_base && limit =3D=3D arm64_dma32_phys_lim=
-it) {
-                        pr_warn("cannot allocate crashkernel (size:0x%llx)\=
-n",
-                                crash_size);
-                        return;
-@@ -448,13 +452,13 @@ void __init arm64_memblock_init(void)
-        else
-                arm64_dma32_phys_limit =3D PHYS_MASK + 1;
-
--       reserve_crashkernel();
--
-        reserve_elfcorehdr();
-
-        high_memory =3D __va(memblock_end_of_DRAM() - 1) + 1;
-
-        dma_contiguous_reserve(arm64_dma_phys_limit ? : arm64_dma32_phys_li=
-mit);
-+
-+       reserve_crashkernel();
- }
-
- void __init bootmem_init(void)
-
-
-Regards,
-Nicolas
-
-
---=-ZViq16FRQSdNTssKSEjh
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl2u5rQACgkQlfZmHno8
-x/4iHgf+PQFTC5EpDaf7AMHfaNb/EWdnE8V/VYNH9X+f8B3poHPSE7yvhZSQO1vE
-xebs4G5cpgU47VqnQ/MCpiozB5KKZcBpPnrUHL+pa3P/p8FQJkwLx+m/AR4ZOcX8
-7v3pg5xDHcu/bfz0ge9i9JxPFG/KUKsK7PGpBuiLCmzLEUcXillwOnq9xtbhp9fJ
-JMizkcYBz6K/PKG9/OIfgioOcMU1Cc0NtE+kexLO9XOeKGyjjeGzcc1gyu1CNEqQ
-Z/kewRJYXRtJqw+sFCoYWtAKfQ+8H4Gcpx+wBU4B9Xtn/xmduQlv4fCSVIRkfW+N
-pd1WccsfBrzNNkeJT3pnA8Xsny2lAw==
-=0GmW
------END PGP SIGNATURE-----
-
---=-ZViq16FRQSdNTssKSEjh--
-
+-- 
+Michal Hocko
+SUSE Labs
