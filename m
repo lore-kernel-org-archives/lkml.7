@@ -2,68 +2,91 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 392D7CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:22:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB3B8CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:22:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FDB421783
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:22:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571750531;
-	bh=MeoYs3mE+9el3GE28fKqwkH8WEdxZBVlOlwsUQxe8Mg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kNO1ZkTyMFMVh8w9Yl3WFYVS3Z7mdH60GfH+C0f8on2IZm/Ih9pGRAwMtgIa78RKj
-	 V1+foRim/AvLRUNc0B96N8S25zcojzyuknMtNn4DGUZOiuA41OtFXr579n/vakaxZG
-	 pYrePDWsTOUiPoVHuuLi5GvFnRc3pWSOZ/Ea2XfA=
+	by mail.kernel.org (Postfix) with ESMTP id 990F221872
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:22:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TlyziFZT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387755AbfJVNWJ (ORCPT
+        id S1731992AbfJVNWL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 09:22:09 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34400 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729146AbfJVNWJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 09:22:09 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id CF5E6B486;
-        Tue, 22 Oct 2019 13:22:06 +0000 (UTC)
-Date:   Tue, 22 Oct 2019 15:22:06 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     linux-mm@kvack.org, Johannes Weiner <hannes@cmpxchg.org>,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com,
-        Shakeel Butt <shakeelb@google.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Waiman Long <longman@redhat.com>,
-        Christoph Lameter <cl@linux.com>
-Subject: Re: [PATCH 00/16] The new slab memory controller
-Message-ID: <20191022132206.GN9379@dhcp22.suse.cz>
-References: <20191018002820.307763-1-guro@fb.com>
+        Tue, 22 Oct 2019 09:22:11 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:43953 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387598AbfJVNWK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 09:22:10 -0400
+Received: by mail-pf1-f196.google.com with SMTP id a2so10650550pfo.10;
+        Tue, 22 Oct 2019 06:22:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nYx2NKitaTBhkEd7A3BVsynzutbsRDInsCzGOV0d+wk=;
+        b=TlyziFZT5RLehXqmdvxj1TDbM1hyj+gyvT6iZeEWyw3pVyPZfwIX0eGMY5hjnizA05
+         FmtNRE/ycgUMmExPlgVmGxgk+0JhgldYV8hLWi288tPwss7VSdaWCeyJwbhK8Kp3Dqyx
+         RzldWSSXx5/RPJes/EiLHAXhmtsFWC9Rygfdqw04w1J5FJhF4owDtVR6I75XLmgHbLU7
+         YkEHMTfW3udCHlzo6nabzsjckrzV3A1XiKKmaFg5YkLEOjAwUrufxoaHinaSiSIqP5R6
+         Zp4Tab95ppzxiDOhwBi6EZ6uSYMcoBdt/k5xCA2VGjqEZcUQ+vMlO6IBgwVthpy5iCeJ
+         k4FA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nYx2NKitaTBhkEd7A3BVsynzutbsRDInsCzGOV0d+wk=;
+        b=FcwiRm47gAhQq63JIwFaLR7kCf6it/7N0uDqfrWBz9OJNh+m78Vr37X9PwxsyLE3pU
+         Rax394q8OTy4XVCcuuUFmwVb966a7y0/o1/NgMBJ04WZuosNYB/4Kqn1+2+pEaMphMbz
+         dUs5x2CZYqDynxb/o0oEKmbKPQr9pWVYVeUcYliml/8Q1DsDLNXxpkbGJVn8AKUCJIO4
+         NOgBMyYVOieXmt5XJnMmlRlMCXUmTXKoIx20w7vW6L71cbueUr7ZCBVLn3BbAz+kLsGS
+         crSlOkDRplXqRc08wbD7N/Bhk9KSec7WgZGLHNH7LbCAf7X+U13yrzGNWW5j+68gvx79
+         cBkg==
+X-Gm-Message-State: APjAAAXurO3x5AsGPH4XwIWP9zWmisXxfLudrXJEbUf4HiEFDUlFCE33
+        0YWgjZuOeF/X2EXuuhZVL8ewfj8anwsUucrbnzU=
+X-Google-Smtp-Source: APXvYqzy3DVWpwMk3Bk3QDR4FyPhDqB1w0DKLmum9LIZMNaQK1qchKfZ4Ipxkn3Vz1nnPS77aRvLK+yeeK51Y/vk+EY=
+X-Received: by 2002:a62:2643:: with SMTP id m64mr4139659pfm.232.1571750529070;
+ Tue, 22 Oct 2019 06:22:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191018002820.307763-1-guro@fb.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191017204217.106453-1-dmitry.torokhov@gmail.com>
+ <20191017204217.106453-10-dmitry.torokhov@gmail.com> <CAGngYiWq9Xw1MMh6eoFjX0rB8utusK8jNrho59BgHpwUV31e+g@mail.gmail.com>
+ <20191021212710.GU35946@dtor-ws>
+In-Reply-To: <20191021212710.GU35946@dtor-ws>
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+Date:   Tue, 22 Oct 2019 09:21:58 -0400
+Message-ID: <CAGngYiXTB8xec=zZeUKdNqLEUyGnDsDk2YKsV8+q_XN_sHOeuA@mail.gmail.com>
+Subject: Re: [PATCH 09/22] Input: apanel - switch to using polled mode of
+ input devices
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     linux-input@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Brian Masney <masneyb@onstation.org>,
+        Enrico Weigelt <info@metux.net>, Luca Weiss <luca@z3ntu.xyz>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 17-10-19 17:28:04, Roman Gushchin wrote:
-[...]
-> Using a drgn* script I've got an estimation of slab utilization on
-> a number of machines running different production workloads. In most
-> cases it was between 45% and 65%, and the best number I've seen was
-> around 85%. Turning kmem accounting off brings it to high 90s. Also
-> it brings back 30-50% of slab memory. It means that the real price
-> of the existing slab memory controller is way bigger than a pointer
-> per page.
+On Mon, Oct 21, 2019 at 5:27 PM Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
+>
+> > > +static const struct i2c_device_id apanel_id[] = {
+> > > +       { "fujitsu_apanel", 0 },
+> >
+> > If the driver_data field of i2c_device_id is unused, would it
+> > be better to match via apanel_driver.driver.of_match_table ?
+>
+> This is X86 driver, and the device is instantiated from
+> drivers/i2c/busses/i2c-i801.c based on DMI match, so using OF is not
+> really helpful here.
+>
 
-How much of the memory are we talking about here? Also is there any
-pattern for specific caches that tend to utilize much worse than others?
--- 
-Michal Hocko
-SUSE Labs
+You're right of course! This driver doesn't even select/need CONFIG_OF :)
