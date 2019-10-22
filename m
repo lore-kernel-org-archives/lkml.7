@@ -2,114 +2,107 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 584C4CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:08:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 430ACCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:09:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E95A21783
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:08:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 162E521872
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:09:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="keHs2RpN"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WXRtanUd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731428AbfJVOIz (ORCPT
+        id S1731971AbfJVOJI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 10:08:55 -0400
-Received: from mail-wr1-f46.google.com ([209.85.221.46]:44298 "EHLO
-        mail-wr1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727582AbfJVOIy (ORCPT
+        Tue, 22 Oct 2019 10:09:08 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:59504 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727582AbfJVOJI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 10:08:54 -0400
-Received: by mail-wr1-f46.google.com with SMTP id z9so18220454wrl.11
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 07:08:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=to:from:subject:openpgp:cc:message-id:date:mime-version
-         :content-language:content-transfer-encoding;
-        bh=gZd1p6fUssdVq9L3/zQnlWDjkbzH5VjZcJqBdDJdR9g=;
-        b=keHs2RpNHJdPkb6uEUy9aPA5uOwZGIgiKzr7hjcHSht944XIqlyXIkEh36Z5ImF2ut
-         FGfc24+pz7Tyb0U62ZJG24ULnyNDZmzkUa8ISCWjuvq2d4RdMaPSasnDnSDZu1HrdTtA
-         F1GnjDJ5bm5zioxzlrNME5nNCnCc+kc/dcT0SE/V743y6KuMzj7mJigk00Z+VmREl/cY
-         HKqelj9dHtjLwLswgJaAW1N6YNb/eBpUDeHzrgvjCERb6xiSpSd0XkYjNPUKuEqV0KAd
-         yMqCsAfGiu2biHYzaFn/J3R60/sPcpKj5/IYWv14xo5XCTsS+I7LlmQbPCuocLSG8A6H
-         U3Sg==
+        Tue, 22 Oct 2019 10:09:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571753347;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
+        bh=uSxGqEuW52lrWz/8potOYyUverZyGRXQnr3ONuzw9lw=;
+        b=WXRtanUd45HLLJffFxnO2L8OIwb636oOtefPsq/Ag/F7bDeFeEZk/u3ezydCAxnapi6wW3
+        EaVbpaz/hcejDPkf7dpPr864xU9Gxjl84ymDZB6Vzp8J4nSG6LDUOaj674e4KK2yBodBay
+        6OG+9DGFK1JQTcazgEn9tQnOPdDIizE=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-379-NnB6b5-iOEOm0i45E50IwQ-1; Tue, 22 Oct 2019 10:09:04 -0400
+Received: by mail-wr1-f72.google.com with SMTP id 4so5072970wrf.19
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 07:09:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:from:subject:openpgp:cc:message-id:date
-         :mime-version:content-language:content-transfer-encoding;
-        bh=gZd1p6fUssdVq9L3/zQnlWDjkbzH5VjZcJqBdDJdR9g=;
-        b=LG5mo30tKR6NvuPZ0qPe+f60WAHDAqrY3wy4WL3exAP4ki+rhoPeCB7C3Q+0l6qiq+
-         evaT3dVZG+YpwWQxQzAtl6ZSIfIGXuaGfe80e4ksYcdwLY5mu6rDQipcNpblXTinXscG
-         ni/NA7qdybKoiGrT1ghEZ/aYY2FZH7DcuBDcMJlan97B3/IAyj67f+6cUfkCliaMQawZ
-         wgzCbOCy3CrHEHK1SF6kcvl8I1Dhj19c9wPVMN6wP5YNJcev/YpA9c1zj/UT00pYDYA3
-         9GLPdo14oycoCueKCdLyCnxr6vCmgEnJhDv3P7zHP67IkblGr725+ViW2zSnwN+BlLU2
-         aDFw==
-X-Gm-Message-State: APjAAAVurXdtuXgrA9NnAhkatSegbxmEvl/Ea6tnUCZMC5M0lzcv0m7m
-        XjAE1AnBceQy31BbPxrI5rCosdvNRX/tuQ==
-X-Google-Smtp-Source: APXvYqxWclLCiBW43xRG3JowpwK/J4RNacQW5rqIrov9rEu/uBMIJkFGUQGH6Wt42JWQOxSi3n5P2A==
-X-Received: by 2002:adf:d84c:: with SMTP id k12mr3945170wrl.235.1571753330819;
-        Tue, 22 Oct 2019 07:08:50 -0700 (PDT)
-Received: from [192.168.27.135] ([37.157.136.206])
-        by smtp.googlemail.com with ESMTPSA id l8sm787765wru.22.2019.10.22.07.08.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 22 Oct 2019 07:08:49 -0700 (PDT)
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-From:   Georgi Djakov <georgi.djakov@linaro.org>
-Subject: [GIT PULL] interconnect fixes for 5.4
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=makMNuKu1ppWLAvCA/QyEUL2D+FfE16R1xUwog6fpcY=;
+        b=Bdw6DYU6/aMDymbbqNeiA7bnnxv0leq0SIpZIWO9Pv2tqWOxhqdmXSETfSsqADbpMH
+         U++alYvFVRtEvk1s7ntQK7knlElJPUYFvMfyKJnUmnSLxtnyudkJDXMtYZkH4N9xINUe
+         Sql6MsLGZjGBgVdKgLAQx4lZj1Cm2qh3KsyFkQlA16reIxcNND9HVKqHs6ChIOXxOGja
+         XM3AInnoKFCRJUE3b4vi0/PPVrTIppbZgMPs/nc31HTIznQUHEH4Wnlo1o2GZQE3FFZT
+         JT08cXDvi8QpIqE5BnJLBcPXJ0dqj9mVjxtX7jDU+zeoqqU1aXqwuEr5BVEbiGmXOw7E
+         BUUg==
+X-Gm-Message-State: APjAAAU68uIET1HENOWcuUduFs+17YRI1ZRREe5IWvOjdMqPP/dfitS1
+        uRqCAVuqMFoEBenmWJkpXoRlotmvhO2Ziit60H3WKID+XXIjMgDpzbeVt1+MJzP8735r4HwppaV
+        qm864xmQIjvzHgs3Db1aWs2C2
+X-Received: by 2002:a1c:64d4:: with SMTP id y203mr3274025wmb.27.1571753343663;
+        Tue, 22 Oct 2019 07:09:03 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzkJgcR6x3vTLahX+BVgNWIDW6o7sVahp6sEE316gNwH/lVfCALUNph0Wv1M5z5/y2k/6tSsQ==
+X-Received: by 2002:a1c:64d4:: with SMTP id y203mr3273996wmb.27.1571753343407;
+        Tue, 22 Oct 2019 07:09:03 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:c0e4:dcf4:b543:ce19? ([2001:b07:6468:f312:c0e4:dcf4:b543:ce19])
+        by smtp.gmail.com with ESMTPSA id z125sm25633535wme.37.2019.10.22.07.09.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Oct 2019 07:09:02 -0700 (PDT)
+Subject: Re: [PATCH v3 6/6] KVM: x86/vPMU: Add lazy mechanism to release
+ perf_event per vPMC
+To:     Like Xu <like.xu@linux.intel.com>, kvm@vger.kernel.org
+Cc:     peterz@infradead.org, like.xu@intel.com,
+        linux-kernel@vger.kernel.org, jmattson@google.com,
+        sean.j.christopherson@intel.com, wei.w.wang@intel.com,
+        kan.liang@intel.com
+References: <20191021160651.49508-1-like.xu@linux.intel.com>
+ <20191021160651.49508-7-like.xu@linux.intel.com>
+ <c17a9d77-2c30-b3c0-4652-57f0b9252f3b@redhat.com>
+ <7d46a902-43eb-4693-f481-1c2efd397fbd@linux.intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
 Openpgp: preference=signencrypt
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-ID: <f9c1befb-9170-5189-6383-3311773c02f2@linaro.org>
-Date:   Tue, 22 Oct 2019 17:08:49 +0300
+Message-ID: <d3434a16-07ed-7070-f316-9a2fa072ace0@redhat.com>
+Date:   Tue, 22 Oct 2019 16:09:02 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <7d46a902-43eb-4693-f481-1c2efd397fbd@linux.intel.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MC-Unique: NnB6b5-iOEOm0i45E50IwQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+On 22/10/19 14:00, Like Xu wrote:
+>=20
+> Second, the structure of pmu->pmc_in_use is in the following format:
+>=20
+> =C2=A0 Intel: [0 .. INTEL_PMC_MAX_GENERIC-1] <=3D> gp counters
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 [INTEL=
+_PMC_IDX_FIXED .. INTEL_PMC_IDX_FIXED + 2] <=3D> fixed
+> =C2=A0 AMD:=C2=A0=C2=A0 [0 .. AMD64_NUM_COUNTERS-1] <=3D> gp counters
 
-This is a tiny pull request with interconnect fixes for 5.4-rc. Could you please
-take them into char-misc for the next possible rc.
+Sorry---I confused INTEL_PMC_MAX_FIXED and INTEL_PMC_IDX_FIXED.
 
-Thanks,
-Georgi
+The patches look good, I'll give them another look since I obviously
+wasn't very much awake when reviewing them.
 
-The following changes since commit 4f5cafb5cb8471e54afdc9054d973535614f7675:
+Paolo
 
-  Linux 5.4-rc3 (2019-10-13 16:37:36 -0700)
-
-are available in the Git repository at:
-
-  https://git.linaro.org/people/georgi.djakov/linux.git tags/icc-5.4-rc5
-
-for you to fetch changes up to a8dfe193a60c6db7c54e03e3f1b96e0aa7244990:
-
-  interconnect: Add locking in icc_set_tag() (2019-10-20 12:14:41 +0300)
-
-----------------------------------------------------------------
-interconnect fixes for 5.4
-
-Two tiny fixes for the current release:
-
-- Fix memory allocation size in a driver.
-- Add missing mutex.
-
-Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-
-----------------------------------------------------------------
-Georgi Djakov (1):
-      interconnect: Add locking in icc_set_tag()
-
-Leonard Crestez (1):
-      interconnect: qcom: Fix icc_onecell_data allocation
-
- drivers/interconnect/core.c        | 4 ++++
- drivers/interconnect/qcom/qcs404.c | 3 ++-
- drivers/interconnect/qcom/sdm845.c | 3 ++-
- 3 files changed, 8 insertions(+), 2 deletions(-)
