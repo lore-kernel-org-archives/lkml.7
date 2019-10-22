@@ -2,86 +2,86 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E68ACA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:01:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EDD5CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:02:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDCEE214E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:01:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 209A22086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:02:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389038AbfJVQBP (ORCPT
+        id S1732581AbfJVQCh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 12:01:15 -0400
-Received: from muru.com ([72.249.23.125]:38950 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387746AbfJVQBP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 12:01:15 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 449F980FA;
-        Tue, 22 Oct 2019 16:01:49 +0000 (UTC)
-Date:   Tue, 22 Oct 2019 09:01:11 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Sebastian Reichel <sre@kernel.org>
-Cc:     Marcel Holtmann <marcel@holtmann.org>,
-        Adam Ford <aford173@gmail.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        linux-bluetooth@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@collabora.com
-Subject: Re: [PATCHv2 0/4] Convert all btwilink users to hci_ll and drop
- btwilink
-Message-ID: <20191022160111.GP5610@atomide.com>
-References: <20191003134147.9458-1-sre@kernel.org>
- <20191008143116.GF5610@atomide.com>
- <20191020203352.rh3n6qpagiyift7d@earth.universe>
+        Tue, 22 Oct 2019 12:02:37 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:38261 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729146AbfJVQCg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 12:02:36 -0400
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=localhost)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1iMwc9-0007LU-DU; Tue, 22 Oct 2019 18:02:30 +0200
+Message-ID: <069adad5ac96a6c95cc8103a5d79ee595cff672c.camel@pengutronix.de>
+Subject: Re: [PATCH 1/3] ARM: dts: imx6qdl-zii-rdu2: Drop GPIO_ACTIVE_LOW
+ form reg_5p0v_user_usb
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Fabio Estevam <festevam@gmail.com>,
+        Chris Healy <cphealy@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>, linux-kernel@vger.kernel.org
+Date:   Tue, 22 Oct 2019 18:01:56 +0200
+In-Reply-To: <20191022040500.18548-1-andrew.smirnov@gmail.com>
+References: <20191022040500.18548-1-andrew.smirnov@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191020203352.rh3n6qpagiyift7d@earth.universe>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Sebastian Reichel <sre@kernel.org> [191020 20:34]:
-> Hi Tony,
-> 
-> On Tue, Oct 08, 2019 at 07:31:16AM -0700, Tony Lindgren wrote:
-> > * Sebastian Reichel <sre@kernel.org> [191003 06:42]:
-> > > This moves the remaining users of btwilink to the "new" serdev based hci_ll
-> > > driver and drops the btwilink driver afterwards. The patches were only compile
-> > > tested by me, but Enric tested the IGEP platform and Adam will test the LogicPD
-> > > platform.
-> > > 
-> > > I kept the TI_ST driver for now, since I plan to send a second patchset for the
-> > > FM radio driver. Once the FM driver has been converted to also use hci_ll, we
-> > > can remove TI_ST completly.
-> > > 
-> > > My suggestion is for the patch handling is, that everything simply goes through
-> > > Tony's tree.
-> > 
-> > Sounds good to me, good to see kim gone with patch 3/4 :)
-> > 
-> > Marcel, care to ack the old driver removal patch?
-> 
-> Looks like Marcel missed the extra messages and merged the 4th
-> patch, so I guess you can just merge patches 1-3. Technically that
-> might lead to temporarily missing BT support on those two devices
-> when the BT tree is merged before ARM tree during the merge window.
-> Not a big issue I guess.
+Am Montag, den 21.10.2019, 21:04 -0700 schrieb Andrey Smirnov:
+> Drop GPIO_ACTIVE_LOW form reg_5p0v_user_usb since it is ignored by the
+> gpiolib and results in a warning.
 
-Sure no problem. Applying dts changes into omap-for-v5.5/dt
-and the pdata quirk removal to omap-for-v5.5/soc.
-
-I guess ti_wilink_st.h will need some follow-up patch to
-remove unused platform data, but best to wait on that.
+NACK. This is consistent with the regulator binding behavior and a fix
+to gpiolib has been accepted to not print a warning in this case.
 
 Regards,
+Lucas
 
-Tony
-
-
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> Cc: Fabio Estevam <festevam@gmail.com>
+> Cc: Chris Healy <cphealy@gmail.com>
+> Cc: Lucas Stach <l.stach@pengutronix.de>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: linux-arm-kernel@lists.infradead.org,
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
+> index 93be00a60c88..8d46f7b2722b 100644
+> --- a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
+> @@ -68,7 +68,7 @@
+>  		regulator-name = "5V_USER_USB";
+>  		regulator-min-microvolt = <5000000>;
+>  		regulator-max-microvolt = <5000000>;
+> -		gpio = <&gpio3 22 GPIO_ACTIVE_LOW>;
+> +		gpio = <&gpio3 22 0>;
+>  		startup-delay-us = <1000>;
+>  	};
+>  
 
