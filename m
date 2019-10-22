@@ -2,121 +2,147 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99E5ECA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:13:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97EFBCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:13:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71C80218AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:13:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6731E20684
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:13:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tessares-net.20150623.gappssmtp.com header.i=@tessares-net.20150623.gappssmtp.com header.b="Y1HBxO8V"
+	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="u77pJJYT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733203AbfJVRM7 (ORCPT
+        id S1732005AbfJVRNt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 13:12:59 -0400
-Received: from mail-wm1-f43.google.com ([209.85.128.43]:53065 "EHLO
-        mail-wm1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732552AbfJVRM6 (ORCPT
+        Tue, 22 Oct 2019 13:13:49 -0400
+Received: from relaydlg-01.paragon-software.com ([81.5.88.159]:34624 "EHLO
+        relaydlg-01.paragon-software.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726702AbfJVRNt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 13:12:58 -0400
-Received: by mail-wm1-f43.google.com with SMTP id r19so18207753wmh.2
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 10:12:57 -0700 (PDT)
+        Tue, 22 Oct 2019 13:13:49 -0400
+Received: from dlg2.mail.paragon-software.com (vdlg-exch-02.paragon-software.com [172.30.1.105])
+        by relaydlg-01.paragon-software.com (Postfix) with ESMTPS id 2C82781E18;
+        Tue, 22 Oct 2019 20:13:45 +0300 (MSK)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=CsdgsMcU3HKx96SXZpLXR9PuPe4fAaa7s6eLfWcojk4=;
-        b=Y1HBxO8V5Y0iD5fKeN0sXhVG1pO538VxcgM0gQN/f/tb3jMldemzDiw2VyXoMlUOog
-         W5H8zhpQqCB47YU39tMe0iF98cF3KJyWYleFX8CKPXMMWQ1GbCVcc+eausOwwkbmbM8X
-         WfK5WjScKPTxKjc8Nq+J7eYWmzTM9baIG96WCQxH8U9WX9dKJJMQO8nUZrPvZurbjmwI
-         75bQCcPI+/WN5Q9BfB4dVVgV2P/vBF6tzQ2gIQtpSElOn/KBKTEbjOuxBkL8EEBbOtQj
-         l/9iB50Ke55wMMpqX48bKv0jBGvyauZ3IyV41yqfxLG1tYr/eSM9AqXAIpMNwjsZ67rE
-         NqNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=CsdgsMcU3HKx96SXZpLXR9PuPe4fAaa7s6eLfWcojk4=;
-        b=LYNdRp4vIPTP5eTOA9Tj64Xu+vSl/GlmDK2bfo92Z+giSqDs0yD0r/6bJ3i+iuoHdN
-         zY9e2rjEstq9swpwzHE73yy3pXEuAmt4r8zCPPTySXov4XDnDro4T87/sCMe5L9oqzIB
-         rCn9MnFZ0X+jANJFaDcdAsmHTllwW/NGghTXaLFWJX87DRcNSVW2MvV0Jqkb5nsHBzLI
-         YJQw0NGhkT+tTRvZKm+qeuNRp1ZryfS5hVgdHi0SFHwoKjP6/V0KW0P8OT8k0AJ0vkXQ
-         xIcaXJIrNfDOnu6n9ZoqYOmnJcXYMJ/AV/gE2pS4eKhdMIERbRECaYmKvz8hwBfPqDvN
-         tKvg==
-X-Gm-Message-State: APjAAAXIWr/ddrZlLdFoCK+LDkqG4XIPv+xoEhJ7yYb+Gxuf3lrlj4dx
-        ebHW0tXGaHHGK/yhvVMlIS93ZQ==
-X-Google-Smtp-Source: APXvYqyBjSpq14ScGELyVv252XLFhNfBPEZJpet8FWhwaC7umORhfRibmOExBWNszeZwotRWlmluyA==
-X-Received: by 2002:a1c:5458:: with SMTP id p24mr3786077wmi.32.1571764376501;
-        Tue, 22 Oct 2019 10:12:56 -0700 (PDT)
-Received: from tsr-vdi-mbaerts.nix.tessares.net (static.23.216.130.94.clients.your-server.de. [94.130.216.23])
-        by smtp.gmail.com with ESMTPSA id y13sm28309810wrg.8.2019.10.22.10.12.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Oct 2019 10:12:55 -0700 (PDT)
-From:   Matthieu Baerts <matthieu.baerts@tessares.net>
-To:     Shuah Khan <shuah@kernel.org>
-Cc:     Matthieu Baerts <matthieu.baerts@tessares.net>,
-        Kees Cook <keescook@chromium.org>,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] selftests: settings: tests can be in subsubdirs
-Date:   Tue, 22 Oct 2019 19:12:20 +0200
-Message-Id: <20191022171223.27934-1-matthieu.baerts@tessares.net>
-X-Mailer: git-send-email 2.20.1
+        d=paragon-software.com; s=mail; t=1571764425;
+        bh=WBZrleQkgVo3x8bYOGbdnGwjOGIOJdJQHv+CY7ylyGA=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=u77pJJYTNTHQFCSQj+wcQf6BxygccQVvF+oxgckVAUMAiEVSRdzAHHxQYOiDZEoV3
+         kPburIpoqsaKIpWzCfzxTmQMlD3okZOSKwOVNVOe6t4b4yRNzzYK14v79hSRm2XfR+
+         sa6PAiOzUrDpVKxvlVtpQlJGI88gjnBYYzpFEZRM=
+Received: from vdlg-exch-02.paragon-software.com (172.30.1.105) by
+ vdlg-exch-02.paragon-software.com (172.30.1.105) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1591.10; Tue, 22 Oct 2019 20:13:44 +0300
+Received: from vdlg-exch-02.paragon-software.com ([fe80::586:6d72:3fe5:bd9b])
+ by vdlg-exch-02.paragon-software.com ([fe80::586:6d72:3fe5:bd9b%6]) with mapi
+ id 15.01.1591.008; Tue, 22 Oct 2019 20:13:44 +0300
+From:   Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
+To:     =?utf-8?B?UGFsaSBSb2jDoXI=?= <pali.rohar@gmail.com>
+CC:     "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH] exFAT read-only driver GPL implementation by Paragon
+ Software.
+Thread-Topic: [PATCH] exFAT read-only driver GPL implementation by Paragon
+ Software.
+Thread-Index: AQHViPwP0nd+67F90kCW3ZTBWy3iuA==
+Date:   Tue, 22 Oct 2019 17:13:44 +0000
+Message-ID: <9763488C-9431-49FF-9465-1B965F159120@paragon-software.com>
+References: <453A1153-9493-4A04-BF66-CE6A572DEBDB@paragon-software.com>
+ <20191019233449.bgimi755vt32itnf@pali>
+In-Reply-To: <20191019233449.bgimi755vt32itnf@pali>
+Accept-Language: ru-RU, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.30.8.4]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <0B23641893AC2445AD6FAC37F072C715@paragon-software.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 852c8cbf34d3 (selftests/kselftest/runner.sh: Add 45 second
-timeout per test) adds support for a new per-test-directory "settings"
-file. But this only works for tests not in a sub-subdirectories, e.g.
-
- - tools/testing/selftests/rtc (rtc) is OK,
- - tools/testing/selftests/net/mptcp (net/mptcp) is not.
-
-We have to increase the timeout for net/mptcp tests which are not
-upstreamed yet but this fix is valid for other tests if they need to add
-a "settings" file, see the full list with:
-
-  tools/testing/selftests/*/*/**/Makefile
-
-Note that this patch changes the text header message printed at the end
-of the execution but this text is modified only for the tests that are
-in sub-subdirectories, e.g.
-
-  ok 1 selftests: net/mptcp: mptcp_connect.sh
-
-Before we had:
-
-  ok 1 selftests: mptcp: mptcp_connect.sh
-
-But showing the full target name is probably better, just in case a
-subsubdir has the same name as another one in another subdirectory.
-
-Fixes: 852c8cbf34d3 (selftests/kselftest/runner.sh: Add 45 second timeout per test)
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
----
- tools/testing/selftests/kselftest/runner.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/testing/selftests/kselftest/runner.sh b/tools/testing/selftests/kselftest/runner.sh
-index 84de7bc74f2c..0d7a89901ef7 100644
---- a/tools/testing/selftests/kselftest/runner.sh
-+++ b/tools/testing/selftests/kselftest/runner.sh
-@@ -90,7 +90,7 @@ run_one()
- run_many()
- {
- 	echo "TAP version 13"
--	DIR=$(basename "$PWD")
-+	DIR="${PWD#${BASE_DIR}/}"
- 	test_num=0
- 	total=$(echo "$@" | wc -w)
- 	echo "1..$total"
--- 
-2.20.1
-
+SGVsbG8hIA0KVGhhbmtzIGZvciB5b3VyIGZpbmRpbmdzLg0KDQo+IE9uIDIwIE9jdCAyMDE5LCBh
+dCAwMjozNCwgUGFsaSBSb2jDoXIgPHBhbGkucm9oYXJAZ21haWwuY29tPiB3cm90ZToNCj4gDQo+
+IEhlbGxvISBJIGhhdmUgbm90IHJlYWQgZGVlcGx5IHdob2xlIGltcGxlbWVudGF0aW9uLCBqdXN0
+IHNwb3R0ZWQNCj4gc3VzcGljaW91cyBvcHRpb25zLiBTZWUgYmVsb3cuDQo+IA0KPiBPbiBGcmlk
+YXkgMTggT2N0b2JlciAyMDE5IDE1OjE4OjM5IEtvbnN0YW50aW4gS29tYXJvdiB3cm90ZToNCj4+
+IGRpZmYgLS1naXQgYS9mcy9leGZhdC9leGZhdF9mcy5oIGIvZnMvZXhmYXQvZXhmYXRfZnMuaA0K
+Pj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4+IGluZGV4IDAwMDAwMDAwMDAwMC4uNWY4NzEzZmUx
+YjBjDQo+PiAtLS0gL2Rldi9udWxsDQo+PiArKysgYi9mcy9leGZhdC9leGZhdF9mcy5oDQo+PiBA
+QCAtMCwwICsxLDM4OCBAQA0KPj4gKy8qIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4w
+ICovDQo+PiArLyoNCj4+ICsgKiAgbGludXgvZnMvZXhmYXQvc3VwZXIuYw0KPj4gKyAqDQo+PiAr
+ICogQ29weXJpZ2h0IChjKSAyMDEwLTIwMTkgUGFyYWdvbiBTb2Z0d2FyZSBHbWJILCBBbGwgcmln
+aHRzIHJlc2VydmVkLg0KPj4gKyAqDQo+PiArICovDQo+PiArDQo+PiArI2luY2x1ZGUgPGxpbnV4
+L2J1ZmZlcl9oZWFkLmg+DQo+PiArI2luY2x1ZGUgPGxpbnV4L2hhc2guaD4NCj4+ICsjaW5jbHVk
+ZSA8bGludXgvbmxzLmg+DQo+PiArI2luY2x1ZGUgPGxpbnV4L3JhdGVsaW1pdC5oPg0KPj4gKw0K
+Pj4gK3N0cnVjdCBleGZhdF9tb3VudF9vcHRpb25zIHsNCj4+ICsJa3VpZF90IGZzX3VpZDsNCj4+
+ICsJa2dpZF90IGZzX2dpZDsNCj4+ICsJdTE2IGZzX2ZtYXNrOw0KPj4gKwl1MTYgZnNfZG1hc2s7
+DQo+PiArCXUxNiBjb2RlcGFnZTsgLyogQ29kZXBhZ2UgZm9yIHNob3J0bmFtZSBjb252ZXJzaW9u
+cyAqLw0KPiANCj4gQWNjb3JkaW5nIHRvIGV4RkFUIHNwZWNpZmljYXRpb24sIHNlY3Rpb24gNy43
+LjMgRmlsZU5hbWUgRmllbGQgdGhlcmUgaXMNCj4gbm8gOC4zIHNob3J0bmFtZSBzdXBwb3J0IHdp
+dGggRE9TL09FTSBjb2RlcGFnZS4NCj4gDQo+IGh0dHBzOi8vZG9jcy5taWNyb3NvZnQuY29tL2Vu
+LXVzL3dpbmRvd3Mvd2luMzIvZmlsZWlvL2V4ZmF0LXNwZWNpZmljYXRpb24jNzczLWZpbGVuYW1l
+LWZpZWxkDQo+IA0KPiBQbHVzIGl0IGxvb2tzIGxpa2UgdGhhdCB0aGlzIG1lbWJlciBjb2RlcGFn
+ZSBpcyBvbmx5IHNldCBhbmQgbmV2ZXINCj4gYWNjZXNzZWQgaW4gd2hvbGUgZHJpdmVyLg0KPiAN
+Cj4gU28gaXQgY2FuIGJlIGNsZWFuIGl0IHVwIGFuZCByZW1vdmVkPw0KWWVzLCB0aGlzIG9uZSBz
+aG91bGQgYmUgcmVtb3ZlZCBhcyBub3QgdXNlZCBhY3R1YWxseSB0aHJvdWdoIHRoZSBjb2RlLiBP
+bmUgdGhpbmcgdG8gZG8gYWJvdXQgdGhlIGltcGxlbWVudGF0aW9uLCBiZXNpZGVzIFJXIHN1cHBv
+cnQgYW5kIGEgbGl0dGxlIGNsZWFuLXVwIG9mIHN1Y2ggcGxhY2VzIGxpa2UgdGhpcyBvbmUsIGlz
+IG5scy9jb2RlcGFnZSBzdXBwb3J0LiBDdXJyZW50bHksIHV0Zi04IG9ubHkgaXMgc3VwcG9ydGVk
+Lg0KDQo+IA0KPj4gKwkvKiBtaW51dGVzIGJpYXM9IFVUQyAtIGxvY2FsIHRpbWUuIEVhc3Rlcm4g
+dGltZSB6b25lOiArMzAwLCAqLw0KPj4gKwkvKlBhcmlzLEJlcmxpbjogLTYwLCBNb3Njb3c6IC0x
+ODAqLw0KPj4gKwlpbnQgYmlhczsNCj4+ICsJdTE2IGFsbG93X3V0aW1lOyAvKiBwZXJtaXNzaW9u
+IGZvciBzZXR0aW5nIHRoZSBbYW1ddGltZSAqLw0KPj4gKwl1bnNpZ25lZCBxdWlldCA6IDEsIC8q
+IHNldCA9IGZha2Ugc3VjY2Vzc2Z1bCBjaG1vZHMgYW5kIGNob3ducyAqLw0KPj4gKwkJc2hvd2V4
+ZWMgOiAxLCAvKiBzZXQgPSBvbmx5IHNldCB4IGJpdCBmb3IgY29tL2V4ZS9iYXQgKi8NCj4+ICsJ
+CXN5c19pbW11dGFibGUgOiAxLCAvKiBzZXQgPSBzeXN0ZW0gZmlsZXMgYXJlIGltbXV0YWJsZSAq
+Lw0KPj4gKwkJdXRmOCA6IDEsIC8qIFVzZSBvZiBVVEYtOCBjaGFyYWN0ZXIgc2V0IChEZWZhdWx0
+KSAqLw0KPj4gKwkJLyogY3JlYXRlIGVzY2FwZSBzZXF1ZW5jZXMgZm9yIHVuaGFuZGxlZCBVbmlj
+b2RlICovDQo+PiArCQl1bmljb2RlX3hsYXRlIDogMSwgZmx1c2ggOiAxLCAvKiB3cml0ZSB0aGlu
+Z3MgcXVpY2tseSAqLw0KPj4gKwkJdHpfc2V0IDogMSwgLyogRmlsZXN5c3RlbSB0aW1lc3RhbXBz
+JyBvZmZzZXQgc2V0ICovDQo+PiArCQlkaXNjYXJkIDogMSAvKiBJc3N1ZSBkaXNjYXJkIHJlcXVl
+c3RzIG9uIGRlbGV0aW9ucyAqLw0KPj4gKwkJOw0KPj4gK307DQo+IA0KPiAuLi4NCj4gDQo+PiBk
+aWZmIC0tZ2l0IGEvZnMvZXhmYXQvc3VwZXIuYyBiL2ZzL2V4ZmF0L3N1cGVyLmMNCj4+IG5ldyBm
+aWxlIG1vZGUgMTAwNjQ0DQo+PiBpbmRleCAwMDAwMDAwMDAwMDAuLjA3MDVkYWIzYzNmYw0KPj4g
+LS0tIC9kZXYvbnVsbA0KPj4gKysrIGIvZnMvZXhmYXQvc3VwZXIuYw0KPiAuLi4NCj4+ICtlbnVt
+IHsNCj4+ICsJT3B0X3VpZCwgT3B0X2dpZCwgT3B0X3VtYXNrLCBPcHRfZG1hc2ssIE9wdF9mbWFz
+aywgT3B0X2FsbG93X3V0aW1lLA0KPj4gKwlPcHRfY29kZXBhZ2UsIE9wdF9xdWlldCwgT3B0X3No
+b3dleGVjLCBPcHRfZGVidWcsIE9wdF9pbW11dGFibGUsDQo+PiArCU9wdF91dGY4X25vLCBPcHRf
+dXRmOF95ZXMsIE9wdF91bmlfeGxfbm8sIE9wdF91bmlfeGxfeWVzLCBPcHRfZmx1c2gsDQo+PiAr
+CU9wdF90el91dGMsIE9wdF9kaXNjYXJkLCBPcHRfbmZzLCBPcHRfYmlhcywgT3B0X2VyciwNCj4+
+ICt9Ow0KPj4gKw0KPj4gK3N0YXRpYyBjb25zdCBtYXRjaF90YWJsZV90IGZhdF90b2tlbnMgPSB7
+DQo+PiArCXsgT3B0X3VpZCwgInVpZD0ldSIgfSwNCj4+ICsJeyBPcHRfZ2lkLCAiZ2lkPSV1IiB9
+LA0KPj4gKwl7IE9wdF91bWFzaywgInVtYXNrPSVvIiB9LA0KPj4gKwl7IE9wdF9kbWFzaywgImRt
+YXNrPSVvIiB9LA0KPj4gKwl7IE9wdF9mbWFzaywgImZtYXNrPSVvIiB9LA0KPj4gKwl7IE9wdF9h
+bGxvd191dGltZSwgImFsbG93X3V0aW1lPSVvIiB9LA0KPj4gKwl7IE9wdF9jb2RlcGFnZSwgImNv
+ZGVwYWdlPSV1IiB9LA0KPj4gKwl7IE9wdF9xdWlldCwgInF1aWV0IiB9LA0KPj4gKwl7IE9wdF9z
+aG93ZXhlYywgInNob3dleGVjIiB9LA0KPj4gKwl7IE9wdF9kZWJ1ZywgImRlYnVnIiB9LA0KPj4g
+Kwl7IE9wdF9pbW11dGFibGUsICJzeXNfaW1tdXRhYmxlIiB9LA0KPj4gKwl7IE9wdF9mbHVzaCwg
+ImZsdXNoIiB9LA0KPj4gKwl7IE9wdF90el91dGMsICJ0ej1VVEMiIH0sDQo+PiArCXsgT3B0X2Jp
+YXMsICJiaWFzPSVkIiB9LA0KPj4gKwl7IE9wdF9kaXNjYXJkLCAiZGlzY2FyZCIgfSwNCj4+ICsJ
+eyBPcHRfdXRmOF9ubywgInV0Zjg9MCIgfSwgLyogMCBvciBubyBvciBmYWxzZSAqLw0KPj4gKwl7
+IE9wdF91dGY4X25vLCAidXRmOD1ubyIgfSwNCj4+ICsJeyBPcHRfdXRmOF9ubywgInV0Zjg9ZmFs
+c2UiIH0sDQo+PiArCXsgT3B0X3V0ZjhfeWVzLCAidXRmOD0xIiB9LCAvKiBlbXB0eSBvciAxIG9y
+IHllcyBvciB0cnVlICovDQo+PiArCXsgT3B0X3V0ZjhfeWVzLCAidXRmOD15ZXMiIH0sDQo+PiAr
+CXsgT3B0X3V0ZjhfeWVzLCAidXRmOD10cnVlIiB9LA0KPj4gKwl7IE9wdF91dGY4X3llcywgInV0
+ZjgiIH0sDQo+IA0KPiBUaGVyZSBhcmUgbG90IG9mIHV0ZjggbW91bnQgb3B0aW9ucy4gQXJlIHRo
+ZXkgcmVhbGx5IG5lZWRlZD8NCj4gDQo+IFdvdWxkIG5vdCBpdCBiZSBiZXR0ZXIgdG8gdXNlIGp1
+c3Qgb25lICJpb2NoYXJzZXQiIG1vdW50IG9wdGlvbiBsaWtlDQo+IG90aGVyIFVuaWNvZGUgYmFz
+ZWQgZmlsZXN5c3RlbSBoYXZlIGl0IChlLmcuIHZmYXQsIGpmcywgaXNvOTY2MCwgdWRmIG9yDQo+
+IG50ZnMpPw0KDQpJdCBzZWVtcyByZWFzb25hYmxlIGFzIHdlbGwuICJpb2NoYXJzZXQiIG1heSBi
+ZSBtb3JlIGhhbmR5IHdheSB0byBoYW5kbGUgc3VjaCBtb3VudCBvcHRpb25zLg0KDQo+IA0KPj4g
+Kwl7IE9wdF91bmlfeGxfbm8sICJ1bmlfeGxhdGU9MCIgfSwgLyogMCBvciBubyBvciBmYWxzZSAq
+Lw0KPj4gKwl7IE9wdF91bmlfeGxfbm8sICJ1bmlfeGxhdGU9bm8iIH0sDQo+PiArCXsgT3B0X3Vu
+aV94bF9ubywgInVuaV94bGF0ZT1mYWxzZSIgfSwNCj4+ICsJeyBPcHRfdW5pX3hsX3llcywgInVu
+aV94bGF0ZT0xIiB9LCAvKiBlbXB0eSBvciAxIG9yIHllcyBvciB0cnVlICovDQo+PiArCXsgT3B0
+X3VuaV94bF95ZXMsICJ1bmlfeGxhdGU9eWVzIiB9LA0KPj4gKwl7IE9wdF91bmlfeGxfeWVzLCAi
+dW5pX3hsYXRlPXRydWUiIH0sDQo+PiArCXsgT3B0X3VuaV94bF95ZXMsICJ1bmlfeGxhdGUiIH0s
+DQo+PiArCXsgT3B0X2VyciwgTlVMTCB9DQo+PiArfTsNCj4gDQo+IC0tIA0KPiBQYWxpIFJvaMOh
+cg0KPiBwYWxpLnJvaGFyQGdtYWlsLmNvbQ0KDQo=
