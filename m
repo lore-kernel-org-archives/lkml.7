@@ -2,94 +2,109 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75340CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 04:42:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95DC1CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 04:49:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B51520700
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 04:42:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65E10214B2
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 04:49:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p/6oRtIk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387534AbfJVEml (ORCPT
+        id S1731055AbfJVEt4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 00:42:41 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:44002 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387462AbfJVEmk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 00:42:40 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 984DD1A030A;
-        Tue, 22 Oct 2019 06:42:38 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 1A2D81A0009;
-        Tue, 22 Oct 2019 06:42:34 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 46DBA40245;
-        Tue, 22 Oct 2019 12:42:28 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     rafael.j.wysocki@intel.com, viresh.kumar@linaro.org,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH] cpufreq: imx-cpufreq-dt: Correct i.MX8MN's default speed grade value
-Date:   Tue, 22 Oct 2019 12:39:39 +0800
-Message-Id: <1571719179-23316-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Tue, 22 Oct 2019 00:49:56 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:41927 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726024AbfJVEt4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 00:49:56 -0400
+Received: by mail-pg1-f194.google.com with SMTP id t3so9161937pga.8;
+        Mon, 21 Oct 2019 21:49:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dwPVVSsRTIc/vGUwpb/molMO8vR63ypSqF4q/acUgcE=;
+        b=p/6oRtIkFlylz8XixsHNiYW01JXqb8njxHlTCNkha+r39X0SYaxuqrLiNi2e4xfO8P
+         XqHqgkFt2pXAdVGbspK25AmOaI2wrj30SIRL9UqoN1T0iV7muaCYXz6ybbQBA4DBJ0NQ
+         YqeFA0hDEAdSryLxNPPhlvdC+SmeCkLUh3xvJ0pjGvCEalJ+fe5viGI18rK2v5P4tkJ2
+         M8HfmUqElpmnFVhYgOua21De6F+n2mC4jgTvxGOKsYM2UOnJxv56QeU9DWU+dbrwhWN4
+         NpxcOMQxbkzNniJirlI2QLAm3HrtuzoK/Ywd0cEIfy5yKSfyFJbqH1YT2Fx+sMiEELTE
+         HISg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dwPVVSsRTIc/vGUwpb/molMO8vR63ypSqF4q/acUgcE=;
+        b=AnjPcXqmDm3OBKrKZXPMwrLORb3kKm7kihHmzWrHmsZgxy5jEUalaVY65D1AkWmQZy
+         NWD7BtfW63Tg6CUy95fLsuKJI9D8+h3zoC566lxiOjb7N04TSM+4WHEpiLjpra0QOB9y
+         IM8ZZ9pJnoajoZQWYRxr/Q1XnCNm31u5iQ6qpcPAnfw9sjEU1x6O8g/Hkm/w3Q5abEGL
+         c8If/kgWMDSxbYAmLmjHYk4Vi9vFji3rBgyz7myx8EqqaYcofGyFD5sFQks8iuOZTsXY
+         Fwh4B6JkeVexyGDQ7tXzUZSDblon5zz8h0SOmDIzv0BpSpucrDdT6aUZWflD1PD/0BzR
+         ZuWw==
+X-Gm-Message-State: APjAAAVJeQO+BHbIS35uchAhofPlyPPnBrNDTbEfM+oneLrAiFkoKYJi
+        ZRM145oQ6PqykvprMREp0AiFVUpv
+X-Google-Smtp-Source: APXvYqxoaVzMPiuNWEwDVDMKBsqiOeRSQai7ps9e7JknsUcYsVtioY1GmYEn+0AFVkJCw/jrWD0Kjg==
+X-Received: by 2002:a17:90a:cf84:: with SMTP id i4mr2161337pju.66.1571719793363;
+        Mon, 21 Oct 2019 21:49:53 -0700 (PDT)
+Received: from localhost.lan (c-67-185-54-80.hsd1.wa.comcast.net. [67.185.54.80])
+        by smtp.gmail.com with ESMTPSA id l24sm17810727pff.151.2019.10.21.21.49.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Oct 2019 21:49:52 -0700 (PDT)
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+To:     linux-serial@vger.kernel.org
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Stefan Agner <stefan@agner.ch>,
+        Chris Healy <cphealy@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: serial: lpuart: Drop unsupported RS485 bindings
+Date:   Mon, 21 Oct 2019 21:49:40 -0700
+Message-Id: <20191022044940.15119-1-andrew.smirnov@gmail.com>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-i.MX8MN has different speed grade definition compared to
-i.MX8MQ/i.MX8MM, when fuses are NOT written, the default
-speed_grade should be set to minimum available OPP defined
-in DT which is 1.2GHz, the corresponding speed_grade value
-should be 0xb.
+LPUART driver does not support 'rs485-rts-delay' or
+'rs485-rx-during-tx' properties. Remove them.
 
-Fixes: 5b8010ba70d5 ("cpufreq: imx-cpufreq-dt: Add i.MX8MN support")
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Stefan Agner <stefan@agner.ch>
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jiri Slaby <jslaby@suse.com>
+Cc: linux-imx@nxp.com
+Cc: linux-serial@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 ---
- drivers/cpufreq/imx-cpufreq-dt.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ Documentation/devicetree/bindings/serial/fsl-lpuart.txt | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/cpufreq/imx-cpufreq-dt.c b/drivers/cpufreq/imx-cpufreq-dt.c
-index 35db14c..26531f0 100644
---- a/drivers/cpufreq/imx-cpufreq-dt.c
-+++ b/drivers/cpufreq/imx-cpufreq-dt.c
-@@ -44,19 +44,19 @@ static int imx_cpufreq_dt_probe(struct platform_device *pdev)
- 	mkt_segment = (cell_value & OCOTP_CFG3_MKT_SEGMENT_MASK) >> OCOTP_CFG3_MKT_SEGMENT_SHIFT;
+diff --git a/Documentation/devicetree/bindings/serial/fsl-lpuart.txt b/Documentation/devicetree/bindings/serial/fsl-lpuart.txt
+index 3495eee81d53..f5f5ab0fd14e 100644
+--- a/Documentation/devicetree/bindings/serial/fsl-lpuart.txt
++++ b/Documentation/devicetree/bindings/serial/fsl-lpuart.txt
+@@ -21,8 +21,7 @@ Required properties:
+ Optional properties:
+ - dmas: A list of two dma specifiers, one for each entry in dma-names.
+ - dma-names: should contain "tx" and "rx".
+-- rs485-rts-delay, rs485-rts-active-low, rs485-rx-during-tx,
+-  linux,rs485-enabled-at-boot-time: see rs485.txt
++- rs485-rts-active-low, linux,rs485-enabled-at-boot-time: see rs485.txt
  
- 	/*
--	 * Early samples without fuses written report "0 0" which means
--	 * consumer segment and minimum speed grading.
--	 *
--	 * According to datasheet minimum speed grading is not supported for
--	 * consumer parts so clamp to 1 to avoid warning for "no OPPs"
-+	 * Early samples without fuses written report "0 0" which may NOT
-+	 * match any OPP defined in DT. So clamp to minimum OPP defined in
-+	 * DT to avoid warning for "no OPPs".
- 	 *
- 	 * Applies to i.MX8M series SoCs.
- 	 */
--	if (mkt_segment == 0 && speed_grade == 0 && (
--			of_machine_is_compatible("fsl,imx8mm") ||
--			of_machine_is_compatible("fsl,imx8mn") ||
--			of_machine_is_compatible("fsl,imx8mq")))
--		speed_grade = 1;
-+	if (mkt_segment == 0 && speed_grade == 0) {
-+		if (of_machine_is_compatible("fsl,imx8mm") ||
-+			of_machine_is_compatible("fsl,imx8mq"))
-+			speed_grade = 1;
-+		if (of_machine_is_compatible("fsl,imx8mn"))
-+			speed_grade = 0xb;
-+	}
+ Note: Optional properties for DMA support. Write them both or both not.
  
- 	supported_hw[0] = BIT(speed_grade);
- 	supported_hw[1] = BIT(mkt_segment);
 -- 
-2.7.4
+2.21.0
 
