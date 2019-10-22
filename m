@@ -2,172 +2,134 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2516DCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:30:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74598CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:31:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC39F218AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:30:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="twr9OH5r"
+	by mail.kernel.org (Postfix) with ESMTP id 52CE320684
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:31:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732374AbfJVPan (ORCPT
+        id S1732391AbfJVPbE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 11:30:43 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:35713 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732338AbfJVPad (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 11:30:33 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 205so10875478pfw.2;
-        Tue, 22 Oct 2019 08:30:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=a7lQln2Sn3ga5wzLGGjdEAkfx3q9Gt4gdmnzplHbZZI=;
-        b=twr9OH5rmelYAVJxvbLwuEbfW7DorGSn1XUE/WWgYTM5Pz5/NUhgfjcEwsWe/gi5ap
-         7vzQLwHjKRMT2EnqrEKzYZSRFJdYUeq0wG9rYBF94015ItMyZE5mQDeyHblitcnae1a4
-         8K6ABiYyV/D4PPVTm8WoQNiCXTHaMNv6Tt3swJN/m42fLW8GbLElQUiO2zQXPeAfIHy2
-         e7Q2jQycF0btkTzK4W6npQT2gnzyGxUPjVwhr0RgB7N+38e6eugyK0I3vns7oJkOb8G0
-         SY0VrmGVXmH7kpwKus7qdNWqY0U62XZUpWIgfMmNruNQFTv+g6eeHSwanMxCBNzPPUa1
-         rK5w==
+        Tue, 22 Oct 2019 11:31:04 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:21136 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732228AbfJVPbC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 11:31:02 -0400
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 96D3637E80
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 15:31:01 +0000 (UTC)
+Received: by mail-wr1-f70.google.com with SMTP id j14so9029003wrm.6
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 08:31:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=a7lQln2Sn3ga5wzLGGjdEAkfx3q9Gt4gdmnzplHbZZI=;
-        b=V4oCbHcBp1ylHFvWWvxkL6x7FQwnLQX3mQEXzmrE3sV/kP6w0bzvdntnzeLiuL8WpR
-         B9oy+WSy5LkEuQxqsQenn6KkanKgSDK4QO/iKKUVYxpMmHjEkHQ09wNWaOgINRyy26F/
-         K2DfIIC2vjE2HqnYsDsj6gXDz9eGB5FFa8HiK8s1D7/r35K/z6/IS+6flyebiP3NpTSK
-         5hSzokDAORx5CbnPT421JLOrPW8ZFjDrorAv0yHTcC4ZcVNADZpslQI08VNaDW51v0+x
-         k/HOtf7nWnxNXLhXdpQB767NTfPt3BzUEbtGglVus0btPIArny4lwjUSgDWGwJ55RfOq
-         YiUQ==
-X-Gm-Message-State: APjAAAVc5sW9SyhHvIJK5tsX4Q090WxhVG71OFPwD/tVb38p3hyIu7ot
-        VvJqSj8YDXD83cq6cw/KptXhAGbC
-X-Google-Smtp-Source: APXvYqwNIRFnMtl/3wnDddhjlXRdWZN+1lbNhvkSKUI0M2LaKl6WJKoCqZOiWVk1vLi1BJS85PoAyQ==
-X-Received: by 2002:a65:504b:: with SMTP id k11mr4451139pgo.13.1571758232064;
-        Tue, 22 Oct 2019 08:30:32 -0700 (PDT)
-Received: from localhost.lan (c-67-185-54-80.hsd1.wa.comcast.net. [67.185.54.80])
-        by smtp.gmail.com with ESMTPSA id z63sm6066128pgb.75.2019.10.22.08.30.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Oct 2019 08:30:30 -0700 (PDT)
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-To:     linux-crypto@vger.kernel.org
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 5/6] crypto: caam - use devres to populate platform devices
-Date:   Tue, 22 Oct 2019 08:30:12 -0700
-Message-Id: <20191022153013.3692-6-andrew.smirnov@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191022153013.3692-1-andrew.smirnov@gmail.com>
-References: <20191022153013.3692-1-andrew.smirnov@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=bYuISgCPeW5+MVYfOIxCD24v5h78aw8/fY5c9Ec2zaE=;
+        b=bMULqvMmPv90dO8yrrcA9pNfuA6ZpSKPgEbyNseYcgbvIV0oipqsDzsdFXjDR7hEv4
+         lDYe/LBlDyaOm45XeTmYvujEnlePowIfoKZk7fwR+brxbruV85VH08L4Zs5TJorrvEhj
+         zJrMoDXdiDOoP5SP6kHPFLEZy6FE27yeQzJ/r0OiHyYW3Go90wr3wVWa1adXNKFscP4v
+         SwpUpoUoYl215Rtfp8u5O+AoXVm7F3SHSTnSGeB+obj2dMmeJGA8LvmJP4/TwR8woYBv
+         kjIu50I284hfnbAu6nLavehC5eInR+xkanDWNXyBhMy9+bE7jpAEB/LiO6L8xLjRJuMl
+         h2rA==
+X-Gm-Message-State: APjAAAUxuXQQZIsnJX60zbC+U2+GhKjcL/jKg1h9X6SQvq9rBoToVf3+
+        e8pdDkzywUiwgZv9L0x/c4UbYnbAKF07dPYiipsGatASJ2R/+rS/dg9np0sNqRHfYLwaa7S58Vk
+        bOPAYJuW0rbfr3ZJp5AsglFEg
+X-Received: by 2002:a7b:c4c6:: with SMTP id g6mr3605232wmk.126.1571758260030;
+        Tue, 22 Oct 2019 08:31:00 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzRNIaPW2VC3E0u/tx9jObrvh39A/kSU1/g2oCY4LzK3jFChqIF1uPjGeoTV55xRLqzG4HUGw==
+X-Received: by 2002:a7b:c4c6:: with SMTP id g6mr3605195wmk.126.1571758259666;
+        Tue, 22 Oct 2019 08:30:59 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:c0e4:dcf4:b543:ce19? ([2001:b07:6468:f312:c0e4:dcf4:b543:ce19])
+        by smtp.gmail.com with ESMTPSA id i18sm17512175wrx.14.2019.10.22.08.30.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Oct 2019 08:30:59 -0700 (PDT)
+Subject: Re: [PATCH v2 14/15] KVM: Terminate memslot walks via used_slots
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     James Hogan <jhogan@kernel.org>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Marc Zyngier <maz@kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
+        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
+References: <20191022003537.13013-1-sean.j.christopherson@intel.com>
+ <20191022003537.13013-15-sean.j.christopherson@intel.com>
+ <642f73ee-9425-0149-f4f4-f56be9ae5713@redhat.com>
+ <20191022152827.GC2343@linux.intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <625e511f-bd35-3b92-0c6d-550c10fc5827@redhat.com>
+Date:   Tue, 22 Oct 2019 17:30:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191022152827.GC2343@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use devres to de-initialize the RNG and drop explicit de-initialization
-code in caam_remove().
+On 22/10/19 17:28, Sean Christopherson wrote:
+> On Tue, Oct 22, 2019 at 04:04:18PM +0200, Paolo Bonzini wrote:
+>> On 22/10/19 02:35, Sean Christopherson wrote:
+>>> +static inline int kvm_shift_memslots_forward(struct kvm_memslots *slots,
+>>> +					     struct kvm_memory_slot *new)
+>>> +{
+>>> +	struct kvm_memory_slot *mslots = slots->memslots;
+>>> +	int i;
+>>> +
+>>> +	if (WARN_ON_ONCE(slots->id_to_index[new->id] == -1) ||
+>>> +	    WARN_ON_ONCE(!slots->used_slots))
+>>> +		return -1;
+>>> +
+>>> +	for (i = slots->id_to_index[new->id]; i < slots->used_slots - 1; i++) {
+>>> +		if (new->base_gfn > mslots[i + 1].base_gfn)
+>>> +			break;
+>>> +
+>>> +		WARN_ON_ONCE(new->base_gfn == mslots[i + 1].base_gfn);
+>>> +
+>>> +		/* Shift the next memslot forward one and update its index. */
+>>> +		mslots[i] = mslots[i + 1];
+>>> +		slots->id_to_index[mslots[i].id] = i;
+>>> +	}
+>>> +	return i;
+>>> +}
+>>> +
+>>> +static inline int kvm_shift_memslots_back(struct kvm_memslots *slots,
+>>> +					  struct kvm_memory_slot *new,
+>>> +					  int start)
+>>
+>> This new implementation of the insertion sort loses the comments that
+>> were there in the old one.  Please keep them as function comments.
+> 
+> I assume you're talking about this blurb in particular?
+> 
+> 	 * The ">=" is needed when creating a slot with base_gfn == 0,
+> 	 * so that it moves before all those with base_gfn == npages == 0.
 
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Reviewed-by: Horia Geantă <horia.geanta@nxp.com>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: Horia Geantă <horia.geanta@nxp.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Iuliana Prodan <iuliana.prodan@nxp.com>
-Cc: linux-crypto@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- drivers/crypto/caam/ctrl.c | 26 +++-----------------------
- 1 file changed, 3 insertions(+), 23 deletions(-)
+Yes, well all of the comments.  You can also keep them in the caller, as
+you prefer.
 
-diff --git a/drivers/crypto/caam/ctrl.c b/drivers/crypto/caam/ctrl.c
-index 7cdb48c7e28e..0540df59ed8a 100644
---- a/drivers/crypto/caam/ctrl.c
-+++ b/drivers/crypto/caam/ctrl.c
-@@ -321,20 +321,6 @@ static int instantiate_rng(struct device *ctrldev, int state_handle_mask,
- 	return ret;
- }
- 
--static int caam_remove(struct platform_device *pdev)
--{
--	struct device *ctrldev;
--	struct caam_drv_private *ctrlpriv;
--
--	ctrldev = &pdev->dev;
--	ctrlpriv = dev_get_drvdata(ctrldev);
--
--	/* Remove platform devices under the crypto node */
--	of_platform_depopulate(ctrldev);
--
--	return 0;
--}
--
- /*
-  * kick_trng - sets the various parameters for enabling the initialization
-  *	       of the RNG4 block in CAAM
-@@ -761,7 +747,7 @@ static int caam_probe(struct platform_device *pdev)
- #endif
- 	}
- 
--	ret = of_platform_populate(nprop, caam_match, NULL, dev);
-+	ret = devm_of_platform_populate(dev);
- 	if (ret) {
- 		dev_err(dev, "JR platform devices creation error\n");
- 		return ret;
-@@ -783,8 +769,7 @@ static int caam_probe(struct platform_device *pdev)
- 	/* If no QI and no rings specified, quit and go home */
- 	if ((!ctrlpriv->qi_present) && (!ctrlpriv->total_jobrs)) {
- 		dev_err(dev, "no queues configured, terminating\n");
--		ret = -ENOMEM;
--		goto caam_remove;
-+		return -ENOMEM;
- 	}
- 
- 	if (ctrlpriv->era < 10)
-@@ -847,7 +832,7 @@ static int caam_probe(struct platform_device *pdev)
- 		} while ((ret == -EAGAIN) && (ent_delay < RTSDCTL_ENT_DLY_MAX));
- 		if (ret) {
- 			dev_err(dev, "failed to instantiate RNG");
--			goto caam_remove;
-+			return ret;
- 		}
- 		/*
- 		 * Set handles init'ed by this module as the complement of the
-@@ -921,10 +906,6 @@ static int caam_probe(struct platform_device *pdev)
- 			    &ctrlpriv->ctl_tdsk_wrap);
- #endif
- 	return 0;
--
--caam_remove:
--	caam_remove(pdev);
--	return ret;
- }
- 
- static struct platform_driver caam_driver = {
-@@ -933,7 +914,6 @@ static struct platform_driver caam_driver = {
- 		.of_match_table = caam_match,
- 	},
- 	.probe       = caam_probe,
--	.remove      = caam_remove,
- };
- 
- module_platform_driver(caam_driver);
--- 
-2.21.0
+Paolo
 
