@@ -2,120 +2,170 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DDE6CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 18:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B02FCA9EB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 18:42:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A93621920
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 18:41:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 316C6218AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 18:42:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="lC/Nm3hC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732710AbfJVSll (ORCPT
+        id S1732771AbfJVSmA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 14:41:41 -0400
-Received: from mga14.intel.com ([192.55.52.115]:11748 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727851AbfJVSlk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 14:41:40 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Oct 2019 11:41:39 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,217,1569308400"; 
-   d="scan'208";a="222915653"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by fmsmga004.fm.intel.com with ESMTP; 22 Oct 2019 11:41:39 -0700
-Date:   Tue, 22 Oct 2019 11:41:39 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Christoffer Dall <christoffer.dall@arm.com>
-Cc:     Marc Zyngier <maz@kernel.org>, James Hogan <jhogan@kernel.org>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        kvm-ppc@vger.kernel.org, Wanpeng Li <wanpengli@tencent.com>,
-        kvm@vger.kernel.org, David Hildenbrand <david@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Cornelia Huck <cohuck@redhat.com>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        kvmarm@lists.cs.columbia.edu, Jim Mattson <jmattson@google.com>
-Subject: Re: [PATCH 42/45] KVM: arm64: Free sve_state via arm specific hook
-Message-ID: <20191022184139.GK2343@linux.intel.com>
-References: <20191022015925.31916-1-sean.j.christopherson@intel.com>
- <20191022015925.31916-43-sean.j.christopherson@intel.com>
- <20191022114342.GB2652@e113682-lin.lund.arm.com>
+        Tue, 22 Oct 2019 14:42:00 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:15076 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732728AbfJVSl7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 14:41:59 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5daf4d7b0000>; Tue, 22 Oct 2019 11:42:03 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 22 Oct 2019 11:41:58 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 22 Oct 2019 11:41:58 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 22 Oct
+ 2019 18:41:57 +0000
+Received: from [10.110.48.28] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 22 Oct
+ 2019 18:41:57 +0000
+Subject: Re: [PATCH 1/1] mm/gup_benchmark: fix MAP_HUGETLB case
+To:     Jerome Glisse <jglisse@redhat.com>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Keith Busch <keith.busch@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+        <linux-kselftest@vger.kernel.org>
+References: <20191021212435.398153-1-jhubbard@nvidia.com>
+ <20191021212435.398153-2-jhubbard@nvidia.com>
+ <20191022171452.GA5169@redhat.com>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <1095fd94-1c0b-de61-7ceb-c963e29575b6@nvidia.com>
+Date:   Tue, 22 Oct 2019 11:41:57 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191022114342.GB2652@e113682-lin.lund.arm.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20191022171452.GA5169@redhat.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1571769723; bh=JT3F3dTTKjKzOGM9MyYbERGszfW34mcd8Au3SboJObQ=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=lC/Nm3hCblA57K9jdrp7xEdECWAxkYwE4XhvI2g6acMV/up4ev7q990mcF1lsaBwU
+         a/TEspy2QuvvK46Z/mk6KPGqX3iLVCJEqmS6EHRYABuh7xrDk3SVLTW81KTKwIr+5m
+         IlbaJVPUVXF9v5RRjC5FLo3z9N5/9PxNqeIwDnfx4VYvrp2yBmI2CqYJV08yIHXMcv
+         CKc6fPj8c25YM9KbpMGmWOulWkJQ1AEsS1RDZEKOVEFNrhhemvH6m2srdZYPEZSVG9
+         QEmcVj8k/U5mQX5wJZQMkLOh59wMVmryjHdSlSCN4on+pCxTNEUyrV/9PmQKROHIMk
+         8QHNdDn0gRkZw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 01:43:42PM +0200, Christoffer Dall wrote:
-> On Mon, Oct 21, 2019 at 06:59:22PM -0700, Sean Christopherson wrote:
-> > Add an arm specific hook to free the arm64-only sve_state.  Doing so
-> > eliminates the last functional code from kvm_arch_vcpu_uninit() across
-> > all architectures and paves the way for removing kvm_arch_vcpu_init()
-> > and kvm_arch_vcpu_uninit() entirely.
-> > 
-> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> > ---
-> >  arch/arm/include/asm/kvm_host.h   | 1 +
-> >  arch/arm64/include/asm/kvm_host.h | 1 +
-> >  arch/arm64/kvm/reset.c            | 5 +++++
-> >  virt/kvm/arm/arm.c                | 2 ++
-> >  4 files changed, 9 insertions(+)
-> > 
-> > diff --git a/arch/arm/include/asm/kvm_host.h b/arch/arm/include/asm/kvm_host.h
-> > index 8a37c8e89777..cc414de5acd3 100644
-> > --- a/arch/arm/include/asm/kvm_host.h
-> > +++ b/arch/arm/include/asm/kvm_host.h
-> > @@ -333,6 +333,7 @@ static inline void kvm_arch_sync_events(struct kvm *kvm) {}
-> >  static inline void kvm_arch_vcpu_uninit(struct kvm_vcpu *vcpu) {}
-> >  static inline void kvm_arch_sched_in(struct kvm_vcpu *vcpu, int cpu) {}
-> >  static inline void kvm_arch_vcpu_block_finish(struct kvm_vcpu *vcpu) {}
-> > +static inline int kvm_arm_vcpu_destroy(struct kvm_vcpu *vcpu) {}
-> >  
-> >  static inline void kvm_arm_init_debug(void) {}
-> >  static inline void kvm_arm_setup_debug(struct kvm_vcpu *vcpu) {}
-> > diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-> > index f656169db8c3..92d7c384a4ed 100644
-> > --- a/arch/arm64/include/asm/kvm_host.h
-> > +++ b/arch/arm64/include/asm/kvm_host.h
-> > @@ -52,6 +52,7 @@ int kvm_arm_init_sve(void);
-> >  
-> >  int __attribute_const__ kvm_target_cpu(void);
-> >  int kvm_reset_vcpu(struct kvm_vcpu *vcpu);
-> > +int kvm_arm_vcpu_destroy(struct kvm_vcpu *vcpu);
-> >  void kvm_arch_vcpu_uninit(struct kvm_vcpu *vcpu);
-> >  int kvm_arch_vm_ioctl_check_extension(struct kvm *kvm, long ext);
-> >  void __extended_idmap_trampoline(phys_addr_t boot_pgd, phys_addr_t idmap_start);
-> > diff --git a/arch/arm64/kvm/reset.c b/arch/arm64/kvm/reset.c
-> > index f4a8ae918827..98abc4278f42 100644
-> > --- a/arch/arm64/kvm/reset.c
-> > +++ b/arch/arm64/kvm/reset.c
-> > @@ -205,6 +205,11 @@ bool kvm_arm_vcpu_is_finalized(struct kvm_vcpu *vcpu)
-> >  }
-> >  
-> >  void kvm_arch_vcpu_uninit(struct kvm_vcpu *vcpu)
-> > +{
-> > +
-> > +}
-> > +
-> > +int kvm_arm_vcpu_destroy(struct kvm_vcpu *vcpu)
-> >  {
-> >  	kfree(vcpu->arch.sve_state);
-> >  }
+On 10/22/19 10:14 AM, Jerome Glisse wrote:
+> On Mon, Oct 21, 2019 at 02:24:35PM -0700, John Hubbard wrote:
+>> The MAP_HUGETLB ("-H" option) of gup_benchmark fails:
+>>
+>> $ sudo ./gup_benchmark -H
+>> mmap: Invalid argument
+>>
+>> This is because gup_benchmark.c is passing in a file descriptor to
+>> mmap(), but the fd came from opening up the /dev/zero file. This
+>> confuses the mmap syscall implementation, which thinks that, if the
+>> caller did not specify MAP_ANONYMOUS, then the file must be a huge
+>> page file. So it attempts to verify that the file really is a huge
+>> page file, as you can see here:
+>>
+>> ksys_mmap_pgoff()
+>> {
+>>     if (!(flags & MAP_ANONYMOUS)) {
+>>         retval = -EINVAL;
+>>         if (unlikely(flags & MAP_HUGETLB && !is_file_hugepages(file)))
+>>             goto out_fput; /* THIS IS WHERE WE END UP */
+>>
+>>     else if (flags & MAP_HUGETLB) {
+>>         ...proceed normally, /dev/zero is ok here...
+>>
+>> ...and of course is_file_hugepages() returns "false" for the /dev/zero
+>> file.
+>>
+>> The problem is that the user space program, gup_benchmark.c, really just
+>> wants anonymous memory here. The simplest way to get that is to pass
+>> MAP_ANONYMOUS whenever MAP_HUGETLB is specified, so that's what this
+>> patch does.
 > 
-> nit: warning: control reaches end of non-void function
+> This looks wrong, MAP_HUGETLB should only be use to create vma
+> for hugetlbfs. If you want anonymous private vma do not set the
+> MAP_HUGETLB. If you want huge page inside your anonymous vma
+> there is nothing to do at the mmap time, this is the job of the
+> transparent huge page code (THP).
+> 
 
-Doh, fixed.  Thanks for the quick review!
+Not the point. Please look more closely at ksys_mmap_pgoff(). You'll 
+see that, since 2009 (and probably earlier; 2009 is just when Hugh Dickens 
+moved it over from util.c), this routine has had full support for using
+hugetlbfs automatically, via mmap.
+
+It does that via hugetlb_file_setup():
+
+unsigned long ksys_mmap_pgoff(unsigned long addr, unsigned long len,
+			      unsigned long prot, unsigned long flags,
+			      unsigned long fd, unsigned long pgoff)
+{
+...
+	if (!(flags & MAP_ANONYMOUS)) {
+...
+	} else if (flags & MAP_HUGETLB) {
+		struct user_struct *user = NULL;
+		struct hstate *hs;
+
+		hs = hstate_sizelog((flags >> MAP_HUGE_SHIFT) & MAP_HUGE_MASK);
+		if (!hs)
+			return -EINVAL;
+
+		len = ALIGN(len, huge_page_size(hs));
+		/*
+		 * VM_NORESERVE is used because the reservations will be
+		 * taken when vm_ops->mmap() is called
+		 * A dummy user value is used because we are not locking
+		 * memory so no accounting is necessary
+		 */
+		file = hugetlb_file_setup(HUGETLB_ANON_FILE, len,
+				VM_NORESERVE,
+				&user, HUGETLB_ANONHUGE_INODE,
+				(flags >> MAP_HUGE_SHIFT) & MAP_HUGE_MASK);
+		if (IS_ERR(file))
+			return PTR_ERR(file);
+	}
+...
+
+
+Also, there are 14 (!) other pre-existing examples of passing
+MAP_HUGETLB | MAP_ANONYMOUS to mmap, so I'm not exactly the first one
+to reach this understanding.
+
+
+> NAK as misleading
+
+Ouch. But I think I'm actually leading correctly, rather than misleading.
+Can you prove me wrong? :)
+
+
+thanks,
+
+John Hubbard
+NVIDIA
