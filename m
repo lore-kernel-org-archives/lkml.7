@@ -8,121 +8,135 @@ X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51172CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 18:42:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F20EC47E49
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 18:45:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2576E2184C
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 18:42:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0521D2184C
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 18:45:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ouZ+YfdY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SbunP9hN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387932AbfJVSm2 (ORCPT
+        id S1732788AbfJVSpT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 14:42:28 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:39440 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731740AbfJVSm2 (ORCPT
+        Tue, 22 Oct 2019 14:45:19 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:43640 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732580AbfJVSpT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 14:42:28 -0400
-Received: by mail-qk1-f194.google.com with SMTP id 4so17248732qki.6;
-        Tue, 22 Oct 2019 11:42:26 -0700 (PDT)
+        Tue, 22 Oct 2019 14:45:19 -0400
+Received: by mail-qk1-f193.google.com with SMTP id a194so13180148qkg.10;
+        Tue, 22 Oct 2019 11:45:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=z5E1UgKK0swToOdaVE1vrj3rS3+MfFMI5KCYTwUDvjE=;
-        b=ouZ+YfdYnsqEG5Mrfhnl/oCGv5/i4ar9VvOIlc4u5soJ6wiKu3idpcvTMQzeVKdYJj
-         YKlbkjvMGpn2hsI8O7MDIylhFSi3KWkYOVyN4K/dWGUedAQh9kUXg7v6LvwZEIrtRHCw
-         8ttqR5gF74VH2eD20Nkmclpcr/DlXhdynNrMkGDkAHiWXaivE0V4KSp7gtq75ZPzqW17
-         0SQS0+7fTMR/oe9ubNe8NBEkNdavt/TH9NwMkKpkEhWzd9g/4mQQr8wKHqC9WgwZaW3S
-         xa2cQAjhQ9BzPkXRSuMA0ys/rEybm8dKUHo+sFTQW7ezmeMbSUIjCMSnc0e+9+Gm/N5F
-         QwWg==
+         :cc;
+        bh=sja+Fgo0bAvbRP0S/b7Ybm+O4OdzsMHo7UdKMU1Ey/0=;
+        b=SbunP9hNL4Rg3+mPuQzprPPBCeBIXu/LCMocGCSvMD5LatAWUanoqIxdLScicxVKyU
+         e313W6rMeMPoR8KHHX6LVpDnTJpuxDZy2wuky8ZB4Oxy9H1KW/jGpqsO/rAJB5cCpU1V
+         0KmJd0c1paaQ3nmFAU3krC/PPPtanjxh/7bFyWZbNjlCavZnxIXOJ6sVcM1JrvqegnwJ
+         yB9NTfUOC8J58EZsASfIxffVwKOJFXIVVn01r6SZ3qtPL8QYdyb6AYetYDV6LR3ZlSmB
+         wMxoJLZMOQlMM6ceHFmmDze/aEvLdYr/f/8eCAg4gDPLLMDL6dMdSREBsAKBghsBVfkL
+         39rw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=z5E1UgKK0swToOdaVE1vrj3rS3+MfFMI5KCYTwUDvjE=;
-        b=pO1O1ASq5PQBZY6aDMWeUVnlqcbZICVpo2NcmUWSz5J93g9r1WoNUDQ11VULmrHnC8
-         NuoS+cDLQJycn616/evaehottnmpap1YaqeO4DrEGCmPxcX61CvVtYnrGxBTNfBi8KIl
-         TYayl++NDYYwahOT/hJ+SEGdKbVboFOM6MIASYqSi1J+Xz5bkzqvn85lBe2qYmbNKtQQ
-         r4JZV9wxo3QXu3qVsq8lqkJj4jy/3ZzPZJWiiX34HW+KZsfphRIMSAOtvQgirIEC53KO
-         92Na/1VgoAPw6ZD6BvwXrHLosjGKt5u602srQ5yLphDd3i8zP6rxAW+av8GBjr3CJnm3
-         nCog==
-X-Gm-Message-State: APjAAAW8t7FzrfZu94BbRTj/KIUBQ2BHwcZ2wam4vlOh41eWEQ4eQoBd
-        U+bxNnpUgKqRQHwxlrpEfFiF4CIb7ZdhYRWStM0=
-X-Google-Smtp-Source: APXvYqwpkAk0xmfVNKx19v7ZUhWLtfpcp58XLtRa4vpl3aPIwquhkdFer4zqDaPeSE6KVtnzx6aaV1JPQjXM3H3VgXk=
-X-Received: by 2002:a37:9a8a:: with SMTP id c132mr4487196qke.92.1571769745663;
- Tue, 22 Oct 2019 11:42:25 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=sja+Fgo0bAvbRP0S/b7Ybm+O4OdzsMHo7UdKMU1Ey/0=;
+        b=ZZqzXlh9ccUaegRO+bM4sn1B82nakX45tdFOpQtMZ/LhlvgZ+Yr1TSw5tBe8dh5QJl
+         RK1Wv5H50FbduQ165DjgGOEb6RfY6DvuQdTW883ljbLbyzrR2DpNPC7fblgHjcWFnJi1
+         Dtq2oV+VSRMyzYFdWzcaPMplXeKtK1y39s9sGFt4tIMda6vzm3j8S3eXWatLt+XsEWbd
+         +ame+vaq8unV12CxelKr3Y1hI3SMAwU57+IJos+0iFnVo4nJwHPgK56PDS+/Q5Pmqvge
+         eduo8QqyIwJAt33wVZZBFbGGQjLOtwrL+xLoivqiqegs28PVmvE1ZusjH/tCmK8R1/EV
+         5/og==
+X-Gm-Message-State: APjAAAWyjpgNY3koilmxGqyHjgl2R/DGnUerEdA2u3R9UOF5cp4QLI4S
+        KNa2yZD4c6Eim5QhoeVUynOSljrDx2jU+Lp+srbHZUBcn4M=
+X-Google-Smtp-Source: APXvYqzo6tB7YHIGHkKxvcbXXVxptE7FDc85alkFLwsdJHhJeKgsw+5SlCtEhkXQSZHo4uSYzEcOYypTihUkB5P2PHE=
+X-Received: by 2002:a37:520a:: with SMTP id g10mr4512468qkb.39.1571769918191;
+ Tue, 22 Oct 2019 11:45:18 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191022141833.5706-1-kpsingh@chromium.org>
-In-Reply-To: <20191022141833.5706-1-kpsingh@chromium.org>
+References: <20191022125925.10508-1-ben.dooks@codethink.co.uk>
+In-Reply-To: <20191022125925.10508-1-ben.dooks@codethink.co.uk>
 From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Tue, 22 Oct 2019 11:42:14 -0700
-Message-ID: <CAEf4BzY5YYtiWOtHWfis2F28gmsCvJ=JuM7yHKrbBCdERwr2ew@mail.gmail.com>
-Subject: Re: [PATCH bpf-next] libbpf: Fix strncat bounds error in libbpf_prog_type_by_name
-To:     KP Singh <kpsingh@chromium.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+Date:   Tue, 22 Oct 2019 11:45:07 -0700
+Message-ID: <CAEf4BzY597=GXirqXzvps+-SbCXohTR-9=hDOxzXdZ9+HUieGQ@mail.gmail.com>
+Subject: Re: [PATCH] xdp: fix type of string pointer in __XDP_ACT_SYM_TAB
+To:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
+Cc:     linux-kernel@lists.codethink.co.uk,
+        Alexei Starovoitov <ast@kernel.org>,
         Daniel Borkmann <daniel@iogearbox.net>,
         Martin KaFai Lau <kafai@fb.com>,
         Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Florent Revest <revest@chromium.org>
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 7:19 AM KP Singh <kpsingh@chromium.org> wrote:
+On Tue, Oct 22, 2019 at 6:51 AM Ben Dooks (Codethink)
+<ben.dooks@codethink.co.uk> wrote:
 >
-> From: KP Singh <kpsingh@google.com>
+> The table entry in __XDP_ACT_SYM_TAB for the last item is set
+> to { -1, 0 } where it should be { -1, NULL } as the second item
+> is a pointer to a string.
 >
-> On compiling samples with this change, one gets an error:
+> Fixes the following sparse warnings:
 >
->  error: =E2=80=98strncat=E2=80=99 specified bound 118 equals destination =
-size
->   [-Werror=3Dstringop-truncation]
+> ./include/trace/events/xdp.h:28:1: warning: Using plain integer as NULL pointer
+> ./include/trace/events/xdp.h:53:1: warning: Using plain integer as NULL pointer
+> ./include/trace/events/xdp.h:82:1: warning: Using plain integer as NULL pointer
+> ./include/trace/events/xdp.h:140:1: warning: Using plain integer as NULL pointer
+> ./include/trace/events/xdp.h:155:1: warning: Using plain integer as NULL pointer
+> ./include/trace/events/xdp.h:190:1: warning: Using plain integer as NULL pointer
+> ./include/trace/events/xdp.h:225:1: warning: Using plain integer as NULL pointer
+> ./include/trace/events/xdp.h:260:1: warning: Using plain integer as NULL pointer
+> ./include/trace/events/xdp.h:318:1: warning: Using plain integer as NULL pointer
+> ./include/trace/events/xdp.h:356:1: warning: Using plain integer as NULL pointer
+> ./include/trace/events/xdp.h:390:1: warning: Using plain integer as NULL pointer
 >
->     strncat(dst, name + section_names[i].len,
->     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->      sizeof(raw_tp_btf_name) - (dst - raw_tp_btf_name));
->      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->
-> strncat requires the destination to have enough space for the
-> terminating null byte.
->
-> Fixes: f75a697e09137 ("libbpf: Auto-detect btf_id of BTF-based raw_tracep=
-oint")
-> Signed-off-by: KP Singh <kpsingh@google.com>
+> Signed-off-by: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
 > ---
->  tools/lib/bpf/libbpf.c | 2 +-
+
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+
+> Cc: Alexei Starovoitov <ast@kernel.org>
+> Cc: Daniel Borkmann <daniel@iogearbox.net>
+> Cc: Martin KaFai Lau <kafai@fb.com>
+> Cc: Song Liu <songliubraving@fb.com>
+> Cc: Yonghong Song <yhs@fb.com>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Jakub Kicinski <jakub.kicinski@netronome.com>
+> Cc: Jesper Dangaard Brouer <hawk@kernel.org>
+> Cc: John Fastabend <john.fastabend@gmail.com>
+> Cc: netdev@vger.kernel.org
+> Cc: bpf@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  include/trace/events/xdp.h | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-> index 9364e66d755d..5fff3f15d705 100644
-> --- a/tools/lib/bpf/libbpf.c
-> +++ b/tools/lib/bpf/libbpf.c
-> @@ -4666,7 +4666,7 @@ int libbpf_prog_type_by_name(const char *name, enum=
- bpf_prog_type *prog_type,
->                         }
->                         /* prepend "btf_trace_" prefix per kernel convent=
-ion */
->                         strncat(dst, name + section_names[i].len,
-> -                               sizeof(raw_tp_btf_name) - (dst - raw_tp_b=
-tf_name));
-> +                               sizeof(raw_tp_btf_name) - (dst - raw_tp_b=
-tf_name + 1));
-
-Just:
-
-sizeof(raw_tp_btf_name) - sizeof("btf_trace_")
-
-?
-
->                         ret =3D btf__find_by_name(btf, raw_tp_btf_name);
->                         btf__free(btf);
->                         if (ret <=3D 0) {
+> diff --git a/include/trace/events/xdp.h b/include/trace/events/xdp.h
+> index 8c8420230a10..c7e3c9c5bad3 100644
+> --- a/include/trace/events/xdp.h
+> +++ b/include/trace/events/xdp.h
+> @@ -22,7 +22,7 @@
+>  #define __XDP_ACT_SYM_FN(x)    \
+>         { XDP_##x, #x },
+>  #define __XDP_ACT_SYM_TAB      \
+> -       __XDP_ACT_MAP(__XDP_ACT_SYM_FN) { -1, 0 }
+> +       __XDP_ACT_MAP(__XDP_ACT_SYM_FN) { -1, NULL }
+>  __XDP_ACT_MAP(__XDP_ACT_TP_FN)
+>
+>  TRACE_EVENT(xdp_exception,
 > --
-> 2.20.1
+> 2.23.0
 >
