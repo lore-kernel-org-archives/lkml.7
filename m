@@ -2,132 +2,148 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D2C3CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 02:27:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A7DCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 02:35:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DE742166E
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 02:27:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gUPc3+r0"
+	by mail.kernel.org (Postfix) with ESMTP id A11402166E
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 02:35:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730917AbfJVC1W (ORCPT
+        id S1730795AbfJVCfh convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 22:27:22 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:38639 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730271AbfJVC1V (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 22:27:21 -0400
-Received: by mail-qk1-f193.google.com with SMTP id p4so14868397qkf.5
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 19:27:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VN4XOQxWZMWnSTs2Dh2Lw0yjzpEOfDxml7hxLuxIwLs=;
-        b=gUPc3+r0SNz5/3BwEP/jyh2XSQNeJOemtUsONV716BzuDnty9pw46TrLUwK6o1cscy
-         8uXKN3QbQeDI4bNQJbBIPchpNZXoFUU5P+ci1bZd9YXOaeNT7UMcp6y3sB0Y17A/Dq6s
-         Du4/0ZaY520ok4LbWICjEYsktLstQJ6TxDDt99B9okzfv2X4Q+MZ3cyoIk2QHSHRXoCF
-         YzwKH4T9VELi04rhOhLbFInmRMfP2vjAVoCyc41Vz/WcbXKrNB1g/4pHEH6IL/2uK0/5
-         Gttu/YQGKgixxsJnaXKUoUyu1+sHU/YFbVoPgt0YQKXWJM4XvxbvNXCiyhz5euildoC1
-         h/gA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VN4XOQxWZMWnSTs2Dh2Lw0yjzpEOfDxml7hxLuxIwLs=;
-        b=kcHSpmSmDEkO9mE1fSG1B3ZlHLCjKf2pPzJvMIdZLW/afUTP20QCPvm7gh01X58KpZ
-         RixLFrdZAQe0DH4jsEjs0n6exNyR9m4Yk8GkX10PKDURwdoz5LednVij9ilsjaQeDh4z
-         sYe1RywMVzGwU/tezmOODgfYR3VBUpROoUSSmE5LcasAYrNlCyvEZuneHlt/4fKQiZao
-         rYVZTmbffux5bw1chqbFnWNG50gqLcs43EsmhNFmVcZ0KEH8iWnk7NXbT8Fg0k5abQuh
-         u5BwgnxZzpo/VElO218Bx55oU82WE3fZysBcF45HdsJEa7W5hSjWT/fsdHHgh/1UCHbn
-         hbqA==
-X-Gm-Message-State: APjAAAWSFZiEymo9h8K89diSc26I/2LZcf/jbRLgK2j67pOQdZVu+KY9
-        3C9hgyDsEz1ChG6fUiwkRIHLbXdTdOh0IOAvjla1OQ==
-X-Google-Smtp-Source: APXvYqzli1POTBKn0kITztaQ0CotLZWI9kuTgVDX+qwQpn+d/fAMU56WobWzNiniZRveIUy3KQbdmwei73fofxuITjk=
-X-Received: by 2002:a37:4a87:: with SMTP id x129mr908751qka.43.1571711240126;
- Mon, 21 Oct 2019 19:27:20 -0700 (PDT)
+        Mon, 21 Oct 2019 22:35:37 -0400
+Received: from mga02.intel.com ([134.134.136.20]:54583 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727264AbfJVCfg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 22:35:36 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 19:35:35 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,325,1566889200"; 
+   d="scan'208";a="227536442"
+Received: from orsmsx106.amr.corp.intel.com ([10.22.225.133])
+  by fmsmga002.fm.intel.com with ESMTP; 21 Oct 2019 19:35:35 -0700
+Received: from orsmsx116.amr.corp.intel.com (10.22.240.14) by
+ ORSMSX106.amr.corp.intel.com (10.22.225.133) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 21 Oct 2019 19:35:34 -0700
+Received: from orsmsx103.amr.corp.intel.com ([169.254.5.9]) by
+ ORSMSX116.amr.corp.intel.com ([169.254.7.79]) with mapi id 14.03.0439.000;
+ Mon, 21 Oct 2019 19:35:34 -0700
+From:   "Brown, Aaron F" <aaron.f.brown@intel.com>
+To:     Navid Emamdoost <navid.emamdoost@gmail.com>
+CC:     "emamd001@umn.edu" <emamd001@umn.edu>,
+        "smccaman@umn.edu" <smccaman@umn.edu>,
+        "kjlu@umn.edu" <kjlu@umn.edu>,
+        "Kirsher, Jeffrey T" <jeffrey.t.kirsher@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] ethernet/intel:  release the local packet buffer
+Thread-Topic: [PATCH] ethernet/intel:  release the local packet buffer
+Thread-Index: AQHVbbQoopumek9cY0G4nbDkuqi67admH4Jg
+Date:   Tue, 22 Oct 2019 02:35:33 +0000
+Message-ID: <309B89C4C689E141A5FF6A0C5FB2118B971541EE@ORSMSX103.amr.corp.intel.com>
+References: <20190918000013.32083-1-navid.emamdoost@gmail.com>
+In-Reply-To: <20190918000013.32083-1-navid.emamdoost@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMTM4YzlmZmUtNThjMi00ZWRiLWE1MDctOTI1ZWRhYmQ4Mzc2IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiWDQ1cE1KVzVLRjl6VDVFZ1VLQ3pweGJ2SEZKK2dhRE9JZ0xxVWZtbCtCSm1FS3VGbHpwQkFubE85ZU5hSVp6UiJ9
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.139]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <20191022021810.3216-1-lyude@redhat.com>
-In-Reply-To: <20191022021810.3216-1-lyude@redhat.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Tue, 22 Oct 2019 04:27:08 +0200
-Message-ID: <CACT4Y+YQf-aje4jqSMop24af_GO8G_oPMfrJ9B7oo5_EudwHow@mail.gmail.com>
-Subject: Re: [RFC] kasan: include the hashed pointer for an object's location
-To:     Lyude Paul <lyude@redhat.com>
-Cc:     Linux-MM <linux-mm@kvack.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Sean Paul <sean@poorly.run>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 4:19 AM Lyude Paul <lyude@redhat.com> wrote:
->
-> The vast majority of the kernel that needs to print out pointers as a
-> way to keep track of a specific object in the kernel for debugging
-> purposes does so using hashed pointers, since these are "good enough".
-> Ironically, the one place we don't do this is within kasan. While
-> simply printing a hashed version of where an out of bounds memory access
-> occurred isn't too useful, printing out the hashed address of the object
-> in question usually is since that's the format most of the kernel is
-> likely to be using in debugging output.
->
-> Of course this isn't perfect though-having the object's originating
-> address doesn't help users at all that need to do things like printing
-> the address of a struct which is embedded within another struct, but
-> it's certainly better then not printing any hashed addresses. And users
-> which need to handle less trivial cases like that can simply fall back
-> to careful usage of %px.
->
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
-> Cc: Sean Paul <sean@poorly.run>
-> Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-> Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-> Cc: Alexander Potapenko <glider@google.com>
-> Cc: Dmitry Vyukov <dvyukov@google.com>
-> Cc: kasan-dev@googlegroups.com
+> From: netdev-owner@vger.kernel.org [mailto:netdev-
+> owner@vger.kernel.org] On Behalf Of Navid Emamdoost
+> Sent: Tuesday, September 17, 2019 5:00 PM
+> Cc: emamd001@umn.edu; smccaman@umn.edu; kjlu@umn.edu; Navid
+> Emamdoost <navid.emamdoost@gmail.com>; Kirsher, Jeffrey T
+> <jeffrey.t.kirsher@intel.com>; David S. Miller <davem@davemloft.net>;
+> intel-wired-lan@lists.osuosl.org; netdev@vger.kernel.org; linux-
+> kernel@vger.kernel.org
+> Subject: [PATCH] ethernet/intel: release the local packet bufferq
+> 
+> In e100_loopback_test the buffer allocated for the local packet needs to
+> be released.
+> 
+> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 > ---
->  mm/kasan/report.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/mm/kasan/report.c b/mm/kasan/report.c
-> index 621782100eaa..0a5663fee1f7 100644
-> --- a/mm/kasan/report.c
-> +++ b/mm/kasan/report.c
-> @@ -128,8 +128,9 @@ static void describe_object_addr(struct kmem_cache *cache, void *object,
->         int rel_bytes;
->
->         pr_err("The buggy address belongs to the object at %px\n"
-> -              " which belongs to the cache %s of size %d\n",
-> -               object, cache->name, cache->object_size);
-> +              " (aka %p) which belongs to the cache\n"
-> +              " %s of size %d\n",
-> +              object, object, cache->name, cache->object_size);
+>  drivers/net/ethernet/intel/e100.c | 1 +
+>  1 file changed, 1 insertion(+)
 
-Hi Lyude,
+Sorry for the delay getting to this, took me a bit to get the hardware together.
 
-This only prints hashed address for heap objects, but
-print_address_description() has 4 different code paths for different
-types of addresses (heap, global, stack, page). Plus there is a case
-for address without shadow.
-Should we print the hashed address at least for all cases in
-print_address_description()?
+NAK, this patch introduces a trace to my test machines when I run the ethtool diagnostic on an e100 port, the system will sometimes survive a bit after the trace, however if I try to run traffic across the interface after the trace the system panics and locks up with a kernel not syncing message.  I do not have a capture of the lock up panic (I can probably get one via serial port or netconsole if really necessary.)  The trace before the lock up panic is as follows:
+---------------------------------------------------------------------------
+[  102.460446] BUG: Bad page state in process ethtool  pfn:78db8
+[  102.460474] page:ffffd5bf41e36e00 refcount:-1 mapcount:0 mapping:0000000000000000 index:0x0
+[  102.460505] flags: 0xfffffc0000000()
+[  102.460523] raw: 000fffffc0000000 dead000000000100 dead000000000122 0000000000000000
+[  102.460553] raw: 0000000000000000 0000000000000000 ffffffffffffffff 0000000000000000
+[  102.460582] page dumped because: nonzero _refcount
+[  102.460602] Modules linked in: snd_hda_codec_realtek snd_hda_codec_generic snd_hda_intel snd_intel_nhlt snd_hda_codec
+ snd_hwdep snd_hda_core snd_seq snd_seq_device snd_pcm mei_wdt snd_timer iTCO_wdt mei_me snd iTCO_vendor_support gpio_ic
+h mei coretemp lpc_ich pcspkr sg soundcore i2c_i801 joydev acpi_cpufreq nfsd auth_rpcgss nfs_acl lockd grace sunrpc ip_t
+ables xfs libcrc32c sd_mod sr_mod cdrom i915 video i2c_algo_bit drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_
+fops e1000e ata_generic firewire_ohci pata_marvell ata_piix drm pata_acpi serio_raw e100 firewire_core libata ptp pps_co
+re mii crc_itu_t
+[  102.460800] CPU: 3 PID: 1541 Comm: ethtool Not tainted 5.4.0-rc1_next-queue_dev-queue_regress-00576-g16390e0 #3
+[  102.460836] Hardware name:  /DQ35JO, BIOS JOQ3510J.86A.0954.2008.0922.2331 09/22/2008
+[  102.460865] Call Trace:
+[  102.460883]  dump_stack+0x5a/0x73
+[  102.460900]  bad_page+0xf5/0x10f
+[  102.460916]  get_page_from_freelist+0x103e/0x1290
+[  102.460936]  ? __switch_to_asm+0x40/0x70
+[  102.460955]  ? __build_skb+0x20/0x190
+[  102.460972]  __alloc_pages_nodemask+0x17d/0x320
+[  102.460991]  page_frag_alloc+0x87/0x130
+[  102.461008]  __netdev_alloc_skb+0x10b/0x130
+[  102.461029]  e100_rx_alloc_skb+0x20/0x180 [e100]
+[  102.461050]  e100_rx_alloc_list+0x98/0x160 [e100]
+[  102.461070]  e100_up+0x11/0x120 [e100]
+[  102.461088]  e100_diag_test+0x14e/0x157 [e100]
+[  102.461107]  ? _cond_resched+0x15/0x30
+[  102.461125]  ? dev_ethtool+0x1133/0x2c30
+[  102.461143]  dev_ethtool+0x1159/0x2c30
+[  102.461161]  ? inet_ioctl+0x1a0/0x1d0
+[  102.461178]  ? netdev_run_todo+0x5d/0x2d0
+[  102.461196]  dev_ioctl+0xb3/0x4e0
+[  102.461212]  sock_do_ioctl+0xa0/0x140
+[  102.461228]  ? do_anonymous_page+0x361/0x670
+[  102.461247]  sock_ioctl+0x26e/0x380
+[  102.461264]  do_vfs_ioctl+0xa9/0x630
+[  102.461281]  ? handle_mm_fault+0xe2/0x1f0
+[  102.462101]  ? __do_page_fault+0x247/0x490
+[  102.462911]  ksys_ioctl+0x60/0x90
+[  102.463715]  __x64_sys_ioctl+0x16/0x20
+[  102.464519]  do_syscall_64+0x5b/0x1b0
+[  102.465321]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[  102.466134] RIP: 0033:0x7f03e53f32f7
+[  102.466948] Code: 44 00 00 48 8b 05 79 1b 2d 00 64 c7 00 26 00 00 00 48 c7 c0 ff ff ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 b8 10 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 49 1b 2d 00 f7 d8 64 89 01 48
+[  102.468728] RSP: 002b:00007ffffc72ebf8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+[  102.469657] RAX: ffffffffffffffda RBX: 00007ffffc72ec50 RCX: 00007f03e53f32f7
+[  102.470595] RDX: 00007ffffc72ec60 RSI: 0000000000008946 RDI: 0000000000000003
+[  102.471532] RBP: 0000000000000001 R08: 0000000000000002 R09: 0000000000000038
+[  102.472453] R10: 00007ffffc72e7c0 R11: 0000000000000246 R12: 0000000000000038
+[  102.473359] R13: 0000000001428010 R14: 00000000014280d0 R15: 00007ffffc72edc8
+[  102.474260] Disabling lock debugging due to kernel taint
+[  104.924447] e100 0000:06:00.0 eth0: NIC Link is Up 100 Mbps Full Duplex
+---------------------------------------------------------------------------
 
 
->         if (!addr)
->                 return;
-> --
-> 2.21.0
->
