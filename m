@@ -2,77 +2,97 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF0A2CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:44:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E94EBCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:44:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE231205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:44:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1268205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:44:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571759099;
+	bh=uB+iJFJC/hVIjUlk10LfhCh+hobudFQOoJDpOyooXkE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=efS3rlssBCPgXk5FlJmLvyTC9LxGixkk+limgV5oO3Ld3JQoRzcY4Bmu/6NLSZ0RL
+	 CJzwEf1sPSmPfWyGijCMBQsUqQOQclP+574yUbVl989D0R0tP6k/pxdRPROX2SWsAL
+	 kVmDs/6aiIoQ5NxZAdgahB3UYE9Bx+7otEnqmAmo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732543AbfJVPov (ORCPT
+        id S1732559AbfJVPo6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 11:44:51 -0400
-Received: from muru.com ([72.249.23.125]:38930 "EHLO muru.com"
+        Tue, 22 Oct 2019 11:44:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45418 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730141AbfJVPou (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 11:44:50 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id BC65180FA;
-        Tue, 22 Oct 2019 15:45:24 +0000 (UTC)
-Date:   Tue, 22 Oct 2019 08:44:46 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Benoit Parrot <bparrot@ti.com>
-Cc:     Tero Kristo <t-kristo@ti.com>, Rob Herring <robh+dt@kernel.org>,
-        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [Patch 5/9] arm: dts: dra72-evm-common: Add entries for the CSI2
- cameras
-Message-ID: <20191022154446.GN5610@atomide.com>
-References: <20191018154849.3127-1-bparrot@ti.com>
- <20191018154849.3127-6-bparrot@ti.com>
+        id S1730141AbfJVPo6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 11:44:58 -0400
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3122E2086D;
+        Tue, 22 Oct 2019 15:44:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571759097;
+        bh=uB+iJFJC/hVIjUlk10LfhCh+hobudFQOoJDpOyooXkE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=0BziVt7kpMMygCTcEdjyfaGeXgAdik+wYQr+mPhwRjhwK9RdDv/0DE2OJjmalwuN5
+         idkYV5wqN7EZdY9hmPYt88huqDJJ5U22/UyduRW2Ljhyf1ReDOIR7IbTRp6zXVG9Bm
+         GtHGa8hC2qL8mWvO+kyun5bPmCR68YLbGpLp7CLA=
+Received: by mail-qt1-f182.google.com with SMTP id m15so27521989qtq.2;
+        Tue, 22 Oct 2019 08:44:57 -0700 (PDT)
+X-Gm-Message-State: APjAAAWskgbcnJnJA+8kLVeDctG2H2vnYoB43dzzo8Hm6i/pjN/nZeuT
+        sZIrO21XrO+RD8R3nDArL/aP97kZdnNZcFqasA==
+X-Google-Smtp-Source: APXvYqyov/Zp05P18+muy5bKvbNnTx96qFTjFGR2D/vBSBLHfsdLmzsSiTpHWl1RItE1SuD/noI1iPC3qzBfZ2ox9oc=
+X-Received: by 2002:a0c:ed4f:: with SMTP id v15mr3617404qvq.136.1571759096365;
+ Tue, 22 Oct 2019 08:44:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191018154849.3127-6-bparrot@ti.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <1571749873-8964-1-git-send-email-gupt21@gmail.com>
+In-Reply-To: <1571749873-8964-1-git-send-email-gupt21@gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 22 Oct 2019 10:44:44 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJ4bGgBBnX2oZ50RaVN36qPZRNS4B7_u0UyqHm30R8SbQ@mail.gmail.com>
+Message-ID: <CAL_JsqJ4bGgBBnX2oZ50RaVN36qPZRNS4B7_u0UyqHm30R8SbQ@mail.gmail.com>
+Subject: Re: [PATCH v5 2/3] dt-bindings: iio: light: add veml6030 ALS bindings
+To:     Rishi Gupta <gupt21@gmail.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald <pmeerw@pmeerw.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>, alexios.zavras@intel.com,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Benoit Parrot <bparrot@ti.com> [191018 15:46]:
-> Add device nodes for CSI2 camera board OV5640.
-> Add the CAL port nodes with the necessary linkage to the ov5640 nodes.
-> 
-> Signed-off-by: Benoit Parrot <bparrot@ti.com>
+On Tue, Oct 22, 2019 at 8:11 AM Rishi Gupta <gupt21@gmail.com> wrote:
+>
+> This commit adds device tree bindings for veml6030 ambient
+> light sensor.
+>
+> Signed-off-by: Rishi Gupta <gupt21@gmail.com>
 > ---
->  arch/arm/boot/dts/dra72-evm-common.dtsi | 35 +++++++++++++++++++++++++
->  1 file changed, 35 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/dra72-evm-common.dtsi b/arch/arm/boot/dts/dra72-evm-common.dtsi
-> index 8641a3d7d8ad..e4c01a67f6de 100644
-> --- a/arch/arm/boot/dts/dra72-evm-common.dtsi
-> +++ b/arch/arm/boot/dts/dra72-evm-common.dtsi
-> @@ -187,6 +187,12 @@
->  		gpio = <&gpio5 8 GPIO_ACTIVE_HIGH>;
->  		enable-active-high;
->  	};
-> +
-> +	clk_ov5640_fixed: clk_ov5640_fixed {
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <24000000>;
-> +	};
->  };
+> Changes in v5:
+> * None
+>
+> Changes in v4:
+> * Added enum in reg property
+> * Removed maxItems from reg property
+>
+> Changes in v3:
+> * None
+>
+> Changes in v2:
+> * Corrected grammatical mistake from 'is' to 'are' in description of bindings
+>
+>  .../devicetree/bindings/iio/light/veml6030.yaml    | 62 ++++++++++++++++++++++
+>  1 file changed, 62 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/light/veml6030.yaml
 
-The clock node name should be generic and not use
-undescores. If there is a hidden dependency to the
-clock node name here, it should be mentioned in the
-patch for the non-standard use.
-
-Regards,
-
-Tony
+Reviewed-by: Rob Herring <robh@kernel.org>
