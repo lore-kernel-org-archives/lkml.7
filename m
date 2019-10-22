@@ -2,108 +2,65 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B32DEC47E49
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:25:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B298CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:26:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92C0821783
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:25:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 129B62064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:26:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571732775;
+	bh=/Mr/LThIEMJbWlYKkDd18Jd9JL0bjmo5Rvnnvx8XJQo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fDb5Wx0JiGQFZWTaOL505KnN8b0y3cq/WqPAN3IJn2kAzBN3Q9x7qX45FZhn85UrQ
+	 dq8HhcmpR2fbT2tTSNsA0A7MAF1LV/5n1YlGsJP0zTW5naK0G4mo6ANhRctIT2nhM3
+	 Qpwjhkj7waOvsIAo98mfPIXJotmW5KLhiBsGWg9g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388357AbfJVIZZ (ORCPT
+        id S2388386AbfJVI0O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 04:25:25 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38430 "EHLO mx1.suse.de"
+        Tue, 22 Oct 2019 04:26:14 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38716 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388061AbfJVIZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 04:25:25 -0400
+        id S2388155AbfJVI0M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 04:26:12 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 6F466B314;
-        Tue, 22 Oct 2019 08:25:23 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 9B09F1E4812; Tue, 22 Oct 2019 10:15:51 +0200 (CEST)
-Date:   Tue, 22 Oct 2019 10:15:51 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Jan Kara <jack@suse.cz>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        "tj@kernel.org" <tj@kernel.org>, Dennis Zhou <dennis@kernel.org>
-Subject: Re: [PATCH v2] cgroup, blkcg: prevent dirty inodes to pin dying
- memory cgroups
-Message-ID: <20191022081551.GD2436@quack2.suse.cz>
-References: <20191010234036.2860655-1-guro@fb.com>
- <20191015090933.GA21104@quack2.suse.cz>
- <20191015214041.GA24736@tower.DHCP.thefacebook.com>
- <20191016091840.GC30337@quack2.suse.cz>
- <20191021234858.GA16251@castle>
+        by mx1.suse.de (Postfix) with ESMTP id CB077AFF1;
+        Tue, 22 Oct 2019 08:26:11 +0000 (UTC)
+Date:   Tue, 22 Oct 2019 10:26:11 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Oscar Salvador <osalvador@suse.de>
+Cc:     n-horiguchi@ah.jp.nec.com, mike.kravetz@oracle.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v2 10/16] mm,hwpoison: Rework soft offline for free
+ pages
+Message-ID: <20191022082611.GD9379@dhcp22.suse.cz>
+References: <20191017142123.24245-1-osalvador@suse.de>
+ <20191017142123.24245-11-osalvador@suse.de>
+ <20191018120615.GM5017@dhcp22.suse.cz>
+ <20191021125842.GA11330@linux>
+ <20191021154158.GV9379@dhcp22.suse.cz>
+ <20191022074615.GA19060@linux>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191021234858.GA16251@castle>
+In-Reply-To: <20191022074615.GA19060@linux>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 21-10-19 23:49:04, Roman Gushchin wrote:
-> On Wed, Oct 16, 2019 at 11:18:40AM +0200, Jan Kara wrote:
-> > On Tue 15-10-19 21:40:45, Roman Gushchin wrote:
-> > > On Tue, Oct 15, 2019 at 11:09:33AM +0200, Jan Kara wrote:
-> > > > On Thu 10-10-19 16:40:36, Roman Gushchin wrote:
-> > > > 
-> > > > > @@ -426,7 +431,7 @@ static void inode_switch_wbs_work_fn(struct work_struct *work)
-> > > > >  	if (!list_empty(&inode->i_io_list)) {
-> > > > >  		struct inode *pos;
-> > > > >  
-> > > > > -		inode_io_list_del_locked(inode, old_wb);
-> > > > > +		inode_io_list_del_locked(inode, old_wb, false);
-> > > > >  		inode->i_wb = new_wb;
-> > > > >  		list_for_each_entry(pos, &new_wb->b_dirty, i_io_list)
-> > > > >  			if (time_after_eq(inode->dirtied_when,
-> > > > 
-> > > > This bit looks wrong. Not the change you made as such but the fact that you
-> > > > can now move inode from b_attached list of old wb to the dirty list of new
-> > > > wb.
-> > > 
-> > > Hm, can you, please, elaborate a bit more why it's wrong?
-> > > The reference to the old_wb will be dropped by the switching code.
-> > 
-> > My point is that the code in full looks like:
-> > 
-> >         if (!list_empty(&inode->i_io_list)) {
-> >                 struct inode *pos;
-> > 
-> >                 inode_io_list_del_locked(inode, old_wb);
-> >                 inode->i_wb = new_wb;
-> >                 list_for_each_entry(pos, &new_wb->b_dirty, i_io_list)
-> >                         if (time_after_eq(inode->dirtied_when,
-> >                                           pos->dirtied_when))
-> >                                 break;
-> >                 inode_io_list_move_locked(inode, new_wb, pos->i_io_list.prev);
-> >         } else {
-> > 
-> > So inode is always moved from some io list in old_wb to b_dirty list of
-> > new_wb. This is fine when it could be only on b_dirty, b_io, b_more_io lists
-> > of old_wb. But once you add b_attached list to the game, it is not correct
-> > anymore. You should not add clean inode to b_dirty list of new_wb.
-> 
-> I see...
-> 
-> Hm, will checking of i_state for not containing I_DIRTY_ALL bits be enough here?
-> Alternatively, I can introduce a new bit which will explicitly point at the
-> inode being on the b_attached list, but I'd prefer not to do it.
+On Tue 22-10-19 09:46:20, Oscar Salvador wrote:
+[...]
+> So, opposite to hard-offline, in soft-offline we do not fiddle with pages
+> unless we are sure the page is not reachable anymore by any means.
 
-Yeah, keying of i_state should work. And while we are at it, we could also
-correctly handle I_DIRTY_TIME case and move inode only to b_dirty_time
-list. That seems to be (mostly harmless) preexisting issue.
-
-								Honza
+I have to say I do not follow. Is there any _real_ reason for
+soft-offline to behave differenttly from MCE (hard-offline)?
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Michal Hocko
+SUSE Labs
