@@ -2,83 +2,96 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7954FCA9EB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:22:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28AE2CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:23:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 505E92086D
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:22:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03FF121872
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:23:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388389AbfJVPW0 (ORCPT
+        id S1732264AbfJVPXD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 11:22:26 -0400
-Received: from mga09.intel.com ([134.134.136.24]:23876 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388081AbfJVPW0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 11:22:26 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Oct 2019 08:22:25 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,216,1569308400"; 
-   d="scan'208";a="196468247"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by fmsmga008.fm.intel.com with ESMTP; 22 Oct 2019 08:22:24 -0700
-Date:   Tue, 22 Oct 2019 08:22:24 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     James Hogan <jhogan@kernel.org>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Marc Zyngier <maz@kernel.org>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 15/15] KVM: Dynamically size memslot array based on
- number of used slots
-Message-ID: <20191022152223.GB2343@linux.intel.com>
-References: <20191022003537.13013-1-sean.j.christopherson@intel.com>
- <20191022003537.13013-16-sean.j.christopherson@intel.com>
- <2609aedc-4fc9-ab92-8877-55c64cf19165@redhat.com>
+        Tue, 22 Oct 2019 11:23:03 -0400
+Received: from imap1.codethink.co.uk ([176.9.8.82]:60632 "EHLO
+        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731521AbfJVPXD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 11:23:03 -0400
+Received: from [167.98.27.226] (helo=[10.35.5.173])
+        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
+        id 1iMvzx-0006GC-BV; Tue, 22 Oct 2019 16:23:01 +0100
+Subject: Re: [PATCH] net: hwbm: if CONFIG_NET_HWBM unset, make stub functions
+ static
+To:     linux-kernel@lists.codethink.co.uk
+Cc:     "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191022151818.21383-1-ben.dooks@codethink.co.uk>
+From:   Ben Dooks <ben.dooks@codethink.co.uk>
+Organization: Codethink Limited.
+Message-ID: <c2ba06f1-fabd-1edb-b75f-8f6e2c23c0ce@codethink.co.uk>
+Date:   Tue, 22 Oct 2019 16:23:00 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2609aedc-4fc9-ab92-8877-55c64cf19165@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20191022151818.21383-1-ben.dooks@codethink.co.uk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 04:04:21PM +0200, Paolo Bonzini wrote:
-> On 22/10/19 02:35, Sean Christopherson wrote:
-> > +	struct kvm_memory_slot memslots[];
-> > +	/*
-> > +	 * WARNING: 'memslots' is dynamically-sized.  It *MUST* be at the end.
-> > +	 */
+On 22/10/2019 16:18, Ben Dooks (Codethink) wrote:
+> If CONFIG_NET_HWBM is not set, then these stub functions in
+> <net/hwbm.h> should be declared static to avoid trying to
+> export them from any driver that includes this.
 > 
-> Isn't that obvious from the flexible array member?
+> Note, add __maybe_unused as the marvell mvneta.c driver will
+> otherwise cause gcc warnings from these.
 
-Probably.  It's also unnecessary as the compiler (at least as of gcc 5.4)
-will throw an error if it's not at the end.  I think I even verified this
-during development and still decided to leave the obnoxious warning in for
-some reason...
+urgh, static inline was what I was actually searching for here.
 
-include/linux/kvm_host.h:436:25: error: flexible array member not at end of struct
-  struct kvm_memory_slot memslots[];
+> Fixes the following sparse warnings:
+> 
+> ./include/net/hwbm.h:24:6: warning: symbol 'hwbm_buf_free' was not declared. Should it be static?
+> ./include/net/hwbm.h:25:5: warning: symbol 'hwbm_pool_refill' was not declared. Should it be static?
+> ./include/net/hwbm.h:26:5: warning: symbol 'hwbm_pool_add' was not declared. Should it be static?
+> 
+> Signed-off-by: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
+> ---
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: netdev@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>   include/net/hwbm.h | 6 +++---
+>   1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/include/net/hwbm.h b/include/net/hwbm.h
+> index 81643cf8a1c4..cb5e6de8b7cd 100644
+> --- a/include/net/hwbm.h
+> +++ b/include/net/hwbm.h
+> @@ -21,9 +21,9 @@ void hwbm_buf_free(struct hwbm_pool *bm_pool, void *buf);
+>   int hwbm_pool_refill(struct hwbm_pool *bm_pool, gfp_t gfp);
+>   int hwbm_pool_add(struct hwbm_pool *bm_pool, unsigned int buf_num);
+>   #else
+> -void hwbm_buf_free(struct hwbm_pool *bm_pool, void *buf) {}
+> -int hwbm_pool_refill(struct hwbm_pool *bm_pool, gfp_t gfp) { return 0; }
+> -int hwbm_pool_add(struct hwbm_pool *bm_pool, unsigned int buf_num)
+> +static void __maybe_unused hwbm_buf_free(struct hwbm_pool *bm_pool, void *buf) {}
+> +static int __maybe_unused hwbm_pool_refill(struct hwbm_pool *bm_pool, gfp_t gfp) { return 0; }
+> +static int __maybe_unused hwbm_pool_add(struct hwbm_pool *bm_pool, unsigned int buf_num)
+>   { return 0; }
+>   #endif /* CONFIG_HWBM */
+>   #endif /* _HWBM_H */
+> 
+
+
+-- 
+Ben Dooks				http://www.codethink.co.uk/
+Senior Engineer				Codethink - Providing Genius
+
+https://www.codethink.co.uk/privacy.html
