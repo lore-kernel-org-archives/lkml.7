@@ -2,157 +2,156 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6A80CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:22:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3555CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:22:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCAD220679
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:22:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KSrwysvh"
+	by mail.kernel.org (Postfix) with ESMTP id 94B92206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:22:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571764954;
+	bh=RoR3fcocZoMB+jVU9MHhimMcDXaQJ50Rbho6yQQSC7M=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Wft7p8Q88AR7Ax1xIcew6cO6NlcOr97SilaSzVNSn75I+wEr/bxQnAxNu49ub+zVo
+	 kueco9mrtlOCOLWF0eFM0ss6eHB642PFI1LbcSpkY5Ch/k8tpov9Ry6AeyTnRy6O6K
+	 Ngc1/CWzZ39YZK0g9DImbW6rg+gk+2/c56qWzdr4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732330AbfJVRWZ (ORCPT
+        id S1732463AbfJVRWd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 13:22:25 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:34535 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731730AbfJVRWZ (ORCPT
+        Tue, 22 Oct 2019 13:22:33 -0400
+Received: from inca-roads.misterjones.org ([213.251.177.50]:42247 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731730AbfJVRWd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 13:22:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571764943;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=DYe7sXZbkW6x0+4z45DRiC8jJviu2jpg3kuxyxWl3ng=;
-        b=KSrwysvhmEKzaleMyo/ZP3JSUxdJUaFIcHqcev1I/bJAcU/Rn98TcjTdztwvm4tcgb8qgs
-        zjWKkJUBn2m/4vLrmB0y333PQ2rcr8N5FqZxqJI2KC+QM1DE3AMLGAu8a6q6KGUqTzkgJV
-        /yB46Fn+SwIQA8LvXUaIw9Y4zu55bwU=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-348-vt7zFo_1Ol2CweukfxJpXg-1; Tue, 22 Oct 2019 13:22:22 -0400
-Received: by mail-qk1-f200.google.com with SMTP id v143so17274807qka.21
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 10:22:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:organization:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=aPRxFMkNB6srnlFX1YYoFjkf1pH9LbIq1Eh01At/K7g=;
-        b=LwY0XLSh0nQ4ghFb0zTANWHZ7H47kpymH9tmPkzZv1EWsalgW/BXMU6Srp7bVGNFKF
-         tCjOXDR+8fV4B/UWrwNJ6gIC6uhd/mxK1zfEeOwjQrZrKfmVRbfO6rlP0ARnMnHCkAbj
-         rJwexeBQyxKZVoTiNs0oS2lDd3BQup0/ojXuPb90a74bX/2hjKjaII3sY6xHAnbtzeCh
-         7UpU1Lfypn2546WlNYYupKu05xDGr5waNP9MUous/bihyX7NHYB4/9c+O70LRv6MYjRJ
-         PHLXNnCepeip7QM75gwhW46Uk2Tv8RQzQa8sMSmwLA0To0HnjPCmOREhNvWXX+/FvGZZ
-         Wpsw==
-X-Gm-Message-State: APjAAAWqRHbmMBEsJ+Oy51HcvrvAD11GhmbkMA/zhcrdFfqHouCzbzKB
-        RE+rRBX9thskDUSSG3hr2n2b+MoVq3G4mirUs2FE0qg5lHjIV7JKWv7cqT1/rtYssvVfs5wAanE
-        isQPx9Sr60uoYUUMJWOZPRoCr
-X-Received: by 2002:a05:6214:2a4:: with SMTP id m4mr63219qvv.165.1571764942124;
-        Tue, 22 Oct 2019 10:22:22 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqy5uvybGj0e1kNUfWhUC24F1OoT5sVrZih1f+cM/euoSjPZxd6/saXn/ubK0+Vz/yya6hB0mw==
-X-Received: by 2002:a05:6214:2a4:: with SMTP id m4mr63188qvv.165.1571764941783;
-        Tue, 22 Oct 2019 10:22:21 -0700 (PDT)
-Received: from dhcp-10-20-1-11.bss.redhat.com ([144.121.20.162])
-        by smtp.gmail.com with ESMTPSA id 81sm12662041qkd.73.2019.10.22.10.22.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Oct 2019 10:22:21 -0700 (PDT)
-Message-ID: <f1043a5f770b290b02e17b3114d80ce7f83a58a1.camel@redhat.com>
-Subject: Re: [RFC] kasan: include the hashed pointer for an object's location
-From:   Lyude Paul <lyude@redhat.com>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Linux-MM <linux-mm@kvack.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Sean Paul <sean@poorly.run>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Date:   Tue, 22 Oct 2019 13:22:19 -0400
-In-Reply-To: <CACT4Y+YQf-aje4jqSMop24af_GO8G_oPMfrJ9B7oo5_EudwHow@mail.gmail.com>
-References: <20191022021810.3216-1-lyude@redhat.com>
-         <CACT4Y+YQf-aje4jqSMop24af_GO8G_oPMfrJ9B7oo5_EudwHow@mail.gmail.com>
-Organization: Red Hat
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30)
+        Tue, 22 Oct 2019 13:22:33 -0400
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
+        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
+        (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iMxrD-0002o8-Lr; Tue, 22 Oct 2019 19:22:07 +0200
+Date:   Tue, 22 Oct 2019 18:22:06 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        kernel-hardening@lists.openwall.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Laura Abbott <labbott@redhat.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 03/18] arm64: kvm: stop treating register x18 as caller
+ save
+Message-ID: <20191022182206.0d8b2301@why>
+In-Reply-To: <20191018161033.261971-4-samitolvanen@google.com>
+References: <20191018161033.261971-1-samitolvanen@google.com>
+        <20191018161033.261971-4-samitolvanen@google.com>
+Organization: Approximate
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-X-MC-Unique: vt7zFo_1Ol2CweukfxJpXg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: samitolvanen@google.com, will@kernel.org, catalin.marinas@arm.com, rostedt@goodmis.org, ard.biesheuvel@linaro.org, mark.rutland@arm.com, keescook@chromium.org, kernel-hardening@lists.openwall.com, ndesaulniers@google.com, linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com, labbott@redhat.com, Dave.Martin@arm.com, linux-arm-kernel@lists.infradead.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-10-22 at 04:27 +0200, Dmitry Vyukov wrote:
-> On Tue, Oct 22, 2019 at 4:19 AM Lyude Paul <lyude@redhat.com> wrote:
-> > The vast majority of the kernel that needs to print out pointers as a
-> > way to keep track of a specific object in the kernel for debugging
-> > purposes does so using hashed pointers, since these are "good enough".
-> > Ironically, the one place we don't do this is within kasan. While
-> > simply printing a hashed version of where an out of bounds memory acces=
-s
-> > occurred isn't too useful, printing out the hashed address of the objec=
-t
-> > in question usually is since that's the format most of the kernel is
-> > likely to be using in debugging output.
-> >=20
-> > Of course this isn't perfect though-having the object's originating
-> > address doesn't help users at all that need to do things like printing
-> > the address of a struct which is embedded within another struct, but
-> > it's certainly better then not printing any hashed addresses. And users
-> > which need to handle less trivial cases like that can simply fall back
-> > to careful usage of %px.
-> >=20
-> > Signed-off-by: Lyude Paul <lyude@redhat.com>
-> > Cc: Sean Paul <sean@poorly.run>
-> > Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-> > Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-> > Cc: Alexander Potapenko <glider@google.com>
-> > Cc: Dmitry Vyukov <dvyukov@google.com>
-> > Cc: kasan-dev@googlegroups.com
-> > ---
-> >  mm/kasan/report.c | 5 +++--
-> >  1 file changed, 3 insertions(+), 2 deletions(-)
-> >=20
-> > diff --git a/mm/kasan/report.c b/mm/kasan/report.c
-> > index 621782100eaa..0a5663fee1f7 100644
-> > --- a/mm/kasan/report.c
-> > +++ b/mm/kasan/report.c
-> > @@ -128,8 +128,9 @@ static void describe_object_addr(struct kmem_cache
-> > *cache, void *object,
-> >         int rel_bytes;
-> >=20
-> >         pr_err("The buggy address belongs to the object at %px\n"
-> > -              " which belongs to the cache %s of size %d\n",
-> > -               object, cache->name, cache->object_size);
-> > +              " (aka %p) which belongs to the cache\n"
-> > +              " %s of size %d\n",
-> > +              object, object, cache->name, cache->object_size);
->=20
-> Hi Lyude,
->=20
-> This only prints hashed address for heap objects, but
-> print_address_description() has 4 different code paths for different
-> types of addresses (heap, global, stack, page). Plus there is a case
-> for address without shadow.
-> Should we print the hashed address at least for all cases in
-> print_address_description()?
+On Fri, 18 Oct 2019 09:10:18 -0700
+Sami Tolvanen <samitolvanen@google.com> wrote:
 
-Yep-this is probably a good idea. Will send a respin in a little bit
->=20
->=20
-> >         if (!addr)
-> >                 return;
-> > --
-> > 2.21.0
-> >=20
---=20
-Cheers,
-=09Lyude Paul
+> From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> 
+> In preparation of using x18 as a task struct pointer register when
+> running in the kernel, stop treating it as caller save in the KVM
+> guest entry/exit code. Currently, the code assumes there is no need
+> to preserve it for the host, given that it would have been assumed
+> clobbered anyway by the function call to __guest_enter(). Instead,
+> preserve its value and restore it upon return.
+> 
+> Link: https://patchwork.kernel.org/patch/9836891/
+> Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+> ---
+>  arch/arm64/kvm/hyp/entry.S | 12 +++++-------
+>  1 file changed, 5 insertions(+), 7 deletions(-)
+> 
+> diff --git a/arch/arm64/kvm/hyp/entry.S b/arch/arm64/kvm/hyp/entry.S
+> index e5cc8d66bf53..20bd9a20ea27 100644
+> --- a/arch/arm64/kvm/hyp/entry.S
+> +++ b/arch/arm64/kvm/hyp/entry.S
+> @@ -23,6 +23,7 @@
+>  	.pushsection	.hyp.text, "ax"
+>  
+>  .macro save_callee_saved_regs ctxt
+> +	str	x18,      [\ctxt, #CPU_XREG_OFFSET(18)]
+>  	stp	x19, x20, [\ctxt, #CPU_XREG_OFFSET(19)]
+>  	stp	x21, x22, [\ctxt, #CPU_XREG_OFFSET(21)]
+>  	stp	x23, x24, [\ctxt, #CPU_XREG_OFFSET(23)]
+> @@ -38,6 +39,7 @@
+>  	ldp	x25, x26, [\ctxt, #CPU_XREG_OFFSET(25)]
+>  	ldp	x27, x28, [\ctxt, #CPU_XREG_OFFSET(27)]
+>  	ldp	x29, lr,  [\ctxt, #CPU_XREG_OFFSET(29)]
+> +	ldr	x18,      [\ctxt, #CPU_XREG_OFFSET(18)]
 
+There is now an assumption that ctxt is x18 (otherwise why would it be
+out of order?). Please add a comment to that effect.
+
+>  .endm
+>  
+>  /*
+> @@ -87,12 +89,9 @@ alternative_else_nop_endif
+>  	ldp	x14, x15, [x18, #CPU_XREG_OFFSET(14)]
+>  	ldp	x16, x17, [x18, #CPU_XREG_OFFSET(16)]
+>  
+> -	// Restore guest regs x19-x29, lr
+> +	// Restore guest regs x18-x29, lr
+>  	restore_callee_saved_regs x18
+
+Or you could elect another register such as x29 as the base, and keep
+the above in a reasonable order.
+
+>  
+> -	// Restore guest reg x18
+> -	ldr	x18,      [x18, #CPU_XREG_OFFSET(18)]
+> -
+>  	// Do not touch any register after this!
+>  	eret
+>  	sb
+> @@ -114,7 +113,7 @@ ENTRY(__guest_exit)
+>  	// Retrieve the guest regs x0-x1 from the stack
+>  	ldp	x2, x3, [sp], #16	// x0, x1
+>  
+> -	// Store the guest regs x0-x1 and x4-x18
+> +	// Store the guest regs x0-x1 and x4-x17
+>  	stp	x2, x3,   [x1, #CPU_XREG_OFFSET(0)]
+>  	stp	x4, x5,   [x1, #CPU_XREG_OFFSET(4)]
+>  	stp	x6, x7,   [x1, #CPU_XREG_OFFSET(6)]
+> @@ -123,9 +122,8 @@ ENTRY(__guest_exit)
+>  	stp	x12, x13, [x1, #CPU_XREG_OFFSET(12)]
+>  	stp	x14, x15, [x1, #CPU_XREG_OFFSET(14)]
+>  	stp	x16, x17, [x1, #CPU_XREG_OFFSET(16)]
+> -	str	x18,      [x1, #CPU_XREG_OFFSET(18)]
+>  
+> -	// Store the guest regs x19-x29, lr
+> +	// Store the guest regs x18-x29, lr
+>  	save_callee_saved_regs x1
+>  
+>  	get_host_ctxt	x2, x3
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
