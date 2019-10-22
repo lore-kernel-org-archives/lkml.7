@@ -2,181 +2,178 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D770CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:42:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F74CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:43:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 588DA2089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:42:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F77020679
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:43:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Dnqw8eUl"
+	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="I1yriIhi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388498AbfJVImP (ORCPT
+        id S2388503AbfJVInO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 04:42:15 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:41636 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388436AbfJVImP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 04:42:15 -0400
-Received: by mail-wr1-f66.google.com with SMTP id p4so17020874wrm.8
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 01:42:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CCoUEx7pgvSwkd52sbHiDWqhbn6D15dx3IidcUSOlCs=;
-        b=Dnqw8eUlpREisKkdtKQIU3R7AtWD+I7KGdKQt39MsbLsH6Qoc355nKrI0tHLiqB3NG
-         /Y4Dn9+GMLBCqAfugauXi/usjnov8QawMPImXtU3CjjRKa7jMHE2ZeArfrFGVHD/rFE1
-         xT/hLokfxu1BCgHKdBRBCGLOgTZF0se9W2/2o=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=CCoUEx7pgvSwkd52sbHiDWqhbn6D15dx3IidcUSOlCs=;
-        b=V5uM5YKLZEPicxCrexD/VYpVv8sOMe2OEKp//0dwAC6Xwy57kNn5cG1OgAHJ6NX2Qf
-         J9w2JkANfYkS/vxHYfITgk9AeNfm0eO15rZeiL25j1WG2xNPEysLtqdmD9EDNDzEpXRt
-         2ATL9QDkM6Utev1PijEo37hlb9OSCbwEL7gWFqY0fEF+JSPiP/ZKaFOGFjZu6Z7SaWhm
-         /ieSyNiaviW5nL62D2GApWEVzzx9QmeDYdol2zjRDPGgp/oX0uIkwVU16SR6lxMjUCzr
-         HWtotQF/yimVxdaQaKE1hizRxwMQYUiqBsPEkDDttdfByxUPKvv4LvUQV1NAwWqPd22H
-         w5cg==
-X-Gm-Message-State: APjAAAWzWQD94apRs0YuvamKtm1YJjlS3BzGWgiTATvsZn4PoCuToWpb
-        fcpDVeMSaxxt8f0aF78wOuHcpw==
-X-Google-Smtp-Source: APXvYqysKcOFImNh7q+xLEnI5+oG8yvXGOPWq0yok1GRmNS4PwSgal7nZQXzjWKsbnuYzK3jXSOCnw==
-X-Received: by 2002:adf:c409:: with SMTP id v9mr2344929wrf.41.1571733732870;
-        Tue, 22 Oct 2019 01:42:12 -0700 (PDT)
-Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
-        by smtp.gmail.com with ESMTPSA id d4sm24692928wrc.54.2019.10.22.01.42.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Oct 2019 01:42:12 -0700 (PDT)
-Date:   Tue, 22 Oct 2019 10:42:10 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Brian Starkey <Brian.Starkey@arm.com>, nd <nd@arm.com>,
-        David Airlie <airlied@linux.ie>,
-        Liviu Dudau <Liviu.Dudau@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Mihail Atanassov <Mihail.Atanassov@arm.com>,
-        Sean Paul <sean@poorly.run>
-Subject: Re: [RFC,3/3] drm/komeda: Allow non-component drm_bridge only
- endpoints
-Message-ID: <20191022084210.GX11828@phenom.ffwll.local>
-Mail-Followup-To: Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Brian Starkey <Brian.Starkey@arm.com>, nd <nd@arm.com>,
-        David Airlie <airlied@linux.ie>, Liviu Dudau <Liviu.Dudau@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Mihail Atanassov <Mihail.Atanassov@arm.com>,
-        Sean Paul <sean@poorly.run>
-References: <20191004143418.53039-4-mihail.atanassov@arm.com>
- <20191009055407.GA3082@jamwan02-TSP300>
- <5390495.Gzyn2rW8Nj@e123338-lin>
- <20191016162206.u2yo37rtqwou4oep@DESKTOP-E1NTVVP.localdomain>
- <20191017030752.GA3109@jamwan02-TSP300>
- <20191017082043.bpiuvfr3r4jngxtu@DESKTOP-E1NTVVP.localdomain>
- <20191017102055.GA8308@jamwan02-TSP300>
- <20191017104812.6qpuzoh5bx5i2y3m@DESKTOP-E1NTVVP.localdomain>
- <20191017114137.GC25745@shell.armlinux.org.uk>
+        Tue, 22 Oct 2019 04:43:14 -0400
+Received: from mout02.posteo.de ([185.67.36.66]:35333 "EHLO mout02.posteo.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388436AbfJVInO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 04:43:14 -0400
+Received: from submission (posteo.de [89.146.220.130]) 
+        by mout02.posteo.de (Postfix) with ESMTPS id C9BA6240100
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 10:43:10 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.de; s=2017;
+        t=1571733790; bh=d7ljr2KXEchtO4eaUj9aJnzgDAtIamCjSvrcjvTlHgc=;
+        h=Subject:To:Cc:From:Openpgp:Autocrypt:Date:From;
+        b=I1yriIhielZarY2gAYculDOCoorKztv6Wz+v08f2L6Jbc+TRN13GHPiA9ATWy3p+8
+         QkzU6HRrA2mUvh2EgFIA76o2AOuFtx3MuRAsNCgF6DV8GGAwUdVl/Nrw88XKTwL3vL
+         9/E+SwpfXWEWy8AtrNiLIqKtIN8aoVO8dOX5TZ+T4qx7xizqaPiKOaAdeT8Ab69rkW
+         6hoCPIGq496oyWu2zRREyk2KuIZ0IMdcjYFR23NLL0o2TMJLtkK7AVJJSKzbwWggKo
+         TkieDjjqERumJSN0RugxIdq31TB4jem02AQowPwkgSD9x/ikqaSeTCCYKCvlq2pwzn
+         2UKcaGUcmANng==
+Received: from customer (localhost [127.0.0.1])
+        by submission (posteo.de) with ESMTPSA id 46y6Tn74Zyz9rxM;
+        Tue, 22 Oct 2019 10:43:09 +0200 (CEST)
+Subject: Re: [PATCH] dt-bindings: mma8452: Re-word 'interrupt-names'
+ description
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        linux-iio@vger.kernel.org
+Cc:     Chris Healy <cphealy@gmail.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191022035626.13002-1-andrew.smirnov@gmail.com>
+From:   Martin Kepplinger <martink@posteo.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=martink@posteo.de; keydata=
+ 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
+Message-ID: <1a1bdf10-2505-6baf-8030-ce5e0e2b55a9@posteo.de>
+Date:   Tue, 22 Oct 2019 10:43:09 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191017114137.GC25745@shell.armlinux.org.uk>
-X-Operating-System: Linux phenom 5.2.0-2-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191022035626.13002-1-andrew.smirnov@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 12:41:37PM +0100, Russell King - ARM Linux admin wrote:
-> On Thu, Oct 17, 2019 at 10:48:12AM +0000, Brian Starkey wrote:
-> > On Thu, Oct 17, 2019 at 10:21:03AM +0000, james qian wang (Arm Technology China) wrote:
-> > > On Thu, Oct 17, 2019 at 08:20:56AM +0000, Brian Starkey wrote:
-> > > > On Thu, Oct 17, 2019 at 03:07:59AM +0000, james qian wang (Arm Technology China) wrote:
-> > > > > On Wed, Oct 16, 2019 at 04:22:07PM +0000, Brian Starkey wrote:
-> > > > > > 
-> > > > > > If James is strongly against merging this, maybe we just swap
-> > > > > > wholesale to bridge? But for me, the pragmatic approach would be this
-> > > > > > stop-gap.
-> > > > > >
-> > > > > 
-> > > > > This is a good idea, and I vote +ULONG_MAX :)
-> > > > > 
-> > > > > and I also checked tda998x driver, it supports bridge. so swap the
-> > > > > wholesale to brige is perfect. :)
-> > > > > 
-> > > > 
-> > > > Well, as Mihail wrote, it's definitely not perfect.
-> > > > 
-> > > > Today, if you rmmod tda998x with the DPU driver still loaded,
-> > > > everything will be unbound gracefully.
-> > > > 
-> > > > If we swap to bridge, then rmmod'ing tda998x (or any other bridge
-> > > > driver the DPU is using) with the DPU driver still loaded will result
-> > > > in a crash.
-> > > 
-> > > I haven't read the bridge code, but seems this is a bug of drm_bridge,
-> > > since if the bridge is still in using by others, the rmmod should fail
-> > > 
-> > 
-> > Correct, but there's no fix for that today. You can also take a look
-> > at the thread linked from Mihail's cover letter.
-> > 
-> > > And personally opinion, if the bridge doesn't handle the dependence.
-> > > for us:
-> > > 
-> > > - add such support to bridge
-> > 
-> > That would certainly be helpful. I don't know if there's consensus on
-> > how to do that.
-> > 
-> > >   or
-> > > - just do the insmod/rmmod in correct order.
-> > > 
-> > > > So, there really are proper benefits to sticking with the component
-> > > > code for tda998x, which is why I'd like to understand why you're so
-> > > > against this patch?
-> > > >
-> > > 
-> > > This change handles two different connectors in komeda internally, compare
-> > > with one interface, it increases the complexity, more risk of bug and more
-> > > cost of maintainance.
-> > > 
-> > 
-> > Well, it's only about how to bind the drivers - two different methods
-> > of binding, not two different connectors. I would argue that carrying
-> > our out-of-tree patches to support both platforms is a larger
-> > maintenance burden.
-> > 
-> > Honestly this looks like a win-win to me. We get the superior approach
-> > when its supported, and still get to support bridges which are more
-> > common.
-> > 
-> > As/when improvements are made to the bridge code we can remove the
-> > component bits and not lose anything.
+On 22.10.19 05:56, Andrey Smirnov wrote:
+> Current wording in the binding documentation doesn't make it 100%
+> clear that only one of "INT1" and "INT2" will ever be used by the
+> driver and that specifying both has no advantages. Re-word it to make
+> this aspect a bit more explicit.
 > 
-> There was an idea a while back about using the device links code to
-> solve the bridge issue - but at the time the device links code wasn't
-> up to the job.  I think that's been resolved now, but I haven't been
-> able to confirm it.  I did propose some patches for bridge at the
-> time but they probably need updating.
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> Cc: Chris Healy <cphealy@gmail.com>
+> Cc: Jonathan Cameron <jic23@kernel.org>
+> Cc: Hartmut Knaack <knaack.h@gmx.de>
+> Cc: Lars-Peter Clausen <lars@metafoo.de>
+> Cc: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+> Cc: linux-iio@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  Documentation/devicetree/bindings/iio/accel/mma8452.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/accel/mma8452.txt b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
+> index e132394375a1..b27b6bee9eb6 100644
+> --- a/Documentation/devicetree/bindings/iio/accel/mma8452.txt
+> +++ b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
+> @@ -17,7 +17,7 @@ Optional properties:
+>  
+>    - interrupts: interrupt mapping for GPIO IRQ
+>  
+> -  - interrupt-names: should contain "INT1" and/or "INT2", the accelerometer's
+> +  - interrupt-names: should contain "INT1" or "INT2", the accelerometer's
+>  		     interrupt line in use.
+>  
+>    - vdd-supply: phandle to the regulator that provides vdd power to the accelerometer.
+> 
 
-I think the only patches that existed where for panel, and we only
-discussed the bridge case. At least I can only find patches for panel,not
-bridge, but might be missing something.
+Acked-by: Martin Kepplinger <martink@posteo.de>
 
-Either way I think device core is fixed now, so would be really great if
-someone can give this another stab, and make drm_bridge/panel easier to
-use without fireworks on unload.
--Daniel
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+thanks,
+
+                           martin
+
