@@ -2,97 +2,105 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C999CCA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:32:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D45BCA9EB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:34:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C01A20B7C
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:32:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECA0120700
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:34:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571765659;
+	bh=YSjJ4F590dYovNyfbb2k7y3t56m687ezX83hs9dGR30=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=IPbA1jpNMKyFhGbneyu7MGqc9eWMFRfAl9x2J7Q+sVavETIWku288+fx+xYz6Tcqd
+	 kDxWxGPDGI9/kYaYDOF/McmCFmVOtZjHy9WGkZoxguSNprC1fw57WqDB5t6JVXWCdW
+	 oufXT5gQ0ANGUUqCQGh1CeXmvKq09tVf4oMD3M0U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731435AbfJVRco (ORCPT
+        id S1731810AbfJVReR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 13:32:44 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:58550 "EHLO foss.arm.com"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S1726024AbfJVRcn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 13:32:43 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D1DD331F;
-        Tue, 22 Oct 2019 10:32:22 -0700 (PDT)
-Received: from usa.arm.com (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 0FBE43F71A;
-        Tue, 22 Oct 2019 10:32:21 -0700 (PDT)
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [RFC PATCH] cpufreq: mark duplicate frequencies as invalid and continue as normal
-Date:   Tue, 22 Oct 2019 18:32:15 +0100
-Message-Id: <20191022173215.13350-1-sudeep.holla@arm.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 22 Oct 2019 13:34:17 -0400
+Received: from inca-roads.misterjones.org ([213.251.177.50]:52165 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727309AbfJVReR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 13:34:17 -0400
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
+        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
+        (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iMy2u-00030U-T5; Tue, 22 Oct 2019 19:34:13 +0200
+Date:   Tue, 22 Oct 2019 18:34:11 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Jakub Kicinski <jakub.kicinski@netronome.com>
+Cc:     Daniel Wagner <dwagner@suse.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        UNGLinuxDriver@microchip.com, netdev@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rt-users@vger.kernel.org,
+        Woojung Huh <woojung.huh@microchip.com>,
+        Andrew Lunn <andrew@lunn.ch>, Stefan Wahren <wahrenst@gmx.net>,
+        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] net: usb: lan78xx: Use phy_mac_interrupt() for
+ interrupt handling
+Message-ID: <20191022183411.0e9a7bdc@why>
+In-Reply-To: <20191022101747.001b6d06@cakuba.netronome.com>
+References: <20191018082817.111480-1-dwagner@suse.de>
+        <20191018131532.dsfhyiilsi7cy4cm@linutronix.de>
+        <20191022101747.001b6d06@cakuba.netronome.com>
+Organization: Approximate
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: jakub.kicinski@netronome.com, dwagner@suse.de, bigeasy@linutronix.de, UNGLinuxDriver@microchip.com, netdev@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org, woojung.huh@microchip.com, andrew@lunn.ch, wahrenst@gmx.net, Jisheng.Zhang@synaptics.com, tglx@linutronix.de
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently if we encounter duplicate frequency table entries, we abort
-the validation and return error immediately. Instead of failing, we
-can mark the entry as invalid and continue to function normal.
+On Tue, 22 Oct 2019 10:17:47 -0700
+Jakub Kicinski <jakub.kicinski@netronome.com> wrote:
 
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
----
- drivers/cpufreq/freq_table.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+> On Fri, 18 Oct 2019 15:15:32 +0200, Sebastian Andrzej Siewior wrote:
+> > On 2019-10-18 10:28:17 [+0200], Daniel Wagner wrote:  
+> > > handle_simple_irq() expect interrupts to be disabled. The USB
+> > > framework is using threaded interrupts, which implies that interrupts
+> > > are re-enabled as soon as it has run.    
+> > 
+> > Without threading interrupts, this is invoked in pure softirq context
+> > since commit ed194d1367698 ("usb: core: remove local_irq_save() around  
+> > ->complete() handler") where the local_irq_disable() has been removed.    
+> > 
+> > This is probably not a problem because the lock is never observed with
+> > in IRQ context.
+> > 
+> > Wouldn't handle_nested_irq() work here instead of the simple thingy?  
+> 
+> Daniel could you try this suggestion? Would it work?
+> 
+> I'm not sure we are at the stage yet where "doesn't work on -rt" is
+> sufficient reason to revert a working upstream patch. Please correct 
+> me if I'm wrong.
 
-Hi Viresh,
+But that's the thing: it doesn't work at all, RT or not (it spits an
+awful warning). See the various reports Daniel linked to. Maintainers
+have been completely unresponsive, and the RPI folks have their own out
+of tree hack, I believe (which probably reverts to the previous,
+working situation where the driver uses polling for some of its PHY
+handling business).
 
-Since commit da0c6dc00c69 ("cpufreq: Handle sorted frequency tables more
-efficiently"), I seem to have modified the firmware entry on my TC2 to
-drop 500MHz and had not seen the issue with duplicate entries and had
-totally forgotten about it.
+Sebastian's suggestion is definitely worth trying if you have the HW
+though.
 
-Recently I reverted back to original setting as I corrupted it and
-started seeing this issues. I don't know the background for raising
-duplicates as fatal error but we did allow it when we add arm_big_little.c
-and hence this RFC. If there are known issues with this approach, I can
-continue with changed firmware config.
+Thanks,
 
-With switcher, we have:
-(little cluster)
-Virt: 175 MHz, 200 MHz, 250 MHz, 300 MHz, 350 MHz, 400 MHz, 450 MHz, 500 MHz
-Actu: 350 MHz, 400 MHz, 500 MHz, 600 MHz, 700 MHz, 800 MHz, 900 MHz, 1000 MHz
-(big cluster)
-500 MHz, 600 MHz, 700 MHz, 800 MHz, 900 MHz, 1000 MHz, 1.10 GHz, 1.20 GHz
-
-with 500 MHz duplicate in merged table.
-
-Regards,
-Sudeep
-
-diff --git a/drivers/cpufreq/freq_table.c b/drivers/cpufreq/freq_table.c
-index ded427e0a488..e9bf287846d6 100644
---- a/drivers/cpufreq/freq_table.c
-+++ b/drivers/cpufreq/freq_table.c
-@@ -305,9 +305,10 @@ static int set_freq_table_sorted(struct cpufreq_policy *policy)
- 		}
- 
- 		if (pos->frequency == prev->frequency) {
--			pr_warn("Duplicate freq-table entries: %u\n",
-+			pr_warn("Duplicate freq-table entries: %u marking it invalid\n,",
- 				pos->frequency);
--			return -EINVAL;
-+			pos->frequency = CPUFREQ_ENTRY_INVALID;
-+			continue;
- 		}
- 
- 		/* Frequency increased from prev to pos */
+	M.
 -- 
-2.17.1
-
+Jazz is not dead. It just smells funny...
