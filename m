@@ -2,151 +2,94 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 092B5CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 05:49:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C1BCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 05:55:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7F57218AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 05:49:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4BDE2089E
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 05:55:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VeZ/77yC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730772AbfJVFtL (ORCPT
+        id S2387465AbfJVFyO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 01:49:11 -0400
-Received: from mail-sz.amlogic.com ([211.162.65.117]:9380 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725788AbfJVFtL (ORCPT
+        Tue, 22 Oct 2019 01:54:14 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:40694 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725907AbfJVFyO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 01:49:11 -0400
-Received: from [10.28.19.63] (10.28.19.63) by mail-sz.amlogic.com (10.28.11.5)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Tue, 22 Oct
- 2019 13:49:20 +0800
-Subject: Re: [PATCH v2 3/4] watchdog: add meson secure watchdog driver
-To:     Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Qianggui Song <qianggui.song@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Jian Hu <jian.hu@amlogic.com>,
-        <linux-watchdog@vger.kernel.org>,
-        <linux-amlogic@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1571387622-35132-1-git-send-email-xingyu.chen@amlogic.com>
- <1571387622-35132-4-git-send-email-xingyu.chen@amlogic.com>
- <7397f6db-1dc8-3abd-41ff-2e47323c7ffa@roeck-us.net>
- <bfc892af-1cd3-1437-75b2-5ba2b7913284@amlogic.com>
- <bd5ed275-4ae4-4163-b585-23fbead9833f@roeck-us.net>
-From:   Xingyu Chen <xingyu.chen@amlogic.com>
-Message-ID: <1b841195-cf76-7128-9569-5c2b0d39c1c1@amlogic.com>
-Date:   Tue, 22 Oct 2019 13:49:20 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 22 Oct 2019 01:54:14 -0400
+Received: by mail-wr1-f67.google.com with SMTP id o28so16461398wro.7
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 22:54:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=70+N4pxkreRk5D8qTuATktL5M/ApNQm1mVe3QKo4Ow8=;
+        b=VeZ/77yCO2vkRreTdZF0BmlF3aBW7GYN63ztZ+W9IxGlyzot3aZzQG7XNVjBY7A7oD
+         5ErFNuJigjHDoajFcUUKer2ZNuRvqeRRkKDFwX0d2Zr1W2J0Sitj3DU47jafk1WpqrB9
+         RO+JgyMPsgCHPUuHfaLf9mhm0FhMWiroTQMq0AMJS2EyfB2q8y2Uj4BUJeCO2gXI9tCY
+         6QkWiBS+nVx6fiVGxPNCg3OkhqZK5Cxo3moubEo1LbU3pI9Z3P3SLfQSm8r4r1GEdvXM
+         A3I5Jr0ovB215EmWyJbd+kRIvPhHLcOf8Yw0LDZ75fNBWsAH3Ssp+sYWHP4KD/+V8/GQ
+         /NvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=70+N4pxkreRk5D8qTuATktL5M/ApNQm1mVe3QKo4Ow8=;
+        b=ftdtM3efjZDG7mkFycUdEdO+nCBShvaB6ztNGjD7EDFWxWIGGm74ZS9SQ0KSmQxCoi
+         xh+WvVrkf/PnRjaEQkC9Ix4vWI+HKkHEw0jZEZ50u8N4md9xeqrIHd8dWEcGtH+Dt7US
+         Rzv412rvC0OI0NLn+9dDzbSmcU15CiFsEw1KtqB9WVsvsc+K55PKBZ0vBPoYum72waEh
+         +QUtXy8lHbRX1QihB+2hchDl/dCFpDrkithS7yCTU+nAjuqKXlzf0e9V2UHHpfLuoTWV
+         gs4SSI5wgnmw7slzSnyZcsHRxcvrhwhJ/F6Lc7Z1qcNvs9FfWGwTf/a7sl2KplfRcc1q
+         579w==
+X-Gm-Message-State: APjAAAUO+/8PSMwcgGteVjv1uZtilF9EAYSVr5wBBoCpzuFTJVdZO6Y8
+        oJ7iPgBG+amXvRDme1CQGZFHOI6cEpzZ8cWwjJj25g==
+X-Google-Smtp-Source: APXvYqwrYnGYkoL34VBIT6H+JNjJm/uZwOLCkW8JDJj+1Q/w7n/LWtklQn1YWpTuz0AHRX28UXgTzenaMPN3dF2ZvS4=
+X-Received: by 2002:adf:9f08:: with SMTP id l8mr1573796wrf.325.1571723652654;
+ Mon, 21 Oct 2019 22:54:12 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <bd5ed275-4ae4-4163-b585-23fbead9833f@roeck-us.net>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.28.19.63]
-X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
- (10.28.11.5)
+References: <20191018161033.261971-1-samitolvanen@google.com>
+ <20191018161033.261971-15-samitolvanen@google.com> <CAKv+Gu-kMzsot5KSPSo_iMsuzcv8J1R5RLT9uGjuzJsxCVUPPg@mail.gmail.com>
+ <CABCJKuf-tXu2ZhBMCYTHP3BU8g1i-0GGd7+YvyTDUc1kH2iZvA@mail.gmail.com>
+In-Reply-To: <CABCJKuf-tXu2ZhBMCYTHP3BU8g1i-0GGd7+YvyTDUc1kH2iZvA@mail.gmail.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Tue, 22 Oct 2019 07:54:07 +0200
+Message-ID: <CAKv+Gu_b6eCy4BbM0xFBgL2EzW+eP5rH+wTOgNCO=ai-vb-WWw@mail.gmail.com>
+Subject: Re: [PATCH 14/18] arm64: efi: restore x18 if it was corrupted
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Guenter
+On Tue, 22 Oct 2019 at 00:40, Sami Tolvanen <samitolvanen@google.com> wrote:
+>
+> On Sun, Oct 20, 2019 at 11:20 PM Ard Biesheuvel
+> <ard.biesheuvel@linaro.org> wrote:
+> > You'll have to elaborate a bit here and explain that this is
+> > sufficient, given that we run EFI runtime services with interrupts
+> > enabled.
+>
+> I can add a note about this in v2. This is called with preemption
+> disabled and we have a separate interrupt shadow stack, so as far as I
+> can tell, this should be sufficient. Did you have concerns about this?
+>
 
-On 2019/10/21 21:38, Guenter Roeck wrote:
-> On 10/21/19 1:03 AM, Xingyu Chen wrote:
->> Hi, Guenter
->>
->> On 2019/10/21 0:56, Guenter Roeck wrote:
->>> On 10/18/19 1:33 AM, Xingyu Chen wrote:
->>>> The watchdog controller on the Meson-A/C series SoCs is moved to secure
->>>> world, watchdog operation needs to be done in secure EL3 mode via ATF,
->>>> Non-secure world can call SMC instruction to trap to AFT for watchdog
->>>> operation.
->>>>
->>>> Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
->>>> ---
->>>>   drivers/watchdog/Kconfig         |  17 ++++
->>>>   drivers/watchdog/Makefile        |   1 +
->>>>   drivers/watchdog/meson_sec_wdt.c | 187 
->>>> +++++++++++++++++++++++++++++++++++++++
->>>>   3 files changed, 205 insertions(+)
->>>>   create mode 100644 drivers/watchdog/meson_sec_wdt.c
->>>>
->>>> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
->>>> index 58e7c10..e84be42 100644
->>>> --- a/drivers/watchdog/Kconfig
->>>> +++ b/drivers/watchdog/Kconfig
->>>> @@ -826,6 +826,23 @@ config MESON_GXBB_WATCHDOG
->>>>         To compile this driver as a module, choose M here: the
->>>>         module will be called meson_gxbb_wdt.
->>>> +config MESON_SEC_WATCHDOG
->>>> +    tristate "Amlogic Meson Secure watchdog support"
->>>> +    depends on MESON_SM
->>>> +    depends on ARCH_MESON || COMPILE_TEST
->>>
->>> This dependency is pointless. MESON_SM already depends on ARCH_MESON,
->>> thus specifying "COMPILE_TEST" here adds no value but only
->>> creates confusion.
->> Thanks for your analysis, perhaps i should remove the line below.
->> - depends on ARCH_MESON || COMPILE_TEST
->>
->> Is it ok to modify code above like this ?
-> 
-> Yes.
-Thanks, fix it in next version.
-
-> [ ... ]
-> 
->>>> +static unsigned int meson_sec_wdt_get_timeleft(struct 
->>>> watchdog_device *wdt_dev)
->>>> +{
->>>> +    int ret;
->>>> +    unsigned int timeleft;
->>>> +    struct meson_sec_wdt *data = watchdog_get_drvdata(wdt_dev);
->>>> +
->>>> +    ret = meson_sm_call(data->fw, SM_WATCHDOG_OPS, Thanks&timeleft,
->>>> +                MESON_SIP_WDT_GETTIMELEFT, 0, 0, 0, 0);
->>>> +
->>>> +    if (ret)
->>>> +        return ret;
->>>
->>> Meh, that doesn't work. I just realized that the return type is 
->>> unsigned,
->>> so returning a negative error code is pointless. Guess we'll have to
->>> live with returning 0 in this case after all. I wonder if we should
->>> fix the API and return an integer (with negative error code), but that
->>> is a different question.
->> Thanks for your review.
->>
->> IMO, if returning an integer, and the value which copy to user buf 
->> should be formatted with %d instead of %u (see timeleft_show), it will 
->> cause the max value of timeleft is reduced from 4294967295 to 
->> 2147483647. but i'am not sure whether it will bring risk.
-> 
-> Not that it matters right now, but I don't think that limiting 'timeleft'
-> reporting to 2147483647 seconds, or ~68 years, would cause any risk.
-> It would just be a large patch changing several drivers all at once,
-> that is all.
-> 
->>
->> So i also think returning 0 may be better in this case.
-> 
-> Yes, please do that.
-Thanks, fix it in next version.
-> 
-> Thanks,
-> Guenter
-> 
-> .
-> 
+No concerns, but we should put the above clarification in the commit log.
