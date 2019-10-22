@@ -2,125 +2,136 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBC88CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:58:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0E6BC47E49
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:58:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC83820679
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:58:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jv-coder.de header.i=@jv-coder.de header.b="WaY/fLxd"
+	by mail.kernel.org (Postfix) with ESMTP id 981B020679
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:58:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571734736;
+	bh=woOQSwlVRud5RY6zp4OOcbj2xbOxfi5ai2ThvAX4eBY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VhFW6Qw6lNQ65w1df4FW3T4hZWsyEz4ZUdTM4u2gXfN0IcJfjUKyALGoX1ha4Iw08
+	 hvSwlEi44ow7xQQAGuo5EUZjkuPKwIBjwTGqQg/eBr15sBHwJB5jrbqxi28CcOWcml
+	 mVciSvdhddlSYmAAUmai54C6d+7v0mXrM2u5sApw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731339AbfJVI6s (ORCPT
+        id S1731366AbfJVI6z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 04:58:48 -0400
-Received: from mail.jv-coder.de ([5.9.79.73]:52360 "EHLO mail.jv-coder.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726978AbfJVI6s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 04:58:48 -0400
-Received: from [10.61.40.7] (unknown [37.156.92.209])
-        by mail.jv-coder.de (Postfix) with ESMTPSA id 0B15E9FA2B;
-        Tue, 22 Oct 2019 08:58:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jv-coder.de; s=dkim;
-        t=1571734725; bh=vmxqbKFdbAsB2xDI6xrGHn1DS1Pl2hjh1JTq6d0++zQ=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version;
-        b=WaY/fLxdqDRfcENriUsOVoPh73icYTpF1VgO6o5bxJNM01aauwiOzp9lCRKS9B3vK
-         5KoM41PObQR9ArA1fz1xpvcODULVcq0k2kO+dCgfhyg/tn/I6z8j42wYJXewMet+GD
-         O7u97x0Mvf0rZp/wHmFI3R5isw3GgWdM860/tAx8=
-Subject: Re: [PATCH] xfrm : lock input tasklet skb queue
-To:     Tom Rix <trix@redhat.com>, steffen.klassert@secunet.com,
-        herbert@gondor.apana.org.au, davem@davemloft.net,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <CACVy4SVuw0Qbjiv6PLRn1symoxGzyBMZx2F5O23+jGZG6WHuYA@mail.gmail.com>
-From:   Joerg Vehlow <lkml@jv-coder.de>
-Message-ID: <ac5f327b-d693-31cb-089f-b0880a4e298b@jv-coder.de>
-Date:   Tue, 22 Oct 2019 10:58:44 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Tue, 22 Oct 2019 04:58:55 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33264 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726978AbfJVI6z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 04:58:55 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id DFD59B7F5;
+        Tue, 22 Oct 2019 08:58:52 +0000 (UTC)
+Date:   Tue, 22 Oct 2019 10:58:51 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Oscar Salvador <osalvador@suse.de>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>
+Subject: Re: [PATCH v1 1/2] mm/page_alloc.c: Don't set pages PageReserved()
+ when offlining
+Message-ID: <20191022085851.GF9379@dhcp22.suse.cz>
+References: <20191021141927.10252-1-david@redhat.com>
+ <20191021141927.10252-2-david@redhat.com>
+ <20191021144345.GT9379@dhcp22.suse.cz>
+ <b6a392c9-1cb8-321e-b7ba-d483d928a3cc@redhat.com>
+ <20191021154712.GW9379@dhcp22.suse.cz>
+ <91ecb9b7-4271-a3a7-2342-b0afd4c41606@redhat.com>
+ <20191022082053.GB9379@dhcp22.suse.cz>
+ <c9517b78-c38f-4e1b-f8cb-8df67bf106ec@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <CACVy4SVuw0Qbjiv6PLRn1symoxGzyBMZx2F5O23+jGZG6WHuYA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c9517b78-c38f-4e1b-f8cb-8df67bf106ec@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue 22-10-19 10:23:37, David Hildenbrand wrote:
+> On 22.10.19 10:20, Michal Hocko wrote:
+> > On Mon 21-10-19 17:54:35, David Hildenbrand wrote:
+> > > On 21.10.19 17:47, Michal Hocko wrote:
+> > > > On Mon 21-10-19 17:39:36, David Hildenbrand wrote:
+> > > > > On 21.10.19 16:43, Michal Hocko wrote:
+> > > > [...]
+> > > > > > We still set PageReserved before onlining pages and that one should be
+> > > > > > good to go as well (memmap_init_zone).
+> > > > > > Thanks!
+> > > > > 
+> > > > > memmap_init_zone() is called when onlining memory. There, set all pages to
+> > > > > reserved right now (on context == MEMMAP_HOTPLUG). We clear PG_reserved when
+> > > > > onlining a page to the buddy (e.g., generic_online_page). If we would online
+> > > > > a memory block with holes, we would want to keep all such pages
+> > > > > (!pfn_valid()) set to reserved. Also, there might be other side effects.
+> > > > 
+> > > > Isn't it sufficient to have those pages in a poisoned state? They are
+> > > > not onlined so their state is basically undefined anyway. I do not see
+> > > > how PageReserved makes this any better.
+> > > 
+> > > It is what people have been using for a long time. Memory hole ->
+> > > PG_reserved. The memmap is valid, but people want to tell "this here is
+> > > crap, don't look at it".
+> > 
+> > The page is poisoned, right? If yes then setting the reserved bit
+> > doesn't make any sense.
+> 
+> No it's not poisoned AFAIK. It should be initialized
 
-I already send a patch on 2019-09-09 to this mailing list with a similar 
-issue[1].
-Sadly no replies, although this is a huge bug in the rt kernel.
-I fixed it a bit differently, using smaller locked regions.
-You have also propably a bug in your patch, because trans->queue.lock is
-no initialized by __skb_queue_head_init (in xfrm_input_init)
+Dohh, it seems I still keep confusing myself. You are right the page is
+initialized at this stage. A potential hole in RAM or ZONE_DEVICE memory
+will just not hit the page allocator. Sorry about the noise.
 
-Jörg
+> - and I remember that PG_reserved on memory holes is relevant to
+> detect MMIO pages. (e.g., looking at KVM code ...)
 
-[1] https://lkml.org/lkml/2019/9/9/111
+I can see kvm_is_reserved_pfn() which checks both pfn_valid and
+PageReserved. How does this help to detect memory holes though?
+Any driver might be setting the page reserved.
+ 
+> > > > Also is the hole inside a hotplugable memory something we really have to
+> > > > care about. Has anybody actually seen a platform to require that?
+> > > 
+> > > That's what I was asking. I can see "support" for this was added basically
+> > > right from the beginning. I'd say we rip that out and cleanup/simplify. I am
+> > > not aware of a platform that requires this. Especially, memory holes on
+> > > DIMMs (detected during boot) seem like an unlikely thing.
+> > 
+> > The thing is that the hotplug development shows ad-hoc decisions
+> > throughout the code. It is even worse that it is hard to guess whether
+> > some hludges are a result of a careful design or ad-hoc trial and
+> > failure approach on setups that never were production. Building on top
+> > of that be preserving hacks is not going to improve the situation. So I
+> > am perfectly fine to focus on making the most straightforward setups
+> > work reliably. Even when there is a risk of breaking some odd setups. We
+> > can fix them up later but we would have at least a specific example and
+> > document it.
+> > 
+> 
+> Alright, I'll prepare a simple patch that rejects offlining memory with
 
-Am 20.10.2019 um 17:46 schrieb Tom Rix:
-> On PREEMPT_RT_FULL while running netperf, a corruption
-> of the skb queue causes an oops.
->
-> This appears to be caused by a race condition here
->          __skb_queue_tail(&trans->queue, skb);
->          tasklet_schedule(&trans->tasklet);
-> Where the queue is changed before the tasklet is locked by
-> tasklet_schedule.
->
-> The fix is to use the skb queue lock.
->
-> Signed-off-by: Tom Rix <trix@redhat.com>
-> ---
->   net/xfrm/xfrm_input.c | 11 ++++++++++-
->   1 file changed, 10 insertions(+), 1 deletion(-)
->
-> diff --git a/net/xfrm/xfrm_input.c b/net/xfrm/xfrm_input.c
-> index 9b599ed66d97..226dead86828 100644
-> --- a/net/xfrm/xfrm_input.c
-> +++ b/net/xfrm/xfrm_input.c
-> @@ -758,12 +758,16 @@ static void xfrm_trans_reinject(unsigned long data)
->       struct xfrm_trans_tasklet *trans = (void *)data;
->       struct sk_buff_head queue;
->       struct sk_buff *skb;
-> +    unsigned long flags;
->
->       __skb_queue_head_init(&queue);
-> +    spin_lock_irqsave(&trans->queue.lock, flags);
->       skb_queue_splice_init(&trans->queue, &queue);
->
->       while ((skb = __skb_dequeue(&queue)))
->           XFRM_TRANS_SKB_CB(skb)->finish(dev_net(skb->dev), NULL, skb);
-> +
-> +    spin_unlock_irqrestore(&trans->queue.lock, flags);
->   }
->
->   int xfrm_trans_queue(struct sk_buff *skb,
-> @@ -771,15 +775,20 @@ int xfrm_trans_queue(struct sk_buff *skb,
->                      struct sk_buff *))
->   {
->       struct xfrm_trans_tasklet *trans;
-> +    unsigned long flags;
->
->       trans = this_cpu_ptr(&xfrm_trans_tasklet);
-> +    spin_lock_irqsave(&trans->queue.lock, flags);
->
-> -    if (skb_queue_len(&trans->queue) >= netdev_max_backlog)
-> +    if (skb_queue_len(&trans->queue) >= netdev_max_backlog) {
-> +        spin_unlock_irqrestore(&trans->queue.lock, flags);
->           return -ENOBUFS;
-> +    }
->
->       XFRM_TRANS_SKB_CB(skb)->finish = finish;
->       __skb_queue_tail(&trans->queue, skb);
->       tasklet_schedule(&trans->tasklet);
-> +    spin_unlock_irqrestore(&trans->queue.lock, flags);
->       return 0;
->   }
->   EXPORT_SYMBOL(xfrm_trans_queue);
+Is offlining an interesting path? I would expect onlining to be much
+more interesting one.
 
+> memory holes. We can apply that and see if anybody screams out loud. If not,
+> we can clean up that crap.
+-- 
+Michal Hocko
+SUSE Labs
