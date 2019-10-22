@@ -2,75 +2,39 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8560CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77401CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:43:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF0BA20679
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:43:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="N+EZgZF8"
+	by mail.kernel.org (Postfix) with ESMTP id 587BD21906
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:43:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388616AbfJVInt (ORCPT
+        id S2388546AbfJVIn2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 04:43:49 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:40284 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388548AbfJVIna (ORCPT
+        Tue, 22 Oct 2019 04:43:28 -0400
+Received: from imap1.codethink.co.uk ([176.9.8.82]:44766 "EHLO
+        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388518AbfJVIn2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 04:43:30 -0400
-Received: by mail-wm1-f66.google.com with SMTP id b24so15270638wmj.5
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 01:43:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=lF0rxmNWyqU1JeqNwoctp95mlhu+5uGfp5ZbeCzqTpo=;
-        b=N+EZgZF8RQP5/8GqOnG3JYNlg3vedBnTgEWesw5+MnrBsb0HMrss3o+obg9jmM3hi+
-         JXazfzwRpHztMHjSymlPadeAkotn0I5y3bD6/akHpBFxgp6o1iJXM+FpZLaAn1IM4a6X
-         7KpyUpaSPIr64+24miNqMyZfyxQqt8PHIEGs+mUOU2sH6WwGrQ8qDsfacOCHGeAOXTsd
-         TVlF5wpAyHuWshufzjRmJDYHwkzTvwy9aCn/Luazg9uhP5T0WpXn6OfTB7+biPvzpbxV
-         nlSRtGDKaZROzrEelkFmzhrr6K+OnBDzB2ZWHbl0BemOjuAyLkdrf1z3w/a8T4a8aNPl
-         zhgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=lF0rxmNWyqU1JeqNwoctp95mlhu+5uGfp5ZbeCzqTpo=;
-        b=PEkCBUpOBSQKioPpCGKjE7ErbgIgBQJTMmak85yej5aCWQeogrLCiiTUlJzk9ogoxC
-         S+gzNx4NSwigqRHgn+0OFy7huJgHpS3QLcNTBAz/ifzwkBK2viGIfgHtgnYqjrIybHz7
-         /XdOddTBhC+CW486BVMUZQYAXvM0J08fnrTd+wJYcR5Yk+7Q5k5OicUniBhRxUmgWa4g
-         Q+aEC8Qm1BUk4RkIw65rIy1Ea5Ha2EBxGBZkyyZRp+2pStbcr+clQbCtxIEZvypWCbyu
-         IgD4zw3iqrWRu5kT3mLEUWjtjb4mqtl7zSptkUs/zsO8fsQweY0ffkeeg1xE559h8PX+
-         U9YQ==
-X-Gm-Message-State: APjAAAWiAhD75TwA/oix3bD2/G9Q34Fth0FLzQTypxZ1wU3sV+yayHra
-        1pWKdo18R0MqO6CRsw9sTGaQGg==
-X-Google-Smtp-Source: APXvYqztDYYsnFdiDGD+fiyY6ct9bi/pTDXqTQExcOzyynd+wJCuOrmecP003ynHnveZyqfhkGb9ng==
-X-Received: by 2002:a1c:7e57:: with SMTP id z84mr1960221wmc.84.1571733808309;
-        Tue, 22 Oct 2019 01:43:28 -0700 (PDT)
-Received: from localhost.localdomain (amontpellier-652-1-281-69.w109-210.abo.wanadoo.fr. [109.210.96.69])
-        by smtp.gmail.com with ESMTPSA id q25sm477231wra.3.2019.10.22.01.43.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Oct 2019 01:43:27 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Jonathan Corbet <corbet@lwn.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [RESEND PATCH v3 5/8] misc: sram: use devm_platform_ioremap_resource_wc()
-Date:   Tue, 22 Oct 2019 10:43:15 +0200
-Message-Id: <20191022084318.22256-6-brgl@bgdev.pl>
+        Tue, 22 Oct 2019 04:43:28 -0400
+Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
+        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
+        id 1iMplF-0003JS-4F; Tue, 22 Oct 2019 09:43:25 +0100
+Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.3)
+        (envelope-from <ben@rainbowdash.codethink.co.uk>)
+        id 1iMplE-0003Y1-Ee; Tue, 22 Oct 2019 09:43:24 +0100
+From:   "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
+To:     linux-kernel@lists.codethink.co.uk
+Cc:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org
+Subject: [PATCH] cpu-topology: declare parse_acpi_topology in <linux/arch_topology.h>
+Date:   Tue, 22 Oct 2019 09:43:23 +0100
+Message-Id: <20191022084323.13594-1-ben.dooks@codethink.co.uk>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191022084318.22256-1-brgl@bgdev.pl>
-References: <20191022084318.22256-1-brgl@bgdev.pl>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,73 +42,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+The parse_acpi_topology() is not declared anywhere which
+causes the following sparse warning:
 
-Use the new devm_platform_ioremap_resource_wc() helper instead of
-devm_ioremap_wc() combinded with a call to platform_get_resource().
-Also use devm_platform_ioremap_resource() where applicable.
+drivers/base/arch_topology.c:522:19: warning: symbol 'parse_acpi_topology' was not declared. Should it be static?
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
 ---
- drivers/misc/sram.c | 28 ++++++++--------------------
- 1 file changed, 8 insertions(+), 20 deletions(-)
+Cc: Sudeep Holla <sudeep.holla@arm.com>
+Cc: linux-kernel@vger.kernel.org
+Cc: gregkh@linuxfoundation.org
+---
+ include/linux/arch_topology.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/misc/sram.c b/drivers/misc/sram.c
-index f30448bf3a63..6c1a23cb3e8c 100644
---- a/drivers/misc/sram.c
-+++ b/drivers/misc/sram.c
-@@ -340,8 +340,6 @@ static const struct of_device_id sram_dt_ids[] = {
- static int sram_probe(struct platform_device *pdev)
- {
- 	struct sram_dev *sram;
--	struct resource *res;
--	size_t size;
- 	int ret;
- 	int (*init_func)(void);
+diff --git a/include/linux/arch_topology.h b/include/linux/arch_topology.h
+index 42f2b5126094..3015ecbb90b1 100644
+--- a/include/linux/arch_topology.h
++++ b/include/linux/arch_topology.h
+@@ -57,6 +57,7 @@ const struct cpumask *cpu_coregroup_mask(int cpu);
+ void update_siblings_masks(unsigned int cpu);
+ void remove_cpu_topology(unsigned int cpuid);
+ void reset_cpu_topology(void);
++int parse_acpi_topology(void);
+ #endif
  
-@@ -351,25 +349,14 @@ static int sram_probe(struct platform_device *pdev)
- 
- 	sram->dev = &pdev->dev;
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	if (!res) {
--		dev_err(sram->dev, "found no memory resource\n");
--		return -EINVAL;
--	}
--
--	size = resource_size(res);
--
--	if (!devm_request_mem_region(sram->dev, res->start, size, pdev->name)) {
--		dev_err(sram->dev, "could not request region for resource\n");
--		return -EBUSY;
--	}
--
- 	if (of_property_read_bool(pdev->dev.of_node, "no-memory-wc"))
--		sram->virt_base = devm_ioremap(sram->dev, res->start, size);
-+		sram->virt_base = devm_platform_ioremap_resource(pdev, 0);
- 	else
--		sram->virt_base = devm_ioremap_wc(sram->dev, res->start, size);
--	if (!sram->virt_base)
--		return -ENOMEM;
-+		sram->virt_base = devm_platform_ioremap_resource_wc(pdev, 0);
-+	if (IS_ERR(sram->virt_base)) {
-+		dev_err(&pdev->dev, "could not map SRAM registers\n");
-+		return PTR_ERR(sram->virt_base);
-+	}
- 
- 	sram->pool = devm_gen_pool_create(sram->dev, ilog2(SRAM_GRANULARITY),
- 					  NUMA_NO_NODE, NULL);
-@@ -382,7 +369,8 @@ static int sram_probe(struct platform_device *pdev)
- 	else
- 		clk_prepare_enable(sram->clk);
- 
--	ret = sram_reserve_regions(sram, res);
-+	ret = sram_reserve_regions(sram,
-+			platform_get_resource(pdev, IORESOURCE_MEM, 0));
- 	if (ret)
- 		goto err_disable_clk;
- 
+ #endif /* _LINUX_ARCH_TOPOLOGY_H_ */
 -- 
 2.23.0
 
