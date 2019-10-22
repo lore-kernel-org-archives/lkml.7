@@ -2,123 +2,137 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FC5FCA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:59:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1293CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:59:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 454EE20640
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:59:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7040720640
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:59:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="FzT8PFDj"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tfuy+tQw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731380AbfJVI7e (ORCPT
+        id S1731393AbfJVI7y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 04:59:34 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40050 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728832AbfJVI7d (ORCPT
+        Tue, 22 Oct 2019 04:59:54 -0400
+Received: from mail-pg1-f201.google.com ([209.85.215.201]:38884 "EHLO
+        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728832AbfJVI7y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 04:59:33 -0400
-Received: by mail-wr1-f67.google.com with SMTP id o28so17077993wro.7
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 01:59:30 -0700 (PDT)
+        Tue, 22 Oct 2019 04:59:54 -0400
+Received: by mail-pg1-f201.google.com with SMTP id b24so12136396pgi.5
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 01:59:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jxmCwIeHDgkpYVsOzcGzZpWtPrDaLJlk3S4i0/jBbqQ=;
-        b=FzT8PFDjIeRzigByVRwj0mJBOY+NZri4fx2GCcFeQvsKu0uIP5+G1eqnDjAUzziXIW
-         iSpGdtjw/lp3Cqe01O2ixd9JHyOXSLeoDOMn/iys8YEejPa0QHKhm7+iDi1ZmWFGWNjP
-         E9UwvDBr6PKnx7uCF5g51cb3H2YhOPDsKpR2o=
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=LZl6zNSvagqcd/4AyoUyx0eWouXvQtN7q4jWsmfi4io=;
+        b=tfuy+tQwGzR8wBSj4bqW+++GTJLvz/JNlH7jUKHLm9iuvXEQfhb5ZNR9xHYc2Fezxa
+         4JaEb5XDWhwEoZ4mxDhEpCWBwDg5Pts4SEkzpjZjI7XS1V1c/AhFAqoXPtUzk+0aa6Rk
+         emCFtwda12zRaQHYEakvagoMbVU+Q0scW3GD6EJ8l6UOPl7t18ykbui3kBQZ3kSZShQ2
+         ubjOmWTl30P4t5QBJ26DQzGRmoV9c9+9CY0j0iYxxaJBhcvtwsJNdoNsTbAkpK4mThGx
+         7fA6ofgnYZwOsTSE63oMpJ3Hh3kYdWb4hASmlnUnKbPBWAWjY5/Xd1Yq5/KZJN55BADZ
+         02IA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=jxmCwIeHDgkpYVsOzcGzZpWtPrDaLJlk3S4i0/jBbqQ=;
-        b=ovJTohS9Ic68MVmkohPW6dKG1/gtQm00QhF0yte6rJlVzcWW4cSDDtRqACdDrMwGLt
-         BTlP/jObJ+xn20zFAr1s46nXAauPLjgT0YpA2DLP/Scx5sIJinDvZeq+IaIjKKUVYCYu
-         7MMjOn8R4h5V623whf1t111ukpejQWVhoRqWi1zZw6a/Z59LQtjO8yaWe999GxtztvFt
-         uxTfMkj20m9AfD01qPt971cs7eBsiZPwRe71xQ/9BHQIMSKRnJAGU9DInxCgOl/wTb2l
-         LFDBkdD6+RB98T7U5gyTVlPxiQxGkqEcE7sJASOD5ziMFxG2N1/GEgVG6xDXH8ZM2n9o
-         wn2Q==
-X-Gm-Message-State: APjAAAWI8bPvRTXnSKjjOtScanphu0wwgC2pMpKhZJVYTxIYP0Olk6BJ
-        s5xUSpha/eCDqxI52V10M8RgYA==
-X-Google-Smtp-Source: APXvYqzd2QpyGvXdawpEdZBVER8fWByd/JbP1ANnd25CFqLpm8M5brZeLwzlHZe2BHfKM5mySIaaEw==
-X-Received: by 2002:adf:9bdc:: with SMTP id e28mr2303057wrc.309.1571734770249;
-        Tue, 22 Oct 2019 01:59:30 -0700 (PDT)
-Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
-        by smtp.gmail.com with ESMTPSA id b196sm10894237wmd.24.2019.10.22.01.59.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Oct 2019 01:59:29 -0700 (PDT)
-Date:   Tue, 22 Oct 2019 10:59:27 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Kangjie Lu <kjlu@umn.edu>
-Cc:     Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/gma500: fix memory disclosures due to uninitialized
- bytes
-Message-ID: <20191022085927.GA11828@phenom.ffwll.local>
-Mail-Followup-To: Kangjie Lu <kjlu@umn.edu>,
-        Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
-        David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-References: <20191018044150.1899-1-kjlu@umn.edu>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191018044150.1899-1-kjlu@umn.edu>
-X-Operating-System: Linux phenom 5.2.0-2-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=LZl6zNSvagqcd/4AyoUyx0eWouXvQtN7q4jWsmfi4io=;
+        b=VfKVS1MKZuvQJ0iiZpWo4aoAIfHxhbybfbe9PWWUmx4Vpc/M4tSzKL6YbVPsPOxyGD
+         VQieOFtAywTnznOmCIZ0bkDz1Ncs3fEvnI2i9MBabwI+ewwEAmH8sj8HszIhecbPyM00
+         dJiyQlFkyCkxuQZdl4KKecUX66KEZuUHDiJxZLBF61fHslEgPaVMnD66Dbs2lgxPgPoz
+         /zbuOKFDtHAoGiS/P7pYQjW46AoC4Q+3ZRM4cTm5d6p2YgV9sxGqmE0bSuX0kvcIRz/z
+         1/o66sMEO7dDWP4SBddodmkCOu8sPD/4MG+BC4GT1cQ06Yk+WZtigclc+Z41rz/oOd7J
+         3WQw==
+X-Gm-Message-State: APjAAAVnNPVNZNTw7mxxFDvgAwJBeuZ/D7HaP0w34wsC2+sxL+HnY7v1
+        fRi9EPd0thYwyyANOdLNTumEjCn/xA9W
+X-Google-Smtp-Source: APXvYqzQ/rX6WZj13Gy2AaMaTZY65r5k/J8i4M18FF8gz4I4aUGooW8mDpkAcV8SY3HIrxQHuXL9DYahdITE
+X-Received: by 2002:a65:609a:: with SMTP id t26mr643896pgu.349.1571734791388;
+ Tue, 22 Oct 2019 01:59:51 -0700 (PDT)
+Date:   Tue, 22 Oct 2019 16:59:24 +0800
+Message-Id: <20191022085924.92783-1-pumahsu@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
+Subject: [PATCH V2] usb: typec: Add sysfs node to show connector orientation
+From:   Puma Hsu <pumahsu@google.com>
+To:     heikki.krogerus@linux.intel.com, gregkh@linuxfoundation.org
+Cc:     badhri@google.com, kyletso@google.com, albertccwang@google.com,
+        rickyniu@google.com, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Puma Hsu <pumahsu@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 11:41:50PM -0500, Kangjie Lu wrote:
-> "clock" may be copied to "best_clock". Initializing best_clock
-> is not sufficient. The fix initializes clock as well to avoid
-> memory disclosures and informaiton leaks.
-> 
-> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Export the Type-C connector orientation so that user space
+can get this information.
 
-Again no leak here, but also doesn't hurt, so applied.
--Daniel
+Signed-off-by: Puma Hsu <pumahsu@google.com>
+---
+ Documentation/ABI/testing/sysfs-class-typec | 11 +++++++++++
+ drivers/usb/typec/class.c                   | 18 ++++++++++++++++++
+ 2 files changed, 29 insertions(+)
 
-> ---
->  drivers/gpu/drm/gma500/oaktrail_crtc.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/gma500/oaktrail_crtc.c b/drivers/gpu/drm/gma500/oaktrail_crtc.c
-> index 167c10767dd4..900e5499249d 100644
-> --- a/drivers/gpu/drm/gma500/oaktrail_crtc.c
-> +++ b/drivers/gpu/drm/gma500/oaktrail_crtc.c
-> @@ -129,6 +129,7 @@ static bool mrst_sdvo_find_best_pll(const struct gma_limit_t *limit,
->  	s32 freq_error, min_error = 100000;
->  
->  	memset(best_clock, 0, sizeof(*best_clock));
-> +	memset(&clock, 0, sizeof(clock));
->  
->  	for (clock.m = limit->m.min; clock.m <= limit->m.max; clock.m++) {
->  		for (clock.n = limit->n.min; clock.n <= limit->n.max;
-> @@ -185,6 +186,7 @@ static bool mrst_lvds_find_best_pll(const struct gma_limit_t *limit,
->  	int err = target;
->  
->  	memset(best_clock, 0, sizeof(*best_clock));
-> +	memset(&clock, 0, sizeof(clock));
->  
->  	for (clock.m = limit->m.min; clock.m <= limit->m.max; clock.m++) {
->  		for (clock.p1 = limit->p1.min; clock.p1 <= limit->p1.max;
-> -- 
-> 2.17.1
-> 
-
+diff --git a/Documentation/ABI/testing/sysfs-class-typec b/Documentation/ABI/testing/sysfs-class-typec
+index d7647b258c3c..b22f71801671 100644
+--- a/Documentation/ABI/testing/sysfs-class-typec
++++ b/Documentation/ABI/testing/sysfs-class-typec
+@@ -108,6 +108,17 @@ Contact:	Heikki Krogerus <heikki.krogerus@linux.intel.com>
+ Description:
+ 		Revision number of the supported USB Type-C specification.
+ 
++What:		/sys/class/typec/<port>/connector_orientation
++Date:		October 2019
++Contact:	Puma Hsu <pumahsu@google.com>
++Description:
++		Indicates which typec connector orientation is configured now.
++		cc1 is defined as "normal" and cc2 is defined as "reversed".
++
++		Valid value:
++		- unknown (nothing configured)
++		- normal (configured in cc1 side)
++		- reversed (configured in cc2 side)
+ 
+ USB Type-C partner devices (eg. /sys/class/typec/port0-partner/)
+ 
+diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
+index 94a3eda62add..911d06676aeb 100644
+--- a/drivers/usb/typec/class.c
++++ b/drivers/usb/typec/class.c
+@@ -1245,6 +1245,23 @@ static ssize_t usb_power_delivery_revision_show(struct device *dev,
+ }
+ static DEVICE_ATTR_RO(usb_power_delivery_revision);
+ 
++static const char * const typec_connector_orientation[] = {
++	[TYPEC_ORIENTATION_NONE]		= "unknown",
++	[TYPEC_ORIENTATION_NORMAL]		= "normal",
++	[TYPEC_ORIENTATION_REVERSE]		= "reversed",
++};
++
++static ssize_t connector_orientation_show(struct device *dev,
++						struct device_attribute *attr,
++						char *buf)
++{
++	struct typec_port *p = to_typec_port(dev);
++
++	return sprintf(buf, "%s\n",
++		       typec_connector_orientation[p->orientation]);
++}
++static DEVICE_ATTR_RO(connector_orientation);
++
+ static struct attribute *typec_attrs[] = {
+ 	&dev_attr_data_role.attr,
+ 	&dev_attr_power_operation_mode.attr,
+@@ -1255,6 +1272,7 @@ static struct attribute *typec_attrs[] = {
+ 	&dev_attr_usb_typec_revision.attr,
+ 	&dev_attr_vconn_source.attr,
+ 	&dev_attr_port_type.attr,
++	&dev_attr_connector_orientation.attr,
+ 	NULL,
+ };
+ ATTRIBUTE_GROUPS(typec);
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+2.23.0.866.gb869b98d4c-goog
+
