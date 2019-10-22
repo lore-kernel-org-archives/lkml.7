@@ -2,151 +2,164 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF8F2CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:06:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F68ECA9EB9
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:08:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B531821872
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:06:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A5862184C
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:08:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T7IdaOvN"
+	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="fvHI1RN9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731975AbfJVNG2 (ORCPT
+        id S1731834AbfJVNIq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 09:06:28 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:58313 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731804AbfJVNG1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 09:06:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571749585;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Syfd0H8D/BZLCngMYW2+8Gfqpo3syPeWg7AigfxOHa0=;
-        b=T7IdaOvNunr1wNsBP9ffS7PduaqV/tkwfalTxTZHSFu2y5t0mfQs8spb0eri7IZW8uUrtV
-        rrb+UFDXuLjq9C914hc/Qfh3z7NWwhFOM7psQZVi80IMd0wQq7xXT9sKS+HmyyHwrji21v
-        YGXIuhVoFUdobL2AKLepAiu27t238w4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-150-71H0vHNaOHmN2MZTv4qjeg-1; Tue, 22 Oct 2019 09:06:22 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id ABD6B800D4E;
-        Tue, 22 Oct 2019 13:06:20 +0000 (UTC)
-Received: from [10.72.12.23] (ovpn-12-23.pek2.redhat.com [10.72.12.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 514B819C69;
-        Tue, 22 Oct 2019 13:06:00 +0000 (UTC)
-Subject: Re: [RFC 2/2] vhost: IFC VF vdpa layer
-To:     Zhu Lingshan <lingshan.zhu@linux.intel.com>,
-        "Zhu, Lingshan" <lingshan.zhu@intel.com>, mst@redhat.com,
-        alex.williamson@redhat.com
-Cc:     linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        netdev@vger.kernel.org, dan.daly@intel.com,
-        cunming.liang@intel.com, tiwei.bie@intel.com, jason.zeng@intel.com,
-        zhiyuan.lv@intel.com
-References: <20191016013050.3918-1-lingshan.zhu@intel.com>
- <20191016013050.3918-3-lingshan.zhu@intel.com>
- <9495331d-3c65-6f49-dcd9-bfdb17054cf0@redhat.com>
- <f65358e9-6728-8260-74f7-176d7511e989@intel.com>
- <1cae60b6-938d-e2df-2dca-fbf545f06853@redhat.com>
- <ddf412c6-69e2-b3ca-d0c8-75de1db78ed9@linux.intel.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <b2adaab0-bbc3-b7f0-77da-e1e3cab93b76@redhat.com>
-Date:   Tue, 22 Oct 2019 21:05:57 +0800
+        Tue, 22 Oct 2019 09:08:46 -0400
+Received: from mout01.posteo.de ([185.67.36.65]:35113 "EHLO mout01.posteo.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728448AbfJVNIp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 09:08:45 -0400
+Received: from submission (posteo.de [89.146.220.130]) 
+        by mout01.posteo.de (Postfix) with ESMTPS id E73EA160074
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 15:08:39 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.de; s=2017;
+        t=1571749720; bh=yZ7wkG5/nTFz2HWgD0QS+01R6jUGKtQkz4Yu6HL4NZE=;
+        h=Subject:To:Cc:From:Openpgp:Autocrypt:Date:From;
+        b=fvHI1RN9P3xoDhX78fw+fQHj3rn09Z4Irp18rrvkrNFlro26Rn2i9WQvgODOa+XCp
+         HZBV7qels2lyBIL5J9G/v/lliHY23UjJhAtBaym8QixvhfT1xcl2SOGOeBsl4ctnWk
+         XVAuBHrQldKQEjAJf4JWT7Yks6NcRxlqt0eskCAAHkIfncjhkzYEsYc/0aIDVAp80b
+         IRsvE+FP+Neb3EmpqZv5t6bJGA+6aoxqIW0hkXNDzjjAnO8tIYRhhTIVpSyziIjtGn
+         zLUmrQES9gpvqCafaFT9WLIhlVtndKkVRtI4irhiVBrWuDLyq+QxU6pPHefLa3FIvA
+         ARt1/IHOfhK7A==
+Received: from customer (localhost [127.0.0.1])
+        by submission (posteo.de) with ESMTPSA id 46yDN56YYYz6tm6;
+        Tue, 22 Oct 2019 15:08:37 +0200 (CEST)
+Subject: Re: [PATCH] dt-bindings: mma8452: Re-word 'interrupt-names'
+ description
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        linux-iio@vger.kernel.org, Chris Healy <cphealy@gmail.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191022035626.13002-1-andrew.smirnov@gmail.com>
+ <1a1bdf10-2505-6baf-8030-ce5e0e2b55a9@posteo.de>
+ <20191022115010.7957744e@archlinux>
+From:   Martin Kepplinger <martink@posteo.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=martink@posteo.de; keydata=
+ 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
+Message-ID: <8cf84d9f-e9d9-4c18-ac0b-e568a34f2608@posteo.de>
+Date:   Tue, 22 Oct 2019 15:08:37 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <ddf412c6-69e2-b3ca-d0c8-75de1db78ed9@linux.intel.com>
+In-Reply-To: <20191022115010.7957744e@archlinux>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-MC-Unique: 71H0vHNaOHmN2MZTv4qjeg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 22.10.19 12:50, Jonathan Cameron wrote:
+> On Tue, 22 Oct 2019 10:43:09 +0200
+> Martin Kepplinger <martink@posteo.de> wrote:
+> 
+>> On 22.10.19 05:56, Andrey Smirnov wrote:
+>>> Current wording in the binding documentation doesn't make it 100%
+>>> clear that only one of "INT1" and "INT2" will ever be used by the
+>>> driver and that specifying both has no advantages. Re-word it to make
+>>> this aspect a bit more explicit.
+> 
+> From a quick glance at the datasheet, it appears that the hardware
+> is capable of routing different interrupts to different pins, even
+> if the driver does not do so.
+> 
+> CTRL_REG5 has 6 different bits to set whether particular blocks have
+> their interrupt routed to INT1 or INT2, so it appears to be possible
+> to send some each way.
+>  
+> A binding is for the hardware not the driver, so if I'm right about this
+> the current text is correct and should be left alone.
 
-On 2019/10/22 =E4=B8=8B=E5=8D=882:53, Zhu Lingshan wrote:
->
-> On 10/21/2019 6:19 PM, Jason Wang wrote:
->>
->> On 2019/10/21 =E4=B8=8B=E5=8D=885:53, Zhu, Lingshan wrote:
->>>
->>> On 10/16/2019 6:19 PM, Jason Wang wrote:
->>>>
->>>> On 2019/10/16 =E4=B8=8A=E5=8D=889:30, Zhu Lingshan wrote:
->>>>> This commit introduced IFC VF operations for vdpa, which complys to
->>>>> vhost_mdev interfaces, handles IFC VF initialization,
->>>>> configuration and removal.
->>>>>
->>>>> Signed-off-by: Zhu Lingshan <lingshan.zhu@intel.com>
->>>>> ---
+right, please ignore my "acked-by". Thanks a lot for taking a look.
 
-
-[...]
-
-
->>
->>
->>>
->>>>
->>>>
->>>>> +}
->>>>> +
->>>>> +static int ifcvf_mdev_set_features(struct mdev_device *mdev, u64=20
->>>>> features)
->>>>> +{
->>>>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_adapter *adapter =3D mdev_get_drvdat=
-a(mdev);
->>>>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_hw *vf =3D IFC_PRIVATE_TO_VF(adapter=
-);
->>>>> +
->>>>> +=C2=A0=C2=A0=C2=A0 vf->req_features =3D features;
->>>>> +
->>>>> +=C2=A0=C2=A0=C2=A0 return 0;
->>>>> +}
->>>>> +
->>>>> +static u64 ifcvf_mdev_get_vq_state(struct mdev_device *mdev, u16=20
->>>>> qid)
->>>>> +{
->>>>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_adapter *adapter =3D mdev_get_drvdat=
-a(mdev);
->>>>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_hw *vf =3D IFC_PRIVATE_TO_VF(adapter=
-);
->>>>> +
->>>>> +=C2=A0=C2=A0=C2=A0 return vf->vring[qid].last_avail_idx;
->>>>
->>>>
->>>> Does this really work? I'd expect it should be fetched from hw=20
->>>> since it's an internal state.
->>> for now, it's working, we intend to support LM in next version drivers.
->>
->>
->> I'm not sure I understand here, I don't see any synchronization=20
->> between the hardware and last_avail_idx, so last_avail_idx should not=20
->> change.
->>
->> Btw, what did "LM" mean :) ?
->
-> I can add bar IO operations here, LM =3D live migration, sorry for the=20
-> abbreviation.
-
-
-Just make sure I understand here, I believe you mean reading=20
-last_avail_idx through IO bar here?
-
-Thanks
-
+                            martin
 
