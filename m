@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 378D1CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 04:05:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4121CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 04:05:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D053214B2
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 04:05:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF59921D7B
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 04:05:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OKMWbGUW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nv9TZUON"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730359AbfJVEFU (ORCPT
+        id S1730724AbfJVEFX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 00:05:20 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:41681 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbfJVEFT (ORCPT
+        Tue, 22 Oct 2019 00:05:23 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:44699 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbfJVEFW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 00:05:19 -0400
-Received: by mail-pf1-f195.google.com with SMTP id q7so9775762pfh.8
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 21:05:19 -0700 (PDT)
+        Tue, 22 Oct 2019 00:05:22 -0400
+Received: by mail-pf1-f193.google.com with SMTP id q21so9763838pfn.11
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 21:05:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=CD4Ry27tfT/ul2M0hAWg1+r/2u5+J2xa4393NWU742M=;
-        b=OKMWbGUWfSu4seLAYx7h6cgAfLj2eeU1bFWbmwtKrl5Zao4lNRCItpJmWUF+KN6irx
-         PdBAsDzslSaEMtgGXKmoFuOPatemVYY9dYwBMNwEVTbPgvs49wkw++DxMfrdirdvQJmS
-         ZycK56sKUSEC5yCIekkToO++5CBISys/7aGXUAuZXTNCwLypOQ7jAnt85epAMbEHra6f
-         jMbyLMtXiNx1hoVJE0JnViIAAR1hyW7VxFGEj1ZVWJi0V/qbZ31MMPtAMvadjOjCwCNQ
-         p7+mSMj3Ht+Iz59QDosH0fcHdukkI5WzZLqolIQA/+tSAQVnjFSPIFGPcFNF/pHamloB
-         fRFg==
+        bh=bvDsvRwPfcgldx1LeklB7J/5Yzxu9yHwJdbavvwR4Wo=;
+        b=nv9TZUONTfn2dSraMbNzPS6RYqeRWCDRij1vxog1Qym35FvjMVPkawBQFmZECv0PZb
+         Lz266mg1REaBVhlL7/fqjDNfLk8gplYJ8WvmcjIGorKnWkO4j+f9ogIN5E9IKnEdF5HI
+         SvSULYCChllQY+fA0n/PQQEStsaHgagJVMlDvEosG5K/P70MkVT2gp12VpjAVAO/kB7P
+         y/4Raa2exKmFP4WMEDyX91JODQboDbigbv1kcK7r9hVlv9X50FolOFrQFSNmcV5BVjFk
+         HMrEMiEBjD26G+RKQIjw+B2l0BvB5rUKUDzx+seq7G3QcGdQx+KQyICqLInwEvnNI6wN
+         Aveg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=CD4Ry27tfT/ul2M0hAWg1+r/2u5+J2xa4393NWU742M=;
-        b=XDp5UvPw4+2M/GvEE+IIL7dtxzilMAuMNhf+Ag5PtqH7gM3r6UQr7U2VeogvFsFwiX
-         /lk/RRqD08+MKZC8awDmOmRfpOfb7Oj0zLomw4sAYws3ZmSi3B8CaHWLhXUYl6nB3mby
-         HWaS6VFn13RpeVlrQ2rq2/5TUNzu1sSlWUa+ZV6AEHtIIC8vhMCZP2mQsKdj26Bzf/ka
-         y47nF25ZGaKzpHrDwDR71bcjEomd6Q3L2ykl+ro3UlpiV6g87FzjMAn2mcs+4Wr44EOq
-         jukGuhr+h0pQD3wQ4HBkxJAHemiYUHq6jpobImjecI5nmVgMzENXO8p5LIXGRxPBsJ3Z
-         IdtQ==
-X-Gm-Message-State: APjAAAVPN0JKMZdbHyns/S+lnMiuTucoeo6tdlDRuz24YJaxBTOqV2S2
-        MEo6WFpo6m4SnrVvXfTSxzM=
-X-Google-Smtp-Source: APXvYqx2tF/v+wSQuX21by2faNJ8DJKymiZbFtaGwGJQKxl3gr9C175dnBB5hYt6r4ABCvlevmoyKw==
-X-Received: by 2002:a62:6842:: with SMTP id d63mr1758351pfc.16.1571717118671;
-        Mon, 21 Oct 2019 21:05:18 -0700 (PDT)
+        bh=bvDsvRwPfcgldx1LeklB7J/5Yzxu9yHwJdbavvwR4Wo=;
+        b=CnKcjV19HesfH8/UMXv0qJ42KhN0e62PPKv91iylkk3TIS1ngljmBUmhxTEE3Dar2v
+         RUjZWzvs+8VdbcI7OLweH7A4lFd20PIPPC4SZjpDTupc7/qsto7UYnOd6mmk+50zg7Zd
+         zLBK5xJeYywUgocVsISBfc/XKoCHU2dDipm8OqfzRchqL086TtwRkgNY1Le4yUVeS8Gz
+         3q0W/NHuU5jWR5aFrRnUtlSgcUErogO6GIy1ckQFnn1wnmfFxpU/zLpK4jnTw7uCiltt
+         dq1EEXor2UgEPHLOrHdvxtbpfLgVUlKiiQfI2u18N4qlM/+VxpJ6VVaFQPtSGV+HLUrk
+         ggRw==
+X-Gm-Message-State: APjAAAVFzBP07qx+F3ABBQB9aXZy8PBGCaE6IbvdwXkpg11gzHJk7UA/
+        8gpJiLK62jmh0yrOiKEeA+aCB8+1
+X-Google-Smtp-Source: APXvYqzqe1MXlja2x8rhvx2cmcIDk27akdvPynUOLWps4bFjuSxrtOBiL9KkmR2fjxDn4c5DsI4aQA==
+X-Received: by 2002:a62:a50b:: with SMTP id v11mr1766600pfm.164.1571717120413;
+        Mon, 21 Oct 2019 21:05:20 -0700 (PDT)
 Received: from localhost.lan (c-67-185-54-80.hsd1.wa.comcast.net. [67.185.54.80])
-        by smtp.gmail.com with ESMTPSA id n3sm18778738pff.102.2019.10.21.21.05.17
+        by smtp.gmail.com with ESMTPSA id n3sm18778738pff.102.2019.10.21.21.05.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Oct 2019 21:05:17 -0700 (PDT)
+        Mon, 21 Oct 2019 21:05:19 -0700 (PDT)
 From:   Andrey Smirnov <andrew.smirnov@gmail.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
@@ -64,9 +64,9 @@ Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
         Chris Healy <cphealy@gmail.com>,
         Lucas Stach <l.stach@pengutronix.de>,
         Shawn Guo <shawnguo@kernel.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/3] ARM: dts: imx6qdl-zii-rdu2: Fix accelerometer interrupt-names
-Date:   Mon, 21 Oct 2019 21:04:59 -0700
-Message-Id: <20191022040500.18548-2-andrew.smirnov@gmail.com>
+Subject: [PATCH 3/3] ARM: dts: imx6qdl-zii-rdu2: Specify supplies for accelerometer
+Date:   Mon, 21 Oct 2019 21:05:00 -0700
+Message-Id: <20191022040500.18548-3-andrew.smirnov@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191022040500.18548-1-andrew.smirnov@gmail.com>
 References: <20191022040500.18548-1-andrew.smirnov@gmail.com>
@@ -77,16 +77,9 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to Documentation/devicetree/bindings/iio/accel/mma8452.txt,
-the correct interrupt-names are "INT1" and "INT2", so fix them
-accordingly.
+Specify 'vdd' and 'vddio' supplies for accelerometer to avoid warnings
+during boot.
 
-While at it, modify the node to only specify "INT2" since providing
-two interrupts is not necessary or useful (the driver will only use
-one).
-
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
-[andrew.smirnov@gmail.com modified the patch to drop INT1]
 Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 Cc: Fabio Estevam <festevam@gmail.com>
 Cc: Chris Healy <cphealy@gmail.com>
@@ -95,37 +88,22 @@ Cc: Shawn Guo <shawnguo@kernel.org>
 Cc: linux-arm-kernel@lists.infradead.org,
 Cc: linux-kernel@vger.kernel.org
 ---
-
-Original patch from Fabio can be seen here:
-
-https://lore.kernel.org/linux-arm-kernel/20191010125300.2822-1-festevam@gmail.com/
-
- arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
-index 8d46f7b2722b..a8c86e621b49 100644
+index a8c86e621b49..42c0a728216d 100644
 --- a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
 +++ b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
-@@ -358,8 +358,8 @@
- 		compatible = "fsl,mma8451";
- 		reg = <0x1c>;
+@@ -360,6 +360,8 @@
  		interrupt-parent = <&gpio1>;
--		interrupt-names = "int1", "int2";
--		interrupts = <18 IRQ_TYPE_LEVEL_LOW>, <20 IRQ_TYPE_LEVEL_LOW>;
-+		interrupt-names = "INT2";
-+		interrupts = <20 IRQ_TYPE_LEVEL_LOW>;
+ 		interrupt-names = "INT2";
+ 		interrupts = <20 IRQ_TYPE_LEVEL_LOW>;
++		vdd-supply = <&reg_3p3v>;
++		vddio-supply = <&reg_3p3v>;
  	};
  
  	hpa2: amp@60 {
-@@ -849,7 +849,6 @@
- &iomuxc {
- 	pinctrl_accel: accelgrp {
- 		fsl,pins = <
--			MX6QDL_PAD_SD1_CMD__GPIO1_IO18		0x4001b000
- 			MX6QDL_PAD_SD1_CLK__GPIO1_IO20		0x4001b000
- 		>;
- 	};
 -- 
 2.21.0
 
