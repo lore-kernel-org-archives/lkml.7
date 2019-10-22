@@ -2,161 +2,110 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC642CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:27:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6F1DCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:30:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93C0921783
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:27:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DB6621872
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:30:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571733013;
+	bh=43hrKQLS/Gs7waQl0DuVQvlooxJE8xr0Ca6LsXfDUJk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mPJw0AefaLakbGavjOCWO/O7gttLQlxbCDKHYHrZUa/5nP/AaMGfQYai8LBFnwOQh
+	 gldetYaPdqKtQFyd+GdZP3igWrqQ0jkhAvSdadbzO9Fr0MIA/9tBPg4HFq1EPQjvcb
+	 Bhws6gq2xTOgeguhbqEsijY7cdAEd2zxJY9l+IWk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388420AbfJVI1x (ORCPT
+        id S2388395AbfJVIaM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 04:27:53 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39198 "EHLO mx1.suse.de"
+        Tue, 22 Oct 2019 04:30:12 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40284 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388061AbfJVI1x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 04:27:53 -0400
+        id S2388061AbfJVIaL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 04:30:11 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 87540B399;
-        Tue, 22 Oct 2019 08:27:50 +0000 (UTC)
-Date:   Tue, 22 Oct 2019 10:27:49 +0200 (CEST)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Jessica Yu <jeyu@kernel.org>
-cc:     Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joe Lawrence <joe.lawrence@redhat.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, mhiramat@kernel.org,
-        bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, jpoimboe@redhat.com,
-        live-patching@vger.kernel.org, pmladek@suse.com
-Subject: Re: [PATCH v3 5/6] x86/ftrace: Use text_poke()
-In-Reply-To: <20191018130342.GA4625@linux-8ccs>
-Message-ID: <alpine.LSU.2.21.1910221022590.28918@pobox.suse.cz>
-References: <20191015130739.GA23565@linux-8ccs> <20191015135634.GK2328@hirez.programming.kicks-ass.net> <alpine.LSU.2.21.1910151611000.13169@pobox.suse.cz> <88bab814-ea24-ece9-2bc0-7a1e10a62f12@redhat.com> <20191015153120.GA21580@linux-8ccs>
- <7e9c7dd1-809e-f130-26a3-3d3328477437@redhat.com> <20191015182705.1aeec284@gandalf.local.home> <20191016074951.GM2328@hirez.programming.kicks-ass.net> <alpine.LSU.2.21.1910161216100.7750@pobox.suse.cz> <alpine.LSU.2.21.1910161521010.7750@pobox.suse.cz>
- <20191018130342.GA4625@linux-8ccs>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        by mx1.suse.de (Postfix) with ESMTP id 79712ACA0;
+        Tue, 22 Oct 2019 08:30:02 +0000 (UTC)
+Date:   Tue, 22 Oct 2019 10:30:02 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Oscar Salvador <osalvador@suse.de>
+Cc:     n-horiguchi@ah.jp.nec.com, mike.kravetz@oracle.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v2 11/16] mm,hwpoison: Rework soft offline for in-use
+ pages
+Message-ID: <20191022083002.GE9379@dhcp22.suse.cz>
+References: <20191017142123.24245-1-osalvador@suse.de>
+ <20191017142123.24245-12-osalvador@suse.de>
+ <20191018123901.GN5017@dhcp22.suse.cz>
+ <20191021134846.GB11330@linux>
+ <20191021140619.GQ9379@dhcp22.suse.cz>
+ <20191022075626.GB19060@linux>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191022075626.GB19060@linux>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 18 Oct 2019, Jessica Yu wrote:
+On Tue 22-10-19 09:56:27, Oscar Salvador wrote:
+> On Mon, Oct 21, 2019 at 04:06:19PM +0200, Michal Hocko wrote:
+> > On Mon 21-10-19 15:48:48, Oscar Salvador wrote:
+> > > We can only perform actions on LRU/Movable pages or hugetlb pages.
+> > 
+> > What would prevent other pages mapped via page tables to be handled as
+> > well?
+> 
+> What kind of pages?
 
-> +++ Miroslav Benes [16/10/19 15:29 +0200]:
-> >On Wed, 16 Oct 2019, Miroslav Benes wrote:
-> >
-> >> On Wed, 16 Oct 2019, Peter Zijlstra wrote:
-> >>
-> >> > On Tue, Oct 15, 2019 at 06:27:05PM -0400, Steven Rostedt wrote:
-> >> >
-> >> > > (7) Seventh session, titled "klp-convert and livepatch relocations",
-> >> > > was led
-> >> > > by Joe Lawrence.
-> >> > >
-> >> > > Joe started the session with problem statement: accessing non exported
-> >> > > / static
-> >> > > symbols from inside the patch module. One possible workardound is
-> >> > > manually via
-> >> > > kallsyms. Second workaround is klp-convert, which actually creates
-> >> > > proper
-> >> > > relocations inside the livepatch module from the symbol database during
-> >> > > the
-> >> > > final .ko link.
-> >> > > Currently module loader looks for special livepatch relocations and
-> >> > > resolves
-> >> > > those during runtime; kernel support for these relocations have so far
-> >> > > been
-> >> > > added for x86 only. Special livepatch relocations are supported and
-> >> > > processed
-> >> > > also on other architectures. Special quirks/sections are not yet
-> >> > > supported.
-> >> > > Plus klp-convert would still be needed even with late module patching
-> >> > > update.
-> >> > > vmlinux or modules could have ambiguous static symbols.
-> >> > >
-> >> > > It turns out that the features / bugs below have to be resolved before
-> >> > > we
-> >> > > can claim the klp-convert support for relocation complete:
-> >> > >     - handle all the corner cases (jump labels, static keys, ...)
-> >> > >     properly and
-> >> > >       have a good regression tests in place
-> >> >
-> >> > I suppose all the patches in this series-of-series here will make life
-> >> > harder for KLP, static_call() and 2 byte jumps etc..
-> >>
-> >> Yes, I think so. We'll have to deal with that once it lands. That is why
-> >> we want to get rid of all this arch-specific code in livepatch and
-> >> reinvent the late module patching. So it is perhaps better to start
-> >> working on it sooner than later. Adding Petr, who hesitantly signed up for
-> >> the task...
-> >
-> >Thinking about it more... crazy idea. I think we could leverage these new
-> >ELF .text per vmlinux/module sections for the reinvention I was talking
-> >about. If we teach module loader to relocate (and apply alternatives and
-> >so on, everything in arch-specific module_finalize()) not the whole module
-> >in case of live patch modules, but separate ELF .text sections, it could
-> >solve the issue with late module patching we have. It is a variation on
-> >Steven's idea. When live patch module is loaded, only its section for
-> >present modules would be processed. Then whenever a to-be-patched module
-> >is loaded, its .text section in all present patch module would be
-> >processed.
-> >
-> >The upside is that almost no work would be required on patch modules
-> >creation side. The downside is that klp_modinfo must stay. Module loader
-> >needs to be hacked a lot in both cases. So it remains to be seen which
-> >idea is easier to implement.
-> >
-> >Jessica, do you think it would be feasible?
-> 
-> I think that does sound feasible. I'm trying to visualize how that
-> would look. I guess there would need to be various livepatching hooks
-> called during the different stages (apply_relocate_add(),
-> module_finalize(), module_enable_ro/x()).
-> 
-> So maybe something like the following?
-> 
-> When a livepatch module loads:
->    apply_relocate_add()
->        klp hook: apply .klp.rela.$objname relocations *only* for
->        already loaded modules
->    module_finalize()
->        klp hook: apply .klp.arch.$objname changes for already loaded modules
->    module_enable_ro()
->        klp hook: only enable ro/x for .klp.text.$objname for already
->        loaded modules
-> 
-> When a to-be-patched module loads:
->    apply_relocate_add()
->        klp hook: for each patch module that patches the coming
->        module, apply .klp.rela.$objname relocations for this object
->    module_finalize()
->        klp hook: for each patch module that patches the coming
->        module, apply .klp.arch.$objname changes for this object
->    module_enable_ro()
->        klp hook: for each patch module, apply ro/x permissions for
->        .klp.text.$objname for this object
-> 
-> Then, in klp_module_coming, we only need to do the callbacks and
-> enable the patch, and get rid of the module_disable_ro->apply
-> relocs->module_enable_ro block.
-> 
-> Does that sound like what you had in mind or am I totally off?
+Any pages mapped to the userspace. E.g. driver memory which is not on
+LRU.
 
-Sort of. What I had in mind was that we could get rid of all special .klp 
-ELF section if module loader guarantees that only sections for loaded 
-modules are processed. Then .klp.rela.$objname is not needed and proper 
-.rela.text.$objname (or whatever its text section is named) should be 
-sufficient. The same for the rest (.klp.arch).
+> I mean, I guess it could be done, it was just not implemented, and I
+> did not want to add more "features" as my main goal was to re-work
+> the interface to be more deterministic.
 
-Only then it would be useful.
+Fair enough. One step at the time sounds definitely good
+ 
+> > > 1) we would need to hook in enqueue_hugetlb_page so the page is not enqueued
+> > >    into hugetlb freelists
+> > > 2) when trying to free a hugetlb page, we would need to do as we do for gigantic
+> > >    pages now, and that is breaking down the pages into order-0 pages and release
+> > >    them to the buddy (so the check in free_papges_prepare would skip the
+> > >    hwpoison page).
+> > >    Trying to handle a higher-order hwpoison page in free_pages_prepare is
+> > >    a bit complicated.
+> > 
+> > I am not sure I see the problem. If you dissolve the hugetlb page then
+> > there is no hugetlb page anymore and so you make it a regular high-order
+> > page.
+> 
+> Yes, but the problem comes when trying to work with a hwpoison high-order page
+> in free_pages_prepare, it gets more complicated, and when I weigthed
+> code vs benefits, I was not really sure to go down that road.
+> 
+> If we get a hwpoison high-order page in free_pages_prepare, we need to
+> break it down to smaller pages, so we can skip the "bad" to not be sent
+> into buddy allocator.
 
-Miroslav
+But we have destructors for compound pages. Can we do the heavy lifting
+there?
+
+> > If the page is free then it shouldn't pin the memcg or any other state.
+> 
+> Well, it is not really free, as it is not usable, is it?
+
+Sorry I meant to say the page is free from the memcg POV - aka no task
+from the memcg is holding a reference to it. The page is not usable for
+anybody, that is true but no particular memcg should pay a price for
+that. This would mean that random memcgs would end up pinned for ever
+without a good reason.
+-- 
+Michal Hocko
+SUSE Labs
