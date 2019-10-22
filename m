@@ -2,132 +2,239 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 104F3CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 19:01:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02BFFCA9EB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 19:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3AE0205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 19:01:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B98FB21783
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 19:01:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m6gaYXo+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CK5IZ7/f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732824AbfJVTBV (ORCPT
+        id S1732850AbfJVTB3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 15:01:21 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:38366 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732517AbfJVTBV (ORCPT
+        Tue, 22 Oct 2019 15:01:29 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:36138 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732517AbfJVTB2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 15:01:21 -0400
-Received: by mail-io1-f66.google.com with SMTP id u8so21766777iom.5;
-        Tue, 22 Oct 2019 12:01:21 -0700 (PDT)
+        Tue, 22 Oct 2019 15:01:28 -0400
+Received: by mail-pf1-f195.google.com with SMTP id y22so11221381pfr.3;
+        Tue, 22 Oct 2019 12:01:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VfxSHYvmdEv1sm79e3HTi1RwgAIgEe7zqfMJ263x0xg=;
-        b=m6gaYXo+SBJ6yxQUD50EHP8m/o2zWCUkcm4zfRYWPqsxcCaBtfI4gR70AjPI0kgvRn
-         oCBJaeHHmvWwyrNPxa4K3iZBQtYc/YciryW1xokRbVbPel4OAQ7wD3RdVFT+QbqAs+F5
-         PNNim372/STeko7kwHy7AUVu0XinaDph2biqSG7OFr66mu66wVP9slSSX6L8361YyVbX
-         OToJI9/0WCGDmYz1T7ylnPlyUNEkU0JcnkGqSYmNelV95xkG9izQyosIY7Lsb5CeSKKA
-         +/XTgAK8JkkRzYT4SgeRBxN3/f6/fF8O8r7Gz0ca473uHMql5bZDE40m1U3Nq0GX1mEe
-         Pi3w==
+        h=from:to:cc:subject:date:message-id;
+        bh=WYVPyN6TIQKQmBJ/hjRhIQzHM1SMeDB+rC6cCAZ6daQ=;
+        b=CK5IZ7/fDlc9HGDR/5NYBLaFIb472dWbbATEk0sFtqAxKrqYwkzYrCL3ITn8stO5B5
+         C9Mmkymm0eGpXhUTOue0kAODrlapvXBKREBm71YlYwt9WVmcNC+mlsiw7kXsxM1zZuOG
+         BDBUcrnEhnmoE54WYC/3YgLdFi/ITSnT+3zW0srdQowk4E5pBF/LuwrECZ4AoTJkFvBb
+         oakxR9XGZEJsCyVaQMNrxC6Go27fC5w/2ZnU21w/vggcpXBjbWz7U72osg6UjojQFWMf
+         1yxVicruoyAQIqEVVb0R707IxYnsxv1kdeVnocE8hs8MxSivLG5yNhWRik20ZnIdIAG6
+         cidQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VfxSHYvmdEv1sm79e3HTi1RwgAIgEe7zqfMJ263x0xg=;
-        b=lTsSZHPjuXU+p6N7MfZ79GghAdLjSjitYQiozhsEc9amPVuAENnNWDQV7JIsrdWO+9
-         ZDCRQuEzxXDiEMOF1VR9CnFlXyLSZZyDZkXWpj8o+A13L1SExtdZKdOA8KcIhTX2yvyM
-         LSYUpRbyOkAaAHUjLLVwmkHgdNb+aMKKPvXKLLFqxYL024iPG/LKyMatIeA3eCAWbsvU
-         kKQ/OSKD8zipOXsReixdz5xr9SXGFYWmRgGzv87X6GCFA5mrykP+aRJeWO0lDaW0O651
-         Ht7kmNUlfylwlbVj4P8vda9uyubMAhjFLQxe5hiz4ji+95NJtNUXYGIEnAgJ4Qki3q5m
-         MdOw==
-X-Gm-Message-State: APjAAAVosGGHqL6eFiAumZYqB3/Gi+QHkQLn2uAwMYr4yJQ0VPKP2uV5
-        Y+BpRxoemX9WwfaqtBquchGn2eC3N/8lOpS/vnU=
-X-Google-Smtp-Source: APXvYqzQASMPJfj+YZm2OBbuJQoz80q16/O9naj7kf1/88RbHylyV8nyZmARfqkPQXvQ0Q9vaSY+MetI2GXnLHntuLQ=
-X-Received: by 2002:a02:c519:: with SMTP id s25mr5378905jam.3.1571770880220;
- Tue, 22 Oct 2019 12:01:20 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191007220540.30690-1-aford173@gmail.com> <20191022162223.GU5610@atomide.com>
-In-Reply-To: <20191022162223.GU5610@atomide.com>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Tue, 22 Oct 2019 14:01:08 -0500
-Message-ID: <CAHCN7xLy975mxX+cm56PMx-TKODEZjYPfMHb=byspKxYXXq7OA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] configs: ARM: omap2plus: Enable OMAP3_THERMAL
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Linux-OMAP <linux-omap@vger.kernel.org>,
-        Adam Ford <adam.ford@logicpd.com>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=WYVPyN6TIQKQmBJ/hjRhIQzHM1SMeDB+rC6cCAZ6daQ=;
+        b=EDvcJz7dn4Tp/7DzjJDhFSjVTznvj2FPcVySnL8W23agN5WbR3LCQ9JJ7jInFVetNG
+         LC/ab1s0POA65bpohzelgWAc3ADm5R+oZ68EVcD2gtkOFfvpqpwCEQ9F8KRByxHa8ZGE
+         Mr+gOdM9GeEF4yslieXwpM52y743QCYjdFZriy0jnI3qGih+qer5PCUIovgNHadbrLec
+         zHoyhAcgWmoSVvGMZGQASeQ+ML4tNzISWUu7joakT2C2ihtjwaI5c2XlXfeMeEYV6fTZ
+         WpBXSOxkPbQsihWjwDBWR9QTiU2LxoPmSe8GJErOcYKkdccWd27u8dko8IsD79uh17jv
+         9ULw==
+X-Gm-Message-State: APjAAAU6wtKX0FUO0n4fdyeEkreqO8jF4SWp7scmnsUHqplOQL01apfs
+        CxNFTaVFLzVqp3WTnWcqvFw=
+X-Google-Smtp-Source: APXvYqzAbRABJxb7CI6UKHnD8ZpCEZSa9XbNpVCEb9Dl5FiMXCGYH/7+YnC/R9o/2VDIgZAIEw+5Jg==
+X-Received: by 2002:a63:6607:: with SMTP id a7mr2744430pgc.68.1571770885773;
+        Tue, 22 Oct 2019 12:01:25 -0700 (PDT)
+Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id v9sm4365690pfm.85.2019.10.22.12.01.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Oct 2019 12:01:24 -0700 (PDT)
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+To:     a.hajda@samsung.com, narmstrong@baylibre.com,
+        Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
+        jernej.skrabec@siol.net, airlied@linux.ie, daniel@ffwll.ch,
+        bjorn.andersson@linaro.org
+Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [PATCH v2] drm/bridge: ti-sn65dsi86: Decouple DP output lanes from DSI input lanes
+Date:   Tue, 22 Oct 2019 12:01:20 -0700
+Message-Id: <20191022190120.25772-1-jeffrey.l.hugo@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 11:22 AM Tony Lindgren <tony@atomide.com> wrote:
->
-> Hi,
->
-> * Adam Ford <aford173@gmail.com> [191007 15:06]:
-> > The some in the OMAP3 family have a bandgap thermal sensor, but
-> > omap2plus has it disabled.
-> >
-> > This patch enables the OMAP3_THERMAL by default like the rest of
-> > the OMAP family.
->
-> Looks like this breaks off mode during idle for omap3, and that's
-> probably why it never got enabled. The difference in power
-> consumption during idle is about 7mW vs 32mW for the SoC as
-> measured from torpedo shunt for main_battery_som.
->
-> I think the right fix might be simply to add handling for
-> CPU_CLUSTER_PM_ENTER to the related thermal driver to disable
-> it during idle like we have for gpio-omap.c for example.
+Based on work by Bjorn Andersson <bjorn.andersson@linaro.org>
 
-I am not sure I know where to start on fixing that issue.  Would you
-entertain enabling the driver if we set the device tree to 'disabled'
-by default?  This way if people want to to use it, it can be enabled
-on a per-device option.  Once the power stuff gets resolved, we might
-be able to enable it by default.  For people who are planning on using
-the DM3730 @ 1GHz in high temp environments, I am not sure they'll
-care about low power.
+The bridge can be configured to use 1, 2, or 4 DP lanes.  This
+configuration is independent of the input DSI lanes.  Right now, the
+driver assumes that there is 1:1 mapping of input lanes to output lanes
+which is not correct and does not work for manu devices such as the
+Lenovo Miix 630 and Lenovo Yoga C630 laptops.
 
-I'll try to look into it when I have time, but I was hoping a
-compromise might be a reasonable work-around.
+The bridge can also be configured to use one of a number of data rates on
+the DP lanes.  Currently any of the supported rates is considered valid,
+however the configured rate must also be supported by the connected panel,
+and not all rates are supported or even valid for any particular panel.
 
-adam
->
-> Regards,
->
-> Tony
->
-> >
-> > Signed-off-by: Adam Ford <aford173@gmail.com>
-> >
-> > diff --git a/arch/arm/configs/omap2plus_defconfig b/arch/arm/configs/omap2plus_defconfig
-> > index 8f1c2b6f9e56..7e14a8c8bb29 100644
-> > --- a/arch/arm/configs/omap2plus_defconfig
-> > +++ b/arch/arm/configs/omap2plus_defconfig
-> > @@ -292,6 +292,7 @@ CONFIG_THERMAL_GOV_FAIR_SHARE=y
-> >  CONFIG_THERMAL_GOV_USER_SPACE=y
-> >  CONFIG_CPU_THERMAL=y
-> >  CONFIG_TI_THERMAL=y
-> > +CONFIG_OMAP3_THERMAL=y
-> >  CONFIG_OMAP4_THERMAL=y
-> >  CONFIG_OMAP5_THERMAL=y
-> >  CONFIG_DRA752_THERMAL=y
-> > --
-> > 2.17.1
-> >
+Luckily, we can determine what we need at runtime by reading the DPCD from
+the attached panel.  DPCD will tell us the maximum number of supported
+lanes, and the supported data rates.
+
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+---
+
+Bjorn, I think this should address the issue you pointed out concerning
+the data rate glitch I missed in your origional work.  Would you kindly
+give this a test and let me know if it appears to address all of the
+issues you were working around?
+
+v2:
+-Use DPCD instead of DT to address the issue of some panels not
+supporting all the rates
+
+ drivers/gpu/drm/bridge/ti-sn65dsi86.c | 97 ++++++++++++++++++++++++++-
+ 1 file changed, 94 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+index 43abf01ebd4c..72bacca8d49a 100644
+--- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
++++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+@@ -100,6 +100,7 @@ struct ti_sn_bridge {
+ 	struct drm_panel		*panel;
+ 	struct gpio_desc		*enable_gpio;
+ 	struct regulator_bulk_data	supplies[SN_REGULATOR_SUPPLY_NUM];
++	int				dp_lanes;
+ };
+ 
+ static const struct regmap_range ti_sn_bridge_volatile_ranges[] = {
+@@ -432,6 +433,8 @@ static void ti_sn_bridge_set_dsi_dp_rate(struct ti_sn_bridge *pdata)
+ 	unsigned int val, i;
+ 	struct drm_display_mode *mode =
+ 		&pdata->bridge.encoder->crtc->state->adjusted_mode;
++	u8 dpcd_val;
++	u8 rate_valid[8] = {0};
+ 
+ 	/* set DSIA clk frequency */
+ 	bit_rate_mhz = (mode->clock / 1000) *
+@@ -444,10 +447,91 @@ static void ti_sn_bridge_set_dsi_dp_rate(struct ti_sn_bridge *pdata)
+ 	regmap_write(pdata->regmap, SN_DSIA_CLK_FREQ_REG, val);
+ 
+ 	/* set DP data rate */
+-	dp_rate_mhz = ((bit_rate_mhz / pdata->dsi->lanes) * DP_CLK_FUDGE_NUM) /
++	dp_rate_mhz = ((bit_rate_mhz / pdata->dp_lanes) * DP_CLK_FUDGE_NUM) /
+ 							DP_CLK_FUDGE_DEN;
++
++	/* read the panel capabilities to determine valid supported rates */
++	val = drm_dp_dpcd_readb(&pdata->aux, DP_MAX_LINK_RATE, &dpcd_val);
++	if (!val) {
++		DRM_ERROR("Reading max link rate from DPCD failed\n");
++		return;
++	}
++
++	if (dpcd_val) {
++		/* cap to the max rate supported by the bridge */
++		if (dpcd_val > 0x14)
++			dpcd_val = 0x14;
++
++		switch (dpcd_val) {
++		case 0x14:
++			rate_valid[7] = 1;
++			/* fall through */
++		case 0xa:
++			rate_valid[4] = 1;
++			/* fall through */
++		case 0x6:
++			rate_valid[1] = 1;
++			break;
++		default:
++			DRM_ERROR("Invalid max link rate from DPCD:%x\n",
++				  dpcd_val);
++			return;
++		}
++	} else {
++		/* eDP 1.4 devices can provide a custom table */
++		__le16 sink_rates[DP_MAX_SUPPORTED_RATES];
++
++		val = drm_dp_dpcd_readb(&pdata->aux, DP_EDP_DPCD_REV, &dpcd_val);
++		if (!val) {
++			DRM_ERROR("Reading eDP rev from DPCD failed\n");
++			return;
++		}
++
++		if (dpcd_val < DP_EDP_14) {
++			DRM_ERROR("eDP 1.4 supported link rates specified from non-1.4 device\n");
++			return;
++		}
++
++		drm_dp_dpcd_read(&pdata->aux, DP_SUPPORTED_LINK_RATES,
++			      sink_rates, sizeof(sink_rates));
++
++		for (i = 0; i < ARRAY_SIZE(sink_rates); i++) {
++			val = le16_to_cpu(sink_rates[i]);
++
++			if (!val)
++				break;
++
++			switch (val) {
++			case 27000:
++				rate_valid[7] = 1;
++				break;
++			case 21600:
++				rate_valid[6] = 1;
++				break;
++			case 16200:
++				rate_valid[5] = 1;
++				break;
++			case 13500:
++				rate_valid[4] = 1;
++				break;
++			case 12150:
++				rate_valid[3] = 1;
++				break;
++			case 10800:
++				rate_valid[2] = 1;
++				break;
++			case 8100:
++				rate_valid[1] = 1;
++				break;
++			default:
++				/* unsupported */
++				break;
++			}
++		}
++	}
++
+ 	for (i = 0; i < ARRAY_SIZE(ti_sn_bridge_dp_rate_lut) - 1; i++)
+-		if (ti_sn_bridge_dp_rate_lut[i] > dp_rate_mhz)
++		if (ti_sn_bridge_dp_rate_lut[i] > dp_rate_mhz && rate_valid[i])
+ 			break;
+ 
+ 	regmap_update_bits(pdata->regmap, SN_DATARATE_CONFIG_REG,
+@@ -505,7 +589,14 @@ static void ti_sn_bridge_enable(struct drm_bridge *bridge)
+ 			   CHA_DSI_LANES_MASK, val);
+ 
+ 	/* DP lane config */
+-	val = DP_NUM_LANES(pdata->dsi->lanes - 1);
++	ret = drm_dp_dpcd_readb(&pdata->aux, DP_MAX_LANE_COUNT, (u8 *)&val);
++	if (!ret) {
++		DRM_ERROR("Reading lane count from DPCD failed\n");
++		return;
++	}
++	pdata->dp_lanes = val & DP_MAX_LANE_COUNT_MASK;
++	/* 4 lanes are encoded with the value "3" */
++	val = DP_NUM_LANES(pdata->dp_lanes == 4 ? 3 : pdata->dp_lanes);
+ 	regmap_update_bits(pdata->regmap, SN_SSC_CONFIG_REG, DP_NUM_LANES_MASK,
+ 			   val);
+ 
+-- 
+2.17.1
+
