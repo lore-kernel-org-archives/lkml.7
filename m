@@ -2,47 +2,45 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8FE1CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 21:46:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C56C1CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 21:46:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C64822053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 21:46:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AB85214B2
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 21:46:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733258AbfJVVqZ (ORCPT
+        id S1733266AbfJVVqY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 17:46:25 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:33080 "EHLO ale.deltatee.com"
+        Tue, 22 Oct 2019 17:46:24 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:33066 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731271AbfJVVqX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 17:46:23 -0400
+        id S1733229AbfJVVqW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 17:46:22 -0400
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1iN1ys-00049R-Ri; Tue, 22 Oct 2019 15:46:22 -0600
+        id 1iN1ys-00049M-Rg; Tue, 22 Oct 2019 15:46:21 -0600
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1iN1ys-000259-F6; Tue, 22 Oct 2019 15:46:18 -0600
+        id 1iN1yr-00024v-Vg; Tue, 22 Oct 2019 15:46:18 -0600
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
         Vinod Koul <vkoul@kernel.org>
 Cc:     Dan Williams <dan.j.williams@intel.com>,
         Logan Gunthorpe <logang@deltatee.com>
-Date:   Tue, 22 Oct 2019 15:46:16 -0600
-Message-Id: <20191022214616.7943-6-logang@deltatee.com>
+Date:   Tue, 22 Oct 2019 15:46:11 -0600
+Message-Id: <20191022214616.7943-1-logang@deltatee.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191022214616.7943-1-logang@deltatee.com>
-References: <20191022214616.7943-1-logang@deltatee.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 172.16.1.31
 X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, vkoul@kernel.org, dan.j.williams@intel.com, logang@deltatee.com
 X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH 5/5] dmaengine: plx-dma: Implement descriptor submission
+Subject: [PATCH 0/5] PLX Switch DMA Engine Driver
 X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -50,182 +48,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On prep, a spin lock is taken and the next entry in the circular buffer
-is filled. On submit, the valid bit is set in the hardware descriptor
-and the lock is released.
+Hi,
 
-The DMA engine is started (if it's not already running) when the client
-calls dma_async_issue_pending().
+The following patches introduce a driver to use the DMA hardware inside
+PLX ExpressLane PEX Switches. The DMA devices appear as one or more
+PCI virtual functions per channel and can serve similar use cases as
+Intel's IOAT driver.
 
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
----
- drivers/dma/plx_dma.c | 119 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 119 insertions(+)
+The first two patches in this series fix some bugs that are required to
+support cases where the driver is unbound while the DMA engine is in
+use. Without these patches the kernel will panic when that happens.
 
-diff --git a/drivers/dma/plx_dma.c b/drivers/dma/plx_dma.c
-index d3c2319e2fad..21e4d7634eeb 100644
---- a/drivers/dma/plx_dma.c
-+++ b/drivers/dma/plx_dma.c
-@@ -7,6 +7,7 @@
- 
- #include "dmaengine.h"
- 
-+#include <linux/circ_buf.h>
- #include <linux/dmaengine.h>
- #include <linux/kref.h>
- #include <linux/list.h>
-@@ -122,6 +123,11 @@ static struct plx_dma_dev *chan_to_plx_dma_dev(struct dma_chan *c)
- 	return container_of(c, struct plx_dma_dev, dma_chan);
- }
- 
-+static struct plx_dma_desc *to_plx_desc(struct dma_async_tx_descriptor *txd)
-+{
-+	return container_of(txd, struct plx_dma_desc, txd);
-+}
-+
- static struct plx_dma_desc *plx_dma_get_desc(struct plx_dma_dev *plxdev, int i)
- {
- 	return plxdev->desc_ring[i & (PLX_DMA_RING_COUNT - 1)];
-@@ -244,6 +250,113 @@ static void plx_dma_desc_task(unsigned long data)
- 	plx_dma_process_desc(plxdev);
- }
- 
-+static struct dma_async_tx_descriptor *plx_dma_prep_memcpy(struct dma_chan *c,
-+		dma_addr_t dma_dst, dma_addr_t dma_src, size_t len,
-+		unsigned long flags)
-+	__acquires(plxdev->ring_lock)
-+{
-+	struct plx_dma_dev *plxdev = chan_to_plx_dma_dev(c);
-+	struct plx_dma_desc *plxdesc;
-+
-+	spin_lock_bh(&plxdev->ring_lock);
-+	if (!plxdev->ring_active)
-+		goto err_unlock;
-+
-+	if (!CIRC_SPACE(plxdev->head, plxdev->tail, PLX_DMA_RING_COUNT))
-+		goto err_unlock;
-+
-+	if (len > PLX_DESC_SIZE_MASK)
-+		goto err_unlock;
-+
-+	plxdesc = plx_dma_get_desc(plxdev, plxdev->head);
-+	plxdev->head++;
-+
-+	plxdesc->hw->dst_addr_lo = cpu_to_le32(lower_32_bits(dma_dst));
-+	plxdesc->hw->dst_addr_hi = cpu_to_le16(upper_32_bits(dma_dst));
-+	plxdesc->hw->src_addr_lo = cpu_to_le32(lower_32_bits(dma_src));
-+	plxdesc->hw->src_addr_hi = cpu_to_le16(upper_32_bits(dma_src));
-+
-+	plxdesc->orig_size = len;
-+
-+	if (flags & DMA_PREP_INTERRUPT)
-+		len |= PLX_DESC_FLAG_INT_WHEN_DONE;
-+
-+	plxdesc->hw->flags_and_size = cpu_to_le32(len);
-+	plxdesc->txd.flags = flags;
-+
-+	/* return with the lock held, it will be released in tx_submit */
-+
-+	return &plxdesc->txd;
-+
-+err_unlock:
-+	/*
-+	 * Keep sparse happy by restoring an even lock count on
-+	 * this lock.
-+	 */
-+	__acquire(plxdev->ring_lock);
-+
-+	spin_unlock_bh(&plxdev->ring_lock);
-+	return NULL;
-+}
-+
-+static dma_cookie_t plx_dma_tx_submit(struct dma_async_tx_descriptor *desc)
-+	__releases(plxdev->ring_lock)
-+{
-+	struct plx_dma_dev *plxdev = chan_to_plx_dma_dev(desc->chan);
-+	struct plx_dma_desc *plxdesc = to_plx_desc(desc);
-+	dma_cookie_t cookie;
-+
-+	cookie = dma_cookie_assign(desc);
-+
-+	/*
-+	 * Ensure the descriptor updates are visible to the dma device
-+	 * before setting the valid bit.
-+	 */
-+	wmb();
-+
-+	plxdesc->hw->flags_and_size |= cpu_to_le32(PLX_DESC_FLAG_VALID);
-+
-+	spin_unlock_bh(&plxdev->ring_lock);
-+
-+	return cookie;
-+}
-+
-+static enum dma_status plx_dma_tx_status(struct dma_chan *chan,
-+		dma_cookie_t cookie, struct dma_tx_state *txstate)
-+{
-+	struct plx_dma_dev *plxdev = chan_to_plx_dma_dev(chan);
-+	enum dma_status ret;
-+
-+	ret = dma_cookie_status(chan, cookie, txstate);
-+	if (ret == DMA_COMPLETE)
-+		return ret;
-+
-+	plx_dma_process_desc(plxdev);
-+
-+	return dma_cookie_status(chan, cookie, txstate);
-+}
-+
-+static void plx_dma_issue_pending(struct dma_chan *chan)
-+{
-+	struct plx_dma_dev *plxdev = chan_to_plx_dma_dev(chan);
-+
-+	rcu_read_lock();
-+	if (!rcu_dereference(plxdev->pdev)) {
-+		rcu_read_unlock();
-+		return;
-+	}
-+
-+	/*
-+	 * Ensure the valid bits are visible before starting the
-+	 * DMA engine.
-+	 */
-+	wmb();
-+
-+	writew(PLX_REG_CTRL_START_VAL, plxdev->bar + PLX_REG_CTRL);
-+
-+	rcu_read_unlock();
-+}
-+
- static irqreturn_t plx_dma_isr(int irq, void *devid)
- {
- 	struct plx_dma_dev *plxdev = devid;
-@@ -307,7 +420,9 @@ static int plx_dma_alloc_desc(struct plx_dma_dev *plxdev)
- 			goto free_and_exit;
- 
- 		dma_async_tx_descriptor_init(&desc->txd, &plxdev->dma_chan);
-+		desc->txd.tx_submit = plx_dma_tx_submit;
- 		desc->hw = &plxdev->hw_ring[i];
-+
- 		plxdev->desc_ring[i] = desc;
- 	}
- 
-@@ -428,11 +543,15 @@ static int plx_dma_create(struct pci_dev *pdev)
- 	dma = &plxdev->dma_dev;
- 	dma->chancnt = 1;
- 	INIT_LIST_HEAD(&dma->channels);
-+	dma_cap_set(DMA_MEMCPY, dma->cap_mask);
- 	dma->copy_align = DMAENGINE_ALIGN_1_BYTE;
- 	dma->dev = get_device(&pdev->dev);
- 
- 	dma->device_alloc_chan_resources = plx_dma_alloc_chan_resources;
- 	dma->device_free_chan_resources = plx_dma_free_chan_resources;
-+	dma->device_prep_dma_memcpy = plx_dma_prep_memcpy;
-+	dma->device_issue_pending = plx_dma_issue_pending;
-+	dma->device_tx_status = plx_dma_tx_status;
- 
- 	chan = &plxdev->dma_chan;
- 	chan->device = dma;
--- 
+The final three patches implement the driver itself.
+
+This patchset is based off of v5.4-rc4 and a git branch is available
+here:
+
+https://github.com/sbates130272/linux-p2pmem/ plx-dma
+
+Thanks,
+
+Logan
+
+--
+
+Logan Gunthorpe (5):
+  dmaengine: Store module owner in dma_device struct
+  dmaengine: Call module_put() after device_free_chan_resources()
+  dmaengine: plx-dma: Introduce PLX DMA engine PCI driver skeleton
+  dmaengine: plx-dma: Implement hardware initialization and cleanup
+  dmaengine: plx-dma: Implement descriptor submission
+
+ MAINTAINERS               |   5 +
+ drivers/dma/Kconfig       |   9 +
+ drivers/dma/Makefile      |   1 +
+ drivers/dma/dmaengine.c   |   7 +-
+ drivers/dma/plx_dma.c     | 658 ++++++++++++++++++++++++++++++++++++++
+ include/linux/dmaengine.h |   2 +
+ 6 files changed, 680 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/dma/plx_dma.c
+
+--
 2.20.1
-
