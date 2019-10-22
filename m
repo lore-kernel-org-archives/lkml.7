@@ -2,99 +2,145 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DD23CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:00:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A60D3CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:01:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08C7D20679
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:00:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 778C12084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:01:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="aFiBDzx8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388166AbfJVJAU (ORCPT
+        id S2388248AbfJVJBt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 05:00:20 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:54027 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387479AbfJVJAT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 05:00:19 -0400
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1iMq1a-0004OA-Fn; Tue, 22 Oct 2019 11:00:18 +0200
-Message-ID: <0a8e4249ae1e75906e4ab36460c2ffcb7ccf963d.camel@pengutronix.de>
-Subject: Re: [PATCH] reset: Fix memory leak in reset_control_array_put()
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     linux-kernel@vger.kernel.org
-Date:   Tue, 22 Oct 2019 11:00:18 +0200
-In-Reply-To: <20191022083623.29697-1-kishon@ti.com>
-References: <20191022083623.29697-1-kishon@ti.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Tue, 22 Oct 2019 05:01:49 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:20290 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388200AbfJVJBs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 05:01:48 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 46y6vG0r0jz9v0Rt;
+        Tue, 22 Oct 2019 11:01:46 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=aFiBDzx8; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id R_xcJFO0NgjM; Tue, 22 Oct 2019 11:01:46 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 46y6vF6hhSz9v0Rs;
+        Tue, 22 Oct 2019 11:01:45 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1571734905; bh=nHY+vb8GjkX/ryDDQxMD9wvS8Jypk/lWmaBjduwAW2g=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=aFiBDzx8TYEsUwlqX8Mz/Bi9WApZqoufpPa5cIYrO9nsqAgJ/tKjk+Ew2Ju35NaM3
+         Rt1OQt0zuWRCn7LaqdRdYm2MGd3m6uvdy/QkGWHSYghSVBcjdNGUapbQv8SQ8y8/K4
+         Zf1wVTqAC+1Vio2vT/Xd24fgvR99CeXYE3lbbfhY=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id DE5A48B91D;
+        Tue, 22 Oct 2019 11:01:46 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id jl5Y6p6W0Ic7; Tue, 22 Oct 2019 11:01:46 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2F4CD8B919;
+        Tue, 22 Oct 2019 11:01:46 +0200 (CEST)
+Subject: Re: [RFC PATCH] powerpc/32: Switch VDSO to C implementation.
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        vincenzo.frascino@arm.com, luto@kernel.org,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <8ce3582f7f7da9ff0286ced857e5aa2e5ae6746e.1571662378.git.christophe.leroy@c-s.fr>
+ <alpine.DEB.2.21.1910212312520.2078@nanos.tec.linutronix.de>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <f4486e86-3c0c-0eec-1639-0e5956cdb8f1@c-s.fr>
+Date:   Tue, 22 Oct 2019 11:01:45 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <alpine.DEB.2.21.1910212312520.2078@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kishon,
 
-On Tue, 2019-10-22 at 14:06 +0530, Kishon Vijay Abraham I wrote:
-> Memory allocated for 'struct reset_control_array' in
-> of_reset_control_array_get() is never freed in
-> reset_control_array_put() resulting in kmemleak showing
-> the following backtrace.
+
+Le 21/10/2019 à 23:29, Thomas Gleixner a écrit :
+> On Mon, 21 Oct 2019, Christophe Leroy wrote:
 > 
->   backtrace:
->     [<00000000c5f17595>] __kmalloc+0x1b0/0x2b0
->     [<00000000bd499e13>] of_reset_control_array_get+0xa4/0x180
->     [<000000004cc02754>] 0xffff800008c669e4
->     [<0000000050a83b24>] platform_drv_probe+0x50/0xa0
->     [<00000000d3a0b0bc>] really_probe+0x108/0x348
->     [<000000005aa458ac>] driver_probe_device+0x58/0x100
->     [<000000008853626c>] device_driver_attach+0x6c/0x90
->     [<0000000085308d19>] __driver_attach+0x84/0xc8
->     [<00000000080d35f2>] bus_for_each_dev+0x74/0xc8
->     [<00000000dd7f015b>] driver_attach+0x20/0x28
->     [<00000000923ba6e6>] bus_add_driver+0x148/0x1f0
->     [<0000000061473b66>] driver_register+0x60/0x110
->     [<00000000c5bec167>] __platform_driver_register+0x40/0x48
->     [<000000007c764b4f>] 0xffff800008c6c020
->     [<0000000047ec2e8c>] do_one_initcall+0x5c/0x1b0
->     [<0000000093d4b50d>] do_init_module+0x54/0x1d0
+>> This is a tentative to switch powerpc/32 vdso to generic C implementation.
+>> It will likely not work on 64 bits or even build properly at the moment.
+>>
+>> powerpc is a bit special for VDSO as well as system calls in the
+>> way that it requires setting CR SO bit which cannot be done in C.
+>> Therefore, entry/exit and fallback needs to be performed in ASM.
+>>
+>> To allow that, C fallbacks just return -1 and the ASM entry point
+>> performs the system call when the C function returns -1.
+>>
+>> The performance is rather disappoiting. That's most likely all
+>> calculation in the C implementation are based on 64 bits math and
+>> converted to 32 bits at the very end. I guess C implementation should
+>> use 32 bits math like the assembly VDSO does as of today.
 > 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  drivers/reset/core.c | 1 +
->  1 file changed, 1 insertion(+)
+>> gettimeofday:    vdso: 750 nsec/call
+>>
+>> gettimeofday:    vdso: 1533 nsec/call
+
+Small improvement (3%) with the proposed change:
+
+gettimeofday:    vdso: 1485 nsec/call
+
+Though still some way to go.
+
+Christophe
+
 > 
-> diff --git a/drivers/reset/core.c b/drivers/reset/core.c
-> index 213ff40dda11..36b1ff69b1e2 100644
-> --- a/drivers/reset/core.c
-> +++ b/drivers/reset/core.c
-> @@ -748,6 +748,7 @@ static void reset_control_array_put(struct reset_control_array *resets)
->  	for (i = 0; i < resets->num_rstcs; i++)
->  		__reset_control_put_internal(resets->rstc[i]);
->  	mutex_unlock(&reset_list_mutex);
-> +	kfree(resets);
->  }
->  
->  /**
-
-Thank you for the patch! I've added a
-
-Fixes: 17c82e206d2a ("reset: Add APIs to manage array of resets")
-
-tag and applied it to my reset/fixes branch.
-
-regards
-Philipp
-
+> The only real 64bit math which can matter is the 64bit * 32bit multiply,
+> i.e.
+> 
+> static __always_inline
+> u64 vdso_calc_delta(u64 cycles, u64 last, u64 mask, u32 mult)
+> {
+>          return ((cycles - last) & mask) * mult;
+> }
+> 
+> Everything else is trivial add/sub/shift, which should be roughly the same
+> in ASM.
+> 
+> Can you try to replace that with:
+> 
+> static __always_inline
+> u64 vdso_calc_delta(u64 cycles, u64 last, u64 mask, u32 mult)
+> {
+>          u64 ret, delta = ((cycles - last) & mask);
+>          u32 dh, dl;
+> 
+>          dl = delta;
+>          dh = delta >> 32;
+> 
+>          res = mul_u32_u32(al, mul);
+>          if (ah)
+>                  res += mul_u32_u32(ah, mul) << 32;
+> 
+>          return res;
+> }
+> 
+> That's pretty much what __do_get_tspec does in ASM.
+> 
+> Thanks,
+> 
+> 	tglx
+> 
