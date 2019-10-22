@@ -2,117 +2,95 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FFF2CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 10:25:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2441ACA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 10:26:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0614F21928
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 10:25:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571739901;
-	bh=v9eWcLU09j3QL42DGPoQHIRo4DpDx0J1RFpJPRqU1iQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EBY2N/dDlwy0L8nmAPyO8W8FZESN0jD8KWUX695QyFBLqxBZtxlANzSV1vqQ/ObgC
-	 aPBAE2Y+tPKHbhSOjRz3CvLYRBZAu1L3jD4jb4g0UhonPAxMm/eqUKB+ZAW1UuVmZA
-	 OoaPdwwrXF5VwR5Eej7NzWoFwgnM8/j3WeuUA50w=
+	by mail.kernel.org (Postfix) with ESMTP id 01D8E21783
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 10:26:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731790AbfJVKY7 (ORCPT
+        id S2388010AbfJVK02 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 06:24:59 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60162 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727101AbfJVKY7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 06:24:59 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C5BE5AAF1;
-        Tue, 22 Oct 2019 10:24:57 +0000 (UTC)
-Date:   Tue, 22 Oct 2019 12:24:57 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Oscar Salvador <osalvador@suse.de>
-Cc:     n-horiguchi@ah.jp.nec.com, mike.kravetz@oracle.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v2 10/16] mm,hwpoison: Rework soft offline for free
- pages
-Message-ID: <20191022102457.GJ9379@dhcp22.suse.cz>
-References: <20191017142123.24245-1-osalvador@suse.de>
- <20191017142123.24245-11-osalvador@suse.de>
- <20191018120615.GM5017@dhcp22.suse.cz>
- <20191021125842.GA11330@linux>
- <20191021154158.GV9379@dhcp22.suse.cz>
- <20191022074615.GA19060@linux>
- <20191022082611.GD9379@dhcp22.suse.cz>
- <20191022083505.GA19708@linux>
- <20191022092256.GH9379@dhcp22.suse.cz>
- <20191022095852.GB20429@linux>
+        Tue, 22 Oct 2019 06:26:28 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:52463 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727101AbfJVK02 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 06:26:28 -0400
+Received: from mail-qk1-f181.google.com ([209.85.222.181]) by
+ mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1N4yuK-1hvC7C2U20-010ufv; Tue, 22 Oct 2019 12:26:26 +0200
+Received: by mail-qk1-f181.google.com with SMTP id 4so15703093qki.6;
+        Tue, 22 Oct 2019 03:26:26 -0700 (PDT)
+X-Gm-Message-State: APjAAAVR6j32xQUPljneE53Igymhij+gEX0gIMHeId866gbHa50djBeN
+        aiZT8P0HZCYTYEh5nLECHtUQWghcPVZ6HhAxnAA=
+X-Google-Smtp-Source: APXvYqwSO1WMdUGQEJlTpMVP4JyNoKS32ISGEXZxl0XuWRKB/d7ZSQIo0HnbDgulrOldKwCE5M4KJ8mRxdWVTW/noF4=
+X-Received: by 2002:a37:a50f:: with SMTP id o15mr1148094qke.3.1571739985400;
+ Tue, 22 Oct 2019 03:26:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191022095852.GB20429@linux>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191009190853.245077-1-arnd@arndb.de> <20191009191044.308087-11-arnd@arndb.de>
+ <20191022043451.GB20354@ZenIV.linux.org.uk>
+In-Reply-To: <20191022043451.GB20354@ZenIV.linux.org.uk>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 22 Oct 2019 12:26:09 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1C=skow522Ge7w=ya2hK8TPS8ncusdyX-Ne4GBWB1H4A@mail.gmail.com>
+Message-ID: <CAK8P3a1C=skow522Ge7w=ya2hK8TPS8ncusdyX-Ne4GBWB1H4A@mail.gmail.com>
+Subject: Re: [PATCH v6 11/43] compat_ioctl: move drivers to compat_ptr_ioctl
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        y2038 Mailman List <y2038@lists.linaro.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Jiri Kosina <jkosina@suse.cz>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:9QYRekkZRmftZTpXqq5Ta7ySdGBrJGpk5Y3E2aNCXjVWZ9lbIgi
+ H+hu3jkbbhmSa/1ogUFGNDHKjzlwZpfbs90MD+hX7EK9U1KbNwmQRfaw875JRI/qJ1Zs88X
+ /+ny+r+I+eUKH7jiIyaFJmavCZy8dNCEFqWL3k8z+DcoGSPaGiJNMFtMQS5tfP70IvtQmFO
+ ZztmTYLt2ZfrEXX3XbCcg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:iGCRB/uaydI=:M830Sz+8d9YgyULC754S0j
+ oXZVneQZ3xqgBlGKCdhol75lDjRmRjQhCeT6uYMxzXwAVjW4CgUpd4AIAsi1qjBKFvdLnevmu
+ 6G0P0um5Jxlvd9V8Xo9oeiwAS1GqA1Eh2ezMKBnXTA62Kx3i+qJ7d0QQIWG7b0AomDNm8nDyj
+ O/FeM2pQ0qr0c91Jnh1q6GXZ54okkyn5MEsTfNXBYalDMjp9Y8ZbKElB4UrGS8+T0Tkn9FAw7
+ teAFTpdfY9aUyUaE7MvswQ803sAmdXjABTsBIJOC6RK0O430isAsjYPvWlPVlAKU0bISc5cqi
+ QlbgSp7QOE+lw9Vz8NZC+UjnoF68kEzBkB2QO6xtkndc0UJpZ6ejaQ+avUMl4KDDQy0s+VYXa
+ H06hRj67wb1rER9+Pj3nG1p6vxg4XdSPc71QZHs7bfVDUMLBKoFZqHif7hDFmZRmjKVhr5bCG
+ 7J78Mkl4zS9CcPuthzVP4y9ybv+6fewFK7rDgaRon/HG2nA8x2lYhW6T2heHpzNzybSqfaSGf
+ kGX+WKI0gDFYCmDGVV9ed8s1IWM+x9qVAR6TYW2gRQPWoahepfOVmoQFl9L/lCf5utDFiE9lP
+ 79Q2qziF+WjU6WNSdUFCjBg6OXMbEFDKay3jkJNB6t6zR7BmZrxwgB9Nn0Cibh2BLXz5NHmWX
+ MGuBEfOJs20jrRHJhVR7F+yPiwuhyG8fVBQa1i/bz/ccB/4jF+L/V5EwSniXxx5exPSQhzt6u
+ Dkpm/ZjFtRqBwTbFW002+hnBEL4jhlNO/ssut0GHsGsWVDD7TDI1s/cwV5X29ExTAfrPvhsMW
+ rN88xeH36W4LLO3N6KWQTdqIXGhzXDKYT8l1ZASCIkia7coy+WEFLdXPl80Lm3RGXkUyJsDlv
+ 9Au2gX55S7x/9bi+L+hw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 22-10-19 11:58:52, Oscar Salvador wrote:
-> On Tue, Oct 22, 2019 at 11:22:56AM +0200, Michal Hocko wrote:
-> > Hmm, that might be a misunderstanding on my end. I thought that it is
-> > the MCE handler to say whether the failure is recoverable or not. If yes
-> > then we can touch the content of the memory (that would imply the
-> > migration). Other than that both paths should be essentially the same,
-> > no? Well unrecoverable case would be essentially force migration failure
-> > path.
-> > 
-> > MADV_HWPOISON is explicitly documented to test MCE handling IIUC:
-> > : This feature is intended for testing of memory error-handling
-> > : code; it is available only if the kernel was configured with
-> > : CONFIG_MEMORY_FAILURE.
-> > 
-> > There is no explicit note about the type of the error that is injected
-> > but I think it is reasonably safe to assume this is a recoverable one.
-> 
-> MADV_HWPOISON stands for hard-offline.
-> MADV_SOFT_OFFLINE stands for soft-offline.
-> 
-> MADV_SOFT_OFFLINE (since Linux 2.6.33)
->               Soft offline the pages in the range specified by addr and
->               length.  The memory of each page in the specified range is
->               preserved (i.e., when next accessed, the same content will be
->               visible, but in a new physical page frame), and the original
->               page is offlined (i.e., no longer used, and taken out of
->               normal memory management).  The effect of the
->               MADV_SOFT_OFFLINE operation is invisible to (i.e., does not
->               change the semantics of) the calling process.
-> 
->               This feature is intended for testing of memory error-handling
->               code; it is available only if the kernel was configured with
->               CONFIG_MEMORY_FAILURE.
+On Tue, Oct 22, 2019 at 6:34 AM Al Viro <viro@zeniv.linux.org.uk> wrote:
+>
+> On Wed, Oct 09, 2019 at 09:10:11PM +0200, Arnd Bergmann wrote:
+> > Each of these drivers has a copy of the same trivial helper function to
+> > convert the pointer argument and then call the native ioctl handler.
+> >
+> > We now have a generic implementation of that, so use it.
+>
+> I'd rather flipped your #7 (ceph_compat_ioctl() introduction) past
+> that one...
 
-I have missed that one somehow. Thanks for pointing out.
+The idea was to be able to backport the ceph patch as a bugfix
+to stable kernels without having to change it or backport
+compat_ptr_ioctl() as well.
 
-[...]
+If you still prefer it that way, I'd move to a simpler version of this
+patch and drop the Cc:stable.
 
-> AFAICS, for hard-offline case, a recovered event would be if:
-> 
-> - the page to shut down is already free
-> - the page was unmapped
-> 
-> In some cases we need to kill the process if it holds dirty pages.
-
-Yes, I would expect that the page table would be poisoned and the
-process receive a SIGBUS when accessing that memory.
-
-> But we never migrate contents in hard-offline path.
-> I guess it is because we cannot really trust the contents anymore.
-
-Yes, that makes a perfect sense. What I am saying that the migration
-(aka trying to recover) is the main and only difference. The soft
-offline should poison page tables when not able to migrate as well
-IIUC.
--- 
-Michal Hocko
-SUSE Labs
+      Arnd
