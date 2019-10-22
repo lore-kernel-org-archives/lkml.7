@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7CECCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 20:34:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75D0ACA9EB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 20:34:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A33192184C
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 20:34:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4627221848
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 20:34:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C7KBtZnl"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aGkYnf6z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389479AbfJVUem (ORCPT
+        id S2389497AbfJVUeo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 16:34:42 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:41268 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389449AbfJVUei (ORCPT
+        Tue, 22 Oct 2019 16:34:44 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:36329 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389407AbfJVUeh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 16:34:38 -0400
-Received: by mail-qt1-f193.google.com with SMTP id c17so25868137qtn.8
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 13:34:38 -0700 (PDT)
+        Tue, 22 Oct 2019 16:34:37 -0400
+Received: by mail-qt1-f195.google.com with SMTP id d17so14264028qto.3
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 13:34:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Cu2iRByuQkBOdiS3ftuWg2x1Invt9O2eimcBFeYIbQQ=;
-        b=C7KBtZnlB3OLT3U/IskLPfrl3eYN7TUJSCVxUyZTTHjT39Q8gfZqWYNG/+7MnuzkzU
-         jlvkgRS5cMhKcRFdBesSUcwLQMK7SQDxdOefzxZVbTboj9zhfgFvIEQGAQu9ClpOaaGJ
-         usZxOmUcITG5BSz18Q3N9ySOJpP+vQo8F08cjsseG+y/jW4ldXvgNhzfbtnOP/8KGFLX
-         Jkck8I97wwtNbLpAzlnaczz4Xu1WxWvaFf+4mEpu6LY9P+UX3qA63Ohvey0Q/eniq3+s
-         piVm6NiLzEekGjtl6K4snX2hLIxfFKiHNpBeuBI7gaKboqZoueX3HbJNV0cTv5JRs/uX
-         fGgw==
+        bh=UTw/C9YOFOt2girMz7/HTweAfnMneRk1SahAwoeEi/8=;
+        b=aGkYnf6z5uRBHSkiivv6AM3qIXlIT5VCPXugOf2w1ms7hIEg+Uz/p4OQDtJ/C/avl2
+         N40dP786qDXUTRM6eF2Xn6o0OQJjAV250vcfoAxxYLL2TS5k18TvLX5TdK8jxS0FoetW
+         h11byvDgqKOwyVDvqkjFFxG3KQUpYzs0UcIwzD83t1lbOWMR8mGPRvTdfmeKHBsY9hsk
+         ChyXQif9WtkMentpyNrEb4QJj2wHAYaOdzrkP550Kqr0182q+oc3tr08V8n/bm9HdKLs
+         NGkdP7VtXme67OU/N6Qun1+Os1vvj0gu4bgzySU8Fnq9h0q9XiBR5sKLDAT0/C6/Ewm3
+         W+ig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=Cu2iRByuQkBOdiS3ftuWg2x1Invt9O2eimcBFeYIbQQ=;
-        b=HdcCv8pJV/BxolGYJ0/OAWwSB8xEcVCMm9riPhuT5ydoM2YPBGeVEcz2V1fincrHGl
-         iPNFOehjeCLbQHib31w3IFY5yafOzd8me8lK6jwJQxtkMh2+09JHVhWApSUwH/C3kAuI
-         5e13jMFjCS0bBszx0SDhb2vkB4wlmbnC3m0ZFhZiP4ccOlXqtXaINHmmN4PaiB7lcDTP
-         QG7JeYd2HAFqe0px7T8Nm+TbJURpPfcCug4pzJwsXMS9idSPjekfYQzlG7X1XrORzhbH
-         EBlxRTp+kh0DeikMDCMCOHF7M0voEdhWX9t+E4V0DhtKPRljb8igWMXWbCONYp/Hyd2g
-         il8g==
-X-Gm-Message-State: APjAAAWRZpcOKHUEru873e1IBef0s0V1eTrGMVdSJhiXV3k/vN4sbJHd
-        crHHzIeUcmEAf1A+crYU9mLaJw==
-X-Google-Smtp-Source: APXvYqwmF2Eif6hUS3VRwX1OSpSCpqeWF5dLxB6Ve3D4fRDRdppov3egMef+I+jToBIYIfLlnrkcSQ==
-X-Received: by 2002:aed:35e7:: with SMTP id d36mr5404833qte.59.1571776477484;
-        Tue, 22 Oct 2019 13:34:37 -0700 (PDT)
+        bh=UTw/C9YOFOt2girMz7/HTweAfnMneRk1SahAwoeEi/8=;
+        b=GKQC82juiz8IgpW4Xx6YSuL40x+PBvt6F2aANj+XSGN9Qm4qQaZ8mon7mhgYoMBlfy
+         dThomJ/8HDftETHIy7kD74cxSMAbDIP4okpbhlBpex/ipmdwlRIYKjLZ3ctJSv613N5D
+         uCZhazyMFSlpMy7qFocwy3lSdDTehF3n/2dV7Mgb6bdiQtpuROHFrD5QmZnrG2HMIXoX
+         gbT4H90J1RoiWrEiewCV/mjIuFqpxqPjyg/67zwnX4BM5SJbEQJSasouAZFhmt9QJJPZ
+         OBQDDE1RJIL+3x4KRxmiqkfrhJB2nCu2AelajvJ86b6o3t/nArZjahVTz06G7fhp0xq/
+         y1TQ==
+X-Gm-Message-State: APjAAAUQOUAEMLogIBkU1VAJx5VKcY2A6M3G8VgNczeTxVSfcHTGgw9e
+        FUVVDvefCTZCRP21f0IYh39gXA==
+X-Google-Smtp-Source: APXvYqwYMAtRE9EftUJJd2GrfOHrpZzFeCSNibUZXKvtjRPPVOMbJKVKX6Tq9tKu40aVZk1KfnMr9g==
+X-Received: by 2002:a0c:efcd:: with SMTP id a13mr5135070qvt.94.1571776475947;
+        Tue, 22 Oct 2019 13:34:35 -0700 (PDT)
 Received: from Thara-Work-Ubuntu.fios-router.home (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
-        by smtp.googlemail.com with ESMTPSA id r126sm8895038qke.98.2019.10.22.13.34.36
+        by smtp.googlemail.com with ESMTPSA id r126sm8895038qke.98.2019.10.22.13.34.34
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 22 Oct 2019 13:34:36 -0700 (PDT)
+        Tue, 22 Oct 2019 13:34:34 -0700 (PDT)
 From:   Thara Gopinath <thara.gopinath@linaro.org>
 To:     mingo@redhat.com, peterz@infradead.org, ionela.voinescu@arm.com,
         vincent.guittot@linaro.org, rui.zhang@intel.com,
         edubezval@gmail.com, qperret@google.com
 Cc:     linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
         javi.merino@kernel.org, daniel.lezcano@linaro.org
-Subject: [Patch v4 6/6] sched: thermal: Enable tuning of decay period
-Date:   Tue, 22 Oct 2019 16:34:25 -0400
-Message-Id: <1571776465-29763-7-git-send-email-thara.gopinath@linaro.org>
+Subject: [Patch v4 5/6] thermal/cpu-cooling: Update thermal pressure in case of a maximum frequency capping
+Date:   Tue, 22 Oct 2019 16:34:24 -0400
+Message-Id: <1571776465-29763-6-git-send-email-thara.gopinath@linaro.org>
 X-Mailer: git-send-email 2.1.4
 In-Reply-To: <1571776465-29763-1-git-send-email-thara.gopinath@linaro.org>
 References: <1571776465-29763-1-git-send-email-thara.gopinath@linaro.org>
@@ -72,84 +72,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thermal pressure follows pelt signas which means the
-decay period for thermal pressure is the default pelt
-decay period. Depending on soc charecteristics and thermal
-activity, it might be beneficial to decay thermal pressure
-slower, but still in-tune with the pelt signals.
-One way to achieve this is to provide a command line parameter
-to set the decay coefficient to an integer between 0 and 10.
+Thermal governors can request for a cpu's maximum supported frequency
+to be capped in case of an overheat event. This in turn means that the
+maximum capacity available for tasks to run on the particular cpu is
+reduced. Delta between the original maximum capacity and capped
+maximum capacity is known as thermal pressure. Enable cpufreq cooling
+device to update the thermal pressure in event of a capped
+maximum frequency.
 
 Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
 ---
-v3->v4:
-	- Removed the sysctl setting to tune decay period and instead
-	  introduced a command line parameter to control it. The rationale
-	  here being changing decay period of a PELT signal runtime can
-	  result in a skewed average value for atleast some cycles.
+ drivers/thermal/cpu_cooling.c | 31 +++++++++++++++++++++++++++++--
+ 1 file changed, 29 insertions(+), 2 deletions(-)
 
- Documentation/admin-guide/kernel-parameters.txt |  5 +++++
- kernel/sched/thermal.c                          | 25 ++++++++++++++++++++++++-
- 2 files changed, 29 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index a84a83f..61d7baa 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -4273,6 +4273,11 @@
- 			incurs a small amount of overhead in the scheduler
- 			but is useful for debugging and performance tuning.
- 
-+	sched_thermal_decay_coeff=
-+			[KNL, SMP] Set decay coefficient for thermal pressure signal.
-+			Format: integer betweer 0 and 10
-+			Default is 0.
-+
- 	skew_tick=	[KNL] Offset the periodic timer tick per cpu to mitigate
- 			xtime_lock contention on larger systems, and/or RCU lock
- 			contention on all systems with CONFIG_MAXSMP set.
-diff --git a/kernel/sched/thermal.c b/kernel/sched/thermal.c
-index 0c84960..0da31e1 100644
---- a/kernel/sched/thermal.c
-+++ b/kernel/sched/thermal.c
-@@ -10,6 +10,28 @@
- #include "pelt.h"
- #include "thermal.h"
- 
-+/**
-+ * By default the decay is the default pelt decay period.
-+ * The decay coefficient can change is decay period in
-+ * multiples of 32.
-+ *   Decay coefficient    Decay period(ms)
-+ *	0			32
-+ *	1			64
-+ *	2			128
-+ *	3			256
-+ *	4			512
-+ */
-+static int sched_thermal_decay_coeff;
-+
-+static int __init setup_sched_thermal_decay_coeff(char *str)
-+{
-+	if (kstrtoint(str, 0, &sched_thermal_decay_coeff))
-+		pr_warn("Unable to set scheduler thermal pressure decay coefficient\n");
-+
-+	return 1;
-+}
-+__setup("sched_thermal_decay_coeff=", setup_sched_thermal_decay_coeff);
-+
- static DEFINE_PER_CPU(unsigned long, delta_capacity);
+diff --git a/drivers/thermal/cpu_cooling.c b/drivers/thermal/cpu_cooling.c
+index 391f397..2e6a979 100644
+--- a/drivers/thermal/cpu_cooling.c
++++ b/drivers/thermal/cpu_cooling.c
+@@ -218,6 +218,23 @@ static u32 cpu_power_to_freq(struct cpufreq_cooling_device *cpufreq_cdev,
+ }
  
  /**
-@@ -40,6 +62,7 @@ void update_thermal_pressure(int cpu, u64 capped_freq_ratio)
-  */
- void trigger_thermal_pressure_average(struct rq *rq)
++ * update_sched_max_capacity - update scheduler about change in cpu
++ *					max frequency.
++ * @policy - cpufreq policy whose max frequency is capped.
++ */
++static void update_sched_max_capacity(struct cpumask *cpus,
++				      unsigned int cur_max_freq,
++				      unsigned int max_freq)
++{
++	int cpu;
++	unsigned long capacity = (cur_max_freq << SCHED_CAPACITY_SHIFT) /
++				  max_freq;
++
++	for_each_cpu(cpu, cpus)
++		update_thermal_pressure(cpu, capacity);
++}
++
++/**
+  * get_load() - get load for a cpu since last updated
+  * @cpufreq_cdev:	&struct cpufreq_cooling_device for this cpu
+  * @cpu:	cpu number
+@@ -320,6 +337,7 @@ static int cpufreq_set_cur_state(struct thermal_cooling_device *cdev,
+ 				 unsigned long state)
  {
--	update_thermal_load_avg(rq_clock_task(rq), rq,
-+	update_thermal_load_avg(rq_clock_task(rq) >>
-+				sched_thermal_decay_coeff, rq,
- 				per_cpu(delta_capacity, cpu_of(rq)));
+ 	struct cpufreq_cooling_device *cpufreq_cdev = cdev->devdata;
++	int ret;
+ 
+ 	/* Request state should be less than max_level */
+ 	if (WARN_ON(state > cpufreq_cdev->max_level))
+@@ -331,8 +349,17 @@ static int cpufreq_set_cur_state(struct thermal_cooling_device *cdev,
+ 
+ 	cpufreq_cdev->cpufreq_state = state;
+ 
+-	return dev_pm_qos_update_request(&cpufreq_cdev->qos_req,
+-				cpufreq_cdev->freq_table[state].frequency);
++	ret = dev_pm_qos_update_request
++				(&cpufreq_cdev->qos_req,
++				 cpufreq_cdev->freq_table[state].frequency);
++
++	if (ret > 0)
++		update_sched_max_capacity
++				(cpufreq_cdev->policy->cpus,
++				 cpufreq_cdev->freq_table[state].frequency,
++				 cpufreq_cdev->policy->cpuinfo.max_freq);
++
++	return ret;
  }
+ 
+ /**
 -- 
 2.1.4
 
