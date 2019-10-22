@@ -2,353 +2,126 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD73BCA9EB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 23:00:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0603CC47E49
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 23:01:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F3642075A
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 23:00:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF213214B2
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 23:01:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571785211;
-	bh=Kx/1CWzHXPzAcA1vV8ItNIOLifm37pD99zDnJEvsW2g=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=0dqmiIFpSmLrbFNeistzymz0hcbi+NqOaW5jdal822pxqB3+gI1zf/SYdx+eeh1QF
-	 CfCJ21hl5mnTnzYucZTnhW8Kar/5ekGDemHtDhg7AtJZXEwylNMk6lJNUuzSxH9Jt3
-	 Ez1mlyQAFF0LhzDFgawSZ5Cir3kkAzXfPqoQ82Bs=
+	s=default; t=1571785304;
+	bh=2T9O9f/svRRLRKxyJkkAcXdX4HnJ/q4asftEJqtbMwg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=gN2BllVEOIB/4ojSi8vYYYcQfNj6pthi/EsPc5tlBF7ZWjAoWj0SW+ugeSsMcdLoL
+	 zasau62kmMsFSrhzWeBQJgfggWVKVaHtlzJJKCAkbfBTSLykpvzyw3WbHPuiXm6rxR
+	 x/IxTcDO5IKcsPyLHew8WR+TuBgRfIxgkyTVmqCQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389609AbfJVXAK (ORCPT
+        id S2389622AbfJVXBn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 19:00:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39874 "EHLO mail.kernel.org"
+        Tue, 22 Oct 2019 19:01:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730034AbfJVXAJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 19:00:09 -0400
-Received: from localhost (unknown [69.71.4.100])
+        id S1731850AbfJVXBn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 19:01:43 -0400
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9AD1C20700;
-        Tue, 22 Oct 2019 23:00:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34DE620700;
+        Tue, 22 Oct 2019 23:01:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571785208;
-        bh=Kx/1CWzHXPzAcA1vV8ItNIOLifm37pD99zDnJEvsW2g=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=E36sPUzvdx7Y6sQcsthmUyMkk98NjVNb24eAKPfUZZ9u0hGnIJ/i2Fzur3mANemaw
-         wseR1mwfyzhvy7bCG+qAlpXYdSxCXDBiLnp66ACVvXHpu6p5il7v4dCMM3KbfIG6PE
-         Pkyxdfqir8RfVDryYUSpVnNvnolNXRfzXwmxdtjw=
-Date:   Tue, 22 Oct 2019 18:00:06 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Lukas Wunner <lukas@wunner.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Frederick Lawler <fred@fredlawl.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] PCI: pciehp: Prevent deadlock on disconnect
-Message-ID: <20191022230006.GA46791@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190812143133.75319-2-mika.westerberg@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        s=default; t=1571785301;
+        bh=2T9O9f/svRRLRKxyJkkAcXdX4HnJ/q4asftEJqtbMwg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=fq6CI2JNFZcVfartOJC/tzum1u9mn84eNLVA7RSwwc6E2UqvQDeJ+ejcVU+f3GdyP
+         nsXZ6EEEh4h2WkVVdxek8GFB00LJR+I5Z41r4Vz99xahSks1Jr2urIbcypYLqVfW8m
+         YdOIWILtkmOuSmIVK0ATPlwQITNrqGNxAkvl6g9Q=
+Date:   Tue, 22 Oct 2019 16:01:40 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     kvm@vger.kernel.org, mst@redhat.com, linux-kernel@vger.kernel.org,
+        willy@infradead.org, mhocko@kernel.org, linux-mm@kvack.org,
+        mgorman@techsingularity.net, vbabka@suse.cz,
+        yang.zhang.wz@gmail.com, nitesh@redhat.com, konrad.wilk@oracle.com,
+        david@redhat.com, pagupta@redhat.com, riel@surriel.com,
+        lcapitulino@redhat.com, dave.hansen@intel.com,
+        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
+        dan.j.williams@intel.com, alexander.h.duyck@linux.intel.com,
+        osalvador@suse.de
+Subject: Re: [PATCH v12 0/6] mm / virtio: Provide support for unused page
+ reporting
+Message-Id: <20191022160140.a6954868d59f47b36334b504@linux-foundation.org>
+In-Reply-To: <20191022221223.17338.5860.stgit@localhost.localdomain>
+References: <20191022221223.17338.5860.stgit@localhost.localdomain>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 05:31:33PM +0300, Mika Westerberg wrote:
-> If there are more than one PCIe switch with hotplug downstream ports
-> hot-removing them leads to a following deadlock:
+On Tue, 22 Oct 2019 15:27:52 -0700 Alexander Duyck <alexander.duyck@gmail.com> wrote:
+
+> Below are the results from various benchmarks. I primarily focused on two
+> tests. The first is the will-it-scale/page_fault2 test, and the other is
+> a modified version of will-it-scale/page_fault1 that was enabled to use
+> THP. I did this as it allows for better visibility into different parts
+> of the memory subsystem. The guest is running on one node of a E5-2630 v3
+> CPU with 48G of RAM that I split up into two logical nodes in the guest
+> in order to test with NUMA as well.
 > 
->  INFO: task irq/126-pciehp:198 blocked for more than 120 seconds.
->  "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
->  irq/126-pciehp  D    0   198      2 0x80000000
->  Call Trace:
->   __schedule+0x2a2/0x880
->   schedule+0x2c/0x80
->   schedule_timeout+0x246/0x350
->   ? ttwu_do_activate+0x67/0x90
->   wait_for_completion+0xb7/0x140
->   ? wake_up_q+0x80/0x80
->   kthread_stop+0x49/0x110
->   __free_irq+0x15c/0x2a0
->   free_irq+0x32/0x70
->   pcie_shutdown_notification+0x2f/0x50
->   pciehp_remove+0x27/0x50
->   pcie_port_remove_service+0x36/0x50
->   device_release_driver_internal+0x18c/0x250
->   device_release_driver+0x12/0x20
->   bus_remove_device+0xec/0x160
->   device_del+0x13b/0x350
->   ? pcie_port_find_device+0x60/0x60
->   device_unregister+0x1a/0x60
->   remove_iter+0x1e/0x30
->   device_for_each_child+0x56/0x90
->   pcie_port_device_remove+0x22/0x40
->   pcie_portdrv_remove+0x20/0x60
->   pci_device_remove+0x3e/0xc0
->   device_release_driver_internal+0x18c/0x250
->   device_release_driver+0x12/0x20
->   pci_stop_bus_device+0x6f/0x90
->   pci_stop_bus_device+0x31/0x90
->   pci_stop_and_remove_bus_device+0x12/0x20
->   pciehp_unconfigure_device+0x88/0x140
->   pciehp_disable_slot+0x6a/0x110
->   pciehp_handle_presence_or_link_change+0x263/0x400
->   pciehp_ist+0x1c9/0x1d0
->   ? irq_forced_thread_fn+0x80/0x80
->   irq_thread_fn+0x24/0x60
->   irq_thread+0xeb/0x190
->   ? irq_thread_fn+0x60/0x60
->   kthread+0x120/0x140
->   ? irq_thread_check_affinity+0xf0/0xf0
->   ? kthread_park+0x90/0x90
->   ret_from_fork+0x35/0x40
->  INFO: task irq/190-pciehp:2288 blocked for more than 120 seconds.
->  irq/190-pciehp  D    0  2288      2 0x80000000
->  Call Trace:
->   __schedule+0x2a2/0x880
->   schedule+0x2c/0x80
->   schedule_preempt_disabled+0xe/0x10
->   __mutex_lock.isra.9+0x2e0/0x4d0
->   ? __mutex_lock_slowpath+0x13/0x20
->   __mutex_lock_slowpath+0x13/0x20
->   mutex_lock+0x2c/0x30
->   pci_lock_rescan_remove+0x15/0x20
->   pciehp_unconfigure_device+0x4d/0x140
->   pciehp_disable_slot+0x6a/0x110
->   pciehp_handle_presence_or_link_change+0x263/0x400
->   pciehp_ist+0x1c9/0x1d0
->   ? irq_forced_thread_fn+0x80/0x80
->   irq_thread_fn+0x24/0x60
->   irq_thread+0xeb/0x190
->   ? irq_thread_fn+0x60/0x60
->   kthread+0x120/0x140
->   ? irq_thread_check_affinity+0xf0/0xf0
->   ? kthread_park+0x90/0x90
->   ret_from_fork+0x35/0x40
+> Test		    page_fault1 (THP)     page_fault2
+> Baseline	 1  1256106.33  +/-0.09%   482202.67  +/-0.46%
+>                 16  8864441.67  +/-0.09%  3734692.00  +/-1.23%
 > 
-> What happens here is that the whole hierarchy is runtime resumed and the
-> parent PCIe downstream port, who got the hot-remove event, starts
-> removing devices below it taking pci_lock_rescan_remove() lock. When the
-> child PCIe port is runtime resumed it calls pciehp_check_presence()
-> which ends up calling pciehp_card_present() and pciehp_check_link_active().
-> Both of these read their parts of PCIe config space by calling helper
-> function pcie_capability_read_word(). Now, this function notices that
-> the underlying device is already gone and returns PCIBIOS_DEVICE_NOT_FOUND
-> with the capability value set to 0. When pciehp gets this value it
-> thinks that its child device is also hot-removed and schedules its IRQ
-> thread to handle the event.
-
-I can't remember if there was a reason why 8c0d3a02c130 ("PCI: Add
-accessors for PCI Express Capability") reset *val to 0 if
-pci_read_config_word() fails.  It doesn't seem like the right thing;
-it seems like it would be better for it to be consistent with a plain
-pci_read_config_word().
-
-> The deadlock happens when the child's IRQ thread runs and tries to
-> acquire pci_lock_rescan_remove() which is already taken by the parent
-> and the parent waits for the child's IRQ thread to finish.
+> Patches applied  1  1257096.00  +/-0.06%   477436.00  +/-0.16%
+>                 16  8864677.33  +/-0.06%  3800037.00  +/-0.19%
 > 
-> We can prevent this from happening by checking the return value of
-> pcie_capability_read_word() and if it is PCIBIOS_DEVICE_NOT_FOUND stop
-> performing any hot-removal activities.
+> Patches enabled	 1  1258420.00  +/-0.04%   480080.00  +/-0.07%
+>  MADV disabled  16  8753840.00  +/-1.27%  3782764.00  +/-0.37%
 > 
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> ---
-> No changes from the previous version.
+> Patches enabled	 1  1267916.33  +/-0.08%   472075.67  +/-0.39%
+>                 16  8287050.33  +/-0.67%  3774500.33  +/-0.11%
 > 
->  drivers/pci/hotplug/pciehp.h      |  6 +++---
->  drivers/pci/hotplug/pciehp_core.c | 11 ++++++++---
->  drivers/pci/hotplug/pciehp_ctrl.c |  4 ++--
->  drivers/pci/hotplug/pciehp_hpc.c  | 32 +++++++++++++++++++++++--------
->  4 files changed, 37 insertions(+), 16 deletions(-)
+> The results above are for a baseline with a linux-next-20191021 kernel,
+> that kernel with this patch set applied but page reporting disabled in
+> virtio-balloon, patches applied but the madvise disabled by direct
+> assigning a device, and the patches applied and page reporting fully
+> enabled.  These results include the deviation seen between the average
+> value reported here versus the high and/or low value. I observed that
+> during the test the memory usage for the first three tests never dropped
+> whereas with the patches fully enabled the VM would drop to using only a
+> few GB of the host's memory when switching from memhog to page fault tests.
 > 
-> diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
-> index 8c51a04b8083..81c514ab9518 100644
-> --- a/drivers/pci/hotplug/pciehp.h
-> +++ b/drivers/pci/hotplug/pciehp.h
-> @@ -173,10 +173,10 @@ int pciehp_query_power_fault(struct controller *ctrl);
->  void pciehp_green_led_on(struct controller *ctrl);
->  void pciehp_green_led_off(struct controller *ctrl);
->  void pciehp_green_led_blink(struct controller *ctrl);
-> -bool pciehp_card_present(struct controller *ctrl);
-> -bool pciehp_card_present_or_link_active(struct controller *ctrl);
-> +int pciehp_card_present(struct controller *ctrl);
-> +int pciehp_card_present_or_link_active(struct controller *ctrl);
->  int pciehp_check_link_status(struct controller *ctrl);
-> -bool pciehp_check_link_active(struct controller *ctrl);
-> +int pciehp_check_link_active(struct controller *ctrl);
->  void pciehp_release_ctrl(struct controller *ctrl);
->  
->  int pciehp_sysfs_enable_slot(struct hotplug_slot *hotplug_slot);
-> diff --git a/drivers/pci/hotplug/pciehp_core.c b/drivers/pci/hotplug/pciehp_core.c
-> index e9f82afa3773..4c032d75c874 100644
-> --- a/drivers/pci/hotplug/pciehp_core.c
-> +++ b/drivers/pci/hotplug/pciehp_core.c
-> @@ -134,10 +134,15 @@ static int get_adapter_status(struct hotplug_slot *hotplug_slot, u8 *value)
->  {
->  	struct controller *ctrl = to_ctrl(hotplug_slot);
->  	struct pci_dev *pdev = ctrl->pcie->port;
-> +	int ret;
->  
->  	pci_config_pm_runtime_get(pdev);
-> -	*value = pciehp_card_present_or_link_active(ctrl);
-> +	ret = pciehp_card_present_or_link_active(ctrl);
->  	pci_config_pm_runtime_put(pdev);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	*value = ret;
->  	return 0;
->  }
->  
-> @@ -153,13 +158,13 @@ static int get_adapter_status(struct hotplug_slot *hotplug_slot, u8 *value)
->   */
->  static void pciehp_check_presence(struct controller *ctrl)
->  {
-> -	bool occupied;
-> +	int occupied;
->  
->  	down_read(&ctrl->reset_lock);
->  	mutex_lock(&ctrl->state_lock);
->  
->  	occupied = pciehp_card_present_or_link_active(ctrl);
-> -	if ((occupied && (ctrl->state == OFF_STATE ||
-> +	if ((occupied > 0 && (ctrl->state == OFF_STATE ||
->  			  ctrl->state == BLINKINGON_STATE)) ||
->  	    (!occupied && (ctrl->state == ON_STATE ||
->  			   ctrl->state == BLINKINGOFF_STATE)))
-> diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
-> index 631ced0ab28a..5a433cc8621f 100644
-> --- a/drivers/pci/hotplug/pciehp_ctrl.c
-> +++ b/drivers/pci/hotplug/pciehp_ctrl.c
-> @@ -221,7 +221,7 @@ void pciehp_handle_disable_request(struct controller *ctrl)
->  
->  void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
->  {
-> -	bool present, link_active;
-> +	int present, link_active;
->  
->  	/*
->  	 * If the slot is on and presence or link has changed, turn it off.
-> @@ -252,7 +252,7 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
->  	mutex_lock(&ctrl->state_lock);
->  	present = pciehp_card_present(ctrl);
->  	link_active = pciehp_check_link_active(ctrl);
-> -	if (!present && !link_active) {
-> +	if (present <= 0 && link_active <= 0) {
->  		mutex_unlock(&ctrl->state_lock);
->  		return;
->  	}
-> diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-> index bd990e3371e3..1f918b043adb 100644
-> --- a/drivers/pci/hotplug/pciehp_hpc.c
-> +++ b/drivers/pci/hotplug/pciehp_hpc.c
-> @@ -201,13 +201,16 @@ static void pcie_write_cmd_nowait(struct controller *ctrl, u16 cmd, u16 mask)
->  	pcie_do_write_cmd(ctrl, cmd, mask, false);
->  }
->  
-> -bool pciehp_check_link_active(struct controller *ctrl)
-> +int pciehp_check_link_active(struct controller *ctrl)
->  {
->  	struct pci_dev *pdev = ctrl_dev(ctrl);
->  	u16 lnk_status;
-> -	bool ret;
-> +	int ret;
-> +
-> +	ret = pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &lnk_status);
-> +	if (ret == PCIBIOS_DEVICE_NOT_FOUND)
-> +		return -ENODEV;
->  
-> -	pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &lnk_status);
->  	ret = !!(lnk_status & PCI_EXP_LNKSTA_DLLLA);
->  
->  	if (ret)
-> @@ -373,13 +376,17 @@ void pciehp_get_latch_status(struct controller *ctrl, u8 *status)
->  	*status = !!(slot_status & PCI_EXP_SLTSTA_MRLSS);
->  }
->  
-> -bool pciehp_card_present(struct controller *ctrl)
-> +int pciehp_card_present(struct controller *ctrl)
->  {
->  	struct pci_dev *pdev = ctrl_dev(ctrl);
->  	u16 slot_status;
-> +	int ret;
->  
-> -	pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &slot_status);
-> -	return slot_status & PCI_EXP_SLTSTA_PDS;
-> +	ret = pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &slot_status);
-> +	if (ret == PCIBIOS_DEVICE_NOT_FOUND)
-> +		return -ENODEV;
+> Most of the overhead seen with this patch set fully enabled is due to the
+> fact that accessing the reported pages will cause a page fault and the host
+> will have to zero the page before giving it back to the guest. The overall
+> guest size is kept fairly small to only a few GB while the test is running.
+> This overhead is much more visible when using THP than with standard 4K
+> pages. As such for the case where the host memory is not oversubscribed
+> this results in a performance regression, however if the host memory were
+> oversubscribed this patch set should result in a performance improvement
+> as swapping memory from the host can be avoided.
 
-Isn't this racy?
+I'm trying to understand "how valuable is this patchset" and the above
+resulted in some headscratching.
 
-                                        # pdev is present
-  pci_read_config_word
-    if (pci_dev_is_disconnected(pdev))  # currently false
-                                        # pdev is removed
-    pci_bus_read_config_word            # fails, returns ~0
-  slot_status = ~0
+Overall, how valuable is this patchset?  To real users running real
+workloads?
 
-I think pci_read_config_word() checks pci_dev_is_disconnected() merely
-as an optimization.  Obviously it can't guarantee that the subsequent
-config access will succeed.
+> There is currently an alternative patch set[1] that has been under work
+> for some time however the v12 version of that patch set could not be
+> tested as it triggered a kernel panic when I attempted to test it. It
+> requires multiple modifications to get up and running with performance
+> comparable to this patch set. A follow-on set has yet to be posted. As
+> such I have not included results from that patch set, and I would
+> appreciate it if we could keep this patch set the focus of any discussion
+> on this thread.
 
-If pci_dev_is_disconnected() was false but the config read fails, I
-think we'll get ~0 data and return 1, i.e., "PDS was set".
+Actually, the rest of us would be interested in a comparison ;)  
 
-Shouldn't we check for slot_status being an error response (~0)
-instead of looking for PCIBIOS_DEVICE_NOT_FOUND?  There are 7 RsvdP
-bits in Slot Status, so ~0 is not a valid value for the register.
 
-All 16 bits of Link Status are defined, but ~0 is still an invalid
-value because the Current Link Speed and Negotiated Link Width fields
-only define a few valid encodings.
-
-> +	return !!(slot_status & PCI_EXP_SLTSTA_PDS);
->  }
->  
->  /**
-> @@ -390,10 +397,19 @@ bool pciehp_card_present(struct controller *ctrl)
->   * Presence Detect State bit, this helper also returns true if the Link Active
->   * bit is set.  This is a concession to broken hotplug ports which hardwire
->   * Presence Detect State to zero, such as Wilocity's [1ae9:0200].
-> + *
-> + * Returns: %1 if the slot is occupied and %0 if it is not. If the hotplug
-> + *	    port is not present anymore returns %-ENODEV.
->   */
-> -bool pciehp_card_present_or_link_active(struct controller *ctrl)
-> +int pciehp_card_present_or_link_active(struct controller *ctrl)
->  {
-> -	return pciehp_card_present(ctrl) || pciehp_check_link_active(ctrl);
-> +	int ret;
-> +
-> +	ret = pciehp_card_present(ctrl);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return pciehp_check_link_active(ctrl);
-
-The names of these functions seem misleading to me: all they can
-really tell us is "the card *was* present" or "the link *was* active"
-at some time in the past.  But the names make it so tempting to
-pretend that "the card *is* present" or "the link *is* active", and
-that may no longer be true.
-
-I think names like "pciehp_card_absent()" and "pciehp_link_down()"
-would make it easier to think about these situations.
-
->  }
->  
->  int pciehp_query_power_fault(struct controller *ctrl)
-> -- 
-> 2.20.1
-> 
