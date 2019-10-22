@@ -6,24 +6,24 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E7B6C47E49
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:27:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A90D2CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:27:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34D6621A4A
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:27:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8663E2086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:27:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388805AbfJVP1M (ORCPT
+        id S2388993AbfJVP1R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 11:27:12 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:35813 "EHLO
+        Tue, 22 Oct 2019 11:27:17 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:37129 "EHLO
         relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726847AbfJVP1F (ORCPT
+        with ESMTP id S1731656AbfJVP1K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 11:27:05 -0400
+        Tue, 22 Oct 2019 11:27:10 -0400
 Received: from localhost.localdomain (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
         (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 38495240010;
-        Tue, 22 Oct 2019 15:27:03 +0000 (UTC)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 5AE19240016;
+        Tue, 22 Oct 2019 15:27:07 +0000 (UTC)
 From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 To:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com
@@ -39,9 +39,9 @@ Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
         Jernej Skrabec <jernej.skrabec@siol.net>,
         Jonas Karlman <jonas@kwiboo.se>,
         Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v9 2/5] media: cedrus: Remove unnecessary parenthesis around DIV_ROUND_UP
-Date:   Tue, 22 Oct 2019 17:26:51 +0200
-Message-Id: <20191022152654.1999355-3-paul.kocialkowski@bootlin.com>
+Subject: [PATCH v9 4/5] media: pixfmt: Document the HEVC slice pixel format
+Date:   Tue, 22 Oct 2019 17:26:53 +0200
+Message-Id: <20191022152654.1999355-5-paul.kocialkowski@bootlin.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191022152654.1999355-1-paul.kocialkowski@bootlin.com>
 References: <20191022152654.1999355-1-paul.kocialkowski@bootlin.com>
@@ -52,30 +52,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DIV_ROUND_UP's first argument doesn't need to be wrapped in parenthesis
-since that is already being taken care of in the macro's definition.
+Document the current state of the HEVC slice pixel format.
+The format will need to evolve in the future, which is why it is
+not part of the public API.
 
 Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 ---
- drivers/staging/media/sunxi/cedrus/cedrus_regs.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ .../media/uapi/v4l/pixfmt-compressed.rst      | 23 +++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_regs.h b/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
-index f9dd8cbf3458..21676a1797f1 100644
---- a/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
-+++ b/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
-@@ -101,9 +101,9 @@
- #define VE_DEC_MPEG_PICCODEDSIZE		(VE_ENGINE_DEC_MPEG + 0x08)
+diff --git a/Documentation/media/uapi/v4l/pixfmt-compressed.rst b/Documentation/media/uapi/v4l/pixfmt-compressed.rst
+index 55d8d690f22f..561bda112809 100644
+--- a/Documentation/media/uapi/v4l/pixfmt-compressed.rst
++++ b/Documentation/media/uapi/v4l/pixfmt-compressed.rst
+@@ -192,6 +192,29 @@ Compressed Formats
+ 	If :ref:`VIDIOC_ENUM_FMT` reports ``V4L2_FMT_FLAG_CONTINUOUS_BYTESTREAM``
+ 	then the decoder has no	requirements since it can parse all the
+ 	information from the raw bytestream.
++    * .. _V4L2-PIX-FMT-HEVC-SLICE:
++
++      - ``V4L2_PIX_FMT_HEVC_SLICE``
++      - 'S265'
++      - HEVC parsed slice data, as extracted from the HEVC bitstream.
++	This format is adapted for stateless video decoders that implement a
++	HEVC pipeline (using the :ref:`mem2mem` and :ref:`media-request-api`).
++	This pixelformat has two modifiers that must be set at least once
++	through the ``V4L2_CID_MPEG_VIDEO_HEVC_DECODE_MODE``
++        and ``V4L2_CID_MPEG_VIDEO_HEVC_START_CODE`` controls.
++	Metadata associated with the frame to decode is required to be passed
++	through the following controls :
++        * ``V4L2_CID_MPEG_VIDEO_HEVC_SPS``
++        * ``V4L2_CID_MPEG_VIDEO_HEVC_PPS``
++        * ``V4L2_CID_MPEG_VIDEO_HEVC_SLICE_PARAMS``
++	See the :ref:`associated Codec Control IDs <v4l2-mpeg-hevc>`.
++	Buffers associated with this pixel format must contain the appropriate
++	number of macroblocks to decode a full corresponding frame.
++
++	.. note::
++
++	   This format is not yet part of the public kernel API and it
++	   is expected to change.
+     * .. _V4L2-PIX-FMT-FWHT:
  
- #define VE_DEC_MPEG_PICCODEDSIZE_WIDTH(w) \
--	SHIFT_AND_MASK_BITS(DIV_ROUND_UP((w), 16), 15, 8)
-+	SHIFT_AND_MASK_BITS(DIV_ROUND_UP(w, 16), 15, 8)
- #define VE_DEC_MPEG_PICCODEDSIZE_HEIGHT(h) \
--	SHIFT_AND_MASK_BITS(DIV_ROUND_UP((h), 16), 7, 0)
-+	SHIFT_AND_MASK_BITS(DIV_ROUND_UP(h, 16), 7, 0)
- 
- #define VE_DEC_MPEG_PICBOUNDSIZE		(VE_ENGINE_DEC_MPEG + 0x0c)
- 
+       - ``V4L2_PIX_FMT_FWHT``
 -- 
 2.23.0
 
