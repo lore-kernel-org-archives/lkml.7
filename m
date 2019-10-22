@@ -2,65 +2,113 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D22ECA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE8E4CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:39:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AB2D218AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:38:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A420C218AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:39:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yuptn+Xp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388359AbfJVMi3 (ORCPT
+        id S1731322AbfJVMj4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 08:38:29 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:43803 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726142AbfJVMi3 (ORCPT
+        Tue, 22 Oct 2019 08:39:56 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:32864 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726978AbfJVMj4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 08:38:29 -0400
-Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.pengutronix.de.)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1iMtQh-0000zx-69; Tue, 22 Oct 2019 14:38:27 +0200
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     linux-kernel@vger.kernel.org
-Cc:     Joe Perches <joe@perches.com>, kernel@pengutronix.de
-Subject: [PATCH] MAINTAINERS: add reset controller framework keywords
-Date:   Tue, 22 Oct 2019 14:38:23 +0200
-Message-Id: <20191022123823.4854-1-p.zabel@pengutronix.de>
-X-Mailer: git-send-email 2.20.1
+        Tue, 22 Oct 2019 08:39:56 -0400
+Received: by mail-wr1-f68.google.com with SMTP id s1so9142011wro.0;
+        Tue, 22 Oct 2019 05:39:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IEqiM8atHxIH0UKIQukfFYbPpj8bV/qswpYiJzDBnHM=;
+        b=Yuptn+Xp3pzaviOf1YxWnObsNNLNBlUMB5/hGbYF3C52rbNCi4WDbPc3AhB/Za6yJF
+         a1IsjGOP5g6s2UrUYasbp1X2Eo7KBDE6vA9bmTPf1EuIct5L475O6LV6BynQz90AozVx
+         XSbq6sQd2Ol2yPAWOy8rRYdBh4d/TOgkwe35GEm7DMKLnJTWcEY1t9KIsDstZBWqrnpg
+         J9f8d2jkRCR/+vXXxPfC8iTGQ98sHlOLyoNgXCEFO03/K76nENZDkX+eZdDlCM25vxjJ
+         VhRQNsPh1LqUKaNasvMpJAJ+UiAnNTv62rMisyFtCtrL/XiO5Hpy8txCAG0V4vZa11gg
+         dXqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IEqiM8atHxIH0UKIQukfFYbPpj8bV/qswpYiJzDBnHM=;
+        b=lkw2hroA+QEKZOIpXDfCtCYF2ZPhUf+d/M4m3EgoRCqUX9rKmKbMBvqYPdn/e2j/3h
+         shwHiiKQD/cP4jOZ/8mdgmy7JWjUhpPTDaFefJADS4kB9q3DRVzVaNoaqNyU+MGUypR8
+         fuooqsMsN5NRqSpeOnuqOWmlOz4Vk/pVWgEK+PfFtm2YL/EtfkPsWLq0uZX53n5utPkK
+         64ES9MiCVimGieOWruA0BxsMaanHIGLd5dXtoLBaTL8MbW1A4kbaYF17SSRLAf5R8ZCO
+         hiUWG0O3u0+tZbmfQPnQfrThl7qTHORDu2X5hr/TwTBcH+UoNp/UxKHw9IEC2iyMUUIh
+         kk+g==
+X-Gm-Message-State: APjAAAVgwmHZz+USx9wRcDY8zzb+stq8EunP0nNtE8+dQpkp8GPgnXHB
+        t1cSlaU52/k9q2C74KICAqARmnv3lh0sA/+ReRI=
+X-Google-Smtp-Source: APXvYqzmx0gQXGcCYVFgILHBvA3ZLu3gjr/gPD4qkrCi98W3sz9AeZuH2TREtsOFsdfX9mKCmYxiaees0zzNDltevIs=
+X-Received: by 2002:adf:ecc7:: with SMTP id s7mr3298507wro.305.1571747993646;
+ Tue, 22 Oct 2019 05:39:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <20191022111806.23143-1-colin.king@canonical.com>
+In-Reply-To: <20191022111806.23143-1-colin.king@canonical.com>
+From:   AngeloGioacchino Del Regno <kholk11@gmail.com>
+Date:   Tue, 22 Oct 2019 14:39:42 +0200
+Message-ID: <CAK7fi1a8CiX=HVqhZSmQJdcjF1X_kdHFDwJhEpYJUcdPTcbMQA@mail.gmail.com>
+Subject: Re: [PATCH][next] thermal: qcom: tsens-v1: fix kfree of a non-pointer value
+To:     Colin King <colin.king@canonical.com>
+Cc:     Amit Kucheria <amit.kucheria@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-pm@vger.kernel.org, MSM <linux-arm-msm@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a regex that matches users of the reset controller API.
+Il giorno mar 22 ott 2019 alle ore 13:18 Colin King
+<colin.king@canonical.com> ha scritto:
+>
+> From: Colin Ian King <colin.king@canonical.com>
+>
+> Currently the kfree of pointer qfprom_cdata is kfreeing an
+> error value that has been cast to a pointer rather than a
+> valid address.  Fix this by removing the kfree.
+>
+> Fixes: 95ededc17e4e ("thermal: qcom: tsens-v1: Add support for MSM8956 and MSM8976")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/thermal/qcom/tsens-v1.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+>
+> diff --git a/drivers/thermal/qcom/tsens-v1.c b/drivers/thermal/qcom/tsens-v1.c
+> index 2d1077b64887..bd2ddb684a45 100644
+> --- a/drivers/thermal/qcom/tsens-v1.c
+> +++ b/drivers/thermal/qcom/tsens-v1.c
+> @@ -240,10 +240,8 @@ static int calibrate_8976(struct tsens_priv *priv)
+>         u32 *qfprom_cdata;
+>
+>         qfprom_cdata = (u32 *)qfprom_read(priv->dev, "calib");
+> -       if (IS_ERR(qfprom_cdata)) {
+> -               kfree(qfprom_cdata);
+> +       if (IS_ERR(qfprom_cdata))
+>                 return PTR_ERR(qfprom_cdata);
+> -       }
+>
+>         mode = (qfprom_cdata[4] & MSM8976_CAL_SEL_MASK);
+>         dev_dbg(priv->dev, "calibration mode is %d\n", mode);
+> --
+> 2.20.1
+>
 
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+I confirm that was one stupid mistake. I was about to send the same patch, and I
+can confirm that this fix is working. Tested on my Xperia X Compact.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 296de2b51c83..7ec2f5c48616 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13851,6 +13851,7 @@ F:	include/dt-bindings/reset/
- F:	include/linux/reset.h
- F:	include/linux/reset/
- F:	include/linux/reset-controller.h
-+K:	\b(devm_|of_)?reset_control(ler_[a-z]+|_[a-z_]+)?\b
- 
- RESTARTABLE SEQUENCES SUPPORT
- M:	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
--- 
-2.20.1
-
+Tested-by: AngeloGioacchino Del Regno <kholk11@gmail.com>
