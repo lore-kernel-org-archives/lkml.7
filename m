@@ -2,239 +2,92 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02BFFCA9EB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 19:01:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C65CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 19:01:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B98FB21783
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 19:01:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CK5IZ7/f"
+	by mail.kernel.org (Postfix) with ESMTP id 0131F21783
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 19:01:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732850AbfJVTB3 (ORCPT
+        id S1732873AbfJVTBb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 22 Oct 2019 15:01:31 -0400
+Received: from dcvr.yhbt.net ([64.71.152.64]:53062 "EHLO dcvr.yhbt.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732843AbfJVTB3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 22 Oct 2019 15:01:29 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:36138 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732517AbfJVTB2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 15:01:28 -0400
-Received: by mail-pf1-f195.google.com with SMTP id y22so11221381pfr.3;
-        Tue, 22 Oct 2019 12:01:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=WYVPyN6TIQKQmBJ/hjRhIQzHM1SMeDB+rC6cCAZ6daQ=;
-        b=CK5IZ7/fDlc9HGDR/5NYBLaFIb472dWbbATEk0sFtqAxKrqYwkzYrCL3ITn8stO5B5
-         C9Mmkymm0eGpXhUTOue0kAODrlapvXBKREBm71YlYwt9WVmcNC+mlsiw7kXsxM1zZuOG
-         BDBUcrnEhnmoE54WYC/3YgLdFi/ITSnT+3zW0srdQowk4E5pBF/LuwrECZ4AoTJkFvBb
-         oakxR9XGZEJsCyVaQMNrxC6Go27fC5w/2ZnU21w/vggcpXBjbWz7U72osg6UjojQFWMf
-         1yxVicruoyAQIqEVVb0R707IxYnsxv1kdeVnocE8hs8MxSivLG5yNhWRik20ZnIdIAG6
-         cidQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=WYVPyN6TIQKQmBJ/hjRhIQzHM1SMeDB+rC6cCAZ6daQ=;
-        b=EDvcJz7dn4Tp/7DzjJDhFSjVTznvj2FPcVySnL8W23agN5WbR3LCQ9JJ7jInFVetNG
-         LC/ab1s0POA65bpohzelgWAc3ADm5R+oZ68EVcD2gtkOFfvpqpwCEQ9F8KRByxHa8ZGE
-         Mr+gOdM9GeEF4yslieXwpM52y743QCYjdFZriy0jnI3qGih+qer5PCUIovgNHadbrLec
-         zHoyhAcgWmoSVvGMZGQASeQ+ML4tNzISWUu7joakT2C2ihtjwaI5c2XlXfeMeEYV6fTZ
-         WpBXSOxkPbQsihWjwDBWR9QTiU2LxoPmSe8GJErOcYKkdccWd27u8dko8IsD79uh17jv
-         9ULw==
-X-Gm-Message-State: APjAAAU6wtKX0FUO0n4fdyeEkreqO8jF4SWp7scmnsUHqplOQL01apfs
-        CxNFTaVFLzVqp3WTnWcqvFw=
-X-Google-Smtp-Source: APXvYqzAbRABJxb7CI6UKHnD8ZpCEZSa9XbNpVCEb9Dl5FiMXCGYH/7+YnC/R9o/2VDIgZAIEw+5Jg==
-X-Received: by 2002:a63:6607:: with SMTP id a7mr2744430pgc.68.1571770885773;
-        Tue, 22 Oct 2019 12:01:25 -0700 (PDT)
-Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id v9sm4365690pfm.85.2019.10.22.12.01.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Oct 2019 12:01:24 -0700 (PDT)
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-To:     a.hajda@samsung.com, narmstrong@baylibre.com,
-        Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
-        jernej.skrabec@siol.net, airlied@linux.ie, daniel@ffwll.ch,
-        bjorn.andersson@linaro.org
-Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: [PATCH v2] drm/bridge: ti-sn65dsi86: Decouple DP output lanes from DSI input lanes
-Date:   Tue, 22 Oct 2019 12:01:20 -0700
-Message-Id: <20191022190120.25772-1-jeffrey.l.hugo@gmail.com>
-X-Mailer: git-send-email 2.17.1
+Received: from localhost (dcvr.yhbt.net [127.0.0.1])
+        by dcvr.yhbt.net (Postfix) with ESMTP id A57891F4C0;
+        Tue, 22 Oct 2019 19:01:28 +0000 (UTC)
+Date:   Tue, 22 Oct 2019 19:01:27 +0000
+From:   Eric Wong <e@80x24.org>
+To:     Vegard Nossum <vegard.nossum@oracle.com>
+Cc:     Willy Tarreau <w@1wt.eu>, "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Santiago Torres Arias <santiago@nyu.edu>,
+        workflows@vger.kernel.org, Git Mailing List <git@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+Subject: Re: email as a bona fide git transport
+Message-ID: <20191022190127.GA697@dcvr>
+References: <b9fb52b8-8168-6bf0-9a72-1e6c44a281a5@oracle.com>
+ <20191016111009.GE13154@1wt.eu>
+ <20191016144517.giwip4yuaxtcd64g@LykOS.localdomain>
+ <56664222-6c29-09dc-ef78-7b380b113c4a@oracle.com>
+ <20191018161547.GG21137@mit.edu>
+ <de49fe5e-85cb-9fb0-f9f4-c294d72e356c@oracle.com>
+ <20191018191456.GI21137@mit.edu>
+ <20191020031716.GA17475@1wt.eu>
+ <1a259d8d-b3d1-b64e-07c3-ba143b42c442@oracle.com>
+ <de6dd8b5-5c28-d0b2-d3fc-e72a6d643105@oracle.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <de6dd8b5-5c28-d0b2-d3fc-e72a6d643105@oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Based on work by Bjorn Andersson <bjorn.andersson@linaro.org>
+Vegard Nossum <vegard.nossum@oracle.com> wrote:
+> I sent v2 of the patches (with metadata _after_ the diff) to the git
+> list here:
+> 
+> https://public-inbox.org/git/20191022114518.32055-1-vegard.nossum@oracle.com/T/#u
+> 
+> As I wrote in there, we could already today start using
+> 
+>    git am --message-id
+> 
+> when applying patches and this would provide something that a bot could
+> annotate with git notes pointing to lore/LKML/LWN/whatever. I think that
+> would already be a pretty nice improvement over today's situation.
+> 
+> Sadly, since the beginning of 2018, this was only used for a measly
+> ~0.14% of all non-merge commits in the kernel:
 
-The bridge can be configured to use 1, 2, or 4 DP lanes.  This
-configuration is independent of the input DSI lanes.  Right now, the
-driver assumes that there is 1:1 mapping of input lanes to output lanes
-which is not correct and does not work for manu devices such as the
-Lenovo Miix 630 and Lenovo Yoga C630 laptops.
+--message-id helps provide a concrete reference, yes.  However,
+being able to search for commit subjects in the mail archives is
+already implemented via cgit filter.  An example is here:
 
-The bridge can also be configured to use one of a number of data rates on
-the DP lanes.  Currently any of the supported rates is considered valid,
-however the configured rate must also be supported by the connected panel,
-and not all rates are supported or even valid for any particular panel.
+https://80x24.org/mirrors/git.git/commit/?id=8da56a484800023a545d7a7c022473f5aa9e720f
 
-Luckily, we can determine what we need at runtime by reading the DPCD from
-the attached panel.  DPCD will tell us the maximum number of supported
-lanes, and the supported data rates.
+The link at "userdiff: fix some corner cases in dts regex" makes a link to:
 
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
----
+https://public-inbox.org/git/?x=t&q=%22userdiff:+fix+some+corner+cases+in+dts+regex%22
+(side note: not sure if that "x=t" to expand the whole message is good...)
 
-Bjorn, I think this should address the issue you pointed out concerning
-the data rate glitch I missed in your origional work.  Would you kindly
-give this a test and let me know if it appears to address all of the
-issues you were working around?
+That link is generated by examples/cgit-commit-filter.lua in the
+ public-inbox source:
 
-v2:
--Use DPCD instead of DT to address the issue of some panels not
-supporting all the rates
+https://public-inbox.org/meta/1677253/s/?b=examples/cgit-commit-filter.lua
 
- drivers/gpu/drm/bridge/ti-sn65dsi86.c | 97 ++++++++++++++++++++++++++-
- 1 file changed, 94 insertions(+), 3 deletions(-)
+My longer term plan is to be able to use the post-image blob OIDs
+from cgit to generate a search query for public-inbox such as:
 
-diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-index 43abf01ebd4c..72bacca8d49a 100644
---- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-+++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-@@ -100,6 +100,7 @@ struct ti_sn_bridge {
- 	struct drm_panel		*panel;
- 	struct gpio_desc		*enable_gpio;
- 	struct regulator_bulk_data	supplies[SN_REGULATOR_SUPPLY_NUM];
-+	int				dp_lanes;
- };
- 
- static const struct regmap_range ti_sn_bridge_volatile_ranges[] = {
-@@ -432,6 +433,8 @@ static void ti_sn_bridge_set_dsi_dp_rate(struct ti_sn_bridge *pdata)
- 	unsigned int val, i;
- 	struct drm_display_mode *mode =
- 		&pdata->bridge.encoder->crtc->state->adjusted_mode;
-+	u8 dpcd_val;
-+	u8 rate_valid[8] = {0};
- 
- 	/* set DSIA clk frequency */
- 	bit_rate_mhz = (mode->clock / 1000) *
-@@ -444,10 +447,91 @@ static void ti_sn_bridge_set_dsi_dp_rate(struct ti_sn_bridge *pdata)
- 	regmap_write(pdata->regmap, SN_DSIA_CLK_FREQ_REG, val);
- 
- 	/* set DP data rate */
--	dp_rate_mhz = ((bit_rate_mhz / pdata->dsi->lanes) * DP_CLK_FUDGE_NUM) /
-+	dp_rate_mhz = ((bit_rate_mhz / pdata->dp_lanes) * DP_CLK_FUDGE_NUM) /
- 							DP_CLK_FUDGE_DEN;
-+
-+	/* read the panel capabilities to determine valid supported rates */
-+	val = drm_dp_dpcd_readb(&pdata->aux, DP_MAX_LINK_RATE, &dpcd_val);
-+	if (!val) {
-+		DRM_ERROR("Reading max link rate from DPCD failed\n");
-+		return;
-+	}
-+
-+	if (dpcd_val) {
-+		/* cap to the max rate supported by the bridge */
-+		if (dpcd_val > 0x14)
-+			dpcd_val = 0x14;
-+
-+		switch (dpcd_val) {
-+		case 0x14:
-+			rate_valid[7] = 1;
-+			/* fall through */
-+		case 0xa:
-+			rate_valid[4] = 1;
-+			/* fall through */
-+		case 0x6:
-+			rate_valid[1] = 1;
-+			break;
-+		default:
-+			DRM_ERROR("Invalid max link rate from DPCD:%x\n",
-+				  dpcd_val);
-+			return;
-+		}
-+	} else {
-+		/* eDP 1.4 devices can provide a custom table */
-+		__le16 sink_rates[DP_MAX_SUPPORTED_RATES];
-+
-+		val = drm_dp_dpcd_readb(&pdata->aux, DP_EDP_DPCD_REV, &dpcd_val);
-+		if (!val) {
-+			DRM_ERROR("Reading eDP rev from DPCD failed\n");
-+			return;
-+		}
-+
-+		if (dpcd_val < DP_EDP_14) {
-+			DRM_ERROR("eDP 1.4 supported link rates specified from non-1.4 device\n");
-+			return;
-+		}
-+
-+		drm_dp_dpcd_read(&pdata->aux, DP_SUPPORTED_LINK_RATES,
-+			      sink_rates, sizeof(sink_rates));
-+
-+		for (i = 0; i < ARRAY_SIZE(sink_rates); i++) {
-+			val = le16_to_cpu(sink_rates[i]);
-+
-+			if (!val)
-+				break;
-+
-+			switch (val) {
-+			case 27000:
-+				rate_valid[7] = 1;
-+				break;
-+			case 21600:
-+				rate_valid[6] = 1;
-+				break;
-+			case 16200:
-+				rate_valid[5] = 1;
-+				break;
-+			case 13500:
-+				rate_valid[4] = 1;
-+				break;
-+			case 12150:
-+				rate_valid[3] = 1;
-+				break;
-+			case 10800:
-+				rate_valid[2] = 1;
-+				break;
-+			case 8100:
-+				rate_valid[1] = 1;
-+				break;
-+			default:
-+				/* unsupported */
-+				break;
-+			}
-+		}
-+	}
-+
- 	for (i = 0; i < ARRAY_SIZE(ti_sn_bridge_dp_rate_lut) - 1; i++)
--		if (ti_sn_bridge_dp_rate_lut[i] > dp_rate_mhz)
-+		if (ti_sn_bridge_dp_rate_lut[i] > dp_rate_mhz && rate_valid[i])
- 			break;
- 
- 	regmap_update_bits(pdata->regmap, SN_DATARATE_CONFIG_REG,
-@@ -505,7 +589,14 @@ static void ti_sn_bridge_enable(struct drm_bridge *bridge)
- 			   CHA_DSI_LANES_MASK, val);
- 
- 	/* DP lane config */
--	val = DP_NUM_LANES(pdata->dsi->lanes - 1);
-+	ret = drm_dp_dpcd_readb(&pdata->aux, DP_MAX_LANE_COUNT, (u8 *)&val);
-+	if (!ret) {
-+		DRM_ERROR("Reading lane count from DPCD failed\n");
-+		return;
-+	}
-+	pdata->dp_lanes = val & DP_MAX_LANE_COUNT_MASK;
-+	/* 4 lanes are encoded with the value "3" */
-+	val = DP_NUM_LANES(pdata->dp_lanes == 4 ? 3 : pdata->dp_lanes);
- 	regmap_update_bits(pdata->regmap, SN_SSC_CONFIG_REG, DP_NUM_LANES_MASK,
- 			   val);
- 
--- 
-2.17.1
+https://public-inbox.org/git/?q=dfpost:afc6b5b404+dfpost:072d58b69d+dfpost:4353b8220c+dfpost:333a625c70+dfpost:e187d356f6
 
+Which finds all versions of the userdiff patch posted.  But AFAIK
+there's no easy way to get at blob OIDs from cgit to a Lua filter...
