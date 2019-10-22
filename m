@@ -2,178 +2,178 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22715CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 10:35:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37CA5CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 10:37:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E451A20B7C
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 10:35:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F29AA20B7C
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 10:37:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="azJ3Q7p1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l5Ps+imA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388472AbfJVKfq (ORCPT
+        id S2388556AbfJVKht (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 06:35:46 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44527 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2388415AbfJVKfq (ORCPT
+        Tue, 22 Oct 2019 06:37:49 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:46445 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388327AbfJVKht (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 06:35:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571740544;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ULN5eSGY4MtkW08yCSqz0QqvTO9SX1bksmLq7XKOj9M=;
-        b=azJ3Q7p1XNV5UDQEiC1Bs8pmqc1ZHXN2sjin3vP+z6G0iu1Tj3KhbEMPsjLanT15sjCL07
-        0Y8XPk9F5WMSYLVfp2o0AlqlEQMSgzieHgW5Y9T24qUmzuRYG7btOQOKk3jLRgEkTdbtTu
-        ciiPvyHDzKLTvh5NXY/uxE9dpTttBeo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-282-W9eko3ddNJq9PMAOLuqccg-1; Tue, 22 Oct 2019 06:35:41 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 75F501800D79;
-        Tue, 22 Oct 2019 10:35:39 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-121-40.rdu2.redhat.com [10.10.121.40])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9C7095DD61;
-        Tue, 22 Oct 2019 10:35:34 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CAHk-=wjFozfjV34_qy3_Z155uz_Z7qFVfE8h=_9ceGU-SVk9hA@mail.gmail.com>
-References: <CAHk-=wjFozfjV34_qy3_Z155uz_Z7qFVfE8h=_9ceGU-SVk9hA@mail.gmail.com> <000000000000830fe50595115344@google.com> <00000000000071e2fc05951229ad@google.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Mimi Zohar <zohar@linux.ibm.com>
-Cc:     dhowells@redhat.com,
-        syzbot <syzbot+6455648abc28dbdd1e7f@syzkaller.appspotmail.com>,
-        aou@eecs.berkeley.edu,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris James Morris <jmorris@namei.org>,
-        keyrings@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-riscv@lists.infradead.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: WARNING: refcount bug in find_key_to_update
+        Tue, 22 Oct 2019 06:37:49 -0400
+Received: by mail-wr1-f65.google.com with SMTP id n15so6667581wrw.13;
+        Tue, 22 Oct 2019 03:37:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=G9L4o2fClACAWWCNYsMy4DkWIxVH39P4nMmUu/kqsjM=;
+        b=l5Ps+imA913Yd2xTluwoQZv3So/ZE86l5oMm0JbXAvfSHnjgo7+UZUo0u7cV56O3Df
+         mmQ2a8Pl0KzFyutA9BrkioQWWZTVY2zgqP8rqmsrvB/UVGH/TW98zOLQSJy+V07ECI5K
+         YgXCavMlHTR60F1zJ5ObfJT2UUlJcJExmLcgGbEVnS3OosUuw6dTmSZZfckHSqV9JlSj
+         LlcpbfHWIOyb6iC1bFYELchtgkVem8GaI36Zy0FP3yJ9gZQ9meH61ZuJTuhkhq8PRYwh
+         DCzRs6cgQEmIXfSeZdNIW2ulfY7Uda1RxRze4Uet7XGezWU4ojZHqbCnaHiSLmyeT4Df
+         7m4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=G9L4o2fClACAWWCNYsMy4DkWIxVH39P4nMmUu/kqsjM=;
+        b=gjYlIdxEtdS0r7saZY0cr0Q79bPqDnfKa3dnVQzmpL28KD4Aa2DxJgm+Kg46fEMLkf
+         xY58bhszHgG3wpA1Fx+hdQX1DMOtivWAcOBojp8h0TGBu5SHWtVZGcD+AscsFNvbM7Mr
+         c/OxPrExmMAmmXm7kJJOgj9osATBs2Dk0rDl7Vgz8Fu51IN2vWqoQth4WZWNRBlwXx05
+         FU22LNucIHT2EQaxcoCWCSKpNOjN5mqr5WfEqVwzYlTUCleUF3dB4xd+YzonwZq9sAu8
+         7Xq7OEdjJfbnjiS+mrDyXQF/lFQNrD/Eb2dz27FgFexmex37YN8pDDM/mQQC7OW/Bwre
+         sGhg==
+X-Gm-Message-State: APjAAAVfdYvKjfDq6vFH/a5tEMIwSTUFaz05oNVYOUWLayObanRjMSFI
+        pxiWRaNXK6WbYBjEL4eBu/A=
+X-Google-Smtp-Source: APXvYqxgt1ARic3a/z4PysM/Vs6tdxOzM7KUqsI484qeJr/DF00XLTrK5eupKukTZCAH1TXLqtxE7w==
+X-Received: by 2002:adf:ea50:: with SMTP id j16mr2743215wrn.295.1571740666041;
+        Tue, 22 Oct 2019 03:37:46 -0700 (PDT)
+Received: from jimi (bzq-82-81-225-244.cablep.bezeqint.net. [82.81.225.244])
+        by smtp.gmail.com with ESMTPSA id g69sm5111253wme.31.2019.10.22.03.37.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Oct 2019 03:37:45 -0700 (PDT)
+Date:   Tue, 22 Oct 2019 13:37:39 +0300
+From:   Eyal Birger <eyal.birger@gmail.com>
+To:     Cong Wang <xiyou.wangcong@gmail.com>
+Cc:     Zhiyuan Hou <zhiyuan2048@linux.alibaba.com>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        "David S . Miller" <davem@davemloft.net>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Shmulik Ladkani <shmulik.ladkani@gmail.com>
+Subject: Re: [PATCH net] net: sched: act_mirred: drop skb's dst_entry in
+ ingress redirection
+Message-ID: <20191022133739.0f255bbe@jimi>
+In-Reply-To: <CAM_iQpW-y=Xo08AqYaGUWB8G7zdTimk8zXdHcsqYQir5AyPJJw@mail.gmail.com>
+References: <20191012071620.8595-1-zhiyuan2048@linux.alibaba.com>
+        <CAM_iQpVkTb6Qf9J-PuXJoQTZa5ojN_oun64SMv9Kji7tZkxSyA@mail.gmail.com>
+        <e2bd3004-9f4b-f3ce-1214-2140f0b7cc61@linux.alibaba.com>
+        <20191016151307.40f63896@jimi>
+        <e16cfafe-059c-3106-835e-d32b7bb5ba61@linux.alibaba.com>
+        <20191019002502.0519ea9b@jimi>
+        <CAM_iQpW-y=Xo08AqYaGUWB8G7zdTimk8zXdHcsqYQir5AyPJJw@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-ID: <11433.1571740533.1@warthog.procyon.org.uk>
-Date:   Tue, 22 Oct 2019 11:35:33 +0100
-Message-ID: <11434.1571740533@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-MC-Unique: W9eko3ddNJq9PMAOLuqccg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+Hi,
 
-> > syzbot has bisected this bug to 0570bc8b7c9b ("Merge tag
-> >  'riscv/for-v5.3-rc1' ...")
+On Mon, 21 Oct 2019 13:50:13 -0700
+Cong Wang <xiyou.wangcong@gmail.com> wrote:
+
+> On Fri, Oct 18, 2019 at 2:25 PM Eyal Birger <eyal.birger@gmail.com>
+> wrote:
+> >
+> > Hi,
+> >
+> > On Fri, 18 Oct 2019 00:33:53 +0800
+> > Zhiyuan Hou <zhiyuan2048@linux.alibaba.com> wrote:
+> >
+> > > On 2019/10/16 8:13 =E4=B8=8B=E5=8D=88, Eyal Birger wrote:
+> > > > Hi,
+> > > >
+> > > > On Wed, 16 Oct 2019 01:22:01 +0800
+> > > > Zhiyuan Hou <zhiyuan2048@linux.alibaba.com> wrote:
+> > > >
+> > > >> On 2019/10/15 1:57 =E4=B8=8A=E5=8D=88, Cong Wang wrote:
+> > > >>> On Sat, Oct 12, 2019 at 12:16 AM Zhiyuan Hou
+> > > >>> <zhiyuan2048@linux.alibaba.com> wrote:
+> > > >>>> diff --git a/net/sched/act_mirred.c b/net/sched/act_mirred.c
+> > > >>>> index 9ce073a05414..6108a64c0cd5 100644
+> > > >>>> --- a/net/sched/act_mirred.c
+> > > >>>> +++ b/net/sched/act_mirred.c
+> > > >>>> @@ -18,6 +18,7 @@
+> > > >>>>    #include <linux/gfp.h>
+> > > >>>>    #include <linux/if_arp.h>
+> > > >>>>    #include <net/net_namespace.h>
+> > > >>>> +#include <net/dst.h>
+> > > >>>>    #include <net/netlink.h>
+> > > >>>>    #include <net/pkt_sched.h>
+> > > >>>>    #include <net/pkt_cls.h>
+> > > >>>> @@ -298,8 +299,10 @@ static int tcf_mirred_act(struct sk_buff
+> > > >>>> *skb, const struct tc_action *a,
+> > > >>>>
+> > > >>>>           if (!want_ingress)
+> > > >>>>                   err =3D dev_queue_xmit(skb2);
+> > > >>>> -       else
+> > > >>>> +       else {
+> > > >>>> +               skb_dst_drop(skb2);
+> > > >>>>                   err =3D netif_receive_skb(skb2);
+> > > >>>> +       }
+> > > >>> Good catch!
+> > > > Indeed! Thanks for fixing this!
+> > > >
+> > > >>> I don't want to be picky, but it seems this is only needed
+> > > >>> when redirecting from egress to ingress, right? That is,
+> > > >>> ingress to ingress, or ingress to egress is okay? If not,
+> > > >>> please fix all the cases while you are on it?
+> > > >> Sure. But I think this patch is also needed when redirecting
+> > > >> from ingress to ingress. Because we cannot assure that a skb
+> > > >> has null dst in ingress redirection path. For example, if
+> > > >> redirecting a skb from loopback's ingress to other device's
+> > > >> ingress, the skb will take a dst.
+> > > >>
+> > > >> As commit logs point out, skb with valid dst cannot be made
+> > > >> routing decision in following process. original dst may cause
+> > > >> skb loss or other unexpected behavior.
+> > > > On the other hand, removing the dst on ingress-to-ingress
+> > > > redirection may remove LWT information on incoming packets,
+> > > > which may be undesired.
+> > > Sorry, I do not understand why lwt information is needed on
+> > > ingress-to-ingress redirection. lwt is used on output path, isn't
+> > > it? Can you please give more information?
+> >
+> > On rx path tunnelled packets parameters received on a collect_md
+> > tunnel device are kept in a metadata dst. See ip_tunnel_rcv()
+> > 'tun_dst' parameter.
+> >
+> > The rx metadata dst can be matched by a number of mechanisms like
+> > routing rules, eBPF, OVS, and netfilter.
 >=20
-> Yeah, that looks unlikely. The only non-riscv changes are from
-> documentation updates and moving a config variable around.
->=20
-> Looks like the crash is quite unlikely, and only happens in one out of
-> ten runs for the ones it has happened to.
->=20
-> The backtrace looks simple enough, though:
->=20
->   RIP: 0010:refcount_inc_checked+0x2b/0x30 lib/refcount.c:156
->    __key_get include/linux/key.h:281 [inline]
->    find_key_to_update+0x67/0x80 security/keys/keyring.c:1127
->    key_create_or_update+0x4e5/0xb20 security/keys/key.c:905
->    __do_sys_add_key security/keys/keyctl.c:132 [inline]
->    __se_sys_add_key security/keys/keyctl.c:72 [inline]
->    __x64_sys_add_key+0x219/0x3f0 security/keys/keyctl.c:72
->    do_syscall_64+0xd0/0x540 arch/x86/entry/common.c:296
->    entry_SYSCALL_64_after_hwframe+0x49/0xbe
->=20
-> which to me implies that there's some locking bug, and somebody
-> released the key without holding a lock.
+> Should this meta information be kept when redirecting? The dest device
+> may be a non-tunnel device, so I don't know if it is still useful when
+> for non-tunnel devices.
 
-I'm wondering if this is actually a bug in the error handling in the encryp=
-ted
-key type.  Looking in the syzbot console log, there's a lot of output from
-there prior to the crash, of which the following is an excerpt:
+I think that on ingress-to-ingress redirect it would make sense to keep the
+metadata.
 
-[  248.516746][T27381] encrypted_key: key user:syz not found
-[  248.524392][T27382] encrypted_key: key user:syz not found
-[  248.616141][T27392] encrypted_key: key user:syz not found
-[  248.618890][T27393] encrypted_key: key user:syz not found
-[  248.690844][T27404] encrypted_key: key user:syz not found
-[  248.739405][T27403] encrypted_key: key user:syz not found
-[  248.804881][T27417] encrypted_key: key user:syz not found
-[  248.828354][T27418] encrypted_key: keyword 'new' not allowed when called=
- from .update method
-[  248.925249][T27427] encrypted_key: keyword 'new' not allowed when called=
- from .update method
-[  248.928200][T27415] Bad refcount user syz
-[  248.934043][T27428] encrypted_key: key user:syz not found
-[  248.939502][T27429] encrypted_key: key user:syz not found
-[  248.968744][T27434] encrypted_key: key user:syz not found
-[  248.982201][T27415] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-[  248.996072][T27415] BUG: KASAN: use-after-free in refcount_inc_not_zero_=
-checked+0x81/0x200
+The dest device does not have to be a tunnel device AFAICT in order to use
+tunnel info as skb_tunnel_info() does not observe skb->dev.
 
-Note that the "Bad refcount user syz" is a bit I patched in to print the ty=
-pe
-and description of the key that incurred the error.
+I don't see why going through mirred redirect should prevent the admin from
+matching the packet based on LWT metadata - a packet may arrive on a collec=
+t_md
+tunnel device, be ingress-redirected to different devices based on different
+criteria, then routed based also on the tunnel parameters.
 
-It's a tad difficult to say exactly what's going on since I've no idea what
-the syzbot reproducer is actually doing.
-
-#{"threaded":true,"collide":true,"repeat":true,"procs":6,"sandbox":"namespa=
-ce","fault_call":-1,"tun":true,"netdev":true,"resetnet":true,"cgroups":true=
-,"binfmt_misc":true,"close_fds":true,"tmpdir":true,"segv":true}
-perf_event_open(&(0x7f000001d000)=3D{0x1, 0x70, 0x0, 0x0, 0x0, 0x0, 0x0, 0x=
-7f, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x7, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0=
-x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0=
-x0, 0x0, 0x0, 0x0, @perf_config_ext}, 0x0, 0xffffffffffffffff, 0xffffffffff=
-ffffff, 0x0)
-keyctl$instantiate(0xc, 0x0, &(0x7f0000000100)=3DANY=3D[@ANYBLOB=3D'new def=
-ault user:syz 04096'], 0x1, 0x0)
-r0 =3D add_key(&(0x7f0000000140)=3D'encrypted\x00', &(0x7f0000000180)=3D{'s=
-yz'}, &(0x7f0000000100), 0xca, 0xfffffffffffffffe)
-add_key$user(&(0x7f0000000040)=3D'user\x00', &(0x7f0000000000)=3D{'syz'}, &=
-(0x7f0000000440)=3D'X', 0x1, 0xfffffffffffffffe)
-keyctl$read(0xb, r0, &(0x7f0000000240)=3D""/112, 0x349b7f55)
-
-However, it looks like the encrypted key type is trying to access a user ke=
-y,
-so maybe there's an overput there?  I'm trying to insert more debugging, bu=
-t
-the test doesn't always fail.
-
-syzbot <syzbot+6455648abc28dbdd1e7f@syzkaller.appspotmail.com> wrote:
-
-> HEAD commit:    bc88f85c kthread: make __kthread_queue_delayed_work stati=
-c
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=3D1730584b60000=
-0
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=3De0ac4d9b35046=
-343
-> dashboard link: https://syzkaller.appspot.com/bug?extid=3D6455648abc28dbd=
-d1e7f
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D11c8adab600=
-000
-
-David
-
+Eyal.
