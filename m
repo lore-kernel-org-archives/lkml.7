@@ -2,157 +2,124 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE10ACA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:48:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D2CDCA9EB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:48:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBFFD214B2
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:48:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5412F2084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:48:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="s6UgbS4y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732859AbfJVQsD (ORCPT
+        id S1732866AbfJVQs0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 12:48:03 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58876 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732072AbfJVQsC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 12:48:02 -0400
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com [209.85.221.72])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 428B485537
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 16:48:01 +0000 (UTC)
-Received: by mail-wr1-f72.google.com with SMTP id 4so5281198wrf.19
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 09:48:01 -0700 (PDT)
+        Tue, 22 Oct 2019 12:48:26 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:45700 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731191AbfJVQsZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 12:48:25 -0400
+Received: by mail-ot1-f68.google.com with SMTP id 41so14773287oti.12
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 09:48:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0+6No+BxgIjHWFQl8mEre5geCrP8fi/EeYgiUXvYmaQ=;
+        b=s6UgbS4ygkuYPcJAAz3pNE7NObfVgWrxILYPPMZ64u/k26Tlh6VILXVknF/EVXamYW
+         JfGqLPtKv0uhIS82q3cjRbmSV68r0gXlRmOSju0sYhJbF19LHXbbiaJ1L9AhhaKRTiKP
+         7Nmc/i7KXYTM75gzn8DB3Ffy4pCr6Gj5U2IhXd6VogFuoho9HkbeTx34hgnfHaDpxJ6R
+         F2vb0qYVbMjW7271kotp9FaczmghmLyL0qHzn7+ppM77aAE1H8W4VMzOgeKAVFZVDeIY
+         ZTJYmyN1FW5YCH4xLwCspopHQI0elv9i01FAWMh92jB+mTr1bnUOm41F0QAuqBnvll+T
+         N/Rw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6IUllQdC1JcBo53l0feki9O911eimyikofYh28oSUZI=;
-        b=gV1X2VMfUs24p7BsFb3OoeeCQDi8ZNcQh9R/o6sOF87NEooIRfv861s4t9tkqTh39+
-         1uXI84LjqEyvv4ZTl2nbpyHMG6rLTvf0aaxE72AO6/eVxbYYZjEDK//I1LDIAEbzniKz
-         WOMs+iiba9IQ69t+amBQvVNbUW7F4njGwPtflPrzwFaX+3jlFpWBxXd1JbbvXaMQ8isT
-         1q4TrH9E7igMA6eyRpPoEQQxrRGNK7AkNbtojznXU2gXDF7uLP1xaoT0KGtsZ+9ETDhy
-         A6xOrYpKrBH1C4rV+MYltJpubA24RQfrGdbEDSWIhA9fVb3GgG5kIGLy7AvqxVRwWbYE
-         zJ3w==
-X-Gm-Message-State: APjAAAUboxbYscTdhZBWMuIx6hyewLUH52Y/FuBeUs9IsTK8bRITVNNn
-        bvtK04ik6O3+YQqbD/iMyqILwwnoWZnb3nKeCToUQGTRHDUcI1SYgZMLZWPkIWKj00xZJypHXvG
-        3SFzWgLR/vI1Sey/XUBn3ATPI
-X-Received: by 2002:adf:f58b:: with SMTP id f11mr4198175wro.85.1571762879787;
-        Tue, 22 Oct 2019 09:47:59 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqw5g3AibMbcuSwNUHwkkYHksej37syxRcre3u394uyNZoNjuqSAg5WvCAysQIXg0CChJznj0Q==
-X-Received: by 2002:adf:f58b:: with SMTP id f11mr4198151wro.85.1571762879474;
-        Tue, 22 Oct 2019 09:47:59 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:c0e4:dcf4:b543:ce19? ([2001:b07:6468:f312:c0e4:dcf4:b543:ce19])
-        by smtp.gmail.com with ESMTPSA id f143sm34080587wme.40.2019.10.22.09.47.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Oct 2019 09:47:58 -0700 (PDT)
-Subject: Re: [PATCH v2] KVM: SVM: Fix potential wrong physical id in
- avic_handle_ldr_update
-To:     Miaohe Lin <linmiaohe@huawei.com>, rkrcmar@redhat.com,
-        sean.j.christopherson@intel.com, vkuznets@redhat.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com
-Cc:     x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mingfangsen@huawei.com
-References: <1571367031-6844-1-git-send-email-linmiaohe@huawei.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <696ae8db-fe41-4710-483c-0f30a06bdd32@redhat.com>
-Date:   Tue, 22 Oct 2019 18:47:58 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0+6No+BxgIjHWFQl8mEre5geCrP8fi/EeYgiUXvYmaQ=;
+        b=GcfJQFnAdftprOmcOcy5iLaW3/BQtf1NM71OPT5XgJz47fpIwUl7PShmXt7fZvOhvg
+         oU10qLT3YrdN4YtKt+EH9qJp8aMrFJYoNuqoM9WTB/IXa5STroSLM5s8PDKPnvTN8dNj
+         gFLq1vHnVzQcW4t2mvDWpm/3Wz3KTKYvsSjcLLHjwjKFrCKvxrgjazSPu2fElEQxvPYz
+         5qOuzL1c+EiyZ7PVOlMVYhp2t5DLP/HsUGMH7oHilauRLixPIud73f40oRRoOiOZNklW
+         XckRq/nAlIy/x6ev41/3bmtYQ33x6lQz0AtAbT90N/HkOUG1U0nwitK3B7hERGFWz66o
+         GhUA==
+X-Gm-Message-State: APjAAAVpQvM0LnKd9PSZXtA87/sLgneV/GsfOItfpVUvuI6iJehOSAAt
+        Q0c9WdHVCu69p1Z9LQtbmMjAZol/P+CSG6YdP7nDmA==
+X-Google-Smtp-Source: APXvYqwtw7FLGKUJW5VN/z168Ax4kCyZdkZTBUWqQLVn8w1bS74nzE4bXxhqmn24Xtn3tFVuwIDJyV6Rl48d61eRmdU=
+X-Received: by 2002:a9d:2d89:: with SMTP id g9mr3564630otb.126.1571762904646;
+ Tue, 22 Oct 2019 09:48:24 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1571367031-6844-1-git-send-email-linmiaohe@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <157118756627.2063440.9878062995925617180.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <157118757175.2063440.9248947575330904096.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <CAJZ5v0i-hhasNCD6Ur8VLfrkc+4GOeNXXX_ZNFZjcY6F51ciSQ@mail.gmail.com> <CAJZ5v0j_-iSqiysZiW=J8Y5FCAjnPC7ZvevrLsYhngWr6mT6GQ@mail.gmail.com>
+In-Reply-To: <CAJZ5v0j_-iSqiysZiW=J8Y5FCAjnPC7ZvevrLsYhngWr6mT6GQ@mail.gmail.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 22 Oct 2019 09:48:12 -0700
+Message-ID: <CAPcyv4js1XqSe1kNeWob=ftscYFKQF+04PrKj7XDiEWUWvnMvQ@mail.gmail.com>
+Subject: Re: [PATCH v7 01/12] acpi/numa: Establish a new drivers/acpi/numa/ directory
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, Len Brown <lenb@kernel.org>,
+        Keith Busch <kbusch@kernel.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/10/19 04:50, Miaohe Lin wrote:
-> Guest physical APIC ID may not equal to vcpu->vcpu_id in some case.
-> We may set the wrong physical id in avic_handle_ldr_update as we
-> always use vcpu->vcpu_id. Get physical APIC ID from vAPIC page
-> instead.
-> Export and use kvm_xapic_id here and in avic_handle_apic_id_update
-> as suggested by Vitaly.
-> 
-> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
-> ---
->  arch/x86/kvm/lapic.c | 5 -----
->  arch/x86/kvm/lapic.h | 5 +++++
->  arch/x86/kvm/svm.c   | 6 +++---
->  3 files changed, 8 insertions(+), 8 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-> index 87b0fcc23ef8..b29d00b661ff 100644
-> --- a/arch/x86/kvm/lapic.c
-> +++ b/arch/x86/kvm/lapic.c
-> @@ -111,11 +111,6 @@ static inline int apic_enabled(struct kvm_lapic *apic)
->  	(LVT_MASK | APIC_MODE_MASK | APIC_INPUT_POLARITY | \
->  	 APIC_LVT_REMOTE_IRR | APIC_LVT_LEVEL_TRIGGER)
->  
-> -static inline u8 kvm_xapic_id(struct kvm_lapic *apic)
-> -{
-> -	return kvm_lapic_get_reg(apic, APIC_ID) >> 24;
-> -}
-> -
->  static inline u32 kvm_x2apic_id(struct kvm_lapic *apic)
->  {
->  	return apic->vcpu->vcpu_id;
-> diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
-> index 2aad7e226fc0..1f5014852e20 100644
-> --- a/arch/x86/kvm/lapic.h
-> +++ b/arch/x86/kvm/lapic.h
-> @@ -242,4 +242,9 @@ static inline enum lapic_mode kvm_apic_mode(u64 apic_base)
->  	return apic_base & (MSR_IA32_APICBASE_ENABLE | X2APIC_ENABLE);
->  }
->  
-> +static inline u8 kvm_xapic_id(struct kvm_lapic *apic)
-> +{
-> +	return kvm_lapic_get_reg(apic, APIC_ID) >> 24;
-> +}
-> +
->  #endif
-> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> index f8ecb6df5106..ca200b50cde4 100644
-> --- a/arch/x86/kvm/svm.c
-> +++ b/arch/x86/kvm/svm.c
-> @@ -4591,6 +4591,7 @@ static int avic_handle_ldr_update(struct kvm_vcpu *vcpu)
->  	int ret = 0;
->  	struct vcpu_svm *svm = to_svm(vcpu);
->  	u32 ldr = kvm_lapic_get_reg(vcpu->arch.apic, APIC_LDR);
-> +	u32 id = kvm_xapic_id(vcpu->arch.apic);
->  
->  	if (ldr == svm->ldr_reg)
->  		return 0;
-> @@ -4598,7 +4599,7 @@ static int avic_handle_ldr_update(struct kvm_vcpu *vcpu)
->  	avic_invalidate_logical_id_entry(vcpu);
->  
->  	if (ldr)
-> -		ret = avic_ldr_write(vcpu, vcpu->vcpu_id, ldr);
-> +		ret = avic_ldr_write(vcpu, id, ldr);
->  
->  	if (!ret)
->  		svm->ldr_reg = ldr;
-> @@ -4610,8 +4611,7 @@ static int avic_handle_apic_id_update(struct kvm_vcpu *vcpu)
->  {
->  	u64 *old, *new;
->  	struct vcpu_svm *svm = to_svm(vcpu);
-> -	u32 apic_id_reg = kvm_lapic_get_reg(vcpu->arch.apic, APIC_ID);
-> -	u32 id = (apic_id_reg >> 24) & 0xff;
-> +	u32 id = kvm_xapic_id(vcpu->arch.apic);
->  
->  	if (vcpu->vcpu_id == id)
->  		return 0;
-> 
+On Tue, Oct 22, 2019 at 3:02 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+>
+> On Fri, Oct 18, 2019 at 11:25 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> >
+> >  On Wed, Oct 16, 2019 at 3:13 AM Dan Williams <dan.j.williams@intel.com> wrote:
+> > >
+> > > Currently hmat.c lives under an "hmat" directory which does not enhance
+> > > the description of the file. The initial motivation for giving hmat.c
+> > > its own directory was to delineate it as mm functionality in contrast to
+> > > ACPI device driver functionality.
+> > >
+> > > As ACPI continues to play an increasing role in conveying
+> > > memory location and performance topology information to the OS take the
+> > > opportunity to co-locate these NUMA relevant tables in a combined
+> > > directory.
+> > >
+> > > numa.c is renamed to srat.c and moved to drivers/acpi/numa/ along with
+> > > hmat.c.
+> > >
+> > > Cc: Len Brown <lenb@kernel.org>
+> > > Cc: Keith Busch <kbusch@kernel.org>
+> > > Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > > Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
+> > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> >
+> > Please note that https://patchwork.kernel.org/patch/11078171/ is being
+> > pushed to Linus (it is overdue anyway), so if it is pulled, there will
+> > be a merge conflict with this patch.
+> >
+> > Respin maybe?
+>
+> Actually, would you mind it if I took this one into the ACPI tree right away?
+>
+> There's https://patchwork.kernel.org/patch/11198373/ queued up that,
+> again, will clash with it.
+>
+> Also, there is the generic Initiator proximity domains series from
+> Jonathan depending on it and I would like to move forward with that
+> one if there are no objections.
 
-Queued, thanks.
-
-Paolo
+Given Ard has acked all the EFI core and ARM changes can we proceed
+with merging the EFI Specific Purpose Memory series through Rafael's
+tree? It would need acks from x86 maintainers.
