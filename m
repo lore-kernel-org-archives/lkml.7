@@ -2,121 +2,94 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1304FCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 03:01:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCB89CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 03:11:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB5242089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 03:01:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9DE02089E
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 03:11:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nZtH6Ev4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387543AbfJVDBR convert rfc822-to-8bit (ORCPT
+        id S1730781AbfJVDKY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 23:01:17 -0400
-Received: from mxhk.zte.com.cn ([63.217.80.70]:63196 "EHLO mxhk.zte.com.cn"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387514AbfJVDBR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 23:01:17 -0400
-Received: from mse-fl2.zte.com.cn (unknown [10.30.14.239])
-        by Forcepoint Email with ESMTPS id AFD2CCB836AC15CE2B92;
-        Tue, 22 Oct 2019 11:01:15 +0800 (CST)
-Received: from notes_smtp.zte.com.cn (notes_smtp.zte.com.cn [10.30.1.239])
-        by mse-fl2.zte.com.cn with ESMTP id x9M30NfR040299;
-        Tue, 22 Oct 2019 11:00:23 +0800 (GMT-8)
-        (envelope-from wang.yi59@zte.com.cn)
-Received: from fox-host8.localdomain ([10.74.120.8])
-          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
-          with ESMTP id 2019102211002498-67328 ;
-          Tue, 22 Oct 2019 11:00:24 +0800 
-From:   Yi Wang <wang.yi59@zte.com.cn>
-To:     steven.price@arm.com, robh@kernel.org
-Cc:     tomeu.vizoso@collabora.com, airlied@linux.ie, daniel@ffwll.ch,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn, up2wing@gmail.com,
-        wang.liang82@zte.com.cn
-Subject: [PATCH v2] drm/panfrost: fix -Wmissing-prototypes warnings
-Date:   Tue, 22 Oct 2019 11:02:35 +0800
-Message-Id: <1571713355-11927-1-git-send-email-wang.yi59@zte.com.cn>
-X-Mailer: git-send-email 1.8.3.1
+        Mon, 21 Oct 2019 23:10:24 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:34647 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730156AbfJVDKY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 23:10:24 -0400
+Received: by mail-lf1-f67.google.com with SMTP id f5so4052763lfp.1
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 20:10:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=H8PSb99Ge+xEM0Y69nCMYhCdyrZD0MqeaLJcNORWi1c=;
+        b=nZtH6Ev4ZSEcjk7KCd9ScQaym8kTbtTUpijNuhaUibPYq+J6jgLamwLNoNn8OPEQnq
+         k8os5lZinQGDgDjCSJIkuD+hob+VbkVOdH9YchedA3PHxJdh5k9KkBgPjFPlmerXH7l7
+         XyrXMqlqBFV7/iRqdVwwLaOgpQxNrGwmJL3dg1/oN7vtBVNh0eWS981ZZMr/qnu7/DLW
+         FIjMKldUCiYRJwS18v3jP/0sxsaCzDWQRGwmbbIgsuQulkfXl0H0zlpsYETRyPiIe0ss
+         4V9Ekne5cl8u/oN2BhEpaQNDYkFZktdPOyJTfZEka8OzlmRt2G+dUJf0v4hoZlEeN3ZO
+         Y3gA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=H8PSb99Ge+xEM0Y69nCMYhCdyrZD0MqeaLJcNORWi1c=;
+        b=CeRq5DRTj9tci/R5qiVXDnVm9e9taeBY3qKEZMRbma1hM7/gG9iY3NddN4E7oGJ94h
+         xg6u5UyjnP5To9klzbyctHf+AwqWIvylLfBCmfHlR5OIYr9YtQMn7X3WCKW3yTfG3NIJ
+         mLgGbccpm6+g8w8SyAsbjRVMbEkSQFI2725qjIkHX+7pgHUUjbSC+UF+b6fX0TcGsftD
+         ncR2BNvKb0tFlTbbxvrI94LcNTItGDZuSo3ua8wKLEllS0navbvEeuuf6OaFlQkmQJgy
+         +k80Y8D3exYDhYeD03/4SUQZYoFCJzIOgc38yGIU04KHi2Xa2kQDq1HsHL/mDekyf+Lq
+         3SeA==
+X-Gm-Message-State: APjAAAUKbqo11xQ9aS8vDQTHX2GBMdID3oRm/YV6RzFnAEg6CANQaKyd
+        M3kc+vUoRaUbs8mWQ/IUpFHBzC8XU4mF2Mc2sg0=
+X-Google-Smtp-Source: APXvYqwWjJE1Pssba3kXlqn6u3PHxWMs80aUfkYoBURshvQe+M2QsWAbva6vBPgIpwVQYIXBwmUDhoWoBxI0QMpB17Q=
+X-Received: by 2002:a19:fc1e:: with SMTP id a30mr4057378lfi.167.1571713822001;
+ Mon, 21 Oct 2019 20:10:22 -0700 (PDT)
 MIME-Version: 1.0
-X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
- 21, 2013) at 2019-10-22 11:00:25,
-        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
- 2019-10-22 11:00:25
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-X-MAIL: mse-fl2.zte.com.cn x9M30NfR040299
+References: <20190827180622.159326993@infradead.org> <20190827181147.166658077@infradead.org>
+ <aaffb32f-6ca9-f9e3-9b1a-627125c563ed@redhat.com> <20191002182106.GC4643@worktop.programming.kicks-ass.net>
+ <20191003181045.7fb1a5b3@gandalf.local.home> <20191004112237.GA19463@hirez.programming.kicks-ass.net>
+ <20191004094228.5a5774fe@gandalf.local.home> <CAADnVQJ0cWYPY-+FhZoqUZ8p1k1FiDsO5jhXiQdcCPmd1UeCyQ@mail.gmail.com>
+ <20191021204310.3c26f730@oasis.local.home>
+In-Reply-To: <20191021204310.3c26f730@oasis.local.home>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Mon, 21 Oct 2019 20:10:09 -0700
+Message-ID: <CAADnVQLn+Fh-UgSRD9SZCT7WYOez5De04iCZucYbA9mYxPm2AQ@mail.gmail.com>
+Subject: Re: [PATCH 3/3] x86/ftrace: Use text_poke()
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We get these warnings when build kernel W=1:
-drivers/gpu/drm/panfrost/panfrost_perfcnt.c:35:6: warning: no previous prototype for ‘panfrost_perfcnt_clean_cache_done’ [-Wmissing-prototypes]
-drivers/gpu/drm/panfrost/panfrost_perfcnt.c:40:6: warning: no previous prototype for ‘panfrost_perfcnt_sample_done’ [-Wmissing-prototypes]
-drivers/gpu/drm/panfrost/panfrost_perfcnt.c:190:5: warning: no previous prototype for ‘panfrost_ioctl_perfcnt_enable’ [-Wmissing-prototypes]
-drivers/gpu/drm/panfrost/panfrost_perfcnt.c:218:5: warning: no previous prototype for ‘panfrost_ioctl_perfcnt_dump’ [-Wmissing-prototypes]
-drivers/gpu/drm/panfrost/panfrost_perfcnt.c:250:6: warning: no previous prototype for ‘panfrost_perfcnt_close’ [-Wmissing-prototypes]
-drivers/gpu/drm/panfrost/panfrost_perfcnt.c:264:5: warning: no previous prototype for ‘panfrost_perfcnt_init’ [-Wmissing-prototypes]
-drivers/gpu/drm/panfrost/panfrost_perfcnt.c:320:6: warning: no previous prototype for ‘panfrost_perfcnt_fini’ [-Wmissing-prototypes]
-drivers/gpu/drm/panfrost/panfrost_mmu.c:227:6: warning: no previous prototype for ‘panfrost_mmu_flush_range’ [-Wmissing-prototypes]
-drivers/gpu/drm/panfrost/panfrost_mmu.c:435:5: warning: no previous prototype for ‘panfrost_mmu_map_fault_addr’ [-Wmissing-prototypes]
+On Mon, Oct 21, 2019 at 5:43 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> On Mon, 21 Oct 2019 17:36:54 -0700
+> Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
+>
+>
+> > What is the status of this set ?
+> > Steven, did you apply it ?
+>
+> There's still bugs to figure out.
 
-For file panfrost_mmu.c, make functions static to fix this.
-For file panfrost_perfcnt.c, include header file can fix this.
-
-Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
-Reviewed-by: Steven Price <steven.price@arm.com>
----
-
-v2: align parameter line, modify comment and sort header
-    includes alphabetically. Thanks to Steve.
----
- drivers/gpu/drm/panfrost/panfrost_mmu.c     | 9 +++++----
- drivers/gpu/drm/panfrost/panfrost_perfcnt.c | 1 +
- 2 files changed, 6 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/gpu/drm/panfrost/panfrost_mmu.c b/drivers/gpu/drm/panfrost/panfrost_mmu.c
-index bdd9905..1f6cc7d 100644
---- a/drivers/gpu/drm/panfrost/panfrost_mmu.c
-+++ b/drivers/gpu/drm/panfrost/panfrost_mmu.c
-@@ -224,9 +224,9 @@ static size_t get_pgsize(u64 addr, size_t size)
- 	return SZ_2M;
- }
- 
--void panfrost_mmu_flush_range(struct panfrost_device *pfdev,
--			      struct panfrost_mmu *mmu,
--			      u64 iova, size_t size)
-+static void panfrost_mmu_flush_range(struct panfrost_device *pfdev,
-+									 struct panfrost_mmu *mmu,
-+									 u64 iova, size_t size)
- {
- 	if (mmu->as < 0)
- 		return;
-@@ -432,7 +432,8 @@ void panfrost_mmu_pgtable_free(struct panfrost_file_priv *priv)
- 
- #define NUM_FAULT_PAGES (SZ_2M / PAGE_SIZE)
- 
--int panfrost_mmu_map_fault_addr(struct panfrost_device *pfdev, int as, u64 addr)
-+static int panfrost_mmu_map_fault_addr(struct panfrost_device *pfdev, int as,
-+									   u64 addr)
- {
- 	int ret, i;
- 	struct panfrost_gem_object *bo;
-diff --git a/drivers/gpu/drm/panfrost/panfrost_perfcnt.c b/drivers/gpu/drm/panfrost/panfrost_perfcnt.c
-index 83c57d3..2dba192 100644
---- a/drivers/gpu/drm/panfrost/panfrost_perfcnt.c
-+++ b/drivers/gpu/drm/panfrost/panfrost_perfcnt.c
-@@ -16,6 +16,7 @@
- #include "panfrost_issues.h"
- #include "panfrost_job.h"
- #include "panfrost_mmu.h"
-+#include "panfrost_perfcnt.h"
- #include "panfrost_regs.h"
- 
- #define COUNTERS_PER_BLOCK		64
--- 
-1.8.3.1
-
+what bugs you're seeing?
+The IPI frequency that was mentioned in this thread or something else?
+I'm hacking ftrace+bpf stuff in the same spot and would like to
+base my work on the latest and greatest.
