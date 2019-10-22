@@ -2,77 +2,124 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E10DCA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 06:43:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B086CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 06:48:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2ECF420B7C
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 06:43:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA13521783
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 06:48:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387667AbfJVGm3 (ORCPT
+        id S2387759AbfJVGsu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 02:42:29 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:53554 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729573AbfJVGm2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 02:42:28 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 79113D38A5E1D6BEEF27;
-        Tue, 22 Oct 2019 14:42:26 +0800 (CST)
-Received: from [127.0.0.1] (10.177.251.225) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Tue, 22 Oct 2019
- 14:42:20 +0800
-To:     Herbert Xu <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
-        <catalin.marinas@arm.com>, <will@kernel.org>
-CC:     <linux-crypto@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        "hushiyuan@huawei.com" <hushiyuan@huawei.com>,
-        "linfeilong@huawei.com" <linfeilong@huawei.com>
-From:   Yunfeng Ye <yeyunfeng@huawei.com>
-Subject: [PATCH] crypto: arm64/aes-neonbs - remove redundant code in
- __xts_crypt()
-Message-ID: <a33932c9-2975-4fcc-ba07-7c54df4eae27@huawei.com>
-Date:   Tue, 22 Oct 2019 14:42:11 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 22 Oct 2019 02:48:50 -0400
+Received: from mga14.intel.com ([192.55.52.115]:21797 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728346AbfJVGst (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 02:48:49 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 23:48:49 -0700
+X-IronPort-AV: E=Sophos;i="5.67,326,1566889200"; 
+   d="scan'208";a="191365233"
+Received: from lingshan-mobl5.ccr.corp.intel.com (HELO [10.238.129.48]) ([10.238.129.48])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 21 Oct 2019 23:48:45 -0700
+Subject: Re: [RFC 1/2] vhost: IFC VF hardware operation layer
+To:     Jason Wang <jasowang@redhat.com>,
+        Simon Horman <simon.horman@netronome.com>,
+        "Zhu, Lingshan" <lingshan.zhu@intel.com>
+Cc:     mst@redhat.com, alex.williamson@redhat.com,
+        linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, dan.daly@intel.com,
+        cunming.liang@intel.com, tiwei.bie@intel.com, jason.zeng@intel.com,
+        zhiyuan.lv@intel.com
+References: <20191016011041.3441-1-lingshan.zhu@intel.com>
+ <20191016011041.3441-2-lingshan.zhu@intel.com>
+ <20191016095347.5sb43knc7eq44ivo@netronome.com>
+ <075be045-3a02-e7d8-672f-4a207c410ee8@intel.com>
+ <20191021163139.GC4486@netronome.com>
+ <15d94e61-9b3d-7854-b65e-6fea6db75450@redhat.com>
+From:   Zhu Lingshan <lingshan.zhu@linux.intel.com>
+Message-ID: <1f468365-4fe4-b13f-0841-cc5a60a8fe41@linux.intel.com>
+Date:   Tue, 22 Oct 2019 14:48:43 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <15d94e61-9b3d-7854-b65e-6fea6db75450@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.251.225]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A warning is found by the static code analysis tool:
-  "Identical condition 'err', second condition is always false"
 
-Fix this by removing the redundant condition @err.
-
-Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
----
- arch/arm64/crypto/aes-neonbs-glue.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm64/crypto/aes-neonbs-glue.c b/arch/arm64/crypto/aes-neonbs-glue.c
-index ea873b8904c4..7b342db428b0 100644
---- a/arch/arm64/crypto/aes-neonbs-glue.c
-+++ b/arch/arm64/crypto/aes-neonbs-glue.c
-@@ -387,7 +387,7 @@ static int __xts_crypt(struct skcipher_request *req, bool encrypt,
- 		skcipher_walk_done(&walk, nbytes);
- 	}
-
--	if (err || likely(!tail))
-+	if (likely(!tail))
- 		return err;
-
- 	/* handle ciphertext stealing */
--- 
-2.7.4.3
-
+On 10/22/2019 9:32 AM, Jason Wang wrote:
+>
+> On 2019/10/22 上午12:31, Simon Horman wrote:
+>> On Mon, Oct 21, 2019 at 05:55:33PM +0800, Zhu, Lingshan wrote:
+>>> On 10/16/2019 5:53 PM, Simon Horman wrote:
+>>>> Hi Zhu,
+>>>>
+>>>> thanks for your patch.
+>>>>
+>>>> On Wed, Oct 16, 2019 at 09:10:40AM +0800, Zhu Lingshan wrote:
+>> ...
+>>
+>>>>> +static void ifcvf_read_dev_config(struct ifcvf_hw *hw, u64 offset,
+>>>>> +               void *dst, int length)
+>>>>> +{
+>>>>> +    int i;
+>>>>> +    u8 *p;
+>>>>> +    u8 old_gen, new_gen;
+>>>>> +
+>>>>> +    do {
+>>>>> +        old_gen = ioread8(&hw->common_cfg->config_generation);
+>>>>> +
+>>>>> +        p = dst;
+>>>>> +        for (i = 0; i < length; i++)
+>>>>> +            *p++ = ioread8((u8 *)hw->dev_cfg + offset + i);
+>>>>> +
+>>>>> +        new_gen = ioread8(&hw->common_cfg->config_generation);
+>>>>> +    } while (old_gen != new_gen);
+>>>> Would it be wise to limit the number of iterations of the loop above?
+>>> Thanks but I don't quite get it. This is used to make sure the function
+>>> would get the latest config.
+>> I am worried about the possibility that it will loop forever.
+>> Could that happen?
+>>
+>> ...
+>
+>
+> My understanding is that the function here is similar to virtio config 
+> generation [1]. So this can only happen for a buggy hardware.
+>
+> Thanks
+>
+> [1] 
+> https://docs.oasis-open.org/virtio/virtio/v1.1/csprd01/virtio-v1.1-csprd01.html 
+> Section 2.4.1
+Yes!
+>
+>
+>>
+>>>>> +static void io_write64_twopart(u64 val, u32 *lo, u32 *hi)
+>>>>> +{
+>>>>> +    iowrite32(val & ((1ULL << 32) - 1), lo);
+>>>>> +    iowrite32(val >> 32, hi);
+>>>>> +}
+>>>> I see this macro is also in virtio_pci_modern.c
+>>>>
+>>>> Assuming lo and hi aren't guaranteed to be sequential
+>>>> and thus iowrite64_hi_lo() cannot be used perhaps
+>>>> it would be good to add a common helper somewhere.
+>>> Thanks, I will try after this IFC patchwork, I will cc you.
+>> Thanks.
+>>
+>> ...
+>
