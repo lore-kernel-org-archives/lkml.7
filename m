@@ -2,117 +2,100 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D4CBCA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:42:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B510ECA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:42:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 734D421906
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:42:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="lpZh7ZFe"
+	by mail.kernel.org (Postfix) with ESMTP id 91A0020700
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:42:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388831AbfJVNmD (ORCPT
+        id S2388844AbfJVNmk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 09:42:03 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:43764 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388176AbfJVNmD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 09:42:03 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9MDfKcR013037;
-        Tue, 22 Oct 2019 15:41:50 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=6OiFUl1fdaeRq1DoqLpiVMazeaoQpnE/nLtSGyzhd/8=;
- b=lpZh7ZFe5rXJeK1A8+nZpUxIAl5J+lyHSBolGt5yILdDdCixYyq0pd75X4DHt5qw4iN6
- Chhy29zxH9wMp5nLYqg5X0Ww9SS4s/n1uZmnzN1jToNgKBMQ+/BqpK+sA7OTfgraKDJ1
- EkESAXyPc64j9G8WxNAC4qz1xjqLBKlsot1KbBJ3kcEffBg6as2XW6HB0aOLkymTtF50
- U1TjOid7B2eWC8OQO/cVGRICKfvuuL+DuXXydzPOFe2BDYCqh4EI1/O5kKBpyouROIyI
- Zzb2YWpKOBD8XLYWe1r2fnugylUGykNsBjGxdiT6XNV5O8/OXyuEz2f7/etuXGkSMu+N Ew== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2vqqy17uyd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 22 Oct 2019 15:41:50 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 6E57310002A;
-        Tue, 22 Oct 2019 15:41:50 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag5node2.st.com [10.75.127.14])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 5C9BB2AE210;
-        Tue, 22 Oct 2019 15:41:50 +0200 (CEST)
-Received: from [10.48.1.171] (10.75.127.51) by SFHDAG5NODE2.st.com
- (10.75.127.14) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 22 Oct
- 2019 15:41:49 +0200
-Subject: Re: [PATCH] i2c: i2c-stm32f7: rework slave_id allocation
-To:     Alain Volmat <alain.volmat@st.com>, <wsa@the-dreams.de>,
-        <robh+dt@kernel.org>
-CC:     <mark.rutland@arm.com>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <linux-i2c@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>
-References: <1571144589-3066-1-git-send-email-alain.volmat@st.com>
-From:   Pierre Yves MORDRET <pierre-yves.mordret@st.com>
-Message-ID: <7092a0d6-2f6a-fa1f-2999-17418b479c5f@st.com>
-Date:   Tue, 22 Oct 2019 15:41:48 +0200
+        Tue, 22 Oct 2019 09:42:40 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54710 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731218AbfJVNmk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 09:42:40 -0400
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id DEC4485365
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 13:42:39 +0000 (UTC)
+Received: by mail-wr1-f70.google.com with SMTP id 7so9253585wrl.2
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 06:42:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=05dJAtGauU0iv5NowbhOU9V3c7+LulyhjnirlWXm1KU=;
+        b=Mnu1s5hcpytI19+FEAgdWNeJ5lats6GO174GgfiHj7dq1DYbk6Ny/0q0KBN9vgRKbd
+         lRkT4j58PAji1mJAIFRwakBMuiZU+45RiSAO5kvC7YJcuW5qDbmCok2vNkx8/M7U6o4J
+         xTF5giqmqnnaZOz5mbL0hYKaDj5TBU9p9gnsEwrvOOyW0WOhOQXgD8TQY6wLmecH34QQ
+         Ksrf4MwR3XDuOXwaINzgBs/n7tsz3SwvpBocId1ZTxFpyDuS2PgrpeVGMRwbPrbPNbrV
+         JwX3SbLdSOQQmiMN+p139DwIXDFOHcjoQJ8pkTKE10le40nhg6r5qqaRPd17GzZM9l2v
+         cdkA==
+X-Gm-Message-State: APjAAAW295ODZpWsLFvXbzftd+FbtasX7uCZ4qcS+63bh/DsympBIF5r
+        OjfxzlkRUpUcH6F42+izPIUooFkJf/sM++dF8JVfrwN9dFXSEgY7HEUOhLp+bgqvFoPAqg0c3VA
+        o+dKXG6J6vq1lne5x2TelWfqC
+X-Received: by 2002:a05:600c:1107:: with SMTP id b7mr3339166wma.151.1571751758408;
+        Tue, 22 Oct 2019 06:42:38 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzMh5FUqHuanmjm92TrlNFZyUpguRk5xXpG2bL4t+/5nKpwjNbkxF5tNwPtsN6voB8mSIllyw==
+X-Received: by 2002:a05:600c:1107:: with SMTP id b7mr3339133wma.151.1571751758104;
+        Tue, 22 Oct 2019 06:42:38 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:c0e4:dcf4:b543:ce19? ([2001:b07:6468:f312:c0e4:dcf4:b543:ce19])
+        by smtp.gmail.com with ESMTPSA id p20sm14205910wmc.23.2019.10.22.06.42.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Oct 2019 06:42:37 -0700 (PDT)
+Subject: Re: [PATCH v3 0/4] Minor cleanup and refactor about vmcs
+To:     Xiaoyao Li <xiaoyao.li@intel.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Cc:     Krish Sadhukhan <krish.sadhukhan@oracle.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191020091101.125516-1-xiaoyao.li@intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <1dcf5ad8-bca9-c797-e0f8-3fd25c8ea5ca@redhat.com>
+Date:   Tue, 22 Oct 2019 15:42:36 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <1571144589-3066-1-git-send-email-alain.volmat@st.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20191020091101.125516-1-xiaoyao.li@intel.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.51]
-X-ClientProxiedBy: SFHDAG5NODE2.st.com (10.75.127.14) To SFHDAG5NODE2.st.com
- (10.75.127.14)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-22_03:2019-10-22,2019-10-22 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello
-
-Looks good
-
-Reviewed-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-
-Thx
-Regards
-
-On 10/15/19 3:03 PM, Alain Volmat wrote:
-> The IP can handle two slave addresses. One address can either be
-> 7 bits or 10 bits while the other can only be 7 bits.
-> In order to ensure that a 10 bits address can always be allocated
-> (assuming there is only one 7 bits address already allocated),
-> pick up the 7-bits only address slot in priority when performing a 7-bits
-> address allocation.
+On 20/10/19 11:10, Xiaoyao Li wrote:
+> There is no functional changs, just some cleanup and renaming to increase
+> readability.
 > 
-> Fixes: 60d609f3 ("i2c: i2c-stm32f7: Add slave support")
+> Patch 1 is newly added from v2.
+> Patcd 2 and 3 is seperated from Patch 4.
 > 
-> Signed-off-by: Alain Volmat <alain.volmat@st.com>
-> ---
->  drivers/i2c/busses/i2c-stm32f7.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Xiaoyao Li (4):
+>   KVM: VMX: Write VPID to vmcs when creating vcpu
+>   KVM: VMX: Remove vmx->hv_deadline_tsc initialization from
+>     vmx_vcpu_setup()
+>   KVM: VMX: Initialize vmx->guest_msrs[] right after allocation
+>   KVM: VMX: Rename {vmx,nested_vmx}_vcpu_setup()
 > 
-> diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
-> index d36cf08461f7..cfae01b15243 100644
-> --- a/drivers/i2c/busses/i2c-stm32f7.c
-> +++ b/drivers/i2c/busses/i2c-stm32f7.c
-> @@ -1265,7 +1265,7 @@ static int stm32f7_i2c_get_free_slave_id(struct stm32f7_i2c_dev *i2c_dev,
->  	 * slave[0] supports 7-bit and 10-bit slave address
->  	 * slave[1] supports 7-bit slave address only
->  	 */
-> -	for (i = 0; i < STM32F7_I2C_MAX_SLAVE; i++) {
-> +	for (i = STM32F7_I2C_MAX_SLAVE - 1; i >= 0; i--) {
->  		if (i == 1 && (slave->flags & I2C_CLIENT_PEC))
->  			continue;
->  		if (!i2c_dev->slave[i]) {
+>  arch/x86/kvm/vmx/nested.c |  2 +-
+>  arch/x86/kvm/vmx/nested.h |  2 +-
+>  arch/x86/kvm/vmx/vmx.c    | 50 +++++++++++++++++++--------------------
+>  3 files changed, 26 insertions(+), 28 deletions(-)
 > 
+
+Queued, thanks.
+
+Paolo
