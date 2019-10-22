@@ -2,227 +2,353 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A67B7CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 22:53:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD73BCA9EB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 23:00:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7814121925
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 22:53:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z0s18jwW"
+	by mail.kernel.org (Postfix) with ESMTP id 7F3642075A
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 23:00:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571785211;
+	bh=Kx/1CWzHXPzAcA1vV8ItNIOLifm37pD99zDnJEvsW2g=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=0dqmiIFpSmLrbFNeistzymz0hcbi+NqOaW5jdal822pxqB3+gI1zf/SYdx+eeh1QF
+	 CfCJ21hl5mnTnzYucZTnhW8Kar/5ekGDemHtDhg7AtJZXEwylNMk6lJNUuzSxH9Jt3
+	 Ez1mlyQAFF0LhzDFgawSZ5Cir3kkAzXfPqoQ82Bs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389594AbfJVWxQ (ORCPT
+        id S2389609AbfJVXAK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 18:53:16 -0400
-Received: from mail-wr1-f41.google.com ([209.85.221.41]:41801 "EHLO
-        mail-wr1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731850AbfJVWxP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 18:53:15 -0400
-Received: by mail-wr1-f41.google.com with SMTP id p4so19850891wrm.8
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 15:53:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nUbl/7U4fkEGLyjIs78RxKgsdpcQ3o0lLUl8H+Jr9fo=;
-        b=Z0s18jwW3kbE5NWQ3W8bKGguxVnDjsqpJGhS7fN7Ammppo4JXdzz0GkGHUGgx5aQwE
-         5tWCMcJWBeRNjlpeXo7CbLHBdKtpJA2+RDI4eDBtefKonwUi5v2y6rvt/MUsFvosmBBI
-         GJcvKJ2QcgyX+Bm3RgYpxE89WWLn4zaQixEp76MbsSBCT02xbGtYmOC7JNp2b+8bUAYM
-         wr2v5dFIirlH2kTxowx7o1/pEfy51SR9TY5JPKJvtR49ahKE4+NBicMjVbDQgCNRkzB+
-         DcrVMo5AT0gVLIjtuOQpzoCeiuV5WaRof5a/7rAHGv1w5rQ8Nqu2uz+l5Qf0Npd+LWcQ
-         UvUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nUbl/7U4fkEGLyjIs78RxKgsdpcQ3o0lLUl8H+Jr9fo=;
-        b=JbtHUh3RPjlXhGw0kQjp8we0xAxOVXU5tSwmWPCN7S4ivRCl7lhfY3a3O9MdgaBIW+
-         v9a6y6ma4EnM9rGJ5pFGkmeVSowhPGDImCUOooJykPQUOwZv70qVfJnl5iLcggCkEw1E
-         z2O0p5WKfF3cCqIkWsrWFUVt/UMc02wRA4kgNgEES5VGCPSMqKsHuAi4mvFD21OKo7EA
-         RCTv/maQ8ey31WQBjqGiyqwK27b7uWeM/FfteJa26+kDvtQ/+yaSJ0YSFfalKr6ujSmi
-         WP9oEYZYSp9PhAGan1xdcZAw5hLA9OcPJXRrrT7pvAMOXnnBH948X+lyZvtb6tdy2+yx
-         Zflw==
-X-Gm-Message-State: APjAAAU12sv5NTdG+spWB0466bbBM+iG13SJwRb5oV3h/lILIe8l2swg
-        20+Dsq33U4yWzFluxZxtNMMfhsvz5zVRIe3R7hoHDQ==
-X-Google-Smtp-Source: APXvYqxJzXoVmDdiBFZrDuTeagPuEgSlmfWkj3gU16VmvlXrjMrhYgIk9hD2xImjQLLoqOeNb8137WlwJzp5QESm7Yo=
-X-Received: by 2002:a5d:674f:: with SMTP id l15mr5899718wrw.80.1571784792413;
- Tue, 22 Oct 2019 15:53:12 -0700 (PDT)
+        Tue, 22 Oct 2019 19:00:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39874 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730034AbfJVXAJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 19:00:09 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9AD1C20700;
+        Tue, 22 Oct 2019 23:00:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571785208;
+        bh=Kx/1CWzHXPzAcA1vV8ItNIOLifm37pD99zDnJEvsW2g=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=E36sPUzvdx7Y6sQcsthmUyMkk98NjVNb24eAKPfUZZ9u0hGnIJ/i2Fzur3mANemaw
+         wseR1mwfyzhvy7bCG+qAlpXYdSxCXDBiLnp66ACVvXHpu6p5il7v4dCMM3KbfIG6PE
+         Pkyxdfqir8RfVDryYUSpVnNvnolNXRfzXwmxdtjw=
+Date:   Tue, 22 Oct 2019 18:00:06 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Lukas Wunner <lukas@wunner.de>,
+        Keith Busch <keith.busch@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Frederick Lawler <fred@fredlawl.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] PCI: pciehp: Prevent deadlock on disconnect
+Message-ID: <20191022230006.GA46791@google.com>
 MIME-Version: 1.0
-References: <CAA25o9TABY=3C+FQEg8FDyF1rim315G2hmeB1DBWJLn-wG1j0g@mail.gmail.com>
- <CAJZ5v0gJWxLJTi7TjaRP-3aR3f4VnX1n9dRE_jxdS6e3SM46LQ@mail.gmail.com>
- <CAA25o9TiaaKGH4ZkOa=FhZW7PdXQ592YZ4q52o-QNx=yFsR4Pw@mail.gmail.com> <CAJZ5v0j7N=o0S1tSwn5DP10oAmb5oN5SsM3jWhs+ZJ2YxMEvnw@mail.gmail.com>
-In-Reply-To: <CAJZ5v0j7N=o0S1tSwn5DP10oAmb5oN5SsM3jWhs+ZJ2YxMEvnw@mail.gmail.com>
-From:   Luigi Semenzato <semenzato@google.com>
-Date:   Tue, 22 Oct 2019 15:53:00 -0700
-Message-ID: <CAA25o9Rd5x7PjFkrhWL-vqfV9uEYKA4K2K=9t1V7TY2OKX+k6g@mail.gmail.com>
-Subject: Re: is hibernation usable?
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Geoff Pike <gpike@google.com>, Bas Nowaira <bassem@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190812143133.75319-2-mika.westerberg@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 3:14 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> On Tue, Oct 22, 2019 at 11:26 PM Luigi Semenzato <semenzato@google.com> wrote:
-> >
-> > Thank you for the quick reply!
-> >
-> > On Tue, Oct 22, 2019 at 1:57 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> > >
-> > > On Tue, Oct 22, 2019 at 10:09 PM Luigi Semenzato <semenzato@google.com> wrote:
-> > > >
-> > > > Following a thread in linux-pm
-> > > > (https://marc.info/?l=linux-mm&m=157012300901871) I have some issues
-> > > > that may be of general interest.
-> > > >
-> > > > 1. To the best of my knowledge, Linux hibernation is guaranteed to
-> > > > fail if more than 1/2 of total RAM is in use (for instance, by
-> > > > anonymous pages).  My knowledge is based on evidence, experiments,
-> > > > code inspection, the thread above, and a comment in
-> > > > Documentation/swsusp.txt, copied here:
-> > >
-> > > So I use it on a regular basis (i.e. every day) on a system that often
-> > > has over 50% or RAM in use and it all works.
-> > >
-> > > I also know about other people using it on a regular basis.
-> > >
-> > > For all of these users, it is usable.
-> > >
-> > > >  "Instead, we load the image into unused memory and then atomically
-> > > > copy it back to it original location. This implies, of course, a
-> > > > maximum image size of half the amount of memory."
-> > >
-> > > That isn't right any more.  An image that is loaded during resume can,
-> > > in fact, be larger than 50% of RAM.  An image that is created during
-> > > hibernation, however, cannot.
-> >
-> > Sorry, I don't understand this.  Are you saying that, for instance,
-> > you can resume a 30 GB image on a 32 GB device, but that image could
-> > only have been created on a 64 GB device?
->
-> Had it been possible to create images larger than 50% of memory during
-> hibernation, it would have been possible to load them during resume as
-> well.
->
-> The resume code doesn't have a 50% of RAM limitation, the image
-> creation code does.
+On Mon, Aug 12, 2019 at 05:31:33PM +0300, Mika Westerberg wrote:
+> If there are more than one PCIe switch with hotplug downstream ports
+> hot-removing them leads to a following deadlock:
+> 
+>  INFO: task irq/126-pciehp:198 blocked for more than 120 seconds.
+>  "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+>  irq/126-pciehp  D    0   198      2 0x80000000
+>  Call Trace:
+>   __schedule+0x2a2/0x880
+>   schedule+0x2c/0x80
+>   schedule_timeout+0x246/0x350
+>   ? ttwu_do_activate+0x67/0x90
+>   wait_for_completion+0xb7/0x140
+>   ? wake_up_q+0x80/0x80
+>   kthread_stop+0x49/0x110
+>   __free_irq+0x15c/0x2a0
+>   free_irq+0x32/0x70
+>   pcie_shutdown_notification+0x2f/0x50
+>   pciehp_remove+0x27/0x50
+>   pcie_port_remove_service+0x36/0x50
+>   device_release_driver_internal+0x18c/0x250
+>   device_release_driver+0x12/0x20
+>   bus_remove_device+0xec/0x160
+>   device_del+0x13b/0x350
+>   ? pcie_port_find_device+0x60/0x60
+>   device_unregister+0x1a/0x60
+>   remove_iter+0x1e/0x30
+>   device_for_each_child+0x56/0x90
+>   pcie_port_device_remove+0x22/0x40
+>   pcie_portdrv_remove+0x20/0x60
+>   pci_device_remove+0x3e/0xc0
+>   device_release_driver_internal+0x18c/0x250
+>   device_release_driver+0x12/0x20
+>   pci_stop_bus_device+0x6f/0x90
+>   pci_stop_bus_device+0x31/0x90
+>   pci_stop_and_remove_bus_device+0x12/0x20
+>   pciehp_unconfigure_device+0x88/0x140
+>   pciehp_disable_slot+0x6a/0x110
+>   pciehp_handle_presence_or_link_change+0x263/0x400
+>   pciehp_ist+0x1c9/0x1d0
+>   ? irq_forced_thread_fn+0x80/0x80
+>   irq_thread_fn+0x24/0x60
+>   irq_thread+0xeb/0x190
+>   ? irq_thread_fn+0x60/0x60
+>   kthread+0x120/0x140
+>   ? irq_thread_check_affinity+0xf0/0xf0
+>   ? kthread_park+0x90/0x90
+>   ret_from_fork+0x35/0x40
+>  INFO: task irq/190-pciehp:2288 blocked for more than 120 seconds.
+>  irq/190-pciehp  D    0  2288      2 0x80000000
+>  Call Trace:
+>   __schedule+0x2a2/0x880
+>   schedule+0x2c/0x80
+>   schedule_preempt_disabled+0xe/0x10
+>   __mutex_lock.isra.9+0x2e0/0x4d0
+>   ? __mutex_lock_slowpath+0x13/0x20
+>   __mutex_lock_slowpath+0x13/0x20
+>   mutex_lock+0x2c/0x30
+>   pci_lock_rescan_remove+0x15/0x20
+>   pciehp_unconfigure_device+0x4d/0x140
+>   pciehp_disable_slot+0x6a/0x110
+>   pciehp_handle_presence_or_link_change+0x263/0x400
+>   pciehp_ist+0x1c9/0x1d0
+>   ? irq_forced_thread_fn+0x80/0x80
+>   irq_thread_fn+0x24/0x60
+>   irq_thread+0xeb/0x190
+>   ? irq_thread_fn+0x60/0x60
+>   kthread+0x120/0x140
+>   ? irq_thread_check_affinity+0xf0/0xf0
+>   ? kthread_park+0x90/0x90
+>   ret_from_fork+0x35/0x40
+> 
+> What happens here is that the whole hierarchy is runtime resumed and the
+> parent PCIe downstream port, who got the hot-remove event, starts
+> removing devices below it taking pci_lock_rescan_remove() lock. When the
+> child PCIe port is runtime resumed it calls pciehp_check_presence()
+> which ends up calling pciehp_card_present() and pciehp_check_link_active().
+> Both of these read their parts of PCIe config space by calling helper
+> function pcie_capability_read_word(). Now, this function notices that
+> the underlying device is already gone and returns PCIBIOS_DEVICE_NOT_FOUND
+> with the capability value set to 0. When pciehp gets this value it
+> thinks that its child device is also hot-removed and schedules its IRQ
+> thread to handle the event.
 
-Thanks a lot for the clarifications.
+I can't remember if there was a reason why 8c0d3a02c130 ("PCI: Add
+accessors for PCI Express Capability") reset *val to 0 if
+pci_read_config_word() fails.  It doesn't seem like the right thing;
+it seems like it would be better for it to be consistent with a plain
+pci_read_config_word().
 
-It is possible that you and I have different definitions of "working
-in general".  My main issue ia that I would like image creation (i.e.
-entering hibernation) to work with >50% of RAM in use, and I am
-extrapolating that other people would like that too.  I can see that
-there are many uses where this is not needed though, especially if you
-mostly care about resume.
+> The deadlock happens when the child's IRQ thread runs and tries to
+> acquire pci_lock_rescan_remove() which is already taken by the parent
+> and the parent waits for the child's IRQ thread to finish.
+> 
+> We can prevent this from happening by checking the return value of
+> pcie_capability_read_word() and if it is PCIBIOS_DEVICE_NOT_FOUND stop
+> performing any hot-removal activities.
+> 
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> ---
+> No changes from the previous version.
+> 
+>  drivers/pci/hotplug/pciehp.h      |  6 +++---
+>  drivers/pci/hotplug/pciehp_core.c | 11 ++++++++---
+>  drivers/pci/hotplug/pciehp_ctrl.c |  4 ++--
+>  drivers/pci/hotplug/pciehp_hpc.c  | 32 +++++++++++++++++++++++--------
+>  4 files changed, 37 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
+> index 8c51a04b8083..81c514ab9518 100644
+> --- a/drivers/pci/hotplug/pciehp.h
+> +++ b/drivers/pci/hotplug/pciehp.h
+> @@ -173,10 +173,10 @@ int pciehp_query_power_fault(struct controller *ctrl);
+>  void pciehp_green_led_on(struct controller *ctrl);
+>  void pciehp_green_led_off(struct controller *ctrl);
+>  void pciehp_green_led_blink(struct controller *ctrl);
+> -bool pciehp_card_present(struct controller *ctrl);
+> -bool pciehp_card_present_or_link_active(struct controller *ctrl);
+> +int pciehp_card_present(struct controller *ctrl);
+> +int pciehp_card_present_or_link_active(struct controller *ctrl);
+>  int pciehp_check_link_status(struct controller *ctrl);
+> -bool pciehp_check_link_active(struct controller *ctrl);
+> +int pciehp_check_link_active(struct controller *ctrl);
+>  void pciehp_release_ctrl(struct controller *ctrl);
+>  
+>  int pciehp_sysfs_enable_slot(struct hotplug_slot *hotplug_slot);
+> diff --git a/drivers/pci/hotplug/pciehp_core.c b/drivers/pci/hotplug/pciehp_core.c
+> index e9f82afa3773..4c032d75c874 100644
+> --- a/drivers/pci/hotplug/pciehp_core.c
+> +++ b/drivers/pci/hotplug/pciehp_core.c
+> @@ -134,10 +134,15 @@ static int get_adapter_status(struct hotplug_slot *hotplug_slot, u8 *value)
+>  {
+>  	struct controller *ctrl = to_ctrl(hotplug_slot);
+>  	struct pci_dev *pdev = ctrl->pcie->port;
+> +	int ret;
+>  
+>  	pci_config_pm_runtime_get(pdev);
+> -	*value = pciehp_card_present_or_link_active(ctrl);
+> +	ret = pciehp_card_present_or_link_active(ctrl);
+>  	pci_config_pm_runtime_put(pdev);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	*value = ret;
+>  	return 0;
+>  }
+>  
+> @@ -153,13 +158,13 @@ static int get_adapter_status(struct hotplug_slot *hotplug_slot, u8 *value)
+>   */
+>  static void pciehp_check_presence(struct controller *ctrl)
+>  {
+> -	bool occupied;
+> +	int occupied;
+>  
+>  	down_read(&ctrl->reset_lock);
+>  	mutex_lock(&ctrl->state_lock);
+>  
+>  	occupied = pciehp_card_present_or_link_active(ctrl);
+> -	if ((occupied && (ctrl->state == OFF_STATE ||
+> +	if ((occupied > 0 && (ctrl->state == OFF_STATE ||
+>  			  ctrl->state == BLINKINGON_STATE)) ||
+>  	    (!occupied && (ctrl->state == ON_STATE ||
+>  			   ctrl->state == BLINKINGOFF_STATE)))
+> diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
+> index 631ced0ab28a..5a433cc8621f 100644
+> --- a/drivers/pci/hotplug/pciehp_ctrl.c
+> +++ b/drivers/pci/hotplug/pciehp_ctrl.c
+> @@ -221,7 +221,7 @@ void pciehp_handle_disable_request(struct controller *ctrl)
+>  
+>  void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
+>  {
+> -	bool present, link_active;
+> +	int present, link_active;
+>  
+>  	/*
+>  	 * If the slot is on and presence or link has changed, turn it off.
+> @@ -252,7 +252,7 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
+>  	mutex_lock(&ctrl->state_lock);
+>  	present = pciehp_card_present(ctrl);
+>  	link_active = pciehp_check_link_active(ctrl);
+> -	if (!present && !link_active) {
+> +	if (present <= 0 && link_active <= 0) {
+>  		mutex_unlock(&ctrl->state_lock);
+>  		return;
+>  	}
+> diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+> index bd990e3371e3..1f918b043adb 100644
+> --- a/drivers/pci/hotplug/pciehp_hpc.c
+> +++ b/drivers/pci/hotplug/pciehp_hpc.c
+> @@ -201,13 +201,16 @@ static void pcie_write_cmd_nowait(struct controller *ctrl, u16 cmd, u16 mask)
+>  	pcie_do_write_cmd(ctrl, cmd, mask, false);
+>  }
+>  
+> -bool pciehp_check_link_active(struct controller *ctrl)
+> +int pciehp_check_link_active(struct controller *ctrl)
+>  {
+>  	struct pci_dev *pdev = ctrl_dev(ctrl);
+>  	u16 lnk_status;
+> -	bool ret;
+> +	int ret;
+> +
+> +	ret = pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &lnk_status);
+> +	if (ret == PCIBIOS_DEVICE_NOT_FOUND)
+> +		return -ENODEV;
+>  
+> -	pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &lnk_status);
+>  	ret = !!(lnk_status & PCI_EXP_LNKSTA_DLLLA);
+>  
+>  	if (ret)
+> @@ -373,13 +376,17 @@ void pciehp_get_latch_status(struct controller *ctrl, u8 *status)
+>  	*status = !!(slot_status & PCI_EXP_SLTSTA_MRLSS);
+>  }
+>  
+> -bool pciehp_card_present(struct controller *ctrl)
+> +int pciehp_card_present(struct controller *ctrl)
+>  {
+>  	struct pci_dev *pdev = ctrl_dev(ctrl);
+>  	u16 slot_status;
+> +	int ret;
+>  
+> -	pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &slot_status);
+> -	return slot_status & PCI_EXP_SLTSTA_PDS;
+> +	ret = pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &slot_status);
+> +	if (ret == PCIBIOS_DEVICE_NOT_FOUND)
+> +		return -ENODEV;
 
->
-> > > > 2. There's no simple/general workaround.  Rafael suggested on the
-> > > > thread "Whatever doesn't fit into 50% of RAM needs to be swapped out
-> > > > before hibernation".  This is a good suggestion: I am actually close
-> > > > to achieving this using memcgroups, but it's a fair amount of work,
-> > > > and a fairly special case.  Not everybody uses memcgroups, and I don't
-> > > > know of other reliable ways of forcing swap from user level.
-> > >
-> > > I don't need to do anything like that.
-> >
-> > Again, I don't understand.  Why did you make that suggestion then?
-> >
-> > > hibernate_preallocate_memory() manages to free a sufficient amount of
-> > > memory on my system every time.
-> >
-> > Unfortunately this doesn't work for me.  I may have described a simple
-> > experiment: on a 4GB device, create two large processes like this:
-> >
-> > dd if=/dev/zero bs=1100M count=1 | sleep infinity &
-> > dd if=/dev/zero bs=1100M count=1 | sleep infinity &
-> >
-> > so that more than 50% of TotalMem is used for anonymous pages.  Then
-> > echo disk > /sys/power/state fails with ENOMEM.
->
-> I guess hibernate_preallocate_memory() is not able to free enough
-> memory for itself in that case.
->
-> > Is this supposed to work?
->
-> Yes, it is, in general.
->
-> > Maybe I am doing something wrong?
-> > Hibernation works before I create the dd processes.  After I force
-> > some of those pages to a separate swap device, hibernation works too,
-> > so those pages aren't mlocked or anything.
->
-> It looks like you are doing something that is not covered by
-> hibernate_preallocate_memory().
->
-> > > > 3. A feature that works only when 1/2 of total RAM can be allocated
-> > > > is, in my opinion, not usable, except possibly under special
-> > > > circumstances, such as mine. Most of the available articles and
-> > > > documentation do not mention this important fact (but for the excerpt
-> > > > I mentioned, which is not in a prominent position).
-> > >
-> > > It can be used with over 1/2 of RAM allocated and that is quite easy
-> > > to demonstrate.
-> > >
-> > > Honestly, I'm not sure what your problem is really.
-> >
-> > I apologize if I am doing something stupid and I should know better
-> > before I waste other people's time.  I have been trying to explain
-> > these issues as best as I can.  I have a reproducible failure.  I'll
-> > be happy to provide any additional detail.
->
-> Simply put, hibernation, as implemented today, needs to allocate over
-> 50% of RAM (or at least as much as to be able to copy all of the
-> non-free pages) for image creation.  If it cannot do that, it will
-> fail and you know how to prevent it from allocating enough memory in a
-> reproducible way.  AFAICS that's a situation in which every attempt to
-> allocate 50% of memory for any other purpose will fail as well.
->
-> Frankly, you are first to report this problem, so it arguably is not
-> common.  It looks like hibernate_preallocate_memory() may be improved
-> to cover that case, but then the question is how much more complicated
-> it will have to become for this purpose and whether or not that's
-> worth pursuing.
+Isn't this racy?
 
-Right.  I was hoping to discuss that.  Is it easier to do in the
-kernel what I am trying to do at user level, i.e. force swap of excess
-pages (possibly to a separate device or partition) so that enough
-pages are freed up to make hibernate_preallocate_memory always
-succeed?  I started reading the swap code, but it is entangled with
-page reclaim and I haven't seen a simple solution, neither do I know
-if there is one and how long it would take to find it, or code around
-it.  (However I haven't looked yet at how it works when memcgroup
-limits are lowered---that may give me good ideas).
+                                        # pdev is present
+  pci_read_config_word
+    if (pci_dev_is_disconnected(pdev))  # currently false
+                                        # pdev is removed
+    pci_bus_read_config_word            # fails, returns ~0
+  slot_status = ~0
 
-Thanks!
+I think pci_read_config_word() checks pci_dev_is_disconnected() merely
+as an optimization.  Obviously it can't guarantee that the subsequent
+config access will succeed.
 
+If pci_dev_is_disconnected() was false but the config read fails, I
+think we'll get ~0 data and return 1, i.e., "PDS was set".
 
->
-> > >
-> > > > Two questions then:
-> > > >
-> > > > A. Should the documentation be changed to reflect this fact more
-> > > > clearly?  I feel that the current situation is a disservice to the
-> > > > user community.
-> > >
-> > > Propose changes.
-> >
-> > Sure, after we resolve the above questions.
-> >
-> > > > B. Would it be worthwhile to improve the hibernation code to remove
-> > > > this limitation?  Is this of interest to anybody (other than me)?
-> > >
-> > > Again, propose specific changes.
+Shouldn't we check for slot_status being an error response (~0)
+instead of looking for PCIBIOS_DEVICE_NOT_FOUND?  There are 7 RsvdP
+bits in Slot Status, so ~0 is not a valid value for the register.
+
+All 16 bits of Link Status are defined, but ~0 is still an invalid
+value because the Current Link Speed and Negotiated Link Width fields
+only define a few valid encodings.
+
+> +	return !!(slot_status & PCI_EXP_SLTSTA_PDS);
+>  }
+>  
+>  /**
+> @@ -390,10 +397,19 @@ bool pciehp_card_present(struct controller *ctrl)
+>   * Presence Detect State bit, this helper also returns true if the Link Active
+>   * bit is set.  This is a concession to broken hotplug ports which hardwire
+>   * Presence Detect State to zero, such as Wilocity's [1ae9:0200].
+> + *
+> + * Returns: %1 if the slot is occupied and %0 if it is not. If the hotplug
+> + *	    port is not present anymore returns %-ENODEV.
+>   */
+> -bool pciehp_card_present_or_link_active(struct controller *ctrl)
+> +int pciehp_card_present_or_link_active(struct controller *ctrl)
+>  {
+> -	return pciehp_card_present(ctrl) || pciehp_check_link_active(ctrl);
+> +	int ret;
+> +
+> +	ret = pciehp_card_present(ctrl);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return pciehp_check_link_active(ctrl);
+
+The names of these functions seem misleading to me: all they can
+really tell us is "the card *was* present" or "the link *was* active"
+at some time in the past.  But the names make it so tempting to
+pretend that "the card *is* present" or "the link *is* active", and
+that may no longer be true.
+
+I think names like "pciehp_card_absent()" and "pciehp_link_down()"
+would make it easier to think about these situations.
+
+>  }
+>  
+>  int pciehp_query_power_fault(struct controller *ctrl)
+> -- 
+> 2.20.1
+> 
