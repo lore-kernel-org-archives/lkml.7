@@ -2,123 +2,116 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE1B9CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:05:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62FCCCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:06:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82A712184C
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:05:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 398B7205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:06:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="mF1FIsNT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HhLfr2vG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731945AbfJVNFy (ORCPT
+        id S1731960AbfJVNGW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 09:05:54 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:38102 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729696AbfJVNFy (ORCPT
+        Tue, 22 Oct 2019 09:06:22 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:36312 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731948AbfJVNGV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 09:05:54 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9MD5pLL077666;
-        Tue, 22 Oct 2019 08:05:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571749551;
-        bh=ieLw0UD3TwNfGq2EsjYftsH6Edo4lDfAf/yj37BOjiM=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=mF1FIsNT5Ib6vj+r6XWhXX5qijsZY1qb0QuDBC0F7UNZXcoR3lOZTbq7NCEnyYQp/
-         so66Gene4HaEpi/nOoDbTfQgjk5w6cm99uMjvmmZFEzbWBWg85hCG1kiqCkWIltIKa
-         LfQ2ZwltgNSTBxTZCYQsNv5hTBZC30uaSh2lUJ2w=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9MD5pqn086771
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 22 Oct 2019 08:05:51 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 22
- Oct 2019 08:05:49 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 22 Oct 2019 08:05:39 -0500
-Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9MD5XhK075548;
-        Tue, 22 Oct 2019 08:05:33 -0500
-Subject: Re: [PATCH 00/13] PHY: Add support for SERDES in TI's J721E SoC
-To:     Kishon Vijay Abraham I <kishon@ti.com>, Jyri Sarha <jsarha@ti.com>
-CC:     Anil Varughese <aniljoy@cadence.com>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20191016113117.12370-1-kishon@ti.com>
-From:   Roger Quadros <rogerq@ti.com>
-Message-ID: <6bc9645d-28df-bcef-e94d-498516fc4ac2@ti.com>
-Date:   Tue, 22 Oct 2019 16:05:32 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 22 Oct 2019 09:06:21 -0400
+Received: by mail-qt1-f194.google.com with SMTP id d17so12007074qto.3
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 06:06:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IFWTbMD8AdeW8CJ2pCx3d0rW0WQ9zdFS/kI+sYlxUlw=;
+        b=HhLfr2vGbjQYb9rn8HQIy2DLmFbAqcxrwLSlbP3wl17ZMLM1KjkzM4iR1Cvu6S1qDd
+         CoEeF4DA79piGOBUWJGNkZAF8WQ8IIM/lGLGTaALz+Hf36nOLIphsPix9D4E6y5LB8Fs
+         l+QbEjt4JlU2YrAtAc4G1gB4AL+x0BZiIo11L6pWdIYMQvzNQ8BhHDhTOqo5K8kB25Ml
+         HnAE4jArpeieysIkWtaYYxGKcml0GZnI4AdZf986UtI4LSoqWCRT0mMrnfKz7I2Wo9KT
+         3hZbhzNN8HEhUl5UKFqJcwdT5ngWiaW84WSDtr6Z+CcY57RR23rFjQJcTySy6+Cpbxrx
+         oJIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IFWTbMD8AdeW8CJ2pCx3d0rW0WQ9zdFS/kI+sYlxUlw=;
+        b=DmecknBPiOqcKHbXYNn8L1JtRlZWd+2a8Fu+3jC743VQ3RCsg8eNzcsby2c8AC5+3C
+         41Zvj9TsFV/x4j9O6Y1yPvC3ndO4bt6EvpxCpPs4JPS1iHDpnVMXXve8Suhmn3KwREfD
+         zD0GH/2UlULaaPuCqT6l0c+++DKn4qXJLxnEVe9jPsFjmKXKpoAXY5VfvVv9eL4xRDWS
+         NRKCyJr3ljYPQb+/zV5JCcsbdE05Z/+pe2peLoxlEZUD40rW04jiT7TdSCUnszB62QrD
+         DcBN/1k52qIFdBcQk1IpknY+LO5gu8EQUIsZw2x0JRjgycb2UlFosNRm85IXeaRwZXaQ
+         xMfQ==
+X-Gm-Message-State: APjAAAWnw5gbeJNM+jqC0MENJ1ZRdyioyMZEG1e45Hr1h73XFp7Y+F9O
+        vZqXGTn6iL+0ikINXmUXGfCdvVEIsG2yFg4hYafSMg==
+X-Google-Smtp-Source: APXvYqxx/KtPDbvOc/l9nR5i6+vVfYhh1O6G+InyUToPteiA4rp6ydW+ZlHhJfx3jmclxN9NxPqz/B4OF/PJPBB2h7g=
+X-Received: by 2002:ac8:237b:: with SMTP id b56mr3301704qtb.264.1571749580487;
+ Tue, 22 Oct 2019 06:06:20 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191016113117.12370-1-kishon@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20191022111806.23143-1-colin.king@canonical.com>
+In-Reply-To: <20191022111806.23143-1-colin.king@canonical.com>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Tue, 22 Oct 2019 18:36:08 +0530
+Message-ID: <CAP245DXjVDJ68kmWONmWh4YB=dcVrQ4q1y3bPncDc5=FohY2Vw@mail.gmail.com>
+Subject: Re: [PATCH][next] thermal: qcom: tsens-v1: fix kfree of a non-pointer value
+To:     Colin King <colin.king@canonical.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        AngeloGioacchino Del Regno <kholk11@gmail.com>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, Oct 22, 2019 at 4:48 PM Colin King <colin.king@canonical.com> wrote:
+>
+> From: Colin Ian King <colin.king@canonical.com>
+>
+> Currently the kfree of pointer qfprom_cdata is kfreeing an
+> error value that has been cast to a pointer rather than a
+> valid address.  Fix this by removing the kfree.
 
-On 16/10/2019 14:31, Kishon Vijay Abraham I wrote:
-> TI's J721E SoC uses Cadence Sierra SERDES for USB, PCIe and SGMII.
-> TI has a wrapper named WIZ to control input signals to Sierra and
-> Torrent SERDES.
-> 
-> This patch series:
->   1) Add support to WIZ module present in TI's J721E SoC
->   2) Adapt Cadence Sierra PHY driver to be used for J721E SoC
-> 
-> Anil Varughese (1):
->    phy: cadence: Sierra: Configure both lane cdb and common cdb registers
->      for external SSC
-> 
-> Kishon Vijay Abraham I (12):
->    dt-bindings: phy: Sierra: Add bindings for Sierra in TI's J721E
->    phy: cadence: Sierra: Make "phy_clk" and "sierra_apb" optional
->      resources
->    phy: cadence: Sierra: Use "regmap" for read and write to Sierra
->      registers
->    phy: cadence: Sierra: Add support for SERDES_16G used in J721E SoC
->    phy: cadence: Sierra: Make cdns_sierra_phy_init() as phy_ops
->    phy: cadence: Sierra: Modify register macro names to be in sync with
->      Sierra user guide
->    phy: cadence: Sierra: Get reset control "array" for each link
->    phy: cadence: Sierra: Check for PLL lock during PHY power on
->    phy: cadence: Sierra: Change MAX_LANES of Sierra to 16
->    phy: cadence: Sierra: Set cmn_refclk/cmn_refclk1 frequency to 25MHz
->    dt-bindings: phy: Document WIZ (SERDES wrapper) bindings
->    phy: ti: j721e-wiz: Add support for WIZ module present in TI J721E SoC
+Hmm, we just added this to other places[1] as a fix for mem leaks
+using the nvmem api.
 
-Tested USB3.0 on J7ES using this series.
+I think we need to fix up the qfprom_read wrapper. Srini?
 
-Tested-by: Roger Quadros <rogerq@ti.com>
+[1] https://lore.kernel.org/stable/20191010083616.685532154@linuxfoundation.org/
 
-> 
->   .../bindings/phy/phy-cadence-sierra.txt       |  13 +-
->   .../bindings/phy/ti,phy-j721e-wiz.txt         |  95 ++
->   drivers/phy/cadence/phy-cadence-sierra.c      | 695 +++++++++++---
->   drivers/phy/ti/Kconfig                        |  15 +
->   drivers/phy/ti/Makefile                       |   1 +
->   drivers/phy/ti/phy-j721e-wiz.c                | 904 ++++++++++++++++++
->   6 files changed, 1585 insertions(+), 138 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.txt
->   create mode 100644 drivers/phy/ti/phy-j721e-wiz.c
-> 
-
--- 
-cheers,
--roger
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> Fixes: 95ededc17e4e ("thermal: qcom: tsens-v1: Add support for MSM8956 and MSM8976")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/thermal/qcom/tsens-v1.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+>
+> diff --git a/drivers/thermal/qcom/tsens-v1.c b/drivers/thermal/qcom/tsens-v1.c
+> index 2d1077b64887..bd2ddb684a45 100644
+> --- a/drivers/thermal/qcom/tsens-v1.c
+> +++ b/drivers/thermal/qcom/tsens-v1.c
+> @@ -240,10 +240,8 @@ static int calibrate_8976(struct tsens_priv *priv)
+>         u32 *qfprom_cdata;
+>
+>         qfprom_cdata = (u32 *)qfprom_read(priv->dev, "calib");
+> -       if (IS_ERR(qfprom_cdata)) {
+> -               kfree(qfprom_cdata);
+> +       if (IS_ERR(qfprom_cdata))
+>                 return PTR_ERR(qfprom_cdata);
+> -       }
+>
+>         mode = (qfprom_cdata[4] & MSM8976_CAL_SEL_MASK);
+>         dev_dbg(priv->dev, "calibration mode is %d\n", mode);
+> --
+> 2.20.1
+>
