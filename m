@@ -2,113 +2,283 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C65CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:17:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDED7CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:18:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BC17218AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:17:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NHRI00dN"
+	by mail.kernel.org (Postfix) with ESMTP id AAB6C2064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:18:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571735913;
+	bh=Hlu8GaM3pyER1WvD6ECYPessAWesR9RC+922Q+vHyEo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=r4t7kB2AvdfnYqN+rYfadKPUkCXxmHyUUPSrp3p07Yqj0njaDLZVKSifz8LniU3rb
+	 URzo02/eKYBBdwqFU8Hwk8p0IsJ9cMgLlb8ub6uyHHNoQx12dN+4SwqFSzhqgAYMMB
+	 uNWeLV3iw0G1iVaIYlu66N0pdki21Kt2GUG1hw64=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388479AbfJVJRf (ORCPT
+        id S2388520AbfJVJSc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 05:17:35 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:54628 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388006AbfJVJRf (ORCPT
+        Tue, 22 Oct 2019 05:18:32 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:37248 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730247AbfJVJSc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 05:17:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571735854;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=O5z9CMG3C81sifoUf2QQwhHlJPM7DMSGubNkuyFNjik=;
-        b=NHRI00dNY2HoF1QPS4xmFjPnxP8d5+dfh/+TkWfPatcv20G1unhvlO6uTrJcPHyzCD4NIb
-        VTcSsQAkqEuc9ffLn9eTjrOQuStSqF8Oy370sffKusFmzyIWKMaupUaJ1zZYSRKW8K9f1W
-        cE3pTaRjv0zlpx6ie01IEfEdQZv8EC4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-357-sm3pJgPVP2O00wTgL4khMA-1; Tue, 22 Oct 2019 05:17:31 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BEABD107AD31;
-        Tue, 22 Oct 2019 09:17:28 +0000 (UTC)
-Received: from [10.36.117.11] (ovpn-117-11.ams2.redhat.com [10.36.117.11])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E60465D6A5;
-        Tue, 22 Oct 2019 09:17:24 +0000 (UTC)
-Subject: Re: [PATCH v2 0/2] mm: Memory offlining + page isolation cleanups
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Pingfan Liu <kernelfans@gmail.com>, Qian Cai <cai@lca.pw>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Wei Yang <richard.weiyang@gmail.com>
-References: <20191021172353.3056-1-david@redhat.com>
- <25d3f071-3268-298b-e0c8-9c307d1015fe@redhat.com>
- <20191022080835.GZ9379@dhcp22.suse.cz>
- <1f56744d-2c22-6c12-8fe8-4a71e791c467@redhat.com>
- <20191022082131.GC9379@dhcp22.suse.cz>
- <de39873c-ae55-88ed-0b4e-4f67a75ef81c@redhat.com>
- <20191022091431.GG9379@dhcp22.suse.cz>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat GmbH
-Message-ID: <68d6da35-276c-0491-99ea-8249dee8fd1d@redhat.com>
-Date:   Tue, 22 Oct 2019 11:17:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Tue, 22 Oct 2019 05:18:32 -0400
+Received: by mail-oi1-f195.google.com with SMTP id i16so13568285oie.4;
+        Tue, 22 Oct 2019 02:18:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nuz84DmbVNqkBwZM2dSH7bNPNbMKWhjIIPtW7H0YPbs=;
+        b=MPDm7Fm3Eo027By8vapjzYhqtuUXysOvIwesTAILCwGG2gFBzdgQ8UIqRz4UJdoCGk
+         OlMafMdWO9SgJabIhzuRAz76bQUKnFc1rL7kJNJzLJGNXYXu/Pv3elElVjgp+sP+QMC/
+         RAOqnxJwMIDxtP3yjHMDLmP3q8geZ8FosHPZ4agcP1mRnQQC2Obsj7/VESs9kaFwGyF2
+         embbeL291r5NDxr73hnWyiYyQmEQeXCawpaQRIm23tEhMISvNmAswvj9fdI7rE94orFI
+         ggUMGEfakkJnC+L0mB0V3FByvsm9r0IRPLMxO8YB8GHukA2ErPDoFnh5E+3L2CSjeF6i
+         p/ow==
+X-Gm-Message-State: APjAAAXqW6aFb1oNHuZ98UgMqSugMkWwhYlUIxtRSXsvowFVTXP7BZey
+        Br3bJNWc0AURP70W8VBJHO6amtdLx4fs4OC2rJA=
+X-Google-Smtp-Source: APXvYqwwDlsgGkAn9HrCd8VV+9jpvEy0YfjvtOplz9BjtCnFCm2kwmx5+01G/UWl5wByWCylJuSaEQxiHp/YzPN/6bE=
+X-Received: by 2002:aca:b6c5:: with SMTP id g188mr2084579oif.103.1571735910539;
+ Tue, 22 Oct 2019 02:18:30 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191022091431.GG9379@dhcp22.suse.cz>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-MC-Unique: sm3pJgPVP2O00wTgL4khMA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+References: <20191022075123.17057-1-ran.wang_1@nxp.com> <20191022075123.17057-3-ran.wang_1@nxp.com>
+In-Reply-To: <20191022075123.17057-3-ran.wang_1@nxp.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 22 Oct 2019 11:18:18 +0200
+Message-ID: <CAJZ5v0jdy+4ZRci2LWsb7vPTQ8Yyb7S0CF2C92zhBXg_xe67ug@mail.gmail.com>
+Subject: Re: [PATCH 3/3] soc: fsl: add RCPM driver
+To:     Ran Wang <ran.wang_1@nxp.com>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Rob Herring <robh+dt@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Pavel Machek <pavel@ucw.cz>, Huang Anson <anson.huang@nxp.com>,
+        Li Biwen <biwen.li@nxp.com>, Len Brown <len.brown@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22.10.19 11:14, Michal Hocko wrote:
-> On Tue 22-10-19 10:32:11, David Hildenbrand wrote:
-> [...]
->> E.g., arch/x86/kvm/mmu.c:kvm_is_mmio_pfn()
->=20
-> Thanks for these references. I am not really familiar with kvm so I
-> cannot really comment on the specific code but I am wondering why
-> it simply doesn't check for ZONE_DEVICE explicitly? Also we do care
-> about holes in RAM (from the early boot), those should be reserved
-> already AFAIR. So we are left with hotplugged memory with holes and
-> I am not really sure we should bother with this until there is a clear
-> usecase in sight.
+On Tue, Oct 22, 2019 at 9:52 AM Ran Wang <ran.wang_1@nxp.com> wrote:
+>
+> The NXP's QorIQ Processors based on ARM Core have RCPM module
+> (Run Control and Power Management), which performs system level
+> tasks associated with power management such as wakeup source control.
+>
+> This driver depends on PM wakeup source framework which help to
+> collect wake information.
+>
+> Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+> ---
+> Change in v8:
+>         - Adjust related API usage to meet wakeup.c's update in patch 1/3.
+>         - Add sanity checking for the case of ws->dev or ws->dev->parent
+>           is null.
+>
+> Change in v7:
+>         - Replace 'ws->dev' with 'ws->dev->parent' to get aligned with
+>         c8377adfa781 ("PM / wakeup: Show wakeup sources stats in sysfs")
+>         - Remove '+obj-y += ftm_alarm.o' since it is wrong.
+>         - Cosmetic work.
+>
+> Change in v6:
+>         - Adjust related API usage to meet wakeup.c's update in patch 1/3.
+>
+> Change in v5:
+>         - Fix v4 regression of the return value of wakeup_source_get_next()
+>         didn't pass to ws in while loop.
+>         - Rename wakeup_source member 'attached_dev' to 'dev'.
+>         - Rename property 'fsl,#rcpm-wakeup-cells' to '#fsl,rcpm-wakeup-cells'.
+>         please see https://lore.kernel.org/patchwork/patch/1101022/
+>
+> Change in v4:
+>         - Remove extra ',' in author line of rcpm.c
+>         - Update usage of wakeup_source_get_next() to be less confusing to the
+> reader, code logic remain the same.
+>
+> Change in v3:
+>         - Some whitespace ajdustment.
+>
+> Change in v2:
+>         - Rebase Kconfig and Makefile update to latest mainline.
+>
+>  drivers/soc/fsl/Kconfig  |   8 +++
+>  drivers/soc/fsl/Makefile |   1 +
+>  drivers/soc/fsl/rcpm.c   | 133 +++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 142 insertions(+)
+>  create mode 100644 drivers/soc/fsl/rcpm.c
+>
+> diff --git a/drivers/soc/fsl/Kconfig b/drivers/soc/fsl/Kconfig
+> index f9ad8ad..4918856 100644
+> --- a/drivers/soc/fsl/Kconfig
+> +++ b/drivers/soc/fsl/Kconfig
+> @@ -40,4 +40,12 @@ config DPAA2_CONSOLE
+>           /dev/dpaa2_mc_console and /dev/dpaa2_aiop_console,
+>           which can be used to dump the Management Complex and AIOP
+>           firmware logs.
+> +
+> +config FSL_RCPM
+> +       bool "Freescale RCPM support"
+> +       depends on PM_SLEEP
+> +       help
+> +         The NXP QorIQ Processors based on ARM Core have RCPM module
+> +         (Run Control and Power Management), which performs all device-level
+> +         tasks associated with power management, such as wakeup source control.
+>  endmenu
+> diff --git a/drivers/soc/fsl/Makefile b/drivers/soc/fsl/Makefile
+> index 71dee8d..906f1cd 100644
+> --- a/drivers/soc/fsl/Makefile
+> +++ b/drivers/soc/fsl/Makefile
+> @@ -6,6 +6,7 @@
+>  obj-$(CONFIG_FSL_DPAA)                 += qbman/
+>  obj-$(CONFIG_QUICC_ENGINE)             += qe/
+>  obj-$(CONFIG_CPM)                      += qe/
+> +obj-$(CONFIG_FSL_RCPM)                 += rcpm.o
+>  obj-$(CONFIG_FSL_GUTS)                 += guts.o
+>  obj-$(CONFIG_FSL_MC_DPIO)              += dpio/
+>  obj-$(CONFIG_DPAA2_CONSOLE)            += dpaa2-console.o
+> diff --git a/drivers/soc/fsl/rcpm.c b/drivers/soc/fsl/rcpm.c
+> new file mode 100644
+> index 0000000..3ed135e
+> --- /dev/null
+> +++ b/drivers/soc/fsl/rcpm.c
+> @@ -0,0 +1,133 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +//
+> +// rcpm.c - Freescale QorIQ RCPM driver
+> +//
+> +// Copyright 2019 NXP
+> +//
+> +// Author: Ran Wang <ran.wang_1@nxp.com>
+> +
+> +#include <linux/init.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/of_address.h>
+> +#include <linux/slab.h>
+> +#include <linux/suspend.h>
+> +#include <linux/kernel.h>
+> +
+> +#define RCPM_WAKEUP_CELL_MAX_SIZE      7
+> +
+> +struct rcpm {
+> +       unsigned int    wakeup_cells;
+> +       void __iomem    *ippdexpcr_base;
+> +       bool            little_endian;
+> +};
+> +
 
-Well, checking for ZONE_DEVICE is only possible if you have an=20
-initialized memmap. And that is not guaranteed when you start mapping=20
-random stuff into your guest via /dev/mem.
+Please add a kerneldoc comment describing this routine.
 
-I am reworking these patches right now and audit the whole kernel for=20
-PageReserved() checks that might affect ZONE_DEVICE. I'll send the=20
-collection of patches as RFC.
+> +static int rcpm_pm_prepare(struct device *dev)
+> +{
+> +       int i, ret, idx;
+> +       void __iomem *base;
+> +       struct wakeup_source    *ws;
+> +       struct rcpm             *rcpm;
+> +       struct device_node      *np = dev->of_node;
+> +       u32 value[RCPM_WAKEUP_CELL_MAX_SIZE + 1], tmp;
+> +
+> +       rcpm = dev_get_drvdata(dev);
+> +       if (!rcpm)
+> +               return -EINVAL;
+> +
+> +       base = rcpm->ippdexpcr_base;
+> +       idx = wakeup_sources_read_lock();
+> +
+> +       /* Begin with first registered wakeup source */
+> +       for_each_wakeup_source(ws) {
+> +
+> +               /* skip object which is not attached to device */
+> +               if (!ws->dev || !ws->dev->parent)
+> +                       continue;
+> +
+> +               ret = device_property_read_u32_array(ws->dev->parent,
+> +                               "fsl,rcpm-wakeup", value,
+> +                               rcpm->wakeup_cells + 1);
+> +
+> +               /*  Wakeup source should refer to current rcpm device */
+> +               if (ret || (np->phandle != value[0])) {
+> +                       dev_info(dev, "%s doesn't refer to this rcpm\n",
+> +                                       ws->name);
 
---=20
+IMO printing this message is not useful in general, because it looks
+like you just want to skip wakeup sources that aren't associated with
+rcpm devices.
 
-Thanks,
+Maybe use pr_debug() to print it?  Or maybe use pr_debug() to print a
+message if you have found a suitable device?  Wouldn't that be more
+useful?
 
-David / dhildenb
+> +                       continue;
+> +               }
+> +
 
+It would be good to add a comment explaining what the code below does
+here.  Or explain that in the function's kerneldoc comment.
+
+> +               for (i = 0; i < rcpm->wakeup_cells; i++) {
+
+It looks like 'tmp' can be defined in this block.
+
+And I would store the value of value[i+1] in tmp upfront, that is
+
+u32 tmp = value[i+1];
+
+> +                       /* We can only OR related bits */
+> +                       if (value[i + 1]) {
+
+Also I would do
+
+if (!tmp)
+        continue;
+
+to reduce the indentation level.
+
+> +                               if (rcpm->little_endian) {
+> +                                       tmp = ioread32(base + i * 4);
+> +                                       tmp |= value[i + 1];
+> +                                       iowrite32(tmp, base + i * 4);
+
+So it is sufficient to do
+
+tmp |= ioread32(base + i * 4);
+iowrite32(tmp, base + i * 4);
+
+here and analogously below.
+
+You may as well define
+
+void __iomem *address = base + i * 4;
+
+and use it everywhere in this block instead of the (base + I * 4) expression.
+
+> +                               } else {
+> +                                       tmp = ioread32be(base + i * 4);
+> +                                       tmp |= value[i + 1];
+> +                                       iowrite32be(tmp, base + i * 4);
+> +                               }
+> +                       }
+> +               }
+> +       }
+> +
+> +       wakeup_sources_read_unlock(idx);
+> +
+> +       return 0;
+> +}
+> +
+> +static const struct dev_pm_ops rcpm_pm_ops = {
+> +       .prepare =  rcpm_pm_prepare,
+> +};
+> +
