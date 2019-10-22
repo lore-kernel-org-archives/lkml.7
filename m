@@ -2,117 +2,118 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B24C1CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 05:56:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03A0BCA9EB9
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 05:57:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 743AD218AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 05:56:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4D1F21A4A
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 05:57:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387636AbfJVF4t (ORCPT
+        id S1730890AbfJVF5z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 01:56:49 -0400
-Received: from mail.windriver.com ([147.11.1.11]:47196 "EHLO
-        mail.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725788AbfJVF4t (ORCPT
+        Tue, 22 Oct 2019 01:57:55 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:42961 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725788AbfJVF5y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 01:56:49 -0400
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
-        by mail.windriver.com (8.15.2/8.15.2) with ESMTPS id x9M5ua1W026864
-        (version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
-        Mon, 21 Oct 2019 22:56:36 -0700 (PDT)
-Received: from [128.224.155.112] (128.224.155.112) by ALA-HCA.corp.ad.wrs.com
- (147.11.189.50) with Microsoft SMTP Server (TLS) id 14.3.468.0; Mon, 21 Oct
- 2019 22:56:34 -0700
-Subject: Re: [PATCH v4] perf record: Add support for limit perf output file
- size
-To:     Jiri Olsa <jolsa@redhat.com>
-References: <20190925070637.13164-1-jiwei.sun@windriver.com>
- <20191021134137.GA8264@krava>
-CC:     <acme@redhat.com>, <arnaldo.melo@gmail.com>,
-        <linux-kernel@vger.kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <mpetlan@redhat.com>,
-        <namhyung@kernel.org>, <a.p.zijlstra@chello.nl>,
-        <adrian.hunter@intel.com>, <Richard.Danter@windriver.com>
-From:   Jiwei Sun <Jiwei.Sun@windriver.com>
-Message-ID: <97a91775-c34c-ede4-4049-ce47160f4773@windriver.com>
-Date:   Tue, 22 Oct 2019 13:56:30 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
- Thunderbird/45.8.0
+        Tue, 22 Oct 2019 01:57:54 -0400
+Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1iMnAo-00013W-QN; Tue, 22 Oct 2019 07:57:38 +0200
+Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1iMnAl-0001k3-TK; Tue, 22 Oct 2019 07:57:35 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Andrew Lunn <andrew@lunn.ch>, Chris Snook <chris.snook@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        James Hogan <jhogan@kernel.org>,
+        Jay Cliburn <jcliburn@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vivien Didelot <vivien.didelot@gmail.com>
+Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, Russell King <linux@armlinux.org.uk>
+Subject: [PATCH v4 0/5] add dsa switch support for ar9331
+Date:   Tue, 22 Oct 2019 07:57:30 +0200
+Message-Id: <20191022055735.6642-1-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <20191021134137.GA8264@krava>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [128.224.155.112]
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jirka,
+changes v4:
+- ag71xx: ag71xx_mac_validate fix always false comparison (&& -> ||)
+- tag_ar9331: use skb_pull_rcsum() instead of skb_pull().
+- tag_ar9331: drop skb_set_mac_header()
 
-On 2019e9410f21f% 21:41, Jiri Olsa wrote:
-> On Wed, Sep 25, 2019 at 03:06:37PM +0800, Jiwei Sun wrote:
-> 
-> SNIP
-> 
->>  SEE ALSO
->>  --------
->>  linkperf:perf-stat[1], linkperf:perf-list[1]
->> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
->> index 48600c90cc7e..30904d2a3407 100644
->> --- a/tools/perf/builtin-record.c
->> +++ b/tools/perf/builtin-record.c
->> @@ -91,6 +91,7 @@ struct record {
->>  	struct switch_output	switch_output;
->>  	unsigned long long	samples;
->>  	cpu_set_t		affinity_mask;
->> +	unsigned long		output_max_size;	/* = 0: unlimited */
->>  };
->>  
->>  static volatile int auxtrace_record__snapshot_started;
->> @@ -120,6 +121,12 @@ static bool switch_output_time(struct record *rec)
->>  	       trigger_is_ready(&switch_output_trigger);
->>  }
->>  
->> +static bool record__output_max_size_exceeded(struct record *rec)
->> +{
->> +	return rec->output_max_size &&
->> +	       (rec->bytes_written >= rec->output_max_size);
->> +}
->> +
->>  static int record__write(struct record *rec, struct mmap *map __maybe_unused,
->>  			 void *bf, size_t size)
->>  {
->> @@ -132,6 +139,12 @@ static int record__write(struct record *rec, struct mmap *map __maybe_unused,
->>  
->>  	rec->bytes_written += size;
->>  
->> +	if (record__output_max_size_exceeded(rec)) {
->> +		WARN_ONCE(1, "WARNING: The perf data has already reached "
->> +			     "the limit, stop recording!\n");
-> 
-> I think the message whouldn't be a warning, the user asked for
-> that, maybe something more like:
-> 
->   [ perf record: perf size limit reached (XXMB), stopping session ]
-> 
->> +		raise(SIGTERM);
-> 
-> could we just set 'done = 1' what's the benefit in killing perf?
+changes v3:
+- ag71xx: ag71xx_mac_config: ignore MLO_AN_INBAND mode. It is not
+  supported by HW and SW.
+- ag71xx: ag71xx_mac_validate: return all supported bits on
+  PHY_INTERFACE_MODE_NA
 
-Thanks for your suggestions. Yes, if just set "done == 1" is more efficient and more concise.
-And I will modify it and the output format, and then send a v5 patch.
-Thanks again.
+changes v2:
+- move Atheros AR9331 TAG format to separate patch
+- use netdev_warn_once in the tag driver to reduce potential message spam
+- typo fixes
+- reorder tag driver alphabetically 
+- configure switch to maximal frame size
+- use mdiobus_read/write
+- fail if mdio sub node is not found
+- add comment for post reset state
+- remove deprecated comment about device id
+- remove phy-handle option for node with fixed-link
+- ag71xx: set 1G support only for GMII mode
 
-Regards,
-Jiwei
+This patch series provides dsa switch support for Atheros ar9331 WiSoC.
+As side effect ag71xx needed to be ported to phylink to make the switch
+driver (as well phylink based) work properly.
 
-> 
-> thanks,
-> jirka
-> 
-> 
+Oleksij Rempel (5):
+  net: ag71xx: port to phylink
+  dt-bindings: net: dsa: qca,ar9331 switch documentation
+  MIPS: ath79: ar9331: add ar9331-switch node
+  net: dsa: add support for Atheros AR9331 TAG format
+  net: dsa: add support for Atheros AR9331 build-in switch
+
+ .../devicetree/bindings/net/dsa/ar9331.txt    | 148 ++++
+ arch/mips/boot/dts/qca/ar9331.dtsi            | 127 ++-
+ arch/mips/boot/dts/qca/ar9331_dpt_module.dts  |  13 +
+ drivers/net/dsa/Kconfig                       |   2 +
+ drivers/net/dsa/Makefile                      |   1 +
+ drivers/net/dsa/qca/Kconfig                   |  11 +
+ drivers/net/dsa/qca/Makefile                  |   2 +
+ drivers/net/dsa/qca/ar9331.c                  | 823 ++++++++++++++++++
+ drivers/net/ethernet/atheros/Kconfig          |   2 +-
+ drivers/net/ethernet/atheros/ag71xx.c         | 146 ++--
+ include/net/dsa.h                             |   2 +
+ net/dsa/Kconfig                               |   6 +
+ net/dsa/Makefile                              |   1 +
+ net/dsa/tag_ar9331.c                          |  96 ++
+ 14 files changed, 1320 insertions(+), 60 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/dsa/ar9331.txt
+ create mode 100644 drivers/net/dsa/qca/Kconfig
+ create mode 100644 drivers/net/dsa/qca/Makefile
+ create mode 100644 drivers/net/dsa/qca/ar9331.c
+ create mode 100644 net/dsa/tag_ar9331.c
+
+-- 
+2.23.0
+
