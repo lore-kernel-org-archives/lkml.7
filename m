@@ -2,153 +2,181 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16844CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 11:21:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B23CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 11:23:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E130920640
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 11:21:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=plexistor-com.20150623.gappssmtp.com header.i=@plexistor-com.20150623.gappssmtp.com header.b="NY/Vg+KY"
+	by mail.kernel.org (Postfix) with ESMTP id 8675321783
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 11:23:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387971AbfJVLVV (ORCPT
+        id S2388021AbfJVLXk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 07:21:21 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:44721 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387405AbfJVLVV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 07:21:21 -0400
-Received: by mail-ed1-f68.google.com with SMTP id r16so12546231edq.11
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 04:21:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=plexistor-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=hkPjYtxu0G68TNOL7v3J1p13GtJ9bbjz9PgUJHvGUO4=;
-        b=NY/Vg+KYkfRz80jxUYpA7t8Pxm2pGBYJ+h3r9wYIIS9WTnYFDXAjUzhM7N78ek5F9C
-         r+L+12vJiHo+PxQ82cmaBgOJ/yw90xHGpO3E/d1R8cdSmLS6Yahs+PXzpAuGzRBVsxK0
-         vVyBefcjZfG2X6pLWNK7Nwn0zpyX2pIy/kqKQ30ad7Q13i7lmWZysLFyuUJr8CYGtBZZ
-         pD6hzp4Zj64Usi8SQFo0A0wCk2GQMYBUBurH4YTO2khbUC78TgpcrMLnyeIturUEx/bF
-         pMEbQwbm9AJOtx6+JoIjFQCQYvqOi5Xft8n5yxfj7F7VjRbYykLjhXNarDhLy1Zj//i/
-         MQzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=hkPjYtxu0G68TNOL7v3J1p13GtJ9bbjz9PgUJHvGUO4=;
-        b=fo54WjwmwnJLzX3ieHGzlsV7Y6U5W7Kz6AVgqZQ61T1sswqbItIXLms4zeqTUHswr3
-         KOSTsZGnd8rnpt0o4e/ErxzmClsaQkMcaMtXGvnXZAEomx+OAAVjbsGNyRYKM03DNzWE
-         5Mt4BNrjjTto43Dvb1Zk1dtThWdbMTxc8ynBN27KqEMZxyHUOMKrLluLPzXFiOI/AvVZ
-         gMV89BfQYt3HtxPFE5stL5x2OzblkpI/qb7GlhfVbVyVPKUvOLo1nmkJa7sY+6jD+FhW
-         yaq9ZgQA48rfc+SOZde226V3lOhF04GIR+esm5sfGFr9Bg6OBlpOz5Qu/XcKMx37mq0o
-         dIWw==
-X-Gm-Message-State: APjAAAV8KKmKfGHCCGhyB8MfXspsHsRotCDwxbgkgyOenu6JmU8TP7ZG
-        /VSPjB1S8J1lFIVpVeQpNEpCTw==
-X-Google-Smtp-Source: APXvYqySKn4thuU3f7K7aDJqekurENi/VR+yBa2dMuzwxWcadqexy5iRGP32nwx1Eh17ArpcLJiB9w==
-X-Received: by 2002:a17:906:bfcb:: with SMTP id us11mr26657460ejb.299.1571743279644;
-        Tue, 22 Oct 2019 04:21:19 -0700 (PDT)
-Received: from [10.68.217.182] ([217.70.210.43])
-        by smtp.googlemail.com with ESMTPSA id gl4sm114537ejb.6.2019.10.22.04.21.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Oct 2019 04:21:18 -0700 (PDT)
-Subject: Re: [PATCH 0/5] Enable per-file/directory DAX operations
-To:     ira.weiny@intel.com, linux-kernel@vger.kernel.org
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-References: <20191020155935.12297-1-ira.weiny@intel.com>
-From:   Boaz Harrosh <boaz@plexistor.com>
-Message-ID: <b7849297-e4a4-aaec-9a64-2b481663588b@plexistor.com>
-Date:   Tue, 22 Oct 2019 14:21:16 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Tue, 22 Oct 2019 07:23:40 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57976 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387405AbfJVLXk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 07:23:40 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 4AB83BA67;
+        Tue, 22 Oct 2019 11:23:37 +0000 (UTC)
+Message-ID: <1956a2c8f4911b2a7e2ba3c53506c0f06efb93f8.camel@suse.de>
+Subject: Re: [PATCH v6 3/4] arm64: use both ZONE_DMA and ZONE_DMA32
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Qian Cai <cai@lca.pw>, catalin.marinas@arm.com
+Cc:     f.fainelli@gmail.com, mbrugger@suse.com, marc.zyngier@arm.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-mm@kvack.org, Rob Herring <robh+dt@kernel.org>,
+        linux-rpi-kernel@lists.infradead.org, m.szyprowski@samsung.com,
+        Robin Murphy <Robin.Murphy@arm.com>, phill@raspberrypi.org,
+        will@kernel.org, Christoph Hellwig <hch@lst.de>,
+        linux-arm-kernel@lists.infradead.org, wahrenst@gmx.net
+Date:   Tue, 22 Oct 2019 13:23:32 +0200
+In-Reply-To: <AA6D37F1-A1B3-4EC4-8620-007095168BC7@lca.pw>
+References: <6703f8dab4a21fe4e1049f8f224502e1733bf72c.camel@suse.de>
+         <A1A8EEF0-2273-4338-B4D8-D9B1328484B4@lca.pw>
+         <9208de061fe2b9ee7b74206b3cd52cc116e43ac0.camel@suse.de>
+         <AA6D37F1-A1B3-4EC4-8620-007095168BC7@lca.pw>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-ZViq16FRQSdNTssKSEjh"
+User-Agent: Evolution 3.34.1 
 MIME-Version: 1.0
-In-Reply-To: <20191020155935.12297-1-ira.weiny@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/10/2019 18:59, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
-> 
-> At LSF/MM'19 [1] [2] we discussed applications that overestimate memory
-> consumption due to their inability to detect whether the kernel will
-> instantiate page cache for a file, and cases where a global dax enable via a
-> mount option is too coarse.
-> 
-> The following patch series enables selecting the use of DAX on individual files
-> and/or directories on xfs, and lays some groundwork to do so in ext4.  In this
-> scheme the dax mount option can be omitted to allow the per-file property to
-> take effect.
-> 
-> The insight at LSF/MM was to separate the per-mount or per-file "physical"
-> capability switch from an "effective" attribute for the file.
-> 
-> At LSF/MM we discussed the difficulties of switching the mode of a file with
-> active mappings / page cache. Rather than solve those races the decision was to
-> just limit mode flips to 0-length files.
-> 
 
-What I understand above is that only "writers" before writing any bytes may
-turn the flag on, which then persists. But as a very long time user of DAX, usually
-it is the writers that are least interesting. With lots of DAX technologies and
-emulations the write is slower and needs slow "flushing".
+--=-ZViq16FRQSdNTssKSEjh
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The more interesting and performance gains comes from DAX READs actually.
-specially cross the VM guest. (IE. All VMs share host memory or pmem)
+On Mon, 2019-10-21 at 16:36 -0400, Qian Cai wrote:
+> I managed to get more information here,
+>=20
+> [    0.000000] cma: dma_contiguous_reserve(limit c0000000)
+> [    0.000000] cma: dma_contiguous_reserve: reserving 64 MiB for global a=
+rea
+> [    0.000000] cma: cma_declare_contiguous(size 0x0000000004000000, base
+> 0x0000000000000000, limit 0x00000000c0000000 alignment 0x0000000000000000=
+)
+> [    0.000000] cma: Failed to reserve 512 MiB
+>=20
+> Full dmesg:
+>=20
+> https://cailca.github.io/files/dmesg.txt
 
-This fixture as I understand it, that I need to know before I write if I will
-want DAX or not and then the write is DAX as well as reads after that, looks
-not very interesting for me as a user.
+OK I got it, reproduced it too.
 
-Just my $0.17
-Boaz
+Here are the relevant logs:
 
-> Finally, the physical DAX flag inheritance is maintained from previous work on 
-> XFS but should be added for other file systems for consistence.
-> 
-> 
-> [1] https://lwn.net/Articles/787973/
-> [2] https://lwn.net/Articles/787233/
-> 
-> To: linux-kernel@vger.kernel.org
-> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-> Cc: "Darrick J. Wong" <darrick.wong@oracle.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Dave Chinner <david@fromorbit.com>
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: "Theodore Y. Ts'o" <tytso@mit.edu>
-> Cc: Jan Kara <jack@suse.cz>
-> Cc: linux-ext4@vger.kernel.org
-> Cc: linux-xfs@vger.kernel.org
-> Cc: linux-fsdevel@vger.kernel.org
-> 
-> Ira Weiny (5):
->   fs/stat: Define DAX statx attribute
->   fs/xfs: Isolate the physical DAX flag from effective
->   fs/xfs: Separate functionality of xfs_inode_supports_dax()
->   fs/xfs: Clean up DAX support check
->   fs/xfs: Allow toggle of physical DAX flag
-> 
->  fs/stat.c                 |  3 +++
->  fs/xfs/xfs_ioctl.c        | 32 ++++++++++++++------------------
->  fs/xfs/xfs_iops.c         | 36 ++++++++++++++++++++++++++++++------
->  fs/xfs/xfs_iops.h         |  2 ++
->  include/uapi/linux/stat.h |  1 +
->  5 files changed, 50 insertions(+), 24 deletions(-)
-> 
+	[    0.000000]   DMA      [mem 0x00000000802f0000-0x00000000bfffffff]
+	[    0.000000]   DMA32    [mem 0x00000000c0000000-0x00000000ffffffff]
+	[    0.000000]   Normal   [mem 0x0000000100000000-0x00000097fcffffff]
+
+As you can see ZONE_DMA spans from 0x00000000802f0000-0x00000000bfffffff wh=
+ich
+is slightly smaller than 1GB.
+
+	[    0.000000] crashkernel reserved: 0x000000009fe00000 - 0x00000000bfe000=
+00 (512 MB)
+
+Here crashkernel reserved 512M in ZONE_DMA.
+
+	[    0.000000] cma: Failed to reserve 512 MiB
+
+CMA tried to allocate 512M in ZONE_DMA which fails as there is no enough sp=
+ace.
+Makes sense.
+
+A fix could be moving crashkernel reservations after CMA and then if unable=
+ to
+fit in ZONE_DMA try ZONE_DMA32 before bailing out. Maybe it's a little over=
+ the
+top, yet although most devices will be fine with ZONE_DMA32, the RPi4 needs
+crashkernel to be reserved in ZONE_DMA.
+
+My knowledge of Kdump is limited, so I'd love to see what Catalin has to sa=
+y.
+Here's a tested patch of what I'm proposing:
+
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index 120c26af916b..49f3c3a34ae2 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -76,6 +76,7 @@ phys_addr_t arm64_dma32_phys_limit __ro_after_init;
+ static void __init reserve_crashkernel(void)
+ {
+        unsigned long long crash_base, crash_size;
++       phys_addr_t limit =3D arm64_dma_phys_limit;
+        int ret;
+
+        ret =3D parse_crashkernel(boot_command_line, memblock_phys_mem_size=
+(),
+@@ -86,11 +87,14 @@ static void __init reserve_crashkernel(void)
+
+        crash_size =3D PAGE_ALIGN(crash_size);
+
++again:
+        if (crash_base =3D=3D 0) {
+                /* Current arm64 boot protocol requires 2MB alignment */
+-               crash_base =3D memblock_find_in_range(0, ARCH_LOW_ADDRESS_L=
+IMIT,
+-                               crash_size, SZ_2M);
+-               if (crash_base =3D=3D 0) {
++               crash_base =3D memblock_find_in_range(0, limit, crash_size,
+SZ_2M);
++               if (!crash_base && limit =3D=3D arm64_dma_phys_limit) {
++                       limit =3D arm64_dma32_phys_limit;
++                       goto again;
++               } else if (!crash_base && limit =3D=3D arm64_dma32_phys_lim=
+it) {
+                        pr_warn("cannot allocate crashkernel (size:0x%llx)\=
+n",
+                                crash_size);
+                        return;
+@@ -448,13 +452,13 @@ void __init arm64_memblock_init(void)
+        else
+                arm64_dma32_phys_limit =3D PHYS_MASK + 1;
+
+-       reserve_crashkernel();
+-
+        reserve_elfcorehdr();
+
+        high_memory =3D __va(memblock_end_of_DRAM() - 1) + 1;
+
+        dma_contiguous_reserve(arm64_dma_phys_limit ? : arm64_dma32_phys_li=
+mit);
++
++       reserve_crashkernel();
+ }
+
+ void __init bootmem_init(void)
+
+
+Regards,
+Nicolas
+
+
+--=-ZViq16FRQSdNTssKSEjh
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl2u5rQACgkQlfZmHno8
+x/4iHgf+PQFTC5EpDaf7AMHfaNb/EWdnE8V/VYNH9X+f8B3poHPSE7yvhZSQO1vE
+xebs4G5cpgU47VqnQ/MCpiozB5KKZcBpPnrUHL+pa3P/p8FQJkwLx+m/AR4ZOcX8
+7v3pg5xDHcu/bfz0ge9i9JxPFG/KUKsK7PGpBuiLCmzLEUcXillwOnq9xtbhp9fJ
+JMizkcYBz6K/PKG9/OIfgioOcMU1Cc0NtE+kexLO9XOeKGyjjeGzcc1gyu1CNEqQ
+Z/kewRJYXRtJqw+sFCoYWtAKfQ+8H4Gcpx+wBU4B9Xtn/xmduQlv4fCSVIRkfW+N
+pd1WccsfBrzNNkeJT3pnA8Xsny2lAw==
+=0GmW
+-----END PGP SIGNATURE-----
+
+--=-ZViq16FRQSdNTssKSEjh--
 
