@@ -2,283 +2,172 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDED7CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:18:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3D2FCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:19:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAB6C2064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:18:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571735913;
-	bh=Hlu8GaM3pyER1WvD6ECYPessAWesR9RC+922Q+vHyEo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=r4t7kB2AvdfnYqN+rYfadKPUkCXxmHyUUPSrp3p07Yqj0njaDLZVKSifz8LniU3rb
-	 URzo02/eKYBBdwqFU8Hwk8p0IsJ9cMgLlb8ub6uyHHNoQx12dN+4SwqFSzhqgAYMMB
-	 uNWeLV3iw0G1iVaIYlu66N0pdki21Kt2GUG1hw64=
+	by mail.kernel.org (Postfix) with ESMTP id 91AA621920
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:19:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="FGtqiS09"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388520AbfJVJSc (ORCPT
+        id S2388538AbfJVJTb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 05:18:32 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:37248 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730247AbfJVJSc (ORCPT
+        Tue, 22 Oct 2019 05:19:31 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:52421 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388120AbfJVJTa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 05:18:32 -0400
-Received: by mail-oi1-f195.google.com with SMTP id i16so13568285oie.4;
-        Tue, 22 Oct 2019 02:18:31 -0700 (PDT)
+        Tue, 22 Oct 2019 05:19:30 -0400
+Received: by mail-wm1-f68.google.com with SMTP id r19so16344609wmh.2
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 02:19:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=r4xbJW3grSnf4M8N0nCJmNaFSFrCKReYewNpwqEWw1I=;
+        b=FGtqiS090+TGQJD//gAwTtX63ZcmUhqxCYUaSFDoCb3SG+hfsQ9BXYvIbAERWpV26E
+         nvExslmfOp0xqb3UqiZUKTt6ZSazb5UOFbbRjLRGwF6wSP8CUZtMhsDdovh16u6N1Zqq
+         tZH+AlYUfkMvQfCtL+XfwoYcRRTylo6Xi42JE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nuz84DmbVNqkBwZM2dSH7bNPNbMKWhjIIPtW7H0YPbs=;
-        b=MPDm7Fm3Eo027By8vapjzYhqtuUXysOvIwesTAILCwGG2gFBzdgQ8UIqRz4UJdoCGk
-         OlMafMdWO9SgJabIhzuRAz76bQUKnFc1rL7kJNJzLJGNXYXu/Pv3elElVjgp+sP+QMC/
-         RAOqnxJwMIDxtP3yjHMDLmP3q8geZ8FosHPZ4agcP1mRnQQC2Obsj7/VESs9kaFwGyF2
-         embbeL291r5NDxr73hnWyiYyQmEQeXCawpaQRIm23tEhMISvNmAswvj9fdI7rE94orFI
-         ggUMGEfakkJnC+L0mB0V3FByvsm9r0IRPLMxO8YB8GHukA2ErPDoFnh5E+3L2CSjeF6i
-         p/ow==
-X-Gm-Message-State: APjAAAXqW6aFb1oNHuZ98UgMqSugMkWwhYlUIxtRSXsvowFVTXP7BZey
-        Br3bJNWc0AURP70W8VBJHO6amtdLx4fs4OC2rJA=
-X-Google-Smtp-Source: APXvYqwwDlsgGkAn9HrCd8VV+9jpvEy0YfjvtOplz9BjtCnFCm2kwmx5+01G/UWl5wByWCylJuSaEQxiHp/YzPN/6bE=
-X-Received: by 2002:aca:b6c5:: with SMTP id g188mr2084579oif.103.1571735910539;
- Tue, 22 Oct 2019 02:18:30 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=r4xbJW3grSnf4M8N0nCJmNaFSFrCKReYewNpwqEWw1I=;
+        b=EoXzUzPKKXS3nroosGTUIuMEXVxsDqYgTB0lEqkh53FIKhaRvQc++bVfHBkYHDui3b
+         9IbyqenPfkFQPO/yGTJmp9XWidL3XeTu4k3m9iWVgmu4tMDhfISYHvhYvyBzRb0exdDm
+         6OOXgGRQwvofmu8wDaOYWqobcD73fSNGIgU906xP1YB4jf3z4aSKMx9tWViCUQpPJxLO
+         O+pw+I0CUIkoJ0KrEpfOfBCwIkcpSykWLNmJ7bRBWtuqqOk/Ae0vnxnPU56ud9sf+V8/
+         Chgo/mDXo/X1K5Abj5NLYYUTj+9KpwJhmP59swPZU2xuPq8kDM0WwWe7JaFreKJt7Rg+
+         ABDg==
+X-Gm-Message-State: APjAAAWrnaziv1sA4DkfOMdBPkfbW4thVURvnkRJxemqTnqIxgbkLo6Y
+        h2A+87WKMzhMuYkyvQ+9Smx4FA==
+X-Google-Smtp-Source: APXvYqz+BA4HFcNcao9aMxDu/3IGW/iUzAxv2dFWU7p6o7dSEVbaGXZxewrvEiq0K5iQ35jC0VObig==
+X-Received: by 2002:a05:600c:214a:: with SMTP id v10mr1953407wml.69.1571735968600;
+        Tue, 22 Oct 2019 02:19:28 -0700 (PDT)
+Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
+        by smtp.gmail.com with ESMTPSA id a4sm17019422wmm.10.2019.10.22.02.19.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Oct 2019 02:19:27 -0700 (PDT)
+Date:   Tue, 22 Oct 2019 11:19:25 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Julia Lawall <julia.lawall@lip6.fr>
+Cc:     Wambui Karuga <wambui@karuga.xyz>, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, airlied@linux.ie, daniel@ffwll.ch,
+        sean@poorly.run, mripard@kernel.org,
+        maarten.lankhorst@linux.intel.com,
+        outreachy-kernel@googlegroups.com,
+        Wambui Karuga <wambui.karugax@gmail.com>
+Subject: Re: [Outreachy kernel] [PATCH] drm: remove unnecessary return
+ variable
+Message-ID: <20191022091925.GD11828@phenom.ffwll.local>
+Mail-Followup-To: Julia Lawall <julia.lawall@lip6.fr>,
+        Wambui Karuga <wambui@karuga.xyz>, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, airlied@linux.ie, sean@poorly.run,
+        mripard@kernel.org, maarten.lankhorst@linux.intel.com,
+        outreachy-kernel@googlegroups.com,
+        Wambui Karuga <wambui.karugax@gmail.com>
+References: <20191019071840.16877-1-wambui@karuga.xyz>
+ <alpine.DEB.2.21.1910192102410.5888@hadrien>
 MIME-Version: 1.0
-References: <20191022075123.17057-1-ran.wang_1@nxp.com> <20191022075123.17057-3-ran.wang_1@nxp.com>
-In-Reply-To: <20191022075123.17057-3-ran.wang_1@nxp.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 22 Oct 2019 11:18:18 +0200
-Message-ID: <CAJZ5v0jdy+4ZRci2LWsb7vPTQ8Yyb7S0CF2C92zhBXg_xe67ug@mail.gmail.com>
-Subject: Re: [PATCH 3/3] soc: fsl: add RCPM driver
-To:     Ran Wang <ran.wang_1@nxp.com>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Rob Herring <robh+dt@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Pavel Machek <pavel@ucw.cz>, Huang Anson <anson.huang@nxp.com>,
-        Li Biwen <biwen.li@nxp.com>, Len Brown <len.brown@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1910192102410.5888@hadrien>
+X-Operating-System: Linux phenom 5.2.0-2-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 9:52 AM Ran Wang <ran.wang_1@nxp.com> wrote:
->
-> The NXP's QorIQ Processors based on ARM Core have RCPM module
-> (Run Control and Power Management), which performs system level
-> tasks associated with power management such as wakeup source control.
->
-> This driver depends on PM wakeup source framework which help to
-> collect wake information.
->
-> Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
-> ---
-> Change in v8:
->         - Adjust related API usage to meet wakeup.c's update in patch 1/3.
->         - Add sanity checking for the case of ws->dev or ws->dev->parent
->           is null.
->
-> Change in v7:
->         - Replace 'ws->dev' with 'ws->dev->parent' to get aligned with
->         c8377adfa781 ("PM / wakeup: Show wakeup sources stats in sysfs")
->         - Remove '+obj-y += ftm_alarm.o' since it is wrong.
->         - Cosmetic work.
->
-> Change in v6:
->         - Adjust related API usage to meet wakeup.c's update in patch 1/3.
->
-> Change in v5:
->         - Fix v4 regression of the return value of wakeup_source_get_next()
->         didn't pass to ws in while loop.
->         - Rename wakeup_source member 'attached_dev' to 'dev'.
->         - Rename property 'fsl,#rcpm-wakeup-cells' to '#fsl,rcpm-wakeup-cells'.
->         please see https://lore.kernel.org/patchwork/patch/1101022/
->
-> Change in v4:
->         - Remove extra ',' in author line of rcpm.c
->         - Update usage of wakeup_source_get_next() to be less confusing to the
-> reader, code logic remain the same.
->
-> Change in v3:
->         - Some whitespace ajdustment.
->
-> Change in v2:
->         - Rebase Kconfig and Makefile update to latest mainline.
->
->  drivers/soc/fsl/Kconfig  |   8 +++
->  drivers/soc/fsl/Makefile |   1 +
->  drivers/soc/fsl/rcpm.c   | 133 +++++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 142 insertions(+)
->  create mode 100644 drivers/soc/fsl/rcpm.c
->
-> diff --git a/drivers/soc/fsl/Kconfig b/drivers/soc/fsl/Kconfig
-> index f9ad8ad..4918856 100644
-> --- a/drivers/soc/fsl/Kconfig
-> +++ b/drivers/soc/fsl/Kconfig
-> @@ -40,4 +40,12 @@ config DPAA2_CONSOLE
->           /dev/dpaa2_mc_console and /dev/dpaa2_aiop_console,
->           which can be used to dump the Management Complex and AIOP
->           firmware logs.
-> +
-> +config FSL_RCPM
-> +       bool "Freescale RCPM support"
-> +       depends on PM_SLEEP
-> +       help
-> +         The NXP QorIQ Processors based on ARM Core have RCPM module
-> +         (Run Control and Power Management), which performs all device-level
-> +         tasks associated with power management, such as wakeup source control.
->  endmenu
-> diff --git a/drivers/soc/fsl/Makefile b/drivers/soc/fsl/Makefile
-> index 71dee8d..906f1cd 100644
-> --- a/drivers/soc/fsl/Makefile
-> +++ b/drivers/soc/fsl/Makefile
-> @@ -6,6 +6,7 @@
->  obj-$(CONFIG_FSL_DPAA)                 += qbman/
->  obj-$(CONFIG_QUICC_ENGINE)             += qe/
->  obj-$(CONFIG_CPM)                      += qe/
-> +obj-$(CONFIG_FSL_RCPM)                 += rcpm.o
->  obj-$(CONFIG_FSL_GUTS)                 += guts.o
->  obj-$(CONFIG_FSL_MC_DPIO)              += dpio/
->  obj-$(CONFIG_DPAA2_CONSOLE)            += dpaa2-console.o
-> diff --git a/drivers/soc/fsl/rcpm.c b/drivers/soc/fsl/rcpm.c
-> new file mode 100644
-> index 0000000..3ed135e
-> --- /dev/null
-> +++ b/drivers/soc/fsl/rcpm.c
-> @@ -0,0 +1,133 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +//
-> +// rcpm.c - Freescale QorIQ RCPM driver
-> +//
-> +// Copyright 2019 NXP
-> +//
-> +// Author: Ran Wang <ran.wang_1@nxp.com>
-> +
-> +#include <linux/init.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/of_address.h>
-> +#include <linux/slab.h>
-> +#include <linux/suspend.h>
-> +#include <linux/kernel.h>
-> +
-> +#define RCPM_WAKEUP_CELL_MAX_SIZE      7
-> +
-> +struct rcpm {
-> +       unsigned int    wakeup_cells;
-> +       void __iomem    *ippdexpcr_base;
-> +       bool            little_endian;
-> +};
-> +
+On Sat, Oct 19, 2019 at 09:04:31PM +0200, Julia Lawall wrote:
+> 
+> 
+> On Sat, 19 Oct 2019, Wambui Karuga wrote:
+> 
+> > From: Wambui Karuga <wambui.karugax@gmail.com>
+> >
+> > Remove unnecessary variable `ret` in drm_dp_atomic_find_vcpi_slots()
+> > only used to hold the function return value and have the function
+> > return the value directly.
+> 
+> This patch applies for me, but with a huge offset.  What tree are you
+> using?
 
-Please add a kerneldoc comment describing this routine.
+For drm patches best practices is to base patches either on linux-next or
+the drm-tip tree we have here:
 
-> +static int rcpm_pm_prepare(struct device *dev)
-> +{
-> +       int i, ret, idx;
-> +       void __iomem *base;
-> +       struct wakeup_source    *ws;
-> +       struct rcpm             *rcpm;
-> +       struct device_node      *np = dev->of_node;
-> +       u32 value[RCPM_WAKEUP_CELL_MAX_SIZE + 1], tmp;
-> +
-> +       rcpm = dev_get_drvdata(dev);
-> +       if (!rcpm)
-> +               return -EINVAL;
-> +
-> +       base = rcpm->ippdexpcr_base;
-> +       idx = wakeup_sources_read_lock();
-> +
-> +       /* Begin with first registered wakeup source */
-> +       for_each_wakeup_source(ws) {
-> +
-> +               /* skip object which is not attached to device */
-> +               if (!ws->dev || !ws->dev->parent)
-> +                       continue;
-> +
-> +               ret = device_property_read_u32_array(ws->dev->parent,
-> +                               "fsl,rcpm-wakeup", value,
-> +                               rcpm->wakeup_cells + 1);
-> +
-> +               /*  Wakeup source should refer to current rcpm device */
-> +               if (ret || (np->phandle != value[0])) {
-> +                       dev_info(dev, "%s doesn't refer to this rcpm\n",
-> +                                       ws->name);
+https://cgit.freedesktop.org/drm-tip
 
-IMO printing this message is not useful in general, because it looks
-like you just want to skip wakeup sources that aren't associated with
-rcpm devices.
+drm moves quickly, so need to be on top of the latest version.
 
-Maybe use pr_debug() to print it?  Or maybe use pr_debug() to print a
-message if you have found a suitable device?  Wouldn't that be more
-useful?
+> Also, Greg won't apply this, because it's not targeting staging.  Is this
+> for a specific outreachy project?
 
-> +                       continue;
-> +               }
-> +
+Yup it's for dri-devel, just applied it.
 
-It would be good to add a comment explaining what the code below does
-here.  Or explain that in the function's kerneldoc comment.
+Thanks for the patch, nice cleanup!
 
-> +               for (i = 0; i < rcpm->wakeup_cells; i++) {
+Cheers, Daniel
 
-It looks like 'tmp' can be defined in this block.
+> 
+> julia
+> 
+> 
+> > Issue found by coccinelle:
+> > @@
+> > local idexpression ret;
+> > expression e;
+> > @@
+> >
+> > -ret =
+> > +return
+> >      e;
+> > -return ret;
+> >
+> > Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
+> > ---
+> >  drivers/gpu/drm/drm_dp_mst_topology.c | 5 ++---
+> >  1 file changed, 2 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
+> > index 9cccc5e63309..b854a422a523 100644
+> > --- a/drivers/gpu/drm/drm_dp_mst_topology.c
+> > +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+> > @@ -3540,7 +3540,7 @@ int drm_dp_atomic_find_vcpi_slots(struct drm_atomic_state *state,
+> >  {
+> >  	struct drm_dp_mst_topology_state *topology_state;
+> >  	struct drm_dp_vcpi_allocation *pos, *vcpi = NULL;
+> > -	int prev_slots, req_slots, ret;
+> > +	int prev_slots, req_slots;
+> >
+> >  	topology_state = drm_atomic_get_mst_topology_state(state, mgr);
+> >  	if (IS_ERR(topology_state))
+> > @@ -3587,8 +3587,7 @@ int drm_dp_atomic_find_vcpi_slots(struct drm_atomic_state *state,
+> >  	}
+> >  	vcpi->vcpi = req_slots;
+> >
+> > -	ret = req_slots;
+> > -	return ret;
+> > +	return req_slots;
+> >  }
+> >  EXPORT_SYMBOL(drm_dp_atomic_find_vcpi_slots);
+> >
+> > --
+> > 2.23.0
+> >
+> > --
+> > You received this message because you are subscribed to the Google Groups "outreachy-kernel" group.
+> > To unsubscribe from this group and stop receiving emails from it, send an email to outreachy-kernel+unsubscribe@googlegroups.com.
+> > To view this discussion on the web visit https://groups.google.com/d/msgid/outreachy-kernel/20191019071840.16877-1-wambui%40karuga.xyz.
+> >
 
-And I would store the value of value[i+1] in tmp upfront, that is
-
-u32 tmp = value[i+1];
-
-> +                       /* We can only OR related bits */
-> +                       if (value[i + 1]) {
-
-Also I would do
-
-if (!tmp)
-        continue;
-
-to reduce the indentation level.
-
-> +                               if (rcpm->little_endian) {
-> +                                       tmp = ioread32(base + i * 4);
-> +                                       tmp |= value[i + 1];
-> +                                       iowrite32(tmp, base + i * 4);
-
-So it is sufficient to do
-
-tmp |= ioread32(base + i * 4);
-iowrite32(tmp, base + i * 4);
-
-here and analogously below.
-
-You may as well define
-
-void __iomem *address = base + i * 4;
-
-and use it everywhere in this block instead of the (base + I * 4) expression.
-
-> +                               } else {
-> +                                       tmp = ioread32be(base + i * 4);
-> +                                       tmp |= value[i + 1];
-> +                                       iowrite32be(tmp, base + i * 4);
-> +                               }
-> +                       }
-> +               }
-> +       }
-> +
-> +       wakeup_sources_read_unlock(idx);
-> +
-> +       return 0;
-> +}
-> +
-> +static const struct dev_pm_ops rcpm_pm_ops = {
-> +       .prepare =  rcpm_pm_prepare,
-> +};
-> +
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
