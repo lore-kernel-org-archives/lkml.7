@@ -2,208 +2,173 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 690FFCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 05:09:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9FCACA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 05:10:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3378720B7C
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 05:09:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8149C20B7C
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 05:10:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="UJDKA2KX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="d18epoJO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731116AbfJVFJp (ORCPT
+        id S1731136AbfJVFKd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 01:09:45 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:36224 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730978AbfJVFJo (ORCPT
+        Tue, 22 Oct 2019 01:10:33 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:33790 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725907AbfJVFKd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 01:09:44 -0400
-Received: by mail-wr1-f66.google.com with SMTP id w18so15831698wrt.3
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 22:09:42 -0700 (PDT)
+        Tue, 22 Oct 2019 01:10:33 -0400
+Received: by mail-qt1-f196.google.com with SMTP id r5so24991998qtd.0
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 22:10:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=u/quP6H3t0vd+EUHeiV1XtwPAgHpe/L6SdgFukt3v7I=;
-        b=UJDKA2KXuJEpZjuCE7M0A4TYaHJwXeoBaS3iWDPtUSt7GpqUGQrS3O4k6DvdgSb0bN
-         redzX4NV6SW/+egZUr2DuF4GQmoqZw7FDbnKJCBzFeU7rWxVQouA5kFncvAehzf3jKqK
-         gdTnn7FZd+1uzTx9c+42X/rn+kUbhA3rerOGp02RJnWesekdrGx8kquK5lfH4pNSvvKR
-         8hVX21GmgbEXHn5F9CCMPTbdlfTnvqE7OfjMz7MWDEo2qd4NIV6VUFFGdpo6bdcurrUX
-         vG60tTnjBqx+BZ1xWISIV0eIeEvBvPOMyy/oxA+ZGo7xMeMx3TYp231RgISwQayeJOpK
-         MH+w==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+w/qzEw27aMbdNSzTHsuyi7AE3I1PGTPr3i5czPeWmY=;
+        b=d18epoJOJ0/pv+lNYQywjIqfTmBcEV4Xe9ZM1R+1nkVFJ0k39xTxxsxkYvdimN1u8D
+         wGdPIPRG6vg8TmeWT28uyJqs9P4kJKkzWrm9Lf1bhLFqtspGApUJsUHOeu/bHSxbKoQR
+         FsB3F8RutqugqF0xleQHdXDJYvlYqjUVNuUIEA6BHdXkFFHCUpqfPeoFnWDOMF1UDdRu
+         o2EgcCB1dGjn3jgIN33ra19bKI3mtq52W9jdEdB1pK1aTvcS+itAW8EmBTlQIKJG4KA2
+         mRZWNZi+hDcDLcQPhJRVPCCVUtetWXz512HyX1AIo4968BWHUD5H0LIR2F6EkM7c4w5c
+         WNeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=u/quP6H3t0vd+EUHeiV1XtwPAgHpe/L6SdgFukt3v7I=;
-        b=WFhVYGGlvdfGNDT2I5Z3eeirusQR/1yt3pxu6KeaWBcEAEI334ne1Zs707N7Up42gz
-         6KzY/KsV2hxT3tNW9zcs8UPUz7KNDUwnU23HQy62bD+O7/3fBaeACFCQ6LMbPnzWwIVJ
-         zSvPowe925KXzIq84xI+vHsNwN/BGGnIAu0gMJrq8XHCm2u4Ape/rYPybs6hgsvrjCu8
-         CzgNuMf3165XE7pvM/cz/KdmvVBDC2QeM3/cJqEYbF5GLElnVJEQtyfyONfJ2wCPtaue
-         Sc6RuFz1t/Lbub1mgAJrR/+XoxWfJat9UrJsR45ampda3arMf1ijbYenJDQSnY6AURbp
-         NGdQ==
-X-Gm-Message-State: APjAAAX6aw9ilpFpyHrl7sOJgnfLQcCQIKyq4GAB/cj/3Lt7ZVZ2Whr1
-        fQI2YkoOZ30I6DK5ATQA1H1/4sXYMQzRpFF7WrNBfA==
-X-Google-Smtp-Source: APXvYqwZD1j8xJWElPYHYhi9Zjt/MS9g2ikbsI1900bS88lRyEawqVJJ6EO8O2gyxOTlf+Gdd0g0pZutNuTIzTbuOe4=
-X-Received: by 2002:adf:e850:: with SMTP id d16mr1439791wrn.251.1571720981754;
- Mon, 21 Oct 2019 22:09:41 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+w/qzEw27aMbdNSzTHsuyi7AE3I1PGTPr3i5czPeWmY=;
+        b=th7NcgVLphAO9zMxLP5LzTDAN2BlCr6setVVDYEpKzx7M7t7OUAUuImNNxgabSqaKl
+         eEcSEh0zzuCnOG2gIuIiAGQa3qNzPhQq8sTaFrOpjGxWr0WsO677hMMZwqplqc4fxJkL
+         z/fuwGaC6YRhFtiiVgAmCfzOi32yI8Mm4W8Iqz18I3X6x2x28OJNiCbVQmyk37cOs5Z8
+         rRRd15k9moXg/WE5E5JUP5/TLx8sBaYosc+KnQEFySMCVGZ3oxA9DnRRsgvrVdYPpMUy
+         nWUMlbtY3ZXQgq42PweB6/VnOXandxT8ZZS5YPu6NFpbv7eSoSMl78YCEU6Rm1Kux6uQ
+         8dAA==
+X-Gm-Message-State: APjAAAUtqeYeMq972YYD8xfqpoCl0LAqCv+qJWyxmGieMF/dHtB/ZC9E
+        ifSfBcntZKv09O3v5IGF0mXXEw==
+X-Google-Smtp-Source: APXvYqwUVrs5nyGdBFsOdfVGQj0yuFetc/Nm7EOzMo+7I/93O+mEndLG3kY9gALAfx/Mv4QZVHGLfQ==
+X-Received: by 2002:ac8:28c4:: with SMTP id j4mr1506947qtj.303.1571721031756;
+        Mon, 21 Oct 2019 22:10:31 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s (li937-157.members.linode.com. [45.56.119.157])
+        by smtp.gmail.com with ESMTPSA id z70sm5313857qkb.60.2019.10.21.22.10.25
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 21 Oct 2019 22:10:29 -0700 (PDT)
+Date:   Tue, 22 Oct 2019 13:10:20 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mike Leach <mike.leach@linaro.org>,
+        Coresight ML <coresight@lists.linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>
+Subject: Re: [PATCH v3 1/6] perf cs-etm: Fix unsigned variable comparison to
+ zero
+Message-ID: <20191022051020.GC32731@leoy-ThinkPad-X240s>
+References: <20191005091614.11635-1-leo.yan@linaro.org>
+ <20191005091614.11635-2-leo.yan@linaro.org>
+ <20191011201606.GC13688@xps15>
 MIME-Version: 1.0
-References: <20191016160649.24622-1-anup.patel@wdc.com> <20191016160649.24622-20-anup.patel@wdc.com>
- <7381057d-a3f3-e79a-bb2c-b078fc918b1f@redhat.com>
-In-Reply-To: <7381057d-a3f3-e79a-bb2c-b078fc918b1f@redhat.com>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Tue, 22 Oct 2019 10:39:30 +0530
-Message-ID: <CAAhSdy0E02VC0+Qb8Tczcs1YFMdFRRhM2VsGqNu1ZFLmohUAdw@mail.gmail.com>
-Subject: Re: [PATCH v9 19/22] RISC-V: KVM: Remove per-CPU vsip_shadow variable
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Anup Patel <Anup.Patel@wdc.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Radim K <rkrcmar@redhat.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexander Graf <graf@amazon.com>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191011201606.GC13688@xps15>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 10:58 PM Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> On 16/10/19 18:12, Anup Patel wrote:
-> > Currently, we track last value wrote to VSIP CSR using per-CPU
-> > vsip_shadow variable but this easily goes out-of-sync because
-> > Guest can update VSIP.SSIP bit directly.
-> >
-> > To simplify things, we remove per-CPU vsip_shadow variable and
-> > unconditionally write vcpu->arch.guest_csr.vsip to VSIP CSR in
-> > run-loop.
-> >
-> > Signed-off-by: Anup Patel <anup.patel@wdc.com>
->
-> Please squash this and patch 20 into the corresponding patches earlier
-> in the series.
+Hi Mathieu,
 
-Sure, I will squash patch20 and patch19 onto patch5.
-
-Regards,
-Anup
-
-
->
-> Paolo
->
+On Fri, Oct 11, 2019 at 02:16:06PM -0600, Mathieu Poirier wrote:
+> On Sat, Oct 05, 2019 at 05:16:09PM +0800, Leo Yan wrote:
+> > If the u64 variable 'offset' is a negative integer, comparison it with
+> > bigger than zero is always going to be true because it is unsigned.
+> > Fix this by using s64 type for variable 'offset'.
+> > 
+> > Signed-off-by: Leo Yan <leo.yan@linaro.org>
 > > ---
-> >  arch/riscv/include/asm/kvm_host.h |  3 ---
-> >  arch/riscv/kvm/main.c             |  6 ------
-> >  arch/riscv/kvm/vcpu.c             | 24 +-----------------------
-> >  3 files changed, 1 insertion(+), 32 deletions(-)
-> >
-> > diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/kvm_host.h
-> > index ec1ca4bc98f2..cd86acaed055 100644
-> > --- a/arch/riscv/include/asm/kvm_host.h
-> > +++ b/arch/riscv/include/asm/kvm_host.h
-> > @@ -202,9 +202,6 @@ static inline void kvm_arch_vcpu_uninit(struct kvm_vcpu *vcpu) {}
-> >  static inline void kvm_arch_sched_in(struct kvm_vcpu *vcpu, int cpu) {}
-> >  static inline void kvm_arch_vcpu_block_finish(struct kvm_vcpu *vcpu) {}
-> >
-> > -int kvm_riscv_setup_vsip(void);
-> > -void kvm_riscv_cleanup_vsip(void);
-> > -
-> >  #define KVM_ARCH_WANT_MMU_NOTIFIER
-> >  int kvm_unmap_hva_range(struct kvm *kvm,
-> >                       unsigned long start, unsigned long end);
-> > diff --git a/arch/riscv/kvm/main.c b/arch/riscv/kvm/main.c
-> > index 55df85184241..002301a27d29 100644
-> > --- a/arch/riscv/kvm/main.c
-> > +++ b/arch/riscv/kvm/main.c
-> > @@ -61,17 +61,11 @@ void kvm_arch_hardware_disable(void)
-> >
-> >  int kvm_arch_init(void *opaque)
+> >  tools/perf/util/cs-etm.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> > index 4ba0f871f086..4bc2d9709d4f 100644
+> > --- a/tools/perf/util/cs-etm.c
+> > +++ b/tools/perf/util/cs-etm.c
+> > @@ -940,7 +940,7 @@ u64 cs_etm__last_executed_instr(const struct cs_etm_packet *packet)
+> >  static inline u64 cs_etm__instr_addr(struct cs_etm_queue *etmq,
+> >  				     u64 trace_chan_id,
+> >  				     const struct cs_etm_packet *packet,
+> > -				     u64 offset)
+> > +				     s64 offset)
+> 
+> In Suzuki's reply there was two choices, 1) move the while(offset > 0) to
+> while (offset) or change the type of @offset to an s64.  Here we know offset
+> can't be negative because of the 
+>         tidq->period_instructions >= etm->instructions_sample_period 
+> 
+> in function cs_etm__sample().  As such I think option #1 is the right way to
+> deal with this rather than changing the type of the variable.
+
+I took sometime to use formulas to prove that 'offset' is possible to
+be a negative value :)
+
+Just paste the updated commit log at here for review:
+
+  Pi: period_instructions
+  Ie: instrs_executed
+  Io: instrs_over
+  Ip: instructions_sample_period
+
+  Pi' = Pi + Ie   -> New period_instructions equals to the old
+                     period_instructions + instrs_executed
+  Io  = Pi' - Ip  -> period_instructions - instructions_sample_period
+
+  offset = Ie - Io - 1
+         = Ie - (Pi' - Ip) -1
+	 = Ie - (Pi + Ie - Ip) -1
+	 = Ip - Pi - 1
+
+In theory, if Ip (instructions_sample_period) is small enough and Pi
+(period_instructions) is bigger than Ip, then it will lead to the
+negative value for 'offset'.
+
+So let's see below command:
+
+  perf inject --itrace=i1il128 -i perf.data -o perf.data.new
+
+With this command, 'offset' is very easily to be a negative value when
+handling packets; this is because if use the inject option 'i1', then
+instructions_sample_period equals to 1; so:
+
+  offset = 1 - Pi - 1
+         = -Pi
+
+Any Pi bigger than zero leads 'offset' to a negative value.
+
+Thanks,
+Leo Yan
+
 > >  {
-> > -     int ret;
-> > -
-> >       if (!riscv_isa_extension_available(NULL, h)) {
-> >               kvm_info("hypervisor extension not available\n");
-> >               return -ENODEV;
-> >       }
-> >
-> > -     ret = kvm_riscv_setup_vsip();
-> > -     if (ret)
-> > -             return ret;
-> > -
-> >       kvm_riscv_stage2_vmid_detect();
-> >
-> >       kvm_info("hypervisor extension available\n");
-> > diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
-> > index fd77cd39dd8c..f1a218d3a8cf 100644
-> > --- a/arch/riscv/kvm/vcpu.c
-> > +++ b/arch/riscv/kvm/vcpu.c
-> > @@ -111,8 +111,6 @@ static void kvm_riscv_vcpu_host_fp_restore(struct kvm_cpu_context *cntx) {}
-> >                                riscv_isa_extension_mask(s) | \
-> >                                riscv_isa_extension_mask(u))
-> >
-> > -static unsigned long __percpu *vsip_shadow;
-> > -
-> >  static void kvm_riscv_reset_vcpu(struct kvm_vcpu *vcpu)
-> >  {
-> >       struct kvm_vcpu_csr *csr = &vcpu->arch.guest_csr;
-> > @@ -765,7 +763,6 @@ int kvm_arch_vcpu_ioctl_set_guest_debug(struct kvm_vcpu *vcpu,
-> >  void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
-> >  {
-> >       struct kvm_vcpu_csr *csr = &vcpu->arch.guest_csr;
-> > -     unsigned long *vsip = raw_cpu_ptr(vsip_shadow);
-> >
-> >       csr_write(CSR_VSSTATUS, csr->vsstatus);
-> >       csr_write(CSR_VSIE, csr->vsie);
-> > @@ -775,7 +772,6 @@ void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
-> >       csr_write(CSR_VSCAUSE, csr->vscause);
-> >       csr_write(CSR_VSTVAL, csr->vstval);
-> >       csr_write(CSR_VSIP, csr->vsip);
-> > -     *vsip = csr->vsip;
-> >       csr_write(CSR_VSATP, csr->vsatp);
-> >
-> >       kvm_riscv_stage2_update_hgatp(vcpu);
-> > @@ -843,26 +839,8 @@ static void kvm_riscv_check_vcpu_requests(struct kvm_vcpu *vcpu)
-> >  static void kvm_riscv_update_vsip(struct kvm_vcpu *vcpu)
-> >  {
-> >       struct kvm_vcpu_csr *csr = &vcpu->arch.guest_csr;
-> > -     unsigned long *vsip = raw_cpu_ptr(vsip_shadow);
-> > -
-> > -     if (*vsip != csr->vsip) {
-> > -             csr_write(CSR_VSIP, csr->vsip);
-> > -             *vsip = csr->vsip;
-> > -     }
-> > -}
-> > -
-> > -int kvm_riscv_setup_vsip(void)
-> > -{
-> > -     vsip_shadow = alloc_percpu(unsigned long);
-> > -     if (!vsip_shadow)
-> > -             return -ENOMEM;
-> >
-> > -     return 0;
-> > -}
-> > -
-> > -void kvm_riscv_cleanup_vsip(void)
-> > -{
-> > -     free_percpu(vsip_shadow);
-> > +     csr_write(CSR_VSIP, csr->vsip);
-> >  }
-> >
-> >  int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *run)
-> >
->
+> >  	if (packet->isa == CS_ETM_ISA_T32) {
+> >  		u64 addr = packet->start_addr;
+> > @@ -1372,7 +1372,7 @@ static int cs_etm__sample(struct cs_etm_queue *etmq,
+> >  		 * sample is reported as though instruction has just been
+> >  		 * executed, but PC has not advanced to next instruction)
+> >  		 */
+> > -		u64 offset = (instrs_executed - instrs_over - 1);
+> > +		s64 offset = (instrs_executed - instrs_over - 1);
+> >  		u64 addr = cs_etm__instr_addr(etmq, trace_chan_id,
+> >  					      tidq->packet, offset);
+> >  
+> > -- 
+> > 2.17.1
+> > 
