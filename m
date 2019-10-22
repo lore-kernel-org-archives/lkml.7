@@ -4,32 +4,32 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7420ACA9EB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:29:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8ADACA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:29:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58B3B20700
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:29:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7DEC20B7C
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:29:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388301AbfJVR3b (ORCPT
+        id S2388560AbfJVR3d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 13:29:31 -0400
-Received: from mga05.intel.com ([192.55.52.43]:52034 "EHLO mga05.intel.com"
+        Tue, 22 Oct 2019 13:29:33 -0400
+Received: from mga07.intel.com ([134.134.136.100]:29854 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388135AbfJVR3a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 13:29:30 -0400
+        id S2388135AbfJVR3b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 13:29:31 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Oct 2019 10:29:29 -0700
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Oct 2019 10:29:31 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,217,1569308400"; 
-   d="scan'208";a="209721741"
+   d="scan'208";a="203706927"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 22 Oct 2019 10:29:27 -0700
+  by FMSMGA003.fm.intel.com with ESMTP; 22 Oct 2019 10:29:28 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 0F7423F2; Tue, 22 Oct 2019 20:29:24 +0300 (EEST)
+        id 30E7E47A; Tue, 22 Oct 2019 20:29:24 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
@@ -40,9 +40,9 @@ To:     Linus Walleij <linus.walleij@linaro.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         William Breathitt Gray <vilhelm.gray@gmail.com>
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v2 06/11] lib/test_bitmap: Fix comment about this file
-Date:   Tue, 22 Oct 2019 20:29:17 +0300
-Message-Id: <20191022172922.61232-7-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 09/11] gpio: pca953x: Use input from regs structure in pca953x_irq_pending()
+Date:   Tue, 22 Oct 2019 20:29:20 +0300
+Message-Id: <20191022172922.61232-10-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191022172922.61232-1-andriy.shevchenko@linux.intel.com>
 References: <20191022172922.61232-1-andriy.shevchenko@linux.intel.com>
@@ -53,25 +53,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This test case file is about bitmap API, and not printf() facility.
+While PCA_PCAL is defined for PCA953X type only, we still may use
+an offset of the input from regs structure for sake of consistency.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- lib/test_bitmap.c | 2 +-
+ drivers/gpio/gpio-pca953x.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/test_bitmap.c b/lib/test_bitmap.c
-index 449d0882b488..4544847cf81e 100644
---- a/lib/test_bitmap.c
-+++ b/lib/test_bitmap.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * Test cases for printf facility.
-+ * Test cases for bitmap API.
-  */
+diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+index 5eee66269a0c..7a57304b5c31 100644
+--- a/drivers/gpio/gpio-pca953x.c
++++ b/drivers/gpio/gpio-pca953x.c
+@@ -686,7 +686,7 @@ static bool pca953x_irq_pending(struct pca953x_chip *chip, u8 *pending)
+ 			return false;
  
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ 		/* Check latched inputs and clear interrupt status */
+-		ret = pca953x_read_regs(chip, PCA953X_INPUT, cur_stat);
++		ret = pca953x_read_regs(chip, chip->regs->input, cur_stat);
+ 		if (ret)
+ 			return false;
+ 
 -- 
 2.23.0
 
