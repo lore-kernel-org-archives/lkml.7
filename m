@@ -2,156 +2,121 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD48C47E49
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 11:58:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A97F2CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:00:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6A2621872
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 11:58:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571745520;
-	bh=RFRa0eYgySROxo6nRL4Tq5+vUbrO5IGp/38FX9bp5I0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=rkrR77hUVbAW0TDzvbzdV9Y0VR/OwuRoA6pn7XT2TvsQy/rGez2Tbq4C1XFFompk2
-	 PO/v8TY+2/UPwlndYyy7nTG7sIizZiQ3pcLkKwgMFyqFyFZ/3ZDP/5JYVGUFcMBAQg
-	 A+b0xrQRgcuhTHozCxQqrCQHJoltJHL01XUrSgPE=
+	by mail.kernel.org (Postfix) with ESMTP id 7990421783
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:00:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388250AbfJVL6j (ORCPT
+        id S2388938AbfJVMAm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 07:58:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38942 "EHLO mail.kernel.org"
+        Tue, 22 Oct 2019 08:00:42 -0400
+Received: from mga04.intel.com ([192.55.52.120]:54384 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388106AbfJVL6j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 07:58:39 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFE1021783;
-        Tue, 22 Oct 2019 11:58:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571745518;
-        bh=RFRa0eYgySROxo6nRL4Tq5+vUbrO5IGp/38FX9bp5I0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=laWS4hlx5qe+fafoLaYEKXjJsVhyCVDVD3VGLRPJdu6nX706+2mH9zHAIDsQrmtA4
-         HI3j7zUQJZyzmAbT8oo8pWWKSiF0uyjsC+ERe1WcMnjirTii0YGEMzFJXvgjpNm6L3
-         r4qeThJSp9wkt534D+ktOZOEht/uYTNn0G0FR4Gw=
-Date:   Tue, 22 Oct 2019 12:58:32 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Andreas Klinger <ak@it-klinger.de>
-Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] iio: adc: hx711: optimize performance in read
- cycle
-Message-ID: <20191022125825.1e8354df@archlinux>
-In-Reply-To: <20190915135948.609aba98@archlinux>
-References: <20190909123746.lvd2q3dwgaksktuy@arbad>
-        <20190915135948.609aba98@archlinux>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S2388106AbfJVMAm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 08:00:42 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Oct 2019 05:00:41 -0700
+X-IronPort-AV: E=Sophos;i="5.67,327,1566889200"; 
+   d="scan'208";a="191438120"
+Received: from likexu-mobl1.ccr.corp.intel.com (HELO [10.255.31.145]) ([10.255.31.145])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/AES256-SHA; 22 Oct 2019 05:00:39 -0700
+Subject: Re: [PATCH v3 6/6] KVM: x86/vPMU: Add lazy mechanism to release
+ perf_event per vPMC
+To:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
+Cc:     peterz@infradead.org, like.xu@intel.com,
+        linux-kernel@vger.kernel.org, jmattson@google.com,
+        sean.j.christopherson@intel.com, wei.w.wang@intel.com,
+        kan.liang@intel.com
+References: <20191021160651.49508-1-like.xu@linux.intel.com>
+ <20191021160651.49508-7-like.xu@linux.intel.com>
+ <c17a9d77-2c30-b3c0-4652-57f0b9252f3b@redhat.com>
+From:   Like Xu <like.xu@linux.intel.com>
+Organization: Intel OTC
+Message-ID: <7d46a902-43eb-4693-f481-1c2efd397fbd@linux.intel.com>
+Date:   Tue, 22 Oct 2019 20:00:37 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <c17a9d77-2c30-b3c0-4652-57f0b9252f3b@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 15 Sep 2019 13:59:48 +0100
-Jonathan Cameron <jic23@kernel.org> wrote:
+Hi Paolo,
+On 2019/10/22 18:47, Paolo Bonzini wrote:
+> On 21/10/19 18:06, Like Xu wrote:
+>>   
+>> +		__set_bit(INTEL_PMC_IDX_FIXED + i, pmu->pmc_in_use);
+>>   		reprogram_fixed_counter(pmc, new_ctrl, i);
+>>   	}
+>>   
+>> @@ -329,6 +330,11 @@ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
+>>   	    (boot_cpu_has(X86_FEATURE_HLE) || boot_cpu_has(X86_FEATURE_RTM)) &&
+>>   	    (entry->ebx & (X86_FEATURE_HLE|X86_FEATURE_RTM)))
+>>   		pmu->reserved_bits ^= HSW_IN_TX|HSW_IN_TX_CHECKPOINTED;
+>> +
+>> +	bitmap_set(pmu->all_valid_pmc_idx,
+>> +		0, pmu->nr_arch_gp_counters);
+>> +	bitmap_set(pmu->all_valid_pmc_idx,
+>> +		INTEL_PMC_MAX_GENERIC, pmu->nr_arch_fixed_counters);
+> 
+> The offset needs to be INTEL_PMC_IDX_FIXED for GP counters, and 0 for
+> fixed counters, otherwise pmc_in_use and all_valid_pmc_idx are not in sync.
+> 
 
-> On Mon, 9 Sep 2019 14:37:48 +0200
-> Andreas Klinger <ak@it-klinger.de> wrote:
-> 
-> > Set gain in hx711_reset() to its default value after a reset cycle. This
-> > omits one precautionary read cycle, because the read is performed in
-> > hx711_set_gain_for_channel() anyway if gain has changed.
-> > 
-> > Check for DOUT low and if its high wait some time if it goes down
-> > instead of doing a blind reset cycle when DOUT is not down.
-> > 
-> > This is a performance optimization which allows to query the sensor with
-> > a higher frequency.
-> > 
-> > Signed-off-by: Andreas Klinger <ak@it-klinger.de>  
-> Hi Andreas,
-> 
-> This one seems to have a slightly non trivial interaction with patch 1
-> so will have to wait until the fixes-togreg branch works it's way back
-> around to the upstream for the togreg branch.   Give me a poke if I seem
-> to have lost it!
-Applied.
+First, the bitmap_set is declared as:
 
-Thanks,
+	static __always_inline void bitmap_set(unsigned long *map,
+	unsigned int start, unsigned int nbits)
 
-Jonathan
+Second, the structure of pmu->pmc_in_use is in the following format:
 
+   Intel: [0 .. INTEL_PMC_MAX_GENERIC-1] <=> gp counters
+        	 [INTEL_PMC_IDX_FIXED .. INTEL_PMC_IDX_FIXED + 2] <=> fixed
+   AMD:   [0 .. AMD64_NUM_COUNTERS-1] <=> gp counters
+
+Then let me translate your suggestion to the following code:
+
+	bitmap_set(pmu->all_valid_pmc_idx, 0,
+		   pmu->nr_arch_fixed_counters);
+	bitmap_set(pmu->all_valid_pmc_idx, INTEL_PMC_IDX_FIXED,
+		   pmu->nr_arch_gp_counters);
+
+and the above code doesn't pass the following verification patch:
+
+diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
+index a8793f965941..0a73bc8c587d 100644
+--- a/arch/x86/kvm/pmu.c
++++ b/arch/x86/kvm/pmu.c
+@@ -469,6 +469,7 @@ void kvm_pmu_cleanup(struct kvm_vcpu *vcpu)
+
+         /* release events for unmarked vPMCs in the last sched time 
+slice */
+         for_each_set_bit(i, bitmask, X86_PMC_IDX_MAX) {
++               pr_info("%s, do cleanup check for i = %d", __func__, i);
+                 pmc = kvm_x86_ops->pmu_ops->pmc_idx_to_pmc(pmu, i);
+
+                 if (pmc && pmc->perf_event && !pmc_speculative_in_use(pmc))
+
+The print message would never stop after the guest user finishes the
+perf command and it's checking the invalid idx for i = 35 unexpectedly.
+
+However, my code does work just as you suggest.
+
+By the way, how about other kvm patches?
+
+> Paolo
 > 
-> Thanks,
-> 
-> Jonathan
-> 
-> > ---
-> >  drivers/iio/adc/hx711.c | 23 +++++------------------
-> >  1 file changed, 5 insertions(+), 18 deletions(-)
-> > 
-> > diff --git a/drivers/iio/adc/hx711.c b/drivers/iio/adc/hx711.c
-> > index 0678964dbd21..c8686558429b 100644
-> > --- a/drivers/iio/adc/hx711.c
-> > +++ b/drivers/iio/adc/hx711.c
-> > @@ -23,6 +23,7 @@
-> >  
-> >  /* gain to pulse and scale conversion */
-> >  #define HX711_GAIN_MAX		3
-> > +#define HX711_RESET_GAIN	128
-> >  
-> >  struct hx711_gain_to_scale {
-> >  	int			gain;
-> > @@ -100,7 +101,6 @@ struct hx711_data {
-> >  
-> >  static int hx711_cycle(struct hx711_data *hx711_data)
-> >  {
-> > -	int val;
-> >  	unsigned long flags;
-> >  
-> >  	/*
-> > @@ -186,8 +186,7 @@ static int hx711_wait_for_ready(struct hx711_data *hx711_data)
-> >  
-> >  static int hx711_reset(struct hx711_data *hx711_data)
-> >  {
-> > -	int ret;
-> > -	int val = gpiod_get_value(hx711_data->gpiod_dout);
-> > +	int val = hx711_wait_for_ready(hx711_data);
-> >  
-> >  	if (val) {
-> >  		/*
-> > @@ -203,22 +202,10 @@ static int hx711_reset(struct hx711_data *hx711_data)
-> >  		msleep(10);
-> >  		gpiod_set_value(hx711_data->gpiod_pd_sck, 0);
-> >  
-> > -		ret = hx711_wait_for_ready(hx711_data);
-> > -		if (ret)
-> > -			return ret;
-> > -		/*
-> > -		 * after a reset the gain is 128 so we do a dummy read
-> > -		 * to set the gain for the next read
-> > -		 */
-> > -		ret = hx711_read(hx711_data);
-> > -		if (ret < 0)
-> > -			return ret;
-> > -
-> > -		/*
-> > -		 * after a dummy read we need to wait vor readiness
-> > -		 * for not mixing gain pulses with the clock
-> > -		 */
-> >  		val = hx711_wait_for_ready(hx711_data);
-> > +
-> > +		/* after a reset the gain is 128 */
-> > +		hx711_data->gain_set = HX711_RESET_GAIN;
-> >  	}
-> >  
-> >  	return val;  
 > 
 
