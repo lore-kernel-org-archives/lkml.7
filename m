@@ -2,138 +2,90 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F7B9CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:11:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF027CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:13:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45BF521783
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:11:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571760701;
-	bh=9wELkPn47mGZSlfMgyrWBhvVHAEsWDwgjIo203PDOwc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=giFFMSqtvHUu4pLwiablNkWwxg9qB/D4cKC2kAd+dzpNd+LRAwdysTp+XEotMCLrw
-	 7b4ZmNUfWh8FiJgY88MpytNjCQSJ55h6nXJGNmU1dJM+Dl87d/+XjGLkeSoC6ipYGX
-	 Rnp9xotdO/LnM8DJVOvvySdUKndawcyvM6lY/rUA=
+	by mail.kernel.org (Postfix) with ESMTP id C599A20B7C
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:13:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389244AbfJVQLk (ORCPT
+        id S2389281AbfJVQNX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 12:11:40 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:36930 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727152AbfJVQLj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 12:11:39 -0400
-Received: by mail-ot1-f65.google.com with SMTP id 53so3067961otv.4;
-        Tue, 22 Oct 2019 09:11:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qlFpjPqwrKm9MJZBKWrL3lYlnTOZRR36fjtod+pxjlg=;
-        b=O+SlIIEXrfPtzBr2MXZifvBbDYjiea20aWCfdAVXjEhNDCF3IJw27ilT/w942x02fm
-         z7KhWKEv5RNnjN5lHxNeLByEU47w8cZEk7mdf5khyegd3yQ3b/4YwqCTVo26dgZlUZd3
-         urcytFmbjr5irvMT4bIrw3TWReGMyi/jNRBIN7vyU+xBv5iyekDTPwQ4/lBC35GRDIrZ
-         94u+wl3Le8st4+O4UZSnD26pwO1M/MKfSqSrEdHA/KiGDHRkaRWN5S/lp6PnfzRBMTA9
-         OWgRPJE2bdSXwpS5srG2TdtVCwnjhPxoXSsliyk8skDJcXMHX6HO2hdgYbji3TJilWn3
-         DkuA==
-X-Gm-Message-State: APjAAAU/VJB7D8jsirZIktpUQXdZBYB34tHxCTSYGWI6H03xPJLNBeBs
-        3yBnL7OEIzp0wf13M7OT2oi1vXnxCmtc/cv0iTM=
-X-Google-Smtp-Source: APXvYqx3r0pg5wNHcKf52wGFqqCCeQDWDahFYAHD22kHuprsjU3b/z6v6JTbTtf3YhD6d7CiotdExo3lW5b2H2fZNvc=
-X-Received: by 2002:a9d:459b:: with SMTP id x27mr3235413ote.167.1571760698020;
- Tue, 22 Oct 2019 09:11:38 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191021132818.23787-1-sudeep.holla@arm.com> <20191022022508.g3ar735237haybxe@vireshk-i7>
- <CAJZ5v0gEbiyjpT4+RG5ytDHOgcyCHFqOgD59bK6h=Fhbqvv7Tw@mail.gmail.com> <20191022100736.sguepyp2t56peqfr@vireshk-i7>
-In-Reply-To: <20191022100736.sguepyp2t56peqfr@vireshk-i7>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 22 Oct 2019 18:11:26 +0200
-Message-ID: <CAJZ5v0g0e7NAb74h565sxnfzeYdDJOzcEiS9NyuNEvtdpL3hUA@mail.gmail.com>
-Subject: Re: [PATCH] cpufreq: Move cancelling of policy update work just after
- removing notifiers
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 22 Oct 2019 12:13:23 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59776 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732197AbfJVQNW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 12:13:22 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id E8CAAB385;
+        Tue, 22 Oct 2019 16:13:20 +0000 (UTC)
+From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
+To:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 3/5] MIPS: arc: remove unused stuff
+Date:   Tue, 22 Oct 2019 18:13:13 +0200
+Message-Id: <20191022161315.4194-3-tbogendoerfer@suse.de>
+X-Mailer: git-send-email 2.16.4
+In-Reply-To: <20191022161315.4194-1-tbogendoerfer@suse.de>
+References: <20191022161315.4194-1-tbogendoerfer@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 12:07 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 22-10-19, 11:46, Rafael J. Wysocki wrote:
-> > On Tue, Oct 22, 2019 at 4:25 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> > >
-> > > On 21-10-19, 14:28, Sudeep Holla wrote:
-> > > > Commit 099967699ad9 ("cpufreq: Cancel policy update work scheduled before freeing")
-> > > > added cancel_work_sync(policy->update) after the frequency QoS were
-> > > > removed. We can cancel the work just after taking the last CPU in the
-> > > > policy offline and unregistering the notifiers as policy->update cannot
-> > > > be scheduled from anywhere at this point.
-> > > >
-> > > > However, due to other bugs, doing so still triggered the race between
-> > > > freeing of policy and scheduled policy update work. Now that all those
-> > > > issues are resolved, we can move this cancelling of any scheduled policy
-> > > > update work just after removing min/max notifiers.
-> > > >
-> > > > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> > > > ---
-> > > >  drivers/cpufreq/cpufreq.c | 5 +++--
-> > > >  1 file changed, 3 insertions(+), 2 deletions(-)
-> > > >
-> > > > Hi Rafael,
-> > > >
-> > > > Based on Viresh's suggestion, I am posting a patch to move this
-> > > > cancel_work_sync earlier though it's not a must have change.
-> > >
-> > > For me it is :)
-> > >
-> > > > I will leave it up to your preference.
-> > > >
-> > > > Regards,
-> > > > Sudeep
-> > > >
-> > > > diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> > > > index 829a3764df1b..48a224a6b178 100644
-> > > > --- a/drivers/cpufreq/cpufreq.c
-> > > > +++ b/drivers/cpufreq/cpufreq.c
-> > > > @@ -1268,6 +1268,9 @@ static void cpufreq_policy_free(struct cpufreq_policy *policy)
-> > > >       freq_qos_remove_notifier(&policy->constraints, FREQ_QOS_MIN,
-> > > >                                &policy->nb_min);
-> > > >
-> > > > +     /* Cancel any pending policy->update work before freeing the policy. */
-> > > > +     cancel_work_sync(&policy->update);
-> > > > +
-> > > >       if (policy->max_freq_req) {
-> > > >               /*
-> > > >                * CPUFREQ_CREATE_POLICY notification is sent only after
-> > > > @@ -1279,8 +1282,6 @@ static void cpufreq_policy_free(struct cpufreq_policy *policy)
-> > > >       }
-> > > >
-> > > >       freq_qos_remove_request(policy->min_freq_req);
-> > > > -     /* Cancel any pending policy->update work before freeing the policy. */
-> > > > -     cancel_work_sync(&policy->update);
-> > > >       kfree(policy->min_freq_req);
-> > > >
-> > > >       cpufreq_policy_put_kobj(policy);
-> > >
-> > > Thanks for doing this.
-> > >
-> > > Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-> >
-> > Folded into the previous patch and applied.
-> >
-> > Please double check the result in the current linux-next branch in my tree.
->
-> I would have kept the blank line after cancel_work_sync() which isn't
-> there anymore.
+remove unused _prom_envp and prom_argc macro.
 
-OK, it looks better with the extra blank line, so updated.  Thanks!
+Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+---
+ arch/mips/fw/arc/init.c         | 3 +--
+ arch/mips/include/asm/sgialib.h | 3 +--
+ 2 files changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/arch/mips/fw/arc/init.c b/arch/mips/fw/arc/init.c
+index 4ac6466a8872..c713292462aa 100644
+--- a/arch/mips/fw/arc/init.c
++++ b/arch/mips/fw/arc/init.c
+@@ -19,7 +19,7 @@
+ /* Master romvec interface. */
+ struct linux_romvec *romvec;
+ int prom_argc;
+-LONG *_prom_argv, *_prom_envp;
++LONG *_prom_argv;
+ 
+ #if defined(CONFIG_64BIT) && defined(CONFIG_FW_ARC32)
+ /* stack for calling 32bit ARC prom */
+@@ -34,7 +34,6 @@ void __init prom_init(void)
+ 
+ 	prom_argc = fw_arg0;
+ 	_prom_argv = (LONG *) fw_arg1;
+-	_prom_envp = (LONG *) fw_arg2;
+ 
+ 	if (pb->magic != 0x53435241) {
+ 		printk(KERN_CRIT "Aieee, bad prom vector magic %08lx\n",
+diff --git a/arch/mips/include/asm/sgialib.h b/arch/mips/include/asm/sgialib.h
+index 21d17eb25ed8..40ab4ef0b1dc 100644
+--- a/arch/mips/include/asm/sgialib.h
++++ b/arch/mips/include/asm/sgialib.h
+@@ -17,12 +17,11 @@
+ extern struct linux_romvec *romvec;
+ extern int prom_argc;
+ 
+-extern LONG *_prom_argv, *_prom_envp;
++extern LONG *_prom_argv;
+ 
+ /* A 32-bit ARC PROM pass arguments and environment as 32-bit pointer.
+    These macros take care of sign extension.  */
+ #define prom_argv(index) ((char *) (long) _prom_argv[(index)])
+-#define prom_argc(index) ((char *) (long) _prom_argc[(index)])
+ 
+ extern int prom_flags;
+ 
+-- 
+2.16.4
+
