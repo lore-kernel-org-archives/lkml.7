@@ -2,112 +2,129 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF583CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:45:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48001CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:46:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB03921783
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:45:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F62A2075A
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:46:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=bfs.de header.i=@bfs.de header.b="smPhmzCB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388565AbfJVMp1 (ORCPT
+        id S2388915AbfJVMqb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 08:45:27 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:52905 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387479AbfJVMp1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 08:45:27 -0400
-Received: from mail-qk1-f180.google.com ([209.85.222.180]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MS3vJ-1iT6mV3syZ-00TWZZ; Tue, 22 Oct 2019 14:45:25 +0200
-Received: by mail-qk1-f180.google.com with SMTP id 4so16058417qki.6;
-        Tue, 22 Oct 2019 05:45:24 -0700 (PDT)
-X-Gm-Message-State: APjAAAVKVuXD/mdkUexILNImqeP3fGPG3tptMHWHdXkZMyDAT+s6zHJi
-        pVEP+iUo6BJn6KEc7oX66vG8mF1GzbkG1C17Mz4=
-X-Google-Smtp-Source: APXvYqyjciZdavu1JPPPe0N7rFEefMcrTxNfxfTRa9du3KMTgEVclLMbFRHL5tu6WR3npY9i8xQxY+iAtUJmsd/5bVk=
-X-Received: by 2002:a37:a755:: with SMTP id q82mr2720249qke.394.1571748323679;
- Tue, 22 Oct 2019 05:45:23 -0700 (PDT)
+        Tue, 22 Oct 2019 08:46:31 -0400
+Received: from mx01-fr.bfs.de ([193.174.231.67]:42016 "EHLO mx01-fr.bfs.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728346AbfJVMqa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 08:46:30 -0400
+Received: from mail-fr.bfs.de (mail-fr.bfs.de [10.177.18.200])
+        by mx01-fr.bfs.de (Postfix) with ESMTPS id 44E982034F;
+        Tue, 22 Oct 2019 14:46:23 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bfs.de; s=dkim201901;
+        t=1571748383; h=from:from:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=c+tRPTlzoCwnRYEOA07Gp6Y8Oc5IPsLLz9/TmlPkbj0=;
+        b=smPhmzCBxR/W6RJDmEX4SMj1A/S87/Jw1gojCqHWa9Xix6yQ+Zr73ne0VqRrrKE7CVBJZA
+        8JirHg+vpZQGKjaLgLrTs14enpO37M9qWxb4rP6531eXqcNTUPq/mWljOQrNp34ftdmfrM
+        UT5eJM3G4uTcbjdm/9PhJ5LMp9bhxX+MhQmIWXkOZmejOitFlYu42pKO8ds7nUwyHtwRBC
+        L0/BE57Fx/Gk0spa3VWah8RzrvfRCt/c2TElbHAwoNOa2bdWdummX3QoBJ9Qs8fZO6+Iht
+        QgJ57yoZbTV9p+H7vKpMUCy6/p14VF3ALrjP912jAGj6X227RnO6Afm2u1l6Kg==
+Received: from [134.92.181.33] (unknown [134.92.181.33])
+        by mail-fr.bfs.de (Postfix) with ESMTPS id A3FDBBEEBD;
+        Tue, 22 Oct 2019 14:46:22 +0200 (CEST)
+Message-ID: <5DAEFA1D.8070508@bfs.de>
+Date:   Tue, 22 Oct 2019 14:46:21 +0200
+From:   walter harms <wharms@bfs.de>
+Reply-To: wharms@bfs.de
+User-Agent: Mozilla/5.0 (X11; U; Linux x86_64; de; rv:1.9.1.16) Gecko/20101125 SUSE/3.0.11 Thunderbird/3.0.11
 MIME-Version: 1.0
-References: <20191021201550.GW26530@ZenIV.linux.org.uk> <20191021225100.17990-1-guillem@hadrons.org>
-In-Reply-To: <20191021225100.17990-1-guillem@hadrons.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 22 Oct 2019 14:45:07 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1OOz2fSgn1YMGxdL+_ZSb5Wc0sAcROfaX=xfJANKpxjQ@mail.gmail.com>
-Message-ID: <CAK8P3a1OOz2fSgn1YMGxdL+_ZSb5Wc0sAcROfaX=xfJANKpxjQ@mail.gmail.com>
-Subject: Re: [PATCH v2] aio: Fix io_pgetevents() struct __compat_aio_sigset layout
-To:     Guillem Jover <guillem@hadrons.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
-        linux-aio <linux-aio@kvack.org>, Christoph Hellwig <hch@lst.de>,
-        Jeff Moyer <jmoyer@redhat.com>,
-        Benjamin LaHaise <bcrl@kvack.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:K4GvhTjBFSXesAG7lBbAkSm70PIPiqjrBqmyNFcH+7pB132R9ZE
- KwQOJyq0Cox+x9AFBDY2meNYRyv8ImM2SC9Ax/fmCk6bxluncYjPXRBInI1rrKDaldt01sW
- cHEH46DBelFKALEZMkoJVEyB6f/sCjI1gCR3QyxgbVeuJewr1bpUzfD9RGJk2mUUt7bjKrN
- fXER3Frmot4PWz9/zq2bw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:GoouX5b415s=:TVfiSSZCtk4Zy+TRdN/NQW
- XD8VhF+Uo5QOOsBvQp7r6eNF36qGFhEOXukCdzm2+SzFdBc/l2XJ+db/CNPoKgCCsrxI17G7B
- z7+cNib0LVI0CYX8ORwTsDl6oVKkN1RP9/2YdOcDNjNOA5Y6gGaRpE8XEXLljCfXLOsF3eOUS
- 0wcjmE25Zw1DzlV8ljBNDw3jixM+iVdqyYyTdTKUr1Irgv1jqMKb8RoD+qchghVOEiosaxkde
- ZFuTY4ckcCkrsfU/GWeTD79vX1Ar92kbmxm4NtSlxJ8I2nR/up4/UPiFaLcnQQ6Qh8Rl1X3Pz
- onUMgSMLRxl5Uhw56yPDrbBKNxwLvpoDdCZ3kYJz71zgF+IL2C/f1L4HkfdVYyxyBh43hnJ89
- MuS7RJvIj9cqdqXhGonUDLtb5M8jW4CZ141wVp/4vnMCGFak//Q5j3vuKnCQk+F76o7hzfPXR
- NUxsH4hXcV5D25ggrTXfZQWDfrnmtFR6KHFL052bVHlcwV5vr00wna9ICMpeRUmEeRQF9smbJ
- uaVfKsgKriSuS/abv51ifTXyXSn3Nb3fGlc+vZevgEq+4mJzistBwA6uSUBWysPPcuHrdg0y4
- 7HWi3aBviurzW4Wm8TycLJ0/X/AbI+MHroe/GDZ1yhGhBh5fYKRLYxi+lNdUcR32DZfM8wH19
- Lce6nSpXB7BTv9t+5Y/TWOyDSLm7Xcr9KFE/T98UTscxTa0VPjPU0oo9aMh0zgJIlIFpLNx9L
- dG+KwMZ7Xm0KCdap4pzqEzerlueC7Urc25MrnuL6pIR3WjD+obKnbV7XNeR8PRutqjU/ZzRgq
- +UJsI4kRfXBWoNySpMo9rD4kCHkVure9sGztl8XOJWhyuSSRKmfnY/Z8CIDmti8+U9bFclRi3
- IajZzHFaqY+mOBWFEpAA==
+To:     Colin King <colin.king@canonical.com>
+CC:     Amit Kucheria <amit.kucheria@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>, linux-pm@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] drivers: thermal: tsens: fix potential integer
+ overflow on multiply
+References: <20191022114910.652-1-colin.king@canonical.com>
+In-Reply-To: <20191022114910.652-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Authentication-Results: mx01-fr.bfs.de
+X-Spamd-Result: default: False [-3.10 / 7.00];
+         ARC_NA(0.00)[];
+         HAS_REPLYTO(0.00)[wharms@bfs.de];
+         BAYES_HAM(-3.00)[100.00%];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         MIME_GOOD(-0.10)[text/plain];
+         REPLYTO_ADDR_EQ_FROM(0.00)[];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_SEVEN(0.00)[11];
+         NEURAL_HAM(-0.00)[-0.999,0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         RCVD_COUNT_TWO(0.00)[2];
+         MID_RHS_MATCH_FROM(0.00)[];
+         RCVD_TLS_ALL(0.00)[]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 12:49 AM Guillem Jover <guillem@hadrons.org> wrote:
->
-> This type is used to pass the sigset_t from userland to the kernel,
-> but it was using the kernel native pointer type for the member
-> representing the compat userland pointer to the userland sigset_t.
->
-> This messes up the layout, and makes the kernel eat up both the
-> userland pointer and the size into the kernel pointer, and then
-> reads garbage into the kernel sigsetsize. Which makes the sigset_t
-> size consistency check fail, and consequently the syscall always
-> returns -EINVAL.
->
-> This breaks both libaio and strace on 32-bit userland running on 64-bit
-> kernels. And there are apparently no users in the wild of the current
-> broken layout (at least according to codesearch.debian.org and a brief
-> check over github.com search). So it looks safe to fix this directly
-> in the kernel, instead of either letting userland deal with this
-> permanently with the additional overhead or trying to make the syscall
-> infer what layout userland used, even though this is also being worked
-> around in libaio to temporarily cope with kernels that have not yet
-> been fixed.
->
-> We use a proper compat_uptr_t instead of a compat_sigset_t pointer.
->
-> Fixes: 7a074e96dee6 ("aio: implement io_pgetevents")
-> Signed-off-by: Guillem Jover <guillem@hadrons.org>
 
-When resending a patch that has already been reviewed, please
-add the tags you received so they get picked up into the final
-changeset as well:
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Jeff Moyer <jmoyer@redhat.com>
+Am 22.10.2019 13:49, schrieb Colin King:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> Currently a multiply operation is being performed on two int values
+> and the result is being assigned to a u64, presumably because the
+> end result is expected to be probably larger than an int. However,
+> because the multiply is an int multiply one can get overflow. Avoid
+> the overflow by casting degc to a u64 to force a u64 multiply.
+> 
+> Addresses-Coverity: ("Unintentional integer overflow")
+> Fixes: fbfe1a042cfd ("drivers: thermal: tsens: Add interrupt support")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/thermal/qcom/tsens-common.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/thermal/qcom/tsens-common.c b/drivers/thermal/qcom/tsens-common.c
+> index 03bf1b8133ea..3d7855106ecd 100644
+> --- a/drivers/thermal/qcom/tsens-common.c
+> +++ b/drivers/thermal/qcom/tsens-common.c
+> @@ -92,7 +92,7 @@ void compute_intercept_slope(struct tsens_priv *priv, u32 *p1,
+>  
+>  static inline u32 degc_to_code(int degc, const struct tsens_sensor *s)
+>  {
+> -	u64 code = (degc * s->slope + s->offset) / SLOPE_FACTOR;
+> +	u64 code = ((u64)degc * s->slope + s->offset) / SLOPE_FACTOR;
+>  
+looks ok
+just to offer an alternative to avoid the cast;
+	u64 code = degc;
 
-Let's make sure this also gets added to stable kernels
+	code = code * s->slope + s->offset;
+	code/=SLOPE_FACTOR;
 
-Cc: <stable@vger.kernel.org> # v4.18+
+ym2c
+re,
+wh
 
-Finally (if you like)
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
 
-     Arnd
+>  	pr_debug("%s: raw_code: 0x%llx, degc:%d\n", __func__, code, degc);
+>  	return clamp_val(code, THRESHOLD_MIN_ADC_CODE, THRESHOLD_MAX_ADC_CODE);
