@@ -2,125 +2,181 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF63CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:27:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71DBCCA9EB9
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:27:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E409A2089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:27:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LQGpiNGR"
+	by mail.kernel.org (Postfix) with ESMTP id 4E31A2064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:27:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731475AbfJVJ1b (ORCPT
+        id S1731511AbfJVJ1p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 05:27:31 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:56372 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731229AbfJVJ1b (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 05:27:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571736449;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=4RFIlZRmmV3hFstILOKd0/m47lPLMEdxfpFwPiVzbAs=;
-        b=LQGpiNGRUecBB+i1RZ9yYjetebKzMvgNUucKdR7gSAJFslG6zEoRx5OHnZxZM/LjdXDuRK
-        dPmoJnHv0um0rtm2qKaxX4fkIx9sMcRkQmoa1oMxI1tXWLAZ7J8a/80xSu3BrgST675PRk
-        HzCObZQokKi/N2x3j+hlLMnmU5hx0cg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-86-jgijt8P-Pyexl-3Jlz0aeQ-1; Tue, 22 Oct 2019 05:27:24 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 992E51800E01;
-        Tue, 22 Oct 2019 09:27:22 +0000 (UTC)
-Received: from [10.36.117.11] (ovpn-117-11.ams2.redhat.com [10.36.117.11])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 621B85C22C;
-        Tue, 22 Oct 2019 09:27:19 +0000 (UTC)
-Subject: Re: [PATCH v2 0/2] mm: Memory offlining + page isolation cleanups
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Pingfan Liu <kernelfans@gmail.com>, Qian Cai <cai@lca.pw>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Wei Yang <richard.weiyang@gmail.com>
-References: <20191021172353.3056-1-david@redhat.com>
- <25d3f071-3268-298b-e0c8-9c307d1015fe@redhat.com>
- <20191022080835.GZ9379@dhcp22.suse.cz>
- <1f56744d-2c22-6c12-8fe8-4a71e791c467@redhat.com>
- <20191022082131.GC9379@dhcp22.suse.cz>
- <de39873c-ae55-88ed-0b4e-4f67a75ef81c@redhat.com>
- <20191022091431.GG9379@dhcp22.suse.cz>
- <68d6da35-276c-0491-99ea-8249dee8fd1d@redhat.com>
- <20191022092454.GI9379@dhcp22.suse.cz>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat GmbH
-Message-ID: <8f5a1d58-6b1a-eef3-b482-ff113425fa65@redhat.com>
-Date:   Tue, 22 Oct 2019 11:27:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Tue, 22 Oct 2019 05:27:45 -0400
+Received: from mga14.intel.com ([192.55.52.115]:32819 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731229AbfJVJ1p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 05:27:45 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Oct 2019 02:27:43 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,326,1566889200"; 
+   d="scan'208";a="227638156"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga002.fm.intel.com with ESMTP; 22 Oct 2019 02:27:43 -0700
+Received: from [10.226.39.21] (unknown [10.226.39.21])
+        by linux.intel.com (Postfix) with ESMTP id BED79580127;
+        Tue, 22 Oct 2019 02:27:39 -0700 (PDT)
+Subject: Re: [PATCH v4 3/3] pci: intel: Add sysfs attributes to configure pcie
+ link
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Andrew Murray <andrew.murray@arm.com>
+Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        lorenzo.pieralisi@arm.com, robh@kernel.org,
+        martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
+        hch@infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com
+References: <20191021171832.GA232571@google.com>
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <187a1a7d-80bd-a0e9-a0d9-7fc53bff8907@linux.intel.com>
+Date:   Tue, 22 Oct 2019 17:27:38 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191022092454.GI9379@dhcp22.suse.cz>
+In-Reply-To: <20191021171832.GA232571@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-MC-Unique: jgijt8P-Pyexl-3Jlz0aeQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22.10.19 11:24, Michal Hocko wrote:
-> On Tue 22-10-19 11:17:24, David Hildenbrand wrote:
->> On 22.10.19 11:14, Michal Hocko wrote:
->>> On Tue 22-10-19 10:32:11, David Hildenbrand wrote:
->>> [...]
->>>> E.g., arch/x86/kvm/mmu.c:kvm_is_mmio_pfn()
->>>
->>> Thanks for these references. I am not really familiar with kvm so I
->>> cannot really comment on the specific code but I am wondering why
->>> it simply doesn't check for ZONE_DEVICE explicitly? Also we do care
->>> about holes in RAM (from the early boot), those should be reserved
->>> already AFAIR. So we are left with hotplugged memory with holes and
->>> I am not really sure we should bother with this until there is a clear
->>> usecase in sight.
+Hi Bjorn Helgaas,
+
+On 10/22/2019 1:18 AM, Bjorn Helgaas wrote:
+> On Mon, Oct 21, 2019 at 02:38:50PM +0100, Andrew Murray wrote:
+>> On Mon, Oct 21, 2019 at 02:39:20PM +0800, Dilip Kota wrote:
+>>> PCIe RC driver on Intel Gateway SoCs have a requirement
+>>> of changing link width and speed on the fly.
+> Please add more details about why this is needed.  Since you're adding
+> sysfs files, it sounds like it's not actually the *driver* that needs
+> this; it's something in userspace?
+We have use cases to change the link speed and width on the fly.
+One is EMI check and other is power saving.
+Some battery backed applications have to switch PCIe link from higher 
+GEN to GEN1 and width to x1. During the cases like
+external power supply got disconnected or broken. Once external power 
+supply is connected then switch PCIe link to higher GEN and width.
+>
+> The normal scenario is that the hardware negotiates link widths and
+> speeds without any software involvement (PCIe r5.0, sec 1.2).
+>
+> If this is to work around hardware defects, we should try to do that
+> inside the kernel because we can't expect userspace to do it reliably.
+>
+> As Andrew points out below, this all sounds like it should be generic
+> rather than Intel-specific.
+>
+>>> So add the sysfs attributes to show and store the link
+>>> properties.
+>>> Add the respective link resize function in pcie DesignWare
+>>> framework so that Intel PCIe driver can use during link
+>>> width configuration on the fly.
+>>> ...
+>>> +static ssize_t pcie_link_status_show(struct device *dev,
+>>> +				     struct device_attribute *attr, char *buf)
+>>> +{
+>>> +	struct intel_pcie_port *lpp = dev_get_drvdata(dev);
+>>> +	u32 reg, width, gen;
+>>> +
+>>> +	reg = pcie_rc_cfg_rd(lpp, PCIE_CAP_OFST + PCI_EXP_LNKCTL);
+>>> +	width = FIELD_GET(PCI_EXP_LNKSTA_NLW, reg >> 16);
+>>> +	gen = FIELD_GET(PCI_EXP_LNKSTA_CLS, reg >> 16);
+>>> +
+>>> +	if (gen > lpp->max_speed)
+>>> +		return -EINVAL;
+>>> +
+>>> +	return sprintf(buf, "Port %2u Width x%u Speed %s GT/s\n", lpp->id,
+>>> +		       width, pcie_link_gen_to_str(gen));
+>>> +}
+>>> +static DEVICE_ATTR_RO(pcie_link_status);
+> We already have generic current_link_speed and current_link_width
+> files.
+
+Thanks for pointing it. I will remove the pcie_link_status.
+
+Regards,
+Dilip
+
+>
+>>> +static ssize_t pcie_speed_store(struct device *dev,
+>>> +				struct device_attribute *attr,
+>>> +				const char *buf, size_t len)
+>>> +{
+>>> +	struct intel_pcie_port *lpp = dev_get_drvdata(dev);
+>>> +	unsigned long val;
+>>> +	int ret;
+>>> +
+>>> +	ret = kstrtoul(buf, 10, &val);
+>>> +	if (ret)
+>>> +		return ret;
+>>> +
+>>> +	if (val > lpp->max_speed)
+>>> +		return -EINVAL;
+>>> +
+>>> +	lpp->link_gen = val;
+>>> +	intel_pcie_max_speed_setup(lpp);
+>>> +	dw_pcie_link_speed_change(&lpp->pci, false);
+>>> +	dw_pcie_link_speed_change(&lpp->pci, true);
+>>> +
+>>> +	return len;
+>>> +}
+>>> +static DEVICE_ATTR_WO(pcie_speed);
+>>> +
+>>> +/*
+>>> + * Link width change on the fly is not always successful.
+>>> + * It also depends on the partner.
+>>> + */
+>>> +static ssize_t pcie_width_store(struct device *dev,
+>>> +				struct device_attribute *attr,
+>>> +				const char *buf, size_t len)
+>>> +{
+>>> +	struct intel_pcie_port *lpp = dev_get_drvdata(dev);
+>>> +	unsigned long val;
+>>> +	int ret;
+>>> +
+>>> +	lpp = dev_get_drvdata(dev);
+>>> +
+>>> +	ret = kstrtoul(buf, 10, &val);
+>>> +	if (ret)
+>>> +		return ret;
+>>> +
+>>> +	if (val > lpp->max_width)
+>>> +		return -EINVAL;
+>>> +
+>>> +	/* HW auto bandwidth negotiation must be enabled */
+>>> +	pcie_rc_cfg_wr_mask(lpp, PCI_EXP_LNKCTL_HAWD, 0,
+>>> +			    PCIE_CAP_OFST + PCI_EXP_LNKCTL);
+>>> +	dw_pcie_link_width_resize(&lpp->pci, val);
+>>> +
+>>> +	return len;
+>>> +}
+>>> +static DEVICE_ATTR_WO(pcie_width);
+>>> +
+>>> +static struct attribute *pcie_cfg_attrs[] = {
+>>> +	&dev_attr_pcie_link_status.attr,
+>>> +	&dev_attr_pcie_speed.attr,
+>>> +	&dev_attr_pcie_width.attr,
+>>> +	NULL,
+>>> +};
+>> Is there a reason that these are limited only to the Intel driver and
+>> not the wider set of DWC drivers?
 >>
->> Well, checking for ZONE_DEVICE is only possible if you have an initializ=
-ed
->> memmap. And that is not guaranteed when you start mapping random stuff i=
-nto
->> your guest via /dev/mem.
->=20
-> Yes, I can understand that part but checking PageReserved on an
-> uninitialized memmap is pointless as well. So if you can test for it you
-
-That's why I add pfn_to_online_page() :)
-
-> can very well test for ZONE_DEVICE as well. PageReserved -> ZONE_DEVICE
-> is a terrible assumption.
-Indeed, it is. But there are more parts in the kernel that I'll be=20
-fixing. Stay tuned.
-
---=20
-
-Thanks,
-
-David / dhildenb
-
+>> Is there anything specific here about the Intel GW driver?
