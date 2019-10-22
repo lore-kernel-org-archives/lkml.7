@@ -2,340 +2,219 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E06B1CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 20:08:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A29D6CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 20:08:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 989452184C
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 20:08:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 595F521783
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 20:08:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="TlIUELKZ"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="i2nm7uUu";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="dVjJVN7U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389032AbfJVUIU (ORCPT
+        id S2389098AbfJVUIj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 16:08:20 -0400
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:46536 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387609AbfJVUIU (ORCPT
+        Tue, 22 Oct 2019 16:08:39 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:56784 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387609AbfJVUIj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 16:08:20 -0400
-Received: by mail-yw1-f65.google.com with SMTP id l64so6646132ywe.13
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 13:08:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=poorly.run; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=X4y+DxWDbbu78QM7yfbLF2A6Kni0aYg/fpkIRsTM57s=;
-        b=TlIUELKZrwSyVj8PCSvz9fXvx/Xdj4HJvSTVKMO9Wpb8PXAutJ6ulqwrcytHT2f9WM
-         yHfvlgjDHG8BXr3H2ZA8mkuumqwbpNr2ezqr9/VReeNf612vCE9YOHAJDxavHRMC3l+c
-         4MsGZ7MWhUsnGDMLSzPExzkdArvt7eqlXGUY7nZrye0D90yePZocjFHToqfkvaCYrcwa
-         fKjrS54FKpbvq3u3wlUVGOyNy+49vNMsJ/lHVjvqM0sDPq4PF2WIJp7do3L/jgZFlYxE
-         L36FkqMaYbr2azjUAvQ3U5IkkPWX1RRbmWXbp+Vd/uTkBu74ma0iGYS1S5qBudQQBd6y
-         9ONA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=X4y+DxWDbbu78QM7yfbLF2A6Kni0aYg/fpkIRsTM57s=;
-        b=W67sxSKnmMsBDNg1l2G55VTE4ExHPkLLQ7GCy+PmFAihGksazdOwiWVgMitk3tLDI0
-         leUubZGXUAGc6DzZJF4jl1BoPXOWfJslBckgPwC+2Yqn8KjDhsRmF+EyOPnEQ/c1Er05
-         fm1GPe3IslP30LRJIS6w22ZHwWqta4MIYugd4Y6Alz73TIYJ/NUytVCo3plWHGZbWvRy
-         VyfyqafB7tT53POZYC8m4gshBVttw0hMHLAQ6qV2eaJoyWKlFYjXJM/Ph3hQhr5+Cwbl
-         0GswMPUtMwdvGD9oP+SoKJUrzbKqejd7Z/QBFbwTnaGVfRbqAaqKTivA3VfCjERjQ2vW
-         hQZg==
-X-Gm-Message-State: APjAAAUPmW+C0VsTIj58NysxVRcwa1AM2OykHNgVAZoBYGawELNJEDhy
-        4z8eEn0ZUWZjVEZOZXWzj7S3pg==
-X-Google-Smtp-Source: APXvYqybDpMCuMzJDVisJ5wjUv95xhXJSwT76Swchhn553Kue1nbTjiT+v/v3aXDg7oQpffQZ+bhZA==
-X-Received: by 2002:a81:9216:: with SMTP id j22mr172352ywg.223.1571774898592;
-        Tue, 22 Oct 2019 13:08:18 -0700 (PDT)
-Received: from localhost ([2620:0:1013:11:89c6:2139:5435:371d])
-        by smtp.gmail.com with ESMTPSA id m62sm4388235ywf.70.2019.10.22.13.08.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Oct 2019 13:08:16 -0700 (PDT)
-Date:   Tue, 22 Oct 2019 16:08:15 -0400
-From:   Sean Paul <sean@poorly.run>
-To:     Lyude Paul <lyude@redhat.com>
-Cc:     dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
-        nouveau@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        Juston Li <juston.li@intel.com>,
-        Imre Deak <imre.deak@intel.com>,
-        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= 
-        <ville.syrjala@linux.intel.com>, Harry Wentland <hwentlan@amd.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Sean Paul <sean@poorly.run>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        "Jerry (Fangzhi) Zuo" <Jerry.Zuo@amd.com>,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        Mathias =?iso-8859-1?Q?Fr=F6hlich?= <Mathias.Froehlich@web.de>,
-        Thomas Lim <Thomas.Lim@amd.com>,
-        David Francis <David.Francis@amd.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        =?iso-8859-1?Q?Jos=E9?= Roberto de Souza 
-        <jose.souza@intel.com>, Sam Ravnborg <sam@ravnborg.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 06/14] drm/dp_mst: Protect drm_dp_mst_port members
- with locking
-Message-ID: <20191022200815.GC212858@art_vandelay>
-References: <20191022023641.8026-1-lyude@redhat.com>
- <20191022023641.8026-7-lyude@redhat.com>
+        Tue, 22 Oct 2019 16:08:39 -0400
+Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9MK8Hds023421;
+        Tue, 22 Oct 2019 13:08:29 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=kSxBKKs/CV01OvG76EJpyOie2QydFm1ggqmmSisDNmE=;
+ b=i2nm7uUuJNSa9jAWC6h8Wqlep677YI2WZ/GblPvUPBYNuupvIhtJrptFE0tTL+KmU4YC
+ woW5ru/6S84q+iXUwTczu1jpnm1K6Gn13cCUOf2kJacT/pvcl2EoXVqa7EmdYZW/jO1W
+ vI3kJBXWHdJI8+Gs+QuEB1FGCXT/0VkYnlU= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2vrj6sv1ru-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Tue, 22 Oct 2019 13:08:29 -0700
+Received: from ash-exhub203.TheFacebook.com (2620:10d:c0a8:83::5) by
+ ash-exhub203.TheFacebook.com (2620:10d:c0a8:83::5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 22 Oct 2019 13:08:27 -0700
+Received: from NAM01-BY2-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.36.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Tue, 22 Oct 2019 13:08:27 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZQtJa7hmfHdIgeRXaWnOqD2MOGqLJDLSK5OHSC9HfbpuSQnPbxsgvJal4raohsThSsdWwjlFwaGbmB1meSfngH93hrSEBCUM5NxHueMfo0mEN7NRD8gf1CGYTyJrau8tk7uIvmSyNuKtH0p9VVw75NWNWNJL+/mUcjgYO8o3yKPjdjq4kpD47Qx0czhCjECqE8cc1pRvL+gQsUo16oJ9qUG1o+f9iHxv11W9Wt1zpXcBZWMUdnzqpBsZ8/S7CvFH+TPBBx/78mb35sib6s/TVoHfE4fgCNsSd4Kp5NTna2pebr2ax+jTe76CYOPNLhloDRXcsP+o5DTAlD6n5Qt2tA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kSxBKKs/CV01OvG76EJpyOie2QydFm1ggqmmSisDNmE=;
+ b=AXP+NK6q3CD9xz6VjYVgUYQDm5pmgfGJ2YpP2arTwg4+cp370Nn9FT80hn2jWBq8UyGASNGddCpurKtZ2sUGvTDWiYe/Nm4fDh10yYPw4eIVq7HpqBid1C7G2lrRBgrDpVOpVnlH6+FJ5JSyg8z2P1ltVJY2Qz/nB2QPZ+kYEM4rYaUYmKDRZIuZlIt4X46HTofidrbladM/u3nmskaeOYgxoBBx4fnrX5X3PGUjSWHx0GD513Zc3UnX+FQc6UgJT6tiPLz7GwaId6lE1GTZZryT/6O08Yd6/Cmdfppt06DmthQ4mzVmKjFE4wQtOQXmlyrlZ6ba2ATuC3r4atmbMQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kSxBKKs/CV01OvG76EJpyOie2QydFm1ggqmmSisDNmE=;
+ b=dVjJVN7U0vFlO5PfQTcR/aXQvtWG5MeK1sIvtcPZPLaYdeFpbjSsO+SBr5G83z4B0sIFf1WvTxNquWDFIq99UGi3rtmmlcIwb4c26vP8tPfI5S9RtR1FSYThj0S8INP4YGRITL0kjjzu2mdg98CKASsrlgKKROKAUKss13cwt0Y=
+Received: from BN8PR15MB2626.namprd15.prod.outlook.com (20.179.137.220) by
+ BN8PR15MB2898.namprd15.prod.outlook.com (20.178.219.33) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2367.24; Tue, 22 Oct 2019 20:08:23 +0000
+Received: from BN8PR15MB2626.namprd15.prod.outlook.com
+ ([fe80::3056:945b:e60e:e2e0]) by BN8PR15MB2626.namprd15.prod.outlook.com
+ ([fe80::3056:945b:e60e:e2e0%6]) with mapi id 15.20.2367.022; Tue, 22 Oct 2019
+ 20:08:23 +0000
+From:   Roman Gushchin <guro@fb.com>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>
+Subject: Re: [PATCH 7/8] mm: vmscan: split shrink_node() into node part and
+ memcgs part
+Thread-Topic: [PATCH 7/8] mm: vmscan: split shrink_node() into node part and
+ memcgs part
+Thread-Index: AQHViOfH2m2ZEFsCqUCyP/k19Cd9B6dnFxWA
+Date:   Tue, 22 Oct 2019 20:08:23 +0000
+Message-ID: <20191022200819.GC22721@tower.DHCP.thefacebook.com>
+References: <20191022144803.302233-1-hannes@cmpxchg.org>
+ <20191022144803.302233-8-hannes@cmpxchg.org>
+In-Reply-To: <20191022144803.302233-8-hannes@cmpxchg.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: CO2PR04CA0149.namprd04.prod.outlook.com (2603:10b6:104::27)
+ To BN8PR15MB2626.namprd15.prod.outlook.com (2603:10b6:408:c7::28)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:200::3:5d4e]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d1907ecf-4874-42fc-c3db-08d7572b9798
+x-ms-traffictypediagnostic: BN8PR15MB2898:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BN8PR15MB28983B799124C0A3E07B7D80BE680@BN8PR15MB2898.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:747;
+x-forefront-prvs: 01986AE76B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(396003)(366004)(136003)(376002)(346002)(189003)(199004)(5660300002)(186003)(476003)(81166006)(6486002)(229853002)(81156014)(8676002)(9686003)(1076003)(256004)(6246003)(11346002)(4326008)(6512007)(478600001)(71190400001)(25786009)(8936002)(14454004)(446003)(6436002)(71200400001)(54906003)(305945005)(66446008)(64756008)(66556008)(6506007)(6116002)(386003)(7736002)(66946007)(46003)(76176011)(99286004)(86362001)(6916009)(102836004)(486006)(2906002)(316002)(52116002)(66476007)(33656002);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR15MB2898;H:BN8PR15MB2626.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: H6WzfsBJwP3cknd9zhdjFF8T0rejgcf18ing/hOU6oEAEHDcizOwz7TfshuJy0AN2pqeFn+/JOM/AFkqfG21l0o3sjDTGe6FYNGVJLf+xfzoyGAYCkMiJgjyh5doYSmc1e86XiPK2HH+EqkqcPdpuAd2HqMXuHISwf2blqQ6gFBGew0spBp67yyM4NBAv1iG3TjYfg3JFHr0Gxcr/G7DfV8KdWDb5H9Snl4b4klNnLUWGeIEeZVT6pIDfyxqqB3NzIMV4IssQeUIjsg1KHWigX2OQN48BGTMlsaqFGsD+noPvd6sfAcQgSgYwQk6RIwF/zyQIZtYPZcrsdFvuWbjEg6XFSysx0aVP/WG52imP5KAHGZq/gFiugm8p4zl8xOesVer9+ocqB6voOmnXYTCPIFgeyDCZ+xVOvVFhO/gUzz674NmA0UJLslAreRGSYNx
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <A5FC583F63CE3C4DB54A3E316B1BE943@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191022023641.8026-7-lyude@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MS-Exchange-CrossTenant-Network-Message-Id: d1907ecf-4874-42fc-c3db-08d7572b9798
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Oct 2019 20:08:23.6475
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: EEjlfZKobG2qLWrTK7vKBgrA3iWSrjbvmudPchIAl2uhNYv35tL6Sje7Fa+QDE67
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR15MB2898
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-22_06:2019-10-22,2019-10-22 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 suspectscore=0
+ adultscore=0 mlxlogscore=999 clxscore=1015 bulkscore=0 phishscore=0
+ malwarescore=0 spamscore=0 mlxscore=0 impostorscore=0 lowpriorityscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1908290000 definitions=main-1910220170
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 10:36:01PM -0400, Lyude Paul wrote:
-> This is a complicated one. Essentially, there's currently a problem in the MST
-> core that hasn't really caused any issues that we're aware of (emphasis on "that
-> we're aware of"): locking.
-> 
-> When we go through and probe the link addresses and path resources in a
-> topology, we hold no locks when updating ports with said information. The
-> members I'm referring to in particular are:
-> 
-> - ldps
-> - ddps
-> - mcs
-> - pdt
-> - dpcd_rev
-> - num_sdp_streams
-> - num_sdp_stream_sinks
-> - available_pbn
-> - input
-> - connector
-> 
-> Now that we're handling UP requests asynchronously and will be using some of
-> the struct members mentioned above in atomic modesetting in the future for
-> features such as PBN validation, this is going to become a lot more important.
-> As well, the next few commits that prepare us for and introduce suspend/resume
-> reprobing will also need clear locking in order to prevent from additional
-> racing hilarities that we never could have hit in the past.
-> 
-> So, let's solve this issue by using &mgr->base.lock, the modesetting
-> lock which currently only protects &mgr->base.state. This works
-> perfectly because it allows us to avoid blocking connection_mutex
-> unnecessarily, and we can grab this in connector detection paths since
-> it's a ww mutex. We start by having drm_dp_mst_handle_up_req() hold this
-> when updating ports. For drm_dp_mst_handle_link_address_port() things
-> are a bit more complicated. As I've learned the hard way, we can grab
-> &mgr->lock.base for everything except for port->connector. See, our
-> normal driver probing paths end up generating this rather obvious
-> lockdep chain:
-> 
-> &drm->mode_config.mutex
->   -> crtc_ww_class_mutex/crtc_ww_class_acquire
->     -> &connector->mutex
-> 
-> However, sysfs grabs &drm->mode_config.mutex in order to protect itself
-> from connector state changing under it. Because this entails grabbing
-> kn->count, e.g. the lock that the kernel provides for protecting sysfs
-> contexts, we end up grabbing kn->count followed by
-> &drm->mode_config.mutex. This ends up creating an extremely rude chain:
-> 
-> &kn->count
->   -> &drm->mode_config.mutex
->     -> crtc_ww_class_mutex/crtc_ww_class_acquire
->       -> &connector->mutex
-> 
-> I mean, look at that thing! It's just evil!!! This gross thing ends up
-> making any calls to drm_connector_register()/drm_connector_unregister()
-> impossible when holding any kind of modesetting lock. This is annoying
-> because ideally, we always want to ensure that
-> drm_dp_mst_port->connector never changes when doing an atomic commit or
-> check that would affect the atomic topology state so that it can
-> reliably and easily be used from future DRM DP MST helpers to assist
-> with tasks such as scanning through the current VCPI allocations and
-> adding connectors which need to have their allocations updated in
-> response to a bandwidth change or the like.
-> 
-> Being able to hold &mgr->base.lock throughout the entire link probe
-> process would have been _great_, since we could prevent userspace from
-> ever seeing any states in-between individual port changes and as a
-> result likely end up with a much faster probe and more consistent
-> results from said probes. But without some rework of how we handle
-> connector probing in sysfs it's not at all currently possible. In the
-> future, maybe we can try using the sysfs locks to protect updates to
-> connector probing state and fix this mess.
-> 
-> So for now, to protect everything other than port->connector under
-> &mgr->base.lock and ensure that we still have the guarantee that atomic
-> check/commit contexts will never see port->connector change we use a
-> silly trick. See: port->connector only needs to change in order to
-> ensure that input ports (see the MST spec) never have a ghost connector
-> associated with them. But, there's nothing stopping us from simply
-> throwing the entire port out and creating a new one in order to maintain
-> that requirement while still keeping port->connector consistent across
-> the lifetime of the port in atomic check/commit contexts. For all
-> intended purposes this works fine, as we validate ports in any contexts
-> we care about before using them and as such will end up reporting the
-> connector as disconnected until it's port's destruction finalizes. So,
-> we just do that in cases where we detect port->input has transitioned
-> from true->false. We don't need to worry about the other direction,
-> since a port without a connector isn't visible to userspace and as such
-> doesn't need to be protected by &mgr->base.lock until we finish
-> registering a connector for it.
-> 
-> For updating members of drm_dp_mst_port other than port->connector, we
-> simply grab &mgr->base.lock in drm_dp_mst_link_probe_work() for already
-> registered ports, update said members and drop the lock before
-> potentially registering a connector and probing the link address of it's
-> children.
-> 
-> Finally, we modify drm_dp_mst_detect_port() to take a modesetting lock
-> acquisition context in order to acquire &mgr->base.lock under
-> &connection_mutex and convert all it's users over to using the
-> .detect_ctx probe hooks.
-> 
-> With that, we finally have well defined locking.
-> 
-> Changes since v4:
-> * Get rid of port->mutex, stop using connection_mutex and just use our own
->   modesetting lock - mgr->base.lock. Also, add a probe_lock that comes
->   before this patch.
-> * Just throw out ports that get changed from an output to an input, and
->   replace them with new ports. This lets us ensure that modesetting
->   contexts never see port->connector go from having a connector to being
->   NULL.
-> * Write an extremely detailed explanation of what problems this is
->   trying to fix, since there's a _lot_ of context here and I honestly
->   forgot some of it myself a couple times.
-> * Don't grab mgr->lock when reading port->mstb in
->   drm_dp_mst_handle_link_address_port(). It's not needed.
-> 
-> Cc: Juston Li <juston.li@intel.com>
-> Cc: Imre Deak <imre.deak@intel.com>
-> Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
-> Cc: Harry Wentland <hwentlan@amd.com>
-> Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-> Cc: Sean Paul <sean@poorly.run>
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
-
-Overall makes sense to me. Thanks for the comprehensive commit message and
-comments, they definitely help :)
-
-Just one nit below,
-
-Reviewed-by: Sean Paul <sean@poorly.run>
-
-
+On Tue, Oct 22, 2019 at 10:48:02AM -0400, Johannes Weiner wrote:
+> This function is getting long and unwieldy, split out the memcg bits.
+>=20
+> The updated shrink_node() handles the generic (node) reclaim aspects:
+>   - global vmpressure notifications
+>   - writeback and congestion throttling
+>   - reclaim/compaction management
+>   - kswapd giving up on unreclaimable nodes
+>=20
+> It then calls a new shrink_node_memcgs() which handles cgroup specifics:
+>   - the cgroup tree traversal
+>   - memory.low considerations
+>   - per-cgroup slab shrinking callbacks
+>   - per-cgroup vmpressure notifications
+>=20
+> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
 > ---
->  .../display/amdgpu_dm/amdgpu_dm_mst_types.c   |  28 +--
->  drivers/gpu/drm/drm_dp_mst_topology.c         | 230 ++++++++++++------
->  drivers/gpu/drm/i915/display/intel_dp_mst.c   |  28 ++-
->  drivers/gpu/drm/nouveau/dispnv50/disp.c       |  32 +--
->  drivers/gpu/drm/radeon/radeon_dp_mst.c        |  24 +-
->  include/drm/drm_dp_mst_helper.h               |  38 ++-
->  6 files changed, 240 insertions(+), 140 deletions(-)
-> 
-
-/snip
-
-> diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
-> index 11d842f0bff5..7bf4db91ff90 100644
-> --- a/drivers/gpu/drm/drm_dp_mst_topology.c
-> +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-
-/snip
-
-> @@ -1912,35 +1984,40 @@ drm_dp_mst_handle_link_address_port(struct drm_dp_mst_branch *mstb,
+>  mm/vmscan.c | 28 ++++++++++++++++++----------
+>  1 file changed, 18 insertions(+), 10 deletions(-)
+>=20
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index db073b40c432..65baa89740dd 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -2722,18 +2722,10 @@ static bool pgdat_memcg_congested(pg_data_t *pgda=
+t, struct mem_cgroup *memcg)
+>  		(memcg && memcg_congested(pgdat, memcg));
+>  }
+> =20
+> -static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
+> +static void shrink_node_memcgs(pg_data_t *pgdat, struct scan_control *sc=
+)
 >  {
->  	struct drm_dp_mst_topology_mgr *mgr = mstb->mgr;
->  	struct drm_dp_mst_port *port;
-> -	bool created = false;
-> -	int old_ddps = 0;
-> +	int old_ddps = 0, ret;
-> +	u8 new_pdt = DP_PEER_DEVICE_NONE;
-> +	bool created = false, send_link_addr = false;
->  
->  	port = drm_dp_get_port(mstb, port_msg->port_number);
->  	if (!port) {
-> -		port = kzalloc(sizeof(*port), GFP_KERNEL);
-> +		port = drm_dp_mst_add_port(dev, mgr, mstb,
-> +					   port_msg->port_number);
->  		if (!port)
->  			return;
-> -		kref_init(&port->topology_kref);
-> -		kref_init(&port->malloc_kref);
-> -		port->parent = mstb;
-> -		port->port_num = port_msg->port_number;
-> -		port->mgr = mgr;
-> -		port->aux.name = "DPMST";
-> -		port->aux.dev = dev->dev;
-> -		port->aux.is_remote = true;
+> -	struct reclaim_state *reclaim_state =3D current->reclaim_state;
+>  	struct mem_cgroup *root =3D sc->target_mem_cgroup;
+> -	unsigned long nr_reclaimed, nr_scanned;
+> -	bool reclaimable =3D false;
+>  	struct mem_cgroup *memcg;
+> -again:
+> -	memset(&sc->nr, 0, sizeof(sc->nr));
 > -
-> -		/*
-> -		 * Make sure the memory allocation for our parent branch stays
-> -		 * around until our own memory allocation is released
-> +		created = true;
-> +	} else if (port_msg->input_port && !port->input && port->connector) {
-> +		/* Destroying the connector is impossible in this context, so
-> +		 * replace the port with a new one
->  		 */
-> -		drm_dp_mst_get_mstb_malloc(mstb);
-> +		drm_dp_mst_topology_unlink_port(mgr, port);
-> +		drm_dp_mst_topology_put_port(port);
->  
-> +		port = drm_dp_mst_add_port(dev, mgr, mstb,
-> +					   port_msg->port_number);
-> +		if (!port)
-> +			return;
->  		created = true;
->  	} else {
-> +		/* Locking is only needed when the port has a connector
-> +		 * exposed to userspace
-> +		 */
-> +		drm_modeset_lock(&mgr->base.lock, NULL);
+> -	nr_reclaimed =3D sc->nr_reclaimed;
+> -	nr_scanned =3D sc->nr_scanned;
+> =20
+>  	memcg =3D mem_cgroup_iter(root, NULL, NULL);
+>  	do {
+> @@ -2786,6 +2778,22 @@ static bool shrink_node(pg_data_t *pgdat, struct s=
+can_control *sc)
+>  			   sc->nr_reclaimed - reclaimed);
+> =20
+>  	} while ((memcg =3D mem_cgroup_iter(root, memcg, NULL)));
+> +}
+> +
+> +static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
+> +{
+> +	struct reclaim_state *reclaim_state =3D current->reclaim_state;
+> +	struct mem_cgroup *root =3D sc->target_mem_cgroup;
+> +	unsigned long nr_reclaimed, nr_scanned;
+> +	bool reclaimable =3D false;
+> +
+> +again:
+> +	memset(&sc->nr, 0, sizeof(sc->nr));
+> +
+> +	nr_reclaimed =3D sc->nr_reclaimed;
+> +	nr_scanned =3D sc->nr_scanned;
+> +
+> +	shrink_node_memcgs(pgdat, sc);
+> =20
+>  	if (reclaim_state) {
+>  		sc->nr_reclaimed +=3D reclaim_state->reclaimed_slab;
+> @@ -2793,7 +2801,7 @@ static bool shrink_node(pg_data_t *pgdat, struct sc=
+an_control *sc)
+>  	}
+> =20
+>  	/* Record the subtree's reclaim efficiency */
+> -	vmpressure(sc->gfp_mask, sc->target_mem_cgroup, true,
+> +	vmpressure(sc->gfp_mask, root, true,
 
-Random musing: It's kind of unfortunate that we don't have a void varient of
-drm_modeset_lock for when there's no acquire_ctx since we end up with a mix of
-drm_modeset_lock calls with and without return checking. 
+Maybe target? Or target_memcg? The word root is associated with the root cg=
+roup.
 
-/snip
+Other than root the patch looks good to me:
 
-> @@ -3441,22 +3516,31 @@ EXPORT_SYMBOL(drm_dp_mst_hpd_irq);
->  /**
->   * drm_dp_mst_detect_port() - get connection status for an MST port
->   * @connector: DRM connector for this port
-> + * @ctx: The acquisition context to use for grabbing locks
->   * @mgr: manager for this port
-> - * @port: unverified pointer to a port
-> + * @port: pointer to a port
->   *
-> - * This returns the current connection state for a port. It validates the
-> - * port pointer still exists so the caller doesn't require a reference
-> + * This returns the current connection state for a port.
-
-"On error, this returns -errno"
-
-/snip
-
-> -- 
-> 2.21.0
-> 
-
--- 
-Sean Paul, Software Engineer, Google / Chromium OS
+Reviewed-by: Roman Gushchin <guro@fb.com>
