@@ -2,148 +2,261 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCC5DCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:50:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8446CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:50:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1B1920B7C
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:50:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4CFC20B7C
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:50:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A4iePABc"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Y78YX+aZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731578AbfJVJuN (ORCPT
+        id S1731592AbfJVJuS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 05:50:13 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:43377 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728182AbfJVJuN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 05:50:13 -0400
-Received: by mail-qt1-f193.google.com with SMTP id t20so25783798qtr.10
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 02:50:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=1pKTrX81FhdzAfIki4jUWvnUPfKP+6v9OO8kScydDF0=;
-        b=A4iePABcqcKzW0Jsx5m5AuKZlAYa/yCwYHjVO5w/VDutR632E6Lxz/yo0TVuKP8dPF
-         nf6uiFsM5iWThy3GN4b6JHCH0xniroAcuHBbfuf7/UJQtyaPfsmakkjB/WmNZPbKQQZN
-         T1iJgdv2oUgVVgC76UZ05it3fi+1CzGIYHL89j64831ipJPQUJEZPg78Ljs9VL27MZF5
-         7liZANuqi3hgFnNCFta6CTX8DmXmQ5qCZTxXUz8xXA81UzZvbHIlvJbUbnnIJDfjslPg
-         +ZsOefVGxqCLhEYQDCjT9xCdaYG7QVveloxCD90BJpBz+iR+dn2oewAjKRV+ijQngvXw
-         wPQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=1pKTrX81FhdzAfIki4jUWvnUPfKP+6v9OO8kScydDF0=;
-        b=MA2CgYw+4HhSihoRv5WVv+bB3dvHWziyowvIuGaNAtHZoz5Iv6s2lmkl9r0wZjjc4v
-         jM3tu2TMbHVuvrEbAWkZglcQI7FK25audWxV0Qmj+xwL15RXrvbiLsXTENJYT1IXIl7/
-         FqoSeKUbNDyxBvNgziC+g4kN+w1OCyTSmjBpsVG4qBOStImYC2qG46Ai6yWd8bKzDeDg
-         G9zbW5d1ZcakgHlo24IH5KImq52341L0IGdt2+vZycoGiDEV1UZRxw84020Nzc3i+rBU
-         qeYNhx/V18qshJD89YhAa7TaxixKfHcKaJSAy0A8vqVlGBxU6tgxKnRrVvLwA9XeHIN5
-         1X6Q==
-X-Gm-Message-State: APjAAAW32ExKr3tJSJ0naexb6ygkUiF3tC3DcZALRQx4BxOqjYlCLSRj
-        s5Yw99buEyfhHGfwXLn2mh4BitN/F4uDujvNb85Dhw==
-X-Google-Smtp-Source: APXvYqxx6IMMU/KLJpBeqdNZyGovtZ15fbtBGOuH42hcGgm4DSwsIdzP0uePjQ4jb5Y/93B74xMZ6fQvpLRfKqhI1qs=
-X-Received: by 2002:ac8:2ccc:: with SMTP id 12mr2396870qtx.49.1571737811081;
- Tue, 22 Oct 2019 02:50:11 -0700 (PDT)
+        Tue, 22 Oct 2019 05:50:18 -0400
+Received: from mout.gmx.net ([212.227.15.19]:52665 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728182AbfJVJuR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 05:50:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1571737790;
+        bh=OE/0MVT0jwdzZZXVDP3ALcBpFIqz2P+d6POGuGMFRDY=;
+        h=X-UI-Sender-Class:Date:In-Reply-To:References:Subject:Reply-to:To:
+         CC:From;
+        b=Y78YX+aZjnPYPJGYXgg9E9WDr/o71f9xVzjw4w0Fb5u40zkwc/kJp3Lv/hx28MIqz
+         Gl1C0msgglfINc9wyGEH3FCzmqTNaV4oSPbSHZG551Smpwjb2WuePRHOqgr14VcqVF
+         sr4nU08T94aigvDi2nq1osHmLuTANbcyYscIyTRQ=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from frank-bq ([185.75.73.113]) by mail.gmx.com (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1N2mFi-1hszdC0mD6-01335A; Tue, 22
+ Oct 2019 11:49:50 +0200
+Date:   Tue, 22 Oct 2019 11:49:47 +0200
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20190910070446.639-3-frank-w@public-files.de>
+References: <20190910070446.639-1-frank-w@public-files.de> <20190910070446.639-3-frank-w@public-files.de>
 MIME-Version: 1.0
-References: <20191022102334.67e5d3d1@canb.auug.org.au>
-In-Reply-To: <20191022102334.67e5d3d1@canb.auug.org.au>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Tue, 22 Oct 2019 15:20:00 +0530
-Message-ID: <CAP245DXChLoSUkj49FrYq4HVkcP2pS8=qamWDDUNOg7aygDwpA@mail.gmail.com>
-Subject: Re: linux-next: build warning after merge of the thermal tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v7 2/7] rtc: mt6397: move some common definitions into rtc.h
+Reply-to: frank-w@public-files.de
+To:     linux-mediatek@lists.infradead.org
+CC:     linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        linux-pm@vger.kernel.org, Josef Friedl <josef.friedl@speed.at>,
+        linux-kernel@vger.kernel.org,
+        Tianping Fang <tianping.fang@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        linux-arm-kernel@lists.infradead.org
+From:   Frank Wunderlich <frank-w@public-files.de>
+Message-ID: <D5C0F601-D71C-40DC-BF89-5C167DB004A1@public-files.de>
+X-Provags-ID: V03:K1:IDQ6Jwwc7LHNhDz0snpL9KvZ48Wwi3GQfUWLY3C+qRfc+xCLK16
+ VIpVqXjm0vosezYP0lKD6q1a3Ykm8DY1U1sI7Bzgslu6NVi/00Gc8ftSzoSI3DohyGHzk6K
+ YLisBIsWGAhnS+1mr95nVB3M2m7Z/RaHwT6BEaaQjhKAM67qKcylpx6isItv2H5Nnw93gLf
+ TwUjRIpjNUSgdx9+zniTA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:soT82Ffej2w=:7rJfWtDTS3SX+upAw34teJ
+ pdr/VwAVmlNWPBFT+zyNEb940CW5sHe5qMrGextya3JYDZUHekANpzUbAgv8aO+vybIsFeqXR
+ R6MZcr6F+OgckblbB3u7N5ICw8XyRtcY8hlZkRHehl9harQdgQLjrwxZ9B16tH5D5CGpiUYxA
+ q8JAdZPeKp1CsTgMlO67nkvifvR1I6tFtMpzq9Hx90A+4/uL3asUaJD6X70IOwXpqIcGNv8qI
+ VLIQqrOFG0xAPvH5jvV0HWkXvh6WV9IkTfPnydZChYrPnJFhZlMMU1R8miBROuw6drjokgKcA
+ XP2g15U4CKOSdkabJQplRsWZrpe/AQ+jBU61Mk+ZXmew2zyji+VJu5zJFvt8359UdHEFE9SzM
+ Mm6OBKstduSagtt4WWcbo9dQ9oQ9hTua5YBevroOjwiTScbvJ56o34ae416OvceYIQ8rIz4xf
+ HmTH7hiwTzGwX2ON9e3pCSRy9ymDLZxTK6q+ooM62DmRHckHLJOoa3ZC5gsDBC0YzdZszBaeU
+ 5tzTPxnCmmCfkyL3tCBo+oRRkU2sooS0mmKnhABR9IqsQLTu07y7ISES3XCNQvaYhnbh9wINR
+ zp38LkQNSblDgvP9prNoYRxJvUpV/DVvXWQLiHwJrO5COcyHN4CtvhRTtg44jHo20cLHckZwt
+ lKQo50s9aZVVH8MiVsatzX+JgxPQmuRwPQzImub3MA2ysd4xrEipjqUTenwpeQAs1Yg1f56H5
+ 8aC0iCh3qLvPiUbvH9A5BTu1gA2dZ8btBLHC4Q2qwBNrwhnD11DLeORmjureVXmoTGP0eH1AL
+ 2/m/Ki8Q3lJc8CDTcH46hw3ZqRcoJVCZ1iSjqny+bN/nopDrp3oMD0OxndZJ7XGqCdFlEAc/v
+ iwUwEmlMUOlFA82ljsSH8LMU3lA9a7uLdmKE569XQ1bs2MN0tgK+0y3Iigy7NucB6+5o4upMU
+ LBCyr0lCIxBTFpVS06+X+39uAxEsGCunhTCnbW+HFQQ3g+I5vv+Sk345oaDNoPZjfMUL7T2o7
+ SX5E8oNwpO1JycXSeBzU45dGG4TFNpm+g2ReNE3NgNoOuiZYUZ1MEthAkg+rwjEvxNws/7r/r
+ fkKymykZ8OgDWXWlvULE2NXmdw7sTuTXlRNm1klfApr8OrDGoC8ctbVzinKbtCDLEG4tQcUH/
+ ZA2K2Z2igjLGuW4F37RK0xDesjF44vU6WB5r/DkRXfxR68TVN7iopaGvFJy5e6nc1fNpc0BDq
+ aHf2osz2ZrW8yuWYogMPdqeQ/2uKCIXXQTDxZV+ucRjLJygJxfp4lG+p3u1I=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(Resending since Gmail mobile client converts email to HTML)
+Is it ok now? It seems not yet merged to next=2E Other code is based on thi=
+s=2E
 
-Hi Stephen,
-
-On Tue, Oct 22, 2019 at 4:53 AM Stephen Rothwell <sfr@canb.auug.org.au> wro=
-te:
+Am 10=2E September 2019 09:04:41 MESZ schrieb Frank Wunderlich <frank-w@pu=
+blic-files=2Ede>:
+>From: Josef Friedl <josef=2Efriedl@speed=2Eat>
 >
-> Hi all,
+>move code to separate header-file to reuse definitions later
+>in poweroff-driver (drivers/power/reset/mt6323-poweroff=2Ec)
 >
-> After merging the thermal tree, today's linux-next build (x86_64
-> allmodconfig) produced this warning:
+>Suggested-by: Frank Wunderlich <frank-w@public-files=2Ede>
+>Signed-off-by: Josef Friedl <josef=2Efriedl@speed=2Eat>
+>Signed-off-by: Frank Wunderlich <frank-w@public-files=2Ede>
+>Acked-by: Alexandre Belloni <alexandre=2Ebelloni@bootlin=2Ecom>
+>Acked-for-MFD-by: Lee Jones <lee=2Ejones@linaro=2Eorg>
+>---
+>changes since v6: updated copyright
+>changes since v5: none
+>changes since v4: none
+>changes since v3: none
+>changes since v2: add missing commit-message
+>---
+> drivers/rtc/rtc-mt6397=2Ec       | 55 +-------------------------
+> include/linux/mfd/mt6397/rtc=2Eh | 71 ++++++++++++++++++++++++++++++++++
+> 2 files changed, 72 insertions(+), 54 deletions(-)
+> create mode 100644 include/linux/mfd/mt6397/rtc=2Eh
 >
-> In file included from drivers/thermal/qcom/tsens-common.c:13:
-> drivers/thermal/qcom/tsens-common.c: In function 'tsens_set_interrupt':
-> include/linux/regmap.h:87:2: warning: 'index' may be used uninitialized i=
-n this function [-Wmaybe-uninitialized]
->    87 |  regmap_field_update_bits_base(field, ~0, val, NULL, false, false=
-)
->       |  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/thermal/qcom/tsens-common.c:183:6: note: 'index' was declared her=
-e
->   183 |  u32 index;
->       |      ^~~~~
-> In file included from drivers/thermal/qcom/tsens-common.c:13:
-> include/linux/regmap.h:87:2: warning: 'index_clear' may be used uninitial=
-ized in this function [-Wmaybe-uninitialized]
->    87 |  regmap_field_update_bits_base(field, ~0, val, NULL, false, false=
-)
->       |  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/thermal/qcom/tsens-common.c:199:18: note: 'index_clear' was decla=
-red here
->   199 |  u32 index_mask, index_clear;
->       |                  ^~~~~~~~~~~
-> drivers/thermal/qcom/tsens-common.c:199:6: warning: 'index_mask' may be u=
-sed uninitialized in this function [-Wmaybe-uninitialized]
->   199 |  u32 index_mask, index_clear;
->       |      ^~~~~~~~~~
->
-> Introduced by commit
->
->   fbfe1a042cfd ("drivers: thermal: tsens: Add interrupt support")
->
-
-
-What compiler version do you use? Any additional flags to make? I'm
-not seeing this, even with W=3D1.
-
-$ make -k -j`nproc` O=3D~/work/builds/build-x86/ allmodconfig
-$ touch drivers/thermal/qcom/*
-=E2=94=80=E2=94=80=E2=80=A2 amit@matterhorn =E2=80=A2=E2=94=80=E2=94=80=E2=
-=94=80(~/.../sources/linux-amit.git) $ make -k
--j`nproc` O=3D~/work/builds/build-x86/
-make[1]: Entering directory '/home/amit/work/builds/build-x86'
-  GEN     Makefile
-scripts/kconfig/conf  --syncconfig Kconfig
-  GEN     Makefile
-  DESCEND  objtool
-  CALL    /home/amit/work/sources/linux-amit.git/scripts/atomic/check-atomi=
-cs.sh
-  CALL    /home/amit/work/sources/linux-amit.git/scripts/checksyscalls.sh
-  CHK     include/generated/compile.h
-  CHK     kernel/kheaders_data.tar.xz
-  CC [M]  drivers/thermal/qcom/tsens.o
-  CC [M]  drivers/thermal/qcom/tsens-common.o
-  CC [M]  drivers/thermal/qcom/tsens-v0_1.o
-  CC [M]  drivers/thermal/qcom/tsens-8960.o
-  CC [M]  drivers/thermal/qcom/tsens-v2.o
-  CC [M]  drivers/thermal/qcom/tsens-v1.o
-  CC [M]  drivers/thermal/qcom/qcom-spmi-temp-alarm.o
-  LD [M]  drivers/thermal/qcom/qcom_tsens.o
-  Building modules, stage 2.
-  MODPOST 7437 modules
-Kernel: arch/x86/boot/bzImage is ready  (#3)
-  LD [M]  drivers/thermal/qcom/qcom-spmi-temp-alarm.ko
-  LD [M]  drivers/thermal/qcom/qcom_tsens.ko
-make[1]: Leaving directory '/home/amit/work/builds/build-x86'
+>diff --git a/drivers/rtc/rtc-mt6397=2Ec b/drivers/rtc/rtc-mt6397=2Ec
+>index b46ed4dc7015=2E=2Ec08ee5edf865 100644
+>--- a/drivers/rtc/rtc-mt6397=2Ec
+>+++ b/drivers/rtc/rtc-mt6397=2Ec
+>@@ -9,60 +9,7 @@
+> #include <linux/module=2Eh>
+> #include <linux/regmap=2Eh>
+> #include <linux/rtc=2Eh>
+>-#include <linux/irqdomain=2Eh>
+>-#include <linux/platform_device=2Eh>
+>-#include <linux/of_address=2Eh>
+>-#include <linux/of_irq=2Eh>
+>-#include <linux/io=2Eh>
+>-#include <linux/mfd/mt6397/core=2Eh>
+>-
+>-#define RTC_BBPU		0x0000
+>-#define RTC_BBPU_CBUSY		BIT(6)
+>-
+>-#define RTC_WRTGR		0x003c
+>-
+>-#define RTC_IRQ_STA		0x0002
+>-#define RTC_IRQ_STA_AL		BIT(0)
+>-#define RTC_IRQ_STA_LP		BIT(3)
+>-
+>-#define RTC_IRQ_EN		0x0004
+>-#define RTC_IRQ_EN_AL		BIT(0)
+>-#define RTC_IRQ_EN_ONESHOT	BIT(2)
+>-#define RTC_IRQ_EN_LP		BIT(3)
+>-#define RTC_IRQ_EN_ONESHOT_AL	(RTC_IRQ_EN_ONESHOT | RTC_IRQ_EN_AL)
+>-
+>-#define RTC_AL_MASK		0x0008
+>-#define RTC_AL_MASK_DOW		BIT(4)
+>-
+>-#define RTC_TC_SEC		0x000a
+>-/* Min, Hour, Dom=2E=2E=2E register offset to RTC_TC_SEC */
+>-#define RTC_OFFSET_SEC		0
+>-#define RTC_OFFSET_MIN		1
+>-#define RTC_OFFSET_HOUR		2
+>-#define RTC_OFFSET_DOM		3
+>-#define RTC_OFFSET_DOW		4
+>-#define RTC_OFFSET_MTH		5
+>-#define RTC_OFFSET_YEAR		6
+>-#define RTC_OFFSET_COUNT	7
+>-
+>-#define RTC_AL_SEC		0x0018
+>-
+>-#define RTC_PDN2		0x002e
+>-#define RTC_PDN2_PWRON_ALARM	BIT(4)
+>-
+>-#define RTC_MIN_YEAR		1968
+>-#define RTC_BASE_YEAR		1900
+>-#define RTC_NUM_YEARS		128
+>-#define RTC_MIN_YEAR_OFFSET	(RTC_MIN_YEAR - RTC_BASE_YEAR)
+>-
+>-struct mt6397_rtc {
+>-	struct device		*dev;
+>-	struct rtc_device	*rtc_dev;
+>-	struct mutex		lock;
+>-	struct regmap		*regmap;
+>-	int			irq;
+>-	u32			addr_base;
+>-};
+>+#include <linux/mfd/mt6397/rtc=2Eh>
+>=20
+> static int mtk_rtc_write_trigger(struct mt6397_rtc *rtc)
+> {
+>diff --git a/include/linux/mfd/mt6397/rtc=2Eh
+>b/include/linux/mfd/mt6397/rtc=2Eh
+>new file mode 100644
+>index 000000000000=2E=2Ef84b9163c0ee
+>--- /dev/null
+>+++ b/include/linux/mfd/mt6397/rtc=2Eh
+>@@ -0,0 +1,71 @@
+>+/* SPDX-License-Identifier: GPL-2=2E0 */
+>+/*
+>+ * Copyright (C) 2014-2019 MediaTek Inc=2E
+>+ *
+>+ * Author: Tianping=2EFang <tianping=2Efang@mediatek=2Ecom>
+>+ *        Sean Wang <sean=2Ewang@mediatek=2Ecom>
+>+ */
+>+
+>+#ifndef _LINUX_MFD_MT6397_RTC_H_
+>+#define _LINUX_MFD_MT6397_RTC_H_
+>+
+>+#include <linux/jiffies=2Eh>
+>+#include <linux/mutex=2Eh>
+>+#include <linux/regmap=2Eh>
+>+#include <linux/rtc=2Eh>
+>+
+>+#define RTC_BBPU               0x0000
+>+#define RTC_BBPU_CBUSY         BIT(6)
+>+#define RTC_BBPU_KEY            (0x43 << 8)
+>+
+>+#define RTC_WRTGR              0x003c
+>+
+>+#define RTC_IRQ_STA            0x0002
+>+#define RTC_IRQ_STA_AL         BIT(0)
+>+#define RTC_IRQ_STA_LP         BIT(3)
+>+
+>+#define RTC_IRQ_EN             0x0004
+>+#define RTC_IRQ_EN_AL          BIT(0)
+>+#define RTC_IRQ_EN_ONESHOT     BIT(2)
+>+#define RTC_IRQ_EN_LP          BIT(3)
+>+#define RTC_IRQ_EN_ONESHOT_AL  (RTC_IRQ_EN_ONESHOT | RTC_IRQ_EN_AL)
+>+
+>+#define RTC_AL_MASK            0x0008
+>+#define RTC_AL_MASK_DOW                BIT(4)
+>+
+>+#define RTC_TC_SEC             0x000a
+>+/* Min, Hour, Dom=2E=2E=2E register offset to RTC_TC_SEC */
+>+#define RTC_OFFSET_SEC         0
+>+#define RTC_OFFSET_MIN         1
+>+#define RTC_OFFSET_HOUR                2
+>+#define RTC_OFFSET_DOM         3
+>+#define RTC_OFFSET_DOW         4
+>+#define RTC_OFFSET_MTH         5
+>+#define RTC_OFFSET_YEAR                6
+>+#define RTC_OFFSET_COUNT       7
+>+
+>+#define RTC_AL_SEC             0x0018
+>+
+>+#define RTC_PDN2               0x002e
+>+#define RTC_PDN2_PWRON_ALARM   BIT(4)
+>+
+>+#define RTC_MIN_YEAR           1968
+>+#define RTC_BASE_YEAR          1900
+>+#define RTC_NUM_YEARS          128
+>+#define RTC_MIN_YEAR_OFFSET    (RTC_MIN_YEAR - RTC_BASE_YEAR)
+>+
+>+#define MTK_RTC_POLL_DELAY_US  10
+>+#define MTK_RTC_POLL_TIMEOUT   (jiffies_to_usecs(HZ))
+>+
+>+struct mt6397_rtc {
+>+	struct device           *dev;
+>+	struct rtc_device       *rtc_dev;
+>+
+>+	/* Protect register access from multiple tasks */
+>+	struct mutex            lock;
+>+	struct regmap           *regmap;
+>+	int                     irq;
+>+	u32                     addr_base;
+>+};
+>+
+>+#endif /* _LINUX_MFD_MT6397_RTC_H_ */
