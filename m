@@ -2,160 +2,128 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B01C0CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:31:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94061CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:35:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DBAD214B2
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:31:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="LybOpDYC"
+	by mail.kernel.org (Postfix) with ESMTP id 672BA21928
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:35:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730553AbfJVAbx (ORCPT
+        id S1730563AbfJVAfk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 20:31:53 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:43369 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730172AbfJVAbw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 20:31:52 -0400
-Received: by mail-lf1-f66.google.com with SMTP id 21so2622540lft.10
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 17:31:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=h0GVt2WTy7rJoxNXkBhE5EwsIuLJIvkg3xBSTCp/DL0=;
-        b=LybOpDYCwdMtqan/8IAEiTe1HU1VkckWx3ZWV8mYQLe7Zgt30h+PDbxzKfRoufCqkH
-         0EkFoBwphjIuG0KBJWy3nWftmyth2CIbnXZnldK/vgeiQwWfj1mtUGK1rMfSdc8pMB51
-         lf7VBdYib0UpYD8xgV9SkKXFcJ1rLAk3x3XkzcEv6UT4PjcEMrs+38xKBtDDPEr4wvaN
-         nrAA2Vaw/gGZi5/X4YKB9LA2KyU558TO4p4eR/anZndtw+7ofxScQasWigX0VUym23Br
-         QmnrXFogjeYF5LcAqTgL8N2dSA/8hOsDM+71jxxz4Sq9n1e2ooqBXfN+pY0XvKsWJD0b
-         xxxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=h0GVt2WTy7rJoxNXkBhE5EwsIuLJIvkg3xBSTCp/DL0=;
-        b=VnrjCV3SGegO/3ykYjcMadSJ32jUJ+tybY3TinpYsjAxLBrVe8Q/zhnT1L5czD7HQw
-         DlEUirLbQ4Qr7Y9f4S6O0LnJYmHOVKB+KmyDQ3m/o8vvz0pXeKIypMjVwqOyMQBzx0su
-         F0/sStM3TRrwDrRRwkVeIxSErfcMRK0RXvrPn898PZcscSM/JzhlJCZVzq82SZy76dXZ
-         JFCJyLrQVPL6Updt0ZV5G1THYVFFoUhJgJtBlp/NyfD8E+bF6f8bncusdScsZpIr14p0
-         1U1CArZv/stsu0pJovZjJyIAgcSPonJd2ZOPsnUX0V53ieUHZXNKw3wVfsLcVCWW76pj
-         CKTw==
-X-Gm-Message-State: APjAAAUZxbMv9xzukmYR0CTjpHYTpOZNM/bUUbMSRMB2UW4fQ46Q+R2I
-        BBF9tnnVErY9B9v13/ZElxXBOhfuS+btS+S2iLmW
-X-Google-Smtp-Source: APXvYqw+rC5J+Z1nzHkK5AOHTkaVF47i78jP11Oa2nYpceyzoYzjRA6z6reajMuaPiEK48mkulR0rdvsnQt6ylqdK7I=
-X-Received: by 2002:ac2:51b6:: with SMTP id f22mr16411765lfk.175.1571704309449;
- Mon, 21 Oct 2019 17:31:49 -0700 (PDT)
+        Mon, 21 Oct 2019 20:35:40 -0400
+Received: from mga07.intel.com ([134.134.136.100]:35281 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727953AbfJVAfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 20:35:40 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 17:35:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,325,1566889200"; 
+   d="scan'208";a="348897196"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
+  by orsmga004.jf.intel.com with ESMTP; 21 Oct 2019 17:35:38 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     James Hogan <jhogan@kernel.org>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Marc Zyngier <maz@kernel.org>
+Cc:     David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
+        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 00/15] KVM: Dynamically size memslot arrays
+Date:   Mon, 21 Oct 2019 17:35:22 -0700
+Message-Id: <20191022003537.13013-1-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-References: <cover.1568834524.git.rgb@redhat.com> <214163d11a75126f610bcedfad67a4d89575dc77.1568834525.git.rgb@redhat.com>
- <20191019013904.uevmrzbmztsbhpnh@madcap2.tricolour.ca> <CAHC9VhRPygA=LsHLUqv+K=ouAiPFJ6fb2_As=OT-_zB7kGc_aQ@mail.gmail.com>
- <20191021213824.6zti5ndxu7sqs772@madcap2.tricolour.ca> <CAHC9VhRdNXsY4neJpSoNyJoAVEoiEc2oW5kSscF99tjmoQAxFA@mail.gmail.com>
- <20191021235734.mgcjotdqoe73e4ha@madcap2.tricolour.ca>
-In-Reply-To: <20191021235734.mgcjotdqoe73e4ha@madcap2.tricolour.ca>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Mon, 21 Oct 2019 20:31:37 -0400
-Message-ID: <CAHC9VhSiwnY-+2awxvGeO4a0NgfVkOPd8fzzBVujp=HtjskTuQ@mail.gmail.com>
-Subject: Re: [PATCH ghak90 V7 20/21] audit: add capcontid to set contid
- outside init_user_ns
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
-        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
-        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
-        nhorman@tuxdriver.com, Dan Walsh <dwalsh@redhat.com>,
-        mpatel@redhat.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 7:58 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> On 2019-10-21 17:43, Paul Moore wrote:
-> > On Mon, Oct 21, 2019 at 5:38 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > On 2019-10-21 15:53, Paul Moore wrote:
-> > > > On Fri, Oct 18, 2019 at 9:39 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > > > On 2019-09-18 21:22, Richard Guy Briggs wrote:
-> > > > > > Provide a mechanism similar to CAP_AUDIT_CONTROL to explicitly give a
-> > > > > > process in a non-init user namespace the capability to set audit
-> > > > > > container identifiers.
-> > > > > >
-> > > > > > Use audit netlink message types AUDIT_GET_CAPCONTID 1027 and
-> > > > > > AUDIT_SET_CAPCONTID 1028.  The message format includes the data
-> > > > > > structure:
-> > > > > > struct audit_capcontid_status {
-> > > > > >         pid_t   pid;
-> > > > > >         u32     enable;
-> > > > > > };
-> > > > >
-> > > > > Paul, can I get a review of the general idea here to see if you're ok
-> > > > > with this way of effectively extending CAP_AUDIT_CONTROL for the sake of
-> > > > > setting contid from beyond the init user namespace where capable() can't
-> > > > > reach and ns_capable() is meaningless for these purposes?
-> > > >
-> > > > I think my previous comment about having both the procfs and netlink
-> > > > interfaces apply here.  I don't see why we need two different APIs at
-> > > > the start; explain to me why procfs isn't sufficient.  If the argument
-> > > > is simply the desire to avoid mounting procfs in the container, how
-> > > > many container orchestrators can function today without a valid /proc?
-> > >
-> > > Ok, sorry, I meant to address that question from a previous patch
-> > > comment at the same time.
-> > >
-> > > It was raised by Eric Biederman that the proc filesystem interface for
-> > > audit had its limitations and he had suggested an audit netlink
-> > > interface made more sense.
-> >
-> > I'm sure you've got it handy, so I'm going to be lazy and ask: archive
-> > pointer to Eric's comments?  Just a heads-up, I'm really *not* a fan
-> > of using the netlink interface for this, so unless Eric presents a
-> > super compelling reason for why we shouldn't use procfs I'm inclined
-> > to stick with /proc.
->
-> It was actually a video call with Eric and Steve where that was
-> recommended, so I can't provide you with any first-hand communication
-> about it.  I'll get more details...
+The end goal of this series is to dynamically size the memslot array so
+that KVM allocates memory based on the number of memslots in use, as
+opposed to unconditionally allocating memory for the maximum number of
+memslots.  On x86, each memslot consumes 88 bytes, and so with 2 address
+spaces of 512 memslots, each VM consumes ~90k bytes for the memslots.
+E.g. given a VM that uses a total of 30 memslots, dynamic sizing reduces
+the memory footprint from 90k to ~2.6k bytes.
 
-Yeah, that sort of information really needs to be on the list.
+The changes required to support dynamic sizing are relatively small,
+e.g. are essentially contained in patches 12/13 and 13/13.  Patches 1-11
+clean up the memslot code, which has gotten quite crusy, especially
+__kvm_set_memory_region().  The clean up is likely not strictly necessary
+to switch to dynamic sizing, but I didn't have a remotely reasonable
+level of confidence in the correctness of the dynamic sizing without first
+doing the clean up.
 
-> So, with that out of the way, could you please comment on the general
-> idea of what was intended to be the central idea of this mechanism to be
-> able to nest containers beyond the initial user namespace (knowing that
-> a /proc interface is available and the audit netlink interface isn't
-> necessary for it to work and the latter can be easily removed)?
+Testing, especially non-x86 platforms, would be greatly appreciated.  The
+non-x86 changes are for all intents and purposes untested, e.g. I compile
+tested pieces of the code by copying them into x86, but that's it.  In
+theory, the vast majority of the functional changes are arch agnostic, in
+theory...
 
-I'm not entirely clear what you are asking about, are you asking why I
-care about nesting container orchestrators?  Simply put, it is not
-uncommon for the LXC/LXD folks to see nested container orchestrators,
-so I felt it was important to support that use case.  When we
-originally started this effort we probably should have done a better
-job reaching out to the LXC/LXD folks, we may have caught this
-earlier.  Regardless, we caught it, and it looks like we are on our
-way to supporting it (that's good).
+v2:
+  - Split "Drop kvm_arch_create_memslot()" into three patches to move
+    minor functional changes to standalone patches [Janosch].
+  - Rebase to latest kvm/queue (f0574a1cea5b, "KVM: x86: fix ...")
+  - Collect an Acked-by and a Reviewed-by
 
-Are you asking why I prefer the procfs approach to setting/getting the
-audit container ID?  For one, it makes it easier for a LSM to enforce
-the audit container ID operations independent of the other audit
-control APIs.  It also provides a simpler interface for container
-orchestrators.  Both seem like desirable traits as far as I'm
-concerned.
+Sean Christopherson (15):
+  KVM: Reinstall old memslots if arch preparation fails
+  KVM: Don't free new memslot if allocation of said memslot fails
+  KVM: PPC: Move memslot memory allocation into prepare_memory_region()
+  KVM: x86: Allocate memslot resources during prepare_memory_region()
+  KVM: Drop kvm_arch_create_memslot()
+  KVM: Explicitly free allocated-but-unused dirty bitmap
+  KVM: Refactor error handling for setting memory region
+  KVM: Move setting of memslot into helper routine
+  KVM: Move memslot deletion to helper function
+  KVM: Simplify kvm_free_memslot() and all its descendents
+  KVM: Clean up local variable usage in __kvm_set_memory_region()
+  KVM: Provide common implementation for generic dirty log functions
+  KVM: Ensure validity of memslot with respect to kvm_get_dirty_log()
+  KVM: Terminate memslot walks via used_slots
+  KVM: Dynamically size memslot array based on number of used slots
 
-> > > The intent was to switch to the audit netlink interface for contid,
-> > > capcontid and to add the audit netlink interface for loginuid and
-> > > sessionid while deprecating the proc interface for loginuid and
-> > > sessionid.  This was alluded to in the cover letter, but not very clear,
-> > > I'm afraid.  I have patches to remove the contid and loginuid/sessionid
-> > > interfaces in another tree which is why I had forgotten to outline that
-> > > plan more explicitly in the cover letter.
+ arch/mips/include/asm/kvm_host.h      |   2 +-
+ arch/mips/kvm/mips.c                  |  68 +---
+ arch/powerpc/include/asm/kvm_ppc.h    |  14 +-
+ arch/powerpc/kvm/book3s.c             |  22 +-
+ arch/powerpc/kvm/book3s_hv.c          |  36 +-
+ arch/powerpc/kvm/book3s_pr.c          |  20 +-
+ arch/powerpc/kvm/booke.c              |  17 +-
+ arch/powerpc/kvm/powerpc.c            |  13 +-
+ arch/s390/include/asm/kvm_host.h      |   2 +-
+ arch/s390/kvm/kvm-s390.c              |  21 +-
+ arch/x86/include/asm/kvm_page_track.h |   3 +-
+ arch/x86/kvm/page_track.c             |  15 +-
+ arch/x86/kvm/x86.c                    | 100 ++---
+ include/linux/kvm_host.h              |  48 +--
+ virt/kvm/arm/arm.c                    |  47 +--
+ virt/kvm/arm/mmu.c                    |  18 +-
+ virt/kvm/kvm_main.c                   | 546 ++++++++++++++++----------
+ 17 files changed, 467 insertions(+), 525 deletions(-)
 
 -- 
-paul moore
-www.paul-moore.com
+2.22.0
+
