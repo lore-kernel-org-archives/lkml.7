@@ -2,154 +2,200 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 797CACA9EB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:13:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A73ACA9EAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:15:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E2F320656
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:13:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b2c8gm4B"
+	by mail.kernel.org (Postfix) with ESMTP id DB4922084C
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:15:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730608AbfJVANf (ORCPT
+        id S1730472AbfJVAPp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 20:13:35 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:41805 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730472AbfJVANf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 20:13:35 -0400
-Received: by mail-ot1-f65.google.com with SMTP id g13so12626988otp.8;
-        Mon, 21 Oct 2019 17:13:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=M+6bF5g/YSE/QuOb6sBnF/qNNP/gyev5JR5+wvN0sXw=;
-        b=b2c8gm4Bbd0OmbDp99yDuCcsXVVEsGL2SvjN68dqGEwR+KknD5UpRk/6NszK4b2rg5
-         aw/bUjPfQlOepsOnIbFhSwBtvsP6o8/05dNHbcKmg9DkogYhX3KtZApt+vF09kl5+4xA
-         IX9oz+GTfHKpW8xlAnEfaS6VkdWK9+Tgy4n6CKpcm8OZK0lmpYHwlnZhldhtOGObSlxi
-         MBD8kc8J2bU+78fxZTVkJ0qFxCD+0BamvidGtVlyBF+L3QqCakODr4lD04jOpB6FYWyY
-         QlGIATUJieZik7oOPlgwyGlGXO+/mmrVAE5mSd/N9upD7h+Q49gGxSrxOaW3VXHz2kPA
-         7/1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=M+6bF5g/YSE/QuOb6sBnF/qNNP/gyev5JR5+wvN0sXw=;
-        b=mawwIV8ZzoB+oHKB4CAmwWR+LmHudPyG+axAg9/34JnwNySBA9Dy5oxwrGjE3pn8mz
-         0tYIH0DGAVBfhyu6hibstZpNdAYULxWT7dW2y/p/Tf7zmdxICOHcCiZyQelTQ3gBo4Iw
-         f8kk5Bl3i1rhtyRmsgsakCHNoZvROpq8WzwpnLv8Dj5cVS7FiddP7q7Q1FkLEBKmrX7D
-         /fobe6X3GCskVoWzi05HaMl75CVReFIaEKFtZaXFC4vsLgaQMzsuNrueXhRPYmnZOp7u
-         bsVGcaWy+ElgBkfRiDdFwLkRMpWXsFZYVNSpzX4t7nfCZr9xU/G2QiY8/OisrvGbhhHm
-         uLNA==
-X-Gm-Message-State: APjAAAWCdPd0ZJVNfzuYata3fETU7ozLCjSApYsG+y8ZuBun2nRA0U8d
-        P2KEq6Toy7Lx+EFSFOx3jpE=
-X-Google-Smtp-Source: APXvYqwA8kBZTBbWwYarMvf9QjlqphWph1OVZOn7BM2jiojzIiQ/xZOfEy0+BTJfGiWPwn8d49SCvw==
-X-Received: by 2002:a05:6830:1aef:: with SMTP id c15mr474833otd.200.1571703214113;
-        Mon, 21 Oct 2019 17:13:34 -0700 (PDT)
-Received: from nuclearis2-1.gtech (c-98-195-139-126.hsd1.tx.comcast.net. [98.195.139.126])
-        by smtp.gmail.com with ESMTPSA id k24sm4198786oic.29.2019.10.21.17.13.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 21 Oct 2019 17:13:33 -0700 (PDT)
-Subject: Re: [PATCH v3 3/3] PCI: pciehp: Add dmi table for in-band presence
- disabled
-To:     Stuart Hayes <stuart.w.hayes@gmail.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Austin Bolen <austin_bolen@dell.com>, keith.busch@intel.com,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, lukas@wunner.de
-References: <20191017193256.3636-1-stuart.w.hayes@gmail.com>
- <20191017193256.3636-4-stuart.w.hayes@gmail.com>
- <20191021134729.GL2819@lahna.fi.intel.com>
- <f4ace3ab-1b39-8a82-4cb6-a7a5d3bfbc72@gmail.com>
-From:   "Alex G." <mr.nuke.me@gmail.com>
-Message-ID: <d41c69c6-fa7b-d271-95e0-bf6e51b981ec@gmail.com>
-Date:   Mon, 21 Oct 2019 19:13:32 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 21 Oct 2019 20:15:45 -0400
+Received: from mga01.intel.com ([192.55.52.88]:27394 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730065AbfJVAPp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 20:15:45 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 17:15:44 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,325,1566889200"; 
+   d="scan'208";a="191289660"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by orsmga008.jf.intel.com with ESMTP; 21 Oct 2019 17:15:44 -0700
+Date:   Mon, 21 Oct 2019 17:15:44 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org
+Cc:     "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        Borislav Petkov <bp@suse.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>, kvm@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Subject: Re: [PATCH v2 01/16] x86/intel: Initialize IA32_FEATURE_CONTROL MSR
+ at boot
+Message-ID: <20191022001544.GA32518@linux.intel.com>
+References: <20191021234632.32363-1-sean.j.christopherson@intel.com>
+ <20191021235423.32733-1-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <f4ace3ab-1b39-8a82-4cb6-a7a5d3bfbc72@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191021235423.32733-1-sean.j.christopherson@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/21/19 1:19 PM, Stuart Hayes wrote:
-> 
-> 
-> On 10/21/19 8:47 AM, Mika Westerberg wrote:
->> On Thu, Oct 17, 2019 at 03:32:56PM -0400, Stuart Hayes wrote:
->>> Some systems have in-band presence detection disabled for hot-plug PCI
->>> slots, but do not report this in the slot capabilities 2 (SLTCAP2) register.
->>> On these systems, presence detect can become active well after the link is
->>> reported to be active, which can cause the slots to be disabled after a
->>> device is connected.
->>>
->>> Add a dmi table to flag these systems as having in-band presence disabled.
->>>
->>> Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
->>> ---
->>>   drivers/pci/hotplug/pciehp_hpc.c | 14 ++++++++++++++
->>>   1 file changed, 14 insertions(+)
->>>
->>> diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
->>> index 02eb811a014f..4d377a2a62ce 100644
->>> --- a/drivers/pci/hotplug/pciehp_hpc.c
->>> +++ b/drivers/pci/hotplug/pciehp_hpc.c
->>> @@ -14,6 +14,7 @@
->>>   
->>>   #define dev_fmt(fmt) "pciehp: " fmt
->>>   
->>> +#include <linux/dmi.h>
->>>   #include <linux/kernel.h>
->>>   #include <linux/types.h>
->>>   #include <linux/jiffies.h>
->>> @@ -26,6 +27,16 @@
->>>   #include "../pci.h"
->>>   #include "pciehp.h"
->>>   
->>> +static const struct dmi_system_id inband_presence_disabled_dmi_table[] = {
->>> +	{
->>> +		.ident = "Dell System",
->>> +		.matches = {
->>> +			DMI_MATCH(DMI_OEM_STRING, "Dell System"),
->>
->> Sorry if this has been discussed previously already but isn't this going
->> to apply on all Dell systems, not just the affected ones? Is this the
->> intention?
->>
-> 
-> Yes, that is the intention. Applying this just makes the hotplug code wait for
-> the presence detect bit to be set before proceeding, which ideally wouldn't hurt
-> anything--for devices that don't have inband presence detect disabled, presence
-> detect should already be up when the code in patch 2/3 starts to wait for it.
-> 
-> The only issue should be with broken hotplug implementations that don't ever
-> bring presence detect active (these apparently exist)--but even those would still
-> work, they would just take an extra second to come up.
-> 
-> On the other hand, a number of Dell systems have (and will have) NVMe
-> implementations that have inband presence detect disabled (but they won't have
-> the new bit implemented to report that), and they don't work correctly without
-> this.
++Cc Paolo and Radim, who occasionally work on KVM...
 
-I think it's clearer if this is explained in a comment. That it doesn't 
-break anything, and we're okay this applies to all hotplug ports, even 
-those that are not in front of an NVMe backplane.
+On Mon, Oct 21, 2019 at 04:54:23PM -0700, Sean Christopherson wrote:
+> Opportunistically initialize IA32_FEATURE_CONTROL MSR to enable VMX when
+> the MSR is left unlocked by BIOS.  Configuring IA32_FEATURE_CONTROL at
+> boot time paves the way for similar enabling of other features, e.g.
+> Software Guard Extensions (SGX).
+> 
+> Temporarily leave equivalent KVM code in place in order to avoid
+> introducing a regression on Centaur and Zhaoxin CPUs, e.g. removing
+> KVM's code would leave the MSR unlocked on those CPUs and would break
+> existing functionality if people are loading kvm_intel on Centaur and/or
+> Zhaoxin.  Defer enablement of the boot-time configuration on Centaur and
+> Zhaoxin to future patches to aid bisection.
+> 
+> Note, Local Machine Check Exceptions (LMCE) are also supported by the
+> kernel and enabled via IA32_FEATURE_CONTROL, but the kernel currently
+> uses LMCE if and and only if the feature is explicitly enable by BIOS.
+> Keep the current behavior to avoid introducing bugs, future patches can
+> opt in to opportunistic enabling if it's deemed desirable to do so.
+> 
+> Always lock IA32_FEATURE_CONTROL if it exists, even if the CPU doesn't
+> support VMX, so that other existing and future kernel code that queries
+> IA32_FEATURE_CONTROL can assume it's locked.
+> 
+> Start from a clean slate when constructing the value to write to
+> IA32_FEATURE_CONTROL, i.e. ignore whatever value BIOS left in the MSR so
+> as not to enable random features or fault on the WRMSR.
+> 
+> Suggested-by: Borislav Petkov <bp@suse.de>
+> Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> Cc: Tony Luck <tony.luck@intel.com>
+> Cc: Vitaly Kuznetsov <vkuznets@redhat.com>,
 
-Alex
+Fat fingered a comma when manually editing the patch files :-/
+
+> Cc: Wanpeng Li <wanpengli@tencent.com>
+> Cc: Jim Mattson <jmattson@google.com>
+> Cc: kvm@vger.kernel.org
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/x86/Kconfig.cpu                  |  4 ++++
+>  arch/x86/kernel/cpu/Makefile          |  1 +
+>  arch/x86/kernel/cpu/cpu.h             |  4 ++++
+>  arch/x86/kernel/cpu/feature_control.c | 30 +++++++++++++++++++++++++++
+>  arch/x86/kernel/cpu/intel.c           |  2 ++
+>  5 files changed, 41 insertions(+)
+>  create mode 100644 arch/x86/kernel/cpu/feature_control.c
+> 
+> diff --git a/arch/x86/Kconfig.cpu b/arch/x86/Kconfig.cpu
+> index af9c967782f6..aafc14a0abf7 100644
+> --- a/arch/x86/Kconfig.cpu
+> +++ b/arch/x86/Kconfig.cpu
+> @@ -387,6 +387,10 @@ config X86_DEBUGCTLMSR
+>  	def_bool y
+>  	depends on !(MK6 || MWINCHIPC6 || MWINCHIP3D || MCYRIXIII || M586MMX || M586TSC || M586 || M486SX || M486) && !UML
+>  
+> +config X86_FEATURE_CONTROL_MSR
+> +	def_bool y
+> +	depends on CPU_SUP_INTEL
+> +
+>  menuconfig PROCESSOR_SELECT
+>  	bool "Supported processor vendors" if EXPERT
+>  	---help---
+> diff --git a/arch/x86/kernel/cpu/Makefile b/arch/x86/kernel/cpu/Makefile
+> index d7a1e5a9331c..df5ad0cfe3e9 100644
+> --- a/arch/x86/kernel/cpu/Makefile
+> +++ b/arch/x86/kernel/cpu/Makefile
+> @@ -29,6 +29,7 @@ obj-y			+= umwait.o
+>  obj-$(CONFIG_PROC_FS)	+= proc.o
+>  obj-$(CONFIG_X86_FEATURE_NAMES) += capflags.o powerflags.o
+>  
+> +obj-$(CONFIG_X86_FEATURE_CONTROL_MSR) += feature_control.o
+>  ifdef CONFIG_CPU_SUP_INTEL
+>  obj-y			+= intel.o intel_pconfig.o
+>  obj-$(CONFIG_PM)	+= intel_epb.o
+> diff --git a/arch/x86/kernel/cpu/cpu.h b/arch/x86/kernel/cpu/cpu.h
+> index c0e2407abdd6..d2750f53a0cb 100644
+> --- a/arch/x86/kernel/cpu/cpu.h
+> +++ b/arch/x86/kernel/cpu/cpu.h
+> @@ -62,4 +62,8 @@ unsigned int aperfmperf_get_khz(int cpu);
+>  
+>  extern void x86_spec_ctrl_setup_ap(void);
+>  
+> +#ifdef CONFIG_X86_FEATURE_CONTROL_MSR
+> +void init_feature_control_msr(struct cpuinfo_x86 *c);
+> +#endif
+> +
+>  #endif /* ARCH_X86_CPU_H */
+> diff --git a/arch/x86/kernel/cpu/feature_control.c b/arch/x86/kernel/cpu/feature_control.c
+> new file mode 100644
+> index 000000000000..57b928e64cf5
+> --- /dev/null
+> +++ b/arch/x86/kernel/cpu/feature_control.c
+> @@ -0,0 +1,30 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#include <linux/tboot.h>
+> +
+> +#include <asm/cpufeature.h>
+> +#include <asm/msr-index.h>
+> +#include <asm/processor.h>
+> +
+> +void init_feature_control_msr(struct cpuinfo_x86 *c)
+> +{
+> +	u64 msr;
+> +
+> +	if (rdmsrl_safe(MSR_IA32_FEATURE_CONTROL, &msr))
+> +		return;
+> +
+> +	if (msr & FEATURE_CONTROL_LOCKED)
+> +		return;
+> +
+> +	/*
+> +	 * Ignore whatever value BIOS left in the MSR to avoid enabling random
+> +	 * features or faulting on the WRMSR.
+> +	 */
+> +	msr = FEATURE_CONTROL_LOCKED;
+> +
+> +	if (cpu_has(c, X86_FEATURE_VMX)) {
+> +		msr |= FEATURE_CONTROL_VMXON_ENABLED_OUTSIDE_SMX;
+> +		if (tboot_enabled())
+> +			msr |= FEATURE_CONTROL_VMXON_ENABLED_INSIDE_SMX;
+> +	}
+> +	wrmsrl(MSR_IA32_FEATURE_CONTROL, msr);
+> +}
+> diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+> index c2fdc00df163..15d59224e2f8 100644
+> --- a/arch/x86/kernel/cpu/intel.c
+> +++ b/arch/x86/kernel/cpu/intel.c
+> @@ -755,6 +755,8 @@ static void init_intel(struct cpuinfo_x86 *c)
+>  	/* Work around errata */
+>  	srat_detect_node(c);
+>  
+> +	init_feature_control_msr(c);
+> +
+>  	if (cpu_has(c, X86_FEATURE_VMX))
+>  		detect_vmx_virtcap(c);
+>  
+> -- 
+> 2.22.0
+> 
