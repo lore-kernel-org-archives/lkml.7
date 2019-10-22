@@ -2,114 +2,65 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEF37CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:14:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DD85CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:16:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C41E520B7C
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:14:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="RSlOVsMA"
+	by mail.kernel.org (Postfix) with ESMTP id 480272084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:16:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389068AbfJVQOx (ORCPT
+        id S2389215AbfJVQQg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 12:14:53 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.50]:8306 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727152AbfJVQOx (ORCPT
+        Tue, 22 Oct 2019 12:16:36 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:56775 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388205AbfJVQQf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 12:14:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1571760888;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=C/uw8S92wjbyOWAQk7FQIkAayZ1BGrYlPAf9Oil9cRE=;
-        b=RSlOVsMAKP+L4nrbSHSrhU929PHeQUT//CQJ+9C51i3Dz/Jh7rLQZztbC537hKGuy+
-        Cb6DN0zE4qmRv15P5OSTipmp+CqbvQLZ443H98Fs+8ybaboVdNUQC71StoxufuqwDTnM
-        JyjnZy0s/RP2C/Tc/yL44uJ+lkT3gR2eZj6SKkKg79OX6KqM/lqIn96iJK/fr1h5r4mJ
-        HfhW4yjYSlwdw2m85pL6O/eVUGCpXOOkIq6DfPKBixLQ9adpGbicBXBeY8mq7B22TXF8
-        XcQ9I3KsO6e5IjEgjCUY78AVU4ahe7yqrNuA7LTj0wJ7JH+2fcAA9Zie3kO+KTU4yyaQ
-        3RlQ==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/zswDWtng=="
-X-RZG-CLASS-ID: mo00
-Received: from mbp-13-nikolaus.fritz.box
-        by smtp.strato.de (RZmta 44.28.1 DYNA|AUTH)
-        with ESMTPSA id R0b2a8v9MGEcRpL
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Tue, 22 Oct 2019 18:14:38 +0200 (CEST)
-Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [PATCH 1/7] dt-bindings: gpu: pvrsgx: add initial bindings
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <20191022153650.GL5610@atomide.com>
-Date:   Tue, 22 Oct 2019 18:14:38 +0200
-Cc:     Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
-Content-Transfer-Encoding: 7bit
-Message-Id: <8FCDC0F6-7734-4629-9646-7BEED89FEF25@goldelico.com>
-References: <cover.1571424390.git.hns@goldelico.com> <f0fb68dc7bc027e5e911721852f6bc6fa2d77a63.1571424390.git.hns@goldelico.com> <CAL_Jsq+obsTSU3iP1wm_3-FsAJ4Mxiz0NbMY1_h5NeFn67Sj+A@mail.gmail.com> <CEA29A3B-4116-4FE3-8E18-0C97353688DC@goldelico.com> <20191021172557.GB5610@atomide.com> <C6CD5A50-7F0A-4F56-ABB9-CAEDF7E47A5D@goldelico.com> <20191022150202.GJ5610@atomide.com> <CC62CE92-28DF-406E-B61C-22F8F341AAFB@goldelico.com> <20191022153650.GL5610@atomide.com>
-To:     Tony Lindgren <tony@atomide.com>
-X-Mailer: Apple Mail (2.3124)
+        Tue, 22 Oct 2019 12:16:35 -0400
+Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.pengutronix.de.)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1iMwpm-0000p1-I6; Tue, 22 Oct 2019 18:16:34 +0200
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     linux-kernel@vger.kernel.org
+Cc:     Joe Perches <joe@perches.com>, kernel@pengutronix.de
+Subject: [PATCH v2] MAINTAINERS: add reset controller framework keywords
+Date:   Tue, 22 Oct 2019 18:16:33 +0200
+Message-Id: <20191022161633.30302-1-p.zabel@pengutronix.de>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add a regex that matches users of the reset controller API.
 
-> Am 22.10.2019 um 17:36 schrieb Tony Lindgren <tony@atomide.com>:
-> 
-> * H. Nikolaus Schaller <hns@goldelico.com> [191022 15:12]:
->> Hm. How should that work? Some SoC have the sgx544 as single
->> core and others as dual core. This imho does not fit into
->> the "img,sgx544-$revision" scheme which could be matched to.
-> 
-> Well don't you have then just two separate child nodes,
-> one for each core with their own register range?
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+---
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
-Doesn't look so. AFAIK the architecture of SGX is that there
-is a single scheduler which is accessed by the register range
-and it internally has control over multiple cores.
-
-> 
-> That is assuming they're really separate instances..
-
-No. There is some internal magic in the driver. It just
-needs to know that there is one or two nodes. Currently
-this is handled by some #define option when calling the
-inner Makefile.
-
-My idea was to replace the #ifdef by checking for the
-img,cores property.
-
-> 
->> But maybe we do it the same as with the timer for the moment,
->> i.e. keep it in some unpublished patch set.
-> 
-> Yeah makes sense to me until things get sorted out.
-> 
->> At the moment I have more problems understanding how the yaml
->> thing works. I understand and fully support the overall goal,
->> but it is quite difficult to get a start here. And there do not
->> seem to be tools or scripts to help converting from old style
->> text format (even if not perfect, this would be helpful) and
->> I have no yaml editor that helps keeping the indentation
->> correct. So this slows down a v2 a little bit.
-> 
-> Sounds handy to me :)
-> 
-> Regards,
-> 
-> Tony
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 296de2b51c83..5d77a376a45c 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -13851,6 +13851,7 @@ F:	include/dt-bindings/reset/
+ F:	include/linux/reset.h
+ F:	include/linux/reset/
+ F:	include/linux/reset-controller.h
++K:      \b(?:devm_|of_)?reset_control(?:ler_[a-z]+|_[a-z_]+)?\b
+ 
+ RESTARTABLE SEQUENCES SUPPORT
+ M:	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+-- 
+2.20.1
 
