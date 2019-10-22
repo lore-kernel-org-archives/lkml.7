@@ -2,70 +2,153 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C13CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 11:20:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16844CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 11:21:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0953D21783
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 11:20:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571743208;
-	bh=tCcnDzs9CibPEhnrwLdPMnchK9XFJ/YHCcJPFtzrVPA=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=EMkfjGQUFxvl2tPpwlK/vqgQBDFiIKs3eBQgf3VhKqlVboR/JqSggHFD74/UTc1Iu
-	 L4GisdMZmOqIN4JQDYDWUI0hp84Z+X0tBi64bEP6eooLKz80J6iqcxdbTjxMGbLMpC
-	 trJNOGijl7GlJixt4Jd8VvzV1hXvkc5M5j6FawVE=
+	by mail.kernel.org (Postfix) with ESMTP id E130920640
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 11:21:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=plexistor-com.20150623.gappssmtp.com header.i=@plexistor-com.20150623.gappssmtp.com header.b="NY/Vg+KY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388390AbfJVLUH (ORCPT
+        id S2387971AbfJVLVV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 07:20:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56916 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387786AbfJVLUG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 07:20:06 -0400
-Subject: Re: [GIT PULL] pin control fixes for v5.4
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571743205;
-        bh=tCcnDzs9CibPEhnrwLdPMnchK9XFJ/YHCcJPFtzrVPA=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=yXIUgZw1WA+pc2s+ggBYusH5mNM8dR4vWOs8083Y79FiRWCy6y3bFMib0+O+TRIs0
-         M+TnfnxmjFwKSn44H2A67zWERiU8grlXyncrw2D4VQi87wAaUVzxHDBg5JVbBYDpbs
-         IDxlzULfaovOQeXyQDiOR4S9D95Bl9uVUVQl8fyY=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CACRpkdbiyY9AT5Y8OwMmFgwgvn_DGUFrJVHWbZwyAxnK_bA7HQ@mail.gmail.com>
-References: <CACRpkdbiyY9AT5Y8OwMmFgwgvn_DGUFrJVHWbZwyAxnK_bA7HQ@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CACRpkdbiyY9AT5Y8OwMmFgwgvn_DGUFrJVHWbZwyAxnK_bA7HQ@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
- tags/pinctrl-v5.4-2
-X-PR-Tracked-Commit-Id: d6e7a1a5119c4e719b0d63651f09762d7384bfed
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 3b7c59a1950c75f2c0152e5a9cd77675b09233d6
-Message-Id: <157174320587.11205.11116457943132650143.pr-tracker-bot@kernel.org>
-Date:   Tue, 22 Oct 2019 11:20:05 +0000
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+        Tue, 22 Oct 2019 07:21:21 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:44721 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387405AbfJVLVV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 07:21:21 -0400
+Received: by mail-ed1-f68.google.com with SMTP id r16so12546231edq.11
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 04:21:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=plexistor-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=hkPjYtxu0G68TNOL7v3J1p13GtJ9bbjz9PgUJHvGUO4=;
+        b=NY/Vg+KYkfRz80jxUYpA7t8Pxm2pGBYJ+h3r9wYIIS9WTnYFDXAjUzhM7N78ek5F9C
+         r+L+12vJiHo+PxQ82cmaBgOJ/yw90xHGpO3E/d1R8cdSmLS6Yahs+PXzpAuGzRBVsxK0
+         vVyBefcjZfG2X6pLWNK7Nwn0zpyX2pIy/kqKQ30ad7Q13i7lmWZysLFyuUJr8CYGtBZZ
+         pD6hzp4Zj64Usi8SQFo0A0wCk2GQMYBUBurH4YTO2khbUC78TgpcrMLnyeIturUEx/bF
+         pMEbQwbm9AJOtx6+JoIjFQCQYvqOi5Xft8n5yxfj7F7VjRbYykLjhXNarDhLy1Zj//i/
+         MQzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=hkPjYtxu0G68TNOL7v3J1p13GtJ9bbjz9PgUJHvGUO4=;
+        b=fo54WjwmwnJLzX3ieHGzlsV7Y6U5W7Kz6AVgqZQ61T1sswqbItIXLms4zeqTUHswr3
+         KOSTsZGnd8rnpt0o4e/ErxzmClsaQkMcaMtXGvnXZAEomx+OAAVjbsGNyRYKM03DNzWE
+         5Mt4BNrjjTto43Dvb1Zk1dtThWdbMTxc8ynBN27KqEMZxyHUOMKrLluLPzXFiOI/AvVZ
+         gMV89BfQYt3HtxPFE5stL5x2OzblkpI/qb7GlhfVbVyVPKUvOLo1nmkJa7sY+6jD+FhW
+         yaq9ZgQA48rfc+SOZde226V3lOhF04GIR+esm5sfGFr9Bg6OBlpOz5Qu/XcKMx37mq0o
+         dIWw==
+X-Gm-Message-State: APjAAAV8KKmKfGHCCGhyB8MfXspsHsRotCDwxbgkgyOenu6JmU8TP7ZG
+        /VSPjB1S8J1lFIVpVeQpNEpCTw==
+X-Google-Smtp-Source: APXvYqySKn4thuU3f7K7aDJqekurENi/VR+yBa2dMuzwxWcadqexy5iRGP32nwx1Eh17ArpcLJiB9w==
+X-Received: by 2002:a17:906:bfcb:: with SMTP id us11mr26657460ejb.299.1571743279644;
+        Tue, 22 Oct 2019 04:21:19 -0700 (PDT)
+Received: from [10.68.217.182] ([217.70.210.43])
+        by smtp.googlemail.com with ESMTPSA id gl4sm114537ejb.6.2019.10.22.04.21.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Oct 2019 04:21:18 -0700 (PDT)
+Subject: Re: [PATCH 0/5] Enable per-file/directory DAX operations
+To:     ira.weiny@intel.com, linux-kernel@vger.kernel.org
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+References: <20191020155935.12297-1-ira.weiny@intel.com>
+From:   Boaz Harrosh <boaz@plexistor.com>
+Message-ID: <b7849297-e4a4-aaec-9a64-2b481663588b@plexistor.com>
+Date:   Tue, 22 Oct 2019 14:21:16 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
+MIME-Version: 1.0
+In-Reply-To: <20191020155935.12297-1-ira.weiny@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Tue, 22 Oct 2019 10:57:10 +0200:
+On 20/10/2019 18:59, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
+> 
+> At LSF/MM'19 [1] [2] we discussed applications that overestimate memory
+> consumption due to their inability to detect whether the kernel will
+> instantiate page cache for a file, and cases where a global dax enable via a
+> mount option is too coarse.
+> 
+> The following patch series enables selecting the use of DAX on individual files
+> and/or directories on xfs, and lays some groundwork to do so in ext4.  In this
+> scheme the dax mount option can be omitted to allow the per-file property to
+> take effect.
+> 
+> The insight at LSF/MM was to separate the per-mount or per-file "physical"
+> capability switch from an "effective" attribute for the file.
+> 
+> At LSF/MM we discussed the difficulties of switching the mode of a file with
+> active mappings / page cache. Rather than solve those races the decision was to
+> just limit mode flips to 0-length files.
+> 
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v5.4-2
+What I understand above is that only "writers" before writing any bytes may
+turn the flag on, which then persists. But as a very long time user of DAX, usually
+it is the writers that are least interesting. With lots of DAX technologies and
+emulations the write is slower and needs slow "flushing".
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/3b7c59a1950c75f2c0152e5a9cd77675b09233d6
+The more interesting and performance gains comes from DAX READs actually.
+specially cross the VM guest. (IE. All VMs share host memory or pmem)
 
-Thank you!
+This fixture as I understand it, that I need to know before I write if I will
+want DAX or not and then the write is DAX as well as reads after that, looks
+not very interesting for me as a user.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Just my $0.17
+Boaz
+
+> Finally, the physical DAX flag inheritance is maintained from previous work on 
+> XFS but should be added for other file systems for consistence.
+> 
+> 
+> [1] https://lwn.net/Articles/787973/
+> [2] https://lwn.net/Articles/787233/
+> 
+> To: linux-kernel@vger.kernel.org
+> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+> Cc: "Darrick J. Wong" <darrick.wong@oracle.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Dave Chinner <david@fromorbit.com>
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: "Theodore Y. Ts'o" <tytso@mit.edu>
+> Cc: Jan Kara <jack@suse.cz>
+> Cc: linux-ext4@vger.kernel.org
+> Cc: linux-xfs@vger.kernel.org
+> Cc: linux-fsdevel@vger.kernel.org
+> 
+> Ira Weiny (5):
+>   fs/stat: Define DAX statx attribute
+>   fs/xfs: Isolate the physical DAX flag from effective
+>   fs/xfs: Separate functionality of xfs_inode_supports_dax()
+>   fs/xfs: Clean up DAX support check
+>   fs/xfs: Allow toggle of physical DAX flag
+> 
+>  fs/stat.c                 |  3 +++
+>  fs/xfs/xfs_ioctl.c        | 32 ++++++++++++++------------------
+>  fs/xfs/xfs_iops.c         | 36 ++++++++++++++++++++++++++++++------
+>  fs/xfs/xfs_iops.h         |  2 ++
+>  include/uapi/linux/stat.h |  1 +
+>  5 files changed, 50 insertions(+), 24 deletions(-)
+> 
+
