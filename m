@@ -2,125 +2,107 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DD40CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:27:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 029E3CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:27:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 508E421872
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:27:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA27B20700
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:27:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="buFDSpnk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729657AbfJVO1X (ORCPT
+        id S1730965AbfJVO1o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 10:27:23 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:34229 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725887AbfJVO1W (ORCPT
+        Tue, 22 Oct 2019 10:27:44 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:35177 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727323AbfJVO1n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 10:27:22 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1Mzhax-1i9dMY3aYT-00vdGx; Tue, 22 Oct 2019 16:27:07 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Chanwoo Choi <cw00.choi@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Lukasz Luba <l.luba@partner.samsung.com>,
-        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] PM / devfreq: events: fix excessive stack usage
-Date:   Tue, 22 Oct 2019 16:26:48 +0200
-Message-Id: <20191022142703.1789898-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Tue, 22 Oct 2019 10:27:43 -0400
+Received: by mail-qk1-f193.google.com with SMTP id w2so16411980qkf.2;
+        Tue, 22 Oct 2019 07:27:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=X0ZOGYsSTOrqAuUJQSbLUK9pxP5SaCYK2GX9ZXRXpGo=;
+        b=buFDSpnktDPCZOnBms8qhalNZimgAYSLbVNQ08D23fWAEr8Amk28tWNY7kQrcLSKYX
+         LLNIQU13CSzasXYCEmisROuDbWG4K9DilKBU7R7n8luUguLxMsy04Ky6L2KPh/n8PDHT
+         ylk1MLCdbtCnrHbu8wwBUOJUrnENaxHvyOcfhP01bl4SkovkcesoK98SGOvZOZdDEtK5
+         sS4rtifd2yyyLy3aVYojExK/aaQDXD0CW7r0hdfYwnkSNQNVYaICjioD9pihR7Al5zeM
+         E3IjnFA0NV2BspGqs/LX5ub01djtBsefxTQkc8G6SiGf8dQZj+qaRYq0Er3icg7c9Acs
+         35Qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=X0ZOGYsSTOrqAuUJQSbLUK9pxP5SaCYK2GX9ZXRXpGo=;
+        b=IgqPSbOeJ6PJQwJKoOJCTD6OWuzb9KdlURXdEjYK0tgJ1EeFeTX9Dubf7Ke4rmp3UR
+         KkdvYV/HNvsRx6WTPD3nRLdolCwV0njq1EiRXMB2eduET8zf0fBxg6KwsKctxhkt1xJL
+         leEwqn8UgVQ/PKBl+pD28lYa8rLllccoEA/a3tqbsGRU6O4NdXdXdnCozEbtrReMr/jo
+         dBZz5wLIi8070WrHnEnd06Pp77lJaed39JW0/IV2sfOQ7Hd9vtM6fdqNgGfTEvo6B87N
+         Rb/tIqOkGbQZeJzAa38jjhTIHsPfv2WBvWk6Zm62YIU4CcqxDUoV3tzGb9wRZFhhFm24
+         SNaA==
+X-Gm-Message-State: APjAAAW9x74UX1HAnwRnuMgolDSD4cKq+xSV6TWitsz4oSo7DxD2V6Re
+        vcdwRF2HlZ004sWfabEW+n7CoJL4V/k=
+X-Google-Smtp-Source: APXvYqxNL03HGLClVr1AH7C8sRxH8TcjK0Dkh8gIZmURmo0hIogq04ewNWkBtNqsKIOZASOCvveTbw==
+X-Received: by 2002:a37:9202:: with SMTP id u2mr3291112qkd.8.1571754462621;
+        Tue, 22 Oct 2019 07:27:42 -0700 (PDT)
+Received: from smtp.gmail.com (gwcrusp.semfio.usp.br. [143.107.150.86])
+        by smtp.gmail.com with ESMTPSA id k29sm9824775qtu.70.2019.10.22.07.27.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Oct 2019 07:27:41 -0700 (PDT)
+Date:   Tue, 22 Oct 2019 11:27:37 -0300
+From:   Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     dragos.bogdan@analog.com, alexandru.ardelean@analog.com,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        kernel-usp@googlegroups.com
+Subject: Re: [PATCH v2 1/2] iio: adc: Add driver support for AD7292
+Message-ID: <20191022142736.ztch3mzqpv6jcvhm@smtp.gmail.com>
+References: <20191016025119.53fclzngzt5qwlmk@smtp.gmail.com>
+ <20191021180644.3a260af2@archlinux>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:qh/RvLmjzDt8CUVV7ACatn1skvYcyfu5E28VkIq7AS6tttHZlMz
- TIjAjlq//c4oE0S7pk2+qn3TwWn+zIIDE+irKrPdUQkLSm9C+UMARBbwSYsXjmQ3A4Vj4+m
- WaYPiiDoSMGCRXT0S2+joZKLny6x7/4mgNiuXorMgIEGEcbqw0dHAFpnjrAPOburAvNGWF+
- 9WZ22K4YeTldC144O2aUQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:sL01PcIlAAs=:AntrFvxzg3D8JTrZICKrqN
- 1ZPcU53wnTXZaTpk0RQYe0TbS0a4kx0bLi2NKVF//lAiil22BuvuewyWdDVifb017uCRjc23M
- a8bn7moO7kXmW24pWlqE+VddKGpvytQMyzEzzGqKZPCHhUe7IErLHu6/FsS0GZj+qI3WiMuSj
- sdZrCdC+hXXvm+yDqnzpqzQ2PNTiGqUeYncWNojpuimzpwSVNBkd6ZUhaGp/ffsVMRA3ndliV
- P8ePYjyBGCeEOiCGk+WSL4mIsAJhFgopmppPVrLN4Y/L40+8DVKFXHJu4njXeEZxz7S4flg/H
- syJEdRIGPIpMeBIqzfhtr/YfVMRuiey+q6s4j9ibCcz3HZlDAxgHjM1USfC1qKlLiD2F/qTKL
- 2aB6GnHIJ/n8MqcKJBN6LcVOklxnFb62hwn0IF7mB9i4ZbUgwuQMoZJn7iq2S+uC86BA77rSZ
- 77t2x1ygZ+fNSEP2Qdee08lDS4Q9N7qkcUKrm7JPIK9meUfMzOgsnSwAPbc9pFIxAsJgD73El
- HN8hbnxKcaHLSKXN4RFXBMka2+4KtDTCQPqISfbeWJyEkUZY8Q1lNdsTIxtR80lVCL0XxtP33
- gx9qE9CPg0iYSV8AbwAggbQ3Aag0BfGSnPClLTRIhOY3NcISc7LnCzvryq8hmcpPpqLDOQDLW
- DBb4COdvFcGH+wED2mv5Rp4f/jkAz7Rj8f2re+ij6KoQuU34ryYMH6VA9pTnVqAQx2W/Bek+H
- iJqeYhoXUFR47tPo3Xo1uxkr+oYSmEzHbP/4WCDejGwmlioTth7WUFtwvbv/pYbZ3nCbst2bv
- zwbdwYn6oSVjStsGxfOWHEX4D4miVBlCvShwv//yhKuL0HP/BCDhx3o5UrU8O2YXXRBPlIu61
- ZV8Swi1xkpPum25vukVg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191021180644.3a260af2@archlinux>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Putting a 'struct devfreq_event_dev' object on the stack is generally
-a bad idea and here it leads to a warnig about potential stack overflow:
+Hi Jonathan,
 
-drivers/devfreq/event/exynos-ppmu.c:643:12: error: stack frame size of 1040 bytes in function 'exynos_ppmu_probe' [-Werror,-Wframe-larger-than=]
+Should I send a V3 for the whole patchset or just for the DT binding patch?
 
-There is no real need for the device structure, only the string inside
-it, so add an internal helper function that simply takes the string
-as its argument and remove the device structure.
+Thanks,
 
-Fixes: 1dd62c66d345 ("PM / devfreq: events: extend events by type of counted data")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/devfreq/event/exynos-ppmu.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+Marcelo
 
-diff --git a/drivers/devfreq/event/exynos-ppmu.c b/drivers/devfreq/event/exynos-ppmu.c
-index 87b42055e6bc..302e466549d3 100644
---- a/drivers/devfreq/event/exynos-ppmu.c
-+++ b/drivers/devfreq/event/exynos-ppmu.c
-@@ -101,17 +101,22 @@ static struct __exynos_ppmu_events {
- 	PPMU_EVENT(dmc1_1),
- };
- 
--static int exynos_ppmu_find_ppmu_id(struct devfreq_event_dev *edev)
-+static int __exynos_ppmu_find_ppmu_id(const char *edev_name)
- {
- 	int i;
- 
- 	for (i = 0; i < ARRAY_SIZE(ppmu_events); i++)
--		if (!strcmp(edev->desc->name, ppmu_events[i].name))
-+		if (!strcmp(edev_name, ppmu_events[i].name))
- 			return ppmu_events[i].id;
- 
- 	return -EINVAL;
- }
- 
-+static int exynos_ppmu_find_ppmu_id(struct devfreq_event_dev *edev)
-+{
-+	return __exynos_ppmu_find_ppmu_id(edev->desc->name);
-+}
-+
- /*
-  * The devfreq-event ops structure for PPMU v1.1
-  */
-@@ -556,13 +561,11 @@ static int of_get_devfreq_events(struct device_node *np,
- 			 * use default if not.
- 			 */
- 			if (info->ppmu_type == EXYNOS_TYPE_PPMU_V2) {
--				struct devfreq_event_dev edev;
- 				int id;
- 				/* Not all registers take the same value for
- 				 * read+write data count.
- 				 */
--				edev.desc = &desc[j];
--				id = exynos_ppmu_find_ppmu_id(&edev);
-+				id = __exynos_ppmu_find_ppmu_id(desc->name);
- 
- 				switch (id) {
- 				case PPMU_PMNCNT0:
--- 
-2.20.0
-
+On 10/21, Jonathan Cameron wrote:
+> On Tue, 15 Oct 2019 23:51:22 -0300
+> Marcelo Schmitt <marcelo.schmitt1@gmail.com> wrote:
+> 
+> > The AD7292 is a 10-bit monitor and control system with ADC, DACs,
+> > temperature sensor, and GPIOs.
+> > 
+> > Configure AD7292 devices in direct access mode, enabling single-ended
+> > ADC readings.
+> > 
+> > Datasheet:
+> > Link: https://www.analog.com/media/en/technical-documentation/data-sheets/ad7292.pdf
+> > 
+> > Signed-off-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+> This looks fine to me.
+> 
+> Assuming nothing else comes up, I'll pick this up once the binding was tidied up.
+> 
+> Thanks,
+> 
+> Jonathan
+> 
