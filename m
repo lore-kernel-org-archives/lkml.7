@@ -2,190 +2,134 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A53AFCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 02:48:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5C71CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 02:59:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77A032086D
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 02:48:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="f9+XYyjc"
+	by mail.kernel.org (Postfix) with ESMTP id B0EE720B7C
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 02:59:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730946AbfJVCsR (ORCPT
+        id S2387459AbfJVC74 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 22:48:17 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:46480 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727264AbfJVCsR (ORCPT
+        Mon, 21 Oct 2019 22:59:56 -0400
+Received: from mail-sh.amlogic.com ([58.32.228.43]:48010 "EHLO
+        mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727264AbfJVC7z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 22:48:17 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9M2d2nI042130;
-        Tue, 22 Oct 2019 02:48:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : from :
- subject : message-id : date : mime-version : content-type :
- content-transfer-encoding; s=corp-2019-08-05;
- bh=Q9utWKWJocLz9Lmse484kL5IWf93HtVEVrbRVjLwMEE=;
- b=f9+XYyjcB27fvE3Tbk8CuJQ3cZTRRAoD3uWHlQemMWaqopET+4Oy+rRFL2R36fs4rgnM
- CVkD/CfQ57JhYEPlaRJho9VshTPzC/S/yoZx8BV8yRBIjBqDv8GGYEHjfctSnIWTn8KU
- KMnIXhm0TJ1km/GF9rCLPo4nxPu5mRvil5gbLhCE7WzuGg0L+VEJxRwnh66C2SitxiyJ
- 9uy4MQn/RpkStD9ShAfn2QupHkbINLOkUk1SJbSbTjHrmg4QSZzO4lMC1E+6sE+F6Zn6
- lo8JbSnAlS4+Kxqdp5U7Qq6VC//NjXkuAu8WxrvkVDPh+9GTHjZwHP3cX0JUC+kRrSKk Wg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2vqu4qkbgh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 22 Oct 2019 02:48:12 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9M2m6hB024977;
-        Tue, 22 Oct 2019 02:48:12 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2vsp3x1fa4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 22 Oct 2019 02:48:12 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9M2mB3P023757;
-        Tue, 22 Oct 2019 02:48:11 GMT
-Received: from [192.168.1.126] (/47.220.71.223)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 21 Oct 2019 19:48:10 -0700
-To:     linux-kernel@vger.kernel.org
-Cc:     Lu Baolu <baolu.lu@linux.intel.com>, joro@8bytes.org,
-        John Donnelly <john.p.donnelly@Oracle.com>
-From:   John Donnelly <John.P.Donnelly@Oracle.com>
-Subject: [PATCH v3 ] iommu/vt-d: Fix panic after kexec -p for kdump
-Message-ID: <f856dfd6-0483-fb97-033c-1cda83ead79f@Oracle.com>
-Date:   Mon, 21 Oct 2019 21:48:10 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Mon, 21 Oct 2019 22:59:55 -0400
+X-Greylist: delayed 901 seconds by postgrey-1.27 at vger.kernel.org; Mon, 21 Oct 2019 22:59:53 EDT
+Received: from mail-sz.amlogic.com (10.28.11.5) by mail-sh.amlogic.com
+ (10.18.11.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Tue, 22 Oct
+ 2019 10:45:02 +0800
+Received: from mail-sz.amlogic.com ([fe80::ed49:2000:aa3e:d8d6]) by
+ mail-sz.amlogic.com ([fe80::ed49:2000:aa3e:d8d6%4]) with mapi id
+ 15.01.1591.008; Tue, 22 Oct 2019 10:45:02 +0800
+From:   Nan Li <Nan.Li@amlogic.com>
+To:     Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jianxin Pan <Jianxin.Pan@amlogic.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Kevin Hilman <khilman@baylibre.com>
+CC:     "linux-amlogic@lists.infradead.org" 
+        <linux-amlogic@lists.infradead.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Victor Wan <victor.wan@amlogic.com>
+Subject: Re: [PATCH] mmc: fix mmc dma operation
+Thread-Topic: [PATCH] mmc: fix mmc dma operation
+Thread-Index: AQHVh9Sr7hMU2KXmREa05uz490zVL6dkNLiAgAAWKoCAASS2AA==
+Date:   Tue, 22 Oct 2019 02:45:02 +0000
+Message-ID: <8fc785d5-78a7-6933-8462-22d4afa24068@amlogic.com>
+References: <1571637541-119016-1-git-send-email-jianxin.pan@amlogic.com>
+ <fc1f61e1-b156-11e6-3f21-c498d2f0a8c6@baylibre.com>
+ <1jwocybgpw.fsf@starbuckisacylon.baylibre.com>
+In-Reply-To: <1jwocybgpw.fsf@starbuckisacylon.baylibre.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
+x-originating-ip: [10.28.18.42]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <21F36A73DE7F4C4491A23F3C776498B7@amlogic.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9417 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=984
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910220026
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9417 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910220025
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-This cures a panic on restart after a kexec operation on 5.3 and 5.4 
-kernels.
-
-The underlying state of the iommu registers (iommu->flags &
-VTD_FLAG_TRANS_PRE_ENABLED) on a restart results in a domain being marked as
-"DEFER_DEVICE_DOMAIN_INFO" that produces an Oops in identity_mapping().
-
-[   43.654737] BUG: kernel NULL pointer dereference, address:
-0000000000000056
-[   43.655720] #PF: supervisor read access in kernel mode
-[   43.655720] #PF: error_code(0x0000) - not-present page
-[   43.655720] PGD 0 P4D 0
-[   43.655720] Oops: 0000 [#1] SMP PTI
-[   43.655720] CPU: 0 PID: 1 Comm: swapper/0 Not tainted
-5.3.2-1940.el8uek.x86_64 #1
-[   43.655720] Hardware name: Oracle Corporation ORACLE SERVER
-X5-2/ASM,MOTHERBOARD,1U, BIOS 30140300 09/20/2018
-[   43.655720] RIP: 0010:iommu_need_mapping+0x29/0xd0
-[   43.655720] Code: 00 0f 1f 44 00 00 48 8b 97 70 02 00 00 48 83 fa ff
-74 53 48 8d 4a ff b8 01 00 00 00 48 83 f9 fd 76 01 c3 48 8b 35 7f 58 e0
-01 <48> 39 72 58 75 f2 55 48 89 e5 41 54 53 48 8b 87 28 02 00 00 4c 8b
-[   43.655720] RSP: 0018:ffffc9000001b9b0 EFLAGS: 00010246
-[   43.655720] RAX: 0000000000000001 RBX: 0000000000001000 RCX:
-fffffffffffffffd
-[   43.655720] RDX: fffffffffffffffe RSI: ffff8880719b8000 RDI:
-ffff8880477460b0
-[   43.655720] RBP: ffffc9000001b9e8 R08: 0000000000000000 R09:
-ffff888047c01700
-[   43.655720] R10: 00002194036fc692 R11: 0000000000000000 R12:
-0000000000000000
-[   43.655720] R13: ffff8880477460b0 R14: 0000000000000cc0 R15:
-ffff888072d2b558
-[   43.655720] FS:  0000000000000000(0000) GS:ffff888071c00000(0000)
-knlGS:0000000000000000
-[   43.655720] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   43.655720] CR2: 0000000000000056 CR3: 000000007440a002 CR4:
-00000000001606b0
-[   43.655720] Call Trace:
-[   43.655720]  ? intel_alloc_coherent+0x2a/0x180
-[   43.655720]  ? __schedule+0x2c2/0x650
-[   43.655720]  dma_alloc_attrs+0x8c/0xd0
-[   43.655720]  dma_pool_alloc+0xdf/0x200
-[   43.655720]  ehci_qh_alloc+0x58/0x130
-[   43.655720]  ehci_setup+0x287/0x7ba
-[   43.655720]  ? _dev_info+0x6c/0x83
-[   43.655720]  ehci_pci_setup+0x91/0x436
-[   43.655720]  usb_add_hcd.cold.48+0x1d4/0x754
-[   43.655720]  usb_hcd_pci_probe+0x2bc/0x3f0
-[   43.655720]  ehci_pci_probe+0x39/0x40
-[   43.655720]  local_pci_probe+0x47/0x80
-[   43.655720]  pci_device_probe+0xff/0x1b0
-[   43.655720]  really_probe+0xf5/0x3a0
-[   43.655720]  driver_probe_device+0xbb/0x100
-[   43.655720]  device_driver_attach+0x58/0x60
-[   43.655720]  __driver_attach+0x8f/0x150
-[   43.655720]  ? device_driver_attach+0x60/0x60
-[   43.655720]  bus_for_each_dev+0x74/0xb0
-[   43.655720]  driver_attach+0x1e/0x20
-[   43.655720]  bus_add_driver+0x151/0x1f0
-[   43.655720]  ? ehci_hcd_init+0xb2/0xb2
-[   43.655720]  ? do_early_param+0x95/0x95
-[   43.655720]  driver_register+0x70/0xc0
-[   43.655720]  ? ehci_hcd_init+0xb2/0xb2
-[   43.655720]  __pci_register_driver+0x57/0x60
-[   43.655720]  ehci_pci_init+0x6a/0x6c
-[   43.655720]  do_one_initcall+0x4a/0x1fa
-[   43.655720]  ? do_early_param+0x95/0x95
-[   43.655720]  kernel_init_freeable+0x1bd/0x262
-[   43.655720]  ? rest_init+0xb0/0xb0
-[   43.655720]  kernel_init+0xe/0x110
-[   43.655720]  ret_from_fork+0x24/0x50
-
-
-Fixes: 8af46c784ecfe ("iommu/vt-d: Implement is_attach_deferred iommu 
-ops entry")
-Cc: stable@vger.kernel.org # v5.3+
-
-Signed-off-by: John Donnelly <john.p.donnelly@oracle.com>
-Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
-
-
----
-  drivers/iommu/intel-iommu.c | 2 +-
-  1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index c4e0e4a9ee9e..f83a9a302f8e 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -2783,7 +2783,7 @@ static int identity_mapping(struct device *dev)
-  	struct device_domain_info *info;
-
-  	info = dev->archdata.iommu;
--	if (info && info != DUMMY_DEVICE_DOMAIN_INFO)
-+	if (info && info != DUMMY_DEVICE_DOMAIN_INFO && info != 
-DEFER_DEVICE_DOMAIN_INFO)
-  		return (info->domain == si_domain);
-
-  	return 0;
--- 
-2.20.1
-
-
--- 
-Thank You,
-John
+5ZyoIDIwMTkvMTAvMjEgMTc6MTcsIEplcm9tZSBCcnVuZXQg5YaZ6YGTOg0KPiBPbiBNb24gMjEg
+T2N0IDIwMTkgYXQgMDk6NTcsIE5laWwgQXJtc3Ryb25nIDxuYXJtc3Ryb25nQGJheWxpYnJlLmNv
+bT4gd3JvdGU6DQo+DQo+PiBIaSwNCj4+DQo+PiBUaGFua3MgZm9yIHRoZSBmaXguDQo+Pg0KPj4g
+Rmlyc3QsIHlvdSBzaG91bGQgYWRkICJtbWM6IG1lc29uLWd4OiIgaW4gdGhlIHN1YmplY3QuDQo+
+Pg0KPj4gT24gMjEvMTAvMjAxOSAwNzo1OSwgSmlhbnhpbiBQYW4gd3JvdGU6DQo+Pj4gRnJvbTog
+TmFuIExpIDxuYW4ubGlAYW1sb2dpYy5jb20+DQo+Pj4NCj4+PiBJbiBNTUMgZG1hIHRyYW5zZmVy
+LCB0aGUgcmVnaW9uIHJlcXVlc3RlZCBieSBkbWFfbWFwX3NnKCkgbWF5IGJlIHJlbGVhc2VkDQo+
+Pj4gYnkgZG1hX3VubWFwX3NnKCkgYmVmb3JlIHRoZSB0cmFuc2ZlciBpcyBjb21wbGV0ZWQuDQo+
+Pj4NCj4+PiBQdXQgdGhlIHVubWFwIG9wZXJhdGlvbiBpbiBmcm9udCBvZiBtbWNfcmVxdWVzdF9k
+b25lKCkgdG8gYXZvaWQgdGhpcy4NCj4gU2luY2Ugd2UgaGF2ZSBzZWVuIHRoaXMgcHJvYmxlbSAo
+eWV0KSwgY291bGQgeW91IGJyaWVmbHkgaG93IHlvdSd2ZQ0KPiB0cmlnZ2VyZWQgaXQgPw0KDQpU
+aGUgcHJvYmxlbSB3ZSBmb3VuZCBpbiB0aGUgc3RyZXNzIHRlc3Qgd2FzIHRoYXQgdGhlIHNkaW8g
+ZGV2aWNlIHdhcyANCmNvbnN0YW50bHkgb3BlcmF0ZWQgb24gYW5kIG9mZiBlbGVjdHJpY2l0eSB0
+byBtYWtlIGl0IHJlcGVhdGVkbHkgDQppbml0aWFsaXplZC4NCg0KRHVyaW5nIHRoZSB0ZXN0LCB3
+ZSBmb3VuZCB0aGF0IHRoZXJlIHdhcyBhIGNoYW5jZSB0aGF0IHRoZSBpbmZvcm1hdGlvbiANCnJl
+YWQgYnkgdGhlIGNvbnRyb2xsZXIgZnJvbSB0aGUgc2RpbyBkZXZpY2Ugc2lkZSB3YXMgd3Jvbmcs
+IHdoaWNoIG1hZGUgDQp0aGUgc2RpbyBpbml0aWFsaXphdGlvbiBmYWlsLg0KDQo+PiBZb3Ugc2hv
+dWxkIGFkZCBhICJGaXhlczoiIHRhZyBzbyBpdCBjYW4gYmUgYmFja3BvcnRlZCBvbiBzdGFibGUg
+a2VybmVscy4NCj4+DQo+Pj4gU2lnbmVkLW9mZi1ieTogTmFuIExpIDxuYW4ubGlAYW1sb2dpYy5j
+b20+DQo+Pj4gU2lnbmVkLW9mZi1ieTogSmlhbnhpbiBQYW4gPGppYW54aW4ucGFuQGFtbG9naWMu
+Y29tPg0KPj4+IC0tLQ0KPj4+ICAgZHJpdmVycy9tbWMvaG9zdC9tZXNvbi1neC1tbWMuYyB8IDE1
+ICsrKysrKysrLS0tLS0tLQ0KPj4+ICAgMSBmaWxlIGNoYW5nZWQsIDggaW5zZXJ0aW9ucygrKSwg
+NyBkZWxldGlvbnMoLSkNCj4+Pg0KPj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21tYy9ob3N0L21l
+c29uLWd4LW1tYy5jIGIvZHJpdmVycy9tbWMvaG9zdC9tZXNvbi1neC1tbWMuYw0KPj4+IGluZGV4
+IGU3MTIzMTUuLjc2NjdlOGEgMTAwNjQ0DQo+Pj4gLS0tIGEvZHJpdmVycy9tbWMvaG9zdC9tZXNv
+bi1neC1tbWMuYw0KPj4+ICsrKyBiL2RyaXZlcnMvbW1jL2hvc3QvbWVzb24tZ3gtbW1jLmMNCj4+
+PiBAQCAtMTczLDYgKzE3Myw3IEBAIHN0cnVjdCBtZXNvbl9ob3N0IHsNCj4+PiAgIAlpbnQgaXJx
+Ow0KPj4+ICAgDQo+Pj4gICAJYm9vbCB2cW1tY19lbmFibGVkOw0KPj4+ICsJYm9vbCBuZWVkc19w
+cmVfcG9zdF9yZXE7DQo+Pj4gICB9Ow0KPj4+ICAgDQo+Pj4gICAjZGVmaW5lIENNRF9DRkdfTEVO
+R1RIX01BU0sgR0VOTUFTSyg4LCAwKQ0KPj4+IEBAIC02NTQsNiArNjU1LDggQEAgc3RhdGljIHZv
+aWQgbWVzb25fbW1jX3JlcXVlc3RfZG9uZShzdHJ1Y3QgbW1jX2hvc3QgKm1tYywNCj4+PiAgIAlz
+dHJ1Y3QgbWVzb25faG9zdCAqaG9zdCA9IG1tY19wcml2KG1tYyk7DQo+Pj4gICANCj4+PiAgIAlo
+b3N0LT5jbWQgPSBOVUxMOw0KPj4+ICsJaWYgKGhvc3QtPm5lZWRzX3ByZV9wb3N0X3JlcSkNCj4+
+PiArCQltZXNvbl9tbWNfcG9zdF9yZXEobW1jLCBtcnEsIDApOw0KPj4+ICAgCW1tY19yZXF1ZXN0
+X2RvbmUoaG9zdC0+bW1jLCBtcnEpOw0KPj4+ICAgfQ0KPj4+ICAgDQo+Pj4gQEAgLTgwMywyNSAr
+ODA2LDIzIEBAIHN0YXRpYyB2b2lkIG1lc29uX21tY19zdGFydF9jbWQoc3RydWN0IG1tY19ob3N0
+ICptbWMsIHN0cnVjdCBtbWNfY29tbWFuZCAqY21kKQ0KPj4+ICAgc3RhdGljIHZvaWQgbWVzb25f
+bW1jX3JlcXVlc3Qoc3RydWN0IG1tY19ob3N0ICptbWMsIHN0cnVjdCBtbWNfcmVxdWVzdCAqbXJx
+KQ0KPj4+ICAgew0KPj4+ICAgCXN0cnVjdCBtZXNvbl9ob3N0ICpob3N0ID0gbW1jX3ByaXYobW1j
+KTsNCj4+PiAtCWJvb2wgbmVlZHNfcHJlX3Bvc3RfcmVxID0gbXJxLT5kYXRhICYmDQo+Pj4gKw0K
+Pj4+ICsJaG9zdC0+bmVlZHNfcHJlX3Bvc3RfcmVxID0gbXJxLT5kYXRhICYmDQo+Pj4gICAJCQkh
+KG1ycS0+ZGF0YS0+aG9zdF9jb29raWUgJiBTRF9FTU1DX1BSRV9SRVFfRE9ORSk7DQo+Pj4gICAN
+Cj4+PiAtCWlmIChuZWVkc19wcmVfcG9zdF9yZXEpIHsNCj4+PiArCWlmIChob3N0LT5uZWVkc19w
+cmVfcG9zdF9yZXEpIHsNCj4+PiAgIAkJbWVzb25fbW1jX2dldF90cmFuc2Zlcl9tb2RlKG1tYywg
+bXJxKTsNCj4+PiAgIAkJaWYgKCFtZXNvbl9tbWNfZGVzY19jaGFpbl9tb2RlKG1ycS0+ZGF0YSkp
+DQo+Pj4gLQkJCW5lZWRzX3ByZV9wb3N0X3JlcSA9IGZhbHNlOw0KPj4+ICsJCQlob3N0LT5uZWVk
+c19wcmVfcG9zdF9yZXEgPSBmYWxzZTsNCj4+PiAgIAl9DQo+Pj4gICANCj4+PiAtCWlmIChuZWVk
+c19wcmVfcG9zdF9yZXEpDQo+Pj4gKwlpZiAoaG9zdC0+bmVlZHNfcHJlX3Bvc3RfcmVxKQ0KPj4+
+ICAgCQltZXNvbl9tbWNfcHJlX3JlcShtbWMsIG1ycSk7DQo+Pj4gICANCj4+PiAgIAkvKiBTdG9w
+IGV4ZWN1dGlvbiAqLw0KPj4+ICAgCXdyaXRlbCgwLCBob3N0LT5yZWdzICsgU0RfRU1NQ19TVEFS
+VCk7DQo+Pj4gICANCj4+PiAgIAltZXNvbl9tbWNfc3RhcnRfY21kKG1tYywgbXJxLT5zYmMgPzog
+bXJxLT5jbWQpOw0KPj4+IC0NCj4+PiAtCWlmIChuZWVkc19wcmVfcG9zdF9yZXEpDQo+Pj4gLQkJ
+bWVzb25fbW1jX3Bvc3RfcmVxKG1tYywgbXJxLCAwKTsNCj4+PiAgIH0NCj4gVGhlIGNvZGUgYXJv
+dW5kIGFsbCB0aGlzIGlzIGdldHRpbmcgcXVpdGUgZGlmZmljdWx0IHRvIGZvbGxvdyBldmVudGhv
+dWdoDQo+IGl0IGRvZXMgbm90IGFjdHVhbGx5IGRvIG11Y2gNCj4NCj4gVGhlIHJvb3Qgb2YgdGhl
+IHByb2JsZW0gc2VlbXMgYmUgdGhhdCBtZXNvbl9tbWNfcHJlX3JlcSgpIGFuZA0KPiBtZXNvbl9t
+bWNfcG9zdF9yZXEoKSBhcmUgcGFzc2VkIHRvIGZyYW1ld29yayBidXQgYWxzbyBjYWxsZWQgbWFu
+dWFsbHkNCj4gZnJvbSBtZXNvbl9tbWNfcmVxdWVzdCgpLg0KPg0KPiBCZWNhdXNlIG9mIHRoaXMs
+IHNvbWUgY29kZSBpcyBhZGRlZCB0byBtYWtlIHN1cmUgd2UgZG9uJ3QgZG8gdGhpbmdzIHR3aWNl
+Lg0KPiBNYXliZSBJJ20gbWlzc2luZyBzb21ldGhpbmcgYnV0IGl0IGxvb2sgd2VpcmQgPyBVbGYs
+IGNvdWxkIHlvdSBnaXZlIHVzDQo+IHlvdXIgdmlldyA/DQo+DQo+IEFzIGZhciBhcyBJIGNhbiB0
+ZWxsOg0KPiAgICogcHJlX3JlcSA6IGRldGVybWluZSBpZiB3ZSB1c2UgQ0hBSU5fTU9ERSBvciBu
+b3QgQU5EDQo+ICAgICAgICAgICAgICAgZG1hX21hcF9zZygpIGlmIHdlIGRvDQo+ICAgKiBwb3N0
+X3JlcSA6IGRtYV91bm1hcF9zZygpIGlmIHByZXZpb3VzbHkgYWxsb2NhdGVkDQo+DQo+IERvIHdl
+IHJlYWxseSBuZWVkIHRvIGRvIGFsbCB0aGlzIG1lc29uX21tY19yZXF1ZXN0KCkgPyBTaG91bGRu
+J3Qgd2UgbGV0IHRoZQ0KPiBmcmFtZXdvcmsgZG8gdGhlIGNhbGxzIHRvIHByZS9wb3N0X3JlcSBm
+b3IgdXMgPw0KPg0KPj4+ICAgDQo+Pj4gICBzdGF0aWMgdm9pZCBtZXNvbl9tbWNfcmVhZF9yZXNw
+KHN0cnVjdCBtbWNfaG9zdCAqbW1jLCBzdHJ1Y3QgbW1jX2NvbW1hbmQgKmNtZCkNCj4+Pg0KPj4g
+TmVpbA0KDQoNCg==
