@@ -2,88 +2,138 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85BD9CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 02:37:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C168CCA9EB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 02:38:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6068420882
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 02:37:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 975BB20882
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 02:38:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="A+YMMe3f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730894AbfJVCh3 (ORCPT
+        id S1730769AbfJVCiY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 22:37:29 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:34725 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727264AbfJVCh2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 22:37:28 -0400
-Received: by mail-io1-f68.google.com with SMTP id q1so18564970ion.1;
-        Mon, 21 Oct 2019 19:37:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wD3owoO7Hcsn6F+M0fWwB4WG/OmBuK67PCnu7DWOZmU=;
-        b=lMJVRkWFpSmzFUcvFuoEepZWNFPBmatWCsHa1UBAE+glA7VTw3xHUkKkMOLlJr39Ef
-         SKqPSo1rr/MEjM6sJtbFTmyEQ9WoL5y8w+aLwTIQQ03G8MLS9B33qDNWSf8TUrt2pmcv
-         Aa3z6/GGjoqSsCdA6qPk6M+EMDfcPy6LgthThrEB6BzQomAS9X+c07eX5/KVTQMocDb9
-         9xnC2siL4OkvZXXd1Tgj8tRL/AxiNOrULtaWTNenftB0cLy0GQpt6cEGHb6zC2mdAJ0R
-         JiXlsutJpPl01KFQgZ+ITc+q2/jHlBB0CIQVRO1dZ+49dCThBPMLMN62VJIGkySANNkY
-         Epyg==
-X-Gm-Message-State: APjAAAVdJaDUVelkj7TwH+dK5ioUC6p9aVOcYCFymrDDRLFBuEZXiAlu
-        1/QxdZWLHQbd254m62I/Tk72arU0rrkvhWEQokA=
-X-Google-Smtp-Source: APXvYqzXfIsGMFvjAZ7AUYcylJqFT1rB9WKhtgf2N4eZKTgy1KjKCQwtphZt8HrV8RX4H8uLZpnd8bOs4Pcvj+d0Zv0=
-X-Received: by 2002:a02:cc4e:: with SMTP id i14mr1545623jaq.32.1571711847683;
- Mon, 21 Oct 2019 19:37:27 -0700 (PDT)
+        Mon, 21 Oct 2019 22:38:24 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:46905 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727264AbfJVCiY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 22:38:24 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46xyNs4NxYz9sCJ;
+        Tue, 22 Oct 2019 13:38:21 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1571711901;
+        bh=RV1ThQjgXC5OTGsFhFYAu0o68+z25LzOZvrAHaPt3xI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=A+YMMe3fS5PomerG4OeOLpgenxuyhfgB1ZYuqRRR3akuDO/mUq3HfoLUQaS/LZryd
+         zLYCXQLJHUJbk4J35xC+ZSCnZkLG5/Q7dnMU2RJj4cHlGe88mSQFnMUZYCY+UmEYQd
+         BZWAc2lWs9uQfYdNgKENNOhK3ensxsBFlKHxh6ncMtvZS70Vdw9S2eXLHq0cE0HMTi
+         gCo7+Ry3VRde8W+Ur7zjZ5qwXE0xnDjrznkKSjfO8iVPWBzKri4j+4FGLAQqgNJ4K7
+         34vsWw5h7c7n2mL4onffrd3N2hUdz9bI8BPqu23y00HhGvU8ibKeqP45b3TbyPC88d
+         qAZkM9tHSsIKg==
+Date:   Tue, 22 Oct 2019 13:38:04 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Greg KH <greg@kroah.com>, Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Tomas Winkler <tomas.winkler@intel.com>
+Subject: linux-next: manual merge of the char-misc tree with the keys tree
+Message-ID: <20191022133804.32ef6f86@canb.auug.org.au>
 MIME-Version: 1.0
-References: <1571662320-1280-1-git-send-email-chenhc@lemote.com>
- <alpine.DEB.2.21.1910211648200.1904@nanos.tec.linutronix.de> <alpine.DEB.2.21.1910211658040.1904@nanos.tec.linutronix.de>
-In-Reply-To: <alpine.DEB.2.21.1910211658040.1904@nanos.tec.linutronix.de>
-From:   Huacai Chen <chenhc@lemote.com>
-Date:   Tue, 22 Oct 2019 10:42:55 +0800
-Message-ID: <CAAhV-H4PEcCgOBL8ksjc+4LC9VPoCRBMtuGEK6ckmdJYXjdcSg@mail.gmail.com>
-Subject: Re: [PATCH 110/110] lib/vdso: Improve do_hres() and update vdso data unconditionally
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Paul Burton <paul.burton@mips.com>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/6DIKUfhdMdCsRa+0GGnSc+8";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Thomas,
+--Sig_/6DIKUfhdMdCsRa+0GGnSc+8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-If we use (s64)cycles < 0, then how to solve the problem that a 64bit
-counter become negative?
+Hi all,
 
-Maybe we can change the "invalid" value from U64_MAX to 0?  I think
-the performance of "cycles == 0" is better than "cycles == U64_MAX".
+Today's linux-next merge of the char-misc tree got conflicts in:
 
-Huacai
+  samples/Kconfig
+  samples/Makefile
 
-On Mon, Oct 21, 2019 at 10:58 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> On Mon, 21 Oct 2019, Thomas Gleixner wrote:
->
-> > On Mon, 21 Oct 2019, Huacai Chen wrote:
-> > > @@ -50,7 +50,7 @@ static int do_hres(const struct vdso_data *vd, clockid_t clk,
-> > >             cycles = __arch_get_hw_counter(vd->clock_mode);
-> > >             ns = vdso_ts->nsec;
-> > >             last = vd->cycle_last;
-> > > -           if (unlikely((s64)cycles < 0))
-> > > +           if (unlikely(cycles == U64_MAX))
-> > >                     return -1;
-> >
-> > That used to create worse code than the weird (s64) type cast which has the
-> > same effect. Did you double check that there is no change?
->
-> It still does for 32bit.
+between commit:
+
+  0b9c31597d81 ("Add sample notification program")
+
+from the keys tree and commit:
+
+  6859eba4f6fb ("samples: mei: use hostprogs kbuild constructs")
+
+from the char-misc tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc samples/Kconfig
+index d0761f29ccb0,b663d9d24114..000000000000
+--- a/samples/Kconfig
++++ b/samples/Kconfig
+@@@ -169,11 -169,11 +169,17 @@@ config SAMPLE_VF
+  	  as mount API and statx().  Note that this is restricted to the x86
+  	  arch whilst it accesses system calls that aren't yet in all arches.
+ =20
+ +config SAMPLE_WATCH_QUEUE
+ +	bool "Build example /dev/watch_queue notification consumer"
+ +	depends on HEADERS_INSTALL
+ +	help
+ +	  Build example userspace program to use the new mount_notify(),
+ +	  sb_notify() syscalls and the KEYCTL_WATCH_KEY keyctl() function.
+ +
++ config SAMPLE_INTEL_MEI
++ 	bool "Build example program working with intel mei driver"
++ 	depends on INTEL_MEI
++ 	help
++ 	  Build a sample program to work with mei device.
++=20
+ -
+  endif # SAMPLES
+diff --cc samples/Makefile
+index a61a39047d02,d6062ab25347..000000000000
+--- a/samples/Makefile
++++ b/samples/Makefile
+@@@ -20,4 -20,4 +20,5 @@@ obj-$(CONFIG_SAMPLE_TRACE_PRINTK)	+=3D tr
+  obj-$(CONFIG_VIDEO_PCI_SKELETON)	+=3D v4l/
+  obj-y					+=3D vfio-mdev/
+  subdir-$(CONFIG_SAMPLE_VFS)		+=3D vfs
+ +subdir-$(CONFIG_SAMPLE_WATCH_QUEUE)	+=3D watch_queue
++ obj-$(CONFIG_SAMPLE_INTEL_MEI)		+=3D mei/
+
+--Sig_/6DIKUfhdMdCsRa+0GGnSc+8
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2ua4wACgkQAVBC80lX
+0GyCUwf8DS1aF9gPvocYL0Lk/irlQZF4tPvAis4Wbzez8Z9CkaJAEKRZFF8sWWiU
+0Rb98MLmdJFsWZAshrO67iTyIgbQZhG/3rQk4ajgTJ+AS8rJ/occ41whq8Np5SS+
+rczippp/aoFnMn+mRYwCZxfqwolEUVwBuiXgMHhIhjtKgOJGnP4N5DDvETYPZgya
+OB/js3lf87ddsNMOcYmX7+/OchWT0JxbII/VoKbd6fymC/fZbyolTQgBOmyMT+Lv
+OelqnCXy9gXprRCQ7C1s2tKjbSAgeJkpg7Jwd49QvlQyYpP8gbFIvBJtL7WBBoDO
+jUEFstUrOtMkeRzV7FYilANwV7sQMg==
+=CmWA
+-----END PGP SIGNATURE-----
+
+--Sig_/6DIKUfhdMdCsRa+0GGnSc+8--
