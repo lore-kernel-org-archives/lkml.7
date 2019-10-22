@@ -2,90 +2,80 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D03ECA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:00:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 696A0CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:01:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DE632086D
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:00:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45F832086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:01:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388922AbfJVQAk (ORCPT
+        id S2389000AbfJVQBK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 12:00:40 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:56130 "EHLO foss.arm.com"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S2387746AbfJVQAj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 12:00:39 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B6C2C177F;
-        Tue, 22 Oct 2019 09:00:14 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 09A513F71A;
-        Tue, 22 Oct 2019 09:00:12 -0700 (PDT)
-Date:   Tue, 22 Oct 2019 17:00:10 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Laura Abbott <labbott@redhat.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 12/18] arm64: reserve x18 only with Shadow Call Stack
-Message-ID: <20191022160010.GB699@lakrids.cambridge.arm.com>
-References: <20191018161033.261971-1-samitolvanen@google.com>
- <20191018161033.261971-13-samitolvanen@google.com>
- <CAKwvOd=rU2cC7C3a=8D2WBEmS49YgR7=aCriE31JQx7ExfQZrg@mail.gmail.com>
+        Tue, 22 Oct 2019 12:01:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49712 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387746AbfJVQBJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 12:01:09 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0810720640;
+        Tue, 22 Oct 2019 16:01:07 +0000 (UTC)
+Date:   Tue, 22 Oct 2019 12:01:06 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     jthierry@redhat.com, will@kernel.org, ard.biesheuvel@linaro.org,
+        peterz@infradead.org, catalin.marinas@arm.com, deller@gmx.de,
+        jpoimboe@redhat.com, linux-kernel@vger.kernel.org,
+        takahiro.akashi@linaro.org, mingo@redhat.com, james.morse@arm.com,
+        jeyu@kernel.org, amit.kachhap@arm.com, svens@stackframe.org,
+        duwe@suse.de, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/8] ftrace: add ftrace_init_nop()
+Message-ID: <20191022120106.234790cb@gandalf.local.home>
+In-Reply-To: <20191022153335.GC52920@lakrids.cambridge.arm.com>
+References: <20191021163426.9408-1-mark.rutland@arm.com>
+        <20191021163426.9408-2-mark.rutland@arm.com>
+        <20191021140756.613a1bac@gandalf.local.home>
+        <20191022112811.GA11583@lakrids.cambridge.arm.com>
+        <20191022085428.75cfaad6@gandalf.local.home>
+        <20191022153035.GB52920@lakrids.cambridge.arm.com>
+        <20191022153335.GC52920@lakrids.cambridge.arm.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKwvOd=rU2cC7C3a=8D2WBEmS49YgR7=aCriE31JQx7ExfQZrg@mail.gmail.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 02:23:10PM -0700, Nick Desaulniers wrote:
-> On Fri, Oct 18, 2019 at 9:11 AM 'Sami Tolvanen' via Clang Built Linux
-> <clang-built-linux@googlegroups.com> wrote:
-> >
-> > Only reserve x18 with CONFIG_SHADOW_CALL_STACK. Note that all external
-> > kernel modules must also have x18 reserved if the kernel uses SCS.
+On Tue, 22 Oct 2019 16:33:35 +0100
+Mark Rutland <mark.rutland@arm.com> wrote:
+
+> On Tue, Oct 22, 2019 at 04:30:35PM +0100, Mark Rutland wrote:
+> > On Tue, Oct 22, 2019 at 08:54:28AM -0400, Steven Rostedt wrote:  
+> > > On Tue, 22 Oct 2019 12:28:11 +0100
+> > > Mark Rutland <mark.rutland@arm.com> wrote:  
+> > > > | /**
+> > > > |  * ftrace_init_nop - initialize a nop call site
+> > > > |  * @mod: module structure if called by module load initialization
+> > > > |  * @rec: the mcount call site record  
+> > > 
+> > > Perhaps say "mcount/fentry"  
+> > 
+> > This is the exact wording that ftrace_make_nop and ftrace_modify_call
+> > have. For consistency, I think those should all match.  
 > 
-> Ah, ok.  The tradeoff for maintainers to consider, either:
-> 1. one less GPR for ALL kernel code or
-> 2. remember not to use x18 in inline as lest you potentially break SCS
+> Now that I read this again, I see what you meant.
+> 
+> If it's ok, I'll change those to:
+> 
+> | @rec: the call site record (e.g. mcount/fentry)
+> 
 
-This option only affects compiler-generated code, so I don't think that
-matters.
+Ack
 
-I think it's fine to say that we should always avoid the use of x18 in
-hand-written assembly (with manual register allocation), while also
-allowing the compiler to use x18 if we're not using SCS.
-
-This can be folded into the earlier patch which always reserved x18.
-
-> This patch is 2 (the earlier patch was 1).  Maybe we don't write
-> enough inline asm that this will be hard to remember, and we do have
-> CI in Android to watch for this (on mainline, not sure about -next).
-
-I think that we can trust the set of people who regularly review arm64
-assembly to remember this. We could also document this somewhere -- we
-might need to document other constraints or conventions for assembly
-in preparation for livepatching and so on.
-
-If we wanted to, we could periodically grep for x18 to find any illicit
-usage.
-
-Thanks,
-Mark.
+-- Steve
