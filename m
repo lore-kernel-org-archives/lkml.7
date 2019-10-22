@@ -6,101 +6,85 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA34CCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 20:11:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 293C4CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 20:13:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 815CC21783
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 20:11:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E348D21783
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 20:13:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389269AbfJVULf (ORCPT
+        id S2389292AbfJVUNZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 16:11:35 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:42716 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387645AbfJVULf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 16:11:35 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iN0V9-0007Ux-9U; Tue, 22 Oct 2019 20:11:31 +0000
-Date:   Tue, 22 Oct 2019 21:11:31 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Ritesh Harjani <riteshh@linux.ibm.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        wugyuan@cn.ibm.com, jlayton@kernel.org, hsiangkao@aol.com,
-        Jan Kara <jack@suse.cz>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH RESEND 1/1] vfs: Really check for inode ptr in lookup_fast
-Message-ID: <20191022201131.GZ26530@ZenIV.linux.org.uk>
-References: <20190927044243.18856-1-riteshh@linux.ibm.com>
- <20191015040730.6A84742047@d06av24.portsmouth.uk.ibm.com>
- <20191022133855.B1B4752050@d06av21.portsmouth.uk.ibm.com>
- <20191022143736.GX26530@ZenIV.linux.org.uk>
+        Tue, 22 Oct 2019 16:13:25 -0400
+Received: from mga02.intel.com ([134.134.136.20]:46875 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387645AbfJVUNZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 16:13:25 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Oct 2019 13:13:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,217,1569308400"; 
+   d="scan'208";a="188017062"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by orsmga007.jf.intel.com with ESMTP; 22 Oct 2019 13:13:21 -0700
+Date:   Tue, 22 Oct 2019 13:13:21 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Yang Weijiang <weijiang.yang@intel.com>
+Cc:     Jim Mattson <jmattson@google.com>, kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Subject: Re: [PATCH v7 5/7] kvm: x86: Add CET CR4 bit and XSS support
+Message-ID: <20191022201321.GN2343@linux.intel.com>
+References: <20190927021927.23057-1-weijiang.yang@intel.com>
+ <20190927021927.23057-6-weijiang.yang@intel.com>
+ <CALMp9eStz-VCv5G60KFtumQ8W1Jqf9bOcK_=KwL1P3LLjgajnQ@mail.gmail.com>
+ <20191017195642.GJ20903@linux.intel.com>
+ <20191018015802.GD2286@local-michael-cet-test>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191022143736.GX26530@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191018015802.GD2286@local-michael-cet-test>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 03:37:36PM +0100, Al Viro wrote:
-> On Tue, Oct 22, 2019 at 07:08:54PM +0530, Ritesh Harjani wrote:
-> > I think we have still not taken this patch. Al?
+On Fri, Oct 18, 2019 at 09:58:02AM +0800, Yang Weijiang wrote:
+> On Thu, Oct 17, 2019 at 12:56:42PM -0700, Sean Christopherson wrote:
+> > On Wed, Oct 02, 2019 at 12:05:23PM -0700, Jim Mattson wrote:
+> > > > +               u64 kvm_xss = kvm_supported_xss();
+> > > > +
+> > > > +               best->ebx =
+> > > > +                       xstate_required_size(vcpu->arch.xcr0 | kvm_xss, true);
+> > > 
+> > > Shouldn't this size be based on the *current* IA32_XSS value, rather
+> > > than the supported IA32_XSS bits? (i.e.
+> > > s/kvm_xss/vcpu->arch.ia32_xss/)
+> > 
+> > Ya.
+> >
+> I'm not sure if I understand correctly, kvm_xss is what KVM supports,
+> but arch.ia32_xss reflects what guest currently is using, shoudn't CPUID
+> report what KVM supports instead of current status?
+> Will CPUID match current IA32_XSS status if guest changes it runtime?
 
-> You've picked the easiest one to hit, but on e.g. KVM setups you can have the
-> host thread representing the CPU where __d_set_inode_and_type() runs get
-> preempted (by the host kernel), leaving others with much wider window.
-> 
-> Sure, we can do that to all callers of d_is_negative/d_is_positive, but...
-> the same goes for any places that assumes that d_is_dir() implies that
-> the sucker is positive, etc.
-> 
-> What we have guaranteed is
-> 	* ->d_lock serializes ->d_flags/->d_inode changes
-> 	* ->d_seq is bumped before/after such changes
-> 	* positive dentry never changes ->d_inode as long as you hold
-> a reference (negative dentry *can* become positive right under you)
-> 
-> So there are 3 classes of valid users: those holding ->d_lock, those
-> sampling and rechecking ->d_seq and those relying upon having observed
-> the sucker they've pinned to be positive.
-> 
-> What you've been hitting is "we have it pinned, ->d_flags says it's
-> positive but we still observe the value of ->d_inode from before the
-> store to ->d_flags that has made it look positive".
+Not in this case.  Select CPUID output is dependent on current state as
+opposed to being a constant defind by hardware.  Per the SDM, EBX is:
 
-Actually, your patch opens another problem there.  Suppose you make
-it d_really_is_positive() and hit the same race sans reordering.
-Dentry is found by __d_lookup() and is negative.  Right after we
-return from __d_lookup() another thread makes it positive (a symlink)
-- ->d_inode is set, d_really_is_positive() becomes true.  OK, on we
-go, pick the inode and move on.  Right?  ->d_flags is still not set
-by the thread that made it positive.  We return from lookup_fast()
-and call step_into().  And get to
-        if (likely(!d_is_symlink(path->dentry)) ||
-Which checks ->d_flags and sees the value from before the sucker
-became positive.  IOW, d_is_symlink() is false here.  If that
-was the last path component and we'd been told to follow links,
-we will end up with positive dentry of a symlink coming out of
-pathname resolution.
+  The size in bytes of the XSAVE area containing all states enabled by
+  XCRO | IA32_XSS
 
-Similar fun happens if you have mkdir racing with lookup - ENOENT
-is what should've happened if lookup comes first, success - if
-mkdir does.  This way we can hit ENOTDIR, due to false negative
-from d_can_lookup().
+Since KVM is emulating CPUID for the guest, XCR0 and IA32_XSS in this
+context refers to the guest's current/actual XCR0/IA32_XSS values.  The
+purpose of this behavior is so that software can call CPUID to query the
+actual amount of memory that is needed for XSAVE(S), as opposed to the
+absolute max size that _might_ be needed.
 
-IOW, d_really_is_negative() in lookup_fast() will paper over
-one of oopsen, but it
-	* won't cover similar oopsen on other codepaths and
-	* will lead to bogus behaviour.
-
-I'm not sure that blanket conversion of d_is_... to smp_load_acquire()
-is the right solution; it might very well be that we need to do that
-only on a small subset of call sites, lookup_fast() being one of
-those.  But we do want at least to be certain that something we'd
-got from lookup_fast() in non-RCU mode already has ->d_flags visible.
-
-I'm going through the callers right now, will post a followup once
-the things get cleaner...
+MONITOR/MWAIT is the other case that comes to mind where CPUID dynamically
+reflects configured state, e.g. MWAIT is reported as unsupported if it's
+disabled via IA32_MISC_ENABLE MSR.
