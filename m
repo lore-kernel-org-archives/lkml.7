@@ -2,65 +2,96 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B298CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:26:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D849CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:26:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 129B62064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:26:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571732775;
-	bh=/Mr/LThIEMJbWlYKkDd18Jd9JL0bjmo5Rvnnvx8XJQo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fDb5Wx0JiGQFZWTaOL505KnN8b0y3cq/WqPAN3IJn2kAzBN3Q9x7qX45FZhn85UrQ
-	 dq8HhcmpR2fbT2tTSNsA0A7MAF1LV/5n1YlGsJP0zTW5naK0G4mo6ANhRctIT2nhM3
-	 Qpwjhkj7waOvsIAo98mfPIXJotmW5KLhiBsGWg9g=
+	by mail.kernel.org (Postfix) with ESMTP id 6F79421783
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:26:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="eb0dm47I";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="DH4Qnrxr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388386AbfJVI0O (ORCPT
+        id S2388404AbfJVI0k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 04:26:14 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38716 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388155AbfJVI0M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 04:26:12 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id CB077AFF1;
-        Tue, 22 Oct 2019 08:26:11 +0000 (UTC)
-Date:   Tue, 22 Oct 2019 10:26:11 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Oscar Salvador <osalvador@suse.de>
-Cc:     n-horiguchi@ah.jp.nec.com, mike.kravetz@oracle.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v2 10/16] mm,hwpoison: Rework soft offline for free
- pages
-Message-ID: <20191022082611.GD9379@dhcp22.suse.cz>
-References: <20191017142123.24245-1-osalvador@suse.de>
- <20191017142123.24245-11-osalvador@suse.de>
- <20191018120615.GM5017@dhcp22.suse.cz>
- <20191021125842.GA11330@linux>
- <20191021154158.GV9379@dhcp22.suse.cz>
- <20191022074615.GA19060@linux>
+        Tue, 22 Oct 2019 04:26:40 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:46376 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388155AbfJVI0j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 04:26:39 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 1DE316079D; Tue, 22 Oct 2019 08:26:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571732799;
+        bh=K/gWunNfzWpOoNvgi+N0faiER3IPcKA6AOuagWiAEAY=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=eb0dm47I0/sBoWudqGk9JM2i4FLYHWx2OMpG5wMTL7sjikPQfQVes9IPdczF8vzVt
+         QyTcF9pFqVCU+E/ldC6tBvQ4KvDrgH9QS+DYnXiPuzwXVW9rNP/cpXngql5laRRi/h
+         LpmPliwWjnwhLBdwxLLF+bncCg+uH7vV3iEXlBGw=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 393CC60779;
+        Tue, 22 Oct 2019 08:26:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571732798;
+        bh=K/gWunNfzWpOoNvgi+N0faiER3IPcKA6AOuagWiAEAY=;
+        h=Subject:From:In-Reply-To:References:To:Cc:From;
+        b=DH4QnrxraDMwUgEb33K7vebJVkhj04kFQWh9z8Nc0Kg6plBEnjFBUpfL+VZLQ002r
+         noANk2vFykv+fJ4iXttxitkT/RL1j2TIErEOv3c5SJr1JY1B/sQBp9rbGGZbJ063EB
+         nUedHV3HGlS4uELVtrIsmnBaSQduJhb6WMJv/7uY=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 393CC60779
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191022074615.GA19060@linux>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v2] rtl8xxxu: fix RTL8723BU connection failure issue after
+ warm reboot
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20191016015408.11091-1-chiu@endlessm.com>
+References: <20191016015408.11091-1-chiu@endlessm.com>
+To:     Chris Chiu <chiu@endlessm.com>
+Cc:     Jes.Sorensen@gmail.com, davem@davemloft.net,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux@endlessm.com
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20191022082639.1DE316079D@smtp.codeaurora.org>
+Date:   Tue, 22 Oct 2019 08:26:39 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 22-10-19 09:46:20, Oscar Salvador wrote:
-[...]
-> So, opposite to hard-offline, in soft-offline we do not fiddle with pages
-> unless we are sure the page is not reachable anymore by any means.
+Chris Chiu <chiu@endlessm.com> wrote:
 
-I have to say I do not follow. Is there any _real_ reason for
-soft-offline to behave differenttly from MCE (hard-offline)?
+> The RTL8723BU has problems connecting to AP after each warm reboot.
+> Sometimes it returns no scan result, and in most cases, it fails
+> the authentication for unknown reason. However, it works totally
+> fine after cold reboot.
+> 
+> Compare the value of register SYS_CR and SYS_CLK_MAC_CLK_ENABLE
+> for cold reboot and warm reboot, the registers imply that the MAC
+> is already powered and thus some procedures are skipped during
+> driver initialization. Double checked the vendor driver, it reads
+> the SYS_CR and SYS_CLK_MAC_CLK_ENABLE also but doesn't skip any
+> during initialization based on them. This commit only tells the
+> RTL8723BU to do full initialization without checking MAC status.
+> 
+> Signed-off-by: Chris Chiu <chiu@endlessm.com>
+> Signed-off-by: Jes Sorensen <Jes.Sorensen@gmail.com>
+
+Patch applied to wireless-drivers-next.git, thanks.
+
+0eeb91ade90c rtl8xxxu: fix RTL8723BU connection failure issue after warm reboot
+
 -- 
-Michal Hocko
-SUSE Labs
+https://patchwork.kernel.org/patch/11192201/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
