@@ -2,91 +2,127 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EBADCA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 19:56:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14550CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 19:57:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E149A21A4A
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 19:56:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D654D21929
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 19:56:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="qx44oaOb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vFY+Gi/J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389178AbfJVT4w (ORCPT
+        id S1733088AbfJVT4d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 15:56:52 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:38381 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388843AbfJVT4u (ORCPT
+        Tue, 22 Oct 2019 15:56:33 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45275 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733069AbfJVT4a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 15:56:50 -0400
-Received: by mail-lj1-f193.google.com with SMTP id q78so3387998lje.5
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 12:56:49 -0700 (PDT)
+        Tue, 22 Oct 2019 15:56:30 -0400
+Received: by mail-pg1-f193.google.com with SMTP id r1so10569856pgj.12;
+        Tue, 22 Oct 2019 12:56:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=mJFn/3QyJLqAcJcgayRN2NV4RnnfMUx/ZNp60iWEx0U=;
-        b=qx44oaObOl5Z3A8Im8+pd3RJwQ67FnX72mNIzR2fNuacOOqtifUryGU1mSP9cx9Coi
-         OwlA4xg5cu62BzgCmrFo5BHDbaaGce4VYz17waemIbXYi5mvl63eMCn1dgsguehVvGzz
-         8FWw+rCapfcw470Q3OkxUgJLJZ6281Y5WYQ6xjxRMPHeGeaydHSo6q7bC0Fj1D8IBmrE
-         C5VNjCF6+ZzPXerBYfKuZu0o13OdANRZGkEtC+iORESw+cDO+e2pK9sGFqBhY5qe0J9A
-         okyPozGjA72PYNCGJSJqa99xICbZJZ2SAXpl+lLoT24JPrzHoUY1HUpwK4rdzQ0aRSwp
-         CHPA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=IGYkPx9V52TrYmEaMjn2Ckv8a3Uj2F70nwOiXmtkUdM=;
+        b=vFY+Gi/JpeXDDOLXp392Zc0u1FhRoCdC+Yh3C+I3LU/iSCbApslxVR8cVt8wcK7voB
+         2KAoDFW082z7tpJA7zqSwE6ZaiIHbyBp749sijVDrrqIa7ttPfd4xclhLkV7qu1INE77
+         4Xg8BTbihoprN4Voz8x6XGBTTcL9OoDmqmA25re1pLGm32+hteedo59tpSYea3y2DtIc
+         sWISqc8Yi7f9Ztq0ihG7D5buJpX7k2Vt0uzjumTwC/O+UKNG3Mv1fpMRZX4+c1jq6buR
+         qFAlcbQYIvAuqt3lnxBVuFR8fhbqP+rMtufzqhUdqLlE36kj5ATXsQzwF09LCoD/u5Ca
+         kbdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=mJFn/3QyJLqAcJcgayRN2NV4RnnfMUx/ZNp60iWEx0U=;
-        b=S6t5G7PQnUKYZ0ZqVbFP/338MdNp797BtIRdq9O0M9Soufbyh7MYftb/Qk68rqFasV
-         lvrf90nHPVnyJLQRymFmQ29xkBniVX0vmLvbOa+EUONzTkv4imncALsX9KeVY0+EHkyf
-         10SuvfC4EIDATX0KyncQPL/l/G9meir1Via1OjqJtMNxlD9w6Zs/wWFatvbSkeca1ln5
-         EplRjZTULGgqj29sKNoLqx2pSSKGcErAH9Aqnul4TDhTwmZI1aVEfQ0a2JAtuqeaPFb/
-         u6Gq48d3fWahNNpDVZ5XySI2RG47WlkMPV7Lp9dk4JGmumcSU6I7MvZ5s6U/jn/K5ytz
-         BIew==
-X-Gm-Message-State: APjAAAVjLxfoI1KXZ959z3LsmyVgjRewoEfk291TFaIq8rey3yad9dyO
-        xz23mbjFEwlH1r2jPmqTiP5R7g==
-X-Google-Smtp-Source: APXvYqxV+52xwMMCtGYUGGGLHmIa0mfaTIVpi2sWRWwgXWVGuY7Yc9SOZf2U7O6CBUohPQt+DgwJWw==
-X-Received: by 2002:a05:651c:1023:: with SMTP id w3mr3672555ljm.79.1571774208276;
-        Tue, 22 Oct 2019 12:56:48 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id p22sm9942111ljp.69.2019.10.22.12.56.45
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=IGYkPx9V52TrYmEaMjn2Ckv8a3Uj2F70nwOiXmtkUdM=;
+        b=VzB0F08bOMS9tNKrgdc1qsZilQWPe1GK5zQez3bEiXRSME1SeOFLfYnZxEnXaVoGo9
+         uoybXgloQiPqx1pp0XfdzVfe4NTwpFDBTVt4ImMILz99d+h7BXDLjeMn5ayzMGa3OTvX
+         OW50pKw31MuPTNDOzeIVLLdCB8nbuN0I2em7hbOQNC/N0E19o26UQVNJAl5feCHU5mGT
+         ln31Jzz95lxb3yukTcoRAmwg+ER3TcsyXdeZeUnTFwnQAANM91nxh6ZQtzpCG+nKEhyO
+         a2ggE5AS+U966xGUPnCEERV6TMNyfBuqKNBSaeXMtK19ba7x5uO0dYBNQ0GTEV1HWFMx
+         Xwmg==
+X-Gm-Message-State: APjAAAU6W+J/xhQMlJ8aP49EF9P0OSjfW5henopzlbqG8Mk4raG8vShS
+        tVJBK7DstlOv4N2Kke0H48y6AR4M
+X-Google-Smtp-Source: APXvYqxe37Zg9/B2PR3UtQn30XIVByBPb8ven8GlJlMYRBD7b+jG1CL9qKSJ9vsqtbTOjn21g9Zabw==
+X-Received: by 2002:a17:90a:9f81:: with SMTP id o1mr6885073pjp.60.1571774189374;
+        Tue, 22 Oct 2019 12:56:29 -0700 (PDT)
+Received: from dtor-ws.mtv.corp.google.com ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id c34sm20212715pgb.35.2019.10.22.12.56.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Oct 2019 12:56:48 -0700 (PDT)
-Date:   Tue, 22 Oct 2019 12:56:40 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Shannon Nelson <snelson@pensando.io>,
-        Pensando Drivers <drivers@pensando.io>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jason Baron <jbaron@akamai.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dynamic_debug: provide dynamic_hex_dump stub
-Message-ID: <20191022125640.02f02424@cakuba.netronome.com>
-In-Reply-To: <20190918195607.2080036-1-arnd@arndb.de>
-References: <20190918195607.2080036-1-arnd@arndb.de>
-Organization: Netronome Systems, Ltd.
+        Tue, 22 Oct 2019 12:56:28 -0700 (PDT)
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Martin Kepplinger <martink@posteo.de>
+Cc:     Dixit Parmar <dixitparmar19@gmail.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Matthias Fend <matthias.fend@wolfvision.net>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 3/8] Input: st1232 - rely on I2C core to configure wakeup interrupt
+Date:   Tue, 22 Oct 2019 12:56:17 -0700
+Message-Id: <20191022195622.66976-4-dmitry.torokhov@gmail.com>
+X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
+In-Reply-To: <20191022195622.66976-1-dmitry.torokhov@gmail.com>
+References: <20191022195622.66976-1-dmitry.torokhov@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 18 Sep 2019 21:55:11 +0200, Arnd Bergmann wrote:
-> The ionic driver started using dymamic_hex_dump(), but
-> that is not always defined:
-> 
-> drivers/net/ethernet/pensando/ionic/ionic_main.c:229:2: error: implicit declaration of function 'dynamic_hex_dump' [-Werror,-Wimplicit-function-declaration]
-> 
-> Add a dummy implementation to use when CONFIG_DYNAMIC_DEBUG
-> is disabled, printing nothing.
-> 
-> Fixes: 938962d55229 ("ionic: Add adminq action")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+When I2C client is created with I2C_CLIENT_WAKE flag (which happens
+either because we have "wakeup-source" device property or the flag
+was passed in when creating an I2C client manually), I2C core will
+take care of configuring interrupt as wakeup source on suspend.
 
-Patch applied to net/master, thanks!
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+---
+
+ drivers/input/touchscreen/st1232.c | 16 ++++++----------
+ 1 file changed, 6 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/input/touchscreen/st1232.c b/drivers/input/touchscreen/st1232.c
+index f1b97075aa9b..bb116f41f1c0 100644
+--- a/drivers/input/touchscreen/st1232.c
++++ b/drivers/input/touchscreen/st1232.c
+@@ -284,12 +284,10 @@ static int __maybe_unused st1232_ts_suspend(struct device *dev)
+ 	struct i2c_client *client = to_i2c_client(dev);
+ 	struct st1232_ts_data *ts = i2c_get_clientdata(client);
+ 
+-	if (device_may_wakeup(&client->dev)) {
+-		enable_irq_wake(client->irq);
+-	} else {
+-		disable_irq(client->irq);
++	disable_irq(client->irq);
++
++	if (!device_may_wakeup(&client->dev))
+ 		st1232_ts_power(ts, false);
+-	}
+ 
+ 	return 0;
+ }
+@@ -299,12 +297,10 @@ static int __maybe_unused st1232_ts_resume(struct device *dev)
+ 	struct i2c_client *client = to_i2c_client(dev);
+ 	struct st1232_ts_data *ts = i2c_get_clientdata(client);
+ 
+-	if (device_may_wakeup(&client->dev)) {
+-		disable_irq_wake(client->irq);
+-	} else {
++	if (!device_may_wakeup(&client->dev))
+ 		st1232_ts_power(ts, true);
+-		enable_irq(client->irq);
+-	}
++
++	enable_irq(client->irq);
+ 
+ 	return 0;
+ }
+-- 
+2.23.0.866.gb869b98d4c-goog
+
