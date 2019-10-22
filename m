@@ -2,137 +2,213 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE647CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 06:01:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 348FDCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 06:05:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF76A21783
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 06:01:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3E2D2184C
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 06:05:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="m7snXKDi"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="nfEx9uo1";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="fjydRdeX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387701AbfJVGBR (ORCPT
+        id S1730982AbfJVGFp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 02:01:17 -0400
-Received: from mout.web.de ([212.227.15.14]:50209 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726569AbfJVGBQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 02:01:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1571724058;
-        bh=acVU5mOSMaCDgB7gHBcOOWdOdcqUAEkvfKW+ViGn8Kc=;
-        h=X-UI-Sender-Class:To:Cc:References:Subject:From:Date:In-Reply-To;
-        b=m7snXKDihF4NUOPCEU7s/jKgeUfxGFPIqX72GTQW1L0kr0K3+brqkbZ8rlCMAgre9
-         YmGS85FDzP01NMs8QTfkjqYA66HpXop3rKCeQ+wpCuB0ZwpjmezThG9q1XR6ZFhXBe
-         nP0uULxuB8UV6Xfse6IFsFXYuMiosyM/BnRm27Fk=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.132.150.42]) by smtp.web.de (mrweb004
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0LaIRi-1hapxk1YLO-00m171; Tue, 22
- Oct 2019 08:00:58 +0200
-To:     netdev@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-doc@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, David Ahern <dsahern@gmail.com>,
-        David Miller <davem@davemloft.net>,
-        Josh Hunt <johunt@akamai.com>,
-        Stephen Hemminger <stephen@networkplumber.org>
-References: <20190601.164838.1496580524715275443.davem@davemloft.net>
-Subject: Re: [RFC] ss: Checking selected network ports
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <93483314-22eb-0ed6-70b3-044e6e007a34@web.de>
-Date:   Tue, 22 Oct 2019 08:00:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Tue, 22 Oct 2019 02:05:45 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:42800 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725788AbfJVGFp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 02:05:45 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 42CFB6079C; Tue, 22 Oct 2019 06:05:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571724344;
+        bh=cY8sxLPZP4vsxpJajBId/YF2IaHEql2Vk2+ldt9E2fU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=nfEx9uo1O1xSaTXuWcoK6t5ju6WT/+pvadG+v2eS/U3MfhLX13srdYUx/1I37J7WK
+         k5VL4kA4kLjXmvb3dvJMEoAtu7z13VHQYfJzGPsv3KtVXqbbt7VK6Zqo5r+wVJqb/b
+         pFulOVd8CwoUJV/4tIRTEqoHjEVeKapn/0dDPHsM=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id 2357960614;
+        Tue, 22 Oct 2019 06:05:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571724343;
+        bh=cY8sxLPZP4vsxpJajBId/YF2IaHEql2Vk2+ldt9E2fU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=fjydRdeXHA1xaIJwtrdGYONDeonhkM77FMoHhORPsVd7Rjra+fBoVB2ieBsewZ5fq
+         z9QJ1V6Nl3lytIgUJJhpQb5W8lzCBNdTOUx+zgdWv/qjmcT5jXZWpwYVdpgTnTlEcq
+         YJxjxuDX40mtlCRkl7T+L3HqCeCkVnBBAhq2+1ig=
 MIME-Version: 1.0
-In-Reply-To: <20190601.164838.1496580524715275443.davem@davemloft.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-Provags-ID: V03:K1:AtDsWwGMqmyZ6n2xHR/7FuRrDqa18Gwm/9QrkNySyB8KOnDnAJI
- WQJI33xdCKv9yu7o3J2ZdEbQSijXaC3OwecqXGeI/qOBwSBO2LKQluVTWLobgXjcWHl3q5M
- V3ckK2VWteuSyfHoo6ufsoN42JiScXhAKzOjqqu0JVD8iiU5J6H5+OdQPv7wE6dpjImsJNm
- MFNnrRo13gTzMhOlL5hbQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:M9nY+nIKi40=:JHcMCW8/HlhjnaW6mYFjdJ
- ETXbGv7vvcbn7RkxxZ6Gm6rC7OB5mVkEIUSe0Eu/yX1th2GuS7xkslTeHu2nXfA6qzuFKg2NW
- zOx3JbNRCBoInO0DxhP1aYEp6PUS/+YkE5h1uuIQ6+jOabWqClO1KHNQHK5cMEIHDeB9kUxFk
- o3rnc8L3pgTR2ys3MvJAygK8JdMA8MqUi9U7OV70DyneRkNgcAH9cEnBllrCsy52pBU1sKOw/
- uxVlV3Igu/kS6H67i/EqbgabprCz7y0oOHVI+v9NF6LjFCZSebyo92iO4l3H6aDMZQhlFLBUa
- c9NlRRlZPgtOyX9JLiFIcjBCUSW1eUBFzR+vvNxwvuPX7nLSmwRvP92NQAVFimhb0DJodUftW
- d9HO84FhLOlv0IvBZALadhm5R68G5xTbi0mXWO5KZHdsSsJ4yST16AjF9FkHJintI7PQVDmVJ
- bjjTJ1fgVQb0jbX6v9CKR/QuOinxhgxiU2eQiwalyUkX0Dw+2CgWeZL3EMlp6CSmIp49A6SvY
- A5OjT8SSI2yqtCHfzJw9sSRB0EdbVXwbmFde0oA5GQevTlgZWf2A5/TWjh+l6W6/i1hOEGAdh
- CGAouYDTKAi38DfMey93+qQk1VbmTTlcNyr+5r51JtfXb/7Yy1JrxJUvwHvyqvnvwznEXB1Fj
- TvyXI9sxut83Ad8VkLqwEgAeydMUaHED4/gG+KBf5Uab4QQ98ry4STa4KdxqPoel95Zk4lTNI
- EN4OMRvyWTC9g26iZdS958HzcQv6yPUWM6V/ZjDnSTN29YJA4NnZfl8srTao/h26cAB76fF3C
- P2lA1ePjyHtnvzltuKyGIW1mVlGyzflbpekEZjRCAE05TyThi7PH2c/1ABr3fcxBJrJfBfgzv
- 1RAWLMtyQNHMOhV3R6EUcRrzGCReCVQvCTl1DlDOG4eYXsTvT7y/WSruOKwk7PWJHlsX21cUG
- KcYfqD2Cwg2E/f2iC8OPQY1tviDGe1RyatsDphpQ9K5Y+E3359UxSnhMzSaniGfUQ94oAmf9e
- t1Td3Rll5TWkUpDkEzd+7xIn+u9Hr/m1PgqJmKY50TThjBR+Fg5h9Gs5S6/riVRsRsvtZyHed
- YHMnB6+KL5OWoOlXFKOKE0IQZ0CA20vPdyT1gBFgDTZWzYeIQAV2x18YlFMWhEkB/MNSEYW6b
- Pjz3YjKopphSlTUh6c8cC5K083Ovwgvn/pB7eWnNVjWZ1J5W+ZrCS97WmA3EC05gEjTVGZQ1Y
- NiU7dlEzGbHPTp1jKktXfe2gSHFwibwjGLh0RuBtoPuPqLcGtRu3VjeiAf50=
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 22 Oct 2019 11:35:43 +0530
+From:   Balakrishna Godavarthi <bgodavar@codeaurora.org>
+To:     Matthias Kaehlcke <mka@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        linux-arm-msm@vger.kernel.org,
+        linux-bluetooth-owner@vger.kernel.org, hemantg@codeaurora.org,
+        Harish Bandi <c-hbandi@codeaurora.org>
+Subject: Re: [PATCH 2/4] Bluetooth: hci_qca: Don't vote for specific voltage
+In-Reply-To: <7f9a4de91f364a5f8ce707c8d8a2344d@codeaurora.org>
+References: <20191018052405.3693555-1-bjorn.andersson@linaro.org>
+ <20191018052405.3693555-3-bjorn.andersson@linaro.org>
+ <20191018182205.GA20212@google.com>
+ <7f9a4de91f364a5f8ce707c8d8a2344d@codeaurora.org>
+Message-ID: <5bbd8e5bbd832ecdafc7c2d603f10c6c@codeaurora.org>
+X-Sender: bgodavar@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> If you use netlink operations directly, you can have the kernel filter
-> on various criteria and only get the socket entries you are interested in.
+Hi Matthias, Bjorn andresson,
 
-Do any developers care to take another look at current software design options?
+On 2019-10-21 12:07, Harish Bandi wrote:
+> + Bala
+> 
+> On 2019-10-18 23:52, Matthias Kaehlcke wrote:
+>> On Thu, Oct 17, 2019 at 10:24:02PM -0700, Bjorn Andersson wrote:
+>>> Devices with specific voltage requirements should not request voltage
+>>> from the driver, but instead rely on the system configuration to 
+>>> define
+>>> appropriate voltages for each rail.
+>>> 
+>>> This ensures that PMIC and board variations are accounted for, 
+>>> something
+>>> that the 0.1V range in the hci_qca driver currently tries to address.
+>>> But on the Lenovo Yoga C630 (with wcn3990) vddch0 is 3.1V, which 
+>>> means
+>>> the driver will fail to set the voltage.
+>>> 
+>>> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+>>> ---
+>>>  drivers/bluetooth/hci_qca.c | 26 ++++++++------------------
+>>>  1 file changed, 8 insertions(+), 18 deletions(-)
+>>> 
+>>> diff --git a/drivers/bluetooth/hci_qca.c 
+>>> b/drivers/bluetooth/hci_qca.c
+>>> index c07c529b0d81..54aafcc69d06 100644
+>>> --- a/drivers/bluetooth/hci_qca.c
+>>> +++ b/drivers/bluetooth/hci_qca.c
+>>> @@ -130,8 +130,6 @@ enum qca_speed_type {
+>>>   */
+>>>  struct qca_vreg {
+>>>  	const char *name;
+>>> -	unsigned int min_uV;
+>>> -	unsigned int max_uV;
+>>>  	unsigned int load_uA;
+>>>  };
+>>> 
+>>> @@ -1332,10 +1330,10 @@ static const struct hci_uart_proto qca_proto 
+>>> = {
+>>>  static const struct qca_vreg_data qca_soc_data_wcn3990 = {
+>>>  	.soc_type = QCA_WCN3990,
+>>>  	.vregs = (struct qca_vreg []) {
+>>> -		{ "vddio",   1800000, 1900000,  15000  },
+>>> -		{ "vddxo",   1800000, 1900000,  80000  },
+>>> -		{ "vddrf",   1300000, 1350000,  300000 },
+>>> -		{ "vddch0",  3300000, 3400000,  450000 },
+>>> +		{ "vddio", 15000  },
+>>> +		{ "vddxo", 80000  },
+>>> +		{ "vddrf", 300000 },
+>>> +		{ "vddch0", 450000 },
+>>>  	},
+>>>  	.num_vregs = 4,
+>>>  };
+>>> @@ -1343,10 +1341,10 @@ static const struct qca_vreg_data 
+>>> qca_soc_data_wcn3990 = {
+>>>  static const struct qca_vreg_data qca_soc_data_wcn3998 = {
+>>>  	.soc_type = QCA_WCN3998,
+>>>  	.vregs = (struct qca_vreg []) {
+>>> -		{ "vddio",   1800000, 1900000,  10000  },
+>>> -		{ "vddxo",   1800000, 1900000,  80000  },
+>>> -		{ "vddrf",   1300000, 1352000,  300000 },
+>>> -		{ "vddch0",  3300000, 3300000,  450000 },
+>>> +		{ "vddio", 10000  },
+>>> +		{ "vddxo", 80000  },
+>>> +		{ "vddrf", 300000 },
+>>> +		{ "vddch0", 450000 },
+>>>  	},
+>>>  	.num_vregs = 4,
+>>>  };
+>>> @@ -1386,13 +1384,6 @@ static int qca_power_off(struct hci_dev *hdev)
+>>>  static int qca_enable_regulator(struct qca_vreg vregs,
+>>>  				struct regulator *regulator)
+>>>  {
+>>> -	int ret;
+>>> -
+>>> -	ret = regulator_set_voltage(regulator, vregs.min_uV,
+>>> -				    vregs.max_uV);
+>>> -	if (ret)
+>>> -		return ret;
+>>> -
+>>>  	return regulator_enable(regulator);
+>>> 
+>>>  }
+>>> @@ -1401,7 +1392,6 @@ static void qca_disable_regulator(struct 
+>>> qca_vreg vregs,
+>>>  				  struct regulator *regulator)
+>>>  {
+>>>  	regulator_disable(regulator);
+>>> -	regulator_set_voltage(regulator, 0, vregs.max_uV);
+>>> 
+>>>  }
+>> 
+>> This was brought up multiple times during the initial review, but
+>> wasn't addressed.
+>> 
+>> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
 
 
-> This whole discussion has zero to do with what text format 'ss' outputs.
+yes true PMIC dts regulator should do this.
+But we have some real time issues observed.
 
-Is there a need to improve the software documentation any further?
+Issue 1:
 
-Which programming interface should be used to check the receive queue
-for a single port (without retrieving more network data before)?
+In PMIC dts node, ASAIK we have three levels of voltages.
 
-Regards,
-Markus
+1. Default voltage.
+2. Minimum voltage. (mandatory entry)
+3. Maximum voltage. (mandatory entry)
+
+Let us assume that the if PMIC regulator dts node supports  defaults 
+voltage to 3.2 Volts and Min  as 3.1 V and max as 3.3V
+So default operating voltage is 3.1V  when we turn on BT (but according 
+to spec SoC requires min of 3.3V to operate,
+Might have some functionality failures on end to end testing
+
+Issue 2:
+
+WCN3990 RF is shared with WiFi, so it also try to turn on the 
+regulators. Wifi driver uses the same approach of restricting to min and 
+max voltages in driver.
+Let us assume we turned ON BT and CH0 is set to 3.1v (as in your case), 
+Wifi is tuned on now, as its request the CH0 to operate at 3.3 Volts, 
+regulator will fail to set this voltage as BT is operating
+at CH0 3.1v (assuming max voltage is 3.2v)
+https://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth-next.git/tree/drivers/net/wireless/ath/ath10k/snoc.c#n39
+
+Issue 3:
+
+By mistake PMIC has low min or default voltage and high max voltages, 
+that is harm for WNC3990.
+
+I would suggest to restrict the min and max voltages in driver, instead 
+of relaying on PMIC to do this.
+BTW pmic will do this and doing it in our driver is safer.
+
+Let me know your views on this.
+-- 
+Regards
+Balakrishna.
