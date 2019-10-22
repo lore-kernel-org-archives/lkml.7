@@ -2,129 +2,112 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46E71CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:52:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D80A0CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:53:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D0EE2084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:52:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hp8pOtAj"
+	by mail.kernel.org (Postfix) with ESMTP id A851D2084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:53:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571763232;
+	bh=64xwg4EjzWsi963A1nN1trF2oAScSFfc7b7KW8YCN/I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nwRa0xfmaEHi1yCg2dwhWxbaQza+EK1pTlWMujU0ysWGIqnBsU7BZAbfCrJzvztxY
+	 uDpi+6NLNx1z0WLFmzKgNT92B/NmnIGgawc1bfPD1kofTw6R9woY7aSUFiFqzvuZZM
+	 q6bjff8jb1z7mCy6nRyeg7w39yxWsIZ1e2orV/5k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388775AbfJVQw0 (ORCPT
+        id S1732908AbfJVQxv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 12:52:26 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:34969 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732104AbfJVQw0 (ORCPT
+        Tue, 22 Oct 2019 12:53:51 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:59958 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727885AbfJVQxv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 12:52:26 -0400
-Received: by mail-oi1-f194.google.com with SMTP id x3so14816695oig.2;
-        Tue, 22 Oct 2019 09:52:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Vxt2BZlQ+53rWMwmVviD+TwDtnO3WTo/KugRQtRT0Hk=;
-        b=hp8pOtAjAB1FU2Ve7em50M7AMTnbgeZogItfSSnQgZluLX+t786AlYjCy12P6wad0W
-         b/Ngt8oyL1mSgvqzAdXaWhY6sBwMCzsi3O+rkDJUoBsvu+iZ53HwhtW+WZBlRxR1by4+
-         k97hSaDRPIlK+yv9BYltD4IXMipDICnw2+IKK1fHbdXrfTWTJIo+HwBW7CeqVloQEXPZ
-         ABOeYi5v7RpPmIT94FR3v3M3iG+yVoBehtcQu2UuaunJtIjgfJdN6dQ42ejD573sBZay
-         qMMgk6aNO9wFEncAB67R1vtk/U3gVmIx3Bsve9Kcs6b6N2gwG6UmyJvPkLe4q59bdazA
-         EQCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Vxt2BZlQ+53rWMwmVviD+TwDtnO3WTo/KugRQtRT0Hk=;
-        b=njov1SHV9J97Kg7x1pZsGKD7obddB9/A0Ko+T1i3UBsLB5ZPXax/A+iQa+B///c4yU
-         yby0JWUO+/EwR0LPD/zWiTwxsVAN5Dsj+1goQ9FngsJanXVz8AswFziZklq8O33T2veU
-         iZ624RNxB+/FIPzd8YxzDc/S+gGmMNE9qP/I6GHm1aXI/T20/Yxxhv4Dub7ab5OepglJ
-         m+Woe9umD8P4vxEY01sKAfouN2LTGXHWWBl5v9xQA/Lg6eXTa1zHwi/ey2Cd6Ozhkfbv
-         Ig99i/vP8JIekMQmc7tbQVEbJptyWbStXeQlr4nU9XdQ5xSFfJLoH5J+OOILonG81OVo
-         kggw==
-X-Gm-Message-State: APjAAAXwtfRQwCy8amMxUpwD9Vh+OM/i9JJ36aEugH7YxTAtHqxwcweh
-        1oml04Ik0pQH6GaDuPGNLBA=
-X-Google-Smtp-Source: APXvYqz/bBY7HDB1zRkrDNQyzP753kDbijKRJnKXe7SQX/AeICng2K8PMN6kR1y/bEt1IyvKmqKyVg==
-X-Received: by 2002:aca:f005:: with SMTP id o5mr3744584oih.36.1571763144136;
-        Tue, 22 Oct 2019 09:52:24 -0700 (PDT)
-Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id z24sm613884oib.21.2019.10.22.09.52.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Oct 2019 09:52:23 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio@elopez.com.ar>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH] clk: sunxi: Fix operator precedence in sunxi_divs_clk_setup
-Date:   Tue, 22 Oct 2019 09:50:54 -0700
-Message-Id: <20191022165054.48302-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.23.0
+        Tue, 22 Oct 2019 12:53:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=nacQBfY/UGUQ+xuZeFazojMy/19k8SRVGm7rI7SQOqc=; b=HAB7IrAm1LQ+xMpuQEu5HYsr+
+        vIj2WroRAhofVTFi/J4crk6vTWm4FDHfJ6F8YcdKeEzKXMNnjkknbCdscW9xYXq7D5eF0zOHNTW6O
+        4d5nR4PUaQOa9501MToOpkKSiBSyBSNCG0pAHDpU8Xc1a3S1+153FVKYP3Ia39UVWcauo=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iMxPe-00075s-2Q; Tue, 22 Oct 2019 16:53:38 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 2890F2743259; Tue, 22 Oct 2019 17:53:37 +0100 (BST)
+Date:   Tue, 22 Oct 2019 17:53:37 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Eugeniu Rosca <erosca@de.adit-jv.com>
+Cc:     kuninori.morimoto.gx@renesas.com, patch@alsa-project.org,
+        twischer@de.adit-jv.com, perex@perex.cz, tiwai@suse.com,
+        Jiada Wang <jiada_wang@mentor.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>
+Subject: Re: [alsa-devel] [PATCH] ASoC: rsnd: dma: fix SSI9 4/5/6/7 busif dma
+ address
+Message-ID: <20191022165337.GX5554@sirena.co.uk>
+References: <1550823803-32446-1-git-send-email-twischer@de.adit-jv.com>
+ <20191022154904.GA17721@vmlxhi-102.adit-jv.com>
+ <20191022163501.GK5554@sirena.co.uk>
+ <20191022164607.GA20665@vmlxhi-102.adit-jv.com>
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="rPH0Y77Oimr1cvNq"
+Content-Disposition: inline
+In-Reply-To: <20191022164607.GA20665@vmlxhi-102.adit-jv.com>
+X-Cookie: Whip it, whip it good!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-r375326 in Clang exposes an issue with operator precedence in
-sunxi_div_clk_setup:
 
-drivers/clk/sunxi/clk-sunxi.c:1083:30: warning: operator '?:' has lower
-precedence than '|'; '|' will be evaluated first
-[-Wbitwise-conditional-parentheses]
-                                                 data->div[i].critical ?
-                                                 ~~~~~~~~~~~~~~~~~~~~~ ^
-drivers/clk/sunxi/clk-sunxi.c:1083:30: note: place parentheses around
-the '|' expression to silence this warning
-                                                 data->div[i].critical ?
-                                                                       ^
-                                                                      )
-drivers/clk/sunxi/clk-sunxi.c:1083:30: note: place parentheses around
-the '?:' expression to evaluate it first
-                                                 data->div[i].critical ?
-                                                                       ^
-                                                 (
-1 warning generated.
+--rPH0Y77Oimr1cvNq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-It appears that the intention was for ?: to be evaluated first so that
-CLK_IS_CRITICAL could be added to clkflags if the critical boolean was
-set; right now, | is being evaluated first. Add parentheses around the
-?: block to have it be evaluated first.
+On Tue, Oct 22, 2019 at 06:46:07PM +0200, Eugeniu Rosca wrote:
+> On Tue, Oct 22, 2019 at 05:35:01PM +0100, Mark Brown wrote:
+> > On Tue, Oct 22, 2019 at 05:49:04PM +0200, Eugeniu Rosca wrote:
 
-Fixes: 9919d44ff297 ("clk: sunxi: Use CLK_IS_CRITICAL flag for critical clks")
-Link: https://github.com/ClangBuiltLinux/linux/issues/745
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
- drivers/clk/sunxi/clk-sunxi.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> > > It still applies cleanly to v5.4-rc4-18-g3b7c59a1950c.
+> > > Any chance to see it in vanilla?
 
-diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
-index d3a43381a792..27201fd26e44 100644
---- a/drivers/clk/sunxi/clk-sunxi.c
-+++ b/drivers/clk/sunxi/clk-sunxi.c
-@@ -1080,8 +1080,8 @@ static struct clk ** __init sunxi_divs_clk_setup(struct device_node *node,
- 						 rate_hw, rate_ops,
- 						 gate_hw, &clk_gate_ops,
- 						 clkflags |
--						 data->div[i].critical ?
--							CLK_IS_CRITICAL : 0);
-+						 (data->div[i].critical ?
-+							CLK_IS_CRITICAL : 0));
- 
- 		WARN_ON(IS_ERR(clk_data->clks[i]));
- 	}
--- 
-2.23.0
+> > Someone would need to resend it.  No idea what the issues are but I
+> > don't have it any more.
 
+> How about downloading it from [1] by pressing on the "mbox" button and
+> applying it with "git am"? This will also include any
+> "*-by: Name <E-mail>" signatures found in the thread.
+
+> If this doesn't match your workflow, I can resend it.
+
+This doesn't match either my workflow or the kernel's workflow in
+general, please resend - that means that not only I but also other
+people on the list have the chance to see the patch and review it.
+
+--rPH0Y77Oimr1cvNq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2vNBAACgkQJNaLcl1U
+h9DFTwf/YN6aXyO0UZfXUnRzppadDN0/xoHh58aU+6oHsmeayHhYXhEMyJaSx0dl
+OEBag6Bb4K9fXX7RBbKFfPrDBmBkwMXFqan9vSfIPo4W9neWCDq+IkIcfzX2/qLa
+LgPVi6cWiFibNHRcBvupm0oBdfLIesJ76xJNmA+dZ9aSxZv+tFgX8ocshqbYf60C
+UUJtfH8or0Lqr5pCV0y42wCez3vGznkN4peD7tnZrzLVwj8oXLbEYlo/FrKQihXg
+kdVTyp/gFwUqJ5ARIMHLGJ9SV+91R1ejA9sSD1+C0pj+7Zbhc43IlmJWvMdFFnm8
+bGDya1sGnhk+9ivtxgDHvWpd9TFoMw==
+=yjN4
+-----END PGP SIGNATURE-----
+
+--rPH0Y77Oimr1cvNq--
