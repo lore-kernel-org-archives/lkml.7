@@ -2,86 +2,105 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB03CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 20:10:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA34CCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 20:11:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B99321783
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 20:10:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="aw5J88gm"
+	by mail.kernel.org (Postfix) with ESMTP id 815CC21783
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 20:11:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389221AbfJVUKw (ORCPT
+        id S2389269AbfJVULf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 16:10:52 -0400
-Received: from ozlabs.org ([203.11.71.1]:59979 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387645AbfJVUKw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 16:10:52 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46yPlF0kH1z9sP6;
-        Wed, 23 Oct 2019 07:10:48 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1571775049;
-        bh=9PRl8yVUpXPcfwRx4EOOwPnp3sP1faFOnEIpTD5ARm8=;
-        h=Date:From:To:Cc:Subject:From;
-        b=aw5J88gmOfdclDDPwGZiWI6yeX5z/J0EEczReCbL798ZCeSYF19yIwlHZFlMsxuL1
-         ytJ7P4JtV3Gbn439pmyOpThHebyGr2S2QJS8zOfMOjMNOHYngJJXQ0i8TkkBKXQdXe
-         j8VZbUy6iRbAylcsOAqlLNq3Tk2piU6BLwW25TqbZf4yYy3hNYOfPsH/gzFYn0vCdx
-         NZPgvAq9s1pN8Ahh9l/XEiUh2Di+nrbG3VXpCERT6MqSanCsq540U87607hpiXYFQe
-         CCa+r54rKBwn/LqYXsIGomsvLJioXoOF1zoegELM7q6B9WFQr5AUXhTRxFLLiezY6J
-         cXvhf6R6jW69Q==
-Date:   Wed, 23 Oct 2019 07:10:46 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the omap tree
-Message-ID: <20191023071046.3e6109d5@canb.auug.org.au>
+        Tue, 22 Oct 2019 16:11:35 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:42716 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387645AbfJVULf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 16:11:35 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iN0V9-0007Ux-9U; Tue, 22 Oct 2019 20:11:31 +0000
+Date:   Tue, 22 Oct 2019 21:11:31 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Ritesh Harjani <riteshh@linux.ibm.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        wugyuan@cn.ibm.com, jlayton@kernel.org, hsiangkao@aol.com,
+        Jan Kara <jack@suse.cz>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH RESEND 1/1] vfs: Really check for inode ptr in lookup_fast
+Message-ID: <20191022201131.GZ26530@ZenIV.linux.org.uk>
+References: <20190927044243.18856-1-riteshh@linux.ibm.com>
+ <20191015040730.6A84742047@d06av24.portsmouth.uk.ibm.com>
+ <20191022133855.B1B4752050@d06av21.portsmouth.uk.ibm.com>
+ <20191022143736.GX26530@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/DsA48zTvy8mjIpLkK/c4I.W";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191022143736.GX26530@ZenIV.linux.org.uk>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/DsA48zTvy8mjIpLkK/c4I.W
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, Oct 22, 2019 at 03:37:36PM +0100, Al Viro wrote:
+> On Tue, Oct 22, 2019 at 07:08:54PM +0530, Ritesh Harjani wrote:
+> > I think we have still not taken this patch. Al?
 
-Hi all,
+> You've picked the easiest one to hit, but on e.g. KVM setups you can have the
+> host thread representing the CPU where __d_set_inode_and_type() runs get
+> preempted (by the host kernel), leaving others with much wider window.
+> 
+> Sure, we can do that to all callers of d_is_negative/d_is_positive, but...
+> the same goes for any places that assumes that d_is_dir() implies that
+> the sucker is positive, etc.
+> 
+> What we have guaranteed is
+> 	* ->d_lock serializes ->d_flags/->d_inode changes
+> 	* ->d_seq is bumped before/after such changes
+> 	* positive dentry never changes ->d_inode as long as you hold
+> a reference (negative dentry *can* become positive right under you)
+> 
+> So there are 3 classes of valid users: those holding ->d_lock, those
+> sampling and rechecking ->d_seq and those relying upon having observed
+> the sucker they've pinned to be positive.
+> 
+> What you've been hitting is "we have it pinned, ->d_flags says it's
+> positive but we still observe the value of ->d_inode from before the
+> store to ->d_flags that has made it look positive".
 
-Commit
+Actually, your patch opens another problem there.  Suppose you make
+it d_really_is_positive() and hit the same race sans reordering.
+Dentry is found by __d_lookup() and is negative.  Right after we
+return from __d_lookup() another thread makes it positive (a symlink)
+- ->d_inode is set, d_really_is_positive() becomes true.  OK, on we
+go, pick the inode and move on.  Right?  ->d_flags is still not set
+by the thread that made it positive.  We return from lookup_fast()
+and call step_into().  And get to
+        if (likely(!d_is_symlink(path->dentry)) ||
+Which checks ->d_flags and sees the value from before the sucker
+became positive.  IOW, d_is_symlink() is false here.  If that
+was the last path component and we'd been told to follow links,
+we will end up with positive dentry of a symlink coming out of
+pathname resolution.
 
-  40f3ee0ea7f1 ("ARM: OMAP2+: Drop legacy platform data for dra7 rng")
+Similar fun happens if you have mkdir racing with lookup - ENOENT
+is what should've happened if lookup comes first, success - if
+mkdir does.  This way we can hit ENOTDIR, due to false negative
+from d_can_lookup().
 
-is missing a Signed-off-by from its author and committer.
+IOW, d_really_is_negative() in lookup_fast() will paper over
+one of oopsen, but it
+	* won't cover similar oopsen on other codepaths and
+	* will lead to bogus behaviour.
 
---=20
-Cheers,
-Stephen Rothwell
+I'm not sure that blanket conversion of d_is_... to smp_load_acquire()
+is the right solution; it might very well be that we need to do that
+only on a small subset of call sites, lookup_fast() being one of
+those.  But we do want at least to be certain that something we'd
+got from lookup_fast() in non-RCU mode already has ->d_flags visible.
 
---Sig_/DsA48zTvy8mjIpLkK/c4I.W
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2vYkYACgkQAVBC80lX
-0GzT1gf/X3G5hGsvOSXqS6c1YZVhtcjh8fB8sCXsBJWLVU/rjblcVBxLg0vGA5cT
-kZc/tGloxGYNsYB5uSvDqFL1Ie/t2tivIjXYPtdoTW78IVq50R7ZPR44CxDFeGmS
-eqfZYFoWPU3sAQg/9h1jKDjja2G+1PF6GSOJADJCJxzso0wSp5yW03/qOgYBePlz
-3ITUVDJ7EQ4MugLV5wphEf6jLi9kHYnx9IQBLU1qoe56zAdW2FD0BJfNo9tPjYJI
-zq9f0SRr1o7AhJqvsXikGSHC9kVVcludz+YAsUS+KpEdYuPGYRi0r2sU+/T4uK9p
-BvePyW7GkIZO+gIBDEI61zItH8HQtg==
-=EF0J
------END PGP SIGNATURE-----
-
---Sig_/DsA48zTvy8mjIpLkK/c4I.W--
+I'm going through the callers right now, will post a followup once
+the things get cleaner...
