@@ -7,29 +7,29 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A235ECA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:01:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E84CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6396120684
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:01:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3105421872
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:01:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="GKybovS1"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="Sacs5uUs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733047AbfJVRBD (ORCPT
+        id S1733057AbfJVRBS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 13:01:03 -0400
-Received: from mail-eopbgr780059.outbound.protection.outlook.com ([40.107.78.59]:60858
-        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
+        Tue, 22 Oct 2019 13:01:18 -0400
+Received: from mail-eopbgr720065.outbound.protection.outlook.com ([40.107.72.65]:65312
+        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732886AbfJVRAn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 13:00:43 -0400
+        id S1730768AbfJVRBR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 13:01:17 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jx071NEhWr3UJA7tlODqD7P30MvTDZHQgU4D1fY5vDxZtd8KuyNtx87WjLgjxyanG2FXF7UA6eLJ/Fv26NzQg4oLLYpUE2skikJeARprUgHhj1JZ3tbODTTTRP9WwSEFqHLGnGCR5hzldtfFu8KZMdiZGTRow7qC9ZxMUB+e1c9FJz+JRHDssB60S5F6q/8ruNtdi9dj9sUqCXFVMT7F6T//XLrKH0DERecoSs7kik/Ah8cPh2C3FcKRbv190+XzgK4BbEk6redfkt/uqQi8+AufFMyKju5jA+IzwjSLGwkzEXC3NUOlXvCvmeYXsCTOcJJRpNpvj0/JCfXDE7Y6Tw==
+ b=V8XcNa+yjyt1MqU8sO4RME5s6YvHBd5mMmJGsWyslk6Zd+GUuYXxUsgm/H5PIWEqrKfSjcjDaiEgP8ThOy05k+wRWU8SUgLklgTAu+R6vQGMivQnVScoBF4VXaIJbNGSLF4oNsVI5dvMCcTzhcvuqFv6fj3vbS8+jBJNPDTmyskSAX8rzympsKCxsxTjrgyutPW0S2amPYjBv2HkyudpBC6iUStrwYoA3FT0ILVK7mPIo+pbsXlM+W8QpTI6REtd8XKqGOsNU+pbfjvmKWyQ5nVila6jUHrS/AqSbIo8dCAyMXXCoYogEh8uzfXEm1gIukCx9sfTxAzZIr1Ly2qbzA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ed3I5BZoPRoKWOYjFKhAI5bg7DDua/eE03WhPAIGYrM=;
- b=dnNvYxsh5lQ9PTMDTNw0ovkLMfrLgWbVaRbOPDH4IMAy8yXb1fkfa3tAsQHBjPnYCMcboOr/1oMVe1VD9BfvComAoecFoHTTCoZN6QYTqAHlgSf4BZrBt7oBTQ2NTDUmOP5tLGwAQqKoFYv7NsN/7R2zkeQVCq7P1HRYS+2d7+kNXLQCM8AWPeHvv1iSanFjClt4Ju49I5H+s6Er2IPMbtwWHY5IavB5EOudoO0OafpKF8sonidw8WhXgFGRZNkH7SCJUZj+W8HUxaKpntwksyaVmNFHO6WGCjlAfv0ShD5XSWp1TFpOSoVSBs7n+zBDS6mYvTk2+xlteq6DgCNc7w==
+ bh=WU76ojE5cyfLDJ4NzqiIRVsIPhl67djomZGnU4Ca31w=;
+ b=OMMLPvE3MChqrc8Gz7ZSv50LKYuEDR0+WYGAIeuFBU3aE5fegjTsfayL6rcQXE5gF95yzrdpF0No2UJ/txye4/lxe7ByFhgsgDr+YCbeHANsqQ/Rcirg8Tyigv8+B4g9fWTtQMM5//MGmOgq0TnCnIxmzk7tg9n1VEPd3+2edPpNB4tVmhGhstK7+gHkKj70l0TO3ReJEOmsFlTuNNduFIbNpimxS40T1zVKd/MNHhjINuhJuHM4sgq8rj4nfw7m2hn+AKZgxX+CkjaANE+hcCriFUcdSDUlNGWrJ6dUQ6MvZ/vGnZ4XDLh/SzUcAvo1yczRl1vi4gVNgQn9n6vJSA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
  dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
@@ -37,18 +37,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ed3I5BZoPRoKWOYjFKhAI5bg7DDua/eE03WhPAIGYrM=;
- b=GKybovS15aRJD7lFoPv2rim6eNa3YMfpuR7rprFnVRg6s3Mdomdf8vTd8fiD6jALdHP0hYqmiepMuuXJYCqyuD6PuJ4Yc5mjuhY7N5MYigLL9hdy8yL8F16rIom7YWRQwnPR4WVDusL/ZR++FdF1DI/pq9Up5khpyXNgZL0qYkk=
-Received: from BN7PR02CA0014.namprd02.prod.outlook.com (2603:10b6:408:20::27)
- by SN4PR0201MB3614.namprd02.prod.outlook.com (2603:10b6:803:46::18) with
+ bh=WU76ojE5cyfLDJ4NzqiIRVsIPhl67djomZGnU4Ca31w=;
+ b=Sacs5uUs9cuRw21FntbXSwRqM6NOzsGN42dgxkxRwalzGoWHs5ZBVR/IEllFZ8MZKsNvQ6Z1nqPNlMFxSHA6Eez4aKYUkhSt7pcB8EKwzxcNE7XxIHSa1uRFrTHI/OpU6FepoxwhGdZrwiE05xpXEvUFW4OwYjByRmTldqrvz7g=
+Received: from BN7PR02CA0007.namprd02.prod.outlook.com (2603:10b6:408:20::20)
+ by DM6PR02MB5354.namprd02.prod.outlook.com (2603:10b6:5:47::19) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2347.19; Tue, 22 Oct
- 2019 17:00:41 +0000
-Received: from SN1NAM02FT038.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e44::200) by BN7PR02CA0014.outlook.office365.com
- (2603:10b6:408:20::27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2347.21 via Frontend
- Transport; Tue, 22 Oct 2019 17:00:40 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2367.24; Tue, 22 Oct
+ 2019 17:00:43 +0000
+Received: from CY1NAM02FT009.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e45::200) by BN7PR02CA0007.outlook.office365.com
+ (2603:10b6:408:20::20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2347.16 via Frontend
+ Transport; Tue, 22 Oct 2019 17:00:43 +0000
 Authentication-Results: spf=pass (sender IP is 149.199.60.83)
  smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
  header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
@@ -57,26 +57,26 @@ Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
  149.199.60.83 as permitted sender) receiver=protection.outlook.com;
  client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
 Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- SN1NAM02FT038.mail.protection.outlook.com (10.152.72.69) with Microsoft SMTP
+ CY1NAM02FT009.mail.protection.outlook.com (10.152.75.12) with Microsoft SMTP
  Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2367.14
- via Frontend Transport; Tue, 22 Oct 2019 17:00:40 +0000
+ via Frontend Transport; Tue, 22 Oct 2019 17:00:43 +0000
 Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
         by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
         (envelope-from <radhey.shyam.pandey@xilinx.com>)
-        id 1iMxWS-0006Ak-0y; Tue, 22 Oct 2019 10:00:40 -0700
-Received: from [127.0.0.1] (helo=xsj-smtp-dlp2.xlnx.xilinx.com)
+        id 1iMxWU-0006Ap-Ea; Tue, 22 Oct 2019 10:00:42 -0700
+Received: from [127.0.0.1] (helo=xsj-smtp-dlp1.xlnx.xilinx.com)
         by xsj-pvapsmtp01 with esmtp (Exim 4.63)
         (envelope-from <radhey.shyam.pandey@xilinx.com>)
-        id 1iMxWM-0005D8-OM; Tue, 22 Oct 2019 10:00:34 -0700
-Received: from xsj-pvapsmtp01 (mailhub.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x9MH0Wo4030513;
-        Tue, 22 Oct 2019 10:00:32 -0700
+        id 1iMxWP-0005GT-1M; Tue, 22 Oct 2019 10:00:37 -0700
+Received: from xsj-pvapsmtp01 (smtp.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x9MH0XNG022072;
+        Tue, 22 Oct 2019 10:00:33 -0700
 Received: from [10.140.184.180] (helo=ubuntu)
         by xsj-pvapsmtp01 with esmtp (Exim 4.63)
         (envelope-from <radheys@ubuntu>)
-        id 1iMxWJ-00059f-JZ; Tue, 22 Oct 2019 10:00:31 -0700
+        id 1iMxWK-0005B3-Pg; Tue, 22 Oct 2019 10:00:33 -0700
 Received: by ubuntu (Postfix, from userid 13245)
-        id CDE1410112E; Tue, 22 Oct 2019 22:30:30 +0530 (IST)
+        id DA455101132; Tue, 22 Oct 2019 22:30:30 +0530 (IST)
 From:   Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
 To:     vkoul@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
         dan.j.williams@intel.com, michal.simek@xilinx.com,
@@ -86,119 +86,102 @@ To:     vkoul@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
 Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org,
         Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-Subject: [PATCH -next 3/6] dt-bindings: dmaengine: xilinx_dma: Add binding for Xilinx MCDMA IP
-Date:   Tue, 22 Oct 2019 22:30:19 +0530
-Message-Id: <1571763622-29281-4-git-send-email-radhey.shyam.pandey@xilinx.com>
+Subject: [PATCH -next 5/6] dmaengine: xilinx_dma: Extend dma_config struct to store irq routine handle
+Date:   Tue, 22 Oct 2019 22:30:21 +0530
+Message-Id: <1571763622-29281-6-git-send-email-radhey.shyam.pandey@xilinx.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1571763622-29281-1-git-send-email-radhey.shyam.pandey@xilinx.com>
 References: <1571763622-29281-1-git-send-email-radhey.shyam.pandey@xilinx.com>
 X-RCIS-Action: ALLOW
 X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-Result: No--2.053-7.0-31-1
-X-imss-scan-details: No--2.053-7.0-31-1;No--2.053-5.0-31-1
+X-TM-AS-Result: No--5.725-7.0-31-1
+X-imss-scan-details: No--5.725-7.0-31-1;No--5.725-5.0-31-1
 X-TM-AS-User-Approved-Sender: No;No
 X-TM-AS-Result-Xfilter: Match text exemption rules:No
 X-EOPAttributedMessage: 0
 X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(376002)(39860400002)(136003)(346002)(396003)(189003)(199004)(478600001)(81156014)(186003)(81166006)(8676002)(26005)(2616005)(6266002)(126002)(446003)(107886003)(11346002)(476003)(4326008)(316002)(50466002)(2906002)(16586007)(42186006)(50226002)(106002)(8936002)(36756003)(70586007)(70206006)(6666004)(356004)(76176011)(48376002)(103686004)(14444005)(47776003)(426003)(486006)(305945005)(7416002)(336012)(5660300002)(51416003)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:SN4PR0201MB3614;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(396003)(39860400002)(136003)(189003)(199004)(476003)(2616005)(446003)(103686004)(50226002)(478600001)(81156014)(8936002)(81166006)(8676002)(356004)(6666004)(70206006)(70586007)(126002)(486006)(50466002)(11346002)(186003)(5660300002)(14444005)(26005)(336012)(426003)(47776003)(76176011)(6266002)(305945005)(7416002)(107886003)(4326008)(36756003)(106002)(2906002)(48376002)(16586007)(42186006)(316002)(51416003)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR02MB5354;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
 MIME-Version: 1.0
 Content-Type: text/plain
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 6ea22e8d-3a24-4563-53d8-08d757115e6c
-X-MS-TrafficTypeDiagnostic: SN4PR0201MB3614:
-X-Microsoft-Antispam-PRVS: <SN4PR0201MB3614D5E8D2770D06B065FC35C7680@SN4PR0201MB3614.namprd02.prod.outlook.com>
+X-MS-Office365-Filtering-Correlation-Id: 63cdd267-7f3f-412b-2891-08d757115ff0
+X-MS-TrafficTypeDiagnostic: DM6PR02MB5354:
+X-Microsoft-Antispam-PRVS: <DM6PR02MB53548A4BD99512C0389FBDAAC7680@DM6PR02MB5354.namprd02.prod.outlook.com>
 X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:1775;
+X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
 X-Forefront-PRVS: 01986AE76B
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: v7eAm6BwoA0HZ1h1AAPgAVSIXvErRJHo0OGJjQK59Nyo9EmPX0p1FZTZ7+ZvcvSFhlRBFArLoB+O8XNvovDVmI3yVbDr0r96q6c/LR3cv+26wngxBlinHd5XWRxTUxLqHeXtZg3rq4oz2HoMOSV24si9vulLB4v3VJ4Q7pnr0FPgRF8Mq0jPJBr6nyLfJn4z6eFy0On00akZ6cAWtR06jM8k9Tn3P/7dMV9niDMFrnj2tQJrmdznGpO4t4nhm2gyu78Yx3hgkolD0fAfvotzrFrWWfZEPIXni9trCDTvsVvHYWHOqUDSdpNd8zynEMANEkYlQY+fQveDBFlXc/T1HmHqXazhXjk657UhvXJ6WlriJOYWO3AGSzWU4oi2JPNZ18mxaB94v4ZOfcCjdZlTeNgRovdcvS4lSsS3C1HouRFKfl7jjkTuj0prbYz0JhvV
+X-Microsoft-Antispam-Message-Info: UD9A4z2kc1lQ+EhzEl7IgGpBvMu6LJSm9Z2jheJTtL8NNliULP8MAKBrLH6HEuB5NXwaqeYsh+Z7ijR6mQw4ykpRD+UKInV7Blnhh+At22oaZbdXmD56aIAACUBeHoQNCal8XXpkMkv3Bww7ZHU/fHgCGE6MoJBagvUgkovm5m9ZYDnTZKPEPo83FtFB81uLyP5BQfaYCWqsjo6T8qmEWPMgCfi2ki/4kUywGI5cnKQQigxOvfZjk5FhclE7atAFsEONh5b3sqyQbU+jDqQrCPDUv2cw6xceZIZpo8Zejy+95qC4/ZmA2PalgiB9Yrqg5HsWMWr2VUJ4WWPwWx9l2vGWHJ9GaXbAO0dUJN2O3VcenCdoXrR6RzbjFGq0T/DFtdG1aihp3v9+qxntSfz1aZ0xrBfr1mkQdq3i/i+/hVIAfg/LzGjFcSnuyzRKvq9K
 X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Oct 2019 17:00:40.4911
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Oct 2019 17:00:43.0428
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6ea22e8d-3a24-4563-53d8-08d757115e6c
+X-MS-Exchange-CrossTenant-Network-Message-Id: 63cdd267-7f3f-412b-2891-08d757115ff0
 X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR0201MB3614
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB5354
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add devicetree binding for Xilinx AXI Multichannel Direct Memory Access
-(AXI MCDMA) IP. The AXI MCDMA provides high-bandwidth direct memory
-access between memory and AXI4-Stream target peripherals. The AXI MCDMA
-core provides a scatter-gather interface with multiple channel support
-with independent configuration.
+Extend dma_config structure to store irq routine handle. It enables runtime
+handler selection based on xdma_ip_type and serves as preparatory patch for
+adding MCDMA IP support.
 
 Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+Suggested-by: Vinod Koul <vkoul@kernel.org>
 ---
-Keep compatible string one per line. Suggested by Rob.
-Reuse the existing xlnx,axi-dma-* channel names. Suggested by Rob.
+Changes since RFC:
+New patch. It serve as a preparatory patch for MCDMA driver support.
 ---
- .../devicetree/bindings/dma/xilinx/xilinx_dma.txt         | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+ drivers/dma/xilinx/xilinx_dma.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt b/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
-index d4ba1cb..325aca5 100644
---- a/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
-+++ b/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
-@@ -11,11 +11,16 @@ is to receive from the device.
- Xilinx AXI CDMA engine, it does transfers between memory-mapped source
- address and a memory-mapped destination address.
+diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
+index 6d45865..25042a9 100644
+--- a/drivers/dma/xilinx/xilinx_dma.c
++++ b/drivers/dma/xilinx/xilinx_dma.c
+@@ -391,6 +391,7 @@ struct xilinx_dma_config {
+ 	int (*clk_init)(struct platform_device *pdev, struct clk **axi_clk,
+ 			struct clk **tx_clk, struct clk **txs_clk,
+ 			struct clk **rx_clk, struct clk **rxs_clk);
++	irqreturn_t (*irq_handler)(int irq, void *data);
+ };
  
-+Xilinx AXI MCDMA engine, it does transfer between memory and AXI4 stream
-+target devices. It can be configured to have up to 16 independent transmit
-+and receive channels.
-+
- Required properties:
- - compatible: Should be one of-
- 		"xlnx,axi-vdma-1.00.a"
- 		"xlnx,axi-dma-1.00.a"
- 		"xlnx,axi-cdma-1.00.a"
-+		"xlnx,axi-mcdma-1.00.a"
- - #dma-cells: Should be <1>, see "dmas" property below
- - reg: Should contain VDMA registers location and length.
- - xlnx,addrwidth: Should be the vdma addressing size in bits(ex: 32 bits).
-@@ -31,7 +36,7 @@ Required properties:
- 			   "m_axis_mm2s_aclk", "s_axis_s2mm_aclk"
- 	For CDMA:
- 	Required elements: "s_axi_lite_aclk", "m_axi_aclk"
--	For AXIDMA:
-+	For AXIDMA and MCDMA:
- 	Required elements: "s_axi_lite_aclk"
- 	Optional elements: "m_axi_mm2s_aclk", "m_axi_s2mm_aclk",
- 			   "m_axi_sg_aclk"
-@@ -39,7 +44,7 @@ Required properties:
- Required properties for VDMA:
- - xlnx,num-fstores: Should be the number of framebuffers as configured in h/w.
+ /**
+@@ -2402,8 +2403,8 @@ static int xilinx_dma_chan_probe(struct xilinx_dma_device *xdev,
  
--Optional properties for AXI DMA:
-+Optional properties for AXI DMA and MCDMA:
- - xlnx,sg-length-width: Should be set to the width in bits of the length
- 	register as configured in h/w. Takes values {8...26}. If the property
- 	is missing or invalid then the default value 23 is used. This is the
-@@ -56,8 +61,8 @@ Required child node properties:
- 	For VDMA: It should be either "xlnx,axi-vdma-mm2s-channel" or
- 	"xlnx,axi-vdma-s2mm-channel".
- 	For CDMA: It should be "xlnx,axi-cdma-channel".
--	For AXIDMA: It should be either "xlnx,axi-dma-mm2s-channel" or
--	"xlnx,axi-dma-s2mm-channel".
-+	For AXIDMA and MCDMA: It should be either "xlnx,axi-dma-mm2s-channel"
-+	or "xlnx,axi-dma-s2mm-channel".
- - interrupts: Should contain per channel VDMA interrupts.
- - xlnx,datawidth: Should contain the stream data width, take values
- 	{32,64...1024}.
-@@ -70,6 +75,8 @@ Optional child node properties for VDMA:
- 	enabled/disabled in hardware.
- - xlnx,enable-vert-flip: Tells vertical flip is
- 	enabled/disabled in hardware(S2MM path).
-+Optional child node properties for MCDMA:
-+- dma-channels: Number of dma channels in child node.
+ 	/* Request the interrupt */
+ 	chan->irq = irq_of_parse_and_map(node, 0);
+-	err = request_irq(chan->irq, xilinx_dma_irq_handler, IRQF_SHARED,
+-			  "xilinx-dma-controller", chan);
++	err = request_irq(chan->irq, xdev->dma_config->irq_handler,
++			  IRQF_SHARED, "xilinx-dma-controller", chan);
+ 	if (err) {
+ 		dev_err(xdev->dev, "unable to request IRQ %d\n", chan->irq);
+ 		return err;
+@@ -2497,16 +2498,19 @@ static struct dma_chan *of_dma_xilinx_xlate(struct of_phandle_args *dma_spec,
+ static const struct xilinx_dma_config axidma_config = {
+ 	.dmatype = XDMA_TYPE_AXIDMA,
+ 	.clk_init = axidma_clk_init,
++	.irq_handler = xilinx_dma_irq_handler,
+ };
  
- Example:
- ++++++++
+ static const struct xilinx_dma_config axicdma_config = {
+ 	.dmatype = XDMA_TYPE_CDMA,
+ 	.clk_init = axicdma_clk_init,
++	.irq_handler = xilinx_dma_irq_handler,
+ };
+ 
+ static const struct xilinx_dma_config axivdma_config = {
+ 	.dmatype = XDMA_TYPE_VDMA,
+ 	.clk_init = axivdma_clk_init,
++	.irq_handler = xilinx_dma_irq_handler,
+ };
+ 
+ static const struct of_device_id xilinx_dma_of_ids[] = {
 -- 
 2.7.4
 
