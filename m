@@ -2,127 +2,91 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DD97CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 23:29:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A5DBCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 23:30:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC5982075A
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 23:29:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 753EA214B2
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 23:30:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389675AbfJVX3k (ORCPT
+        id S2389686AbfJVXaQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 19:29:40 -0400
-Received: from baldur.buserror.net ([165.227.176.147]:59068 "EHLO
-        baldur.buserror.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731847AbfJVX3k (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 19:29:40 -0400
-Received: from [2601:449:8480:af0:12bf:48ff:fe84:c9a0]
-        by baldur.buserror.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <oss@buserror.net>)
-        id 1iN3UG-0003jo-Ga; Tue, 22 Oct 2019 18:22:51 -0500
-Message-ID: <51ee13bc7ced50c3aa1a7ac9335bea16651db684.camel@buserror.net>
-From:   Scott Wood <oss@buserror.net>
-To:     Jason Yan <yanaijie@huawei.com>, mpe@ellerman.id.au,
-        linuxppc-dev@lists.ozlabs.org, diana.craciun@nxp.com,
-        christophe.leroy@c-s.fr, benh@kernel.crashing.org,
-        paulus@samba.org, npiggin@gmail.com, keescook@chromium.org,
-        kernel-hardening@lists.openwall.com
-Cc:     wangkefeng.wang@huawei.com, linux-kernel@vger.kernel.org,
-        jingxiangfeng@huawei.com, zhaohongjiang@huawei.com,
-        thunder.leizhen@huawei.com, yebin10@huawei.com
-Date:   Tue, 22 Oct 2019 18:22:47 -0500
-In-Reply-To: <0543af6f-df4a-81ff-41fe-c81959568859@huawei.com>
-References: <20190920094546.44948-1-yanaijie@huawei.com>
-         <9c2dd2a8-83f2-983c-383e-956e19a7803a@huawei.com>
-         <c4769b34-95f6-81b9-4856-50459630aa0d@huawei.com>
-         <38141b946f3376ce471e46eaf065e357ac540354.camel@buserror.net>
-         <90bb659a-bde4-3b8e-8f01-bf22d7534f44@huawei.com>
-         <34ef1980887c8a6d635c20bdaf748bb0548e51b5.camel@buserror.net>
-         <0543af6f-df4a-81ff-41fe-c81959568859@huawei.com>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2601:449:8480:af0:12bf:48ff:fe84:c9a0
-X-SA-Exim-Rcpt-To: yanaijie@huawei.com, mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org, diana.craciun@nxp.com, christophe.leroy@c-s.fr, benh@kernel.crashing.org, paulus@samba.org, npiggin@gmail.com, keescook@chromium.org, kernel-hardening@lists.openwall.com, wangkefeng.wang@huawei.com, linux-kernel@vger.kernel.org, jingxiangfeng@huawei.com, zhaohongjiang@huawei.com, thunder.leizhen@huawei.com, yebin10@huawei.com
-X-SA-Exim-Mail-From: oss@buserror.net
-Subject: Re: [PATCH v7 00/12] implement KASLR for powerpc/fsl_booke/32
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on baldur.buserror.net)
+        Tue, 22 Oct 2019 19:30:16 -0400
+Received: from mga12.intel.com ([192.55.52.136]:25621 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731847AbfJVXaP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 19:30:15 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Oct 2019 16:30:15 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,218,1569308400"; 
+   d="scan'208";a="200952756"
+Received: from srajamoh-mobl2.amr.corp.intel.com (HELO pbossart-mobl3.intel.com) ([10.251.20.203])
+  by orsmga003.jf.intel.com with ESMTP; 22 Oct 2019 16:30:13 -0700
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+To:     alsa-devel@alsa-project.org
+Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
+        vkoul@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
+        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Sanyog Kale <sanyog.r.kale@intel.com>
+Subject: [PATCH] soundwire: intel: fix PDI/stream mapping for Bulk
+Date:   Tue, 22 Oct 2019 18:29:48 -0500
+Message-Id: <20191022232948.17156-1-pierre-louis.bossart@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-10-21 at 11:34 +0800, Jason Yan wrote:
-> 
-> On 2019/10/10 2:46, Scott Wood wrote:
-> > On Wed, 2019-10-09 at 16:41 +0800, Jason Yan wrote:
-> > > Hi Scott,
-> > > 
-> > > On 2019/10/9 15:13, Scott Wood wrote:
-> > > > On Wed, 2019-10-09 at 14:10 +0800, Jason Yan wrote:
-> > > > > Hi Scott,
-> > > > > 
-> > > > > Would you please take sometime to test this?
-> > > > > 
-> > > > > Thank you so much.
-> > > > > 
-> > > > > On 2019/9/24 13:52, Jason Yan wrote:
-> > > > > > Hi Scott,
-> > > > > > 
-> > > > > > Can you test v7 to see if it works to load a kernel at a non-zero
-> > > > > > address?
-> > > > > > 
-> > > > > > Thanks,
-> > > > 
-> > > > Sorry for the delay.  Here's the output:
-> > > > 
-> > > 
-> > > Thanks for the test.
-> > > 
-> > > > ## Booting kernel from Legacy Image at 10000000 ...
-> > > >      Image Name:   Linux-5.4.0-rc2-00050-g8ac2cf5b4
-> > > >      Image Type:   PowerPC Linux Kernel Image (gzip compressed)
-> > > >      Data Size:    7521134 Bytes = 7.2 MiB
-> > > >      Load Address: 04000000
-> > > >      Entry Point:  04000000
-> > > >      Verifying Checksum ... OK
-> > > > ## Flattened Device Tree blob at 1fc00000
-> > > >      Booting using the fdt blob at 0x1fc00000
-> > > >      Uncompressing Kernel Image ... OK
-> > > >      Loading Device Tree to 07fe0000, end 07fff65c ... OK
-> > > > KASLR: No safe seed for randomizing the kernel base.
-> > > > OF: reserved mem: initialized node qman-fqd, compatible id fsl,qman-
-> > > > fqd
-> > > > OF: reserved mem: initialized node qman-pfdr, compatible id fsl,qman-
-> > > > pfdr
-> > > > OF: reserved mem: initialized node bman-fbpr, compatible id fsl,bman-
-> > > > fbpr
-> > > > Memory CAM mapping: 64/64/64 Mb, residual: 12032Mb
-> > > 
-> > > When boot from 04000000, the max CAM value is 64M. And
-> > > you have a board with 12G memory, CONFIG_LOWMEM_CAM_NUM=3 means only
-> > > 192M memory is mapped and when kernel is randomized at the middle of
-> > > this 192M memory, we will not have enough continuous memory for node
-> > > map.
-> > > 
-> > > Can you set CONFIG_LOWMEM_CAM_NUM=8 and see if it works?
-> > 
-> > OK, that worked.
-> > 
-> 
-> Hi Scott, any more cases should be tested or any more comments?
-> What else need to be done before this feature can be merged?
+The previous formula is incorrect for PDI0/1, the mapping is not
+linear but has a discontinuity between PDI1 and PDI2.
 
-I've just applied it and sent a pull request.
+This change has no effect on PCM PDIs (same mapping).
 
--Scott
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+---
+ drivers/soundwire/intel.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
+index b403ccc832b6..c984261fcc33 100644
+--- a/drivers/soundwire/intel.c
++++ b/drivers/soundwire/intel.c
+@@ -480,7 +480,10 @@ intel_pdi_shim_configure(struct sdw_intel *sdw, struct sdw_cdns_pdi *pdi)
+ 	unsigned int link_id = sdw->instance;
+ 	int pdi_conf = 0;
+ 
+-	pdi->intel_alh_id = (link_id * 16) + pdi->num + 5;
++	/* the Bulk and PCM streams are not contiguous */
++	pdi->intel_alh_id = (link_id * 16) + pdi->num + 3;
++	if (pdi->num >= 2)
++		pdi->intel_alh_id += 2;
+ 
+ 	/*
+ 	 * Program stream parameters to stream SHIM register
+@@ -509,7 +512,10 @@ intel_pdi_alh_configure(struct sdw_intel *sdw, struct sdw_cdns_pdi *pdi)
+ 	unsigned int link_id = sdw->instance;
+ 	unsigned int conf;
+ 
+-	pdi->intel_alh_id = (link_id * 16) + pdi->num + 5;
++	/* the Bulk and PCM streams are not contiguous */
++	pdi->intel_alh_id = (link_id * 16) + pdi->num + 3;
++	if (pdi->num >= 2)
++		pdi->intel_alh_id += 2;
+ 
+ 	/* Program Stream config ALH register */
+ 	conf = intel_readl(alh, SDW_ALH_STRMZCFG(pdi->intel_alh_id));
+-- 
+2.20.1
 
