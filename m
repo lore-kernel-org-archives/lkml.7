@@ -2,153 +2,163 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 731E7CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:44:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95CD1C47E49
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:45:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42E522089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:44:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mw/Pn5GB"
+	by mail.kernel.org (Postfix) with ESMTP id 759072089E
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:45:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388629AbfJVIo3 (ORCPT
+        id S2388640AbfJVIpV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 04:44:29 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:44258 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387575AbfJVIo2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 04:44:28 -0400
-Received: by mail-wr1-f67.google.com with SMTP id z9so17008601wrl.11
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 01:44:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=w9hE3H2QqcKC0k4cAF5UP1zSQ3qEgbtQSjagp+w7kTY=;
-        b=Mw/Pn5GBAg50VeKizp3ggQBlLa29y4QBd34pwIlWgxuB1CnU7Bv+6Y23h4VW6aBJtz
-         SPfSQnHVEOQG1qM8h4gB/p2SrP+ycwUxTkhF7kxdB3njZFq4Etuwp80cmJIzXC1IYDsq
-         1AmADuJ7ApPdGp1/jOsLTPQIqHIHHKtk7fkpqLfMzSAk6BoDFDJiLAYhuQRDUOIMffOw
-         FK1eCm+6iPpdydn2NsXcSolat6gk7uy3jp2XUdf/mNKIZtwVh6V7JTcsZAvLCqIyOTOR
-         YKIVhfOppkBJaxnY1KqrXwJ/IyCiNoSU+wHYFebLK0Gje39GJIqyyR5GYaXKZjgkaZwO
-         8udQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=w9hE3H2QqcKC0k4cAF5UP1zSQ3qEgbtQSjagp+w7kTY=;
-        b=OlRKaKS6F0BwhesNGiKGoOZKxnROVXTHssQhUmzLSh/UpdbXArDsmATxNm3yW2GZLV
-         LzCNKrUGtW6vW/v8IvBViKvjg1626D6BvZ/lbaPTrQso8Ybx1fLcB4ELE133tbTxax89
-         8GJ2Dfwo3/XPQhZHPbbRSgg/boFMpJmtt17sUEDAgzDQmOVi0iLxB98TLplVCpUPKr2P
-         UVp3iViiQjSiFuk8rEPz/ZExv0xtrY6fsPf4iNPzp+sB7krEwUYVAo2NZ91MUJUkpuea
-         7gElr7Lap1ooaK25CRVkqtj0lFyUNl/+18hMAk8Xao7kN5PInXrqwD17l+EhVfZLi5I6
-         +5AA==
-X-Gm-Message-State: APjAAAUUp/ga/2C6YaB9Z9kyG7EpnLDgDl4y/Zrm5BSIY531sfePX8WB
-        7JAhQLjaEK+4MyDgYuXQMkk=
-X-Google-Smtp-Source: APXvYqxb9CtmaeKXSI41YCIJ6lDnZcFZzJDQW1jQX5COHVXCfaamJPNMfbN8l+Cb+uDVwQu+IPUUcQ==
-X-Received: by 2002:adf:eec4:: with SMTP id a4mr2331771wrp.38.1571733866143;
-        Tue, 22 Oct 2019 01:44:26 -0700 (PDT)
-Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
-        by smtp.gmail.com with ESMTPSA id r27sm31936247wrc.55.2019.10.22.01.44.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Oct 2019 01:44:24 -0700 (PDT)
-Date:   Tue, 22 Oct 2019 10:44:23 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Jani Nikula <jani.nikula@linux.intel.com>
-Cc:     Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
+        Tue, 22 Oct 2019 04:45:21 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:34128 "EHLO honk.sigxcpu.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388485AbfJVIpV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 04:45:21 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id 37CFAFB03;
+        Tue, 22 Oct 2019 10:45:17 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id J_7FrQl3FDaI; Tue, 22 Oct 2019 10:45:15 +0200 (CEST)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id 1D2F949BFC; Tue, 22 Oct 2019 10:45:15 +0200 (CEST)
+Date:   Tue, 22 Oct 2019 10:45:14 +0200
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     kbuild test robot <lkp@intel.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        David Airlie <airlied@linux.ie>,
         dri-devel@lists.freedesktop.org,
-        Thierry Reding <treding@nvidia.com>,
-        David Airlie <airlied@linux.ie>, Sean Paul <sean@poorly.run>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/scdc: Fix typo in bit definition of SCDC_STATUS_FLAGS
-Message-ID: <20191022084423.GB1531961@ulmo>
-References: <20191016123342.19119-1-patrik.r.jakobsson@gmail.com>
- <87lftdfb4c.fsf@intel.com>
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Robert Chiras <robert.chiras@nxp.com>,
+        devicetree@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>,
+        Arnd Bergmann <arnd@arndb.de>, Jonas Karlman <jonas@kwiboo.se>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v7 2/2] drm/bridge: Add NWL MIPI DSI host controller
+ support
+Message-ID: <20191022084514.GA30274@bogon.m.sigxcpu.org>
+References: <e0304ab9320cbbf3e63d78449e50975c036b2633.1571494140.git.agx@sigxcpu.org>
+ <201910211901.yB3b4mYu%lkp@intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="oLBj+sq0vYjzfsbl"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87lftdfb4c.fsf@intel.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <201910211901.yB3b4mYu%lkp@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
+On Mon, Oct 21, 2019 at 07:11:12PM +0800, kbuild test robot wrote:
+> Hi "Guido,
+> 
+> I love your patch! Yet something to improve:
+> 
+> [auto build test ERROR on linus/master]
+> [cannot apply to v5.4-rc4 next-20191018]
+> [if your patch is applied to the wrong git tree, please drop us a note to help
+> improve the system. BTW, we also suggest to use '--base' option to specify the
+> base tree in git format-patch, please see
+> https://stackoverflow.com/a/37406982]
 
---oLBj+sq0vYjzfsbl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The base for this series is next-20191018 where drm_panel_bridge_add()
+list it's second argument (89958b7cd9555a5d82556cc9a1f4c62fffda6f96).
 
-On Tue, Oct 22, 2019 at 11:16:51AM +0300, Jani Nikula wrote:
-> On Wed, 16 Oct 2019, Patrik Jakobsson <patrik.r.jakobsson@gmail.com> wrot=
-e:
-> > Fix typo where bits got compared (x < y) instead of shifted (x << y).
->=20
-> Fixes: 3ad33ae2bc80 ("drm: Add SCDC helpers")
-> Cc: Thierry Reding <treding@nvidia.com>
+Cheers,
+ -- Guido
 
-I'm not sure we really need the Fixes: tag here. These defines aren't
-used anywhere, so technically there's no bug.
+> 
+> url:    https://github.com/0day-ci/linux/commits/Guido-G-nther/dt-bindings-display-bridge-Add-binding-for-NWL-mipi-dsi-host-controller/20191021-180825
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 7d194c2100ad2a6dded545887d02754948ca5241
+> config: mips-allmodconfig (attached as .config)
+> compiler: mips-linux-gcc (GCC) 7.4.0
+> reproduce:
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         GCC_VERSION=7.4.0 make.cross ARCH=mips 
+> 
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+> 
+> All errors (new ones prefixed by >>):
+> 
+>    drivers/gpu/drm/bridge/nwl-dsi.c: In function 'nwl_dsi_host_attach':
+> >> drivers/gpu/drm/bridge/nwl-dsi.c:384:12: error: too few arguments to function 'drm_panel_bridge_add'
+>       bridge = drm_panel_bridge_add(panel);
+>                ^~~~~~~~~~~~~~~~~~~~
+>    In file included from include/drm/drm_crtc.h:44:0,
+>                     from include/drm/drm_atomic_helper.h:31,
+>                     from drivers/gpu/drm/bridge/nwl-dsi.c:24:
+>    include/drm/drm_bridge.h:432:20: note: declared here
+>     struct drm_bridge *drm_panel_bridge_add(struct drm_panel *panel,
+>                        ^~~~~~~~~~~~~~~~~~~~
+> 
+> vim +/drm_panel_bridge_add +384 drivers/gpu/drm/bridge/nwl-dsi.c
+> 
+>    358	
+>    359	static int nwl_dsi_host_attach(struct mipi_dsi_host *dsi_host,
+>    360				       struct mipi_dsi_device *device)
+>    361	{
+>    362		struct nwl_dsi *dsi = container_of(dsi_host, struct nwl_dsi, dsi_host);
+>    363		struct device *dev = dsi->dev;
+>    364		struct drm_bridge *bridge;
+>    365		struct drm_panel *panel;
+>    366		int ret;
+>    367	
+>    368		DRM_DEV_INFO(dev, "lanes=%u, format=0x%x flags=0x%lx\n", device->lanes,
+>    369			     device->format, device->mode_flags);
+>    370	
+>    371		if (device->lanes < 1 || device->lanes > 4)
+>    372			return -EINVAL;
+>    373	
+>    374		dsi->lanes = device->lanes;
+>    375		dsi->format = device->format;
+>    376		dsi->dsi_mode_flags = device->mode_flags;
+>    377	
+>    378		ret = drm_of_find_panel_or_bridge(dsi->dev->of_node, 1, 0, &panel,
+>    379						  &bridge);
+>    380		if (ret)
+>    381			return ret;
+>    382	
+>    383		if (panel) {
+>  > 384			bridge = drm_panel_bridge_add(panel);
+>    385			if (IS_ERR(bridge))
+>    386				return PTR_ERR(bridge);
+>    387		}
+>    388	
+>    389		dsi->panel_bridge = bridge;
+>    390		drm_bridge_add(&dsi->bridge);
+>    391	
+>    392		return 0;
+>    393	}
+>    394	
+> 
+> ---
+> 0-DAY kernel test infrastructure                Open Source Technology Center
+> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
 
-Thierry
 
->=20
-> > Signed-off-by: Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
-> > ---
-> >  include/drm/drm_scdc_helper.h | 6 +++---
-> >  1 file changed, 3 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/include/drm/drm_scdc_helper.h b/include/drm/drm_scdc_helpe=
-r.h
-> > index f92eb2094d6b..6a483533aae4 100644
-> > --- a/include/drm/drm_scdc_helper.h
-> > +++ b/include/drm/drm_scdc_helper.h
-> > @@ -50,9 +50,9 @@
-> >  #define  SCDC_READ_REQUEST_ENABLE (1 << 0)
-> > =20
-> >  #define SCDC_STATUS_FLAGS_0 0x40
-> > -#define  SCDC_CH2_LOCK (1 < 3)
-> > -#define  SCDC_CH1_LOCK (1 < 2)
-> > -#define  SCDC_CH0_LOCK (1 < 1)
-> > +#define  SCDC_CH2_LOCK (1 << 3)
-> > +#define  SCDC_CH1_LOCK (1 << 2)
-> > +#define  SCDC_CH0_LOCK (1 << 1)
-> >  #define  SCDC_CH_LOCK_MASK (SCDC_CH2_LOCK | SCDC_CH1_LOCK | SCDC_CH0_L=
-OCK)
-> >  #define  SCDC_CLOCK_DETECT (1 << 0)
->=20
-> --=20
-> Jani Nikula, Intel Open Source Graphics Center
 > _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
---oLBj+sq0vYjzfsbl
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2uwWcACgkQ3SOs138+
-s6F4VQ/9Fh26YyxOGOPt6U2FJ+9WXA66c18kbCj663XQekyTjTlDa1/TirKGwiTz
-XMN3mpwKhTjK0UXga841fW5yiGqlIHHWtNLcgOFnZxlryc1YX70ZcHVoNMZfrDsL
-iRxgkuHhvLcPc3UpBmG2zCK84a0kqw7xEQlrd31erUpOWHrZKUruw1EoefzqTsx1
-nT/6Yw3BZNpzb6qilOAqdK98aTdE08wzeAFPbwXOfI2ZdcGWhWbE9zyAMb6Rt9BM
-TADOW2MkrkCaRZ6pUd/xTrd6d9SHAymGBd8tN97Q4kL4C8aXO8zZi2MZO1QIIrcr
-Vtq2Q8jMNiQEswZ/NN3/5lnDxtVl/pjuiBB7rOuuZUi7pEopgArL24OoeM4LZN95
-3Ejt/bhnhHd6yd18l0Yvu3GEZwS+1TAHZ3hdMUHuVTK0K/bqgo8xPm34SO/ECbUj
-B7zAIQ6HPc5YFpL+AHoRoJdAsHVPjqeIWeJi25aMhBo8H7EU0xoYg83Uro7/maoy
-3VCv25JHyGXyUvRjy37rDwJ04lN8rlarzTISOz2et8VOlON94isov0fW6E3GU4fX
-efEKbnJqqcc5xAsOTO1QWvonKTpFjcwC77dlDouA8vhEbc+wLxbC25RbbX+vjKTS
-wn2b0eSfJPEFB6dRP91ouHvojJYQuJgtzpa7TddCOM4+7pIV9RU=
-=Vn4o
------END PGP SIGNATURE-----
-
---oLBj+sq0vYjzfsbl--
