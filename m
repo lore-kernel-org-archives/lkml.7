@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7662CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:37:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F351CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:37:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A4E8218AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:37:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11401218AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:37:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="R0kpfQV0"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="UkLVmhIa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731355AbfJVIhI (ORCPT
+        id S1731369AbfJVIhO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 04:37:08 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:42130 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388393AbfJVIgo (ORCPT
+        Tue, 22 Oct 2019 04:37:14 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:39314 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388329AbfJVIgm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 04:36:44 -0400
-Received: by mail-wr1-f66.google.com with SMTP id r1so7197139wrs.9
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 01:36:42 -0700 (PDT)
+        Tue, 22 Oct 2019 04:36:42 -0400
+Received: by mail-wm1-f68.google.com with SMTP id r141so5676416wme.4
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 01:36:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=kvQLRHJvRjudaJXCpLtV7CQx5y9VARSzzzMBbffwoBQ=;
-        b=R0kpfQV0jZYq2r/gSdB59v/D7Ky/qC7QBaqd8jFL5iqpVaB7HbudHuRs3k/Du5yZrv
-         RtLp9RXnK3Ac6JBmGc61233Jzc3czDf1nZkMp74sB5QkgfhDFSpXYx4SG6FF6KNOAcvK
-         /xnwnzv9ysxeUNTqHWANmB+wu32P67SBprPLFSGNL0FSwskPlqDpo/ZF5YXHYp77tP89
-         ruPFvimpaR67SUNYOCzZLwoadfWEfB1p5iS/pd3brQsJSi7qoQpOZFfXaEzQTRwn+V6Z
-         JPHXS9Y72JOkuFLWYupTjAv/kuwlsgyMZ9/CdzY8lCwE8KVEsY8bW6MoCWUxYQsh6ztg
-         9TeA==
+        bh=OjHvv8ZdSVaFl2j34zmQMRFMhFwh+26xUwIofDUAWMQ=;
+        b=UkLVmhIaiNsxcswxRm7saAjEeStKBBF+NXde2AaAQaH3O4OXrI2JqpEeNiYtx1tT4k
+         O3tmDJV08ouTAT18mpcXHM49waszOD09C3kcJoqJ1K3QN1xmklwP/eU7Hi3Da1KpH6+p
+         xHzUd7cW8tvQpL0LdK8EzIbsEydpnZXp6EgfJ09/AxanR8iqfgD2W5clxItpQ1XlxvE1
+         Y3NivMmlc1FI2uZ+h4mjPDpGg07DcZC5wE4UFYAR5q7HGQNTlYTFiD5P+jRs/sNoqlfW
+         5Afs8sR94u+Uqox3JbfZuJfuKgrV7Pd2SzSCLdqv7UzJb6rRU5U+dBwxaIfjR8LqHfw9
+         VMTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=kvQLRHJvRjudaJXCpLtV7CQx5y9VARSzzzMBbffwoBQ=;
-        b=c+psFDYPwAkbtzZnMkZ7Ik91jTNGs0VjUd/YzJ88g98/xJTBJRs+cIfLXCvQtxdxBO
-         dohzmkH5Nqkp37vEFDJcI3izk5zQIDj8Dtf3xaiKh8Oa20lJB9Wh56rjHuZ+WzAC4RnT
-         9PhveTflsqBkHYv8YNOmqcmN3/JbpGBRve5xats0BISyTMWxVv4tDHW0xbHqLwlyJD5u
-         BQWmmrEp+v6t0Yzq28qfjj9iy603TilltcP5jQLRxIPU8kP8SQkXWJ3a9Z/nHlyaZGlO
-         uee7LGNpqmzIqTYbOiaOEQ10T0WMQI8Bw03YIfQ1qTJBsAgKG0Zrjfw8rlCFn0ABsiJ9
-         3WlQ==
-X-Gm-Message-State: APjAAAU7RPiKh0a4u6ocPQbns1F04pHjU700oqWusTMg23el6THRprII
-        ZwykkeMsgsPIEqxstNgqhwfeng==
-X-Google-Smtp-Source: APXvYqyaselYLV/0dnxVgvDBqTCkwoVW8/nREL08BhLjGuMEQBFszR2zj3NmBAPYQD7CNxTVF2VrFw==
-X-Received: by 2002:adf:fb0b:: with SMTP id c11mr2450846wrr.50.1571733401978;
-        Tue, 22 Oct 2019 01:36:41 -0700 (PDT)
+        bh=OjHvv8ZdSVaFl2j34zmQMRFMhFwh+26xUwIofDUAWMQ=;
+        b=M2hEhzcGiwT5wTswHU3pF9s5JvCdwvcPg5ESjX9NOHO2dqKquIgLaCaOp/mOHOJ9Ii
+         HGsylaSdjQ3xEjgf20YcCobBDhGWJSlvthFNkn9cOD4d0wWC0By8whbKSPNte4P33E0f
+         ZfoJDLphkyy43Q1z6pytlf3KWwG9mjoIOnstDaMiDk/9/UgYI89lfNmD8vdnxc/pAuqO
+         QxbX7ngBgjYpbqhWofdRyDwul6Lvcqlx5uGNwhZJnpAUFK7570JqYdW8P65rkAmXkBx0
+         e4Jmg24kIZ1Qbm5Fcc2nczrgGwBXaT3vvIm4mA7dXUhN8uan4Mu2xc0M2PORyhEkWFcN
+         GRgQ==
+X-Gm-Message-State: APjAAAUH+IdUjtyDh9WQQgvGQb8AQuUrBjK5+ITizUCt7KFpiCyZ8UnW
+        6/cO8Ctnr04RMkUEKoJOMKCQzRV8LEY=
+X-Google-Smtp-Source: APXvYqwKHDyg0m8WqC6lLMl8/nhXbBRKfJRxg4+8ou9ARo5YAW/NNdc3UuYo+8foYS7XDWsI6AWPPA==
+X-Received: by 2002:a7b:cb03:: with SMTP id u3mr1840598wmj.126.1571733399937;
+        Tue, 22 Oct 2019 01:36:39 -0700 (PDT)
 Received: from localhost.localdomain (amontpellier-652-1-281-69.w109-210.abo.wanadoo.fr. [109.210.96.69])
-        by smtp.gmail.com with ESMTPSA id g17sm17115253wrq.58.2019.10.22.01.36.41
+        by smtp.gmail.com with ESMTPSA id g17sm17115253wrq.58.2019.10.22.01.36.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Oct 2019 01:36:41 -0700 (PDT)
+        Tue, 22 Oct 2019 01:36:39 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Yoshinori Sato <ysato@users.sourceforge.jp>,
         Rich Felker <dalias@libc.org>,
@@ -69,9 +69,9 @@ To:     Yoshinori Sato <ysato@users.sourceforge.jp>,
 Cc:     linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org,
         dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v7 5/9] backlight: gpio: simplify the platform data handling
-Date:   Tue, 22 Oct 2019 10:36:26 +0200
-Message-Id: <20191022083630.28175-6-brgl@bgdev.pl>
+Subject: [PATCH v7 3/9] backlight: gpio: explicitly set the direction of the GPIO
+Date:   Tue, 22 Oct 2019 10:36:24 +0200
+Message-Id: <20191022083630.28175-4-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191022083630.28175-1-brgl@bgdev.pl>
 References: <20191022083630.28175-1-brgl@bgdev.pl>
@@ -84,108 +84,86 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Now that the last user of platform data (sh ecovec24) defines a proper
-GPIO lookup and sets the 'default-on' device property, we can drop the
-platform_data-specific GPIO handling and unify a big chunk of code.
+The GPIO backlight driver currently requests the line 'as is', without
+acively setting its direction. This can lead to problems: if the line
+is in input mode by default, we won't be able to drive it later when
+updating the status and also reading its initial value doesn't make
+sense for backlight setting.
 
-The only field used from the platform data is now the fbdev pointer.
+Request the line 'as is' initially, so that we can read its value
+without affecting it but then change the direction to output explicitly
+when setting the initial brightness.
+
+Also: check the current direction and only read the value if it's output.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/video/backlight/gpio_backlight.c | 62 +++++-------------------
- 1 file changed, 11 insertions(+), 51 deletions(-)
+ drivers/video/backlight/gpio_backlight.c | 23 ++++++++++++++++++-----
+ 1 file changed, 18 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/video/backlight/gpio_backlight.c b/drivers/video/backlight/gpio_backlight.c
-index 52f17c9ca1c3..ddc7d3b288b7 100644
+index 3955b513f2f8..52f17c9ca1c3 100644
 --- a/drivers/video/backlight/gpio_backlight.c
 +++ b/drivers/video/backlight/gpio_backlight.c
-@@ -6,7 +6,6 @@
- #include <linux/backlight.h>
- #include <linux/err.h>
- #include <linux/fb.h>
--#include <linux/gpio.h> /* Only for legacy support */
- #include <linux/gpio/consumer.h>
- #include <linux/init.h>
- #include <linux/kernel.h>
-@@ -61,28 +60,6 @@ static const struct backlight_ops gpio_backlight_ops = {
- 	.check_fb	= gpio_backlight_check_fb,
+@@ -25,9 +25,8 @@ struct gpio_backlight {
+ 	int def_value;
  };
  
--static int gpio_backlight_probe_dt(struct platform_device *pdev,
--				   struct gpio_backlight *gbl)
--{
--	struct device *dev = &pdev->dev;
--	int ret;
--
--	gbl->def_value = device_property_read_bool(dev, "default-on");
--
--	gbl->gpiod = devm_gpiod_get(dev, NULL, GPIOD_ASIS);
--	if (IS_ERR(gbl->gpiod)) {
--		ret = PTR_ERR(gbl->gpiod);
--
--		if (ret != -EPROBE_DEFER) {
--			dev_err(dev,
--				"Error: The gpios parameter is missing or invalid.\n");
--		}
--		return ret;
--	}
--
--	return 0;
--}
--
- static int gpio_backlight_initial_power_state(struct gpio_backlight *gbl)
+-static int gpio_backlight_update_status(struct backlight_device *bl)
++static int gpio_backlight_get_next_brightness(struct backlight_device *bl)
  {
- 	struct device_node *node = gbl->dev->of_node;
-@@ -114,35 +91,18 @@ static int gpio_backlight_probe(struct platform_device *pdev)
+-	struct gpio_backlight *gbl = bl_get_data(bl);
+ 	int brightness = bl->props.brightness;
  
- 	gbl->dev = &pdev->dev;
+ 	if (bl->props.power != FB_BLANK_UNBLANK ||
+@@ -35,6 +34,14 @@ static int gpio_backlight_update_status(struct backlight_device *bl)
+ 	    bl->props.state & (BL_CORE_SUSPENDED | BL_CORE_FBBLANK))
+ 		brightness = 0;
  
--	if (pdev->dev.fwnode) {
--		ret = gpio_backlight_probe_dt(pdev, gbl);
--		if (ret)
--			return ret;
--	} else if (pdata) {
--		/*
--		 * Legacy platform data GPIO retrieveal. Do not expand
--		 * the use of this code path, currently only used by one
--		 * SH board.
--		 */
--		unsigned long flags = GPIOF_DIR_OUT;
--
-+	if (pdata)
- 		gbl->fbdev = pdata->fbdev;
--		gbl->def_value = pdata->def_value;
--		flags |= gbl->def_value ? GPIOF_INIT_HIGH : GPIOF_INIT_LOW;
--
--		ret = devm_gpio_request_one(gbl->dev, pdata->gpio, flags,
--					    pdata ? pdata->name : "backlight");
--		if (ret < 0) {
--			dev_err(&pdev->dev, "unable to request GPIO\n");
--			return ret;
--		}
--		gbl->gpiod = gpio_to_desc(pdata->gpio);
--		if (!gbl->gpiod)
--			return -EINVAL;
--	} else {
--		dev_err(&pdev->dev,
--			"failed to find platform data or device tree node.\n");
--		return -ENODEV;
++	return brightness;
++}
 +
-+	gbl->def_value = device_property_read_bool(&pdev->dev, "default-on");
++static int gpio_backlight_update_status(struct backlight_device *bl)
++{
++	struct gpio_backlight *gbl = bl_get_data(bl);
++	int brightness = gpio_backlight_get_next_brightness(bl);
 +
-+	gbl->gpiod = devm_gpiod_get(&pdev->dev, NULL, GPIOD_ASIS);
-+	if (IS_ERR(gbl->gpiod)) {
-+		ret = PTR_ERR(gbl->gpiod);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(&pdev->dev,
-+				"Error: The gpios parameter is missing or invalid.\n");
+ 	gpiod_set_value_cansleep(gbl->gpiod, brightness);
+ 
+ 	return 0;
+@@ -85,7 +92,8 @@ static int gpio_backlight_initial_power_state(struct gpio_backlight *gbl)
+ 		return gbl->def_value ? FB_BLANK_UNBLANK : FB_BLANK_POWERDOWN;
+ 
+ 	/* if the enable GPIO is disabled, do not enable the backlight */
+-	if (gpiod_get_value_cansleep(gbl->gpiod) == 0)
++	if (gpiod_get_direction(gbl->gpiod) == 0 &&
++	    gpiod_get_value_cansleep(gbl->gpiod) == 0)
+ 		return FB_BLANK_POWERDOWN;
+ 
+ 	return FB_BLANK_UNBLANK;
+@@ -98,7 +106,7 @@ static int gpio_backlight_probe(struct platform_device *pdev)
+ 	struct backlight_properties props;
+ 	struct backlight_device *bl;
+ 	struct gpio_backlight *gbl;
+-	int ret;
++	int ret, init_brightness;
+ 
+ 	gbl = devm_kzalloc(&pdev->dev, sizeof(*gbl), GFP_KERNEL);
+ 	if (gbl == NULL)
+@@ -151,7 +159,12 @@ static int gpio_backlight_probe(struct platform_device *pdev)
+ 	bl->props.power = gpio_backlight_initial_power_state(gbl);
+ 	bl->props.brightness = 1;
+ 
+-	backlight_update_status(bl);
++	init_brightness = gpio_backlight_get_next_brightness(bl);
++	ret = gpiod_direction_output(gbl->gpiod, init_brightness);
++	if (ret) {
++		dev_err(&pdev->dev, "failed to set initial brightness\n");
 +		return ret;
- 	}
++	}
  
- 	memset(&props, 0, sizeof(props));
+ 	platform_set_drvdata(pdev, bl);
+ 	return 0;
 -- 
 2.23.0
 
