@@ -2,81 +2,109 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E34D3CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 22:44:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B6D8CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 22:44:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0A7E2084C
+	by mail.kernel.org (Postfix) with ESMTP id DB02E20B7C
 	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 22:44:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571784257;
-	bh=s6jIaDy6L8w46Wpyk5SR+8mifFro7PId0+D18ldD7mY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=rFSEnqqscCrOcB+rJ2TTyMeNHiNY4d1IUM9rl6GjJGy5TT3/AGWQejQXWAzzzIqI8
-	 HR/dDgyA2veM9pvANTLd1VqjgpKbkvAzEvbr5h2wyPKDNrszS4YB3NKFHH4JD314N3
-	 RC6UJUmF2deuVT4IYEvioaINAA8n2ro8jsscMIH8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733099AbfJVWoC (ORCPT
+        id S2389447AbfJVWoN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 18:44:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56428 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731850AbfJVWoB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 18:44:01 -0400
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B27B2084C;
-        Tue, 22 Oct 2019 22:43:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571784239;
-        bh=s6jIaDy6L8w46Wpyk5SR+8mifFro7PId0+D18ldD7mY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=AoD4+JQ5VH5btT9ZL6/jrLNahb9N/Tjnv29pjX6mJpMxwJ1sHfyPDFTACCWXBaJEV
-         W+JRzve4gQ8Tl393GA6ujKrgIkCBuUm3qo2wiCF13xkXgXowJxTltO0NAh8DVi37nH
-         KAmMWJhSYMVM6oIn7ZFCwRSkmVvYljGSsVL+O5i0=
-Date:   Tue, 22 Oct 2019 15:43:58 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Manfred Spraul <manfred@colorfullife.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Waiman Long <longman@redhat.com>, 1vier1@web.de,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH 2/5] ipc/mqueue.c: Remove duplicated code
-Message-Id: <20191022154358.a99d7d3f972c72d74399b4ed@linux-foundation.org>
-In-Reply-To: <20191020123305.14715-3-manfred@colorfullife.com>
-References: <20191020123305.14715-1-manfred@colorfullife.com>
-        <20191020123305.14715-3-manfred@colorfullife.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 22 Oct 2019 18:44:13 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:47427 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388779AbfJVWoN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 18:44:13 -0400
+Received: by mail-io1-f69.google.com with SMTP id r84so2669598ior.14
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 15:44:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=n8AthPz5EJS+41jvmzMtDwkf5FjVXZx9cmlJKclfd/M=;
+        b=P6kUYRS65oAkxlPsG3bpoV439Ee0AvQOxWgM9SYCiBHdnbe6CPAs5sLErWowDwQ51x
+         wSp3YUeEyMNGWEUS6WFJ+aPwWIhrDjOM108t6qA6dw4e+nJ7wTuvJbtxe3cqsTzwVe5W
+         axr0s5wgP+zuYXsBDCicw8/bQlnLd9WgGjWwGLctQpTWAcY3W8mdkMVSzUI2D9gbUOGB
+         yi49HyXCHYahBFQGQLdRrYyVUgscIzIM90D2tltC1bfTeVym74Nos4mYDIUtDza9lcnc
+         PQbmmZF9tm45fcHdd3di1SRCBnFs61sOL/Lm3xBbZPoKuujZQWkBWw/OXTU7QPT2oFJg
+         WzIA==
+X-Gm-Message-State: APjAAAU54PjeyIu29dQtQUjbLLJ3vIJOqJXpYsKFVVK6PcdNWHuBEMKE
+        tDNNKF2mcNGsJAWRLQDlyqdl7f2R7n/fw/SVclXQFnRdRv3M
+X-Google-Smtp-Source: APXvYqy8SHCJO8nVqDVFjtRO0viqI7sq50268hI2BxRPY53Spf82Y2/LvjiTliYN9zGkl6aZIGnO0+zVoltc7aACBjopLIVrFuUr
+MIME-Version: 1.0
+X-Received: by 2002:a92:9c94:: with SMTP id x20mr1571289ill.149.1571784252347;
+ Tue, 22 Oct 2019 15:44:12 -0700 (PDT)
+Date:   Tue, 22 Oct 2019 15:44:12 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000065d240595878a92@google.com>
+Subject: memory leak in rxrpc_lookup_local
+From:   syzbot <syzbot+305326672fed51b205f7@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, dhowells@redhat.com,
+        linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 20 Oct 2019 14:33:02 +0200 Manfred Spraul <manfred@colorfullife.com> wrote:
+Hello,
 
-> Patch from Davidlohr, I just added this change log.
-> pipelined_send() and pipelined_receive() are identical, so merge them.
-> 
-> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
-> Signed-off-by: Manfred Spraul <manfred@colorfullife.com>
+syzbot found the following crash on:
 
-I redid the changelog as below:
+HEAD commit:    4fe34d61 Merge branch 'x86-urgent-for-linus' of git://git...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=11b21d40e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=cd7f8e43c7bdf83a
+dashboard link: https://syzkaller.appspot.com/bug?extid=305326672fed51b205f7
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10e692ff600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10af816b600000
 
-From: Davidlohr Bueso <dave@stgolabs.net>
-Subject: ipc/mqueue.c: remove duplicated code
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+305326672fed51b205f7@syzkaller.appspotmail.com
 
-pipelined_send() and pipelined_receive() are identical, so merge them.
+BUG: memory leak
+unreferenced object 0xffff888121f35e00 (size 256):
+   comm "syz-executor362", pid 6892, jiffies 4294941791 (age 7.710s)
+   hex dump (first 32 bytes):
+     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+     00 00 00 00 09 00 00 00 00 80 e7 21 81 88 ff ff  ...........!....
+   backtrace:
+     [<000000006221752a>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<000000006221752a>] slab_post_alloc_hook mm/slab.h:586 [inline]
+     [<000000006221752a>] slab_alloc mm/slab.c:3319 [inline]
+     [<000000006221752a>] kmem_cache_alloc_trace+0x145/0x2c0 mm/slab.c:3548
+     [<000000006ee28c35>] kmalloc include/linux/slab.h:556 [inline]
+     [<000000006ee28c35>] kzalloc include/linux/slab.h:690 [inline]
+     [<000000006ee28c35>] rxrpc_alloc_local net/rxrpc/local_object.c:79  
+[inline]
+     [<000000006ee28c35>] rxrpc_lookup_local+0x1aa/0x750  
+net/rxrpc/local_object.c:277
+     [<000000009255b1c3>] rxrpc_bind+0x131/0x1e0 net/rxrpc/af_rxrpc.c:149
+     [<00000000d7bcf378>] __sys_bind+0x11c/0x140 net/socket.c:1647
+     [<00000000c269c3cb>] __do_sys_bind net/socket.c:1658 [inline]
+     [<00000000c269c3cb>] __se_sys_bind net/socket.c:1656 [inline]
+     [<00000000c269c3cb>] __x64_sys_bind+0x1e/0x30 net/socket.c:1656
+     [<000000000444b7d1>] do_syscall_64+0x73/0x1f0  
+arch/x86/entry/common.c:290
+     [<000000001700d564>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-[manfred@colorfullife.com: add changelog]
-Link: http://lkml.kernel.org/r/20191020123305.14715-3-manfred@colorfullife.com
-Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
-Signed-off-by: Manfred Spraul <manfred@colorfullife.com>
 
 
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
