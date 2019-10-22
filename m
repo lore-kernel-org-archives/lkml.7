@@ -2,120 +2,179 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=FORGED_MUA_MOZILLA,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2AB5CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:39:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 200EBCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:39:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B46422064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:39:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r3lN2fcN"
+	by mail.kernel.org (Postfix) with ESMTP id E54E621783
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:39:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388517AbfJVNjB (ORCPT
+        id S2388767AbfJVNjG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 09:39:01 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:37650 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388106AbfJVNjB (ORCPT
+        Tue, 22 Oct 2019 09:39:06 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:26814 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388581AbfJVNjG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 09:39:01 -0400
-Received: by mail-pl1-f194.google.com with SMTP id u20so8382880plq.4;
-        Tue, 22 Oct 2019 06:39:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=gpoW/8Yw0CDfvnTYDUEt7wnlvPB+LdjenekF+dbtjls=;
-        b=r3lN2fcNiqbiD+lTtxMThvS7h5kEpehwJT2wWH9MYxpdx0zW6ZvPe5+oJTGHBdo3UJ
-         +1snUlb5BmZKfZgCMc5oHa9QCVpM51bJtLcoi0n8l6jvNxfYgPFgQ3xMC4wejMQvvNYf
-         FLjLePAA2nsc9FCaZLwszr/yv2z8Vo+c37bA8ZqlWGieYmxcCBCFDjIlAayEvRnKlNTe
-         rqo/FUiZITczTRPc6fHUG/C01orY7LXqFnZKXsZ7XIBhPyrITrbCxMUTxVQfktXKt10E
-         YtnLrgW/UV4XeUX78ycvlYJllBR+2c+GHpwybsbZFCsZd91dCUD8z8jlNuKghFtR7G86
-         EPSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=gpoW/8Yw0CDfvnTYDUEt7wnlvPB+LdjenekF+dbtjls=;
-        b=AUGwPbPwoXLPDAYRjGmvwEPtzEdlSMz3iixGNDBdffY14Bi4wUIbqjQVkZb+MW2Dzk
-         lkaYNEU1PAg7JXfLhqtSxpgy50m3BYm91sXSrFlfDcLtkE9z/3snsi3oxE7RUfVS3jiZ
-         2He8/I71I8HKs/X3cYXFPDEOGU8tvN/atLosaXz7C15H9nLls2bJZujJ8sEAN/aGmMK8
-         5RTn98PlYEFXTyUl0XSAjqbejd5faNhyRjYPbI63iyNE3uMWcHTKpz6D4jPYdAVcfk4S
-         gEBHFQZAep+AssdqbSVN03mFZNOo8bIZvlDBOmPGwV6JzKJMvEtyQRCgeSFCH/lGL3F/
-         cMzQ==
-X-Gm-Message-State: APjAAAUrrK+mNU/wp0Gzzbgba7og3kSx9snAMFD9L2p52dxpA6OTbB/n
-        SlqP5qFYY8Jmw9A1NWuxMqtQhCOu
-X-Google-Smtp-Source: APXvYqxnblBiUF+4VE72i3RD2Q7pDJaYooI6GNAv8EneUhqFZsEv0k6WdGtSCJU5/e/gq6M4YVlHIA==
-X-Received: by 2002:a17:902:d90f:: with SMTP id c15mr3753482plz.157.1571751540152;
-        Tue, 22 Oct 2019 06:39:00 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id f188sm22206087pfa.170.2019.10.22.06.38.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 22 Oct 2019 06:38:59 -0700 (PDT)
-Subject: Re: [PATCH 09/46] watchdog: sa1100: use platform device registration
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>
-References: <20191018154052.1276506-1-arnd@arndb.de>
- <20191018154201.1276638-9-arnd@arndb.de>
- <bb4713a0-60bd-8d27-874f-e7e3a5adaec8@roeck-us.net>
- <CAK8P3a0GPVs+PqUwsL2H8VJqLh=MJnMTwPu9nhX+Nq-xiMS1yQ@mail.gmail.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <21d72661-a4f1-d51f-ddf0-f8cebb984029@roeck-us.net>
-Date:   Tue, 22 Oct 2019 06:38:57 -0700
+        Tue, 22 Oct 2019 09:39:06 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9MDcmEL125781
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 09:39:05 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vt1fnm28q-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 09:39:04 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <riteshh@linux.ibm.com>;
+        Tue, 22 Oct 2019 14:39:01 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 22 Oct 2019 14:38:57 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9MDcvXt50069544
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 22 Oct 2019 13:38:57 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 595AC5205F;
+        Tue, 22 Oct 2019 13:38:57 +0000 (GMT)
+Received: from [9.199.159.6] (unknown [9.199.159.6])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id B1B4752050;
+        Tue, 22 Oct 2019 13:38:55 +0000 (GMT)
+Subject: Re: [PATCH RESEND 1/1] vfs: Really check for inode ptr in lookup_fast
+To:     Al Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, wugyuan@cn.ibm.com,
+        jlayton@kernel.org, hsiangkao@aol.com, Jan Kara <jack@suse.cz>
+References: <20190927044243.18856-1-riteshh@linux.ibm.com>
+ <20191015040730.6A84742047@d06av24.portsmouth.uk.ibm.com>
+From:   Ritesh Harjani <riteshh@linux.ibm.com>
+Date:   Tue, 22 Oct 2019 19:08:54 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a0GPVs+PqUwsL2H8VJqLh=MJnMTwPu9nhX+Nq-xiMS1yQ@mail.gmail.com>
+In-Reply-To: <20191015040730.6A84742047@d06av24.portsmouth.uk.ibm.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19102213-4275-0000-0000-000003759081
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19102213-4276-0000-0000-00003888B47D
+Message-Id: <20191022133855.B1B4752050@d06av21.portsmouth.uk.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-22_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910220127
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/22/19 2:44 AM, Arnd Bergmann wrote:
-> On Sat, Oct 19, 2019 at 4:07 PM Guenter Roeck <linux@roeck-us.net> wrote:
+I think we have still not taken this patch. Al?
+
+
+On 10/15/19 9:37 AM, Ritesh Harjani wrote:
+> ping!!
 > 
->>> @@ -319,10 +316,13 @@ static struct platform_device *sa11x0_devices[] __initdata = {
->>>
->>>    static int __init sa1100_init(void)
->>>    {
->>> +     struct resource wdt_res = DEFINE_RES_MEM(0x90000000, 0x20);
->>>        pm_power_off = sa1100_power_off;
->>>
->>>        regulator_has_full_constraints();
->>>
->>> +     platform_device_register_simple("sa1100_wdt", -1, &wdt_res, 1);
->>> +
->>>        return platform_add_devices(sa11x0_devices, ARRAY_SIZE(sa11x0_devices));
+> On 9/27/19 10:12 AM, Ritesh Harjani wrote:
+>> d_is_negative can race with d_instantiate_new()
+>> -> __d_set_inode_and_type().
+>> For e.g. in use cases where Thread-1 is creating
+>> symlink (doing d_instantiate_new()) & Thread-2 is doing
+>> cat of that symlink while doing lookup_fast (via REF-walk-
+>> one such case is, when ->permission returns -ECHILD).
 >>
->> Wouldn't it be better to add the watchdog device to sa11x0_devices ?
+>> During this race if __d_set_and_inode_type() does out-of-order
+>> execution and set the dentry->d_flags before setting
+>> dentry->inode, then it can result into following kernel panic.
+>>
+>> This change fixes the issue by directly checking for inode.
+>>
+>> E.g. kernel panic, since inode was NULL.
+>> trailing_symlink() -> may_follow_link() -> inode->i_uid.
+>> Issue signature:-
+>>    [NIP  : trailing_symlink+80]
+>>    [LR   : trailing_symlink+1092]
+>>    #4 [c00000198069bb70] trailing_symlink at c0000000004bae60  
+>> (unreliable)
+>>    #5 [c00000198069bc00] path_openat at c0000000004bdd14
+>>    #6 [c00000198069bc90] do_filp_open at c0000000004c0274
+>>    #7 [c00000198069bdb0] do_sys_open at c00000000049b248
+>>    #8 [c00000198069be30] system_call at c00000000000b388
+>>
+>> Sequence of events:-
+>> Thread-2(Comm: ln)            Thread-1(Comm: cat)
+>>
+>>                     dentry = __d_lookup() //nonRCU
+>>
+>> __d_set_and_inode_type() (Out-of-order execution)
+>>      flags = READ_ONCE(dentry->d_flags);
+>>      flags &= ~(DCACHE_ENTRY_TYPE | DCACHE_FALLTHRU);
+>>      flags |= type_flags;
+>>      WRITE_ONCE(dentry->d_flags, flags);
+>>
+>>                     if (unlikely(d_is_negative()) // fails
+>>                            {}
+>>                     // since d_flags is already updated in
+>>                     // Thread-2 in parallel but inode
+>>                     // not yet set.
+>>                     // d_is_negative returns false
+>>
+>>                     *inode = d_backing_inode(path->dentry);
+>>                     // means inode is still NULL
+>>
+>>      dentry->d_inode = inode;
+>>
+>>                     trailing_symlink()
+>>                         may_follow_link()
+>>                             inode = nd->link_inode;
+>>                             // nd->link_inode = NULL
+>>                             //Then it crashes while
+>>                             //doing inode->i_uid
+>>
+>> Reported-by: Guang Yuan Wu <wugyuan@cn.ibm.com>
+>> Tested-by: Guang Yuan Wu <wugyuan@cn.ibm.com>
+>> Acked-by: Jeff Layton <jlayton@kernel.org>
+>> Signed-off-by: Ritesh Harjani <riteshh@linux.ibm.com>
+>> ---
+>>   fs/namei.c | 16 +++++++++++++++-
+>>   1 file changed, 15 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/fs/namei.c b/fs/namei.c
+>> index 671c3c1a3425..7c5337cddebd 100644
+>> --- a/fs/namei.c
+>> +++ b/fs/namei.c
+>> @@ -1617,7 +1617,21 @@ static int lookup_fast(struct nameidata *nd,
+>>           dput(dentry);
+>>           return status;
+>>       }
+>> -    if (unlikely(d_is_negative(dentry))) {
+>> +
+>> +    /*
+>> +     * Caution: d_is_negative() can race with
+>> +     * __d_set_inode_and_type().
+>> +     * For e.g. in use cases where Thread-1 is creating
+>> +     * symlink (doing d_instantiate_new()) & Thread-2 is doing
+>> +     * cat of that symlink and falling here (via Ref-walk) while
+>> +     * doing lookup_fast (one such case is when ->permission
+>> +     * returns -ECHILD).
+>> +     * Now if __d_set_inode_and_type() does out-of-order execution
+>> +     * i.e. it first sets the dentry->d_flags & then dentry->inode
+>> +     * then it can result into inode being NULL, causing panic later.
+>> +     * Hence directly check if inode is NULL here.
+>> +     */
+>> +    if (unlikely(d_really_is_negative(dentry))) {
+>>           dput(dentry);
+>>           return -ENOENT;
+>>       }
+>>
 > 
-> Generally speaking, platform_device_register_simple() is better than
-> platform_add_devices(), it does the same thing with fewer source lines
-> and smaller object code, and it doesn't have the problem of lifetime rules
-> for statically allocated reference-counted devices.
-> 
-> One day we may want to replace all static platform_device instances with
-> platform_device_info instead, but right now there are too many of those.
-> 
-> I can change this one to a platform_device for consistency though if you
-> think it's worth it.
-> 
-
-No, I was just wondering. Thanks for the explanation.
-
-Guenter
 
