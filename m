@@ -2,115 +2,174 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9562FCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:44:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88C60CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:45:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69F5F20700
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:44:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OuMSKRWw"
+	by mail.kernel.org (Postfix) with ESMTP id 5AA5E218AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:45:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732103AbfJVNoA (ORCPT
+        id S1732113AbfJVNo7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 09:44:00 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:24531 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731707AbfJVNoA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 09:44:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571751838;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:  in-reply-to:in-reply-to;
-        bh=zHfL5vClgCqy3xfsuPRygxfVvqfz2goIqbC4zkAjqZY=;
-        b=OuMSKRWwCxsa+Ue4CZQyeI2kAZXy/pnPOwWlGjkSqKOfqk9K5cpl+ugi5niikCXE63iJzQ
-        XTVVYr/22CfJ7p9FSJ3GBwGn/57vJ/MyC3epDzVQED8Sv/4VSz37UO8vjuwwMOiAW0mz0u
-        XpgKZ0OIpdAcRZAbts/7l+umL6LafjI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-198-I13NcTyKPKiRhLkpj3_Img-1; Tue, 22 Oct 2019 09:43:57 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 22 Oct 2019 09:44:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39132 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731218AbfJVNo6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 09:44:58 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BEF0D5ED
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 13:43:54 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B1FD51059A53
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 13:43:54 +0000 (UTC)
-Received: from zmail24.collab.prod.int.phx2.redhat.com (zmail24.collab.prod.int.phx2.redhat.com [10.5.83.30])
-        by colo-mx.corp.redhat.com (Postfix) with ESMTP id A7C8218089DC
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 13:43:54 +0000 (UTC)
-Date:   Tue, 22 Oct 2019 09:43:54 -0400 (EDT)
-From:   Dave Anderson <anderson@redhat.com>
-To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Message-ID: <1789830883.7797936.1571751834645.JavaMail.zimbra@redhat.com>
-In-Reply-To: <55902207.7797907.1571751831873.JavaMail.zimbra@redhat.com>
-Subject: Re: [PATCH 1/3 v4] x86/kdump: always reserve the low 1MiB when the
- crashkernel option is specified
+        by mail.kernel.org (Postfix) with ESMTPSA id 7041C20700;
+        Tue, 22 Oct 2019 13:44:56 +0000 (UTC)
+Date:   Tue, 22 Oct 2019 09:44:55 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH 3/3] x86/ftrace: Use text_poke()
+Message-ID: <20191022094455.6a0a1a27@gandalf.local.home>
+In-Reply-To: <20191022071956.07e21543@gandalf.local.home>
+References: <aaffb32f-6ca9-f9e3-9b1a-627125c563ed@redhat.com>
+        <20191002182106.GC4643@worktop.programming.kicks-ass.net>
+        <20191003181045.7fb1a5b3@gandalf.local.home>
+        <20191004112237.GA19463@hirez.programming.kicks-ass.net>
+        <20191004094228.5a5774fe@gandalf.local.home>
+        <CAADnVQJ0cWYPY-+FhZoqUZ8p1k1FiDsO5jhXiQdcCPmd1UeCyQ@mail.gmail.com>
+        <20191021204310.3c26f730@oasis.local.home>
+        <CAADnVQLn+Fh-UgSRD9SZCT7WYOez5De04iCZucYbA9mYxPm2AQ@mail.gmail.com>
+        <20191021231630.49805757@oasis.local.home>
+        <20191021231904.4b968dc1@oasis.local.home>
+        <20191022040532.fvpxcs74i4mn4rc6@ast-mbp.dhcp.thefacebook.com>
+        <20191022071956.07e21543@gandalf.local.home>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-X-Originating-IP: [10.18.17.5, 10.4.195.9]
-Thread-Topic: x86/kdump: always reserve the low 1MiB when the crashkernel option is specified
-Thread-Index: 85xNxgPNoOZRUFlcGwROOLaIM4U0zw==
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-MC-Unique: I13NcTyKPKiRhLkpj3_Img-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 22 Oct 2019 07:19:56 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
----- Original Message -----
+> > I'm not touching dyn_ftrace.
+> > Actually calling my stuff ftrace+bpf is probably not correct either.
+> > I'm reusing code patching of nop into call that ftrace does. That's it.
+> > Turned out I cannot use 99% of ftrace facilities.
+> > ftrace_caller, ftrace_call, ftrace_ops_list_func and the whole ftrace api
+> > with ip, parent_ip and pt_regs cannot be used for this part of the work.
+> > bpf prog needs to access raw function arguments. To achieve that I'm  
+> 
+> You can do that today with the ftrace facility, just like live patching
+> does. You register a ftrace_ops with the flag FTRACE_OPS_FL_IPMODIFY,
+> and your func will set the regs->ip to your bpf handler. When the
+> ftrace_ops->func returns, instead of going back to the called
+> function, it can jump to your bpf_handler. You can create a shadow stack
+> (like function graph tracer does) to save the return address for where
+> you bpf handler needs to return to. As your bpf_handler needs raw
+> access to the parameters, it may not even need the shadow stack because
+> it should know the function it is reading the parameters from.
 
-> >=20
-> > [root linux]$ crash vmlinux
-> > /var/crash/127.0.0.1-2019-09-19-08\:31\:27/vmcore
-> > WARNING: kernel relocated [240MB]: patching 97110 gdb minimal_symbol va=
-lues
-> >=20
-> >       KERNEL: /var/crash/127.0.0.1-2019-09-19-08:31:27/vmlinux
-> >     DUMPFILE: /var/crash/127.0.0.1-2019-09-19-08:31:27/vmcore  [PARTIAL=
- DUMP]
-> >         CPUS: 128
-> >         DATE: Thu Sep 19 08:31:18 2019
-> >       UPTIME: 00:01:21
-> > LOAD AVERAGE: 0.16, 0.07, 0.02
-> >        TASKS: 1343
-> >     NODENAME: amd-ethanol
-> >      RELEASE: 5.3.0-rc7+
-> >      VERSION: #4 SMP Thu Sep 19 08:14:00 EDT 2019
-> >      MACHINE: x86_64  (2195 Mhz)
-> >       MEMORY: 127.9 GB
-> >        PANIC: "Kernel panic - not syncing: sysrq triggered crash"
-> >          PID: 9789
-> >      COMMAND: "bash"
-> >         TASK: "ffff89711894ae80  [THREAD_INFO: ffff89711894ae80]"
-> >          CPU: 83
-> >        STATE: TASK_RUNNING (PANIC)
-> >=20
-> > crash> kmem -s|grep -i invalid
-> > kmem: dma-kmalloc-512: slab:ffffd77680001c00 invalid freepointer:a6086a=
-c099f0c5a4
-> > kmem: dma-kmalloc-512: slab:ffffd77680001c00 invalid freepointer:a6086a=
-c099f0c5a4
-> > crash>
->=20
-> I fail to see what that's trying to tell me? You have invalid pointers?
+To show just how easy this is, I wrote up a quick hack that hijacks the
+wake_up_process() function and adds a trace_printk() to see what was
+woken up. My output from the trace is this:
 
-Correct, because the pointer values are encrypted.  The command is walking =
-through the
-singly-linked list of free objects in a slab from the dma-kmalloc-512 slab =
-cache.  The
-slab memory had been allocated from low memory, and because of the  problem=
- at hand,
-it was was copied to the vmcore in its encrypted state.
+          <idle>-0     [007] ..s1    68.517276: my_wake_up: We are waking up rcu_preempt:10
+           <...>-1240  [001] ....    68.517727: my_wake_up: We are waking up kthreadd:2
+           <...>-1240  [001] d..1    68.517973: my_wake_up: We are waking up kworker/1:0:17
+            bash-1188  [003] d..2    68.519020: my_wake_up: We are waking up kworker/u16:3:140
+            bash-1188  [003] d..2    68.519138: my_wake_up: We are waking up kworker/u16:3:140
+            sshd-1187  [005] d.s2    68.519295: my_wake_up: We are waking up kworker/5:2:517
+          <idle>-0     [007] ..s1    68.522293: my_wake_up: We are waking up rcu_preempt:10
+          <idle>-0     [007] ..s1    68.526309: my_wake_up: We are waking up rcu_preempt:10
 
-Dave=20
+I added the code to the trace-event-sample.c sample module, and got the
+above when I loaded that module (modprobe trace-event-sample).
 
+It's mostly non arch specific (that is, you can do this with any
+arch that supports the IPMODIFY flag). The only parts that would need
+arch specific code is the regs->ip compare. The pip check can also be
+done less "hacky". But this shows you how easy this can be done today.
+Not sure what is missing that you need.
+
+Here's the patch:
+
+diff --git a/samples/trace_events/trace-events-sample.c b/samples/trace_events/trace-events-sample.c
+index 1a72b7d95cdc..526a6098c811 100644
+--- a/samples/trace_events/trace-events-sample.c
++++ b/samples/trace_events/trace-events-sample.c
+@@ -11,6 +11,41 @@
+ #define CREATE_TRACE_POINTS
+ #include "trace-events-sample.h"
+ 
++#include <linux/ftrace.h>
++
++int wake_up_process(struct task_struct *p);
++
++int x;
++
++static int my_wake_up(struct task_struct *p)
++{
++	int ret;
++
++	trace_printk("We are waking up %s:%d\n", p->comm, p->pid);
++	ret = wake_up_process(p);
++	/* Force not having a tail call */
++	if (!x)
++		return ret;
++	return 0;
++}
++
++static void my_hijack_func(unsigned long ip, unsigned long pip,
++			   struct ftrace_ops *ops, struct pt_regs *regs)
++{
++	unsigned long this_func = (unsigned long)my_wake_up;
++
++	if (pip >= this_func && pip <= this_func + 0x10000)
++		return;
++
++	regs->ip = my_wake_up;
++}
++
++static struct ftrace_ops my_ops = {
++	.func = my_hijack_func,
++	.flags = FTRACE_OPS_FL_IPMODIFY | FTRACE_OPS_FL_RECURSION_SAFE |
++					   FTRACE_OPS_FL_SAVE_REGS,
++};
++
+ static const char *random_strings[] = {
+ 	"Mother Goose",
+ 	"Snoopy",
+@@ -115,6 +150,11 @@ void foo_bar_unreg(void)
+ 
+ static int __init trace_event_init(void)
+ {
++	int ret;
++
++	ret = ftrace_set_filter_ip(&my_ops, (unsigned long)wake_up_process, 0, 0);
++	if (!ret)
++		register_ftrace_function(&my_ops);
+ 	simple_tsk = kthread_run(simple_thread, NULL, "event-sample");
+ 	if (IS_ERR(simple_tsk))
+ 		return -1;
+@@ -124,6 +164,7 @@ static int __init trace_event_init(void)
+ 
+ static void __exit trace_event_exit(void)
+ {
++	unregister_ftrace_function(&my_ops);
+ 	kthread_stop(simple_tsk);
+ 	mutex_lock(&thread_mutex);
+ 	if (simple_tsk_fn)
+
+
+-- Steve
