@@ -2,105 +2,221 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62E57CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:28:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6A1FCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:29:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E516218AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:28:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ED4E20700
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:29:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ExFZknmA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731617AbfJVO2T (ORCPT
+        id S1731831AbfJVO30 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 10:28:19 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:45591 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727194AbfJVO2S (ORCPT
+        Tue, 22 Oct 2019 10:29:26 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:27060 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727582AbfJVO3Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 10:28:18 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MN5aF-1idDT43P41-00J6G4; Tue, 22 Oct 2019 16:27:47 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Adam Ford <aford173@gmail.com>,
-        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Tero Kristo <t-kristo@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh@kernel.org>, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] hwrng: omap3-rom - Fix unused function warnings
-Date:   Tue, 22 Oct 2019 16:27:31 +0200
-Message-Id: <20191022142741.1794378-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Tue, 22 Oct 2019 10:29:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571754564;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=99x+P3m9acVw3MrQAWw2EOvH80A/uxpSA9gp5a6gHE4=;
+        b=ExFZknmAUYAUxQyHN3iAvjQHEOQIRqpcaTuYAn5fEBpUfPTBUpn2/K99+jQZB4HEMXLReT
+        nSPA3EjQOC3EreZ9GSKUXq77j7qX7opkyujAsIUhQh4Ds6cAowndd+55gt2C1fz5V7gYI4
+        c1ueDmUW0DhMzuMI5VvuytFhWsraK14=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-183-6S1jDIpfO_a0u_OZuqNhHg-1; Tue, 22 Oct 2019 10:29:20 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AC5E05E4;
+        Tue, 22 Oct 2019 14:29:17 +0000 (UTC)
+Received: from localhost.localdomain (ovpn-117-200.phx2.redhat.com [10.3.117.200])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E3B645C1D4;
+        Tue, 22 Oct 2019 14:29:13 +0000 (UTC)
+Subject: Re: [PATCH] ipmi: Don't allow device module unload when in use
+To:     minyard@acm.org
+Cc:     openipmi-developer@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, Corey Minyard <cminyard@mvista.com>
+References: <20191014134141.GA25427@t560>
+ <20191014154632.11103-1-minyard@acm.org>
+From:   Tony Camuso <tcamuso@redhat.com>
+Message-ID: <28065598-c638-07eb-d966-0e85ce62c37f@redhat.com>
+Date:   Tue, 22 Oct 2019 10:29:12 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:PBfTuEp8ZX4Ra2Ce3a9pZMSs9SwhMX1hftuoj/HSfQ/p0GlQWT4
- wMj8mkLE7kG+8bdty5J1+ElmfuOTIR4PA6vdmHFsFLC0YXcpfucBrpTcccLMbR6YXng5JVu
- zE7vpU4lQC0NFySxsgbnkX4cEG95HGNmQWpd8uRboG0BVC4+FQgUOv15lgD8qAWPhbEnYba
- tNjqA/jWVavi2TrI1wYfg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:pKRLuV2+9dI=:6cTjtlK905RHJs9ndFcqmD
- juozbcR0cdC4bMaUv2wwl6wuJrWELOB45PPT6II7Kef6Vub0TSU5FFQk/iKBYuLi88kUDPtK7
- 7vaTpiHI3qkJQIUNBziBwkg8xIAeOlU/Ze7GkCT85tdTAF8Z2p+MQaV7Sc5Ie9PIYsMu8dOyP
- /LqJU8oAIJ2h8wnKKVhpoJ20FFmQj2ETCkxFs4EvykGt93Lof1ORVpTH0jd5mrXT4qfoGszXI
- xJk3RPilXcdGBszcps4Uc0xJu48ZgoybpIkvqQdgPAO+7PdhHL3pUkrgrTX5GiHWqfBGlGaAN
- JoKezIHCF5sq/q2fZSLG0Cg/yC6pj/KdBZFl8ntnxBHG6OlZ/LtZjhnuO7wRxRT82rmEWOyWp
- r9Iy+joHgPvnzw6HjnWfqPz0aGidOqjEA1EoDMeNsSgJUf/fMVnh7DxCyBDjdvtHCNezJXdwX
- HyN1jg6bOGbxFbo93wMXApStWS/WTikWUdStKZS5UTgVSbSS2HwPIrK6h5t7KIEYKsY667iNK
- +zKbvb6uc7JS6ZwcsNJhs5i8oyJ5Zbc3dL0yLOGbtfyDSfeGcGe6iavaFuo/kr3ZO4jF/EG2n
- dN4AoZ3H175TBYbr9+YV8B0PCByqpNbVHMvG6XLnKY2kl8vnZnxgXu1zKZ3llRKe2EUY3jhnq
- AMMOCTx04fbukNEpcKqVduYCJu0qXfDLeP24tQDFceNGbTmy7tD9twpmYJSe64+A6Iedtj91/
- Y4DQrY0KpjrLYjZTBvnPBm5EflRX5Kki1hmyk5ScEZQ8hERqOmGEl3bY1jtfZaWL6Xzxjz1Be
- kY25MZEJbHMalz08x1sntIC1dKasN2delAgrDfjKfL4q1mcQn5YT3bV0OOMyGq82+mIXSAWaq
- TqWnK6DBylwqp8GwnGLg==
+In-Reply-To: <20191014154632.11103-1-minyard@acm.org>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MC-Unique: 6S1jDIpfO_a0u_OZuqNhHg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When runtime-pm is disabled, we get a few harmless warnings:
+Corey,
 
-drivers/char/hw_random/omap3-rom-rng.c:65:12: error: unused function 'omap_rom_rng_runtime_suspend' [-Werror,-Wunused-function]
-drivers/char/hw_random/omap3-rom-rng.c:81:12: error: unused function 'omap_rom_rng_runtime_resume' [-Werror,-Wunused-function]
+Testing shows that this patch works as expected.
 
-Mark these functions as __maybe_unused so gcc can drop them
-silently.
+Regards,
+Tony
 
-Fixes: 8d9d4bdc495f ("hwrng: omap3-rom - Use runtime PM instead of custom functions")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/char/hw_random/omap3-rom-rng.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/char/hw_random/omap3-rom-rng.c b/drivers/char/hw_random/omap3-rom-rng.c
-index 0b90983c95c8..e08a8887e718 100644
---- a/drivers/char/hw_random/omap3-rom-rng.c
-+++ b/drivers/char/hw_random/omap3-rom-rng.c
-@@ -62,7 +62,7 @@ static int omap3_rom_rng_read(struct hwrng *rng, void *data, size_t max, bool w)
- 	return r;
- }
- 
--static int omap_rom_rng_runtime_suspend(struct device *dev)
-+static int __maybe_unused omap_rom_rng_runtime_suspend(struct device *dev)
- {
- 	struct omap_rom_rng *ddata;
- 	int r;
-@@ -78,7 +78,7 @@ static int omap_rom_rng_runtime_suspend(struct device *dev)
- 	return 0;
- }
- 
--static int omap_rom_rng_runtime_resume(struct device *dev)
-+static int __maybe_unused omap_rom_rng_runtime_resume(struct device *dev)
- {
- 	struct omap_rom_rng *ddata;
- 	int r;
--- 
-2.20.0
+On 10/14/19 11:46 AM, minyard@acm.org wrote:
+> From: Corey Minyard <cminyard@mvista.com>
+>=20
+> If something has the IPMI driver open, don't allow the device
+> module to be unloaded.  Before it would unload and the user would
+> get errors on use.
+>=20
+> This change is made on user request, and it makes it consistent
+> with the I2C driver, which has the same behavior.
+>=20
+> It does change things a little bit with respect to kernel users.
+> If the ACPI or IPMI watchdog (or any other kernel user) has
+> created a user, then the device module cannot be unloaded.  Before
+> it could be unloaded,
+>=20
+> This does not affect hot-plug.  If the device goes away (it's on
+> something removable that is removed or is hot-removed via sysfs)
+> then it still behaves as it did before.
+>=20
+> Reported-by: tony camuso <tcamuso@redhat.com>
+> Signed-off-by: Corey Minyard <cminyard@mvista.com>
+> ---
+> Tony, here is a suggested change for this.  Can you look it over and
+> see if it looks ok?
+>=20
+> Thanks,
+>=20
+> -corey
+>=20
+>   drivers/char/ipmi/ipmi_msghandler.c | 23 ++++++++++++++++-------
+>   include/linux/ipmi_smi.h            | 12 ++++++++----
+>   2 files changed, 24 insertions(+), 11 deletions(-)
+>=20
+> diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi=
+_msghandler.c
+> index 2aab80e19ae0..15680de18625 100644
+> --- a/drivers/char/ipmi/ipmi_msghandler.c
+> +++ b/drivers/char/ipmi/ipmi_msghandler.c
+> @@ -448,6 +448,8 @@ enum ipmi_stat_indexes {
+>  =20
+>   #define IPMI_IPMB_NUM_SEQ=0964
+>   struct ipmi_smi {
+> +=09struct module *owner;
+> +
+>   =09/* What interface number are we? */
+>   =09int intf_num;
+>  =20
+> @@ -1220,6 +1222,11 @@ int ipmi_create_user(unsigned int          if_num,
+>   =09if (rv)
+>   =09=09goto out_kfree;
+>  =20
+> +=09if (!try_module_get(intf->owner)) {
+> +=09=09rv =3D -ENODEV;
+> +=09=09goto out_kfree;
+> +=09}
+> +=09
+>   =09/* Note that each existing user holds a refcount to the interface. *=
+/
+>   =09kref_get(&intf->refcount);
+>  =20
+> @@ -1349,6 +1356,7 @@ static void _ipmi_destroy_user(struct ipmi_user *us=
+er)
+>   =09}
+>  =20
+>   =09kref_put(&intf->refcount, intf_free);
+> +=09module_put(intf->owner);
+>   }
+>  =20
+>   int ipmi_destroy_user(struct ipmi_user *user)
+> @@ -2459,7 +2467,7 @@ static int __get_device_id(struct ipmi_smi *intf, s=
+truct bmc_device *bmc)
+>    * been recently fetched, this will just use the cached data.  Otherwis=
+e
+>    * it will run a new fetch.
+>    *
+> - * Except for the first time this is called (in ipmi_register_smi()),
+> + * Except for the first time this is called (in ipmi_add_smi()),
+>    * this will always return good data;
+>    */
+>   static int __bmc_get_device_id(struct ipmi_smi *intf, struct bmc_device=
+ *bmc,
+> @@ -3377,10 +3385,11 @@ static void redo_bmc_reg(struct work_struct *work=
+)
+>   =09kref_put(&intf->refcount, intf_free);
+>   }
+>  =20
+> -int ipmi_register_smi(const struct ipmi_smi_handlers *handlers,
+> -=09=09      void=09=09       *send_info,
+> -=09=09      struct device            *si_dev,
+> -=09=09      unsigned char            slave_addr)
+> +int ipmi_add_smi(struct module         *owner,
+> +=09=09 const struct ipmi_smi_handlers *handlers,
+> +=09=09 void=09=09       *send_info,
+> +=09=09 struct device         *si_dev,
+> +=09=09 unsigned char         slave_addr)
+>   {
+>   =09int              i, j;
+>   =09int              rv;
+> @@ -3406,7 +3415,7 @@ int ipmi_register_smi(const struct ipmi_smi_handler=
+s *handlers,
+>   =09=09return rv;
+>   =09}
+>  =20
+> -
+> +=09intf->owner =3D owner;
+>   =09intf->bmc =3D &intf->tmp_bmc;
+>   =09INIT_LIST_HEAD(&intf->bmc->intfs);
+>   =09mutex_init(&intf->bmc->dyn_mutex);
+> @@ -3514,7 +3523,7 @@ int ipmi_register_smi(const struct ipmi_smi_handler=
+s *handlers,
+>  =20
+>   =09return rv;
+>   }
+> -EXPORT_SYMBOL(ipmi_register_smi);
+> +EXPORT_SYMBOL(ipmi_add_smi);
+>  =20
+>   static void deliver_smi_err_response(struct ipmi_smi *intf,
+>   =09=09=09=09     struct ipmi_smi_msg *msg,
+> diff --git a/include/linux/ipmi_smi.h b/include/linux/ipmi_smi.h
+> index 4dc66157d872..deec18b8944a 100644
+> --- a/include/linux/ipmi_smi.h
+> +++ b/include/linux/ipmi_smi.h
+> @@ -224,10 +224,14 @@ static inline int ipmi_demangle_device_id(uint8_t n=
+etfn, uint8_t cmd,
+>    * is called, and the lower layer must get the interface from that
+>    * call.
+>    */
+> -int ipmi_register_smi(const struct ipmi_smi_handlers *handlers,
+> -=09=09      void                     *send_info,
+> -=09=09      struct device            *dev,
+> -=09=09      unsigned char            slave_addr);
+> +int ipmi_add_smi(struct module            *owner,
+> +=09=09 const struct ipmi_smi_handlers *handlers,
+> +=09=09 void                     *send_info,
+> +=09=09 struct device            *dev,
+> +=09=09 unsigned char            slave_addr);
+> +
+> +#define ipmi_register_smi(handlers, send_info, dev, slave_addr) \
+> +=09ipmi_add_smi(THIS_MODULE, handlers, send_info, dev, slave_addr)
+>  =20
+>   /*
+>    * Remove a low-level interface from the IPMI driver.  This will
+>=20
 
