@@ -2,87 +2,121 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F2ECA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:03:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18D91CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:03:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A4FF2184C
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:03:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E191A2184C
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:03:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571760239;
+	bh=wZqpmahqkdwN8bSUWflCybWpGAN6ZEbtQZB3qCoZljg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=lNvczkuObQyumwG/9AqpDZjiEt/C+Yqjj5iDSb69LjoOqYn4RMMrjm5N64Czgad9U
+	 MYaSnMCkZkOsm0wN6p5Deafd8AiAhRPRHT/2kLX+7kAYpf9g8wgryKHGPuDx8Vq5AJ
+	 tgiWFzw+QlS+TGTEACtcdyKDZYtUrUxKY9enObZs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389096AbfJVQDz (ORCPT
+        id S2389132AbfJVQD5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 12:03:55 -0400
-Received: from muru.com ([72.249.23.125]:38962 "EHLO muru.com"
+        Tue, 22 Oct 2019 12:03:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387746AbfJVQDy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 12:03:54 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 66F6380FA;
-        Tue, 22 Oct 2019 16:04:29 +0000 (UTC)
-Date:   Tue, 22 Oct 2019 09:03:51 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Adam Ford <aford173@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>
-Subject: Re: [PATCH] MAINTAINERS: Add logicpd-som-lv and logicpd-torpedo to
- OMAP TREE
-Message-ID: <20191022160351.GQ5610@atomide.com>
-References: <20190923135908.23080-1-aford173@gmail.com>
- <CAHCN7xLQvYbY_Pu5hQOO8o+1o8CAVvXq_-RM78Q=jYvtLxtmbg@mail.gmail.com>
+        id S2387746AbfJVQD4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 12:03:56 -0400
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E39F21906;
+        Tue, 22 Oct 2019 16:03:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571760235;
+        bh=wZqpmahqkdwN8bSUWflCybWpGAN6ZEbtQZB3qCoZljg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=kfdQNIrvB/s9H8KQC7rO59/l3ydNVyU/ihPEcbQgqHc8iYlLgPGNP53znI1XGkZbp
+         zKp9BNTuVAovRoYJsjf0ve98p9jxSW+o5aOdHl3RUA2eSeb5OZHAVyfbDGCyhl2YOe
+         swTrBGgRroC8KtsMuhpKGF8CHBPraGYjLhOee4NY=
+Received: by mail-qt1-f174.google.com with SMTP id c21so27497198qtj.12;
+        Tue, 22 Oct 2019 09:03:55 -0700 (PDT)
+X-Gm-Message-State: APjAAAUiRov13Q4nl311SaYm+NmPw+IsM68HfJdrep2TI4MIJE9HtocR
+        N6y9j05t/isX8pmBUPOcEbPa5te3nymJcMoqGg==
+X-Google-Smtp-Source: APXvYqyyB49iT/626fOA+V3xooxxBwy9dN/zE/XUizKQfbN9LeELAEH0K+nxf/XITvR19bMhVI+BTk4qKYDqfrxtpdo=
+X-Received: by 2002:ac8:44d9:: with SMTP id b25mr4261906qto.300.1571760234567;
+ Tue, 22 Oct 2019 09:03:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHCN7xLQvYbY_Pu5hQOO8o+1o8CAVvXq_-RM78Q=jYvtLxtmbg@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20191016025220.td3xb7oxlfkznxl6@smtp.gmail.com>
+ <20191017191152.GA11222@bogus> <20191019150652.h6bkfz2w2ohemvwy@smtp.gmail.com>
+ <CAL_JsqKqgko02KstmytNNUUF0-QR7rpMF4dV=X55N=TnDahd+Q@mail.gmail.com> <20191022140604.ovmooly47qax2sms@smtp.gmail.com>
+In-Reply-To: <20191022140604.ovmooly47qax2sms@smtp.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 22 Oct 2019 11:03:43 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLf8kpOu0MQN-TAhQkiZCGfMKWmztnHNo+2BAVqfX8yGQ@mail.gmail.com>
+Message-ID: <CAL_JsqLf8kpOu0MQN-TAhQkiZCGfMKWmztnHNo+2BAVqfX8yGQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] dt-bindings: iio: adc: Add DT docs for AD7292
+To:     Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Dragos Bogdan <dragos.bogdan@analog.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        devicetree@vger.kernel.org, kernel-usp@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Adam Ford <aford173@gmail.com> [191021 21:41]:
-> On Mon, Sep 23, 2019 at 8:59 AM Adam Ford <aford173@gmail.com> wrote:
-> >
-> > The OMAP DEVICE TREE SUPPORT lists a bunch of device tree files
-> > with wildcard names using am3*, am4*, am5*, dra7*, and *omap*.
-> > Unfortunately, the LogicPD boards do not follow this convention
-> > so changes to these boards don't get automatically flagged to
-> > route to the omap mailing list.  After consulting with Tony
-> > Lindgren, he agreed it made sense to add these boards to the
-> > list.
-> >
-> > This patch adds the omap based boards to the omap device tree
-> > maintainer list.
-> >
-> > Signed-off-by: Adam Ford <aford173@gmail.com>
-> 
-> Tony,
-> 
-> Are you ok with this?  I am not sure who to bug, but I am guessing
-> whomever it is will want/need your approval too.
+On Tue, Oct 22, 2019 at 9:06 AM Marcelo Schmitt
+<marcelo.schmitt1@gmail.com> wrote:
+>
+> Hi,
+>
+> I ran the DTC and CHECK for AD7292 schema however, the target '__build'
+> did not run due to errors found in regulator/fixed-regulator.yaml and
+> arm/allwinner,sun4i-a10-csi.yaml.
 
-Yeah looks fine to me thanks, I'll apply it into
-omap-for-v5.5/maintainers branch.
+Fixes for those are still pending in -next. Use 'make -k' and ignore those.
 
-Regards,
+>
+> I recall seeing something about the maxItems requirement over regulator
+> supplies being changed on the iio mailing list, so I updated my repo
+> locally, cloned and reinstalled the dt-schema toolset. However, I still
+> can't make it go through the '__build' target.
+>
+> Python 3.7.5rc1 is my default python and I got the following pip3
+> packages installed:
+>
+> ruamel.yaml        0.16.5
+> ruamel.yaml.clib   0.2.0
+> rfc3987            1.3.8
+> jsonschema         3.0.1
+> dtschema           0.0.1  at $HOME/<iio repo dir>/dt-schema
+>
+> Debian Bullseye packages installed:
+> python3-yaml/testing,now 5.1.2-1
+> libyaml-dev/testing,now 0.2.2-1
+>
+> I was only able to run DTC after installing the libyaml-dev package, so
+> I think it might be worth to add it to the project dependencies at
+> https://github.com/robherring/dt-schema.
 
-Tony
+Strictly speaking, it's not a dependency for dt-schema. It's
+documented in Documentation/devicetree/writing-schema.rst. I've added
+a pointer to that in bindings/submitting-patches.txt. I'm not sure how
+else to make it more obvious.
 
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index a50e97a63bc8..0ee89575699c 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -11645,6 +11645,8 @@ F:      arch/arm/boot/dts/*am3*
-> >  F:     arch/arm/boot/dts/*am4*
-> >  F:     arch/arm/boot/dts/*am5*
-> >  F:     arch/arm/boot/dts/*dra7*
-> > +F:     arch/arm/boot/dts/logicpd-som-lv*
-> > +F:     arch/arm/boot/dts/logicpd-torpedo*
-> >
-> >  OMAP DISPLAY SUBSYSTEM and FRAMEBUFFER SUPPORT (DSS2)
-> >  L:     linux-omap@vger.kernel.org
-> > --
-> > 2.17.1
-> >
+BTW, You will get a useful error message if libyaml is missing when
+building 'make dtbs_check'. I need to make that work for
+dt_binding_check.
+
+> apt-get install libyaml-dev
+
+You need the lib too, but that tends to already be installed. IIRC,
+installing the headers doesn't install the lib automatically.
+
+In any case, I wanted to avoid putting in distro specific instructions
+in the kernel.
+
+Rob
