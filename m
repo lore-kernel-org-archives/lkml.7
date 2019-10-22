@@ -2,94 +2,108 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D10B2CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:59:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D64F3CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:59:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8A4E21906
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:59:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571749195;
-	bh=4CPRU2ALG6GtK6+pZ+F3xABl2sxm6yLoW6A4ltcqWtU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=m+JBACy9y/1E7CF8+62hZ1tvwNYMnTTwxm/mnBaov5+DiYMt4GGDlmke+xgCLMT5k
-	 ObiKsQGkveCQZKFLNsm3c1377dF4+vnyK5auO/kTXEkQIBIjbtxj6qNROgUCJJz5jv
-	 aNp/sRKI79isZLA2RFnS0ldhCS0msFWqW/oL+Uxk=
+	by mail.kernel.org (Postfix) with ESMTP id B77482075A
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:59:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389210AbfJVM7y (ORCPT
+        id S1731401AbfJVM76 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 08:59:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51346 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389143AbfJVM7x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 08:59:58 -0400
+Received: from imap1.codethink.co.uk ([176.9.8.82]:55767 "EHLO
+        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389138AbfJVM7x (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 22 Oct 2019 08:59:53 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A0732075A;
-        Tue, 22 Oct 2019 12:59:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571749192;
-        bh=4CPRU2ALG6GtK6+pZ+F3xABl2sxm6yLoW6A4ltcqWtU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=qd0nYUPsgaG9IQbK11fQUzwXq8mTBGzbDXUTHySjkMY6Isg3AWTNC57qoNvhrhJE3
-         QU5mwzF0qEtRY4mBoO2BgXUMNBl7kBZ+DpM0UhKcORxb/NSXxxULcBPdRqfsiFGVLY
-         9YV20AE4vybz5xwzQNJeySSj3JmCvGA+VTmjSLng=
-Date:   Tue, 22 Oct 2019 07:59:50 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Dilip Kota <eswara.kota@linux.intel.com>
-Cc:     Andrew Murray <andrew.murray@arm.com>, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com,
-        robh@kernel.org, martin.blumenstingl@googlemail.com,
-        linux-pci@vger.kernel.org, hch@infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
-        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v4 3/3] pci: intel: Add sysfs attributes to configure
- pcie link
-Message-ID: <20191022125950.GA133170@google.com>
+Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
+        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
+        id 1iMtl1-0002WG-UN; Tue, 22 Oct 2019 13:59:28 +0100
+Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.3)
+        (envelope-from <ben@rainbowdash.codethink.co.uk>)
+        id 1iMtl1-0002kH-6c; Tue, 22 Oct 2019 13:59:27 +0100
+From:   "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
+To:     linux-kernel@lists.codethink.co.uk
+Cc:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] xdp: fix type of string pointer in __XDP_ACT_SYM_TAB
+Date:   Tue, 22 Oct 2019 13:59:25 +0100
+Message-Id: <20191022125925.10508-1-ben.dooks@codethink.co.uk>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <187a1a7d-80bd-a0e9-a0d9-7fc53bff8907@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+cc Rafael, linux-pm, beginning of discussion at
-https://lore.kernel.org/r/d8574605f8e70f41ce1e88ccfb56b63c8f85e4df.1571638827.git.eswara.kota@linux.intel.com]
+The table entry in __XDP_ACT_SYM_TAB for the last item is set
+to { -1, 0 } where it should be { -1, NULL } as the second item
+is a pointer to a string.
 
-On Tue, Oct 22, 2019 at 05:27:38PM +0800, Dilip Kota wrote:
-> On 10/22/2019 1:18 AM, Bjorn Helgaas wrote:
-> > On Mon, Oct 21, 2019 at 02:38:50PM +0100, Andrew Murray wrote:
-> > > On Mon, Oct 21, 2019 at 02:39:20PM +0800, Dilip Kota wrote:
-> > > > PCIe RC driver on Intel Gateway SoCs have a requirement
-> > > > of changing link width and speed on the fly.
-> > Please add more details about why this is needed.  Since you're adding
-> > sysfs files, it sounds like it's not actually the *driver* that needs
-> > this; it's something in userspace?
+Fixes the following sparse warnings:
 
-> We have use cases to change the link speed and width on the fly.
-> One is EMI check and other is power saving.  Some battery backed
-> applications have to switch PCIe link from higher GEN to GEN1 and
-> width to x1. During the cases like external power supply got
-> disconnected or broken. Once external power supply is connected then
-> switch PCIe link to higher GEN and width.
+./include/trace/events/xdp.h:28:1: warning: Using plain integer as NULL pointer
+./include/trace/events/xdp.h:53:1: warning: Using plain integer as NULL pointer
+./include/trace/events/xdp.h:82:1: warning: Using plain integer as NULL pointer
+./include/trace/events/xdp.h:140:1: warning: Using plain integer as NULL pointer
+./include/trace/events/xdp.h:155:1: warning: Using plain integer as NULL pointer
+./include/trace/events/xdp.h:190:1: warning: Using plain integer as NULL pointer
+./include/trace/events/xdp.h:225:1: warning: Using plain integer as NULL pointer
+./include/trace/events/xdp.h:260:1: warning: Using plain integer as NULL pointer
+./include/trace/events/xdp.h:318:1: warning: Using plain integer as NULL pointer
+./include/trace/events/xdp.h:356:1: warning: Using plain integer as NULL pointer
+./include/trace/events/xdp.h:390:1: warning: Using plain integer as NULL pointer
 
-That sounds plausible, but of course nothing there is specific to the
-Intel Gateway, so we should implement this generically so it would
-work on all hardware.
+Signed-off-by: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
+---
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Martin KaFai Lau <kafai@fb.com>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Yonghong Song <yhs@fb.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Jakub Kicinski <jakub.kicinski@netronome.com>
+Cc: Jesper Dangaard Brouer <hawk@kernel.org>
+Cc: John Fastabend <john.fastabend@gmail.com>
+Cc: netdev@vger.kernel.org
+Cc: bpf@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ include/trace/events/xdp.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I'm not sure what the interface should look like -- should it be a
-low-level interface as you propose where userspace would have to
-identify each link of interest, or is there some system-wide
-power/performance knob that could tune all links?  Cc'd Rafael and
-linux-pm in case they have ideas.
+diff --git a/include/trace/events/xdp.h b/include/trace/events/xdp.h
+index 8c8420230a10..c7e3c9c5bad3 100644
+--- a/include/trace/events/xdp.h
++++ b/include/trace/events/xdp.h
+@@ -22,7 +22,7 @@
+ #define __XDP_ACT_SYM_FN(x)	\
+ 	{ XDP_##x, #x },
+ #define __XDP_ACT_SYM_TAB	\
+-	__XDP_ACT_MAP(__XDP_ACT_SYM_FN) { -1, 0 }
++	__XDP_ACT_MAP(__XDP_ACT_SYM_FN) { -1, NULL }
+ __XDP_ACT_MAP(__XDP_ACT_TP_FN)
+ 
+ TRACE_EVENT(xdp_exception,
+-- 
+2.23.0
 
-Bjorn
