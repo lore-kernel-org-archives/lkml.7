@@ -2,100 +2,111 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE30BCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 10:01:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02ADACA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 10:01:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 868AD2064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 10:01:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD40E2064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 10:01:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571738515;
+	bh=zU77JOPItwE0kfL2VdVJZpqjmZAJj7PLPPh8VoTKlPI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=k0Wx25saWrSftagAfOgx7ZROtQTx8eiYjkkcaBxghBknrfDUmtnB9KjpRHkZwe5uZ
+	 32pmF0sAH1OD0JrwA8nHNxGD3y89EOeKwaiGxJvqrBPS6X2cLmd4Gh3oE6VGqH05pg
+	 OuPe9eulRWC0fuUrC/VchGQ0kDP/2bIDPXejT/kA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731711AbfJVKBJ (ORCPT
+        id S1731661AbfJVKBy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 06:01:09 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:38851 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731439AbfJVKBJ (ORCPT
+        Tue, 22 Oct 2019 06:01:54 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:39759 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727101AbfJVKBx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 06:01:09 -0400
-Received: from mail-qk1-f176.google.com ([209.85.222.176]) by
- mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MvJsF-1i5K3W2p05-00rDDT for <linux-kernel@vger.kernel.org>; Tue, 22 Oct
- 2019 12:01:07 +0200
-Received: by mail-qk1-f176.google.com with SMTP id w2so15657774qkf.2
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 03:01:07 -0700 (PDT)
-X-Gm-Message-State: APjAAAXuXy1pelWmvDJozPkY5/qFb58aqX9F/BGd0K77AUzyNOV0sS3y
-        UURskf014MyhnJKOtywvAU63GAtn2t+jrXq/JYM=
-X-Google-Smtp-Source: APXvYqyoMIjk7fBvUWRiXF8k07tFQvXGIdLU7kRIlPOeM1jTgptpSLpWi87upCSM+kuYDA+uEkyDtyteslJySUIWKjQ=
-X-Received: by 2002:a05:620a:4f:: with SMTP id t15mr2145972qkt.286.1571738466579;
- Tue, 22 Oct 2019 03:01:06 -0700 (PDT)
+        Tue, 22 Oct 2019 06:01:53 -0400
+Received: by mail-oi1-f196.google.com with SMTP id w144so13656852oia.6;
+        Tue, 22 Oct 2019 03:01:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QymUh+Fku1vQVHvu/DETUtAo+Qu6b8CnaBuQss7KKWQ=;
+        b=h2iFRY8kvTIp3uSv1xdak5KNpDhBffU8tz5cQttN6wCNauPnlPr4C5ZPCzDK5CEjVa
+         Jxoa41P5dwq9bKhkzqx0Lhpe3IpS9iFh9cyJ3exTdWgUzJ6R+9ID9etOk3itNUlrar2D
+         XYT0qtXndeRj9xZtnfwNHPtyn0MofhuSzR1VX+og2nVBKLSnEFyMwBpZeIHjZ8WPEg5K
+         TRHJZ9fOqANYXYSxnM2D98uyiYJbtjOwM5X9RI90k+PrtRht3xEJJhiPmQx7AT9si9UM
+         hA1O2FwqFUJUiCozB/kw6xe9MWnkXAuC990fm+qCTFujfjkbLRyGorM16gj6rzx+yPZA
+         07tw==
+X-Gm-Message-State: APjAAAWTo+kUSUZW11FBs6JEIIRg89XQoX2SG8iweGe3VcITONwczN4m
+        pCbAufSGXt3fuEq6mWhOJ1bXI0QjGhu5O60Zt6M=
+X-Google-Smtp-Source: APXvYqwN0bxJxdIvFNnaNORZKQBNabY4ldLgTUIlNjE1Z7rAnNoVLH34CBEzb2jBIdbGQUA6pt46njyJIVaN1WsCNSA=
+X-Received: by 2002:aca:d405:: with SMTP id l5mr2047939oig.115.1571738512905;
+ Tue, 22 Oct 2019 03:01:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191018154052.1276506-1-arnd@arndb.de> <20191018154201.1276638-11-arnd@arndb.de>
- <20191019114417.5268f7e4@xps13>
-In-Reply-To: <20191019114417.5268f7e4@xps13>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 22 Oct 2019 12:00:50 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1pR=fmvDr6n22Zp1XM7J=durtt1Au8F2qg3=Jc75DrNg@mail.gmail.com>
-Message-ID: <CAK8P3a1pR=fmvDr6n22Zp1XM7J=durtt1Au8F2qg3=Jc75DrNg@mail.gmail.com>
-Subject: Re: [PATCH 11/46] ARM: pxa: cmx270: use platform device for nand
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-mtd <linux-mtd@lists.infradead.org>
+References: <157118756627.2063440.9878062995925617180.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <157118757175.2063440.9248947575330904096.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <CAJZ5v0i-hhasNCD6Ur8VLfrkc+4GOeNXXX_ZNFZjcY6F51ciSQ@mail.gmail.com>
+In-Reply-To: <CAJZ5v0i-hhasNCD6Ur8VLfrkc+4GOeNXXX_ZNFZjcY6F51ciSQ@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 22 Oct 2019 12:01:42 +0200
+Message-ID: <CAJZ5v0j_-iSqiysZiW=J8Y5FCAjnPC7ZvevrLsYhngWr6mT6GQ@mail.gmail.com>
+Subject: Re: [PATCH v7 01/12] acpi/numa: Establish a new drivers/acpi/numa/ directory
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Len Brown <lenb@kernel.org>,
+        Keith Busch <kbusch@kernel.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:tT8zKhmTNS8yJqLtjj7C+5nL4wiRhScvbgahO/Luy9v5Ywux2Cl
- DVlCAt6KvH+hvkIc/JLJgVyTFj7I3XYdYuIZ083RUPuI3k7/1nuyzayKbbO6PTQl2V7uNLI
- 6vs2eQ10HvFPUexzKNnijIO7B8LoDLzguGJSOxR1x2fx5U6S1pYVtwobO/o+y0yWQhIxhZK
- tOLkDoLTXW0bNJAv5Qurw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ZhLJ6kNFoRI=:2FqjaM1DCDtdoLAtmohe7X
- S0to2iXUaI0sJtW/Vt5Z26/8D+45BKjDJoXuUur3+KlKoivaLu71RxfzI7/lfGVAxVmZh3e/u
- VVFwqBl/dTiU21huNApR29Z2zdGPFSO6wQnpdEd8XV0BhXt102trPThP8xrGyOznTY3N2dMBV
- WuxS3HEC1LFenJcSvSlMIi83cY6CYO5IWmd3NUlcC7Vbju86E5biYkCjGwQwuBxNajcnMcuFp
- W/3kKw/SILSVFJEiSakS2i8q4IvKpO5vUI5k4JvU+pJIozrVvf8Hw3MtSa4KQdGFxXT60djOR
- 75HXh/IiKZveU/uXufIwDyLiIPGFCGVyiBrH7qtrQswRgzFpugg54iyLtf8sBFSkfdUDcfzwe
- anCx0qXRRZ6C5qO3WPr9ImQbcbcJqiokXj1C9f/C/IAFNLYWgPcRTj3Zk1y0IQfB/V7pDLOmv
- nn2J9Gp6+y3yVz6HCZ5J3s2HwSwlsek1IQuddcrNByDJuCosly6V/Osbag6/R26d2ojJxABB0
- a75HM7lUXwbj+lUEaMBIY/dPSnSpHT7gmxzti2kpJJdybbd+FFyGZS5lbGpLzyaowXWOE99bL
- jPUcRBEv1w5bxFQYFbqFz4Qe+5baHIhmcNOX5f24LPnMNggfLklrrW6ynoCiPtZLEygagEi/G
- dpvfW8zDD2fEBc2eZn2ESt6srEwdgD0wUYPmqkORxgXB5k8LaWs55feEDxu/DZvtKpJRtE4xB
- TCLWanutcuA/7OMFTRMabDlfNveQ0VPfvOV2IfEaR7uqBaFnXnyt9WFXlrzpaJl4k/9W7e66n
- plPmALYz/avbzsUEaS4rtS5/y14YH3GrFqX4IxWcV6OhrcUQ68cHwitRbSo05+t3tqzh//5C8
- NcYhvIJcHXB8GhGFByGA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Oct 19, 2019 at 11:44 AM Miquel Raynal
-<miquel.raynal@bootlin.com> wrote:
+On Fri, Oct 18, 2019 at 11:25 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
 >
-> Hi Arnd,
->
-> Arnd Bergmann <arnd@arndb.de> wrote on Fri, 18 Oct 2019 17:41:26 +0200:
->
-> > The driver traditionally hardcodes the MMIO register address and
-> > the GPIO numbers from data defined in platform header files.
+>  On Wed, Oct 16, 2019 at 3:13 AM Dan Williams <dan.j.williams@intel.com> wrote:
 > >
-> > To make it indepdendent of that, use a memory resource for the
-> > registers, and a gpio lookup table to replace the gpio numbers.
+> > Currently hmat.c lives under an "hmat" directory which does not enhance
+> > the description of the file. The initial motivation for giving hmat.c
+> > its own directory was to delineate it as mm functionality in contrast to
+> > ACPI device driver functionality.
+> >
+> > As ACPI continues to play an increasing role in conveying
+> > memory location and performance topology information to the OS take the
+> > opportunity to co-locate these NUMA relevant tables in a combined
+> > directory.
+> >
+> > numa.c is renamed to srat.c and moved to drivers/acpi/numa/ along with
+> > hmat.c.
+> >
+> > Cc: Len Brown <lenb@kernel.org>
+> > Cc: Keith Busch <kbusch@kernel.org>
+> > Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
+> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 >
-> Looks good to me besides the typo s/indepdendent/independent/.
+> Please note that https://patchwork.kernel.org/patch/11078171/ is being
+> pushed to Linus (it is overdue anyway), so if it is pulled, there will
+> be a merge conflict with this patch.
+>
+> Respin maybe?
 
-Fixed now
+Actually, would you mind it if I took this one into the ACPI tree right away?
 
-> Acked-by: Miquel Raynal <miquel.raynal@bootlin.com>
+There's https://patchwork.kernel.org/patch/11198373/ queued up that,
+again, will clash with it.
 
-Thanks!
-
-     Arnd
+Also, there is the generic Initiator proximity domains series from
+Jonathan depending on it and I would like to move forward with that
+one if there are no objections.
