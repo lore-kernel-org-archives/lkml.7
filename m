@@ -2,34 +2,34 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39245CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:29:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE0FCCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:29:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 151E520700
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:29:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D335206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:29:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732534AbfJVR31 (ORCPT
+        id S2388124AbfJVR33 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 13:29:27 -0400
-Received: from mga04.intel.com ([192.55.52.120]:17268 "EHLO mga04.intel.com"
+        Tue, 22 Oct 2019 13:29:29 -0400
+Received: from mga17.intel.com ([192.55.52.151]:50509 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730141AbfJVR31 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 13:29:27 -0400
+        id S1732554AbfJVR32 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 13:29:28 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Oct 2019 10:29:27 -0700
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Oct 2019 10:29:27 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,217,1569308400"; 
-   d="scan'208";a="201748566"
+   d="scan'208";a="372605618"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga006.jf.intel.com with ESMTP; 22 Oct 2019 10:29:24 -0700
+  by orsmga005.jf.intel.com with ESMTP; 22 Oct 2019 10:29:24 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id C71391C5; Tue, 22 Oct 2019 20:29:23 +0300 (EEST)
+        id E8BB43BB; Tue, 22 Oct 2019 20:29:23 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
@@ -40,10 +40,12 @@ To:     Linus Walleij <linus.walleij@linaro.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         William Breathitt Gray <vilhelm.gray@gmail.com>
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v2 00/11] gpio: pca953x: Convert to bitmap (extended) API
-Date:   Tue, 22 Oct 2019 20:29:11 +0300
-Message-Id: <20191022172922.61232-1-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 03/11] lib/test_bitmap: Name EXP_BYTES properly
+Date:   Tue, 22 Oct 2019 20:29:14 +0300
+Message-Id: <20191022172922.61232-4-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191022172922.61232-1-andriy.shevchenko@linux.intel.com>
+References: <20191022172922.61232-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -51,48 +53,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While converting gpio-pca953x driver to bitmap API, I noticed that we have
-no function to replace bits.
+EXP_BYTES has been wrongly named. It's a size of the exp array in bits.
 
-So, that's how patch 7 appears.
+While here, go ahead and rename to EXP1_IN_BITS to avoid double renaming
+when exp will be renamed to exp1 in the next patch
 
-First 6 patches are preparatory of the test suite (including some warning
-fixes, etc).
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ lib/test_bitmap.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-Patches 8-9 are preparatory for the GPIO driver to be easier converted
-to bitmap API, conversion to which happens in patch 10.
-
-Patch 11 simple indentation fixes.
-
-Since the series depends to the commit e51819d749db ("bitops: introduce the
-for_each_set_clump8 macro") in Andrew's set and taking into consideration
-a lot of bitmap related patches here, it would make sense to route these thru
-Andrew as well.
-
-In v2:
-- address wrong logic in pca953x_gpio_set_multiple() (William)
-- 10 more patches as described above
-
-Andy Shevchenko (11):
-  lib/test_bitmap: Force argument of bitmap_parselist_user() to proper
-    address space
-  lib/test_bitmap: Undefine macros after use
-  lib/test_bitmap: Name EXP_BYTES properly
-  lib/test_bitmap: Rename exp to exp1 to avoid ambiguous name
-  lib/test_bitmap: Move exp1 and exp2 upper for others to use
-  lib/test_bitmap: Fix comment about this file
-  bitmap: Introduce bitmap_replace() helper
-  gpio: pca953x: Remove redundant variable and check in IRQ handler
-  gpio: pca953x: Use input from regs structure in pca953x_irq_pending()
-  gpio: pca953x: Convert to use bitmap API
-  gpio: pca953x: Tight up indentation
-
- drivers/gpio/gpio-pca953x.c | 196 ++++++++++++++++--------------------
- include/linux/bitmap.h      |  16 +++
- lib/bitmap.c                |  12 +++
- lib/test_bitmap.c           | 137 ++++++++++++++++---------
- 4 files changed, 203 insertions(+), 158 deletions(-)
-
+diff --git a/lib/test_bitmap.c b/lib/test_bitmap.c
+index d2fa94e45a46..38f923411ada 100644
+--- a/lib/test_bitmap.c
++++ b/lib/test_bitmap.c
+@@ -374,17 +374,17 @@ static void __init test_bitmap_parselist_user(void)
+ 	__test_bitmap_parselist(1);
+ }
+ 
+-#define EXP_BYTES	(sizeof(exp) * 8)
++#define EXP1_IN_BITS	(sizeof(exp) * 8)
+ 
+ static void __init test_bitmap_arr32(void)
+ {
+ 	unsigned int nbits, next_bit;
+-	u32 arr[sizeof(exp) / 4];
+-	DECLARE_BITMAP(bmap2, EXP_BYTES);
++	u32 arr[EXP1_IN_BITS / 32];
++	DECLARE_BITMAP(bmap2, EXP1_IN_BITS);
+ 
+ 	memset(arr, 0xa5, sizeof(arr));
+ 
+-	for (nbits = 0; nbits < EXP_BYTES; ++nbits) {
++	for (nbits = 0; nbits < EXP1_IN_BITS; ++nbits) {
+ 		bitmap_to_arr32(arr, exp, nbits);
+ 		bitmap_from_arr32(bmap2, arr, nbits);
+ 		expect_eq_bitmap(bmap2, exp, nbits);
+@@ -396,7 +396,7 @@ static void __init test_bitmap_arr32(void)
+ 				" tail is not safely cleared: %d\n",
+ 				nbits, next_bit);
+ 
+-		if (nbits < EXP_BYTES - 32)
++		if (nbits < EXP1_IN_BITS - 32)
+ 			expect_eq_uint(arr[DIV_ROUND_UP(nbits, 32)],
+ 								0xa5a5a5a5);
+ 	}
 -- 
 2.23.0
 
