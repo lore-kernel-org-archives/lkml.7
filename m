@@ -2,158 +2,98 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58E5FC47E49
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:57:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74E71CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:59:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26ADB2173B
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:57:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A8D4214B2
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:59:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Mgrj/IV/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AchD/OIn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730647AbfJVA5e (ORCPT
+        id S1730686AbfJVA7s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 20:57:34 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:41130 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729620AbfJVA5e (ORCPT
+        Mon, 21 Oct 2019 20:59:48 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:36934 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728741AbfJVA7r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 20:57:34 -0400
-Received: by mail-pf1-f194.google.com with SMTP id q7so9519808pfh.8
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 17:57:33 -0700 (PDT)
+        Mon, 21 Oct 2019 20:59:47 -0400
+Received: by mail-pg1-f193.google.com with SMTP id p1so8872011pgi.4;
+        Mon, 21 Oct 2019 17:59:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=P6RcNi5uOd1zBKqkT/UxYCKGepqZ9mx8RKHu653+b60=;
-        b=Mgrj/IV/UOMgU2MuVVtmPeMxX+dYKZehrsDmNUOFzEVphmGX8rFvKNLhq5ICaXO+Gr
-         TlNU9BVZZvKUASmDXgCyYGkdw2CoS4vLSV/y4e4nVY+03URTQVGbjD8u86Ie24bDhj3Z
-         7t33zWaB0wWQK9vrnndS28gEgeiCK/hMWqJ4uT86ToJq8VkljiNyfG9ED+xfdxjRTuYT
-         Bw6ycj92HqJK1Tt6OaPZfrwnPu0OrDIusjxpPaRBZ53XhbDq80yCVxPHoNje1Y/gEJit
-         J3SQ6qzfWayU6N65dUYvUFa+GDQ/2I/MwtsYR7n2a/VCPZgyvmaTEsmNnX/Ua7IKw7O4
-         6ZFg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Yp6XZv2w7lOfwkyV2MRjUFMwYORElBrNWoBrrUGHJfA=;
+        b=AchD/OInf0vgOebOczUZ6B52r1yQlUeGQmFH+t6h55IX9GluxyTRZZyUWKlRL/TCDE
+         ylKzZ6b4snYYhqV/Vbn8xVrGHImhMhsH/XKUVqMjv7XaIqFG9j/bLT3gExueqt85d/Ra
+         PpyLrFncIROTAjvvbbKh9/3DgyRX6i01cKQFmTPyONfi/2RgkYighKOhzrFNmtN2721d
+         TJiM6ycpQAW4Ncm+iwT1tLdn5toY479q2VDm7HmisO1GTUpfro7jEh+4eZRfljsjNkA8
+         zpcjARIYsPi7jNeou4hCSQ4paWB0C4e/2uZn3SuHxNnAkmpMG9PksrgzeFafyIzCLETf
+         EprQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=P6RcNi5uOd1zBKqkT/UxYCKGepqZ9mx8RKHu653+b60=;
-        b=ELzwViGaec9U1lhN/D1QBH7htNvPMKJri6KmDxf0trAOMR3tjx5oMgbiusMtzm61lN
-         bkK0oK4gHz+xKLGJmsmvHdhjVSbwMOU2I4gZoFtmcDnRTfPprUZuVhtyaQ92Z0NpY35q
-         swuHNMy4golCmD8vI0FIkmyVWoW09y3JASnJeOpesZ2tNLhQ89/+ukYs5/OY0Asof4NJ
-         l6ljX+JBgbKg8EL9u7C5V69yupUdrlCayRTohGajS6G3Jb5AOlPqBJtUa04KiSXqX3Ft
-         K0fwQVQPDU0kdkGaxWkVtWwPQ8e+gBbK34oo3mb+5mI69Js8eP0cz3Q06SJVkbJBUM1I
-         nmyg==
-X-Gm-Message-State: APjAAAUT7PAzmps+XUoAqlCvhKdUpRd40FH0N6fzqpd9HujrsbKd90OC
-        V+v272IoYEdAYTBo3TWye3Srkg==
-X-Google-Smtp-Source: APXvYqyu4LbDJfT2eWZ8/oHrrdSfHGvGWoVYo/oqgwjpzuYEe1iYBMFioC3k1wDjZ8k1+vs0m13lMA==
-X-Received: by 2002:a62:1ccf:: with SMTP id c198mr1035187pfc.156.1571705853073;
-        Mon, 21 Oct 2019 17:57:33 -0700 (PDT)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id f21sm14561089pgh.85.2019.10.21.17.57.32
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Yp6XZv2w7lOfwkyV2MRjUFMwYORElBrNWoBrrUGHJfA=;
+        b=eew2d6W9K0/eUphwqtXwS9W62YI3ixcPhrO6ByqBPxvgNcffQKxqHjgaSQTx/iei3x
+         09rGskKivyuBb6pNW8sEr088auhYahe8te/fjasBxn5g3ORry3U5rP8Ma3NiIt/sMTWh
+         hbcl8scnGbElesLK92/ilVkOr2d+0gV36bsVP3opt46OSN5Bn2IerwOrS8R9wOKrs2tU
+         oYECurpGRsMPb9bwx8oL+TWQ9H37STgyZfFGNlw+OWKIGVC+V2td3ne4OwkCl+m9OOVC
+         uqjiPp+R0zkSMrsipNhqNVOhgRvU9Ax6G/BFLQQPBVUbHipBQWU7Pm3HspaNmVyEo7sA
+         y0nw==
+X-Gm-Message-State: APjAAAXPWEHdU9K4vCUPEJeR5zKtVMR+Ro84BwZjfIvFDYaA3GL7h3Hy
+        twW7VSLpA/eXEoMFcnByBnw=
+X-Google-Smtp-Source: APXvYqwiSd0HP7osxDuH5e3OIVJPToSg3+b/k5OzNJaNblBWTWoKrPCpHz8uyGB7YI+MC4aHCzu7nQ==
+X-Received: by 2002:a63:a54a:: with SMTP id r10mr741548pgu.277.1571705986497;
+        Mon, 21 Oct 2019 17:59:46 -0700 (PDT)
+Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id h1sm17542271pfk.124.2019.10.21.17.59.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Oct 2019 17:57:32 -0700 (PDT)
-Date:   Mon, 21 Oct 2019 17:57:31 -0700 (PDT)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     "Singh, Brijesh" <brijesh.singh@amd.com>
-cc:     "Kalra, Ashish" <Ashish.Kalra@amd.com>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        "Hook, Gary" <Gary.Hook@amd.com>,
-        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "allison@lohutok.net" <allison@lohutok.net>,
-        "info@metux.net" <info@metux.net>,
-        "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: Re: [PATCH] crypto: ccp - Retry SEV INIT command in case of integrity
- check failure.
-In-Reply-To: <29887804-ecab-ae83-8d3f-52ea83e44b4e@amd.com>
-Message-ID: <alpine.DEB.2.21.1910211754550.152056@chino.kir.corp.google.com>
-References: <20191017223459.64281-1-Ashish.Kalra@amd.com> <alpine.DEB.2.21.1910190156210.140416@chino.kir.corp.google.com> <29887804-ecab-ae83-8d3f-52ea83e44b4e@amd.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Mon, 21 Oct 2019 17:59:46 -0700 (PDT)
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     jdelvare@suse.com, linux@roeck-us.net
+Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] hwmon: (ina3221) Fix read timeout issue
+Date:   Mon, 21 Oct 2019 17:59:22 -0700
+Message-Id: <20191022005922.30239-1-nicoleotsuka@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 21 Oct 2019, Singh, Brijesh wrote:
+After introducing "samples" to the calculation of wait time, the
+driver might timeout at the regmap_field_read_poll_timeout call,
+because the wait time could be longer than the 100000 usec limit
+due to a large "samples" number.
 
-> >> From: Ashish Kalra <ashish.kalra@amd.com>
-> >>
-> >> SEV INIT command loads the SEV related persistent data from NVS
-> >> and initializes the platform context. The firmware validates the
-> >> persistent state. If validation fails, the firmware will reset
-> >> the persisent state and return an integrity check failure status.
-> >>
-> >> At this point, a subsequent INIT command should succeed, so retry
-> >> the command. The INIT command retry is only done during driver
-> >> initialization.
-> >>
-> >> Additional enums along with SEV_RET_SECURE_DATA_INVALID are added
-> >> to sev_ret_code to maintain continuity and relevance of enum values.
-> >>
-> >> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
-> >> ---
-> >>   drivers/crypto/ccp/psp-dev.c | 12 ++++++++++++
-> >>   include/uapi/linux/psp-sev.h |  3 +++
-> >>   2 files changed, 15 insertions(+)
-> >>
-> >> diff --git a/drivers/crypto/ccp/psp-dev.c b/drivers/crypto/ccp/psp-dev.c
-> >> index 6b17d179ef8a..f9318d4482f2 100644
-> >> --- a/drivers/crypto/ccp/psp-dev.c
-> >> +++ b/drivers/crypto/ccp/psp-dev.c
-> >> @@ -1064,6 +1064,18 @@ void psp_pci_init(void)
-> >>   
-> >>   	/* Initialize the platform */
-> >>   	rc = sev_platform_init(&error);
-> >> +	if (rc && (error == SEV_RET_SECURE_DATA_INVALID)) {
-> >> +		/*
-> >> +		 * INIT command returned an integrity check failure
-> >> +		 * status code, meaning that firmware load and
-> >> +		 * validation of SEV related persistent data has
-> >> +		 * failed and persistent state has been erased.
-> >> +		 * Retrying INIT command here should succeed.
-> >> +		 */
-> >> +		dev_dbg(sp->dev, "SEV: retrying INIT command");
-> >> +		rc = sev_platform_init(&error);
-> >> +	}
-> >> +
-> >>   	if (rc) {
-> >>   		dev_err(sp->dev, "SEV: failed to INIT error %#x\n", error);
-> >>   		return;
-> > 
-> > Curious why this isn't done in __sev_platform_init_locked() since
-> > sev_platform_init() can be called when loading the kvm module and the same
-> > init failure can happen that way.
-> > 
-> 
-> The FW initialization (aka PLATFORM_INIT) is called in the following
-> code paths:
-> 
-> 1. During system boot up
-> 
-> and
-> 
-> 2. After the platform reset command is issued
-> 
-> The patch takes care of #1. Based on the spec, platform reset command
-> should erase the persistent data and the PLATFORM_INIT should *not* fail
-> with SEV_RET_SECURE_DATA_INVALID error code. So, I am not able to see
-> any  strong reason to move the retry code in
-> __sev_platform_init_locked().
-> 
+So this patch sets the timeout limit to 2 times of the wait time
+in order to fix this issue.
 
-Hmm, is the sev_platform_init() call in sev_guest_init() intended to do 
-SEV_CMD_INIT only after platform reset?  I was under the impression it was 
-done in case any previous init failed.
+Fixes: 5c090abf945b ("hwmon: (ina3221) Add averaging mode support")
+Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
+---
+ drivers/hwmon/ina3221.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/hwmon/ina3221.c b/drivers/hwmon/ina3221.c
+index ef37479991be..f335d0cb0c77 100644
+--- a/drivers/hwmon/ina3221.c
++++ b/drivers/hwmon/ina3221.c
+@@ -213,7 +213,7 @@ static inline int ina3221_wait_for_data(struct ina3221_data *ina)
+ 
+ 	/* Polling the CVRF bit to make sure read data is ready */
+ 	return regmap_field_read_poll_timeout(ina->fields[F_CVRF],
+-					      cvrf, cvrf, wait, 100000);
++					      cvrf, cvrf, wait, wait * 2);
+ }
+ 
+ static int ina3221_read_value(struct ina3221_data *ina, unsigned int reg,
+-- 
+2.17.1
+
