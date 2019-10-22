@@ -2,136 +2,198 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BCE2CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:01:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BC5ACA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:01:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C788218AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:01:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61D9D21783
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:01:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388093AbfJVOBc convert rfc822-to-8bit (ORCPT
+        id S1732155AbfJVOBf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 10:01:32 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:60191 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727805AbfJVOBc (ORCPT
+        Tue, 22 Oct 2019 10:01:35 -0400
+Received: from relay4-d.mail.gandi.net ([217.70.183.196]:34455 "EHLO
+        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388057AbfJVOBe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 10:01:32 -0400
-Received: from mail-qk1-f173.google.com ([209.85.222.173]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1Ml6Vg-1hbmf00qzM-00lVCj; Tue, 22 Oct 2019 16:01:30 +0200
-Received: by mail-qk1-f173.google.com with SMTP id u184so16330124qkd.4;
-        Tue, 22 Oct 2019 07:01:29 -0700 (PDT)
-X-Gm-Message-State: APjAAAXylN35vLp7LcKQWl1mf/SQRyJQ+Jhfx/+/q50VBkwkAbUAvipI
-        gNDSSJZLA0cTPMgfqe6gRRGBTM0Cjfe+mrVbDZM=
-X-Google-Smtp-Source: APXvYqzNJSBsmzArUiJoxHmomaDqQtkgb7eiZl33ieH3Pnwwm1/FZ2lXqT+Z19UoP0NfH21IBu5WdckCCzmNgI5QFYQ=
-X-Received: by 2002:a37:a50f:: with SMTP id o15mr1985123qke.3.1571752888552;
- Tue, 22 Oct 2019 07:01:28 -0700 (PDT)
+        Tue, 22 Oct 2019 10:01:34 -0400
+X-Originating-IP: 86.250.200.211
+Received: from aptenodytes (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 9477FE000A;
+        Tue, 22 Oct 2019 14:01:29 +0000 (UTC)
+Date:   Tue, 22 Oct 2019 16:01:29 +0200
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com,
+        Chen-Yu Tsai <wens@csie.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v8 3/3] media: cedrus: Add HEVC/H.265 decoding support
+Message-ID: <20191022140129.GA1926725@aptenodytes>
+References: <20190927143411.141526-1-paul.kocialkowski@bootlin.com>
+ <20190927143411.141526-4-paul.kocialkowski@bootlin.com>
+ <20191017095751.5a229051@coco.lan>
+ <20191022124012.GD2651@aptenodytes>
+ <20191022131751.GE2651@aptenodytes>
+ <62ddccd3-38c0-89c5-7f0c-35f24494c3f9@xs4all.nl>
 MIME-Version: 1.0
-References: <20191010202802.1132272-1-arnd@arndb.de> <20191010203043.1241612-1-arnd@arndb.de>
- <20191010203043.1241612-11-arnd@arndb.de> <20191011055149.4dudr4tk2znpt65u@pengutronix.de>
-In-Reply-To: <20191011055149.4dudr4tk2znpt65u@pengutronix.de>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 22 Oct 2019 16:01:12 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1st8gR7u+8-oyP6HrzZdmrzhq7PRonYuz0a5O8rfKaSA@mail.gmail.com>
-Message-ID: <CAK8P3a1st8gR7u+8-oyP6HrzZdmrzhq7PRonYuz0a5O8rfKaSA@mail.gmail.com>
-Subject: Re: [PATCH 11/36] ARM: s5pv210: split from plat-samsung
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Sangbeom Kim <sbkim73@samsung.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        "moderated list:ARM/SAMSUNG EXYNOS ARM ARCHITECTURES" 
-        <linux-samsung-soc@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Olof Johansson <olof@lixom.net>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        linux-serial@vger.kernel.org,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Provags-ID: V03:K1:Hv7SAjdeGUOuU0McebMKe8pPPZg0PjMGWOl/Urvv+a4u20VCEki
- BFcgNMzF1Ce2YeJaDkJj/8e1qZD+QsK9q7XCqvXzzhWPfq25ha/TveFndkJVh3L2f/jhBlx
- JciffjQ98mgELP72Tjk9qG3zcowbLTUYNBfBre1jKWUn5R768dPB81VhbT5M0AnUbkgzJYs
- ZewkdgDUCJWp7CJE7usUg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:hRmFgw04pHw=:GuyhHbXPjvHIFHW4LRgnKZ
- JUUU3xWSamtSYw54My8YFjIeR73SnkKRIsMIAdVCUi9rvsNxaJDcJxRYNlfLkI9DzpPfqpQTA
- I7G1r69BMop3/1BDwtYEmRW0ol67cpVwD/kRph1WTOrhogNP4yfHwpwAygty8a9J5EPEFMil9
- KWPpH/57iFFSeaJ2YSuFIPyWMBBLQl++b3TSh0BHi/XCSUDfvpjhqMgO4R1ah5Jw6OWW4lHMu
- wHzuHnAmBRT9HCPxwqvPkFsKoJ1IkKua7U8vB/6Pt2WkXimrVAhOKtzbeh+tQnF5aArHzooI2
- BKkzGzuHxPakyMObe5/QrkDyKv89Rg1fE1Tjf2oCbGlQXVnxUPsgKK6hM9Ocm7HgKQY4sdfBG
- /B2HCfkNZwHUdK6ZWvg84yx54x5BvnSLxf8zXn78HzDm+IsVlr1PDezP3mgrfXj3zQK+h+l7G
- Glkjok+W2Nb8gODf1HZ31B3Yw8cStsgywOo2itc9dTJ2hFqEvHrGQA0urUm+7j/uW0JJ6MsQ+
- bC9PCelDGsrVTiO2ViP/Lpam7+ce0lYliOJv1EkYMITtMm//AcupeTwf0O/j9mghlw2gSMgdL
- ezJMy71zKCYvT99BZzOgTJuaUEOtzv9Eu0ZzW5YJaI1iZZ2mMr4uA00vDupp4Q8dQfW5k3RHY
- 6k4TnW4N/haFxfLXHSwFbv9quv8KHVwTWLUXy9ygc3odU+r+hpSfgfAPD/wYDJlCHDLu7X0LF
- l4A+x3+t3SGQHn8iI91phMXHlOW5YMGjvfVpPrU6aJZzSJWKOCAewYLuFBiF6C7SiNgfB7jbe
- 2Pq0cXaLg4l7xTsen5u4CNRbXmq2yYggxPCbU73Fyk5nVz+3xg8cIrHy/l7DmXg1wfM444Q9S
- tU94dcFtWb1hgiPPpMyw==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="IS0zKkzwUGydFO0o"
+Content-Disposition: inline
+In-Reply-To: <62ddccd3-38c0-89c5-7f0c-35f24494c3f9@xs4all.nl>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 7:51 AM Uwe Kleine-König
-<u.kleine-koenig@pengutronix.de> wrote:
->
-> On Thu, Oct 10, 2019 at 10:29:55PM +0200, Arnd Bergmann wrote:
-> > These can be build completely independently, so split
-> > the two Kconfig symbols.
-> >
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
->
-> I'd mention the two symbols' names you're working on in the commit log.
-> I guess it's about PLAT_SAMSUNG and ARCH_S5PV210. And I wouldn't call it
-> "split" which IMHO suggests there was only one symbol before.
->
-> Maybe:
->
->         Don't imply PLAT_SAMSUNG if ARCH_S5PV210 is enabled
->
-> would be a better subject line?
 
-Ok, changed to
+--IS0zKkzwUGydFO0o
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-ARM: s5pv210: don't imply CONFIG_PLAT_SAMSUNG
+Hi,
 
-> > @@ -235,7 +235,6 @@ machine-$(CONFIG_PLAT_SPEAR)              += spear
-> >  # by CONFIG_* macro name.
-> >  plat-$(CONFIG_ARCH_OMAP)     += omap
-> >  plat-$(CONFIG_ARCH_S3C64XX)  += samsung
-> > -plat-$(CONFIG_ARCH_S5PV210)  += samsung
->
-> Would it make more sense to make this
->
->         plat-$(PLAT_SAMSUNG) += samsung
->
-> (in a separate patch)? Hmm, it seems there is no plat-y for
-> PLAT_S3C24XX=y builds. Is this intended? If yes, the directory name
-> containing "samsung" suggests something that seems untrue.
+On Tue 22 Oct 19, 15:37, Hans Verkuil wrote:
+> On 10/22/19 3:17 PM, Paul Kocialkowski wrote:
+> > Hi again,
+> >=20
+> > On Tue 22 Oct 19, 14:40, Paul Kocialkowski wrote:
+> >> Hi Mauro and thanks for the review,
+> >>
+> >> On Thu 17 Oct 19, 09:57, Mauro Carvalho Chehab wrote:
+> >>> Em Fri, 27 Sep 2019 16:34:11 +0200
+> >>> Paul Kocialkowski <paul.kocialkowski@bootlin.com> escreveu:
+> >>>
+> >>>> This introduces support for HEVC/H.265 to the Cedrus VPU driver, with
+> >>>> both uni-directional and bi-directional prediction modes supported.
+> >>>>
+> >>>> Field-coded (interlaced) pictures, custom quantization matrices and
+> >>>> 10-bit output are not supported at this point.
+> >>>>
+> >>>> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> >>>> ---
+> >>>
+> >>> ...
+> >>>
+> >>>> +		unsigned int ctb_size_luma =3D
+> >>>> +			1 << log2_max_luma_coding_block_size;
+> >>>
+> >>> Shifts like this is a little scary. "1" constant is signed. So, if
+> >>> log2_max_luma_coding_block_size is 31, the above logic has undefined
+> >>> behavior. Different archs and C compilers may handle it on different
+> >>> ways.
+> >>
+> >> I wasn't aware that it was the case, thanks for bringing this to light!
+> >> I'll make it 1UL then.
+> >>
+> >>>> +#define VE_DEC_H265_LOW_ADDR_PRIMARY_CHROMA(a) \
+> >>>> +	(((a) << 24) & GENMASK(31, 24))
+> >>>
+> >>> Same applies here and on other similar macros. You need to enforce
+> >>> (a) to be unsigned, as otherwise the behavior is undefined.
+> >>>
+> >>> Btw, this is a recurrent pattern on this file. I would define a
+> >>> macro, e. g. something like:
+> >>>
+> >>> 	#define MASK_BITS_AND_SHIFT(v, high, low) \
+> >>> 		((UL(v) << low) & GENMASK(high, low))
+> >>>
+> >>> And use it for all similar patterns here.
+> >>
+> >> Sounds good! I find that the reverse wording (SHIFT_AND_MASK_BITS) wou=
+ld be
+> >> a bit more explicit since the shift happens prior to the mask.
+> >=20
+> > Apparently the UL(v) macro just appends UL to v in preprocessor, so it =
+won't
+> > work with anything else than direct integers.
+> >=20
+> > I'll replace it with a (unsigned long) cast, that seems to do the job.
+>=20
+> Shouldn't that be a (u32) cast? Since this is used with 32 bit registers?
 
-By the end of the series, the plat-samsung directory is completely
-removed (folded into mach-s3c), so that would only add more
-churn for the same result I think.
+This would work for cedrus, but I think that what Mauro had in mind was to
+migrate this macro to linux/bits.h, where everthing else (including GENMASK)
+is apparently defined in terms of unsigned long and not types with explicit
+numbers of bits. So I find it more consistent to go with unsigned long.
 
-     Arnd
+In our case, 64-bit platforms that use cedrus would calculate the macro on
+64 bits and use it in 32-bit variables. Since we're never masking beyond the
+lower 32 bits, I don't see how things could go wrong and the situation looks
+fairly similar to the use of GENMASK in similar conditions.
+
+Does that sound right to you or am I missing something here?
+
+Cheers,
+
+Paul
+
+> Regards,
+>=20
+> 	Hans
+>=20
+> >=20
+> > Cheers,
+> >=20
+> > Paul
+> >=20
+> >> Also we probably need to have parenthesis around "low", right?
+> >>
+> >>> The best would be to include such macro at linux/bits.h, although some
+> >>> upstream discussion is required.
+> >>>
+> >>> So, for now, let's add it at this header file, but work upstream
+> >>> to have it merged there.
+> >>
+> >> Understood, I'll include it in that header for now and send a separate=
+ patch
+> >> for inclusion in linux/bits.h (apparently the preprocessor doesn't car=
+e about
+> >> redefinitions so we can just remove the cedrus fashion once the common=
+ one is
+> >> in).
+> >>
+> >> What do you think?
+> >>
+> >> Cheers,
+> >>
+> >> Paul
+> >=20
+> >=20
+> >=20
+>=20
+
+--=20
+Paul Kocialkowski, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
+
+--IS0zKkzwUGydFO0o
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl2vC7kACgkQ3cLmz3+f
+v9FNWQf/VOFy2NcFFmeA6TWZfvyrkmu5obas+AFQpmgHiPdhg/5hxka22rig87Es
+ZGJbCBBCOTKnxdGVp4TX+gNTWdHNuwcc3m61U50w6uNFaPnSHjraKEvt6A44rwoq
+DyQA5JeBbyLpjKT6ceVhSl719jqnsNr3wel0zNo1rBLvyFRxZgvysWff3x3xAQQU
+3+InsoB/T1C8tj1dMlS2okywVpeN8MfKcTX8Yfw3kubeULYM6gzoZ377Px6DMYmP
+SpNlTYcYQIoIKni/pB8ji+BfisYqdcLBkVq37Y6vcTLWZmiF9bTfXylaTefEISaq
+3Mss27y4ElhNhARIXlfxsz8Vn1Hrgw==
+=VMbB
+-----END PGP SIGNATURE-----
+
+--IS0zKkzwUGydFO0o--
