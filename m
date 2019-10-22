@@ -2,170 +2,149 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9695ECA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 11:24:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D13BCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 11:28:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C79C21783
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 11:24:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571743491;
-	bh=RxIvZmZ4winCrLc4Nk5sN1bnC6Gb4ZQ2WWKAzi9Pwo0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=e6M+IAp25H2CBo/AMrGRli3yBPcEycJ7ZQbTP86yJ/mIvz7UyzPBM8VURt7BM3qnK
-	 CwJL8ogYNA+E+BLuRCkrKCMfdTQXTGImGohBAhdDgmib34JgA4BUmo+fWOIhb67i0X
-	 YPIc+vxmsmazCMw4hOhiweEssJ3i9fkWc1ojvUbU=
+	by mail.kernel.org (Postfix) with ESMTP id 48F6D214B2
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 11:28:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388430AbfJVLYu (ORCPT
+        id S2388633AbfJVL2t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 07:24:50 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60080 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387645AbfJVLYu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 07:24:50 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 55868BA3D;
-        Tue, 22 Oct 2019 11:24:47 +0000 (UTC)
-Date:   Tue, 22 Oct 2019 13:24:46 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Mike Christie <mchristi@redhat.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-block@vger.kernel.org, martin@urbackup.org,
-        Damien.LeMoal@wdc.com
-Subject: Re: [PATCH] Add prctl support for controlling PF_MEMALLOC V2
-Message-ID: <20191022112446.GA8213@dhcp22.suse.cz>
-References: <20191021214137.8172-1-mchristi@redhat.com>
+        Tue, 22 Oct 2019 07:28:49 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:49864 "EHLO foss.arm.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S2387405AbfJVL2s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 07:28:48 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E47011007;
+        Tue, 22 Oct 2019 04:28:23 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C6E213F718;
+        Tue, 22 Oct 2019 04:28:21 -0700 (PDT)
+Date:   Tue, 22 Oct 2019 12:28:11 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        amit.kachhap@arm.com, ard.biesheuvel@linaro.org,
+        catalin.marinas@arm.com, deller@gmx.de, duwe@suse.de,
+        james.morse@arm.com, jeyu@kernel.org, jpoimboe@redhat.com,
+        jthierry@redhat.com, mingo@redhat.com, peterz@infradead.org,
+        svens@stackframe.org, takahiro.akashi@linaro.org, will@kernel.org
+Subject: Re: [PATCH 1/8] ftrace: add ftrace_init_nop()
+Message-ID: <20191022112811.GA11583@lakrids.cambridge.arm.com>
+References: <20191021163426.9408-1-mark.rutland@arm.com>
+ <20191021163426.9408-2-mark.rutland@arm.com>
+ <20191021140756.613a1bac@gandalf.local.home>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191021214137.8172-1-mchristi@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191021140756.613a1bac@gandalf.local.home>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 21-10-19 16:41:37, Mike Christie wrote:
-> There are several storage drivers like dm-multipath, iscsi, tcmu-runner,
-> amd nbd that have userspace components that can run in the IO path. For
-> example, iscsi and nbd's userspace deamons may need to recreate a socket
-> and/or send IO on it, and dm-multipath's daemon multipathd may need to
-> send IO to figure out the state of paths and re-set them up.
+On Mon, Oct 21, 2019 at 02:07:56PM -0400, Steven Rostedt wrote:
+> On Mon, 21 Oct 2019 17:34:19 +0100
+> Mark Rutland <mark.rutland@arm.com> wrote:
 > 
-> In the kernel these drivers have access to GFP_NOIO/GFP_NOFS and the
-> memalloc_*_save/restore functions to control the allocation behavior,
-> but for userspace we would end up hitting a allocation that ended up
-> writing data back to the same device we are trying to allocate for.
+> > Architectures may need to perform special initialization of ftrace
+> > callsites, and today they do so by special-casing ftrace_make_nop() when
+> > the expected branch address is MCOUNT_ADDR. In some cases (e.g. for
+> > patchable-function-entry), we don't have an mcount-like symbol and don't
+> > want a synthetic MCOUNT_ADDR, but we may need to perform some
+> > initialization of callsites.
+> > 
+> > To make it possible to separate initialization from runtime
+> > modification, and to handle cases without an mcount-like symbol, this
+> > patch adds an optional ftrace_init_nop() function that architectures can
+> > implement, which does not pass a branch address.
+> > 
+> > Where an architecture does not provide ftrace_init_nop(), we will fall
+> > back to the existing behaviour of calling ftrace_make_nop() with
+> > MCOUNT_ADDR.
+> > 
+> > At the same time, ftrace_code_disable() is renamed to
+> > ftrace_code_init_disabled() to make it clearer that it is intended to
+> > intialize a callsite into a disabled state, and is not for disabling a
+> > callsite that has been runtime enabled.
+> 
+> To make the name even better, let's just rename it to:
+> 
+>  ftrace_nop_initialization()
+> 
+> I think that may be the best description for it.
 
-Which code paths are we talking about here? Any ioctl or is this a
-general syscall path? Can we mark the process in a more generic way?
-E.g. we have PF_LESS_THROTTLE (used by nfsd). It doesn't affect the
-reclaim recursion but it shows a pattern that doesn't really exhibit
-too many internals. Maybe we need PF_IO_FLUSHER or similar?
+Perhaps ftrace_nop_initialize(), so that it's not a noun?
 
-> This patch allows the userspace deamon to set the PF_MEMALLOC* flags
-> with prctl during their initialization so later allocations cannot
-> calling back into them.
+I've made it ftrace_nop_initialization() in my branch for now.
 
-TBH I am not really happy to export these to the userspace. They are
-an internal implementation detail and the userspace shouldn't really
-care. So if this is really necessary then we need a very good argumnets
-and documentation to make the usage clear.
- 
-> Signed-off-by: Mike Christie <mchristi@redhat.com>
-> ---
+> > diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> > index f296d89be757..afd7e210e595 100644
+> > --- a/kernel/trace/ftrace.c
+> > +++ b/kernel/trace/ftrace.c
+> > @@ -2493,15 +2493,22 @@ struct dyn_ftrace *ftrace_rec_iter_record(struct ftrace_rec_iter *iter)
+> >  	return &iter->pg->records[iter->index];
+> >  }
+> >  
+> > +#ifndef ftrace_init_nop
+> > +static int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec)
+> > +{
+> > +	return ftrace_make_nop(mod, rec, MCOUNT_ADDR);
+> > +}
+> > +#endif
 > 
-> V2:
-> - Use prctl instead of procfs.
-> - Add support for NOFS for fuse.
-> - Check permissions.
+> Can you place the above in the ftrace.h header. That's where that would
+> belong.
 > 
->  include/uapi/linux/prctl.h |  8 +++++++
->  kernel/sys.c               | 44 ++++++++++++++++++++++++++++++++++++++
->  2 files changed, 52 insertions(+)
-> 
-> diff --git a/include/uapi/linux/prctl.h b/include/uapi/linux/prctl.h
-> index 7da1b37b27aa..6f6b3af6633a 100644
-> --- a/include/uapi/linux/prctl.h
-> +++ b/include/uapi/linux/prctl.h
-> @@ -234,4 +234,12 @@ struct prctl_mm_map {
->  #define PR_GET_TAGGED_ADDR_CTRL		56
->  # define PR_TAGGED_ADDR_ENABLE		(1UL << 0)
->  
-> +/* Control reclaim behavior when allocating memory */
-> +#define PR_SET_MEMALLOC			57
-> +#define PR_GET_MEMALLOC			58
-> +#define PR_MEMALLOC_SET_NOIO		(1UL << 0)
-> +#define PR_MEMALLOC_CLEAR_NOIO		(1UL << 1)
-> +#define PR_MEMALLOC_SET_NOFS		(1UL << 2)
-> +#define PR_MEMALLOC_CLEAR_NOFS		(1UL << 3)
-> +
->  #endif /* _LINUX_PRCTL_H */
-> diff --git a/kernel/sys.c b/kernel/sys.c
-> index a611d1d58c7d..34fedc9fc7e4 100644
-> --- a/kernel/sys.c
-> +++ b/kernel/sys.c
-> @@ -2486,6 +2486,50 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
->  			return -EINVAL;
->  		error = GET_TAGGED_ADDR_CTRL();
->  		break;
-> +	case PR_SET_MEMALLOC:
-> +		if (!capable(CAP_SYS_ADMIN))
-> +			return -EPERM;
-> +
-> +		if (arg3 || arg4 || arg5)
-> +			return -EINVAL;
-> +
-> +		switch (arg2) {
-> +		case PR_MEMALLOC_SET_NOIO:
-> +			if (current->flags & PF_MEMALLOC_NOFS)
-> +				return -EINVAL;
-> +
-> +			current->flags |= PF_MEMALLOC_NOIO;
-> +			break;
-> +		case PR_MEMALLOC_CLEAR_NOIO:
-> +			current->flags &= ~PF_MEMALLOC_NOIO;
-> +			break;
-> +		case PR_MEMALLOC_SET_NOFS:
-> +			if (current->flags & PF_MEMALLOC_NOIO)
-> +				return -EINVAL;
-> +
-> +			current->flags |= PF_MEMALLOC_NOFS;
-> +			break;
-> +		case PR_MEMALLOC_CLEAR_NOFS:
-> +			current->flags &= ~PF_MEMALLOC_NOFS;
-> +			break;
-> +		default:
-> +			return -EINVAL;
-> +		}
-> +		break;
-> +	case PR_GET_MEMALLOC:
-> +		if (!capable(CAP_SYS_ADMIN))
-> +			return -EPERM;
-> +
-> +		if (arg2 || arg3 || arg4 || arg5)
-> +			return -EINVAL;
-> +
-> +		if (current->flags & PF_MEMALLOC_NOIO)
-> +			error = PR_MEMALLOC_SET_NOIO;
-> +		else if (current->flags & PF_MEMALLOC_NOFS)
-> +			error = PR_MEMALLOC_SET_NOFS;
-> +		else
-> +			error = 0;
-> +		break;
->  	default:
->  		error = -EINVAL;
->  		break;
-> -- 
-> 2.20.1
-> 
+> #ifndef ftrace_init_nop
+> struct module;
+> static inline int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec)
+> {
+> 	return ftrace_make_nop(mod, rec, MCOUNT_ADDR);
+> }
+> #endif
 
--- 
-Michal Hocko
-SUSE Labs
+True.
+
+I've put this immediately after ftrace_make_nop() in the header, and
+given it a kerneldoc comment. There's a declaration for struct module at
+the top of the header, so I've just relied on that
+
+That looks like:
+
+| /**
+|  * ftrace_init_nop - initialize a nop call site
+|  * @mod: module structure if called by module load initialization
+|  * @rec: the mcount call site record
+|  *
+|  * This is a very sensitive operation and great care needs
+|  * to be taken by the arch.  The operation should carefully
+|  * read the location, check to see if what is read is indeed
+|  * what we expect it to be, and then on success of the compare,
+|  * it should write to the location.
+|  *
+|  * The code segment at @rec->ip should be as initialized by the
+|  * compiler
+|  *
+|  * Return must be:
+|  *  0 on success
+|  *  -EFAULT on error reading the location
+|  *  -EINVAL on a failed compare of the contents
+|  *  -EPERM  on error writing to the location
+|  * Any other value will be considered a failure.
+|  */
+| #ifndef ftrace_init_nop
+| static int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec)
+| {
+| 	return ftrace_make_nop(mod, rec, MCOUNT_ADDR);
+| }
+| #endif
+
+Thanks,
+Mark.
