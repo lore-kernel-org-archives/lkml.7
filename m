@@ -2,126 +2,115 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0603CC47E49
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 23:01:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E834CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 23:03:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF213214B2
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 23:01:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571785304;
-	bh=2T9O9f/svRRLRKxyJkkAcXdX4HnJ/q4asftEJqtbMwg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=gN2BllVEOIB/4ojSi8vYYYcQfNj6pthi/EsPc5tlBF7ZWjAoWj0SW+ugeSsMcdLoL
-	 zasau62kmMsFSrhzWeBQJgfggWVKVaHtlzJJKCAkbfBTSLykpvzyw3WbHPuiXm6rxR
-	 x/IxTcDO5IKcsPyLHew8WR+TuBgRfIxgkyTVmqCQ=
+	by mail.kernel.org (Postfix) with ESMTP id E25662075A
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 23:03:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="gvCCbLOI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389622AbfJVXBn (ORCPT
+        id S2389631AbfJVXDM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 19:01:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40074 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731850AbfJVXBn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 19:01:43 -0400
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34DE620700;
-        Tue, 22 Oct 2019 23:01:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571785301;
-        bh=2T9O9f/svRRLRKxyJkkAcXdX4HnJ/q4asftEJqtbMwg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=fq6CI2JNFZcVfartOJC/tzum1u9mn84eNLVA7RSwwc6E2UqvQDeJ+ejcVU+f3GdyP
-         nsXZ6EEEh4h2WkVVdxek8GFB00LJR+I5Z41r4Vz99xahSks1Jr2urIbcypYLqVfW8m
-         YdOIWILtkmOuSmIVK0ATPlwQITNrqGNxAkvl6g9Q=
-Date:   Tue, 22 Oct 2019 16:01:40 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     kvm@vger.kernel.org, mst@redhat.com, linux-kernel@vger.kernel.org,
-        willy@infradead.org, mhocko@kernel.org, linux-mm@kvack.org,
-        mgorman@techsingularity.net, vbabka@suse.cz,
-        yang.zhang.wz@gmail.com, nitesh@redhat.com, konrad.wilk@oracle.com,
-        david@redhat.com, pagupta@redhat.com, riel@surriel.com,
-        lcapitulino@redhat.com, dave.hansen@intel.com,
-        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
-        dan.j.williams@intel.com, alexander.h.duyck@linux.intel.com,
-        osalvador@suse.de
-Subject: Re: [PATCH v12 0/6] mm / virtio: Provide support for unused page
- reporting
-Message-Id: <20191022160140.a6954868d59f47b36334b504@linux-foundation.org>
-In-Reply-To: <20191022221223.17338.5860.stgit@localhost.localdomain>
-References: <20191022221223.17338.5860.stgit@localhost.localdomain>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
+        Tue, 22 Oct 2019 19:03:12 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:40828 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730034AbfJVXDM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 19:03:12 -0400
+Received: by mail-il1-f195.google.com with SMTP id d83so8600052ilk.7
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 16:03:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
+        bh=FCNSpvhucdslU4xdhlUj1eji96TKzrd4QEx7zlNJdXU=;
+        b=gvCCbLOIKWTljdF4xlr9PMDzTM+XPkwYupgcnkTFkWUWvEOvNUNgBK3weffnZMZNn+
+         Ghs0fgjmCqPEoAg8e3W7Ff4o4zsQECeZTGFDRd83PgGZuD/lZsaPWQzEb/f0d/rfvfPo
+         a/1i3Las7Uz/UnynRVaTZEl4Qbaob6K41EbYxjD0Y3pZeWTXnZc4GSEWHEHWBHxuYMsh
+         33ONw0DyDd0kEJf/T+f7G1tvAvQw7SXOHR7jxmAf/63pVXIxTuBA5rE2jn3eH76CVJVi
+         F5bJcvR4qUCI1RUGpPFU9GnXtVwAnIjmbBiGPtpxLG1kbPcKx5Vcjg92d5NBp4pdBqvt
+         F2Lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
+         :mime-version;
+        bh=FCNSpvhucdslU4xdhlUj1eji96TKzrd4QEx7zlNJdXU=;
+        b=cbe0tPJaBFKV0gKSwGQg54M3Th6Yg44N7xXXtLvJcDP8+B7/5irfVQ0ZledVbu8unf
+         3i6HUjF4jfn996QMAsmJMtF+egGgYzVFVGtsPgspL26TsgbLkzsoFlcsIytA7V4VCVwc
+         Ne1TL3WE3RExvWgLRpi+E0HkWjUrQF81KofzrH5A3vvP7AV8WSEarsvYDS3KXqZUrbBu
+         EZiWLTrSUMvG3wKduiiClPzFD3xx4isWzW0+z1aS4FhQEa09MYQoFmtjeQgBgAzGfhcY
+         aL5NvncPf2gHnfxDYkqYAyfWFP3tr+/nfEAiOOWMn+du2+U32C3PFJkEmXmbf/gyHqjL
+         bjHQ==
+X-Gm-Message-State: APjAAAX5HlirtxDBXAep24cH7l599dcNv87PMHIt9Mo8uBZYvwjjT3oR
+        cNj3xHSF9/viubqeJIFqog/DsQ==
+X-Google-Smtp-Source: APXvYqx5+7e2i1TygQBtYul2CZ+dTQLBLh4OyjITtN3933T1jRnJPAzZcgf6MWL1RshfohIFNIyYzQ==
+X-Received: by 2002:a92:b00f:: with SMTP id x15mr11505916ilh.280.1571785391511;
+        Tue, 22 Oct 2019 16:03:11 -0700 (PDT)
+Received: from localhost ([64.62.168.194])
+        by smtp.gmail.com with ESMTPSA id y5sm3011061ioa.13.2019.10.22.16.03.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Oct 2019 16:03:10 -0700 (PDT)
+Date:   Tue, 22 Oct 2019 16:03:08 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     torvalds@linux-foundation.org
+cc:     keescook@chromium.org, david.abdurachmanov@sifive.com,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] RISC-V SECCOMP support for v5.4-rc5
+Message-ID: <alpine.DEB.2.21.9999.1910221600320.25457@viisi.sifive.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 22 Oct 2019 15:27:52 -0700 Alexander Duyck <alexander.duyck@gmail.com> wrote:
+Linus,
 
-> Below are the results from various benchmarks. I primarily focused on two
-> tests. The first is the will-it-scale/page_fault2 test, and the other is
-> a modified version of will-it-scale/page_fault1 that was enabled to use
-> THP. I did this as it allows for better visibility into different parts
-> of the memory subsystem. The guest is running on one node of a E5-2630 v3
-> CPU with 48G of RAM that I split up into two logical nodes in the guest
-> in order to test with NUMA as well.
-> 
-> Test		    page_fault1 (THP)     page_fault2
-> Baseline	 1  1256106.33  +/-0.09%   482202.67  +/-0.46%
->                 16  8864441.67  +/-0.09%  3734692.00  +/-1.23%
-> 
-> Patches applied  1  1257096.00  +/-0.06%   477436.00  +/-0.16%
->                 16  8864677.33  +/-0.06%  3800037.00  +/-0.19%
-> 
-> Patches enabled	 1  1258420.00  +/-0.04%   480080.00  +/-0.07%
->  MADV disabled  16  8753840.00  +/-1.27%  3782764.00  +/-0.37%
-> 
-> Patches enabled	 1  1267916.33  +/-0.08%   472075.67  +/-0.39%
->                 16  8287050.33  +/-0.67%  3774500.33  +/-0.11%
-> 
-> The results above are for a baseline with a linux-next-20191021 kernel,
-> that kernel with this patch set applied but page reporting disabled in
-> virtio-balloon, patches applied but the madvise disabled by direct
-> assigning a device, and the patches applied and page reporting fully
-> enabled.  These results include the deviation seen between the average
-> value reported here versus the high and/or low value. I observed that
-> during the test the memory usage for the first three tests never dropped
-> whereas with the patches fully enabled the VM would drop to using only a
-> few GB of the host's memory when switching from memhog to page fault tests.
-> 
-> Most of the overhead seen with this patch set fully enabled is due to the
-> fact that accessing the reported pages will cause a page fault and the host
-> will have to zero the page before giving it back to the guest. The overall
-> guest size is kept fairly small to only a few GB while the test is running.
-> This overhead is much more visible when using THP than with standard 4K
-> pages. As such for the case where the host memory is not oversubscribed
-> this results in a performance regression, however if the host memory were
-> oversubscribed this patch set should result in a performance improvement
-> as swapping memory from the host can be avoided.
+The following changes since commit 5bf4e52ff0317db083fafee010dc806f8d4cb0cb:
 
-I'm trying to understand "how valuable is this patchset" and the above
-resulted in some headscratching.
+  RISC-V: fix virtual address overlapped in FIXADDR_START and VMEMMAP_START (2019-10-15 22:47:41 -0700)
 
-Overall, how valuable is this patchset?  To real users running real
-workloads?
+are available in the Git repository at:
 
-> There is currently an alternative patch set[1] that has been under work
-> for some time however the v12 version of that patch set could not be
-> tested as it triggered a kernel panic when I attempted to test it. It
-> requires multiple modifications to get up and running with performance
-> comparable to this patch set. A follow-on set has yet to be posted. As
-> such I have not included results from that patch set, and I would
-> appreciate it if we could keep this patch set the focus of any discussion
-> on this thread.
+  git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv/for-v5.4-rc5
 
-Actually, the rest of us would be interested in a comparison ;)  
+for you to fetch changes up to 7326fcbeea619b95c9b380ddee0a94f5f9ea6a48:
 
+  riscv: add support for SECCOMP and SECCOMP_FILTER (2019-10-16 08:27:25 -0700)
 
+----------------------------------------------------------------
+RISC-V SECCOMP support for v5.4-rc5
+
+This pull request contains a single change: the addition of SECCOMP
+support for RISC-V for v5.4-rc5.  Normally, I'd consider this too
+large for this point in the -rc releases.  However, we've heard that
+v5.4 is likely to be a long-term support release, and adding it in now
+should help the distribution and security folks.  The changes look
+relatively bounded, and the only reason we've been sitting on it until
+now is because we've been waiting for a trivial ack from the
+tools/testing maintainer.  That hasn't come.  Since the change to that
+subsystem is quite minor, we think it should be OK with her, so,
+sending it now.
+
+If you have a different opinion about whether this patch should go in
+now, we're fine with requeuing it for v5.5-rc1.
+
+----------------------------------------------------------------
+David Abdurachmanov (1):
+      riscv: add support for SECCOMP and SECCOMP_FILTER
+
+ arch/riscv/Kconfig                            | 14 ++++++++++++++
+ arch/riscv/include/asm/seccomp.h              | 10 ++++++++++
+ arch/riscv/include/asm/thread_info.h          |  5 ++++-
+ arch/riscv/kernel/entry.S                     | 27 +++++++++++++++++++++++++--
+ arch/riscv/kernel/ptrace.c                    | 10 ++++++++++
+ tools/testing/selftests/seccomp/seccomp_bpf.c |  8 +++++++-
+ 6 files changed, 70 insertions(+), 4 deletions(-)
+ create mode 100644 arch/riscv/include/asm/seccomp.h
