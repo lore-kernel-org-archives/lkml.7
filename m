@@ -2,136 +2,123 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0E6BC47E49
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:58:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FC5FCA9EB9
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:59:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 981B020679
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:58:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571734736;
-	bh=woOQSwlVRud5RY6zp4OOcbj2xbOxfi5ai2ThvAX4eBY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VhFW6Qw6lNQ65w1df4FW3T4hZWsyEz4ZUdTM4u2gXfN0IcJfjUKyALGoX1ha4Iw08
-	 hvSwlEi44ow7xQQAGuo5EUZjkuPKwIBjwTGqQg/eBr15sBHwJB5jrbqxi28CcOWcml
-	 mVciSvdhddlSYmAAUmai54C6d+7v0mXrM2u5sApw=
+	by mail.kernel.org (Postfix) with ESMTP id 454EE20640
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:59:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="FzT8PFDj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731366AbfJVI6z (ORCPT
+        id S1731380AbfJVI7e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 04:58:55 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33264 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726978AbfJVI6z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 04:58:55 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id DFD59B7F5;
-        Tue, 22 Oct 2019 08:58:52 +0000 (UTC)
-Date:   Tue, 22 Oct 2019 10:58:51 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Oscar Salvador <osalvador@suse.de>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>
-Subject: Re: [PATCH v1 1/2] mm/page_alloc.c: Don't set pages PageReserved()
- when offlining
-Message-ID: <20191022085851.GF9379@dhcp22.suse.cz>
-References: <20191021141927.10252-1-david@redhat.com>
- <20191021141927.10252-2-david@redhat.com>
- <20191021144345.GT9379@dhcp22.suse.cz>
- <b6a392c9-1cb8-321e-b7ba-d483d928a3cc@redhat.com>
- <20191021154712.GW9379@dhcp22.suse.cz>
- <91ecb9b7-4271-a3a7-2342-b0afd4c41606@redhat.com>
- <20191022082053.GB9379@dhcp22.suse.cz>
- <c9517b78-c38f-4e1b-f8cb-8df67bf106ec@redhat.com>
+        Tue, 22 Oct 2019 04:59:34 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:40050 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728832AbfJVI7d (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 04:59:33 -0400
+Received: by mail-wr1-f67.google.com with SMTP id o28so17077993wro.7
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 01:59:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=jxmCwIeHDgkpYVsOzcGzZpWtPrDaLJlk3S4i0/jBbqQ=;
+        b=FzT8PFDjIeRzigByVRwj0mJBOY+NZri4fx2GCcFeQvsKu0uIP5+G1eqnDjAUzziXIW
+         iSpGdtjw/lp3Cqe01O2ixd9JHyOXSLeoDOMn/iys8YEejPa0QHKhm7+iDi1ZmWFGWNjP
+         E9UwvDBr6PKnx7uCF5g51cb3H2YhOPDsKpR2o=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=jxmCwIeHDgkpYVsOzcGzZpWtPrDaLJlk3S4i0/jBbqQ=;
+        b=ovJTohS9Ic68MVmkohPW6dKG1/gtQm00QhF0yte6rJlVzcWW4cSDDtRqACdDrMwGLt
+         BTlP/jObJ+xn20zFAr1s46nXAauPLjgT0YpA2DLP/Scx5sIJinDvZeq+IaIjKKUVYCYu
+         7MMjOn8R4h5V623whf1t111ukpejQWVhoRqWi1zZw6a/Z59LQtjO8yaWe999GxtztvFt
+         uxTfMkj20m9AfD01qPt971cs7eBsiZPwRe71xQ/9BHQIMSKRnJAGU9DInxCgOl/wTb2l
+         LFDBkdD6+RB98T7U5gyTVlPxiQxGkqEcE7sJASOD5ziMFxG2N1/GEgVG6xDXH8ZM2n9o
+         wn2Q==
+X-Gm-Message-State: APjAAAWI8bPvRTXnSKjjOtScanphu0wwgC2pMpKhZJVYTxIYP0Olk6BJ
+        s5xUSpha/eCDqxI52V10M8RgYA==
+X-Google-Smtp-Source: APXvYqzd2QpyGvXdawpEdZBVER8fWByd/JbP1ANnd25CFqLpm8M5brZeLwzlHZe2BHfKM5mySIaaEw==
+X-Received: by 2002:adf:9bdc:: with SMTP id e28mr2303057wrc.309.1571734770249;
+        Tue, 22 Oct 2019 01:59:30 -0700 (PDT)
+Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
+        by smtp.gmail.com with ESMTPSA id b196sm10894237wmd.24.2019.10.22.01.59.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Oct 2019 01:59:29 -0700 (PDT)
+Date:   Tue, 22 Oct 2019 10:59:27 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Kangjie Lu <kjlu@umn.edu>
+Cc:     Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/gma500: fix memory disclosures due to uninitialized
+ bytes
+Message-ID: <20191022085927.GA11828@phenom.ffwll.local>
+Mail-Followup-To: Kangjie Lu <kjlu@umn.edu>,
+        Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
+        David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+References: <20191018044150.1899-1-kjlu@umn.edu>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c9517b78-c38f-4e1b-f8cb-8df67bf106ec@redhat.com>
+In-Reply-To: <20191018044150.1899-1-kjlu@umn.edu>
+X-Operating-System: Linux phenom 5.2.0-2-amd64 
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 22-10-19 10:23:37, David Hildenbrand wrote:
-> On 22.10.19 10:20, Michal Hocko wrote:
-> > On Mon 21-10-19 17:54:35, David Hildenbrand wrote:
-> > > On 21.10.19 17:47, Michal Hocko wrote:
-> > > > On Mon 21-10-19 17:39:36, David Hildenbrand wrote:
-> > > > > On 21.10.19 16:43, Michal Hocko wrote:
-> > > > [...]
-> > > > > > We still set PageReserved before onlining pages and that one should be
-> > > > > > good to go as well (memmap_init_zone).
-> > > > > > Thanks!
-> > > > > 
-> > > > > memmap_init_zone() is called when onlining memory. There, set all pages to
-> > > > > reserved right now (on context == MEMMAP_HOTPLUG). We clear PG_reserved when
-> > > > > onlining a page to the buddy (e.g., generic_online_page). If we would online
-> > > > > a memory block with holes, we would want to keep all such pages
-> > > > > (!pfn_valid()) set to reserved. Also, there might be other side effects.
-> > > > 
-> > > > Isn't it sufficient to have those pages in a poisoned state? They are
-> > > > not onlined so their state is basically undefined anyway. I do not see
-> > > > how PageReserved makes this any better.
-> > > 
-> > > It is what people have been using for a long time. Memory hole ->
-> > > PG_reserved. The memmap is valid, but people want to tell "this here is
-> > > crap, don't look at it".
-> > 
-> > The page is poisoned, right? If yes then setting the reserved bit
-> > doesn't make any sense.
+On Thu, Oct 17, 2019 at 11:41:50PM -0500, Kangjie Lu wrote:
+> "clock" may be copied to "best_clock". Initializing best_clock
+> is not sufficient. The fix initializes clock as well to avoid
+> memory disclosures and informaiton leaks.
 > 
-> No it's not poisoned AFAIK. It should be initialized
+> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
 
-Dohh, it seems I still keep confusing myself. You are right the page is
-initialized at this stage. A potential hole in RAM or ZONE_DEVICE memory
-will just not hit the page allocator. Sorry about the noise.
+Again no leak here, but also doesn't hurt, so applied.
+-Daniel
 
-> - and I remember that PG_reserved on memory holes is relevant to
-> detect MMIO pages. (e.g., looking at KVM code ...)
-
-I can see kvm_is_reserved_pfn() which checks both pfn_valid and
-PageReserved. How does this help to detect memory holes though?
-Any driver might be setting the page reserved.
- 
-> > > > Also is the hole inside a hotplugable memory something we really have to
-> > > > care about. Has anybody actually seen a platform to require that?
-> > > 
-> > > That's what I was asking. I can see "support" for this was added basically
-> > > right from the beginning. I'd say we rip that out and cleanup/simplify. I am
-> > > not aware of a platform that requires this. Especially, memory holes on
-> > > DIMMs (detected during boot) seem like an unlikely thing.
-> > 
-> > The thing is that the hotplug development shows ad-hoc decisions
-> > throughout the code. It is even worse that it is hard to guess whether
-> > some hludges are a result of a careful design or ad-hoc trial and
-> > failure approach on setups that never were production. Building on top
-> > of that be preserving hacks is not going to improve the situation. So I
-> > am perfectly fine to focus on making the most straightforward setups
-> > work reliably. Even when there is a risk of breaking some odd setups. We
-> > can fix them up later but we would have at least a specific example and
-> > document it.
-> > 
+> ---
+>  drivers/gpu/drm/gma500/oaktrail_crtc.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> Alright, I'll prepare a simple patch that rejects offlining memory with
+> diff --git a/drivers/gpu/drm/gma500/oaktrail_crtc.c b/drivers/gpu/drm/gma500/oaktrail_crtc.c
+> index 167c10767dd4..900e5499249d 100644
+> --- a/drivers/gpu/drm/gma500/oaktrail_crtc.c
+> +++ b/drivers/gpu/drm/gma500/oaktrail_crtc.c
+> @@ -129,6 +129,7 @@ static bool mrst_sdvo_find_best_pll(const struct gma_limit_t *limit,
+>  	s32 freq_error, min_error = 100000;
+>  
+>  	memset(best_clock, 0, sizeof(*best_clock));
+> +	memset(&clock, 0, sizeof(clock));
+>  
+>  	for (clock.m = limit->m.min; clock.m <= limit->m.max; clock.m++) {
+>  		for (clock.n = limit->n.min; clock.n <= limit->n.max;
+> @@ -185,6 +186,7 @@ static bool mrst_lvds_find_best_pll(const struct gma_limit_t *limit,
+>  	int err = target;
+>  
+>  	memset(best_clock, 0, sizeof(*best_clock));
+> +	memset(&clock, 0, sizeof(clock));
+>  
+>  	for (clock.m = limit->m.min; clock.m <= limit->m.max; clock.m++) {
+>  		for (clock.p1 = limit->p1.min; clock.p1 <= limit->p1.max;
+> -- 
+> 2.17.1
+> 
 
-Is offlining an interesting path? I would expect onlining to be much
-more interesting one.
-
-> memory holes. We can apply that and see if anybody screams out loud. If not,
-> we can clean up that crap.
 -- 
-Michal Hocko
-SUSE Labs
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
