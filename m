@@ -2,110 +2,137 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F179CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:18:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74B6BCA9EB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:19:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76F4220700
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:18:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46F1F20700
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:19:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fqT9mBFQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YAwJ3bV/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731331AbfJVOSl (ORCPT
+        id S1730399AbfJVOTc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 10:18:41 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:46300 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728346AbfJVOSk (ORCPT
+        Tue, 22 Oct 2019 10:19:32 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:40222 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727582AbfJVOTb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 10:18:40 -0400
-Received: by mail-wr1-f66.google.com with SMTP id n15so7490689wrw.13
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 07:18:39 -0700 (PDT)
+        Tue, 22 Oct 2019 10:19:31 -0400
+Received: by mail-il1-f195.google.com with SMTP id d83so7098204ilk.7;
+        Tue, 22 Oct 2019 07:19:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=NtToSK8rJbeD7PBMEYCkRdUP5O0v+6Pk6qb5FPxPaHI=;
-        b=fqT9mBFQ7+jTdNHtlR1Qw/BBvFcM3GuODdLq7FyGhBcksFS+dx4wN6OE4Agf/J5pjr
-         Fqp4t0l1nA1ttnDxCXTJA04ZiKYTSZ511Y/EPDdJ1SKDk+DeL8zZCVl5se2HsOyZx3rp
-         FIv0Drf//rLGRRN7NrKXb+hhW9J7rH+JkbKwc=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+f3+Xe6vGoRY1MkZlLrpomXTPs0/tCl2G1ZKWZtIxAo=;
+        b=YAwJ3bV/qfhkrwx/pD8NNAOcp8lyAcKZAf0rVGAEA3R+ynDUDgag6Su0pYLScEACaF
+         VdbEM+ccOLQhxi9UHidkOrvDJPqXKGP62aEowqoJ8AWPBqdNFCJmKMzEqZXhpq5Z9P0s
+         h8grN0Ol4cUzSo0r9ZMic6r13EiSk96l/8poQAFEotOMkSrOxXwIbz3nalNS0aN2U7CO
+         zQhZNTYOGlJm1PzXy/JXyk+2P+pSs4WwYMsvx0S2hwQfhNz3xxQjC+UNb9EURlBtsQix
+         6nlfNdHiulpRhMRli6vXbQY/Fmp/xdFt7dANhI9eImDClqjNY+EZmYEkwBuz4WZI7OtN
+         L1RQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=NtToSK8rJbeD7PBMEYCkRdUP5O0v+6Pk6qb5FPxPaHI=;
-        b=gQ6v1PxzOHtCBqGqFD81VvHa31xLS4kwI4AMXabv1f7Sj4vPcWenSfZM10MuKi4y86
-         oRVvwZRSsfXqDZ1oduBmOC7MefrrJAVbfIjHPtpSXs/CfyMc2IMRppA7fRr7Mljrodsf
-         zgmGRaoJogAK84lMDginoUlCkHoCpOwWRz/biZWePQM6CtiwDATweuzNMFfr+tvDETGO
-         NJqCbw0T508bgNjRVcghNW8k4PCL0LseTGLHcJdqNP2UcDpQrC1y34WCq56f1kxOlFn/
-         zgpVoKZx1UhQLhruUfV22HfYQrRl1rdW1P8aLW1yo1n5qvQa5CRczaWXYCKQQr2wGc43
-         v0fg==
-X-Gm-Message-State: APjAAAUTY5COCpTGyt9NFDMwqLXlZAjrV0yowm5dwyBiS5ZGHW0jPdMA
-        xo7Jh7CRZH7pYcyLe5rk0aKNK/oHWtM=
-X-Google-Smtp-Source: APXvYqwdty9Um7w4UJrNY05wfS63/GznTNrL1FldtQvvbiZP/oxW3Vf/cmZe+IB0wN0m4KhS6Xx6Dw==
-X-Received: by 2002:adf:9486:: with SMTP id 6mr3604509wrr.28.1571753918818;
-        Tue, 22 Oct 2019 07:18:38 -0700 (PDT)
-Received: from kpsingh-kernel.localdomain ([2620:0:105f:fd00:7101:e21a:33a0:90d9])
-        by smtp.gmail.com with ESMTPSA id l14sm2886585wrr.37.2019.10.22.07.18.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Oct 2019 07:18:37 -0700 (PDT)
-From:   KP Singh <kpsingh@chromium.org>
-To:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Florent Revest <revest@chromium.org>
-Subject: [PATCH bpf-next] libbpf: Fix strncat bounds error in libbpf_prog_type_by_name
-Date:   Tue, 22 Oct 2019 16:18:33 +0200
-Message-Id: <20191022141833.5706-1-kpsingh@chromium.org>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+f3+Xe6vGoRY1MkZlLrpomXTPs0/tCl2G1ZKWZtIxAo=;
+        b=OgQoDv0WwkukYUjcisPhthKZz43ppQbv3rfulGPW4g/Bazo2eozBSicGSxURF7IBFQ
+         pyO3Nq0ghve0KhlfCYQrbf8sXs9hf0QTJkfEZvzGOkvH/U/E3nxXK24AtLr2vhBpXSic
+         OMW311+uZkTPyjpD/8+j+H2qzyUiIUumY+hfhrSro2afKiLCDAtC3lPRYjGLEfberAQZ
+         kkPXkY8OnKTyIrHwoJnh7Mog/aE+0GDNhIuOiMf21x6KgdS83MPkGRgqF8hr6K4esuos
+         MIyU1dbDW+863DRP3LvDnYYV2//7BrlNz1mTlpvLCQLHuJREcoBJ7CazNDT4MnusK37d
+         bN0g==
+X-Gm-Message-State: APjAAAUfpNBlfcbap9iYUnf7I3zy7wrPD5LRavN1+na/Ui7x7mZbBqsK
+        VOV4K6BlrxvLQykxn+OEWf4JHLbOtfgH9hfI1M0=
+X-Google-Smtp-Source: APXvYqzYgoObKadQNqP9/pOBBZSO8nRSPoX0xvkFOCE5TKS5+426FdTSaMvdKNMXLC9KHJtsRM3Xeaiu0SFDiXeY/qA=
+X-Received: by 2002:a92:1d51:: with SMTP id d78mr10157573ild.166.1571753970497;
+ Tue, 22 Oct 2019 07:19:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <1571749887-9054-1-git-send-email-gupt21@gmail.com>
+In-Reply-To: <1571749887-9054-1-git-send-email-gupt21@gmail.com>
+From:   rishi gupta <gupt21@gmail.com>
+Date:   Tue, 22 Oct 2019 19:49:19 +0530
+Message-ID: <CALUj-gtADUhcUPmtOyjxwJCKhBcUOJaSdQd0H0J+JuSZ-yZEDQ@mail.gmail.com>
+Subject: Re: [PATCH v5 3/3] iio: documentation: light: Add veml6030 sysfs documentation
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     knaack.h@gmx.de, lars@metafoo.de,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        gregkh@linuxfoundation.org, tglx@linutronix.de,
+        allison@lohutok.net, alexios.zavras@intel.com, angus@akkea.ca,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: KP Singh <kpsingh@google.com>
+Forget to capture in change log:
+removed PSM sysfs completely.
 
-On compiling samples with this change, one gets an error:
-
- error: ‘strncat’ specified bound 118 equals destination size
-  [-Werror=stringop-truncation]
-
-    strncat(dst, name + section_names[i].len,
-    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     sizeof(raw_tp_btf_name) - (dst - raw_tp_btf_name));
-     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-strncat requires the destination to have enough space for the
-terminating null byte.
-
-Fixes: f75a697e09137 ("libbpf: Auto-detect btf_id of BTF-based raw_tracepoint")
-Signed-off-by: KP Singh <kpsingh@google.com>
----
- tools/lib/bpf/libbpf.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-index 9364e66d755d..5fff3f15d705 100644
---- a/tools/lib/bpf/libbpf.c
-+++ b/tools/lib/bpf/libbpf.c
-@@ -4666,7 +4666,7 @@ int libbpf_prog_type_by_name(const char *name, enum bpf_prog_type *prog_type,
- 			}
- 			/* prepend "btf_trace_" prefix per kernel convention */
- 			strncat(dst, name + section_names[i].len,
--				sizeof(raw_tp_btf_name) - (dst - raw_tp_btf_name));
-+				sizeof(raw_tp_btf_name) - (dst - raw_tp_btf_name + 1));
- 			ret = btf__find_by_name(btf, raw_tp_btf_name);
- 			btf__free(btf);
- 			if (ret <= 0) {
--- 
-2.20.1
-
+On Tue, Oct 22, 2019 at 6:41 PM Rishi Gupta <gupt21@gmail.com> wrote:
+>
+> The driver for veml6030 light sensor provides sysfs
+> entries like configuring cutoff for interrupt. This
+> commit document them.
+>
+> Signed-off-by: Rishi Gupta <gupt21@gmail.com>
+> ---
+> Changes in v5:
+> * Use ABI/testing/sysfs-bus-iio to document sysfs files for veml6030
+>
+> Changes in v4:
+> * None
+>
+> Changes in v3:
+> * Updated Date from September to October
+> * Updated KernelVersion from 5.3.1 to 5.4
+> * in_illuminance_period_available is now in events directory
+>
+> Changes in v2:
+> * None
+>
+>  Documentation/ABI/testing/sysfs-bus-iio | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+>
+> diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
+> index 6804516..a26d532 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-iio
+> +++ b/Documentation/ABI/testing/sysfs-bus-iio
+> @@ -753,6 +753,8 @@ What:               /sys/.../events/in_illuminance0_thresh_falling_value
+>  what:          /sys/.../events/in_illuminance0_thresh_rising_value
+>  what:          /sys/.../events/in_proximity0_thresh_falling_value
+>  what:          /sys/.../events/in_proximity0_thresh_rising_value
+> +What:          /sys/.../events/in_illuminance_thresh_rising_value
+> +What:          /sys/.../events/in_illuminance_thresh_falling_value
+>  KernelVersion: 2.6.37
+>  Contact:       linux-iio@vger.kernel.org
+>  Description:
+> @@ -972,6 +974,7 @@ What:               /sys/.../events/in_activity_jogging_thresh_rising_period
+>  What:          /sys/.../events/in_activity_jogging_thresh_falling_period
+>  What:          /sys/.../events/in_activity_running_thresh_rising_period
+>  What:          /sys/.../events/in_activity_running_thresh_falling_period
+> +What:          /sys/.../events/in_illuminance_thresh_either_period
+>  KernelVersion: 2.6.37
+>  Contact:       linux-iio@vger.kernel.org
+>  Description:
+> @@ -1715,3 +1718,12 @@ Description:
+>                 Mass concentration reading of particulate matter in ug / m3.
+>                 pmX consists of particles with aerodynamic diameter less or
+>                 equal to X micrometers.
+> +
+> +What:          /sys/bus/iio/devices/iio:deviceX/events/in_illuminance_period_available
+> +Date:          October 2019
+> +KernelVersion: 5.4
+> +Contact:       linux-iio@vger.kernel.org
+> +Description:
+> +               List of valid values available in multiples of integration time
+> +               for which the light intensity must be above the threshold level
+> +               before interrupt is asserted. This refers to persistence values.
+> --
+> 2.7.4
+>
