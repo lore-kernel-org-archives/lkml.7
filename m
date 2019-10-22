@@ -2,192 +2,130 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67B5FCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:43:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 313C1CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:50:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ECBC2084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:43:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D1E720B7C
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:50:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="D8bfP3dY"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cS9amdW/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731889AbfJVRnD (ORCPT
+        id S1730752AbfJVRuM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 13:43:03 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:42307 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731053AbfJVRnC (ORCPT
+        Tue, 22 Oct 2019 13:50:12 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:37731 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727881AbfJVRuM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 13:43:02 -0400
-Received: by mail-oi1-f193.google.com with SMTP id i185so14918203oif.9
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 10:43:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MHo+bPZ3FyZTrXrvFae5gOHqYffPj0NYcnQ23J1Mtd8=;
-        b=D8bfP3dYb9Xw3Ejz/XW6sJaiJoIzrU0if9m7dseFDXz0GuoQXFZZBSTgbjJU0sjON7
-         CTsIv3bjWf2AvHSPeKOaRXcyEjBAx+URak3jnpv4lulJ/EVuiqqWnNdoWoe554TF/cJ0
-         FU8/9VTLt4e6HnKwcSlzNGR54imzjgAORjvN05VsZdT3aFYiGR+7MO+6zvojPCzmaXQe
-         rqmerCdhyIjHFH+noVK7tj/FkhNO4aAZ0Up4wIhGTOOBiYn85Qd1A+J2olHu9J0wWQTq
-         mFpeecULEnrKhZxONseYGkjQ356U0Iwm1ionhs0PmWk/gwCIyyzyxv1w+qkcqY7dnMsh
-         p2hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MHo+bPZ3FyZTrXrvFae5gOHqYffPj0NYcnQ23J1Mtd8=;
-        b=oAc4iGIcb90FIkBqLihQJkShxv9xUdlKmNebe0Jx/rPri2rXMvtmrcYMrkpYDHcO2W
-         sRzvdRJJr2+NhZDC9enb3vD4jd0M/mxxSLiE5S3pgADWPUMGX7yOjNdtTaSSwAnysLBq
-         980GasgeIcRtP7f3a1ETjywEOcbc2uZwuCQIU9RcD0nPUSUpYVG1cfADyO1/HoCGruXF
-         1qR91AVCDei9LbQID4GjQcEhRuisHIBLJbK7lSpL72IoiRzEJdHStT976pVv1NGuYd/T
-         QE7H0/kJiN90YhGyEuoLyjdMCTR1ZorphUgSvQ3L4G1YXCGNDP9O+KWj6qrVJxdWgtdh
-         uteA==
-X-Gm-Message-State: APjAAAXpUMFghYRXABzvN0bmi+7d3wFlULcmMUnThelTnN48BnoERgcS
-        rNbSlvEa7LV4Idddqfbm+N8CTsw6AriyP8Y+3jMFdw==
-X-Google-Smtp-Source: APXvYqxfVwLHQu/nljm2npVYMv0/xxXLHw8hKdDqlhGb7PXQz9eRPAcgKMk0ub1hWAYFfjq7ip3as3hOP5jSlLN4VGw=
-X-Received: by 2002:aca:f492:: with SMTP id s140mr4056153oih.83.1571766180963;
- Tue, 22 Oct 2019 10:43:00 -0700 (PDT)
+        Tue, 22 Oct 2019 13:50:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571766611;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=vV5R9JFSPuxaXsrBZzTkyUrLqrzYx1h6I7SHkYotgvg=;
+        b=cS9amdW/YAfj40V4jxjwWhX4voAhIkTPId9a+Jb814cCva5bup/OfKoEOzWAaKC7mmDjq1
+        poVxivnxUFQSyGEBS6WyQy5uKFbx7oZ+dQVyIyzKGCHXy1hcxn9bem4enET5B+pkTXOH/8
+        E/w5a+hmTtSclDjgDP24WHJKYZMWT6U=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-84-hnVfKaHvOz2UMHYu4vAX0w-1; Tue, 22 Oct 2019 13:50:07 -0400
+X-MC-Unique: hnVfKaHvOz2UMHYu4vAX0w-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9DCC21005509;
+        Tue, 22 Oct 2019 17:50:05 +0000 (UTC)
+Received: from linux-ws.nc.xsintricity.com (ovpn-112-37.rdu2.redhat.com [10.10.112.37])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0E1E41001B3F;
+        Tue, 22 Oct 2019 17:50:02 +0000 (UTC)
+Message-ID: <edc0090d294d23451cc174835fedf9f0c4cd825a.camel@redhat.com>
+Subject: Re: [PATCH] RDMA/hns: Fix build error again
+From:   Doug Ledford <dledford@redhat.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Lijun Ou <oulijun@huawei.com>,
+        "Wei Hu(Xavier)" <xavier.huwei@huawei.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Hulk Robot <hulkci@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Shaobo Xu <xushaobo2@huawei.com>,
+        Shamir Rabinovitch <shamir.rabinovitch@oracle.com>,
+        Xi Wang <wangxi11@huawei.com>, Tao Tian <tiantao6@huawei.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Tue, 22 Oct 2019 13:50:00 -0400
+In-Reply-To: <CAK8P3a071AHaN0Jb9dX5c3syQZZPgaR9bX3V3nseDTsPvgDWGg@mail.gmail.com>
+References: <20191007211826.3361202-1-arnd@arndb.de>
+         <113038cde3f1335ba9bf4d66f22f0a536b70ef1f.camel@redhat.com>
+         <CAK8P3a071AHaN0Jb9dX5c3syQZZPgaR9bX3V3nseDTsPvgDWGg@mail.gmail.com>
+Organization: Red Hat, Inc.
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30)
 MIME-Version: 1.0
-References: <20191017141305.146193-1-elver@google.com> <20191017141305.146193-2-elver@google.com>
- <20191022154858.GA13700@redhat.com>
-In-Reply-To: <20191022154858.GA13700@redhat.com>
-From:   Marco Elver <elver@google.com>
-Date:   Tue, 22 Oct 2019 19:42:48 +0200
-Message-ID: <CANpmjNPUT2B3rWaa=5Ee2Xs3HHDaUiBGpG09Q4h9Gemhsp9KFw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/8] kcsan: Add Kernel Concurrency Sanitizer infrastructure
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Alexander Potapenko <glider@google.com>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Borislav Petkov <bp@alien8.de>, Daniel Axtens <dja@axtens.net>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        David Howells <dhowells@redhat.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-efi@vger.kernel.org,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Mimecast-Spam-Score: 0
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-JAbWIVJ500SGnZMy61hI"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 22 Oct 2019 at 17:49, Oleg Nesterov <oleg@redhat.com> wrote:
->
-> On 10/17, Marco Elver wrote:
-> >
-> > +     /*
-> > +      * Delay this thread, to increase probability of observing a racy
-> > +      * conflicting access.
-> > +      */
-> > +     udelay(get_delay());
-> > +
-> > +     /*
-> > +      * Re-read value, and check if it is as expected; if not, we infer a
-> > +      * racy access.
-> > +      */
-> > +     switch (size) {
-> > +     case 1:
-> > +             is_expected = expect_value._1 == READ_ONCE(*(const u8 *)ptr);
-> > +             break;
-> > +     case 2:
-> > +             is_expected = expect_value._2 == READ_ONCE(*(const u16 *)ptr);
-> > +             break;
-> > +     case 4:
-> > +             is_expected = expect_value._4 == READ_ONCE(*(const u32 *)ptr);
-> > +             break;
-> > +     case 8:
-> > +             is_expected = expect_value._8 == READ_ONCE(*(const u64 *)ptr);
-> > +             break;
-> > +     default:
-> > +             break; /* ignore; we do not diff the values */
-> > +     }
-> > +
-> > +     /* Check if this access raced with another. */
-> > +     if (!remove_watchpoint(watchpoint)) {
-> > +             /*
-> > +              * No need to increment 'race' counter, as the racing thread
-> > +              * already did.
-> > +              */
-> > +             kcsan_report(ptr, size, is_write, smp_processor_id(),
-> > +                          kcsan_report_race_setup);
-> > +     } else if (!is_expected) {
-> > +             /* Inferring a race, since the value should not have changed. */
-> > +             kcsan_counter_inc(kcsan_counter_races_unknown_origin);
-> > +#ifdef CONFIG_KCSAN_REPORT_RACE_UNKNOWN_ORIGIN
-> > +             kcsan_report(ptr, size, is_write, smp_processor_id(),
-> > +                          kcsan_report_race_unknown_origin);
-> > +#endif
-> > +     }
->
-> Not sure I understand this code...
->
-> Just for example. Suppose that task->state = TASK_UNINTERRUPTIBLE, this task
-> does __set_current_state(TASK_RUNNING), another CPU does wake_up_process(task)
-> which does the same UNINTERRUPTIBLE -> RUNNING transition.
->
-> Looks like, this is the "data race" according to kcsan?
+--=-JAbWIVJ500SGnZMy61hI
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Yes, they are "data races". They are probably not "race conditions" though.
+On Mon, 2019-10-21 at 23:51 +0200, Arnd Bergmann wrote:
+> On Mon, Oct 21, 2019 at 11:09 PM Doug Ledford <dledford@redhat.com>
+> wrote:
+> > This fix looks reasonable, but since I can't test this at all, and
+> > I'm
+> > personally tired of trying and failing to fix this issue, I need to
+> > ask
+> > if you've tried all the permutations for this just to confirm it
+> > works
+> > in all valid cases?
+>=20
+> I'm fairly sure I would have found them all by now: Since I sent this
+> patch I built 4680 randconfig kernels, 293 of which had some HNS
+> driver enabled.
+>=20
+> I also like to think that I spent more time to think it through in
+> theory.
 
-This is a fair distinction to make, and we never claimed to find "race
-conditions" only -- race conditions are logic bugs that result in bad
-state due to unexpected interleaving of threads. Data races are more
-subtle, and become relevant at the programming language level.
+I reviewed it pretty closely, and I couldn't find any way in which I
+thought it would fail, I'm just being picky because I want this to be
+the last fix ;-)
 
-In Documentation we summarize: "Informally, two operations conflict if
-they access the same memory location, and at least one of them is a
-write operation. In an execution, two memory operations from different
-threads form a data-race if they conflict, at least one of them is a
-*plain* access (non-atomic), and they are unordered in the
-"happens-before" order according to the LKMM."
+--=20
+Doug Ledford <dledford@redhat.com>
+    GPG KeyID: B826A3330E572FDD
+    Fingerprint =3D AE6B 1BDA 122B 23B4 265B  1274 B826 A333 0E57 2FDD
 
-KCSAN's goal is to find *data races* according to the LKMM.  Some data
-races are race conditions (usually the more interesting bugs) -- but
-not *all* data races are race conditions. Those are what are usually
-referred to as "benign", but they can still become bugs on the wrong
-arch/compiler combination. Hence, the need to annotate these accesses
-with READ_ONCE, WRITE_ONCE or use atomic_t:
-- https://lwn.net/Articles/793253/
-- https://lwn.net/Articles/799218/
+--=-JAbWIVJ500SGnZMy61hI
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
-> Hmm. even the "if (!(p->state & state))" check in try_to_wake_up() can trigger
-> kcsan_report() ?
+-----BEGIN PGP SIGNATURE-----
 
-We blacklisted sched (KCSAN_SANITIZE := n   in kernel/sched/Makefile),
-so these data races won't actually be reported.
+iQIzBAABCAAdFiEErmsb2hIrI7QmWxJ0uCajMw5XL90FAl2vQUgACgkQuCajMw5X
+L93xlw/8CVxWkpoZYKzUO1eqL1qucmpiLHo2PSSUBHKPM8BBbNWcai0T/w1Y7nQC
+LFvuE21ydBtwccJcB0juPQKoMTrIzqM4AzZAlCodBM9L9iJiCL72E0uoNTDsa/LK
+6dxi4V+GpM/86aIXjNEeaZ7Eqrn/z7m1x4mYY7lYv/UEd/ms/fGiASCcYhMvouGh
+sQe0rKiMn4ODzy1xV/tQfKsARfxhT4ntvCAJpgxnqBNxyW+o6rQI3srPtu1BrFgG
+KqauoqAj2x4V+xYAs+2UtndWeejPtfkOlwjhSJuHHIaaUzuRRYNgoolaN+Uk5n5X
+9qlMAPihrUgApxQIRYtfF53b89SHeSEU+AbQHQcgBcvab6+DyGf0x+oBDGaxqopU
+yalV1i3Ob67B/aOxWxiFOL76OHmloH9K09aMMbiKZOZBlg8iRPxPbifPClG+0LUs
+TuLt85wXiRIMN/GUdor8yv5WrH8e0d9Tzw7Kl1Mbwcw/Yjl08wZu1fUmoY0MEsR+
+M1ovstGW/HYNOa8rLB3i2mARCh+pgpTa7eMY7KSulZcRcFPQzsTAlHMmVWXGvp77
+ykf78xjelP50tQmhRTS8athuj/SSl17isfifcNPfXjDMDWYwM3icMQ/qrf6b6bV1
+RF7j2+3P9eHOw7Z/RJasCXOMZhlsfpzafuaspt+6ONawylNdaWM=
+=C6YR
+-----END PGP SIGNATURE-----
 
-Thanks,
--- Marco
+--=-JAbWIVJ500SGnZMy61hI--
 
-> Oleg.
->
