@@ -2,111 +2,223 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02ADACA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 10:01:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA986CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 10:03:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD40E2064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 10:01:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571738515;
-	bh=zU77JOPItwE0kfL2VdVJZpqjmZAJj7PLPPh8VoTKlPI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=k0Wx25saWrSftagAfOgx7ZROtQTx8eiYjkkcaBxghBknrfDUmtnB9KjpRHkZwe5uZ
-	 32pmF0sAH1OD0JrwA8nHNxGD3y89EOeKwaiGxJvqrBPS6X2cLmd4Gh3oE6VGqH05pg
-	 OuPe9eulRWC0fuUrC/VchGQ0kDP/2bIDPXejT/kA=
+	by mail.kernel.org (Postfix) with ESMTP id 7EF5A21872
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 10:03:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731661AbfJVKBy (ORCPT
+        id S1731672AbfJVKDk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 06:01:54 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:39759 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727101AbfJVKBx (ORCPT
+        Tue, 22 Oct 2019 06:03:40 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:46892 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729388AbfJVKDj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 06:01:53 -0400
-Received: by mail-oi1-f196.google.com with SMTP id w144so13656852oia.6;
-        Tue, 22 Oct 2019 03:01:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QymUh+Fku1vQVHvu/DETUtAo+Qu6b8CnaBuQss7KKWQ=;
-        b=h2iFRY8kvTIp3uSv1xdak5KNpDhBffU8tz5cQttN6wCNauPnlPr4C5ZPCzDK5CEjVa
-         Jxoa41P5dwq9bKhkzqx0Lhpe3IpS9iFh9cyJ3exTdWgUzJ6R+9ID9etOk3itNUlrar2D
-         XYT0qtXndeRj9xZtnfwNHPtyn0MofhuSzR1VX+og2nVBKLSnEFyMwBpZeIHjZ8WPEg5K
-         TRHJZ9fOqANYXYSxnM2D98uyiYJbtjOwM5X9RI90k+PrtRht3xEJJhiPmQx7AT9si9UM
-         hA1O2FwqFUJUiCozB/kw6xe9MWnkXAuC990fm+qCTFujfjkbLRyGorM16gj6rzx+yPZA
-         07tw==
-X-Gm-Message-State: APjAAAWTo+kUSUZW11FBs6JEIIRg89XQoX2SG8iweGe3VcITONwczN4m
-        pCbAufSGXt3fuEq6mWhOJ1bXI0QjGhu5O60Zt6M=
-X-Google-Smtp-Source: APXvYqwN0bxJxdIvFNnaNORZKQBNabY4ldLgTUIlNjE1Z7rAnNoVLH34CBEzb2jBIdbGQUA6pt46njyJIVaN1WsCNSA=
-X-Received: by 2002:aca:d405:: with SMTP id l5mr2047939oig.115.1571738512905;
- Tue, 22 Oct 2019 03:01:52 -0700 (PDT)
+        Tue, 22 Oct 2019 06:03:39 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 36B6328D57C
+Subject: Re: [PATCH v2 05/18] platform: chrome: cros-ec: record event
+ timestamp in the hard irq
+To:     Gwendal Grignou <gwendal@chromium.org>, briannorris@chromium.org,
+        jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, lee.jones@linaro.org, bleung@chromium.org,
+        dianders@chromium.org, groeck@chromium.org,
+        fabien.lahoudere@collabora.com
+Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        Rushikesh S Kadam <rushikesh.s.kadam@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Jett Rink <jettrink@chromium.org>
+References: <20191021055403.67849-1-gwendal@chromium.org>
+ <20191021055403.67849-6-gwendal@chromium.org>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <176f0ed8-5dd8-ca79-17c6-3b2e2f3a1aaa@collabora.com>
+Date:   Tue, 22 Oct 2019 12:03:34 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <157118756627.2063440.9878062995925617180.stgit@dwillia2-desk3.amr.corp.intel.com>
- <157118757175.2063440.9248947575330904096.stgit@dwillia2-desk3.amr.corp.intel.com>
- <CAJZ5v0i-hhasNCD6Ur8VLfrkc+4GOeNXXX_ZNFZjcY6F51ciSQ@mail.gmail.com>
-In-Reply-To: <CAJZ5v0i-hhasNCD6Ur8VLfrkc+4GOeNXXX_ZNFZjcY6F51ciSQ@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 22 Oct 2019 12:01:42 +0200
-Message-ID: <CAJZ5v0j_-iSqiysZiW=J8Y5FCAjnPC7ZvevrLsYhngWr6mT6GQ@mail.gmail.com>
-Subject: Re: [PATCH v7 01/12] acpi/numa: Establish a new drivers/acpi/numa/ directory
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Ingo Molnar <mingo@redhat.com>, Len Brown <lenb@kernel.org>,
-        Keith Busch <kbusch@kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191021055403.67849-6-gwendal@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 11:25 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
->
->  On Wed, Oct 16, 2019 at 3:13 AM Dan Williams <dan.j.williams@intel.com> wrote:
-> >
-> > Currently hmat.c lives under an "hmat" directory which does not enhance
-> > the description of the file. The initial motivation for giving hmat.c
-> > its own directory was to delineate it as mm functionality in contrast to
-> > ACPI device driver functionality.
-> >
-> > As ACPI continues to play an increasing role in conveying
-> > memory location and performance topology information to the OS take the
-> > opportunity to co-locate these NUMA relevant tables in a combined
-> > directory.
-> >
-> > numa.c is renamed to srat.c and moved to drivers/acpi/numa/ along with
-> > hmat.c.
-> >
-> > Cc: Len Brown <lenb@kernel.org>
-> > Cc: Keith Busch <kbusch@kernel.org>
-> > Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
-> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
->
-> Please note that https://patchwork.kernel.org/patch/11078171/ is being
-> pushed to Linus (it is overdue anyway), so if it is pulled, there will
-> be a merge conflict with this patch.
->
-> Respin maybe?
+Hi Gwendal,
 
-Actually, would you mind it if I took this one into the ACPI tree right away?
+Cc'ing some ISHTP people as I don't have the hardware. If possible, could any of
+you give us your Tested-by tag?
 
-There's https://patchwork.kernel.org/patch/11198373/ queued up that,
-again, will clash with it.
+On 21/10/19 7:53, Gwendal Grignou wrote:
+> To improve sensor timestamp precision, given EC and AP are in
+> different time domains, the AP needs to try to record the exact
+> moment an event was signalled to the AP by the EC as soon as
+> possible after it happens.
+> 
+> First thing in the hard irq is the best place for this.
+> 
+> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
 
-Also, there is the generic Initiator proximity domains series from
-Jonathan depending on it and I would like to move forward with that
-one if there are no objections.
+Gwendal, I am right saying that this patch can be applied independently of the
+others and has no dependencies?
+
+Thanks,
+ Enric
+
+> ---
+> Changes in v2:
+>   Make cros_ec_get_time_ns inline.
+>   Using ktime_t instead of s64 when dealing with time.
+>   Added code in ishtp to gather timestamp.
+> 
+>  drivers/platform/chrome/cros_ec.c           | 12 +++++++++++-
+>  drivers/platform/chrome/cros_ec_ishtp.c     | 17 +++++++++++++++--
+>  drivers/platform/chrome/cros_ec_lpc.c       |  2 ++
+>  include/linux/platform_data/cros_ec_proto.h | 16 ++++++++++++++++
+>  4 files changed, 44 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/platform/chrome/cros_ec.c b/drivers/platform/chrome/cros_ec.c
+> index 9b2d07422e175..739f3cffe26e3 100644
+> --- a/drivers/platform/chrome/cros_ec.c
+> +++ b/drivers/platform/chrome/cros_ec.c
+> @@ -31,6 +31,15 @@ static struct cros_ec_platform pd_p = {
+>  	.cmd_offset = EC_CMD_PASSTHRU_OFFSET(CROS_EC_DEV_PD_INDEX),
+>  };
+>  
+> +static irqreturn_t ec_irq_handler(int irq, void *data)
+> +{
+> +	struct cros_ec_device *ec_dev = data;
+> +
+> +	ec_dev->last_event_time = cros_ec_get_time_ns();
+> +
+> +	return IRQ_WAKE_THREAD;
+> +}
+> +
+>  static irqreturn_t ec_irq_thread(int irq, void *data)
+>  {
+>  	struct cros_ec_device *ec_dev = data;
+> @@ -141,7 +150,8 @@ int cros_ec_register(struct cros_ec_device *ec_dev)
+>  	}
+>  
+>  	if (ec_dev->irq) {
+> -		err = devm_request_threaded_irq(dev, ec_dev->irq, NULL,
+> +		err = devm_request_threaded_irq(
+> +				dev, ec_dev->irq, ec_irq_handler,
+>  				ec_irq_thread, IRQF_TRIGGER_LOW | IRQF_ONESHOT,
+>  				"chromeos-ec", ec_dev);
+>  		if (err) {
+> diff --git a/drivers/platform/chrome/cros_ec_ishtp.c b/drivers/platform/chrome/cros_ec_ishtp.c
+> index 25ca2c894b4de..5c848f22b44b4 100644
+> --- a/drivers/platform/chrome/cros_ec_ishtp.c
+> +++ b/drivers/platform/chrome/cros_ec_ishtp.c
+> @@ -200,13 +200,14 @@ static int ish_send(struct ishtp_cl_data *client_data,
+>   * process_recv() - Received and parse incoming packet
+>   * @cros_ish_cl: Client instance to get stats
+>   * @rb_in_proc: Host interface message buffer
+> + * @timestamp: Timestamp of when parent callback started
+>   *
+>   * Parse the incoming packet. If it is a response packet then it will
+>   * update per instance flags and wake up the caller waiting to for the
+>   * response. If it is an event packet then it will schedule event work.
+>   */
+>  static void process_recv(struct ishtp_cl *cros_ish_cl,
+> -			 struct ishtp_cl_rb *rb_in_proc)
+> +			 struct ishtp_cl_rb *rb_in_proc, ktime_t timestamp)
+>  {
+>  	size_t data_len = rb_in_proc->buf_idx;
+>  	struct ishtp_cl_data *client_data =
+> @@ -295,6 +296,11 @@ static void process_recv(struct ishtp_cl *cros_ish_cl,
+>  		break;
+>  
+>  	case CROS_MKBP_EVENT:
+> +		/*
+> +		 * Set timestamp from beginning of function since we actually
+> +		 * got an incoming MKBP event
+> +		 */
+> +		client_data->ec_dev->last_event_time = timestamp;
+>  		/* The event system doesn't send any data in buffer */
+>  		schedule_work(&client_data->work_ec_evt);
+>  
+> @@ -322,10 +328,17 @@ static void ish_event_cb(struct ishtp_cl_device *cl_device)
+>  {
+>  	struct ishtp_cl_rb *rb_in_proc;
+>  	struct ishtp_cl	*cros_ish_cl = ishtp_get_drvdata(cl_device);
+> +	ktime_t timestamp;
+> +
+> +	/*
+> +	 * Take timestamp as close to hardware interrupt as possible for sensor
+> +	 * timestamps.
+> +	 */
+> +	timestamp = cros_ec_get_time_ns();
+>  
+>  	while ((rb_in_proc = ishtp_cl_rx_get_rb(cros_ish_cl)) != NULL) {
+>  		/* Decide what to do with received data */
+> -		process_recv(cros_ish_cl, rb_in_proc);
+> +		process_recv(cros_ish_cl, rb_in_proc, timestamp);
+>  	}
+>  }
+>  
+> diff --git a/drivers/platform/chrome/cros_ec_lpc.c b/drivers/platform/chrome/cros_ec_lpc.c
+> index 7d10d909435ff..3c77496e164da 100644
+> --- a/drivers/platform/chrome/cros_ec_lpc.c
+> +++ b/drivers/platform/chrome/cros_ec_lpc.c
+> @@ -313,6 +313,8 @@ static void cros_ec_lpc_acpi_notify(acpi_handle device, u32 value, void *data)
+>  {
+>  	struct cros_ec_device *ec_dev = data;
+>  
+> +	ec_dev->last_event_time = cros_ec_get_time_ns();
+> +
+>  	if (ec_dev->mkbp_event_supported &&
+>  	    cros_ec_get_next_event(ec_dev, NULL) > 0)
+>  		blocking_notifier_call_chain(&ec_dev->event_notifier, 0,
+> diff --git a/include/linux/platform_data/cros_ec_proto.h b/include/linux/platform_data/cros_ec_proto.h
+> index 691f9e953a96a..b183024fef1f6 100644
+> --- a/include/linux/platform_data/cros_ec_proto.h
+> +++ b/include/linux/platform_data/cros_ec_proto.h
+> @@ -122,6 +122,8 @@ struct cros_ec_command {
+>   * @event_data: Raw payload transferred with the MKBP event.
+>   * @event_size: Size in bytes of the event data.
+>   * @host_event_wake_mask: Mask of host events that cause wake from suspend.
+> + * @last_event_time: exact time from the hard irq when we got notified of
+
+nit: s/e/E/
+
+> + *     a new event.
+>   * @ec: The platform_device used by the mfd driver to interface with the
+>   *      main EC.
+>   * @pd: The platform_device used by the mfd driver to interface with the
+> @@ -162,6 +164,7 @@ struct cros_ec_device {
+>  	int event_size;
+>  	u32 host_event_wake_mask;
+>  	u32 last_resume_result;
+> +	ktime_t last_event_time;
+>  
+>  	/* The platform devices used by the mfd driver */
+>  	struct platform_device *ec;
+> @@ -210,4 +213,17 @@ int cros_ec_check_features(struct cros_ec_dev *ec, int feature);
+>  
+>  int cros_ec_get_sensor_count(struct cros_ec_dev *ec);
+>  
+> +/**
+> + * cros_ec_get_time_ns - Return time in ns.
+> + *
+> + * This is the function used to record the time for last_event_time in struct
+> + * cros_ec_device during the hard irq.
+> + *
+> + * Return: ktime_t format since boot.
+> + */
+> +static inline ktime_t cros_ec_get_time_ns(void)
+> +{
+> +	return ktime_get_boottime_ns();
+> +}
+> +
+>  #endif /* __LINUX_CROS_EC_PROTO_H */
+> 
