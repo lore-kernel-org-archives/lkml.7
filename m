@@ -2,170 +2,127 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B02FCA9EB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 18:42:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51172CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 18:42:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 316C6218AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 18:42:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2576E2184C
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 18:42:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="lC/Nm3hC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ouZ+YfdY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732771AbfJVSmA (ORCPT
+        id S2387932AbfJVSm2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 14:42:00 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:15076 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732728AbfJVSl7 (ORCPT
+        Tue, 22 Oct 2019 14:42:28 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:39440 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731740AbfJVSm2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 14:41:59 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5daf4d7b0000>; Tue, 22 Oct 2019 11:42:03 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 22 Oct 2019 11:41:58 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 22 Oct 2019 11:41:58 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 22 Oct
- 2019 18:41:57 +0000
-Received: from [10.110.48.28] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 22 Oct
- 2019 18:41:57 +0000
-Subject: Re: [PATCH 1/1] mm/gup_benchmark: fix MAP_HUGETLB case
-To:     Jerome Glisse <jglisse@redhat.com>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Keith Busch <keith.busch@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-        <linux-kselftest@vger.kernel.org>
-References: <20191021212435.398153-1-jhubbard@nvidia.com>
- <20191021212435.398153-2-jhubbard@nvidia.com>
- <20191022171452.GA5169@redhat.com>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <1095fd94-1c0b-de61-7ceb-c963e29575b6@nvidia.com>
-Date:   Tue, 22 Oct 2019 11:41:57 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 22 Oct 2019 14:42:28 -0400
+Received: by mail-qk1-f194.google.com with SMTP id 4so17248732qki.6;
+        Tue, 22 Oct 2019 11:42:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=z5E1UgKK0swToOdaVE1vrj3rS3+MfFMI5KCYTwUDvjE=;
+        b=ouZ+YfdYnsqEG5Mrfhnl/oCGv5/i4ar9VvOIlc4u5soJ6wiKu3idpcvTMQzeVKdYJj
+         YKlbkjvMGpn2hsI8O7MDIylhFSi3KWkYOVyN4K/dWGUedAQh9kUXg7v6LvwZEIrtRHCw
+         8ttqR5gF74VH2eD20Nkmclpcr/DlXhdynNrMkGDkAHiWXaivE0V4KSp7gtq75ZPzqW17
+         0SQS0+7fTMR/oe9ubNe8NBEkNdavt/TH9NwMkKpkEhWzd9g/4mQQr8wKHqC9WgwZaW3S
+         xa2cQAjhQ9BzPkXRSuMA0ys/rEybm8dKUHo+sFTQW7ezmeMbSUIjCMSnc0e+9+Gm/N5F
+         QwWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=z5E1UgKK0swToOdaVE1vrj3rS3+MfFMI5KCYTwUDvjE=;
+        b=pO1O1ASq5PQBZY6aDMWeUVnlqcbZICVpo2NcmUWSz5J93g9r1WoNUDQ11VULmrHnC8
+         NuoS+cDLQJycn616/evaehottnmpap1YaqeO4DrEGCmPxcX61CvVtYnrGxBTNfBi8KIl
+         TYayl++NDYYwahOT/hJ+SEGdKbVboFOM6MIASYqSi1J+Xz5bkzqvn85lBe2qYmbNKtQQ
+         r4JZV9wxo3QXu3qVsq8lqkJj4jy/3ZzPZJWiiX34HW+KZsfphRIMSAOtvQgirIEC53KO
+         92Na/1VgoAPw6ZD6BvwXrHLosjGKt5u602srQ5yLphDd3i8zP6rxAW+av8GBjr3CJnm3
+         nCog==
+X-Gm-Message-State: APjAAAW8t7FzrfZu94BbRTj/KIUBQ2BHwcZ2wam4vlOh41eWEQ4eQoBd
+        U+bxNnpUgKqRQHwxlrpEfFiF4CIb7ZdhYRWStM0=
+X-Google-Smtp-Source: APXvYqwpkAk0xmfVNKx19v7ZUhWLtfpcp58XLtRa4vpl3aPIwquhkdFer4zqDaPeSE6KVtnzx6aaV1JPQjXM3H3VgXk=
+X-Received: by 2002:a37:9a8a:: with SMTP id c132mr4487196qke.92.1571769745663;
+ Tue, 22 Oct 2019 11:42:25 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191022171452.GA5169@redhat.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1571769723; bh=JT3F3dTTKjKzOGM9MyYbERGszfW34mcd8Au3SboJObQ=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=lC/Nm3hCblA57K9jdrp7xEdECWAxkYwE4XhvI2g6acMV/up4ev7q990mcF1lsaBwU
-         a/TEspy2QuvvK46Z/mk6KPGqX3iLVCJEqmS6EHRYABuh7xrDk3SVLTW81KTKwIr+5m
-         IlbaJVPUVXF9v5RRjC5FLo3z9N5/9PxNqeIwDnfx4VYvrp2yBmI2CqYJV08yIHXMcv
-         CKc6fPj8c25YM9KbpMGmWOulWkJQ1AEsS1RDZEKOVEFNrhhemvH6m2srdZYPEZSVG9
-         QEmcVj8k/U5mQX5wJZQMkLOh59wMVmryjHdSlSCN4on+pCxTNEUyrV/9PmQKROHIMk
-         8QHNdDn0gRkZw==
+References: <20191022141833.5706-1-kpsingh@chromium.org>
+In-Reply-To: <20191022141833.5706-1-kpsingh@chromium.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Tue, 22 Oct 2019 11:42:14 -0700
+Message-ID: <CAEf4BzY5YYtiWOtHWfis2F28gmsCvJ=JuM7yHKrbBCdERwr2ew@mail.gmail.com>
+Subject: Re: [PATCH bpf-next] libbpf: Fix strncat bounds error in libbpf_prog_type_by_name
+To:     KP Singh <kpsingh@chromium.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Florent Revest <revest@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/22/19 10:14 AM, Jerome Glisse wrote:
-> On Mon, Oct 21, 2019 at 02:24:35PM -0700, John Hubbard wrote:
->> The MAP_HUGETLB ("-H" option) of gup_benchmark fails:
->>
->> $ sudo ./gup_benchmark -H
->> mmap: Invalid argument
->>
->> This is because gup_benchmark.c is passing in a file descriptor to
->> mmap(), but the fd came from opening up the /dev/zero file. This
->> confuses the mmap syscall implementation, which thinks that, if the
->> caller did not specify MAP_ANONYMOUS, then the file must be a huge
->> page file. So it attempts to verify that the file really is a huge
->> page file, as you can see here:
->>
->> ksys_mmap_pgoff()
->> {
->>     if (!(flags & MAP_ANONYMOUS)) {
->>         retval = -EINVAL;
->>         if (unlikely(flags & MAP_HUGETLB && !is_file_hugepages(file)))
->>             goto out_fput; /* THIS IS WHERE WE END UP */
->>
->>     else if (flags & MAP_HUGETLB) {
->>         ...proceed normally, /dev/zero is ok here...
->>
->> ...and of course is_file_hugepages() returns "false" for the /dev/zero
->> file.
->>
->> The problem is that the user space program, gup_benchmark.c, really just
->> wants anonymous memory here. The simplest way to get that is to pass
->> MAP_ANONYMOUS whenever MAP_HUGETLB is specified, so that's what this
->> patch does.
-> 
-> This looks wrong, MAP_HUGETLB should only be use to create vma
-> for hugetlbfs. If you want anonymous private vma do not set the
-> MAP_HUGETLB. If you want huge page inside your anonymous vma
-> there is nothing to do at the mmap time, this is the job of the
-> transparent huge page code (THP).
-> 
+On Tue, Oct 22, 2019 at 7:19 AM KP Singh <kpsingh@chromium.org> wrote:
+>
+> From: KP Singh <kpsingh@google.com>
+>
+> On compiling samples with this change, one gets an error:
+>
+>  error: =E2=80=98strncat=E2=80=99 specified bound 118 equals destination =
+size
+>   [-Werror=3Dstringop-truncation]
+>
+>     strncat(dst, name + section_names[i].len,
+>     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>      sizeof(raw_tp_btf_name) - (dst - raw_tp_btf_name));
+>      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>
+> strncat requires the destination to have enough space for the
+> terminating null byte.
+>
+> Fixes: f75a697e09137 ("libbpf: Auto-detect btf_id of BTF-based raw_tracep=
+oint")
+> Signed-off-by: KP Singh <kpsingh@google.com>
+> ---
+>  tools/lib/bpf/libbpf.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+> index 9364e66d755d..5fff3f15d705 100644
+> --- a/tools/lib/bpf/libbpf.c
+> +++ b/tools/lib/bpf/libbpf.c
+> @@ -4666,7 +4666,7 @@ int libbpf_prog_type_by_name(const char *name, enum=
+ bpf_prog_type *prog_type,
+>                         }
+>                         /* prepend "btf_trace_" prefix per kernel convent=
+ion */
+>                         strncat(dst, name + section_names[i].len,
+> -                               sizeof(raw_tp_btf_name) - (dst - raw_tp_b=
+tf_name));
+> +                               sizeof(raw_tp_btf_name) - (dst - raw_tp_b=
+tf_name + 1));
 
-Not the point. Please look more closely at ksys_mmap_pgoff(). You'll 
-see that, since 2009 (and probably earlier; 2009 is just when Hugh Dickens 
-moved it over from util.c), this routine has had full support for using
-hugetlbfs automatically, via mmap.
+Just:
 
-It does that via hugetlb_file_setup():
+sizeof(raw_tp_btf_name) - sizeof("btf_trace_")
 
-unsigned long ksys_mmap_pgoff(unsigned long addr, unsigned long len,
-			      unsigned long prot, unsigned long flags,
-			      unsigned long fd, unsigned long pgoff)
-{
-...
-	if (!(flags & MAP_ANONYMOUS)) {
-...
-	} else if (flags & MAP_HUGETLB) {
-		struct user_struct *user = NULL;
-		struct hstate *hs;
+?
 
-		hs = hstate_sizelog((flags >> MAP_HUGE_SHIFT) & MAP_HUGE_MASK);
-		if (!hs)
-			return -EINVAL;
-
-		len = ALIGN(len, huge_page_size(hs));
-		/*
-		 * VM_NORESERVE is used because the reservations will be
-		 * taken when vm_ops->mmap() is called
-		 * A dummy user value is used because we are not locking
-		 * memory so no accounting is necessary
-		 */
-		file = hugetlb_file_setup(HUGETLB_ANON_FILE, len,
-				VM_NORESERVE,
-				&user, HUGETLB_ANONHUGE_INODE,
-				(flags >> MAP_HUGE_SHIFT) & MAP_HUGE_MASK);
-		if (IS_ERR(file))
-			return PTR_ERR(file);
-	}
-...
-
-
-Also, there are 14 (!) other pre-existing examples of passing
-MAP_HUGETLB | MAP_ANONYMOUS to mmap, so I'm not exactly the first one
-to reach this understanding.
-
-
-> NAK as misleading
-
-Ouch. But I think I'm actually leading correctly, rather than misleading.
-Can you prove me wrong? :)
-
-
-thanks,
-
-John Hubbard
-NVIDIA
+>                         ret =3D btf__find_by_name(btf, raw_tp_btf_name);
+>                         btf__free(btf);
+>                         if (ret <=3D 0) {
+> --
+> 2.20.1
+>
