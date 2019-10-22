@@ -7,43 +7,43 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF3CACA9EAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 02:42:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF9AECA9EB0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 02:42:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BF2920882
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 02:42:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 928F420882
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 02:42:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QilF5EDu"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H259MJcB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730764AbfJVCmI (ORCPT
+        id S1730919AbfJVCmK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 22:42:08 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:60050 "EHLO
+        Mon, 21 Oct 2019 22:42:10 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:22279 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727264AbfJVCmI (ORCPT
+        with ESMTP id S1729573AbfJVCmJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 22:42:08 -0400
+        Mon, 21 Oct 2019 22:42:09 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571712126;
+        s=mimecast20190719; t=1571712127;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=2NzST84UVP7UqSrxt1t/UMMPijv4/JY92KueGM0g9gA=;
-        b=QilF5EDu86gJkp2AV2lQ4lpTES1+QZyi8afdUuW2xnSy5Ms0wK1M01rCGO1MTbDg3OFwQ7
-        T+Lnzo1wGc4x87EhHORx+EWbAiAax77d3YyAGIBjl0P8qQLB1QPJgWi8/QGXX3BGNZNgTa
-        CWOaWplVhKGVYv8UOJ+GA+zHrZMJcpw=
+        bh=lrcURt96aE5EHVhNmaVNmOBVnWTfjuiDFNgRlZ76m00=;
+        b=H259MJcBlvzfVtvDtqPVr0mD6ufGeMLCnYuACF2mgcXIU3QvdKeagKTUaNj6VQyC/IGgya
+        7XgKAJE+OJOuHFz/7+Jeu9dQPGieDFC1ae2u9AszpexqQ8/SuUzrj7F1ibSplxJmsQuO3Z
+        uriXOxhcqHfLXLEhKnMAog8bmmDjGag=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-259-gjcSJMpeMYCymoAyWoOlMA-1; Mon, 21 Oct 2019 22:42:00 -0400
+ us-mta-339-nK0cvsgiNnaIyuCaZEGfBQ-1; Mon, 21 Oct 2019 22:42:03 -0400
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 38A7D1005500;
-        Tue, 22 Oct 2019 02:41:57 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 617EB800D41;
+        Tue, 22 Oct 2019 02:42:01 +0000 (UTC)
 Received: from malachite.redhat.com (ovpn-120-98.rdu2.redhat.com [10.10.120.98])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7C94560126;
-        Tue, 22 Oct 2019 02:41:28 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 66B8660126;
+        Tue, 22 Oct 2019 02:41:58 +0000 (UTC)
 From:   Lyude Paul <lyude@redhat.com>
 To:     dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
         nouveau@lists.freedesktop.org, intel-gfx@lists.freedesktop.org
@@ -52,37 +52,18 @@ Cc:     Juston Li <juston.li@intel.com>, Imre Deak <imre.deak@intel.com>,
         <ville.syrjala@linux.intel.com>, Harry Wentland <hwentlan@amd.com>,
         Daniel Vetter <daniel.vetter@ffwll.ch>,
         Sean Paul <sean@poorly.run>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
         Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         Maxime Ripard <mripard@kernel.org>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        David Francis <David.Francis@amd.com>,
-        Mario Kleiner <mario.kleiner.de@gmail.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Manasi Navare <manasi.d.navare@intel.com>,
-        Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>,
-        =?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?= <jose.souza@intel.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v5 13/14] drm/dp_mst: Add basic topology reprobing when resuming
-Date:   Mon, 21 Oct 2019 22:36:08 -0400
-Message-Id: <20191022023641.8026-14-lyude@redhat.com>
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
+Subject: [PATCH v5 14/14] drm/dp_mst: Add topology ref history tracking for debugging
+Date:   Mon, 21 Oct 2019 22:36:09 -0400
+Message-Id: <20191022023641.8026-15-lyude@redhat.com>
 In-Reply-To: <20191022023641.8026-1-lyude@redhat.com>
 References: <20191022023641.8026-1-lyude@redhat.com>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-MC-Unique: gjcSJMpeMYCymoAyWoOlMA-1
+X-MC-Unique: nK0cvsgiNnaIyuCaZEGfBQ-1
 X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
@@ -91,54 +72,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Finally! For a very long time, our MST helpers have had one very
-annoying issue: They don't know how to reprobe the topology state when
-coming out of suspend. This means that if a user has a machine connected
-to an MST topology and decides to suspend their machine, we lose all
-topology changes that happened during that period. That can be a big
-problem if the machine was connected to a different topology on the same
-port before resuming, as we won't bother reprobing any of the ports and
-likely cause the user's monitors not to come back up as expected.
+For very subtle mistakes with topology refs, it can be rather difficult
+to trace them down with the debugging info that we already have. I had
+one such issue recently while trying to implement suspend/resume
+reprobing for MST, and ended up coming up with this.
 
-So, we start fixing this by teaching our MST helpers how to reprobe the
-link addresses of each connected topology when resuming. As it turns
-out, the behavior that we want here is identical to the behavior we want
-when initially probing a newly connected MST topology, with a couple of
-important differences:
+Inspired by Chris Wilson's wakeref tracking for i915, this adds a very
+similar feature to the DP MST helpers, which allows for partial tracking
+of topology refs for both ports and branch devices. This is a lot less
+advanced then wakeref tracking: we merely keep a count of all of the
+spots where a topology ref has been grabbed or dropped, then dump out
+that history in chronological order when a port or branch device's
+topology refcount reaches 0. So far, I've found this incredibly useful
+for debugging topology refcount errors.
 
-- We need to be more careful about handling the potential races between
-  events from the MST hub that could change the topology state as we're
-  performing the link address reprobe
-- We need to be more careful about handling unlikely state changes on
-  ports - such as an input port turning into an output port, something
-  that would be far more likely to happen in situations like the MST hub
-  we're connected to being changed while we're suspend
+Since this has the potential to be somewhat slow and loud, we add an
+expert kernel config option to enable or disable this feature,
+CONFIG_DRM_DEBUG_DP_MST_TOPOLOGY_REFS.
 
-Both of which have been solved by previous commits. That leaves one
-requirement:
-
-- We need to prune any MST ports in our in-memory topology state that
-  were present when suspending, but have not appeared in the post-resume
-  link address response from their parent branch device
-
-Which we can now handle in this commit by modifying
-drm_dp_send_link_address(). We then introduce suspend/resume reprobing
-by introducing drm_dp_mst_topology_mgr_invalidate_mstb(), which we call
-in drm_dp_mst_topology_mgr_suspend() to traverse the in-memory topology
-state to indicate that each mstb needs it's link address resent and PBN
-resources reprobed.
-
-On resume, we start back up &mgr->work and have it reprobe the topology
-in the same way we would on a hotplug, removing any leftover ports that
-no longer appear in the topology state.
-
+Changes since v1:
+* Don't forget to destroy topology_ref_history_lock
 Changes since v4:
-* Split indenting changes in drm_dp_mst_topology_mgr_resume() into a
-  separate patch
-* Only fire hotplugs when something has actually changed after a link
-  address probe
-* Don't try to change port->connector at all on ports, just throw out
-  ports that need their connectors removed to make things easier.
+* Correct order of kref_put()/topology_ref_history_unlock - we can't
+  unlock the history after kref_put() since the memory might have been
+  freed by that point
+* Don't print message on allocation error failures, the kernel already
+  does this for us
 
 Cc: Juston Li <juston.li@intel.com>
 Cc: Imre Deak <imre.deak@intel.com>
@@ -148,452 +107,468 @@ Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
 Reviewed-by: Sean Paul <sean@poorly.run>
 Signed-off-by: Lyude Paul <lyude@redhat.com>
 ---
- .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c |   2 +-
- drivers/gpu/drm/drm_dp_mst_topology.c         | 182 ++++++++++++++----
- drivers/gpu/drm/i915/display/intel_dp.c       |   3 +-
- drivers/gpu/drm/nouveau/dispnv50/disp.c       |   6 +-
- include/drm/drm_dp_mst_helper.h               |   3 +-
- 5 files changed, 156 insertions(+), 40 deletions(-)
+ drivers/gpu/drm/Kconfig               |  14 ++
+ drivers/gpu/drm/drm_dp_mst_topology.c | 241 ++++++++++++++++++++++++--
+ include/drm/drm_dp_mst_helper.h       |  45 +++++
+ 3 files changed, 290 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gp=
-u/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-index 8f67d301ad81..6c34f640f419 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-@@ -974,7 +974,7 @@ static void s3_handle_mst(struct drm_device *dev, bool =
-suspend)
- =09=09if (suspend) {
- =09=09=09drm_dp_mst_topology_mgr_suspend(mgr);
- =09=09} else {
--=09=09=09ret =3D drm_dp_mst_topology_mgr_resume(mgr);
-+=09=09=09ret =3D drm_dp_mst_topology_mgr_resume(mgr, true);
- =09=09=09if (ret < 0) {
- =09=09=09=09drm_dp_mst_topology_mgr_set_mst(mgr, false);
- =09=09=09=09need_hotplug =3D true;
+diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
+index 36357a36a281..f3f5910743d4 100644
+--- a/drivers/gpu/drm/Kconfig
++++ b/drivers/gpu/drm/Kconfig
+@@ -93,6 +93,20 @@ config DRM_KMS_FB_HELPER
+ =09help
+ =09  FBDEV helpers for KMS drivers.
+=20
++config DRM_DEBUG_DP_MST_TOPOLOGY_REFS
++        bool "Enable refcount backtrace history in the DP MST helpers"
++        select STACKDEPOT
++        depends on DRM_KMS_HELPER
++        depends on DEBUG_KERNEL
++        depends on EXPERT
++        help
++          Enables debug tracing for topology refs in DRM's DP MST helpers.=
+ A
++          history of each topology reference/dereference will be printed t=
+o the
++          kernel log once a port or branch device's topology refcount reac=
+hes 0.
++
++          This has the potential to use a lot of memory and print some ver=
+y
++          large kernel messages. If in doubt, say "N".
++
+ config DRM_FBDEV_EMULATION
+ =09bool "Enable legacy fbdev support for your modesetting driver"
+ =09depends on DRM
 diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp=
 _mst_topology.c
-index d486d15aa002..428160270482 100644
+index 428160270482..cedfa281a22e 100644
 --- a/drivers/gpu/drm/drm_dp_mst_topology.c
 +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-@@ -67,8 +67,8 @@ static int drm_dp_send_dpcd_write(struct drm_dp_mst_topol=
-ogy_mgr *mgr,
- =09=09=09=09  struct drm_dp_mst_port *port,
- =09=09=09=09  int offset, int size, u8 *bytes);
+@@ -28,6 +28,13 @@
+ #include <linux/sched.h>
+ #include <linux/seq_file.h>
 =20
--static void drm_dp_send_link_address(struct drm_dp_mst_topology_mgr *mgr,
--=09=09=09=09     struct drm_dp_mst_branch *mstb);
-+static int drm_dp_send_link_address(struct drm_dp_mst_topology_mgr *mgr,
-+=09=09=09=09    struct drm_dp_mst_branch *mstb);
- static int drm_dp_send_enum_path_resources(struct drm_dp_mst_topology_mgr =
-*mgr,
- =09=09=09=09=09   struct drm_dp_mst_branch *mstb,
- =09=09=09=09=09   struct drm_dp_mst_port *port);
-@@ -1977,7 +1977,7 @@ drm_dp_mst_add_port(struct drm_device *dev,
- =09return port;
- }
-=20
--static void
-+static int
- drm_dp_mst_handle_link_address_port(struct drm_dp_mst_branch *mstb,
- =09=09=09=09    struct drm_device *dev,
- =09=09=09=09    struct drm_dp_link_addr_reply_port *port_msg)
-@@ -1986,33 +1986,45 @@ drm_dp_mst_handle_link_address_port(struct drm_dp_m=
-st_branch *mstb,
- =09struct drm_dp_mst_port *port;
- =09int old_ddps =3D 0, ret;
- =09u8 new_pdt =3D DP_PEER_DEVICE_NONE;
--=09bool created =3D false, send_link_addr =3D false;
-+=09bool created =3D false, send_link_addr =3D false, changed =3D false;
-=20
- =09port =3D drm_dp_get_port(mstb, port_msg->port_number);
- =09if (!port) {
- =09=09port =3D drm_dp_mst_add_port(dev, mgr, mstb,
- =09=09=09=09=09   port_msg->port_number);
- =09=09if (!port)
--=09=09=09return;
-+=09=09=09return -ENOMEM;
- =09=09created =3D true;
--=09} else if (port_msg->input_port && !port->input && port->connector) {
--=09=09/* Destroying the connector is impossible in this context, so
--=09=09 * replace the port with a new one
-+=09=09changed =3D true;
-+=09} else if (!port->input && port_msg->input_port && port->connector) {
-+=09=09/* Since port->connector can't be changed here, we create a
-+=09=09 * new port if input_port changes from 0 to 1
- =09=09 */
- =09=09drm_dp_mst_topology_unlink_port(mgr, port);
- =09=09drm_dp_mst_topology_put_port(port);
--
- =09=09port =3D drm_dp_mst_add_port(dev, mgr, mstb,
- =09=09=09=09=09   port_msg->port_number);
- =09=09if (!port)
--=09=09=09return;
-+=09=09=09return -ENOMEM;
-+=09=09changed =3D true;
- =09=09created =3D true;
--=09} else {
--=09=09/* Locking is only needed when the port has a connector
--=09=09 * exposed to userspace
-+=09} else if (port->input && !port_msg->input_port) {
-+=09=09changed =3D true;
-+=09} else if (port->connector) {
-+=09=09/* We're updating a port that's exposed to userspace, so do it
-+=09=09 * under lock
- =09=09 */
- =09=09drm_modeset_lock(&mgr->base.lock, NULL);
++#if IS_ENABLED(CONFIG_DRM_DEBUG_DP_MST_TOPOLOGY_REFS)
++#include <linux/stackdepot.h>
++#include <linux/sort.h>
++#include <linux/timekeeping.h>
++#include <linux/math64.h>
++#endif
 +
- =09=09old_ddps =3D port->ddps;
-+=09=09changed =3D port->ddps !=3D port_msg->ddps ||
-+=09=09=09(port->ddps &&
-+=09=09=09 (port->ldps !=3D port_msg->legacy_device_plug_status ||
-+=09=09=09  port->dpcd_rev !=3D port_msg->dpcd_revision ||
-+=09=09=09  port->mcs !=3D port_msg->mcs ||
-+=09=09=09  port->pdt !=3D port_msg->peer_device_type ||
-+=09=09=09  port->num_sdp_stream_sinks !=3D
-+=09=09=09  port_msg->num_sdp_stream_sinks));
- =09}
+ #include <drm/drm_atomic.h>
+ #include <drm/drm_atomic_helper.h>
+ #include <drm/drm_dp_mst_helper.h>
+@@ -1399,12 +1406,187 @@ drm_dp_mst_put_port_malloc(struct drm_dp_mst_port =
+*port)
+ }
+ EXPORT_SYMBOL(drm_dp_mst_put_port_malloc);
 =20
- =09port->input =3D port_msg->input_port;
-@@ -2054,23 +2066,38 @@ drm_dp_mst_handle_link_address_port(struct drm_dp_m=
-st_branch *mstb,
- =09=09goto fail;
- =09}
-=20
--=09if (!created)
-+=09/*
-+=09 * If this port wasn't just created, then we're reprobing because
-+=09 * we're coming out of suspend. In this case, always resend the link
-+=09 * address if there's an MSTB on this port
-+=09 */
-+=09if (!created && port->pdt =3D=3D DP_PEER_DEVICE_MST_BRANCHING)
-+=09=09send_link_addr =3D true;
++#if IS_ENABLED(CONFIG_DRM_DEBUG_DP_MST_TOPOLOGY_REFS)
 +
-+=09if (port->connector)
- =09=09drm_modeset_unlock(&mgr->base.lock);
--=09else if (!port->connector && !port->input)
-+=09else if (!port->input)
- =09=09drm_dp_mst_port_add_connector(mstb, port);
-=20
--=09if (send_link_addr && port->mstb)
--=09=09drm_dp_send_link_address(mgr, port->mstb);
-+=09if (send_link_addr && port->mstb) {
-+=09=09ret =3D drm_dp_send_link_address(mgr, port->mstb);
-+=09=09if (ret =3D=3D 1) /* MSTB below us changed */
-+=09=09=09changed =3D true;
-+=09=09else if (ret < 0)
-+=09=09=09goto fail_put;
-+=09}
-=20
- =09/* put reference to this port */
- =09drm_dp_mst_topology_put_port(port);
--=09return;
-+=09return changed;
-=20
- fail:
- =09drm_dp_mst_topology_unlink_port(mgr, port);
--=09drm_dp_mst_topology_put_port(port);
--=09if (!created)
-+=09if (port->connector)
- =09=09drm_modeset_unlock(&mgr->base.lock);
-+fail_put:
-+=09drm_dp_mst_topology_put_port(port);
-+=09return ret;
- }
-=20
- static void
-@@ -2230,13 +2257,20 @@ drm_dp_get_mst_branch_device_by_guid(struct drm_dp_=
-mst_topology_mgr *mgr,
- =09return mstb;
- }
-=20
--static void drm_dp_check_and_send_link_address(struct drm_dp_mst_topology_=
-mgr *mgr,
-+static int drm_dp_check_and_send_link_address(struct drm_dp_mst_topology_m=
-gr *mgr,
- =09=09=09=09=09       struct drm_dp_mst_branch *mstb)
- {
- =09struct drm_dp_mst_port *port;
-+=09int ret;
-+=09bool changed =3D false;
-=20
--=09if (!mstb->link_address_sent)
--=09=09drm_dp_send_link_address(mgr, mstb);
-+=09if (!mstb->link_address_sent) {
-+=09=09ret =3D drm_dp_send_link_address(mgr, mstb);
-+=09=09if (ret =3D=3D 1)
-+=09=09=09changed =3D true;
-+=09=09else if (ret < 0)
-+=09=09=09return ret;
-+=09}
-=20
- =09list_for_each_entry(port, &mstb->ports, next) {
- =09=09struct drm_dp_mst_branch *mstb_child =3D NULL;
-@@ -2248,6 +2282,7 @@ static void drm_dp_check_and_send_link_address(struct=
- drm_dp_mst_topology_mgr *m
- =09=09=09drm_modeset_lock(&mgr->base.lock, NULL);
- =09=09=09drm_dp_send_enum_path_resources(mgr, mstb, port);
- =09=09=09drm_modeset_unlock(&mgr->base.lock);
-+=09=09=09changed =3D true;
- =09=09}
-=20
- =09=09if (port->mstb)
-@@ -2255,10 +2290,17 @@ static void drm_dp_check_and_send_link_address(stru=
-ct drm_dp_mst_topology_mgr *m
- =09=09=09    mgr, port->mstb);
-=20
- =09=09if (mstb_child) {
--=09=09=09drm_dp_check_and_send_link_address(mgr, mstb_child);
-+=09=09=09ret =3D drm_dp_check_and_send_link_address(mgr,
-+=09=09=09=09=09=09=09=09 mstb_child);
- =09=09=09drm_dp_mst_topology_put_mstb(mstb_child);
-+=09=09=09if (ret =3D=3D 1)
-+=09=09=09=09changed =3D true;
-+=09=09=09else if (ret < 0)
-+=09=09=09=09return ret;
- =09=09}
- =09}
++#define STACK_DEPTH 8
 +
-+=09return changed;
- }
-=20
- static void drm_dp_mst_link_probe_work(struct work_struct *work)
-@@ -2284,11 +2326,12 @@ static void drm_dp_mst_link_probe_work(struct work_=
-struct *work)
- =09=09return;
- =09}
-=20
--=09drm_dp_check_and_send_link_address(mgr, mstb);
-+=09ret =3D drm_dp_check_and_send_link_address(mgr, mstb);
- =09drm_dp_mst_topology_put_mstb(mstb);
-=20
- =09mutex_unlock(&mgr->probe_lock);
--=09drm_kms_helper_hotplug_event(dev);
-+=09if (ret)
-+=09=09drm_kms_helper_hotplug_event(dev);
- }
-=20
- static bool drm_dp_validate_guid(struct drm_dp_mst_topology_mgr *mgr,
-@@ -2534,16 +2577,18 @@ drm_dp_dump_link_address(struct drm_dp_link_address=
-_ack_reply *reply)
- =09}
- }
-=20
--static void drm_dp_send_link_address(struct drm_dp_mst_topology_mgr *mgr,
-+static int drm_dp_send_link_address(struct drm_dp_mst_topology_mgr *mgr,
- =09=09=09=09     struct drm_dp_mst_branch *mstb)
- {
- =09struct drm_dp_sideband_msg_tx *txmsg;
- =09struct drm_dp_link_address_ack_reply *reply;
--=09int i, len, ret;
-+=09struct drm_dp_mst_port *port, *tmp;
-+=09int i, len, ret, port_mask =3D 0;
-+=09bool changed =3D false;
-=20
- =09txmsg =3D kzalloc(sizeof(*txmsg), GFP_KERNEL);
- =09if (!txmsg)
--=09=09return;
-+=09=09return -ENOMEM;
-=20
- =09txmsg->dst =3D mstb;
- =09len =3D build_link_address(txmsg);
-@@ -2569,14 +2614,39 @@ static void drm_dp_send_link_address(struct drm_dp_=
-mst_topology_mgr *mgr,
-=20
- =09drm_dp_check_mstb_guid(mstb, reply->guid);
-=20
--=09for (i =3D 0; i < reply->nports; i++)
--=09=09drm_dp_mst_handle_link_address_port(mstb, mgr->dev,
--=09=09=09=09=09=09    &reply->ports[i]);
-+=09for (i =3D 0; i < reply->nports; i++) {
-+=09=09port_mask |=3D BIT(reply->ports[i].port_number);
-+=09=09ret =3D drm_dp_mst_handle_link_address_port(mstb, mgr->dev,
-+=09=09=09=09=09=09=09  &reply->ports[i]);
-+=09=09if (ret =3D=3D 1)
-+=09=09=09changed =3D true;
-+=09=09else if (ret < 0)
-+=09=09=09goto out;
-+=09}
-+
-+=09/* Prune any ports that are currently a part of mstb in our in-memory
-+=09 * topology, but were not seen in this link address. Usually this
-+=09 * means that they were removed while the topology was out of sync,
-+=09 * e.g. during suspend/resume
-+=09 */
-+=09mutex_lock(&mgr->lock);
-+=09list_for_each_entry_safe(port, tmp, &mstb->ports, next) {
-+=09=09if (port_mask & BIT(port->port_num))
-+=09=09=09continue;
-+
-+=09=09DRM_DEBUG_KMS("port %d was not in link address, removing\n",
-+=09=09=09      port->port_num);
-+=09=09list_del(&port->next);
-+=09=09drm_dp_mst_topology_put_port(port);
-+=09=09changed =3D true;
-+=09}
-+=09mutex_unlock(&mgr->lock);
-=20
- out:
- =09if (ret <=3D 0)
- =09=09mstb->link_address_sent =3D false;
- =09kfree(txmsg);
-+=09return ret < 0 ? ret : changed;
- }
-=20
- static int
-@@ -3181,6 +3251,23 @@ int drm_dp_mst_topology_mgr_set_mst(struct drm_dp_ms=
-t_topology_mgr *mgr, bool ms
- }
- EXPORT_SYMBOL(drm_dp_mst_topology_mgr_set_mst);
-=20
-+static void
-+drm_dp_mst_topology_mgr_invalidate_mstb(struct drm_dp_mst_branch *mstb)
++static noinline void
++__topology_ref_save(struct drm_dp_mst_topology_mgr *mgr,
++=09=09    struct drm_dp_mst_topology_ref_history *history,
++=09=09    enum drm_dp_mst_topology_ref_type type)
 +{
-+=09struct drm_dp_mst_port *port;
++=09struct drm_dp_mst_topology_ref_entry *entry =3D NULL;
++=09depot_stack_handle_t backtrace;
++=09ulong stack_entries[STACK_DEPTH];
++=09uint n;
++=09int i;
 +
-+=09/* The link address will need to be re-sent on resume */
-+=09mstb->link_address_sent =3D false;
++=09n =3D stack_trace_save(stack_entries, ARRAY_SIZE(stack_entries), 1);
++=09backtrace =3D stack_depot_save(stack_entries, n, GFP_KERNEL);
++=09if (!backtrace)
++=09=09return;
 +
-+=09list_for_each_entry(port, &mstb->ports, next) {
-+=09=09/* The PBN for each port will also need to be re-probed */
-+=09=09port->available_pbn =3D 0;
-+
-+=09=09if (port->mstb)
-+=09=09=09drm_dp_mst_topology_mgr_invalidate_mstb(port->mstb);
++=09/* Try to find an existing entry for this backtrace */
++=09for (i =3D 0; i < history->len; i++) {
++=09=09if (history->entries[i].backtrace =3D=3D backtrace) {
++=09=09=09entry =3D &history->entries[i];
++=09=09=09break;
++=09=09}
 +=09}
++
++=09/* Otherwise add one */
++=09if (!entry) {
++=09=09struct drm_dp_mst_topology_ref_entry *new;
++=09=09int new_len =3D history->len + 1;
++
++=09=09new =3D krealloc(history->entries, sizeof(*new) * new_len,
++=09=09=09       GFP_KERNEL);
++=09=09if (!new)
++=09=09=09return;
++
++=09=09entry =3D &new[history->len];
++=09=09history->len =3D new_len;
++=09=09history->entries =3D new;
++
++=09=09entry->backtrace =3D backtrace;
++=09=09entry->type =3D type;
++=09=09entry->count =3D 0;
++=09}
++=09entry->count++;
++=09entry->ts_nsec =3D ktime_get_ns();
++
++=09return;
 +}
 +
- /**
-  * drm_dp_mst_topology_mgr_suspend() - suspend the MST manager
-  * @mgr: manager to suspend
-@@ -3197,20 +3284,36 @@ void drm_dp_mst_topology_mgr_suspend(struct drm_dp_=
-mst_topology_mgr *mgr)
- =09flush_work(&mgr->up_req_work);
- =09flush_work(&mgr->work);
- =09flush_work(&mgr->delayed_destroy_work);
++static int
++topology_ref_history_cmp(const void *a, const void *b)
++{
++=09const struct drm_dp_mst_topology_ref_entry *entry_a =3D a, *entry_b =3D=
+ b;
 +
-+=09mutex_lock(&mgr->lock);
-+=09if (mgr->mst_state && mgr->mst_primary)
-+=09=09drm_dp_mst_topology_mgr_invalidate_mstb(mgr->mst_primary);
-+=09mutex_unlock(&mgr->lock);
- }
- EXPORT_SYMBOL(drm_dp_mst_topology_mgr_suspend);
-=20
- /**
-  * drm_dp_mst_topology_mgr_resume() - resume the MST manager
-  * @mgr: manager to resume
-+ * @sync: whether or not to perform topology reprobing synchronously
-  *
-  * This will fetch DPCD and see if the device is still there,
-  * if it is, it will rewrite the MSTM control bits, and return.
-  *
-- * if the device fails this returns -1, and the driver should do
-+ * If the device fails this returns -1, and the driver should do
-  * a full MST reprobe, in case we were undocked.
-+ *
-+ * During system resume (where it is assumed that the driver will be calli=
-ng
-+ * drm_atomic_helper_resume()) this function should be called beforehand w=
-ith
-+ * @sync set to true. In contexts like runtime resume where the driver is =
-not
-+ * expected to be calling drm_atomic_helper_resume(), this function should=
- be
-+ * called with @sync set to false in order to avoid deadlocking.
-+ *
-+ * Returns: -1 if the MST topology was removed while we were suspended, 0
-+ * otherwise.
-  */
--int drm_dp_mst_topology_mgr_resume(struct drm_dp_mst_topology_mgr *mgr)
-+int drm_dp_mst_topology_mgr_resume(struct drm_dp_mst_topology_mgr *mgr,
-+=09=09=09=09   bool sync)
- {
- =09int ret;
- =09u8 guid[16];
-@@ -3243,8 +3346,19 @@ int drm_dp_mst_topology_mgr_resume(struct drm_dp_mst=
-_topology_mgr *mgr)
- =09}
- =09drm_dp_check_mstb_guid(mgr->mst_primary, guid);
-=20
-+=09/*
-+=09 * For the final step of resuming the topology, we need to bring the
-+=09 * state of our in-memory topology back into sync with reality. So,
-+=09 * restart the probing process as if we're probing a new hub
++=09if (entry_a->ts_nsec > entry_b->ts_nsec)
++=09=09return 1;
++=09else if (entry_a->ts_nsec < entry_b->ts_nsec)
++=09=09return -1;
++=09else
++=09=09return 0;
++}
++
++static inline const char *
++topology_ref_type_to_str(enum drm_dp_mst_topology_ref_type type)
++{
++=09if (type =3D=3D DRM_DP_MST_TOPOLOGY_REF_GET)
++=09=09return "get";
++=09else
++=09=09return "put";
++}
++
++static void
++__dump_topology_ref_history(struct drm_dp_mst_topology_ref_history *histor=
+y,
++=09=09=09    void *ptr, const char *type_str)
++{
++=09struct drm_printer p =3D drm_debug_printer(DBG_PREFIX);
++=09char *buf =3D kzalloc(PAGE_SIZE, GFP_KERNEL);
++=09int i;
++
++=09if (!buf)
++=09=09return;
++
++=09if (!history->len)
++=09=09goto out;
++
++=09/* First, sort the list so that it goes from oldest to newest
++=09 * reference entry
 +=09 */
-+=09queue_work(system_long_wq, &mgr->work);
- =09mutex_unlock(&mgr->lock);
-=20
-+=09if (sync) {
-+=09=09DRM_DEBUG_KMS("Waiting for link probe work to finish re-syncing topo=
-logy...\n");
-+=09=09flush_work(&mgr->work);
++=09sort(history->entries, history->len, sizeof(*history->entries),
++=09     topology_ref_history_cmp, NULL);
++
++=09drm_printf(&p,
++=09=09   "%s (%p/%px) topology count reached 0, dumping history:\n",
++=09=09   type_str, ptr, ptr);
++
++=09for (i =3D 0; i < history->len; i++) {
++=09=09const struct drm_dp_mst_topology_ref_entry *entry =3D
++=09=09=09&history->entries[i];
++=09=09ulong *entries;
++=09=09uint nr_entries;
++=09=09u64 ts_nsec =3D entry->ts_nsec;
++=09=09u64 rem_nsec =3D do_div(ts_nsec, 1000000000);
++
++=09=09nr_entries =3D stack_depot_fetch(entry->backtrace, &entries);
++=09=09stack_trace_snprint(buf, PAGE_SIZE, entries, nr_entries, 4);
++
++=09=09drm_printf(&p, "  %d %ss (last at %5llu.%06llu):\n%s",
++=09=09=09   entry->count,
++=09=09=09   topology_ref_type_to_str(entry->type),
++=09=09=09   ts_nsec, rem_nsec / 1000, buf);
 +=09}
 +
- =09return 0;
++=09/* Now free the history, since this is the only time we expose it */
++=09kfree(history->entries);
++out:
++=09kfree(buf);
++}
++
++static __always_inline void
++drm_dp_mst_dump_mstb_topology_history(struct drm_dp_mst_branch *mstb)
++{
++=09__dump_topology_ref_history(&mstb->topology_ref_history, mstb,
++=09=09=09=09    "MSTB");
++}
++
++static __always_inline void
++drm_dp_mst_dump_port_topology_history(struct drm_dp_mst_port *port)
++{
++=09__dump_topology_ref_history(&port->topology_ref_history, port,
++=09=09=09=09    "Port");
++}
++
++static __always_inline void
++save_mstb_topology_ref(struct drm_dp_mst_branch *mstb,
++=09=09       enum drm_dp_mst_topology_ref_type type)
++{
++=09__topology_ref_save(mstb->mgr, &mstb->topology_ref_history, type);
++}
++
++static __always_inline void
++save_port_topology_ref(struct drm_dp_mst_port *port,
++=09=09       enum drm_dp_mst_topology_ref_type type)
++{
++=09__topology_ref_save(port->mgr, &port->topology_ref_history, type);
++}
++
++static inline void
++topology_ref_history_lock(struct drm_dp_mst_topology_mgr *mgr)
++{
++=09mutex_lock(&mgr->topology_ref_history_lock);
++}
++
++static inline void
++topology_ref_history_unlock(struct drm_dp_mst_topology_mgr *mgr)
++{
++=09mutex_unlock(&mgr->topology_ref_history_lock);
++}
++#else
++static inline void
++topology_ref_history_lock(struct drm_dp_mst_topology_mgr *mgr) {}
++static inline void
++topology_ref_history_unlock(struct drm_dp_mst_topology_mgr *mgr) {}
++static inline void
++drm_dp_mst_dump_mstb_topology_history(struct drm_dp_mst_branch *mstb) {}
++static inline void
++drm_dp_mst_dump_port_topology_history(struct drm_dp_mst_port *port) {}
++#define save_mstb_topology_ref(mstb, type)
++#define save_port_topology_ref(port, type)
++#endif
++
+ static void drm_dp_destroy_mst_branch_device(struct kref *kref)
+ {
+ =09struct drm_dp_mst_branch *mstb =3D
+ =09=09container_of(kref, struct drm_dp_mst_branch, topology_kref);
+ =09struct drm_dp_mst_topology_mgr *mgr =3D mstb->mgr;
 =20
- out_fail:
-diff --git a/drivers/gpu/drm/i915/display/intel_dp.c b/drivers/gpu/drm/i915=
-/display/intel_dp.c
-index 5eeafa45831a..403b593a3eb4 100644
---- a/drivers/gpu/drm/i915/display/intel_dp.c
-+++ b/drivers/gpu/drm/i915/display/intel_dp.c
-@@ -7625,7 +7625,8 @@ void intel_dp_mst_resume(struct drm_i915_private *dev=
-_priv)
- =09=09if (!intel_dp->can_mst)
- =09=09=09continue;
++=09drm_dp_mst_dump_mstb_topology_history(mstb);
++
+ =09INIT_LIST_HEAD(&mstb->destroy_next);
 =20
--=09=09ret =3D drm_dp_mst_topology_mgr_resume(&intel_dp->mst_mgr);
-+=09=09ret =3D drm_dp_mst_topology_mgr_resume(&intel_dp->mst_mgr,
-+=09=09=09=09=09=09     true);
- =09=09if (ret) {
- =09=09=09intel_dp->is_mst =3D false;
- =09=09=09drm_dp_mst_topology_mgr_set_mst(&intel_dp->mst_mgr,
-diff --git a/drivers/gpu/drm/nouveau/dispnv50/disp.c b/drivers/gpu/drm/nouv=
-eau/dispnv50/disp.c
-index a9d6aa110cfd..549486f1d937 100644
---- a/drivers/gpu/drm/nouveau/dispnv50/disp.c
-+++ b/drivers/gpu/drm/nouveau/dispnv50/disp.c
-@@ -1309,14 +1309,14 @@ nv50_mstm_fini(struct nv50_mstm *mstm)
+ =09/*
+@@ -1442,11 +1624,17 @@ static void drm_dp_destroy_mst_branch_device(struct=
+ kref *kref)
+ static int __must_check
+ drm_dp_mst_topology_try_get_mstb(struct drm_dp_mst_branch *mstb)
+ {
+-=09int ret =3D kref_get_unless_zero(&mstb->topology_kref);
++=09int ret;
+=20
+-=09if (ret)
+-=09=09DRM_DEBUG("mstb %p (%d)\n", mstb,
+-=09=09=09  kref_read(&mstb->topology_kref));
++=09topology_ref_history_lock(mstb->mgr);
++=09ret =3D kref_get_unless_zero(&mstb->topology_kref);
++=09if (ret) {
++=09=09DRM_DEBUG("mstb %p (%d)\n",
++=09=09=09  mstb, kref_read(&mstb->topology_kref));
++=09=09save_mstb_topology_ref(mstb, DRM_DP_MST_TOPOLOGY_REF_GET);
++=09}
++
++=09topology_ref_history_unlock(mstb->mgr);
+=20
+ =09return ret;
+ }
+@@ -1467,9 +1655,14 @@ drm_dp_mst_topology_try_get_mstb(struct drm_dp_mst_b=
+ranch *mstb)
+  */
+ static void drm_dp_mst_topology_get_mstb(struct drm_dp_mst_branch *mstb)
+ {
++=09topology_ref_history_lock(mstb->mgr);
++
++=09save_mstb_topology_ref(mstb, DRM_DP_MST_TOPOLOGY_REF_GET);
+ =09WARN_ON(kref_read(&mstb->topology_kref) =3D=3D 0);
+ =09kref_get(&mstb->topology_kref);
+ =09DRM_DEBUG("mstb %p (%d)\n", mstb, kref_read(&mstb->topology_kref));
++
++=09topology_ref_history_unlock(mstb->mgr);
  }
 =20
+ /**
+@@ -1487,8 +1680,13 @@ static void drm_dp_mst_topology_get_mstb(struct drm_=
+dp_mst_branch *mstb)
  static void
--nv50_mstm_init(struct nv50_mstm *mstm)
-+nv50_mstm_init(struct nv50_mstm *mstm, bool runtime)
+ drm_dp_mst_topology_put_mstb(struct drm_dp_mst_branch *mstb)
  {
- =09int ret;
++=09topology_ref_history_lock(mstb->mgr);
++
+ =09DRM_DEBUG("mstb %p (%d)\n",
+ =09=09  mstb, kref_read(&mstb->topology_kref) - 1);
++=09save_mstb_topology_ref(mstb, DRM_DP_MST_TOPOLOGY_REF_PUT);
++
++=09topology_ref_history_unlock(mstb->mgr);
+ =09kref_put(&mstb->topology_kref, drm_dp_destroy_mst_branch_device);
+ }
 =20
- =09if (!mstm || !mstm->mgr.mst_state)
- =09=09return;
+@@ -1498,6 +1696,8 @@ static void drm_dp_destroy_port(struct kref *kref)
+ =09=09container_of(kref, struct drm_dp_mst_port, topology_kref);
+ =09struct drm_dp_mst_topology_mgr *mgr =3D port->mgr;
 =20
--=09ret =3D drm_dp_mst_topology_mgr_resume(&mstm->mgr);
-+=09ret =3D drm_dp_mst_topology_mgr_resume(&mstm->mgr, !runtime);
- =09if (ret =3D=3D -1) {
- =09=09drm_dp_mst_topology_mgr_set_mst(&mstm->mgr, false);
- =09=09drm_kms_helper_hotplug_event(mstm->mgr.dev);
-@@ -2263,7 +2263,7 @@ nv50_display_init(struct drm_device *dev, bool resume=
-, bool runtime)
- =09=09if (encoder->encoder_type !=3D DRM_MODE_ENCODER_DPMST) {
- =09=09=09struct nouveau_encoder *nv_encoder =3D
- =09=09=09=09nouveau_encoder(encoder);
--=09=09=09nv50_mstm_init(nv_encoder->dp.mstm);
-+=09=09=09nv50_mstm_init(nv_encoder->dp.mstm, runtime);
- =09=09}
- =09}
++=09drm_dp_mst_dump_port_topology_history(port);
++
+ =09/* There's nothing that needs locking to destroy an input port yet */
+ =09if (port->input) {
+ =09=09drm_dp_mst_put_port_malloc(port);
+@@ -1541,12 +1741,17 @@ static void drm_dp_destroy_port(struct kref *kref)
+ static int __must_check
+ drm_dp_mst_topology_try_get_port(struct drm_dp_mst_port *port)
+ {
+-=09int ret =3D kref_get_unless_zero(&port->topology_kref);
++=09int ret;
+=20
+-=09if (ret)
+-=09=09DRM_DEBUG("port %p (%d)\n", port,
+-=09=09=09  kref_read(&port->topology_kref));
++=09topology_ref_history_lock(port->mgr);
++=09ret =3D kref_get_unless_zero(&port->topology_kref);
++=09if (ret) {
++=09=09DRM_DEBUG("port %p (%d)\n",
++=09=09=09  port, kref_read(&port->topology_kref));
++=09=09save_port_topology_ref(port, DRM_DP_MST_TOPOLOGY_REF_GET);
++=09}
+=20
++=09topology_ref_history_unlock(port->mgr);
+ =09return ret;
+ }
+=20
+@@ -1565,9 +1770,14 @@ drm_dp_mst_topology_try_get_port(struct drm_dp_mst_p=
+ort *port)
+  */
+ static void drm_dp_mst_topology_get_port(struct drm_dp_mst_port *port)
+ {
++=09topology_ref_history_lock(port->mgr);
++
+ =09WARN_ON(kref_read(&port->topology_kref) =3D=3D 0);
+ =09kref_get(&port->topology_kref);
+ =09DRM_DEBUG("port %p (%d)\n", port, kref_read(&port->topology_kref));
++=09save_port_topology_ref(port, DRM_DP_MST_TOPOLOGY_REF_GET);
++
++=09topology_ref_history_unlock(port->mgr);
+ }
+=20
+ /**
+@@ -1583,8 +1793,13 @@ static void drm_dp_mst_topology_get_port(struct drm_=
+dp_mst_port *port)
+  */
+ static void drm_dp_mst_topology_put_port(struct drm_dp_mst_port *port)
+ {
+-=09DRM_DEBUG("port %p (%d)\n",
+-=09=09  port, kref_read(&port->topology_kref) - 1);
++=09topology_ref_history_lock(port->mgr);
++
++=09DRM_DEBUG("port %p/%px (%d)\n",
++=09=09  port, port, kref_read(&port->topology_kref) - 1);
++=09save_port_topology_ref(port, DRM_DP_MST_TOPOLOGY_REF_PUT);
++
++=09topology_ref_history_unlock(port->mgr);
+ =09kref_put(&port->topology_kref, drm_dp_destroy_port);
+ }
+=20
+@@ -4577,6 +4792,9 @@ int drm_dp_mst_topology_mgr_init(struct drm_dp_mst_to=
+pology_mgr *mgr,
+ =09mutex_init(&mgr->delayed_destroy_lock);
+ =09mutex_init(&mgr->up_req_lock);
+ =09mutex_init(&mgr->probe_lock);
++#if IS_ENABLED(CONFIG_DRM_DEBUG_DP_MST_TOPOLOGY_REFS)
++=09mutex_init(&mgr->topology_ref_history_lock);
++#endif
+ =09INIT_LIST_HEAD(&mgr->tx_msg_downq);
+ =09INIT_LIST_HEAD(&mgr->destroy_port_list);
+ =09INIT_LIST_HEAD(&mgr->destroy_branch_device_list);
+@@ -4643,6 +4861,9 @@ void drm_dp_mst_topology_mgr_destroy(struct drm_dp_ms=
+t_topology_mgr *mgr)
+ =09mutex_destroy(&mgr->lock);
+ =09mutex_destroy(&mgr->up_req_lock);
+ =09mutex_destroy(&mgr->probe_lock);
++#if IS_ENABLED(CONFIG_DRM_DEBUG_DP_MST_TOPOLOGY_REFS)
++=09mutex_destroy(&mgr->topology_ref_history_lock);
++#endif
+ }
+ EXPORT_SYMBOL(drm_dp_mst_topology_mgr_destroy);
 =20
 diff --git a/include/drm/drm_dp_mst_helper.h b/include/drm/drm_dp_mst_helpe=
 r.h
-index fd142db42cb0..144027e27464 100644
+index 144027e27464..d5fc90b30487 100644
 --- a/include/drm/drm_dp_mst_helper.h
 +++ b/include/drm/drm_dp_mst_helper.h
-@@ -706,7 +706,8 @@ void drm_dp_mst_dump_topology(struct seq_file *m,
+@@ -26,6 +26,26 @@
+ #include <drm/drm_dp_helper.h>
+ #include <drm/drm_atomic.h>
 =20
- void drm_dp_mst_topology_mgr_suspend(struct drm_dp_mst_topology_mgr *mgr);
- int __must_check
--drm_dp_mst_topology_mgr_resume(struct drm_dp_mst_topology_mgr *mgr);
-+drm_dp_mst_topology_mgr_resume(struct drm_dp_mst_topology_mgr *mgr,
-+=09=09=09       bool sync);
++#if IS_ENABLED(CONFIG_DRM_DEBUG_DP_MST_TOPOLOGY_REFS)
++#include <linux/stackdepot.h>
++#include <linux/timekeeping.h>
++
++enum drm_dp_mst_topology_ref_type {
++=09DRM_DP_MST_TOPOLOGY_REF_GET,
++=09DRM_DP_MST_TOPOLOGY_REF_PUT,
++};
++
++struct drm_dp_mst_topology_ref_history {
++=09struct drm_dp_mst_topology_ref_entry {
++=09=09enum drm_dp_mst_topology_ref_type type;
++=09=09int count;
++=09=09ktime_t ts_nsec;
++=09=09depot_stack_handle_t backtrace;
++=09} *entries;
++=09int len;
++};
++#endif /* IS_ENABLED(CONFIG_DRM_DEBUG_DP_MST_TOPOLOGY_REFS) */
++
+ struct drm_dp_mst_branch;
 =20
- ssize_t drm_dp_mst_dpcd_read(struct drm_dp_aux *aux,
- =09=09=09     unsigned int offset, void *buffer, size_t size);
+ /**
+@@ -89,6 +109,14 @@ struct drm_dp_mst_port {
+ =09 */
+ =09struct kref malloc_kref;
+=20
++#if IS_ENABLED(CONFIG_DRM_DEBUG_DP_MST_TOPOLOGY_REFS)
++=09/**
++=09 * @topology_ref_history: A history of each topology
++=09 * reference/dereference. See CONFIG_DRM_DEBUG_DP_MST_TOPOLOGY_REFS.
++=09 */
++=09struct drm_dp_mst_topology_ref_history topology_ref_history;
++#endif
++
+ =09u8 port_num;
+ =09bool input;
+ =09bool mcs;
+@@ -162,6 +190,14 @@ struct drm_dp_mst_branch {
+ =09 */
+ =09struct kref malloc_kref;
+=20
++#if IS_ENABLED(CONFIG_DRM_DEBUG_DP_MST_TOPOLOGY_REFS)
++=09/**
++=09 * @topology_ref_history: A history of each topology
++=09 * reference/dereference. See CONFIG_DRM_DEBUG_DP_MST_TOPOLOGY_REFS.
++=09 */
++=09struct drm_dp_mst_topology_ref_history topology_ref_history;
++#endif
++
+ =09/**
+ =09 * @destroy_next: linked-list entry used by
+ =09 * drm_dp_delayed_destroy_work()
+@@ -647,6 +683,15 @@ struct drm_dp_mst_topology_mgr {
+ =09 * transmissions.
+ =09 */
+ =09struct work_struct up_req_work;
++
++#if IS_ENABLED(CONFIG_DRM_DEBUG_DP_MST_TOPOLOGY_REFS)
++=09/**
++=09 * @topology_ref_history_lock: protects
++=09 * &drm_dp_mst_port.topology_ref_history and
++=09 * &drm_dp_mst_branch.topology_ref_history.
++=09 */
++=09struct mutex topology_ref_history_lock;
++#endif
+ };
+=20
+ int drm_dp_mst_topology_mgr_init(struct drm_dp_mst_topology_mgr *mgr,
 --=20
 2.21.0
 
