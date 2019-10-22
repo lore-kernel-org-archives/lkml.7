@@ -2,68 +2,31 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCB89CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 03:11:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B06ECA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 03:16:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9DE02089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 03:11:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nZtH6Ev4"
+	by mail.kernel.org (Postfix) with ESMTP id 2E4D920882
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 03:16:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730781AbfJVDKY (ORCPT
+        id S1730877AbfJVDQd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 23:10:24 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:34647 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730156AbfJVDKY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 23:10:24 -0400
-Received: by mail-lf1-f67.google.com with SMTP id f5so4052763lfp.1
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 20:10:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=H8PSb99Ge+xEM0Y69nCMYhCdyrZD0MqeaLJcNORWi1c=;
-        b=nZtH6Ev4ZSEcjk7KCd9ScQaym8kTbtTUpijNuhaUibPYq+J6jgLamwLNoNn8OPEQnq
-         k8os5lZinQGDgDjCSJIkuD+hob+VbkVOdH9YchedA3PHxJdh5k9KkBgPjFPlmerXH7l7
-         XyrXMqlqBFV7/iRqdVwwLaOgpQxNrGwmJL3dg1/oN7vtBVNh0eWS981ZZMr/qnu7/DLW
-         FIjMKldUCiYRJwS18v3jP/0sxsaCzDWQRGwmbbIgsuQulkfXl0H0zlpsYETRyPiIe0ss
-         4V9Ekne5cl8u/oN2BhEpaQNDYkFZktdPOyJTfZEka8OzlmRt2G+dUJf0v4hoZlEeN3ZO
-         Y3gA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=H8PSb99Ge+xEM0Y69nCMYhCdyrZD0MqeaLJcNORWi1c=;
-        b=CeRq5DRTj9tci/R5qiVXDnVm9e9taeBY3qKEZMRbma1hM7/gG9iY3NddN4E7oGJ94h
-         xg6u5UyjnP5To9klzbyctHf+AwqWIvylLfBCmfHlR5OIYr9YtQMn7X3WCKW3yTfG3NIJ
-         mLgGbccpm6+g8w8SyAsbjRVMbEkSQFI2725qjIkHX+7pgHUUjbSC+UF+b6fX0TcGsftD
-         ncR2BNvKb0tFlTbbxvrI94LcNTItGDZuSo3ua8wKLEllS0navbvEeuuf6OaFlQkmQJgy
-         +k80Y8D3exYDhYeD03/4SUQZYoFCJzIOgc38yGIU04KHi2Xa2kQDq1HsHL/mDekyf+Lq
-         3SeA==
-X-Gm-Message-State: APjAAAUKbqo11xQ9aS8vDQTHX2GBMdID3oRm/YV6RzFnAEg6CANQaKyd
-        M3kc+vUoRaUbs8mWQ/IUpFHBzC8XU4mF2Mc2sg0=
-X-Google-Smtp-Source: APXvYqwWjJE1Pssba3kXlqn6u3PHxWMs80aUfkYoBURshvQe+M2QsWAbva6vBPgIpwVQYIXBwmUDhoWoBxI0QMpB17Q=
-X-Received: by 2002:a19:fc1e:: with SMTP id a30mr4057378lfi.167.1571713822001;
- Mon, 21 Oct 2019 20:10:22 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190827180622.159326993@infradead.org> <20190827181147.166658077@infradead.org>
- <aaffb32f-6ca9-f9e3-9b1a-627125c563ed@redhat.com> <20191002182106.GC4643@worktop.programming.kicks-ass.net>
- <20191003181045.7fb1a5b3@gandalf.local.home> <20191004112237.GA19463@hirez.programming.kicks-ass.net>
- <20191004094228.5a5774fe@gandalf.local.home> <CAADnVQJ0cWYPY-+FhZoqUZ8p1k1FiDsO5jhXiQdcCPmd1UeCyQ@mail.gmail.com>
- <20191021204310.3c26f730@oasis.local.home>
-In-Reply-To: <20191021204310.3c26f730@oasis.local.home>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Mon, 21 Oct 2019 20:10:09 -0700
-Message-ID: <CAADnVQLn+Fh-UgSRD9SZCT7WYOez5De04iCZucYbA9mYxPm2AQ@mail.gmail.com>
-Subject: Re: [PATCH 3/3] x86/ftrace: Use text_poke()
-To:     Steven Rostedt <rostedt@goodmis.org>
+        Mon, 21 Oct 2019 23:16:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55688 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730156AbfJVDQd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 23:16:33 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04F7E20882;
+        Tue, 22 Oct 2019 03:16:31 +0000 (UTC)
+Date:   Mon, 21 Oct 2019 23:16:30 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Daniel Bristot de Oliveira <bristot@redhat.com>,
         LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
@@ -72,24 +35,54 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         Song Liu <songliubraving@fb.com>,
         Masami Hiramatsu <mhiramat@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH 3/3] x86/ftrace: Use text_poke()
+Message-ID: <20191021231630.49805757@oasis.local.home>
+In-Reply-To: <CAADnVQLn+Fh-UgSRD9SZCT7WYOez5De04iCZucYbA9mYxPm2AQ@mail.gmail.com>
+References: <20190827180622.159326993@infradead.org>
+        <20190827181147.166658077@infradead.org>
+        <aaffb32f-6ca9-f9e3-9b1a-627125c563ed@redhat.com>
+        <20191002182106.GC4643@worktop.programming.kicks-ass.net>
+        <20191003181045.7fb1a5b3@gandalf.local.home>
+        <20191004112237.GA19463@hirez.programming.kicks-ass.net>
+        <20191004094228.5a5774fe@gandalf.local.home>
+        <CAADnVQJ0cWYPY-+FhZoqUZ8p1k1FiDsO5jhXiQdcCPmd1UeCyQ@mail.gmail.com>
+        <20191021204310.3c26f730@oasis.local.home>
+        <CAADnVQLn+Fh-UgSRD9SZCT7WYOez5De04iCZucYbA9mYxPm2AQ@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 5:43 PM Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> On Mon, 21 Oct 2019 17:36:54 -0700
-> Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
->
->
-> > What is the status of this set ?
-> > Steven, did you apply it ?
->
-> There's still bugs to figure out.
+On Mon, 21 Oct 2019 20:10:09 -0700
+Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
 
-what bugs you're seeing?
-The IPI frequency that was mentioned in this thread or something else?
-I'm hacking ftrace+bpf stuff in the same spot and would like to
-base my work on the latest and greatest.
+> On Mon, Oct 21, 2019 at 5:43 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+> >
+> > On Mon, 21 Oct 2019 17:36:54 -0700
+> > Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
+> >
+> >  
+> > > What is the status of this set ?
+> > > Steven, did you apply it ?  
+> >
+> > There's still bugs to figure out.  
+> 
+> what bugs you're seeing?
+> The IPI frequency that was mentioned in this thread or something else?
+> I'm hacking ftrace+bpf stuff in the same spot and would like to
+> base my work on the latest and greatest.
+
+There's real bugs (crashes), talked about in later versions of the
+patch set:
+
+ https://lore.kernel.org/r/20191009224135.2dcf7767@oasis.local.home
+
+And there was another crash on Peter's latest I just reported:
+
+ https://lore.kernel.org/r/20191021222110.49044eb5@oasis.local.home
+
+-- Steve
