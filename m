@@ -2,1089 +2,157 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB8F6CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:53:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A580ACA9EBA
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:53:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 564D72184C
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:53:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70DB22184C
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:53:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="MHuP48St"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388859AbfJVNxO (ORCPT
+        id S2388920AbfJVNxU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 09:53:14 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:40509 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388381AbfJVNxN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 09:53:13 -0400
-Received: by mail-io1-f70.google.com with SMTP id 125so5120739iou.7
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 06:53:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=gnWW0WWNMZ8dF9pLmMvlvAzi62OcZhDN5y+l5REdBUo=;
-        b=Yq0Zg7JlZVKLOqWqP0ROGyJe66OmlOfXO+xokSXH5svAfftvFDuGRpat7X6y+PWP3x
-         p3Wr1e8X0Fjk5ABHdZnditNisw8JDsnwyKVakWNlPrOySVi6OyNgUc+bt/P/WfLQdvbA
-         x1ZEWJzhDXAm1MXdGqiNIWwr1g23cV5zq+7uvpSLI409/C/PKlYncZzT1O4c+9AiVEhO
-         ErDu3fGgGyocY0JiiXIyq7eAXMY+Ohy/doZURGyKAfhOCKHwdZDzgigCocpc8EUThi2O
-         1NzGkc/wY3qobkSZ+2byPNc8Ww++ERPE9kMONZwHl+690ZvpnE1xLrAGIGjCxnzcJBd2
-         G42Q==
-X-Gm-Message-State: APjAAAWBT94xdDGbSwOX3nHFWOlTcZKXfoXnEB1ht4FHgsdry20PMoLC
-        xW9cW6TJe+cZCRLKgF+MQp+CvVE23fTNb9BPzIqSfVMLhGmz
-X-Google-Smtp-Source: APXvYqzwreEVvYUKJpW/xnkaNsPFZ+6FP3dcxKOoMkQSsI5rCvzRGNLU99vs3sFOW3HVQnvscGwJWb1NjvS7T3AZyBA0R0zO8kLf
+        Tue, 22 Oct 2019 09:53:20 -0400
+Received: from mail-eopbgr140043.outbound.protection.outlook.com ([40.107.14.43]:5505
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388381AbfJVNxS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 09:53:18 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=S1iEa92jK11eBqyfPTKYIWi1gLy0Q905sw/XOc9HglLVtatYM28rVlcD0XIc+XoRWEzcUadDK+i2qfsFE2HTgbSZlAhzd72mG0N+GSRDWJg7olMKzce/HU4PtdKK1EbP5S11TtBrRe8VnB7dGE4kI1XI3VLIqSl7uhXRrB7O4xDAy7/lCRsHT3nfmrdb12Cbthj9EW5bt15AifBZT5E+8aLW/M+sXKJ1eSHJWxk1Lo0a8bJ0NVI9dJ4aSL0xRhXTtr5reovtu2IiqYolPxmurshbIvhblyP/2LtrKeUYj1npD2xuck5z5HDJ/eByDoTsCHLP1wZtqJgTvJrbEBmY9w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8XTB2jDj7bStRalMMzlBYlIlAXfKMzK9REcCMf2o7Rg=;
+ b=dIHvCx5L9WV0uKO5kx5HBxgtcxzRW+NC4cZ/7Q2kDHlH88WRDVphjpcsVqXU/14vSjwaDsS8RoDQosz6ZZD4iJfWL8jAyyKE7VRttTyu8DnvtnHQ53qffqJc7NsVh6PT3ceLNKlQQt1HJsnGJbojQxo3yD7xgOneHEYtrQ+n7+JL5qpd/PbZxM+EQECMPZEEhJgo7nJdBdp86f7wpLJpMDtiLqwyJW3x12Eth/TS7zJPjmH45fyk+6rO0Yu7UjVcpTtM1s7LeiK+YOFViYd3nUuMx8quQT8/28aOZd4RgNlPm+qwR4du4D6DpXGLNipAvIOv6hb0QmokNAszQSmG4w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8XTB2jDj7bStRalMMzlBYlIlAXfKMzK9REcCMf2o7Rg=;
+ b=MHuP48StKB9i33JI2+uwgaypCSMVrGTBWsz1OHu3CUQ29AMBDUuvd0Q5y6CD5hrh6HYdtr6uPDDbuuc3dhUWFFVxedscUqVGDZ65isTdYIuGT/+NnJ2d4bGp6rWL7wgKsjacFXuoIRBDsj8/Raqm0ME9a8iGAKRppmVTVqhB2Yg=
+Received: from VI1PR04MB5134.eurprd04.prod.outlook.com (20.177.51.208) by
+ VI1PR04MB5005.eurprd04.prod.outlook.com (20.177.49.222) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.16; Tue, 22 Oct 2019 13:53:14 +0000
+Received: from VI1PR04MB5134.eurprd04.prod.outlook.com
+ ([fe80::10f0:af2c:76ac:dfb]) by VI1PR04MB5134.eurprd04.prod.outlook.com
+ ([fe80::10f0:af2c:76ac:dfb%7]) with mapi id 15.20.2347.029; Tue, 22 Oct 2019
+ 13:53:14 +0000
+From:   Laurentiu Tudor <laurentiu.tudor@nxp.com>
+To:     Robin Murphy <robin.murphy@arm.com>, "hch@lst.de" <hch@lst.de>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        Ioana Ciocoi Radulescu <ruxandra.radulescu@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>
+CC:     Leo Li <leoyang.li@nxp.com>,
+        Diana Madalina Craciun <diana.craciun@nxp.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        Madalin-cristian Bucur <madalin.bucur@nxp.com>
+Subject: Re: [RFC PATCH 1/3] dma-mapping: introduce a new dma api
+ dma_addr_to_phys_addr()
+Thread-Topic: [RFC PATCH 1/3] dma-mapping: introduce a new dma api
+ dma_addr_to_phys_addr()
+Thread-Index: AQHViNfyo/IzAF7o50+e1U9qS9i5xadmpruAgAAHrIA=
+Date:   Tue, 22 Oct 2019 13:53:14 +0000
+Message-ID: <ab195e02-e7d5-2ca2-9fe0-f2175faf0072@nxp.com>
+References: <20191022125502.12495-1-laurentiu.tudor@nxp.com>
+ <20191022125502.12495-2-laurentiu.tudor@nxp.com>
+ <62561dca-cdd7-fe01-a0c3-7b5971c96e7e@arm.com>
+In-Reply-To: <62561dca-cdd7-fe01-a0c3-7b5971c96e7e@arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=laurentiu.tudor@nxp.com; 
+x-originating-ip: [89.37.124.34]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: cd1b7fa6-dee9-4c3b-17c0-08d756f72f4f
+x-ms-traffictypediagnostic: VI1PR04MB5005:|VI1PR04MB5005:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR04MB50059A0BE0847CA834F9DE9EEC680@VI1PR04MB5005.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 01986AE76B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(366004)(396003)(136003)(376002)(39860400002)(189003)(199004)(8676002)(2616005)(102836004)(110136005)(11346002)(6246003)(2201001)(54906003)(6512007)(8936002)(4326008)(14454004)(6636002)(71200400001)(71190400001)(81156014)(81166006)(25786009)(486006)(561944003)(476003)(256004)(478600001)(31686004)(6486002)(186003)(26005)(446003)(66946007)(86362001)(31696002)(229853002)(5660300002)(3846002)(36756003)(7736002)(66446008)(99286004)(66476007)(91956017)(66556008)(6116002)(305945005)(2501003)(66066001)(316002)(76176011)(76116006)(53546011)(64756008)(6506007)(6436002)(44832011)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5005;H:VI1PR04MB5134.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: K0MTenO+MNAb+xQQiYBVB4uxNSmXG+TUiznNRfSuW7GCQ59Q+W+7GCBXLB8WSvq/xQxDuYXv7uGXCbQ8T+xJt0/khWrXDwQMDmS830RSDbOJ+bxPaWNBj6b7ZzKuHNO7bX+jvMNyKvD2TkGmQheYJyS7jzcoVxwpCgfZlvb5P4dSyIZxSFjgEYSE6isj4Mt7Pan3Wx3xUOrFHFA9pF60dEUhDo421LFfW7pHQO60l05bzqNp+JtidbSQX19o9p8NUrh8TnSdMFGWtBcTdxJCkdAo5JaoMvwS9Cf/mDvO8jrA94hq+nM7muBvay1S90b+MepRdriYS2HnaoTFDdUrFjdqqyypaqeYpUFaLJltP+X6hkj7hOjBLs+Nhy5iEj+gRXgPc0ExXzrRWdc3DnJqi9TrIylC6IAxER96ZLGIudc=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <037C736D50287E4994EC930D45F1AC02@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-Received: by 2002:a5e:de43:: with SMTP id e3mr3807227ioq.23.1571752390288;
- Tue, 22 Oct 2019 06:53:10 -0700 (PDT)
-Date:   Tue, 22 Oct 2019 06:53:10 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000e600b70595801ebe@google.com>
-Subject: linux-next boot error: WARNING in corrupted (2)
-From:   syzbot <syzbot+ed5ca5ca7bd74317292b@syzkaller.appspotmail.com>
-To:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cd1b7fa6-dee9-4c3b-17c0-08d756f72f4f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Oct 2019 13:53:14.5388
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 9X3QIVq3w+H9zWvcohL/uAVovplXOm7LdqbwG7JAe8pFUugXIgXDh4wpyyRP81cBIJx7c+HVrQXXW1piFP/mww==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5005
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-syzbot found the following crash on:
-
-HEAD commit:    78662bff Add linux-next specific files for 20191016
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=15702173600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=1795e2d55aa87343
-dashboard link: https://syzkaller.appspot.com/bug?extid=ed5ca5ca7bd74317292b
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+ed5ca5ca7bd74317292b@syzkaller.appspotmail.com
-
-smpboot: CPU0: Intel(R) Xeon(R) CPU @ 2.30GHz (family: 0x6, model: 0x3f,  
-stepping: 0x0)
-Performance Events: unsupported p6 CPU model 63 no PMU driver, software  
-events only.
-rcu: Hierarchical SRCU implementation.
-NMI watchdog: Perf NMI watchdog permanently disabled
-smp: Bringing up secondary CPUs ...
-x86: Booting SMP configuration:
-.... node  #0, CPUs:      #1
-MDS CPU bug present and SMT on, data leak possible. See  
-https://www.kernel.org/doc/html/latest/admin-guide/hw-vuln/mds.html for  
-more details.
-smp: Brought up 2 nodes, 2 CPUs
-smpboot: Max logical packages: 1
-smpboot: Total of 2 processors activated (9200.00 BogoMIPS)
-devtmpfs: initialized
-clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns:  
-19112604462750000 ns
-futex hash table entries: 512 (order: 4, 65536 bytes, vmalloc)
-xor: automatically using best checksumming function   avx
-PM: RTC time: 17:21:14, date: 2019-10-16
-NET: Registered protocol family 16
-audit: initializing netlink subsys (disabled)
-cpuidle: using governor menu
-ACPI: bus type PCI registered
-dca service started, version 1.12.1
-PCI: Using configuration type 1 for base access
-WARNING: workqueue cpumask: online intersect > possible intersect
-HugeTLB registered 1.00 GiB page size, pre-allocated 0 pages
-HugeTLB registered 2.00 MiB page size, pre-allocated 0 pages
-cryptd: max_cpu_qlen set to 1000
-raid6: avx2x4   gen() 12305 MB/s
-raid6: avx2x4   xor()  6652 MB/s
-raid6: avx2x2   gen()  7554 MB/s
-raid6: avx2x2   xor()  3817 MB/s
-raid6: avx2x1   gen()  1272 MB/s
-raid6: avx2x1   xor()  2107 MB/s
-raid6: sse2x4   gen()  6225 MB/s
-raid6: sse2x4   xor()  3465 MB/s
-raid6: sse2x2   gen()  2833 MB/s
-raid6: sse2x2   xor()  2040 MB/s
-raid6: sse2x1   gen()   523 MB/s
-raid6: sse2x1   xor()  1020 MB/s
-raid6: using algorithm avx2x4 gen() 12305 MB/s
-raid6: .... xor() 6652 MB/s, rmw enabled
-raid6: using avx2x2 recovery algorithm
-ACPI: Added _OSI(Module Device)
-ACPI: Added _OSI(Processor Device)
-ACPI: Added _OSI(3.0 _SCP Extensions)
-ACPI: Added _OSI(Processor Aggregator Device)
-ACPI: Added _OSI(Linux-Dell-Video)
-ACPI: Added _OSI(Linux-Lenovo-NV-HDMI-Audio)
-ACPI: Added _OSI(Linux-HPI-Hybrid-Graphics)
-ACPI: 2 ACPI AML tables successfully acquired and loaded
-ACPI: Interpreter enabled
-ACPI: (supports S0 S3 S4 S5)
-ACPI: Using IOAPIC for interrupt routing
-PCI: Using host bridge windows from ACPI; if necessary, use "pci=nocrs" and  
-report a bug
-ACPI: Enabled 16 GPEs in block 00 to 0F
-ACPI: PCI Root Bridge [PCI0] (domain 0000 [bus 00-ff])
-acpi PNP0A03:00: _OSC: OS supports [ASPM ClockPM Segments MSI HPX-Type3]
-acpi PNP0A03:00: fail to add MMCONFIG information, can't access extended  
-PCI configuration space under this bridge.
-PCI host bridge to bus 0000:00
-pci_bus 0000:00: root bus resource [io  0x0000-0x0cf7 window]
-pci_bus 0000:00: root bus resource [io  0x0d00-0xffff window]
-pci_bus 0000:00: root bus resource [mem 0x000a0000-0x000bffff window]
-pci_bus 0000:00: root bus resource [mem 0xc0000000-0xfebfffff window]
-pci_bus 0000:00: root bus resource [bus 00-ff]
-pci 0000:00:00.0: [8086:1237] type 00 class 0x060000
-pci 0000:00:01.0: [8086:7110] type 00 class 0x060100
-pci 0000:00:01.3: [8086:7113] type 00 class 0x068000
-pci 0000:00:01.3: quirk: [io  0xb000-0xb03f] claimed by PIIX4 ACPI
-pci 0000:00:03.0: [1af4:1004] type 00 class 0x000000
-pci 0000:00:03.0: reg 0x10: [io  0xc000-0xc03f]
-pci 0000:00:03.0: reg 0x14: [mem 0xfebfe000-0xfebfe07f]
-pci 0000:00:04.0: [1af4:1000] type 00 class 0x020000
-pci 0000:00:04.0: reg 0x10: [io  0xc040-0xc07f]
-pci 0000:00:04.0: reg 0x14: [mem 0xfebff000-0xfebff07f]
-ACPI: PCI Interrupt Link [LNKA] (IRQs 5 *10 11)
-ACPI: PCI Interrupt Link [LNKB] (IRQs 5 *10 11)
-ACPI: PCI Interrupt Link [LNKC] (IRQs 5 10 *11)
-ACPI: PCI Interrupt Link [LNKD] (IRQs 5 10 *11)
-ACPI: PCI Interrupt Link [LNKS] (IRQs *9)
-iommu: Default domain type: Translated
-vgaarb: loaded
-SCSI subsystem initialized
-ACPI: bus type USB registered
-usbcore: registered new interface driver usbfs
-usbcore: registered new interface driver hub
-usbcore: registered new device driver usb
-mc: Linux media interface: v0.10
-videodev: Linux video capture interface: v2.00
-pps_core: LinuxPPS API ver. 1 registered
-pps_core: Software ver. 5.3.6 - Copyright 2005-2007 Rodolfo Giometti  
-<giometti@linux.it>
-PTP clock support registered
-EDAC MC: Ver: 3.0.0
-Advanced Linux Sound Architecture Driver Initialized.
-PCI: Using ACPI for IRQ routing
-Bluetooth: Core ver 2.22
-NET: Registered protocol family 31
-Bluetooth: HCI device and connection manager initialized
-Bluetooth: HCI socket layer initialized
-Bluetooth: L2CAP socket layer initialized
-Bluetooth: SCO socket layer initialized
-NET: Registered protocol family 8
-NET: Registered protocol family 20
-NetLabel: Initializing
-NetLabel:  domain hash size = 128
-NetLabel:  protocols = UNLABELED CIPSOv4 CALIPSO
-NetLabel:  unlabeled traffic allowed by default
-nfc: nfc_init: NFC Core ver 0.1
-NET: Registered protocol family 39
-clocksource: Switched to clocksource kvm-clock
-*** VALIDATE bpf ***
-VFS: Disk quotas dquot_6.6.0
-VFS: Dquot-cache hash table entries: 512 (order 0, 4096 bytes)
-FS-Cache: Loaded
-*** VALIDATE ramfs ***
-*** VALIDATE hugetlbfs ***
-CacheFiles: Loaded
-TOMOYO: 2.6.0
-Mandatory Access Control activated.
-AppArmor: AppArmor Filesystem Enabled
-pnp: PnP ACPI init
-pnp: PnP ACPI: found 7 devices
-thermal_sys: Registered thermal governor 'step_wise'
-thermal_sys: Registered thermal governor 'user_space'
-clocksource: acpi_pm: mask: 0xffffff max_cycles: 0xffffff, max_idle_ns:  
-2085701024 ns
-pci_bus 0000:00: resource 4 [io  0x0000-0x0cf7 window]
-pci_bus 0000:00: resource 5 [io  0x0d00-0xffff window]
-pci_bus 0000:00: resource 6 [mem 0x000a0000-0x000bffff window]
-pci_bus 0000:00: resource 7 [mem 0xc0000000-0xfebfffff window]
-NET: Registered protocol family 2
-tcp_listen_portaddr_hash hash table entries: 4096 (order: 6, 294912 bytes,  
-vmalloc)
-TCP established hash table entries: 65536 (order: 7, 524288 bytes, vmalloc)
-TCP bind hash table entries: 65536 (order: 10, 4194304 bytes, vmalloc)
-TCP: Hash tables configured (established 65536 bind 65536)
-UDP hash table entries: 4096 (order: 7, 655360 bytes, vmalloc)
-UDP-Lite hash table entries: 4096 (order: 7, 655360 bytes, vmalloc)
-NET: Registered protocol family 1
-RPC: Registered named UNIX socket transport module.
-RPC: Registered udp transport module.
-RPC: Registered tcp transport module.
-RPC: Registered tcp NFSv4.1 backchannel transport module.
-NET: Registered protocol family 44
-pci 0000:00:00.0: Limiting direct PCI/PCI transfers
-PCI: CLS 0 bytes, default 64
-PCI-DMA: Using software bounce buffering for IO (SWIOTLB)
-software IO TLB: mapped [mem 0xaa800000-0xae800000] (64MB)
-RAPL PMU: API unit is 2^-32 Joules, 0 fixed counters, 10737418240 ms ovfl  
-timer
-kvm: already loaded the other module
-clocksource: tsc: mask: 0xffffffffffffffff max_cycles: 0x212735223b2,  
-max_idle_ns: 440795277976 ns
-clocksource: Switched to clocksource tsc
-mce: Machine check injector initialized
-check: Scanning for low memory corruption every 60 seconds
-Initialise system trusted keyrings
-workingset: timestamp_bits=40 max_order=21 bucket_order=0
-zbud: loaded
-DLM installed
-squashfs: version 4.0 (2009/01/31) Phillip Lougher
-FS-Cache: Netfs 'nfs' registered for caching
-NFS: Registering the id_resolver key type
-Key type id_resolver registered
-Key type id_legacy registered
-nfs4filelayout_init: NFSv4 File Layout Driver Registering...
-Installing knfsd (copyright (C) 1996 okir@monad.swb.de).
-ntfs: driver 2.1.32 [Flags: R/W].
-fuse: init (API version 7.31)
-*** VALIDATE fuse ***
-*** VALIDATE fuse ***
-JFS: nTxBlock = 8192, nTxLock = 65536
-SGI XFS with ACLs, security attributes, realtime, no debug enabled
-9p: Installing v9fs 9p2000 file system support
-FS-Cache: Netfs '9p' registered for caching
-*** VALIDATE gfs2 ***
-gfs2: GFS2 installed
-FS-Cache: Netfs 'ceph' registered for caching
-ceph: loaded (mds proto 32)
-NET: Registered protocol family 38
-async_tx: api initialized (async)
-Key type asymmetric registered
-Asymmetric key parser 'x509' registered
-Asymmetric key parser 'pkcs8' registered
-Key type pkcs7_test registered
-Asymmetric key parser 'tpm_parser' registered
-Block layer SCSI generic (bsg) driver version 0.4 loaded (major 246)
-io scheduler mq-deadline registered
-io scheduler kyber registered
-io scheduler bfq registered
-input: Power Button as /devices/LNXSYSTM:00/LNXPWRBN:00/input/input0
-ACPI: Power Button [PWRF]
-input: Sleep Button as /devices/LNXSYSTM:00/LNXSLPBN:00/input/input1
-ACPI: Sleep Button [SLPF]
-ioatdma: Intel(R) QuickData Technology Driver 5.00
-PCI Interrupt Link [LNKC] enabled at IRQ 11
-virtio-pci 0000:00:03.0: virtio_pci: leaving for legacy driver
-PCI Interrupt Link [LNKD] enabled at IRQ 10
-virtio-pci 0000:00:04.0: virtio_pci: leaving for legacy driver
-HDLC line discipline maxframe=4096
-N_HDLC line discipline registered.
-Serial: 8250/16550 driver, 4 ports, IRQ sharing enabled
-00:03: ttyS0 at I/O 0x3f8 (irq = 4, base_baud = 115200) is a 16550A
-00:04: ttyS1 at I/O 0x2f8 (irq = 3, base_baud = 115200) is a 16550A
-00:05: ttyS2 at I/O 0x3e8 (irq = 6, base_baud = 115200) is a 16550A
-00:06: ttyS3 at I/O 0x2e8 (irq = 7, base_baud = 115200) is a 16550A
-Non-volatile memory driver v1.3
-Linux agpgart interface v0.103
-[drm] Initialized vgem 1.0.0 20120112 for vgem on minor 0
-[drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
-[drm] Driver supports precise vblank timestamp query.
-[drm] Initialized vkms 1.0.0 20180514 for vkms on minor 1
-usbcore: registered new interface driver udl
-brd: module loaded
-loop: module loaded
-zram: Added device: zram0
-null_blk: module loaded
-nfcsim 0.2 initialized
-Loading iSCSI transport class v2.0-870.
-scsi host0: Virtio SCSI HBA
-st: Version 20160209, fixed bufsize 32768, s/g segs 256
-slram: not enough parameters.
-ftl_cs: FTL header not found.
-Ethernet Channel Bonding Driver: v3.7.1 (April 27, 2011)
-eql: Equalizer2002: Simon Janes (simon@ncm.com) and David S. Miller  
-(davem@redhat.com)
-MACsec IEEE 802.1AE
-tun: Universal TUN/TAP device driver, 1.6
-vcan: Virtual CAN interface driver
-vxcan: Virtual CAN Tunnel driver
-slcan: serial line CAN interface driver
-slcan: 10 dynamic interface channels.
-CAN device driver interface
-enic: Cisco VIC Ethernet NIC Driver, ver 2.3.0.53
-e100: Intel(R) PRO/100 Network Driver, 3.5.24-k2-NAPI
-e100: Copyright(c) 1999-2006 Intel Corporation
-e1000: Intel(R) PRO/1000 Network Driver - version 7.3.21-k8-NAPI
-e1000: Copyright (c) 1999-2006 Intel Corporation.
-e1000e: Intel(R) PRO/1000 Network Driver - 3.2.6-k
-e1000e: Copyright(c) 1999 - 2015 Intel Corporation.
-mkiss: AX.25 Multikiss, Hans Albas PE1AYX
-AX.25: 6pack driver, Revision: 0.3.0
-AX.25: bpqether driver version 004
-PPP generic driver version 2.4.2
-PPP BSD Compression module registered
-PPP Deflate Compression module registered
-PPP MPPE Compression module registered
-NET: Registered protocol family 24
-PPTP driver version 0.8.5
-SLIP: version 0.8.4-NET3.019-NEWTTY (dynamic channels, max=256) (6 bit  
-encapsulation enabled).
-CSLIP: code copyright 1989 Regents of the University of California.
-SLIP linefill/keepalive option.
-hdlc: HDLC support module revision 1.22
-x25_asy: X.25 async: version 0.00 ALPHA (dynamic channels, max=256)
-DLCI driver v0.35, 4 Jan 1997, mike.mclagan@linux.org.
-LAPB Ethernet driver version 0.02
-usbcore: registered new interface driver rndis_wlan
-mac80211_hwsim: initializing netlink
-mac802154_hwsim mac802154_hwsim: Added 2 mac802154 hwsim hardware radios
-VMware vmxnet3 virtual NIC driver - version 1.4.17.0-k-NAPI
-pegasus: v0.9.3 (2013/04/25), Pegasus/Pegasus II USB Ethernet driver
-usbcore: registered new interface driver pegasus
-usbcore: registered new interface driver rtl8150
-usbcore: registered new interface driver r8152
-usbcore: registered new interface driver asix
-usbcore: registered new interface driver ax88179_178a
-usbcore: registered new interface driver cdc_ether
-usbcore: registered new interface driver dm9601
-usbcore: registered new interface driver smsc75xx
-usbcore: registered new interface driver smsc95xx
-usbcore: registered new interface driver net1080
-usbcore: registered new interface driver rndis_host
-usbcore: registered new interface driver cdc_subset
-usbcore: registered new interface driver zaurus
-usbcore: registered new interface driver MOSCHIP usb-ethernet driver
-usbcore: registered new interface driver cdc_ncm
-usbcore: registered new interface driver cdc_mbim
-VFIO - User Level meta-driver version: 0.3
-aoe: AoE v85 initialised.
-ehci_hcd: USB 2.0 'Enhanced' Host Controller (EHCI) Driver
-ehci-pci: EHCI PCI platform driver
-ohci_hcd: USB 1.1 'Open' Host Controller (OHCI) Driver
-ohci-pci: OHCI PCI platform driver
-uhci_hcd: USB Universal Host Controller Interface driver
-usbcore: registered new interface driver cdc_acm
-cdc_acm: USB Abstract Control Model driver for USB modems and ISDN adapters
-usbcore: registered new interface driver usblp
-usbcore: registered new interface driver cdc_wdm
-usbcore: registered new interface driver uas
-usbcore: registered new interface driver usb-storage
-usbcore: registered new interface driver ums-realtek
-usbcore: registered new interface driver usbserial_generic
-usbserial: USB Serial support registered for generic
-usbcore: registered new interface driver ch341
-usbserial: USB Serial support registered for ch341-uart
-usbcore: registered new interface driver cp210x
-usbserial: USB Serial support registered for cp210x
-usbcore: registered new interface driver ftdi_sio
-usbserial: USB Serial support registered for FTDI USB Serial Device
-usbcore: registered new interface driver keyspan
-usbserial: USB Serial support registered for Keyspan - (without firmware)
-usbserial: USB Serial support registered for Keyspan 1 port adapter
-usbserial: USB Serial support registered for Keyspan 2 port adapter
-usbserial: USB Serial support registered for Keyspan 4 port adapter
-usbcore: registered new interface driver option
-usbserial: USB Serial support registered for GSM modem (1-port)
-usbcore: registered new interface driver oti6858
-usbserial: USB Serial support registered for oti6858
-usbcore: registered new interface driver pl2303
-usbserial: USB Serial support registered for pl2303
-usbcore: registered new interface driver qcserial
-usbserial: USB Serial support registered for Qualcomm USB modem
-usbcore: registered new interface driver sierra
-usbserial: USB Serial support registered for Sierra USB modem
-usbcore: registered new interface driver usb_serial_simple
-usbserial: USB Serial support registered for carelink
-usbserial: USB Serial support registered for zio
-usbserial: USB Serial support registered for funsoft
-usbserial: USB Serial support registered for flashloader
-usbserial: USB Serial support registered for google
-usbserial: USB Serial support registered for libtransistor
-usbserial: USB Serial support registered for vivopay
-usbserial: USB Serial support registered for moto_modem
-usbserial: USB Serial support registered for motorola_tetra
-usbserial: USB Serial support registered for novatel_gps
-usbserial: USB Serial support registered for hp4x
-usbserial: USB Serial support registered for suunto
-usbserial: USB Serial support registered for siemens_mpi
-Number of emulated UDC must be in range of 1...2
-udc-core: couldn't find an available UDC - added [g_multi] to list of  
-pending drivers
-vhci_hcd vhci_hcd.0: USB/IP Virtual Host Controller
-vhci_hcd vhci_hcd.0: new USB bus registered, assigned bus number 1
-vhci_hcd: created sysfs vhci_hcd.0
-usb usb1: New USB device found, idVendor=1d6b, idProduct=0002, bcdDevice=  
-5.04
-usb usb1: New USB device strings: Mfr=3, Product=2, SerialNumber=1
-usb usb1: Product: USB/IP Virtual Host Controller
-usb usb1: Manufacturer: Linux 5.4.0-rc3-next-20191016 vhci_hcd
-usb usb1: SerialNumber: vhci_hcd.0
-hub 1-0:1.0: USB hub found
-hub 1-0:1.0: 8 ports detected
-vhci_hcd vhci_hcd.0: USB/IP Virtual Host Controller
-vhci_hcd vhci_hcd.0: new USB bus registered, assigned bus number 2
-usb usb2: We don't know the algorithms for LPM for this host, disabling LPM.
-usb usb2: New USB device found, idVendor=1d6b, idProduct=0003, bcdDevice=  
-5.04
-usb usb2: New USB device strings: Mfr=3, Product=2, SerialNumber=1
-usb usb2: Product: USB/IP Virtual Host Controller
-usb usb2: Manufacturer: Linux 5.4.0-rc3-next-20191016 vhci_hcd
-usb usb2: SerialNumber: vhci_hcd.0
-hub 2-0:1.0: USB hub found
-hub 2-0:1.0: 8 ports detected
-vhci_hcd vhci_hcd.1: USB/IP Virtual Host Controller
-vhci_hcd vhci_hcd.1: new USB bus registered, assigned bus number 3
-usb usb3: New USB device found, idVendor=1d6b, idProduct=0002, bcdDevice=  
-5.04
-usb usb3: New USB device strings: Mfr=3, Product=2, SerialNumber=1
-usb usb3: Product: USB/IP Virtual Host Controller
-usb usb3: Manufacturer: Linux 5.4.0-rc3-next-20191016 vhci_hcd
-usb usb3: SerialNumber: vhci_hcd.1
-hub 3-0:1.0: USB hub found
-hub 3-0:1.0: 8 ports detected
-vhci_hcd vhci_hcd.1: USB/IP Virtual Host Controller
-vhci_hcd vhci_hcd.1: new USB bus registered, assigned bus number 4
-usb usb4: We don't know the algorithms for LPM for this host, disabling LPM.
-usb usb4: New USB device found, idVendor=1d6b, idProduct=0003, bcdDevice=  
-5.04
-usb usb4: New USB device strings: Mfr=3, Product=2, SerialNumber=1
-usb usb4: Product: USB/IP Virtual Host Controller
-usb usb4: Manufacturer: Linux 5.4.0-rc3-next-20191016 vhci_hcd
-usb usb4: SerialNumber: vhci_hcd.1
-hub 4-0:1.0: USB hub found
-hub 4-0:1.0: 8 ports detected
-vhci_hcd vhci_hcd.2: USB/IP Virtual Host Controller
-vhci_hcd vhci_hcd.2: new USB bus registered, assigned bus number 5
-usb usb5: New USB device found, idVendor=1d6b, idProduct=0002, bcdDevice=  
-5.04
-usb usb5: New USB device strings: Mfr=3, Product=2, SerialNumber=1
-usb usb5: Product: USB/IP Virtual Host Controller
-usb usb5: Manufacturer: Linux 5.4.0-rc3-next-20191016 vhci_hcd
-usb usb5: SerialNumber: vhci_hcd.2
-hub 5-0:1.0: USB hub found
-hub 5-0:1.0: 8 ports detected
-vhci_hcd vhci_hcd.2: USB/IP Virtual Host Controller
-vhci_hcd vhci_hcd.2: new USB bus registered, assigned bus number 6
-usb usb6: We don't know the algorithms for LPM for this host, disabling LPM.
-usb usb6: New USB device found, idVendor=1d6b, idProduct=0003, bcdDevice=  
-5.04
-usb usb6: New USB device strings: Mfr=3, Product=2, SerialNumber=1
-usb usb6: Product: USB/IP Virtual Host Controller
-usb usb6: Manufacturer: Linux 5.4.0-rc3-next-20191016 vhci_hcd
-usb usb6: SerialNumber: vhci_hcd.2
-hub 6-0:1.0: USB hub found
-hub 6-0:1.0: 8 ports detected
-vhci_hcd vhci_hcd.3: USB/IP Virtual Host Controller
-vhci_hcd vhci_hcd.3: new USB bus registered, assigned bus number 7
-usb usb7: New USB device found, idVendor=1d6b, idProduct=0002, bcdDevice=  
-5.04
-usb usb7: New USB device strings: Mfr=3, Product=2, SerialNumber=1
-usb usb7: Product: USB/IP Virtual Host Controller
-usb usb7: Manufacturer: Linux 5.4.0-rc3-next-20191016 vhci_hcd
-usb usb7: SerialNumber: vhci_hcd.3
-hub 7-0:1.0: USB hub found
-hub 7-0:1.0: 8 ports detected
-vhci_hcd vhci_hcd.3: USB/IP Virtual Host Controller
-vhci_hcd vhci_hcd.3: new USB bus registered, assigned bus number 8
-usb usb8: We don't know the algorithms for LPM for this host, disabling LPM.
-usb usb8: New USB device found, idVendor=1d6b, idProduct=0003, bcdDevice=  
-5.04
-usb usb8: New USB device strings: Mfr=3, Product=2, SerialNumber=1
-usb usb8: Product: USB/IP Virtual Host Controller
-usb usb8: Manufacturer: Linux 5.4.0-rc3-next-20191016 vhci_hcd
-usb usb8: SerialNumber: vhci_hcd.3
-hub 8-0:1.0: USB hub found
-hub 8-0:1.0: 8 ports detected
-vhci_hcd vhci_hcd.4: USB/IP Virtual Host Controller
-vhci_hcd vhci_hcd.4: new USB bus registered, assigned bus number 9
-usb usb9: New USB device found, idVendor=1d6b, idProduct=0002, bcdDevice=  
-5.04
-usb usb9: New USB device strings: Mfr=3, Product=2, SerialNumber=1
-usb usb9: Product: USB/IP Virtual Host Controller
-usb usb9: Manufacturer: Linux 5.4.0-rc3-next-20191016 vhci_hcd
-usb usb9: SerialNumber: vhci_hcd.4
-hub 9-0:1.0: USB hub found
-hub 9-0:1.0: 8 ports detected
-vhci_hcd vhci_hcd.4: USB/IP Virtual Host Controller
-vhci_hcd vhci_hcd.4: new USB bus registered, assigned bus number 10
-usb usb10: We don't know the algorithms for LPM for this host, disabling  
-LPM.
-usb usb10: New USB device found, idVendor=1d6b, idProduct=0003, bcdDevice=  
-5.04
-usb usb10: New USB device strings: Mfr=3, Product=2, SerialNumber=1
-usb usb10: Product: USB/IP Virtual Host Controller
-usb usb10: Manufacturer: Linux 5.4.0-rc3-next-20191016 vhci_hcd
-usb usb10: SerialNumber: vhci_hcd.4
-hub 10-0:1.0: USB hub found
-hub 10-0:1.0: 8 ports detected
-vhci_hcd vhci_hcd.5: USB/IP Virtual Host Controller
-vhci_hcd vhci_hcd.5: new USB bus registered, assigned bus number 11
-usb usb11: New USB device found, idVendor=1d6b, idProduct=0002, bcdDevice=  
-5.04
-usb usb11: New USB device strings: Mfr=3, Product=2, SerialNumber=1
-usb usb11: Product: USB/IP Virtual Host Controller
-usb usb11: Manufacturer: Linux 5.4.0-rc3-next-20191016 vhci_hcd
-usb usb11: SerialNumber: vhci_hcd.5
-hub 11-0:1.0: USB hub found
-hub 11-0:1.0: 8 ports detected
-vhci_hcd vhci_hcd.5: USB/IP Virtual Host Controller
-vhci_hcd vhci_hcd.5: new USB bus registered, assigned bus number 12
-usb usb12: We don't know the algorithms for LPM for this host, disabling  
-LPM.
-usb usb12: New USB device found, idVendor=1d6b, idProduct=0003, bcdDevice=  
-5.04
-usb usb12: New USB device strings: Mfr=3, Product=2, SerialNumber=1
-usb usb12: Product: USB/IP Virtual Host Controller
-usb usb12: Manufacturer: Linux 5.4.0-rc3-next-20191016 vhci_hcd
-usb usb12: SerialNumber: vhci_hcd.5
-hub 12-0:1.0: USB hub found
-hub 12-0:1.0: 8 ports detected
-vhci_hcd vhci_hcd.6: USB/IP Virtual Host Controller
-vhci_hcd vhci_hcd.6: new USB bus registered, assigned bus number 13
-usb usb13: New USB device found, idVendor=1d6b, idProduct=0002, bcdDevice=  
-5.04
-usb usb13: New USB device strings: Mfr=3, Product=2, SerialNumber=1
-usb usb13: Product: USB/IP Virtual Host Controller
-usb usb13: Manufacturer: Linux 5.4.0-rc3-next-20191016 vhci_hcd
-usb usb13: SerialNumber: vhci_hcd.6
-hub 13-0:1.0: USB hub found
-hub 13-0:1.0: 8 ports detected
-vhci_hcd vhci_hcd.6: USB/IP Virtual Host Controller
-vhci_hcd vhci_hcd.6: new USB bus registered, assigned bus number 14
-usb usb14: We don't know the algorithms for LPM for this host, disabling  
-LPM.
-usb usb14: New USB device found, idVendor=1d6b, idProduct=0003, bcdDevice=  
-5.04
-usb usb14: New USB device strings: Mfr=3, Product=2, SerialNumber=1
-usb usb14: Product: USB/IP Virtual Host Controller
-usb usb14: Manufacturer: Linux 5.4.0-rc3-next-20191016 vhci_hcd
-usb usb14: SerialNumber: vhci_hcd.6
-hub 14-0:1.0: USB hub found
-hub 14-0:1.0: 8 ports detected
-vhci_hcd vhci_hcd.7: USB/IP Virtual Host Controller
-vhci_hcd vhci_hcd.7: new USB bus registered, assigned bus number 15
-usb usb15: New USB device found, idVendor=1d6b, idProduct=0002, bcdDevice=  
-5.04
-usb usb15: New USB device strings: Mfr=3, Product=2, SerialNumber=1
-usb usb15: Product: USB/IP Virtual Host Controller
-usb usb15: Manufacturer: Linux 5.4.0-rc3-next-20191016 vhci_hcd
-usb usb15: SerialNumber: vhci_hcd.7
-hub 15-0:1.0: USB hub found
-hub 15-0:1.0: 8 ports detected
-vhci_hcd vhci_hcd.7: USB/IP Virtual Host Controller
-vhci_hcd vhci_hcd.7: new USB bus registered, assigned bus number 16
-usb usb16: We don't know the algorithms for LPM for this host, disabling  
-LPM.
-usb usb16: New USB device found, idVendor=1d6b, idProduct=0003, bcdDevice=  
-5.04
-usb usb16: New USB device strings: Mfr=3, Product=2, SerialNumber=1
-usb usb16: Product: USB/IP Virtual Host Controller
-usb usb16: Manufacturer: Linux 5.4.0-rc3-next-20191016 vhci_hcd
-usb usb16: SerialNumber: vhci_hcd.7
-hub 16-0:1.0: USB hub found
-hub 16-0:1.0: 8 ports detected
-vhci_hcd vhci_hcd.8: USB/IP Virtual Host Controller
-vhci_hcd vhci_hcd.8: new USB bus registered, assigned bus number 17
-usb usb17: New USB device found, idVendor=1d6b, idProduct=0002, bcdDevice=  
-5.04
-usb usb17: New USB device strings: Mfr=3, Product=2, SerialNumber=1
-usb usb17: Product: USB/IP Virtual Host Controller
-usb usb17: Manufacturer: Linux 5.4.0-rc3-next-20191016 vhci_hcd
-usb usb17: SerialNumber: vhci_hcd.8
-hub 17-0:1.0: USB hub found
-hub 17-0:1.0: 8 ports detected
-vhci_hcd vhci_hcd.8: USB/IP Virtual Host Controller
-vhci_hcd vhci_hcd.8: new USB bus registered, assigned bus number 18
-usb usb18: We don't know the algorithms for LPM for this host, disabling  
-LPM.
-usb usb18: New USB device found, idVendor=1d6b, idProduct=0003, bcdDevice=  
-5.04
-usb usb18: New USB device strings: Mfr=3, Product=2, SerialNumber=1
-usb usb18: Product: USB/IP Virtual Host Controller
-usb usb18: Manufacturer: Linux 5.4.0-rc3-next-20191016 vhci_hcd
-usb usb18: SerialNumber: vhci_hcd.8
-hub 18-0:1.0: USB hub found
-hub 18-0:1.0: 8 ports detected
-vhci_hcd vhci_hcd.9: USB/IP Virtual Host Controller
-vhci_hcd vhci_hcd.9: new USB bus registered, assigned bus number 19
-usb usb19: New USB device found, idVendor=1d6b, idProduct=0002, bcdDevice=  
-5.04
-usb usb19: New USB device strings: Mfr=3, Product=2, SerialNumber=1
-usb usb19: Product: USB/IP Virtual Host Controller
-usb usb19: Manufacturer: Linux 5.4.0-rc3-next-20191016 vhci_hcd
-usb usb19: SerialNumber: vhci_hcd.9
-hub 19-0:1.0: USB hub found
-hub 19-0:1.0: 8 ports detected
-vhci_hcd vhci_hcd.9: USB/IP Virtual Host Controller
-vhci_hcd vhci_hcd.9: new USB bus registered, assigned bus number 20
-usb usb20: We don't know the algorithms for LPM for this host, disabling  
-LPM.
-usb usb20: New USB device found, idVendor=1d6b, idProduct=0003, bcdDevice=  
-5.04
-usb usb20: New USB device strings: Mfr=3, Product=2, SerialNumber=1
-usb usb20: Product: USB/IP Virtual Host Controller
-usb usb20: Manufacturer: Linux 5.4.0-rc3-next-20191016 vhci_hcd
-usb usb20: SerialNumber: vhci_hcd.9
-hub 20-0:1.0: USB hub found
-hub 20-0:1.0: 8 ports detected
-vhci_hcd vhci_hcd.10: USB/IP Virtual Host Controller
-vhci_hcd vhci_hcd.10: new USB bus registered, assigned bus number 21
-usb usb21: New USB device found, idVendor=1d6b, idProduct=0002, bcdDevice=  
-5.04
-usb usb21: New USB device strings: Mfr=3, Product=2, SerialNumber=1
-usb usb21: Product: USB/IP Virtual Host Controller
-usb usb21: Manufacturer: Linux 5.4.0-rc3-next-20191016 vhci_hcd
-usb usb21: SerialNumber: vhci_hcd.10
-hub 21-0:1.0: USB hub found
-hub 21-0:1.0: 8 ports detected
-vhci_hcd vhci_hcd.10: USB/IP Virtual Host Controller
-vhci_hcd vhci_hcd.10: new USB bus registered, assigned bus number 22
-usb usb22: We don't know the algorithms for LPM for this host, disabling  
-LPM.
-usb usb22: New USB device found, idVendor=1d6b, idProduct=0003, bcdDevice=  
-5.04
-usb usb22: New USB device strings: Mfr=3, Product=2, SerialNumber=1
-usb usb22: Product: USB/IP Virtual Host Controller
-usb usb22: Manufacturer: Linux 5.4.0-rc3-next-20191016 vhci_hcd
-usb usb22: SerialNumber: vhci_hcd.10
-hub 22-0:1.0: USB hub found
-hub 22-0:1.0: 8 ports detected
-vhci_hcd vhci_hcd.11: USB/IP Virtual Host Controller
-vhci_hcd vhci_hcd.11: new USB bus registered, assigned bus number 23
-usb usb23: New USB device found, idVendor=1d6b, idProduct=0002, bcdDevice=  
-5.04
-usb usb23: New USB device strings: Mfr=3, Product=2, SerialNumber=1
-usb usb23: Product: USB/IP Virtual Host Controller
-usb usb23: Manufacturer: Linux 5.4.0-rc3-next-20191016 vhci_hcd
-usb usb23: SerialNumber: vhci_hcd.11
-hub 23-0:1.0: USB hub found
-hub 23-0:1.0: 8 ports detected
-vhci_hcd vhci_hcd.11: USB/IP Virtual Host Controller
-vhci_hcd vhci_hcd.11: new USB bus registered, assigned bus number 24
-usb usb24: We don't know the algorithms for LPM for this host, disabling  
-LPM.
-usb usb24: New USB device found, idVendor=1d6b, idProduct=0003, bcdDevice=  
-5.04
-usb usb24: New USB device strings: Mfr=3, Product=2, SerialNumber=1
-usb usb24: Product: USB/IP Virtual Host Controller
-usb usb24: Manufacturer: Linux 5.4.0-rc3-next-20191016 vhci_hcd
-usb usb24: SerialNumber: vhci_hcd.11
-hub 24-0:1.0: USB hub found
-hub 24-0:1.0: 8 ports detected
-vhci_hcd vhci_hcd.12: USB/IP Virtual Host Controller
-vhci_hcd vhci_hcd.12: new USB bus registered, assigned bus number 25
-usb usb25: New USB device found, idVendor=1d6b, idProduct=0002, bcdDevice=  
-5.04
-usb usb25: New USB device strings: Mfr=3, Product=2, SerialNumber=1
-usb usb25: Product: USB/IP Virtual Host Controller
-usb usb25: Manufacturer: Linux 5.4.0-rc3-next-20191016 vhci_hcd
-usb usb25: SerialNumber: vhci_hcd.12
-hub 25-0:1.0: USB hub found
-hub 25-0:1.0: 8 ports detected
-vhci_hcd vhci_hcd.12: USB/IP Virtual Host Controller
-vhci_hcd vhci_hcd.12: new USB bus registered, assigned bus number 26
-usb usb26: We don't know the algorithms for LPM for this host, disabling  
-LPM.
-usb usb26: New USB device found, idVendor=1d6b, idProduct=0003, bcdDevice=  
-5.04
-usb usb26: New USB device strings: Mfr=3, Product=2, SerialNumber=1
-usb usb26: Product: USB/IP Virtual Host Controller
-usb usb26: Manufacturer: Linux 5.4.0-rc3-next-20191016 vhci_hcd
-usb usb26: SerialNumber: vhci_hcd.12
-hub 26-0:1.0: USB hub found
-hub 26-0:1.0: 8 ports detected
-vhci_hcd vhci_hcd.13: USB/IP Virtual Host Controller
-vhci_hcd vhci_hcd.13: new USB bus registered, assigned bus number 27
-usb usb27: New USB device found, idVendor=1d6b, idProduct=0002, bcdDevice=  
-5.04
-usb usb27: New USB device strings: Mfr=3, Product=2, SerialNumber=1
-usb usb27: Product: USB/IP Virtual Host Controller
-usb usb27: Manufacturer: Linux 5.4.0-rc3-next-20191016 vhci_hcd
-usb usb27: SerialNumber: vhci_hcd.13
-hub 27-0:1.0: USB hub found
-hub 27-0:1.0: 8 ports detected
-vhci_hcd vhci_hcd.13: USB/IP Virtual Host Controller
-vhci_hcd vhci_hcd.13: new USB bus registered, assigned bus number 28
-usb usb28: We don't know the algorithms for LPM for this host, disabling  
-LPM.
-usb usb28: New USB device found, idVendor=1d6b, idProduct=0003, bcdDevice=  
-5.04
-usb usb28: New USB device strings: Mfr=3, Product=2, SerialNumber=1
-usb usb28: Product: USB/IP Virtual Host Controller
-usb usb28: Manufacturer: Linux 5.4.0-rc3-next-20191016 vhci_hcd
-usb usb28: SerialNumber: vhci_hcd.13
-hub 28-0:1.0: USB hub found
-hub 28-0:1.0: 8 ports detected
-vhci_hcd vhci_hcd.14: USB/IP Virtual Host Controller
-vhci_hcd vhci_hcd.14: new USB bus registered, assigned bus number 29
-usb usb29: New USB device found, idVendor=1d6b, idProduct=0002, bcdDevice=  
-5.04
-usb usb29: New USB device strings: Mfr=3, Product=2, SerialNumber=1
-usb usb29: Product: USB/IP Virtual Host Controller
-usb usb29: Manufacturer: Linux 5.4.0-rc3-next-20191016 vhci_hcd
-usb usb29: SerialNumber: vhci_hcd.14
-hub 29-0:1.0: USB hub found
-hub 29-0:1.0: 8 ports detected
-vhci_hcd vhci_hcd.14: USB/IP Virtual Host Controller
-vhci_hcd vhci_hcd.14: new USB bus registered, assigned bus number 30
-usb usb30: We don't know the algorithms for LPM for this host, disabling  
-LPM.
-usb usb30: New USB device found, idVendor=1d6b, idProduct=0003, bcdDevice=  
-5.04
-usb usb30: New USB device strings: Mfr=3, Product=2, SerialNumber=1
-usb usb30: Product: USB/IP Virtual Host Controller
-usb usb30: Manufacturer: Linux 5.4.0-rc3-next-20191016 vhci_hcd
-usb usb30: SerialNumber: vhci_hcd.14
-hub 30-0:1.0: USB hub found
-hub 30-0:1.0: 8 ports detected
-vhci_hcd vhci_hcd.15: USB/IP Virtual Host Controller
-vhci_hcd vhci_hcd.15: new USB bus registered, assigned bus number 31
-usb usb31: New USB device found, idVendor=1d6b, idProduct=0002, bcdDevice=  
-5.04
-usb usb31: New USB device strings: Mfr=3, Product=2, SerialNumber=1
-usb usb31: Product: USB/IP Virtual Host Controller
-usb usb31: Manufacturer: Linux 5.4.0-rc3-next-20191016 vhci_hcd
-usb usb31: SerialNumber: vhci_hcd.15
-hub 31-0:1.0: USB hub found
-hub 31-0:1.0: 8 ports detected
-vhci_hcd vhci_hcd.15: USB/IP Virtual Host Controller
-vhci_hcd vhci_hcd.15: new USB bus registered, assigned bus number 32
-usb usb32: We don't know the algorithms for LPM for this host, disabling  
-LPM.
-usb usb32: New USB device found, idVendor=1d6b, idProduct=0003, bcdDevice=  
-5.04
-usb usb32: New USB device strings: Mfr=3, Product=2, SerialNumber=1
-usb usb32: Product: USB/IP Virtual Host Controller
-usb usb32: Manufacturer: Linux 5.4.0-rc3-next-20191016 vhci_hcd
-usb usb32: SerialNumber: vhci_hcd.15
-hub 32-0:1.0: USB hub found
-hub 32-0:1.0: 8 ports detected
-usbcore: registered new device driver usbip-host
-using random self ethernet address
-using random host ethernet address
-Mass Storage Function, version: 2009/09/11
-LUN: removable file: (no medium)
-no file given for LUN0
-g_multi usbip-vudc.0: failed to start g_multi: -22
-usbip-vudc: probe of usbip-vudc.0 failed with error -22
-i8042: PNP: PS/2 Controller [PNP0303:KBD,PNP0f13:MOU] at 0x60,0x64 irq 1,12
-i8042: Warning: Keylock active
-serio: i8042 KBD port at 0x60,0x64 irq 1
-serio: i8042 AUX port at 0x60,0x64 irq 12
-mousedev: PS/2 mouse device common for all mice
-rtc_cmos 00:00: RTC can wake from S4
-rtc_cmos 00:00: registered as rtc0
-rtc_cmos 00:00: alarms up to one day, 114 bytes nvram
-i2c /dev entries driver
-piix4_smbus 0000:00:01.3: SMBus base address uninitialized - upgrade BIOS  
-or use force_addr=0xaddr
-i2c-parport-light: adapter type unspecified
-usbcore: registered new interface driver RobotFuzz Open Source InterFace,  
-OSIF
-usbcore: registered new interface driver i2c-tiny-usb
-IR NEC protocol handler initialized
-IR RC5(x/sz) protocol handler initialized
-IR RC6 protocol handler initialized
-IR JVC protocol handler initialized
-IR Sony protocol handler initialized
-IR SANYO protocol handler initialized
-IR Sharp protocol handler initialized
-IR MCE Keyboard/mouse protocol handler initialized
-IR XMP protocol handler initialized
-vivid-000: using single planar format API
-vivid-000: CEC adapter cec0 registered for HDMI input 0
-vivid-000: V4L2 capture device registered as video3
-vivid-000: CEC adapter cec1 registered for HDMI output 0
-vivid-000: V4L2 output device registered as video4
-vivid-000: V4L2 capture device registered as vbi0, supports raw and sliced  
-VBI
-vivid-000: V4L2 output device registered as vbi1, supports raw and sliced  
-VBI
-vivid-000: V4L2 capture device registered as swradio0
-vivid-000: V4L2 receiver device registered as radio0
-vivid-000: V4L2 transmitter device registered as radio1
-vivid-001: using multiplanar format API
-vivid-001: CEC adapter cec2 registered for HDMI input 0
-vivid-001: V4L2 capture device registered as video5
-vivid-001: CEC adapter cec3 registered for HDMI output 0
-vivid-001: V4L2 output device registered as video6
-vivid-001: V4L2 capture device registered as vbi2, supports raw and sliced  
-VBI
-vivid-001: V4L2 output device registered as vbi3, supports raw and sliced  
-VBI
-vivid-001: V4L2 capture device registered as swradio1
-vivid-001: V4L2 receiver device registered as radio2
-vivid-001: V4L2 transmitter device registered as radio3
-vivid-002: using single planar format API
-vivid-002: CEC adapter cec4 registered for HDMI input 0
-vivid-002: V4L2 capture device registered as video7
-vivid-002: CEC adapter cec5 registered for HDMI output 0
-vivid-002: V4L2 output device registered as video8
-vivid-002: V4L2 capture device registered as vbi4, supports raw and sliced  
-VBI
-vivid-002: V4L2 output device registered as vbi5, supports raw and sliced  
-VBI
-vivid-002: V4L2 capture device registered as swradio2
-vivid-002: V4L2 receiver device registered as radio4
-vivid-002: V4L2 transmitter device registered as radio5
-vivid-003: using multiplanar format API
-vivid-003: CEC adapter cec6 registered for HDMI input 0
-vivid-003: V4L2 capture device registered as video9
-vivid-003: CEC adapter cec7 registered for HDMI output 0
-vivid-003: V4L2 output device registered as video10
-vivid-003: V4L2 capture device registered as vbi6, supports raw and sliced  
-VBI
-vivid-003: V4L2 output device registered as vbi7, supports raw and sliced  
-VBI
-vivid-003: V4L2 capture device registered as swradio3
-vivid-003: V4L2 receiver device registered as radio6
-vivid-003: V4L2 transmitter device registered as radio7
-vivid-004: using single planar format API
-vivid-004: CEC adapter cec8 registered for HDMI input 0
-vivid-004: V4L2 capture device registered as video11
-vivid-004: CEC adapter cec9 registered for HDMI output 0
-vivid-004: V4L2 output device registered as video12
-vivid-004: V4L2 capture device registered as vbi8, supports raw and sliced  
-VBI
-vivid-004: V4L2 output device registered as vbi9, supports raw and sliced  
-VBI
-vivid-004: V4L2 capture device registered as swradio4
-vivid-004: V4L2 receiver device registered as radio8
-vivid-004: V4L2 transmitter device registered as radio9
-vivid-005: using multiplanar format API
-vivid-005: CEC adapter cec10 registered for HDMI input 0
-vivid-005: V4L2 capture device registered as video13
-vivid-005: CEC adapter cec11 registered for HDMI output 0
-vivid-005: V4L2 output device registered as video14
-vivid-005: V4L2 capture device registered as vbi10, supports raw and sliced  
-VBI
-vivid-005: V4L2 output device registered as vbi11, supports raw and sliced  
-VBI
-vivid-005: V4L2 capture device registered as swradio5
-vivid-005: V4L2 receiver device registered as radio10
-vivid-005: V4L2 transmitter device registered as radio11
-vivid-006: using single planar format API
-vivid-006: CEC adapter cec12 registered for HDMI input 0
-vivid-006: V4L2 capture device registered as video15
-vivid-006: CEC adapter cec13 registered for HDMI output 0
-vivid-006: V4L2 output device registered as video16
-vivid-006: V4L2 capture device registered as vbi12, supports raw and sliced  
-VBI
-vivid-006: V4L2 output device registered as vbi13, supports raw and sliced  
-VBI
-vivid-006: V4L2 capture device registered as swradio6
-vivid-006: V4L2 receiver device registered as radio12
-vivid-006: V4L2 transmitter device registered as radio13
-vivid-007: using multiplanar format API
-vivid-007: CEC adapter cec14 registered for HDMI input 0
-vivid-007: V4L2 capture device registered as video17
-vivid-007: CEC adapter cec15 registered for HDMI output 0
-vivid-007: V4L2 output device registered as video18
-vivid-007: V4L2 capture device registered as vbi14, supports raw and sliced  
-VBI
-vivid-007: V4L2 output device registered as vbi15, supports raw and sliced  
-VBI
-vivid-007: V4L2 capture device registered as swradio7
-vivid-007: V4L2 receiver device registered as radio14
-vivid-007: V4L2 transmitter device registered as radio15
-vivid-008: using single planar format API
-vivid-008: CEC adapter cec16 registered for HDMI input 0
-vivid-008: V4L2 capture device registered as video19
-vivid-008: CEC adapter cec17 registered for HDMI output 0
-vivid-008: V4L2 output device registered as video20
-vivid-008: V4L2 capture device registered as vbi16, supports raw and sliced  
-VBI
-vivid-008: V4L2 output device registered as vbi17, supports raw and sliced  
-VBI
-vivid-008: V4L2 capture device registered as swradio8
-vivid-008: V4L2 receiver device registered as radio16
-vivid-008: V4L2 transmitter device registered as radio17
-vivid-009: using multiplanar format API
-vivid-009: CEC adapter cec18 registered for HDMI input 0
-vivid-009: V4L2 capture device registered as video21
-vivid-009: CEC adapter cec19 registered for HDMI output 0
-vivid-009: V4L2 output device registered as video22
-vivid-009: V4L2 capture device registered as vbi18, supports raw and sliced  
-VBI
-vivid-009: V4L2 output device registered as vbi19, supports raw and sliced  
-VBI
-vivid-009: V4L2 capture device registered as swradio9
-vivid-009: V4L2 receiver device registered as radio18
-vivid-009: V4L2 transmitter device registered as radio19
-vivid-010: using single planar format API
-vivid-010: CEC adapter cec20 registered for HDMI input 0
-vivid-010: V4L2 capture device registered as video23
-vivid-010: CEC adapter cec21 registered for HDMI output 0
-vivid-010: V4L2 output device registered as video24
-vivid-010: V4L2 capture device registered as vbi20, supports raw and sliced  
-VBI
-vivid-010: V4L2 output device registered as vbi21, supports raw and sliced  
-VBI
-vivid-010: V4L2 capture device registered as swradio10
-vivid-010: V4L2 receiver device registered as radio20
-vivid-010: V4L2 transmitter device registered as radio21
-vivid-011: using multiplanar format API
-vivid-011: CEC adapter cec22 registered for HDMI input 0
-vivid-011: V4L2 capture device registered as video25
-vivid-011: CEC adapter cec23 registered for HDMI output 0
-vivid-011: V4L2 output device registered as video26
-vivid-011: V4L2 capture device registered as vbi22, supports raw and sliced  
-VBI
-vivid-011: V4L2 output device registered as vbi23, supports raw and sliced  
-VBI
-vivid-011: V4L2 capture device registered as swradio11
-vivid-011: V4L2 receiver device registered as radio22
-vivid-011: V4L2 transmitter device registered as radio23
-vivid-012: using single planar format API
-vivid-012: CEC adapter cec24 registered for HDMI input 0
-vivid-012: V4L2 capture device registered as video27
-vivid-012: CEC adapter cec25 registered for HDMI output 0
-vivid-012: V4L2 output device registered as video28
-vivid-012: V4L2 capture device registered as vbi24, supports raw and sliced  
-VBI
-vivid-012: V4L2 output device registered as vbi25, supports raw and sliced  
-VBI
-vivid-012: V4L2 capture device registered as swradio12
-vivid-012: V4L2 receiver device registered as radio24
-vivid-012: V4L2 transmitter device registered as radio25
-vivid-013: using multiplanar format API
-vivid-013: CEC adapter cec26 registered for HDMI input 0
-vivid-013: V4L2 capture device registered as video29
-vivid-013: CEC adapter cec27 registered for HDMI output 0
-vivid-013: V4L2 output device registered as video30
-vivid-013: V4L2 capture device registered as vbi26, supports raw and sliced  
-VBI
-vivid-013: V4L2 output device registered as vbi27, supports raw and sliced  
-VBI
-vivid-013: V4L2 capture device registered as swradio13
-vivid-013: V4L2 receiver device registered as radio26
-vivid-013: V4L2 transmitter device registered as radio27
-vivid-014: using single planar format API
-vivid-014: CEC adapter cec28 registered for HDMI input 0
-vivid-014: V4L2 capture device registered as video31
-vivid-014: CEC adapter cec29 registered for HDMI output 0
-vivid-014: V4L2 output device registered as video32
-vivid-014: V4L2 capture device registered as vbi28, supports raw and sliced  
-VBI
-vivid-014: V4L2 output device registered as vbi29, supports raw and sliced  
-VBI
-vivid-014: V4L2 capture device registered as swradio14
-vivid-014: V4L2 receiver device registered as radio28
-vivid-014: V4L2 transmitter device registered as radio29
-vivid-015: using multiplanar format API
-vivid-015: CEC adapter cec30 registered for HDMI input 0
-vivid-015: V4L2 capture device registered as video33
-vivid-015: CEC adapter cec31 registered for HDMI output 0
-vivid-015: V4L2 output device registered as video34
-vivid-015: V4L2 capture device registered as vbi30, supports raw and sliced  
-VBI
-vivid-015: V4L2 output device registered as vbi31, supports raw and sliced  
-VBI
-vivid-015: V4L2 capture device registered as swradio15
-vivid-015: V4L2 receiver device registered as radio30
-vivid-015: V4L2 transmitter device registered as radio31
-vim2m vim2m.0: Device registered as /dev/video35
-vicodec vicodec.0: Device 'stateful-encoder' registered as /dev/video36
-vicodec vicodec.0: Device 'stateful-decoder' registered as /dev/video37
-vicodec vicodec.0: Device 'stateless-decoder' registered as /dev/video38
-usbcore: registered new interface driver uvcvideo
-USB Video Class driver (1.1.1)
-gspca_main: v2.14.0 registered
-iTCO_wdt: Intel TCO WatchDog Timer Driver v1.11
-iTCO_vendor_support: vendor-support=0
-device-mapper: uevent: version 1.0.3
-device-mapper: ioctl: 4.41.0-ioctl (2019-09-16) initialised:  
-dm-devel@redhat.com
-device-mapper: multipath round-robin: version 1.2.0 loaded
-device-mapper: multipath queue-length: version 0.2.0 loaded
-device-mapper: multipath service-time: version 0.3.0 loaded
-device-mapper: raid: Loading target version 1.14.0
-Bluetooth: HCI UART driver ver 2.3
-Bluetooth: HCI UART protocol H4 registered
-Bluetooth: HCI UART protocol BCSP registered
-Bluetooth: HCI UART protocol LL registered
-Bluetooth: HCI UART protocol Three-wire (H5) registered
-Bluetooth: HCI UART protocol QCA registered
-Bluetooth: HCI UART protocol AG6XX registered
-Bluetooth: HCI UART protocol Marvell registered
-usbcore: registered new interface driver bfusb
-usbcore: registered new interface driver btusb
-CAPI 2.0 started up with major 68 (middleware)
-Modular ISDN core version 1.1.29
-NET: Registered protocol family 34
-DSP module 2.0
-mISDN_dsp: DSP clocks every 80 samples. This equals 1 jiffies.
-mISDN: Layer-1-over-IP driver Rev. 2.00
-0 virtual devices registered
-intel_pstate: CPU model not supported
-usnic_verbs: Cisco VIC (USNIC) Verbs Driver v1.0.3 (December 19, 2013)
-usnic_verbs:usnic_uiom_init:563:
-IOMMU required but not present or enabled.  USNIC QPs will not function w/o  
-enabling IOMMU
-usnic_verbs:usnic_ib_init:667:
-Unable to initialize umem with err -1
-iscsi: registered transport (iser)
-OPA Virtual Network Driver - v1.0
-SoftiWARP attached
-Driver 'framebuffer' was unable to register with bus_type 'coreboot'  
-because the bus was not initialized.
-Driver 'memconsole' was unable to register with bus_type 'coreboot' because  
-the bus was not initialized.
-Driver 'vpd' was unable to register with bus_type 'coreboot' because the  
-bus was not initialized.
-hid: raw HID events driver (C) Jiri Kosina
-usbcore: registered new interface driver usbhid
-usbhid: USB HID core driver
-NET: Registered protocol family 40
-ashmem: initialized
-exFAT: Version 1.3.0
-usbcore: registered new interface driver snd-usb-audio
-drop_monitor: Initializing network drop monitor service
-NET: Registered protocol family 26
-GACT probability on
-Mirror/redirect action on
-Simple TC action Loaded
-netem: version 1.3
-u32 classifier
-     Performance counters on
-     input device check on
-     Actions configured
-nf_conntrack_irc: failed to register helpers
-nf_conntrack_sane: failed to register helpers
-nf_conntrack_sip: failed to register helpers
-xt_time: kernel timezone is -0000
-IPVS: Registered protocols (TCP, UDP, SCTP, AH, ESP)
-IPVS: Connection hash table configured (size=4096, memory=64Kbytes)
-IPVS: ipvs loaded.
-IPVS: [rr] scheduler registered.
-IPVS: [wrr] scheduler registered.
-IPVS: [lc] scheduler registered.
-IPVS: [wlc] scheduler registered.
-IPVS: [fo] scheduler registered.
-IPVS: [ovf] scheduler registered.
-IPVS: [lblc] scheduler registered.
-IPVS: [lblcr] scheduler registered.
-IPVS: [dh] scheduler registered.
-IPVS: [sh] scheduler registered.
-IPVS: [mh] scheduler registered.
-IPVS: [sed] scheduler registered.
-IPVS: [nq] scheduler registered.
-IPVS: ftp: loaded support on port[0] = 21
-IPVS: [sip] pe registered.
-ipip: IPv4 and MPLS over IPv4 tunneling driver
-gre: GRE over IPv4 demultiplexor driver
-ip_gre: GRE over IPv4 tunneling driver
-IPv4 over IPsec tunneling driver
-ipt_CLUSTERIP: ClusterIP Version 0.8 loaded successfully
-Initializing XFRM netlink socket
-IPsec XFRM device driver
-NET: Registered protocol family 10
-------------[ cut here ]------------
-remove_proc_entry: removing non-empty directory 'net/dev_snmp6', leaking at  
-least 'lo'
-WARNING: CPU: 1 PID: 1 at fs/proc/generic.c:680  
-remove_proc_entry+0x32f/0x3d0 fs/proc/generic.c:680
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+DQpPbiAyMi4xMC4yMDE5IDE2OjI1LCBSb2JpbiBNdXJwaHkgd3JvdGU6DQo+IE9uIDIyLzEwLzIw
+MTkgMTM6NTUsIExhdXJlbnRpdSBUdWRvciB3cm90ZToNCj4+IEZyb206IExhdXJlbnRpdSBUdWRv
+ciA8bGF1cmVudGl1LnR1ZG9yQG54cC5jb20+DQo+Pg0KPj4gSW50cm9kdWNlIGEgbmV3IGRtYSBt
+YXAgb3AgY2FsbGVkIGRtYV9hZGRyX3RvX3BoeXNfYWRkcigpIHRoYXQgY29udmVydHMNCj4+IGEg
+ZG1hIGFkZHJlc3MgdG8gdGhlIHBoeXNpY2FsIGFkZHJlc3MgYmFja2luZyBpdCB1cCBhbmQgYWRk
+IHdyYXBwZXIgZm9yDQo+PiBpdC4NCj4gDQo+IEknZCByZWFsbHkgbG92ZSBpdCBpZiB0aGVyZSB3
+YXMgYSBuYW1lIHdoaWNoIGNvdWxkIGVuY2Fwc3VsYXRlIHRoYXQgdGhpcyANCj4gaXMgKm9ubHkq
+IGZvciBleHRyZW1lIHNwZWNpYWwgY2FzZXMgb2YgY29uc3RyYWluZWQgZGVzY3JpcHRvcnMvcGFn
+ZXRhYmxlIA0KPiBlbnRyaWVzL2V0Yy4gd2hlcmUgdGhlcmUncyBzaW1wbHkgbm8gcHJhY3RpY2Fs
+IHdheSB0byBrZWVwIHRyYWNrIG9mIGEgDQo+IENQVSBhZGRyZXNzIGFsb25nc2lkZSB0aGUgRE1B
+IGFkZHJlc3MsIGFuZCB0aGUgb25seSBvcHRpb24gaXMgdGhpcyANCj4gcG90ZW50aWFsbHktYXJi
+aXRyYXJpbHktY29tcGxleCBvcGVyYXRpb24gKEkgbWVhbiwgb24gc29tZSBzeXN0ZW1zIGl0IA0K
+PiBtYXkgZW5kIHVwIHRha2luZyBsb2NrcyBhbmQgcG9raW5nIGhhcmR3YXJlKS4NCj4gDQo+IEVp
+dGhlciB3YXkgaXQncyB0cmlja3kgLSBtdWNoIGFzIEkgZG9uJ3QgbGlrZSBhZGRpbmcgYW4gaW50
+ZXJmYWNlIHdoaWNoIA0KPiBpcyByaXBlIGZvciBkcml2ZXJzIHRvIG1pc3VzZSwgSSBhbHNvIHJl
+YWxseSBkb24ndCB3YW50IGhhY2tzIGxpa2UgDQo+IGJkZjk1OTIzMDg2ZiBzaG92ZWQgaW50byBv
+dGhlciBBUElzIHRvIGNvbXBlbnNhdGUsIHNvIG9uIGJhbGFuY2UgSSdkIA0KPiBwcm9iYWJseSBj
+b25zaWRlciB0aGlzIHByb3Bvc2FsIGV2ZXIgc28gc2xpZ2h0bHkgdGhlIGxlc3NlciBldmlsLg0K
+PiANCj4+IFNpZ25lZC1vZmYtYnk6IExhdXJlbnRpdSBUdWRvciA8bGF1cmVudGl1LnR1ZG9yQG54
+cC5jb20+DQo+PiAtLS0NCj4+IMKgIGluY2x1ZGUvbGludXgvZG1hLW1hcHBpbmcuaCB8IDIxICsr
+KysrKysrKysrKysrKysrKysrKw0KPj4gwqAgMSBmaWxlIGNoYW5nZWQsIDIxIGluc2VydGlvbnMo
+KykNCj4+DQo+PiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9kbWEtbWFwcGluZy5oIGIvaW5j
+bHVkZS9saW51eC9kbWEtbWFwcGluZy5oDQo+PiBpbmRleCA0YTFjNGZjYTQ3NWEuLjU5NjVkMTU5
+YzlhOSAxMDA2NDQNCj4+IC0tLSBhL2luY2x1ZGUvbGludXgvZG1hLW1hcHBpbmcuaA0KPj4gKysr
+IGIvaW5jbHVkZS9saW51eC9kbWEtbWFwcGluZy5oDQo+PiBAQCAtMTMyLDYgKzEzMiw4IEBAIHN0
+cnVjdCBkbWFfbWFwX29wcyB7DQo+PiDCoMKgwqDCoMKgIHU2NCAoKmdldF9yZXF1aXJlZF9tYXNr
+KShzdHJ1Y3QgZGV2aWNlICpkZXYpOw0KPj4gwqDCoMKgwqDCoCBzaXplX3QgKCptYXhfbWFwcGlu
+Z19zaXplKShzdHJ1Y3QgZGV2aWNlICpkZXYpOw0KPj4gwqDCoMKgwqDCoCB1bnNpZ25lZCBsb25n
+ICgqZ2V0X21lcmdlX2JvdW5kYXJ5KShzdHJ1Y3QgZGV2aWNlICpkZXYpOw0KPj4gK8KgwqDCoCBw
+aHlzX2FkZHJfdCAoKmRtYV9hZGRyX3RvX3BoeXNfYWRkcikoc3RydWN0IGRldmljZSAqZGV2LA0K
+Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBkbWFf
+YWRkcl90IGRtYV9oYW5kbGUpOw0KPiANCj4gSSdkIGJlIGluY2xpbmVkIHRvIG5hbWUgdGhlIGlu
+dGVybmFsIGNhbGxiYWNrIHNvbWV0aGluZyBhIGJpdCBzbmFwcGllciANCj4gbGlrZSAuZ2V0X3Bo
+eXNfYWRkci4NCg0KQWxyaWdodC4gV2FudCBtZSB0byBhbHNvIHJlbmFtZSB0aGUgd3JhcHBlciB0
+byBzb21ldGhpbmcgbGlrZSANCmRtYV9nZXRfcGh5c19hZGRyKCk/IFNvdW5kcyBhIGJpdCBuaWNl
+ciB0byBtZS4NCg0KPj4gwqAgfTsNCj4+IMKgICNkZWZpbmUgRE1BX01BUFBJTkdfRVJST1LCoMKg
+wqDCoMKgwqDCoCAofihkbWFfYWRkcl90KTApDQo+PiBAQCAtNDQyLDYgKzQ0NCwxOSBAQCBzdGF0
+aWMgaW5saW5lIGludCBkbWFfbWFwcGluZ19lcnJvcihzdHJ1Y3QgZGV2aWNlIA0KPj4gKmRldiwg
+ZG1hX2FkZHJfdCBkbWFfYWRkcikNCj4+IMKgwqDCoMKgwqAgcmV0dXJuIDA7DQo+PiDCoCB9DQo+
+PiArc3RhdGljIGlubGluZSBwaHlzX2FkZHJfdCBkbWFfYWRkcl90b19waHlzX2FkZHIoc3RydWN0
+IGRldmljZSAqZGV2LA0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqAgZG1hX2FkZHJfdCBkbWFfaGFuZGxlKQ0KPj4gK3sNCj4+ICvCoMKgwqAgY29uc3Qg
+c3RydWN0IGRtYV9tYXBfb3BzICpvcHMgPSBnZXRfZG1hX29wcyhkZXYpOw0KPj4gKw0KPj4gK8Kg
+wqDCoCBpZiAoZG1hX2lzX2RpcmVjdChvcHMpKQ0KPj4gK8KgwqDCoMKgwqDCoMKgIHJldHVybiAo
+cGh5c19hZGRyX3QpZG1hX2hhbmRsZTsNCj4gDQo+IFdlbGwgdGhhdCdzIG5vdCByaWdodCwgaXMg
+aXQgLSByZW1lbWJlciB3aHkgeW91IGhhZCB0aGF0IG5hbWVzcGFjZSANCj4gY29sbGlzaW9uPyA7
+KQ0KPiANCg0KVWdoLCBjb3JyZWN0LiBEb24ndCBrbm93IHdoYXQgSSB3YXMgdGhpbmtpbmcuIFdp
+bGwgcmV3b3JrIHRoZSBjaGVjay4NCg0KLS0tDQpUaGFua3MgJiBCZXN0IFJlZ2FyZHMsIExhdXJl
+bnRpdQ==
