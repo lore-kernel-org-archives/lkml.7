@@ -7,43 +7,43 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E336CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 02:40:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7029CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 02:40:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F7E920882
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 02:40:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D9CA20882
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 02:40:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VvNvMH8R"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FSSCHIDO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387481AbfJVCka (ORCPT
+        id S2387506AbfJVCkc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 22:40:30 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:39115 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2387442AbfJVCk3 (ORCPT
+        Mon, 21 Oct 2019 22:40:32 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:39305 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2387462AbfJVCka (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 22:40:29 -0400
+        Mon, 21 Oct 2019 22:40:30 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571712028;
+        s=mimecast20190719; t=1571712029;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=db9/FSAmKT0MnuPKHIiAKkFAQGlG8AAFjVTq9TTRJZQ=;
-        b=VvNvMH8RtJhfXRhgbaXoJCo8BodBsXsu2x7/raJChoPEmwnXri0U3aM7CXYNTmAanD1yMM
-        RnWTW1aaRe/3BZKm0h8sTJrwAGHHiH30zTwgXjygV/x/zKr4FaDlO68uu0hy703cGonoyP
-        KH8ayEV9mL74ALUwoXM+cJrwXXH3e+s=
+        bh=K5jcZwjlYxKIN+ZIuBL1G9ofGIMh7sLLjPY6LJCqd3Y=;
+        b=FSSCHIDONGz/B73qnUas3fXtCoOZGIT1pxIuS211EZKg7PWlaSpinKiCjNVm3h6qkE29/q
+        FoKqM0JBO6yW3f9261SwhTTihS0VDqb22vFzc5PEZu41n2r+QvtRsj/2a1ZmB3kafLQUID
+        n79jNajx2ei05qZazQoJ/qQgM2Zmv84=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-242-4KKH-D0uMUWkmlss76nB1A-1; Mon, 21 Oct 2019 22:40:24 -0400
+ us-mta-303-HUmMC_PYMZ27M5xQzaJrQA-1; Mon, 21 Oct 2019 22:40:27 -0400
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 622141005500;
-        Tue, 22 Oct 2019 02:40:22 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 04AC1107AD31;
+        Tue, 22 Oct 2019 02:40:26 +0000 (UTC)
 Received: from malachite.redhat.com (ovpn-120-98.rdu2.redhat.com [10.10.120.98])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 79BAB60161;
-        Tue, 22 Oct 2019 02:40:16 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D54FD60126;
+        Tue, 22 Oct 2019 02:40:22 +0000 (UTC)
 From:   Lyude Paul <lyude@redhat.com>
 To:     dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
         nouveau@lists.freedesktop.org, intel-gfx@lists.freedesktop.org
@@ -51,19 +51,17 @@ Cc:     Juston Li <juston.li@intel.com>, Imre Deak <imre.deak@intel.com>,
         =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
         <ville.syrjala@linux.intel.com>, Harry Wentland <hwentlan@amd.com>,
         Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Sean Paul <sean@poorly.run>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
+        Sean Paul <sean@poorly.run>, Ben Skeggs <bskeggs@redhat.com>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 08/14] drm/dp_mst: Lessen indenting in drm_dp_mst_topology_mgr_resume()
-Date:   Mon, 21 Oct 2019 22:36:03 -0400
-Message-Id: <20191022023641.8026-9-lyude@redhat.com>
+Subject: [PATCH v5 09/14] drm/nouveau: Don't grab runtime PM refs for HPD IRQs
+Date:   Mon, 21 Oct 2019 22:36:04 -0400
+Message-Id: <20191022023641.8026-10-lyude@redhat.com>
 In-Reply-To: <20191022023641.8026-1-lyude@redhat.com>
 References: <20191022023641.8026-1-lyude@redhat.com>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-MC-Unique: 4KKH-D0uMUWkmlss76nB1A-1
+X-MC-Unique: HUmMC_PYMZ27M5xQzaJrQA-1
 X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
@@ -72,7 +70,18 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Does what it says on the tin.
+In order for suspend/resume reprobing to work, we need to be able to
+perform sideband communications during suspend/resume, along with
+runtime PM suspend/resume. In order to do so, we also need to make sure
+that nouveau doesn't bother grabbing a runtime PM reference to do so,
+since otherwise we'll start deadlocking runtime PM again.
+
+Note that we weren't able to do this before, because of the DP MST
+helpers processing UP requests from topologies in the same context as
+drm_dp_mst_hpd_irq() which would have caused us to open ourselves up to
+receiving hotplug events and deadlocking with runtime suspend/resume.
+Now that those requests are handled asynchronously, this change should
+be completely safe.
 
 Cc: Juston Li <juston.li@intel.com>
 Cc: Imre Deak <imre.deak@intel.com>
@@ -82,90 +91,66 @@ Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
 Reviewed-by: Sean Paul <sean@poorly.run>
 Signed-off-by: Lyude Paul <lyude@redhat.com>
 ---
- drivers/gpu/drm/drm_dp_mst_topology.c | 59 +++++++++++++--------------
- 1 file changed, 29 insertions(+), 30 deletions(-)
+ drivers/gpu/drm/nouveau/nouveau_connector.c | 33 +++++++++++----------
+ 1 file changed, 17 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp=
-_mst_topology.c
-index c8e218b902ae..d486d15aa002 100644
---- a/drivers/gpu/drm/drm_dp_mst_topology.c
-+++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-@@ -3212,45 +3212,44 @@ EXPORT_SYMBOL(drm_dp_mst_topology_mgr_suspend);
-  */
- int drm_dp_mst_topology_mgr_resume(struct drm_dp_mst_topology_mgr *mgr)
- {
--=09int ret =3D 0;
-+=09int ret;
-+=09u8 guid[16];
-=20
- =09mutex_lock(&mgr->lock);
-+=09if (!mgr->mst_primary)
-+=09=09goto out_fail;
-=20
--=09if (mgr->mst_primary) {
--=09=09int sret;
--=09=09u8 guid[16];
-+=09ret =3D drm_dp_dpcd_read(mgr->aux, DP_DPCD_REV, mgr->dpcd,
-+=09=09=09       DP_RECEIVER_CAP_SIZE);
-+=09if (ret !=3D DP_RECEIVER_CAP_SIZE) {
-+=09=09DRM_DEBUG_KMS("dpcd read failed - undocked during suspend?\n");
-+=09=09goto out_fail;
+diff --git a/drivers/gpu/drm/nouveau/nouveau_connector.c b/drivers/gpu/drm/=
+nouveau/nouveau_connector.c
+index 3a5db17bc5c7..5b413588b823 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_connector.c
++++ b/drivers/gpu/drm/nouveau/nouveau_connector.c
+@@ -1130,6 +1130,16 @@ nouveau_connector_hotplug(struct nvif_notify *notify=
+)
+ =09const char *name =3D connector->name;
+ =09struct nouveau_encoder *nv_encoder;
+ =09int ret;
++=09bool plugged =3D (rep->mask !=3D NVIF_NOTIFY_CONN_V0_UNPLUG);
++
++=09if (rep->mask & NVIF_NOTIFY_CONN_V0_IRQ) {
++=09=09NV_DEBUG(drm, "service %s\n", name);
++=09=09drm_dp_cec_irq(&nv_connector->aux);
++=09=09if ((nv_encoder =3D find_encoder(connector, DCB_OUTPUT_DP)))
++=09=09=09nv50_mstm_service(nv_encoder->dp.mstm);
++
++=09=09return NVIF_NOTIFY_KEEP;
 +=09}
 =20
--=09=09sret =3D drm_dp_dpcd_read(mgr->aux, DP_DPCD_REV, mgr->dpcd, DP_RECEI=
-VER_CAP_SIZE);
--=09=09if (sret !=3D DP_RECEIVER_CAP_SIZE) {
--=09=09=09DRM_DEBUG_KMS("dpcd read failed - undocked during suspend?\n");
--=09=09=09ret =3D -1;
--=09=09=09goto out_unlock;
+ =09ret =3D pm_runtime_get(drm->dev->dev);
+ =09if (ret =3D=3D 0) {
+@@ -1150,25 +1160,16 @@ nouveau_connector_hotplug(struct nvif_notify *notif=
+y)
+ =09=09return NVIF_NOTIFY_DROP;
+ =09}
+=20
+-=09if (rep->mask & NVIF_NOTIFY_CONN_V0_IRQ) {
+-=09=09NV_DEBUG(drm, "service %s\n", name);
+-=09=09drm_dp_cec_irq(&nv_connector->aux);
+-=09=09if ((nv_encoder =3D find_encoder(connector, DCB_OUTPUT_DP)))
+-=09=09=09nv50_mstm_service(nv_encoder->dp.mstm);
+-=09} else {
+-=09=09bool plugged =3D (rep->mask !=3D NVIF_NOTIFY_CONN_V0_UNPLUG);
+-
++=09if (!plugged)
++=09=09drm_dp_cec_unset_edid(&nv_connector->aux);
++=09NV_DEBUG(drm, "%splugged %s\n", plugged ? "" : "un", name);
++=09if ((nv_encoder =3D find_encoder(connector, DCB_OUTPUT_DP))) {
+ =09=09if (!plugged)
+-=09=09=09drm_dp_cec_unset_edid(&nv_connector->aux);
+-=09=09NV_DEBUG(drm, "%splugged %s\n", plugged ? "" : "un", name);
+-=09=09if ((nv_encoder =3D find_encoder(connector, DCB_OUTPUT_DP))) {
+-=09=09=09if (!plugged)
+-=09=09=09=09nv50_mstm_remove(nv_encoder->dp.mstm);
 -=09=09}
-+=09ret =3D drm_dp_dpcd_writeb(mgr->aux, DP_MSTM_CTRL,
-+=09=09=09=09 DP_MST_EN |
-+=09=09=09=09 DP_UP_REQ_EN |
-+=09=09=09=09 DP_UPSTREAM_IS_SRC);
-+=09if (ret < 0) {
-+=09=09DRM_DEBUG_KMS("mst write failed - undocked during suspend?\n");
-+=09=09goto out_fail;
-+=09}
+-
+-=09=09drm_helper_hpd_irq_event(connector->dev);
++=09=09=09nv50_mstm_remove(nv_encoder->dp.mstm);
+ =09}
 =20
--=09=09ret =3D drm_dp_dpcd_writeb(mgr->aux, DP_MSTM_CTRL,
--=09=09=09=09=09 DP_MST_EN | DP_UP_REQ_EN | DP_UPSTREAM_IS_SRC);
--=09=09if (ret < 0) {
--=09=09=09DRM_DEBUG_KMS("mst write failed - undocked during suspend?\n");
--=09=09=09ret =3D -1;
--=09=09=09goto out_unlock;
--=09=09}
-+=09/* Some hubs forget their guids after they resume */
-+=09ret =3D drm_dp_dpcd_read(mgr->aux, DP_GUID, guid, 16);
-+=09if (ret !=3D 16) {
-+=09=09DRM_DEBUG_KMS("dpcd read failed - undocked during suspend?\n");
-+=09=09goto out_fail;
-+=09}
-+=09drm_dp_check_mstb_guid(mgr->mst_primary, guid);
-=20
--=09=09/* Some hubs forget their guids after they resume */
--=09=09sret =3D drm_dp_dpcd_read(mgr->aux, DP_GUID, guid, 16);
--=09=09if (sret !=3D 16) {
--=09=09=09DRM_DEBUG_KMS("dpcd read failed - undocked during suspend?\n");
--=09=09=09ret =3D -1;
--=09=09=09goto out_unlock;
--=09=09}
--=09=09drm_dp_check_mstb_guid(mgr->mst_primary, guid);
-+=09mutex_unlock(&mgr->lock);
-=20
--=09=09ret =3D 0;
--=09} else
--=09=09ret =3D -1;
-+=09return 0;
-=20
--out_unlock:
-+out_fail:
- =09mutex_unlock(&mgr->lock);
--=09return ret;
-+=09return -1;
- }
- EXPORT_SYMBOL(drm_dp_mst_topology_mgr_resume);
-=20
++=09drm_helper_hpd_irq_event(connector->dev);
++
+ =09pm_runtime_mark_last_busy(drm->dev->dev);
+ =09pm_runtime_put_autosuspend(drm->dev->dev);
+ =09return NVIF_NOTIFY_KEEP;
 --=20
 2.21.0
 
