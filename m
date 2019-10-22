@@ -2,128 +2,147 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3241CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:13:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20369CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:13:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA56E21872
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:13:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D25B5214B2
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:13:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KNj120IA"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="eCRGo85T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388997AbfJVMNM (ORCPT
+        id S2389008AbfJVMNQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 08:13:12 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:42464 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388106AbfJVMNM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 08:13:12 -0400
-Received: by mail-io1-f65.google.com with SMTP id i26so10760096iog.9;
-        Tue, 22 Oct 2019 05:13:11 -0700 (PDT)
+        Tue, 22 Oct 2019 08:13:16 -0400
+Received: from mail-eopbgr810055.outbound.protection.outlook.com ([40.107.81.55]:57216
+        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388106AbfJVMNQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 08:13:16 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=R+tSwfuwhpSIBRx7nIVmPXSW6av1dgAnPPhnqc5S2yfezqalj2EoRFPHRxmPgLhWWa9+4UB1SHY8EQRN0EYJg85kODxNSyOT2LTeASt+mb1ZN78QIY0cBzv+AFQq3chUM40QXjdRqu1AxQc5D1NzWPAeEDQOFnXAgGEw4K3elJQCLex58I5qDptgu9ir6b+tfMDORFcLcOESDdi4vgOz5n0BJEey9R0IzG9kjaKmKdxNrsgxdFKp/AOxf0+Bfxyq9Q5S2iRPIR+WBjj1urmclcZ5ZxLuL1nSvE0WCH1xcm4p+ayyhXVVB24F290kF+e1I7ZLPu0JIl0HwYE1dz4IoA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=erZ4S0w/Qq6IL7i2I6z2gT3RJ9w/1cUbTZHg77/V71Q=;
+ b=HDtSlmhBh0rb40sL1ZpZ23nh1+IOn3pLdjoQRnoLH1a6JcrSTkFJwS3ZVAhkRo22IqY3v4Gi/CbISZOMQPdwpb7MCIIAJb0WQ4ZtfNd5TFbl8DWtDuH187wiqf3dfC91VWBaRniRC6+WZ00r6XkM4yA6bGUzotRg9RgGUBiS4M5jkyEfOKaJ8Ex9thPzohI4tBzdk2RTUOftGOb1/+2h9i5Jt6l4g5I4eHwn8JGnWpwcI7c+fxUIIAUAcrcpCBuKlQ1WmdsKVIHMvIHus1HBg05hl9mA0gR5s0oJQELsbQvb1Ox0llOFqYWMPoCG3k940aJFbL70QWJjwnh2Y1d53w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=pengutronix.de smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=7VUSL4glh9tdmGltrbXAxLhst/cC64H17TVs7Wd2ISI=;
-        b=KNj120IAsn18ftYPNYtGAMO522hDC71q+lnhMtWOYXoXlDsQo9QgcVuidnJk/ml7tr
-         UbqrQwC1U8wazJ7pHfzxOF7LsixYPLXxRE9/JTcNA33V/m2jTWO+KAELTbrPE8q0D6HW
-         S9+0vi0V/9gTXRujRZeQ8kuvFFrKCsEWVB5YHsGdr//QG36RtI8w7Ivuc3u3oSfL7y0U
-         07cTguxrdcpKQNMzG+oFAzr+Ziun2e0ahAEXELyZvsQxszVck3Pxet4kl1tSkrZdOCHp
-         z0Jy+6K1Gkapib2IaHiK6EzZNdk0P8i9rV92PT0J1kYTE863bAcw/RHuDUMxThwvDmiy
-         imCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=7VUSL4glh9tdmGltrbXAxLhst/cC64H17TVs7Wd2ISI=;
-        b=AHDOiZeYzU4MPkOHoXOO0vH/+DIHujzqaI8diCJGXU4j0MsjLjd/pa4ycqUeNzKgeP
-         saHkRriQTVpqOcKobXdUI6nkDvuYLxDhKYaUSAI0hN9OSQX6iNQJZcyA/Hczcod19V5H
-         WmlbzSjGeQ16xOFnGq2c3M1NndvbeYW0sy8OGE+sN634XkJJcBZKBbLsClTZLs6V8TL4
-         jQwNwCT8y0vICEs0Njv6eOSGz7O6LYZQ/xi3UWHObOAKjDgGAQurWQDdAOvV76ra7+bX
-         SKYeTJ0jA5j7Xt8qxgHo4u09L/UphqL8v5Df99LBhsLqYy1iyis2S/52vV6kEPf8bOhH
-         O05Q==
-X-Gm-Message-State: APjAAAX+Il5atyqjZDHhNPeGO++AoQ1OJipAEPaaVpS/Ra6odzXPzqUa
-        b/XixEDpYwC93152KBqfa3IN1HceH6VHssd9rw0=
-X-Google-Smtp-Source: APXvYqz9BuIKcbppibeFWeJbwe4oRUtRoe+yhYAEZFYke6YfzSl3wycLo6ueyYsgQWQ8Is+1lpwo08JP+zHbKn3n89w=
-X-Received: by 2002:a02:92c9:: with SMTP id c9mr3507699jah.0.1571746391225;
- Tue, 22 Oct 2019 05:13:11 -0700 (PDT)
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=erZ4S0w/Qq6IL7i2I6z2gT3RJ9w/1cUbTZHg77/V71Q=;
+ b=eCRGo85TPBe0pLfVRiJJJXyc9+tr/UWE19fQZnYw592TwDYhC3SMZcYjVVqvspisa3UaI2GuveVl8A5BxIrGxUuuKwt+27p1FeOYZe4fjjWh15UWXy9cNralbhLeYzfwthadYfeaVM/OmtFtNUGGVkUdAldJCybfgRhePAowGaA=
+Received: from MWHPR0201CA0031.namprd02.prod.outlook.com
+ (2603:10b6:301:74::44) by DM6PR02MB4970.namprd02.prod.outlook.com
+ (2603:10b6:5:11::27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2367.20; Tue, 22 Oct
+ 2019 12:13:12 +0000
+Received: from BL2NAM02FT036.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e46::204) by MWHPR0201CA0031.outlook.office365.com
+ (2603:10b6:301:74::44) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2367.21 via Frontend
+ Transport; Tue, 22 Oct 2019 12:13:12 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; pengutronix.de; dkim=none (message not signed)
+ header.d=none;pengutronix.de; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ BL2NAM02FT036.mail.protection.outlook.com (10.152.77.154) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2367.14
+ via Frontend Transport; Tue, 22 Oct 2019 12:13:11 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1iMt2F-0004ip-16; Tue, 22 Oct 2019 05:13:11 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1iMt29-0003wM-KR; Tue, 22 Oct 2019 05:13:05 -0700
+Received: from xsj-pvapsmtp01 (mail.xilinx.com [149.199.38.66] (may be forged))
+        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x9MCD179027641;
+        Tue, 22 Oct 2019 05:13:01 -0700
+Received: from [172.30.17.123]
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <michals@xilinx.com>)
+        id 1iMt24-0003vN-KB; Tue, 22 Oct 2019 05:13:00 -0700
+Subject: Re: [PATCH] reset: zynqmp: Make reset_control_ops const
+To:     Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-kernel@vger.kernel.org
+Cc:     Michal Simek <michal.simek@xilinx.com>, kernel@pengutronix.de
+References: <20191022115517.19886-1-p.zabel@pengutronix.de>
+From:   Michal Simek <michal.simek@xilinx.com>
+Message-ID: <0b42b11c-d4c4-e7fc-1dc3-c6ac07ab8b1d@xilinx.com>
+Date:   Tue, 22 Oct 2019 14:12:59 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20190828150037.2640-1-aford173@gmail.com> <20190905230443.GA52127@atomide.com>
- <CAHCN7xL0fbr=Sv+b=0AuGB1PPhAAFdAFLEd_iBM+ZMTkUw5sHQ@mail.gmail.com>
- <CAHCN7xL-Gfxe0qF5w7BUsHnyhcNNpmCnchdKErnmiqggXfsLWw@mail.gmail.com>
- <20190909134033.s26eiurpat3iekse@pali> <20190909163543.GQ52127@atomide.com>
-In-Reply-To: <20190909163543.GQ52127@atomide.com>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Tue, 22 Oct 2019 07:13:00 -0500
-Message-ID: <CAHCN7xJjMNOLT5oPn8CArApM5b2ksPon8eALq=gUi0ZqoLjGHQ@mail.gmail.com>
-Subject: Re: [RFC] ARM: omap3: Enable HWMODS for HW Random Number Generator
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Tero Kristo <t-kristo@ti.com>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Adam Ford <adam.ford@logicpd.com>,
-        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Paul Walmsley <paul@pwsan.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191022115517.19886-1-p.zabel@pengutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(376002)(39860400002)(136003)(346002)(396003)(199004)(189003)(476003)(58126008)(36756003)(106002)(9786002)(31696002)(23676004)(2486003)(8936002)(126002)(486006)(31686004)(446003)(336012)(6246003)(4744005)(186003)(229853002)(76176011)(70206006)(70586007)(426003)(8676002)(230700001)(65956001)(305945005)(47776003)(478600001)(2616005)(2906002)(11346002)(65806001)(50466002)(316002)(5660300002)(356004)(81156014)(14444005)(26005)(4326008)(36386004)(44832011)(81166006)(42866002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR02MB4970;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 8cc0759c-05ee-47fa-d1e9-08d756e93552
+X-MS-TrafficTypeDiagnostic: DM6PR02MB4970:
+X-Microsoft-Antispam-PRVS: <DM6PR02MB49703237A8558966E9A2E8A4C6680@DM6PR02MB4970.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:660;
+X-Forefront-PRVS: 01986AE76B
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: mxdmQgYYfXf0MzIFvMNbjE77Cktq7vuHCgZg8Tw6S0dqr79kdNgnONuM4GRGZcG+Put9H6rS04AFysq9+k7n4pCmaiNychtFiuXgriPGIURJFYdoDN7bpC2jBp/k50nvWx+mIeFG/hi9oWXBDRsdC68QRg20jFSFKNyRIqYfGnc3u/Nsn3YKZWaJJFWIU70Sx+g3d1vfIviYmErUeNRfWa5o4lEcwtj/YRZbiMBpIxfWE730FRF3IJ7C0eUAaNv8eUbEukFmMApbS9wrzaN2Q6zQ5wFWNhslIdoZhTkd/mWQar0iGRUf0wxHqUA0L/IoATqYh3InjfZjEFI4PLDWwC/ElnuGER2cQOG+GYR5c+/ltgmyaUZ43+8gkuNZw0X8WKjKaJErVgxtwcbxOlRL1eml032XWm+Op9KyfWzd6mt/7BNNLk6u0Oov9jhH35aa
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Oct 2019 12:13:11.6451
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8cc0759c-05ee-47fa-d1e9-08d756e93552
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB4970
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 9, 2019 at 11:35 AM Tony Lindgren <tony@atomide.com> wrote:
->
-> * Pali Roh=C3=A1r <pali.rohar@gmail.com> [190909 13:41]:
-> > On Monday 09 September 2019 08:37:09 Adam Ford wrote:
-> > > I applied this on 5.3 and it is working.  I assume the same is true i=
-n for-next.
->
-> Hmm I noticed I stopped getting RNG data after several rmmod modprobe
-> cycles, or several hd /dev/random reads. Anybody else seeing that?
->
-> > > Do you want to submit a formal patch?  I  can mark it as 'tested-by'
-> > > This really helps speed up the startup sequence on boards with sshd
-> > > because it delays for nearly 80 seconds waiting for entropy without
-> > > the hwrng.
-> >
-> > Hi! When applying a patch, could you please disable this rng for n900?
-> >
-> > In omap3-n900.dts for rng should be status =3D "disabled" (as Tony alre=
-ady
-> > wrote), similarly like for aes.
->
-> Yeah I'll post a proper patch after -rc1.
+On 22. 10. 19 13:55, Philipp Zabel wrote:
+> The zynqmp_reset_ops structure is never modified. Make it const.
+> 
+> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> ---
+>  drivers/reset/reset-zynqmp.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/reset/reset-zynqmp.c b/drivers/reset/reset-zynqmp.c
+> index 99e75d92dada..0144075b11a6 100644
+> --- a/drivers/reset/reset-zynqmp.c
+> +++ b/drivers/reset/reset-zynqmp.c
+> @@ -64,7 +64,7 @@ static int zynqmp_reset_reset(struct reset_controller_dev *rcdev,
+>  					    PM_RESET_ACTION_PULSE);
+>  }
+>  
+> -static struct reset_control_ops zynqmp_reset_ops = {
+> +static const struct reset_control_ops zynqmp_reset_ops = {
+>  	.reset = zynqmp_reset_reset,
+>  	.assert = zynqmp_reset_assert,
+>  	.deassert = zynqmp_reset_deassert,
+> 
 
-Tony,
-
-I am just following up on this.  Without the HWRNG there are some
-tools and daemons like sshd which wait a long time at startup.  The
-patch you sent really helps speed up the startup time in these cases.
-At least in my case, it shaves 80 seconds off by eliminating the
-delays.
-
-Do you think you'll have time to post a more formal patch?  If not, I
-can do it.  I just don't know which mailing list is the more
-appropriate.  I was able to verity your patch on a DM3730 and OMAP3530
+Acked-by: Michal Simek <michal.simek@xilinx.com>
 
 Thanks,
-
-adam
-
-
->
-> Regards,
->
-> Tony
+Michal
