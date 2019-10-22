@@ -2,330 +2,123 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67EE8CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 10:03:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2972ECA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 10:04:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CF37214B2
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 10:03:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571738635;
-	bh=ggRvJSD6EqP5F0OwMvS5LVsoEw458wXTn3ClgvxsC3A=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=VD6jT1UMxJg+TXAtCmzykBpzgLffmBSOiPPV5XuI5KtnPI2aKSxlITS4CH6BLGu+i
-	 623+KDWDAlbUwzTphcWSRvt7WnB/RF6+8EALeWLT59MUxOKCzQJenBUWOQXMERzjqt
-	 24AX+nqWzsKccbwox11Jkl37HzHzXaWRdNHB9ZIs=
+	by mail.kernel.org (Postfix) with ESMTP id EF57B214B2
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 10:04:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sMk3GnpM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731717AbfJVKDy (ORCPT
+        id S1731726AbfJVKEE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 06:03:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39988 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729388AbfJVKDx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 06:03:53 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        Tue, 22 Oct 2019 06:04:04 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:37576 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728182AbfJVKEE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 06:04:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=kV/nLiFmUNm6OH0Bd9x6U4JZyYHsMO+jxibkjxu3pa8=; b=sMk3GnpMr0ciIPen7KoChofUj
+        ZtT277y+/fyxmsstKPSdsW2SwlSv/ik1QdAt6Xf6/JFAkRjX7PcTkvr/jz9TfxzNZmjMO9MYE3R5i
+        pSAmkKgVAWkWahL9al2RgbUXZjn6MZDjrNHZzKZ2ULV96zTLUQXQ144oXTqAEB+kDtg0Kg+nPPnkb
+        9cNmy7c6mVjfOV/ALZ9sLIOX7471ZyBFB580OgWxVNwEJIu8eNNxtWNr2vs5ET4r3xNdBvIYRKqGh
+        mU9fL62eUKFfCrAFGh2DLZ+S5RZI+/ldKl2h4+qEyOqbo3qyCu8/uYmn9gGs5Y0nUuYlCnNt4yd7X
+        /kt5Rzouw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iMr1B-0002gq-HU; Tue, 22 Oct 2019 10:03:57 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 514282064B;
-        Tue, 22 Oct 2019 10:03:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571738632;
-        bh=ggRvJSD6EqP5F0OwMvS5LVsoEw458wXTn3ClgvxsC3A=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=VlzMaGyA9SLhpUaXAZM3D+SJM76gGXuoYh7673waoplRzB56OgC0d80EapGZ+452y
-         utyYiOwLRai0xsOyyFL2KFhsOJC9WUjZ0fHndqlrO8KMLwGnoqPjS4aqFkHNRssWfb
-         cpebIZcJ7LdjVukabrGGuyk3mLUQODajP/0L0n3k=
-Date:   Tue, 22 Oct 2019 11:03:47 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@01.org,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH 1/4] iio: pressure: bmp280: use bulk regulator ops
-Message-ID: <20191022110347.2da68e99@archlinux>
-In-Reply-To: <20191006104919.05caab4f@archlinux>
-References: <20191002085759.13337-2-brgl@bgdev.pl>
-        <201910022132.qRNFfzjP%lkp@intel.com>
-        <CAMRc=McpiPT2n2adpUiNGF+iF-gO_B3r7rAGFEA_1YzY0c+6Ww@mail.gmail.com>
-        <20191006104919.05caab4f@archlinux>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4842D300EBF;
+        Tue, 22 Oct 2019 12:02:58 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B1D4F29AB92A3; Tue, 22 Oct 2019 12:03:55 +0200 (CEST)
+Date:   Tue, 22 Oct 2019 12:03:55 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     mingo@kernel.org, linux-kernel@vger.kernel.org
+Cc:     acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, andi@firstfloor.org, kan.liang@linux.intel.com
+Subject: Re: [PATCH 1/3] perf: Optimize perf_install_in_event()
+Message-ID: <20191022100355.GM1817@hirez.programming.kicks-ass.net>
+References: <20191022092017.740591163@infradead.org>
+ <20191022092307.368892814@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191022092307.368892814@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 6 Oct 2019 10:49:18 +0100
-Jonathan Cameron <jic23@kernel.org> wrote:
+On Tue, Oct 22, 2019 at 11:20:18AM +0200, Peter Zijlstra wrote:
+> Andi reported that when creating a lot of events, a lot of time is
+> spend in IPIs and asked if it would be possible to elide some of that.
+> 
+> Now when, as for example the perf-tool always does, events are created
+> disabled, then these events will not need to be scheduled when added
+> to the context (they're still disable) and therefore the IPI is not
+> required -- except for the very first event, that will need to set
+> ctx->is_active.
+> 
+> ( it might be possible to set ctx->is_active remotely for cpu_ctx, but
+>   we really need the IPI for task_ctx, so lets not make that
+>   distinction )
+> 
+> Also use __perf_effective_state() since group events depend on the
+> state of the leader, if the leader is OFF, the whole group is OFF.
+> 
+> So when sibling events are created enabled (XXX check tool) then we
+> only need a single IPI to create and enable the whole group (+ that
+> initial IPI to initialize the context).
 
-> On Wed, 2 Oct 2019 17:57:30 +0200
-> Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->=20
-> > =C5=9Br., 2 pa=C5=BA 2019 o 15:06 kbuild test robot <lkp@intel.com> nap=
-isa=C5=82(a): =20
-> > >
-> > > Hi Bartosz,
-> > >
-> > > I love your patch! Yet something to improve:
-> > >
-> > > [auto build test ERROR on iio/togreg]
-> > > [cannot apply to v5.4-rc1 next-20191002]
-> > > [if your patch is applied to the wrong git tree, please drop us a not=
-e to help
-> > > improve the system. BTW, we also suggest to use '--base' option to sp=
-ecify the
-> > > base tree in git format-patch, please see https://stackoverflow.com/a=
-/37406982]
-> > >
-> > > url:    https://github.com/0day-ci/linux/commits/Bartosz-Golaszewski/=
-iio-pressure-bmp280-code-shrink/20191002-194508
-> > > base:   https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git=
- togreg
-> > > config: sh-allmodconfig (attached as .config)
-> > > compiler: sh4-linux-gcc (GCC) 7.4.0
-> > > reproduce:
-> > >         wget https://raw.githubusercontent.com/intel/lkp-tests/master=
-/sbin/make.cross -O ~/bin/make.cross
-> > >         chmod +x ~/bin/make.cross
-> > >         # save the attached .config to linux build tree
-> > >         GCC_VERSION=3D7.4.0 make.cross ARCH=3Dsh
-> > >
-> > > If you fix the issue, kindly add following tag
-> > > Reported-by: kbuild test robot <lkp@intel.com>
-> > >
-> > > All errors (new ones prefixed by >>):
-> > >
-> > >    drivers/iio/pressure/bmp280-core.c: In function 'bmp280_common_pro=
-be':   =20
-> > > >> drivers/iio/pressure/bmp280-core.c:1041:2: error: implicit declara=
-tion of function 'regulator_bulk_set_supply_names'; did you mean 'regulator=
-_bulk_register_supply_alias'? [-Werror=3Dimplicit-function-declaration]   =
-=20
-> > >      regulator_bulk_set_supply_names(data->supplies,
-> > >      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > >      regulator_bulk_register_supply_alias
-> > >    cc1: some warnings being treated as errors
-> > >   =20
-> >=20
-> > This function has been introduced in commit d0087e72710c ("regulator:
-> > provide regulator_bulk_set_supply_names()") and released in v5.4-rc1
-> > but it's not present in this tree. In other words: a false positive. =20
-> Kind of handy to known though ;)  My tree doesn't contain it yet
-> either.  That should be fixed later this week after a pull request
-> and rebase.  I'll not be applying this series until after that.
-Applied to the togreg branch of iio.git and pushed out as testing for
-the autobuilders to play with it.
+Arguably, we could possible do something like so as well, but I'm not
+sure it makes sense as it will not help if IOC_ENABLE is called in
+creation order. Because in that case we'll enable the group leader
+before the siblings and we'll schedule them one at a time, instead of
+the whole group at once.
 
-Thanks,
-
-Jonathan
-
->=20
-> Thanks,
->=20
-> Jonathan
->=20
-> >=20
-> > Bart
-> >  =20
-> > > vim +1041 drivers/iio/pressure/bmp280-core.c
-> > >
-> > >    986
-> > >    987  int bmp280_common_probe(struct device *dev,
-> > >    988                          struct regmap *regmap,
-> > >    989                          unsigned int chip,
-> > >    990                          const char *name,
-> > >    991                          int irq)
-> > >    992  {
-> > >    993          int ret;
-> > >    994          struct iio_dev *indio_dev;
-> > >    995          struct bmp280_data *data;
-> > >    996          unsigned int chip_id;
-> > >    997          struct gpio_desc *gpiod;
-> > >    998
-> > >    999          indio_dev =3D devm_iio_device_alloc(dev, sizeof(*data=
-));
-> > >   1000          if (!indio_dev)
-> > >   1001                  return -ENOMEM;
-> > >   1002
-> > >   1003          data =3D iio_priv(indio_dev);
-> > >   1004          mutex_init(&data->lock);
-> > >   1005          data->dev =3D dev;
-> > >   1006
-> > >   1007          indio_dev->dev.parent =3D dev;
-> > >   1008          indio_dev->name =3D name;
-> > >   1009          indio_dev->channels =3D bmp280_channels;
-> > >   1010          indio_dev->info =3D &bmp280_info;
-> > >   1011          indio_dev->modes =3D INDIO_DIRECT_MODE;
-> > >   1012
-> > >   1013          switch (chip) {
-> > >   1014          case BMP180_CHIP_ID:
-> > >   1015                  indio_dev->num_channels =3D 2;
-> > >   1016                  data->chip_info =3D &bmp180_chip_info;
-> > >   1017                  data->oversampling_press =3D ilog2(8);
-> > >   1018                  data->oversampling_temp =3D ilog2(1);
-> > >   1019                  data->start_up_time =3D 10000;
-> > >   1020                  break;
-> > >   1021          case BMP280_CHIP_ID:
-> > >   1022                  indio_dev->num_channels =3D 2;
-> > >   1023                  data->chip_info =3D &bmp280_chip_info;
-> > >   1024                  data->oversampling_press =3D ilog2(16);
-> > >   1025                  data->oversampling_temp =3D ilog2(2);
-> > >   1026                  data->start_up_time =3D 2000;
-> > >   1027                  break;
-> > >   1028          case BME280_CHIP_ID:
-> > >   1029                  indio_dev->num_channels =3D 3;
-> > >   1030                  data->chip_info =3D &bme280_chip_info;
-> > >   1031                  data->oversampling_press =3D ilog2(16);
-> > >   1032                  data->oversampling_humid =3D ilog2(16);
-> > >   1033                  data->oversampling_temp =3D ilog2(2);
-> > >   1034                  data->start_up_time =3D 2000;
-> > >   1035                  break;
-> > >   1036          default:
-> > >   1037                  return -EINVAL;
-> > >   1038          }
-> > >   1039
-> > >   1040          /* Bring up regulators */   =20
-> > > > 1041          regulator_bulk_set_supply_names(data->supplies,   =20
-> > >   1042                                          bmp280_supply_names,
-> > >   1043                                          BMP280_NUM_SUPPLIES);
-> > >   1044
-> > >   1045          ret =3D devm_regulator_bulk_get(dev,
-> > >   1046                                        BMP280_NUM_SUPPLIES, da=
-ta->supplies);
-> > >   1047          if (ret) {
-> > >   1048                  dev_err(dev, "failed to get regulators\n");
-> > >   1049                  return ret;
-> > >   1050          }
-> > >   1051
-> > >   1052          ret =3D regulator_bulk_enable(BMP280_NUM_SUPPLIES, da=
-ta->supplies);
-> > >   1053          if (ret) {
-> > >   1054                  dev_err(dev, "failed to enable regulators\n");
-> > >   1055                  return ret;
-> > >   1056          }
-> > >   1057
-> > >   1058          /* Wait to make sure we started up properly */
-> > >   1059          usleep_range(data->start_up_time, data->start_up_time=
- + 100);
-> > >   1060
-> > >   1061          /* Bring chip out of reset if there is an assigned GP=
-IO line */
-> > >   1062          gpiod =3D devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH=
-);
-> > >   1063          /* Deassert the signal */
-> > >   1064          if (!IS_ERR(gpiod)) {
-> > >   1065                  dev_info(dev, "release reset\n");
-> > >   1066                  gpiod_set_value(gpiod, 0);
-> > >   1067          }
-> > >   1068
-> > >   1069          data->regmap =3D regmap;
-> > >   1070          ret =3D regmap_read(regmap, BMP280_REG_ID, &chip_id);
-> > >   1071          if (ret < 0)
-> > >   1072                  goto out_disable_regulators;
-> > >   1073          if (chip_id !=3D chip) {
-> > >   1074                  dev_err(dev, "bad chip id: expected %x got %x=
-\n",
-> > >   1075                          chip, chip_id);
-> > >   1076                  ret =3D -EINVAL;
-> > >   1077                  goto out_disable_regulators;
-> > >   1078          }
-> > >   1079
-> > >   1080          ret =3D data->chip_info->chip_config(data);
-> > >   1081          if (ret < 0)
-> > >   1082                  goto out_disable_regulators;
-> > >   1083
-> > >   1084          dev_set_drvdata(dev, indio_dev);
-> > >   1085
-> > >   1086          /*
-> > >   1087           * Some chips have calibration parameters "programmed=
- into the devices'
-> > >   1088           * non-volatile memory during production". Let's read=
- them out at probe
-> > >   1089           * time once. They will not change.
-> > >   1090           */
-> > >   1091          if (chip_id  =3D=3D BMP180_CHIP_ID) {
-> > >   1092                  ret =3D bmp180_read_calib(data, &data->calib.=
-bmp180);
-> > >   1093                  if (ret < 0) {
-> > >   1094                          dev_err(data->dev,
-> > >   1095                                  "failed to read calibration c=
-oefficients\n");
-> > >   1096                          goto out_disable_regulators;
-> > >   1097                  }
-> > >   1098          } else if (chip_id =3D=3D BMP280_CHIP_ID || chip_id =
-=3D=3D BME280_CHIP_ID) {
-> > >   1099                  ret =3D bmp280_read_calib(data, &data->calib.=
-bmp280, chip_id);
-> > >   1100                  if (ret < 0) {
-> > >   1101                          dev_err(data->dev,
-> > >   1102                                  "failed to read calibration c=
-oefficients\n");
-> > >   1103                          goto out_disable_regulators;
-> > >   1104                  }
-> > >   1105          }
-> > >   1106
-> > >   1107          /*
-> > >   1108           * Attempt to grab an optional EOC IRQ - only the BMP=
-085 has this
-> > >   1109           * however as it happens, the BMP085 shares the chip =
-ID of BMP180
-> > >   1110           * so we look for an IRQ if we have that.
-> > >   1111           */
-> > >   1112          if (irq > 0 || (chip_id  =3D=3D BMP180_CHIP_ID)) {
-> > >   1113                  ret =3D bmp085_fetch_eoc_irq(dev, name, irq, =
-data);
-> > >   1114                  if (ret)
-> > >   1115                          goto out_disable_regulators;
-> > >   1116          }
-> > >   1117
-> > >   1118          /* Enable runtime PM */
-> > >   1119          pm_runtime_get_noresume(dev);
-> > >   1120          pm_runtime_set_active(dev);
-> > >   1121          pm_runtime_enable(dev);
-> > >   1122          /*
-> > >   1123           * Set autosuspend to two orders of magnitude larger =
-than the
-> > >   1124           * start-up time.
-> > >   1125           */
-> > >   1126          pm_runtime_set_autosuspend_delay(dev, data->start_up_=
-time / 10);
-> > >   1127          pm_runtime_use_autosuspend(dev);
-> > >   1128          pm_runtime_put(dev);
-> > >   1129
-> > >   1130          ret =3D iio_device_register(indio_dev);
-> > >   1131          if (ret)
-> > >   1132                  goto out_runtime_pm_disable;
-> > >   1133
-> > >   1134
-> > >   1135          return 0;
-> > >   1136
-> > >   1137  out_runtime_pm_disable:
-> > >   1138          pm_runtime_get_sync(data->dev);
-> > >   1139          pm_runtime_put_noidle(data->dev);
-> > >   1140          pm_runtime_disable(data->dev);
-> > >   1141  out_disable_regulators:
-> > >   1142          regulator_bulk_disable(BMP280_NUM_SUPPLIES, data->sup=
-plies);
-> > >   1143          return ret;
-> > >   1144  }
-> > >   1145  EXPORT_SYMBOL(bmp280_common_probe);
-> > >   1146
-> > >
-> > > ---
-> > > 0-DAY kernel test infrastructure                Open Source Technolog=
-y Center
-> > > https://lists.01.org/pipermail/kbuild-all                   Intel Cor=
-poration   =20
->=20
-
+---
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index f9a5d4356562..2a5e6d9654e1 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -2791,6 +2791,7 @@ static void __perf_event_enable(struct perf_event *event,
+ static void _perf_event_enable(struct perf_event *event)
+ {
+ 	struct perf_event_context *ctx = event->ctx;
++	struct perf_event *leader;
+ 
+ 	raw_spin_lock_irq(&ctx->lock);
+ 	if (event->state >= PERF_EVENT_STATE_INACTIVE ||
+@@ -2808,6 +2809,17 @@ static void _perf_event_enable(struct perf_event *event)
+ 	 */
+ 	if (event->state == PERF_EVENT_STATE_ERROR)
+ 		event->state = PERF_EVENT_STATE_OFF;
++
++	/*
++	 * If this is a sibling event and the group leader is still OFF
++	 * then there is no point in trying to schedule this event.
++	 */
++	leader = event->group_leader;
++	if (leader != event && leader->state == PERF_EVENT_STATE_OFF) {
++		event->state = PERF_EVENT_STATE_INACTIVE;
++		raw_spin_unlock_irq(&ctx->lock);
++		return;
++	}
+ 	raw_spin_unlock_irq(&ctx->lock);
+ 
+ 	event_function_call(event, __perf_event_enable, NULL);
