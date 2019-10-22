@@ -2,182 +2,262 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 488C5CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:03:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A477CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:03:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 260CE21872
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:03:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 715A021872
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:03:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388960AbfJVODE (ORCPT
+        id S2389003AbfJVODI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 10:03:04 -0400
-Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:54489 "EHLO
-        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387965AbfJVODD (ORCPT
+        Tue, 22 Oct 2019 10:03:08 -0400
+Received: from mail-il1-f197.google.com ([209.85.166.197]:53540 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387965AbfJVODI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 10:03:03 -0400
-Received: from [IPv6:2001:420:44c1:2577:31:9f59:b53f:5d72]
- ([IPv6:2001:420:44c1:2577:31:9f59:b53f:5d72])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id MukTi3IXtPduvMukWiMkLM; Tue, 22 Oct 2019 16:03:01 +0200
-Subject: Re: [PATCH v8 3/3] media: cedrus: Add HEVC/H.265 decoding support
-To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com,
-        Chen-Yu Tsai <wens@csie.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Nicolas Dufresne <nicolas@ndufresne.ca>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-References: <20190927143411.141526-1-paul.kocialkowski@bootlin.com>
- <20190927143411.141526-4-paul.kocialkowski@bootlin.com>
- <20191017095751.5a229051@coco.lan> <20191022124012.GD2651@aptenodytes>
- <20191022131751.GE2651@aptenodytes>
- <62ddccd3-38c0-89c5-7f0c-35f24494c3f9@xs4all.nl>
- <20191022140129.GA1926725@aptenodytes>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <345a6781-a5b3-1408-40ec-580873720c4a@xs4all.nl>
-Date:   Tue, 22 Oct 2019 16:02:57 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 22 Oct 2019 10:03:08 -0400
+Received: by mail-il1-f197.google.com with SMTP id a17so5148279ilb.20
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 07:03:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=X8R9No+KYRblmHd6HBmjv/vYFX9sgoKPVl5b2HVYjsw=;
+        b=K6X1oq4mMRWFPpXNJDJlj7bmZxfyd8LJdrT0enyRiPijj/WnbgVDwM6E/ZTLAokpYr
+         H3y5ILRF8ngBthQ8GazUfQBpihNzUFZv3d2azVAYEsP7h3YW0jJ4UA4zUDEK8aIuNABi
+         FGeKDhenNe2T28Bvxq05W1pOgKNiCSh90w+nVdCrV47lIiRiUpxxg+LRPZ1jlzuwz4d6
+         g394A3ZLt6VW7DZcRWfjTG6gR+e6rWvp4yBE7h7eCo3zaJLTAdXMOEWuZ4SKDi7+vi3V
+         lDDpzD/8E9MXn9G9FVD3FcYlF9unjrsFj0uaesEL5LNCQ98eNFbq9KciwVLvC5HYwy4E
+         TbZw==
+X-Gm-Message-State: APjAAAUuz2W6XwRLd1UNdrgB9BNQpgjX3whLpJyG4MQ0MHrOa7VvEglJ
+        In3Ubka0PAEE3PFpI3FekcWrygOgMWZN6LoUE0kfkJ1+0Grm
+X-Google-Smtp-Source: APXvYqy9Lrb+tqJJGeEY5yKqbiUG8/YR6RXMSFJXZ6uHkr8DS0g+4onKOt30+gN8f921O1j6CCOlHO85Czr9m/g1vP4nzjfri3pG
 MIME-Version: 1.0
-In-Reply-To: <20191022140129.GA1926725@aptenodytes>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfLyToBbJkvoNRLhYqBvZHVXfIm7iukgHkajVmC/txXYqaReY4el4wR3BxG5BTgxtiScGgBnV0kxhH6kDr/OEW3KJ+v+YsODAMwe5yEeEtS+FgbsHq7dV
- fdMG0VGNqYIhwjH7J7Sb+mXFSLzj4uPkGVG4X/JcZOw+OeFPvLRkzs5wJxPWAuzxPlOqry9K8/FLndsCmhzA0hYSRp/x7bP7eGayeRjAN7wu9urRBuySNMAT
- rpTuaQggdjanULe0u/fQM+fW9lb7FPpkjNuLW20PZ3ZCjRDSOdPEvMnmFWbsH3oGnI/KfL45Gi99Jdvvsn5LhBuiCxtz2/uiLE8ZTTuEPMdOPI8NWS14W+Sd
- OfoivH1DiUS0VaLSAsSbfZ0iM/q/LUE9JuCwlCWLZcVmEXv0hZ+IJzmMUiTIP0GPdwEYU3JXPstdFkz1oXZmizJhk7BzABSrYr3PM8q2I08RmiB6zgRdovHk
- lS27pzKhvOA4nbPJQDskKROYHec/bUkcDAs4xo0spMXqB70ExtmEnQpUq7oCQXCbsmvvv5SaYgnnOePA0YI3ngH2mlRuJrebfwZrJ8vPF4UHPtQT+dEGSpWw
- HpuMzANUMUE0Puthk1YVByV9ER72/ENKKACHrdmCiU89opg6jSk+365tsEvgse/moOebrKO/EyhqyTOUn5T3cTSXo6dTLb8ZCko9xT4WTOhx5obzgZcMpUzy
- SOq+0knuWhd4idM5xZhC/M2gEmyV+tPY
+X-Received: by 2002:a02:b817:: with SMTP id o23mr3974902jam.42.1571752986849;
+ Tue, 22 Oct 2019 07:03:06 -0700 (PDT)
+Date:   Tue, 22 Oct 2019 07:03:06 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000074bc3105958042ef@google.com>
+Subject: KASAN: use-after-free Read in nf_ct_deliver_cached_events
+From:   syzbot <syzbot+c7aabc9fe93e7f3637ba@syzkaller.appspotmail.com>
+To:     coreteam@netfilter.org, davem@davemloft.net, fw@strlen.de,
+        kadlec@netfilter.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        pablo@netfilter.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/22/19 4:01 PM, Paul Kocialkowski wrote:
-> Hi,
-> 
-> On Tue 22 Oct 19, 15:37, Hans Verkuil wrote:
->> On 10/22/19 3:17 PM, Paul Kocialkowski wrote:
->>> Hi again,
->>>
->>> On Tue 22 Oct 19, 14:40, Paul Kocialkowski wrote:
->>>> Hi Mauro and thanks for the review,
->>>>
->>>> On Thu 17 Oct 19, 09:57, Mauro Carvalho Chehab wrote:
->>>>> Em Fri, 27 Sep 2019 16:34:11 +0200
->>>>> Paul Kocialkowski <paul.kocialkowski@bootlin.com> escreveu:
->>>>>
->>>>>> This introduces support for HEVC/H.265 to the Cedrus VPU driver, with
->>>>>> both uni-directional and bi-directional prediction modes supported.
->>>>>>
->>>>>> Field-coded (interlaced) pictures, custom quantization matrices and
->>>>>> 10-bit output are not supported at this point.
->>>>>>
->>>>>> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
->>>>>> ---
->>>>>
->>>>> ...
->>>>>
->>>>>> +		unsigned int ctb_size_luma =
->>>>>> +			1 << log2_max_luma_coding_block_size;
->>>>>
->>>>> Shifts like this is a little scary. "1" constant is signed. So, if
->>>>> log2_max_luma_coding_block_size is 31, the above logic has undefined
->>>>> behavior. Different archs and C compilers may handle it on different
->>>>> ways.
->>>>
->>>> I wasn't aware that it was the case, thanks for bringing this to light!
->>>> I'll make it 1UL then.
->>>>
->>>>>> +#define VE_DEC_H265_LOW_ADDR_PRIMARY_CHROMA(a) \
->>>>>> +	(((a) << 24) & GENMASK(31, 24))
->>>>>
->>>>> Same applies here and on other similar macros. You need to enforce
->>>>> (a) to be unsigned, as otherwise the behavior is undefined.
->>>>>
->>>>> Btw, this is a recurrent pattern on this file. I would define a
->>>>> macro, e. g. something like:
->>>>>
->>>>> 	#define MASK_BITS_AND_SHIFT(v, high, low) \
->>>>> 		((UL(v) << low) & GENMASK(high, low))
->>>>>
->>>>> And use it for all similar patterns here.
->>>>
->>>> Sounds good! I find that the reverse wording (SHIFT_AND_MASK_BITS) would be
->>>> a bit more explicit since the shift happens prior to the mask.
->>>
->>> Apparently the UL(v) macro just appends UL to v in preprocessor, so it won't
->>> work with anything else than direct integers.
->>>
->>> I'll replace it with a (unsigned long) cast, that seems to do the job.
->>
->> Shouldn't that be a (u32) cast? Since this is used with 32 bit registers?
-> 
-> This would work for cedrus, but I think that what Mauro had in mind was to
-> migrate this macro to linux/bits.h, where everthing else (including GENMASK)
-> is apparently defined in terms of unsigned long and not types with explicit
-> numbers of bits. So I find it more consistent to go with unsigned long.
-> 
-> In our case, 64-bit platforms that use cedrus would calculate the macro on
-> 64 bits and use it in 32-bit variables. Since we're never masking beyond the
-> lower 32 bits, I don't see how things could go wrong and the situation looks
-> fairly similar to the use of GENMASK in similar conditions.
-> 
-> Does that sound right to you or am I missing something here?
+Hello,
 
-Ah, OK. Fair enough.
+syzbot found the following crash on:
 
-Regards,
+HEAD commit:    a6fcdcd9 Add linux-next specific files for 20191021
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=111b7fcf600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=32434321999f01e9
+dashboard link: https://syzkaller.appspot.com/bug?extid=c7aabc9fe93e7f3637ba
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-	Hans
+Unfortunately, I don't have any reproducer for this crash yet.
 
-> 
-> Cheers,
-> 
-> Paul
-> 
->> Regards,
->>
->> 	Hans
->>
->>>
->>> Cheers,
->>>
->>> Paul
->>>
->>>> Also we probably need to have parenthesis around "low", right?
->>>>
->>>>> The best would be to include such macro at linux/bits.h, although some
->>>>> upstream discussion is required.
->>>>>
->>>>> So, for now, let's add it at this header file, but work upstream
->>>>> to have it merged there.
->>>>
->>>> Understood, I'll include it in that header for now and send a separate patch
->>>> for inclusion in linux/bits.h (apparently the preprocessor doesn't care about
->>>> redefinitions so we can just remove the cedrus fashion once the common one is
->>>> in).
->>>>
->>>> What do you think?
->>>>
->>>> Cheers,
->>>>
->>>> Paul
->>>
->>>
->>>
->>
-> 
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+c7aabc9fe93e7f3637ba@syzkaller.appspotmail.com
 
+==================================================================
+BUG: KASAN: use-after-free in __nf_ct_ext_exist  
+include/net/netfilter/nf_conntrack_extend.h:53 [inline]
+BUG: KASAN: use-after-free in nf_ct_ext_exist  
+include/net/netfilter/nf_conntrack_extend.h:58 [inline]
+BUG: KASAN: use-after-free in __nf_ct_ext_find  
+include/net/netfilter/nf_conntrack_extend.h:63 [inline]
+BUG: KASAN: use-after-free in nf_ct_ecache_find  
+include/net/netfilter/nf_conntrack_ecache.h:35 [inline]
+BUG: KASAN: use-after-free in nf_ct_deliver_cached_events+0x5c3/0x6d0  
+net/netfilter/nf_conntrack_ecache.c:205
+Read of size 1 at addr ffff88806bb2dc04 by task syz-executor.2/27585
+
+CPU: 0 PID: 27585 Comm: syz-executor.2 Not tainted 5.4.0-rc4-next-20191021  
+#0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
+  __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
+  kasan_report+0x12/0x20 mm/kasan/common.c:634
+  __asan_report_load1_noabort+0x14/0x20 mm/kasan/generic_report.c:129
+  __nf_ct_ext_exist include/net/netfilter/nf_conntrack_extend.h:53 [inline]
+  nf_ct_ext_exist include/net/netfilter/nf_conntrack_extend.h:58 [inline]
+  __nf_ct_ext_find include/net/netfilter/nf_conntrack_extend.h:63 [inline]
+  nf_ct_ecache_find include/net/netfilter/nf_conntrack_ecache.h:35 [inline]
+  nf_ct_deliver_cached_events+0x5c3/0x6d0  
+net/netfilter/nf_conntrack_ecache.c:205
+  nf_conntrack_confirm include/net/netfilter/nf_conntrack_core.h:65 [inline]
+  nf_confirm+0x3d8/0x4d0 net/netfilter/nf_conntrack_proto.c:154
+  ipv4_confirm+0x14c/0x240 net/netfilter/nf_conntrack_proto.c:169
+  nf_hook_entry_hookfn include/linux/netfilter.h:135 [inline]
+  nf_hook_slow+0xbc/0x1e0 net/netfilter/core.c:512
+  nf_hook include/linux/netfilter.h:262 [inline]
+  NF_HOOK_COND include/linux/netfilter.h:295 [inline]
+  ip_output+0x40d/0x670 net/ipv4/ip_output.c:432
+  dst_output include/net/dst.h:436 [inline]
+  ip_local_out+0xbb/0x1b0 net/ipv4/ip_output.c:125
+  ip_send_skb+0x42/0xf0 net/ipv4/ip_output.c:1558
+  udp_send_skb.isra.0+0x6d5/0x11b0 net/ipv4/udp.c:891
+  udp_sendmsg+0x1e8f/0x2810 net/ipv4/udp.c:1178
+  inet_sendmsg+0x9e/0xe0 net/ipv4/af_inet.c:807
+  sock_sendmsg_nosec net/socket.c:638 [inline]
+  sock_sendmsg+0xd7/0x130 net/socket.c:658
+  kernel_sendmsg+0x44/0x50 net/socket.c:678
+  rxrpc_send_data_packet+0x10cb/0x36b0 net/rxrpc/output.c:416
+  rxrpc_queue_packet net/rxrpc/sendmsg.c:220 [inline]
+  rxrpc_send_data+0x1097/0x4130 net/rxrpc/sendmsg.c:427
+  rxrpc_do_sendmsg+0xb8e/0x1d5f net/rxrpc/sendmsg.c:736
+  rxrpc_sendmsg+0x4d6/0x5f0 net/rxrpc/af_rxrpc.c:585
+  sock_sendmsg_nosec net/socket.c:638 [inline]
+  sock_sendmsg+0xd7/0x130 net/socket.c:658
+  ___sys_sendmsg+0x3e2/0x920 net/socket.c:2312
+  __sys_sendmmsg+0x1bf/0x4d0 net/socket.c:2414
+  __do_sys_sendmmsg net/socket.c:2443 [inline]
+  __se_sys_sendmmsg net/socket.c:2440 [inline]
+  __x64_sys_sendmmsg+0x9d/0x100 net/socket.c:2440
+  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x459a59
+Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f18acb64c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000133
+RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 0000000000459a59
+RDX: 0000000000000001 RSI: 0000000020005c00 RDI: 0000000000000004
+RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f18acb656d4
+R13: 00000000004c74b8 R14: 00000000004dd1a8 R15: 00000000ffffffff
+
+Allocated by task 27585:
+  save_stack+0x23/0x90 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  __kasan_kmalloc mm/kasan/common.c:510 [inline]
+  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:483
+  kasan_krealloc+0x84/0xc0 mm/kasan/common.c:565
+  __do_krealloc mm/slab_common.c:1655 [inline]
+  krealloc+0xa6/0xd0 mm/slab_common.c:1710
+  nf_ct_ext_add+0x2c7/0x630 net/netfilter/nf_conntrack_extend.c:74
+  nf_ct_ecache_ext_add include/net/netfilter/nf_conntrack_ecache.h:55  
+[inline]
+  init_conntrack.isra.0+0x5ed/0x11a0 net/netfilter/nf_conntrack_core.c:1470
+  resolve_normal_ct net/netfilter/nf_conntrack_core.c:1547 [inline]
+  nf_conntrack_in+0xd94/0x1460 net/netfilter/nf_conntrack_core.c:1707
+  ipv4_conntrack_local+0x127/0x220 net/netfilter/nf_conntrack_proto.c:200
+  nf_hook_entry_hookfn include/linux/netfilter.h:135 [inline]
+  nf_hook_slow+0xbc/0x1e0 net/netfilter/core.c:512
+  nf_hook include/linux/netfilter.h:262 [inline]
+  __ip_local_out+0x403/0x870 net/ipv4/ip_output.c:114
+  ip_local_out+0x2d/0x1b0 net/ipv4/ip_output.c:123
+  ip_send_skb+0x42/0xf0 net/ipv4/ip_output.c:1558
+  udp_send_skb.isra.0+0x6d5/0x11b0 net/ipv4/udp.c:891
+  udp_sendmsg+0x1e8f/0x2810 net/ipv4/udp.c:1178
+  inet_sendmsg+0x9e/0xe0 net/ipv4/af_inet.c:807
+  sock_sendmsg_nosec net/socket.c:638 [inline]
+  sock_sendmsg+0xd7/0x130 net/socket.c:658
+  kernel_sendmsg+0x44/0x50 net/socket.c:678
+  rxrpc_send_data_packet+0x10cb/0x36b0 net/rxrpc/output.c:416
+  rxrpc_queue_packet net/rxrpc/sendmsg.c:220 [inline]
+  rxrpc_send_data+0x1097/0x4130 net/rxrpc/sendmsg.c:427
+  rxrpc_do_sendmsg+0xb8e/0x1d5f net/rxrpc/sendmsg.c:736
+  rxrpc_sendmsg+0x4d6/0x5f0 net/rxrpc/af_rxrpc.c:585
+  sock_sendmsg_nosec net/socket.c:638 [inline]
+  sock_sendmsg+0xd7/0x130 net/socket.c:658
+  ___sys_sendmsg+0x3e2/0x920 net/socket.c:2312
+  __sys_sendmmsg+0x1bf/0x4d0 net/socket.c:2414
+  __do_sys_sendmmsg net/socket.c:2443 [inline]
+  __se_sys_sendmmsg net/socket.c:2440 [inline]
+  __x64_sys_sendmmsg+0x9d/0x100 net/socket.c:2440
+  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 27585:
+  save_stack+0x23/0x90 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  kasan_set_free_info mm/kasan/common.c:332 [inline]
+  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:471
+  kasan_slab_free+0xe/0x10 mm/kasan/common.c:480
+  __cache_free mm/slab.c:3426 [inline]
+  kfree+0x10a/0x2c0 mm/slab.c:3757
+  nf_ct_ext_destroy+0x2ab/0x2e0 net/netfilter/nf_conntrack_extend.c:38
+  nf_conntrack_free+0x8f/0xe0 net/netfilter/nf_conntrack_core.c:1418
+  destroy_conntrack+0x1a2/0x270 net/netfilter/nf_conntrack_core.c:626
+  nf_conntrack_destroy+0xed/0x230 net/netfilter/core.c:600
+  nf_conntrack_put include/linux/netfilter/nf_conntrack_common.h:34 [inline]
+  nf_conntrack_put include/linux/netfilter/nf_conntrack_common.h:31 [inline]
+  nf_ct_resolve_clash net/netfilter/nf_conntrack_core.c:915 [inline]
+  __nf_conntrack_confirm+0x21ca/0x2830 net/netfilter/nf_conntrack_core.c:1038
+  nf_conntrack_confirm include/net/netfilter/nf_conntrack_core.h:63 [inline]
+  nf_confirm+0x3e7/0x4d0 net/netfilter/nf_conntrack_proto.c:154
+  ipv4_confirm+0x14c/0x240 net/netfilter/nf_conntrack_proto.c:169
+  nf_hook_entry_hookfn include/linux/netfilter.h:135 [inline]
+  nf_hook_slow+0xbc/0x1e0 net/netfilter/core.c:512
+  nf_hook include/linux/netfilter.h:262 [inline]
+  NF_HOOK_COND include/linux/netfilter.h:295 [inline]
+  ip_output+0x40d/0x670 net/ipv4/ip_output.c:432
+  dst_output include/net/dst.h:436 [inline]
+  ip_local_out+0xbb/0x1b0 net/ipv4/ip_output.c:125
+  ip_send_skb+0x42/0xf0 net/ipv4/ip_output.c:1558
+  udp_send_skb.isra.0+0x6d5/0x11b0 net/ipv4/udp.c:891
+  udp_sendmsg+0x1e8f/0x2810 net/ipv4/udp.c:1178
+  inet_sendmsg+0x9e/0xe0 net/ipv4/af_inet.c:807
+  sock_sendmsg_nosec net/socket.c:638 [inline]
+  sock_sendmsg+0xd7/0x130 net/socket.c:658
+  kernel_sendmsg+0x44/0x50 net/socket.c:678
+  rxrpc_send_data_packet+0x10cb/0x36b0 net/rxrpc/output.c:416
+  rxrpc_queue_packet net/rxrpc/sendmsg.c:220 [inline]
+  rxrpc_send_data+0x1097/0x4130 net/rxrpc/sendmsg.c:427
+  rxrpc_do_sendmsg+0xb8e/0x1d5f net/rxrpc/sendmsg.c:736
+  rxrpc_sendmsg+0x4d6/0x5f0 net/rxrpc/af_rxrpc.c:585
+  sock_sendmsg_nosec net/socket.c:638 [inline]
+  sock_sendmsg+0xd7/0x130 net/socket.c:658
+  ___sys_sendmsg+0x3e2/0x920 net/socket.c:2312
+  __sys_sendmmsg+0x1bf/0x4d0 net/socket.c:2414
+  __do_sys_sendmmsg net/socket.c:2443 [inline]
+  __se_sys_sendmmsg net/socket.c:2440 [inline]
+  __x64_sys_sendmmsg+0x9d/0x100 net/socket.c:2440
+  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff88806bb2dc00
+  which belongs to the cache kmalloc-128 of size 128
+The buggy address is located 4 bytes inside of
+  128-byte region [ffff88806bb2dc00, ffff88806bb2dc80)
+The buggy address belongs to the page:
+page:ffffea0001aecb40 refcount:1 mapcount:0 mapping:ffff8880aa400700  
+index:0x0
+flags: 0x1fffc0000000200(slab)
+raw: 01fffc0000000200 ffffea0002506788 ffffea00026a2c48 ffff8880aa400700
+raw: 0000000000000000 ffff88806bb2d000 0000000100000010 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff88806bb2db00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff88806bb2db80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+> ffff88806bb2dc00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                    ^
+  ffff88806bb2dc80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+  ffff88806bb2dd00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
