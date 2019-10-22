@@ -2,113 +2,114 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61639CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 07:43:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72E34CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 07:45:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3265221783
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 07:43:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47FB22184C
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 07:45:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dnADVe92"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="oM1KYUcB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387974AbfJVHnI (ORCPT
+        id S2387982AbfJVHpD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 03:43:08 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54745 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387919AbfJVHnI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 03:43:08 -0400
-Received: by mail-wm1-f66.google.com with SMTP id p7so15976558wmp.4
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 00:43:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Nh2LJWcAA6+F58FkBmsDYADEarvpFUTo1V/7oVQrNLc=;
-        b=dnADVe925smBvR+rSpyj4PtIlJk5/q3GB4C2JSunmryH/ihy/PAiXj+FVebkWFYq7h
-         Vhy49WWqi7OJpoWSOJ9a/i3mE2seYWQfEvw/wTU/QS7L/aD4oysMQQ3jgn7MhGSO2G2R
-         qv88wCmhp/vLRFQnQUR9IL1SUsC2x33PjpeCdt2aVQelQWXkF6ZxD5VpPOMVgJ0KRrub
-         rfLOd9AJiPeOyFEKQT+skRwT7ZYS4zmIsbUxzvYwJRaypgVAMGDfjmP/91MRWtuHkCb5
-         W+iZfnoUhIBqsXz47EwLknza6gSLZUpCm/lXGzfu0LlKxgP2yGGFY1VNnaHnSNo1WBFE
-         fOBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Nh2LJWcAA6+F58FkBmsDYADEarvpFUTo1V/7oVQrNLc=;
-        b=q0fjDDnLknFtz/mBX6aia0y354GH9AZrBa9o+iIsxvIRO66QE2DbJDzITyjDtuaYMH
-         7yuNmmqKvN6E6Twdea5Ks5Mz4Al/lD/9Cvxi7jipXlzKaPcUOhnFxnrQBtzZ2CqyC24N
-         2mjS5NxjmOEamkaZkWEfJL3m9oa4p/vq4JM0ryt6fns4FTTXiErlI3O2YyCYt48YfgtR
-         C1qmcRfju4Zh8/e2xXor31yUlCMr8FLg1FMYB+ZU+wTEMqxF3DL/W3KEPTlYX5lhhbBx
-         PHB1y1uzLrQMw9Rl5UTgb26JbCAXNHk4mcprBvQa5VXorIoM+aPoe2RZ9EPpSJcMNMrT
-         KuSA==
-X-Gm-Message-State: APjAAAVoPf5v2snAt5101cY/HUaV652fYlh9ML1AV2Mmb5pWnOoIOr5E
-        lhW5q1rX4Z2Esr/fVneYT5HzO++Jc2JhZ914UuQbrw==
-X-Google-Smtp-Source: APXvYqzja7xl0D4V5WYVo1mTlFrVTbTKv6QHAypbeOH/fy5ot9cR72w/UPWY151nEVaz/vrxF6wPxmJhMQmVAt9CRLA=
-X-Received: by 2002:a05:600c:2214:: with SMTP id z20mr1719270wml.10.1571730185195;
- Tue, 22 Oct 2019 00:43:05 -0700 (PDT)
-MIME-Version: 1.0
-References: <0812dca3-8447-be46-b84c-e89f25176cbf@huawei.com>
-In-Reply-To: <0812dca3-8447-be46-b84c-e89f25176cbf@huawei.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Tue, 22 Oct 2019 09:43:00 +0200
-Message-ID: <CAKv+Gu_+ab6KuvFdp+=F4M4JYm+eO7tN0ea=1ePrwEdG9tLNmQ@mail.gmail.com>
-Subject: Re: [PATCH v2] crypto: arm64/aes-neonbs - add return value of
- skcipher_walk_done() in __xts_crypt()
-To:     Yunfeng Ye <yeyunfeng@huawei.com>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Tue, 22 Oct 2019 03:45:03 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:42478 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387692AbfJVHpC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 03:45:02 -0400
+Received: from zn.tnic (p4FED31B8.dip0.t-ipconnect.de [79.237.49.184])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 220471EC0C5C;
+        Tue, 22 Oct 2019 09:45:01 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1571730301;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=3ZuiOtOrGhN5RdAedvLTRxybDphCcw+39KdvlnjWico=;
+        b=oM1KYUcBqoXeHpCxTGr4T2mCPDOpn/QS1Fu1A7mp42nW8ZFYkoqyrdjc25nKgwQaJRO16b
+        Da4jkZsNtNck9RHYVDnUG+f71dJ7X3cYlH6cylJLIg90r1l7pATfn1KqM+kBeSYD/032KA
+        AQfYXnUsP/k/wuNcy4CA97yV0Qbgq5s=
+Date:   Tue, 22 Oct 2019 09:44:22 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Kairui Song <kasong@redhat.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        hushiyuan@huawei.com, linfeilong@huawei.com
-Content-Type: text/plain; charset="UTF-8"
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Matthew Garrett <matthewgarrett@google.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>
+Subject: Re: [PATCH v4] x86, efi: never relocate kernel below lowest
+ acceptable address
+Message-ID: <20191022074422.GA31700@zn.tnic>
+References: <20191017093020.28658-1-kasong@redhat.com>
+ <CAKv+Gu8nJ0uDn0G9s5N1ZM=FE4JB5c2Kjs=mKpatTFkwF0WaaQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAKv+Gu8nJ0uDn0G9s5N1ZM=FE4JB5c2Kjs=mKpatTFkwF0WaaQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 22 Oct 2019 at 09:28, Yunfeng Ye <yeyunfeng@huawei.com> wrote:
->
-> A warning is found by the static code analysis tool:
->   "Identical condition 'err', second condition is always false"
->
-> Fix this by adding return value of skcipher_walk_done().
->
-> Fixes: 67cfa5d3b721 ("crypto: arm64/aes-neonbs - implement ciphertext stealing for XTS")
-> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+On Tue, Oct 22, 2019 at 08:13:56AM +0200, Ard Biesheuvel wrote:
+> On Thu, 17 Oct 2019 at 11:30, Kairui Song <kasong@redhat.com> wrote:
+> >
+> > Currently, kernel fails to boot on some HyperV VMs when using EFI.
+> > And it's a potential issue on all platforms.
+> >
+> > It's caused by broken kernel relocation on EFI systems, when below three
+> > conditions are met:
+> >
+> > 1. Kernel image is not loaded to the default address (LOAD_PHYSICAL_ADDR)
+> >    by the loader.
+> > 2. There isn't enough room to contain the kernel, starting from the
+> >    default load address (eg. something else occupied part the region).
+> > 3. In the memmap provided by EFI firmware, there is a memory region
+> >    starts below LOAD_PHYSICAL_ADDR, and suitable for containing the
+> >    kernel.
+> >
+> > EFI stub will perform a kernel relocation when condition 1 is met. But
+> > due to condition 2, EFI stub can't relocate kernel to the preferred
+> > address, so it fallback to ask EFI firmware to alloc lowest usable memory
+> > region, got the low region mentioned in condition 3, and relocated
+> > kernel there.
+> >
+> > It's incorrect to relocate the kernel below LOAD_PHYSICAL_ADDR. This
+> > is the lowest acceptable kernel relocation address.
+> >
+> > The first thing goes wrong is in arch/x86/boot/compressed/head_64.S.
+> > Kernel decompression will force use LOAD_PHYSICAL_ADDR as the output
+> > address if kernel is located below it. Then the relocation before
+> > decompression, which move kernel to the end of the decompression buffer,
+> > will overwrite other memory region, as there is no enough memory there.
+> >
+> > To fix it, just don't let EFI stub relocate the kernel to any address
+> > lower than lowest acceptable address.
+> >
+> > Signed-off-by: Kairui Song <kasong@redhat.com>
+> > Acked-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> >
+> 
+> Ingo, Boris, could you please comment on this?
 
-Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Yah, the commit message makes more sense now.
 
-> ---
-> v1 -> v2:
->  - update the subject and comment
->  - add return value of skcipher_walk_done()
->
->  arch/arm64/crypto/aes-neonbs-glue.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/arm64/crypto/aes-neonbs-glue.c b/arch/arm64/crypto/aes-neonbs-glue.c
-> index ea873b8904c4..e3e27349a9fe 100644
-> --- a/arch/arm64/crypto/aes-neonbs-glue.c
-> +++ b/arch/arm64/crypto/aes-neonbs-glue.c
-> @@ -384,7 +384,7 @@ static int __xts_crypt(struct skcipher_request *req, bool encrypt,
->                         goto xts_tail;
->
->                 kernel_neon_end();
-> -               skcipher_walk_done(&walk, nbytes);
-> +               err = skcipher_walk_done(&walk, nbytes);
->         }
->
->         if (err || likely(!tail))
-> --
-> 2.7.4.3
->
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
