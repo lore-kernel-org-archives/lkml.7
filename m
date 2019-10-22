@@ -2,104 +2,103 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D37CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:09:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FB6ACA9EB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:09:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F6E921928
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:09:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571749750;
-	bh=qbwfDtY+gjN70QK4vfeGu6QOKlIe/RCNosirjkTKnMQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=esHSa398ctrjhljaROsONO+zFehFgvwZhzQN0bmP2NX1BOJwGQVIFVY4VidP+CuX0
-	 RZhhsPAJAkDbL5KoE0bMCwwUvvuDnRkeAlqK+4tUnPJSFLiXbXZjNjdsYUuzLvs5fD
-	 LkxddpryjX00v/n227ukN2DvtszSir5KoCRfvRhk=
+	by mail.kernel.org (Postfix) with ESMTP id 40EFC2184C
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:09:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731991AbfJVNJJ (ORCPT
+        id S1732002AbfJVNJ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 09:09:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54270 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727805AbfJVNJI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 09:09:08 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B46062184C;
-        Tue, 22 Oct 2019 13:09:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571749748;
-        bh=qbwfDtY+gjN70QK4vfeGu6QOKlIe/RCNosirjkTKnMQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=bHBhYl7TxUI7VNA5PzjW5w96MU9y2nVDNjayeOwE+FDwo2K5pKSx240WTnyBuxxlx
-         /rJ0xdo1XpVzV5cUXYHqCsJjVu/2JtxbF2DQa0ffc/nV+AYDUMu/pPA5a7Lis/oYpf
-         Oz+Gk6dpXMkBvWWyiwQaVqvQUlxXJK4EF8TMxZbY=
-Date:   Tue, 22 Oct 2019 08:09:06 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Dilip Kota <eswara.kota@linux.intel.com>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lorenzo.pieralisi@arm.com, andrew.murray@arm.com, robh@kernel.org,
-        martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
-        hch@infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
-        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com
-Subject: Re: [PATCH v4 2/3] dwc: PCI: intel: PCIe RC controller driver
-Message-ID: <20191022130905.GA133961@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0914051f-b726-f15f-7f86-c0b26ff0f04c@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 22 Oct 2019 09:09:28 -0400
+Received: from mx2.suse.de ([195.135.220.15]:51672 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727805AbfJVNJ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 09:09:27 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 17528B2DE;
+        Tue, 22 Oct 2019 13:09:26 +0000 (UTC)
+From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
+To:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] MIPS: include: remove unsued header file asm/sgi/sgi.h
+Date:   Tue, 22 Oct 2019 15:09:19 +0200
+Message-Id: <20191022130919.18582-1-tbogendoerfer@suse.de>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 05:07:47PM +0800, Dilip Kota wrote:
-> On 10/22/2019 1:17 AM, Bjorn Helgaas wrote:
-> > On Mon, Oct 21, 2019 at 02:39:19PM +0800, Dilip Kota wrote:
-> > > Add support to PCIe RC controller on Intel Gateway SoCs.
-> > > PCIe controller is based of Synopsys DesignWare pci core.
-> > > 
-> > > Intel PCIe driver requires Upconfig support, fast training
-> > > sequence configuration and link speed change. So adding the
-> > > respective helper functions in the pcie DesignWare framework.
-> > > It also programs hardware autonomous speed during speed
-> > > configuration so defining it in pci_regs.h.
-> > > 
-> > > +static void intel_pcie_link_setup(struct intel_pcie_port *lpp)
-> > > +{
-> > > +	u32 val;
-> > > +
-> > > +	val = pcie_rc_cfg_rd(lpp, PCIE_CAP_OFST + PCI_EXP_LNKCAP);
-> > > +	lpp->max_speed = FIELD_GET(PCI_EXP_LNKCAP_SLS, val);
-> > > +	lpp->max_width = FIELD_GET(PCI_EXP_LNKCAP_MLW, val);
-> > > +
-> > > +	val = pcie_rc_cfg_rd(lpp, PCIE_CAP_OFST + PCI_EXP_LNKCTL);
-> > > +
-> > > +	val &= ~(PCI_EXP_LNKCTL_LD | PCI_EXP_LNKCTL_ASPMC);
-> > > +	val |= (PCI_EXP_LNKSTA_SLC << 16) | PCI_EXP_LNKCTL_CCC |
-> > > +	       PCI_EXP_LNKCTL_RCB;
+asm/sgi/sgi.h is unused, time to remove it.
 
-> > PCI_EXP_LNKCTL_CCC is RW.  But doesn't it depend on the components on
-> > both ends of the link?  Do you know what device is at the other end?
-> > I would have assumed that you'd have to start with CCC==0, which
-> > should be most conservative, then set CCC=1 only if you know both ends
-> > have a common clock.
-> PCIe RC and endpoint device are having the common clock so set the CCC=1.
+Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+---
+ arch/mips/include/asm/sgi/sgi.h | 48 -----------------------------------------
+ 1 file changed, 48 deletions(-)
+ delete mode 100644 arch/mips/include/asm/sgi/sgi.h
 
-How do you know what the endpoint device is?  Is this driver only for
-a specific embedded configuration where the endpoint is always
-soldered down?  There's no possibility of this RC being used with a
-connector?
+diff --git a/arch/mips/include/asm/sgi/sgi.h b/arch/mips/include/asm/sgi/sgi.h
+deleted file mode 100644
+index b61557151e3f..000000000000
+--- a/arch/mips/include/asm/sgi/sgi.h
++++ /dev/null
+@@ -1,48 +0,0 @@
+-/*
+- * This file is subject to the terms and conditions of the GNU General Public
+- * License.  See the file "COPYING" in the main directory of this archive
+- * for more details.
+- *
+- * sgi.h: Definitions specific to SGI machines.
+- *
+- * Copyright (C) 1996 David S. Miller (dm@sgi.com)
+- */
+-#ifndef _ASM_SGI_SGI_H
+-#define _ASM_SGI_SGI_H
+-
+-/* UP=UniProcessor MP=MultiProcessor(capable) */
+-enum sgi_mach {
+-	ip4,	/* R2k UP */
+-	ip5,	/* R2k MP */
+-	ip6,	/* R3k UP */
+-	ip7,	/* R3k MP */
+-	ip9,	/* R3k UP */
+-	ip12,	/* R3kA UP, Indigo */
+-	ip15,	/* R3kA MP */
+-	ip17,	/* R4K UP */
+-	ip19,	/* R4K MP */
+-	ip20,	/* R4K UP, Indigo */
+-	ip21,	/* R8k/TFP MP */
+-	ip22,	/* R4x00 UP, Indy, Indigo2 */
+-	ip25,	/* R10k MP */
+-	ip26,	/* R8k/TFP UP, Indigo2 */
+-	ip27,	/* R10k MP, R12k MP, R14k MP, Origin 200/2k, Onyx2 */
+-	ip28,	/* R10k UP, Indigo2 Impact R10k */
+-	ip30,	/* R10k MP, R12k MP, R14k MP, Octane */
+-	ip32,	/* R5k UP, RM5200 UP, RM7k UP, R10k UP, R12k UP, O2 */
+-	ip35,   /* R14k MP, R16k MP, Origin 300/3k, Onyx3, Fuel, Tezro */
+-};
+-
+-extern enum sgi_mach sgimach;
+-extern void sgi_sysinit(void);
+-
+-/* Many I/O space registers are byte sized and are contained within
+- * one byte per word, specifically the MSB, this macro helps out.
+- */
+-#ifdef __MIPSEL__
+-#define SGI_MSB(regaddr)   (regaddr)
+-#else
+-#define SGI_MSB(regaddr)   ((regaddr) | 0x3)
+-#endif
+-
+-#endif /* _ASM_SGI_SGI_H */
+-- 
+2.16.4
 
-Shouldn't this be either discoverable or configurable via DT or
-something?  pcie_aspm_configure_common_clock() seems to do something
-similar, but I can't really vouch for its correctness.
-
-Bjorn
