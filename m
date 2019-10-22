@@ -2,234 +2,256 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C87BCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:15:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F7BACA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:16:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0974A20684
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:15:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UvzBGgeT"
+	by mail.kernel.org (Postfix) with ESMTP id 282C22084C
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:16:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571764566;
+	bh=mhjoDEVCxOjWE7ihz07zZD1WRHwkqur2dO1djnXzC8Y=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=zl34DTyXrInYRFS2xZkXARGBc12vC+SArHBENE460xGOBgIsmnRR1zlI0pTvs1zw1
+	 t/oQnI77ipOx+dhuTVXu6rlps/ObIqGQRLzOoTHzO4SxiN6nxCB7v4MooUg+AjlShP
+	 0Z4xXYWKvv28hScZI6OHOqQ2zaW4eR/Fe/Kxj8/4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732658AbfJVRPM (ORCPT
+        id S1732263AbfJVRQF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 13:15:12 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:33911 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727309AbfJVRPM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 13:15:12 -0400
-Received: by mail-pg1-f194.google.com with SMTP id k20so10353489pgi.1
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 10:15:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=h50Pi9XwOsR13aFlSA2CGe6nBusqUaN9N1zc7oNb4PM=;
-        b=UvzBGgeTgfAtcXP1FB0br1DsNDcrRyYR4jkC+DfnlzDHvFSyW1tI7nCx2yNZmcj2WN
-         OczJvcdDtpV9pZ8kzRoh3ch4+4iF/jJPOST+cLCokov/O1jMpoGeVFWgAYYLKWKJL8Tp
-         KGYXAAITmrRH1HflOWy1TsC5SzYI26+Io0QS4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=h50Pi9XwOsR13aFlSA2CGe6nBusqUaN9N1zc7oNb4PM=;
-        b=U2sL+MI8pOFNUdBUiFKf+br2+iKdVZAL6tN9Bg3rAY9KQlHGL3jvlwW403A5I6/tlY
-         Yx1itjh4VICQDBkES1a8jjRjgPWs6kbjcpRqcoFRnV74L1AkE7w2g1ddnXdlIPWv2S8q
-         GHxCQlQteixEWRUF0+s8rBVUnd/jWFcys5u9Yoc0oAUY3FsBYwJR+jV9zbi2EphbaWMb
-         5C98eLyrykYSdwCiHASTMmC8EPxQz6oPTICz3G23eOgfdgMLngLlnaFWz58BENGMdpYo
-         es05Nfqm0Rf43kaZ0jF0gG2hu60UGKRwaUzOIzj9DpaeljcCVx6KxWqk61lDzX11aj5P
-         LCuQ==
-X-Gm-Message-State: APjAAAX5I6MegLtpOpVDJ9iwJawBtkh8HsK/xPU40IM9cxUMeNwq+HJj
-        vD2ooI6eboLDOT4Qb6q3meNppw==
-X-Google-Smtp-Source: APXvYqyG0OfMRoG7uYhrblw+12GhEr/VYU+Opf8UClqR725yP7qojPu+4B2BRZRrLrdfm2E1KeELFw==
-X-Received: by 2002:a17:90a:3706:: with SMTP id u6mr6040268pjb.107.1571764510860;
-        Tue, 22 Oct 2019 10:15:10 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id 69sm19915996pgh.47.2019.10.22.10.15.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Oct 2019 10:15:07 -0700 (PDT)
-Date:   Tue, 22 Oct 2019 10:15:05 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Balakrishna Godavarthi <bgodavar@codeaurora.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        linux-arm-msm@vger.kernel.org,
-        linux-bluetooth-owner@vger.kernel.org, hemantg@codeaurora.org,
-        Harish Bandi <c-hbandi@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH 2/4] Bluetooth: hci_qca: Don't vote for specific voltage
-Message-ID: <20191022171505.GK20212@google.com>
-References: <20191018052405.3693555-1-bjorn.andersson@linaro.org>
- <20191018052405.3693555-3-bjorn.andersson@linaro.org>
- <20191018182205.GA20212@google.com>
- <7f9a4de91f364a5f8ce707c8d8a2344d@codeaurora.org>
- <5bbd8e5bbd832ecdafc7c2d603f10c6c@codeaurora.org>
+        Tue, 22 Oct 2019 13:16:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51420 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726702AbfJVRQE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 13:16:04 -0400
+Received: from localhost (unknown [104.132.0.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E3E420679;
+        Tue, 22 Oct 2019 17:16:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571764563;
+        bh=mhjoDEVCxOjWE7ihz07zZD1WRHwkqur2dO1djnXzC8Y=;
+        h=From:To:Cc:Subject:Date:From;
+        b=KcEyqFu60OGYyRfU9vpKllmZL0XEhENKfQfnDs6yASkC3HiFpAjwQpny7BA5PVrVd
+         aGUL9aNUPWbilBE7U5r9tlzUsp0qE/pNgtijeUhJuvTPzx5roapYQprS6PS7FZe4pG
+         wDGo/ELgyil1nq4G4YwR9PxnXW1IwJKupvvUMlzU=
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net
+Cc:     Jaegeuk Kim <jaegeuk@kernel.org>
+Subject: [PATCH 1/2] f2fs: support aligned pinned file
+Date:   Tue, 22 Oct 2019 10:16:01 -0700
+Message-Id: <20191022171602.93637-1-jaegeuk@kernel.org>
+X-Mailer: git-send-email 2.19.0.605.g01d371f741-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <5bbd8e5bbd832ecdafc7c2d603f10c6c@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 11:35:43AM +0530, Balakrishna Godavarthi wrote:
-> Hi Matthias, Bjorn andresson,
-> 
-> On 2019-10-21 12:07, Harish Bandi wrote:
-> > + Bala
-> > 
-> > On 2019-10-18 23:52, Matthias Kaehlcke wrote:
-> > > On Thu, Oct 17, 2019 at 10:24:02PM -0700, Bjorn Andersson wrote:
-> > > > Devices with specific voltage requirements should not request voltage
-> > > > from the driver, but instead rely on the system configuration to
-> > > > define
-> > > > appropriate voltages for each rail.
-> > > > 
-> > > > This ensures that PMIC and board variations are accounted for,
-> > > > something
-> > > > that the 0.1V range in the hci_qca driver currently tries to address.
-> > > > But on the Lenovo Yoga C630 (with wcn3990) vddch0 is 3.1V, which
-> > > > means
-> > > > the driver will fail to set the voltage.
-> > > > 
-> > > > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > > > ---
-> > > >  drivers/bluetooth/hci_qca.c | 26 ++++++++------------------
-> > > >  1 file changed, 8 insertions(+), 18 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/bluetooth/hci_qca.c
-> > > > b/drivers/bluetooth/hci_qca.c
-> > > > index c07c529b0d81..54aafcc69d06 100644
-> > > > --- a/drivers/bluetooth/hci_qca.c
-> > > > +++ b/drivers/bluetooth/hci_qca.c
-> > > > @@ -130,8 +130,6 @@ enum qca_speed_type {
-> > > >   */
-> > > >  struct qca_vreg {
-> > > >  	const char *name;
-> > > > -	unsigned int min_uV;
-> > > > -	unsigned int max_uV;
-> > > >  	unsigned int load_uA;
-> > > >  };
-> > > > 
-> > > > @@ -1332,10 +1330,10 @@ static const struct hci_uart_proto
-> > > > qca_proto = {
-> > > >  static const struct qca_vreg_data qca_soc_data_wcn3990 = {
-> > > >  	.soc_type = QCA_WCN3990,
-> > > >  	.vregs = (struct qca_vreg []) {
-> > > > -		{ "vddio",   1800000, 1900000,  15000  },
-> > > > -		{ "vddxo",   1800000, 1900000,  80000  },
-> > > > -		{ "vddrf",   1300000, 1350000,  300000 },
-> > > > -		{ "vddch0",  3300000, 3400000,  450000 },
-> > > > +		{ "vddio", 15000  },
-> > > > +		{ "vddxo", 80000  },
-> > > > +		{ "vddrf", 300000 },
-> > > > +		{ "vddch0", 450000 },
-> > > >  	},
-> > > >  	.num_vregs = 4,
-> > > >  };
-> > > > @@ -1343,10 +1341,10 @@ static const struct qca_vreg_data
-> > > > qca_soc_data_wcn3990 = {
-> > > >  static const struct qca_vreg_data qca_soc_data_wcn3998 = {
-> > > >  	.soc_type = QCA_WCN3998,
-> > > >  	.vregs = (struct qca_vreg []) {
-> > > > -		{ "vddio",   1800000, 1900000,  10000  },
-> > > > -		{ "vddxo",   1800000, 1900000,  80000  },
-> > > > -		{ "vddrf",   1300000, 1352000,  300000 },
-> > > > -		{ "vddch0",  3300000, 3300000,  450000 },
-> > > > +		{ "vddio", 10000  },
-> > > > +		{ "vddxo", 80000  },
-> > > > +		{ "vddrf", 300000 },
-> > > > +		{ "vddch0", 450000 },
-> > > >  	},
-> > > >  	.num_vregs = 4,
-> > > >  };
-> > > > @@ -1386,13 +1384,6 @@ static int qca_power_off(struct hci_dev *hdev)
-> > > >  static int qca_enable_regulator(struct qca_vreg vregs,
-> > > >  				struct regulator *regulator)
-> > > >  {
-> > > > -	int ret;
-> > > > -
-> > > > -	ret = regulator_set_voltage(regulator, vregs.min_uV,
-> > > > -				    vregs.max_uV);
-> > > > -	if (ret)
-> > > > -		return ret;
-> > > > -
-> > > >  	return regulator_enable(regulator);
-> > > > 
-> > > >  }
-> > > > @@ -1401,7 +1392,6 @@ static void qca_disable_regulator(struct
-> > > > qca_vreg vregs,
-> > > >  				  struct regulator *regulator)
-> > > >  {
-> > > >  	regulator_disable(regulator);
-> > > > -	regulator_set_voltage(regulator, 0, vregs.max_uV);
-> > > > 
-> > > >  }
-> > > 
-> > > This was brought up multiple times during the initial review, but
-> > > wasn't addressed.
-> > > 
-> > > Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-> 
-> 
-> yes true PMIC dts regulator should do this.
-> But we have some real time issues observed.
-> 
-> Issue 1:
-> 
-> In PMIC dts node, ASAIK we have three levels of voltages.
-> 
-> 1. Default voltage.
-> 2. Minimum voltage. (mandatory entry)
-> 3. Maximum voltage. (mandatory entry)
-> 
-> Let us assume that the if PMIC regulator dts node supports  defaults voltage
-> to 3.2 Volts and Min  as 3.1 V and max as 3.3V
-> So default operating voltage is 3.1V  when we turn on BT (but according to
-> spec SoC requires min of 3.3V to operate,
-> Might have some functionality failures on end to end testing
+This patch supports 2MB-aligned pinned file, which can guarantee no GC at all
+by allocating fully valid 2MB segment.
 
-The PMIC regulator shouldn't be configured with the entire range of voltages
-it can generate, but with a range of voltages that is suitable for all its
-consumers.
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+---
+ fs/f2fs/f2fs.h     |  4 +++-
+ fs/f2fs/file.c     | 39 ++++++++++++++++++++++++++++++++++-----
+ fs/f2fs/recovery.c |  2 +-
+ fs/f2fs/segment.c  | 21 ++++++++++++++++++++-
+ fs/f2fs/segment.h  |  2 ++
+ fs/f2fs/super.c    |  1 +
+ fs/f2fs/sysfs.c    |  2 ++
+ 7 files changed, 63 insertions(+), 8 deletions(-)
 
-In other words if BT requires a minimum voltage of 3.3V the minimum voltage
-of the regulator should be at least 3.3V.
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index ca342f4c7db1..c681f51e351b 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -890,6 +890,7 @@ enum {
+ 	CURSEG_WARM_NODE,	/* direct node blocks of normal files */
+ 	CURSEG_COLD_NODE,	/* indirect node blocks */
+ 	NO_CHECK_TYPE,
++	CURSEG_COLD_DATA_PINNED,/* cold data for pinned file */
+ };
+ 
+ struct flush_cmd {
+@@ -1301,6 +1302,7 @@ struct f2fs_sb_info {
+ 
+ 	/* threshold for gc trials on pinned files */
+ 	u64 gc_pin_file_threshold;
++	struct rw_semaphore pin_sem;
+ 
+ 	/* maximum # of trials to find a victim segment for SSR and GC */
+ 	unsigned int max_victim_search;
+@@ -3116,7 +3118,7 @@ void f2fs_release_discard_addrs(struct f2fs_sb_info *sbi);
+ int f2fs_npages_for_summary_flush(struct f2fs_sb_info *sbi, bool for_ra);
+ void allocate_segment_for_resize(struct f2fs_sb_info *sbi, int type,
+ 					unsigned int start, unsigned int end);
+-void f2fs_allocate_new_segments(struct f2fs_sb_info *sbi);
++void f2fs_allocate_new_segments(struct f2fs_sb_info *sbi, int type);
+ int f2fs_trim_fs(struct f2fs_sb_info *sbi, struct fstrim_range *range);
+ bool f2fs_exist_trim_candidates(struct f2fs_sb_info *sbi,
+ 					struct cp_control *cpc);
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index 29bc0a542759..f6c038e8a6a7 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -1545,12 +1545,41 @@ static int expand_inode_data(struct inode *inode, loff_t offset,
+ 	if (off_end)
+ 		map.m_len++;
+ 
+-	if (f2fs_is_pinned_file(inode))
+-		map.m_seg_type = CURSEG_COLD_DATA;
++	if (!map.m_len)
++		return 0;
++
++	if (f2fs_is_pinned_file(inode)) {
++		block_t len = (map.m_len >> sbi->log_blocks_per_seg) <<
++					sbi->log_blocks_per_seg;
++		block_t done = 0;
++
++		if (map.m_len % sbi->blocks_per_seg)
++			len += sbi->blocks_per_seg;
+ 
+-	err = f2fs_map_blocks(inode, &map, 1, (f2fs_is_pinned_file(inode) ?
+-						F2FS_GET_BLOCK_PRE_DIO :
+-						F2FS_GET_BLOCK_PRE_AIO));
++		map.m_len = sbi->blocks_per_seg;
++next_alloc:
++		mutex_lock(&sbi->gc_mutex);
++		err = f2fs_gc(sbi, true, false, NULL_SEGNO);
++		if (err && err != -ENODATA && err != -EAGAIN)
++			goto out_err;
++
++		down_write(&sbi->pin_sem);
++		map.m_seg_type = CURSEG_COLD_DATA_PINNED;
++		f2fs_allocate_new_segments(sbi, CURSEG_COLD_DATA);
++		err = f2fs_map_blocks(inode, &map, 1, F2FS_GET_BLOCK_PRE_DIO);
++		up_write(&sbi->pin_sem);
++
++		done += map.m_len;
++		len -= map.m_len;
++		map.m_lblk += map.m_len;
++		if (!err && len)
++			goto next_alloc;
++
++		map.m_len = done;
++	} else {
++		err = f2fs_map_blocks(inode, &map, 1, F2FS_GET_BLOCK_PRE_AIO);
++	}
++out_err:
+ 	if (err) {
+ 		pgoff_t last_off;
+ 
+diff --git a/fs/f2fs/recovery.c b/fs/f2fs/recovery.c
+index 783773e4560d..76477f71d4ee 100644
+--- a/fs/f2fs/recovery.c
++++ b/fs/f2fs/recovery.c
+@@ -711,7 +711,7 @@ static int recover_data(struct f2fs_sb_info *sbi, struct list_head *inode_list,
+ 		f2fs_put_page(page, 1);
+ 	}
+ 	if (!err)
+-		f2fs_allocate_new_segments(sbi);
++		f2fs_allocate_new_segments(sbi, NO_CHECK_TYPE);
+ 	return err;
+ }
+ 
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index 25c750cd0272..253d72c2663c 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -2690,7 +2690,7 @@ void allocate_segment_for_resize(struct f2fs_sb_info *sbi, int type,
+ 	up_read(&SM_I(sbi)->curseg_lock);
+ }
+ 
+-void f2fs_allocate_new_segments(struct f2fs_sb_info *sbi)
++void f2fs_allocate_new_segments(struct f2fs_sb_info *sbi, int type)
+ {
+ 	struct curseg_info *curseg;
+ 	unsigned int old_segno;
+@@ -2699,6 +2699,9 @@ void f2fs_allocate_new_segments(struct f2fs_sb_info *sbi)
+ 	down_write(&SIT_I(sbi)->sentry_lock);
+ 
+ 	for (i = CURSEG_HOT_DATA; i <= CURSEG_COLD_DATA; i++) {
++		if (type != NO_CHECK_TYPE && i != type)
++			continue;
++
+ 		curseg = CURSEG_I(sbi, i);
+ 		old_segno = curseg->segno;
+ 		SIT_I(sbi)->s_ops->allocate_segment(sbi, i, true);
+@@ -3068,6 +3071,19 @@ void f2fs_allocate_data_block(struct f2fs_sb_info *sbi, struct page *page,
+ {
+ 	struct sit_info *sit_i = SIT_I(sbi);
+ 	struct curseg_info *curseg = CURSEG_I(sbi, type);
++	bool put_pin_sem = false;
++
++	if (type == CURSEG_COLD_DATA) {
++		/* GC during CURSEG_COLD_DATA_PINNED allocation */
++		if (down_read_trylock(&sbi->pin_sem)) {
++			put_pin_sem = true;
++		} else {
++			type = CURSEG_WARM_DATA;
++			curseg = CURSEG_I(sbi, type);
++		}
++	} else if (type == CURSEG_COLD_DATA_PINNED) {
++		type = CURSEG_COLD_DATA;
++	}
+ 
+ 	down_read(&SM_I(sbi)->curseg_lock);
+ 
+@@ -3133,6 +3149,9 @@ void f2fs_allocate_data_block(struct f2fs_sb_info *sbi, struct page *page,
+ 	mutex_unlock(&curseg->curseg_mutex);
+ 
+ 	up_read(&SM_I(sbi)->curseg_lock);
++
++	if (put_pin_sem)
++		up_read(&sbi->pin_sem);
+ }
+ 
+ static void update_device_state(struct f2fs_io_info *fio)
+diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h
+index 325781a1ae4d..a95467b202ea 100644
+--- a/fs/f2fs/segment.h
++++ b/fs/f2fs/segment.h
+@@ -313,6 +313,8 @@ struct sit_entry_set {
+  */
+ static inline struct curseg_info *CURSEG_I(struct f2fs_sb_info *sbi, int type)
+ {
++	if (type == CURSEG_COLD_DATA_PINNED)
++		type = CURSEG_COLD_DATA;
+ 	return (struct curseg_info *)(SM_I(sbi)->curseg_array + type);
+ }
+ 
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index f320fd11db48..c02a47ce551b 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -2853,6 +2853,7 @@ static void init_sb_info(struct f2fs_sb_info *sbi)
+ 	spin_lock_init(&sbi->dev_lock);
+ 
+ 	init_rwsem(&sbi->sb_lock);
++	init_rwsem(&sbi->pin_sem);
+ }
+ 
+ static int init_percpu_info(struct f2fs_sb_info *sbi)
+diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
+index b558b64a4c9c..f164959e4224 100644
+--- a/fs/f2fs/sysfs.c
++++ b/fs/f2fs/sysfs.c
+@@ -154,6 +154,8 @@ static ssize_t features_show(struct f2fs_attr *a,
+ 	if (f2fs_sb_has_casefold(sbi))
+ 		len += snprintf(buf + len, PAGE_SIZE - len, "%s%s",
+ 				len ? ", " : "", "casefold");
++	len += snprintf(buf + len, PAGE_SIZE - len, "%s%s",
++				len ? ", " : "", "pin_file");
+ 	len += snprintf(buf + len, PAGE_SIZE - len, "\n");
+ 	return len;
+ }
+-- 
+2.19.0.605.g01d371f741-goog
 
-> Issue 2:
-> 
-> WCN3990 RF is shared with WiFi, so it also try to turn on the regulators.
-> Wifi driver uses the same approach of restricting to min and max voltages in
-> driver.
-> Let us assume we turned ON BT and CH0 is set to 3.1v (as in your case), Wifi
-> is tuned on now, as its request the CH0 to operate at 3.3 Volts, regulator
-> will fail to set this voltage as BT is operating
-> at CH0 3.1v (assuming max voltage is 3.2v)
-> https://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth-next.git/tree/drivers/net/wireless/ath/ath10k/snoc.c#n39
-
-see above
-
-> Issue 3:
-> 
-> By mistake PMIC has low min or default voltage and high max voltages, that
-> is harm for WNC3990.
-> 
-> I would suggest to restrict the min and max voltages in driver, instead of
-> relaying on PMIC to do this.
-> BTW pmic will do this and doing it in our driver is safer.
-
-What if another device switches the regulator on before BT?
-
-Again, what you describe is a misconfiguration of the regulator and should
-be fixed at its root, instead of implementing unreliable 'safeguards' in each
-and every driver using regulators.
