@@ -2,162 +2,85 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33B63CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:14:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC25BCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:15:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 048DE214B2
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:14:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 960002086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:15:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="DXOYKsYK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389041AbfJVMOl (ORCPT
+        id S2388527AbfJVMPt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 08:14:41 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:53117 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388552AbfJVMOk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 08:14:40 -0400
-Received: from mail-qt1-f173.google.com ([209.85.160.173]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1N94FT-1hzG5w0ynf-0163wO; Tue, 22 Oct 2019 14:14:39 +0200
-Received: by mail-qt1-f173.google.com with SMTP id o49so18528472qta.7;
-        Tue, 22 Oct 2019 05:14:38 -0700 (PDT)
-X-Gm-Message-State: APjAAAWhI0hzM0vbW0n0IVJBI4DTREhNH2/9q8A2dMgEqBqBeaGNtqnR
-        N1cmFPhOpyMkJcM0a3KeJ8TaWPnj3xF+yvg9CbE=
-X-Google-Smtp-Source: APXvYqwo4iaXiWc9keweLjxIvSCa7w0jFkiDPZWKviou4a0Bxa+qtglo0QV3JQ+Kl6v/4gAkkG+1IujkTObOOFibW4w=
-X-Received: by 2002:a0c:d0e1:: with SMTP id b30mr2712706qvh.197.1571746477934;
- Tue, 22 Oct 2019 05:14:37 -0700 (PDT)
+        Tue, 22 Oct 2019 08:15:49 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:56542 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388011AbfJVMPt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 08:15:49 -0400
+Received: from zn.tnic (p200300EC2F0D77000D5BF9E7EE486C9A.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:7700:d5b:f9e7:ee48:6c9a])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 39BE61EC0A85;
+        Tue, 22 Oct 2019 14:15:47 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1571746547;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=WEsstjL+927k0W9vkkctJFIzvZ1Hzz2SfZi16ucZgXQ=;
+        b=DXOYKsYKz65K7naianpJguPN8bAtA8ZQLKscfbWcVT9zKFfJQLzuTKSZ8W5MVroWHnQIT3
+        jH8iFo4FxzRuexKN/2cuYJQAGXTWbTWejkZciq8YgNCgKn/gQu3biRsfHqCev9Oze0fB2S
+        5mBJyZLAkdc1QTmQj0E2tEfLFac2bpQ=
+Date:   Tue, 22 Oct 2019 14:15:41 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Lianbo Jiang <lijiang@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        hpa@zytor.com, x86@kernel.org, bhe@redhat.com, dyoung@redhat.com,
+        jgross@suse.com, dhowells@redhat.com, Thomas.Lendacky@amd.com,
+        ebiederm@xmission.com, vgoyal@redhat.com, kexec@lists.infradead.org
+Subject: Re: [PATCH 3/3 v4] x86/kdump: clean up all the code related to the
+ backup region
+Message-ID: <20191022121541.GC31700@zn.tnic>
+References: <20191017094347.20327-1-lijiang@redhat.com>
+ <20191017094347.20327-4-lijiang@redhat.com>
 MIME-Version: 1.0
-References: <20191009190853.245077-1-arnd@arndb.de> <20191009191044.308087-10-arnd@arndb.de>
- <d1022cda6bd6ce73e9875644a5a2c65e4d554f37.camel@codethink.co.uk>
- <CAK8P3a0BYkPTSnQUmde2k+HVcg7XNihzWTEzrCD4d8G8ecO9-w@mail.gmail.com> <20191022043051.GA20354@ZenIV.linux.org.uk>
-In-Reply-To: <20191022043051.GA20354@ZenIV.linux.org.uk>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 22 Oct 2019 14:14:21 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3yutJU83AfxKXTFuCVQwsX50KYsDgbGbHeJJ0JoLbejg@mail.gmail.com>
-Message-ID: <CAK8P3a3yutJU83AfxKXTFuCVQwsX50KYsDgbGbHeJJ0JoLbejg@mail.gmail.com>
-Subject: Re: [Y2038] [PATCH v6 10/43] compat_ioctl: move rtc handling into rtc-dev.c
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        y2038 Mailman List <y2038@lists.linaro.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:/sHdnSiMoAnuM2mO95KOE1bx19PpHaydUFH1K+CfceIAFsFpJAM
- rHUGwT7BLz6Nf6J3HzeN0wmpzHtsk+andbk3mN6fst1uJoDtrgDM1iqpwO+4x8pOh4rx0Hz
- J788tLZ8Jcb2nlqTm79+wmsBwrlIIn9BteVWN0KpNR8mVajx7S3ufQPSP4hXXe9xgEPBL6o
- Tq2fW98R+vMFfw32z0X7Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:hz09wcLX470=:PJGHc4BNLHrKEDiBlWzeo0
- qg+wjdYtLVinPq6/kb5HqpC3WTomSRIIC/882A3Rp1pp1X6k3fDRrsLOYsqjtDg/2AngeC3Po
- +gcXPBdvSDPRMPFO/SUIxwo9AsUlL86gt0lZ54FSqgdD+43WwLV99b8oESOlVo0fENg7UnlU3
- dGqnisbDj3eBPoI41g5CdwxLrl0rEBGltmJrNQnRQHSqIEIj5YwF1v4xcCgfyVzjkeFne1fpP
- +KF8QiXdeq42TfF8ZVQJTF6z4ynjV8gJ8ydk7w8R8NXlvTaozZpNqizW/606u+WliaomFJ+JS
- bb6MbbcO2rcqerDAmYDeVIl7EIFeRygTPdvy+UoEADrP7MGr9FU/8Ss/qhh/c2VFU+WVc9oH+
- hHlFo4SB6I1okQRf2niB9NpPBm25KnMnb+6K7cmWmhuBwzV9fo2lYqRMhHyWVmmU3EWH6fhX3
- 4q4mkO47CZfKy1n07YbeFzl/Zrl+ZdUPsT83O7igTaAKTpi/zW/D/rS2i6zg0VaQK9QGBaO7W
- 2N9irEMD7wIMFL8z3wytwyVV2E5tDRpvX4RrGb6HWfq3Q8Udsg0FWZXP5/dGDJvMaOlwlE2S1
- heNOXCveXxZDCldYhvkPAjuBav3a3iwjDRMuaGve0E5VScKpunJPw0Im765axTG/bTsdCtx/3
- ikvyoLKMuQ9TC8iEJa0U2e2rQuaqclRdzGiC0VcsdBMox5PwfBQ91pvHsEHyhlc4/1IOzNAXL
- XCB5qkJZ7KFsSu6ioaYkUCDIJgNTCNxrj5vc658gUWhDmfvCOR3ewDEt5WTBtScnYzThr0oG8
- pStovhV2K+CTjj9L6gj3PhDG5G6nRU7Emk+s2vS3wABdgokWGrLJnUa3yCXtGAv09IWJLJIjW
- F9L+UFH0M00un80xvusA==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191017094347.20327-4-lijiang@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 6:30 AM Al Viro <viro@zeniv.linux.org.uk> wrote:
->
-> On Thu, Oct 17, 2019 at 04:33:09PM +0200, Arnd Bergmann wrote:
->
-> > However, looking at this again after your comment I found a rather
-> > more serious bug in my new RTC_IRQP_SET handling: Any 64-bit
-> > machine can now bypass the permission check for RTC_IRQP_SET by
-> > calling RTC_IRQP_SET32 instead.
->
-> You've lost the check on RTC_EPOCH_SET as well.
+On Thu, Oct 17, 2019 at 05:43:47PM +0800, Lianbo Jiang wrote:
+> When the crashkernel kernel command line option is specified, the
+> low 1MiB memory will always be reserved, which makes that the memory
+> allocated later won't fall into the low 1MiB area, thereby, it's not
+> necessary to create a backup region and also no need to copy the first
+> 640k content to a backup region.
+> 
+> Currently, the code related to the backup region can be safely removed,
+> so lets clean up.
+> 
+> Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
+> ---
+>  arch/x86/include/asm/kexec.h       | 10 ----
+>  arch/x86/include/asm/purgatory.h   | 10 ----
+>  arch/x86/kernel/crash.c            | 87 ++++--------------------------
+>  arch/x86/kernel/machine_kexec_64.c | 47 ----------------
+>  arch/x86/purgatory/purgatory.c     | 19 -------
+>  5 files changed, 11 insertions(+), 162 deletions(-)
 
-Right, originally my plan was to keep the epoch handling local to
-rtc-vr41xx.c as explained in the patch description. The driver is
-specific to a particular very obsolete MIPS machine that was
-apparently only ever used with 32-bit kernels.
+That's a diffstat one cannot object to nowadays. :)
 
-I guess it can't hurt to treat it the same as RTC_IRQP_SET32
-if you prefer. Folding in this change now and adapting the
-changelog text:
+-- 
+Regards/Gruss,
+    Boris.
 
---- a/drivers/rtc/dev.c
-+++ b/drivers/rtc/dev.c
-@@ -402,6 +402,7 @@ static long rtc_dev_ioctl(struct file *file,
- #ifdef CONFIG_COMPAT
- #define RTC_IRQP_SET32         _IOW('p', 0x0c, __u32)
- #define RTC_IRQP_READ32                _IOR('p', 0x0b, __u32)
-+#define RTC_EPOCH_SET32                _IOW('p', 0x0e, __u32)
-
- static long rtc_dev_compat_ioctl(struct file *file,
-                                 unsigned int cmd, unsigned long arg)
-@@ -416,6 +417,10 @@ static long rtc_dev_compat_ioctl(struct file *file,
-        case RTC_IRQP_SET32:
-                /* arg is a plain integer, not pointer */
-                return rtc_dev_ioctl(file, RTC_IRQP_SET, arg);
-+
-+       case RTC_EPOCH_SET32:
-+               /* arg is a plain integer, not pointer */
-+               return rtc_dev_ioctl(file, RTC_EPOCH_SET, arg);
-        }
-
-        return rtc_dev_ioctl(file, cmd, (unsigned long)uarg);
-diff --git a/drivers/rtc/rtc-vr41xx.c b/drivers/rtc/rtc-vr41xx.c
-index 79f27de545af..c3671043ace7 100644
---- a/drivers/rtc/rtc-vr41xx.c
-+++ b/drivers/rtc/rtc-vr41xx.c
-@@ -69,7 +69,6 @@ static void __iomem *rtc2_base;
-
- /* 32-bit compat for ioctls that nobody else uses */
- #define RTC_EPOCH_READ32       _IOR('p', 0x0d, __u32)
--#define RTC_EPOCH_SET32                _IOW('p', 0x0e, __u32)
-
- static unsigned long epoch = 1970;     /* Jan 1 1970 00:00:00 */
-
-@@ -187,7 +186,6 @@ static int vr41xx_rtc_ioctl(struct device *dev,
-unsigned int cmd, unsigned long
- #ifdef CONFIG_64BIT
-        case RTC_EPOCH_READ32:
-                return put_user(epoch, (unsigned int __user *)arg);
--       case RTC_EPOCH_SET32:
- #endif
-        case RTC_EPOCH_SET:
-                /* Doesn't support before 1900 */
-
-> Another potential issue is drivers/input/misc/hp_sdc_rtc.c,
-> provided that the hardware in question might possibly exist
-> on hppa64 boxen - CONFIG_GSC defaults to y and it's not
-> 32bit-only, so that thing is at least selectable on 64bit
-> kernels.
-
-I decided long ago not to care: that code has never compiled after
-it was originally merged into the kernel in 2005:
-
-static int hp_sdc_rtc_ioctl(struct inode *inode, struct file *file,
-                           unsigned int cmd, unsigned long arg)
-{
-#if 1
-       return -EINVAL;
-#else
-      ...
-    RTC_IRQP_SET, RTC_EPOCH_SET, ...
-      ...
-#endif
-}
-
-I don't see any chance that this code is revived. If anyone wanted to
-make it work, the right approach would be to use the rtc framework
-and rewrite the code first.
-
-I could send a patch to remove the dead code though if that helps.
-
-     Arnd
+https://people.kernel.org/tglx/notes-about-netiquette
