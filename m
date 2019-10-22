@@ -2,152 +2,222 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7626FCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 11:32:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39635CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 11:36:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CCFE2075A
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 11:32:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=plexistor-com.20150623.gappssmtp.com header.i=@plexistor-com.20150623.gappssmtp.com header.b="nshfuIVH"
+	by mail.kernel.org (Postfix) with ESMTP id 105BD207FC
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 11:36:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388687AbfJVLcL (ORCPT
+        id S2388717AbfJVLgk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 07:32:11 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:33357 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731916AbfJVLcJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 07:32:09 -0400
-Received: by mail-ed1-f65.google.com with SMTP id c4so12612850edl.0
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 04:32:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=plexistor-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=IXdjAlYYb0/3BF9pQMCekdzHObGq7UqdMRAHLQJHvP0=;
-        b=nshfuIVHMv5W1kTsmAFRMGY2vgtWD69hiQb7EqRiIky+siiGzKA8rT9H/CfogSpRWH
-         ZzKKpiJII+11E/4bokPxJF9UeJdJJFXxET0FxY7Fny224N4pEngrgxbgQWpkSB/j7Pbn
-         yhlbR9Y6w0Wujfqk41ZsLKXwAKZ5+/c46nnZSXt9j0X4GaelObZTCP/32nzyoA0eGKvJ
-         EJrJ2D/qFHzNtezHZpQReKsjKU8Z2UcNRzQD+t2nObetnUDXlscLrsyXvG4/6VXG33QW
-         RkNeTXbG4vW3EOIhy/oixEhvw+WDoPM5OFP1aGoYuZk451UWI2GmpxEwbsd+n8WpfONN
-         5FnQ==
+        Tue, 22 Oct 2019 07:36:40 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49892 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388705AbfJVLgj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 07:36:39 -0400
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com [209.85.221.72])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A32B93688E
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 11:36:38 +0000 (UTC)
+Received: by mail-wr1-f72.google.com with SMTP id a6so6163430wru.1
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 04:36:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=IXdjAlYYb0/3BF9pQMCekdzHObGq7UqdMRAHLQJHvP0=;
-        b=BYha4X1/BZm2nFUbQUXp3ugZ4Nyhp6NuxiED+ZHZp9YQcFbbo9gLczFaPMkyGj8ZQv
-         WFRSdopomjmzlxDiTK9PSjqoYoqY81/sP6DGjcwOS6t9P8o+hYRQtISTKISsSkg94KAG
-         RBu9ousAENUf2nEWpGCNXfNCOypvLNGmpSNv6T6mfQnHLF6YLBMHdFlI3/K9ik/I2yCn
-         DxsQsVS4tIv7MvX9aQfY01M19KBwZS7iNCYXi1QkWaoCgKQV+H+QTWwtfSB+3ifzxBYn
-         OgoLUs7i0zWnmrGg9OOWI7woMUsqCWgIlpxjZNRmI9byDieKZHTedcpEU+Kc4w+xyy63
-         sVPw==
-X-Gm-Message-State: APjAAAVbLpZ7pI4kd8jQFbXm4DexAFEqJKEeO0O+jPiQ5M18CRwbmajq
-        fSE4fGhSSJbxckRUUGJnkLgVdA==
-X-Google-Smtp-Source: APXvYqxQ+E/WTqukoI30ERPrEHKNbOYeg/geWj0e2Fz5zYm6mmeaHbKU07xRP3K0z7lNB1LlNNnNCw==
-X-Received: by 2002:aa7:c595:: with SMTP id g21mr30006580edq.79.1571743927007;
-        Tue, 22 Oct 2019 04:32:07 -0700 (PDT)
-Received: from [10.68.217.182] ([217.70.210.43])
-        by smtp.googlemail.com with ESMTPSA id g17sm97740ejx.75.2019.10.22.04.32.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Oct 2019 04:32:06 -0700 (PDT)
-Subject: Re: [PATCH 1/5] fs/stat: Define DAX statx attribute
-To:     ira.weiny@intel.com, linux-kernel@vger.kernel.org
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-References: <20191020155935.12297-1-ira.weiny@intel.com>
- <20191020155935.12297-2-ira.weiny@intel.com>
-From:   Boaz Harrosh <boaz@plexistor.com>
-Message-ID: <119b57ed-2799-c499-00df-50da80d23612@plexistor.com>
-Date:   Tue, 22 Oct 2019 14:32:04 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=FTSbOqc/cP0++TLaNzktd3vhmDx93fKNtqalIV8xNj4=;
+        b=K/hLQUH/IFvxazJNog+HGOwIJXRg/f+m2oXk1wZuInjE6ZuKlNoWsOjujh3dQYP+nH
+         vOghgWY7Z7pPdXOrIG/s74x2hrSU8gsBBO5ZRGXRQga7Hf+s1e6Kpo6B8u9HL6OlvHJI
+         zhGOa0uP8trv+XY9l6rg3EySxJacBDcAU6T4LirnNZHJyvP7LpRd0aKP0oIZ+8+zcbAx
+         Fqk12LMJpwiiRKHiJ2cIZqKaD2mXYZB/IrQVooET7l0L4RGQEV+c2w8dynVP2KtxPSpm
+         SGKE93dulEi8mg6wfXTa9aYO09TespXeV4FQcL4tofZ2uNIoB+UG4qRMviC0QDBtsJGP
+         5GYg==
+X-Gm-Message-State: APjAAAWo0O5hejFrhOdu8t//RR2AnDvMFh5cQ7S4QiJgtb1V4yiEp2uu
+        WCl53Eh3HIRRPxB+avnedduvTUxl2JiYTjUJZnJOLwq95E2Jqv+2TIWmqGZZD6ejpJ76Co7YR28
+        ZsL9YFy7SNBCxYx2jXgF+Ys/P
+X-Received: by 2002:a1c:814b:: with SMTP id c72mr2717182wmd.167.1571744197227;
+        Tue, 22 Oct 2019 04:36:37 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqw9oRJXXcWY8MVsiwOOdUQqcZhl+/UqiW9ZlmC6hc407IYb6Lv06C/pih3i1cpDDOvdsx5uGw==
+X-Received: by 2002:a1c:814b:: with SMTP id c72mr2717136wmd.167.1571744196883;
+        Tue, 22 Oct 2019 04:36:36 -0700 (PDT)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id p10sm20019762wrx.2.2019.10.22.04.36.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Oct 2019 04:36:36 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        linux-kernel@vger.kernel.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        pbonzini@redhat.com, rkrcmar@redhat.com,
+        sean.j.christopherson@intel.com, wanpengli@tencent.com,
+        jmattson@google.com, joro@8bytes.org, boris.ostrovsky@oracle.com,
+        jgross@suse.com, peterz@infradead.org, will@kernel.org,
+        linux-hyperv@vger.kernel.org, kvm@vger.kernel.org,
+        mikelley@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
+        sthemmin@microsoft.com, sashal@kernel.org,
+        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH v7 3/5] x86/kvm: Add "nopvspin" parameter to disable PV spinlocks
+In-Reply-To: <1571649076-2421-4-git-send-email-zhenzhong.duan@oracle.com>
+References: <1571649076-2421-1-git-send-email-zhenzhong.duan@oracle.com> <1571649076-2421-4-git-send-email-zhenzhong.duan@oracle.com>
+Date:   Tue, 22 Oct 2019 13:36:34 +0200
+Message-ID: <8736fl1071.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20191020155935.12297-2-ira.weiny@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/10/2019 18:59, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
-> 
-> In order for users to determine if a file is currently operating in DAX
-> mode (effective DAX).  Define a statx attribute value and set that
-> attribute if the effective DAX flag is set.
-> 
-> To go along with this we propose the following addition to the statx man
-> page:
-> 
-> STATX_ATTR_DAX
-> 
-> 	DAX (cpu direct access) is a file mode that attempts to minimize
-> 	software cache effects for both I/O and memory mappings of this
-> 	file.  It requires a capable device, a compatible filesystem
-> 	block size, and filesystem opt-in. It generally assumes all
-> 	accesses are via cpu load / store instructions which can
-> 	minimize overhead for small accesses, but adversely affect cpu
-> 	utilization for large transfers. File I/O is done directly
-> 	to/from user-space buffers. While the DAX property tends to
-> 	result in data being transferred synchronously it does not give
-> 	the guarantees of synchronous I/O that data and necessary
-> 	metadata are transferred. Memory mapped I/O may be performed
-> 	with direct mappings that bypass system memory buffering. Again
-> 	while memory-mapped I/O tends to result in data being
-> 	transferred synchronously it does not guarantee synchronous
-> 	metadata updates. A dax file may optionally support being mapped
-> 	with the MAP_SYNC flag which does allow cpu store operations to
-> 	be considered synchronous modulo cpu cache effects.
-> 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+Zhenzhong Duan <zhenzhong.duan@oracle.com> writes:
+
+> There are cases where a guest tries to switch spinlocks to bare metal
+> behavior (e.g. by setting "xen_nopvspin" on XEN platform and
+> "hv_nopvspin" on HYPER_V).
+>
+> That feature is missed on KVM, add a new parameter "nopvspin" to disable
+> PV spinlocks for KVM guest.
+>
+> The new 'nopvspin' parameter will also replace Xen and Hyper-V specific
+> parameters in future patches.
+>
+> Define variable nopvsin as global because it will be used in future
+> patches as above.
+>
+> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: Radim Krcmar <rkrcmar@redhat.com>
+> Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+> Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+> Cc: Wanpeng Li <wanpengli@tencent.com>
+> Cc: Jim Mattson <jmattson@google.com>
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Will Deacon <will@kernel.org>
 > ---
->  fs/stat.c                 | 3 +++
->  include/uapi/linux/stat.h | 1 +
->  2 files changed, 4 insertions(+)
-> 
-> diff --git a/fs/stat.c b/fs/stat.c
-> index c38e4c2e1221..59ca360c1ffb 100644
-> --- a/fs/stat.c
-> +++ b/fs/stat.c
-> @@ -77,6 +77,9 @@ int vfs_getattr_nosec(const struct path *path, struct kstat *stat,
->  	if (IS_AUTOMOUNT(inode))
->  		stat->attributes |= STATX_ATTR_AUTOMOUNT;
+>  Documentation/admin-guide/kernel-parameters.txt |  5 ++++
+>  arch/x86/include/asm/qspinlock.h                |  1 +
+>  arch/x86/kernel/kvm.c                           | 34 ++++++++++++++++++++-----
+>  kernel/locking/qspinlock.c                      |  7 +++++
+>  4 files changed, 40 insertions(+), 7 deletions(-)
+>
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index a84a83f..bd49ed2 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -5334,6 +5334,11 @@
+>  			as generic guest with no PV drivers. Currently support
+>  			XEN HVM, KVM, HYPER_V and VMWARE guest.
 >  
-> +	if (inode->i_flags & S_DAX)
-
-Is there a reason not to use IS_DAX(inode) ?
-
-> +		stat->attributes |= STATX_ATTR_DAX;
+> +	nopvspin	[X86,KVM]
+> +			Disables the qspinlock slow path using PV optimizations
+> +			which allow the hypervisor to 'idle' the guest on lock
+> +			contention.
 > +
->  	if (inode->i_op->getattr)
->  		return inode->i_op->getattr(path, stat, request_mask,
->  					    query_flags);
-> diff --git a/include/uapi/linux/stat.h b/include/uapi/linux/stat.h
-> index 7b35e98d3c58..5b0962121ef7 100644
-> --- a/include/uapi/linux/stat.h
-> +++ b/include/uapi/linux/stat.h
-> @@ -169,6 +169,7 @@ struct statx {
->  #define STATX_ATTR_ENCRYPTED		0x00000800 /* [I] File requires key to decrypt in fs */
+>  	xirc2ps_cs=	[NET,PCMCIA]
+>  			Format:
+>  			<irq>,<irq_mask>,<io>,<full_duplex>,<do_sound>,<lockup_hack>[,<irq2>[,<irq3>[,<irq4>]]]
+> diff --git a/arch/x86/include/asm/qspinlock.h b/arch/x86/include/asm/qspinlock.h
+> index 444d6fd..d86ab94 100644
+> --- a/arch/x86/include/asm/qspinlock.h
+> +++ b/arch/x86/include/asm/qspinlock.h
+> @@ -32,6 +32,7 @@ static __always_inline u32 queued_fetch_set_pending_acquire(struct qspinlock *lo
+>  extern void __pv_init_lock_hash(void);
+>  extern void __pv_queued_spin_lock_slowpath(struct qspinlock *lock, u32 val);
+>  extern void __raw_callee_save___pv_queued_spin_unlock(struct qspinlock *lock);
+> +extern bool nopvspin;
 >  
->  #define STATX_ATTR_AUTOMOUNT		0x00001000 /* Dir: Automount trigger */
-> +#define STATX_ATTR_DAX			0x00002000 /* [I] File is DAX */
+>  #define	queued_spin_unlock queued_spin_unlock
+>  /**
+> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+> index 249f14a..3945aa5 100644
+> --- a/arch/x86/kernel/kvm.c
+> +++ b/arch/x86/kernel/kvm.c
+> @@ -825,18 +825,36 @@ __visible bool __kvm_vcpu_is_preempted(long cpu)
+>   */
+>  void __init kvm_spinlock_init(void)
+>  {
+> -	/* Does host kernel support KVM_FEATURE_PV_UNHALT? */
+> -	if (!kvm_para_has_feature(KVM_FEATURE_PV_UNHALT))
+> +	/*
+> +	 * In case host doesn't support KVM_FEATURE_PV_UNHALT there is still an
+> +	 * advantage of keeping virt_spin_lock_key enabled: virt_spin_lock() is
+> +	 * preferred over native qspinlock when vCPU is preempted.
+> +	 */
+> +	if (!kvm_para_has_feature(KVM_FEATURE_PV_UNHALT)) {
+> +		pr_info("PV spinlocks disabled, no host support.\n");
+>  		return;
+> +	}
 >  
+> +	/*
+> +	 * Disable PV qspinlock and use native qspinlock when dedicated pCPUs
+> +	 * are available.
+> +	 */
+>  	if (kvm_para_has_hint(KVM_HINTS_REALTIME)) {
+> -		static_branch_disable(&virt_spin_lock_key);
+> -		return;
+> +		pr_info("PV spinlocks disabled with KVM_HINTS_REALTIME hints.\n");
+> +		goto out;
+>  	}
 >  
->  #endif /* _UAPI_LINUX_STAT_H */
-> 
+> -	/* Don't use the pvqspinlock code if there is only 1 vCPU. */
+> -	if (num_possible_cpus() == 1)
+> -		return;
+> +	if (num_possible_cpus() == 1) {
+> +		pr_info("PV spinlocks disabled, single CPU.\n");
+> +		goto out;
+> +	}
+> +
+> +	if (nopvspin) {
+> +		pr_info("PV spinlocks disabled, forced by \"nopvspin\" parameter.\n");
+> +		goto out;
+> +	}
+> +
+> +	pr_info("PV spinlocks enabled\n");
+>  
+>  	__pv_init_lock_hash();
+>  	pv_ops.lock.queued_spin_lock_slowpath = __pv_queued_spin_lock_slowpath;
+> @@ -849,6 +867,8 @@ void __init kvm_spinlock_init(void)
+>  		pv_ops.lock.vcpu_is_preempted =
+>  			PV_CALLEE_SAVE(__kvm_vcpu_is_preempted);
+>  	}
+> +out:
+> +	static_branch_disable(&virt_spin_lock_key);
 
+You probably need to add 'return' before 'out:' as it seems you're
+disabling virt_spin_lock_key in all cases now).
+
+>  }
+>  
+>  #endif	/* CONFIG_PARAVIRT_SPINLOCKS */
+> diff --git a/kernel/locking/qspinlock.c b/kernel/locking/qspinlock.c
+> index 2473f10..75193d6 100644
+> --- a/kernel/locking/qspinlock.c
+> +++ b/kernel/locking/qspinlock.c
+> @@ -580,4 +580,11 @@ void queued_spin_lock_slowpath(struct qspinlock *lock, u32 val)
+>  #include "qspinlock_paravirt.h"
+>  #include "qspinlock.c"
+>  
+> +bool nopvspin __initdata;
+> +static __init int parse_nopvspin(char *arg)
+> +{
+> +	nopvspin = true;
+> +	return 0;
+> +}
+> +early_param("nopvspin", parse_nopvspin);
+>  #endif
+
+-- 
+Vitaly
