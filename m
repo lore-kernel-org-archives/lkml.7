@@ -2,110 +2,108 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C055DCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:06:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 512FDCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:10:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CB6320700
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:06:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rgltDEjt"
+	by mail.kernel.org (Postfix) with ESMTP id 2FFA0214B2
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:10:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732195AbfJVPGW (ORCPT
+        id S1732199AbfJVPKD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 11:06:22 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:35908 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725788AbfJVPGV (ORCPT
+        Tue, 22 Oct 2019 11:10:03 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:34068 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731453AbfJVPKC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 11:06:21 -0400
-Received: by mail-pf1-f195.google.com with SMTP id y22so10840072pfr.3
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 08:06:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=IQrlgH9loWQR27iY8AmaRCSKR358bZ5kDUpR/+gPo88=;
-        b=rgltDEjtrJM+H3tUeFN8nAqWX2kAMCK+ixb/hXDSjuPMm6hdtnUU26Np9ZDIq9obrD
-         EzXTBttHOm1CeXR8RuKVxD2208EcO93+ZrmXWcS5yo5i7SnDZ0ilh6/ne6kQM9j64QgU
-         /baidjqSQSDT4de63aID37SgMPW5Yi8tc830BBPbDuYGrUneN/AKTG+uggnRK9snKh2j
-         wTo5vNmsd3AgeLSYVMh9Rn5V37Y6M62btHI9yWU35ecwbalTVFHKmRn5ii3mOviTWFeu
-         Iv2CDRViz5lHVi1WSR/mMShKKaOZjutoZHEJ+Okf3vSjH9mbMlWkmPzc/qcsYeuolcha
-         OxJg==
+        Tue, 22 Oct 2019 11:10:02 -0400
+Received: by mail-pg1-f195.google.com with SMTP id k20so10149117pgi.1
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 08:10:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=IQrlgH9loWQR27iY8AmaRCSKR358bZ5kDUpR/+gPo88=;
-        b=Id/sBUQ4BQP+97EO3w2wuenXx5G80cxFacfMVSFGgT8EPZ4L96lxTGzmyqb1TLwqDL
-         CGOj2lCSztGPgDUUbnb82Yvt1CmsTThaGnmx3mRfbvbjLSGBy9in+g1p+ugni54FsMuI
-         lSF252au6kCMQfYDOxYAhmb/kFpWwivtN8mpdiafbmgAehTUDMKwD83Y52Kjiw1xGoi7
-         juxmiv3A7gQ6GjSsJsB/QHzBBDh4sW+5KnSPODGG30Vnqi/TomtNMaWpofOXOFaxzYLO
-         T9tJNzHYl27fWq4Rz8ZcIuYxkCbaGWkTtscFYN/ddVBRXIMS9HEU4+DckWROWSiG88Eb
-         CGcQ==
-X-Gm-Message-State: APjAAAXSZxYGL99zkPnPMmtiPfUZXjfemIs832UkZeu0OpwkLKcpS69A
-        LXR5ziNrBWJt+FxmHeA2tAo=
-X-Google-Smtp-Source: APXvYqwjiNaBXnXOpx6sfoiwSQnl5ZJE+rvz3IL63kNQgF5sIwe31dDdMtaqznhJQg+GquPAND9OAA==
-X-Received: by 2002:a62:6404:: with SMTP id y4mr3581119pfb.170.1571756781213;
-        Tue, 22 Oct 2019 08:06:21 -0700 (PDT)
-Received: from haolee.github.io ([2600:3c01::f03c:91ff:fe02:b162])
-        by smtp.gmail.com with ESMTPSA id r30sm20688247pfl.42.2019.10.22.08.06.19
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=VpPZchWxBalhXenlomTdpWCrOTqc954uAKLWrxBCzwg=;
+        b=A8VfciBbjlAUruZntO/G+9d/IcpIACqLMvhg0OGNs/nWsPgs9ycS3nE4e6nZKD8mtn
+         BusSN8mY6DW39BT4XmCcCUYoXKv0Qu/mIQnx1dOG/z9eMJe60W5iHde1K3/Bhh0erikN
+         g1Cxu178vACb0XmYeBjVaWeyh67Le4CqYmN6gfxJSSMy3ii2ff03R9unRxOm9s6VdODE
+         JJIFFcVcNvUnyYD4eKfX58MsLAI/f+A1d7l6IBRDLmKaAFrLkpwzIkJGtCDAaXdmX6Z9
+         kpIEnMNhL4oTaLQ3dX+bkzoXb2iRNNzbHQe2y2D6J1r1+FdzRBX2SCyvLSbd9LRSmQjS
+         2Dag==
+X-Gm-Message-State: APjAAAUjzAyOvmLCqUB74rFZH0wKp4lq9VhkyEUE51NBbtX30ZUWxLhz
+        fJ9/0qRCQImr/KiAMrZf6/6Opw==
+X-Google-Smtp-Source: APXvYqy/RH57lz78tmo+obFfGFFGPfZHogTmReh9YUV/QtsrPLBStlqA39MPr3GYs1lhDAYM+t/DZA==
+X-Received: by 2002:a17:90a:a889:: with SMTP id h9mr5345232pjq.61.1571757000702;
+        Tue, 22 Oct 2019 08:10:00 -0700 (PDT)
+Received: from localhost ([12.206.222.5])
+        by smtp.gmail.com with ESMTPSA id m102sm16867880pje.5.2019.10.22.08.09.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Oct 2019 08:06:20 -0700 (PDT)
-Date:   Tue, 22 Oct 2019 15:06:18 +0000
-From:   Hao Lee <haolee.swjtu@gmail.com>
-To:     akpm@linux-foundation.org
-Cc:     hannes@cmpxchg.org, guro@fb.com, shakeelb@google.com,
-        mhocko@kernel.org, chris@chrisdown.name,
-        yang.shi@linux.alibaba.com, tj@kernel.org, tglx@linutronix.de,
-        linux-kernel@vger.kernel.org, haolee.swjtu@gmail.com
-Subject: [PATCH] mm: fix comments based on per-node memcg
-Message-ID: <20191022150618.GA15519@haolee.github.io>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Tue, 22 Oct 2019 08:09:59 -0700 (PDT)
+Date:   Tue, 22 Oct 2019 08:09:59 -0700 (PDT)
+X-Google-Original-Date: Tue, 22 Oct 2019 08:07:08 PDT (-0700)
+Subject:     Re: [PATCH 4/8] riscv: ensure RISC-V C model definitions are passed to static analyzers
+In-Reply-To: <alpine.DEB.2.21.9999.1910172138320.3026@viisi.sifive.com>
+CC:     luc.vanoostenryck@gmail.com, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+From:   Palmer Dabbelt <palmer@sifive.com>
+To:     Paul Walmsley <paul.walmsley@sifive.com>
+Message-ID: <mhng-8e06672c-a3e1-4dde-bbe9-ba1d8ab79645@palmer-si-x1e>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These comments should be updated as memcg limit enforcement has been moved
-from zones to nodes.
+On Thu, 17 Oct 2019 21:39:29 PDT (-0700), Paul Walmsley wrote:
+> On Fri, 18 Oct 2019, Luc Van Oostenryck wrote:
+>
+>> On Thu, Oct 17, 2019 at 05:49:25PM -0700, Paul Walmsley wrote:
+>> > Static analysis tools such as sparse don't set the RISC-V C model
+>> > preprocessor directives such as "__riscv_cmodel_medany", set by the C
+>> > compilers.  This causes the static analyzers to evaluate different
+>> > preprocessor paths than C compilers would.  Fix this by defining the
+>> > appropriate C model macros in the static analyzer command lines.
+>> >
+>> > Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+>> > ---
+>> >  arch/riscv/Makefile | 2 ++
+>> >  1 file changed, 2 insertions(+)
+>> >
+>> > diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
+>> > index f5e914210245..0247a90bd4d8 100644
+>> > --- a/arch/riscv/Makefile
+>> > +++ b/arch/riscv/Makefile
+>> > @@ -47,9 +47,11 @@ KBUILD_CFLAGS += -DCONFIG_PAGE_OFFSET=$(CONFIG_PAGE_OFFSET)
+>> >
+>> >  ifeq ($(CONFIG_CMODEL_MEDLOW),y)
+>> >  	KBUILD_CFLAGS += -mcmodel=medlow
+>> > +	CHECKFLAGS += -D__riscv_cmodel_medlow
+>> >  endif
+>> >  ifeq ($(CONFIG_CMODEL_MEDANY),y)
+>> >  	KBUILD_CFLAGS += -mcmodel=medany
+>> > +	CHECKFLAGS += -D__riscv_cmodel_medany
+>>
+>> I can teach sparse about this in the following days.
+>
+> That would be great.  Would you be willing to follow up with me via E-mail
+> or mailing list post when it's fixed?  If so, then in the meantime, I'll
+> just drop this patch.
 
-Signed-off-by: Hao Lee <haolee.swjtu@gmail.com>
----
- include/linux/memcontrol.h | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+It's probably worth going through all our argument-dependent builtin 
+definitions at the same time.  They're generated by riscv_cpu_cpp_builtins(): 
+https://github.com/gcc-mirror/gcc/blob/master/gcc/config/riscv/riscv-c.c#L35 .
 
-diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-index ae703ea3ef48..12c29f74c02a 100644
---- a/include/linux/memcontrol.h
-+++ b/include/linux/memcontrol.h
-@@ -112,7 +112,7 @@ struct memcg_shrinker_map {
- };
- 
- /*
-- * per-zone information in memory controller.
-+ * per-node information in memory controller.
-  */
- struct mem_cgroup_per_node {
- 	struct lruvec		lruvec;
-@@ -399,8 +399,7 @@ mem_cgroup_nodeinfo(struct mem_cgroup *memcg, int nid)
-  * @memcg: memcg of the wanted lruvec
-  *
-  * Returns the lru list vector holding pages for a given @node or a given
-- * @memcg and @zone. This can be the node lruvec, if the memory controller
-- * is disabled.
-+ * @memcg. This can be the node lruvec, if the memory controller is disabled.
-  */
- static inline struct lruvec *mem_cgroup_lruvec(struct pglist_data *pgdat,
- 				struct mem_cgroup *memcg)
--- 
-2.14.5
-
+>
+>
+> - Paul
+>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
