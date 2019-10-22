@@ -2,77 +2,78 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A325FCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 11:48:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A239C47E49
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 11:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8243A21783
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 11:48:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF39D21783
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 11:49:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388834AbfJVLsD convert rfc822-to-8bit (ORCPT
+        id S2388853AbfJVLtP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 07:48:03 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:2489 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387973AbfJVLsD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 07:48:03 -0400
-Received: from DGGEMM401-HUB.china.huawei.com (unknown [172.30.72.57])
-        by Forcepoint Email with ESMTP id 6AF7EABB2C0A136A3B6A;
-        Tue, 22 Oct 2019 19:48:00 +0800 (CST)
-Received: from dggeme761-chm.china.huawei.com (10.3.19.107) by
- DGGEMM401-HUB.china.huawei.com (10.3.20.209) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 22 Oct 2019 19:48:00 +0800
-Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
- dggeme761-chm.china.huawei.com (10.3.19.107) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Tue, 22 Oct 2019 19:47:59 +0800
-Received: from dggeme762-chm.china.huawei.com ([10.8.68.53]) by
- dggeme762-chm.china.huawei.com ([10.8.68.53]) with mapi id 15.01.1713.004;
- Tue, 22 Oct 2019 19:47:59 +0800
-From:   linfeilong <linfeilong@huawei.com>
-To:     "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH] scripts: fix memleak error in read_file
-Thread-Topic: [PATCH] scripts: fix memleak error in read_file
-Thread-Index: AdWIy2TaZdJlKP2sR+evaSWkQsNSfg==
-Date:   Tue, 22 Oct 2019 11:47:59 +0000
-Message-ID: <bf5c73b4b8534189be0f0df81fe863f0@huawei.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.173.220.147]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Tue, 22 Oct 2019 07:49:15 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:38152 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388204AbfJVLtP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 07:49:15 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1iMsf1-0007KS-67; Tue, 22 Oct 2019 11:49:11 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Amit Kucheria <amit.kucheria@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>, linux-pm@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] drivers: thermal: tsens: fix potential integer overflow on multiply
+Date:   Tue, 22 Oct 2019 12:49:10 +0100
+Message-Id: <20191022114910.652-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-An error is found by the static code analysis tool: "memleak"
-Fix this by add free before return.
+From: Colin Ian King <colin.king@canonical.com>
 
-Signed-off-by: Feilong Lin <linfeilong@huawei.com>
+Currently a multiply operation is being performed on two int values
+and the result is being assigned to a u64, presumably because the
+end result is expected to be probably larger than an int. However,
+because the multiply is an int multiply one can get overflow. Avoid
+the overflow by casting degc to a u64 to force a u64 multiply.
+
+Addresses-Coverity: ("Unintentional integer overflow")
+Fixes: fbfe1a042cfd ("drivers: thermal: tsens: Add interrupt support")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
- scripts/insert-sys-cert.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/thermal/qcom/tsens-common.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/scripts/insert-sys-cert.c b/scripts/insert-sys-cert.c
-index 8902836..22d99a8 100644
---- a/scripts/insert-sys-cert.c
-+++ b/scripts/insert-sys-cert.c
-@@ -250,6 +250,7 @@ static char *read_file(char *file_name, int *size)
- 	}
- 	if (read(fd, buf, *size) != *size) {
- 		perror("File read failed");
-+		free(buf);
- 		close(fd);
- 		return NULL;
- 	}
+diff --git a/drivers/thermal/qcom/tsens-common.c b/drivers/thermal/qcom/tsens-common.c
+index 03bf1b8133ea..3d7855106ecd 100644
+--- a/drivers/thermal/qcom/tsens-common.c
++++ b/drivers/thermal/qcom/tsens-common.c
+@@ -92,7 +92,7 @@ void compute_intercept_slope(struct tsens_priv *priv, u32 *p1,
+ 
+ static inline u32 degc_to_code(int degc, const struct tsens_sensor *s)
+ {
+-	u64 code = (degc * s->slope + s->offset) / SLOPE_FACTOR;
++	u64 code = ((u64)degc * s->slope + s->offset) / SLOPE_FACTOR;
+ 
+ 	pr_debug("%s: raw_code: 0x%llx, degc:%d\n", __func__, code, degc);
+ 	return clamp_val(code, THRESHOLD_MIN_ADC_CODE, THRESHOLD_MAX_ADC_CODE);
 -- 
-1.8.3.1
+2.20.1
+
