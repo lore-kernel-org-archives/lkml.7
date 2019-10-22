@@ -2,174 +2,143 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88C60CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:45:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16F2DCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:47:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AA5E218AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:45:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA0A32184C
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:47:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732113AbfJVNo7 (ORCPT
+        id S1732138AbfJVNrE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 09:44:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39132 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731218AbfJVNo6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 09:44:58 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7041C20700;
-        Tue, 22 Oct 2019 13:44:56 +0000 (UTC)
-Date:   Tue, 22 Oct 2019 09:44:55 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH 3/3] x86/ftrace: Use text_poke()
-Message-ID: <20191022094455.6a0a1a27@gandalf.local.home>
-In-Reply-To: <20191022071956.07e21543@gandalf.local.home>
-References: <aaffb32f-6ca9-f9e3-9b1a-627125c563ed@redhat.com>
-        <20191002182106.GC4643@worktop.programming.kicks-ass.net>
-        <20191003181045.7fb1a5b3@gandalf.local.home>
-        <20191004112237.GA19463@hirez.programming.kicks-ass.net>
-        <20191004094228.5a5774fe@gandalf.local.home>
-        <CAADnVQJ0cWYPY-+FhZoqUZ8p1k1FiDsO5jhXiQdcCPmd1UeCyQ@mail.gmail.com>
-        <20191021204310.3c26f730@oasis.local.home>
-        <CAADnVQLn+Fh-UgSRD9SZCT7WYOez5De04iCZucYbA9mYxPm2AQ@mail.gmail.com>
-        <20191021231630.49805757@oasis.local.home>
-        <20191021231904.4b968dc1@oasis.local.home>
-        <20191022040532.fvpxcs74i4mn4rc6@ast-mbp.dhcp.thefacebook.com>
-        <20191022071956.07e21543@gandalf.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 22 Oct 2019 09:47:04 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55284 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730540AbfJVNrE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 09:47:04 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id CF95EAE86;
+        Tue, 22 Oct 2019 13:47:01 +0000 (UTC)
+Date:   Tue, 22 Oct 2019 14:47:00 +0100
+From:   Luis Henriques <lhenriques@suse.com>
+To:     "Yan, Zheng" <ukernel@gmail.com>
+Cc:     Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        ceph-devel <ceph-devel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ceph: Fix use-after-free in __ceph_remove_cap
+Message-ID: <20191022134700.GA23308@hermes.olymp>
+References: <20191017144636.28617-1-lhenriques@suse.com>
+ <a68eeb81a5b193be2da49b83dfedce7d2782fb40.camel@kernel.org>
+ <87a79unocw.fsf@suse.com>
+ <CAAM7YA=dg8ufUWqrD_V8pSdvxrnU+knOW4uW4io_b=Lwjhpg5Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAAM7YA=dg8ufUWqrD_V8pSdvxrnU+knOW4uW4io_b=Lwjhpg5Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 22 Oct 2019 07:19:56 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> > I'm not touching dyn_ftrace.
-> > Actually calling my stuff ftrace+bpf is probably not correct either.
-> > I'm reusing code patching of nop into call that ftrace does. That's it.
-> > Turned out I cannot use 99% of ftrace facilities.
-> > ftrace_caller, ftrace_call, ftrace_ops_list_func and the whole ftrace api
-> > with ip, parent_ip and pt_regs cannot be used for this part of the work.
-> > bpf prog needs to access raw function arguments. To achieve that I'm  
+On Tue, Oct 22, 2019 at 08:48:56PM +0800, Yan, Zheng wrote:
+> On Mon, Oct 21, 2019 at 10:55 PM Luis Henriques <lhenriques@suse.com> wrote:
 > 
-> You can do that today with the ftrace facility, just like live patching
-> does. You register a ftrace_ops with the flag FTRACE_OPS_FL_IPMODIFY,
-> and your func will set the regs->ip to your bpf handler. When the
-> ftrace_ops->func returns, instead of going back to the called
-> function, it can jump to your bpf_handler. You can create a shadow stack
-> (like function graph tracer does) to save the return address for where
-> you bpf handler needs to return to. As your bpf_handler needs raw
-> access to the parameters, it may not even need the shadow stack because
-> it should know the function it is reading the parameters from.
+> >
+> > Jeff Layton <jlayton@kernel.org> writes:
+> >
+> > > On Thu, 2019-10-17 at 15:46 +0100, Luis Henriques wrote:
+> > >> KASAN reports a use-after-free when running xfstest generic/531, with
+> > the
+> > >> following trace:
+> > >>
+> > >> [  293.903362]  kasan_report+0xe/0x20
+> > >> [  293.903365]  rb_erase+0x1f/0x790
+> > >> [  293.903370]  __ceph_remove_cap+0x201/0x370
+> > >> [  293.903375]  __ceph_remove_caps+0x4b/0x70
+> > >> [  293.903380]  ceph_evict_inode+0x4e/0x360
+> > >> [  293.903386]  evict+0x169/0x290
+> > >> [  293.903390]  __dentry_kill+0x16f/0x250
+> > >> [  293.903394]  dput+0x1c6/0x440
+> > >> [  293.903398]  __fput+0x184/0x330
+> > >> [  293.903404]  task_work_run+0xb9/0xe0
+> > >> [  293.903410]  exit_to_usermode_loop+0xd3/0xe0
+> > >> [  293.903413]  do_syscall_64+0x1a0/0x1c0
+> > >> [  293.903417]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> > >>
+> > >> This happens because __ceph_remove_cap() may queue a cap release
+> > >> (__ceph_queue_cap_release) which can be scheduled before that cap is
+> > >> removed from the inode list with
+> > >>
+> > >>      rb_erase(&cap->ci_node, &ci->i_caps);
+> > >>
+> > >> And, when this finally happens, the use-after-free will occur.
+> > >>
+> > >> This can be fixed by protecting the rb_erase with the s_cap_lock
+> > spinlock,
+> > >> which is used by ceph_send_cap_releases(), before the cap is freed.
+> > >>
+> > >> Signed-off-by: Luis Henriques <lhenriques@suse.com>
+> > >> ---
+> > >>  fs/ceph/caps.c | 4 ++--
+> > >>  1 file changed, 2 insertions(+), 2 deletions(-)
+> > >>
+> > >> diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
+> > >> index d3b9c9d5c1bd..21ee38cabe98 100644
+> > >> --- a/fs/ceph/caps.c
+> > >> +++ b/fs/ceph/caps.c
+> > >> @@ -1089,13 +1089,13 @@ void __ceph_remove_cap(struct ceph_cap *cap,
+> > bool queue_release)
+> > >>      }
+> > >>      cap->cap_ino = ci->i_vino.ino;
+> > >>
+> > >> -    spin_unlock(&session->s_cap_lock);
+> > >> -
+> > >>      /* remove from inode list */
+> > >>      rb_erase(&cap->ci_node, &ci->i_caps);
+> > >>      if (ci->i_auth_cap == cap)
+> > >>              ci->i_auth_cap = NULL;
+> > >>
+> > >> +    spin_unlock(&session->s_cap_lock);
+> > >> +
+> > >>      if (removed)
+> > >>              ceph_put_cap(mdsc, cap);
+> > >>
+> > >
+> > > Is there any reason we need to wait until this point to remove it from
+> > > the rbtree? ISTM that we ought to just do that at the beginning of the
+> > > function, before we take the s_cap_lock.
+> >
+> > That sounds good to me, at least at a first glace.  I spent some time
+> > looking for any possible issues in the code, and even run a few tests.
+> >
+> > However, looking at git log I found commit f818a73674c5 ("ceph: fix cap
+> > removal races"), which moved that rb_erase from the beginning of the
+> > function to it's current position.  So, unless the race mentioned in
+> > this commit has disappeared in the meantime (which is possible, this
+> > commit is from 2010!), this rbtree operation shouldn't be changed.
+> >
+> > And I now wonder if my patch isn't introducing a race too...
+> > __ceph_remove_cap() is supposed to always be called with the session
+> > mutex held, except for the ceph_evict_inode() path.  Which is where I'm
+> > seeing the UAF.  So, maybe what's missing here is the s_mutex.  Hmm...
+> >
+> >
+> we can't lock s_mutex here, because i_ceph_lock is locked
 
-To show just how easy this is, I wrote up a quick hack that hijacks the
-wake_up_process() function and adds a trace_printk() to see what was
-woken up. My output from the trace is this:
+Well, my idea wasn't to get s_mutex here but earlier in the stack.
+Maybe in ceph_evict_inode, protecting the call to __ceph_remove_caps.
+But I didn't really looked into that yet, so I'm not really sure if
+that's feasible (or even if that would fix this UAF).  I suspect that's
+not possible anyway, due to the comment above __ceph_remove_cap:
 
-          <idle>-0     [007] ..s1    68.517276: my_wake_up: We are waking up rcu_preempt:10
-           <...>-1240  [001] ....    68.517727: my_wake_up: We are waking up kthreadd:2
-           <...>-1240  [001] d..1    68.517973: my_wake_up: We are waking up kworker/1:0:17
-            bash-1188  [003] d..2    68.519020: my_wake_up: We are waking up kworker/u16:3:140
-            bash-1188  [003] d..2    68.519138: my_wake_up: We are waking up kworker/u16:3:140
-            sshd-1187  [005] d.s2    68.519295: my_wake_up: We are waking up kworker/5:2:517
-          <idle>-0     [007] ..s1    68.522293: my_wake_up: We are waking up rcu_preempt:10
-          <idle>-0     [007] ..s1    68.526309: my_wake_up: We are waking up rcu_preempt:10
+  caller will not hold session s_mutex if called from destroy_inode.
 
-I added the code to the trace-event-sample.c sample module, and got the
-above when I loaded that module (modprobe trace-event-sample).
-
-It's mostly non arch specific (that is, you can do this with any
-arch that supports the IPMODIFY flag). The only parts that would need
-arch specific code is the regs->ip compare. The pip check can also be
-done less "hacky". But this shows you how easy this can be done today.
-Not sure what is missing that you need.
-
-Here's the patch:
-
-diff --git a/samples/trace_events/trace-events-sample.c b/samples/trace_events/trace-events-sample.c
-index 1a72b7d95cdc..526a6098c811 100644
---- a/samples/trace_events/trace-events-sample.c
-+++ b/samples/trace_events/trace-events-sample.c
-@@ -11,6 +11,41 @@
- #define CREATE_TRACE_POINTS
- #include "trace-events-sample.h"
- 
-+#include <linux/ftrace.h>
-+
-+int wake_up_process(struct task_struct *p);
-+
-+int x;
-+
-+static int my_wake_up(struct task_struct *p)
-+{
-+	int ret;
-+
-+	trace_printk("We are waking up %s:%d\n", p->comm, p->pid);
-+	ret = wake_up_process(p);
-+	/* Force not having a tail call */
-+	if (!x)
-+		return ret;
-+	return 0;
-+}
-+
-+static void my_hijack_func(unsigned long ip, unsigned long pip,
-+			   struct ftrace_ops *ops, struct pt_regs *regs)
-+{
-+	unsigned long this_func = (unsigned long)my_wake_up;
-+
-+	if (pip >= this_func && pip <= this_func + 0x10000)
-+		return;
-+
-+	regs->ip = my_wake_up;
-+}
-+
-+static struct ftrace_ops my_ops = {
-+	.func = my_hijack_func,
-+	.flags = FTRACE_OPS_FL_IPMODIFY | FTRACE_OPS_FL_RECURSION_SAFE |
-+					   FTRACE_OPS_FL_SAVE_REGS,
-+};
-+
- static const char *random_strings[] = {
- 	"Mother Goose",
- 	"Snoopy",
-@@ -115,6 +150,11 @@ void foo_bar_unreg(void)
- 
- static int __init trace_event_init(void)
- {
-+	int ret;
-+
-+	ret = ftrace_set_filter_ip(&my_ops, (unsigned long)wake_up_process, 0, 0);
-+	if (!ret)
-+		register_ftrace_function(&my_ops);
- 	simple_tsk = kthread_run(simple_thread, NULL, "event-sample");
- 	if (IS_ERR(simple_tsk))
- 		return -1;
-@@ -124,6 +164,7 @@ static int __init trace_event_init(void)
- 
- static void __exit trace_event_exit(void)
- {
-+	unregister_ftrace_function(&my_ops);
- 	kthread_stop(simple_tsk);
- 	mutex_lock(&thread_mutex);
- 	if (simple_tsk_fn)
-
-
--- Steve
+Cheers,
+--
+Luís
