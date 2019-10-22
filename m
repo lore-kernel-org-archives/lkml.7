@@ -5,67 +5,67 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98332CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 19:56:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0001ECA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 19:56:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63B8121872
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 19:56:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCF1E21872
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 19:56:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B36yGOPV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V7KPusGe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733065AbfJVT43 (ORCPT
+        id S2388480AbfJVT4e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 15:56:29 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:35245 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733028AbfJVT43 (ORCPT
+        Tue, 22 Oct 2019 15:56:34 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:46584 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733028AbfJVT4b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 15:56:29 -0400
-Received: by mail-pg1-f195.google.com with SMTP id c8so5771101pgb.2;
-        Tue, 22 Oct 2019 12:56:28 -0700 (PDT)
+        Tue, 22 Oct 2019 15:56:31 -0400
+Received: by mail-pg1-f196.google.com with SMTP id e15so10560164pgu.13;
+        Tue, 22 Oct 2019 12:56:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=KTnOBZV7yx8NmDils5fAf50gZrGC7vwGvWz6YsCLa7I=;
-        b=B36yGOPVjnjNGjTLoIt7BVqcQ2A4Xgmqsf6WNSoXtuxNfa+xAq62kGvdLhk2iFayUi
-         cibSHMGD/P7EHfMfRNlonn7jnkYpRe6akm09HwLCe/1oF3c+UkNyQAwb6+2/sjy40Dnt
-         AjhYG0Y7lBYlvVp0Reuk+fzaG8/qpC//XuqfzBaco+fCSm3SMG2e5vA0ulPXNMyAnqCx
-         0kQ78Bo9F9cbOU/xZu+DxNckZRSmVkuZwe3Wk6VdpCybRO1UDJ7UOdPlNIx2VQh2AKcW
-         t6NIWMVC6FzCDsz98onm6V1Q0ahY/Ehg23X2EX/yX7IbrFNT9z3eTJkXqmIiNoeinr4a
-         gg+A==
+        bh=r4y/5VwE/UlGgYr3QyrcPLtb/wmsPwbDIuZ2lbakaKE=;
+        b=V7KPusGeHLpRexxKm4l1fM2Nsa/VnUGskG05cKTSasNjuTIF9AaUyaGxuEuk/Yu6eP
+         EKkEPROhrwoyjAFagfkahsh78KGxz8RC011dzgfUDIKrfERY4BY3iQqW4xu0LG5A8MQw
+         VBZ4v+3EpsODL8XmkAI1SCtNC31qaIg84EneMRlual9M3yD5S/xSCQHaxnRxV6Tn5tcI
+         B1p4INFaSAEXIWBV0MnNOFuz3hBW1IoiBGa9KzImg9gBYv1DYioJrrDKx7YC1lkByBDv
+         VudsDID7hLDEYPZ+PMCnSQc6xQ6Sy9Gj/B1bvvbARd1cwh3Ui0WIJbYBxEDxAyKWaLxb
+         RAbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=KTnOBZV7yx8NmDils5fAf50gZrGC7vwGvWz6YsCLa7I=;
-        b=mWBC0oFRFBhk+2imAQiyDx6GRkCDsxBFcLOfSh6vPc+wC3LV06etQ51OghBdGmPFx9
-         NE2ZezqVgFHhqHHDM2UpFcDLD19BuSfCTVhUscy1GXeoKZJkU/6k+SLdhtgkOWq+69L1
-         d6QrcvyJCH29bykw0jIgQaB/LB7spqC8ATMqvPCOS6a4yxuUskM4qTbZORXX8SSMDPty
-         IFLJVnU/gdTTiyZKTsHZf1MyJLTa19phQqmWzSvzTGNI+OrBUlt/KhuqIeNJD2v8ssp2
-         30QSCv+HqKDQHvl3bhdruZorJqEExXJefJYRC0U/IdaDIXzWaNEY5kC1ezmsl6lG7G9q
-         xdMQ==
-X-Gm-Message-State: APjAAAWAEvZvu/chR94PdvHwGY/wGnVpfIVJN0F1JqXi4yO152bUG2d9
-        elsKCI4/TmjsY8vH3F21yNo=
-X-Google-Smtp-Source: APXvYqwNarsIKzR/4LFw0H3HX4iVDgWFexava5gDwyk/CkpJenhnBQ4BkrFPX50pSryuYiBuxsakRA==
-X-Received: by 2002:a63:2224:: with SMTP id i36mr5771312pgi.9.1571774187769;
-        Tue, 22 Oct 2019 12:56:27 -0700 (PDT)
+        bh=r4y/5VwE/UlGgYr3QyrcPLtb/wmsPwbDIuZ2lbakaKE=;
+        b=Es28p0Jzx140SvMBBHSPlUyqrfj4vP6YP7kv+UWRHh+iv/8rolixdxp/VaP2onSA+i
+         q+/M/cbWKY4gFQvQ4ikE7KoSnHLfWCdMzjrwwt+Lq32DF37ZgZtwwHYMH3vbJAmuXc/A
+         2CKzWyTEqJNbEDILEzIJGSow+ooRfyQ/Wu2W85H2BhNnWFOKiK4jtLR625IuwTRqfgBh
+         8aSSvHsfK7ohT0ldh+m2Mm+rXoWfwu+4tMNOo5/JDZexjWWFNfC4l1+xnvur6BLO3of/
+         rT790WfAakbMTvXJXeDqw1s/VRj8H2YZ2fw+c0wRd+s4h21QG56L2dsfD5HyBu6aF+4N
+         OO/g==
+X-Gm-Message-State: APjAAAX/YxqIMBrLCJFmIYZQvQu3WpK9/L70aXO5OnuZF4tSWN6gohM4
+        GFE9Bghrp7fW1rEHzS5EgNM=
+X-Google-Smtp-Source: APXvYqz8ZeChw4ngk4AOKRjiRJinu4KmGpxpDbQ/Vw0A52hWWc8Hz4YetMi2CpkWGKSIxPU8zTYgHQ==
+X-Received: by 2002:a62:6842:: with SMTP id d63mr6152795pfc.166.1571774190261;
+        Tue, 22 Oct 2019 12:56:30 -0700 (PDT)
 Received: from dtor-ws.mtv.corp.google.com ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id c34sm20212715pgb.35.2019.10.22.12.56.26
+        by smtp.gmail.com with ESMTPSA id c34sm20212715pgb.35.2019.10.22.12.56.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Oct 2019 12:56:27 -0700 (PDT)
+        Tue, 22 Oct 2019 12:56:29 -0700 (PDT)
 From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
 To:     Martin Kepplinger <martink@posteo.de>
 Cc:     Dixit Parmar <dixitparmar19@gmail.com>,
         Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
         Matthias Fend <matthias.fend@wolfvision.net>,
         linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/8] Input: st1232 - do not unconditionally configure as wakeup source
-Date:   Tue, 22 Oct 2019 12:56:16 -0700
-Message-Id: <20191022195622.66976-3-dmitry.torokhov@gmail.com>
+Subject: [PATCH 4/8] Input: st1232 - do not reset the chip too early
+Date:   Tue, 22 Oct 2019 12:56:18 -0700
+Message-Id: <20191022195622.66976-5-dmitry.torokhov@gmail.com>
 X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
 In-Reply-To: <20191022195622.66976-1-dmitry.torokhov@gmail.com>
 References: <20191022195622.66976-1-dmitry.torokhov@gmail.com>
@@ -76,29 +76,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Do not unconditionally configure the touchscreen as wakeup source but
-rather rely on I2C core to do that when requested (either via
-"wakeup-source" device property, or when creating a client with
-I2C_CLIENT_WAKE flag).
+We should not be putting the chip into reset while interrupts are enabled
+and ISR may be running. Fix this by installing a custom devm action and
+powering off the device/resetting GPIO line from there. This ensures proper
+ordering.
 
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
 
- drivers/input/touchscreen/st1232.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/input/touchscreen/st1232.c | 22 ++++++++++++----------
+ 1 file changed, 12 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/input/touchscreen/st1232.c b/drivers/input/touchscreen/st1232.c
-index 47033ef3749a..f1b97075aa9b 100644
+index bb116f41f1c0..bfea02202ded 100644
 --- a/drivers/input/touchscreen/st1232.c
 +++ b/drivers/input/touchscreen/st1232.c
-@@ -266,7 +266,6 @@ static int st1232_ts_probe(struct i2c_client *client,
- 	}
+@@ -149,6 +149,11 @@ static void st1232_ts_power(struct st1232_ts_data *ts, bool poweron)
+ 		gpiod_set_value_cansleep(ts->reset_gpio, !poweron);
+ }
  
- 	i2c_set_clientdata(client, ts);
--	device_init_wakeup(&client->dev, 1);
++static void st1232_ts_power_off(void *data)
++{
++	st1232_ts_power(data, false);
++}
++
+ static const struct st_chip_info st1232_chip_info = {
+ 	.have_z		= true,
+ 	.max_x		= 0x31f, /* 800 - 1 */
+@@ -229,6 +234,13 @@ static int st1232_ts_probe(struct i2c_client *client,
  
+ 	st1232_ts_power(ts, true);
+ 
++	error = devm_add_action_or_reset(&client->dev, st1232_ts_power_off, ts);
++	if (error) {
++		dev_err(&client->dev,
++			"Failed to install power off action: %d\n", error);
++		return error;
++	}
++
+ 	input_dev->name = "st1232-touchscreen";
+ 	input_dev->id.bustype = BUS_I2C;
+ 	input_dev->dev.parent = &client->dev;
+@@ -270,15 +282,6 @@ static int st1232_ts_probe(struct i2c_client *client,
  	return 0;
  }
+ 
+-static int st1232_ts_remove(struct i2c_client *client)
+-{
+-	struct st1232_ts_data *ts = i2c_get_clientdata(client);
+-
+-	st1232_ts_power(ts, false);
+-
+-	return 0;
+-}
+-
+ static int __maybe_unused st1232_ts_suspend(struct device *dev)
+ {
+ 	struct i2c_client *client = to_i2c_client(dev);
+@@ -324,7 +327,6 @@ MODULE_DEVICE_TABLE(of, st1232_ts_dt_ids);
+ 
+ static struct i2c_driver st1232_ts_driver = {
+ 	.probe		= st1232_ts_probe,
+-	.remove		= st1232_ts_remove,
+ 	.id_table	= st1232_ts_id,
+ 	.driver = {
+ 		.name	= ST1232_TS_NAME,
 -- 
 2.23.0.866.gb869b98d4c-goog
 
