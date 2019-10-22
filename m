@@ -2,226 +2,127 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E83E5CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 23:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DD97CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 23:29:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4FB92086D
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 23:25:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YzL3h8hg"
+	by mail.kernel.org (Postfix) with ESMTP id EC5982075A
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 23:29:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389668AbfJVXZ4 (ORCPT
+        id S2389675AbfJVX3k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 19:25:56 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:53361 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727403AbfJVXZz (ORCPT
+        Tue, 22 Oct 2019 19:29:40 -0400
+Received: from baldur.buserror.net ([165.227.176.147]:59068 "EHLO
+        baldur.buserror.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731847AbfJVX3k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 19:25:55 -0400
-Received: by mail-wm1-f68.google.com with SMTP id i13so3844117wmd.3
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 16:25:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WIdjvj3kcTlPGjglhXDelm+EyQ4AXkSZ1XXSBXmy05M=;
-        b=YzL3h8hgvCV4nviJ4p9KC3zaLwubCJcDm3zcroeVzc+KXKo8KJtm9sCz+kMJfcleHe
-         3WdLR48GXsxIkjFl67gQxkAeiMer/wBUQTmup2/9k5Hqb9z+4anezjLWJBPrnrxLQcsN
-         q2lgGmEKQTMUOu5AHutq/xNE8K0f8X82cDl9DB9rhBp2YcpKmN5RQynQJiT1NrUjiEzG
-         y3NBw2iL12HXr/myUYYCEDKqUX2389LSKscBsgvg5q1zpmAOxtkQo+AilaIk/RQF178k
-         bQkoqxA3ti9eFA1nI6QgoL9EgnpS8wewMWVPrMiqP0tQRiiaixVFyqMA/L1+WAWfz7OQ
-         BK2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WIdjvj3kcTlPGjglhXDelm+EyQ4AXkSZ1XXSBXmy05M=;
-        b=R1tElACf/zQNyVK3o6o/1h/EiNyL35LDa2Pr9PE0FuiFVhl5F7b/cOX1a+sPTPl34m
-         f5UKP+S5aH1RZ2LkJmLsNQsGWUFMDtPUrGCuFYZWtpkcuol1INBbhAiYFBS0/5ISLcTN
-         +2cu7XpSGkcb4D4Fqu8SFD73mAfBVvxy0WG618tJR9Wttf6lWa9G8Z07NQlsxxA6jUhP
-         ixPyY0QyOLIopO9y3MhK+Op7nDk6pyNHvKjowwIA+ZPRHC22/3mdLN1pcoHmwZftit0u
-         /5ZFeSznGbkeazM8lqm0SQsIP4T41/JRt1UnZ9oC+HZBPiwi7DsyIJJNsw9Vwll/pwjD
-         0hEA==
-X-Gm-Message-State: APjAAAWzpFqQYMGaT/Ei0WFFt6vtIapc5Ygdw0HWYHyapy7H6soLvC2V
-        zxETBRWMI1FGQA4nKeVcxMP5CtGlGTeo7CmhAF4MeQ==
-X-Google-Smtp-Source: APXvYqwcmIc+w+oSCSoeRsn9sd5KdshyuRDokhhp19P5OCvAWODAVN35HC4A4ljeYB/Zv8kl32TfscZO5lPGHMWhVOs=
-X-Received: by 2002:a1c:2986:: with SMTP id p128mr3248874wmp.173.1571786752358;
- Tue, 22 Oct 2019 16:25:52 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAA25o9TABY=3C+FQEg8FDyF1rim315G2hmeB1DBWJLn-wG1j0g@mail.gmail.com>
- <CAJZ5v0gJWxLJTi7TjaRP-3aR3f4VnX1n9dRE_jxdS6e3SM46LQ@mail.gmail.com>
- <CAA25o9TiaaKGH4ZkOa=FhZW7PdXQ592YZ4q52o-QNx=yFsR4Pw@mail.gmail.com>
- <CAJZ5v0j7N=o0S1tSwn5DP10oAmb5oN5SsM3jWhs+ZJ2YxMEvnw@mail.gmail.com>
- <CAA25o9Rd5x7PjFkrhWL-vqfV9uEYKA4K2K=9t1V7TY2OKX+k6g@mail.gmail.com> <CAJZ5v0jDwUi4dU5zjCWuRAYEbg63xJadE=Fdr_OY7UcU82q94w@mail.gmail.com>
-In-Reply-To: <CAJZ5v0jDwUi4dU5zjCWuRAYEbg63xJadE=Fdr_OY7UcU82q94w@mail.gmail.com>
-From:   Luigi Semenzato <semenzato@google.com>
-Date:   Tue, 22 Oct 2019 16:25:40 -0700
-Message-ID: <CAA25o9Spr=h+YHadyRBTpVciH4n-wtsPcKvM10u_RZNHYqYomg@mail.gmail.com>
-Subject: Re: is hibernation usable?
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Geoff Pike <gpike@google.com>, Bas Nowaira <bassem@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>
+        Tue, 22 Oct 2019 19:29:40 -0400
+Received: from [2601:449:8480:af0:12bf:48ff:fe84:c9a0]
+        by baldur.buserror.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <oss@buserror.net>)
+        id 1iN3UG-0003jo-Ga; Tue, 22 Oct 2019 18:22:51 -0500
+Message-ID: <51ee13bc7ced50c3aa1a7ac9335bea16651db684.camel@buserror.net>
+From:   Scott Wood <oss@buserror.net>
+To:     Jason Yan <yanaijie@huawei.com>, mpe@ellerman.id.au,
+        linuxppc-dev@lists.ozlabs.org, diana.craciun@nxp.com,
+        christophe.leroy@c-s.fr, benh@kernel.crashing.org,
+        paulus@samba.org, npiggin@gmail.com, keescook@chromium.org,
+        kernel-hardening@lists.openwall.com
+Cc:     wangkefeng.wang@huawei.com, linux-kernel@vger.kernel.org,
+        jingxiangfeng@huawei.com, zhaohongjiang@huawei.com,
+        thunder.leizhen@huawei.com, yebin10@huawei.com
+Date:   Tue, 22 Oct 2019 18:22:47 -0500
+In-Reply-To: <0543af6f-df4a-81ff-41fe-c81959568859@huawei.com>
+References: <20190920094546.44948-1-yanaijie@huawei.com>
+         <9c2dd2a8-83f2-983c-383e-956e19a7803a@huawei.com>
+         <c4769b34-95f6-81b9-4856-50459630aa0d@huawei.com>
+         <38141b946f3376ce471e46eaf065e357ac540354.camel@buserror.net>
+         <90bb659a-bde4-3b8e-8f01-bf22d7534f44@huawei.com>
+         <34ef1980887c8a6d635c20bdaf748bb0548e51b5.camel@buserror.net>
+         <0543af6f-df4a-81ff-41fe-c81959568859@huawei.com>
+Organization: Red Hat
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2601:449:8480:af0:12bf:48ff:fe84:c9a0
+X-SA-Exim-Rcpt-To: yanaijie@huawei.com, mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org, diana.craciun@nxp.com, christophe.leroy@c-s.fr, benh@kernel.crashing.org, paulus@samba.org, npiggin@gmail.com, keescook@chromium.org, kernel-hardening@lists.openwall.com, wangkefeng.wang@huawei.com, linux-kernel@vger.kernel.org, jingxiangfeng@huawei.com, zhaohongjiang@huawei.com, thunder.leizhen@huawei.com, yebin10@huawei.com
+X-SA-Exim-Mail-From: oss@buserror.net
+Subject: Re: [PATCH v7 00/12] implement KASLR for powerpc/fsl_booke/32
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on baldur.buserror.net)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 4:16 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> On Wed, Oct 23, 2019 at 12:53 AM Luigi Semenzato <semenzato@google.com> wrote:
-> >
-> > On Tue, Oct 22, 2019 at 3:14 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> > >
-> > > On Tue, Oct 22, 2019 at 11:26 PM Luigi Semenzato <semenzato@google.com> wrote:
-> > > >
-> > > > Thank you for the quick reply!
-> > > >
-> > > > On Tue, Oct 22, 2019 at 1:57 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> > > > >
-> > > > > On Tue, Oct 22, 2019 at 10:09 PM Luigi Semenzato <semenzato@google.com> wrote:
-> > > > > >
-> > > > > > Following a thread in linux-pm
-> > > > > > (https://marc.info/?l=linux-mm&m=157012300901871) I have some issues
-> > > > > > that may be of general interest.
-> > > > > >
-> > > > > > 1. To the best of my knowledge, Linux hibernation is guaranteed to
-> > > > > > fail if more than 1/2 of total RAM is in use (for instance, by
-> > > > > > anonymous pages).  My knowledge is based on evidence, experiments,
-> > > > > > code inspection, the thread above, and a comment in
-> > > > > > Documentation/swsusp.txt, copied here:
-> > > > >
-> > > > > So I use it on a regular basis (i.e. every day) on a system that often
-> > > > > has over 50% or RAM in use and it all works.
-> > > > >
-> > > > > I also know about other people using it on a regular basis.
-> > > > >
-> > > > > For all of these users, it is usable.
-> > > > >
-> > > > > >  "Instead, we load the image into unused memory and then atomically
-> > > > > > copy it back to it original location. This implies, of course, a
-> > > > > > maximum image size of half the amount of memory."
-> > > > >
-> > > > > That isn't right any more.  An image that is loaded during resume can,
-> > > > > in fact, be larger than 50% of RAM.  An image that is created during
-> > > > > hibernation, however, cannot.
-> > > >
-> > > > Sorry, I don't understand this.  Are you saying that, for instance,
-> > > > you can resume a 30 GB image on a 32 GB device, but that image could
-> > > > only have been created on a 64 GB device?
-> > >
-> > > Had it been possible to create images larger than 50% of memory during
-> > > hibernation, it would have been possible to load them during resume as
-> > > well.
-> > >
-> > > The resume code doesn't have a 50% of RAM limitation, the image
-> > > creation code does.
-> >
-> > Thanks a lot for the clarifications.
-> >
-> > It is possible that you and I have different definitions of "working
-> > in general".  My main issue ia that I would like image creation (i.e.
-> > entering hibernation) to work with >50% of RAM in use, and I am
-> > extrapolating that other people would like that too.  I can see that
-> > there are many uses where this is not needed though, especially if you
-> > mostly care about resume.
->
-> Also note that you need to be precise about what ">50% of RAM in use"
-> means.  For example, AFAICS hibernation works just fine for many cases
-> in which MemFree is way below 50% of MemTotal.
+On Mon, 2019-10-21 at 11:34 +0800, Jason Yan wrote:
+> 
+> On 2019/10/10 2:46, Scott Wood wrote:
+> > On Wed, 2019-10-09 at 16:41 +0800, Jason Yan wrote:
+> > > Hi Scott,
+> > > 
+> > > On 2019/10/9 15:13, Scott Wood wrote:
+> > > > On Wed, 2019-10-09 at 14:10 +0800, Jason Yan wrote:
+> > > > > Hi Scott,
+> > > > > 
+> > > > > Would you please take sometime to test this?
+> > > > > 
+> > > > > Thank you so much.
+> > > > > 
+> > > > > On 2019/9/24 13:52, Jason Yan wrote:
+> > > > > > Hi Scott,
+> > > > > > 
+> > > > > > Can you test v7 to see if it works to load a kernel at a non-zero
+> > > > > > address?
+> > > > > > 
+> > > > > > Thanks,
+> > > > 
+> > > > Sorry for the delay.  Here's the output:
+> > > > 
+> > > 
+> > > Thanks for the test.
+> > > 
+> > > > ## Booting kernel from Legacy Image at 10000000 ...
+> > > >      Image Name:   Linux-5.4.0-rc2-00050-g8ac2cf5b4
+> > > >      Image Type:   PowerPC Linux Kernel Image (gzip compressed)
+> > > >      Data Size:    7521134 Bytes = 7.2 MiB
+> > > >      Load Address: 04000000
+> > > >      Entry Point:  04000000
+> > > >      Verifying Checksum ... OK
+> > > > ## Flattened Device Tree blob at 1fc00000
+> > > >      Booting using the fdt blob at 0x1fc00000
+> > > >      Uncompressing Kernel Image ... OK
+> > > >      Loading Device Tree to 07fe0000, end 07fff65c ... OK
+> > > > KASLR: No safe seed for randomizing the kernel base.
+> > > > OF: reserved mem: initialized node qman-fqd, compatible id fsl,qman-
+> > > > fqd
+> > > > OF: reserved mem: initialized node qman-pfdr, compatible id fsl,qman-
+> > > > pfdr
+> > > > OF: reserved mem: initialized node bman-fbpr, compatible id fsl,bman-
+> > > > fbpr
+> > > > Memory CAM mapping: 64/64/64 Mb, residual: 12032Mb
+> > > 
+> > > When boot from 04000000, the max CAM value is 64M. And
+> > > you have a board with 12G memory, CONFIG_LOWMEM_CAM_NUM=3 means only
+> > > 192M memory is mapped and when kernel is randomized at the middle of
+> > > this 192M memory, we will not have enough continuous memory for node
+> > > map.
+> > > 
+> > > Can you set CONFIG_LOWMEM_CAM_NUM=8 and see if it works?
+> > 
+> > OK, that worked.
+> > 
+> 
+> Hi Scott, any more cases should be tested or any more comments?
+> What else need to be done before this feature can be merged?
 
-Yes, I agree, that's tricky to explain.  Of course here I mean the
-number of "saveable" pages, as defined in hibernate.c, and clearly
-anon pages are always saveable.
+I've just applied it and sent a pull request.
 
-> > >
-> > > > > > 2. There's no simple/general workaround.  Rafael suggested on the
-> > > > > > thread "Whatever doesn't fit into 50% of RAM needs to be swapped out
-> > > > > > before hibernation".  This is a good suggestion: I am actually close
-> > > > > > to achieving this using memcgroups, but it's a fair amount of work,
-> > > > > > and a fairly special case.  Not everybody uses memcgroups, and I don't
-> > > > > > know of other reliable ways of forcing swap from user level.
-> > > > >
-> > > > > I don't need to do anything like that.
-> > > >
-> > > > Again, I don't understand.  Why did you make that suggestion then?
-> > > >
-> > > > > hibernate_preallocate_memory() manages to free a sufficient amount of
-> > > > > memory on my system every time.
-> > > >
-> > > > Unfortunately this doesn't work for me.  I may have described a simple
-> > > > experiment: on a 4GB device, create two large processes like this:
-> > > >
-> > > > dd if=/dev/zero bs=1100M count=1 | sleep infinity &
-> > > > dd if=/dev/zero bs=1100M count=1 | sleep infinity &
-> > > >
-> > > > so that more than 50% of TotalMem is used for anonymous pages.  Then
-> > > > echo disk > /sys/power/state fails with ENOMEM.
-> > >
-> > > I guess hibernate_preallocate_memory() is not able to free enough
-> > > memory for itself in that case.
-> > >
-> > > > Is this supposed to work?
-> > >
-> > > Yes, it is, in general.
-> > >
-> > > > Maybe I am doing something wrong?
-> > > > Hibernation works before I create the dd processes.  After I force
-> > > > some of those pages to a separate swap device, hibernation works too,
-> > > > so those pages aren't mlocked or anything.
-> > >
-> > > It looks like you are doing something that is not covered by
-> > > hibernate_preallocate_memory().
-> > >
-> > > > > > 3. A feature that works only when 1/2 of total RAM can be allocated
-> > > > > > is, in my opinion, not usable, except possibly under special
-> > > > > > circumstances, such as mine. Most of the available articles and
-> > > > > > documentation do not mention this important fact (but for the excerpt
-> > > > > > I mentioned, which is not in a prominent position).
-> > > > >
-> > > > > It can be used with over 1/2 of RAM allocated and that is quite easy
-> > > > > to demonstrate.
-> > > > >
-> > > > > Honestly, I'm not sure what your problem is really.
-> > > >
-> > > > I apologize if I am doing something stupid and I should know better
-> > > > before I waste other people's time.  I have been trying to explain
-> > > > these issues as best as I can.  I have a reproducible failure.  I'll
-> > > > be happy to provide any additional detail.
-> > >
-> > > Simply put, hibernation, as implemented today, needs to allocate over
-> > > 50% of RAM (or at least as much as to be able to copy all of the
-> > > non-free pages) for image creation.  If it cannot do that, it will
-> > > fail and you know how to prevent it from allocating enough memory in a
-> > > reproducible way.  AFAICS that's a situation in which every attempt to
-> > > allocate 50% of memory for any other purpose will fail as well.
-> > >
-> > > Frankly, you are first to report this problem, so it arguably is not
-> > > common.  It looks like hibernate_preallocate_memory() may be improved
-> > > to cover that case, but then the question is how much more complicated
-> > > it will have to become for this purpose and whether or not that's
-> > > worth pursuing.
-> >
-> > Right.  I was hoping to discuss that.  Is it easier to do in the
-> > kernel what I am trying to do at user level, i.e. force swap of excess
-> > pages (possibly to a separate device or partition) so that enough
-> > pages are freed up to make hibernate_preallocate_memory always
-> > succeed?
->
-> It should at least be possible to do that, but it's been a while since
-> I last looked at hibernate_preallocate_memory() etc.
->
-> > I started reading the swap code, but it is entangled with
-> > page reclaim and I haven't seen a simple solution, neither do I know
-> > if there is one and how long it would take to find it, or code around
-> > it.  (However I haven't looked yet at how it works when memcgroup
-> > limits are lowered---that may give me good ideas).
+-Scott
+
+
