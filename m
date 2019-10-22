@@ -2,122 +2,94 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66951CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 19:02:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5FBDCA9EBA
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 19:04:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34F5321872
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 19:02:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AA1D21783
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 19:04:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EeP7vgis"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Cyx6nT07"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732912AbfJVTCI (ORCPT
+        id S1732917AbfJVTEU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 15:02:08 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:45478 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732436AbfJVTCH (ORCPT
+        Tue, 22 Oct 2019 15:04:20 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:44281 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732615AbfJVTEU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 15:02:07 -0400
-Received: by mail-lj1-f196.google.com with SMTP id q64so18338242ljb.12
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 12:02:06 -0700 (PDT)
+        Tue, 22 Oct 2019 15:04:20 -0400
+Received: by mail-qk1-f194.google.com with SMTP id u22so17297600qkk.11
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 12:04:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ODZrm/rP7oHITb+NAb6AT+ekfsFAz8Z8DIgMpULpRQc=;
-        b=EeP7vgis4oHoauMG+PYOC0a9rpOYSNAMp3eKA9t/KXTu2YpY8sNIX8wPZtQjcSXPon
-         yjPsrJAkTxG8gy9OaDwpD3wJ/L/G8qyBOunP+4IfbAQKN5cEwPQumyg8MU2DmFS695eg
-         lze3xTVq+LLzZkQ+jWm9J3RBIf0Ozvh6JuGnrz568EOtqfk8Zn0jK33bZU9W5amsLlWF
-         0YjykSgLv43MTy1dHr0XxNI+EtOqZ2/dHO24XRYEIAp+8oEE0DjKs8ZKhGKrUcW/GQZm
-         Fm0wWpPq5MiTiaYPk3G5isWuVZ7hGzzWP1MYi/wn1O+/2OIj8WBc7PzB9GOnStKV0Jim
-         UvHg==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=RnIjMRHJMSPKbNY9niWQYtD0BFK9lkZCoZ5skYCypAo=;
+        b=Cyx6nT07Vi4tJSjjzdr8xysU2m5BGHzg8F/i+q4NPjayLrf8GvyZxIrLl8teotBRhu
+         qvCQX6nFhAosqiorzJ13fJvKfHoiSg3qRgJXKJmcoKWFAvjhaB5yb1lmcBvqGSHJRyEs
+         7ZG85Fnh7O+aJ2VydmTeDC6Etb1I0K9mjuNlgEyZxiTdFbUTmlYSH4547SQx7aZJJ6II
+         JNbhQLWx7YmccOqInrc7GAfWJMdhCcZ1oTwORxBWh+KWr/s5ofyvmc6yAiseiWosREH2
+         +xNmXeOBaNAvsSqul4aioVzTYxlr3BGbcv4IXQ/93r5/iDKdNBvwFticrA7SI0O3WJlo
+         1cEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ODZrm/rP7oHITb+NAb6AT+ekfsFAz8Z8DIgMpULpRQc=;
-        b=XzUt64JbOvOpROv1oVP1oFA6jdGOgRQWyWlua/LKIPf8QkZZOOzq9AcWo8mWm3ypzl
-         8PtrdNwkpjA2xwv+KzhljH+QMLHTJ3N1yAU7EnJMX1mkSfldxHPy3t+cla32RfRne0On
-         RMsDjNANgZgVYOjqSaV7kCakYTfTus++h5xXwqELvBrdOW046lDLHI33SAwyZJ6YboC+
-         yRRuOU2WWQeP67AkDcYvz4Gz4W2/9Rhb/j+Re6LSg9ECZjlbetY61Iy2BPdt+IedUHqs
-         ebhcjMabm5PFKmEg7Iy1XNtMSxhT4nqhyExHVwlhetZzLUQ3YwfoOMPmUCYVQgGPF7sF
-         +9nA==
-X-Gm-Message-State: APjAAAX4Y9fLqEBuccpfaK+oYfXauS9L5HSbjdgudJCpZlcyxpBWefKU
-        rbEFpoztfyoLivhAh1tOBrylOEyEHss3HAtE+1Y=
-X-Google-Smtp-Source: APXvYqwRnDdLQWpJT9C0Olg4cjksGgTXctgTE+XFYx90vIV/7/vIpENMrwScfxbfMRzJm/7vMp7IcRovj6EB2yrOLiE=
-X-Received: by 2002:a2e:3111:: with SMTP id x17mr2616135ljx.146.1571770925975;
- Tue, 22 Oct 2019 12:02:05 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=RnIjMRHJMSPKbNY9niWQYtD0BFK9lkZCoZ5skYCypAo=;
+        b=BuEXSSjSZsz9Kr0vY8XXeoEYFjja77BZibSi9vpRP7m5mEa2ESYRa/Uueb5+VhJb/i
+         DiwRqrfMb2StrJUkx70u1t3KnSipEFNVC6OfX8NKfMMNWXO/sFnCdl7dvd08m8SJysnB
+         RVLsRlJ6TN/qcnF9+3S4yH++0uNnx5uCyi6hZ/IYygtXLl4i2pV2gY5JNTVBcWIvlP85
+         9O2q8chEktrrpy6AQvYAquUH6YrXAMK7TVmtam0ETY62b9N/7D1KJCOfMTJUTX7YPp9k
+         bFvB7XOTkg6R+mkrFDkyvVi2v4x8J5hP2goR3RY8FuJB2R0zSouTrjMXEsVO54Ssr1Tq
+         Bb8w==
+X-Gm-Message-State: APjAAAVpIAbgC898hlG+8jfeMniyngOHf49mgdwKXPPf5uKsYoEeQuHB
+        WzNUk402Fm5e8s3f/1x2phPeSvdqhqw=
+X-Google-Smtp-Source: APXvYqzSlTX6xHqUfo5bYRRigWYkT+HGShHr3AHboMVNtRnbmnZIXOHLWYpk2QjLc5PdWsg9Zi6JKQ==
+X-Received: by 2002:a05:620a:140c:: with SMTP id d12mr4494690qkj.419.1571771059522;
+        Tue, 22 Oct 2019 12:04:19 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-162-113-180.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.180])
+        by smtp.gmail.com with ESMTPSA id t17sm16737280qtt.57.2019.10.22.12.04.18
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 22 Oct 2019 12:04:18 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1iMzS6-0002er-Eu; Tue, 22 Oct 2019 16:04:18 -0300
+Date:   Tue, 22 Oct 2019 16:04:18 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Maksym Planeta <mplaneta@os.inf.tu-dresden.de>
+Cc:     Moni Shoua <monis@mellanox.com>,
+        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 10/10] Replace tasklets with workqueues
+Message-ID: <20191022190418.GC23952@ziepe.ca>
+References: <20190722151426.5266-1-mplaneta@os.inf.tu-dresden.de>
+ <20190722151426.5266-11-mplaneta@os.inf.tu-dresden.de>
+ <20190722153205.GG7607@ziepe.ca>
+ <21a4daf9-c77e-ec80-9da0-78ab512d248d@os.inf.tu-dresden.de>
+ <20190725185006.GD7467@ziepe.ca>
+ <385139f2-0d31-1148-95c0-a6e6768ab413@os.inf.tu-dresden.de>
+ <995754de-5ec4-0a62-991e-2ea77a6bc622@os.inf.tu-dresden.de>
 MIME-Version: 1.0
-References: <20191016210629.1005086-1-ztuowen@gmail.com> <20191016210629.1005086-4-ztuowen@gmail.com>
-In-Reply-To: <20191016210629.1005086-4-ztuowen@gmail.com>
-From:   Roman Gilg <subdiff@gmail.com>
-Date:   Tue, 22 Oct 2019 21:01:58 +0200
-Message-ID: <CAJcyoyvymcUE4ckPzYno6f9oM6qTUPL_yCZSeJaENtF1UEt5NQ@mail.gmail.com>
-Subject: Re: [PATCH v5 3/4] mfd: intel-lpss: use devm_ioremap_uc for MMIO
-To:     Tuowen Zhao <ztuowen@gmail.com>
-Cc:     lee.jones@linaro.org, linux-kernel@vger.kernel.org,
-        andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com,
-        acelan.kao@canonical.com, mcgrof@kernel.org, davem@davemloft.net
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <995754de-5ec4-0a62-991e-2ea77a6bc622@os.inf.tu-dresden.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 7:48 PM Tuowen Zhao <ztuowen@gmail.com> wrote:
->
-> Some BIOS erroneously specifies write-combining BAR for intel-lpss-pci
-> in MTRR. This will cause the system to hang during boot. If possible,
-> this bug could be corrected with a firmware update.
->
-> This patch use devm_ioremap_uc to overwrite/ignore the MTRR settings
-> by forcing the use of strongly uncachable pages for intel-lpss.
->
-> The BIOS bug is present on Dell XPS 13 7390 2-in-1:
->
-> [    0.001734]   5 base 4000000000 mask 6000000000 write-combining
->
-> 4000000000-7fffffffff : PCI Bus 0000:00
->   4000000000-400fffffff : 0000:00:02.0 (i915)
->   4010000000-4010000fff : 0000:00:15.0 (intel-lpss-pci)
->
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=203485
-> Cc: <stable@vger.kernel.org>
-> Tested-by: AceLan Kao <acelan.kao@canonical.com>
-> Signed-off-by: Tuowen Zhao <ztuowen@gmail.com>
-> Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
-> ---
->  drivers/mfd/intel-lpss.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/mfd/intel-lpss.c b/drivers/mfd/intel-lpss.c
-> index bfe4ff337581..b0f0781a6b9c 100644
-> --- a/drivers/mfd/intel-lpss.c
-> +++ b/drivers/mfd/intel-lpss.c
-> @@ -384,7 +384,7 @@ int intel_lpss_probe(struct device *dev,
->         if (!lpss)
->                 return -ENOMEM;
->
-> -       lpss->priv = devm_ioremap(dev, info->mem->start + LPSS_PRIV_OFFSET,
-> +       lpss->priv = devm_ioremap_uc(dev, info->mem->start + LPSS_PRIV_OFFSET,
->                                   LPSS_PRIV_SIZE);
->         if (!lpss->priv)
->                 return -ENOMEM;
-> --
-> 2.23.0
->
+On Fri, Oct 11, 2019 at 12:41:50PM +0200, Maksym Planeta wrote:
+> Hi,
+> 
+> this is a kind reminder regarding the patchset. I added description of races
+> in the original email.
 
-Tested this v5 series on an XPS 13 7390 2-in-1 with Manjaro/KDE
-install and works fine there. Fixes hang during boot. Currently being
-backported to 5.3 on that distro:
-https://gitlab.manjaro.org/packages/core/linux53/commit/c00ddfb5
+Your patch isn't on patchworks any more, you will need to send a v2
+with the updated commit descriptions
 
-Tested-by: Roman Gilg <subdiff@gmail.com>
+Jason
