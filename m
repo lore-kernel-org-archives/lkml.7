@@ -2,153 +2,123 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A135CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:02:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE1B9CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:05:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA99A2184C
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:02:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82A712184C
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:05:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OA8cRa7t"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="mF1FIsNT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731780AbfJVNCv (ORCPT
+        id S1731945AbfJVNFy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 09:02:51 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:34738 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731583AbfJVNCu (ORCPT
+        Tue, 22 Oct 2019 09:05:54 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:38102 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729696AbfJVNFy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 09:02:50 -0400
-Received: by mail-oi1-f193.google.com with SMTP id 83so14101712oii.1
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 06:02:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kuKLQUxYTkpNquMkRmE+sotbdgdLrnH62e1xn6PHfbU=;
-        b=OA8cRa7tD6FPhuQ4fOfUw/N5hOeyF7n/lLzNq3Ht4ejf7flFCx3QqXSB5bOT1sLk73
-         ZsryZ3JVOnRII4PQhu6d29eVoQye7p4mGl8rHMBpQgoiZzib5f6zyc7OVSxrZYXHFDpH
-         gRYOr6/6wRM57aYrxTehevcSTyrRWPDQ2eYFYNJPStg78PuxujyDxr3z66sy68ynlc8V
-         cdWBK4hJXpdo806HSFYYN/pKKpf5xyJ2W+nA8dkv3Ku7Zt/5LIlFI5ETaE6sVUO+GY8A
-         kiPxxwJp8i0cpt9wfhKYSMxbt4zahzUejFDk87y6aY5rE4ozijMMry/LOQ0WiLDqDqr8
-         pYrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kuKLQUxYTkpNquMkRmE+sotbdgdLrnH62e1xn6PHfbU=;
-        b=iXItLkQDDp6lSQrHDcADHPAqwebZcAptUZR5JI0/9DDsHIeELBWSxO/7vSZdY5rE4d
-         IFset3OiVx9Q8FnAjmAyNXFzI8xXeKGsVHIfimF555hQx9XBmWg80WLSxpUi3SXon3EF
-         k6IbiNFC/BE50qANTx2CkzzFWLBn69ZgMdgZGY+C8w5mjPPyOcXxa5oZa+BtU9mzZays
-         Rk1rbkiUpLEcWariUu3CWBivohIiS+pAXGEPiBRu7IpefLqaG4IdtBDcPY+wB89/0W9G
-         jd6G2Ia2KwVydGgTqC73kZdWlrLtP+As+2Jigg4uxZu5drCWKqZ6+xAd0n3NH2mWBgzM
-         ny3A==
-X-Gm-Message-State: APjAAAXARbM37tBRif9B+11ms8nXfHD++/lBwZC5kpovDPsFiChOz6Lh
-        OmMNjBPltBoN5nwxs2VIy6YGHtebssyYEEEfrSBKJg==
-X-Google-Smtp-Source: APXvYqyE6JC7ar+RMfPYe2Bc7CF9ZEa9LQOjvcDMXILupXpHwW11aEDB46Lmm6zDvKX0yjzZjdW35NrOtLMI1hgKKkw=
-X-Received: by 2002:aca:f1a:: with SMTP id 26mr2807399oip.172.1571749369044;
- Tue, 22 Oct 2019 06:02:49 -0700 (PDT)
+        Tue, 22 Oct 2019 09:05:54 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9MD5pLL077666;
+        Tue, 22 Oct 2019 08:05:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1571749551;
+        bh=ieLw0UD3TwNfGq2EsjYftsH6Edo4lDfAf/yj37BOjiM=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=mF1FIsNT5Ib6vj+r6XWhXX5qijsZY1qb0QuDBC0F7UNZXcoR3lOZTbq7NCEnyYQp/
+         so66Gene4HaEpi/nOoDbTfQgjk5w6cm99uMjvmmZFEzbWBWg85hCG1kiqCkWIltIKa
+         LfQ2ZwltgNSTBxTZCYQsNv5hTBZC30uaSh2lUJ2w=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9MD5pqn086771
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 22 Oct 2019 08:05:51 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 22
+ Oct 2019 08:05:49 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 22 Oct 2019 08:05:39 -0500
+Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9MD5XhK075548;
+        Tue, 22 Oct 2019 08:05:33 -0500
+Subject: Re: [PATCH 00/13] PHY: Add support for SERDES in TI's J721E SoC
+To:     Kishon Vijay Abraham I <kishon@ti.com>, Jyri Sarha <jsarha@ti.com>
+CC:     Anil Varughese <aniljoy@cadence.com>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20191016113117.12370-1-kishon@ti.com>
+From:   Roger Quadros <rogerq@ti.com>
+Message-ID: <6bc9645d-28df-bcef-e94d-498516fc4ac2@ti.com>
+Date:   Tue, 22 Oct 2019 16:05:32 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191017141305.146193-1-elver@google.com> <20191017141305.146193-9-elver@google.com>
- <20191022125921.GD11583@lakrids.cambridge.arm.com>
-In-Reply-To: <20191022125921.GD11583@lakrids.cambridge.arm.com>
-From:   Marco Elver <elver@google.com>
-Date:   Tue, 22 Oct 2019 15:02:37 +0200
-Message-ID: <CANpmjNPcToD2Joe_BE4xgLDOGCscHrtJdqivDPfFjE6nCpq5PQ@mail.gmail.com>
-Subject: Re: [PATCH v2 8/8] x86, kcsan: Enable KCSAN for x86
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Alexander Potapenko <glider@google.com>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Borislav Petkov <bp@alien8.de>, Daniel Axtens <dja@axtens.net>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        David Howells <dhowells@redhat.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-efi@vger.kernel.org,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191016113117.12370-1-kishon@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 22 Oct 2019 at 14:59, Mark Rutland <mark.rutland@arm.com> wrote:
->
-> On Thu, Oct 17, 2019 at 04:13:05PM +0200, Marco Elver wrote:
-> > This patch enables KCSAN for x86, with updates to build rules to not use
-> > KCSAN for several incompatible compilation units.
-> >
-> > Signed-off-by: Marco Elver <elver@google.com>
-> > ---
-> > v2:
-> > * Document build exceptions where no previous above comment explained
-> >   why we cannot instrument.
-> > ---
-> >  arch/x86/Kconfig                      | 1 +
-> >  arch/x86/boot/Makefile                | 2 ++
-> >  arch/x86/boot/compressed/Makefile     | 2 ++
-> >  arch/x86/entry/vdso/Makefile          | 3 +++
-> >  arch/x86/include/asm/bitops.h         | 6 +++++-
-> >  arch/x86/kernel/Makefile              | 7 +++++++
-> >  arch/x86/kernel/cpu/Makefile          | 3 +++
-> >  arch/x86/lib/Makefile                 | 4 ++++
-> >  arch/x86/mm/Makefile                  | 3 +++
-> >  arch/x86/purgatory/Makefile           | 2 ++
-> >  arch/x86/realmode/Makefile            | 3 +++
-> >  arch/x86/realmode/rm/Makefile         | 3 +++
-> >  drivers/firmware/efi/libstub/Makefile | 2 ++
-> >  13 files changed, 40 insertions(+), 1 deletion(-)
->
-> > diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-> > index 0460c7581220..693d0a94b118 100644
-> > --- a/drivers/firmware/efi/libstub/Makefile
-> > +++ b/drivers/firmware/efi/libstub/Makefile
-> > @@ -31,7 +31,9 @@ KBUILD_CFLAGS                       := $(cflags-y) -DDISABLE_BRANCH_PROFILING \
-> >                                  -D__DISABLE_EXPORTS
-> >
-> >  GCOV_PROFILE                 := n
-> > +# Sanitizer runtimes are unavailable and cannot be linked here.
-> >  KASAN_SANITIZE                       := n
-> > +KCSAN_SANITIZE                       := n
-> >  UBSAN_SANITIZE                       := n
-> >  OBJECT_FILES_NON_STANDARD    := y
->
-> Not a big deal, but it might make sense to move the EFI stub exception
-> to patch 3 since it isn't x86 specific (and will also apply for arm64).
+Hi,
 
-Thanks for spotting, moved for v3.
+On 16/10/2019 14:31, Kishon Vijay Abraham I wrote:
+> TI's J721E SoC uses Cadence Sierra SERDES for USB, PCIe and SGMII.
+> TI has a wrapper named WIZ to control input signals to Sierra and
+> Torrent SERDES.
+> 
+> This patch series:
+>   1) Add support to WIZ module present in TI's J721E SoC
+>   2) Adapt Cadence Sierra PHY driver to be used for J721E SoC
+> 
+> Anil Varughese (1):
+>    phy: cadence: Sierra: Configure both lane cdb and common cdb registers
+>      for external SSC
+> 
+> Kishon Vijay Abraham I (12):
+>    dt-bindings: phy: Sierra: Add bindings for Sierra in TI's J721E
+>    phy: cadence: Sierra: Make "phy_clk" and "sierra_apb" optional
+>      resources
+>    phy: cadence: Sierra: Use "regmap" for read and write to Sierra
+>      registers
+>    phy: cadence: Sierra: Add support for SERDES_16G used in J721E SoC
+>    phy: cadence: Sierra: Make cdns_sierra_phy_init() as phy_ops
+>    phy: cadence: Sierra: Modify register macro names to be in sync with
+>      Sierra user guide
+>    phy: cadence: Sierra: Get reset control "array" for each link
+>    phy: cadence: Sierra: Check for PLL lock during PHY power on
+>    phy: cadence: Sierra: Change MAX_LANES of Sierra to 16
+>    phy: cadence: Sierra: Set cmn_refclk/cmn_refclk1 frequency to 25MHz
+>    dt-bindings: phy: Document WIZ (SERDES wrapper) bindings
+>    phy: ti: j721e-wiz: Add support for WIZ module present in TI J721E SoC
 
--- Marco
+Tested USB3.0 on J7ES using this series.
 
-> Otherwise this looks good to me.
->
-> Thanks,
-> Mark.
+Tested-by: Roger Quadros <rogerq@ti.com>
+
+> 
+>   .../bindings/phy/phy-cadence-sierra.txt       |  13 +-
+>   .../bindings/phy/ti,phy-j721e-wiz.txt         |  95 ++
+>   drivers/phy/cadence/phy-cadence-sierra.c      | 695 +++++++++++---
+>   drivers/phy/ti/Kconfig                        |  15 +
+>   drivers/phy/ti/Makefile                       |   1 +
+>   drivers/phy/ti/phy-j721e-wiz.c                | 904 ++++++++++++++++++
+>   6 files changed, 1585 insertions(+), 138 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.txt
+>   create mode 100644 drivers/phy/ti/phy-j721e-wiz.c
+> 
+
+-- 
+cheers,
+-roger
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
