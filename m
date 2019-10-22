@@ -2,161 +2,219 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29FA4CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 21:04:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE15CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 21:04:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF32221783
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 21:04:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571778266;
-	bh=WLy5g3MOjMOPK8irCkIp5jydSqdpsh998LqZ43NOmYE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=aeAGoEk9Bf1n6sMhukLEWnaePoy1MFe0wrkuM4Xa3jisC29iASbErYEzBHO+U3cbJ
-	 3m5tjqKFNNhPLL1qlqzJffJjVPVL7qNz4KUA1w1ksENjhX239PhsDyyjo2S2Lw4MOu
-	 aot6BVi650cMVGaZYtFpWiouODLa3e0J9keF9W5k=
+	by mail.kernel.org (Postfix) with ESMTP id 9C867214B2
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 21:04:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732205AbfJVVEZ (ORCPT
+        id S1732304AbfJVVEf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 17:04:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44782 "EHLO mail.kernel.org"
+        Tue, 22 Oct 2019 17:04:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725874AbfJVVEY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 17:04:24 -0400
-Received: from localhost (unknown [69.71.4.100])
+        id S1725874AbfJVVEe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 17:04:34 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E461720B7C;
-        Tue, 22 Oct 2019 21:04:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571778263;
-        bh=WLy5g3MOjMOPK8irCkIp5jydSqdpsh998LqZ43NOmYE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=NgzQw/bJRQ2kRpQYL2X3+n5ZxmiWQkVGfqCuhf3H40IGH/BAzGtFfpm8cPv7oEAX5
-         rqwBXV2TZxeywmjgkchR6sS6Zvk1K7Yu5AwaPfDOVU9W3M1n0T6B5adG9fPjihaANa
-         cBlowmZv197efP+xUyWp0+vqbhma+FpBhp5LJ/i0=
-Date:   Tue, 22 Oct 2019 16:04:20 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Yunsheng Lin <linyunsheng@huawei.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mhocko@kernel.org, peterz@infradead.org, robin.murphy@arm.com,
-        geert@linux-m68k.org, gregkh@linuxfoundation.org,
-        paul.burton@mips.com
-Subject: Re: [PATCH] PCI: Warn about host bridge device when its numa node is
- NO_NODE
-Message-ID: <20191022210420.GA17717@google.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F13F20B7C;
+        Tue, 22 Oct 2019 21:04:32 +0000 (UTC)
+Date:   Tue, 22 Oct 2019 17:04:30 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH 3/3] x86/ftrace: Use text_poke()
+Message-ID: <20191022170430.6af3b360@gandalf.local.home>
+In-Reply-To: <20191022204620.jp535nfvfubjngzd@ast-mbp.dhcp.thefacebook.com>
+References: <CAADnVQJ0cWYPY-+FhZoqUZ8p1k1FiDsO5jhXiQdcCPmd1UeCyQ@mail.gmail.com>
+        <20191021204310.3c26f730@oasis.local.home>
+        <CAADnVQLn+Fh-UgSRD9SZCT7WYOez5De04iCZucYbA9mYxPm2AQ@mail.gmail.com>
+        <20191021231630.49805757@oasis.local.home>
+        <20191021231904.4b968dc1@oasis.local.home>
+        <20191022040532.fvpxcs74i4mn4rc6@ast-mbp.dhcp.thefacebook.com>
+        <20191022071956.07e21543@gandalf.local.home>
+        <20191022094455.6a0a1a27@gandalf.local.home>
+        <20191022175052.frjzlnjjfwwfov64@ast-mbp.dhcp.thefacebook.com>
+        <20191022141021.2c4496c2@gandalf.local.home>
+        <20191022204620.jp535nfvfubjngzd@ast-mbp.dhcp.thefacebook.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1571467543-26125-1-git-send-email-linyunsheng@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Oct 19, 2019 at 02:45:43PM +0800, Yunsheng Lin wrote:
-> As the disscusion in [1]:
+On Tue, 22 Oct 2019 13:46:23 -0700
+Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
 
-We need to justify this patch right here in the commit log, not with a
-pointer to a 50+ message email thread.
-
-> A PCI device really _MUST_ have a node assigned. 
-
-No, it's not really essential.  It's *nice* if we know the node
-closest to a PCI device, but the system should function correctly even
-if we don't.  The only problem is that it will be slower.
-
-I think the underlying problem you're addressing is that:
-
-  - NUMA_NO_NODE == -1,
-  - dev_to_node(dev) may return NUMA_NO_NODE,
-  - kmalloc(dev) relies on cpumask_of_node(dev_to_node(dev)), and
-  - cpumask_of_node(NUMA_NO_NODE) makes an invalid array reference
-
-For example, on arm64, mips loongson, s390, and x86,
-cpumask_of_node(node) returns "node_to_cpumask_map[node]", and -1 is
-an invalid array index.
-
-That problem can't be solved by emitting a warning, of course.  I
-assume some variation of your "numa: make node_to_cpumask_map()
-NUMA_NO_NODE aware" patch [a] will solve that problem.
-
-[a] https://lore.kernel.org/linux-mips/1568535656-158979-1-git-send-email-linyunsheng@huawei.com/T/#u
-
-It is probably a good idea to emit a warning about the performance
-issue.
-
-When I run your patch on qemu, I see this:
-
-  ACPI: PCI Root Bridge [PCI0] (domain 0000 [bus 00-ff])
-  acpi PNP0A08:00: _OSC: OS supports [ExtendedConfig ASPM ClockPM Segments MSI HPX-Type3]
-  acpi PNP0A08:00: _OSC: platform does not support [LTR]
-  acpi PNP0A08:00: _OSC: OS now controls [PME AER PCIeCapability]
-  PCI host bridge to bus 0000:00
-  pci_bus 0000:00: root bus resource [io  0x0000-0x0cf7 window]
-  pci_bus 0000:00: root bus resource [io  0x0d00-0xffff window]
-  pci_bus 0000:00: root bus resource [mem 0x000a0000-0x000bffff window]
-  pci_bus 0000:00: root bus resource [mem 0xc0000000-0xfebfffff window]
-  pci_bus 0000:00: root bus resource [mem 0x100000000-0x8ffffffff window]
-  pci_bus 0000:00: root bus resource [bus 00-ff]
-   pci0000:00: [Firmware Bug]: No node assigned on NUMA capable HW by BIOS. Please contact your vendor for updates.
-
-I didn't debug it to see what's wrong with the " pci0000:00" string.
-Ideally it would be connected with "acpi PNP0A08:00" since that's the
-place where BIOS would make a fix but I suppose "pci_bus 0000:00"
-would be adequate.
-
-> It is possible to
-> have a PCI bridge shared between two nodes, such that the PCI
-> devices have equidistance. But the moment you scale this out, you
-> either get devices that are 'local' to a package while having
-> multiple packages, or if you maintain a single bridge in a big
-> system, things become so slow it all doesn't matter anyway.
-> Assigning a node (one of the shared) is, in the generic ase of
-> multiple packages, the better solution over assigning all nodes.
+> On Tue, Oct 22, 2019 at 02:10:21PM -0400, Steven Rostedt wrote:
+> > On Tue, 22 Oct 2019 10:50:56 -0700
+> > Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
+> >   
+> > > > +static void my_hijack_func(unsigned long ip, unsigned long pip,
+> > > > +			   struct ftrace_ops *ops, struct pt_regs *regs)    
+> > > 
+> > > 1.
+> > > To pass regs into the callback ftrace_regs_caller() has huge amount
+> > > of stores to do. Saving selector registers is not fast. pushf/popf are even slower.
+> > > ~200 bytes of stack is being used for save/restore.
+> > > This is pure overhead that bpf execution cannot afford.
+> > > bpf is different from traditional ftrace and other tracing, since
+> > > it's often active 24/7. Every nanosecond counts.  
+> > 
+> > Live patching is the same as what you have. If not even more critical.
+> > 
+> > Note, it would be easy to also implement a "just give me IP regs" flag,
+> > or have that be the default if IPMODIFY is set and REGS is not.  
 > 
-> As pci_device_add() will assign the pci device' node according to
-> the bus the device is on, which is decided by pcibus_to_node().
-> Currently different arch may implement the pcibus_to_node() based
-> on bus->sysdata or bus device' node, which has the same node as
-> the bridge device.
->
-> And for devices behind another bridge case, the child bus device
-> is setup with proper parent bus device and inherit its parent'
-> sysdata in pci_alloc_child_bus(), so the pcie device under the
-> child bus should have the same node as the parent bridge when
-> device_add() is called, which will set the node to its parent's
-> node when the child device' node is NUMA_NO_NODE.
+> And that will reduce overhead from 20+ regs save/restore into 3-4 ?
+
+Huge difference.
+
+> Say, it's only two regs (rbp and rip). Why bpf side has to pay this runtime
+> penalty? I see no good technical reason.
+
+Because we have existing infrastructure, and we don't need to rewrite
+the world from scratch. Let's try this out first, and then you show me
+how much of an overhead this is to prove that bpf deserves to create a
+new infrastructure.
+
 > 
-> So this patch only warns about the case when a host bridge device
-> is registered with a node of NO_NODE in pci_register_host_bridge().
-> And it only warns about that when there are more than one numa
-> nodes in the system.
+> >   
+> > > So for bpf I'm generating assembler trampoline tailored to specific kernel
+> > > function that has its fentry nop replaced with a call to that trampoline.
+> > > Instead of 20+ register save I save only arguments of that kernel function.
+> > > For example the trampoline that attaches to kfree_skb() will save only two registers
+> > > (rbp and rdi on x86) and will use 16 bytes of stack.
+> > > 
+> > > 2.
+> > > The common ftrace callback api allows ftrace infra to use generic ftrace_ops_list_func()
+> > > that works for all ftracers, but it doesn't scale.  
+> > 
+> > That only happens if you have more than one callback to a same
+> > function. Otherwise you get a dedicated trampoline.  
+> 
+> That's exactly what I tried to explain below. We have production use case
+> with 2 kprobes (backed by ftrace) at the same function.
+> fwiw the function is tcp_retransmit_skb.
+
+As I state below, you can merge it into a single ftrace_ops.
 
 
-> [1] https://lore.kernel.org/lkml/1568724534-146242-1-git-send-email-linyunsheng@huawei.com/
 > 
-> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-> ---
->  drivers/pci/probe.c | 3 +++
->  1 file changed, 3 insertions(+)
+> > > We see different teams writing bpf services that attach to the same function.
+> > > In addition there are 30+ kprobes active in other places, so for every
+> > > fentry the ftrace_ops_list_func() walks long linked list and does hash
+> > > lookup for each. That's not efficient and we see this slowdown in practice.
+> > > Because of unique trampoline for every kernel function single
+> > > generic list caller is not possible.
+> > > Instead generated unique trampoline handles all attached bpf program
+> > > for this particular kernel function in a sequence of calls.  
+> > 
+> > Why not have a single ftrace_ops() that calls this utility and do the
+> > multiplexing then?  
 > 
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 3d5271a..22be96a 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -927,6 +927,9 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
->  	list_add_tail(&bus->node, &pci_root_buses);
->  	up_write(&pci_bus_sem);
->  
-> +	if (nr_node_ids > 1 && dev_to_node(bus->bridge) == NUMA_NO_NODE)
-> +		dev_err(bus->bridge, FW_BUG "No node assigned on NUMA capable HW by BIOS. Please contact your vendor for updates.\n");
-> +
->  	return 0;
->  
->  unregister:
+> because it's not an acceptable overhead.
+
+Prove it! (with the non regs case)
+
+> 
+> > > No link lists to walk, no hash tables to lookup.
+> > > All overhead is gone.
+> > > 
+> > > 3.
+> > > The existing kprobe bpf progs are using pt_regs to read arguments. Due to  
+> > 
+> > That was done because kprobes in general work off of int3. And the
+> > saving of pt_regs was to reuse the code and allow kprobes to work both
+> > with or without a ftrace helper.  
+> 
+> sure. that makes sense. That's why ftrace-based kprobes are the best
+> and fastest kernel infra today for bpf to attach to.
+> But after using it all in prod we see that it's too slow for ever growing
+> demands which are bpf specific. All the optimizations that went
+> into kprobe handling do help. No doubt about that. But here I'm talking
+> about removing _all_ overhead. Not just making kprobe 2-3 times faster.
+
+You said yourself that the reg saving overhead is too much. The
+pushf/popf is hard too. And I agree that that is unacceptable overhead.
+That's why we have two function callers: One with and one without
+saving regs. Because I knew that was expensive and we didn't need to
+cause everyone to suffer just to have kprobes work with ftrace.
+
+I gave a solution for this. And that is to add another flag to allow
+for just the minimum to change the ip. And we can even add another flag
+to allow for changing the stack if needed (to emulate a call with the
+same parameters).
+
+The world is not just bpf. Does Facebook now own the Linux kernel?
+
+By doing this work, live kernel patching will also benefit. Because it
+is also dealing with the unnecessary overhead of saving regs.
+
+And we could possibly even have kprobes benefit from this if a kprobe
+doesn't need full regs.
+
+> 
+> > > that ugliness all of them are written for single architecture (x86-64).
+> > > Porting them to arm64 is not that hard, but porting to 32-bit arch is close
+> > > to impossible. With custom generated trampoline we'll have bpf progs that
+> > > work as-is on all archs. raw_tracepoint bpf progs already demonstrated
+> > > that such portability is possible. This new kprobe++ progs will be similar.
+> > > 
+> > > 4.
+> > > Due to uniqueness of bpf trampoline sharing trampoline between ftracers
+> > > and bpf progs is not possible, so users would have to choose whether to
+> > > ftrace that particular kernel function or attach bpf to it.
+> > > Attach is not going to stomp on each other. I'm reusing ftrace_make_call/nop
+> > > approach that checks that its a 'nop' being replaced.  
+> > 
+> > What about the approach I showed here? Just register a ftrace_ops with
+> > ip modify set, and then call you unique trampoline directly.  
+> 
+> It's 100% unnecessary overhead.
+
+Prove it!
+
+The only benchmarks you are dealing with is using kprobes, which is
+known to add added overhead. But you are not even considering to use
+something that can handle it without the full regs.
+
+I could probably whip up a POC patch set to get this working in a
+day or two.
+
+> 
+> > It would keep the modification all in one place instead of having
+> > multiple implementations of it. We can make ftrace call your trampoline
+> > just like it was called directly, without writing a whole new
+> > infrastructure.  
+> 
+> That is not true at all.
+> I haven't posted the code yet, but you're already arguing about
+> hypothetical code duplication.
+> There is none so far. I'm not reinventing ftrace.
+> There will be no FTRACE_OPS_FL_* flags, no ftrace_ops equivalent.
+> None of it applies.
+> Since Peter is replacing ftrace specific nop->int3->call patching
+> with text_poke() I can just use that.
+
+
+But you said that you can't have this and trace the functions at the
+same time. Which also means you can't do live kernel patching on these
+functions either.
+
+-- Steve
