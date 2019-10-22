@@ -2,203 +2,105 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02494CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:27:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62E57CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:28:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3FA620700
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:27:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QkY9+hIl"
+	by mail.kernel.org (Postfix) with ESMTP id 3E516218AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:28:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731281AbfJVO1q (ORCPT
+        id S1731617AbfJVO2T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 10:27:46 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:22880 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727831AbfJVO1o (ORCPT
+        Tue, 22 Oct 2019 10:28:19 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:45591 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727194AbfJVO2S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 10:27:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571754462;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=aFYbK6C3qp/0zkqHt/cgoxVzxlaRVYo3tKqlapYrcCU=;
-        b=QkY9+hIlXk0eAWYhH1QgkqNQGf9FMyGYoT/q7fEfjMadDIgyaUlxnLZ/pB9ZGaauEhDxSi
-        iE7qEWktcshGV/j5jBokail3pKFfwEeFSyUHl6I0S3HROZ2XiRTQjVYq7Wh91DPPUVXXNd
-        BwYGmDu+Ijo8jw7MNBKiOZ6pYnVr6W0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-182-VansDXcXP9-M9jCVigjTnA-1; Tue, 22 Oct 2019 10:27:38 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2D263800D4E;
-        Tue, 22 Oct 2019 14:27:35 +0000 (UTC)
-Received: from madcap2.tricolour.ca (ovpn-112-19.phx2.redhat.com [10.3.112.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C9DEE5DC18;
-        Tue, 22 Oct 2019 14:27:19 +0000 (UTC)
-Date:   Tue, 22 Oct 2019 10:27:16 -0400
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
-        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
-        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
-        nhorman@tuxdriver.com, Dan Walsh <dwalsh@redhat.com>,
-        mpatel@redhat.com
-Subject: Re: [PATCH ghak90 V7 20/21] audit: add capcontid to set contid
- outside init_user_ns
-Message-ID: <20191022142716.sgxcmc27w4uaqh3u@madcap2.tricolour.ca>
-References: <cover.1568834524.git.rgb@redhat.com>
- <214163d11a75126f610bcedfad67a4d89575dc77.1568834525.git.rgb@redhat.com>
- <20191019013904.uevmrzbmztsbhpnh@madcap2.tricolour.ca>
- <CAHC9VhRPygA=LsHLUqv+K=ouAiPFJ6fb2_As=OT-_zB7kGc_aQ@mail.gmail.com>
- <20191021213824.6zti5ndxu7sqs772@madcap2.tricolour.ca>
- <CAHC9VhRdNXsY4neJpSoNyJoAVEoiEc2oW5kSscF99tjmoQAxFA@mail.gmail.com>
- <20191021235734.mgcjotdqoe73e4ha@madcap2.tricolour.ca>
- <CAHC9VhSiwnY-+2awxvGeO4a0NgfVkOPd8fzzBVujp=HtjskTuQ@mail.gmail.com>
+        Tue, 22 Oct 2019 10:28:18 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MN5aF-1idDT43P41-00J6G4; Tue, 22 Oct 2019 16:27:47 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Adam Ford <aford173@gmail.com>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Tero Kristo <t-kristo@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh@kernel.org>, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] hwrng: omap3-rom - Fix unused function warnings
+Date:   Tue, 22 Oct 2019 16:27:31 +0200
+Message-Id: <20191022142741.1794378-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-In-Reply-To: <CAHC9VhSiwnY-+2awxvGeO4a0NgfVkOPd8fzzBVujp=HtjskTuQ@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-MC-Unique: VansDXcXP9-M9jCVigjTnA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:PBfTuEp8ZX4Ra2Ce3a9pZMSs9SwhMX1hftuoj/HSfQ/p0GlQWT4
+ wMj8mkLE7kG+8bdty5J1+ElmfuOTIR4PA6vdmHFsFLC0YXcpfucBrpTcccLMbR6YXng5JVu
+ zE7vpU4lQC0NFySxsgbnkX4cEG95HGNmQWpd8uRboG0BVC4+FQgUOv15lgD8qAWPhbEnYba
+ tNjqA/jWVavi2TrI1wYfg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:pKRLuV2+9dI=:6cTjtlK905RHJs9ndFcqmD
+ juozbcR0cdC4bMaUv2wwl6wuJrWELOB45PPT6II7Kef6Vub0TSU5FFQk/iKBYuLi88kUDPtK7
+ 7vaTpiHI3qkJQIUNBziBwkg8xIAeOlU/Ze7GkCT85tdTAF8Z2p+MQaV7Sc5Ie9PIYsMu8dOyP
+ /LqJU8oAIJ2h8wnKKVhpoJ20FFmQj2ETCkxFs4EvykGt93Lof1ORVpTH0jd5mrXT4qfoGszXI
+ xJk3RPilXcdGBszcps4Uc0xJu48ZgoybpIkvqQdgPAO+7PdhHL3pUkrgrTX5GiHWqfBGlGaAN
+ JoKezIHCF5sq/q2fZSLG0Cg/yC6pj/KdBZFl8ntnxBHG6OlZ/LtZjhnuO7wRxRT82rmEWOyWp
+ r9Iy+joHgPvnzw6HjnWfqPz0aGidOqjEA1EoDMeNsSgJUf/fMVnh7DxCyBDjdvtHCNezJXdwX
+ HyN1jg6bOGbxFbo93wMXApStWS/WTikWUdStKZS5UTgVSbSS2HwPIrK6h5t7KIEYKsY667iNK
+ +zKbvb6uc7JS6ZwcsNJhs5i8oyJ5Zbc3dL0yLOGbtfyDSfeGcGe6iavaFuo/kr3ZO4jF/EG2n
+ dN4AoZ3H175TBYbr9+YV8B0PCByqpNbVHMvG6XLnKY2kl8vnZnxgXu1zKZ3llRKe2EUY3jhnq
+ AMMOCTx04fbukNEpcKqVduYCJu0qXfDLeP24tQDFceNGbTmy7tD9twpmYJSe64+A6Iedtj91/
+ Y4DQrY0KpjrLYjZTBvnPBm5EflRX5Kki1hmyk5ScEZQ8hERqOmGEl3bY1jtfZaWL6Xzxjz1Be
+ kY25MZEJbHMalz08x1sntIC1dKasN2delAgrDfjKfL4q1mcQn5YT3bV0OOMyGq82+mIXSAWaq
+ TqWnK6DBylwqp8GwnGLg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-10-21 20:31, Paul Moore wrote:
-> On Mon, Oct 21, 2019 at 7:58 PM Richard Guy Briggs <rgb@redhat.com> wrote=
-:
-> > On 2019-10-21 17:43, Paul Moore wrote:
-> > > On Mon, Oct 21, 2019 at 5:38 PM Richard Guy Briggs <rgb@redhat.com> w=
-rote:
-> > > > On 2019-10-21 15:53, Paul Moore wrote:
-> > > > > On Fri, Oct 18, 2019 at 9:39 PM Richard Guy Briggs <rgb@redhat.co=
-m> wrote:
-> > > > > > On 2019-09-18 21:22, Richard Guy Briggs wrote:
-> > > > > > > Provide a mechanism similar to CAP_AUDIT_CONTROL to explicitl=
-y give a
-> > > > > > > process in a non-init user namespace the capability to set au=
-dit
-> > > > > > > container identifiers.
-> > > > > > >
-> > > > > > > Use audit netlink message types AUDIT_GET_CAPCONTID 1027 and
-> > > > > > > AUDIT_SET_CAPCONTID 1028.  The message format includes the da=
-ta
-> > > > > > > structure:
-> > > > > > > struct audit_capcontid_status {
-> > > > > > >         pid_t   pid;
-> > > > > > >         u32     enable;
-> > > > > > > };
-> > > > > >
-> > > > > > Paul, can I get a review of the general idea here to see if you=
-'re ok
-> > > > > > with this way of effectively extending CAP_AUDIT_CONTROL for th=
-e sake of
-> > > > > > setting contid from beyond the init user namespace where capabl=
-e() can't
-> > > > > > reach and ns_capable() is meaningless for these purposes?
-> > > > >
-> > > > > I think my previous comment about having both the procfs and netl=
-ink
-> > > > > interfaces apply here.  I don't see why we need two different API=
-s at
-> > > > > the start; explain to me why procfs isn't sufficient.  If the arg=
-ument
-> > > > > is simply the desire to avoid mounting procfs in the container, h=
-ow
-> > > > > many container orchestrators can function today without a valid /=
-proc?
-> > > >
-> > > > Ok, sorry, I meant to address that question from a previous patch
-> > > > comment at the same time.
-> > > >
-> > > > It was raised by Eric Biederman that the proc filesystem interface =
-for
-> > > > audit had its limitations and he had suggested an audit netlink
-> > > > interface made more sense.
-> > >
-> > > I'm sure you've got it handy, so I'm going to be lazy and ask: archiv=
-e
-> > > pointer to Eric's comments?  Just a heads-up, I'm really *not* a fan
-> > > of using the netlink interface for this, so unless Eric presents a
-> > > super compelling reason for why we shouldn't use procfs I'm inclined
-> > > to stick with /proc.
-> >
-> > It was actually a video call with Eric and Steve where that was
-> > recommended, so I can't provide you with any first-hand communication
-> > about it.  I'll get more details...
->=20
-> Yeah, that sort of information really needs to be on the list.
->=20
-> > So, with that out of the way, could you please comment on the general
-> > idea of what was intended to be the central idea of this mechanism to b=
-e
-> > able to nest containers beyond the initial user namespace (knowing that
-> > a /proc interface is available and the audit netlink interface isn't
-> > necessary for it to work and the latter can be easily removed)?
->=20
-> I'm not entirely clear what you are asking about, are you asking why I
-> care about nesting container orchestrators?  Simply put, it is not
-> uncommon for the LXC/LXD folks to see nested container orchestrators,
-> so I felt it was important to support that use case.  When we
-> originally started this effort we probably should have done a better
-> job reaching out to the LXC/LXD folks, we may have caught this
-> earlier.  Regardless, we caught it, and it looks like we are on our
-> way to supporting it (that's good).
+When runtime-pm is disabled, we get a few harmless warnings:
 
-I'm not asking why you care about container orchestrators.
+drivers/char/hw_random/omap3-rom-rng.c:65:12: error: unused function 'omap_rom_rng_runtime_suspend' [-Werror,-Wunused-function]
+drivers/char/hw_random/omap3-rom-rng.c:81:12: error: unused function 'omap_rom_rng_runtime_resume' [-Werror,-Wunused-function]
 
-> Are you asking why I prefer the procfs approach to setting/getting the
-> audit container ID?  For one, it makes it easier for a LSM to enforce
-> the audit container ID operations independent of the other audit
-> control APIs.  It also provides a simpler interface for container
-> orchestrators.  Both seem like desirable traits as far as I'm
-> concerned.
+Mark these functions as __maybe_unused so gcc can drop them
+silently.
 
-I'd like to leave the proc/netlink decision/debate out of this
-discussion, though it does need to happen and I was hoping that would
-happen on the loginuid/sessionid proc/netlink patch thread.
+Fixes: 8d9d4bdc495f ("hwrng: omap3-rom - Use runtime PM instead of custom functions")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/char/hw_random/omap3-rom-rng.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-I'd like your perspective on how the capcontid feature was implemented
-(aside from the proc/netlink api issue which was intended to be
-consistent across loginuid/sessionid/contid/capcontid).  Do you see this
-feature as potentially solving the nested container issue in child user
-namespaces?
-
-> > > > The intent was to switch to the audit netlink interface for contid,
-> > > > capcontid and to add the audit netlink interface for loginuid and
-> > > > sessionid while deprecating the proc interface for loginuid and
-> > > > sessionid.  This was alluded to in the cover letter, but not very c=
-lear,
-> > > > I'm afraid.  I have patches to remove the contid and loginuid/sessi=
-onid
-> > > > interfaces in another tree which is why I had forgotten to outline =
-that
-> > > > plan more explicitly in the cover letter.
->=20
-> paul moore
-
-- RGB
-
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
+diff --git a/drivers/char/hw_random/omap3-rom-rng.c b/drivers/char/hw_random/omap3-rom-rng.c
+index 0b90983c95c8..e08a8887e718 100644
+--- a/drivers/char/hw_random/omap3-rom-rng.c
++++ b/drivers/char/hw_random/omap3-rom-rng.c
+@@ -62,7 +62,7 @@ static int omap3_rom_rng_read(struct hwrng *rng, void *data, size_t max, bool w)
+ 	return r;
+ }
+ 
+-static int omap_rom_rng_runtime_suspend(struct device *dev)
++static int __maybe_unused omap_rom_rng_runtime_suspend(struct device *dev)
+ {
+ 	struct omap_rom_rng *ddata;
+ 	int r;
+@@ -78,7 +78,7 @@ static int omap_rom_rng_runtime_suspend(struct device *dev)
+ 	return 0;
+ }
+ 
+-static int omap_rom_rng_runtime_resume(struct device *dev)
++static int __maybe_unused omap_rom_rng_runtime_resume(struct device *dev)
+ {
+ 	struct omap_rom_rng *ddata;
+ 	int r;
+-- 
+2.20.0
 
