@@ -2,127 +2,139 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 450BCCA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:15:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD956CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:16:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1993721BE5
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:15:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CGUi+bZ+"
+	by mail.kernel.org (Postfix) with ESMTP id 93F8C20684
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:16:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388280AbfJVIPT (ORCPT
+        id S2388323AbfJVIQa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 04:15:19 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:42640 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2388061AbfJVIPT (ORCPT
+        Tue, 22 Oct 2019 04:16:30 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:44953 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388061AbfJVIQa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 04:15:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571732117;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=8AwgANZ9oDz6D4lqOk6X+wOo3w6oZWgeLO/Mbb7W20g=;
-        b=CGUi+bZ+lYOUEzURb/nyM5w0RJ6OGF3sw3EKBu9ZiWGLGnm6NADY274NzG9xjT87gp7h2a
-        mGHRqmIhLdAquq9PoB+OiMwfkBiNhnVd8PKoEjyLoEQBcRICRtRuciOKD1j3WxPL/9/LAX
-        DUSLKI/oQfy8l8WAUPpfS95kgjMZPpk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-220-TBXAxhgSMVScSIvfMbhVQQ-1; Tue, 22 Oct 2019 04:15:14 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 79DEB1800D6A;
-        Tue, 22 Oct 2019 08:15:11 +0000 (UTC)
-Received: from [10.36.117.11] (ovpn-117-11.ams2.redhat.com [10.36.117.11])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2065819C4F;
-        Tue, 22 Oct 2019 08:15:07 +0000 (UTC)
-Subject: Re: [PATCH v2 0/2] mm: Memory offlining + page isolation cleanups
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Pingfan Liu <kernelfans@gmail.com>, Qian Cai <cai@lca.pw>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Wei Yang <richard.weiyang@gmail.com>
-References: <20191021172353.3056-1-david@redhat.com>
- <25d3f071-3268-298b-e0c8-9c307d1015fe@redhat.com>
- <20191022080835.GZ9379@dhcp22.suse.cz>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat GmbH
-Message-ID: <1f56744d-2c22-6c12-8fe8-4a71e791c467@redhat.com>
-Date:   Tue, 22 Oct 2019 10:15:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Tue, 22 Oct 2019 04:16:30 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iMpL8-0006mc-Dk; Tue, 22 Oct 2019 10:16:26 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iMpL6-0003pF-L0; Tue, 22 Oct 2019 10:16:24 +0200
+Date:   Tue, 22 Oct 2019 10:16:24 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM Kernel Mailing List 
+        <linux-arm-kernel@lists.infradead.org>, git@vger.kernel.org
+Subject: Re: [GIT PULL] arm64: Fixes for -rc4
+Message-ID: <20191022081624.4tmumskeoayt4bzg@pengutronix.de>
+References: <20191017234348.wcbbo2njexn7ixpk@willie-the-truck>
+ <CAHk-=wjPZYxiTs3F0Vbrd3kRizJGq-rQ_jqH1+8XR9Ai_kBoXg@mail.gmail.com>
+ <20191018174153.slpmkvsz45hb6cts@willie-the-truck>
+ <CAHk-=whmtB98b8=YL2b8HzPKRadk2A9pL0aasmvgebhePrDP9w@mail.gmail.com>
+ <20191021064658.GB22042@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191022080835.GZ9379@dhcp22.suse.cz>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-MC-Unique: TBXAxhgSMVScSIvfMbhVQQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191021064658.GB22042@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22.10.19 10:08, Michal Hocko wrote:
-> On Tue 22-10-19 08:52:28, David Hildenbrand wrote:
->> On 21.10.19 19:23, David Hildenbrand wrote:
->>> Two cleanups that popped up while working on (and discussing) virtio-me=
-m:
->>>    https://lkml.org/lkml/2019/9/19/463
->>>
->>> Tested with DIMMs on x86.
->>>
->>> As discussed with michal in v1, I'll soon look into removing the use
->>> of PG_reserved during memory onlining completely - most probably
->>> disallowing to offline memory blocks with holes, cleaning up the
->>> onlining+offlining code.
->>
->> BTW, I remember that ZONE_DEVICE pages are still required to be set
->> PG_reserved. That has to be sorted out first.
->=20
-> Do they?
+Hello,
 
-Yes, especially KVM code :/
+I added the git list to Cc:. For the new readers: The context of this
+thread can be found at
+https://lwn.net/ml/linux-kernel/20191017234348.wcbbo2njexn7ixpk@willie-the-truck/
 
->=20
->> I remember that somebody was
->> working on it a while ago but didn't hear about that again. Will look in=
-to
->> that as well - should be as easy as adding a zone check (if there isn't =
-a
->> pfn_to_online_page() check already). But of course, there might be speci=
-al
->> cases ....
->=20
-> I remember Alexander didn't want to change the PageReserved handling
-> because he was worried about unforeseeable side effects. I have a vague
-> recollection he (or maybe Dan) has promissed some follow up clean ups
-> which didn't seem to materialize.
+On Mon, Oct 21, 2019 at 08:46:58AM +0200, Ingo Molnar wrote:
+> Anyway, a small Git feature request: it would be super useful if "git 
+> request-pull" output was a bit more dependable and at least warned about 
+> this and didn't include what is, from the viewpoint of the person doing 
+> the merge, a bogus diffstat. (Generating the correct diffstat is probably 
+> beyond request-pull's abilities: it would require changing the working 
+> tree to actually perform the merge - while request-pull is a read-only 
+> operation right now. But detecting the condition and warning about it 
+> should be possible?)
 
-I'm looking into it right now, especially the KVM part.
+I think Will's case is still an easy one compared with what could
+actually happen.
 
---=20
+The related history looks as follows:
 
-Thanks,
+             ,-.     ,-.              ,-.    ,-.    ,-.
+  v5.4-rc1 --| |-...-| |-- v5.4-rc2 --| |-..-| |-..-| |-- v5.4-rc3
+      \      `-'     `-'       \      `-'    /-'    `-'
+       \   ,-.     ,-.          \         ,-/    ,-.     ,-.
+        `--| |-...-| |--------------------|*|----| |-...-|H|
+           `-'     `-'            \       `-'    `-'     /-'
+                                   \   ,-.     ,-.      /
+                                    `--| |-...-| |-----'
+                                       `-'     `-'
 
-David / dhildenb
+Will asked Linus to merge the Commit marked 'H', the two merge bases are
+v5.4-rc2 and '*'.
 
+(FTR:
+  * = 3e7c93bd04edfb0cae7dad1215544c9350254b8f
+  H = 777d062e5bee0e3c0751cdcbce116a76ee2310ec
+, they can be found in
+git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git)
+
+The formally correct way to create the diffstat is to merge v5.4-rc2 and
+'*' (in general: all merge bases) and calculate the diff between this
+merge and the to-be-merged-commit. Compared to what Will did (i.e. merge
+Linus' HEAD and this branch and then diff @~ with @) doing it the way I
+described has the advantage(?) that commits that conflict with this
+merge request in Linus' tree since the merge bases are not in the way.
+
+In this case this can be done automatically:
+
+	$ git read-tree --index-output=tralala v5.4-rc2 3e7c93bd04edfb0cae7dad1215544c9350254b8f
+	$ GIT_INDEX=tralala git write-tree
+	6a2acfd1870d9da3c330ea9b648a7e858b5ee39f
+	$ git diff --stat 6a2acfd1870d9da3c330ea9b648a7e858b5ee39f 777d062e5bee0e3c0751cdcbce116a76ee2310ec
+	 Documentation/arm64/silicon-errata.rst |  2 ++
+	 arch/arm64/Kconfig                     | 17 ++++++++++++++
+	 arch/arm64/include/asm/asm-uaccess.h   |  7 +++---
+	 arch/arm64/include/asm/cpucaps.h       |  4 +++-
+	 arch/arm64/include/asm/memory.h        | 10 ++++++--
+	 arch/arm64/include/asm/pgtable.h       |  3 ---
+	 arch/arm64/include/asm/sysreg.h        |  2 +-
+	 arch/arm64/kernel/cpu_errata.c         | 38 +++++++++++++++++++++++++++++++
+	 arch/arm64/kernel/cpufeature.c         | 15 ++++++++----
+	 arch/arm64/kernel/entry.S              |  8 ++++---
+	 arch/arm64/kernel/hibernate.c          |  9 +++++++-
+	 arch/arm64/kernel/process.c            | 18 +++++++++++++++
+	 arch/arm64/kvm/hyp/switch.c            | 69 ++++++++++++++++++++++++++++++++++++++++++++++++++++++--
+	 arch/arm64/mm/fault.c                  |  6 ++++-
+	 include/linux/sched.h                  |  1 +
+	 15 files changed, 186 insertions(+), 23 deletions(-)
+
+Would be great if git-request-pull learned to do that.
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
