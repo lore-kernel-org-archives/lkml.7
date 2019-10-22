@@ -2,117 +2,184 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DDF9CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 20:30:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 283F5CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 20:34:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC94221848
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 20:30:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6FDC21848
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 20:34:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="qsI8fJo0"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AJR2mIsT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389018AbfJVUaw (ORCPT
+        id S2389066AbfJVUe3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 16:30:52 -0400
-Received: from mail-eopbgr730084.outbound.protection.outlook.com ([40.107.73.84]:41248
-        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388344AbfJVUaw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 16:30:52 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=P1q2vpwCXkaip3FFIDoFvo2EevNVrlnd052qUOzQhGPndQQZn0k6uWBXnEBYiJDs4bHlFhh3RuMEbS9oTySh/QJ6xaCu3GFsecL5nZSTOVigrJkkgBPdGmgbTG9AJcvVya2v7gm/08Mz+yYeSZDY4X0mPH+8d3/9TdOdDVmGuNdJsu7HXbHT5I107pIdXIoAvjeusxoic7RSOCN+RRQNxxFPODDGOOgyPyDxaCWfRZfzWD+L/hOB/qcg9J5+fE9LyVnfMfSP0COZ99aAR/KVwzqp/NYgLHyZ6QTa6Maw+dq2+hcQSuTYGcG3TkMxBWSUjJuyaeQaOg4tFeoVOFt0fg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7rjQ88nqVRVP23hFDKlGqBsrgsY4L/hi8h6Z41cPcII=;
- b=ljlqrbXS19I/j5rkkHPKQv7Yk24vpUUvcxRuBYONgJfFKGg3Z3n2g/zbY8RRlZfZV+0I8WzCbOq9dOy0cItLiM7HsM6isQ5XrK3AvvmQqboTuw/HGDJ0UCqkd89uEiDfWc2w1pR2/bRk27/34gGuEpeh9kEOvN3AUtFOEz2oS1nTuH7BAz+gqv1aU2W7p8egcfaNeODu8lZ4mOrqEpbP/qqNLImzQNeSwY25GdvQgqkc1Dl8s8JmqsaBW77tBI2pu7nf4B8q5uN7AhWfuHbU0cxju0z9MWz47ux5TiGhXUa3jZVmJXSZ7nWAefrJRuCQbFswBLCbcXs8c1jlZ6cXVQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
- dkim=pass header.d=vmware.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7rjQ88nqVRVP23hFDKlGqBsrgsY4L/hi8h6Z41cPcII=;
- b=qsI8fJo0JN7Uj0XWXZjfIErHIJBpdfHE5gYIoUKLRv2sA5oSdLsJg0N2hNuRySRkyjIGPdTNE3r4kB3eCwQKvaWyah4ddEQCuriwWzutergRfRmQ3Jw0Q4Z9l9SttEdIk54B35/uNx50rWMht4qah5xWUT3rtROpzMuVI08+kGY=
-Received: from MN2PR05MB6141.namprd05.prod.outlook.com (20.178.241.217) by
- MN2PR05MB6352.namprd05.prod.outlook.com (20.178.245.139) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2387.14; Tue, 22 Oct 2019 20:30:49 +0000
-Received: from MN2PR05MB6141.namprd05.prod.outlook.com
- ([fe80::fc6c:1ed8:d63d:4dc8]) by MN2PR05MB6141.namprd05.prod.outlook.com
- ([fe80::fc6c:1ed8:d63d:4dc8%5]) with mapi id 15.20.2387.016; Tue, 22 Oct 2019
- 20:30:49 +0000
-From:   Thomas Hellstrom <thellstrom@vmware.com>
-To:     Ingo Molnar <mingo@elte.hu>
-CC:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: Fixes tags need some work in the tip tree
-Thread-Topic: linux-next: Fixes tags need some work in the tip tree
-Thread-Index: AQHViRWtAoMoRM+NF0imfmWMacoxNg==
-Date:   Tue, 22 Oct 2019 20:30:48 +0000
-Message-ID: <MN2PR05MB6141177C37F2D1566E4FB341A1680@MN2PR05MB6141.namprd05.prod.outlook.com>
-References: <20191023071655.10a9cff5@canb.auug.org.au>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=thellstrom@vmware.com; 
-x-originating-ip: [155.4.205.35]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 664efff6-ace7-4245-968d-08d7572eb998
-x-ms-traffictypediagnostic: MN2PR05MB6352:
-x-microsoft-antispam-prvs: <MN2PR05MB63529EDA6D8060143474D430A1680@MN2PR05MB6352.namprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 01986AE76B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(346002)(376002)(39860400002)(366004)(53754006)(199004)(189003)(7696005)(26005)(66946007)(66476007)(8936002)(6246003)(7736002)(446003)(8676002)(81156014)(66556008)(99286004)(102836004)(186003)(66446008)(4326008)(6506007)(53546011)(486006)(305945005)(74316002)(76176011)(476003)(256004)(81166006)(64756008)(91956017)(55016002)(6436002)(9686003)(76116006)(6916009)(229853002)(14454004)(71190400001)(316002)(2906002)(3846002)(478600001)(25786009)(6116002)(33656002)(52536014)(5660300002)(54906003)(4744005)(86362001)(71200400001)(66066001);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR05MB6352;H:MN2PR05MB6141.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: vmware.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: StnHGSRnzPtMPnuIGVvngWLmULE0+HBKUHHLFzW4Zo9BWl0u4qB5T7JFN6Q1u5a5fGO04vbl4BmcEnHlGXvdrLbxsnpb58sncMQ+PtXBYBDN7MZ3+vArYMnJJl6NSaJdapM7zbSAVSGE1NyP93c/oxXTLHrNC8o6jJANW3cWtuC/dRVTpWkcNCGtefrf0pX0/tUO6bz53q92RXaIQMHkAcGAzJq/Fm9OXmjLB9E8aKB9C0FcWkwg5Oc3+vRwpnZzP/ArjViuE10Ll2XPlLXXXX6ZUjwgsU/4r9yVGhzux7SYxGiPwWsY8FCGNr3pYDDfxZGm4Cp0sw7fB1112OTti60r17JBcFepKbDnGDrcmqDp7uty6psgJ9r7ggU16rF+aAqHtU3H5CGQPRC96OLNs5kZ8jnsutYnE4hjh7lWygyiHNfxaVp19rvjHa+EgKoN
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 664efff6-ace7-4245-968d-08d7572eb998
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Oct 2019 20:30:48.8512
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: dZuKZaX3q/J+9Ur6CgOlMGqP1uOk5gDgmNXu1GwdVMQgkG7mQSw22jMEScVv1R0sPVHAbRfNeDgQWbehnnbHRw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR05MB6352
+        Tue, 22 Oct 2019 16:34:29 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:44080 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729810AbfJVUe3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 16:34:29 -0400
+Received: by mail-qk1-f194.google.com with SMTP id u22so17600103qkk.11
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 13:34:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=1j6EL84WGaCqLsOIVzGT7uSZAM1FKMj8EA1mIvfe7Rk=;
+        b=AJR2mIsTxYNL8t0SRBXXWjrux2ZB8m5xp0CGJlkmC8Nj8JNxthnmpo9YPem+7u2phL
+         mQDcF1nrPC3llECPboyyAjlsms7FVn4mifKMOe4tQlMfnZhoPE2CzoiX7GxPv3ix54LZ
+         J9m3T/fd4kwUgPPOiFuRGxAA6Ys8uTFGZitkmcRwqTA9CUUFZ9DKfLvylE7hrjYzDPSQ
+         qGi5Vqc4k+RYrR3mM3w2zauFnf56dpV7IbMRQxLkwASv/Ii37luhWtZBObQMgbmtet9A
+         m3QPUlxmhttgrpcdC7SkvbAwbGqyE9DGcPLemWl5cmeonIiCG58+vYD/LVTuzdrlcnNJ
+         mJWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=1j6EL84WGaCqLsOIVzGT7uSZAM1FKMj8EA1mIvfe7Rk=;
+        b=D7+MjnEvLqGLdf0jur57JO/01YuaClHII0K8JZlmLrePnMHwuas8x9suaXWcRUv3b6
+         9CpVuddFHA89yUbFSJZJj+Fy2dc8izYg5PD97I+pdJdThJCU090AOeW9Mq3vJk/UjjJ8
+         ty+Ul+cJG5kHpNjWNtMyGEwNjbD3MQHak0Qg70eKZ/Txo1sGLC3tiUYMKevTEGeqcsAB
+         MvwoegEnR9VLplFco1QjDrMgCHD8degMnNe4HxdVkxZnL3ge+m1Z0ZB53yzX2egfQcpX
+         lMRLp9xK1k9LxoHDPWX6TxCMPxZj26c8xctJvToakCUKKYkctPPgHyS2pqt3XFy+y2vc
+         IITg==
+X-Gm-Message-State: APjAAAVQ+ZhwCKsO2l7dxAdtC5HcyVBvy9BpdKyuAF5xRzeqAodgv1+y
+        ki5mZzTNknUGgman5wxgoZoHPQ==
+X-Google-Smtp-Source: APXvYqyRzOD+i5B2tUebdDoTLJ08v6buxeU9L5b5q0cg+wRnvqhl4XnWiwmTwdlmr8DEab4LqL19sg==
+X-Received: by 2002:a05:620a:209e:: with SMTP id e30mr4925116qka.440.1571776467519;
+        Tue, 22 Oct 2019 13:34:27 -0700 (PDT)
+Received: from Thara-Work-Ubuntu.fios-router.home (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
+        by smtp.googlemail.com with ESMTPSA id r126sm8895038qke.98.2019.10.22.13.34.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 22 Oct 2019 13:34:26 -0700 (PDT)
+From:   Thara Gopinath <thara.gopinath@linaro.org>
+To:     mingo@redhat.com, peterz@infradead.org, ionela.voinescu@arm.com,
+        vincent.guittot@linaro.org, rui.zhang@intel.com,
+        edubezval@gmail.com, qperret@google.com
+Cc:     linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
+        javi.merino@kernel.org, daniel.lezcano@linaro.org
+Subject: [Patch v4 0/6] Introduce Thermal Pressure
+Date:   Tue, 22 Oct 2019 16:34:19 -0400
+Message-Id: <1571776465-29763-1-git-send-email-thara.gopinath@linaro.org>
+X-Mailer: git-send-email 2.1.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/22/19 10:17 PM, Stephen Rothwell wrote:=0A=
-> Hi all,=0A=
->=0A=
-> n commit=0A=
->=0A=
->   6fee2a0be0ec ("x86/cpu/vmware: Fix platform detection VMWARE_PORT macro=
-")=0A=
->=0A=
-> Fixes tag=0A=
->=0A=
->   Fixes: b4dd4f6e3648 ("Add a header file for hypercall definitions")=0A=
-=0A=
-The cited subject is missing a leading "x86/vmware:". Ingo, please let=0A=
-me know if you want me to respin those.=0A=
-=0A=
-Thanks,=0A=
-=0A=
-Thomas=0A=
-=0A=
-=0A=
+Thermal governors can respond to an overheat event of a cpu by
+capping the cpu's maximum possible frequency. This in turn
+means that the maximum available compute capacity of the
+cpu is restricted. But today in the kernel, task scheduler is 
+not notified of capping of maximum frequency of a cpu.
+In other words, scheduler is unware of maximum capacity
+restrictions placed on a cpu due to thermal activity.
+This patch series attempts to address this issue.
+The benefits identified are better task placement among available
+cpus in event of overheating which in turn leads to better
+performance numbers.
+
+The reduction in the maximum possible capacity of a cpu due to a 
+thermal event can be considered as thermal pressure. Instantaneous
+thermal pressure is hard to record and can sometime be erroneous
+as there can be mismatch between the actual capping of capacity
+and scheduler recording it. Thus solution is to have a weighted
+average per cpu value for thermal pressure over time.
+The weight reflects the amount of time the cpu has spent at a
+capped maximum frequency. Since thermal pressure is recorded as
+an average, it must be decayed periodically. Exisiting algorithm
+in the kernel scheduler pelt framework is re-used to calculate
+the weighted average. This patch series also defines a sysctl
+inerface to allow for a configurable decay period.
+
+Regarding testing, basic build, boot and sanity testing have been
+performed on db845c platform with debian file system.
+Further, dhrystone and hackbench tests have been
+run with the thermal pressure algorithm. During testing, due to
+constraints of step wise governor in dealing with big little systems,
+trip point 0 temperature was made assymetric between cpus in little
+cluster and big cluster; the idea being that
+big core will heat up and cpu cooling device will throttle the
+frequency of the big cores faster, there by limiting the maximum available
+capacity and the scheduler will spread out tasks to little cores as well.
+
+Test Results
+
+Hackbench: 1 group , 30000 loops, 10 runs       
+                                               Result         SD             
+                                               (Secs)     (% of mean)     
+ No Thermal Pressure                            14.03       2.69%           
+ Thermal Pressure PELT Algo. Decay : 32 ms      13.29       0.56%         
+ Thermal Pressure PELT Algo. Decay : 64 ms      12.57       1.56%           
+ Thermal Pressure PELT Algo. Decay : 128 ms     12.71       1.04%         
+ Thermal Pressure PELT Algo. Decay : 256 ms     12.29       1.42%           
+ Thermal Pressure PELT Algo. Decay : 512 ms     12.42       1.15%  
+
+Dhrystone Run Time  : 20 threads, 3000 MLOOPS
+                                                 Result      SD             
+                                                 (Secs)    (% of mean)     
+ No Thermal Pressure                              9.452      4.49%
+ Thermal Pressure PELT Algo. Decay : 32 ms        8.793      5.30%
+ Thermal Pressure PELT Algo. Decay : 64 ms        8.981      5.29%
+ Thermal Pressure PELT Algo. Decay : 128 ms       8.647      6.62%
+ Thermal Pressure PELT Algo. Decay : 256 ms       8.774      6.45%
+ Thermal Pressure PELT Algo. Decay : 512 ms       8.603      5.41%  
+
+A Brief History
+
+The first version of this patch-series was posted with resuing
+PELT algorithm to decay thermal pressure signal. The discussions
+that followed were around whether intanteneous thermal pressure
+solution is better and whether a stand-alone algortihm to accumulate
+and decay thermal pressure is more appropriate than re-using the
+PELT framework. 
+Tests on Hikey960 showed the stand-alone algorithm performing slightly
+better than resuing PELT algorithm and V2 was posted with the stand
+alone algorithm. Test results were shared as part of this series.
+Discussions were around re-using PELT algorithm and running
+further tests with more granular decay period.
+
+For some time after this development was impeded due to hardware
+unavailability, some other unforseen and possibly unfortunate events.
+For this version, h/w was switched from hikey960 to db845c.
+Also Instantaneous thermal pressure was never tested as part of this
+cycle as it is clear that weighted average is a better implementation.
+The non-PELT algorithm never gave any conclusive results to prove that it
+is better than reusing PELT algorithm, in this round of testing.
+Also reusing PELT algorithm means thermal pressure tracks the
+other utilization signals in the scheduler.
+
+v3->v4:
+	- "Patch 3/7:sched: Initialize per cpu thermal pressure structure"
+	   is dropped as it is no longer needed following changes in other
+	   other patches.
+	- rest of the change log mentioned in specific patches.
+
+Thara Gopinath (6):
+  sched/pelt.c: Add support to track thermal pressure
+  sched: Add infrastructure to store and update instantaneous thermal
+    pressure
+  sched/fair: Enable CFS periodic tick to update thermal pressure
+  sched/fair: update cpu_capcity to reflect thermal pressure
+  thermal/cpu-cooling: Update thermal pressure in case of a maximum
+    frequency capping
+  sched: thermal: Enable tuning of decay period
+
+ Documentation/admin-guide/kernel-parameters.txt |  5 ++
+ drivers/thermal/cpu_cooling.c                   | 31 ++++++++++-
+ include/linux/sched.h                           |  8 +++
+ kernel/sched/Makefile                           |  2 +-
+ kernel/sched/fair.c                             |  6 +++
+ kernel/sched/pelt.c                             | 13 +++++
+ kernel/sched/pelt.h                             |  7 +++
+ kernel/sched/sched.h                            |  1 +
+ kernel/sched/thermal.c                          | 68 +++++++++++++++++++++++++
+ kernel/sched/thermal.h                          | 13 +++++
+ 10 files changed, 151 insertions(+), 3 deletions(-)
+ create mode 100644 kernel/sched/thermal.c
+ create mode 100644 kernel/sched/thermal.h
+
+-- 
+2.1.4
+
