@@ -2,137 +2,253 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74B6BCA9EB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:19:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85D26CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:22:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46F1F20700
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:19:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5296020700
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:22:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YAwJ3bV/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TssGJoyJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730399AbfJVOTc (ORCPT
+        id S1727927AbfJVOWz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 10:19:32 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:40222 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727582AbfJVOTb (ORCPT
+        Tue, 22 Oct 2019 10:22:55 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:33471 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725788AbfJVOWy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 10:19:31 -0400
-Received: by mail-il1-f195.google.com with SMTP id d83so7098204ilk.7;
-        Tue, 22 Oct 2019 07:19:31 -0700 (PDT)
+        Tue, 22 Oct 2019 10:22:54 -0400
+Received: by mail-pf1-f196.google.com with SMTP id c184so1242761pfb.0;
+        Tue, 22 Oct 2019 07:22:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+f3+Xe6vGoRY1MkZlLrpomXTPs0/tCl2G1ZKWZtIxAo=;
-        b=YAwJ3bV/qfhkrwx/pD8NNAOcp8lyAcKZAf0rVGAEA3R+ynDUDgag6Su0pYLScEACaF
-         VdbEM+ccOLQhxi9UHidkOrvDJPqXKGP62aEowqoJ8AWPBqdNFCJmKMzEqZXhpq5Z9P0s
-         h8grN0Ol4cUzSo0r9ZMic6r13EiSk96l/8poQAFEotOMkSrOxXwIbz3nalNS0aN2U7CO
-         zQhZNTYOGlJm1PzXy/JXyk+2P+pSs4WwYMsvx0S2hwQfhNz3xxQjC+UNb9EURlBtsQix
-         6nlfNdHiulpRhMRli6vXbQY/Fmp/xdFt7dANhI9eImDClqjNY+EZmYEkwBuz4WZI7OtN
-         L1RQ==
+        h=from:to:cc:subject:date:message-id;
+        bh=JuhwNBI77xw4yhQBYlW3dTjmN2CGF9B3zie8/1I8bQY=;
+        b=TssGJoyJtf0kah1LyEchB6MoMZJBUV4sO2nTFmlTPlQnPcVR8qRet1hb/HquglzVP9
+         n2Rac6qXlKJFQeMRTy/oigDZD89F/ovDOTToUUjXB3algZxV0owV8Yhn1nNLYSoxxMCT
+         JAP+d7Fu3E6ZFqBTXu3MWoMIQrtRzMOLu7U0rVheNqRknwxQ1tohj7lpuU06KU+AJYu2
+         Gf8VFgHdH2KrnXgXsxda23VIrHVI+FkDkfm3drwZZ4lggMR6iyvbtZEL/wh1RIgSp5p5
+         KQ5BvC3RuNqDV75dMoVCInMWi9PyCKgzsH6yrLNbVTCuT678QR6/WRvOyrRvXBuXRC6f
+         BFSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+f3+Xe6vGoRY1MkZlLrpomXTPs0/tCl2G1ZKWZtIxAo=;
-        b=OgQoDv0WwkukYUjcisPhthKZz43ppQbv3rfulGPW4g/Bazo2eozBSicGSxURF7IBFQ
-         pyO3Nq0ghve0KhlfCYQrbf8sXs9hf0QTJkfEZvzGOkvH/U/E3nxXK24AtLr2vhBpXSic
-         OMW311+uZkTPyjpD/8+j+H2qzyUiIUumY+hfhrSro2afKiLCDAtC3lPRYjGLEfberAQZ
-         kkPXkY8OnKTyIrHwoJnh7Mog/aE+0GDNhIuOiMf21x6KgdS83MPkGRgqF8hr6K4esuos
-         MIyU1dbDW+863DRP3LvDnYYV2//7BrlNz1mTlpvLCQLHuJREcoBJ7CazNDT4MnusK37d
-         bN0g==
-X-Gm-Message-State: APjAAAUfpNBlfcbap9iYUnf7I3zy7wrPD5LRavN1+na/Ui7x7mZbBqsK
-        VOV4K6BlrxvLQykxn+OEWf4JHLbOtfgH9hfI1M0=
-X-Google-Smtp-Source: APXvYqzYgoObKadQNqP9/pOBBZSO8nRSPoX0xvkFOCE5TKS5+426FdTSaMvdKNMXLC9KHJtsRM3Xeaiu0SFDiXeY/qA=
-X-Received: by 2002:a92:1d51:: with SMTP id d78mr10157573ild.166.1571753970497;
- Tue, 22 Oct 2019 07:19:30 -0700 (PDT)
-MIME-Version: 1.0
-References: <1571749887-9054-1-git-send-email-gupt21@gmail.com>
-In-Reply-To: <1571749887-9054-1-git-send-email-gupt21@gmail.com>
-From:   rishi gupta <gupt21@gmail.com>
-Date:   Tue, 22 Oct 2019 19:49:19 +0530
-Message-ID: <CALUj-gtADUhcUPmtOyjxwJCKhBcUOJaSdQd0H0J+JuSZ-yZEDQ@mail.gmail.com>
-Subject: Re: [PATCH v5 3/3] iio: documentation: light: Add veml6030 sysfs documentation
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     knaack.h@gmx.de, lars@metafoo.de,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        gregkh@linuxfoundation.org, tglx@linutronix.de,
-        allison@lohutok.net, alexios.zavras@intel.com, angus@akkea.ca,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=JuhwNBI77xw4yhQBYlW3dTjmN2CGF9B3zie8/1I8bQY=;
+        b=owIUe7RflM6R9dSZXp3F4WNfeDY+3viMc6BedZR3ZC7tv4ZOYSNoYHiBptgqYAGsTM
+         npMBK1KxwJ3gAe39a3ArbZNx7FZYMiov4s934xhFIyrKBBF7+4bofHjD+ReXuO2hengp
+         k0oMUBLE5pWbWEJTWDKrmjOt4WbKnI+7MxtHmAs+WdK7EJChlc6SBO8/GO/QxJeU0404
+         pMsKBaLm8jABKuWD4yl9V0FqePWJJYaiDkAjn5AtxqNJCJnvECYvXi/rxA20wkygB/VL
+         +GwAMcgadxbuJ8gbd6aeXOY26spd0fr0+dXfYHHgVM/wcDlGDf1Cb0b1e5KVo7Fj3cJV
+         uNlA==
+X-Gm-Message-State: APjAAAW2jfWqMbwGNyMhxgrHhOdmH74wqxMg/68S+qxv7dHwmW8HGkPX
+        +mcSwHdkf+91NojIezUpsGI=
+X-Google-Smtp-Source: APXvYqw7+og6sWUlhcfAtdPgUV0mhi7b3FbgKcdr07HTjHLSX8x7zblxtYHUQQH7DhzktXi36KbFRQ==
+X-Received: by 2002:a63:7845:: with SMTP id t66mr4044985pgc.31.1571754172292;
+        Tue, 22 Oct 2019 07:22:52 -0700 (PDT)
+Received: from bj04616pcu.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id b185sm24867376pfg.14.2019.10.22.07.22.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Oct 2019 07:22:51 -0700 (PDT)
+From:   Candle Sun <candlesea@gmail.com>
+To:     jikos@kernel.org, benjamin.tissoires@redhat.com,
+        nsaenzjulienne@suse.de
+Cc:     orson.zhai@unisoc.com, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Candle Sun <candle.sun@unisoc.com>,
+        Nianfu Bai <nianfu.bai@unisoc.com>
+Subject: [PATCH v4] HID: core: check whether Usage Page item is after Usage ID items
+Date:   Tue, 22 Oct 2019 22:21:39 +0800
+Message-Id: <20191022142139.16789-1-candlesea@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Forget to capture in change log:
-removed PSM sysfs completely.
+From: Candle Sun <candle.sun@unisoc.com>
 
-On Tue, Oct 22, 2019 at 6:41 PM Rishi Gupta <gupt21@gmail.com> wrote:
->
-> The driver for veml6030 light sensor provides sysfs
-> entries like configuring cutoff for interrupt. This
-> commit document them.
->
-> Signed-off-by: Rishi Gupta <gupt21@gmail.com>
-> ---
-> Changes in v5:
-> * Use ABI/testing/sysfs-bus-iio to document sysfs files for veml6030
->
-> Changes in v4:
-> * None
->
-> Changes in v3:
-> * Updated Date from September to October
-> * Updated KernelVersion from 5.3.1 to 5.4
-> * in_illuminance_period_available is now in events directory
->
-> Changes in v2:
-> * None
->
->  Documentation/ABI/testing/sysfs-bus-iio | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
->
-> diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
-> index 6804516..a26d532 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-iio
-> +++ b/Documentation/ABI/testing/sysfs-bus-iio
-> @@ -753,6 +753,8 @@ What:               /sys/.../events/in_illuminance0_thresh_falling_value
->  what:          /sys/.../events/in_illuminance0_thresh_rising_value
->  what:          /sys/.../events/in_proximity0_thresh_falling_value
->  what:          /sys/.../events/in_proximity0_thresh_rising_value
-> +What:          /sys/.../events/in_illuminance_thresh_rising_value
-> +What:          /sys/.../events/in_illuminance_thresh_falling_value
->  KernelVersion: 2.6.37
->  Contact:       linux-iio@vger.kernel.org
->  Description:
-> @@ -972,6 +974,7 @@ What:               /sys/.../events/in_activity_jogging_thresh_rising_period
->  What:          /sys/.../events/in_activity_jogging_thresh_falling_period
->  What:          /sys/.../events/in_activity_running_thresh_rising_period
->  What:          /sys/.../events/in_activity_running_thresh_falling_period
-> +What:          /sys/.../events/in_illuminance_thresh_either_period
->  KernelVersion: 2.6.37
->  Contact:       linux-iio@vger.kernel.org
->  Description:
-> @@ -1715,3 +1718,12 @@ Description:
->                 Mass concentration reading of particulate matter in ug / m3.
->                 pmX consists of particles with aerodynamic diameter less or
->                 equal to X micrometers.
-> +
-> +What:          /sys/bus/iio/devices/iio:deviceX/events/in_illuminance_period_available
-> +Date:          October 2019
-> +KernelVersion: 5.4
-> +Contact:       linux-iio@vger.kernel.org
-> +Description:
-> +               List of valid values available in multiples of integration time
-> +               for which the light intensity must be above the threshold level
-> +               before interrupt is asserted. This refers to persistence values.
-> --
-> 2.7.4
->
+Upstream commit 58e75155009c ("HID: core: move Usage Page concatenation
+to Main item") adds support for Usage Page item after Usage ID items
+(such as keyboards manufactured by Primax).
+
+Usage Page concatenation in Main item works well for following report
+descriptor patterns:
+
+    USAGE_PAGE (Keyboard)                   05 07
+    USAGE_MINIMUM (Keyboard LeftControl)    19 E0
+    USAGE_MAXIMUM (Keyboard Right GUI)      29 E7
+    LOGICAL_MINIMUM (0)                     15 00
+    LOGICAL_MAXIMUM (1)                     25 01
+    REPORT_SIZE (1)                         75 01
+    REPORT_COUNT (8)                        95 08
+    INPUT (Data,Var,Abs)                    81 02
+
+-------------
+
+    USAGE_MINIMUM (Keyboard LeftControl)    19 E0
+    USAGE_MAXIMUM (Keyboard Right GUI)      29 E7
+    LOGICAL_MINIMUM (0)                     15 00
+    LOGICAL_MAXIMUM (1)                     25 01
+    REPORT_SIZE (1)                         75 01
+    REPORT_COUNT (8)                        95 08
+    USAGE_PAGE (Keyboard)                   05 07
+    INPUT (Data,Var,Abs)                    81 02
+
+But it makes the parser act wrong for the following report
+descriptor pattern(such as some Gamepads):
+
+    USAGE_PAGE (Button)                     05 09
+    USAGE (Button 1)                        09 01
+    USAGE (Button 2)                        09 02
+    USAGE (Button 4)                        09 04
+    USAGE (Button 5)                        09 05
+    USAGE (Button 7)                        09 07
+    USAGE (Button 8)                        09 08
+    USAGE (Button 14)                       09 0E
+    USAGE (Button 15)                       09 0F
+    USAGE (Button 13)                       09 0D
+    USAGE_PAGE (Consumer Devices)           05 0C
+    USAGE (Back)                            0a 24 02
+    USAGE (HomePage)                        0a 23 02
+    LOGICAL_MINIMUM (0)                     15 00
+    LOGICAL_MAXIMUM (1)                     25 01
+    REPORT_SIZE (1)                         75 01
+    REPORT_COUNT (11)                       95 0B
+    INPUT (Data,Var,Abs)                    81 02
+
+With Usage Page concatenation in Main item, parser recognizes all the
+11 Usages as consumer keys, it is not the HID device's real intention.
+
+This patch checks whether Usage Page is really defined after Usage ID
+items by comparing usage page using status.
+
+Usage Page concatenation on currently defined Usage Page will always
+do in local parsing when Usage ID items encountered.
+
+When Main item is parsing, concatenation will do again with last
+defined Usage Page if this page has not been used in the previous
+usages concatenation.
+
+Signed-off-by: Candle Sun <candle.sun@unisoc.com>
+Signed-off-by: Nianfu Bai <nianfu.bai@unisoc.com>
+---
+Changes in v4:
+- Fix v3 introduced BUG in hid_add_usage()
+- Add checking logic to replace usage_page_last member
+- Update patch description
+
+Changes in v3:
+- Rework the GET_COMPLETE_USAGE macro as static complete_usage()
+  function
+- Add some code comments for usage_page_last
+
+Changes in v2:
+- Update patch title
+- Add GET_COMPLETE_USAGE macro
+- Change the logic of checking whether to concatenate usage page again
+  in main parsing
+---
+ drivers/hid/hid-core.c | 51 +++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 45 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
+index 3eaee2c37931..c18ed7180b07 100644
+--- a/drivers/hid/hid-core.c
++++ b/drivers/hid/hid-core.c
+@@ -211,6 +211,18 @@ static unsigned hid_lookup_collection(struct hid_parser *parser, unsigned type)
+ 	return 0; /* we know nothing about this usage type */
+ }
+ 
++/*
++ * Concatenate usage which defines 16 bits or less with the
++ * currently defined usage page to form a 32 bit usage
++ */
++
++static void complete_usage(struct hid_parser *parser, unsigned int index)
++{
++	parser->local.usage[index] &= 0xFFFF;
++	parser->local.usage[index] |=
++		(parser->global.usage_page & 0xFFFF) << 16;
++}
++
+ /*
+  * Add a usage to the temporary parser table.
+  */
+@@ -222,6 +234,14 @@ static int hid_add_usage(struct hid_parser *parser, unsigned usage, u8 size)
+ 		return -1;
+ 	}
+ 	parser->local.usage[parser->local.usage_index] = usage;
++
++	/*
++	 * If Usage item only includes usage id, concatenate it with
++	 * currently defined usage page
++	 */
++	if (size <= 2)
++		complete_usage(parser, parser->local.usage_index);
++
+ 	parser->local.usage_size[parser->local.usage_index] = size;
+ 	parser->local.collection_index[parser->local.usage_index] =
+ 		parser->collection_stack_ptr ?
+@@ -543,13 +563,32 @@ static int hid_parser_local(struct hid_parser *parser, struct hid_item *item)
+  * usage value."
+  */
+ 
+-static void hid_concatenate_usage_page(struct hid_parser *parser)
++static void hid_concatenate_last_usage_page(struct hid_parser *parser)
+ {
+ 	int i;
++	unsigned int usage_page;
++	unsigned int current_page;
+ 
+-	for (i = 0; i < parser->local.usage_index; i++)
+-		if (parser->local.usage_size[i] <= 2)
+-			parser->local.usage[i] += parser->global.usage_page << 16;
++	if (!parser->local.usage_index)
++		return;
++
++	usage_page = parser->global.usage_page;
++
++	/*
++	 * Concatenate usage page again only if last declared Usage Page
++	 * has not been already used in previous usages concatenation
++	 */
++	for (i = parser->local.usage_index - 1; i >= 0; i--) {
++		if (parser->local.usage_size[i] > 2)
++			/* Ignore extended usages */
++			continue;
++
++		current_page = parser->local.usage[i] >> 16;
++		if (current_page == usage_page)
++			break;
++
++		complete_usage(parser, i);
++	}
+ }
+ 
+ /*
+@@ -561,7 +600,7 @@ static int hid_parser_main(struct hid_parser *parser, struct hid_item *item)
+ 	__u32 data;
+ 	int ret;
+ 
+-	hid_concatenate_usage_page(parser);
++	hid_concatenate_last_usage_page(parser);
+ 
+ 	data = item_udata(item);
+ 
+@@ -772,7 +811,7 @@ static int hid_scan_main(struct hid_parser *parser, struct hid_item *item)
+ 	__u32 data;
+ 	int i;
+ 
+-	hid_concatenate_usage_page(parser);
++	hid_concatenate_last_usage_page(parser);
+ 
+ 	data = item_udata(item);
+ 
+-- 
+2.17.1
+
