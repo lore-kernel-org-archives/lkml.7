@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 550DFCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 19:12:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDC10CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 19:12:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25BEC21872
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 19:12:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2CFB21A4A
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 19:12:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571771544;
-	bh=x0hWzsK+SyGvpdoXV2Qzb3lMOfU9IISAP3AHFmIYd1g=;
+	s=default; t=1571771545;
+	bh=R3tHkDCH+7tkl14+AOFmzJTymspPmc+OGB4U1M8uKt8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j6XFe0+o2XpaadmFyHm1B1sU2ItFHx+JRNawMbqfpryt0yNPH7VroOcv2e0N/UZ/p
-	 H+kWrJlL+zZRyXk0bkTapPQISQrxSMkww0vwxsWabuNG0JFv3BRryCKj8YsuzHyj23
-	 PM50+SheRbH4+jTfIsBNHglPy5+KL/8Wzo1AD87k=
+	b=ypewzwZPQexG3aohgG4rUWEq3AwuoR3iej61X2FCHdoVYMm2YDXDCeV0xAEqV5he5
+	 l18Z4isSrUj5rCX0Hb2TAlcYAYpqE3+iDSK/0PeePQw4ELbpfFdtFz9NOHHl/uhoSV
+	 vJ57s2FnCxBZV3XyJaayuOHmhRvCwvUILcxccQr8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732905AbfJVTMX (ORCPT
+        id S1732948AbfJVTMY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 15:12:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43238 "EHLO mail.kernel.org"
+        Tue, 22 Oct 2019 15:12:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729696AbfJVTMV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 15:12:21 -0400
+        id S1732903AbfJVTMX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 15:12:23 -0400
 Received: from localhost.localdomain (rrcs-50-75-166-42.nys.biz.rr.com [50.75.166.42])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A732021783;
-        Tue, 22 Oct 2019 19:12:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA37621906;
+        Tue, 22 Oct 2019 19:12:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571771540;
-        bh=x0hWzsK+SyGvpdoXV2Qzb3lMOfU9IISAP3AHFmIYd1g=;
+        s=default; t=1571771542;
+        bh=R3tHkDCH+7tkl14+AOFmzJTymspPmc+OGB4U1M8uKt8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BhUOdhzl+jIqtkc2bGLEztfls5oh/lSleXrwmA0zEfzyZ3CdHpJdvORmIbcIy6iyE
-         M2DSe0i2Rvl4LOpT5JmqPShX7HkSHai0uD/jrSp5FGXPTBau97UThytdhPJfkxE1Ub
-         eTKAIUtr2edbPEYRbVHswi/NOIJ7yJ/Sg730r+qc=
+        b=0OLUuUOtRdP0jRyYAWW6w0ldh8KU81QVmuon8dGG0kMSUUYvmJjbSVfLR89zD3gQE
+         5vj7iWGw2mBo28bqITekuThcLemKYXHga/pRsJ76gOazKfJnea/kPy8+rj+QPOFKIV
+         xoBV4vf7tOVsT1p7GcTghDLLhiFFlRYNn+ZBsBw4=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
@@ -48,17 +48,19 @@ Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Paul E. McKenney" <paulmck@kernel.org>,
-        Bart Van Assche <bart.vanassche@wdc.com>,
-        Christoph Hellwig <hch@lst.de>, Hannes Reinecke <hare@suse.de>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Shane M Seymour <shane.seymour@hpe.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH tip/core/rcu 01/10] rcu: Upgrade rcu_swap_protected() to rcu_replace()
-Date:   Tue, 22 Oct 2019 12:12:06 -0700
-Message-Id: <20191022191215.25781-1-paulmck@kernel.org>
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        kvm@vger.kernel.org
+Subject: [PATCH tip/core/rcu 02/10] x86/kvm/pmu: Replace rcu_swap_protected() with rcu_replace()
+Date:   Tue, 22 Oct 2019 12:12:07 -0700
+Message-Id: <20191022191215.25781-2-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20191022191136.GA25627@paulmck-ThinkPad-P72>
 References: <20191022191136.GA25627@paulmck-ThinkPad-P72>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -66,56 +68,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Paul E. McKenney" <paulmck@kernel.org>
 
-Although the rcu_swap_protected() macro follows the example of swap(),
-the interactions with RCU make its update of its argument somewhat
-counter-intuitive.  This commit therefore introduces an rcu_replace()
-that returns the old value of the RCU pointer instead of doing the
-argument update.  Once all the uses of rcu_swap_protected() are updated
-to instead use rcu_replace(), rcu_swap_protected() will be removed.
+This commit replaces the use of rcu_swap_protected() with the more
+intuitively appealing rcu_replace() as a step towards removing
+rcu_swap_protected().
 
 Link: https://lore.kernel.org/lkml/CAHk-=wiAsJLw1egFEE=Z7-GGtM6wcvtyytXZA1+BHqta4gg6Hw@mail.gmail.com/
 Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
 [ paulmck: From rcu_replace() to rcu_replace_pointer() per Ingo Molnar. ]
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-Cc: Bart Van Assche <bart.vanassche@wdc.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Hannes Reinecke <hare@suse.de>
-Cc: Johannes Thumshirn <jthumshirn@suse.de>
-Cc: Shane M Seymour <shane.seymour@hpe.com>
-Cc: Martin K. Petersen <martin.petersen@oracle.com>
+Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+Cc: "Radim Krčmář" <rkrcmar@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: <x86@kernel.org>
+Cc: <kvm@vger.kernel.org>
 ---
- include/linux/rcupdate.h | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ arch/x86/kvm/pmu.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
-index 75a2ede..185dd97 100644
---- a/include/linux/rcupdate.h
-+++ b/include/linux/rcupdate.h
-@@ -383,6 +383,24 @@ do {									      \
- } while (0)
+diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
+index 46875bb..5ddb05a 100644
+--- a/arch/x86/kvm/pmu.c
++++ b/arch/x86/kvm/pmu.c
+@@ -416,8 +416,8 @@ int kvm_vm_ioctl_set_pmu_event_filter(struct kvm *kvm, void __user *argp)
+ 	*filter = tmp;
  
- /**
-+ * rcu_replace_pointer() - replace an RCU pointer, returning its old value
-+ * @rcu_ptr: RCU pointer, whose old value is returned
-+ * @ptr: regular pointer
-+ * @c: the lockdep conditions under which the dereference will take place
-+ *
-+ * Perform a replacement, where @rcu_ptr is an RCU-annotated
-+ * pointer and @c is the lockdep argument that is passed to the
-+ * rcu_dereference_protected() call used to read that pointer.  The old
-+ * value of @rcu_ptr is returned, and @rcu_ptr is set to @ptr.
-+ */
-+#define rcu_replace_pointer(rcu_ptr, ptr, c)				\
-+({									\
-+	typeof(ptr) __tmp = rcu_dereference_protected((rcu_ptr), (c));	\
-+	rcu_assign_pointer((rcu_ptr), (ptr));				\
-+	__tmp;								\
-+})
-+
-+/**
-  * rcu_swap_protected() - swap an RCU and a regular pointer
-  * @rcu_ptr: RCU pointer
-  * @ptr: regular pointer
+ 	mutex_lock(&kvm->lock);
+-	rcu_swap_protected(kvm->arch.pmu_event_filter, filter,
+-			   mutex_is_locked(&kvm->lock));
++	filter = rcu_replace_pointer(kvm->arch.pmu_event_filter, filter,
++				     mutex_is_locked(&kvm->lock));
+ 	mutex_unlock(&kvm->lock);
+ 
+ 	synchronize_srcu_expedited(&kvm->srcu);
 -- 
 2.9.5
 
