@@ -2,101 +2,75 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC392CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:27:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6984CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:27:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8912421783
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:27:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96BFB2084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:27:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732399AbfJVQ1n (ORCPT
+        id S1732456AbfJVQ1t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 12:27:43 -0400
-Received: from muru.com ([72.249.23.125]:39052 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730305AbfJVQ1n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 12:27:43 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id F2D5B80FA;
-        Tue, 22 Oct 2019 16:28:16 +0000 (UTC)
-Date:   Tue, 22 Oct 2019 09:27:39 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Benoit Parrot <bparrot@ti.com>
-Cc:     Tero Kristo <t-kristo@ti.com>, Rob Herring <robh+dt@kernel.org>,
-        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [Patch 5/9] arm: dts: dra72-evm-common: Add entries for the CSI2
- cameras
-Message-ID: <20191022162739.GW5610@atomide.com>
-References: <20191018154849.3127-1-bparrot@ti.com>
- <20191018154849.3127-6-bparrot@ti.com>
- <20191022154446.GN5610@atomide.com>
- <20191022161620.pnxrmbhucyvh6swr@ti.com>
+        Tue, 22 Oct 2019 12:27:49 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:55927 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731132AbfJVQ1s (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 12:27:48 -0400
+Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.pengutronix.de.)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1iMx0c-00027u-VS; Tue, 22 Oct 2019 18:27:47 +0200
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     linux-kernel@vger.kernel.org
+Cc:     Vivek Gautam <vivek.gautam@codeaurora.org>, kernel@pengutronix.de
+Subject: [PATCH] reset: fix of_reset_control_get_count kerneldoc comment
+Date:   Tue, 22 Oct 2019 18:27:42 +0200
+Message-Id: <20191022162742.9908-1-p.zabel@pengutronix.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191022161620.pnxrmbhucyvh6swr@ti.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Benoit Parrot <bparrot@ti.com> [191022 16:17]:
-> Tony Lindgren <tony@atomide.com> wrote on Tue [2019-Oct-22 08:44:46 -0700]:
-> > * Benoit Parrot <bparrot@ti.com> [191018 15:46]:
-> > > Add device nodes for CSI2 camera board OV5640.
-> > > Add the CAL port nodes with the necessary linkage to the ov5640 nodes.
-> > > 
-> > > Signed-off-by: Benoit Parrot <bparrot@ti.com>
-> > > ---
-> > >  arch/arm/boot/dts/dra72-evm-common.dtsi | 35 +++++++++++++++++++++++++
-> > >  1 file changed, 35 insertions(+)
-> > > 
-> > > diff --git a/arch/arm/boot/dts/dra72-evm-common.dtsi b/arch/arm/boot/dts/dra72-evm-common.dtsi
-> > > index 8641a3d7d8ad..e4c01a67f6de 100644
-> > > --- a/arch/arm/boot/dts/dra72-evm-common.dtsi
-> > > +++ b/arch/arm/boot/dts/dra72-evm-common.dtsi
-> > > @@ -187,6 +187,12 @@
-> > >  		gpio = <&gpio5 8 GPIO_ACTIVE_HIGH>;
-> > >  		enable-active-high;
-> > >  	};
-> > > +
-> > > +	clk_ov5640_fixed: clk_ov5640_fixed {
-> > > +		compatible = "fixed-clock";
-> > > +		#clock-cells = <0>;
-> > > +		clock-frequency = <24000000>;
-> > > +	};
-> > >  };
-> > 
-> > The clock node name should be generic and not use
-> > undescores. If there is a hidden dependency to the
-> > clock node name here, it should be mentioned in the
-> > patch for the non-standard use.
-> 
-> Not sure what you mean by generic, here.
-> This is just to provide a "clock" node which gives the "value" of the fixed
-> oscillator frequency so driver can get to it, the actual name does not
-> matter.
+Add a newline and remove a superfluous kerneldoc marker before the
+of_reset_control_get_count kerneldoc comment, to fix documentation
+build warnings:
 
-Oh just something like:
+  ./drivers/reset/core.c:832: warning: Incorrect use of kernel-doc format:  * of_reset_control_get_count - Count number of resets available with a device
+  ./drivers/reset/core.c:840: warning: Function parameter or member 'node' not described in 'of_reset_control_get_count'
 
-	clk_ov5640_fixed: clock@foo {
-		compatible = "fixed-clock";
-		#clock-cells = <0>;
-		clock-frequency = <24000000>;
-	};
+Fixes: 17c82e206d2a ("reset: Add APIs to manage array of resets")
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+---
+ drivers/reset/core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Or just clock if the only instance and no reg?
+diff --git a/drivers/reset/core.c b/drivers/reset/core.c
+index 7c95cafcdf08..660e0b07feca 100644
+--- a/drivers/reset/core.c
++++ b/drivers/reset/core.c
+@@ -824,9 +824,10 @@ int __device_reset(struct device *dev, bool optional)
+ }
+ EXPORT_SYMBOL_GPL(__device_reset);
+ 
+-/**
++/*
+  * APIs to manage an array of reset controls.
+  */
++
+ /**
+  * of_reset_control_get_count - Count number of resets available with a device
+  *
+-- 
+2.20.1
 
-We currently get tons of warnings for TI clocks, that's
-thousands of lines because of non-standard naming and
-use of undescore instead of dash for the naming.. Let's
-not add more.
-
-Regards,
-
-Tony
