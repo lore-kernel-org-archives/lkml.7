@@ -6,82 +6,98 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A05C6CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:57:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01451CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:59:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 739EC2075A
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:57:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1FA02075A
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:59:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388090AbfJVM5l (ORCPT
+        id S2389130AbfJVM7u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 08:57:41 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:48586 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730684AbfJVM5l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 08:57:41 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id C59296D3148C1257A736;
-        Tue, 22 Oct 2019 20:57:39 +0800 (CST)
-Received: from [127.0.0.1] (10.133.213.239) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Tue, 22 Oct 2019
- 20:57:36 +0800
-Subject: Re: [RFC PATCH -next] mm/vmstat: Fix build error without
- CONFIG_VM_EVENT_COUNTERS
-To:     <sfr@canb.auug.org.au>, <khlebnikov@yandex-team.ru>,
-        <akpm@linux-foundation.org>, <mhocko@suse.com>,
-        <hannes@cmpxchg.org>, <vbabka@suse.cz>, <jannh@google.com>,
-        <gregkh@linuxfoundation.org>, <janne.huttunen@nokia.com>,
-        <arunks@codeaurora.org>
-References: <20191022125124.32812-1-yuehaibing@huawei.com>
-CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
-From:   Yuehaibing <yuehaibing@huawei.com>
-Message-ID: <8929a502-96d3-fef6-8c5c-885da60d60b2@huawei.com>
-Date:   Tue, 22 Oct 2019 20:57:35 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        Tue, 22 Oct 2019 08:59:50 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:51986 "EHLO foss.arm.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S1731281AbfJVM7u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 08:59:50 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 19CE1168F;
+        Tue, 22 Oct 2019 05:59:29 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D48AF3F71F;
+        Tue, 22 Oct 2019 05:59:24 -0700 (PDT)
+Date:   Tue, 22 Oct 2019 13:59:22 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Marco Elver <elver@google.com>
+Cc:     akiyks@gmail.com, stern@rowland.harvard.edu, glider@google.com,
+        parri.andrea@gmail.com, andreyknvl@google.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, arnd@arndb.de, boqun.feng@gmail.com,
+        bp@alien8.de, dja@axtens.net, dlustig@nvidia.com,
+        dave.hansen@linux.intel.com, dhowells@redhat.com,
+        dvyukov@google.com, hpa@zytor.com, mingo@redhat.com,
+        j.alglave@ucl.ac.uk, joel@joelfernandes.org, corbet@lwn.net,
+        jpoimboe@redhat.com, luc.maranget@inria.fr, npiggin@gmail.com,
+        paulmck@linux.ibm.com, peterz@infradead.org, tglx@linutronix.de,
+        will@kernel.org, kasan-dev@googlegroups.com,
+        linux-arch@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-efi@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
+Subject: Re: [PATCH v2 8/8] x86, kcsan: Enable KCSAN for x86
+Message-ID: <20191022125921.GD11583@lakrids.cambridge.arm.com>
+References: <20191017141305.146193-1-elver@google.com>
+ <20191017141305.146193-9-elver@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20191022125124.32812-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191017141305.146193-9-elver@google.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pls ignore this, seems has fixed.
-
-https://lore.kernel.org/linux-mm/cd1c42ae-281f-c8a8-70ac-1d01d417b2e1@infradead.org/T/#u
-
-On 2019/10/22 20:51, YueHaibing wrote:
-> If CONFIG_VM_EVENT_COUNTERS is n but CONFIG_MEMCG is y,
-> vmstat_text is not equal stat_items_size:
+On Thu, Oct 17, 2019 at 04:13:05PM +0200, Marco Elver wrote:
+> This patch enables KCSAN for x86, with updates to build rules to not use
+> KCSAN for several incompatible compilation units.
 > 
-> mm/vmstat.c: In function vmstat_start:
-> ./include/linux/compiler.h:350:38: error: call to __compiletime_assert_1659 declared
->  with attribute error: BUILD_BUG_ON failed: stat_items_size != ARRAY_SIZE(vmstat_text) * sizeof(unsigned long)
->   _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Fixes: 2fdf561910a9 ("mm/memcontrol: use vmstat names for printing statistics")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> Signed-off-by: Marco Elver <elver@google.com>
 > ---
->  mm/vmstat.c | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/mm/vmstat.c b/mm/vmstat.c
-> index b2fd344..a19ed6e 100644
-> --- a/mm/vmstat.c
-> +++ b/mm/vmstat.c
-> @@ -1655,8 +1655,6 @@ static void *vmstat_start(struct seq_file *m, loff_t *pos)
->  	stat_items_size += sizeof(struct vm_event_state);
->  #endif
->  
-> -	BUILD_BUG_ON(stat_items_size !=
-> -		     ARRAY_SIZE(vmstat_text) * sizeof(unsigned long));
->  	v = kmalloc(stat_items_size, GFP_KERNEL);
->  	m->private = v;
->  	if (!v)
-> 
+> v2:
+> * Document build exceptions where no previous above comment explained
+>   why we cannot instrument.
+> ---
+>  arch/x86/Kconfig                      | 1 +
+>  arch/x86/boot/Makefile                | 2 ++
+>  arch/x86/boot/compressed/Makefile     | 2 ++
+>  arch/x86/entry/vdso/Makefile          | 3 +++
+>  arch/x86/include/asm/bitops.h         | 6 +++++-
+>  arch/x86/kernel/Makefile              | 7 +++++++
+>  arch/x86/kernel/cpu/Makefile          | 3 +++
+>  arch/x86/lib/Makefile                 | 4 ++++
+>  arch/x86/mm/Makefile                  | 3 +++
+>  arch/x86/purgatory/Makefile           | 2 ++
+>  arch/x86/realmode/Makefile            | 3 +++
+>  arch/x86/realmode/rm/Makefile         | 3 +++
+>  drivers/firmware/efi/libstub/Makefile | 2 ++
+>  13 files changed, 40 insertions(+), 1 deletion(-)
 
+> diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
+> index 0460c7581220..693d0a94b118 100644
+> --- a/drivers/firmware/efi/libstub/Makefile
+> +++ b/drivers/firmware/efi/libstub/Makefile
+> @@ -31,7 +31,9 @@ KBUILD_CFLAGS			:= $(cflags-y) -DDISABLE_BRANCH_PROFILING \
+>  				   -D__DISABLE_EXPORTS
+>  
+>  GCOV_PROFILE			:= n
+> +# Sanitizer runtimes are unavailable and cannot be linked here.
+>  KASAN_SANITIZE			:= n
+> +KCSAN_SANITIZE			:= n
+>  UBSAN_SANITIZE			:= n
+>  OBJECT_FILES_NON_STANDARD	:= y
+
+Not a big deal, but it might make sense to move the EFI stub exception
+to patch 3 since it isn't x86 specific (and will also apply for arm64).
+
+Otherwise this looks good to me.
+
+Thanks,
+Mark.
