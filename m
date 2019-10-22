@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AD41CA9EA0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB7EFCA9EB9
 	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:12:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7D9620684
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:12:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C4E62084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:12:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733070AbfJVRMG (ORCPT
+        id S1733082AbfJVRMH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 13:12:06 -0400
+        Tue, 22 Oct 2019 13:12:07 -0400
 Received: from mga01.intel.com ([192.55.52.88]:35587 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731061AbfJVRMF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 13:12:05 -0400
+        id S1731061AbfJVRMG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 13:12:06 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Oct 2019 10:12:05 -0700
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Oct 2019 10:12:06 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,217,1569308400"; 
-   d="scan'208";a="191538259"
+   d="scan'208";a="191538270"
 Received: from labuser-ice-lake-client-platform.jf.intel.com ([10.54.55.125])
-  by orsmga008.jf.intel.com with ESMTP; 22 Oct 2019 10:12:04 -0700
+  by orsmga008.jf.intel.com with ESMTP; 22 Oct 2019 10:12:06 -0700
 From:   kan.liang@linux.intel.com
 To:     peterz@infradead.org, acme@kernel.org, mingo@kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     jolsa@kernel.org, namhyung@kernel.org, vitaly.slobodskoy@intel.com,
         pavel.gerasimov@intel.com, ak@linux.intel.com, eranian@google.com,
         Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V3 03/13] perf tools: Support new branch sample type for LBR TOS
-Date:   Tue, 22 Oct 2019 10:11:26 -0700
-Message-Id: <20191022171136.4022-4-kan.liang@linux.intel.com>
+Subject: [PATCH V3 05/13] perf pmu: Add support for PMU capabilities
+Date:   Tue, 22 Oct 2019 10:11:28 -0700
+Message-Id: <20191022171136.4022-6-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191022171136.4022-1-kan.liang@linux.intel.com>
 References: <20191022171136.4022-1-kan.liang@linux.intel.com>
@@ -47,179 +47,163 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-Support new branch sample type for LBR TOS.
+The PMU capabilities information, which is located at
+/sys/bus/event_source/devices/<dev>/caps, is required by perf tool.
+For example, the max LBR information is required to stitch LBR call
+stack.
 
-Enable LBR_TOS by default in LBR call stack mode.
-If kernel doesn't support the sample type, switching it off.
+Add perf_pmu__caps_parse() to parse the PMU capabilities information.
+The information is stored in a list.
 
-Add a new branch options "tos" for the new branch sample type.
+Add perf_pmu__scan_caps() to scan the capabilities once by one.
 
-Set tos to -1ULL if the LBR TOS information is unavailable.
+The following patch will store the capabilities information in perf
+header.
 
+Reviewed-by: Andi Kleen <ak@linux.intel.com>
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 ---
- tools/include/uapi/linux/perf_event.h     | 10 +++++++++-
- tools/perf/util/event.h                   |  1 +
- tools/perf/util/evsel.c                   | 20 +++++++++++++++++---
- tools/perf/util/evsel.h                   |  6 ++++++
- tools/perf/util/parse-branch-options.c    |  1 +
- tools/perf/util/perf_event_attr_fprintf.c |  1 +
- 6 files changed, 35 insertions(+), 4 deletions(-)
+ tools/perf/util/pmu.c | 87 +++++++++++++++++++++++++++++++++++++++++++
+ tools/perf/util/pmu.h | 12 ++++++
+ 2 files changed, 99 insertions(+)
 
-diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
-index bb7b271397a6..b1f022190571 100644
---- a/tools/include/uapi/linux/perf_event.h
-+++ b/tools/include/uapi/linux/perf_event.h
-@@ -180,6 +180,8 @@ enum perf_branch_sample_type_shift {
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index adbe97e941dd..03006132333e 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -853,6 +853,7 @@ static struct perf_pmu *pmu_lookup(const char *name)
  
- 	PERF_SAMPLE_BRANCH_TYPE_SAVE_SHIFT	= 16, /* save branch type */
- 
-+	PERF_SAMPLE_BRANCH_LBR_TOS_SHIFT	= 17, /* save LBR TOS */
+ 	INIT_LIST_HEAD(&pmu->format);
+ 	INIT_LIST_HEAD(&pmu->aliases);
++	INIT_LIST_HEAD(&pmu->caps);
+ 	list_splice(&format, &pmu->format);
+ 	list_splice(&aliases, &pmu->aliases);
+ 	list_add_tail(&pmu->list, &pmus);
+@@ -1561,3 +1562,89 @@ int perf_pmu__scan_file(struct perf_pmu *pmu, const char *name, const char *fmt,
+ 	va_end(args);
+ 	return ret;
+ }
 +
- 	PERF_SAMPLE_BRANCH_MAX_SHIFT		/* non-ABI */
- };
- 
-@@ -207,6 +209,8 @@ enum perf_branch_sample_type {
- 	PERF_SAMPLE_BRANCH_TYPE_SAVE	=
- 		1U << PERF_SAMPLE_BRANCH_TYPE_SAVE_SHIFT,
- 
-+	PERF_SAMPLE_BRANCH_LBR_TOS	= 1U << PERF_SAMPLE_BRANCH_LBR_TOS_SHIFT,
-+
- 	PERF_SAMPLE_BRANCH_MAX		= 1U << PERF_SAMPLE_BRANCH_MAX_SHIFT,
- };
- 
-@@ -849,7 +853,11 @@ enum perf_event_type {
- 	 *	  char                  data[size];}&& PERF_SAMPLE_RAW
- 	 *
- 	 *	{ u64                   nr;
--	 *        { u64 from, to, flags } lbr[nr];} && PERF_SAMPLE_BRANCH_STACK
-+	 *        { u64 from, to, flags } lbr[nr];
-+	 *
-+	 *        # only available if PERF_SAMPLE_BRANCH_LBR_TOS is set
-+	 *        u64			tos;
-+	 *      } && PERF_SAMPLE_BRANCH_STACK
- 	 *
- 	 * 	{ u64			abi; # enum perf_sample_regs_abi
- 	 * 	  u64			regs[weight(mask)]; } && PERF_SAMPLE_REGS_USER
-diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
-index a0a0c91cde4a..98794758546b 100644
---- a/tools/perf/util/event.h
-+++ b/tools/perf/util/event.h
-@@ -130,6 +130,7 @@ struct perf_sample {
- 	u32 raw_size;
- 	u64 data_src;
- 	u64 phys_addr;
-+	u64 lbr_tos;
- 	u32 flags;
- 	u16 insn_len;
- 	u8  cpumode;
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index abc7fda4a0fe..6b91897e4ca2 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -712,7 +712,8 @@ static void __perf_evsel__config_callchain(struct evsel *evsel,
- 				attr->branch_sample_type = PERF_SAMPLE_BRANCH_USER |
- 							PERF_SAMPLE_BRANCH_CALL_STACK |
- 							PERF_SAMPLE_BRANCH_NO_CYCLES |
--							PERF_SAMPLE_BRANCH_NO_FLAGS;
-+							PERF_SAMPLE_BRANCH_NO_FLAGS |
-+							PERF_SAMPLE_BRANCH_LBR_TOS;
- 			}
- 		} else
- 			 pr_warning("Cannot use LBR callstack with branch stack. "
-@@ -763,7 +764,8 @@ perf_evsel__reset_callgraph(struct evsel *evsel,
- 	if (param->record_mode == CALLCHAIN_LBR) {
- 		perf_evsel__reset_sample_bit(evsel, BRANCH_STACK);
- 		attr->branch_sample_type &= ~(PERF_SAMPLE_BRANCH_USER |
--					      PERF_SAMPLE_BRANCH_CALL_STACK);
-+					      PERF_SAMPLE_BRANCH_CALL_STACK |
-+					      PERF_SAMPLE_BRANCH_LBR_TOS);
- 	}
- 	if (param->record_mode == CALLCHAIN_DWARF) {
- 		perf_evsel__reset_sample_bit(evsel, REGS_USER);
-@@ -1641,6 +1643,8 @@ int evsel__open(struct evsel *evsel, struct perf_cpu_map *cpus,
- 		evsel->core.attr.ksymbol = 0;
- 	if (perf_missing_features.bpf)
- 		evsel->core.attr.bpf_event = 0;
-+	if (perf_missing_features.lbr_tos)
-+		evsel->core.attr.branch_sample_type &= ~PERF_SAMPLE_BRANCH_LBR_TOS;
- retry_sample_id:
- 	if (perf_missing_features.sample_id_all)
- 		evsel->core.attr.sample_id_all = 0;
-@@ -1752,7 +1756,12 @@ int evsel__open(struct evsel *evsel, struct perf_cpu_map *cpus,
- 	 * Must probe features in the order they were added to the
- 	 * perf_event_attr interface.
- 	 */
--	if (!perf_missing_features.aux_output && evsel->core.attr.aux_output) {
-+	if (!perf_missing_features.lbr_tos &&
-+	    (evsel->core.attr.branch_sample_type & PERF_SAMPLE_BRANCH_LBR_TOS)) {
-+		perf_missing_features.lbr_tos = true;
-+		pr_debug2("switching off LBR TOS support\n");
-+		goto fallback_missing_features;
-+	} else if (!perf_missing_features.aux_output && evsel->core.attr.aux_output) {
- 		perf_missing_features.aux_output = true;
- 		pr_debug2("Kernel has no attr.aux_output support, bailing out\n");
- 		goto out_close;
-@@ -2126,6 +2135,11 @@ int perf_evsel__parse_sample(struct evsel *evsel, union perf_event *event,
- 		sz = data->branch_stack->nr * sizeof(struct branch_entry);
- 		OVERFLOW_CHECK(array, sz, max_size);
- 		array = (void *)array + sz;
-+
-+		if (perf_evsel__has_lbr_tos(evsel))
-+			data->lbr_tos = *array++;
-+		else
-+			data->lbr_tos = -1ULL;
- 	}
- 
- 	if (type & PERF_SAMPLE_REGS_USER) {
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index ddc5ee6f6592..52f8a5401361 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -115,6 +115,7 @@ struct perf_missing_features {
- 	bool ksymbol;
- 	bool bpf;
- 	bool aux_output;
-+	bool lbr_tos;
- };
- 
- extern struct perf_missing_features perf_missing_features;
-@@ -377,6 +378,11 @@ for ((_evsel) = _leader; 							\
-      (_evsel) && (_evsel)->leader == (_leader);					\
-      (_evsel) = list_entry((_evsel)->core.node.next, struct evsel, core.node))
- 
-+static inline bool perf_evsel__has_lbr_tos(const struct evsel *evsel)
++static int perf_pmu__new_caps(struct list_head *list, char *name, char *value)
 +{
-+	return evsel->core.attr.branch_sample_type & PERF_SAMPLE_BRANCH_LBR_TOS;
++	struct perf_pmu_caps *caps;
++
++	caps = zalloc(sizeof(*caps));
++	if (!caps)
++		return -ENOMEM;
++
++	caps->name = strdup(name);
++	caps->value = strndup(value, strlen(value) - 1);
++	list_add_tail(&caps->list, list);
++	return 0;
 +}
 +
- static inline bool perf_evsel__has_branch_callstack(const struct evsel *evsel)
- {
- 	return evsel->core.attr.branch_sample_type & PERF_SAMPLE_BRANCH_CALL_STACK;
-diff --git a/tools/perf/util/parse-branch-options.c b/tools/perf/util/parse-branch-options.c
-index bb4aa88c50a8..1425c3525f17 100644
---- a/tools/perf/util/parse-branch-options.c
-+++ b/tools/perf/util/parse-branch-options.c
-@@ -32,6 +32,7 @@ static const struct branch_mode branch_modes[] = {
- 	BRANCH_OPT("call", PERF_SAMPLE_BRANCH_CALL),
- 	BRANCH_OPT("save_type", PERF_SAMPLE_BRANCH_TYPE_SAVE),
- 	BRANCH_OPT("stack", PERF_SAMPLE_BRANCH_CALL_STACK),
-+	BRANCH_OPT("tos", PERF_SAMPLE_BRANCH_LBR_TOS),
- 	BRANCH_END
++/*
++ * Reading/parsing the given pmu capabilities, which should be located at:
++ * /sys/bus/event_source/devices/<dev>/caps as sysfs group attributes.
++ * Return the number of capabilities
++ */
++int perf_pmu__caps_parse(struct perf_pmu *pmu)
++{
++	struct stat st;
++	char caps_path[PATH_MAX];
++	const char *sysfs = sysfs__mountpoint();
++	DIR *caps_dir;
++	struct dirent *evt_ent;
++	int nr_caps = 0;
++
++	if (!sysfs)
++		return -1;
++
++	snprintf(caps_path, PATH_MAX,
++		 "%s" EVENT_SOURCE_DEVICE_PATH "%s/caps", sysfs, pmu->name);
++
++	if (stat(caps_path, &st) < 0)
++		return 0;	/* no error if caps does not exist */
++
++	caps_dir = opendir(caps_path);
++	if (!caps_dir)
++		return -EINVAL;
++
++	while ((evt_ent = readdir(caps_dir)) != NULL) {
++		char *name = evt_ent->d_name;
++		char path[PATH_MAX];
++		char value[128];
++		FILE *file;
++
++		if (!strcmp(name, ".") || !strcmp(name, ".."))
++			continue;
++
++		snprintf(path, PATH_MAX, "%s/%s", caps_path, name);
++
++		file = fopen(path, "r");
++		if (!file)
++			break;
++
++		if (!fgets(value, sizeof(value), file) ||
++		    (perf_pmu__new_caps(&pmu->caps, name, value) < 0)) {
++			fclose(file);
++			break;
++		}
++
++		nr_caps++;
++		fclose(file);
++	}
++
++	closedir(caps_dir);
++
++	return nr_caps;
++}
++
++struct perf_pmu_caps *perf_pmu__scan_caps(struct perf_pmu *pmu,
++					  struct perf_pmu_caps *caps)
++{
++	if (!pmu)
++		return NULL;
++
++	if (!caps)
++		caps = list_prepare_entry(caps, &pmu->caps, list);
++
++	list_for_each_entry_continue(caps, &pmu->caps, list)
++		return caps;
++
++	return NULL;
++}
+diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+index 3e8cd31a89cc..f7dc94c3ae8a 100644
+--- a/tools/perf/util/pmu.h
++++ b/tools/perf/util/pmu.h
+@@ -21,6 +21,12 @@ enum {
+ 
+ struct perf_event_attr;
+ 
++struct perf_pmu_caps {
++	char *name;
++	char *value;
++	struct list_head list;
++};
++
+ struct perf_pmu {
+ 	char *name;
+ 	__u32 type;
+@@ -31,6 +37,7 @@ struct perf_pmu {
+ 	struct perf_cpu_map *cpus;
+ 	struct list_head format;  /* HEAD struct perf_pmu_format -> list */
+ 	struct list_head aliases; /* HEAD struct perf_pmu_alias -> list */
++	struct list_head caps;    /* HEAD struct perf_pmu_caps -> list */
+ 	struct list_head list;    /* ELEM */
  };
  
-diff --git a/tools/perf/util/perf_event_attr_fprintf.c b/tools/perf/util/perf_event_attr_fprintf.c
-index d4ad3f04923a..5c4047e7cc8d 100644
---- a/tools/perf/util/perf_event_attr_fprintf.c
-+++ b/tools/perf/util/perf_event_attr_fprintf.c
-@@ -50,6 +50,7 @@ static void __p_branch_sample_type(char *buf, size_t size, u64 value)
- 		bit_name(ABORT_TX), bit_name(IN_TX), bit_name(NO_TX),
- 		bit_name(COND), bit_name(CALL_STACK), bit_name(IND_JUMP),
- 		bit_name(CALL), bit_name(NO_FLAGS), bit_name(NO_CYCLES),
-+		bit_name(LBR_TOS),
- 		{ .name = NULL, }
- 	};
- #undef bit_name
+@@ -100,4 +107,9 @@ struct pmu_events_map *perf_pmu__find_map(struct perf_pmu *pmu);
+ 
+ int perf_pmu__convert_scale(const char *scale, char **end, double *sval);
+ 
++int perf_pmu__caps_parse(struct perf_pmu *pmu);
++
++struct perf_pmu_caps *perf_pmu__scan_caps(struct perf_pmu *pmu,
++					  struct perf_pmu_caps *caps);
++
+ #endif /* __PMU_H */
 -- 
 2.17.1
 
