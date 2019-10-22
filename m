@@ -2,161 +2,104 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C92CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:18:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F2EBCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:19:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C91CC20684
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:18:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFB9420684
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:19:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="ibGx5Pnq"
+	dkim=pass (2048-bit key) header.d=hazent-com.20150623.gappssmtp.com header.i=@hazent-com.20150623.gappssmtp.com header.b="EMe+Ib7C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388331AbfJVISF (ORCPT
+        id S2388276AbfJVITq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 04:18:05 -0400
-Received: from mout02.posteo.de ([185.67.36.66]:52325 "EHLO mout02.posteo.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388011AbfJVISF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 04:18:05 -0400
-Received: from submission (posteo.de [89.146.220.130]) 
-        by mout02.posteo.de (Postfix) with ESMTPS id 71FA0240102
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 10:18:01 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.de; s=2017;
-        t=1571732281; bh=9fXRnJUFHF20QgQJ4tbJIo1CYC+blJYEejA3ZN6+WK0=;
-        h=Subject:To:Cc:From:Openpgp:Autocrypt:Date:From;
-        b=ibGx5Pnq1aZRJJKSHbKzq06PkMOGV69BO0wJ50n/LW6bku2ID+1gI6BlhKBBS8z1e
-         RKT1efcKjfA6DBAoU6WHHCZDvT+2fusuxtOyzfPnnFXOzUNXuJp4N32c8VySU8PBJd
-         qea343zZ3JsxVz01BoCgcSzhYfocaz4cHP7iTDvKhaW0Kdj0VXhOk549FPsxsTnmNH
-         4HiQqAHZLxQyCRW7NnE4IknBuem0tzKjB7u951KB756DvoyoPYdCujDXLIFV+ZP8o8
-         zv8Z09drQ8Yr3z6WKbjEIswYfRkIA1m+21ENtDPC/6cxJAAR3W4bvGG6VuM9lCFoQ3
-         gwnrDwTjm+IAw==
-Received: from customer (localhost [127.0.0.1])
-        by submission (posteo.de) with ESMTPSA id 46y5wl6BT2z9rxH;
-        Tue, 22 Oct 2019 10:17:59 +0200 (CEST)
-Subject: Re: [PATCH] driver:st1633: fixed multitouch incorrect coordinates
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Dixit Parmar <dixitparmar19@gmail.com>, rydberg@bitmath.org,
-        kuninori.morimoto.gx@renesas.com, robh@kernel.org,
-        matthias.fend@wolfvision.net, linux-input@vger.kernel.org,
+        Tue, 22 Oct 2019 04:19:46 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:32897 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388061AbfJVITq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 04:19:46 -0400
+Received: by mail-wm1-f68.google.com with SMTP id 6so3117175wmf.0
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 01:19:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=hazent-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FDa3VnBT23L9dvMYIxsGdPSjONQzum8y5hGoC5q7sNA=;
+        b=EMe+Ib7CMnddao0MTq/n4feJ1cOdAhbnKH4v/Ih316dUI5ksR8Ln3J58CBLkid9TTy
+         +3kLvmgw3lGnYvoPL2yCxjrhKNAgXlSDGJZ7s8thbeWppNKhW+Yvv3LNDpIMRTVjCUI9
+         a3NnopicdCmrLV4YzKLz4fd3YmORebKVFeimYbkK2hg5Jj7H2dnJ31KDxKXbfigk/aEx
+         qwG0VlnHp8frquqAhjJ44xKFP+sk5d3SY+Lk2d21fGb5RwK2mMMjhYPV4zI7TfwjThbZ
+         SdnxLP10dU7J/F9Ul0nFhYxYYUl0WWL29GcfQzv0y6Otefzn7RMY/TWS5aWih+YoDI1z
+         ryuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FDa3VnBT23L9dvMYIxsGdPSjONQzum8y5hGoC5q7sNA=;
+        b=baVtGjtc3sEp/ci+VVNmf1PG9K+H2YlXXImgZ1/6wqzBRj7kFu9D4ueHzRXENPdO4X
+         ZLR5zQKZb53jERCxYnkS9EG9KJ1J/QELyBRDxSMyn/tW22MTcZvBIG0oh+ThN/9BYNM3
+         X2AXpla0wyUcNebVUwXAXjAmk1+ZhwTohBMCVGEUwmyfJxIuPXkAOR9+1T7f03RlkwGB
+         rbKcBkOdUqaDnL6UcwFcoW+xetCtkNdSuQAjJKHunLP+oU+ozY7zqELI6mHO1mt4H6nI
+         PtbS26eKy73fcIUsQZfv/bljIIlJhza9Qf1FFCXspnDMJw/9Y6N2rIMA5NEulJb9aN0u
+         xXZA==
+X-Gm-Message-State: APjAAAUyE9/XkcUZa2uQxf78Al4vhsG4BlJ6xHTtnhDaoco2KZYKl3yi
+        mw9hBp6vtZPA1tykt9Jd6jYHYg==
+X-Google-Smtp-Source: APXvYqypsdIq7EqYlwd4a8KcjxGdNyb1fAfBBGqiaA5OpcRH1d15bQzYxEYZ1Uq5QHplYObrwWr6hA==
+X-Received: by 2002:a1c:a9cb:: with SMTP id s194mr1939922wme.92.1571732384504;
+        Tue, 22 Oct 2019 01:19:44 -0700 (PDT)
+Received: from salem.gmr.ssr.upm.es (salem.gmr.ssr.upm.es. [138.4.36.7])
+        by smtp.gmail.com with ESMTPSA id a71sm16308513wme.11.2019.10.22.01.19.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Oct 2019 01:19:43 -0700 (PDT)
+From:   Alvaro Gamez Machado <alvaro.gamez@hazent.com>
+To:     Michal Simek <monstr@monstr.eu>,
+        Andrew Morton <akpm@linux-foundation.org>,
         linux-kernel@vger.kernel.org
-References: <1566209314-21767-1-git-send-email-dixitparmar19@gmail.com>
- <8cfedf751fc87f5f1c660cfda69d36ce@posteo.de> <20191020082919.GB3917@Dixit>
- <9de64de8-7581-808d-e930-315aca05687c@posteo.de>
- <20191021171350.GT35946@dtor-ws>
-From:   Martin Kepplinger <martink@posteo.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=martink@posteo.de; keydata=
- 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
-Message-ID: <2672574b-2582-22b6-f032-6e1a6a6dc346@posteo.de>
-Date:   Tue, 22 Oct 2019 10:17:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+Cc:     Alvaro Gamez Machado <alvaro.gamez@hazent.com>
+Subject: [PATCH] arch: microblaze: support for reserved-memory entries in DT
+Date:   Tue, 22 Oct 2019 10:19:29 +0200
+Message-Id: <20191022081929.10602-1-alvaro.gamez@hazent.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <20191021171350.GT35946@dtor-ws>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21.10.19 19:13, Dmitry Torokhov wrote:
-> On Mon, Oct 21, 2019 at 09:10:23AM +0200, Martin Kepplinger wrote:
->> On 20.10.19 10:29, Dixit Parmar wrote:
->>> Any review comments for this?
->>> Or it should be merged?
->>>
->>> Thanks.
->>
->> My comment and tag is there. This fixes multitouch and should be merged.
-> 
-> Missed it earlier, sorry. I am applying it, but I wonder if we shoudl
-> not do the patch below as I find the version with 2 loop variables quite
-> confusing.
-> 
-> Thanks.
-> 
+Signed-off-by: Alvaro Gamez Machado <alvaro.gamez@hazent.com>
+---
+ arch/microblaze/mm/init.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Makes sense to me.
-
-Acked-by: Martin Kepplinger <martink@posteo.de>
-
-thanks
-
-                              martin
+diff --git a/arch/microblaze/mm/init.c b/arch/microblaze/mm/init.c
+index a015a951c8b7..928c5c2816e4 100644
+--- a/arch/microblaze/mm/init.c
++++ b/arch/microblaze/mm/init.c
+@@ -17,6 +17,8 @@
+ #include <linux/slab.h>
+ #include <linux/swap.h>
+ #include <linux/export.h>
++#include <linux/of_fdt.h>
++#include <linux/of.h>
+ 
+ #include <asm/page.h>
+ #include <asm/mmu_context.h>
+@@ -188,6 +190,9 @@ void __init setup_memory(void)
+ 
+ void __init mem_init(void)
+ {
++	early_init_fdt_reserve_self();
++	early_init_fdt_scan_reserved_mem();
++
+ 	high_memory = (void *)__va(memory_start + lowmem_size - 1);
+ 
+ 	/* this will put all memory onto the freelists */
+-- 
+2.23.0
 
