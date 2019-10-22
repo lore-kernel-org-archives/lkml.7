@@ -2,219 +2,151 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5609CCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 05:45:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 092B5CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 05:49:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2329121783
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 05:45:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7F57218AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 05:49:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731052AbfJVFow (ORCPT
+        id S1730772AbfJVFtL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 01:44:52 -0400
-Received: from mga17.intel.com ([192.55.52.151]:54004 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725788AbfJVFov (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 01:44:51 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 22:44:51 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,326,1566889200"; 
-   d="scan'208";a="372408710"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga005.jf.intel.com with ESMTP; 21 Oct 2019 22:44:50 -0700
-Received: from [10.249.230.171] (abudanko-mobl.ccr.corp.intel.com [10.249.230.171])
-        by linux.intel.com (Postfix) with ESMTP id 53FA958029D;
-        Mon, 21 Oct 2019 22:44:47 -0700 (PDT)
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Subject: [PATCH v4 0/4]: perf/core: fix restoring of Intel LBR call stack on a
- context switch
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>,
-        Song Liu <songliubraving@fb.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Organization: Intel Corp.
-Message-ID: <f4662ac9-e72e-d141-bead-da07e29f81e8@linux.intel.com>
-Date:   Tue, 22 Oct 2019 08:44:46 +0300
+        Tue, 22 Oct 2019 01:49:11 -0400
+Received: from mail-sz.amlogic.com ([211.162.65.117]:9380 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725788AbfJVFtL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 01:49:11 -0400
+Received: from [10.28.19.63] (10.28.19.63) by mail-sz.amlogic.com (10.28.11.5)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Tue, 22 Oct
+ 2019 13:49:20 +0800
+Subject: Re: [PATCH v2 3/4] watchdog: add meson secure watchdog driver
+To:     Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Qianggui Song <qianggui.song@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Jian Hu <jian.hu@amlogic.com>,
+        <linux-watchdog@vger.kernel.org>,
+        <linux-amlogic@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1571387622-35132-1-git-send-email-xingyu.chen@amlogic.com>
+ <1571387622-35132-4-git-send-email-xingyu.chen@amlogic.com>
+ <7397f6db-1dc8-3abd-41ff-2e47323c7ffa@roeck-us.net>
+ <bfc892af-1cd3-1437-75b2-5ba2b7913284@amlogic.com>
+ <bd5ed275-4ae4-4163-b585-23fbead9833f@roeck-us.net>
+From:   Xingyu Chen <xingyu.chen@amlogic.com>
+Message-ID: <1b841195-cf76-7128-9569-5c2b0d39c1c1@amlogic.com>
+Date:   Tue, 22 Oct 2019 13:49:20 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <bd5ed275-4ae4-4163-b585-23fbead9833f@roeck-us.net>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.28.19.63]
+X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
+ (10.28.11.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi, Guenter
 
-Restore Intel LBR call stack from cloned inactive task perf context on
-a context switch. This change inherently addresses inconsistency in LBR 
-call stack data provided on a sample in record profiling mode:
+On 2019/10/21 21:38, Guenter Roeck wrote:
+> On 10/21/19 1:03 AM, Xingyu Chen wrote:
+>> Hi, Guenter
+>>
+>> On 2019/10/21 0:56, Guenter Roeck wrote:
+>>> On 10/18/19 1:33 AM, Xingyu Chen wrote:
+>>>> The watchdog controller on the Meson-A/C series SoCs is moved to secure
+>>>> world, watchdog operation needs to be done in secure EL3 mode via ATF,
+>>>> Non-secure world can call SMC instruction to trap to AFT for watchdog
+>>>> operation.
+>>>>
+>>>> Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
+>>>> ---
+>>>>   drivers/watchdog/Kconfig         |  17 ++++
+>>>>   drivers/watchdog/Makefile        |   1 +
+>>>>   drivers/watchdog/meson_sec_wdt.c | 187 
+>>>> +++++++++++++++++++++++++++++++++++++++
+>>>>   3 files changed, 205 insertions(+)
+>>>>   create mode 100644 drivers/watchdog/meson_sec_wdt.c
+>>>>
+>>>> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+>>>> index 58e7c10..e84be42 100644
+>>>> --- a/drivers/watchdog/Kconfig
+>>>> +++ b/drivers/watchdog/Kconfig
+>>>> @@ -826,6 +826,23 @@ config MESON_GXBB_WATCHDOG
+>>>>         To compile this driver as a module, choose M here: the
+>>>>         module will be called meson_gxbb_wdt.
+>>>> +config MESON_SEC_WATCHDOG
+>>>> +    tristate "Amlogic Meson Secure watchdog support"
+>>>> +    depends on MESON_SM
+>>>> +    depends on ARCH_MESON || COMPILE_TEST
+>>>
+>>> This dependency is pointless. MESON_SM already depends on ARCH_MESON,
+>>> thus specifying "COMPILE_TEST" here adds no value but only
+>>> creates confusion.
+>> Thanks for your analysis, perhaps i should remove the line below.
+>> - depends on ARCH_MESON || COMPILE_TEST
+>>
+>> Is it ok to modify code above like this ?
+> 
+> Yes.
+Thanks, fix it in next version.
 
-  $ perf record -N -B -T -R --call-graph lbr \
-         -e cpu/period=0xcdfe60,event=0x3c,name=\'CPU_CLK_UNHALTED.THREAD\'/Duk \
-         --clockid=monotonic_raw -- ./miniFE.x nx 25 ny 25 nz 25
-
-Let's assume threads A, B, C belonging to the same process. 
-B and C are siblings of A and their perf contexts are treated as equivalent.
-At some point B blocks on a futex (non preempt context switch).
-B's LBRs are preserved at B's perf context task_ctx_data and B's events 
-are removed from PMU and disabled. B's perf context becomes inactive.
-
-Later C gets on a cpu, runs, gets profiled and eventually switches to 
-the awaken but not yet running B. The optimized context switch path is 
-executed swapping B's and C's task_ctx_data pointers at perf event contexts.
-So C's task_ctx_data will refer preserved B's LBRs on the following 
-switch-in event.
-
-However, as far B's perf context is inactive there is no enabled events
-in there and B's task_ctx_data->lbr_callstack_users is equal to 0.
-When B gets on the cpu B's events reviving is skipped following
-the optimized context switch path and B's task_ctx_data->lbr_callstack_users
-remains 0. Thus B's LBR's are not restored by pmu sched_task() code called 
-in the end of perf context switch-in callback for B.
-
-In the report that manifests as having short fragments of B's
-call stack, still tracked by LBR's HW between adjacent samples,
-but the whole thread call tree doesn't aggregate.
-
-The fix has been evaluated when profiling miniFE [1] (C++, OpenMP)
-workload running 64 threads on Intel Skylake EP(64 core, 2 sockets):
-
-  $ perf report --call-graph callee,flat
-
-5.3.0-rc6+ (tip perf/core) - fixed
-
--   92.66%    82.64%  miniFE.x  libiomp5.so         [.] _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
-   - 69.14% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
-        __kmp_fork_barrier
-        __kmp_launch_thread
-        _INTERNAL_24_______src_z_Linux_util_c_3e0095e6::__kmp_launch_worker
-        start_thread
-        __clone
-   - 21.89% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
-        __kmp_barrier
-        __kmpc_reduce_nowait
-        miniFE::cg_solve<miniFE::CSRMatrix<double, int, int>, miniFE::Vector<double, int, int>, miniFE::matvec_std<miniFE::CSRMatrix<double, int, int>, miniFE::Vector<double, int, in
-        __kmp_invoke_microtask
-        __kmp_invoke_task_func
-        __kmp_launch_thread
-        _INTERNAL_24_______src_z_Linux_util_c_3e0095e6::__kmp_launch_worker
-        start_thread
-        __clone
-   - 1.63% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
-        __kmp_barrier
-        __kmpc_reduce_nowait
-        main
-        __kmp_invoke_microtask
-        __kmp_invoke_task_func
-        __kmp_launch_thread
-        _INTERNAL_24_______src_z_Linux_util_c_3e0095e6::__kmp_launch_worker
-        start_thread
-        __clone
-
-5.0.13-300.fc30.x86_64 - no fix
-
--   90.29%    81.01%  miniFE.x  libiomp5.so         [.] _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
-   - 33.45% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
-        __kmp_fork_barrier
-        __kmp_launch_thread
-        _INTERNAL_24_______src_z_Linux_util_c_3e0095e6::__kmp_launch_worker
-        start_thread
-        __clone
-     87.63% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
-   - 54.79% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
-        __kmp_fork_barrier
-        __kmp_launch_thread
-   - 9.18% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
-        __kmp_barrier
-        __kmpc_reduce_nowait
-        miniFE::cg_solve<miniFE::CSRMatrix<double, int, int>, miniFE::Vector<double, int, int>, miniFE::matvec_std<miniFE::CSRMatrix<double, int, int>, miniFE::Vector<double, int, in
-        __kmp_invoke_microtask
-        __kmp_invoke_task_func
-        __kmp_launch_thread
-        _INTERNAL_24_______src_z_Linux_util_c_3e0095e6::__kmp_launch_worker
-        start_thread
-        __clone
-   - 41.28% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
-        __kmp_fork_barrier
-        __kmp_launch_thread
-        _INTERNAL_24_______src_z_Linux_util_c_3e0095e6::__kmp_launch_worker
-   - 15.77% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
-        __kmp_barrier
-        __kmpc_reduce_nowait
-        miniFE::cg_solve<miniFE::CSRMatrix<double, int, int>, miniFE::Vector<double, int, int>, miniFE::matvec_std<miniFE::CSRMatrix<double, int, int>, miniFE::Vector<double, int, in
-        __kmp_invoke_microtask
-        __kmp_invoke_task_func
-        __kmp_launch_thread
-   - 11.56% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
-        __kmp_barrier
-        __kmpc_reduce_nowait
-        miniFE::cg_solve<miniFE::CSRMatrix<double, int, int>, miniFE::Vector<double, int, int>, miniFE::matvec_std<miniFE::CSRMatrix<double, int, int>, miniFE::Vector<double, int, in
-        __kmp_invoke_microtask
-        __kmp_invoke_task_func
-        __kmp_launch_thread
-        _INTERNAL_24_______src_z_Linux_util_c_3e0095e6::__kmp_launch_worker
-   - 2.33% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
-        __kmp_barrier
-        __kmpc_reduce_nowait
-        main
-        __kmp_invoke_microtask
-        __kmp_invoke_task_func
-        __kmp_launch_thread
-        _INTERNAL_24_______src_z_Linux_util_c_3e0095e6::__kmp_launch_worker
-        start_thread
-        __clone
-     0.67% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_gather
-     0.57% __kmp_hardware_timestamp
-
-[1] https://www.hpcadvisorycouncil.com/pdf/miniFE_Analysis_and_Profiling.pdf
-
----
-Alexey Budankov (4):
-  perf/core,x86: introduce sync_task_ctx() method at struct pmu
-  perf/x86: install platform specific sync_task_ctx adapter
-  perf/x86/intel: implement LBR callstacks context synchronization
-  perf/core,x86: synchronize PMU task contexts on optimized context
-    switches
-
- arch/x86/events/core.c       |  7 +++++++
- arch/x86/events/intel/core.c |  7 +++++++
- arch/x86/events/intel/lbr.c  |  6 ++++++
- arch/x86/events/perf_event.h | 11 +++++++++++
- include/linux/perf_event.h   |  7 +++++++
- kernel/events/core.c         | 13 +++++++++++++
- 6 files changed, 51 insertions(+)
-
----
-Changes in v4:
-- moved check on simultaneous task_ctx_data objects availability 
-  to the perf/core layer;
-- marked sync_task_ctx() as the optional in code comments;
-- renamed params of sync_task_ctx() to prev and next;
-
-Changes in v3:
-- replaced assignment with swap at intel_pmu_lbr_sync_task_ctx()
-
-Changes in v2:
-- implemented sync_task_ctx() method at perf,x86,intel pmu types;
-- employed the method on the optimized context switch path between 
-  equivalent perf event contexts;
-
--- 
-2.20.1
-
+> [ ... ]
+> 
+>>>> +static unsigned int meson_sec_wdt_get_timeleft(struct 
+>>>> watchdog_device *wdt_dev)
+>>>> +{
+>>>> +    int ret;
+>>>> +    unsigned int timeleft;
+>>>> +    struct meson_sec_wdt *data = watchdog_get_drvdata(wdt_dev);
+>>>> +
+>>>> +    ret = meson_sm_call(data->fw, SM_WATCHDOG_OPS, Thanks&timeleft,
+>>>> +                MESON_SIP_WDT_GETTIMELEFT, 0, 0, 0, 0);
+>>>> +
+>>>> +    if (ret)
+>>>> +        return ret;
+>>>
+>>> Meh, that doesn't work. I just realized that the return type is 
+>>> unsigned,
+>>> so returning a negative error code is pointless. Guess we'll have to
+>>> live with returning 0 in this case after all. I wonder if we should
+>>> fix the API and return an integer (with negative error code), but that
+>>> is a different question.
+>> Thanks for your review.
+>>
+>> IMO, if returning an integer, and the value which copy to user buf 
+>> should be formatted with %d instead of %u (see timeleft_show), it will 
+>> cause the max value of timeleft is reduced from 4294967295 to 
+>> 2147483647. but i'am not sure whether it will bring risk.
+> 
+> Not that it matters right now, but I don't think that limiting 'timeleft'
+> reporting to 2147483647 seconds, or ~68 years, would cause any risk.
+> It would just be a large patch changing several drivers all at once,
+> that is all.
+> 
+>>
+>> So i also think returning 0 may be better in this case.
+> 
+> Yes, please do that.
+Thanks, fix it in next version.
+> 
+> Thanks,
+> Guenter
+> 
+> .
+> 
