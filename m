@@ -2,213 +2,119 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C9BCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 23:17:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 203E3CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 23:21:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A185206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 23:17:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571786229;
-	bh=1vkAMPwTHOpnBgGDNz7vAJMdb+BnXCdEtBMcR2I/yco=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=FJtOIjz0HqywnEiiougkdM4yCYA/ZaGqTlHs7Qd8yIDYHn1bZZs1adqSlOXVxi5ka
-	 iHLACYcksPnOOXbIiP8N8efskCxq5TBHzTawO9rIV9BqnDmVjp28/a/HANNyKYYRrH
-	 ChU1Uq3826Tto1uIRgDPLyEN41XZ7DQEJT2R0Az4=
+	by mail.kernel.org (Postfix) with ESMTP id EB14B206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 23:21:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389274AbfJVXQ6 (ORCPT
+        id S1732818AbfJVXVf convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 19:16:58 -0400
-Received: from mail-oi1-f179.google.com ([209.85.167.179]:45026 "EHLO
-        mail-oi1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727403AbfJVXQ5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 19:16:57 -0400
-Received: by mail-oi1-f179.google.com with SMTP id s71so2871516oih.11;
-        Tue, 22 Oct 2019 16:16:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=o7ny16/mnyqk5KkvAfWXHyW+yD70otI87QA0VLCTMkw=;
-        b=UuoZGqKuzbC0bUtrcpzDgbFcjnh1+c69186xZh75Veey32L1ZZLCFOaTqszVSc4yeb
-         GR+JK4esuiRfNYbOO2Mw4735KubXm/VM4qC62go0Ez2+mj5m+U+GgY63vmH6m4G+WzBY
-         t0HiK2jrZcfDejH3ynWG1MEIHCi4o9fTaGC0TavLzeupKG6ZRTwbBH0t2Ou9Hqr6sd4t
-         ZkhWqlTRILZY6DRUxSTcbNxPOzBqVAA0ELKqN4euU4+gQbleF62lAWiARA6WBfGOIPpU
-         YA/x31ywD8qwihvQeGAOa5qSZvxq55UXyFPpd7BaSrc9E6EWsCq7cRlW9RisApeOWwnp
-         rdjA==
-X-Gm-Message-State: APjAAAXwntdH/dZZk800Dam0iAnnHs3knQOWkeVklweeG8zqIesaIsiF
-        PSH3cN+Jat13R0GjRinu4UIikMt0DdO3WYDErsFteG5P
-X-Google-Smtp-Source: APXvYqxYf8YWXu5+u/mwjWAbrC38MXvHAb1sDdX7TSSBvj5NQHLohbDCObbbjBrsoIqtGSJL4ByZXive0vcGLIwkPdM=
-X-Received: by 2002:a05:6808:9b7:: with SMTP id e23mr752573oig.68.1571786215994;
- Tue, 22 Oct 2019 16:16:55 -0700 (PDT)
+        Tue, 22 Oct 2019 19:21:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42770 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728081AbfJVXVf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 19:21:35 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E93AE206C2;
+        Tue, 22 Oct 2019 23:21:33 +0000 (UTC)
+Date:   Tue, 22 Oct 2019 19:21:32 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Andy Lutomirski <luto@amacapital.net>
+Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH 3/3] x86/ftrace: Use text_poke()
+Message-ID: <20191022192132.22cc15b5@gandalf.local.home>
+In-Reply-To: <7364B113-DD65-423D-BED3-FF90C4DF8334@amacapital.net>
+References: <20191022215841.2qsmhd6vxi4mwade@ast-mbp.dhcp.thefacebook.com>
+        <7364B113-DD65-423D-BED3-FF90C4DF8334@amacapital.net>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <CAA25o9TABY=3C+FQEg8FDyF1rim315G2hmeB1DBWJLn-wG1j0g@mail.gmail.com>
- <CAJZ5v0gJWxLJTi7TjaRP-3aR3f4VnX1n9dRE_jxdS6e3SM46LQ@mail.gmail.com>
- <CAA25o9TiaaKGH4ZkOa=FhZW7PdXQ592YZ4q52o-QNx=yFsR4Pw@mail.gmail.com>
- <CAJZ5v0j7N=o0S1tSwn5DP10oAmb5oN5SsM3jWhs+ZJ2YxMEvnw@mail.gmail.com> <CAA25o9Rd5x7PjFkrhWL-vqfV9uEYKA4K2K=9t1V7TY2OKX+k6g@mail.gmail.com>
-In-Reply-To: <CAA25o9Rd5x7PjFkrhWL-vqfV9uEYKA4K2K=9t1V7TY2OKX+k6g@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 23 Oct 2019 01:16:45 +0200
-Message-ID: <CAJZ5v0jDwUi4dU5zjCWuRAYEbg63xJadE=Fdr_OY7UcU82q94w@mail.gmail.com>
-Subject: Re: is hibernation usable?
-To:     Luigi Semenzato <semenzato@google.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Geoff Pike <gpike@google.com>, Bas Nowaira <bassem@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 12:53 AM Luigi Semenzato <semenzato@google.com> wrote:
->
-> On Tue, Oct 22, 2019 at 3:14 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> >
-> > On Tue, Oct 22, 2019 at 11:26 PM Luigi Semenzato <semenzato@google.com> wrote:
-> > >
-> > > Thank you for the quick reply!
-> > >
-> > > On Tue, Oct 22, 2019 at 1:57 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> > > >
-> > > > On Tue, Oct 22, 2019 at 10:09 PM Luigi Semenzato <semenzato@google.com> wrote:
-> > > > >
-> > > > > Following a thread in linux-pm
-> > > > > (https://marc.info/?l=linux-mm&m=157012300901871) I have some issues
-> > > > > that may be of general interest.
-> > > > >
-> > > > > 1. To the best of my knowledge, Linux hibernation is guaranteed to
-> > > > > fail if more than 1/2 of total RAM is in use (for instance, by
-> > > > > anonymous pages).  My knowledge is based on evidence, experiments,
-> > > > > code inspection, the thread above, and a comment in
-> > > > > Documentation/swsusp.txt, copied here:
-> > > >
-> > > > So I use it on a regular basis (i.e. every day) on a system that often
-> > > > has over 50% or RAM in use and it all works.
-> > > >
-> > > > I also know about other people using it on a regular basis.
-> > > >
-> > > > For all of these users, it is usable.
-> > > >
-> > > > >  "Instead, we load the image into unused memory and then atomically
-> > > > > copy it back to it original location. This implies, of course, a
-> > > > > maximum image size of half the amount of memory."
-> > > >
-> > > > That isn't right any more.  An image that is loaded during resume can,
-> > > > in fact, be larger than 50% of RAM.  An image that is created during
-> > > > hibernation, however, cannot.
-> > >
-> > > Sorry, I don't understand this.  Are you saying that, for instance,
-> > > you can resume a 30 GB image on a 32 GB device, but that image could
-> > > only have been created on a 64 GB device?
-> >
-> > Had it been possible to create images larger than 50% of memory during
-> > hibernation, it would have been possible to load them during resume as
-> > well.
-> >
-> > The resume code doesn't have a 50% of RAM limitation, the image
-> > creation code does.
->
-> Thanks a lot for the clarifications.
->
-> It is possible that you and I have different definitions of "working
-> in general".  My main issue ia that I would like image creation (i.e.
-> entering hibernation) to work with >50% of RAM in use, and I am
-> extrapolating that other people would like that too.  I can see that
-> there are many uses where this is not needed though, especially if you
-> mostly care about resume.
+On Tue, 22 Oct 2019 15:45:26 -0700
+Andy Lutomirski <luto@amacapital.net> wrote:
 
-Also note that you need to be precise about what ">50% of RAM in use"
-means.  For example, AFAICS hibernation works just fine for many cases
-in which MemFree is way below 50% of MemTotal.
+> >> On Oct 22, 2019, at 2:58 PM, Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
+> >> 
+> >> ﻿On Tue, Oct 22, 2019 at 05:04:30PM -0400, Steven Rostedt wrote:
+> >> I gave a solution for this. And that is to add another flag to allow
+> >> for just the minimum to change the ip. And we can even add another flag
+> >> to allow for changing the stack if needed (to emulate a call with the
+> >> same parameters).  
+> > 
+> > your solution is to reduce the overhead.
+> > my solution is to remove it competely. See the difference?
+> >   
+> >> By doing this work, live kernel patching will also benefit. Because it
+> >> is also dealing with the unnecessary overhead of saving regs.
+> >> And we could possibly even have kprobes benefit from this if a kprobe
+> >> doesn't need full regs.  
+> > 
+> > Neither of two statements are true. The per-function generated trampoline
+> > I'm talking about is bpf specific. For a function with two arguments it's just:
+> > push rbp 
+> > mov rbp, rsp
+> > push rdi
+> > push rsi
+> > lea  rdi,[rbp-0x10]
+> > call jited_bpf_prog
+> > pop rsi
+> > pop rdi
+> > leave
+> > ret  
+> 
+> Why are you saving rsi?  You said upthread that you’re saving the
+> args, but rsi is already available in rsi.
 
-> >
-> > > > > 2. There's no simple/general workaround.  Rafael suggested on the
-> > > > > thread "Whatever doesn't fit into 50% of RAM needs to be swapped out
-> > > > > before hibernation".  This is a good suggestion: I am actually close
-> > > > > to achieving this using memcgroups, but it's a fair amount of work,
-> > > > > and a fairly special case.  Not everybody uses memcgroups, and I don't
-> > > > > know of other reliable ways of forcing swap from user level.
-> > > >
-> > > > I don't need to do anything like that.
-> > >
-> > > Again, I don't understand.  Why did you make that suggestion then?
-> > >
-> > > > hibernate_preallocate_memory() manages to free a sufficient amount of
-> > > > memory on my system every time.
-> > >
-> > > Unfortunately this doesn't work for me.  I may have described a simple
-> > > experiment: on a 4GB device, create two large processes like this:
-> > >
-> > > dd if=/dev/zero bs=1100M count=1 | sleep infinity &
-> > > dd if=/dev/zero bs=1100M count=1 | sleep infinity &
-> > >
-> > > so that more than 50% of TotalMem is used for anonymous pages.  Then
-> > > echo disk > /sys/power/state fails with ENOMEM.
-> >
-> > I guess hibernate_preallocate_memory() is not able to free enough
-> > memory for itself in that case.
-> >
-> > > Is this supposed to work?
-> >
-> > Yes, it is, in general.
-> >
-> > > Maybe I am doing something wrong?
-> > > Hibernation works before I create the dd processes.  After I force
-> > > some of those pages to a separate swap device, hibernation works too,
-> > > so those pages aren't mlocked or anything.
-> >
-> > It looks like you are doing something that is not covered by
-> > hibernate_preallocate_memory().
-> >
-> > > > > 3. A feature that works only when 1/2 of total RAM can be allocated
-> > > > > is, in my opinion, not usable, except possibly under special
-> > > > > circumstances, such as mine. Most of the available articles and
-> > > > > documentation do not mention this important fact (but for the excerpt
-> > > > > I mentioned, which is not in a prominent position).
-> > > >
-> > > > It can be used with over 1/2 of RAM allocated and that is quite easy
-> > > > to demonstrate.
-> > > >
-> > > > Honestly, I'm not sure what your problem is really.
-> > >
-> > > I apologize if I am doing something stupid and I should know better
-> > > before I waste other people's time.  I have been trying to explain
-> > > these issues as best as I can.  I have a reproducible failure.  I'll
-> > > be happy to provide any additional detail.
-> >
-> > Simply put, hibernation, as implemented today, needs to allocate over
-> > 50% of RAM (or at least as much as to be able to copy all of the
-> > non-free pages) for image creation.  If it cannot do that, it will
-> > fail and you know how to prevent it from allocating enough memory in a
-> > reproducible way.  AFAICS that's a situation in which every attempt to
-> > allocate 50% of memory for any other purpose will fail as well.
-> >
-> > Frankly, you are first to report this problem, so it arguably is not
-> > common.  It looks like hibernate_preallocate_memory() may be improved
-> > to cover that case, but then the question is how much more complicated
-> > it will have to become for this purpose and whether or not that's
-> > worth pursuing.
->
-> Right.  I was hoping to discuss that.  Is it easier to do in the
-> kernel what I am trying to do at user level, i.e. force swap of excess
-> pages (possibly to a separate device or partition) so that enough
-> pages are freed up to make hibernate_preallocate_memory always
-> succeed?
+The above is for two parameters, and is being called before the
+function with those two parameters. The jited_bpf_prog will be called
+with those two parameters as well, but it may also clobber them. Then
+we need to restore those two parameters before calling the original
+function.
 
-It should at least be possible to do that, but it's been a while since
-I last looked at hibernate_preallocate_memory() etc.
+> 
+> Just how custom is this bpf program?  It seems to clobber no regs
+> (except args), and it doesn’t return anything. Is it entirely
+> specific to the probed function?  If so, why not just call it
+> directly?
 
-> I started reading the swap code, but it is entangled with
-> page reclaim and I haven't seen a simple solution, neither do I know
-> if there is one and how long it would take to find it, or code around
-> it.  (However I haven't looked yet at how it works when memcgroup
-> limits are lowered---that may give me good ideas).
+It's injecting the jited_bpf_prog to be called when the probed function
+is called, with the same parameters as the probed function.
+
+my_probed_function
+  call trampoline
+
+
+trampoline
+  save parameters
+  call jited_bpf_prog (with same parameters)
+  restore paremeters
+  ret
+
+Jumps back to the my_probed_function, where my_probed_function is
+clueless it was just interrupted.
+
+No need to save any clobbered registers but the parameters, as the
+jited_bpf_prog needs to save any registers that it clobbers just like
+the my_probed_function saves its.
+
+-- Steve
