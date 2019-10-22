@@ -2,114 +2,96 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAA3DCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:16:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89908CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:17:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 798F62084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:16:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rugrgoB+"
+	by mail.kernel.org (Postfix) with ESMTP id 68D5721783
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:17:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389352AbfJVQQ6 (ORCPT
+        id S2389358AbfJVQRg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 12:16:58 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:53142 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389282AbfJVQQ5 (ORCPT
+        Tue, 22 Oct 2019 12:17:36 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:36489 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727152AbfJVQRf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 12:16:57 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9MGGpDl103911;
-        Tue, 22 Oct 2019 11:16:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571761011;
-        bh=ICCv8x/fB/e3A/ZhgbM39pFZPIKBgN0qG0G65NygcQY=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=rugrgoB+b0rTerHlQCBE6GHpLIggA26viOjAVxHIx/+zuOwGMzqcf2SS3bV6rE+6P
-         vYZCU2TA3s+e4tVyrlJCmkAhsiNy9gtd4R7NUZ2EhuyxRk8He11vY7MutKLt16CAx+
-         HMqQ+kmWp8h/la+bnSHzsVdR/6cNnE6A924fq8W0=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9MGGoKp052099
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 22 Oct 2019 11:16:51 -0500
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 22
- Oct 2019 11:16:40 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 22 Oct 2019 11:16:50 -0500
-Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with SMTP id x9MGGKt9053166;
-        Tue, 22 Oct 2019 11:16:20 -0500
-Date:   Tue, 22 Oct 2019 11:16:20 -0500
-From:   Benoit Parrot <bparrot@ti.com>
-To:     Tony Lindgren <tony@atomide.com>
-CC:     Tero Kristo <t-kristo@ti.com>, Rob Herring <robh+dt@kernel.org>,
-        <linux-omap@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [Patch 5/9] arm: dts: dra72-evm-common: Add entries for the CSI2
- cameras
-Message-ID: <20191022161620.pnxrmbhucyvh6swr@ti.com>
-References: <20191018154849.3127-1-bparrot@ti.com>
- <20191018154849.3127-6-bparrot@ti.com>
- <20191022154446.GN5610@atomide.com>
+        Tue, 22 Oct 2019 12:17:35 -0400
+Received: from mail-qt1-f182.google.com ([209.85.160.182]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MO9vD-1igY3r0lq5-00OaRo; Tue, 22 Oct 2019 18:17:34 +0200
+Received: by mail-qt1-f182.google.com with SMTP id u22so27548891qtq.13;
+        Tue, 22 Oct 2019 09:17:33 -0700 (PDT)
+X-Gm-Message-State: APjAAAVVsDH9Dx0DMUddF7SQc69kO/vvo27iR978Rcab1Xi25EOUH3S5
+        RbOdo7Lse1xU3vXLljxWYoZopYC8aOAHMEnT3w4=
+X-Google-Smtp-Source: APXvYqzOVveCcqi6IzsUb1jWOUTf6iMi0+WDBOpmGm2qZQuClTYIYUCOIg/E6ED39g/gNb+nD+rxAapci4yU+CYXkiI=
+X-Received: by 2002:ac8:18eb:: with SMTP id o40mr4277193qtk.304.1571761052972;
+ Tue, 22 Oct 2019 09:17:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20191022154446.GN5610@atomide.com>
-User-Agent: NeoMutt/20171215
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20191022142914.1803322-1-arnd@arndb.de> <MN2PR20MB29732A5C1B14AE24DD7531A3CA680@MN2PR20MB2973.namprd20.prod.outlook.com>
+In-Reply-To: <MN2PR20MB29732A5C1B14AE24DD7531A3CA680@MN2PR20MB2973.namprd20.prod.outlook.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 22 Oct 2019 18:17:16 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1-d7PmYB6v9y2DFD+kOB9ebDsixhFNcuxVJ2+rrBwjqA@mail.gmail.com>
+Message-ID: <CAK8P3a1-d7PmYB6v9y2DFD+kOB9ebDsixhFNcuxVJ2+rrBwjqA@mail.gmail.com>
+Subject: Re: [PATCH] crypto: inside-secure - select CONFIG_CRYPTO_SM3
+To:     Pascal Van Leeuwen <pvanleeuwen@verimatrix.com>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Pascal van Leeuwen <pascalvanl@gmail.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:8p6IsfGbVz0hGZQIFrLX7uaVKL5DNWbfLFWQX0A851z+dPKH9n/
+ B4Sq0SRyMN/0AtuEAzUbLolWkEsMQyI+XJVHEIgNy1TPQvdFLQCeIyLu+XaIjhK+p+SnNGH
+ llFaf4K6pEfdJ8Epuf5wXDjYupX5zeoWId6ALD6N8gYT/CXUBEq+90Yx2BDC3I3+3SYF92S
+ uF2ORlRRgjLnnDJaF7eKw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:L5rxhNVuXIc=:xKEVhUbPuqVibDmdfqMLZD
+ qsaYeDH5Kzq9GKBWpRyEsm7d3cz+iipopPkGfWaRfrFocpiHMhs51l4L5CBFxwpMWJjSUR1Qd
+ KpsEhHRuBVh9FAFTv2M3Vlpp3Lryi8W1psOdTeCciIwEpGBzWSY2XGUxcHrIHJs0BOjuL5Nr7
+ SkOc0d3ivJoNbVMqQVXQKAPPLUH93SdFa0dglJIIh7afikzelgRXzI0wwihDir9JApBHTW05l
+ AOLs18Z7Asrz8HVSCPpfcAwRxJlauOYG1SXYUfYEdp4mrQZB+UNq7pTFh5RCf3TInnqsU8IhX
+ qViH4GWirZQoFTbiDfTW9/InpASrOvtICmtHMcJQxjhkpIbXNieEeDfAvo72eEc2XPyBqHTuA
+ Cs3sKx/EJY0LcOHXlvzJk5aZrzk8ofF8SJDxrjtUzEIIRd7z6HXPv1zefDIgbPGWW2BMgtbQt
+ vLOR2+YtnLc51YDxGLISl82vFbqYxLzZYns1pvwqnOnuleSIfPt0FEyOBaXRElTFnTqiovRFV
+ anE9blKeSSxVFoVHPSxAQRnLZr6WrLIGdUhxgkTGVSvCfJDfrQEiurkbmj8ORMGRxJ43vy1Ys
+ fJyzHQtjvaO098HIqAK1Kb8gzySpaMt4ehFKlTjKyL3UqbR5xSQshP33WR2pdC49XZfXH5inC
+ vDUPaw+ojrTJzyQonuVM83vXhw98MSkf0puoL531j8l/f/tzA1JUrPGTY0lA3chzt3sojJT+q
+ Givy/G/Z0DaeCPTsHux6YTGIzAHZ93UoqBl2qdgnk3KOr6Rf/WtKR+vBnljFzkqeKF9l0H7hs
+ ZKFaqKC0KcGKlTaBaoNdNVZJ85PxOxpR5MuWVgxjvZxkLD+oyZ9m+vo/Ad8nMXu5EFBbiy0Nm
+ MfHI9Ypp02HDG8dXOffg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tony Lindgren <tony@atomide.com> wrote on Tue [2019-Oct-22 08:44:46 -0700]:
-> * Benoit Parrot <bparrot@ti.com> [191018 15:46]:
-> > Add device nodes for CSI2 camera board OV5640.
-> > Add the CAL port nodes with the necessary linkage to the ov5640 nodes.
-> > 
-> > Signed-off-by: Benoit Parrot <bparrot@ti.com>
-> > ---
-> >  arch/arm/boot/dts/dra72-evm-common.dtsi | 35 +++++++++++++++++++++++++
-> >  1 file changed, 35 insertions(+)
-> > 
-> > diff --git a/arch/arm/boot/dts/dra72-evm-common.dtsi b/arch/arm/boot/dts/dra72-evm-common.dtsi
-> > index 8641a3d7d8ad..e4c01a67f6de 100644
-> > --- a/arch/arm/boot/dts/dra72-evm-common.dtsi
-> > +++ b/arch/arm/boot/dts/dra72-evm-common.dtsi
-> > @@ -187,6 +187,12 @@
-> >  		gpio = <&gpio5 8 GPIO_ACTIVE_HIGH>;
-> >  		enable-active-high;
-> >  	};
-> > +
-> > +	clk_ov5640_fixed: clk_ov5640_fixed {
-> > +		compatible = "fixed-clock";
-> > +		#clock-cells = <0>;
-> > +		clock-frequency = <24000000>;
-> > +	};
-> >  };
-> 
-> The clock node name should be generic and not use
-> undescores. If there is a hidden dependency to the
-> clock node name here, it should be mentioned in the
-> patch for the non-standard use.
+On Tue, Oct 22, 2019 at 5:42 PM Pascal Van Leeuwen
+<pvanleeuwen@verimatrix.com> wrote:
 
-Not sure what you mean by generic, here.
-This is just to provide a "clock" node which gives the "value" of the fixed
-oscillator frequency so driver can get to it, the actual name does not
-matter.
+> > diff --git a/drivers/crypto/Kconfig b/drivers/crypto/Kconfig
+> > index 357e230769c8..1ca8d9a15f2a 100644
+> > --- a/drivers/crypto/Kconfig
+> > +++ b/drivers/crypto/Kconfig
+> > @@ -753,6 +753,7 @@ config CRYPTO_DEV_SAFEXCEL
+> >       select CRYPTO_SHA512
+> >       select CRYPTO_CHACHA20POLY1305
+> >       select CRYPTO_SHA3
+> > +     select CRYPTO_SM3
+> >
+> Was this problem observed with the latest state of the Cryptodev GIT?
+> Because I already attempted to fix this issue with commit 99a59da3723b9725
+> Can you please double check if you still get the compile error with that
+> commit included?
+> (I can't tell from this mail which version of the sources you are using)
 
-Benoit
+I was testing on linux-5.4-rc3 plus some of my own patches, so your fix
+was not included.
 
-> 
-> Regards,
-> 
-> Tony
+With your patch applied, mine is no longer needed.
+
+        Arnd
