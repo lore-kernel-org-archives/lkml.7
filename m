@@ -2,93 +2,85 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB26CCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:16:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59E81CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:18:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E18E2086D
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:16:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2712C21872
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:18:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387965AbfJVPQY (ORCPT
+        id S1732252AbfJVPSZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 11:16:24 -0400
-Received: from mga09.intel.com ([134.134.136.24]:23206 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731234AbfJVPQY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 11:16:24 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Oct 2019 08:16:23 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,327,1569308400"; 
-   d="scan'208";a="222845949"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by fmsmga004.fm.intel.com with ESMTP; 22 Oct 2019 08:16:22 -0700
-Date:   Tue, 22 Oct 2019 08:16:22 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        linux-kernel@vger.kernel.org,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>, kvm@vger.kernel.org
-Subject: Re: [PATCH v2 05/16] KVM: VMX: Drop initialization of
- IA32_FEATURE_CONTROL MSR
-Message-ID: <20191022151622.GA2343@linux.intel.com>
-References: <20191021234632.32363-1-sean.j.christopherson@intel.com>
- <20191022000820.1854-1-sean.j.christopherson@intel.com>
- <59cbc79a-fb06-f689-aa24-0ba923783345@redhat.com>
+        Tue, 22 Oct 2019 11:18:25 -0400
+Received: from imap1.codethink.co.uk ([176.9.8.82]:60425 "EHLO
+        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731220AbfJVPSY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 11:18:24 -0400
+Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
+        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
+        id 1iMvvP-00067a-C6; Tue, 22 Oct 2019 16:18:19 +0100
+Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.3)
+        (envelope-from <ben@rainbowdash.codethink.co.uk>)
+        id 1iMvvP-0005Ze-0Q; Tue, 22 Oct 2019 16:18:19 +0100
+From:   "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
+To:     linux-kernel@lists.codethink.co.uk
+Cc:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] net: hwbm: if CONFIG_NET_HWBM unset, make stub functions static
+Date:   Tue, 22 Oct 2019 16:18:18 +0100
+Message-Id: <20191022151818.21383-1-ben.dooks@codethink.co.uk>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <59cbc79a-fb06-f689-aa24-0ba923783345@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 12:51:01PM +0200, Paolo Bonzini wrote:
-> On 22/10/19 02:08, Sean Christopherson wrote:
-> > Remove the code to initialize IA32_FEATURE_CONTROL MSR when KVM is
-> > loaded now that the MSR is initialized during boot on all CPUs that
-> > support VMX, i.e. can possibly load kvm_intel.
-> > 
-> > Reviewed-by: Jim Mattson <jmattson@google.com>
-> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> > ---
-> >  arch/x86/kvm/vmx/vmx.c | 48 +++++++++++++++++-------------------------
-> >  1 file changed, 19 insertions(+), 29 deletions(-)
-> 
-> I am still not sure about this...  Enabling VMX is adding a possible
-> attack vector for the kernel, we should not do it unless we plan to do a
-> VMXON.
+If CONFIG_NET_HWBM is not set, then these stub functions in
+<net/hwbm.h> should be declared static to avoid trying to
+export them from any driver that includes this.
 
-An attacker would need arbitrary cpl0 access to toggle CR4.VMXE and do
-VMXON (and VMLAUNCH), would an extra WRMSR really slow them down?
+Note, add __maybe_unused as the marvell mvneta.c driver will
+otherwise cause gcc warnings from these.
 
-And practically speaking, how often do you encounter systems whose
-firmware leaves IA32_FEATURE_CONTROL unlocked?
+Fixes the following sparse warnings:
 
-> Why is it so important to operate with locked
-> IA32_FEATURE_CONTROL (so that KVM can enable VMX and the kernel can
-> still enable SGX if desired).
+./include/net/hwbm.h:24:6: warning: symbol 'hwbm_buf_free' was not declared. Should it be static?
+./include/net/hwbm.h:25:5: warning: symbol 'hwbm_pool_refill' was not declared. Should it be static?
+./include/net/hwbm.h:26:5: warning: symbol 'hwbm_pool_add' was not declared. Should it be static?
 
-For simplicity.  The alternative that comes to mind is to compute the
-desired MSR value and write/lock the MSR on demand, e.g. add a sequence
-similar to KVM's hardware_enable_all() for SGX, but that's a fair amount
-of complexity for marginal benefit (IMO).
+Signed-off-by: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
+---
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ include/net/hwbm.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-If a user really doesn't want VMX enabled, they can clear the feature bit
-via the clearcpuid kernel param. 
+diff --git a/include/net/hwbm.h b/include/net/hwbm.h
+index 81643cf8a1c4..cb5e6de8b7cd 100644
+--- a/include/net/hwbm.h
++++ b/include/net/hwbm.h
+@@ -21,9 +21,9 @@ void hwbm_buf_free(struct hwbm_pool *bm_pool, void *buf);
+ int hwbm_pool_refill(struct hwbm_pool *bm_pool, gfp_t gfp);
+ int hwbm_pool_add(struct hwbm_pool *bm_pool, unsigned int buf_num);
+ #else
+-void hwbm_buf_free(struct hwbm_pool *bm_pool, void *buf) {}
+-int hwbm_pool_refill(struct hwbm_pool *bm_pool, gfp_t gfp) { return 0; }
+-int hwbm_pool_add(struct hwbm_pool *bm_pool, unsigned int buf_num)
++static void __maybe_unused hwbm_buf_free(struct hwbm_pool *bm_pool, void *buf) {}
++static int __maybe_unused hwbm_pool_refill(struct hwbm_pool *bm_pool, gfp_t gfp) { return 0; }
++static int __maybe_unused hwbm_pool_add(struct hwbm_pool *bm_pool, unsigned int buf_num)
+ { return 0; }
+ #endif /* CONFIG_HWBM */
+ #endif /* _HWBM_H */
+-- 
+2.23.0
 
-That being said, enabling VMX in IA32_FEATURE_CONTROL if and only if
-IS_ENABLED(CONFIG_KVM) is true would be an easy enhancement.
