@@ -2,122 +2,128 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F09BCCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:33:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92ABBCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:38:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF08D218AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:33:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D2DE218AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:38:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JL/FNY8A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389120AbfJVMd6 (ORCPT
+        id S1731065AbfJVMiF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 08:33:58 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:51226 "EHLO foss.arm.com"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S2388512AbfJVMd6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 08:33:58 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D49D215BF;
-        Tue, 22 Oct 2019 05:33:36 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5A5DA3F71F;
-        Tue, 22 Oct 2019 05:33:32 -0700 (PDT)
-Date:   Tue, 22 Oct 2019 13:33:30 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Marco Elver <elver@google.com>
-Cc:     akiyks@gmail.com, stern@rowland.harvard.edu, glider@google.com,
-        parri.andrea@gmail.com, andreyknvl@google.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, arnd@arndb.de, boqun.feng@gmail.com,
-        bp@alien8.de, dja@axtens.net, dlustig@nvidia.com,
-        dave.hansen@linux.intel.com, dhowells@redhat.com,
-        dvyukov@google.com, hpa@zytor.com, mingo@redhat.com,
-        j.alglave@ucl.ac.uk, joel@joelfernandes.org, corbet@lwn.net,
-        jpoimboe@redhat.com, luc.maranget@inria.fr, npiggin@gmail.com,
-        paulmck@linux.ibm.com, peterz@infradead.org, tglx@linutronix.de,
-        will@kernel.org, kasan-dev@googlegroups.com,
-        linux-arch@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-efi@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
-Subject: Re: [PATCH v2 7/8] locking/atomics, kcsan: Add KCSAN instrumentation
-Message-ID: <20191022123329.GC11583@lakrids.cambridge.arm.com>
-References: <20191017141305.146193-1-elver@google.com>
- <20191017141305.146193-8-elver@google.com>
+        Tue, 22 Oct 2019 08:38:05 -0400
+Received: from mail-yb1-f195.google.com ([209.85.219.195]:38050 "EHLO
+        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726142AbfJVMiE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 08:38:04 -0400
+Received: by mail-yb1-f195.google.com with SMTP id r68so5083323ybf.5
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 05:38:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Vqe+JDf7lxru1jxAApix4PrWiqgoGBD8c1cyEEgcqrE=;
+        b=JL/FNY8AIG2cFwuPUArErStvGoncUr7Ku9MMD8uZ69Q1G21BYkrRLbsIlUKYSn7H06
+         2dDG5woly8l7mPCHbZAmoh5ZSGfTpAo0dhPJxNveH0f0PYcgM084O9WM8pfugoP2zztG
+         qYSybo2fclyUs1/KIcUQ9Ub3nff1hY8cZwtJkJESpRTMdxW7R+f/zkSMjYPfN1Lw8PZ5
+         gk0CGIY3m08Ip/9jiD5QVAhpFMktXVP6j5WdQyAX4l+wmSB/ffucACjcfHd62GXi9vsl
+         vmea+/YMSkID9Xy95yMwTcYYxb4f7LkXC72SbfEsdCdc5dpGagYwfnhssRD0bnU5uQPj
+         hnLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Vqe+JDf7lxru1jxAApix4PrWiqgoGBD8c1cyEEgcqrE=;
+        b=WkCfeP+p/7i1WzucIz3XnJZfHV0OxXCCrn2DbjJsOKPCzJHlmwSYCr5fkD5SidyVlR
+         ozqMGeT5BROy/UDTb81x0ahz//Su7MYeB2ep3/z5U3x/06+10o5OtOtD2/a6eG4YbuPF
+         FXxkeTo+y1j+nGqQ9U7/L0YSYfB/sWG/doawYq27vBAnlpPSIp4QnLQgMuN6msS8Dk5l
+         EdB051p9GhXmCht6imcKjGTj8uUNSQJJAjz+q9fOU2U3lIAIXX9/atcEeKyDArlXx9hT
+         +o5ECfJ4Nq3ahX8WMUHDR7KwvLfQgq7BKCN5FdXVU7A9mPt+gC3wj2knX5tMxLH0sufR
+         AhIA==
+X-Gm-Message-State: APjAAAUVZOmz3jxHqONWeH4vIhragXPBN1bCm8Zpnamn/QbuqYuJCADG
+        g3BjAsRv0NWhUDkjR05CxGSKjZBmTOJQSnanOY4=
+X-Google-Smtp-Source: APXvYqwM6+kvBzSdwrfHuERc1tibLhtRgB8VQ5xXy9dY5J59vNeFeO9D4XNBXJoXCz0aNpLTsJet6lWlQ9b83kq06Xw=
+X-Received: by 2002:a25:5386:: with SMTP id h128mr2145519ybb.362.1571747883623;
+ Tue, 22 Oct 2019 05:38:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191017141305.146193-8-elver@google.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+References: <1569483508-18768-1-git-send-email-candlesea@gmail.com> <20191022122550.GA17232@willie-the-truck>
+In-Reply-To: <20191022122550.GA17232@willie-the-truck>
+From:   Candle Sun <candlesea@gmail.com>
+Date:   Tue, 22 Oct 2019 20:37:51 +0800
+Message-ID: <CAPnx3XP5nEMJwsT0tKD-Lm1MRf0cfR5KLfz0to+ZZ3pin6tEnA@mail.gmail.com>
+Subject: Re: [RESEND PATCH] ARM/hw_breakpoint: add ARMv8.1/ARMv8.2 debug
+ architecutre versions support in enable_monitor_mode()
+To:     Will Deacon <will@kernel.org>
+Cc:     mark.rutland@arm.com, linux@armlinux.org.uk,
+        linux-arm-kernel@lists.infradead.org,
+        lkml <linux-kernel@vger.kernel.org>,
+        Candle Sun <candle.sun@unisoc.com>,
+        Nianfu Bai <nianfu.bai@unisoc.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 04:13:04PM +0200, Marco Elver wrote:
-> This adds KCSAN instrumentation to atomic-instrumented.h.
-> 
-> Signed-off-by: Marco Elver <elver@google.com>
-> ---
-> v2:
-> * Use kcsan_check{,_atomic}_{read,write} instead of
->   kcsan_check_{access,atomic}.
-> * Introduce __atomic_check_{read,write} [Suggested by Mark Rutland].
-> ---
->  include/asm-generic/atomic-instrumented.h | 393 +++++++++++-----------
->  scripts/atomic/gen-atomic-instrumented.sh |  17 +-
->  2 files changed, 218 insertions(+), 192 deletions(-)
+On Tue, Oct 22, 2019 at 8:25 PM Will Deacon <will@kernel.org> wrote:
+>
+> On Thu, Sep 26, 2019 at 03:38:28PM +0800, Candle Sun wrote:
+> > From: Candle Sun <candle.sun@unisoc.com>
+> >
+> > When ARMv8.1/ARMv8.2 cores are used in AArch32 mode,
+> > arch_hw_breakpoint_init() in arch/arm/kernel/hw_breakpoint.c will be used.
+> >
+> > From ARMv8 specification, different debug architecture versions defined:
+> > * 0110 ARMv8, v8 Debug architecture.
+> > * 0111 ARMv8.1, v8 Debug architecture, with Virtualization Host Extensions.
+> > * 1000 ARMv8.2, v8.2 Debug architecture.
+> >
+> > So missing ARMv8.1/ARMv8.2 cases will cause enable_monitor_mode() function
+> > returns -ENODEV, and arch_hw_breakpoint_init() will fail.
+> >
+> > Signed-off-by: Candle Sun <candle.sun@unisoc.com>
+> > Signed-off-by: Nianfu Bai <nianfu.bai@unisoc.com>
+> > ---
+> >  arch/arm/include/asm/hw_breakpoint.h | 2 ++
+> >  arch/arm/kernel/hw_breakpoint.c      | 2 ++
+> >  2 files changed, 4 insertions(+)
+>
+> [...]
+>
+> > diff --git a/arch/arm/include/asm/hw_breakpoint.h b/arch/arm/include/asm/hw_breakpoint.h
+> > index ac54c06..9137ef6 100644
+> > --- a/arch/arm/include/asm/hw_breakpoint.h
+> > +++ b/arch/arm/include/asm/hw_breakpoint.h
+> > @@ -53,6 +53,8 @@ static inline void decode_ctrl_reg(u32 reg,
+> >  #define ARM_DEBUG_ARCH_V7_MM 4
+> >  #define ARM_DEBUG_ARCH_V7_1  5
+> >  #define ARM_DEBUG_ARCH_V8    6
+> > +#define ARM_DEBUG_ARCH_V8_1  7
+> > +#define ARM_DEBUG_ARCH_V8_2  8
+>
+> Looks like you can also add:
+>
+> #define ARM_DEBUG_ARCH_V8_4     9
+>
+> and treat that the same way. With that, and a fix to $SUBJECT:
+>
+> Acked-by: Will Deacon <will@kernel.org>
+>
+> Please put this into the patch system [1].
+>
+> Will
+>
+> [1] https://www.arm.linux.org.uk/developer/patches/
 
-The script changes and generated code look fine to me, so FWIW:
+Thanks, Will.
+I will do it ASAP.
 
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-
-Thanks,
-Mark.
-
-> diff --git a/scripts/atomic/gen-atomic-instrumented.sh b/scripts/atomic/gen-atomic-instrumented.sh
-> index e09812372b17..8b8b2a6f8d68 100755
-> --- a/scripts/atomic/gen-atomic-instrumented.sh
-> +++ b/scripts/atomic/gen-atomic-instrumented.sh
-> @@ -20,7 +20,7 @@ gen_param_check()
->  	# We don't write to constant parameters
->  	[ ${type#c} != ${type} ] && rw="read"
->  
-> -	printf "\tkasan_check_${rw}(${name}, sizeof(*${name}));\n"
-> +	printf "\t__atomic_check_${rw}(${name}, sizeof(*${name}));\n"
->  }
->  
->  #gen_param_check(arg...)
-> @@ -107,7 +107,7 @@ cat <<EOF
->  #define ${xchg}(ptr, ...)						\\
->  ({									\\
->  	typeof(ptr) __ai_ptr = (ptr);					\\
-> -	kasan_check_write(__ai_ptr, ${mult}sizeof(*__ai_ptr));		\\
-> +	__atomic_check_write(__ai_ptr, ${mult}sizeof(*__ai_ptr));		\\
->  	arch_${xchg}(__ai_ptr, __VA_ARGS__);				\\
->  })
->  EOF
-> @@ -148,6 +148,19 @@ cat << EOF
->  
->  #include <linux/build_bug.h>
->  #include <linux/kasan-checks.h>
-> +#include <linux/kcsan-checks.h>
-> +
-> +static inline void __atomic_check_read(const volatile void *v, size_t size)
-> +{
-> +	kasan_check_read(v, size);
-> +	kcsan_check_atomic_read(v, size);
-> +}
-> +
-> +static inline void __atomic_check_write(const volatile void *v, size_t size)
-> +{
-> +	kasan_check_write(v, size);
-> +	kcsan_check_atomic_write(v, size);
-> +}
->  
->  EOF
->  
-> -- 
-> 2.23.0.866.gb869b98d4c-goog
-> 
+Best regards,
+Candle
