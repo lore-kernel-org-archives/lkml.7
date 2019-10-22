@@ -2,155 +2,178 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 193B4CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 10:33:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22715CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 10:35:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E346720B7C
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 10:33:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E451A20B7C
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 10:35:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="azJ3Q7p1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731882AbfJVKdi (ORCPT
+        id S2388472AbfJVKfq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 06:33:38 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:6560 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730197AbfJVKdh (ORCPT
+        Tue, 22 Oct 2019 06:35:46 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44527 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2388415AbfJVKfq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 06:33:37 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9MAXEl5111333;
-        Tue, 22 Oct 2019 06:33:22 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2vsxm8uh9m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 22 Oct 2019 06:33:21 -0400
-Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x9MAXL7M111933;
-        Tue, 22 Oct 2019 06:33:21 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2vsxm8uh90-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 22 Oct 2019 06:33:21 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x9MAUmVM007385;
-        Tue, 22 Oct 2019 10:33:20 GMT
-Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
-        by ppma01dal.us.ibm.com with ESMTP id 2vqt46muur-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 22 Oct 2019 10:33:20 +0000
-Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9MAXJev53346812
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 22 Oct 2019 10:33:19 GMT
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7E37AAC059;
-        Tue, 22 Oct 2019 10:33:19 +0000 (GMT)
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3F2DCAC05E;
-        Tue, 22 Oct 2019 10:33:19 +0000 (GMT)
-Received: from sofia.ibm.com (unknown [9.124.31.210])
-        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue, 22 Oct 2019 10:33:19 +0000 (GMT)
-Received: by sofia.ibm.com (Postfix, from userid 1000)
-        id 246DB2E31C4; Tue, 22 Oct 2019 16:03:17 +0530 (IST)
-From:   "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
-To:     Nathan Lynch <nathanl@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>,
-        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
-        Kamalesh Babulal <kamaleshb@in.ibm.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
-Subject: [PATCH v2 1/1] pseries/hotplug-cpu: Change default behaviour of cede_offline to "off"
-Date:   Tue, 22 Oct 2019 16:03:11 +0530
-Message-Id: <1571740391-3251-2-git-send-email-ego@linux.vnet.ibm.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1571740391-3251-1-git-send-email-ego@linux.vnet.ibm.com>
-References: <1571740391-3251-1-git-send-email-ego@linux.vnet.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-22_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910220095
+        Tue, 22 Oct 2019 06:35:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571740544;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ULN5eSGY4MtkW08yCSqz0QqvTO9SX1bksmLq7XKOj9M=;
+        b=azJ3Q7p1XNV5UDQEiC1Bs8pmqc1ZHXN2sjin3vP+z6G0iu1Tj3KhbEMPsjLanT15sjCL07
+        0Y8XPk9F5WMSYLVfp2o0AlqlEQMSgzieHgW5Y9T24qUmzuRYG7btOQOKk3jLRgEkTdbtTu
+        ciiPvyHDzKLTvh5NXY/uxE9dpTttBeo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-282-W9eko3ddNJq9PMAOLuqccg-1; Tue, 22 Oct 2019 06:35:41 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 75F501800D79;
+        Tue, 22 Oct 2019 10:35:39 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-121-40.rdu2.redhat.com [10.10.121.40])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9C7095DD61;
+        Tue, 22 Oct 2019 10:35:34 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAHk-=wjFozfjV34_qy3_Z155uz_Z7qFVfE8h=_9ceGU-SVk9hA@mail.gmail.com>
+References: <CAHk-=wjFozfjV34_qy3_Z155uz_Z7qFVfE8h=_9ceGU-SVk9hA@mail.gmail.com> <000000000000830fe50595115344@google.com> <00000000000071e2fc05951229ad@google.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Mimi Zohar <zohar@linux.ibm.com>
+Cc:     dhowells@redhat.com,
+        syzbot <syzbot+6455648abc28dbdd1e7f@syzkaller.appspotmail.com>,
+        aou@eecs.berkeley.edu,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris James Morris <jmorris@namei.org>,
+        keyrings@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-riscv@lists.infradead.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Subject: Re: WARNING: refcount bug in find_key_to_update
+MIME-Version: 1.0
+Content-ID: <11433.1571740533.1@warthog.procyon.org.uk>
+Date:   Tue, 22 Oct 2019 11:35:33 +0100
+Message-ID: <11434.1571740533@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MC-Unique: W9eko3ddNJq9PMAOLuqccg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-Currently on PSeries Linux guests, the offlined CPU can be put to one
-of the following two states:
-   - Long term processor cede (also called extended cede)
-   - Returned to the hypervisor via RTAS "stop-self" call.
+> > syzbot has bisected this bug to 0570bc8b7c9b ("Merge tag
+> >  'riscv/for-v5.3-rc1' ...")
+>=20
+> Yeah, that looks unlikely. The only non-riscv changes are from
+> documentation updates and moving a config variable around.
+>=20
+> Looks like the crash is quite unlikely, and only happens in one out of
+> ten runs for the ones it has happened to.
+>=20
+> The backtrace looks simple enough, though:
+>=20
+>   RIP: 0010:refcount_inc_checked+0x2b/0x30 lib/refcount.c:156
+>    __key_get include/linux/key.h:281 [inline]
+>    find_key_to_update+0x67/0x80 security/keys/keyring.c:1127
+>    key_create_or_update+0x4e5/0xb20 security/keys/key.c:905
+>    __do_sys_add_key security/keys/keyctl.c:132 [inline]
+>    __se_sys_add_key security/keys/keyctl.c:72 [inline]
+>    __x64_sys_add_key+0x219/0x3f0 security/keys/keyctl.c:72
+>    do_syscall_64+0xd0/0x540 arch/x86/entry/common.c:296
+>    entry_SYSCALL_64_after_hwframe+0x49/0xbe
+>=20
+> which to me implies that there's some locking bug, and somebody
+> released the key without holding a lock.
 
-This is controlled by the kernel boot parameter "cede_offline=on/off".
+I'm wondering if this is actually a bug in the error handling in the encryp=
+ted
+key type.  Looking in the syzbot console log, there's a lot of output from
+there prior to the crash, of which the following is an excerpt:
 
-By default the offlined CPUs enter extended cede. The PHYP hypervisor
-considers CPUs in extended cede to be "active" since they are still
-under the control fo the Linux guests. Hence, when we change the SMT
-modes by offlining the secondary CPUs, the PURR and the RWMR SPRs will
-continue to count the values for offlined CPUs in extended cede as if
-they are online. This breaks the accounting in tools such as lparstat.
+[  248.516746][T27381] encrypted_key: key user:syz not found
+[  248.524392][T27382] encrypted_key: key user:syz not found
+[  248.616141][T27392] encrypted_key: key user:syz not found
+[  248.618890][T27393] encrypted_key: key user:syz not found
+[  248.690844][T27404] encrypted_key: key user:syz not found
+[  248.739405][T27403] encrypted_key: key user:syz not found
+[  248.804881][T27417] encrypted_key: key user:syz not found
+[  248.828354][T27418] encrypted_key: keyword 'new' not allowed when called=
+ from .update method
+[  248.925249][T27427] encrypted_key: keyword 'new' not allowed when called=
+ from .update method
+[  248.928200][T27415] Bad refcount user syz
+[  248.934043][T27428] encrypted_key: key user:syz not found
+[  248.939502][T27429] encrypted_key: key user:syz not found
+[  248.968744][T27434] encrypted_key: key user:syz not found
+[  248.982201][T27415] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+[  248.996072][T27415] BUG: KASAN: use-after-free in refcount_inc_not_zero_=
+checked+0x81/0x200
 
-To fix this, ensure that by default the offlined CPUs are returned to
-the hypervisor via RTAS "stop-self" call by changing the default value
-of "cede_offline_enabled" to false.
+Note that the "Bad refcount user syz" is a bit I patched in to print the ty=
+pe
+and description of the key that incurred the error.
 
-Fixes: commit 3aa565f53c39 ("powerpc/pseries: Add hooks to put the CPU
-into an appropriate offline state")
+It's a tad difficult to say exactly what's going on since I've no idea what
+the syzbot reproducer is actually doing.
 
-Signed-off-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
----
- Documentation/core-api/cpu_hotplug.rst       |  2 +-
- arch/powerpc/platforms/pseries/hotplug-cpu.c | 12 +++++++++++-
- 2 files changed, 12 insertions(+), 2 deletions(-)
+#{"threaded":true,"collide":true,"repeat":true,"procs":6,"sandbox":"namespa=
+ce","fault_call":-1,"tun":true,"netdev":true,"resetnet":true,"cgroups":true=
+,"binfmt_misc":true,"close_fds":true,"tmpdir":true,"segv":true}
+perf_event_open(&(0x7f000001d000)=3D{0x1, 0x70, 0x0, 0x0, 0x0, 0x0, 0x0, 0x=
+7f, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x7, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0=
+x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0=
+x0, 0x0, 0x0, 0x0, @perf_config_ext}, 0x0, 0xffffffffffffffff, 0xffffffffff=
+ffffff, 0x0)
+keyctl$instantiate(0xc, 0x0, &(0x7f0000000100)=3DANY=3D[@ANYBLOB=3D'new def=
+ault user:syz 04096'], 0x1, 0x0)
+r0 =3D add_key(&(0x7f0000000140)=3D'encrypted\x00', &(0x7f0000000180)=3D{'s=
+yz'}, &(0x7f0000000100), 0xca, 0xfffffffffffffffe)
+add_key$user(&(0x7f0000000040)=3D'user\x00', &(0x7f0000000000)=3D{'syz'}, &=
+(0x7f0000000440)=3D'X', 0x1, 0xfffffffffffffffe)
+keyctl$read(0xb, r0, &(0x7f0000000240)=3D""/112, 0x349b7f55)
 
-diff --git a/Documentation/core-api/cpu_hotplug.rst b/Documentation/core-api/cpu_hotplug.rst
-index 4a50ab7..5319593 100644
---- a/Documentation/core-api/cpu_hotplug.rst
-+++ b/Documentation/core-api/cpu_hotplug.rst
-@@ -53,7 +53,7 @@ Command Line Switches
- ``cede_offline={"off","on"}``
-   Use this option to disable/enable putting offlined processors to an extended
-   ``H_CEDE`` state on supported pseries platforms. If nothing is specified,
--  ``cede_offline`` is set to "on".
-+  ``cede_offline`` is set to "off".
- 
-   This option is limited to the PowerPC architecture.
- 
-diff --git a/arch/powerpc/platforms/pseries/hotplug-cpu.c b/arch/powerpc/platforms/pseries/hotplug-cpu.c
-index bbda646..f9d0366 100644
---- a/arch/powerpc/platforms/pseries/hotplug-cpu.c
-+++ b/arch/powerpc/platforms/pseries/hotplug-cpu.c
-@@ -46,7 +46,17 @@ static DEFINE_PER_CPU(enum cpu_state_vals, preferred_offline_state) =
- 
- static enum cpu_state_vals default_offline_state = CPU_STATE_OFFLINE;
- 
--static bool cede_offline_enabled __read_mostly = true;
-+/*
-+ * Determines whether the offlined CPUs should be put to a long term
-+ * processor cede (called extended cede) for power-saving
-+ * purposes. The CPUs in extended cede are still with the Linux Guest
-+ * and are not returned to the Hypervisor.
-+ *
-+ * By default, the offlined CPUs are returned to the hypervisor via
-+ * RTAS "stop-self". This behaviour can be changed by passing the
-+ * kernel commandline parameter "cede_offline=on".
-+ */
-+static bool cede_offline_enabled __read_mostly;
- 
- /*
-  * Enable/disable cede_offline when available.
--- 
-1.9.4
+However, it looks like the encrypted key type is trying to access a user ke=
+y,
+so maybe there's an overput there?  I'm trying to insert more debugging, bu=
+t
+the test doesn't always fail.
+
+syzbot <syzbot+6455648abc28dbdd1e7f@syzkaller.appspotmail.com> wrote:
+
+> HEAD commit:    bc88f85c kthread: make __kthread_queue_delayed_work stati=
+c
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=3D1730584b60000=
+0
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=3De0ac4d9b35046=
+343
+> dashboard link: https://syzkaller.appspot.com/bug?extid=3D6455648abc28dbd=
+d1e7f
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D11c8adab600=
+000
+
+David
 
