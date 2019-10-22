@@ -2,148 +2,114 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDA58CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:06:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 584C4CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:08:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C500B21906
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:06:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E95A21783
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:08:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dQSQd8zv"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="keHs2RpN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388139AbfJVOGl (ORCPT
+        id S1731428AbfJVOIz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 10:06:41 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:40332 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727582AbfJVOGk (ORCPT
+        Tue, 22 Oct 2019 10:08:55 -0400
+Received: from mail-wr1-f46.google.com ([209.85.221.46]:44298 "EHLO
+        mail-wr1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727582AbfJVOIy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 10:06:40 -0400
-Received: by mail-qt1-f194.google.com with SMTP id o49so19090145qta.7;
-        Tue, 22 Oct 2019 07:06:40 -0700 (PDT)
+        Tue, 22 Oct 2019 10:08:54 -0400
+Received: by mail-wr1-f46.google.com with SMTP id z9so18220454wrl.11
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 07:08:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=sHs2QlhxbBkINZWNWfLKn7toSRHDRtAjO+pu/W5oZEw=;
-        b=dQSQd8zvq44JjJnas5gkyT5ZaMzsJTMqzIIN148V+8hv85hrKwU+zj8JrDLPyXSdif
-         zRloFwPsMvDEODBLgvr3a8aU2D8kN/k59FU15NF7CS0RtLaWtog5pW5jZQ6DIaooIMgy
-         EcSxbdLmkeL4UgrN4Unz7fHfLtxpmMGZQLQcaJpQyCqeI+hTj7H4VG2YKfsgtD49HKE2
-         LknFWZIpbyAdg0qu0TZ0GiJAys2u2+MzNx15bxD8az7B6zACrkl50NS++A0kyDyaFDYA
-         7efqODlPKgBgmxIQRj5gnv+DMaqb7KTKd0dWOIYHxH8p/x3Navcf00+tZLJXS9P9mvj4
-         j1og==
+        d=linaro.org; s=google;
+        h=to:from:subject:openpgp:cc:message-id:date:mime-version
+         :content-language:content-transfer-encoding;
+        bh=gZd1p6fUssdVq9L3/zQnlWDjkbzH5VjZcJqBdDJdR9g=;
+        b=keHs2RpNHJdPkb6uEUy9aPA5uOwZGIgiKzr7hjcHSht944XIqlyXIkEh36Z5ImF2ut
+         FGfc24+pz7Tyb0U62ZJG24ULnyNDZmzkUa8ISCWjuvq2d4RdMaPSasnDnSDZu1HrdTtA
+         F1GnjDJ5bm5zioxzlrNME5nNCnCc+kc/dcT0SE/V743y6KuMzj7mJigk00Z+VmREl/cY
+         HKqelj9dHtjLwLswgJaAW1N6YNb/eBpUDeHzrgvjCERb6xiSpSd0XkYjNPUKuEqV0KAd
+         yMqCsAfGiu2biHYzaFn/J3R60/sPcpKj5/IYWv14xo5XCTsS+I7LlmQbPCuocLSG8A6H
+         U3Sg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sHs2QlhxbBkINZWNWfLKn7toSRHDRtAjO+pu/W5oZEw=;
-        b=QNwBmshhIYnwhFZdR60Y1hWExa7UMVaRh5c2IB2xeqVX7PATSsXKcs6ao7ILUXCwQ9
-         Nb8m7klSh+bBAJHdoSU66St23bQsq0zeQjRUGP7Jvktrfgg2yb50YxMZ81uoEy1z1/qp
-         ba7nLKjGAkOnAV/nzGKXRO66uRBhHJHoqeIUzXQTS0ae/xapooELzCBKylq+B2NMmOG5
-         J77Nx0sxmAiF1zNxTI1+kAarlI6ZFPdjr1pZadzfzHSx+fm1YEsD/kZSb+K0YoRFA+En
-         QV+gl/C+pEuPixQzl1Y8Uws3FLTI04OHYg9x73xyp05UaLyFIsN4pomMPLI2LosuT9lK
-         DNwQ==
-X-Gm-Message-State: APjAAAXecgLyqlL+1wOannSSOArRGorVowh2anCU1QcOWjbweFxguqKc
-        rPYSGJ8e9BbwAu4z9dcqwds=
-X-Google-Smtp-Source: APXvYqygfBqxEFPNJIXaP/QrHWQzCuZsQXrnLgNtmuWg9S65iYxDR5QdCFZUXUmf0bttAcOU+7mXOg==
-X-Received: by 2002:ac8:4243:: with SMTP id r3mr3365473qtm.329.1571753199574;
-        Tue, 22 Oct 2019 07:06:39 -0700 (PDT)
-Received: from smtp.gmail.com (gwcrusp.semfio.usp.br. [143.107.150.86])
-        by smtp.gmail.com with ESMTPSA id q8sm3970384qta.31.2019.10.22.07.06.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Oct 2019 07:06:39 -0700 (PDT)
-Date:   Tue, 22 Oct 2019 11:06:33 -0300
-From:   Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Dragos Bogdan <dragos.bogdan@analog.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        devicetree@vger.kernel.org, kernel-usp@googlegroups.com
-Subject: Re: [PATCH v2 2/2] dt-bindings: iio: adc: Add DT docs for AD7292
-Message-ID: <20191022140604.ovmooly47qax2sms@smtp.gmail.com>
-References: <20191016025220.td3xb7oxlfkznxl6@smtp.gmail.com>
- <20191017191152.GA11222@bogus>
- <20191019150652.h6bkfz2w2ohemvwy@smtp.gmail.com>
- <CAL_JsqKqgko02KstmytNNUUF0-QR7rpMF4dV=X55N=TnDahd+Q@mail.gmail.com>
+        h=x-gm-message-state:to:from:subject:openpgp:cc:message-id:date
+         :mime-version:content-language:content-transfer-encoding;
+        bh=gZd1p6fUssdVq9L3/zQnlWDjkbzH5VjZcJqBdDJdR9g=;
+        b=LG5mo30tKR6NvuPZ0qPe+f60WAHDAqrY3wy4WL3exAP4ki+rhoPeCB7C3Q+0l6qiq+
+         evaT3dVZG+YpwWQxQzAtl6ZSIfIGXuaGfe80e4ksYcdwLY5mu6rDQipcNpblXTinXscG
+         ni/NA7qdybKoiGrT1ghEZ/aYY2FZH7DcuBDcMJlan97B3/IAyj67f+6cUfkCliaMQawZ
+         wgzCbOCy3CrHEHK1SF6kcvl8I1Dhj19c9wPVMN6wP5YNJcev/YpA9c1zj/UT00pYDYA3
+         9GLPdo14oycoCueKCdLyCnxr6vCmgEnJhDv3P7zHP67IkblGr725+ViW2zSnwN+BlLU2
+         aDFw==
+X-Gm-Message-State: APjAAAVurXdtuXgrA9NnAhkatSegbxmEvl/Ea6tnUCZMC5M0lzcv0m7m
+        XjAE1AnBceQy31BbPxrI5rCosdvNRX/tuQ==
+X-Google-Smtp-Source: APXvYqxWclLCiBW43xRG3JowpwK/J4RNacQW5rqIrov9rEu/uBMIJkFGUQGH6Wt42JWQOxSi3n5P2A==
+X-Received: by 2002:adf:d84c:: with SMTP id k12mr3945170wrl.235.1571753330819;
+        Tue, 22 Oct 2019 07:08:50 -0700 (PDT)
+Received: from [192.168.27.135] ([37.157.136.206])
+        by smtp.googlemail.com with ESMTPSA id l8sm787765wru.22.2019.10.22.07.08.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 22 Oct 2019 07:08:49 -0700 (PDT)
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+Subject: [GIT PULL] interconnect fixes for 5.4
+Openpgp: preference=signencrypt
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-ID: <f9c1befb-9170-5189-6383-3311773c02f2@linaro.org>
+Date:   Tue, 22 Oct 2019 17:08:49 +0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqKqgko02KstmytNNUUF0-QR7rpMF4dV=X55N=TnDahd+Q@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Greg,
 
-I ran the DTC and CHECK for AD7292 schema however, the target '__build'
-did not run due to errors found in regulator/fixed-regulator.yaml and
-arm/allwinner,sun4i-a10-csi.yaml.
-
-I recall seeing something about the maxItems requirement over regulator
-supplies being changed on the iio mailing list, so I updated my repo
-locally, cloned and reinstalled the dt-schema toolset. However, I still
-can't make it go through the '__build' target.
-
-Python 3.7.5rc1 is my default python and I got the following pip3
-packages installed:
-
-ruamel.yaml        0.16.5
-ruamel.yaml.clib   0.2.0
-rfc3987            1.3.8
-jsonschema         3.0.1
-dtschema           0.0.1  at $HOME/<iio repo dir>/dt-schema
-
-Debian Bullseye packages installed:
-python3-yaml/testing,now 5.1.2-1
-libyaml-dev/testing,now 0.2.2-1
-
-I was only able to run DTC after installing the libyaml-dev package, so
-I think it might be worth to add it to the project dependencies at
-https://github.com/robherring/dt-schema.
-
-apt-get install libyaml-dev
+This is a tiny pull request with interconnect fixes for 5.4-rc. Could you please
+take them into char-misc for the next possible rc.
 
 Thanks,
-Marcelo
+Georgi
 
-On 10/20, Rob Herring wrote:
-> On Sat, Oct 19, 2019 at 10:07 AM Marcelo Schmitt
-> <marcelo.schmitt1@gmail.com> wrote:
-> >
-> > Hi Rob
-> >
-> > Thanks for the review.
-> >
-> > I'm having some trouble with the DTC.
-> > I installed the DT tool from https://github.com/robherring/dt-schema.
-> > Running make -k dt_binding_check goes through all the checks (CHKDT), producing
-> > the .example.dts files but then gives errors like:
-> >
-> >   DTC     Documentation/devicetree/bindings/arm/calxeda.example.dt.yaml
-> > FATAL ERROR: Unknown output format "yaml"
-> > make[1]: *** [scripts/Makefile.lib:314: Documentation/devicetree/bindings/arm/calxeda.example.dt.yaml] Error 1
-> > make[1]: *** Deleting file 'Documentation/devicetree/bindings/arm/calxeda.example.dt.yaml'
-> >
-> > My pip3 installation has:
-> > jsonschema jsonschema-3.1.2.dev6+g0d827f3
-> > rfc3987 1.3.8
-> >
-> > $HOME/.local/bin is listed in my shell's PATH variable.
-> >
-> > I was trying to follow the documentation at:
-> > Documentation/devicetree/writing-schema.rst
-> >
-> > Are there any other DTC dependencies that I am missing?
-> 
-> Yes, libyaml. See Documentation/devicetree/writing-schema.rst.
-> 
-> Rob
+The following changes since commit 4f5cafb5cb8471e54afdc9054d973535614f7675:
+
+  Linux 5.4-rc3 (2019-10-13 16:37:36 -0700)
+
+are available in the Git repository at:
+
+  https://git.linaro.org/people/georgi.djakov/linux.git tags/icc-5.4-rc5
+
+for you to fetch changes up to a8dfe193a60c6db7c54e03e3f1b96e0aa7244990:
+
+  interconnect: Add locking in icc_set_tag() (2019-10-20 12:14:41 +0300)
+
+----------------------------------------------------------------
+interconnect fixes for 5.4
+
+Two tiny fixes for the current release:
+
+- Fix memory allocation size in a driver.
+- Add missing mutex.
+
+Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+
+----------------------------------------------------------------
+Georgi Djakov (1):
+      interconnect: Add locking in icc_set_tag()
+
+Leonard Crestez (1):
+      interconnect: qcom: Fix icc_onecell_data allocation
+
+ drivers/interconnect/core.c        | 4 ++++
+ drivers/interconnect/qcom/qcs404.c | 3 ++-
+ drivers/interconnect/qcom/sdm845.c | 3 ++-
+ 3 files changed, 8 insertions(+), 2 deletions(-)
