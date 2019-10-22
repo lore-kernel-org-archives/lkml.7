@@ -2,75 +2,143 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CF20CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:36:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00941CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:37:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D1992086D
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:36:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF72F2086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:37:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387774AbfJVOgI (ORCPT
+        id S1731714AbfJVOhj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 10:36:08 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60374 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726915AbfJVOgH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 10:36:07 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id CC66DB022;
-        Tue, 22 Oct 2019 14:36:05 +0000 (UTC)
-Date:   Tue, 22 Oct 2019 16:36:04 +0200
-From:   Cyril Hrubis <chrubis@suse.cz>
-To:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>
-Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ltp@lists.linux.it,
-        Richard Palethorpe <rpalethorpe@suse.de>
-Subject: EPERM failures for repeated runs
-Message-ID: <20191022143604.GA18468@rei>
+        Tue, 22 Oct 2019 10:37:39 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:38780 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727194AbfJVOhj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 10:37:39 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iMvI0-0008W2-Pe; Tue, 22 Oct 2019 14:37:36 +0000
+Date:   Tue, 22 Oct 2019 15:37:36 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Ritesh Harjani <riteshh@linux.ibm.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        wugyuan@cn.ibm.com, jlayton@kernel.org, hsiangkao@aol.com,
+        Jan Kara <jack@suse.cz>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH RESEND 1/1] vfs: Really check for inode ptr in lookup_fast
+Message-ID: <20191022143736.GX26530@ZenIV.linux.org.uk>
+References: <20190927044243.18856-1-riteshh@linux.ibm.com>
+ <20191015040730.6A84742047@d06av24.portsmouth.uk.ibm.com>
+ <20191022133855.B1B4752050@d06av21.portsmouth.uk.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191022133855.B1B4752050@d06av21.portsmouth.uk.ibm.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
-Lately we started to write BPF testcases for LTP and after writing a
-first few tests we found out that running more than a few in a row
-causes them to fail with EPERM.
+On Tue, Oct 22, 2019 at 07:08:54PM +0530, Ritesh Harjani wrote:
+> I think we have still not taken this patch. Al?
 
-The culprit is deferred cleanup of the bpf maps that are locked in the
-memory, see:
+I'm still not sure it's a good way to deal with the whole
+mess, TBH ;-/  Consider e.g. walk_component(), with its
 
-http://lists.linux.it/pipermail/ltp/2019-August/013349.html
+                if (unlikely(d_is_negative(path.dentry))) {
+                        path_to_nameidata(&path, nd);
+                        return -ENOENT;
+                }
 
-We worked around that by bumping the limit for the tests in:
+                seq = 0;        /* we are already out of RCU mode */
+                inode = d_backing_inode(path.dentry);
 
-https://github.com/linux-test-project/ltp/commit/85c4e886b357f7844f6ab8ec5719168c38703a76
+or mountpoint_last()
+        if (d_is_negative(path.dentry)) {
+                dput(path.dentry);
+                return -ENOENT;
+        }
+        path.mnt = nd->path.mnt;
+        return step_into(nd, &path, 0, d_backing_inode(path.dentry), 0);
+or last_open()
+        if (unlikely(d_is_negative(path.dentry))) {
+                path_to_nameidata(&path, nd);
+                return -ENOENT; 
+        }
 
-But it looks like this value will not scale, especially for
-architectures that have larger than 4k pages, running four BPF tests in
-a row still fails on ppc64le even with the increased limit.
+        /*
+         * create/update audit record if it already exists.
+         */
+        audit_inode(nd->name, path.dentry, 0);
 
-Perhaps I'm naive but can't we check, in the kernel, if there is
-deferred cleanup in progress if we fail to lock memory for a map and
-retry once it's done?
+        if (unlikely((open_flag & (O_EXCL | O_CREAT)) == (O_EXCL | O_CREAT))) {
+                path_to_nameidata(&path, nd);
+                return -EEXIST;
+        }
 
-Or is this intended behavior and should we retry on EPERM in userspace?
+        seq = 0;        /* out of RCU mode, so the value doesn't matter */
+        inode = d_backing_inode(path.dentry);
+or, for that matter, any callers of filename_lookup() assuming that the
+lack of ENOENT means that the last call of walk_component() (from lookup_last())
+has not failed with the same ENOENT and thus the result has been observed
+positive.
 
--- 
-Cyril Hrubis
-chrubis@suse.cz
+You've picked the easiest one to hit, but on e.g. KVM setups you can have the
+host thread representing the CPU where __d_set_inode_and_type() runs get
+preempted (by the host kernel), leaving others with much wider window.
+
+Sure, we can do that to all callers of d_is_negative/d_is_positive, but...
+the same goes for any places that assumes that d_is_dir() implies that
+the sucker is positive, etc.
+
+What we have guaranteed is
+	* ->d_lock serializes ->d_flags/->d_inode changes
+	* ->d_seq is bumped before/after such changes
+	* positive dentry never changes ->d_inode as long as you hold
+a reference (negative dentry *can* become positive right under you)
+
+So there are 3 classes of valid users: those holding ->d_lock, those
+sampling and rechecking ->d_seq and those relying upon having observed
+the sucker they've pinned to be positive.
+
+What you've been hitting is "we have it pinned, ->d_flags says it's
+positive but we still observe the value of ->d_inode from before the
+store to ->d_flags that has made it look positive".
+
+I'm somewhat tempted to make __d_set_inode_and_type() do smp_store_release()
+for setting ->d_flags and __d_entry_type() - smp_load_acquire(); that would
+be pretty much free for x86 (as well as sparc, s390 and itanic) and reasonably
+cheap on ppc and arm64.  How badly would e.g. SMP arm suffer from the below
+(completely untested)?
+
+diff --git a/fs/dcache.c b/fs/dcache.c
+index e88cf0554e65..35368316c582 100644
+--- a/fs/dcache.c
++++ b/fs/dcache.c
+@@ -319,7 +319,7 @@ static inline void __d_set_inode_and_type(struct dentry *dentry,
+ 	flags = READ_ONCE(dentry->d_flags);
+ 	flags &= ~(DCACHE_ENTRY_TYPE | DCACHE_FALLTHRU);
+ 	flags |= type_flags;
+-	WRITE_ONCE(dentry->d_flags, flags);
++	smp_store_release(&dentry->d_flags, flags);
+ }
+ 
+ static inline void __d_clear_type_and_inode(struct dentry *dentry)
+diff --git a/include/linux/dcache.h b/include/linux/dcache.h
+index 10090f11ab95..bee28076a3fd 100644
+--- a/include/linux/dcache.h
++++ b/include/linux/dcache.h
+@@ -386,7 +386,7 @@ static inline bool d_mountpoint(const struct dentry *dentry)
+  */
+ static inline unsigned __d_entry_type(const struct dentry *dentry)
+ {
+-	return dentry->d_flags & DCACHE_ENTRY_TYPE;
++	return smp_load_acquire(&dentry->d_flags) & DCACHE_ENTRY_TYPE;
+ }
+ 
+ static inline bool d_is_miss(const struct dentry *dentry)
