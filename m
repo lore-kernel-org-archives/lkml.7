@@ -2,86 +2,66 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EDD5CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:02:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 798E2CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:03:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 209A22086D
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:02:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55FD32086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:03:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732581AbfJVQCh (ORCPT
+        id S2389064AbfJVQDw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 12:02:37 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:38261 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729146AbfJVQCg (ORCPT
+        Tue, 22 Oct 2019 12:03:52 -0400
+Received: from smtprelay0178.hostedemail.com ([216.40.44.178]:36971 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2387746AbfJVQDv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 12:02:36 -0400
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=localhost)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1iMwc9-0007LU-DU; Tue, 22 Oct 2019 18:02:30 +0200
-Message-ID: <069adad5ac96a6c95cc8103a5d79ee595cff672c.camel@pengutronix.de>
-Subject: Re: [PATCH 1/3] ARM: dts: imx6qdl-zii-rdu2: Drop GPIO_ACTIVE_LOW
- form reg_5p0v_user_usb
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Fabio Estevam <festevam@gmail.com>,
-        Chris Healy <cphealy@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>, linux-kernel@vger.kernel.org
-Date:   Tue, 22 Oct 2019 18:01:56 +0200
-In-Reply-To: <20191022040500.18548-1-andrew.smirnov@gmail.com>
-References: <20191022040500.18548-1-andrew.smirnov@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Tue, 22 Oct 2019 12:03:51 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 86C3481D6;
+        Tue, 22 Oct 2019 16:03:50 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: soda94_216e47221b22d
+X-Filterd-Recvd-Size: 1297
+Received: from XPS-9350.home (unknown [47.151.135.224])
+        (Authenticated sender: joe@perches.com)
+        by omf09.hostedemail.com (Postfix) with ESMTPA;
+        Tue, 22 Oct 2019 16:03:49 +0000 (UTC)
+Message-ID: <5db6c53e5c87ca2999c577333d9c6df678b36994.camel@perches.com>
+Subject: Re: [PATCH] MAINTAINERS: add reset controller framework keywords
+From:   Joe Perches <joe@perches.com>
+To:     Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-kernel@vger.kernel.org
+Cc:     kernel@pengutronix.de
+Date:   Tue, 22 Oct 2019 09:03:48 -0700
+In-Reply-To: <20191022123823.4854-1-p.zabel@pengutronix.de>
+References: <20191022123823.4854-1-p.zabel@pengutronix.de>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Montag, den 21.10.2019, 21:04 -0700 schrieb Andrey Smirnov:
-> Drop GPIO_ACTIVE_LOW form reg_5p0v_user_usb since it is ignored by the
-> gpiolib and results in a warning.
+On Tue, 2019-10-22 at 14:38 +0200, Philipp Zabel wrote:
+> Add a regex that matches users of the reset controller API.
+[]
+> diff --git a/MAINTAINERS b/MAINTAINERS
+[]
+> @@ -13851,6 +13851,7 @@ F:	include/dt-bindings/reset/
+>  F:	include/linux/reset.h
+>  F:	include/linux/reset/
+>  F:	include/linux/reset-controller.h
+> +K:	\b(devm_|of_)?reset_control(ler_[a-z]+|_[a-z_]+)?\b
 
-NACK. This is consistent with the regulator binding behavior and a fix
-to gpiolib has been accepted to not print a warning in this case.
+Please add ?: to each group so no capture is done.
+It's a little faster.
 
-Regards,
-Lucas
+K:	\b(?:devm_|of_)?reset_control(?:ler_[a-z]+|_[a-z_]+)?\b
 
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> Cc: Fabio Estevam <festevam@gmail.com>
-> Cc: Chris Healy <cphealy@gmail.com>
-> Cc: Lucas Stach <l.stach@pengutronix.de>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: linux-arm-kernel@lists.infradead.org,
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
-> index 93be00a60c88..8d46f7b2722b 100644
-> --- a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
-> @@ -68,7 +68,7 @@
->  		regulator-name = "5V_USER_USB";
->  		regulator-min-microvolt = <5000000>;
->  		regulator-max-microvolt = <5000000>;
-> -		gpio = <&gpio3 22 GPIO_ACTIVE_LOW>;
-> +		gpio = <&gpio3 22 0>;
->  		startup-delay-us = <1000>;
->  	};
->  
 
