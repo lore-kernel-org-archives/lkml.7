@@ -2,90 +2,92 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66AE0CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 22:20:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85534CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 22:20:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F352420700
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 22:20:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58BED2084C
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 22:20:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="JeFmbIAl"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="kblqZkpK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387958AbfJVWUD (ORCPT
+        id S2388156AbfJVWUF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 18:20:03 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:55882 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725837AbfJVWUD (ORCPT
+        Tue, 22 Oct 2019 18:20:05 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:42526 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387767AbfJVWUE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 18:20:03 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 07525806A8;
-        Wed, 23 Oct 2019 11:20:02 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1571782802;
-        bh=LtvxEKkSPHNyKRPgRkt0mLmoWuIQEMyTQMTbpJmYd90=;
-        h=From:To:Cc:Subject:Date;
-        b=JeFmbIAlCo9DhZjJ1FxwXIAL7L/7mQe2qKyW7ybOI51joj1Pmh57AuxCaFCFViCMQ
-         a4ZuNy+bFVzXvi42zpzrL0FTE9hx5tDHNWoJzfQcyYVAvIQi05h4Ws7D8k2pwHYE1G
-         ctXud6XnoELJLn1W14Ibis9/kttSzOBekfaMKKnDc7ja22R45ZMHvNXhi7eVUgKvcA
-         3lxBpwJ7HYWJupmkT0hVxoBDLomIJ7K+ZT6K5IcEmndwiJlcpZyLZ1k1V13DU7v7km
-         R67TZ3r7cPK/SQI71jO6agO4A5F/LtwGAMNsbIt4qCE83MXTh5BAKbqHRoQeA8VT/s
-         S08MyFszQZBUQ==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5daf80900000>; Wed, 23 Oct 2019 11:20:02 +1300
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
-        by smtp (Postfix) with ESMTP id EAF1713EED4;
-        Wed, 23 Oct 2019 11:20:03 +1300 (NZDT)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-        id BF38C280059; Wed, 23 Oct 2019 11:19:59 +1300 (NZDT)
-From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, rjui@broadcom.com,
-        f.fainelli@gmail.com
-Cc:     bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Scott Branden <sbranden@broadcom.com>
-Subject: [PATCH] ARM: dts: bcm: HR2: add label to sp805 watchdog
-Date:   Wed, 23 Oct 2019 11:19:56 +1300
-Message-Id: <20191022221956.10746-1-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.23.0
+        Tue, 22 Oct 2019 18:20:04 -0400
+Received: by mail-lj1-f194.google.com with SMTP id u4so4733079ljj.9
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 15:20:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=eJeiOHf0qMrqlF/fxKjCis2VKW2qM0EkZCFmwOD6UAY=;
+        b=kblqZkpKk9Zv8+vkRFatupFOSxOn+KEJuyarb+K8rHZ/PuJhhR0Ed/8kh+trzE+yE5
+         HXws66SwIuCM+7LckDSHL7N4WKeHP3ryW4/5zdszebvixBPYOEus0ggkgOArT9A1VUlq
+         MBctIzg0ofDuYIPuGGjG7wg22DTTVgAAuKw6iNFdj1NLMRrhYSiXV5dK7d4CjsWt2OTe
+         pBGDl7CCrzI63IYMbC/nPICyLBw5VqVUvhSIUmGZ2fqo+2k6SnB09abYgnmKRMfEnuig
+         +nm1+fqNM9DOl7GLGS8F3n6TWEdLT8DtJdd7GvGGepzxTYvys+4PqHUMCqo3KkIIACvd
+         XYIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=eJeiOHf0qMrqlF/fxKjCis2VKW2qM0EkZCFmwOD6UAY=;
+        b=mr8+bpFBJwAD7IrTIXHCO/2peJRwtSkDXfszWdm1FIILG9PU9HlgNs+3SX26FnrOvk
+         FRtPHbQbn3S/NV8z3xs0w4zy0v1MuJ+rtQ+c6Xlfl9WpbTeFJT3q2msb/sCu4TA0HQoY
+         CGwENc135R6Xv6+vYYEOqVeuPA59meSHGnOUe6IjS+JjAI6f0tehnFhnXD9LkYWmBCG9
+         YNq+76aJZtUsRnEJuVJkk1TMgFhh/ngyRRxhmMonXfGxr8pr/FfSYdqzaxUCF9ccikdW
+         y92lrnLKQdEIL8MuN9cN/oUSAw0/8ENxXwoG8JLNmcDWvGY0fwZpfoxAeFPsvVogMZ0K
+         paSw==
+X-Gm-Message-State: APjAAAUGWYVuZxcur4weYmG1lxOHIROeHqCdt3lp/wdVLLU00YfHFDSd
+        gC0HGgN5bMRgW6uU4hp10oihxa/pFW4=
+X-Google-Smtp-Source: APXvYqygfc/fvNSdOubo3mFfaZ2INJ9KgK0gK/dRspdCWOAaWW0QuhW0oG93R+xgpeYR28cfxYUKew==
+X-Received: by 2002:a2e:b4ee:: with SMTP id s14mr20399148ljm.88.1571782802349;
+        Tue, 22 Oct 2019 15:20:02 -0700 (PDT)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id h21sm1583836ljl.20.2019.10.22.15.19.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Oct 2019 15:20:01 -0700 (PDT)
+Date:   Tue, 22 Oct 2019 15:19:54 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
+Cc:     linux-kernel@lists.codethink.co.uk,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ipv6: include <net/addrconf.h> for missing declarations
+Message-ID: <20191022151954.2973f774@cakuba.netronome.com>
+In-Reply-To: <20191022144440.23086-1-ben.dooks@codethink.co.uk>
+References: <20191022144440.23086-1-ben.dooks@codethink.co.uk>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This allows boards the option of adding properties or disabling the
-watchdog entirely.
+On Tue, 22 Oct 2019 15:44:40 +0100, Ben Dooks (Codethink) wrote:
+> Include <net/addrconf.h> for the missing declarations of
+> various functions. Fixes the following sparse warnings:
+> 
+> net/ipv6/addrconf_core.c:94:5: warning: symbol 'register_inet6addr_notifier' was not declared. Should it be static?
+> net/ipv6/addrconf_core.c:100:5: warning: symbol 'unregister_inet6addr_notifier' was not declared. Should it be static?
+> net/ipv6/addrconf_core.c:106:5: warning: symbol 'inet6addr_notifier_call_chain' was not declared. Should it be static?
+> net/ipv6/addrconf_core.c:112:5: warning: symbol 'register_inet6addr_validator_notifier' was not declared. Should it be static?
+> net/ipv6/addrconf_core.c:118:5: warning: symbol 'unregister_inet6addr_validator_notifier' was not declared. Should it be static?
+> net/ipv6/addrconf_core.c:125:5: warning: symbol 'inet6addr_validator_notifier_call_chain' was not declared. Should it be static?
+> net/ipv6/addrconf_core.c:237:6: warning: symbol 'in6_dev_finish_destroy' was not declared. Should it be static?
+> 
+> Signed-off-by: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
----
- arch/arm/boot/dts/bcm-hr2.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/bcm-hr2.dtsi b/arch/arm/boot/dts/bcm-hr2.d=
-tsi
-index e4d49731287f..6142c672811e 100644
---- a/arch/arm/boot/dts/bcm-hr2.dtsi
-+++ b/arch/arm/boot/dts/bcm-hr2.dtsi
-@@ -268,7 +268,7 @@
- 			clock-frequency =3D <100000>;
- 		};
-=20
--		watchdog@39000 {
-+		watchdog: watchdog@39000 {
- 			compatible =3D "arm,sp805", "arm,primecell";
- 			reg =3D <0x39000 0x1000>;
- 			interrupts =3D <GIC_SPI 213 IRQ_TYPE_LEVEL_HIGH>;
---=20
-2.23.0
-
+Applied, thanks!
