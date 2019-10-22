@@ -2,331 +2,213 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE4ACA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 22:27:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7D0CCA9EBA
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 22:27:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EB5C207FC
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 22:27:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B75A92086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 22:27:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BRBQpDE0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kf9SehCN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388222AbfJVW1y (ORCPT
+        id S2388394AbfJVW15 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 18:27:54 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:34414 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731534AbfJVW1y (ORCPT
+        Tue, 22 Oct 2019 18:27:57 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:42516 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388172AbfJVW1z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 18:27:54 -0400
-Received: by mail-pg1-f194.google.com with SMTP id k20so10839609pgi.1
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 15:27:53 -0700 (PDT)
+        Tue, 22 Oct 2019 18:27:55 -0400
+Received: by mail-pg1-f193.google.com with SMTP id f14so10800523pgi.9;
+        Tue, 22 Oct 2019 15:27:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=MMatxSwB0mVXfrgjKkBzOUtpq16IKZXG5pseS/xWs+Q=;
-        b=BRBQpDE01Egq4iGtX57txEWQ9UT9kam0PhJPlX2UfFfUVSocPfxTpWKsywVSa6sfRU
-         dsjkWcJsoH9hJkVrIXwdFlJMuOpKw0lx3luxSt/GtyKhI0GeaP6DNjhvuUJNKyPLNg0G
-         2hLgq1YPfjvqskiBZF6CO7o5MshAhjq/oO57zTT3+uM01o1ZGbXrbeHABnPoDfUkHhe9
-         nVExdw8tHNx2AirUgbNYbGN4sMBulsMjuKX/5m9iGUisrXXoBQ5EIPaTdYzLBrXM2Tfv
-         Q8vx1dhJtO3A+8KW9LaVFuwXY9H1TANOIU4Rgfoonrfr38aR/tAKUOhJGIAZFNw6RWyR
-         9jDg==
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:date:message-id:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=J0Cde3YCRyKb7sVda9AuSr3SUq1DFyMrFHgfTQRevNg=;
+        b=kf9SehCNiEcM+GfhpzKh3NyW4ANcI4Qdoy/zWsrS/DaZYbQEvhhtjhO5o55SoORHVz
+         kSiuvyY8pV6mlTEHPalaOwwbRqM0mBd2Drmym4mBY7jVdS4C0PSddXT9sePiecgGvYUE
+         JVI1qNOYbEO0iOiOQETNouy/sRKJ/czZqmabrurDDThDhkLiBuj1+3o5c3LwXcFTAtxo
+         zjumP+IQlO/rDNVbhKHSlpcYKWBes7iePihLor2Nr6QdefABT76ujZbKFE7TfNyAe68e
+         84blhV53Q9HSAUfH72G4PO/cAqAjqbDo7slsDOGzq4P0drmRP/c+0FSDlgWpLM7Nhf8u
+         xi8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=MMatxSwB0mVXfrgjKkBzOUtpq16IKZXG5pseS/xWs+Q=;
-        b=lvepsYXenN2Lyq7R9B9iFAR6XlcyX6agAAvtoEcDj0gZNxcJ+3UTwiy2ABBu0/+4dc
-         vBA3xPl7V9p1njk1MTjmPKOFBCvabTQ/cu2zcdTOtoynSUpIomUKC8PwCb3xMhugmJnD
-         uhdF8IOxCus2yH17FKv1d/jWOMDpX/qeQHm2LdIbZVc7dH/vOXTCcfyKjV4y5zaNviv9
-         kPgCKZQOsG4wu73j8GC0EVXizLd44sx4xwosm7xp7UIw0A9oY5o9X+y+KT3xTaczpp0e
-         i6aFie357yyB3IE4VVGbfS1S86Xt2CqCNhOpq1GG2Ft4TrWhf4AjdWO23w4Jj0+W6BvL
-         sKcA==
-X-Gm-Message-State: APjAAAVKTcOCImG2eVRu6Cg1xYGnesYv82+CnkGuRCAgt0xSGRiQN0BP
-        8J/PBLvE9rPkhnPkWEz1CNDJoA==
-X-Google-Smtp-Source: APXvYqy+7P+LK4vKHjfOL/30XOXOjl7eeNZKN7c4hptS97Ihgq2L+FukRorNJoGoEogMpMFaOFHtjw==
-X-Received: by 2002:a17:90a:bd10:: with SMTP id y16mr7164819pjr.111.1571783272619;
-        Tue, 22 Oct 2019 15:27:52 -0700 (PDT)
-Received: from [100.112.92.218] ([104.133.9.106])
-        by smtp.gmail.com with ESMTPSA id g7sm3524804pfq.143.2019.10.22.15.27.51
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 22 Oct 2019 15:27:51 -0700 (PDT)
-Date:   Tue, 22 Oct 2019 15:27:36 -0700 (PDT)
-From:   Hugh Dickins <hughd@google.com>
-X-X-Sender: hugh@eggly.anvils
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-cc:     aarcange@redhat.com, kirill.shutemov@linux.intel.com,
-        hughd@google.com, gavin.dg@linux.alibaba.com,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: thp: handle page cache THP correctly in
- PageTransCompoundMap
-In-Reply-To: <1571769577-89735-1-git-send-email-yang.shi@linux.alibaba.com>
-Message-ID: <alpine.LSU.2.11.1910221454060.2077@eggly.anvils>
-References: <1571769577-89735-1-git-send-email-yang.shi@linux.alibaba.com>
-User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
+        h=x-gm-message-state:subject:from:to:cc:date:message-id:user-agent
+         :mime-version:content-transfer-encoding;
+        bh=J0Cde3YCRyKb7sVda9AuSr3SUq1DFyMrFHgfTQRevNg=;
+        b=EfdnMSy95i8jqNvlX5Ip+p0WnprYI9JORIzGwD9mWPyYYhrdJ/kKLiZBSHFtR+CRV6
+         wjf/VPfOzhlVBWg+AaoNGfy5eBnkatBTr72DLAxI97Bk4wxSh0PXZOZPcENMm6fsG7u7
+         33iNalFToYwIOEeMp8SSFzpdP0LnZxCBRnsHJIR66l2PfTKJN24jYcOcio3jIvWcr/Ox
+         n71hfB/o11zyJo/nfvqApRIKz7gSv1IJrAUupP1+gsPsPX612eXPfh5C7JdtkoszodSx
+         elzyC4nHrYwt+mKqH56WpuLy2y66IW2WPsutTS8Ce5UqQmobs0R5fJV+Q4MC/NNx1I6E
+         sYUw==
+X-Gm-Message-State: APjAAAVqaSdoB4jFZpHC1yB9nTBi+2c1g38sAweF3zhQ7GilWD/qahfE
+        Qxgq84C+WrCoA7DaonAfNQU=
+X-Google-Smtp-Source: APXvYqxUpZCIgjB/RhowJmJMcKSaevo7BJq4WvFJyIaGUi8Z6RPUU8dpXpcsYruoZJ6BMwX+j5xojA==
+X-Received: by 2002:aa7:9715:: with SMTP id a21mr6913876pfg.144.1571783274147;
+        Tue, 22 Oct 2019 15:27:54 -0700 (PDT)
+Received: from localhost.localdomain ([2001:470:b:9c3:9e5c:8eff:fe4f:f2d0])
+        by smtp.gmail.com with ESMTPSA id y15sm29621200pfp.111.2019.10.22.15.27.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 22 Oct 2019 15:27:53 -0700 (PDT)
+Subject: [PATCH v12 0/6] mm / virtio: Provide support for unused page
+ reporting
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+To:     kvm@vger.kernel.org, mst@redhat.com, linux-kernel@vger.kernel.org,
+        willy@infradead.org, mhocko@kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, mgorman@techsingularity.net,
+        vbabka@suse.cz
+Cc:     yang.zhang.wz@gmail.com, nitesh@redhat.com, konrad.wilk@oracle.com,
+        david@redhat.com, pagupta@redhat.com, riel@surriel.com,
+        lcapitulino@redhat.com, dave.hansen@intel.com,
+        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
+        dan.j.williams@intel.com, alexander.h.duyck@linux.intel.com,
+        osalvador@suse.de
+Date:   Tue, 22 Oct 2019 15:27:52 -0700
+Message-ID: <20191022221223.17338.5860.stgit@localhost.localdomain>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 23 Oct 2019, Yang Shi wrote:
+This series provides an asynchronous means of reporting unused guest
+pages to a hypervisor so that the memory associated with those pages can
+be dropped and reused by other processes and/or guests.
 
-> We have usecase to use tmpfs as QEMU memory backend and we would like to
-> take the advantage of THP as well.  But, our test shows the EPT is not
-> PMD mapped even though the underlying THP are PMD mapped on host.
-> The number showed by /sys/kernel/debug/kvm/largepage is much less than
-> the number of PMD mapped shmem pages as the below:
-> 
-> 7f2778200000-7f2878200000 rw-s 00000000 00:14 262232 /dev/shm/qemu_back_mem.mem.Hz2hSf (deleted)
-> Size:            4194304 kB
-> [snip]
-> AnonHugePages:         0 kB
-> ShmemPmdMapped:   579584 kB
-> [snip]
-> Locked:                0 kB
-> 
-> cat /sys/kernel/debug/kvm/largepages
-> 12
-> 
-> And some benchmarks do worse than with anonymous THPs.
-> 
-> By digging into the code we figured out that commit 127393fbe597 ("mm:
-> thp: kvm: fix memory corruption in KVM with THP enabled") checks if
-> there is a single PTE mapping on the page for anonymous THP when
-> setting up EPT map.  But, the _mapcount < 0 check doesn't fit to page
-> cache THP since every subpage of page cache THP would get _mapcount
-> inc'ed once it is PMD mapped, so PageTransCompoundMap() always returns
-> false for page cache THP.  This would prevent KVM from setting up PMD
-> mapped EPT entry.
-> 
-> So we need handle page cache THP correctly.  However, when page cache
-> THP's PMD gets split, kernel just remove the map instead of setting up
-> PTE map like what anonymous THP does.  Before KVM calls get_user_pages()
-> the subpages may get PTE mapped even though it is still a THP since the
-> page cache THP may be mapped by other processes at the mean time.
-> 
-> Checking its _mapcount and whether the THP is double mapped or not since
-> we can't tell if the single PTE mapping comes from the current process
-> or not by _mapcount.  Although this may report some false negative cases
-> (PTE mapped by other processes), it looks not trivial to make this
-> accurate.
-> 
-> With this fix /sys/kernel/debug/kvm/largepage would show reasonable
-> pages are PMD mapped by EPT as the below:
-> 
-> 7fbeaee00000-7fbfaee00000 rw-s 00000000 00:14 275464 /dev/shm/qemu_back_mem.mem.SKUvat (deleted)
-> Size:            4194304 kB
-> [snip]
-> AnonHugePages:         0 kB
-> ShmemPmdMapped:   557056 kB
-> [snip]
-> Locked:                0 kB
-> 
-> cat /sys/kernel/debug/kvm/largepages
-> 271
-> 
-> And the benchmarks are as same as anonymous THPs.
-> 
-> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
-> Reported-by: Gang Deng <gavin.dg@linux.alibaba.com>
-> Tested-by: Gang Deng <gavin.dg@linux.alibaba.com>
-> Cc: Andrea Arcangeli <aarcange@redhat.com>
-> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Cc: Hugh Dickins <hughd@google.com>
-> Cc: <stable@vger.kernel.org> 4.8+
-> ---
->  include/linux/page-flags.h | 54 ++++++++++++++++++++++++++++------------------
->  1 file changed, 33 insertions(+), 21 deletions(-)
-> 
-> diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-> index f91cb88..3b8e5c5 100644
-> --- a/include/linux/page-flags.h
-> +++ b/include/linux/page-flags.h
-> @@ -610,27 +610,6 @@ static inline int PageTransCompound(struct page *page)
->  }
->  
->  /*
-> - * PageTransCompoundMap is the same as PageTransCompound, but it also
-> - * guarantees the primary MMU has the entire compound page mapped
-> - * through pmd_trans_huge, which in turn guarantees the secondary MMUs
-> - * can also map the entire compound page. This allows the secondary
-> - * MMUs to call get_user_pages() only once for each compound page and
-> - * to immediately map the entire compound page with a single secondary
-> - * MMU fault. If there will be a pmd split later, the secondary MMUs
-> - * will get an update through the MMU notifier invalidation through
-> - * split_huge_pmd().
-> - *
-> - * Unlike PageTransCompound, this is safe to be called only while
-> - * split_huge_pmd() cannot run from under us, like if protected by the
-> - * MMU notifier, otherwise it may result in page->_mapcount < 0 false
-> - * positives.
-> - */
-> -static inline int PageTransCompoundMap(struct page *page)
-> -{
-> -	return PageTransCompound(page) && atomic_read(&page->_mapcount) < 0;
-> -}
-> -
-> -/*
->   * PageTransTail returns true for both transparent huge pages
->   * and hugetlbfs pages, so it should only be called when it's known
->   * that hugetlbfs pages aren't involved.
-> @@ -681,6 +660,39 @@ static inline int TestClearPageDoubleMap(struct page *page)
->  	return test_and_clear_bit(PG_double_map, &page[1].flags);
->  }
->  
-> +/*
-> + * PageTransCompoundMap is the same as PageTransCompound, but it also
-> + * guarantees the primary MMU has the entire compound page mapped
-> + * through pmd_trans_huge, which in turn guarantees the secondary MMUs
-> + * can also map the entire compound page. This allows the secondary
-> + * MMUs to call get_user_pages() only once for each compound page and
-> + * to immediately map the entire compound page with a single secondary
-> + * MMU fault. If there will be a pmd split later, the secondary MMUs
-> + * will get an update through the MMU notifier invalidation through
-> + * split_huge_pmd().
-> + *
-> + * Unlike PageTransCompound, this is safe to be called only while
-> + * split_huge_pmd() cannot run from under us, like if protected by the
-> + * MMU notifier, otherwise it may result in page->_mapcount check false
-> + * positives.
-> + *
-> + * We have to treat page cache THP differently since every subpage of it
-> + * would get _mapcount inc'ed once it is PMD mapped.  But, it may be PTE
-> + * mapped in the current process so checking PageDoubleMap flag to rule
-> + * this out.
-> + */
-> +static inline int PageTransCompoundMap(struct page *page)
-> +{
-> +	bool pmd_mapped;
-> +
-> +	if (PageAnon(page))
-> +		pmd_mapped = atomic_read(&page->_mapcount) < 0;
-> +	else
-> +		pmd_mapped = atomic_read(&page->_mapcount) >= 0 &&
-> +			     !PageDoubleMap(compound_head(page));
-> +
-> +	return PageTransCompound(page) && pmd_mapped;
-> +}
->  #else
->  TESTPAGEFLAG_FALSE(TransHuge)
->  TESTPAGEFLAG_FALSE(TransCompound)
-> -- 
-> 1.8.3.1
+When enabled it will allocate a set of statistics to track the number of
+reported pages. When the nr_free for a given free_area is greater than
+this by the high water mark we will schedule a worker to begin allocating
+the non-reported memory and to provide it to the reporting interface via a
+scatterlist.
 
-I completely agree that the current PageTransCompoundMap() is wrong.
+Currently this is only in use by virtio-balloon however there is the hope
+that at some point in the future other hypervisors might be able to make
+use of it. In the virtio-balloon/QEMU implementation the hypervisor is
+currently using MADV_DONTNEED to indicate to the host kernel that the page
+is currently unused. It will be faulted back into the guest the next time
+the page is accessed.
 
-A fix for that is one of many patches I've not yet got to upstreaming.
-Comparing yours and mine, I'm worried by your use of PageDoubleMap(),
-because really that's a flag for anon THP, and not properly supported
-on shmem (or now I suppose file) THP - I forget the details, is it
-that it sometimes gets set, but never cleared?  Generally, we just
-don't refer to PageDoubleMap() on shmem THPs (but there may be
-exceptions: sorting out the THP mapcount maze, and eliminating
-PageDoubleMap(), is one of my long-held ambitions, not yet reached).
+To track if a page is reported or not the Uptodate flag was repurposed and
+used as a Reported flag for Buddy pages. While we are processing the pages
+in a given zone we have a set of pointers we track called
+reported_boundary that is used to keep our processing time to a minimum.
+Without these we would have to iterate through all of the reported pages
+which would become a significant burden. I measured as much as a 20%
+performance degradation without using the boundary pointers. In the event
+of something like compaction needing to process the zone at the same time
+it currently resorts to resetting the boundary if it is rearranging the
+list. However in the future it could choose to delay processing the zone
+if a flag is set indicating that a zone is being actively processed.
 
-Here's the patch I've been carrying, but it's from earlier, so I
-should warn that I've done no more than build-testing it on 5.4,
-and I'm too far away from these issues at the moment to be able to
-make a good judgement or argue for it - I hope you and others can
-decide which patch is the better.  I should also add that we're
-barely using PageTransCompoundMap() at all: at best it can only
-give a heuristic guess as to whether the page is pmd-mapped in
-any particular case, and we preferred to take forward the KVM
-patches we posted back in April 2016, plumbing hva down to where
-it's needed - though of course those are somewhat different now.
+Below are the results from various benchmarks. I primarily focused on two
+tests. The first is the will-it-scale/page_fault2 test, and the other is
+a modified version of will-it-scale/page_fault1 that was enabled to use
+THP. I did this as it allows for better visibility into different parts
+of the memory subsystem. The guest is running on one node of a E5-2630 v3
+CPU with 48G of RAM that I split up into two logical nodes in the guest
+in order to test with NUMA as well.
 
-[PATCH] mm: kvm: huge tmpfs: fix PageTransCompoundMap()
+Test		    page_fault1 (THP)     page_fault2
+Baseline	 1  1256106.33  +/-0.09%   482202.67  +/-0.46%
+                16  8864441.67  +/-0.09%  3734692.00  +/-1.23%
 
-4.6 commit 127393fbe597
-("mm: thp: kvm: fix memory corruption in KVM with THP enabled")
-replaced the PageTransCompound() in KVM's transparent_hugepage_adjust()
-by a new PageTransCompoundMap() which also checks page _mapcount;
-while 4.8 commit dd78fedde4b9 ("rmap: support file thp")
-was under development, making shmem file THP's use of page _mapcount
-different from anon THP's (to avoid double-accounting in the tiresome
-NR_FILE_MAPPED statistic, I believe).
+Patches applied  1  1257096.00  +/-0.06%   477436.00  +/-0.16%
+                16  8864677.33  +/-0.06%  3800037.00  +/-0.19%
 
-Nobody spotted the disconnect, whose consequence has been that KVM
-could not recognize a shmem file THP, so could not optimize for it.
+Patches enabled	 1  1258420.00  +/-0.04%   480080.00  +/-0.07%
+ MADV disabled  16  8753840.00  +/-1.27%  3782764.00  +/-0.37%
 
-Fix PageTransCompoundMap() to handle both cases.  Unfortunately, its
-definition has been placed (as you would suppose from the CamelCase)
-in page-flags.h, but now it needs compound_mapcount_ptr() from mm.h.
-My zest for header file refactoring has ebbed: instead, put identical
-defines of it in both files - no build will get far if they disagree.
+Patches enabled	 1  1267916.33  +/-0.08%   472075.67  +/-0.39%
+                16  8287050.33  +/-0.67%  3774500.33  +/-0.11%
 
-Whether PageTransCompoundMap() is actually correct is another matter.
-Good enough heuristic, erring on the safe side?  Good enough heuristic
-for anon, but not so good for shmem file (if a random other usage could
-ever map some ptes)?
+The results above are for a baseline with a linux-next-20191021 kernel,
+that kernel with this patch set applied but page reporting disabled in
+virtio-balloon, patches applied but the madvise disabled by direct
+assigning a device, and the patches applied and page reporting fully
+enabled.  These results include the deviation seen between the average
+value reported here versus the high and/or low value. I observed that
+during the test the memory usage for the first three tests never dropped
+whereas with the patches fully enabled the VM would drop to using only a
+few GB of the host's memory when switching from memhog to page fault tests.
 
-Fixes: dd78fedde4b9 ("rmap: support file thp")
-Signed-off-by: Hugh Dickins <hughd@google.com>
+Most of the overhead seen with this patch set fully enabled is due to the
+fact that accessing the reported pages will cause a page fault and the host
+will have to zero the page before giving it back to the guest. The overall
+guest size is kept fairly small to only a few GB while the test is running.
+This overhead is much more visible when using THP than with standard 4K
+pages. As such for the case where the host memory is not oversubscribed
+this results in a performance regression, however if the host memory were
+oversubscribed this patch set should result in a performance improvement
+as swapping memory from the host can be avoided.
+
+There is currently an alternative patch set[1] that has been under work
+for some time however the v12 version of that patch set could not be
+tested as it triggered a kernel panic when I attempted to test it. It
+requires multiple modifications to get up and running with performance
+comparable to this patch set. A follow-on set has yet to be posted. As
+such I have not included results from that patch set, and I would
+appreciate it if we could keep this patch set the focus of any discussion
+on this thread.
+
+For info on earlier versions you will need to follow the links provided
+with the respective versions.
+
+[1]: https://lore.kernel.org/lkml/20190812131235.27244-1-nitesh@redhat.com/
+
+Changes from v10:
+https://lore.kernel.org/lkml/20190918175109.23474.67039.stgit@localhost.localdomain/
+Rebased on "Add linux-next specific files for 20190930"
+Added page_is_reported() macro to prevent unneeded testing of PageReported bit
+Fixed several spots where comments referred to older aeration naming
+Set upper limit for phdev->capacity to page reporting high water mark
+Updated virtio page poison detection logic to also cover init_on_free
+Tweaked page_reporting_notify_free to reduce code size
+Removed dead code in non-reporting path
+
+Changes from v11:
+https://lore.kernel.org/lkml/20191001152441.27008.99285.stgit@localhost.localdomain/
+Removed unnecessary whitespace change from patch 2
+Minor tweak to get_unreported_page to avoid excess writes to boundary
+Rewrote cover page to lay out additional performance info.
+
 ---
 
- include/linux/mm.h         |    6 ++----
- include/linux/page-flags.h |   20 +++++++++++++++++---
- 2 files changed, 19 insertions(+), 7 deletions(-)
+Alexander Duyck (6):
+      mm: Adjust shuffle code to allow for future coalescing
+      mm: Use zone and order instead of free area in free_list manipulators
+      mm: Introduce Reported pages
+      mm: Add device side and notifier for unused page reporting
+      virtio-balloon: Pull page poisoning config out of free page hinting
+      virtio-balloon: Add support for providing unused page reports to host
 
---- 5.4-rc4/include/linux/mm.h	2019-10-06 17:20:18.473153411 -0700
-+++ linux/include/linux/mm.h	2019-10-22 13:00:30.697944228 -0700
-@@ -695,10 +695,8 @@ static inline void *kvcalloc(size_t n, s
- 
- extern void kvfree(const void *addr);
- 
--static inline atomic_t *compound_mapcount_ptr(struct page *page)
--{
--	return &page[1].compound_mapcount;
--}
-+/* #define in order to validate duplicate definition in page-flags.h */
-+#define compound_mapcount_ptr(head)	(&(head)[1].compound_mapcount)
- 
- static inline int compound_mapcount(struct page *page)
- {
---- 5.4-rc4/include/linux/page-flags.h	2019-09-15 14:19:32.000000000 -0700
-+++ linux/include/linux/page-flags.h	2019-10-22 13:00:30.697944228 -0700
-@@ -609,6 +609,9 @@ static inline int PageTransCompound(stru
- 	return PageCompound(page);
- }
- 
-+/* #define in order to validate duplicate definition in mm.h */
-+#define compound_mapcount_ptr(head)	(&(head)[1].compound_mapcount)
-+
- /*
-  * PageTransCompoundMap is the same as PageTransCompound, but it also
-  * guarantees the primary MMU has the entire compound page mapped
-@@ -622,12 +625,23 @@ static inline int PageTransCompound(stru
-  *
-  * Unlike PageTransCompound, this is safe to be called only while
-  * split_huge_pmd() cannot run from under us, like if protected by the
-- * MMU notifier, otherwise it may result in page->_mapcount < 0 false
-- * positives.
-+ * MMU notifier, otherwise it may result in false positives.
-  */
- static inline int PageTransCompoundMap(struct page *page)
- {
--	return PageTransCompound(page) && atomic_read(&page->_mapcount) < 0;
-+	struct page *head;
-+
-+	if (!PageTransCompound(page))
-+		return 0;
-+	if (PageAnon(page))
-+		return atomic_read(&page->_mapcount) < 0;
-+	/*
-+	 * pmd mappings are not included in anon THP's _mapcounts,
-+	 * but they are included in shmem file THP's _mapcounts.
-+	 */
-+	head = compound_head(page);
-+	return atomic_read(&page->_mapcount) ==
-+		atomic_read(compound_mapcount_ptr(head));
- }
- 
- /*
+
+ drivers/virtio/Kconfig              |    1 
+ drivers/virtio/virtio_balloon.c     |   88 ++++++++-
+ include/linux/mmzone.h              |   60 ++----
+ include/linux/page-flags.h          |   11 +
+ include/linux/page_reporting.h      |   31 +++
+ include/uapi/linux/virtio_balloon.h |    1 
+ mm/Kconfig                          |   11 +
+ mm/Makefile                         |    1 
+ mm/compaction.c                     |    5 
+ mm/memory_hotplug.c                 |    2 
+ mm/page_alloc.c                     |  194 +++++++++++++++----
+ mm/page_reporting.c                 |  353 +++++++++++++++++++++++++++++++++++
+ mm/page_reporting.h                 |  225 ++++++++++++++++++++++
+ mm/shuffle.c                        |   12 +
+ mm/shuffle.h                        |    6 +
+ 15 files changed, 899 insertions(+), 102 deletions(-)
+ create mode 100644 include/linux/page_reporting.h
+ create mode 100644 mm/page_reporting.c
+ create mode 100644 mm/page_reporting.h
+
+--
