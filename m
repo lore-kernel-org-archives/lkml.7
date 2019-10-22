@@ -2,102 +2,100 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 366B3CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:31:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66735CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:31:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08DB320684
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:31:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 380072084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:31:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571758294;
+	bh=IfpiHO9UiZhxJ3OUbn/nqonUiXpoAPlwIazKm5MnWWs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=u1awQn0Y7IJwWY1L63AsZu+LQFnhe6kt83KwJDFvTz5LuMweGmJ6J/B+KhNiVTrKn
+	 hF+bEm1OjR+x/dwgPgbxLFvBGvRi8c+GIys1uj1ei1kCzKV1tM9aFFw7nlkOdetPlr
+	 lGtygETRpWx3345hO5vc4He1HhELwtqYVrHJs668=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732383AbfJVPbD (ORCPT
+        id S1732402AbfJVPbd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 11:31:03 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:55422 "EHLO foss.arm.com"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S1732202AbfJVPbC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 11:31:02 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EA786176B;
-        Tue, 22 Oct 2019 08:30:39 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BFBAE3F71A;
-        Tue, 22 Oct 2019 08:30:37 -0700 (PDT)
-Date:   Tue, 22 Oct 2019 16:30:35 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        amit.kachhap@arm.com, ard.biesheuvel@linaro.org,
-        catalin.marinas@arm.com, deller@gmx.de, duwe@suse.de,
-        james.morse@arm.com, jeyu@kernel.org, jpoimboe@redhat.com,
-        jthierry@redhat.com, mingo@redhat.com, peterz@infradead.org,
-        svens@stackframe.org, takahiro.akashi@linaro.org, will@kernel.org
-Subject: Re: [PATCH 1/8] ftrace: add ftrace_init_nop()
-Message-ID: <20191022153035.GB52920@lakrids.cambridge.arm.com>
-References: <20191021163426.9408-1-mark.rutland@arm.com>
- <20191021163426.9408-2-mark.rutland@arm.com>
- <20191021140756.613a1bac@gandalf.local.home>
- <20191022112811.GA11583@lakrids.cambridge.arm.com>
- <20191022085428.75cfaad6@gandalf.local.home>
+        Tue, 22 Oct 2019 11:31:33 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:33995 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730305AbfJVPbc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 11:31:32 -0400
+Received: by mail-lj1-f193.google.com with SMTP id j19so17695784lja.1;
+        Tue, 22 Oct 2019 08:31:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=EJB7XvTqhwkjvsiq5gN/UX3zka3jCAmlwtv3LG1edKM=;
+        b=GmteRHHVXu7hTKNck9oncJxOalc+3Wn2O/Neg1SgG0y+YprmsuFFXlpvoSuTZ17BwV
+         wnnGWJw3jrTExyJdTz6nEi7Camk1f/OD6K26d5GoA7Lni/IeQ5xiMGs7Ag6S4ehbLvKU
+         WdFjHEB9l6JBuKC7Mbln8PzR8Ov3yJPjNaWoqz4DmF8AzgIETu65FfrWRjCSV3dOupPW
+         5SL7wH2Bk/tNqQmuDSVUajAAbuDnv4L0paULBNcV5WtF5rESmQn+6tDahVOOMUMf/U0J
+         bpuNFeoVkvngd7r9NyvIbDOJGTiAUAZ7GVnjboBOBGL+GHtS+lgTiPAOv6hLAW/jgDMc
+         C4Xg==
+X-Gm-Message-State: APjAAAXY47a8bbQC7tosthE7diIfjXlnTtcKgav1qTspk/Nvvi28pQDv
+        XvRV/ZZdaSfbIG9TNU8Dxcw=
+X-Google-Smtp-Source: APXvYqz7WVVbHykWkvapHIKnSa5f3AP+b6vE+OgP9+nSP9uT98ogjaSLRJqBoOoJ6Wqgl5oBqYNZqA==
+X-Received: by 2002:a2e:6c15:: with SMTP id h21mr18862340ljc.10.1571758290572;
+        Tue, 22 Oct 2019 08:31:30 -0700 (PDT)
+Received: from xi.terra (c-51f1e055.07-184-6d6c6d4.bbcust.telenor.se. [85.224.241.81])
+        by smtp.gmail.com with ESMTPSA id q24sm7556775ljj.6.2019.10.22.08.31.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 22 Oct 2019 08:31:29 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.92.2)
+        (envelope-from <johan@xi.terra>)
+        id 1iMw8O-0005oL-4R; Tue, 22 Oct 2019 17:31:44 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Johan Hovold <johan@kernel.org>,
+        stable <stable@vger.kernel.org>,
+        syzbot+a4fbb3bb76cda0ea4e58@syzkaller.appspotmail.com
+Subject: [PATCH] USB: ldusb: fix control-message timeout
+Date:   Tue, 22 Oct 2019 17:31:27 +0200
+Message-Id: <20191022153127.22295-1-johan@kernel.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <000000000000daa63d059580f872@google.com>
+References: <000000000000daa63d059580f872@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191022085428.75cfaad6@gandalf.local.home>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 08:54:28AM -0400, Steven Rostedt wrote:
-> On Tue, 22 Oct 2019 12:28:11 +0100
-> Mark Rutland <mark.rutland@arm.com> wrote:
-> > > To make the name even better, let's just rename it to:
-> > > 
-> > >  ftrace_nop_initialization()
-> > > 
-> > > I think that may be the best description for it.  
-> > 
-> > Perhaps ftrace_nop_initialize(), so that it's not a noun?
-> > 
-> > I've made it ftrace_nop_initialization() in my branch for now.
-> 
-> I'm fine with ftrace_nop_initialize().
+USB control-message timeouts are specified in milliseconds, not jiffies.
+Waiting 83 minutes for a transfer to complete is a bit excessive.
 
-It's settled, then. :)
+Fixes: 2824bd250f0b ("[PATCH] USB: add ldusb driver")
+Cc: stable <stable@vger.kernel.org>     # 2.6.13
+Reported-by: syzbot+a4fbb3bb76cda0ea4e58@syzkaller.appspotmail.com
+Signed-off-by: Johan Hovold <johan@kernel.org>
+---
+ drivers/usb/misc/ldusb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-[...]
+diff --git a/drivers/usb/misc/ldusb.c b/drivers/usb/misc/ldusb.c
+index dd1ea25e42b1..8f86b4ebca89 100644
+--- a/drivers/usb/misc/ldusb.c
++++ b/drivers/usb/misc/ldusb.c
+@@ -581,7 +581,7 @@ static ssize_t ld_usb_write(struct file *file, const char __user *buffer,
+ 					 1 << 8, 0,
+ 					 dev->interrupt_out_buffer,
+ 					 bytes_to_write,
+-					 USB_CTRL_SET_TIMEOUT * HZ);
++					 USB_CTRL_SET_TIMEOUT);
+ 		if (retval < 0)
+ 			dev_err(&dev->intf->dev,
+ 				"Couldn't submit HID_REQ_SET_REPORT %d\n",
+-- 
+2.23.0
 
-> > | /**
-> > |  * ftrace_init_nop - initialize a nop call site
-> > |  * @mod: module structure if called by module load initialization
-> > |  * @rec: the mcount call site record
-> 
-> Perhaps say "mcount/fentry"
-
-This is the exact wording that ftrace_make_nop and ftrace_modify_call
-have. For consistency, I think those should all match.
-
-I can add " (e.g. mcount/fentry)" to all of those if you'd like?
-
-... or leave them all as-is?
-
-> > |  *
-> > |  * This is a very sensitive operation and great care needs
-> > |  * to be taken by the arch.  The operation should carefully
-> > |  * read the location, check to see if what is read is indeed
-> > |  * what we expect it to be, and then on success of the compare,
-> > |  * it should write to the location.
-> > |  *
-> > |  * The code segment at @rec->ip should be as initialized by the
-> 
-> "should be as" is a bit confusing. What about?
-> 
->  "The code segment at @rec->ip should contain the contents created by
->   the compiler".
-
-Works for me.
-
-Mark.
