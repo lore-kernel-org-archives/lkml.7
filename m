@@ -6,73 +6,68 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F314CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:18:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBD7DCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:19:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECF6420679
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:18:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 916BC206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:19:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="0emUZ4DI"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="tEpsjhnX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732239AbfJVRSC (ORCPT
+        id S1732297AbfJVRTp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 13:18:02 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:43554 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729666AbfJVRSB (ORCPT
+        Tue, 22 Oct 2019 13:19:45 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:42004 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725861AbfJVRTo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 13:18:01 -0400
-Received: by mail-lj1-f195.google.com with SMTP id n14so18022809ljj.10
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 10:18:00 -0700 (PDT)
+        Tue, 22 Oct 2019 13:19:44 -0400
+Received: by mail-lj1-f196.google.com with SMTP id u4so3907150ljj.9
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 10:19:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=netronome-com.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:in-reply-to:references
          :organization:mime-version:content-transfer-encoding;
-        bh=JbSeTyaaDeS0Oac3Dz/SH3vfJqau6TFa9nT5osYxqic=;
-        b=0emUZ4DIyrkOQb97o35j44irCAOu5E+woH6fECqyL5uCGqYFsGORlvuLr8FFcJl2Dw
-         C6DMgOVSLo2mmE2roDg4aHtF4jWZmbzwZz+AkHrr3+BNHkWwWGAhKfo9vhDAjDDypb3f
-         +DCa6+CTdQFMW93ApP+p2eu61uKvUj4QWjA2Sdaq9E961KzBzgsKvbq0z5i2bEPTCipE
-         tdzqffi4FWUmGSvvDASGSZxelEVmvFrEU4Q20iW468z/PQIUr2TdQjTTJ1HV2Q47rKtT
-         C8CWomXFlYuniNcpugn4jtxubW6hyVXPvFgU+TX8SMMRToZmCvtpZTKOmvwvZO07HLHR
-         YgHQ==
+        bh=cy34QT92NHhuXVd0S9iPTc4eeCufEq/lJNlVwgrDWg0=;
+        b=tEpsjhnXNsRzMFdAsi5Me5vtmMaSPKxbjyPby898vjwDTkOf6U4LzY66u49GwG4QxU
+         PelGGK5wr/HkW0Vel+2/ab6Ro+WYh6lMvqELw1S19dch0gJnycxJkFTFS7qJ/0CbRwDp
+         sS0FMnzQOyBKK+qQMbNnbfna88/YZZt46vKYn3UZ5CPC4RZdQ+MgHwWZ2JxseE2eFT1j
+         cxE31qCc1oC8snuXaIae7fZMBEiVgQZhqc9zYn8CWTLNW1AV4MhL6/90fvnphP33G9EI
+         jCZ8RU5+GWaky9PujnMjVTE9Uf3mk/Ci5xhAlEXOcUF/xARugV0TAjRGujTBAnYhurKv
+         MZ0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
          :references:organization:mime-version:content-transfer-encoding;
-        bh=JbSeTyaaDeS0Oac3Dz/SH3vfJqau6TFa9nT5osYxqic=;
-        b=U4K/tru+J+XmnGBTVQ/Ec3AROfGm3U87wAn4TFv5pCcs5sAkFvivqkro3rjeAx5laC
-         DftoWUsvpoB2OmJJEJgscOpYwoiMjfej5ZUCoBGGZEd2OIQ3bwnWxry204LjiyCjRd9v
-         wsm9n/b991TElSLWhTaQSOPUm0Ph0BtMzN20i7fNt/x4+TjF0+4uEitdNkK/CLGJRHnx
-         0rcTTJDa/ybRVzW3+llQtLrGAbCKt3AZQhX0dd/Cb49wj3J9tELUqRLrivYGeI+oKFAq
-         c372+ku0LRvyrJ92eLK+qLe64JqiqFHAuSmKRcMzx5wp21m+4iFlRezPXg6W0xwPgM/s
-         B/Lg==
-X-Gm-Message-State: APjAAAW96NAiOAIEEmVAxpeuD/5v4Ij3OWjLygSUMnMhlVPRqkQc64tK
-        IS9NaajqWl1JKLlo4z+tUuHgZA==
-X-Google-Smtp-Source: APXvYqxfS0KYXiZzlr4Zb6U6jiZAmr9m2KY1CTPUKISzb24hQeJNLXEd/Q5Ef4KgY/or62HPngcoiQ==
-X-Received: by 2002:a2e:3919:: with SMTP id g25mr19605019lja.242.1571764679410;
-        Tue, 22 Oct 2019 10:17:59 -0700 (PDT)
+        bh=cy34QT92NHhuXVd0S9iPTc4eeCufEq/lJNlVwgrDWg0=;
+        b=DhmOiQFPnxb0IDNUiVcjlZXi8BI2XMrGhzg3fvIgMssZuJF1Tir9VCwJKklC9pyLcn
+         7iNuYxfKB27AI0J1F23KsLk0RgiypAX4OMXHV9FmzYp/8O42SqqSjvt8uBeIfAC26aGJ
+         QKy6TUc6QB0hSYcDrk1kTnFop0Sl1gRY9B41Du/ZLYGVd5rqjEZy5CI2YGM3/ToUi1tr
+         /0Cdgt6RGvek4dU0jT9kCEKW+QJHF7Krm/V1vX4cSn7kKyMWQ4UjKkfMIO9slUh056LI
+         isSzCOwJj63TsxfwR+CTjFWIM2dQ2B5xbkJfVq9UISzuQN9hVCF74QnG7pWoco5HtG5l
+         w3rw==
+X-Gm-Message-State: APjAAAWe68n4U6adOLmLuPaEMWT9cGbfHT38+VNqTnm/e09/rZjBGPUv
+        UNHJH4vp1InR3lfNVtKjuWPPFg==
+X-Google-Smtp-Source: APXvYqx2nMG9uV82zzuDAWW/sGyUPqp5AI2OI+UE3fPbmcfyRxRy2DzOxBhWNqFGs90SK1p+WXM+Qw==
+X-Received: by 2002:a2e:97ca:: with SMTP id m10mr192469ljj.190.1571764782935;
+        Tue, 22 Oct 2019 10:19:42 -0700 (PDT)
 Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id 81sm9324414lje.70.2019.10.22.10.17.55
+        by smtp.gmail.com with ESMTPSA id d24sm5173468lfl.65.2019.10.22.10.19.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Oct 2019 10:17:58 -0700 (PDT)
-Date:   Tue, 22 Oct 2019 10:17:47 -0700
+        Tue, 22 Oct 2019 10:19:42 -0700 (PDT)
+Date:   Tue, 22 Oct 2019 10:19:36 -0700
 From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Daniel Wagner <dwagner@suse.de>
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        UNGLinuxDriver@microchip.com, netdev@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rt-users@vger.kernel.org,
-        Woojung Huh <woojung.huh@microchip.com>,
-        Marc Zyngier <maz@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH] net: usb: lan78xx: Use phy_mac_interrupt() for
- interrupt handling
-Message-ID: <20191022101747.001b6d06@cakuba.netronome.com>
-In-Reply-To: <20191018131532.dsfhyiilsi7cy4cm@linutronix.de>
-References: <20191018082817.111480-1-dwagner@suse.de>
-        <20191018131532.dsfhyiilsi7cy4cm@linutronix.de>
+To:     Eric Dumazet <eric.dumazet@gmail.com>
+Cc:     Tejun Heo <tj@kernel.org>, "David S. Miller" <davem@davemloft.net>,
+        netdev@vger.kernel.org, kernel-team@fb.com,
+        linux-kernel@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>
+Subject: Re: [PATCH] net: fix sk_page_frag() recursion from memory reclaim
+Message-ID: <20191022101936.23759c14@cakuba.netronome.com>
+In-Reply-To: <41874d3e-584c-437c-0110-83e001abf1b9@gmail.com>
+References: <20191019170141.GQ18794@devbig004.ftw2.facebook.com>
+        <dc6ff540-e7fc-695e-ed71-2bc0a92a0a9b@gmail.com>
+        <20191019211856.GR18794@devbig004.ftw2.facebook.com>
+        <41874d3e-584c-437c-0110-83e001abf1b9@gmail.com>
 Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -82,23 +77,13 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 18 Oct 2019 15:15:32 +0200, Sebastian Andrzej Siewior wrote:
-> On 2019-10-18 10:28:17 [+0200], Daniel Wagner wrote:
-> > handle_simple_irq() expect interrupts to be disabled. The USB
-> > framework is using threaded interrupts, which implies that interrupts
-> > are re-enabled as soon as it has run.  
+On Sat, 19 Oct 2019 14:25:57 -0700, Eric Dumazet wrote:
+> On 10/19/19 2:18 PM, Tejun Heo wrote:
 > 
-> Without threading interrupts, this is invoked in pure softirq context
-> since commit ed194d1367698 ("usb: core: remove local_irq_save() around
-> ->complete() handler") where the local_irq_disable() has been removed.  
+> > Whatever works is fine by me.  gfpflags_allow_blocking() is clearer
+> > than testing __GFP_DIRECT_RECLAIM directly tho.  Maybe a better way is
+> > introducing a new gfpflags_ helper?  
 > 
-> This is probably not a problem because the lock is never observed with
-> in IRQ context.
-> 
-> Wouldn't handle_nested_irq() work here instead of the simple thingy?
+> Sounds good to me !
 
-Daniel could you try this suggestion? Would it work?
-
-I'm not sure we are at the stage yet where "doesn't work on -rt" is
-sufficient reason to revert a working upstream patch. Please correct 
-me if I'm wrong.
+IIUC there will be a v2 with a new helper, dropping this from patchwork.
