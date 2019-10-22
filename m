@@ -2,306 +2,234 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D9F0CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 06:14:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F164ECA9EB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 06:15:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F29BE21783
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 06:14:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF8DD21783
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 06:15:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XzPuJ0Fj"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="MfrXq7Pm";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="oFLfKQJ4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387620AbfJVGOE (ORCPT
+        id S2387673AbfJVGPY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 02:14:04 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:43270 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387464AbfJVGOE (ORCPT
+        Tue, 22 Oct 2019 02:15:24 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:46760 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387488AbfJVGPY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 02:14:04 -0400
-Received: by mail-wr1-f67.google.com with SMTP id c2so11282126wrr.10
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 23:14:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5evoy8xnNoaQB+XLeUTtF36TLCnuCIuN9lobaj1jooE=;
-        b=XzPuJ0Fjy0V5L4h9mM2cAiKpwTo83TMCdhkGXy4cEDDj7smJBvovSRFnAGO2fF4uw+
-         +g61vhWlVnceM4npBm+zMJ7lm5quIu/S4BU6iXfM8fis2ViDLgH4FNI4MP8+6ou/A9jV
-         uOtCM/2POkj2JlCt26hOG0EVHHUX80dTPdSfyQi09BF7G5t1BHeiYmOzMZ1JNeLzxrzT
-         FNRdlk+1GIosMAKAbl1ZiEg3wcoW6rSS2FsWr8wsq7d8zMo76zb4kr8UlU42k6aAiQgL
-         oh0eA+1AHA+WHExyYI075gbzzk26mUGNi3rWKg5dWsLPRTju6N9F2Cv81lUbruuJQqgm
-         SF9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5evoy8xnNoaQB+XLeUTtF36TLCnuCIuN9lobaj1jooE=;
-        b=WT+1d0akAN7fa2xHtnerG8NefYMnDck9QWD+L6Qu9Zu2YiO/i0AXM9psRSWCdGVnS9
-         QnPA61WN0JIS+JeQ6s+tn9qHBZ43l4/akfztOWEkcZAAuE7/NCnfoyVLsLySDdummTmN
-         dyNlZ2jFYUPLcbsc4RMgOvlz0GYG7iDdOgEtL0Nv57R10kXfvXQ4QvB2AlN5yAa1vEJi
-         9V8Z/86vY1LRMJhNj9YLuBsX0E+L82zv2W5s4iAFwHbYx8ousrO9LtsFz5N9K/kteqo8
-         fRAdCkYAqjdm4PdnKWvZ5+BlF+crskhufQEzmrRDLxabtgnLZeVB8vWOIDxUzQEuqB6P
-         CxUA==
-X-Gm-Message-State: APjAAAV4FRh+qQ1jhBSkP0Xcp7dn3OuZ1payo4VFW2+mUmkQdQ6HxY4Y
-        UuXED+J3P4+TNvBfbTrIenmXG6l5/3AsGwWAKxc6dg==
-X-Google-Smtp-Source: APXvYqwQEknzYKOQvHSxWaj9PouA3wn69HXv0Mx1MHKr1IT3iMoNNwecSpm4/1pvwVo8L2pHqXpSzCM1jwV2yIHMSUY=
-X-Received: by 2002:adf:fd88:: with SMTP id d8mr1702530wrr.200.1571724840576;
- Mon, 21 Oct 2019 23:14:00 -0700 (PDT)
+        Tue, 22 Oct 2019 02:15:24 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id F1EAC60716; Tue, 22 Oct 2019 06:15:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571724923;
+        bh=oeDinmeIyEmHGbM2kXwZ1rSYY0UZ8x6QIofWRLfG2rc=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=MfrXq7PmYsKcqoywn6kq67/7J9L+PKz8kWIbtiWiNyhE86zhQqbSrt065l4DIJ7P4
+         Bysymhlxgs4WeCWYm+trrS7/LhDSithxPOR+3FR184UMr0Z0YBzAE0Q867KBg6x2mR
+         eRVmaqDCPDIzMwcwcYxN++WnaDszh5tgwG/5igqQ=
+Received: from [10.79.136.17] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id BF1176078F;
+        Tue, 22 Oct 2019 06:15:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571724922;
+        bh=oeDinmeIyEmHGbM2kXwZ1rSYY0UZ8x6QIofWRLfG2rc=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=oFLfKQJ4Y3SjophrXAvU3JsTEHzKIMbOlvdJa200wXoXFWlfJV5Oc2WkCqMKWJcuS
+         AY2Q0MhMX8UZk5brkJ1d/cl22KXv6+pjUTAL0XT+dA7LJoL4wkEh+yOYALrHhikMv6
+         Beg9P3OOwRanSwoCcfjTODFa7V8ePTdPXyp/cyGg=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BF1176078F
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH v2 02/13] arm64: dts: sc7180: Add minimal dts/dtsi files
+ for SC7180 soc
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     agross@kernel.org, robh+dt@kernel.org, bjorn.andersson@linaro.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Taniya Das <tdas@codeaurora.org>
+References: <20191021065522.24511-1-rnayak@codeaurora.org>
+ <20191021065522.24511-3-rnayak@codeaurora.org>
+ <20191022000833.GI20212@google.com>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <759a74e3-f2da-3200-0819-2c3d6fdd57e6@codeaurora.org>
+Date:   Tue, 22 Oct 2019 11:45:17 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191017093020.28658-1-kasong@redhat.com>
-In-Reply-To: <20191017093020.28658-1-kasong@redhat.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Tue, 22 Oct 2019 08:13:56 +0200
-Message-ID: <CAKv+Gu8nJ0uDn0G9s5N1ZM=FE4JB5c2Kjs=mKpatTFkwF0WaaQ@mail.gmail.com>
-Subject: Re: [PATCH v4] x86, efi: never relocate kernel below lowest
- acceptable address
-To:     Kairui Song <kasong@redhat.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Matthew Garrett <matthewgarrett@google.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191022000833.GI20212@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 17 Oct 2019 at 11:30, Kairui Song <kasong@redhat.com> wrote:
->
-> Currently, kernel fails to boot on some HyperV VMs when using EFI.
-> And it's a potential issue on all platforms.
->
-> It's caused by broken kernel relocation on EFI systems, when below three
-> conditions are met:
->
-> 1. Kernel image is not loaded to the default address (LOAD_PHYSICAL_ADDR)
->    by the loader.
-> 2. There isn't enough room to contain the kernel, starting from the
->    default load address (eg. something else occupied part the region).
-> 3. In the memmap provided by EFI firmware, there is a memory region
->    starts below LOAD_PHYSICAL_ADDR, and suitable for containing the
->    kernel.
->
-> EFI stub will perform a kernel relocation when condition 1 is met. But
-> due to condition 2, EFI stub can't relocate kernel to the preferred
-> address, so it fallback to ask EFI firmware to alloc lowest usable memory
-> region, got the low region mentioned in condition 3, and relocated
-> kernel there.
->
-> It's incorrect to relocate the kernel below LOAD_PHYSICAL_ADDR. This
-> is the lowest acceptable kernel relocation address.
->
-> The first thing goes wrong is in arch/x86/boot/compressed/head_64.S.
-> Kernel decompression will force use LOAD_PHYSICAL_ADDR as the output
-> address if kernel is located below it. Then the relocation before
-> decompression, which move kernel to the end of the decompression buffer,
-> will overwrite other memory region, as there is no enough memory there.
->
-> To fix it, just don't let EFI stub relocate the kernel to any address
-> lower than lowest acceptable address.
->
-> Signed-off-by: Kairui Song <kasong@redhat.com>
-> Acked-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
->
+Hi Matthias, thanks for the review
 
-Ingo, Boris, could you please comment on this?
+On 10/22/2019 5:38 AM, Matthias Kaehlcke wrote:
+> Hi Rajendra,
+> 
+> I don't have all the hardware documentation for a full review, but
+> find a few comments inline.
+> 
+[]..
 
-Apologies for not responding with review comments until now, but I was
-waiting for someone from team-x86 to acknowledge the issue and confirm
-a fix is needed.
+>> +#include "sc7180.dtsi"
+>> +
+>> +/ {
+>> +	model = "Qualcomm Technologies, Inc. SC7180 IDP";
+>> +	compatible = "qcom,sc7180-idp";
+>> +
+>> +	aliases {
+>> +		serial0 = &uart2;
+>> +	};
+>> +
+>> +	chosen {
+>> +		stdout-path = "serial0:115200n8";
+>> +	};
+>> +};
+>> +
+>> +&qupv3_id_0 {
+>> +	status = "okay";
+>> +};
+>> +
+>> +&uart2 {
+>> +	status = "okay";
+>> +};
+>> +
+>> +/* PINCTRL - additions to nodes defined in sc7180.dtsi */
+>> +
+>> +&qup_uart2_default {
+>> +	pinconf-tx {
+>> +		pins = "gpio44";
+>> +		drive-strength = <2>;
+>> +		bias-disable;
+>> +	};
+>> +
+>> +	pinconf-rx {
+>> +		pins = "gpio45";
+>> +		drive-strength = <2>;
+>> +		bias-pull-up;
+>> +	};
+>> +};
+> 
+> This config seems reasonable as default for a UART in general.
+> Would it make sense to configure these in the SoC .dtsi?
 
-Some comments below.
+I think the general rule of thumb that was followed was to have
+all pinmux configurations in soc file and all pinconf setting in
+the board, even though it meant a bit of duplication in some cases.
+See [1] for some discussions around it that happened in the past.
+
+[1] https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1603693.html
+
+> 
+>> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>> new file mode 100644
+>> index 000000000000..82bf7cdce6b8
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>> @@ -0,0 +1,300 @@
+>> +// SPDX-License-Identifier: BSD-3-Clause
+>> +/*
+>> + * SC7180 SoC device tree source
+>> + *
+>> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
+>> + */
+>> +
+>> +#include <dt-bindings/clock/qcom,gcc-sc7180.h>
+> 
+> Note: depends on "Add Global Clock controller (GCC) driver for SC7180"
+> (https://patchwork.kernel.org/project/linux-arm-msm/list/?submitter=179717)
+> which isn't merged yet.
+
+Right, I did mention it in the cover letter, perhaps I should have mentioned it
+as part of this patch as well.
+
+[]..
+>> +
+>> +	soc: soc {
+>> +		#address-cells = <2>;
+>> +		#size-cells = <2>;
+>> +		ranges = <0 0 0 0 0x10 0>;
+>> +		dma-ranges = <0 0 0 0  0x10 0>;
+>> +		compatible = "simple-bus";
+>> +
+>> +		gcc: clock-controller@100000 {
+>> +			compatible = "qcom,gcc-sc7180";
+> 
+> 
+> 
+>> +			reg = <0 0x00100000 0 0x1f0000>;
+>> +			#clock-cells = <1>;
+>> +			#reset-cells = <1>;
+>> +			#power-domain-cells = <1>;
+>> +		};
+>> +
+>> +		qupv3_id_0: geniqup@ac0000 {
+> 
+> The QUP enumeration is a bit confusing. The Hardware Register
+> Description has QUPV3_0_QUPV3_ID_0 at 0x00800000 and
+> QUPV3_1_QUPV3_ID_0 at 0x00a00000. This QUP apparently is
+> the latter. In the SDM845 DT the QUP @ac0000 has the label
+> 'qupv3_id_1', I guess this should be the same here.
+
+I had a re-look at the documentation again and yes, you are
+right, this seems exactly same as on sdm845 except that on
+sdm845 the 2 blocks were named QUPV3_0_QUPV3_ID_1 at 0x00800000
+and QUPV3_1_QUPV3_ID_1 at 0x00a00000.
+I will match this up with the labeling approach we followed on
+sdm845. Thanks.
+
+> 
+>> +			compatible = "qcom,geni-se-qup";
+>> +			reg = <0 0x00ac0000 0 0x6000>;
+>> +			clock-names = "m-ahb", "s-ahb";
+>> +			clocks = <&gcc GCC_QUPV3_WRAP_1_M_AHB_CLK>,
+>> +				 <&gcc GCC_QUPV3_WRAP_1_S_AHB_CLK>;
+>> +			#address-cells = <2>;
+>> +			#size-cells = <2>;
+>> +			ranges;
+>> +			status = "disabled";
+>> +
+>> +			uart2: serial@a88000 {
+>> +				compatible = "qcom,geni-debug-uart";
+>> +				reg = <0 0x00a88000 0 0x4000>;
+> 
+> Related to the comment above: on SDM845 this UART has the label
+> 'uart10'. I understand these are different SoCs, but could you
+> please clarify the enumeration of the SC7180 QUPs and their ports?
+
+I will move this to uart10 once I have the qup instance marked with id_1.
+On sdm845 the qup_id_0 had SE instances from 0 to 7 and qup_id_1 had it
+from 8 to 15. I will follow the same here so this uart instance would
+remain the same as on sdm845, which is uart10.
+
+thanks,
+Rajendra
+
+> 
+>> +				clock-names = "se";
+>> +				clocks = <&gcc GCC_QUPV3_WRAP1_S2_CLK>;
+>> +				pinctrl-names = "default";
+>> +				pinctrl-0 = <&qup_uart2_default>;
+>> +				interrupts = <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>;
+>> +				status = "disabled";
+>> +			};
+>> +		};
+>> +
 
 
-> ---
-> Update from V3:
->  - Update commit message.
->
-> Update from V2:
->  - Update part of the commit message.
->
-> Update from V1:
->  - Redo the commit message.
->
->  arch/x86/boot/compressed/eboot.c               |  8 +++++---
->  drivers/firmware/efi/libstub/arm32-stub.c      |  2 +-
->  drivers/firmware/efi/libstub/arm64-stub.c      |  2 +-
->  drivers/firmware/efi/libstub/efi-stub-helper.c | 12 ++++++++----
->  include/linux/efi.h                            |  5 +++--
->  5 files changed, 18 insertions(+), 11 deletions(-)
->
-> diff --git a/arch/x86/boot/compressed/eboot.c b/arch/x86/boot/compressed/eboot.c
-> index d6662fdef300..e89e84b66527 100644
-> --- a/arch/x86/boot/compressed/eboot.c
-> +++ b/arch/x86/boot/compressed/eboot.c
-> @@ -13,6 +13,7 @@
->  #include <asm/e820/types.h>
->  #include <asm/setup.h>
->  #include <asm/desc.h>
-> +#include <asm/boot.h>
->
->  #include "../string.h"
->  #include "eboot.h"
-> @@ -413,7 +414,7 @@ struct boot_params *make_boot_params(struct efi_config *c)
->         }
->
->         status = efi_low_alloc(sys_table, 0x4000, 1,
-> -                              (unsigned long *)&boot_params);
-> +                              (unsigned long *)&boot_params, 0);
 
-Instead of changing the calls to efi_low_alloc() everywhere, could you
-please only update the implementation to take a 'min' argument, and
-rename it to something like ' ()', Then, the original extern
-declaration of efi_low_alloc() can be converted into a static inline
-that calls efi_low_alloc_above. That also allows us to pull the 'alloc
-at 0x0' logic out of the loop, e.g.,
-
-efi_status_t efi_low_alloc_above(efi_system_table_t *sys_table_arg,
-                           unsigned long size, unsigned long align,
-                           unsigned long *addr, unsigned long min);
-
-static inline
-efi_status_t efi_low_alloc(efi_system_table_t *sys_table_arg,
-                           unsigned long size, unsigned long align,
-                           unsigned long *addr)
-{
-    /*
-     * Don't allocate at 0x0. It will confuse code that
-     * checks pointers against NULL. Skip the first 8
-     * bytes so we start at a nice even number.
-     */
-    return efi_low_alloc_above(sys_table_arg, size, align, addr, 8);
-}
-
-(and drop the same logic from the function implementation)
-
->         if (status != EFI_SUCCESS) {
->                 efi_printk(sys_table, "Failed to allocate lowmem for boot params\n");
->                 return NULL;
-> @@ -798,7 +799,7 @@ efi_main(struct efi_config *c, struct boot_params *boot_params)
->
->         gdt->size = 0x800;
->         status = efi_low_alloc(sys_table, gdt->size, 8,
-> -                          (unsigned long *)&gdt->address);
-> +                              (unsigned long *)&gdt->address, 0);
->         if (status != EFI_SUCCESS) {
->                 efi_printk(sys_table, "Failed to allocate memory for 'gdt'\n");
->                 goto fail;
-> @@ -813,7 +814,8 @@ efi_main(struct efi_config *c, struct boot_params *boot_params)
->                 status = efi_relocate_kernel(sys_table, &bzimage_addr,
->                                              hdr->init_size, hdr->init_size,
->                                              hdr->pref_address,
-> -                                            hdr->kernel_alignment);
-> +                                            hdr->kernel_alignment,
-> +                                            LOAD_PHYSICAL_ADDR);
->                 if (status != EFI_SUCCESS) {
->                         efi_printk(sys_table, "efi_relocate_kernel() failed!\n");
->                         goto fail;
-> diff --git a/drivers/firmware/efi/libstub/arm32-stub.c b/drivers/firmware/efi/libstub/arm32-stub.c
-> index e8f7aefb6813..bf6f954d6afe 100644
-> --- a/drivers/firmware/efi/libstub/arm32-stub.c
-> +++ b/drivers/firmware/efi/libstub/arm32-stub.c
-> @@ -220,7 +220,7 @@ efi_status_t handle_kernel_image(efi_system_table_t *sys_table,
->         *image_size = image->image_size;
->         status = efi_relocate_kernel(sys_table, image_addr, *image_size,
->                                      *image_size,
-> -                                    dram_base + MAX_UNCOMP_KERNEL_SIZE, 0);
-> +                                    dram_base + MAX_UNCOMP_KERNEL_SIZE, 0, 0);
->         if (status != EFI_SUCCESS) {
->                 pr_efi_err(sys_table, "Failed to relocate kernel.\n");
->                 efi_free(sys_table, *reserve_size, *reserve_addr);
-> diff --git a/drivers/firmware/efi/libstub/arm64-stub.c b/drivers/firmware/efi/libstub/arm64-stub.c
-> index 1550d244e996..3d2e517e10f4 100644
-> --- a/drivers/firmware/efi/libstub/arm64-stub.c
-> +++ b/drivers/firmware/efi/libstub/arm64-stub.c
-> @@ -140,7 +140,7 @@ efi_status_t handle_kernel_image(efi_system_table_t *sys_table_arg,
->         if (status != EFI_SUCCESS) {
->                 *reserve_size = kernel_memsize + TEXT_OFFSET;
->                 status = efi_low_alloc(sys_table_arg, *reserve_size,
-> -                                      MIN_KIMG_ALIGN, reserve_addr);
-> +                                      MIN_KIMG_ALIGN, reserve_addr, 0);
->
->                 if (status != EFI_SUCCESS) {
->                         pr_efi_err(sys_table_arg, "Failed to relocate kernel\n");
-> diff --git a/drivers/firmware/efi/libstub/efi-stub-helper.c b/drivers/firmware/efi/libstub/efi-stub-helper.c
-> index 3caae7f2cf56..00b00a2562aa 100644
-> --- a/drivers/firmware/efi/libstub/efi-stub-helper.c
-> +++ b/drivers/firmware/efi/libstub/efi-stub-helper.c
-> @@ -260,11 +260,11 @@ efi_status_t efi_high_alloc(efi_system_table_t *sys_table_arg,
->  }
->
->  /*
-> - * Allocate at the lowest possible address.
-> + * Allocate at the lowest possible address that is not below 'min'.
->   */
->  efi_status_t efi_low_alloc(efi_system_table_t *sys_table_arg,
->                            unsigned long size, unsigned long align,
-> -                          unsigned long *addr)
-> +                          unsigned long *addr, unsigned long min)
->  {
->         unsigned long map_size, desc_size, buff_size;
->         efi_memory_desc_t *map;
-> @@ -311,6 +311,9 @@ efi_status_t efi_low_alloc(efi_system_table_t *sys_table_arg,
->                 start = desc->phys_addr;
->                 end = start + desc->num_pages * EFI_PAGE_SIZE;
->
-> +               if (start < min)
-> +                       start = min;
-> +
->                 /*
->                  * Don't allocate at 0x0. It will confuse code that
->                  * checks pointers against NULL. Skip the first 8
-> @@ -698,7 +701,8 @@ efi_status_t efi_relocate_kernel(efi_system_table_t *sys_table_arg,
->                                  unsigned long image_size,
->                                  unsigned long alloc_size,
->                                  unsigned long preferred_addr,
-> -                                unsigned long alignment)
-> +                                unsigned long alignment,
-> +                                unsigned long min_addr)
->  {
->         unsigned long cur_image_addr;
->         unsigned long new_addr = 0;
-> @@ -732,7 +736,7 @@ efi_status_t efi_relocate_kernel(efi_system_table_t *sys_table_arg,
->          */
->         if (status != EFI_SUCCESS) {
->                 status = efi_low_alloc(sys_table_arg, alloc_size, alignment,
-> -                                      &new_addr);
-> +                                      &new_addr, min_addr);
->         }
->         if (status != EFI_SUCCESS) {
->                 pr_efi_err(sys_table_arg, "Failed to allocate usable memory for kernel.\n");
-> diff --git a/include/linux/efi.h b/include/linux/efi.h
-> index bd3837022307..a5144cc44e54 100644
-> --- a/include/linux/efi.h
-> +++ b/include/linux/efi.h
-> @@ -1581,7 +1581,7 @@ efi_status_t efi_get_memory_map(efi_system_table_t *sys_table_arg,
->
->  efi_status_t efi_low_alloc(efi_system_table_t *sys_table_arg,
->                            unsigned long size, unsigned long align,
-> -                          unsigned long *addr);
-> +                          unsigned long *addr, unsigned long min);
->
->  efi_status_t efi_high_alloc(efi_system_table_t *sys_table_arg,
->                             unsigned long size, unsigned long align,
-> @@ -1592,7 +1592,8 @@ efi_status_t efi_relocate_kernel(efi_system_table_t *sys_table_arg,
->                                  unsigned long image_size,
->                                  unsigned long alloc_size,
->                                  unsigned long preferred_addr,
-> -                                unsigned long alignment);
-> +                                unsigned long alignment,
-> +                                unsigned long min_addr);
->
->  efi_status_t handle_cmdline_files(efi_system_table_t *sys_table_arg,
->                                   efi_loaded_image_t *image,
-> --
-> 2.21.0
->
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
