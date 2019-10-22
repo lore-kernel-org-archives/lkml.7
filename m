@@ -2,153 +2,66 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B949CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:48:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E582FCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:50:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72C3621928
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:48:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="FvZrlFyR"
+	by mail.kernel.org (Postfix) with ESMTP id C657421872
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 14:50:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732065AbfJVOsf (ORCPT
+        id S1732076AbfJVOuz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 10:48:35 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:33292 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388502AbfJVOsY (ORCPT
+        Tue, 22 Oct 2019 10:50:55 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:38950 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727531AbfJVOuz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 10:48:24 -0400
-Received: by mail-qk1-f194.google.com with SMTP id 71so12616878qkl.0
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 07:48:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=TcikxxhhZnd6YbZpIU4lRQd5AagmURIl+Vuyl9j6u4o=;
-        b=FvZrlFyRQntoTimiufrW53mtj9qQm5Pfkmi6p9CvHGf4iR1aINMvfQGfKS5J6FOE6Q
-         +a/mswPjs8yJdf44DISKKSp7pkEDXdEPHmpL5dPfkzMfKhGowvZmJntlFeptg/YT+M/4
-         F1yyqrA4p/pPpGQwEYO5wWe4v1QX3CFT8wrfa/IjioJDCqvPCRNx912M+Xg1uvyLIba4
-         UAI8qPBU/g32WGoLKqRcwfWhJ/8NtFsyvIIeW30mb8ztOxvbZzL7agXcNuzl+ePB6+7e
-         nyCJPye+F9FgFZgkKIcjPyM7ig4P+P+beI6kZp4hAJ8urRBGbCg/vCRTdLEj/z9s2Ymk
-         ndjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=TcikxxhhZnd6YbZpIU4lRQd5AagmURIl+Vuyl9j6u4o=;
-        b=jMhg7/QY+My4xe0RyLPO7/JDYEz2x0UMBKW58NjqESD1yKK007xpWrypnmpI0yZMyn
-         y1aqNV76GNHowZHXAW8jqDHpn8185wV0i9QLtBCIrmjEWQCrJwia4V4PcJYlC8r5R7lm
-         R4W0YYRIA1RisxMkXLtOBXXkUEPtgMFrscRD+7hjoiG/8zv3F/xLC4sQufBZtWWNBB75
-         mtx676Fi24icetBOPIONdunGWiK2aday/eD3bwWIFP8IO+Y42KOAa5/SJwPnU1f90iOo
-         mK4FPA1V44EqCXDdZWCfkqDf/PWVIm+YNJZ3cF2jvhIJHCaQEgCsZtAHBcjXQBm/H9SU
-         aMRw==
-X-Gm-Message-State: APjAAAWJYw8bvvOeUWsgOUlztIt/aHfjU01CJ1fn1n+Mp5iTJ2lr2lez
-        gjlsT9xoCl2XFk4wpSqWijqWdw==
-X-Google-Smtp-Source: APXvYqwd6CQlHw+mwJeGW1LxVFd0b0qCo4M2vpP4Ov/AangPWepYRJV0QsNC4KaEIrqRkOUKo/osTA==
-X-Received: by 2002:a37:8183:: with SMTP id c125mr3303192qkd.279.1571755703347;
-        Tue, 22 Oct 2019 07:48:23 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::3:10ad])
-        by smtp.gmail.com with ESMTPSA id b4sm3862311qtt.26.2019.10.22.07.48.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Oct 2019 07:48:22 -0700 (PDT)
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Michal Hocko <mhocko@suse.com>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: [PATCH 7/8] mm: vmscan: split shrink_node() into node part and memcgs part
-Date:   Tue, 22 Oct 2019 10:48:02 -0400
-Message-Id: <20191022144803.302233-8-hannes@cmpxchg.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191022144803.302233-1-hannes@cmpxchg.org>
-References: <20191022144803.302233-1-hannes@cmpxchg.org>
+        Tue, 22 Oct 2019 10:50:55 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iMvUr-0000Jf-Jb; Tue, 22 Oct 2019 14:50:53 +0000
+Date:   Tue, 22 Oct 2019 15:50:53 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Ritesh Harjani <riteshh@linux.ibm.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        wugyuan@cn.ibm.com, jlayton@kernel.org, hsiangkao@aol.com,
+        Jan Kara <jack@suse.cz>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH RESEND 1/1] vfs: Really check for inode ptr in lookup_fast
+Message-ID: <20191022145053.GY26530@ZenIV.linux.org.uk>
+References: <20190927044243.18856-1-riteshh@linux.ibm.com>
+ <20191015040730.6A84742047@d06av24.portsmouth.uk.ibm.com>
+ <20191022133855.B1B4752050@d06av21.portsmouth.uk.ibm.com>
+ <20191022143736.GX26530@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191022143736.GX26530@ZenIV.linux.org.uk>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This function is getting long and unwieldy, split out the memcg bits.
+On Tue, Oct 22, 2019 at 03:37:36PM +0100, Al Viro wrote:
 
-The updated shrink_node() handles the generic (node) reclaim aspects:
-  - global vmpressure notifications
-  - writeback and congestion throttling
-  - reclaim/compaction management
-  - kswapd giving up on unreclaimable nodes
+> I'm somewhat tempted to make __d_set_inode_and_type() do smp_store_release()
+> for setting ->d_flags and __d_entry_type() - smp_load_acquire(); that would
+> be pretty much free for x86 (as well as sparc, s390 and itanic) and reasonably
+> cheap on ppc and arm64.  How badly would e.g. SMP arm suffer from the below
+> (completely untested)?
 
-It then calls a new shrink_node_memcgs() which handles cgroup specifics:
-  - the cgroup tree traversal
-  - memory.low considerations
-  - per-cgroup slab shrinking callbacks
-  - per-cgroup vmpressure notifications
+PS: if we really go that way, we'd probably want __d_is_negative(), to be
+used only under ->d_lock or with ->d_seq validation.
 
-Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
----
- mm/vmscan.c | 28 ++++++++++++++++++----------
- 1 file changed, 18 insertions(+), 10 deletions(-)
+d_is_negative() callers in fs/dcache.c (all under ->d_lock) as well as
+the RCU-side one in lookup_fast() (->d_seq validated) would you that.
 
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index db073b40c432..65baa89740dd 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -2722,18 +2722,10 @@ static bool pgdat_memcg_congested(pg_data_t *pgdat, struct mem_cgroup *memcg)
- 		(memcg && memcg_congested(pgdat, memcg));
- }
- 
--static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
-+static void shrink_node_memcgs(pg_data_t *pgdat, struct scan_control *sc)
- {
--	struct reclaim_state *reclaim_state = current->reclaim_state;
- 	struct mem_cgroup *root = sc->target_mem_cgroup;
--	unsigned long nr_reclaimed, nr_scanned;
--	bool reclaimable = false;
- 	struct mem_cgroup *memcg;
--again:
--	memset(&sc->nr, 0, sizeof(sc->nr));
--
--	nr_reclaimed = sc->nr_reclaimed;
--	nr_scanned = sc->nr_scanned;
- 
- 	memcg = mem_cgroup_iter(root, NULL, NULL);
- 	do {
-@@ -2786,6 +2778,22 @@ static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
- 			   sc->nr_reclaimed - reclaimed);
- 
- 	} while ((memcg = mem_cgroup_iter(root, memcg, NULL)));
-+}
-+
-+static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
-+{
-+	struct reclaim_state *reclaim_state = current->reclaim_state;
-+	struct mem_cgroup *root = sc->target_mem_cgroup;
-+	unsigned long nr_reclaimed, nr_scanned;
-+	bool reclaimable = false;
-+
-+again:
-+	memset(&sc->nr, 0, sizeof(sc->nr));
-+
-+	nr_reclaimed = sc->nr_reclaimed;
-+	nr_scanned = sc->nr_scanned;
-+
-+	shrink_node_memcgs(pgdat, sc);
- 
- 	if (reclaim_state) {
- 		sc->nr_reclaimed += reclaim_state->reclaimed_slab;
-@@ -2793,7 +2801,7 @@ static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
- 	}
- 
- 	/* Record the subtree's reclaim efficiency */
--	vmpressure(sc->gfp_mask, sc->target_mem_cgroup, true,
-+	vmpressure(sc->gfp_mask, root, true,
- 		   sc->nr_scanned - nr_scanned,
- 		   sc->nr_reclaimed - nr_reclaimed);
- 
--- 
-2.23.0
-
+Another fun place is do_unlinkat() - there we want to reorder
+                inode = dentry->d_inode;
+                if (d_is_negative(dentry))
+                        goto slashes;
+As it were, the same race here can lead to unbalanced iput(), if you
+hit the window just right.
