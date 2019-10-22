@@ -2,103 +2,139 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CD54CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:13:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8CCACA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:13:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E31A21783
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:13:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BbyZ+sZS"
+	by mail.kernel.org (Postfix) with ESMTP id 94DFB21783
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:13:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389338AbfJVQNh (ORCPT
+        id S2389272AbfJVQNX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 12:13:37 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:58520 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389312AbfJVQNg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 12:13:36 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9MGDTIF052496;
-        Tue, 22 Oct 2019 11:13:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571760809;
-        bh=QGk7qbe/nYACD/rro5HVU0hxjmC2+PiIZcphPyYqDg4=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=BbyZ+sZSr3GX6SkfLtTPvcIegE8IWRidE7M9CyzLnq/VjEjC/TU+aRjcyOQJHytN9
-         csyjsi10Ulk28g61RvhvXfgwaW+lJEKTUNQZkA4yk6fVP2e2e1Fhhea+YavWWmzHe6
-         LqI6XK2TeYMgYp1CLe1Z82oO49YahMfMDr4IY1sc=
-Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9MGDTBd043929
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 22 Oct 2019 11:13:29 -0500
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 22
- Oct 2019 11:13:28 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 22 Oct 2019 11:13:19 -0500
-Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with SMTP id x9MGDDPn111989;
-        Tue, 22 Oct 2019 11:13:13 -0500
-Date:   Tue, 22 Oct 2019 11:13:13 -0500
-From:   Benoit Parrot <bparrot@ti.com>
-To:     Tony Lindgren <tony@atomide.com>
-CC:     Tero Kristo <t-kristo@ti.com>, Rob Herring <robh+dt@kernel.org>,
-        <linux-omap@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [Patch 1/9] ARM: dts: dra7: add cam clkctrl node
-Message-ID: <20191022161313.nzwovtxipibpvwpf@ti.com>
-References: <20191018154849.3127-1-bparrot@ti.com>
- <20191018154849.3127-2-bparrot@ti.com>
- <20191022154012.GM5610@atomide.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20191022154012.GM5610@atomide.com>
-User-Agent: NeoMutt/20171215
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Tue, 22 Oct 2019 12:13:23 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59766 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732118AbfJVQNW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 12:13:22 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id BA110B383;
+        Tue, 22 Oct 2019 16:13:20 +0000 (UTC)
+From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
+To:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/5] MIPS: SGI-IP27: collect externs in new header file
+Date:   Tue, 22 Oct 2019 18:13:11 +0200
+Message-Id: <20191022161315.4194-1-tbogendoerfer@suse.de>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tony Lindgren <tony@atomide.com> wrote on Tue [2019-Oct-22 08:40:12 -0700]:
-> * Benoit Parrot <bparrot@ti.com> [191018 15:46]:
-> > Add clkctrl nodes for CAM domain.
-> 
-> You're missing the Linux clk folks and list from Cc, can
-> you please resend?
+IP27 code has a few externs distributed over .c files. Collect them
+together into one commcon header file.
 
-Sure.
+Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+---
+ arch/mips/sgi-ip27/ip27-common.h | 9 +++++++++
+ arch/mips/sgi-ip27/ip27-init.c   | 4 ++--
+ arch/mips/sgi-ip27/ip27-reset.c  | 2 ++
+ arch/mips/sgi-ip27/ip27-smp.c    | 4 ++--
+ arch/mips/sgi-ip27/ip27-timer.c  | 2 ++
+ 5 files changed, 17 insertions(+), 4 deletions(-)
+ create mode 100644 arch/mips/sgi-ip27/ip27-common.h
 
-> 
-> I need an ack for the clk-7xx.c changes if I'm to apply
-> this patch.
-> 
-> Probably the best way would be for tero to collect
-> all the drivers/clk/ti clock data changes and provide
-> an immutable branch with those that I can merge too.
+diff --git a/arch/mips/sgi-ip27/ip27-common.h b/arch/mips/sgi-ip27/ip27-common.h
+new file mode 100644
+index 000000000000..e9e9f1dc8c20
+--- /dev/null
++++ b/arch/mips/sgi-ip27/ip27-common.h
+@@ -0,0 +1,9 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++
++#ifndef __IP27_COMMON_H
++#define __IP27_COMMON_H
++
++extern void ip27_reboot_setup(void);
++extern void hub_rt_clock_event_init(void);
++
++#endif /* __IP27_COMMON_H */
+diff --git a/arch/mips/sgi-ip27/ip27-init.c b/arch/mips/sgi-ip27/ip27-init.c
+index 1dad799758c4..f48e2b3990f6 100644
+--- a/arch/mips/sgi-ip27/ip27-init.c
++++ b/arch/mips/sgi-ip27/ip27-init.c
+@@ -36,6 +36,8 @@
+ #include <asm/sn/sn0/ip27.h>
+ #include <asm/sn/mapped_kernel.h>
+ 
++#include "ip27-common.h"
++
+ #define CPU_NONE		(cpuid_t)-1
+ 
+ static DECLARE_BITMAP(hub_init_mask, MAX_COMPACT_NODES);
+@@ -113,8 +115,6 @@ get_nasid(void)
+ 			 >> NSRI_NODEID_SHFT);
+ }
+ 
+-extern void ip27_reboot_setup(void);
+-
+ void __init plat_mem_setup(void)
+ {
+ 	u64 p, e, n_mode;
+diff --git a/arch/mips/sgi-ip27/ip27-reset.c b/arch/mips/sgi-ip27/ip27-reset.c
+index c90228d0d4c2..74d078247e49 100644
+--- a/arch/mips/sgi-ip27/ip27-reset.c
++++ b/arch/mips/sgi-ip27/ip27-reset.c
+@@ -26,6 +26,8 @@
+ #include <asm/sn/gda.h>
+ #include <asm/sn/sn0/hub.h>
+ 
++#include "ip27-common.h"
++
+ void machine_restart(char *command) __noreturn;
+ void machine_halt(void) __noreturn;
+ void machine_power_off(void) __noreturn;
+diff --git a/arch/mips/sgi-ip27/ip27-smp.c b/arch/mips/sgi-ip27/ip27-smp.c
+index 386702abe660..c38df7c62964 100644
+--- a/arch/mips/sgi-ip27/ip27-smp.c
++++ b/arch/mips/sgi-ip27/ip27-smp.c
+@@ -27,6 +27,8 @@
+ #include <asm/sn/sn0/hubio.h>
+ #include <asm/sn/sn0/ip27.h>
+ 
++#include "ip27-common.h"
++
+ /*
+  * Takes as first input the PROM assigned cpu id, and the kernel
+  * assigned cpu id as the second.
+@@ -147,8 +149,6 @@ static void ip27_init_cpu(void)
+ 
+ static void ip27_smp_finish(void)
+ {
+-	extern void hub_rt_clock_event_init(void);
+-
+ 	hub_rt_clock_event_init();
+ 	local_irq_enable();
+ }
+diff --git a/arch/mips/sgi-ip27/ip27-timer.c b/arch/mips/sgi-ip27/ip27-timer.c
+index 9ca775465a91..d53a29070e12 100644
+--- a/arch/mips/sgi-ip27/ip27-timer.c
++++ b/arch/mips/sgi-ip27/ip27-timer.c
+@@ -38,6 +38,8 @@
+ #include <asm/sn/sn0/hubio.h>
+ #include <asm/pci/bridge.h>
+ 
++#include "ip27-common.h"
++
+ static int rt_next_event(unsigned long delta, struct clock_event_device *evt)
+ {
+ 	unsigned int cpu = smp_processor_id();
+-- 
+2.16.4
 
-So I assume then that the clk*.c and header file changes should be split in
-a separate patch?
-
-Tero,
-Let me know how youo would like to proceed.
-
-Benoit
-
-> 
-> That way the related dts changes can be applied on
-> top of it with things working.
-> 
-> Regards,
-> 
-> Tony
