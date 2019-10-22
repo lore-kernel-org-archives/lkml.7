@@ -2,109 +2,117 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDC6BCA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 05:12:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9669CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 05:15:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADBF320B7C
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 05:12:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 971E32184C
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 05:15:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ab/j3x+f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731176AbfJVFMa (ORCPT
+        id S1731106AbfJVFPd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 01:12:30 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:46299 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731159AbfJVFM3 (ORCPT
+        Tue, 22 Oct 2019 01:15:33 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:45109 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725788AbfJVFPd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 01:12:29 -0400
-Received: from soja.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:13da])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <o.rempel@pengutronix.de>)
-        id 1iMmT0-00060g-Df; Tue, 22 Oct 2019 07:12:22 +0200
-Subject: Re: [PATCH v3 1/5] net: ag71xx: port to phylink
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>,
-        Jay Cliburn <jcliburn@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        devicetree@vger.kernel.org, James Hogan <jhogan@kernel.org>,
-        linux-kernel@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Paul Burton <paul.burton@mips.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Chris Snook <chris.snook@gmail.com>, netdev@vger.kernel.org,
-        linux-mips@vger.kernel.org,
-        Vivien Didelot <vivien.didelot@gmail.com>
-References: <20191021053811.19818-1-o.rempel@pengutronix.de>
- <20191021053811.19818-2-o.rempel@pengutronix.de>
- <20191021222122.GM25745@shell.armlinux.org.uk>
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-Message-ID: <bf684928-0800-69df-f5cd-5d1db6958804@pengutronix.de>
-Date:   Tue, 22 Oct 2019 07:12:16 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 22 Oct 2019 01:15:33 -0400
+Received: by mail-oi1-f196.google.com with SMTP id o205so13080115oib.12
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 22:15:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=6rY2Wjoe2GHPPcQrTvZ8onLLc/wPWzZXs6sWpQV54Tw=;
+        b=ab/j3x+fg+cZiHLu3xqUGr4m5ASYRpmL96jgg7Cxv17KIdEo23ZnGKI5FtlQqPRQpZ
+         OzRSyHfgpgCJjKr6yv/lGLqF5i0LyAgJCLvb9jCXPQAfYjSVM4iu7chEOKWAPUlS+oa1
+         SI0W467DTaXUKR40SCcbPTUrSW4GsVpShEF9XHpChvQ03IpaHhOJa5xatrikIN0+doI1
+         tX0p6uKLXKC15E8nD7CDyXuAFbupnjUyOLSmIdSp1QBOzrSTtEywmaZassw5HbgupmO1
+         1XpvcQVWVhBGlsmtc3CGAF/TsmB51iR3XvgG1K6xcmp5KoceyMuAIqSfNaRPTBosJ5hF
+         zXKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6rY2Wjoe2GHPPcQrTvZ8onLLc/wPWzZXs6sWpQV54Tw=;
+        b=XHQ4Lw6wtYfBdacxAxO4FIk3UqHvcK/FlRkoaUmwid+quHcgePAxy/mdO2nngCJtwQ
+         HK4WKsH84GDBNNkofFm97quwTuQ6hg7cLMrpk0H7Sq5Wpyb7qXT5owTWSZBzmWSzF67c
+         pPFmqSTnC3LBJUU4OIM+ZsNBROofJHvxhMk7IWCGLAcYZqVn9HSrtq/9L5r32YQVYj4I
+         wGdTL0Fh8eRMF/lM3NZ4Mvl/aeycVRiDxP+1yPIk92AIvhxlFYfadQU/QwFdCJV6fzvI
+         3mAJUGPN0gfGY3sMVJ6JdbSq8Ux17G7iXAa0v9F5bMbbXwoZWVLb6ckx1+jSPLXt+6fJ
+         /pOQ==
+X-Gm-Message-State: APjAAAUWKN3HW+Q90EftPKZ70PItgbgRrP9Ujh8ebpjBUyHt6oHPStJ2
+        nu5SxMA1G/aDQ+R3Il8i06Y=
+X-Google-Smtp-Source: APXvYqyysJTAcB6ZzJCttmbfooVDtrC7YfJzT5YfjPwTR2JyhMcoWVGSp/baLb+hkx/xq7ZFdm7Msg==
+X-Received: by 2002:a05:6808:b07:: with SMTP id s7mr1288447oij.162.1571721331706;
+        Mon, 21 Oct 2019 22:15:31 -0700 (PDT)
+Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id k93sm4869194otc.30.2019.10.21.22.15.30
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 21 Oct 2019 22:15:31 -0700 (PDT)
+Date:   Mon, 21 Oct 2019 22:15:29 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Segher Boessenkool <segher@kernel.crashing.org>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 3/3] powerpc/prom_init: Use -ffreestanding to avoid a
+ reference to bcmp
+Message-ID: <20191022051529.GA44041@ubuntu-m2-xlarge-x86>
+References: <20190911182049.77853-1-natechancellor@gmail.com>
+ <20191014025101.18567-1-natechancellor@gmail.com>
+ <20191014025101.18567-4-natechancellor@gmail.com>
+ <20191014093501.GE28442@gate.crashing.org>
+ <CAKwvOdmcUT2A9FG0JD9jd0s=gAavRc_h+RLG6O3mBz4P1FfF8w@mail.gmail.com>
+ <20191014191141.GK28442@gate.crashing.org>
+ <20191018190022.GA1292@ubuntu-m2-xlarge-x86>
+ <20191018200210.GR28442@gate.crashing.org>
 MIME-Version: 1.0
-In-Reply-To: <20191021222122.GM25745@shell.armlinux.org.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:13da
-X-SA-Exim-Mail-From: o.rempel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191018200210.GR28442@gate.crashing.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 22.10.19 00:21, Russell King - ARM Linux admin wrote:
-> On Mon, Oct 21, 2019 at 07:38:07AM +0200, Oleksij Rempel wrote:
->> +static void ag71xx_mac_validate(struct phylink_config *config,
->> +			    unsigned long *supported,
->> +			    struct phylink_link_state *state)
->>   {
->> -	struct ag71xx *ag = netdev_priv(ndev);
->> +	__ETHTOOL_DECLARE_LINK_MODE_MASK(mask) = { 0, };
->> +
->> +	if (state->interface != PHY_INTERFACE_MODE_NA &&
->> +	    state->interface != PHY_INTERFACE_MODE_GMII &&
->> +	    state->interface != PHY_INTERFACE_MODE_MII) {
->> +		bitmap_zero(supported, __ETHTOOL_LINK_MODE_MASK_NBITS);
->> +		return;
->> +	}
->> +
->> +	phylink_set(mask, MII);
->> +
->> +	/* flow control is not supported */
->> +
->> +	phylink_set(mask, 10baseT_Half);
->> +	phylink_set(mask, 10baseT_Full);
->> +	phylink_set(mask, 100baseT_Half);
->> +	phylink_set(mask, 100baseT_Full);
->>   
->> -	ag71xx_link_adjust(ag, true);
->> +	if (state->interface == PHY_INTERFACE_MODE_NA &&
->> +	    state->interface == PHY_INTERFACE_MODE_GMII) {
+On Fri, Oct 18, 2019 at 03:02:10PM -0500, Segher Boessenkool wrote:
+> On Fri, Oct 18, 2019 at 12:00:22PM -0700, Nathan Chancellor wrote:
+> > Just as an FYI, there was some more discussion around the availablity
+> > and use of bcmp in this LLVM bug which spawned
+> > commit 5f074f3e192f ("lib/string.c: implement a basic bcmp").
+> > 
+> > https://bugs.llvm.org/show_bug.cgi?id=41035#c13
+> > 
+> > I believe this is the proper solution but I am fine with whatever works,
+> > I just want our CI to be green without any out of tree patches again...
 > 
-> This is always false.
+> I think the proper solution is for the kernel to *do* use -ffreestanding,
+> and then somehow tell the kernel that memcpy etc. are the standard
+> functions.  A freestanding GCC already requires memcpy, memmove, memset,
+> memcmp, and sometimes abort to exist and do the standard thing; why cannot
+> programs then also rely on it to be the standard functions.
+> 
+> What exact functions are the reason the kernel does not use -ffreestanding?
+> Is it just memcpy?  Is more wanted?
+> 
+> 
+> Segher
 
-... I shame to myself :(
+I think Linus summarized it pretty well here:
 
-> Apart from that, from just reading the patch I have no further concerns.
+https://lore.kernel.org/lkml/CAHk-=wi-epJZfBHDbKKDZ64us7WkF=LpUfhvYBmZSteO8Q0RAg@mail.gmail.com/
 
-ok. thx!
-
-Kind regards,
-Oleksij Rempel
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Cheers,
+Nathan
