@@ -4,30 +4,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 489DBCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 02:02:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C004CCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 02:02:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 249582089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 02:02:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1185207FC
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 02:02:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388012AbfJVCCb (ORCPT
+        id S2387515AbfJVB7q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 22:02:31 -0400
-Received: from mga14.intel.com ([192.55.52.115]:61595 "EHLO mga14.intel.com"
+        Mon, 21 Oct 2019 21:59:46 -0400
+Received: from mga14.intel.com ([192.55.52.115]:61583 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387532AbfJVB7s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 21:59:48 -0400
+        id S2387437AbfJVB7l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 21:59:41 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 18:59:47 -0700
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 18:59:41 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.67,325,1566889200"; 
-   d="scan'208";a="196293834"
+   d="scan'208";a="196293799"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
-  by fmsmga008.fm.intel.com with ESMTP; 21 Oct 2019 18:59:46 -0700
+  by fmsmga008.fm.intel.com with ESMTP; 21 Oct 2019 18:59:40 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Marc Zyngier <maz@kernel.org>, James Hogan <jhogan@kernel.org>,
         Paul Mackerras <paulus@ozlabs.org>,
@@ -48,9 +49,9 @@ Cc:     James Morse <james.morse@arm.com>,
         linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
         linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
         kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 21/45] KVM: x86: Remove spurious clearing of async #PF MSR
-Date:   Mon, 21 Oct 2019 18:59:01 -0700
-Message-Id: <20191022015925.31916-22-sean.j.christopherson@intel.com>
+Subject: [PATCH 13/45] KVM: PPC: Book3S PR: Allocate book3s and shadow vcpu after common init
+Date:   Mon, 21 Oct 2019 18:58:53 -0700
+Message-Id: <20191022015925.31916-14-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20191022015925.31916-1-sean.j.christopherson@intel.com>
 References: <20191022015925.31916-1-sean.j.christopherson@intel.com>
@@ -61,35 +62,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove a bogus clearing of apf.msr_val from kvm_arch_vcpu_destroy().
+Call kvm_vcpu_init() in kvmppc_core_vcpu_create_pr() prior to allocating
+the book3s and shadow_vcpu objects in preparation of moving said call to
+common PPC code.  Although kvm_vcpu_init() has an arch callback, the
+callback is empty for Book3S PR, i.e. barring unseen black magic, moving
+the allocation has no real functional impact.
 
-apf.msr_val is only set to a non-zero value by kvm_pv_enable_async_pf(),
-which is only reachable by kvm_set_msr_common(), i.e. by writing
-MSR_KVM_ASYNC_PF_EN.  KVM does not autonomously write said MSR, i.e.
-can only be written via KVM_SET_MSRS or KVM_RUN.  Since KVM_SET_MSRS and
-KVM_RUN are vcpu ioctls, they require a valid vcpu file descriptor.
-kvm_arch_vcpu_destroy() is only called if KVM_CREATE_VCPU fails, and KVM
-declares KVM_CREATE_VCPU successful once the vcpu fd is installed and
-thus visible to userspace.  Ergo, apf.msr_val cannot be non-zero when
-kvm_arch_vcpu_destroy() is called.
-
-Fixes: 344d9588a9df0 ("KVM: Add PV MSR to enable asynchronous page faults delivery.")
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/x86.c | 2 --
- 1 file changed, 2 deletions(-)
+ arch/powerpc/kvm/book3s_pr.c | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index dd667df37d63..dfd5c5244a6b 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -9097,8 +9097,6 @@ void kvm_arch_vcpu_postcreate(struct kvm_vcpu *vcpu)
- 
- void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu)
+diff --git a/arch/powerpc/kvm/book3s_pr.c b/arch/powerpc/kvm/book3s_pr.c
+index 1e6b83908668..a933ba60bc7c 100644
+--- a/arch/powerpc/kvm/book3s_pr.c
++++ b/arch/powerpc/kvm/book3s_pr.c
+@@ -1712,12 +1712,18 @@ static int kvmppc_core_vcpu_create_pr(struct kvm *kvm, struct kvm_vcpu *vcpu,
+ 				      unsigned int id)
  {
--	vcpu->arch.apf.msr_val = 0;
+ 	struct kvmppc_vcpu_book3s *vcpu_book3s;
+-	int err = -ENOMEM;
+ 	unsigned long p;
++	int err;
++
++	err = kvm_vcpu_init(vcpu, kvm, id);
++	if (err)
++		return err;
++
++	err = -ENOMEM;
+ 
+ 	vcpu_book3s = vzalloc(sizeof(struct kvmppc_vcpu_book3s));
+ 	if (!vcpu_book3s)
+-		goto out;
++		goto uninit_vcpu;
+ 	vcpu->arch.book3s = vcpu_book3s;
+ 
+ #ifdef CONFIG_KVM_BOOK3S_32_HANDLER
+@@ -1727,14 +1733,9 @@ static int kvmppc_core_vcpu_create_pr(struct kvm *kvm, struct kvm_vcpu *vcpu,
+ 		goto free_vcpu3s;
+ #endif
+ 
+-	err = kvm_vcpu_init(vcpu, kvm, id);
+-	if (err)
+-		goto free_shadow_vcpu;
 -
- 	kvm_arch_vcpu_free(vcpu);
+-	err = -ENOMEM;
+ 	p = __get_free_page(GFP_KERNEL|__GFP_ZERO);
+ 	if (!p)
+-		goto uninit_vcpu;
++		goto free_shadow_vcpu;
+ 	vcpu->arch.shared = (void *)p;
+ #ifdef CONFIG_PPC_BOOK3S_64
+ 	/* Always start the shared struct in native endian mode */
+@@ -1770,15 +1771,14 @@ static int kvmppc_core_vcpu_create_pr(struct kvm *kvm, struct kvm_vcpu *vcpu,
+ 
+ free_shared_page:
+ 	free_page((unsigned long)vcpu->arch.shared);
+-uninit_vcpu:
+-	kvm_vcpu_uninit(vcpu);
+ free_shadow_vcpu:
+ #ifdef CONFIG_KVM_BOOK3S_32_HANDLER
+ 	kfree(vcpu->arch.shadow_vcpu);
+ free_vcpu3s:
+ #endif
+ 	vfree(vcpu_book3s);
+-out:
++uninit_vcpu:
++	kvm_vcpu_uninit(vcpu);
+ 	return err;
  }
  
 -- 
