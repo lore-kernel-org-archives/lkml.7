@@ -2,143 +2,190 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3767CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:37:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7662CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:37:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0025218AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:37:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A4E8218AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:37:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="K1drMWAD"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="R0kpfQV0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731342AbfJVIhA (ORCPT
+        id S1731355AbfJVIhI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 04:37:00 -0400
-Received: from mail-eopbgr10076.outbound.protection.outlook.com ([40.107.1.76]:1664
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731321AbfJVIg6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 04:36:58 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MyI3KM6T57C76M8GK2rSV5SDRgJrvbxEvNwJPxJoV1UGILMOoJNo8IG0Y0jUVl/NWuaj72/QsWIdrKQIOazk/tQvRFJFsL5XO2It8Nj3zISbtJ0Coh9ZjtWcdmLtMKGkkEnsr8WtFWRVvNrr1k45GWXkCI+IyGIjHL1SYa6we3AsCv8/0X2nF/oxYAhvXmcnsCBYfDj8d3RMa39Of+3j2OLN9fHxd7Ie0jW1y+z3GQAvPzJt39mmlXYkY83M70xPYNMC0e8l+f990mVAwvv29v9QzaWwpCh6L6MC4sAwMB416IFX0x8xiEk3KyaZTl5psITxCknPpw1n0Iyi3BVC9A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=stwmg0OizPp2+nyPdC+KT02MhX3t+bf4yKUhEqNkjgE=;
- b=d3U2y3CMLS8LWAm6EjdIknPeKLmpDAh6hhdkILX/KaQ46yedVph201nAFlEktjKNB8lYMV3XJ1qU7egciYWY1wBbMqU1c34ej7mUVg7158+WPllj4vlSZKFquqBt7CdA2l0SdeBWaHPA031/ov/w6o/9B+hjuYDBPbJer1DyCB+lcxsr6u3mdxB7YwS/g8yXePWGmUXOht4lSHM/gvU1mwEMn5VPmMGAB5/jXREKwhb46zyTxCzwr85oLLSJDKyUIgPy3slbElKPwpHjTvkW9ftucrEu/AYjCulaTPnUB73W+mjvx/qqUbxzJmDAREhpPfcTSPE6CFGBtEndXDPolA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=stwmg0OizPp2+nyPdC+KT02MhX3t+bf4yKUhEqNkjgE=;
- b=K1drMWADM3OgjX497twXlKim3NGToOdVKd9SUijgDseDXIURTUS3KDdvY0dpyN9vByAtVSHq7sv9WD0Sxs/dhhzOFJgvJms2TWJWbYct3QP8G+GhvVMfT9ZjtcfHAIgDEyOUEkKK0CdGIJvM0GmaTTJS+VKjRbvJRSXjA6JkX4s=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3658.eurprd04.prod.outlook.com (52.134.65.28) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.22; Tue, 22 Oct 2019 08:36:52 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::d469:ad51:2bec:19f0]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::d469:ad51:2bec:19f0%6]) with mapi id 15.20.2367.022; Tue, 22 Oct 2019
- 08:36:52 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-CC:     "rafael.j.wysocki@intel.com" <rafael.j.wysocki@intel.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH] cpufreq: imx-cpufreq-dt: Correct i.MX8MN's default speed
- grade value
-Thread-Topic: [PATCH] cpufreq: imx-cpufreq-dt: Correct i.MX8MN's default speed
- grade value
-Thread-Index: AQHViJMjrjphINO/nEKP49CFCN+2HqdmUvUAgAADUQA=
-Date:   Tue, 22 Oct 2019 08:36:52 +0000
-Message-ID: <DB3PR0402MB391687A3723E810119A58866F5680@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1571719179-23316-1-git-send-email-Anson.Huang@nxp.com>
- <20191022082400.7dsoo57mt7wfpqs7@vireshk-i7>
-In-Reply-To: <20191022082400.7dsoo57mt7wfpqs7@vireshk-i7>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: ea30b8a5-e85e-496b-6fee-08d756cafd4d
-x-ms-traffictypediagnostic: DB3PR0402MB3658:|DB3PR0402MB3658:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB3PR0402MB365839A73F4318F9BB88A617F5680@DB3PR0402MB3658.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 01986AE76B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(39860400002)(396003)(136003)(376002)(189003)(199004)(6436002)(11346002)(64756008)(446003)(76176011)(6116002)(3846002)(6246003)(99286004)(476003)(44832011)(66946007)(76116006)(486006)(52536014)(66476007)(66066001)(66556008)(9686003)(26005)(102836004)(7696005)(86362001)(186003)(55016002)(6506007)(53546011)(66446008)(5660300002)(256004)(316002)(81156014)(8676002)(8936002)(54906003)(7736002)(305945005)(74316002)(14454004)(229853002)(4326008)(25786009)(81166006)(6916009)(33656002)(71190400001)(71200400001)(478600001)(2906002)(14444005);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3658;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: w7SDN1dgh/gcYXrSf8TK1Hl8XrR6d0/K97Ci3iaxBn85oSvibrdM/IBP8uvm+hzqtkFbtDR0GHjyC4wuErKe/8bWsdT0vGsO0jXkOjD/T04vFeCB3oNCxSRo+H92eHroCgGeChS8sMlC8apMVyM7r36iFa2lR6Eg1Qs4gP1VimX/N2W1KYxLItnZhAE9J//+fW7wWhevxDrZED3rNvC/30Nmh2sFNgUnL9N/ITcoG5/c2MNGe8rZRyV/PdRVQ46eEgRdJDODKv+dEgQN/32k+7N/7KLAkXbBiIfy737gV6MIRbyho3S6pP98SAEkMl8YYwF3fN9egrd53tI8R/z68WrdBS2GaCjKIhi/CywcZ/oaNb63Q1HMjOUul5BGp9Q/KCM9WzrQYiJgDfLq1qlS0GaZXVe6UstOWbXn1JzeQgQFn0CXNAAW4A39aJwZuyIq
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 22 Oct 2019 04:37:08 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:42130 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388393AbfJVIgo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 04:36:44 -0400
+Received: by mail-wr1-f66.google.com with SMTP id r1so7197139wrs.9
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 01:36:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=kvQLRHJvRjudaJXCpLtV7CQx5y9VARSzzzMBbffwoBQ=;
+        b=R0kpfQV0jZYq2r/gSdB59v/D7Ky/qC7QBaqd8jFL5iqpVaB7HbudHuRs3k/Du5yZrv
+         RtLp9RXnK3Ac6JBmGc61233Jzc3czDf1nZkMp74sB5QkgfhDFSpXYx4SG6FF6KNOAcvK
+         /xnwnzv9ysxeUNTqHWANmB+wu32P67SBprPLFSGNL0FSwskPlqDpo/ZF5YXHYp77tP89
+         ruPFvimpaR67SUNYOCzZLwoadfWEfB1p5iS/pd3brQsJSi7qoQpOZFfXaEzQTRwn+V6Z
+         JPHXS9Y72JOkuFLWYupTjAv/kuwlsgyMZ9/CdzY8lCwE8KVEsY8bW6MoCWUxYQsh6ztg
+         9TeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=kvQLRHJvRjudaJXCpLtV7CQx5y9VARSzzzMBbffwoBQ=;
+        b=c+psFDYPwAkbtzZnMkZ7Ik91jTNGs0VjUd/YzJ88g98/xJTBJRs+cIfLXCvQtxdxBO
+         dohzmkH5Nqkp37vEFDJcI3izk5zQIDj8Dtf3xaiKh8Oa20lJB9Wh56rjHuZ+WzAC4RnT
+         9PhveTflsqBkHYv8YNOmqcmN3/JbpGBRve5xats0BISyTMWxVv4tDHW0xbHqLwlyJD5u
+         BQWmmrEp+v6t0Yzq28qfjj9iy603TilltcP5jQLRxIPU8kP8SQkXWJ3a9Z/nHlyaZGlO
+         uee7LGNpqmzIqTYbOiaOEQ10T0WMQI8Bw03YIfQ1qTJBsAgKG0Zrjfw8rlCFn0ABsiJ9
+         3WlQ==
+X-Gm-Message-State: APjAAAU7RPiKh0a4u6ocPQbns1F04pHjU700oqWusTMg23el6THRprII
+        ZwykkeMsgsPIEqxstNgqhwfeng==
+X-Google-Smtp-Source: APXvYqyaselYLV/0dnxVgvDBqTCkwoVW8/nREL08BhLjGuMEQBFszR2zj3NmBAPYQD7CNxTVF2VrFw==
+X-Received: by 2002:adf:fb0b:: with SMTP id c11mr2450846wrr.50.1571733401978;
+        Tue, 22 Oct 2019 01:36:41 -0700 (PDT)
+Received: from localhost.localdomain (amontpellier-652-1-281-69.w109-210.abo.wanadoo.fr. [109.210.96.69])
+        by smtp.gmail.com with ESMTPSA id g17sm17115253wrq.58.2019.10.22.01.36.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Oct 2019 01:36:41 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jacopo Mondi <jacopo@jmondi.org>
+Cc:     linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v7 5/9] backlight: gpio: simplify the platform data handling
+Date:   Tue, 22 Oct 2019 10:36:26 +0200
+Message-Id: <20191022083630.28175-6-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191022083630.28175-1-brgl@bgdev.pl>
+References: <20191022083630.28175-1-brgl@bgdev.pl>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ea30b8a5-e85e-496b-6fee-08d756cafd4d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Oct 2019 08:36:52.7778
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: oBy6pLcwIHG5tXBq9V9pWxbhx7vsJB9A/e10S18YWXHBxEQMsebZiWFrB639y06Did7VF0taAi0gbolN4I5S6A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3658
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIFZpcmVzaA0KDQo+IE9uIDIyLTEwLTE5LCAxMjozOSwgQW5zb24gSHVhbmcgd3JvdGU6DQo+
-ID4gaS5NWDhNTiBoYXMgZGlmZmVyZW50IHNwZWVkIGdyYWRlIGRlZmluaXRpb24gY29tcGFyZWQg
-dG8NCj4gPiBpLk1YOE1RL2kuTVg4TU0sIHdoZW4gZnVzZXMgYXJlIE5PVCB3cml0dGVuLCB0aGUg
-ZGVmYXVsdCBzcGVlZF9ncmFkZQ0KPiA+IHNob3VsZCBiZSBzZXQgdG8gbWluaW11bSBhdmFpbGFi
-bGUgT1BQIGRlZmluZWQgaW4gRFQgd2hpY2ggaXMgMS4yR0h6LA0KPiA+IHRoZSBjb3JyZXNwb25k
-aW5nIHNwZWVkX2dyYWRlIHZhbHVlIHNob3VsZCBiZSAweGIuDQo+ID4NCj4gPiBGaXhlczogNWI4
-MDEwYmE3MGQ1ICgiY3B1ZnJlcTogaW14LWNwdWZyZXEtZHQ6IEFkZCBpLk1YOE1OIHN1cHBvcnQi
-KQ0KPiA+IFNpZ25lZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0K
-PiA+IC0tLQ0KPiA+ICBkcml2ZXJzL2NwdWZyZXEvaW14LWNwdWZyZXEtZHQuYyB8IDIwICsrKysr
-KysrKystLS0tLS0tLS0tDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxMCBpbnNlcnRpb25zKCspLCAx
-MCBkZWxldGlvbnMoLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2NwdWZyZXEvaW14
-LWNwdWZyZXEtZHQuYw0KPiA+IGIvZHJpdmVycy9jcHVmcmVxL2lteC1jcHVmcmVxLWR0LmMNCj4g
-PiBpbmRleCAzNWRiMTRjLi4yNjUzMWYwIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvY3B1ZnJl
-cS9pbXgtY3B1ZnJlcS1kdC5jDQo+ID4gKysrIGIvZHJpdmVycy9jcHVmcmVxL2lteC1jcHVmcmVx
-LWR0LmMNCj4gPiBAQCAtNDQsMTkgKzQ0LDE5IEBAIHN0YXRpYyBpbnQgaW14X2NwdWZyZXFfZHRf
-cHJvYmUoc3RydWN0DQo+IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gPiAgCW1rdF9zZWdtZW50
-ID0gKGNlbGxfdmFsdWUgJiBPQ09UUF9DRkczX01LVF9TRUdNRU5UX01BU0spID4+DQo+ID4gT0NP
-VFBfQ0ZHM19NS1RfU0VHTUVOVF9TSElGVDsNCj4gPg0KPiA+ICAJLyoNCj4gPiAtCSAqIEVhcmx5
-IHNhbXBsZXMgd2l0aG91dCBmdXNlcyB3cml0dGVuIHJlcG9ydCAiMCAwIiB3aGljaCBtZWFucw0K
-PiA+IC0JICogY29uc3VtZXIgc2VnbWVudCBhbmQgbWluaW11bSBzcGVlZCBncmFkaW5nLg0KPiA+
-IC0JICoNCj4gPiAtCSAqIEFjY29yZGluZyB0byBkYXRhc2hlZXQgbWluaW11bSBzcGVlZCBncmFk
-aW5nIGlzIG5vdCBzdXBwb3J0ZWQNCj4gZm9yDQo+ID4gLQkgKiBjb25zdW1lciBwYXJ0cyBzbyBj
-bGFtcCB0byAxIHRvIGF2b2lkIHdhcm5pbmcgZm9yICJubyBPUFBzIg0KPiA+ICsJICogRWFybHkg
-c2FtcGxlcyB3aXRob3V0IGZ1c2VzIHdyaXR0ZW4gcmVwb3J0ICIwIDAiIHdoaWNoIG1heSBOT1QN
-Cj4gPiArCSAqIG1hdGNoIGFueSBPUFAgZGVmaW5lZCBpbiBEVC4gU28gY2xhbXAgdG8gbWluaW11
-bSBPUFAgZGVmaW5lZA0KPiBpbg0KPiA+ICsJICogRFQgdG8gYXZvaWQgd2FybmluZyBmb3IgIm5v
-IE9QUHMiLg0KPiA+ICAJICoNCj4gPiAgCSAqIEFwcGxpZXMgdG8gaS5NWDhNIHNlcmllcyBTb0Nz
-Lg0KPiA+ICAJICovDQo+ID4gLQlpZiAobWt0X3NlZ21lbnQgPT0gMCAmJiBzcGVlZF9ncmFkZSA9
-PSAwICYmICgNCj4gPiAtCQkJb2ZfbWFjaGluZV9pc19jb21wYXRpYmxlKCJmc2wsaW14OG1tIikg
-fHwNCj4gPiAtCQkJb2ZfbWFjaGluZV9pc19jb21wYXRpYmxlKCJmc2wsaW14OG1uIikgfHwNCj4g
-PiAtCQkJb2ZfbWFjaGluZV9pc19jb21wYXRpYmxlKCJmc2wsaW14OG1xIikpKQ0KPiA+IC0JCXNw
-ZWVkX2dyYWRlID0gMTsNCj4gPiArCWlmIChta3Rfc2VnbWVudCA9PSAwICYmIHNwZWVkX2dyYWRl
-ID09IDApIHsNCj4gPiArCQlpZiAob2ZfbWFjaGluZV9pc19jb21wYXRpYmxlKCJmc2wsaW14OG1t
-IikgfHwNCj4gPiArCQkJb2ZfbWFjaGluZV9pc19jb21wYXRpYmxlKCJmc2wsaW14OG1xIikpDQo+
-IA0KPiBvZl9tYWNoaW5lX2lzX2NvbXBhdGlibGUgc2hvdWxkIGNvbWUgcmlnaHQgYmVsb3cgdGhl
-IGFib3ZlDQo+IG9mX21hY2hpbmVfaXNfY29tcGF0aWJsZSBoZXJlLCBpbnN0ZWFkIG9mIGEgbGVh
-ZGluZyB0YWIuDQoNCkFoLCB5ZXMsIGZpeGVkIGluIFYyLg0KDQpUaGFua3MsDQpBbnNvbg0KDQo=
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+
+Now that the last user of platform data (sh ecovec24) defines a proper
+GPIO lookup and sets the 'default-on' device property, we can drop the
+platform_data-specific GPIO handling and unify a big chunk of code.
+
+The only field used from the platform data is now the fbdev pointer.
+
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/video/backlight/gpio_backlight.c | 62 +++++-------------------
+ 1 file changed, 11 insertions(+), 51 deletions(-)
+
+diff --git a/drivers/video/backlight/gpio_backlight.c b/drivers/video/backlight/gpio_backlight.c
+index 52f17c9ca1c3..ddc7d3b288b7 100644
+--- a/drivers/video/backlight/gpio_backlight.c
++++ b/drivers/video/backlight/gpio_backlight.c
+@@ -6,7 +6,6 @@
+ #include <linux/backlight.h>
+ #include <linux/err.h>
+ #include <linux/fb.h>
+-#include <linux/gpio.h> /* Only for legacy support */
+ #include <linux/gpio/consumer.h>
+ #include <linux/init.h>
+ #include <linux/kernel.h>
+@@ -61,28 +60,6 @@ static const struct backlight_ops gpio_backlight_ops = {
+ 	.check_fb	= gpio_backlight_check_fb,
+ };
+ 
+-static int gpio_backlight_probe_dt(struct platform_device *pdev,
+-				   struct gpio_backlight *gbl)
+-{
+-	struct device *dev = &pdev->dev;
+-	int ret;
+-
+-	gbl->def_value = device_property_read_bool(dev, "default-on");
+-
+-	gbl->gpiod = devm_gpiod_get(dev, NULL, GPIOD_ASIS);
+-	if (IS_ERR(gbl->gpiod)) {
+-		ret = PTR_ERR(gbl->gpiod);
+-
+-		if (ret != -EPROBE_DEFER) {
+-			dev_err(dev,
+-				"Error: The gpios parameter is missing or invalid.\n");
+-		}
+-		return ret;
+-	}
+-
+-	return 0;
+-}
+-
+ static int gpio_backlight_initial_power_state(struct gpio_backlight *gbl)
+ {
+ 	struct device_node *node = gbl->dev->of_node;
+@@ -114,35 +91,18 @@ static int gpio_backlight_probe(struct platform_device *pdev)
+ 
+ 	gbl->dev = &pdev->dev;
+ 
+-	if (pdev->dev.fwnode) {
+-		ret = gpio_backlight_probe_dt(pdev, gbl);
+-		if (ret)
+-			return ret;
+-	} else if (pdata) {
+-		/*
+-		 * Legacy platform data GPIO retrieveal. Do not expand
+-		 * the use of this code path, currently only used by one
+-		 * SH board.
+-		 */
+-		unsigned long flags = GPIOF_DIR_OUT;
+-
++	if (pdata)
+ 		gbl->fbdev = pdata->fbdev;
+-		gbl->def_value = pdata->def_value;
+-		flags |= gbl->def_value ? GPIOF_INIT_HIGH : GPIOF_INIT_LOW;
+-
+-		ret = devm_gpio_request_one(gbl->dev, pdata->gpio, flags,
+-					    pdata ? pdata->name : "backlight");
+-		if (ret < 0) {
+-			dev_err(&pdev->dev, "unable to request GPIO\n");
+-			return ret;
+-		}
+-		gbl->gpiod = gpio_to_desc(pdata->gpio);
+-		if (!gbl->gpiod)
+-			return -EINVAL;
+-	} else {
+-		dev_err(&pdev->dev,
+-			"failed to find platform data or device tree node.\n");
+-		return -ENODEV;
++
++	gbl->def_value = device_property_read_bool(&pdev->dev, "default-on");
++
++	gbl->gpiod = devm_gpiod_get(&pdev->dev, NULL, GPIOD_ASIS);
++	if (IS_ERR(gbl->gpiod)) {
++		ret = PTR_ERR(gbl->gpiod);
++		if (ret != -EPROBE_DEFER)
++			dev_err(&pdev->dev,
++				"Error: The gpios parameter is missing or invalid.\n");
++		return ret;
+ 	}
+ 
+ 	memset(&props, 0, sizeof(props));
+-- 
+2.23.0
+
