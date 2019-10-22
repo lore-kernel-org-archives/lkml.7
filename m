@@ -2,69 +2,40 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66735CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:31:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE2B3CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:32:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 380072084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:31:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571758294;
-	bh=IfpiHO9UiZhxJ3OUbn/nqonUiXpoAPlwIazKm5MnWWs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u1awQn0Y7IJwWY1L63AsZu+LQFnhe6kt83KwJDFvTz5LuMweGmJ6J/B+KhNiVTrKn
-	 hF+bEm1OjR+x/dwgPgbxLFvBGvRi8c+GIys1uj1ei1kCzKV1tM9aFFw7nlkOdetPlr
-	 lGtygETRpWx3345hO5vc4He1HhELwtqYVrHJs668=
+	by mail.kernel.org (Postfix) with ESMTP id 84B042084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:32:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732402AbfJVPbd (ORCPT
+        id S1732412AbfJVPcy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 11:31:33 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:33995 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730305AbfJVPbc (ORCPT
+        Tue, 22 Oct 2019 11:32:54 -0400
+Received: from imap1.codethink.co.uk ([176.9.8.82]:32871 "EHLO
+        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730305AbfJVPcy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 11:31:32 -0400
-Received: by mail-lj1-f193.google.com with SMTP id j19so17695784lja.1;
-        Tue, 22 Oct 2019 08:31:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=EJB7XvTqhwkjvsiq5gN/UX3zka3jCAmlwtv3LG1edKM=;
-        b=GmteRHHVXu7hTKNck9oncJxOalc+3Wn2O/Neg1SgG0y+YprmsuFFXlpvoSuTZ17BwV
-         wnnGWJw3jrTExyJdTz6nEi7Camk1f/OD6K26d5GoA7Lni/IeQ5xiMGs7Ag6S4ehbLvKU
-         WdFjHEB9l6JBuKC7Mbln8PzR8Ov3yJPjNaWoqz4DmF8AzgIETu65FfrWRjCSV3dOupPW
-         5SL7wH2Bk/tNqQmuDSVUajAAbuDnv4L0paULBNcV5WtF5rESmQn+6tDahVOOMUMf/U0J
-         bpuNFeoVkvngd7r9NyvIbDOJGTiAUAZ7GVnjboBOBGL+GHtS+lgTiPAOv6hLAW/jgDMc
-         C4Xg==
-X-Gm-Message-State: APjAAAXY47a8bbQC7tosthE7diIfjXlnTtcKgav1qTspk/Nvvi28pQDv
-        XvRV/ZZdaSfbIG9TNU8Dxcw=
-X-Google-Smtp-Source: APXvYqz7WVVbHykWkvapHIKnSa5f3AP+b6vE+OgP9+nSP9uT98ogjaSLRJqBoOoJ6Wqgl5oBqYNZqA==
-X-Received: by 2002:a2e:6c15:: with SMTP id h21mr18862340ljc.10.1571758290572;
-        Tue, 22 Oct 2019 08:31:30 -0700 (PDT)
-Received: from xi.terra (c-51f1e055.07-184-6d6c6d4.bbcust.telenor.se. [85.224.241.81])
-        by smtp.gmail.com with ESMTPSA id q24sm7556775ljj.6.2019.10.22.08.31.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 22 Oct 2019 08:31:29 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.92.2)
-        (envelope-from <johan@xi.terra>)
-        id 1iMw8O-0005oL-4R; Tue, 22 Oct 2019 17:31:44 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Johan Hovold <johan@kernel.org>,
-        stable <stable@vger.kernel.org>,
-        syzbot+a4fbb3bb76cda0ea4e58@syzkaller.appspotmail.com
-Subject: [PATCH] USB: ldusb: fix control-message timeout
-Date:   Tue, 22 Oct 2019 17:31:27 +0200
-Message-Id: <20191022153127.22295-1-johan@kernel.org>
+        Tue, 22 Oct 2019 11:32:54 -0400
+Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
+        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
+        id 1iMw9R-0006aB-1U; Tue, 22 Oct 2019 16:32:49 +0100
+Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.3)
+        (envelope-from <ben@rainbowdash.codethink.co.uk>)
+        id 1iMw9Q-0002gg-B6; Tue, 22 Oct 2019 16:32:48 +0100
+From:   "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
+To:     linux-kernel@lists.codethink.co.uk
+Cc:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] xfs: add mising include of xfs_pnfs.h for missing declarations
+Date:   Tue, 22 Oct 2019 16:32:47 +0100
+Message-Id: <20191022153247.10286-1-ben.dooks@codethink.co.uk>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <000000000000daa63d059580f872@google.com>
-References: <000000000000daa63d059580f872@google.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -72,30 +43,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-USB control-message timeouts are specified in milliseconds, not jiffies.
-Waiting 83 minutes for a transfer to complete is a bit excessive.
+The xfs_pnfs.c file is missing an include of xfs_pnfs.h to
+add the prototypes of the functions it exports. Include this
+file to fix the following sparse warnings:
 
-Fixes: 2824bd250f0b ("[PATCH] USB: add ldusb driver")
-Cc: stable <stable@vger.kernel.org>     # 2.6.13
-Reported-by: syzbot+a4fbb3bb76cda0ea4e58@syzkaller.appspotmail.com
-Signed-off-by: Johan Hovold <johan@kernel.org>
+fs/xfs/xfs_pnfs.c:27:1: warning: symbol 'xfs_break_leased_layouts' was not declared. Should it be static?
+fs/xfs/xfs_pnfs.c:52:1: warning: symbol 'xfs_fs_get_uuid' was not declared. Should it be static?
+fs/xfs/xfs_pnfs.c:77:1: warning: symbol 'xfs_fs_map_blocks' was not declared. Should it be static?
+fs/xfs/xfs_pnfs.c:226:1: warning: symbol 'xfs_fs_commit_blocks' was not declared. Should it be static?
+
+Signed-off-by: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
 ---
- drivers/usb/misc/ldusb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Cc: "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc: linux-xfs@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ fs/xfs/xfs_pnfs.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/usb/misc/ldusb.c b/drivers/usb/misc/ldusb.c
-index dd1ea25e42b1..8f86b4ebca89 100644
---- a/drivers/usb/misc/ldusb.c
-+++ b/drivers/usb/misc/ldusb.c
-@@ -581,7 +581,7 @@ static ssize_t ld_usb_write(struct file *file, const char __user *buffer,
- 					 1 << 8, 0,
- 					 dev->interrupt_out_buffer,
- 					 bytes_to_write,
--					 USB_CTRL_SET_TIMEOUT * HZ);
-+					 USB_CTRL_SET_TIMEOUT);
- 		if (retval < 0)
- 			dev_err(&dev->intf->dev,
- 				"Couldn't submit HID_REQ_SET_REPORT %d\n",
+diff --git a/fs/xfs/xfs_pnfs.c b/fs/xfs/xfs_pnfs.c
+index a339bd5fa260..b2f6f1e3d9c4 100644
+--- a/fs/xfs/xfs_pnfs.c
++++ b/fs/xfs/xfs_pnfs.c
+@@ -12,6 +12,7 @@
+ #include "xfs_trans.h"
+ #include "xfs_bmap.h"
+ #include "xfs_iomap.h"
++#include "xfs_pnfs.h"
+ 
+ /*
+  * Ensure that we do not have any outstanding pNFS layouts that can be used by
 -- 
 2.23.0
 
