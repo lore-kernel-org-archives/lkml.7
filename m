@@ -2,78 +2,93 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0286CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 19:42:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2C1CCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 19:46:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB889214B2
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 19:42:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A23ED2184C
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 19:46:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388636AbfJVTmd (ORCPT
+        id S2388743AbfJVTqR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 15:42:33 -0400
-Received: from www62.your-server.de ([213.133.104.62]:46196 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731806AbfJVTmd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 15:42:33 -0400
-Received: from 13.249.197.178.dynamic.dsl-lte-bonding.lssmb00p-msn.res.cust.swisscom.ch ([178.197.249.13] helo=localhost)
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1iN030-0005QE-Ii; Tue, 22 Oct 2019 21:42:26 +0200
-Date:   Tue, 22 Oct 2019 21:42:26 +0200
-From:   Daniel Borkmann <daniel@iogearbox.net>
-To:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
-Cc:     linux-kernel@lists.codethink.co.uk,
-        Alexei Starovoitov <ast@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] xdp: fix type of string pointer in __XDP_ACT_SYM_TAB
-Message-ID: <20191022194226.GD31343@pc-66.home>
-References: <20191022125925.10508-1-ben.dooks@codethink.co.uk>
+        Tue, 22 Oct 2019 15:46:17 -0400
+Received: from mga02.intel.com ([134.134.136.20]:45093 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388205AbfJVTqR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 15:46:17 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Oct 2019 12:46:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,217,1569308400"; 
+   d="scan'208";a="196549819"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga008.fm.intel.com with ESMTP; 22 Oct 2019 12:46:15 -0700
+Date:   Tue, 22 Oct 2019 12:46:15 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Yang Weijiang <weijiang.yang@intel.com>
+Cc:     Jim Mattson <jmattson@google.com>, kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Subject: Re: [PATCH v7 1/7] KVM: CPUID: Fix IA32_XSS support in CPUID(0xd,i)
+ enumeration
+Message-ID: <20191022194615.GM2343@linux.intel.com>
+References: <20190927021927.23057-1-weijiang.yang@intel.com>
+ <20190927021927.23057-2-weijiang.yang@intel.com>
+ <CALMp9eRXoyoX6GHQgVTXemJjm69MwqN+VDN47X=5BN36rvrAgA@mail.gmail.com>
+ <20191017194622.GI20903@linux.intel.com>
+ <20191018012809.GA2286@local-michael-cet-test>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191022125925.10508-1-ben.dooks@codethink.co.uk>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.101.4/25610/Tue Oct 22 10:54:26 2019)
+In-Reply-To: <20191018012809.GA2286@local-michael-cet-test>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 01:59:25PM +0100, Ben Dooks (Codethink) wrote:
-> The table entry in __XDP_ACT_SYM_TAB for the last item is set
-> to { -1, 0 } where it should be { -1, NULL } as the second item
-> is a pointer to a string.
-> 
-> Fixes the following sparse warnings:
-> 
-> ./include/trace/events/xdp.h:28:1: warning: Using plain integer as NULL pointer
-> ./include/trace/events/xdp.h:53:1: warning: Using plain integer as NULL pointer
-> ./include/trace/events/xdp.h:82:1: warning: Using plain integer as NULL pointer
-> ./include/trace/events/xdp.h:140:1: warning: Using plain integer as NULL pointer
-> ./include/trace/events/xdp.h:155:1: warning: Using plain integer as NULL pointer
-> ./include/trace/events/xdp.h:190:1: warning: Using plain integer as NULL pointer
-> ./include/trace/events/xdp.h:225:1: warning: Using plain integer as NULL pointer
-> ./include/trace/events/xdp.h:260:1: warning: Using plain integer as NULL pointer
-> ./include/trace/events/xdp.h:318:1: warning: Using plain integer as NULL pointer
-> ./include/trace/events/xdp.h:356:1: warning: Using plain integer as NULL pointer
-> ./include/trace/events/xdp.h:390:1: warning: Using plain integer as NULL pointer
-> 
-> Signed-off-by: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
+On Fri, Oct 18, 2019 at 09:28:09AM +0800, Yang Weijiang wrote:
+> On Thu, Oct 17, 2019 at 12:46:22PM -0700, Sean Christopherson wrote:
+> > On Wed, Oct 02, 2019 at 10:26:10AM -0700, Jim Mattson wrote:
+> > > > +                       entry->eax = 0;
+> > > > +                       entry->ebx = 0;
+> > > > +                       entry->ecx = 0;
+> > > > +                       entry->edx = 0;
+> > > > +                       return;
+> > > > +               }
+> > > > +               if (entry->ecx)
+> > > > +                       entry->ebx = 0;
+> > > 
+> > > This seems to back up my claims above regarding the EBX output for
+> > > cases 0 and 1, but aside from those subleaves, is this correct? For
+> > > subleaves > 1, ECX bit 1 can be set for extended state components that
+> > > need to be cache-line aligned. Such components could map to a valid
+> > > bit in XCR0 and have a non-zero offset from the beginning of the
+> > > non-compacted XSAVE area.
+> > > 
+> > > > +               entry->edx = 0;
+> > > 
+> > > This seems too aggressive. See my comments above regarding EDX outputs
+> > > for cases 0 and 1.
+> > > 
+> Sean, I don't know how to deal with entry->edx here as SDM says it's
+> reserved for valid subleaf.
 
-Applied, thanks!
+The SDM also states:
+
+  Bit 31 - 00: Reports the supported bits of the upper 32 bits of XCR0.
+  XCR0[n+32] can be set to 1 only if EDX[n] is 1.
+
+the second part, "Bits 31 - 00: Reserved" is at best superfluous, e.g. it
+could be interpreted as saying that XCR0[63:32] are currently reserved,
+and at worst the extra qualifier is an SDM bug and should be removed.
+
+TL;DR: Ignore the blurb about the bits being reserved.
