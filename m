@@ -2,88 +2,137 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C90AECA9EAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 01:16:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D13FACA9EB0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 01:23:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D8652089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 01:16:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EFA92089E
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 01:23:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U24ilZxZ"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="EJecjF3+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730172AbfJVBPq (ORCPT
+        id S1730536AbfJVBXO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 21:15:46 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:35099 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727264AbfJVBPq (ORCPT
+        Mon, 21 Oct 2019 21:23:14 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:35289 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727953AbfJVBXO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 21:15:46 -0400
-Received: by mail-pg1-f195.google.com with SMTP id c8so4074289pgb.2
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 18:15:46 -0700 (PDT)
+        Mon, 21 Oct 2019 21:23:14 -0400
+Received: by mail-il1-f194.google.com with SMTP id p8so4161561ilp.2
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 18:23:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HPmdbVnkXBdcuF2g6zsawysDd6Gfy8LkQCCWQO/3l40=;
-        b=U24ilZxZ9Bo3Zx1yLdQAYg2irQA8n9O+WueP3mmZO8+FpM6jWhkQNwN2/GZ1QnLhnh
-         vxeBV7f9VucO/cdQosz3rdV2GSUcYLoiiUAztExEHK3YarZUcXbA+sPQ5JCkbzEDtK8a
-         zniQKjEeQj/BHCC5PPN2GtAeTquwylZkyts31Rz9kWj+ek+txWi7aFgp/PHxvFprjLuy
-         J7pgtPeLMfdNeZkXXlPZMHu4pT+tHFGo/uXhgMamuQdmyidmwwMUCTgEGvhAStD1wZmj
-         S6W+MxYgojX5byXhCGbJEYmqxvic58NSgWKzkU5P7BDUpq1k13/rcSvZQIwuWQMlLDtr
-         BYQA==
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=HxSTurX1jmsAhOfpsGghsXLIvTQPCzV7aaceHn58k98=;
+        b=EJecjF3+nEd1bVBO0x2r9May2yxPiA5i56nJtsaPHWNOunlSAVJaQ72R714XCXmt5g
+         qE7uHOx26GVMiQ3tcxzHITeZ4z8sVJgAbNiZ98i/6py1pkF7Ngndur9vlJSB0Eefa83m
+         jsoHwwRG7dWcdt6lwh8uauXOTh6Eh1P7i+tN9NmM3rzKNaj8Hwv6aDf8v/87QCWwpVVh
+         3h5viIHtwHM9X4krDKGy56i+0gPNpeM8HLwmYJcZgbhiHdoklanfbeSAVJ2pg7vfXZp9
+         bV6tuKUFo5++0D/tFiZoTbVksgQTOnOdi4ScAp2G4HxODcbbVAq3wVbTINg0UbSmzB8l
+         L10g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HPmdbVnkXBdcuF2g6zsawysDd6Gfy8LkQCCWQO/3l40=;
-        b=nxHDu6mryyFMSp/ER1rklQhAXRtVBDOAl/Lmx12ZkOYsa2Ue39YrF0TD9cPhbMLF2t
-         kP0kPTpCQ6PdGBq75aCW8AYW35SEnXV8RxASRsvlaOOROrgXfcFD1MwrBvilqZ/8BwxJ
-         mjfjoyIgcLpOvOI9kQsiNXl66exSGWL6ko2h3IVQ8QhTrPV/wFAPLq73Rs2H2TdjcWup
-         XRIx0QGp6INNrp41wsNzCQFfjANab5U+D1St9Ke7Pfa3pXDLKijdgY9mhT0QlWX+j7JL
-         AUT0VABps48+ITPJ8IfNydfVfyMLkmv/0k5qRYeb2B1reOm+ov5Mz3o+qV1Dv3b11bwr
-         TCMQ==
-X-Gm-Message-State: APjAAAUJBHqDVqFrd/xjo1O602h7Vdi95G+f8wOuzt13hS6gpDVp8YrH
-        9LUEBK3rtr0lHlcJm7ho6uG1u0g694FScbm+h5lMvA==
-X-Google-Smtp-Source: APXvYqxqileGL9IAimD9SCzpiYufUF1W0QkGwwfdMGRt9c5M8/7kLWXYT7DOcpmijBzX4BOkqsRvWdbaQkxZDrLX1QY=
-X-Received: by 2002:a17:90a:c48:: with SMTP id u8mr1333271pje.16.1571706945651;
- Mon, 21 Oct 2019 18:15:45 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=HxSTurX1jmsAhOfpsGghsXLIvTQPCzV7aaceHn58k98=;
+        b=bAxmoJrT4i/ly2GV3i5OvNs+89zfQ/LH70s1bkBq4rJZPaun9P2w+0U20NQ6bUg/NM
+         1oNVfUBYz/H71ybMaqfVu83IN6nO8R1I7YDDUuJk5GRfaRHmt4N0b0PZNDbm/Wd23CfK
+         Zl0LycFl/zSaj3LtOhNKGoBlqXMU1zdn+hVSW076QykbRQhpowRXKg61ctdU60OTUU8n
+         ebxFkrK36U3q/rNu0Vuc25ehJSQn7mBZGJHdJp97WunmotmfZ7jnK9i1QZN47bwJ8XFo
+         GAnJpgWblIWJifTdwjlNRS/UX/UzTrlniBZDfN/yHXG2bhAEb87cai40M9qFvxdfKoG/
+         HLVA==
+X-Gm-Message-State: APjAAAVoJNWhT1Ri+SO2XZpktoeSU5keYGt6PqYmgU93CDL7X14oVN5M
+        KCZbzlTmtDj2ZCePTdBgLROqnA==
+X-Google-Smtp-Source: APXvYqwDxSFEQy2XdZlfsF/YxbIAJJAlAeHn1v5sEQT7bVF2SswsEb++F6PWyZ24fGTNgL+h7v0irA==
+X-Received: by 2002:a92:d784:: with SMTP id d4mr30026867iln.1.1571707393182;
+        Mon, 21 Oct 2019 18:23:13 -0700 (PDT)
+Received: from localhost (67-0-11-246.albq.qwest.net. [67.0.11.246])
+        by smtp.gmail.com with ESMTPSA id v17sm5902825ilg.1.2019.10.21.18.23.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Oct 2019 18:23:12 -0700 (PDT)
+Date:   Mon, 21 Oct 2019 18:23:11 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Eric Biggers <ebiggers@kernel.org>
+cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-fscrypt@vger.kernel.org
+Subject: Re: arch/riscv doesn't support xchg() on bool
+In-Reply-To: <20191021204026.GE122863@gmail.com>
+Message-ID: <alpine.DEB.2.21.9999.1910211744450.28831@viisi.sifive.com>
+References: <20191021204026.GE122863@gmail.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-References: <20190904211456.31204-1-xiyou.wangcong@gmail.com>
- <CAM_iQpUiOi8JDBqAtMHii5UHK3D6WQkk_G5DriJ9Y0yTYbWf3Q@mail.gmail.com>
- <CAM_iQpU3dqvUR0Qp6ZdZrAiyT_t_uFk4K79vcT2Q_-EjqBCGbw@mail.gmail.com> <20191021192146.0d651ce2@oasis.local.home>
-In-Reply-To: <20191021192146.0d651ce2@oasis.local.home>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Mon, 21 Oct 2019 18:15:34 -0700
-Message-ID: <CAM_iQpUe2HD-x9btYBJpL+O+1coRuLBX36qQm5bVwxmYWg8Y_g@mail.gmail.com>
-Subject: Re: [PATCH v3] tracing: Introduce trace event injection
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 4:21 PM Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> On Mon, 21 Oct 2019 13:41:51 -0700
-> Cong Wang <xiyou.wangcong@gmail.com> wrote:
->
-> > On Mon, Sep 23, 2019 at 2:13 PM Cong Wang <xiyou.wangcong@gmail.com> wrote:
-> > >
-> > > Hi, Steven
-> > >
-> > > Any reviews for V3? I've addressed your concern about Kconfig.
-> > >
-> >
-> > Ping..
->
-> Sorry, I still haven't forgotten about you. Just trying to deal with
-> other fires at the moment.
+Hi Eric,
 
-Ok. Thanks!
+On Mon, 21 Oct 2019, Eric Biggers wrote:
+
+> The kbuild test robot reported a build error on RISC-V in this patch:
+> 
+> 	https://patchwork.kernel.org/patch/11182389/
+> 
+> ... because of the line:
+> 
+> 	if (!xchg(&mode->logged_impl_name, true)) {
+> 
+> where logged_impl_name is a 'bool'.  The problem is that unlike most (or 
+> all?) other kernel architectures, arch/riscv/ doesn't support xchg() on 
+> bytes.
+
+When I looked at this in August, it looked like several Linux other 
+architectures - SPARC, Microblaze, C-SKY, and Hexagon - also didn't 
+support xchg() on anything other than 32-bit types:
+
+https://lore.kernel.org/lkml/alpine.DEB.2.21.9999.1908161931110.32497@viisi.sifive.com/
+
+Examples:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/sparc/include/asm/cmpxchg_32.h#n18
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/sparc/include/asm/cmpxchg_32.h#n41
+
+> Is there any chance this could be implemented, to avoid this
+> architecture-specific quirk?
+
+It is certainly possible.  I wonder whether it is wise.  Several of the 
+other architectures implement a software workaround for this operation, 
+and I guess you're advocating that we do the same.  We could copy one 
+these implementations.  However, the workarounds balloon into quite a lot 
+of code.  Here is an example from MIPS:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/mips/kernel/cmpxchg.c#n10
+
+I could be wrong, but I think this expansion would be pretty surprising 
+for most users of xchg().  I suspect most xchg() users are looking for 
+something performant, and would be better served by simply using a 
+variable with a 32-bit type.
+
+In the case of your patch, it appears that struct 
+fscrypt_mode.logged_impl_name is only used in the patched function.  It 
+looks like it could be promoted into a u32 without much difficulty.  
+Would you be willing to consider that approach of solving the problem?  
+Then the code would be able to take advantage of the fast hardware 
+implementation that's available on many architectures (including RISC-V).
+
+> Note, there's at least one other place in the kernel that also uses 
+> xchg() on a bool.
+
+Given the nasty compatibility code, I wonder if we'd be better served by 
+removing most of this compatibility code across the kernel, and just 
+requiring callers to use a 32-bit type?  For most callers that I've seen, 
+this doesn't seem to be much of an issue; and it would avoid the nasty 
+code involved in software emulations of xchg().
+
+
+- Paul
