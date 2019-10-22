@@ -2,180 +2,130 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E12ACA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:06:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB82CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:07:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67653218AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:06:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="SayvGCoA"
+	by mail.kernel.org (Postfix) with ESMTP id 9822320663
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:07:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731279AbfJVJG2 (ORCPT
+        id S1731396AbfJVJHk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 05:06:28 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44170 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726978AbfJVJG1 (ORCPT
+        Tue, 22 Oct 2019 05:07:40 -0400
+Received: from smtprelay0193.hostedemail.com ([216.40.44.193]:38322 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731234AbfJVJHk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 05:06:27 -0400
-Received: by mail-wr1-f65.google.com with SMTP id z9so17091727wrl.11
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 02:06:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PyGCvO7yvNngDSlKne/jPIBQIOZ8tTLnmw0W5bAjlwU=;
-        b=SayvGCoATdUpVcqC5Nwb/Sou7TjKYsh9ojvvGVV8K5ekqJw8hWQYFqk7ccV1PNxCQm
-         7RFUnb4kYlZLQeKaquDcdN0QFyIwzCtEJnVox4MWShZG/G8g6OgjccKLMwZB3jasR0Sm
-         Y5botJm/1SEJuXUrc8F6mqZOcBhUqth2/0Bqg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=PyGCvO7yvNngDSlKne/jPIBQIOZ8tTLnmw0W5bAjlwU=;
-        b=RQwwTLhz5sQFXi4B8Vz+R2LqxlRkdHT9p+WWaymqbC0wQlboH0cL6hSL7EntH7rCGc
-         aHDV8/NoMAnq+bstehX/ePV9m8P1R3fW10DkL79JQh0Y42ZXrhfIYamb2g53fs6W/u+Y
-         gjAcZ9Z3FZS62X18hiau0l7gWcpf9glN+W+01E21GxqxRNb+LILquxvJGtb87/SuV/hR
-         LQl3qljYA7u8UB/rfo+dGoRjySkpJaKA0EsJqiGguS4HUBsYlKaaGwwn6u3P7ghVHF6P
-         WYjdYYFW+jO54T4/W30APnT3LHzfG032iV/Klgipphmn0TKY14HSyr0aMz2FkrPWdt4o
-         Q+1g==
-X-Gm-Message-State: APjAAAXIN5IkcjE6zroG8/ZMpvX9mo58UXcBU4aarJ6PVgMoucfxdBwv
-        nUTdA3AMPKCHfOyQqmO4NVTYPQ==
-X-Google-Smtp-Source: APXvYqy2fd1mENqTQBbR51G8er0W9sr/MDy2gD3lxGrfLEDYlBc17QL0TksiwYQJ7DnJdB6ruwOSZw==
-X-Received: by 2002:adf:ce87:: with SMTP id r7mr677053wrn.307.1571735184750;
-        Tue, 22 Oct 2019 02:06:24 -0700 (PDT)
-Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
-        by smtp.gmail.com with ESMTPSA id o4sm29085790wre.91.2019.10.22.02.06.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Oct 2019 02:06:23 -0700 (PDT)
-Date:   Tue, 22 Oct 2019 11:06:21 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "open list:VIRTIO GPU DRIVER" 
-        <virtualization@lists.linux-foundation.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drm/virtio: move byteorder handling into
- virtio_gpu_cmd_transfer_to_host_2d function
-Message-ID: <20191022090621.GC11828@phenom.ffwll.local>
-Mail-Followup-To: Gerd Hoffmann <kraxel@redhat.com>,
-        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
-        "open list:VIRTIO GPU DRIVER" <virtualization@lists.linux-foundation.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20191018122352.17019-1-kraxel@redhat.com>
+        Tue, 22 Oct 2019 05:07:40 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 119F2182CF666;
+        Tue, 22 Oct 2019 09:07:38 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: veil63_252ba08252f48
+X-Filterd-Recvd-Size: 4166
+Received: from XPS-9350.home (unknown [47.151.135.224])
+        (Authenticated sender: joe@perches.com)
+        by omf13.hostedemail.com (Postfix) with ESMTPA;
+        Tue, 22 Oct 2019 09:07:35 +0000 (UTC)
+Message-ID: <a32b6a6b5f48ff0c4685bd417a8fb66229d95033.camel@perches.com>
+Subject: Re: [PATCH 1/7] debugfs: Add debugfs_create_xul() for hexadecimal
+ unsigned long
+From:   Joe Perches <joe@perches.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Jaehoon Chung <jh80.chung@samsung.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        netdev <netdev@vger.kernel.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Tue, 22 Oct 2019 02:07:34 -0700
+In-Reply-To: <CAMuHMdU4OhsK6Jvy406ZCM+OeGcfVB0b7ccsne9KdMZFLf=JqQ@mail.gmail.com>
+References: <20191021143742.14487-1-geert+renesas@glider.be>
+         <20191021143742.14487-2-geert+renesas@glider.be>
+         <0f91839d858fcb03435ebc85e61ee4e75371ff37.camel@perches.com>
+         <CAMuHMdU4OhsK6Jvy406ZCM+OeGcfVB0b7ccsne9KdMZFLf=JqQ@mail.gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191018122352.17019-1-kraxel@redhat.com>
-X-Operating-System: Linux phenom 5.2.0-2-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 02:23:52PM +0200, Gerd Hoffmann wrote:
-> Be consistent with the rest of the code base.
+On Tue, 2019-10-22 at 10:03 +0200, Geert Uytterhoeven wrote:
+> Hi Joe,
+
+Hey again Geert.
+
+> On Mon, Oct 21, 2019 at 5:37 PM Joe Perches <joe@perches.com> wrote:
+> > On Mon, 2019-10-21 at 16:37 +0200, Geert Uytterhoeven wrote:
+> > > The existing debugfs_create_ulong() function supports objects of
+> > > type "unsigned long", which are 32-bit or 64-bit depending on the
+> > > platform, in decimal form.  To format objects in hexadecimal, various
+> > > debugfs_create_x*() functions exist, but all of them take fixed-size
+> > > types.
+> > > 
+> > > Add a debugfs helper for "unsigned long" objects in hexadecimal format.
+> > > This avoids the need for users to open-code the same, or introduce
+> > > bugs when casting the value pointer to "u32 *" or "u64 *" to call
+> > > debugfs_create_x{32,64}().
+> > []
+> > > diff --git a/include/linux/debugfs.h b/include/linux/debugfs.h
+> > []
+> > > @@ -356,4 +356,14 @@ static inline ssize_t debugfs_write_file_bool(struct file *file,
+> > > 
+> > >  #endif
+> > > 
+> > > +static inline void debugfs_create_xul(const char *name, umode_t mode,
+> > > +                                   struct dentry *parent,
+> > > +                                   unsigned long *value)
+> > > +{
+> > > +     if (sizeof(*value) == sizeof(u32))
+> > > +             debugfs_create_x32(name, mode, parent, (u32 *)value);
+> > > +     else
+> > > +             debugfs_create_x64(name, mode, parent, (u64 *)value);
+> > 
+> > trivia: the casts are unnecessary.
 > 
-> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+> They are necessary, in both calls (so using #ifdef as suggested below
+> won't help):
 
-Assuming sparse is all still pleased:
+Silly thinko, (I somehow thought the compiler would
+eliminate the code after the branch not taken, but
+of course it has to compile it first...  oops)
+though the #ifdef should work.
 
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-
-> ---
->  drivers/gpu/drm/virtio/virtgpu_drv.h   |  4 ++--
->  drivers/gpu/drm/virtio/virtgpu_plane.c | 12 ++++++------
->  drivers/gpu/drm/virtio/virtgpu_vq.c    | 12 ++++++------
->  3 files changed, 14 insertions(+), 14 deletions(-)
+> > This might be more sensible using #ifdef
+> > 
+> > static inline void debugfs_create_xul(const char *name, umode_t mode,
+> >                                       struct dentry *parent,
+> >                                       unsigned long *value)
+> > {
+> > #if BITS_PER_LONG == 64
+> >         debugfs_create_x64(name, mode, parent, value);
+> > #else
+> >         debugfs_create_x32(name, mode, parent, value);
+> > #endif
+> > }
 > 
-> diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.h b/drivers/gpu/drm/virtio/virtgpu_drv.h
-> index 314e02f94d9c..0b56ba005e25 100644
-> --- a/drivers/gpu/drm/virtio/virtgpu_drv.h
-> +++ b/drivers/gpu/drm/virtio/virtgpu_drv.h
-> @@ -267,8 +267,8 @@ void virtio_gpu_cmd_unref_resource(struct virtio_gpu_device *vgdev,
->  				   uint32_t resource_id);
->  void virtio_gpu_cmd_transfer_to_host_2d(struct virtio_gpu_device *vgdev,
->  					uint64_t offset,
-> -					__le32 width, __le32 height,
-> -					__le32 x, __le32 y,
-> +					uint32_t width, uint32_t height,
-> +					uint32_t x, uint32_t y,
->  					struct virtio_gpu_object_array *objs,
->  					struct virtio_gpu_fence *fence);
->  void virtio_gpu_cmd_resource_flush(struct virtio_gpu_device *vgdev,
-> diff --git a/drivers/gpu/drm/virtio/virtgpu_plane.c b/drivers/gpu/drm/virtio/virtgpu_plane.c
-> index f4b7360282ce..390524143139 100644
-> --- a/drivers/gpu/drm/virtio/virtgpu_plane.c
-> +++ b/drivers/gpu/drm/virtio/virtgpu_plane.c
-> @@ -132,10 +132,10 @@ static void virtio_gpu_primary_plane_update(struct drm_plane *plane,
->  			virtio_gpu_array_add_obj(objs, vgfb->base.obj[0]);
->  			virtio_gpu_cmd_transfer_to_host_2d
->  				(vgdev, 0,
-> -				 cpu_to_le32(plane->state->src_w >> 16),
-> -				 cpu_to_le32(plane->state->src_h >> 16),
-> -				 cpu_to_le32(plane->state->src_x >> 16),
-> -				 cpu_to_le32(plane->state->src_y >> 16),
-> +				 plane->state->src_w >> 16,
-> +				 plane->state->src_h >> 16,
-> +				 plane->state->src_x >> 16,
-> +				 plane->state->src_y >> 16,
->  				 objs, NULL);
->  		}
->  	} else {
-> @@ -234,8 +234,8 @@ static void virtio_gpu_cursor_plane_update(struct drm_plane *plane,
->  		virtio_gpu_array_add_obj(objs, vgfb->base.obj[0]);
->  		virtio_gpu_cmd_transfer_to_host_2d
->  			(vgdev, 0,
-> -			 cpu_to_le32(plane->state->crtc_w),
-> -			 cpu_to_le32(plane->state->crtc_h),
-> +			 plane->state->crtc_w,
-> +			 plane->state->crtc_h,
->  			 0, 0, objs, vgfb->fence);
->  		dma_fence_wait(&vgfb->fence->f, true);
->  		dma_fence_put(&vgfb->fence->f);
-> diff --git a/drivers/gpu/drm/virtio/virtgpu_vq.c b/drivers/gpu/drm/virtio/virtgpu_vq.c
-> index 80176f379ad5..74ad3bc3ebe8 100644
-> --- a/drivers/gpu/drm/virtio/virtgpu_vq.c
-> +++ b/drivers/gpu/drm/virtio/virtgpu_vq.c
-> @@ -549,8 +549,8 @@ void virtio_gpu_cmd_resource_flush(struct virtio_gpu_device *vgdev,
->  
->  void virtio_gpu_cmd_transfer_to_host_2d(struct virtio_gpu_device *vgdev,
->  					uint64_t offset,
-> -					__le32 width, __le32 height,
-> -					__le32 x, __le32 y,
-> +					uint32_t width, uint32_t height,
-> +					uint32_t x, uint32_t y,
->  					struct virtio_gpu_object_array *objs,
->  					struct virtio_gpu_fence *fence)
->  {
-> @@ -571,10 +571,10 @@ void virtio_gpu_cmd_transfer_to_host_2d(struct virtio_gpu_device *vgdev,
->  	cmd_p->hdr.type = cpu_to_le32(VIRTIO_GPU_CMD_TRANSFER_TO_HOST_2D);
->  	cmd_p->resource_id = cpu_to_le32(bo->hw_res_handle);
->  	cmd_p->offset = cpu_to_le64(offset);
-> -	cmd_p->r.width = width;
-> -	cmd_p->r.height = height;
-> -	cmd_p->r.x = x;
-> -	cmd_p->r.y = y;
-> +	cmd_p->r.width = cpu_to_le32(width);
-> +	cmd_p->r.height = cpu_to_le32(height);
-> +	cmd_p->r.x = cpu_to_le32(x);
-> +	cmd_p->r.y = cpu_to_le32(y);
->  
->  	virtio_gpu_queue_fenced_ctrl_buffer(vgdev, vbuf, &cmd_p->hdr, fence);
->  }
-> -- 
-> 2.18.1
+> ... at the expense of the compiler checking only one branch.
 > 
+> Just like "if (IS_ENABLED(CONFIG_<foo>)" (when possible) is preferred
+> over "#ifdef CONFIG_<foo>" because of compile-coverage, I think using
+> "if" here is better than using "#if".
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+True if all compilers will always eliminate the unused branch.
+
+
