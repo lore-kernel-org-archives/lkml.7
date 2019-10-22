@@ -2,276 +2,112 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B40DCA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 22:28:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53701CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 22:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06BAB20684
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 22:28:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E83A207FC
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 22:29:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XEOoJjLX"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="MmHCB89C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389206AbfJVW2f (ORCPT
+        id S2389236AbfJVW3X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 18:28:35 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:43648 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389125AbfJVW2e (ORCPT
+        Tue, 22 Oct 2019 18:29:23 -0400
+Received: from mail-lj1-f169.google.com ([209.85.208.169]:38535 "EHLO
+        mail-lj1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732684AbfJVW3X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 18:28:34 -0400
-Received: by mail-pl1-f196.google.com with SMTP id v5so4298246ply.10;
-        Tue, 22 Oct 2019 15:28:33 -0700 (PDT)
+        Tue, 22 Oct 2019 18:29:23 -0400
+Received: by mail-lj1-f169.google.com with SMTP id q78so3758948lje.5
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 15:29:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:date:message-id:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=JJfwPr63Q1M/xjYGQd4hOFUJFA0qW3vXAUWOtzOr/WI=;
-        b=XEOoJjLXjBwFMF9BJSoWwKHMGT7Hyv8wDXVyxnLy3MqM5eSt0W4cs8lc94YWUsZA5B
-         rB2/6Fd3AmyT/OTjU8FF8mZo9kjAYNR1segrfuqX47KmaZssfkrDnXXXJKopExw/G+GP
-         qPNLL+8kD2f9aTRvzp8tPxG3IADYjZ93BsxA/0SJA1WfhVey40wbvMiqFqZbxO2O2g7F
-         D0pcUoAQcrShFci4V39EQ6aIoTgPdynH0k9uetrsnf3iRLabf7Fl2WwQDPo1XdUvGPxJ
-         J4xv9HK4lHbQybJ9NdksPKz5Vu1FZGoQ/TBfF4Ack2Cekeb/tDuMYwp14tlID4+BFPZ/
-         35YA==
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=9FOtoCFESHJi4wxTzN6IqBIN6ywWAlgMoghhNwhRpqM=;
+        b=MmHCB89CJklZxCu7RA3AVIPVHrD3pzJXbkPORYa3HjFwqiJPCTkxBvQuhvsW2IfrFe
+         5HEuCjOyed5FfpdhPxjYI6VSrQ9YDwG1mNmmcTVz7u6SYPobeqXP5PeuQ3nvNo9pZpFU
+         8EEbgNiJymkvE2oWBuXpPC0Vprl/lFjvT1ALZq07LtleWptY0pZf/p0gRtBo5dLsHmEa
+         N3KHQFZnRXR+j633ENPBwNPxuC9Y/Em9G5NUDrUJM6RrIclvlnCmd89D/94o10I9zti1
+         lr99WphJoyUGhe1oDW+N1ZNhH/oZtBj8XU8lW6ZGTctX5+48ereaGKhtkfKzM6wlohje
+         aAXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:date:message-id:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=JJfwPr63Q1M/xjYGQd4hOFUJFA0qW3vXAUWOtzOr/WI=;
-        b=DDOuSraeFaLpwzhs0VkERmsxKHFRIbvBgDO84pvByAODpZvGkZd1iHiQbYVkrx8bkK
-         eAbxWyvBCDns15/RNiy6ljpuaqJVKV9YNmdZTXUQtJ4CIZXMcAiscZE0mVopwfIcDJph
-         5TDX9xUlJnhqBnHEz9qOa3lKdOdIoIgtQmEbQMD9M+DLgmH+j/Qqg2vhwv3QoRV0qB/L
-         tPbDiGFqDivO5NF89nzlAo68MY/ZUyiehSzS79jld+3RoRhK43aqxgkgLp8va/D4Zkud
-         6L6ca3G/pRakRGEnBSRBIRIR0bsJgiLLqwoE1IJpKjCmLTPliKqDXeP+1lsOHrsck+EV
-         2Kug==
-X-Gm-Message-State: APjAAAX6cnb/Oe9DU/mH8r1MZcJgAOH15YLViOTAtOTv0a0HyUofq6XJ
-        MkSOTyc+JaqLooAWfpkPg0c=
-X-Google-Smtp-Source: APXvYqx1+LBfw8M6XHL5m0irLpA+1EmMLYboLvXMgJUwR0aMF+pvKlK2RHF2T9xaRS/g9C1h5W8oVA==
-X-Received: by 2002:a17:902:8c96:: with SMTP id t22mr6088677plo.290.1571783313202;
-        Tue, 22 Oct 2019 15:28:33 -0700 (PDT)
-Received: from localhost.localdomain ([2001:470:b:9c3:9e5c:8eff:fe4f:f2d0])
-        by smtp.gmail.com with ESMTPSA id ce16sm19296350pjb.29.2019.10.22.15.28.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 22 Oct 2019 15:28:32 -0700 (PDT)
-Subject: [PATCH v12 6/6] virtio-balloon: Add support for providing unused
- page reports to host
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-To:     kvm@vger.kernel.org, mst@redhat.com, linux-kernel@vger.kernel.org,
-        willy@infradead.org, mhocko@kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, mgorman@techsingularity.net,
-        vbabka@suse.cz
-Cc:     yang.zhang.wz@gmail.com, nitesh@redhat.com, konrad.wilk@oracle.com,
-        david@redhat.com, pagupta@redhat.com, riel@surriel.com,
-        lcapitulino@redhat.com, dave.hansen@intel.com,
-        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
-        dan.j.williams@intel.com, alexander.h.duyck@linux.intel.com,
-        osalvador@suse.de
-Date:   Tue, 22 Oct 2019 15:28:31 -0700
-Message-ID: <20191022222831.17338.83628.stgit@localhost.localdomain>
-In-Reply-To: <20191022221223.17338.5860.stgit@localhost.localdomain>
-References: <20191022221223.17338.5860.stgit@localhost.localdomain>
-User-Agent: StGit/0.17.1-dirty
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=9FOtoCFESHJi4wxTzN6IqBIN6ywWAlgMoghhNwhRpqM=;
+        b=SgU4fjhlheNraoHMH52nI8lJh5dH8jryZZXFXS4OZNvBvFuFglN5PKs8DCnfQKGc7C
+         Cl98oDekThUwfebPAzI0veBWS79hXmTJk+7DM8lzIt7jpyJ7J3/d3g8Fb6NXR0IjNCzm
+         CcvRc2zggf799jKWUH1FpGeyx1eTZucMpgL4m4OVziJJlXg02udzHC11U89a+Dprx5N9
+         u7Hqs/1ZBrTXb4TDpkGfk0D93ijOBcg9jGv41ZDZofzBGjPW2tJO0Z434lLtzpQ0SqRF
+         OXy1C8yhdn9NXn6kL+vDV41dlpw5sC2tT94ockGhV9pbAIhaMblfJ82DfZI21ITUfwbo
+         zZgw==
+X-Gm-Message-State: APjAAAXGyn1FFfpdEDJwgRo2IpKvL+x1/cBsKOE41mUAS7C42JDP39d2
+        MM68aLgmkgRt4aCU8JQcJnveDg==
+X-Google-Smtp-Source: APXvYqw9u+Fbae9zCZZJofKlkrDbCHtrHbcSTTrEc5Ccg3iiYwsVqWefC8WGWjEwghACsA+sUNYang==
+X-Received: by 2002:a2e:3c05:: with SMTP id j5mr20619250lja.24.1571783361168;
+        Tue, 22 Oct 2019 15:29:21 -0700 (PDT)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id j26sm7660642lja.25.2019.10.22.15.29.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Oct 2019 15:29:20 -0700 (PDT)
+Date:   Tue, 22 Oct 2019 15:29:14 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
+Cc:     linux-kernel@lists.codethink.co.uk,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] [V2] net: hwbm: if CONFIG_NET_HWBM unset, make stub
+ functions static
+Message-ID: <20191022152914.19790aea@cakuba.netronome.com>
+In-Reply-To: <20191022152551.19730-1-ben.dooks@codethink.co.uk>
+References: <20191022152551.19730-1-ben.dooks@codethink.co.uk>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+On Tue, 22 Oct 2019 16:25:51 +0100, Ben Dooks (Codethink) wrote:
+> If CONFIG_NET_HWBM is not set, then these stub functions in
+> <net/hwbm.h> should be declared static to avoid trying to
+> export them from any driver that includes this.
+> 
+> Fixes the following sparse warnings:
+> 
+> ./include/net/hwbm.h:24:6: warning: symbol 'hwbm_buf_free' was not declared. Should it be static?
+> ./include/net/hwbm.h:25:5: warning: symbol 'hwbm_pool_refill' was not declared. Should it be static?
+> ./include/net/hwbm.h:26:5: warning: symbol 'hwbm_pool_add' was not declared. Should it be static?
+> 
+> Signed-off-by: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
 
-Add support for the page reporting feature provided by virtio-balloon.
-Reporting differs from the regular balloon functionality in that is is
-much less durable than a standard memory balloon. Instead of creating a
-list of pages that cannot be accessed the pages are only inaccessible
-while they are being indicated to the virtio interface. Once the
-interface has acknowledged them they are placed back into their respective
-free lists and are once again accessible by the guest system.
+Same story, going over 80 chars here, please fix and post v2.
 
-Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
----
- drivers/virtio/Kconfig              |    1 +
- drivers/virtio/virtio_balloon.c     |   65 +++++++++++++++++++++++++++++++++++
- include/uapi/linux/virtio_balloon.h |    1 +
- 3 files changed, 67 insertions(+)
-
-diff --git a/drivers/virtio/Kconfig b/drivers/virtio/Kconfig
-index 078615cf2afc..4b2dd8259ff5 100644
---- a/drivers/virtio/Kconfig
-+++ b/drivers/virtio/Kconfig
-@@ -58,6 +58,7 @@ config VIRTIO_BALLOON
- 	tristate "Virtio balloon driver"
- 	depends on VIRTIO
- 	select MEMORY_BALLOON
-+	select PAGE_REPORTING
- 	---help---
- 	 This driver supports increasing and decreasing the amount
- 	 of memory within a KVM guest.
-diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
-index 92099298bc16..b56ca35482bc 100644
---- a/drivers/virtio/virtio_balloon.c
-+++ b/drivers/virtio/virtio_balloon.c
-@@ -19,6 +19,7 @@
- #include <linux/mount.h>
- #include <linux/magic.h>
- #include <linux/pseudo_fs.h>
-+#include <linux/page_reporting.h>
- 
- /*
-  * Balloon device works in 4K page units.  So each page is pointed to by
-@@ -37,6 +38,9 @@
- #define VIRTIO_BALLOON_FREE_PAGE_SIZE \
- 	(1 << (VIRTIO_BALLOON_FREE_PAGE_ORDER + PAGE_SHIFT))
- 
-+/*  limit on the number of pages that can be on the reporting vq */
-+#define VIRTIO_BALLOON_VRING_HINTS_MAX	16
-+
- #ifdef CONFIG_BALLOON_COMPACTION
- static struct vfsmount *balloon_mnt;
- #endif
-@@ -46,6 +50,7 @@ enum virtio_balloon_vq {
- 	VIRTIO_BALLOON_VQ_DEFLATE,
- 	VIRTIO_BALLOON_VQ_STATS,
- 	VIRTIO_BALLOON_VQ_FREE_PAGE,
-+	VIRTIO_BALLOON_VQ_REPORTING,
- 	VIRTIO_BALLOON_VQ_MAX
- };
- 
-@@ -113,6 +118,10 @@ struct virtio_balloon {
- 
- 	/* To register a shrinker to shrink memory upon memory pressure */
- 	struct shrinker shrinker;
-+
-+	/* Unused page reporting device */
-+	struct virtqueue *reporting_vq;
-+	struct page_reporting_dev_info ph_dev_info;
- };
- 
- static struct virtio_device_id id_table[] = {
-@@ -152,6 +161,32 @@ static void tell_host(struct virtio_balloon *vb, struct virtqueue *vq)
- 
- }
- 
-+void virtballoon_unused_page_report(struct page_reporting_dev_info *ph_dev_info,
-+				    unsigned int nents)
-+{
-+	struct virtio_balloon *vb =
-+		container_of(ph_dev_info, struct virtio_balloon, ph_dev_info);
-+	struct virtqueue *vq = vb->reporting_vq;
-+	unsigned int unused, err;
-+
-+	/* We should always be able to add these buffers to an empty queue. */
-+	err = virtqueue_add_inbuf(vq, ph_dev_info->sg, nents, vb,
-+				  GFP_NOWAIT | __GFP_NOWARN);
-+
-+	/*
-+	 * In the extremely unlikely case that something has changed and we
-+	 * are able to trigger an error we will simply display a warning
-+	 * and exit without actually processing the pages.
-+	 */
-+	if (WARN_ON(err))
-+		return;
-+
-+	virtqueue_kick(vq);
-+
-+	/* When host has read buffer, this completes via balloon_ack */
-+	wait_event(vb->acked, virtqueue_get_buf(vq, &unused));
-+}
-+
- static void set_page_pfns(struct virtio_balloon *vb,
- 			  __virtio32 pfns[], struct page *page)
- {
-@@ -476,6 +511,7 @@ static int init_vqs(struct virtio_balloon *vb)
- 	names[VIRTIO_BALLOON_VQ_DEFLATE] = "deflate";
- 	names[VIRTIO_BALLOON_VQ_STATS] = NULL;
- 	names[VIRTIO_BALLOON_VQ_FREE_PAGE] = NULL;
-+	names[VIRTIO_BALLOON_VQ_REPORTING] = NULL;
- 
- 	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_STATS_VQ)) {
- 		names[VIRTIO_BALLOON_VQ_STATS] = "stats";
-@@ -487,11 +523,19 @@ static int init_vqs(struct virtio_balloon *vb)
- 		callbacks[VIRTIO_BALLOON_VQ_FREE_PAGE] = NULL;
- 	}
- 
-+	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_REPORTING)) {
-+		names[VIRTIO_BALLOON_VQ_REPORTING] = "reporting_vq";
-+		callbacks[VIRTIO_BALLOON_VQ_REPORTING] = balloon_ack;
-+	}
-+
- 	err = vb->vdev->config->find_vqs(vb->vdev, VIRTIO_BALLOON_VQ_MAX,
- 					 vqs, callbacks, names, NULL, NULL);
- 	if (err)
- 		return err;
- 
-+	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_REPORTING))
-+		vb->reporting_vq = vqs[VIRTIO_BALLOON_VQ_REPORTING];
-+
- 	vb->inflate_vq = vqs[VIRTIO_BALLOON_VQ_INFLATE];
- 	vb->deflate_vq = vqs[VIRTIO_BALLOON_VQ_DEFLATE];
- 	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_STATS_VQ)) {
-@@ -932,12 +976,30 @@ static int virtballoon_probe(struct virtio_device *vdev)
- 		if (err)
- 			goto out_del_balloon_wq;
- 	}
-+
-+	vb->ph_dev_info.report = virtballoon_unused_page_report;
-+	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_REPORTING)) {
-+		unsigned int capacity;
-+
-+		capacity = min_t(unsigned int,
-+				 virtqueue_get_vring_size(vb->reporting_vq),
-+				 VIRTIO_BALLOON_VRING_HINTS_MAX);
-+		vb->ph_dev_info.capacity = capacity;
-+
-+		err = page_reporting_register(&vb->ph_dev_info);
-+		if (err)
-+			goto out_unregister_shrinker;
-+	}
-+
- 	virtio_device_ready(vdev);
- 
- 	if (towards_target(vb))
- 		virtballoon_changed(vdev);
- 	return 0;
- 
-+out_unregister_shrinker:
-+	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_DEFLATE_ON_OOM))
-+		virtio_balloon_unregister_shrinker(vb);
- out_del_balloon_wq:
- 	if (virtio_has_feature(vdev, VIRTIO_BALLOON_F_FREE_PAGE_HINT))
- 		destroy_workqueue(vb->balloon_wq);
-@@ -966,6 +1028,8 @@ static void virtballoon_remove(struct virtio_device *vdev)
- {
- 	struct virtio_balloon *vb = vdev->priv;
- 
-+	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_REPORTING))
-+		page_reporting_unregister(&vb->ph_dev_info);
- 	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_DEFLATE_ON_OOM))
- 		virtio_balloon_unregister_shrinker(vb);
- 	spin_lock_irq(&vb->stop_update_lock);
-@@ -1038,6 +1102,7 @@ static int virtballoon_validate(struct virtio_device *vdev)
- 	VIRTIO_BALLOON_F_DEFLATE_ON_OOM,
- 	VIRTIO_BALLOON_F_FREE_PAGE_HINT,
- 	VIRTIO_BALLOON_F_PAGE_POISON,
-+	VIRTIO_BALLOON_F_REPORTING,
- };
- 
- static struct virtio_driver virtio_balloon_driver = {
-diff --git a/include/uapi/linux/virtio_balloon.h b/include/uapi/linux/virtio_balloon.h
-index a1966cd7b677..19974392d324 100644
---- a/include/uapi/linux/virtio_balloon.h
-+++ b/include/uapi/linux/virtio_balloon.h
-@@ -36,6 +36,7 @@
- #define VIRTIO_BALLOON_F_DEFLATE_ON_OOM	2 /* Deflate balloon on OOM */
- #define VIRTIO_BALLOON_F_FREE_PAGE_HINT	3 /* VQ to report free pages */
- #define VIRTIO_BALLOON_F_PAGE_POISON	4 /* Guest is using page poisoning */
-+#define VIRTIO_BALLOON_F_REPORTING	5 /* Page reporting virtqueue */
- 
- /* Size of a PFN in the balloon interface. */
- #define VIRTIO_BALLOON_PFN_SHIFT 12
+>  include/net/hwbm.h | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/include/net/hwbm.h b/include/net/hwbm.h
+> index 81643cf8a1c4..76a303b2925c 100644
+> --- a/include/net/hwbm.h
+> +++ b/include/net/hwbm.h
+> @@ -21,9 +21,9 @@ void hwbm_buf_free(struct hwbm_pool *bm_pool, void *buf);
+>  int hwbm_pool_refill(struct hwbm_pool *bm_pool, gfp_t gfp);
+>  int hwbm_pool_add(struct hwbm_pool *bm_pool, unsigned int buf_num);
+>  #else
+> -void hwbm_buf_free(struct hwbm_pool *bm_pool, void *buf) {}
+> -int hwbm_pool_refill(struct hwbm_pool *bm_pool, gfp_t gfp) { return 0; }
+> -int hwbm_pool_add(struct hwbm_pool *bm_pool, unsigned int buf_num)
+> +static inline void hwbm_buf_free(struct hwbm_pool *bm_pool, void *buf) {}
+> +static inline int hwbm_pool_refill(struct hwbm_pool *bm_pool, gfp_t gfp) { return 0; }
+> +static inline int hwbm_pool_add(struct hwbm_pool *bm_pool, unsigned int buf_num)
+>  { return 0; }
+>  #endif /* CONFIG_HWBM */
+>  #endif /* _HWBM_H */
 
