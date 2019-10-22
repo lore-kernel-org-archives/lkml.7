@@ -2,139 +2,77 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD956CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:16:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 334D8CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:16:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93F8C20684
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:16:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FD4B20684
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:16:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388323AbfJVIQa (ORCPT
+        id S2388328AbfJVIQ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 04:16:30 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:44953 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388061AbfJVIQa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 04:16:30 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iMpL8-0006mc-Dk; Tue, 22 Oct 2019 10:16:26 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iMpL6-0003pF-L0; Tue, 22 Oct 2019 10:16:24 +0200
-Date:   Tue, 22 Oct 2019 10:16:24 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM Kernel Mailing List 
-        <linux-arm-kernel@lists.infradead.org>, git@vger.kernel.org
-Subject: Re: [GIT PULL] arm64: Fixes for -rc4
-Message-ID: <20191022081624.4tmumskeoayt4bzg@pengutronix.de>
-References: <20191017234348.wcbbo2njexn7ixpk@willie-the-truck>
- <CAHk-=wjPZYxiTs3F0Vbrd3kRizJGq-rQ_jqH1+8XR9Ai_kBoXg@mail.gmail.com>
- <20191018174153.slpmkvsz45hb6cts@willie-the-truck>
- <CAHk-=whmtB98b8=YL2b8HzPKRadk2A9pL0aasmvgebhePrDP9w@mail.gmail.com>
- <20191021064658.GB22042@gmail.com>
+        Tue, 22 Oct 2019 04:16:57 -0400
+Received: from mga11.intel.com ([192.55.52.93]:65139 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387928AbfJVIQ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 04:16:56 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Oct 2019 01:16:56 -0700
+X-IronPort-AV: E=Sophos;i="5.67,326,1566889200"; 
+   d="scan'208";a="191387159"
+Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.161])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Oct 2019 01:16:53 -0700
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
+        dri-devel@lists.freedesktop.org,
+        Thierry Reding <treding@nvidia.com>
+Cc:     David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
+        Sean Paul <sean@poorly.run>
+Subject: Re: [PATCH] drm/scdc: Fix typo in bit definition of SCDC_STATUS_FLAGS
+In-Reply-To: <20191016123342.19119-1-patrik.r.jakobsson@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20191016123342.19119-1-patrik.r.jakobsson@gmail.com>
+Date:   Tue, 22 Oct 2019 11:16:51 +0300
+Message-ID: <87lftdfb4c.fsf@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191021064658.GB22042@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Wed, 16 Oct 2019, Patrik Jakobsson <patrik.r.jakobsson@gmail.com> wrote:
+> Fix typo where bits got compared (x < y) instead of shifted (x << y).
 
-I added the git list to Cc:. For the new readers: The context of this
-thread can be found at
-https://lwn.net/ml/linux-kernel/20191017234348.wcbbo2njexn7ixpk@willie-the-truck/
+Fixes: 3ad33ae2bc80 ("drm: Add SCDC helpers")
+Cc: Thierry Reding <treding@nvidia.com>
 
-On Mon, Oct 21, 2019 at 08:46:58AM +0200, Ingo Molnar wrote:
-> Anyway, a small Git feature request: it would be super useful if "git 
-> request-pull" output was a bit more dependable and at least warned about 
-> this and didn't include what is, from the viewpoint of the person doing 
-> the merge, a bogus diffstat. (Generating the correct diffstat is probably 
-> beyond request-pull's abilities: it would require changing the working 
-> tree to actually perform the merge - while request-pull is a read-only 
-> operation right now. But detecting the condition and warning about it 
-> should be possible?)
-
-I think Will's case is still an easy one compared with what could
-actually happen.
-
-The related history looks as follows:
-
-             ,-.     ,-.              ,-.    ,-.    ,-.
-  v5.4-rc1 --| |-...-| |-- v5.4-rc2 --| |-..-| |-..-| |-- v5.4-rc3
-      \      `-'     `-'       \      `-'    /-'    `-'
-       \   ,-.     ,-.          \         ,-/    ,-.     ,-.
-        `--| |-...-| |--------------------|*|----| |-...-|H|
-           `-'     `-'            \       `-'    `-'     /-'
-                                   \   ,-.     ,-.      /
-                                    `--| |-...-| |-----'
-                                       `-'     `-'
-
-Will asked Linus to merge the Commit marked 'H', the two merge bases are
-v5.4-rc2 and '*'.
-
-(FTR:
-  * = 3e7c93bd04edfb0cae7dad1215544c9350254b8f
-  H = 777d062e5bee0e3c0751cdcbce116a76ee2310ec
-, they can be found in
-git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git)
-
-The formally correct way to create the diffstat is to merge v5.4-rc2 and
-'*' (in general: all merge bases) and calculate the diff between this
-merge and the to-be-merged-commit. Compared to what Will did (i.e. merge
-Linus' HEAD and this branch and then diff @~ with @) doing it the way I
-described has the advantage(?) that commits that conflict with this
-merge request in Linus' tree since the merge bases are not in the way.
-
-In this case this can be done automatically:
-
-	$ git read-tree --index-output=tralala v5.4-rc2 3e7c93bd04edfb0cae7dad1215544c9350254b8f
-	$ GIT_INDEX=tralala git write-tree
-	6a2acfd1870d9da3c330ea9b648a7e858b5ee39f
-	$ git diff --stat 6a2acfd1870d9da3c330ea9b648a7e858b5ee39f 777d062e5bee0e3c0751cdcbce116a76ee2310ec
-	 Documentation/arm64/silicon-errata.rst |  2 ++
-	 arch/arm64/Kconfig                     | 17 ++++++++++++++
-	 arch/arm64/include/asm/asm-uaccess.h   |  7 +++---
-	 arch/arm64/include/asm/cpucaps.h       |  4 +++-
-	 arch/arm64/include/asm/memory.h        | 10 ++++++--
-	 arch/arm64/include/asm/pgtable.h       |  3 ---
-	 arch/arm64/include/asm/sysreg.h        |  2 +-
-	 arch/arm64/kernel/cpu_errata.c         | 38 +++++++++++++++++++++++++++++++
-	 arch/arm64/kernel/cpufeature.c         | 15 ++++++++----
-	 arch/arm64/kernel/entry.S              |  8 ++++---
-	 arch/arm64/kernel/hibernate.c          |  9 +++++++-
-	 arch/arm64/kernel/process.c            | 18 +++++++++++++++
-	 arch/arm64/kvm/hyp/switch.c            | 69 ++++++++++++++++++++++++++++++++++++++++++++++++++++++--
-	 arch/arm64/mm/fault.c                  |  6 ++++-
-	 include/linux/sched.h                  |  1 +
-	 15 files changed, 186 insertions(+), 23 deletions(-)
-
-Would be great if git-request-pull learned to do that.
-
-Best regards
-Uwe
+> Signed-off-by: Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
+> ---
+>  include/drm/drm_scdc_helper.h | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/include/drm/drm_scdc_helper.h b/include/drm/drm_scdc_helper.h
+> index f92eb2094d6b..6a483533aae4 100644
+> --- a/include/drm/drm_scdc_helper.h
+> +++ b/include/drm/drm_scdc_helper.h
+> @@ -50,9 +50,9 @@
+>  #define  SCDC_READ_REQUEST_ENABLE (1 << 0)
+>  
+>  #define SCDC_STATUS_FLAGS_0 0x40
+> -#define  SCDC_CH2_LOCK (1 < 3)
+> -#define  SCDC_CH1_LOCK (1 < 2)
+> -#define  SCDC_CH0_LOCK (1 < 1)
+> +#define  SCDC_CH2_LOCK (1 << 3)
+> +#define  SCDC_CH1_LOCK (1 << 2)
+> +#define  SCDC_CH0_LOCK (1 << 1)
+>  #define  SCDC_CH_LOCK_MASK (SCDC_CH2_LOCK | SCDC_CH1_LOCK | SCDC_CH0_LOCK)
+>  #define  SCDC_CLOCK_DETECT (1 << 0)
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Jani Nikula, Intel Open Source Graphics Center
