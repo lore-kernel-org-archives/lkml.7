@@ -4,32 +4,32 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9845FCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:29:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0063DCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:29:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72955206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:29:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9794206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:29:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388820AbfJVR3m (ORCPT
+        id S1732632AbfJVR3v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 13:29:42 -0400
-Received: from mga04.intel.com ([192.55.52.120]:17268 "EHLO mga04.intel.com"
+        Tue, 22 Oct 2019 13:29:51 -0400
+Received: from mga11.intel.com ([192.55.52.93]:43553 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388156AbfJVR3a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2388136AbfJVR3a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 22 Oct 2019 13:29:30 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Oct 2019 10:29:30 -0700
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Oct 2019 10:29:30 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,217,1569308400"; 
-   d="scan'208";a="201748570"
+   d="scan'208";a="196507356"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga006.jf.intel.com with ESMTP; 22 Oct 2019 10:29:28 -0700
+  by fmsmga008.fm.intel.com with ESMTP; 22 Oct 2019 10:29:28 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 1EDB7425; Tue, 22 Oct 2019 20:29:24 +0300 (EEST)
+        id 40CB84FE; Tue, 22 Oct 2019 20:29:24 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
@@ -39,11 +39,10 @@ To:     Linus Walleij <linus.walleij@linaro.org>,
         linux-kernel@vger.kernel.org,
         Andrew Morton <akpm@linux-foundation.org>,
         William Breathitt Gray <vilhelm.gray@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Yury Norov <ynorov@marvell.com>
-Subject: [PATCH v2 07/11] bitmap: Introduce bitmap_replace() helper
-Date:   Tue, 22 Oct 2019 20:29:18 +0300
-Message-Id: <20191022172922.61232-8-andriy.shevchenko@linux.intel.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 11/11] gpio: pca953x: Tight up indentation
+Date:   Tue, 22 Oct 2019 20:29:22 +0300
+Message-Id: <20191022172922.61232-12-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191022172922.61232-1-andriy.shevchenko@linux.intel.com>
 References: <20191022172922.61232-1-andriy.shevchenko@linux.intel.com>
@@ -54,149 +53,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In some drivers we want to have a single operation over bitmap which is
-an equivalent to:
+There is no need to split some of the lines. However,
+improve the style of multi-line comment. On top of this
+there is no need to have double space.
 
-	*dst = (*old & ~(*mask)) | (*new & *mask)
+Correct above indentation issues without altering the functionality.
 
-Introduce bitmap_replace() helper for this.
-
-Cc: Yury Norov <ynorov@marvell.com>
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- include/linux/bitmap.h | 16 ++++++++++++++++
- lib/bitmap.c           | 12 ++++++++++++
- lib/test_bitmap.c      | 38 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 66 insertions(+)
+ drivers/gpio/gpio-pca953x.c | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/include/linux/bitmap.h b/include/linux/bitmap.h
-index 9f046609e809..ff335b22f23c 100644
---- a/include/linux/bitmap.h
-+++ b/include/linux/bitmap.h
-@@ -53,6 +53,7 @@
-  *  bitmap_find_next_zero_area_off(buf, len, pos, n, mask)  as above
-  *  bitmap_shift_right(dst, src, n, nbits)      *dst = *src >> n
-  *  bitmap_shift_left(dst, src, n, nbits)       *dst = *src << n
-+ *  bitmap_replace(dst, old, new, mask, nbits)  *dst = (*old & ~(*mask)) | (*new & *mask)
-  *  bitmap_remap(dst, src, old, new, nbits)     *dst = map(old, new)(src)
-  *  bitmap_bitremap(oldbit, old, new, nbits)    newbit = map(old, new)(oldbit)
-  *  bitmap_onto(dst, orig, relmap, nbits)       *dst = orig relative to relmap
-@@ -140,6 +141,9 @@ extern void __bitmap_xor(unsigned long *dst, const unsigned long *bitmap1,
- 			const unsigned long *bitmap2, unsigned int nbits);
- extern int __bitmap_andnot(unsigned long *dst, const unsigned long *bitmap1,
- 			const unsigned long *bitmap2, unsigned int nbits);
-+extern void __bitmap_replace(unsigned long *dst,
-+			const unsigned long *old, const unsigned long *new,
-+			const unsigned long *mask, unsigned int nbits);
- extern int __bitmap_intersects(const unsigned long *bitmap1,
- 			const unsigned long *bitmap2, unsigned int nbits);
- extern int __bitmap_subset(const unsigned long *bitmap1,
-@@ -434,6 +438,18 @@ static inline void bitmap_shift_left(unsigned long *dst, const unsigned long *sr
- 		__bitmap_shift_left(dst, src, shift, nbits);
+diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+index 774e4c69df03..f80ed5a43614 100644
+--- a/drivers/gpio/gpio-pca953x.c
++++ b/drivers/gpio/gpio-pca953x.c
+@@ -421,7 +421,9 @@ static int pca953x_gpio_get_value(struct gpio_chip *gc, unsigned off)
+ 	ret = regmap_read(chip->regmap, inreg, &reg_val);
+ 	mutex_unlock(&chip->i2c_lock);
+ 	if (ret < 0) {
+-		/* NOTE:  diagnostic already emitted; that's all we should
++		/*
++		 * NOTE:
++		 * diagnostic already emitted; that's all we should
+ 		 * do unless gpio_*_value_cansleep() calls become different
+ 		 * from their nonsleeping siblings (and report faults).
+ 		 */
+@@ -735,8 +737,7 @@ static irqreturn_t pca953x_irq_handler(int irq, void *devid)
+ 	return IRQ_HANDLED;
  }
  
-+static inline void bitmap_replace(unsigned long *dst,
-+				  const unsigned long *old,
-+				  const unsigned long *new,
-+				  const unsigned long *mask,
-+				  unsigned int nbits)
-+{
-+	if (small_const_nbits(nbits))
-+		*dst = (*old & ~(*mask)) | (*new & *mask);
-+	else
-+		__bitmap_replace(dst, old, new, mask, nbits);
-+}
-+
- static inline int bitmap_parse(const char *buf, unsigned int buflen,
- 			unsigned long *maskp, int nmaskbits)
+-static int pca953x_irq_setup(struct pca953x_chip *chip,
+-			     int irq_base)
++static int pca953x_irq_setup(struct pca953x_chip *chip, int irq_base)
  {
-diff --git a/lib/bitmap.c b/lib/bitmap.c
-index f9e834841e94..4250519d7d1c 100644
---- a/lib/bitmap.c
-+++ b/lib/bitmap.c
-@@ -222,6 +222,18 @@ int __bitmap_andnot(unsigned long *dst, const unsigned long *bitmap1,
- }
- EXPORT_SYMBOL(__bitmap_andnot);
+ 	struct i2c_client *client = chip->client;
+ 	struct irq_chip *irq_chip = &chip->irq_chip;
+@@ -786,9 +787,9 @@ static int pca953x_irq_setup(struct pca953x_chip *chip,
+ 	irq_chip->irq_set_type = pca953x_irq_set_type;
+ 	irq_chip->irq_shutdown = pca953x_irq_shutdown;
  
-+void __bitmap_replace(unsigned long *dst,
-+		      const unsigned long *old, const unsigned long *new,
-+		      const unsigned long *mask, unsigned int nbits)
-+{
-+	unsigned int k;
-+	unsigned int nr = BITS_TO_LONGS(nbits);
-+
-+	for (k = 0; k < nr; k++)
-+		dst[k] = (old[k] & ~mask[k]) | (new[k] & mask[k]);
-+}
-+EXPORT_SYMBOL(__bitmap_replace);
-+
- int __bitmap_intersects(const unsigned long *bitmap1,
- 			const unsigned long *bitmap2, unsigned int bits)
+-	ret =  gpiochip_irqchip_add_nested(&chip->gpio_chip, irq_chip,
+-					   irq_base, handle_simple_irq,
+-					   IRQ_TYPE_NONE);
++	ret = gpiochip_irqchip_add_nested(&chip->gpio_chip, irq_chip,
++					  irq_base, handle_simple_irq,
++					  IRQ_TYPE_NONE);
+ 	if (ret) {
+ 		dev_err(&client->dev,
+ 			"could not connect irqchip to gpiochip\n");
+@@ -862,7 +863,7 @@ static int device_pca957x_init(struct pca953x_chip *chip, u32 invert)
+ static const struct of_device_id pca953x_dt_ids[];
+ 
+ static int pca953x_probe(struct i2c_client *client,
+-				   const struct i2c_device_id *i2c_id)
++			 const struct i2c_device_id *i2c_id)
  {
-diff --git a/lib/test_bitmap.c b/lib/test_bitmap.c
-index 4544847cf81e..e14a15ac250b 100644
---- a/lib/test_bitmap.c
-+++ b/lib/test_bitmap.c
-@@ -42,6 +42,19 @@ static const unsigned long exp2[] __initconst = {
- 	BITMAP_FROM_U64(0xffffffff77777777ULL),
- };
+ 	struct pca953x_platform_data *pdata;
+ 	struct pca953x_chip *chip;
+@@ -871,8 +872,7 @@ static int pca953x_probe(struct i2c_client *client,
+ 	u32 invert = 0;
+ 	struct regulator *reg;
  
-+/* Fibonacci sequence */
-+static const unsigned long exp2_to_exp3_mask[] __initconst = {
-+	BITMAP_FROM_U64(0x008000020020212eULL),
-+};
-+/* exp3_0_1 = (exp2[0] & ~exp2_to_exp3_mask) | (exp2[1] & exp2_to_exp3_mask) */
-+static const unsigned long exp3_0_1[] __initconst = {
-+	BITMAP_FROM_U64(0x33b3333311313137ULL),
-+};
-+/* exp3_1_0 = (exp2[1] & ~exp2_to_exp3_mask) | (exp2[0] & exp2_to_exp3_mask) */
-+static const unsigned long exp3_1_0[] __initconst = {
-+	BITMAP_FROM_U64(0xff7fffff77575751ULL),
-+};
-+
- static bool __init
- __check_eq_uint(const char *srcfile, unsigned int line,
- 		const unsigned int exp_uint, unsigned int x)
-@@ -257,6 +270,30 @@ static void __init test_copy(void)
- 	expect_eq_pbl("0-108,128-1023", bmap2, 1024);
- }
+-	chip = devm_kzalloc(&client->dev,
+-			sizeof(struct pca953x_chip), GFP_KERNEL);
++	chip = devm_kzalloc(&client->dev, sizeof(*chip), GFP_KERNEL);
+ 	if (chip == NULL)
+ 		return -ENOMEM;
  
-+#define EXP2_IN_BITS	(sizeof(exp2) * 8)
-+
-+static void __init test_replace(void)
-+{
-+	unsigned int nbits = 64;
-+	DECLARE_BITMAP(bmap, 1024);
-+
-+	bitmap_zero(bmap, 1024);
-+	bitmap_replace(bmap, &exp2[0], &exp2[1], exp2_to_exp3_mask, nbits);
-+	expect_eq_bitmap(bmap, exp3_0_1, nbits);
-+
-+	bitmap_zero(bmap, 1024);
-+	bitmap_replace(bmap, &exp2[1], &exp2[0], exp2_to_exp3_mask, nbits);
-+	expect_eq_bitmap(bmap, exp3_1_0, nbits);
-+
-+	bitmap_fill(bmap, 1024);
-+	bitmap_replace(bmap, &exp2[0], &exp2[1], exp2_to_exp3_mask, nbits);
-+	expect_eq_bitmap(bmap, exp3_0_1, nbits);
-+
-+	bitmap_fill(bmap, 1024);
-+	bitmap_replace(bmap, &exp2[1], &exp2[0], exp2_to_exp3_mask, nbits);
-+	expect_eq_bitmap(bmap, exp3_1_0, nbits);
-+}
-+
- #define PARSE_TIME 0x1
+@@ -986,7 +986,7 @@ static int pca953x_probe(struct i2c_client *client,
  
- struct test_bitmap_parselist{
-@@ -476,6 +513,7 @@ static void __init selftest(void)
- 	test_zero_clear();
- 	test_fill_set();
- 	test_copy();
-+	test_replace();
- 	test_bitmap_arr32();
- 	test_bitmap_parselist();
- 	test_bitmap_parselist_user();
+ 	if (pdata && pdata->setup) {
+ 		ret = pdata->setup(client, chip->gpio_chip.base,
+-				chip->gpio_chip.ngpio, pdata->context);
++				   chip->gpio_chip.ngpio, pdata->context);
+ 		if (ret < 0)
+ 			dev_warn(&client->dev, "setup failed, %d\n", ret);
+ 	}
+@@ -1006,7 +1006,7 @@ static int pca953x_remove(struct i2c_client *client)
+ 
+ 	if (pdata && pdata->teardown) {
+ 		ret = pdata->teardown(client, chip->gpio_chip.base,
+-				chip->gpio_chip.ngpio, pdata->context);
++				      chip->gpio_chip.ngpio, pdata->context);
+ 		if (ret < 0)
+ 			dev_err(&client->dev, "teardown failed, %d\n", ret);
+ 	} else {
 -- 
 2.23.0
 
