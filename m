@@ -2,140 +2,94 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A201BCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 04:38:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75340CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 04:42:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 298C920700
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 04:38:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="ZVOfQ6au"
+	by mail.kernel.org (Postfix) with ESMTP id 3B51520700
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 04:42:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387455AbfJVEii (ORCPT
+        id S2387534AbfJVEml (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 00:38:38 -0400
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:22866 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726024AbfJVEih (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 00:38:37 -0400
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id x9M4cOAq031118
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 13:38:24 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x9M4cOAq031118
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1571719105;
-        bh=Y7m4kw56amPHSqMoZrVwVOiMi5wEMDjWOEjfzQz1ycM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ZVOfQ6aubywwI+UqbDwuRDPWsL82iI5ltIea8ODNs+f5vSc2ZYyejT+tTYlLJMmM7
-         af9GWHHClDkE8nY+ij0Sn5uSAlN0YTbndUPrbgPmcDjB/98Jweo5xr530ha/6vhL7h
-         vbvnpRCJpXpXdO5QpwgozR8s/3C4Fz6eaP8yNDyQuZFgTilW0Es/1fk+gjUicUtbs0
-         0IH1PGymxW9EPT5Z+/IiWnTGcXRu5fkTaEpG7bT1toPXtJ00zVmG56owMxGXaNawNP
-         8t74xKLtKRICggS2ZIcKK89x16JHIcyD104U7QinyvJcvLMxjMFaRJjCmKO4x+0kL0
-         g6jK2m6ZT2/tw==
-X-Nifty-SrcIP: [209.85.217.54]
-Received: by mail-vs1-f54.google.com with SMTP id k15so1479644vsp.2
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 21:38:24 -0700 (PDT)
-X-Gm-Message-State: APjAAAVV85t0PTTo0hKRr3EzooZVhvjIZszW2Qmg586T+b2qWIkl1l96
-        sTUlKhB0+hdi64fHToRl9M3iUZGQ79xLyJIk6eQ=
-X-Google-Smtp-Source: APXvYqxNsSxZLZUPntTADw6NzjShnO+XDxBNSTBJH+iA0GeYSr5INORgrwjUisPz1cbHvohVwLXsVpoaAB6Finzit4g=
-X-Received: by 2002:a67:e354:: with SMTP id s20mr740200vsm.54.1571719103415;
- Mon, 21 Oct 2019 21:38:23 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191021145137.31672-1-jeyu@kernel.org> <20191021160419.28270-1-jeyu@kernel.org>
-In-Reply-To: <20191021160419.28270-1-jeyu@kernel.org>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Tue, 22 Oct 2019 13:37:47 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASyGSVNoKDqbtJYs+s-PRz3cqfet779M+PEWoAFu4e2TA@mail.gmail.com>
-Message-ID: <CAK7LNASyGSVNoKDqbtJYs+s-PRz3cqfet779M+PEWoAFu4e2TA@mail.gmail.com>
-Subject: Re: [PATCH v2] scripts/nsdeps: use alternative sed delimiter
-To:     Jessica Yu <jeyu@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Matthias Maennich <maennich@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 22 Oct 2019 00:42:41 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:44002 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387462AbfJVEmk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 00:42:40 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 984DD1A030A;
+        Tue, 22 Oct 2019 06:42:38 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 1A2D81A0009;
+        Tue, 22 Oct 2019 06:42:34 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 46DBA40245;
+        Tue, 22 Oct 2019 12:42:28 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     rafael.j.wysocki@intel.com, viresh.kumar@linaro.org,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH] cpufreq: imx-cpufreq-dt: Correct i.MX8MN's default speed grade value
+Date:   Tue, 22 Oct 2019 12:39:39 +0800
+Message-Id: <1571719179-23316-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 1:05 AM Jessica Yu <jeyu@kernel.org> wrote:
->
-> When doing an out of tree build with O=, the nsdeps script constructs
-> the absolute pathname of the module source file so that it can insert
-> MODULE_IMPORT_NS statements in the right place. However, ${srctree}
-> contains an unescaped path to the source tree, which, when used in a sed
-> substitution, makes sed complain:
->
-> ++ sed 's/[^ ]* *//home/jeyu/jeyu-linux\/&/g'
-> sed: -e expression #1, char 12: unknown option to `s'
->
-> The sed substitution command 's' ends prematurely with the forward
-> slashes in the pathname, and sed errors out when it encounters the 'h',
-> which is an invalid sed substitution option. To avoid escaping forward
-> slashes in ${srctree}, we can use '|' as an alternative delimiter for
-> sed to avoid this error.
->
-> Signed-off-by: Jessica Yu <jeyu@kernel.org>
-> ---
->
-> This is an alternative to my first patch here:
->
->   http://lore.kernel.org/r/20191021145137.31672-1-jeyu@kernel.org
->
-> Matthias suggested using an alternative sed delimiter instead to avoid the
-> ugly/unreadable ${srctree//\//\\\/} substitution.
->
->  scripts/nsdeps | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/scripts/nsdeps b/scripts/nsdeps
-> index 3754dac13b31..63da30a33422 100644
-> --- a/scripts/nsdeps
-> +++ b/scripts/nsdeps
-> @@ -33,7 +33,7 @@ generate_deps() {
->         if [ ! -f "$ns_deps_file" ]; then return; fi
->         local mod_source_files=`cat $mod_file | sed -n 1p                      \
->                                               | sed -e 's/\.o/\.c/g'           \
-> -                                             | sed "s/[^ ]* */${srctree}\/&/g"`
-> +                                             | sed "s|[^ ]* *|${srctree}\/&|g"`
+i.MX8MN has different speed grade definition compared to
+i.MX8MQ/i.MX8MM, when fuses are NOT written, the default
+speed_grade should be set to minimum available OPP defined
+in DT which is 1.2GHz, the corresponding speed_grade value
+should be 0xb.
 
+Fixes: 5b8010ba70d5 ("cpufreq: imx-cpufreq-dt: Add i.MX8MN support")
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ drivers/cpufreq/imx-cpufreq-dt.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-You no longer need to escape the '/'.
-
-s|[^ ]* *|${srctree}/&|g
-
-is enough.
-
-
-BTW, connecting multiple sed commands with pipes
-is not efficient.
-
-
-sed -n 1p | sed -e 's/\.o/\.c/g'
-
-can be replaced with
-
-sed -n '1s/\.o/\.c/gp'
-
-
-
-This script can be improved a whole
-if somebody is interested in the refactoring.
-
-
-
-
->         for ns in `cat $ns_deps_file`; do
->                 echo "Adding namespace $ns to module $mod_name (if needed)."
->                 generate_deps_for_ns $ns $mod_source_files
-> --
-> 2.16.4
->
-
-
+diff --git a/drivers/cpufreq/imx-cpufreq-dt.c b/drivers/cpufreq/imx-cpufreq-dt.c
+index 35db14c..26531f0 100644
+--- a/drivers/cpufreq/imx-cpufreq-dt.c
++++ b/drivers/cpufreq/imx-cpufreq-dt.c
+@@ -44,19 +44,19 @@ static int imx_cpufreq_dt_probe(struct platform_device *pdev)
+ 	mkt_segment = (cell_value & OCOTP_CFG3_MKT_SEGMENT_MASK) >> OCOTP_CFG3_MKT_SEGMENT_SHIFT;
+ 
+ 	/*
+-	 * Early samples without fuses written report "0 0" which means
+-	 * consumer segment and minimum speed grading.
+-	 *
+-	 * According to datasheet minimum speed grading is not supported for
+-	 * consumer parts so clamp to 1 to avoid warning for "no OPPs"
++	 * Early samples without fuses written report "0 0" which may NOT
++	 * match any OPP defined in DT. So clamp to minimum OPP defined in
++	 * DT to avoid warning for "no OPPs".
+ 	 *
+ 	 * Applies to i.MX8M series SoCs.
+ 	 */
+-	if (mkt_segment == 0 && speed_grade == 0 && (
+-			of_machine_is_compatible("fsl,imx8mm") ||
+-			of_machine_is_compatible("fsl,imx8mn") ||
+-			of_machine_is_compatible("fsl,imx8mq")))
+-		speed_grade = 1;
++	if (mkt_segment == 0 && speed_grade == 0) {
++		if (of_machine_is_compatible("fsl,imx8mm") ||
++			of_machine_is_compatible("fsl,imx8mq"))
++			speed_grade = 1;
++		if (of_machine_is_compatible("fsl,imx8mn"))
++			speed_grade = 0xb;
++	}
+ 
+ 	supported_hw[0] = BIT(speed_grade);
+ 	supported_hw[1] = BIT(mkt_segment);
 -- 
-Best Regards
-Masahiro Yamada
+2.7.4
+
