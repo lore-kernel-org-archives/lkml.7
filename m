@@ -2,107 +2,105 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 299F7CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:37:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 357C7CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:37:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0876A2089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:37:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0679D214B2
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:37:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mxn6zclG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730985AbfJVAg7 (ORCPT
+        id S1730970AbfJVAhL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 20:36:59 -0400
-Received: from mga07.intel.com ([134.134.136.100]:35282 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730577AbfJVAfl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 20:35:41 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 17:35:39 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,325,1566889200"; 
-   d="scan'208";a="348897207"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
-  by orsmga004.jf.intel.com with ESMTP; 21 Oct 2019 17:35:39 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     James Hogan <jhogan@kernel.org>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Marc Zyngier <maz@kernel.org>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 04/15] KVM: x86: Allocate memslot resources during prepare_memory_region()
-Date:   Mon, 21 Oct 2019 17:35:26 -0700
-Message-Id: <20191022003537.13013-5-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20191022003537.13013-1-sean.j.christopherson@intel.com>
-References: <20191022003537.13013-1-sean.j.christopherson@intel.com>
+        Mon, 21 Oct 2019 20:37:11 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:44823 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730690AbfJVAhI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 20:37:08 -0400
+Received: by mail-lj1-f195.google.com with SMTP id c4so140109lja.11
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 17:37:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IWhaX4k6lFHGGs9vgp5PpGqm7vKA7sqLPJ/OVQwJYM8=;
+        b=Mxn6zclG7aCJE+Gbl0eDGL3OWzLs5QH1w1HctpXaXwa9lerQff2UuOFWNngRVL4rXP
+         DVdvDkzXv9TwweIDY/j2A/og6LdXEdMN/VBgdnfG92KVKX6hVsFCn4QCtKqr/tGmQ06q
+         14m19p9d10EH7vCewH2Xl+BiXNWN+IgXQc0Wh2dJoGP10RmkbAo08sSWzf53pHr3wImS
+         pUMTNlgMkEpEHZgE2FuTsgX9cUM/TK53D0iy90ILc3vDdTlNkaip67g+0i2mE4Li2tQj
+         X1kbr936re/JPT+azvWX2YkV/0YmW1WpfQk3ageC8tYUU8XlDmFW4RmM93LstdIAb8i7
+         /EXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IWhaX4k6lFHGGs9vgp5PpGqm7vKA7sqLPJ/OVQwJYM8=;
+        b=DEDRMDnIocgwveyaHAdH7y6DpWOMa14QQ9w04WkAcGXVGhVt6Pdg3Ph02tfoTjQR0r
+         9nSKrI5D2DHH69V26RAw65D5BblUXSh0dnqHbsKhkD7DktZOAyyFXxkO7cKFhYj895/w
+         ntOhO0FCou/HOMa/B/7YvDAvlC7ZX9HzWGXA4c8EL6sVt5F3VH8MXcX7kA2Ao+4gxfcP
+         pQRjfxgrwxAu7h6aT0YqfInuzXb5NpgaQ8OOIkzNfIzwZ/Ivh/5z/RbzL5HbPWEHnkoU
+         c3T8Hbv8dA3pvTpU0gA91INL9wgOmBYDErJ8xEts8sFiIxJVsU8xhxkO0cKBUS8mlRGi
+         sK8g==
+X-Gm-Message-State: APjAAAV3KrmjtgY+IE8plctpaGDnk4hONRVJyhxsl1b2a7Cpjpp+uaVn
+        DAUSpwdq08BMppmyXiYD79NKNTbM26lvQvyTP4w=
+X-Google-Smtp-Source: APXvYqzJxVNLIiOghpn1W2rzPihKl7eHGQ0C3yaZSdE3EDpHK+15u/NGo2yCgMTFqy3MF6QpJLHu0T9oTVQysyHklNI=
+X-Received: by 2002:a2e:9cc9:: with SMTP id g9mr16376348ljj.188.1571704626347;
+ Mon, 21 Oct 2019 17:37:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190827180622.159326993@infradead.org> <20190827181147.166658077@infradead.org>
+ <aaffb32f-6ca9-f9e3-9b1a-627125c563ed@redhat.com> <20191002182106.GC4643@worktop.programming.kicks-ass.net>
+ <20191003181045.7fb1a5b3@gandalf.local.home> <20191004112237.GA19463@hirez.programming.kicks-ass.net>
+ <20191004094228.5a5774fe@gandalf.local.home>
+In-Reply-To: <20191004094228.5a5774fe@gandalf.local.home>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Mon, 21 Oct 2019 17:36:54 -0700
+Message-ID: <CAADnVQJ0cWYPY-+FhZoqUZ8p1k1FiDsO5jhXiQdcCPmd1UeCyQ@mail.gmail.com>
+Subject: Re: [PATCH 3/3] x86/ftrace: Use text_poke()
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allocate the various metadata structures associated with a memslot
-during during kvm_arch_prepare_memory_region(), which paves the way for
-removing kvm_arch_create_memslot() altogether.  Moving x86's memory
-allocation only changes the order of kernel memory allocations between
-x86 and common KVM code.
+On Fri, Oct 4, 2019 at 6:45 AM Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> On Fri, 4 Oct 2019 13:22:37 +0200
+> Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> > On Thu, Oct 03, 2019 at 06:10:45PM -0400, Steven Rostedt wrote:
+> > > But still, we are going from 120 to 660 IPIs for every CPU. Not saying
+> > > it's a problem, but something that we should note. Someone (those that
+> > > don't like kernel interference) may complain.
+> >
+> > It is machine wide function tracing, interference is going to happen..
+> > :-)
+> >
+> > Anyway, we can grow the batch size if sufficient benefit can be shown to
+> > exist.
+>
+> Yeah, I was thinking that we just go with these patches and then fix
+> the IPI issue when someone starts complaining ;-)
+>
+> Anyway, is this series ready to go? I can pull them in (I guess I
+> should get an ack from Thomas or Ingo as they are x86 specific). I'm
+> currently working on code that affects the same code paths as this
+> patch, and would like to build my changes on top of this, instead of
+> monkeying around with major conflicts.
 
-No functional change intended.
-
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
- arch/x86/kvm/x86.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index f26f8be4e621..fa80f07ba501 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -9601,6 +9601,12 @@ void kvm_arch_free_memslot(struct kvm *kvm, struct kvm_memory_slot *free,
- 
- int kvm_arch_create_memslot(struct kvm *kvm, struct kvm_memory_slot *slot,
- 			    unsigned long npages)
-+{
-+	return 0;
-+}
-+
-+static int kvm_create_memslot(struct kvm *kvm, struct kvm_memory_slot *slot,
-+			      unsigned long npages)
- {
- 	int i;
- 
-@@ -9678,6 +9684,9 @@ int kvm_arch_prepare_memory_region(struct kvm *kvm,
- 				const struct kvm_userspace_memory_region *mem,
- 				enum kvm_mr_change change)
- {
-+	if (change == KVM_MR_CREATE)
-+		return kvm_create_memslot(kvm, memslot,
-+					  mem->memory_size >> PAGE_SHIFT);
- 	return 0;
- }
- 
--- 
-2.22.0
-
+What is the status of this set ?
+Steven, did you apply it ?
