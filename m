@@ -2,149 +2,149 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E06CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 10:07:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A86CBCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 10:12:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53C8D20700
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 10:07:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AAF32075A
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 10:12:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ivO5b5vu"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="Ic0hqL5A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731684AbfJVKHq (ORCPT
+        id S1731728AbfJVKMe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 06:07:46 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:40835 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727609AbfJVKHp (ORCPT
+        Tue, 22 Oct 2019 06:12:34 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:37915 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726847AbfJVKMd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 06:07:45 -0400
-Received: by mail-pg1-f193.google.com with SMTP id 15so4301082pgt.7
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 03:07:43 -0700 (PDT)
+        Tue, 22 Oct 2019 06:12:33 -0400
+Received: by mail-lj1-f195.google.com with SMTP id q78so1398528lje.5
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 03:12:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=hcL7Y1mIHrv+zJufdm/7tWW0i/5Ngmwav5YR6aEz2Qo=;
-        b=ivO5b5vurvQ9LA8qtn3cHbpPoRX2yjkgwkpDqqE16TH42wJwB/6rdZXhctRQpTwQx6
-         czMO6XZbFR5LH5YX3sED3ZKy4lVOZ8gG+ofEZCZC6jYUG771VczXQdj7a0pHIU921xch
-         SBCzpsI3iWnHkfjRuLfKoGDjcXy+gyp5qaifnvDGYwHlb1rPeFGrk5d0NpD5ZAW3u375
-         yjcFyeEzpkEZWryMfTAJa3ESs4NpHE/ez/nJKblHqDc0Wpf6QBraSlP18+ciPX2IBcnH
-         8Kj7RDbw4qttl+056hF9Z4oEHQBJ5SXmnLEito4He527Qfw/auwXy1JFfgdoaynnaPb7
-         FgFQ==
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=hjSv+wwiORAZwQroV0MjPyGZjVfHuvomytZjWA/sFNI=;
+        b=Ic0hqL5AEydTjmoYQ4tUn1uoaJcRLZ+2GEpJ1kQHS1/OR4c9etzeWrdKjwV8o1tcLD
+         LPpA2VaMo3XUzapC0wtQpSC2SFXhaBgPzMavdDagC7dYu7RNq+FMhBB+Ew5Kwqtg4jPM
+         juN3r0sW/bDp/bnW5U/eHm7+dlCaX6fr83uZE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hcL7Y1mIHrv+zJufdm/7tWW0i/5Ngmwav5YR6aEz2Qo=;
-        b=Xu5ovcu+l/E7z03e+6T49aCWsJyXrOJXWcz8oeuWSonXFNXwhDa64gxIU7sl+BFrrl
-         hLahTqu8Mrjiy7fZiiuqaKXtcgmZVePquuosB+p/pJXpelZvYgICAqrJyCCypp/YG3Zy
-         Ad5f52vwp6H5QCZrXURFS1anW3xs3r3gHIgScVn3wjUwlNKpbGuLLC2FeZu8cTrmwaHF
-         mVFqQCRv/hfOl+q7GMlXjn3pCJz2fUiiGf79+kTwD9PULevYugEWyTQNr9nwrzODsSq1
-         uUBXVD89wpb/A8cZlJOYZAzNphPd60QIi+780ez4cNLG3zTZAn8f/hwGXkjJlPavvz1d
-         NSjQ==
-X-Gm-Message-State: APjAAAWH7cC9brxd5HU/x3E+lI/dDxlsTu4AvI9JQbqRcC11U1MGctiK
-        S3vf4jxmENWhhK8QMRNSu7msEw==
-X-Google-Smtp-Source: APXvYqxRKGAwKo0zopfJjMo09GhkRf6idef1XrBcgk7k+D4HJD/XZ9UndPzm9f1Mpn9zihgU/3EKZg==
-X-Received: by 2002:a63:1e1f:: with SMTP id e31mr2816686pge.303.1571738863006;
-        Tue, 22 Oct 2019 03:07:43 -0700 (PDT)
-Received: from localhost ([122.172.151.112])
-        by smtp.gmail.com with ESMTPSA id h186sm22715430pfb.63.2019.10.22.03.07.39
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=hjSv+wwiORAZwQroV0MjPyGZjVfHuvomytZjWA/sFNI=;
+        b=az0AsiPXdxJZ8VG6pE+n4O5JGNicnR6UG722Yf6MsSTmmwe90lcAZYVPaL76VYmtNE
+         ggZkvPgXDf9kcjPI8fVoimdtJDxzr+r+IrTmlO3MhZU0ueW97lGAb1Q4k5OYVR7ylRoc
+         tMqz0NreSWP1Tv/6vYZ2+611hbhAg/5IEP9+SPlegsjKH6UQ4eMhFQokaPGSg/uuX5hv
+         KGihbbD4EfxW1P9/66VrVXc+LUFt2q3bF6dOEf2V2PO5kiZhldvglE0SCmSzgHJrphfg
+         A+nNGH/lpCIKTqOEK5Kr4fy2qEbSOzT//k2380f8Y7NpwjJbl1xCH25uH3EW3wZg0WGu
+         TlbQ==
+X-Gm-Message-State: APjAAAUHwXNWSgkaPgF5pnOYh9vw8HkCSK0wei/oBstkdtO2ddby/6xk
+        9DqWr5dpA6taDjYNCfb3XdBejw==
+X-Google-Smtp-Source: APXvYqytv4x9SX0QXXZ5y785ZosmmkK9pTamMTH5LXkfjr+9GoKrqEXh83aR0//s2xRSFOK5cvBzdQ==
+X-Received: by 2002:a05:651c:1042:: with SMTP id x2mr18711751ljm.127.1571739150552;
+        Tue, 22 Oct 2019 03:12:30 -0700 (PDT)
+Received: from [172.16.11.28] ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id a7sm3846380ljn.4.2019.10.22.03.12.28
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 22 Oct 2019 03:07:39 -0700 (PDT)
-Date:   Tue, 22 Oct 2019 15:37:36 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH] cpufreq: Move cancelling of policy update work just
- after removing notifiers
-Message-ID: <20191022100736.sguepyp2t56peqfr@vireshk-i7>
-References: <20191021132818.23787-1-sudeep.holla@arm.com>
- <20191022022508.g3ar735237haybxe@vireshk-i7>
- <CAJZ5v0gEbiyjpT4+RG5ytDHOgcyCHFqOgD59bK6h=Fhbqvv7Tw@mail.gmail.com>
+        Tue, 22 Oct 2019 03:12:29 -0700 (PDT)
+Subject: Re: [PATCH 0/7] towards QE support on ARM
+To:     Li Yang <leoyang.li@nxp.com>
+Cc:     Timur Tabi <timur@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Qiang Zhao <qiang.zhao@nxp.com>
+References: <20191018125234.21825-1-linux@rasmusvillemoes.dk>
+ <VE1PR04MB6687DA0268FAF03D3E77A23B8F6C0@VE1PR04MB6687.eurprd04.prod.outlook.com>
+ <e02fa027-9c78-3272-d2d7-7ad2b0ed3ab0@rasmusvillemoes.dk>
+ <CADRPPNREUK1SVxO4P5qb2COn+T04dtYgpVEzrveKUt16hBqAtQ@mail.gmail.com>
+ <679bf33b-8c05-b77a-0cb2-d79dc5bfbe75@rasmusvillemoes.dk>
+ <CADRPPNSiMUy77Dhxjg03sHDxyZzWf_BP8a5+fCncbynyO_cNGg@mail.gmail.com>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <a2bfec28-1e5c-f3f1-56e7-b11b4c23aabe@rasmusvillemoes.dk>
+Date:   Tue, 22 Oct 2019 12:12:23 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0gEbiyjpT4+RG5ytDHOgcyCHFqOgD59bK6h=Fhbqvv7Tw@mail.gmail.com>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <CADRPPNSiMUy77Dhxjg03sHDxyZzWf_BP8a5+fCncbynyO_cNGg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22-10-19, 11:46, Rafael J. Wysocki wrote:
-> On Tue, Oct 22, 2019 at 4:25 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> >
-> > On 21-10-19, 14:28, Sudeep Holla wrote:
-> > > Commit 099967699ad9 ("cpufreq: Cancel policy update work scheduled before freeing")
-> > > added cancel_work_sync(policy->update) after the frequency QoS were
-> > > removed. We can cancel the work just after taking the last CPU in the
-> > > policy offline and unregistering the notifiers as policy->update cannot
-> > > be scheduled from anywhere at this point.
-> > >
-> > > However, due to other bugs, doing so still triggered the race between
-> > > freeing of policy and scheduled policy update work. Now that all those
-> > > issues are resolved, we can move this cancelling of any scheduled policy
-> > > update work just after removing min/max notifiers.
-> > >
-> > > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> > > ---
-> > >  drivers/cpufreq/cpufreq.c | 5 +++--
-> > >  1 file changed, 3 insertions(+), 2 deletions(-)
-> > >
-> > > Hi Rafael,
-> > >
-> > > Based on Viresh's suggestion, I am posting a patch to move this
-> > > cancel_work_sync earlier though it's not a must have change.
-> >
-> > For me it is :)
-> >
-> > > I will leave it up to your preference.
-> > >
-> > > Regards,
-> > > Sudeep
-> > >
-> > > diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> > > index 829a3764df1b..48a224a6b178 100644
-> > > --- a/drivers/cpufreq/cpufreq.c
-> > > +++ b/drivers/cpufreq/cpufreq.c
-> > > @@ -1268,6 +1268,9 @@ static void cpufreq_policy_free(struct cpufreq_policy *policy)
-> > >       freq_qos_remove_notifier(&policy->constraints, FREQ_QOS_MIN,
-> > >                                &policy->nb_min);
-> > >
-> > > +     /* Cancel any pending policy->update work before freeing the policy. */
-> > > +     cancel_work_sync(&policy->update);
-> > > +
-> > >       if (policy->max_freq_req) {
-> > >               /*
-> > >                * CPUFREQ_CREATE_POLICY notification is sent only after
-> > > @@ -1279,8 +1282,6 @@ static void cpufreq_policy_free(struct cpufreq_policy *policy)
-> > >       }
-> > >
-> > >       freq_qos_remove_request(policy->min_freq_req);
-> > > -     /* Cancel any pending policy->update work before freeing the policy. */
-> > > -     cancel_work_sync(&policy->update);
-> > >       kfree(policy->min_freq_req);
-> > >
-> > >       cpufreq_policy_put_kobj(policy);
-> >
-> > Thanks for doing this.
-> >
-> > Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-> 
-> Folded into the previous patch and applied.
-> 
-> Please double check the result in the current linux-next branch in my tree.
+On 22/10/2019 00.11, Li Yang wrote:
+> On Mon, Oct 21, 2019 at 3:46 AM Rasmus Villemoes
+> <linux@rasmusvillemoes.dk> wrote:
+>>
 
-I would have kept the blank line after cancel_work_sync() which isn't
-there anymore.
+>>> Can you try the 4.14 branch from a newer LSDK release?  LS1021a should
+>>> be supported platform on LSDK.  If it is broken, something is wrong.
+>>
+>> What newer release? LSDK-18.06-V4.14 is the latest -V4.14 tag at
+>> https://github.com/qoriq-open-source/linux.git, and identical to the
+> 
+> That tree has been abandoned for a while, we probably should state
+> that in the github.  The latest tree can be found at
+> https://source.codeaurora.org/external/qoriq/qoriq-components/linux/
 
--- 
-viresh
+Ah. FYI, googling "LSDK" gives https://lsdk.github.io as one of the
+first hits, and (apart from itself being a github url) that says on the
+front page "Disaggregated components of LSDK are available in github.".
+But yes, navigating to the Components tab and from there to lsdk linux
+one does get directed at codeaurora.
+
+>> In any case, we have zero interest in running an NXP kernel. Maybe I
+>> should clarify what I meant by "based on commits from" above: We're
+>> currently running a mainline 4.14 kernel on LS1021A, with a few patches
+>> inspired from the NXP 4.1 branch applied on top - but also with some
+>> manual fixes for e.g. the pvr_version_is() issue. Now we want to move
+>> that to a 4.19-based kernel (so that it aligns with our MPC8309 platform).
+> 
+> We also provide 4.19 based kernel in the codeaurora repo.  I think it
+> will be helpful to reuse patches there if you want to make your own
+> tree.
+
+Again, we don't want to run off an NXP kernel, we want to get the
+necessary pieces upstream. For now, we have to live with a patched 4.19
+kernel, but hopefully by the time we switch to 5.x (for some x >= 5) we
+don't need to supply anything other than our own .dts and defconfig.
+
+>> Yes, as I said, I wanted to try a fresh approach since Zhao
+>> Qiang's patches seemed to be getting nowhere. Splitting the patches into
+>> smaller pieces is definitely part of that - for example, the completely
+>> trivial whitespace fix in patch 1 is to make sure the later coccinelle
+>> generated patch is precisely that (i.e., a later respin can just rerun
+>> the coccinelle script, with zero manual fixups). I also want to avoid
+>> mixing the ppcism cleanups with other things (e.g. replacing some
+>> of_get_property() by of_property_read_u32()). And the "testing on ARM"
+>> part comes once I get to actually building on ARM. But there's not much
+>> point doing all that unless there's some indication that this can be
+>> applied to some tree that actually feeds into Linus', which is why I
+>> started with a few trivial patches and precisely to start this discussion.
+> 
+> Right.  I'm really interested in getting this applied to my tree and
+> make it upstream.  Zhao Qiang, can you help to review Rasmus's patches
+> and comment?
+
+Thanks, this is exactly what I was hoping for. Even just getting these
+first rather trivial patches (in that they don't attempt to build for
+ARM, or change functionality at all for PPC) merged for 5.5 would reduce
+the amount of out-of-tree patches that we (and NXP for that matter)
+would have to carry. I'll take the above as a go-ahead for me to try to
+post more patches working towards enabling some of the QE drivers for ARM.
+
+Rasmus
