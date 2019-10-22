@@ -2,177 +2,117 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E4ACCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:14:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C90C8CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:17:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2795221872
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:14:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571750074;
-	bh=CL/xFvn31VTj0bWYIaumiEDX4FAE4FmWveGE7TbKL9g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mT5ZqwKnPF9Nw7E/XUdLhLAYwnZgAFe7aGqxJLgYBDlbLAUXdpHlMrQzaykdXrwdJ
-	 TDShpGNeTY1XxeZVKJWxqGiJF+qQsKOeGr3KLXX0CzefbdwQq6HIq0g8vIYV9byFdY
-	 WML+Ms8SPKuR1eshTXlPsaOBV8rPtxdSoUU4gKyI=
+	by mail.kernel.org (Postfix) with ESMTP id 98D8021783
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:17:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eUp4Uc54"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732014AbfJVNOd (ORCPT
+        id S2389217AbfJVNRq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 09:14:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55466 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730290AbfJVNOc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 09:14:32 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 22 Oct 2019 09:17:46 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44873 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2387489AbfJVNRq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 09:17:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571750265;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=efljvJ2w2MdjEO93WQa9AoZJv0D+nIyDWGfcRPbJ1Lo=;
+        b=eUp4Uc54wqaoXRE/EC5GeBc7sS+4HSS3aGXiaWK49g+8k1dUEkdyyx7GFJ3+D+jxPzsyJR
+        cIntqW3S5Quzo7mw0UAu5/xrfSBRNyTA1FhO/bJV7Qc30MkrwlyrC8ReNw66wdXRm/yReP
+        VxpMGd9RhJyky1kqyBWyJj3oJAEHPIw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-330-HLyXQWEwMU2neTojI_a1xg-1; Tue, 22 Oct 2019 09:17:41 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58CF72184C;
-        Tue, 22 Oct 2019 13:14:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571750071;
-        bh=CL/xFvn31VTj0bWYIaumiEDX4FAE4FmWveGE7TbKL9g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RViUNS18ImkiWCTnB2mPBcKZ3iLu60VuBhL9A/Tf6vUWIydt3+8HSBWu/kw05m9sW
-         ASHvuTfm2rRRAOlD312WjI1lNk+IPQ+uh+UtsltUD09tRHoBFs7ABRlxwayL3BsHj7
-         F951rSf39+qtAHQa5xBadQSSoGGPPqz7oZLg1F7c=
-Date:   Tue, 22 Oct 2019 14:14:25 +0100
-From:   Will Deacon <will@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-tip-commits@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Brajeswar Ghosh <brajeswar.linux@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>
-Subject: Re: [tip: perf/core] perf tests: Disable bp_signal testing for arm64
-Message-ID: <20191022131423.GA17920@willie-the-truck>
-References: <20191018085531.6348-3-leo.yan@linaro.org>
- <157169993406.29376.12473771029179755767.tip-bot2@tip-bot2>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 38012800D4E;
+        Tue, 22 Oct 2019 13:17:39 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-121-40.rdu2.redhat.com [10.10.121.40])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CAEDD1001B20;
+        Tue, 22 Oct 2019 13:17:36 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <11434.1571740533@warthog.procyon.org.uk>
+References: <11434.1571740533@warthog.procyon.org.uk> <CAHk-=wjFozfjV34_qy3_Z155uz_Z7qFVfE8h=_9ceGU-SVk9hA@mail.gmail.com> <000000000000830fe50595115344@google.com> <00000000000071e2fc05951229ad@google.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>
+Cc:     dhowells@redhat.com,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        syzbot <syzbot+6455648abc28dbdd1e7f@syzkaller.appspotmail.com>,
+        aou@eecs.berkeley.edu,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris James Morris <jmorris@namei.org>,
+        keyrings@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-riscv@lists.infradead.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Subject: Re: WARNING: refcount bug in find_key_to_update
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <157169993406.29376.12473771029179755767.tip-bot2@tip-bot2>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-ID: <24776.1571750256.1@warthog.procyon.org.uk>
+Date:   Tue, 22 Oct 2019 14:17:36 +0100
+Message-ID: <24777.1571750256@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: HLyXQWEwMU2neTojI_a1xg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 11:18:54PM -0000, tip-bot2 for Leo Yan wrote:
-> The following commit has been merged into the perf/core branch of tip:
-> 
-> Commit-ID:     6a5f3d94cb69a185b921cb92c39888dc31009acb
-> Gitweb:        https://git.kernel.org/tip/6a5f3d94cb69a185b921cb92c39888dc31009acb
-> Author:        Leo Yan <leo.yan@linaro.org>
-> AuthorDate:    Fri, 18 Oct 2019 16:55:31 +08:00
-> Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-> CommitterDate: Sat, 19 Oct 2019 15:35:01 -03:00
-> 
-> perf tests: Disable bp_signal testing for arm64
-> 
-> As there are several discussions for enabling perf breakpoint signal
-> testing on arm64 platform: arm64 needs to rely on single-step to execute
-> the breakpointed instruction and then reinstall the breakpoint exception
-> handler.  But if we hook the breakpoint with a signal, the signal
-> handler will do the stepping rather than the breakpointed instruction,
-> this causes infinite loops as below:
-> 
->          Kernel space              |            Userspace
->   ---------------------------------|--------------------------------
->                                    |  __test_function() -> hit
-> 				   |                       breakpoint
->   breakpoint_handler()             |
->     `-> user_enable_single_step()  |
->   do_signal()                      |
->                                    |  sig_handler() -> Step one
-> 				   |                instruction and
-> 				   |                trap to kernel
->   single_step_handler()            |
->     `-> reinstall_suspended_bps()  |
->                                    |  __test_function() -> hit
-> 				   |     breakpoint again and
-> 				   |     repeat up flow infinitely
-> 
-> As Will Deacon mentioned [1]: "that we require the overflow handler to
-> do the stepping on arm/arm64, which is relied upon by GDB/ptrace. The
-> hw_breakpoint code is a complete disaster so my preference would be to
-> rip out the perf part and just implement something directly in ptrace,
-> but it's a pretty horrible job".  Though Will commented this on arm
-> architecture, but the comment also can apply on arm64 architecture.
-> 
-> For complete information, I searched online and found a few years back,
-> Wang Nan sent one patch 'arm64: Store breakpoint single step state into
-> pstate' [2]; the patch tried to resolve this issue by avoiding single
-> stepping in signal handler and defer to enable the signal stepping when
-> return to __test_function().  The fixing was not merged due to the
-> concern for missing to handle different usage cases.
-> 
-> Based on the info, the most feasible way is to skip Perf breakpoint
-> signal testing for arm64 and this could avoid the duplicate
-> investigation efforts when people see the failure.  This patch skips
-> this case on arm64 platform, which is same with arm architecture.
-> 
-> [1] https://lkml.org/lkml/2018/11/15/205
-> [2] https://lkml.org/lkml/2015/12/23/477
-> 
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Brajeswar Ghosh <brajeswar.linux@gmail.com>
-> Cc: Florian Fainelli <f.fainelli@gmail.com>
-> Cc: Jiri Olsa <jolsa@redhat.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Michael Petlan <mpetlan@redhat.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Song Liu <songliubraving@fb.com>
-> Cc: Souptick Joarder <jrdr.linux@gmail.com>
-> Cc: Will Deacon <will@kernel.org>
-> Link: http://lore.kernel.org/lkml/20191018085531.6348-3-leo.yan@linaro.org
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> ---
->  tools/perf/tests/bp_signal.c | 15 ++++++---------
->  1 file changed, 6 insertions(+), 9 deletions(-)
-> 
-> diff --git a/tools/perf/tests/bp_signal.c b/tools/perf/tests/bp_signal.c
-> index c1c2c13..166f411 100644
-> --- a/tools/perf/tests/bp_signal.c
-> +++ b/tools/perf/tests/bp_signal.c
-> @@ -49,14 +49,6 @@ asm (
->  	"__test_function:\n"
->  	"incq (%rdi)\n"
->  	"ret\n");
-> -#elif defined (__aarch64__)
-> -extern void __test_function(volatile long *ptr);
-> -asm (
-> -	".globl __test_function\n"
-> -	"__test_function:\n"
-> -	"str x30, [x0]\n"
-> -	"ret\n");
-> -
->  #else
->  static void __test_function(volatile long *ptr)
->  {
-> @@ -302,10 +294,15 @@ bool test__bp_signal_is_supported(void)
->  	 * stepping into the SIGIO handler and getting stuck on the
->  	 * breakpointed instruction.
->  	 *
-> +	 * Since arm64 has the same issue with arm for the single-step
-> +	 * handling, this case also gets suck on the breakpointed
-> +	 * instruction.
+Okay, I managed to catch a backtrace for this line:
 
-Freudian slip?
+=09encrypted_key: key user:syz not found (-126)
 
-Will
+looking like:
+
+=09CPU: 0 PID: 8878 Comm: syz-executor.0 Not tainted 5.4.0-rc3+ #0
+=09Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS =
+Google 01/01/2011
+=09Call Trace:
+=09 dump_stack+0x172/0x1f0
+=09 request_master_key.isra.0.cold+0x62/0xc3
+=09 encrypted_read+0x221/0x830
+=09 ? get_derived_key+0xf0/0xf0
+=09 ? keyctl_read_key+0x1c2/0x2b0
+=09 ? __kasan_check_write+0x14/0x20
+=09 ? down_read+0x109/0x430
+=09 ? security_key_permission+0x8d/0xc0
+=09 ? down_read_killable+0x490/0x490
+=09 ? key_task_permission+0x1b5/0x3a0
+=09 keyctl_read_key+0x231/0x2b0
+=09 __x64_sys_keyctl+0x171/0x470
+=09 do_syscall_64+0xfa/0x760
+=09entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+So something somewhere is calling keyctl_read() in userspace on the encrypt=
+ed
+key and that is then referring across to the user key added.
+
+Also, the encrypted key is being given the following payload:
+
+=09ENCRYPTED: 'new default user:syz 04096'
+
+in at least one of the cases that encrypted_update() being called.
+
+David
+
