@@ -2,117 +2,136 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC83CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:17:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 509C6CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:19:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 161A02084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:17:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571761070;
-	bh=Gg/K4AWcAIZMUhsjSl+x6is8fvGE9nG7djqvjYD1rN0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=HlAKtlH5/R3l+U/JZZIuQYL4uUEQ1Yerst7RZ/cnIefp9A6i8ckWXWkvn8astwsPA
-	 gFg2cMx5cKwljMmzJEFy1jsdYQeIKX5O3PE6u0zUxgR3QEGcxmgOR0Y039WoWRpyMh
-	 exSaVyqzNwUUY7O0d3em9A3sUsMT+ZDkowQOvzUo=
+	by mail.kernel.org (Postfix) with ESMTP id 32C822084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:19:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389372AbfJVQRt (ORCPT
+        id S1731589AbfJVQTY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 12:17:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55740 "EHLO mail.kernel.org"
+        Tue, 22 Oct 2019 12:19:24 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:44116 "EHLO honk.sigxcpu.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388978AbfJVQRs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 12:17:48 -0400
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8512F21906;
-        Tue, 22 Oct 2019 16:17:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571761067;
-        bh=Gg/K4AWcAIZMUhsjSl+x6is8fvGE9nG7djqvjYD1rN0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=FYsfHdPH1H18SJQUEaduUxml14PNKkhavCDSweG6QCDb9TlXsb7Agl9nu02nSKkcM
-         q7juO5StFsUg3HAtdqL2wqpuH49QpTNz0y9QxwvTdmqGKecqebUaLLlcaHzzyXmXXC
-         X5MsEjaTR41kYPyXJ7i1YPagvmmiBzhdqxHKputQ=
-Received: by mail-qt1-f173.google.com with SMTP id t20so27583756qtr.10;
-        Tue, 22 Oct 2019 09:17:47 -0700 (PDT)
-X-Gm-Message-State: APjAAAVGPvpteRmdj0PA9yJshcSWRYRAECebU+3N22xK01hPz6/r4Hq4
-        k+muJFtakjewkasBq/fAFSV1FGgYx2lmV4WT8g==
-X-Google-Smtp-Source: APXvYqwH0FQlbk2Qa04L/g3dKMJcwcPDR5Z3VqCtTDPrkq+GCUtoxYZ7KMCUXfKG7g9gqSoNyfVwPl9v1l7yqdmzqVU=
-X-Received: by 2002:ac8:4508:: with SMTP id q8mr4292602qtn.110.1571761066718;
- Tue, 22 Oct 2019 09:17:46 -0700 (PDT)
+        id S1730331AbfJVQTY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 12:19:24 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id 773C2FB03;
+        Tue, 22 Oct 2019 18:19:21 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id asa4HXtqqs4k; Tue, 22 Oct 2019 18:19:20 +0200 (CEST)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id B351E49BFE; Tue, 22 Oct 2019 18:19:19 +0200 (CEST)
+Date:   Tue, 22 Oct 2019 18:19:19 +0200
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     Daniel Baluta <daniel.baluta@nxp.com>
+Cc:     shawnguo@kernel.org, devicetree@vger.kernel.org, baruch@tkos.co.il,
+        abel.vesa@nxp.com, Anson.Huang@nxp.com, ccaione@baylibre.com,
+        andrew.smirnov@gmail.com, s.hauer@pengutronix.de, angus@akkea.ca,
+        linux-kernel@vger.kernel.org, linux-imx@nxp.com,
+        festevam@gmail.com, shengjiu.wang@nxp.com,
+        linux-arm-kernel@lists.infradead.org, l.stach@pengutronix.de
+Subject: Re: [PATCH v4] arm64: dts: imx8mq: Init rates and parents configs
+ for clocks
+Message-ID: <20191022161919.GA3727@bogon.m.sigxcpu.org>
+References: <20190728152040.15323-1-daniel.baluta@nxp.com>
 MIME-Version: 1.0
-References: <b47ec7088aa4b07458519ab151de92df552a9302.1570101510.git.amit.kucheria@linaro.org>
- <20191003115154.6f2jgj3dnqsved2y@gilmour> <CAHLCerNoLyQ-e70=1VMPO_J_amA+-2vtHwfoUabo4dhUWj-H0A@mail.gmail.com>
- <20191007100535.6gp6b3h6ueyeln3b@gilmour> <CAP245DXT=HL+m-LqoC25EBnOaPmF1pUW0fEZp6EZB-MdgOJoWw@mail.gmail.com>
- <20191007104835.v6iqpoolqtajryik@gilmour>
-In-Reply-To: <20191007104835.v6iqpoolqtajryik@gilmour>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 22 Oct 2019 11:17:35 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLVkikYVpjs1m+QqsOK2CfSm9+LfZWXbWEoszeSt3RGaA@mail.gmail.com>
-Message-ID: <CAL_JsqLVkikYVpjs1m+QqsOK2CfSm9+LfZWXbWEoszeSt3RGaA@mail.gmail.com>
-Subject: Re: [PATCH] media: dt-bindings: media: Fixup Allwinner A10 CSI binding
-To:     Maxime Ripard <mripard@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Amit Kucheria <amit.kucheria@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        lakml <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190728152040.15323-1-daniel.baluta@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 7, 2019 at 5:48 AM Maxime Ripard <mripard@kernel.org> wrote:
->
-> On Mon, Oct 07, 2019 at 03:45:29PM +0530, Amit Kucheria wrote:
-> > On Mon, Oct 7, 2019 at 3:35 PM Maxime Ripard <mripard@kernel.org> wrote:
-> > >
-> > > On Sat, Oct 05, 2019 at 04:15:57PM +0530, Amit Kucheria wrote:
-> > > > On Thu, Oct 3, 2019 at 5:22 PM Maxime Ripard <mripard@kernel.org> wrote:
-> > > > >
-> > > > > Hi,
-> > > > >
-> > > > > On Thu, Oct 03, 2019 at 04:52:24PM +0530, Amit Kucheria wrote:
-> > > > > > This new binding fails dt_binding_check due to a typo. Fix it up.
-> > > > > >
-> > > > > > linux.git/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml: $id: path/filename 'arm/allwinner,sun4i-a10-csi.yaml' doesn't match actual filename
-> > > > > > linux.git/Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.example.dts' failed
-> > > > > > make[2]: *** [Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.example.dts] Error 1
-> > > > > > make[2]: *** Waiting for unfinished jobs....
-> > > > > > linux.git/Makefile:1284: recipe for target 'dt_binding_check' failed
-> > > > > > make[1]: *** [dt_binding_check] Error 2
-> > > > > >
-> > > > > > Fixes: c5e8f4ccd7750 ("media: dt-bindings: media: Add Allwinner A10 CSI binding")
-> > > > > > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> > > > >
-> > > > > Thanks for your patch.
-> > > > >
-> > > > > It has already been submitted though:
-> > > > > https://lore.kernel.org/linux-arm-kernel/1568808060-17516-1-git-send-email-pragnesh.patel@sifive.com/
-> > > > >
-> > > > > I'm not sure why it hasn't been applied yet though :/
-> > > >
-> > > > Perhaps a Fixes tag will allow more attention to it?
-> > >
-> > > I've added a fixes tag and merged it through the sunxi tree.
-> > >
-> > > Sorry for the time it took, and thanks for sending that fix!
-> >
-> > Will it get merged for -rc2?
->
-> -rc2 was released yesterday, so we're a bit late for that, but it's
->  going to be in next tomorrow.
+Hi,
+On Sun, Jul 28, 2019 at 06:20:40PM +0300, Daniel Baluta wrote:
+> From: Abel Vesa <abel.vesa@nxp.com>
+> 
+> Add the initial configuration for clocks that need default parent and rate
+> setting. This is based on the vendor tree clock provider parents and rates
+> configuration except this is doing the setup in dts rather then using clock
+> consumer API in a clock provider driver.
+> 
+> Note that by adding the initial rate setting for audio_pll1/audio_pll
+> setting we need to remove it from imx8mq-librem5-devkit.dts
 
-Is this going to Linus anytime soon? It is affecting anyone submitting
-bindings against current -rc's.
+It seems this never made it into any tree, any particular reason for
+that?
+Cheers,
+ -- Guido
 
-Rob
+> 
+> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+> Tested-by: Angus Ainslie (Purism) <angus@akkea.ca>
+> ---
+> Changes since v3:
+> 	- fix extra new lines
+> 
+>  .../dts/freescale/imx8mq-librem5-devkit.dts   |  5 -----
+>  arch/arm64/boot/dts/freescale/imx8mq.dtsi     | 19 +++++++++++++++++++
+>  2 files changed, 19 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+> index 683a11035643..c702ccc82867 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+> +++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+> @@ -169,11 +169,6 @@
+>  	};
+>  };
+>  
+> -&clk {
+> -	assigned-clocks = <&clk IMX8MQ_AUDIO_PLL1>, <&clk IMX8MQ_AUDIO_PLL2>;
+> -	assigned-clock-rates = <786432000>, <722534400>;
+> -};
+> -
+>  &dphy {
+>  	status = "okay";
+>  };
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> index 02fbd0625318..a55d72ba2e05 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> @@ -494,6 +494,25 @@
+>  				clock-names = "ckil", "osc_25m", "osc_27m",
+>  				              "clk_ext1", "clk_ext2",
+>  				              "clk_ext3", "clk_ext4";
+> +				assigned-clocks = <&clk IMX8MQ_VIDEO_PLL1>,
+> +					<&clk IMX8MQ_AUDIO_PLL1>,
+> +					<&clk IMX8MQ_AUDIO_PLL2>,
+> +					<&clk IMX8MQ_CLK_AHB>,
+> +					<&clk IMX8MQ_CLK_NAND_USDHC_BUS>,
+> +					<&clk IMX8MQ_CLK_AUDIO_AHB>,
+> +					<&clk IMX8MQ_VIDEO_PLL1_REF_SEL>,
+> +					<&clk IMX8MQ_CLK_NOC>;
+> +				assigned-clock-parents = <0>,
+> +						<0>,
+> +						<0>,
+> +						<&clk IMX8MQ_SYS1_PLL_133M>,
+> +						<&clk IMX8MQ_SYS1_PLL_266M>,
+> +						<&clk IMX8MQ_SYS2_PLL_500M>,
+> +						<&clk IMX8MQ_CLK_27M>,
+> +						<&clk IMX8MQ_SYS1_PLL_800M>;
+> +				assigned-clock-rates = <593999999>,
+> +						<786432000>,
+> +						<722534400>;
+>  			};
+>  
+>  			src: reset-controller@30390000 {
+> -- 
+> 2.17.1
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
