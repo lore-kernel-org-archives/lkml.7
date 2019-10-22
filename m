@@ -2,175 +2,319 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8F32CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 10:14:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA6B7CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 10:15:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A912E2075A
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 10:14:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fRFiFu91"
+	by mail.kernel.org (Postfix) with ESMTP id 97F8F214B2
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 10:15:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571739309;
+	bh=JvFDhIHW2078G3XkkbjyfQ2GnXTHvER802eg7Axfue8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=iAyVCC21PMSHp9o8n00w8rmUHjqGdByq3pP4vxqZp2vnpQPxbamj8z538MOaoYTlA
+	 Xx4td7rYaJf/pdb25B7kzZQSwPHSDPW/m1iCYNPYTRont15zW0nAksAZKlsCfgcnv3
+	 k66EcHqc1sKJNBPEobpKwEVdnj4jFpLOgj2gb2Wk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731747AbfJVKOW (ORCPT
+        id S1731750AbfJVKPI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 06:14:22 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:41783 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727101AbfJVKOW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 06:14:22 -0400
-Received: by mail-wr1-f67.google.com with SMTP id p4so17371833wrm.8
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 03:14:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Ecp7w/hJmXBVWFySg3KpzIRhvM49DSx8lFHehzy7hk0=;
-        b=fRFiFu9115aCE+SgtQZi4fJ3gGrz7s99XoenJ0ll+4BbNyYVHfehhS/TgSO8/MNxiK
-         wwecmTwAPsjrc+Hj/hgjLWz11X+sweN1cPESRp41Q150VwGfLDHW1SmKZMk8JZPJTXs7
-         3SV6wGOX1b5QOcslTm2aou+1oRmAwbePg1zZZYbqzBdSNMhHb/ParUdwX0haH4Sf4COA
-         VgW0Q8mE9zp4LoCF0PT/p9QoFC9Ox4117lV60UZCcmcZi78FU5qPf316/I5JCC2/VZPR
-         3rRBedVtPBkiORU65dNmroqlaRDNYzYYJcPqrbW3vT+Y3sAigm1A2YxAi91Jv/+NZvvj
-         PbTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Ecp7w/hJmXBVWFySg3KpzIRhvM49DSx8lFHehzy7hk0=;
-        b=niTmHPELKSegksMpgblmGCPk0N9fgujESavtew1dTbUbDzO9x56LsXdGPsGT1nivp1
-         H57fxe2mbBZMWgFrRxtfFg1YcZLbvzBESMkfXfmYlXKQbEbenS25+XYRc3YfhFv+x4+f
-         mU9Rk6JJ9r0a3NwHkakv+Cf8plx7PXkQK4FemnhG8HkGNOQsVvxKQ/lmeoBYmfF9MeRS
-         D10MXMhD9diRfxoxDFjUYTRwJAewa4w1tiNCJ40/0vXDsC2TEzpkHOu4jOJcvpaBL8Z2
-         RGY8Ky6dTtYj34Q50pLzXLDZZVPJInIs6ayJfKubgOhqy2PsvXdpi2amNbJnToa3QwDo
-         EwjA==
-X-Gm-Message-State: APjAAAVXfjgq6xOXIX2h9i3C2/5a6L9c/2/jY8s1atLZsmyOuRCGjipu
-        LmoAiwVmwS2jhY9duGkNTIBR7A==
-X-Google-Smtp-Source: APXvYqy69MSDwMGJydjlO5jDUJHbFqo/+EKRl4bhfBg3eHvYxjqMrge6DsMg/kqLwPmoSguq6vUTyw==
-X-Received: by 2002:a05:6000:1288:: with SMTP id f8mr2667048wrx.111.1571739259892;
-        Tue, 22 Oct 2019 03:14:19 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id l7sm8333986wro.17.2019.10.22.03.14.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Oct 2019 03:14:19 -0700 (PDT)
-Date:   Tue, 22 Oct 2019 11:14:17 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
+        Tue, 22 Oct 2019 06:15:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42510 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729666AbfJVKPI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 06:15:08 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 598FE2075A;
+        Tue, 22 Oct 2019 10:15:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571739306;
+        bh=JvFDhIHW2078G3XkkbjyfQ2GnXTHvER802eg7Axfue8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=X7qllggY4xUXxZJT61yTCil7uF4SANm5VzXBg+6q6Ys8tzbRvzX3+Tq42IfT6VNNr
+         eE/dXoOwAXKeFA3es7GRs2gEUP+BLbwwZBm3sViiikJgLyq/QqoxwUEpRURf7ETlhT
+         dBd3WBUfbvUvCrvN5sh7qW4PtoS302SiELOxJKcU=
+Date:   Tue, 22 Oct 2019 11:15:02 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
 To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jacopo Mondi <jacopo@jmondi.org>, linux-sh@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org,
+Cc:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v7 3/9] backlight: gpio: explicitly set the direction of
- the GPIO
-Message-ID: <20191022101417.24zkd3htnyfg3hy6@holly.lan>
-References: <20191022083630.28175-1-brgl@bgdev.pl>
- <20191022083630.28175-4-brgl@bgdev.pl>
+Subject: Re: [PATCH v2] iio: pressure: bmp280: use devm action and remove
+ labels from probe
+Message-ID: <20191022111502.5097190e@archlinux>
+In-Reply-To: <CAMRc=MekOWGKo4eJ69ifV+MG5==PetPpb87Amrqm_x95sjFiGQ@mail.gmail.com>
+References: <20191007024131.22708-1-brgl@bgdev.pl>
+        <20191012143722.7cb7015d@archlinux>
+        <CAMRc=MekOWGKo4eJ69ifV+MG5==PetPpb87Amrqm_x95sjFiGQ@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191022083630.28175-4-brgl@bgdev.pl>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 10:36:24AM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> The GPIO backlight driver currently requests the line 'as is', without
-> acively setting its direction. This can lead to problems: if the line
-> is in input mode by default, we won't be able to drive it later when
-> updating the status and also reading its initial value doesn't make
-> sense for backlight setting.
-> 
-> Request the line 'as is' initially, so that we can read its value
-> without affecting it but then change the direction to output explicitly
-> when setting the initial brightness.
-> 
-> Also: check the current direction and only read the value if it's output.
-> 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Mon, 21 Oct 2019 14:47:18 +0200
+Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+> sob., 12 pa=C5=BA 2019 o 15:37 Jonathan Cameron <jic23@kernel.org> napisa=
+=C5=82(a):
+> >
+> > On Mon,  7 Oct 2019 04:41:31 +0200
+> > Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> > =20
+> > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > >
+> > > We can drop some duplicate code if we use devm_action for disabling
+> > > regulators and pm and the managed variant of iio_device_register().
+> > >
+> > > This allows us to completely remove all remove() callbacks from both
+> > > i2c and spi code.
+> > >
+> > > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com> =20
+> > This is on top of the bulk regulator patch which is awaiting precusors
+> > getting to my upstream.  I'll hold this one as well on that.
+> >
+> > If it looks like I've forgotten it then give me a poke.
+> > =20
+>=20
+> Hi Jonathan,
+>=20
+> gentle poke after v5.4-rc4. Only one of the three patches is in next
+> so far, the one using bulk regulators is missing too besides this one.
+Thanks for the reminder.
 
-> ---
->  drivers/video/backlight/gpio_backlight.c | 23 ++++++++++++++++++-----
->  1 file changed, 18 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/video/backlight/gpio_backlight.c b/drivers/video/backlight/gpio_backlight.c
-> index 3955b513f2f8..52f17c9ca1c3 100644
-> --- a/drivers/video/backlight/gpio_backlight.c
-> +++ b/drivers/video/backlight/gpio_backlight.c
-> @@ -25,9 +25,8 @@ struct gpio_backlight {
->  	int def_value;
->  };
->  
-> -static int gpio_backlight_update_status(struct backlight_device *bl)
-> +static int gpio_backlight_get_next_brightness(struct backlight_device *bl)
->  {
-> -	struct gpio_backlight *gbl = bl_get_data(bl);
->  	int brightness = bl->props.brightness;
->  
->  	if (bl->props.power != FB_BLANK_UNBLANK ||
-> @@ -35,6 +34,14 @@ static int gpio_backlight_update_status(struct backlight_device *bl)
->  	    bl->props.state & (BL_CORE_SUSPENDED | BL_CORE_FBBLANK))
->  		brightness = 0;
->  
-> +	return brightness;
-> +}
-> +
-> +static int gpio_backlight_update_status(struct backlight_device *bl)
-> +{
-> +	struct gpio_backlight *gbl = bl_get_data(bl);
-> +	int brightness = gpio_backlight_get_next_brightness(bl);
-> +
->  	gpiod_set_value_cansleep(gbl->gpiod, brightness);
->  
->  	return 0;
-> @@ -85,7 +92,8 @@ static int gpio_backlight_initial_power_state(struct gpio_backlight *gbl)
->  		return gbl->def_value ? FB_BLANK_UNBLANK : FB_BLANK_POWERDOWN;
->  
->  	/* if the enable GPIO is disabled, do not enable the backlight */
-> -	if (gpiod_get_value_cansleep(gbl->gpiod) == 0)
-> +	if (gpiod_get_direction(gbl->gpiod) == 0 &&
-> +	    gpiod_get_value_cansleep(gbl->gpiod) == 0)
->  		return FB_BLANK_POWERDOWN;
->  
->  	return FB_BLANK_UNBLANK;
-> @@ -98,7 +106,7 @@ static int gpio_backlight_probe(struct platform_device *pdev)
->  	struct backlight_properties props;
->  	struct backlight_device *bl;
->  	struct gpio_backlight *gbl;
-> -	int ret;
-> +	int ret, init_brightness;
->  
->  	gbl = devm_kzalloc(&pdev->dev, sizeof(*gbl), GFP_KERNEL);
->  	if (gbl == NULL)
-> @@ -151,7 +159,12 @@ static int gpio_backlight_probe(struct platform_device *pdev)
->  	bl->props.power = gpio_backlight_initial_power_state(gbl);
->  	bl->props.brightness = 1;
->  
-> -	backlight_update_status(bl);
-> +	init_brightness = gpio_backlight_get_next_brightness(bl);
-> +	ret = gpiod_direction_output(gbl->gpiod, init_brightness);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "failed to set initial brightness\n");
-> +		return ret;
-> +	}
->  
->  	platform_set_drvdata(pdev, bl);
->  	return 0;
-> -- 
-> 2.23.0
-> 
+Applied to the togreg branch of iio.git and pushed out as testing for the
+autobuilders to play with it.
+
+Thanks,
+
+Jonathan
+>=20
+> Best regards,
+> Bartosz Golaszewski
+>=20
+> > Thanks,
+> >
+> > Jonathan
+> > =20
+> > > ---
+> > > v1 -> v2:
+> > > - squash the patches using devm_iio_device_register() and devm_action
+> > >   to keep the changes bisectable
+> > >
+> > >  drivers/iio/pressure/bmp280-core.c | 62 +++++++++++++++-------------=
+--
+> > >  drivers/iio/pressure/bmp280-i2c.c  |  6 ---
+> > >  drivers/iio/pressure/bmp280-spi.c  |  6 ---
+> > >  drivers/iio/pressure/bmp280.h      |  1 -
+> > >  4 files changed, 30 insertions(+), 45 deletions(-)
+> > >
+> > > diff --git a/drivers/iio/pressure/bmp280-core.c b/drivers/iio/pressur=
+e/bmp280-core.c
+> > > index c2988dbdb1a7..79254dd26dfd 100644
+> > > --- a/drivers/iio/pressure/bmp280-core.c
+> > > +++ b/drivers/iio/pressure/bmp280-core.c
+> > > @@ -984,6 +984,22 @@ static int bmp085_fetch_eoc_irq(struct device *d=
+ev,
+> > >       return 0;
+> > >  }
+> > >
+> > > +static void bmp280_pm_disable(void *data)
+> > > +{
+> > > +     struct device *dev =3D data;
+> > > +
+> > > +     pm_runtime_get_sync(dev);
+> > > +     pm_runtime_put_noidle(dev);
+> > > +     pm_runtime_disable(dev);
+> > > +}
+> > > +
+> > > +static void bmp280_regulators_disable(void *data)
+> > > +{
+> > > +     struct regulator_bulk_data *supplies =3D data;
+> > > +
+> > > +     regulator_bulk_disable(BMP280_NUM_SUPPLIES, supplies);
+> > > +}
+> > > +
+> > >  int bmp280_common_probe(struct device *dev,
+> > >                       struct regmap *regmap,
+> > >                       unsigned int chip,
+> > > @@ -1055,6 +1071,11 @@ int bmp280_common_probe(struct device *dev,
+> > >               return ret;
+> > >       }
+> > >
+> > > +     ret =3D devm_add_action_or_reset(dev, bmp280_regulators_disable,
+> > > +                                    data->supplies);
+> > > +     if (ret)
+> > > +             return ret;
+> > > +
+> > >       /* Wait to make sure we started up properly */
+> > >       usleep_range(data->start_up_time, data->start_up_time + 100);
+> > >
+> > > @@ -1069,17 +1090,16 @@ int bmp280_common_probe(struct device *dev,
+> > >       data->regmap =3D regmap;
+> > >       ret =3D regmap_read(regmap, BMP280_REG_ID, &chip_id);
+> > >       if (ret < 0)
+> > > -             goto out_disable_regulators;
+> > > +             return ret;
+> > >       if (chip_id !=3D chip) {
+> > >               dev_err(dev, "bad chip id: expected %x got %x\n",
+> > >                       chip, chip_id);
+> > > -             ret =3D -EINVAL;
+> > > -             goto out_disable_regulators;
+> > > +             return -EINVAL;
+> > >       }
+> > >
+> > >       ret =3D data->chip_info->chip_config(data);
+> > >       if (ret < 0)
+> > > -             goto out_disable_regulators;
+> > > +             return ret;
+> > >
+> > >       dev_set_drvdata(dev, indio_dev);
+> > >
+> > > @@ -1093,14 +1113,14 @@ int bmp280_common_probe(struct device *dev,
+> > >               if (ret < 0) {
+> > >                       dev_err(data->dev,
+> > >                               "failed to read calibration coefficient=
+s\n");
+> > > -                     goto out_disable_regulators;
+> > > +                     return ret;
+> > >               }
+> > >       } else if (chip_id =3D=3D BMP280_CHIP_ID || chip_id =3D=3D BME2=
+80_CHIP_ID) {
+> > >               ret =3D bmp280_read_calib(data, &data->calib.bmp280, ch=
+ip_id);
+> > >               if (ret < 0) {
+> > >                       dev_err(data->dev,
+> > >                               "failed to read calibration coefficient=
+s\n");
+> > > -                     goto out_disable_regulators;
+> > > +                     return ret;
+> > >               }
+> > >       }
+> > >
+> > > @@ -1112,7 +1132,7 @@ int bmp280_common_probe(struct device *dev,
+> > >       if (irq > 0 || (chip_id  =3D=3D BMP180_CHIP_ID)) {
+> > >               ret =3D bmp085_fetch_eoc_irq(dev, name, irq, data);
+> > >               if (ret)
+> > > -                     goto out_disable_regulators;
+> > > +                     return ret;
+> > >       }
+> > >
+> > >       /* Enable runtime PM */
+> > > @@ -1127,36 +1147,14 @@ int bmp280_common_probe(struct device *dev,
+> > >       pm_runtime_use_autosuspend(dev);
+> > >       pm_runtime_put(dev);
+> > >
+> > > -     ret =3D iio_device_register(indio_dev);
+> > > +     ret =3D devm_add_action_or_reset(dev, bmp280_pm_disable, dev);
+> > >       if (ret)
+> > > -             goto out_runtime_pm_disable;
+> > > -
+> > > -     return 0;
+> > > +             return ret;
+> > >
+> > > -out_runtime_pm_disable:
+> > > -     pm_runtime_get_sync(data->dev);
+> > > -     pm_runtime_put_noidle(data->dev);
+> > > -     pm_runtime_disable(data->dev);
+> > > -out_disable_regulators:
+> > > -     regulator_bulk_disable(BMP280_NUM_SUPPLIES, data->supplies);
+> > > -     return ret;
+> > > +     return devm_iio_device_register(dev, indio_dev);
+> > >  }
+> > >  EXPORT_SYMBOL(bmp280_common_probe);
+> > >
+> > > -int bmp280_common_remove(struct device *dev)
+> > > -{
+> > > -     struct iio_dev *indio_dev =3D dev_get_drvdata(dev);
+> > > -     struct bmp280_data *data =3D iio_priv(indio_dev);
+> > > -
+> > > -     iio_device_unregister(indio_dev);
+> > > -     pm_runtime_get_sync(data->dev);
+> > > -     pm_runtime_put_noidle(data->dev);
+> > > -     pm_runtime_disable(data->dev);
+> > > -     regulator_bulk_disable(BMP280_NUM_SUPPLIES, data->supplies);
+> > > -     return 0;
+> > > -}
+> > > -EXPORT_SYMBOL(bmp280_common_remove);
+> > > -
+> > >  #ifdef CONFIG_PM
+> > >  static int bmp280_runtime_suspend(struct device *dev)
+> > >  {
+> > > diff --git a/drivers/iio/pressure/bmp280-i2c.c b/drivers/iio/pressure=
+/bmp280-i2c.c
+> > > index acd9a3784fb4..3109c8e2cc11 100644
+> > > --- a/drivers/iio/pressure/bmp280-i2c.c
+> > > +++ b/drivers/iio/pressure/bmp280-i2c.c
+> > > @@ -38,11 +38,6 @@ static int bmp280_i2c_probe(struct i2c_client *cli=
+ent,
+> > >                                  client->irq);
+> > >  }
+> > >
+> > > -static int bmp280_i2c_remove(struct i2c_client *client)
+> > > -{
+> > > -     return bmp280_common_remove(&client->dev);
+> > > -}
+> > > -
+> > >  static const struct acpi_device_id bmp280_acpi_i2c_match[] =3D {
+> > >       {"BMP0280", BMP280_CHIP_ID },
+> > >       {"BMP0180", BMP180_CHIP_ID },
+> > > @@ -82,7 +77,6 @@ static struct i2c_driver bmp280_i2c_driver =3D {
+> > >               .pm =3D &bmp280_dev_pm_ops,
+> > >       },
+> > >       .probe          =3D bmp280_i2c_probe,
+> > > -     .remove         =3D bmp280_i2c_remove,
+> > >       .id_table       =3D bmp280_i2c_id,
+> > >  };
+> > >  module_i2c_driver(bmp280_i2c_driver);
+> > > diff --git a/drivers/iio/pressure/bmp280-spi.c b/drivers/iio/pressure=
+/bmp280-spi.c
+> > > index 9d57b7a3b134..625b86878ad8 100644
+> > > --- a/drivers/iio/pressure/bmp280-spi.c
+> > > +++ b/drivers/iio/pressure/bmp280-spi.c
+> > > @@ -86,11 +86,6 @@ static int bmp280_spi_probe(struct spi_device *spi)
+> > >                                  spi->irq);
+> > >  }
+> > >
+> > > -static int bmp280_spi_remove(struct spi_device *spi)
+> > > -{
+> > > -     return bmp280_common_remove(&spi->dev);
+> > > -}
+> > > -
+> > >  static const struct of_device_id bmp280_of_spi_match[] =3D {
+> > >       { .compatible =3D "bosch,bmp085", },
+> > >       { .compatible =3D "bosch,bmp180", },
+> > > @@ -118,7 +113,6 @@ static struct spi_driver bmp280_spi_driver =3D {
+> > >       },
+> > >       .id_table =3D bmp280_spi_id,
+> > >       .probe =3D bmp280_spi_probe,
+> > > -     .remove =3D bmp280_spi_remove,
+> > >  };
+> > >  module_spi_driver(bmp280_spi_driver);
+> > >
+> > > diff --git a/drivers/iio/pressure/bmp280.h b/drivers/iio/pressure/bmp=
+280.h
+> > > index eda50ef65706..57ba0e85db91 100644
+> > > --- a/drivers/iio/pressure/bmp280.h
+> > > +++ b/drivers/iio/pressure/bmp280.h
+> > > @@ -112,7 +112,6 @@ int bmp280_common_probe(struct device *dev,
+> > >                       unsigned int chip,
+> > >                       const char *name,
+> > >                       int irq);
+> > > -int bmp280_common_remove(struct device *dev);
+> > >
+> > >  /* PM ops */
+> > >  extern const struct dev_pm_ops bmp280_dev_pm_ops; =20
+> > =20
+
