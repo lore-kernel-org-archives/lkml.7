@@ -2,152 +2,98 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1009CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:38:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BD17CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:39:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8C3720B7C
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:38:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bXbBkvHL"
+	by mail.kernel.org (Postfix) with ESMTP id 252D3205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:39:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571762342;
+	bh=Oh88TdIVwomXyqjDgrD03dKXu9TTl8Lvlp/IGQhs5uw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TDTqEodhBswpwYFqBZrsEWHty+nXJJsneLyL+D1xSeHDDJkZxRozUJe8JLzOI3RRo
+	 9GYQ+xJ6WvCySMZgYWFGc/uItLccaUXSTX7u260CQQS4WLg4kTxP7cGg4KaM0e7CF+
+	 F/BMYybAhL4Xl1Df1FvmmzkcPhpRSICoDdiMgoTs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732763AbfJVQij (ORCPT
+        id S1732772AbfJVQjB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 12:38:39 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:35486 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732748AbfJVQii (ORCPT
+        Tue, 22 Oct 2019 12:39:01 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:34988 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732026AbfJVQjA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 12:38:38 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9MGcRGx065024;
-        Tue, 22 Oct 2019 11:38:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571762307;
-        bh=Fy+OBX4P0UBiFTv4J1DsNAxpQNlNFk7V+smtkmjb3Ao=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=bXbBkvHLAVYQZi/bHMOuIU7X+yXZdag91kcFM1wBxo2uH+V9l4FNDydL5FuVwShQ2
-         xdUbx3z718sV0Xb7edEIne6LvowyDE8mmh5pvh+WwKXvRvmbW0XT+WzVIxL/wHapXT
-         DMFa2PNsRHm94bGl9xt5RxXDzsd5PO7pKRjDJhHo=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9MGcC5j104266
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 22 Oct 2019 11:38:12 -0500
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 22
- Oct 2019 11:38:02 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 22 Oct 2019 11:38:12 -0500
-Received: from [10.250.35.43] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9MGbu4x050727;
-        Tue, 22 Oct 2019 11:37:56 -0500
-Subject: Re: [PATCH v14 13/19] leds: lp55xx: Add multicolor framework support
- to lp55xx
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
-CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20191018122521.6757-1-dmurphy@ti.com>
- <20191018122521.6757-14-dmurphy@ti.com>
- <a24832d9-1c3d-b3ea-4326-2ef4937d5a59@gmail.com>
- <c9a704d4-b411-59f1-02bf-3ea7b219c4b4@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <e1b84d15-d670-9393-aa65-85120e522a35@ti.com>
-Date:   Tue, 22 Oct 2019 11:37:18 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 22 Oct 2019 12:39:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Oh88TdIVwomXyqjDgrD03dKXu9TTl8Lvlp/IGQhs5uw=; b=LSW1HEZCZm9pDFMe606YRrM0S
+        +75xL9xLQ0Mdnl4kGlDA95WS5lkCzyihsB3yV/gQYe35SBGkMDrSljMusL38h46axGYQ5fUnwOcUO
+        ZgnfRMr5EFmZdO/4zCelANLkSmfRrzn7kJ+bGeKv8OkU18WMWh2IucRUHV2h0RAUbi4Vk=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iMxBR-00074D-IX; Tue, 22 Oct 2019 16:38:57 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id D79D42743259; Tue, 22 Oct 2019 17:38:56 +0100 (BST)
+Date:   Tue, 22 Oct 2019 17:38:56 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        alsa-devel@alsa-project.org
+Subject: Re: [PATCH 24/46] ARM: pxa: magician: use platform driver for audio
+Message-ID: <20191022163856.GU5554@sirena.co.uk>
+References: <20191018154052.1276506-1-arnd@arndb.de>
+ <20191018154201.1276638-24-arnd@arndb.de>
 MIME-Version: 1.0
-In-Reply-To: <c9a704d4-b411-59f1-02bf-3ea7b219c4b4@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="TVVcQco/7vcH19KK"
+Content-Disposition: inline
+In-Reply-To: <20191018154201.1276638-24-arnd@arndb.de>
+X-Cookie: Whip it, whip it good!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jacek
 
-On 10/18/19 4:56 PM, Jacek Anaszewski wrote:
-> On 10/18/19 11:48 PM, Jacek Anaszewski wrote:
->> Dan,
-> +		ret = lp5xx_parse_channel_child(child, cfg, i);
->> I went into details of this parsing and finally came up with
->> the code which is a bit greater in size, but IMHO cleaner.
->> Note changes in variable naming. It is not even compile-tested.
->>
->> static int lp55xx_parse_common_child(struct device_node *np,
->>                                      struct lp55xx_led_config *cfg,
->>                                      int led_number, int *chan_nr)
->> {
->>          int ret;
->>
->>          of_property_read_string(np, "chan-name",
->>                                  &cfg[led_number].name);
->>          of_property_read_u8(np, "led-cur",
->>                              &cfg[led_number].led_current);
->>          of_property_read_u8(np, "max-cur",
->>                              &cfg[led_number].max_current);
->>
->>          ret = of_property_read_u32(np, "reg", chan_nr);
->>          if (ret)
->>                  return ret;
->>
->>          if (chan_nr < 0 || chan_nr > cfg->max_chan_nr) /* side note: new
->> max_chan_nr property needed in cfg */
->>                  return -EINVAL;
->>
->>          return 0;
->> }
->>
->> static int lp55xx_parse_mutli_led_child(struct device_node *np,
->>                                          struct lp55xx_led_config *cfg,
->>                                          int child_number,
->>                                          int color_number)
->> {
->>          int chan_nr, color_id;
->>
->>          ret = lp55xx_parse_common_child(child, cfg, child_number,
->> color_number,
->>                                          &chan_nr);
->>          if (ret)
->>                  return ret;
->>
->>          ret = of_property_read_u32(child, "color", &color_id);
->>          if (ret)
->>                 return ret;
->>
->>          cfg[child_number].color_components[color_number].color_id =
->> color_id;
->>          cfg[child_number].color_components[color_number].output_num =
->> chan_nr;
->>          set_bit(color_id, &cfg[child_number].available_colors);
->>
->>          return 0;
->> }
->>
->> staitc int lp55xx_parse_mutli_led(struct device_node *np,
->>                                    struct lp55xx_led_config *cfg,
->>                                    int child_number)
->> {
->>          struct device_node *child;
->>          int num_colors = 0, i = 0;
-> s/, i = 0//
->
->>          for_each_child_of_node(np, child) {
->>                  ret = lp55xx_parse_mutli_led_child(child, cfg, num_colors,
->>                                                     child_number, i))
-> Replace above call with below:
->
-> ret = lp55xx_parse_mutli_led_child(child, cfg, child_number, num_colors);
->
-I applied your DT parser patch from the v13 series.  Which eliminates 
-this comment correct?
+--TVVcQco/7vcH19KK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Dan
+On Fri, Oct 18, 2019 at 05:41:39PM +0200, Arnd Bergmann wrote:
+> The magician audio driver creates a codec device and gets
+> data from a board specific header file, both of which is
+> a bit suspicious. Move these into the board file itself,
+> using a gpio lookup table.
+
+Acked-by: Mark Brown <broonie@kernel.org>
+
+--TVVcQco/7vcH19KK
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2vMKAACgkQJNaLcl1U
+h9Cafwf+IMs9u3JG7wwFGnBDA4ojo/c0GOly2J9qruoKDijxJlyOzNvP4v4EoarL
+O+4UcvUiFTB4Ju5s+obbJGO3MU0uuMM8lGcgK7qmiZ0hly1jukKegk4whw3z+cyr
+xx5ek42aS5EmkfBVd9nErG/x062u145i53UtDLyCeCxJHmv9vy5Z/8GJpk9NyeyS
+ZsqGoud0yh0X8Llz0G85Ok4ziRCvtw0HzS8GLGXuxZsnPgIACxHBAy5tYT3KlePN
+EpBXQTKHS5WEsQ5kFWG/Kux+GrufCEFe+kAvIcYbZQxqD0R9hFuwiw2RQ/EGwX7v
+TFQvoO2AhUmcr/eD/5QT56wssTj1nQ==
+=1xnE
+-----END PGP SIGNATURE-----
+
+--TVVcQco/7vcH19KK--
