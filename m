@@ -6,54 +6,54 @@ X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBEC0CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:25:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76B97CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:25:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E8502084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:25:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48E972084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:25:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gK9l9daf"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VTrZSEeQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731430AbfJVJZQ (ORCPT
+        id S1731449AbfJVJZS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 05:25:16 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:53070 "EHLO
+        Tue, 22 Oct 2019 05:25:18 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:53076 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731338AbfJVJZQ (ORCPT
+        with ESMTP id S1731338AbfJVJZR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 05:25:16 -0400
+        Tue, 22 Oct 2019 05:25:17 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
         Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=oljRXGXjGPbNChUqNXgPojMiOXcqHr9P0brP8VW8uCg=; b=gK9l9dafKTgj56+Kio/59vuKpC
-        tQB5QUR9X6yu97N6etoyCxG1YC8+Rpc5jEafgBb/jXYW5TI7oYD2pXM+Yne22HU3zs48mBM3I9SrG
-        G84LcALYSWXdmDfqAiwUhad+jll5blSvLlh9NniBjXa7YqZ4+70EsKHuSGMyRpW5TIq+nvrXPVuCU
-        k+3WkuwzQ4P8cBimJq7kdMbSQNnO/en/HbcsSxHYpA2OkSTKcZOMZfTUHJV6aWXQnWPkd7LF/xUV0
-        kCmWNfSGrlC26qqMEH7jrIbTqVGAJJ959EJo4C/jqvW83aKlw7bbbaU2yfUIgk/ww5jueEkEdYKNU
-        cFYwbgiA==;
+        bh=yLtJ8P6gz03aUZVPIm6Z/OVxKfrGoXfiB2G4aC34xIE=; b=VTrZSEeQi/av4rzOjJIj7/KPmD
+        QW+UhvFedRUw5r38vvezqEdelaRO/tAPyjOlCiggCUkOXvhLe2dOW89m8HMXdDRuBD8U35hnkNWK4
+        oNUP6PRxvw6NCUen2muCd4F51WwsSBiKJ9Hwu+NjntbgQmHHag64hvuE0HGhyxW59PO4Zpuk9XLUt
+        8WZE4BJiQYmuGrd6oNu5A/HGrv/8u98sU581BW13c/dZht2rV4uv3ubLu0t6GNwGdY1GSi223CgI3
+        eC/edMAsMc7/WzkOJ2SRGTQ9qjHDaVZ1YB3SmhP1AehrnpE7LRiiCM19iPU875MKlZnLArOuxqrft
+        JeatnYGA==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iMqPf-0005Lb-Dx; Tue, 22 Oct 2019 09:25:11 +0000
+        id 1iMqPf-0005LY-Dp; Tue, 22 Oct 2019 09:25:11 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C8DFA30314F;
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 9534E301A79;
         Tue, 22 Oct 2019 11:24:11 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 1877A2022BA0A; Tue, 22 Oct 2019 11:25:09 +0200 (CEST)
-Message-Id: <20191022092307.368892814@infradead.org>
+        id 1A59720977B04; Tue, 22 Oct 2019 11:25:09 +0200 (CEST)
+Message-Id: <20191022092307.425783389@infradead.org>
 User-Agent: quilt/0.65
-Date:   Tue, 22 Oct 2019 11:20:18 +0200
+Date:   Tue, 22 Oct 2019 11:20:19 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     mingo@kernel.org, peterz@infradead.org,
         linux-kernel@vger.kernel.org
 Cc:     acme@kernel.org, mark.rutland@arm.com,
         alexander.shishkin@linux.intel.com, jolsa@redhat.com,
         namhyung@kernel.org, andi@firstfloor.org, kan.liang@linux.intel.com
-Subject: [PATCH 1/3] perf: Optimize perf_install_in_event()
+Subject: [PATCH 2/3] perf: Optimize perf_init_event()
 References: <20191022092017.740591163@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,63 +62,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andi reported that when creating a lot of events, a lot of time is
-spend in IPIs and asked if it would be possible to elide some of that.
+Andi reported that he was hitting the linear search in
+perf_init_event() a lot. Make more agressive use of the IDR lookup to
+avoid hitting the linear search.
 
-Now when, as for example the perf-tool always does, events are created
-disabled, then these events will not need to be scheduled when added
-to the context (they're still disable) and therefore the IPI is not
-required -- except for the very first event, that will need to set
-ctx->is_active.
+With exception of PERF_TYPE_SOFTWARE (which relies on a hideous hack),
+we can put everything in the IDR. On top of that, we can alias
+TYPE_HARDWARE and TYPE_HW_CACHE to TYPE_RAW on the lookup side.
 
-( it might be possible to set ctx->is_active remotely for cpu_ctx, but
-  we really need the IPI for task_ctx, so lets not make that
-  distinction )
-
-Also use __perf_effective_state() since group events depend on the
-state of the leader, if the leader is OFF, the whole group is OFF.
-
-So when sibling events are created enabled (XXX check tool) then we
-only need a single IPI to create and enable the whole group (+ that
-initial IPI to initialize the context).
+This greatly reduces the chances of hitting the linear search.
 
 Reported-by: Andi Kleen <andi@firstfloor.org>
-Suggested-by: Andi Kleen <andi@firstfloor.org>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: kan.liang@linux.intel.com
-Cc: jolsa@redhat.com
-Cc: acme@kernel.org
+Cc: Kan <kan.liang@linux.intel.com>
 ---
- kernel/events/core.c |   19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ kernel/events/core.c |   41 ++++++++++++++++++++++++++++++-----------
+ 1 file changed, 30 insertions(+), 11 deletions(-)
 
 --- a/kernel/events/core.c
 +++ b/kernel/events/core.c
-@@ -2666,6 +2666,25 @@ perf_install_in_context(struct perf_even
- 	 */
- 	smp_store_release(&event->ctx, ctx);
+@@ -10067,7 +10067,7 @@ static struct lock_class_key cpuctx_lock
  
-+	/*
-+	 * perf_event_attr::disabled events will not run and can be initialized
-+	 * without IPI. Except when this is the first event for the context, in
-+	 * that case we need the magic of the IPI to set ctx->is_active.
-+	 *
-+	 * The IOC_ENABLE that is sure to follow the creation of a disabled
-+	 * event will issue the IPI and reprogram the hardware.
-+	 */
-+	if (__perf_effective_state(event) == PERF_EVENT_STATE_OFF && ctx->nr_events) {
-+		raw_spin_lock_irq(&ctx->lock);
-+		if (task && ctx->task == TASK_TOMBSTONE) {
-+			raw_spin_unlock_irq(&ctx->lock);
-+			return;
-+		}
-+		add_event_to_ctx(event, ctx);
-+		raw_spin_unlock_irq(&ctx->lock);
-+		return;
-+	}
+ int perf_pmu_register(struct pmu *pmu, const char *name, int type)
+ {
+-	int cpu, ret;
++	int cpu, ret, max = PERF_TYPE_MAX;
+ 
+ 	mutex_lock(&pmus_lock);
+ 	ret = -ENOMEM;
+@@ -10080,12 +10080,17 @@ int perf_pmu_register(struct pmu *pmu, c
+ 		goto skip_type;
+ 	pmu->name = name;
+ 
+-	if (type < 0) {
+-		type = idr_alloc(&pmu_idr, pmu, PERF_TYPE_MAX, 0, GFP_KERNEL);
+-		if (type < 0) {
+-			ret = type;
++	if (type != PERF_TYPE_SOFTWARE) {
++		if (type >= 0)
++			max = type;
 +
- 	if (!task) {
- 		cpu_function_call(cpu, __perf_install_in_context, event);
- 		return;
++		ret = idr_alloc(&pmu_idr, pmu, max, 0, GFP_KERNEL);
++		if (ret < 0)
+ 			goto free_pdc;
+-		}
++
++		WARN_ON(type >= 0 && ret != type);
++
++		type = ret;
+ 	}
+ 	pmu->type = type;
+ 
+@@ -10175,7 +10180,7 @@ int perf_pmu_register(struct pmu *pmu, c
+ 	put_device(pmu->dev);
+ 
+ free_idr:
+-	if (pmu->type >= PERF_TYPE_MAX)
++	if (pmu->type != PERF_TYPE_SOFTWARE)
+ 		idr_remove(&pmu_idr, pmu->type);
+ 
+ free_pdc:
+@@ -10197,7 +10202,7 @@ void perf_pmu_unregister(struct pmu *pmu
+ 	synchronize_rcu();
+ 
+ 	free_percpu(pmu->pmu_disable_count);
+-	if (pmu->type >= PERF_TYPE_MAX)
++	if (pmu->type != PERF_TYPE_SOFTWARE)
+ 		idr_remove(&pmu_idr, pmu->type);
+ 	if (pmu_bus_running) {
+ 		if (pmu->nr_addr_filters)
+@@ -10267,9 +10272,8 @@ static int perf_try_init_event(struct pm
+ 
+ static struct pmu *perf_init_event(struct perf_event *event)
+ {
++	int idx, type, ret;
+ 	struct pmu *pmu;
+-	int idx;
+-	int ret;
+ 
+ 	idx = srcu_read_lock(&pmus_srcu);
+ 
+@@ -10282,12 +10286,27 @@ static struct pmu *perf_init_event(struc
+ 	}
+ 
+ 	rcu_read_lock();
+-	pmu = idr_find(&pmu_idr, event->attr.type);
++	/*
++	 * PERF_TYPE_HARDWARE and PERF_TYPE_HW_CACHE
++	 * are often aliases for PERF_TYPE_RAW.
++	 */
++	type = event->attr.type;
++	if (type == PERF_TYPE_HARDWARE || type == PERF_TYPE_HW_CACHE)
++		type = PERF_TYPE_RAW;
++
++again:
++	pmu = idr_find(&pmu_idr, type);
+ 	rcu_read_unlock();
+ 	if (pmu) {
+ 		ret = perf_try_init_event(pmu, event);
++		if (ret == -ENOENT && event->attr.type != type) {
++			type = event->attr.type;
++			goto again;
++		}
++
+ 		if (ret)
+ 			pmu = ERR_PTR(ret);
++
+ 		goto unlock;
+ 	}
+ 
 
 
