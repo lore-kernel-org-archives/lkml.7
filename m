@@ -2,105 +2,132 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B104CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:32:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D9DECA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:37:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C89D20679
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:32:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F10E92084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:37:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="TnzD6LOK"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="aGVHsYgn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731407AbfJVJc5 (ORCPT
+        id S1731314AbfJVJg7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 05:32:57 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:38537 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728182AbfJVJc4 (ORCPT
+        Tue, 22 Oct 2019 05:36:59 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:32801 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730247AbfJVJg7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 05:32:56 -0400
-Received: by mail-io1-f65.google.com with SMTP id u8so19541880iom.5
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 02:32:54 -0700 (PDT)
+        Tue, 22 Oct 2019 05:36:59 -0400
+Received: by mail-wr1-f65.google.com with SMTP id s1so8477248wro.0
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 02:36:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=p6B5vIq4mBCEi2j6VspXkHH98NRmRELS3pKey0pcg9A=;
-        b=TnzD6LOK7P2cm5iTTfxxd8SPWst7kL9joiV3t5ft/tKMF5foCxZLRbKa4F5aRkxz2i
-         DQJUNzvTCXWpjTuunUPGnVQZpLIVL2wj5To4595cjUa81Gwm4BEo6XFYoKNB7liyhmLE
-         F1HJchnDcQ25TY39p4HEskEy+oJRzXgCunSObjsyrNorFkTpVRzADJDjvJZ6ImiNCryI
-         VY5P+Mw4BAcehGCbz/KSaQXlNsyBZXPgdb5vfT7x9+/A0urnbxf8/qqXbkE/usv5PTWo
-         IWrMmHooqxXW7MR0cX7qBVJXCAOy4+j/k4sOcTf+DNZxB6YkUTcCuK6uuijUWKbScAub
-         yFbw==
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/YqXqHk50UmDNEMYXTSHPPhm4w8EIzR88JCsr5CRoHs=;
+        b=aGVHsYgnTUvSzWqxkgDanmOAat4LYpbPxLmx2ADBlcbzp7QiYvVsQnpy8U4e9sdlqk
+         r4T+Mtq7tgm0lj8K12o6lyV6AithxP6WkNF/WaL4ZRc7hWiQiKGVft9Y5ktPWjQD7bBm
+         zP/z3wGQr4utEDtjRQmJ3PwIsly2omlqgMho4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=p6B5vIq4mBCEi2j6VspXkHH98NRmRELS3pKey0pcg9A=;
-        b=YsSkElVW5g3+oJYUxk+/Kh7FMMwNEgENC8suSDQKh1on70V8cECEv3XlWL6lhxqpBd
-         2l41tVfsZgoRHzMFeWyBfoH/9CjbuggFTF+zdKzTQgkv/n0axZC1ZUg+GZuVY74GfB4s
-         +DrZp481AyxctkFsqE4WYPln2btHjk11R9/ryv/tswl+SGRduudCK+Jn5aIMrfjrDtyf
-         5MntzkF3Tc1MYdC+9Er8w4Kvkv1aRdrBWZT3XVebZYdBQiQjV04AZ1OEnWo+2tEdAQH9
-         Ds1wqVexOXeE98+ntuQCUmg7D9eiXFpv05DEsRBz7BTqVKIRJLJ7RL3JZBJnNSlV9KhM
-         mwbA==
-X-Gm-Message-State: APjAAAXz4FzkuLR4QiyFlg1zMqCqikGisApc8GQM6mtwHBmFbhOJDxgE
-        eJflEXomMmn8iXhBuSQLfsDgkRMqW2yyczhUY67/MQ==
-X-Google-Smtp-Source: APXvYqz2/snQXHiOFBHAJHp4uTYsYA49vZLl9SSWul/3XwSH9uBc4EiHcU7yJIzgHgu1vrDGv/JFbkX6SHqYPhpPGDA=
-X-Received: by 2002:a02:920f:: with SMTP id x15mr2782918jag.57.1571736774365;
- Tue, 22 Oct 2019 02:32:54 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191021202626.5246-1-navid.emamdoost@gmail.com>
-In-Reply-To: <20191021202626.5246-1-navid.emamdoost@gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 22 Oct 2019 11:32:43 +0200
-Message-ID: <CAMRc=MfpS+iTmoey0mSjH63Cm_fgfqjdebd07HY522bGcZv6dA@mail.gmail.com>
-Subject: Re: [PATCH] clocksource/drivers/davinci: Fix memory leak in davinci_timer_register
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=/YqXqHk50UmDNEMYXTSHPPhm4w8EIzR88JCsr5CRoHs=;
+        b=obeiwOUoUrfohM4McgXcoYyOUdbZQr/CxMwgNh3tsNFXSQXdngGznmR+TezVr6DMO8
+         i4MTpV0vkTMOH/9RC3qe9FqYguumS6YW/WOMc/DpTA2ZHKKB6O3ZxJilrZWrTXf8z+zY
+         72+E3VCnKCTTQyojSjZ76hN1h4MsPJTCh/51DWCoTbuN+/+RyWOUAg8p2W92gLCOa0lv
+         WjimziHzrfKlLlil4fxSUkucAXb1O9m6bfM1PqiDwQVCprBwkliybQD50rPvx2zH8P6c
+         nP2MKWW3IJGoA/Y1ajTaThmJl15tuTsPCscC1GbG3RhmT/Utgwv22npCFxxDEZ0g7s/1
+         mj0g==
+X-Gm-Message-State: APjAAAVgTs2TgJNf3gpBnm9fOIbu1DKEmUoLNkOV3KzES2dPHb5wuncc
+        h0Bl/HZBsjAzH5LQ+cKrCBwCvw==
+X-Google-Smtp-Source: APXvYqx+JFyqVszkw5BCqDalJWIVq/o7Yqx3WGohJsD0fVYT2Ap02/oIbKtgTtyZt/Vvwhfl85iaeA==
+X-Received: by 2002:adf:92e7:: with SMTP id 94mr2748992wrn.199.1571737016806;
+        Tue, 22 Oct 2019 02:36:56 -0700 (PDT)
+Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
+        by smtp.gmail.com with ESMTPSA id u26sm18652968wrd.87.2019.10.22.02.36.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Oct 2019 02:36:55 -0700 (PDT)
+Date:   Tue, 22 Oct 2019 11:36:54 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
 To:     Navid Emamdoost <navid.emamdoost@gmail.com>
 Cc:     emamd001@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Eric Anholt <eric@anholt.net>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/v3d: Fix memory leak in v3d_submit_cl_ioctl
+Message-ID: <20191022093654.GF11828@phenom.ffwll.local>
+Mail-Followup-To: Navid Emamdoost <navid.emamdoost@gmail.com>,
+        emamd001@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
+        Eric Anholt <eric@anholt.net>, David Airlie <airlied@linux.ie>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20191021185250.26130-1-navid.emamdoost@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191021185250.26130-1-navid.emamdoost@gmail.com>
+X-Operating-System: Linux phenom 5.2.0-2-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pon., 21 pa=C5=BA 2019 o 22:26 Navid Emamdoost <navid.emamdoost@gmail.com>
-napisa=C5=82(a):
->
-> In the impelementation of davinci_timer_register() the allocated memory
-> for clockevent should be released if request_irq() fails.
->
-> Fixes: 721154f972aa ("clocksource/drivers/davinci: Add support for clocke=
-vents")
+On Mon, Oct 21, 2019 at 01:52:49PM -0500, Navid Emamdoost wrote:
+> In the impelementation of v3d_submit_cl_ioctl() there are two memory
+> leaks. One is when allocation for bin fails, and the other is when bin
+> initialization fails. If kcalloc fails to allocate memory for bin then
+> render->base should be put. Also, if v3d_job_init() fails to initialize
+> bin->base then allocated memory for bin should be released.
+> 
+> Fixes: a783a09ee76d ("drm/v3d: Refactor job management.")
 > Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 > ---
->  drivers/clocksource/timer-davinci.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/clocksource/timer-davinci.c b/drivers/clocksource/ti=
-mer-davinci.c
-> index 62745c962049..910d4d2f0d64 100644
-> --- a/drivers/clocksource/timer-davinci.c
-> +++ b/drivers/clocksource/timer-davinci.c
-> @@ -299,6 +299,7 @@ int __init davinci_timer_register(struct clk *clk,
->                          "clockevent/tim12", clockevent);
->         if (rv) {
->                 pr_err("Unable to request the clockevent interrupt");
-> +               kfree(clockevent);
->                 return rv;
->         }
->
-> --
+>  drivers/gpu/drm/v3d/v3d_gem.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/v3d/v3d_gem.c b/drivers/gpu/drm/v3d/v3d_gem.c
+> index 5d80507b539b..19c092d75266 100644
+> --- a/drivers/gpu/drm/v3d/v3d_gem.c
+> +++ b/drivers/gpu/drm/v3d/v3d_gem.c
+> @@ -557,13 +557,16 @@ v3d_submit_cl_ioctl(struct drm_device *dev, void *data,
+>  
+>  	if (args->bcl_start != args->bcl_end) {
+>  		bin = kcalloc(1, sizeof(*bin), GFP_KERNEL);
+> -		if (!bin)
+> +		if (!bin) {
+> +			v3d_job_put(&render->base);
+
+The job isn't initialized yet, this doesn't work.
+
+>  			return -ENOMEM;
+> +		}
+>  
+>  		ret = v3d_job_init(v3d, file_priv, &bin->base,
+>  				   v3d_job_free, args->in_sync_bcl);
+>  		if (ret) {
+>  			v3d_job_put(&render->base);
+
+v3d_job_put will call kfree, if you chase the callchain long enough (in
+v3d_job_free). So no bug here, this would lead to a double kfree and
+crash.
+-Daniel
+
+> +			kfree(bin);
+>  			return ret;
+>  		}
+>  
+> -- 
 > 2.17.1
->
+> 
 
-Any failure in this driver means the system is fried. I explicitly
-didn't bother freeing any resources. Nack.
-
-Bart
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
