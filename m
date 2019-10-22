@@ -2,116 +2,102 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8425ACA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:43:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01117CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:44:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 567602084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:43:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ltGOOSMB"
+	by mail.kernel.org (Postfix) with ESMTP id D52DE2084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:44:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731550AbfJVJnL (ORCPT
+        id S1731493AbfJVJox (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 05:43:11 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:37390 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731421AbfJVJnK (ORCPT
+        Tue, 22 Oct 2019 05:44:53 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:37195 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730619AbfJVJox (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 05:43:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=RwIP5iYVyDPZ4XmYjQVjvZswU8VLxR/GtcD4XS8SImg=; b=ltGOOSMBEdi9MdfgedYGqHuDC
-        GzgOqwKXl4XZ/ydrrwwa9xZBYSvImnTuIVpeuYFKzzJdp6Heo7UPXreMaXNjYrqF6DQY/05jSrsLS
-        Lfin28Y/Jl2yXuKUvgSU3l+GjP4eSa/K0eiC1CM6lzjpqe8MVuAHHwf/1NXQfHhTt5gyzRsDOrXEh
-        hzMIWn+ejfiZXx0yiecL1nheG9st/oxoGsFOQxnjKxy16SZWLqiDRblgSpCNUWQ5m+0xIhIYzP2CC
-        bWG14fRJ8ZF221vTMXFf1kxNkd7So0jrYKj7+ijD0l2pDJORAqJSncIQLn+KwjkHN6g1+iH95AFKS
-        eH2NsWntQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iMqgv-0002RW-EB; Tue, 22 Oct 2019 09:43:01 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A3A87300F29;
-        Tue, 22 Oct 2019 11:42:02 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 2900F20977B04; Tue, 22 Oct 2019 11:43:00 +0200 (CEST)
-Date:   Tue, 22 Oct 2019 11:43:00 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>,
-        Song Liu <songliubraving@fb.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 4/4] perf/core,x86: synchronize PMU task contexts on
- optimized context switches
-Message-ID: <20191022094300.GL1817@hirez.programming.kicks-ass.net>
-References: <f4662ac9-e72e-d141-bead-da07e29f81e8@linux.intel.com>
- <4d6320bb-0d15-0028-aefb-a176c986b8db@linux.intel.com>
+        Tue, 22 Oct 2019 05:44:53 -0400
+Received: from mail-qt1-f182.google.com ([209.85.160.182]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MvbJw-1i3O5t0uak-00shqz; Tue, 22 Oct 2019 11:44:51 +0200
+Received: by mail-qt1-f182.google.com with SMTP id g50so11627486qtb.4;
+        Tue, 22 Oct 2019 02:44:50 -0700 (PDT)
+X-Gm-Message-State: APjAAAUYazSrb3Gwxzn0uEB3Xz5IMLC0WgvMwk7I4JMHZW04/8eMzKLu
+        W4MQVyD5axg4khHD1E6zxkhNUOv0cr+r8Paz+Ac=
+X-Google-Smtp-Source: APXvYqxUguCPOp5LGMrfhG+G2UL8MgJST6yvwsbwS5pSbXnjYf7SsBUo3nYRm7EHYr0oSYA+LoNeUI92RIaCIkpSbmY=
+X-Received: by 2002:ac8:18eb:: with SMTP id o40mr2367412qtk.304.1571737490006;
+ Tue, 22 Oct 2019 02:44:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4d6320bb-0d15-0028-aefb-a176c986b8db@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191018154052.1276506-1-arnd@arndb.de> <20191018154201.1276638-9-arnd@arndb.de>
+ <bb4713a0-60bd-8d27-874f-e7e3a5adaec8@roeck-us.net>
+In-Reply-To: <bb4713a0-60bd-8d27-874f-e7e3a5adaec8@roeck-us.net>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 22 Oct 2019 11:44:33 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a0GPVs+PqUwsL2H8VJqLh=MJnMTwPu9nhX+Nq-xiMS1yQ@mail.gmail.com>
+Message-ID: <CAK8P3a0GPVs+PqUwsL2H8VJqLh=MJnMTwPu9nhX+Nq-xiMS1yQ@mail.gmail.com>
+Subject: Re: [PATCH 09/46] watchdog: sa1100: use platform device registration
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:TFMiph9iftlPu/I44aOxHFyNWGsYwv4B00XFAtCQdCQRjaJURuI
+ WX3mqNCkEyiZ/JXLGJMfVD2K6/mNI/4Kp3o7KbRltUNfdCUY+x50VGtyfLlj7bqO/v4o93X
+ wmjeQNiEUltJb7EnUQ1Xqzjn+IwKH2I+4D9dNGrx7t+wCtU0GbQkwDSn/9f7ysqT1ShUigM
+ zk3J1dG3cPxUhD0KspWFg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:X4jd4H54yL8=:goNIci1sGhaZ5snOezD3LY
+ SDY3Vqyab26QqB+uY3lw810jl/gAFyJHlvKxaNWlSA7igpniuHPPD7S/GmE0QHFbHD423zPu8
+ gSauNQUlolz55d6vRVdALJc+ox59ZxB3MLAGv8gXwqBn+h/w3AQPDWCrVyLIISFmPNQPnw7j1
+ 4l9ILrEPg36GR38AS/4DUhpXeFvMDOZEVpYsaxzNUlDRXWhmxRwrUqmW34vt51Iukk9lZhGg4
+ 9wNyu0SRtSLK0RevCxH4r3T1ndkOvwhJ3xs3P/4vMG7GLn8n5yHbi6/wzXvznl+SrpJxihfns
+ 90xoTMDm68xxfVZB264HjxWQdHMRSkiNwyoeUGNVWusRlK0kJaZz9ANTiVgWxtGbUkkNZMpFF
+ b8zTOFcrgAUcO3KpK32UCBlfYxAYi/WhSX9zOV7dFCVWhYke9XOMvDlkVAKuzttotrChooPRB
+ 0e8SIJGLyc8KrzLjCkmaXbqZJ2apuNDkqH9ZH6lVFYMOvgNMExLghjb2SyJhZreSzKQ43+943
+ vRVErfeXavgvoQDvN9HfFCeID1f5tE1+xa51xnpDhlbZzIQSIwRMfsizRBdPD3T3b2WjbQSvq
+ AsKnb5mv6pVNCRyf0hO4NPWoqvepcsNyaoAxKJ34QWpZe25NSrnc6pCUqS7mQ+KxOlxfy1hAB
+ 8jJxpMaToEIcyOY/ZrkM8upYGjzcPjrfxocpKwiOSE/WVmNJErNZbItO+qlOsWAkv4uqAZgz7
+ VSXZGADqkApGbl97oTPPbuHoz/uapRr4aLBfat5jAPE7pP64NXVOhyO0Kk26Sc3WyGNLTI2xF
+ Rnk3wC3pHUu56QEyn6mSpt76gtasSA+krT0xQ5czQagDsca+KWZTp8XIQ2kMj42k7eQq2MRrq
+ HS8tKj6Njt8EnNW4nMNg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 09:01:11AM +0300, Alexey Budankov wrote:
+On Sat, Oct 19, 2019 at 4:07 PM Guenter Roeck <linux@roeck-us.net> wrote:
 
->  			swap(ctx->task_ctx_data, next_ctx->task_ctx_data);
->  
-> +			/*
-> +			 * PMU specific parts of task perf context can require
-> +			 * additional synchronization which makes sense only if
-> +			 * both next_ctx->task_ctx_data and ctx->task_ctx_data
-> +			 * pointers are allocated. As an example of such
-> +			 * synchronization see implementation details of Intel
-> +			 * LBR call stack data profiling;
-> +			 */
-> +			if (ctx->task_ctx_data && next_ctx->task_ctx_data)
-> +				pmu->sync_task_ctx(next_ctx->task_ctx_data,
-> +						   ctx->task_ctx_data);
+> > @@ -319,10 +316,13 @@ static struct platform_device *sa11x0_devices[] __initdata = {
+> >
+> >   static int __init sa1100_init(void)
+> >   {
+> > +     struct resource wdt_res = DEFINE_RES_MEM(0x90000000, 0x20);
+> >       pm_power_off = sa1100_power_off;
+> >
+> >       regulator_has_full_constraints();
+> >
+> > +     platform_device_register_simple("sa1100_wdt", -1, &wdt_res, 1);
+> > +
+> >       return platform_add_devices(sa11x0_devices, ARRAY_SIZE(sa11x0_devices));
+>
+> Wouldn't it be better to add the watchdog device to sa11x0_devices ?
 
-This still does not check if pmu->sync_task_ctx is set. If any other
-arch ever uses task_ctx_data without then also supplying this method
-things will go *bang*.
+Generally speaking, platform_device_register_simple() is better than
+platform_add_devices(), it does the same thing with fewer source lines
+and smaller object code, and it doesn't have the problem of lifetime rules
+for statically allocated reference-counted devices.
 
-Also, I think I prefer the variant I gave you yesterday:
+One day we may want to replace all static platform_device instances with
+platform_device_info instead, but right now there are too many of those.
 
-  https://lkml.kernel.org/r/20191021103745.GF1800@hirez.programming.kicks-ass.net
+I can change this one to a platform_device for consistency though if you
+think it's worth it.
 
-	if (pmu->swap_task_ctx)
-		pmu->swap_task_ctx(ctx, next_ctx);
-	else
-		swap(ctx->task_ctx_data, next_ctx->task_ctx_data);
-
-That also unconfuses the argument order in your above patch (where you
-have to undo thw swap).
-
-Alternatively, since there currently is no other arch using
-task_ctx_data, we can make the pmu::swap_task_ctx() thing mandatory when
-having it and completely replace the swap(), write it like so:
-
-
--	swap(ctx->task_ctx_data, next_ctx->task_ctx_data);
-+	if (pmu->swap_task_ctx)
-+		pmu->swap_task_ctx(ctx, next_ctx);
-
-Hmm?
+     Arnd
