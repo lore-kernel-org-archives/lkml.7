@@ -2,62 +2,119 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7992CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:40:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE934CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:42:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C828821872
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:40:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81062205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:42:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OyejphQp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732535AbfJVPkQ (ORCPT
+        id S2387682AbfJVPmf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 11:40:16 -0400
-Received: from muru.com ([72.249.23.125]:38918 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730141AbfJVPkP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 11:40:15 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id C9B7C80FA;
-        Tue, 22 Oct 2019 15:40:49 +0000 (UTC)
-Date:   Tue, 22 Oct 2019 08:40:12 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Benoit Parrot <bparrot@ti.com>
-Cc:     Tero Kristo <t-kristo@ti.com>, Rob Herring <robh+dt@kernel.org>,
-        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [Patch 1/9] ARM: dts: dra7: add cam clkctrl node
-Message-ID: <20191022154012.GM5610@atomide.com>
-References: <20191018154849.3127-1-bparrot@ti.com>
- <20191018154849.3127-2-bparrot@ti.com>
+        Tue, 22 Oct 2019 11:42:35 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:59388 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731277AbfJVPmf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 11:42:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571758953;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=FHUjeSW+OQPq+sc+A88fJ+/QQEBkysWzrSaHp9k75do=;
+        b=OyejphQpYSsgzUWubEwFX7pAC6OWtaKD3dHlB+raYZdE7NmFwoupOBSF7dGO3XPChnAG2p
+        QwSj5LMzFGX0RNnduOmekp6tRq4aXQ9j1sJKjrsEt1+01+BlYwA1zd6zhcpbN4WBhOF+Ec
+        nEqpOsX6tysXEayKhtp+ZTdoy0kblIQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-212-duVXvBAvNBGY_2YeQmWhzA-1; Tue, 22 Oct 2019 11:42:30 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E6C001800DD0;
+        Tue, 22 Oct 2019 15:42:28 +0000 (UTC)
+Received: from [10.10.123.180] (ovpn-123-180.rdu2.redhat.com [10.10.123.180])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E64B560C5E;
+        Tue, 22 Oct 2019 15:42:27 +0000 (UTC)
+Subject: Re: [PATCH] Add prctl support for controlling PF_MEMALLOC V2
+To:     Dave Chinner <david@fromorbit.com>
+References: <20191021214137.8172-1-mchristi@redhat.com>
+ <20191021225234.GC2642@dread.disaster.area>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-block@vger.kernel.org, martin@urbackup.org,
+        Damien.LeMoal@wdc.com
+From:   Mike Christie <mchristi@redhat.com>
+Message-ID: <5DAF2363.2070204@redhat.com>
+Date:   Tue, 22 Oct 2019 10:42:27 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191018154849.3127-2-bparrot@ti.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191021225234.GC2642@dread.disaster.area>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-MC-Unique: duVXvBAvNBGY_2YeQmWhzA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Benoit Parrot <bparrot@ti.com> [191018 15:46]:
-> Add clkctrl nodes for CAM domain.
+On 10/21/2019 05:52 PM, Dave Chinner wrote:
+> On Mon, Oct 21, 2019 at 04:41:37PM -0500, Mike Christie wrote:
+>> There are several storage drivers like dm-multipath, iscsi, tcmu-runner,
+>> amd nbd that have userspace components that can run in the IO path. For
+>> example, iscsi and nbd's userspace deamons may need to recreate a socket
+>> and/or send IO on it, and dm-multipath's daemon multipathd may need to
+>> send IO to figure out the state of paths and re-set them up.
+>>
+>> In the kernel these drivers have access to GFP_NOIO/GFP_NOFS and the
+>> memalloc_*_save/restore functions to control the allocation behavior,
+>> but for userspace we would end up hitting a allocation that ended up
+>> writing data back to the same device we are trying to allocate for.
+>=20
+> I think this needs to describe the symptoms this results in. i.e.
+> that this can result in deadlocking the IO path.
+>=20
+>> This patch allows the userspace deamon to set the PF_MEMALLOC* flags
+>> with prctl during their initialization so later allocations cannot
+>> calling back into them.
+>>
+>> Signed-off-by: Mike Christie <mchristi@redhat.com>
+>> ---
+>=20
+> ....
+>> +=09case PR_SET_MEMALLOC:
+>> +=09=09if (!capable(CAP_SYS_ADMIN))
+>> +=09=09=09return -EPERM;
+>=20
+> Wouldn't CAP_SYS_RAWIO (because it's required by kernel IO path
+> drivers) or CAP_SYS_RESOURCE (controlling memory allocation
+> behaviour) be more appropriate here?
 
-You're missing the Linux clk folks and list from Cc, can
-you please resend?
+I think I misread a review comment last posting. I will use
+CAP_SYS_RESROUCE on the next resend if people do not have any objections.
 
-I need an ack for the clk-7xx.c changes if I'm to apply
-this patch.
+>=20
+> Which-ever is selected, the use should be added to the list above
+> the definition of the capability in include/linux/capability.h...
+>=20
 
-Probably the best way would be for tero to collect
-all the drivers/clk/ti clock data changes and provide
-an immutable branch with those that I can merge too.
+Will do. Thanks.
 
-That way the related dts changes can be applied on
-top of it with things working.
+> Otherwise looks fine to me.
+>=20
+> Cheers,
+>=20
+> Dave.
+>=20
 
-Regards,
-
-Tony
