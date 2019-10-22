@@ -2,124 +2,119 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 280A2CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:02:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC4CECA9EB9
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:06:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07D4020700
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:02:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2E9C214B2
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:06:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="IjCNGVD/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732164AbfJVPCH (ORCPT
+        id S1732179AbfJVPGG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 11:02:07 -0400
-Received: from muru.com ([72.249.23.125]:38870 "EHLO muru.com"
+        Tue, 22 Oct 2019 11:06:06 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:11144 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727152AbfJVPCH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 11:02:07 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 51D4180FA;
-        Tue, 22 Oct 2019 15:02:40 +0000 (UTC)
-Date:   Tue, 22 Oct 2019 08:02:02 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
-Subject: Re: [PATCH 1/7] dt-bindings: gpu: pvrsgx: add initial bindings
-Message-ID: <20191022150202.GJ5610@atomide.com>
-References: <cover.1571424390.git.hns@goldelico.com>
- <f0fb68dc7bc027e5e911721852f6bc6fa2d77a63.1571424390.git.hns@goldelico.com>
- <CAL_Jsq+obsTSU3iP1wm_3-FsAJ4Mxiz0NbMY1_h5NeFn67Sj+A@mail.gmail.com>
- <CEA29A3B-4116-4FE3-8E18-0C97353688DC@goldelico.com>
- <20191021172557.GB5610@atomide.com>
- <C6CD5A50-7F0A-4F56-ABB9-CAEDF7E47A5D@goldelico.com>
+        id S1725788AbfJVPGG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 11:06:06 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 46yGzZ3WYzz9txrJ;
+        Tue, 22 Oct 2019 17:06:02 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=IjCNGVD/; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id Jh8cJZ18iESD; Tue, 22 Oct 2019 17:06:02 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 46yGzZ0Wppz9txrG;
+        Tue, 22 Oct 2019 17:06:02 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1571756762; bh=ZTTwSzcfyFlbzpNpRSH3QAO6LqI52zwrKBYTswAtHNM=;
+        h=Subject:To:References:From:Date:In-Reply-To:From;
+        b=IjCNGVD/m+/3chtJGoKPuCqnoE/qjdU6NrH1x41xizbG/AhCOYIRQB+QO5vlsJ7/2
+         wqzZ2eWImxNZQ/T4BDEEKb61YVt/OeI3FXDBrXiajTMpFSqXvckl1n+kYp1ejLLCul
+         xWiNhXxkahj2A8m2aG1TrGbwz8FSVKfdFtjxUDFc=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 80D6D8B93A;
+        Tue, 22 Oct 2019 17:06:03 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id JxnfEccYQSsS; Tue, 22 Oct 2019 17:06:03 +0200 (CEST)
+Received: from po16098vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id DAC5A8B931;
+        Tue, 22 Oct 2019 17:06:02 +0200 (CEST)
+Subject: Re: [PATCH 0/7] towards QE support on ARM
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, Timur Tabi <timur@kernel.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-serial@vger.kernel.org
+References: <20191018125234.21825-1-linux@rasmusvillemoes.dk>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <e50640a4-bf6b-9859-2acf-81f4af9c6409@c-s.fr>
+Date:   Tue, 22 Oct 2019 15:06:02 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <C6CD5A50-7F0A-4F56-ABB9-CAEDF7E47A5D@goldelico.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191018125234.21825-1-linux@rasmusvillemoes.dk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* H. Nikolaus Schaller <hns@goldelico.com> [191021 18:08]:
+
+
+On 10/18/2019 12:52 PM, Rasmus Villemoes wrote:
+> There have been several attempts in the past few years to allow
+> building the QUICC engine drivers for platforms other than PPC. This
+> is (the beginning of) yet another attempt. I hope I can get someone to
+> pick up these relatively trivial patches (I _think_ they shouldn't
+> change functionality at all), and then I'll continue slowly working
+> towards removing the PPC32 dependency for CONFIG_QUICC_ENGINE.
 > 
-> > Am 21.10.2019 um 19:25 schrieb Tony Lindgren <tony@atomide.com>:
-> > 
-> > * H. Nikolaus Schaller <hns@goldelico.com> [191021 15:46]:
-> >>> Am 21.10.2019 um 17:07 schrieb Rob Herring <robh+dt@kernel.org>:
-> >>> On Fri, Oct 18, 2019 at 1:46 PM H. Nikolaus Schaller <hns@goldelico.com> wrote:
-> >>>> +Optional properties:
-> >>>> +- timer:       the timer to be used by the driver.
-> >>> 
-> >>> Needs a better description and vendor prefix at least.
-> >> 
-> >> I am not yet sure if it is vendor specific or if all
-> >> SGX implementations need some timer.
-> >> 
-> >>> 
-> >>> Why is this needed rather than using the OS's timers?
-> >> 
-> >> Because nobody understands the current (out of tree and
-> >> planned for staging) driver well enough what the timer
-> >> is doing. It is currently hard coded that some omap refer
-> >> to timer7 and others use timer11.
-> > 
-> > Just configure it in the driver based on the compatible
-> > value to keep it out of the dts. It's best to stick to
-> > standard bindings.
+> Tested on an MPC8309-derived board.
 > 
-> IMHO leads to ugly code... Since the timer is not part of
-> the SGX IPR module but one of the OMAP timers it is sort
-> of hardware connection that can be chosen a little arbitrarily.
+> Rasmus Villemoes (7):
+>    soc: fsl: qe: remove space-before-tab
+>    soc: fsl: qe: drop volatile qualifier of struct qe_ic::regs
+>    soc: fsl: qe: avoid ppc-specific io accessors
+>    soc: fsl: qe: replace spin_event_timeout by readx_poll_timeout_atomic
+>    serial: make SERIAL_QE depend on PPC32
+>    serial: ucc_uart.c: explicitly include asm/cpm.h
+>    soc/fsl/qe/qe.h: remove include of asm/cpm.h
+
+Please copy the entire series to linuxppc-dev list. We are missing 5/7 
+and 7/7 (see 
+https://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=137048)
+
+Christophe
+
 > 
-> This is the main reason why I think adding it to a device tree
-> source so that a board that really requires to use a timer
-> for a different purpose, can reassign it. This is not possible
-> if we hard-code that into the driver by scanning for
-> compatible. In that case the driver must check board compatible
-> names...
+>   drivers/soc/fsl/qe/gpio.c     | 30 ++++++++--------
+>   drivers/soc/fsl/qe/qe.c       | 44 +++++++++++------------
+>   drivers/soc/fsl/qe/qe_ic.c    |  8 ++---
+>   drivers/soc/fsl/qe/qe_ic.h    |  2 +-
+>   drivers/soc/fsl/qe/qe_io.c    | 40 ++++++++++-----------
+>   drivers/soc/fsl/qe/qe_tdm.c   |  8 ++---
+>   drivers/soc/fsl/qe/ucc.c      | 12 +++----
+>   drivers/soc/fsl/qe/ucc_fast.c | 66 ++++++++++++++++++-----------------
+>   drivers/soc/fsl/qe/ucc_slow.c | 38 ++++++++++----------
+>   drivers/soc/fsl/qe/usb.c      |  2 +-
+>   drivers/tty/serial/Kconfig    |  1 +
+>   drivers/tty/serial/ucc_uart.c |  1 +
+>   include/soc/fsl/qe/qe.h       |  1 -
+>   13 files changed, 126 insertions(+), 127 deletions(-)
 > 
-> But if we gain a better understanding of its role in the driver
-> (does it really need a dedicated timer and for what and which
-> properties the timer must have) we can probably replace it.
-
-Well how about just leave out the timer from the binding
-for now, and just carry a patch for it until it is known
-if/why it's really needed?
-
-If it's needed, yeah I agree a timer property should be
-used.
-
-> >>>> +- img,cores:   number of cores. Defaults to <1>.
-> >>> 
-> >>> Not discoverable?
-> >> 
-> >> Not sure if it is. This is probably available in undocumented
-> >> registers of the sgx.
-> > 
-> > This too, and whatever non-standrd other properities
-> > you might have.
-> 
-> Here it is a feature of the SGX IPR of the SoC, i.e.
-> describes that the hardware has one or two cores.
-
-Here you can have a standard dts binding by putting this
-into driver struct of_device_id match .data. Then when
-somebody figures out how to read that from the hardware,
-it can be just dropped.
-
-Regards,
-
-Tony
