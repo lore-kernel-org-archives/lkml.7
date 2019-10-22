@@ -2,95 +2,105 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2441ACA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 10:26:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0865CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 10:27:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01D8E21783
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 10:26:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8961121783
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 10:27:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571740066;
+	bh=GRD7MZeVdKR1vgtr0TQS+zdY9FPxRAIwfXXcdGpmZOg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JFWgXngQTak+VJJSqYViUCG9fQEhD5ly+Qh3PVqUsL5wsBCH9Xc17tc45914+41im
+	 i11dUNET4ctgi95ieWNcjxN/1E+oRN5LZtoKTQ9l7PIVwgc844CXkX8kWpWXLxWoQ6
+	 sFVyoARNVtfZWfGzUgHBCr6AwAPlRGzrB9jtaURI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388010AbfJVK02 (ORCPT
+        id S1731846AbfJVK1p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 06:26:28 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:52463 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727101AbfJVK02 (ORCPT
+        Tue, 22 Oct 2019 06:27:45 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:59614 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727101AbfJVK1p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 06:26:28 -0400
-Received: from mail-qk1-f181.google.com ([209.85.222.181]) by
- mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1N4yuK-1hvC7C2U20-010ufv; Tue, 22 Oct 2019 12:26:26 +0200
-Received: by mail-qk1-f181.google.com with SMTP id 4so15703093qki.6;
-        Tue, 22 Oct 2019 03:26:26 -0700 (PDT)
-X-Gm-Message-State: APjAAAVR6j32xQUPljneE53Igymhij+gEX0gIMHeId866gbHa50djBeN
-        aiZT8P0HZCYTYEh5nLECHtUQWghcPVZ6HhAxnAA=
-X-Google-Smtp-Source: APXvYqwSO1WMdUGQEJlTpMVP4JyNoKS32ISGEXZxl0XuWRKB/d7ZSQIo0HnbDgulrOldKwCE5M4KJ8mRxdWVTW/noF4=
-X-Received: by 2002:a37:a50f:: with SMTP id o15mr1148094qke.3.1571739985400;
- Tue, 22 Oct 2019 03:26:25 -0700 (PDT)
+        Tue, 22 Oct 2019 06:27:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=GRD7MZeVdKR1vgtr0TQS+zdY9FPxRAIwfXXcdGpmZOg=; b=Cvn5TPX6Q/YA59sDtrK567pcC
+        x2Jug15Avnz0PUuMDv1tHQ9lT9p/RnP3yAdK4YvZjwosOkgjdrav3JTKUeju+DmUqD1R20db9ZlmU
+        zEp0eeuDtYD8JNPmufP8I9MglkAsS5bThdcGjpGermwb83ah82Qm1B3Zs5o3tesMJxHX0=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iMrO7-0006NA-On; Tue, 22 Oct 2019 10:27:39 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 18CE02743259; Tue, 22 Oct 2019 11:27:39 +0100 (BST)
+Date:   Tue, 22 Oct 2019 11:27:38 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-pm@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH v4 2/6] dt-bindings: regulator: max77650: convert the
+ binding document to yaml
+Message-ID: <20191022102738.GB5554@sirena.co.uk>
+References: <20191021124428.2541-1-brgl@bgdev.pl>
+ <20191021124428.2541-3-brgl@bgdev.pl>
 MIME-Version: 1.0
-References: <20191009190853.245077-1-arnd@arndb.de> <20191009191044.308087-11-arnd@arndb.de>
- <20191022043451.GB20354@ZenIV.linux.org.uk>
-In-Reply-To: <20191022043451.GB20354@ZenIV.linux.org.uk>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 22 Oct 2019 12:26:09 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1C=skow522Ge7w=ya2hK8TPS8ncusdyX-Ne4GBWB1H4A@mail.gmail.com>
-Message-ID: <CAK8P3a1C=skow522Ge7w=ya2hK8TPS8ncusdyX-Ne4GBWB1H4A@mail.gmail.com>
-Subject: Re: [PATCH v6 11/43] compat_ioctl: move drivers to compat_ptr_ioctl
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        y2038 Mailman List <y2038@lists.linaro.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Jiri Kosina <jkosina@suse.cz>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:9QYRekkZRmftZTpXqq5Ta7ySdGBrJGpk5Y3E2aNCXjVWZ9lbIgi
- H+hu3jkbbhmSa/1ogUFGNDHKjzlwZpfbs90MD+hX7EK9U1KbNwmQRfaw875JRI/qJ1Zs88X
- /+ny+r+I+eUKH7jiIyaFJmavCZy8dNCEFqWL3k8z+DcoGSPaGiJNMFtMQS5tfP70IvtQmFO
- ZztmTYLt2ZfrEXX3XbCcg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:iGCRB/uaydI=:M830Sz+8d9YgyULC754S0j
- oXZVneQZ3xqgBlGKCdhol75lDjRmRjQhCeT6uYMxzXwAVjW4CgUpd4AIAsi1qjBKFvdLnevmu
- 6G0P0um5Jxlvd9V8Xo9oeiwAS1GqA1Eh2ezMKBnXTA62Kx3i+qJ7d0QQIWG7b0AomDNm8nDyj
- O/FeM2pQ0qr0c91Jnh1q6GXZ54okkyn5MEsTfNXBYalDMjp9Y8ZbKElB4UrGS8+T0Tkn9FAw7
- teAFTpdfY9aUyUaE7MvswQ803sAmdXjABTsBIJOC6RK0O430isAsjYPvWlPVlAKU0bISc5cqi
- QlbgSp7QOE+lw9Vz8NZC+UjnoF68kEzBkB2QO6xtkndc0UJpZ6ejaQ+avUMl4KDDQy0s+VYXa
- H06hRj67wb1rER9+Pj3nG1p6vxg4XdSPc71QZHs7bfVDUMLBKoFZqHif7hDFmZRmjKVhr5bCG
- 7J78Mkl4zS9CcPuthzVP4y9ybv+6fewFK7rDgaRon/HG2nA8x2lYhW6T2heHpzNzybSqfaSGf
- kGX+WKI0gDFYCmDGVV9ed8s1IWM+x9qVAR6TYW2gRQPWoahepfOVmoQFl9L/lCf5utDFiE9lP
- 79Q2qziF+WjU6WNSdUFCjBg6OXMbEFDKay3jkJNB6t6zR7BmZrxwgB9Nn0Cibh2BLXz5NHmWX
- MGuBEfOJs20jrRHJhVR7F+yPiwuhyG8fVBQa1i/bz/ccB/4jF+L/V5EwSniXxx5exPSQhzt6u
- Dkpm/ZjFtRqBwTbFW002+hnBEL4jhlNO/ssut0GHsGsWVDD7TDI1s/cwV5X29ExTAfrPvhsMW
- rN88xeH36W4LLO3N6KWQTdqIXGhzXDKYT8l1ZASCIkia7coy+WEFLdXPl80Lm3RGXkUyJsDlv
- 9Au2gX55S7x/9bi+L+hw==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Pd0ReVV5GZGQvF3a"
+Content-Disposition: inline
+In-Reply-To: <20191021124428.2541-3-brgl@bgdev.pl>
+X-Cookie: Whip it, whip it good!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 6:34 AM Al Viro <viro@zeniv.linux.org.uk> wrote:
->
-> On Wed, Oct 09, 2019 at 09:10:11PM +0200, Arnd Bergmann wrote:
-> > Each of these drivers has a copy of the same trivial helper function to
-> > convert the pointer argument and then call the native ioctl handler.
-> >
-> > We now have a generic implementation of that, so use it.
->
-> I'd rather flipped your #7 (ceph_compat_ioctl() introduction) past
-> that one...
 
-The idea was to be able to backport the ceph patch as a bugfix
-to stable kernels without having to change it or backport
-compat_ptr_ioctl() as well.
+--Pd0ReVV5GZGQvF3a
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-If you still prefer it that way, I'd move to a simpler version of this
-patch and drop the Cc:stable.
+On Mon, Oct 21, 2019 at 02:44:24PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>=20
+> Convert the binding document for MAX77650 regulator module to YAML.
 
-      Arnd
+Acked-by: Mark Brown <broonie@kernel.org>
+
+--Pd0ReVV5GZGQvF3a
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2u2ZoACgkQJNaLcl1U
+h9C1gQf5Ad6I48RubPUMRfKZLJmmrTX3xcIgwSG/sD+od1xoySZz+IrL2rHEHLqJ
+HSvhxiGnDgRWfdgQaZ6zigH0oMQOdHCLF1UYEiUDJfcQZQEFf0M5eC3018FHUI1E
+SsT2svNjuHED+P52Ti/UPRwPJSz7g++DSc/uYoW+2qrlGYYvM28q0e6LKKqKV4oW
+L7PJ3QwiZzo4zxNhmKTrBGH/nvH8lxY71DZHGEl89V87kbSx01b+MSw8iIubifM6
+R2a/EowiqjZc4gvO1Uu0VlY7Lnk2h3m63hFZsYnhckRvaF/0OkvAlHOfafyZwSxE
+5yM4xQKLWjHAUIuIBGEiej78Ds3+Sg==
+=NvkN
+-----END PGP SIGNATURE-----
+
+--Pd0ReVV5GZGQvF3a--
