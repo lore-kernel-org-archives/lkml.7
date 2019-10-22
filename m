@@ -6,18 +6,18 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C250CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:12:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67E62CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:12:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FA942084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:12:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 482FB2084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:12:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733151AbfJVRMX (ORCPT
+        id S1733161AbfJVRM3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 13:12:23 -0400
+        Tue, 22 Oct 2019 13:12:29 -0400
 Received: from mga01.intel.com ([192.55.52.88]:35587 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733099AbfJVRMK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1733080AbfJVRMK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 22 Oct 2019 13:12:10 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
@@ -25,18 +25,18 @@ Received: from orsmga008.jf.intel.com ([10.7.209.65])
   by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Oct 2019 10:12:10 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,217,1569308400"; 
-   d="scan'208";a="191538306"
+   d="scan'208";a="191538296"
 Received: from labuser-ice-lake-client-platform.jf.intel.com ([10.54.55.125])
-  by orsmga008.jf.intel.com with ESMTP; 22 Oct 2019 10:12:10 -0700
+  by orsmga008.jf.intel.com with ESMTP; 22 Oct 2019 10:12:09 -0700
 From:   kan.liang@linux.intel.com
 To:     peterz@infradead.org, acme@kernel.org, mingo@kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     jolsa@kernel.org, namhyung@kernel.org, vitaly.slobodskoy@intel.com,
         pavel.gerasimov@intel.com, ak@linux.intel.com, eranian@google.com,
         Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V3 10/13] perf script: Add option to enable the LBR stitching approach
-Date:   Tue, 22 Oct 2019 10:11:33 -0700
-Message-Id: <20191022171136.4022-11-kan.liang@linux.intel.com>
+Subject: [PATCH V3 09/13] perf report: Add option to enable the LBR stitching approach
+Date:   Tue, 22 Oct 2019 10:11:32 -0700
+Message-Id: <20191022171136.4022-10-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191022171136.4022-1-kan.liang@linux.intel.com>
 References: <20191022171136.4022-1-kan.liang@linux.intel.com>
@@ -55,20 +55,81 @@ samples with stitched LBRs are huge.
 
 Add an option to enable the approach.
 
+  # To display the perf.data header info, please use
+  # --header/--header-only options.
+  #
+  #
+  # Total Lost Samples: 0
+  #
+  # Samples: 6K of event 'cycles'
+  # Event count (approx.): 6492797701
+  #
+  # Children      Self  Command          Shared Object       Symbol
+  # ........  ........  ...............  ..................
+  # .................................
+  #
+    99.99%    99.99%  tchain_edit      tchain_edit        [.] f43
+            |
+            ---main
+               f1
+               f2
+               f3
+               f4
+               f5
+               f6
+               f7
+               f8
+               f9
+               f10
+               f11
+               f12
+               f13
+               f14
+               f15
+               f16
+               f17
+               f18
+               f19
+               f20
+               f21
+               f22
+               f23
+               f24
+               f25
+               f26
+               f27
+               f28
+               f29
+               f30
+               f31
+               |
+                --99.65%--f32
+                          f33
+                          f34
+                          f35
+                          f36
+                          f37
+                          f38
+                          f39
+                          f40
+                          f41
+                          f42
+                          f43
+
 Reviewed-by: Andi Kleen <ak@linux.intel.com>
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 ---
- tools/perf/Documentation/perf-script.txt | 11 +++++++++++
- tools/perf/builtin-script.c              |  6 ++++++
+ tools/perf/Documentation/perf-report.txt | 11 +++++++++++
+ tools/perf/builtin-report.c              |  6 ++++++
  2 files changed, 17 insertions(+)
 
-diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
-index 2599b057e47b..472f20f1e479 100644
---- a/tools/perf/Documentation/perf-script.txt
-+++ b/tools/perf/Documentation/perf-script.txt
-@@ -426,6 +426,17 @@ include::itrace.txt[]
- --show-on-off-events::
- 	Show the --switch-on/off events too.
+diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
+index 7315f155803f..c0651b68ed5d 100644
+--- a/tools/perf/Documentation/perf-report.txt
++++ b/tools/perf/Documentation/perf-report.txt
+@@ -476,6 +476,17 @@ include::itrace.txt[]
+ 	This option extends the perf report to show reference callgraphs,
+ 	which collected by reference event, in no callgraph event.
  
 +--stitch-lbr::
 +	Show callgraph with stitched LBRs, which may have more complete
@@ -81,40 +142,40 @@ index 2599b057e47b..472f20f1e479 100644
 +	The known limitations include exception handing such as
 +	setjmp/longjmp will have calls/returns not match.
 +
- SEE ALSO
- --------
- linkperf:perf-record[1], linkperf:perf-script-perl[1],
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index f86c5cce5b2c..fa1d475571dd 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -1641,6 +1641,7 @@ struct perf_script {
- 	bool			show_bpf_events;
- 	bool			allocated;
- 	bool			per_event_dump;
-+	bool			stitch_lbr;
- 	struct evswitch		evswitch;
- 	struct perf_cpu_map	*cpus;
- 	struct perf_thread_map *threads;
-@@ -1867,6 +1868,9 @@ static void process_event(struct perf_script *script,
- 	if (PRINT_FIELD(IP)) {
- 		struct callchain_cursor *cursor = NULL;
+ --socket-filter::
+ 	Only report the samples on the processor socket that match with this filter
  
-+		if (script->stitch_lbr)
-+			al->thread->lbr_stitch_enable = true;
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 7accaf8ef689..783dd5ec0db5 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -83,6 +83,7 @@ struct report {
+ 	bool			header_only;
+ 	bool			nonany_branch_mode;
+ 	bool			group_set;
++	bool			stitch_lbr;
+ 	int			max_stack;
+ 	struct perf_read_values	show_threads_values;
+ 	struct annotation_options annotation_opts;
+@@ -263,6 +264,9 @@ static int process_sample_event(struct perf_tool *tool,
+ 		return -1;
+ 	}
+ 
++	if (rep->stitch_lbr)
++		al.thread->lbr_stitch_enable = true;
 +
- 		if (symbol_conf.use_callchain && sample->callchain &&
- 		    thread__resolve_callchain(al->thread, &callchain_cursor, evsel,
- 					      sample, NULL, NULL, scripting_max_stack) == 0)
-@@ -3556,6 +3560,8 @@ int cmd_script(int argc, const char **argv)
- 		   "file", "file saving guest os /proc/kallsyms"),
- 	OPT_STRING(0, "guestmodules", &symbol_conf.default_guest_modules,
- 		   "file", "file saving guest os /proc/modules"),
-+	OPT_BOOLEAN('\0', "stitch-lbr", &script.stitch_lbr,
+ 	if (symbol_conf.hide_unresolved && al.sym == NULL)
+ 		goto out_put;
+ 
+@@ -1190,6 +1194,8 @@ int cmd_report(int argc, const char **argv)
+ 			"Show full source file name path for source lines"),
+ 	OPT_BOOLEAN(0, "show-ref-call-graph", &symbol_conf.show_ref_callgraph,
+ 		    "Show callgraph from reference event"),
++	OPT_BOOLEAN(0, "stitch-lbr", &report.stitch_lbr,
 +		    "Enable LBR callgraph stitching approach"),
- 	OPTS_EVSWITCH(&script.evswitch),
- 	OPT_END()
- 	};
+ 	OPT_INTEGER(0, "socket-filter", &report.socket_filter,
+ 		    "only show processor socket that match with this filter"),
+ 	OPT_BOOLEAN(0, "raw-trace", &symbol_conf.raw_trace,
 -- 
 2.17.1
 
