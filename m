@@ -2,133 +2,103 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF37BCA9EB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:17:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F314CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:18:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C88BC206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:17:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECF6420679
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:18:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DIwKEi7q"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="0emUZ4DI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387922AbfJVRQ7 (ORCPT
+        id S1732239AbfJVRSC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 13:16:59 -0400
-Received: from mail-ot1-f46.google.com ([209.85.210.46]:39507 "EHLO
-        mail-ot1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730658AbfJVRQ7 (ORCPT
+        Tue, 22 Oct 2019 13:18:02 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:43554 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729666AbfJVRSB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 13:16:59 -0400
-Received: by mail-ot1-f46.google.com with SMTP id s22so14862635otr.6;
-        Tue, 22 Oct 2019 10:16:58 -0700 (PDT)
+        Tue, 22 Oct 2019 13:18:01 -0400
+Received: by mail-lj1-f195.google.com with SMTP id n14so18022809ljj.10
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 10:18:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=N+r28++QmE97B3YyUbwqqgILQ6GkScGiNmGk0rbaE4M=;
-        b=DIwKEi7queHKniCnlTvSf0yXFfGigi3q7Gdt8CzMnhAcxQwgNlDwh+J4xNyvAHqIcJ
-         hrwmE6nbLguADLBhg813NKD9+Ixumefx6kmLhFO1cBSWtAxD/wNsZJ8p6Q5uq/8Vl0oJ
-         CM1rRdpWz6rMH+usEi4CYXjtlQL3JoC+Cfesdd1wlh/cHFe6dX+SQnCpD1S7ALDP2gP/
-         +iNQAhLEksTzJ7Fs1qphYdiNsBG+EQpWp6fUY5mdlXZFAnhkzsPJNofgQbM0FFR3F/ul
-         C/IiV2cbmr4aX/JtVMDdiYoL72w/moDN929ub7DnXWbafUozXsnJ+Wu2Y3isZqPtNHG+
-         GV1Q==
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=JbSeTyaaDeS0Oac3Dz/SH3vfJqau6TFa9nT5osYxqic=;
+        b=0emUZ4DIyrkOQb97o35j44irCAOu5E+woH6fECqyL5uCGqYFsGORlvuLr8FFcJl2Dw
+         C6DMgOVSLo2mmE2roDg4aHtF4jWZmbzwZz+AkHrr3+BNHkWwWGAhKfo9vhDAjDDypb3f
+         +DCa6+CTdQFMW93ApP+p2eu61uKvUj4QWjA2Sdaq9E961KzBzgsKvbq0z5i2bEPTCipE
+         tdzqffi4FWUmGSvvDASGSZxelEVmvFrEU4Q20iW468z/PQIUr2TdQjTTJ1HV2Q47rKtT
+         C8CWomXFlYuniNcpugn4jtxubW6hyVXPvFgU+TX8SMMRToZmCvtpZTKOmvwvZO07HLHR
+         YgHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=N+r28++QmE97B3YyUbwqqgILQ6GkScGiNmGk0rbaE4M=;
-        b=pev1Zo09sIsUNzOQcjFthhXKGNhroJjgF6QDOrvJ9+aEdlUUHCa1x011Pp4RjWMyGU
-         EnpGeyQDtbgmxC9hzYCWiYMbR1hDhakc6GRRHR0y3Q+sN8wIfJFOBsyiiDPtAwlRUche
-         cFkxZCGo+Hm8pjthbOXdQy2KVXWd/1tB1GHVKisr32RJ1ml1CMF6WL+gR6V3dn9NCi3F
-         1TY+OwmyW51sOYvVltnLoVYspTGtn4LZDnsU4nAlL3GrI7fIRcSShIybh0iMhOOVIx7I
-         11GaIaxN3DwZo0c5gLdnRqRKcUvyhPv2OD8FSpm3dJwS31JB/wLO6nJZ9MSm/vAdb/Be
-         WgCw==
-X-Gm-Message-State: APjAAAXZBOG/cSbTXdaJhPg7tC+dZfsxx5o2ONPqS7Gzbqc/pvwYesGE
-        QxOY0v/ZMzUGazabtc57l3Q=
-X-Google-Smtp-Source: APXvYqzoONu4gvcCac2l7qmeXHmuK5PoWa0b5XS6T6776F3Bwh8Mph1jJ+2LvkPcF23G7g/L2SkntA==
-X-Received: by 2002:a9d:8a5:: with SMTP id 34mr929413otf.197.1571764617978;
-        Tue, 22 Oct 2019 10:16:57 -0700 (PDT)
-Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id u130sm4857224oib.56.2019.10.22.10.16.57
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=JbSeTyaaDeS0Oac3Dz/SH3vfJqau6TFa9nT5osYxqic=;
+        b=U4K/tru+J+XmnGBTVQ/Ec3AROfGm3U87wAn4TFv5pCcs5sAkFvivqkro3rjeAx5laC
+         DftoWUsvpoB2OmJJEJgscOpYwoiMjfej5ZUCoBGGZEd2OIQ3bwnWxry204LjiyCjRd9v
+         wsm9n/b991TElSLWhTaQSOPUm0Ph0BtMzN20i7fNt/x4+TjF0+4uEitdNkK/CLGJRHnx
+         0rcTTJDa/ybRVzW3+llQtLrGAbCKt3AZQhX0dd/Cb49wj3J9tELUqRLrivYGeI+oKFAq
+         c372+ku0LRvyrJ92eLK+qLe64JqiqFHAuSmKRcMzx5wp21m+4iFlRezPXg6W0xwPgM/s
+         B/Lg==
+X-Gm-Message-State: APjAAAW96NAiOAIEEmVAxpeuD/5v4Ij3OWjLygSUMnMhlVPRqkQc64tK
+        IS9NaajqWl1JKLlo4z+tUuHgZA==
+X-Google-Smtp-Source: APXvYqxfS0KYXiZzlr4Zb6U6jiZAmr9m2KY1CTPUKISzb24hQeJNLXEd/Q5Ef4KgY/or62HPngcoiQ==
+X-Received: by 2002:a2e:3919:: with SMTP id g25mr19605019lja.242.1571764679410;
+        Tue, 22 Oct 2019 10:17:59 -0700 (PDT)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id 81sm9324414lje.70.2019.10.22.10.17.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Oct 2019 10:16:57 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Peng Ma <peng.ma@nxp.com>, Vinod Koul <vkoul@kernel.org>
-Cc:     Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH -next] dmaengine: fsl-dpaa2-qdma: Remove unnecessary local variables in DPDMAI_CMD_CREATE macro
-Date:   Tue, 22 Oct 2019 10:16:48 -0700
-Message-Id: <20191022171648.37732-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.23.0
+        Tue, 22 Oct 2019 10:17:58 -0700 (PDT)
+Date:   Tue, 22 Oct 2019 10:17:47 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Daniel Wagner <dwagner@suse.de>
+Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        UNGLinuxDriver@microchip.com, netdev@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rt-users@vger.kernel.org,
+        Woojung Huh <woojung.huh@microchip.com>,
+        Marc Zyngier <maz@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] net: usb: lan78xx: Use phy_mac_interrupt() for
+ interrupt handling
+Message-ID: <20191022101747.001b6d06@cakuba.netronome.com>
+In-Reply-To: <20191018131532.dsfhyiilsi7cy4cm@linutronix.de>
+References: <20191018082817.111480-1-dwagner@suse.de>
+        <20191018131532.dsfhyiilsi7cy4cm@linutronix.de>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clang warns:
+On Fri, 18 Oct 2019 15:15:32 +0200, Sebastian Andrzej Siewior wrote:
+> On 2019-10-18 10:28:17 [+0200], Daniel Wagner wrote:
+> > handle_simple_irq() expect interrupts to be disabled. The USB
+> > framework is using threaded interrupts, which implies that interrupts
+> > are re-enabled as soon as it has run.  
+> 
+> Without threading interrupts, this is invoked in pure softirq context
+> since commit ed194d1367698 ("usb: core: remove local_irq_save() around
+> ->complete() handler") where the local_irq_disable() has been removed.  
+> 
+> This is probably not a problem because the lock is never observed with
+> in IRQ context.
+> 
+> Wouldn't handle_nested_irq() work here instead of the simple thingy?
 
-drivers/dma/fsl-dpaa2-qdma/dpdmai.c:148:25: warning: variable 'cfg' is
-uninitialized when used within its own initialization [-Wuninitialized]
-        DPDMAI_CMD_CREATE(cmd, cfg);
-        ~~~~~~~~~~~~~~~~~~~~~~~^~~~
-drivers/dma/fsl-dpaa2-qdma/dpdmai.c:42:24: note: expanded from macro
-'DPDMAI_CMD_CREATE'
-        typeof(_cfg) (cfg) = (_cfg); \
-                      ~~~     ^~~~
-1 warning generated.
+Daniel could you try this suggestion? Would it work?
 
-Looking at the preprocessed source, we can see that this is true.
-
-int dpdmai_create(struct fsl_mc_io *mc_io, u32 cmd_flags,
-                  const struct dpdmai_cfg *cfg, u16 *token)
-{
-        struct fsl_mc_command cmd = { 0 };
-        int err;
-
-        cmd.header = mc_encode_cmd_header((((0x90E) << 4) | 0), cmd_flags, 0);
-        do {
-                typeof(cmd)(cmd) = (cmd);
-                typeof(cfg)(cfg) = (cfg);
-                ((cmd).params[0] |= mc_enc((8), (8), (cfg)->priorities[0]));
-                ((cmd).params[0] |= mc_enc((16), (8), (cfg)->priorities[1]));
-        } while (0);
-
-I cannot see a good reason to create another version of cfg when the
-parameter one will work perfectly fine and cmd can just be used as is.
-Remove them to fix this warning.
-
-Fixes: f2835adf8afb ("dmaengine: fsl-dpaa2-qdma: Add the DPDMAI(Data Path DMA Interface) support")
-Link: https://github.com/ClangBuiltLinux/linux/issues/746
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
- drivers/dma/fsl-dpaa2-qdma/dpdmai.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/drivers/dma/fsl-dpaa2-qdma/dpdmai.c b/drivers/dma/fsl-dpaa2-qdma/dpdmai.c
-index fbc2b2f39bec..f26c0b71688a 100644
---- a/drivers/dma/fsl-dpaa2-qdma/dpdmai.c
-+++ b/drivers/dma/fsl-dpaa2-qdma/dpdmai.c
-@@ -36,10 +36,8 @@ struct dpdmai_rsp_get_tx_queue {
- 	((_cmd).params[_param] |= mc_enc((_offset), (_width), _arg))
- 
- /* cmd, param, offset, width, type, arg_name */
--#define DPDMAI_CMD_CREATE(_cmd, _cfg) \
-+#define DPDMAI_CMD_CREATE(cmd, cfg) \
- do { \
--	typeof(_cmd) (cmd) = (_cmd); \
--	typeof(_cfg) (cfg) = (_cfg); \
- 	MC_CMD_OP(cmd, 0, 8,  8,  u8,  (cfg)->priorities[0]);\
- 	MC_CMD_OP(cmd, 0, 16, 8,  u8,  (cfg)->priorities[1]);\
- } while (0)
--- 
-2.23.0
-
+I'm not sure we are at the stage yet where "doesn't work on -rt" is
+sufficient reason to revert a working upstream patch. Please correct 
+me if I'm wrong.
