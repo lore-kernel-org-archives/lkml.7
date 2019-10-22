@@ -2,163 +2,155 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95CD1C47E49
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:45:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D06A9CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:45:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 759072089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:45:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99B0321872
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:45:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TWDMknpF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388640AbfJVIpV (ORCPT
+        id S2388668AbfJVIpa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 04:45:21 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:34128 "EHLO honk.sigxcpu.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388485AbfJVIpV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 04:45:21 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 37CFAFB03;
-        Tue, 22 Oct 2019 10:45:17 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id J_7FrQl3FDaI; Tue, 22 Oct 2019 10:45:15 +0200 (CEST)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 1D2F949BFC; Tue, 22 Oct 2019 10:45:15 +0200 (CEST)
-Date:   Tue, 22 Oct 2019 10:45:14 +0200
-From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-To:     kbuild test robot <lkp@intel.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Robert Chiras <robert.chiras@nxp.com>,
-        devicetree@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>,
-        Arnd Bergmann <arnd@arndb.de>, Jonas Karlman <jonas@kwiboo.se>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v7 2/2] drm/bridge: Add NWL MIPI DSI host controller
- support
-Message-ID: <20191022084514.GA30274@bogon.m.sigxcpu.org>
-References: <e0304ab9320cbbf3e63d78449e50975c036b2633.1571494140.git.agx@sigxcpu.org>
- <201910211901.yB3b4mYu%lkp@intel.com>
+        Tue, 22 Oct 2019 04:45:30 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:39684 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388490AbfJVIp2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 04:45:28 -0400
+Received: by mail-pf1-f195.google.com with SMTP id v4so10211006pff.6;
+        Tue, 22 Oct 2019 01:45:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=gbVCuO1WQVx+qJcG6Sg/Opdkgu7URi3xiu037hazHk4=;
+        b=TWDMknpFoCT949orSWtnAoCgM5tn9MwYr5BqaG5sz0b8Pp8RF1XKdZ8OpbAFefH31p
+         Ix+rM6Lj4xO8zOxphrKRhE48ZA5k5mpdKjqqh9k1DLZaFJ3wdcJufdEavsVF4gWtMrGj
+         epHromsW1B/v2SXqRVRl9U9Y8+V55NALadNSh8dCp79PYWg63p03pEC/7NQLw8mjcP3z
+         noYiIetKYDZPslISEFvGFJxAeMmGMhsOcUwh93hllqGlrrdWKcT/B0rvoJJOT+EnmCFc
+         +WZh3JE+WiZihLWhOhvsp3uP9bInUQS/J0JC6PyEjNzTwJNeWz8AbsmjOgy5iVJC2nqi
+         kstQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=gbVCuO1WQVx+qJcG6Sg/Opdkgu7URi3xiu037hazHk4=;
+        b=MxKt1gMuHFKGTd+rsPscpV3zI7OyIYu4K4xLRNPnZL2vYMI0q4Mm6FH3GYmR2EwMCz
+         9QGKq5u/eMoPPKN5DmCPjXHhVc5zjbH3hNB7Z9WlfJDPYpb/3qhcgSwKRaJ6gVe1w1tq
+         TN1Q8vD5aOzuE7hJWkyvhk7tmrUNOa1YoEuAedrMkpLgSFXFVJbAYvFp3Eufn7bqEYE3
+         ctqA1nmBvrWN78V2rW6HaXXhYyUaDVh1+czQl3DLTl6BImAmSbN31r1c59RKZcEztAJS
+         qphuTAi97VA5z7IxZkPmGyw3pczc29lNyOxTtRcbGvolNqVsdfgX1dV5LEWEbd191vi0
+         LACw==
+X-Gm-Message-State: APjAAAUSfwBkBMD7or4xcUvFL1XXMUmQA+BuTNoKGF2RKlFhNdeah4NE
+        d/05u4udhd3A/XRyCR6AWGo=
+X-Google-Smtp-Source: APXvYqxbVAQyYFXA5Zv6OaHM3Z958GlGOpJyuXawUyhwooBk3J7N3O7dbRKponelNhid1zCiajG1vg==
+X-Received: by 2002:a63:cc4a:: with SMTP id q10mr2536282pgi.221.1571733926664;
+        Tue, 22 Oct 2019 01:45:26 -0700 (PDT)
+Received: from gmail.com ([2601:600:817f:a132:df3e:521d:99d5:710d])
+        by smtp.gmail.com with ESMTPSA id o9sm22716329pfp.67.2019.10.22.01.45.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Oct 2019 01:45:25 -0700 (PDT)
+Date:   Tue, 22 Oct 2019 01:45:23 -0700
+From:   Andrei Vagin <avagin@gmail.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Adrian Reber <adrian@lisas.de>,
+        Andrei Vagin <avagin@openvz.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        containers@lists.linux-foundation.org, criu@openvz.org,
+        linux-api@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCHv7 00/33] kernel: Introduce Time Namespace
+Message-ID: <20191022084523.GA2923@gmail.com>
+References: <20191011012341.846266-1-dima@arista.com>
+ <alpine.DEB.2.21.1910171122030.1824@nanos.tec.linutronix.de>
+ <20191017234748.GA26011@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=koi8-r
 Content-Disposition: inline
-In-Reply-To: <201910211901.yB3b4mYu%lkp@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191017234748.GA26011@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-On Mon, Oct 21, 2019 at 07:11:12PM +0800, kbuild test robot wrote:
-> Hi "Guido,
+On Thu, Oct 17, 2019 at 04:47:48PM -0700, Andrei Vagin wrote:
 > 
-> I love your patch! Yet something to improve:
+> In my table, the "before" column is actually for the upstream kernel
+> with the 18-th patch. Here is the table with the real "before" column:
 > 
-> [auto build test ERROR on linus/master]
-> [cannot apply to v5.4-rc4 next-20191018]
-> [if your patch is applied to the wrong git tree, please drop us a note to help
-> improve the system. BTW, we also suggest to use '--base' option to specify the
-> base tree in git format-patch, please see
-> https://stackoverflow.com/a/37406982]
+>         | before    | with 18/33 | CONFIG_TIME_NS=n | host      | inside timens
+> ------------------------------------------------------------------------------
+> avg     | 150331408 | 153345935  | 153588088        | 150816637 | 139192114
+> ------------------------------------------------------------------------------
+> diff %  |       98  |      100   | 100.1            | 98.3      | 90.7
+> ------------------------------------------------------------------------------
+> stdev % |       0.3 |     0.09   | 0.15             | 0.25      | 0.13
+> 
+> If we compare numbers in "before", "host" and "inside timens" columns, we
+> see the same results that you had. clock_gettime() works with the
+> same performance in the host namespace and 7% slower in a time
+> namespace.
+> 
 
-The base for this series is next-20191018 where drm_panel_bridge_add()
-list it's second argument (89958b7cd9555a5d82556cc9a1f4c62fffda6f96).
+I played with this a bit more and I've found that we can speed up
+clock_gettime on 5% more if we mark do_hres and do_coarse as
+__always_inline.
 
-Cheers,
- -- Guido
-
-> 
-> url:    https://github.com/0day-ci/linux/commits/Guido-G-nther/dt-bindings-display-bridge-Add-binding-for-NWL-mipi-dsi-host-controller/20191021-180825
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 7d194c2100ad2a6dded545887d02754948ca5241
-> config: mips-allmodconfig (attached as .config)
-> compiler: mips-linux-gcc (GCC) 7.4.0
-> reproduce:
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # save the attached .config to linux build tree
->         GCC_VERSION=7.4.0 make.cross ARCH=mips 
-> 
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
-> 
-> All errors (new ones prefixed by >>):
-> 
->    drivers/gpu/drm/bridge/nwl-dsi.c: In function 'nwl_dsi_host_attach':
-> >> drivers/gpu/drm/bridge/nwl-dsi.c:384:12: error: too few arguments to function 'drm_panel_bridge_add'
->       bridge = drm_panel_bridge_add(panel);
->                ^~~~~~~~~~~~~~~~~~~~
->    In file included from include/drm/drm_crtc.h:44:0,
->                     from include/drm/drm_atomic_helper.h:31,
->                     from drivers/gpu/drm/bridge/nwl-dsi.c:24:
->    include/drm/drm_bridge.h:432:20: note: declared here
->     struct drm_bridge *drm_panel_bridge_add(struct drm_panel *panel,
->                        ^~~~~~~~~~~~~~~~~~~~
-> 
-> vim +/drm_panel_bridge_add +384 drivers/gpu/drm/bridge/nwl-dsi.c
-> 
->    358	
->    359	static int nwl_dsi_host_attach(struct mipi_dsi_host *dsi_host,
->    360				       struct mipi_dsi_device *device)
->    361	{
->    362		struct nwl_dsi *dsi = container_of(dsi_host, struct nwl_dsi, dsi_host);
->    363		struct device *dev = dsi->dev;
->    364		struct drm_bridge *bridge;
->    365		struct drm_panel *panel;
->    366		int ret;
->    367	
->    368		DRM_DEV_INFO(dev, "lanes=%u, format=0x%x flags=0x%lx\n", device->lanes,
->    369			     device->format, device->mode_flags);
->    370	
->    371		if (device->lanes < 1 || device->lanes > 4)
->    372			return -EINVAL;
->    373	
->    374		dsi->lanes = device->lanes;
->    375		dsi->format = device->format;
->    376		dsi->dsi_mode_flags = device->mode_flags;
->    377	
->    378		ret = drm_of_find_panel_or_bridge(dsi->dev->of_node, 1, 0, &panel,
->    379						  &bridge);
->    380		if (ret)
->    381			return ret;
->    382	
->    383		if (panel) {
->  > 384			bridge = drm_panel_bridge_add(panel);
->    385			if (IS_ERR(bridge))
->    386				return PTR_ERR(bridge);
->    387		}
->    388	
->    389		dsi->panel_bridge = bridge;
->    390		drm_bridge_add(&dsi->bridge);
->    391	
->    392		return 0;
->    393	}
->    394	
-> 
-> ---
-> 0-DAY kernel test infrastructure                Open Source Technology Center
-> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+With the unlikely hint in vdso_read_begin and noinline for
+do_hres_timens and do_coarse_timens:
+1..8
+ok 1 host:      clock:  monotonic       cycles:  155278332
+ok 2 host:      clock: monotonic-coarse cycles:  662067077
+ok 3 host:      clock: monotonic-raw    cycles:  151218057
+ok 4 host:      clock:   boottime       cycles:  154907635
+ok 5 ns:        clock:  monotonic       cycles:  133100433
+ok 6 host:      clock: monotonic-coarse cycles:  444170219
+ok 7 host:      clock: monotonic-raw    cycles:  129550178
+ok 8 ns:        clock:   boottime       cycles:  130167136
 
 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+With __always_inline for do_hres and do_coarse:
+1..8
+ok 1 host:      clock:  monotonic       cycles:  163691015
+ok 2 host:      clock: monotonic-coarse cycles:  641443397
+ok 3 host:      clock: monotonic-raw    cycles:  163649270
+ok 4 host:      clock:   boottime       cycles:  163682242
+ok 5 ns:        clock:  monotonic       cycles:  138759212
+ok 6 host:      clock: monotonic-coarse cycles:  486149502
+ok 7 host:      clock: monotonic-raw    cycles:  134801053
+ok 8 ns:        clock:   boottime       cycles:  138675460
+# Pass 8 Fail 0 Xfail 0 Xpass 0 Skip 0 Error 0
 
+With __always_inline for do_hres, do_coarse, do_hres_timens,
+do_coarse_timens:
+1..8
+ok 1 host:	clock:  monotonic	cycles:	 158984538
+ok 2 host:	clock: monotonic-coarse	cycles:	 594932695
+ok 3 host:	clock: monotonic-raw	cycles:	 157834511
+ok 4 host:	clock:   boottime	cycles:	 158297691
+ok 5 ns:	clock:  monotonic	cycles:	 148559612
+ok 6 host:	clock: monotonic-coarse	cycles:	 468505657
+ok 7 host:	clock: monotonic-raw	cycles:	 146366575
+ok 8 ns:	clock:   boottime	cycles:	 148573015
+# Pass 8 Fail 0 Xfail 0 Xpass 0 Skip 0 Error 0
+
+Thanks,
+Andrei
