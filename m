@@ -2,66 +2,87 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 798E2CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:03:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F2ECA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:03:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55FD32086D
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:03:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A4FF2184C
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 16:03:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389064AbfJVQDw (ORCPT
+        id S2389096AbfJVQDz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 12:03:52 -0400
-Received: from smtprelay0178.hostedemail.com ([216.40.44.178]:36971 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387746AbfJVQDv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 12:03:51 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 86C3481D6;
-        Tue, 22 Oct 2019 16:03:50 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: soda94_216e47221b22d
-X-Filterd-Recvd-Size: 1297
-Received: from XPS-9350.home (unknown [47.151.135.224])
-        (Authenticated sender: joe@perches.com)
-        by omf09.hostedemail.com (Postfix) with ESMTPA;
-        Tue, 22 Oct 2019 16:03:49 +0000 (UTC)
-Message-ID: <5db6c53e5c87ca2999c577333d9c6df678b36994.camel@perches.com>
-Subject: Re: [PATCH] MAINTAINERS: add reset controller framework keywords
-From:   Joe Perches <joe@perches.com>
-To:     Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-kernel@vger.kernel.org
-Cc:     kernel@pengutronix.de
-Date:   Tue, 22 Oct 2019 09:03:48 -0700
-In-Reply-To: <20191022123823.4854-1-p.zabel@pengutronix.de>
-References: <20191022123823.4854-1-p.zabel@pengutronix.de>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.32.1-2 
+        Tue, 22 Oct 2019 12:03:55 -0400
+Received: from muru.com ([72.249.23.125]:38962 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387746AbfJVQDy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 12:03:54 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 66F6380FA;
+        Tue, 22 Oct 2019 16:04:29 +0000 (UTC)
+Date:   Tue, 22 Oct 2019 09:03:51 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Adam Ford <aford173@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>
+Subject: Re: [PATCH] MAINTAINERS: Add logicpd-som-lv and logicpd-torpedo to
+ OMAP TREE
+Message-ID: <20191022160351.GQ5610@atomide.com>
+References: <20190923135908.23080-1-aford173@gmail.com>
+ <CAHCN7xLQvYbY_Pu5hQOO8o+1o8CAVvXq_-RM78Q=jYvtLxtmbg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHCN7xLQvYbY_Pu5hQOO8o+1o8CAVvXq_-RM78Q=jYvtLxtmbg@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-10-22 at 14:38 +0200, Philipp Zabel wrote:
-> Add a regex that matches users of the reset controller API.
-[]
-> diff --git a/MAINTAINERS b/MAINTAINERS
-[]
-> @@ -13851,6 +13851,7 @@ F:	include/dt-bindings/reset/
->  F:	include/linux/reset.h
->  F:	include/linux/reset/
->  F:	include/linux/reset-controller.h
-> +K:	\b(devm_|of_)?reset_control(ler_[a-z]+|_[a-z_]+)?\b
+* Adam Ford <aford173@gmail.com> [191021 21:41]:
+> On Mon, Sep 23, 2019 at 8:59 AM Adam Ford <aford173@gmail.com> wrote:
+> >
+> > The OMAP DEVICE TREE SUPPORT lists a bunch of device tree files
+> > with wildcard names using am3*, am4*, am5*, dra7*, and *omap*.
+> > Unfortunately, the LogicPD boards do not follow this convention
+> > so changes to these boards don't get automatically flagged to
+> > route to the omap mailing list.  After consulting with Tony
+> > Lindgren, he agreed it made sense to add these boards to the
+> > list.
+> >
+> > This patch adds the omap based boards to the omap device tree
+> > maintainer list.
+> >
+> > Signed-off-by: Adam Ford <aford173@gmail.com>
+> 
+> Tony,
+> 
+> Are you ok with this?  I am not sure who to bug, but I am guessing
+> whomever it is will want/need your approval too.
 
-Please add ?: to each group so no capture is done.
-It's a little faster.
+Yeah looks fine to me thanks, I'll apply it into
+omap-for-v5.5/maintainers branch.
 
-K:	\b(?:devm_|of_)?reset_control(?:ler_[a-z]+|_[a-z_]+)?\b
+Regards,
 
+Tony
 
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index a50e97a63bc8..0ee89575699c 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -11645,6 +11645,8 @@ F:      arch/arm/boot/dts/*am3*
+> >  F:     arch/arm/boot/dts/*am4*
+> >  F:     arch/arm/boot/dts/*am5*
+> >  F:     arch/arm/boot/dts/*dra7*
+> > +F:     arch/arm/boot/dts/logicpd-som-lv*
+> > +F:     arch/arm/boot/dts/logicpd-torpedo*
+> >
+> >  OMAP DISPLAY SUBSYSTEM and FRAMEBUFFER SUPPORT (DSS2)
+> >  L:     linux-omap@vger.kernel.org
+> > --
+> > 2.17.1
+> >
