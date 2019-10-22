@@ -2,129 +2,106 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48001CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:46:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE093CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:46:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F62A2075A
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:46:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=bfs.de header.i=@bfs.de header.b="smPhmzCB"
+	by mail.kernel.org (Postfix) with ESMTP id 87F172075A
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:46:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388915AbfJVMqb (ORCPT
+        id S2389129AbfJVMqf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 08:46:31 -0400
-Received: from mx01-fr.bfs.de ([193.174.231.67]:42016 "EHLO mx01-fr.bfs.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728346AbfJVMqa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 08:46:30 -0400
-Received: from mail-fr.bfs.de (mail-fr.bfs.de [10.177.18.200])
-        by mx01-fr.bfs.de (Postfix) with ESMTPS id 44E982034F;
-        Tue, 22 Oct 2019 14:46:23 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bfs.de; s=dkim201901;
-        t=1571748383; h=from:from:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=c+tRPTlzoCwnRYEOA07Gp6Y8Oc5IPsLLz9/TmlPkbj0=;
-        b=smPhmzCBxR/W6RJDmEX4SMj1A/S87/Jw1gojCqHWa9Xix6yQ+Zr73ne0VqRrrKE7CVBJZA
-        8JirHg+vpZQGKjaLgLrTs14enpO37M9qWxb4rP6531eXqcNTUPq/mWljOQrNp34ftdmfrM
-        UT5eJM3G4uTcbjdm/9PhJ5LMp9bhxX+MhQmIWXkOZmejOitFlYu42pKO8ds7nUwyHtwRBC
-        L0/BE57Fx/Gk0spa3VWah8RzrvfRCt/c2TElbHAwoNOa2bdWdummX3QoBJ9Qs8fZO6+Iht
-        QgJ57yoZbTV9p+H7vKpMUCy6/p14VF3ALrjP912jAGj6X227RnO6Afm2u1l6Kg==
-Received: from [134.92.181.33] (unknown [134.92.181.33])
-        by mail-fr.bfs.de (Postfix) with ESMTPS id A3FDBBEEBD;
-        Tue, 22 Oct 2019 14:46:22 +0200 (CEST)
-Message-ID: <5DAEFA1D.8070508@bfs.de>
-Date:   Tue, 22 Oct 2019 14:46:21 +0200
-From:   walter harms <wharms@bfs.de>
-Reply-To: wharms@bfs.de
-User-Agent: Mozilla/5.0 (X11; U; Linux x86_64; de; rv:1.9.1.16) Gecko/20101125 SUSE/3.0.11 Thunderbird/3.0.11
+        Tue, 22 Oct 2019 08:46:35 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:51644 "EHLO foss.arm.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S1728346AbfJVMqe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 08:46:34 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C3248168F;
+        Tue, 22 Oct 2019 05:46:11 -0700 (PDT)
+Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 420CA3F71F;
+        Tue, 22 Oct 2019 05:46:10 -0700 (PDT)
+Subject: Re: [PATCH v3 1/2] sched/topology: Don't try to build empty sched
+ domains
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org
+Cc:     lizefan@huawei.com, tj@kernel.org, hannes@cmpxchg.org,
+        mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org,
+        morten.rasmussen@arm.com, qperret@google.com,
+        stable@vger.kernel.org
+References: <20191015154250.12951-1-valentin.schneider@arm.com>
+ <20191015154250.12951-2-valentin.schneider@arm.com>
+ <20dc939f-4102-334e-5fde-a442ee7eaa5e@arm.com>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <b38c30cd-f990-dd98-b414-c284f8f32cfd@arm.com>
+Date:   Tue, 22 Oct 2019 13:46:08 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-To:     Colin King <colin.king@canonical.com>
-CC:     Amit Kucheria <amit.kucheria@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>, linux-pm@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] drivers: thermal: tsens: fix potential integer
- overflow on multiply
-References: <20191022114910.652-1-colin.king@canonical.com>
-In-Reply-To: <20191022114910.652-1-colin.king@canonical.com>
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20dc939f-4102-334e-5fde-a442ee7eaa5e@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Authentication-Results: mx01-fr.bfs.de
-X-Spamd-Result: default: False [-3.10 / 7.00];
-         ARC_NA(0.00)[];
-         HAS_REPLYTO(0.00)[wharms@bfs.de];
-         BAYES_HAM(-3.00)[100.00%];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         MIME_GOOD(-0.10)[text/plain];
-         REPLYTO_ADDR_EQ_FROM(0.00)[];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_SEVEN(0.00)[11];
-         NEURAL_HAM(-0.00)[-0.999,0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         RCVD_COUNT_TWO(0.00)[2];
-         MID_RHS_MATCH_FROM(0.00)[];
-         RCVD_TLS_ALL(0.00)[]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Am 22.10.2019 13:49, schrieb Colin King:
-> From: Colin Ian King <colin.king@canonical.com>
+On 22/10/2019 12:43, Dietmar Eggemann wrote:
+> First I thought we can do with a little less drama by only preventing
+> arch_scale_cpu_capacity() from consuming >= nr_cpu_ids.
 > 
-> Currently a multiply operation is being performed on two int values
-> and the result is being assigned to a u64, presumably because the
-> end result is expected to be probably larger than an int. However,
-> because the multiply is an int multiply one can get overflow. Avoid
-> the overflow by casting degc to a u64 to force a u64 multiply.
+> @@ -1894,6 +1894,9 @@ static struct sched_domain_topology_level
+>         struct sched_domain_topology_level *tl, *asym_tl = NULL;
+>         unsigned long cap;
 > 
-> Addresses-Coverity: ("Unintentional integer overflow")
-> Fixes: fbfe1a042cfd ("drivers: thermal: tsens: Add interrupt support")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  drivers/thermal/qcom/tsens-common.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> +       if (cpumask_empty(cpu_map))
+> +               return NULL;
+> +
 > 
-> diff --git a/drivers/thermal/qcom/tsens-common.c b/drivers/thermal/qcom/tsens-common.c
-> index 03bf1b8133ea..3d7855106ecd 100644
-> --- a/drivers/thermal/qcom/tsens-common.c
-> +++ b/drivers/thermal/qcom/tsens-common.c
-> @@ -92,7 +92,7 @@ void compute_intercept_slope(struct tsens_priv *priv, u32 *p1,
->  
->  static inline u32 degc_to_code(int degc, const struct tsens_sensor *s)
->  {
-> -	u64 code = (degc * s->slope + s->offset) / SLOPE_FACTOR;
-> +	u64 code = ((u64)degc * s->slope + s->offset) / SLOPE_FACTOR;
->  
-looks ok
-just to offer an alternative to avoid the cast;
-	u64 code = degc;
+> Until I tried to hp'ed in CPU4 after CPU4/5 had been hp'ed out (your
+> example further below) and I got another:
+> 
+> [   68.014564] Unable to handle kernel paging request at virtual address
+> fffe8009903d8ee0
+> ...
+> [   68.191293] Call trace:
+> [   68.193712]  partition_sched_domains_locked+0x1a4/0x4a0
+> [   68.198882]  rebuild_sched_domains_locked+0x4d0/0x7b0
+> [   68.203880]  rebuild_sched_domains+0x24/0x40
+> [   68.208104]  cpuset_hotplug_workfn+0xe0/0x5f8
+> ...
+> 
+> @@ -2213,6 +2216,11 @@ void partition_sched_domains_locked(int
+> ndoms_new, cpumask_var_t doms_new[],
+>                                * will be recomputed in function
+>                                * update_tasks_root_domain().
+>                                */
+> +                             if (cpumask_empty(doms_cur[i]))
+> +                                    printk("doms_cur[%d] empty\n", i);
+> +
+>                               rd = cpu_rq(cpumask_any(doms_cur[i]))->rd;
+> 
+> doms_cur[i] is empty when hp'ing in CPU4 again.
+> 
+> Your patch fixes this as well.
+> 
 
-	code = code * s->slope + s->offset;
-	code/=SLOPE_FACTOR;
+Thanks for giving it a spin!
 
-ym2c
-re,
-wh
+> Might be worth noting that this is not only about asym CPU capacity
+> handling but missing checks after cpumask operations in case the cpuset
+> is empty.
 
+Aye, we end up saving whatever we're given (doms_cur = doms_new at the end
+of the rebuild). As you pointed out this is also an issue for the operation
+done by
 
->  	pr_debug("%s: raw_code: 0x%llx, degc:%d\n", __func__, code, degc);
->  	return clamp_val(code, THRESHOLD_MIN_ADC_CODE, THRESHOLD_MAX_ADC_CODE);
+  f9a25f776d78 ("cpusets: Rebuild root domain deadline accounting information")
+
+but it has been introduced after the asymmetry check, hence why I'm tagging
+the latter for stable.
