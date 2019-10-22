@@ -2,93 +2,154 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11A24CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:12:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 797CACA9EB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:13:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D791320656
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:12:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E2F320656
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 00:13:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b2c8gm4B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730588AbfJVAMl (ORCPT
+        id S1730608AbfJVANf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 20:12:41 -0400
-Received: from mga07.intel.com ([134.134.136.100]:64232 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730172AbfJVAMk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 20:12:40 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 17:12:40 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,325,1566889200"; 
-   d="scan'208";a="191289038"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
-  by orsmga008.jf.intel.com with ESMTP; 21 Oct 2019 17:12:40 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>, kvm@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [PATCH v2 16/16] KVM: VMX: Allow KVM_INTEL when building for Centaur and/or Zhaoxin CPUs
-Date:   Mon, 21 Oct 2019 17:12:35 -0700
-Message-Id: <20191022001235.2739-1-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20191021234632.32363-1-sean.j.christopherson@intel.com>
-References: <20191021234632.32363-1-sean.j.christopherson@intel.com>
+        Mon, 21 Oct 2019 20:13:35 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:41805 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730472AbfJVANf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 20:13:35 -0400
+Received: by mail-ot1-f65.google.com with SMTP id g13so12626988otp.8;
+        Mon, 21 Oct 2019 17:13:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=M+6bF5g/YSE/QuOb6sBnF/qNNP/gyev5JR5+wvN0sXw=;
+        b=b2c8gm4Bbd0OmbDp99yDuCcsXVVEsGL2SvjN68dqGEwR+KknD5UpRk/6NszK4b2rg5
+         aw/bUjPfQlOepsOnIbFhSwBtvsP6o8/05dNHbcKmg9DkogYhX3KtZApt+vF09kl5+4xA
+         IX9oz+GTfHKpW8xlAnEfaS6VkdWK9+Tgy4n6CKpcm8OZK0lmpYHwlnZhldhtOGObSlxi
+         MBD8kc8J2bU+78fxZTVkJ0qFxCD+0BamvidGtVlyBF+L3QqCakODr4lD04jOpB6FYWyY
+         QlGIATUJieZik7oOPlgwyGlGXO+/mmrVAE5mSd/N9upD7h+Q49gGxSrxOaW3VXHz2kPA
+         7/1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=M+6bF5g/YSE/QuOb6sBnF/qNNP/gyev5JR5+wvN0sXw=;
+        b=mawwIV8ZzoB+oHKB4CAmwWR+LmHudPyG+axAg9/34JnwNySBA9Dy5oxwrGjE3pn8mz
+         0tYIH0DGAVBfhyu6hibstZpNdAYULxWT7dW2y/p/Tf7zmdxICOHcCiZyQelTQ3gBo4Iw
+         f8kk5Bl3i1rhtyRmsgsakCHNoZvROpq8WzwpnLv8Dj5cVS7FiddP7q7Q1FkLEBKmrX7D
+         /fobe6X3GCskVoWzi05HaMl75CVReFIaEKFtZaXFC4vsLgaQMzsuNrueXhRPYmnZOp7u
+         bsVGcaWy+ElgBkfRiDdFwLkRMpWXsFZYVNSpzX4t7nfCZr9xU/G2QiY8/OisrvGbhhHm
+         uLNA==
+X-Gm-Message-State: APjAAAWCdPd0ZJVNfzuYata3fETU7ozLCjSApYsG+y8ZuBun2nRA0U8d
+        P2KEq6Toy7Lx+EFSFOx3jpE=
+X-Google-Smtp-Source: APXvYqwA8kBZTBbWwYarMvf9QjlqphWph1OVZOn7BM2jiojzIiQ/xZOfEy0+BTJfGiWPwn8d49SCvw==
+X-Received: by 2002:a05:6830:1aef:: with SMTP id c15mr474833otd.200.1571703214113;
+        Mon, 21 Oct 2019 17:13:34 -0700 (PDT)
+Received: from nuclearis2-1.gtech (c-98-195-139-126.hsd1.tx.comcast.net. [98.195.139.126])
+        by smtp.gmail.com with ESMTPSA id k24sm4198786oic.29.2019.10.21.17.13.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 21 Oct 2019 17:13:33 -0700 (PDT)
+Subject: Re: [PATCH v3 3/3] PCI: pciehp: Add dmi table for in-band presence
+ disabled
+To:     Stuart Hayes <stuart.w.hayes@gmail.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Austin Bolen <austin_bolen@dell.com>, keith.busch@intel.com,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, lukas@wunner.de
+References: <20191017193256.3636-1-stuart.w.hayes@gmail.com>
+ <20191017193256.3636-4-stuart.w.hayes@gmail.com>
+ <20191021134729.GL2819@lahna.fi.intel.com>
+ <f4ace3ab-1b39-8a82-4cb6-a7a5d3bfbc72@gmail.com>
+From:   "Alex G." <mr.nuke.me@gmail.com>
+Message-ID: <d41c69c6-fa7b-d271-95e0-bf6e51b981ec@gmail.com>
+Date:   Mon, 21 Oct 2019 19:13:32 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <f4ace3ab-1b39-8a82-4cb6-a7a5d3bfbc72@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change the dependency for KVM_INTEL, i.e. KVM w/ VMX, from Intel CPUs to
-any CPU that has IA32_FEATURE_CONTROL MSR and thus VMX functionality.
-This effectively allows building KVM_INTEL for Centaur and Zhaoxin CPUs.
+On 10/21/19 1:19 PM, Stuart Hayes wrote:
+> 
+> 
+> On 10/21/19 8:47 AM, Mika Westerberg wrote:
+>> On Thu, Oct 17, 2019 at 03:32:56PM -0400, Stuart Hayes wrote:
+>>> Some systems have in-band presence detection disabled for hot-plug PCI
+>>> slots, but do not report this in the slot capabilities 2 (SLTCAP2) register.
+>>> On these systems, presence detect can become active well after the link is
+>>> reported to be active, which can cause the slots to be disabled after a
+>>> device is connected.
+>>>
+>>> Add a dmi table to flag these systems as having in-band presence disabled.
+>>>
+>>> Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
+>>> ---
+>>>   drivers/pci/hotplug/pciehp_hpc.c | 14 ++++++++++++++
+>>>   1 file changed, 14 insertions(+)
+>>>
+>>> diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+>>> index 02eb811a014f..4d377a2a62ce 100644
+>>> --- a/drivers/pci/hotplug/pciehp_hpc.c
+>>> +++ b/drivers/pci/hotplug/pciehp_hpc.c
+>>> @@ -14,6 +14,7 @@
+>>>   
+>>>   #define dev_fmt(fmt) "pciehp: " fmt
+>>>   
+>>> +#include <linux/dmi.h>
+>>>   #include <linux/kernel.h>
+>>>   #include <linux/types.h>
+>>>   #include <linux/jiffies.h>
+>>> @@ -26,6 +27,16 @@
+>>>   #include "../pci.h"
+>>>   #include "pciehp.h"
+>>>   
+>>> +static const struct dmi_system_id inband_presence_disabled_dmi_table[] = {
+>>> +	{
+>>> +		.ident = "Dell System",
+>>> +		.matches = {
+>>> +			DMI_MATCH(DMI_OEM_STRING, "Dell System"),
+>>
+>> Sorry if this has been discussed previously already but isn't this going
+>> to apply on all Dell systems, not just the affected ones? Is this the
+>> intention?
+>>
+> 
+> Yes, that is the intention. Applying this just makes the hotplug code wait for
+> the presence detect bit to be set before proceeding, which ideally wouldn't hurt
+> anything--for devices that don't have inband presence detect disabled, presence
+> detect should already be up when the code in patch 2/3 starts to wait for it.
+> 
+> The only issue should be with broken hotplug implementations that don't ever
+> bring presence detect active (these apparently exist)--but even those would still
+> work, they would just take an extra second to come up.
+> 
+> On the other hand, a number of Dell systems have (and will have) NVMe
+> implementations that have inband presence detect disabled (but they won't have
+> the new bit implemented to report that), and they don't work correctly without
+> this.
 
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
- arch/x86/kvm/Kconfig | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+I think it's clearer if this is explained in a comment. That it doesn't 
+break anything, and we're okay this applies to all hotplug ports, even 
+those that are not in front of an NVMe backplane.
 
-diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
-index 840e12583b85..42c7a23c5f28 100644
---- a/arch/x86/kvm/Kconfig
-+++ b/arch/x86/kvm/Kconfig
-@@ -60,13 +60,12 @@ config KVM
- 	  If unsure, say N.
- 
- config KVM_INTEL
--	tristate "KVM for Intel processors support"
-+	tristate "KVM for Intel (and compatible) processors support"
- 	depends on KVM
--	# for perf_guest_get_msrs():
--	depends on CPU_SUP_INTEL
-+	depends on X86_FEATURE_CONTROL_MSR
- 	---help---
--	  Provides support for KVM on Intel processors equipped with the VT
--	  extensions.
-+	  Provides support for KVM on processors equipped with Intel's VT
-+	  extensions, a.k.a. Virtual Machine Extensions (VMX).
- 
- 	  To compile this as a module, choose M here: the module
- 	  will be called kvm-intel.
--- 
-2.22.0
-
+Alex
