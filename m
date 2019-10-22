@@ -2,85 +2,117 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F77ECA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 21:28:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37AFECA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 21:31:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E02EC2084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 21:28:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0479420679
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 21:31:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="d/RTOx8b"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="Kpeg9R3G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733116AbfJVV17 (ORCPT
+        id S1733142AbfJVVbd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 17:27:59 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:37297 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733101AbfJVV17 (ORCPT
+        Tue, 22 Oct 2019 17:31:33 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:43245 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733123AbfJVVbc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 17:27:59 -0400
-Received: by mail-lf1-f66.google.com with SMTP id g21so13173521lfh.4
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 14:27:58 -0700 (PDT)
+        Tue, 22 Oct 2019 17:31:32 -0400
+Received: by mail-qt1-f195.google.com with SMTP id t20so29084758qtr.10
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 14:31:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sC7HSfb2VOkcipSqiZUGFtYaUxnR7Wt7cAUpMLN2oNc=;
-        b=d/RTOx8b3U9xLKMNU8hgAwzgUFgP0wI0I78MgFGo5S9RxNwmUYga4vLUgMB+jV4e90
-         JD0z80pZFg5atR7ZfnvDKTGRRXWKxvFCLzkjU4VpwJ0cVyHC7IJE/jenH9piaQ29f9y1
-         6O7bbq+Py3xOllvFcTxsY48y8xWuHcYGlQJtgxFzWc3qms3t4t+4x285MPbC9an3ZcvK
-         6KUKqwVQEX9c/uJ8QuiXxpKwfIImpNCTTWtFhvagyjvMyGJAbHnmXoNgx2ZIcUrz1Rl2
-         1sADZVEtgWJI78llDswMxd+0BfIrHiRkqzBuXv+WBJ3teUdRsXb+THuZqZao+YTKtX9P
-         1TFg==
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=98G4icOId5gRa0BO3+NnJk8SaIphOMOAkR+jC8y01cM=;
+        b=Kpeg9R3GFL4QkfZagosY6d53cYjLfU/55y5oiGy1mjM68ATS5EsPMC/b39+CZvdWeM
+         8ibBRJ3iDRpWYJTRT5OE2MAc0HRbHMm595crY+xLwbBHRUMsTGMIbg0AntoeOMyUCt+/
+         L8qKG9XzwfuKXthd76s7hR9+ewQIJGi5UyQFtq3Us7KZpuY4HdPH6MW0y0ZEnYa/9c63
+         ZO4/9+L5Y1ZazxPGB0LMu0hJk9Ap/Z0UgVACp0+rsSjXaz0Ac+1uW4mdQ3ZHCdSPFPXm
+         t7w3cYhZSB217CYGAzMq3ziGNwSN3kVFOgs5o5kvEn100lxhMNAhcgNpDaiAD2pOTogb
+         u82Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sC7HSfb2VOkcipSqiZUGFtYaUxnR7Wt7cAUpMLN2oNc=;
-        b=to4Mgr6NZZtxw88YCgDAodhRfeQ0mhq9Hb5ZUZjiU47PxRelnOCZ/mXKaBjY9HYdqo
-         rck5d2qBnB7zCcx9Bl24Us1axg3o07J7IuzNYNviGjCsnEhE9C1ATli93J2vuJEElbNc
-         qNHdKaZmVUWKbyY6MGT0dFT0dc5Lbut1A2B880+C/J4MBHbQnPRrRSsF9Bbp50zEYxZx
-         2Y8gY60urW1f26GXGTH1nsFHe9GIIll6Pwc2YzsNqIFi4kCsktvW9lIZ2wX/SX3lmh86
-         m4t6oS9HwLYWCBrGI7Y5G5wGSofaYdL9g3M96LH1s+CSzcZCvieT85yVk5+EROpKiA9O
-         WbtQ==
-X-Gm-Message-State: APjAAAUsdreReT2wr8DNF1x0S/KzdbHIDzl9Fhh1snelMzMW3mzxr02y
-        IRsv01XFxmKK0CxKdvveVurZePlVFCo4+USxgK1KGg==
-X-Google-Smtp-Source: APXvYqwFV8qXwJtM7cnjAnOyJyVn3NlRuVspzSfQ76qX4vGPHP7ckHVTpW+7szVpGRXWavpHfb0/Lto0ZQ2teHSplF8=
-X-Received: by 2002:a19:ac48:: with SMTP id r8mr4712555lfc.181.1571779677332;
- Tue, 22 Oct 2019 14:27:57 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=98G4icOId5gRa0BO3+NnJk8SaIphOMOAkR+jC8y01cM=;
+        b=W4dZ7+8Q77dbwxCQ0MHzy4emxQ6/t/Ll7X6phO6MRP4s/Hsc4auwdQ5JtgML6RxGM2
+         4GHIlHS/DNenYfcphbyuXSL196ha1m6yFYJQFl4WQfTZ3prqG6NQRjgH2M3XGvd6024L
+         xG5IRU9rkJ85fSJEoEcB8D0koP9oTSXFI9ldfFd/MWOjrLlwkZIjF5On13ZPRAW/MV+y
+         J3aYGqUyn1Jyr79G7i+ovmJR/ngqMGuicFTnrGt9ILjxLlKMIAyZ4XRqb6VzZSUxWTHw
+         UV0SWpqeCXRIYdlP4SdMdko85MkF7ACDVY2q+MqhIa8ciUM9lyD8FyIWdGXV39WmRaLu
+         qEeA==
+X-Gm-Message-State: APjAAAVFNfb0AqiS1txtGWQdnyh90t4pbjWg0H/NvvjeSndCZ4LiWNz6
+        gMk3aXJOe64bxEEy0blqVHZdjQ==
+X-Google-Smtp-Source: APXvYqxtoQLEP4BL19wiGwuyRPuynHQIQ7Fa6uLZDQMbflk5fVafKu3TQVjiuhiZwrorgsPiF32wZw==
+X-Received: by 2002:ac8:f8d:: with SMTP id b13mr5674183qtk.129.1571779891433;
+        Tue, 22 Oct 2019 14:31:31 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::3:869e])
+        by smtp.gmail.com with ESMTPSA id d39sm7220087qtc.23.2019.10.22.14.31.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Oct 2019 14:31:30 -0700 (PDT)
+Date:   Tue, 22 Oct 2019 17:31:30 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>
+Subject: Re: [PATCH 2/8] mm: clean up and clarify lruvec lookup procedure
+Message-ID: <20191022213130.GA361040@cmpxchg.org>
+References: <20191022144803.302233-1-hannes@cmpxchg.org>
+ <20191022144803.302233-3-hannes@cmpxchg.org>
+ <20191022192456.GB11461@tower.DHCP.thefacebook.com>
 MIME-Version: 1.0
-References: <20191012191602.45649-1-dancol@google.com> <20191012191602.45649-4-dancol@google.com>
- <CALCETrVZHd+csdRL-uKbVN3Z7yeNNtxiDy-UsutMi=K3ZgCiYw@mail.gmail.com>
- <CAKOZuevUqs_Oe1UEwguQK7Ate3ai1DSVSij=0R=vmz9LzX4k6Q@mail.gmail.com> <CALCETrUyq=J37gU-MYXqLdoi7uH7iNNVRjvcGUT11JA1QuTFyg@mail.gmail.com>
-In-Reply-To: <CALCETrUyq=J37gU-MYXqLdoi7uH7iNNVRjvcGUT11JA1QuTFyg@mail.gmail.com>
-From:   Daniel Colascione <dancol@google.com>
-Date:   Tue, 22 Oct 2019 14:27:20 -0700
-Message-ID: <CAKOZueuhU05wXWcoAnfRM4rShuvQ8BteV32WTiWDmAA3-LBJfg@mail.gmail.com>
-Subject: Re: [PATCH 3/7] Add a UFFD_SECURE flag to the userfaultfd API.
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Jann Horn <jannh@google.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Pavel Emelyanov <xemul@parallels.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lokesh Gidra <lokeshgidra@google.com>,
-        Nick Kralevich <nnk@google.com>,
-        Nosh Minwalla <nosh@google.com>,
-        Tim Murray <timmurray@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191022192456.GB11461@tower.DHCP.thefacebook.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Oct 12, 2019 at 6:14 PM Andy Lutomirski <luto@kernel.org> wrote:
-> [adding more people because this is going to be an ABI break, sigh]
+On Tue, Oct 22, 2019 at 07:25:01PM +0000, Roman Gushchin wrote:
+> On Tue, Oct 22, 2019 at 10:47:57AM -0400, Johannes Weiner wrote:
+> > There is a per-memcg lruvec and a NUMA node lruvec. Which one is being
+> > used is somewhat confusing right now, and it's easy to make mistakes -
+> > especially when it comes to global reclaim.
+> > 
+> > How it works: when memory cgroups are enabled, we always use the
+> > root_mem_cgroup's per-node lruvecs. When memory cgroups are not
+> > compiled in or disabled at runtime, we use pgdat->lruvec.
+> > 
+> > Document that in a comment.
+> > 
+> > Due to the way the reclaim code is generalized, all lookups use the
+> > mem_cgroup_lruvec() helper function, and nobody should have to find
+> > the right lruvec manually right now. But to avoid future mistakes,
+> > rename the pgdat->lruvec member to pgdat->__lruvec and delete the
+> > convenience wrapper that suggests it's a commonly accessed member.
+> 
+> This part looks great!
 
-Just pinging this thread. I'd like to rev my patch and I'm not sure
-what we want to do about problem Andy identified. Are we removing
-UFFD_EVENT_FORK?
+Thanks!
+
+> > While in this area, swap the mem_cgroup_lruvec() argument order. The
+> > name suggests a memcg operation, yet it takes a pgdat first and a
+> > memcg second. I have to double take every time I call this. Fix that.
+> 
+> Idk, I agree that the new order makes more sense (slightly), but
+> such changes make any backports / git blame searches more complex.
+> So, I'm not entirely convinced that it worth it. The compiler will
+> prevent passing bad arguments by mistake.
+
+Lol, this has cost me a lot of time since we've had it. It takes you
+out of the flow while writing code and make you think about something
+stupid and trivial.
+
+The backport period is limited, but the mental overhead of a stupid
+interface is forever!
