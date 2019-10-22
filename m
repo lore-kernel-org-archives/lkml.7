@@ -2,168 +2,168 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E306CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 21:15:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95E8CCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 21:26:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9C13214B2
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 21:15:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571778943;
-	bh=y0bXY4CdFmzvtNLs1eSw30l+FGGoCG9Qp3fyZyZLnOQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=uK6TJtobjC9DUUKdxcADnipkPWTQ/nqNhtB68EG/S9gr7+t6DLcvzL02iU27Jz/6i
-	 r6V5h/P9O6D15IfYYevM83guhdU/PS1iKM83kOceVl36T/XnVM0RNLn8TiVv1DVSLP
-	 1wQFSEZtbgsshyUCiFcHHH5QK4Kdjca9Wg2GcxZo=
+	by mail.kernel.org (Postfix) with ESMTP id 5A83F2084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 21:26:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Wn7w5KAy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732739AbfJVVPm (ORCPT
+        id S1733095AbfJVV05 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 17:15:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54678 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731573AbfJVVPl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 17:15:41 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E50620B7C;
-        Tue, 22 Oct 2019 21:15:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571778940;
-        bh=y0bXY4CdFmzvtNLs1eSw30l+FGGoCG9Qp3fyZyZLnOQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=q5VZ5NtHVlLdCqvVfvmtxAuUyuOBlUbkSrkqtRsN/vI3IvLebeTysQrMyJ3QkUsLK
-         s1k2+NsiqLpGTX42w+dyqRSTc897q8DW2v2ebdGZLWn+DZzkeNeNJZpJxaPXQaY/DR
-         QOmZyNQ8kE1aHmvblMkAUlVaUWlBCaqxMsHkzZdU=
-Date:   Tue, 22 Oct 2019 16:15:39 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     George Cherian <gcherian@marvell.com>
-Cc:     Robert Richter <rrichter@marvell.com>,
-        Jayachandran Chandrasekharan Nair <jnair@marvell.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "shannon.zhao@linux.alibaba.com" <shannon.zhao@linux.alibaba.com>,
-        Sunil Kovvuri Goutham <sgoutham@marvell.com>
-Subject: Re: [EXT] Re: [PATCH] PCI: Enhance the ACS quirk for Cavium devices
-Message-ID: <20191022211539.GA34867@google.com>
+        Tue, 22 Oct 2019 17:26:57 -0400
+Received: from mail-wm1-f48.google.com ([209.85.128.48]:36865 "EHLO
+        mail-wm1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726847AbfJVV04 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 17:26:56 -0400
+Received: by mail-wm1-f48.google.com with SMTP id f22so17544624wmc.2
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 14:26:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0Z38w4WeorVLa55pv2bFPQYaKP+W4SvCLyYXgYMK+IY=;
+        b=Wn7w5KAyx1ojYoHVRBGGgyNncGa/iKhuHd5rjXLNsG8vDzbKO38J2Qvk71WBeHPv7M
+         b1AxxZPMkvOCIMng/n547Xwq6V4p5a+E8UE17l2+Uk44iM9Y3aOTEVeGU6BqHthEcem/
+         MhNPnsw8Gs1QfungV7+kD02pWsv2pedejSkFk3FEjsiKE4NsfiaIYLLJy/ZMeoACeohq
+         RVWU3fa59Oz8TSew7u9gsW3+jFsHG7r+5nrgOTXZ7EzEpYxAoa/HkVMn3OZjzfJpXycL
+         EE96D1eSCKwTr8URqmefMtyqrhMlajgcWBcIG3e8T/RIoI+z47wC7d9mXfy5ylJefmRv
+         8GDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0Z38w4WeorVLa55pv2bFPQYaKP+W4SvCLyYXgYMK+IY=;
+        b=haIiaMAkEaZ8hJWx1+mAS351RALdurhT8Arm0JUfwel0dBb+KA/lYEKKGKBCGOdWYE
+         vuiT3CUChAhfxdGhnijBhXW0vrlH1KCXlRbL6HYtl8EGdP2/KkeECzqeYBAqpV9Zr/s1
+         qUB0SzeAlQIWFXRe+VJ8l28PgM06c9kV7Dlhh1OomvmFMKP7wlnTgMssMgXnqj+CHZQ3
+         pOF7Sjx4STacUpkKYUKF+Z2qWqXGza5aBG6Er4t4BAaec6zqg+qgboexe63vwbhBhrgY
+         ze2aJ227sGa1TTa00Adxcu2BkLz/dPinasW9fP1lAobEDxulRNt76c6PZ3ZBaxe4mikO
+         Fehw==
+X-Gm-Message-State: APjAAAUUzOqd2RDCGTEX95KRUBIubKUU9117v18HlL0lvO3XhSvwnwyG
+        Rz/K4h620X5PnV5M5dOM20Lj2RVx8hXek4zNCcyuBSjwDdI=
+X-Google-Smtp-Source: APXvYqyzdwGgDwMP2zk4d3TpGzXYgy26HaSUxMxn18tcYotG6c04jlPfK4Ld5JCvCkJnYpJDytgJsKPnvH5Txse/kJg=
+X-Received: by 2002:a1c:2986:: with SMTP id p128mr2971786wmp.173.1571779613021;
+ Tue, 22 Oct 2019 14:26:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191009124253.GA63232@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <CAA25o9TABY=3C+FQEg8FDyF1rim315G2hmeB1DBWJLn-wG1j0g@mail.gmail.com>
+ <CAJZ5v0gJWxLJTi7TjaRP-3aR3f4VnX1n9dRE_jxdS6e3SM46LQ@mail.gmail.com>
+In-Reply-To: <CAJZ5v0gJWxLJTi7TjaRP-3aR3f4VnX1n9dRE_jxdS6e3SM46LQ@mail.gmail.com>
+From:   Luigi Semenzato <semenzato@google.com>
+Date:   Tue, 22 Oct 2019 14:26:41 -0700
+Message-ID: <CAA25o9TiaaKGH4ZkOa=FhZW7PdXQ592YZ4q52o-QNx=yFsR4Pw@mail.gmail.com>
+Subject: Re: is hibernation usable?
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Geoff Pike <gpike@google.com>, Bas Nowaira <bassem@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 07:42:53AM -0500, Bjorn Helgaas wrote:
-> On Wed, Oct 09, 2019 at 02:51:15AM +0000, George Cherian wrote:
-> > Hi Bjorn,
-> > 
-> > Sorry for the late reply I was off for couple of days.
-> > 
-> > On 10/8/19 2:32 PM, Bjorn Helgaas wrote:
-> > > External Email
-> > >
-> > > ----------------------------------------------------------------------
-> > > On Tue, Oct 08, 2019 at 08:25:23AM +0000, Robert Richter wrote:
-> > >> On 04.10.19 14:48:13, Bjorn Helgaas wrote:
-> > >>> commit 37b22fbfec2d
-> > >>> Author: George Cherian <george.cherian@marvell.com>
-> > >>> Date:   Thu Sep 19 02:43:34 2019 +0000
-> > >>>
-> > >>>      PCI: Apply Cavium ACS quirk to CN99xx and CN11xxx Root Ports
-> > >>>      
-> > >>>      Add an array of Cavium Root Port device IDs and apply the quirk only to the
-> > >>>      listed devices.
-> > >>>      
-> > >>>      Instead of applying the quirk to all Root Ports where
-> > >>>      "(dev->device & 0xf800) == 0xa000", apply it only to CN88xx 0xa180 and
-> > >>>      0xa170 Root Ports.
-> > 
-> > All the root ports of CN88xx series will have device id's 0xa180 and 0xa170.
-> > 
-> > This patch currently targets only CN88xx series and not all of the CN8xxx.
-> > 
-> > For eg:- 83xx devices don't wont the quirk to be applied as of today. 
-> > The quirk
-> > 
-> > needs to be applied only for TX1 series and not oncteon-tx1 series.
-> > 
-> > >> No, this can't be removed. It is a match all for all CN8xxx variants
-> > >> (note the 3 'x', all TX1 cores). So all device ids from 0xa000 to
-> > >> 0xa7FF are affected here and need the quirk.
-> > > OK, I'll drop the patch and wait for a new one.  Maybe what was needed
-> > > was to keep the "(dev->device & 0xf800) == 0xa000" part and add the
-> > > pci_quirk_cavium_acs_ids[] array in addition?
-> > >
-> > >>>      Also apply the quirk to CN99xx (0xaf84) and CN11xxx (0xb884) Root Ports.
-> > 
-> > The device id's for all variants of CN99xx is 0xaf84 and CN11xxx will be 
-> > 0xb884.
-> > 
-> > So this patch holds good for TX2 as well as TX3 series of processors.
-> 
-> OK, can you and Robert get together and post something with Robert's
-> Reviewed-by?  Please make the commit log a little more specific about
-> which families/variants are supported (the vendor IDs are very
-> specific, but not as user-friendly as CN99xx, etc).
+Thank you for the quick reply!
 
-Just to make sure this doesn't get lost, please post an update.  I
-currently do not have this patch queued up for v5.5 because I haven't
-seen a clear consensus on what it should look like.
+On Tue, Oct 22, 2019 at 1:57 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+>
+> On Tue, Oct 22, 2019 at 10:09 PM Luigi Semenzato <semenzato@google.com> wrote:
+> >
+> > Following a thread in linux-pm
+> > (https://marc.info/?l=linux-mm&m=157012300901871) I have some issues
+> > that may be of general interest.
+> >
+> > 1. To the best of my knowledge, Linux hibernation is guaranteed to
+> > fail if more than 1/2 of total RAM is in use (for instance, by
+> > anonymous pages).  My knowledge is based on evidence, experiments,
+> > code inspection, the thread above, and a comment in
+> > Documentation/swsusp.txt, copied here:
+>
+> So I use it on a regular basis (i.e. every day) on a system that often
+> has over 50% or RAM in use and it all works.
+>
+> I also know about other people using it on a regular basis.
+>
+> For all of these users, it is usable.
+>
+> >  "Instead, we load the image into unused memory and then atomically
+> > copy it back to it original location. This implies, of course, a
+> > maximum image size of half the amount of memory."
+>
+> That isn't right any more.  An image that is loaded during resume can,
+> in fact, be larger than 50% of RAM.  An image that is created during
+> hibernation, however, cannot.
 
-> > >> I thought the quirk is CN8xxx specific, but I could be wrong here.
-> > >>
-> > >> -Robert
-> > >>
-> > >>>      
-> > >>>      Link: https://urldefense.proofpoint.com/v2/url?u=https-3A__lore.kernel.org_r_20190919024319.GA8792-40dc5-2Deodlnx05.marvell.com&d=DwIBAg&c=nKjWec2b6R0mOyPaz7xtfQ&r=8vKOpC26NZGzQPAMiIlimxyEGCRSJiq-j8yyjPJ6VZ4&m=Vmml-rx3t63ZbbXZ0XaESAM9yAlexE29R-giTbcj4Qk&s=57jKIj8BAydbLpftLt5Ssva7vD6GuoCaIpjTi-sB5kU&e=
-> > >>>      Fixes: f2ddaf8dfd4a ("PCI: Apply Cavium ThunderX ACS quirk to more Root Ports")
-> > >>>      Fixes: b404bcfbf035 ("PCI: Add ACS quirk for all Cavium devices")
-> > >>>      Signed-off-by: George Cherian <george.cherian@marvell.com>
-> > >>>      Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> > >>>      Cc: stable@vger.kernel.org      # v4.12+
-> > >>>
-> > >>> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> > >>> index 320255e5e8f8..4e5048cb5ec6 100644
-> > >>> --- a/drivers/pci/quirks.c
-> > >>> +++ b/drivers/pci/quirks.c
-> > >>> @@ -4311,17 +4311,24 @@ static int pci_quirk_amd_sb_acs(struct pci_dev *dev, u16 acs_flags)
-> > >>>   #endif
-> > >>>   }
-> > >>>   
-> > >>> +static const u16 pci_quirk_cavium_acs_ids[] = {
-> > >>> +	0xa180, 0xa170,		/* CN88xx family of devices */
-> > >>> +	0xaf84,			/* CN99xx family of devices */
-> > >>> +	0xb884,			/* CN11xxx family of devices */
-> > >>> +};
-> > >>> +
-> > >>>   static bool pci_quirk_cavium_acs_match(struct pci_dev *dev)
-> > >>>   {
-> > >>> -	/*
-> > >>> -	 * Effectively selects all downstream ports for whole ThunderX 1
-> > >>> -	 * family by 0xf800 mask (which represents 8 SoCs), while the lower
-> > >>> -	 * bits of device ID are used to indicate which subdevice is used
-> > >>> -	 * within the SoC.
-> > >>> -	 */
-> > >>> -	return (pci_is_pcie(dev) &&
-> > >>> -		(pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT) &&
-> > >>> -		((dev->device & 0xf800) == 0xa000));
-> > >>> +	int i;
-> > >>> +
-> > >>> +	if (!pci_is_pcie(dev) || pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT)
-> > >>> +		return false;
-> > >>> +
-> > >>> +	for (i = 0; i < ARRAY_SIZE(pci_quirk_cavium_acs_ids); i++)
-> > >>> +		if (pci_quirk_cavium_acs_ids[i] == dev->device)
-> > >>> +			return true;
-> > >>> +
-> > >>> +	return false;
-> > >>>   }
-> > >>>   
-> > >>>   static int pci_quirk_cavium_acs(struct pci_dev *dev, u16 acs_flags)
+Sorry, I don't understand this.  Are you saying that, for instance,
+you can resume a 30 GB image on a 32 GB device, but that image could
+only have been created on a 64 GB device?
+
+> > 2. There's no simple/general workaround.  Rafael suggested on the
+> > thread "Whatever doesn't fit into 50% of RAM needs to be swapped out
+> > before hibernation".  This is a good suggestion: I am actually close
+> > to achieving this using memcgroups, but it's a fair amount of work,
+> > and a fairly special case.  Not everybody uses memcgroups, and I don't
+> > know of other reliable ways of forcing swap from user level.
+>
+> I don't need to do anything like that.
+
+Again, I don't understand.  Why did you make that suggestion then?
+
+> hibernate_preallocate_memory() manages to free a sufficient amount of
+> memory on my system every time.
+
+Unfortunately this doesn't work for me.  I may have described a simple
+experiment: on a 4GB device, create two large processes like this:
+
+dd if=/dev/zero bs=1100M count=1 | sleep infinity &
+dd if=/dev/zero bs=1100M count=1 | sleep infinity &
+
+so that more than 50% of TotalMem is used for anonymous pages.  Then
+echo disk > /sys/power/state fails with ENOMEM.
+
+Is this supposed to work?  Maybe I am doing something wrong?
+Hibernation works before I create the dd processes.  After I force
+some of those pages to a separate swap device, hibernation works too,
+so those pages aren't mlocked or anything.
+
+> > 3. A feature that works only when 1/2 of total RAM can be allocated
+> > is, in my opinion, not usable, except possibly under special
+> > circumstances, such as mine. Most of the available articles and
+> > documentation do not mention this important fact (but for the excerpt
+> > I mentioned, which is not in a prominent position).
+>
+> It can be used with over 1/2 of RAM allocated and that is quite easy
+> to demonstrate.
+>
+> Honestly, I'm not sure what your problem is really.
+
+I apologize if I am doing something stupid and I should know better
+before I waste other people's time.  I have been trying to explain
+these issues as best as I can.  I have a reproducible failure.  I'll
+be happy to provide any additional detail.
+
+>
+> > Two questions then:
+> >
+> > A. Should the documentation be changed to reflect this fact more
+> > clearly?  I feel that the current situation is a disservice to the
+> > user community.
+>
+> Propose changes.
+
+Sure, after we resolve the above questions.
+
+> > B. Would it be worthwhile to improve the hibernation code to remove
+> > this limitation?  Is this of interest to anybody (other than me)?
+>
+> Again, propose specific changes.
