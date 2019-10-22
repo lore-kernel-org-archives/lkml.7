@@ -2,147 +2,111 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97EFBCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32B9ECA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:15:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6731E20684
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:13:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 096A4214B2
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:15:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="u77pJJYT"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TFkUSbsN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732005AbfJVRNt (ORCPT
+        id S1732616AbfJVRPA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 13:13:49 -0400
-Received: from relaydlg-01.paragon-software.com ([81.5.88.159]:34624 "EHLO
-        relaydlg-01.paragon-software.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726702AbfJVRNt (ORCPT
+        Tue, 22 Oct 2019 13:15:00 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:43004 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731837AbfJVRPA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 13:13:49 -0400
-Received: from dlg2.mail.paragon-software.com (vdlg-exch-02.paragon-software.com [172.30.1.105])
-        by relaydlg-01.paragon-software.com (Postfix) with ESMTPS id 2C82781E18;
-        Tue, 22 Oct 2019 20:13:45 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paragon-software.com; s=mail; t=1571764425;
-        bh=WBZrleQkgVo3x8bYOGbdnGwjOGIOJdJQHv+CY7ylyGA=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=u77pJJYTNTHQFCSQj+wcQf6BxygccQVvF+oxgckVAUMAiEVSRdzAHHxQYOiDZEoV3
-         kPburIpoqsaKIpWzCfzxTmQMlD3okZOSKwOVNVOe6t4b4yRNzzYK14v79hSRm2XfR+
-         sa6PAiOzUrDpVKxvlVtpQlJGI88gjnBYYzpFEZRM=
-Received: from vdlg-exch-02.paragon-software.com (172.30.1.105) by
- vdlg-exch-02.paragon-software.com (172.30.1.105) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1591.10; Tue, 22 Oct 2019 20:13:44 +0300
-Received: from vdlg-exch-02.paragon-software.com ([fe80::586:6d72:3fe5:bd9b])
- by vdlg-exch-02.paragon-software.com ([fe80::586:6d72:3fe5:bd9b%6]) with mapi
- id 15.01.1591.008; Tue, 22 Oct 2019 20:13:44 +0300
-From:   Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
-To:     =?utf-8?B?UGFsaSBSb2jDoXI=?= <pali.rohar@gmail.com>
-CC:     "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH] exFAT read-only driver GPL implementation by Paragon
- Software.
-Thread-Topic: [PATCH] exFAT read-only driver GPL implementation by Paragon
- Software.
-Thread-Index: AQHViPwP0nd+67F90kCW3ZTBWy3iuA==
-Date:   Tue, 22 Oct 2019 17:13:44 +0000
-Message-ID: <9763488C-9431-49FF-9465-1B965F159120@paragon-software.com>
-References: <453A1153-9493-4A04-BF66-CE6A572DEBDB@paragon-software.com>
- <20191019233449.bgimi755vt32itnf@pali>
-In-Reply-To: <20191019233449.bgimi755vt32itnf@pali>
-Accept-Language: ru-RU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.30.8.4]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <0B23641893AC2445AD6FAC37F072C715@paragon-software.com>
-Content-Transfer-Encoding: base64
+        Tue, 22 Oct 2019 13:15:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571764499;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZnqQpohuKQ9uYTM7VPMOk3S+s+Sz5MTWH/R9yn2bwqA=;
+        b=TFkUSbsNVm4sJEeniTyKuwOl1q6F6Tb9jK4Ixg1Jmc9cQqDY7+7GCEhFZGvbrRhLLmxKa/
+        VFilB51CO47MYlIxEpSRiHhXU1atIWTD+u+8d2+KGatEbWi9Z+1zWf/guIRvwGa4jmGgxn
+        QqrEG0cx+J/M+AYwxlsTGhMUZzdESWU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-40-Jldqq01BOAOUQbEbYa4rKg-1; Tue, 22 Oct 2019 13:14:56 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E80591005509;
+        Tue, 22 Oct 2019 17:14:54 +0000 (UTC)
+Received: from redhat.com (unknown [10.20.6.178])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 557C71001B22;
+        Tue, 22 Oct 2019 17:14:54 +0000 (UTC)
+Date:   Tue, 22 Oct 2019 13:14:52 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Keith Busch <keith.busch@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 1/1] mm/gup_benchmark: fix MAP_HUGETLB case
+Message-ID: <20191022171452.GA5169@redhat.com>
+References: <20191021212435.398153-1-jhubbard@nvidia.com>
+ <20191021212435.398153-2-jhubbard@nvidia.com>
 MIME-Version: 1.0
+In-Reply-To: <20191021212435.398153-2-jhubbard@nvidia.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: Jldqq01BOAOUQbEbYa4rKg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8hIA0KVGhhbmtzIGZvciB5b3VyIGZpbmRpbmdzLg0KDQo+IE9uIDIwIE9jdCAyMDE5LCBh
-dCAwMjozNCwgUGFsaSBSb2jDoXIgPHBhbGkucm9oYXJAZ21haWwuY29tPiB3cm90ZToNCj4gDQo+
-IEhlbGxvISBJIGhhdmUgbm90IHJlYWQgZGVlcGx5IHdob2xlIGltcGxlbWVudGF0aW9uLCBqdXN0
-IHNwb3R0ZWQNCj4gc3VzcGljaW91cyBvcHRpb25zLiBTZWUgYmVsb3cuDQo+IA0KPiBPbiBGcmlk
-YXkgMTggT2N0b2JlciAyMDE5IDE1OjE4OjM5IEtvbnN0YW50aW4gS29tYXJvdiB3cm90ZToNCj4+
-IGRpZmYgLS1naXQgYS9mcy9leGZhdC9leGZhdF9mcy5oIGIvZnMvZXhmYXQvZXhmYXRfZnMuaA0K
-Pj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4+IGluZGV4IDAwMDAwMDAwMDAwMC4uNWY4NzEzZmUx
-YjBjDQo+PiAtLS0gL2Rldi9udWxsDQo+PiArKysgYi9mcy9leGZhdC9leGZhdF9mcy5oDQo+PiBA
-QCAtMCwwICsxLDM4OCBAQA0KPj4gKy8qIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4w
-ICovDQo+PiArLyoNCj4+ICsgKiAgbGludXgvZnMvZXhmYXQvc3VwZXIuYw0KPj4gKyAqDQo+PiAr
-ICogQ29weXJpZ2h0IChjKSAyMDEwLTIwMTkgUGFyYWdvbiBTb2Z0d2FyZSBHbWJILCBBbGwgcmln
-aHRzIHJlc2VydmVkLg0KPj4gKyAqDQo+PiArICovDQo+PiArDQo+PiArI2luY2x1ZGUgPGxpbnV4
-L2J1ZmZlcl9oZWFkLmg+DQo+PiArI2luY2x1ZGUgPGxpbnV4L2hhc2guaD4NCj4+ICsjaW5jbHVk
-ZSA8bGludXgvbmxzLmg+DQo+PiArI2luY2x1ZGUgPGxpbnV4L3JhdGVsaW1pdC5oPg0KPj4gKw0K
-Pj4gK3N0cnVjdCBleGZhdF9tb3VudF9vcHRpb25zIHsNCj4+ICsJa3VpZF90IGZzX3VpZDsNCj4+
-ICsJa2dpZF90IGZzX2dpZDsNCj4+ICsJdTE2IGZzX2ZtYXNrOw0KPj4gKwl1MTYgZnNfZG1hc2s7
-DQo+PiArCXUxNiBjb2RlcGFnZTsgLyogQ29kZXBhZ2UgZm9yIHNob3J0bmFtZSBjb252ZXJzaW9u
-cyAqLw0KPiANCj4gQWNjb3JkaW5nIHRvIGV4RkFUIHNwZWNpZmljYXRpb24sIHNlY3Rpb24gNy43
-LjMgRmlsZU5hbWUgRmllbGQgdGhlcmUgaXMNCj4gbm8gOC4zIHNob3J0bmFtZSBzdXBwb3J0IHdp
-dGggRE9TL09FTSBjb2RlcGFnZS4NCj4gDQo+IGh0dHBzOi8vZG9jcy5taWNyb3NvZnQuY29tL2Vu
-LXVzL3dpbmRvd3Mvd2luMzIvZmlsZWlvL2V4ZmF0LXNwZWNpZmljYXRpb24jNzczLWZpbGVuYW1l
-LWZpZWxkDQo+IA0KPiBQbHVzIGl0IGxvb2tzIGxpa2UgdGhhdCB0aGlzIG1lbWJlciBjb2RlcGFn
-ZSBpcyBvbmx5IHNldCBhbmQgbmV2ZXINCj4gYWNjZXNzZWQgaW4gd2hvbGUgZHJpdmVyLg0KPiAN
-Cj4gU28gaXQgY2FuIGJlIGNsZWFuIGl0IHVwIGFuZCByZW1vdmVkPw0KWWVzLCB0aGlzIG9uZSBz
-aG91bGQgYmUgcmVtb3ZlZCBhcyBub3QgdXNlZCBhY3R1YWxseSB0aHJvdWdoIHRoZSBjb2RlLiBP
-bmUgdGhpbmcgdG8gZG8gYWJvdXQgdGhlIGltcGxlbWVudGF0aW9uLCBiZXNpZGVzIFJXIHN1cHBv
-cnQgYW5kIGEgbGl0dGxlIGNsZWFuLXVwIG9mIHN1Y2ggcGxhY2VzIGxpa2UgdGhpcyBvbmUsIGlz
-IG5scy9jb2RlcGFnZSBzdXBwb3J0LiBDdXJyZW50bHksIHV0Zi04IG9ubHkgaXMgc3VwcG9ydGVk
-Lg0KDQo+IA0KPj4gKwkvKiBtaW51dGVzIGJpYXM9IFVUQyAtIGxvY2FsIHRpbWUuIEVhc3Rlcm4g
-dGltZSB6b25lOiArMzAwLCAqLw0KPj4gKwkvKlBhcmlzLEJlcmxpbjogLTYwLCBNb3Njb3c6IC0x
-ODAqLw0KPj4gKwlpbnQgYmlhczsNCj4+ICsJdTE2IGFsbG93X3V0aW1lOyAvKiBwZXJtaXNzaW9u
-IGZvciBzZXR0aW5nIHRoZSBbYW1ddGltZSAqLw0KPj4gKwl1bnNpZ25lZCBxdWlldCA6IDEsIC8q
-IHNldCA9IGZha2Ugc3VjY2Vzc2Z1bCBjaG1vZHMgYW5kIGNob3ducyAqLw0KPj4gKwkJc2hvd2V4
-ZWMgOiAxLCAvKiBzZXQgPSBvbmx5IHNldCB4IGJpdCBmb3IgY29tL2V4ZS9iYXQgKi8NCj4+ICsJ
-CXN5c19pbW11dGFibGUgOiAxLCAvKiBzZXQgPSBzeXN0ZW0gZmlsZXMgYXJlIGltbXV0YWJsZSAq
-Lw0KPj4gKwkJdXRmOCA6IDEsIC8qIFVzZSBvZiBVVEYtOCBjaGFyYWN0ZXIgc2V0IChEZWZhdWx0
-KSAqLw0KPj4gKwkJLyogY3JlYXRlIGVzY2FwZSBzZXF1ZW5jZXMgZm9yIHVuaGFuZGxlZCBVbmlj
-b2RlICovDQo+PiArCQl1bmljb2RlX3hsYXRlIDogMSwgZmx1c2ggOiAxLCAvKiB3cml0ZSB0aGlu
-Z3MgcXVpY2tseSAqLw0KPj4gKwkJdHpfc2V0IDogMSwgLyogRmlsZXN5c3RlbSB0aW1lc3RhbXBz
-JyBvZmZzZXQgc2V0ICovDQo+PiArCQlkaXNjYXJkIDogMSAvKiBJc3N1ZSBkaXNjYXJkIHJlcXVl
-c3RzIG9uIGRlbGV0aW9ucyAqLw0KPj4gKwkJOw0KPj4gK307DQo+IA0KPiAuLi4NCj4gDQo+PiBk
-aWZmIC0tZ2l0IGEvZnMvZXhmYXQvc3VwZXIuYyBiL2ZzL2V4ZmF0L3N1cGVyLmMNCj4+IG5ldyBm
-aWxlIG1vZGUgMTAwNjQ0DQo+PiBpbmRleCAwMDAwMDAwMDAwMDAuLjA3MDVkYWIzYzNmYw0KPj4g
-LS0tIC9kZXYvbnVsbA0KPj4gKysrIGIvZnMvZXhmYXQvc3VwZXIuYw0KPiAuLi4NCj4+ICtlbnVt
-IHsNCj4+ICsJT3B0X3VpZCwgT3B0X2dpZCwgT3B0X3VtYXNrLCBPcHRfZG1hc2ssIE9wdF9mbWFz
-aywgT3B0X2FsbG93X3V0aW1lLA0KPj4gKwlPcHRfY29kZXBhZ2UsIE9wdF9xdWlldCwgT3B0X3No
-b3dleGVjLCBPcHRfZGVidWcsIE9wdF9pbW11dGFibGUsDQo+PiArCU9wdF91dGY4X25vLCBPcHRf
-dXRmOF95ZXMsIE9wdF91bmlfeGxfbm8sIE9wdF91bmlfeGxfeWVzLCBPcHRfZmx1c2gsDQo+PiAr
-CU9wdF90el91dGMsIE9wdF9kaXNjYXJkLCBPcHRfbmZzLCBPcHRfYmlhcywgT3B0X2VyciwNCj4+
-ICt9Ow0KPj4gKw0KPj4gK3N0YXRpYyBjb25zdCBtYXRjaF90YWJsZV90IGZhdF90b2tlbnMgPSB7
-DQo+PiArCXsgT3B0X3VpZCwgInVpZD0ldSIgfSwNCj4+ICsJeyBPcHRfZ2lkLCAiZ2lkPSV1IiB9
-LA0KPj4gKwl7IE9wdF91bWFzaywgInVtYXNrPSVvIiB9LA0KPj4gKwl7IE9wdF9kbWFzaywgImRt
-YXNrPSVvIiB9LA0KPj4gKwl7IE9wdF9mbWFzaywgImZtYXNrPSVvIiB9LA0KPj4gKwl7IE9wdF9h
-bGxvd191dGltZSwgImFsbG93X3V0aW1lPSVvIiB9LA0KPj4gKwl7IE9wdF9jb2RlcGFnZSwgImNv
-ZGVwYWdlPSV1IiB9LA0KPj4gKwl7IE9wdF9xdWlldCwgInF1aWV0IiB9LA0KPj4gKwl7IE9wdF9z
-aG93ZXhlYywgInNob3dleGVjIiB9LA0KPj4gKwl7IE9wdF9kZWJ1ZywgImRlYnVnIiB9LA0KPj4g
-Kwl7IE9wdF9pbW11dGFibGUsICJzeXNfaW1tdXRhYmxlIiB9LA0KPj4gKwl7IE9wdF9mbHVzaCwg
-ImZsdXNoIiB9LA0KPj4gKwl7IE9wdF90el91dGMsICJ0ej1VVEMiIH0sDQo+PiArCXsgT3B0X2Jp
-YXMsICJiaWFzPSVkIiB9LA0KPj4gKwl7IE9wdF9kaXNjYXJkLCAiZGlzY2FyZCIgfSwNCj4+ICsJ
-eyBPcHRfdXRmOF9ubywgInV0Zjg9MCIgfSwgLyogMCBvciBubyBvciBmYWxzZSAqLw0KPj4gKwl7
-IE9wdF91dGY4X25vLCAidXRmOD1ubyIgfSwNCj4+ICsJeyBPcHRfdXRmOF9ubywgInV0Zjg9ZmFs
-c2UiIH0sDQo+PiArCXsgT3B0X3V0ZjhfeWVzLCAidXRmOD0xIiB9LCAvKiBlbXB0eSBvciAxIG9y
-IHllcyBvciB0cnVlICovDQo+PiArCXsgT3B0X3V0ZjhfeWVzLCAidXRmOD15ZXMiIH0sDQo+PiAr
-CXsgT3B0X3V0ZjhfeWVzLCAidXRmOD10cnVlIiB9LA0KPj4gKwl7IE9wdF91dGY4X3llcywgInV0
-ZjgiIH0sDQo+IA0KPiBUaGVyZSBhcmUgbG90IG9mIHV0ZjggbW91bnQgb3B0aW9ucy4gQXJlIHRo
-ZXkgcmVhbGx5IG5lZWRlZD8NCj4gDQo+IFdvdWxkIG5vdCBpdCBiZSBiZXR0ZXIgdG8gdXNlIGp1
-c3Qgb25lICJpb2NoYXJzZXQiIG1vdW50IG9wdGlvbiBsaWtlDQo+IG90aGVyIFVuaWNvZGUgYmFz
-ZWQgZmlsZXN5c3RlbSBoYXZlIGl0IChlLmcuIHZmYXQsIGpmcywgaXNvOTY2MCwgdWRmIG9yDQo+
-IG50ZnMpPw0KDQpJdCBzZWVtcyByZWFzb25hYmxlIGFzIHdlbGwuICJpb2NoYXJzZXQiIG1heSBi
-ZSBtb3JlIGhhbmR5IHdheSB0byBoYW5kbGUgc3VjaCBtb3VudCBvcHRpb25zLg0KDQo+IA0KPj4g
-Kwl7IE9wdF91bmlfeGxfbm8sICJ1bmlfeGxhdGU9MCIgfSwgLyogMCBvciBubyBvciBmYWxzZSAq
-Lw0KPj4gKwl7IE9wdF91bmlfeGxfbm8sICJ1bmlfeGxhdGU9bm8iIH0sDQo+PiArCXsgT3B0X3Vu
-aV94bF9ubywgInVuaV94bGF0ZT1mYWxzZSIgfSwNCj4+ICsJeyBPcHRfdW5pX3hsX3llcywgInVu
-aV94bGF0ZT0xIiB9LCAvKiBlbXB0eSBvciAxIG9yIHllcyBvciB0cnVlICovDQo+PiArCXsgT3B0
-X3VuaV94bF95ZXMsICJ1bmlfeGxhdGU9eWVzIiB9LA0KPj4gKwl7IE9wdF91bmlfeGxfeWVzLCAi
-dW5pX3hsYXRlPXRydWUiIH0sDQo+PiArCXsgT3B0X3VuaV94bF95ZXMsICJ1bmlfeGxhdGUiIH0s
-DQo+PiArCXsgT3B0X2VyciwgTlVMTCB9DQo+PiArfTsNCj4gDQo+IC0tIA0KPiBQYWxpIFJvaMOh
-cg0KPiBwYWxpLnJvaGFyQGdtYWlsLmNvbQ0KDQo=
+On Mon, Oct 21, 2019 at 02:24:35PM -0700, John Hubbard wrote:
+> The MAP_HUGETLB ("-H" option) of gup_benchmark fails:
+>=20
+> $ sudo ./gup_benchmark -H
+> mmap: Invalid argument
+>=20
+> This is because gup_benchmark.c is passing in a file descriptor to
+> mmap(), but the fd came from opening up the /dev/zero file. This
+> confuses the mmap syscall implementation, which thinks that, if the
+> caller did not specify MAP_ANONYMOUS, then the file must be a huge
+> page file. So it attempts to verify that the file really is a huge
+> page file, as you can see here:
+>=20
+> ksys_mmap_pgoff()
+> {
+>     if (!(flags & MAP_ANONYMOUS)) {
+>         retval =3D -EINVAL;
+>         if (unlikely(flags & MAP_HUGETLB && !is_file_hugepages(file)))
+>             goto out_fput; /* THIS IS WHERE WE END UP */
+>=20
+>     else if (flags & MAP_HUGETLB) {
+>         ...proceed normally, /dev/zero is ok here...
+>=20
+> ...and of course is_file_hugepages() returns "false" for the /dev/zero
+> file.
+>=20
+> The problem is that the user space program, gup_benchmark.c, really just
+> wants anonymous memory here. The simplest way to get that is to pass
+> MAP_ANONYMOUS whenever MAP_HUGETLB is specified, so that's what this
+> patch does.
+
+This looks wrong, MAP_HUGETLB should only be use to create vma
+for hugetlbfs. If you want anonymous private vma do not set the
+MAP_HUGETLB. If you want huge page inside your anonymous vma
+there is nothing to do at the mmap time, this is the job of the
+transparent huge page code (THP).
+
+NAK as misleading
+
+Cheers,
+J=E9r=F4me
+
