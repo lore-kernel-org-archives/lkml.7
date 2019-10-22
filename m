@@ -2,247 +2,139 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DATE_IN_PAST_12_24,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0097BC47E49
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:12:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C38BCA9EB9
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:14:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C683621906
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:12:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71BA32184C
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 08:14:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="docP2kVW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388303AbfJVIMg (ORCPT
+        id S2388321AbfJVIO1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 04:12:36 -0400
-Received: from mga06.intel.com ([134.134.136.31]:64390 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388278AbfJVIMd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 04:12:33 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Oct 2019 01:12:32 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,326,1566889200"; 
-   d="scan'208";a="200703521"
-Received: from sqa-gate.sh.intel.com (HELO clx-ap-likexu.tsp.org) ([10.239.48.212])
-  by orsmga003.jf.intel.com with ESMTP; 22 Oct 2019 01:12:30 -0700
-From:   Like Xu <like.xu@linux.intel.com>
-To:     pbonzini@redhat.com, peterz@infradead.org, kvm@vger.kernel.org
-Cc:     like.xu@intel.com, linux-kernel@vger.kernel.org,
-        jmattson@google.com, sean.j.christopherson@intel.com,
-        wei.w.wang@intel.com, kan.liang@intel.com
-Subject: [PATCH v3 5/6] KVM: x86/vPMU: Reuse perf_event to avoid unnecessary pmc_reprogram_counter
-Date:   Tue, 22 Oct 2019 00:06:50 +0800
-Message-Id: <20191021160651.49508-6-like.xu@linux.intel.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191021160651.49508-1-like.xu@linux.intel.com>
-References: <20191021160651.49508-1-like.xu@linux.intel.com>
+        Tue, 22 Oct 2019 04:14:27 -0400
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:59546 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388055AbfJVIO1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 04:14:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1571732066; x=1603268066;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=uZ1Nc7xFlhZlA6hWP8C46y6MYqzMnnimoCEDMdoW5BA=;
+  b=docP2kVWCzaIyCDL4vdH0+GJWPTf5Eu6ZfKLMr1t7aa+x409A018Ogvt
+   ZhTi4dzq16wSQcTapQ+3SQWIjzpgNRDa0em33a3FbGAgcslOKKVwQbSHZ
+   37UgVzXJrPjN60sUEpbwIzj7RGrH9fRa1wPDjz+4qgowdkjzBgLIcFKDv
+   s=;
+X-IronPort-AV: E=Sophos;i="5.67,326,1566864000"; 
+   d="scan'208";a="425788157"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1d-2c665b5d.us-east-1.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 22 Oct 2019 08:14:24 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1d-2c665b5d.us-east-1.amazon.com (Postfix) with ESMTPS id 0E5F6A22B7;
+        Tue, 22 Oct 2019 08:14:20 +0000 (UTC)
+Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 22 Oct 2019 08:14:20 +0000
+Received: from [10.125.238.52] (10.43.160.153) by EX13D01EUB001.ant.amazon.com
+ (10.43.166.194) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Tue, 22 Oct
+ 2019 08:14:11 +0000
+Subject: Re: [PATCH v4 1/2] dt-bindings: edac: al-mc-edac: Amazon's Annapurna
+ Labs Memory Controller EDAC
+To:     Rob Herring <robh@kernel.org>
+CC:     <maz@kernel.org>, <mark.rutland@arm.com>, <arnd@arndb.de>,
+        <bp@alien8.de>, <mchehab@kernel.org>, <james.morse@arm.com>,
+        <davem@davemloft.net>, <gregkh@linuxfoundation.org>,
+        <paulmck@linux.ibm.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-edac@vger.kernel.org>,
+        <dwmw@amazon.co.uk>, <benh@kernel.crashing.org>,
+        <hhhawa@amazon.com>, <ronenk@amazon.com>, <jonnyc@amazon.com>,
+        <hanochu@amazon.com>, <amirkl@amazon.com>, <barakw@amazon.com>
+References: <1570708454-10784-1-git-send-email-talel@amazon.com>
+ <1570708454-10784-2-git-send-email-talel@amazon.com>
+ <20191011132904.GA15595@bogus>
+From:   "Shenhar, Talel" <talel@amazon.com>
+Message-ID: <9e1a863c-9523-4e67-b000-4b429ae7616e@amazon.com>
+Date:   Tue, 22 Oct 2019 11:14:05 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191011132904.GA15595@bogus>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [10.43.160.153]
+X-ClientProxiedBy: EX13D11UWB001.ant.amazon.com (10.43.161.53) To
+ EX13D01EUB001.ant.amazon.com (10.43.166.194)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The perf_event_create_kernel_counter() in the pmc_reprogram_counter() is
-a heavyweight and high-frequency operation, especially when host disables
-the watchdog (maximum 21000000 ns) which leads to an unacceptable latency
-of the guest NMI handler. It limits the use of vPMUs in the guest.
+Thanks Rob,
 
-When a vPMC is fully enabled, the legacy reprogram_*_counter() would stop
-and release its existing perf_event (if any) every time EVEN in most cases
-almost the same requested perf_event will be created and configured again.
+On 10/11/2019 4:29 PM, Rob Herring wrote:
+> On Thu, Oct 10, 2019 at 02:54:13PM +0300, Talel Shenhar wrote:
+>> Document Amazon's Annapurna Labs Memory Controller EDAC SoC binding.
+>>
+>> Signed-off-by: Talel Shenhar <talel@amazon.com>
+>> ---
+>>   .../bindings/edac/amazon,al-mc-edac.yaml           | 50 ++++++++++++++++++++++
+>>   1 file changed, 50 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml b/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
+>> new file mode 100644
+>> index 00000000..f66b094
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
+>> @@ -0,0 +1,50 @@
+>> +# SPDX-License-Identifier: GPL-2.0
+> Forgot to mention, please make new bindings (GPL-2.0-only OR BSD-2-Clause).
+ack, shall be part of v5
+> + interrupts:
+>> +    maxItems: 2
+>> +    items:
+>> +      - description: uncorrectable error interrupt
+>> +      - description: correctable error interrupt
+>> +
+>> +  interrupt-names:
+>> +    maxItems: 2
+>> +    items:
+>> +      - const: ue
+>> +      - const: ce
+> Now the example fails to build:
+>
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.example.dt.yaml:
+> edac@f0080000: interrupt-names: ['ue'] is too short
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.example.dt.yaml:
+> edac@f0080000: interrupts: [[20, 4]] is too short
+>
+> You either need to always have the CE irq or add 'minItems: 1' to both.
 
-For each vPMC, if the reuqested config ('u64 eventsel' for gp and 'u8 ctrl'
-for fixed) is the same as its current config AND a new sample period based
-on pmc->counter is accepted by host perf interface, the current event could
-be reused safely as a new created one does. Otherwise, do release the
-undesirable perf_event and reprogram a new one as usual.
+Indeed adding the minItems to 1 solves this.
 
-It's light-weight to call pmc_pause_counter (disable, read and reset event)
-and pmc_resume_counter (recalibrate period and re-enable event) as guest
-expects instead of release-and-create again on any condition. Compared to
-use the filterable event->attr or hw.config, a new 'u64 current_config'
-field is added to save the last original programed config for each vPMC.
+However, shouldn't it really be 0? interrupts are not mandatory?
 
-Based on this implementation, the number of calls to pmc_reprogram_counter
-is reduced by ~82.5% for a gp sampling event and ~99.9% for a fixed event.
-In the usage of multiplexing perf sampling mode, the average latency of the
-guest NMI handler is reduced from 104923 ns to 48393 ns (~2.16x speed up).
-If host disables watchdog, the minimum latecy of guest NMI handler could be
-speed up at ~3413x (from 20407603 to 5979 ns) and at ~786x in the average.
+What is the way to capture this in the new binding?
 
-Suggested-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Like Xu <like.xu@linux.intel.com>
----
- arch/x86/include/asm/kvm_host.h |  5 ++++
- arch/x86/kvm/pmu.c              | 45 +++++++++++++++++++++++++++++++--
- arch/x86/kvm/pmu.h              | 12 +++++++--
- arch/x86/kvm/pmu_amd.c          |  1 +
- arch/x86/kvm/vmx/pmu_intel.c    |  2 ++
- 5 files changed, 61 insertions(+), 4 deletions(-)
-
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 50eb430b0ad8..ccce4aaa44df 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -451,6 +451,11 @@ struct kvm_pmc {
- 	u64 eventsel;
- 	struct perf_event *perf_event;
- 	struct kvm_vcpu *vcpu;
-+	/*
-+	 * eventsel value for general purpose counters,
-+	 * ctrl value for fixed counters.
-+	 */
-+	u64 current_config;
- };
- 
- struct kvm_pmu {
-diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
-index 39a259b701e0..80a17377ec81 100644
---- a/arch/x86/kvm/pmu.c
-+++ b/arch/x86/kvm/pmu.c
-@@ -140,6 +140,35 @@ static void pmc_reprogram_counter(struct kvm_pmc *pmc, u32 type,
- 	clear_bit(pmc->idx, (unsigned long*)&pmc_to_pmu(pmc)->reprogram_pmi);
- }
- 
-+static void pmc_pause_counter(struct kvm_pmc *pmc)
-+{
-+	u64 counter = pmc->counter;
-+
-+	if (!pmc->perf_event)
-+		return;
-+
-+	/* update counter, reset event value to avoid redundant accumulation */
-+	counter += perf_event_pause(pmc->perf_event, true);
-+	pmc->counter = counter & pmc_bitmask(pmc);
-+}
-+
-+static bool pmc_resume_counter(struct kvm_pmc *pmc)
-+{
-+	if (!pmc->perf_event)
-+		return false;
-+
-+	/* recalibrate sample period and check if it's accepted by perf core */
-+	if (perf_event_period(pmc->perf_event,
-+			(-pmc->counter) & pmc_bitmask(pmc)))
-+		return false;
-+
-+	/* reuse perf_event to serve as pmc_reprogram_counter() does*/
-+	perf_event_enable(pmc->perf_event);
-+
-+	clear_bit(pmc->idx, (unsigned long *)&pmc_to_pmu(pmc)->reprogram_pmi);
-+	return true;
-+}
-+
- void reprogram_gp_counter(struct kvm_pmc *pmc, u64 eventsel)
- {
- 	unsigned config, type = PERF_TYPE_RAW;
-@@ -154,7 +183,7 @@ void reprogram_gp_counter(struct kvm_pmc *pmc, u64 eventsel)
- 
- 	pmc->eventsel = eventsel;
- 
--	pmc_stop_counter(pmc);
-+	pmc_pause_counter(pmc);
- 
- 	if (!(eventsel & ARCH_PERFMON_EVENTSEL_ENABLE) || !pmc_is_enabled(pmc))
- 		return;
-@@ -193,6 +222,12 @@ void reprogram_gp_counter(struct kvm_pmc *pmc, u64 eventsel)
- 	if (type == PERF_TYPE_RAW)
- 		config = eventsel & X86_RAW_EVENT_MASK;
- 
-+	if (pmc->current_config == eventsel && pmc_resume_counter(pmc))
-+		return;
-+
-+	pmc_release_perf_event(pmc);
-+
-+	pmc->current_config = eventsel;
- 	pmc_reprogram_counter(pmc, type, config,
- 			      !(eventsel & ARCH_PERFMON_EVENTSEL_USR),
- 			      !(eventsel & ARCH_PERFMON_EVENTSEL_OS),
-@@ -209,7 +244,7 @@ void reprogram_fixed_counter(struct kvm_pmc *pmc, u8 ctrl, int idx)
- 	struct kvm_pmu_event_filter *filter;
- 	struct kvm *kvm = pmc->vcpu->kvm;
- 
--	pmc_stop_counter(pmc);
-+	pmc_pause_counter(pmc);
- 
- 	if (!en_field || !pmc_is_enabled(pmc))
- 		return;
-@@ -224,6 +259,12 @@ void reprogram_fixed_counter(struct kvm_pmc *pmc, u8 ctrl, int idx)
- 			return;
- 	}
- 
-+	if (pmc->current_config == (u64)ctrl && pmc_resume_counter(pmc))
-+		return;
-+
-+	pmc_release_perf_event(pmc);
-+
-+	pmc->current_config = (u64)ctrl;
- 	pmc_reprogram_counter(pmc, PERF_TYPE_HARDWARE,
- 			      kvm_x86_ops->pmu_ops->find_fixed_event(idx),
- 			      !(en_field & 0x2), /* exclude user */
-diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
-index 3b4f1942d206..4bf1d25c92d3 100644
---- a/arch/x86/kvm/pmu.h
-+++ b/arch/x86/kvm/pmu.h
-@@ -56,12 +56,20 @@ static inline u64 pmc_read_counter(struct kvm_pmc *pmc)
- 	return counter & pmc_bitmask(pmc);
- }
- 
--static inline void pmc_stop_counter(struct kvm_pmc *pmc)
-+static inline void pmc_release_perf_event(struct kvm_pmc *pmc)
- {
- 	if (pmc->perf_event) {
--		pmc->counter = pmc_read_counter(pmc);
- 		perf_event_release_kernel(pmc->perf_event);
- 		pmc->perf_event = NULL;
-+		pmc->current_config = 0;
-+	}
-+}
-+
-+static inline void pmc_stop_counter(struct kvm_pmc *pmc)
-+{
-+	if (pmc->perf_event) {
-+		pmc->counter = pmc_read_counter(pmc);
-+		pmc_release_perf_event(pmc);
- 	}
- }
- 
-diff --git a/arch/x86/kvm/pmu_amd.c b/arch/x86/kvm/pmu_amd.c
-index 88fe3f5f5bd1..0ed2cc7c5902 100644
---- a/arch/x86/kvm/pmu_amd.c
-+++ b/arch/x86/kvm/pmu_amd.c
-@@ -292,6 +292,7 @@ static void amd_pmu_init(struct kvm_vcpu *vcpu)
- 		pmu->gp_counters[i].type = KVM_PMC_GP;
- 		pmu->gp_counters[i].vcpu = vcpu;
- 		pmu->gp_counters[i].idx = i;
-+		pmu->gp_counters[i].current_config = 0;
- 	}
- }
- 
-diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
-index 714afcd9244c..002b98a8977e 100644
---- a/arch/x86/kvm/vmx/pmu_intel.c
-+++ b/arch/x86/kvm/vmx/pmu_intel.c
-@@ -340,12 +340,14 @@ static void intel_pmu_init(struct kvm_vcpu *vcpu)
- 		pmu->gp_counters[i].type = KVM_PMC_GP;
- 		pmu->gp_counters[i].vcpu = vcpu;
- 		pmu->gp_counters[i].idx = i;
-+		pmu->gp_counters[i].current_config = 0;
- 	}
- 
- 	for (i = 0; i < INTEL_PMC_MAX_FIXED; i++) {
- 		pmu->fixed_counters[i].type = KVM_PMC_FIXED;
- 		pmu->fixed_counters[i].vcpu = vcpu;
- 		pmu->fixed_counters[i].idx = i + INTEL_PMC_IDX_FIXED;
-+		pmu->fixed_counters[i].current_config = 0;
- 	}
- }
- 
--- 
-2.21.0
-
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    edac@f0080000 {
+> +      compatible = "amazon,al-mc-edac";
+> +      reg = <0x0 0xf0080000 0x0 0x00010000>;
+> +      interrupt-parent = <&amazon_al_system_fabric>;
+> +      interrupt-names = "ue";
+> +      interrupts = <20 IRQ_TYPE_LEVEL_HIGH>;
+> +    };
+> -- 
+> 2.7.4
+>
