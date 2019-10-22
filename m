@@ -2,121 +2,200 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A97F2CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:00:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AF1ACA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:05:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7990421783
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:00:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38D1821872
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:05:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pi2vCaoI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388938AbfJVMAm (ORCPT
+        id S2388945AbfJVMFR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 08:00:42 -0400
-Received: from mga04.intel.com ([192.55.52.120]:54384 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388106AbfJVMAm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 08:00:42 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Oct 2019 05:00:41 -0700
-X-IronPort-AV: E=Sophos;i="5.67,327,1566889200"; 
-   d="scan'208";a="191438120"
-Received: from likexu-mobl1.ccr.corp.intel.com (HELO [10.255.31.145]) ([10.255.31.145])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/AES256-SHA; 22 Oct 2019 05:00:39 -0700
-Subject: Re: [PATCH v3 6/6] KVM: x86/vPMU: Add lazy mechanism to release
- perf_event per vPMC
-To:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
-Cc:     peterz@infradead.org, like.xu@intel.com,
-        linux-kernel@vger.kernel.org, jmattson@google.com,
-        sean.j.christopherson@intel.com, wei.w.wang@intel.com,
-        kan.liang@intel.com
-References: <20191021160651.49508-1-like.xu@linux.intel.com>
- <20191021160651.49508-7-like.xu@linux.intel.com>
- <c17a9d77-2c30-b3c0-4652-57f0b9252f3b@redhat.com>
-From:   Like Xu <like.xu@linux.intel.com>
-Organization: Intel OTC
-Message-ID: <7d46a902-43eb-4693-f481-1c2efd397fbd@linux.intel.com>
-Date:   Tue, 22 Oct 2019 20:00:37 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 22 Oct 2019 08:05:17 -0400
+Received: from mail-lj1-f181.google.com ([209.85.208.181]:42028 "EHLO
+        mail-lj1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388246AbfJVMFR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 08:05:17 -0400
+Received: by mail-lj1-f181.google.com with SMTP id u4so2761764ljj.9
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 05:05:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=VGTfUe//Lkyyq1CFsi2Aw+FdHH2W9Ju5Bb6Df3fquDw=;
+        b=pi2vCaoItbcXJ3F6Bo71yn+jXqd3pUZmK66jHNjAkxWt9qjAswyRHIIsKKK72IkTXF
+         /IvctVUS5+Et1kRm85+/fTdAMG6rzkj4+bC/284zs0NqpGElHvrvhM6VtG5Oteyu3d8z
+         X3/6G6g//2ckZ/demrHv7AuYYD7M7xSSbVgMj0XayXZhIwSodnRNmXSaxpCWbszhUD68
+         wQb6DLFyZ+Hj85zp69FgdmjvHHjZuGsYd56eKrruHekeB9s2DSlxgz1TYs2RZPVqBGKj
+         yaiHok3rmXo/vPDzoXU0deh8jdiYvdZaUgncHbfuyUiknG+ebmixBr2n3MkfWfs2FE7w
+         hKcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=VGTfUe//Lkyyq1CFsi2Aw+FdHH2W9Ju5Bb6Df3fquDw=;
+        b=hoJ2+gojh2mlhsENsLaDUx5zhf6AioPWGJuaHi9xWlmDkkZ3FXG2klBf6JxJVtJEVM
+         8tEdCy/YsjdDw1DJp+Q6BaMx/ub5rhIUCBewQY/9iNmxQwUqIB7xWrdUFH/ryzFj7aiy
+         WUm582pYFtlfLh14kiwROcxfVqyEhQaEsV++hTDHjUPAmiLrfw9ZaGpHE8dvFWauKFKg
+         VQCWoNtBxl8GBPiFxacrFPLKu7FCoe2Pzlxu1frLVi3azNNhFfKQOlWPVZuHyWwFhTL8
+         Hi50NP4Lr2d6OkYpCXf1FOEB3KwXsiVUEUC8SCaka4w0Aj2pXZNrJepS1foBQilZfAWl
+         ZTsw==
+X-Gm-Message-State: APjAAAXrJIEm03VBxiGlTwlNzkwrHOy+KUevIuia3Oyi+I28EfHuaUo5
+        UUmKN5Ge+FFBggqJ211NnIEqNg==
+X-Google-Smtp-Source: APXvYqw73VgC0S976eZM9uQqGSZ6Ma0RPqQ57qIGOHoyqFCwxrGlaeFe6OIdIpOCQtqa5/Z8vQsNJA==
+X-Received: by 2002:a2e:9b46:: with SMTP id o6mr2071632ljj.90.1571745914535;
+        Tue, 22 Oct 2019 05:05:14 -0700 (PDT)
+Received: from localhost.localdomain (c-413e70d5.07-21-73746f28.bbcust.telenor.se. [213.112.62.65])
+        by smtp.gmail.com with ESMTPSA id r75sm6940248lff.93.2019.10.22.05.05.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 22 Oct 2019 05:05:12 -0700 (PDT)
+Date:   Tue, 22 Oct 2019 13:10:39 +0200
+From:   Anders Roxell <anders.roxell@linaro.org>
+To:     Peng Ma <peng.ma@nxp.com>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        Leo Li <leoyang.li@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
+Subject: Re: [EXT] Re: [V5 1/2] dmaengine: fsl-dpaa2-qdma: Add the
+ DPDMAI(Data Path DMA Interface) support
+Message-ID: <20191022111039.GA8762@localhost.localdomain>
+References: <20190930020440.7754-1-peng.ma@nxp.com>
+ <20191017041124.GN2654@vkoul-mobl>
+ <AM0PR04MB44207F0EF575C5FB44DA6984ED6D0@AM0PR04MB4420.eurprd04.prod.outlook.com>
+ <CADYN=9JkQMawVnLoJ8sXAbV8NB_BK0zQA0PomJ583Agj12r8Cg@mail.gmail.com>
+ <VI1PR04MB443121007853185039A65534ED680@VI1PR04MB4431.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <c17a9d77-2c30-b3c0-4652-57f0b9252f3b@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <VI1PR04MB443121007853185039A65534ED680@VI1PR04MB4431.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paolo,
-On 2019/10/22 18:47, Paolo Bonzini wrote:
-> On 21/10/19 18:06, Like Xu wrote:
->>   
->> +		__set_bit(INTEL_PMC_IDX_FIXED + i, pmu->pmc_in_use);
->>   		reprogram_fixed_counter(pmc, new_ctrl, i);
->>   	}
->>   
->> @@ -329,6 +330,11 @@ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
->>   	    (boot_cpu_has(X86_FEATURE_HLE) || boot_cpu_has(X86_FEATURE_RTM)) &&
->>   	    (entry->ebx & (X86_FEATURE_HLE|X86_FEATURE_RTM)))
->>   		pmu->reserved_bits ^= HSW_IN_TX|HSW_IN_TX_CHECKPOINTED;
->> +
->> +	bitmap_set(pmu->all_valid_pmc_idx,
->> +		0, pmu->nr_arch_gp_counters);
->> +	bitmap_set(pmu->all_valid_pmc_idx,
->> +		INTEL_PMC_MAX_GENERIC, pmu->nr_arch_fixed_counters);
+On 2019-10-22 10:19, Peng Ma wrote:
+> Hi Anders && Viod,
 > 
-> The offset needs to be INTEL_PMC_IDX_FIXED for GP counters, and 0 for
-> fixed counters, otherwise pmc_in_use and all_valid_pmc_idx are not in sync.
+> I sent v6 patch to fix the build error, please check.
+
+oh I will check, didn't see them when I sent out my email. =/
+
+Cheers,
+Anders
+
+> Patchwork link:
+> https://patchwork.kernel.org/project/linux-dmaengine/list/?series=191397
 > 
-
-First, the bitmap_set is declared as:
-
-	static __always_inline void bitmap_set(unsigned long *map,
-	unsigned int start, unsigned int nbits)
-
-Second, the structure of pmu->pmc_in_use is in the following format:
-
-   Intel: [0 .. INTEL_PMC_MAX_GENERIC-1] <=> gp counters
-        	 [INTEL_PMC_IDX_FIXED .. INTEL_PMC_IDX_FIXED + 2] <=> fixed
-   AMD:   [0 .. AMD64_NUM_COUNTERS-1] <=> gp counters
-
-Then let me translate your suggestion to the following code:
-
-	bitmap_set(pmu->all_valid_pmc_idx, 0,
-		   pmu->nr_arch_fixed_counters);
-	bitmap_set(pmu->all_valid_pmc_idx, INTEL_PMC_IDX_FIXED,
-		   pmu->nr_arch_gp_counters);
-
-and the above code doesn't pass the following verification patch:
-
-diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
-index a8793f965941..0a73bc8c587d 100644
---- a/arch/x86/kvm/pmu.c
-+++ b/arch/x86/kvm/pmu.c
-@@ -469,6 +469,7 @@ void kvm_pmu_cleanup(struct kvm_vcpu *vcpu)
-
-         /* release events for unmarked vPMCs in the last sched time 
-slice */
-         for_each_set_bit(i, bitmask, X86_PMC_IDX_MAX) {
-+               pr_info("%s, do cleanup check for i = %d", __func__, i);
-                 pmc = kvm_x86_ops->pmu_ops->pmc_idx_to_pmc(pmu, i);
-
-                 if (pmc && pmc->perf_event && !pmc_speculative_in_use(pmc))
-
-The print message would never stop after the guest user finishes the
-perf command and it's checking the invalid idx for i = 35 unexpectedly.
-
-However, my code does work just as you suggest.
-
-By the way, how about other kvm patches?
-
-> Paolo
-> 
-> 
-
+> Best Regards,
+> Peng
+> >-----Original Message-----
+> >From: Anders Roxell <anders.roxell@linaro.org>
+> >Sent: 2019年10月22日 17:27
+> >To: Peng Ma <peng.ma@nxp.com>
+> >Cc: Vinod Koul <vkoul@kernel.org>; dan.j.williams@intel.com; Leo Li
+> ><leoyang.li@nxp.com>; linux-kernel@vger.kernel.org;
+> >dmaengine@vger.kernel.org
+> >Subject: Re: [EXT] Re: [V5 1/2] dmaengine: fsl-dpaa2-qdma: Add the
+> >DPDMAI(Data Path DMA Interface) support
+> >
+> >Caution: EXT Email
+> >
+> >On Thu, 17 Oct 2019 at 08:16, Peng Ma <peng.ma@nxp.com> wrote:
+> >>
+> >> Hi Vinod,
+> >>
+> >> Thanks very much for your reply.
+> >>
+> >> Best Regards,
+> >> Peng
+> >> >-----Original Message-----
+> >> >From: Vinod Koul <vkoul@kernel.org>
+> >> >Sent: 2019年10月17日 12:11
+> >> >To: Peng Ma <peng.ma@nxp.com>
+> >> >Cc: dan.j.williams@intel.com; Leo Li <leoyang.li@nxp.com>;
+> >> >linux-kernel@vger.kernel.org; dmaengine@vger.kernel.org
+> >> >Subject: [EXT] Re: [V5 1/2] dmaengine: fsl-dpaa2-qdma: Add the
+> >> >DPDMAI(Data Path DMA Interface) support
+> >> >
+> >> >Caution: EXT Email
+> >> >
+> >> >On 30-09-19, 02:04, Peng Ma wrote:
+> >> >> The MC(Management Complex) exports the DPDMAI(Data Path DMA
+> >> >Interface)
+> >> >> object as an interface to operate the DPAA2(Data Path Acceleration
+> >> >> Architecture 2) qDMA Engine. The DPDMAI enables sending frame-based
+> >> >> requests to qDMA and receiving back confirmation response on
+> >> >> transaction completion, utilizing the DPAA2 QBMan(Queue Manager and
+> >> >> Buffer Manager
+> >> >> hardware) infrastructure. DPDMAI object provides up to two
+> >> >> priorities for processing qDMA requests.
+> >> >> The following list summarizes the DPDMAI main features and capabilities:
+> >> >>       1. Supports up to two scheduling priorities for processing
+> >> >>       service requests.
+> >> >>       - Each DPDMAI transmit queue is mapped to one of two service
+> >> >>       priorities, allowing further prioritization in hardware between
+> >> >>       requests from different DPDMAI objects.
+> >> >>       2. Supports up to two receive queues for incoming transaction
+> >> >>       completion confirmations.
+> >> >>       - Each DPDMAI receive queue is mapped to one of two receive
+> >> >>       priorities, allowing further prioritization between other
+> >> >>       interfaces when associating the DPDMAI receive queues to DPIO
+> >> >>       or DPCON(Data Path Concentrator) objects.
+> >> >>       3. Supports different scheduling options for processing received
+> >> >>       packets:
+> >> >>       - Queues can be configured either in 'parked' mode (default),
+> >> >>       or attached to a DPIO object, or attached to DPCON object.
+> >> >>       4. Allows interaction with one or more DPIO objects for
+> >> >>       dequeueing/enqueueing frame descriptors(FD) and for
+> >> >>       acquiring/releasing buffers.
+> >> >>       5. Supports enable, disable, and reset operations.
+> >> >>
+> >> >> Add dpdmai to support some platforms with dpaa2 qdma engine.
+> >> >
+> >> >Applied both, thanks
+> >
+> >I see this error when I'm building.
+> >
+> >WARNING: modpost: missing MODULE_LICENSE() in
+> >drivers/dma/fsl-dpaa2-qdma/dpdmai.o
+> >see include/linux/module.h for more information
+> >ERROR: "dpdmai_enable" [drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko]
+> >undefined!
+> >ERROR: "dpdmai_set_rx_queue"
+> >[drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko] undefined!
+> >ERROR: "dpdmai_get_tx_queue"
+> >[drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko] undefined!
+> >ERROR: "dpdmai_get_rx_queue"
+> >[drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko] undefined!
+> >ERROR: "dpdmai_get_attributes"
+> >[drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko] undefined!
+> >ERROR: "dpdmai_open" [drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko]
+> >undefined!
+> >ERROR: "dpdmai_close" [drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko]
+> >undefined!
+> >ERROR: "dpdmai_disable" [drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko]
+> >undefined!
+> >ERROR: "dpdmai_reset" [drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko]
+> >undefined!
+> >make[2]: *** [../scripts/Makefile.modpost:95: __modpost] Error 1
+> >make[1]: *** [/srv/src/kernel/next/Makefile:1282: modules] Error 2
+> >make: *** [Makefile:179: sub-make] Error 2
+> >make: Target 'Image' not remade because of errors.
+> >make: Target 'modules' not remade because of errors.
+> >
+> >any other that see the same ?
+> >
+> >Cheers,
+> >Anders
