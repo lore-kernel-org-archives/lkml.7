@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D365CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 19:12:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A671CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 19:12:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38332218AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 19:12:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DD74218AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 19:12:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571771553;
-	bh=c352t9a37W5iZ6QoYbS1JdFxmkNCiGi48vP+/8QJvW4=;
+	s=default; t=1571771557;
+	bh=tUhpaitMuoRbduLSgEqFovdvLBjMXkIUbwLYs5P9r5U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D0hmmFFqZsWWx3hlNX3LRP3pIOhLhZzzGMukqQrUsjM6UV1m2lFJfpKz5r3wQHlB9
-	 yePs9KNgZ5HtgvkA2PSoHsWlnJu5D4eBhnLeBG1D/9CpAA7WpXV7m8eXzr2q0UwsvF
-	 eUyVf8zEpHGhzUtI8NmqUbRjrQZJkb+Ikd3M04qA=
+	b=zhvdUZ6FanWQwi7nGvi9SbaqUjD4JWBe7EOsMMyB93NxA4FV7tEGx3K8a2XXD7lvF
+	 teAhHrMZgQ3/jMlOsG243UZ53SzMIfVRUDGYNgmf+TEX8kObV0ycidKx9NVFr1yGJ7
+	 dtgVZJbXyl3Hld4h2c4p5TzB68Z2c+rUJcGpc5a4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733004AbfJVTMc (ORCPT
+        id S1733040AbfJVTMf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 15:12:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43538 "EHLO mail.kernel.org"
+        Tue, 22 Oct 2019 15:12:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732903AbfJVTM3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 15:12:29 -0400
+        id S1732903AbfJVTMd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 15:12:33 -0400
 Received: from localhost.localdomain (rrcs-50-75-166-42.nys.biz.rr.com [50.75.166.42])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1A4521D81;
-        Tue, 22 Oct 2019 19:12:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDA3421D71;
+        Tue, 22 Oct 2019 19:12:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571771548;
-        bh=c352t9a37W5iZ6QoYbS1JdFxmkNCiGi48vP+/8QJvW4=;
+        s=default; t=1571771552;
+        bh=tUhpaitMuoRbduLSgEqFovdvLBjMXkIUbwLYs5P9r5U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ietizg4mUds30r5O4A4J+Bp5G/ZLJ5XbMtd5So8K55enMBKbNOcUbvqKS9Wm7AqeZ
-         nq1d2JW4rk9RdrqiB7AoaNsv4o26kshE0NqC+GcPcOfsp6Hg2oq042xGZJ7Od+fJcT
-         qkSF05XSStsT+H5BHnc4OcVoBm5L3+4eCM7DhPKA=
+        b=a7QtZqijRRS/LJjdLOMKOOMGrCcTiPqrYAKaIY+gOdm94A9J2viGhlesoc9JwM9k8
+         xyab/CbLUFn0vjcSzMqFn3Rk4qz8Hd+GH17svYO4bWHeODusQyZwrtN9AHYII8TpMZ
+         S9/BWIqe9JHcWvIBZlEXYbFRrS+RP3Wzw55EOmcQ=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
@@ -48,10 +48,14 @@ Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Paul E. McKenney" <paulmck@kernel.org>,
-        linux-afs@lists.infradead.org
-Subject: [PATCH tip/core/rcu 05/10] fs/afs: Replace rcu_swap_protected() with rcu_replace()
-Date:   Tue, 22 Oct 2019 12:12:10 -0700
-Message-Id: <20191022191215.25781-5-paulmck@kernel.org>
+        "David S. Miller" <davem@davemloft.net>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Petr Machata <petrm@mellanox.com>,
+        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org
+Subject: [PATCH tip/core/rcu 07/10] net/core: Replace rcu_swap_protected() with rcu_replace()
+Date:   Tue, 22 Oct 2019 12:12:12 -0700
+Message-Id: <20191022191215.25781-7-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20191022191136.GA25627@paulmck-ThinkPad-P72>
 References: <20191022191136.GA25627@paulmck-ThinkPad-P72>
@@ -70,28 +74,48 @@ Link: https://lore.kernel.org/lkml/CAHk-=wiAsJLw1egFEE=Z7-GGtM6wcvtyytXZA1+BHqta
 Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
 [ paulmck: From rcu_replace() to rcu_replace_pointer() per Ingo Molnar. ]
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-Acked-by: David Howells <dhowells@redhat.com>
-Cc: <linux-afs@lists.infradead.org>
-Cc: <linux-kernel@vger.kernel.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Jiri Pirko <jiri@mellanox.com>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Ido Schimmel <idosch@mellanox.com>
+Cc: Petr Machata <petrm@mellanox.com>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: <netdev@vger.kernel.org>
 ---
- fs/afs/vl_list.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/core/dev.c            | 4 ++--
+ net/core/sock_reuseport.c | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/fs/afs/vl_list.c b/fs/afs/vl_list.c
-index 21eb0c0..8fea54e 100644
---- a/fs/afs/vl_list.c
-+++ b/fs/afs/vl_list.c
-@@ -279,8 +279,8 @@ struct afs_vlserver_list *afs_extract_vlserver_list(struct afs_cell *cell,
- 			struct afs_addr_list *old = addrs;
+diff --git a/net/core/dev.c b/net/core/dev.c
+index bf3ed41..c5d8882 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -1288,8 +1288,8 @@ int dev_set_alias(struct net_device *dev, const char *alias, size_t len)
+ 	}
  
- 			write_lock(&server->lock);
--			rcu_swap_protected(server->addresses, old,
--					   lockdep_is_held(&server->lock));
-+			old = rcu_replace_pointer(server->addresses, old,
-+						  lockdep_is_held(&server->lock));
- 			write_unlock(&server->lock);
- 			afs_put_addrlist(old);
- 		}
+ 	mutex_lock(&ifalias_mutex);
+-	rcu_swap_protected(dev->ifalias, new_alias,
+-			   mutex_is_locked(&ifalias_mutex));
++	new_alias = rcu_replace_pointer(dev->ifalias, new_alias,
++					mutex_is_locked(&ifalias_mutex));
+ 	mutex_unlock(&ifalias_mutex);
+ 
+ 	if (new_alias)
+diff --git a/net/core/sock_reuseport.c b/net/core/sock_reuseport.c
+index f3ceec9..f19f179 100644
+--- a/net/core/sock_reuseport.c
++++ b/net/core/sock_reuseport.c
+@@ -356,8 +356,8 @@ int reuseport_detach_prog(struct sock *sk)
+ 	spin_lock_bh(&reuseport_lock);
+ 	reuse = rcu_dereference_protected(sk->sk_reuseport_cb,
+ 					  lockdep_is_held(&reuseport_lock));
+-	rcu_swap_protected(reuse->prog, old_prog,
+-			   lockdep_is_held(&reuseport_lock));
++	old_prog = rcu_replace_pointer(reuse->prog, old_prog,
++				       lockdep_is_held(&reuseport_lock));
+ 	spin_unlock_bh(&reuseport_lock);
+ 
+ 	if (!old_prog)
 -- 
 2.9.5
 
