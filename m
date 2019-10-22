@@ -2,139 +2,113 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CB5FCA9EB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:16:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C65CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:17:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51DA62064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:16:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BC17218AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 09:17:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NHRI00dN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388385AbfJVJQ2 (ORCPT
+        id S2388479AbfJVJRf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 05:16:28 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36302 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388405AbfJVJQ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 05:16:27 -0400
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Tue, 22 Oct 2019 05:17:35 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:54628 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388006AbfJVJRf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 05:17:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571735854;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=O5z9CMG3C81sifoUf2QQwhHlJPM7DMSGubNkuyFNjik=;
+        b=NHRI00dNY2HoF1QPS4xmFjPnxP8d5+dfh/+TkWfPatcv20G1unhvlO6uTrJcPHyzCD4NIb
+        VTcSsQAkqEuc9ffLn9eTjrOQuStSqF8Oy370sffKusFmzyIWKMaupUaJ1zZYSRKW8K9f1W
+        cE3pTaRjv0zlpx6ie01IEfEdQZv8EC4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-357-sm3pJgPVP2O00wTgL4khMA-1; Tue, 22 Oct 2019 05:17:31 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8C4B736961
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 09:16:26 +0000 (UTC)
-Received: by mail-qt1-f200.google.com with SMTP id j18so9418261qtp.23
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 02:16:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1NaftjpZ7q0/7FUFVe9FC7tfQH1ZMRLJsGxSpJEAYR0=;
-        b=SJ72QxCdM2bF6+34K1Lrrr3ILkRtt4e0BKo+qLQCdVLOF3SGTEVDYkJscMV/73Y63n
-         zvxJ7xergnBumC1ZSY+CDsF+qi/SAEzzvdlQNF1Z+Ijq8KylqO4m9JZo1nda93okLv4H
-         tVLE6ASRafu9rxxqcEfwZDjl+HcI/NQJJpSxzHVSuzjBW3YeupEaFhSO2UQYonE509pt
-         DYQg+hDbsROL/Vs15j6F6JZ14AGchs6+uTTtT1TcDwB4Zvpgw8Zdx9UweQYLpEOaogrN
-         D9prH5PmEDG6gnKm7exphb79PfMlmHtkr57LTJcRO8ulfzmjR5nPNtVzaSHZq1enklhk
-         RqlA==
-X-Gm-Message-State: APjAAAUz2qrop4Ml9vctTjIYWtev2A17yg32zGXu0z0mwgk4zLPI3sxo
-        rubOqtfEHOeQ37CAYEa82Ns4Ay21cm5gMc1ADQaZ2zlqdrz45NToxK0fXT7scYltFc/6+AeygYR
-        HUf2wGBlaqCxOsitIFovlB/Aw8czKBAk9qrMB106j
-X-Received: by 2002:ac8:664b:: with SMTP id j11mr2246839qtp.137.1571735785692;
-        Tue, 22 Oct 2019 02:16:25 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxh+htVaSt1EHk6f2pMjctNRL+6dMevykS1gSHbmTJ7kc2awbIl5sahcS8cpGCaPnstRND7kRjzMbWgqOesrio=
-X-Received: by 2002:ac8:664b:: with SMTP id j11mr2246814qtp.137.1571735785316;
- Tue, 22 Oct 2019 02:16:25 -0700 (PDT)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BEABD107AD31;
+        Tue, 22 Oct 2019 09:17:28 +0000 (UTC)
+Received: from [10.36.117.11] (ovpn-117-11.ams2.redhat.com [10.36.117.11])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E60465D6A5;
+        Tue, 22 Oct 2019 09:17:24 +0000 (UTC)
+Subject: Re: [PATCH v2 0/2] mm: Memory offlining + page isolation cleanups
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Pingfan Liu <kernelfans@gmail.com>, Qian Cai <cai@lca.pw>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Wei Yang <richard.weiyang@gmail.com>
+References: <20191021172353.3056-1-david@redhat.com>
+ <25d3f071-3268-298b-e0c8-9c307d1015fe@redhat.com>
+ <20191022080835.GZ9379@dhcp22.suse.cz>
+ <1f56744d-2c22-6c12-8fe8-4a71e791c467@redhat.com>
+ <20191022082131.GC9379@dhcp22.suse.cz>
+ <de39873c-ae55-88ed-0b4e-4f67a75ef81c@redhat.com>
+ <20191022091431.GG9379@dhcp22.suse.cz>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat GmbH
+Message-ID: <68d6da35-276c-0491-99ea-8249dee8fd1d@redhat.com>
+Date:   Tue, 22 Oct 2019 11:17:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-References: <CACO55ttOJaXKWmKQQbMAQRJHLXF-VtNn58n4BZhFKYmAdfiJjA@mail.gmail.com>
- <20191016213722.GA72810@google.com> <CACO55tuXck7vqGVLmMBGFg6A2pr3h8koRuvvWHLNDH8XvBVxew@mail.gmail.com>
- <20191021133328.GI2819@lahna.fi.intel.com> <CACO55tujUZr+rKkyrkfN+wkNOJWdNEVhVc-eZ3RCXJD+G1z=7A@mail.gmail.com>
- <20191021140852.GM2819@lahna.fi.intel.com> <CACO55tvp6n2ahizwhc70xRJ1uTohs2ep962vwtHGQK-MkcLmsw@mail.gmail.com>
- <20191021154606.GT2819@lahna.fi.intel.com> <CACO55tsGhvG1qapRkdu_j7R534cFa5o=Gv2s4VZDrWUrxjBFwA@mail.gmail.com>
-In-Reply-To: <CACO55tsGhvG1qapRkdu_j7R534cFa5o=Gv2s4VZDrWUrxjBFwA@mail.gmail.com>
-From:   Karol Herbst <kherbst@redhat.com>
-Date:   Tue, 22 Oct 2019 11:16:14 +0200
-Message-ID: <CACO55ts7hivYgN7=3bcAjWx2h8FfbR5UiKiOOExYY9m-TGRNfw@mail.gmail.com>
-Subject: Re: [PATCH v3] pci: prevent putting nvidia GPUs into lower device
- states on certain intel bridges
-To:     Mika Westerberg <mika.westerberg@intel.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lyude Paul <lyude@redhat.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        Linux ACPI Mailing List <linux-acpi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191022091431.GG9379@dhcp22.suse.cz>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-MC-Unique: sm3pJgPVP2O00wTgL4khMA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I think there is something I totally forgot about:
+On 22.10.19 11:14, Michal Hocko wrote:
+> On Tue 22-10-19 10:32:11, David Hildenbrand wrote:
+> [...]
+>> E.g., arch/x86/kvm/mmu.c:kvm_is_mmio_pfn()
+>=20
+> Thanks for these references. I am not really familiar with kvm so I
+> cannot really comment on the specific code but I am wondering why
+> it simply doesn't check for ZONE_DEVICE explicitly? Also we do care
+> about holes in RAM (from the early boot), those should be reserved
+> already AFAIR. So we are left with hotplugged memory with holes and
+> I am not really sure we should bother with this until there is a clear
+> usecase in sight.
 
-When there was never a driver bound to the GPU, and if runtime power
-management gets enabled on that device, runtime suspend/resume works
-as expected (I am not 100% sure on if that always works, but I will
-recheck that).
-In the past I know that at some point I "bisected" the nouveau driver
-to figure out what actually breaks it and found out that some script
-executed with the help of an on-chip engine (signed script, signed
-firmware, both vbios provided) makes it break. Debugging the script
-lead me to the PCIe link speed changes done inside the script breaking
-it.
+Well, checking for ZONE_DEVICE is only possible if you have an=20
+initialized memmap. And that is not guaranteed when you start mapping=20
+random stuff into your guest via /dev/mem.
 
-But as "reverting" the speed change didn't make it work reliably
-again, I think I need to get back on that and check if it's something
-else. I will try to convert the script into C or python code to make
-it more accessible to debug and hopefully I'll find something I
-overlooked the last time.
+I am reworking these patches right now and audit the whole kernel for=20
+PageReserved() checks that might affect ZONE_DEVICE. I'll send the=20
+collection of patches as RFC.
 
-On Mon, Oct 21, 2019 at 6:40 PM Karol Herbst <kherbst@redhat.com> wrote:
->
-> On Mon, Oct 21, 2019 at 5:46 PM Mika Westerberg
-> <mika.westerberg@intel.com> wrote:
-> >
-> > On Mon, Oct 21, 2019 at 04:49:09PM +0200, Karol Herbst wrote:
-> > > On Mon, Oct 21, 2019 at 4:09 PM Mika Westerberg
-> > > <mika.westerberg@intel.com> wrote:
-> > > >
-> > > > On Mon, Oct 21, 2019 at 03:54:09PM +0200, Karol Herbst wrote:
-> > > > > > I really would like to provide you more information about such
-> > > > > > workaround but I'm not aware of any ;-) I have not seen any issues like
-> > > > > > this when D3cold is properly implemented in the platform.  That's why
-> > > > > > I'm bit skeptical that this has anything to do with specific Intel PCIe
-> > > > > > ports. More likely it is some power sequence in the _ON/_OFF() methods
-> > > > > > that is run differently on Windows.
-> > > > >
-> > > > > yeah.. maybe. I really don't know what's the actual root cause. I just
-> > > > > know that with this workaround it works perfectly fine on my and some
-> > > > > other systems it was tested on. Do you know who would be best to
-> > > > > approach to get proper documentation about those methods and what are
-> > > > > the actual prerequisites of those methods?
-> > > >
-> > > > Those should be documented in the ACPI spec. Chapter 7 should explain
-> > > > power resources and the device power methods in detail.
-> > >
-> > > either I looked up the wrong spec or the documentation isn't really
-> > > saying much there.
-> >
-> > Well it explains those methods, _PSx, _PRx and _ON()/_OFF(). In case of
-> > PCIe device you also want to check PCIe spec. PCIe 5.0 section 5.8 "PCI
-> > Function Power State Transitions" has a picture about the supported
-> > power state transitions and there we can find that function must be in
-> > D3hot before it can be transitioned into D3cold so if the _OFF() for
-> > example blindly assumes that the device is in D0 when it is called, it
-> > is a bug in the BIOS.
-> >
-> > BTW, where can I find acpidump of such system?
->
-> I am sure it's uploaded somewhere already. But it's not an issue of
-> just one system. It's essentially hitting every single laptop with a
-> skylake or kaby lake CPU + Nvidia GPU. I didn't see any system where
-> it's actually working right now (and we are pestering nvidia about
-> this issue for over a year already with no solution)
->
-> I've attached an acpidump from my system.
+--=20
+
+Thanks,
+
+David / dhildenb
+
