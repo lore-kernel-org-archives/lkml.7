@@ -2,143 +2,97 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16F2DCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:47:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5DDBCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:49:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA0A32184C
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:47:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF0462184C
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 13:49:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571752194;
+	bh=fAc3a3dCnscUxCLvl6UZm+JCE3ZdsazRWb9Rkf+ifDQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=f6qPaPzgRnFY6nHgqkRWsWlYtSRLtsfy+o/WKr2hV/ZzdAxlA6ehP6hBM66kKXiD8
+	 XlPvC/pH27Eow4AvuKcpPlSNc+dsqaPb93xJ3W/xBH59z28OClepyq2YzppnXterPe
+	 TYigpl+r3M/XBOQD2fiD2zyL2fvKSaGtPHcLEAlQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732138AbfJVNrE (ORCPT
+        id S1732101AbfJVNtx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 09:47:04 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55284 "EHLO mx1.suse.de"
+        Tue, 22 Oct 2019 09:49:53 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56926 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730540AbfJVNrE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 09:47:04 -0400
+        id S1731035AbfJVNtx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 09:49:53 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id CF95EAE86;
-        Tue, 22 Oct 2019 13:47:01 +0000 (UTC)
-Date:   Tue, 22 Oct 2019 14:47:00 +0100
-From:   Luis Henriques <lhenriques@suse.com>
-To:     "Yan, Zheng" <ukernel@gmail.com>
-Cc:     Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        ceph-devel <ceph-devel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ceph: Fix use-after-free in __ceph_remove_cap
-Message-ID: <20191022134700.GA23308@hermes.olymp>
-References: <20191017144636.28617-1-lhenriques@suse.com>
- <a68eeb81a5b193be2da49b83dfedce7d2782fb40.camel@kernel.org>
- <87a79unocw.fsf@suse.com>
- <CAAM7YA=dg8ufUWqrD_V8pSdvxrnU+knOW4uW4io_b=Lwjhpg5Q@mail.gmail.com>
+        by mx1.suse.de (Postfix) with ESMTP id 6D6D6AFA8;
+        Tue, 22 Oct 2019 13:49:51 +0000 (UTC)
+Date:   Tue, 22 Oct 2019 15:49:50 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        dan.j.williams@intel.com
+Subject: Re: [PATCH 0/4] [RFC] Migrate Pages in lieu of discard
+Message-ID: <20191022134950.GQ9379@dhcp22.suse.cz>
+References: <20191016221148.F9CCD155@viggo.jf.intel.com>
+ <20191018074411.GC5017@dhcp22.suse.cz>
+ <0b05c135-4762-e745-5289-58ee84cc8c3e@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAAM7YA=dg8ufUWqrD_V8pSdvxrnU+knOW4uW4io_b=Lwjhpg5Q@mail.gmail.com>
+In-Reply-To: <0b05c135-4762-e745-5289-58ee84cc8c3e@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 08:48:56PM +0800, Yan, Zheng wrote:
-> On Mon, Oct 21, 2019 at 10:55 PM Luis Henriques <lhenriques@suse.com> wrote:
+On Fri 18-10-19 07:54:20, Dave Hansen wrote:
+> On 10/18/19 12:44 AM, Michal Hocko wrote:
+> > How does this compare to
+> > http://lkml.kernel.org/r/1560468577-101178-1-git-send-email-yang.shi@linux.alibaba.com
 > 
-> >
-> > Jeff Layton <jlayton@kernel.org> writes:
-> >
-> > > On Thu, 2019-10-17 at 15:46 +0100, Luis Henriques wrote:
-> > >> KASAN reports a use-after-free when running xfstest generic/531, with
-> > the
-> > >> following trace:
-> > >>
-> > >> [  293.903362]  kasan_report+0xe/0x20
-> > >> [  293.903365]  rb_erase+0x1f/0x790
-> > >> [  293.903370]  __ceph_remove_cap+0x201/0x370
-> > >> [  293.903375]  __ceph_remove_caps+0x4b/0x70
-> > >> [  293.903380]  ceph_evict_inode+0x4e/0x360
-> > >> [  293.903386]  evict+0x169/0x290
-> > >> [  293.903390]  __dentry_kill+0x16f/0x250
-> > >> [  293.903394]  dput+0x1c6/0x440
-> > >> [  293.903398]  __fput+0x184/0x330
-> > >> [  293.903404]  task_work_run+0xb9/0xe0
-> > >> [  293.903410]  exit_to_usermode_loop+0xd3/0xe0
-> > >> [  293.903413]  do_syscall_64+0x1a0/0x1c0
-> > >> [  293.903417]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> > >>
-> > >> This happens because __ceph_remove_cap() may queue a cap release
-> > >> (__ceph_queue_cap_release) which can be scheduled before that cap is
-> > >> removed from the inode list with
-> > >>
-> > >>      rb_erase(&cap->ci_node, &ci->i_caps);
-> > >>
-> > >> And, when this finally happens, the use-after-free will occur.
-> > >>
-> > >> This can be fixed by protecting the rb_erase with the s_cap_lock
-> > spinlock,
-> > >> which is used by ceph_send_cap_releases(), before the cap is freed.
-> > >>
-> > >> Signed-off-by: Luis Henriques <lhenriques@suse.com>
-> > >> ---
-> > >>  fs/ceph/caps.c | 4 ++--
-> > >>  1 file changed, 2 insertions(+), 2 deletions(-)
-> > >>
-> > >> diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
-> > >> index d3b9c9d5c1bd..21ee38cabe98 100644
-> > >> --- a/fs/ceph/caps.c
-> > >> +++ b/fs/ceph/caps.c
-> > >> @@ -1089,13 +1089,13 @@ void __ceph_remove_cap(struct ceph_cap *cap,
-> > bool queue_release)
-> > >>      }
-> > >>      cap->cap_ino = ci->i_vino.ino;
-> > >>
-> > >> -    spin_unlock(&session->s_cap_lock);
-> > >> -
-> > >>      /* remove from inode list */
-> > >>      rb_erase(&cap->ci_node, &ci->i_caps);
-> > >>      if (ci->i_auth_cap == cap)
-> > >>              ci->i_auth_cap = NULL;
-> > >>
-> > >> +    spin_unlock(&session->s_cap_lock);
-> > >> +
-> > >>      if (removed)
-> > >>              ceph_put_cap(mdsc, cap);
-> > >>
-> > >
-> > > Is there any reason we need to wait until this point to remove it from
-> > > the rbtree? ISTM that we ought to just do that at the beginning of the
-> > > function, before we take the s_cap_lock.
-> >
-> > That sounds good to me, at least at a first glace.  I spent some time
-> > looking for any possible issues in the code, and even run a few tests.
-> >
-> > However, looking at git log I found commit f818a73674c5 ("ceph: fix cap
-> > removal races"), which moved that rb_erase from the beginning of the
-> > function to it's current position.  So, unless the race mentioned in
-> > this commit has disappeared in the meantime (which is possible, this
-> > commit is from 2010!), this rbtree operation shouldn't be changed.
-> >
-> > And I now wonder if my patch isn't introducing a race too...
-> > __ceph_remove_cap() is supposed to always be called with the session
-> > mutex held, except for the ceph_evict_inode() path.  Which is where I'm
-> > seeing the UAF.  So, maybe what's missing here is the s_mutex.  Hmm...
-> >
-> >
-> we can't lock s_mutex here, because i_ceph_lock is locked
+> It's a _bit_ more tied to persistent memory and it appears a bit more
+> tied to two tiers rather something arbitrarily deep.  They're pretty
+> similar conceptually although there are quite a few differences.
+> 
+> For instance, what I posted has a static mapping for the migration path.
+>  If node A is in reclaim, we always try to allocate pages on node B.
+> There are no restrictions on what those nodes can be.  In Yang Shi's
+> apporach, there's a dynamic search for a target migration node on each
+> migration that follows the normal alloc fallback path.  This ends up
+> making migration nodes special.
 
-Well, my idea wasn't to get s_mutex here but earlier in the stack.
-Maybe in ceph_evict_inode, protecting the call to __ceph_remove_caps.
-But I didn't really looked into that yet, so I'm not really sure if
-that's feasible (or even if that would fix this UAF).  I suspect that's
-not possible anyway, due to the comment above __ceph_remove_cap:
+As we have discussed at LSFMM this year and there seemed to be a goog
+consensus on that, the resulting implementation should be as pmem
+neutral as possible. After all node migration mode sounds like a
+reasonable feature even without pmem. So I would be more inclined to the
+normal alloc fallback path rather than a very specific and static
+migration fallback path. If that turns out impractical then sure let's
+come up with something more specific but I think there is quite a long
+route there because we do not really have much of an experience with
+this so far.
 
-  caller will not hold session s_mutex if called from destroy_inode.
+> There are also some different choices that are pretty arbitrary.  For
+> instance, when you allocation a migration target page, should you cause
+> memory pressure on the target?
 
-Cheers,
---
-Luís
+Those are details to really sort out and they require some
+experimentation to.
+
+> To be honest, though, I don't see anything fatally flawed with it.  It's
+> probably a useful exercise to factor out the common bits from the two
+> sets and see what we can agree on being absolutely necessary.
+
+Makes sense. What would that be? Is there a real consensus on having the
+new node_reclaim mode to be the configuration mechanism? Do we want to
+support generic NUMA without any PMEM in place as well for starter?
+
+Thanks!
+-- 
+Michal Hocko
+SUSE Labs
