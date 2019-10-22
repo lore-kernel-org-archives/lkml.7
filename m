@@ -2,129 +2,175 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51619CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 18:55:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D269BCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 18:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26B8221906
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 18:55:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A453D20B7C
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 18:57:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZrUw6cQ2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388061AbfJVSze (ORCPT
+        id S1732789AbfJVS5K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 14:55:34 -0400
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:34787 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727851AbfJVSze (ORCPT
+        Tue, 22 Oct 2019 14:57:10 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:36175 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731740AbfJVS5K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 14:55:34 -0400
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 710263C0579;
-        Tue, 22 Oct 2019 20:55:32 +0200 (CEST)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Vq_DkLNWpUpD; Tue, 22 Oct 2019 20:55:27 +0200 (CEST)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        Tue, 22 Oct 2019 14:57:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571770628;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=KmXtv+xjVUY0EdjSkqIq2Jgpn3pXg6NOTpjVb7VJr9k=;
+        b=ZrUw6cQ2YnsXZwMdcV25DxpKu9XFYtmrYT+X3HqrRq/ay0cXS2XUVGto/oz81ZNkD5NM9u
+        Wvn4mS4loQblEm9KQH9zy0IHEmCig6+o8wLh8AvhoinLSaiLLyGmnERDh4wN/aV6AjeshV
+        fFKVxU6uIbfa9NsT04qt/IBdpePSNhQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-102-KFcFTeHvPCiuzixU_R4e4g-1; Tue, 22 Oct 2019 14:57:05 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 354CC3C009D;
-        Tue, 22 Oct 2019 20:55:27 +0200 (CEST)
-Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Tue, 22 Oct
- 2019 20:55:26 +0200
-From:   Eugeniu Rosca <erosca@de.adit-jv.com>
-To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, <alsa-devel@alsa-project.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>,
-        Jiada Wang <jiada_wang@mentor.com>,
-        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
-        Timo Wischer <twischer@de.adit-jv.com>
-Subject: [PATCH] ASoC: rsnd: dma: set bus width to data width for monaural data
-Date:   Tue, 22 Oct 2019 20:55:18 +0200
-Message-ID: <20191022185518.12838-1-erosca@de.adit-jv.com>
-X-Mailer: git-send-email 2.23.0
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 147D780183D;
+        Tue, 22 Oct 2019 18:57:04 +0000 (UTC)
+Received: from redhat.com (unknown [10.20.6.178])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 736165C1D4;
+        Tue, 22 Oct 2019 18:57:03 +0000 (UTC)
+Date:   Tue, 22 Oct 2019 14:57:01 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Keith Busch <keith.busch@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 1/1] mm/gup_benchmark: fix MAP_HUGETLB case
+Message-ID: <20191022185701.GD5169@redhat.com>
+References: <20191021212435.398153-1-jhubbard@nvidia.com>
+ <20191021212435.398153-2-jhubbard@nvidia.com>
+ <20191022171452.GA5169@redhat.com>
+ <1095fd94-1c0b-de61-7ceb-c963e29575b6@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.72.93.184]
+In-Reply-To: <1095fd94-1c0b-de61-7ceb-c963e29575b6@nvidia.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MC-Unique: KFcFTeHvPCiuzixU_R4e4g-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiada Wang <jiada_wang@mentor.com>
+On Tue, Oct 22, 2019 at 11:41:57AM -0700, John Hubbard wrote:
+> On 10/22/19 10:14 AM, Jerome Glisse wrote:
+> > On Mon, Oct 21, 2019 at 02:24:35PM -0700, John Hubbard wrote:
+> >> The MAP_HUGETLB ("-H" option) of gup_benchmark fails:
+> >>
+> >> $ sudo ./gup_benchmark -H
+> >> mmap: Invalid argument
+> >>
+> >> This is because gup_benchmark.c is passing in a file descriptor to
+> >> mmap(), but the fd came from opening up the /dev/zero file. This
+> >> confuses the mmap syscall implementation, which thinks that, if the
+> >> caller did not specify MAP_ANONYMOUS, then the file must be a huge
+> >> page file. So it attempts to verify that the file really is a huge
+> >> page file, as you can see here:
+> >>
+> >> ksys_mmap_pgoff()
+> >> {
+> >>     if (!(flags & MAP_ANONYMOUS)) {
+> >>         retval =3D -EINVAL;
+> >>         if (unlikely(flags & MAP_HUGETLB && !is_file_hugepages(file)))
+> >>             goto out_fput; /* THIS IS WHERE WE END UP */
+> >>
+> >>     else if (flags & MAP_HUGETLB) {
+> >>         ...proceed normally, /dev/zero is ok here...
+> >>
+> >> ...and of course is_file_hugepages() returns "false" for the /dev/zero
+> >> file.
+> >>
+> >> The problem is that the user space program, gup_benchmark.c, really ju=
+st
+> >> wants anonymous memory here. The simplest way to get that is to pass
+> >> MAP_ANONYMOUS whenever MAP_HUGETLB is specified, so that's what this
+> >> patch does.
+> >=20
+> > This looks wrong, MAP_HUGETLB should only be use to create vma
+> > for hugetlbfs. If you want anonymous private vma do not set the
+> > MAP_HUGETLB. If you want huge page inside your anonymous vma
+> > there is nothing to do at the mmap time, this is the job of the
+> > transparent huge page code (THP).
+> >=20
+>=20
+> Not the point. Please look more closely at ksys_mmap_pgoff(). You'll=20
+> see that, since 2009 (and probably earlier; 2009 is just when Hugh Dicken=
+s=20
+> moved it over from util.c), this routine has had full support for using
+> hugetlbfs automatically, via mmap.
+>=20
+> It does that via hugetlb_file_setup():
+>=20
+> unsigned long ksys_mmap_pgoff(unsigned long addr, unsigned long len,
+> =09=09=09      unsigned long prot, unsigned long flags,
+> =09=09=09      unsigned long fd, unsigned long pgoff)
+> {
+> ...
+> =09if (!(flags & MAP_ANONYMOUS)) {
+> ...
+> =09} else if (flags & MAP_HUGETLB) {
+> =09=09struct user_struct *user =3D NULL;
+> =09=09struct hstate *hs;
+>=20
+> =09=09hs =3D hstate_sizelog((flags >> MAP_HUGE_SHIFT) & MAP_HUGE_MASK);
+> =09=09if (!hs)
+> =09=09=09return -EINVAL;
+>=20
+> =09=09len =3D ALIGN(len, huge_page_size(hs));
+> =09=09/*
+> =09=09 * VM_NORESERVE is used because the reservations will be
+> =09=09 * taken when vm_ops->mmap() is called
+> =09=09 * A dummy user value is used because we are not locking
+> =09=09 * memory so no accounting is necessary
+> =09=09 */
+> =09=09file =3D hugetlb_file_setup(HUGETLB_ANON_FILE, len,
+> =09=09=09=09VM_NORESERVE,
+> =09=09=09=09&user, HUGETLB_ANONHUGE_INODE,
+> =09=09=09=09(flags >> MAP_HUGE_SHIFT) & MAP_HUGE_MASK);
+> =09=09if (IS_ERR(file))
+> =09=09=09return PTR_ERR(file);
+> =09}
+> ...
+>=20
+>=20
+> Also, there are 14 (!) other pre-existing examples of passing
+> MAP_HUGETLB | MAP_ANONYMOUS to mmap, so I'm not exactly the first one
+> to reach this understanding.
+>=20
+>=20
+> > NAK as misleading
+>=20
+> Ouch. But I think I'm actually leading correctly, rather than misleading.
+> Can you prove me wrong? :)
 
-According to R-Car3 HW manual 40.3.3 (Data Format on Audio Local Bus),
-in case of monaural data writing or reading through Audio-DMAC,
-it's always in Left Justified format, so both src and dst
-DMA Bus width should be equal to physical data width.
+So i was misslead by the file descriptor, passing a file descriptor and
+asking for anonymous always bugs me. But yeah the _linux_ kernel is happy
+to ignore the file argument if you set the anonymous flag. I guess the
+rules of passing -1 for fd when anonymous is just engrave in my brain.
 
-Therefore set src and dst's DMA bus width to:
- - [monaural case] data width
- - [non-monaural case] 32bits (as prior applying the patch)
+Also i thought that the file was an argument of the test and thus that
+for huge you needed to pass a hugetlbfs' file.
 
-Cc: Andrew Gabbasov <andrew_gabbasov@mentor.com>
-Cc: Timo Wischer <twischer@de.adit-jv.com>
-Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
-Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
----
- sound/soc/sh/rcar/dma.c | 30 ++++++++++++++++++++++++++++--
- 1 file changed, 28 insertions(+), 2 deletions(-)
+Anyway my mistake, you are right, you can pass a file and ask for anonymous
+and hugetlb at the same time.
 
-diff --git a/sound/soc/sh/rcar/dma.c b/sound/soc/sh/rcar/dma.c
-index 28f65eba2bb4..95aa26d62e4f 100644
---- a/sound/soc/sh/rcar/dma.c
-+++ b/sound/soc/sh/rcar/dma.c
-@@ -165,14 +165,40 @@ static int rsnd_dmaen_start(struct rsnd_mod *mod,
- 	struct device *dev = rsnd_priv_to_dev(priv);
- 	struct dma_async_tx_descriptor *desc;
- 	struct dma_slave_config cfg = {};
-+	enum dma_slave_buswidth buswidth = DMA_SLAVE_BUSWIDTH_4_BYTES;
- 	int is_play = rsnd_io_is_play(io);
- 	int ret;
- 
-+	/*
-+	 * in case of monaural data writing or reading through Audio-DMAC
-+	 * data is always in Left Justified format, so both src and dst
-+	 * DMA Bus width need to be set equal to physical data width.
-+	 */
-+	if (rsnd_runtime_channel_original(io) == 1) {
-+		struct snd_pcm_runtime *runtime = rsnd_io_to_runtime(io);
-+		int bits = snd_pcm_format_physical_width(runtime->format);
-+
-+		switch (bits) {
-+		case 8:
-+			buswidth = DMA_SLAVE_BUSWIDTH_1_BYTE;
-+			break;
-+		case 16:
-+			buswidth = DMA_SLAVE_BUSWIDTH_2_BYTES;
-+			break;
-+		case 32:
-+			buswidth = DMA_SLAVE_BUSWIDTH_4_BYTES;
-+			break;
-+		default:
-+			dev_err(dev, "invalid format width %d\n", bits);
-+			return -EINVAL;
-+		}
-+	}
-+
- 	cfg.direction	= is_play ? DMA_MEM_TO_DEV : DMA_DEV_TO_MEM;
- 	cfg.src_addr	= dma->src_addr;
- 	cfg.dst_addr	= dma->dst_addr;
--	cfg.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
--	cfg.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
-+	cfg.src_addr_width = buswidth;
-+	cfg.dst_addr_width = buswidth;
- 
- 	dev_dbg(dev, "%s %pad -> %pad\n",
- 		rsnd_mod_name(mod),
--- 
-2.23.0
+Reviewed-by: J=E9r=F4me Glisse <jglisse@redhat.com>
 
