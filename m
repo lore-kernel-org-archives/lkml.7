@@ -2,170 +2,153 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 829ABCA9EB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 11:53:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34687CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 11:53:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B1CE21872
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 11:53:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571745200;
-	bh=mFRL1cOPVqH8M3jRF0HmpTCPqEWt43++I19E5TTgXoI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=DCle73lCbJC9AELdzalOk/oSkilz524e2ouyagum89snnjUSIRenWtV1ji5pZBiYR
-	 33U5MevgCXm1l242F1HZS1e6VmsAyu2CkDQVuBOSuNZEFCRABxQ3PcdinCpzngFwH2
-	 D0cNGAq+RoiOlY9GzkyyV/WMtZKfoXVa+ql0cJ1s=
+	by mail.kernel.org (Postfix) with ESMTP id 0A751218AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 11:53:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388064AbfJVLxT (ORCPT
+        id S2388889AbfJVLx0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 07:53:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37784 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387868AbfJVLxT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 07:53:19 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B980A21783;
-        Tue, 22 Oct 2019 11:53:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571745197;
-        bh=mFRL1cOPVqH8M3jRF0HmpTCPqEWt43++I19E5TTgXoI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=mAWvrBfIzsX978Bzhdz58X/RJTv4gaboqshUmS6jwmj6zeg755OZ1YhtbD+8hQbVZ
-         ZNIUd5psvHtZ5ukNKWPaAZTL+5E8oPMJnkx5FjKs/sDTT77PGDgqrvtMFvIihct+Xb
-         5t9LLmHOLRS/r5RFu8rrVNphbzdHeXAvJouX2KNM=
-Date:   Tue, 22 Oct 2019 12:53:12 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Lars-Peter Clausen <lars@metafoo.de>
-Cc:     Olivier MOYSAN <olivier.moysan@st.com>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        Fabrice GASNIER <fabrice.gasnier@st.com>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Benjamin GAIGNARD <benjamin.gaignard@st.com>
-Subject: Re: [PATCH][RFC] iio: core: add a class hierarchy on iio device
- lock
-Message-ID: <20191022125312.68aa514a@archlinux>
-In-Reply-To: <9ddc41c4-3d84-cc94-5494-a5ef06697ce8@metafoo.de>
-References: <20191011151314.5365-1-olivier.moysan@st.com>
-        <20191012095747.3acd95e6@archlinux>
-        <db362ddf-390e-0847-1269-f3cd0c757d2a@st.com>
-        <9ddc41c4-3d84-cc94-5494-a5ef06697ce8@metafoo.de>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 22 Oct 2019 07:53:26 -0400
+Received: from mx2.suse.de ([195.135.220.15]:51986 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387868AbfJVLx0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 07:53:26 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id CD9DBB298;
+        Tue, 22 Oct 2019 11:53:23 +0000 (UTC)
+Subject: Re: [PATCH] mm: trivial mark_page_accessed() cleanup
+To:     Fengguang Wu <fengguang.wu@intel.com>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Dave Hansen <dave.hansen@intel.com>,
+        Liu Jingqi <jingqi.liu@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20191016225326.GB12497@wfg-t540p.sh.intel.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <1e12400d-80c7-33a0-051d-85976b6d3fad@suse.cz>
+Date:   Tue, 22 Oct 2019 13:53:23 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20191016225326.GB12497@wfg-t540p.sh.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 15 Oct 2019 23:11:43 +0200
-Lars-Peter Clausen <lars@metafoo.de> wrote:
-
-> On 10/14/19 5:59 PM, Olivier MOYSAN wrote:
-> > Hello Jonathan,
-> > 
-> > Thanks for your comment.
-> > 
-> > On 10/12/19 10:57 AM, Jonathan Cameron wrote:  
-> >> On Fri, 11 Oct 2019 17:13:14 +0200
-> >> Olivier Moysan <olivier.moysan@st.com> wrote:
-> >>  
-> >>> The aim of this patch is to correct a recursive locking warning,
-> >>> detected when setting CONFIG_PROVE_LOCKING flag (as shown in message below).
-> >>> This message was initially triggered by the following call sequence
-> >>> in stm32-dfsdm-adc.c driver, when using IIO hardware consumer interface.
-> >>>
-> >>> in stm32_dfsdm_read_raw()
-> >>> 	iio_device_claim_direct_mode
-> >>> 		mutex_lock(&indio_dev->mlock);			-> lock on dfsdm device
-> >>> 	iio_hw_consumer_enable
-> >>> 		iio_update_buffers
-> >>> 			mutex_lock(&indio_dev->mlock);		-> lock on hw consumer device  
-> >> Hmm.  I'm not sure I follow the logic.  That lock is
-> >> for one thing and one thing only, preventing access
-> >> to the iio device that are unsafe when it is running
-> >> in a buffered mode.  We shouldn't be in a position where
-> >> we both say don't do this if we are in buffered mode, + enter
-> >> buffered mode whilst doing this, or we need special functions
-> >> for entering buffering mode if in this state.  We are in
-> >> some sense combining internal driver logic with overall
-> >> IIO states.  IIO shouldn't care that the device is using
-> >> the same methods under the hood for buffered and non
-> >> buffered operations.
-> >>
-> >> I can't really recall how this driver works.   Is it actually
-> >> possible to have multiple hw_consumers at the same time?
-> >>
-> >> So do we end up with multiple buffers registered and have
-> >> to demux out to the read_raw + the actual buffered path?
-> >> Given we have a bit of code saying grab one sample, I'm
-> >> going to guess we don't...
-> >>
-> >> If so, the vast majority of the buffer setup code in IIO
-> >> is irrelevant here and we just need to call a few of
-> >> the callbacks from this driver directly... (I think
-> >> though I haven't chased through every corner.
-> >>
-> >> I'd rather avoid introducing this nesting for a corner
-> >> case that makes no 'semantic' sense in IIO as it leaves us
-> >> in two separate states at the same time that the driver
-> >> is trying to make mutually exclusive.  We can't both
-> >> not be in buffered mode, and in buffered mode.
-> >>
-> >> Thanks and good luck with this nasty corner!
-> >>
-> >> Jonathan
-> >>  
-> > Here I consider the following use case:
-> > A single conversion is performed. The dfsdm (filter) is chained with a 
-> > front-end, which can be an ADC or a sensor. So we have two IIO devices, 
-> > the dfsdm and its front-end handled through the hw consumer interface.
-> > 
-> > You are right. There is something wrong here, in buffered/non-buffered 
-> > mode mixing.
-> > iio_hw_consumer_enable() call is used to enable the front-end device. 
-> > But this interface is intended for buffered mode.
-> > So this is not coherent with the expected single conversion mode, 
-> > indeed. Another interface is required to manage the front-end device. I 
-> > have a poor knowledge of iio framework, but it seems to me that there is 
-> > no interface to manage this.
-> > 
-> > My understanding regarding mlock, is that it is used to protect the 
-> > state of the iio device.
-> > I we want to do a conversion from the chained devices, I think we need 
-> > to activate the first device
-> > and keep it performing conversion, as long as the second device has done 
-> > its conversion.
-> > We need to protect both devices, and we should have to do it in a nested 
-> > way.
-> > So, I guess that anyway, nested mutexes would be required in this case.
-> >  
+On 10/17/19 12:53 AM, Fengguang Wu wrote:
+> This avoids duplicated PageReferenced() calls.
+> No behavior change.
 > 
-> Others like regmap have solved this by having a lockclass per instance.
-> Although that is not ideal either since it will slow down lockdep.
+> Signed-off-by: Fengguang Wu <fengguang.wu@intel.com>
+
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+
+> ---
+>   mm/swap.c | 14 +++++++++-----
+>   1 file changed, 9 insertions(+), 5 deletions(-)
 > 
-> See
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/regmap.h#n629
-
-It'll take me a while to get back to this as my understanding is
-currently very limited.  Poke me if I've not replied in a few weeks.
-
-Thanks,
-
-Jonathan
-
+> diff --git a/mm/swap.c b/mm/swap.c
+> index 38a52b9..c55720c 100644
+> --- a/mm/swap.c
+> +++ b/mm/swap.c
+> @@ -373,9 +373,15 @@ void mark_page_accessed(struct page *page)
+>   	page = compound_head(page);
+>   	inc_node_page_state(page, NR_ACCESSED);
+>   
+> -	if (!PageActive(page) && !PageUnevictable(page) &&
+> -			PageReferenced(page)) {
+> -
+> +	if (!PageReferenced(page)) {
+> +		SetPageReferenced(page);
+> +	} else if (PageUnevictable(page)) {
+> +		/*
+> +		 * Unevictable pages are on the "LRU_UNEVICTABLE" list. But,
+> +		 * this list is never rotated or maintained, so marking an
+> +		 * evictable page accessed has no effect.
+> +		 */
+> +	} else if (!PageActive(page)) {
+>   		/*
+>   		 * If the page is on the LRU, queue it for activation via
+>   		 * activate_page_pvecs. Otherwise, assume the page is on a
+> @@ -389,8 +395,6 @@ void mark_page_accessed(struct page *page)
+>   		ClearPageReferenced(page);
+>   		if (page_is_file_cache(page))
+>   			workingset_activation(page);
+> -	} else if (!PageReferenced(page)) {
+> -		SetPageReferenced(page);
+>   	}
+>   	if (page_is_idle(page))
+>   		clear_page_idle(page);
+> 
 
