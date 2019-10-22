@@ -2,139 +2,136 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE6F0CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 19:21:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 423CDCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 19:21:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AA4021872
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 19:21:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E06321872
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 19:21:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pMXoI8ZH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tRogLjAw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732882AbfJVTVI (ORCPT
+        id S1732962AbfJVTVU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 15:21:08 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:44849 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727851AbfJVTVI (ORCPT
+        Tue, 22 Oct 2019 15:21:20 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:40261 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732911AbfJVTVU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 15:21:08 -0400
-Received: by mail-qt1-f196.google.com with SMTP id z22so7988854qtq.11;
-        Tue, 22 Oct 2019 12:21:07 -0700 (PDT)
+        Tue, 22 Oct 2019 15:21:20 -0400
+Received: by mail-ot1-f65.google.com with SMTP id d8so4020676otc.7
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 12:21:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=p3HQhINpc7sZsIcpNCn/h8geG6mtLx6BBg3t3ICTUhg=;
-        b=pMXoI8ZHhGZcW/PUKZ0iseGz3giLQXTTrrO+IGc6who5BO+L9ecTquG6EerKy1i86J
-         Fcu488f3Aa7B+qe5IDaHvkaGntiwBcF4RF5Dm25f0HueFN2+NlW4FGm3/4JpP4df/2NZ
-         hmQI8vsK7dJJX2BY4cJASDZ18EkacZYjjwwCzTkWTg7H0ZCIQFmp1d9qeM0jJ+WJ7ffG
-         S+5PHNyYMz4EH+zRdeWb2UTAIFp6RVSR/WLLc8S3fcMRuebkIqkOAhGnHJklPt2rYofZ
-         rpNikWcoi4RNqcbS8BU9/zlo8CyEGYF3CSPlMPP1xuSGwCqmMbi4InOsFIlelX/wh75V
-         sdIw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0f04Kxscv5o4C1QvArEzBOxFfUoH9rZElTm3k0F24Mw=;
+        b=tRogLjAw/ciCcW5JcJz3Bq4lVLaOvR0pvgH+v0xoI6bI4zYGi4vqEy+ZAeHAGL0yeH
+         DM8wyA+aEC83ZyW7ho+WYaPuvYyXY6gIJEdu9NcKN9Wfz/8wSS5qfKcoxNr6zSl79lcH
+         AzKFfJs1YaER6ZfRxqyLSUzRel+t4b9ZHeVK4sG6ywt2B7U5Z6xeytBAip40R/Rg5qYv
+         MffPOPs0GVyqP78eTphaUA7KGPLkOiK1bUi5nnNY8Aa6T4P+J3Sph0sZjWAaFd2i0yQ9
+         z6DmJ7U1sH3FimBBbEUfV5Alalk3uIv92czK6JGzmRQsxIjvMq7xQ8ebwxyZ93TbzMas
+         tl0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=p3HQhINpc7sZsIcpNCn/h8geG6mtLx6BBg3t3ICTUhg=;
-        b=d3qozAw5aIDM0TMile5vrw4cD5ufh26ZPVl5qWehM05syI+M+Bp8Y5B63cxQ8aVLOH
-         PWX9umOj7tVzywnT8S8GDrCkbQi+9kF4p/FramGWZFl9P9wgwYqLQATK7OhyUiSShBTg
-         /GYuC9ctrEH/aWotVbAk1mtByIu3JxgYLUxeoSHaqDkABNSbH140DfTo/dZuaMrFDg2B
-         u2FP35GnA/rc7o7OGau2YRdu3Mj8oeDPiZhhEWCazUb+Unbt1KroInUXFC/6v3Ey7Zq4
-         evj6IlLJHh1op9Buo9Ef6V1SrCRBpoo9qI3FjfyZNj5C0vg3trXprJ0B902gfsiTolGp
-         ZGJA==
-X-Gm-Message-State: APjAAAXz7RdBjNVtpCGa5ukhubT2bk43DGLl7DMeB/8LcFYWFaj/ipY0
-        eEcQANkgjRj2P74JT9pSDZQ=
-X-Google-Smtp-Source: APXvYqxo6yjcFHy00Qtvm6n/aWHlQmpIUDixfzEK4DqPUaT+bhPco4Rl8Q6Ob6JJu+WOl+bpRZJMPA==
-X-Received: by 2002:ac8:1e89:: with SMTP id c9mr5258144qtm.226.1571772067051;
-        Tue, 22 Oct 2019 12:21:07 -0700 (PDT)
-Received: from rogerio-Latitude-7490.nxp.com ([177.221.114.206])
-        by smtp.gmail.com with ESMTPSA id h20sm8185938qtp.93.2019.10.22.12.21.02
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0f04Kxscv5o4C1QvArEzBOxFfUoH9rZElTm3k0F24Mw=;
+        b=UGUD8VwggQda9tlhsjWX3PLT+3zQUtKo7Iup2m7+uYPssXhJotDPaKNy+RN979kz5k
+         X0s2sHbVR3jN5IGPPRu4UDJaTd/0vCRaIxR34S5Y9Jhn0USVtA8WA2spw06WvODo/M7j
+         J8OGW7pzSz2gVWBDBROrhYuQQHqGuV0dr61i8tOll8cQViez4JdhLbQfFarcNwucSE43
+         YiixHgcJDu4bgOg7nGMW9vKz/IH4139512SJ8HpJCK4V3WWb3BAPoYHtPSrHREo/yUCU
+         afGK3Z3WE8msMH2DZPxJchK4Uq0NpJ1q8vZhiAtG2zv9oYNGf/XfntNFzSjAS8tpU6o0
+         Uq7g==
+X-Gm-Message-State: APjAAAUzJlODEdkriCt8YqOsnQzNqJpHr5gw/6sh5IIYilVxiHwZou6V
+        z4rddXV5cJqNirkxcLKV5Hc=
+X-Google-Smtp-Source: APXvYqxvaPm8vl0CL/uzf5Cbb/dacb981yhfzzcEkWtXCBTVfTaC/2T42tX/0ypHd2+TiQA28PwkEQ==
+X-Received: by 2002:a05:6830:4c7:: with SMTP id s7mr4096882otd.3.1571772079567;
+        Tue, 22 Oct 2019 12:21:19 -0700 (PDT)
+Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id g8sm5372074otp.42.2019.10.22.12.21.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Oct 2019 12:21:06 -0700 (PDT)
-From:   Rogerio Pimentel da Silva <rpimentel.silva@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Carlo Caione <ccaione@baylibre.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Baruch Siach <baruch@tkos.co.il>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     rpimentel.silva@gmail.com
-Subject: [PATCH] arm64: dts: imx8mq-evk: Add remote control
-Date:   Tue, 22 Oct 2019 16:20:34 -0300
-Message-Id: <20191022192038.30094-1-rpimentel.silva@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 22 Oct 2019 12:21:18 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH] kernel/profile: Use cpumask_available to check for NULL cpumask
+Date:   Tue, 22 Oct 2019 12:19:57 -0700
+Message-Id: <20191022191957.9554-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.23.0
+MIME-Version: 1.0
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add remote control to i.MX8M EVK device tree.
+When building with clang + -Wtautological-pointer-compare, these
+instances pop up:
 
-The rc protocol must be selected by writing to:
-/sys/devices/platform/ir-receiver/rc/rc0/protocols
+kernel/profile.c:339:6: warning: comparison of array 'prof_cpu_mask' not
+equal to a null pointer is always true [-Wtautological-pointer-compare]
+        if (prof_cpu_mask != NULL)
+            ^~~~~~~~~~~~~    ~~~~
+kernel/profile.c:376:6: warning: comparison of array 'prof_cpu_mask' not
+equal to a null pointer is always true [-Wtautological-pointer-compare]
+        if (prof_cpu_mask != NULL)
+            ^~~~~~~~~~~~~    ~~~~
+kernel/profile.c:406:26: warning: comparison of array 'prof_cpu_mask'
+not equal to a null pointer is always true
+[-Wtautological-pointer-compare]
+        if (!user_mode(regs) && prof_cpu_mask != NULL &&
+                                ^~~~~~~~~~~~~    ~~~~
+3 warnings generated.
 
-On my tests, I used "nec" rc protocol:
-echo nec > protocols
+This can be addressed with the cpumask_available helper, introduced in
+commit f7e30f01a9e2 ("cpumask: Add helper cpumask_available()") to fix
+warnings like this while keeping the code the same.
 
-Tested using evetest:
-evtest /dev/input/event0
-
-Output log for each key pressed:
-Event: 
-time 1568122608.267845, -------------- SYN_REPORT ------------
-Event: 
-time 1568122610.503835, type 4 (EV_MSC), code 4 (MSC_SCAN), value 440
-
-Signed-off-by: Rogerio Pimentel da Silva <rpimentel.silva@gmail.com>
+Link: https://github.com/ClangBuiltLinux/linux/issues/747
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 ---
- arch/arm64/boot/dts/freescale/imx8mq-evk.dts | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ kernel/profile.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-index 6ede46f7d45b..bd81e4a45ff5 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-@@ -50,6 +50,13 @@
- 			  900000 0x1>;
- 	};
+diff --git a/kernel/profile.c b/kernel/profile.c
+index af7c94bf5fa1..4b144b02ca5d 100644
+--- a/kernel/profile.c
++++ b/kernel/profile.c
+@@ -336,7 +336,7 @@ static int profile_dead_cpu(unsigned int cpu)
+ 	struct page *page;
+ 	int i;
  
-+	ir-receiver {
-+		compatible = "gpio-ir-receiver";
-+		gpios = <&gpio1 12 GPIO_ACTIVE_LOW>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_ir>;
-+	};
-+
- 	wm8524: audio-codec {
- 		#sound-dai-cells = <0>;
- 		compatible = "wlf,wm8524";
-@@ -340,6 +347,12 @@
- 		>;
- 	};
+-	if (prof_cpu_mask != NULL)
++	if (cpumask_available(prof_cpu_mask))
+ 		cpumask_clear_cpu(cpu, prof_cpu_mask);
  
-+	pinctrl_ir: irgrp {
-+		fsl,pins = <
-+			MX8MQ_IOMUXC_GPIO1_IO12_GPIO1_IO12		0x4f
-+		>;
-+	};
-+
- 	pinctrl_pcie0: pcie0grp {
- 		fsl,pins = <
- 			MX8MQ_IOMUXC_I2C4_SCL_PCIE1_CLKREQ_B		0x76
+ 	for (i = 0; i < 2; i++) {
+@@ -373,7 +373,7 @@ static int profile_prepare_cpu(unsigned int cpu)
+ 
+ static int profile_online_cpu(unsigned int cpu)
+ {
+-	if (prof_cpu_mask != NULL)
++	if (cpumask_available(prof_cpu_mask))
+ 		cpumask_set_cpu(cpu, prof_cpu_mask);
+ 
+ 	return 0;
+@@ -403,7 +403,7 @@ void profile_tick(int type)
+ {
+ 	struct pt_regs *regs = get_irq_regs();
+ 
+-	if (!user_mode(regs) && prof_cpu_mask != NULL &&
++	if (!user_mode(regs) && cpumask_available(prof_cpu_mask) &&
+ 	    cpumask_test_cpu(smp_processor_id(), prof_cpu_mask))
+ 		profile_hit(type, (void *)profile_pc(regs));
+ }
 -- 
-2.17.1
+2.23.0
 
