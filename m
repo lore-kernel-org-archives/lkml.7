@@ -2,180 +2,88 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F56CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 07:51:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D169CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 07:56:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52CE52184C
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 07:51:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A7FF21928
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 07:56:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388054AbfJVHvy (ORCPT
+        id S2387957AbfJVH4c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 03:51:54 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:57982 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387938AbfJVHvt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 03:51:49 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id AE2E91A0C08;
-        Tue, 22 Oct 2019 09:51:43 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 04A3A1A0E2F;
-        Tue, 22 Oct 2019 09:51:37 +0200 (CEST)
-Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id D4A7D40249;
-        Tue, 22 Oct 2019 15:51:28 +0800 (SGT)
-From:   Ran Wang <ran.wang_1@nxp.com>
-To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Rob Herring <robh+dt@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Pavel Machek <pavel@ucw.cz>, Huang Anson <anson.huang@nxp.com>
-Cc:     Li Biwen <biwen.li@nxp.com>, Len Brown <len.brown@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Ran Wang <ran.wang_1@nxp.com>
-Subject: [PATCH 1/3] PM: wakeup: Add routine to help fetch wakeup source object.
-Date:   Tue, 22 Oct 2019 15:51:21 +0800
-Message-Id: <20191022075123.17057-1-ran.wang_1@nxp.com>
-X-Mailer: git-send-email 2.17.1
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Tue, 22 Oct 2019 03:56:32 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47872 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726978AbfJVH4b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 03:56:31 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 23D46B27C;
+        Tue, 22 Oct 2019 07:56:29 +0000 (UTC)
+Date:   Tue, 22 Oct 2019 09:56:27 +0200
+From:   Oscar Salvador <osalvador@suse.de>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     n-horiguchi@ah.jp.nec.com, mike.kravetz@oracle.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v2 11/16] mm,hwpoison: Rework soft offline for in-use
+ pages
+Message-ID: <20191022075626.GB19060@linux>
+References: <20191017142123.24245-1-osalvador@suse.de>
+ <20191017142123.24245-12-osalvador@suse.de>
+ <20191018123901.GN5017@dhcp22.suse.cz>
+ <20191021134846.GB11330@linux>
+ <20191021140619.GQ9379@dhcp22.suse.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191021140619.GQ9379@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some user might want to go through all registered wakeup sources
-and doing things accordingly. For example, SoC PM driver might need to
-do HW programming to prevent powering down specific IP which wakeup
-source depending on. So add this API to help walk through all registered
-wakeup source objects on that list and return them one by one.
+On Mon, Oct 21, 2019 at 04:06:19PM +0200, Michal Hocko wrote:
+> On Mon 21-10-19 15:48:48, Oscar Salvador wrote:
+> > We can only perform actions on LRU/Movable pages or hugetlb pages.
+> 
+> What would prevent other pages mapped via page tables to be handled as
+> well?
 
-Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
-Tested-by: Leonard Crestez <leonard.crestez@nxp.com>
----
-Change in v8
-	- Rename wakeup_source_get_next() to wakeup_sources_walk_next().
-	- Add wakeup_sources_read_lock() to take over locking job of
-	  wakeup_source_get_star().
-	- Rename wakeup_source_get_start() to wakeup_sources_walk_start().
-	- Replace wakeup_source_get_stop() with wakeup_sources_read_unlock().
-	- Define macro for_each_wakeup_source(ws).
+What kind of pages?
+I mean, I guess it could be done, it was just not implemented, and I
+did not want to add more "features" as my main goal was to re-work
+the interface to be more deterministic.
 
-Change in v7:
-	- Remove define of member *dev in wake_irq to fix conflict with commit 
-	c8377adfa781 ("PM / wakeup: Show wakeup sources stats in sysfs"), user 
-	will use ws->dev->parent instead.
-	- Remove '#include <linux/of_device.h>' because it is not used.
+> > 1) we would need to hook in enqueue_hugetlb_page so the page is not enqueued
+> >    into hugetlb freelists
+> > 2) when trying to free a hugetlb page, we would need to do as we do for gigantic
+> >    pages now, and that is breaking down the pages into order-0 pages and release
+> >    them to the buddy (so the check in free_papges_prepare would skip the
+> >    hwpoison page).
+> >    Trying to handle a higher-order hwpoison page in free_pages_prepare is
+> >    a bit complicated.
+> 
+> I am not sure I see the problem. If you dissolve the hugetlb page then
+> there is no hugetlb page anymore and so you make it a regular high-order
+> page.
 
-Change in v6:
-	- Add wakeup_source_get_star() and wakeup_source_get_stop() to aligned 
-	with wakeup_sources_stats_seq_start/nex/stop.
+Yes, but the problem comes when trying to work with a hwpoison high-order page
+in free_pages_prepare, it gets more complicated, and when I weigthed
+code vs benefits, I was not really sure to go down that road.
 
-Change in v5:
-	- Update commit message, add decription of walk through all wakeup
-	source objects.
-	- Add SCU protection in function wakeup_source_get_next().
-	- Rename wakeup_source member 'attached_dev' to 'dev' and move it up
-	(before wakeirq).
+If we get a hwpoison high-order page in free_pages_prepare, we need to
+break it down to smaller pages, so we can skip the "bad" to not be sent
+into buddy allocator.
 
-Change in v4:
-	- None.
+> If the page is free then it shouldn't pin the memcg or any other state.
 
-Change in v3:
-	- Adjust indentation of *attached_dev;.
+Well, it is not really free, as it is not usable, is it?
+Anyway, I do agree that we should clean the bondings to other subsystems like memcg.
 
-Change in v2:
-	- None.
-
- drivers/base/power/wakeup.c | 42 ++++++++++++++++++++++++++++++++++++++++++
- include/linux/pm_wakeup.h   |  9 +++++++++
- 2 files changed, 51 insertions(+)
-
-diff --git a/drivers/base/power/wakeup.c b/drivers/base/power/wakeup.c
-index 5817b51..8c7a5f9 100644
---- a/drivers/base/power/wakeup.c
-+++ b/drivers/base/power/wakeup.c
-@@ -248,6 +248,48 @@ void wakeup_source_unregister(struct wakeup_source *ws)
- EXPORT_SYMBOL_GPL(wakeup_source_unregister);
- 
- /**
-+ * wakeup_sources_read_lock - Lock wakeup source list for read.
-+ */
-+int wakeup_sources_read_lock(void)
-+{
-+	return srcu_read_lock(&wakeup_srcu);
-+}
-+EXPORT_SYMBOL_GPL(wakeup_sources_read_lock);
-+
-+/**
-+ * wakeup_sources_read_unlock - Unlock wakeup source list.
-+ */
-+void wakeup_sources_read_unlock(int idx)
-+{
-+	srcu_read_unlock(&wakeup_srcu, idx);
-+}
-+EXPORT_SYMBOL_GPL(wakeup_sources_read_unlock);
-+
-+/**
-+ * wakeup_sources_walk_start - Begin a walk on wakeup source list
-+ */
-+struct wakeup_source *wakeup_sources_walk_start(void)
-+{
-+	struct list_head *ws_head = &wakeup_sources;
-+
-+	return list_entry_rcu(ws_head->next, struct wakeup_source, entry);
-+}
-+EXPORT_SYMBOL_GPL(wakeup_sources_walk_start);
-+
-+/**
-+ * wakeup_sources_walk_next - Get next wakeup source from the list
-+ * @ws: Previous wakeup source object
-+ */
-+struct wakeup_source *wakeup_sources_walk_next(struct wakeup_source *ws)
-+{
-+	struct list_head *ws_head = &wakeup_sources;
-+
-+	return list_next_or_null_rcu(ws_head, &ws->entry,
-+				struct wakeup_source, entry);
-+}
-+EXPORT_SYMBOL_GPL(wakeup_sources_walk_next);
-+
-+/**
-  * device_wakeup_attach - Attach a wakeup source object to a device object.
-  * @dev: Device to handle.
-  * @ws: Wakeup source object to attach to @dev.
-diff --git a/include/linux/pm_wakeup.h b/include/linux/pm_wakeup.h
-index 661efa0..aa3da66 100644
---- a/include/linux/pm_wakeup.h
-+++ b/include/linux/pm_wakeup.h
-@@ -63,6 +63,11 @@ struct wakeup_source {
- 	bool			autosleep_enabled:1;
- };
- 
-+#define for_each_wakeup_source(ws) \
-+	for ((ws) = wakeup_sources_walk_start();	\
-+	     (ws);					\
-+	     (ws) = wakeup_sources_walk_next((ws)))
-+
- #ifdef CONFIG_PM_SLEEP
- 
- /*
-@@ -92,6 +97,10 @@ extern void wakeup_source_remove(struct wakeup_source *ws);
- extern struct wakeup_source *wakeup_source_register(struct device *dev,
- 						    const char *name);
- extern void wakeup_source_unregister(struct wakeup_source *ws);
-+extern int wakeup_sources_read_lock(void);
-+extern void wakeup_sources_read_unlock(int idx);
-+extern struct wakeup_source *wakeup_sources_walk_start(void);
-+extern struct wakeup_source *wakeup_sources_walk_next(struct wakeup_source *ws);
- extern int device_wakeup_enable(struct device *dev);
- extern int device_wakeup_disable(struct device *dev);
- extern void device_set_wakeup_capable(struct device *dev, bool capable);
 -- 
-2.7.4
-
+Oscar Salvador
+SUSE L3
