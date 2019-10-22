@@ -2,114 +2,114 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72E34CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 07:45:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B2B7CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 07:46:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47FB22184C
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 07:45:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="oM1KYUcB"
+	by mail.kernel.org (Postfix) with ESMTP id 63CD22184C
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 07:46:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387982AbfJVHpD (ORCPT
+        id S2387993AbfJVHq0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 03:45:03 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:42478 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387692AbfJVHpC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 03:45:02 -0400
-Received: from zn.tnic (p4FED31B8.dip0.t-ipconnect.de [79.237.49.184])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 220471EC0C5C;
-        Tue, 22 Oct 2019 09:45:01 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1571730301;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=3ZuiOtOrGhN5RdAedvLTRxybDphCcw+39KdvlnjWico=;
-        b=oM1KYUcBqoXeHpCxTGr4T2mCPDOpn/QS1Fu1A7mp42nW8ZFYkoqyrdjc25nKgwQaJRO16b
-        Da4jkZsNtNck9RHYVDnUG+f71dJ7X3cYlH6cylJLIg90r1l7pATfn1KqM+kBeSYD/032KA
-        AQfYXnUsP/k/wuNcy4CA97yV0Qbgq5s=
-Date:   Tue, 22 Oct 2019 09:44:22 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     Kairui Song <kasong@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Matthew Garrett <matthewgarrett@google.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>
-Subject: Re: [PATCH v4] x86, efi: never relocate kernel below lowest
- acceptable address
-Message-ID: <20191022074422.GA31700@zn.tnic>
-References: <20191017093020.28658-1-kasong@redhat.com>
- <CAKv+Gu8nJ0uDn0G9s5N1ZM=FE4JB5c2Kjs=mKpatTFkwF0WaaQ@mail.gmail.com>
+        Tue, 22 Oct 2019 03:46:26 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43230 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726160AbfJVHqZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 03:46:25 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 29256B299;
+        Tue, 22 Oct 2019 07:46:23 +0000 (UTC)
+Date:   Tue, 22 Oct 2019 09:46:20 +0200
+From:   Oscar Salvador <osalvador@suse.de>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     n-horiguchi@ah.jp.nec.com, mike.kravetz@oracle.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v2 10/16] mm,hwpoison: Rework soft offline for free
+ pages
+Message-ID: <20191022074615.GA19060@linux>
+References: <20191017142123.24245-1-osalvador@suse.de>
+ <20191017142123.24245-11-osalvador@suse.de>
+ <20191018120615.GM5017@dhcp22.suse.cz>
+ <20191021125842.GA11330@linux>
+ <20191021154158.GV9379@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKv+Gu8nJ0uDn0G9s5N1ZM=FE4JB5c2Kjs=mKpatTFkwF0WaaQ@mail.gmail.com>
+In-Reply-To: <20191021154158.GV9379@dhcp22.suse.cz>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 08:13:56AM +0200, Ard Biesheuvel wrote:
-> On Thu, 17 Oct 2019 at 11:30, Kairui Song <kasong@redhat.com> wrote:
-> >
-> > Currently, kernel fails to boot on some HyperV VMs when using EFI.
-> > And it's a potential issue on all platforms.
-> >
-> > It's caused by broken kernel relocation on EFI systems, when below three
-> > conditions are met:
-> >
-> > 1. Kernel image is not loaded to the default address (LOAD_PHYSICAL_ADDR)
-> >    by the loader.
-> > 2. There isn't enough room to contain the kernel, starting from the
-> >    default load address (eg. something else occupied part the region).
-> > 3. In the memmap provided by EFI firmware, there is a memory region
-> >    starts below LOAD_PHYSICAL_ADDR, and suitable for containing the
-> >    kernel.
-> >
-> > EFI stub will perform a kernel relocation when condition 1 is met. But
-> > due to condition 2, EFI stub can't relocate kernel to the preferred
-> > address, so it fallback to ask EFI firmware to alloc lowest usable memory
-> > region, got the low region mentioned in condition 3, and relocated
-> > kernel there.
-> >
-> > It's incorrect to relocate the kernel below LOAD_PHYSICAL_ADDR. This
-> > is the lowest acceptable kernel relocation address.
-> >
-> > The first thing goes wrong is in arch/x86/boot/compressed/head_64.S.
-> > Kernel decompression will force use LOAD_PHYSICAL_ADDR as the output
-> > address if kernel is located below it. Then the relocation before
-> > decompression, which move kernel to the end of the decompression buffer,
-> > will overwrite other memory region, as there is no enough memory there.
-> >
-> > To fix it, just don't let EFI stub relocate the kernel to any address
-> > lower than lowest acceptable address.
-> >
-> > Signed-off-by: Kairui Song <kasong@redhat.com>
-> > Acked-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> >
+On Mon, Oct 21, 2019 at 05:41:58PM +0200, Michal Hocko wrote:
+> On Mon 21-10-19 14:58:49, Oscar Salvador wrote:
+> > Nothing prevents the page to be allocated in the meantime.
+> > We would just bail out and return -EBUSY to userspace.
+> > Since we do not do __anything__ to the page until we are sure we took it off,
+> > and it is completely isolated from the memory, there is no danger.
 > 
-> Ingo, Boris, could you please comment on this?
+> Wouldn't it be better to simply check the PageBuddy state after the lock
+> has been taken?
 
-Yah, the commit message makes more sense now.
+We already do that:
 
-Thx.
+bool take_page_off_buddy(struct page *page)
+ {
+	... 
+        spin_lock_irqsave(&zone->lock, flags);
+        for (order = 0; order < MAX_ORDER; order++) {
+                struct page *page_head = page - (pfn & ((1 << order) - 1));
+                int buddy_order = page_order(page_head);
+                struct free_area *area = &(zone->free_area[buddy_order]);
+
+                if (PageBuddy(page_head) && buddy_order >= order) {
+	...
+ }
+
+Actually, we __only__ call break_down_buddy_pages() (which breaks down a higher-order page
+and keeps our page out of buddy) if that is true.
+
+> > Since soft-offline is kinda "best effort" mode, it is something like:
+> > "Sorry, could not poison the page, try again".
+> 
+> Well, I would disagree here. While madvise is indeed a best effort
+> operation please keep in mind that the sole purpose of this interface is
+> to allow real MCE behavior. And that operation should better try
+> _really_ hard to make sure we try to recover as gracefully as possible.
+
+In this case, there is nothing to be recovered from.
+If we wanted to soft-offline a page that was free, and then it was allocated
+in the meantime, there is no harm in that as we do not flag the page
+until we are sure it is under our control.
+That means:
+
+ - for free pages: was succesfully taken off buddy
+ - in use pages: was freed or migrated
+
+So, opposite to hard-offline, in soft-offline we do not fiddle with pages
+unless we are sure the page is not reachable anymore by any means.
+
+> > Now, thinking about this a bit more, I guess we could be more clever here
+> > and call the routine that handles in-use pages if we see that the page
+> > was allocated by the time we reach take_page_off_buddy.
+> > 
+> > About pcp pages, you are right.
+> > I thought that we were already handling that case, and we do, but looking closer the
+> > call to shake_page() (that among other things spills pcppages into buddy)
+> > is performed at a later stage.
+> > I think we need to adjust __get_any_page to recognize pcp pages as well.
+> 
+> Yeah, pcp pages are PITA. We cannot really recognize them now. Dropping
+> all pcp pages is certainly a way to go but we need to mark the page
+> before that happens.
+
+I will work on that.
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Oscar Salvador
+SUSE L3
