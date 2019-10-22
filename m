@@ -2,116 +2,113 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC03CCA9EB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 02:13:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A40F3CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 02:19:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92A6120882
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 02:13:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571710391;
-	bh=S/2WtQMt9L/0ZoLF2YR0k3YeJsSzQfW7/ml8EXtJZvQ=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=03eTPCbhEfxL0B/ZuxIM6W0RHguVScRtkcXlflbHM9Skkj/iG19XBj/XwSjJyhzqQ
-	 rHgZPNzkuZzkat2s79qLu6P8TiMztABeaXa+4pgJIS+rUs6GJ0T37sNbBPn6E0nMIp
-	 65Sq9KevQrmpq8iFyMLDVhUYLGF7C63WlR+TJIzg=
+	by mail.kernel.org (Postfix) with ESMTP id 73EDD2089E
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 02:19:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Lc2b2oYx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730830AbfJVCNK (ORCPT
+        id S1730711AbfJVCTu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 22:13:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42594 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727264AbfJVCNK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 22:13:10 -0400
-Received: from paulmck-ThinkPad-P72 (cpe-67-241-73-101.twcny.res.rr.com [67.241.73.101])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 21 Oct 2019 22:19:50 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:60078 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729573AbfJVCTu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 22:19:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571710788;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=cy1H0yNRlADn6s5BcmmX0kDdj1YRyEm1IRV1QcI4xNE=;
+        b=Lc2b2oYxZyahvQpUf/P3NPT4Y5rW7aajfuGYltV2ynrX1ClW0d+L/kb0ssozJuQ4Iv5aHD
+        0M0vzFEoKdMBjoyyKGu2zTE2QCGU92Pyi6FnBMxDXPz31dPnelbGIFuMfoyFyUGSw+pDCS
+        T/kwCIK/mBuYRf8x8oFdcsW/PvJBHNs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-378-qGaYFtxgOfqv3l0NUq_F-w-1; Mon, 21 Oct 2019 22:19:45 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 873D12086D;
-        Tue, 22 Oct 2019 02:13:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571710389;
-        bh=S/2WtQMt9L/0ZoLF2YR0k3YeJsSzQfW7/ml8EXtJZvQ=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=W2+pqJsXZVCDf8qWvoR27cJI/6f5uG2gCB5k8Ghad9Zr7D2VIHYSdll/wRwZqRLFd
-         UbKo85vILq3YxvjNwmzn0pBvbtBvPflDFTDPKcElEKh/h2kH4hnuXnZjumRLMbQxpl
-         OH6GT+HydvwSq7LrueUKv9geSOaxXaQGAo4OLsG4=
-Date:   Mon, 21 Oct 2019 19:13:06 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Micah Morton <mortonm@chromium.org>,
-        Jann Horn <jannh@google.com>,
-        Bart Van Assche <bart.vanassche@wdc.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>
-Subject: Re: [GIT PULL] SafeSetID LSM changes for 5.4
-Message-ID: <20191022021306.GB2479@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <CAJ-EccM49yBA+xgkR+3m5pEAJqmH_+FxfuAjijrQxaxxMUAt3Q@mail.gmail.com>
- <CAHk-=wiAsJLw1egFEE=Z7-GGtM6wcvtyytXZA1+BHqta4gg6Hw@mail.gmail.com>
- <20190923233038.GE7828@paulmck-ThinkPad-P72>
- <20191021065811.GA17098@gmail.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3B345107AD31;
+        Tue, 22 Oct 2019 02:19:44 +0000 (UTC)
+Received: from malachite.redhat.com (ovpn-120-98.rdu2.redhat.com [10.10.120.98])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C7EA85C22C;
+        Tue, 22 Oct 2019 02:19:21 +0000 (UTC)
+From:   Lyude Paul <lyude@redhat.com>
+To:     linux-mm@kvack.org, kasan-dev@googlegroups.com
+Cc:     Sean Paul <sean@poorly.run>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        linux-kernel@vger.kernel.org
+Subject: [RFC] kasan: include the hashed pointer for an object's location
+Date:   Mon, 21 Oct 2019 22:18:11 -0400
+Message-Id: <20191022021810.3216-1-lyude@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191021065811.GA17098@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MC-Unique: qGaYFtxgOfqv3l0NUq_F-w-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 08:58:11AM +0200, Ingo Molnar wrote:
-> 
-> * Paul E. McKenney <paulmck@kernel.org> wrote:
-> 
-> > --- a/include/linux/rcupdate.h
-> > +++ b/include/linux/rcupdate.h
-> > @@ -383,20 +383,22 @@ do {									      \
-> >  } while (0)
-> >  
-> >  /**
-> > - * rcu_swap_protected() - swap an RCU and a regular pointer
-> > - * @rcu_ptr: RCU pointer
-> > + * rcu_replace() - replace an RCU pointer, returning its old value
-> > + * @rcu_ptr: RCU pointer, whose old value is returned
-> >   * @ptr: regular pointer
-> > - * @c: the conditions under which the dereference will take place
-> > + * @c: the lockdep conditions under which the dereference will take place
-> >   *
-> > - * Perform swap(@rcu_ptr, @ptr) where @rcu_ptr is an RCU-annotated pointer and
-> > - * @c is the argument that is passed to the rcu_dereference_protected() call
-> > - * used to read that pointer.
-> > + * Perform a replacement, where @rcu_ptr is an RCU-annotated
-> > + * pointer and @c is the lockdep argument that is passed to the
-> > + * rcu_dereference_protected() call used to read that pointer.  The old
-> > + * value of @rcu_ptr is returned, and @rcu_ptr is set to @ptr.
-> >   */
-> > -#define rcu_swap_protected(rcu_ptr, ptr, c) do {			\
-> > +#define rcu_replace(rcu_ptr, ptr, c)					\
-> > +({									\
-> >  	typeof(ptr) __tmp = rcu_dereference_protected((rcu_ptr), (c));	\
-> >  	rcu_assign_pointer((rcu_ptr), (ptr));				\
-> > -	(ptr) = __tmp;							\
-> > -} while (0)
-> > +	__tmp;								\
-> > +})
-> 
-> One small suggestion, would it make sense to name it "rcu_replace_pointer()"?
-> 
-> This would make it fit into the pointer handling family of RCU functions: 
-> rcu_assign_pointer(), rcu_access_pointer(), RCU_INIT_POINTER() et al?
+The vast majority of the kernel that needs to print out pointers as a
+way to keep track of a specific object in the kernel for debugging
+purposes does so using hashed pointers, since these are "good enough".
+Ironically, the one place we don't do this is within kasan. While
+simply printing a hashed version of where an out of bounds memory access
+occurred isn't too useful, printing out the hashed address of the object
+in question usually is since that's the format most of the kernel is
+likely to be using in debugging output.
 
-Easy enough to make the change.  I will do that tomorrow and test over
-the following night.
+Of course this isn't perfect though-having the object's originating
+address doesn't help users at all that need to do things like printing
+the address of a struct which is embedded within another struct, but
+it's certainly better then not printing any hashed addresses. And users
+which need to handle less trivial cases like that can simply fall back
+to careful usage of %px.
 
-> rcu_swap() would also look a bit weird if used in MM code. ;-)
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Cc: Sean Paul <sean@poorly.run>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc: Alexander Potapenko <glider@google.com>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Cc: kasan-dev@googlegroups.com
+---
+ mm/kasan/report.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-How much RCU swap should we configure on this system?  About same amount
-as reader-writer swap!  ;-)
+diff --git a/mm/kasan/report.c b/mm/kasan/report.c
+index 621782100eaa..0a5663fee1f7 100644
+--- a/mm/kasan/report.c
++++ b/mm/kasan/report.c
+@@ -128,8 +128,9 @@ static void describe_object_addr(struct kmem_cache *cac=
+he, void *object,
+ =09int rel_bytes;
+=20
+ =09pr_err("The buggy address belongs to the object at %px\n"
+-=09       " which belongs to the cache %s of size %d\n",
+-=09=09object, cache->name, cache->object_size);
++=09       " (aka %p) which belongs to the cache\n"
++=09       " %s of size %d\n",
++=09       object, object, cache->name, cache->object_size);
+=20
+ =09if (!addr)
+ =09=09return;
+--=20
+2.21.0
 
-							Thanx, Paul
