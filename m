@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25DDFCA9EB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 03:42:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A97D1CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 03:51:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F006121850
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 03:42:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BD5120659
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 03:51:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571715748;
-	bh=Co3JhqRHABlYSAEd0JeFkgSLwV0P0FKoYxiM594GFf0=;
+	s=default; t=1571716314;
+	bh=PmJXpAoOqCPINMiF32BoEa6xiE54h9KITk1Y0KuPtyk=;
 	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=GFeTz92QcxeZUYNhpnmDZ1+UD7cXqKNUpkRsCGF3YYwFDwo2rGqpiRnYZJJvZ5YmZ
-	 YzpmglITssZo6O0jHNFwLAZHh67MkxejmTTPJU7GoYnWg8Gntdvi5rC6laQIQMento
-	 VaeBkJb3C0ORXxE4na2xfJNjyzCErtNiWWyC3UNU=
+	b=inehTu+F7x+giiSvtz3GD17z/zFA2RSiIqsFaX0uh/6AdyeT60n9WqbuDfO1UVf4g
+	 Y1Qk7v/uEFDTp8MDHXM1VsGyTi/Qbk3hdGwBsK8ugXjBw9b9Krrq5IKg7Q+c3oJACz
+	 8jJ9S6zlKMYBQtCh2qUT81AZy8eNDxbSHCvpznU0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730798AbfJVDm1 (ORCPT
+        id S2387519AbfJVDvq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 21 Oct 2019 23:42:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58466 "EHLO mail.kernel.org"
+        Mon, 21 Oct 2019 23:51:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730370AbfJVDm0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 21 Oct 2019 23:42:26 -0400
+        id S1729573AbfJVDvq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 21 Oct 2019 23:51:46 -0400
 Received: from [192.168.1.27] (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F45E2086D;
-        Tue, 22 Oct 2019 03:42:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BE1220659;
+        Tue, 22 Oct 2019 03:51:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571715745;
-        bh=Co3JhqRHABlYSAEd0JeFkgSLwV0P0FKoYxiM594GFf0=;
+        s=default; t=1571716305;
+        bh=PmJXpAoOqCPINMiF32BoEa6xiE54h9KITk1Y0KuPtyk=;
         h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=uO5jgiAkPVO+klwmrabb33n9Nf0ZVlk1115MeHHzGI9gxGH2vWJHoXbGEcxB0Pfag
-         Ce/bC40FDiNAhL0DEfQbcl16jFLuU1YmL1EKUWDUmOCHAksYdEn1Dl7lBQC+/0te1I
-         OJLkCoXEXXkPXZXb/qkuzoDCgODRSJM0FstFeTjA=
-Subject: Re: [PATCHv2] arm64: dts: agilex: add QSPI support for Intel Agilex
-To:     Ley Foon Tan <ley.foon.tan@intel.com>,
-        "Ooi, Joyce" <joyce.ooi@intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ong Hean Loong <hean.loong.ong@intel.com>,
-        See Chin Liang <chin.liang.see@intel.com>
-References: <1571218846-12306-1-git-send-email-joyce.ooi@intel.com>
- <1571360401.2504.3.camel@intel.com>
+        b=oigK4LVS63vRYZf3mGLsk+NQ2UVMnaJY52i7eISFw0avHtJamSTFlFHOMdvSAxz4B
+         arIrE3b4Be79wtVEVbU7ih6hmkvrucnYlCaawbEV4ELccXWp5N4ejR6I841gMeJrel
+         7Z8ImHTgC3dJXNfzOp+/l+lwZSTiVe3yN2kY5eh4=
+Subject: Re: [PATCHv1] arm64: dts: agilex: add service layer, fpga manager and
+ fpga region
+To:     richard.gong@linux.intel.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Richard Gong <richard.gong@intel.com>
+References: <1571340880-18421-1-git-send-email-richard.gong@linux.intel.com>
 From:   Dinh Nguyen <dinguyen@kernel.org>
 Openpgp: preference=signencrypt
 Autocrypt: addr=dinguyen@kernel.org; prefer-encrypt=mutual; keydata=
@@ -93,15 +90,15 @@ Autocrypt: addr=dinguyen@kernel.org; prefer-encrypt=mutual; keydata=
  cJEJNezizexE0dVclt9OS2U9Xwb3VOjs1ITMEYUf8T1j83iiCCFuXqH4U3Eji0nDEiEN5Ac0
  Jn/EGOBG2qGyKZ4uOec9j5ABF7J6hyO7H6LJaX5bLtp0Z7wUbyVaR4UIGdIOchNgNQk4stfm
  JiyuXyoFl/1ihREfvUG/e7+VAAoOBnMjitE5/qUERDoEkkuQkMcAHyEyd+XZMyXY
-Message-ID: <1a497a81-da4c-973b-3bfe-4d676e4a3715@kernel.org>
-Date:   Mon, 21 Oct 2019 22:42:23 -0500
+Message-ID: <e34ba161-9648-6e31-6163-5997b8049efa@kernel.org>
+Date:   Mon, 21 Oct 2019 22:51:43 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <1571360401.2504.3.camel@intel.com>
+In-Reply-To: <1571340880-18421-1-git-send-email-richard.gong@linux.intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -109,39 +106,75 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 10/17/19 8:00 PM, Ley Foon Tan wrote:
-> On Wed, 2019-10-16 at 02:40 -0700, Ooi, Joyce wrote:
->> This patch adds QSPI flash interface in device tree for Intel Agilex
->>
->> Signed-off-by: Ooi, Joyce <joyce.ooi@intel.com>
->> ---
->> v2: update the qspi_rootfs partition size
->> ---
->>  arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts | 35
->> ++++++++++++++++++++++
->>  1 file changed, 35 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts
->> b/arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts
->> index 7814a9e..8de8118 100644
->> --- a/arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts
->> +++ b/arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts
->> @@ -73,3 +73,38 @@
->>  &watchdog0 {
->>  	status = "okay";
->>  };
->> +
->> +&qspi {
->> +	flash@0 {
->> +		#address-cells = <1>;
->> +		#size-cells = <1>;
->> +		compatible = "mt25qu02g";
->> +		reg = <0>;
->> +		spi-max-frequency = <50000000>;
-> QSPI can support up to 100MHz.
+On 10/17/19 2:34 PM, richard.gong@linux.intel.com wrote:
+> From: Richard Gong <richard.gong@intel.com>
+> 
+> Add service layer, fpga manager and fpga region to the device tree
+> on Intel Agilex platform.
+> 
+> Signed-off-by: Richard Gong <richard.gong@intel.com>
+> ---
+>  arch/arm64/boot/dts/intel/socfpga_agilex.dtsi | 32 +++++++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi b/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
+> index 36abc25..94090c6 100644
+> --- a/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
+> +++ b/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
+> @@ -12,6 +12,19 @@
+>  	#address-cells = <2>;
+>  	#size-cells = <2>;
+>  
+> +	reserved-memory {
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +
+> +		service_reserved: svcbuffer@0 {
+> +			compatible = "shared-dma-pool";
+> +			reg = <0x0 0x0 0x0 0x1000000>;
+> +			alignment = <0x1000>;
+> +			no-map;
+> +		};
+> +	};
+> +
+>  	cpus {
+>  		#address-cells = <1>;
+>  		#size-cells = <0>;
+> @@ -81,6 +94,13 @@
+>  		interrupt-parent = <&intc>;
+>  		ranges = <0 0 0 0xffffffff>;
+>  
+> +		base_fpga_region {
+> +			#address-cells = <0x1>;
+> +			#size-cells = <0x1>;
+> +			compatible = "fpga-region";
+> +			fpga-mgr = <&fpga_mgr>;
+> +		};
+> +
+>  		gmac0: ethernet@ff800000 {
+>  			compatible = "altr,socfpga-stmmac", "snps,dwmac-3.74a", "snps,dwmac";
+>  			reg = <0xff800000 0x2000>;
+> @@ -442,5 +462,17 @@
+>  
+>  			status = "disabled";
+>  		};
+> +
+> +		firmware {
+> +			svc {
+> +				compatible = "intel,stratix10-svc";
+> +				method = "smc";
+> +				memory-region = <&service_reserved>;
+> +
+> +				fpga_mgr: fpga-mgr {
+> +					compatible = "intel,stratix10-soc-fpga-mgr";
+> +				};
+> +			};
+> +		};
+>  	};
+>  };
+> 
 
-I've updated the patch accordingly.
+Applied.
 
 Dinh
-
-
