@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE0FCCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:29:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7420ACA9EB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:29:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D335206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:29:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58B3B20700
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 17:29:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388124AbfJVR33 (ORCPT
+        id S2388301AbfJVR3b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 13:29:29 -0400
-Received: from mga17.intel.com ([192.55.52.151]:50509 "EHLO mga17.intel.com"
+        Tue, 22 Oct 2019 13:29:31 -0400
+Received: from mga05.intel.com ([192.55.52.43]:52034 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732554AbfJVR32 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 13:29:28 -0400
+        id S2388135AbfJVR3a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 13:29:30 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Oct 2019 10:29:27 -0700
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Oct 2019 10:29:29 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,217,1569308400"; 
-   d="scan'208";a="372605618"
+   d="scan'208";a="209721741"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga005.jf.intel.com with ESMTP; 22 Oct 2019 10:29:24 -0700
+  by fmsmga001.fm.intel.com with ESMTP; 22 Oct 2019 10:29:27 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id E8BB43BB; Tue, 22 Oct 2019 20:29:23 +0300 (EEST)
+        id 0F7423F2; Tue, 22 Oct 2019 20:29:24 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
@@ -40,9 +40,9 @@ To:     Linus Walleij <linus.walleij@linaro.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         William Breathitt Gray <vilhelm.gray@gmail.com>
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v2 03/11] lib/test_bitmap: Name EXP_BYTES properly
-Date:   Tue, 22 Oct 2019 20:29:14 +0300
-Message-Id: <20191022172922.61232-4-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 06/11] lib/test_bitmap: Fix comment about this file
+Date:   Tue, 22 Oct 2019 20:29:17 +0300
+Message-Id: <20191022172922.61232-7-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191022172922.61232-1-andriy.shevchenko@linux.intel.com>
 References: <20191022172922.61232-1-andriy.shevchenko@linux.intel.com>
@@ -53,51 +53,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-EXP_BYTES has been wrongly named. It's a size of the exp array in bits.
-
-While here, go ahead and rename to EXP1_IN_BITS to avoid double renaming
-when exp will be renamed to exp1 in the next patch
+This test case file is about bitmap API, and not printf() facility.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- lib/test_bitmap.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ lib/test_bitmap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/lib/test_bitmap.c b/lib/test_bitmap.c
-index d2fa94e45a46..38f923411ada 100644
+index 449d0882b488..4544847cf81e 100644
 --- a/lib/test_bitmap.c
 +++ b/lib/test_bitmap.c
-@@ -374,17 +374,17 @@ static void __init test_bitmap_parselist_user(void)
- 	__test_bitmap_parselist(1);
- }
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * Test cases for printf facility.
++ * Test cases for bitmap API.
+  */
  
--#define EXP_BYTES	(sizeof(exp) * 8)
-+#define EXP1_IN_BITS	(sizeof(exp) * 8)
- 
- static void __init test_bitmap_arr32(void)
- {
- 	unsigned int nbits, next_bit;
--	u32 arr[sizeof(exp) / 4];
--	DECLARE_BITMAP(bmap2, EXP_BYTES);
-+	u32 arr[EXP1_IN_BITS / 32];
-+	DECLARE_BITMAP(bmap2, EXP1_IN_BITS);
- 
- 	memset(arr, 0xa5, sizeof(arr));
- 
--	for (nbits = 0; nbits < EXP_BYTES; ++nbits) {
-+	for (nbits = 0; nbits < EXP1_IN_BITS; ++nbits) {
- 		bitmap_to_arr32(arr, exp, nbits);
- 		bitmap_from_arr32(bmap2, arr, nbits);
- 		expect_eq_bitmap(bmap2, exp, nbits);
-@@ -396,7 +396,7 @@ static void __init test_bitmap_arr32(void)
- 				" tail is not safely cleared: %d\n",
- 				nbits, next_bit);
- 
--		if (nbits < EXP_BYTES - 32)
-+		if (nbits < EXP1_IN_BITS - 32)
- 			expect_eq_uint(arr[DIV_ROUND_UP(nbits, 32)],
- 								0xa5a5a5a5);
- 	}
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 -- 
 2.23.0
 
