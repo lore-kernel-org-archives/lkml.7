@@ -2,127 +2,138 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F123CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 07:15:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 994BBCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 07:20:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F5BC20B7C
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 07:15:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FDB5214B2
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 07:20:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="dWFWIuvf";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="L182tLUn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387771AbfJVHPM (ORCPT
+        id S1731123AbfJVHUa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 03:15:12 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4703 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726160AbfJVHPM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 03:15:12 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 1FA04A12A33EAD9386E7;
-        Tue, 22 Oct 2019 15:15:10 +0800 (CST)
-Received: from [127.0.0.1] (10.177.251.225) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Tue, 22 Oct 2019
- 15:15:02 +0800
-Subject: Re: [PATCH] crypto: arm64/aes-neonbs - remove redundant code in
- __xts_crypt()
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-CC:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        "hushiyuan@huawei.com" <hushiyuan@huawei.com>,
-        "linfeilong@huawei.com" <linfeilong@huawei.com>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <a33932c9-2975-4fcc-ba07-7c54df4eae27@huawei.com>
- <CAKv+Gu-qAy9iLbR97=Kz90+-YLLvz0nmTZtxhByeOXEG3xvaBQ@mail.gmail.com>
-From:   Yunfeng Ye <yeyunfeng@huawei.com>
-Message-ID: <43706330-cc84-d597-11ad-a3e0afb0b793@huawei.com>
-Date:   Tue, 22 Oct 2019 15:14:58 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 22 Oct 2019 03:20:30 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:39994 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728346AbfJVHU3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 03:20:29 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 62804607DE; Tue, 22 Oct 2019 07:20:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571728827;
+        bh=EVwj46UeE2wGGDTOX5OHTVhOFwofSd5fYovKQxbRLQg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=dWFWIuvfhkYhzhxaCFrwEsjwAD6OHiNShNaNIzxk8XoTN1KGvmppbfSYjkQoOGTkT
+         kaBx5EoMwX0C8/4ivSYMZfuArOjpTYa6/N25SyUi9j7zJYi/iLnxtxTWWHB5KP7Gyp
+         L1ERtz9LOVC3CFeW+MJ2FxquzrnpUbV013oRX/UE=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id 1BFE9602D8;
+        Tue, 22 Oct 2019 07:20:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571728826;
+        bh=EVwj46UeE2wGGDTOX5OHTVhOFwofSd5fYovKQxbRLQg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=L182tLUn5lO3IAJmkyDsbs67sIsNniqSSrUcM/4htc7AHSW6qY8UzUT2JztXMGK0f
+         eYdL11L+La2yCVX3QAQ5tVN+DH34lPoZGTunK3dzImJAB6zIq1mxy+NAiZGiooY7Vo
+         yKwNxmgTYuTPfNtvox+bMnBltKkQCsVS23TY9sOs=
 MIME-Version: 1.0
-In-Reply-To: <CAKv+Gu-qAy9iLbR97=Kz90+-YLLvz0nmTZtxhByeOXEG3xvaBQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.251.225]
-X-CFilter-Loop: Reflected
+Date:   Tue, 22 Oct 2019 12:50:16 +0530
+From:   kgunda@codeaurora.org
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
+        lee.jones@linaro.org, b.zolnierkie@samsung.com,
+        dri-devel@lists.freedesktop.org, jacek.anaszewski@gmail.com,
+        pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-fbdev@vger.kernel.org
+Subject: Re: [PATCH V8 6/6] backlight: qcom-wled: Add auto string detection
+ logic
+In-Reply-To: <20191021103150.ta7qalltldofouh4@holly.lan>
+References: <1571402009-8706-1-git-send-email-kgunda@codeaurora.org>
+ <1571402009-8706-7-git-send-email-kgunda@codeaurora.org>
+ <20191021103150.ta7qalltldofouh4@holly.lan>
+Message-ID: <0d41f3eb83bbae9eaab0723a84bfcb1b@codeaurora.org>
+X-Sender: kgunda@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2019/10/22 14:52, Ard Biesheuvel wrote:
-> On Tue, 22 Oct 2019 at 08:42, Yunfeng Ye <yeyunfeng@huawei.com> wrote:
->>
->> A warning is found by the static code analysis tool:
->>   "Identical condition 'err', second condition is always false"
->>
->> Fix this by removing the redundant condition @err.
->>
->> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
-> 
-> Please don't blindly 'fix' crypto code without reading it carefully
-> and without cc'ing the author.
-> 
-ok, thanks.
-
-> The correct fix is to add the missing assignment of 'err', like so
-> 
-> diff --git a/arch/arm64/crypto/aes-neonbs-glue.c
-> b/arch/arm64/crypto/aes-neonbs-glue.c
-> index ea873b8904c4..e3e27349a9fe 100644
-> --- a/arch/arm64/crypto/aes-neonbs-glue.c
-> +++ b/arch/arm64/crypto/aes-neonbs-glue.c
-> @@ -384,7 +384,7 @@ static int __xts_crypt(struct skcipher_request
-> *req, bool encrypt,
->                         goto xts_tail;
-> 
->                 kernel_neon_end();
-> -               skcipher_walk_done(&walk, nbytes);
-> +               err = skcipher_walk_done(&walk, nbytes);
->         }
-> 
->         if (err || likely(!tail))
-> 
-> Does that make the warning go away?
-> 
-yes, warning has go way.
-
-> 
+On 2019-10-21 16:01, Daniel Thompson wrote:
+> On Fri, Oct 18, 2019 at 06:03:29PM +0530, Kiran Gunda wrote:
+>> The auto string detection algorithm checks if the current WLED
+>> sink configuration is valid. It tries enabling every sink and
+>> checks if the OVP fault is observed. Based on this information
+>> it detects and enables the valid sink configuration.
+>> Auto calibration will be triggered when the OVP fault interrupts
+>> are seen frequently thereby it tries to fix the sink configuration.
+>> 
+>> The auto-detection also kicks in when the connected LED string
+>> of the display-backlight malfunctions (because of damage) and
+>> requires the damaged string to be turned off to prevent the
+>> complete panel and/or board from being damaged.
+>> 
+>> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
 >> ---
->>  arch/arm64/crypto/aes-neonbs-glue.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/arch/arm64/crypto/aes-neonbs-glue.c b/arch/arm64/crypto/aes-neonbs-glue.c
->> index ea873b8904c4..7b342db428b0 100644
->> --- a/arch/arm64/crypto/aes-neonbs-glue.c
->> +++ b/arch/arm64/crypto/aes-neonbs-glue.c
->> @@ -387,7 +387,7 @@ static int __xts_crypt(struct skcipher_request *req, bool encrypt,
->>                 skcipher_walk_done(&walk, nbytes);
->>         }
->>
->> -       if (err || likely(!tail))
->> +       if (likely(!tail))
->>                 return err;
->>
->>         /* handle ciphertext stealing */
->> --
->> 2.7.4.3
->>
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>>  drivers/video/backlight/qcom-wled.c | 398 
+>> +++++++++++++++++++++++++++++++++++-
+>>  1 file changed, 392 insertions(+), 6 deletions(-)
+>> 
+>> diff --git a/drivers/video/backlight/qcom-wled.c 
+>> b/drivers/video/backlight/qcom-wled.c
+>> index 658b1e0..b2e6754 100644
+>> --- a/drivers/video/backlight/qcom-wled.c
+>> +++ b/drivers/video/backlight/qcom-wled.c
+>> @@ -193,7 +216,23 @@ static int wled_module_enable(struct wled *wled, 
+>> int val)
+>>  				WLED3_CTRL_REG_MOD_EN,
+>>  				WLED3_CTRL_REG_MOD_EN_MASK,
+>>  				val << WLED3_CTRL_REG_MOD_EN_SHIFT);
+>> -	return rc;
+>> +	if (rc < 0)
+>> +		return rc;
+>> +
+>> +	if (wled->ovp_irq > 0) {
+>> +		if (val) {
+>> +			/*
+>> +			 * Wait for at least 10ms before enabling OVP interrupt
+>> +			 * after module enable so that soft start is completed.
+>> +			 */
 > 
-> .
+> Comments should not say what is does (we can read that). It should be
+> saying what is weird about the hardware the results in us enabling the
+> interrupt in an unusual way.
 > 
+> More like:
+> 
+> "The hardware generates a storm of spurious OVP interrupts during soft
+> start operations so defer enabling the IRQ for 10ms to ensure that
+> the soft start is complete."
+> 
+> Note that I am only guessing that is an spurious interrupt storm that
+> caused you to defer the interrupt enable... I don't want to have to
+> guess which is why I am asking for a good quality comment!
+> 
+> 
+> Daniel.
+Yes. Your guess is correct. The hardware document explains the same.
+The WLED boost voltage can hit OVP limit in normal operating conditions 
+such as
+during the soft start timing.
+Hence, waiting for the soft start to complete before enabling the OVP 
+interrupt
+to avoid the spurious interrupts.
 
+I will update the comment as you suggested in the next series.
