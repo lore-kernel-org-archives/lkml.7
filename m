@@ -6,54 +6,80 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88B60CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:35:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEBCACA9EB9
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:36:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62DC72084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:35:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0A862084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 15:36:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732459AbfJVPfK (ORCPT
+        id S1732468AbfJVPgy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 11:35:10 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43452 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732384AbfJVPfJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 11:35:09 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 2323BAC10;
-        Tue, 22 Oct 2019 15:35:08 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id D1F87DA732; Tue, 22 Oct 2019 17:35:18 +0200 (CEST)
-Date:   Tue, 22 Oct 2019 17:35:16 +0200
-From:   David Sterba <dsterba@suse.cz>
-To:     David Sterba <dsterba@suse.com>
-Cc:     torvalds@linux-foundation.org, linux-btrfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] Btrfs fixes for 5.4-rc5
-Message-ID: <20191022153514.GZ3001@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz, David Sterba <dsterba@suse.com>,
-        torvalds@linux-foundation.org, linux-btrfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1571751313.git.dsterba@suse.com>
+        Tue, 22 Oct 2019 11:36:54 -0400
+Received: from muru.com ([72.249.23.125]:38904 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731450AbfJVPgy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 11:36:54 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id EF18F80FA;
+        Tue, 22 Oct 2019 15:37:27 +0000 (UTC)
+Date:   Tue, 22 Oct 2019 08:36:50 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
+Subject: Re: [PATCH 1/7] dt-bindings: gpu: pvrsgx: add initial bindings
+Message-ID: <20191022153650.GL5610@atomide.com>
+References: <cover.1571424390.git.hns@goldelico.com>
+ <f0fb68dc7bc027e5e911721852f6bc6fa2d77a63.1571424390.git.hns@goldelico.com>
+ <CAL_Jsq+obsTSU3iP1wm_3-FsAJ4Mxiz0NbMY1_h5NeFn67Sj+A@mail.gmail.com>
+ <CEA29A3B-4116-4FE3-8E18-0C97353688DC@goldelico.com>
+ <20191021172557.GB5610@atomide.com>
+ <C6CD5A50-7F0A-4F56-ABB9-CAEDF7E47A5D@goldelico.com>
+ <20191022150202.GJ5610@atomide.com>
+ <CC62CE92-28DF-406E-B61C-22F8F341AAFB@goldelico.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1571751313.git.dsterba@suse.com>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+In-Reply-To: <CC62CE92-28DF-406E-B61C-22F8F341AAFB@goldelico.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 03:52:07PM +0200, David Sterba wrote:
-> * fix during file sync, the full-sync status might get dropped
->   externally, eg. by background witeback under some circumstances
+* H. Nikolaus Schaller <hns@goldelico.com> [191022 15:12]:
+> Hm. How should that work? Some SoC have the sgx544 as single
+> core and others as dual core. This imho does not fit into
+> the "img,sgx544-$revision" scheme which could be matched to.
 
-Please replace the above merge log entry with
+Well don't you have then just two separate child nodes,
+one for each core with their own register range?
 
-* fix race when handling full sync flag
+That is assuming they're really separate instances..
 
-The above wording was wrong and misleading, the changelog has all the
-deatils and my attempt to condense it did not work very well. Thanks.
+> But maybe we do it the same as with the timer for the moment,
+> i.e. keep it in some unpublished patch set.
+
+Yeah makes sense to me until things get sorted out.
+
+> At the moment I have more problems understanding how the yaml
+> thing works. I understand and fully support the overall goal,
+> but it is quite difficult to get a start here. And there do not
+> seem to be tools or scripts to help converting from old style
+> text format (even if not perfect, this would be helpful) and
+> I have no yaml editor that helps keeping the indentation
+> correct. So this slows down a v2 a little bit.
+
+Sounds handy to me :)
+
+Regards,
+
+Tony
