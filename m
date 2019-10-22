@@ -2,148 +2,99 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55A9CCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:30:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5FACCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:31:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F17FE2184C
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:30:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5EA721783
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 12:31:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="j/cz1avO"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="A8DP0T8H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389080AbfJVMaX (ORCPT
+        id S2389085AbfJVMbj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 08:30:23 -0400
-Received: from ste-pvt-msa1.bahnhof.se ([213.80.101.70]:53174 "EHLO
-        ste-pvt-msa1.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728832AbfJVMaX (ORCPT
+        Tue, 22 Oct 2019 08:31:39 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:38194 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388066AbfJVMbj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 08:30:23 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTP id CFD9B3F41D;
-        Tue, 22 Oct 2019 14:30:20 +0200 (CEST)
-Authentication-Results: ste-pvt-msa1.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=j/cz1avO;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from ste-pvt-msa1.bahnhof.se ([127.0.0.1])
-        by localhost (ste-pvt-msa1.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id yHU_t1oiuxg7; Tue, 22 Oct 2019 14:30:19 +0200 (CEST)
-Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        (Authenticated sender: mb878879)
-        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id AADFF3F6B6;
-        Tue, 22 Oct 2019 14:30:18 +0200 (CEST)
-Received: from localhost.localdomain.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id E0E2C360150;
-        Tue, 22 Oct 2019 14:30:17 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1571747417; bh=LkBSK5Hwwhp8Ui1I2/duEhGAmp4GNTdWNqAL3TYlptk=;
-        h=From:To:Cc:Subject:Date:From;
-        b=j/cz1avOPL+hoh4VjqyGqaXnQdvQFmDoD121lv94PmcK8RcihgBCZG3W6lvPE5JyC
-         9rJF7WnIrTeDNOqNOC9mgYQDCs/2k5cBs26hxQ+vuxv7HW8BztxsRJzVDpjWByQCdb
-         hf8JE+l+aNASDxeiuFPjyQOr8XmE6ZpF8lZzC/Qc=
-From:   =?UTF-8?q?Thomas=20Hellstr=C3=B6m=20=28VMware=29?= 
-        <thomas_os@shipmail.org>
-To:     linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Cc:     Thomas Hellstrom <thellstrom@vmware.com>,
-        Matthew Wilcox <willy@infradead.org>
-Subject: [PATCH] mm: Fix a huge pud insertion race during faulting
-Date:   Tue, 22 Oct 2019 14:30:03 +0200
-Message-Id: <20191022123003.37089-1-thomas_os@shipmail.org>
-X-Mailer: git-send-email 2.21.0
+        Tue, 22 Oct 2019 08:31:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=cbzjBRCNu064oPbnxwV51wPz82f0A4UhuT/lsEJ7sU4=; b=A8DP0T8HXpZ8QWEfSqsuG6Ova
+        F76pB1qsAY0tM7KHGTfJwIRVFa9StYYpj95znyoyLDLI9O/v8gL9TJ0XkF70eO1krOrP6GXCCYvTb
+        d6kk4YTnmtFrSBWQZ8XtgtfLSIUAiSgYATA82WeupbmoawGtMerU+REv2V8LTK72UEsTuzfRYSqPq
+        M2yc8lLtZLPYhfhBQekUuWuR5Norwc2zaTrLJ13PNb4IBNmYwox279jsZsyy3GPRSiDx67kPcfInK
+        tP1L+MpRF60+GTtc8zfS9e1h3rDux0Zd0bzlG34rgLlshFAB1Mh2egzjU95RvoQEdw+k21y/JLoFj
+        x0WMEvoog==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iMtJj-000478-Tc; Tue, 22 Oct 2019 12:31:16 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D188D300F29;
+        Tue, 22 Oct 2019 14:30:14 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 6BF1C2042087F; Tue, 22 Oct 2019 14:31:12 +0200 (CEST)
+Date:   Tue, 22 Oct 2019 14:31:12 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+        mhiramat@kernel.org, bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, jeyu@kernel.org
+Subject: Re: [PATCH v4 15/16] module: Move where we mark modules RO,X
+Message-ID: <20191022123112.GI1800@hirez.programming.kicks-ass.net>
+References: <20191018073525.768931536@infradead.org>
+ <20191018074634.801435443@infradead.org>
+ <20191021135312.jbbxsuipxldocdjk@treble>
+ <20191021141402.GI1817@hirez.programming.kicks-ass.net>
+ <20191021153425.GB19358@hirez.programming.kicks-ass.net>
+ <20191021161135.GD19358@hirez.programming.kicks-ass.net>
+ <20191022113116.GA8574@osiris>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191022113116.GA8574@osiris>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Hellstrom <thellstrom@vmware.com>
+On Tue, Oct 22, 2019 at 01:31:16PM +0200, Heiko Carstens wrote:
+> On Mon, Oct 21, 2019 at 06:11:35PM +0200, Peter Zijlstra wrote:
+> > On Mon, Oct 21, 2019 at 05:34:25PM +0200, Peter Zijlstra wrote:
+> > > On Mon, Oct 21, 2019 at 04:14:02PM +0200, Peter Zijlstra wrote:
+> > 
+> > > So On IRC Josh suggested we use text_poke() for RELA. Since KLP is only
+> > > available on Power and x86, and Power does not have STRICT_MODULE_RWX,
+> > > the below should be sufficient.
+> > > 
+> > > Completely untested...
+> > 
+> > And because s390 also has: HAVE_LIVEPATCH and STRICT_MODULE_RWX the even
+> > less tested s390 bits included below.
+> > 
+> > Heiko, apologies if I completely wrecked it.
+> > 
+> > The purpose is to remove module_disable_ro()/module_enable_ro() from
+> > livepatch/core.c such that:
+> > 
+> >  - nothing relies on where in the module loading path module text goes RX.
+> >  - nothing ever has writable text
+> 
+> Given that Steven reported a crash, I assume I can wait until you
+> repost a new version of the series, which also includes s390 bits?
 
-A huge pud page can theoretically be faulted in racing with pmd_alloc()
-in __handle_mm_fault(). That will lead to pmd_alloc() returning an
-invalid pmd pointer. Fix this by adding a pud_trans_unstable() function
-similar to pmd_trans_unstable() and check whether the pud is really stable
-before using the pmd pointer.
-
-Race:
-Thread 1:             Thread 2:                 Comment
-create_huge_pud()                               Fallback - not taken.
-		      create_huge_pud()         Taken.
-pmd_alloc()                                     Returns an invalid pointer.
-
-Cc: Matthew Wilcox <willy@infradead.org>
-Fixes: a00cc7d9dd93 ("mm, x86: add support for PUD-sized transparent hugepages")
-Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
----
- include/asm-generic/pgtable.h | 25 +++++++++++++++++++++++++
- mm/memory.c                   |  6 ++++++
- 2 files changed, 31 insertions(+)
-
-diff --git a/include/asm-generic/pgtable.h b/include/asm-generic/pgtable.h
-index 818691846c90..70c2058230ba 100644
---- a/include/asm-generic/pgtable.h
-+++ b/include/asm-generic/pgtable.h
-@@ -912,6 +912,31 @@ static inline int pud_trans_huge(pud_t pud)
- }
- #endif
- 
-+/* See pmd_none_or_trans_huge_or_clear_bad for discussion. */
-+static inline int pud_none_or_trans_huge_or_dev_or_clear_bad(pud_t *pud)
-+{
-+	pud_t pudval = READ_ONCE(*pud);
-+
-+	if (pud_none(pudval) || pud_trans_huge(pudval) || pud_devmap(pudval))
-+		return 1;
-+	if (unlikely(pud_bad(pudval))) {
-+		pud_clear_bad(pud);
-+		return 1;
-+	}
-+	return 0;
-+}
-+
-+/* See pmd_trans_unstable for discussion. */
-+static inline int pud_trans_unstable(pud_t *pud)
-+{
-+#if defined(CONFIG_TRANSPARENT_HUGEPAGE) &&			\
-+	defined(CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD)
-+	return pud_none_or_trans_huge_or_dev_or_clear_bad(pud);
-+#else
-+	return 0;
-+#endif
-+}
-+
- #ifndef pmd_read_atomic
- static inline pmd_t pmd_read_atomic(pmd_t *pmdp)
- {
-diff --git a/mm/memory.c b/mm/memory.c
-index b1ca51a079f2..43ff372f4f07 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -3914,6 +3914,7 @@ static vm_fault_t __handle_mm_fault(struct vm_area_struct *vma,
- 	vmf.pud = pud_alloc(mm, p4d, address);
- 	if (!vmf.pud)
- 		return VM_FAULT_OOM;
-+retry_pud:
- 	if (pud_none(*vmf.pud) && __transparent_hugepage_enabled(vma)) {
- 		ret = create_huge_pud(&vmf);
- 		if (!(ret & VM_FAULT_FALLBACK))
-@@ -3940,6 +3941,11 @@ static vm_fault_t __handle_mm_fault(struct vm_area_struct *vma,
- 	vmf.pmd = pmd_alloc(mm, vmf.pud, address);
- 	if (!vmf.pmd)
- 		return VM_FAULT_OOM;
-+
-+	/* Huge pud page fault raced with pmd_alloc? */
-+	if (pud_trans_unstable(vmf.pud))
-+		goto retry_pud;
-+
- 	if (pmd_none(*vmf.pmd) && __transparent_hugepage_enabled(vma)) {
- 		ret = create_huge_pmd(&vmf);
- 		if (!(ret & VM_FAULT_FALLBACK))
--- 
-2.21.0
-
+His crash is somewhat orthogonal, but yes, I will repost once sorted.
