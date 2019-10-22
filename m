@@ -2,134 +2,117 @@ Return-Path: <SRS0=qxzQ=YP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA873CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 06:54:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 430ACCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 06:59:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9796521783
-	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 06:54:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 140FD21783
+	for <linux-kernel@archiver.kernel.org>; Tue, 22 Oct 2019 06:59:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="KFNyTsvY"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hbyPJZlx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387863AbfJVGyS (ORCPT
+        id S1731051AbfJVG7W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 02:54:18 -0400
-Received: from mail-eopbgr740047.outbound.protection.outlook.com ([40.107.74.47]:44759
-        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387623AbfJVGyS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 02:54:18 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Bd21J+SikT++yoowkG2DQ2o+rAeUlrI9zg2aNAYgXJtkf1IwpXBmSI2s/STurJuXWk35tS7DUnXh9MwzfqT9bxyIvjIVzR0v65Av3bpCC8wmgP/xJ7fCAHXYtGK7QuHZkh51J+kygRZ7xwFTY8oO8GGXsv2IIw3rTTuYp0/ftr97SBjA9JJMIiHc8Po50BROUUaUZRUJQ8vG0mEc4Z6/Uz3SNbD0O2xl97kG+AvMoqD/+vgXFc/PDgXXhZlTU99COZ59L/Y1F7LF1uRK0osi/2qoyXEa2pDXTL1+RSQJ6tRFb4xJu682RGzXvJXJuNciLSDT1I8BaD6Omt1RAFv9fQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=L9jj67AIbtLVV+wtEsGcthC8gbbf7KW0xOmDTgUeFLA=;
- b=FxGBgE1pVhKVLXAxH7YMuDfBB86JLmovOzGv9SPVmPRUw+6kK/lqChrBxQRsCo01v7E4F5PFJMKU8TsHCfqEJw8n9B2vrXypFnZfy6sjL/TZi4z7/LGZRVqsgTmFxIEY+LpsyR+15AAcql6okelBBxfi/jSSbpjz91YgCGkM+7R4hidGmqb1XCy4SfiDhf2kM8+g8wZjYj2th3B/LIao/y6S/xKc8gb/1Xjt85RL964OGHhj9Cd/dgmJrM9IJBB/haGhBtVUHniOgVdT1JoemSbLW8OL8IvMgV5lX6uCjiZiDypCecPUi3fgi2VTO0u7Mo3dMcz6DYA1pcwE7pWL7w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Tue, 22 Oct 2019 02:59:22 -0400
+Received: from mail-vk1-f193.google.com ([209.85.221.193]:43986 "EHLO
+        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731023AbfJVG7V (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 02:59:21 -0400
+Received: by mail-vk1-f193.google.com with SMTP id i21so1301710vka.10
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Oct 2019 23:59:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=L9jj67AIbtLVV+wtEsGcthC8gbbf7KW0xOmDTgUeFLA=;
- b=KFNyTsvYxfpAqr1SIeDD9xCrmOVKMU8ZezFDVaeL5TZZ+a4e2rUL7X6QH9fV9Y1VNybR3MwDjX5lGVKOOesmeNayJ7nPpMttG0JZwRDGCh7Cig3IBweK4B9l4xzVEZotdjwoljcPMsA32MAwhYZyDIwKrmOo/tKo9JOb4NOnmDI=
-Received: from DM5PR12MB1705.namprd12.prod.outlook.com (10.175.88.22) by
- DM5PR12MB1530.namprd12.prod.outlook.com (10.172.34.23) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2367.20; Tue, 22 Oct 2019 06:54:13 +0000
-Received: from DM5PR12MB1705.namprd12.prod.outlook.com
- ([fe80::7428:f6b3:a0b1:a02e]) by DM5PR12MB1705.namprd12.prod.outlook.com
- ([fe80::7428:f6b3:a0b1:a02e%10]) with mapi id 15.20.2347.029; Tue, 22 Oct
- 2019 06:54:13 +0000
-From:   "Koenig, Christian" <Christian.Koenig@amd.com>
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>
-CC:     "emamd001@umn.edu" <emamd001@umn.edu>,
-        "kjlu@umn.edu" <kjlu@umn.edu>,
-        "smccaman@umn.edu" <smccaman@umn.edu>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "Quan, Evan" <Evan.Quan@amd.com>,
-        "Zhang, Hawking" <Hawking.Zhang@amd.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        "Xiao, Jack" <Jack.Xiao@amd.com>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drm/amdgpu: Fix memory leak in amdgpu_fence_emit
-Thread-Topic: [PATCH] drm/amdgpu: Fix memory leak in amdgpu_fence_emit
-Thread-Index: AQHViDq/P8TbUvdRQEq868WpdR2sDKdmOogA
-Date:   Tue, 22 Oct 2019 06:54:13 +0000
-Message-ID: <fad3d810-d3bd-ccdf-1d21-f5a483597043@amd.com>
-References: <20191021180944.22183-1-navid.emamdoost@gmail.com>
-In-Reply-To: <20191021180944.22183-1-navid.emamdoost@gmail.com>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-x-originating-ip: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
-x-clientproxiedby: AM0PR0102CA0013.eurprd01.prod.exchangelabs.com
- (2603:10a6:208:14::26) To DM5PR12MB1705.namprd12.prod.outlook.com
- (2603:10b6:3:10c::22)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Christian.Koenig@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 8c80dfa4-556e-4542-7b4d-08d756bca5b5
-x-ms-traffictypediagnostic: DM5PR12MB1530:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM5PR12MB1530B2C030712C2AC805182783680@DM5PR12MB1530.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4502;
-x-forefront-prvs: 01986AE76B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(39860400002)(376002)(136003)(396003)(346002)(189003)(199004)(6506007)(4326008)(6486002)(386003)(2616005)(476003)(186003)(52116002)(229853002)(99286004)(6246003)(11346002)(256004)(14444005)(478600001)(25786009)(486006)(6436002)(76176011)(46003)(446003)(6512007)(102836004)(65806001)(4744005)(31686004)(6916009)(65956001)(36756003)(58126008)(8936002)(31696002)(14454004)(54906003)(8676002)(81166006)(71190400001)(81156014)(66574012)(316002)(71200400001)(86362001)(2906002)(6116002)(5660300002)(7416002)(66946007)(64756008)(66556008)(66446008)(66476007)(7736002)(305945005);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB1530;H:DM5PR12MB1705.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: JALPQFOlx3JS5KMwNgOKUItH4dl05UcKP37Un5oz8503HIP0RZc+0ak1oE5LJH1hLTM1GenLH4s1rH1D6pIU9kDn3LUVJbBmrY+Pa0ikVrJ59TXw9oslXl9zE02wx1fLhzcMiuaz6skvj7hJwzMLyDJ9O5LubxSYiwbDBIOjtawyIxsnOPMDWlfnSrf2NJz4zRij5RVSDWBsLmMNzi41jeeISSAYOMd3GMRBDI0wsH+yuys1x3Cpvjf+Mok+AvZc0G9Jc+DY/ckmF71uoYsmEcxzqVA8U6ksjL+aOw59MyTT/1aJlkfQqFKJF10m9OgZihzctJ7KX+YM2dO2uU3BMmcVZX3vFZYUdCNFNghDrlB6WgNZD3ppiyKHzhZJzZt2RjdfQGSydL09y2aGnhwkDk6jNnEPs4huDyBz5zK3vgiB8rBY3wQp0oIJYyt/RT5p
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <F7F816AE92352B4E8833E3EBD9AB3B3B@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=48GsjoJkha+FkK4BjEpjxR+SeBNRB+aPyJf6ECBpNI8=;
+        b=hbyPJZlxSdwm88myuhdtJEWIniVP1HiyEFgnExhI8LirSFCoAssFt32rZiA6ATyVm1
+         RfPrjPXMTCjoAwM+OIdY+RZmtVg+qMxVFAFdE1sSNExUcHfa5QU/axOjkyW9NIhXAnMw
+         12HfGq8+/d7D00ifWT3bp1gIIGhSCTcWH+AOmyLfDPf2pm+QQayGYH6BM5PnZcao+fGx
+         EN2Ht1omTOCmgsUVR6YVT2YLw5ezM3kXz8KQFgXSzvnivqvBoEff2XKL34V5JzZ7ygvs
+         6ovL3ZC5dP+zoCqhRdoblDoZCU9DAwv3bVwBcsq87BrFkpXHAkgA+4tHyuorekroJaA5
+         kHPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=48GsjoJkha+FkK4BjEpjxR+SeBNRB+aPyJf6ECBpNI8=;
+        b=IPPMIN80eeIeb4whjkJ2u59Rhq2ATtRJfsEfGQj7GxZCoaxaSHbc+M4pB7vJtMsbV/
+         /zJXc0rM0jVv3bDaF5FvXahpJ9I9FjsEvNykVI1hVz5I4gkLfig6ZAxcMreC1P/Fah1+
+         Mk77tPESjm2Ug/M3URZ09yzW/ruo5mGvZg3+CAI1Ha/CgUL6O2dnuz+vPE8+fPRhdxMc
+         B4XpZmawITcRh96FJbK7UKfYKJmJ3aiG1D1C3FeS1O6CxmvAE7qo/wT/b5leLYeQgTYU
+         kT+A6H+A8dj6qA0B3/12MJx3JLOe4MAw+yE7ll1fGwDLUNih6yZRdBj5+jTT2SDO+xnG
+         3B2Q==
+X-Gm-Message-State: APjAAAUReropq4Je9vPwPK3vlSfQAdf+KCetjiRZ6lIwFcNofnMtsbk0
+        4ZKkEq/zuPX+LEWGZzo9lM8PQOhgjN+OZNru9l/XWA==
+X-Google-Smtp-Source: APXvYqyQp/ZBzqbnbb99OA7AcxXgKHIl2AlPbDn895oCL9HPi5AEBH3Op7dbJ+nVlsWjQf3q2l3n/Tbcy8/XA0+cyS0=
+X-Received: by 2002:a1f:a293:: with SMTP id l141mr1033147vke.43.1571727560670;
+ Mon, 21 Oct 2019 23:59:20 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8c80dfa4-556e-4542-7b4d-08d756bca5b5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Oct 2019 06:54:13.3397
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: uKPriWDWFZr3AF7qstVIPpzGV3U6/xGA0Oy3gUgbOf9c8NzNILhDxCefYpy5dUpb
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1530
+References: <cover.1571510481.git.hns@goldelico.com> <9bd4c0bb0df26523d7f5265cdb06d86d63dafba8.1571510481.git.hns@goldelico.com>
+ <20191021143008.GS5610@atomide.com> <3FDBE28F-B2C5-4EDE-905C-687F601462B6@goldelico.com>
+ <20191021171104.GY5610@atomide.com>
+In-Reply-To: <20191021171104.GY5610@atomide.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 22 Oct 2019 08:58:44 +0200
+Message-ID: <CAPDyKFryqo3wF-GphhytNqrDL4rbZ7Qou1Ki3e2_5w-yh2o=uw@mail.gmail.com>
+Subject: Re: [PATCH v2 07/11] omap: remove old hsmmc.[ch] and in Makefile
+To:     Tony Lindgren <tony@atomide.com>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QW0gMjEuMTAuMTkgdW0gMjA6MDkgc2NocmllYiBOYXZpZCBFbWFtZG9vc3Q6DQo+IEluIHRoZSBp
-bXBlbGVtZW50YXRpb24gb2YgYW1kZ3B1X2ZlbmNlX2VtaXQoKSBpZiBkbWFfZmVuY2Vfd2FpdCgp
-IGZhaWxzDQo+IGFuZCByZXR1cm5zIGFuIGVycm5vLCBiZWZvcmUgcmV0dXJuaW5nIHRoZSBhbGxv
-Y2F0ZWQgbWVtb3J5IGZvciBmZW5jZQ0KPiBzaG91bGQgYmUgcmVsZWFzZWQuDQo+DQo+IEZpeGVz
-OiAzZDJhY2E4Yzg2MjAgKCJkcm0vYW1kZ3B1OiBmaXggb2xkIGZlbmNlIGNoZWNrIGluIGFtZGdw
-dV9mZW5jZV9lbWl0IikNCj4gU2lnbmVkLW9mZi1ieTogTmF2aWQgRW1hbWRvb3N0IDxuYXZpZC5l
-bWFtZG9vc3RAZ21haWwuY29tPg0KDQpSZXZpZXdlZC1ieTogQ2hyaXN0aWFuIEvDtm5pZyA8Y2hy
-aXN0aWFuLmtvZW5pZ0BhbWQuY29tPg0KDQo+IC0tLQ0KPiAgIGRyaXZlcnMvZ3B1L2RybS9hbWQv
-YW1kZ3B1L2FtZGdwdV9mZW5jZS5jIHwgNCArKystDQo+ICAgMSBmaWxlIGNoYW5nZWQsIDMgaW5z
-ZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPg0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUv
-ZHJtL2FtZC9hbWRncHUvYW1kZ3B1X2ZlbmNlLmMgYi9kcml2ZXJzL2dwdS9kcm0vYW1kL2FtZGdw
-dS9hbWRncHVfZmVuY2UuYw0KPiBpbmRleCAyMzA4NWIzNTJjZjIuLjJmNTljOTI3MGE3ZSAxMDA2
-NDQNCj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRncHUvYW1kZ3B1X2ZlbmNlLmMNCj4g
-KysrIGIvZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRncHUvYW1kZ3B1X2ZlbmNlLmMNCj4gQEAgLTE2
-Niw4ICsxNjYsMTAgQEAgaW50IGFtZGdwdV9mZW5jZV9lbWl0KHN0cnVjdCBhbWRncHVfcmluZyAq
-cmluZywgc3RydWN0IGRtYV9mZW5jZSAqKmYsDQo+ICAgCQlpZiAob2xkKSB7DQo+ICAgCQkJciA9
-IGRtYV9mZW5jZV93YWl0KG9sZCwgZmFsc2UpOw0KPiAgIAkJCWRtYV9mZW5jZV9wdXQob2xkKTsN
-Cj4gLQkJCWlmIChyKQ0KPiArCQkJaWYgKHIpIHsNCj4gKwkJCQlkbWFfZmVuY2VfcHV0KGZlbmNl
-KTsNCj4gICAJCQkJcmV0dXJuIHI7DQo+ICsJCQl9DQo+ICAgCQl9DQo+ICAgCX0NCj4gICANCg0K
+- Trimmed cc-list (could be a good idea for next submission as well)
+
+On Mon, 21 Oct 2019 at 19:11, Tony Lindgren <tony@atomide.com> wrote:
+>
+> * H. Nikolaus Schaller <hns@goldelico.com> [191021 17:08]:
+> >
+> > > Am 21.10.2019 um 16:30 schrieb Tony Lindgren <tony@atomide.com>:
+> > >
+> > > * H. Nikolaus Schaller <hns@goldelico.com> [191019 18:43]:
+> > >> --- a/arch/arm/mach-omap2/Makefile
+> > >> +++ b/arch/arm/mach-omap2/Makefile
+> > >> @@ -216,7 +216,6 @@ obj-$(CONFIG_MACH_NOKIA_N8X0)          += board-n8x0.o
+> > >>
+> > >> # Platform specific device init code
+> > >>
+> > >> -omap-hsmmc-$(CONFIG_MMC_OMAP_HS)  := hsmmc.o
+> > >> obj-y                                      += $(omap-hsmmc-m) $(omap-hsmmc-y)
+> > >
+> > > The related obj-y line can go now too, right?
+> >
+> > Yes, I think so. It is a construction that I have never seen before :)
+> > Therefore I did not recognize that it is related.
+> >
+> > > And looks like common.h also has struct omap2_hsmmc_info
+> > > so maybe check by grepping for hsmmc_info to see it's gone.
+> >
+> > Yes, it is just a forward-declaration of the struct name with
+> > no user anywhere.
+> >
+> > Scheduled for v3.
+> >
+> > BTW: should this series go through your tree since it is an
+> > omap machine?
+>
+> Or MMC tree as that's where the code change really are.
+
+I am okay with that. I will have a look at the series and provide some comments.
+
+Kind regards
+Uffe
