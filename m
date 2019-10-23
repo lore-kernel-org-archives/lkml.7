@@ -2,86 +2,153 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE329CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:13:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F487C47E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:13:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 808D521928
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:13:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54C40205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:13:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="rXcf07Ef"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404271AbfJWKNi (ORCPT
+        id S2404298AbfJWKNm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 06:13:38 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54006 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2404204AbfJWKNf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 06:13:35 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 3EFF2B67E;
-        Wed, 23 Oct 2019 10:13:33 +0000 (UTC)
-From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-To:     linux-realtek-soc@lists.infradead.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: [PATCH v2 11/11] ARM: dts: rtd1195: Adopt reset constants
-Date:   Wed, 23 Oct 2019 12:13:17 +0200
-Message-Id: <20191023101317.26656-12-afaerber@suse.de>
-X-Mailer: git-send-email 2.16.4
-In-Reply-To: <20191023101317.26656-1-afaerber@suse.de>
-References: <20191023101317.26656-1-afaerber@suse.de>
+        Wed, 23 Oct 2019 06:13:42 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:37742 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404266AbfJWKNj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 06:13:39 -0400
+Received: by mail-ed1-f68.google.com with SMTP id r4so15321755edy.4
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 03:13:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=ORDM/VOBs1fIrp01I0A5xms2tGNpKSAd1TbHc1PkN5w=;
+        b=rXcf07Ef2MkSeZMGF3P4Q07eX4Y+LghQnjQZ4TE6fRY/lyPxphd/TGZkXWCyliyv9k
+         JRVd5T1itlTVH6a/44ePIv+jYO7zyF7Vw8U0lWYqSfR2cMJlFLWaQZ9ubGE4RZKnWovT
+         SeIcGZonw3JCCbt7SNCLdoY+2k5BwOiM9haBN0drd1VwFBQ9wwKEV44m5UEoOHRropd9
+         iajVfoflOTx5L6VT46RC8Gblu4rebThCGjwYyQH8qPMXxlgGp0iPMXkOXOfswvy4CO88
+         Ka9ggW3bx+36ONuvSwcGA+xqTCXQKNBGKl1zm09t/uFhLxEePbKOR457z8zA3/fkCpOy
+         Ds9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=ORDM/VOBs1fIrp01I0A5xms2tGNpKSAd1TbHc1PkN5w=;
+        b=KKR5za/oMC9Zr0F15q7i/oPpAT+HC0tPQnRYw7xA6WCes5En/bbrpIuNcRJV4InpTf
+         GdKCRkaO7/eJE2lXMnss9u0g4FpWs1xTRx7GV6Xg9YrBzae9frhVQm+eIVIGSM3l+f8d
+         0urbmNIQeEC+yRRkR5NUeNn/LFGui3OfyBK/9zExj3KFIj16nTan7/piurqP71UBU/Nb
+         Q1NhF0nMeEgb7Bxp73omqBjhWsBqHxrl/C2qh/gMghz/UE57curJEGPAt7d+BmP2CK1i
+         QW0BV7o0l42btBdc55rnryfLU0EKz6C/3r0rhbWCskYvAIKy5V5gPfu2SlC5zsPcL+iQ
+         ZIcw==
+X-Gm-Message-State: APjAAAVzxvGpPjLyXJ4NzM4CZjpkDIPvbQMj/eRABaw8NeMoAI1UNfFl
+        unIBoXfNwnkNHmxaqu4jflWE+Q==
+X-Google-Smtp-Source: APXvYqyltJAbTQ9ow85BJkdjYC7irXmeeLrCr37rdhH0tOd5l2py+1UfitLMbDnJ4Ds+5iVUMRwsTg==
+X-Received: by 2002:aa7:cc95:: with SMTP id p21mr9049005edt.189.1571825617836;
+        Wed, 23 Oct 2019 03:13:37 -0700 (PDT)
+Received: from netronome.com ([62.119.166.9])
+        by smtp.gmail.com with ESMTPSA id ck10sm39035ejb.59.2019.10.23.03.13.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Oct 2019 03:13:37 -0700 (PDT)
+Date:   Wed, 23 Oct 2019 12:13:31 +0200
+From:   Simon Horman <simon.horman@netronome.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     "Zhu, Lingshan" <lingshan.zhu@intel.com>, mst@redhat.com,
+        alex.williamson@redhat.com, linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, dan.daly@intel.com,
+        cunming.liang@intel.com, tiwei.bie@intel.com, jason.zeng@intel.com,
+        zhiyuan.lv@intel.com
+Subject: Re: [RFC 1/2] vhost: IFC VF hardware operation layer
+Message-ID: <20191023101329.GE8732@netronome.com>
+References: <20191016011041.3441-1-lingshan.zhu@intel.com>
+ <20191016011041.3441-2-lingshan.zhu@intel.com>
+ <20191016095347.5sb43knc7eq44ivo@netronome.com>
+ <075be045-3a02-e7d8-672f-4a207c410ee8@intel.com>
+ <20191021163139.GC4486@netronome.com>
+ <15d94e61-9b3d-7854-b65e-6fea6db75450@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <15d94e61-9b3d-7854-b65e-6fea6db75450@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace reset controller indices with constants.
+On Tue, Oct 22, 2019 at 09:32:36AM +0800, Jason Wang wrote:
+> 
+> On 2019/10/22 上午12:31, Simon Horman wrote:
+> > On Mon, Oct 21, 2019 at 05:55:33PM +0800, Zhu, Lingshan wrote:
+> > > On 10/16/2019 5:53 PM, Simon Horman wrote:
+> > > > Hi Zhu,
+> > > > 
+> > > > thanks for your patch.
+> > > > 
+> > > > On Wed, Oct 16, 2019 at 09:10:40AM +0800, Zhu Lingshan wrote:
+> > ...
+> > 
+> > > > > +static void ifcvf_read_dev_config(struct ifcvf_hw *hw, u64 offset,
+> > > > > +		       void *dst, int length)
+> > > > > +{
+> > > > > +	int i;
+> > > > > +	u8 *p;
+> > > > > +	u8 old_gen, new_gen;
+> > > > > +
+> > > > > +	do {
+> > > > > +		old_gen = ioread8(&hw->common_cfg->config_generation);
+> > > > > +
+> > > > > +		p = dst;
+> > > > > +		for (i = 0; i < length; i++)
+> > > > > +			*p++ = ioread8((u8 *)hw->dev_cfg + offset + i);
+> > > > > +
+> > > > > +		new_gen = ioread8(&hw->common_cfg->config_generation);
+> > > > > +	} while (old_gen != new_gen);
+> > > > Would it be wise to limit the number of iterations of the loop above?
+> > > Thanks but I don't quite get it. This is used to make sure the function
+> > > would get the latest config.
+> > I am worried about the possibility that it will loop forever.
+> > Could that happen?
+> > 
+> > ...
+> 
+> 
+> My understanding is that the function here is similar to virtio config
+> generation [1]. So this can only happen for a buggy hardware.
 
-Signed-off-by: Andreas Färber <afaerber@suse.de>
----
- v2: New
- 
- arch/arm/boot/dts/rtd1195.dtsi | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Ok, so this circles back to my original question.
+Should we put a bound on the number of times the loop runs
+or should we accept that the kernel locks up if the HW is buggy?
 
-diff --git a/arch/arm/boot/dts/rtd1195.dtsi b/arch/arm/boot/dts/rtd1195.dtsi
-index e2cdcbcf70f4..9ccf8fa04718 100644
---- a/arch/arm/boot/dts/rtd1195.dtsi
-+++ b/arch/arm/boot/dts/rtd1195.dtsi
-@@ -13,6 +13,7 @@
- /memreserve/ 0x18100000 0x01000000; /* nor */
- 
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/reset/realtek,rtd1195.h>
- 
- / {
- 	compatible = "realtek,rtd1195";
-@@ -128,7 +129,7 @@
- 			reg = <0x18007800 0x400>;
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
--			resets = <&iso_reset 8>;
-+			resets = <&iso_reset RTD1195_ISO_RSTN_UR0>;
- 			clock-frequency = <27000000>;
- 			status = "disabled";
- 		};
-@@ -138,7 +139,7 @@
- 			reg = <0x1801b200 0x100>;
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
--			resets = <&reset2 28>;
-+			resets = <&reset2 RTD1195_RSTN_UR1>;
- 			clock-frequency = <27000000>;
- 			status = "disabled";
- 		};
--- 
-2.16.4
-
+> 
+> Thanks
+> 
+> [1] https://docs.oasis-open.org/virtio/virtio/v1.1/csprd01/virtio-v1.1-csprd01.html
+> Section 2.4.1
+> 
+> 
+> > 
+> > > > > +static void io_write64_twopart(u64 val, u32 *lo, u32 *hi)
+> > > > > +{
+> > > > > +	iowrite32(val & ((1ULL << 32) - 1), lo);
+> > > > > +	iowrite32(val >> 32, hi);
+> > > > > +}
+> > > > I see this macro is also in virtio_pci_modern.c
+> > > > 
+> > > > Assuming lo and hi aren't guaranteed to be sequential
+> > > > and thus iowrite64_hi_lo() cannot be used perhaps
+> > > > it would be good to add a common helper somewhere.
+> > > Thanks, I will try after this IFC patchwork, I will cc you.
+> > Thanks.
+> > 
+> > ...
+> 
