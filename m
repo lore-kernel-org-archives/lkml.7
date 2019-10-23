@@ -2,120 +2,191 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB68CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 21:07:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21158CA9EBB
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 21:12:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E30AB2064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 21:07:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XcUqdG2i"
+	by mail.kernel.org (Postfix) with ESMTP id EA08721928
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 21:12:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571865160;
+	bh=a8K/AtX863XlsnPxoFbWARUemt7/EGJWxYsS057naeA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=vg/MvjlWy9Y7wWgAWDjsAy024ZsvawkR6ELKvCGt8jEmadCq3NME3h+JKMQLqpu3/
+	 Ku8NCdVvAIkNSbR5kjjZmuOyt9/zXGL7vfF/rZ1rLNscC2XjsXSVa9kBnYN/UoBrWX
+	 Uc/wfaVFL2WLfChEpp+/sfCIMypIbpq2zvbQv3qo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392056AbfJWVHa (ORCPT
+        id S2405466AbfJWVMi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 17:07:30 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:37352 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391902AbfJWVH3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 17:07:29 -0400
-Received: by mail-pg1-f194.google.com with SMTP id p1so12862132pgi.4
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 14:07:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hTdZZnlA7EABBBAHUknV0T6AXSDyE/LhNtrQ1WO3UbI=;
-        b=XcUqdG2izYOn+mbHak6wx+UZELo+hDTuO/+fxjKpVKHu0vitTZdRpxSAWCiL288QOM
-         Y4sQAcicvH5dezcg14hGy1Asu7I5ifDnXHph8pEEYigQaild/ZOsD1de9jXymX4iAo4U
-         YtPkllEHsNkBl1XYV8p60uhU9i8FsE8WCeV/8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hTdZZnlA7EABBBAHUknV0T6AXSDyE/LhNtrQ1WO3UbI=;
-        b=lo1W5f4+BgG19xVw0osCYbSYfiadqDcvJoD0Mpdi8UUYJQ9CXGchjQAJRaSnRXRzQf
-         J/GQIHZB9D7zKAXAsm9FrS0Z12fQJvZMshk4tShjzy49dAz4mibGcxPVzqN4jBL0oLAE
-         NWn6Z9L3Hq1NkTpsI3rCx9uROJ0r71ZfaFNK82U+4vP07b3yYgJvVL5wwA8vDXItdcVL
-         bpNA4LBnJwwTUVXjFkpdVXohYFggwWbTI2pmdZmw6Ni6rafDkBpyb8vvQUK272vcW65u
-         jGSw1QkgDxL5DZh792qyWjHrc5ZUn3foHWF16RAgwRswFLsERvPKANqst3Frb3o2Lbi+
-         /tOw==
-X-Gm-Message-State: APjAAAU0yJMEtN+O3beOr/dTUEV/TxNr8i1l3n3pmOcDbnUQHiPJfqFD
-        UiJ+g812wHuYMmdAsiQnmR8xJA==
-X-Google-Smtp-Source: APXvYqxIMniSNwAkzc2lHxYvMbXHhVnLpxKHVTcbtv205RmdruWuesi6Yx4Fs/+BBpFofGh5PgQlew==
-X-Received: by 2002:a63:3d41:: with SMTP id k62mr11959835pga.129.1571864848131;
-        Wed, 23 Oct 2019 14:07:28 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id z12sm26529195pfj.41.2019.10.23.14.07.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Oct 2019 14:07:27 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Minas Harutyunyan <hminas@synopsys.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>
-Cc:     linux-rockchip@lists.infradead.org, stefan.wahren@i2se.com,
-        mka@chromium.org, Alexandru M Stan <amstan@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] usb: dwc2: Fix NULL qh in dwc2_queue_transaction
-Date:   Wed, 23 Oct 2019 14:06:31 -0700
-Message-Id: <20191023140530.v2.1.I9850aab29e945168070b0a9c50c421d5485e7d97@changeid>
-X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
+        Wed, 23 Oct 2019 17:12:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37150 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404204AbfJWVMi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 17:12:38 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B34BB2064A;
+        Wed, 23 Oct 2019 21:12:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571865157;
+        bh=a8K/AtX863XlsnPxoFbWARUemt7/EGJWxYsS057naeA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=nPF141IPJGM2Zu0id5fY28Igdyj5BMtWIuis9+eK1336dlKyVZnT9TcqWhFwxORuX
+         1Cuzn84vESHeLHKnRIzm9v3Ykw9oX5kQb3kaAVAHHLIQpi/rWedra3qrIx/yU8rR3W
+         S6s6iIFJY5E6ezcdZ629hB+Af95KXd4FWDb8flsc=
+Date:   Wed, 23 Oct 2019 16:12:35 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jian-Hong Pan <jian-hong@endlessm.com>
+Cc:     Matthew Wilcox <willy@linux.intel.com>, linux@endlesssm.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvme@lists.infradead.org
+Subject: Re: [PATCH] PCI/MSI: Fix restoring of MSI-X vector control's mask bit
+Message-ID: <20191023211235.GA236419@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191008034238.2503-1-jian-hong@endlessm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandru M Stan <amstan@chromium.org>
+On Tue, Oct 08, 2019 at 11:42:39AM +0800, Jian-Hong Pan wrote:
+> MSI-X vector control's bit 0 is the mask bit, which masks the
+> corresponding interrupt request, or not. Other reserved bits might be
+> used for other purpose by device vendors. For example, the values of
+> Kingston NVMe SSD's MSI-X vector control are neither 0, nor 1, but other
+> values [1].
+> 
+> The original restoring logic in system resuming uses the whole MSI-X
+> vector control value as the flag to set/clear the mask bit. However,
+> this logic conflicts the idea mentioned above. It may mislead system to
+> disable the MSI-X vector entries. That makes system get no interrupt
+> from Kingston NVMe SSD after resume and usually get NVMe I/O timeout
+> error.
+> 
+> [  174.715534] nvme nvme0: I/O 978 QID 3 timeout, completion polled
+> 
+> This patch takes only the mask bit of original MSI-X vector control
+> value as the flag to fix this issue.
+> 
+> [1] https://bugzilla.kernel.org/show_bug.cgi?id=204887#c8
+> 
+> Buglink: https://bugzilla.kernel.org/show_bug.cgi?id=204887
+> Fixed: f2440d9acbe8 ("PCI MSI: Refactor interrupt masking code")
+> Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+> ---
+>  drivers/pci/msi.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
+> index 0884bedcfc7a..deae3d5acaf6 100644
+> --- a/drivers/pci/msi.c
+> +++ b/drivers/pci/msi.c
+> @@ -433,6 +433,7 @@ static void __pci_restore_msi_state(struct pci_dev *dev)
+>  static void __pci_restore_msix_state(struct pci_dev *dev)
+>  {
+>  	struct msi_desc *entry;
+> +	u32 flag;
+>  
+>  	if (!dev->msix_enabled)
+>  		return;
+> @@ -444,8 +445,10 @@ static void __pci_restore_msix_state(struct pci_dev *dev)
+>  				PCI_MSIX_FLAGS_ENABLE | PCI_MSIX_FLAGS_MASKALL);
+>  
+>  	arch_restore_msi_irqs(dev);
+> -	for_each_pci_msi_entry(entry, dev)
+> -		msix_mask_irq(entry, entry->masked);
+> +	for_each_pci_msi_entry(entry, dev) {
+> +		flag = entry->masked & PCI_MSIX_ENTRY_CTRL_MASKBIT;
+> +		msix_mask_irq(entry, flag);
 
-When a usb device disconnects in a certain way, dwc2_queue_transaction
-still gets called after dwc2_hcd_cleanup_channels.
+This makes good sense: before your patch, when we restore, we set the
+mask bit if *any* bits in the Vector Control register are set.
 
-dwc2_hcd_cleanup_channels does "channel->qh = NULL;" but
-dwc2_queue_transaction still wants to dereference qh.
-This adds a check for a null qh.
+There are other paths leading to __pci_msix_desc_mask_irq(), so I
+think it would be better to do the masking there, e.g.,
 
-Signed-off-by: Alexandru M Stan <amstan@chromium.org>
-[dianders: rebased to mainline]
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
-While testing a newer version of the Linux kernel on rk3288-veyron
-devices we saw a bunch of crashes reported in dwc2_queue_transaction()
-where chan->qh was NULL [1].  I don't know how to reproduce those
-crashes myself, but I noticed that in our 3.14 kernel we had a patch
-that probably fixed it.  That patch was sent upstream ages ago [2] but
-never landed.  Here I've rebased the patch.  While I haven't
-reproduced the crash myself, it seems fairly likely that this will fix
-the problem.
+  if (flag & PCI_MSIX_ENTRY_CTRL_MASKBIT)
+    mask_bits |= PCI_MSIX_ENTRY_CTRL_MASKBIT;
 
-[1] https://crbug.com/1017388
-[2] https://lore.kernel.org/r/1442952651-4341-2-git-send-email-amstan@chromium.org
+I think the other paths all pass either 0 or 1, so they're all safe
+today.  But doing the masking in __pci_msix_desc_mask_irq() removes
+that assumption from the callers.
 
-Changes in v2:
-- Rebased to mainline
+I applied the patch below to pci/msi, let me know if it doesn't work
+for you.
 
- drivers/usb/dwc2/hcd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> +	}
+>  
+>  	pci_msix_clear_and_set_ctrl(dev, PCI_MSIX_FLAGS_MASKALL, 0);
+>  }
 
-diff --git a/drivers/usb/dwc2/hcd.c b/drivers/usb/dwc2/hcd.c
-index 81afe553aa66..b90f858af960 100644
---- a/drivers/usb/dwc2/hcd.c
-+++ b/drivers/usb/dwc2/hcd.c
-@@ -2824,7 +2824,7 @@ static int dwc2_queue_transaction(struct dwc2_hsotg *hsotg,
- 		list_move_tail(&chan->split_order_list_entry,
- 			       &hsotg->split_order);
+commit 1a828a554650
+Author: Jian-Hong Pan <jian-hong@endlessm.com>
+Date:   Tue Oct 8 11:42:39 2019 +0800
+
+    PCI/MSI: Fix incorrect MSI-X masking on resume
+    
+    When a driver enables MSI-X, msix_program_entries() reads the MSI-X Vector
+    Control register for each vector and saves it in desc->masked.  Each
+    register is 32 bits and bit 0 is the actual Mask bit.
+    
+    When we restored these registers during resume, we previously set the Mask
+    bit if *any* bit in desc->masked was set instead of when the Mask bit
+    itself was set:
+    
+      pci_restore_state
+        pci_restore_msi_state
+          __pci_restore_msix_state
+            for_each_pci_msi_entry
+              msix_mask_irq(entry, entry->masked)   <-- entire u32 word
+                __pci_msix_desc_mask_irq(desc, flag)
+                  mask_bits = desc->masked & ~PCI_MSIX_ENTRY_CTRL_MASKBIT
+                  if (flag)       <-- testing entire u32, not just bit 0
+                    mask_bits |= PCI_MSIX_ENTRY_CTRL_MASKBIT
+                  writel(mask_bits, desc_addr + PCI_MSIX_ENTRY_VECTOR_CTRL)
+    
+    This means that after resume, MSI-X vectors were masked when they shouldn't
+    be, which leads to timeouts like this:
+    
+      nvme nvme0: I/O 978 QID 3 timeout, completion polled
+    
+    On resume, set the Mask bit only when the saved Mask bit from suspend was
+    set.
+    
+    This should remove the need for 19ea025e1d28 ("nvme: Add quirk for Kingston
+    NVME SSD running FW E8FK11.T").
+    
+    [bhelgaas: commit log, move fix to __pci_msix_desc_mask_irq()]
+    Fixes: f2440d9acbe8 ("PCI MSI: Refactor interrupt masking code")
+    Link: https://bugzilla.kernel.org/show_bug.cgi?id=204887
+    Link: https://lore.kernel.org/r/20191008034238.2503-1-jian-hong@endlessm.com
+    Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+
+diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
+index 0884bedcfc7a..771041784e64 100644
+--- a/drivers/pci/msi.c
++++ b/drivers/pci/msi.c
+@@ -213,12 +213,13 @@ u32 __pci_msix_desc_mask_irq(struct msi_desc *desc, u32 flag)
  
--	if (hsotg->params.host_dma) {
-+	if (hsotg->params.host_dma && chan->qh) {
- 		if (hsotg->params.dma_desc_enable) {
- 			if (!chan->xfer_started ||
- 			    chan->ep_type == USB_ENDPOINT_XFER_ISOC) {
--- 
-2.23.0.866.gb869b98d4c-goog
-
+ 	if (pci_msi_ignore_mask)
+ 		return 0;
++
+ 	desc_addr = pci_msix_desc_addr(desc);
+ 	if (!desc_addr)
+ 		return 0;
+ 
+ 	mask_bits &= ~PCI_MSIX_ENTRY_CTRL_MASKBIT;
+-	if (flag)
++	if (flag & PCI_MSIX_ENTRY_CTRL_MASKBIT)
+ 		mask_bits |= PCI_MSIX_ENTRY_CTRL_MASKBIT;
+ 
+ 	writel(mask_bits, desc_addr + PCI_MSIX_ENTRY_VECTOR_CTRL);
