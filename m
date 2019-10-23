@@ -2,101 +2,162 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C686CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:56:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F065CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:56:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B4202064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:56:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 594D22064B
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:56:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b5zDXq8J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390936AbfJWJz6 (ORCPT
+        id S2390955AbfJWJ4M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 05:55:58 -0400
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:38444 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390384AbfJWJz6 (ORCPT
+        Wed, 23 Oct 2019 05:56:12 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:50246 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2390278AbfJWJ4L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 05:55:58 -0400
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 811B73C04C1;
-        Wed, 23 Oct 2019 11:55:55 +0200 (CEST)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id gK48FXrscP2K; Wed, 23 Oct 2019 11:55:48 +0200 (CEST)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        Wed, 23 Oct 2019 05:56:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571824571;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=PjIrWxilILjTXJMM4pZ+a2frsZYLFCvzVYmdT4dKHeA=;
+        b=b5zDXq8J97LwC5WX8PDjo+cfJdZZOnEezlbTMRhRHpU2HUGLbaQxaw+As7v+urTLtBvPCO
+        jM5JM27+/lVGh8aIP74TVhqRuUiISgaAurfsQFsZZn7yRTifKcU5ghkF4R+odbPzYeFbAN
+        WSNSePJTMlPVIAqAazHXU5EXB1LqDpc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-45-AIB5fJO8MnCfZd5pS6ln_A-1; Wed, 23 Oct 2019 05:56:07 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id EA0613C009D;
-        Wed, 23 Oct 2019 11:55:48 +0200 (CEST)
-Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Wed, 23 Oct
- 2019 11:55:48 +0200
-Date:   Wed, 23 Oct 2019 11:55:45 +0200
-From:   Eugeniu Rosca <erosca@de.adit-jv.com>
-To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-CC:     Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, <alsa-devel@alsa-project.org>,
-        <linux-kernel@vger.kernel.org>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>,
-        Jiada Wang <jiada_wang@mentor.com>,
-        Timo Wischer <twischer@de.adit-jv.com>,
-        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
-        <stable@vger.kernel.org>
-Subject: Re: [RESEND PATCH] ASoC: rsnd: dma: fix SSI9 4/5/6/7 busif dma
- address
-Message-ID: <20191023095545.GA20748@vmlxhi-102.adit-jv.com>
-References: <20191022185429.12769-1-erosca@de.adit-jv.com>
- <87h840z3l3.wl-kuninori.morimoto.gx@renesas.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B56EC1800DD0;
+        Wed, 23 Oct 2019 09:56:05 +0000 (UTC)
+Received: from steredhat.redhat.com (unknown [10.36.118.164])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1BEEB5C1B2;
+        Wed, 23 Oct 2019 09:55:54 +0000 (UTC)
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     netdev@vger.kernel.org
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>, kvm@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jason Wang <jasowang@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dexuan Cui <decui@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Jorgen Hansen <jhansen@vmware.com>,
+        Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        linux-hyperv@vger.kernel.org,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH net-next 00/14] vsock: add multi-transports support
+Date:   Wed, 23 Oct 2019 11:55:40 +0200
+Message-Id: <20191023095554.11340-1-sgarzare@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <87h840z3l3.wl-kuninori.morimoto.gx@renesas.com>
-User-Agent: Mutt/1.12.1+40 (7f8642d4ee82) (2019-06-28)
-X-Originating-IP: [10.72.93.184]
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MC-Unique: AIB5fJO8MnCfZd5pS6ln_A-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Morimoto-san,
+This series adds the multi-transports support to vsock, following
+this proposal: https://www.spinics.net/lists/netdev/msg575792.html
 
-On Wed, Oct 23, 2019 at 09:51:36AM +0900, Kuninori Morimoto wrote:
-> 
-> Hi
-> 
-> > From: Jiada Wang <jiada_wang@mentor.com>
-> > 
-> > Currently each SSI unit's busif dma address is calculated by
-> > following calculation formula:
-> > 0xec540000 + 0x1000 * id + busif / 4 * 0xA000 + busif % 4 * 0x400
-> > 
-> > But according to R-Car3 HW manual 41.1.4 Register Configuration,
-> > ssi9 4/5/6/7 busif data register address
-> > (SSI9_4_BUSIF/SSI9_5_BUSIF/SSI9_6_BUSIF/SSI9_7_BUSIF)
-> > are out of this rule.
-> > 
-> > This patch updates the calculation formula to correct
-> > ssi9 4/5/6/7 busif data register address.
-> > 
-> > Fixes: 5e45a6fab3b9 ("ASoc: rsnd: dma: Calculate dma address with consider of BUSIF")
-> > Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
-> > Signed-off-by: Timo Wischer <twischer@de.adit-jv.com>
-> > [erosca: minor improvements in commit description]
-> > Cc: Andrew Gabbasov <andrew_gabbasov@mentor.com>
-> > Cc: stable@vger.kernel.org # v4.20+
-> > Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-> > ---
-> 
-> Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+With the multi-transports support, we can use VSOCK with nested VMs
+(using also different hypervisors) loading both guest->host and
+host->guest transports at the same time.
+Before this series, vmci-transport supported this behavior but only
+using VMware hypervisor on L0, L1, etc.
 
-Many thanks for the prompt responses.
+RFC: https://patchwork.ozlabs.org/cover/1168442/
+RFC -> v1:
+- Added R-b/A-b from Dexuan and Stefan
+- Fixed comments and typos in several patches (Stefan)
+- Patch 7: changed .notify_buffer_size return to void (Stefan)
+- Added patch 8 to simplify the API exposed to the transports (Stefan)
+- Patch 11:
+  + documented VSOCK_TRANSPORT_F_* flags (Stefan)
+  + fixed vsock_assign_transport() when the socket is already assigned
+  + moved features outside of struct vsock_transport, and used as
+    parameter of vsock_core_register() as a preparation of Patch 12
+- Removed "vsock: add 'transport_hg' to handle g2h\h2g transports" patch
+- Added patch 12 to register vmci_transport only when VMCI guest/host
+  are active
 
--- 
-Best Regards,
-Eugeniu
+The first 9 patches are cleanups and preparations, maybe some of
+these can go regardless of this series.
+
+Patch 10 changes the hvs_remote_addr_init(). setting the
+VMADDR_CID_HOST as remote CID instead of VMADDR_CID_ANY to make
+the choice of transport to be used work properly.
+
+Patch 11 adds multi-transports support.
+
+Patch 12 touch a little bit the vmci_transport and the vmci driver
+to register the vmci_transport only when there are active host/guest.
+
+Patch 13 prevents the transport modules unloading while sockets are
+assigned to them.
+
+Patch 14 fixes an issue in the bind() logic discoverable only with
+the new multi-transport support.
+
+I've tested this series with nested KVM (vsock-transport [L0,L1],
+virtio-transport[L1,L2]) and with VMware (L0) + KVM (L1)
+(vmci-transport [L0,L1], vhost-transport [L1], virtio-transport[L2]).
+
+Dexuan successfully tested the RFC series on HyperV with a Linux guest.
+
+Stefano Garzarella (14):
+  vsock/vmci: remove unused VSOCK_DEFAULT_CONNECT_TIMEOUT
+  vsock: remove vm_sockets_get_local_cid()
+  vsock: remove include/linux/vm_sockets.h file
+  vsock: add 'transport' member in the struct vsock_sock
+  vsock/virtio: add transport parameter to the
+    virtio_transport_reset_no_sock()
+  vsock: add 'struct vsock_sock *' param to vsock_core_get_transport()
+  vsock: handle buffer_size sockopts in the core
+  vsock: add vsock_create_connected() called by transports
+  vsock: move vsock_insert_unbound() in the vsock_create()
+  hv_sock: set VMADDR_CID_HOST in the hvs_remote_addr_init()
+  vsock: add multi-transports support
+  vsock/vmci: register vmci_transport only when VMCI guest/host are
+    active
+  vsock: prevent transport modules unloading
+  vsock: fix bind() behaviour taking care of CID
+
+ drivers/misc/vmw_vmci/vmci_driver.c     |  50 ++++
+ drivers/misc/vmw_vmci/vmci_driver.h     |   2 +
+ drivers/misc/vmw_vmci/vmci_guest.c      |   2 +
+ drivers/misc/vmw_vmci/vmci_host.c       |   7 +
+ drivers/vhost/vsock.c                   |  96 +++---
+ include/linux/virtio_vsock.h            |  18 +-
+ include/linux/vm_sockets.h              |  15 -
+ include/linux/vmw_vmci_api.h            |   2 +
+ include/net/af_vsock.h                  |  44 +--
+ include/net/vsock_addr.h                |   2 +-
+ net/vmw_vsock/af_vsock.c                | 376 ++++++++++++++++++------
+ net/vmw_vsock/hyperv_transport.c        |  70 ++---
+ net/vmw_vsock/virtio_transport.c        | 177 ++++++-----
+ net/vmw_vsock/virtio_transport_common.c | 131 +++------
+ net/vmw_vsock/vmci_transport.c          | 137 +++------
+ net/vmw_vsock/vmci_transport.h          |   3 -
+ net/vmw_vsock/vmci_transport_notify.h   |   1 -
+ 17 files changed, 627 insertions(+), 506 deletions(-)
+ delete mode 100644 include/linux/vm_sockets.h
+
+--=20
+2.21.0
+
