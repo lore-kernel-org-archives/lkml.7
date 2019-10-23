@@ -6,38 +6,33 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66FDDCA9EBB
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 22:39:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38FC5CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 22:40:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BCF8205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 22:39:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10CE1205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 22:40:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407958AbfJWWjN (ORCPT
+        id S2407976AbfJWWj7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 18:39:13 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:57332 "EHLO gloria.sntech.de"
+        Wed, 23 Oct 2019 18:39:59 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:57396 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407932AbfJWWjN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 18:39:13 -0400
+        id S2389112AbfJWWj7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 18:39:59 -0400
 Received: from ip5f5a6266.dynamic.kabel-deutschland.de ([95.90.98.102] helo=phil.fritz.box)
         by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.89)
         (envelope-from <heiko@sntech.de>)
-        id 1iNPHR-0004FB-Kh; Thu, 24 Oct 2019 00:39:01 +0200
+        id 1iNPIL-0004HP-PO; Thu, 24 Oct 2019 00:39:57 +0200
 From:   Heiko Stuebner <heiko@sntech.de>
-To:     kishon@ti.com
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, bivvy.bi@rock-chips.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
+To:     linux-rockchip@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         christoph.muellner@theobroma-systems.com,
         Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH 2/3] dt-bindings: phy: add yaml binding for rockchip,px30-dsi-dphy
-Date:   Thu, 24 Oct 2019 00:38:50 +0200
-Message-Id: <20191023223851.3030-2-heiko@sntech.de>
+Subject: [PATCH] arm64: dts: rockchip: enable gpu on rk3399-puma
+Date:   Thu, 24 Oct 2019 00:39:54 +0200
+Message-Id: <20191023223954.3139-1-heiko@sntech.de>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191023223851.3030-1-heiko@sntech.de>
-References: <20191023223851.3030-1-heiko@sntech.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -45,96 +40,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds a yaml binding for the external dsi phy found on Rockchip
-socs of the px30, rk3128 and rk3368 variants.
+Set the supplying regulator and enable the gpu node on the rk3399-puma som.
 
 Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 ---
- .../bindings/phy/rockchip,px30-dsi-dphy.yaml  | 75 +++++++++++++++++++
- 1 file changed, 75 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/rockchip,px30-dsi-dphy.yaml
+ arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/phy/rockchip,px30-dsi-dphy.yaml b/Documentation/devicetree/bindings/phy/rockchip,px30-dsi-dphy.yaml
-new file mode 100644
-index 000000000000..c2e1a998a766
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/rockchip,px30-dsi-dphy.yaml
-@@ -0,0 +1,75 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/phy/rockchip,px30-dsi-dphy.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
+index 62ea288a1a70..c1edca3872c7 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
+@@ -165,6 +165,11 @@
+ 	status = "okay";
+ };
+ 
++&gpu {
++	mali-supply = <&vdd_gpu>;
++	status = "okay";
++};
 +
-+title: Rockchip MIPI DPHY with additional LVDS/TTL modes
-+
-+maintainers:
-+  - Heiko Stuebner <heiko@sntech.de>
-+
-+properties:
-+  "#phy-cells":
-+    const: 0
-+
-+  "#clock-cells":
-+    const: 0
-+
-+  compatible:
-+    enum:
-+      - rockchip,px30-dsi-dphy
-+      - rockchip,rk3128-dsi-dphy
-+      - rockchip,rk3368-dsi-dphy
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: PLL reference clock
-+      - description: Module clock
-+
-+  clock-names:
-+    items:
-+      - const: ref
-+      - const: pclk
-+
-+  power-domains:
-+    maxItems: 1
-+    description: phandle to the associated power domain
-+
-+  resets:
-+    items:
-+      - description: exclusive PHY reset line
-+
-+  reset-names:
-+    items:
-+      - const: apb
-+
-+required:
-+  - "#phy-cells"
-+  - "#clock-cells"
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - resets
-+  - reset-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    dsi_dphy: phy@ff2e0000 {
-+        compatible = "rockchip,px30-video-phy";
-+        reg = <0x0 0xff2e0000 0x0 0x10000>;
-+        clocks = <&pmucru 13>, <&cru 12>;
-+        clock-names = "ref", "pclk";
-+        #clock-cells = <0>;
-+        resets = <&cru 12>;
-+        reset-names = "apb";
-+        #phy-cells = <0>;
-+    };
-+
-+...
+ &i2c0 {
+ 	status = "okay";
+ 	i2c-scl-rising-time-ns = <168>;
 -- 
 2.23.0
 
