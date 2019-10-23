@@ -2,92 +2,138 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A2AACA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:36:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DD18CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:37:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A60E20640
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:36:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74CA920640
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:37:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571837846;
+	bh=hDMyjlrpKjkucux9xQPGLNbcZu8m4xAJC3hW0CQY8DU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bFaHhdJJpAH+unexklGSuRmA41BQFgiEFoI/WQAgOD6pPlJkwylJvsXWzUrUrlv5N
+	 +kG/lEjLlEqXx4Z8WV9l0Zg1RPI5PJZjfLJckuyTjHqW1NqOG2sVzB5XdWuiMaDwD1
+	 379pwO0k3alTBQowqW+vkbNKnrpFXxCO8FvqgmHk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392075AbfJWNgJ (ORCPT
+        id S2392054AbfJWNhZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 09:36:09 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:44333 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389807AbfJWNgI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 09:36:08 -0400
-Received: from mail-qk1-f180.google.com ([209.85.222.180]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MMGZS-1igRY912gQ-00JNsX; Wed, 23 Oct 2019 15:36:07 +0200
-Received: by mail-qk1-f180.google.com with SMTP id a194so15664356qkg.10;
-        Wed, 23 Oct 2019 06:36:06 -0700 (PDT)
-X-Gm-Message-State: APjAAAUs+06u4SNx39KClRYOpsTnfrvFRb9XBO/YIh26An3BB/kzEwwh
-        bYGBVR4fTdXCelohvVrEfzWBgbptP7y61NCK43g=
-X-Google-Smtp-Source: APXvYqwqW5j67aigUtbaQwMvvZPaRM75Zx1vwHK4rpCvIcwvfeEYCvDuZFw2giioKFckU9rb9ypL7pHNYyg0dml8Ps0=
-X-Received: by 2002:aed:3c67:: with SMTP id u36mr9047061qte.142.1571837765100;
- Wed, 23 Oct 2019 06:36:05 -0700 (PDT)
+        Wed, 23 Oct 2019 09:37:25 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47100 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2390204AbfJWNhZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 09:37:25 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 84699B59E;
+        Wed, 23 Oct 2019 13:37:22 +0000 (UTC)
+Date:   Wed, 23 Oct 2019 15:37:20 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@suse.de>, Waiman Long <longman@redhat.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Roman Gushchin <guro@fb.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Jann Horn <jannh@google.com>, Song Liu <songliubraving@fb.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rafael Aquini <aquini@redhat.com>, linux-mm@kvack.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH 2/2] mm, vmstat: reduce zone->lock holding time by
+ /proc/pagetypeinfo
+Message-ID: <20191023133720.GA17610@dhcp22.suse.cz>
+References: <20191023095607.GE3016@techsingularity.net>
+ <20191023102737.32274-1-mhocko@kernel.org>
+ <20191023102737.32274-3-mhocko@kernel.org>
+ <30211965-8ad0-416d-0fe1-113270bd1ea8@suse.cz>
 MIME-Version: 1.0
-References: <20191010202802.1132272-1-arnd@arndb.de> <20191010203043.1241612-1-arnd@arndb.de>
- <20191010203043.1241612-28-arnd@arndb.de> <20191023131321.GH11048@pi3>
-In-Reply-To: <20191023131321.GH11048@pi3>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 23 Oct 2019 15:35:49 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a03JtFrCYFUQAFnSENghrXSCDBQXB-QfiDG3yTxXxdpaw@mail.gmail.com>
-Message-ID: <CAK8P3a03JtFrCYFUQAFnSENghrXSCDBQXB-QfiDG3yTxXxdpaw@mail.gmail.com>
-Subject: Re: [PATCH 28/36] fbdev: s3c2410fb: remove mach header dependency
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        "moderated list:ARM/SAMSUNG EXYNOS ARM ARCHITECTURES" 
-        <linux-samsung-soc@vger.kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:dlcVjROea1jaoI1MdzPRxFVjhVzRcIC5nkL5pQCG9c45CBvt/Gw
- OtS9RyEw9Wl+/QXCFcTyHcQMzd/kSbVdMywUxqWJw7PBsf3xheHztLfkvmMef+6rB5f7XYD
- /wypCgz03sZllX8iYByJGqCmIUTWHW6TPGSiQfO0sUcn6Xc1mp2mcMglRC9PpdWFJFEDpOm
- s+GIC3mT/30V55XKx434g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:SlBXf2eBKF8=:LpnGX2aRKKhX+6Ax5hvUbj
- RP/UDtVFQ4CgxwMrzqfiKPJkWvny8Z0/R9H0m5Bqp2PeRqPVZCAOQ2pc0Gex5YkqWhsbqv7At
- srpiYCqw3yPZDMvr88lHykMICXKXo/LE0++1APDBQw9fL9pcwqWhCV48GVPlH8ifb15ihMvXH
- 4/KDZSw3yTUyvP/p1H67XmJp1jwZZDUJ2OpsEm4jwGxk+fX/F8kR0FSk60wLMnvT98MK8b2+i
- QAFoZUHlVdwcf04eSa0jCr6rOo8mrmH0SzjpKUmfsS9KXsXPcdm3BsA7EbuaLBfmgKZhea1D6
- cyhZPK4e6Dnfzsl8GmWxC6t0yVaFhNDj/5CcH4QzwSV74tX3urzqXC9hb/xH1shGi/XQm7D3d
- bq6PFa9Fhy795yfhUIG6ws8qk9gQKW2rtDg9WMXpeaUPJqbItjT+LGN+Byt0kK0HPwUtWS8d0
- FnVH+tA+VpSBR9cPbMGU2LEJIeiXVk0/L7tTYslYYnTGjZr9VjA+O3Pft5pPaSEV+1sxMHzRq
- hl5vin0aqfPk6RkNWHvqrL/omUGzLE9mPNq0hywEMkyG6n4G74bgN5tgf3Cli2Pa/IrXL6p2w
- vHlnf76tnf34Aj6Z4Aq12PR4rgC/bxe58YVqlF2WhfNgzU1EYDN9tr4NPyTekO26fzrzeD3LW
- x8Vl/W8hfAgUzYesNEN9UJZ6u496nXVieIBUbBWCHT3HwqzlHK97MSSDF7QcFRX185C6nOw4W
- ZwIjzC1VNizQYPonXkpiDX8Cb9GSYkbUjArBdKKAqNGRF1Xt8XC/LOx1tVORgmYdaBiEakrWu
- meRx9kHAMRafEfqq2gQPp9euWpIDeUnG1xjAVBkHWaXXUboEVAumYTPUUx4vqB5bJx9Q20ZsD
- QL3BGk5AOyeSPKwFkSVw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <30211965-8ad0-416d-0fe1-113270bd1ea8@suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 3:13 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> On Thu, Oct 10, 2019 at 10:30:12PM +0200, Arnd Bergmann wrote:
+On Wed 23-10-19 15:32:05, Vlastimil Babka wrote:
+> On 10/23/19 12:27 PM, Michal Hocko wrote:
+> > From: Michal Hocko <mhocko@suse.com>
+> > 
+> > pagetypeinfo_showfree_print is called by zone->lock held in irq mode.
+> > This is not really nice because it blocks both any interrupts on that
+> > cpu and the page allocator. On large machines this might even trigger
+> > the hard lockup detector.
+> > 
+> > Considering the pagetypeinfo is a debugging tool we do not really need
+> > exact numbers here. The primary reason to look at the outuput is to see
+> > how pageblocks are spread among different migratetypes therefore putting
+> > a bound on the number of pages on the free_list sounds like a reasonable
+> > tradeoff.
+> > 
+> > The new output will simply tell
+> > [...]
+> > Node    6, zone   Normal, type      Movable >100000 >100000 >100000 >100000  41019  31560  23996  10054   3229    983    648
+> > 
+> > instead of
+> > Node    6, zone   Normal, type      Movable 399568 294127 221558 102119  41019  31560  23996  10054   3229    983    648
+> > 
+> > The limit has been chosen arbitrary and it is a subject of a future
+> > change should there be a need for that.
+> > 
+> > Suggested-by: Andrew Morton <akpm@linux-foundation.org>
+> > Signed-off-by: Michal Hocko <mhocko@suse.com>
+> 
+> Hmm dunno, I would rather e.g. hide the file behind some config or boot
+> option than do this. Or move it to /sys/kernel/debug ?
 
-> > @@ -321,6 +320,7 @@ static struct s3c2410fb_mach_info jive_lcd_config = {
-> >        * data. */
-> >
-> >       .gpcup          = (0xf << 1) | (0x3f << 10),
-> > +     .gpcup_reg =    S3C2410_GPCUP,
->
-> Nits: indentation before/after '=' looks wrong. Tab should be
-> before '=', one space after.
+But those wouldn't really help to prevent from the lockup, right?
+Besides that who would enable that config and how much of a difference
+would root only vs. debugfs make?
 
-Ok, fixed now for the four boards that had inconsistent indentation --
-jive, mini2440, smdk2440, and rx1950. Unfortunately each board
-seemed to have its own way of doing this.
+Is the incomplete value a real problem?
 
-      Arnd
+> > ---
+> >  mm/vmstat.c | 19 ++++++++++++++++++-
+> >  1 file changed, 18 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/mm/vmstat.c b/mm/vmstat.c
+> > index 4e885ecd44d1..762034fc3b83 100644
+> > --- a/mm/vmstat.c
+> > +++ b/mm/vmstat.c
+> > @@ -1386,8 +1386,25 @@ static void pagetypeinfo_showfree_print(struct seq_file *m,
+> >  
+> >  			area = &(zone->free_area[order]);
+> >  
+> > -			list_for_each(curr, &area->free_list[mtype])
+> > +			list_for_each(curr, &area->free_list[mtype]) {
+> >  				freecount++;
+> > +				/*
+> > +				 * Cap the free_list iteration because it might
+> > +				 * be really large and we are under a spinlock
+> > +				 * so a long time spent here could trigger a
+> > +				 * hard lockup detector. Anyway this is a
+> > +				 * debugging tool so knowing there is a handful
+> > +				 * of pages in this order should be more than
+> > +				 * sufficient
+> > +				 */
+> > +				if (freecount > 100000) {
+> > +					seq_printf(m, ">%6lu ", freecount);
+> > +					spin_unlock_irq(&zone->lock);
+> > +					cond_resched();
+> > +					spin_lock_irq(&zone->lock);
+> > +					continue;
+> > +				}
+> > +			}
+> >  			seq_printf(m, "%6lu ", freecount);
+> >  		}
+> >  		seq_putc(m, '\n');
+> > 
+
+-- 
+Michal Hocko
+SUSE Labs
