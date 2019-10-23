@@ -2,215 +2,104 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 487B5CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:40:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8286ACA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:40:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08983214B2
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:40:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51FD821906
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:40:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="GEFDqWLM"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yXA4ZIex"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390700AbfJWMkT (ORCPT
+        id S2390768AbfJWMkh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 08:40:19 -0400
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:45986 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732361AbfJWMkS (ORCPT
+        Wed, 23 Oct 2019 08:40:37 -0400
+Received: from mail-vk1-f194.google.com ([209.85.221.194]:40116 "EHLO
+        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732361AbfJWMkg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 08:40:18 -0400
-Received-SPF: Pass (esa1.microchip.iphmx.com: domain of
-  Eugen.Hristev@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
-  envelope-from="Eugen.Hristev@microchip.com";
-  x-sender="Eugen.Hristev@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa1.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
-  envelope-from="Eugen.Hristev@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa1.microchip.iphmx.com; spf=Pass smtp.mailfrom=Eugen.Hristev@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: SzpqzQEN5+FUaVsDQt9S24yfGZaDHg1Oj5OikdNNoV4NSYMb7bfFwCUBvurfTq71IxoByvn6gA
- BQz+EuGSLU1yl8UP3GVLoWgcFH9it0tgEmsSu+xzbFj1AHZQ+jmSyNU4rokai6UZiKXbBSQnzE
- Ff1XlzI0ecSEZpp7ZkKemdvP/N5HTpDWyHH8Ap/Wg7bC1pT7fRKlRX5dAHwiYb+G8brkJ4eBqH
- OJmnZUTvpjTM8uc5oKl/dCr4Rw0BPg54ODmVBR/cLCS/tjH6tXHv8rHsZ1wwGAHcNzMCWA/1hE
- rms=
-X-IronPort-AV: E=Sophos;i="5.68,220,1569308400"; 
-   d="scan'208";a="55338755"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 23 Oct 2019 05:40:16 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 23 Oct 2019 05:40:15 -0700
-Received: from NAM04-SN1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Wed, 23 Oct 2019 05:40:15 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CmKczHQMvz2GBZP6tK7s4UbB6xXQe7duMxhLqL6ZBEFAqQkKW/lEqCiyGd41w+NHKUNipngEVzr1PnKOTJECA+RjWTYs6IQ/K4TnIvj9GCMgnfG6zuC3WaHOXYn6O3KEngmw8amiWiJnFRQrqmHnhWPZHaximOf5RBFhOLZrP/IGrePgum86FvKT3OZsqJGN/OJlYlIib+x2JEPvm0cZi/N/4WetvacLbjvvbmrvS3baY8e2i/Fm3SkbCc2p/uTKVnLVnbqqCdntQJN8UuGZJFSxTTRlpUnY46jbfCCAUIZ8ZZTGVriyguuWZv9URTngPu5s58pBsIeB9rdPJsJvcw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6OAziD565bi+FCwA8JoD/DHQfByjBDR/u2LXTDTxz18=;
- b=LPmaduzgBtptpN/4UTuDbiUI9aOmVauPxE9/imsqoSp3+CGrScZtduG0oBPLBCq/2vHZCTGPwjWw/bIAaKX4JleFzi8PEHF1zmyqg28aEhyQv+XBad97OP1MoOG6NCfLfNvTfXJ5lAkmfkRvks3JSr2QKjajvV5OTLzEi5Ar6DVLYN7ayPGiR2aliewj5pMdGJrDUn7gxxmR5DpMKRFiZjTsc5yQNNFUVieXPL9E4vgHedcQuMX/AZ9wUmmMlBt0IQtsK5O+zxFKzTNf8NxVDN0E9mnyQ8ewsW3p9jGoDK46+p6vQ1+SjLV3Kbrx22nmOP4X/yb3xWLdeqFEO6IfMg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+        Wed, 23 Oct 2019 08:40:36 -0400
+Received: by mail-vk1-f194.google.com with SMTP id c10so275521vkm.7
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 05:40:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6OAziD565bi+FCwA8JoD/DHQfByjBDR/u2LXTDTxz18=;
- b=GEFDqWLM7LixQQ++UryGUYJYRbCvffYqAXpcw0iBEAj2DxeiFJTe6PKzSpQA4BzIR82qr3JXzS3dK3KGirmVfvKzr/3Zjghz4nTp3eKrNav3IKn0uhwrIVFP458LsOr6Qcg95a8UcNnlEFLfg40YFTiiEr7Qmr14rqNWllt8b1o=
-Received: from DM5PR11MB1242.namprd11.prod.outlook.com (10.168.108.8) by
- DM5PR11MB1276.namprd11.prod.outlook.com (10.168.108.18) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2367.24; Wed, 23 Oct 2019 12:40:14 +0000
-Received: from DM5PR11MB1242.namprd11.prod.outlook.com
- ([fe80::b125:76c1:c9b1:34f4]) by DM5PR11MB1242.namprd11.prod.outlook.com
- ([fe80::b125:76c1:c9b1:34f4%10]) with mapi id 15.20.2367.025; Wed, 23 Oct
- 2019 12:40:14 +0000
-From:   <Eugen.Hristev@microchip.com>
-To:     <robh+dt@kernel.org>, <Nicolas.Ferre@microchip.com>,
-        <alexandre.belloni@bootlin.com>, <wsa@the-dreams.de>,
-        <peda@axentia.se>, <Ludovic.Desroches@microchip.com>,
-        <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <Eugen.Hristev@microchip.com>
-Subject: [PATCH v6 3/9] i2c: add support for filters optional properties
-Thread-Topic: [PATCH v6 3/9] i2c: add support for filters optional properties
-Thread-Index: AQHViZ8EmqljGdrD10aSBxnDJd1ZDQ==
-Date:   Wed, 23 Oct 2019 12:40:14 +0000
-Message-ID: <1571834060-31580-1-git-send-email-eugen.hristev@microchip.com>
-Accept-Language: en-US, ro-RO
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: PR0P264CA0096.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:100:18::36) To DM5PR11MB1242.namprd11.prod.outlook.com
- (2603:10b6:3:14::8)
-x-mailer: git-send-email 2.7.4
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [94.177.32.156]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 527f708c-15ab-4338-adb9-08d757b62699
-x-ms-traffictypediagnostic: DM5PR11MB1276:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM5PR11MB1276EB92610121842431745DE86B0@DM5PR11MB1276.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 019919A9E4
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(136003)(376002)(39860400002)(346002)(396003)(189003)(199004)(14454004)(6486002)(50226002)(8676002)(81156014)(107886003)(5660300002)(256004)(14444005)(36756003)(4326008)(6512007)(6436002)(81166006)(478600001)(476003)(66066001)(110136005)(71190400001)(8936002)(25786009)(2616005)(71200400001)(64756008)(66446008)(6116002)(66556008)(186003)(305945005)(66476007)(386003)(7736002)(66946007)(6506007)(2201001)(99286004)(86362001)(316002)(102836004)(26005)(52116002)(2906002)(3846002)(486006)(2501003)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR11MB1276;H:DM5PR11MB1242.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 9jCsnqYapvXDxFSVwohndTWCwnbUyso+JyLYmOeBQg1Z0g2JMTnMzhaqoxHz4+oc3/pmDOTaz1rexk6SOsEBSq3aHF3gHhngp8CAxCqt0brJg3SELxLZPI5vmrKEmL4uGbVoqMEpsk2jRiQpgqchH2w8kA2DU6aGqmcCZl5/csaziU7v3lK9JnDwjx41S2qc/Mk04b36/e+VTiF1jb61BcVM5LTOBFa1kbSPwq9Nxd4o1/I/IgeCfnYqogceaJyN197jI/jTu4czMM91QY43yV5Da+oASgorjrI8hCCBA787XYEqBSQ7BJpDiFsBhzZC9eQEHN2xqQgOyk8seGE24N1GeSfbpmqpXtm9vr85q+4sZr5sisEgR28VR/9UznM4i/SH0qAKGYYQrcLLY/NUidnlx0qIJ/r1fwXuAqXjD0vaYvs4lspi0G3PYh9qTN7H
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=td+5v62luaK17DIKgu/9K0KKwUeMkYA5SFVZr/oyThI=;
+        b=yXA4ZIexYjDv6xjTogTSzL8qNIBnICOTejFxIsogplkGY9rZZvlKxfrQ1tvWD09wAH
+         zK2fdhfb49NQoXmU/h8XnJpCgMBUXBjMJEvV+vO/9dZN1H9dkB4jiOEt07JTilW1f1Mx
+         S08afyvRCC9QHTSKc/VUC1CSktyW+k6JdBG89PjfGips8PwWkcOndXlq5V33J3shwcyB
+         LlkTk138Vl3tPSAtrv/wawbqbF4Szj4thndqDvbfx5lsFofsRx+70QGGLqbcbBMCU/V4
+         nFk3esz9zSvRkQNI4VgPcvnumXSjsjXRB8Xb6d16tnFudr+OhKLHGlzul54qt0NMKH/g
+         IDSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=td+5v62luaK17DIKgu/9K0KKwUeMkYA5SFVZr/oyThI=;
+        b=p2Re5zQ5P54NopKT+1eNZR5iOr764OxXPbhxoN/yNJ34Ap4EHvosc431V+dtynsx8o
+         HvpY3VJoLjKacVNHFwDC9qEzNC2JbEfKJYMNuveOcrOC+ebFd0XO0qm/BrgcIVX3Snsh
+         h23lboM0MGFvz2FE3rwqsIwc2Hz1Ie+SD0Fmth2ncwWfAxhV+7DVp75dkuIFQn8jFRPd
+         1Pvhkt2+WxqxriShMkmlk9sLZHcoPGv5teZetGeKKgsO6zaX8B4D9/oDv2suKr1xWHjR
+         T1ZwaOKixrGzUryraRLi2GyPFrh358wx4BkMAU1B4Wtd/X/n0uHgULnWIrGyouhaRT43
+         qG2g==
+X-Gm-Message-State: APjAAAXN9U+PDYqVhakafWJ/w23j6E7NUR5hssebQ7j+wxrXRZvAxhnT
+        yP1sDPNZjoFY1AmSC8Kihr/trHa/NvL18EQYpx99bg==
+X-Google-Smtp-Source: APXvYqyUEbyxZWyaXWyV5JPcNuCh0d7/ckbTtrpa/6d+Zxyq4SYJk8fsTgLhUdZwfCES2l0zOc254VMD7BJwF8ToAv8=
+X-Received: by 2002:a1f:ae0a:: with SMTP id x10mr5154470vke.25.1571834435305;
+ Wed, 23 Oct 2019 05:40:35 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 527f708c-15ab-4338-adb9-08d757b62699
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Oct 2019 12:40:14.3192
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: AcMEzcFZFGKSl4Sg+LkKQfMYfuWPzyCUwIKJVUM6H2VjKZT6K7kNKG9O6FB8MZzB/qXC8rq6MUSCYQh/N9HyV2Rt24H8XdTGNN1AjcXnY7w=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB1276
+References: <20191022130036.23877-1-sudipm.mukherjee@gmail.com>
+In-Reply-To: <20191022130036.23877-1-sudipm.mukherjee@gmail.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Wed, 23 Oct 2019 14:39:57 +0200
+Message-ID: <CAPDyKFq7_Obp2Qc2iZDC4wCokMt9-ttuZ0A8A1CYR+b4=JbqOw@mail.gmail.com>
+Subject: Re: [PATCH] mmc: block: remove unused variable
+To:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Chaotian Jing <chaotian.jing@mediatek.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugen Hristev <eugen.hristev@microchip.com>
+On Tue, 22 Oct 2019 at 15:00, Sudip Mukherjee
+<sudipm.mukherjee@gmail.com> wrote:
+>
+> The use of 'status' was removed but the variable itself was not
+> removed and thus adding a build warning.
+>
+> Fixes: 05224f7e4975 ("mmc: block: Add CMD13 polling for MMC IOCTLS with R1B response")
+> Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
 
-i2c-digital-filter-width-ns:
-This optional timing property specifies the width of the spikes on the i2c
-lines (in ns) that can be filtered out by built-in digital filters which ar=
-e
-embedded in some i2c controllers.
-i2c-analog-filter-cutoff-frequency:
-This optional timing property specifies the cutoff frequency of a low-pass
-analog filter built-in i2c controllers. This low pass filter is used to fil=
-ter
-out high frequency noise on the i2c lines. Specified in Hz.
-Include these properties in the timings structure and read them as integers=
-.
+This has already been taken care of, by amending the original patch.
+Thanks anyway!
 
-Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
----
+Kind regards
+Uffe
 
-Hello Wolfram,
-
-I modified the comment as requested.
-I only resent this patch.
-
-Thanks !
-Eugen
-
-
- drivers/i2c/i2c-core-base.c | 6 ++++++
- include/linux/i2c.h         | 6 ++++++
- 2 files changed, 12 insertions(+)
-
-diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-index 5f6a498..6a5183c 100644
---- a/drivers/i2c/i2c-core-base.c
-+++ b/drivers/i2c/i2c-core-base.c
-@@ -1656,6 +1656,12 @@ void i2c_parse_fw_timings(struct device *dev, struct=
- i2c_timings *t, bool use_de
- 		t->sda_fall_ns =3D t->scl_fall_ns;
-=20
- 	device_property_read_u32(dev, "i2c-sda-hold-time-ns", &t->sda_hold_ns);
-+
-+	device_property_read_u32(dev, "i2c-digital-filter-width-ns",
-+				 &t->digital_filter_width_ns);
-+
-+	device_property_read_u32(dev, "i2c-analog-filter-cutoff-frequency",
-+				 &t->analog_filter_cutoff_freq_hz);
- }
- EXPORT_SYMBOL_GPL(i2c_parse_fw_timings);
-=20
-diff --git a/include/linux/i2c.h b/include/linux/i2c.h
-index 1361637..aaf57d9 100644
---- a/include/linux/i2c.h
-+++ b/include/linux/i2c.h
-@@ -575,6 +575,10 @@ struct i2c_lock_operations {
-  * @scl_int_delay_ns: time IP core additionally needs to setup SCL in ns
-  * @sda_fall_ns: time SDA signal takes to fall in ns; t(f) in the I2C spec=
-ification
-  * @sda_hold_ns: time IP core additionally needs to hold SDA in ns
-+ * @digital_filter_width_ns: width in ns of spikes on i2c lines that the I=
-P core
-+ *	digital filter can filter out
-+ * @analog_filter_cutoff_freq_hz: threshold frequency for the low pass IP =
-core
-+ *	analog filter
-  */
- struct i2c_timings {
- 	u32 bus_freq_hz;
-@@ -583,6 +587,8 @@ struct i2c_timings {
- 	u32 scl_int_delay_ns;
- 	u32 sda_fall_ns;
- 	u32 sda_hold_ns;
-+	u32 digital_filter_width_ns;
-+	u32 analog_filter_cutoff_freq_hz;
- };
-=20
- /**
---=20
-2.7.4
-
+> ---
+>  drivers/mmc/core/block.c | 1 -
+>  1 file changed, 1 deletion(-)
+>
+> diff --git a/drivers/mmc/core/block.c b/drivers/mmc/core/block.c
+> index ee1fd7df4ec8..95b41c0891d0 100644
+> --- a/drivers/mmc/core/block.c
+> +++ b/drivers/mmc/core/block.c
+> @@ -497,7 +497,6 @@ static int __mmc_blk_ioctl_cmd(struct mmc_card *card, struct mmc_blk_data *md,
+>         struct scatterlist sg;
+>         int err;
+>         unsigned int target_part;
+> -       u32 status = 0;
+>
+>         if (!card || !md || !idata)
+>                 return -EINVAL;
+> --
+> 2.11.0
+>
