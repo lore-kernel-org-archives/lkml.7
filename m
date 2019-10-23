@@ -2,196 +2,197 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE287CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 07:29:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7FE8CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 07:30:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91BAE2084B
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 07:29:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAD212084B
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 07:30:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KvKekcwv"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="k4viSWdd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389777AbfJWH31 (ORCPT
+        id S2389835AbfJWHaQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 03:29:27 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:37520 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389459AbfJWH30 (ORCPT
+        Wed, 23 Oct 2019 03:30:16 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:46266 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389459AbfJWHaQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 03:29:26 -0400
-Received: by mail-lj1-f195.google.com with SMTP id l21so19940700lje.4;
-        Wed, 23 Oct 2019 00:29:24 -0700 (PDT)
+        Wed, 23 Oct 2019 03:30:16 -0400
+Received: by mail-il1-f194.google.com with SMTP id m16so11562456iln.13
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 00:30:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ln81R0efE/ZH1psBIcBlQmI7xQI8ZFqWWj7CvH8xre0=;
-        b=KvKekcwv0dOijxy2Al4fHEN72Et9MQpp1mxiQfImKOQYNJwxlPvDZy4ISGWKtINQlY
-         f6893cHnHV1EvufCLn2Vv6uzhVcXK2EG5xnHHQbgwNid1K5IBSoEQCQ75QKmuQYbU5if
-         GJqmymIATeN7XkaNU4PT5M0suDtvKDVIrieyayDb1d0+mz6TgJ44bKzzobxaKnBrr6kS
-         pDyECDwobqJIVkR85PLN0nqfp4JNIvMN1Erlrv9HmXML4MgmsGcVcPM+Q+KUMwFksoIQ
-         58XwyaZXXEqHQ+zoynFXTfcHEc3gCRB5sTnR+fxblm8/sCJ9FD39r0o8KoXlJGr0K5uU
-         CNaQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=a/eREjOiXcNhufL9DgQopGz4FLxgM/xyBmpBfgdAUZM=;
+        b=k4viSWddhZ6TKb4tB8HqvScD0/HK7k0Cy3zYqS4VIz2vBUs1Nf4hOvsxAGTsTjoL/e
+         OyuYHC5mO5M1/tJsY1lvvb3LX+xdShCDn6JWOXsDwdEz8kNNQ9o+MJYxv0KNpXnEZbIT
+         COCFxWpVlEHJk0LifLkoMiOwXa3v2D5CwodZEFSIaSuvcX/gdkx8JyNc72a3nmgBajte
+         g13Bz2lyBJuVrtoD6M+MUjMdGuP+LL+6J/+YVaU81BELS6N5P0qHU8gKES0zfp/UZ12z
+         vOr9FWsR2l6mVW6c+cV99KLivXONHN+Ozs3yuftfsfzrCuwGpBYYKaDba9z/G1NU/U0b
+         rV2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ln81R0efE/ZH1psBIcBlQmI7xQI8ZFqWWj7CvH8xre0=;
-        b=ZNu1J6jolsdDVqcgZaxD7wnq6OrAm9L7nRLFZT0WtpE3xyyzB/ahLIAsNJJIhWl+ou
-         dnkauQe72gt4Eyjh3bULfZVfIEldQv7LopLoKezAnmN5Zgg5XeFxoPP/CvXvM0TLFMpY
-         2Jny+7EqnOMQGRDzLvY5SRMzkgI1AWXyOn5tkV9npmgu024f2irORDjyNWynif4Fram9
-         NKRSeUdz24JMwRxG/sSw5C+s27fxoc09M358zP7Oy4UxGs++AB2ty3ppmCvL5v2HRPB4
-         23uUmuL/7YF0M094cHld+ITfKAveJBV3KcFTcgOfy55kFYjSAPCU9aS2+lC+wN/JqFVt
-         Jx4A==
-X-Gm-Message-State: APjAAAVP70K+hGH2PfRekqv6LdZWOWPTwyvNxzUGloEMLCWLxFixKkwn
-        3tsspMLlGCkz7tE0xu2hFHNbnlcO
-X-Google-Smtp-Source: APXvYqzMaq6WCqannQ5qOGTc2Wl+Lp5cCBUZ9bu6HJgeq4GU1xz01AmOS487IIOca6jO+wYQLJAoBg==
-X-Received: by 2002:a2e:89c9:: with SMTP id c9mr20563733ljk.108.1571815764054;
-        Wed, 23 Oct 2019 00:29:24 -0700 (PDT)
-Received: from uranus.localdomain ([5.18.199.94])
-        by smtp.gmail.com with ESMTPSA id g27sm9236540lja.33.2019.10.23.00.29.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Oct 2019 00:29:22 -0700 (PDT)
-Received: by uranus.localdomain (Postfix, from userid 1000)
-        id 76D83460F9C; Wed, 23 Oct 2019 10:29:20 +0300 (MSK)
-Date:   Wed, 23 Oct 2019 10:29:20 +0300
-From:   Cyrill Gorcunov <gorcunov@gmail.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Pavel Emelyanov <xemul@virtuozzo.com>,
-        Daniel Colascione <dancol@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jann Horn <jannh@google.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lokesh Gidra <lokeshgidra@google.com>,
-        Nick Kralevich <nnk@google.com>,
-        Nosh Minwalla <nosh@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Radostin Stoyanov <rstoyanov1@gmail.com>,
-        Andrey Vagin <avagin@gmail.com>
-Subject: Re: [PATCH 3/7] Add a UFFD_SECURE flag to the userfaultfd API.
-Message-ID: <20191023072920.GF12121@uranus.lan>
-References: <20191012191602.45649-1-dancol@google.com>
- <20191012191602.45649-4-dancol@google.com>
- <CALCETrVZHd+csdRL-uKbVN3Z7yeNNtxiDy-UsutMi=K3ZgCiYw@mail.gmail.com>
- <CAKOZuevUqs_Oe1UEwguQK7Ate3ai1DSVSij=0R=vmz9LzX4k6Q@mail.gmail.com>
- <CALCETrUyq=J37gU-MYXqLdoi7uH7iNNVRjvcGUT11JA1QuTFyg@mail.gmail.com>
- <CALCETrX=1XUwsuKc6dinj3ZTnrK85m_+UL=iaYKj4EZtf-xm5g@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=a/eREjOiXcNhufL9DgQopGz4FLxgM/xyBmpBfgdAUZM=;
+        b=f3XqCaNk9c6bo/4/6zuWCBrktLYVjzLVKW3Zvkmph9Afg9RAOyXdQa7o+AhiwTDPlU
+         JPn28yQtuxCI9Ug7tCow2No4OrsLlP3w9IjwfpyGF6MlN9ILNW94Xj4uX7+cQNXZkE4n
+         1juimHJul68NVzVNO5fmYPybQ+KwUsme8cZWrkzraIHz6INkKFqUWjxVvTGrHwzcvKcm
+         4eY2sD9NN9IrzvpW4D/S0hFXx8ge6nhPAPOr3ifTnGQT2KVNKdICSIIbRKHa5id96q6E
+         cWndeMgXX+Ewkt3SXp6uhe4wBhJEQhF2Zvur95GBlfgon1Jm2shD6X7XExfjuc8vY1pc
+         bstg==
+X-Gm-Message-State: APjAAAXnvlbs2ZmDccJepOtxpWfSMXGwr9GcPiCUP+aacmVIAacTrBvi
+        e41ZQzkqvCuaEKAxBW3xkmpvZa2imbMbx2cez7KPLg==
+X-Google-Smtp-Source: APXvYqyRlGK1oEwk1RoOfA9S4tf+gVhDDuQFE+LN9hnnSLY3yCv1j8mvau3zqyjGrggq8l2c26tLc2A8LwQgE+ji4Yk=
+X-Received: by 2002:a92:8f94:: with SMTP id r20mr37550938ilk.41.1571815814849;
+ Wed, 23 Oct 2019 00:30:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALCETrX=1XUwsuKc6dinj3ZTnrK85m_+UL=iaYKj4EZtf-xm5g@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20191018002746.149200-1-eranian@google.com> <20191021102059.GD1800@hirez.programming.kicks-ass.net>
+In-Reply-To: <20191021102059.GD1800@hirez.programming.kicks-ass.net>
+From:   Stephane Eranian <eranian@google.com>
+Date:   Wed, 23 Oct 2019 00:30:03 -0700
+Message-ID: <CABPqkBQ86=EpsKXMyYgqGdUhSHOi2uCQQfEtupMPavDRiK_30Q@mail.gmail.com>
+Subject: Re: [PATCH] perf/core: fix multiplexing event scheduling issue
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, mingo@elte.hu,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        "Liang, Kan" <kan.liang@intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 09:11:04PM -0700, Andy Lutomirski wrote:
-> Trying again.  It looks like I used the wrong address for Pavel.
+On Mon, Oct 21, 2019 at 3:21 AM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Thu, Oct 17, 2019 at 05:27:46PM -0700, Stephane Eranian wrote:
+> > This patch complements the following commit:
+> > 7fa343b7fdc4 ("perf/core: Fix corner case in perf_rotate_context()")
+> >
+> > The fix from Song addresses the consequences of the problem but
+> > not the cause. This patch fixes the causes and can sit on top of
+> > Song's patch.
+>
+> I'm tempted to say the other way around.
+>
+> Consider the case where you claim fixed2 with a pinned event and then
+> have another fixed2 in the flexible list. At that point you're _never_
+> going to run any other flexible events (without Song's patch).
+>
+In that case, there is no deactivation or removal of events, so yes, my patch
+will not help that case. I said his patch is still useful. You gave one example,
+even though in this case the rotate will not yield a reschedule of that flexible
+event because fixed2 is used by a pinned event. So checking for it, will not
+really help.
 
-Thanks for CC Andy! I must confess I didn't dive into userfaultfd engine
-personally but let me CC more people involved from criu side. (overquoting
-left untouched for their sake).
+> This patch isn't going to help with that. Similarly, Songs patch helps
+> with your situation where it will allow rotation to resume after you
+> disable/remove all active events (while you still have pending events).
+>
+Yes, it will unblock the case where active events are deactivated or
+removed. But it will delay the unblocking until the next mux timer
+expires. And I am saying this is too far away in many cases. For instance,
+we do not run with the 1ms timer for uncore, this is way too much overhead.
+Imagine this timer is set to 10ms or event 100ms, just with Song's patch, the
+inactive events would have to wait for up to 100ms to be scheduled again.
+This is not acceptable for us.
 
-> 
-> On Sat, Oct 12, 2019 at 6:14 PM Andy Lutomirski <luto@kernel.org> wrote:
+> > This patch fixes a scheduling problem in the core functions of
+> > perf_events. Under certain conditions, some events would not be
+> > scheduled even though many counters would be available. This
+> > is related to multiplexing and is architecture agnostic and
+> > PMU agnostic (i.e., core or uncore).
 > >
-> > [adding more people because this is going to be an ABI break, sigh]
-> >
-> > On Sat, Oct 12, 2019 at 5:52 PM Daniel Colascione <dancol@google.com> wrote:
-> > >
-> > > On Sat, Oct 12, 2019 at 4:10 PM Andy Lutomirski <luto@kernel.org> wrote:
-> > > >
-> > > > On Sat, Oct 12, 2019 at 12:16 PM Daniel Colascione <dancol@google.com> wrote:
-> > > > >
-> > > > > The new secure flag makes userfaultfd use a new "secure" anonymous
-> > > > > file object instead of the default one, letting security modules
-> > > > > supervise userfaultfd use.
-> > > > >
-> > > > > Requiring that users pass a new flag lets us avoid changing the
-> > > > > semantics for existing callers.
-> > > >
-> > > > Is there any good reason not to make this be the default?
-> > > >
-> > > >
-> > > > The only downside I can see is that it would increase the memory usage
-> > > > of userfaultfd(), but that doesn't seem like such a big deal.  A
-> > > > lighter-weight alternative would be to have a single inode shared by
-> > > > all userfaultfd instances, which would require a somewhat different
-> > > > internal anon_inode API.
-> > >
-> > > I'd also prefer to just make SELinux use mandatory, but there's a
-> > > nasty interaction with UFFD_EVENT_FORK. Adding a new UFFD_SECURE mode
-> > > which blocks UFFD_EVENT_FORK sidesteps this problem. Maybe you know a
-> > > better way to deal with it.
-> >
-> > ...
-> >
-> > > But maybe we can go further: let's separate authentication and
-> > > authorization, as we do in other LSM hooks. Let's split my
-> > > inode_init_security_anon into two hooks, inode_init_security_anon and
-> > > inode_create_anon. We'd define the former to just initialize the file
-> > > object's security information --- in the SELinux case, figuring out
-> > > its class and SID --- and define the latter to answer the yes/no
-> > > question of whether a particular anonymous inode creation should be
-> > > allowed. Normally, anon_inode_getfile2() would just call both hooks.
-> > > We'd add another anon_inode_getfd flag, ANON_INODE_SKIP_AUTHORIZATION
-> > > or something, that would tell anon_inode_getfile2() to skip calling
-> > > the authorization hook, effectively making the creation always
-> > > succeed. We can then make the UFFD code pass
-> > > ANON_INODE_SKIP_AUTHORIZATION when it's creating a file object in the
-> > > fork child while creating UFFD_EVENT_FORK messages.
-> >
-> > That sounds like an improvement.  Or maybe just teach SELinux that
-> > this particular fd creation is actually making an anon_inode that is a
-> > child of an existing anon inode and that the context should be copied
-> > or whatever SELinux wants to do.  Like this, maybe:
-> >
-> > static int resolve_userfault_fork(struct userfaultfd_ctx *ctx,
-> >                                   struct userfaultfd_ctx *new,
-> >                                   struct uffd_msg *msg)
-> > {
-> >         int fd;
-> >
-> > Change this:
-> >
-> >         fd = anon_inode_getfd("[userfaultfd]", &userfaultfd_fops, new,
-> >                               O_RDWR | (new->flags & UFFD_SHARED_FCNTL_FLAGS));
-> >
-> > to something like:
-> >
-> >       fd = anon_inode_make_child_fd(..., ctx->inode, ...);
-> >
-> > where ctx->inode is the one context's inode.
-> >
-> > *** HOWEVER *** !!!
-> >
-> > Now that you've pointed this mechanism out, it is utterly and
-> > completely broken and should be removed from the kernel outright or at
-> > least severely restricted.  A .read implementation MUST NOT ACT ON THE
-> > CALLING TASK.  Ever.  Just imagine the effect of passing a userfaultfd
-> > as stdin to a setuid program.
-> >
-> > So I think the right solution might be to attempt to *remove*
-> > UFFD_EVENT_FORK.  Maybe the solution is to say that, unless the
-> > creator of a userfaultfd() has global CAP_SYS_ADMIN, then it cannot
-> > use UFFD_FEATURE_EVENT_FORK) and print a warning (once) when
-> > UFFD_FEATURE_EVENT_FORK is allowed.  And, after some suitable
-> > deprecation period, just remove it.  If it's genuinely useful, it
-> > needs an entirely new API based on ioctl() or a syscall.  Or even
-> > recvmsg() :)
-> >
-> > And UFFD_SECURE should just become automatic, since you don't have a
-> > problem any more. :-p
-> >
-> > --Andy
-> 
+> > This problem can easily be reproduced when you have two perf
+> > stat sessions. The first session does not cause multiplexing,
+> > let's say it is measuring 1 event, E1. While it is measuring,
+> > a second session starts and causes multiplexing. Let's say it
+> > adds 6 events, B1-B6. Now, 7 events compete and are multiplexed.
+> > When the second session terminates, all 6 (B1-B6) events are
+> > removed. Normally, you'd expect the E1 event to continue to run
+> > with no multiplexing. However, the problem is that depending on
+> > the state Of E1 when B1-B6 are removed, it may never be scheduled
+> > again. If E1 was inactive at the time of removal, despite the
+> > multiplexing hrtimer still firing, it will not find any active
+> > events and will not try to reschedule. This is what Song's patch
+> > fixes. It forces the multiplexing code to consider non-active events.
+>
+> This; so Song's patch fixes the fundamental problem of the rotation not
+> working right under certain conditions.
+>
+> > However, the cause is not addressed. The kernel should not rely on
+> > the multiplexing hrtimer to unblock inactive events. That timer
+> > can have abitrary duration in the milliseconds. Until the timer
+> > fires, counters are available, but no measurable events are using
+> > them. We do not want to introduce blind spots of arbitrary durations.
+>
+> This I disagree with -- you don't get a guarantee other than
+> timer_period/n when you multiplex, and idling the counters until the
+> next tick doesn't violate that at all.
 
-	Cyrill
+My take is that if you have free counters and "idling" events, the kernel
+should take every effort to schedule them as soon as they become available.
+In the situation I described in the patch, once I remove the active
+events, there
+is no more reasons for multiplexing, all the counters are free (ignore
+watchdog).
+Now you may be arguing, that it may take more time to ctx_resched() then to
+wait for the timer to expire. But I am not sure I buy that. Similarly,
+I am not sure
+there is code to cancel an active mux hrtimer when we clear rotate_necessary.
+Maybe we just let it lapse and clear itself via a ctx_sched_out() in
+the rotation code.
+
+>
+> > This patch addresses the cause of the problem, by checking that,
+> > when an event is disabled or removed and the context was multiplexing
+> > events, inactive events gets immediately a chance to be scheduled by
+> > calling ctx_resched(). The rescheduling is done on  event of equal
+> > or lower priority types.  With that in place, as soon as a counter
+> > is freed, schedulable inactive events may run, thereby eliminating
+> > a blind spot.
+>
+> Disagreed, Song's patch removed the fundamental blind spot of rotation
+> completely failing.
+Sure it removed the infinite blocking of schedulable events. My patch addresses
+the issue of having free counters following a deactivation/removal and
+not scheduling
+the idling events on them, thereby creating a blind spot where no
+event is monitoring.
+
+>
+> This just slightly optimizes counter usage -- at a cost of having to
+> reprogram the counters more often.
+>
+Only on deactivation/removal AND multiplexing so it is not every time but
+only where there is an opportunity to keep the counters busy.
+
+> Not saying we shouldn't do this, but this justification is just all
+> sorts of wrong.
+
+I think the patches are not mutually exclusive. They sort of complement each
+other. My problem was that if you have free counters and idling events, you may
+not need to do one more rotation and wait for it to resume active
+collection, especially
+when the timer may be set to a value larger than default. In my case,
+I debug my issue
+without Song's patch. I discovered it at the time I was ready to
+submit my patch to LKML.
+My patch by itself solved the problem I was seeing. Song patch is
+needed to solve the
+problem of the first flexible event not schedulable while other could
+be. My patch does
+not address that. It would address the case where that ref-cycles
+pinned event is removed
+and the flexible ref-cycles could take the counter immediately. So, I
+am okay with you saying
+this is an optimization and I think it is useful.
