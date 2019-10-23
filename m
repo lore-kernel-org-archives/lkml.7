@@ -2,130 +2,335 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9238ECA9EB7
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:09:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1172CCA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:09:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E63321872
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:09:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="xtnaKHon"
+	by mail.kernel.org (Postfix) with ESMTP id D5A2321872
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:09:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406530AbfJWPJq (ORCPT
+        id S2406520AbfJWPJp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 11:09:46 -0400
-Received: from mail-eopbgr780080.outbound.protection.outlook.com ([40.107.78.80]:6592
-        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2406509AbfJWPJm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 11:09:42 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iKdZaFiUXDI5OAoVUicNR7Bz0iqDrW+g0kjK9PJRn1JnMgsIFb0Bi7UNxefdkpgGJ0ZviRBXufQIEeH/92haABRyx1AtnYp476v7OZmoKtWnDteUuh3vR7irtbMJorzJAaHO0/2ogqpmiAy//q06x+kCE4mcdTHIY/02OJJddjokrL3MAfwZAeyVkXssIqn72Qtob0H3TFl+0nzqjrk9v0hQvLq62MgqYhQy4vKocgX9PXBl5FMALxNDP3tCssKU2iyML4Ck3Nb9mkBOkBPyFl3dzEdMn2jEP01CMW/iR6d1h2SX7knSEBveb0rz9+TWRA0X+1r8JOszGHn5bCHRxQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JCnhIUVzMGcsPJXOAuWP66Vcw/fVbfhmNdyag6Ckgn8=;
- b=lBfZxxjmLFbw+M8RhzPpZI6jxlR8fD7RtLBEMHGUdGWwe1WfxuKpyV+tsJPWc/l9KsFQgQmgAnzLs3e4t+0AHcG2pfmWI1ly/Gs+hFPPkYawy5w5Rp9VahEV4mMUD2iSWQ6B2uCc/a6RAPBRBR/zjvDcLfIogMyPkP1BHm0e9O3vJ5f832BjMmc/2VWpiYf4W8dlmcSvOdX+iD41p/cU9S2mb7Fp2oGO/EXkalexek534w6N2gUmyMnJI4nvD/65r6wQaG0YiKdc8j7myNxBL9fpG+W5wEgMPSrerC6jP5jcUiJvAejJCDjGEZqvtWnEHRDArIEt3s4xsxrL/aAH4Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JCnhIUVzMGcsPJXOAuWP66Vcw/fVbfhmNdyag6Ckgn8=;
- b=xtnaKHonNZaYKsbTFvDO+dS4kPPZrpSyp17/z+8b8svzwVGIzUCcsO1QyUrUgnqZQ0q+MWZUgsTyMssaOYCMFIq3OpcBQrSOahf6sXnsDC/nqixgUObr2VHgRmKCshtK+WUuFy38yrJICImAXJluGhiLqIrCAk6XIj/59RFBzpM=
-Received: from CY4PR1201MB0230.namprd12.prod.outlook.com (10.172.79.7) by
- CY4PR1201MB2503.namprd12.prod.outlook.com (10.172.116.137) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2367.24; Wed, 23 Oct 2019 15:09:40 +0000
-Received: from CY4PR1201MB0230.namprd12.prod.outlook.com
- ([fe80::5471:f58b:733e:1a61]) by CY4PR1201MB0230.namprd12.prod.outlook.com
- ([fe80::5471:f58b:733e:1a61%7]) with mapi id 15.20.2367.025; Wed, 23 Oct 2019
- 15:09:40 +0000
-From:   Harry Wentland <hwentlan@amd.com>
-To:     Wambui Karuga <wambui@karuga.xyz>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-CC:     "airlied@linux.ie" <airlied@linux.ie>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "outreachy-kernel@googlegroups.com" 
-        <outreachy-kernel@googlegroups.com>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>
-Subject: Re: [PATCH] drm/radeon: remove assignment for return value
-Thread-Topic: [PATCH] drm/radeon: remove assignment for return value
-Thread-Index: AQHVhtpVI7Za6Y3hgUObDSSJ2llK9adoWhCA
-Date:   Wed, 23 Oct 2019 15:09:40 +0000
-Message-ID: <2bed3fab-e84d-226d-b552-1ac088fc5d9c@amd.com>
-References: <20191019073242.21652-1-wambui@karuga.xyz>
-In-Reply-To: <20191019073242.21652-1-wambui@karuga.xyz>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [165.204.55.250]
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
-x-clientproxiedby: YT1PR01CA0014.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01::27)
- To CY4PR1201MB0230.namprd12.prod.outlook.com (2603:10b6:910:1e::7)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Harry.Wentland@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: bc7d57a9-bb4f-4a72-8068-08d757cb06b6
-x-ms-traffictypediagnostic: CY4PR1201MB2503:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CY4PR1201MB250318DBA5C9852DCD22C5628C6B0@CY4PR1201MB2503.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4303;
-x-forefront-prvs: 019919A9E4
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(39860400002)(346002)(136003)(396003)(376002)(199004)(189003)(305945005)(110136005)(3846002)(2906002)(7736002)(4326008)(6246003)(6116002)(52116002)(6486002)(71190400001)(76176011)(54906003)(4001150100001)(71200400001)(316002)(36756003)(229853002)(99286004)(6436002)(58126008)(6512007)(31696002)(478600001)(81156014)(8936002)(81166006)(446003)(14454004)(8676002)(186003)(11346002)(476003)(31686004)(386003)(5660300002)(53546011)(256004)(102836004)(6506007)(26005)(2616005)(25786009)(66446008)(66946007)(486006)(66476007)(65806001)(66556008)(2501003)(66066001)(65956001)(64756008);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR1201MB2503;H:CY4PR1201MB0230.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: K3EDtX/sOL1kFqbk78Ilb9AjHuw+dEqQZqCQsPOxDMx8ozKRCYGc4J1nO7i9uY4baJ5afvBkIhYP7rLLx5q9uBNYGJgEokJTixxiB6VL/tlXcso0Ra3IPFydz1knckkCQdik5/toyNC+36eHt2pj7Oes/kmYqEDfzeRPNW8oX+C0irIaqTTMyWDJ9kBBFs7HXni/KFZLh0ByGHsB8qoXy6/a53HhCotsJxe9h1JJeAVN9EKdPik/UopnB/rnGfSrXZJhWIXjuBEfZfmC+KD8wDHnc4wSLHNbaSnaqTXZwxZhbZo70fGKZnsPzu928+93MdFPsxbEOVROaPn3xgdxFq3cATo+8Bne5jrtzE94dFJprGb+iOzZeIFEoA8JsMHPVFDy4pSPjycY7x4heqv+PaTx5j4Mcn8ih5C9qLO0zeDpk5POOaM4NQvIydFHIpl9
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <02F5B14052661E4FAD9585FB77B7C616@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 23 Oct 2019 11:09:45 -0400
+Received: from mga05.intel.com ([192.55.52.43]:16216 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2406322AbfJWPJn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 11:09:43 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 08:09:42 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,221,1569308400"; 
+   d="scan'208";a="372903703"
+Received: from um.fi.intel.com (HELO um) ([10.237.72.57])
+  by orsmga005.jf.intel.com with ESMTP; 23 Oct 2019 08:09:39 -0700
+From:   Alexander Shishkin <alexander.shishkin@linux.intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        jolsa@redhat.com, adrian.hunter@intel.com,
+        mathieu.poirier@linaro.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com
+Subject: Re: [PATCH v2 4/4] perf/x86/intel/pt: Opportunistically use single range output mode
+In-Reply-To: <20191022095812.67071-5-alexander.shishkin@linux.intel.com>
+References: <20191022095812.67071-1-alexander.shishkin@linux.intel.com> <20191022095812.67071-5-alexander.shishkin@linux.intel.com>
+Date:   Wed, 23 Oct 2019 18:09:38 +0300
+Message-ID: <87h83zh51p.fsf@ashishki-desk.ger.corp.intel.com>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bc7d57a9-bb4f-4a72-8068-08d757cb06b6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Oct 2019 15:09:40.1734
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: APw0BRkEeZD6y6aICHG2WYezWrsDR0GPYaxdTrbij/u4FYB38VNnyoJA9bgPseyYz92Mtqg12VAv+6tEkMZ7QA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1201MB2503
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjAxOS0xMC0xOSAzOjMyIGEubS4sIFdhbWJ1aSBLYXJ1Z2Egd3JvdGU6DQo+IFJlbW92ZSB1
-bm5lY2Vzc2FyeSBhc3NpZ25tZW50IGZvciByZXR1cm4gdmFsdWUgYW5kIGhhdmUgdGhlDQo+IGZ1
-bmN0aW9uIHJldHVybiB0aGUgcmVxdWlyZWQgdmFsdWUgZGlyZWN0bHkuDQo+IElzc3VlIGZvdW5k
-IGJ5IGNvY2NpbmVsbGU6DQo+IEBADQo+IGxvY2FsIGlkZXhwcmVzc2lvbiByZXQ7DQo+IGV4cHJl
-c3Npb24gZTsNCj4gQEANCj4gDQo+IC1yZXQgPQ0KPiArcmV0dXJuDQo+ICAgICAgZTsNCj4gLXJl
-dHVybiByZXQ7DQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBXYW1idWkgS2FydWdhIDx3YW1idWlAa2Fy
-dWdhLnh5ej4NCg0KVGhhbmtzIGZvciB5b3VyIHBhdGNoLg0KDQpSZXZpZXdlZC1ieTogSGFycnkg
-V2VudGxhbmQgPGhhcnJ5LndlbnRsYW5kQGFtZC5jb20+DQoNCkhhcnJ5DQoNCg0KPiAtLS0NCj4g
-IGRyaXZlcnMvZ3B1L2RybS9yYWRlb24vY2lrLmMgfCA4ICsrLS0tLS0tDQo+ICAxIGZpbGUgY2hh
-bmdlZCwgMiBpbnNlcnRpb25zKCspLCA2IGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvZ3B1L2RybS9yYWRlb24vY2lrLmMgYi9kcml2ZXJzL2dwdS9kcm0vcmFkZW9uL2Np
-ay5jDQo+IGluZGV4IDYyZWFiODJhNjRmOS4uZGFmZjlhMmFmM2JlIDEwMDY0NA0KPiAtLS0gYS9k
-cml2ZXJzL2dwdS9kcm0vcmFkZW9uL2Npay5jDQo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9yYWRl
-b24vY2lrLmMNCj4gQEAgLTIyMSw5ICsyMjEsNyBAQCBpbnQgY2lfZ2V0X3RlbXAoc3RydWN0IHJh
-ZGVvbl9kZXZpY2UgKnJkZXYpDQo+ICAJZWxzZQ0KPiAgCQlhY3R1YWxfdGVtcCA9IHRlbXAgJiAw
-eDFmZjsNCj4gIA0KPiAtCWFjdHVhbF90ZW1wID0gYWN0dWFsX3RlbXAgKiAxMDAwOw0KPiAtDQo+
-IC0JcmV0dXJuIGFjdHVhbF90ZW1wOw0KPiArCXJldHVybiBhY3R1YWxfdGVtcCAqIDEwMDA7DQo+
-ICB9DQo+ICANCj4gIC8qIGdldCB0ZW1wZXJhdHVyZSBpbiBtaWxsaWRlZ3JlZXMgKi8NCj4gQEAg
-LTIzOSw5ICsyMzcsNyBAQCBpbnQga3ZfZ2V0X3RlbXAoc3RydWN0IHJhZGVvbl9kZXZpY2UgKnJk
-ZXYpDQo+ICAJZWxzZQ0KPiAgCQlhY3R1YWxfdGVtcCA9IDA7DQo+ICANCj4gLQlhY3R1YWxfdGVt
-cCA9IGFjdHVhbF90ZW1wICogMTAwMDsNCj4gLQ0KPiAtCXJldHVybiBhY3R1YWxfdGVtcDsNCj4g
-KwlyZXR1cm4gYWN0dWFsX3RlbXAgKiAxMDAwOw0KPiAgfQ0KPiAgDQo+ICAvKg0KPiANCg==
+Alexander Shishkin <alexander.shishkin@linux.intel.com> writes:
+
+> diff --git a/arch/x86/events/intel/pt.c b/arch/x86/events/intel/pt.c
+> index 2f20d5a333c1..6edd7b785861 100644
+> --- a/arch/x86/events/intel/pt.c
+> +++ b/arch/x86/events/intel/pt.c
+> @@ -491,7 +491,9 @@ static void pt_config(struct perf_event *event)
+>  	}
+>  
+>  	reg = pt_config_filters(event);
+> -	reg |= RTIT_CTL_TOPA | RTIT_CTL_TRACEEN;
+> +	reg |= RTIT_CTL_TRACEEN;
+> +	if (!buf->single)
+> +		reg |= RTIT_CTL_TOPA;
+
+This one is broken. The below is better.
+
+From a18feffdc15957f6db0a686e51cddf69eef205c3 Mon Sep 17 00:00:00 2001
+From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Date: Thu, 17 Oct 2019 15:42:15 +0300
+Subject: [PATCH] perf/x86/intel/pt: Opportunistically use single range output
+ mode
+
+Most of PT implementations support Single Range Output mode, which is
+an alternative to ToPA that can be used for a single contiguous buffer
+and if we don't require an interrupt, that is, in AUX snapshot mode.
+
+Now that perf core will use high order allocations for the AUX buffer,
+in many cases the first condition will also be satisfied.
+
+The two most obvious benefits of the Single Range Output mode over the
+ToPA are:
+ * not having to allocate the ToPA table(s),
+ * not using the ToPA walk hardware.
+
+Make use of this functionality where available and appropriate.
+
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+---
+ arch/x86/events/intel/pt.c | 118 ++++++++++++++++++++++++++++---------
+ arch/x86/events/intel/pt.h |   2 +
+ 2 files changed, 92 insertions(+), 28 deletions(-)
+
+diff --git a/arch/x86/events/intel/pt.c b/arch/x86/events/intel/pt.c
+index 2f20d5a333c1..e6a10a5dba85 100644
+--- a/arch/x86/events/intel/pt.c
++++ b/arch/x86/events/intel/pt.c
+@@ -482,6 +482,8 @@ static u64 pt_config_filters(struct perf_event *event)
+ 
+ static void pt_config(struct perf_event *event)
+ {
++	struct pt *pt = this_cpu_ptr(&pt_ctx);
++	struct pt_buffer *buf = perf_get_aux(&pt->handle);
+ 	u64 reg;
+ 
+ 	/* First round: clear STATUS, in particular the PSB byte counter. */
+@@ -491,7 +493,9 @@ static void pt_config(struct perf_event *event)
+ 	}
+ 
+ 	reg = pt_config_filters(event);
+-	reg |= RTIT_CTL_TOPA | RTIT_CTL_TRACEEN;
++	reg |= RTIT_CTL_TRACEEN;
++	if (!buf->single)
++		reg |= RTIT_CTL_TOPA;
+ 
+ 	/*
+ 	 * Previously, we had BRANCH_EN on by default, but now that PT has
+@@ -543,18 +547,6 @@ static void pt_config_stop(struct perf_event *event)
+ 	wmb();
+ }
+ 
+-static void pt_config_buffer(void *buf, unsigned int topa_idx,
+-			     unsigned int output_off)
+-{
+-	u64 reg;
+-
+-	wrmsrl(MSR_IA32_RTIT_OUTPUT_BASE, virt_to_phys(buf));
+-
+-	reg = 0x7f | ((u64)topa_idx << 7) | ((u64)output_off << 32);
+-
+-	wrmsrl(MSR_IA32_RTIT_OUTPUT_MASK, reg);
+-}
+-
+ /**
+  * struct topa - ToPA metadata
+  * @list:	linkage to struct pt_buffer's list of tables
+@@ -612,6 +604,26 @@ static inline phys_addr_t topa_pfn(struct topa *topa)
+ #define TOPA_ENTRY_SIZE(t, i) (sizes(TOPA_ENTRY((t), (i))->size))
+ #define TOPA_ENTRY_PAGES(t, i) (1 << TOPA_ENTRY((t), (i))->size)
+ 
++static void pt_config_buffer(struct pt_buffer *buf)
++{
++	u64 reg, mask;
++	void *base;
++
++	if (buf->single) {
++		base = buf->data_pages[0];
++		mask = (buf->nr_pages * PAGE_SIZE - 1) >> 7;
++	} else {
++		base = topa_to_page(buf->cur)->table;
++		mask = (u64)buf->cur_idx;
++	}
++
++	wrmsrl(MSR_IA32_RTIT_OUTPUT_BASE, virt_to_phys(base));
++
++	reg = 0x7f | (mask << 7) | ((u64)buf->output_off << 32);
++
++	wrmsrl(MSR_IA32_RTIT_OUTPUT_MASK, reg);
++}
++
+ /**
+  * topa_alloc() - allocate page-sized ToPA table
+  * @cpu:	CPU on which to allocate.
+@@ -812,6 +824,11 @@ static void pt_update_head(struct pt *pt)
+ 	struct pt_buffer *buf = perf_get_aux(&pt->handle);
+ 	u64 topa_idx, base, old;
+ 
++	if (buf->single) {
++		local_set(&buf->data_size, buf->output_off);
++		return;
++	}
++
+ 	/* offset of the first region in this table from the beginning of buf */
+ 	base = buf->cur->offset + buf->output_off;
+ 
+@@ -913,18 +930,21 @@ static void pt_handle_status(struct pt *pt)
+  */
+ static void pt_read_offset(struct pt_buffer *buf)
+ {
+-	u64 offset, base_topa;
++	u64 offset, base;
+ 	struct topa_page *tp;
+ 
+-	rdmsrl(MSR_IA32_RTIT_OUTPUT_BASE, base_topa);
+-	tp = phys_to_virt(base_topa);
+-	buf->cur = &tp->topa;
++	rdmsrl(MSR_IA32_RTIT_OUTPUT_BASE, base);
++	if (!buf->single) {
++		tp = phys_to_virt(base);
++		buf->cur = &tp->topa;
++	}
+ 
+ 	rdmsrl(MSR_IA32_RTIT_OUTPUT_MASK, offset);
+ 	/* offset within current output region */
+ 	buf->output_off = offset >> 32;
+ 	/* index of current output region within this table */
+-	buf->cur_idx = (offset & 0xffffff80) >> 7;
++	if (!buf->single)
++		buf->cur_idx = (offset & 0xffffff80) >> 7;
+ }
+ 
+ static struct topa_entry *
+@@ -1040,6 +1060,9 @@ static int pt_buffer_reset_markers(struct pt_buffer *buf,
+ 	unsigned long head = local64_read(&buf->head);
+ 	unsigned long idx, npages, wakeup;
+ 
++	if (buf->single)
++		return 0;
++
+ 	/* can't stop in the middle of an output region */
+ 	if (buf->output_off + handle->size + 1 < pt_buffer_region_size(buf)) {
+ 		perf_aux_output_flag(handle, PERF_AUX_FLAG_TRUNCATED);
+@@ -1121,13 +1144,17 @@ static void pt_buffer_reset_offsets(struct pt_buffer *buf, unsigned long head)
+ 	if (buf->snapshot)
+ 		head &= (buf->nr_pages << PAGE_SHIFT) - 1;
+ 
+-	pg = (head >> PAGE_SHIFT) & (buf->nr_pages - 1);
+-	te = pt_topa_entry_for_page(buf, pg);
++	if (!buf->single) {
++		pg = (head >> PAGE_SHIFT) & (buf->nr_pages - 1);
++		te = pt_topa_entry_for_page(buf, pg);
+ 
+-	cur_tp = topa_entry_to_page(te);
+-	buf->cur = &cur_tp->topa;
+-	buf->cur_idx = te - TOPA_ENTRY(buf->cur, 0);
+-	buf->output_off = head & (pt_buffer_region_size(buf) - 1);
++		cur_tp = topa_entry_to_page(te);
++		buf->cur = &cur_tp->topa;
++		buf->cur_idx = te - TOPA_ENTRY(buf->cur, 0);
++		buf->output_off = head & (pt_buffer_region_size(buf) - 1);
++	} else {
++		buf->output_off = head;
++	}
+ 
+ 	local64_set(&buf->head, head);
+ 	local_set(&buf->data_size, 0);
+@@ -1141,6 +1168,9 @@ static void pt_buffer_fini_topa(struct pt_buffer *buf)
+ {
+ 	struct topa *topa, *iter;
+ 
++	if (buf->single)
++		return;
++
+ 	list_for_each_entry_safe(topa, iter, &buf->tables, list) {
+ 		/*
+ 		 * right now, this is in free_aux() path only, so
+@@ -1186,6 +1216,36 @@ static int pt_buffer_init_topa(struct pt_buffer *buf, int cpu,
+ 	return 0;
+ }
+ 
++static int pt_buffer_try_single(struct pt_buffer *buf, int nr_pages)
++{
++	struct page *p = virt_to_page(buf->data_pages[0]);
++	int ret = -ENOTSUPP, order = 0;
++
++	/*
++	 * We can use single range output mode
++	 * + in snapshot mode, where we don't need interrupts;
++	 * + if the hardware supports it;
++	 * + if the entire buffer is one contiguous allocation.
++	 */
++	if (!buf->snapshot)
++		goto out;
++
++	if (!intel_pt_validate_hw_cap(PT_CAP_single_range_output))
++		goto out;
++
++	if (PagePrivate(p))
++		order = page_private(p);
++
++	if (1 << order != nr_pages)
++		goto out;
++
++	buf->single = true;
++	buf->nr_pages = nr_pages;
++	ret = 0;
++out:
++	return ret;
++}
++
+ /**
+  * pt_buffer_setup_aux() - set up topa tables for a PT buffer
+  * @cpu:	Cpu on which to allocate, -1 means current.
+@@ -1230,6 +1290,10 @@ pt_buffer_setup_aux(struct perf_event *event, void **pages,
+ 
+ 	INIT_LIST_HEAD(&buf->tables);
+ 
++	ret = pt_buffer_try_single(buf, nr_pages);
++	if (!ret)
++		return buf;
++
+ 	ret = pt_buffer_init_topa(buf, cpu, nr_pages, GFP_KERNEL);
+ 	if (ret) {
+ 		kfree(buf);
+@@ -1396,8 +1460,7 @@ void intel_pt_interrupt(void)
+ 			return;
+ 		}
+ 
+-		pt_config_buffer(topa_to_page(buf->cur)->table, buf->cur_idx,
+-				 buf->output_off);
++		pt_config_buffer(buf);
+ 		pt_config_start(event);
+ 	}
+ }
+@@ -1461,8 +1524,7 @@ static void pt_event_start(struct perf_event *event, int mode)
+ 	WRITE_ONCE(pt->handle_nmi, 1);
+ 	hwc->state = 0;
+ 
+-	pt_config_buffer(topa_to_page(buf->cur)->table, buf->cur_idx,
+-			 buf->output_off);
++	pt_config_buffer(buf);
+ 	pt_config(event);
+ 
+ 	return;
+diff --git a/arch/x86/events/intel/pt.h b/arch/x86/events/intel/pt.h
+index 1d2bb7572374..3f7818221b95 100644
+--- a/arch/x86/events/intel/pt.h
++++ b/arch/x86/events/intel/pt.h
+@@ -64,6 +64,7 @@ struct pt_pmu {
+  * @lost:	if data was lost/truncated
+  * @head:	logical write offset inside the buffer
+  * @snapshot:	if this is for a snapshot/overwrite counter
++ * @single:	use Single Range Output instead of ToPA
+  * @stop_pos:	STOP topa entry index
+  * @intr_pos:	INT topa entry index
+  * @stop_te:	STOP topa entry pointer
+@@ -80,6 +81,7 @@ struct pt_buffer {
+ 	local_t			data_size;
+ 	local64_t		head;
+ 	bool			snapshot;
++	bool			single;
+ 	long			stop_pos, intr_pos;
+ 	struct topa_entry	*stop_te, *intr_te;
+ 	void			**data_pages;
+-- 
+2.23.0
+
