@@ -2,121 +2,98 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A06CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:36:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A59BCA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:37:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9A9021906
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:36:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 034992173B
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:37:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FnXFrZo5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392267AbfJWOgv (ORCPT
+        id S2392275AbfJWOht (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 10:36:51 -0400
-Received: from muru.com ([72.249.23.125]:39262 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732328AbfJWOgv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 10:36:51 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id D2A4B80CF;
-        Wed, 23 Oct 2019 14:37:23 +0000 (UTC)
-Date:   Wed, 23 Oct 2019 07:36:46 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Adam Ford <aford173@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Adam Ford <adam.ford@logicpd.com>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 1/2] configs: ARM: omap2plus: Enable OMAP3_THERMAL
-Message-ID: <20191023143646.GG5610@atomide.com>
-References: <20191007220540.30690-1-aford173@gmail.com>
- <20191022162223.GU5610@atomide.com>
- <CAHCN7xLy975mxX+cm56PMx-TKODEZjYPfMHb=byspKxYXXq7OA@mail.gmail.com>
- <20191022221919.GF5610@atomide.com>
- <1CE62E4E-1A38-448C-9197-8FA16747F942@goldelico.com>
+        Wed, 23 Oct 2019 10:37:49 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:49102 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732328AbfJWOhs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 10:37:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=/PR2FEiCX+iu4eBmOZGHncjejUZSgrUpVLIkHmDbJhU=; b=FnXFrZo50dOrSKOXpol2prson
+        gTlqkVnD6hYYGZ5vX+QKIYp1tlmacAw4DtTMwHmAxJIz8Q9OKuTAMPacabb4rZ5rqtjYLz9yvhYdF
+        GcNTyDoOD67WxiR5GjT4fakBYjhOFKVV7t4OyCJKIdZrr8zB3dLn1H15qt0Affa7xuR1t4uqwHI52
+        1VA2EW8gfOT6fDr7m5ZgZcUL/iwEb/vckqEB9sgi56WyUtQVMOHWUKC2FTrpdYouJNrEtbdrj+dyl
+        TFTBGjr4n+MfeKN9HhzNCTcncRmr7a+/NTp57Gq4y45KRR9sGJc0CbqkXcufhl1DW+g88P30GgKhm
+        4hCq4S+kg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iNHlY-0007VJ-Ql; Wed, 23 Oct 2019 14:37:37 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 770C4300EBF;
+        Wed, 23 Oct 2019 16:36:36 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 8643A2B1D776D; Wed, 23 Oct 2019 16:37:34 +0200 (CEST)
+Date:   Wed, 23 Oct 2019 16:37:34 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        linux-arch@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>
+Subject: Re: [patch V2 00/17] entry: Provide generic implementation for host
+ and guest entry/exit work
+Message-ID: <20191023143734.GJ1800@hirez.programming.kicks-ass.net>
+References: <20191023122705.198339581@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1CE62E4E-1A38-448C-9197-8FA16747F942@goldelico.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191023122705.198339581@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* H. Nikolaus Schaller <hns@goldelico.com> [191023 04:42]:
-> 
-> > Am 23.10.2019 um 00:19 schrieb Tony Lindgren <tony@atomide.com>:
-> > 
-> > * Adam Ford <aford173@gmail.com> [191022 19:01]:
-> >> On Tue, Oct 22, 2019 at 11:22 AM Tony Lindgren <tony@atomide.com> wrote:
-> >>> 
-> >>> Hi,
-> >>> 
-> >>> * Adam Ford <aford173@gmail.com> [191007 15:06]:
-> >>>> The some in the OMAP3 family have a bandgap thermal sensor, but
-> >>>> omap2plus has it disabled.
-> >>>> 
-> >>>> This patch enables the OMAP3_THERMAL by default like the rest of
-> >>>> the OMAP family.
-> >>> 
-> >>> Looks like this breaks off mode during idle for omap3, and that's
-> >>> probably why it never got enabled. The difference in power
-> >>> consumption during idle is about 7mW vs 32mW for the SoC as
-> >>> measured from torpedo shunt for main_battery_som.
-> >>> 
-> >>> I think the right fix might be simply to add handling for
-> >>> CPU_CLUSTER_PM_ENTER to the related thermal driver to disable
-> >>> it during idle like we have for gpio-omap.c for example.
-> >> 
-> >> I am not sure I know where to start on fixing that issue.  Would you
-> >> entertain enabling the driver if we set the device tree to 'disabled'
-> >> by default?  This way if people want to to use it, it can be enabled
-> >> on a per-device option.  Once the power stuff gets resolved, we might
-> >> be able to enable it by default.  For people who are planning on using
-> >> the DM3730 @ 1GHz in high temp environments, I am not sure they'll
-> >> care about low power.
-> > 
-> > They should both work fine together though. They are not mutually
-> > exclusive features.
-> > 
-> >> I'll try to look into it when I have time, but I was hoping a
-> >> compromise might be a reasonable work-around.
-> > 
-> > It should be hopefully a trivial fix.. I have not looked at the
-> > driver code though.
-> 
-> If I am taken right, it is the drivers/thermal/ti-soc-thermal/ti-*.c
-> which is a common driver for omap3, omap4, omap5. They only differ
-> in the thermal data and which registers and bits are used to access
-> the ADC.
+On Wed, Oct 23, 2019 at 02:27:05PM +0200, Thomas Gleixner wrote:
+>  /Makefile                             |    3 
+>  arch/Kconfig                          |    3 
+>  arch/x86/Kconfig                      |    1 
+>  arch/x86/entry/calling.h              |   12 +
+>  arch/x86/entry/common.c               |  264 ++------------------------------
+>  arch/x86/entry/entry_32.S             |   41 ----
+>  arch/x86/entry/entry_64.S             |   32 ---
+>  arch/x86/entry/entry_64_compat.S      |   30 ---
+>  arch/x86/include/asm/irqflags.h       |    8 
+>  arch/x86/include/asm/paravirt.h       |    9 -
+>  arch/x86/include/asm/signal.h         |    1 
+>  arch/x86/include/asm/thread_info.h    |    9 -
+>  arch/x86/kernel/signal.c              |    2 
+>  arch/x86/kernel/traps.c               |   33 ++--
+>  arch/x86/kvm/x86.c                    |   17 --
+>  arch/x86/mm/fault.c                   |    7 
+>  b/arch/x86/include/asm/entry-common.h |  104 ++++++++++++
+>  b/arch/x86/kvm/Kconfig                |    1 
+>  b/include/linux/entry-common.h        |  280 ++++++++++++++++++++++++++++++++++
+>  b/kernel/entry/common.c               |  184 ++++++++++++++++++++++
+>  include/linux/kvm_host.h              |   64 +++++++
+>  kernel/Makefile                       |    1 
+>  virt/kvm/Kconfig                      |    3 
+>  23 files changed, 735 insertions(+), 374 deletions(-)
 
-Yes so it seems. Enabling OMAP3_THERMAL adds support to
-of_ti_bandgap_match[] for omap3 and causes the issue.
+This looks really nice; esp. the cleaned up interrupt state.
 
-> So is this problem with off mode also known for omap4 and omap5?
-
-Probably. But we don't have off mode working for omap4, and
-it cannot be used for omap5 AFAIK.
-
-My guess is we need to call clk_disable() and call
-ti_bandgap_save_ctxt() on CPU_CLUSTER_PM_ENTER similar to
-what ti_bandgap_suspend does. And then restore it on
-CPU_CLUSTER_PM_EXIT.
-
-There's a similar example already in gpio_omap_cpu_notifier().
-Not sure if there is some related errata to deal with too,
-probably the old Nokia n900 or n9 would provide some hints
-on what exactly needs to be done.
-
-Regards,
-
-Tony
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
