@@ -2,110 +2,118 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEC71C47E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:31:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17857CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:33:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DEEC2084C
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:31:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E65212084C
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:33:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406691AbfJWPbB (ORCPT
+        id S2406752AbfJWPdQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 11:31:01 -0400
-Received: from mga11.intel.com ([192.55.52.93]:9180 "EHLO mga11.intel.com"
+        Wed, 23 Oct 2019 11:33:16 -0400
+Received: from sauhun.de ([88.99.104.3]:45324 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392441AbfJWPbB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 11:31:01 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 08:31:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,221,1569308400"; 
-   d="scan'208";a="203992073"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by FMSMGA003.fm.intel.com with ESMTP; 23 Oct 2019 08:30:58 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 360A8BD; Wed, 23 Oct 2019 18:30:56 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Yury Norov <yury.norov@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1] gpio: pca953x: Reduce stack usage in couple of functions
-Date:   Wed, 23 Oct 2019 18:30:56 +0300
-Message-Id: <20191023153056.64262-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.23.0
+        id S2403853AbfJWPdQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 11:33:16 -0400
+Received: from localhost (p54B33207.dip0.t-ipconnect.de [84.179.50.7])
+        by pokefinder.org (Postfix) with ESMTPSA id 367582C001C;
+        Wed, 23 Oct 2019 17:33:14 +0200 (CEST)
+Date:   Wed, 23 Oct 2019 17:33:13 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Chuhong Yuan <hslester96@gmail.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mmc: renesas_sdhi: add checks for pinctrl_lookup_state
+Message-ID: <20191023153313.GB5153@kunai>
+References: <20191018131338.11713-1-hslester96@gmail.com>
+ <CAPDyKFoBYchP96hv=7XfTo8CrCSD+KC0h_oFRAsOYT-Lc1SFZQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="gatW/ieO32f1wygP"
+Content-Disposition: inline
+In-Reply-To: <CAPDyKFoBYchP96hv=7XfTo8CrCSD+KC0h_oFRAsOYT-Lc1SFZQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Simple bitmap operations are safe against in-place modifications.
-Due to above we may get rid of temporary variables in some cases.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
+--gatW/ieO32f1wygP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Andrew, it can be folded into "gpio: pca953x: Convert to use bitmap API"
+On Mon, Oct 21, 2019 at 04:32:49PM +0200, Ulf Hansson wrote:
+> On Fri, 18 Oct 2019 at 15:13, Chuhong Yuan <hslester96@gmail.com> wrote:
+> >
+> > renesas_sdhi_probe misses checks for pinctrl_lookup_state and may miss
+> > failures.
+> > Add checks for them to fix the problem.
+> >
+> > Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+> > ---
+> >  drivers/mmc/host/renesas_sdhi_core.c | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> >
+> > diff --git a/drivers/mmc/host/renesas_sdhi_core.c b/drivers/mmc/host/re=
+nesas_sdhi_core.c
+> > index d4ada5cca2d1..dc5ad6632df3 100644
+> > --- a/drivers/mmc/host/renesas_sdhi_core.c
+> > +++ b/drivers/mmc/host/renesas_sdhi_core.c
+> > @@ -694,8 +694,13 @@ int renesas_sdhi_probe(struct platform_device *pde=
+v,
+> >         if (!IS_ERR(priv->pinctrl)) {
+> >                 priv->pins_default =3D pinctrl_lookup_state(priv->pinct=
+rl,
+> >                                                 PINCTRL_STATE_DEFAULT);
+> > +               if (IS_ERR(priv->pins_default))
+> > +                       return PTR_ERR(priv->pins_default);
+> > +
+> >                 priv->pins_uhs =3D pinctrl_lookup_state(priv->pinctrl,
+> >                                                 "state_uhs");
+> > +               if (IS_ERR(priv->pins_uhs))
+> > +                       return PTR_ERR(priv->pins_uhs);
+> >         }
+>=20
+> This looks correct to me, as I guess if there is a pinctrl specified
+> for device node of the controller, it means that it should be used!?
+>=20
+> I understand that this is only used for those variants that supports
+> UHS-I via the renesas_sdhi_start_signal_voltage_switch(). Wolfram, is
+> this fine you think?
 
- drivers/gpio/gpio-pca953x.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+Well, I don't like to bail out because this error is not fatal for basic
+operations. How about releasing priv->pinctrl again with an additional
+warning that pinctrl settings are broken and will prevent 1.8v modes?
 
-diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-index f80ed5a43614..b9e326dfed23 100644
---- a/drivers/gpio/gpio-pca953x.c
-+++ b/drivers/gpio/gpio-pca953x.c
-@@ -468,7 +468,6 @@ static void pca953x_gpio_set_multiple(struct gpio_chip *gc,
- {
- 	struct pca953x_chip *chip = gpiochip_get_data(gc);
- 	DECLARE_BITMAP(reg_val, MAX_LINE);
--	DECLARE_BITMAP(new_val, MAX_LINE);
- 	int ret;
- 
- 	mutex_lock(&chip->i2c_lock);
-@@ -476,9 +475,9 @@ static void pca953x_gpio_set_multiple(struct gpio_chip *gc,
- 	if (ret)
- 		goto exit;
- 
--	bitmap_replace(new_val, reg_val, bits, mask, gc->ngpio);
-+	bitmap_replace(reg_val, reg_val, bits, mask, gc->ngpio);
- 
--	pca953x_write_regs(chip, chip->regs->output, new_val);
-+	pca953x_write_regs(chip, chip->regs->output, reg_val);
- exit:
- 	mutex_unlock(&chip->i2c_lock);
- }
-@@ -605,7 +604,6 @@ static void pca953x_irq_bus_sync_unlock(struct irq_data *d)
- 	struct pca953x_chip *chip = gpiochip_get_data(gc);
- 	DECLARE_BITMAP(irq_mask, MAX_LINE);
- 	DECLARE_BITMAP(reg_direction, MAX_LINE);
--	DECLARE_BITMAP(new_irqs, MAX_LINE);
- 	int level;
- 
- 	pca953x_read_regs(chip, chip->regs->direction, reg_direction);
-@@ -620,8 +618,8 @@ static void pca953x_irq_bus_sync_unlock(struct irq_data *d)
- 		pca953x_write_regs(chip, PCAL953X_INT_MASK, irq_mask);
- 	}
- 
--	bitmap_or(new_irqs, chip->irq_trig_fall, chip->irq_trig_raise, gc->ngpio);
--	bitmap_and(irq_mask, new_irqs, reg_direction, gc->ngpio);
-+	bitmap_or(irq_mask, chip->irq_trig_fall, chip->irq_trig_raise, gc->ngpio);
-+	bitmap_and(irq_mask, irq_mask, reg_direction, gc->ngpio);
- 
- 	/* Look for any newly setup interrupt */
- 	for_each_set_bit(level, irq_mask, gc->ngpio)
--- 
-2.23.0
+Opinions?
 
+
+--gatW/ieO32f1wygP
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl2wcrkACgkQFA3kzBSg
+KbYLrA//c8zF4HqJkaFNFIInZh0QWFD/4DVtK/SARs7eE/Ccf0DEE3hKk8WxvZAQ
+r21YVOhBw/dPlgog4xF0zBZZ2B4KIptDyJRZPVj/ZVoFBFrA1w+hu4HlUtiJMr79
+apZNpwlhSkxTYfO6PEo4wuFuGmoLRA6qj+PJDeFb9uAWdxMUTU26KVwa6jZBAbE6
+Hzfzvs4OXZGoawXSxfzY9IkwtHKR8CWaB8FpcdUSN88wwWVMopejAVMr2zUrOeec
+6E6/mjT29Qut+rBl0SUcZZyy/9ZKsAsrslFOU8YLAMknHAonz0NYO+6XKu26qRhH
+wHgv6/6htzpeFJh8f8wbQ4aRdeRuCJFFvcAd1bqeTrWJ5sFq1MYFMRJs38bFgs1J
+AbWD5BBSC2nIGhHGXt9dHv7hxl4SDE+JCZu+VNjbdJOYqbGlNBMGyMXfZ2ZjPNS1
+Z8cwz4l6KModx+s4sqM0BkSbn/uLzlCtmVHN7s/lLs0FMXOG4NQkKZwgowu6cKJX
+/PzXcT4N3Roswar2c5sncYHMPvTYNkknmp2T9qXQ3XELHZsb9f5xgONyzxNjwap1
+K2H1ZCuoTrJMpi7NNQwmG5NovFEcAOQ7qlRlCE2ITBniH4XFeduveigSntXnioEE
+K5RKUqi+9gOjU9+BbXxLSzo8OCrF+6o+psCNCUWdVQHbnTgtKsw=
+=S45A
+-----END PGP SIGNATURE-----
+
+--gatW/ieO32f1wygP--
