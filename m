@@ -2,115 +2,182 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03A78CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 18:54:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22D08CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 18:56:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C281F21928
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 18:54:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="GDUVls0n"
+	by mail.kernel.org (Postfix) with ESMTP id E0C552086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 18:56:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571856974;
+	bh=H07JzHAFIUf1gCLOH3uCDgii//4E4g5UyMZWFgnUkj0=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=ina2I4bh32W01nr+CNtDWDNAzyCPpT+NUGTglG5gzXMBnAyrd9ZeRGAlgyRqUQn5p
+	 G02WXzIW1l03LwGrCyBx6beFFIM5Kr2+dZ16QF2Au1WmgbkemN5GC7mx49yXeMDdZj
+	 LwT2m3dNAHLXE5uBONFfs8CNuQfasJY1ABYrUxwI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404262AbfJWSy5 (ORCPT
+        id S2404370AbfJWS4M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 14:54:57 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:43489 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404000AbfJWSy5 (ORCPT
+        Wed, 23 Oct 2019 14:56:12 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:59256 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388827AbfJWS4M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 14:54:57 -0400
-Received: by mail-io1-f65.google.com with SMTP id c11so17173415iom.10
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 11:54:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=12QbW3key6pkPLRePaJeG2+1IWcL9FQrUNpf3RuSKSQ=;
-        b=GDUVls0nbXaYTbmTFZL/RVapwYhF4nk0yOpUXO8xXNki35UwD8vLzY6PEIH775b/eV
-         VNCdP2nsxX8S0Kq9AO5cvrLCvrv6qM5hrppOxC2VWCtuWUDk3Tzlc7FqwI4db6+ifuoK
-         +vWrow2Di4hCVAXJK88uEH0ux41umg45NcID2sXhUHxpGF9d3PKcR/IEcxfv1YZIF34t
-         7u1ujeneJLCnj6GSeuT5nxPZuW5/eJJvvkYXuoON8ADB5dXNHu2LntShneO+66r6YszK
-         wAKsFHgpvpJiRLvTUho0x12PR2Mq4iUFg1Khv0PG7Si9RCFyTYD1/vzOEMRqWYMMbEF9
-         fg/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=12QbW3key6pkPLRePaJeG2+1IWcL9FQrUNpf3RuSKSQ=;
-        b=fKjkvn0gwNUSxtNLAQ+kc5Fv8ISLfdBqMh8b+tABdS6eWDU69kZF1kw++oDfIOkoUo
-         ljRcs4eFWwz3y7MtNFqilvbCCM/MhVi+UAdZWTJfRY9HxSpWdcynfSO6uA3G7+/lu+nV
-         tr+whyFxRZZB0R4IFht1qosWNYav+BV3RoGSciDZtfg0xKDu0M3u8f6wVDBvVn0gh/fp
-         udUgaNsaIyoS/fgeDqbilTmijlYTWGDW9GhXlkxCWsbHfMRFOgRy2eK/gjda+IgBkeO5
-         DkAHTTi+wpv4w6qRWc73iaQ3x3EtH4Lgea7Frdd+KCJ/VBKrb2yC0RpWPtCCTgM9fqGG
-         mrmA==
-X-Gm-Message-State: APjAAAVR6qyVM0GQ35cyzpg3lZVBgyMWHI4L6Oi0W9fwDpu51zbmF1ZR
-        2mVo6xEoS651O86BWDluiRgWnA==
-X-Google-Smtp-Source: APXvYqwAgcDxjS3FQfiMaYQ2W8py38nxP64qtmVkcxcVPl8C/rXsYd/CoOC3NOujys7o6Ep29KpLRQ==
-X-Received: by 2002:a6b:7942:: with SMTP id j2mr5108252iop.161.1571856896420;
-        Wed, 23 Oct 2019 11:54:56 -0700 (PDT)
-Received: from localhost ([64.62.168.194])
-        by smtp.gmail.com with ESMTPSA id b18sm3791776ilo.70.2019.10.23.11.54.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Oct 2019 11:54:55 -0700 (PDT)
-Date:   Wed, 23 Oct 2019 11:54:54 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Alan Mikhak <alan.mikhak@sifive.com>
-cc:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org,
-        palmer@sifive.com, hch@infradead.org
-Subject: Re: [PATCH] irqchip: Skip contexts other supervisor in plic_init()
-In-Reply-To: <1571847755-20388-1-git-send-email-alan.mikhak@sifive.com>
-Message-ID: <alpine.DEB.2.21.9999.1910231152580.16536@viisi.sifive.com>
-References: <1571847755-20388-1-git-send-email-alan.mikhak@sifive.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Wed, 23 Oct 2019 14:56:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=52hnjhXNVROi4hAmQzIOnp9s1z1iJebZL+D1ztfofgY=; b=nlaCd52J51mg
+        dQFzGc1CmiKVM8hLd5It0hvULjbIXUwun28h9fd9+tKeOUI9JGFrTXsMKqV/auLgB2SlwLanXwtd4
+        NEOQA5WNa95NTI4peluTXNg+WNd0/CyWdTh5lGRpw/oZHfaRPOmzkKiZeGzm2ve2APvHuEQINHmPt
+        9yoq8=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iNLni-0001Ar-HS; Wed, 23 Oct 2019 18:56:06 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id F01A9274326E; Wed, 23 Oct 2019 19:56:04 +0100 (BST)
+From:   Mark Brown <broonie@kernel.org>
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>
+Subject: Applied "ASoC: hdmi-codec: drop mutex locking again" to the asoc tree
+In-Reply-To: <20191023161203.28955-2-jbrunet@baylibre.com>
+X-Patchwork-Hint: ignore
+Message-Id: <20191023185604.F01A9274326E@ypsilon.sirena.org.uk>
+Date:   Wed, 23 Oct 2019 19:56:04 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+ hch
+The patch
 
-On Wed, 23 Oct 2019, Alan Mikhak wrote:
+   ASoC: hdmi-codec: drop mutex locking again
 
-> From: Alan Mikhak <alan.mikhak@sifive.com>
-> 
-> Modify plic_init() to skip .dts interrupt contexts other
-> than supervisor external interrupt.
+has been applied to the asoc tree at
 
-Might be good to explain the motivation here.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
 
-> 
-> Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
-> ---
->  drivers/irqchip/irq-sifive-plic.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
-> index c72c036aea76..5f2a773d5669 100644
-> --- a/drivers/irqchip/irq-sifive-plic.c
-> +++ b/drivers/irqchip/irq-sifive-plic.c
-> @@ -251,8 +251,8 @@ static int __init plic_init(struct device_node *node,
->  			continue;
->  		}
->  
-> -		/* skip context holes */
-> -		if (parent.args[0] == -1)
-> +		/* skip contexts other than supervisor external interrupt */
-> +		if (parent.args[0] != IRQ_S_EXT)
->  			continue;
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-Will this need to change for RISC-V M-mode Linux support?  
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-https://lore.kernel.org/linux-riscv/20191017173743.5430-1-hch@lst.de/
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-- Paul
+Thanks,
+Mark
 
+From 901af18b6baade6a327e532427cbb233f4945f5d Mon Sep 17 00:00:00 2001
+From: Jerome Brunet <jbrunet@baylibre.com>
+Date: Wed, 23 Oct 2019 18:12:02 +0200
+Subject: [PATCH] ASoC: hdmi-codec: drop mutex locking again
+
+This reverts commit eb1ecadb7f67dde94ef0efd3ddaed5cb6c9a65ed.
+
+This fixes the following warning reported by lockdep and a potential
+issue with hibernation
+
+====================================
+WARNING: pulseaudio/1297 still has locks held!
+5.3.0+ #1826 Not tainted
+------------------------------------
+1 lock held by pulseaudio/1297:
+ #0: ee815308 (&hcp->lock){....}, at: hdmi_codec_startup+0x20/0x130
+
+stack backtrace:
+CPU: 0 PID: 1297 Comm: pulseaudio Not tainted 5.3.0+ #1826
+Hardware name: Marvell Dove (Cubox)
+[<c0017b4c>] (unwind_backtrace) from [<c0014d10>] (show_stack+0x10/0x14)
+[<c0014d10>] (show_stack) from [<c00a2d18>] (futex_wait_queue_me+0x13c/0x19c)
+[<c00a2d18>] (futex_wait_queue_me) from [<c00a3630>] (futex_wait+0x184/0x24c)
+[<c00a3630>] (futex_wait) from [<c00a5e1c>] (do_futex+0x334/0x598)
+[<c00a5e1c>] (do_futex) from [<c00a62e8>] (sys_futex_time32+0x118/0x180)
+[<c00a62e8>] (sys_futex_time32) from [<c0009000>] (ret_fast_syscall+0x0/0x54)
+Exception stack(0xebd31fa8 to 0xebd31ff0)
+1fa0:                   00000000 ffffffff 000c8748 00000189 00000001 00000000
+1fc0: 00000000 ffffffff 00000000 000000f0 00000000 00000000 00000000 00056200
+1fe0: 000000f0 beac03a8 b6d6c835 b6d6f456
+
+Fixes: eb1ecadb7f67 ("ASoC: hdmi-codec: re-introduce mutex locking")
+Reported-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Link: https://lore.kernel.org/r/20191023161203.28955-2-jbrunet@baylibre.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/codecs/hdmi-codec.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
+
+diff --git a/sound/soc/codecs/hdmi-codec.c b/sound/soc/codecs/hdmi-codec.c
+index b5fd8f08726e..f8b5b960e597 100644
+--- a/sound/soc/codecs/hdmi-codec.c
++++ b/sound/soc/codecs/hdmi-codec.c
+@@ -274,7 +274,7 @@ struct hdmi_codec_priv {
+ 	uint8_t eld[MAX_ELD_BYTES];
+ 	struct snd_pcm_chmap *chmap_info;
+ 	unsigned int chmap_idx;
+-	struct mutex lock;
++	unsigned long busy;
+ 	struct snd_soc_jack *jack;
+ 	unsigned int jack_status;
+ };
+@@ -390,8 +390,8 @@ static int hdmi_codec_startup(struct snd_pcm_substream *substream,
+ 	struct hdmi_codec_priv *hcp = snd_soc_dai_get_drvdata(dai);
+ 	int ret = 0;
+ 
+-	ret = mutex_trylock(&hcp->lock);
+-	if (!ret) {
++	ret = test_and_set_bit(0, &hcp->busy);
++	if (ret) {
+ 		dev_err(dai->dev, "Only one simultaneous stream supported!\n");
+ 		return -EINVAL;
+ 	}
+@@ -419,7 +419,7 @@ static int hdmi_codec_startup(struct snd_pcm_substream *substream,
+ 
+ err:
+ 	/* Release the exclusive lock on error */
+-	mutex_unlock(&hcp->lock);
++	clear_bit(0, &hcp->busy);
+ 	return ret;
+ }
+ 
+@@ -431,7 +431,7 @@ static void hdmi_codec_shutdown(struct snd_pcm_substream *substream,
+ 	hcp->chmap_idx = HDMI_CODEC_CHMAP_IDX_UNKNOWN;
+ 	hcp->hcd.ops->audio_shutdown(dai->dev->parent, hcp->hcd.data);
+ 
+-	mutex_unlock(&hcp->lock);
++	clear_bit(0, &hcp->busy);
+ }
+ 
+ static int hdmi_codec_hw_params(struct snd_pcm_substream *substream,
+@@ -811,8 +811,6 @@ static int hdmi_codec_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 
+ 	hcp->hcd = *hcd;
+-	mutex_init(&hcp->lock);
+-
+ 	daidrv = devm_kcalloc(dev, dai_count, sizeof(*daidrv), GFP_KERNEL);
+ 	if (!daidrv)
+ 		return -ENOMEM;
+-- 
+2.20.1
 
