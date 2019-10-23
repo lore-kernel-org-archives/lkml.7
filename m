@@ -2,290 +2,117 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DC3ECA9EB7
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:06:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4677CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:08:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E94C320679
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:06:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7897E2086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:08:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="a9kbrGD0"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="YDGE49MM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727599AbfJWRG4 (ORCPT
+        id S1727787AbfJWRIA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 13:06:56 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:32927 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726812AbfJWRG4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 13:06:56 -0400
-Received: by mail-qk1-f196.google.com with SMTP id 71so16579013qkl.0
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 10:06:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BmJlh4WyBNl5ujqJykwBJPqFEruvIfpYSLEoPjqEaF0=;
-        b=a9kbrGD0VSKrvdNU25RKScBnDnByLA4+uj/kwwXdk+N2049BF3bn/9X8wxg/ptPAMI
-         QrwmPUCoCr2vlIwbMjD0s94a5ZRtq3UnE85Ty+T7aavcI8LsBUT41tSH+WWsIq3UgEd9
-         3stFaNvJhzE3ykEPC/vWgsyEBZ2BKeKLnlI9tFn/8TyLFcC6n3qMFwmu/pPEtuOzY4ft
-         9PkZkf7Lfy0jsAx2AvV9MKrTU6R2S8hbY86LznBATQx6OVkQO6r5czyyjHCFiL/pKDeL
-         SicEgj+Bq+Kcf5GVp4U+jUi/zO5wIaG7p9Tr5ZJyKdxmp7HFKjaftYR7S0h767gjdxry
-         0z3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BmJlh4WyBNl5ujqJykwBJPqFEruvIfpYSLEoPjqEaF0=;
-        b=P42CHrfVfpuFBf56MVblhNdDU/r02NtYIDJuHnSJ8C53NI6NV0esKl1eWbSZXX5rfb
-         JTtIlD6z6UF74HyjEnMlkrGQUlMaxhsDg74YWgPz8JPmGex5YV3ElTcO03BgJjVU/vSK
-         s070/MkbRi4IQhTAPonoyhCMIr8ajuu+JZENeMfEWaNiFWZnDcxxKQ+zgpOioFRtwJD5
-         qsZe2rfwLj6H1Xto8U21YSHLbUMg2EoztjVnpsfzGtlCMtiAlcFAWo4iDiOlFl02eSav
-         99TCOj6uUc0AvBS+y5tbZAVm68BttTw2hhMms+iIpA76613q9iASUuqr40zwjniTQcEP
-         pJbA==
-X-Gm-Message-State: APjAAAWerD4A/OtI1pMZHjx5umrAVH2NDZMBfefPzwfC2cFEy9txbW0w
-        fDhhYVyX72RehEak7FLRbd0a4tvXwceJidHiAig7Qg==
-X-Google-Smtp-Source: APXvYqwsGOSD5flrnTSltEbjBX/WuFFbqInKkFlUr30Uh1BYrK/uT2f+/aOtrvvxfmcptN3z6ecpULr0sPMFQuf+GTE=
-X-Received: by 2002:a05:620a:16a6:: with SMTP id s6mr8708369qkj.407.1571850414641;
- Wed, 23 Oct 2019 10:06:54 -0700 (PDT)
+        Wed, 23 Oct 2019 13:08:00 -0400
+Received: from mail-eopbgr140072.outbound.protection.outlook.com ([40.107.14.72]:23249
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725796AbfJWRH7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 13:07:59 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=F70pGD5Oppzpv+xpEvw2ONohNW/iRHW9G68oW0Myxm7SWEUXSJNcALmu2/pCQSqcYHWGVBBU7XD0Ll4Rj27uXEAH2RirXlTunUKmukeSfg/002aJ9Ke0Wb5odf17aUC05rIu+xtRst9qwO9nJB40pZzWVX8FzTkGabHZmxz2FARjTRQbX64drloUw0BGTWqXiGJBBursNjPdN31KLGGkxVN67FwQp7K+YibcKveoLMV9xcclT9Fp6U+pwq9vpuku4lRow+OJWwLHqY7eU23nZCqnrvecP/+q3onn8rFNPuPWiypNWSMGT4W588mnbO8ONwZSa0Lm2LTsysP7c44pgw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ojdnikd8BWcYGDJ4hbYJfrEmZfebCvFHBpIpvjHkn5I=;
+ b=Uob2hNsd4R75/9cRQv2G0YEHVoL+0+ItLUwa7aAWYDV5NIypnM9fQWpwJkPfqfyviAl3BrYfsqKuD4hST66vZpkhYG3oKDAuDipSgUd1t6g4daFsgBRzKsgnNEk3CQK9PSNB4Bg6fL/cih50nvvtMpiYiun5by94L8ybx75e8RLelEwZRHtBIvOUMiMxQlwokx/sP9yXLVehvwQ4F4uCSKpYfDN2jTsPEHhEOzcQAUNqcIYHo2NQxHWe7ulSQ2Z/bTXyZiDHT2vgRaZN/Ca+KDZbWITY/oAWH3P2QzQ9mkxQR0IPY18DrMN0pfkN3HuEeIltPnbQhtbpf2hxz25RLw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ojdnikd8BWcYGDJ4hbYJfrEmZfebCvFHBpIpvjHkn5I=;
+ b=YDGE49MMmr56vLzrWriRNIYzv1c3jE0HxyBTgvjAf/mnxw/Bl/XbmxLs+/N8vUWO0ad3Zt8Q+xwXAxUyFwoz1RFDsBtllS75GYxSu96DEvMxwtDMzmB2LLb98gBNu39Tl5OMLyUwM8Y3FN6fNJCxKDMdiVL8VkzQP0qeP3yc5BY=
+Received: from AM6PR0402MB3477.eurprd04.prod.outlook.com (52.133.25.15) by
+ AM6PR0402MB3431.eurprd04.prod.outlook.com (52.133.23.10) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.22; Wed, 23 Oct 2019 17:07:57 +0000
+Received: from AM6PR0402MB3477.eurprd04.prod.outlook.com
+ ([fe80::a1b5:b818:c136:bf86]) by AM6PR0402MB3477.eurprd04.prod.outlook.com
+ ([fe80::a1b5:b818:c136:bf86%6]) with mapi id 15.20.2347.030; Wed, 23 Oct 2019
+ 17:07:57 +0000
+From:   Horia Geanta <horia.geanta@nxp.com>
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
+CC:     Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 3/6] crypto: caam - use devres to de-initialize the RNG
+Thread-Topic: [PATCH v2 3/6] crypto: caam - use devres to de-initialize the
+ RNG
+Thread-Index: AQHViO2kRpecYPaWy0GLIKrqCInqQQ==
+Date:   Wed, 23 Oct 2019 17:07:56 +0000
+Message-ID: <AM6PR0402MB3477E7F4276A90B67A026793986B0@AM6PR0402MB3477.eurprd04.prod.outlook.com>
+References: <20191022153013.3692-1-andrew.smirnov@gmail.com>
+ <20191022153013.3692-4-andrew.smirnov@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=horia.geanta@nxp.com; 
+x-originating-ip: [84.117.251.185]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 9ea74606-7fde-4efa-cdb8-08d757db8cf7
+x-ms-traffictypediagnostic: AM6PR0402MB3431:|AM6PR0402MB3431:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM6PR0402MB34311688E1707662FD2ACECA986B0@AM6PR0402MB3431.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4714;
+x-forefront-prvs: 019919A9E4
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(136003)(39860400002)(396003)(376002)(346002)(189003)(199004)(186003)(6116002)(26005)(7696005)(76176011)(99286004)(53546011)(6506007)(3846002)(7736002)(476003)(486006)(86362001)(74316002)(14454004)(305945005)(102836004)(44832011)(76116006)(66446008)(64756008)(91956017)(66556008)(66476007)(229853002)(6246003)(446003)(66946007)(256004)(6436002)(2906002)(54906003)(25786009)(81156014)(55016002)(5660300002)(66066001)(81166006)(9686003)(52536014)(4326008)(71190400001)(71200400001)(2501003)(33656002)(110136005)(8676002)(316002)(8936002)(478600001)(4744005);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR0402MB3431;H:AM6PR0402MB3477.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: gpDp7TpVvh6BlxH8WZI2Rb30dOGzJ5FuDQ4qSGAfIDNIu35bW9pmt8zrA+LnzeZlvx/D6iN1pyxq5JIR98KCbOk5APkfS6qsFViGFZLoPYCiOv0bK6c50KjUWp0KQiRVlkEZ6trk3Pw0siB/bB4UoTRfwGLnvt2jYTuLTLPDOUQW99crLsw4wiJkOMRXwHuecJcK/Ua9hy5BgLV2OggVcKnCODBEXqh7T/rg81QafBqXnyfMk5QlqnRH4yZQD+kF/oDrXTS9k66DJ0VArbsJ08KBqNjUTM/gfSK0DKgsBDIuyqdtCuOOkjQfR3EtBZPb3Ro4cE2ZWzBJTeXMGYMhLf7h5nbMictHecssDyaR2qH+OGHLFaJGt8G1mPVbAO0cySnv4bVBu46U8zZXyIoTPxtTM+AACBVA1/WVJlKkVfIWoYVegULdmZy6X1vTVWu0
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <000000000000328b2905951a7667@google.com> <CANpmjNPoBBJgMKLEAXs+bPhitF+WygseHgTkSJsuiK8WcsB==g@mail.gmail.com>
- <20191017181709.GA5312@avx2> <CANpmjNOkpOQsmQKYLAJ1iuj6UYJqyY6PRaYXSyWbF=omfnj6Uw@mail.gmail.com>
-In-Reply-To: <CANpmjNOkpOQsmQKYLAJ1iuj6UYJqyY6PRaYXSyWbF=omfnj6Uw@mail.gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Wed, 23 Oct 2019 19:06:43 +0200
-Message-ID: <CACT4Y+YE8BtDJvbPfgDQq-HVwiPkg-7CTD1x8xCzeQTPuNG65Q@mail.gmail.com>
-Subject: Re: KCSAN: data-race in task_dump_owner / task_dump_owner
-To:     Marco Elver <elver@google.com>
-Cc:     Alexey Dobriyan <adobriyan@gmail.com>,
-        syzbot <syzbot+e392f8008a294fdf8891@syzkaller.appspotmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Christian Brauner <christian@brauner.io>,
-        Kees Cook <keescook@chromium.org>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Eric Dumazet <edumazet@google.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9ea74606-7fde-4efa-cdb8-08d757db8cf7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Oct 2019 17:07:56.9809
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Bw0jrxyMKXpHJ1HfkSemwkj+ZvcIt7PTjJl4qAVSjUrUHlVRyya2l2NGKPpg3YDXnDrVMMFUlovu3Sm2ETULPA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0402MB3431
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 8:33 PM 'Marco Elver' via syzkaller-bugs
-<syzkaller-bugs@googlegroups.com> wrote:
->
-> On Thu, 17 Oct 2019 at 20:17, Alexey Dobriyan <adobriyan@gmail.com> wrote:
-> >
-> > On Thu, Oct 17, 2019 at 02:56:47PM +0200, Marco Elver wrote:
-> > > Hi,
-> > >
-> > > On Thu, 17 Oct 2019 at 14:36, syzbot
-> > > <syzbot+e392f8008a294fdf8891@syzkaller.appspotmail.com> wrote:
-> > > >
-> > > > Hello,
-> > > >
-> > > > syzbot found the following crash on:
-> > > >
-> > > > HEAD commit:    d724f94f x86, kcsan: Enable KCSAN for x86
-> > > > git tree:       https://github.com/google/ktsan.git kcsan
-> > > > console output: https://syzkaller.appspot.com/x/log.txt?x=17884db3600000
-> > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=c0906aa620713d80
-> > > > dashboard link: https://syzkaller.appspot.com/bug?extid=e392f8008a294fdf8891
-> > > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > > >
-> > > > Unfortunately, I don't have any reproducer for this crash yet.
-> > > >
-> > > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > > > Reported-by: syzbot+e392f8008a294fdf8891@syzkaller.appspotmail.com
-> > > >
-> > > > ==================================================================
-> > > > BUG: KCSAN: data-race in task_dump_owner / task_dump_owner
-> > > >
-> > > > write to 0xffff8881255bb7fc of 4 bytes by task 7804 on cpu 0:
-> > > >   task_dump_owner+0xd8/0x260 fs/proc/base.c:1742
-> > > >   pid_update_inode+0x3c/0x70 fs/proc/base.c:1818
-> > > >   pid_revalidate+0x91/0xd0 fs/proc/base.c:1841
-> > > >   d_revalidate fs/namei.c:765 [inline]
-> > > >   d_revalidate fs/namei.c:762 [inline]
-> > > >   lookup_fast+0x7cb/0x7e0 fs/namei.c:1613
-> > > >   walk_component+0x6d/0xe80 fs/namei.c:1804
-> > > >   link_path_walk.part.0+0x5d3/0xa90 fs/namei.c:2139
-> > > >   link_path_walk fs/namei.c:2070 [inline]
-> > > >   path_openat+0x14f/0x3530 fs/namei.c:3532
-> > > >   do_filp_open+0x11e/0x1b0 fs/namei.c:3563
-> > > >   do_sys_open+0x3b3/0x4f0 fs/open.c:1089
-> > > >   __do_sys_open fs/open.c:1107 [inline]
-> > > >   __se_sys_open fs/open.c:1102 [inline]
-> > > >   __x64_sys_open+0x55/0x70 fs/open.c:1102
-> > > >   do_syscall_64+0xcf/0x2f0 arch/x86/entry/common.c:296
-> > > >   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> > > >
-> > > > write to 0xffff8881255bb7fc of 4 bytes by task 7813 on cpu 1:
-> > > >   task_dump_owner+0xd8/0x260 fs/proc/base.c:1742
-> > > >   pid_update_inode+0x3c/0x70 fs/proc/base.c:1818
-> > > >   pid_revalidate+0x91/0xd0 fs/proc/base.c:1841
-> > > >   d_revalidate fs/namei.c:765 [inline]
-> > > >   d_revalidate fs/namei.c:762 [inline]
-> > > >   lookup_fast+0x7cb/0x7e0 fs/namei.c:1613
-> > > >   walk_component+0x6d/0xe80 fs/namei.c:1804
-> > > >   lookup_last fs/namei.c:2271 [inline]
-> > > >   path_lookupat.isra.0+0x13a/0x5a0 fs/namei.c:2316
-> > > >   filename_lookup+0x145/0x2d0 fs/namei.c:2346
-> > > >   user_path_at_empty+0x4c/0x70 fs/namei.c:2606
-> > > >   user_path_at include/linux/namei.h:60 [inline]
-> > > >   vfs_statx+0xd9/0x190 fs/stat.c:187
-> > > >   vfs_stat include/linux/fs.h:3188 [inline]
-> > > >   __do_sys_newstat+0x51/0xb0 fs/stat.c:341
-> > > >   __se_sys_newstat fs/stat.c:337 [inline]
-> > > >   __x64_sys_newstat+0x3a/0x50 fs/stat.c:337
-> > > >   do_syscall_64+0xcf/0x2f0 arch/x86/entry/common.c:296
-> > > >   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> > > >
-> > > > Reported by Kernel Concurrency Sanitizer on:
-> > > > CPU: 1 PID: 7813 Comm: ps Not tainted 5.3.0+ #0
-> > > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> > > > Google 01/01/2011
-> > > > ==================================================================
-> > >
-> > > My understanding is, that for every access to /proc/<pid>,
-> > > d_revalidate is called, and /proc-fs implementation simply says that
-> > > pid_revalidate always revalidates by rewriting uid/gid because "owning
-> > > task may have performed a setuid(), etc." presumably so every access
-> > > to a /proc/<pid> entry always has the right uid/gid (in effect
-> > > updating /proc/<pid> lazily via d_revalidate).
-> > >
-> > > Is it possible that one of the tasks above could be preempted after
-> > > doing its writes to *ruid/*rgid, another thread writing some other
-> > > values (after setuid / seteuid), and then the preempted thread seeing
-> > > the other values? Assertion here should never fail:
-> > > === TASK 1 ===
-> > > | seteuid(1000);
-> > > | seteuid(0);
-> > > | stat("/proc/<pid-of-task-1>", &fstat);
-> > > | assert(fstat.st_uid == 0);
-> > > === TASK 2 ===
-> > > | stat("/proc/<pid-of-task-1>", ...);
-> >
-> > Is it the same as
-> > pid_revalidate() snapshots (uid,gid) correctly
-> > but writeback is done in any order?
->
-> Yes, I think so. Snapshot is done in RCU reader critical section, but
-> the writes can race with another thread. Is there logic that ensures
-> this doesn't lead to the observable outcome above?
-
-
-I found the case where this leads to an observable bug.
-common_perm_cond() in security/apparmor/lsm.c reads the inode uid and
-uses it for the security check:
-
-static int common_perm_cond(const char *op, const struct path *path, u32 mask)
-{
-      struct path_cond cond = { d_backing_inode(path->dentry)->i_uid,
-
-d_backing_inode(path->dentry)->i_mode
-      };
-
-Now consider the following test program:
-
-#define _GNU_SOURCE
-#include <stdio.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <pthread.h>
-
-void *thr(void *arg)
-{
-        for (;;) {
-                struct stat file_stat;
-                stat((char*)arg, &file_stat);
-        }
-        return 0;
-}
-
-int main(int argc, char *argv[])
-{
-        char proc[32];
-        sprintf(proc, "/proc/%d", getpid());
-        printf("%s\n", proc);
-        pthread_t th;
-        pthread_create(&th, 0, thr, proc);
-        for (;;) {
-                seteuid(1000);
-                usleep(1);
-                seteuid(0);
-                struct stat file_stat;
-                stat(proc, &file_stat);
-        }
-        return 0;
-}
-
-Whenever the main thread does stat, it must observe inode.uid == 0 in
-common_perm_cond().
-
-But since task_dump_owner() does writeback out of order, it can lead
-to non-linearizable executions and main thread observing inode.uid ==
-1000.
-This in turn can lead to both false negatives and false positives from
-AppArmour (false denying access and falsely permitting access).
-
-I don't know how to setup actual AppArmour profile to do this, but I
-see this guide mentions "owner @{PROC}/[0-9]*" in a policy, so I
-assume it's possible:
-https://gitlab.com/apparmor/apparmor/wikis/Profiling_by_hand
-
-Instead, I added the following check to common_perm_cond() (it's
-dirty, but you get the idea):
-
-@@ -218,6 +218,15 @@ static int common_perm_cond(const char *op, const
-struct path *path, u32 mask)
-                                  d_backing_inode(path->dentry)->i_mode
-        };
-+       if (op == OP_GETATTR && mask == AA_MAY_GETATTR && cond.uid.val != 0) {
-+               char buf1[64], buf2[64];
-+               char *str = d_path(path, buf1, sizeof(buf1));
-+               sprintf(buf2, "/proc/%d", current->pid);
-+               if (!strcmp(str, buf2))
-+                       pr_err("common_perm_cond: path=%s pid=%d uid=%d\n",
-+                               str, current->pid, cond.uid.val);
-+       }
-
-Now when I run the program, I see how it fires every few seconds:
-
-# ./a.out
-/proc/1548
-[  123.233107] common_perm_cond: path=/proc/1548 pid=1548 uid=1000
-[  126.142869] common_perm_cond: path=/proc/1548 pid=1548 uid=1000
-[  127.048353] common_perm_cond: path=/proc/1548 pid=1548 uid=1000
-[  128.181873] common_perm_cond: path=/proc/1548 pid=1548 uid=1000
-[  128.557104] common_perm_cond: path=/proc/1548 pid=1548 uid=1000
-[  144.690774] common_perm_cond: path=/proc/1548 pid=1548 uid=1000
-
-Which means AppArmour acts based on the wrong UID. Obviously can lead
-to falsely denying access, but also falsely permitting access.
-Consider the following scenario.
-A process sets owner UID on a file so that a child process won't be
-able to access it, after that it starts the child process.
-common_perm_cond() in the child process should observe the new owner
-UID. However, if there a random other process simply doing stat() or
-something similar on the file, now the common_perm_cond() in the child
-can suddenly observe the old UID, which will be permitted by
-AppArmour. Boom!
-
-I've tried to apply "proc: fix inode uid/gid writeback race":
-https://lore.kernel.org/lkml/20191020173010.GA14744@avx2/
-but it does _not_ help because it does not really resolve the
-non-atomic snapshot and writeback of UID.
+On 10/22/2019 6:30 PM, Andrey Smirnov wrote:=0A=
+> Use devres to de-initialize the RNG and drop explicit de-initialization=
+=0A=
+> code in caam_remove().=0A=
+> =0A=
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>=0A=
+> Cc: Chris Healy <cphealy@gmail.com>=0A=
+> Cc: Lucas Stach <l.stach@pengutronix.de>=0A=
+> Cc: Horia Geant=E3 <horia.geanta@nxp.com>=0A=
+> Cc: Herbert Xu <herbert@gondor.apana.org.au>=0A=
+> Cc: Iuliana Prodan <iuliana.prodan@nxp.com>=0A=
+> Cc: linux-crypto@vger.kernel.org=0A=
+> Cc: linux-kernel@vger.kernel.org=0A=
+Reviewed-by: Horia Geant=E3 <horia.geanta@nxp.com>=0A=
+=0A=
+Thanks,=0A=
+Horia=0A=
