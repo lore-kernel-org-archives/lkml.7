@@ -2,137 +2,64 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 543A9CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:37:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AE31CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:38:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2845C2064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:37:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571845075;
-	bh=4CP2ycU+E6K5fjkBXPL4B0R3el922R8lqyX1rX3+y/Q=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=gtC23gI0WS9x28Kvk9PshpFJprZZi/O+tNCoO9Jx0ZSukblmr2xKgcGrui5pkgpKV
-	 iOPbVAkuTqCj7A91vvPNwkPBytp4WfoPXnmGIegtsZ7Ir6EOtNwuDp2WBpuFhSVTfB
-	 ZwDitMWSQVgmtqvZy8M41FH6rXcp6Uva6hsiZl6M=
+	by mail.kernel.org (Postfix) with ESMTP id 5DCFB2064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:38:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="iPF6zM0x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392495AbfJWPhx (ORCPT
+        id S2406679AbfJWPiF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 11:37:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36316 "EHLO mail.kernel.org"
+        Wed, 23 Oct 2019 11:38:05 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:59818 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390400AbfJWPhx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 11:37:53 -0400
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60F0021A4A;
-        Wed, 23 Oct 2019 15:37:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571845071;
-        bh=4CP2ycU+E6K5fjkBXPL4B0R3el922R8lqyX1rX3+y/Q=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=xhyz2fKUP6xWdPpOnNhE3QoNFZoi+xgI4KmrIfstsv2MJRBuQBMfqeIM3T6W+k3Oc
-         FavuXjHQcKWIUbvYRpaTAgd6FdTC7wpqrCck3u4UY+r/7eIFezjnRVbmxlsXbNEiVr
-         Ngz7TndveHL0+z8GdQDpYm9AwCVPxqyad/8D8YBA=
-Received: by mail-qk1-f181.google.com with SMTP id 71so16291186qkl.0;
-        Wed, 23 Oct 2019 08:37:51 -0700 (PDT)
-X-Gm-Message-State: APjAAAV2tiDh4VoehHaN+jgmTRuBDdn5hfj8I5l/TMbJGsqxzDa5mYWz
-        aBIIWQOpLWGxhzRKpy+ttli7GmGmR0B2wH8Lng==
-X-Google-Smtp-Source: APXvYqxHwHxGB2KG39VmZoeZDpBh35nE31eyksvPPkWeP0mtHx0PqbFk5yhV6ecorTgDYforRDBf+vXgZrZpHZA43ms=
-X-Received: by 2002:a05:620a:12f1:: with SMTP id f17mr9010262qkl.152.1571845070465;
- Wed, 23 Oct 2019 08:37:50 -0700 (PDT)
+        id S2390140AbfJWPiE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 11:38:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=V3oDxr418GNArABHMwXWMqzw6a3zK7l1rUhwHe5yV+s=; b=iPF6zM0xmLLT26VQxQ2zDfozH6
+        Ufu9tk0izsRMbMRFuECX4f57dbespw4Njlr/xJPGeq68YebbFOw8Xj9T0O+y+tyD0VunoMF1NuFox
+        lGCahVUDmQuh4XIbsHjitNtcznHHv/WYZQ4/l6gBel6v2nWXsWav5UMM5b8RCVR5DLiQ=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1iNIhz-0007MJ-3W; Wed, 23 Oct 2019 17:37:59 +0200
+Date:   Wed, 23 Oct 2019 17:37:59 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] net: phy: dp83867: move dt parsing to probe
+Message-ID: <20191023153759.GA13748@lunn.ch>
+References: <20191023144846.1381-1-grygorii.strashko@ti.com>
+ <20191023144846.1381-3-grygorii.strashko@ti.com>
 MIME-Version: 1.0
-References: <BY5PR04MB6599EAA659A53B2331CB812586890@BY5PR04MB6599.namprd04.prod.outlook.com>
-In-Reply-To: <BY5PR04MB6599EAA659A53B2331CB812586890@BY5PR04MB6599.namprd04.prod.outlook.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 23 Oct 2019 10:37:38 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJxcUr06+O_Ht5Kw0KXCWfSVC+6WMQqNxt-JehHh874hw@mail.gmail.com>
-Message-ID: <CAL_JsqJxcUr06+O_Ht5Kw0KXCWfSVC+6WMQqNxt-JehHh874hw@mail.gmail.com>
-Subject: Re: [PATCH v6 1/2] dt-bindings: edac: arm-dmc520.txt
-To:     Lei Wang <leiwang_git@outlook.com>
-Cc:     "bp@alien8.de" <bp@alien8.de>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "hangl@microsoft.com" <hangl@microsoft.com>,
-        "lewan@microsoft.com" <lewan@microsoft.com>,
-        "ruizhao@microsoft.com" <ruizhao@microsoft.com>,
-        "scott.branden@broadcom.com" <scott.branden@broadcom.com>,
-        "yuqing.shen@broadcom.com" <yuqing.shen@broadcom.com>,
-        "ray.jui@broadcom.com" <ray.jui@broadcom.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191023144846.1381-3-grygorii.strashko@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 19, 2019 at 1:37 PM Lei Wang <leiwang_git@outlook.com> wrote:
->
-> This is the device tree bindings for new EDAC driver dmc520_edac.c.
->
-> Signed-off-by: Lei Wang <leiwang_git@outlook.com>
-> Reviewed-by: James Morse <james.morse@arm.com>
->
-> ---
->     No change in v6.
-> ---
->  .../devicetree/bindings/edac/arm-dmc520.txt   | 26 +++++++++++++++++++
->  1 file changed, 26 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/edac/arm-dmc520.txt
->
-> diff --git a/Documentation/devicetree/bindings/edac/arm-dmc520.txt b/Documentation/devicetree/bindings/edac/arm-dmc520.txt
-> new file mode 100644
-> index 000000000000..71e7aa32971a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/edac/arm-dmc520.txt
-> @@ -0,0 +1,26 @@
-> +* ARM DMC-520 EDAC node
-> +
-> +Required properties:
-> +- compatible           : "brcm,dmc-520", "arm,dmc-520".
-> +- reg                  : Address range of the DMC-520 registers.
-> +- interrupts           : DMC-520 interrupt numbers. The example below specifies
-> +                         two interrupt lines for dram_ecc_errc_int and
-> +                         dram_ecc_errd_int.
-> +- interrupt-config     : This is an array of interrupt masks. For each of the
+On Wed, Oct 23, 2019 at 05:48:46PM +0300, Grygorii Strashko wrote:
+> Move DT parsing code to probe dp83867_probe() as it's one time operation.
+> 
+> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 
-Not a standard property, so would need a vendor prefix...
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-> +                         above interrupt line, add one interrupt mask element to
-> +                         it. That is, there is a 1:1 mapping from each interrupt
-> +                         line to an interrupt mask. An interrupt mask can represent
-> +                         multiple interrupts being enabled. Refer to interrupt_control
-> +                         register in DMC-520 TRM for interrupt mapping. In the example
-> +                         below, the interrupt configuration enables dram_ecc_errc_int
-> +                         and dram_ecc_errd_int. And each interrupt is connected to
-> +                         a separate interrupt line.
-
-I've gone and read thru the TRM some. This binding doesn't seem to
-correspond to the TRM at all. There are a bunch of interrupts and a
-combined interrupt, and then there's the same set for 'overflow'
-interrupts.
-
-There's only one 'interrupt_control' reg. How do you have more that 1
-32-bit value?
-
-> +
-> +Example:
-> +
-> +dmc0: dmc@200000 {
-> +       compatible = "brcm,dmc-520", "arm,dmc-520";
-> +       reg = <0x200000 0x80000>;
-> +       interrupts = <0x0 0x349 0x4>, <0x0 0x34B 0x4>;
-> +       interrupt-config = <0x4>, <0x8>;
-> +};
-> --
-> 2.17.1
->
+    Andrew
