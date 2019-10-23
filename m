@@ -2,84 +2,98 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D527CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:01:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 896C5CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:03:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D3042084B
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:01:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D07821906
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:03:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gHIg3gQn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390112AbfJWIBO (ORCPT
+        id S2390123AbfJWIDW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 04:01:14 -0400
-Received: from mga02.intel.com ([134.134.136.20]:2100 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732328AbfJWIBO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 04:01:14 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 01:01:13 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,220,1569308400"; 
-   d="scan'208";a="228034694"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga002.fm.intel.com with ESMTP; 23 Oct 2019 01:01:10 -0700
-Received: from andy by smile with local (Exim 4.92.2)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1iNBZt-0007Av-8P; Wed, 23 Oct 2019 11:01:09 +0300
-Date:   Wed, 23 Oct 2019 11:01:09 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Yury Norov <yury.norov@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>
-Subject: Re: [PATCH v2 10/11] gpio: pca953x: Convert to use bitmap API
-Message-ID: <20191023080109.GK32742@smile.fi.intel.com>
-References: <20191022172922.61232-1-andriy.shevchenko@linux.intel.com>
- <20191022172922.61232-11-andriy.shevchenko@linux.intel.com>
- <CAMuHMdUUvVdg8w0evV4zjrqis9e9Jak_qTnkufYT5wQHUn9j-A@mail.gmail.com>
+        Wed, 23 Oct 2019 04:03:22 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:38727 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390069AbfJWIDV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 04:03:21 -0400
+Received: by mail-ot1-f68.google.com with SMTP id e11so16617454otl.5
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 01:03:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6uunPk4FRGMVRF/7mka4EzN9Nm4HV/2M2f5HwcfgzDg=;
+        b=gHIg3gQn71VKU1Zb5o/Bjl3AtqVaiUFOBs/9yFdHsyR5Cp3O9qFur0Z7Yp6eGhpSJP
+         zwARXUjs2v0bUpgfQNpyh3eSjlOfqyeklONDjphVP78YlJqbsj6txItzZMqz4fLMkXjE
+         ujdJRD/EJ6Dn4eD61vueYzyHTWA2nMju0JbBrdnWyHj3k0z5rIMg6SaSDLL/aGtcsJyz
+         mM79AoUbEry+9j1JIloGvt49aoCGf7Gc5GT1Lt07h+2w635KjXjOVVq/P8OhlKbEhx/9
+         sb6SUs2Kmy//iuqTRXE9jU1OwV+XtPfM1lxotMBnnPjKkStTZ/JgbvF6bo4zsjRaxsII
+         7J3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6uunPk4FRGMVRF/7mka4EzN9Nm4HV/2M2f5HwcfgzDg=;
+        b=cwKLMLcj55Tc5L7HVfFr0x+b/M0E/UEmSOddFTz52dYfA1PpuR6UDqpRw93Ld9MDfv
+         i5KrsV6VhoC1noUHnW8ia66R+kQNubLnG/rig0g6rA05k/seZ3Rvek4qp4QjiVmiH++0
+         01bHP0K28IELtIGNY+GcQWGC7rSIqN/iAu+hiVyw6fWvC4jRYvQITM8zTQme6GCvBbJz
+         MR+uKT5exfZllNLHXTOmEg7oxfL7gp9PlqLNfWZzshpN5ZBscmzO0Y7pKnBSw/EiEf5O
+         ZddQhOXYNgvZoYEgA+H0cquFmlminn6VIvsxZOVz3cyuJJPuaP7k6quG9t6ZLfuRIvsS
+         nz3w==
+X-Gm-Message-State: APjAAAWE8YmgjS2iQyD0ENH470+ibR5WJWDzt8tcYERGGiJuTb+SDOv5
+        9yBw8M4TCI01n1tGh1k1XxkHEqy47rZUgv+/jiPHXg==
+X-Google-Smtp-Source: APXvYqyfHE/ivBJeAMwtq+xDy7lllkwK/zu3sWWZGYeVM4ARAomhLhU7HXNGvp44TV8sDYdi8DuU8C7CCvatK56LIEM=
+X-Received: by 2002:a9d:7d12:: with SMTP id v18mr4015609otn.103.1571817800353;
+ Wed, 23 Oct 2019 01:03:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdUUvVdg8w0evV4zjrqis9e9Jak_qTnkufYT5wQHUn9j-A@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191023063103.44941-1-maowenan@huawei.com>
+In-Reply-To: <20191023063103.44941-1-maowenan@huawei.com>
+From:   Tzung-Bi Shih <tzungbi@google.com>
+Date:   Wed, 23 Oct 2019 16:03:07 +0800
+Message-ID: <CA+Px+wU5UrVC0pk5pbfGTdVsh7OHcBx_MhbC3Bjmj_+zgn54PQ@mail.gmail.com>
+Subject: Re: [PATCH] ASoC: mediatek: Check SND_SOC_CROS_EC_CODEC dependency
+To:     Mao Wenan <maowenan@huawei.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        =?UTF-8?B?U2h1bmxpIFdhbmcgKOeOi+mhuuWIqSk=?= 
+        <shunli.wang@mediatek.com>, yuehaibing@huawei.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        tglx@linutronix.de, KaiChieh Chuang <kaichieh.chuang@mediatek.com>,
+        ALSA development <alsa-devel@alsa-project.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, kernel-janitors@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 08:03:00PM +0200, Geert Uytterhoeven wrote:
-> On Tue, Oct 22, 2019 at 7:29 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > Instead of customized approach convert the driver to use bitmap API.
+On Wed, Oct 23, 2019 at 2:31 PM Mao Wenan <maowenan@huawei.com> wrote:
+>
+> If SND_SOC_MT8183_MT6358_TS3A227E_MAX98357A=y,
+> below errors can be seen:
+> sound/soc/codecs/cros_ec_codec.o: In function `send_ec_host_command':
+> cros_ec_codec.c:(.text+0x534): undefined reference to `cros_ec_cmd_xfer_status'
+> cros_ec_codec.c:(.text+0x101c): undefined reference to `cros_ec_get_host_event'
+>
+> This is because it will select SND_SOC_CROS_EC_CODEC
+> after commit 2cc3cd5fdc8b ("ASoC: mediatek: mt8183: support WoV"),
+> but SND_SOC_CROS_EC_CODEC depends on CROS_EC.
+>
+> Fixes: 2cc3cd5fdc8b ("ASoC: mediatek: mt8183: support WoV")
+> Signed-off-by: Mao Wenan <maowenan@huawei.com>
 
-> >  #define MAX_BANK 5
-> >  #define BANK_SZ 8
-> > +#define MAX_LINE       (MAX_BANK * BANK_SZ)
-> 
-> Given (almost) everything is now bitmap (i.e. long [])-based, you might
-> as well increase MAX_BANK to a multiple of 4 or 8, e.g. 8.
+Acked-by: Tzung-Bi Shih <tzungbi@google.com>
 
-We can do it any time when we will really need it.
-
-(Yes, I understand that we have no penalty for the change anyway)
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Thanks for the catching.
