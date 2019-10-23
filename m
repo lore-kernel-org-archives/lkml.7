@@ -2,300 +2,174 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FEBCC47E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 00:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1144EC47E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 00:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3425320B7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 00:07:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571789278;
-	bh=iWTiPNGy+UUhaAxufA2FQEzKoDPYx/bdR41aBLqfImo=;
-	h=Date:From:To:Subject:List-ID:From;
-	b=KG/AbbkNEeCMYleCRzfD6Mv0XC7Xf6I1LdOrRDgEeOniIiNampIwJgYQaneNWUUmQ
-	 +qAXk2yesaQyR7FRWzbL7zP4XjSwTXT1esg2KE0zhLlYLDgcdIZgMX1PxvbobC9iwW
-	 teCYU0xAknnGzN0QUlBi8tt+ALN0I6uVu3Cej1I0=
+	by mail.kernel.org (Postfix) with ESMTP id CBD0920B7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 00:08:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I65uEKOP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731909AbfJWAH4 (ORCPT
+        id S1731993AbfJWAI2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 20:07:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50078 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727140AbfJWAH4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 20:07:56 -0400
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF7D32084B;
-        Wed, 23 Oct 2019 00:07:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571789275;
-        bh=iWTiPNGy+UUhaAxufA2FQEzKoDPYx/bdR41aBLqfImo=;
-        h=Date:From:To:Subject:From;
-        b=zPVqh/RxADCB5UcG5acNZna1TJPQyOAt3cMimje8OtUYeHzhXyJ/hy84BrAw6c4WE
-         /yxj0JcHe2JFf+BDsIdw6gt2Zblge1DBFYGbcPbFGr+YSryov2FkDaf1DiiH91W5Px
-         joCiqXH35dx+MPAMzgpETZk9MWWDpbEo8EKhdmrE=
-Date:   Tue, 22 Oct 2019 17:07:54 -0700
-From:   akpm@linux-foundation.org
-To:     broonie@kernel.org, mhocko@suse.cz, sfr@canb.auug.org.au,
-        linux-next@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        mm-commits@vger.kernel.org
-Subject:  mmotm 2019-10-22-17-07 uploaded
-Message-ID: <20191023000754.2M2KY%akpm@linux-foundation.org>
-User-Agent: s-nail v14.9.11
+        Tue, 22 Oct 2019 20:08:28 -0400
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:45967 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727960AbfJWAI2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 20:08:28 -0400
+Received: by mail-yw1-f67.google.com with SMTP id x65so6853247ywf.12
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 17:08:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gwswcDh5bJ2bT2C14GST9xfOvFECPkeSkCMn/Gf+Iag=;
+        b=I65uEKOP1nbsrV1NBkO4Is/QD8xWqYkYP+7YR78ahSMhdSLdutBNFrrAGINV5xwia9
+         hcYOWYimdjD+ZqSlGvlHABBtfxvyZrSRk660wM6yIqABizn99/xaGQJxYJFoT82vZHu1
+         1AHmCnZZXgP3oAErl7Uiwq8lFYPWjX6t9a6YvLrDoe7FeAmcKpkt61zq1FhxrUZeYLJv
+         +FVDY0zAmXNXM/W6Z+gMMkPirS1LKZY4eLc2+26ez0k/jM1Ao/zcPifBZHOc6U+Ks1zY
+         9vfRuBnkZinVPuSNZjtRkgw3EdM90ULjEjcdrXCtc5U6CqJ/GnzPWFQD3OyZ8vbH3E9i
+         TpGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gwswcDh5bJ2bT2C14GST9xfOvFECPkeSkCMn/Gf+Iag=;
+        b=GlvxuHfQUN0/7kEF0zgOCRCLeESueSXN/7zTzwQy9irQK57nQkMGLzbVFBXSuuEFf9
+         jeBa3FP5tSLLpuMNOFzZggururS9qazLEx32iP680nhNeznodstqezb7I2KIbIxq57Gl
+         E+aedjrPNkDrcbHYDen8sWkLzBxzvSa7r/ELeatQwywvM9XlghHGpV2lyUNdKamkdynj
+         ixgfGZkt3SFOQtcUui8EI9/NBPfkJ5B6eyCUY0Ltg+U8O/aKj3K62JiwzY+czSf624cd
+         Ip4AszwPhxLG6zYRQz0vpF7psFa6l9y3nW6HpXW2QUNlue7FevRckdDmTtyw9KBfOtad
+         y5CA==
+X-Gm-Message-State: APjAAAUH0lrdxUgpQt3t7j1YabnjJWnd3OeSOxS53Dzarz+BWs+0Ikzu
+        lJdLc+H9kB0YnHmDf9ZvJuTXUGFV8vRbzBHpsdZR5g==
+X-Google-Smtp-Source: APXvYqw/vLI4wyle5SOG0ri01u7tHHlrq9svEB89OCfd5IrD54quGW4uI1wIMYXqPmjUV3dn7URF2xqaPTgdPZnWBbg=
+X-Received: by 2002:a81:c8c:: with SMTP id 134mr855677ywm.205.1571789307033;
+ Tue, 22 Oct 2019 17:08:27 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191022233708.365764-1-hannes@cmpxchg.org>
+In-Reply-To: <20191022233708.365764-1-hannes@cmpxchg.org>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Tue, 22 Oct 2019 17:08:15 -0700
+Message-ID: <CALvZod7EPi+vt-C8_uAtzybpnkP_yqvWaO7AJ24K9EkFH3oAJA@mail.gmail.com>
+Subject: Re: [PATCH] mm: memcontrol: fix network errors from failing
+ __GFP_ATOMIC charges
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>, Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Cgroups <cgroups@vger.kernel.org>, netdev@vger.kernel.org,
+        Kernel Team <kernel-team@fb.com>,
+        Suleiman Souhlal <suleiman@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The mm-of-the-moment snapshot 2019-10-22-17-07 has been uploaded to
++Suleiman Souhlal
 
-   http://www.ozlabs.org/~akpm/mmotm/
+On Tue, Oct 22, 2019 at 4:37 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
+>
+> While upgrading from 4.16 to 5.2, we noticed these allocation errors
+> in the log of the new kernel:
+>
+> [ 8642.253395] SLUB: Unable to allocate memory on node -1, gfp=0xa20(GFP_ATOMIC)
+> [ 8642.269170]   cache: tw_sock_TCPv6(960:helper-logs), object size: 232, buffer size: 240, default order: 1, min order: 0
+> [ 8642.293009]   node 0: slabs: 5, objs: 170, free: 0
+>
+>         slab_out_of_memory+1
+>         ___slab_alloc+969
+>         __slab_alloc+14
+>         kmem_cache_alloc+346
+>         inet_twsk_alloc+60
+>         tcp_time_wait+46
+>         tcp_fin+206
+>         tcp_data_queue+2034
+>         tcp_rcv_state_process+784
+>         tcp_v6_do_rcv+405
+>         __release_sock+118
+>         tcp_close+385
+>         inet_release+46
+>         __sock_release+55
+>         sock_close+17
+>         __fput+170
+>         task_work_run+127
+>         exit_to_usermode_loop+191
+>         do_syscall_64+212
+>         entry_SYSCALL_64_after_hwframe+68
+>
+> accompanied by an increase in machines going completely radio silent
+> under memory pressure.
+>
+> One thing that changed since 4.16 is e699e2c6a654 ("net, mm: account
+> sock objects to kmemcg"), which made these slab caches subject to
+> cgroup memory accounting and control.
+>
+> The problem with that is that cgroups, unlike the page allocator, do
+> not maintain dedicated atomic reserves. As a cgroup's usage hovers at
+> its limit, atomic allocations - such as done during network rx - can
+> fail consistently for extended periods of time. The kernel is not able
+> to operate under these conditions.
+>
+> We don't want to revert the culprit patch, because it indeed tracks a
+> potentially substantial amount of memory used by a cgroup.
+>
+> We also don't want to implement dedicated atomic reserves for cgroups.
+> There is no point in keeping a fixed margin of unused bytes in the
+> cgroup's memory budget to accomodate a consumer that is impossible to
+> predict - we'd be wasting memory and get into configuration headaches,
+> not unlike what we have going with min_free_kbytes. We do this for
+> physical mem because we have to, but cgroups are an accounting game.
+>
+> Instead, account these privileged allocations to the cgroup, but let
+> them bypass the configured limit if they have to. This way, we get the
+> benefits of accounting the consumed memory and have it exert pressure
+> on the rest of the cgroup, but like with the page allocator, we shift
+> the burden of reclaimining on behalf of atomic allocations onto the
+> regular allocations that can block.
+>
+> Cc: stable@kernel.org # 4.18+
+> Fixes: e699e2c6a654 ("net, mm: account sock objects to kmemcg")
+> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
 
-mmotm-readme.txt says
+Reviewed-by: Shakeel Butt <shakeelb@google.com>
 
-README for mm-of-the-moment:
+> ---
+>  mm/memcontrol.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+>
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index 8090b4c99ac7..c7e3e758c165 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -2528,6 +2528,15 @@ static int try_charge(struct mem_cgroup *memcg, gfp_t gfp_mask,
+>                 goto retry;
+>         }
+>
+> +       /*
+> +        * Memcg doesn't have a dedicated reserve for atomic
+> +        * allocations. But like the global atomic pool, we need to
+> +        * put the burden of reclaim on regular allocation requests
+> +        * and let these go through as privileged allocations.
+> +        */
+> +       if (gfp_mask & __GFP_ATOMIC)
+> +               goto force;
+> +
 
-http://www.ozlabs.org/~akpm/mmotm/
+Actually we (Google) already have a similar internal patch where we
+check for __GFP_HIGH and then go for force charging with similar
+reasoning.
 
-This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
-more than once a week.
-
-You will need quilt to apply these patches to the latest Linus release (5.x
-or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
-http://ozlabs.org/~akpm/mmotm/series
-
-The file broken-out.tar.gz contains two datestamp files: .DATE and
-.DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss,
-followed by the base kernel version against which this patch series is to
-be applied.
-
-This tree is partially included in linux-next.  To see which patches are
-included in linux-next, consult the `series' file.  Only the patches
-within the #NEXT_PATCHES_START/#NEXT_PATCHES_END markers are included in
-linux-next.
-
-
-A full copy of the full kernel tree with the linux-next and mmotm patches
-already applied is available through git within an hour of the mmotm
-release.  Individual mmotm releases are tagged.  The master branch always
-points to the latest release, so it's constantly rebasing.
-
-	https://github.com/hnaz/linux-mm
-
-The directory http://www.ozlabs.org/~akpm/mmots/ (mm-of-the-second)
-contains daily snapshots of the -mm tree.  It is updated more frequently
-than mmotm, and is untested.
-
-A git copy of this tree is also available at
-
-	https://github.com/hnaz/linux-mm
-
-
-
-This mmotm tree contains the following patches against 5.4-rc4:
-(patches marked "*" will be included in linux-next)
-
-  origin.patch
-* proc-kpageflags-prevent-an-integer-overflow-in-stable_page_flags.patch
-* proc-kpageflags-do-not-use-uninitialized-struct-pages.patch
-* mmthp-recheck-each-page-before-collapsing-file-thp.patch
-* mmthp-recheck-each-page-before-collapsing-file-thp-v4.patch
-* mm-memcontrol-fix-null-ptr-deref-in-percpu-stats-flush.patch
-* mm-gup_benchmark-fix-map_hugetlb-case.patch
-* mm-meminit-recalculate-pcpu-batch-and-high-limits-after-init-completes.patch
-* mm-thp-handle-page-cache-thp-correctly-in-pagetranscompoundmap.patch
-* ocfs2-protect-extent-tree-in-the-ocfs2_prepare_inode_for_write.patch
-* ocfs2-protect-extent-tree-in-the-ocfs2_prepare_inode_for_write-checkpatch-fixes.patch
-* ocfs2-remove-unused-function-ocfs2_prepare_inode_for_refcount.patch
-* ocfs2-fix-passing-zero-to-ptr_err-warning.patch
-* ramfs-support-o_tmpfile.patch
-  mm.patch
-* mm-slab-make-kmalloc_info-contain-all-types-of-names.patch
-* mm-slab-remove-unused-kmalloc_size.patch
-* mm-slab_common-use-enum-kmalloc_cache_type-to-iterate-over-kmalloc-caches.patch
-* mm-slub-print-the-offset-of-fault-addresses.patch
-* mm-update-comments-in-slubc.patch
-* mm-gup-allow-cma-migration-to-propagate-errors-back-to-caller.patch
-* mm-swap-disallow-swapon-on-zoned-block-devices.patch
-* mm-swap-disallow-swapon-on-zoned-block-devices-fix.patch
-* mm-trivial-mark_page_accessed-cleanup.patch
-* mm-memcg-clean-up-reclaim-iter-array.patch
-* mm-vmscan-expose-cgroup_ino-for-memcg-reclaim-tracepoints.patch
-* mm-memcontrol-remove-dead-code-from-memory_max_write.patch
-* mm-memcontrol-try-harder-to-set-a-new-memoryhigh.patch
-* mm-fix-comments-based-on-per-node-memcg.patch
-* mm-drop-mmap_sem-before-calling-balance_dirty_pages-in-write-fault.patch
-* shmem-pin-the-file-in-shmem_fault-if-mmap_sem-is-dropped.patch
-* mm-emit-tracepoint-when-rss-changes.patch
-* mm-mmapc-remove-a-never-trigger-warning-in-__vma_adjust.patch
-* mm-pgmap-use-correct-alignment-when-looking-at-first-pfn-from-a-region.patch
-* mm-pgmap-use-correct-alignment-when-looking-at-first-pfn-from-a-region-checkpatch-fixes.patch
-* mm-mmap-fix-the-adjusted-length-error.patch
-* mm-swap-piggyback-lru_add_drain_all-calls.patch
-* mm-mmapc-prev-could-be-retrieved-from-vma-vm_prev.patch
-* mm-mmapc-__vma_unlink_prev-is-not-necessary-now.patch
-* mm-mmapc-extract-__vma_unlink_list-as-counter-part-for-__vma_link_list.patch
-* mm-mmapc-rb_parent-is-not-necessary-in-__vma_link_list.patch
-* mm-rmapc-dont-reuse-anon_vma-if-we-just-want-a-copy.patch
-* mm-rmapc-reuse-mergeable-anon_vma-as-parent-when-fork.patch
-* mm-mmapc-use-is_err_value-to-check-return-value-of-get_unmapped_area.patch
-* mm-mmapc-use-is_err_value-to-check-return-value-of-get_unmapped_area-fix.patch
-* arc-mm-remove-__arch_use_5level_hack.patch
-* asm-generic-tlb-stub-out-pud_free_tlb-if-nopud.patch
-* asm-generic-tlb-stub-out-p4d_free_tlb-if-nop4d.patch
-* asm-generic-tlb-stub-out-pmd_free_tlb-if-nopmd.patch
-* asm-generic-mm-stub-out-p4ud_clear_bad-if-__pagetable_p4ud_folded.patch
-* mm-fix-outdated-comment-in-page_get_anon_vma.patch
-* mm-memory-failurec-clean-up-around-tk-pre-allocation.patch
-* mm-soft-offline-convert-parameter-to-pfn.patch
-* mm-hotplug-reorder-memblock_-calls-in-try_remove_memory.patch
-* memory_hotplug-add-a-bounds-check-to-__add_pages.patch
-* mm-memory_hotplug-export-generic_online_page.patch
-* hv_balloon-use-generic_online_page.patch
-* mm-memory_hotplug-remove-__online_page_free-and-__online_page_increment_counters.patch
-* mm-memmap_init-update-variable-name-in-memmap_init_zone.patch
-* mm-memory_hotplug-dont-access-uninitialized-memmaps-in-shrink_zone_span.patch
-* mm-memory_hotplug-shrink-zones-when-offlining-memory.patch
-* mm-memory_hotplug-poison-memmap-in-remove_pfn_range_from_zone.patch
-* mm-memory_hotplug-we-always-have-a-zone-in-find_smallestbiggest_section_pfn.patch
-* mm-memory_hotplug-dont-check-for-all-holes-in-shrink_zone_span.patch
-* mm-memory_hotplug-drop-local-variables-in-shrink_zone_span.patch
-* mm-memory_hotplug-cleanup-__remove_pages.patch
-* mm-page_allocc-dont-set-pages-pagereserved-when-offlining.patch
-* mm-page_isolationc-convert-skip_hwpoison-to-memory_offline.patch
-* mm-vmalloc-remove-unnecessary-highmem_mask-from-parameter-of-gfpflags_allow_blocking.patch
-* mm-vmalloc-remove-preempt_disable-enable-when-do-preloading.patch
-* mm-vmalloc-respect-passed-gfp_mask-when-do-preloading.patch
-* mm-vmalloc-add-more-comments-to-the-adjust_va_to_fit_type.patch
-* selftests-vm-add-fragment-config_test_vmalloc.patch
-* mm-vmalloc-rework-vmap_area_lock.patch
-* mm-page_alloc-add-alloc_contig_pages.patch
-* mm-pcp-share-common-code-between-memory-hotplug-and-percpu-sysctl-handler.patch
-* mm-pcpu-make-zone-pcp-updates-and-reset-internal-to-the-mm.patch
-* mm-vmscan-remove-unused-scan_control-parameter-from-pageout.patch
-* z3fold-add-inter-page-compaction.patch
-* z3fold-add-inter-page-compaction-fix.patch
-* mm-support-memblock-alloc-on-the-exact-node-for-sparse_buffer_init.patch
-* mm-oom-avoid-printk-iteration-under-rcu.patch
-* mm-oom-avoid-printk-iteration-under-rcu-fix.patch
-* hugetlbfs-hugetlb_fault_mutex_hash-cleanup.patch
-* hugetlb-region_chg-provides-only-cache-entry.patch
-* hugetlb-remove-duplicated-code.patch
-* hugetlb-remove-duplicated-code-checkpatch-fixes.patch
-* hugetlb-remove-unused-hstate-in-hugetlb_fault_mutex_hash.patch
-* hugetlb-remove-unused-hstate-in-hugetlb_fault_mutex_hash-fix.patch
-* hugetlb-remove-unused-hstate-in-hugetlb_fault_mutex_hash-fix-fix.patch
-* mm-hugetlb-avoid-looping-to-the-same-hugepage-if-pages-and-vmas.patch
-* mm-thp-do-not-queue-fully-unmapped-pages-for-deferred-split.patch
-* mm-thp-make-set_huge_zero_page-return-void.patch
-* mm-cmac-switch-to-bitmap_zalloc-for-cma-bitmap-allocation.patch
-* mm-vmstat-add-helpers-to-get-vmstat-item-names-for-each-enum-type.patch
-* mm-vmstat-do-not-use-size-of-vmstat_text-as-count-of-proc-vmstat-items.patch
-* mm-memcontrol-use-vmstat-names-for-printing-statistics.patch
-* mm-vmstat-reduce-zone-lock-hold-time-when-reading-proc-pagetypeinfo.patch
-* userfaultfd-use-vma_pagesize-for-all-huge-page-size-calculation.patch
-* userfaultfd-remove-unnecessary-warn_on-in-__mcopy_atomic_hugetlb.patch
-* userfaultfd-wrap-the-common-dst_vma-check-into-an-inlined-function.patch
-* uffd-wp-clear-vm_uffd_missing-or-vm_uffd_wp-during-userfaultfd_register.patch
-* mm-shmemc-make-array-values-static-const-makes-object-smaller.patch
-* mm-fix-struct-member-name-in-function-comments.patch
-* mm-fix-typo-in-the-comment-when-calling-function-__setpageuptodate.patch
-* mm-memory_hotplugc-remove-__online_page_set_limits.patch
-* mm-annotate-refault-stalls-from-swap_readpage.patch
-* mm-annotate-refault-stalls-from-swap_readpage-fix.patch
-* mm-vmscan-remove-unused-lru_pages-argument.patch
-* info-task-hung-in-generic_file_write_iter.patch
-* info-task-hung-in-generic_file_write-fix.patch
-* kernel-hung_taskc-monitor-killed-tasks.patch
-* proc-change-nlink-under-proc_subdir_lock.patch
-* proc-delete-useless-len-variable.patch
-* proc-shuffle-struct-pde_opener.patch
-* proc-fix-confusing-macro-arg-name.patch
-* sysctl-inline-braces-for-ctl_table-and-ctl_table_header.patch
-* gitattributes-use-dts-diff-driver-for-dts-files.patch
-* linux-build_bugh-change-type-to-int.patch
-* kernel-notifierc-intercepting-duplicate-registrations-to-avoid-infinite-loops.patch
-* kernel-notifierc-remove-notifier_chain_cond_register.patch
-* kernel-notifierc-remove-blocking_notifier_chain_cond_register.patch
-* kernel-profile-use-cpumask_available-to-check-for-null-cpumask.patch
-* hung_task-allow-printing-warnings-every-check-interval.patch
-* get_maintainer-add-signatures-from-fixes-badcommit-lines-in-commit-message.patch
-* string-add-stracpy-and-stracpy_pad-mechanisms.patch
-* documentation-checkpatch-prefer-stracpy-strscpy-over-strcpy-strlcpy-strncpy.patch
-* lib-fix-possible-incorrect-result-from-rational-fractions-helper.patch
-* checkpatch-improve-ignoring-camelcase-si-style-variants-like-ma.patch
-* epoll-simplify-ep_poll_safewake-for-config_debug_lock_alloc.patch
-* fs-epoll-remove-unnecessary-wakeups-of-nested-epoll.patch
-* selftests-add-epoll-selftests.patch
-* elf-delete-unused-interp_map_addr-argument.patch
-* elf-extract-elf_read-function.patch
-* uaccess-disallow-int_max-copy-sizes.patch
-* aio-simplify-read_events.patch
-* lib-ubsan-dont-seralize-ubsan-report.patch
-* smp_mb__beforeafter_atomic-update-documentation.patch
-* ipc-mqueuec-remove-duplicated-code.patch
-* ipc-mqueuec-update-document-memory-barriers.patch
-* ipc-msgc-update-and-document-memory-barriers.patch
-* ipc-semc-document-and-update-memory-barriers.patch
-* ipc-consolidate-all-xxxctl_down-functions.patch
-  linux-next.patch
-  diff-sucks.patch
-* drivers-block-null_blk_mainc-fix-layout.patch
-* drivers-block-null_blk_mainc-fix-uninitialized-var-warnings.patch
-* pinctrl-fix-pxa2xxc-build-warnings.patch
-* lib-list-test-add-a-test-for-the-list-doubly-linked-list.patch
-* lib-list-test-add-a-test-for-the-list-doubly-linked-list-v3.patch
-* lib-genallocc-export-symbol-addr_in_gen_pool.patch
-* lib-genallocc-rename-addr_in_gen_pool-to-gen_pool_has_addr.patch
-* lib-genallocc-rename-addr_in_gen_pool-to-gen_pool_has_addr-fix.patch
-* hacking-group-sysrq-kgdb-ubsan-into-generic-kernel-debugging-instruments.patch
-* hacking-create-submenu-for-arch-special-debugging-options.patch
-* hacking-group-kernel-data-structures-debugging-together.patch
-* hacking-move-kernel-testing-and-coverage-options-to-same-submenu.patch
-* hacking-move-oops-into-lockups-and-hangs.patch
-* hacking-move-sched_stack_end_check-after-debug_stack_usage.patch
-* hacking-create-a-submenu-for-scheduler-debugging-options.patch
-* hacking-move-debug_bugverbose-to-printk-and-dmesg-options.patch
-* hacking-move-debug_fs-to-generic-kernel-debugging-instruments.patch
-* bitops-introduce-the-for_each_set_clump8-macro.patch
-* bitops-introduce-the-for_each_set_clump8-macro-fix.patch
-* bitops-introduce-the-for_each_set_clump8-macro-fix-fix.patch
-* bitops-introduce-the-for_each_set_clump8-macro-fix-fix-fix.patch
-* lib-test_bitmapc-add-for_each_set_clump8-test-cases.patch
-* gpio-104-dio-48e-utilize-for_each_set_clump8-macro.patch
-* gpio-104-idi-48-utilize-for_each_set_clump8-macro.patch
-* gpio-gpio-mm-utilize-for_each_set_clump8-macro.patch
-* gpio-ws16c48-utilize-for_each_set_clump8-macro.patch
-* gpio-pci-idio-16-utilize-for_each_set_clump8-macro.patch
-* gpio-pcie-idio-24-utilize-for_each_set_clump8-macro.patch
-* gpio-uniphier-utilize-for_each_set_clump8-macro.patch
-* gpio-74x164-utilize-the-for_each_set_clump8-macro.patch
-* thermal-intel-intel_soc_dts_iosf-utilize-for_each_set_clump8-macro.patch
-* gpio-pisosr-utilize-the-for_each_set_clump8-macro.patch
-* gpio-max3191x-utilize-the-for_each_set_clump8-macro.patch
-* gpio-pca953x-utilize-the-for_each_set_clump8-macro.patch
-* lib-test_bitmap-force-argument-of-bitmap_parselist_user-to-proper-address-space.patch
-* lib-test_bitmap-undefine-macros-after-use.patch
-* lib-test_bitmap-name-exp_bytes-properly.patch
-* lib-test_bitmap-rename-exp-to-exp1-to-avoid-ambiguous-name.patch
-* lib-test_bitmap-move-exp1-and-exp2-upper-for-others-to-use.patch
-* lib-test_bitmap-fix-comment-about-this-file.patch
-* bitmap-introduce-bitmap_replace-helper.patch
-* gpio-pca953x-remove-redundant-variable-and-check-in-irq-handler.patch
-* gpio-pca953x-use-input-from-regs-structure-in-pca953x_irq_pending.patch
-* gpio-pca953x-convert-to-use-bitmap-api.patch
-* gpio-pca953x-tight-up-indentation.patch
-* cleanup-replace-prefered-with-preferred.patch
-* drivers-tty-serial-sh-scic-suppress-warning.patch
-* fix-read-buffer-overflow-in-delta-ipc.patch
-  make-sure-nobodys-leaking-resources.patch
-  releasing-resources-with-children.patch
-  mutex-subsystem-synchro-test-module.patch
-  kernel-forkc-export-kernel_thread-to-modules.patch
-  workaround-for-a-pci-restoring-bug.patch
+>         /*
+>          * Unlike in global OOM situations, memcg is not in a physical
+>          * memory shortage.  Allow dying and OOM-killed tasks to
+> --
+> 2.23.0
+>
