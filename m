@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD06CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 16:36:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EEB6CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 16:36:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6E0121A4C
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 16:36:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 749E520650
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 16:36:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436574AbfJWQgI (ORCPT
+        id S2436585AbfJWQgM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 12:36:08 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:48572 "EHLO ale.deltatee.com"
+        Wed, 23 Oct 2019 12:36:12 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:48590 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407307AbfJWQgC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 12:36:02 -0400
+        id S2436522AbfJWQgD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 12:36:03 -0400
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1iNJc4-0006Vt-8H; Wed, 23 Oct 2019 10:36:01 -0600
+        id 1iNJc4-0006Vs-8H; Wed, 23 Oct 2019 10:36:01 -0600
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1iNJc2-00016Y-La; Wed, 23 Oct 2019 10:35:54 -0600
+        id 1iNJc2-00016V-Is; Wed, 23 Oct 2019 10:35:54 -0600
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org
 Cc:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
@@ -34,8 +34,8 @@ Cc:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
         Max Gurtovoy <maxg@mellanox.com>,
         Stephen Bates <sbates@raithlin.com>,
         Logan Gunthorpe <logang@deltatee.com>
-Date:   Wed, 23 Oct 2019 10:35:40 -0600
-Message-Id: <20191023163545.4193-3-logang@deltatee.com>
+Date:   Wed, 23 Oct 2019 10:35:39 -0600
+Message-Id: <20191023163545.4193-2-logang@deltatee.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191023163545.4193-1-logang@deltatee.com>
 References: <20191023163545.4193-1-logang@deltatee.com>
@@ -44,7 +44,7 @@ Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 172.16.1.31
 X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org, hch@lst.de, sagi@grimberg.me, Chaitanya.Kulkarni@wdc.com, maxg@mellanox.com, sbates@raithlin.com, logang@deltatee.com
 X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH 2/7] nvmet-tcp: Don't set the request's data_len
+Subject: [PATCH 1/7] nvmet-tcp: Don't check data_len in nvmet_tcp_map_data()
 X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -52,37 +52,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's not apprporiate for the transports to set the data_len
-field of the request which is only used by the core.
-
-In this case, just use a variable on the stack to store the
-length of the sgl for comparison.
+None of the other transports check data_len which is verified
+in core code. The function should instead check that the sgl length
+is non-zero.
 
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
 ---
- drivers/nvme/target/tcp.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/nvme/target/tcp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/nvme/target/tcp.c b/drivers/nvme/target/tcp.c
-index 1e2d92f818ad..3378480c49f6 100644
+index d535080b781f..1e2d92f818ad 100644
 --- a/drivers/nvme/target/tcp.c
 +++ b/drivers/nvme/target/tcp.c
-@@ -813,13 +813,11 @@ static int nvmet_tcp_handle_icreq(struct nvmet_tcp_queue *queue)
- static void nvmet_tcp_handle_req_failure(struct nvmet_tcp_queue *queue,
- 		struct nvmet_tcp_cmd *cmd, struct nvmet_req *req)
- {
-+	size_t data_len = le32_to_cpu(req->cmd->common.dptr.sgl.length);
- 	int ret;
+@@ -320,7 +320,7 @@ static int nvmet_tcp_map_data(struct nvmet_tcp_cmd *cmd)
+ 	struct nvme_sgl_desc *sgl = &cmd->req.cmd->common.dptr.sgl;
+ 	u32 len = le32_to_cpu(sgl->length);
  
--	/* recover the expected data transfer length */
--	req->data_len = le32_to_cpu(req->cmd->common.dptr.sgl.length);
--
- 	if (!nvme_is_write(cmd->req.cmd) ||
--	    req->data_len > cmd->req.port->inline_data_size) {
-+	    data_len > cmd->req.port->inline_data_size) {
- 		nvmet_prepare_receive_pdu(queue);
- 		return;
- 	}
+-	if (!cmd->req.data_len)
++	if (!len)
+ 		return 0;
+ 
+ 	if (sgl->type == ((NVME_SGL_FMT_DATA_DESC << 4) |
 -- 
 2.20.1
 
