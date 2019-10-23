@@ -2,103 +2,84 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9F04CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:31:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC52CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:34:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AED732173B
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:31:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DVIgRYPg"
+	by mail.kernel.org (Postfix) with ESMTP id C92042173B
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:34:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392226AbfJWObT (ORCPT
+        id S2392240AbfJWOek (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 10:31:19 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:23924 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2389995AbfJWObT (ORCPT
+        Wed, 23 Oct 2019 10:34:40 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:54531 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732328AbfJWOek (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 10:31:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571841078;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=NEpRmfIMlgMtQvCpBiyWHq35i58wkyDE9q0HwuYCkJw=;
-        b=DVIgRYPgETaky0cdhsOeRnas2Spp/oTSN75tt8aVa1bXJykpWFcY3qJkIlWhdkbe/s+27O
-        TJWN9MS0v2ojkX0dRR2kuercxzxRWLIRBnxU+JrQz2GEUaqrnwMNbuNW8p6hAv1jMddNr4
-        CTt37xMJowpI6/4FeqaoxJaDsxdF+wk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-289-9MNdKUhlPuOEt5UBzneH8A-1; Wed, 23 Oct 2019 10:31:15 -0400
-X-MC-Unique: 9MNdKUhlPuOEt5UBzneH8A-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DE8EC800D49;
-        Wed, 23 Oct 2019 14:31:13 +0000 (UTC)
-Received: from localhost (unknown [10.36.118.70])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 73E735DD61;
-        Wed, 23 Oct 2019 14:31:13 +0000 (UTC)
-Date:   Wed, 23 Oct 2019 15:31:12 +0100
-From:   Stefan Hajnoczi <stefanha@redhat.com>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     vgoyal@redhat.com, miklos@szeredi.hu, mszeredi@redhat.com,
-        virtualization@lists.linux-foundation.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] virtiofs: remove unused variable 'fc'
-Message-ID: <20191023143112.GF9574@stefanha-x1.localdomain>
-References: <20191023062130.23068-1-yuehaibing@huawei.com>
+        Wed, 23 Oct 2019 10:34:40 -0400
+X-Originating-IP: 92.137.17.54
+Received: from localhost (alyon-657-1-975-54.w92-137.abo.wanadoo.fr [92.137.17.54])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id A562DFF815;
+        Wed, 23 Oct 2019 14:34:37 +0000 (UTC)
+Date:   Wed, 23 Oct 2019 16:34:36 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        y2038 Mailman List <y2038@lists.linaro.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [Y2038] [PATCH v6 10/43] compat_ioctl: move rtc handling into
+ rtc-dev.c
+Message-ID: <20191023143436.GN3125@piout.net>
+References: <20191009190853.245077-1-arnd@arndb.de>
+ <20191009191044.308087-10-arnd@arndb.de>
+ <d1022cda6bd6ce73e9875644a5a2c65e4d554f37.camel@codethink.co.uk>
+ <CAK8P3a0BYkPTSnQUmde2k+HVcg7XNihzWTEzrCD4d8G8ecO9-w@mail.gmail.com>
+ <20191022043051.GA20354@ZenIV.linux.org.uk>
+ <CAK8P3a3yutJU83AfxKXTFuCVQwsX50KYsDgbGbHeJJ0JoLbejg@mail.gmail.com>
+ <20191023102937.GK3125@piout.net>
+ <CAK8P3a2+wEH5mtq_vF6fTSkmCfBeKHOvNmjbvViiHFWxUAjV_g@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191023062130.23068-1-yuehaibing@huawei.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Mimecast-Spam-Score: 0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="3oCie2+XPXTnK5a5"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <CAK8P3a2+wEH5mtq_vF6fTSkmCfBeKHOvNmjbvViiHFWxUAjV_g@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---3oCie2+XPXTnK5a5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 23/10/2019 16:28:40+0200, Arnd Bergmann wrote:
+> On Wed, Oct 23, 2019 at 12:29 PM Alexandre Belloni
+> <alexandre.belloni@bootlin.com> wrote:
+> > On 22/10/2019 14:14:21+0200, Arnd Bergmann wrote:
+> > > On Tue, Oct 22, 2019 at 6:30 AM Al Viro <viro@zeniv.linux.org.uk> wrote:
+> > >
+> > > I don't see any chance that this code is revived. If anyone wanted to
+> > > make it work, the right approach would be to use the rtc framework
+> > > and rewrite the code first.
+> > >
+> > > I could send a patch to remove the dead code though if that helps.
+> > >
+> >
+> > Please do.
+> 
+> Ok, done. Speaking of removing rtc drivers, should we just kill off
+> drivers/char/rtc.c and drivers/char/efirtc.c as well? I don't remember
+> why we left them in the tree, but I'm fairly sure they are not actually
+> needed.
+> 
 
-On Wed, Oct 23, 2019 at 02:21:30PM +0800, YueHaibing wrote:
-> fs/fuse/virtio_fs.c:983:20: warning:
->  variable fc set but not used [-Wunused-but-set-variable]
->=20
-> It is not used since commit 7ee1e2e631db ("virtiofs:
-> No need to check fpq->connected state")
->=20
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  fs/fuse/virtio_fs.c | 2 --
->  1 file changed, 2 deletions(-)
+https://lore.kernel.org/lkml/CAK8P3a0QZNY+K+V1HG056xCerz=_L2jh5UfZ+2LWkDqkw5Zznw@mail.gmail.com/
 
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+That's how we left it ;)
 
---3oCie2+XPXTnK5a5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl2wZDAACgkQnKSrs4Gr
-c8ia7Af+MQeFLTLG0CFTE1qP7CUS9Bb7d/kyzFLEOhRKzGeQ/X5WF82X/8onbeeS
-vWxhG9VDk5YfFMxJs/kCUsOdHyqzSqfU1neF08K+wgu2RsL9LwSvppC+RM68SbUV
-+2fh6BaNdKNNtfxRi8Dbw+2xqKLnqlLyhBVCqc7jIAshVMwTeV8GiDAv5WMNWEhQ
-8tXKiepCviHSBWHHE0hFQaczmLQQobtgxvJOE6Ooy0Cvd8daN5f3PiCIqpUfRPTx
-4ojBtmkZN3Cdc9qHM9cQmqZ/AwdtTuCeTuqd5E096I4Zqm0oq+ZiCBmlt/BSKK+t
-sPTRv0L6bdGD6UztBumMJcHOyGplaA==
-=Ygrg
------END PGP SIGNATURE-----
-
---3oCie2+XPXTnK5a5--
-
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
