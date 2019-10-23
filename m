@@ -2,129 +2,120 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A883DCA9EAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 07:14:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A3BACA9EB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 07:14:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83A922084C
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 07:14:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6858C2084C
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 07:14:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389762AbfJWHOD (ORCPT
+        id S2389703AbfJWHOq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 03:14:03 -0400
-Received: from mga04.intel.com ([192.55.52.120]:35986 "EHLO mga04.intel.com"
+        Wed, 23 Oct 2019 03:14:46 -0400
+Received: from mx-out.tlen.pl ([193.222.135.140]:60281 "EHLO mx-out.tlen.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727574AbfJWHOD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 03:14:03 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 00:14:02 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,219,1569308400"; 
-   d="scan'208";a="349310694"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga004.jf.intel.com with ESMTP; 23 Oct 2019 00:14:01 -0700
-Received: from [10.249.230.188] (abudanko-mobl.ccr.corp.intel.com [10.249.230.188])
-        by linux.intel.com (Postfix) with ESMTP id 46A1458029F;
-        Wed, 23 Oct 2019 00:13:58 -0700 (PDT)
-Subject: [PATCH v5 4/4] perf/core,x86: synchronize PMU task contexts on
- optimized context switches
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>,
-        Song Liu <songliubraving@fb.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <f8d5a880-38e5-29f4-9e6a-848f70a67988@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <9c6445a9-bdba-ef03-3859-f1f91198f27a@linux.intel.com>
-Date:   Wed, 23 Oct 2019 10:13:56 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S2389327AbfJWHOp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 03:14:45 -0400
+Received: (wp-smtpd smtp.tlen.pl 3618 invoked from network); 23 Oct 2019 09:14:36 +0200
+Received: from unknown (HELO localhost.localdomain) (p.sarna@o2.pl@[31.179.144.84])
+          (envelope-sender <p.sarna@tlen.pl>)
+          by smtp.tlen.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
+          for <linux-fsdevel@vger.kernel.org>; 23 Oct 2019 09:14:36 +0200
+Subject: Re: [PATCH] hugetlbfs: add O_TMPFILE support
+To:     Mike Kravetz <mike.kravetz@oracle.com>
+Cc:     Michal Hocko <mhocko@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, viro@zeniv.linux.org.uk,
+        linux-fsdevel@vger.kernel.org
+References: <22c29acf9c51dae17802e1b05c9e5e4051448c5c.1571129593.git.p.sarna@tlen.pl>
+ <20191015105055.GA24932@dhcp22.suse.cz>
+ <766b4370-ba71-85a2-5a57-ca9ed7dc7870@oracle.com>
+ <eb6206ee-eb2e-ffbc-3963-d80eec04119c@oracle.com>
+ <c0415816-2682-7bf5-2c82-43c3a8941a54@tlen.pl>
+ <d29bc957-a074-22f6-51d7-e043719d5f98@oracle.com>
+From:   Piotr Sarna <p.sarna@tlen.pl>
+Message-ID: <36c17999-caf6-9f0a-d63a-cc6e4b5fabb8@tlen.pl>
+Date:   Wed, 23 Oct 2019 09:14:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <f8d5a880-38e5-29f4-9e6a-848f70a67988@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <d29bc957-a074-22f6-51d7-e043719d5f98@oracle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-WP-MailID: 424e793a204962c7684229931db4e0c3
+X-WP-AV: skaner antywirusowy Poczty o2
+X-WP-SPAM: NO 0000000 [IXNk]                               
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 10/23/19 4:55 AM, Mike Kravetz wrote:
+> On 10/22/19 12:09 AM, Piotr Sarna wrote:
+>> On 10/21/19 7:17 PM, Mike Kravetz wrote:
+>>> On 10/15/19 4:37 PM, Mike Kravetz wrote:
+>>>> On 10/15/19 3:50 AM, Michal Hocko wrote:
+>>>>> On Tue 15-10-19 11:01:12, Piotr Sarna wrote:
+>>>>>> With hugetlbfs, a common pattern for mapping anonymous huge pages
+>>>>>> is to create a temporary file first.
+>>>>>
+>>>>> Really? I though that this is normally done by shmget(SHM_HUGETLB) or
+>>>>> mmap(MAP_HUGETLB). Or maybe I misunderstood your definition on anonymous
+>>>>> huge pages.
+>>>>>
+>>>>>> Currently libraries like
+>>>>>> libhugetlbfs and seastar create these with a standard mkstemp+unlink
+>>>>>> trick,
+>>>>
+>>>> I would guess that much of libhugetlbfs was writen before MAP_HUGETLB
+>>>> was implemented.  So, that is why it does not make (more) use of that
+>>>> option.
+>>>>
+>>>> The implementation looks to be straight forward.  However, I really do
+>>>> not want to add more functionality to hugetlbfs unless there is specific
+>>>> use case that needs it.
+>>>
+>>> It was not my intention to shut down discussion on this patch.  I was just
+>>> asking if there was a (new) use case for such a change.  I am checking with
+>>> our DB team as I seem to remember them using the create/unlink approach for
+>>> hugetlbfs in one of their upcoming models.
+>>>
+>>> Is there a new use case you were thinking about?
+>>>
+>>
+>> Oh, I indeed thought it was a shutdown. The use case I was thinking about was in Seastar, where the create+unlink trick is used for creating temporary files (in a generic way, not only for hugetlbfs). I simply intended to migrate it to a newer approach - O_TMPFILE. However,
+>> for the specific case of hugetlbfs it indeed makes more sense to skip it and use mmap's MAP_HUGETLB, so perhaps it's not worth it to patch a perfectly good and stable file system just to provide a semi-useful flag support. My implementation of tmpfile for hugetlbfs is straightforward indeed, but the MAP_HUGETLB argument made me realize that it may not be worth the trouble - especially that MAP_HUGETLB is here since 2.6 and O_TMPFILE was introduced around v3.11, so the mmap way looks more portable.
+>>
+>> tldr: I'd be very happy to get my patch accepted, but the use case I had in mind can be easily solved with MAP_HUGETLB, so I don't insist.
+> 
+> If you really are after something like 'anonymous memory' for Seastar,
+> then MAP_HUGETLB would be the better approach.
 
-Install Intel specific PMU task context synchronization adapter and
-extend optimized context switch path with PMU specific task context
-synchronization to fix LBR callstack virtualization on context switches.
+Just to clarify - my original goal was to migrate Seastar's temporary 
+file implementation (which is fs-agnostic, based on descriptors) from 
+the current create+unlink to O_TMPFILE, for robustness. One of the 
+internal usages of this generic mechanism was to create a tmpfile on 
+hugetlbfs and that's why I sent this patch. However, this particular 
+internal usage can be easily switched to more portable MAP_HUGETLB, 
+which will also mean that the generic tmpfile implementation will not be 
+used internally for hugetlbfs anymore.
 
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
----
- arch/x86/events/intel/core.c |  7 +++++++
- kernel/events/core.c         | 13 ++++++++++++-
- 2 files changed, 19 insertions(+), 1 deletion(-)
+There *may* still be value in being able to support hugetlbfs once 
+Seastar's tmpfile implementation migrates to O_TMPFILE, since the 
+library offers creating temporary files in its public API, but there's 
+no immediate use case I can apply it to.
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index bbf6588d47ee..dc64b16e6b71 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -3820,6 +3820,12 @@ static void intel_pmu_sched_task(struct perf_event_context *ctx,
- 	intel_pmu_lbr_sched_task(ctx, sched_in);
- }
- 
-+static void intel_pmu_swap_task_ctx(struct perf_event_context *prev,
-+				    struct perf_event_context *next)
-+{
-+	intel_pmu_lbr_swap_task_ctx(prev, next);
-+}
-+
- static int intel_pmu_check_period(struct perf_event *event, u64 value)
- {
- 	return intel_pmu_has_bts_period(event, value) ? -EINVAL : 0;
-@@ -3955,6 +3961,7 @@ static __initconst const struct x86_pmu intel_pmu = {
- 
- 	.guest_get_msrs		= intel_guest_get_msrs,
- 	.sched_task		= intel_pmu_sched_task,
-+	.swap_task_ctx		= intel_pmu_swap_task_ctx,
- 
- 	.check_period		= intel_pmu_check_period,
- 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index f9a5d4356562..ed31aa849161 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -3204,10 +3204,21 @@ static void perf_event_context_sched_out(struct task_struct *task, int ctxn,
- 		raw_spin_lock(&ctx->lock);
- 		raw_spin_lock_nested(&next_ctx->lock, SINGLE_DEPTH_NESTING);
- 		if (context_equiv(ctx, next_ctx)) {
-+			struct pmu *pmu = ctx->pmu;
-+
- 			WRITE_ONCE(ctx->task, next);
- 			WRITE_ONCE(next_ctx->task, task);
- 
--			swap(ctx->task_ctx_data, next_ctx->task_ctx_data);
-+			/*
-+			 * PMU specific parts of task perf context can require
-+			 * additional synchronization. As an example of such
-+			 * synchronization see implementation details of Intel
-+			 * LBR call stack data profiling;
-+			 */
-+			if (pmu->swap_task_ctx)
-+				pmu->swap_task_ctx(ctx, next_ctx);
-+			else
-+				swap(ctx->task_ctx_data, next_ctx->task_ctx_data);
- 
- 			/*
- 			 * RCU_INIT_POINTER here is safe because we've not
--- 
-2.20.1
+> 
+> I'm still checking with Oracle DB team as they may have a use for O_TMPFILE
+> in an upcoming release.  In their use case, they want an open fd to work with.
+> If it looks like they will proceed in this direction, we can work to get
+> your patch moved forward.
+> 
+> Thanks,
+
+Great, if it turns out that my patch helps anyone with their O_TMPFILE 
+usage, I'd be very glad to see it merged.
 
