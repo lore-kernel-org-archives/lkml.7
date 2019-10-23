@@ -2,212 +2,271 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D96BECA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 19:10:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33500CA9EBB
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 19:10:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A08FE2086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 19:10:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EADF32086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 19:10:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RWi87UbO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="APOUMKFt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732747AbfJWTKK (ORCPT
+        id S1733222AbfJWTK2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 15:10:10 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:52581 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726882AbfJWTKK (ORCPT
+        Wed, 23 Oct 2019 15:10:28 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:33451 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732234AbfJWTK2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 15:10:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571857807;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=GSqYczFmAd6Ynxten2iqPGJFZ6CnAADv6AsKVu1TUHs=;
-        b=RWi87UbOCN0ThHRT76xq9j+Ws8dNDDJmA58JGYEduCQEW9X4PRybHU/Re3P8Evs8NWaFPu
-        isOW+KdaCEAMkY8UiuWbJXi04N0KX12Bg+Aqfm8ONQvVhqG8zTKHMHapMG/qXkxnsMEADQ
-        ZhuUporw6+y2+fY7+Mmit3yVcpsBvYU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-370-ua7GK7FcMlSlXUjvoIwVMA-1; Wed, 23 Oct 2019 15:10:02 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DD88D800D49;
-        Wed, 23 Oct 2019 19:10:00 +0000 (UTC)
-Received: from mail (ovpn-123-192.rdu2.redhat.com [10.10.123.192])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 65D435DAAF;
-        Wed, 23 Oct 2019 19:10:00 +0000 (UTC)
-Date:   Wed, 23 Oct 2019 15:09:59 -0400
-From:   Andrea Arcangeli <aarcange@redhat.com>
-To:     Andy Lutomirski <luto@kernel.org>, Jann Horn <jannh@google.com>
-Cc:     Daniel Colascione <dancol@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Lokesh Gidra <lokeshgidra@google.com>,
-        Nick Kralevich <nnk@google.com>,
-        Nosh Minwalla <nosh@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/7] Add a UFFD_SECURE flag to the userfaultfd API.
-Message-ID: <20191023190959.GA9902@redhat.com>
-References: <20191012191602.45649-1-dancol@google.com>
- <20191012191602.45649-4-dancol@google.com>
- <CALCETrVZHd+csdRL-uKbVN3Z7yeNNtxiDy-UsutMi=K3ZgCiYw@mail.gmail.com>
- <CAKOZuevUqs_Oe1UEwguQK7Ate3ai1DSVSij=0R=vmz9LzX4k6Q@mail.gmail.com>
- <CALCETrUyq=J37gU-MYXqLdoi7uH7iNNVRjvcGUT11JA1QuTFyg@mail.gmail.com>
- <CAG48ez3P27-xqdjKLqfP_0Q_v9K92CgEjU4C=kob2Ax7=NoZbA@mail.gmail.com>
+        Wed, 23 Oct 2019 15:10:28 -0400
+Received: by mail-pf1-f196.google.com with SMTP id c184so3994434pfb.0
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 12:10:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Wedy5pGJORyqF9ETWtu/bm70wj9Mpmh0YPkLpaSld18=;
+        b=APOUMKFtctD5mY/VLWicGv14AHP8YF2RxE9lCloG3iKAFDrN2TtgQYlXhplVkq163N
+         LahF9pSBs/3XYq7f8DGrOA1pelXIB7/QHExaqDdYo0/XRURQ2dR6PNv+6orquAaoe27d
+         Nv7Lr9mA4iCCfG5Gc0spya7J6B+m86iFUAXTJdlAL3PYLRAdGGvJ7S19DM6eF5WSGOFI
+         09fL00QiV6pGErDbntOxAwVofo2iag6NLtRnv4XyjEj1mZJAnN2D99AKHUe4gPfAH3zT
+         Q81sQY7T/i9g0npiSm+X2rZ825QvJnwpQVbFHA19Oa0XaojLBCe9PekB0jgj9W5HMNLt
+         HFrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Wedy5pGJORyqF9ETWtu/bm70wj9Mpmh0YPkLpaSld18=;
+        b=SbjLRd0E+inUpMdMluDAictauS2JUeSa2K7q4VYDTzwC7xzK81M27/JZLIWIZn1Z9H
+         cXJn/03r1BZqHuNOFkpWvm635wOkWClfF0CzZhmnLPtuKLEqCSjxtYO5eW8odxZqQUoL
+         6tTlkkbFzSKR0fDJlecGEl24ewnwqet2hIxsqKyUAQrubmuAeiqX5aCAzRxNTIIAZ/fV
+         uWZq7m+MvKXGFiEThPhbYPCoRgSkNfTuPpiVhYDjORv4/4t3ldPMLRZ99rOWqnM96pfw
+         FKh7XsrRyAkX0UW6TRz7Cg7UcQOqBMrhI1XTs5624Tdrj98/8iASozdqsEjusEgi/yGp
+         r6zA==
+X-Gm-Message-State: APjAAAV+K8ScbmaytNQBn13tcxhwWXvHPlhA8ZpX0Z7NipjQXD6P1SSL
+        LyAM4Okz55YDspk+iZfdpBlE4q0Vcj8=
+X-Google-Smtp-Source: APXvYqwSZez+2yq+w1FWUCzo61I7MRI0T+B0lXJzyoigx6N9h9tZfgWThfcHw5zU+lftX9TnLkY/3g==
+X-Received: by 2002:a62:a50b:: with SMTP id v11mr12690945pfm.164.1571857827268;
+        Wed, 23 Oct 2019 12:10:27 -0700 (PDT)
+Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id m102sm52695pje.5.2019.10.23.12.10.26
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 23 Oct 2019 12:10:26 -0700 (PDT)
+Date:   Wed, 23 Oct 2019 12:10:06 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     "S.j. Wang" <shengjiu.wang@nxp.com>
+Cc:     "timur@kernel.org" <timur@kernel.org>,
+        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "perex@perex.cz" <perex@perex.cz>,
+        "tiwai@suse.com" <tiwai@suse.com>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ASoC: fsl_asrc: refine the setting of internal clock
+ divider
+Message-ID: <20191023191002.GB16043@Asurada-Nvidia.nvidia.com>
+References: <VE1PR04MB647949BE7BDB9CD2B1B2C521E36B0@VE1PR04MB6479.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <CAG48ez3P27-xqdjKLqfP_0Q_v9K92CgEjU4C=kob2Ax7=NoZbA@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-MC-Unique: ua7GK7FcMlSlXUjvoIwVMA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <VE1PR04MB647949BE7BDB9CD2B1B2C521E36B0@VE1PR04MB6479.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Wed, Oct 23, 2019 at 06:25:20AM +0000, S.j. Wang wrote:
+> > On Thu, Oct 17, 2019 at 02:21:08PM +0800, Shengjiu Wang wrote:
+> > > For P2P output, the output divider should align with the output sample
+> > 
+> > I think we should avoid "P2P" (or "M2M") keyword in the mainline code as
+> > we know M2M will never get merged while somebody working with the
+> > mainline and caring about new feature might be confused.
+> 
+> Ok. But we still curious that is there a way to upstream m2m?
 
-On Sat, Oct 12, 2019 at 06:14:23PM -0700, Andy Lutomirski wrote:
-> [adding more people because this is going to be an ABI break, sigh]
+Hmm..I would love to see that happening. Here is an old discussion
+that you may want to take a look:
+https://mailman.alsa-project.org/pipermail/alsa-devel/2014-May/076797.html
 
-That wouldn't break the ABI, no more than when if you boot a kernel
-built with CONFIG_USERFAULTFD=3Dn.
+> > It makes sense to me, yet I feel that the delay at the beginning of the audio
+> > playback might be longer as a compromise. I am okay with this decision
+> > though...
+> > 
+> > > The maximum divider of asrc clock is 1024, but there is no judgement
+> > > for this limitaion in driver, which may cause the divider setting not
+> > > correct.
+> > >
+> > > For non-ideal ratio mode, the clock rate should divide the sample rate
+> > > with no remainder, and the quotient should be less than 1024.
+> > >
+> > > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
 
-All non-cooperative features can be removed any time in a backwards
-compatible way, the only precaution is to mark their feature bits as
-reserved so they can't be reused for something else later.
+> > > @@ -351,7 +352,9 @@ static int fsl_asrc_config_pair(struct fsl_asrc_pair
+> > *pair)
+> > >       /* We only have output clock for ideal ratio mode */
+> > >       clk = asrc_priv->asrck_clk[clk_index[ideal ? OUT : IN]];
+> > >
+> > > -     div[IN] = clk_get_rate(clk) / inrate;
+> > > +     clk_rate = clk_get_rate(clk);
+> > 
+> > The fsl_asrc.c file has config.inclk being set to INCLK_NONE and this sets the
+> > "ideal" in this function to true. So, although we tend to not use ideal ratio
+> > setting for p2p cases, yet the input clock is still not physically connected, so
+> > we still use output clock for div[IN] calculation?
+> 
+> For p2p case, it can be ideal or non-ideal.  For non-ideal, we still use
+> Output clock for div calculation.
+> 
+> > 
+> > I am thinking something simplier: if we decided not to use ideal ratio for
+> > "P2P", instead of adding "bool p2p" with the confusing "ideal" in this
+> > function, could we just set config.inclk to the same clock as the output one
+> > for "P2P"? By doing so, "P2P" won't go through ideal ratio mode while still
+> > having a clock rate from the output clock for div[IN] calculation here.
+> 
+> Bool p2p is to force output rate to be sample rate, no impact to ideal
+> Ratio mode.
 
-> least severely restricted.  A .read implementation MUST NOT ACT ON THE
-> CALLING TASK.  Ever.  Just imagine the effect of passing a userfaultfd
-> as stdin to a setuid program.
+I just realized that the function has a bottom part for ideal mode
+exclusively -- if we treat p2p as !ideal, those configurations will
+be missing. So you're right, should have an extra boolean variable.
 
-With UFFD_EVENT_FORK, the newly created uffd that controls the child,
-is not passed to the parent nor to the child. Instead it's passed to
-the CRIU monitor only, which has to be already running as root and is
-fully trusted and acts a hypervisor (despite there is no hypervisor).
+> > 
+> > > +     rem[IN] = do_div(clk_rate, inrate);
+> > > +     div[IN] = (u32)clk_rate;
+> > >       if (div[IN] == 0) {
+> > 
+> > Could we check div[IN] and rem[IN] here? Like:
+> >         if (div[IN] == 0 || div[IN] > 1024) {
+> >                 pair_err();
+> >                 goto out;
+> >         }
+> > 
+> >         if (!ideal && rem[IN]) {
+> >                 pair_err();
+> >                 goto out;
+> >         }
+> > 
+> > According to your commit log, I think the max-1024 limitation should be
+> > applied to all cases, not confined to "!ideal" cases right? And we should
+> > add some comments also, indicating it is limited by hardware.
+> 
+> For ideal mode,  my test result is  the divider not impact the output result.
+> Which means it is ok for ideal mode even divider is not correct... 
 
-By the time execve runs and any suid bit in the execve'd inode becomes
-relevant, well before the new userland executable code can run, the
-kernel throws away the "old_mm" controlled by any uffd and all
-attached uffds are released as well.
+OK.
 
-All I found is your "A .read implementation MUST NOT ACT ON THE
-CALLING TASK" as an explanation that something is broken but I need
-further clarification.
+> > 
+> > >               pair_err("failed to support input sample rate %dHz by
+> > asrck_%x\n",
+> > >                               inrate, clk_index[ideal ? OUT : IN]); @@
+> > > -360,11 +363,20 @@ static int fsl_asrc_config_pair(struct
+> > > fsl_asrc_pair *pair)
+> > >
+> > >       clk = asrc_priv->asrck_clk[clk_index[OUT]];
+> > >
+> > > -     /* Use fixed output rate for Ideal Ratio mode (INCLK_NONE) */
+> > > -     if (ideal)
+> > > -             div[OUT] = clk_get_rate(clk) / IDEAL_RATIO_RATE;
+> > > -     else
+> > > -             div[OUT] = clk_get_rate(clk) / outrate;
+> > > +     /*
+> > > +      * When P2P mode, output rate should align with the out samplerate.
+> > > +      * if set too high output rate, there will be lots of Overload.
+> > > +      * When M2M mode, output rate should also need to align with the
+> > > + out
+> > 
+> > For this "should", do you actually mean "M2M could also"? Sorry, I'm just
+> > trying to understand everyting here, not intentionally being picky at words.
+> > My understanding is that we still keep the ideal ratio setting because
+> > "M2M" still uses it.
+> 
+> We use IDEAL_RATIO_RATE as output rate for m2m mode, it likes a
+> Tricky operation, in order to improve the performance. I think
+> The correct operation is to use the real output rate, but the performance
+> Is bad.  So it is a compromise.
 
-Of course I can see you can always open a uffd and pass it to any task
-you are going to execve on, but that simply means the suid program
-will be able to control you, not the other way around. If you don't
-want to be controlled by the next task, no matter if suid or not, just
-don't that. What I don't see is how you're going to control the suid
-binary from the outside, the suid binary at most will block in the
-poll, read and write syscalls and get garbage or write some garbage
-and get an error, it won't get signals and it cannot block in any page
-fault either, it's not immediately clear what's out of ordinary.
+I see.
 
-On Mon, Oct 14, 2019 at 06:04:22PM +0200, Jann Horn wrote:
-> FWIW, <https://codesearch.debian.net/search?q=3DUFFD_FEATURE_EVENT_FORK&l=
-iteral=3D1>
-> just shows the kernel, kernel selftests, and strace code for decoding
-> syscall arguments. CRIU uses it though (probably for postcopy live
-> migration / lazy migration?), I guess that code isn't in debian for
-> some reason.
+> > 
+> > > +      * samplerate, but M2M must use less time to achieve good
+> > performance.
+> > > +      */
+> > > +     clk_rate = clk_get_rate(clk);
+> > > +     if (p2p || !ideal) {
+> > > +             rem[OUT] = do_div(clk_rate, outrate);
+> > > +             div[OUT] = clk_rate;
+> > > +     } else {
+> > > +             rem[OUT] = do_div(clk_rate, IDEAL_RATIO_RATE);
+> > > +             div[OUT] = clk_rate;
+> > > +     }
+> > >
+> > >       if (div[OUT] == 0) {
+> > >               pair_err("failed to support output sample rate %dHz by
+> > > asrck_%x\n", @@ -372,6 +384,16 @@ static int fsl_asrc_config_pair(struct
+> > fsl_asrc_pair *pair)
+> > >               return -EINVAL;
+> > >       }
+> > >
+> > > +     if (!ideal && (div[IN] > 1024 || div[OUT] > 1024 ||
+> > > +                    rem[IN] != 0 || rem[OUT] != 0)) {
+> > > +     if (!ideal && (div[IN] > 1024 || div[OUT] > 1024 || rem[IN] ||
+> > > + rem[OUT] != 0)) {
+> > 
+> > So for ideal == true, these limitaions are not applied any more?
+> > Remember that the "ideal" is true for "p2p == true" cases here.
+> 
+> No, not applied.  for ideal, the div don't impact the output result
+> Even it is not accurate.
 
-https://criu.org/Userfaultfd#Limitations
+I see.
 
-The CRIU developers did a truly amazing job by making container post
-copy live migration work great for a subset of apps, that alone was an
-amazing achievement. Is that achievement enough to use post copy live
-migration of bare metal containers in production? Unfortunately
-probably not and not just in debian.
+> > 
+> > > +             pair_err("The divider can't be used for non ideal mode\n");
+> > > +             return -EINVAL;
+> > > +     }
+> > > +
+> > > +     /* Divider range is [1, 1024] */
+> > > +     div[IN] = min_t(u32, 1024, div[IN]);
+> > > +     div[OUT] = min_t(u32, 1024, div[OUT]);
+> > 
+> > Hmm, this looks like we want to allow ideal ratio cases and p2p cases to
+> > operate any way, even if the divider wasn't within the range to get the
+> > in/out rates from the output clock?
+> 
+> Yes. We still allow the p2p = true,  ideal = false.  Note that p2p is not
+> Equal to ideal.
 
-If you're wrong and UFFDIO_EVENT_FORK isn't currently buggy and in
-turn it isn't causing further maintenance burden, there is no hurry of
-removing them, but in the long term, if none of the non-cooperative
-features find its way in production (like it was reasonable to expect
-initially), they must be removed from the kernel anyway, not just
-UFFD_EVEN_FORK but all non-cooperative features associated with it.
+Got it.
 
-In my view the kernel is complex enough that we can't keep in the
-kernel anything that isn't actively used in production.
+Overall, I feel it's better to have a naming to state the purpose
+of using ideal configurations without the IDEAL_RATIO_RATE setup.
+	bool use_ideal_rate;
+And we can put into the asrc_config structure if there's no major
+problem.
 
-If you're right and UFFDIO_EVENT_FORK is flawed beyond repair well
-then we should remove all non cooperative features right now.
+So the condition check for the calculation would be:
++	if (ideal && config->use_ideal_rate)
++		rem[OUT] = do_div(clk_rate, IDEAL_RATIO_RATE);
++	else
++		rem[OUT] = do_div(clk_rate, outrate);
++	div[OUT] = clk_rate;
 
-Or is someone out there using CRIU --lazy-pages in production?
+And for that if (!ideal && div[IN]....rem[OUT]), I feel it would
+be clear to have them separately, as the existing "div[IN] == 0"
+and "div[OUT] == 0" checks, so that we can tell users which side
+of the divider is out of range and what the sample rate and clock
+rate are.
 
-Virtual machine machine postcopy live migration is shipped in
-production for years and it's fully reliable and by design it cannot
-suffer from any of the above limitations.
-
-In my view there's simply no justification not to use virtual machines
-when the alternative requires so much more code to be written and so
-much more complexity to be dealt with.
-
-However the higher complexity happened in lots areas of the kernel
-already where things got extremely complex just to avoid using virtual
-machines, despite the end result is less secure, for the only sake of
-slightly higher consolidation (especially if you ignore the existence
-millisecond guest boot time, direct mapped pmem nvdimm, virtfs and
-free page hinting).
-
-The non-cooperative features of userfaultfd in principle aren't
-fundamentally different from other cgroup vs KVM tradeoffs, so 1) it
-wasn't apparent they wouldn't be used in production eventually and 2)
-it didn't sound fair enough not to give a chance to bare metal
-containers to achieve feature parity with VM (again with a much higher
-code complexity, but that was to be expected and it has apparently
-been dealt with in other areas with more or less satisfactory
-results).
-
-While at it, as far as userfaultfd is concerned I'd rather see people
-spend time to write a malloc library that uses userfaultfd with the
-UFFD_FEATURE_SIGBUS features and it replaces mmap with UFFDIO_ZEROPAGE
-(plus adding the THP accelleration currently missing) and munmap with
-MADV_DONTNEED to do allocations and freeing of memory with full
-scalability without ever hitting on the map sem for writing. This is
-already possible without any further kernel change (the THP
-accelleration to UFFDIO_ZEROPAGE will only make it go faster but it
-could be done later after the lib already works because it'd be
-invisible to userland).
-
-On my side, instead of trying to fix whatever issue in
-UFFD_EVENT_FORK, I'd prefer to spend my time reviewing the uffd-wp
-feature from Peter and the page fault enhancement patchset that Peter
-and Linus were discussing. uffd-wp has the potential to drop fork()
-from all apps calling fork() only to do an atomic snapshot of their
-memory. Replacing fork() also means the uffd manager thread can decide
-how much memory to reserve to the snapshot and it can start throttling
-waiting for I/O completion if the threshold is exceeded, while fork
-COWs cannot throttle and all apps using fork() risk to hit on x2
-memory usage which can become oom-killer material if the memory size
-of the process is huge. The side benefit is also that the way
-userfaultfd works the fault granularity is entirely in control of
-userland (because it's always userland that resolves the fault), it
-could decide to use 8k or 16k even if that doesn't match the hardware
-page size. That will allow to keep THP on without risking to hit on 2M
-cows during the snapshot. Being able to keep THP enabled in nosql db
-without hitting on slow 2M COW copies during snapshot, should allow a
-further overall performance improvement when the snapshot is not
-running than what it is possible today. In a completely different use
-case, uffd-wp will also avoid JITs to set a dirty bit every time they
-modify any data in memory. It should also be possible to provide the
-same soft-dirty information in O(1) instead of O(N).
-
-Thanks,
-Andrea
-
+Thanks
+Nicolin
