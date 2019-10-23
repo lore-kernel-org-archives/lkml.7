@@ -2,107 +2,118 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2C24CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:25:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBDB9CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:26:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E8392053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:25:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=hazent-com.20150623.gappssmtp.com header.i=@hazent-com.20150623.gappssmtp.com header.b="fI+o7jbY"
+	by mail.kernel.org (Postfix) with ESMTP id B1B4420650
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:26:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571826379;
+	bh=z4ipP4Ck0yBqTHzgeKqG4ObZnNyOh+UsmqwlDY/xwzg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=C+LH4EmDdfpiwqX1+k3j7ayf2L3N5061q5rQfxQbd91/bc1n4rado98YX3zDKmTKJ
+	 RxHnU6kzCR0+ucXCDQAAPEt6D3PWVOYRcbV5emFGtSe4WiyGp04YJwvbsnHf0bqKE0
+	 SlqIju7qiKOmbgZqPwG8QJEOosfFiNLig8y7k6Q8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404208AbfJWKZ6 (ORCPT
+        id S2404315AbfJWK0S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 06:25:58 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:34563 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404042AbfJWKZ6 (ORCPT
+        Wed, 23 Oct 2019 06:26:18 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:42961 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391001AbfJWK0S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 06:25:58 -0400
-Received: by mail-wm1-f67.google.com with SMTP id v3so5989152wmh.1
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 03:25:56 -0700 (PDT)
+        Wed, 23 Oct 2019 06:26:18 -0400
+Received: by mail-lf1-f67.google.com with SMTP id z12so15592582lfj.9
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 03:26:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=hazent-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Az7GdSb+e6TdjHcHdIa3JCr0/3rrdnc/fgd5bd/3iww=;
-        b=fI+o7jbYb3n+SZzHk/tq/7rzJV5liOoXtUp9W6GyQ26jncKxp1OonqYSGlf0yweLmt
-         5aSk5KYE2mMm22/k7ecPb1ffZZ4ERARz3Saps9aFBKvQnJyKxgFmWVdmbdFEA0A8rxKd
-         mk0QTMMsJnSgtUot7gDwK7xnHyrGR58tShsW5zlC+3jjkt7DmbNK1kQemkDH029g/Axj
-         q9SOqdofyZcKgZAGCMmFSmSpB4yN6CMtT2UytG2xZpzB42fVAhSmLpYIecR+vvUwVqAy
-         O5O3RG3xLi9E4ar9qulZ/nHOsmp5VOyDXRFI6HwCQDDq/YEghCeJV+L95g+SWG0+szl5
-         SIyA==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aRWUNj4J7qgXSXD2PSfXvGDEs07MKcTmNuTdcaVnUGw=;
+        b=Slb+IaA7gxUyVr09pbGzJOB54Jv239tGUr7XIcQxfolpIG44u/NoAMOhLnza+Em4WR
+         TEPsZuhBtQdRHRD82otLdcY2uJ9E7K4xMc5ZFii1pfI6kkUC5qwEGbYYfYuTwlvtQiDO
+         wMOTH/ObIO23qcZyZJ2PI3HvK563JGx6aHaAU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Az7GdSb+e6TdjHcHdIa3JCr0/3rrdnc/fgd5bd/3iww=;
-        b=TpYIfNEm1zv9ZKzYcPvQBo5aqr+qi9j5aAbRmKAx/dTu3pwSlyjhE3Mojg5P9n60P/
-         FjLmPXRggaEAz5canI/7PGE0UdvrakebxvH8PW4FHEvmPtNxF+w1V6++pOPPehDcO5J5
-         0JNH3gBz1TILBrEXRlYKlmOn6uPMqfRVoE7Ss9I6xE4PZo/6CvAa13vuOl8QJJigj/x9
-         EomywUrfBZYwR4Ef7QNZmpHAsbdeE/0ZkgJt+hciTtKpmIb7wy12lgNqJAbCFV05xpU+
-         pGFwqrD11y3H/HtJi1/h1iP9u5ba4B3rbDKFTZ9gPQm7oJ2se98b5H+zT1Woe13Y+6qJ
-         lZAQ==
-X-Gm-Message-State: APjAAAUtydxYrFwUx0dIr9RsM4GjFUe0C9QUG0eciHP7HWCJlyh8DquQ
-        tzeyd1/MxfyWPGXI/OtnS1RdHQ==
-X-Google-Smtp-Source: APXvYqxVLWttQAwlsY3dG0DxuB8fZT0ysWMSuHeOsGPJ2uJL8m4ti8uBNdeioogb40RlvJR/K0Igqw==
-X-Received: by 2002:a1c:1901:: with SMTP id 1mr7112162wmz.28.1571826356170;
-        Wed, 23 Oct 2019 03:25:56 -0700 (PDT)
-Received: from salem.gmr.ssr.upm.es (salem.gmr.ssr.upm.es. [138.4.36.7])
-        by smtp.gmail.com with ESMTPSA id v20sm17424441wml.26.2019.10.23.03.25.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Oct 2019 03:25:55 -0700 (PDT)
-From:   Alvaro Gamez Machado <alvaro.gamez@hazent.com>
-To:     Michal Simek <monstr@monstr.eu>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     Alvaro Gamez Machado <alvaro.gamez@hazent.com>
-Subject: [PATCH v2] microblaze: add support for reserved memory defined by device tree
-Date:   Wed, 23 Oct 2019 12:25:48 +0200
-Message-Id: <20191023102548.15164-1-alvaro.gamez@hazent.com>
-X-Mailer: git-send-email 2.23.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aRWUNj4J7qgXSXD2PSfXvGDEs07MKcTmNuTdcaVnUGw=;
+        b=JGoxbDuy0m5K0RU28WFiqJ9idHmOrGFOtbMqPAGA0Rs+oL1eJCljvBkxfHPr4jTR9z
+         oGxuTJzjIB81W/CujJ4/qjdtRVLb0aNxsm0CIuzUPKFCANfgF+y6xAdCy3IgdrJ1lihl
+         UJbPmsoe/YHzdu19oy1B3KQVEN66XQ7/jkwl2M4Sdj+Rj0zhtKEhkgKlMHR9KG3zXzJj
+         nf/bDqdEJuenXTZBUga2HtyDnq6JtpyC76cIAFoNuRLaQfVhX8f3GDTnxeCY8Dh/mKME
+         R4kaseSQcqb55O29881ymY59sJ8OmabIQ6X3KX7mVwLaEgKcxPeBBEs69k2gdLGf+hyW
+         l4cw==
+X-Gm-Message-State: APjAAAU6fY5YUSy2bBffJTmtNT8NE4RtEu5BU6FoZQDaC1tiSxdbxitj
+        JjHjL6q2JZt+ikIIN2rQ61XMAu0eKB3/ag==
+X-Google-Smtp-Source: APXvYqzWg7bFb/Mv2tuV7W5xFInN2aMIyFzfUf0tolc1jhbB7dOKT9cHv9wH7nO0ctnfcTeWj8P+LA==
+X-Received: by 2002:a19:ec16:: with SMTP id b22mr10397159lfa.137.1571826375904;
+        Wed, 23 Oct 2019 03:26:15 -0700 (PDT)
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com. [209.85.208.181])
+        by smtp.gmail.com with ESMTPSA id b25sm10210171ljj.36.2019.10.23.03.26.06
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 23 Oct 2019 03:26:11 -0700 (PDT)
+Received: by mail-lj1-f181.google.com with SMTP id j19so20496851lja.1
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 03:26:06 -0700 (PDT)
+X-Received: by 2002:a2e:29dd:: with SMTP id p90mr21979653ljp.26.1571826364626;
+ Wed, 23 Oct 2019 03:26:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1571822941-29776-1-git-send-email-rppt@kernel.org>
+In-Reply-To: <1571822941-29776-1-git-send-email-rppt@kernel.org>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 23 Oct 2019 06:25:48 -0400
+X-Gmail-Original-Message-ID: <CAHk-=whd6wNfx2bq7BmN4ouZgt=NQ5pw+3uqPOTbvz_Qb3itFg@mail.gmail.com>
+Message-ID: <CAHk-=whd6wNfx2bq7BmN4ouZgt=NQ5pw+3uqPOTbvz_Qb3itFg@mail.gmail.com>
+Subject: Re: [PATCH 00/12] mm: remove __ARCH_HAS_4LEVEL_HACK
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     Linux-MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Greentime Hu <green.hu@gmail.com>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Helge Deller <deller@gmx.de>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Jeff Dike <jdike@addtoit.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Mark Salter <msalter@redhat.com>,
+        Matt Turner <mattst88@gmail.com>,
+        Michal Simek <monstr@monstr.eu>,
+        Richard Weinberger <richard@nod.at>,
+        Russell King <linux@armlinux.org.uk>,
+        Sam Creasey <sammy@sammy.net>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
+        alpha <linux-alpha@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-c6x-dev@linux-c6x.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        linux-parisc@vger.kernel.org, linux-um@lists.infradead.org,
+        sparclinux@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This allows reserving regions of physical memory from the device tree.
-See Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
-for more details.
+On Wed, Oct 23, 2019 at 5:29 AM Mike Rapoport <rppt@kernel.org> wrote:
+>
+> These patches convert several architectures to use page table folding and
+> remove __ARCH_HAS_4LEVEL_HACK along with include/asm-generic/4level-fixup.h.
 
-Signed-off-by: Alvaro Gamez Machado <alvaro.gamez@hazent.com>
----
- arch/microblaze/mm/init.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Thanks for doing this.
 
-diff --git a/arch/microblaze/mm/init.c b/arch/microblaze/mm/init.c
-index a015a951c8b7..b69362fbfdbd 100644
---- a/arch/microblaze/mm/init.c
-+++ b/arch/microblaze/mm/init.c
-@@ -17,6 +17,7 @@
- #include <linux/slab.h>
- #include <linux/swap.h>
- #include <linux/export.h>
-+#include <linux/of_fdt.h>
- 
- #include <asm/page.h>
- #include <asm/mmu_context.h>
-@@ -188,6 +189,9 @@ void __init setup_memory(void)
- 
- void __init mem_init(void)
- {
-+	early_init_fdt_reserve_self();
-+	early_init_fdt_scan_reserved_mem();
-+
- 	high_memory = (void *)__va(memory_start + lowmem_size - 1);
- 
- 	/* this will put all memory onto the freelists */
--- 
-2.23.0
+The patches look sane from a quick scan, and it's definitely the right
+thing to do. So ack on my part, but obviously testing the different
+architectures would be a really good thing...
 
+                Linus
