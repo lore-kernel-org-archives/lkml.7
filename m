@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32BFDCA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 20:03:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A6ACA9EBB
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 20:03:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03B4F2086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 20:03:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67AF82086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 20:03:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HWzChNfm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bl1g34Mk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407336AbfJWUDj (ORCPT
+        id S2405275AbfJWUCq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 16:03:39 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:38565 "EHLO
+        Wed, 23 Oct 2019 16:02:46 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40666 "EHLO
         mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733176AbfJWUCs (ORCPT
+        with ESMTP id S2405185AbfJWUCp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 16:02:48 -0400
-Received: by mail-pg1-f194.google.com with SMTP id w3so12759935pgt.5;
-        Wed, 23 Oct 2019 13:02:47 -0700 (PDT)
+        Wed, 23 Oct 2019 16:02:45 -0400
+Received: by mail-pg1-f194.google.com with SMTP id 15so7411414pgt.7;
+        Wed, 23 Oct 2019 13:02:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=v3H54pMajw9vQAImO1zQUK9pcXc+MkHfH1n0XYG6X74=;
-        b=HWzChNfmQ2anc5V0nyw5UhLaS86AenhkOOnkjnHMCUOQ8ZgjQdz2KeoZC1SeuliTgc
-         9z3PO9ilE1TIlWVjviGlnCy/RywbMmphIDVwG4+sNS9lYCs4khxqD6ZnxN8xLzEVSgaJ
-         CdbEaqCyhUFsyzDY/TnN9Hsih/DLPh06gm2qHb1Wmx/yjPoqZaX5PILpkbMAyDLVWKlA
-         vdQEQKjlBju2ri2apFO36moIywuaxLp05/ny78ZU1cmGud0F1tDw1VeJ9Y7HKRjCEI6L
-         JM+As0f9rhEqcpNWaW30LyYn5X3t9mwYizRAhz3bSewfIVrWImAujlTth0I5IXj7pDJa
-         7meg==
+        bh=qtC7CH3uCwc1qnA7SQUM9vPjiJGHmllhEByKdOb4NKs=;
+        b=Bl1g34Mkp5wfx+KC9+klwhpKZk1kBhcM5NRp3FEFF07RQNZcVc4o24x1U11z10h6M6
+         LCIeI2Dy1qVdyeYk7Ldx8r3o/qs/FDyIX3QfJUJZyD6lq6pPMhvkUrpaqPFqgaYiyrc3
+         6AIibK6lfZYm/yIMhlv+VDOye62lgOM16ixQJY6NjpXW1cRbUnAW2sfmJmSkBRg0iuQU
+         3TSJB9Avz/zvs2sutC7DOVkbaoMD3gD+J/KdR/CbqCL7putsPB1Epk4uelX31SWDQwYo
+         5ackelqsjcnw8GQO5oqsP47ZlhuqjTzYI4ozItX8zAvf0I5EN94RSc+j0ee8WUme0gEd
+         1FoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=v3H54pMajw9vQAImO1zQUK9pcXc+MkHfH1n0XYG6X74=;
-        b=gQt6yMqg/9Xc4QhA1Vb4pqYS4/C6PjLaLy8XvGw+VkeRRQAMR7ZpMe0qnOjYNTF3YB
-         3C2ddfFquKFvIsat/EWxhyLNvutO7YrK2xauTH95KRL5t5M48Zh1nycoedmVoL+vWVk2
-         gqJdZu7O7Zu2DGPzKIZ8D0w5Udw5frq8XSuE7IrV0YfwfK059xiL+Y1hnrGPixjLDMCH
-         a9XLpEYO7LXVaiCfuXkS5J5+xEIBQo6bkWJsGvOg+n5txUM2N/Vj59j4hwP2oJPzRqed
-         P9b02uYPn3zEY1a1frUZNINxsjyUGXSc4wWl2oMa7Zn5vDmFapy5XeM3pfBRi9puqQqS
-         rKzw==
-X-Gm-Message-State: APjAAAXqYfnQCyO52a5LlRce8OJAAmHi9lU4oFyhdgOgQs1yQ1BSc/Kd
-        ld3iigtcxjO3X1qWkYTJl6k=
-X-Google-Smtp-Source: APXvYqx2dQjzCEQV0a9JbYtyY0kDCslgGRmIpudMlu+R4NLpxGsBIq5EXVcukjcdBFhjDxCwVbX+Qg==
-X-Received: by 2002:a63:ce0d:: with SMTP id y13mr6007108pgf.430.1571860966900;
-        Wed, 23 Oct 2019 13:02:46 -0700 (PDT)
+        bh=qtC7CH3uCwc1qnA7SQUM9vPjiJGHmllhEByKdOb4NKs=;
+        b=F4DSrxN/ZVYhh0GomiSfJkljFcfjhyAd2MJ4VjdSz5wFsO+EPZk0MVLQoLGpz47yZu
+         r716THGct8pGd2bG0O8jfxMENyOWArPyhyOSWNy8IcgvTs4hA3mCRkEhy5/88srm/70A
+         YL53po063wjZKE2+y/MHH9OwrP3M2sh5YxkYAHTS+YFVbGdtsu49PR4edo6FjA9Fy8OB
+         vBbCFUrfSNTK5i/vM/5d7WD4iS+23Vbuayy4CakiWxL51mBIUbdIzOtyP8X3tGN307q5
+         aGxGFm9ZM9Un/y36WRTjORHbL+0tkMaNHpm9zLCa8BKfywdvmmGkQnu9CNd+cF8csQpL
+         zwNw==
+X-Gm-Message-State: APjAAAUaFh0LFXzXCGx7wMLD890FbHTYbJ45BLFRKJ5PCcAgK0LxbGQT
+        BuiULh16sqMIwbHlK+t8lic=
+X-Google-Smtp-Source: APXvYqxrtG+HMKhqIm6N7hCHG05q+xOQ8FHVy0CHWWfKPchAcaWeOKq4CAT1YBwjvkyfK5HeusGoGw==
+X-Received: by 2002:a63:6949:: with SMTP id e70mr11937570pgc.226.1571860963943;
+        Wed, 23 Oct 2019 13:02:43 -0700 (PDT)
 Received: from dtor-ws.mtv.corp.google.com ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id 6sm10593598pfy.43.2019.10.23.13.02.45
+        by smtp.gmail.com with ESMTPSA id 6sm10593598pfy.43.2019.10.23.13.02.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Oct 2019 13:02:45 -0700 (PDT)
+        Wed, 23 Oct 2019 13:02:42 -0700 (PDT)
 From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
 To:     "Rafael J. Wysocki" <rafael@kernel.org>,
         Heikki Krogerus <heikki.krogerus@linux.intel.com>
@@ -66,9 +66,9 @@ Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Ard Biesheuvel <ard.biesheuvel@linaro.org>,
         linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH v6 05/15] software node: clean up property_copy_string_array()
-Date:   Wed, 23 Oct 2019 13:02:23 -0700
-Message-Id: <20191023200233.86616-6-dmitry.torokhov@gmail.com>
+Subject: [PATCH v6 03/15] efi/apple-properties: use PROPERTY_ENTRY_U8_ARRAY_LEN
+Date:   Wed, 23 Oct 2019 13:02:21 -0700
+Message-Id: <20191023200233.86616-4-dmitry.torokhov@gmail.com>
 X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
 In-Reply-To: <20191023200233.86616-1-dmitry.torokhov@gmail.com>
 References: <20191023200233.86616-1-dmitry.torokhov@gmail.com>
@@ -79,78 +79,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Because property_copy_string_array() stores the newly allocated pointer in the
-destination property, we have an awkward code in property_entry_copy_data()
-where we fetch the new pointer from dst.
+Let's switch to using PROPERTY_ENTRY_U8_ARRAY_LEN() to initialize
+property entries. Also, when dumping data, rely on local variables
+instead of poking into the property entry structure directly.
 
-Let's change property_copy_string_array() to return pointer and rely on the
-common path in property_entry_copy_data() to store it in destination structure.
-
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
- drivers/base/swnode.c | 19 ++++++++-----------
- 1 file changed, 8 insertions(+), 11 deletions(-)
+ drivers/firmware/efi/apple-properties.c | 18 ++++++++----------
+ 1 file changed, 8 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-index 12ca439bab30..f41692e0f63b 100644
---- a/drivers/base/swnode.c
-+++ b/drivers/base/swnode.c
-@@ -337,8 +337,8 @@ static void property_entry_free_data(const struct property_entry *p)
- 	kfree(p->name);
- }
+diff --git a/drivers/firmware/efi/apple-properties.c b/drivers/firmware/efi/apple-properties.c
+index 0e206c9e0d7a..5ccf39986a14 100644
+--- a/drivers/firmware/efi/apple-properties.c
++++ b/drivers/firmware/efi/apple-properties.c
+@@ -53,7 +53,8 @@ static void __init unmarshal_key_value_pairs(struct dev_header *dev_header,
  
--static int property_copy_string_array(struct property_entry *dst,
--				      const struct property_entry *src)
-+static const char * const *
-+property_copy_string_array(const struct property_entry *src)
- {
- 	const char **d;
- 	size_t nval = src->length / sizeof(*d);
-@@ -346,7 +346,7 @@ static int property_copy_string_array(struct property_entry *dst,
+ 	for (i = 0; i < dev_header->prop_count; i++) {
+ 		int remaining = dev_header->len - (ptr - (void *)dev_header);
+-		u32 key_len, val_len;
++		u32 key_len, val_len, entry_len;
++		const u8 *entry_data;
+ 		char *key;
  
- 	d = kcalloc(nval, sizeof(*d), GFP_KERNEL);
- 	if (!d)
--		return -ENOMEM;
-+		return NULL;
+ 		if (sizeof(key_len) > remaining)
+@@ -85,17 +86,14 @@ static void __init unmarshal_key_value_pairs(struct dev_header *dev_header,
+ 		ucs2_as_utf8(key, ptr + sizeof(key_len),
+ 			     key_len - sizeof(key_len));
  
- 	for (i = 0; i < nval; i++) {
- 		d[i] = kstrdup(src->pointer.str[i], GFP_KERNEL);
-@@ -354,12 +354,11 @@ static int property_copy_string_array(struct property_entry *dst,
- 			while (--i >= 0)
- 				kfree(d[i]);
- 			kfree(d);
--			return -ENOMEM;
-+			return NULL;
+-		entry[i].name = key;
+-		entry[i].length = val_len - sizeof(val_len);
+-		entry[i].is_array = !!entry[i].length;
+-		entry[i].type = DEV_PROP_U8;
+-		entry[i].pointer.u8_data = ptr + key_len + sizeof(val_len);
+-
++		entry_data = ptr + key_len + sizeof(val_len);
++		entry_len = val_len - sizeof(val_len);
++		entry[i] = PROPERTY_ENTRY_U8_ARRAY_LEN(key, entry_data,
++						       entry_len);
+ 		if (dump_properties) {
+-			dev_info(dev, "property: %s\n", entry[i].name);
++			dev_info(dev, "property: %s\n", key);
+ 			print_hex_dump(KERN_INFO, pr_fmt(), DUMP_PREFIX_OFFSET,
+-				16, 1, entry[i].pointer.u8_data,
+-				entry[i].length, true);
++				16, 1, entry_data, entry_len, true);
  		}
- 	}
  
--	dst->pointer.str = d;
--	return 0;
-+	return d;
- }
- 
- static int property_entry_copy_data(struct property_entry *dst,
-@@ -367,17 +366,15 @@ static int property_entry_copy_data(struct property_entry *dst,
- {
- 	const void *pointer = property_get_pointer(src);
- 	const void *new;
--	int error;
- 
- 	if (src->is_array) {
- 		if (!src->length)
- 			return -ENODATA;
- 
- 		if (src->type == DEV_PROP_STRING) {
--			error = property_copy_string_array(dst, src);
--			if (error)
--				return error;
--			new = dst->pointer.str;
-+			new = property_copy_string_array(src);
-+			if (!new)
-+				return -ENOMEM;
- 		} else {
- 			new = kmemdup(pointer, src->length, GFP_KERNEL);
- 			if (!new)
+ 		ptr += key_len + val_len;
 -- 
 2.23.0.866.gb869b98d4c-goog
 
