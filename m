@@ -2,84 +2,79 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC52CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:34:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FAF0CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:36:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C92042173B
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:34:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A7AC21906
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:36:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392240AbfJWOek (ORCPT
+        id S2392253AbfJWOgT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 10:34:40 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:54531 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732328AbfJWOek (ORCPT
+        Wed, 23 Oct 2019 10:36:19 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:38663 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732328AbfJWOgT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 10:34:40 -0400
-X-Originating-IP: 92.137.17.54
-Received: from localhost (alyon-657-1-975-54.w92-137.abo.wanadoo.fr [92.137.17.54])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id A562DFF815;
-        Wed, 23 Oct 2019 14:34:37 +0000 (UTC)
-Date:   Wed, 23 Oct 2019 16:34:36 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        y2038 Mailman List <y2038@lists.linaro.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [Y2038] [PATCH v6 10/43] compat_ioctl: move rtc handling into
- rtc-dev.c
-Message-ID: <20191023143436.GN3125@piout.net>
-References: <20191009190853.245077-1-arnd@arndb.de>
- <20191009191044.308087-10-arnd@arndb.de>
- <d1022cda6bd6ce73e9875644a5a2c65e4d554f37.camel@codethink.co.uk>
- <CAK8P3a0BYkPTSnQUmde2k+HVcg7XNihzWTEzrCD4d8G8ecO9-w@mail.gmail.com>
- <20191022043051.GA20354@ZenIV.linux.org.uk>
- <CAK8P3a3yutJU83AfxKXTFuCVQwsX50KYsDgbGbHeJJ0JoLbejg@mail.gmail.com>
- <20191023102937.GK3125@piout.net>
- <CAK8P3a2+wEH5mtq_vF6fTSkmCfBeKHOvNmjbvViiHFWxUAjV_g@mail.gmail.com>
+        Wed, 23 Oct 2019 10:36:19 -0400
+Received: by mail-oi1-f196.google.com with SMTP id v186so4756803oie.5
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 07:36:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xxo/chYm01QC8eTInCjxWj6Txmh3kYU/ouOy2udw44M=;
+        b=feAhax+OMofSpcTmlhBg9ZLx11+HHhuubwwMgvidgXbGsMbk5GMLj8BZj5jvqt+9bD
+         E9qu7hcychL86lQur6Ad7wY55JQDPtkqxDc9tnUrod56dFnTlBb0aXFDPybUNPgdzZqT
+         yX6Bb9F3fOfrOcjDTfKbebz39ckrQ38rEhfIwrQ7S2n2QSXBHP2rVrZ/Q+iaJwYyC/lv
+         y+ZjK5Q1LR34Q9Y+Fnx0YzPxrnrTBuRQaasTAH11GfxIotua2qwqemfkNpGA9mlKTD18
+         s1RjwV63Qf+YkZQ/tV4ZbLGSGjAwF9+rVd4nMC0e1+IH+Oi9NMRpnoGsaKVgmtf2LMxh
+         wxdQ==
+X-Gm-Message-State: APjAAAV92LJhgNNT3ZaiDdNCg8L51kS2diQO1RdjQAvCTkK7rgcIgcbv
+        Rsz3y+BMqqP3XuGF97yNK3n41SYMXojRhckzJNs=
+X-Google-Smtp-Source: APXvYqxDclxiIFroHlO24WZd1qvRSeKC3vh9yrg9lUgtANFtKnt58omlgaU/40OuK3FT1h/IrrwozE4TWGFgB2yxrRY=
+X-Received: by 2002:a54:4e89:: with SMTP id c9mr216403oiy.148.1571841378774;
+ Wed, 23 Oct 2019 07:36:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a2+wEH5mtq_vF6fTSkmCfBeKHOvNmjbvViiHFWxUAjV_g@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20191023135941.15000-1-yuehaibing@huawei.com>
+In-Reply-To: <20191023135941.15000-1-yuehaibing@huawei.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 23 Oct 2019 16:36:07 +0200
+Message-ID: <CAMuHMdV5dBGbB4DCwidpqeFkxtQGzrh=qO8Ph-Se3ZyGnrGpbw@mail.gmail.com>
+Subject: Re: [PATCH -next] iommu/ipmmu-vmsa: Remove dev_err() on
+ platform_get_irq() failure
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        Linux IOMMU <iommu@lists.linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Joerg Roedel <jroedel@suse.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/10/2019 16:28:40+0200, Arnd Bergmann wrote:
-> On Wed, Oct 23, 2019 at 12:29 PM Alexandre Belloni
-> <alexandre.belloni@bootlin.com> wrote:
-> > On 22/10/2019 14:14:21+0200, Arnd Bergmann wrote:
-> > > On Tue, Oct 22, 2019 at 6:30 AM Al Viro <viro@zeniv.linux.org.uk> wrote:
-> > >
-> > > I don't see any chance that this code is revived. If anyone wanted to
-> > > make it work, the right approach would be to use the rtc framework
-> > > and rewrite the code first.
-> > >
-> > > I could send a patch to remove the dead code though if that helps.
-> > >
-> >
-> > Please do.
-> 
-> Ok, done. Speaking of removing rtc drivers, should we just kill off
-> drivers/char/rtc.c and drivers/char/efirtc.c as well? I don't remember
-> why we left them in the tree, but I'm fairly sure they are not actually
-> needed.
-> 
+On Wed, Oct 23, 2019 at 4:01 PM YueHaibing <yuehaibing@huawei.com> wrote:
+> platform_get_irq() will call dev_err() itself on failure,
+> so there is no need for the driver to also do this.
+> This is detected by coccinelle.
+>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-https://lore.kernel.org/lkml/CAK8P3a0QZNY+K+V1HG056xCerz=_L2jh5UfZ+2LWkDqkw5Zznw@mail.gmail.com/
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-That's how we left it ;)
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
