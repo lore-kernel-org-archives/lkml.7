@@ -2,69 +2,141 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9811CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:39:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E02FCA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:44:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99F7F2173B
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:39:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5ABB21906
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:44:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571841844;
+	bh=86L8vdQa4TaJXZEJtgNdY1/pXGxLmyNUlMHKBcm1PMQ=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=HP2lBvMAPwwP1NcUX0nJHZO56OfJVm/11y+1sx0WeCERxU10KzFsqnGN/lxGsI5xo
+	 DsbiHCnvFnNETeUaZ+3Ae5I6jjwteDkFNjyukOmEKtyMTUMCMgzasjTZEhMAzKSGYQ
+	 8YBn3IMh2Ds29gFI7wgLkZn2AjlrVDNRqz+nvBnM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392291AbfJWOjl (ORCPT
+        id S2392308AbfJWOoD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 10:39:41 -0400
-Received: from muru.com ([72.249.23.125]:39286 "EHLO muru.com"
+        Wed, 23 Oct 2019 10:44:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389921AbfJWOjl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 10:39:41 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id B4C7480CF;
-        Wed, 23 Oct 2019 14:40:14 +0000 (UTC)
-Date:   Wed, 23 Oct 2019 07:39:36 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Sebastian Reichel <sre@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Adam Ford <aford173@gmail.com>,
-        Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>,
-        Tero Kristo <t-kristo@ti.com>, Rob Herring <robh@kernel.org>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] hwrng: omap3-rom - Fix unused function warnings
-Message-ID: <20191023143936.GH5610@atomide.com>
-References: <20191022142741.1794378-1-arnd@arndb.de>
- <20191023131452.2rilepif7x5lpfma@earth.universe>
+        id S2389423AbfJWOoD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 10:44:03 -0400
+Received: from [192.168.1.27] (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D5462173B;
+        Wed, 23 Oct 2019 14:44:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571841841;
+        bh=86L8vdQa4TaJXZEJtgNdY1/pXGxLmyNUlMHKBcm1PMQ=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=ycWKMBZp9y13eO/hIcFe8Gvjg3Lvh5/WndeI/FYQj1sXlzcwBnfW0V3/K+SDiYipc
+         FHh1ERHOhTWDFv6ud0H4SqOdW2VXv9mw+hnRQXAPo0zr8Xb0qf0CqDycJElURYPoru
+         M1A/LA0kP8iIhU/5gCVJuNDGAl8GKzb5fCLBw5Ys=
+Subject: Re: [RESEND PATCHv1] arm64: defconfig: enable rsu driver
+To:     richard.gong@linux.intel.com, catalin.marinas@arm.com,
+        will@kernel.org, shawnguo@kernel.org, olof@lixom.net,
+        mripard@kernel.org, bjorn.andersson@linaro.org, arnd@arndb.de,
+        marcin.juszkiewicz@linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Richard Gong <richard.gong@intel.com>
+References: <1571343351-25788-1-git-send-email-richard.gong@linux.intel.com>
+From:   Dinh Nguyen <dinguyen@kernel.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dinguyen@kernel.org; prefer-encrypt=mutual; keydata=
+ mQINBFEnvWwBEAC44OQqJjuetSRuOpBMIk3HojL8dY1krl8T8GJjfgc/Gh97CfVbrqhV5yQ3
+ Sk/MW9mxO9KNvQCbZtthfn62YHmroNwipjZ6wKOMfKdtJR4+8JW/ShIJYnrMfwN8Wki6O+5a
+ yPNNCeENHleV0FLVXw3aACxOcjEzGJHYmg4UC+56rfoxPEhKF6aGBTV5aGKMtQy77ywuqt12
+ c+hlRXHODmXdIeT2V4/u/AsFNAq6UFUEvHrVj+dMIyv2VhjRvkcESIGnG12ifPdU7v/+wom/
+ smtfOAGojgTCqpwd0Ay2xFzgGnSCIFRHp0I/OJqhUcwAYEAdgHSBVwiyTQx2jP+eDu3Q0jI3
+ K/x5qrhZ7lj8MmJPJWQOSYC4fYSse2oVO+2msoMTvMi3+Jy8k+QNH8LhB6agq7wTgF2jodwO
+ yij5BRRIKttp4U62yUgfwbQtEUvatkaBQlG3qSerOzcdjSb4nhRPxasRqNbgkBfs7kqH02qU
+ LOAXJf+y9Y1o6Nk9YCqb5EprDcKCqg2c8hUya8BYqo7y+0NkBU30mpzhaJXncbCMz3CQZYgV
+ 1TR0qEzMv/QtoVuuPtWH9RCC83J5IYw1uFUG4RaoL7Z03fJhxGiXx3/r5Kr/hC9eMl2he6vH
+ 8rrEpGGDm/mwZOEoG5D758WQHLGH4dTAATg0+ZzFHWBbSnNaSQARAQABtCFEaW5oIE5ndXll
+ biA8ZGluZ3V5ZW5Aa2VybmVsLm9yZz6JAjgEEwECACIFAlbG5oQCGwMGCwkIBwMCBhUIAgkK
+ CwQWAgMBAh4BAheAAAoJEBmUBAuBoyj0fIgQAICrZ2ceRWpkZv1UPM/6hBkWwOo3YkzSQwL+
+ AH15hf9xx0D5mvzEtZ97ZoD0sAuB+aVIFwolet+nw49Q8HA3E/3j0DT7sIAqJpcPx3za+kKT
+ twuQ4NkQTTi4q5WCpA5b6e2qzIynB50b3FA6bCjJinN06PxhdOixJGv1qDDmJ01fq2lA7/PL
+ cny/1PIo6PVMWo9nf77L6iXVy8sK/d30pa1pjhMivfenIleIPYhWN1ZdRAkH39ReDxdqjQXN
+ NHanNtsnoCPFsqeCLmuUwcG+XSTo/gEM6l2sdoMF4qSkD4DdrVf5rsOyN4KJAY9Uqytn4781
+ n6l1NAQSRr0LPT5r6xdQ3YXIbwUfrBWh2nDPm0tihuHoH0CfyJMrFupSmjrKXF84F3cq0DzC
+ yasTWUKyW/YURbWeGMpQH3ioDLvBn0H3AlVoSloaRzPudQ6mP4O8mY0DZQASGf6leM82V3t0
+ Gw8MxY9tIiowY7Yl2bHqXCorPlcEYXjzBP32UOxIK7y7AQ1JQkcv6pZ0/6lX6hMshzi9Ydw0
+ m8USfFRZb48gsp039gODbSMCQ2NfxBEyUPw1O9nertCMbIO/0bHKkP9aiHwg3BPwm3YL1UvM
+ ngbze/8cyjg9pW3Eu1QAzMQHYkT1iiEjJ8fTssqDLjgJyp/I3YHYUuAf3i8SlcZTusIwSqnD
+ uQINBFEnvWwBEADZqma4LI+vMqJYe15fxnX8ANw+ZuDeYHy17VXqQ7dA7n8E827ndnoXoBKB
+ 0n7smz1C0I9StarHQPYTUciMLsaUpedEfpYgqLa7eRLFPvk/cVXxmY8Pk+aO8zHafr8yrFB1
+ cYHO3Ld8d/DvF2DuC3iqzmgXzaRQhvQZvJ513nveCa2zTPPCj5w4f/Qkq8OgCz9fOrf/CseM
+ xcP3Jssyf8qTZ4CTt1L6McRZPA/oFNTTgS/KA22PMMP9i8E6dF0Nsj0MN0R7261161PqfA9h
+ 5c+BBzKZ6IHvmfwY+Fb0AgbqegOV8H/wQYCltPJHeA5y1kc/rqplw5I5d8Q6B29p0xxXSfaP
+ UQ/qmXUkNQPNhsMnlL3wRoCol60IADiEyDJHVZRIl6U2K54LyYE1vkf14JM670FsUH608Hmk
+ 30FG8bxax9i+8Muda9ok/KR4Z/QPQukmHIN9jVP1r1C/aAEvjQ2PK9aqrlXCKKenQzZ8qbeC
+ rOTXSuJgWmWnPWzDrMxyEyy+e84bm+3/uPhZjjrNiaTzHHSRnF2ffJigu9fDKAwSof6SwbeH
+ eZcIM4a9Dy+Ue0REaAqFacktlfELeu1LVzMRvpIfPua8izTUmACTgz2kltTaeSxAXZwIziwY
+ prPU3cfnAjqxFHO2TwEpaQOMf8SH9BSAaCXArjfurOF+Pi3lKwARAQABiQIfBBgBAgAJBQJR
+ J71sAhsMAAoJEBmUBAuBoyj0MnIQAI+bcNsfTNltf5AbMJptDgzISZJrYCXuzOgv4+d1CubD
+ 83s0k6VJgsiCIEpvELQJsr58xB6l+o3yTBZRo/LViNLk0jF4CmCdXWjTyaQAIceEdlaeeTGH
+ d5GqAud9rv9q1ERHTcvmoEX6pwv3m66ANK/dHdBV97vXacl+BjQ71aRiAiAFySbJXnqj+hZQ
+ K8TCI/6TOtWJ9aicgiKpmh/sGmdeJCwZ90nxISvkxDXLEmJ1prvbGc74FGNVNTW4mmuNqj/p
+ oNr0iHan8hjPNXwoyLNCtj3I5tBmiHZcOiHDUufHDyKQcsKsKI8kqW3pJlDSACeNpKkrjrib
+ 3KLQHSEhTQCt3ZUDf5xNPnFHOnBjQuGkumlmhkgD5RVguki39AP2BQYp/mdk1NCRQxz5PR1B
+ 2w0QaTgPY24chY9PICcMw+VeEgHZJAhuARKglxiYj9szirPd2kv4CFu2w6a5HNMdVT+i5Hov
+ cJEJNezizexE0dVclt9OS2U9Xwb3VOjs1ITMEYUf8T1j83iiCCFuXqH4U3Eji0nDEiEN5Ac0
+ Jn/EGOBG2qGyKZ4uOec9j5ABF7J6hyO7H6LJaX5bLtp0Z7wUbyVaR4UIGdIOchNgNQk4stfm
+ JiyuXyoFl/1ihREfvUG/e7+VAAoOBnMjitE5/qUERDoEkkuQkMcAHyEyd+XZMyXY
+Message-ID: <7916a110-5e05-03e4-3e40-cea307c49941@kernel.org>
+Date:   Wed, 23 Oct 2019 09:43:59 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191023131452.2rilepif7x5lpfma@earth.universe>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <1571343351-25788-1-git-send-email-richard.gong@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Sebastian Reichel <sre@kernel.org> [191023 13:15]:
-> Hi,
-> 
-> On Tue, Oct 22, 2019 at 04:27:31PM +0200, Arnd Bergmann wrote:
-> > When runtime-pm is disabled, we get a few harmless warnings:
-> > 
-> > drivers/char/hw_random/omap3-rom-rng.c:65:12: error: unused function 'omap_rom_rng_runtime_suspend' [-Werror,-Wunused-function]
-> > drivers/char/hw_random/omap3-rom-rng.c:81:12: error: unused function 'omap_rom_rng_runtime_resume' [-Werror,-Wunused-function]
-> > 
-> > Mark these functions as __maybe_unused so gcc can drop them
-> > silently.
-> > 
-> > Fixes: 8d9d4bdc495f ("hwrng: omap3-rom - Use runtime PM instead of custom functions")
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> > ---
-> 
-> Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 
-Thanks for fixing these similar issues again:
 
-Reviewwed-by: Tony Lindgren <tony@atomide.com>
+On 10/17/19 3:15 PM, richard.gong@linux.intel.com wrote:
+> From: Richard Gong <richard.gong@intel.com>
+> 
+> Enable Intel Stratix10 Remote System Update (RSU) driver
+> 
+> The Intel Remote System Update (RSU) driver provides a way for customers
+> to update the boot configuration of a Intel Stratix 10 SoC device with
+> significantly reduced risk of corrupting the bitstream storage and
+> bricking the system.
+> 
+> Signed-off-by: Richard Gong <richard.gong@intel.com>
+> ---
+>  arch/arm64/configs/defconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> index c9adae4..0b626b2 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -90,6 +90,7 @@ CONFIG_ARM_TEGRA186_CPUFREQ=y
+>  CONFIG_ARM_SCPI_PROTOCOL=y
+>  CONFIG_RASPBERRYPI_FIRMWARE=y
+>  CONFIG_INTEL_STRATIX10_SERVICE=y
+> +CONFIG_INTEL_STRATIX10_RSU=m
+>  CONFIG_TI_SCI_PROTOCOL=y
+>  CONFIG_EFI_CAPSULE_LOADER=y
+>  CONFIG_IMX_SCU=y
+> 
+
+Applied!
+
+Thanks,
+Dinh
