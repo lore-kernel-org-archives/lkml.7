@@ -2,154 +2,254 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7386CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:27:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EF0ACA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:28:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA176222C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:27:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RfSt8m1g"
+	by mail.kernel.org (Postfix) with ESMTP id 0A46121928
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:28:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571851691;
+	bh=5pgWB4AkehuWd0cfv4A/b1IFZsyYusfiPRz17cePncs=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=0ThtymTFAzU6Yz6WK0PMq+QTzR7IUWOB3Ja4Mo81nggI58eawoMZxhcSNEjV1RVqz
+	 ndGpUdcnOlaDrxMoKsIPr2vpjZYCaHWY9V9JASf+yAu/2OIZoQIqvT6cIl+W5VRAYC
+	 9iXiCwM46EgmhKzvAc9NNzH3uAzbqkQ+SFejgas8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729518AbfJWR1k (ORCPT
+        id S1729620AbfJWR2K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 13:27:40 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:53999 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728583AbfJWR1j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 13:27:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571851658;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=esWx43fZLzMnjouiOJwe7rGNAZqI0D7XVCwYEnxdbUA=;
-        b=RfSt8m1gOMR7uVoM6YJU/zPqWy5KWZMMkuXvMW+U4to0XCxLQTlJ0WsUZJiAN2id6N9WsO
-        Mp3K1NGQwXInPlusDaKWs5z5fkCrgIvuN/TTxbWVoBFs4a1QmIpVoWjCRNCakJ3BHpSvA6
-        BQBQ7FvFgxfAd0RMkXQjSQWSKLWLReg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-346-N1h7g-G8MRyyM5N5r7xtRg-1; Wed, 23 Oct 2019 13:27:35 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 23 Oct 2019 13:28:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41614 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729423AbfJWR2J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 13:28:09 -0400
+Received: from localhost (unknown [104.132.0.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3FDBA800D49;
-        Wed, 23 Oct 2019 17:27:33 +0000 (UTC)
-Received: from [10.10.123.185] (ovpn-123-185.rdu2.redhat.com [10.10.123.185])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4BC1760C80;
-        Wed, 23 Oct 2019 17:27:30 +0000 (UTC)
-Subject: Re: [PATCH] Add prctl support for controlling PF_MEMALLOC V2
-To:     Michal Hocko <mhocko@kernel.org>,
-        Dave Chinner <david@fromorbit.com>
-References: <20191021214137.8172-1-mchristi@redhat.com>
- <20191022112446.GA8213@dhcp22.suse.cz> <5DAF2AA0.5030500@redhat.com>
- <20191022163310.GS9379@dhcp22.suse.cz>
- <20191022204344.GB2044@dread.disaster.area>
- <20191023071146.GE754@dhcp22.suse.cz>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-block@vger.kernel.org, martin@urbackup.org,
-        Damien.LeMoal@wdc.com
-From:   Mike Christie <mchristi@redhat.com>
-Message-ID: <5DB08D81.8050300@redhat.com>
-Date:   Wed, 23 Oct 2019 12:27:29 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.6.0
+        by mail.kernel.org (Postfix) with ESMTPSA id D3FED21872;
+        Wed, 23 Oct 2019 17:28:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571851687;
+        bh=5pgWB4AkehuWd0cfv4A/b1IFZsyYusfiPRz17cePncs=;
+        h=Date:From:To:Subject:References:In-Reply-To:From;
+        b=OWFT3gE6ccyQz2r3n9mQVAaG7rJDOKP8MU6yf2is0l5OG60rTBToazya3uXg90hAL
+         MC3ETtBjtGo0d0z5fshUsHzywa7dGbRHxEyvu6KKJvcw31zPhELmcSVxt/rFXVQBse
+         gHSGDvBLs5gxe6IGxUV2XMCD6tNMX2HIO6ggcB5s=
+Date:   Wed, 23 Oct 2019 10:28:07 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: Re: [PATCH 2/2] f2fs: support data compression
+Message-ID: <20191023172807.GA37885@jaegeuk-macbookpro.roam.corp.google.com>
+References: <20191022171602.93637-1-jaegeuk@kernel.org>
+ <20191022171602.93637-2-jaegeuk@kernel.org>
+ <20191023052447.GD361298@sol.localdomain>
 MIME-Version: 1.0
-In-Reply-To: <20191023071146.GE754@dhcp22.suse.cz>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: N1h7g-G8MRyyM5N5r7xtRg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191023052447.GD361298@sol.localdomain>
+User-Agent: Mutt/1.8.2 (2017-04-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/23/2019 02:11 AM, Michal Hocko wrote:
-> On Wed 23-10-19 07:43:44, Dave Chinner wrote:
->> On Tue, Oct 22, 2019 at 06:33:10PM +0200, Michal Hocko wrote:
->=20
-> Thanks for more clarifiation regarding PF_LESS_THROTTLE.
->=20
-> [...]
->>> PF_IO_FLUSHER would mean that the user
->>> context is a part of the IO path and therefore there are certain reclai=
-m
->>> recursion restrictions.
->>
->> If PF_IO_FLUSHER just maps to PF_LESS_THROTTLE|PF_MEMALLOC_NOIO,
->> then I'm not sure we need a new definition. Maybe that's the ptrace
->> flag name, but in the kernel we don't need a PF_IO_FLUSHER process
->> flag...
->=20
-> Yes, the internal implementation would do something like that. I was
-> more interested in the user space visible API at this stage. Something
-> generic enough because exporting MEMALLOC flags is just a bad idea IMHO
-> (especially PF_MEMALLOC).
+On 10/22, Eric Biggers wrote:
+> On Tue, Oct 22, 2019 at 10:16:02AM -0700, Jaegeuk Kim wrote:
+> > From: Chao Yu <yuchao0@huawei.com>
+> > 
+> > This patch tries to support compression in f2fs.
+> > 
+> > - New term named cluster is defined as basic unit of compression, file can
+> > be divided into multiple clusters logically. One cluster includes 4 << n
+> > (n >= 0) logical pages, compression size is also cluster size, each of
+> > cluster can be compressed or not.
+> > 
+> > - In cluster metadata layout, one special flag is used to indicate cluster
+> > is compressed one or normal one, for compressed cluster, following metadata
+> > maps cluster to [1, 4 << n - 1] physical blocks, in where f2fs stores
+> > data including compress header and compressed data.
+> > 
+> > - In order to eliminate write amplification during overwrite, F2FS only
+> > support compression on write-once file, data can be compressed only when
+> > all logical blocks in file are valid and cluster compress ratio is lower
+> > than specified threshold.
+> > 
+> > - To enable compression on regular inode, there are three ways:
+> > * chattr +c file
+> > * chattr +c dir; touch dir/file
+> > * mount w/ -o compress_extension=ext; touch file.ext
+> > 
+> > Compress metadata layout:
+> >                              [Dnode Structure]
+> >              +-----------------------------------------------+
+> >              | cluster 1 | cluster 2 | ......... | cluster N |
+> >              +-----------------------------------------------+
+> >              .           .                       .           .
+> >        .                       .                .                      .
+> >   .         Compressed Cluster       .        .        Normal Cluster            .
+> > +----------+---------+---------+---------+  +---------+---------+---------+---------+
+> > |compr flag| block 1 | block 2 | block 3 |  | block 1 | block 2 | block 3 | block 4 |
+> > +----------+---------+---------+---------+  +---------+---------+---------+---------+
+> >            .                             .
+> >          .                                           .
+> >        .                                                           .
+> >       +-------------+-------------+----------+----------------------------+
+> >       | data length | data chksum | reserved |      compressed data       |
+> >       +-------------+-------------+----------+----------------------------+
+> > 
+> > Changelog:
+> > 
+> > 20190326:
+> > - fix error handling of read_end_io().
+> > - remove unneeded comments in f2fs_encrypt_one_page().
+> > 
+> > 20190327:
+> > - fix wrong use of f2fs_cluster_is_full() in f2fs_mpage_readpages().
+> > - don't jump into loop directly to avoid uninitialized variables.
+> > - add TODO tag in error path of f2fs_write_cache_pages().
+> > 
+> > 20190328:
+> > - fix wrong merge condition in f2fs_read_multi_pages().
+> > - check compressed file in f2fs_post_read_required().
+> > 
+> > 20190401
+> > - allow overwrite on non-compressed cluster.
+> > - check cluster meta before writing compressed data.
+> > 
+> > 20190402
+> > - don't preallocate blocks for compressed file.
+> > 
+> > - add lz4 compress algorithm
+> > - process multiple post read works in one workqueue
+> >   Now f2fs supports processing post read work in multiple workqueue,
+> >   it shows low performance due to schedule overhead of multiple
+> >   workqueue executing orderly.
+> > 
+> > - compress: support buffered overwrite
+> > C: compress cluster flag
+> > V: valid block address
+> > N: NEW_ADDR
+> > 
+> > One cluster contain 4 blocks
+> > 
+> >  before overwrite   after overwrite
+> > 
+> > - VVVV		->	CVNN
+> > - CVNN		->	VVVV
+> > 
+> > - CVNN		->	CVNN
+> > - CVNN		->	CVVV
+> > 
+> > - CVVV		->	CVNN
+> > - CVVV		->	CVVV
+> > 
+> > [Jaegeuk Kim]
+> > - add tracepoint for f2fs_{,de}compress_pages()
+> > - fix many bugs and add some compression stats
+> > 
+> > Signed-off-by: Chao Yu <yuchao0@huawei.com>
+> > Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+> 
+> How was this tested?  Shouldn't there a mount option analogous to
+> test_dummy_encryption that causes all files to be auto-compressed, so that a
+> full run of xfstests can be done with compression?  I see "compress_extension",
+> but apparently it's only for a file extension?  Also, since reads can involve
+> any combination of decryption, compression, and verity, it's important to test
+> as many combinations as possible, including all at once.  Has that been done?
 
-Do you mean we would do something like:
+This patch should be RFC which requires as many tests as possible. I posted it
+quite early in order to get some reviews and feedback as well.
 
-prctl()
-....
-case PF_SET_IO_FLUSHER:
-        current->flags |=3D PF_MEMALLOC_NOIO;
-....
+What I've done so far would look like:
+- mkfs.f2fs -f -O encrypt -O quota -O compression -O extra_attr /dev/sdb1
+- mount -t f2fs /dev/sdb1 /mnt/test
+- mkdir /mnt/test/comp_dir
+- f2fs_io setflags compression /mnt/test/comp_dir
+- cd /mnt/test/comp_dir
+- git clone kernel.git
+- compile kernel
+- or, fsstress on top of it
 
-or are you saying we would add a new PF_IO_FLUSHER flag and then modify
-PF_MEMALLOC_NOIO uses like in current_gfp_context:
+> 
+> I also tried running the fs-verity xfstests on this with
+> 'kvm-xfstests -c f2fs -g verity', but the kernel immediately crashes:
 
-if (current->flags & (PF_MEMALLOC_NOIO | PF_IO_FLUSHER)
-      flags &=3D ~(__GFP_IO | __GFP_FS);
+I didn't check verity yet. I'll take a look at this soon.
 
-?
-
->=20
->>>>>> This patch allows the userspace deamon to set the PF_MEMALLOC* flags
->>>>>> with prctl during their initialization so later allocations cannot
->>>>>> calling back into them.
->>>>>
->>>>> TBH I am not really happy to export these to the userspace. They are
->>>>> an internal implementation detail and the userspace shouldn't really
->>>>
->>>> They care in these cases, because block/fs drivers must be able to mak=
-e
->>>> forward progress during writes. To meet this guarantee kernel block
->>>> drivers use mempools and memalloc/GFP flags.
->>>>
->>>> For these userspace components of the block/fs drivers they already do
->>>> things normal daemons do not to meet that guarantee like mlock their
->>>> memory, disable oom killer, and preallocate resources they have contro=
-l
->>>> over. They have no control over reclaim like the kernel drivers do so
->>>> its easy for us to deadlock when memory gets low.
->>>
->>> OK, fair enough. How much of a control do they really need though. Is a
->>> single PF_IO_FLUSHER as explained above (essentially imply GPF_NOIO
->>> context) sufficient?
->>
->> I think some of these usrspace processes work at the filesystem
->> level and so really only need GFP_NOFS allocation (fuse), while
->> others work at the block device level (iscsi, nbd) so need GFP_NOIO
->> allocation. So there's definitely an argument for providing both...
->=20
-> The main question is whether giving more APIs is really necessary. Is
-> there any real problem to give them only PF_IO_FLUSHER and let both
-> groups use this one? It will imply more reclaim restrictions for solely
-> FS based ones but is this a practical problem? If yes we can always add
-> PF_FS_$FOO later on.
-
-
-I am not sure. I will have to defer to general FS experts like Dave or
-Martin and Damien for the specific fuse case. There do not seem to be a
-lot of places where we check for __GFP_IO so configs with fuse and
-bcache for example are probably not a big deal. However, I am not very
-familiar with some of the other code paths in the mm layer and how FSs
-interact with them.
-
+> 
+> BUG: kernel NULL pointer dereference, address: 0000000000000182
+> #PF: supervisor read access in kernel mode
+> #PF: error_code(0x0000) - not-present page
+> PGD 0 P4D 0 
+> Oops: 0000 [#1] SMP
+> CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.4.0-rc1-00119-g60f351f4c50f #3
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20191013_105130-anatol 04/01/2014
+> RIP: 0010:__queue_work+0x3e/0x5f0 kernel/workqueue.c:1409
+> Code: d4 53 48 83 ec 18 89 7d d4 8b 3d c1 bf 2a 01 85 ff 74 17 65 48 8b 04 25 80 5d 01 00 8b b0 0c 07 00 00 85 f6 0f 84 1
+> RSP: 0018:ffffc900000a8db0 EFLAGS: 00010046
+> RAX: ffff88807d94e340 RBX: 0000000000000246 RCX: 0000000000000000
+> RDX: ffff88807d9e0be8 RSI: 0000000000000000 RDI: 0000000000000001
+> RBP: ffffc900000a8df0 R08: 0000000000000000 R09: 0000000000000001
+> R10: ffff888075f2bc68 R11: 0000000000000000 R12: ffff88807d9e0be8
+> R13: 0000000000000000 R14: 0000000000000030 R15: ffff88807c2c6780
+> FS:  0000000000000000(0000) GS:ffff88807fd00000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 0000000000000182 CR3: 00000000757e3000 CR4: 00000000003406e0
+> Call Trace:
+>  <IRQ>
+>  queue_work_on+0x67/0x70 kernel/workqueue.c:1518
+>  queue_work include/linux/workqueue.h:494 [inline]
+>  f2fs_enqueue_post_read_work fs/f2fs/data.c:166 [inline]
+>  bio_post_read_processing fs/f2fs/data.c:173 [inline]
+>  f2fs_read_end_io+0xcb/0xe0 fs/f2fs/data.c:195
+>  bio_endio+0xa4/0x1a0 block/bio.c:1818
+>  req_bio_endio block/blk-core.c:242 [inline]
+>  blk_update_request+0xf6/0x310 block/blk-core.c:1462
+>  blk_mq_end_request+0x1c/0x130 block/blk-mq.c:568
+>  virtblk_request_done+0x32/0x80 drivers/block/virtio_blk.c:226
+>  blk_done_softirq+0x98/0xc0 block/blk-softirq.c:37
+>  __do_softirq+0xc1/0x40d kernel/softirq.c:292
+>  invoke_softirq kernel/softirq.c:373 [inline]
+>  irq_exit+0xb3/0xc0 kernel/softirq.c:413
+>  exiting_irq arch/x86/include/asm/apic.h:536 [inline]
+>  do_IRQ+0x5b/0x110 arch/x86/kernel/irq.c:263
+>  common_interrupt+0xf/0xf arch/x86/entry/entry_64.S:607
+>  </IRQ>
+> RIP: 0010:native_safe_halt arch/x86/include/asm/irqflags.h:60 [inline]
+> RIP: 0010:arch_safe_halt arch/x86/include/asm/irqflags.h:103 [inline]
+> RIP: 0010:default_idle+0x29/0x160 arch/x86/kernel/process.c:580
+> Code: 90 55 48 89 e5 41 55 41 54 65 44 8b 25 70 64 76 7e 53 0f 1f 44 00 00 e8 95 13 88 ff e9 07 00 00 00 0f 00 2d 8b c0 b
+> RSP: 0018:ffffc90000073e78 EFLAGS: 00000202 ORIG_RAX: ffffffffffffffdc
+> RAX: ffff88807d94e340 RBX: 0000000000000001 RCX: 0000000000000000
+> RDX: 0000000000000046 RSI: 0000000000000006 RDI: ffff88807d94e340
+> RBP: ffffc90000073e90 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000001
+> R13: ffff88807d94e340 R14: 0000000000000000 R15: 0000000000000000
+>  arch_cpu_idle+0xa/0x10 arch/x86/kernel/process.c:571
+>  default_idle_call+0x1e/0x30 kernel/sched/idle.c:94
+>  cpuidle_idle_call kernel/sched/idle.c:154 [inline]
+>  do_idle+0x1e4/0x210 kernel/sched/idle.c:263
+>  cpu_startup_entry+0x1b/0x20 kernel/sched/idle.c:355
+>  start_secondary+0x151/0x1a0 arch/x86/kernel/smpboot.c:264
+>  secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:241
+> CR2: 0000000000000182
+> ---[ end trace 86328090a3179142 ]---
+> RIP: 0010:__queue_work+0x3e/0x5f0 kernel/workqueue.c:1409
+> Code: d4 53 48 83 ec 18 89 7d d4 8b 3d c1 bf 2a 01 85 ff 74 17 65 48 8b 04 25 80 5d 01 00 8b b0 0c 07 00 00 85 f6 0f 84 1
+> RSP: 0018:ffffc900000a8db0 EFLAGS: 00010046
+> RAX: ffff88807d94e340 RBX: 0000000000000246 RCX: 0000000000000000
+> RDX: ffff88807d9e0be8 RSI: 0000000000000000 RDI: 0000000000000001
+> RBP: ffffc900000a8df0 R08: 0000000000000000 R09: 0000000000000001
+> R10: ffff888075f2bc68 R11: 0000000000000000 R12: ffff88807d9e0be8
+> R13: 0000000000000000 R14: 0000000000000030 R15: ffff88807c2c6780
+> FS:  0000000000000000(0000) GS:ffff88807fd00000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 0000000000000182 CR3: 00000000757e3000 CR4: 00000000003406e0
+> Kernel panic - not syncing: Fatal exception in interrupt
+> Kernel Offset: disabled
+> Rebooting in 5 seconds..
