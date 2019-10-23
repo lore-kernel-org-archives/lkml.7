@@ -2,132 +2,121 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F761CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:09:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8050ECA9EBB
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:10:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8E6D21872
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:09:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=plexistor-com.20150623.gappssmtp.com header.i=@plexistor-com.20150623.gappssmtp.com header.b="Ue6vcAWX"
+	by mail.kernel.org (Postfix) with ESMTP id 56E9F21872
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:10:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571836258;
+	bh=XfD1Vyk8Auehu+lpd/AA3ke17tRs+2Dw4K2hWCStsDc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Q7yTF+rkIb3hNI2ys78TRFtfRZ/bGwqXu2/qUEZbpnEmfBCQvFCLrrp1+wJ9M+Z0S
+	 cuRXldlehILKVH4HgIvKQpb+/kTUFKY3fKeSPPgKzMCgJ1DpGf0Xk5kYGbIP8bQdBZ
+	 x8vKS62jA3+FtxWHUu9+f+FZfYB5/BeQ/ifRC8UY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405606AbfJWNJz (ORCPT
+        id S2405627AbfJWNK5 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 09:09:55 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:41324 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405594AbfJWNJz (ORCPT
+        Wed, 23 Oct 2019 09:10:57 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:35592 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726032AbfJWNK4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 09:09:55 -0400
-Received: by mail-ed1-f66.google.com with SMTP id f20so15702538edv.8
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 06:09:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=plexistor-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=NinmgajUCfhO7+tZ41dBDs+Wf/QWxDVGKSCH9dLTzRQ=;
-        b=Ue6vcAWXJumSy35CyULE52NwN/O5lBkjnv9W+NBFTDwFNKyvVEU8n3GtW0A6Ip5xMM
-         jYmD3UgNWmMoM/ChyG9SxPC0xzUCQv6UAixpeQlQQ2C3zJ59PtOIwjk0ObIiKceehjFZ
-         7nyLriOsglh0IubE9caMlAhyGbJwrXIG9V0phNMTWk10nfiM274GVzS8FLdwugR8M8k8
-         P1Xo6dRBAs+FK8SYRwmsL6zEFZfJH/RkmxttRQvnzuRKKaDHtjgYfnBWBesfjGf4LIRf
-         AzPBR2eR/JBYl9QxjzDlx/EUBfEfjgMcI5SBMS5WscFAhrN+0sft4P4GrzYn5jDd2HQZ
-         TFkw==
+        Wed, 23 Oct 2019 09:10:56 -0400
+Received: by mail-ed1-f68.google.com with SMTP id k2so5018362edx.2;
+        Wed, 23 Oct 2019 06:10:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=NinmgajUCfhO7+tZ41dBDs+Wf/QWxDVGKSCH9dLTzRQ=;
-        b=NkLJUtuKGXJ0PlDkO70FKst9XWI8hHgRWNp0obMVwU7necFMUfRgddZZd6fbpO8DUC
-         ydBUnWr4VzW4HCsHD2lHPy3qISGjfCx2yvK/ubkE+ru3EKv0eedqUNYr0P0Ny1G5DPSY
-         7Xzz1lcEKpAhpMIG9lyNdbtobtkgp116hU4bFqv8lSHteQTeWQLrlYjcbo1E043mal/l
-         JA6xzaV2AjrcpEbdnrlncyghDFnoQT1fyQ/ZUKCBC/eDA+TeFW8th2JzNMQMJtAHbr2B
-         50Q9wW/sMTSpLmF/CQ7kLf34RqNRNDI6JFKhCUipyCBUbuktWzo9MVnWSYVFo0H1a+FW
-         aJEg==
-X-Gm-Message-State: APjAAAUQaX+koFawV3aWPuFPrPgSM7oT1f7SBnQyH5ruQ2Wu/IkoZ+Sp
-        dHipAQPuE02cdYauMm99sypi4w==
-X-Google-Smtp-Source: APXvYqyRh5PulbU0JdPquFxyjvevhPD2754GjlUlLCqslOvV0Q+oG+GG6pV2FwjfcFMZbk+F1TJ4mg==
-X-Received: by 2002:a17:906:7212:: with SMTP id m18mr32604441ejk.88.1571836193408;
-        Wed, 23 Oct 2019 06:09:53 -0700 (PDT)
-Received: from [10.68.217.182] ([217.70.210.43])
-        by smtp.googlemail.com with ESMTPSA id o26sm115518edt.55.2019.10.23.06.09.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Oct 2019 06:09:52 -0700 (PDT)
-Subject: Re: [PATCH 0/5] Enable per-file/directory DAX operations
-From:   Boaz Harrosh <boaz@plexistor.com>
-To:     ira.weiny@intel.com, linux-kernel@vger.kernel.org
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-References: <20191020155935.12297-1-ira.weiny@intel.com>
- <b7849297-e4a4-aaec-9a64-2b481663588b@plexistor.com>
-Message-ID: <b883142c-ecfe-3c5b-bcd9-ebe4ff28d852@plexistor.com>
-Date:   Wed, 23 Oct 2019 16:09:50 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=lzwXfyhUE7yc9zrzbjqMe71sKuHvjq9U3aqm0Bd1AoI=;
+        b=S/A3aIGnph7/r49FdcX/+rOROLnuReURWi9z5AaaiFgwNDyHNguoHy2jLTKIg0AobS
+         Ii8Aob7iyqUE9px3EJl+QbMXPlHqS2i4AJjUkEXgVYMOpJB5ylqfR28AxSRz0LGrE0oN
+         dz0N+b0G4A1+WoZyqXNpZC27TiMgZrwh3OQIocjQVBgN+3XtOoyCaMvlIaqATpBbxqeb
+         aH+TRLRapqnj+ldkTcAZ0Bi9oR73bzEGJ0oLBkEdJwU7OEXluqUoH1Bhl4rcsWPwWDMa
+         DGF3xhA2WaMsusqyac2NzMIPJnBzhBlKnq/yDYu7/oI4+szOWAtVn2bNxBf1GiYtQfaY
+         jRtQ==
+X-Gm-Message-State: APjAAAXIBu2F0LkRRidZBYch85DAr88A/27wF1+klG85knTLuwFmQPUI
+        Ki2dfON5MI5tkKTRGbG4ylA=
+X-Google-Smtp-Source: APXvYqyft44OcCGb0xN0+fC1gmfK8usNRgvA/I5KY4vuTv2zLifQ5kptU9qNo1AQahi2rM4m7Aa/dg==
+X-Received: by 2002:aa7:c595:: with SMTP id g21mr36717915edq.79.1571836252860;
+        Wed, 23 Oct 2019 06:10:52 -0700 (PDT)
+Received: from pi3 ([194.230.155.217])
+        by smtp.googlemail.com with ESMTPSA id b12sm785479edq.75.2019.10.23.06.10.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Oct 2019 06:10:52 -0700 (PDT)
+Date:   Wed, 23 Oct 2019 15:10:49 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Kukjin Kim <kgene@kernel.org>, linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, patches@opensource.cirrus.com,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-clk@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-usb@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, alsa-devel@alsa-project.org,
+        Lihua Yao <ylhuajnu@163.com>,
+        =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>,
+        Lihua Yao <ylhuajnu@outlook.com>,
+        Sergio Prado <sergio.prado@e-labworks.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH 00/36] ARM: samsung platform cleanup
+Message-ID: <20191023131049.GG11048@pi3>
+References: <20191010202802.1132272-1-arnd@arndb.de>
 MIME-Version: 1.0
-In-Reply-To: <b7849297-e4a4-aaec-9a64-2b481663588b@plexistor.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20191010202802.1132272-1-arnd@arndb.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22/10/2019 14:21, Boaz Harrosh wrote:
-> On 20/10/2019 18:59, ira.weiny@intel.com wrote:
-<>
->> At LSF/MM we discussed the difficulties of switching the mode of a file with
->> active mappings / page cache. Rather than solve those races the decision was to
->> just limit mode flips to 0-length files.
->>
+On Thu, Oct 10, 2019 at 10:28:02PM +0200, Arnd Bergmann wrote:
+> I've spent some time looking at the remaining ARMv4/ARMv5 platforms
+> that are not part of ARCH_MULTIPLATFORM, and tried to get them closer
+> to that. Here is what came out of that for the samsung platforms:
 > 
-> What I understand above is that only "writers" before writing any bytes may
-> turn the flag on, which then persists. But as a very long time user of DAX, usually
-> it is the writers that are least interesting. With lots of DAX technologies and
-> emulations the write is slower and needs slow "flushing".
+> * Exynos and s5pv210 are made independent of plat-samsung
+> * device drivers stop using mach/*.h headers for s3c24xx
+>   (and other platforms not in this series)
+> * s3c24xx and s3c64xx get merged into mach-s3c, removing
+>   the need for plat-samsung (I have other patches for the
+>   remaining plat-* directories)
+> * mach/io.h gets cleaned up to only be needed for BAST
+>   PC104 mode (looking for ideas to proceed)
+> * mach/irqs.h remains for now, this still needs to be converted
+>   to sparse IRQs.
 > 
-> The more interesting and performance gains comes from DAX READs actually.
-> specially cross the VM guest. (IE. All VMs share host memory or pmem)
+> Some bits are a little ugly, but overall I think this a big
+> improvement.
 > 
-> This fixture as I understand it, that I need to know before I write if I will
-> want DAX or not and then the write is DAX as well as reads after that, looks
-> not very interesting for me as a user.
+> The contents are available for testing in
 > 
-> Just my $0.17
-> Boaz
-> 
+> git://kernel.org:/pub/scm/linux/kernel/git/arnd/playground.git s3c-multiplatform
 
-I want to say one more thing about this patchset please. I was sleeping on it
-and I think it is completely wrong approach with a completely wrong API.
+When sending v2, can you Cc:
 
-The DAX or not DAX is a matter of transport. and is nothing to do with data
-content and persistency. It's like connecting a disk behind, say, a scsi bus and then
-take the same DB and putting it behind a multy-path or an NFS server. It is always
-the same data.
-(Same mistake we did with ndctl which is cry for generations)
+Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
+Lihua Yao <ylhuajnu@outlook.com>
+(or Lihua Yao <ylhuajnu@163.com> if outlook.com bounces)
+Sergio Prado <sergio.prado@e-labworks.com>
+Sylwester Nawrocki <s.nawrocki@samsung.com>
 
-For me the DAX or NO-DAX is an application thing and not a data thing.
+These are folks which to my knowledge had working S3C and S5P boards
+so maybe they could provide testing.
 
-The right API is perhaps an open O_FLAG where if you are not the first opener
-the open returns EBUSY and then the app can decide if to open without the
-flag or complain and fail. (Or apply open locks)
+Best regards,
+Krzysztof
 
-If you are a second opener when the file is already opened O_DAX you are
-silently running DAX. If you are 2nd open(O_DAX) when already oppened
-O_DAX then off course you succeed.
-(Also the directory inheritance thing is all mute too)
-
-Please explain the use case behind your model?
-
-Thanks
-Boaz
