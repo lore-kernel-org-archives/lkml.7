@@ -2,117 +2,221 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F633CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:52:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C532CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:55:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 174F12086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:52:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 079592086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:55:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h/41757P"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="VsRj7qkS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392351AbfJWOw4 (ORCPT
+        id S2392399AbfJWOz2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 10:52:56 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:52050 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2390614AbfJWOw4 (ORCPT
+        Wed, 23 Oct 2019 10:55:28 -0400
+Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:14869 "EHLO
+        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390614AbfJWOz2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 10:52:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571842375;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=emR3PoHEO27QDES+p5wODmAC9pYpw/dbeRHOoHO20Ao=;
-        b=h/41757PEuwfAGRhaSk9UHSlzvoGPYb+V7l6xUsm8v9MhJWZ3bX5AoWWU5daYa/1qEr4Ib
-        VdIc0q29jc6+vBGhQ58X8OSF/sPR7t3Nmqahf6bsA0ItfOegP6FoHOsNFHQJwxMqfeLXkz
-        NSJ1ahdgoOW5gqbCo8MG3HIZAJ6sni0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-146-60Zyz4gRP82yzeX22HESNA-1; Wed, 23 Oct 2019 10:52:52 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EE120476;
-        Wed, 23 Oct 2019 14:52:49 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 193ED5C1D4;
-        Wed, 23 Oct 2019 14:52:45 +0000 (UTC)
-Subject: Re: [RFC PATCH 1/2] mm, vmstat: hide /proc/pagetypeinfo from normal
- users
-To:     Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@suse.de>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>, Roman Gushchin <guro@fb.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Jann Horn <jannh@google.com>, Song Liu <songliubraving@fb.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rafael Aquini <aquini@redhat.com>, linux-mm@kvack.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Michal Hocko <mhocko@suse.com>
-References: <20191023095607.GE3016@techsingularity.net>
- <20191023102737.32274-1-mhocko@kernel.org>
- <20191023102737.32274-2-mhocko@kernel.org>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <48c4b79b-d2e6-684c-2d0e-7693985817f1@redhat.com>
-Date:   Wed, 23 Oct 2019 10:52:44 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 23 Oct 2019 10:55:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1571842526; x=1603378526;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=ZcS6iGC6ZW39+YwuXUhER1NX3nIKpR9Zdk1NwCB3k3s=;
+  b=VsRj7qkS9omF6E8tDNGel3K6Eh+e5wcByyZJNscd+UI28YdlHA8Da5q8
+   ggAGw/BoJmDMPrZOjvWUVKfbWbxg4j6bMvZmY0Gk6aaEsLWFcDoS0iZm1
+   srBfnjMOgINPLMp6+2LEhG2HH/OEz+CiOpXh3hfdSOWrVSN2dOih6znQv
+   Q=;
+X-IronPort-AV: E=Sophos;i="5.68,221,1569283200"; 
+   d="scan'208";a="432633064"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-119b4f96.us-west-2.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 23 Oct 2019 14:55:23 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2a-119b4f96.us-west-2.amazon.com (Postfix) with ESMTPS id E242F1A0A5F;
+        Wed, 23 Oct 2019 14:55:22 +0000 (UTC)
+Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Wed, 23 Oct 2019 14:55:22 +0000
+Received: from [10.125.238.52] (10.43.162.31) by EX13D01EUB001.ant.amazon.com
+ (10.43.166.194) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Wed, 23 Oct
+ 2019 14:55:13 +0000
+Subject: Re: [PATCH v6 2/2] soc: amazon: al-pos-edac: Introduce Amazon's
+ Annapurna Labs POS EDAC driver
+To:     James Morse <james.morse@arm.com>
+CC:     <robh+dt@kernel.org>, <maz@kernel.org>, <mark.rutland@arm.com>,
+        <arnd@arndb.de>, <bp@alien8.de>, <mchehab@kernel.org>,
+        <davem@davemloft.net>, <gregkh@linuxfoundation.org>,
+        <paulmck@linux.ibm.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-edac@vger.kernel.org>,
+        <dwmw@amazon.co.uk>, <benh@kernel.crashing.org>,
+        <hhhawa@amazon.com>, <ronenk@amazon.com>, <jonnyc@amazon.com>,
+        <hanochu@amazon.com>, <amirkl@amazon.com>, <barakw@amazon.com>
+References: <1570707681-865-1-git-send-email-talel@amazon.com>
+ <1570707681-865-3-git-send-email-talel@amazon.com>
+ <e66ff9b9-5fcb-e746-a551-2dc76bbeab48@arm.com>
+From:   "Shenhar, Talel" <talel@amazon.com>
+Message-ID: <e80b86e1-861e-1497-8f2b-0269aa9865ad@amazon.com>
+Date:   Wed, 23 Oct 2019 17:55:07 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <20191023102737.32274-2-mhocko@kernel.org>
+In-Reply-To: <e66ff9b9-5fcb-e746-a551-2dc76bbeab48@arm.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-MC-Unique: 60Zyz4gRP82yzeX22HESNA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+X-Originating-IP: [10.43.162.31]
+X-ClientProxiedBy: EX13P01UWA004.ant.amazon.com (10.43.160.127) To
+ EX13D01EUB001.ant.amazon.com (10.43.166.194)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/23/19 6:27 AM, Michal Hocko wrote:
-> From: Michal Hocko <mhocko@suse.com>
->
-> /proc/pagetypeinfo is a debugging tool to examine internal page
-> allocator state wrt to fragmentation. It is not very useful for
-> any other use so normal users really do not need to read this file.
->
-> Waiman Long has noticed that reading this file can have negative side
-> effects because zone->lock is necessary for gathering data and that
-> a) interferes with the page allocator and its users and b) can lead to
-> hard lockups on large machines which have very long free_list.
->
-> Reduce both issues by simply not exporting the file to regular users.
->
-> Reported-by: Waiman Long <longman@redhat.com>
-> Cc: stable
-> Signed-off-by: Michal Hocko <mhocko@suse.com>
-> ---
->  mm/vmstat.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/mm/vmstat.c b/mm/vmstat.c
-> index 6afc892a148a..4e885ecd44d1 100644
-> --- a/mm/vmstat.c
-> +++ b/mm/vmstat.c
-> @@ -1972,7 +1972,7 @@ void __init init_mm_internals(void)
->  #endif
->  #ifdef CONFIG_PROC_FS
->  =09proc_create_seq("buddyinfo", 0444, NULL, &fragmentation_op);
-> -=09proc_create_seq("pagetypeinfo", 0444, NULL, &pagetypeinfo_op);
-> +=09proc_create_seq("pagetypeinfo", 0400, NULL, &pagetypeinfo_op);
->  =09proc_create_seq("vmstat", 0444, NULL, &vmstat_op);
->  =09proc_create_seq("zoneinfo", 0444, NULL, &zoneinfo_op);
->  #endif
 
-Acked-by: Waiman Long <longman@redhat.com>
-
+On 10/21/2019 7:42 PM, James Morse wrote:
+> Hi Talel,
+>
+> On 10/10/2019 12:41, Talel Shenhar wrote:
+>> The Amazon's Annapurna Labs SoCs includes Point Of Serialization error
+>> logging unit that reports an error in case write error (e.g . Attempt to
+> (This is tricky to parse. "error in case write error" -> "error when a write error occurs"?)
+ack
+>
+>> write to a read only register).
+>> This error shall be reported to EDAC subsystem as uncorrectable-error.
+>
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index 55199ef..a77d554 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -757,6 +757,13 @@ F:	drivers/tty/serial/altera_jtaguart.c
+>>   F:	include/linux/altera_uart.h
+>>   F:	include/linux/altera_jtaguart.h
+>>   
+>> +AMAZON ANNAPURNA LABS POS EDAC DRIVER
+>> +M:	Talel Shenhar <talel@amazon.com>
+>> +M:	Talel Shenhar <talelshenhar@gmail.com>
+>> +S:	Maintained
+>> +F:	Documentation/devicetree/bindings/edac/amazon,al-pos-edac.yaml
+>> +F:	drivers/edac/al-pos-edac.c
+> ~s/-/_/
+ack
+>
+>
+>> diff --git a/drivers/edac/al_pos_edac.c b/drivers/edac/al_pos_edac.c
+>> new file mode 100644
+>> index 00000000..a85ab67
+>> --- /dev/null
+>> +++ b/drivers/edac/al_pos_edac.c
+>> @@ -0,0 +1,173 @@
+>> +static int al_pos_handle(struct al_pos_edac *al_pos)
+>> +{
+>> +	log1 = readl_relaxed(al_pos->mmio_base + AL_POS_ERROR_LOG_1);
+>> +	if (!FIELD_GET(AL_POS_ERROR_LOG_1_VALID, log1))
+>> +		return 0;
+> [...]
+>
+>> +	edac_device_handle_ue(al_pos->edac_dev, 0, 0, msg);
+>> +
+>> +	return 1;
+>> +}
+> [...]
+>
+>> +static irqreturn_t al_pos_irq_handler(int irq, void *info)
+>> +{
+>> +	if (al_pos_handle(al_pos))
+>> +		return IRQ_HANDLED;
+>> +	return IRQ_NONE;
+>> +}
+>
+>> +static int al_pos_probe(struct platform_device *pdev)
+>> +{
+>> +	struct edac_device_ctl_info *edac_dev;
+>> +	struct al_pos_edac *al_pos;
+>> +	int ret;
+>> +
+>> +	edac_dev = edac_device_alloc_ctl_info(sizeof(*al_pos), DRV_NAME, 1,
+>> +					      DRV_NAME, 1, 0, NULL, 0,
+>> +					      edac_device_alloc_index());
+>> +	if (!edac_dev)
+>> +		return -ENOMEM;
+>> +
+>> +	al_pos = edac_dev->pvt_info;
+>> +	al_pos->edac_dev = edac_dev;
+>> +	platform_set_drvdata(pdev, al_pos);
+>> +
+>> +	al_pos->mmio_base = devm_platform_ioremap_resource(pdev, 0);
+>> +	if (IS_ERR(al_pos->mmio_base)) {
+>> +		dev_err(&pdev->dev, "failed to ioremap memory (%ld)\n",
+>> +			PTR_ERR(al_pos->mmio_base));
+> edac_device_free_ctl_info(al_pos->edac_dev) or goto err_free_edac ?
+ack, shall add managed handling using devm
+>
+>> +		return PTR_ERR(al_pos->mmio_base);
+>> +	}
+>> +
+>> +	al_pos->irq = platform_get_irq(pdev, 0);
+>> +	if (al_pos->irq <= 0)
+>> +		edac_dev->edac_check = al_pos_edac_check;
+>> +
+>> +	edac_dev->dev = &pdev->dev;
+>> +	edac_dev->mod_name = DRV_NAME;
+>> +	edac_dev->dev_name = dev_name(&pdev->dev);
+>> +	edac_dev->ctl_name = "POS";
+> Does this show up in sysfs? The 'AL_' prefix may make it easier to find the corresponding
+> driver. (The TLA space is a little crowded!)
+ack
+>
+>
+>> +	ret = edac_device_add_device(edac_dev);
+>> +	if (ret) {
+>> +		dev_err(&pdev->dev, "Failed to add edac device\n");
+>> +		goto err_free_edac;
+>> +	}
+>> +
+>> +	if (al_pos->irq > 0) {
+>> +		ret = devm_request_irq(&pdev->dev,
+>> +				       al_pos->irq,
+>> +				       al_pos_irq_handler,
+>> +				       0,
+> Can this be IRQF_SHARED? This lets other devices register the interrupt too, which is
+> easily allowed if you can identify whether your device has triggered the interrupt. (which
+> you are already doing with the valid bit in your log1 register).
+ack
+>
+>
+>> +				       pdev->name,
+>> +				       pdev);
+>> +		if (ret != 0) {
+>> +			dev_err(&pdev->dev,
+>> +				"failed to register to irq %d (%d)\n",
+>> +				al_pos->irq, ret);
+>> +			goto err_remove_edac;
+>> +		}
+>> +	}
+>> +
+>> +	return 0;
+>> +
+>> +err_remove_edac:
+>> +	edac_device_del_device(edac_dev->dev);
+>> +err_free_edac:
+>> +	edac_device_free_ctl_info(edac_dev);
+>> +
+>> +	return ret;
+>> +}
+>
+> With the edac_dev-leak fixed and the -/_ in MAINTAINERS:
+>
+> Reviewed-by: James Morse <james.morse@arm.com>
+thanks. shall post v7 with the fixes
+>
+>
+> Thanks,
+>
+> James
