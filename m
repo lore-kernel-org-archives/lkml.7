@@ -8,70 +8,70 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A6ACA9EBB
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 20:03:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E40E5CA9EBB
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 20:05:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67AF82086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 20:03:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B923020663
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 20:05:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bl1g34Mk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iQu7jlUI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405275AbfJWUCq (ORCPT
+        id S2405427AbfJWUFW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 16:02:46 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:40666 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405185AbfJWUCp (ORCPT
+        Wed, 23 Oct 2019 16:05:22 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:51665 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726838AbfJWUFV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 16:02:45 -0400
-Received: by mail-pg1-f194.google.com with SMTP id 15so7411414pgt.7;
-        Wed, 23 Oct 2019 13:02:44 -0700 (PDT)
+        Wed, 23 Oct 2019 16:05:21 -0400
+Received: by mail-wm1-f66.google.com with SMTP id q70so282451wme.1;
+        Wed, 23 Oct 2019 13:05:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=qtC7CH3uCwc1qnA7SQUM9vPjiJGHmllhEByKdOb4NKs=;
-        b=Bl1g34Mkp5wfx+KC9+klwhpKZk1kBhcM5NRp3FEFF07RQNZcVc4o24x1U11z10h6M6
-         LCIeI2Dy1qVdyeYk7Ldx8r3o/qs/FDyIX3QfJUJZyD6lq6pPMhvkUrpaqPFqgaYiyrc3
-         6AIibK6lfZYm/yIMhlv+VDOye62lgOM16ixQJY6NjpXW1cRbUnAW2sfmJmSkBRg0iuQU
-         3TSJB9Avz/zvs2sutC7DOVkbaoMD3gD+J/KdR/CbqCL7putsPB1Epk4uelX31SWDQwYo
-         5ackelqsjcnw8GQO5oqsP47ZlhuqjTzYI4ozItX8zAvf0I5EN94RSc+j0ee8WUme0gEd
-         1FoQ==
+        bh=VpdEp2zf81VBM+LhkWglZ2eMDIpA3da8iXPWPqvvAdE=;
+        b=iQu7jlUIO+uRonAxUB1Yx/zCvI7R9gqlIv6hs5hMa10GoZ9yMocX6c8lzjgiiROvGC
+         5IgEt+kBt6COaVuTTZTGS/F4QmaItAyvKlgheV1AGOe1K0uS7j7wPdMIKk1bRxbm2kdP
+         jLbpQ0ksy4rlQTR6QtsKKR/s9X09TZL+1JY4+Kz/nuZgA/Qlsbdlrqsu21/WVXGwSmvM
+         45M+z+SV3g2kYXAL69simQkHrA+ZpIbn6bZDcFbzPGtDBO4AprqSQKJ3Y2+GpQHhgQni
+         B5QPBz93lpzs25cyEmZ6LVuUTUrT65vJll93p1oXZB7Hasuvcqqv3fQHFiQ5nayK+Icn
+         h2hw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=qtC7CH3uCwc1qnA7SQUM9vPjiJGHmllhEByKdOb4NKs=;
-        b=F4DSrxN/ZVYhh0GomiSfJkljFcfjhyAd2MJ4VjdSz5wFsO+EPZk0MVLQoLGpz47yZu
-         r716THGct8pGd2bG0O8jfxMENyOWArPyhyOSWNy8IcgvTs4hA3mCRkEhy5/88srm/70A
-         YL53po063wjZKE2+y/MHH9OwrP3M2sh5YxkYAHTS+YFVbGdtsu49PR4edo6FjA9Fy8OB
-         vBbCFUrfSNTK5i/vM/5d7WD4iS+23Vbuayy4CakiWxL51mBIUbdIzOtyP8X3tGN307q5
-         aGxGFm9ZM9Un/y36WRTjORHbL+0tkMaNHpm9zLCa8BKfywdvmmGkQnu9CNd+cF8csQpL
-         zwNw==
-X-Gm-Message-State: APjAAAUaFh0LFXzXCGx7wMLD890FbHTYbJ45BLFRKJ5PCcAgK0LxbGQT
-        BuiULh16sqMIwbHlK+t8lic=
-X-Google-Smtp-Source: APXvYqxrtG+HMKhqIm6N7hCHG05q+xOQ8FHVy0CHWWfKPchAcaWeOKq4CAT1YBwjvkyfK5HeusGoGw==
-X-Received: by 2002:a63:6949:: with SMTP id e70mr11937570pgc.226.1571860963943;
-        Wed, 23 Oct 2019 13:02:43 -0700 (PDT)
-Received: from dtor-ws.mtv.corp.google.com ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id 6sm10593598pfy.43.2019.10.23.13.02.42
+        bh=VpdEp2zf81VBM+LhkWglZ2eMDIpA3da8iXPWPqvvAdE=;
+        b=VZ8su123BBtgHh6gYJ2aodVC4COcIGF2zV+LuKh3Q2fcqFcedVl9ow32M9/JiU0fwP
+         tBav2xIwXo8a2wfZ8mtHThjH1hsIBBnleULsjiNmo7ddCRS67p9IMyA0UXqiNWdV/cT/
+         memSnN7CtL4LwfhKRScXr4UFKksQeUyzkQcGYGe9SIZEe1GoE4tW4CbMmIdYeGbx8AF5
+         m++5Wx4KL2xdddV8qrXBjLtn54PwBOZ28CviqSySX23VtGSBPym5mx8WpTYgmut0k/Rk
+         gu/vghH3nd8dmc6ZE35CQDv9R9DBQljq+qjqL0BRi42cRMyaXLypGQlnVlZdXcPaTVt2
+         obrw==
+X-Gm-Message-State: APjAAAV9Btr3/ks8tsPrqQ99p8uyXBmEEUFj0gdxtyNBX/WgpMW+qt1Q
+        /B08YMx+vlYRLwnt54FyNLc=
+X-Google-Smtp-Source: APXvYqxxeKv8ZV8kF3ro0l6Hkz0Ty5HtJhHnoM3Ces69iywJZZQaO+/q3FvG/DVd/Ct8Lc2VMML6wQ==
+X-Received: by 2002:a1c:9dd3:: with SMTP id g202mr1532122wme.43.1571861119604;
+        Wed, 23 Oct 2019 13:05:19 -0700 (PDT)
+Received: from Red.localdomain (lfbn-1-7036-79.w90-116.abo.wanadoo.fr. [90.116.209.79])
+        by smtp.googlemail.com with ESMTPSA id b5sm177555wmj.18.2019.10.23.13.05.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Oct 2019 13:02:42 -0700 (PDT)
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH v6 03/15] efi/apple-properties: use PROPERTY_ENTRY_U8_ARRAY_LEN
-Date:   Wed, 23 Oct 2019 13:02:21 -0700
-Message-Id: <20191023200233.86616-4-dmitry.torokhov@gmail.com>
-X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
-In-Reply-To: <20191023200233.86616-1-dmitry.torokhov@gmail.com>
-References: <20191023200233.86616-1-dmitry.torokhov@gmail.com>
+        Wed, 23 Oct 2019 13:05:19 -0700 (PDT)
+From:   Corentin Labbe <clabbe.montjoie@gmail.com>
+To:     catalin.marinas@arm.com, davem@davemloft.net,
+        herbert@gondor.apana.org.au, linux@armlinux.org.uk,
+        mark.rutland@arm.com, mripard@kernel.org, robh+dt@kernel.org,
+        wens@csie.org, will@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com,
+        Corentin Labbe <clabbe.montjoie@gmail.com>
+Subject: [PATCH v6 01/11] crypto: Add allwinner subdirectory
+Date:   Wed, 23 Oct 2019 22:05:03 +0200
+Message-Id: <20191023200513.22630-2-clabbe.montjoie@gmail.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20191023200513.22630-1-clabbe.montjoie@gmail.com>
+References: <20191023200513.22630-1-clabbe.montjoie@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -79,54 +79,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Let's switch to using PROPERTY_ENTRY_U8_ARRAY_LEN() to initialize
-property entries. Also, when dumping data, rely on local variables
-instead of poking into the property entry structure directly.
+Since a second Allwinner crypto driver will be added, it is better to
+create a dedicated subdirectory.
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Acked-by: Maxime Ripard <mripard@kernel.org>
+Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
 ---
- drivers/firmware/efi/apple-properties.c | 18 ++++++++----------
- 1 file changed, 8 insertions(+), 10 deletions(-)
+ MAINTAINERS                      | 6 ++++++
+ drivers/crypto/Kconfig           | 2 ++
+ drivers/crypto/Makefile          | 1 +
+ drivers/crypto/allwinner/Kconfig | 6 ++++++
+ 4 files changed, 15 insertions(+)
+ create mode 100644 drivers/crypto/allwinner/Kconfig
 
-diff --git a/drivers/firmware/efi/apple-properties.c b/drivers/firmware/efi/apple-properties.c
-index 0e206c9e0d7a..5ccf39986a14 100644
---- a/drivers/firmware/efi/apple-properties.c
-+++ b/drivers/firmware/efi/apple-properties.c
-@@ -53,7 +53,8 @@ static void __init unmarshal_key_value_pairs(struct dev_header *dev_header,
+diff --git a/MAINTAINERS b/MAINTAINERS
+index c7b48525822a..9153c02e1f63 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -690,6 +690,12 @@ L:	linux-crypto@vger.kernel.org
+ S:	Maintained
+ F:	drivers/crypto/sunxi-ss/
  
- 	for (i = 0; i < dev_header->prop_count; i++) {
- 		int remaining = dev_header->len - (ptr - (void *)dev_header);
--		u32 key_len, val_len;
-+		u32 key_len, val_len, entry_len;
-+		const u8 *entry_data;
- 		char *key;
++ALLWINNER CRYPTO DRIVERS
++M:	Corentin Labbe <clabbe.montjoie@gmail.com>
++L:	linux-crypto@vger.kernel.org
++S:	Maintained
++F:	drivers/crypto/allwinner/
++
+ ALLWINNER VPU DRIVER
+ M:	Maxime Ripard <mripard@kernel.org>
+ M:	Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+diff --git a/drivers/crypto/Kconfig b/drivers/crypto/Kconfig
+index 3e51bae191ec..610bb52d77d6 100644
+--- a/drivers/crypto/Kconfig
++++ b/drivers/crypto/Kconfig
+@@ -11,6 +11,8 @@ menuconfig CRYPTO_HW
  
- 		if (sizeof(key_len) > remaining)
-@@ -85,17 +86,14 @@ static void __init unmarshal_key_value_pairs(struct dev_header *dev_header,
- 		ucs2_as_utf8(key, ptr + sizeof(key_len),
- 			     key_len - sizeof(key_len));
+ if CRYPTO_HW
  
--		entry[i].name = key;
--		entry[i].length = val_len - sizeof(val_len);
--		entry[i].is_array = !!entry[i].length;
--		entry[i].type = DEV_PROP_U8;
--		entry[i].pointer.u8_data = ptr + key_len + sizeof(val_len);
--
-+		entry_data = ptr + key_len + sizeof(val_len);
-+		entry_len = val_len - sizeof(val_len);
-+		entry[i] = PROPERTY_ENTRY_U8_ARRAY_LEN(key, entry_data,
-+						       entry_len);
- 		if (dump_properties) {
--			dev_info(dev, "property: %s\n", entry[i].name);
-+			dev_info(dev, "property: %s\n", key);
- 			print_hex_dump(KERN_INFO, pr_fmt(), DUMP_PREFIX_OFFSET,
--				16, 1, entry[i].pointer.u8_data,
--				entry[i].length, true);
-+				16, 1, entry_data, entry_len, true);
- 		}
- 
- 		ptr += key_len + val_len;
++source "drivers/crypto/allwinner/Kconfig"
++
+ config CRYPTO_DEV_PADLOCK
+ 	tristate "Support for VIA PadLock ACE"
+ 	depends on X86 && !UML
+diff --git a/drivers/crypto/Makefile b/drivers/crypto/Makefile
+index afc4753b5d28..90d60eff5ecc 100644
+--- a/drivers/crypto/Makefile
++++ b/drivers/crypto/Makefile
+@@ -1,4 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0
++obj-$(CONFIG_CRYPTO_DEV_ALLWINNER) += allwinner/
+ obj-$(CONFIG_CRYPTO_DEV_ATMEL_AES) += atmel-aes.o
+ obj-$(CONFIG_CRYPTO_DEV_ATMEL_SHA) += atmel-sha.o
+ obj-$(CONFIG_CRYPTO_DEV_ATMEL_TDES) += atmel-tdes.o
+diff --git a/drivers/crypto/allwinner/Kconfig b/drivers/crypto/allwinner/Kconfig
+new file mode 100644
+index 000000000000..0c8a99f7959d
+--- /dev/null
++++ b/drivers/crypto/allwinner/Kconfig
+@@ -0,0 +1,6 @@
++config CRYPTO_DEV_ALLWINNER
++	bool "Support for Allwinner cryptographic offloader"
++	depends on ARCH_SUNXI || COMPILE_TEST
++	default y if ARCH_SUNXI
++	help
++	  Say Y here to get to see options for Allwinner hardware crypto devices
 -- 
-2.23.0.866.gb869b98d4c-goog
+2.21.0
 
