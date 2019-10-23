@@ -4,114 +4,129 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A08C6CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 01:56:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82929C47E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 01:59:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71AEA207FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 01:56:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 594B220679
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 01:59:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="TFoKqTjP"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Q97sViVS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388505AbfJWB45 (ORCPT
+        id S1733256AbfJWB7i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 21:56:57 -0400
-Received: from mx0a-00190b01.pphosted.com ([67.231.149.131]:44180 "EHLO
-        mx0a-00190b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727582AbfJWB44 (ORCPT
+        Tue, 22 Oct 2019 21:59:38 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:38032 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727582AbfJWB7i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 21:56:56 -0400
-Received: from pps.filterd (m0122332.ppops.net [127.0.0.1])
-        by mx0a-00190b01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9N1rN5u029356;
-        Wed, 23 Oct 2019 02:55:41 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type; s=jan2016.eng;
- bh=BqGmH2JxEqEbAiNxKXAPOoEeFbhaMLD6EHMMK5gsR7M=;
- b=TFoKqTjPSi3jM8T+9S17AYzdJGDKfA+EOIRNcdniE53+1eqrriNmmTtdT39ZAtcZ1UIg
- wZ34Semn3qYT30dMKJnVlN0cz/qj43SPXSwxtbBMtnGCp6oPVECwTfMBrlNSL6eYAgt9
- fiugceUovGL6gvEiMF+LsxVWLrk1WXLIRl6LLoHqIpD260jHJ6aI88rzLwmeTVIugU8Z
- ZiOC2cs0lNf5zs0ASNApb+4TCq5fp7kDI6PAnYGGEoNZlIvd+SGhXwGq54RtUmpK70AK
- H4lj/JN8gBd2IqpHoJucOUI+fRuWS0zF04o34E7yH1B8P1fDrLzwtzXL6PDxhe4tsjz6 dw== 
-Received: from prod-mail-ppoint1 (prod-mail-ppoint1.akamai.com [184.51.33.18] (may be forged))
-        by mx0a-00190b01.pphosted.com with ESMTP id 2vqthjjek3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 23 Oct 2019 02:55:41 +0100
-Received: from pps.filterd (prod-mail-ppoint1.akamai.com [127.0.0.1])
-        by prod-mail-ppoint1.akamai.com (8.16.0.27/8.16.0.27) with SMTP id x9N1lCuD024927;
-        Tue, 22 Oct 2019 21:55:40 -0400
-Received: from email.msg.corp.akamai.com ([172.27.123.33])
-        by prod-mail-ppoint1.akamai.com with ESMTP id 2vqwtwq07e-3
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Tue, 22 Oct 2019 21:55:40 -0400
-Received: from USMA1EX-DAG1MB5.msg.corp.akamai.com (172.27.123.105) by
- usma1ex-dag1mb6.msg.corp.akamai.com (172.27.123.65) with Microsoft SMTP
- Server (TLS) id 15.0.1473.3; Tue, 22 Oct 2019 21:55:39 -0400
-Received: from usma1ex-cas4.msg.corp.akamai.com (172.27.123.57) by
- usma1ex-dag1mb5.msg.corp.akamai.com (172.27.123.105) with Microsoft SMTP
- Server (TLS) id 15.0.1473.3; Tue, 22 Oct 2019 21:55:39 -0400
-Received: from igorcastle.kendall.corp.akamai.com (172.29.170.135) by
- usma1ex-cas4.msg.corp.akamai.com (172.27.123.57) with Microsoft SMTP Server
- id 15.0.1473.3 via Frontend Transport; Tue, 22 Oct 2019 18:55:39 -0700
-Received: by igorcastle.kendall.corp.akamai.com (Postfix, from userid 29659)
-        id 51C8F61E64; Tue, 22 Oct 2019 21:55:37 -0400 (EDT)
-From:   Igor Lubashev <ilubashe@akamai.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-CC:     Igor Lubashev <ilubashe@akamai.com>, Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
-Subject: [PATCH 3/3] perf kvm: Use evlist layer api when possible
-Date:   Tue, 22 Oct 2019 21:54:53 -0400
-Message-ID: <1571795693-23558-4-git-send-email-ilubashe@akamai.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1571795693-23558-1-git-send-email-ilubashe@akamai.com>
-References: <1571795693-23558-1-git-send-email-ilubashe@akamai.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-22_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=789
+        Tue, 22 Oct 2019 21:59:38 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9N1t6RI028643;
+        Wed, 23 Oct 2019 01:59:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2019-08-05;
+ bh=vumlNhIDpEfgHxXgVPRZJkF7ivtI8M5hQwk1p8n3CZg=;
+ b=Q97sViVSujkG1sGSwXzfEd1u5r0ZEV1JPXEvOzhGXss/yMBx6dOe80WT9QT1CXozWkNZ
+ cm7m6AI8A1xFAztt1FTrgDUR5PUmCXTCweyHZh6JZI55TIFWQEQgaT0S3VCiDOyO53jH
+ sQlWdRvkafHU1w/l+8EEGtTDI1uh9+Fm3UMiaVlima3+t2f415DdCAqLRO/mRL7QZrkj
+ Ifu8AnNswKFrI8gamOPcXpyZASodvOeHqDHcNoUebYFZFsi3TYCHFiXfF0e1AOLhDIEV
+ OmEgcUI4bXkktMjPXColBm92/lW9XztDPR7jBNzOyzMrfUCGOYunOhDod5ZkJPkcc0vF /A== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2vqswtjcdr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 23 Oct 2019 01:59:19 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9N1sGPI043034;
+        Wed, 23 Oct 2019 01:59:19 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2vsp40wrt4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 23 Oct 2019 01:59:18 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9N1xFLZ011819;
+        Wed, 23 Oct 2019 01:59:17 GMT
+Received: from z2.cn.oracle.com (/10.182.71.218)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 22 Oct 2019 18:59:14 -0700
+From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     rjw@rjwysocki.net, daniel.lezcano@linaro.org,
+        linux-pm@vger.kernel.org, mtosatti@redhat.com,
+        Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Subject: [PATCH v2] cpuidle: not unset the driver if it already exist
+Date:   Wed, 23 Oct 2019 09:57:14 +0800
+Message-Id: <1571795834-2027-1-git-send-email-zhenzhong.duan@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9418 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910230015
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-23_01:2019-10-22,2019-10-23 signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0
- priorityscore=1501 malwarescore=0 mlxlogscore=776 bulkscore=0 phishscore=0
- adultscore=0 suspectscore=0 impostorscore=0 clxscore=1015
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1908290000 definitions=main-1910230016
+ engine=8.0.1-1908290000 definitions=main-1910230017
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9418 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910230017
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No need for layer violations when a proper evlist api is available.
+__cpuidle_set_driver() check if there is an already exist driver and
+unset it before return with -EBUSY. The next call will succeed as it's
+just unset.
 
-Signed-off-by: Igor Lubashev <ilubashe@akamai.com>
+check if any of the CPUs in the mask have a driver different from drv
+already and if so return -EBUSY before updating any cpuidle_drivers
+per-CPU pointers.
+
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
 ---
- tools/perf/builtin-kvm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+v2: update code logic per Rafael
 
-diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
-index 5217aa3596c7..340927c2b243 100644
---- a/tools/perf/builtin-kvm.c
-+++ b/tools/perf/builtin-kvm.c
-@@ -1005,7 +1005,7 @@ static int kvm_events_live_report(struct perf_kvm_stat *kvm)
- 		}
+ drivers/cpuidle/driver.c | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/cpuidle/driver.c b/drivers/cpuidle/driver.c
+index 80c1a83..acfce04 100644
+--- a/drivers/cpuidle/driver.c
++++ b/drivers/cpuidle/driver.c
+@@ -62,24 +62,23 @@ static inline void __cpuidle_unset_driver(struct cpuidle_driver *drv)
+  * __cpuidle_set_driver - set per CPU driver variables for the given driver.
+  * @drv: a valid pointer to a struct cpuidle_driver
+  *
+- * For each CPU in the driver's cpumask, unset the registered driver per CPU
+- * to @drv.
+- *
+- * Returns 0 on success, -EBUSY if the CPUs have driver(s) already.
++ * Returns 0 on success, -EBUSY if any CPU in the cpumask have a driver
++ * different from drv already.
+  */
+ static inline int __cpuidle_set_driver(struct cpuidle_driver *drv)
+ {
+ 	int cpu;
  
- 		if (!rc && !done)
--			err = fdarray__poll(fda, 100);
-+			err = evlist__poll(kvm->evlist, 100);
- 	}
+ 	for_each_cpu(cpu, drv->cpumask) {
++		struct cpuidle_driver *old_drv;
  
- 	evlist__disable(kvm->evlist);
+-		if (__cpuidle_get_cpu_driver(cpu)) {
+-			__cpuidle_unset_driver(drv);
++		old_drv = __cpuidle_get_cpu_driver(cpu);
++		if (old_drv && old_drv != drv)
+ 			return -EBUSY;
+-		}
++	}
+ 
++	for_each_cpu(cpu, drv->cpumask)
+ 		per_cpu(cpuidle_drivers, cpu) = drv;
+-	}
+ 
+ 	return 0;
+ }
 -- 
-2.7.4
+1.8.3.1
 
