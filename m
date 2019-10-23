@@ -2,200 +2,103 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43B35CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 21:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63467CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 21:46:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05E6021906
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 21:45:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R0V7DxSa"
+	by mail.kernel.org (Postfix) with ESMTP id 3D1FA2086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 21:46:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407625AbfJWVpK (ORCPT
+        id S2407637AbfJWVqM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 17:45:10 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:39138 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2391240AbfJWVpK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 17:45:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571867109;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=0D4EQ8thGQKRRU/Fz2c1O7VtA1gRTINZXqgRy6HfSuk=;
-        b=R0V7DxSapSFPev4UGzimkxUEIrMclUZodFMOePwyBjdC3PkoEX9IHO8CiV/9e3ccXmQ+JC
-        4A7d90Cfe7WgzZmiok371uhmCno8Tx+Mt6X3tW1OKYEj5fCZSYkXuFHlMG9NatkMTXLOVE
-        xRIUi6+z9xhMdPFbyJ284vd00qkuzMc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-240-m8GaqF_nOUal1pqA5AbW-g-1; Wed, 23 Oct 2019 17:45:05 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0FAFE100550E;
-        Wed, 23 Oct 2019 21:45:03 +0000 (UTC)
-Received: from emilne (unknown [10.18.25.205])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 401405DA8D;
-        Wed, 23 Oct 2019 21:44:55 +0000 (UTC)
-Message-ID: <6759dfc6c5c721b5060d75e6c5f5a0b1dbb9a80b.camel@redhat.com>
-Subject: Re: [PATCH v2 7/8] scsi: sr: workaround VMware ESXi cdrom emulation
- bug
-From:   "Ewan D. Milne" <emilne@redhat.com>
-To:     Michal =?ISO-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>,
-        Hannes Reinecke <hare@suse.de>
-Cc:     linux-scsi@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Jens Axboe <axboe@kernel.dk>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Eric Biggers <ebiggers@google.com>,
-        "J. Bruce Fields" <bfields@redhat.com>,
-        Benjamin Coddington <bcodding@redhat.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Omar Sandoval <osandov@fb.com>, Ming Lei <ming.lei@redhat.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Tejun Heo <tj@kernel.org>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Date:   Wed, 23 Oct 2019 17:44:54 -0400
-In-Reply-To: <20191023162313.GE938@kitsune.suse.cz>
-References: <cover.1571834862.git.msuchanek@suse.de>
-         <abf81ec4f8b6139fffc609df519856ff8dc01d0d.1571834862.git.msuchanek@suse.de>
-         <08f1e291-0196-2402-1947-c0cdaaf534da@suse.de>
-         <20191023162313.GE938@kitsune.suse.cz>
-Mime-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-MC-Unique: m8GaqF_nOUal1pqA5AbW-g-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+        Wed, 23 Oct 2019 17:46:12 -0400
+Received: from mga06.intel.com ([134.134.136.31]:39636 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389396AbfJWVqL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 17:46:11 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 14:46:11 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,222,1569308400"; 
+   d="scan'208";a="196908081"
+Received: from ayamada-mobl1.gar.corp.intel.com (HELO pbossart-mobl3.intel.com) ([10.254.95.208])
+  by fmsmga008.fm.intel.com with ESMTP; 23 Oct 2019 14:46:09 -0700
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+To:     alsa-devel@alsa-project.org
+Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
+        vkoul@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
+        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Subject: [PATCH 00/18] soundwire: code hardening and suspend-resume support
+Date:   Wed, 23 Oct 2019 16:45:43 -0500
+Message-Id: <20191023214601.883-1-pierre-louis.bossart@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-10-23 at 18:23 +0200, Michal Such=C3=A1nek wrote:
-> On Wed, Oct 23, 2019 at 04:13:15PM +0200, Hannes Reinecke wrote:
-> > On 10/23/19 2:52 PM, Michal Suchanek wrote:
-> > > The WMware ESXi cdrom identifies itself as:
-> > > sr 0:0:0:0: [sr0] scsi3-mmc drive: vendor: "NECVMWarVMware SATA CD001=
-.00"
-> > > model: "VMware SATA CD001.00"
-> > > with the following get_capabilities print in sr.c:
-> > >         sr_printk(KERN_INFO, cd,
-> > >                   "scsi3-mmc drive: vendor: \"%s\" model: \"%s\"\n",
-> > >                   cd->device->vendor, cd->device->model);
-> > >=20
-> > > So the model looks like reliable identification while vendor does not=
-.
-> > >=20
-> > > The drive claims to have a tray and claims to be able to close it.
-> > > However, the UI has no notion of a tray - when medium is ejected it i=
-s
-> > > dropped in the floor and the user must select a medium again before t=
-he
-> > > drive can be re-loaded.  On the kernel side the tray_move call to clo=
-se
-> > > the tray succeeds but the drive state does not change as a result of =
-the
-> > > call.
-> > >=20
-> > > The drive does not in fact emulate the tray state. There are two ways=
- to
-> > > get the medium state. One is the SCSI status:
-> > >=20
-> > > Physical drive:
-> > >=20
-> > > Fixed format, current; Sense key: Not Ready
-> > > Additional sense: Medium not present - tray open
-> > > Raw sense data (in hex):
-> > >         70 00 02 00 00 00 00 0a  00 00 00 00 3a 02 00 00
-> > >         00 00
-> > >=20
-> > > Fixed format, current; Sense key: Not Ready
-> > > Additional sense: Medium not present - tray closed
-> > >  Raw sense data (in hex):
-> > >         70 00 02 00 00 00 00 0a  00 00 00 00 3a 01 00 00
-> > >         00 00
-> > >=20
-> > > VMware ESXi:
-> > >=20
-> > > Fixed format, current; Sense key: Not Ready
-> > > Additional sense: Medium not present
-> > >   Info fld=3D0x0 [0]
-> > >  Raw sense data (in hex):
-> > >         f0 00 02 00 00 00 00 0a  00 00 00 00 3a 00 00 00
-> > >         00 00
-> > >=20
-> > > So the tray state is not reported here. Other is medium status which =
-the
-> > > kernel prefers if available. Adding a print here gives:
-> > >=20
-> > > cdrom: get_media_event success: code =3D 0, door_open =3D 1, medium_p=
-resent =3D 0
-> > >=20
-> > > door_open is interpreted as open tray. This is fine so long as tray_m=
-ove
-> > > would close the tray when requested or report an error which never
-> > > happens on VMware ESXi servers (5.5 and 6.5 tested).
-> > >=20
-> > > This is a popular virtualization platform so a workaround is worthwhi=
-le.
-> > >=20
-> > > Signed-off-by: Michal Suchanek <msuchanek@suse.de>
-> > > ---
-> > >  drivers/scsi/sr.c | 6 ++++++
-> > >  1 file changed, 6 insertions(+)
-> > >=20
-> > > diff --git a/drivers/scsi/sr.c b/drivers/scsi/sr.c
-> > > index 4664fdf75c0f..8090c5bdec09 100644
-> > > --- a/drivers/scsi/sr.c
-> > > +++ b/drivers/scsi/sr.c
-> > > @@ -867,6 +867,7 @@ static void get_capabilities(struct scsi_cd *cd)
-> > >  =09unsigned int ms_len =3D 128;
-> > >  =09int rc, n;
-> > > =20
-> > > +=09static const char *model_vmware =3D "VMware";
-> > >  =09static const char *loadmech[] =3D
-> > >  =09{
-> > >  =09=09"caddy",
-> > > @@ -922,6 +923,11 @@ static void get_capabilities(struct scsi_cd *cd)
-> > >  =09=09  buffer[n + 4] & 0x20 ? "xa/form2 " : "",=09/* can read xa/fr=
-om2 */
-> > >  =09=09  buffer[n + 5] & 0x01 ? "cdda " : "", /* can read audio data =
-*/
-> > >  =09=09  loadmech[buffer[n + 6] >> 5]);
-> > > +=09if (!strncmp(cd->device->model, model_vmware, strlen(model_vmware=
-))) {
-> > > +=09=09buffer[n + 6] &=3D ~(0xff << 5);
-> > > +=09=09sr_printk(KERN_INFO, cd,
-> > > +=09=09=09  "VMware ESXi bug workaround: tray -> caddy\n");
-> > > +=09}
-> > >  =09if ((buffer[n + 6] >> 5) =3D=3D 0)
-> > >  =09=09/* caddy drives can't close tray... */
-> > >  =09=09cd->cdi.mask |=3D CDC_CLOSE_TRAY;
-> > >=20
-> >=20
-> > This looks something which should be handled via a blacklist flag, not
-> > some inline hack which everyone forgets about it...
->=20
-> AFAIK we used to have a blacklist but don't have anymore. So either it
-> has to be resurrected for this one flag or an inline hack should be good
-> enough.
->=20
+this patchset applies on top of "[PATCH 00/14] soundwire: intel:
+implement new ASoC interfaces". It implements a series of improvements
+for:
+a) interrupt handling on Intel platforms in MSI mode
+b) race conditions on codec probe and enumeration
+c) suspend-resume issues (clock-stop mode not supported for now)
+d) underflow handling
+e) updates to the stream state machine which did not support valid
+ALSA transitions.
 
-I agree with Hannes.  We should have a blacklist flag for this.
-Putting inline code in the sr driver that special cases on a particular
-device model string is not clean.  The "VMware ESXi bug workaround" message
-is not particularly descriptive either.
+These patches were tested extensively on 4 different platforms and are
+viewed as required for any sort of SoundWire-based product.
 
--Ewan
+Bard Liao (3):
+  soundwire: intel/cadence: fix timeouts in MSI mode
+  soundwire: stream: only prepare stream when it is configured.
+  soundwire: intel: reinitialize IP+DSP in .prepare()
+
+Pierre-Louis Bossart (15):
+  soundwire: fix race between driver probe and update_status callback
+  soundwire: bus: add PM/no-PM versions of read/write functions
+  soundwire: bus: write Slave Device Number without runtime_pm
+  soundwire: intel: add helpers for link power down and shim wake
+  soundwire: intel: Add basic power management support
+  soundwire: intel: add pm_runtime support
+  soundwire: intel: reset pm_runtime status during system resume
+  soundwire: bus: add helper to reset Slave status to UNATTACHED
+  soundwire: intel: call helper to reset Slave states on resume
+  soundwire: bus: check first if Slaves become UNATTACHED
+  soundwire: add enumeration_complete signaling
+  soundwire: intel: disable pm_runtime when removing a master
+  soundwire: bus: disable pm_runtime in sdw_slave_delete
+  soundwire: stream: update state machine and add state checks
+  soundwire: stream: do not update parameters during DISABLED-PREPARED
+    transition
+
+ Documentation/driver-api/soundwire/stream.rst |  63 +++-
+ drivers/soundwire/bus.c                       | 157 +++++++--
+ drivers/soundwire/bus.h                       |   3 +
+ drivers/soundwire/bus_type.c                  |   5 +
+ drivers/soundwire/cadence_master.c            |  17 +-
+ drivers/soundwire/cadence_master.h            |   4 +
+ drivers/soundwire/intel.c                     | 328 ++++++++++++++++--
+ drivers/soundwire/intel.h                     |   2 +
+ drivers/soundwire/intel_init.c                |  45 ++-
+ drivers/soundwire/slave.c                     |   3 +
+ drivers/soundwire/stream.c                    |  64 +++-
+ include/linux/soundwire/sdw.h                 |   1 +
+ include/linux/soundwire/sdw_intel.h           |   2 +
+ 13 files changed, 623 insertions(+), 71 deletions(-)
+
+-- 
+2.20.1
 
