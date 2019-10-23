@@ -2,138 +2,232 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71AB6CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 03:54:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC06ACA9EAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 03:57:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DF4B2086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 03:54:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A95BF2086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 03:57:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lDTH3vIp"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="F/02A//E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733204AbfJWDyJ (ORCPT
+        id S1733272AbfJWD5B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 23:54:09 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:35015 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729994AbfJWDyJ (ORCPT
+        Tue, 22 Oct 2019 23:57:01 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:35256 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729994AbfJWD5A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 23:54:09 -0400
-Received: by mail-il1-f195.google.com with SMTP id p8so7861715ilp.2
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 20:54:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/LHGxMJgC9fsphY4M+7ir7vJgAGyj8pWVsdCiE4QA6o=;
-        b=lDTH3vIpVKOT4cHUqTnhkivTQ/0ICLeWcMIrK5ZpKQrPpEFQiBap0C9/xiuuA7wMxu
-         8qBj7L4RonbFjzmHvGBvSUy8aBkmXf57NlETXJkYp2JYk1Gs5XYFODyLJGmOygbbtq1n
-         ZzoXTonLboEb9/AoN4tpBNFgcjkThTFUlluD+mVvTUlVccwdHYK0POuC2eN1/YMikfVZ
-         oQhuvJhEVkSsPRc8/jRE4P2ZEt3qp1ejyR5m8zyHnDg0SuT6JavrrseUCrEJfdDrrMAp
-         O16+zL3BDiIswbyFWElgVoRfqbC92XM2WGHKAz78vQqXUCUyWuZFD+jSb1/8B5eWe7Ue
-         RRSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/LHGxMJgC9fsphY4M+7ir7vJgAGyj8pWVsdCiE4QA6o=;
-        b=BudtZ0Bem5RGWCpiRr1vFA3I1XY3PnX8pOtLl2FW7NP/VqSVlU1rnlgRZCujdfyTlI
-         B6g+khPNKATyUuEqcmG+delOmcPVCbrePyKhxrW0yRoOKYSG1NdCQeib9zBhd51Qy/G4
-         o7jVxqcqqmcgwFM7EcHxcU1uvZNs1PYXvTRyx5ZjuX1OXvOdy24EYQs6UDHva4CEO8Fs
-         zyWfz8nHkdQxmcoSPYhh8q++4e8/PIv7jCyQ+IOttinHyN1YNV7ktwgt6bpaYVl5SVvX
-         kk1IUe4PsImme4bBMIXQnfoxk5qGQmY8MwUlKYeT1/ZW3k+p1aaQn6M1oAf69b3cN2BU
-         zvig==
-X-Gm-Message-State: APjAAAX1p/3n9+ebxirbsO3Em1jwYt/twlCOUq21q0hfdfJzuitcgOvn
-        mpgMndwRN+Y7r/eeNx6Mco54CYTj0xSA8nZZi+oE9q9f
-X-Google-Smtp-Source: APXvYqwrn/WBtVMHAFAqhmGHKKoxDT87Sr8DyCIRMO6XG644b9uQ571IH4gZTRLXpqfbcU/Odip8LocEhUk4d72c8Iw=
-X-Received: by 2002:a92:4144:: with SMTP id o65mr35736635ila.172.1571802848526;
- Tue, 22 Oct 2019 20:54:08 -0700 (PDT)
+        Tue, 22 Oct 2019 23:57:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=vhnNfgbyvwy7UCyN7x40j7OcT7i5pKApwS9FpVwzmEE=; b=F/02A//E4yisXmCcnOCo5WoJn
+        7LnD8pB7EWXenQI56WuP9oOgjVzfs7Dy7qLDP4T9Y6p1eX4KZJq1nWweGP3ghpN9CMm1WBdP+G2TQ
+        H/puuhvr3MRGWZLdepMOiRNKe46rXd/4g5TLs50sJtKAnq2U0uOYEqqBDjOQA93EcMJ7UsYFerx/z
+        ZmJyrsngkTzZxCaHFhTtiC2Z4VOEqIgqCEddF0anKls34Ubeo8y4vNMYbUl9xKgICGjd+wUj1eDpa
+        omPdObRdXVTl2/k6z4FOuiGdtDpqoyJr2KdYr7EN/AqHmCPjagYYlF3rHnFqBRPwyuU6j4yCsi2KD
+        kL6BqfOUg==;
+Received: from [2601:1c0:6280:3f0::9ef4]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iN7lO-00050V-R5; Wed, 23 Oct 2019 03:56:46 +0000
+Subject: Re: [RFC] docs: add a reset controller chapter to the driver API docs
+To:     Philipp Zabel <p.zabel@pengutronix.de>, linux-doc@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Thierry Reding <treding@nvidia.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Lee Jones <lee.jones@linaro.org>, kernel@pengutronix.de
+References: <20191022164547.22632-1-p.zabel@pengutronix.de>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <8e964179-4515-33ea-bdc4-f27daa311267@infradead.org>
+Date:   Tue, 22 Oct 2019 20:56:45 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-References: <20191021185250.26130-1-navid.emamdoost@gmail.com> <20191022093654.GF11828@phenom.ffwll.local>
-In-Reply-To: <20191022093654.GF11828@phenom.ffwll.local>
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-Date:   Tue, 22 Oct 2019 22:53:57 -0500
-Message-ID: <CAEkB2ETFM7u6YiUOT3fz4UQ3U_za9iM1arTnYNg-rjs5+wxOfw@mail.gmail.com>
-Subject: Re: [PATCH] drm/v3d: Fix memory leak in v3d_submit_cl_ioctl
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>,
-        Eric Anholt <eric@anholt.net>, David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191022164547.22632-1-p.zabel@pengutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 4:36 AM Daniel Vetter <daniel@ffwll.ch> wrote:
->
-> On Mon, Oct 21, 2019 at 01:52:49PM -0500, Navid Emamdoost wrote:
-> > In the impelementation of v3d_submit_cl_ioctl() there are two memory
-> > leaks. One is when allocation for bin fails, and the other is when bin
-> > initialization fails. If kcalloc fails to allocate memory for bin then
-> > render->base should be put. Also, if v3d_job_init() fails to initialize
-> > bin->base then allocated memory for bin should be released.
-> >
-> > Fixes: a783a09ee76d ("drm/v3d: Refactor job management.")
-> > Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-> > ---
-> >  drivers/gpu/drm/v3d/v3d_gem.c | 5 ++++-
-> >  1 file changed, 4 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/gpu/drm/v3d/v3d_gem.c b/drivers/gpu/drm/v3d/v3d_gem.c
-> > index 5d80507b539b..19c092d75266 100644
-> > --- a/drivers/gpu/drm/v3d/v3d_gem.c
-> > +++ b/drivers/gpu/drm/v3d/v3d_gem.c
-> > @@ -557,13 +557,16 @@ v3d_submit_cl_ioctl(struct drm_device *dev, void *data,
-> >
-> >       if (args->bcl_start != args->bcl_end) {
-> >               bin = kcalloc(1, sizeof(*bin), GFP_KERNEL);
-> > -             if (!bin)
-> > +             if (!bin) {
-> > +                     v3d_job_put(&render->base);
->
-> The job isn't initialized yet, this doesn't work.
-Do you mean we have to release render via kfree() here?
+On 10/22/19 9:45 AM, Philipp Zabel wrote:
+> Add initial reset controller API documentation. This is mostly indented
 
->
-> >                       return -ENOMEM;
-> > +             }
-> >
-> >               ret = v3d_job_init(v3d, file_priv, &bin->base,
-> >                                  v3d_job_free, args->in_sync_bcl);
-> >               if (ret) {
-> >                       v3d_job_put(&render->base);
->
-> v3d_job_put will call kfree, if you chase the callchain long enough (in
-> v3d_job_free). So no bug here, this would lead to a double kfree and
-> crash.
-Yes, v3d_job_put() takes care of render,
+                                                                 intended
 
-> -Daniel
->
-> > +                     kfree(bin);
-but how about leaking bin?
-
-> >                       return ret;
-> >               }
-> >
-> > --
-> > 2.17.1
-> >
->
-> --
-> Daniel Vetter
-> Software Engineer, Intel Corporation
-> http://blog.ffwll.ch
+> to describe the concepts to users of the consumer API, and to tie the
+> kerneldoc comments we already have into the driver API documentation.
+> 
+> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> ---
+>  Documentation/driver-api/index.rst |   1 +
+>  Documentation/driver-api/reset.rst | 217 +++++++++++++++++++++++++++++
+>  2 files changed, 218 insertions(+)
+>  create mode 100644 Documentation/driver-api/reset.rst
+> 
 
 
+> diff --git a/Documentation/driver-api/reset.rst b/Documentation/driver-api/reset.rst
+> new file mode 100644
+> index 000000000000..210ccd97c5f0
+> --- /dev/null
+> +++ b/Documentation/driver-api/reset.rst
+> @@ -0,0 +1,217 @@
+> +.. SPDX-License-Identifier: GPL-2.0-only
+> +
+> +====================
+> +Reset controller API
+> +====================
+> +
+> +Introduction
+> +============
+> +
+> +Reset controllers are central units that control the reset signals to multiple
+> +peripherals.
+> +The reset controller API is split in two parts:
 
+                 I prefer            into two parts:
+
+> +the `consumer driver interface <#consumer-driver-interface>`__ (`API reference
+> +<#reset-consumer-api>`__), which allows peripheral drivers to request control
+> +over their reset input signals, and the `reset controller driver interface
+> +<#reset-controller-driver-interface>`__ (`API reference
+> +<#reset-controller-driver-api>`__), which is used by drivers for reset
+> +controller devices to register their reset controls to provide them to the
+> +consumers.
+> +
+> +While some reset controller hardware units also implement system restart
+> +functionality, restart handlers are out of scope for the reset controller API.
+> +
+> +Glossary
+> +--------
+> +
+> +The reset controller API uses these terms with a specific meaning:
+> +
+> +Reset line
+> +
+> +    Physical reset line carrying a reset signal from a reset controller
+> +    hardware unit to a peripheral module.
+> +
+> +Reset control
+> +
+> +    Control method that determines the state of one or multiple reset lines.
+> +    Most commonly this is a single bit in reset controller register space that
+> +    either allows direct control over the physical state of the reset line, or
+> +    is self-clearing and can be used to trigger a predetermined pulse on the
+> +    reset line.
+> +    In more complicated reset controls, a single trigger action can launch a
+> +    carefully timed sequence of pulses on multiple reset lines.
+> +
+> +Reset controller
+> +
+> +    A hardware module that provides a number of reset controls to control a
+> +    number of reset lines.
+> +
+> +Reset consumer
+> +
+> +    Peripheral module or external IC that is put into reset by the signal on a
+> +    reset line.
+> +
+> +Consumer driver interface
+> +=========================
+> +
+> +This interface offers a similar API to the kernel clock framework.
+
+or:
+  This interface provides an API that is similar to the kernel clock framework.
+
+> +Consumer drivers use get and put operations to acquire and release reset
+> +controls.
+> +Functions are provided to assert and deassert the controlled reset lines,
+> +trigger reset pulses, or to query reset line status.
+> +
+> +When requesting reset controls, consumers can use symbolic names for their
+> +reset inputs, which are mapped to an actual reset control on an existing reset
+> +controller device by the core.
+> +
+> +A stub version of this API is provided when the reset controller framework is
+> +not in use in order to minimise the need to use ifdefs.
+> +
+> +Shared and exclusive resets
+> +---------------------------
+
+[snip]
+
+> +
+> +API reference
+> +=============
+> +
+> +The reset controller API is documented here in two parts:
+> +the `reset consumer API <#reset-consumer-api>`__ and the `reset controller
+> +driver API <#reset-controller-driver-api>`__.
+> +
+> +Reset consumer API
+> +------------------
+> +
+> +Reset consumers can control a reset line using an opaque reset control handle,
+> +which can be obtained from :c:func:`devm_reset_control_get_exclusive` or
+> +:c:func:`devm_reset_control_get_shared`.
+> +Given the reset control, consumers can call :c:func:`reset_control_assert` and
+> +:c:func:`reset_control_deassert`, trigger a reset pulse using
+> +:c:func:`reset_control_reset`, or query the reset line status using
+> +:c:func:`reset_control_status`.
+> +
+> +.. kernel-doc:: include/linux/reset.h
+> +   :internal:
+> +
+> +.. kernel-doc:: drivers/reset/core.c
+> +   :functions: reset_control_reset
+> +               reset_control_assert
+> +               reset_control_deassert
+> +               reset_control_status
+> +               reset_control_acquire
+> +               reset_control_release
+> +               reset_control_put
+> +               of_reset_control_get_count
+> +               of_reset_control_array_get
+> +               devm_reset_control_array_get
+> +               reset_control_get_count
+> +
+> +Reset controller driver API
+> +---------------------------
+> +
+> +Reset controller drivers are supposed to implement the necessary functions in
+> +a static constant structure :c:type:`reset_control_ops`, allocate and fill out
+> +a struct :c:type:`reset_controller_dev`, and register it using
+> +:c:func:`devm_reset_controller_register`.
+> +
+> +.. kernel-doc:: include/linux/reset-controller.h
+> +   :internal:
+> +
+> +.. kernel-doc:: drivers/reset/core.c
+> +   :functions: of_reset_simple_xlate
+> +               reset_controller_register
+> +               reset_controller_unregister
+> +               devm_reset_controller_register
+> +               reset_controller_add_lookup
+
+These header and source files cause a number of kernel-doc warnings
+for which I am sending a patch.
+
+thanks.
 -- 
-Navid.
+~Randy
+
