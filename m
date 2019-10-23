@@ -5,60 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB705CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 00:54:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3802CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 00:54:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A368208C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 00:54:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C800A208C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 00:54:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aD+ecd8q"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BL8dfNYw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732624AbfJWAyK (ORCPT
+        id S1732913AbfJWAyR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 20:54:10 -0400
-Received: from mail-pf1-f201.google.com ([209.85.210.201]:36765 "EHLO
-        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732503AbfJWAyI (ORCPT
+        Tue, 22 Oct 2019 20:54:17 -0400
+Received: from mail-pf1-f202.google.com ([209.85.210.202]:35749 "EHLO
+        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732677AbfJWAyN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 20:54:08 -0400
-Received: by mail-pf1-f201.google.com with SMTP id 194so14776543pfu.3
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 17:54:07 -0700 (PDT)
+        Tue, 22 Oct 2019 20:54:13 -0400
+Received: by mail-pf1-f202.google.com with SMTP id r7so14763893pfg.2
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 17:54:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=FMgQDO+Dnj5IilbdBYKNu48aqofIvdKnV+5Czp2NCJk=;
-        b=aD+ecd8qy5XtTCWk57ZL9YxyPdxh61JhJmiWz5tbPXcunacXfmH4RlJVWnFs275uEc
-         3ToWc6yaeXXrZGHeJutdTeyWtSRvNshxMGBD8C1ep5Yp1WJzgqgYjc5x0A7GLMbrwzjG
-         YRuXjQP1DxkSygys3+x+DZ2TZvQzbnwEx00bO6NMOXB9NNvuEudMkhjV8WnhtRPOIGNW
-         baLqIgipOvh3Jpc5gQJdQui3X9GBWZhdrzF/GtXueJoQ0gw5tDNKQ4P0HC3mG+rYbBgB
-         20riwU0+CTB4jy1DCXT6Lfw7kdt0QmRsc1WuL/Y0mKh8anrr4OXReXj5244zTaHOtACQ
-         8jCQ==
+        bh=98x/ZBLRTnMz91JDf+r9eCkgM4R/aoJz7oABA29poQw=;
+        b=BL8dfNYwle/qgbtW7ADVHiEsSuwDsPLSjZoTlfXnyBE0oqkv1xRRcAwpwnjTG/UhRy
+         ISsJthzTeEQUMS7g0lCGJbG93C5BRxPyP8lId+AdASqwo84DykO2wLDNuaAxqKA1IX/O
+         iTR6Luj0jJI3JE5RMfuZvTBQdZTsfSyjj/FPLjdWOQKtb/rP4LSTf3FG61gkWGbAM1QQ
+         uys3F9C2nkJ19ZClEX2bMBki9FW87OhkyJlk0k+bgKEzX+VdNwbnee3KVbObhucc/ZHO
+         dwiV1/bRVl14YMNAKrWD7i9S/1x8sGDRth318qZKTokTijAHXJaIzF6W5tB20o9btapG
+         N9BA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=FMgQDO+Dnj5IilbdBYKNu48aqofIvdKnV+5Czp2NCJk=;
-        b=Cl/jqvMKMpr8e5+wg+ag2hH6/Aj+JDHI+GODRxuuomsBwPRarZi4HvqvpREsKJwwKS
-         eIeKAWK9W79SBeWo1URv6apek8Z7D0GEy24tqwBw60SEI6uGo1uifJYefGhLKln+B7XF
-         jrFoUJbcWyTcI42pjihDooNyGVFWqDTwhAdKtcC9hnbnv0kdY3Yvz6c/NFmI1CavRqXj
-         QUASNTOT1X/K/Y1y9xAlrzkA4AilPRLu6NxmozvbZyZ/mg37ukxpNIPVBeRNl8cnPyAX
-         5oMGip06Dd3agQBO5Pj/t9sVeWD4CXtsgsVFxHFvWEAi+28CESUVLonbFh7EU/ymtuyD
-         NxZQ==
-X-Gm-Message-State: APjAAAWxk/44WR9GgzDZZ9fDTpY9u/WIy0cRMTriStzHN7crErjYXTI5
-        wmf26ILpilKKoHobN/GY+ldrdRUY20C/
-X-Google-Smtp-Source: APXvYqyREqZX+QnAAEVJzMEdYSL+vkbj69zfIuRXQ7/lc6aXG4ZLFgqIA3xEwdGAgjqe9gGRsmIemsZ/K483
-X-Received: by 2002:a63:ce0d:: with SMTP id y13mr842966pgf.430.1571792046163;
- Tue, 22 Oct 2019 17:54:06 -0700 (PDT)
-Date:   Tue, 22 Oct 2019 17:53:31 -0700
+        bh=98x/ZBLRTnMz91JDf+r9eCkgM4R/aoJz7oABA29poQw=;
+        b=Nji4AFdQndgyp2qGz21tyaC2BwFgaVN9SrEbtQiCEyhVedU0B/sN8KW+Eq2n7Ltmws
+         51UZFicyZI0TL8+KDEOmIpn+G/K1gA43w8W/rxgFK7iClL9oWMW3381B6byTR6Mztac5
+         dbe616kQSihfKjpNf6ByIiIEP9eTFMzUiOiX9NMQJWVDhhzC5s+9/St7QeE/E3VnP/xU
+         u1OvCj3la+GbCN/tzzB/MTUymeCXCREXWDXCm+JbOSZnZDc3Ip5Y/lE4zHOXgMQm4VaU
+         yeBdlrj58XGkqCpt/dBuKQn84tkMlDyQiMGGC0RTOP8glyVp71KI+m7lYFo8tVB6AfX7
+         zmkA==
+X-Gm-Message-State: APjAAAVg0fDRvZSM7q6NEmZX+NQUE347pYVM7QhF9jDCyyUJV7x2c12F
+        ficWl2swjRqlTitnvxWm6AJyZWe1YJN1
+X-Google-Smtp-Source: APXvYqwtREz6g9G/rGR93rQsNY/2ZLedqbEtW+Xi7gR2wUD6zXu9bFlMVAC8iCLgsGQ/ldKSRBkh98pzxPJx
+X-Received: by 2002:a63:1666:: with SMTP id 38mr2072471pgw.93.1571792051528;
+ Tue, 22 Oct 2019 17:54:11 -0700 (PDT)
+Date:   Tue, 22 Oct 2019 17:53:33 -0700
 In-Reply-To: <20191023005337.196160-1-irogers@google.com>
-Message-Id: <20191023005337.196160-4-irogers@google.com>
+Message-Id: <20191023005337.196160-6-irogers@google.com>
 Mime-Version: 1.0
 References: <20191017170531.171244-1-irogers@google.com> <20191023005337.196160-1-irogers@google.com>
 X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
-Subject: [PATCH v2 3/9] perf tools: ensure config and str in terms are unique
+Subject: [PATCH v2 5/9] perf tools: avoid a malloc for array events
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -86,125 +86,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make it easier to release memory associated with parse event terms by
-duplicating the string for the config name and ensuring the val string
-is a duplicate.
+Use realloc rather than malloc+memcpy to possibly avoid a memory
+allocation when appending array elements.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/parse-events.c | 33 ++++++++++++++++++++++++---------
- tools/perf/util/parse-events.y |  4 +++-
- 2 files changed, 27 insertions(+), 10 deletions(-)
+ tools/perf/util/parse-events.y | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index a8f8801bd127..f7c8d0853d71 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -1424,7 +1424,6 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
- int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
- 			       char *str, struct list_head **listp)
- {
--	struct list_head *head;
- 	struct parse_events_term *term;
- 	struct list_head *list;
- 	struct perf_pmu *pmu = NULL;
-@@ -1441,19 +1440,30 @@ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
- 
- 		list_for_each_entry(alias, &pmu->aliases, list) {
- 			if (!strcasecmp(alias->name, str)) {
-+				struct list_head *head;
-+				char *config;
-+
- 				head = malloc(sizeof(struct list_head));
- 				if (!head)
- 					return -1;
- 				INIT_LIST_HEAD(head);
--				if (parse_events_term__num(&term, PARSE_EVENTS__TERM_TYPE_USER,
--							   str, 1, false, &str, NULL) < 0)
-+				config = strdup(str);
-+				if (!config)
-+					return -1;
-+				if (parse_events_term__num(&term,
-+						   PARSE_EVENTS__TERM_TYPE_USER,
-+						   config, 1, false, &config,
-+						   NULL) < 0) {
-+					free(list);
-+					free(config);
- 					return -1;
-+				}
- 				list_add_tail(&term->list, head);
- 
- 				if (!parse_events_add_pmu(parse_state, list,
- 							  pmu->name, head,
- 							  true, true)) {
--					pr_debug("%s -> %s/%s/\n", str,
-+					pr_debug("%s -> %s/%s/\n", config,
- 						 pmu->name, alias->str);
- 					ok++;
- 				}
-@@ -1462,8 +1472,10 @@ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
- 			}
- 		}
- 	}
--	if (!ok)
-+	if (!ok) {
-+		free(list);
- 		return -1;
-+	}
- 	*listp = list;
- 	return 0;
- }
-@@ -2761,13 +2773,13 @@ int parse_events_term__sym_hw(struct parse_events_term **term,
- 	struct parse_events_term temp = {
- 		.type_val  = PARSE_EVENTS__TERM_TYPE_STR,
- 		.type_term = PARSE_EVENTS__TERM_TYPE_USER,
--		.config    = config ?: (char *) "event",
-+		.config    = config ?: strdup("event"),
- 	};
- 
- 	BUG_ON(idx >= PERF_COUNT_HW_MAX);
- 	sym = &event_symbols_hw[idx];
- 
--	return new_term(term, &temp, (char *) sym->symbol, 0);
-+	return new_term(term, &temp, strdup(sym->symbol), 0);
- }
- 
- int parse_events_term__clone(struct parse_events_term **new,
-@@ -2776,12 +2788,15 @@ int parse_events_term__clone(struct parse_events_term **new,
- 	struct parse_events_term temp = {
- 		.type_val  = term->type_val,
- 		.type_term = term->type_term,
--		.config    = term->config,
-+		.config    = term->config ? strdup(term->config) : NULL,
- 		.err_term  = term->err_term,
- 		.err_val   = term->err_val,
- 	};
- 
--	return new_term(new, &temp, term->val.str, term->val.num);
-+	if (term->type_val == PARSE_EVENTS__TERM_TYPE_NUM)
-+		return new_term(new, &temp, NULL, term->val.num);
-+	else
-+		return new_term(new, &temp, strdup(term->val.str), 0);
- }
- 
- int parse_events_copy_term_list(struct list_head *old,
 diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-index 48126ae4cd13..27d6b187c9b1 100644
+index 26cb65798522..545ab7cefc20 100644
 --- a/tools/perf/util/parse-events.y
 +++ b/tools/perf/util/parse-events.y
-@@ -644,9 +644,11 @@ PE_NAME array '=' PE_VALUE
- PE_DRV_CFG_TERM
- {
- 	struct parse_events_term *term;
-+	char *config = strdup($1);
+@@ -691,14 +691,12 @@ array_terms ',' array_term
+ 	struct parse_events_array new_array;
  
-+	ABORT_ON(!config);
- 	ABORT_ON(parse_events_term__str(&term, PARSE_EVENTS__TERM_TYPE_DRV_CFG,
--					$1, $1, &@1, NULL));
-+					config, $1, &@1, NULL));
- 	$$ = term;
+ 	new_array.nr_ranges = $1.nr_ranges + $3.nr_ranges;
+-	new_array.ranges = malloc(sizeof(new_array.ranges[0]) *
+-				  new_array.nr_ranges);
++	new_array.ranges = realloc($1.ranges,
++				sizeof(new_array.ranges[0]) *
++				new_array.nr_ranges);
+ 	ABORT_ON(!new_array.ranges);
+-	memcpy(&new_array.ranges[0], $1.ranges,
+-	       $1.nr_ranges * sizeof(new_array.ranges[0]));
+ 	memcpy(&new_array.ranges[$1.nr_ranges], $3.ranges,
+ 	       $3.nr_ranges * sizeof(new_array.ranges[0]));
+-	free($1.ranges);
+ 	free($3.ranges);
+ 	$$ = new_array;
  }
- 
 -- 
 2.23.0.866.gb869b98d4c-goog
 
