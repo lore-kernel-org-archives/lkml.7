@@ -2,216 +2,245 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 460E3CA9EBB
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:31:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 793C7CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:34:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1340A222D2
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:31:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571823064;
-	bh=0lGj0AI/IfAJbVTLRfdK6fD/lMA7GlT+qoua/5oNwys=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qp4fnJMKpmLfDDucowBJ62mQptQ7EP18YpaP7G2ieMGpI27B/TQoG5j97SI0ueRiT
-	 u+PLtmA/N1RlJ50zuX5o8Nm4wuPqxOJ2VcgDqfLkcQsbBMLvg0eTC9ljFEGmPrPTVE
-	 llIFk4wjSrxe0fqiAvdx0auftmrI+HCBXd3qSYBo=
+	by mail.kernel.org (Postfix) with ESMTP id 4F63221A4A
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:34:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404063AbfJWJbD (ORCPT
+        id S2390899AbfJWJeY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 05:31:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41030 "EHLO mail.kernel.org"
+        Wed, 23 Oct 2019 05:34:24 -0400
+Received: from mga03.intel.com ([134.134.136.65]:39490 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403831AbfJWJbC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 05:31:02 -0400
-Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0100222CB;
-        Wed, 23 Oct 2019 09:30:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571823060;
-        bh=0lGj0AI/IfAJbVTLRfdK6fD/lMA7GlT+qoua/5oNwys=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EjUWcHhaP2sY6M7iSvI0Jbl1Ez9p8dy7j+rXbPiK3x3k56SUTr6+26wiIbhOZtRTs
-         7x10sNHdnhY1fgiPV/WKGg2ad1iHee2yn3F+nojVOr9cbI8eq1Be6yk1gXldcBLygS
-         awUGZgZZUyye0gMhU1R5yvaiagYotNs4cg/MLlQk=
-From:   Mike Rapoport <rppt@kernel.org>
-To:     linux-mm@kvack.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Greentime Hu <green.hu@gmail.com>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Helge Deller <deller@gmx.de>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Jeff Dike <jdike@addtoit.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mark Salter <msalter@redhat.com>,
-        Matt Turner <mattst88@gmail.com>,
-        Michal Simek <monstr@monstr.eu>,
-        Richard Weinberger <richard@nod.at>,
-        Russell King <linux@armlinux.org.uk>,
-        Sam Creasey <sammy@sammy.net>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
-        Mike Rapoport <rppt@kernel.org>, linux-alpha@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-c6x-dev@linux-c6x.org, linux-kernel@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-parisc@vger.kernel.org,
-        linux-um@lists.infradead.org, sparclinux@vger.kernel.org,
-        Mike Rapoport <rppt@linux.ibm.com>
-Subject: [PATCH 12/12] mm: remove __ARCH_HAS_4LEVEL_HACK and include/asm-generic/4level-fixup.h
-Date:   Wed, 23 Oct 2019 12:29:01 +0300
-Message-Id: <1571822941-29776-13-git-send-email-rppt@kernel.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1571822941-29776-1-git-send-email-rppt@kernel.org>
-References: <1571822941-29776-1-git-send-email-rppt@kernel.org>
+        id S2390165AbfJWJeY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 05:34:24 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 02:34:22 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,220,1569308400"; 
+   d="scan'208";a="209886389"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 23 Oct 2019 02:34:19 -0700
+Received: by lahna (sSMTP sendmail emulation); Wed, 23 Oct 2019 12:34:19 +0300
+Date:   Wed, 23 Oct 2019 12:34:19 +0300
+From:   "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>
+To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "logang@deltatee.com" <logang@deltatee.com>
+Subject: Re: [PATCH v8 1/6] PCI: Consider alignment of hot-added bridges when
+ distributing available resources
+Message-ID: <20191023093419.GR2819@lahna.fi.intel.com>
+References: <SL2P216MB01871E87E3A760E3AA87E27380C00@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
+ <20191008113812.GF2819@lahna.fi.intel.com>
+ <PSXP216MB0183D447FD3ADF6F82979439806B0@PSXP216MB0183.KORP216.PROD.OUTLOOK.COM>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PSXP216MB0183D447FD3ADF6F82979439806B0@PSXP216MB0183.KORP216.PROD.OUTLOOK.COM>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Rapoport <rppt@linux.ibm.com>
+On Wed, Oct 23, 2019 at 09:08:42AM +0000, Nicholas Johnson wrote:
+> On Tue, Oct 08, 2019 at 02:38:12PM +0300, mika.westerberg@linux.intel.com wrote:
+> > Hi Nicholas,
+> 
+> Hi Mika,
+> 
+> I apologise for not responding quickly . I have switched off for a while 
+> - taking my time to post the patches based on Linux 5.4. Hence, I was 
+> not expecting any emails on this, and was not checking. Plus I was 
+> starting to lose motivation.
+> 
+> I have been taking the time to change how I approach this. I am going to 
+> post the patches to egpu.io forums to get a heap of people testing it 
+> and hopefully saying nice things about it. Originally I thought it would 
+> be quick to get the patches accepted so I was only going to announce 
+> this after being accepted.
+> 
+> I also realised my patch series should not be a series. None of this is 
+> specific to Thunderbolt and hence should not be a series. By separating 
+> parts of this series, it may be easier to sign off and accept.
+> 
+> > 
+> > On Fri, Jul 26, 2019 at 12:53:19PM +0000, Nicholas Johnson wrote:
+> > > Rewrite pci_bus_distribute_available_resources to better handle bridges
+> > > with different resource alignment requirements. Pass more details
+> > > arguments recursively to track the resource start and end addresses
+> > > relative to the initial hotplug bridge. This is especially useful for
+> > > Thunderbolt with native PCI enumeration, enabling external graphics
+> > > cards and other devices with bridge alignment higher than 1MB.
+> > > 
+> > > Change extend_bridge_window to resize the actual resource, rather than
+> > > using add_list and dev_res->add_size. If an additional resource entry
+> > > exists for the given resource, zero out the add_size field to avoid it
+> > > interfering. Because add_size is considered optional when allocating,
+> > > using add_size could cause issues in some cases, because successful
+> > > resource distribution requires sizes to be guaranteed. Such cases
+> > > include hot-adding nested hotplug bridges in one enumeration, and
+> > > potentially others which are yet to be encountered.
+> > > 
+> > > Solves bug report: https://bugzilla.kernel.org/show_bug.cgi?id=199581
+> > 
+> > Here better to use:
+> > 
+> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=199581
+> > 
+> > > Reported-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > 
+> > This solves the issue I reported so,
+> > 
+> > Tested-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> So this is adding "Tested-by" on top of "Reported-by" and not replacing 
+> one with the other?
 
-There are no architectures that use include/asm-generic/4level-fixup.h
-therefore it can be removed along with __ARCH_HAS_4LEVEL_HACK define.
+Yes.
 
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
----
- include/asm-generic/4level-fixup.h | 40 --------------------------------------
- include/asm-generic/tlb.h          |  2 --
- include/linux/mm.h                 | 10 +++++-----
- mm/memory.c                        |  8 --------
- 4 files changed, 5 insertions(+), 55 deletions(-)
- delete mode 100644 include/asm-generic/4level-fixup.h
+> > 
+> > There are a couple of comments below.
+> > 
+> > > Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+> > > ---
+> > >  drivers/pci/setup-bus.c | 148 +++++++++++++++++++---------------------
+> > >  1 file changed, 71 insertions(+), 77 deletions(-)
+> > > 
+> > > diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+> > > index 79b1fa651..6835fd64c 100644
+> > > --- a/drivers/pci/setup-bus.c
+> > > +++ b/drivers/pci/setup-bus.c
+> > > @@ -1840,12 +1840,10 @@ static void extend_bridge_window(struct pci_dev *bridge, struct resource *res,
+> > >  }
+> > >  
+> > >  static void pci_bus_distribute_available_resources(struct pci_bus *bus,
+> > > -					    struct list_head *add_list,
+> > > -					    resource_size_t available_io,
+> > > -					    resource_size_t available_mmio,
+> > > -					    resource_size_t available_mmio_pref)
+> > > +	struct list_head *add_list, struct resource io,
+> > > +	struct resource mmio, struct resource mmio_pref)
+> > 
+> > You pass a copy of each resource because you modify it inplace. I wonder
+> > if it makes more sense to explicitly take a copy here with comments?
+> 
+> I have no qualms with modifying parameters, and sometimes quite like 
+> doing it. I could do as you suggest but that means more lines of diff, 
+> and Bjorn seems to be sending me a strong message that the less lines of 
+> diff, the better.
+> 
+> I just noticed this: https://lkml.org/lkml/2019/10/4/337
+> 
+> Bjorn says I am touching critical and complicated code that he does not 
+> understand. This could explain his aversion to more lines of diff.
+> 
+> If Bjorn will trust you to sign this off and take your assurance that it 
+> is fine, then I can start taking your advice over his. I have been 
+> favouring his advice because I figured he would have the final say as 
+> the PCI subsystem maintainer.
 
-diff --git a/include/asm-generic/4level-fixup.h b/include/asm-generic/4level-fixup.h
-deleted file mode 100644
-index e3667c9..0000000
---- a/include/asm-generic/4level-fixup.h
-+++ /dev/null
-@@ -1,40 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--#ifndef _4LEVEL_FIXUP_H
--#define _4LEVEL_FIXUP_H
--
--#define __ARCH_HAS_4LEVEL_HACK
--#define __PAGETABLE_PUD_FOLDED 1
--
--#define PUD_SHIFT			PGDIR_SHIFT
--#define PUD_SIZE			PGDIR_SIZE
--#define PUD_MASK			PGDIR_MASK
--#define PTRS_PER_PUD			1
--
--#define pud_t				pgd_t
--
--#define pmd_alloc(mm, pud, address) \
--	((unlikely(pgd_none(*(pud))) && __pmd_alloc(mm, pud, address))? \
-- 		NULL: pmd_offset(pud, address))
--
--#define pud_offset(pgd, start)		(pgd)
--#define pud_none(pud)			0
--#define pud_bad(pud)			0
--#define pud_present(pud)		1
--#define pud_ERROR(pud)			do { } while (0)
--#define pud_clear(pud)			pgd_clear(pud)
--#define pud_val(pud)			pgd_val(pud)
--#define pud_populate(mm, pud, pmd)	pgd_populate(mm, pud, pmd)
--#define pud_page(pud)			pgd_page(pud)
--#define pud_page_vaddr(pud)		pgd_page_vaddr(pud)
--
--#undef pud_free_tlb
--#define pud_free_tlb(tlb, x, addr)	do { } while (0)
--#define pud_free(mm, x)			do { } while (0)
--#define __pud_free_tlb(tlb, x, addr)	do { } while (0)
--
--#undef  pud_addr_end
--#define pud_addr_end(addr, end)		(end)
--
--#include <asm-generic/5level-fixup.h>
--
--#endif
-diff --git a/include/asm-generic/tlb.h b/include/asm-generic/tlb.h
-index 04c0644..5e0c2d0 100644
---- a/include/asm-generic/tlb.h
-+++ b/include/asm-generic/tlb.h
-@@ -584,7 +584,6 @@ static inline void tlb_end_vma(struct mmu_gather *tlb, struct vm_area_struct *vm
- 	} while (0)
- #endif
- 
--#ifndef __ARCH_HAS_4LEVEL_HACK
- #ifndef pud_free_tlb
- #define pud_free_tlb(tlb, pudp, address)			\
- 	do {							\
-@@ -594,7 +593,6 @@ static inline void tlb_end_vma(struct mmu_gather *tlb, struct vm_area_struct *vm
- 		__pud_free_tlb(tlb, pudp, address);		\
- 	} while (0)
- #endif
--#endif
- 
- #ifndef __ARCH_HAS_5LEVEL_HACK
- #ifndef p4d_free_tlb
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index cc29227..477b52a 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -1850,12 +1850,12 @@ static inline void mm_dec_nr_ptes(struct mm_struct *mm) {}
- int __pte_alloc(struct mm_struct *mm, pmd_t *pmd);
- int __pte_alloc_kernel(pmd_t *pmd);
- 
-+#if defined(CONFIG_MMU)
-+
- /*
-- * The following ifdef needed to get the 4level-fixup.h header to work.
-- * Remove it when 4level-fixup.h has been removed.
-+ * The following ifdef needed to get the 5level-fixup.h header to work.
-+ * Remove it when 5level-fixup.h has been removed.
-  */
--#if defined(CONFIG_MMU) && !defined(__ARCH_HAS_4LEVEL_HACK)
--
- #ifndef __ARCH_HAS_5LEVEL_HACK
- static inline p4d_t *p4d_alloc(struct mm_struct *mm, pgd_t *pgd,
- 		unsigned long address)
-@@ -1877,7 +1877,7 @@ static inline pmd_t *pmd_alloc(struct mm_struct *mm, pud_t *pud, unsigned long a
- 	return (unlikely(pud_none(*pud)) && __pmd_alloc(mm, pud, address))?
- 		NULL: pmd_offset(pud, address);
- }
--#endif /* CONFIG_MMU && !__ARCH_HAS_4LEVEL_HACK */
-+#endif /* CONFIG_MMU */
- 
- #if USE_SPLIT_PTE_PTLOCKS
- #if ALLOC_SPLIT_PTLOCKS
-diff --git a/mm/memory.c b/mm/memory.c
-index b1ca51a..50300f0 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -4095,19 +4095,11 @@ int __pmd_alloc(struct mm_struct *mm, pud_t *pud, unsigned long address)
- 	smp_wmb(); /* See comment in __pte_alloc */
- 
- 	ptl = pud_lock(mm, pud);
--#ifndef __ARCH_HAS_4LEVEL_HACK
- 	if (!pud_present(*pud)) {
- 		mm_inc_nr_pmds(mm);
- 		pud_populate(mm, pud, new);
- 	} else	/* Another has populated it */
- 		pmd_free(mm, new);
--#else
--	if (!pgd_present(*pud)) {
--		mm_inc_nr_pmds(mm);
--		pgd_populate(mm, pud, new);
--	} else /* Another has populated it */
--		pmd_free(mm, new);
--#endif /* __ARCH_HAS_4LEVEL_HACK */
- 	spin_unlock(ptl);
- 	return 0;
- }
--- 
-2.7.4
+Yes, if Bjorn says something you should listen to him and not me ;-)
 
+I'm just trying to help him to review this because I think this is
+important stuff.
+
+This indeed touches the resource allocation code which is rather old and
+not too well understood but then again it should not prevent us to
+extend and make it better to support more configurations.
+
+> > > -	resource_size_t remaining_io, remaining_mmio, remaining_mmio_pref;
+> > > +	resource_size_t io_per_hp, mmio_per_hp, mmio_pref_per_hp, align;
+> > >  	unsigned int normal_bridges = 0, hotplug_bridges = 0;
+> > >  	struct resource *io_res, *mmio_res, *mmio_pref_res;
+> > >  	struct pci_dev *dev, *bridge = bus->self;
+> > > @@ -1855,15 +1853,29 @@ static void pci_bus_distribute_available_resources(struct pci_bus *bus,
+> > >  	mmio_pref_res = &bridge->resource[PCI_BRIDGE_RESOURCES + 2];
+> > >  
+> > >  	/*
+> > > -	 * Update additional resource list (add_list) to fill all the
+> > > -	 * extra resource space available for this port except the space
+> > > -	 * calculated in __pci_bus_size_bridges() which covers all the
+> > > -	 * devices currently connected to the port and below.
+> > > +	 * The alignment of this bridge is yet to be considered, hence it must
+> > > +	 * be done now before extending its bridge window.
+> > >  	 */
+> > > -	extend_bridge_window(bridge, io_res, add_list, available_io);
+> > > -	extend_bridge_window(bridge, mmio_res, add_list, available_mmio);
+> > > +	align = pci_resource_alignment(bridge, io_res);
+> > > +	if (!io_res->parent && align)
+> > > +		io.start = ALIGN(io.start, align);
+> > > +
+> > > +	align = pci_resource_alignment(bridge, mmio_res);
+> > > +	if (!mmio_res->parent && align)
+> > > +		mmio.start = ALIGN(mmio.start, align);
+> > > +
+> > > +	align = pci_resource_alignment(bridge, mmio_pref_res);
+> > > +	if (!mmio_pref_res->parent && align)
+> > > +		mmio_pref.start = ALIGN(mmio_pref.start, align);
+> > > +
+> > > +	/*
+> > > +	 * Update the resources to fill as much remaining resource space in the
+> > > +	 * parent bridge as possible, while considering alignment.
+> > > +	 */
+> > > +	extend_bridge_window(bridge, io_res, add_list, resource_size(&io));
+> > > +	extend_bridge_window(bridge, mmio_res, add_list, resource_size(&mmio));
+> > >  	extend_bridge_window(bridge, mmio_pref_res, add_list,
+> > > -			     available_mmio_pref);
+> > > +		resource_size(&mmio_pref));
+> > 
+> > I think this should be aligned like:
+> > 
+> >  	extend_bridge_window(bridge, mmio_pref_res, add_list,
+> > 			     resource_size(&mmio_pref));
+> Me too, I do not know how that one slipped past me.
+> 
+> > 
+> > 
+> > >  
+> > >  	/*
+> > >  	 * Calculate how many hotplug bridges and normal bridges there
+> > > @@ -1884,108 +1896,90 @@ static void pci_bus_distribute_available_resources(struct pci_bus *bus,
+> > >  	 */
+> > >  	if (hotplug_bridges + normal_bridges == 1) {
+> > >  		dev = list_first_entry(&bus->devices, struct pci_dev, bus_list);
+> > > -		if (dev->subordinate) {
+> > > +		if (dev->subordinate)
+> > >  			pci_bus_distribute_available_resources(dev->subordinate,
+> > > -				add_list, available_io, available_mmio,
+> > > -				available_mmio_pref);
+> > > -		}
+> > > +				add_list, io, mmio, mmio_pref);
+> > >  		return;
+> > >  	}
+> > >  
+> > > -	if (hotplug_bridges == 0)
+> > > -		return;
+> > > -
+> > >  	/*
+> > > -	 * Calculate the total amount of extra resource space we can
+> > > -	 * pass to bridges below this one.  This is basically the
+> > > -	 * extra space reduced by the minimal required space for the
+> > > -	 * non-hotplug bridges.
+> > > +	 * Reduce the available resource space by what the
+> > > +	 * bridge and devices below it occupy.
+> > 
+> > This can be widen:
+> I avoided changing comments because Bjorn said it creates distracting 
+> noise. But I am considering changing tactics because what I have been 
+> doing has not been working.
+
+If Bjorn says so then you can just ignore my comment :)
