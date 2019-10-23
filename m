@@ -2,466 +2,151 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0FFFCA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:25:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9144CCA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:26:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C54F021872
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:25:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67CB121872
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:26:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X1cQq4D9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404668AbfJWOZh (ORCPT
+        id S2392204AbfJWO0H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 10:25:37 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:51899 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392203AbfJWOZg (ORCPT
+        Wed, 23 Oct 2019 10:26:07 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:31201 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731524AbfJWO0G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 10:25:36 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1Mt6wz-1i8EhQ2iwT-00tWtd; Wed, 23 Oct 2019 16:25:25 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>, linux-parisc@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] Input: hp_sdc_rtc - remove dead chardev code
-Date:   Wed, 23 Oct 2019 16:25:02 +0200
-Message-Id: <20191023142521.3643152-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Wed, 23 Oct 2019 10:26:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571840764;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=13Spz0wRn9BPIEKHK6lBwRMb0mhnJ9FQoUABupMC7i0=;
+        b=X1cQq4D98CNTiikPrx/Slp5bs/G0eYG3Lv1pUgR4zNdsG9he8ndzYWcXmsOLh8ivYcAbg3
+        cPvbIyNjP/Cvme+/o4Vaa+RS4yL+ilfFK9A4QnX5+5h+4uEUlXu7c3oIFGhKPEeXEIFLJG
+        13AYB1NLf+kWd8NQ3Yhj7qN7o+L8Xts=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-264-q5qpaux0NUSTfwOhkwjJjg-1; Wed, 23 Oct 2019 10:26:01 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0B2755E4;
+        Wed, 23 Oct 2019 14:26:00 +0000 (UTC)
+Received: from [10.36.117.79] (ovpn-117-79.ams2.redhat.com [10.36.117.79])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 21E5360852;
+        Wed, 23 Oct 2019 14:25:58 +0000 (UTC)
+Subject: Re: [PATCH] mm: gup: fix comment of __get_user_pages()
+To:     Liu Xiang <liuxiang_1999@126.com>, linux-mm@kvack.org
+Cc:     linux-kernel@vger.kernel.org
+References: <1571838707-4994-1-git-send-email-liuxiang_1999@126.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <3247a4c2-de05-418d-9567-b49df4f2cb2c@redhat.com>
+Date:   Wed, 23 Oct 2019 16:25:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:PGxjn/DN8bZkx1wX8oALQUWcD7gmvt4z1G9Rq5Kd349eKGVemv7
- IFWFFZnFv9j4i3SYvtJXQv5f4u7SaBDDObMetL9P/PtC3OWe+N763oI8N6AZUer5NnfzL/T
- 9g0b4kCDPmkK+NAsd4lvz4m09LTazvfuVI4bMh7Y+JJP6tpyH3e3OUyQPLHUXmgbtawKmOn
- 6UidaKMJ7xLs0Oa+x1few==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:c/WSoK4LJOQ=:J/mvOvYnuWtmN1YTyIYwel
- 8+6Dxv9dpbpFh95mZZfYsWHmqIDYVcXDjFM1DZsXJBwlkgSXKU67JXByniRXx29hpI5MoZrYw
- ZaAUq0BbFDX7QPHVmVoUK4oOoOoCWcIk6q9TMiZKCqf2BkRT8WbUUAW2QTuVWI25mZLzbf8D6
- WevRP4nE2UgYdfS1KrB9N7yLdv5XOjWgZljhZ2piqJ63aPVpSXG7hH98vQa4kP+sFyVcFDVL9
- Bod4W4Fx3lXMOWPeY9cvtcq883pAzPqG3VzpD3Opep2A62ahzFz46teziXkwdpSLKU+qS/jcX
- DfVnb1XwUJoO29G3j+rILY9CL5u+fcPg6lPoBSdD7n533W/a2nS94EXAMGne8FZTlADrXvhTz
- 2FYwXUG+EbDJrxZH23IJS0yU17Vkml74K38OQxi+UvPwz2/xaUUsBxbxwBweD7c05phFRVTyw
- WA9mlVu+B4y67TUPUbGiVfEyxe2CmIwS1TC/7bcuduHBLG0yAKvR48mlLT2V5niWc0WrgZYbW
- pu3DdkUjgrzrSIAjtfLx3jHT9HZTUfnhCh7CIoejHlhVa8VBxCYpnBnaOo/fkZ05FCj/tW4uD
- /s8xxYuZtbUmmWaij3KGSLG8dfW4uK1VEW7kiCnj1xw0uaCadPK4kEDpxrNea1nDHg1FH+TmT
- T7vUhQAY13V44/GMM3mawVxoMEvXLKOTTNQ15EEYuju2BE0fgOIzlek2dD1Bo/58/ISu6nRPX
- BM3hV3fPt+jND0FjpxJ8xGOmmzlcwNJxALYyVKHjDVwa3Zq2rrip745MCq1Yn7kfKi5qc7PSo
- /pfK2IE4Huw325b7rm0KjLHoInEVT+hh1KaYaSnlhmWiP2fB6ii+WGGHxyA0j5ze2nZB1SA07
- sxCw1o3748osFzo93F3A==
+In-Reply-To: <1571838707-4994-1-git-send-email-liuxiang_1999@126.com>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MC-Unique: q5qpaux0NUSTfwOhkwjJjg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver contains half of the implementation of /dev/rtc, but this
-was never completed, and it is now incompatible with the drivers/rtc
-framework.
+On 23.10.19 15:51, Liu Xiang wrote:
+> Because nr_pages is unsigned long, it can not be negative.
+>=20
+> Signed-off-by: Liu Xiang <liuxiang_1999@126.com>
+> ---
+>  mm/gup.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/mm/gup.c b/mm/gup.c
+> index 8f236a3..0236954 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+> @@ -735,10 +735,10 @@ static int check_vma_flags(struct vm_area_struct *v=
+ma, unsigned long gup_flags)
+>   * @nonblocking: whether waiting for disk IO or mmap_sem contention
+>   *
+>   * Returns number of pages pinned. This may be fewer than the number
+> - * requested. If nr_pages is 0 or negative, returns 0. If no pages
+> - * were pinned, returns -errno. Each page returned must be released
+> - * with a put_page() call when it is finished with. vmas will only
+> - * remain valid while mmap_sem is held.
+> + * requested. If nr_pages is 0, returns 0. If no pages were pinned,
+> + * returns -errno. Each page returned must be released with a
+> + * put_page() call when it is finished with. vmas will only remain
+> + * valid while mmap_sem is held.
 
-Remove the chardev completely. If anyone wants to add the functionality
-later, that shoudl be done through rtc_register_device().
+Can we fix the "when it is finished with" part right away, too? At least
+it sounds wrong to me, but I am not a native speaker.
 
-The remaining portions of the driver basically implement a single
-procfs file that may or may not be used anywhere. Not sure why this
-is in drivers/input/ though.
+Simply "Each page returned must be released with put_page()." should be
+good enough
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/input/misc/hp_sdc_rtc.c | 342 --------------------------------
- 1 file changed, 342 deletions(-)
+Reviewed-by: David Hildenbrand <david@redhat.com>
 
-diff --git a/drivers/input/misc/hp_sdc_rtc.c b/drivers/input/misc/hp_sdc_rtc.c
-index abca895a6156..199bc17ddb1d 100644
---- a/drivers/input/misc/hp_sdc_rtc.c
-+++ b/drivers/input/misc/hp_sdc_rtc.c
-@@ -53,28 +53,10 @@ MODULE_LICENSE("Dual BSD/GPL");
- 
- #define RTC_VERSION "1.10d"
- 
--static DEFINE_MUTEX(hp_sdc_rtc_mutex);
- static unsigned long epoch = 2000;
- 
- static struct semaphore i8042tregs;
- 
--static hp_sdc_irqhook hp_sdc_rtc_isr;
--
--static struct fasync_struct *hp_sdc_rtc_async_queue;
--
--static DECLARE_WAIT_QUEUE_HEAD(hp_sdc_rtc_wait);
--
--static ssize_t hp_sdc_rtc_read(struct file *file, char __user *buf,
--			       size_t count, loff_t *ppos);
--
--static long hp_sdc_rtc_unlocked_ioctl(struct file *file,
--				      unsigned int cmd, unsigned long arg);
--
--static unsigned int hp_sdc_rtc_poll(struct file *file, poll_table *wait);
--
--static int hp_sdc_rtc_open(struct inode *inode, struct file *file);
--static int hp_sdc_rtc_fasync (int fd, struct file *filp, int on);
--
- static void hp_sdc_rtc_isr (int irq, void *dev_id, 
- 			    uint8_t status, uint8_t data) 
- {
-@@ -283,151 +265,6 @@ static inline int hp_sdc_rtc_read_ct(struct timespec64 *res) {
- 	return 0;
- }
- 
--
--#if 0 /* not used yet */
--/* Set the i8042 real-time clock */
--static int hp_sdc_rtc_set_rt (struct timeval *setto)
--{
--	uint32_t tenms;
--	unsigned int days;
--	hp_sdc_transaction t;
--	uint8_t tseq[11] = {
--		HP_SDC_ACT_PRECMD | HP_SDC_ACT_DATAOUT,
--		HP_SDC_CMD_SET_RTMS, 3, 0, 0, 0,
--		HP_SDC_ACT_PRECMD | HP_SDC_ACT_DATAOUT,
--		HP_SDC_CMD_SET_RTD, 2, 0, 0 
--	};
--
--	t.endidx = 10;
--
--	if (0xffff < setto->tv_sec / 86400) return -1;
--	days = setto->tv_sec / 86400;
--	if (0xffff < setto->tv_usec / 1000000 / 86400) return -1;
--	days += ((setto->tv_sec % 86400) + setto->tv_usec / 1000000) / 86400;
--	if (days > 0xffff) return -1;
--
--	if (0xffffff < setto->tv_sec) return -1;
--	tenms  = setto->tv_sec * 100;
--	if (0xffffff < setto->tv_usec / 10000) return -1;
--	tenms += setto->tv_usec / 10000;
--	if (tenms > 0xffffff) return -1;
--
--	tseq[3] = (uint8_t)(tenms & 0xff);
--	tseq[4] = (uint8_t)((tenms >> 8)  & 0xff);
--	tseq[5] = (uint8_t)((tenms >> 16) & 0xff);
--
--	tseq[9] = (uint8_t)(days & 0xff);
--	tseq[10] = (uint8_t)((days >> 8) & 0xff);
--
--	t.seq =	tseq;
--
--	if (hp_sdc_enqueue_transaction(&t)) return -1;
--	return 0;
--}
--
--/* Set the i8042 fast handshake timer */
--static int hp_sdc_rtc_set_fhs (struct timeval *setto)
--{
--	uint32_t tenms;
--	hp_sdc_transaction t;
--	uint8_t tseq[5] = {
--		HP_SDC_ACT_PRECMD | HP_SDC_ACT_DATAOUT,
--		HP_SDC_CMD_SET_FHS, 2, 0, 0
--	};
--
--	t.endidx = 4;
--
--	if (0xffff < setto->tv_sec) return -1;
--	tenms  = setto->tv_sec * 100;
--	if (0xffff < setto->tv_usec / 10000) return -1;
--	tenms += setto->tv_usec / 10000;
--	if (tenms > 0xffff) return -1;
--
--	tseq[3] = (uint8_t)(tenms & 0xff);
--	tseq[4] = (uint8_t)((tenms >> 8)  & 0xff);
--
--	t.seq =	tseq;
--
--	if (hp_sdc_enqueue_transaction(&t)) return -1;
--	return 0;
--}
--
--
--/* Set the i8042 match timer (a.k.a. alarm) */
--#define hp_sdc_rtc_set_mt (setto) \
--	hp_sdc_rtc_set_i8042timer(setto, HP_SDC_CMD_SET_MT)
--
--/* Set the i8042 delay timer */
--#define hp_sdc_rtc_set_dt (setto) \
--	hp_sdc_rtc_set_i8042timer(setto, HP_SDC_CMD_SET_DT)
--
--/* Set the i8042 cycle timer (a.k.a. periodic) */
--#define hp_sdc_rtc_set_ct (setto) \
--	hp_sdc_rtc_set_i8042timer(setto, HP_SDC_CMD_SET_CT)
--
--/* Set one of the i8042 3-byte wide timers */
--static int hp_sdc_rtc_set_i8042timer (struct timeval *setto, uint8_t setcmd)
--{
--	uint32_t tenms;
--	hp_sdc_transaction t;
--	uint8_t tseq[6] = {
--		HP_SDC_ACT_PRECMD | HP_SDC_ACT_DATAOUT,
--		0, 3, 0, 0, 0
--	};
--
--	t.endidx = 6;
--
--	if (0xffffff < setto->tv_sec) return -1;
--	tenms  = setto->tv_sec * 100;
--	if (0xffffff < setto->tv_usec / 10000) return -1;
--	tenms += setto->tv_usec / 10000;
--	if (tenms > 0xffffff) return -1;
--
--	tseq[1] = setcmd;
--	tseq[3] = (uint8_t)(tenms & 0xff);
--	tseq[4] = (uint8_t)((tenms >> 8)  & 0xff);
--	tseq[5] = (uint8_t)((tenms >> 16)  & 0xff);
--
--	t.seq =			tseq;
--
--	if (hp_sdc_enqueue_transaction(&t)) { 
--		return -1;
--	}
--	return 0;
--}
--#endif
--
--static ssize_t hp_sdc_rtc_read(struct file *file, char __user *buf,
--			       size_t count, loff_t *ppos) {
--	ssize_t retval;
--
--        if (count < sizeof(unsigned long))
--                return -EINVAL;
--
--	retval = put_user(68, (unsigned long __user *)buf);
--	return retval;
--}
--
--static __poll_t hp_sdc_rtc_poll(struct file *file, poll_table *wait)
--{
--        unsigned long l;
--
--	l = 0;
--        if (l != 0)
--                return EPOLLIN | EPOLLRDNORM;
--        return 0;
--}
--
--static int hp_sdc_rtc_open(struct inode *inode, struct file *file)
--{
--        return 0;
--}
--
--static int hp_sdc_rtc_fasync (int fd, struct file *filp, int on)
--{
--        return fasync_helper (fd, filp, on, &hp_sdc_rtc_async_queue);
--}
--
- static int hp_sdc_rtc_proc_show(struct seq_file *m, void *v)
- {
- #define YN(bit) ("no")
-@@ -507,182 +344,6 @@ static int hp_sdc_rtc_proc_show(struct seq_file *m, void *v)
- #undef NY
- }
- 
--static int hp_sdc_rtc_ioctl(struct file *file, 
--			    unsigned int cmd, unsigned long arg)
--{
--#if 1
--	return -EINVAL;
--#else
--	
--        struct rtc_time wtime; 
--	struct timeval ttime;
--	int use_wtime = 0;
--
--	/* This needs major work. */
--
--        switch (cmd) {
--
--        case RTC_AIE_OFF:       /* Mask alarm int. enab. bit    */
--        case RTC_AIE_ON:        /* Allow alarm interrupts.      */
--	case RTC_PIE_OFF:       /* Mask periodic int. enab. bit */
--        case RTC_PIE_ON:        /* Allow periodic ints          */
--        case RTC_UIE_ON:        /* Allow ints for RTC updates.  */
--        case RTC_UIE_OFF:       /* Allow ints for RTC updates.  */
--        {
--		/* We cannot mask individual user timers and we
--		   cannot tell them apart when they occur, so it 
--		   would be disingenuous to succeed these IOCTLs */
--		return -EINVAL;
--        }
--        case RTC_ALM_READ:      /* Read the present alarm time */
--        {
--		if (hp_sdc_rtc_read_mt(&ttime)) return -EFAULT;
--		if (hp_sdc_rtc_read_bbrtc(&wtime)) return -EFAULT;
--
--		wtime.tm_hour = ttime.tv_sec / 3600;  ttime.tv_sec %= 3600;
--		wtime.tm_min  = ttime.tv_sec / 60;    ttime.tv_sec %= 60;
--		wtime.tm_sec  = ttime.tv_sec;
--                
--		break;
--        }
--        case RTC_IRQP_READ:     /* Read the periodic IRQ rate.  */
--        {
--                return put_user(hp_sdc_rtc_freq, (unsigned long *)arg);
--        }
--        case RTC_IRQP_SET:      /* Set periodic IRQ rate.       */
--        {
--                /* 
--                 * The max we can do is 100Hz.
--		 */
--
--                if ((arg < 1) || (arg > 100)) return -EINVAL;
--		ttime.tv_sec = 0;
--		ttime.tv_usec = 1000000 / arg;
--		if (hp_sdc_rtc_set_ct(&ttime)) return -EFAULT;
--		hp_sdc_rtc_freq = arg;
--                return 0;
--        }
--        case RTC_ALM_SET:       /* Store a time into the alarm */
--        {
--                /*
--                 * This expects a struct hp_sdc_rtc_time. Writing 0xff means
--                 * "don't care" or "match all" for PC timers.  The HP SDC
--		 * does not support that perk, but it could be emulated fairly
--		 * easily.  Only the tm_hour, tm_min and tm_sec are used.
--		 * We could do it with 10ms accuracy with the HP SDC, if the 
--		 * rtc interface left us a way to do that.
--                 */
--                struct hp_sdc_rtc_time alm_tm;
--
--                if (copy_from_user(&alm_tm, (struct hp_sdc_rtc_time*)arg,
--                                   sizeof(struct hp_sdc_rtc_time)))
--                       return -EFAULT;
--
--                if (alm_tm.tm_hour > 23) return -EINVAL;
--		if (alm_tm.tm_min  > 59) return -EINVAL;
--		if (alm_tm.tm_sec  > 59) return -EINVAL;  
--
--		ttime.sec = alm_tm.tm_hour * 3600 + 
--		  alm_tm.tm_min * 60 + alm_tm.tm_sec;
--		ttime.usec = 0;
--		if (hp_sdc_rtc_set_mt(&ttime)) return -EFAULT;
--                return 0;
--        }
--        case RTC_RD_TIME:       /* Read the time/date from RTC  */
--        {
--		if (hp_sdc_rtc_read_bbrtc(&wtime)) return -EFAULT;
--                break;
--        }
--        case RTC_SET_TIME:      /* Set the RTC */
--        {
--                struct rtc_time hp_sdc_rtc_tm;
--                unsigned char mon, day, hrs, min, sec, leap_yr;
--                unsigned int yrs;
--
--                if (!capable(CAP_SYS_TIME))
--                        return -EACCES;
--		if (copy_from_user(&hp_sdc_rtc_tm, (struct rtc_time *)arg,
--                                   sizeof(struct rtc_time)))
--                        return -EFAULT;
--
--                yrs = hp_sdc_rtc_tm.tm_year + 1900;
--                mon = hp_sdc_rtc_tm.tm_mon + 1;   /* tm_mon starts at zero */
--                day = hp_sdc_rtc_tm.tm_mday;
--                hrs = hp_sdc_rtc_tm.tm_hour;
--                min = hp_sdc_rtc_tm.tm_min;
--                sec = hp_sdc_rtc_tm.tm_sec;
--
--                if (yrs < 1970)
--                        return -EINVAL;
--
--                leap_yr = ((!(yrs % 4) && (yrs % 100)) || !(yrs % 400));
--
--                if ((mon > 12) || (day == 0))
--                        return -EINVAL;
--                if (day > (days_in_mo[mon] + ((mon == 2) && leap_yr)))
--                        return -EINVAL;
--		if ((hrs >= 24) || (min >= 60) || (sec >= 60))
--                        return -EINVAL;
--
--                if ((yrs -= eH) > 255)    /* They are unsigned */
--                        return -EINVAL;
--
--
--                return 0;
--        }
--        case RTC_EPOCH_READ:    /* Read the epoch.      */
--        {
--                return put_user (epoch, (unsigned long *)arg);
--        }
--        case RTC_EPOCH_SET:     /* Set the epoch.       */
--        {
--                /* 
--                 * There were no RTC clocks before 1900.
--                 */
--                if (arg < 1900)
--		  return -EINVAL;
--		if (!capable(CAP_SYS_TIME))
--		  return -EACCES;
--		
--                epoch = arg;
--                return 0;
--        }
--        default:
--                return -EINVAL;
--        }
--        return copy_to_user((void *)arg, &wtime, sizeof wtime) ? -EFAULT : 0;
--#endif
--}
--
--static long hp_sdc_rtc_unlocked_ioctl(struct file *file,
--				      unsigned int cmd, unsigned long arg)
--{
--	int ret;
--
--	mutex_lock(&hp_sdc_rtc_mutex);
--	ret = hp_sdc_rtc_ioctl(file, cmd, arg);
--	mutex_unlock(&hp_sdc_rtc_mutex);
--
--	return ret;
--}
--
--
--static const struct file_operations hp_sdc_rtc_fops = {
--        .owner =		THIS_MODULE,
--        .llseek =		no_llseek,
--        .read =			hp_sdc_rtc_read,
--        .poll =			hp_sdc_rtc_poll,
--        .unlocked_ioctl =	hp_sdc_rtc_unlocked_ioctl,
--        .open =			hp_sdc_rtc_open,
--        .fasync =		hp_sdc_rtc_fasync,
--};
--
--static struct miscdevice hp_sdc_rtc_dev = {
--        .minor =	RTC_MINOR,
--        .name =		"rtc_HIL",
--        .fops =		&hp_sdc_rtc_fops
--};
--
- static int __init hp_sdc_rtc_init(void)
- {
- 	int ret;
-@@ -696,8 +357,6 @@ static int __init hp_sdc_rtc_init(void)
- 
- 	if ((ret = hp_sdc_request_timer_irq(&hp_sdc_rtc_isr)))
- 		return ret;
--	if (misc_register(&hp_sdc_rtc_dev) != 0)
--		printk(KERN_INFO "Could not register misc. dev for i8042 rtc\n");
- 
-         proc_create_single("driver/rtc", 0, NULL, hp_sdc_rtc_proc_show);
- 
-@@ -710,7 +369,6 @@ static int __init hp_sdc_rtc_init(void)
- static void __exit hp_sdc_rtc_exit(void)
- {
- 	remove_proc_entry ("driver/rtc", NULL);
--        misc_deregister(&hp_sdc_rtc_dev);
- 	hp_sdc_release_timer_irq(hp_sdc_rtc_isr);
-         printk(KERN_INFO "HP i8042 SDC + MSM-58321 RTC support unloaded\n");
- }
--- 
-2.20.0
+--=20
+
+Thanks,
+
+David / dhildenb
 
