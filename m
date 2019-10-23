@@ -2,464 +2,226 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A073C47E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 07:05:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5E66CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 07:05:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C07A22084C
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 07:05:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="9T3p8WmH"
+	by mail.kernel.org (Postfix) with ESMTP id 9C38A2084C
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 07:05:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389608AbfJWHFq (ORCPT
+        id S2389657AbfJWHFt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 03:05:46 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:36894 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731524AbfJWHFq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 03:05:46 -0400
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9N72wbR003523;
-        Wed, 23 Oct 2019 03:05:31 -0400
-Received: from nam01-sn1-obe.outbound.protection.outlook.com (mail-sn1nam01lp2051.outbound.protection.outlook.com [104.47.32.51])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2vt9tw17sy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 23 Oct 2019 03:05:30 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gCcaO4UdL591mkLBkRZi7orNXKjw3QVHhTIAs0LP8ezUG9LPnaxnTCWMWUBoTjohzxLyps8oKYCrwatiYQAEUZIX9U+V+hwslOwQ2O2aHZ3g3o/suqGbHCgVJ0D8sFvGW09ttGizonoGxU2bkDVv79ICDejdYvOHC2kHWYqbtycHCSZRiqaUQoSafEHbjYMLmTiXnAK7v4+53bWqEARnL6t6ZERhsc15O8aUlWkP45MfQx3WOXyIwXASILOCOCrevarsySwY7zzboO9cJG5rqX/57CW9kbUs+9g4mtfnaPGJ9nAJucEaz1LKWq3xfdOXXDbis5KEFD8x4gVblYtpwQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=baiGIU0/o6tVrJSeGBenm0VN61AqoQGJ48svNwliOIY=;
- b=ZWBa/L01upXx4xfKOIe6TYob9kXxDaCoTjs3JleR+q2MfM7PdEne4QrWDSG1bblzkQie0waFmUUS7qENPmnrMZhFY4g6KBkBPgd97a1RpV/eCIrWMa9SJnzpgOrNQHD+JyKlczVaR0JGTi1Mz3V4eXPU9sSDrdQ7uN++SF5k6/Ek78YaJ/r6m4tPnDrRMyYwzd5Umr/p6noXjwpUoI/TQCN9BpUTOs0piTa0KNqguw6uR6jEdt/pyh5mrkPtunbIbUr736mjVcTtc5Rj4rEuvr7sWAUaWwWO/QLKvRSHSmZ8k605EgNGCkw12DH91uL+TTRvXy3QmvH8ioJ+2QB28g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 137.71.25.55) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=analog.com;
- dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=baiGIU0/o6tVrJSeGBenm0VN61AqoQGJ48svNwliOIY=;
- b=9T3p8WmHlziglOvnq7LP6rmkR6odm5lwmUKu1XPKarJRLc2e6bOXEEBCE4VHlkQPXJKsVF741MXpSyAzQckvsxrGpmSHavloxCtsGpa8epaCXr9H2cmg/LRXeEkHnrZlhtkMp4G1dbWT/pivd4llVz62tslZIba0S1aPtClsLFg=
-Received: from BYAPR03CA0019.namprd03.prod.outlook.com (2603:10b6:a02:a8::32)
- by BN7PR03MB4468.namprd03.prod.outlook.com (2603:10b6:408:d::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2387.20; Wed, 23 Oct
- 2019 07:05:29 +0000
-Received: from SN1NAM02FT028.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e44::206) by BYAPR03CA0019.outlook.office365.com
- (2603:10b6:a02:a8::32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2367.21 via Frontend
- Transport; Wed, 23 Oct 2019 07:05:28 +0000
-Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
- 137.71.25.55 as permitted sender) receiver=protection.outlook.com;
- client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
-Received: from nwd2mta1.analog.com (137.71.25.55) by
- SN1NAM02FT028.mail.protection.outlook.com (10.152.72.105) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2367.14
- via Frontend Transport; Wed, 23 Oct 2019 07:05:28 +0000
-Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
-        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id x9N75R9t017499
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Wed, 23 Oct 2019 00:05:28 -0700
-Received: from saturn.ad.analog.com (10.48.65.116) by
- NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
- 14.3.408.0; Wed, 23 Oct 2019 03:05:26 -0400
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <dmitry.torokhov@gmail.com>, Lars-Peter Clausen <lars@metafoo.de>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH][RESEND] input: adp5589: Make keypad support optional
-Date:   Wed, 23 Oct 2019 10:05:41 +0300
-Message-ID: <20191023070541.13940-1-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190927123836.28047-1-alexandru.ardelean@analog.com>
-References: <20190927123836.28047-1-alexandru.ardelean@analog.com>
+        Wed, 23 Oct 2019 03:05:49 -0400
+Received: from mga06.intel.com ([134.134.136.31]:27527 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731524AbfJWHFs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 03:05:48 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 00:05:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,219,1569308400"; 
+   d="scan'208";a="203879421"
+Received: from linux.intel.com ([10.54.29.200])
+  by FMSMGA003.fm.intel.com with ESMTP; 23 Oct 2019 00:05:46 -0700
+Received: from [10.249.230.188] (abudanko-mobl.ccr.corp.intel.com [10.249.230.188])
+        by linux.intel.com (Postfix) with ESMTP id 01C1658029F;
+        Wed, 23 Oct 2019 00:05:41 -0700 (PDT)
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Subject: [PATCH v5 0/4] perf/core: fix restoring of Intel LBR call stack on a
+ context switch
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>,
+        Song Liu <songliubraving@fb.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Organization: Intel Corp.
+Message-ID: <f8d5a880-38e5-29f4-9e6a-848f70a67988@linux.intel.com>
+Date:   Wed, 23 Oct 2019 10:05:40 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(39860400002)(136003)(396003)(346002)(376002)(189003)(199004)(47776003)(2906002)(14444005)(7636002)(54906003)(246002)(476003)(106002)(305945005)(8676002)(316002)(126002)(110136005)(446003)(356004)(11346002)(2616005)(107886003)(44832011)(486006)(36756003)(4326008)(186003)(336012)(8936002)(2870700001)(50226002)(76176011)(1076003)(426003)(50466002)(7696005)(51416003)(478600001)(70586007)(86362001)(70206006)(6666004)(26005)(48376002)(5660300002)(334744003);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR03MB4468;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;MX:1;A:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 0ffbd3e7-1456-41a5-7c46-08d7578762d9
-X-MS-TrafficTypeDiagnostic: BN7PR03MB4468:
-X-Microsoft-Antispam-PRVS: <BN7PR03MB4468D38E4480B209E8744969F96B0@BN7PR03MB4468.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
-X-Forefront-PRVS: 019919A9E4
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: azpyGkacPmIexh+Sb17HOC2AKjf19fTOXYOGmGlIBJUnQp4vpn+Fl4Tk6VKnEx3H+NYB0Tt6KCL/u++kdNRfcAiENdjBc9EWL4uH2oenZXNMb7Pe/U7ucyhY8PsIX7/aYi3kQogNaqquEErWEPjq10RZ+LI6s+Qu47Nn5yajTbKAkNn0JmyDTwX2LFSfRVxUGlMc9EGGF4qU1gXdn7dimHWdnD/PDLrL72c7CtDwJSlpCo11lhRwzlI9IabmxwQ7kACtDFAqnFWS9WspizI9joIH/fwnZ8PMtQJyH+juFHxyJQ+64JkMg3hMUFIJFogRJlsgSCenQFyDE+HCY6g347zpd8KTbgivbeHsebpM6DUHKjjolx34uTcViTVKHgmDFnv5LgW5DPx5hbbcNj13DYrg4bGeTUTw22zTpyFo5TU6hFKX8Dn4DlYn0aUP+7sc
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Oct 2019 07:05:28.5735
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0ffbd3e7-1456-41a5-7c46-08d7578762d9
-X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR03MB4468
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-23_01:2019-10-22,2019-10-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=2 mlxscore=0
- bulkscore=0 spamscore=0 mlxlogscore=999 lowpriorityscore=0
- priorityscore=1501 clxscore=1015 malwarescore=0 phishscore=0
- impostorscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-1908290000 definitions=main-1910230069
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lars-Peter Clausen <lars@metafoo.de>
 
-On some platforms the adp5589 is used in GPIO only mode. On these platforms
-we do not want to register a input device, so make that optional and only
-create the input device if a keymap is supplied.
+Restore Intel LBR call stack from cloned inactive task perf context on
+a context switch. This change inherently addresses inconsistency in LBR 
+call stack data provided on a sample in record profiling mode:
 
-Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+  $ perf record -N -B -T -R --call-graph lbr \
+         -e cpu/period=0xcdfe60,event=0x3c,name=\'CPU_CLK_UNHALTED.THREAD\'/Duk \
+         --clockid=monotonic_raw -- ./miniFE.x nx 25 ny 25 nz 25
+
+Let's assume threads A, B, C belonging to the same process. 
+B and C are siblings of A and their perf contexts are treated as equivalent.
+At some point B blocks on a futex (non preempt context switch).
+B's LBRs are preserved at B's perf context task_ctx_data and B's events 
+are removed from PMU and disabled. B's perf context becomes inactive.
+
+Later C gets on a cpu, runs, gets profiled and eventually switches to 
+the awaken but not yet running B. The optimized context switch path is 
+executed swapping B's and C's task_ctx_data pointers at perf event contexts.
+So C's task_ctx_data will refer preserved B's LBRs on the following 
+switch-in event.
+
+However, as far B's perf context is inactive there is no enabled events
+in there and B's task_ctx_data->lbr_callstack_users is equal to 0.
+When B gets on the cpu B's events reviving is skipped following
+the optimized context switch path and B's task_ctx_data->lbr_callstack_users
+remains 0. Thus B's LBR's are not restored by pmu sched_task() code called 
+in the end of perf context switch-in callback for B.
+
+In the report that manifests as having short fragments of B's
+call stack, still tracked by LBR's HW between adjacent samples,
+but the whole thread call tree doesn't aggregate.
+
+The fix has been evaluated when profiling miniFE [1] (C++, OpenMP)
+workload running 64 threads on Intel Skylake EP(64 core, 2 sockets):
+
+  $ perf report --call-graph callee,flat
+
+5.3.0-rc6+ (tip perf/core) - fixed
+
+-   92.66%    82.64%  miniFE.x  libiomp5.so         [.] _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
+   - 69.14% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
+        __kmp_fork_barrier
+        __kmp_launch_thread
+        _INTERNAL_24_______src_z_Linux_util_c_3e0095e6::__kmp_launch_worker
+        start_thread
+        __clone
+   - 21.89% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
+        __kmp_barrier
+        __kmpc_reduce_nowait
+        miniFE::cg_solve<miniFE::CSRMatrix<double, int, int>, miniFE::Vector<double, int, int>, miniFE::matvec_std<miniFE::CSRMatrix<double, int, int>, miniFE::Vector<double, int, in
+        __kmp_invoke_microtask
+        __kmp_invoke_task_func
+        __kmp_launch_thread
+        _INTERNAL_24_______src_z_Linux_util_c_3e0095e6::__kmp_launch_worker
+        start_thread
+        __clone
+   - 1.63% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
+        __kmp_barrier
+        __kmpc_reduce_nowait
+        main
+        __kmp_invoke_microtask
+        __kmp_invoke_task_func
+        __kmp_launch_thread
+        _INTERNAL_24_______src_z_Linux_util_c_3e0095e6::__kmp_launch_worker
+        start_thread
+        __clone
+
+5.0.13-300.fc30.x86_64 - no fix
+
+-   90.29%    81.01%  miniFE.x  libiomp5.so         [.] _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
+   - 33.45% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
+        __kmp_fork_barrier
+        __kmp_launch_thread
+        _INTERNAL_24_______src_z_Linux_util_c_3e0095e6::__kmp_launch_worker
+        start_thread
+        __clone
+     87.63% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
+   - 54.79% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
+        __kmp_fork_barrier
+        __kmp_launch_thread
+   - 9.18% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
+        __kmp_barrier
+        __kmpc_reduce_nowait
+        miniFE::cg_solve<miniFE::CSRMatrix<double, int, int>, miniFE::Vector<double, int, int>, miniFE::matvec_std<miniFE::CSRMatrix<double, int, int>, miniFE::Vector<double, int, in
+        __kmp_invoke_microtask
+        __kmp_invoke_task_func
+        __kmp_launch_thread
+        _INTERNAL_24_______src_z_Linux_util_c_3e0095e6::__kmp_launch_worker
+        start_thread
+        __clone
+   - 41.28% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
+        __kmp_fork_barrier
+        __kmp_launch_thread
+        _INTERNAL_24_______src_z_Linux_util_c_3e0095e6::__kmp_launch_worker
+   - 15.77% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
+        __kmp_barrier
+        __kmpc_reduce_nowait
+        miniFE::cg_solve<miniFE::CSRMatrix<double, int, int>, miniFE::Vector<double, int, int>, miniFE::matvec_std<miniFE::CSRMatrix<double, int, int>, miniFE::Vector<double, int, in
+        __kmp_invoke_microtask
+        __kmp_invoke_task_func
+        __kmp_launch_thread
+   - 11.56% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
+        __kmp_barrier
+        __kmpc_reduce_nowait
+        miniFE::cg_solve<miniFE::CSRMatrix<double, int, int>, miniFE::Vector<double, int, int>, miniFE::matvec_std<miniFE::CSRMatrix<double, int, int>, miniFE::Vector<double, int, in
+        __kmp_invoke_microtask
+        __kmp_invoke_task_func
+        __kmp_launch_thread
+        _INTERNAL_24_______src_z_Linux_util_c_3e0095e6::__kmp_launch_worker
+   - 2.33% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
+        __kmp_barrier
+        __kmpc_reduce_nowait
+        main
+        __kmp_invoke_microtask
+        __kmp_invoke_task_func
+        __kmp_launch_thread
+        _INTERNAL_24_______src_z_Linux_util_c_3e0095e6::__kmp_launch_worker
+        start_thread
+        __clone
+     0.67% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_gather
+     0.57% __kmp_hardware_timestamp
+
+[1] https://www.hpcadvisorycouncil.com/pdf/miniFE_Analysis_and_Profiling.pdf
+
 ---
- drivers/input/keyboard/adp5589-keys.c | 197 +++++++++++++++-----------
- 1 file changed, 111 insertions(+), 86 deletions(-)
+Alexey Budankov (4):
+  perf/core,x86: introduce swap_task_ctx() method at struct pmu
+  perf/x86: install platform specific swap_task_ctx adapter
+  perf/x86/intel: implement LBR callstacks context synchronization
+  perf/core,x86: synchronize PMU task contexts on optimized context switches
 
-diff --git a/drivers/input/keyboard/adp5589-keys.c b/drivers/input/keyboard/adp5589-keys.c
-index 4f96a4a99e5b..08bfa8b213e8 100644
---- a/drivers/input/keyboard/adp5589-keys.c
-+++ b/drivers/input/keyboard/adp5589-keys.c
-@@ -495,10 +495,10 @@ static int adp5589_build_gpiomap(struct adp5589_kpad *kpad,
- 	return n_unused;
- }
- 
--static int adp5589_gpio_add(struct adp5589_kpad *kpad)
-+static int adp5589_gpio_add(struct adp5589_kpad *kpad,
-+	const struct adp5589_kpad_platform_data *pdata)
- {
- 	struct device *dev = &kpad->client->dev;
--	const struct adp5589_kpad_platform_data *pdata = dev_get_platdata(dev);
- 	const struct adp5589_gpio_platform_data *gpio_data = pdata->gpio_data;
- 	int i, error;
- 
-@@ -550,10 +550,10 @@ static int adp5589_gpio_add(struct adp5589_kpad *kpad)
- 	return 0;
- }
- 
--static void adp5589_gpio_remove(struct adp5589_kpad *kpad)
-+static void adp5589_gpio_remove(struct adp5589_kpad *kpad,
-+	const struct adp5589_kpad_platform_data *pdata)
- {
- 	struct device *dev = &kpad->client->dev;
--	const struct adp5589_kpad_platform_data *pdata = dev_get_platdata(dev);
- 	const struct adp5589_gpio_platform_data *gpio_data = pdata->gpio_data;
- 	int error;
- 
-@@ -571,12 +571,14 @@ static void adp5589_gpio_remove(struct adp5589_kpad *kpad)
- 	gpiochip_remove(&kpad->gc);
- }
- #else
--static inline int adp5589_gpio_add(struct adp5589_kpad *kpad)
-+static inline int adp5589_gpio_add(struct adp5589_kpad *kpad,
-+	struct const adp5589_kpad_platform_data *pdata)
- {
- 	return 0;
- }
- 
--static inline void adp5589_gpio_remove(struct adp5589_kpad *kpad)
-+static inline void adp5589_gpio_remove(struct adp5589_kpad *kpad,
-+	struct const adp5589_kpad_platform_data *pdata)
- {
- }
- #endif
-@@ -652,11 +654,10 @@ static int adp5589_get_evcode(struct adp5589_kpad *kpad, unsigned short key)
- 	return -EINVAL;
- }
- 
--static int adp5589_setup(struct adp5589_kpad *kpad)
-+static int adp5589_setup(struct adp5589_kpad *kpad, 
-+	const struct adp5589_kpad_platform_data *pdata)
- {
- 	struct i2c_client *client = kpad->client;
--	const struct adp5589_kpad_platform_data *pdata =
--		dev_get_platdata(&client->dev);
- 	u8 (*reg) (u8) = kpad->var->reg;
- 	unsigned char evt_mode1 = 0, evt_mode2 = 0, evt_mode3 = 0;
- 	unsigned char pull_mask = 0;
-@@ -857,70 +858,37 @@ static void adp5589_report_switch_state(struct adp5589_kpad *kpad)
- 	input_sync(kpad->input);
- }
- 
--static int adp5589_probe(struct i2c_client *client,
--			 const struct i2c_device_id *id)
-+static int adp5589_keypad_add(struct adp5589_kpad *kpad, unsigned int revid,
-+	const struct adp5589_kpad_platform_data *pdata)
- {
--	struct adp5589_kpad *kpad;
--	const struct adp5589_kpad_platform_data *pdata =
--		dev_get_platdata(&client->dev);
-+	struct i2c_client *client = kpad->client;
- 	struct input_dev *input;
--	unsigned int revid;
--	int ret, i;
-+	unsigned int i;
- 	int error;
- 
--	if (!i2c_check_functionality(client->adapter,
--				     I2C_FUNC_SMBUS_BYTE_DATA)) {
--		dev_err(&client->dev, "SMBUS Byte Data not Supported\n");
--		return -EIO;
--	}
--
--	if (!pdata) {
--		dev_err(&client->dev, "no platform data?\n");
--		return -EINVAL;
--	}
--
--	kpad = kzalloc(sizeof(*kpad), GFP_KERNEL);
--	if (!kpad)
--		return -ENOMEM;
--
--	switch (id->driver_data) {
--	case ADP5585_02:
--		kpad->support_row5 = true;
--		/* fall through */
--	case ADP5585_01:
--		kpad->is_adp5585 = true;
--		kpad->var = &const_adp5585;
--		break;
--	case ADP5589:
--		kpad->support_row5 = true;
--		kpad->var = &const_adp5589;
--		break;
--	}
-+	if (pdata->keymapsize == 0)
-+		return 0;
- 
- 	if (!((pdata->keypad_en_mask & kpad->var->row_mask) &&
- 			(pdata->keypad_en_mask >> kpad->var->col_shift)) ||
- 			!pdata->keymap) {
- 		dev_err(&client->dev, "no rows, cols or keymap from pdata\n");
--		error = -EINVAL;
--		goto err_free_mem;
-+		return -EINVAL;
- 	}
- 
- 	if (pdata->keymapsize != kpad->var->keymapsize) {
- 		dev_err(&client->dev, "invalid keymapsize\n");
--		error = -EINVAL;
--		goto err_free_mem;
-+		return -EINVAL;
- 	}
- 
- 	if (!pdata->gpimap && pdata->gpimapsize) {
- 		dev_err(&client->dev, "invalid gpimap from pdata\n");
--		error = -EINVAL;
--		goto err_free_mem;
-+		return -EINVAL;
- 	}
- 
- 	if (pdata->gpimapsize > kpad->var->gpimapsize_max) {
- 		dev_err(&client->dev, "invalid gpimapsize\n");
--		error = -EINVAL;
--		goto err_free_mem;
-+		return -EINVAL;
- 	}
- 
- 	for (i = 0; i < pdata->gpimapsize; i++) {
-@@ -929,41 +897,27 @@ static int adp5589_probe(struct i2c_client *client,
- 		if (pin < kpad->var->gpi_pin_base ||
- 				pin > kpad->var->gpi_pin_end) {
- 			dev_err(&client->dev, "invalid gpi pin data\n");
--			error = -EINVAL;
--			goto err_free_mem;
-+			return -EINVAL;
- 		}
- 
- 		if ((1 << (pin - kpad->var->gpi_pin_row_base)) &
- 				pdata->keypad_en_mask) {
- 			dev_err(&client->dev, "invalid gpi row/col data\n");
--			error = -EINVAL;
--			goto err_free_mem;
-+			return -EINVAL;
- 		}
- 	}
- 
- 	if (!client->irq) {
- 		dev_err(&client->dev, "no IRQ?\n");
--		error = -EINVAL;
--		goto err_free_mem;
-+		return -EINVAL;
- 	}
- 
- 	input = input_allocate_device();
--	if (!input) {
--		error = -ENOMEM;
--		goto err_free_mem;
--	}
-+	if (!input)
-+		return -ENOMEM;
- 
--	kpad->client = client;
- 	kpad->input = input;
- 
--	ret = adp5589_read(client, ADP5589_5_ID);
--	if (ret < 0) {
--		error = ret;
--		goto err_free_input;
--	}
--
--	revid = (u8) ret & ADP5589_5_DEVICE_ID_MASK;
--
- 	input->name = client->name;
- 	input->phys = "adp5589-keys/input0";
- 	input->dev.parent = &client->dev;
-@@ -1015,30 +969,94 @@ static int adp5589_probe(struct i2c_client *client,
- 		goto err_unreg_dev;
- 	}
- 
--	error = adp5589_setup(kpad);
-+	device_init_wakeup(&client->dev, 1);
-+
-+	return 0;
-+
-+err_unreg_dev:
-+	input_unregister_device(input);
-+	input = NULL;
-+err_free_input:
-+	input_free_device(input);
-+
-+	return error;
-+}
-+
-+static void adp5589_keypad_remove(struct adp5589_kpad *kpad,
-+	const struct adp5589_kpad_platform_data *pdata)
-+{
-+	if (!kpad->input)
-+		return;
-+
-+	free_irq(kpad->client->irq, kpad);
-+	input_unregister_device(kpad->input);
-+}
-+
-+static int adp5589_probe(struct i2c_client *client,
-+			 const struct i2c_device_id *id)
-+{
-+	struct adp5589_kpad *kpad;
-+	const struct adp5589_kpad_platform_data *pdata =
-+		dev_get_platdata(&client->dev);
-+	unsigned int revid;
-+	int error, ret;
-+
-+	if (!i2c_check_functionality(client->adapter,
-+				     I2C_FUNC_SMBUS_BYTE_DATA)) {
-+		dev_err(&client->dev, "SMBUS Byte Data not Supported\n");
-+		return -EIO;
-+	}
-+
-+
-+	kpad = kzalloc(sizeof(*kpad), GFP_KERNEL);
-+	if (!kpad)
-+		return -ENOMEM;
-+
-+	kpad->client = client;
-+
-+	switch (id->driver_data) {
-+	case ADP5585_02:
-+		kpad->support_row5 = true;
-+	case ADP5585_01:
-+		kpad->is_adp5585 = true;
-+		kpad->var = &const_adp5585;
-+		break;
-+	case ADP5589:
-+		kpad->support_row5 = true;
-+		kpad->var = &const_adp5589;
-+		break;
-+	}
-+
-+	ret = adp5589_read(client, ADP5589_5_ID);
-+	if (ret < 0) {
-+		error = ret;
-+		goto err_free_mem;
-+	}
-+
-+	revid = (u8) ret & ADP5589_5_DEVICE_ID_MASK;
-+
-+	error = adp5589_keypad_add(kpad, revid, pdata);
- 	if (error)
--		goto err_free_irq;
-+		goto err_free_mem;
-+
-+	error = adp5589_setup(kpad, pdata);
-+	if (error)
-+		goto err_keypad_remove;
- 
- 	if (kpad->gpimapsize)
- 		adp5589_report_switch_state(kpad);
- 
--	error = adp5589_gpio_add(kpad);
-+	error = adp5589_gpio_add(kpad, pdata);
- 	if (error)
--		goto err_free_irq;
-+		goto err_keypad_remove;
- 
--	device_init_wakeup(&client->dev, 1);
- 	i2c_set_clientdata(client, kpad);
- 
- 	dev_info(&client->dev, "Rev.%d keypad, irq %d\n", revid, client->irq);
- 	return 0;
- 
--err_free_irq:
--	free_irq(client->irq, kpad);
--err_unreg_dev:
--	input_unregister_device(input);
--	input = NULL;
--err_free_input:
--	input_free_device(input);
-+err_keypad_remove:
-+	adp5589_keypad_remove(kpad, pdata);
- err_free_mem:
- 	kfree(kpad);
- 
-@@ -1048,11 +1066,12 @@ static int adp5589_probe(struct i2c_client *client,
- static int adp5589_remove(struct i2c_client *client)
- {
- 	struct adp5589_kpad *kpad = i2c_get_clientdata(client);
-+	const struct adp5589_kpad_platform_data *pdata =
-+		dev_get_platdata(&client->dev);
- 
- 	adp5589_write(client, kpad->var->reg(ADP5589_GENERAL_CFG), 0);
--	free_irq(client->irq, kpad);
--	input_unregister_device(kpad->input);
--	adp5589_gpio_remove(kpad);
-+	adp5589_keypad_remove(kpad, pdata);
-+	adp5589_gpio_remove(kpad, pdata);
- 	kfree(kpad);
- 
- 	return 0;
-@@ -1064,6 +1083,9 @@ static int adp5589_suspend(struct device *dev)
- 	struct adp5589_kpad *kpad = dev_get_drvdata(dev);
- 	struct i2c_client *client = kpad->client;
- 
-+	if (!kpad->input)
-+		return 0;
-+
- 	disable_irq(client->irq);
- 
- 	if (device_may_wakeup(&client->dev))
-@@ -1077,6 +1099,9 @@ static int adp5589_resume(struct device *dev)
- 	struct adp5589_kpad *kpad = dev_get_drvdata(dev);
- 	struct i2c_client *client = kpad->client;
- 
-+	if (!kpad->input)
-+		return 0;
-+
- 	if (device_may_wakeup(&client->dev))
- 		disable_irq_wake(client->irq);
- 
+ arch/x86/events/core.c       |  8 ++++++++
+ arch/x86/events/intel/core.c |  7 +++++++
+ arch/x86/events/intel/lbr.c  | 23 +++++++++++++++++++++++
+ arch/x86/events/perf_event.h | 11 +++++++++++
+ include/linux/perf_event.h   |  9 +++++++++
+ kernel/events/core.c         | 13 ++++++++++++-
+ 6 files changed, 70 insertions(+), 1 deletion(-)
+
+---
+Changes in v5:
+- renamed sync_task_ctx to swap_task_ctx;
+- converted type of prev and next swap_task_ctx() params to struct perf_event_context;
+- implemented check on availability of swap_task_ctx() pointer in pmu type
+  at perf core implementation;
+- moved swap of ctx->task_ctx_data pointers to architecture specific
+  intel_pmu_lbr_swap_task_ctx() implementation;
+
+Changes in v4:
+- moved check on simultaneous task_ctx_data objects availability 
+  to the perf/core layer;
+- marked sync_task_ctx() as the optional in code comments;
+- renamed params of sync_task_ctx() to prev and next;
+
+Changes in v3:
+- replaced assignment with swap at intel_pmu_lbr_sync_task_ctx()
+
+Changes in v2:
+- implemented sync_task_ctx() method at perf,x86,intel pmu types;
+- employed the method on the optimized context switch path between 
+  equivalent perf event contexts;
+
 -- 
 2.20.1
 
