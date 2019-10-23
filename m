@@ -2,88 +2,67 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F6B0CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:54:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D37CCCA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:55:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FC9B21929
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:54:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B445121920
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:55:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406226AbfJWNys (ORCPT
+        id S2406239AbfJWNzU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 09:54:48 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:57373 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390181AbfJWNys (ORCPT
+        Wed, 23 Oct 2019 09:55:20 -0400
+Received: from out28-146.mail.aliyun.com ([115.124.28.146]:58893 "EHLO
+        out28-146.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406181AbfJWNzU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 09:54:48 -0400
-Received: from mail-qk1-f170.google.com ([209.85.222.170]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1M1pfy-1iPSxS12ro-002GC9; Wed, 23 Oct 2019 15:54:46 +0200
-Received: by mail-qk1-f170.google.com with SMTP id q70so12255704qke.12;
-        Wed, 23 Oct 2019 06:54:45 -0700 (PDT)
-X-Gm-Message-State: APjAAAWoErbG2vVzPG1ASGwUqNjiigXVXCYO+CmCrM6ASujv85zjVmHg
-        7Zy4mtB+bKS5nRP2wftma5HH0gWUaO+zaFufcK8=
-X-Google-Smtp-Source: APXvYqwg1GMH8QdNiqBQrXGE6tBmtG4ranjbu2NqBzx98xXXHvxcSSud6NSUY0ZDvcAUkWXJquc0IymGFTx7V0wKlHc=
-X-Received: by 2002:a05:620a:4f:: with SMTP id t15mr8358153qkt.286.1571838884945;
- Wed, 23 Oct 2019 06:54:44 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191010202802.1132272-1-arnd@arndb.de> <20191010203043.1241612-1-arnd@arndb.de>
- <20191010203043.1241612-33-arnd@arndb.de> <20191023134956.GK11048@pi3>
-In-Reply-To: <20191023134956.GK11048@pi3>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 23 Oct 2019 15:54:28 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1LVo0vfngK_7z-a0nC_t_v85OE8epke2XAFYH9EW821g@mail.gmail.com>
-Message-ID: <CAK8P3a1LVo0vfngK_7z-a0nC_t_v85OE8epke2XAFYH9EW821g@mail.gmail.com>
-Subject: Re: [PATCH 33/36] ARM: s3c: move low-level clk reg access into
- platform code
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     "moderated list:ARM/SAMSUNG EXYNOS ARM ARCHITECTURES" 
-        <linux-samsung-soc@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:+Av+xoFVIkh4CH56GsaW7ZCFUxfyKXmDxn17ZfHzj78Rnv6BbZe
- nJvEfDkynb539c2dyFovr3KbiR2lWvNrB8g5Fj7aCvYtcecZUc+0sFg5Li/AdrRd4v6oswI
- tdrE2af8rwgXT8xZQBFNBPiJ4RKVCZIPz+NXib65BSX1NQQbaAXsK2i74vScoVBZ3UQT3w2
- Za92BQERlqrCdnzlroQvw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:g8zyAMASZJ4=:kXtUw3vCqlR/mK6YThXKVO
- j3EmAzd9kPfheebOTnhxgjXHq/tsW7rigG3saHPvB8QzySep4Bw+UZigTU9VHQN+pWiCPYr5V
- 0AYfXtpnmqpwbhv9fNZwhN8qL/bdVI7hsqzktH9yo9sQlDVTLr/otE+9bD7GYvNS3MHfuC8fl
- +N1raW8tBfOTSPlF+XniHCze/ZHEZ1zjFZMzteJxfSz7INtF9ibDmG0JVkjQOJ/95WVcWjTmG
- ieb7/r/ee/NTXYCWeV41VH7P9SRQFjO9C7Aq6upS3ftkugo+77SGoZ1o0/2B4gcCsLfZ6liRg
- anwSOO8W+HiddRPOyIKef33OTZvY0o5WJj8fIzOglGl/3waHbALPn0E5RzgzijvCI70BofE+j
- 7bw7MYPYgGakZ9qh8+la67Z8H12Ls4raiMvfKOSUmDlmWzxEiSFPZyb0O2Unie3q92w6v64DT
- vH0rN98PKLQuqdv+lA4VYl+lwEZUSo2w7vJGqoTB1QFUQl2+4abu3pSEBFSP1PFzW5tSnTXEN
- zca5NgGuWTuCeGWqVvTid9s+U9QJJnlJKDcd+4vuOt+qY6Q2bKeOO8FJykEZKdP8butsSLD6B
- p7sfc1zyepXdFlJ2SVjSS652JLZRIXL9wD8azwcfP4BsAgw0URclfuSqVFqciVQffhZvCdj37
- AAJewUrfVBjuuDpZkvie+ey2IcMsb3Mfth7mMaz530MFuYMdhybbKRK4alfkCLQAEf7/EyVFH
- hLrdDblzJwZmcNF1CQaUqZTi8QlEr4fzgNyQoVgvRoGiy+cmVtPwWAEfRf73IwKnLRqZ3SGRv
- tUCTeuGo7/pmeZRvVEA1urNZbw+I0mduroQA3pes9YrNrjLdIFNdgJi9QUPmuVU59k4WNs/Za
- qVc91JR4CXDYlKyaYv4Q==
+        Wed, 23 Oct 2019 09:55:20 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.1084395|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.434615-0.0129558-0.552429;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03312;MF=liu.xiang@zlingsmart.com;NM=1;PH=DS;RN=3;RT=3;SR=0;TI=SMTPD_---.FpNUs9Y_1571838908;
+Received: from localhost(mailfrom:liu.xiang@zlingsmart.com fp:SMTPD_---.FpNUs9Y_1571838908)
+          by smtp.aliyun-inc.com(10.194.97.246);
+          Wed, 23 Oct 2019 21:55:09 +0800
+From:   Liu Xiang <liuxiang_1999@126.com>
+To:     linux-mm@kvack.org
+Cc:     linux-kernel@vger.kernel.org, liuxiang_1999@126.com
+Subject: [PATCH] mm: gup: fix comment of __get_user_pages()
+Date:   Wed, 23 Oct 2019 21:51:47 +0800
+Message-Id: <1571838707-4994-1-git-send-email-liuxiang_1999@126.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 3:50 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+Because nr_pages is unsigned long, it can not be negative.
 
-> >  # common code
-> >
-> > -obj-$(CONFIG_S3C2410_CPUFREQ_UTILS) += cpufreq-utils.o
-> > +obj-$(CONFIG_ARM_S3C24XX_CPUFREQ) += cpufreq-utils.o
->
-> Drop also here S3C2410_CPUFREQ_UTILS entirely.
->
+Signed-off-by: Liu Xiang <liuxiang_1999@126.com>
+---
+ mm/gup.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Ok, done.
+diff --git a/mm/gup.c b/mm/gup.c
+index 8f236a3..0236954 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -735,10 +735,10 @@ static int check_vma_flags(struct vm_area_struct *vma, unsigned long gup_flags)
+  * @nonblocking: whether waiting for disk IO or mmap_sem contention
+  *
+  * Returns number of pages pinned. This may be fewer than the number
+- * requested. If nr_pages is 0 or negative, returns 0. If no pages
+- * were pinned, returns -errno. Each page returned must be released
+- * with a put_page() call when it is finished with. vmas will only
+- * remain valid while mmap_sem is held.
++ * requested. If nr_pages is 0, returns 0. If no pages were pinned,
++ * returns -errno. Each page returned must be released with a
++ * put_page() call when it is finished with. vmas will only remain
++ * valid while mmap_sem is held.
+  *
+  * Must be called with mmap_sem held.  It may be released.  See below.
+  *
+-- 
+1.9.1
 
-      Arnd
