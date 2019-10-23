@@ -2,151 +2,89 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B4C6CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:14:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29B54CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:15:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02B3421920
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:14:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571836498;
-	bh=E6T55uP3FrNoFRn1ScztDiriAouaJNVm+C23qSgGr54=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=S2V3BqkXE8C7JYIki0s880tHQZ2s2ZLTo6nvo8epIDwBhagvjuvM0YIM87Y1PwYD7
-	 eKYoPuBSQmGtZ/ywqQ/MQ0M9OL60X0UntSN4es8z463hCQbvz4Ji8hsaYIEUbj2+D1
-	 GyxLPsaEgiowJ451WZcvyh4sytOGqY6ha7MvGRks=
+	by mail.kernel.org (Postfix) with ESMTP id 0A0E421A4A
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:15:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405204AbfJWNO5 (ORCPT
+        id S2405605AbfJWNPT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 09:14:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48862 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389590AbfJWNO4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 09:14:56 -0400
-Received: from earth.universe (monacowifi.monaco.mc [82.113.13.92])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D31E21906;
-        Wed, 23 Oct 2019 13:14:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571836495;
-        bh=E6T55uP3FrNoFRn1ScztDiriAouaJNVm+C23qSgGr54=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KRZo+1m99h+6klvOJNcfToHQwLue1EIjCd65zwAMbXCJmUecwaD6rTEZZMg9+kYGQ
-         X5a4WwTr2/f7Tv+/O8EavXhqMgoo2QXEcQz50Xv0uqv9yVI1aI0ToD4bwbFdEjF4FY
-         xMiNVRLd3aBYkcz5+MbbKBcELuqBmnzcS8WN5k6k=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 6FA8C3C09B2; Wed, 23 Oct 2019 15:14:52 +0200 (CEST)
-Date:   Wed, 23 Oct 2019 15:14:52 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        Wed, 23 Oct 2019 09:15:19 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35604 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730450AbfJWNPS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 09:15:18 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id E45C7B2F5;
+        Wed, 23 Oct 2019 13:15:16 +0000 (UTC)
+Date:   Wed, 23 Oct 2019 14:15:14 +0100
+From:   Mel Gorman <mgorman@suse.de>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Waiman Long <longman@redhat.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Roman Gushchin <guro@fb.com>, Vlastimil Babka <vbabka@suse.cz>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Jann Horn <jannh@google.com>, Song Liu <songliubraving@fb.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Adam Ford <aford173@gmail.com>,
-        Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>,
-        Tero Kristo <t-kristo@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh@kernel.org>, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] hwrng: omap3-rom - Fix unused function warnings
-Message-ID: <20191023131452.2rilepif7x5lpfma@earth.universe>
-References: <20191022142741.1794378-1-arnd@arndb.de>
+        Rafael Aquini <aquini@redhat.com>, linux-mm@kvack.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Michal Hocko <mhocko@suse.com>
+Subject: Re: [RFC PATCH 2/2] mm, vmstat: reduce zone->lock holding time by
+ /proc/pagetypeinfo
+Message-ID: <20191023131514.GC28938@suse.de>
+References: <20191023095607.GE3016@techsingularity.net>
+ <20191023102737.32274-1-mhocko@kernel.org>
+ <20191023102737.32274-3-mhocko@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="sf4hte6kcc3ifsee"
+Content-Type: text/plain; charset=iso-8859-15
 Content-Disposition: inline
-In-Reply-To: <20191022142741.1794378-1-arnd@arndb.de>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191023102737.32274-3-mhocko@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Oct 23, 2019 at 12:27:37PM +0200, Michal Hocko wrote:
+> From: Michal Hocko <mhocko@suse.com>
+> 
+> pagetypeinfo_showfree_print is called by zone->lock held in irq mode.
+> This is not really nice because it blocks both any interrupts on that
+> cpu and the page allocator. On large machines this might even trigger
+> the hard lockup detector.
+> 
+> Considering the pagetypeinfo is a debugging tool we do not really need
+> exact numbers here. The primary reason to look at the outuput is to see
+> how pageblocks are spread among different migratetypes therefore putting
+> a bound on the number of pages on the free_list sounds like a reasonable
+> tradeoff.
+> 
+> The new output will simply tell
+> [...]
+> Node    6, zone   Normal, type      Movable >100000 >100000 >100000 >100000  41019  31560  23996  10054   3229    983    648
+> 
+> instead of
+> Node    6, zone   Normal, type      Movable 399568 294127 221558 102119  41019  31560  23996  10054   3229    983    648
+> 
+> The limit has been chosen arbitrary and it is a subject of a future
+> change should there be a need for that.
+> 
+> Suggested-by: Andrew Morton <akpm@linux-foundation.org>
+> Signed-off-by: Michal Hocko <mhocko@suse.com>
 
---sf4hte6kcc3ifsee
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+You could have used need_resched() instead of unconditionally dropping the
+lock but that's very minor for a proc file and it would allos a parallel
+allocation to go ahead so
 
-Hi,
+Acked-by: Mel Gorman <mgorman@suse.de>
 
-On Tue, Oct 22, 2019 at 04:27:31PM +0200, Arnd Bergmann wrote:
-> When runtime-pm is disabled, we get a few harmless warnings:
->=20
-> drivers/char/hw_random/omap3-rom-rng.c:65:12: error: unused function 'oma=
-p_rom_rng_runtime_suspend' [-Werror,-Wunused-function]
-> drivers/char/hw_random/omap3-rom-rng.c:81:12: error: unused function 'oma=
-p_rom_rng_runtime_resume' [-Werror,-Wunused-function]
->=20
-> Mark these functions as __maybe_unused so gcc can drop them
-> silently.
->=20
-> Fixes: 8d9d4bdc495f ("hwrng: omap3-rom - Use runtime PM instead of custom=
- functions")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
-
-Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-
--- Sebastian
-
->  drivers/char/hw_random/omap3-rom-rng.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/char/hw_random/omap3-rom-rng.c b/drivers/char/hw_ran=
-dom/omap3-rom-rng.c
-> index 0b90983c95c8..e08a8887e718 100644
-> --- a/drivers/char/hw_random/omap3-rom-rng.c
-> +++ b/drivers/char/hw_random/omap3-rom-rng.c
-> @@ -62,7 +62,7 @@ static int omap3_rom_rng_read(struct hwrng *rng, void *=
-data, size_t max, bool w)
->  	return r;
->  }
-> =20
-> -static int omap_rom_rng_runtime_suspend(struct device *dev)
-> +static int __maybe_unused omap_rom_rng_runtime_suspend(struct device *de=
-v)
->  {
->  	struct omap_rom_rng *ddata;
->  	int r;
-> @@ -78,7 +78,7 @@ static int omap_rom_rng_runtime_suspend(struct device *=
-dev)
->  	return 0;
->  }
-> =20
-> -static int omap_rom_rng_runtime_resume(struct device *dev)
-> +static int __maybe_unused omap_rom_rng_runtime_resume(struct device *dev)
->  {
->  	struct omap_rom_rng *ddata;
->  	int r;
-> --=20
-> 2.20.0
->=20
-
---sf4hte6kcc3ifsee
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl2wUkQACgkQ2O7X88g7
-+prkIQ//eDW6JCdb1BVZK+8ld4GNb5f9QiGBp78CEzw4Nt7b9sjiSkuODvtpwUEz
-LUYeSj3XJErABjT9CEteFHYmXlS4Tge9a12s4596KR1sut3960u83ZSVMD2MaFd7
-jnNp9oZsiJivbZPWMqCiFPxpaV8nmvYvnyX5yMgDFrAMFFS6qk2w6ZznJctahXzs
-WyKmQQTOc7wFo0AsT3iomSxZsyPKjPWUcXF1fO49Anzka3+6aV5k6mmEVEhMep/r
-txA1zr6Fw3OKwF72r1x1bg2VcLluU4K66cm8R636W1FzujvHUgkWYr3BcUwaCqwr
-LlTzvVokm6Pq2L9hFVIo5WrCP2qnnlzKXu6M0BoFcSWq0sXi2slhE1J1jlg63NpG
-nHn/cpu8DPDfvZ/SdvDfESCGaMubItcv4EhauN/Ar8x2buf3duK4OE4ApJGUWnOV
-BzghZnt1iY6y1JC4Rbnl6NJYaZm54sYjMildCKza4OuoLYGeTZKEM/bqpbiVodtI
-Rm4nUpxCkZ2vfI2XxyDYuxmzzF/lu+1oZOTHDpVlv0OlqAJhgXzvUiuikMxS+6xQ
-LSAzY1uG14pfrwKAUtWoh1vG/ZVoK5UpRYyhBnAAPcXH3C4h6TKxBwGCJ0BrhLmI
-PfZIF2uCFofMB8Q3A8/cGxx6WGVgKWU1xkQhGr51TMgxA13+vwk=
-=uPzb
------END PGP SIGNATURE-----
-
---sf4hte6kcc3ifsee--
+-- 
+Mel Gorman
+SUSE Labs
