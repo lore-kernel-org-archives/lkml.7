@@ -2,139 +2,111 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E43FCCA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 01:24:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9167BCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 01:24:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB1E121783
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 01:24:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64EC920679
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 01:24:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="Nonvx4cC"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="tLZW+9iu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732982AbfJWBYJ (ORCPT
+        id S1733073AbfJWBYj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 21:24:09 -0400
-Received: from mail-eopbgr700051.outbound.protection.outlook.com ([40.107.70.51]:14176
-        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727881AbfJWBYI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 21:24:08 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Hxs/t3wfeNWpqDJrVVelMXaxQqRCSY9Ln8mm4zo26qnjgp+jlAI6W0+HeMJGTjiOhXgymWAc0TfVMkVYa97RK7n7921m8iqqrPT/zhLvhdV/H1Mf+ep+eetWlJITg5UDrjyFmgcNkY61gauuWnFgSrfuJd8sUjVRhaG5GuSv5W2IY55BmRIWXHzp7Six/xMECjd4No0KQNW/+Pm8dcHsGNLDWG3FTFB+tOYr/tR9xs2/8q5CPT7r/Knh+G78c/1ZV/4WwfJ7LcKaXkYF5/9eN5c8bUKNm6CcIJy2K2cpsmdD9zuGOyadJmfyM469tiV1RImc4Frpb+ZQB8rydzSMxQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xTPvpu3onupjSAlpVUVEAaCGLefT3W+hE++mRnSXGZU=;
- b=JmmBIkxfpfRp4OiStw4qA3IInVWxd8PUEGDbQWTjDHCaEqAfTxpl4kKkr3uU8Pi7L2FKlwhNqXg1c27kHTzy1YAbyrseoqxSvdusSraFcgP3UgVAwkfu3PPpb4edK1E/UdM09zZeYyFl8vSmEEHnqX/9x2T0wg91jw2VPpqlBqqA1JM4i4F/orz8DHcJJNQ+VFAhOR27orSzsfv4cw5Ktq+oEL8Jevm4NvH+/8X4KXNQNXWi1XEGfA9FTCywCUcgn+pe9az9CAunxlMOEGm9PxbGNPMSIWElmLw0wrs1uiGN7q/HowdTYgdVPXS3DpL7nvcgYHYS9UBUOlmflrhYUQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synaptics.com; dmarc=pass action=none
- header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xTPvpu3onupjSAlpVUVEAaCGLefT3W+hE++mRnSXGZU=;
- b=Nonvx4cC3W9LP6WQKJ1BI5du5ZuZZeBxnla1S4+TEVQvNb+LkuCPkn9PUJpX8nJLZmOO2ZE9umoTBixkKriRNlN+TQpC85Aas7Hev6mFjj4buNmTgmdZB6FuSjjQ0Ax3oSm+JIBSCBmNcUs9T01C+rQhUYcCm5b4CeYswBSnQM8=
-Received: from BYAPR03MB4135.namprd03.prod.outlook.com (20.177.127.85) by
- BYAPR03MB3669.namprd03.prod.outlook.com (52.135.214.24) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2367.24; Wed, 23 Oct 2019 01:24:06 +0000
-Received: from BYAPR03MB4135.namprd03.prod.outlook.com
- ([fe80::d168:6b9a:e289:e124]) by BYAPR03MB4135.namprd03.prod.outlook.com
- ([fe80::d168:6b9a:e289:e124%4]) with mapi id 15.20.2347.029; Wed, 23 Oct 2019
- 01:24:06 +0000
-From:   Andrew Duggan <aduggan@synaptics.com>
-To:     "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Andrew Duggan <aduggan@synaptics.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Federico Cerutti <federico@ceres-c.it>,
-        Christopher Heiny <Cheiny@synaptics.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH] Input: synaptics-rmi4 - validate that the rmi_dev pointer is
- set before dereferencing it
-Thread-Topic: [PATCH] Input: synaptics-rmi4 - validate that the rmi_dev
- pointer is set before dereferencing it
-Thread-Index: AQHViUCPzjLAumaXX06BfCvuoJBvvA==
-Date:   Wed, 23 Oct 2019 01:24:05 +0000
-Message-ID: <20191023012344.20998-2-aduggan@synaptics.com>
-References: <20191023012344.20998-1-aduggan@synaptics.com>
-In-Reply-To: <20191023012344.20998-1-aduggan@synaptics.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [192.147.44.15]
-x-clientproxiedby: BYAPR21CA0007.namprd21.prod.outlook.com
- (2603:10b6:a03:114::17) To BYAPR03MB4135.namprd03.prod.outlook.com
- (2603:10b6:a03:77::21)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=aduggan@synaptics.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.20.1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 638fb80f-0cc1-4952-626a-08d75757b213
-x-ms-traffictypediagnostic: BYAPR03MB3669:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR03MB36699DB228FDAA957C2C3613B26B0@BYAPR03MB3669.namprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 019919A9E4
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(366004)(346002)(39860400002)(136003)(396003)(189003)(199004)(186003)(2616005)(478600001)(14454004)(50226002)(446003)(86362001)(25786009)(66556008)(81166006)(1076003)(8936002)(11346002)(8676002)(64756008)(66476007)(66446008)(486006)(66066001)(66946007)(2501003)(81156014)(102836004)(256004)(476003)(4744005)(26005)(6506007)(386003)(5660300002)(52116002)(76176011)(305945005)(7736002)(110136005)(6116002)(3846002)(6486002)(4326008)(6512007)(71190400001)(6436002)(2906002)(99286004)(54906003)(36756003)(71200400001)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR03MB3669;H:BYAPR03MB4135.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
-received-spf: None (protection.outlook.com: synaptics.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Uu0D6AENQmEbak8Zt86JzTbUUDV7aC65M4mQ3j6djg2OR8sWC/49jqLv4w4I064ouPiLMpUJhpD/Ju0eHttXa2XRspulinHp8ATN5dTWlOB+YiYP+J9PS9t94vXYH+CxjA53pBU0ZucMzYNiuNx7nRqeainbnrQPopKPGXSIMGDz4QPan0xUpvt+hPEMJIQVChR+jTTS2EYTaYs/V/GPX98C15r0sKTa7mG3At98TkX1cwzKB2WqZbzjoDDrzlgSDyMKK8AQzu7fvGNm6M1xbNbRABhYKDBOA8DUbp9GMve0QkJ06cJPek2wFOqsxeOE+S9d3by/pHERIFNvbFgPx+V8fF26X/EBPOdMPp6X1uJO5gjNFjeDfHuNy1aYHwjlHvPdyk4bn1w0XthT3c4rCKMU2LZEeAPmIbDhWnYCybI/iJtmKawV7l3N5GpW0P6M
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 22 Oct 2019 21:24:39 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:40090 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727881AbfJWBYj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 21:24:39 -0400
+Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id x9N1OGrk001511
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 10:24:16 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x9N1OGrk001511
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1571793857;
+        bh=BtdIFLzjSF0M2qZMCrwtECZtdItHeicakXIfe0ZLK1g=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=tLZW+9iu20JkdNHoXZf6lFj5MjNtqWIes0I7cwWYXPnpkxxf22gevgi6ZJb+A76px
+         H1BS1F1MPVXv2Vw7DSwI6RsKohohdrtRjDAHpdtr4Fm6WsiIA1atMbxBUkwcunJO3L
+         MSY+8SO85sijFiv4VzNzzaj1aLIkZtCvf0rhgVRR0bU1Pkn7c9VzQyaCMPBUtlmUN5
+         BvwbJMHoRhA+84Tw5JM8F5yj0V30ywqxHdFOjkp5wObu7zNiTerjyhexFMc1wj0VNP
+         Q/Y/lPYn1BUcW7Bfqmc2r5kzL80eBN9xm0ciKBmq00znef+9P87bhSNX5ytwyvxI/X
+         lFYzNA7hXbA2g==
+X-Nifty-SrcIP: [209.85.217.44]
+Received: by mail-vs1-f44.google.com with SMTP id b123so12672825vsb.5
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 18:24:16 -0700 (PDT)
+X-Gm-Message-State: APjAAAXHf64d8bGAYIG2wRkqOhjUTWH7EUAj0N/jFSan1HcPtFipNQfq
+        k3tShHx4LHcq9Uxzw145JOnO2Z14xjoMhbrvTSU=
+X-Google-Smtp-Source: APXvYqzQ7EbfRKHTdEDtX1IIUzO9qaHq6Jv9BvfMZFAFcz+7Zyy5R3MPoflIftEjT1ud6nWCH8ukcTG4yUDvI3oQwzs=
+X-Received: by 2002:a67:ff86:: with SMTP id v6mr3902386vsq.181.1571793855568;
+ Tue, 22 Oct 2019 18:24:15 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: synaptics.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 638fb80f-0cc1-4952-626a-08d75757b213
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Oct 2019 01:24:05.9879
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 335d1fbc-2124-4173-9863-17e7051a2a0e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: SvaiXCzhNXz0X2hzyYl3flZD0Vbucf92V/BDdnNE8mhqoZVudcRLQXy3K7XtM6JozMMdkxXQdGiLZ9hr5fUJGw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB3669
+References: <20191021160419.28270-1-jeyu@kernel.org> <20191022110403.29715-1-jeyu@kernel.org>
+In-Reply-To: <20191022110403.29715-1-jeyu@kernel.org>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Wed, 23 Oct 2019 10:23:39 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATzCA-+-9Mp6GZcBk1UZnUdgoYHLkX0wVSHyJcRefyWEg@mail.gmail.com>
+Message-ID: <CAK7LNATzCA-+-9Mp6GZcBk1UZnUdgoYHLkX0wVSHyJcRefyWEg@mail.gmail.com>
+Subject: Re: [PATCH v3] scripts/nsdeps: use alternative sed delimiter
+To:     Jessica Yu <jeyu@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Matthias Maennich <maennich@google.com>,
+        David Laight <David.Laight@aculab.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A bug in hid-rmi was causing rmi_unregister_transport_device() to be
-called even if the call to rmi_register_transport_device() failed to
-allocate the rmi device. A patch has been submitted to fix the issue in
-hid-rmi. This patch will ensure that should a simialr situation
-occur then the rmi driver will not dereference a NULL pointer.
+On Tue, Oct 22, 2019 at 8:04 PM Jessica Yu <jeyu@kernel.org> wrote:
+>
+> When doing an out of tree build with O=, the nsdeps script constructs
+> the absolute pathname of the module source file so that it can insert
+> MODULE_IMPORT_NS statements in the right place. However, ${srctree}
+> contains an unescaped path to the source tree, which, when used in a sed
+> substitution, makes sed complain:
+>
+> ++ sed 's/[^ ]* *//home/jeyu/jeyu-linux\/&/g'
+> sed: -e expression #1, char 12: unknown option to `s'
+>
+> The sed substitution command 's' ends prematurely with the forward
+> slashes in the pathname, and sed errors out when it encounters the 'h',
+> which is an invalid sed substitution option. To avoid escaping forward
+> slashes ${srctree}, we can use '|' as an alternative delimiter for
+> sed instead to avoid this error.
+>
+> Signed-off-by: Jessica Yu <jeyu@kernel.org>
+> ---
+>
+> v3: don't need to escape '/' since we're using a different delimiter.
+>
+>  scripts/nsdeps | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/scripts/nsdeps b/scripts/nsdeps
+> index 3754dac13b31..dda6fbac016e 100644
+> --- a/scripts/nsdeps
+> +++ b/scripts/nsdeps
+> @@ -33,7 +33,7 @@ generate_deps() {
+>         if [ ! -f "$ns_deps_file" ]; then return; fi
+>         local mod_source_files=`cat $mod_file | sed -n 1p                      \
+>                                               | sed -e 's/\.o/\.c/g'           \
+> -                                             | sed "s/[^ ]* */${srctree}\/&/g"`
+> +                                             | sed "s|[^ ]* *|${srctree}/&|g"`
+>         for ns in `cat $ns_deps_file`; do
+>                 echo "Adding namespace $ns to module $mod_name (if needed)."
+>                 generate_deps_for_ns $ns $mod_source_files
+> --
+> 2.16.4
+>
 
-Signed-off-by: Andrew Duggan <aduggan@synaptics.com>
----
- drivers/input/rmi4/rmi_bus.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-diff --git a/drivers/input/rmi4/rmi_bus.c b/drivers/input/rmi4/rmi_bus.c
-index af706a583656..6c3abae1e159 100644
---- a/drivers/input/rmi4/rmi_bus.c
-+++ b/drivers/input/rmi4/rmi_bus.c
-@@ -118,8 +118,10 @@ void rmi_unregister_transport_device(struct rmi_transp=
-ort_dev *xport)
- {
- 	struct rmi_device *rmi_dev =3D xport->rmi_dev;
-=20
--	device_del(&rmi_dev->dev);
--	put_device(&rmi_dev->dev);
-+	if (rmi_dev) {
-+		device_del(&rmi_dev->dev);
-+		put_device(&rmi_dev->dev);
-+	}
- }
- EXPORT_SYMBOL(rmi_unregister_transport_device);
-=20
---=20
-2.20.1
-
+-- 
+Best Regards
+Masahiro Yamada
