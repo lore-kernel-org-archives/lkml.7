@@ -2,120 +2,131 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E0D6CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 19:18:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B3EFCA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 19:21:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E462A20663
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 19:18:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TjHYF38Z"
+	by mail.kernel.org (Postfix) with ESMTP id 0DF3E20663
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 19:21:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571858497;
+	bh=eA+ZT4QHat2+EIWy0C1wo1arzUq8iBFuHoCMVRtUvt8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=UTvOO1BGrRJbZSm1/cFnHS77lUx97Bmd3/Q7m0HLoD1BGe15UDlqLEIX2IGTKBd73
+	 i9Eq4yvUNn/I8r3DsHID3JJaRfjkMzecCbGvswo0vAEoIEEYERbpKIr1Jpk40Or7uj
+	 PGe2/1eXAcljuJs8p3HGVfgFLKy3fyNhLf8n4WrA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389979AbfJWTRg (ORCPT
+        id S2390615AbfJWTVc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 15:17:36 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:20314 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732232AbfJWTRg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 15:17:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571858255;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=B2jWJoLV4M/x0NOV2DvVdjIugn3QFhW+98dQqjMEXRs=;
-        b=TjHYF38Z9lAFJaKAUzEiLl6KRn+Yz72OyN9m0GlOjTn5dqiWBWEy09PUnHXuC8ZrJ/wo3I
-        9ynJlrgmNSNJ1lISFJrHPfaPhgwufMr80FPFiVse5w6vwak1kTYrlKuPxHHu8Twy46DZTA
-        1wzkizizDejoFBaCnX3wLqgFZZQeaiM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-249-jDBA8Uu1MnGLZW0w92yTEw-1; Wed, 23 Oct 2019 15:17:31 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 23 Oct 2019 15:21:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34002 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732686AbfJWTVc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 15:21:32 -0400
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2A0A2107AD31;
-        Wed, 23 Oct 2019 19:17:29 +0000 (UTC)
-Received: from treble (ovpn-121-225.rdu2.redhat.com [10.10.121.225])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7892D1001B3F;
-        Wed, 23 Oct 2019 19:17:27 +0000 (UTC)
-Date:   Wed, 23 Oct 2019 14:17:25 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Cyrill Gorcunov <gorcunov@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, linux-mm@kvack.org,
-        Catalin Marinas <catalin.marinas@arm.com>, x86@kernel.org
-Subject: Re: [PATCH] x86/dumpstack/64: Don't evaluate exception stacks before
- setup
-Message-ID: <20191023191725.67dg3vwkpodmbrqv@treble>
-References: <20191019114421.GK9698@uranus.lan>
- <20191022142325.GD12121@uranus.lan>
- <20191022145619.GE12121@uranus.lan>
- <alpine.DEB.2.21.1910231457400.2308@nanos.tec.linutronix.de>
- <alpine.DEB.2.21.1910231533180.2308@nanos.tec.linutronix.de>
- <20191023135943.GK12121@uranus.lan>
- <alpine.DEB.2.21.1910231950590.1852@nanos.tec.linutronix.de>
+        by mail.kernel.org (Postfix) with ESMTPSA id 5659B21A4A
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 19:21:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571858491;
+        bh=eA+ZT4QHat2+EIWy0C1wo1arzUq8iBFuHoCMVRtUvt8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=N30U1gto6Y/YW/X1kjdHTf6mLeW4+VibfbIFM42pv5YSs8asbTGcNaJWGqyX25TxZ
+         z5gpw2lQn2AOn3p/diZj3/f2Oz28XCAKU3IjBQBjW9vLWlYnblHW6a82xQHkMXk/Ta
+         DByiMu15BSt/Z7StrjbIRoYhSWZ8+32agPiSV8Js=
+Received: by mail-wr1-f49.google.com with SMTP id r1so13537992wrs.9
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 12:21:31 -0700 (PDT)
+X-Gm-Message-State: APjAAAUZYLfdNSaZ8+CGB1INZ3jzu33026z80yP536Tm9ZnRYM4aQDRm
+        Eq4x1gzaNMyT5KydpGdIFep3Y/y+TXYpgWgkpY9Tig==
+X-Google-Smtp-Source: APXvYqw7KTG+90tUY67BWKH60wbgDRsGNBs48rLJnwu/jKRhPVU6JrS99XBLoxXAEuVueDNIS4APVe/18+ujBzqLCQ0=
+X-Received: by 2002:a05:6000:1288:: with SMTP id f8mr266958wrx.111.1571858489805;
+ Wed, 23 Oct 2019 12:21:29 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1910231950590.1852@nanos.tec.linutronix.de>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-MC-Unique: jDBA8Uu1MnGLZW0w92yTEw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+References: <20191012191602.45649-1-dancol@google.com> <20191012191602.45649-4-dancol@google.com>
+ <CALCETrVZHd+csdRL-uKbVN3Z7yeNNtxiDy-UsutMi=K3ZgCiYw@mail.gmail.com>
+ <CAKOZuevUqs_Oe1UEwguQK7Ate3ai1DSVSij=0R=vmz9LzX4k6Q@mail.gmail.com>
+ <CALCETrUyq=J37gU-MYXqLdoi7uH7iNNVRjvcGUT11JA1QuTFyg@mail.gmail.com>
+ <CAG48ez3P27-xqdjKLqfP_0Q_v9K92CgEjU4C=kob2Ax7=NoZbA@mail.gmail.com> <20191023190959.GA9902@redhat.com>
+In-Reply-To: <20191023190959.GA9902@redhat.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Wed, 23 Oct 2019 12:21:18 -0700
+X-Gmail-Original-Message-ID: <CALCETrWY+5ynDct7eU_nDUqx=okQvjm=Y5wJvA4ahBja=CQXGw@mail.gmail.com>
+Message-ID: <CALCETrWY+5ynDct7eU_nDUqx=okQvjm=Y5wJvA4ahBja=CQXGw@mail.gmail.com>
+Subject: Re: [PATCH 3/7] Add a UFFD_SECURE flag to the userfaultfd API.
+To:     Andrea Arcangeli <aarcange@redhat.com>
+Cc:     Andy Lutomirski <luto@kernel.org>, Jann Horn <jannh@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Lokesh Gidra <lokeshgidra@google.com>,
+        Nick Kralevich <nnk@google.com>,
+        Nosh Minwalla <nosh@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 08:05:49PM +0200, Thomas Gleixner wrote:
-> Cyrill reported the following crash:
->=20
->   BUG: unable to handle page fault for address: 0000000000001ff0
->   #PF: supervisor read access in kernel mode
->   RIP: 0010:get_stack_info+0xb3/0x148
->=20
-> It turns out that if the stack tracer is invoked before the exception sta=
-ck
-> mappings are initialized in_exception_stack() can erroneously classify an
-> invalid address as an address inside of an exception stack:
->=20
->     begin =3D this_cpu_read(cea_exception_stacks);  <- 0
->     end =3D begin + sizeof(exception stacks);
->=20
-> i.e. any address between 0 and end will be considered as exception stack
-> address and the subsequent code will then try to derefence the resulting
-> stack frame at a non mapped address.
->=20
->  end =3D begin + (unsigned long)ep->size;
->      =3D=3D> end =3D 0x2000
->=20
->  regs =3D (struct pt_regs *)end - 1;
->      =3D=3D> regs =3D 0x2000 - sizeof(struct pt_regs *) =3D 0x1ff0
->=20
->  info->next_sp   =3D (unsigned long *)regs->sp;
->      =3D=3D> Crashes due to accessing 0x1ff0
->=20
-> Prevent this by checking the validity of the cea_exception_stack base
-> address and bailing out if it is zero.
->=20
-> Fixes: afcd21dad88b ("x86/dumpstack/64: Use cpu_entry_area instead of ori=
-g_ist")
-> Reported-by: Cyrill Gorcunov <gorcunov@gmail.com>
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Tested-by: Cyrill Gorcunov <gorcunov@gmail.com>
-> Cc: stable@vger.kernel.org
+On Wed, Oct 23, 2019 at 12:10 PM Andrea Arcangeli <aarcange@redhat.com> wrote:
+>
+> Hello,
+>
+> On Sat, Oct 12, 2019 at 06:14:23PM -0700, Andy Lutomirski wrote:
+> > [adding more people because this is going to be an ABI break, sigh]
+>
+> That wouldn't break the ABI, no more than when if you boot a kernel
+> built with CONFIG_USERFAULTFD=n.
+>
+> All non-cooperative features can be removed any time in a backwards
+> compatible way, the only precaution is to mark their feature bits as
+> reserved so they can't be reused for something else later.
+>
+> > least severely restricted.  A .read implementation MUST NOT ACT ON THE
+> > CALLING TASK.  Ever.  Just imagine the effect of passing a userfaultfd
+> > as stdin to a setuid program.
+>
+> With UFFD_EVENT_FORK, the newly created uffd that controls the child,
+> is not passed to the parent nor to the child. Instead it's passed to
+> the CRIU monitor only, which has to be already running as root and is
+> fully trusted and acts a hypervisor (despite there is no hypervisor).
+>
+> By the time execve runs and any suid bit in the execve'd inode becomes
+> relevant, well before the new userland executable code can run, the
+> kernel throws away the "old_mm" controlled by any uffd and all
+> attached uffds are released as well.
+>
+> All I found is your "A .read implementation MUST NOT ACT ON THE
+> CALLING TASK" as an explanation that something is broken but I need
+> further clarification.
 
-Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
+There are two things going on here.
 
---=20
-Josh
+1. Daniel wants to add LSM labels to userfaultfd objects.  This seems
+reasonable to me.  The question, as I understand it, is: who is the
+subject that creates a uffd referring to a forked child?  I'm sure
+this is solvable in any number of straightforward ways, but I think
+it's less important than:
 
+2. The existing ABI is busted independently of #1.  Suppose you call
+userfaultfd to get a userfaultfd and enable UFFD_FEATURE_EVENT_FORK.
+Then you do:
+
+$ sudo <&[userfaultfd number]
+
+Sudo will read it and get a new fd unexpectedly added to its fd table.
+It's worse if SCM_RIGHTS is involved.
+
+So I think we either need to declare that UFFD_FEATURE_EVENT_FORK is
+only usable by global root or we need to remove it and maybe re-add it
+in some other form.
+
+
+--Andy
