@@ -2,131 +2,135 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02082CA9EBB
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 18:49:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C08CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 18:52:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D76DE2086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 18:49:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1143C21928
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 18:52:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404137AbfJWStf (ORCPT
+        id S2390495AbfJWSwt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 14:49:35 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:10702 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2404015AbfJWStf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 14:49:35 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9NIlXdk059268
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 14:49:34 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vttpc463h-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 14:49:33 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Wed, 23 Oct 2019 19:49:31 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 23 Oct 2019 19:49:28 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9NInRD459506866
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 23 Oct 2019 18:49:27 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5014842049;
-        Wed, 23 Oct 2019 18:49:27 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1C45A42042;
-        Wed, 23 Oct 2019 18:49:26 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.184.174])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 23 Oct 2019 18:49:25 +0000 (GMT)
-Subject: Re: [PATCH v1 5/6] KEYS: measure queued keys
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        dhowells@redhat.com, casey@schaufler-ca.com, sashal@kernel.org,
-        jamorris@linux.microsoft.com,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        keyrings@vger.kernel.org
-Date:   Wed, 23 Oct 2019 14:49:25 -0400
-In-Reply-To: <1571853139.5104.154.camel@linux.ibm.com>
-References: <20191023001818.3684-1-nramas@linux.microsoft.com>
-         <20191023001818.3684-6-nramas@linux.microsoft.com>
-         <1571836990.5104.96.camel@linux.ibm.com>
-         <89d778d1-1ac9-4a58-b159-7db68b7fa4ad@linux.microsoft.com>
-         <1571853139.5104.154.camel@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19102318-0016-0000-0000-000002BC4B8E
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19102318-0017-0000-0000-0000331D8CDD
-Message-Id: <1571856565.5104.176.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-23_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910230174
+        Wed, 23 Oct 2019 14:52:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56980 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389636AbfJWSwt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 14:52:49 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A75F2086D;
+        Wed, 23 Oct 2019 18:52:46 +0000 (UTC)
+Date:   Wed, 23 Oct 2019 14:52:45 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, mhiramat@kernel.org,
+        bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, jpoimboe@redhat.com, jeyu@kernel.org
+Subject: Re: [PATCH v4 15/16] module: Move where we mark modules RO,X
+Message-ID: <20191023145245.53c75d70@gandalf.local.home>
+In-Reply-To: <20191022202401.GO1817@hirez.programming.kicks-ass.net>
+References: <20191018073525.768931536@infradead.org>
+        <20191018074634.801435443@infradead.org>
+        <20191021222110.49044eb5@oasis.local.home>
+        <20191022202401.GO1817@hirez.programming.kicks-ass.net>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-10-23 at 13:52 -0400, Mimi Zohar wrote:
-> On Wed, 2019-10-23 at 10:34 -0700, Lakshmi Ramasubramanian wrote:
-> > On 10/23/19 6:23 AM, Mimi Zohar wrote:
+On Tue, 22 Oct 2019 22:24:01 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
+
+> On Mon, Oct 21, 2019 at 10:21:10PM -0400, Steven Rostedt wrote:
+> > On Fri, 18 Oct 2019 09:35:40 +0200
+> > Peter Zijlstra <peterz@infradead.org> wrote:
+> >   
+> > > Now that set_all_modules_text_*() is gone, nothing depends on the
+> > > relation between ->state = COMING and the protection state anymore.
+> > > This enables moving the protection changes later, such that the COMING
+> > > notifier callbacks can more easily modify the text.
+> > > 
+> > > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > > Cc: Jessica Yu <jeyu@kernel.org>
+> > > ---  
 > > 
-> > > The ordering of this patch set is awkward.  It should first introduce
-> > > a generic method for measuring keys based on the keyring.  Then add
-> > > the additional support needed for the specific builtin_trusted_keys
-> > > keyring usecase.
-> > 
-> > Would the following ordering of the patch set be acceptable:
-> > 
-> >   => PATCH 0/5: Cover letter
-> > 
-> >   => PATCH 1/5: Define the enum "hook(BUILTIN_TRUSTED_KEYS)" in ima.h
-> > 
-> >   => PATCH 2/5: Define ima hook
-> >                 This will initially do nothing if ima is not yet
-> >                 initialized.
-> >                 Call process_buffer_measurement() if ima is initialized.
-> > 
-> >   => PATCH 3/5: key_create_or_update change and the call to ima hook
-> > 
-> >   => PATCH 4/5: Queue\De-Queue of key measurement requests.
-> >                 Enable queuing of key in the ima hook if ima is not
-> >                 initialized.
-> > 
-> >   => PATCH 5/5: ima policy to enable measurement of keys which will
-> >                 enable end-to-end working of this feature.
+> > This triggered the following bug:
+> >   
 > 
-> The first patches need to introduce the generic concept of measuring
-> keys based on policy.  Only afterwards would you add any builtin
-> trusted keyring specific code.
+> > The trace_event_define_fields_<event>() is defined in
+> > include/trace/trace_events.h and is an init function called by the
+> > trace_events event_create_dir() via the module notifier:
+> > MODULE_STATE_COMING  
+> 
+> The below seems to cure it; and seems to generate identical
+> events/*/format output (for my .config, with the exception of ID).
+> 
+> It has just one section mismatch report that I'm too tired to look at
+> just now.
+> 
+> I'm not particularly proud of the "__function__" hack, but it works :/ I
+> couldn't come up with anything else for [uk]probes which seem to have
+> dynamic fields and if we're having it then syscall_enter can also make
+> use of it, the syscall_metadata crud was going to be ugly otherwise.
+> 
+> (also, win on LOC)
+> 
+>
 
-1. Extend the IMA policy language to support identifying keyrings
-2. Define a new IMA hook which calls process_buffer_measurement()
-3. Call the new IMA hook (eg. from post_key_create_or_update)
-4. Define an early workqueue for saving keys loaded prior to IMA is
-initialized.  (Remember we don't hard code policy in the kernel.)
+After applying this series and this patch I triggered this:
 
-I'll be pushing out linux-integrity shortly.  For the time being,
-please base your patches on -rc3.
+[ 1397.281889] BUG: kernel NULL pointer dereference, address: 0000000000000001
+[ 1397.288896] #PF: supervisor read access in kernel mode
+[ 1397.294062] #PF: error_code(0x0000) - not-present page
+[ 1397.299192] PGD 0 P4D 0 
+[ 1397.301728] Oops: 0000 [#1] PREEMPT SMP PTI
+[ 1397.305908] CPU: 7 PID: 4252 Comm: ftracetest Not tainted 5.4.0-rc3-test+ #132
+[ 1397.313114] Hardware name: Hewlett-Packard HP Compaq Pro 6300 SFF/339A, BIOS K01 v03.03 07/14/2016
+[ 1397.322056] RIP: 0010:event_create_dir+0x26a/0x520
+[ 1397.326841] Code: ff ff 5a 85 c0 75 37 44 03 7b 10 48 83 c3 20 4c 8b 13 4d 85 d2 0f 84 66 fe ff ff b9 0d 00 00 00 4c 89 d6 4c 89 f7 48 8b 53 08 <f3> a6 0f 97 c1 80 d9 00 84 c9 75 a5 48 89 ef e8 b2 d4 a3 00 85 c0
+[ 1397.345558] RSP: 0018:ffffc90000a63d18 EFLAGS: 00010202
+[ 1397.350775] RAX: 0000000000000000 RBX: ffffc90000a63d80 RCX: 000000000000000d
+[ 1397.357893] RDX: ffffffff811ccfac RSI: 0000000000000001 RDI: ffffffff8207c68a
+[ 1397.365006] RBP: ffff888114b1c750 R08: 0000000000000000 R09: ffff8881147561b0
+[ 1397.372119] R10: 0000000000000001 R11: 0000000000000001 R12: ffff8880b1d80528
+[ 1397.379243] R13: ffff88811189aeb0 R14: ffffffff8207c68a R15: 00000000811d2d22
+[ 1397.386365] FS:  00007f2567213740(0000) GS:ffff88811a9c0000(0000) knlGS:0000000000000000
+[ 1397.394437] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 1397.400174] CR2: 0000000000000001 CR3: 00000000b1f06005 CR4: 00000000001606e0
+[ 1397.407297] Call Trace:
+[ 1397.409753]  trace_add_event_call+0x6c/0xb0
+[ 1397.413938]  trace_probe_register_event_call+0x22/0x50
+[ 1397.419071]  trace_kprobe_create+0x65c/0xa20
+[ 1397.423340]  ? argv_split+0x99/0x130
+[ 1397.426913]  ? __kmalloc+0x1d4/0x2c0
+[ 1397.430485]  ? trace_kprobe_create+0xa20/0xa20
+[ 1397.434922]  ? trace_kprobe_create+0xa20/0xa20
+[ 1397.439361]  create_or_delete_trace_kprobe+0xd/0x30
+[ 1397.444237]  trace_run_command+0x72/0x90
+[ 1397.448158]  trace_parse_run_command+0xaf/0x131
+[ 1397.452684]  vfs_write+0xa5/0x1a0
+[ 1397.455996]  ksys_write+0x5c/0xd0
+[ 1397.459312]  do_syscall_64+0x48/0x120
+[ 1397.462971]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[ 1397.468017] RIP: 0033:0x7f2567303ff8
 
-thanks,
+By running tools/selftests/ftrace/ftracetest
 
-Mimi
+Crashed here:
 
+[33] Kprobe dynamic event - adding and removing	[PASS]
+[34] Kprobe dynamic event - busy event check	[PASS]
+[35] Kprobe event with comm arguments	[FAIL]
+[36] Kprobe event string type argumentclient_loop:
+
+-- Steve
