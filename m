@@ -2,137 +2,132 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40D71CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 11:48:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB53DCA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 11:49:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 011D520650
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 11:48:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XgVr/qDH"
+	by mail.kernel.org (Postfix) with ESMTP id 99BE320650
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 11:49:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390906AbfJWLs6 (ORCPT
+        id S2405094AbfJWLtn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 07:48:58 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:51118 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732092AbfJWLs5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 07:48:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=9dSEppQA0zukOyOGzSeFOc6C/ThFaH8w34WM1hQFp6A=; b=XgVr/qDHNiMu6tpV95rREang4
-        9vfwCOILKRNAh/pkDIFvyAVcih0R0P0WqO6Q6b381BmA9d8BL51X6bLjrbcE4Orki4HdUyq6G+9BT
-        eyVCW9L+wOw9hn6YTO73aEpH4LSQGf0VqTlnt+UBJBwyU/SZV5nv7Zlw6oFeO4fpbBCX8GKj5NJGU
-        HvLp6xVLLTG14iJnuAfzxJ7nS+62fTWV4WLJiItTnYajHdZl/PcnWq2Cz+dlIgIdwJDu3ivqtUfvX
-        V0R8125e8xZBCG7R8VR9mTsyeIY4v1rFky4eSVIz9m8d5ZWWmBih2qLe4dhKeCQ6HdaTNc7ooD05u
-        tdwPU9cqA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iNF82-00031x-D9; Wed, 23 Oct 2019 11:48:38 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 9A5F9301224;
-        Wed, 23 Oct 2019 13:47:37 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 9418D2B1C6364; Wed, 23 Oct 2019 13:48:35 +0200 (CEST)
-Date:   Wed, 23 Oct 2019 13:48:35 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        mhiramat@kernel.org, bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, jeyu@kernel.org
-Subject: Re: [PATCH v4 15/16] module: Move where we mark modules RO,X
-Message-ID: <20191023114835.GT1817@hirez.programming.kicks-ass.net>
-References: <20191018073525.768931536@infradead.org>
- <20191018074634.801435443@infradead.org>
- <20191021135312.jbbxsuipxldocdjk@treble>
- <20191021141402.GI1817@hirez.programming.kicks-ass.net>
+        Wed, 23 Oct 2019 07:49:43 -0400
+Received: from mga11.intel.com ([192.55.52.93]:56121 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733180AbfJWLtn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 07:49:43 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 04:49:42 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,220,1569308400"; 
+   d="scan'208";a="228097176"
+Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.121])
+  by fmsmga002.fm.intel.com with ESMTP; 23 Oct 2019 04:49:35 -0700
+Date:   Wed, 23 Oct 2019 14:49:35 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sumit Garg <sumit.garg@linaro.org>
+Cc:     dhowells@redhat.com, peterhuewe@gmx.de, keyrings@vger.kernel.org,
+        linux-integrity@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-security-module@vger.kernel.org, herbert@gondor.apana.org.au,
+        davem@davemloft.net, jgg@ziepe.ca, arnd@arndb.de,
+        gregkh@linuxfoundation.org, jejb@linux.ibm.com,
+        zohar@linux.ibm.com, jmorris@namei.org, serge@hallyn.com,
+        jsnitsel@redhat.com, linux-kernel@vger.kernel.org,
+        daniel.thompson@linaro.org
+Subject: Re: [Patch v8 0/4] Create and consolidate trusted keys subsystem
+Message-ID: <20191023114935.GE21973@linux.intel.com>
+References: <1571202895-32651-1-git-send-email-sumit.garg@linaro.org>
+ <20191023114133.GD21973@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191021141402.GI1817@hirez.programming.kicks-ass.net>
+In-Reply-To: <20191023114133.GD21973@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 04:14:02PM +0200, Peter Zijlstra wrote:
-> On Mon, Oct 21, 2019 at 08:53:12AM -0500, Josh Poimboeuf wrote:
-
-> > Doesn't livepatch code also need to be modified?  We have:
+On Wed, Oct 23, 2019 at 02:41:33PM +0300, Jarkko Sakkinen wrote:
+> On Wed, Oct 16, 2019 at 10:44:51AM +0530, Sumit Garg wrote:
+> > This patch-set does restructuring of trusted keys code to create and
+> > consolidate trusted keys subsystem.
+> > 
+> > Also, patch #2 replaces tpm1_buf code used in security/keys/trusted.c and
+> > crypto/asymmertic_keys/asym_tpm.c files to use the common tpm_buf code.
+> > 
+> > Changes in v8:
+> > 1. Rebased to latest tpmdd/master.
+> > 2. Added Reviewed-by tags.
+> > 
+> > Changes in v7:
+> > 1. Rebased to top of tpmdd/master
+> > 2. Patch #4: update tpm2 trusted keys code to use tpm_send() instead of
+> >    tpm_transmit_cmd() which is an internal function.
+> > 
+> > Changes in v6:
+> > 1. Switch TPM asymmetric code also to use common tpm_buf code. These
+> >    changes required patches #1 and #2 update, so I have dropped review
+> >    tags from those patches.
+> > 2. Incorporated miscellaneous comments from Jarkko.
+> > 
+> > Changes in v5:
+> > 1. Drop 5/5 patch as its more relavant along with TEE patch-set.
+> > 2. Add Reviewed-by tag for patch #2.
+> > 3. Fix build failure when "CONFIG_HEADER_TEST" and
+> >    "CONFIG_KERNEL_HEADER_TEST" config options are enabled.
+> > 4. Misc changes to rename files.
+> > 
+> > Changes in v4:
+> > 1. Separate patch for export of tpm_buf code to include/linux/tpm.h
+> > 2. Change TPM1.x trusted keys code to use common tpm_buf
+> > 3. Keep module name as trusted.ko only
+> > 
+> > Changes in v3:
+> > 
+> > Move TPM2 trusted keys code to trusted keys subsystem.
+> > 
+> > Changes in v2:
+> > 
+> > Split trusted keys abstraction patch for ease of review.
+> > 
+> > Sumit Garg (4):
+> >   tpm: Move tpm_buf code to include/linux/
+> >   KEYS: Use common tpm_buf for trusted and asymmetric keys
+> >   KEYS: trusted: Create trusted keys subsystem
+> >   KEYS: trusted: Move TPM2 trusted keys code
+> > 
+> >  crypto/asymmetric_keys/asym_tpm.c                  | 101 +++----
+> >  drivers/char/tpm/tpm-interface.c                   |  56 ----
+> >  drivers/char/tpm/tpm.h                             | 223 ---------------
+> >  drivers/char/tpm/tpm2-cmd.c                        | 307 --------------------
+> >  include/Kbuild                                     |   1 -
+> >  include/keys/{trusted.h => trusted_tpm.h}          |  49 +---
+> >  include/linux/tpm.h                                | 248 ++++++++++++++--
+> >  security/keys/Makefile                             |   2 +-
+> >  security/keys/trusted-keys/Makefile                |   8 +
+> >  .../{trusted.c => trusted-keys/trusted_tpm1.c}     |  96 +++----
+> >  security/keys/trusted-keys/trusted_tpm2.c          | 314 +++++++++++++++++++++
+> >  11 files changed, 649 insertions(+), 756 deletions(-)
+> >  rename include/keys/{trusted.h => trusted_tpm.h} (77%)
+> >  create mode 100644 security/keys/trusted-keys/Makefile
+> >  rename security/keys/{trusted.c => trusted-keys/trusted_tpm1.c} (94%)
+> >  create mode 100644 security/keys/trusted-keys/trusted_tpm2.c
+> > 
+> > -- 
+> > 2.7.4
+> > 
 > 
-> Urgh bah.. I was too focussed on the other klp borkage :/ But yes,
-> arm64/ftrace and klp are the only two users of that function (outside of
-> module.c) and Mark was already writing a patch for arm64.
-> 
-> Means these last two patches need to wait a little until we've fixed
-> those.
+> Tested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
-So the other KLP issue:
+Pushed. I'll include them to my v5.5 PR :-) Thank you for doing
+this.
 
-<mbenes> peterz: ad klp, apply_relocate_add() and text_poke()... what
-         about apply_alternatives() and apply_paravirt()? They call
-         text_poke_early(), which was ok with module_disable/enable_ro(), but
-	 now it is not, I suppose. See arch_klp_init_object_loaded() in
-         arch/x86/kernel/livepatch.c.
-
-<peterz> mbenes: hurm, I don't see why we would need to do
-         apply_alternatives() / apply_paravirt() later, why can't we do that
-	 the moment we load the module
-
-<peterz> mbenes: that is, those things _never_ change after boot
-
-<mbenes> peterz: as jpoimboe explained. See commit
-         d4c3e6e1b193497da3a2ce495fb1db0243e41e37 for detailed explanation.
-
-Now sadly that commit missed all the useful information, luckily I could
-find the patch in my LKML folder, more sad, that thread still didn't
-contain the actual useful information, for that I was directed to
-github:
-
-  https://github.com/dynup/kpatch/issues/580
-
-Now, someone is owning me a beer for having to look at github for this.
-
-That finally explained that what happens is that the RELA was trying to
-fix up the paravirt indirect call to 'local_irq_disable', which
-apply_paravirt() will have overwritten with 'CLI; NOP'. This then
-obviously goes *bang*.
-
-This then raises a number of questions:
-
- 1) why is that RELA (that obviously does not depend on any module)
-    applied so late?
-
- 2) why can't we unconditionally skip RELA's to paravirt sites?
-
- 3) Is there ever a possible module-dependent RELA to a paravirt /
-    alternative site?
-
-
-Now, for 1), I would propose '.klp.rela.${mod}' sections only contain
-RELAs that depend on symbols in ${mod} (or modules in general). We can
-fix up RELAs that depend on core kernel early without problems. Let them
-be in the normal .rela sections and be fixed up on loading the
-patch-module as per usual.
-
-This should also deal with 2, paravirt should always have RELAs into the
-core kernel.
-
-Then for 3) we only have alternatives left, and I _think_ it unlikely to
-be the case, but I'll have to have a hard look at that.
-
-Hmmm ?
+/Jarkko
