@@ -2,151 +2,204 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2DB8CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:56:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFFBCCA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:00:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7802021A4A
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:56:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AC4A2086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:00:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BwfD6rNm"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LkFiQMFl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406405AbfJWO4p (ORCPT
+        id S2392406AbfJWPAT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 10:56:45 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:32742 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2390185AbfJWO4p (ORCPT
+        Wed, 23 Oct 2019 11:00:19 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:43796 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390185AbfJWPAT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 10:56:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571842603;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=dFr4auTB5WCyyB+oGj7EM0Xur1GVbDsBycmZZyHEWFI=;
-        b=BwfD6rNmNvETo/OaSPeV6cXtCW3j15gHtTC42V4Hhq9pGJg1+yD8uoth3KBo88lUo7Ry6l
-        b1NoFeTJ9Kuum7KH3Sbf8niO6+XIWJc/M38jVxYLnwelqRWWBGO4rURXoxY5A8o8cCR0vS
-        pqrIi/Q9lbo0R1Q3YMLQhCf8d0BNSFE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-25-7rKysA6pPnepJMF_sEPftA-1; Wed, 23 Oct 2019 10:56:40 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 53E7D1800D6B;
-        Wed, 23 Oct 2019 14:56:38 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6F8A3194BE;
-        Wed, 23 Oct 2019 14:56:31 +0000 (UTC)
-Subject: Re: [RFC PATCH 2/2] mm, vmstat: reduce zone->lock holding time by
- /proc/pagetypeinfo
-To:     Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@suse.de>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>, Roman Gushchin <guro@fb.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Jann Horn <jannh@google.com>, Song Liu <songliubraving@fb.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rafael Aquini <aquini@redhat.com>, linux-mm@kvack.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Michal Hocko <mhocko@suse.com>
-References: <20191023095607.GE3016@techsingularity.net>
- <20191023102737.32274-1-mhocko@kernel.org>
- <20191023102737.32274-3-mhocko@kernel.org>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <a3510617-fd23-9f90-3c40-700bcb0f353c@redhat.com>
-Date:   Wed, 23 Oct 2019 10:56:30 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 23 Oct 2019 11:00:19 -0400
+Received: by mail-pl1-f195.google.com with SMTP id v5so5486405ply.10
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 08:00:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=N+w72TNzpRjbI10b0jitVHs/ZztNdVqny0Vx93sBfHk=;
+        b=LkFiQMFlNCbmBcSny+BOcbJp4l+Y7hxmhJpwbh+oZKj4dclcUmkgKvgYT/+UYb+gC2
+         gyHdiiQA0zgCVq5edOVaCswUbLLDVp5XxK7S64xHl5B14kzfNFd1rQGeDZSDltZr/3Wu
+         JUlYM9V7bShYYsBBni9hVzN4el8+a0sJvdIGSmvxXXC+hQroujJZ3Ku4IzspLg14V4pP
+         rO5w9PLppQQ6gwzqvOxY2udruUJiYhNLNVz1w2QSMCchaEg4Q1G6HlbIZru6HKxG+aS9
+         CXqkZ33YbTEGVGVz3EaMmpMU7IxVFS79ScHmIC/CAFsX2auB9k4I7uGZczMJuJ1biDdh
+         KMQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=N+w72TNzpRjbI10b0jitVHs/ZztNdVqny0Vx93sBfHk=;
+        b=I6m3H1nviA1on3o8Hi0I/iltj+UZ0z+rtmChRl4DGLaCAphKd/AfxRrDIBnfLe1N3K
+         yN0mFdxvGjwlT9pOb8HmVJmjViS/y1JxbjNDk+3kBYycBstfI2wBkKnPm8JBAt3a7VxQ
+         XcROUhbKRYwnVKEZyoc2bq6MT5XdzkSFRB4TTHZLiolPmeB4KTD1LSkOU3vo37/mCZgV
+         /M9JA7jwyLetHbyAfZGtcZvVZKWCVy0shdYb84S5KMehulo3zi3xddupKvMrv+7ertUB
+         RbftjxXzwuiF1+JVzPcTYmpiD7DLZ4DRbC4NoPwfsNUB7eOZgmE0ZBiQOernch+CLKVU
+         UbDg==
+X-Gm-Message-State: APjAAAWFuasUZwDEtAJlp+n5VKa9VP8j1mmMuvIe2FYTymDR8f0I2aB4
+        UUq6hUfV2PUYAJbVYyHMjiVrmNcwUBFJXGvCVSXHcg==
+X-Google-Smtp-Source: APXvYqzT4S2F+jsQrBIZuP+l7T+33RUZhHDDMRCf+924fdyQ7ByNNyi84Cz1xTdKu0cUzV3k5+G7LjvdIr/BATafnwk=
+X-Received: by 2002:a17:902:9002:: with SMTP id a2mr10495952plp.147.1571842817724;
+ Wed, 23 Oct 2019 08:00:17 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191023102737.32274-3-mhocko@kernel.org>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-MC-Unique: 7rKysA6pPnepJMF_sEPftA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+References: <cover.1571762488.git.andreyknvl@google.com> <26e088ae3ebcaa30afe957aeabaa9f0c653df7d0.1571762488.git.andreyknvl@google.com>
+ <CACT4Y+YntxT+cpESOBvbg+h=g-84ECJwQrFg7LM5tbq_zaMd3A@mail.gmail.com>
+ <CAAeHK+yUTZc+BrGDvvTQD4O0hsDzhp0V6GGFdtnmE6U4yWabKw@mail.gmail.com> <CACT4Y+b+RTYjUyB1h0SYjEq8vmOZas3ByjeJqVU1LrjxpRKy2Q@mail.gmail.com>
+In-Reply-To: <CACT4Y+b+RTYjUyB1h0SYjEq8vmOZas3ByjeJqVU1LrjxpRKy2Q@mail.gmail.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Wed, 23 Oct 2019 17:00:06 +0200
+Message-ID: <CAAeHK+x-dihJ5+Zb1JBNaL5VK1zB87BR5kPX2B=q+FyVW+WHnw@mail.gmail.com>
+Subject: Re: [PATCH 3/3] vhost, kcov: collect coverage from vhost_worker
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     USB list <linux-usb@vger.kernel.org>,
+        KVM list <kvm@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        David Windsor <dwindsor@gmail.com>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        Anders Roxell <anders.roxell@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/23/19 6:27 AM, Michal Hocko wrote:
-> From: Michal Hocko <mhocko@suse.com>
+On Wed, Oct 23, 2019 at 3:50 PM Dmitry Vyukov <dvyukov@google.com> wrote:
 >
-> pagetypeinfo_showfree_print is called by zone->lock held in irq mode.
-> This is not really nice because it blocks both any interrupts on that
-> cpu and the page allocator. On large machines this might even trigger
-> the hard lockup detector.
+> On Wed, Oct 23, 2019 at 3:35 PM Andrey Konovalov <andreyknvl@google.com> wrote:
+> >
+> > On Wed, Oct 23, 2019 at 10:36 AM Dmitry Vyukov <dvyukov@google.com> wrote:
+> > >
+> > > On Tue, Oct 22, 2019 at 6:46 PM Andrey Konovalov <andreyknvl@google.com> wrote:
+> > > >
+> > > > This patch adds kcov_remote_start()/kcov_remote_stop() annotations to the
+> > > > vhost_worker() function, which is responsible for processing vhost works.
+> > > > Since vhost_worker() threads are spawned per vhost device instance
+> > > > the common kcov handle is used for kcov_remote_start()/stop() annotations
+> > > > (see Documentation/dev-tools/kcov.rst for details). As the result kcov can
+> > > > now be used to collect coverage from vhost worker threads.
+> > > >
+> > > > Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+> > > > ---
+> > > >  drivers/vhost/vhost.c | 6 ++++++
+> > > >  drivers/vhost/vhost.h | 1 +
+> > > >  2 files changed, 7 insertions(+)
+> > > >
+> > > > diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+> > > > index 36ca2cf419bf..a5a557c4b67f 100644
+> > > > --- a/drivers/vhost/vhost.c
+> > > > +++ b/drivers/vhost/vhost.c
+> > > > @@ -30,6 +30,7 @@
+> > > >  #include <linux/sched/signal.h>
+> > > >  #include <linux/interval_tree_generic.h>
+> > > >  #include <linux/nospec.h>
+> > > > +#include <linux/kcov.h>
+> > > >
+> > > >  #include "vhost.h"
+> > > >
+> > > > @@ -357,7 +358,9 @@ static int vhost_worker(void *data)
+> > > >                 llist_for_each_entry_safe(work, work_next, node, node) {
+> > > >                         clear_bit(VHOST_WORK_QUEUED, &work->flags);
+> > > >                         __set_current_state(TASK_RUNNING);
+> > > > +                       kcov_remote_start(dev->kcov_handle);
+> > > >                         work->fn(work);
+> > > > +                       kcov_remote_stop();
+> > > >                         if (need_resched())
+> > > >                                 schedule();
+> > > >                 }
+> > > > @@ -546,6 +549,7 @@ long vhost_dev_set_owner(struct vhost_dev *dev)
+> > > >
+> > > >         /* No owner, become one */
+> > > >         dev->mm = get_task_mm(current);
+> > > > +       dev->kcov_handle = current->kcov_handle;
+> > >
+> > > kcov_handle is not present in task_struct if !CONFIG_KCOV
+> > >
+> > > Also this does not use KCOV_SUBSYSTEM_COMMON.
+> > > We discussed something along the following lines:
+> > >
+> > > u64 kcov_remote_handle(u64 subsys, u64 id)
+> > > {
+> > >   WARN_ON(subsys or id has wrong bits set).
+> >
+> > Hm, we can't have warnings in kcov_remote_handle() that is exposed in
+> > uapi headers. What we can do is return 0 (invalid handle) if subsys/id
+> > have incorrect bits set. And then we can either have another
+> > kcov_remote_handle() internally (with a different name though) that
+> > has a warning, or have warning in kcov_remote_start(). WDYT?
 >
-> Considering the pagetypeinfo is a debugging tool we do not really need
-> exact numbers here. The primary reason to look at the outuput is to see
-> how pageblocks are spread among different migratetypes therefore putting
-> a bound on the number of pages on the free_list sounds like a reasonable
-> tradeoff.
->
-> The new output will simply tell
-> [...]
-> Node    6, zone   Normal, type      Movable >100000 >100000 >100000 >1000=
-00  41019  31560  23996  10054   3229    983    648
->
-> instead of
-> Node    6, zone   Normal, type      Movable 399568 294127 221558 102119  =
-41019  31560  23996  10054   3229    983    648
->
-> The limit has been chosen arbitrary and it is a subject of a future
-> change should there be a need for that.
->
-> Suggested-by: Andrew Morton <akpm@linux-foundation.org>
-> Signed-off-by: Michal Hocko <mhocko@suse.com>
-> ---
->  mm/vmstat.c | 19 ++++++++++++++++++-
->  1 file changed, 18 insertions(+), 1 deletion(-)
->
-> diff --git a/mm/vmstat.c b/mm/vmstat.c
-> index 4e885ecd44d1..762034fc3b83 100644
-> --- a/mm/vmstat.c
-> +++ b/mm/vmstat.c
-> @@ -1386,8 +1386,25 @@ static void pagetypeinfo_showfree_print(struct seq=
-_file *m,
-> =20
->  =09=09=09area =3D &(zone->free_area[order]);
-> =20
-> -=09=09=09list_for_each(curr, &area->free_list[mtype])
-> +=09=09=09list_for_each(curr, &area->free_list[mtype]) {
->  =09=09=09=09freecount++;
-> +=09=09=09=09/*
-> +=09=09=09=09 * Cap the free_list iteration because it might
-> +=09=09=09=09 * be really large and we are under a spinlock
-> +=09=09=09=09 * so a long time spent here could trigger a
-> +=09=09=09=09 * hard lockup detector. Anyway this is a
-> +=09=09=09=09 * debugging tool so knowing there is a handful
-> +=09=09=09=09 * of pages in this order should be more than
-> +=09=09=09=09 * sufficient
-> +=09=09=09=09 */
-> +=09=09=09=09if (freecount > 100000) {
-> +=09=09=09=09=09seq_printf(m, ">%6lu ", freecount);
-> +=09=09=09=09=09spin_unlock_irq(&zone->lock);
-> +=09=09=09=09=09cond_resched();
-> +=09=09=09=09=09spin_lock_irq(&zone->lock);
-> +=09=09=09=09=09continue;
-list_for_each() is a for loop. The continue statement will just iterate
-the rests with the possibility that curr will be stale. Should we use
-goto to jump after the seq_print() below?
-> +=09=09=09=09}
-> +=09=09=09}
->  =09=09=09seq_printf(m, "%6lu ", freecount);
->  =09=09}
->  =09=09seq_putc(m, '\n');
+> I would probably add the warning to kcov_remote_start(). This avoids
+> the need for another function and will catch a wrong ID if caller
+> generated it by some other means.
+> And then ioctls should also detect bad handles passed in and return
+> EINVAL. Then we will cover errors for both kernel and user programs.
 
-Cheers,
-Longman
+OK, will do in v2.
 
+>
+> >
+> > >   return ...;
+> > > }
+> > >
+> > > kcov_remote_handle(KCOV_SUBSYSTEM_USB, bus);
+> > > kcov_remote_handle(KCOV_SUBSYSTEM_COMMON, current->kcov_handle);
+
+I'll add internal kcov_remote_handle_common() and
+kcov_remote_handle_usb() helpers to simplify kcov hooks in usb/vhost
+code though.
+
+> > >
+> > >
+> > > >         worker = kthread_create(vhost_worker, dev, "vhost-%d", current->pid);
+> > > >         if (IS_ERR(worker)) {
+> > > >                 err = PTR_ERR(worker);
+> > > > @@ -571,6 +575,7 @@ long vhost_dev_set_owner(struct vhost_dev *dev)
+> > > >         if (dev->mm)
+> > > >                 mmput(dev->mm);
+> > > >         dev->mm = NULL;
+> > > > +       dev->kcov_handle = 0;
+> > > >  err_mm:
+> > > >         return err;
+> > > >  }
+> > > > @@ -682,6 +687,7 @@ void vhost_dev_cleanup(struct vhost_dev *dev)
+> > > >         if (dev->worker) {
+> > > >                 kthread_stop(dev->worker);
+> > > >                 dev->worker = NULL;
+> > > > +               dev->kcov_handle = 0;
+> > > >         }
+> > > >         if (dev->mm)
+> > > >                 mmput(dev->mm);
+> > > > diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
+> > > > index e9ed2722b633..a123fd70847e 100644
+> > > > --- a/drivers/vhost/vhost.h
+> > > > +++ b/drivers/vhost/vhost.h
+> > > > @@ -173,6 +173,7 @@ struct vhost_dev {
+> > > >         int iov_limit;
+> > > >         int weight;
+> > > >         int byte_weight;
+> > > > +       u64 kcov_handle;
+> > > >  };
+> > > >
+> > > >  bool vhost_exceeds_weight(struct vhost_virtqueue *vq, int pkts, int total_len);
+> > > > --
+> > > > 2.23.0.866.gb869b98d4c-goog
+> > > >
