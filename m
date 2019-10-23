@@ -2,146 +2,318 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1812ECA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:29:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FDF1CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:30:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E886120659
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:29:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7B5520659
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:30:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FyrWT8NC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404462AbfJWK3r (ORCPT
+        id S2404466AbfJWKaM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 06:29:47 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41816 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2404447AbfJWK3p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 06:29:45 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 2DF28ABB1;
-        Wed, 23 Oct 2019 10:29:43 +0000 (UTC)
-References: <20191017144636.28617-1-lhenriques@suse.com> <a68eeb81a5b193be2da49b83dfedce7d2782fb40.camel@kernel.org> <87a79unocw.fsf@suse.com> <CAAM7YA=dg8ufUWqrD_V8pSdvxrnU+knOW4uW4io_b=Lwjhpg5Q@mail.gmail.com> <20191022134700.GA23308@hermes.olymp>
-From:   Luis Henriques <lhenriques@suse.com>
-To:     "Yan\, Zheng" <ukernel@gmail.com>
-Cc:     Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        ceph-devel <ceph-devel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ceph: Fix use-after-free in __ceph_remove_cap
-In-reply-to: <20191022134700.GA23308@hermes.olymp>
-Date:   Wed, 23 Oct 2019 11:29:42 +0100
-Message-ID: <878spboiuh.fsf@suse.com>
+        Wed, 23 Oct 2019 06:30:12 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:34205 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2390935AbfJWKaM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 06:30:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571826611;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=x3lZ3Bo1e/mYDo8MUIcOkY/ZXzHg1U9rdfroL4Ixwe4=;
+        b=FyrWT8NCa0xopvA4KT4UBCNKppU+a39BS6N/to7bAvKiETMRRtEaimYHkh90bZ7wJSBsRD
+        Geu8IkQ05rwBIKb73oiaMjeR3HiM5UDTy9c2TqbXWaN4ACk/wGsUhx+uoUTGBcKovqv3sh
+        1lB4t/6NQCehdbecznIZaHs5RHmIZXI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-283-AhIKu5Q-Pu65-8OG6n8GXA-1; Wed, 23 Oct 2019 06:30:07 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7BA02107AD31;
+        Wed, 23 Oct 2019 10:30:06 +0000 (UTC)
+Received: from [10.72.12.79] (ovpn-12-79.pek2.redhat.com [10.72.12.79])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0D01351763;
+        Wed, 23 Oct 2019 10:29:33 +0000 (UTC)
+Subject: Re: [PATCH v2] vhost: introduce mdev based hardware backend
+To:     Tiwei Bie <tiwei.bie@intel.com>
+Cc:     mst@redhat.com, alex.williamson@redhat.com,
+        maxime.coquelin@redhat.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, dan.daly@intel.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        lingshan.zhu@intel.com
+References: <20191022095230.2514-1-tiwei.bie@intel.com>
+ <47a572fd-5597-1972-e177-8ee25ca51247@redhat.com>
+ <20191023030253.GA15401@___>
+ <ac36f1e3-b972-71ac-fe0c-3db03e016dcf@redhat.com>
+ <20191023070747.GA30533@___>
+ <106834b5-dae5-82b2-0f97-16951709d075@redhat.com> <20191023101135.GA6367@___>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <5a7bc5da-d501-2750-90bf-545dd55f85fa@redhat.com>
+Date:   Wed, 23 Oct 2019 18:29:21 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20191023101135.GA6367@___>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MC-Unique: AhIKu5Q-Pu65-8OG6n8GXA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Luis Henriques <lhenriques@suse.com> writes:
+On 2019/10/23 =E4=B8=8B=E5=8D=886:11, Tiwei Bie wrote:
+> On Wed, Oct 23, 2019 at 03:25:00PM +0800, Jason Wang wrote:
+>> On 2019/10/23 =E4=B8=8B=E5=8D=883:07, Tiwei Bie wrote:
+>>> On Wed, Oct 23, 2019 at 01:46:23PM +0800, Jason Wang wrote:
+>>>> On 2019/10/23 =E4=B8=8A=E5=8D=8811:02, Tiwei Bie wrote:
+>>>>> On Tue, Oct 22, 2019 at 09:30:16PM +0800, Jason Wang wrote:
+>>>>>> On 2019/10/22 =E4=B8=8B=E5=8D=885:52, Tiwei Bie wrote:
+>>>>>>> This patch introduces a mdev based hardware vhost backend.
+>>>>>>> This backend is built on top of the same abstraction used
+>>>>>>> in virtio-mdev and provides a generic vhost interface for
+>>>>>>> userspace to accelerate the virtio devices in guest.
+>>>>>>>
+>>>>>>> This backend is implemented as a mdev device driver on top
+>>>>>>> of the same mdev device ops used in virtio-mdev but using
+>>>>>>> a different mdev class id, and it will register the device
+>>>>>>> as a VFIO device for userspace to use. Userspace can setup
+>>>>>>> the IOMMU with the existing VFIO container/group APIs and
+>>>>>>> then get the device fd with the device name. After getting
+>>>>>>> the device fd of this device, userspace can use vhost ioctls
+>>>>>>> to setup the backend.
+>>>>>>>
+>>>>>>> Signed-off-by: Tiwei Bie <tiwei.bie@intel.com>
+>>>>>>> ---
+>>>>>>> This patch depends on below series:
+>>>>>>> https://lkml.org/lkml/2019/10/17/286
+>>>>>>>
+>>>>>>> v1 -> v2:
+>>>>>>> - Replace _SET_STATE with _SET_STATUS (MST);
+>>>>>>> - Check status bits at each step (MST);
+>>>>>>> - Report the max ring size and max number of queues (MST);
+>>>>>>> - Add missing MODULE_DEVICE_TABLE (Jason);
+>>>>>>> - Only support the network backend w/o multiqueue for now;
+>>>>>> Any idea on how to extend it to support devices other than net? I th=
+ink we
+>>>>>> want a generic API or an API that could be made generic in the futur=
+e.
+>>>>>>
+>>>>>> Do we want to e.g having a generic vhost mdev for all kinds of devic=
+es or
+>>>>>> introducing e.g vhost-net-mdev and vhost-scsi-mdev?
+>>>>> One possible way is to do what vhost-user does. I.e. Apart from
+>>>>> the generic ring, features, ... related ioctls, we also introduce
+>>>>> device specific ioctls when we need them. As vhost-mdev just needs
+>>>>> to forward configs between parent and userspace and even won't
+>>>>> cache any info when possible,
+>>>> So it looks to me this is only possible if we expose e.g set_config an=
+d
+>>>> get_config to userspace.
+>>> The set_config and get_config interface isn't really everything
+>>> of device specific settings. We also have ctrlq in virtio-net.
+>>
+>> Yes, but it could be processed by the exist API. Isn't it? Just set ctrl=
+ vq
+>> address and let parent to deal with that.
+> I mean how to expose ctrlq related settings to userspace?
 
-> On Tue, Oct 22, 2019 at 08:48:56PM +0800, Yan, Zheng wrote:
->> On Mon, Oct 21, 2019 at 10:55 PM Luis Henriques <lhenriques@suse.com> wrote:
->> 
->> >
->> > Jeff Layton <jlayton@kernel.org> writes:
->> >
->> > > On Thu, 2019-10-17 at 15:46 +0100, Luis Henriques wrote:
->> > >> KASAN reports a use-after-free when running xfstest generic/531, with
->> > the
->> > >> following trace:
->> > >>
->> > >> [  293.903362]  kasan_report+0xe/0x20
->> > >> [  293.903365]  rb_erase+0x1f/0x790
->> > >> [  293.903370]  __ceph_remove_cap+0x201/0x370
->> > >> [  293.903375]  __ceph_remove_caps+0x4b/0x70
->> > >> [  293.903380]  ceph_evict_inode+0x4e/0x360
->> > >> [  293.903386]  evict+0x169/0x290
->> > >> [  293.903390]  __dentry_kill+0x16f/0x250
->> > >> [  293.903394]  dput+0x1c6/0x440
->> > >> [  293.903398]  __fput+0x184/0x330
->> > >> [  293.903404]  task_work_run+0xb9/0xe0
->> > >> [  293.903410]  exit_to_usermode_loop+0xd3/0xe0
->> > >> [  293.903413]  do_syscall_64+0x1a0/0x1c0
->> > >> [  293.903417]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
->> > >>
->> > >> This happens because __ceph_remove_cap() may queue a cap release
->> > >> (__ceph_queue_cap_release) which can be scheduled before that cap is
->> > >> removed from the inode list with
->> > >>
->> > >>      rb_erase(&cap->ci_node, &ci->i_caps);
->> > >>
->> > >> And, when this finally happens, the use-after-free will occur.
->> > >>
->> > >> This can be fixed by protecting the rb_erase with the s_cap_lock
->> > spinlock,
->> > >> which is used by ceph_send_cap_releases(), before the cap is freed.
->> > >>
->> > >> Signed-off-by: Luis Henriques <lhenriques@suse.com>
->> > >> ---
->> > >>  fs/ceph/caps.c | 4 ++--
->> > >>  1 file changed, 2 insertions(+), 2 deletions(-)
->> > >>
->> > >> diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
->> > >> index d3b9c9d5c1bd..21ee38cabe98 100644
->> > >> --- a/fs/ceph/caps.c
->> > >> +++ b/fs/ceph/caps.c
->> > >> @@ -1089,13 +1089,13 @@ void __ceph_remove_cap(struct ceph_cap *cap,
->> > bool queue_release)
->> > >>      }
->> > >>      cap->cap_ino = ci->i_vino.ino;
->> > >>
->> > >> -    spin_unlock(&session->s_cap_lock);
->> > >> -
->> > >>      /* remove from inode list */
->> > >>      rb_erase(&cap->ci_node, &ci->i_caps);
->> > >>      if (ci->i_auth_cap == cap)
->> > >>              ci->i_auth_cap = NULL;
->> > >>
->> > >> +    spin_unlock(&session->s_cap_lock);
->> > >> +
->> > >>      if (removed)
->> > >>              ceph_put_cap(mdsc, cap);
->> > >>
->> > >
->> > > Is there any reason we need to wait until this point to remove it from
->> > > the rbtree? ISTM that we ought to just do that at the beginning of the
->> > > function, before we take the s_cap_lock.
->> >
->> > That sounds good to me, at least at a first glace.  I spent some time
->> > looking for any possible issues in the code, and even run a few tests.
->> >
->> > However, looking at git log I found commit f818a73674c5 ("ceph: fix cap
->> > removal races"), which moved that rb_erase from the beginning of the
->> > function to it's current position.  So, unless the race mentioned in
->> > this commit has disappeared in the meantime (which is possible, this
->> > commit is from 2010!), this rbtree operation shouldn't be changed.
->> >
->> > And I now wonder if my patch isn't introducing a race too...
->> > __ceph_remove_cap() is supposed to always be called with the session
->> > mutex held, except for the ceph_evict_inode() path.  Which is where I'm
->> > seeing the UAF.  So, maybe what's missing here is the s_mutex.  Hmm...
->> >
->> >
->> we can't lock s_mutex here, because i_ceph_lock is locked
+
+I think it works like:
+
+1) userspace find ctrl_vq is supported
+
+2) then it can allocate memory for ctrl vq and set its address through=20
+vhost-mdev
+
+3) userspace can populate ctrl vq itself
+
+
 >
-> Well, my idea wasn't to get s_mutex here but earlier in the stack.
-> Maybe in ceph_evict_inode, protecting the call to __ceph_remove_caps.
-> But I didn't really looked into that yet, so I'm not really sure if
+>>
+>>>>> I think it might be better to do
+>>>>> this in one generic vhost-mdev module.
+>>>> Looking at definitions of VhostUserRequest in qemu, it mixed generic A=
+PI
+>>>> with device specific API. If we want go this ways (a generic vhost-mde=
+v),
+>>>> more questions needs to be answered:
+>>>>
+>>>> 1) How could userspace know which type of vhost it would use? Do we ne=
+ed to
+>>>> expose virtio subsystem device in for userspace this case?
+>>>>
+>>>> 2) That generic vhost-mdev module still need to filter out unsupported
+>>>> ioctls for a specific type. E.g if it probes a net device, it should r=
+efuse
+>>>> API for other type. This in fact a vhost-mdev-net but just not modular=
+ize it
+>>>> on top of vhost-mdev.
+>>>>
+>>>>
+>>>>>>> - Some minor fixes and improvements;
+>>>>>>> - Rebase on top of virtio-mdev series v4;
+>>> [...]
+>>>>>>> +
+>>>>>>> +static long vhost_mdev_get_features(struct vhost_mdev *m, u64 __us=
+er *featurep)
+>>>>>>> +{
+>>>>>>> +=09if (copy_to_user(featurep, &m->features, sizeof(m->features)))
+>>>>>>> +=09=09return -EFAULT;
+>>>>>> As discussed in previous version do we need to filter out MQ feature=
+ here?
+>>>>> I think it's more straightforward to let the parent drivers to
+>>>>> filter out the unsupported features. Otherwise it would be tricky
+>>>>> when we want to add more features in vhost-mdev module,
+>>>> It's as simple as remove the feature from blacklist?
+>>> It's not really that easy. It may break the old drivers.
+>>
+>> I'm not sure I understand here, we do feature negotiation anyhow. For ol=
+d
+>> drivers do you mean the guest drivers without MQ?
+> For old drivers I mean old parent drivers. It's possible
+> to compile old drivers on new kernels.
 
-Ok, I looked into that now and obviously that's not possible.  So, I
-guess my original patch is still the best option.
 
-Cheers,
--- 
-Luis
+Yes, but if old parent driver itself can not support MQ it should just=20
+not advertise that feature.
 
-> that's feasible (or even if that would fix this UAF).  I suspect that's
-> not possible anyway, due to the comment above __ceph_remove_cap:
+
 >
->   caller will not hold session s_mutex if called from destroy_inode.
+> I'm not quite sure how will we implement MQ support in
+> vhost-mdev.
+
+
+Yes, that's why I ask here. I think we want the vhost-mdev to be generic=20
+which means it's better not let vhost-mdev to know anything which is=20
+device specific. So this is a question that should be considered.
+
+
+> If we need to introduce new virtio_mdev_device_ops
+> callbacks and an old driver exposed the MQ feature,
+> then the new vhost-mdev will see this old driver expose
+> MQ feature but not provide corresponding callbacks.ean
+
+
+That's exact the issue which current API can not handle, so that's why I=20
+suggest to filter MQ out for vhost-mdev.
+
+And in the future, we can:
+
+1) invent new ioctls and convert them to config access or
+
+2) just exposing config for userspace to access (then vhost-mdev work=20
+much more similar to virtio-mdev).
+
+
+>
+>>
+>>>>> i.e. if
+>>>>> the parent drivers may expose unsupported features and relay on
+>>>>> vhost-mdev to filter them out, these features will be exposed
+>>>>> to userspace automatically when they are enabled in vhost-mdev
+>>>>> in the future.
+>>>> The issue is, it's only that vhost-mdev knows its own limitation. E.g =
+in
+>>>> this patch, vhost-mdev only implements a subset of transport API, but =
+parent
+>>>> doesn't know about that.
+>>>>
+>>>> Still MQ as an example, there's no way (or no need) for parent to know=
+ that
+>>>> vhost-mdev does not support MQ.
+>>> The mdev is a MDEV_CLASS_ID_VHOST mdev device. When the parent
+>>> is being developed, it should know the currently supported features
+>>> of vhost-mdev.
+>>
+>> How can parent know MQ is not supported by vhost-mdev?
+> Good point. I agree vhost-mdev should filter out the unsupported
+> features. But in the meantime, I think drivers also shouldn't
+> expose unsupported features.
+
+
+Exactly. But there's a case in the middle, e.g parent drivers support MQ=20
+and virtio-mdev can do that but not vhost-mdev.
+
+
+>
+>>
+>>>> And this allows old kenrel to work with new
+>>>> parent drivers.
+>>> The new drivers should provide things like VIRTIO_MDEV_F_VERSION_1
+>>> to be compatible with the old kernels. When VIRTIO_MDEV_F_VERSION_1
+>>> is provided/negotiated, the behaviours should be consistent.
+>>
+>> To be clear, I didn't mean a change in virtio-mdev API, I meant:
+>>
+>> 1) old vhost-mdev kernel driver that filters out MQ
+>>
+>> 2) new parent driver that support MQ
+>>
+>>
+>>>> So basically we have three choices here:
+>>>>
+>>>> 1) Implement what vhost-user did and implement a generic vhost-mdev (b=
+ut may
+>>>> still have lots of device specific code). To support advanced feature =
+which
+>>>> requires the access to config, still lots of API that needs to be adde=
+d.
+>>>>
+>>>> 2) Implement what vhost-kernel did, have a generic vhost-mdev driver a=
+nd a
+>>>> vhost bus on top for match a device specific API e.g vhost-mdev-net. W=
+e
+>>>> still have device specific API but limit them only to device specific
+>>>> module. Still require new ioctls for advanced feature like MQ.
+>>>>
+>>>> 3) Simply expose all virtio-mdev transport to userspace.
+>>> Currently, virtio-mdev transport is a set of function callbacks
+>>> defined in kernel. How to simply expose virtio-mdev transport to
+>>> userspace?
+>>
+>> The most straightforward way is to have an 1:1 mapping between ioctl and
+>> virito_mdev_device_ops.
+> Seems we are already trying to do 1:1 mapping between ioctl
+> and virtio_mdev_device_ops in vhost-mdev now (the major piece
+> missing is get_device_id/get_config/set_config).
+
+
+Yes, with this we can have a device independent API. Do you think this=20
+is better?
+
+Thanks
+
+
+>
+>
+>> Thanks
+>>
+>>
+>>>
+>>>> A generic module
+>>>> without any type specific code (like virtio-mdev). No need dedicated A=
+PI for
+>>>> e.g MQ. But then the API will look much different than current vhost d=
+id.
+>>>>
+>>>> Consider the limitation of 1) I tend to choose 2 or 3. What's you opin=
+ion?
+>>>>
+>>>>
 
