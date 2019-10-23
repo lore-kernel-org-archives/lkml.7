@@ -2,161 +2,164 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A599C47E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 16:11:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5BAECA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 16:12:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A4D0205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 16:11:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8160A222CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 16:12:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="luap40pq"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="gMwNNbwH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407069AbfJWQLg (ORCPT
+        id S2407080AbfJWQMO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 12:11:36 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:42633 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404582AbfJWQLf (ORCPT
+        Wed, 23 Oct 2019 12:12:14 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:54253 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404582AbfJWQMN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 12:11:35 -0400
-Received: by mail-ed1-f65.google.com with SMTP id s20so10199000edq.9;
-        Wed, 23 Oct 2019 09:11:34 -0700 (PDT)
+        Wed, 23 Oct 2019 12:12:13 -0400
+Received: by mail-wm1-f67.google.com with SMTP id i13so6647259wmd.3
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 09:12:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=LEjYGuFDJrMtrXX28Gh+2EM+3SRNT/CDGLTrMQV4RPQ=;
-        b=luap40pq1IOiaysCcwqoFg5JhvjuYI58xG336hxCAjC5t7l0ZIBbxPCs9DtlY4XHE8
-         m30O1POKuGyjb8TrPzy5UnowNQur79oppVRXH6t2HJ76jY8QPjgsg+ZAVnbZrWaYaLM/
-         /8Jxd28WWa5LVaCpHkf7W9CJbcdduXyUdTQU64VZmn8MmJOG3yewBiXxgy6L+L0t2eOd
-         EKRbooz7We/J/CEDWQMGe5ZvPJKN8oqzBG1us9KPJ/MsC6zvuHfeZUJ3dhkQRU//0q0I
-         RaeEW+mf6/vwdSrnKYbg7Nx024JnlPrBWNljq5oAGt1xQ6ltJmkE1h0jxjuwE2erAtLF
-         9h2A==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=94Fa0onmL8QGae72SEYXHjiLUCmbUKrPJtMdClFuS2o=;
+        b=gMwNNbwHenujY7v/kJuQKntVQAWnsbgfL4M3WoHGC6pm2MKHeb8jdd5TIQPe7JlCEn
+         uLskMNAA5vwIZaPVvT+qBK5AsvgbCLhqhL48s/ZapNXG9WwgIE+cc2XRKyithM4kw/jH
+         Qruk2iiXGFqF20V1T4d/BOF0PgCnBhF3LJns6TBGWi1xj5grk+i1ooWWkhLoo5/Wz7pe
+         3XjE2ouDUWRZA+ta1vLrkivCI2ABovlbJFO1Qv/iAYAmM6JVdwkSIr8EteFdFU85B8Rl
+         tpbxiXX4+Z0HHikclQzwKJ6xrA7NEGwogl85KmN9OWjh9q4Yzt2Zrl/LMmNPt7pI1evZ
+         NPnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LEjYGuFDJrMtrXX28Gh+2EM+3SRNT/CDGLTrMQV4RPQ=;
-        b=gv2HTAUQsfF0dNcMV1mblNGbh8Lk1MBB0n1EuV6kQLqcviuL4FN4TxG6L1eQkhqvwe
-         d/nNLA6drCiPueWMa7Jw8ZQkNnkLigih52vQm9Sb2Vxi77msyeP9oZyC1SW1wNVdCIeH
-         CJmDOVEKJyte1ZtURD7nlq2fSD3ZlhQbnsfL6ibVHC6AqoWCdqbg0LCl/n6eTiO4w7r0
-         9c7Zt8EJjj58aPsUL6toZ7nEf2JaLZdDQ/mePmZQcrjrEvADP+YVUgZvGSj9SuGh0O2x
-         clBXS67J5F6p6nRDrKcbk9OPMDG/+vH/mJgotPWLePgV9u5twnlOR5KRGT+p0v05GgGN
-         ojww==
-X-Gm-Message-State: APjAAAUgGDFaq6EpTXzmhq/EerUgPnWy227JME8isYx3DBuo6HsVWmwX
-        5/VfDBzJn6p6UCziLu91E39F1Ycv1TM=
-X-Google-Smtp-Source: APXvYqz6G69Xr/QHHsEOv7Z9RPjQiaDFNG9k4aq6vlk+hxuv9mV24MHbULGrRGBGRc6JlOGNv7h/Og==
-X-Received: by 2002:a17:906:6087:: with SMTP id t7mr33950448ejj.58.1571847093904;
-        Wed, 23 Oct 2019 09:11:33 -0700 (PDT)
-Received: from localhost (ip1f113d5e.dynamic.kabel-deutschland.de. [31.17.61.94])
-        by smtp.gmail.com with ESMTPSA id p9sm68270edx.4.2019.10.23.09.11.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 23 Oct 2019 09:11:32 -0700 (PDT)
-Date:   Wed, 23 Oct 2019 18:11:32 +0200
-From:   Oliver Graute <oliver.graute@gmail.com>
-To:     Shawn Guo <shawnguo@kernel.org>
-Cc:     m.felsch@pengutronix.de, narmstrong@baylibre.com,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCHv6 2/2] ARM: dts: Add support for i.MX6 UltraLite DART
- Variscite Customboard
-Message-ID: <20191023161132.GD20321@ripley>
-References: <1569342022-15901-1-git-send-email-oliver.graute@gmail.com>
- <1569342022-15901-3-git-send-email-oliver.graute@gmail.com>
- <20191014072047.GG12262@dragon>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=94Fa0onmL8QGae72SEYXHjiLUCmbUKrPJtMdClFuS2o=;
+        b=s5MDeRnEVy8N2tuwr68JzT0YJkHTHzsooOXMa0KtTMqRnXbK2kDpFc8DJfeE3hEb9f
+         hZqIkovpUsO7e4mE+fBF011cnjzEaMjsd6jVe1GWlGBCj8QVsX5xTcYnSd0s3Ze+4Sy1
+         oNQ+5yqqdaPBl8dtG28mpWjPqAc52rmQ+RdZ/D5aIxd8S9igLge9fELEIy3/uzWf6tMX
+         j7rtzZPFgujEoA89UN7mDNmw6nWzLkUgJT3qsFTTgE8N+jhKoDseMcSikP3ZBaN+KiRC
+         H4PxNOJ5uqNjAZXMWXTvb/YA36oJJabkR3ZaT/e0Bikzalu479BN3tBW+Qvagl5W7we6
+         K72Q==
+X-Gm-Message-State: APjAAAWphIUW7aaUSKn7hkHkdspy51ZVLyRCI8vxOVqPDZMZAjVryiqW
+        wk7+18Kknnmb67UAVi3gDYXFaQ==
+X-Google-Smtp-Source: APXvYqzMAmLwNI3p00bA5kimGrraRfnNgjr+Zbn8mCCG731Bi76QA7o5giekrbQp+R2MiBkIwKlWvg==
+X-Received: by 2002:a1c:544e:: with SMTP id p14mr621282wmi.17.1571847132157;
+        Wed, 23 Oct 2019 09:12:12 -0700 (PDT)
+Received: from starbuck.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.googlemail.com with ESMTPSA id x7sm30240578wrg.63.2019.10.23.09.12.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Oct 2019 09:12:11 -0700 (PDT)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org,
+        Russell King <rmk+kernel@armlinux.org.uk>
+Subject: [PATCH 1/2] Revert "ASoC: hdmi-codec: re-introduce mutex locking"
+Date:   Wed, 23 Oct 2019 18:12:02 +0200
+Message-Id: <20191023161203.28955-2-jbrunet@baylibre.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20191023161203.28955-1-jbrunet@baylibre.com>
+References: <20191023161203.28955-1-jbrunet@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191014072047.GG12262@dragon>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/10/19, Shawn Guo wrote:
-> On Tue, Sep 24, 2019 at 06:20:21PM +0200, Oliver Graute wrote:
-> > This patch adds DeviceTree Source for the i.MX6 UltraLite DART NAND/WIFI
-> > 
-> > Signed-off-by: Oliver Graute <oliver.graute@gmail.com>
-> > Cc: Shawn Guo <shawnguo@kernel.org>
-> > Cc: Neil Armstrong <narmstrong@baylibre.com>
-> > Cc: Marco Felsch <m.felsch@pengutronix.de>
-> > ---
-> > Changelog:
-> > v6:
-> >  - added some muxing
-> >  - added codec in sound node
-> >  - added adc1 node
-> > 
-> >  arch/arm/boot/dts/Makefile                      |   1 +
-> >  arch/arm/boot/dts/imx6ul-var-6ulcustomboard.dts | 221 ++++++++++++++++++++++++
-> >  2 files changed, 222 insertions(+)
-> >  create mode 100644 arch/arm/boot/dts/imx6ul-var-6ulcustomboard.dts
-> > 
-> > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> > index a24a6a1..a2a69e4 100644
-> > --- a/arch/arm/boot/dts/Makefile
-> > +++ b/arch/arm/boot/dts/Makefile
-> > @@ -579,6 +579,7 @@ dtb-$(CONFIG_SOC_IMX6UL) += \
-> >  	imx6ul-tx6ul-0010.dtb \
-> >  	imx6ul-tx6ul-0011.dtb \
-> >  	imx6ul-tx6ul-mainboard.dtb \
-> > +	imx6ul-var-6ulcustomboard.dtb \
-> >  	imx6ull-14x14-evk.dtb \
-> >  	imx6ull-colibri-eval-v3.dtb \
-> >  	imx6ull-colibri-wifi-eval-v3.dtb \
-> > diff --git a/arch/arm/boot/dts/imx6ul-var-6ulcustomboard.dts b/arch/arm/boot/dts/imx6ul-var-6ulcustomboard.dts
-> > new file mode 100644
-> > index 00000000..031d8d4
-> > --- /dev/null
-> > +++ b/arch/arm/boot/dts/imx6ul-var-6ulcustomboard.dts
-> > @@ -0,0 +1,221 @@
-> > +// SPDX-License-Identifier: (GPL-2.0)
-> > +/*
-> > + * Support for Variscite DART-6UL Module
-> > + *
-> > + * Copyright (C) 2015 Freescale Semiconductor, Inc.
-> > + * Copyright (C) 2015-2016 Variscite Ltd. - http://www.variscite.com
-> > + * Copyright (C) 2018-2019 Oliver Graute <oliver.graute@gmail.com>
-> > + */
-> > +
-> > +/dts-v1/;
-> > +
-> > +#include <dt-bindings/input/input.h>
-> > +#include "imx6ul-imx6ull-var-dart-common.dtsi"
-> > +
-> > +/ {
-> > +	model = "Variscite i.MX6 UltraLite Carrier-board";
-> > +	compatible = "variscite,6ulcustomboard", "fsl,imx6ul";
-> 
-> The compatible needs to be documented.
+This reverts commit eb1ecadb7f67dde94ef0efd3ddaed5cb6c9a65ed.
 
-I'am not sure if I got this right. Is this the way to document it?
-or is there more to do?
+This fixes the following warning reported by lockdep and a potential
+issue with hibernation
 
-diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-index 41db01d..3ed497b 100644
---- a/Documentation/devicetree/bindings/arm/fsl.yaml
-+++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-@@ -173,6 +173,7 @@ properties:
-               - armadeus,imx6ul-opos6uldev # OPOS6UL (i.MX6UL) SoM on OPOS6ULDev board
-               - fsl,imx6ul-14x14-evk      # i.MX6 UltraLite 14x14 EVK Board
-               - kontron,imx6ul-n6310-som  # Kontron N6310 SOM
-+              - variscite,6ulcustomboard" # i.MX UltraLite Carrier-board
-           - const: fsl,imx6ul
+====================================
+WARNING: pulseaudio/1297 still has locks held!
+5.3.0+ #1826 Not tainted
+------------------------------------
+1 lock held by pulseaudio/1297:
+ #0: ee815308 (&hcp->lock){....}, at: hdmi_codec_startup+0x20/0x130
 
-Best Regards,
+stack backtrace:
+CPU: 0 PID: 1297 Comm: pulseaudio Not tainted 5.3.0+ #1826
+Hardware name: Marvell Dove (Cubox)
+[<c0017b4c>] (unwind_backtrace) from [<c0014d10>] (show_stack+0x10/0x14)
+[<c0014d10>] (show_stack) from [<c00a2d18>] (futex_wait_queue_me+0x13c/0x19c)
+[<c00a2d18>] (futex_wait_queue_me) from [<c00a3630>] (futex_wait+0x184/0x24c)
+[<c00a3630>] (futex_wait) from [<c00a5e1c>] (do_futex+0x334/0x598)
+[<c00a5e1c>] (do_futex) from [<c00a62e8>] (sys_futex_time32+0x118/0x180)
+[<c00a62e8>] (sys_futex_time32) from [<c0009000>] (ret_fast_syscall+0x0/0x54)
+Exception stack(0xebd31fa8 to 0xebd31ff0)
+1fa0:                   00000000 ffffffff 000c8748 00000189 00000001 00000000
+1fc0: 00000000 ffffffff 00000000 000000f0 00000000 00000000 00000000 00056200
+1fe0: 000000f0 beac03a8 b6d6c835 b6d6f456
 
-Oliver
+Fixes: eb1ecadb7f67 ("ASoC: hdmi-codec: re-introduce mutex locking")
+Reported-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+ sound/soc/codecs/hdmi-codec.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
+
+diff --git a/sound/soc/codecs/hdmi-codec.c b/sound/soc/codecs/hdmi-codec.c
+index b5fd8f08726e..f8b5b960e597 100644
+--- a/sound/soc/codecs/hdmi-codec.c
++++ b/sound/soc/codecs/hdmi-codec.c
+@@ -274,7 +274,7 @@ struct hdmi_codec_priv {
+ 	uint8_t eld[MAX_ELD_BYTES];
+ 	struct snd_pcm_chmap *chmap_info;
+ 	unsigned int chmap_idx;
+-	struct mutex lock;
++	unsigned long busy;
+ 	struct snd_soc_jack *jack;
+ 	unsigned int jack_status;
+ };
+@@ -390,8 +390,8 @@ static int hdmi_codec_startup(struct snd_pcm_substream *substream,
+ 	struct hdmi_codec_priv *hcp = snd_soc_dai_get_drvdata(dai);
+ 	int ret = 0;
+ 
+-	ret = mutex_trylock(&hcp->lock);
+-	if (!ret) {
++	ret = test_and_set_bit(0, &hcp->busy);
++	if (ret) {
+ 		dev_err(dai->dev, "Only one simultaneous stream supported!\n");
+ 		return -EINVAL;
+ 	}
+@@ -419,7 +419,7 @@ static int hdmi_codec_startup(struct snd_pcm_substream *substream,
+ 
+ err:
+ 	/* Release the exclusive lock on error */
+-	mutex_unlock(&hcp->lock);
++	clear_bit(0, &hcp->busy);
+ 	return ret;
+ }
+ 
+@@ -431,7 +431,7 @@ static void hdmi_codec_shutdown(struct snd_pcm_substream *substream,
+ 	hcp->chmap_idx = HDMI_CODEC_CHMAP_IDX_UNKNOWN;
+ 	hcp->hcd.ops->audio_shutdown(dai->dev->parent, hcp->hcd.data);
+ 
+-	mutex_unlock(&hcp->lock);
++	clear_bit(0, &hcp->busy);
+ }
+ 
+ static int hdmi_codec_hw_params(struct snd_pcm_substream *substream,
+@@ -811,8 +811,6 @@ static int hdmi_codec_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 
+ 	hcp->hcd = *hcd;
+-	mutex_init(&hcp->lock);
+-
+ 	daidrv = devm_kcalloc(dev, dai_count, sizeof(*daidrv), GFP_KERNEL);
+ 	if (!daidrv)
+ 		return -ENOMEM;
+-- 
+2.21.0
+
