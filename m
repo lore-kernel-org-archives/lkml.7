@@ -2,92 +2,79 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD075CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:01:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C97CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:03:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B27FC2064B
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:01:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D1FA2064B
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:03:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404279AbfJWKBp (ORCPT
+        id S2390971AbfJWKDt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 06:01:45 -0400
-Received: from imap1.codethink.co.uk ([176.9.8.82]:52172 "EHLO
-        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390361AbfJWKBn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 06:01:43 -0400
-Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
-        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
-        id 1iNDSW-0001zE-Cl; Wed, 23 Oct 2019 11:01:40 +0100
-Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.3)
-        (envelope-from <ben@rainbowdash.codethink.co.uk>)
-        id 1iNDSV-0002zM-NL; Wed, 23 Oct 2019 11:01:39 +0100
-From:   "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
-To:     linux-kernel@lists.codethink.co.uk
-Cc:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] [V3] net: hwbm: if CONFIG_NET_HWBM unset, make stub functions static
-Date:   Wed, 23 Oct 2019 11:01:39 +0100
-Message-Id: <20191023100139.11434-1-ben.dooks@codethink.co.uk>
-X-Mailer: git-send-email 2.23.0
+        Wed, 23 Oct 2019 06:03:49 -0400
+Received: from mga05.intel.com ([192.55.52.43]:56935 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390897AbfJWKDt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 06:03:49 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 03:03:48 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,220,1569308400"; 
+   d="scan'208";a="223133571"
+Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.170]) ([10.237.72.170])
+  by fmsmga004.fm.intel.com with ESMTP; 23 Oct 2019 03:03:47 -0700
+Subject: Re: [PATCH] usb: xhci: fix Immediate Data Transfer endianness
+To:     Samuel Holland <samuel@sholland.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+References: <20191020015313.4558-1-samuel@sholland.org>
+From:   Mathias Nyman <mathias.nyman@linux.intel.com>
+Message-ID: <f5029323-9b3b-1c66-3c89-c3230d5a24ea@linux.intel.com>
+Date:   Wed, 23 Oct 2019 13:05:54 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191020015313.4558-1-samuel@sholland.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If CONFIG_NET_HWBM is not set, then these stub functions in
-<net/hwbm.h> should be declared static to avoid trying to
-export them from any driver that includes this.
+On 20.10.2019 4.53, Samuel Holland wrote:
+> The arguments to queue_trb are always byteswapped to LE for placement in
+> the ring, but this should not happen in the case of immediate data; the
+> bytes copied out of transfer_buffer are already in the correct order.
+> Add a complementary byteswap so the bytes end up in the ring correctly.
+> 
+> This was observed on BE ppc64 with a "Texas Instruments TUSB73x0
+> SuperSpeed USB 3.0 xHCI Host Controller [104c:8241]" as a ch341
+> usb-serial adapter ("1a86:7523 QinHeng Electronics HL-340 USB-Serial
+> adapter") always transmitting the same character (generally NUL) over
+> the serial link regardless of the key pressed.
+> 
 
-Fixes the following sparse warnings:
+Thanks, nice catch.
 
-./include/net/hwbm.h:24:6: warning: symbol 'hwbm_buf_free' was not declared. Should it be static?
-./include/net/hwbm.h:25:5: warning: symbol 'hwbm_pool_refill' was not declared. Should it be static?
-./include/net/hwbm.h:26:5: warning: symbol 'hwbm_pool_add' was not declared. Should it be static?
+It's unfortunate that we ended up with a situation where this fix is the
+least intrusive one.
+With IDT we would just want to memcpy() bytes an not care about endianness,
+but on BE we end up storing data bytes in a u64, and start with a complementary u64
+byteswap to counter a later u32 byteswap done after splitting the u64 to upper
+and lower 32 bit parts.
 
-Signed-off-by: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
----
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+This because that TRB field is normally used for 64bit data buffer pointers,
+and all code is written to support that
 
-v2:
-- fix inline instead of __maybe_unused
+adding to queue
 
-v3:
-- fix formatting issues
----
- include/net/hwbm.h | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
-
-diff --git a/include/net/hwbm.h b/include/net/hwbm.h
-index 81643cf8a1c4..c81444611a22 100644
---- a/include/net/hwbm.h
-+++ b/include/net/hwbm.h
-@@ -21,9 +21,13 @@ void hwbm_buf_free(struct hwbm_pool *bm_pool, void *buf);
- int hwbm_pool_refill(struct hwbm_pool *bm_pool, gfp_t gfp);
- int hwbm_pool_add(struct hwbm_pool *bm_pool, unsigned int buf_num);
- #else
--void hwbm_buf_free(struct hwbm_pool *bm_pool, void *buf) {}
--int hwbm_pool_refill(struct hwbm_pool *bm_pool, gfp_t gfp) { return 0; }
--int hwbm_pool_add(struct hwbm_pool *bm_pool, unsigned int buf_num)
-+static inline void hwbm_buf_free(struct hwbm_pool *bm_pool, void *buf) {}
-+
-+static inline int hwbm_pool_refill(struct hwbm_pool *bm_pool, gfp_t gfp)
-+{ return 0; }
-+
-+static inline int hwbm_pool_add(struct hwbm_pool *bm_pool,
-+				unsigned int buf_num)
- { return 0; }
- #endif /* CONFIG_HWBM */
- #endif /* _HWBM_H */
--- 
-2.23.0
-
+-Mathias
