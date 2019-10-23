@@ -2,128 +2,115 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78675CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 18:53:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03A78CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 18:54:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5148A2086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 18:53:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C281F21928
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 18:54:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ah5HGVC6"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="GDUVls0n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404187AbfJWSxd (ORCPT
+        id S2404262AbfJWSy5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 14:53:33 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:56261 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2390527AbfJWSxc (ORCPT
+        Wed, 23 Oct 2019 14:54:57 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:43489 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404000AbfJWSy5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 14:53:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571856811;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=ecQ98e61/2Ea388fkZplfUt1Z60f+MBx+DeZm7DbqNw=;
-        b=Ah5HGVC626wlMRKhJyHH2Ncsbngly1vgYVNQnJTuQogBhVnqJf3kZw67CxZ4si+3tHdOzE
-        ZKyjGMf8xVOouU4IA0jhNQ6wtictGOQr3Tygd8aaWSB8TNs1Mw0qeC0+fzhD9Y7yS4lZYv
-        bl8rE2iv4ES0WaXDAyaiWFohM07QKr0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-312-7Lp0hEqHM_2VEfj9KFOBVA-1; Wed, 23 Oct 2019 14:53:27 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9FEE01005500;
-        Wed, 23 Oct 2019 18:53:26 +0000 (UTC)
-Received: from shalem.localdomain.com (ovpn-116-79.ams2.redhat.com [10.36.116.79])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 62CC360C57;
-        Wed, 23 Oct 2019 18:53:25 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Daniel Gorbea Ainz <danielgorbea@hotmail.com>
-Subject: [PATCH resend] Add touchscreen platform data for the Schneider SCT101CTM tablet
-Date:   Wed, 23 Oct 2019 20:53:23 +0200
-Message-Id: <20191023185323.13552-1-hdegoede@redhat.com>
+        Wed, 23 Oct 2019 14:54:57 -0400
+Received: by mail-io1-f65.google.com with SMTP id c11so17173415iom.10
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 11:54:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=12QbW3key6pkPLRePaJeG2+1IWcL9FQrUNpf3RuSKSQ=;
+        b=GDUVls0nbXaYTbmTFZL/RVapwYhF4nk0yOpUXO8xXNki35UwD8vLzY6PEIH775b/eV
+         VNCdP2nsxX8S0Kq9AO5cvrLCvrv6qM5hrppOxC2VWCtuWUDk3Tzlc7FqwI4db6+ifuoK
+         +vWrow2Di4hCVAXJK88uEH0ux41umg45NcID2sXhUHxpGF9d3PKcR/IEcxfv1YZIF34t
+         7u1ujeneJLCnj6GSeuT5nxPZuW5/eJJvvkYXuoON8ADB5dXNHu2LntShneO+66r6YszK
+         wAKsFHgpvpJiRLvTUho0x12PR2Mq4iUFg1Khv0PG7Si9RCFyTYD1/vzOEMRqWYMMbEF9
+         fg/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=12QbW3key6pkPLRePaJeG2+1IWcL9FQrUNpf3RuSKSQ=;
+        b=fKjkvn0gwNUSxtNLAQ+kc5Fv8ISLfdBqMh8b+tABdS6eWDU69kZF1kw++oDfIOkoUo
+         ljRcs4eFWwz3y7MtNFqilvbCCM/MhVi+UAdZWTJfRY9HxSpWdcynfSO6uA3G7+/lu+nV
+         tr+whyFxRZZB0R4IFht1qosWNYav+BV3RoGSciDZtfg0xKDu0M3u8f6wVDBvVn0gh/fp
+         udUgaNsaIyoS/fgeDqbilTmijlYTWGDW9GhXlkxCWsbHfMRFOgRy2eK/gjda+IgBkeO5
+         DkAHTTi+wpv4w6qRWc73iaQ3x3EtH4Lgea7Frdd+KCJ/VBKrb2yC0RpWPtCCTgM9fqGG
+         mrmA==
+X-Gm-Message-State: APjAAAVR6qyVM0GQ35cyzpg3lZVBgyMWHI4L6Oi0W9fwDpu51zbmF1ZR
+        2mVo6xEoS651O86BWDluiRgWnA==
+X-Google-Smtp-Source: APXvYqwAgcDxjS3FQfiMaYQ2W8py38nxP64qtmVkcxcVPl8C/rXsYd/CoOC3NOujys7o6Ep29KpLRQ==
+X-Received: by 2002:a6b:7942:: with SMTP id j2mr5108252iop.161.1571856896420;
+        Wed, 23 Oct 2019 11:54:56 -0700 (PDT)
+Received: from localhost ([64.62.168.194])
+        by smtp.gmail.com with ESMTPSA id b18sm3791776ilo.70.2019.10.23.11.54.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Oct 2019 11:54:55 -0700 (PDT)
+Date:   Wed, 23 Oct 2019 11:54:54 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Alan Mikhak <alan.mikhak@sifive.com>
+cc:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+        tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org,
+        palmer@sifive.com, hch@infradead.org
+Subject: Re: [PATCH] irqchip: Skip contexts other supervisor in plic_init()
+In-Reply-To: <1571847755-20388-1-git-send-email-alan.mikhak@sifive.com>
+Message-ID: <alpine.DEB.2.21.9999.1910231152580.16536@viisi.sifive.com>
+References: <1571847755-20388-1-git-send-email-alan.mikhak@sifive.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: 7Lp0hEqHM_2VEfj9KFOBVA-1
-X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Gorbea Ainz <danielgorbea@hotmail.com>
++ hch
 
-Add touchscreen platform data for the Schneider SCT101CTM tablet
+On Wed, 23 Oct 2019, Alan Mikhak wrote:
 
-Signed-off-by: Daniel Gorbea <danielgorbea@hotmail.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
-hdegoede: Resend from my email address as vger.kernel.org does not like
-Daniel's emails
----
- drivers/platform/x86/touchscreen_dmi.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+> From: Alan Mikhak <alan.mikhak@sifive.com>
+> 
+> Modify plic_init() to skip .dts interrupt contexts other
+> than supervisor external interrupt.
 
-diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/=
-touchscreen_dmi.c
-index 8bfef880e216..ba494ace83d4 100644
---- a/drivers/platform/x86/touchscreen_dmi.c
-+++ b/drivers/platform/x86/touchscreen_dmi.c
-@@ -549,6 +549,24 @@ static const struct ts_dmi_data pov_mobii_wintab_p1006=
-w_v10_data =3D {
- =09.properties=09=3D pov_mobii_wintab_p1006w_v10_props,
- };
-=20
-+static const struct property_entry schneider_sct101ctm_props[] =3D {
-+=09PROPERTY_ENTRY_U32("touchscreen-size-x", 1715),
-+=09PROPERTY_ENTRY_U32("touchscreen-size-y", 1140),
-+=09PROPERTY_ENTRY_BOOL("touchscreen-inverted-x"),
-+=09PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
-+=09PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
-+=09PROPERTY_ENTRY_STRING("firmware-name",
-+=09=09=09      "gsl1680-schneider-sct101ctm.fw"),
-+=09PROPERTY_ENTRY_U32("silead,max-fingers", 10),
-+=09PROPERTY_ENTRY_BOOL("silead,home-button"),
-+=09{ }
-+};
-+
-+static const struct ts_dmi_data schneider_sct101ctm_data =3D {
-+=09.acpi_name=09=3D "MSSL1680:00",
-+=09.properties=09=3D schneider_sct101ctm_props,
-+};
-+
- static const struct property_entry teclast_x3_plus_props[] =3D {
- =09PROPERTY_ENTRY_U32("touchscreen-size-x", 1980),
- =09PROPERTY_ENTRY_U32("touchscreen-size-y", 1500),
-@@ -968,6 +986,14 @@ const struct dmi_system_id touchscreen_dmi_table[] =3D=
- {
- =09=09=09DMI_EXACT_MATCH(DMI_BOARD_NAME, "0E57"),
- =09=09},
- =09},
-+=09{
-+=09=09/* Schneider SCT101CTM */
-+=09=09.driver_data =3D (void *)&schneider_sct101ctm_data,
-+=09=09.matches =3D {
-+=09=09=09DMI_MATCH(DMI_SYS_VENDOR, "Default string"),
-+=09=09=09DMI_MATCH(DMI_PRODUCT_NAME, "SCT101CTM"),
-+=09=09},
-+=09},
- =09{
- =09=09/* Teclast X3 Plus */
- =09=09.driver_data =3D (void *)&teclast_x3_plus_data,
---=20
-2.23.0
+Might be good to explain the motivation here.
+
+> 
+> Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
+> ---
+>  drivers/irqchip/irq-sifive-plic.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
+> index c72c036aea76..5f2a773d5669 100644
+> --- a/drivers/irqchip/irq-sifive-plic.c
+> +++ b/drivers/irqchip/irq-sifive-plic.c
+> @@ -251,8 +251,8 @@ static int __init plic_init(struct device_node *node,
+>  			continue;
+>  		}
+>  
+> -		/* skip context holes */
+> -		if (parent.args[0] == -1)
+> +		/* skip contexts other than supervisor external interrupt */
+> +		if (parent.args[0] != IRQ_S_EXT)
+>  			continue;
+
+Will this need to change for RISC-V M-mode Linux support?  
+
+https://lore.kernel.org/linux-riscv/20191017173743.5430-1-hch@lst.de/
+
+
+- Paul
+
 
