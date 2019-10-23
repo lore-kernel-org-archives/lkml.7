@@ -2,118 +2,189 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9821CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:16:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE1CDCA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:17:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9542421872
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:16:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADEDD21872
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:17:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="glSAeidi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406572AbfJWPQN (ORCPT
+        id S2406580AbfJWPR2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 11:16:13 -0400
-Received: from mga14.intel.com ([192.55.52.115]:48105 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406499AbfJWPQM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 11:16:12 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 08:16:10 -0700
-X-IronPort-AV: E=Sophos;i="5.68,221,1569308400"; 
-   d="scan'208";a="372905884"
-Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 08:16:07 -0700
-Message-ID: <860dda361b6e0b94908d94beb0ad9f5519c8f2cf.camel@linux.intel.com>
-Subject: Re: [PATCH v12 2/6] mm: Use zone and order instead of free area in
- free_list manipulators
-From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
-To:     David Hildenbrand <david@redhat.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        kvm@vger.kernel.org, mst@redhat.com, linux-kernel@vger.kernel.org,
-        willy@infradead.org, mhocko@kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, mgorman@techsingularity.net,
-        vbabka@suse.cz
-Cc:     yang.zhang.wz@gmail.com, nitesh@redhat.com, konrad.wilk@oracle.com,
-        pagupta@redhat.com, riel@surriel.com, lcapitulino@redhat.com,
-        dave.hansen@intel.com, wei.w.wang@intel.com, aarcange@redhat.com,
-        pbonzini@redhat.com, dan.j.williams@intel.com, osalvador@suse.de
-Date:   Wed, 23 Oct 2019 08:16:07 -0700
-In-Reply-To: <c3544859-606d-4e8f-2e48-2d7868e0fa13@redhat.com>
-References: <20191022221223.17338.5860.stgit@localhost.localdomain>
-         <20191022222805.17338.3243.stgit@localhost.localdomain>
-         <c3544859-606d-4e8f-2e48-2d7868e0fa13@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Wed, 23 Oct 2019 11:17:28 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:49354 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390140AbfJWPR2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 11:17:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=RSwZx5vXYUgltg6SGAgq4hYjxU5vyXKL5mMiSRK1G+c=; b=glSAeidi9my/AlJrLdNkbFUKp
+        CHfBM7dYonAuhtzeGlRiirtBYrxg1M/IqUVhyq0nhlSMeQhu85UFv3aAPiHcNG+v4wBBwI5itww7m
+        WMOFic49egghTv8tdW6einsAIORpmqfWBdtg5BxsCrb7ck972Te1g0Uhc5uAfzgSn/QHHGw+6pk4a
+        FJ1Pfqdf5buIekasrF8v8ygA+Kg8Fj/ZYdSZ2I+UnW4s3jPp23VqhhaPDKw1eEinYBp6fO7mzCEzl
+        alvwIcZ6dteZgr5S9qb7Wq2SDF1kHEtimShzcQ495HZHVout1vIemy7tfPzLHY5E3YM940Uo3Raxj
+        WWFa0tnKw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iNINd-0007k2-1F; Wed, 23 Oct 2019 15:16:57 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A0A69300EBF;
+        Wed, 23 Oct 2019 17:15:56 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B11FF2B1D76AD; Wed, 23 Oct 2019 17:16:54 +0200 (CEST)
+Date:   Wed, 23 Oct 2019 17:16:54 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+        mhiramat@kernel.org, bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, jeyu@kernel.org
+Subject: Re: [PATCH v4 15/16] module: Move where we mark modules RO,X
+Message-ID: <20191023151654.GF19358@hirez.programming.kicks-ass.net>
+References: <20191018073525.768931536@infradead.org>
+ <20191018074634.801435443@infradead.org>
+ <20191021135312.jbbxsuipxldocdjk@treble>
+ <20191021141402.GI1817@hirez.programming.kicks-ass.net>
+ <20191023114835.GT1817@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191023114835.GT1817@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-10-23 at 10:26 +0200, David Hildenbrand wrote:
-> On 23.10.19 00:28, Alexander Duyck wrote:
-> > From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+On Wed, Oct 23, 2019 at 01:48:35PM +0200, Peter Zijlstra wrote:
+> On Mon, Oct 21, 2019 at 04:14:02PM +0200, Peter Zijlstra wrote:
+> > On Mon, Oct 21, 2019 at 08:53:12AM -0500, Josh Poimboeuf wrote:
+> 
+> > > Doesn't livepatch code also need to be modified?  We have:
 > > 
-> > In order to enable the use of the zone from the list manipulator functions
-> > I will need access to the zone pointer. As it turns out most of the
-> > accessors were always just being directly passed &zone->free_area[order]
-> > anyway so it would make sense to just fold that into the function itself
-> > and pass the zone and order as arguments instead of the free area.
+> > Urgh bah.. I was too focussed on the other klp borkage :/ But yes,
+> > arm64/ftrace and klp are the only two users of that function (outside of
+> > module.c) and Mark was already writing a patch for arm64.
 > > 
-> > In order to be able to reference the zone we need to move the declaration
-> > of the functions down so that we have the zone defined before we define the
-> > list manipulation functions. Since the functions are only used in the file
-> > mm/page_alloc.c we can just move them there to reduce noise in the header.
-> > 
-> > Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-> > Reviewed-by: David Hildenbrand <david@redhat.com>
-> > Reviewed-by: Pankaj Gupta <pagupta@redhat.com>
-> > Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> > ---
-> >   include/linux/mmzone.h |   32 -----------------------
-> >   mm/page_alloc.c        |   67 +++++++++++++++++++++++++++++++++++-------------
-> >   2 files changed, 49 insertions(+), 50 deletions(-)
+> > Means these last two patches need to wait a little until we've fixed
+> > those.
 > 
-> Did you see
+> So the other KLP issue:
 > 
-> https://lore.kernel.org/lkml/20191001152928.27008.8178.stgit@localhost.localdomain/T/#m4d2bc2f37bd7bdc3ae35c4f197905c275d0ad2f9
+> <mbenes> peterz: ad klp, apply_relocate_add() and text_poke()... what
+>          about apply_alternatives() and apply_paravirt()? They call
+>          text_poke_early(), which was ok with module_disable/enable_ro(), but
+> 	 now it is not, I suppose. See arch_klp_init_object_loaded() in
+>          arch/x86/kernel/livepatch.c.
 > 
-> this time?
+> <peterz> mbenes: hurm, I don't see why we would need to do
+>          apply_alternatives() / apply_paravirt() later, why can't we do that
+> 	 the moment we load the module
 > 
-> And the difference to the old patch is only an empty line.
+> <peterz> mbenes: that is, those things _never_ change after boot
 > 
+> <mbenes> peterz: as jpoimboe explained. See commit
+>          d4c3e6e1b193497da3a2ce495fb1db0243e41e37 for detailed explanation.
+> 
+> Now sadly that commit missed all the useful information, luckily I could
+> find the patch in my LKML folder, more sad, that thread still didn't
+> contain the actual useful information, for that I was directed to
+> github:
+> 
+>   https://github.com/dynup/kpatch/issues/580
+> 
+> Now, someone is owning me a beer for having to look at github for this.
+> 
+> That finally explained that what happens is that the RELA was trying to
+> fix up the paravirt indirect call to 'local_irq_disable', which
+> apply_paravirt() will have overwritten with 'CLI; NOP'. This then
+> obviously goes *bang*.
+> 
+> This then raises a number of questions:
+> 
+>  1) why is that RELA (that obviously does not depend on any module)
+>     applied so late?
+> 
+>  2) why can't we unconditionally skip RELA's to paravirt sites?
+> 
+>  3) Is there ever a possible module-dependent RELA to a paravirt /
+>     alternative site?
+> 
+> 
+> Now, for 1), I would propose '.klp.rela.${mod}' sections only contain
+> RELAs that depend on symbols in ${mod} (or modules in general). We can
+> fix up RELAs that depend on core kernel early without problems. Let them
+> be in the normal .rela sections and be fixed up on loading the
+> patch-module as per usual.
+> 
+> This should also deal with 2, paravirt should always have RELAs into the
+> core kernel.
+> 
+> Then for 3) we only have alternatives left, and I _think_ it unlikely to
+> be the case, but I'll have to have a hard look at that.
+> 
+> Hmmm ?
 
-I saw the report. However I have not had much luck reproducing it in order
-to get root cause. Here are my results for linux-next 20191021 with that
-patch running page_fault2 over an average of 3 runs:
+Something like so on top, I suppose.
 
-Baseline:   3734692.00
-This patch: 3739878.67
+---
 
-Also I am not so sure about these results as the same patch had passed
-previously before and instead it was patch 3 that was reported as having a
--1.2% regression[1]. All I changed in response to that report was to add
-page_is_reported() which just wrapped the bit test for the reported flag
-in a #ifdef to avoid testing it for the blocks that were already #ifdef
-wrapped anyway.
-
-I am still trying to see if I can get access to a system that would be a
-better match for the one that reported the issue. My working theory is
-that maybe it requires a high core count per node to reproduce. Either
-that or it is some combination of the kernel being tested on and the patch
-is causing some loop to go out of alignment and become more expensive.
-
-I also included the page_fault2 results in my cover page as that seems to
-show a slight improvement with all of the patches applied.
-
-Thanks.
-
-- Alex
-
-[1]: https://lore.kernel.org/lkml/20190921152522.GU15734@shao2-debian/
-
+--- a/arch/x86/kernel/module.c
++++ b/arch/x86/kernel/module.c
+@@ -131,7 +131,8 @@ static int __apply_relocate_add(Elf64_Sh
+ 		   unsigned int symindex,
+ 		   unsigned int relsec,
+ 		   struct module *me,
+-		   void *(*write)(void *addr, const void *val, size_t size))
++		   void *(*write)(void *addr, const void *val, size_t size),
++		   bool klp)
+ {
+ 	unsigned int i;
+ 	Elf64_Rela *rel = (void *)sechdrs[relsec].sh_addr;
+@@ -157,6 +158,14 @@ static int __apply_relocate_add(Elf64_Sh
+ 
+ 		val = sym->st_value + rel[i].r_addend;
+ 
++		/*
++		 * .klp.rela.* sections should only contain module
++		 * related RELAs. All core-kernel RELAs should be in
++		 * normal .rela.* sections and be applied when loading
++		 * the patch module itself.
++		 */
++		WARN_ON_ONCE(klp && core_kernel_text(val));
++
+ 		switch (ELF64_R_TYPE(rel[i].r_info)) {
+ 		case R_X86_64_NONE:
+ 			break;
+@@ -223,7 +232,7 @@ int apply_relocate_add(Elf64_Shdr *sechd
+ 		   unsigned int relsec,
+ 		   struct module *me)
+ {
+-	return __apply_relocate_add(sechdrs, strtab, symindex, relsec, me, memcpy);
++	return __apply_relocate_add(sechdrs, strtab, symindex, relsec, me, memcpy, false);
+ }
+ 
+ int klp_apply_relocate_add(Elf64_Shdr *sechdrs,
+@@ -234,7 +243,7 @@ int klp_apply_relocate_add(Elf64_Shdr *s
+ {
+ 	int ret;
+ 
+-	ret = __apply_relocate_add(sechdrs, strtab, symindex, relsec, me, text_poke);
++	ret = __apply_relocate_add(sechdrs, strtab, symindex, relsec, me, text_poke, true);
+ 	if (!ret)
+ 		text_poke_sync();
+ 
