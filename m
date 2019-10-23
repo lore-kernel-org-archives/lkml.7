@@ -2,248 +2,120 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C41CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 00:45:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A65CCCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 00:47:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 334022084B
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 00:45:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72C062084B
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 00:47:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QSFeIgSm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730979AbfJWApJ (ORCPT
+        id S1731593AbfJWArM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 20:45:09 -0400
-Received: from mga03.intel.com ([134.134.136.65]:12314 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727403AbfJWApJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 20:45:09 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Oct 2019 17:45:08 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,218,1569308400"; 
-   d="scan'208";a="209805660"
-Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.145])
-  by fmsmga001.fm.intel.com with ESMTP; 22 Oct 2019 17:45:08 -0700
-Date:   Tue, 22 Oct 2019 17:45:03 -0700
-From:   "Raj, Ashok" <ashok.raj@intel.com>
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc:     iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Eric Auger <eric.auger@redhat.com>,
-        Ashok Raj <ashok.raj@intel.com>
-Subject: Re: [PATCH v6 01/10] iommu/vt-d: Enlightened PASID allocation
-Message-ID: <20191023004503.GB100970@otc-nc-03>
-References: <1571788403-42095-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1571788403-42095-2-git-send-email-jacob.jun.pan@linux.intel.com>
+        Tue, 22 Oct 2019 20:47:12 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:34016 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727403AbfJWArL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 20:47:11 -0400
+Received: by mail-oi1-f196.google.com with SMTP id 83so15911829oii.1;
+        Tue, 22 Oct 2019 17:47:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UodMGGQreKI/Daksnr6iCH8mqoXWy+dXHEHaIgh6+g8=;
+        b=QSFeIgSmIlR5mXSH7G1xUu2l4YnRnwWmQnXyhf8qqf2Vz3r0sHRX+mP0MInhGSJtzR
+         BgA6yLsVpqK2tk+GmBdDxjeiOTck+m4ZpIS6FsGVbKqTO8mS7PsKBxViyzBNicclwjba
+         mxSf8q/BFne5/Ps6plessuvDt2Jy7UAv7JA1gjzCuR6SjEBZvNCNTz7aTVnlU9nD5gWn
+         Kcfwcp5VGqga4zUWA5fFSojxgyZdS5s6Rd8JqXqs2T98ILtzSxKzvpEWaH+lxLJpCmuN
+         7QHzEtr5013FpI+isyUJ2JxDgJ3hBEpW8Ra07fMaSARSWVV3gCCYaNf84nQ9T9bSVUmE
+         8inA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UodMGGQreKI/Daksnr6iCH8mqoXWy+dXHEHaIgh6+g8=;
+        b=XhrMpg0H5sDx02gvR9eazvjMPzwr+vUZHsmbuaN7Cg89cib1CCRUHRI1VcA1P6PIyo
+         9x4m6iRm1jnzdE3uC91UhelL7Vrga7EphXtCRuRWGxjrS2HGg32KkH4C1d0zLsENel2z
+         GFmNIZeX06z7xeLAv811tvSLJh3xVMLTc/sEVZY0fFrVpHRsqZ1/VqNsmTRT3WNbxKvy
+         fBZHFvTSDI4DE7XsWzVuqcA4xSy3stRsoCnC+8d58JXQoXzSMJL2T3+ltKLwGlRs9Zbj
+         7J5Jp26E1pB+upuh81inN8Pl4xfBEnW5BPYd+EBCgaVoyRvP6/AvSYItdBCAa9cgpVkl
+         H2vw==
+X-Gm-Message-State: APjAAAVbq5EmJT2jl+t92EFRHlrsB1GZlece/VS/9L32LxCWNkIQZY4e
+        MGlw/rAQUNF1ruTXVembBsY=
+X-Google-Smtp-Source: APXvYqwCcFA9Hg4v3KhshDhEGYGK3yOoFmAln5ZVzk92y1MjmmXnOWsgPGDMXC+/X0JX5jCjspu+1g==
+X-Received: by 2002:aca:d508:: with SMTP id m8mr5161231oig.144.1571791629071;
+        Tue, 22 Oct 2019 17:47:09 -0700 (PDT)
+Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id j3sm5274476oih.52.2019.10.22.17.47.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Oct 2019 17:47:08 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Ping-Ke Shih <pkshih@realtek.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Cc:     Larry Finger <Larry.Finger@lwfinger.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH] rtlwifi: Remove unnecessary NULL check in rtl_regd_init
+Date:   Tue, 22 Oct 2019 17:47:03 -0700
+Message-Id: <20191023004703.39710-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1571788403-42095-2-git-send-email-jacob.jun.pan@linux.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 04:53:14PM -0700, Jacob Pan wrote:
-> From: Lu Baolu <baolu.lu@linux.intel.com>
-> 
-> If Intel IOMMU runs in caching mode, a.k.a. virtual IOMMU, the
-> IOMMU driver should rely on the emulation software to allocate
-> and free PASID IDs. The Intel vt-d spec revision 3.0 defines a
-> register set to support this. This includes a capability register,
-> a virtual command register and a virtual response register. Refer
-> to section 10.4.42, 10.4.43, 10.4.44 for more information.
+When building with Clang + -Wtautological-pointer-compare:
 
-The above paragraph seems a bit confusing, there is no reference
-to caching mode for for VCMD... some suggestion below.
+drivers/net/wireless/realtek/rtlwifi/regd.c:389:33: warning: comparison
+of address of 'rtlpriv->regd' equal to a null pointer is always false
+[-Wtautological-pointer-compare]
+        if (wiphy == NULL || &rtlpriv->regd == NULL)
+                              ~~~~~~~~~^~~~    ~~~~
+1 warning generated.
 
-Enabling IOMMU in a guest requires communication with the host
-driver for certain aspects. Use of PASID ID to enable Shared Virtual
-Addressing (SVA) requires managing PASID's in the host. VT-d 3.0 spec
-provides a Virtual Command Register (VCMD) to facilitate this.
-Writes to this register in the guest are trapped by Qemu and 
-proxies the call to the host driver.... 
+The address of an array member is never NULL unless it is the first
+struct member so remove the unnecessary check. This was addressed in
+the staging version of the driver in commit f986978b32b3 ("Staging:
+rtlwifi: remove unnecessary NULL check").
 
+While we are here, fix the following checkpatch warning:
 
-> 
-> This patch adds the enlightened PASID allocation/free interfaces
-> via the virtual command register.
-> 
-> Cc: Ashok Raj <ashok.raj@intel.com>
-> Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> Cc: Kevin Tian <kevin.tian@intel.com>
-> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> Reviewed-by: Eric Auger <eric.auger@redhat.com>
-> ---
->  drivers/iommu/intel-pasid.c | 83 +++++++++++++++++++++++++++++++++++++++++++++
->  drivers/iommu/intel-pasid.h | 13 ++++++-
->  include/linux/intel-iommu.h |  2 ++
->  3 files changed, 97 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iommu/intel-pasid.c b/drivers/iommu/intel-pasid.c
-> index 040a445be300..76bcbb21e112 100644
-> --- a/drivers/iommu/intel-pasid.c
-> +++ b/drivers/iommu/intel-pasid.c
-> @@ -63,6 +63,89 @@ void *intel_pasid_lookup_id(int pasid)
->  	return p;
->  }
->  
-> +static int check_vcmd_pasid(struct intel_iommu *iommu)
-> +{
-> +	u64 cap;
-> +
-> +	if (!ecap_vcs(iommu->ecap)) {
-> +		pr_warn("IOMMU: %s: Hardware doesn't support virtual command\n",
-> +			iommu->name);
-> +		return -ENODEV;
-> +	}
-> +
-> +	cap = dmar_readq(iommu->reg + DMAR_VCCAP_REG);
-> +	if (!(cap & DMA_VCS_PAS)) {
-> +		pr_warn("IOMMU: %s: Emulation software doesn't support PASID allocation\n",
-> +			iommu->name);
-> +		return -ENODEV;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +int vcmd_alloc_pasid(struct intel_iommu *iommu, unsigned int *pasid)
-> +{
-> +	u64 res;
-> +	u8 status_code;
-> +	unsigned long flags;
-> +	int ret = 0;
-> +
-> +	ret = check_vcmd_pasid(iommu);
+CHECK: Comparison to NULL could be written "!wiphy"
+35: FILE: drivers/net/wireless/realtek/rtlwifi/regd.c:389:
++       if (wiphy == NULL)
 
-Do you have to check this everytime? every dmar_readq is going to trap
-to the other side ...
+Fixes: 0c8173385e54 ("rtl8192ce: Add new driver")
+Link:https://github.com/ClangBuiltLinux/linux/issues/750
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+ drivers/net/wireless/realtek/rtlwifi/regd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> +	if (ret)
-> +		return ret;
-> +
-> +	raw_spin_lock_irqsave(&iommu->register_lock, flags);
-> +	dmar_writeq(iommu->reg + DMAR_VCMD_REG, VCMD_CMD_ALLOC);
-> +	IOMMU_WAIT_OP(iommu, DMAR_VCRSP_REG, dmar_readq,
-> +		      !(res & VCMD_VRSP_IP), res);
-> +	raw_spin_unlock_irqrestore(&iommu->register_lock, flags);
-> +
-> +	status_code = VCMD_VRSP_SC(res);
-> +	switch (status_code) {
-> +	case VCMD_VRSP_SC_SUCCESS:
-> +		*pasid = VCMD_VRSP_RESULT(res);
-> +		break;
-> +	case VCMD_VRSP_SC_NO_PASID_AVAIL:
-> +		pr_info("IOMMU: %s: No PASID available\n", iommu->name);
-> +		ret = -ENOMEM;
-> +		break;
-> +	default:
-> +		ret = -ENODEV;
-> +		pr_warn("IOMMU: %s: Unexpected error code %d\n",
-> +			iommu->name, status_code);
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +void vcmd_free_pasid(struct intel_iommu *iommu, unsigned int pasid)
-> +{
-> +	u64 res;
-> +	u8 status_code;
-> +	unsigned long flags;
-> +
-> +	if (check_vcmd_pasid(iommu))
-> +		return;
-> +
-> +	raw_spin_lock_irqsave(&iommu->register_lock, flags);
-> +	dmar_writeq(iommu->reg + DMAR_VCMD_REG, (pasid << 8) | VCMD_CMD_FREE);
-> +	IOMMU_WAIT_OP(iommu, DMAR_VCRSP_REG, dmar_readq,
-> +		      !(res & VCMD_VRSP_IP), res);
-> +	raw_spin_unlock_irqrestore(&iommu->register_lock, flags);
-> +
-> +	status_code = VCMD_VRSP_SC(res);
-> +	switch (status_code) {
-> +	case VCMD_VRSP_SC_SUCCESS:
-> +		break;
-> +	case VCMD_VRSP_SC_INVALID_PASID:
-> +		pr_info("IOMMU: %s: Invalid PASID\n", iommu->name);
-> +		break;
-> +	default:
-> +		pr_warn("IOMMU: %s: Unexpected error code %d\n",
-> +			iommu->name, status_code);
-> +	}
-> +}
-> +
->  /*
->   * Per device pasid table management:
->   */
-> diff --git a/drivers/iommu/intel-pasid.h b/drivers/iommu/intel-pasid.h
-> index fc8cd8f17de1..e413e884e685 100644
-> --- a/drivers/iommu/intel-pasid.h
-> +++ b/drivers/iommu/intel-pasid.h
-> @@ -23,6 +23,16 @@
->  #define is_pasid_enabled(entry)		(((entry)->lo >> 3) & 0x1)
->  #define get_pasid_dir_size(entry)	(1 << ((((entry)->lo >> 9) & 0x7) + 7))
->  
-> +/* Virtual command interface for enlightened pasid management. */
-> +#define VCMD_CMD_ALLOC			0x1
-> +#define VCMD_CMD_FREE			0x2
-> +#define VCMD_VRSP_IP			0x1
-> +#define VCMD_VRSP_SC(e)			(((e) >> 1) & 0x3)
-> +#define VCMD_VRSP_SC_SUCCESS		0
-> +#define VCMD_VRSP_SC_NO_PASID_AVAIL	1
-> +#define VCMD_VRSP_SC_INVALID_PASID	1
-> +#define VCMD_VRSP_RESULT(e)		(((e) >> 8) & 0xfffff)
-> +
->  /*
->   * Domain ID reserved for pasid entries programmed for first-level
->   * only and pass-through transfer modes.
-> @@ -95,5 +105,6 @@ int intel_pasid_setup_pass_through(struct intel_iommu *iommu,
->  				   struct device *dev, int pasid);
->  void intel_pasid_tear_down_entry(struct intel_iommu *iommu,
->  				 struct device *dev, int pasid);
-> -
-> +int vcmd_alloc_pasid(struct intel_iommu *iommu, unsigned int *pasid);
-> +void vcmd_free_pasid(struct intel_iommu *iommu, unsigned int pasid);
->  #endif /* __INTEL_PASID_H */
-> diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
-> index ed11ef594378..eea7468694a7 100644
-> --- a/include/linux/intel-iommu.h
-> +++ b/include/linux/intel-iommu.h
-> @@ -161,6 +161,7 @@
->  #define ecap_smpwc(e)		(((e) >> 48) & 0x1)
->  #define ecap_flts(e)		(((e) >> 47) & 0x1)
->  #define ecap_slts(e)		(((e) >> 46) & 0x1)
-> +#define ecap_vcs(e)		(((e) >> 44) & 0x1)
->  #define ecap_smts(e)		(((e) >> 43) & 0x1)
->  #define ecap_dit(e)		((e >> 41) & 0x1)
->  #define ecap_pasid(e)		((e >> 40) & 0x1)
-> @@ -279,6 +280,7 @@
->  
->  /* PRS_REG */
->  #define DMA_PRS_PPR	((u32)1)
-> +#define DMA_VCS_PAS	((u64)1)
->  
->  #define IOMMU_WAIT_OP(iommu, offset, op, cond, sts)			\
->  do {									\
-> -- 
-> 2.7.4
-> 
+diff --git a/drivers/net/wireless/realtek/rtlwifi/regd.c b/drivers/net/wireless/realtek/rtlwifi/regd.c
+index c10432cd703e..8be31e0ad878 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/regd.c
++++ b/drivers/net/wireless/realtek/rtlwifi/regd.c
+@@ -386,7 +386,7 @@ int rtl_regd_init(struct ieee80211_hw *hw,
+ 	struct wiphy *wiphy = hw->wiphy;
+ 	struct country_code_to_enum_rd *country = NULL;
+ 
+-	if (wiphy == NULL || &rtlpriv->regd == NULL)
++	if (!wiphy)
+ 		return -EINVAL;
+ 
+ 	/* init country_code from efuse channel plan */
+-- 
+2.23.0
+
