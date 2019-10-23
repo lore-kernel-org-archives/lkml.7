@@ -2,89 +2,92 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E98F7CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:35:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 838AACA9EB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:35:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2DC921906
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:35:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="j6z1WeOb"
+	by mail.kernel.org (Postfix) with ESMTP id 5E98121A4C
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:35:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571852129;
+	bh=nU+t6hJBerEGHVpX83l9jQCd8/P6S+syZ7EgEoM54YM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=krDsPJ1WBM5uuB6tsiq+kDhoYQkJix9TcgpKQy+akfueZfCcn2gMz13VI8cAgXsr5
+	 f6iTRZg3l8FI+qoo+HP1R4wkf3Ols+DD/jSGNWa0oDGb7mVegEFOtWSOgjV7nlDkAg
+	 UPBOFmqYm0zYMA93LpuCbEluWG0Gno/MMa8aglQk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730519AbfJWRfA (ORCPT
+        id S1730759AbfJWRf2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 13:35:00 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:39150 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730302AbfJWRfA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 13:35:00 -0400
-Received: from [10.137.112.108] (unknown [131.107.174.108])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 77F5220106BE;
-        Wed, 23 Oct 2019 10:34:59 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 77F5220106BE
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1571852099;
-        bh=vqQGCbajvg6tqXYaZDPRkvd/epy9EBlB+JVvTXS6jQA=;
-        h=Subject:To:References:From:Date:In-Reply-To:From;
-        b=j6z1WeObOALb27C7iDRzG4wPZqcwVGNUh1P4LtXHp+HGbkTypLgpORQIJ23yZaCQJ
-         J7iqhkI5q75gg/uB+y/fKJBye0NhlgHGemY+oZRf0sL2UZSejk617HCbed5imFn7zr
-         95TU5QubcPetP850MWP2G5mo2BOsafnXV2fwsF6A=
-Subject: Re: [PATCH v1 5/6] KEYS: measure queued keys
-To:     Mimi Zohar <zohar@linux.ibm.com>, dhowells@redhat.com,
-        casey@schaufler-ca.com, sashal@kernel.org,
-        jamorris@linux.microsoft.com,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        keyrings@vger.kernel.org
-References: <20191023001818.3684-1-nramas@linux.microsoft.com>
- <20191023001818.3684-6-nramas@linux.microsoft.com>
- <1571836990.5104.96.camel@linux.ibm.com>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <89d778d1-1ac9-4a58-b159-7db68b7fa4ad@linux.microsoft.com>
-Date:   Wed, 23 Oct 2019 10:34:59 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 23 Oct 2019 13:35:28 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46004 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730453AbfJWRf1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 13:35:27 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 8E590AD29;
+        Wed, 23 Oct 2019 17:35:25 +0000 (UTC)
+Date:   Wed, 23 Oct 2019 19:35:24 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Mike Christie <mchristi@redhat.com>
+Cc:     Dave Chinner <david@fromorbit.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
+        martin@urbackup.org, Damien.LeMoal@wdc.com
+Subject: Re: [PATCH] Add prctl support for controlling PF_MEMALLOC V2
+Message-ID: <20191023173524.GM17610@dhcp22.suse.cz>
+References: <20191021214137.8172-1-mchristi@redhat.com>
+ <20191022112446.GA8213@dhcp22.suse.cz>
+ <5DAF2AA0.5030500@redhat.com>
+ <20191022163310.GS9379@dhcp22.suse.cz>
+ <20191022204344.GB2044@dread.disaster.area>
+ <20191023071146.GE754@dhcp22.suse.cz>
+ <5DB08D81.8050300@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <1571836990.5104.96.camel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5DB08D81.8050300@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/23/19 6:23 AM, Mimi Zohar wrote:
+On Wed 23-10-19 12:27:29, Mike Christie wrote:
+> On 10/23/2019 02:11 AM, Michal Hocko wrote:
+> > On Wed 23-10-19 07:43:44, Dave Chinner wrote:
+> >> On Tue, Oct 22, 2019 at 06:33:10PM +0200, Michal Hocko wrote:
+> > 
+> > Thanks for more clarifiation regarding PF_LESS_THROTTLE.
+> > 
+> > [...]
+> >>> PF_IO_FLUSHER would mean that the user
+> >>> context is a part of the IO path and therefore there are certain reclaim
+> >>> recursion restrictions.
+> >>
+> >> If PF_IO_FLUSHER just maps to PF_LESS_THROTTLE|PF_MEMALLOC_NOIO,
+> >> then I'm not sure we need a new definition. Maybe that's the ptrace
+> >> flag name, but in the kernel we don't need a PF_IO_FLUSHER process
+> >> flag...
+> > 
+> > Yes, the internal implementation would do something like that. I was
+> > more interested in the user space visible API at this stage. Something
+> > generic enough because exporting MEMALLOC flags is just a bad idea IMHO
+> > (especially PF_MEMALLOC).
+> 
+> Do you mean we would do something like:
+> 
+> prctl()
+> ....
+> case PF_SET_IO_FLUSHER:
+>         current->flags |= PF_MEMALLOC_NOIO;
+> ....
 
-> The ordering of this patch set is awkward.  It should first introduce
-> a generic method for measuring keys based on the keyring.  Then add
-> the additional support needed for the specific builtin_trusted_keys
-> keyring usecase.
+yes, along with PF_LESS_THROTTLE.
 
-Would the following ordering of the patch set be acceptable:
-
-  => PATCH 0/5: Cover letter
-
-  => PATCH 1/5: Define the enum "hook(BUILTIN_TRUSTED_KEYS)" in ima.h
-
-  => PATCH 2/5: Define ima hook
-                This will initially do nothing if ima is not yet
-                initialized.
-                Call process_buffer_measurement() if ima is initialized.
-
-  => PATCH 3/5: key_create_or_update change and the call to ima hook
-
-  => PATCH 4/5: Queue\De-Queue of key measurement requests.
-                Enable queuing of key in the ima hook if ima is not
-                initialized.
-
-  => PATCH 5/5: ima policy to enable measurement of keys which will
-                enable end-to-end working of this feature.
-
-thanks,
-  -lakshmi
+-- 
+Michal Hocko
+SUSE Labs
