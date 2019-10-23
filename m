@@ -2,96 +2,92 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 841A6CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 02:33:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 943A6CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 02:36:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ABB720679
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 02:33:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fF/IEJZd"
+	by mail.kernel.org (Postfix) with ESMTP id 6F898214B2
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 02:36:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388904AbfJWCd1 (ORCPT
+        id S2389016AbfJWCgu convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 22:33:27 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:40476 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730655AbfJWCd0 (ORCPT
+        Tue, 22 Oct 2019 22:36:50 -0400
+Received: from tyo161.gate.nec.co.jp ([114.179.232.161]:49935 "EHLO
+        tyo161.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730655AbfJWCgt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 22:33:26 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9N2UAwP034399;
-        Wed, 23 Oct 2019 02:33:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2019-08-05;
- bh=50FkkD1tlc6Jl7z36oTDHqnFkTLU8MePNrzE19IPc58=;
- b=fF/IEJZdMLzsAYX/D6yszrQFdg8iP/K3yCHjgGmMaiQU6Nbecf3puXT+VdMgOnYFJc8V
- s7wZsqmEfnZ90csriBNe2he6qxpKmU2jICRZGcbn8Aaqn4IFl7ynsM7GBKrxrkDvhTkC
- zq5OQ3AzosuZowMxjELFIvomdfvWRFPJuESQ3r5VAT3j3I05mOPkkxLDs8QXEnE/vsdd
- 06xjRW/FgkYBonWXc7/2lXHzHbgNMsNZfWuqy1pJog17C1Cd8/7aAbOoF7IxheegGl0c
- pBlyQA5h8keHPCsHAKEe678YDO2cz12ELup9z42XTvamr4tyM89ptoBZJqw2pErRBYMr Mg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2vqteptba7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 23 Oct 2019 02:33:21 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9N2X7OP108206;
-        Wed, 23 Oct 2019 02:33:21 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2vsp40ym4r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 23 Oct 2019 02:33:20 +0000
-Received: from abhmp0021.oracle.com (abhmp0021.oracle.com [141.146.116.27])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9N2XJmk026762;
-        Wed, 23 Oct 2019 02:33:19 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 23 Oct 2019 02:33:18 +0000
-To:     Daniel Wagner <dwagner@suse.de>
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        James Smart <james.smart@broadcom.com>
-Subject: Re: [PATCH v2] scsi: lpfc: Honor module parameter lpfc_use_adisc
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20191022072112.132268-1-dwagner@suse.de>
-Date:   Tue, 22 Oct 2019 22:33:16 -0400
-In-Reply-To: <20191022072112.132268-1-dwagner@suse.de> (Daniel Wagner's
-        message of "Tue, 22 Oct 2019 09:21:12 +0200")
-Message-ID: <yq1a79sdwcz.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Tue, 22 Oct 2019 22:36:49 -0400
+Received: from mailgate02.nec.co.jp ([114.179.233.122])
+        by tyo161.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x9N2aRKv011049
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Wed, 23 Oct 2019 11:36:27 +0900
+Received: from mailsv02.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
+        by mailgate02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x9N2aRfM032034;
+        Wed, 23 Oct 2019 11:36:27 +0900
+Received: from mail03.kamome.nec.co.jp (mail03.kamome.nec.co.jp [10.25.43.7])
+        by mailsv02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x9N2XWcx006253;
+        Wed, 23 Oct 2019 11:36:27 +0900
+Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.147] [10.38.151.147]) by mail01b.kamome.nec.co.jp with ESMTP id BT-MMP-9712104; Wed, 23 Oct 2019 11:15:10 +0900
+Received: from BPXM23GP.gisp.nec.co.jp ([10.38.151.215]) by
+ BPXC19GP.gisp.nec.co.jp ([10.38.151.147]) with mapi id 14.03.0439.000; Wed,
+ 23 Oct 2019 11:15:09 +0900
+From:   Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+To:     Oscar Salvador <osalvador@suse.de>
+CC:     Michal Hocko <mhocko@kernel.org>,
+        "mike.kravetz@oracle.com" <mike.kravetz@oracle.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH v2 10/16] mm,hwpoison: Rework soft offline for free
+ pages
+Thread-Topic: [RFC PATCH v2 10/16] mm,hwpoison: Rework soft offline for free
+ pages
+Thread-Index: AQHVhPYxuKrdanK4Pk2pyFsBlimO86dfuBWAgATFroCAAC2WAIABDXAAgAALI4CAAAKLgIAADVAAgAAKCgCAAAdKgIAAAl2AgAEHHQA=
+Date:   Wed, 23 Oct 2019 02:15:08 +0000
+Message-ID: <20191023021508.GA29387@hori.linux.bs1.fc.nec.co.jp>
+References: <20191018120615.GM5017@dhcp22.suse.cz>
+ <20191021125842.GA11330@linux> <20191021154158.GV9379@dhcp22.suse.cz>
+ <20191022074615.GA19060@linux> <20191022082611.GD9379@dhcp22.suse.cz>
+ <20191022083505.GA19708@linux> <20191022092256.GH9379@dhcp22.suse.cz>
+ <20191022095852.GB20429@linux> <20191022102457.GJ9379@dhcp22.suse.cz>
+ <20191022103319.GA21736@linux>
+In-Reply-To: <20191022103319.GA21736@linux>
+Accept-Language: en-US, ja-JP
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.34.125.96]
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-ID: <E800C125A5CD5A43AD8AFB60C05422A0@gisp.nec.co.jp>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9418 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=925
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910230024
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9418 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910230023
+X-TM-AS-MML: disable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Oct 22, 2019 at 12:33:25PM +0200, Oscar Salvador wrote:
+> On Tue, Oct 22, 2019 at 12:24:57PM +0200, Michal Hocko wrote:
+> > Yes, that makes a perfect sense. What I am saying that the migration
+> > (aka trying to recover) is the main and only difference. The soft
+> > offline should poison page tables when not able to migrate as well
+> > IIUC.
+> 
+> Yeah, I see your point.
+> I do not really why soft-offline strived so much to left the page
+> untouched unless it was able to content the problem.
+> 
+> Note that if we start now to poison pages even if we could not 
+> content them (in soft-offline mode), that is a big and visible user
+> change.
 
-Hi Daniel,
+It's declared that soft offline never disrupts userspace by design,
+so if poisoning page tables in migration failure, we could break this
+and send SIGBUSs.  Then end users would complain that their processes
+are killed by corrected (so non-urgent) errors.
 
-> The initial lpfc_desc_set_adisc implementation dea3101e0a5c ("lpfc:
-> add Emulex FC driver version 8.0.28") enabled ADISC if
-
-Fixed up Hannes' email typo and applied to 5.4/scsi-fixes.
-
-Also, please run checkpatch next time. Thanks!
-
--- 
-Martin K. Petersen	Oracle Linux Engineering
+Thanks,
+Naoya Horiguchi
