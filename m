@@ -2,106 +2,135 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A8CBCA9EB7
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:34:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94DE6CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:38:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AC4021A4A
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:34:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65B7721D7B
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:38:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IAXJcfjg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390928AbfJWJex (ORCPT
+        id S2403898AbfJWJiG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 05:34:53 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:40475 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390165AbfJWJew (ORCPT
+        Wed, 23 Oct 2019 05:38:06 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:48880 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390165AbfJWJiF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 05:34:52 -0400
-Received: by mail-lj1-f196.google.com with SMTP id u22so2314665lji.7;
-        Wed, 23 Oct 2019 02:34:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=sEQ9zSFknQ5RX9v6VO5JzIVVMvyimeBxeFDrpRcw3v8=;
-        b=cwqPZr2DhJ7AkUuJAY/hQmSKlmwtTlt46sMIsXOROzfhDNbGAp/daW6uauhwpAl2li
-         WcItL+9qnoyPyVk/KjjpG0atLm0ahX/UQZuskwuVS5CIY1lnozLPcK2rLegyMfBB57LO
-         vyNQhJATJoSKAKOxVl71hh6w5FapBzCxn9TzR64hLswaETrpj3FK38BekP86suXPeV5z
-         WWuG041Prb9Hp++f4lFuOgfbhe3pu7PcsD9c+7xpYFxtc/4sREHu4FA2dA1trwjwOagV
-         xLS3Ng+Om6GXPTGKizBYAAoGC/04jJPfqGTUnaQmWRQb0nnEbwJ5Cj5GnSRLg+8W+W1p
-         ZOKA==
-X-Gm-Message-State: APjAAAWhgbtECfWT5ddFNQTIGLC97cf3X132w7zY2j1BPaY5RwSlgVg9
-        T+8I9F8sz32pDcrPM0oWjmo=
-X-Google-Smtp-Source: APXvYqzOztLkcfZE4lM2Jhw5qA4q5TDB61647ftMC4bUulC9/P9LlKwlAqZtIgZqea7TnsB2Nf3w3w==
-X-Received: by 2002:a2e:9691:: with SMTP id q17mr5831618lji.223.1571823290485;
-        Wed, 23 Oct 2019 02:34:50 -0700 (PDT)
-Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id g3sm10040533lja.61.2019.10.23.02.34.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Oct 2019 02:34:49 -0700 (PDT)
-Date:   Wed, 23 Oct 2019 12:34:37 +0300
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     Chanwoo Choi <cw00.choi@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH RESEND 2] dt-bindings: max77693: fix missing curly brace
-Message-ID: <20191023093437.GA30570@localhost.localdomain>
+        Wed, 23 Oct 2019 05:38:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=08h2Fac4binfde4ottD+HQZVrVOQxbpKLsAB927oEJs=; b=IAXJcfjgK/GUlvRiGaRoOru2V
+        Glp2+FLESPHbp6mucnf59vda8jyHelKbFehC5EQYpU27itgefobVbQrlQxeuf4EJVDbgDuXs6j0/f
+        08cWrdLvUP+DcTFL/lsvdrnwpOiqKOA7M8y1Zcx6XZr78RZVxECvOzIQASWb1xoMflPaWAMs7BNn2
+        BzfkayP70VSySTwFe0P0tczGubWh6ODHWxHx1V2iRFSmTqj+DaZF4x3ffvQTIwDFnewCXBfgi+2hY
+        mIqpNiNNOTXQx6Qi1NwgyjbV1TN+Y5AW64+RRebJSIuB0HLqYNfcnAT4+4sKI5tUSKFkza5FToqVa
+        BAaavjnWQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iND5b-00088E-9O; Wed, 23 Oct 2019 09:37:59 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7448D300EBF;
+        Wed, 23 Oct 2019 11:36:59 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 36F492B1C6361; Wed, 23 Oct 2019 11:37:57 +0200 (CEST)
+Date:   Wed, 23 Oct 2019 11:37:57 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Stephane Eranian <eranian@google.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, mingo@elte.hu,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        "Liang, Kan" <kan.liang@intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Ian Rogers <irogers@google.com>
+Subject: Re: [PATCH] perf/core: fix multiplexing event scheduling issue
+Message-ID: <20191023093757.GR1817@hirez.programming.kicks-ass.net>
+References: <20191018002746.149200-1-eranian@google.com>
+ <20191021100558.GC1800@hirez.programming.kicks-ass.net>
+ <CABPqkBRgBegcdNHtXUqkdfJUASjuUYnSkh_cNeqfoO4wF7tnFQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <CABPqkBRgBegcdNHtXUqkdfJUASjuUYnSkh_cNeqfoO4wF7tnFQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add missing curly brace to charger node example.
+On Wed, Oct 23, 2019 at 12:06:43AM -0700, Stephane Eranian wrote:
+> On Mon, Oct 21, 2019 at 3:06 AM Peter Zijlstra <peterz@infradead.org> wrote:
+> > On Thu, Oct 17, 2019 at 05:27:46PM -0700, Stephane Eranian wrote:
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
----
+> > > +      * others removed. There is a way to get removed and not be disabled first.
+> > > +      */
+> > > +     if (ctx->rotate_necessary && ctx->nr_events) {
+> > > +             int type = get_event_type(event);
+> > > +             /*
+> > > +              * In case we removed a pinned event, then we need to
+> > > +              * resched for both pinned and flexible events. The
+> > > +              * opposite is not true. A pinned event can never be
+> > > +              * inactive due to multiplexing.
+> > > +              */
+> > > +             if (type & EVENT_PINNED)
+> > > +                     type |= EVENT_FLEXIBLE;
+> > > +             ctx_resched(cpuctx, cpuctx->task_ctx, type);
+> > > +     }
+> >
+> > What you're relying on is that ->rotate_necessary implies ->is_active
+> > and there's pending events. And if we tighten ->rotate_necessary you can
+> > remove the && ->nr_events.
+> >
+> Imagine I have 6 events and 4 counters and I do delete them all before
+> the timer expires.  Then, I can be in a situation where
+> rotate_necessary is still true and yet have no more events in the
+> context. That is because only ctx_sched_out() clears rotate_necessary,
+> IIRC. So that is why there is the && nr_events. Now, calling
+> ctx_resched() with no events wouldn't probably cause any harm, just
+> wasted work.
 
-Resending once more.  Sorry again guys. This time I added also the DT folks
-and used correct email for Bartlomiej.
+> So if by tightening, I am guessing you mean clearing rotate_necessary
+> earlier. But that would be tricky because the only reliable way of
+> clearing it is when you know you are about the reschedule everything.
+> Removing an event by itself may not be enough to eliminate
+> multiplexing.
 
- Documentation/devicetree/bindings/mfd/max77693.txt | 1 +
- 1 file changed, 1 insertion(+)
+I think you're over-thinking things. The thing you test 'ctx->nr_events'
+has a clear place where it drops to 0.
 
-diff --git a/Documentation/devicetree/bindings/mfd/max77693.txt b/Documentation/devicetree/bindings/mfd/max77693.txt
-index a3c60a7a3be1..0ced96e16c16 100644
---- a/Documentation/devicetree/bindings/mfd/max77693.txt
-+++ b/Documentation/devicetree/bindings/mfd/max77693.txt
-@@ -175,6 +175,7 @@ Example:
- 			maxim,thermal-regulation-celsius = <75>;
- 			maxim,battery-overcurrent-microamp = <3000000>;
- 			maxim,charge-input-threshold-microvolt = <4300000>;
-+		};
- 
- 		led {
- 			compatible = "maxim,max77693-led";
--- 
-2.21.0
+If we add
 
+	ctx->nr_events--;
++	if (!ctx->nr_events && ctx->rotate_necessary)
++		ctx->rotate_necessary = 0;
 
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
+to list_del_event(), we can get rid of that.
 
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
+Further, since we set it on reschedule, I propose you change the above
+like:
+
+	if (ctx->rotate_necessary) {
+		int type = get_event_type(event);
+		/*
+		 * comment..
+		 */
+		if (type & EVENT_PINNED)
+			type |= EVENT_FLEXIBLE;
++		/*
++		 * Will be reset by ctx_resched()'s flexible_sched_in().
++		 */
++		ctx->rotate_necessary = 0;
+		ctx_resched(cpuctx, cpuctx->task_ctx, type);
+	}
+
+Then rotate_necessary will be tight.
