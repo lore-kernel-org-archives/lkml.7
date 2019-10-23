@@ -2,133 +2,74 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B984CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:12:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 572CECA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:12:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F4A22086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:12:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571839951;
-	bh=aVuB+kbcyfFS5VKfJ8DdDA8G+/LuM70QRxmO3sxZC4g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DrFA+LEWantowRoo8aBY2qdlqgvAB8jGJW9dy/kAPaRRJhJSIPgHDW2dzkU2LM5wM
-	 H6JDPLGd79OMTZA4gbGzqPZJyPupiCL09bAU68mc5amdCeX6rkz9Mn5xBFxNvI/zKh
-	 4FNsd697iE7g9qOxZATWxQsR+y63gx1wkm16VbYg=
+	by mail.kernel.org (Postfix) with ESMTP id 36C142086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:12:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406162AbfJWOMa (ORCPT
+        id S2406312AbfJWOMc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 10:12:30 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:44482 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405316AbfJWOM3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 10:12:29 -0400
-Received: by mail-ed1-f66.google.com with SMTP id r16so15850605edq.11;
-        Wed, 23 Oct 2019 07:12:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rcTMyT1DxjA7fFrS2w24JzXu+0SnoZwJUx+ToqxoQbY=;
-        b=FnUPTeClwtKNqLjQPMFpQm0p4bhUkbflqUYO7UEG+hyFyZVhjZiTsf4NoFA9XYyTe+
-         V/dhZuVxT3Og3mA0VGA6bPYauFduz338RgypJymPhfRg51npRHOlTYhy+YNyDVFa71CQ
-         pDXm3uKCqadjRMENRqPDgHPQbW0WnDZ8HxH+OSIvm669GTsR1Py5j/6hN8iftKbNYuQj
-         Cdn3tnGQqeWvA6whCrU2M3gSRLIWrkkfFeNtMOXiKvzwQZKZhIuXzpCaVXfxsKLS8y3h
-         ewjtgPv+7Qn9QzeZrh97+/bVEZ/VUGo75ZCNX68eHbcP8LS7UhxRs/H/LCm53dl331Ai
-         uqCg==
-X-Gm-Message-State: APjAAAXsFKwQJnoIOXwHhJO0UHlYmbfpppfA6Q8hEGWo6tnmE51WHufL
-        QdETKQ90T0PcgEi0bINFee0=
-X-Google-Smtp-Source: APXvYqxkd9DwWDZi/qHKDFHlMK0H8AlyVBKbEwPxz7lMmEqyzeKCvZ18JbP/k1gOjozG9nkYwgwxAA==
-X-Received: by 2002:a50:ee8d:: with SMTP id f13mr25391791edr.285.1571839945480;
-        Wed, 23 Oct 2019 07:12:25 -0700 (PDT)
-Received: from pi3 ([194.230.155.217])
-        by smtp.googlemail.com with ESMTPSA id p9sm60974edx.4.2019.10.23.07.12.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Oct 2019 07:12:24 -0700 (PDT)
-Date:   Wed, 23 Oct 2019 16:12:21 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Kukjin Kim <kgene@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Sangbeom Kim <sbkim73@samsung.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        "moderated list:ARM/SAMSUNG EXYNOS ARM ARCHITECTURES" 
-        <linux-samsung-soc@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Olof Johansson <olof@lixom.net>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        linux-serial@vger.kernel.org,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>
-Subject: Re: [PATCH 11/36] ARM: s5pv210: split from plat-samsung
-Message-ID: <20191023141221.GA11575@pi3>
-References: <20191010202802.1132272-1-arnd@arndb.de>
- <20191010203043.1241612-1-arnd@arndb.de>
- <20191010203043.1241612-11-arnd@arndb.de>
- <20191023121458.GB11048@pi3>
- <CAK8P3a3ktdA12vpi6zrTXs7-03efk2Ke_0_mQ9X40MLNcZnEqA@mail.gmail.com>
+        Wed, 23 Oct 2019 10:12:32 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:53276 "EHLO foss.arm.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S2405316AbfJWOMb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 10:12:31 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A90CA492;
+        Wed, 23 Oct 2019 07:12:08 -0700 (PDT)
+Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B8C4A3F71F;
+        Wed, 23 Oct 2019 07:12:05 -0700 (PDT)
+Subject: Re: [PATCH v3 1/2] sched/topology: Don't try to build empty sched
+ domains
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org
+Cc:     lizefan@huawei.com, tj@kernel.org, hannes@cmpxchg.org,
+        mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org,
+        morten.rasmussen@arm.com, qperret@google.com,
+        stable@vger.kernel.org
+References: <20191015154250.12951-1-valentin.schneider@arm.com>
+ <20191015154250.12951-2-valentin.schneider@arm.com>
+ <9134acf7-69bb-403b-2e9c-0eb7fb7efabd@arm.com>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <595dc187-bbe7-bd24-a322-db0d777697c0@arm.com>
+Date:   Wed, 23 Oct 2019 15:12:03 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <9134acf7-69bb-403b-2e9c-0eb7fb7efabd@arm.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a3ktdA12vpi6zrTXs7-03efk2Ke_0_mQ9X40MLNcZnEqA@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 03:17:35PM +0200, Arnd Bergmann wrote:
-> On Wed, Oct 23, 2019 at 2:15 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> > On Thu, Oct 10, 2019 at 10:29:55PM +0200, Arnd Bergmann wrote:
-> > > These can be build completely independently, so split
-> > > the two Kconfig symbols.
-> > >       config DEBUG_S3C_UART0
-> > > -             depends on PLAT_SAMSUNG || ARCH_EXYNOS
-> > > +             depends on PLAT_SAMSUNG || ARCH_S5PV210 || ARCH_EXYNOS
-> >
-> > How are you going to select DEBUG_S5PV210_UART now?
+On 23/10/2019 12:46, Dietmar Eggemann wrote:
+> Can you not just prevent that a cpuset pointer (cp) is added to the
+> cpuset array (csa[]) in case cpumask_empty(cp->effective_cpus)?
 > 
-> I don't see a problem here, the patch should not change the behavior at all.
+> @@ -798,9 +800,14 @@ static int generate_sched_domains(cpumask_var_t
+> **domains, cpumask_subset(cp->cpus_allowed, top_cpuset.effective_cpus))
+>                         continue;
 > 
-> The whole entry now looks like:
+> -   if (is_sched_load_balance(cp))
+> +   if (is_sched_load_balance(cp) && !cpumask_empty(cp->effective_cpus))
+>             csa[csn++] = cp;
 > 
->         config DEBUG_S3C_UART0
->                 depends on PLAT_SAMSUNG || ARCH_S5PV210 || ARCH_EXYNOS
->                 select DEBUG_EXYNOS_UART if ARCH_EXYNOS
->                 select DEBUG_S3C24XX_UART if ARCH_S3C24XX
->                 select DEBUG_S3C64XX_UART if ARCH_S3C64XX
->                 select DEBUG_S5PV210_UART if ARCH_S5PV210
->                 bool "Use Samsung S3C UART 0 for low-level debug"
-> 
-> so this will work as before with any of ARCH_EXYNOS, ARCH_S3C24XX,
-> ARCH_S3C64XX and ARCH_S5PV210.
-> 
-> What am I missing?
 
-Ah, everything is OK, I mixed up removed with added line so it looked
-reversed (removal of ARCH_S5PV210).
+I think you're right. Let me give it a shot and I'll spin a v4 with this +
+better changelog for the key.
 
-Looks good.
-
-Best regards,
-Krzysztof
-
+>>  		dp = doms[nslot];
+>>  
+>>  		if (nslot == ndoms) {
+> 
+> [...]
+> 
