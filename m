@@ -2,187 +2,126 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40B4CCA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:32:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22987CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:32:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 183BA214B2
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:32:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571833929;
-	bh=Xsz3V0pAjeDbCXJuq/ZnByR2BhpcKM1AaYB5kYOjbFU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XEKzfkwV1uxi1bt5NAKmhcxvUtE9/t+YytjYZvw2khOkPCwrag3Y0OF8uDBaST2eV
-	 /G8H52A4JbN1H+OFdCCohsIoyxB+bNfBpQjoKdFwaPOb1pzY810asjaBc9TZIR0/In
-	 zgyWVYQkskgU53087ResaIm8TKMZrumLSSbPpCv0=
+	by mail.kernel.org (Postfix) with ESMTP id EB1AC21906
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:32:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391524AbfJWMcI (ORCPT
+        id S2391566AbfJWMcW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 08:32:08 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:35217 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391515AbfJWMcG (ORCPT
+        Wed, 23 Oct 2019 08:32:22 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:49143 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391426AbfJWMbo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 08:32:06 -0400
-Received: by mail-ed1-f68.google.com with SMTP id k2so4920019edx.2;
-        Wed, 23 Oct 2019 05:32:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KQN2p3CqQqqGqvDm8RQZXLnReFZTauNKSF3Je5lv8Vs=;
-        b=gItzH1IURch9FFmt63SUbbuq/OHTKyUQ+X7g1I/SDPfP8SPD++IdzXjsJLSxhnrT+N
-         tMZ7HCc3PZJRuioc9AhYyW6s0zwbCsyhMjRSc+HbjmeoxuoLpnbM0yq6iN+cbvruD/vc
-         rTRSRo5AorLH7xpE5vk2bqL81l6/FVXACI8mFe7Wdjpog4PletWf2rPalNrBnsqgzsUK
-         prfA7+sG/29ktzTFqFMbvgGQWXW+KvNNHfIKEaRtVB7cwgWhrcPxHwDLydbg37kbcBJ0
-         x07ojpOZiqSzFVkx/TSKdq9HbYfZxw33JAMRD1oza44o3yyauaQUSvmvFXtThfrXTSBU
-         8O0g==
-X-Gm-Message-State: APjAAAVvImdjU/xeCMkWXraiHXTMP2+Fcn8XJl95qjDSMA8n5dxJII9U
-        XTuWekMG/g8hH5ZaaoDosG8=
-X-Google-Smtp-Source: APXvYqzAyy2/9uMMaEi+++Uil+JEuPxjvNWuDWfQdsPMkZduyAwEgeg60Y2iekGhRXEaJq6rYisoxg==
-X-Received: by 2002:a17:906:d214:: with SMTP id w20mr32128690ejz.68.1571833923476;
-        Wed, 23 Oct 2019 05:32:03 -0700 (PDT)
-Received: from pi3 ([194.230.155.217])
-        by smtp.googlemail.com with ESMTPSA id k24sm163420edx.46.2019.10.23.05.32.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Oct 2019 05:32:02 -0700 (PDT)
-Date:   Wed, 23 Oct 2019 14:32:00 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Kukjin Kim <kgene@kernel.org>, Andi Shyti <andi@etezian.org>,
-        Mark Brown <broonie@kernel.org>,
-        linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linus.walleij@linaro.org,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
-Subject: Re: [PATCH 13/36] ARM: s3c: move regs-spi.h into spi driver
-Message-ID: <20191023123200.GC11048@pi3>
-References: <20191010202802.1132272-1-arnd@arndb.de>
- <20191010203043.1241612-1-arnd@arndb.de>
- <20191010203043.1241612-13-arnd@arndb.de>
+        Wed, 23 Oct 2019 08:31:44 -0400
+Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iNFng-00018T-J0; Wed, 23 Oct 2019 14:31:40 +0200
+Message-Id: <20191023123118.871105130@linutronix.de>
+User-Agent: quilt/0.65
+Date:   Wed, 23 Oct 2019 14:27:18 +0200
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        linux-arch@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>
+Subject: [patch V2 13/17] x86/entry: Use generic syscall exit functionality
+References: <20191023122705.198339581@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191010203043.1241612-13-arnd@arndb.de>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=UTF-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 10:29:57PM +0200, Arnd Bergmann wrote:
-> The file is mostly specific to the driver, the few bits that
-> are actually used by the platform code get moved to mach/map.h
-> instead.
-> 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  arch/arm/mach-s3c24xx/include/mach/map.h                      | 2 ++
->  arch/arm/mach-s3c24xx/s3c2412.c                               | 1 -
->  arch/arm/plat-samsung/devs.c                                  | 1 -
->  drivers/spi/spi-s3c24xx-fiq.S                                 | 4 +++-
->  .../include/plat/regs-spi.h => drivers/spi/spi-s3c24xx-regs.h | 3 ---
->  drivers/spi/spi-s3c24xx.c                                     | 3 +--
->  6 files changed, 6 insertions(+), 8 deletions(-)
->  rename arch/arm/plat-samsung/include/plat/regs-spi.h => drivers/spi/spi-s3c24xx-regs.h (95%)
-> 
-> diff --git a/arch/arm/mach-s3c24xx/include/mach/map.h b/arch/arm/mach-s3c24xx/include/mach/map.h
-> index bca93112f57d..a20c9fd0d855 100644
-> --- a/arch/arm/mach-s3c24xx/include/mach/map.h
-> +++ b/arch/arm/mach-s3c24xx/include/mach/map.h
-> @@ -86,6 +86,8 @@
->  #define S3C2410_PA_SPI	   (0x59000000)
->  #define S3C2443_PA_SPI0		(0x52000000)
->  #define S3C2443_PA_SPI1		S3C2410_PA_SPI
-> +#define S3C2410_SPI1		(0x20)
-> +#define S3C2412_SPI1		(0x100)
->  
->  /* SDI */
->  #define S3C2410_PA_SDI	   (0x5A000000)
-> diff --git a/arch/arm/mach-s3c24xx/s3c2412.c b/arch/arm/mach-s3c24xx/s3c2412.c
-> index 8fe4d4670dcb..c3fb3e6c0dd8 100644
-> --- a/arch/arm/mach-s3c24xx/s3c2412.c
-> +++ b/arch/arm/mach-s3c24xx/s3c2412.c
-> @@ -37,7 +37,6 @@
->  #include <plat/cpu-freq.h>
->  #include <plat/devs.h>
->  #include <plat/pm.h>
-> -#include <plat/regs-spi.h>
->  
->  #include "common.h"
->  #include "nand-core.h"
-> diff --git a/arch/arm/plat-samsung/devs.c b/arch/arm/plat-samsung/devs.c
-> index 6e4c1cb07104..fd94a35e22f8 100644
-> --- a/arch/arm/plat-samsung/devs.c
-> +++ b/arch/arm/plat-samsung/devs.c
-> @@ -59,7 +59,6 @@
->  #include <linux/platform_data/usb-s3c2410_udc.h>
->  #include <linux/platform_data/usb-ohci-s3c2410.h>
->  #include <plat/usb-phy.h>
-> -#include <plat/regs-spi.h>
->  #include <linux/platform_data/asoc-s3c.h>
->  #include <linux/platform_data/spi-s3c64xx.h>
->  
-> diff --git a/drivers/spi/spi-s3c24xx-fiq.S b/drivers/spi/spi-s3c24xx-fiq.S
-> index e95d6282109e..9d5f8f1e5e81 100644
-> --- a/drivers/spi/spi-s3c24xx-fiq.S
-> +++ b/drivers/spi/spi-s3c24xx-fiq.S
-> @@ -12,10 +12,12 @@
->  
->  #include <mach/map.h>
->  #include <mach/regs-irq.h>
-> -#include <plat/regs-spi.h>
->  
->  #include "spi-s3c24xx-fiq.h"
->  
-> +#define S3C2410_SPTDAT           (0x10)
-> +#define S3C2410_SPRDAT           (0x14)
-> +
->  	.text
->  
->  	@ entry to these routines is as follows, with the register names
-> diff --git a/arch/arm/plat-samsung/include/plat/regs-spi.h b/drivers/spi/spi-s3c24xx-regs.h
-> similarity index 95%
-> rename from arch/arm/plat-samsung/include/plat/regs-spi.h
-> rename to drivers/spi/spi-s3c24xx-regs.h
-> index 607844311566..37b93ff7c7fe 100644
-> --- a/arch/arm/plat-samsung/include/plat/regs-spi.h
-> +++ b/drivers/spi/spi-s3c24xx-regs.h
-> @@ -8,9 +8,6 @@
->  #ifndef __ASM_ARCH_REGS_SPI_H
->  #define __ASM_ARCH_REGS_SPI_H
+Replace the x86 variant with the generic version.
 
-Can you also update the guard name?
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ arch/x86/entry/common.c             |   44 ------------------------------------
+ arch/x86/include/asm/entry-common.h |    2 +
+ 2 files changed, 3 insertions(+), 43 deletions(-)
 
-Best regards,
-Krzysztof
+--- a/arch/x86/entry/common.c
++++ b/arch/x86/entry/common.c
+@@ -142,55 +142,13 @@ static void exit_to_usermode_loop(struct
+ 	trace_hardirqs_on();
+ }
+ 
+-#define SYSCALL_EXIT_WORK_FLAGS				\
+-	(_TIF_SYSCALL_TRACE | _TIF_SYSCALL_AUDIT |	\
+-	 _TIF_SINGLESTEP | _TIF_SYSCALL_TRACEPOINT)
+-
+-static void syscall_slow_exit_work(struct pt_regs *regs, u32 cached_flags)
+-{
+-	bool step;
+-
+-	audit_syscall_exit(regs);
+-
+-	if (cached_flags & _TIF_SYSCALL_TRACEPOINT)
+-		trace_sys_exit(regs, regs->ax);
+-
+-	/*
+-	 * If TIF_SYSCALL_EMU is set, we only get here because of
+-	 * TIF_SINGLESTEP (i.e. this is PTRACE_SYSEMU_SINGLESTEP).
+-	 * We already reported this syscall instruction in
+-	 * syscall_trace_enter().
+-	 */
+-	step = unlikely(
+-		(cached_flags & (_TIF_SINGLESTEP | _TIF_SYSCALL_EMU))
+-		== _TIF_SINGLESTEP);
+-	if (step || cached_flags & _TIF_SYSCALL_TRACE)
+-		tracehook_report_syscall_exit(regs, step);
+-}
+-
+ /*
+  * Called with IRQs on and fully valid regs.  Returns with IRQs off in a
+  * state such that we can immediately switch to user mode.
+  */
+ __visible inline void syscall_return_slowpath(struct pt_regs *regs)
+ {
+-	struct thread_info *ti = current_thread_info();
+-	u32 cached_flags = READ_ONCE(ti->flags);
+-
+-	CT_WARN_ON(ct_state() != CONTEXT_KERNEL);
+-
+-	if (IS_ENABLED(CONFIG_PROVE_LOCKING) &&
+-	    WARN(irqs_disabled(), "syscall %ld left IRQs disabled", regs->orig_ax))
+-		local_irq_enable();
+-
+-	rseq_syscall(regs);
+-
+-	/*
+-	 * First do one-time work.  If these work items are enabled, we
+-	 * want to run them exactly once per syscall exit with IRQs on.
+-	 */
+-	if (unlikely(cached_flags & SYSCALL_EXIT_WORK_FLAGS))
+-		syscall_slow_exit_work(regs, cached_flags);
++	syscall_exit_to_usermode(regs, regs->orig_ax, regs->ax);
+ 
+ 	local_irq_disable();
+ 	prepare_exit_to_usermode(regs);
+--- a/arch/x86/include/asm/entry-common.h
++++ b/arch/x86/include/asm/entry-common.h
+@@ -5,6 +5,8 @@
+ #include <linux/seccomp.h>
+ #include <linux/audit.h>
+ 
++#define ARCH_SYSCALL_EXIT_WORK		(_TIF_SINGLESTEP)
++
+ static inline long arch_syscall_enter_seccomp(struct pt_regs *regs)
+ {
+ #ifdef CONFIG_SECCOMP
 
->  
-> -#define S3C2410_SPI1		(0x20)
-> -#define S3C2412_SPI1		(0x100)
-> -
->  #define S3C2410_SPCON		(0x00)
->  
->  #define S3C2410_SPCON_SMOD_DMA	(2 << 5)	/* DMA mode */
-> diff --git a/drivers/spi/spi-s3c24xx.c b/drivers/spi/spi-s3c24xx.c
-> index 2d6e37f25e2d..2f395e4861f6 100644
-> --- a/drivers/spi/spi-s3c24xx.c
-> +++ b/drivers/spi/spi-s3c24xx.c
-> @@ -21,10 +21,9 @@
->  #include <linux/spi/s3c24xx.h>
->  #include <linux/module.h>
->  
-> -#include <plat/regs-spi.h>
-> -
->  #include <asm/fiq.h>
->  
-> +#include "spi-s3c24xx-regs.h"
->  #include "spi-s3c24xx-fiq.h"
->  
->  /**
-> -- 
-> 2.20.0
-> 
+
