@@ -2,189 +2,304 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE1CDCA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:17:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47365CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:20:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADEDD21872
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:17:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="glSAeidi"
+	by mail.kernel.org (Postfix) with ESMTP id 16CDB2173B
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:20:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406580AbfJWPR2 (ORCPT
+        id S2406582AbfJWPUF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 11:17:28 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:49354 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390140AbfJWPR2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 11:17:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=RSwZx5vXYUgltg6SGAgq4hYjxU5vyXKL5mMiSRK1G+c=; b=glSAeidi9my/AlJrLdNkbFUKp
-        CHfBM7dYonAuhtzeGlRiirtBYrxg1M/IqUVhyq0nhlSMeQhu85UFv3aAPiHcNG+v4wBBwI5itww7m
-        WMOFic49egghTv8tdW6einsAIORpmqfWBdtg5BxsCrb7ck972Te1g0Uhc5uAfzgSn/QHHGw+6pk4a
-        FJ1Pfqdf5buIekasrF8v8ygA+Kg8Fj/ZYdSZ2I+UnW4s3jPp23VqhhaPDKw1eEinYBp6fO7mzCEzl
-        alvwIcZ6dteZgr5S9qb7Wq2SDF1kHEtimShzcQ495HZHVout1vIemy7tfPzLHY5E3YM940Uo3Raxj
-        WWFa0tnKw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iNINd-0007k2-1F; Wed, 23 Oct 2019 15:16:57 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A0A69300EBF;
-        Wed, 23 Oct 2019 17:15:56 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id B11FF2B1D76AD; Wed, 23 Oct 2019 17:16:54 +0200 (CEST)
-Date:   Wed, 23 Oct 2019 17:16:54 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        mhiramat@kernel.org, bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, jeyu@kernel.org
-Subject: Re: [PATCH v4 15/16] module: Move where we mark modules RO,X
-Message-ID: <20191023151654.GF19358@hirez.programming.kicks-ass.net>
-References: <20191018073525.768931536@infradead.org>
- <20191018074634.801435443@infradead.org>
- <20191021135312.jbbxsuipxldocdjk@treble>
- <20191021141402.GI1817@hirez.programming.kicks-ass.net>
- <20191023114835.GT1817@hirez.programming.kicks-ass.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191023114835.GT1817@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 23 Oct 2019 11:20:05 -0400
+Received: from mga12.intel.com ([192.55.52.136]:42649 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390636AbfJWPUF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 11:20:05 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 08:20:04 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,221,1569308400"; 
+   d="scan'208";a="349419680"
+Received: from brentlu-desk0.itwn.intel.com ([10.5.253.11])
+  by orsmga004.jf.intel.com with ESMTP; 23 Oct 2019 08:20:01 -0700
+From:   Brent Lu <brent.lu@intel.com>
+To:     alsa-devel@alsa-project.org
+Cc:     Cezary Rojewski <cezary.rojewski@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, Brent Lu <brent.lu@intel.com>,
+        "Subhransu S . Prusty" <subhransu.s.prusty@intel.com>,
+        Richard Fontana <rfontana@redhat.com>,
+        Tzung-Bi Shih <tzungbi@google.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Naveen M <naveen.m@intel.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH] ASoC: Intel: eve: Enable mclk and ssp sclk early for rt5514
+Date:   Wed, 23 Oct 2019 23:16:36 +0800
+Message-Id: <1571843796-5021-1-git-send-email-brent.lu@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 01:48:35PM +0200, Peter Zijlstra wrote:
-> On Mon, Oct 21, 2019 at 04:14:02PM +0200, Peter Zijlstra wrote:
-> > On Mon, Oct 21, 2019 at 08:53:12AM -0500, Josh Poimboeuf wrote:
-> 
-> > > Doesn't livepatch code also need to be modified?  We have:
-> > 
-> > Urgh bah.. I was too focussed on the other klp borkage :/ But yes,
-> > arm64/ftrace and klp are the only two users of that function (outside of
-> > module.c) and Mark was already writing a patch for arm64.
-> > 
-> > Means these last two patches need to wait a little until we've fixed
-> > those.
-> 
-> So the other KLP issue:
-> 
-> <mbenes> peterz: ad klp, apply_relocate_add() and text_poke()... what
->          about apply_alternatives() and apply_paravirt()? They call
->          text_poke_early(), which was ok with module_disable/enable_ro(), but
-> 	 now it is not, I suppose. See arch_klp_init_object_loaded() in
->          arch/x86/kernel/livepatch.c.
-> 
-> <peterz> mbenes: hurm, I don't see why we would need to do
->          apply_alternatives() / apply_paravirt() later, why can't we do that
-> 	 the moment we load the module
-> 
-> <peterz> mbenes: that is, those things _never_ change after boot
-> 
-> <mbenes> peterz: as jpoimboe explained. See commit
->          d4c3e6e1b193497da3a2ce495fb1db0243e41e37 for detailed explanation.
-> 
-> Now sadly that commit missed all the useful information, luckily I could
-> find the patch in my LKML folder, more sad, that thread still didn't
-> contain the actual useful information, for that I was directed to
-> github:
-> 
->   https://github.com/dynup/kpatch/issues/580
-> 
-> Now, someone is owning me a beer for having to look at github for this.
-> 
-> That finally explained that what happens is that the RELA was trying to
-> fix up the paravirt indirect call to 'local_irq_disable', which
-> apply_paravirt() will have overwritten with 'CLI; NOP'. This then
-> obviously goes *bang*.
-> 
-> This then raises a number of questions:
-> 
->  1) why is that RELA (that obviously does not depend on any module)
->     applied so late?
-> 
->  2) why can't we unconditionally skip RELA's to paravirt sites?
-> 
->  3) Is there ever a possible module-dependent RELA to a paravirt /
->     alternative site?
-> 
-> 
-> Now, for 1), I would propose '.klp.rela.${mod}' sections only contain
-> RELAs that depend on symbols in ${mod} (or modules in general). We can
-> fix up RELAs that depend on core kernel early without problems. Let them
-> be in the normal .rela sections and be fixed up on loading the
-> patch-module as per usual.
-> 
-> This should also deal with 2, paravirt should always have RELAs into the
-> core kernel.
-> 
-> Then for 3) we only have alternatives left, and I _think_ it unlikely to
-> be the case, but I'll have to have a hard look at that.
-> 
-> Hmmm ?
+The first DMIC capture always fail (zero sequence data from PCM port)
+after using DSP hotwording function (i.e. Google assistant). The DMIC
+is attached to rt5514 which also require eaily mclk/sclk like rt5663.
+Therefore we add a dapm route to provide ssp mclk/sclk early to rt5514.
+The rt5514 is attached to SSP0 and the rt5663 is attached to SSP1 so
+we create another supply widget to provide SSP0 mclk/sclk to rt5514.
 
-Something like so on top, I suppose.
-
+Signed-off-by: Brent Lu <brent.lu@intel.com>
 ---
+ .../soc/intel/boards/kbl_rt5663_rt5514_max98927.c  | 136 ++++++++++++++-------
+ 1 file changed, 92 insertions(+), 44 deletions(-)
 
---- a/arch/x86/kernel/module.c
-+++ b/arch/x86/kernel/module.c
-@@ -131,7 +131,8 @@ static int __apply_relocate_add(Elf64_Sh
- 		   unsigned int symindex,
- 		   unsigned int relsec,
- 		   struct module *me,
--		   void *(*write)(void *addr, const void *val, size_t size))
-+		   void *(*write)(void *addr, const void *val, size_t size),
-+		   bool klp)
+diff --git a/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c b/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
+index dc09a85..1755efa 100644
+--- a/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
++++ b/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
+@@ -53,8 +53,10 @@ struct kbl_codec_private {
+ 	struct snd_soc_jack kabylake_headset;
+ 	struct list_head hdmi_pcm_list;
+ 	struct snd_soc_jack kabylake_hdmi[2];
+-	struct clk *mclk;
+-	struct clk *sclk;
++	struct clk *ssp0_mclk;
++	struct clk *ssp0_sclk;
++	struct clk *ssp1_mclk;
++	struct clk *ssp1_sclk;
+ };
+ 
+ enum {
+@@ -77,13 +79,31 @@ static const struct snd_kcontrol_new kabylake_controls[] = {
+ };
+ 
+ static int platform_clock_control(struct snd_soc_dapm_widget *w,
+-			struct snd_kcontrol *k, int  event)
++			struct snd_kcontrol *k, int event, int ssp_num)
  {
- 	unsigned int i;
- 	Elf64_Rela *rel = (void *)sechdrs[relsec].sh_addr;
-@@ -157,6 +158,14 @@ static int __apply_relocate_add(Elf64_Sh
+ 	struct snd_soc_dapm_context *dapm = w->dapm;
+ 	struct snd_soc_card *card = dapm->card;
+ 	struct kbl_codec_private *priv = snd_soc_card_get_drvdata(card);
++	struct clk *mclk, *sclk;
++	unsigned long sclk_rate;
+ 	int ret = 0;
  
- 		val = sym->st_value + rel[i].r_addend;
- 
-+		/*
-+		 * .klp.rela.* sections should only contain module
-+		 * related RELAs. All core-kernel RELAs should be in
-+		 * normal .rela.* sections and be applied when loading
-+		 * the patch module itself.
-+		 */
-+		WARN_ON_ONCE(klp && core_kernel_text(val));
++	switch (ssp_num) {
++	case 0:
++		mclk = priv->ssp0_mclk;
++		sclk = priv->ssp0_sclk;
++		sclk_rate = 6144000;
++		break;
++	case 1:
++		mclk = priv->ssp1_mclk;
++		sclk = priv->ssp1_sclk;
++		sclk_rate = 3072000;
++		break;
++	default:
++		dev_err(card->dev, "Invalid ssp_num %d\n", ssp_num);
++		return -EINVAL;
++	}
 +
- 		switch (ELF64_R_TYPE(rel[i].r_info)) {
- 		case R_X86_64_NONE:
- 			break;
-@@ -223,7 +232,7 @@ int apply_relocate_add(Elf64_Shdr *sechd
- 		   unsigned int relsec,
- 		   struct module *me)
- {
--	return __apply_relocate_add(sechdrs, strtab, symindex, relsec, me, memcpy);
-+	return __apply_relocate_add(sechdrs, strtab, symindex, relsec, me, memcpy, false);
+ 	/*
+ 	 * MCLK/SCLK need to be ON early for a successful synchronization of
+ 	 * codec internal clock. And the clocks are turned off during
+@@ -92,37 +112,39 @@ static int platform_clock_control(struct snd_soc_dapm_widget *w,
+ 	switch (event) {
+ 	case SND_SOC_DAPM_PRE_PMU:
+ 		/* Enable MCLK */
+-		ret = clk_set_rate(priv->mclk, 24000000);
++		ret = clk_set_rate(mclk, 24000000);
+ 		if (ret < 0) {
+-			dev_err(card->dev, "Can't set rate for mclk, err: %d\n",
+-				ret);
++			dev_err(card->dev, "Can't set rate for ssp%d_mclk, err: %d\n",
++				ssp_num, ret);
+ 			return ret;
+ 		}
+ 
+-		ret = clk_prepare_enable(priv->mclk);
++		ret = clk_prepare_enable(mclk);
+ 		if (ret < 0) {
+-			dev_err(card->dev, "Can't enable mclk, err: %d\n", ret);
++			dev_err(card->dev, "Can't enable ssp%d_mclk, err: %d\n",
++				ssp_num, ret);
+ 			return ret;
+ 		}
+ 
+ 		/* Enable SCLK */
+-		ret = clk_set_rate(priv->sclk, 3072000);
++		ret = clk_set_rate(sclk, sclk_rate);
+ 		if (ret < 0) {
+-			dev_err(card->dev, "Can't set rate for sclk, err: %d\n",
+-				ret);
+-			clk_disable_unprepare(priv->mclk);
++			dev_err(card->dev, "Can't set rate for ssp%d_sclk, err: %d\n",
++				ssp_num, ret);
++			clk_disable_unprepare(mclk);
+ 			return ret;
+ 		}
+ 
+-		ret = clk_prepare_enable(priv->sclk);
++		ret = clk_prepare_enable(sclk);
+ 		if (ret < 0) {
+-			dev_err(card->dev, "Can't enable sclk, err: %d\n", ret);
+-			clk_disable_unprepare(priv->mclk);
++			dev_err(card->dev, "Can't enable ssp%d_sclk, err: %d\n",
++				ssp_num, ret);
++			clk_disable_unprepare(mclk);
+ 		}
+ 		break;
+ 	case SND_SOC_DAPM_POST_PMD:
+-		clk_disable_unprepare(priv->mclk);
+-		clk_disable_unprepare(priv->sclk);
++		clk_disable_unprepare(mclk);
++		clk_disable_unprepare(sclk);
+ 		break;
+ 	default:
+ 		return 0;
+@@ -131,6 +153,18 @@ static int platform_clock_control(struct snd_soc_dapm_widget *w,
+ 	return 0;
  }
  
- int klp_apply_relocate_add(Elf64_Shdr *sechdrs,
-@@ -234,7 +243,7 @@ int klp_apply_relocate_add(Elf64_Shdr *s
++static int platform_clock_control_ssp0(struct snd_soc_dapm_widget *w,
++			struct snd_kcontrol *k, int event)
++{
++	return platform_clock_control(w, k, event, 0);
++}
++
++static int platform_clock_control_ssp1(struct snd_soc_dapm_widget *w,
++			struct snd_kcontrol *k, int event)
++{
++	return platform_clock_control(w, k, event, 1);
++}
++
+ static const struct snd_soc_dapm_widget kabylake_widgets[] = {
+ 	SND_SOC_DAPM_HP("Headphone Jack", NULL),
+ 	SND_SOC_DAPM_MIC("Headset Mic", NULL),
+@@ -139,15 +173,17 @@ static const struct snd_soc_dapm_widget kabylake_widgets[] = {
+ 	SND_SOC_DAPM_MIC("DMIC", NULL),
+ 	SND_SOC_DAPM_SPK("HDMI1", NULL),
+ 	SND_SOC_DAPM_SPK("HDMI2", NULL),
+-	SND_SOC_DAPM_SUPPLY("Platform Clock", SND_SOC_NOPM, 0, 0,
+-			platform_clock_control, SND_SOC_DAPM_PRE_PMU |
++	SND_SOC_DAPM_SUPPLY("Platform Clock SSP0", SND_SOC_NOPM, 0, 0,
++			platform_clock_control_ssp0, SND_SOC_DAPM_PRE_PMU |
++			SND_SOC_DAPM_POST_PMD),
++	SND_SOC_DAPM_SUPPLY("Platform Clock SSP1", SND_SOC_NOPM, 0, 0,
++			platform_clock_control_ssp1, SND_SOC_DAPM_PRE_PMU |
+ 			SND_SOC_DAPM_POST_PMD),
+-
+ };
+ 
+ static const struct snd_soc_dapm_route kabylake_map[] = {
+ 	/* Headphones */
+-	{ "Headphone Jack", NULL, "Platform Clock" },
++	{ "Headphone Jack", NULL, "Platform Clock SSP1" },
+ 	{ "Headphone Jack", NULL, "HPOL" },
+ 	{ "Headphone Jack", NULL, "HPOR" },
+ 
+@@ -156,7 +192,7 @@ static const struct snd_soc_dapm_route kabylake_map[] = {
+ 	{ "Right Spk", NULL, "Right BE_OUT" },
+ 
+ 	/* other jacks */
+-	{ "Headset Mic", NULL, "Platform Clock" },
++	{ "Headset Mic", NULL, "Platform Clock SSP1" },
+ 	{ "IN1P", NULL, "Headset Mic" },
+ 	{ "IN1N", NULL, "Headset Mic" },
+ 
+@@ -180,6 +216,7 @@ static const struct snd_soc_dapm_route kabylake_map[] = {
+ 	{ "ssp0 Rx", NULL, "Right HiFi Capture" },
+ 
+ 	/* DMIC */
++	{ "DMIC", NULL, "Platform Clock SSP0" },
+ 	{ "DMIC1L", NULL, "DMIC" },
+ 	{ "DMIC1R", NULL, "DMIC" },
+ 	{ "DMIC2L", NULL, "DMIC" },
+@@ -704,6 +741,29 @@ static struct snd_soc_card kabylake_audio_card = {
+ 	.late_probe = kabylake_card_late_probe,
+ };
+ 
++static int kabylake_audio_clk_get(struct device *dev, const char *id,
++	struct clk **clk)
++{
++	int ret = 0;
++
++	if (!clk)
++		return -EINVAL;
++
++	*clk = devm_clk_get(dev, id);
++	if (IS_ERR(*clk)) {
++		ret = PTR_ERR(*clk);
++		if (ret == -ENOENT) {
++			dev_info(dev, "Failed to get %s, defer probe\n", id);
++			return -EPROBE_DEFER;
++		}
++
++		dev_err(dev, "Failed to get %s with err:%d\n", id, ret);
++		return ret;
++	}
++
++	return ret;
++}
++
+ static int kabylake_audio_probe(struct platform_device *pdev)
  {
- 	int ret;
+ 	struct kbl_codec_private *ctx;
+@@ -724,33 +784,21 @@ static int kabylake_audio_probe(struct platform_device *pdev)
+ 		dmic_constraints = mach->mach_params.dmic_num == 2 ?
+ 			&constraints_dmic_2ch : &constraints_dmic_channels;
  
--	ret = __apply_relocate_add(sechdrs, strtab, symindex, relsec, me, text_poke);
-+	ret = __apply_relocate_add(sechdrs, strtab, symindex, relsec, me, text_poke, true);
- 	if (!ret)
- 		text_poke_sync();
+-	ctx->mclk = devm_clk_get(&pdev->dev, "ssp1_mclk");
+-	if (IS_ERR(ctx->mclk)) {
+-		ret = PTR_ERR(ctx->mclk);
+-		if (ret == -ENOENT) {
+-			dev_info(&pdev->dev,
+-				"Failed to get ssp1_mclk, defer probe\n");
+-			return -EPROBE_DEFER;
+-		}
++	ret = kabylake_audio_clk_get(&pdev->dev, "ssp0_mclk", &ctx->ssp0_mclk);
++	if (ret != 0)
++		return ret;
  
+-		dev_err(&pdev->dev, "Failed to get ssp1_mclk with err:%d\n",
+-								ret);
++	ret = kabylake_audio_clk_get(&pdev->dev, "ssp0_sclk", &ctx->ssp0_sclk);
++	if (ret != 0)
+ 		return ret;
+-	}
+ 
+-	ctx->sclk = devm_clk_get(&pdev->dev, "ssp1_sclk");
+-	if (IS_ERR(ctx->sclk)) {
+-		ret = PTR_ERR(ctx->sclk);
+-		if (ret == -ENOENT) {
+-			dev_info(&pdev->dev,
+-				"Failed to get ssp1_sclk, defer probe\n");
+-			return -EPROBE_DEFER;
+-		}
++	ret = kabylake_audio_clk_get(&pdev->dev, "ssp1_mclk", &ctx->ssp1_mclk);
++	if (ret != 0)
++		return ret;
+ 
+-		dev_err(&pdev->dev, "Failed to get ssp1_sclk with err:%d\n",
+-								ret);
++	ret = kabylake_audio_clk_get(&pdev->dev, "ssp1_sclk", &ctx->ssp1_sclk);
++	if (ret != 0)
+ 		return ret;
+-	}
+ 
+ 	return devm_snd_soc_register_card(&pdev->dev, &kabylake_audio_card);
+ }
+-- 
+2.7.4
+
