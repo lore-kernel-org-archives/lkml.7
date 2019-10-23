@@ -2,56 +2,50 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE6C4CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 18:47:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7918CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 18:49:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFFBA21906
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 18:47:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571856438;
-	bh=oG4wx933ZLpl4aM2m4EEpiKhO9JSGK0tIJ4p2alzJQ8=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=BdPa2IKwt9iOv/Yz03RHc57fyBwBSsSPvVF5GO4SXixJNRUuf3UpXj5xhdeu0s+bw
-	 Cf8FN+sxtZ19Ki7YgVDL12CdeBp7KTnJctw34tSBZc9pIV4IzwGF9M+DENqRoqKQU1
-	 zR+ZI7JBYsJid9a7bN/ATZ1TW15H9erFkbU9N7Uo=
+	by mail.kernel.org (Postfix) with ESMTP id B9E6C2086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 18:49:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390326AbfJWSrR (ORCPT
+        id S2403864AbfJWStO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 14:47:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55502 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726506AbfJWSrR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 14:47:17 -0400
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B86C22086D;
-        Wed, 23 Oct 2019 18:47:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571856436;
-        bh=oG4wx933ZLpl4aM2m4EEpiKhO9JSGK0tIJ4p2alzJQ8=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=sPuDOhERPL6r9ngrwdBvAkLLD22YcWt4HjAYnPllvVPlrQkw3C2Vk4Sutbyc8JEuw
-         whPKyKqpT+D6TSifNe8464Ow6lJ3c/q8ZG0uqwbCpl08Rxr2PVGsVVQd1uvVBHyIwe
-         9YVqkylkNqIoc3mG2MwGcs8p4Ht2fuqzMqQdTqf8=
-Message-ID: <9c1fe73500ca7dece15c73d7534b9e0ec417c83a.camel@kernel.org>
-Subject: Re: [PATCH] ceph: Fix use-after-free in __ceph_remove_cap
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Luis Henriques <lhenriques@suse.com>
-Cc:     Sage Weil <sage@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
-        ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Wed, 23 Oct 2019 14:47:14 -0400
-In-Reply-To: <87a79unocw.fsf@suse.com>
-References: <20191017144636.28617-1-lhenriques@suse.com>
-         <a68eeb81a5b193be2da49b83dfedce7d2782fb40.camel@kernel.org>
-         <87a79unocw.fsf@suse.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Wed, 23 Oct 2019 14:49:14 -0400
+Received: from smtprelay0242.hostedemail.com ([216.40.44.242]:57924 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726506AbfJWStN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 14:49:13 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay06.hostedemail.com (Postfix) with ESMTP id B81DA1822327E;
+        Wed, 23 Oct 2019 18:49:11 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: seed76_500e99da2a55d
+X-Filterd-Recvd-Size: 1829
+Received: from XPS-9350.home (unknown [47.151.135.224])
+        (Authenticated sender: joe@perches.com)
+        by omf09.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 23 Oct 2019 18:49:10 +0000 (UTC)
+Message-ID: <bff0a1c4fc69b83c763ffbce42a0152e1573499a.camel@perches.com>
+Subject: Re: [Kgdb-bugreport] [PATCH] kernel: convert switch/case
+ fallthrough comments to fallthrough;
+From:   Joe Perches <joe@perches.com>
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-pm@vger.kernel.org, kgdb-bugreport@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-audit@redhat.com,
+        netdev@vger.kernel.org, bpf@vger.kernel.org
+Date:   Wed, 23 Oct 2019 11:49:08 -0700
+In-Reply-To: <20191021090909.yjyed4qodjjcioqc@holly.lan>
+References: <f31b38b9ad515a138edaecf85701b1e3db064114.camel@perches.com>
+         <20191021090909.yjyed4qodjjcioqc@holly.lan>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -59,90 +53,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-10-21 at 15:51 +0100, Luis Henriques wrote:
-> Jeff Layton <jlayton@kernel.org> writes:
-> 
-> > On Thu, 2019-10-17 at 15:46 +0100, Luis Henriques wrote:
-> > > KASAN reports a use-after-free when running xfstest generic/531, with the
-> > > following trace:
-> > > 
-> > > [  293.903362]  kasan_report+0xe/0x20
-> > > [  293.903365]  rb_erase+0x1f/0x790
-> > > [  293.903370]  __ceph_remove_cap+0x201/0x370
-> > > [  293.903375]  __ceph_remove_caps+0x4b/0x70
-> > > [  293.903380]  ceph_evict_inode+0x4e/0x360
-> > > [  293.903386]  evict+0x169/0x290
-> > > [  293.903390]  __dentry_kill+0x16f/0x250
-> > > [  293.903394]  dput+0x1c6/0x440
-> > > [  293.903398]  __fput+0x184/0x330
-> > > [  293.903404]  task_work_run+0xb9/0xe0
-> > > [  293.903410]  exit_to_usermode_loop+0xd3/0xe0
-> > > [  293.903413]  do_syscall_64+0x1a0/0x1c0
-> > > [  293.903417]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> > > 
-> > > This happens because __ceph_remove_cap() may queue a cap release
-> > > (__ceph_queue_cap_release) which can be scheduled before that cap is
-> > > removed from the inode list with
-> > > 
-> > > 	rb_erase(&cap->ci_node, &ci->i_caps);
-> > > 
-> > > And, when this finally happens, the use-after-free will occur.
-> > > 
-> > > This can be fixed by protecting the rb_erase with the s_cap_lock spinlock,
-> > > which is used by ceph_send_cap_releases(), before the cap is freed.
-> > > 
-> > > Signed-off-by: Luis Henriques <lhenriques@suse.com>
-> > > ---
-> > >  fs/ceph/caps.c | 4 ++--
-> > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
-> > > index d3b9c9d5c1bd..21ee38cabe98 100644
-> > > --- a/fs/ceph/caps.c
-> > > +++ b/fs/ceph/caps.c
-> > > @@ -1089,13 +1089,13 @@ void __ceph_remove_cap(struct ceph_cap *cap, bool queue_release)
-> > >  	}
-> > >  	cap->cap_ino = ci->i_vino.ino;
-> > > 
-> > > -	spin_unlock(&session->s_cap_lock);
-> > > -
-> > >  	/* remove from inode list */
-> > >  	rb_erase(&cap->ci_node, &ci->i_caps);
-> > >  	if (ci->i_auth_cap == cap)
-> > >  		ci->i_auth_cap = NULL;
-> > > 
-> > > +	spin_unlock(&session->s_cap_lock);
-> > > +
-> > >  	if (removed)
-> > >  		ceph_put_cap(mdsc, cap);
-> > > 
+On Mon, 2019-10-21 at 10:09 +0100, Daniel Thompson wrote:
+> On Fri, Oct 18, 2019 at 09:35:08AM -0700, Joe Perches wrote:
+> > Use the new pseudo keyword "fallthrough;" and not the
+> > various /* fallthrough */ style comments.
 > > 
-> > Is there any reason we need to wait until this point to remove it from
-> > the rbtree? ISTM that we ought to just do that at the beginning of the
-> > function, before we take the s_cap_lock.
+> > Signed-off-by: Joe Perches <joe@perches.com>
+> > ---
+> > 
+> > This is a single patch for the kernel/ source tree,
+> > which would otherwise be sent through as separate
+> > patches to 19 maintainer sections.
 > 
-> That sounds good to me, at least at a first glace.  I spent some time
-> looking for any possible issues in the code, and even run a few tests.
+> For the kernel/debug/ files:
 > 
-> However, looking at git log I found commit f818a73674c5 ("ceph: fix cap
-> removal races"), which moved that rb_erase from the beginning of the
-> function to it's current position.  So, unless the race mentioned in
-> this commit has disappeared in the meantime (which is possible, this
-> commit is from 2010!), this rbtree operation shouldn't be changed.
+> Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
 > 
-> And I now wonder if my patch isn't introducing a race too...
-> __ceph_remove_cap() is supposed to always be called with the session
-> mutex held, except for the ceph_evict_inode() path.  Which is where I'm
-> seeing the UAF.  So, maybe what's missing here is the s_mutex.  Hmm...
-> 
+> Will you be putting this in an immutable branch once you've collected
+> enough acks?
 
-I don't get it. That commit log talks about needing to ensure that the
-backpointer is cleared under the lock which is fine, but I don't see why
-we need to keep it in the inode's rbtree until that point.
+No, I expect Linus will either run the script
+or apply this patch one day.
 
-Unhashing an object before you potentially free it is just good
-practice, IMO. If we need to do something different here, then I think
-it'd be good to add a comment explaining why.
--- 
-Jeff Layton <jlayton@kernel.org>
 
