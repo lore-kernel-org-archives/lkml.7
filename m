@@ -2,154 +2,162 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02E2ACA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 16:58:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5278BCA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 16:59:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8FB221906
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 16:58:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29BEB21906
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 16:59:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KIudtqZj"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="sDn/5z25"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726754AbfJWQ65 (ORCPT
+        id S1726792AbfJWQ7W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 12:58:57 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:38528 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726712AbfJWQ65 (ORCPT
+        Wed, 23 Oct 2019 12:59:22 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.51]:35031 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726347AbfJWQ7V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 12:58:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571849936;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=svxKy9PpZYdSp7My5GoLpaiAHrwdkyewTYZPNZNZ5xI=;
-        b=KIudtqZjdSyR0zAwaz6uW/Fz4HUw9nQfkvJ3MgudY31zLvPENQikR2tUlJhSI/UPfFJEGk
-        cv73hbsoTUoB5iI1skqD7TCy7GGmtTrFYSzOzL0Qr8et+gGSXecWNfsQXkvrgNmwLT4lBG
-        k+kpgfF8K6BqhjVWsLsS9EvKGvxR4zI=
-Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
- [209.85.167.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-159-VU-4ulozMBecvazaRcXPaQ-1; Wed, 23 Oct 2019 12:58:54 -0400
-Received: by mail-lf1-f71.google.com with SMTP id x20so4292462lfe.14
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 09:58:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WadZePlEGvqCjR+F4g4l9zs3Tb/z+tEXc700EM0+NZE=;
-        b=EdR7DaXFM0kE57+VCqbWYgZGGJ4Zm/4sfhsArOl5u9XozV9QTz2qxsD2lUZlb9HIzu
-         sXLbCVL5MQ3ZmlFfQlfVk12fL93TThYO2gdvfGAN0cpKSe/O9CI5TJqRBPl3QBsjgYNk
-         rWoOb8geVrFWZuk/BnguJOwRR4AfjLm/cr/NTun/UcdK9RbprbocldgYhoIOz8z8dsnu
-         I96rt4mM2UoQoOs8llgjaZnmYuCJcXQv1C5co1EtzS3ps7xARQsLk8gcUR54mqSNxxrs
-         /tiE/nQ/9o5ile87ndqEG48hGEhxD08YcT+y1nTqjwaqU+q31fqhx2eF0kBp1hgrzEh3
-         diNA==
-X-Gm-Message-State: APjAAAUAM8F9lmNz9GTYVvkZnoB/EfRZGualAB9paQFxObEW+LN+M+R6
-        2TT1KThUwr3JiMmG+DAqmIVElnxRIbRE27ixnk6f5wqoAN7WF1EYa3djwuKOQJeCLTTOACdNlQ2
-        PkAaJgedKWy8tTjqfsRoTRttGqTw7z5ees7oEj+4x
-X-Received: by 2002:a19:f707:: with SMTP id z7mr12684775lfe.0.1571849932884;
-        Wed, 23 Oct 2019 09:58:52 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxzuAJ3SiF0de98rFTJPLLTmMZ3yLAQ4bENcIP+wrr2Kj8d3MAxXL/CqGOvxQJUi82d4cSF+Pao0feEKCQuYsA=
-X-Received: by 2002:a19:f707:: with SMTP id z7mr12684749lfe.0.1571849932584;
- Wed, 23 Oct 2019 09:58:52 -0700 (PDT)
+        Wed, 23 Oct 2019 12:59:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1571849957;
+        s=strato-dkim-0002; d=gerhold.net;
+        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
+        Subject:Sender;
+        bh=yJSh4O/Weq0HT56NhjFS1glIBJT4Lljt1Ot7yEFQ4Uk=;
+        b=sDn/5z25GMoKOqQ8YbhpZC3r4dG4YJqX8bdhzVTfOIiuegm7mZCHHpwQ2lcD3dEs5u
+        H2UNgdKMAL/BOJJ3ZE4TTDQcx2AF8zOlE6F1zI+gksU9QSIHsabmnVfXQuS3wn9cEguR
+        EOCUgD8H1d/yIbjVVCVBb/10flSotWCAXFDE4izH0P3WRDTyJ/FZnK4e8OpwNkuT6bKj
+        Dcb40IKYoEkQKcWt5UsWuCy3MHOKrQtGS1HeSo3jyRhe20BY6Gv0ggI66HTgChv/lQyh
+        AgaEW0YbQOi08esUuHeEqyv7WEdVlw1SmTsAaowdF5afxFx6YH+vcRCXEHZrbRjs8bMG
+        wGTQ==
+X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVORvLd4SsytBXS7IYBkLahKxP526PRnc="
+X-RZG-CLASS-ID: mo00
+Received: from localhost.localdomain
+        by smtp.strato.de (RZmta 44.28.1 DYNA|AUTH)
+        with ESMTPSA id 409989v9NGxDeZo
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Wed, 23 Oct 2019 18:59:13 +0200 (CEST)
+From:   Stephan Gerhold <stephan@gerhold.net>
+To:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Hai Li <hali@codeaurora.org>, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Nikita Travkin <nikitos.tr@gmail.com>
+Subject: [PATCH v2] drm/msm/dsi: Implement qcom,dsi-phy-regulator-ldo-mode for 28nm PHY
+Date:   Wed, 23 Oct 2019 18:56:17 +0200
+Message-Id: <20191023165617.28738-1-stephan@gerhold.net>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-References: <20191021200948.23775-1-mcroce@redhat.com> <20191021200948.23775-5-mcroce@redhat.com>
- <20191023100132.GD8732@netronome.com>
-In-Reply-To: <20191023100132.GD8732@netronome.com>
-From:   Matteo Croce <mcroce@redhat.com>
-Date:   Wed, 23 Oct 2019 18:58:16 +0200
-Message-ID: <CAGnkfhy1rsm0Dp_jsuHhfXY0kzMc_hShYmYSX=X8=q-HMtNczg@mail.gmail.com>
-Subject: Re: [PATCH net-next 4/4] bonding: balance ICMP echoes in layer3+4 mode
-To:     Simon Horman <simon.horman@netronome.com>
-Cc:     netdev <netdev@vger.kernel.org>,
-        Jay Vosburgh <j.vosburgh@gmail.com>,
-        Veaceslav Falico <vfalico@gmail.com>,
-        Andy Gospodarek <andy@greyhouse.net>,
-        "David S . Miller" <davem@davemloft.net>,
-        Stanislav Fomichev <sdf@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Song Liu <songliubraving@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Paul Blakey <paulb@mellanox.com>,
-        LKML <linux-kernel@vger.kernel.org>
-X-MC-Unique: VU-4ulozMBecvazaRcXPaQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 12:01 PM Simon Horman
-<simon.horman@netronome.com> wrote:
->
-> On Mon, Oct 21, 2019 at 10:09:48PM +0200, Matteo Croce wrote:
-> > The bonding uses the L4 ports to balance flows between slaves.
-> > As the ICMP protocol has no ports, those packets are sent all to the
-> > same device:
-> >
-> >     # tcpdump -qltnni veth0 ip |sed 's/^/0: /' &
-> >     # tcpdump -qltnni veth1 ip |sed 's/^/1: /' &
-> >     # ping -qc1 192.168.0.2
-> >     1: IP 192.168.0.1 > 192.168.0.2: ICMP echo request, id 315, seq 1, =
-length 64
-> >     1: IP 192.168.0.2 > 192.168.0.1: ICMP echo reply, id 315, seq 1, le=
-ngth 64
-> >     # ping -qc1 192.168.0.2
-> >     1: IP 192.168.0.1 > 192.168.0.2: ICMP echo request, id 316, seq 1, =
-length 64
-> >     1: IP 192.168.0.2 > 192.168.0.1: ICMP echo reply, id 316, seq 1, le=
-ngth 64
-> >     # ping -qc1 192.168.0.2
-> >     1: IP 192.168.0.1 > 192.168.0.2: ICMP echo request, id 317, seq 1, =
-length 64
-> >     1: IP 192.168.0.2 > 192.168.0.1: ICMP echo reply, id 317, seq 1, le=
-ngth 64
-> >
-> > But some ICMP packets have an Identifier field which is
-> > used to match packets within sessions, let's use this value in the hash
-> > function to balance these packets between bond slaves:
-> >
-> >     # ping -qc1 192.168.0.2
-> >     0: IP 192.168.0.1 > 192.168.0.2: ICMP echo request, id 303, seq 1, =
-length 64
-> >     0: IP 192.168.0.2 > 192.168.0.1: ICMP echo reply, id 303, seq 1, le=
-ngth 64
-> >     # ping -qc1 192.168.0.2
-> >     1: IP 192.168.0.1 > 192.168.0.2: ICMP echo request, id 304, seq 1, =
-length 64
-> >     1: IP 192.168.0.2 > 192.168.0.1: ICMP echo reply, id 304, seq 1, le=
-ngth 64
-> >
-> > Signed-off-by: Matteo Croce <mcroce@redhat.com>
->
-> I see where this patch is going but it is unclear to me what problem it i=
-s
-> solving. I would expect ICMP traffic to be low volume and thus able to be
-> handled by a single lower-device of a bond.
->
-> ...
+The DSI PHY regulator supports two regulator modes: LDO and DCDC.
+This mode can be selected using the "qcom,dsi-phy-regulator-ldo-mode"
+device tree property.
 
-Hi,
+However, at the moment only the 20nm PHY driver actually implements
+that option. Add a check in the 28nm PHY driver to program the
+registers correctly for LDO mode.
 
-The problem is not balancing the volume, even if it could increase due
-to IoT devices pinging some well known DNS servers to check for
-connection.
-If a bonding slave is down, people using pings to check for
-connectivity could fail to detect a broken link if all the packets are
-sent to the alive link.
-Anyway, although I didn't measure it, the computational overhead of
-this changeset should be minimal, and only affect ICMP packets when
-the ICMP dissector is used.
+Tested-by: Nikita Travkin <nikitos.tr@gmail.com> # l8150
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+---
+Changes in v2: Move DCDC/LDO code into separate methods
+v1: https://lore.kernel.org/linux-arm-msm/20191021163425.83697-1-stephan@gerhold.net/
 
-Regards,
---=20
-Matteo Croce
-per aspera ad upstream
+This is needed to make the display work on Longcheer L8150,
+which has recently gained mainline support in:
+https://git.kernel.org/pub/scm/linux/kernel/git/qcom/linux.git/commit/?id=16e8e8072108426029f0c16dff7fbe77fae3df8f
+
+This patch is based on code from the downstream kernel:
+https://source.codeaurora.org/quic/la/kernel/msm-3.10/tree/drivers/video/msm/mdss/msm_mdss_io_8974.c?h=LA.BR.1.2.9.1-02310-8x16.0#n152
+
+The LDO regulator configuration is taken from msm8916-qrd.dtsi:
+https://source.codeaurora.org/quic/la/kernel/msm-3.10/tree/arch/arm/boot/dts/qcom/msm8916-qrd.dtsi?h=LA.BR.1.2.9.1-02310-8x16.0#n56
+---
+ drivers/gpu/drm/msm/dsi/phy/dsi_phy_28nm.c | 42 +++++++++++++++++-----
+ 1 file changed, 34 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_28nm.c b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_28nm.c
+index b3f678f6c2aa..b384ea20f359 100644
+--- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_28nm.c
++++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_28nm.c
+@@ -39,15 +39,10 @@ static void dsi_28nm_dphy_set_timing(struct msm_dsi_phy *phy,
+ 		DSI_28nm_PHY_TIMING_CTRL_11_TRIG3_CMD(0));
+ }
+ 
+-static void dsi_28nm_phy_regulator_ctrl(struct msm_dsi_phy *phy, bool enable)
++static void dsi_28nm_phy_regulator_enable_dcdc(struct msm_dsi_phy *phy)
+ {
+ 	void __iomem *base = phy->reg_base;
+ 
+-	if (!enable) {
+-		dsi_phy_write(base + REG_DSI_28nm_PHY_REGULATOR_CAL_PWR_CFG, 0);
+-		return;
+-	}
+-
+ 	dsi_phy_write(base + REG_DSI_28nm_PHY_REGULATOR_CTRL_0, 0x0);
+ 	dsi_phy_write(base + REG_DSI_28nm_PHY_REGULATOR_CAL_PWR_CFG, 1);
+ 	dsi_phy_write(base + REG_DSI_28nm_PHY_REGULATOR_CTRL_5, 0);
+@@ -56,6 +51,39 @@ static void dsi_28nm_phy_regulator_ctrl(struct msm_dsi_phy *phy, bool enable)
+ 	dsi_phy_write(base + REG_DSI_28nm_PHY_REGULATOR_CTRL_1, 0x9);
+ 	dsi_phy_write(base + REG_DSI_28nm_PHY_REGULATOR_CTRL_0, 0x7);
+ 	dsi_phy_write(base + REG_DSI_28nm_PHY_REGULATOR_CTRL_4, 0x20);
++	dsi_phy_write(phy->base + REG_DSI_28nm_PHY_LDO_CNTRL, 0x00);
++}
++
++static void dsi_28nm_phy_regulator_enable_ldo(struct msm_dsi_phy *phy)
++{
++	void __iomem *base = phy->reg_base;
++
++	dsi_phy_write(base + REG_DSI_28nm_PHY_REGULATOR_CTRL_0, 0x0);
++	dsi_phy_write(base + REG_DSI_28nm_PHY_REGULATOR_CAL_PWR_CFG, 0);
++	dsi_phy_write(base + REG_DSI_28nm_PHY_REGULATOR_CTRL_5, 0x7);
++	dsi_phy_write(base + REG_DSI_28nm_PHY_REGULATOR_CTRL_3, 0);
++	dsi_phy_write(base + REG_DSI_28nm_PHY_REGULATOR_CTRL_2, 0x1);
++	dsi_phy_write(base + REG_DSI_28nm_PHY_REGULATOR_CTRL_1, 0x1);
++	dsi_phy_write(base + REG_DSI_28nm_PHY_REGULATOR_CTRL_4, 0x20);
++
++	if (phy->cfg->type == MSM_DSI_PHY_28NM_LP)
++		dsi_phy_write(phy->base + REG_DSI_28nm_PHY_LDO_CNTRL, 0x05);
++	else
++		dsi_phy_write(phy->base + REG_DSI_28nm_PHY_LDO_CNTRL, 0x0d);
++}
++
++static void dsi_28nm_phy_regulator_ctrl(struct msm_dsi_phy *phy, bool enable)
++{
++	if (!enable) {
++		dsi_phy_write(phy->reg_base +
++			      REG_DSI_28nm_PHY_REGULATOR_CAL_PWR_CFG, 0);
++		return;
++	}
++
++	if (phy->regulator_ldo_mode)
++		dsi_28nm_phy_regulator_enable_ldo(phy);
++	else
++		dsi_28nm_phy_regulator_enable_dcdc(phy);
+ }
+ 
+ static int dsi_28nm_phy_enable(struct msm_dsi_phy *phy, int src_pll_id,
+@@ -77,8 +105,6 @@ static int dsi_28nm_phy_enable(struct msm_dsi_phy *phy, int src_pll_id,
+ 
+ 	dsi_28nm_phy_regulator_ctrl(phy, true);
+ 
+-	dsi_phy_write(base + REG_DSI_28nm_PHY_LDO_CNTRL, 0x00);
+-
+ 	dsi_28nm_dphy_set_timing(phy, timing);
+ 
+ 	dsi_phy_write(base + REG_DSI_28nm_PHY_CTRL_1, 0x00);
+-- 
+2.23.0
 
