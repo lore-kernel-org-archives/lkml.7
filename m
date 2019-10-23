@@ -2,111 +2,90 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCA1FCA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:14:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16241CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:14:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B05F6214B2
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:14:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="BXvd9oNT"
+	by mail.kernel.org (Postfix) with ESMTP id DC1D221872
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:14:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571822063;
+	bh=J/0NYI9vPeRWmzOPUYf2ExKt6m2NpJRlNiOPTe8xGOs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PSKs4iyV+iAmn4rIM9eHhx+RSUEwbInTHWlnAlkif6FO0My30Dy3n++jTJ3hogr3d
+	 pEmiKpnljDPgT4v9qWUiPBbSAf4VvjGgdQpce5pEICjpUx5BHRGD9mda4XBaTeSABZ
+	 nxvRjW/YgfIIGEYO3UC045Dt3akGu0Vt3ML2Ce1A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390740AbfJWJOD (ORCPT
+        id S2403771AbfJWJOW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 05:14:03 -0400
-Received: from smtp86.ord1d.emailsrvr.com ([184.106.54.86]:51309 "EHLO
-        smtp86.ord1d.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732361AbfJWJOD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 05:14:03 -0400
-X-Greylist: delayed 449 seconds by postgrey-1.27 at vger.kernel.org; Wed, 23 Oct 2019 05:14:02 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
-        s=20190130-41we5z8j; t=1571821592;
-        bh=OegGS/GRixpjinYAdFnaxb8OEXr2UIj9Qvl4F/12miI=;
-        h=Subject:To:From:Date:From;
-        b=BXvd9oNTpVecEoseU+lgJdvLtTENOEg+nAXG77Djswpvi9Qkovbkxgsw5u8nND2ih
-         onXmzFSvI1PlxN8ilcbq4RqNvd2X0s+E5H+rbok4ifCeDRbTEXKZ0dvVCcYCIyh0WG
-         2ccuX3JTanTZoHOwmOKV0j6WHaKbXkzKZwhD2WrA=
-X-Auth-ID: abbotti@mev.co.uk
-Received: by smtp3.relay.ord1d.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id 2B1AD60080;
-        Wed, 23 Oct 2019 05:06:32 -0400 (EDT)
-X-Sender-Id: abbotti@mev.co.uk
-Received: from [10.0.0.173] (remote.quintadena.com [81.133.34.160])
-        (using TLSv1.2 with cipher AES128-SHA)
-        by 0.0.0.0:465 (trex/5.7.12);
-        Wed, 23 Oct 2019 05:06:32 -0400
-Subject: Re: [PATCH -next] staging: comedi: dt2814: remove set but not used
- variables 'data'
-To:     YueHaibing <yuehaibing@huawei.com>, hsweeten@visionengravers.com,
-        gregkh@linuxfoundation.org
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-References: <20191023074827.33264-1-yuehaibing@huawei.com>
-From:   Ian Abbott <abbotti@mev.co.uk>
-Organization: MEV Ltd.
-Message-ID: <39229719-55d4-4a71-f698-95ce491496b4@mev.co.uk>
-Date:   Wed, 23 Oct 2019 10:06:30 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 23 Oct 2019 05:14:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36352 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732361AbfJWJOW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 05:14:22 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3396A2084B;
+        Wed, 23 Oct 2019 09:14:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571822062;
+        bh=J/0NYI9vPeRWmzOPUYf2ExKt6m2NpJRlNiOPTe8xGOs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VuZs8gJo5L4/OdewVJj5asGrwjUdbbjQ8tuc/NvvVifrv/GI7BKGvIID8GfYU6mZZ
+         DSuwL1Twcouv29gCbCEqeGrfbZMSNnJJNAnCfBpfcYwzfbKlPcu6xf5Fxcsmx/WSNM
+         vLXAIFlJV8dOjIO7N5rD978d/PYKBeGArlzLl2lg=
+Date:   Wed, 23 Oct 2019 10:14:17 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf tests: Fix a typo
+Message-ID: <20191023091416.GB25798@willie-the-truck>
+References: <20191023083324.12093-1-leo.yan@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20191023074827.33264-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191023083324.12093-1-leo.yan@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/10/2019 08:48, YueHaibing wrote:
-> drivers/staging/comedi/drivers/dt2814.c:193:6:
->   warning: variable data set but not used [-Wunused-but-set-variable]
+On Wed, Oct 23, 2019 at 04:33:24PM +0800, Leo Yan wrote:
+> Correct typo in comment: s/suck/stuck.
 > 
-> It is never used, so can be removed.
-> 
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
 > ---
->   drivers/staging/comedi/drivers/dt2814.c | 8 ++------
->   1 file changed, 2 insertions(+), 6 deletions(-)
+>  tools/perf/tests/bp_signal.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/staging/comedi/drivers/dt2814.c b/drivers/staging/comedi/drivers/dt2814.c
-> index d2c7157..e7c6787 100644
-> --- a/drivers/staging/comedi/drivers/dt2814.c
-> +++ b/drivers/staging/comedi/drivers/dt2814.c
-> @@ -186,21 +186,17 @@ static int dt2814_ai_cmd(struct comedi_device *dev, struct comedi_subdevice *s)
->   
->   static irqreturn_t dt2814_interrupt(int irq, void *d)
->   {
-> -	int lo, hi;
->   	struct comedi_device *dev = d;
->   	struct dt2814_private *devpriv = dev->private;
->   	struct comedi_subdevice *s = dev->read_subdev;
-> -	int data;
->   
->   	if (!dev->attached) {
->   		dev_err(dev->class_dev, "spurious interrupt\n");
->   		return IRQ_HANDLED;
->   	}
->   
-> -	hi = inb(dev->iobase + DT2814_DATA);
-> -	lo = inb(dev->iobase + DT2814_DATA);
-> -
-> -	data = (hi << 4) | (lo >> 4);
-> +	inb(dev->iobase + DT2814_DATA);
-> +	inb(dev->iobase + DT2814_DATA);
->   
->   	if (!(--devpriv->ntrig)) {
->   		int i;
-> 
+> diff --git a/tools/perf/tests/bp_signal.c b/tools/perf/tests/bp_signal.c
+> index 166f411568a5..415903b48578 100644
+> --- a/tools/perf/tests/bp_signal.c
+> +++ b/tools/perf/tests/bp_signal.c
+> @@ -295,7 +295,7 @@ bool test__bp_signal_is_supported(void)
+>  	 * breakpointed instruction.
+>  	 *
+>  	 * Since arm64 has the same issue with arm for the single-step
+> -	 * handling, this case also gets suck on the breakpointed
+> +	 * handling, this case also gets stuck on the breakpointed
+>  	 * instruction.
+>  	 *
+>  	 * Just disable the test for these architectures until these
 
-Those variables are currently unused due to a bug that I need to fix.
+Thanks, and sorry for only spotting this after the offending patch was
+merged.
 
-
--- 
--=( Ian Abbott <abbotti@mev.co.uk> || Web: www.mev.co.uk )=-
--=( MEV Ltd. is a company registered in England & Wales. )=-
--=( Registered number: 02862268.  Registered address:    )=-
--=( 15 West Park Road, Bramhall, STOCKPORT, SK7 3JZ, UK. )=-
+Will
