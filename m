@@ -2,67 +2,97 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45872CA9EBB
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:25:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 085BBCA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B51F20650
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:25:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571826309;
-	bh=dkE3MrqlPJvwnrTN1PpFKAE8Ll7LIwAMZtG0/eVUxes=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=bX34B44TYAHJdTQGE4NbDA1MKYirMD8fbDBOUXaa5EI9spYECpu6F4e7QILUOD2i+
-	 PVI5XLL2rzi8i1j9kKdCpY2OcdDzW2ALGy3GP18bD4Y+LA+WJ97TXSzndailKnLSrR
-	 93P2smC6LxVaxNeg4te0nAr5yBj0Idcl28ZpbAFI=
+	by mail.kernel.org (Postfix) with ESMTP id CB96220650
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:25:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404394AbfJWKZI (ORCPT
+        id S2404314AbfJWKZH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 06:25:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56370 "EHLO mail.kernel.org"
+        Wed, 23 Oct 2019 06:25:07 -0400
+Received: from mail.sf-mail.de ([116.202.16.50]:42885 "EHLO mail.sf-mail.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391001AbfJWKZG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2390935AbfJWKZG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 23 Oct 2019 06:25:06 -0400
-Subject: Re: [GIT PULL] Btrfs fixes for 5.4-rc5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571826306;
-        bh=dkE3MrqlPJvwnrTN1PpFKAE8Ll7LIwAMZtG0/eVUxes=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=QKjMO6Iwqc6sLTVHlbFoAqM0SzLM1e/lUeMfH9HNby9O2345vN1Z2ACs8nV+SpsZb
-         qsuwxrYEvD7UajIyRzDK+FGo8ciSVXFjdWNWyZCDBdqrmq/M0Xit2owJwxqLc9+swq
-         2ASByCg2akqS8pjjk+lVMi0kBCcq/6VPuZQfjNB4=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <cover.1571751313.git.dsterba@suse.com>
-References: <cover.1571751313.git.dsterba@suse.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <cover.1571751313.git.dsterba@suse.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.4-rc4-tag
-X-PR-Tracked-Commit-Id: ba0b084ac309283db6e329785c1dc4f45fdbd379
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 54955e3bfde54dcdd29694741f2ddfc6b763b193
-Message-Id: <157182630637.4124.5490393115058163263.pr-tracker-bot@kernel.org>
-Date:   Wed, 23 Oct 2019 10:25:06 +0000
-To:     David Sterba <dsterba@suse.com>
-Cc:     torvalds@linux-foundation.org, David Sterba <dsterba@suse.com>,
-        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Received: (qmail 27735 invoked from network); 23 Oct 2019 10:20:38 -0000
+Received: from mail.sf-mail.de ([2a01:4f8:1c17:6fae:616d:6c69:616d:6c69]:43938 HELO webmail.sf-mail.de) (auth=eike@sf-mail.de)
+        by mail.sf-mail.de (Qsmtpd 0.36dev) with (DHE-RSA-AES256-GCM-SHA384 encrypted) ESMTPSA
+        for <rppt@kernel.org>; Wed, 23 Oct 2019 12:20:38 +0200
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 23 Oct 2019 12:20:29 +0200
+From:   Rolf Eike Beer <eike-kernel@sf-tec.de>
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Greentime Hu <green.hu@gmail.com>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Helge Deller <deller@gmx.de>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Jeff Dike <jdike@addtoit.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mark Salter <msalter@redhat.com>,
+        Matt Turner <mattst88@gmail.com>,
+        Michal Simek <monstr@monstr.eu>,
+        Richard Weinberger <richard@nod.at>,
+        Russell King <linux@armlinux.org.uk>,
+        Sam Creasey <sammy@sammy.net>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
+        linux-alpha@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
+        linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-parisc@vger.kernel.org, linux-um@lists.infradead.org,
+        sparclinux@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>,
+        linux-parisc-owner@vger.kernel.org
+Subject: Re: [PATCH 08/12] parisc: use pgtable-nopXd instead of 4level-fixup
+In-Reply-To: <1571822941-29776-9-git-send-email-rppt@kernel.org>
+References: <1571822941-29776-1-git-send-email-rppt@kernel.org>
+ <1571822941-29776-9-git-send-email-rppt@kernel.org>
+Message-ID: <70339cfc547e2fa0f6b98fefb1b1a9fa@sf-tec.de>
+X-Sender: eike-kernel@sf-tec.de
+User-Agent: Roundcube Webmail/1.3.8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Tue, 22 Oct 2019 15:52:07 +0200:
+> diff --git a/arch/parisc/include/asm/page.h 
+> b/arch/parisc/include/asm/page.h
+> index 93caf17..1d339ee 100644
+> --- a/arch/parisc/include/asm/page.h
+> +++ b/arch/parisc/include/asm/page.h
+> @@ -42,48 +42,54 @@ typedef struct { unsigned long pte; } pte_t; /*
+> either 32 or 64bit */
+> 
+>  /* NOTE: even on 64 bits, these entries are __u32 because we allocate
+>   * the pmd and pgd in ZONE_DMA (i.e. under 4GB) */
+> -typedef struct { __u32 pmd; } pmd_t;
+>  typedef struct { __u32 pgd; } pgd_t;
+>  typedef struct { unsigned long pgprot; } pgprot_t;
+> 
+> -#define pte_val(x)	((x).pte)
+> -/* These do not work lvalues, so make sure we don't use them as such. 
+> */
+> +#if CONFIG_PGTABLE_LEVELS == 3
+> +typedef struct { __u32 pmd; } pmd_t;
+> +#define __pmd(x)	((pmd_t) { (x) } )
+> +/* pXd_val() do not work lvalues, so make sure we don't use them as 
+> such. */
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.4-rc4-tag
+For me it sounds like there is something missing, maybe an "as" before 
+lvalues?
+And it was "These", so plural, and now it is singular, so do -> does?
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/54955e3bfde54dcdd29694741f2ddfc6b763b193
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Eike
