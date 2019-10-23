@@ -2,187 +2,106 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FORGED_MUA_MOZILLA,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49378CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 11:06:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C3EECA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 11:06:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F76C20650
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 11:06:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D223520650
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 11:06:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p3MKCf8w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404633AbfJWLGB (ORCPT
+        id S2404644AbfJWLGP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 07:06:01 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:53684 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2390486AbfJWLGB (ORCPT
+        Wed, 23 Oct 2019 07:06:15 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:43002 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390486AbfJWLGP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 07:06:01 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9NB2TtU034220
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 07:06:00 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2vtm533jg2-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 07:05:59 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <riteshh@linux.ibm.com>;
-        Wed, 23 Oct 2019 12:05:57 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 23 Oct 2019 12:05:55 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9NB5sex54263842
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 23 Oct 2019 11:05:54 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 51DB24C052;
-        Wed, 23 Oct 2019 11:05:54 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D04AE4C044;
-        Wed, 23 Oct 2019 11:05:51 +0000 (GMT)
-Received: from [9.199.158.207] (unknown [9.199.158.207])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 23 Oct 2019 11:05:51 +0000 (GMT)
-Subject: Re: [PATCH RESEND 1/1] vfs: Really check for inode ptr in lookup_fast
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        wugyuan@cn.ibm.com, jlayton@kernel.org, hsiangkao@aol.com,
-        Jan Kara <jack@suse.cz>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-References: <20190927044243.18856-1-riteshh@linux.ibm.com>
- <20191015040730.6A84742047@d06av24.portsmouth.uk.ibm.com>
- <20191022133855.B1B4752050@d06av21.portsmouth.uk.ibm.com>
- <20191022143736.GX26530@ZenIV.linux.org.uk>
- <20191022201131.GZ26530@ZenIV.linux.org.uk>
-From:   Ritesh Harjani <riteshh@linux.ibm.com>
-Date:   Wed, 23 Oct 2019 16:35:50 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <20191022201131.GZ26530@ZenIV.linux.org.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19102311-4275-0000-0000-00000376149D
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19102311-4276-0000-0000-000038893B65
-Message-Id: <20191023110551.D04AE4C044@d06av22.portsmouth.uk.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-23_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=771 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910230112
+        Wed, 23 Oct 2019 07:06:15 -0400
+Received: by mail-pl1-f196.google.com with SMTP id c16so6181681plz.9
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 04:06:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=qPpOdZIAHDcQDrpBHTEE+DHd+oPdwYCkPle0TB+oIr0=;
+        b=p3MKCf8wTny1eS9+WPg6KOdbGDAsoT4+mmQ/bB4oIdKy1EGN/uexUzv2N6TBs8n0EY
+         m7hssrUIb+/WSqvEqhdbUhZeUJUlI8wmbxI1D4tYuGKWlavl2peaFC1guqcEhtvTFZOE
+         ccBz0AU/19tolt7kAyLX5NTSYSzXqMKzQZg7id7A1B3YVpS8wqZglTvTfMvHs7zBkVl3
+         5OyjG5TJIC33F5tRek+T9wO8yS/zOWHMCz1mBHnlfcrYMg7l0fJWQ6Ds8smtZyrS1RW5
+         U9Nw9FxVBivygrSN2t2x8CMo1pFKPpxLXZiXO1y3mib6P3EBO1/76FfNkkpwya/yyH5t
+         UCmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=qPpOdZIAHDcQDrpBHTEE+DHd+oPdwYCkPle0TB+oIr0=;
+        b=nMjnyIOXLoVOqZhV5XrMqqOlwub9V9PAASg0Ct/ZQFXpDABIhTuik/fakoHBR+Z0NE
+         hzcudfWamslPycPBtLaoLuFeHU/2vfXd2YvWOk5u2luWkSApPAn0r7OQyDqzcCMH+PVW
+         RV7LSV9BBqQdClhqkEfQEWtiljh+Q5inJPAipvBNbN4XRY9Ea+5BQtltdIKEFluS2kN2
+         /egniRnTB5WdbZAbQq4UXRP9PB1QpUJCwhe+XvXSm96qVNAMHOKQ/8QX+nTJ6rtsx/0h
+         s/iDy6hVOCaxZINzTw7ASUE4Fc9phfsVr5pagZJewSw44VI3CReMh5U74CWmMi/kr/SQ
+         DltA==
+X-Gm-Message-State: APjAAAUysMVWbbZrfPMHCR3ei8F0E2QG3NiKNebfFvsOjokzjwZoWn0Z
+        idPmu6MaLrl8NIy8NpuiaxF7Jw==
+X-Google-Smtp-Source: APXvYqwfrOgnuHFr7yKLUeel5YnP71QVIOnjIksynYQ+9B7+FuzJo2MjfhTvfAHVg7D8MpdMVYNLXw==
+X-Received: by 2002:a17:902:6ac8:: with SMTP id i8mr8498933plt.164.1571828773442;
+        Wed, 23 Oct 2019 04:06:13 -0700 (PDT)
+Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id y138sm23388684pfb.174.2019.10.23.04.06.09
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 23 Oct 2019 04:06:12 -0700 (PDT)
+From:   Baolin Wang <baolin.wang@linaro.org>
+To:     arnd@arndb.de
+Cc:     olof@lixom.net, arm@kernel.org,
+        linux-arm-kernel@lists.infradead.org, orsonzhai@gmail.com,
+        baolin.wang@linaro.org, baolin.wang7@gmail.com,
+        zhang.lyra@gmail.com, linux-kernel@vger.kernel.org
+Subject: [PATCH] MAINTAINERS: Update the Spreadtrum SoC maintainer
+Date:   Wed, 23 Oct 2019 19:05:27 +0800
+Message-Id: <2e3d8287d05ce2d642c0445fbef6f1960124c557.1571828539.git.baolin.wang@linaro.org>
+X-Mailer: git-send-email 1.7.9.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Change my email address, and add more Spreadtrum PMIC drivers
+to maintain.
 
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+---
+ MAINTAINERS |   11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-On 10/23/19 1:41 AM, Al Viro wrote:
-> On Tue, Oct 22, 2019 at 03:37:36PM +0100, Al Viro wrote:
->> On Tue, Oct 22, 2019 at 07:08:54PM +0530, Ritesh Harjani wrote:
->>> I think we have still not taken this patch. Al?
-
->> or, for that matter, any callers of filename_lookup() assuming that the
->> lack of ENOENT means that the last call of walk_component() (from lookup_last())
->> has not failed with the same ENOENT and thus the result has been observed
->> positive.
->> You've picked the easiest one to hit, but on e.g. KVM setups you can have the
->> host thread representing the CPU where __d_set_inode_and_type() runs get
->> preempted (by the host kernel), leaving others with much wider window.
-
-I had thought so about the other call sites, but as you said
-maybe this was the easiest one to hit.
-Then, I kind of followed your suggested fix in below link to fix at 
-least this current crash.
-https://patchwork.kernel.org/patch/10909881/
-
->>
->> Sure, we can do that to all callers of d_is_negative/d_is_positive, but...
->> the same goes for any places that assumes that d_is_dir() implies that
->> the sucker is positive, etc.
->>
->> What we have guaranteed is
->> 	* ->d_lock serializes ->d_flags/->d_inode changes
->> 	* ->d_seq is bumped before/after such changes
->> 	* positive dentry never changes ->d_inode as long as you hold
->> a reference (negative dentry *can* become positive right under you)
->>
->> So there are 3 classes of valid users: those holding ->d_lock, those
->> sampling and rechecking ->d_seq and those relying upon having observed
->> the sucker they've pinned to be positive.
-
-:) Thanks for simplifying like this. Agreed.
-
-
-
->>
->> What you've been hitting is "we have it pinned, ->d_flags says it's
->> positive but we still observe the value of ->d_inode from before the
->> store to ->d_flags that has made it look positive".
-> 
-> Actually, your patch opens another problem there.  Suppose you make
-> it d_really_is_positive() and hit the same race sans reordering.
-> Dentry is found by __d_lookup() and is negative.  Right after we
-> return from __d_lookup() another thread makes it positive (a symlink)
-> - ->d_inode is set, d_really_is_positive() becomes true.  OK, on we
-> go, pick the inode and move on.  Right?  ->d_flags is still not set
-> by the thread that made it positive.  We return from lookup_fast()
-> and call step_into().  And get to
->          if (likely(!d_is_symlink(path->dentry)) ||
-> Which checks ->d_flags and sees the value from before the sucker
-> became positive.  IOW, d_is_symlink() is false here.  If that
-> was the last path component and we'd been told to follow links,
-> we will end up with positive dentry of a symlink coming out of
-> pathname resolution.
-> 
-
-hmm. yes, looks like it, based on your above explanation.
-So even though this could avoid crash, but still we may end up with
-a bogus entry with current patch.
-
-
-
-> Similar fun happens if you have mkdir racing with lookup - ENOENT
-> is what should've happened if lookup comes first, success - if
-> mkdir does.  This way we can hit ENOTDIR, due to false negative
-> from d_can_lookup().
-> 
-> IOW, d_really_is_negative() in lookup_fast() will paper over
-> one of oopsen, but it
-> 	* won't cover similar oopsen on other codepaths and
-> 	* will lead to bogus behaviour.
-> 
-> I'm not sure that blanket conversion of d_is_... to smp_load_acquire()
-> is the right solution; it might very well be that we need to do that
-> only on a small subset of call sites, lookup_fast() being one of
-> those.  But we do want at least to be certain that something we'd
-> got from lookup_fast() in non-RCU mode already has ->d_flags visible.
-
-We may also need similar guarantees with __d_clear_type_and_inode().
-
-So do you think we should make use of ->d_seq for verifying this?
-I see both __d_set_inode_and_type & __d_clear_type_and_inode() called
-under ->d_seq_begin/->d_seq_end.
-
-Then maybe we should use ->d_seq checking at those call sites.
-We cannot unconditionally use ->d_seq checking in __d_entry_type(),
-since we sometimes call this function inside ->d_seq_begin
-(like in lookup_fast).
-
-
-> 
-> I'm going through the callers right now, will post a followup once
-> the things get cleaner...
-> 
-Thanks for looking into this.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 55199ef..7e6fdcf 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2327,10 +2327,19 @@ F:	drivers/edac/altera_edac.
+ 
+ ARM/SPREADTRUM SoC SUPPORT
+ M:	Orson Zhai <orsonzhai@gmail.com>
+-M:	Baolin Wang <baolin.wang@linaro.org>
++M:	Baolin Wang <baolin.wang7@gmail.com>
+ M:	Chunyan Zhang <zhang.lyra@gmail.com>
+ S:	Maintained
+ F:	arch/arm64/boot/dts/sprd
++F:	drivers/power/reset/sc27xx-poweroff.c
++F:	drivers/leds/leds-sc27xx-bltc.c
++F:	drivers/input/misc/sc27xx-vibra.c
++F:	drivers/power/supply/sc27xx_fuel_gauge.c
++F:	drivers/power/supply/sc2731_charger.c
++F:	drivers/rtc/rtc-sc27xx.c
++F:	drivers/regulator/sc2731-regulator.c
++F:	drivers/nvmem/sc27xx-efuse.c
++F:	drivers/iio/adc/sc27xx_adc.c
+ N:	sprd
+ 
+ ARM/STI ARCHITECTURE
+-- 
+1.7.9.5
 
