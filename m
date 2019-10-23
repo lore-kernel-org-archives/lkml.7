@@ -2,73 +2,88 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 533EFCA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:54:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F6B0CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:54:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3128221920
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:54:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FC9B21929
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:54:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391919AbfJWNyf (ORCPT
+        id S2406226AbfJWNys (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 09:54:35 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4711 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390181AbfJWNye (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 09:54:34 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 1A8149213314023501A7;
-        Wed, 23 Oct 2019 21:54:27 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Wed, 23 Oct 2019
- 21:54:17 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <dhowells@redhat.com>
-CC:     <linux-afs@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <pmladek@suse.com>, <sergey.senozhatsky@gmail.com>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] afs: remove unused variable 'afs_zero_fid'
-Date:   Wed, 23 Oct 2019 21:54:08 +0800
-Message-ID: <20191023135408.32932-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Wed, 23 Oct 2019 09:54:48 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:57373 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390181AbfJWNys (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 09:54:48 -0400
+Received: from mail-qk1-f170.google.com ([209.85.222.170]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1M1pfy-1iPSxS12ro-002GC9; Wed, 23 Oct 2019 15:54:46 +0200
+Received: by mail-qk1-f170.google.com with SMTP id q70so12255704qke.12;
+        Wed, 23 Oct 2019 06:54:45 -0700 (PDT)
+X-Gm-Message-State: APjAAAWoErbG2vVzPG1ASGwUqNjiigXVXCYO+CmCrM6ASujv85zjVmHg
+        7Zy4mtB+bKS5nRP2wftma5HH0gWUaO+zaFufcK8=
+X-Google-Smtp-Source: APXvYqwg1GMH8QdNiqBQrXGE6tBmtG4ranjbu2NqBzx98xXXHvxcSSud6NSUY0ZDvcAUkWXJquc0IymGFTx7V0wKlHc=
+X-Received: by 2002:a05:620a:4f:: with SMTP id t15mr8358153qkt.286.1571838884945;
+ Wed, 23 Oct 2019 06:54:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+References: <20191010202802.1132272-1-arnd@arndb.de> <20191010203043.1241612-1-arnd@arndb.de>
+ <20191010203043.1241612-33-arnd@arndb.de> <20191023134956.GK11048@pi3>
+In-Reply-To: <20191023134956.GK11048@pi3>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 23 Oct 2019 15:54:28 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1LVo0vfngK_7z-a0nC_t_v85OE8epke2XAFYH9EW821g@mail.gmail.com>
+Message-ID: <CAK8P3a1LVo0vfngK_7z-a0nC_t_v85OE8epke2XAFYH9EW821g@mail.gmail.com>
+Subject: Re: [PATCH 33/36] ARM: s3c: move low-level clk reg access into
+ platform code
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     "moderated list:ARM/SAMSUNG EXYNOS ARM ARCHITECTURES" 
+        <linux-samsung-soc@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:+Av+xoFVIkh4CH56GsaW7ZCFUxfyKXmDxn17ZfHzj78Rnv6BbZe
+ nJvEfDkynb539c2dyFovr3KbiR2lWvNrB8g5Fj7aCvYtcecZUc+0sFg5Li/AdrRd4v6oswI
+ tdrE2af8rwgXT8xZQBFNBPiJ4RKVCZIPz+NXib65BSX1NQQbaAXsK2i74vScoVBZ3UQT3w2
+ Za92BQERlqrCdnzlroQvw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:g8zyAMASZJ4=:kXtUw3vCqlR/mK6YThXKVO
+ j3EmAzd9kPfheebOTnhxgjXHq/tsW7rigG3saHPvB8QzySep4Bw+UZigTU9VHQN+pWiCPYr5V
+ 0AYfXtpnmqpwbhv9fNZwhN8qL/bdVI7hsqzktH9yo9sQlDVTLr/otE+9bD7GYvNS3MHfuC8fl
+ +N1raW8tBfOTSPlF+XniHCze/ZHEZ1zjFZMzteJxfSz7INtF9ibDmG0JVkjQOJ/95WVcWjTmG
+ ieb7/r/ee/NTXYCWeV41VH7P9SRQFjO9C7Aq6upS3ftkugo+77SGoZ1o0/2B4gcCsLfZ6liRg
+ anwSOO8W+HiddRPOyIKef33OTZvY0o5WJj8fIzOglGl/3waHbALPn0E5RzgzijvCI70BofE+j
+ 7bw7MYPYgGakZ9qh8+la67Z8H12Ls4raiMvfKOSUmDlmWzxEiSFPZyb0O2Unie3q92w6v64DT
+ vH0rN98PKLQuqdv+lA4VYl+lwEZUSo2w7vJGqoTB1QFUQl2+4abu3pSEBFSP1PFzW5tSnTXEN
+ zca5NgGuWTuCeGWqVvTid9s+U9QJJnlJKDcd+4vuOt+qY6Q2bKeOO8FJykEZKdP8butsSLD6B
+ p7sfc1zyepXdFlJ2SVjSS652JLZRIXL9wD8azwcfP4BsAgw0URclfuSqVFqciVQffhZvCdj37
+ AAJewUrfVBjuuDpZkvie+ey2IcMsb3Mfth7mMaz530MFuYMdhybbKRK4alfkCLQAEf7/EyVFH
+ hLrdDblzJwZmcNF1CQaUqZTi8QlEr4fzgNyQoVgvRoGiy+cmVtPwWAEfRf73IwKnLRqZ3SGRv
+ tUCTeuGo7/pmeZRvVEA1urNZbw+I0mduroQA3pes9YrNrjLdIFNdgJi9QUPmuVU59k4WNs/Za
+ qVc91JR4CXDYlKyaYv4Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-fs/afs/fsclient.c:18:29: warning:
- afs_zero_fid defined but not used [-Wunused-const-variable=]
+On Wed, Oct 23, 2019 at 3:50 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
 
-It is never used since commit 025db80c9e42 ("afs: Trace
-the initiation and completion of client calls")
+> >  # common code
+> >
+> > -obj-$(CONFIG_S3C2410_CPUFREQ_UTILS) += cpufreq-utils.o
+> > +obj-$(CONFIG_ARM_S3C24XX_CPUFREQ) += cpufreq-utils.o
+>
+> Drop also here S3C2410_CPUFREQ_UTILS entirely.
+>
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- fs/afs/yfsclient.c | 2 --
- 1 file changed, 2 deletions(-)
+Ok, done.
 
-diff --git a/fs/afs/yfsclient.c b/fs/afs/yfsclient.c
-index 9ac035c..46c679e 100644
---- a/fs/afs/yfsclient.c
-+++ b/fs/afs/yfsclient.c
-@@ -15,8 +15,6 @@
- #include "xdr_fs.h"
- #include "protocol_yfs.h"
- 
--static const struct afs_fid afs_zero_fid;
--
- static inline void afs_use_fs_server(struct afs_call *call, struct afs_cb_interest *cbi)
- {
- 	call->cbi = afs_get_cb_interest(cbi);
--- 
-2.7.4
-
-
+      Arnd
