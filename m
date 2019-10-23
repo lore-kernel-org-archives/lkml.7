@@ -2,200 +2,109 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 399D6CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:13:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AA58CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:14:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0951520640
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:13:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571832804;
-	bh=q0HB093G8YTHpPgkMrbu29RHoKgtWViq73a6cQtM7Hw=;
-	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
-	b=16LrXliIcoH03o75hsUtueUO+Vn8eGKGXcS1Ye6Nye0x4P1Ch3ZLx75ACx5dvS2Zs
-	 R8+qfOCreMAIymfR/+5MzhCByUc0IO6oLqxA1TfzL+Cflt/dUhn6q4udQccL9qaLwI
-	 CU1spbPWcma5jUsQebiXpWtkvO6mw1NRYNqxRYXs=
+	by mail.kernel.org (Postfix) with ESMTP id DE6C520640
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:14:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391226AbfJWMNX (ORCPT
+        id S2391230AbfJWMON (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 08:13:23 -0400
-Received: from inca-roads.misterjones.org ([213.251.177.50]:49339 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726925AbfJWMNW (ORCPT
+        Wed, 23 Oct 2019 08:14:13 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:42259 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726925AbfJWMOM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 08:13:22 -0400
-Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1iNFVq-0001TZ-BF; Wed, 23 Oct 2019 14:13:14 +0200
-To:     "liwei (GF)" <liwei391@huawei.com>
-Subject: Re: [PATCH v3 1/2] arm64: Relax =?UTF-8?Q?ICC=5FPMR=5FEL=31=20acc?=  =?UTF-8?Q?esses=20when=20ICC=5FCTLR=5FEL=31=2EPMHE=20is=20clear?=
-X-PHP-Originating-Script: 0:main.inc
+        Wed, 23 Oct 2019 08:14:12 -0400
+Received: from mail-qk1-f177.google.com ([209.85.222.177]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MowOm-1hetlU2NIM-00qOq5; Wed, 23 Oct 2019 14:14:10 +0200
+Received: by mail-qk1-f177.google.com with SMTP id p4so19503992qkf.5;
+        Wed, 23 Oct 2019 05:14:10 -0700 (PDT)
+X-Gm-Message-State: APjAAAVgFidVU8O7xHC8sllB8qi9XpNBjes+CBPHMJHN17BYr1N/UyRL
+        IHSkK1l97zOafM5EnkQF68qbgseU5D6NyAHqKo0=
+X-Google-Smtp-Source: APXvYqx9FmGVkwD8EbgMmlWydk5PgzJ33OYlaEnM7tpXys5e+jS3v3e/vy3XLGsCvMOw7vkw88sF/Z9WI6L06moKLMI=
+X-Received: by 2002:a37:9442:: with SMTP id w63mr7673807qkd.138.1571832849353;
+ Wed, 23 Oct 2019 05:14:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 23 Oct 2019 13:13:14 +0100
-From:   Marc Zyngier <maz@kernel.org>
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        <huawei.libin@huawei.com>, <guohanjun@huawei.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-In-Reply-To: <ad164b94-06af-ffe7-b8ff-317b4078b1a5@huawei.com>
-References: <20191002090613.14236-1-maz@kernel.org>
- <20191002090613.14236-2-maz@kernel.org>
- <ad164b94-06af-ffe7-b8ff-317b4078b1a5@huawei.com>
-Message-ID: <4ed2ed389a81cc0ec6f3150ce38517a5@www.loen.fr>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/0.7.2
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: liwei391@huawei.com, will@kernel.org, catalin.marinas@arm.com, suzuki.poulose@arm.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, huawei.libin@huawei.com, guohanjun@huawei.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+References: <20191010202802.1132272-1-arnd@arndb.de> <20191010203043.1241612-1-arnd@arndb.de>
+ <20191010203043.1241612-5-arnd@arndb.de> <20191023102750.GD10630@pi3>
+In-Reply-To: <20191023102750.GD10630@pi3>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 23 Oct 2019 14:13:52 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a0SwvSHRddMZEiRy3hHQB5OpyP1H05c0oZt3JUeKOf+=g@mail.gmail.com>
+Message-ID: <CAK8P3a0SwvSHRddMZEiRy3hHQB5OpyP1H05c0oZt3JUeKOf+=g@mail.gmail.com>
+Subject: Re: [PATCH 05/36] ARM: samsung: make pm-debug platform independent
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Kukjin Kim <kgene@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        "moderated list:ARM/SAMSUNG EXYNOS ARM ARCHITECTURES" 
+        <linux-samsung-soc@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:a43ik33BKP22rbmRQGbj9BzOnOijdOzJH6/EMxbiAQS0BlFPVUi
+ sv5fjSrhrftA5lEhZ2zRyCAz4ReA0rUbaBpnR1vZF7ASNqCfdnA88xcLrPX7kG/dpUhwK19
+ arl6t0NVDw+MGcuyZX+9xavpDdG2hq1tS3Sgpnlfm2cjbPuMMsbqqKVEkMqoIuCBVxwLRT/
+ m3qjEXTctE+hAMRVwGF/Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:IFNGo97kzRE=:vHjLrX1J+UWjDoRAJ2NxxE
+ A1ONjWNttP62cWJX18DBkYCPK2HNTebke7HEno7klZENLGXOdy0gbF8CTVG07CoUJ9qB3VVDL
+ T15BpDYxE1qzWPvGVwEdK6uWSybEIup+PDg6W3nRanLJG+tQY67q0LDkbebKmE5htfJMk/DZ3
+ P1RDdxkdaHj1k0O3F/HVxClk8VrlDRSPU/7ZQLqNa6ob54Mb2oCYl5mM6Cd3sshKKZ11cwvBl
+ 3zC74MPED8P5VNqMiYuyGJsplgmN0rU5E+GltWsSNtmdOpGC/02jsxUdjGopAfJ7A29Wg3Ae3
+ Q6WUPaRcqPGzNF3oNXCc+1+Cep9Cv5exMezLjmpgz700N5daVlLEey6t37WJfaMJZ6tkjNpIz
+ J5P52xD81KKRE0uq6zO2NyWZ2HqId5JI1Wg/ChS4U/QRR6RaogjRq/G9+AYLbKtFuncQl/spg
+ 3X7G48/oVPn6QNeeRbJTTbk4gEW8jCnpVIIDjuS0jkfr531CqfNVQLbMPVU4KTaEeafruJHOs
+ PxE1S+LPoQs7Af39qvNT6RI7K5PB6YJyWjfcJPVXgocUsrfbK7dFi5aOMDb8wkPkCghgEJkZy
+ DqhS7aTx5BVUaCuK0SH+rUplHYp9QBsFWc+DYWYy46Pbo9y1wDwimwiCspqiP55ZiRGd7gIza
+ Cur+KSjCSbvlnvRr3oyyh/u0b2NHoPY+7vWZ1u6ujgL+jTJTPaVuRubXbiNOMBS9K5v5tM1rA
+ mRakYKF0wdP014emxSTzY+J5Vq8edyCxFGklQg15lJ/aS1TX4t2Na33SLpfRo4ikAJggOLWI6
+ iqElYZljLSfscFtw6NTqHT4M1XzMG1X9gg/s6mTQjvuhDzyOdqg1xPJatGjKp7aFdhgn6kZcT
+ sg23VWvUxaE5IOBjnN6g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Wei,
-
-On 2019-10-23 09:38, liwei (GF) wrote:
-> Hi Marc,
+On Wed, Oct 23, 2019 at 12:27 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> On Thu, Oct 10, 2019 at 10:29:49PM +0200, Arnd Bergmann wrote:
+> > diff --git a/arch/arm/mach-s5pv210/pm.c b/arch/arm/mach-s5pv210/pm.c
+> > index b336df0c57f3..efdb5a27c060 100644
+> > --- a/arch/arm/mach-s5pv210/pm.c
+> > +++ b/arch/arm/mach-s5pv210/pm.c
+> > @@ -99,8 +99,6 @@ static int s5pv210_suspend_enter(suspend_state_t state)
+> >       u32 eint_wakeup_mask = s5pv210_read_eint_wakeup_mask();
+> >       int ret;
+> >
+> > -     s3c_pm_debug_init();
 >
-> On 2019/10/2 17:06, Marc Zyngier wrote:
->> The GICv3 architecture specification is incredibly misleading when 
->> it
->> comes to PMR and the requirement for a DSB. It turns out that this 
->> DSB
->> is only required if the CPU interface sends an Upstream Control
->> message to the redistributor in order to update the RD's view of 
->> PMR.
->>
->> This message is only sent when ICC_CTLR_EL1.PMHE is set, which isn't
->> the case in Linux. It can still be set from EL3, so some special 
->> care
->> is required. But the upshot is that in the (hopefuly large) majority
->> of the cases, we can drop the DSB altogether.
->>
->> This relies on a new static key being set if the boot CPU has PMHE
->> set. The drawback is that this static key has to be exported to
->> modules.
->>
->> Cc: Catalin Marinas <catalin.marinas@arm.com>
->> Cc: Will Deacon <will@kernel.org>
->> Cc: James Morse <james.morse@arm.com>
->> Cc: Julien Thierry <julien.thierry.kdev@gmail.com>
->> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
->> Signed-off-by: Marc Zyngier <maz@kernel.org>
->> ---
->>  arch/arm64/include/asm/barrier.h   | 12 ++++++++++++
->>  arch/arm64/include/asm/daifflags.h |  3 ++-
->>  arch/arm64/include/asm/irqflags.h  | 19 ++++++++++---------
->>  arch/arm64/include/asm/kvm_host.h  |  3 +--
->>  arch/arm64/kernel/entry.S          |  6 ++++--
->>  arch/arm64/kvm/hyp/switch.c        |  4 ++--
->>  drivers/irqchip/irq-gic-v3.c       | 20 ++++++++++++++++++++
->>  include/linux/irqchip/arm-gic-v3.h |  2 ++
->>  8 files changed, 53 insertions(+), 16 deletions(-)
->>
->> diff --git a/arch/arm64/include/asm/barrier.h 
->> b/arch/arm64/include/asm/barrier.h
->> index e0e2b1946f42..7d9cc5ec4971 100644
->> --- a/arch/arm64/include/asm/barrier.h
->> +++ b/arch/arm64/include/asm/barrier.h
->> @@ -29,6 +29,18 @@
->>  						 SB_BARRIER_INSN"nop\n",	\
->>  						 ARM64_HAS_SB))
->>
->> +#ifdef CONFIG_ARM64_PSEUDO_NMI
->> +#define pmr_sync()						\
->> +	do {							\
->> +		extern struct static_key_false gic_pmr_sync;	\
->> +								\
->> +		if (static_branch_unlikely(&gic_pmr_sync))	\
->> +			dsb(sy);				\
->> +	} while(0)
->> +#else
->> +#define pmr_sync()	do {} while (0)
->> +#endif
->> +
->
-> Thank you for solving this problem, it helps a lot indeed.
->
-> The pmr_sync() will call dsb(sy) when ARM64_PSEUDO_NMI=y and
-> gic_pmr_sync=force,
-> but if pseudo nmi is not enabled through boot option, it just take 
-> one more
-> redundant calling than before at the following two place.
->
-> I think change dsb(sy) to
-> +                       asm volatile(ALTERNATIVE("nop", "dsb sy",     
->  \
-> +                               ARM64_HAS_IRQ_PRIO_MASKING)     \
-> +                               : : : "memory");                \
-> may be more appropriate.
+> Your patch is not equivalent here. If there is a reason behind removal
+> of UART init (e.g. not needed), I prefer to make it in separate patch.
 
-I'm not sure I understand what you mean. The static key defaults to 
-false,
-so if pseudo_nmi is not enabled, this dsb(sy) is simply never executed.
+It is equivalent, but the reason is a bit subtle:
 
-Am I missing something obvious?
+The definition looks like
 
-Thanks,
+#ifdef CONFIG_SAMSUNG_ATAGS
+#include <plat/pm.h>
+#include <mach/pm-core.h>
+#else
+static inline void s3c_pm_debug_init_uart(void) {}
+#endif
+void s3c_pm_debug_init(void)
+{
+        /* restart uart clocks so we can use them to output */
+        s3c_pm_debug_init_uart();
+}
 
-         M.
+On s5pv210, CONFIG_SAMSUNG_ATAGS is never set, so this
+function does not do anything. Splitting the change out into a
+separate patch to explain that is a good idea, I'll do this.
 
->
-> Thanks,
-> Wei
->
->>
->> @@ -34,14 +35,14 @@ static inline void arch_local_irq_enable(void)
->>  	}
->>
->>  	asm volatile(ALTERNATIVE(
->> -		"msr	daifclr, #2		// arch_local_irq_enable\n"
->> -		"nop",
->> -		__msr_s(SYS_ICC_PMR_EL1, "%0")
->> -		"dsb	sy",
->> +		"msr	daifclr, #2		// arch_local_irq_enable",
->> +		__msr_s(SYS_ICC_PMR_EL1, "%0"),
->>  		ARM64_HAS_IRQ_PRIO_MASKING)
->>  		:
->>  		: "r" ((unsigned long) GIC_PRIO_IRQON)
->>  		: "memory");
->> +
->> +	pmr_sync();
->>  }
->>
->>  static inline void arch_local_irq_disable(void)
->> @@ -116,14 +117,14 @@ static inline unsigned long 
->> arch_local_irq_save(void)
->>  static inline void arch_local_irq_restore(unsigned long flags)
->>  {
->>  	asm volatile(ALTERNATIVE(
->> -			"msr	daif, %0\n"
->> -			"nop",
->> -			__msr_s(SYS_ICC_PMR_EL1, "%0")
->> -			"dsb	sy",
->> -			ARM64_HAS_IRQ_PRIO_MASKING)
->> +		"msr	daif, %0",
->> +		__msr_s(SYS_ICC_PMR_EL1, "%0"),
->> +		ARM64_HAS_IRQ_PRIO_MASKING)
->>  		:
->>  		: "r" (flags)
->>  		: "memory");
->> +
->> +	pmr_sync();
->>  }
->>
-
--- 
-Jazz is not dead. It just smells funny...
+        Arnd
