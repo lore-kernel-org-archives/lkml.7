@@ -2,126 +2,114 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3BFBCA9EB7
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:16:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7458ACA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:16:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AEFF2086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:16:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4580F2086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:16:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ojnE0Dcv"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="G3KKv5JB";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="hEB1c2Y4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391270AbfJWMQN (ORCPT
+        id S2391279AbfJWMQj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 08:16:13 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:51610 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730796AbfJWMQN (ORCPT
+        Wed, 23 Oct 2019 08:16:39 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:51792 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730796AbfJWMQj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 08:16:13 -0400
-Received: by mail-wm1-f67.google.com with SMTP id q70so13804830wme.1;
-        Wed, 23 Oct 2019 05:16:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=CVMZIlFOmsUq+Vskr+tW0iGHn90ty7G6Hxjpnt8OG8M=;
-        b=ojnE0DcvbLt/j4uUZPeFzmfKmga2rO8E+9NXFcWrlKCvPSGUgr/vQUU+szzDg1mDA+
-         v5NhCBILtyORwkN20a+IzCYLSo0bhiFsahfEB5sOikH758RLyZdDpnK4LsnhdngGsI7Q
-         jq3Z7lDpcyKYLQ6He4l2vT2rSbdmO3/R74AlnQvfKurtejnhO9FBxTBItXeVcM92zZvB
-         dl56umDy9DdZX68gLVthIzBQFJEeG9E3tmamcBX6IiC6Dg7isKf9s1Rb17K7BNQa2tI9
-         VHYNAv7l98J09PaL6TE344tTiLdPL3w/vbngEYCQSU2/6Zhi4FwLQwR9oCw1x9zOTmTg
-         EPJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CVMZIlFOmsUq+Vskr+tW0iGHn90ty7G6Hxjpnt8OG8M=;
-        b=oe/Kib51tvoG5skXGBDRuLLGSIFTSB+2fttQgBbjEWxH4haKTvDj2TCO+li+jNl6tK
-         2VFs3HdcufEGdT9/ZVJkkrOSDtj/wCXYiB7IUBOsXu+WKcSNQa9ZaZ61iRr1aRb2A+dc
-         p0mqMROwdr2LTCo92YT+X1ST3pOprkmenKiupvbPIskpdCHbJ1LVBEt6DhxcfWqmvFgR
-         7PiaCoUuZZU5xq+SZ2m8D1EQkke33eXdj15eeyU4wEJ4Wo4L3C0ix+Etuc+wMI7bJSjD
-         sQcoo4wsT5rvfLrRgfbQKK7gjZOarHeMFQxFupRykW1AcAdarxVHlhYeJTWIe/FrzZHT
-         Kkzg==
-X-Gm-Message-State: APjAAAW0Ps5WABEvoAA7IvR2VokWQ+PssuOL5gXpm0VzxlMCduD46usO
-        s0ueEPugLp42N6XP2CDeiXCO8GBZvTU=
-X-Google-Smtp-Source: APXvYqyPu5nM/9wohUAJp6nNJluOH/TU3xDM7gzETkX6nv5t8ka6YdF9i5MOGNXaVmNYHrsl/qf8Hw==
-X-Received: by 2002:a1c:6405:: with SMTP id y5mr3559550wmb.175.1571832970440;
-        Wed, 23 Oct 2019 05:16:10 -0700 (PDT)
-Received: from andrea.guest.corp.microsoft.com ([2a01:110:8012:1012:517c:6bd4:d9e0:aab5])
-        by smtp.gmail.com with ESMTPSA id a189sm7930047wma.2.2019.10.23.05.16.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Oct 2019 05:16:09 -0700 (PDT)
-Date:   Wed, 23 Oct 2019 14:16:03 +0200
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
-        bsingharora@gmail.com, dvyukov@google.com, elver@google.com,
-        stable@vger.kernel.org,
-        syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: [PATCH v6] taskstats: fix data-race
-Message-ID: <20191023121603.GA16344@andrea.guest.corp.microsoft.com>
-References: <20191009114809.8643-1-christian.brauner@ubuntu.com>
- <20191021113327.22365-1-christian.brauner@ubuntu.com>
+        Wed, 23 Oct 2019 08:16:39 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id EFF6D60112; Wed, 23 Oct 2019 12:16:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571832998;
+        bh=IuBmUElM00WvUbGKM5X/tRqNg/9nafBDP5xAYZmqdbs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=G3KKv5JB0RyFdGVhD863CarOsbVBbU/gBH4y/WHqBgx6C8t2l8ikRImGMe6iI38mk
+         Qzaa2aysKBDb7axTL5HKnzo7reO9dtglGwTPl4sANW/VB7DR7HsekRaBvTb3mWHGCv
+         pThCRi3hl+YeOD6/ihpJOJ+B0Y2Vb9gLfftuP4oE=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id C9E2C6083E;
+        Wed, 23 Oct 2019 12:16:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571832996;
+        bh=IuBmUElM00WvUbGKM5X/tRqNg/9nafBDP5xAYZmqdbs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=hEB1c2Y4RBvXQ98RHnaVzSXE/MQXh3M3lmd3m5eSkqxM7uZ22JcLJ9FQR3faod26s
+         zgIIoi2rY8yK80JFFUODer7Z5ZWho36Mq3DBUk6SvnBRoxWxCLeDKFiWERcm5SONz1
+         6NYq7bIO0bdiB5+R5me2oJ7m4gYMRpOk5eHHn1EA=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191021113327.22365-1-christian.brauner@ubuntu.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 23 Oct 2019 17:46:35 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     agross@kernel.org, robh+dt@kernel.org, bjorn.andersson@linaro.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mka@chromium.org,
+        Maulik Shah <mkshah@codeaurora.org>,
+        linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH v3 05/11] arm64: dts: qcom: sc7180: Add cmd_db reserved
+ area
+In-Reply-To: <20191023090219.15603-6-rnayak@codeaurora.org>
+References: <20191023090219.15603-1-rnayak@codeaurora.org>
+ <20191023090219.15603-6-rnayak@codeaurora.org>
+Message-ID: <5bb4acef7f11af9e9c4016743d668f57@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 01:33:27PM +0200, Christian Brauner wrote:
-> When assiging and testing taskstats in taskstats_exit() there's a race
-> when writing and reading sig->stats when a thread-group with more than
-> one thread exits:
+On 2019-10-23 14:32, Rajendra Nayak wrote:
+> From: Maulik Shah <mkshah@codeaurora.org>
 > 
-> cpu0:
-> thread catches fatal signal and whole thread-group gets taken down
->  do_exit()
->  do_group_exit()
->  taskstats_exit()
->  taskstats_tgid_alloc()
-> The tasks reads sig->stats without holding sighand lock.
+> Command_db provides mapping for resource key and address managed
+> by remote processor. Add cmd_db reserved memory area.
 > 
-> cpu1:
-> task calls exit_group()
->  do_exit()
->  do_group_exit()
->  taskstats_exit()
->  taskstats_tgid_alloc()
-> The task takes sighand lock and assigns new stats to sig->stats.
+> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
 > 
-> The first approach used smp_load_acquire() and smp_store_release().
-> However, after having discussed this it seems that the data dependency
-> for kmem_cache_alloc() would be fixed by WRITE_ONCE().
-> Furthermore, the smp_load_acquire() would only manage to order the stats
-> check before the thread_group_empty() check. So it seems just using
-> READ_ONCE() and WRITE_ONCE() will do the job and I wanted to bring this
-> up for discussion at least.
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index f17684148595..dfa49ef2bce0 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -32,6 +32,18 @@
+>  		};
+>  	};
+> 
+> +	reserved_memory: reserved-memory {
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +
+> +		cmd_db: reserved-memory@80820000 {
 
-Mmh, the RELEASE was intended to order the memory initialization in
-kmem_cache_zalloc() with the later ->stats pointer assignment; AFAICT,
-there is no data dependency between such memory accesses.
+aop_cmd_db_mem: memory@80820000 {
+please use ^^ instead
 
-Correspondingly, the ACQUIRE was intended to order the ->stats pointer
-load with later, _independent dereferences of the same pointer; the
-latter are, e.g., in taskstats_exit() (but not thread_group_empty()).
+> +			reg = <0x0 0x80820000 0x0 0x20000>;
+> +			compatible = "qcom,cmd-db";
+> +			no-map;
+> +		};
+> +	};
+> +
+>  	cpus {
+>  		#address-cells = <2>;
+>  		#size-cells = <0>;
 
-Looking again, I see that fill_tgid_exit()'s dereferences of ->stats
-are protected by ->siglock: maybe you meant to rely on such a critical
-section pairing with the critical section in taskstats_tgid_alloc()?
-
-That memcpy(-, tsk->signal->stats, -) at the end of taskstats_exit()
-also bugs me: could these dereferences of ->stats happen concurrently
-with other stores to the same memory locations?
-
-Thanks,
-  Andrea
+-- 
+-- Sibi Sankar --
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
