@@ -2,154 +2,75 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABF9BC47E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 20:46:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6C23CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 20:50:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DC202064B
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 20:46:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571863603;
-	bh=pC35TflnyCjFvVvR+rzOGTAEgWBTmYw1/+C59nJ0vY8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=OIVGA5q7MuHYWBnq0tzkzwxRTPu9XwNy1aZKG0GNy/6KGvoaprmz5RN0suP924YrC
-	 SxNo09aKG5bEVfPMhBhqTDoP+IIb+QSkFOh0M8xkQWiW4at3p4uOAYBD7Rv2RU+Mzu
-	 sdBcEi7L46FYgUMtbsWl33EOANNUd1tYGyTNKnEg=
+	by mail.kernel.org (Postfix) with ESMTP id 9414321872
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 20:50:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391783AbfJWUqm (ORCPT
+        id S2391800AbfJWUuX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 16:46:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59658 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391748AbfJWUql (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 16:46:41 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B706520650;
-        Wed, 23 Oct 2019 20:46:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571863599;
-        bh=pC35TflnyCjFvVvR+rzOGTAEgWBTmYw1/+C59nJ0vY8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=L8FOHttArRiLUrkM6EhiNXc5yYB11kJE6WmQzxydqdp0wSuEiMysl7FGDQjQd4z1r
-         dwQJON7WXJ2Lw2wGuQC7XkchUk8BuPUVBwfQVKFlEWSqwEqcT5WPp8zs5oqPueZa+0
-         EUbE5gYd758ixuZYBQaV38eE3oBJyWDA7psVsLGQ=
-Date:   Wed, 23 Oct 2019 15:46:38 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Xiang Zheng <zhengxiang9@huawei.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mingo@redhat.com,
-        peterz@infradead.org, alex.williamson@redhat.com,
-        Wang Haibin <wanghaibin.wang@huawei.com>,
-        Guoheyi <guoheyi@huawei.com>,
-        yebiaoxiang <yebiaoxiang@huawei.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: Kernel panic while doing vfio-pci hot-plug/unplug test
-Message-ID: <20191023204638.GA8868@google.com>
+        Wed, 23 Oct 2019 16:50:23 -0400
+Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:40569 "EHLO
+        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2390611AbfJWUuW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 16:50:22 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07486;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0Tg.Zevt_1571863816;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0Tg.Zevt_1571863816)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 24 Oct 2019 04:50:19 +0800
+Subject: Re: [v2 PATCH] mm: thp: handle page cache THP correctly in
+ PageTransCompoundMap
+To:     Hugh Dickins <hughd@google.com>
+Cc:     aarcange@redhat.com, kirill.shutemov@linux.intel.com,
+        gavin.dg@linux.alibaba.com, akpm@linux-foundation.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+References: <1571850304-82802-1-git-send-email-yang.shi@linux.alibaba.com>
+ <alpine.LSU.2.11.1910231157570.1088@eggly.anvils>
+ <4d3c14ef-ee86-2719-70d6-68f1a8b42c28@linux.alibaba.com>
+ <alpine.LSU.2.11.1910231250260.1794@eggly.anvils>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <d500d98e-3577-ced1-9614-7aa5e09e6dbe@linux.alibaba.com>
+Date:   Wed, 23 Oct 2019 13:50:14 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191023163851.GA2963@bombadil.infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <alpine.LSU.2.11.1910231250260.1794@eggly.anvils>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+cc Thomas, Rafael, beginning of thread at
-https://lore.kernel.org/r/79827f2f-9b43-4411-1376-b9063b67aee3@huawei.com]
 
-On Wed, Oct 23, 2019 at 09:38:51AM -0700, Matthew Wilcox wrote:
-> On Wed, Oct 23, 2019 at 10:15:40AM -0500, Bjorn Helgaas wrote:
-> > I don't like being one of a handful of callers of __add_wait_queue(),
-> > so I like that solution from that point of view.
-> > 
-> > The 7ea7e98fd8d0 ("PCI: Block on access to temporarily unavailable pci
-> > device") commit log suggests that using __add_wait_queue() is a
-> > significant optimization, but I don't know how important that is in
-> > practical terms.  Config accesses are never a performance path anyway,
-> > so I'd be inclined to use add_wait_queue() unless somebody complains.
-> 
-> Wow, this has got pretty messy in the umpteen years since I last looked
-> at it.
-> 
-> Some problems I see:
-> 
-> 1. Commit df65c1bcd9b7b639177a5a15da1b8dc3bee4f5fa (tglx) says:
-> 
->     x86/PCI: Select CONFIG_PCI_LOCKLESS_CONFIG
->     
->     All x86 PCI configuration space accessors have either their own
->     serialization or can operate completely lockless (ECAM).
->     
->     Disable the global lock in the generic PCI configuration space accessors.
-> 
-> The concept behind this patch is broken.  We still need to lock out
-> config space accesses when devices are undergoing D-state transitions.
-> I would suggest that for the contention case that tglx is concerned about,
-> we should have a pci_bus_read_config_unlocked_##size set of functions
-> which can be used for devices we know never go into D states.
 
-Host bridges that can't do config accesses atomically, e.g., they have
-something like the 0xcf8/0xcfc addr/data ports, need serialization.
-CONFIG_PCI_LOCKLESS_CONFIG removes the use of pci_lock for that, and I
-think that part makes sense regardless of whether devices can enter D
-states.
+On 10/23/19 1:00 PM, Hugh Dickins wrote:
+> On Wed, 23 Oct 2019, Yang Shi wrote:
+>> On 10/23/19 12:28 PM, Hugh Dickins wrote:
+>>>> +	return map_count >= 0 &&
+>>> You have added a map_count >= 0 test there. Okay, not wrong, but not
+>>> necessary, and not consistent with what's returned in the PageAnon
+>>> case (if this were called for an unmapped page).
+>> I was thinking about this too. I'm wondering there might be a case that the
+>> PMD is split and it was the last PMD map, in this case subpage's _mapcount is
+>> also equal to compound_mapcount (both is -1). So, it would return true, then
+>> KVM may setup PMD map in EPT, but it might be PTE mapped later on the host.
+>> But, I'm not quite sure if this is really possible or if this is really a
+>> integrity problem. So, I thought it might be safer to add this check.
+> The mmu_notifier_invalidate_range_start.._end() in __split_huge_pmd(),
+> with KVM's locking and sequence counting, is required to protect
+> against such races.
 
-We *should* prevent config accesses during D-state transitions (per
-PCIe r5.0, sec 5.9), but I don't think pci_lock ever did that.
-pci_raw_set_power_state() contains delays, but that only prevents
-accesses from the caller, not from other threads or from userspace.
-I suppose we should also prevent accesses by other threads during
-transitions done by ACPI, e.g., _PS0, _PS1, _PS2, _PS3.  AFAICT we
-don't do any of that.
+OK, it sounds safe. Thanks for confirming. Will post v4 soon.
 
-It looks like pci_lock currently:
+>
+> Hugh
 
-  - Serializes all kernel config accesses system-wide in
-    pci_bus_read_config_##size() (unless CONFIG_PCI_LOCKLESS_CONFIG=y).
-
-  - Serializes all userspace config accesses system-wide in
-    pci_user_read_config_##size() (this seems unnecessary when
-    CONFIG_PCI_LOCKLESS_CONFIG=y).
-
-  - Serializes userspace config accesses with resets of the device via
-    the dev->block_cfg_access bit and waitqueue mechanism.
-
-  - Serializes kernel and userspace config accesses with bus->ops
-    changes in pci_bus_set_ops() (except that we don't serialize
-    kernel config accesses if CONFIG_PCI_LOCKLESS_CONFIG=y, which is
-    probably a problem).  But pci_bus_set_ops() is hardly used and I'm
-    not sure it's worth keeping it.
-
-> 2. Commit a2e27787f893621c5a6b865acf6b7766f8671328 (jan kiszka)
->    exports pci_lock.  I think this is a mistake; at best there should be
->    accessors for the pci_lock.  But I don't understand why it needs to
->    exclude PCI config space changes throughout pci_check_and_set_intx_mask().
->    Why can it not do:
-> 
-> -	bus->ops->read(bus, dev->devfn, PCI_COMMAND, 4, &cmd_status_dword);
-> +	pci_read_config_dword(dev, PCI_COMMAND, &cmd_status_dword);
-> 
-> 3. I don't understand why 511dd98ce8cf6dc4f8f2cb32a8af31ce9f4ba4a1
->    changed pci_lock to be a raw spinlock.  The patch description
->    essentially says "We need it for RT" which isn't terribly helpful.
-> 
-> 4. Finally, getting back to the original problem report here, I wouldn't
->    write this code this way today.  There's no reason not to use the
->    regular add_wait_queue etc.  BUT!  Why are we using this custom locking
->    mechanism?  It pretty much screams to me of an rwsem (reads/writes
->    of config space take it for read; changes to config space accesses
->    (disabling and changing of accessor methods) take it for write.
-
-So maybe the immediate thing is to just convert to add_wait_queue()?
-
-There's a lot we could clean up here, but I think it would take a fair
-bit of untangling before we actually solve this panic.
-
-Bjorn
