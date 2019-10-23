@@ -2,123 +2,75 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD351CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:38:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC99DCA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:38:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 961DD21928
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:38:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571845121;
-	bh=bM/mEFcrlLuEZp0P1EMlHoIbnorgdXnXqaEVenoUobo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DZbACsHvLYDwY9spELJzkMq1ZNfVa57Rplqt2QKjEobMIBRDKJSPO5gZ87hJTr0cD
-	 gHP7jslyR1rjZCG4GChTKJwH6wj5aZeCySirOhvokkOd33JMfAgRf0J+TUOkvbFTr1
-	 aQd/V85Qm9MNNj/FhKPv9sKsVbVJcoXH6n06Tp3E=
+	by mail.kernel.org (Postfix) with ESMTP id 9A7C12086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:38:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406789AbfJWPik (ORCPT
+        id S2406800AbfJWPir (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 11:38:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36714 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406692AbfJWPii (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 11:38:38 -0400
-Received: from localhost.localdomain (unknown [194.230.155.217])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98BAC21A4C;
-        Wed, 23 Oct 2019 15:38:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571845117;
-        bh=bM/mEFcrlLuEZp0P1EMlHoIbnorgdXnXqaEVenoUobo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LFIe6aUM5wa79Oq3zx51FbUaTsKJLxlsXTmgfOYoBNi3ZXfGUQYka3xC8T0jZwAxb
-         vR3WlTWia7oj09i6auE3vk7sqbYzwjIv526kXHicgl0jR7zV4cqj3AM0YNYpAc0bsq
-         n9CEB1VIcKbzOy1iRM/Z/ni1Mv/rUbHLiZED8eW0=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 2/2] ARM: s3c: Rename s5p_usb_phy functions
-Date:   Wed, 23 Oct 2019 17:38:24 +0200
-Message-Id: <20191023153824.6085-2-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191023153824.6085-1-krzk@kernel.org>
-References: <20191023153824.6085-1-krzk@kernel.org>
+        Wed, 23 Oct 2019 11:38:47 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:55190 "EHLO foss.arm.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S2403912AbfJWPip (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 11:38:45 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A714A3E8;
+        Wed, 23 Oct 2019 08:38:25 -0700 (PDT)
+Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 127083F718;
+        Wed, 23 Oct 2019 08:38:23 -0700 (PDT)
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     linux-kernel@vger.kernel.org, cgroups@vger.kernel.org
+Cc:     lizefan@huawei.com, tj@kernel.org, hannes@cmpxchg.org,
+        mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org,
+        Dietmar.Eggemann@arm.com, morten.rasmussen@arm.com,
+        qperret@google.com
+Subject: [PATCH v4 0/2] sched/topology: Asymmetric topologies fixes
+Date:   Wed, 23 Oct 2019 16:37:43 +0100
+Message-Id: <20191023153745.19515-1-valentin.schneider@arm.com>
+X-Mailer: git-send-email 2.22.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The name s5p_usb_phy_init() suggests it is shared with S5Pv210 platform,
-but it is not.  It is specific to S3C64xx, so make it clear in the
-name.
+Hi,
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- arch/arm/mach-s3c64xx/setup-usb-phy.c        | 4 ++--
- arch/arm/plat-samsung/devs.c                 | 4 ++--
- arch/arm/plat-samsung/include/plat/usb-phy.h | 4 ++--
- 3 files changed, 6 insertions(+), 6 deletions(-)
+I got a nice splat while testing out the toggling of
+sched_asym_cpucapacity, so this is a cpuset fix plus a topology patch.
 
-diff --git a/arch/arm/mach-s3c64xx/setup-usb-phy.c b/arch/arm/mach-s3c64xx/setup-usb-phy.c
-index 6aaaa1d8e8b9..d6b0e3b268af 100644
---- a/arch/arm/mach-s3c64xx/setup-usb-phy.c
-+++ b/arch/arm/mach-s3c64xx/setup-usb-phy.c
-@@ -73,7 +73,7 @@ static int s3c_usb_otgphy_exit(struct platform_device *pdev)
- 	return 0;
- }
- 
--int s5p_usb_phy_init(struct platform_device *pdev, int type)
-+int s3c_usb_phy_init(struct platform_device *pdev, int type)
- {
- 	if (type == USB_PHY_TYPE_DEVICE)
- 		return s3c_usb_otgphy_init(pdev);
-@@ -81,7 +81,7 @@ int s5p_usb_phy_init(struct platform_device *pdev, int type)
- 	return -EINVAL;
- }
- 
--int s5p_usb_phy_exit(struct platform_device *pdev, int type)
-+int s3c_usb_phy_exit(struct platform_device *pdev, int type)
- {
- 	if (type == USB_PHY_TYPE_DEVICE)
- 		return s3c_usb_otgphy_exit(pdev);
-diff --git a/arch/arm/plat-samsung/devs.c b/arch/arm/plat-samsung/devs.c
-index 1d1fa068d228..1602f6dc900b 100644
---- a/arch/arm/plat-samsung/devs.c
-+++ b/arch/arm/plat-samsung/devs.c
-@@ -1010,9 +1010,9 @@ void __init dwc2_hsotg_set_platdata(struct dwc2_hsotg_plat *pd)
- 	npd = s3c_set_platdata(pd, sizeof(*npd), &s3c_device_usb_hsotg);
- 
- 	if (!npd->phy_init)
--		npd->phy_init = s5p_usb_phy_init;
-+		npd->phy_init = s3c_usb_phy_init;
- 	if (!npd->phy_exit)
--		npd->phy_exit = s5p_usb_phy_exit;
-+		npd->phy_exit = s3c_usb_phy_exit;
- }
- #endif /* CONFIG_S3C_DEV_USB_HSOTG */
- 
-diff --git a/arch/arm/plat-samsung/include/plat/usb-phy.h b/arch/arm/plat-samsung/include/plat/usb-phy.h
-index 94da89ecbd3b..759d66a0773a 100644
---- a/arch/arm/plat-samsung/include/plat/usb-phy.h
-+++ b/arch/arm/plat-samsung/include/plat/usb-phy.h
-@@ -7,7 +7,7 @@
- #ifndef __PLAT_SAMSUNG_USB_PHY_H
- #define __PLAT_SAMSUNG_USB_PHY_H __FILE__
- 
--extern int s5p_usb_phy_init(struct platform_device *pdev, int type);
--extern int s5p_usb_phy_exit(struct platform_device *pdev, int type);
-+extern int s3c_usb_phy_init(struct platform_device *pdev, int type);
-+extern int s3c_usb_phy_exit(struct platform_device *pdev, int type);
- 
- #endif /* __PLAT_SAMSUNG_USB_PHY_H */
--- 
-2.17.1
+Details are in the logs.
+
+v2 changes:
+  - Use static_branch_{inc,dec} rather than enable/disable
+
+v3 changes:
+  - New patch: add fix for empty cpumap in sched domain rebuild
+  - Move static_branch_dec outside of RCU read-side section (Quentin)
+
+v4 changes:
+  - Patch 1/2: Directly tweak the cpuset array (Dietmar)
+  - Patch 2/2: Add an example to the changelog (Dietmar)
+
+Cheers,
+Valentin
+
+Valentin Schneider (2):
+  sched/topology: Don't try to build empty sched domains
+  sched/topology: Allow sched_asym_cpucapacity to be disabled
+
+ kernel/cgroup/cpuset.c  |  3 ++-
+ kernel/sched/topology.c | 11 +++++++++--
+ 2 files changed, 11 insertions(+), 3 deletions(-)
+
+--
+2.22.0
 
