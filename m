@@ -6,88 +6,97 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86FC0CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:00:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13CE4CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:00:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57407205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:00:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E900221872
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:00:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390610AbfJWJAW (ORCPT
+        id S2390630AbfJWJAr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 05:00:22 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:46060 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387829AbfJWJAV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 05:00:21 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 4D523CDCC9D6B47E0DAC;
-        Wed, 23 Oct 2019 17:00:17 +0800 (CST)
-Received: from [127.0.0.1] (10.177.96.96) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Wed, 23 Oct 2019
- 17:00:10 +0800
-Subject: Re: [PATCH] ASoC: mediatek: Check SND_SOC_CROS_EC_CODEC dependency
-To:     Tzung-Bi Shih <tzungbi@google.com>
-CC:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        "Matthias Brugger" <matthias.bgg@gmail.com>,
-        =?UTF-8?B?U2h1bmxpIFdhbmcgKOeOi+mhuuWIqSk=?= 
-        <shunli.wang@mediatek.com>, <yuehaibing@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <tglx@linutronix.de>,
-        KaiChieh Chuang <kaichieh.chuang@mediatek.com>,
-        "ALSA development" <alsa-devel@alsa-project.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <kernel-janitors@vger.kernel.org>
-References: <20191023063103.44941-1-maowenan@huawei.com>
- <CA+Px+wX7-tn-rXeKqnPtp74tU5cLxhJwF6XZ_jeQX-tnAfvO5g@mail.gmail.com>
- <1d948ec1-69e4-735f-c369-80d2b28e0eaa@huawei.com>
- <CA+Px+wXgXkmVYboPcrhOWkAwRB2ygLDLi+TN9xw2awUZKMhCJA@mail.gmail.com>
-From:   maowenan <maowenan@huawei.com>
-Message-ID: <8ed955f7-a629-d438-f421-28aaa363532d@huawei.com>
-Date:   Wed, 23 Oct 2019 17:00:03 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.0
+        Wed, 23 Oct 2019 05:00:47 -0400
+Received: from mga04.intel.com ([192.55.52.120]:43799 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387829AbfJWJAr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 05:00:47 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 02:00:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,220,1569308400"; 
+   d="scan'208";a="209878290"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 23 Oct 2019 02:00:43 -0700
+Received: by lahna (sSMTP sendmail emulation); Wed, 23 Oct 2019 12:00:42 +0300
+Date:   Wed, 23 Oct 2019 12:00:42 +0300
+From:   Mika Westerberg <mika.westerberg@intel.com>
+To:     Karol Herbst <kherbst@redhat.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lyude Paul <lyude@redhat.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        Linux ACPI Mailing List <linux-acpi@vger.kernel.org>
+Subject: Re: [PATCH v3] pci: prevent putting nvidia GPUs into lower device
+ states on certain intel bridges
+Message-ID: <20191023090042.GQ2819@lahna.fi.intel.com>
+References: <CACO55tuXck7vqGVLmMBGFg6A2pr3h8koRuvvWHLNDH8XvBVxew@mail.gmail.com>
+ <20191021133328.GI2819@lahna.fi.intel.com>
+ <CACO55tujUZr+rKkyrkfN+wkNOJWdNEVhVc-eZ3RCXJD+G1z=7A@mail.gmail.com>
+ <20191021140852.GM2819@lahna.fi.intel.com>
+ <CACO55tvp6n2ahizwhc70xRJ1uTohs2ep962vwtHGQK-MkcLmsw@mail.gmail.com>
+ <20191021154606.GT2819@lahna.fi.intel.com>
+ <CACO55tsGhvG1qapRkdu_j7R534cFa5o=Gv2s4VZDrWUrxjBFwA@mail.gmail.com>
+ <CACO55ts7hivYgN7=3bcAjWx2h8FfbR5UiKiOOExYY9m-TGRNfw@mail.gmail.com>
+ <20191022124453.GK2819@lahna.fi.intel.com>
+ <CACO55tvxvwUqzg=jLoO6bhmcaXQwRaTv9S4pt2t0V5TUi+HsEw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CA+Px+wXgXkmVYboPcrhOWkAwRB2ygLDLi+TN9xw2awUZKMhCJA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.96.96]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACO55tvxvwUqzg=jLoO6bhmcaXQwRaTv9S4pt2t0V5TUi+HsEw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2019/10/23 16:49, Tzung-Bi Shih wrote:
-> On Wed, Oct 23, 2019 at 4:38 PM maowenan <maowenan@huawei.com> wrote:
->> I receive below message after I post, do you know why?
->> '''
->> Your mail to 'Alsa-devel' with the subject
->>
->>     [PATCH] ASoC: mediatek: Check SND_SOC_CROS_EC_CODEC dependency
->>
->> Is being held until the list moderator can review it for approval.
->>
->> The reason it is being held:
->>
->>     Post by non-member to a members-only list
+On Tue, Oct 22, 2019 at 02:51:53PM +0200, Karol Herbst wrote:
+> On Tue, Oct 22, 2019 at 2:45 PM Mika Westerberg
+> <mika.westerberg@intel.com> wrote:
+> >
+> > On Tue, Oct 22, 2019 at 11:16:14AM +0200, Karol Herbst wrote:
+> > > I think there is something I totally forgot about:
+> > >
+> > > When there was never a driver bound to the GPU, and if runtime power
+> > > management gets enabled on that device, runtime suspend/resume works
+> > > as expected (I am not 100% sure on if that always works, but I will
+> > > recheck that).
+> >
+> > AFAIK, if there is no driver bound to the PCI device it is left to D0
+> > regardless of the runtime PM state which could explain why it works in
+> > that case (it is never put into D3hot).
+> >
+> > I looked at the acpidump you sent and there is one thing that may
+> > explain the differences between Windows and Linux. Not sure if you were
+> > aware of this already, though. The power resource PGOF() method has
+> > this:
+> >
+> >    If (((OSYS <= 0x07D9) || ((OSYS == 0x07DF) && (_REV == 0x05)))) {
+> >       ...
+> >    }
+> >
 > 
-> I don't exactly know.  But I got similar messages when I first time
-> sent mail to the alsa-devel.
-> 
-> Have you subscribed to alsa-devel mailing list?  I guess it is fine to
-> wait maintainers to proceed your patch.
-> 
+> I think this is the fallback to some older method of runtime
+> suspending the device, and I think it will end up touching different
+> registers on the bridge controller which do not show the broken
+> behaviour.
 
-OK. Thanks.
-
-> .
-> 
-
+I think it actually tries to identify older Windows and then Linux (the
+_REV == 0x05 check comes from that). So at least some point Dell people
+have experiment this on Linux.
