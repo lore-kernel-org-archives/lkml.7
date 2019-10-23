@@ -2,75 +2,52 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A305CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:16:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E50BCA9EB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:16:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E0F52064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:16:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tMnxwFWO"
+	by mail.kernel.org (Postfix) with ESMTP id 538DB2064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:16:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390182AbfJWIQg (ORCPT
+        id S2390194AbfJWIQw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 04:16:36 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34901 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389987AbfJWIQf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 04:16:35 -0400
-Received: by mail-wr1-f68.google.com with SMTP id l10so20568124wrb.2
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 01:16:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:openpgp:message-id:date:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=WbxBtm15ehJ1RZCxqVQYmBoMODjzafh8sNAh0IrYMnM=;
-        b=tMnxwFWOP+DcVkZ22BE7ijTUOqeQbAgS6s+w5MlY6cZt8IAg9346u14e+jpLXjfVoe
-         nNV63+Mh1qSmiAemdLhj8f0NEj609/L9TyAGrHwSOuYs5EDiYOvxGmkfQ9N6jDM6CZTQ
-         SmegHcsD4u1fUJq+6qYBIz2kRHFS80ufhexZYqJNXHSYRzKJqbn8I8sGb/ay52cVJni0
-         dqLJINFUzFyfYiB/oWumJWK71rIDkuZ2owLwJZxbVygLMESk6Z+e4CHWID3cPgM/NQ4z
-         kuTUsPhwyeiQnu1TGP36i6puPLJmPEiQbF11QZQpGsEDlUX6JQSNV6LIdy4tfP8Gv5kC
-         JzPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=WbxBtm15ehJ1RZCxqVQYmBoMODjzafh8sNAh0IrYMnM=;
-        b=g9BcB25zqO1od8U+CRbPtTtoFS1OQBpVBzaOQX5zmPxazniv5JH4N4msHAfQWYTSOe
-         sLV4PsGPdgTpkI0FetR00IVFjbymJEhiXCuhUyBz0yUhjHPXSbdgmIsa9yJVxjjeAHpH
-         lL5PgspGRdYYV/e5EqHuVpDgew4JoEwNIwYPaBjOp5u9lReAzIFC8XutGXAuC+J/oo2N
-         Y0qNYAGjlGcFdGgX3+8l7Z7Q5SaRWmmxA4qNRqo+PpD4Nu6jCPXKyLkdvX/LclT7uShd
-         T3xE6oBqjC8VOEwEAY1+cHBbYKfws1woM/gUQ0lH/CIUJmDBzCEXcYufwBHOvTjPBR9e
-         frZQ==
-X-Gm-Message-State: APjAAAVl6NhIRSVKkPAbw5G8y/wlZ5+RhZ9HkuGNa2iy2Be4p6un/uHf
-        fOrPJcbXj0u6lU3egIC2vyovp5+/UEVnKg==
-X-Google-Smtp-Source: APXvYqyQLKTf56oSSBJJdMYaRgF+bUBUWCWlNytDptiBX3zCwn3VT/a7qS1uX2Zpp1qwQ1dd66prZQ==
-X-Received: by 2002:a5d:4612:: with SMTP id t18mr6798024wrq.255.1571818592047;
-        Wed, 23 Oct 2019 01:16:32 -0700 (PDT)
-Received: from [192.168.27.135] ([37.157.136.206])
-        by smtp.googlemail.com with ESMTPSA id 37sm32673981wrc.96.2019.10.23.01.16.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 23 Oct 2019 01:16:31 -0700 (PDT)
-Subject: Re: [PATCH 2/5] ARM: qcom_defconfig: add msm8974 interconnect support
-To:     Brian Masney <masneyb@onstation.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20191013080804.10231-1-masneyb@onstation.org>
- <20191013080804.10231-3-masneyb@onstation.org>
-From:   Georgi Djakov <georgi.djakov@linaro.org>
-Openpgp: preference=signencrypt
-Message-ID: <0ec2aaa4-bd71-5e69-f8f0-6acbb032e7cb@linaro.org>
-Date:   Wed, 23 Oct 2019 11:16:30 +0300
+        Wed, 23 Oct 2019 04:16:52 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54084 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2389987AbfJWIQw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 04:16:52 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 23006BFE2;
+        Wed, 23 Oct 2019 08:16:50 +0000 (UTC)
+Subject: Re: [PATCH v5.1 RESEND] dt-bindings: hwrng: Add Samsung Exynos 5250+
+ True RNG bindings
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        =?UTF-8?Q?=c5=81ukasz_Stelmach?= <l.stelmach@samsung.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Joe Perches <joe@perches.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org,
+        Otto Sabart <ottosabart@seberm.com>,
+        Rob Herring <robh@kernel.org>
+References: <CGME20190111132222eucas1p1d80caf8ba30422bc5fe1a1fac4cf48e8@eucas1p1.samsung.com>
+ <CAL_JsqKt-ujsB-t9A=4dEAjqrvcquUG+qF3tFg1YCqmup_5wcw@mail.gmail.com>
+ <20190111132139.12333-1-l.stelmach@samsung.com>
+ <CAJKOXPfM+EUzBBBhrtSFw5-e7hiimsFT8okcd8J9gGyFdzd2+w@mail.gmail.com>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Organization: SUSE Software Solutions Germany GmbH
+Message-ID: <58f7d127-b798-04b8-1bc6-d37a8af273f7@suse.de>
+Date:   Wed, 23 Oct 2019 10:16:48 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <20191013080804.10231-3-masneyb@onstation.org>
+In-Reply-To: <CAJKOXPfM+EUzBBBhrtSFw5-e7hiimsFT8okcd8J9gGyFdzd2+w@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -79,42 +56,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Brian,
+Hi guys,
 
-Thank you for working on this!
-
-On 13.10.19 г. 11:08 ч., Brian Masney wrote:
-> Add interconnect support for msm8974-based SoCs in order to support the
-> GPU on this platform.
+Am 26.03.19 um 12:42 schrieb Krzysztof Kozlowski:
+> On Fri, 11 Jan 2019 at 14:22, Łukasz Stelmach <l.stelmach@samsung.com> wrote:
+>>
+>> Add binding documentation for the True Random Number Generator
+>> found on Samsung Exynos 5250+ SoCs.
+>>
+>> Acked-by: Rob Herring <robh@kernel.org>
+>> Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+>> Signed-off-by: Łukasz Stelmach <l.stelmach@samsung.com>
+>> ---
 > 
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
-> ---
->  arch/arm/configs/qcom_defconfig | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/arch/arm/configs/qcom_defconfig b/arch/arm/configs/qcom_defconfig
-> index b6faf6f2ddb4..32fc8a24e5c7 100644
-> --- a/arch/arm/configs/qcom_defconfig
-> +++ b/arch/arm/configs/qcom_defconfig
-> @@ -252,6 +252,9 @@ CONFIG_PHY_QCOM_IPQ806X_SATA=y
->  CONFIG_PHY_QCOM_USB_HS=y
->  CONFIG_PHY_QCOM_USB_HSIC=y
->  CONFIG_QCOM_QFPROM=y
-> +CONFIG_INTERCONNECT=m
+> Rob,
+> Could you apply this directly? You acked this some time ago but it
+> never went through drivers tree. Lukasz resent this patch and it is
+> waiting since then.
+> The driver implementing compatible is already in mainline.
 
-We want to change it from tristate to bool [1].
+For some reason this text file in linux-next is lonely in devicetree/...
+rather than living in Documentation/devicetree/... - please fix that.
+The patch here looks correct, so not sure what went wrong:
 
-> +CONFIG_INTERCONNECT_QCOM=y
-> +CONFIG_INTERCONNECT_QCOM_MSM8974=m
->  CONFIG_EXT2_FS=y
->  CONFIG_EXT2_FS_XATTR=y
->  CONFIG_EXT3_FS=y
-> 
-
-Otherwise looks good to me.
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/devicetree/bindings/rng/samsung,exynos5250-trng.txt?h=next-20191023&id=85552c22f03c9066c33f26f34538b67fee6a91a8
 
 Thanks,
-Georgi
+Andreas
 
-[1]
-https://lore.kernel.org/r/b789cce388dd1f2906492f307dea6780c398bc6a.1567065991.git.viresh.kumar@linaro.org
+-- 
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer
+HRB 36809 (AG Nürnberg)
