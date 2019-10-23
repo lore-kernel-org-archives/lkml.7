@@ -2,99 +2,112 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19496CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:49:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75910CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:49:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB32D21872
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:49:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A5E321872
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:49:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="huwfFp12"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jNUlaw1D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390565AbfJWIta (ORCPT
+        id S2390575AbfJWItb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 04:49:30 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:34975 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390343AbfJWIt3 (ORCPT
+        Wed, 23 Oct 2019 04:49:31 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:41296 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390553AbfJWIta (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 04:49:29 -0400
-Received: by mail-oi1-f193.google.com with SMTP id x3so16715346oig.2
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 01:49:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ADV4dloY4QrpGFTvy/OoeHNXpjGf72Q0UAxYSc8ChkI=;
-        b=huwfFp12qyI2jHm5EkRIvVBfBZqxMGd9x3nLq47NHMuoNKyPqUUlPqebVk2hNWcmoB
-         khsxVS+6M6Mwbin2NE2ARQLmtl2uUthxZN6Q0ty4ygeOYJOmRfBZsicWfsp0FZeh0PR0
-         0YM25+A7HZueY+CL67+tKQ4O0O+iPzCz3YCSV7s5SXkpIa1N/74v/bSlQ8OVkxDLFOtZ
-         t1WUqnauORxl1IlJycJtJDRyJNJFWU0w6tlcmL3a7O2EPySayNDeSJq2uSSuC3gJq3vQ
-         lmjitHFVXJtM3d77FbqsRR5hW3PKY6hdPWimAJgEkDU4svHHe24YtTnR4XqvCMWsWMxz
-         tapw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ADV4dloY4QrpGFTvy/OoeHNXpjGf72Q0UAxYSc8ChkI=;
-        b=e1+QM1hWfeKObrDwnTvOFAIRi6STjL9TCBaWVNZdweY8S7u18nU6aYTf1d25KdINsZ
-         0pV/TCtJTf8DQEMNJ7DP4CLuUVBickvWXKM+BpRh41ztGkj+wQbF4km14/ukmtxzOrPu
-         XRUGCfeqvDwjfjPPvkUOBvr/DKkM1qjDpOemfUJG/TIcpnoFQ6AcdsAi9tfSmjbVLroY
-         iUNsCRB30H5rrT7OkvKJ25gzC4fDGTHBQfmnt4ldFfvAvMfgBScU9U47UTho7VbZOyhT
-         TlOz05/HDwuYP5TL/slou46qly5Re4EdLEBek2OIrxf8WnyzIU2lHdPCsBUZp/C36mPU
-         4BlA==
-X-Gm-Message-State: APjAAAU8uDaEL40S4U00UBOD38sjeB8Vey8YBqidEgqGXXp91uNiqBnM
-        r/GVm+KkgOfiHCQgUU5m16NnDVIhCgbur7fF7Tx34A==
-X-Google-Smtp-Source: APXvYqzqfl89y1pbwQVoS8A11ClrnUFaZyaqUTogCmeTUjY5/jx96G9aTd3cpQSBIBLrLvTVV6/LLgDn+8AwgABdV6M=
-X-Received: by 2002:aca:1a18:: with SMTP id a24mr6615198oia.145.1571820568027;
- Wed, 23 Oct 2019 01:49:28 -0700 (PDT)
+        Wed, 23 Oct 2019 04:49:30 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9N8nRor085350;
+        Wed, 23 Oct 2019 03:49:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1571820567;
+        bh=gR7OAXsQc4OiOhV7DWYE58CP8SVL3y7X8+jWjC3qNZ0=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=jNUlaw1DqfYHX8dAttAr0l+BIvyYssXG6zN7BBS2xur1mqQNT6GCZXqudNpnZl70b
+         OIZ+6QoePoHJL5ZIvqPuAsYzC06pZSdeLPDm7s9W/oNvBprzoYnCIkkyYPfRZBG1sf
+         bxbbErB3ZeAQDQ7rHG+u7JU0jOzvyBX/tUPHRo24=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9N8nQUV011800
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 23 Oct 2019 03:49:27 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 23
+ Oct 2019 03:49:14 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 23 Oct 2019 03:49:14 -0500
+Received: from lta0400828a.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9N8nHVv061069;
+        Wed, 23 Oct 2019 03:49:21 -0500
+From:   Roger Quadros <rogerq@ti.com>
+To:     <kishon@ti.com>
+CC:     <aniljoy@cadence.com>, <adouglas@cadence.com>, <nsekhar@ti.com>,
+        <jsarha@ti.com>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Roger Quadros <rogerq@ti.com>
+Subject: [PATCH v2 2/3] dt-bindings: phy: ti,phy-j721e-wiz: Add Type-C dir GPIO
+Date:   Wed, 23 Oct 2019 11:49:15 +0300
+Message-ID: <20191023084916.26895-3-rogerq@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191023084916.26895-1-rogerq@ti.com>
+References: <20191023084916.26895-1-rogerq@ti.com>
 MIME-Version: 1.0
-References: <20191023063103.44941-1-maowenan@huawei.com> <CA+Px+wX7-tn-rXeKqnPtp74tU5cLxhJwF6XZ_jeQX-tnAfvO5g@mail.gmail.com>
- <1d948ec1-69e4-735f-c369-80d2b28e0eaa@huawei.com>
-In-Reply-To: <1d948ec1-69e4-735f-c369-80d2b28e0eaa@huawei.com>
-From:   Tzung-Bi Shih <tzungbi@google.com>
-Date:   Wed, 23 Oct 2019 16:49:16 +0800
-Message-ID: <CA+Px+wXgXkmVYboPcrhOWkAwRB2ygLDLi+TN9xw2awUZKMhCJA@mail.gmail.com>
-Subject: Re: [PATCH] ASoC: mediatek: Check SND_SOC_CROS_EC_CODEC dependency
-To:     maowenan <maowenan@huawei.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        =?UTF-8?B?U2h1bmxpIFdhbmcgKOeOi+mhuuWIqSk=?= 
-        <shunli.wang@mediatek.com>, yuehaibing@huawei.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        tglx@linutronix.de, KaiChieh Chuang <kaichieh.chuang@mediatek.com>,
-        ALSA development <alsa-devel@alsa-project.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, kernel-janitors@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 4:38 PM maowenan <maowenan@huawei.com> wrote:
-> I receive below message after I post, do you know why?
-> '''
-> Your mail to 'Alsa-devel' with the subject
->
->     [PATCH] ASoC: mediatek: Check SND_SOC_CROS_EC_CODEC dependency
->
-> Is being held until the list moderator can review it for approval.
->
-> The reason it is being held:
->
->     Post by non-member to a members-only list
+This is an optional GPIO, if specified will be used to
+swap lane 0 and lane 1 based on GPIO status. This is required
+to achieve plug flip support for USB Type-C.
 
-I don't exactly know.  But I got similar messages when I first time
-sent mail to the alsa-devel.
+Type-C companions typically need some time after the cable is
+plugged before and before they reflect the correct status of
+Type-C plug orientation on the DIR line.
 
-Have you subscribed to alsa-devel mailing list?  I guess it is fine to
-wait maintainers to proceed your patch.
+Type-C Spec specifies CC attachment debounce time (tCCDebounce)
+of 100 ms (min) to 200 ms (max).
+
+Allow the DT node to specify the time (in ms) that we need
+to wait before sampling the DIR line.
+
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+---
+ .../devicetree/bindings/phy/ti,phy-j721e-wiz.txt         | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.txt b/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.txt
+index 19b4c3e855d6..253535a8819f 100644
+--- a/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.txt
++++ b/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.txt
+@@ -24,6 +24,15 @@ Optional properties:
+ assigned-clocks and assigned-clock-parents: As documented in the generic
+ clock bindings in Documentation/devicetree/bindings/clock/clock-bindings.txt
+ 
++ - typec-dir-gpios: GPIO to signal Type-C cable orientation for lane swap.
++     If GPIO is active, lane 0 and lane 1 of SERDES will be swapped to
++     achieve the funtionality of an exernal type-C plug flip mux.
++
++ - typec-dir-debounce: Number of milliseconds to wait before sampling
++     typec-dir-gpio. If not specified, the GPIO will be sampled ASAP.
++     Type-C spec states minimum CC pin debounce of 100 ms and maximum
++     of 200 ms.
++
+ Required subnodes:
+  - Clock Subnode: WIZ node should have '3' subnodes for each of the clock
+      selects it supports. The clock subnodes should have the following names
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
