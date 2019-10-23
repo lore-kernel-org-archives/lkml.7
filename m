@@ -2,109 +2,149 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 017BCC47E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:44:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BEB0CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:44:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD08A21928
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:44:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NxHFS4h2"
+	by mail.kernel.org (Postfix) with ESMTP id 5302620663
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:44:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571838270;
+	bh=xDgzQNhlX2ylQcYgKkDdPd02qB1NXK/sRR3KxYmLlok=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dBeSvef1oS/sVE8I8ysdGyEgDqyuiqsq0l6gGllBvQy/Z1JD7HlsFMV/7x799OXTG
+	 +BSazy5EdnNXt9NKw0Y137IGvdPWtmp8u3ofEDUKog6j2frLBVphKgG+KwAw8LamKu
+	 uP3uL+cCsjiSiVk3HdXjPamNFOtOmkjdQ7a+FHCo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405793AbfJWNoR (ORCPT
+        id S2406003AbfJWNo0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 09:44:17 -0400
-Received: from mail-lj1-f180.google.com ([209.85.208.180]:46709 "EHLO
-        mail-lj1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392056AbfJWNoR (ORCPT
+        Wed, 23 Oct 2019 09:44:26 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:42880 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405903AbfJWNoZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 09:44:17 -0400
-Received: by mail-lj1-f180.google.com with SMTP id d1so21135043ljl.13
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 06:44:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=fVWT8LOX7hiMjzmwaVkkcwJWIfsHuA36zoSZSTB0yuM=;
-        b=NxHFS4h2zxcr3PyzhLh0Qk9xOCqJL026hwR5FNmCyixHEVD0e4yCc909qhJLWtZeUZ
-         H1qF87BDiynS9cV8CLEYWhoizZdJ3Tmnpc5iBaED04sqTeqtnbuuLJl/xAJmILJqMWaW
-         syhtRcFRp1DlALraodSUrtNeJZjhhMc93jsvZ7ZWdMyajqhVxWJ88/8tmTjFAzHap9As
-         6GpHUUomwMjlnj8BcpEDjTuNFo4ifhGv4pBzOsexIWTFDInb1sJ6mWsimYwHtLvlh60S
-         H0epGqYjqPxvO+jgcm94cGSjkzx9yE68irp9JNkAZbhL31WmM7c9gK1KVlQUnonTC0F0
-         pc5w==
+        Wed, 23 Oct 2019 09:44:25 -0400
+Received: by mail-ed1-f68.google.com with SMTP id s20so9794877edq.9;
+        Wed, 23 Oct 2019 06:44:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fVWT8LOX7hiMjzmwaVkkcwJWIfsHuA36zoSZSTB0yuM=;
-        b=Hn8ahiyUcNDwc9IRhUHFpelC/j3FQcviccbSrrRtZbjQ4wParU+FlHQcgZNMVVzXuV
-         bKGPNVhejx8L89vhFe7X/UyVaG6agcKpGVMx93L/hqoRBQd0lXnwvnkVUXyTFQePl40v
-         AbU4QfspsINwgaxW0J5xqdrH5skkT311U5sZyl7I4ZrXTTc/cO6+R1tYKkiW1khenxdn
-         SNETffSFzijKXxM4TILfl1nlTomGbLVzNuF3Z0xl+smo+4ojvwA3wv6bNSxKKWZc9oP3
-         22v7xUSjJt91EipdGr5G+sQi7kKT381xobTpKqcIEYuo2525fCrif2xDuEr2vfR2z3ld
-         oeSA==
-X-Gm-Message-State: APjAAAVJDTTdRvjAmh5p+r98puu/jMzt2u6A5yAjdnZPbrOiQrkSKkWf
-        pXkfJXRIoLBh23JJ0HzeYQd7hJi1
-X-Google-Smtp-Source: APXvYqxJ14Zwj0CcAv5ywhBjFN4Mtan5pZ6k/oKrgQiJlZi0Sv2tbD/Q4jWuGGXpxXVVkCuT5qlJqQ==
-X-Received: by 2002:a05:651c:8b:: with SMTP id 11mr14588261ljq.100.1571838255226;
-        Wed, 23 Oct 2019 06:44:15 -0700 (PDT)
-Received: from uranus.localdomain ([5.18.199.94])
-        by smtp.gmail.com with ESMTPSA id n11sm13123511lfd.88.2019.10.23.06.44.13
+        bh=hBKYE+zy7+DFfvyH7A7knU3GB9ufsS1mx+vP5bbzBP0=;
+        b=h+15i4clnO21Zx9dM+73o0B2yXXTJmzRzBHqEXYW1uCb4maysbPf2EpfP2y/jWyQpF
+         dPvd08udhWwotPD3HLTKBt6ka5b8X6qI8s7tw7xdywZdR4Yb8bxND5lh2DssOkrU6Ul8
+         mLGSJr9FhVXlEIaEN1WsXBd9OWKgQUMPP80dpqiP6M/+wCOclGQsx9iq34DMoVgaAo3/
+         9MXE5+GytSW5N2/wpTToUWXSMg1Hv3dGsd8t+8CtROektv8v4vjw1mXRxYE4pLavN8jW
+         ZCR9HtoIC2kuTE7UgWFcZgFwxkPvl5Go4zqgNO8jlgagNCxzLfFmzjCqbcPO2c5GAb5G
+         4xIQ==
+X-Gm-Message-State: APjAAAVFaWR9/NRMnCEZ0p4XQBLa+d4Lc1+wAc3uYx6kbbP2vbRexzIW
+        1h/TPwmJ4kL9MtlTX9saKiiodoaI2YE=
+X-Google-Smtp-Source: APXvYqw1ctMopj1G34EABDvNktzYOL72/P1RYQagEEVZr6sIwqcab9NGrf4osslw7kr0sYn6k43JVw==
+X-Received: by 2002:a17:906:c801:: with SMTP id cx1mr33598956ejb.266.1571838263609;
+        Wed, 23 Oct 2019 06:44:23 -0700 (PDT)
+Received: from pi3 ([194.230.155.217])
+        by smtp.googlemail.com with ESMTPSA id z65sm848736ede.86.2019.10.23.06.44.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Oct 2019 06:44:13 -0700 (PDT)
-Received: by uranus.localdomain (Postfix, from userid 1000)
-        id 4C2A34610AC; Wed, 23 Oct 2019 16:44:13 +0300 (MSK)
-Date:   Wed, 23 Oct 2019 16:44:13 +0300
-From:   Cyrill Gorcunov <gorcunov@gmail.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, linux-mm@kvack.org,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [BUG -tip] kmemleak and stacktrace cause page faul
-Message-ID: <20191023134413.GI12121@uranus.lan>
-References: <20191019114421.GK9698@uranus.lan>
- <20191022142325.GD12121@uranus.lan>
- <20191022145619.GE12121@uranus.lan>
- <alpine.DEB.2.21.1910231457400.2308@nanos.tec.linutronix.de>
- <20191023133204.GH12121@uranus.lan>
- <alpine.DEB.2.21.1910231536220.2308@nanos.tec.linutronix.de>
+        Wed, 23 Oct 2019 06:44:22 -0700 (PDT)
+Date:   Wed, 23 Oct 2019 15:44:20 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Kukjin Kim <kgene@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linus.walleij@linaro.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 31/36] ARM: s3c: cpufreq: use global
+ s3c2412_cpufreq_setrefresh
+Message-ID: <20191023134420.GJ11048@pi3>
+References: <20191010202802.1132272-1-arnd@arndb.de>
+ <20191010203043.1241612-1-arnd@arndb.de>
+ <20191010203043.1241612-31-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1910231536220.2308@nanos.tec.linutronix.de>
+In-Reply-To: <20191010203043.1241612-31-arnd@arndb.de>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 03:38:40PM +0200, Thomas Gleixner wrote:
-> > > 
-> > > [0,2,4,5,6,8,10,12] are guard pages so 0 is not that crappy at all
-> > 
-> > Wait, Thomas, I might be wrong, but per-cpu is initialized to the pointer,
-> > the memory for this estack_pages has not yet been allocated, no?
+On Thu, Oct 10, 2019 at 10:30:15PM +0200, Arnd Bergmann wrote:
+> There are two identical copies of the s3c2412_cpufreq_setrefresh
+> function: a static one in the cpufreq driver and a global
+> version in iotiming-s3c2412.c.
 > 
-> static const
-> struct estack_pages estack_pages[CEA_ESTACK_PAGES] ____cacheline_aligned = {
->         EPAGERANGE(DF),
-> 	EPAGERANGE(NMI),
-> 	EPAGERANGE(DB1),
-> 	EPAGERANGE(DB),
->         EPAGERANGE(MCE),
-> };
+> As the function requires the use of a hardcoded register address
+> from a header that we want to not be visible to drivers, just
+> move the existing global function and add a declaration in
+> one of the cpufreq header files.
 > 
-> It's statically allocated. So it's available from the very beginning.
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/cpufreq/s3c2412-cpufreq.c            | 23 --------------------
+>  include/linux/soc/samsung/s3c-cpufreq-core.h |  1 +
+>  2 files changed, 1 insertion(+), 23 deletions(-)
+> 
+> diff --git a/drivers/cpufreq/s3c2412-cpufreq.c b/drivers/cpufreq/s3c2412-cpufreq.c
+> index 38dc9e6db633..a77c63e92e1a 100644
+> --- a/drivers/cpufreq/s3c2412-cpufreq.c
+> +++ b/drivers/cpufreq/s3c2412-cpufreq.c
+> @@ -25,8 +25,6 @@
+>  #include <asm/mach/arch.h>
+>  #include <asm/mach/map.h>
+>  
+> -#include <mach/s3c2412.h>
+> -
+>  #include <mach/map.h>
+>  
+>  #define S3C2410_CLKREG(x) ((x) + S3C24XX_VA_CLKPWR)
+> @@ -156,27 +154,6 @@ static void s3c2412_cpufreq_setdivs(struct s3c_cpufreq_config *cfg)
+>  	clk_set_parent(armclk, cfg->divs.dvs ? hclk : fclk);
+>  }
+>  
+> -static void s3c2412_cpufreq_setrefresh(struct s3c_cpufreq_config *cfg)
+> -{
+> -	struct s3c_cpufreq_board *board = cfg->board;
+> -	unsigned long refresh;
+> -
+> -	s3c_freq_dbg("%s: refresh %u ns, hclk %lu\n", __func__,
+> -		     board->refresh, cfg->freq.hclk);
+> -
+> -	/* Reduce both the refresh time (in ns) and the frequency (in MHz)
+> -	 * by 10 each to ensure that we do not overflow 32 bit numbers. This
+> -	 * should work for HCLK up to 133MHz and refresh period up to 30usec.
+> -	 */
+> -
+> -	refresh = (board->refresh / 10);
+> -	refresh *= (cfg->freq.hclk / 100);
+> -	refresh /= (1 * 1000 * 1000);	/* 10^6 */
+> -
+> -	s3c_freq_dbg("%s: setting refresh 0x%08lx\n", __func__, refresh);
+> -	__raw_writel(refresh, S3C2412_REFRESH);
+> -}
+> -
+>  /* set the default cpu frequency information, based on an 200MHz part
+>   * as we have no other way of detecting the speed rating in software.
+>   */
+> diff --git a/include/linux/soc/samsung/s3c-cpufreq-core.h b/include/linux/soc/samsung/s3c-cpufreq-core.h
+> index 4d22be1031b9..eca942559014 100644
+> --- a/include/linux/soc/samsung/s3c-cpufreq-core.h
+> +++ b/include/linux/soc/samsung/s3c-cpufreq-core.h
+> @@ -246,6 +246,7 @@ extern int s3c2412_iotiming_calc(struct s3c_cpufreq_config *cfg,
+>  
+>  extern void s3c2412_iotiming_set(struct s3c_cpufreq_config *cfg,
+>  				 struct s3c_iotimings *iot);
+> +extern void s3c2412_cpufreq_setrefresh(struct s3c_cpufreq_config *cfg);
 
-Indeed, thanks! I happened to overlooked this moment.
-...
-> And as I explained to you properly decoded the values _ARE_ correct and
-> make sense.
+I think that it does not cover the !CONFIG_S3C2412_IOTIMING case.
+Either you need to provide also the empty stub or add default=y to
+S3C2412_IOTIMING. Otherwise cpufreq driver might end up without this.
 
-Yes, just posted the diff itself to be sure. Thanks a huge for
-explanation, Thomas!
+Best regards,
+Krzysztof
