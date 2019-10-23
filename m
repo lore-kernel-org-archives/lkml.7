@@ -2,123 +2,154 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB85CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 00:21:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30DC7CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 00:22:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 634C320650
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 00:21:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECECA20650
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 00:22:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ME8AeDt8"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FetI7HPE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732530AbfJWAVw (ORCPT
+        id S1733081AbfJWAWS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 20:21:52 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:38742 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727154AbfJWAVv (ORCPT
+        Tue, 22 Oct 2019 20:22:18 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:46569 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732704AbfJWAWS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 20:21:51 -0400
-Received: by mail-oi1-f196.google.com with SMTP id v186so3034332oie.5;
-        Tue, 22 Oct 2019 17:21:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qkST9yhwhwu10AHBsdYDPDVaDucJkRuGL9XsMxO/Jus=;
-        b=ME8AeDt8lrDNr6sdt0nQbp3m0YrKt09TY+Q9IcIyd0LERSAE4nud3tI2pB/Rv3BX8C
-         h7BQ50s2Z/hiLZ1nXPToZ49oSle/vfbVspSaHod0K4eX78YalSsxKzV8ozki+HttScgd
-         C0yrhsUm1BwEGc94A5r9eD3JHpsFrzBAD2hdYNxq7mzgbSmcfg3GPeXoR0GFEVJWhPvd
-         586/veeV52ejEmBLHASChNDK70dMGPPwWPX5GBAVn5jP/hu17mwYASU3pNa07IaXOouo
-         ewrkz/0J2eCGzyKsQP40c+CxXZypTpl8aRYv97fCr8Oe7AyFtd61mBlgpZNhXlNJTNL/
-         CygQ==
+        Tue, 22 Oct 2019 20:22:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571790137;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=BRtNNhXUxGj/iKOpVn/NIU4B21BikmHUzRYNqGSNsWA=;
+        b=FetI7HPExsWO2dNfy3mGlUddt/L+vGzUdnFZJOBb4LiUqqxvhHV/zFJtBspYKWODKHcL7+
+        SfHDNu/ETgCJZiwYJm+e/HkRFD/JcTiw/Q5MrDuOt1qOtVymBCwl2ryXM/3gD7qfsgbUzP
+        PG47OjGiclfEaqycaXO9ZKIBLC6ROlY=
+Received: from mail-yw1-f70.google.com (mail-yw1-f70.google.com
+ [209.85.161.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-326-1-ab-zEnPuifrwmwRQWsAg-1; Tue, 22 Oct 2019 20:22:15 -0400
+Received: by mail-yw1-f70.google.com with SMTP id y131so2105883ywc.11
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 17:22:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qkST9yhwhwu10AHBsdYDPDVaDucJkRuGL9XsMxO/Jus=;
-        b=QPloE48mrqzkl+uTzrOS24BJXYLINfW3sI9MeyYWjqu6sUCCbNjQP2A4YXq6wnMmwL
-         zeAo9AcMHg7XjtnAS09+8HDtU2600vyoXFbp7epMHf0O4J3xxz9OZbxyhy38RDsR20HW
-         t5mxerq5R36lRAbc20CNwF9nUCzKXtZYzeHlQrgMrf2LHXmp6mZ+E6TflCyqzYw40IpK
-         w11DpmX8iab/AwE+VCc8KoL1Mj6/40QPAHmw85/zDSrVf5y3SNzg7uv41Gg4bMxph0l+
-         N4IBUGI2IUVYkrfOdxGZhFwvc9Eit6KbFbiLtJ6zg/qyvklsbtTfRH66sod0v+LOoDTA
-         7nYg==
-X-Gm-Message-State: APjAAAUmZRV41P8xHFlycc7baTydmHNBJvhwkLQRpAWC4tm+G4+4Nmt0
-        Ek1qCKGIpxfBdaWEevdcFCChuy0+Guk=
-X-Google-Smtp-Source: APXvYqxr/KAWWKDTvz/rOExJ/s20dCk+w4jw1dGVEhtXOsldTSeDqYqV0IT7fReqQBgvwT5Pbi2b3g==
-X-Received: by 2002:aca:3b84:: with SMTP id i126mr3720122oia.28.1571790110917;
-        Tue, 22 Oct 2019 17:21:50 -0700 (PDT)
-Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id n4sm901229oic.2.2019.10.22.17.21.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Oct 2019 17:21:50 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Felipe Balbi <balbi@kernel.org>,
-        Ashwini Pahuja <ashwini.linux@gmail.com>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH] usb: gadget: udc: bdc: Remove unnecessary NULL checks in bdc_req_complete
-Date:   Tue, 22 Oct 2019 17:20:15 -0700
-Message-Id: <20191023002014.22571-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.23.0
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=+IXJWBytrC/xK/Bmd9e8MMpXuNGH/WR5SvJe1bLIZuI=;
+        b=fOTERJhWT3H7ncHiGOwO0iZotk/daeD/+sXXhE5gGZ5vhfOwj76ZhWKmtSYMrYEpNf
+         W3UFmcMan8cddSDijYiH4zgQB4f5/quRb1qhNc74mNBfcqB8bgo5gv8nlWVQnS2uNIFh
+         4tW4cFAw/ut0xliW+Gnbtt3kHD+oEIvsYITAlwsUkpydIp9zzqUHN0hBd8W2SvrtIoBr
+         lpaXyiyXkQu09eH13JmK6Z7OVlpp54FApX5WVlBW7bG51nBkrY+F2FPRnZ0UX6SrZhMR
+         wQpSoumOFGe6WzagDd5RnugZRe4VAbrT0uxpEGsJaMXhCMIBqQVKaUxxtMywINTOdNP7
+         ZP5w==
+X-Gm-Message-State: APjAAAWzsM+J0n2ZV+FWD6PEqKJaXaNkWpKqAbujTqFSIBixiW4rTpY0
+        HTVzy0k/JwBG+BBICvuBjnagOgS27swxOtf3f9QHXo2RJ9MuHKZDWoQDzfIq+Oc/U55onkBhtdY
+        fzAMIpcRPmq7+n98smTTA+jf0Q5CD4Q7htbjhygYB
+X-Received: by 2002:a25:b6ca:: with SMTP id f10mr4835419ybm.376.1571790135333;
+        Tue, 22 Oct 2019 17:22:15 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxI7865C7FbMjHafWESnBA/nOolnjjYIAPJZxe09kuTpOgpGHlm0WoGto+SV1G5gY7LUkg625qYOyF/uv18VNA=
+X-Received: by 2002:a25:b6ca:: with SMTP id f10mr4835396ybm.376.1571790134960;
+ Tue, 22 Oct 2019 17:22:14 -0700 (PDT)
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+From:   Tom Rix <trix@redhat.com>
+Date:   Tue, 22 Oct 2019 17:22:04 -0700
+Message-ID: <CACVy4SUkfn4642Vne=c1yuWhne=2cutPZQ5XeXz_QBz1g67CrA@mail.gmail.com>
+Subject: [PATCH v2 1/1] xfrm : lock input tasklet skb queue
+To:     Steffen Klassert <steffen.klassert@secunet.com>,
+        herbert@gondor.apana.org.au, davem@davemloft.net,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Joerg Vehlow <lkml@jv-coder.de>
+X-MC-Unique: 1-ab-zEnPuifrwmwRQWsAg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When building with Clang + -Wtautological-pointer-compare:
+On PREEMPT_RT_FULL while running netperf, a corruption
+of the skb queue causes an oops.
 
-drivers/usb/gadget/udc/bdc/bdc_ep.c:543:28: warning: comparison of
-address of 'req->queue' equal to a null pointer is always false
-[-Wtautological-pointer-compare]
-        if (req == NULL  || &req->queue == NULL || &req->usb_req == NULL)
-                             ~~~~~^~~~~    ~~~~
-drivers/usb/gadget/udc/bdc/bdc_ep.c:543:51: warning: comparison of
-address of 'req->usb_req' equal to a null pointer is always false
-[-Wtautological-pointer-compare]
-        if (req == NULL  || &req->queue == NULL || &req->usb_req == NULL)
-                                                    ~~~~~^~~~~~~    ~~~~
-2 warnings generated.
+This appears to be caused by a race condition here
+        __skb_queue_tail(&trans->queue, skb);
+        tasklet_schedule(&trans->tasklet);
+Where the queue is changed before the tasklet is locked by
+tasklet_schedule.
 
-As it notes, these statements will always evaluate to false so remove
-them.
+The fix is to use the skb queue lock.
 
-Fixes: efed421a94e6 ("usb: gadget: Add UDC driver for Broadcom USB3.0 device controller IP BDC")
-Link: https://github.com/ClangBuiltLinux/linux/issues/749
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+This is the original work of Joerg Vehlow <joerg.vehlow@aox-tech.de>
+https://lkml.org/lkml/2019/9/9/111
+  xfrm_input: Protect queue with lock
+
+  During the skb_queue_splice_init the tasklet could have been preempted
+  and __skb_queue_tail called, which led to an inconsistent queue.
+
+ifdefs for CONFIG_PREEMPT_RT_FULL added to reduce runtime effects
+on the normal kernel.
+
+Signed-off-by: Tom Rix <trix@redhat.com>
 ---
+ net/xfrm/xfrm_input.c | 18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
 
-Note: I am not sure if these checks were intended to check if the
-contents of these arrays were NULL or if there should be some other
-checks in lieu of these; I am not familiar with the USB subsystem to
-answer this but I will happily respin the patch if this is not correct.
+diff --git a/net/xfrm/xfrm_input.c b/net/xfrm/xfrm_input.c
+index 9b599ed66d97..decd515f84cf 100644
+--- a/net/xfrm/xfrm_input.c
++++ b/net/xfrm/xfrm_input.c
+@@ -755,13 +755,21 @@ EXPORT_SYMBOL(xfrm_input_resume);
 
- drivers/usb/gadget/udc/bdc/bdc_ep.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/usb/gadget/udc/bdc/bdc_ep.c b/drivers/usb/gadget/udc/bdc/bdc_ep.c
-index a4d9b5e1e50e..d49c6dc1082d 100644
---- a/drivers/usb/gadget/udc/bdc/bdc_ep.c
-+++ b/drivers/usb/gadget/udc/bdc/bdc_ep.c
-@@ -540,7 +540,7 @@ static void bdc_req_complete(struct bdc_ep *ep, struct bdc_req *req,
+ static void xfrm_trans_reinject(unsigned long data)
  {
- 	struct bdc *bdc = ep->bdc;
- 
--	if (req == NULL  || &req->queue == NULL || &req->usb_req == NULL)
-+	if (req == NULL)
- 		return;
- 
- 	dev_dbg(bdc->dev, "%s ep:%s status:%d\n", __func__, ep->name, status);
--- 
++#ifdef CONFIG_PREEMPT_RT_FULL
++    unsigned long flags;
++#endif
+     struct xfrm_trans_tasklet *trans =3D (void *)data;
+     struct sk_buff_head queue;
+     struct sk_buff *skb;
+
+     __skb_queue_head_init(&queue);
++#ifdef CONFIG_PREEMPT_RT_FULL
++    spin_lock_irqsave(&trans->queue.lock, flags);
++#endif
+     skb_queue_splice_init(&trans->queue, &queue);
+-
++#ifdef CONFIG_PREEMPT_RT_FULL
++    spin_unlock_irqrestore(&trans->queue.lock, flags);
++#endif
+     while ((skb =3D __skb_dequeue(&queue)))
+         XFRM_TRANS_SKB_CB(skb)->finish(dev_net(skb->dev), NULL, skb);
+ }
+@@ -778,7 +786,11 @@ int xfrm_trans_queue(struct sk_buff *skb,
+         return -ENOBUFS;
+
+     XFRM_TRANS_SKB_CB(skb)->finish =3D finish;
++#ifdef CONFIG_PREEMPT_RT_FULL
++    skb_queue_tail(&trans->queue, skb);
++#else
+     __skb_queue_tail(&trans->queue, skb);
++#endif
+     tasklet_schedule(&trans->tasklet);
+     return 0;
+ }
+@@ -798,7 +810,11 @@ void __init xfrm_input_init(void)
+         struct xfrm_trans_tasklet *trans;
+
+         trans =3D &per_cpu(xfrm_trans_tasklet, i);
++#ifdef CONFIG_PREEMPT_RT_FULL
++        skb_queue_head_init(&trans->queue);
++#else
+         __skb_queue_head_init(&trans->queue);
++#endif
+         tasklet_init(&trans->tasklet, xfrm_trans_reinject,
+                  (unsigned long)trans);
+     }
+--=20
 2.23.0
 
