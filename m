@@ -2,166 +2,149 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84CF4CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:32:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC42CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:33:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61E4420663
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:32:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E7382064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:33:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="cneQ/nKt";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="f0jRZ8Oh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404523AbfJWKce (ORCPT
+        id S2404539AbfJWKdU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 06:32:34 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:46475 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404332AbfJWKce (ORCPT
+        Wed, 23 Oct 2019 06:33:20 -0400
+Received: from esa6.hgst.iphmx.com ([216.71.154.45]:59744 "EHLO
+        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404332AbfJWKdU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 06:32:34 -0400
-X-Originating-IP: 92.137.17.54
-Received: from localhost (alyon-657-1-975-54.w92-137.abo.wanadoo.fr [92.137.17.54])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 2816C240010;
-        Wed, 23 Oct 2019 10:32:29 +0000 (UTC)
-Date:   Wed, 23 Oct 2019 12:32:28 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        y2038 Mailman List <y2038@lists.linaro.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [Y2038] [PATCH v6 10/43] compat_ioctl: move rtc handling into
- rtc-dev.c
-Message-ID: <20191023103228.GL3125@piout.net>
-References: <20191009190853.245077-1-arnd@arndb.de>
- <20191009191044.308087-10-arnd@arndb.de>
- <d1022cda6bd6ce73e9875644a5a2c65e4d554f37.camel@codethink.co.uk>
- <CAK8P3a0BYkPTSnQUmde2k+HVcg7XNihzWTEzrCD4d8G8ecO9-w@mail.gmail.com>
+        Wed, 23 Oct 2019 06:33:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1571826799; x=1603362799;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=MRAouh2VRVHhVMAH/E+k/pdKQ9zmNfZGhoIN3rQ5FIQ=;
+  b=cneQ/nKtaoaPL4eEvC3iFAbqq1aPqtAHiHWUrCifp5fIBIS5GCS2ymeQ
+   is5uDNd7iQe44QQHDUHC8eqLA5fLvPulBEDyI4WaMEu2AX0D7abCjTd4L
+   pbqLlpwEQ/h6LiW/PqjI10NSqKzo5WjJpWLFLoRxtR8IXdsBDGqe/jcUv
+   zx8mquu7i6EzU/1vWCXYk7t6MRDtPWIFEtx0rNyKElBJzIyUCNdw3pyS8
+   uwIObEijqpvSizi/I2gLKK7u4t93PZdd87I+JHPo5Fd7V/DTJXTJZhns9
+   8nMpFN9xXxHstHnRr+G5FEBbRV3gZK8uJYSRhOmTCOfWvQdD5w8Ap6826
+   Q==;
+IronPort-SDR: 9tV5ArE5EfhNEyCQKSuHyj0Kio3igHPAL/Xedt+WNp6pm0nWD6UZ/uvIebDSqN79fruV9PhUJP
+ HiFLq0vEoypHsW4NSm1BrEMNrL8PQiTKeXOQP0dG9emYK9UehCjCD79rG+ZL9LuObDR+mi3AIj
+ JR5Mb5bhhT+6xOLPwc3Es63n5aEDwVgqjFbp44DM4l9PEPneR4CbAM+7OiiDzdvIORM12AWOVW
+ pah44TI+MN8KwSAlwe83IjgB9oYRJLAxfugZHKuEp2TnJsTs7BDrIkPMlPbPBJPTzvHeA6TQLK
+ E+w=
+X-IronPort-AV: E=Sophos;i="5.68,220,1569254400"; 
+   d="scan'208";a="122723483"
+Received: from mail-by2nam03lp2057.outbound.protection.outlook.com (HELO NAM03-BY2-obe.outbound.protection.outlook.com) ([104.47.42.57])
+  by ob1.hgst.iphmx.com with ESMTP; 23 Oct 2019 18:33:17 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bcN/qTaMhje3YtEJaS4qIaX/qHn5wkDH5K+njBtzn2Yn18RnDept0lL/Jpx3QZDPrlTHKsPWhtlASe52BDKzZDX+DBUXWmGc6cF8e9vcevt6NlmhV9pqke+Z7fsJpwQSGvB+cQVl8rmOAvyFlq8nB4XNzUs0LyYHy9lPaRCvIqvBDafB00JFnV70npbBd5gpKv42hkvmdrOwl6z2sxFXSPDRsUOkrNN3Al572fJDIagST2ouPDa+p+ljD6t3GJTaSyrbsoFuE2UrYLAqQbAJ4nu+tJb2fsN4D9solVaKLny8prAqStTPKE3CJSkZtlWtfro/7o7/D3GBM2jz6W8P+g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MRAouh2VRVHhVMAH/E+k/pdKQ9zmNfZGhoIN3rQ5FIQ=;
+ b=b0khvwdNNqIBaUnlsKYU20pkooDxuTVQZtLIno1DZ+BCMgZWzYiIwQJSwkLWyMbiIOy0RlmuSZHeZ1376kCyx9Z+fz6rsIICTV8hY9lafQF5O+PWKTUCS5cp3oV/P/h3oo4yD5OthkuSo+bLNcKLbLc2Wemb0HUJTWOllBCRS7GYt89H1Z6H7gK4l7xFlJAzAd43WUfmrjMEYFkeZGmoXTufr2ddZ19lVhtRUWWDjCPQPKiyolo8EiGwrkHXa39AinGY8mKohkLHrEUIWjoGvMvslaJnK7wJdBIMioC2EsmdawWlw0z8ung4TMYyCh1HIQBzqapNajEo72GeQvPzDg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MRAouh2VRVHhVMAH/E+k/pdKQ9zmNfZGhoIN3rQ5FIQ=;
+ b=f0jRZ8Oh19RlN9lcxwpmeoS8EUY2y3GCtwj09lVRm9PrCqjSGfeSKSbzDlF32HQ1eBAGV2OJQRQ6SfznfZpskQc1H2d51EbWdWmBzqklIcbq2APvUnKwHCch8tLpjZbCdv7Z9RuOoRSQo4J9brqxtwvsBEKp7Sy0PByxsFp11rI=
+Received: from MN2PR04MB6991.namprd04.prod.outlook.com (10.186.144.209) by
+ MN2PR04MB6991.namprd04.prod.outlook.com (10.186.144.209) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2367.24; Wed, 23 Oct 2019 10:33:10 +0000
+Received: from MN2PR04MB6991.namprd04.prod.outlook.com
+ ([fe80::cd55:cc47:e0ff:1604]) by MN2PR04MB6991.namprd04.prod.outlook.com
+ ([fe80::cd55:cc47:e0ff:1604%6]) with mapi id 15.20.2367.022; Wed, 23 Oct 2019
+ 10:33:10 +0000
+From:   Avri Altman <Avri.Altman@wdc.com>
+To:     "Winkler, Tomas" <tomas.winkler@intel.com>,
+        Can Guo <cang@codeaurora.org>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "nguyenb@codeaurora.org" <nguyenb@codeaurora.org>,
+        "rnayak@codeaurora.org" <rnayak@codeaurora.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "kernel-team@android.com" <kernel-team@android.com>,
+        "saravanak@google.com" <saravanak@google.com>,
+        "salyzyn@google.com" <salyzyn@google.com>
+CC:     Alim Akhtar <alim.akhtar@samsung.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Evan Green <evgreen@chromium.org>,
+        Janek Kotas <jank@cadence.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Subhash Jadavani <subhashj@codeaurora.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v1 1/1] scsi: ufs: Add command logging infrastructure
+Thread-Topic: [PATCH v1 1/1] scsi: ufs: Add command logging infrastructure
+Thread-Index: AQHViWLhprkG394+5UW4GUZ9ZO/s2adn01AAgAAzmCA=
+Date:   Wed, 23 Oct 2019 10:33:10 +0000
+Message-ID: <MN2PR04MB6991C2AF4DDEDD84C7887258FC6B0@MN2PR04MB6991.namprd04.prod.outlook.com>
+References: <1571808560-3965-1-git-send-email-cang@codeaurora.org>
+ <5B8DA87D05A7694D9FA63FD143655C1B9DCF0AFE@hasmsx108.ger.corp.intel.com>
+In-Reply-To: <5B8DA87D05A7694D9FA63FD143655C1B9DCF0AFE@hasmsx108.ger.corp.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Avri.Altman@wdc.com; 
+x-originating-ip: [212.25.79.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: c71b6ac6-c8a8-49f9-524a-08d757a466c8
+x-ms-traffictypediagnostic: MN2PR04MB6991:
+x-microsoft-antispam-prvs: <MN2PR04MB69911AF741D0E99BD6BD8D8CFC6B0@MN2PR04MB6991.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 019919A9E4
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(366004)(39860400002)(396003)(136003)(376002)(199004)(189003)(2201001)(81166006)(81156014)(25786009)(4744005)(66946007)(8936002)(476003)(186003)(256004)(71200400001)(486006)(71190400001)(446003)(14444005)(3846002)(52536014)(2906002)(6116002)(8676002)(66556008)(66446008)(66476007)(64756008)(11346002)(86362001)(55016002)(33656002)(5660300002)(9686003)(76116006)(99286004)(478600001)(7416002)(110136005)(54906003)(6246003)(7736002)(4326008)(305945005)(6436002)(316002)(26005)(66066001)(74316002)(6506007)(14454004)(2501003)(76176011)(7696005)(102836004)(229853002)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB6991;H:MN2PR04MB6991.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: vKW+kisKbnFR427rlDim/ToXELoye9A7I/0YCmH/RLBjTHk4iLEKqPUMhBkM6SKMt4gf3v/dFQFf3LwAd0kgfM8PrKz+W1rZ+UnCblU03qnGVLYcUfLVJ9or6zJwW8I7hopJ4u8A/92eEVoSnNESkm3E2SRQ5ZOO7Sp10+/pxRZ4C/3eoBdfLdgsKN1spiShiPBJf/8Q/Z2ve3R6pQWC1sndZK5XuXigpXwx8Q6LUWElTz4OTnwg0UZJzDXwmzgBMiMOB4uqLUjADXlulWI+9Jg3Im/3P1N+AvceJvfgNI04vFxiRixTgxBb+JXbFWZsqzhI5OFmD4ncyqEE5PQPS0UuC/tWWa2Qh4rMtOzsePemEBM5N82qzuUIIQcwAS1NQbjsEixQ07tLS4gi/2+oJkO5fIIyM7u/6t2Q5mnJPT/q6KML86YRm6o+Nq32qBqJ
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a0BYkPTSnQUmde2k+HVcg7XNihzWTEzrCD4d8G8ecO9-w@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c71b6ac6-c8a8-49f9-524a-08d757a466c8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Oct 2019 10:33:10.4741
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: omN+G7DuKEzDYA4oLbYXYvTFqyjfqgYTQ+tDFvl1do4FYc2h+HBf4oav/ibxy5kKrwJFXlcQUg0cPdzIsEwqhw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB6991
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/10/2019 16:33:09+0200, Arnd Bergmann wrote:
-> On Thu, Oct 17, 2019 at 3:42 PM Ben Hutchings
-> <ben.hutchings@codethink.co.uk> wrote:
-> >
-> > On Wed, 2019-10-09 at 21:10 +0200, Arnd Bergmann wrote:
-> > > We no longer need the rtc compat handling to be in common code, now that
-> > > all drivers are either moved to the rtc-class framework, or (rarely)
-> > > exist in drivers/char for architectures without compat mode (m68k,
-> > > alpha and ia64, respectively).
-> > >
-> > > I checked the list of ioctl commands in drivers, and the ones that are
-> > > not already handled are all compatible, again with the one exception of
-> > > m68k driver, which implements RTC_PLL_GET and RTC_PLL_SET, but has no
-> > > compat mode.
-> > >
-> > > Since the ioctl commands are either compatible or differ in both structure
-> > > and command code between 32-bit and 64-bit, we can merge the compat
-> > > handler into the native one and just implement the two common compat
-> > > commands (RTC_IRQP_READ, RTC_IRQP_SET) there.
-> > [...]
-> >
-> > I don't think this can work properly on s390, because some of them take
-> > integers and some take pointers.
-> 
-> Thanks a lot for taking a look at the patch and pointing this out!
-> 
-> I don't remember how I got to this, either I missed the problem or I
-> decided that it was ok, since it will still do the right thing:
-> On s390 only the highest bit is cleared in a pointer value, and we
-> ensure that the RTC_IRQP_SET argument is between 1 and 8192.
-> 
-> Passing a value of (0x80000000 + n) where n is in the valid range
-> would lead to the call succeeding unexpectedly on compat s390
-> (if it had an RTC, which it does not) which is clearly not good but
-> mostly harmless. I certainly had not considered this case.
-> 
-> However, looking at this again after your comment I found a rather
-> more serious bug in my new RTC_IRQP_SET handling: Any 64-bit
-> machine can now bypass the permission check for RTC_IRQP_SET by
-> calling RTC_IRQP_SET32 instead.
-> 
-> I'll fix it both issues by adding a rtc_compat_dev_ioctl() to handle
-> RTC_IRQP_SET32/RTC_IRQP_READ32:
-> 
-> diff --git a/drivers/rtc/dev.c b/drivers/rtc/dev.c
-> index 1dc5063f78c9..9e4fd5088ead 100644
-> --- a/drivers/rtc/dev.c
-> +++ b/drivers/rtc/dev.c
-> @@ -358,16 +358,6 @@ static long rtc_dev_ioctl(struct file *file,
->                 mutex_unlock(&rtc->ops_lock);
->                 return rtc_update_irq_enable(rtc, 0);
-> 
-> -#ifdef CONFIG_64BIT
-> -#define RTC_IRQP_SET32         _IOW('p', 0x0c, __u32)
-> -#define RTC_IRQP_READ32                _IOR('p', 0x0b, __u32)
-> -       case RTC_IRQP_SET32:
-> -               err = rtc_irq_set_freq(rtc, arg);
-> -               break;
-> -       case RTC_IRQP_READ32:
-> -               err = put_user(rtc->irq_freq, (unsigned int __user *)uarg);
-> -               break;
-> -#endif
->         case RTC_IRQP_SET:
->                 err = rtc_irq_set_freq(rtc, arg);
->                 break;
-> @@ -409,6 +399,29 @@ static long rtc_dev_ioctl(struct file *file,
->         return err;
->  }
-> 
-> +#ifdef CONFIG_COMPAT
-> +#define RTC_IRQP_SET32         _IOW('p', 0x0c, __u32)
-> +#define RTC_IRQP_READ32                _IOR('p', 0x0b, __u32)
-> +
-> +static long rtc_dev_compat_ioctl(struct file *file,
-> +                                unsigned int cmd, unsigned long arg)
-> +{
-> +       struct rtc_device *rtc = file->private_data;
-> +       void __user *uarg = compat_ptr(arg);
-> +
-> +       switch (cmd) {
-> +       case RTC_IRQP_READ32:
-> +               return put_user(rtc->irq_freq, (__u32 __user *)uarg);
-> +
-> +       case RTC_IRQP_SET32:
-> +               /* arg is a plain integer, not pointer */
-> +               return rtc_dev_ioctl(file, RTC_IRQP_SET, arg);
-> +       }
-> +
-> +       return rtc_dev_ioctl(file, cmd, (unsigned long)uarg);
-> +}
-> +#endif
-> +
->  static int rtc_dev_fasync(int fd, struct file *file, int on)
->  {
->         struct rtc_device *rtc = file->private_data;
-> @@ -444,7 +457,7 @@ static const struct file_operations rtc_dev_fops = {
->         .read           = rtc_dev_read,
->         .poll           = rtc_dev_poll,
->         .unlocked_ioctl = rtc_dev_ioctl,
-> -       .compat_ioctl   = compat_ptr_ioctl,
-> +       .compat_ioctl   = rtc_dev_compat_ioctl,
->         .open           = rtc_dev_open,
->         .release        = rtc_dev_release,
->         .fasync         = rtc_dev_fasync,
-> 
-> If you and Alexandre are both happy with this version, I'll fold it into
-> my original patch.
-> 
+=20
+>=20
+> > Add the necessary infrastructure to keep timestamp history of
+> > commands, events and other useful info for debugging complex issues.
+> > This helps in diagnosing events leading upto failure.
+>=20
+> Why not use tracepoints, for that?
+Ack on Tomas's comment.
+Are there any pieces of information that you need not provided by the upiu =
+tracer?
 
-I'm OK with that version
-
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Thanks,
+Avri
