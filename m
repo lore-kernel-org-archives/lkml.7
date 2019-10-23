@@ -2,168 +2,168 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4012CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 04:12:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFFB2CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 04:13:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A95CC207FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 04:12:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571803930;
-	bh=Gibqdh2Co8u4JylpxSaH4/x76GwQHMi9FG9hIlKKtek=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=QDY8GMtzfrOfUGlwcmsQ786wY0RIOzioeD6UpuScYcu7i+38ksyzyyf3X37nGjPKh
-	 pLvrsVEY2B785JK2HEEwo7qCbUzpgaHQLFwcn5X6nE6xwS8pkl+OASP0sUAaxicPJo
-	 5ZRLjFUbMFOLKKSzbgV3kdsbKu4PNUwNduBjgIYI=
+	by mail.kernel.org (Postfix) with ESMTP id BA8EA207FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 04:13:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Z8HSfTGj";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="K80r7HEO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729253AbfJWELT (ORCPT
+        id S1731234AbfJWENy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 00:11:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54484 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727574AbfJWELT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 00:11:19 -0400
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Wed, 23 Oct 2019 00:13:54 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:41860 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726283AbfJWENx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 00:13:53 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 50AEE60A23; Wed, 23 Oct 2019 04:13:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571804032;
+        bh=uC8LiLkcBv7RD3c+BU2tghu/rE7vS/ZQkF3t3atOtTA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Z8HSfTGjyWVo6B49E2VeIruMZfEiwM/XikkHjOFF1tqYEZ6zcAr1RjWmTrUBL1mjI
+         oicFOOlqVLCMLrnRYKt4aK+2avH1ob+frUt/IXaXEwcraUado3jBRWLx3FmozRdiZS
+         nCGJhByZPLbLPwgN6xDTxUd4g1h8SE1nIMiiw5+4=
+Received: from pacamara-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50D3221928
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 04:11:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571803877;
-        bh=Gibqdh2Co8u4JylpxSaH4/x76GwQHMi9FG9hIlKKtek=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=yeiVt0pL096iSqYCKZeiQ9dctzQYy574QUj8xgZboFtW5nXfqGi4XxllH/ec2+sxf
-         pzqoE68RFnb2hXuFHcK4N1D9Vu6+gTeRBSBwSFOfft4GDWGdnKafzZeRdW8VEBywM7
-         05RhG1a8ayx+mQx1nleRif40EJxWMb56m+XcZzcQ=
-Received: by mail-wr1-f50.google.com with SMTP id p4so20360643wrm.8
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 21:11:17 -0700 (PDT)
-X-Gm-Message-State: APjAAAU8Ri/zhUwg5VPoYdnYlsi/CrD0MpHXwpQPVLpCak6lC3PLWTMM
-        j1wQlESLebgm6ViF+PF6PvelVWyr4SA9Rq2eFEkaRA==
-X-Google-Smtp-Source: APXvYqxNmV1lwxPxGnlytrDZFlyMjNhOxN6X9ZkZQPM6PGzlRFh30f+cYzArtw27U3+B4cK0+W1rFr1aTAQYBBpw/fA=
-X-Received: by 2002:a05:6000:1288:: with SMTP id f8mr6102479wrx.111.1571803875660;
- Tue, 22 Oct 2019 21:11:15 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191012191602.45649-1-dancol@google.com> <20191012191602.45649-4-dancol@google.com>
- <CALCETrVZHd+csdRL-uKbVN3Z7yeNNtxiDy-UsutMi=K3ZgCiYw@mail.gmail.com>
- <CAKOZuevUqs_Oe1UEwguQK7Ate3ai1DSVSij=0R=vmz9LzX4k6Q@mail.gmail.com> <CALCETrUyq=J37gU-MYXqLdoi7uH7iNNVRjvcGUT11JA1QuTFyg@mail.gmail.com>
-In-Reply-To: <CALCETrUyq=J37gU-MYXqLdoi7uH7iNNVRjvcGUT11JA1QuTFyg@mail.gmail.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 22 Oct 2019 21:11:04 -0700
-X-Gmail-Original-Message-ID: <CALCETrX=1XUwsuKc6dinj3ZTnrK85m_+UL=iaYKj4EZtf-xm5g@mail.gmail.com>
-Message-ID: <CALCETrX=1XUwsuKc6dinj3ZTnrK85m_+UL=iaYKj4EZtf-xm5g@mail.gmail.com>
-Subject: Re: [PATCH 3/7] Add a UFFD_SECURE flag to the userfaultfd API.
-To:     Andy Lutomirski <luto@kernel.org>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Cyrill Gorcunov <gorcunov@gmail.com>
-Cc:     Daniel Colascione <dancol@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jann Horn <jannh@google.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lokesh Gidra <lokeshgidra@google.com>,
-        Nick Kralevich <nnk@google.com>,
-        Nosh Minwalla <nosh@google.com>,
-        Tim Murray <timmurray@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        (Authenticated sender: cang@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id DA47F609D4;
+        Wed, 23 Oct 2019 04:13:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571804030;
+        bh=uC8LiLkcBv7RD3c+BU2tghu/rE7vS/ZQkF3t3atOtTA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=K80r7HEO25ljHqcNN1pBm3RqPC2q9c0PR744S/QPevts9vKq9K5cPovp7BJBxDc7i
+         iq2aq0q6VsqBkzG3Dh3x0KW0NkPcOIF1MR4C+AHH2XfDMMXzKAgpHYGoZB+M5TM7r1
+         j2ze8ERHm66kJYBV2/sGTaKt4lzRPRCXUk4WSPS8=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DA47F609D4
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=cang@codeaurora.org
+From:   Can Guo <cang@codeaurora.org>
+To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
+        cang@codeaurora.org
+Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Subhash Jadavani <subhashj@codeaurora.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v1 1/2] scsi: ufs: Introduce a vops for resetting host controller
+Date:   Tue, 22 Oct 2019 21:13:27 -0700
+Message-Id: <1571804009-29787-2-git-send-email-cang@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1571804009-29787-1-git-send-email-cang@codeaurora.org>
+References: <1571804009-29787-1-git-send-email-cang@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Trying again.  It looks like I used the wrong address for Pavel.
+Some UFS host controllers need their specific implementations of resetting
+to get them into a good state. Provide a new vops to allow the platform
+driver to implement this own reset operation.
 
-On Sat, Oct 12, 2019 at 6:14 PM Andy Lutomirski <luto@kernel.org> wrote:
->
-> [adding more people because this is going to be an ABI break, sigh]
->
-> On Sat, Oct 12, 2019 at 5:52 PM Daniel Colascione <dancol@google.com> wrote:
-> >
-> > On Sat, Oct 12, 2019 at 4:10 PM Andy Lutomirski <luto@kernel.org> wrote:
-> > >
-> > > On Sat, Oct 12, 2019 at 12:16 PM Daniel Colascione <dancol@google.com> wrote:
-> > > >
-> > > > The new secure flag makes userfaultfd use a new "secure" anonymous
-> > > > file object instead of the default one, letting security modules
-> > > > supervise userfaultfd use.
-> > > >
-> > > > Requiring that users pass a new flag lets us avoid changing the
-> > > > semantics for existing callers.
-> > >
-> > > Is there any good reason not to make this be the default?
-> > >
-> > >
-> > > The only downside I can see is that it would increase the memory usage
-> > > of userfaultfd(), but that doesn't seem like such a big deal.  A
-> > > lighter-weight alternative would be to have a single inode shared by
-> > > all userfaultfd instances, which would require a somewhat different
-> > > internal anon_inode API.
-> >
-> > I'd also prefer to just make SELinux use mandatory, but there's a
-> > nasty interaction with UFFD_EVENT_FORK. Adding a new UFFD_SECURE mode
-> > which blocks UFFD_EVENT_FORK sidesteps this problem. Maybe you know a
-> > better way to deal with it.
->
-> ...
->
-> > But maybe we can go further: let's separate authentication and
-> > authorization, as we do in other LSM hooks. Let's split my
-> > inode_init_security_anon into two hooks, inode_init_security_anon and
-> > inode_create_anon. We'd define the former to just initialize the file
-> > object's security information --- in the SELinux case, figuring out
-> > its class and SID --- and define the latter to answer the yes/no
-> > question of whether a particular anonymous inode creation should be
-> > allowed. Normally, anon_inode_getfile2() would just call both hooks.
-> > We'd add another anon_inode_getfd flag, ANON_INODE_SKIP_AUTHORIZATION
-> > or something, that would tell anon_inode_getfile2() to skip calling
-> > the authorization hook, effectively making the creation always
-> > succeed. We can then make the UFFD code pass
-> > ANON_INODE_SKIP_AUTHORIZATION when it's creating a file object in the
-> > fork child while creating UFFD_EVENT_FORK messages.
->
-> That sounds like an improvement.  Or maybe just teach SELinux that
-> this particular fd creation is actually making an anon_inode that is a
-> child of an existing anon inode and that the context should be copied
-> or whatever SELinux wants to do.  Like this, maybe:
->
-> static int resolve_userfault_fork(struct userfaultfd_ctx *ctx,
->                                   struct userfaultfd_ctx *new,
->                                   struct uffd_msg *msg)
-> {
->         int fd;
->
-> Change this:
->
->         fd = anon_inode_getfd("[userfaultfd]", &userfaultfd_fops, new,
->                               O_RDWR | (new->flags & UFFD_SHARED_FCNTL_FLAGS));
->
-> to something like:
->
->       fd = anon_inode_make_child_fd(..., ctx->inode, ...);
->
-> where ctx->inode is the one context's inode.
->
-> *** HOWEVER *** !!!
->
-> Now that you've pointed this mechanism out, it is utterly and
-> completely broken and should be removed from the kernel outright or at
-> least severely restricted.  A .read implementation MUST NOT ACT ON THE
-> CALLING TASK.  Ever.  Just imagine the effect of passing a userfaultfd
-> as stdin to a setuid program.
->
-> So I think the right solution might be to attempt to *remove*
-> UFFD_EVENT_FORK.  Maybe the solution is to say that, unless the
-> creator of a userfaultfd() has global CAP_SYS_ADMIN, then it cannot
-> use UFFD_FEATURE_EVENT_FORK) and print a warning (once) when
-> UFFD_FEATURE_EVENT_FORK is allowed.  And, after some suitable
-> deprecation period, just remove it.  If it's genuinely useful, it
-> needs an entirely new API based on ioctl() or a syscall.  Or even
-> recvmsg() :)
->
-> And UFFD_SECURE should just become automatic, since you don't have a
-> problem any more. :-p
->
-> --Andy
+Signed-off-by: Can Guo <cang@codeaurora.org>
+---
+ drivers/scsi/ufs/ufshcd.c | 16 ++++++++++++++++
+ drivers/scsi/ufs/ufshcd.h | 10 ++++++++++
+ 2 files changed, 26 insertions(+)
+
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index c28c144..161e3c4 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -3859,6 +3859,14 @@ static int ufshcd_link_recovery(struct ufs_hba *hba)
+ 	ufshcd_set_eh_in_progress(hba);
+ 	spin_unlock_irqrestore(hba->host->host_lock, flags);
+ 
++	ret = ufshcd_vops_full_reset(hba);
++	if (ret)
++		dev_warn(hba->dev, "%s: full reset returned %d\n",
++				  __func__, ret);
++
++	/* Reset the attached device */
++	ufshcd_vops_device_reset(hba);
++
+ 	ret = ufshcd_host_reset_and_restore(hba);
+ 
+ 	spin_lock_irqsave(hba->host->host_lock, flags);
+@@ -6241,6 +6249,11 @@ static int ufshcd_reset_and_restore(struct ufs_hba *hba)
+ 	int retries = MAX_HOST_RESET_RETRIES;
+ 
+ 	do {
++		err = ufshcd_vops_full_reset(hba);
++		if (err)
++			dev_warn(hba->dev, "%s: full reset returned %d\n",
++					__func__, err);
++
+ 		/* Reset the attached device */
+ 		ufshcd_vops_device_reset(hba);
+ 
+@@ -8384,6 +8397,9 @@ int ufshcd_init(struct ufs_hba *hba, void __iomem *mmio_base, unsigned int irq)
+ 		goto exit_gating;
+ 	}
+ 
++	/* Reset controller to power on reset (POR) state */
++	ufshcd_vops_full_reset(hba);
++
+ 	/* Reset the attached device */
+ 	ufshcd_vops_device_reset(hba);
+ 
+diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
+index e0fe247..253b9ea 100644
+--- a/drivers/scsi/ufs/ufshcd.h
++++ b/drivers/scsi/ufs/ufshcd.h
+@@ -296,6 +296,8 @@ struct ufs_pwr_mode_info {
+  * @apply_dev_quirks: called to apply device specific quirks
+  * @suspend: called during host controller PM callback
+  * @resume: called during host controller PM callback
++ * @full_reset: called for handling variant specific implementations of
++ *              resetting the hci
+  * @dbg_register_dump: used to dump controller debug information
+  * @phy_initialization: used to initialize phys
+  * @device_reset: called to issue a reset pulse on the UFS device
+@@ -325,6 +327,7 @@ struct ufs_hba_variant_ops {
+ 	int	(*apply_dev_quirks)(struct ufs_hba *);
+ 	int     (*suspend)(struct ufs_hba *, enum ufs_pm_op);
+ 	int     (*resume)(struct ufs_hba *, enum ufs_pm_op);
++	int	(*full_reset)(struct ufs_hba *hba);
+ 	void	(*dbg_register_dump)(struct ufs_hba *hba);
+ 	int	(*phy_initialization)(struct ufs_hba *);
+ 	void	(*device_reset)(struct ufs_hba *hba);
+@@ -1076,6 +1079,13 @@ static inline int ufshcd_vops_resume(struct ufs_hba *hba, enum ufs_pm_op op)
+ 	return 0;
+ }
+ 
++static inline int ufshcd_vops_full_reset(struct ufs_hba *hba)
++{
++	if (hba->vops && hba->vops->full_reset)
++		return hba->vops->full_reset(hba);
++	return 0;
++}
++
+ static inline void ufshcd_vops_dbg_register_dump(struct ufs_hba *hba)
+ {
+ 	if (hba->vops && hba->vops->dbg_register_dump)
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
