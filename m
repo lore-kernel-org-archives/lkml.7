@@ -2,98 +2,154 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31056CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:24:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7386CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:27:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F234721872
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:24:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA176222C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:27:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uGPIy0Zl"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RfSt8m1g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729328AbfJWRY0 (ORCPT
+        id S1729518AbfJWR1k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 13:24:26 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:32780 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727079AbfJWRY0 (ORCPT
+        Wed, 23 Oct 2019 13:27:40 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:53999 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728583AbfJWR1j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 13:24:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=bG3/WLQ3BKtHlYI3WFB7izs5MtpxdRb40qU5GLuq7Kc=; b=uGPIy0ZlzUq7xee7gYH6zC3G2
-        pSrOyTAvWP+Wpg6vgAZSinr7A2/uNC+nOEmCHmCOqLTI8/zJvB+NLkxefC248I+ClUm+cwguY+Nln
-        i2myUnQID2xvEzjNYXcRnH8vMWKtCF64XjrlHnPS4x02FrIsPQGxBNGyWP+pHdwlqDXK2KYql6Smm
-        b/VttAo5viTNxoBVU/xaMwnpd/goLs5Uf3vsX9NKku6Qk7xB7NAmSuVrOGChBDT/j0bVb7HrZjlZE
-        yblsP/9LqUE4osPgpwuuiFPziJsaIIm+qmX4gSbd5fFkKKoVZcevHIu1LvRofn9XdxY1AvtHUgeZx
-        ZC6VLKRlA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iNKMu-0006oY-I8; Wed, 23 Oct 2019 17:24:20 +0000
-Date:   Wed, 23 Oct 2019 10:24:20 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     hughd@google.com, aarcange@redhat.com,
-        kirill.shutemov@linux.intel.com, gavin.dg@linux.alibaba.com,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [v2 PATCH] mm: thp: handle page cache THP correctly in
- PageTransCompoundMap
-Message-ID: <20191023172420.GB2963@bombadil.infradead.org>
-References: <1571850304-82802-1-git-send-email-yang.shi@linux.alibaba.com>
+        Wed, 23 Oct 2019 13:27:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571851658;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=esWx43fZLzMnjouiOJwe7rGNAZqI0D7XVCwYEnxdbUA=;
+        b=RfSt8m1gOMR7uVoM6YJU/zPqWy5KWZMMkuXvMW+U4to0XCxLQTlJ0WsUZJiAN2id6N9WsO
+        Mp3K1NGQwXInPlusDaKWs5z5fkCrgIvuN/TTxbWVoBFs4a1QmIpVoWjCRNCakJ3BHpSvA6
+        BQBQ7FvFgxfAd0RMkXQjSQWSKLWLReg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-346-N1h7g-G8MRyyM5N5r7xtRg-1; Wed, 23 Oct 2019 13:27:35 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3FDBA800D49;
+        Wed, 23 Oct 2019 17:27:33 +0000 (UTC)
+Received: from [10.10.123.185] (ovpn-123-185.rdu2.redhat.com [10.10.123.185])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4BC1760C80;
+        Wed, 23 Oct 2019 17:27:30 +0000 (UTC)
+Subject: Re: [PATCH] Add prctl support for controlling PF_MEMALLOC V2
+To:     Michal Hocko <mhocko@kernel.org>,
+        Dave Chinner <david@fromorbit.com>
+References: <20191021214137.8172-1-mchristi@redhat.com>
+ <20191022112446.GA8213@dhcp22.suse.cz> <5DAF2AA0.5030500@redhat.com>
+ <20191022163310.GS9379@dhcp22.suse.cz>
+ <20191022204344.GB2044@dread.disaster.area>
+ <20191023071146.GE754@dhcp22.suse.cz>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-block@vger.kernel.org, martin@urbackup.org,
+        Damien.LeMoal@wdc.com
+From:   Mike Christie <mchristi@redhat.com>
+Message-ID: <5DB08D81.8050300@redhat.com>
+Date:   Wed, 23 Oct 2019 12:27:29 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1571850304-82802-1-git-send-email-yang.shi@linux.alibaba.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191023071146.GE754@dhcp22.suse.cz>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-MC-Unique: N1h7g-G8MRyyM5N5r7xtRg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 01:05:04AM +0800, Yang Shi wrote:
-> +	return map_count >= 0 &&
-> +	       map_count == atomic_read(&head[1].compound_mapcount);
->  }
+On 10/23/2019 02:11 AM, Michal Hocko wrote:
+> On Wed 23-10-19 07:43:44, Dave Chinner wrote:
+>> On Tue, Oct 22, 2019 at 06:33:10PM +0200, Michal Hocko wrote:
+>=20
+> Thanks for more clarifiation regarding PF_LESS_THROTTLE.
+>=20
+> [...]
+>>> PF_IO_FLUSHER would mean that the user
+>>> context is a part of the IO path and therefore there are certain reclai=
+m
+>>> recursion restrictions.
+>>
+>> If PF_IO_FLUSHER just maps to PF_LESS_THROTTLE|PF_MEMALLOC_NOIO,
+>> then I'm not sure we need a new definition. Maybe that's the ptrace
+>> flag name, but in the kernel we don't need a PF_IO_FLUSHER process
+>> flag...
+>=20
+> Yes, the internal implementation would do something like that. I was
+> more interested in the user space visible API at this stage. Something
+> generic enough because exporting MEMALLOC flags is just a bad idea IMHO
+> (especially PF_MEMALLOC).
 
-I didn't like Hugh's duplicate definition either.  May I suggest:
+Do you mean we would do something like:
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 2f2199a51941..3d0efd937d2b 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -695,11 +695,6 @@ static inline void *kvcalloc(size_t n, size_t size, gfp_t flags)
- 
- extern void kvfree(const void *addr);
- 
--static inline atomic_t *compound_mapcount_ptr(struct page *page)
--{
--	return &page[1].compound_mapcount;
--}
--
- static inline int compound_mapcount(struct page *page)
- {
- 	VM_BUG_ON_PAGE(!PageCompound(page), page);
-diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index 2222fa795284..270aa8fd2800 100644
---- a/include/linux/mm_types.h
-+++ b/include/linux/mm_types.h
-@@ -221,6 +221,11 @@ struct page {
- #endif
- } _struct_page_alignment;
- 
-+static inline atomic_t *compound_mapcount_ptr(struct page *page)
-+{
-+	return &page[1].compound_mapcount;
-+}
-+
- /*
-  * Used for sizing the vmemmap region on some architectures
-  */
+prctl()
+....
+case PF_SET_IO_FLUSHER:
+        current->flags |=3D PF_MEMALLOC_NOIO;
+....
+
+or are you saying we would add a new PF_IO_FLUSHER flag and then modify
+PF_MEMALLOC_NOIO uses like in current_gfp_context:
+
+if (current->flags & (PF_MEMALLOC_NOIO | PF_IO_FLUSHER)
+      flags &=3D ~(__GFP_IO | __GFP_FS);
+
+?
+
+>=20
+>>>>>> This patch allows the userspace deamon to set the PF_MEMALLOC* flags
+>>>>>> with prctl during their initialization so later allocations cannot
+>>>>>> calling back into them.
+>>>>>
+>>>>> TBH I am not really happy to export these to the userspace. They are
+>>>>> an internal implementation detail and the userspace shouldn't really
+>>>>
+>>>> They care in these cases, because block/fs drivers must be able to mak=
+e
+>>>> forward progress during writes. To meet this guarantee kernel block
+>>>> drivers use mempools and memalloc/GFP flags.
+>>>>
+>>>> For these userspace components of the block/fs drivers they already do
+>>>> things normal daemons do not to meet that guarantee like mlock their
+>>>> memory, disable oom killer, and preallocate resources they have contro=
+l
+>>>> over. They have no control over reclaim like the kernel drivers do so
+>>>> its easy for us to deadlock when memory gets low.
+>>>
+>>> OK, fair enough. How much of a control do they really need though. Is a
+>>> single PF_IO_FLUSHER as explained above (essentially imply GPF_NOIO
+>>> context) sufficient?
+>>
+>> I think some of these usrspace processes work at the filesystem
+>> level and so really only need GFP_NOFS allocation (fuse), while
+>> others work at the block device level (iscsi, nbd) so need GFP_NOIO
+>> allocation. So there's definitely an argument for providing both...
+>=20
+> The main question is whether giving more APIs is really necessary. Is
+> there any real problem to give them only PF_IO_FLUSHER and let both
+> groups use this one? It will imply more reclaim restrictions for solely
+> FS based ones but is this a practical problem? If yes we can always add
+> PF_FS_$FOO later on.
+
+
+I am not sure. I will have to defer to general FS experts like Dave or
+Martin and Damien for the specific fuse case. There do not seem to be a
+lot of places where we check for __GFP_IO so configs with fuse and
+bcache for example are probably not a big deal. However, I am not very
+familiar with some of the other code paths in the mm layer and how FSs
+interact with them.
+
