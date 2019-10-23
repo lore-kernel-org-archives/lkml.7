@@ -2,126 +2,101 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9020CA9EBF
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:44:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13AADCA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:45:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACB1921906
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:44:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="YAyY0a5+"
+	by mail.kernel.org (Postfix) with ESMTP id E61CA21928
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:45:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391770AbfJWMos (ORCPT
+        id S2403930AbfJWMpj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 08:44:48 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:37284 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2391686AbfJWMoY (ORCPT
+        Wed, 23 Oct 2019 08:45:39 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:52765 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391037AbfJWMpi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 08:44:24 -0400
-Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 72D9CC0DDE;
-        Wed, 23 Oct 2019 12:44:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1571834664; bh=9bNHRLE5N78H1xT78BVFMS/DIn9uGRWP5TXcJX4sEgI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YAyY0a5+qAz2eP0iUTxvt4Ud9f3r/rU4QOEuODemZpHqsd6lElGstWiV4Naz+ca7l
-         esqMd1GWPdc/+1M0jinS95b5CWBKOHcEeRvVBtSp/Z6BBfbNIYZr0VjihXJxusl+wZ
-         YVIfyAE5k7LH9zmUDyGcwUEoVt0/3zBNCFiC6+4Q7fXj15j0X61LxKysIIOJOgSjaA
-         KFn2vq6NbHR34cSOHdYPzlwHwLyBNL57rC1J+lNk7c8xxSiDR7b3IbV+s3UnkE6Mm9
-         2gfB17/XgWccZuQCbNuaFCg5ps0RBM6buMJCDe8XDqtXNQcLat3346Q7cqMDhJfX7m
-         HSkStNGXbjmJg==
-Received: from paltsev-e7480.internal.synopsys.com (paltsev-e7480.internal.synopsys.com [10.121.3.73])
-        by mailhost.synopsys.com (Postfix) with ESMTP id BE8B3A0063;
-        Wed, 23 Oct 2019 12:44:22 +0000 (UTC)
-From:   Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-To:     linux-snps-arc@lists.infradead.org,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Subject: [PATCH 2/8] ARC: HAPS: cleanup defconfigs from unused IO-related options
-Date:   Wed, 23 Oct 2019 15:44:11 +0300
-Message-Id: <20191023124417.5770-3-Eugeniy.Paltsev@synopsys.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191023124417.5770-1-Eugeniy.Paltsev@synopsys.com>
-References: <20191023124417.5770-1-Eugeniy.Paltsev@synopsys.com>
+        Wed, 23 Oct 2019 08:45:38 -0400
+Received: from mail-qt1-f175.google.com ([209.85.160.175]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MZl1l-1iTZ7G04IB-00WnZl; Wed, 23 Oct 2019 14:45:37 +0200
+Received: by mail-qt1-f175.google.com with SMTP id g50so17884261qtb.4;
+        Wed, 23 Oct 2019 05:45:36 -0700 (PDT)
+X-Gm-Message-State: APjAAAXqU4eAJDwvhXDnj0TiMlz8//56JCfVHX2zVi0IcP9DLdJ4ol2M
+        rzaAsTbJUpOEy+oWFQrczxknQ6IPGOtPq7v6fY8=
+X-Google-Smtp-Source: APXvYqyy9eLPSjSegvDzhnQvcTJZRNXOvgxtascK9z6lCnK+he0UZpFg1zpN14r2VDhc4zyiPUa1Ko1f6GMezspKs4c=
+X-Received: by 2002:ac8:6956:: with SMTP id n22mr8794799qtr.7.1571834735758;
+ Wed, 23 Oct 2019 05:45:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191010202802.1132272-1-arnd@arndb.de> <20191010203043.1241612-1-arnd@arndb.de>
+ <20191010203043.1241612-9-arnd@arndb.de> <20191023113252.GG10630@pi3>
+In-Reply-To: <20191023113252.GG10630@pi3>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 23 Oct 2019 14:45:19 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a2f8USPJP5OL2J=wi=GqvBrTJpwVOtYg=WcWQM2PZ30cQ@mail.gmail.com>
+Message-ID: <CAK8P3a2f8USPJP5OL2J=wi=GqvBrTJpwVOtYg=WcWQM2PZ30cQ@mail.gmail.com>
+Subject: Re: [PATCH 09/36] ARM: samsung: move pm check code to drivers/soc
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     "moderated list:ARM/SAMSUNG EXYNOS ARM ARCHITECTURES" 
+        <linux-samsung-soc@vger.kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Pankaj Dubey <pankaj.dubey@samsung.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:AHM2NU0QTJyje//gruH+Don3wT44Dal5JmNeL0fdw/0WSkF9AgN
+ 5mb3zodeOahxj/ah4jl8zsJJMaYkxK1NMQ3IlkmKIA9nO51hWcnn+lgTZG7NRQQfdN1pVdJ
+ /n/GzSYR6SpztHI8sA/r+VU9NGUJXATN1ipnckRdx9peHq3iWSR8VA5aScIYhdLFi2pdDFL
+ ZMqQMKUZcAO8DFO4/rvNw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Pgu5C6zyWb8=:fn/zWAD0SS67j6IUs1VIDX
+ FoMqLpjtdvL5/MSUxUOjHtEG5vOoI8U1LHkAnVO1lDhCyatWAJyeMKj7sI6YTFelTvjRKTJZf
+ 5OAFWsqxvoq0+SBmimt1766oM+46fCG+y0KRKYloGz9aUFEdvntl9hKnPZ9l9bXig41Iug03X
+ 22cphV68qYI3ggQLAyMUVH9YkTxCALaKLvrCB1I3x45pqilHB1Fcklq2fmbWLtKPxhx6X159R
+ TRF1xnSGsOBp4q4cLEnYcn2J+zHZN9ktKwtTDcuKcIWdGutMosiRFOIn33nwQp8MAapN6Oqwb
+ OUTW783/UY8mDtvMD42/ChrwDtSMavCE0c5wWKoeWT9WPZahG/n8jwuYPFM4YfVQVwiQaWRIU
+ CIOjwDCdhLHsAXqPzuv6JuuDGSwpPMwwaeBFujePf1/32e0kZkbiZfyhXZoC0ZbMaQ8N2ro6s
+ 8vp7Sqx3M2ALuurIUzmDL1Ad51IOElvt98o+HSEt8Wj7utXoI3TJimpkjGIuR3DUJtj5o6Jh8
+ i9RICA92Nj6abLrgO8TslqCdjgDruvt/xPREskCIHkK0o/gUqPL7V9R6b6SVw9lQAv7Q9MdhJ
+ yfklDBHfQEfapbino8NofiFmGqs+jZ+aJ+I8roI75p5xTpiZQyd2jdUsXlGc2SvIjzIWkqaDa
+ oCMFWDNEh+l6cSf8lOf2b9+5fH2ufrsAb7WmLr+B8C2/tCeANZY9NavKUqEKC4Wo3x90YqbhY
+ H+P4MxQQW7PhzuZ8seqo/C8nqSRe9jB4b23g04Rez15VzY/1gwd55OL89pVf3yG5/VEvv0BNR
+ EJFJc9JMcxbu4MO8VY70HzbT1n6JKWgoyVYY77J7OWyzuqc/sgzV5QIRW8eMxwSKVYUwIJoy/
+ OlNhyqH1Szjx3f5uVQmA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We don't have any peripherals on HAPS which may require FB or
-input_devices support. So get rid of them.
+On Wed, Oct 23, 2019 at 1:33 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> On Thu, Oct 10, 2019 at 10:29:53PM +0200, Arnd Bergmann wrote:
+> > This is the only part of plat-samsung that is really
+> > shared between the s3c and s5p ports. Moving it to
+> > drivers/soc/ lets us make them completely independent.
+> >
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > ---
+> > + *   Tomasz Figa <t.figa@samsung.com>
+> > + * Copyright (c) 2004 Simtec Electronics
+> > + *   http://armlinux.simtec.co.uk/
+> > + *   Written by Ben Dooks, <ben@simtec.co.uk>
+> > + */
+> > +
+> > +#ifndef __SAMSUNG_SOC_S3C_PM_H
+> > +#define __SAMSUNG_SOC_S3C_PM_H __FILE__
+>
+> Use guard name prefix consistent with other files, so:
+> __LINUX_SOC_SAMSUNG_S3C_PM_H
 
-Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
----
- arch/arc/configs/haps_hs_defconfig     | 9 +++------
- arch/arc/configs/haps_hs_smp_defconfig | 9 +++------
- 2 files changed, 6 insertions(+), 12 deletions(-)
+Ok, done.
 
-diff --git a/arch/arc/configs/haps_hs_defconfig b/arch/arc/configs/haps_hs_defconfig
-index e22f40612089..33b7a402b6bd 100644
---- a/arch/arc/configs/haps_hs_defconfig
-+++ b/arch/arc/configs/haps_hs_defconfig
-@@ -48,9 +48,9 @@ CONFIG_VIRTIO_NET=y
- # CONFIG_NET_VENDOR_WIZNET is not set
- # CONFIG_WLAN is not set
- CONFIG_INPUT_EVDEV=y
--CONFIG_MOUSE_PS2_TOUCHKIT=y
--# CONFIG_SERIO_SERPORT is not set
--CONFIG_SERIO_ARC_PS2=y
-+# CONFIG_INPUT_KEYBOARD is not set
-+# CONFIG_INPUT_MOUSE is not set
-+# CONFIG_SERIO is not set
- # CONFIG_LEGACY_PTYS is not set
- CONFIG_SERIAL_8250=y
- CONFIG_SERIAL_8250_CONSOLE=y
-@@ -60,9 +60,6 @@ CONFIG_SERIAL_8250_DW=y
- CONFIG_SERIAL_OF_PLATFORM=y
- # CONFIG_HW_RANDOM is not set
- # CONFIG_HWMON is not set
--CONFIG_FB=y
--CONFIG_FRAMEBUFFER_CONSOLE=y
--CONFIG_LOGO=y
- # CONFIG_HID is not set
- # CONFIG_USB_SUPPORT is not set
- CONFIG_VIRTIO_MMIO=y
-diff --git a/arch/arc/configs/haps_hs_smp_defconfig b/arch/arc/configs/haps_hs_smp_defconfig
-index ff4fcd7640a4..5586511a00bf 100644
---- a/arch/arc/configs/haps_hs_smp_defconfig
-+++ b/arch/arc/configs/haps_hs_smp_defconfig
-@@ -49,9 +49,9 @@ CONFIG_NETDEVICES=y
- # CONFIG_NET_VENDOR_WIZNET is not set
- # CONFIG_WLAN is not set
- CONFIG_INPUT_EVDEV=y
--CONFIG_MOUSE_PS2_TOUCHKIT=y
--# CONFIG_SERIO_SERPORT is not set
--CONFIG_SERIO_ARC_PS2=y
-+# CONFIG_INPUT_KEYBOARD is not set
-+# CONFIG_INPUT_MOUSE is not set
-+# CONFIG_SERIO is not set
- # CONFIG_LEGACY_PTYS is not set
- CONFIG_SERIAL_8250=y
- CONFIG_SERIAL_8250_CONSOLE=y
-@@ -61,9 +61,6 @@ CONFIG_SERIAL_8250_DW=y
- CONFIG_SERIAL_OF_PLATFORM=y
- # CONFIG_HW_RANDOM is not set
- # CONFIG_HWMON is not set
--CONFIG_FB=y
--CONFIG_FRAMEBUFFER_CONSOLE=y
--CONFIG_LOGO=y
- # CONFIG_HID is not set
- # CONFIG_USB_SUPPORT is not set
- # CONFIG_IOMMU_SUPPORT is not set
--- 
-2.21.0
-
+        Arnd
