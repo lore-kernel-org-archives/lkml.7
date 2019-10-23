@@ -2,91 +2,110 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23211CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:40:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E205CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:41:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 000152064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:40:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64AEA2064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:41:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="irN2kiQL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406838AbfJWPkH (ORCPT
+        id S2406855AbfJWPlA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 11:40:07 -0400
-Received: from mga12.intel.com ([192.55.52.136]:44407 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390140AbfJWPkH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 11:40:07 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 08:40:06 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,221,1569308400"; 
-   d="scan'208";a="201170699"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by orsmga003.jf.intel.com with ESMTP; 23 Oct 2019 08:40:06 -0700
-Date:   Wed, 23 Oct 2019 08:40:06 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, x86@kernel.org, pbonzini@redhat.com,
-        rkrcmar@redhat.com, vkuznets@redhat.com, wanpengli@tencent.com,
-        jmattson@google.com, joro@8bytes.org, boris.ostrovsky@oracle.com,
-        jgross@suse.com, peterz@infradead.org, will@kernel.org,
-        linux-hyperv@vger.kernel.org, kvm@vger.kernel.org,
-        mikelley@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
-        sthemmin@microsoft.com, sashal@kernel.org,
-        Jonathan Corbet <corbet@lwn.net>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH v8 3/5] x86/kvm: Add "nopvspin" parameter to disable PV
- spinlocks
-Message-ID: <20191023154006.GN329@linux.intel.com>
-References: <1571829384-5309-1-git-send-email-zhenzhong.duan@oracle.com>
- <1571829384-5309-4-git-send-email-zhenzhong.duan@oracle.com>
+        Wed, 23 Oct 2019 11:41:00 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:45787 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404283AbfJWPk7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 11:40:59 -0400
+Received: by mail-wr1-f68.google.com with SMTP id q13so17664830wrs.12
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 08:40:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=veaWPcqNKkHO2xesR9++rJ5BEwtFW1XMdldljCUmrk8=;
+        b=irN2kiQLBDfDnCbkJkg5TiJ0d5LvrWcrQ5jUW84CdQAxBOp1dChVo9su8AS5uRSXFp
+         ryQ+1X1PYcX+WoSysGNEbEJPpc0fpgfTWJoUNywUDNIbqA8mH3ODHwEWSeyCJhLouOeE
+         DVHVp69j/ByZgGGQgC+qzhbsjg2qiHrZ2bFtw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=veaWPcqNKkHO2xesR9++rJ5BEwtFW1XMdldljCUmrk8=;
+        b=XTL2W3Tyvq3e9wE4PWobZtAO5csa/F7vCknDWopCn3Mt4Yhib83UUstJbpOynQe0+v
+         kq7lZcufvrFEr+JLap8X/+wlhPF88dstWG+RK4WWr2CW2j6GN/RLdPlWxm1+kBpgL4j5
+         mk/lHY0ZmG0E3FagXU+zEFqjqk2dp0ciqNoWQhbUcWY+khmZ/+4owLSFAG/u1bzLYLpE
+         Jza7BUrPj0aO/GN4/m7hC0+deFZYKWkWy04U3qHWhXYoMnk0INy3qQ1KNzIj6YpchYRC
+         GPxrcaluUIVmFWYmbscDxAsMbw49VtC0yPz/QSOFaQ3OvFiDqU9Um6hK+V5MFBGvE+/E
+         nMQQ==
+X-Gm-Message-State: APjAAAUgWo4+mTTLGhHKdfnOu1soOla5r2uIpFCLFt0S/4X5DaPTOYyk
+        a6IHvM4TWmrfU4IRCpwhW40edbkovks=
+X-Google-Smtp-Source: APXvYqwikxw4MBCiG3jMJl/r6iNmK2oFCpBVjH1jp5K/GYEMf1X3ljOFTScw2qqjSvtT/PV9J5kUBg==
+X-Received: by 2002:adf:dc44:: with SMTP id m4mr7923796wrj.203.1571845257764;
+        Wed, 23 Oct 2019 08:40:57 -0700 (PDT)
+Received: from kpsingh-kernel.localdomain (90.226.197.178.dynamic.wless.zhbmb00p-cgnat.res.cust.swisscom.ch. [178.197.226.90])
+        by smtp.gmail.com with ESMTPSA id a186sm21123622wmd.3.2019.10.23.08.40.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Oct 2019 08:40:57 -0700 (PDT)
+From:   KP Singh <kpsingh@chromium.org>
+To:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Florent Revest <revest@chromium.org>
+Subject: [PATCH bpf-next v2] libbpf: Fix strncat bounds error in libbpf_prog_type_by_name
+Date:   Wed, 23 Oct 2019 17:40:38 +0200
+Message-Id: <20191023154038.24075-1-kpsingh@chromium.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1571829384-5309-4-git-send-email-zhenzhong.duan@oracle.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 07:16:22PM +0800, Zhenzhong Duan wrote:
-> There are cases where a guest tries to switch spinlocks to bare metal
-> behavior (e.g. by setting "xen_nopvspin" on XEN platform and
-> "hv_nopvspin" on HYPER_V).
-> 
-> That feature is missed on KVM, add a new parameter "nopvspin" to disable
-> PV spinlocks for KVM guest.
-> 
-> The new 'nopvspin' parameter will also replace Xen and Hyper-V specific
-> parameters in future patches.
-> 
-> Define variable nopvsin as global because it will be used in future
-> patches as above.
-> 
-> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: Radim Krcmar <rkrcmar@redhat.com>
-> Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-> Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
-> Cc: Wanpeng Li <wanpengli@tencent.com>
-> Cc: Jim Mattson <jmattson@google.com>
-> Cc: Joerg Roedel <joro@8bytes.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Will Deacon <will@kernel.org>
-> ---
+From: KP Singh <kpsingh@google.com>
 
-Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+On compiling samples with this change, one gets an error:
+
+ error: ‘strncat’ specified bound 118 equals destination size
+  [-Werror=stringop-truncation]
+
+    strncat(dst, name + section_names[i].len,
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     sizeof(raw_tp_btf_name) - (dst - raw_tp_btf_name));
+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+strncat requires the destination to have enough space for the
+terminating null byte.
+
+Fixes: f75a697e09137 ("libbpf: Auto-detect btf_id of BTF-based raw_tracepoint")
+Signed-off-by: KP Singh <kpsingh@google.com>
+---
+ tools/lib/bpf/libbpf.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+index 290684b504b7..dc7d493a7d3d 100644
+--- a/tools/lib/bpf/libbpf.c
++++ b/tools/lib/bpf/libbpf.c
+@@ -4693,7 +4693,7 @@ int libbpf_prog_type_by_name(const char *name, enum bpf_prog_type *prog_type,
+ 			}
+ 			/* prepend "btf_trace_" prefix per kernel convention */
+ 			strncat(dst, name + section_names[i].len,
+-				sizeof(raw_tp_btf_name) - (dst - raw_tp_btf_name));
++				sizeof(raw_tp_btf_name) - sizeof("btf_trace_"));
+ 			ret = btf__find_by_name(btf, raw_tp_btf_name);
+ 			btf__free(btf);
+ 			if (ret <= 0) {
+-- 
+2.20.1
+
