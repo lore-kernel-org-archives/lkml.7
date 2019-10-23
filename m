@@ -2,132 +2,89 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3430CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:34:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E98F7CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:35:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D30E21906
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:34:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2DC921906
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:35:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="mMjMJAWP"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="j6z1WeOb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730430AbfJWReL (ORCPT
+        id S1730519AbfJWRfA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 13:34:11 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:59672 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730302AbfJWReK (ORCPT
+        Wed, 23 Oct 2019 13:35:00 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:39150 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730302AbfJWRfA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 13:34:10 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9NHT0MZ190406;
-        Wed, 23 Oct 2019 17:33:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2019-08-05;
- bh=mHXswdXwjMkjlynu6WoO/JXk1XcXd81Y/XoQ2aJrYlc=;
- b=mMjMJAWPAOGCP7e/Eh0KJ0oLM2GOYPVRUzKsUHf//g0VJ08flrTR0PkKo4ldPUvx1wdm
- 1xmJ7V0CmnPZDFiYiXyMQSegB8oHt93MBAi6YqL3l6fZEn/cdB7MkTrYastp0NGPc768
- pCnlbnvQAbRkFQp5P7zznAX3D1z7QHRa5CWyWnKNwiHIiu0nt7kjBZNTALpfrzMjjngN
- H7jVzBMhjRsiThJdQDbBjdka3yGnnfZYpchbaFuJ1j2WugWb39nBrXC+Bc83odRKRAWL
- erPhKb2D3xBDLCq4tfyzK5ONtK6jUp3a7ze5R0LZ9Y/Ytr+q/seVuuUshtZqik2geQ3B /A== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2vqtepxv63-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 23 Oct 2019 17:33:58 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9NHXkwc070018;
-        Wed, 23 Oct 2019 17:33:58 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by aserp3030.oracle.com with ESMTP id 2vtm22kxeg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 23 Oct 2019 17:33:58 +0000
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x9NHXnFO070572;
-        Wed, 23 Oct 2019 17:33:57 GMT
-Received: from ca-dev107.us.oracle.com (ca-dev107.us.oracle.com [10.129.135.36])
-        by aserp3030.oracle.com with ESMTP id 2vtm22kwep-2;
-        Wed, 23 Oct 2019 17:33:57 +0000
-From:   rao Shoaib <rao.shoaib@oracle.com>
-To:     monis@mellanox.com, dledford@redhat.com, sean.hefty@intel.com,
-        hal.rosenstock@gmail.com, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Rao Shoaib <rao.shoaib@oracle.com>
-Subject: [PATCH v1 1/1] rxe: calculate inline data size based on requested values
-Date:   Wed, 23 Oct 2019 10:32:37 -0700
-Message-Id: <1571851957-3524-2-git-send-email-rao.shoaib@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1571851957-3524-1-git-send-email-rao.shoaib@oracle.com>
-References: <1571851957-3524-1-git-send-email-rao.shoaib@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9419 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910230167
+        Wed, 23 Oct 2019 13:35:00 -0400
+Received: from [10.137.112.108] (unknown [131.107.174.108])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 77F5220106BE;
+        Wed, 23 Oct 2019 10:34:59 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 77F5220106BE
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1571852099;
+        bh=vqQGCbajvg6tqXYaZDPRkvd/epy9EBlB+JVvTXS6jQA=;
+        h=Subject:To:References:From:Date:In-Reply-To:From;
+        b=j6z1WeObOALb27C7iDRzG4wPZqcwVGNUh1P4LtXHp+HGbkTypLgpORQIJ23yZaCQJ
+         J7iqhkI5q75gg/uB+y/fKJBye0NhlgHGemY+oZRf0sL2UZSejk617HCbed5imFn7zr
+         95TU5QubcPetP850MWP2G5mo2BOsafnXV2fwsF6A=
+Subject: Re: [PATCH v1 5/6] KEYS: measure queued keys
+To:     Mimi Zohar <zohar@linux.ibm.com>, dhowells@redhat.com,
+        casey@schaufler-ca.com, sashal@kernel.org,
+        jamorris@linux.microsoft.com,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        keyrings@vger.kernel.org
+References: <20191023001818.3684-1-nramas@linux.microsoft.com>
+ <20191023001818.3684-6-nramas@linux.microsoft.com>
+ <1571836990.5104.96.camel@linux.ibm.com>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <89d778d1-1ac9-4a58-b159-7db68b7fa4ad@linux.microsoft.com>
+Date:   Wed, 23 Oct 2019 10:34:59 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <1571836990.5104.96.camel@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rao Shoaib <rao.shoaib@oracle.com>
+On 10/23/19 6:23 AM, Mimi Zohar wrote:
 
-rxe driver has a hard coded value for the size of inline data, where as
-mlx5 driver calculates number of SGE's and inline data size based on the
-values in the qp request. This patch modifies rxe driver to do the same
-so that applications can work seamlessly across drivers.
+> The ordering of this patch set is awkward.  It should first introduce
+> a generic method for measuring keys based on the keyring.  Then add
+> the additional support needed for the specific builtin_trusted_keys
+> keyring usecase.
 
-Signed-off-by: Rao Shoaib <rao.shoaib@oracle.com>
----
- drivers/infiniband/sw/rxe/rxe_param.h | 2 +-
- drivers/infiniband/sw/rxe/rxe_qp.c    | 4 ++++
- 2 files changed, 5 insertions(+), 1 deletion(-)
+Would the following ordering of the patch set be acceptable:
 
-diff --git a/drivers/infiniband/sw/rxe/rxe_param.h b/drivers/infiniband/sw/rxe/rxe_param.h
-index 1b596fb..657f9303 100644
---- a/drivers/infiniband/sw/rxe/rxe_param.h
-+++ b/drivers/infiniband/sw/rxe/rxe_param.h
-@@ -68,7 +68,6 @@ enum rxe_device_param {
- 	RXE_HW_VER			= 0,
- 	RXE_MAX_QP			= 0x10000,
- 	RXE_MAX_QP_WR			= 0x4000,
--	RXE_MAX_INLINE_DATA		= 400,
- 	RXE_DEVICE_CAP_FLAGS		= IB_DEVICE_BAD_PKEY_CNTR
- 					| IB_DEVICE_BAD_QKEY_CNTR
- 					| IB_DEVICE_AUTO_PATH_MIG
-@@ -81,6 +80,7 @@ enum rxe_device_param {
- 					| IB_DEVICE_MEM_MGT_EXTENSIONS,
- 	RXE_MAX_SGE			= 32,
- 	RXE_MAX_SGE_RD			= 32,
-+	RXE_MAX_INLINE_DATA		= RXE_MAX_SGE * sizeof(struct ib_sge),
- 	RXE_MAX_CQ			= 16384,
- 	RXE_MAX_LOG_CQE			= 15,
- 	RXE_MAX_MR			= 2 * 1024,
-diff --git a/drivers/infiniband/sw/rxe/rxe_qp.c b/drivers/infiniband/sw/rxe/rxe_qp.c
-index aeea994..45b5da5 100644
---- a/drivers/infiniband/sw/rxe/rxe_qp.c
-+++ b/drivers/infiniband/sw/rxe/rxe_qp.c
-@@ -229,6 +229,7 @@ static int rxe_qp_init_req(struct rxe_dev *rxe, struct rxe_qp *qp,
- {
- 	int err;
- 	int wqe_size;
-+	unsigned int inline_size;
- 
- 	err = sock_create_kern(&init_net, AF_INET, SOCK_DGRAM, 0, &qp->sk);
- 	if (err < 0)
-@@ -244,6 +245,9 @@ static int rxe_qp_init_req(struct rxe_dev *rxe, struct rxe_qp *qp,
- 			 sizeof(struct rxe_send_wqe) +
- 			 qp->sq.max_inline);
- 
-+	inline_size = wqe_size - sizeof(struct rxe_send_wqe);
-+	qp->sq.max_inline = inline_size;
-+	init->cap.max_inline_data = inline_size;
- 	qp->sq.queue = rxe_queue_init(rxe,
- 				      &qp->sq.max_wr,
- 				      wqe_size);
--- 
-1.8.3.1
+  => PATCH 0/5: Cover letter
 
+  => PATCH 1/5: Define the enum "hook(BUILTIN_TRUSTED_KEYS)" in ima.h
+
+  => PATCH 2/5: Define ima hook
+                This will initially do nothing if ima is not yet
+                initialized.
+                Call process_buffer_measurement() if ima is initialized.
+
+  => PATCH 3/5: key_create_or_update change and the call to ima hook
+
+  => PATCH 4/5: Queue\De-Queue of key measurement requests.
+                Enable queuing of key in the ima hook if ima is not
+                initialized.
+
+  => PATCH 5/5: ima policy to enable measurement of keys which will
+                enable end-to-end working of this feature.
+
+thanks,
+  -lakshmi
