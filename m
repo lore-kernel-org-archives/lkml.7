@@ -2,194 +2,133 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 991B8CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:40:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E037CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:40:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70B6A21D7B
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:40:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20006222BE
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:40:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="baqvOwE4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404059AbfJWJkf (ORCPT
+        id S2404039AbfJWJku (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 05:40:35 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:41580 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729191AbfJWJkf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 05:40:35 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 54D6B99A478B06500BF9;
-        Wed, 23 Oct 2019 17:40:31 +0800 (CST)
-Received: from [127.0.0.1] (10.133.224.57) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Wed, 23 Oct 2019
- 17:40:22 +0800
-Subject: Re: Kernel panic while doing vfio-pci hot-plug/unplug test
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mingo@redhat.com>, <peterz@infradead.org>,
-        <alex.williamson@redhat.com>,
-        Wang Haibin <wanghaibin.wang@huawei.com>,
-        Guoheyi <guoheyi@huawei.com>,
-        yebiaoxiang <yebiaoxiang@huawei.com>,
-        Matthew Wilcox <willy@infradead.org>
-References: <20191018135846.GA161054@google.com>
-From:   Xiang Zheng <zhengxiang9@huawei.com>
-Message-ID: <2e7293dc-eb27-bce3-c209-e0ba15409f16@huawei.com>
-Date:   Wed, 23 Oct 2019 17:40:20 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Wed, 23 Oct 2019 05:40:50 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:39543 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729191AbfJWJkt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 05:40:49 -0400
+Received: by mail-wr1-f66.google.com with SMTP id a11so5208313wra.6
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 02:40:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=T1vZzFViZyMkNTAaMLcRtzCAcI3MmnDKFouAR6APmLw=;
+        b=baqvOwE4akmVAZoKsYSgsHLHqy6z2Ogz6Fh2kYLnw+faVDaGNCl83nolJogzWCqyP5
+         W0zBf5tSZqoPFjZUkouxLd9gDLNMjFaTkSlQlE6ZdoVRV3DewMuf3jI7i1g2KDITYfCF
+         BxvupF/D4ssQasSWtotBkG/uwDB68xzfxuI09jr63uOP+1B5+rbI3cweZ8Kt0keGj7RT
+         WZEprvrNLFm8fCHsK1g55qBu9NKRQCGsWJP+YyKFU/1Mi+x0VGHnzgdO0pLNX9ZUTxFt
+         5OlGNAMlbAEQG6gENZoOXxfQnaQzwcRwLr83wcDXelInl6p8ZeLiBdX85bjfQjEiwHUE
+         KFGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=T1vZzFViZyMkNTAaMLcRtzCAcI3MmnDKFouAR6APmLw=;
+        b=H67hpYxUeFrG7pcn4VJe6ewEenRvbwqHyiDxHJSnsSaJ/31YhIGhlZZExK0ItlotK3
+         98tlE+ZJF4phawM+kdRngbiLmr38CZncurT1V0tsgGBNKGsVHDdpKqDRCfs+9PLlBeEo
+         gHSbgEyflB8ShPmhmLBmYTkGs2ZOCodbvi2HfITowhEk+nKboQwrzIGQjJEi5fyRgqkq
+         eR+gpdUTav5HuHdaegLRXjIOZVUEGsu5bhgN1XaZycHc63r6dWIiiUb0Gzhrm4m8vqDM
+         9rwzhNCuJRu/2kg5D6uQgGd2vW/PZFCwBseU+mX9Fij6MHU5UCPVvXSQl3noAg46aT+I
+         vjZQ==
+X-Gm-Message-State: APjAAAWw0PUyAqAD1ELGiKEaxE6GLWYrEsyBxJ8UBUeIwsy6mYmkwgXE
+        RfGkVO4st1O71ok4l6U9panwPA==
+X-Google-Smtp-Source: APXvYqycXcyw31uAAhWTtIQ5erAv+53zHhtWrf7wMIsRejx/pwbJLyNDcoWiQ9gT5mZGlllhEUK4wg==
+X-Received: by 2002:adf:978a:: with SMTP id s10mr7889652wrb.264.1571823645654;
+        Wed, 23 Oct 2019 02:40:45 -0700 (PDT)
+Received: from dell ([95.149.164.99])
+        by smtp.gmail.com with ESMTPSA id r5sm3650011wrs.57.2019.10.23.02.40.44
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 23 Oct 2019 02:40:45 -0700 (PDT)
+Date:   Wed, 23 Oct 2019 10:40:43 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Gene Chen <gene.chen.richtek@gmail.com>
+Cc:     matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        gene_chen@richtek.com, Wilma.Wu@mediatek.com,
+        shufan_lee@richtek.com, cy_huang@richtek.com
+Subject: Re: [PATCH v3] mfd: mt6360: add pmic mt6360 driver
+Message-ID: <20191023094043.GB19477@dell>
+References: <1569338741-2784-1-git-send-email-gene.chen.richtek@gmail.com>
+ <20191004133324.GE18429@dell>
+ <CAE+NS37bQyWknxy+bXYZqyHH_3RbhTQJc5fVd=ibjV6QMz_rew@mail.gmail.com>
+ <CAE+NS37TEcfxOy97WL0kQ2u8zM9sbROaEr-1b81hX2eoqh-sfg@mail.gmail.com>
+ <20191016100438.GF4365@dell>
+ <CAE+NS36Pdc8zutu=GpNQkREyEu07iLF8NDMtSQcUJE3RuuT2VQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191018135846.GA161054@google.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.224.57]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAE+NS36Pdc8zutu=GpNQkREyEu07iLF8NDMtSQcUJE3RuuT2VQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
+On Tue, 22 Oct 2019, Gene Chen wrote:
 
-Thanks for your reply!
-
-On 2019/10/18 21:58, Bjorn Helgaas wrote:
-> [+cc Matthew]
+> 2019-10-16 18:04 GMT+08:00, Lee Jones <lee.jones@linaro.org>:
+> > On Tue, 15 Oct 2019, Gene Chen wrote:
+> >
+> >> Hi Lee,
+> >>
+> >> we find OF_MFD_CELL is not defined in mfd/core.h, which is ready to
+> >> merge to next kernel version
+> >> https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next-history/+/master/Next/merge.log
+> >
+> > It's here:
+> >
+> > Merging mfd/for-mfd-next (38a6fc63a3ea mfd: db8500-prcmu: Example using new
+> > OF_MFD_CELL/MFD_CELL_BASIC MACROs)
+> > $ git merge mfd/for-mfd-next
+> > Merge made by the 'recursive' strategy.
+> >  drivers/mfd/ab8500-core.c    | 138
+> > +++++++++++++------------------------------
+> >  drivers/mfd/db8500-prcmu.c   |  21 +++----
+> >  drivers/mfd/intel-lpss-pci.c |  28 ++++++---
+> >  drivers/mfd/ipaq-micro.c     |   6 +-
+> >  drivers/mfd/rk808.c          |  22 ++-----
+> >  include/linux/mfd/core.h     |  29 +++++++++                <===== [THIS
+> > ONE]
+> >  include/linux/mfd/rk808.h    |   2 +-
+> >  7 files changed, 105 insertions(+), 141 deletions(-)
+> >
+> > https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next-history/+/master/Next/merge.log#4470
+> >
 > 
-> On Wed, Oct 16, 2019 at 09:36:23PM +0800, Xiang Zheng wrote:
->> Hi all,
->>
->> Recently I encountered a kernel panic while doing vfio-pci hot-plug/unplug test repeatly on my Arm-KVM virtual machines.
->> See the call stack below:
->>
->> [66628.697280] vfio-pci 0000:06:03.5: enabling device (0000 -> 0002)
->> [66628.809290] vfio-pci 0000:06:03.1: enabling device (0000 -> 0002)
->> [66628.921283] vfio-pci 0000:06:02.7: enabling device (0000 -> 0002)
->> [66629.029280] vfio-pci 0000:06:03.6: enabling device (0000 -> 0002)
->> [66629.137338] vfio-pci 0000:06:03.2: enabling device (0000 -> 0002)
->> [66629.249285] vfio-pci 0000:06:03.7: enabling device (0000 -> 0002)
->> [66630.237261] Unable to handle kernel read from unreadable memory at virtual address ffff802dac469000
->> [66630.246266] Mem abort info:
->> [66630.249047]   ESR = 0x8600000d
->> [66630.252088]   Exception class = IABT (current EL), IL = 32 bits
->> [66630.257981]   SET = 0, FnV = 0
->> [66630.261022]   EA = 0, S1PTW = 0
->> [66630.264150] swapper pgtable: 4k pages, 48-bit VAs, pgdp = 00000000fb16886e
->> [66630.270992] [ffff802dac469000] pgd=0000203fffff6803, pud=00e8002d80000f11
->> [66630.277751] Internal error: Oops: 8600000d [#1] SMP
->> [66630.282606] Process qemu-kvm (pid: 37201, stack limit = 0x00000000d8f19858)
->> [66630.289537] CPU: 41 PID: 37201 Comm: qemu-kvm Kdump: loaded Tainted: G           OE     4.19.36-vhulk1907.1.0.h453.eulerosv2r8.aarch64 #1
->> [66630.301822] Hardware name: Huawei TaiShan 2280 V2/BC82AMDDA, BIOS 0.88 07/24/2019
->> [66630.309270] pstate: 80400089 (Nzcv daIf +PAN -UAO)
->> [66630.314042] pc : 0xffff802dac469000
->> [66630.317519] lr : __wake_up_common+0x90/0x1a8
->> [66630.321768] sp : ffff00027746bb00
->> [66630.325067] x29: ffff00027746bb00 x28: 0000000000000000
->> [66630.330355] x27: 0000000000000000 x26: ffff0000092755b8
->> [66630.335643] x25: 0000000000000000 x24: 0000000000000000
->> [66630.340930] x23: 0000000000000003 x22: ffff00027746bbc0
->> [66630.346219] x21: 000000000954c000 x20: ffff0001f542bc6c
->> [66630.351506] x19: ffff0001f542bb90 x18: 0000000000000000
->> [66630.356793] x17: 0000000000000000 x16: 0000000000000000
->> [66630.362081] x15: 0000000000000000 x14: 0000000000000000
->> [66630.367368] x13: 0000000000000000 x12: 0000000000000000
->> [66630.372655] x11: 0000000000000000 x10: 0000000000000bb0
->> [66630.377942] x9 : ffff00027746ba50 x8 : ffff80367ff6ca10
->> [66630.383229] x7 : ffff802e20d59200 x6 : 000000000000003f
->> [66630.388517] x5 : ffff00027746bbc0 x4 : ffff802dac469000
->> [66630.393806] x3 : 0000000000000000 x2 : 0000000000000000
->> [66630.399093] x1 : 0000000000000003 x0 : ffff0001f542bb90
->> [66630.404381] Call trace:
->> [66630.406818]  0xffff802dac469000
->> [66630.409945]  __wake_up_common_lock+0xa8/0x1a0
->> [66630.414283]  __wake_up+0x40/0x50
->> [66630.417499]  pci_cfg_access_unlock+0x9c/0xd0
->> [66630.421752]  pci_try_reset_function+0x58/0x78
->> [66630.426095]  vfio_pci_ioctl+0x478/0xdb8 [vfio_pci]
->> [66630.430870]  vfio_device_fops_unl_ioctl+0x44/0x70 [vfio]
->> [66630.436158]  do_vfs_ioctl+0xc4/0x8c0
->> [66630.439718]  ksys_ioctl+0x8c/0xa0
->> [66630.443018]  __arm64_sys_ioctl+0x28/0x38
->> [66630.446925]  el0_svc_common+0x78/0x130
->> [66630.450657]  el0_svc_handler+0x38/0x78
->> [66630.454389]  el0_svc+0x8/0xc
->> [66630.457260] Code: 00000000 00000000 00000000 00000000 (ac46d000)
->> [66630.463325] kernel fault(0x1) notification starting on CPU 41
->> [66630.469044] kernel fault(0x1) notification finished on CPU 41
->>
->> The chance to reproduce this problem is very small. We had an initial analysis of this problem,
->> and found it was caused by the illegal value of the 'curr->func' in the __wake_up_common() function.
->>
->> I cannot image how 'curr->func' can be wrote to 0xffff802dac469000. Is there any problem about
->> concurrent competition between the pci_wait_cfg() function and the wake_up_all() function?
-> 
-> I haven't heard of a problem there, but that doesn't mean there isn't
-> one.
-> 
-> The fact that pci_wait_cfg() uses __add_wait_queue() (not
-> add_wait_queue(), which does more locking) makes me a little
-> suspicious.  Most of the other callers of __add_wait_queue() acquire
-> the wait_queue lock themselves, but pci_wait_cfg() doesn't.
-> 
-> This was added by 7ea7e98fd8d0 ("PCI: Block on access to temporarily
-> unavailable pci device"), and the commit log suggests that the
-> pci_lock is sufficient.  All callers of pci_wait_cfg() do hold
-> pci_lock, and the "pci_cfg_wait" queue is private, but ...
-> pci_cfg_access_unlock() calls wake_up_all(&pci_cfg_wait) *without*
-> holding pci_lock.  That path leads to __wake_up_common_lock(), which
-> depends on wq_head->lock, which pci_wait_cfg() doesn't use.
+> I thought i need to wait this "mfd/for-mfd-next" patch merge to latest
+> codebase, but we can't actually get the date or version (e.g. Linux
+> 5.4-rc4) landing
+> and i try command "git merge mfd/for-mfd-next" which also can't work
+> may i ask how to pull this patch for temporarily build pass?
 
-Yes, we was also suspicious about this point and had a further analysis of this problem.
-We found that the "pci_cfg_wait" queue was empty when the "curr->func" callback function
-was called:
+Rebase onto for-mfd-next or cherry-pick the commit you need.
 
-crash> p pci_cfg_wait.head
-$2 = {
-  next = 0xffff0000092755b8 <pci_cfg_wait+8>,
-  prev = 0xffff0000092755b8 <pci_cfg_wait+8>
-}
-crash> p &(pci_cfg_wait.head)
-$3 = (struct list_head *) 0xffff0000092755b8 <pci_cfg_wait+8>
-crash>
+The tree is located here:
 
-The "ps" command also shows that there was no processes on "UN" state at that time.
-
-According to the above two clues, we finally reached a conclusion: there must be two processes,
-'A' was calling pci_wait_cfg() and 'B' was calling __wake_up_common(). And there is a very
-small chance that 'A' called __remove_wait_queue() before 'B' called the "curr->func", after
-'B' got the queue entry "curr". Since the queue entry was a local variable, it would be
-invalid after pci_wait_cfg() returned and eventually we got an invalid value of "curr->func".
-
-In order to verify this conclusion, we add a delay(e.g. 300ms) before calling "curr->func"
-in the __wake_up_common() function. Then this problem can be easily reproduced.
-
-> 
-> pci_cfg_access_unlock() originally *did* hold pci_lock while calling
-> wake_up_all(), but I changed that with cdcb33f98244 ("PCI: Avoid
-> possible deadlock on pci_lock and p->pi_lock") without understanding
-> both sides of the wait_queue locking issue.
-
-Before your change was merged, any operations to the "pci_cfg_wait" was safe because they all
-did hold pci_lock. So the pci_lock was sufficient.
-
-> 
-> But I still don't understand enough to know whether this is actually
-> the problem or to propose a fix.
-
-I think we need to fix it. A simple solution is to use add_wait_queue()/remove_wait_queue()
-instead of __add_wait_queue()/__remove_wait_queue() and this works for me. What do you think?
-
-> 
-> Bjorn
-> 
-> .
-> 
+  https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git/
 
 -- 
-
-Thanks,
-Xiang
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
