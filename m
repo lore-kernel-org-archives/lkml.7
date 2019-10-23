@@ -2,350 +2,209 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2BDCCA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 19:42:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE89ACA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 19:42:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EAB220640
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 19:42:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L0aqmp+h"
+	by mail.kernel.org (Postfix) with ESMTP id 7E29620640
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 19:42:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733123AbfJWTmK (ORCPT
+        id S2388288AbfJWTmk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 15:42:10 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:38477 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731949AbfJWTmJ (ORCPT
+        Wed, 23 Oct 2019 15:42:40 -0400
+Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:53644 "EHLO
+        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728697AbfJWTmj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 15:42:09 -0400
-Received: by mail-pl1-f196.google.com with SMTP id w8so10591644plq.5
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 12:42:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1BdKjGUf/i8XE9JAWNux071yqthCw0rl3d9t1MaVfnE=;
-        b=L0aqmp+hurNXVarGwR+9LtaJf/UHr2Nsm3oUobvX7vYn4gUCjqAzhYn2Pe0AnmyOGx
-         Q515Zj3k9zg5zKoMqCHd6lst5hkIznHluNJPCpmVqfz0CubNb4OtzL1YyudL0RhXivCz
-         xcEjePgv1bs6etQiDIoGDTpuWMtAjgADc+WRMiomAeEDA/msW23D0T3+8g3K/XV8UjT6
-         RE7pKY0L6D/tkfubx5Rw2cA/RYIUp1+2Ntpg7xA7t+BvFCYbskteMXy9zotnI8lXB7TS
-         QChV+Lv2fPMBQR18CxeOh7lVypSuyS2mGEL+Y30sfubGGQ0MgMndZTBjXYwbw/wnUFsY
-         Osig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1BdKjGUf/i8XE9JAWNux071yqthCw0rl3d9t1MaVfnE=;
-        b=ShlGdfzFmEqFiYllv4T6U6u55MQuwctmd6OXvLUdY0ZoDOdII/RAPqE5edRvzzZCwz
-         IH4URjduzEZlc22tE6GjV84hu1D1rXfftfDMhgjHvdEhnlzsiBT7KkFadLZFng57gfMW
-         PP+lPQS8K69V0TTJbISR46qHcctLELYBHQcw4Rfwo9OHveHRwU63o1bu43pzIsK9FyNZ
-         esS8wxsQlpyiYwr5cs0OHRIZfCU1SHbZniy6zqERasPchWIOOh3XRc+tdtWjy3lD9EK+
-         rTf7+Tk5bhIBj82f1ZSrxgZnlKfC9WEnSzR/bTPjCaEPP9c527vALLNkl4MJW+fx/z6y
-         f0Vg==
-X-Gm-Message-State: APjAAAUi33AIyRZfhwfXnc5to07ZZROTwQIFsdtO6CKkvhr9GTS1EvJT
-        9/wRCGme0qBz1MRDNhNvtDY=
-X-Google-Smtp-Source: APXvYqxZx7Y+QGS7l/HIi7NGU4SyzfZ/kZDv8JUMhsob+LaBNDAJOP9B0xUg4jAomLs0L7K3uZQcKA==
-X-Received: by 2002:a17:902:d68f:: with SMTP id v15mr9035802ply.206.1571859286641;
-        Wed, 23 Oct 2019 12:34:46 -0700 (PDT)
-Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:180::741a])
-        by smtp.gmail.com with ESMTPSA id c14sm27335901pfm.179.2019.10.23.12.34.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 23 Oct 2019 12:34:45 -0700 (PDT)
-Date:   Wed, 23 Oct 2019 12:34:43 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH 3/3] x86/ftrace: Use text_poke()
-Message-ID: <20191023193442.35lhhrqnyn3bfwpq@ast-mbp.dhcp.thefacebook.com>
-References: <20191021231904.4b968dc1@oasis.local.home>
- <20191022040532.fvpxcs74i4mn4rc6@ast-mbp.dhcp.thefacebook.com>
- <20191022071956.07e21543@gandalf.local.home>
- <20191022094455.6a0a1a27@gandalf.local.home>
- <20191022175052.frjzlnjjfwwfov64@ast-mbp.dhcp.thefacebook.com>
- <20191022141021.2c4496c2@gandalf.local.home>
- <20191022204620.jp535nfvfubjngzd@ast-mbp.dhcp.thefacebook.com>
- <20191022170430.6af3b360@gandalf.local.home>
- <20191022215841.2qsmhd6vxi4mwade@ast-mbp.dhcp.thefacebook.com>
- <20191023122307.756b4978@gandalf.local.home>
+        Wed, 23 Oct 2019 15:42:39 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04391;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0Tg.I.VG_1571859431;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0Tg.I.VG_1571859431)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 24 Oct 2019 03:37:14 +0800
+Subject: Re: [v2 PATCH] mm: thp: handle page cache THP correctly in
+ PageTransCompoundMap
+To:     Hugh Dickins <hughd@google.com>
+Cc:     aarcange@redhat.com, kirill.shutemov@linux.intel.com,
+        gavin.dg@linux.alibaba.com, akpm@linux-foundation.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+References: <1571850304-82802-1-git-send-email-yang.shi@linux.alibaba.com>
+ <alpine.LSU.2.11.1910231157570.1088@eggly.anvils>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <4d3c14ef-ee86-2719-70d6-68f1a8b42c28@linux.alibaba.com>
+Date:   Wed, 23 Oct 2019 12:37:09 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191023122307.756b4978@gandalf.local.home>
-User-Agent: NeoMutt/20180223
+In-Reply-To: <alpine.LSU.2.11.1910231157570.1088@eggly.anvils>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 12:23:06PM -0400, Steven Rostedt wrote:
-> On Tue, 22 Oct 2019 14:58:43 -0700
-> Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
-> 
-> > Neither of two statements are true. The per-function generated trampoline
-> > I'm talking about is bpf specific. For a function with two arguments it's just:
-> > push rbp 
-> > mov rbp, rsp
-> > push rdi
-> > push rsi
-> > lea  rdi,[rbp-0x10]
-> > call jited_bpf_prog
-> > pop rsi
-> > pop rdi
-> > leave
-> > ret
-> > 
-> > fentry's nop is replaced with call to the above.
-> > That's it.
-> > kprobe and live patching has no use out of it.
-> > 
-> 
-> Below is a patch that allows you to do this, and you don't need to
-> worry about patching the nops. And it also allows to you hook directly
-> to any function and still allow kprobes and tracing on those same
-> functions (as long as they don't modify the ip, but in the future, we
-> may be able to allow that too!). And this code does not depend on
-> Peter's code either.
-> 
-> All you need to do is:
-> 
-> 	register_ftrace_direct((unsigned long)func_you_want_to_trace,
-> 			       (unsigned long)your_trampoline);
-> 
-> 
-> I added to trace-event-samples.c:
-> 
-> void my_direct_func(raw_spinlock_t *lock)
-> {
-> 	trace_printk("taking %p\n", lock);
-> }
-> 
-> extern void my_tramp(void *);
-> 
-> asm (
-> "       .pushsection    .text, \"ax\", @progbits\n"
-> "   my_tramp:"
-> #if 1
-> "       pushq %rbp\n"
-> "	movq %rsp, %rbp\n"
-> "	pushq %rdi\n"
-> "	call my_direct_func\n"
-> "	popq %rdi\n"
-> "	leave\n"
-> #endif
-> "	ret\n"
-> "       .popsection\n"
-> );
-> 
-> 
-> (the #if was for testing purposes)
-> 
-> And then in the module load and unload:
-> 
-> 	ret = register_ftrace_direct((unsigned long)do_raw_spin_lock,
-> 				     (unsigned long)my_tramp);
-> 
-> 	unregister_ftrace_direct((unsigned long)do_raw_spin_lock,
-> 				 (unsigned long)my_tramp);
-> 
-> respectively.
-> 
-> And what this does is if there's only a single callback to the
-> registered function, it changes the nop in the function to call your
-> trampoline directly (just like you want this to do!). But if we add
-> another callback, a direct_ops ftrace_ops gets added to the list of the
-> functions to go through, and this will set up the code to call your
-> trampoline after it calls all the other callbacks.
-> 
-> The called trampoline will be called as if it was called directly from
-> the nop.
-> 
-> OK, I wrote this up quickly, and it has some bugs, but nothing that
-> can't be straighten out (specifically, the checks fail if you add a
-> function trace to one of the direct callbacks, but this can be dealt
-> with).
-> 
-> Note, the work needed to port this to other archs is rather minimal
-> (just need to tweak the ftrace_regs_caller and have a way to pass back
-> the call address via pt_regs that is not saved).
-> 
-> Alexei,
-> 
-> Would this work for you?
 
-Yes!
-Looks great. More comments below.
 
-> 
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index 6adaf18b3365..de3372bd08ae 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -159,6 +159,7 @@ config X86
->  	select HAVE_DYNAMIC_FTRACE
->  	select HAVE_DYNAMIC_FTRACE_WITH_REGS
->  	select HAVE_DYNAMIC_FTRACE_WITH_IPMODIFY
-> +	select HAVE_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
->  	select HAVE_EBPF_JIT
->  	select HAVE_EFFICIENT_UNALIGNED_ACCESS
->  	select HAVE_EISA
-> diff --git a/arch/x86/include/asm/ftrace.h b/arch/x86/include/asm/ftrace.h
-> index c38a66661576..34da1e424391 100644
-> --- a/arch/x86/include/asm/ftrace.h
-> +++ b/arch/x86/include/asm/ftrace.h
-> @@ -28,6 +28,12 @@ static inline unsigned long ftrace_call_adjust(unsigned long addr)
->  	return addr;
->  }
->  
-> +static inline void ftrace_set_call_func(struct pt_regs *regs, unsigned long addr)
-> +{
-> +	/* Emulate a call */
-> +	regs->orig_ax = addr;
+On 10/23/19 12:28 PM, Hugh Dickins wrote:
+> On Thu, 24 Oct 2019, Yang Shi wrote:
+>
+>> We have usecase to use tmpfs as QEMU memory backend and we would like to
+>> take the advantage of THP as well.  But, our test shows the EPT is not
+>> PMD mapped even though the underlying THP are PMD mapped on host.
+>> The number showed by /sys/kernel/debug/kvm/largepage is much less than
+>> the number of PMD mapped shmem pages as the below:
+>>
+>> 7f2778200000-7f2878200000 rw-s 00000000 00:14 262232 /dev/shm/qemu_back_mem.mem.Hz2hSf (deleted)
+>> Size:            4194304 kB
+>> [snip]
+>> AnonHugePages:         0 kB
+>> ShmemPmdMapped:   579584 kB
+>> [snip]
+>> Locked:                0 kB
+>>
+>> cat /sys/kernel/debug/kvm/largepages
+>> 12
+>>
+>> And some benchmarks do worse than with anonymous THPs.
+>>
+>> By digging into the code we figured out that commit 127393fbe597 ("mm:
+>> thp: kvm: fix memory corruption in KVM with THP enabled") checks if
+>> there is a single PTE mapping on the page for anonymous THP when
+>> setting up EPT map.  But, the _mapcount < 0 check doesn't fit to page
+>> cache THP since every subpage of page cache THP would get _mapcount
+>> inc'ed once it is PMD mapped, so PageTransCompoundMap() always returns
+>> false for page cache THP.  This would prevent KVM from setting up PMD
+>> mapped EPT entry.
+>>
+>> So we need handle page cache THP correctly.  However, when page cache
+>> THP's PMD gets split, kernel just remove the map instead of setting up
+>> PTE map like what anonymous THP does.  Before KVM calls get_user_pages()
+>> the subpages may get PTE mapped even though it is still a THP since the
+>> page cache THP may be mapped by other processes at the mean time.
+>>
+>> Checking its _mapcount and whether the THP has PTE mapped or not.
+>> Although this may report some false negative cases (PTE mapped by other
+>> processes), it looks not trivial to make this accurate.
+>>
+>> With this fix /sys/kernel/debug/kvm/largepage would show reasonable
+>> pages are PMD mapped by EPT as the below:
+>>
+>> 7fbeaee00000-7fbfaee00000 rw-s 00000000 00:14 275464 /dev/shm/qemu_back_mem.mem.SKUvat (deleted)
+>> Size:            4194304 kB
+>> [snip]
+>> AnonHugePages:         0 kB
+>> ShmemPmdMapped:   557056 kB
+>> [snip]
+>> Locked:                0 kB
+>>
+>> cat /sys/kernel/debug/kvm/largepages
+>> 271
+>>
+>> And the benchmarks are as same as anonymous THPs.
+>>
+> Fixes: dd78fedde4b9 ("rmap: support file thp")
 
-This probably needs a longer comment :)
+OK, though it might be the best blame target.
 
-> +	.if \make_call
-> +	movq ORIG_RAX(%rsp), %rax
-> +	movq %rax, MCOUNT_REG_SIZE-8(%rsp)
+>
+>> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+>> Reported-by: Gang Deng <gavin.dg@linux.alibaba.com>
+>> Tested-by: Gang Deng <gavin.dg@linux.alibaba.com>
+>> Suggested-by: Hugh Dickins <hughd@google.com>
+>> Cc: Andrea Arcangeli <aarcange@redhat.com>
+>> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+>> Cc: <stable@vger.kernel.org> 4.8+
+>> ---
+>> v2: Adopted the suggestion from Hugh to use _mapcount and compound_mapcount.
+>>      But I just open coding compound_mapcount to avoid duplicating the
+>>      definition of compound_mapcount_ptr in two different files.  Since
+>>      "compound_mapcount" looks self-explained so I'm supposed the open
+>>      coding would not affect the readability.
+> No, relying on head[1] is not nice: Matthew's suggestion better.
 
-reading asm helps.
+Done in v3.
 
-> +config HAVE_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
-> +	bool
-> +
->  config HAVE_FTRACE_MCOUNT_RECORD
->  	bool
->  	help
-> @@ -565,6 +568,11 @@ config DYNAMIC_FTRACE_WITH_IPMODIFY_ONLY
->  	depends on DYNAMIC_FTRACE
->  	depends on HAVE_DYNAMIC_FTRACE_WITH_IPMODIFY
->  
-> +config DYNAMIC_FTRACE_WITH_DIRECT_CALLS
-> +	def_bool y
-> +	depends on DYNAMIC_FTRACE
-> +	depends on HAVE_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
+>
+>>   include/linux/page-flags.h | 22 ++++++++++++++++++++--
+>>   1 file changed, 20 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
+>> index f91cb88..954a877 100644
+>> --- a/include/linux/page-flags.h
+>> +++ b/include/linux/page-flags.h
+>> @@ -622,12 +622,30 @@ static inline int PageTransCompound(struct page *page)
+>>    *
+>>    * Unlike PageTransCompound, this is safe to be called only while
+>>    * split_huge_pmd() cannot run from under us, like if protected by the
+>> - * MMU notifier, otherwise it may result in page->_mapcount < 0 false
+>> + * MMU notifier, otherwise it may result in page->_mapcount check false
+>>    * positives.
+>> + *
+>> + * We have to treat page cache THP differently since every subpage of it
+>> + * would get _mapcount inc'ed once it is PMD mapped.  But, it may be PTE
+>> + * mapped in the current process so comparing subpage's _mapcount to
+>> + * compound_mapcount ot filter out PTE mapped case.
+> s/ ot / to /
 
-It seems to me that it's a bit of overkill to add new config knob
-for every ftrace feature.
-HAVE_DYNAMIC_FTRACE_WITH_DIRECT_CALLS (that arch defined) would
-be enough to check and return error in register_ftrace_direct()
-right?
+oops, will fix it.
 
-> -static struct ftrace_hash *
-> -__ftrace_hash_move(struct ftrace_hash *src)
-> +static void transfer_hash(struct ftrace_hash *dst, struct ftrace_hash *src)
->  {
->  	struct ftrace_func_entry *entry;
-> -	struct hlist_node *tn;
->  	struct hlist_head *hhd;
-> +	struct hlist_node *tn;
-> +	int size;
-> +	int i;
-> +
-> +	dst->flags = src->flags;
-> +
-> +	size = 1 << src->size_bits;
-> +	for (i = 0; i < size; i++) {
-> +		hhd = &src->buckets[i];
-> +		hlist_for_each_entry_safe(entry, tn, hhd, hlist) {
-> +			remove_hash_entry(src, entry);
-> +			__add_hash_entry(dst, entry);
+>
+>>    */
+>>   static inline int PageTransCompoundMap(struct page *page)
+>>   {
+>> -	return PageTransCompound(page) && atomic_read(&page->_mapcount) < 0;
+>> +	struct page *head;
+>> +	int map_count;
+>> +
+>> +	if (!PageTransCompound(page))
+>> +		return 0;
+>> +
+>> +	if (PageAnon(page))
+>> +		return atomic_read(&page->_mapcount) < 0;
+>> +
+>> +	head = compound_head(page);
+>> +	map_count = atomic_read(&page->_mapcount);
+>> +	/* File THP is PMD mapped and not double mapped */
+> s/ double / PTE /
 
-I don't quite follow why this is needed.
-I thought alloc_and_copy_ftrace_hash() can already handle it.
-If that is just unrelated cleanup then sure. Looks good.
+Will fix it.
 
-> +struct ftrace_ops direct_ops = {
-> +	.func		= call_direct_funcs,
-> +	.flags		= FTRACE_OPS_FL_IPMODIFY | FTRACE_OPS_FL_RECURSION_SAFE
-> +#if 1
-> +					| FTRACE_OPS_FL_DIRECT
-> +#endif
-> +#ifndef CONFIG_DYNAMIC_FTRACE_WITH_IPMODIFY_ONLY
-> +					| FTRACE_OPS_FL_SAVE_REGS
-> +#endif
+>
+>> +	return map_count >= 0 &&
+> You have added a map_count >= 0 test there. Okay, not wrong, but not
+> necessary, and not consistent with what's returned in the PageAnon
+> case (if this were called for an unmapped page).
 
-With FL_DIRECT the CONFIG_DYNAMIC_FTRACE_WITH_IPMODIFY_ONLY won't be needed, right ?
-At least not for bpf use case.
-Do you see livepatching using it or switching to FL_DIRECT too?
+I was thinking about this too. I'm wondering there might be a case that 
+the PMD is split and it was the last PMD map, in this case subpage's 
+_mapcount is also equal to compound_mapcount (both is -1). So, it would 
+return true, then KVM may setup PMD map in EPT, but it might be PTE 
+mapped later on the host. But, I'm not quite sure if this is really 
+possible or if this is really a integrity problem. So, I thought it 
+might be safer to add this check.
 
-> +	ret = -ENOMEM;
-> +	if (ftrace_hash_empty(direct_functions) ||
-> +	    direct_functions->count > 2 * (1 << direct_functions->size_bits)) {
-> +		struct ftrace_hash *new_hash;
-> +		int size = ftrace_hash_empty(direct_functions) ? 0 :
-> +			direct_functions->count + 1;
-> +		int bits;
-> +
-> +		if (size < 32)
-> +			size = 32;
-> +
-> +		for (size /= 2; size; size >>= 1)
-> +			bits++;
-> +
-> +		/* Don't allocate too much */
-> +		if (bits > FTRACE_HASH_MAX_BITS)
-> +			bits = FTRACE_HASH_MAX_BITS;
-> +
-> +		new_hash = alloc_ftrace_hash(bits);
-> +		if (!new_hash)
-> +			goto out_unlock;
-> +
-> +		transfer_hash(new_hash, direct_functions);
-> +		free_ftrace_hash(direct_functions);
-> +		direct_functions = new_hash;
-
-That's probably racy, no?
-ftrace_get_addr_new() is not holding direct_mutex that
-protects direct_functions.
-
-> +	if (!ret && !(direct_ops.flags & FTRACE_OPS_FL_ENABLED))
-> +		ret = register_ftrace_function(&direct_ops);
-
-Having single direct_ops is nice.
-
-> @@ -2370,6 +2542,10 @@ unsigned long ftrace_get_addr_new(struct dyn_ftrace *rec)
->  {
->  	struct ftrace_ops *ops;
->  
-> +	if ((rec->flags & FTRACE_FL_DIRECT) &&
-> +	    (ftrace_rec_count(rec) == 1))
-> +		return find_rec_direct(rec->ip);
-> +
-
-I've started playing with this function as well to
-implement 2nd nop approach I mentioned earlier.
-I'm going to abandon it, since your approach is better.
-It allows not only bpf, but anyone else to register direct.
-
-I have one more question/request.
-Looks like ftrace can be turned off with sysctl.
-Which means that a person or a script can accidently turn it off
-and all existing kprobe+bpf stuff that is ftrace based will
-be silently switched off.
-User services will be impacted and will make people unhappy.
-I'm not sure how to solve the existing situation,
-but for FL_DIRECT can you add a check that if particular
-nop is modified to do direct call then the only interface to
-turn it off is to call unregister_ftrace_direct().
-There should no side channel to kill it.
-ftrace_disable and ftrace_kill make me nervous too.
-Fast forward a year and imagine few host critical bpf progs
-are running in production and relying on FL_DIRECT.
-Now somebody decided to test new ftrace feature and
-it hit one of FTRACE_WARN_ON().
-That will shutdown the whole ftrace and bpf progs
-will stop executing. I'd like to avoid that.
-May be I misread the code?
+>
+> But asking for consistency in this function is asking for too much.
+> It is *very* specialized to the particular places from which it is
+> called (doesn't really belong in page-flags.h at all), and just so
+> long as it gives them the right answer most of the time, and errs
+> on the safe side the rest of the time, it'll do.
+>
+> (I don't know if it's ever called on a tail page: it would not crash
+> if it were, but different tail pages may give different answers.)
+>
+>> +	       map_count == atomic_read(&head[1].compound_mapcount);
+>>   }
+>>   
+>>   /*
+>> -- 
+>> 1.8.3.1
+>>
+>>
 
