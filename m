@@ -2,191 +2,113 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90D57CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 16:36:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05ED8CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 16:37:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66C1F20650
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 16:36:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFF4F20650
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 16:37:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571848624;
+	bh=TDwaUgac7SGDoOVgcgfx/jooWyoqj3/D+qlh6IbOnM0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=U32i0t1DFevdZ8liRBwMal+HGG8DuYn2VIz1FAtuTtFv/KlEYGDARJBSs4wHdO/T4
+	 9KGdhp2Yh1PFCrlt7xqGEd/nYfEaZMIpRIWPgEj1/Vf8mW/mrMtBgK7OYkPH181DFq
+	 7Y+usUIomJOx6WdI148ti0x6UsCe7PooWBY4WboU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436604AbfJWQgZ (ORCPT
+        id S2407298AbfJWQhD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 12:36:25 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:48578 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407309AbfJWQgC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 12:36:02 -0400
-Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
-        by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1iNJc4-0006Vu-8I; Wed, 23 Oct 2019 10:36:01 -0600
-Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1iNJc2-00016b-P6; Wed, 23 Oct 2019 10:35:54 -0600
-From:   Logan Gunthorpe <logang@deltatee.com>
-To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org
-Cc:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Stephen Bates <sbates@raithlin.com>,
-        Logan Gunthorpe <logang@deltatee.com>
-Date:   Wed, 23 Oct 2019 10:35:41 -0600
-Message-Id: <20191023163545.4193-4-logang@deltatee.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191023163545.4193-1-logang@deltatee.com>
-References: <20191023163545.4193-1-logang@deltatee.com>
+        Wed, 23 Oct 2019 12:37:03 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:51218 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403971AbfJWQhD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 12:37:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=m700Ovhtawx1D7xYGjJcWREMnvuFfL4T8auLxTc4g+o=; b=tVW+N1CGFWe7AqjwhhUwObc5T
+        4DcO3owdYhBJ4EIo45+VMPO/QapuVR8eKr7Hk4KYvWTFDygVNHMgTfW2vVYJf4451ljrE1z7fnQGU
+        v2h/cr+LcMpU9LhKonteQt9Mc7RpjlboPdAiJmpHZKMCFJhUOm0rhoqvgfT6tteSrf55k=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iNJd3-0000wd-He; Wed, 23 Oct 2019 16:36:57 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 0F4AA2743021; Wed, 23 Oct 2019 17:36:57 +0100 (BST)
+Date:   Wed, 23 Oct 2019 17:36:56 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] cpufreq: s3c64xx: Remove pointless NULL check in
+ s3c64xx_cpufreq_driver_init
+Message-ID: <20191023163656.GH5723@sirena.co.uk>
+References: <20191023000906.14374-1-natechancellor@gmail.com>
+ <20191023032302.tu5nkvulo2yoctgr@vireshk-i7>
+ <20191023104304.GA5723@sirena.co.uk>
+ <20191023162628.GA10997@ubuntu-m2-xlarge-x86>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org, hch@lst.de, sagi@grimberg.me, Chaitanya.Kulkarni@wdc.com, maxg@mellanox.com, sbates@raithlin.com, logang@deltatee.com
-X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH 3/7] nvmet: Introduce common execute function for get_log_page and identify
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="/Gk0KcsbyUMelFU1"
+Content-Disposition: inline
+In-Reply-To: <20191023162628.GA10997@ubuntu-m2-xlarge-x86>
+X-Cookie: MMM-MM!!  So THIS is BIO-NEBULATION!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of picking the sub-command handler to execute in a nested
-switch statement introduce a landing functions that calls out
-to the appropriate sub-command handler.
 
-This will allow us to have a common place in the handler to check
-the transfer length in a future patch.
+--/Gk0KcsbyUMelFU1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-[logang@deltatee.com: separated out of a larger draft patch from hch]
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
----
- drivers/nvme/target/admin-cmd.c | 93 ++++++++++++++++++---------------
- 1 file changed, 50 insertions(+), 43 deletions(-)
+On Wed, Oct 23, 2019 at 09:26:28AM -0700, Nathan Chancellor wrote:
+> On Wed, Oct 23, 2019 at 11:43:04AM +0100, Mark Brown wrote:
 
-diff --git a/drivers/nvme/target/admin-cmd.c b/drivers/nvme/target/admin-cmd.c
-index 831a062d27cb..3665b45d6515 100644
---- a/drivers/nvme/target/admin-cmd.c
-+++ b/drivers/nvme/target/admin-cmd.c
-@@ -282,6 +282,33 @@ static void nvmet_execute_get_log_page_ana(struct nvmet_req *req)
- 	nvmet_req_complete(req, status);
- }
- 
-+static void nvmet_execute_get_log_page(struct nvmet_req *req)
-+{
-+	switch (req->cmd->get_log_page.lid) {
-+	case NVME_LOG_ERROR:
-+		return nvmet_execute_get_log_page_error(req);
-+	case NVME_LOG_SMART:
-+		return nvmet_execute_get_log_page_smart(req);
-+	case NVME_LOG_FW_SLOT:
-+		/*
-+		 * We only support a single firmware slot which always is
-+		 * active, so we can zero out the whole firmware slot log and
-+		 * still claim to fully implement this mandatory log page.
-+		 */
-+		return nvmet_execute_get_log_page_noop(req);
-+	case NVME_LOG_CHANGED_NS:
-+		return nvmet_execute_get_log_changed_ns(req);
-+	case NVME_LOG_CMD_EFFECTS:
-+		return nvmet_execute_get_log_cmd_effects_ns(req);
-+	case NVME_LOG_ANA:
-+		return nvmet_execute_get_log_page_ana(req);
-+	}
-+	pr_err("unhandled lid %d on qid %d\n",
-+	       req->cmd->get_log_page.lid, req->sq->qid);
-+	req->error_loc = offsetof(struct nvme_get_log_page_command, lid);
-+	nvmet_req_complete(req, NVME_SC_INVALID_FIELD | NVME_SC_DNR);
-+}
-+
- static void nvmet_execute_identify_ctrl(struct nvmet_req *req)
- {
- 	struct nvmet_ctrl *ctrl = req->sq->ctrl;
-@@ -565,6 +592,25 @@ static void nvmet_execute_identify_desclist(struct nvmet_req *req)
- 	nvmet_req_complete(req, status);
- }
- 
-+static void nvmet_execute_identify(struct nvmet_req *req)
-+{
-+	switch (req->cmd->identify.cns) {
-+	case NVME_ID_CNS_NS:
-+		return nvmet_execute_identify_ns(req);
-+	case NVME_ID_CNS_CTRL:
-+		return nvmet_execute_identify_ctrl(req);
-+	case NVME_ID_CNS_NS_ACTIVE_LIST:
-+		return nvmet_execute_identify_nslist(req);
-+	case NVME_ID_CNS_NS_DESC_LIST:
-+		return nvmet_execute_identify_desclist(req);
-+	}
-+
-+	pr_err("unhandled identify cns %d on qid %d\n",
-+	       req->cmd->identify.cns, req->sq->qid);
-+	req->error_loc = offsetof(struct nvme_identify, cns);
-+	nvmet_req_complete(req, NVME_SC_INVALID_FIELD | NVME_SC_DNR);
-+}
-+
- /*
-  * A "minimum viable" abort implementation: the command is mandatory in the
-  * spec, but we are not required to do any useful work.  We couldn't really
-@@ -819,52 +865,13 @@ u16 nvmet_parse_admin_cmd(struct nvmet_req *req)
- 
- 	switch (cmd->common.opcode) {
- 	case nvme_admin_get_log_page:
-+		req->execute = nvmet_execute_get_log_page;
- 		req->data_len = nvmet_get_log_page_len(cmd);
--
--		switch (cmd->get_log_page.lid) {
--		case NVME_LOG_ERROR:
--			req->execute = nvmet_execute_get_log_page_error;
--			return 0;
--		case NVME_LOG_SMART:
--			req->execute = nvmet_execute_get_log_page_smart;
--			return 0;
--		case NVME_LOG_FW_SLOT:
--			/*
--			 * We only support a single firmware slot which always
--			 * is active, so we can zero out the whole firmware slot
--			 * log and still claim to fully implement this mandatory
--			 * log page.
--			 */
--			req->execute = nvmet_execute_get_log_page_noop;
--			return 0;
--		case NVME_LOG_CHANGED_NS:
--			req->execute = nvmet_execute_get_log_changed_ns;
--			return 0;
--		case NVME_LOG_CMD_EFFECTS:
--			req->execute = nvmet_execute_get_log_cmd_effects_ns;
--			return 0;
--		case NVME_LOG_ANA:
--			req->execute = nvmet_execute_get_log_page_ana;
--			return 0;
--		}
--		break;
-+		return 0;
- 	case nvme_admin_identify:
-+		req->execute = nvmet_execute_identify;
- 		req->data_len = NVME_IDENTIFY_DATA_SIZE;
--		switch (cmd->identify.cns) {
--		case NVME_ID_CNS_NS:
--			req->execute = nvmet_execute_identify_ns;
--			return 0;
--		case NVME_ID_CNS_CTRL:
--			req->execute = nvmet_execute_identify_ctrl;
--			return 0;
--		case NVME_ID_CNS_NS_ACTIVE_LIST:
--			req->execute = nvmet_execute_identify_nslist;
--			return 0;
--		case NVME_ID_CNS_NS_DESC_LIST:
--			req->execute = nvmet_execute_identify_desclist;
--			return 0;
--		}
--		break;
-+		return 0;
- 	case nvme_admin_abort_cmd:
- 		req->execute = nvmet_execute_abort;
- 		req->data_len = 0;
--- 
-2.20.1
+> > The driver should also have supported s3c6400 as well.
 
+> Kconfig says otherwise, unless I am missing something.
+
+> config ARM_S3C64XX_CPUFREQ
+>         bool "Samsung S3C64XX"
+>         depends on CPU_S3C6410
+>         default y
+>         help
+>           This adds the CPUFreq driver for Samsung S3C6410 SoC.
+>=20
+>           If in doubt, say N.
+
+Note the XX in the config option.
+
+--/Gk0KcsbyUMelFU1
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2wgagACgkQJNaLcl1U
+h9B+kgf/Tu4Mcdc2QLhbFdhdn07a8/luddZop3Dn6jL3SW5BZhP4E4UY9ekG3fTz
+CKU0uGyVB8qUYZKlNQIgwWmBghGl9HeqKuLUGEdsDcOxVxccnSJYTMk2ZNLz6IK9
+lH0wfeiXPIV7wguJCqAkkVZVfxdFZcKoQx00n6rTWjh7Py5qzuJtzwf/DTaDGsjC
+F5nqTo4vdQQSNm6WSAEX/I629qmL3Yd/ogB+jUVFYvcqxozLMcuae+CP5Nu8MH8T
+w5LrxCUugVJnkaUm6XUkeO29V9d2qmA3f9YU9BmyAm8caPdBABp5cjciu0X4sSCk
+03ZCDlb+0oZqbtMSlcjVKXin63aMOA==
+=JqnS
+-----END PGP SIGNATURE-----
+
+--/Gk0KcsbyUMelFU1--
