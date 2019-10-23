@@ -2,205 +2,168 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9C59CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:22:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76623CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:23:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45CE820659
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:22:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4289D20650
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:23:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="VHUyWi+Y"
+	dkim=pass (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="Y95oQ188"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404352AbfJWKW6 (ORCPT
+        id S2404369AbfJWKXT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 06:22:58 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:40439 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404312AbfJWKW5 (ORCPT
+        Wed, 23 Oct 2019 06:23:19 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:55246 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404104AbfJWKXS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 06:22:57 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20191023102256euoutp01c6e8f8284c96efdd07f1e9024db1c96c~QP5RZHzzZ2877628776euoutp01G
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 10:22:56 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20191023102256euoutp01c6e8f8284c96efdd07f1e9024db1c96c~QP5RZHzzZ2877628776euoutp01G
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1571826176;
-        bh=nEwa9AqtRqOH/1tI4JgppDN9b7uF1/aatluiGEi2DL0=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=VHUyWi+Yjq2BvzAjJV/MXcgErwgYJcp0f8+96OOyM8MamO7rUPvpl/6A9gz772hBv
-         Tbe0ahuTMBZtdAg7HpE3mnV+RlSHbclqnVMJlCBBrzvgI5sZFJ8XNMll9w0yQISqWH
-         7pzkdSsvWsPsjAKpBAjndCganjqj40klXOS6tC4Y=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20191023102256eucas1p1b11e67c24607954bfd20d97bf5fd4ce4~QP5RNxyUd2978529785eucas1p1s;
-        Wed, 23 Oct 2019 10:22:56 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 1A.16.04309.00A20BD5; Wed, 23
-        Oct 2019 11:22:56 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20191023102255eucas1p187669b0a3672fd293e4d6acc05efaaad~QP5Q1Zg-w2978529785eucas1p1r;
-        Wed, 23 Oct 2019 10:22:55 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20191023102255eusmtrp2ef5c3895cb7599b506b6b694d4cc720e~QP5Qz1ZQq2298822988eusmtrp2_;
-        Wed, 23 Oct 2019 10:22:55 +0000 (GMT)
-X-AuditID: cbfec7f4-afbff700000010d5-cc-5db02a00fc2a
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id DF.F6.04117.FF920BD5; Wed, 23
-        Oct 2019 11:22:55 +0100 (BST)
-Received: from [106.120.51.15] (unknown [106.120.51.15]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20191023102255eusmtip2ff13bacd2d020226fbc223ddcac3718f~QP5QVAn151093910939eusmtip2O;
-        Wed, 23 Oct 2019 10:22:55 +0000 (GMT)
-Subject: Re: [PATCH net-next] r8152: support request_firmware for RTL8153
-To:     Hayes Wang <hayeswang@realtek.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Cc:     nic_swsd <nic_swsd@realtek.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "pmalani@chromium.org" <pmalani@chromium.org>,
-        "grundler@chromium.org" <grundler@chromium.org>,
-        'Linux Samsung SOC' <linux-samsung-soc@vger.kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <c20abd08-5f22-2cc8-15fa-956d06b5b8af@samsung.com>
-Date:   Wed, 23 Oct 2019 12:22:54 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
-        Thunderbird/60.9.0
+        Wed, 23 Oct 2019 06:23:18 -0400
+Received: by mail-wm1-f68.google.com with SMTP id g7so2520896wmk.4
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 03:23:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ZqJp5QwTHeIfd54hVsbdTrPly7o1sW/Jce3j5kYMOAQ=;
+        b=Y95oQ188QQJadaABHsdBlC4b+Z+qqdbz8Wymda4ai2n+ry3KZN4972cwzuAPT6vO3t
+         Yw5ti/CEODV09yx7rdBrqNPM8OcKZBP80LV31IxcPR3SxVUEGmwQNTHuCZKSBjIR1uNb
+         UOY0pbyu+ZznY7INdRfuknnEpF1AhGcyCXcn7qJwm0F3rZLdMmZXmORqcsKMS6gNyQv7
+         6KUM7/b8AczQ7Su3cvdn3aKH/bpiHXFRLBkD2aNehaHGSGNAaKBraayIpHuhPjlD8uLL
+         y1XSenvznpbPxKOq/iQwRobu5wxpKjEoSbY3LAye0iNQKkkjwbkOlL5Lpbm23A81q13N
+         WlZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ZqJp5QwTHeIfd54hVsbdTrPly7o1sW/Jce3j5kYMOAQ=;
+        b=gM4toCWBLlOAf4Sj6o1UujwioT5EO7W48i4VS2444RZCMvg4SBVZU9LAbKDuJNooVf
+         ig58j2k0fsSKsX+ZkxAD012VgoouQ3czyD0YU9pKGJOqgxRI6QyTR73Uwo4qrgaPwpQh
+         99dBj3RI7HeyjTeFj0rft3VGfCaYZ0WSLne/A5Qze3Fn+25iY22TYpikjOVT5DZHjNbx
+         u8F8UanreR2zDRrvul3GwUcAb4TpjdqjWeFTuZaob7gi/glijA4tCqANKilOTtCuSQZ+
+         L/40K0BMbU17hPggxmJFY4xjmvs7STAxEWz2UB4O+jz742SsjFUmzDLOqqa2p2vvIcTv
+         ImTA==
+X-Gm-Message-State: APjAAAUYl2gHuvZXbZE6y7p9jN1IrbArgnsudwp27FOlahfvtgxyi4nt
+        LQbxqLA7sHXmuSxvXEKLrkajUbSuIWk2DA==
+X-Google-Smtp-Source: APXvYqwrN6yz7u6PoJUCsOJmve7u4PBqA9Op4RDhXDI0ZB+SjuDBau7ej2Vq1zHMxykDxvPlnRHG4w==
+X-Received: by 2002:a1c:4c02:: with SMTP id z2mr5331863wmf.78.1571826196348;
+        Wed, 23 Oct 2019 03:23:16 -0700 (PDT)
+Received: from [173.194.76.108] ([149.199.62.130])
+        by smtp.gmail.com with ESMTPSA id 126sm23678206wma.48.2019.10.23.03.23.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 23 Oct 2019 03:23:15 -0700 (PDT)
+Subject: Re: [PATCH] arch: microblaze: support for reserved-memory entries in
+ DT
+To:     Alvaro Gamez Machado <alvaro.gamez@hazent.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org
+References: <20191022081929.10602-1-alvaro.gamez@hazent.com>
+ <64db9f22-2e24-23f8-bf64-c4a972fa50c1@monstr.eu>
+ <20191023081728.GA17517@salem.gmr.ssr.upm.es>
+From:   Michal Simek <monstr@monstr.eu>
+Message-ID: <741d5f8b-439f-5d03-b279-d8844da55e4a@monstr.eu>
+Date:   Wed, 23 Oct 2019 12:23:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <0835B3720019904CB8F7AA43166CEEB2F18ED3FA@RTITMBSVM03.realtek.com.tw>
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20191023081728.GA17517@salem.gmr.ssr.upm.es>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SeUiTYRz23bfj22jyOo/9UNEadCh4pX98dIhB0IqCEBLLJKd+eG1TNrWs
-        f9RIzAMq8ppaongkqGOVVzlSy5Wlm1tIpHiggYrDwpFKorl9s/zveX7X8zwvL0mItBxvMk2Z
-        TauUMrmEK2B3j2wZg1wCtfGh5jEOtfJ+k0VVDpYhymjU8ihLfx2XqjbqWVRjywOCGmnwomzl
-        Gg5VYarlRfGltfkTbKmu/SFXumB9yZOu6/yusm8IziTT8rRcWhUSmSBINRdZOFnzXndGd+e5
-        +eiLqATxScARYLaVskuQgBThNgRtrQOIITYEb35tOMk6gpqdD7z9lYG2PoJptCIY1vY4iRVB
-        8dgcYZ9yxxdhe6mBa8ceOA7GW3ocpwi8wIIfvfWOBheHQYm1xIGFOBJ0P/uRHbPxUWitHXMc
-        8sTxMLNpIJgZN/hUs7jnliT5OBpm62LsZQL7Q4+1jmCwGL4vPmfZtQDreVD8fIfF2D4PT5sK
-        nRHcYcXwyol9Ybdvf+E+gvnxDh5DyhBYCqsRM3Uahg0THLsygQOgqz+EKZ+DptV5hyHArvDN
-        6saYcIUn3VUEUxZCcZHzsY+BxtD5T3bQZCYeIYnmQDLNgTiaA3E0/3UbELsdiekctSKFVp9U
-        0reD1TKFOkeZEpyUqdChvX/0ecdg60X924lDCJNIckgYtdYZL+LIctV5iiEEJCHxEE6HdsSL
-        hMmyvLu0KvOWKkdOq4eQD8mWiIX3XObiRDhFlk1n0HQWrdrvski+dz5K2PhYIdaduhbeIGrk
-        898dX864GZOePin1+6P0idAHdMY2d1c1CbdHX/jbBh6rWl+Pf52xaBOLn3UdMZmwZ3TBpbdb
-        15fM0XF5PvU1nc38qezyyaypbL2srzq30nS2qDQkcE0wOx27fKHMp+Dy753VSnnQiXB/3+Ur
-        SUK/w41ZqxK2OlUWFkio1LK/99usfUMDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrIIsWRmVeSWpSXmKPExsVy+t/xe7r/NTfEGkxeqmnx6sgPJotpB3sY
-        Lc6f38BucXnXHDaLGef3MVksWtbKbHFsgZjFl95ZrBZTL8xmd+D0mN1wkcVj06pONo/Hbzez
-        e3zeJBfAEqVnU5RfWpKqkJFfXGKrFG1oYaRnaGmhZ2RiqWdobB5rZWSqpG9nk5Kak1mWWqRv
-        l6CXcantMmvBQ7GKU/8fsjUwnhHqYuTkkBAwkdi7YidzFyMXh5DAUkaJ9f0HWCASMhInpzWw
-        QtjCEn+udbFBFL1mlGj+8IMdJCEs4Cnx58UCNhBbRCBaovPQX1aQImaB50wSiz+/YIXo6GOS
-        eHZ0EyNIFZuAoUTX2y6wDl4BO4lNH3aBxVkEVCWWzz4LdAcHh6hArMSmvWYQJYISJ2c+YQEJ
-        cwoESdyfEwYSZhYwk5i3+SEzhC0vsf3tHChbXOLWk/lMExiFZiHpnoWkZRaSlllIWhYwsqxi
-        FEktLc5Nzy020itOzC0uzUvXS87P3cQIjL5tx35u2cHY9S74EKMAB6MSD6/D+3WxQqyJZcWV
-        uYcYJTiYlUR47xisjRXiTUmsrEotyo8vKs1JLT7EaAr02kRmKdHkfGBiyCuJNzQ1NLewNDQ3
-        Njc2s1AS5+0QOBgjJJCeWJKanZpakFoE08fEwSnVwMjwMMB9hdfDHtu/2pXanY7sEzqnxQis
-        ctVMPhm1Tizuk4/1xKxDLwMn7fn8Zhufn/GWayfMFY89m2ZzxL1aK1vu9O3/V8zXSvCE8ph5
-        zcyceVUmcO/c8rzpro7GIjWRH+fkcFze91S8ZUNqkeP8R8+jSxWX8fzhKmhX/vtnrev31PQ1
-        9TNOGCqxFGckGmoxFxUnAgAbpVEa1AIAAA==
-X-CMS-MailID: 20191023102255eucas1p187669b0a3672fd293e4d6acc05efaaad
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20191023091648eucas1p12dcc4e9041169e3c7ae43f4ea525dd7f
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20191023091648eucas1p12dcc4e9041169e3c7ae43f4ea525dd7f
-References: <1394712342-15778-329-Taiwan-albertk@realtek.com>
-        <CGME20191023091648eucas1p12dcc4e9041169e3c7ae43f4ea525dd7f@eucas1p1.samsung.com>
-        <44261242-ff44-0067-bbb9-2241e400ad53@samsung.com>
-        <0835B3720019904CB8F7AA43166CEEB2F18ED3FA@RTITMBSVM03.realtek.com.tw>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hayes,
-
-On 23.10.2019 11:48, Hayes Wang wrote:
-> Marek Szyprowski [mailto:m.szyprowski@samsung.com]
->> Sent: Wednesday, October 23, 2019 5:17 PM
->> Subject: Re: [PATCH net-next] r8152: support request_firmware for RTL8153
+On 23. 10. 19 10:17, Alvaro Gamez Machado wrote:
+> Hi Michal
+> 
+> On Wed, Oct 23, 2019 at 09:59:40AM +0200, Michal Simek wrote:
+>> Hi,
 >>
->> Hi Hayes,
 >>
->> On 16.10.2019 05:02, Hayes Wang wrote:
->>> This patch supports loading additional firmware file through
->>> request_firmware().
+>> On 22. 10. 19 10:19, Alvaro Gamez Machado wrote:
+>>> Signed-off-by: Alvaro Gamez Machado <alvaro.gamez@hazent.com>
+>>
+>> please put there reasonable description to commit message.
+> 
+> Ok, will use those below as template.
+>  
+>>> ---
+>>>  arch/microblaze/mm/init.c | 5 +++++
+>>>  1 file changed, 5 insertions(+)
 >>>
->>> A firmware file may include a header followed by several blocks
->>> which have different types of firmware. Currently, the supported
->>> types are RTL_FW_END, RTL_FW_PLA, and RTL_FW_USB.
->>>
->>> The firmware is used to fix some compatible or hardware issues. For
->>> example, the device couldn't be found after rebooting several times.
->>>
->>> The supported chips are
->>> 	RTL_VER_04 (rtl8153a-2.fw)
->>> 	RTL_VER_05 (rtl8153a-3.fw)
->>> 	RTL_VER_06 (rtl8153a-4.fw)
->>> 	RTL_VER_09 (rtl8153b-2.fw)
->>>
->>> Signed-off-by: Hayes Wang <hayeswang@realtek.com>
->>> Reviewed-by: Prashant Malani <pmalani@chromium.org>
->> This patch (which landed in linux-next last days) causes a following
->> kernel oops on the ARM 32bit Exynos5422 SoC based Odroid XU4 board:
-> Please try the following patch.
-
-Yes, this fixes the issue. I've applied those changes manually on top of 
-Linux next-20191022, due to some differences in the context. When you 
-prepare a final patch, feel free to add:
-
-Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Fixes: 9370f2d05a2a ("r8152: support request_firmware for RTL8153")
-Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-
-
-> diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
-> index d3c30ccc8577..283b35a76cf0 100644
-> --- a/drivers/net/usb/r8152.c
-> +++ b/drivers/net/usb/r8152.c
-> @@ -4000,8 +4000,8 @@ static void rtl8152_fw_mac_apply(struct r8152 *tp, struct fw_mac *mac)
->   static void rtl8152_apply_firmware(struct r8152 *tp)
->   {
->   	struct rtl_fw *rtl_fw = &tp->rtl_fw;
-> -	const struct firmware *fw = rtl_fw->fw;
-> -	struct fw_header *fw_hdr = (struct fw_header *)fw->data;
-> +	const struct firmware *fw;
-> +	struct fw_header *fw_hdr;
->   	struct fw_phy_patch_key *key;
->   	u16 key_addr = 0;
->   	int i;
-> @@ -4009,6 +4009,9 @@ static void rtl8152_apply_firmware(struct r8152 *tp)
->   	if (IS_ERR_OR_NULL(rtl_fw->fw))
->   		return;
->   
-> +	fw = rtl_fw->fw;
-> +	fw_hdr = (struct fw_header *)fw->data;
-> +
->   	if (rtl_fw->pre_fw)
->   		rtl_fw->pre_fw(tp);
->
->>> +static void rtl8152_apply_firmware(struct r8152 *tp)
->>> +{
->>> +	struct rtl_fw *rtl_fw = &tp->rtl_fw;
->>> +	const struct firmware *fw = rtl_fw->fw;
->>> +	struct fw_header *fw_hdr = (struct fw_header *)fw->data;
->>> +	int i;
+>>> diff --git a/arch/microblaze/mm/init.c b/arch/microblaze/mm/init.c
+>>> index a015a951c8b7..928c5c2816e4 100644
+>>> --- a/arch/microblaze/mm/init.c
+>>> +++ b/arch/microblaze/mm/init.c
+>>> @@ -17,6 +17,8 @@
+>>>  #include <linux/slab.h>
+>>>  #include <linux/swap.h>
+>>>  #include <linux/export.h>
+>>> +#include <linux/of_fdt.h>
+>>> +#include <linux/of.h>
+>>
+>> of_fdt.h should be enough.
+> 
+> Ok
+> 
+>>>  
+>>>  #include <asm/page.h>
+>>>  #include <asm/mmu_context.h>
+>>> @@ -188,6 +190,9 @@ void __init setup_memory(void)
+>>>  
+>>>  void __init mem_init(void)
+>>>  {
+>>> +	early_init_fdt_reserve_self();
+>>> +	early_init_fdt_scan_reserved_mem();
 >>> +
->>> +	if (IS_ERR_OR_NULL(rtl_fw->fw))
->>> +		return;
->>> +
->>> +	if (rtl_fw->pre_fw)
->>> +		rtl_fw->pre_fw(tp);
->>> +
+>>>  	high_memory = (void *)__va(memory_start + lowmem_size - 1);
+>>>  
+>>>  	/* this will put all memory onto the freelists */
 >>>
-Best regards
+>>
+>>
+>> Also I have looked at others arch and take a look at
+>>
+>> 1b10cb21d888c021bedbe678f7c26aee1bf04ffa
+>> ARC: add support for reserved memory defined by device tree
+>>
+>> where they also enable OF_RESERVED_MEM to call fdt_init_reserve_mem()
+>>
+>> The same here
+>> 4e7c84ec045921dacc78d36295e2e61390249665
+>>  xtensa: support reserved-memory DT node
+>>
+>> and here
+>> 9bf14b7c540ae9ca7747af3a0c0d8470ef77b6ce
+>> arm64: add support for reserved memory defined by device tree
+>>
+> 
+> They did that at the time, but it seems it's not needed anymore:
+> 
+> 34e04eedd1cf1be714abb0e5976338cc72ccc05f
+>   of: select OF_RESERVED_MEM automatically
+> 
+> This commit removed those select OF_RESERVED_MEM lines. Is it needed
+> specifically for microblaze? I didn't need to do that in order for
+> reserved-memory entries to work on my platform.
+
+Ok. Even better. It is not needed if it is built already.
+
+Thanks,
+Michal
+
+
 -- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Xilinx Microblaze
+Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP ARM64 SoCs
+U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP/Versal SoCs
 
