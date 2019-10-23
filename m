@@ -2,213 +2,243 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA9CDCA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:44:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9179CCA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:47:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 940F321872
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:44:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 609C92086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:47:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uMe0Ilia"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="IiaX5j3x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731804AbfJWRoW (ORCPT
+        id S1731925AbfJWRrY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 13:44:22 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:35460 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730988AbfJWRoW (ORCPT
+        Wed, 23 Oct 2019 13:47:24 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:38342 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730988AbfJWRrX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 13:44:22 -0400
-Received: by mail-il1-f196.google.com with SMTP id p8so10015382ilp.2
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 10:44:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=l7knJJRqgYDmFqxJ/P0UYmGVQVgQ03De77m0r79mOwc=;
-        b=uMe0IliaJYQWC8Jn/yZ3CiGlxuDQZH+f10Q7lge6zfWutnKJXGh4BWICW11Ebl+Ivy
-         Oxejv1SVb2yT/78oFQyeW4IT+mBHN7lfptD17aF2otgkIjzcHbEckkO79uO0abLuB+54
-         nJ4iBdYAAczEP6ZNeUD4kiKRbXclG8SM7J/22PKP2pv7qy+Fs2tmkBqHisDmUi4gguq1
-         WxjK7bxCKSliaD0hRE1B7GeJ1ZKOsQiUYHPZUFtlNzlLlPHobxK8aXtnpX7E1VaZMLRR
-         alMRul5KuIe2LWy7EZRui74YC/BQh8/DeNuhVw1UbTv2TbLfeUtij6rr9nZAfOGfpcbW
-         i5rQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=l7knJJRqgYDmFqxJ/P0UYmGVQVgQ03De77m0r79mOwc=;
-        b=hgQWOd5PvGkgKpmpdDyYX058sCkzl8KwfCjcUZHvRY2qLCKypVtyLWFdFSSOrNljoV
-         8sH2vZ9fyL6ae+Crali18VI38nK8e21siIZ+G0pVY07by6WspWa2odoe2H4LgOoVSLN4
-         FZSke56wAUGospEXb4hjhJnVoJNaR8hye7S8+Q85oBXcUaDUacnUaUWPbuCv59d4x+JY
-         GVY5kbTMcPNJi3Mftws//5UPjMjiBUfesLNRl229J3m2UkzqkiKGa1+61SFyogOlhSTv
-         cnlKq3/HvLg2A82P6MzWDHmWeyw4qsnPB4yuT0stIT5DotxYFOQNdBUcxSzruye2JE4E
-         1LDw==
-X-Gm-Message-State: APjAAAXwDxUqNyT++jxEjhoeSp1Gv+jxd3sOwj2EpB5+UD+vYdIkq8aO
-        mF7ramSNvNzR4la6xoppt7gF6xFKli5G+E5RrXbJ0g==
-X-Google-Smtp-Source: APXvYqwHJCvpPQUxFlZw2TZ9dIzX7FKcb7XR0aT91MnqH2tT22DFTGW4JpzbbSscGbBc0ZKfh/o3tgJXUzQ7/aKz1DI=
-X-Received: by 2002:a92:9adb:: with SMTP id c88mr25596074ill.193.1571852657700;
- Wed, 23 Oct 2019 10:44:17 -0700 (PDT)
+        Wed, 23 Oct 2019 13:47:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1571852841; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=fkkYd+A3LtbnJ8VlG6CjKA7lliTwdOuqmLmZmhqC4oI=;
+        b=IiaX5j3xIeiz/5eRCTjkwX7W0CJ+f0c1BkWOLbCNQo2cielWbb9RZGCioUiKnAah2TQTxs
+        8auWZHN/QYMuD2r3sLuJNTtEzrPRDCW7LqD0NsaYc6McCwLfxelltamiYzi3HPpDP/JhW1
+        jYIeVriZjVzI9TqTFzEo7VV5P98+9o8=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>
+Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+        od@zcrc.me, Paul Cercueil <paul@crapouillou.net>,
+        Mathieu Malaterre <malat@debian.org>,
+        Artur Rojek <contact@artur-rojek.eu>
+Subject: [PATCH v2 1/3] watchdog: jz4740: Use WDT clock provided by TCU driver
+Date:   Wed, 23 Oct 2019 19:47:12 +0200
+Message-Id: <20191023174714.14362-1-paul@crapouillou.net>
 MIME-Version: 1.0
-References: <20191018002746.149200-1-eranian@google.com> <20191021102059.GD1800@hirez.programming.kicks-ass.net>
- <CABPqkBQ86=EpsKXMyYgqGdUhSHOi2uCQQfEtupMPavDRiK_30Q@mail.gmail.com> <20191023110234.GS1817@hirez.programming.kicks-ass.net>
-In-Reply-To: <20191023110234.GS1817@hirez.programming.kicks-ass.net>
-From:   Stephane Eranian <eranian@google.com>
-Date:   Wed, 23 Oct 2019 10:44:06 -0700
-Message-ID: <CABPqkBQ+dwSbFjRL+AnGnEMhRkiPEEGAt9sTxHqLm5vg=4XPKA@mail.gmail.com>
-Subject: Re: [PATCH] perf/core: fix multiplexing event scheduling issue
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, mingo@elte.hu,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        "Liang, Kan" <kan.liang@intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 4:02 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Wed, Oct 23, 2019 at 12:30:03AM -0700, Stephane Eranian wrote:
-> > On Mon, Oct 21, 2019 at 3:21 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> > >
-> > > On Thu, Oct 17, 2019 at 05:27:46PM -0700, Stephane Eranian wrote:
-> > > > This patch complements the following commit:
-> > > > 7fa343b7fdc4 ("perf/core: Fix corner case in perf_rotate_context()")
-> > > >
-> > > > The fix from Song addresses the consequences of the problem but
-> > > > not the cause. This patch fixes the causes and can sit on top of
-> > > > Song's patch.
-> > >
-> > > I'm tempted to say the other way around.
-> > >
-> > > Consider the case where you claim fixed2 with a pinned event and then
-> > > have another fixed2 in the flexible list. At that point you're _never_
-> > > going to run any other flexible events (without Song's patch).
-> > >
-> > In that case, there is no deactivation or removal of events, so yes, my patch
-> > will not help that case. I said his patch is still useful. You gave one example,
-> > even though in this case the rotate will not yield a reschedule of that flexible
-> > event because fixed2 is used by a pinned event. So checking for it, will not
-> > really help.
->
-> Stick 10 cycle events after the fixed2 flexible event. Without Song's
-> patch you'll never see those 10 cycle events get scheduled.
->
-> > > This patch isn't going to help with that. Similarly, Songs patch helps
-> > > with your situation where it will allow rotation to resume after you
-> > > disable/remove all active events (while you still have pending events).
-> > >
-> > Yes, it will unblock the case where active events are deactivated or
-> > removed. But it will delay the unblocking until the next mux timer
-> > expires. And I am saying this is too far away in many cases. For instance,
-> > we do not run with the 1ms timer for uncore, this is way too much overhead.
-> > Imagine this timer is set to 10ms or event 100ms, just with Song's patch, the
-> > inactive events would have to wait for up to 100ms to be scheduled again.
-> > This is not acceptable for us.
->
-> Then how was it acceptible to mux in the first place? And if
-> multiplexing wasn't acceptible, then why were you doing it?
->
-> > > > However, the cause is not addressed. The kernel should not rely on
-> > > > the multiplexing hrtimer to unblock inactive events. That timer
-> > > > can have abitrary duration in the milliseconds. Until the timer
-> > > > fires, counters are available, but no measurable events are using
-> > > > them. We do not want to introduce blind spots of arbitrary durations.
-> > >
-> > > This I disagree with -- you don't get a guarantee other than
-> > > timer_period/n when you multiplex, and idling the counters until the
-> > > next tick doesn't violate that at all.
-> >
-> > My take is that if you have free counters and "idling" events, the kernel
-> > should take every effort to schedule them as soon as they become available.
-> > In the situation I described in the patch, once I remove the active
-> > events, there
-> > is no more reasons for multiplexing, all the counters are free (ignore
-> > watchdog).
->
-> That's fine; all I'm arguing is that the current behaviour doesn't
-> violate the guarantees given. Now you want to improve counter
-> utilization (at a cost) and that is fine. Just don't argue that there's
-> something broken -- there is not.
->
-> Your patch also does not fix something more fundamental than Song's
-> patch did. Quite the reverse. Yours is purely a utilization efficiency
-> thing, while Song's addressed a correctness issue.
->
-Going back to Song's patch and his test case. It exposes a problem that was
-introduced with the RB tree and multiple event list changes. In the event
-scheduler, there was this guarantee that each event will get a chance to
-be scheduled because each would eventually get to the head of the list and
-thus get a chance to be scheduled as the first event of its priority
-class, assuming
-there was still at least one compatible counter available from higher
-priority classes.
-The scheduler also still stops at the first error. In Song's case
-ref-cycles:D,ref-cycles,cycles,
-the pinned event is commandeering fixed2. But I believe the rotation
-code was not
-rotating the list *even* if it could not schedule the first event.
-That explained why
-the cycle event could never be scheduled. That's a violation of the guarantee.
-At each timer, the list must rotate. I think his patch somehow addresses this.
+Instead of requesting the "ext" clock and handling the watchdog clock
+divider and gating in the watchdog driver, we now request and use the
+"wdt" clock that is supplied by the ingenic-timer "TCU" driver.
 
-> > Now you may be arguing, that it may take more time to ctx_resched() then to
-> > wait for the timer to expire. But I am not sure I buy that.
->
-> I'm not arguing that. All I'm saying is that fairness is not affected.
->
-> > Similarly, I am not sure there is code to cancel an active mux hrtimer
-> > when we clear rotate_necessary.  Maybe we just let it lapse and clear
-> > itself via a ctx_sched_out() in the rotation code.
->
-> Yes, we let it lapse and disable itself, I don't see the problem with
-> that -- also remember that the timer services two contexts.
->
-> > > > This patch addresses the cause of the problem, by checking that,
-> > > > when an event is disabled or removed and the context was multiplexing
-> > > > events, inactive events gets immediately a chance to be scheduled by
-> > > > calling ctx_resched(). The rescheduling is done on  event of equal
-> > > > or lower priority types.  With that in place, as soon as a counter
-> > > > is freed, schedulable inactive events may run, thereby eliminating
-> > > > a blind spot.
-> > >
-> > > Disagreed, Song's patch removed the fundamental blind spot of rotation
-> > > completely failing.
->
-> > Sure it removed the infinite blocking of schedulable events. My patch
-> > addresses the issue of having free counters following a
-> > deactivation/removal and not scheduling the idling events on them,
-> > thereby creating a blind spot where no event is monitoring.
->
-> If the counters were removed later (like a us before their slice
-> expired) there would not have been much idle time.
->
-> Either way, fairness does not mandate we schedule immediately.
->
-> > > This just slightly optimizes counter usage -- at a cost of having to
-> > > reprogram the counters more often.
-> > >
-> > Only on deactivation/removal AND multiplexing so it is not every time but
-> > only where there is an opportunity to keep the counters busy.
->
-> Sure, but it's still non-zero :-)
->
-> > > Not saying we shouldn't do this, but this justification is just all
-> > > sorts of wrong.
-> >
-> > I think the patches are not mutually exclusive.
->
-> I never said they were. And I'm not opposed to your patch. What I
-> objected to was the mischaracterization of it in the Changelog.
->
-> Present it as an optimization and all should be well.
+The major benefit is that the watchdog's clock rate and parent can now
+be specified from within devicetree, instead of hardcoded in the driver.
 
-I will respin it as an optimization then.
-Thanks.
+Also, this driver won't poke anymore into the TCU registers to
+enable/disable the clock, as this is now handled by the TCU driver.
+
+On the bad side, we break the ABI with devicetree - as we now request a
+different clock. In this very specific case it is still okay, as every
+Ingenic JZ47xx-based board out there compile the devicetree within the
+kernel; so it's still time to push breaking changes, in order to get a
+clean devicetree that won't break once it musn't.
+
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Tested-by: Mathieu Malaterre <malat@debian.org>
+Tested-by: Artur Rojek <contact@artur-rojek.eu>
+Acked-by: Guenter Roeck <linux@roeck-us.net>
+---
+
+Notes:
+    v2: Rebase on top of 5.4-rc4
+
+ drivers/watchdog/Kconfig      |  1 +
+ drivers/watchdog/jz4740_wdt.c | 75 ++++++++++++++---------------------
+ 2 files changed, 31 insertions(+), 45 deletions(-)
+
+diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+index 58e7c100b6ad..6421187769cf 100644
+--- a/drivers/watchdog/Kconfig
++++ b/drivers/watchdog/Kconfig
+@@ -1642,6 +1642,7 @@ config INDYDOG
+ config JZ4740_WDT
+ 	tristate "Ingenic jz4740 SoC hardware watchdog"
+ 	depends on MACH_JZ4740 || MACH_JZ4780
++	depends on COMMON_CLK
+ 	select WATCHDOG_CORE
+ 	help
+ 	  Hardware driver for the built-in watchdog timer on Ingenic jz4740 SoCs.
+diff --git a/drivers/watchdog/jz4740_wdt.c b/drivers/watchdog/jz4740_wdt.c
+index c6052ae54f32..72920f09f4a7 100644
+--- a/drivers/watchdog/jz4740_wdt.c
++++ b/drivers/watchdog/jz4740_wdt.c
+@@ -18,19 +18,6 @@
+ #include <linux/err.h>
+ #include <linux/of.h>
+ 
+-#include <asm/mach-jz4740/timer.h>
+-
+-#define JZ_WDT_CLOCK_PCLK 0x1
+-#define JZ_WDT_CLOCK_RTC  0x2
+-#define JZ_WDT_CLOCK_EXT  0x4
+-
+-#define JZ_WDT_CLOCK_DIV_1    (0 << TCU_TCSR_PRESCALE_LSB)
+-#define JZ_WDT_CLOCK_DIV_4    (1 << TCU_TCSR_PRESCALE_LSB)
+-#define JZ_WDT_CLOCK_DIV_16   (2 << TCU_TCSR_PRESCALE_LSB)
+-#define JZ_WDT_CLOCK_DIV_64   (3 << TCU_TCSR_PRESCALE_LSB)
+-#define JZ_WDT_CLOCK_DIV_256  (4 << TCU_TCSR_PRESCALE_LSB)
+-#define JZ_WDT_CLOCK_DIV_1024 (5 << TCU_TCSR_PRESCALE_LSB)
+-
+ #define DEFAULT_HEARTBEAT 5
+ #define MAX_HEARTBEAT     2048
+ 
+@@ -50,7 +37,8 @@ MODULE_PARM_DESC(heartbeat,
+ struct jz4740_wdt_drvdata {
+ 	struct watchdog_device wdt;
+ 	void __iomem *base;
+-	struct clk *rtc_clk;
++	struct clk *clk;
++	unsigned long clk_rate;
+ };
+ 
+ static int jz4740_wdt_ping(struct watchdog_device *wdt_dev)
+@@ -65,32 +53,14 @@ static int jz4740_wdt_set_timeout(struct watchdog_device *wdt_dev,
+ 				    unsigned int new_timeout)
+ {
+ 	struct jz4740_wdt_drvdata *drvdata = watchdog_get_drvdata(wdt_dev);
+-	unsigned int rtc_clk_rate;
+-	unsigned int timeout_value;
+-	unsigned short clock_div = JZ_WDT_CLOCK_DIV_1;
++	u16 timeout_value = (u16)(drvdata->clk_rate * new_timeout);
+ 	u8 tcer;
+ 
+-	rtc_clk_rate = clk_get_rate(drvdata->rtc_clk);
+-
+-	timeout_value = rtc_clk_rate * new_timeout;
+-	while (timeout_value > 0xffff) {
+-		if (clock_div == JZ_WDT_CLOCK_DIV_1024) {
+-			/* Requested timeout too high;
+-			* use highest possible value. */
+-			timeout_value = 0xffff;
+-			break;
+-		}
+-		timeout_value >>= 2;
+-		clock_div += (1 << TCU_TCSR_PRESCALE_LSB);
+-	}
+-
+ 	tcer = readb(drvdata->base + TCU_REG_WDT_TCER);
+ 	writeb(0x0, drvdata->base + TCU_REG_WDT_TCER);
+-	writew(clock_div, drvdata->base + TCU_REG_WDT_TCSR);
+ 
+ 	writew((u16)timeout_value, drvdata->base + TCU_REG_WDT_TDR);
+ 	writew(0x0, drvdata->base + TCU_REG_WDT_TCNT);
+-	writew(clock_div | JZ_WDT_CLOCK_RTC, drvdata->base + TCU_REG_WDT_TCSR);
+ 
+ 	if (tcer & TCU_WDT_TCER_TCEN)
+ 		writeb(TCU_WDT_TCER_TCEN, drvdata->base + TCU_REG_WDT_TCER);
+@@ -102,11 +72,15 @@ static int jz4740_wdt_set_timeout(struct watchdog_device *wdt_dev,
+ static int jz4740_wdt_start(struct watchdog_device *wdt_dev)
+ {
+ 	struct jz4740_wdt_drvdata *drvdata = watchdog_get_drvdata(wdt_dev);
++	int ret;
+ 	u8 tcer;
+ 
++	ret = clk_prepare_enable(drvdata->clk);
++	if (ret)
++		return ret;
++
+ 	tcer = readb(drvdata->base + TCU_REG_WDT_TCER);
+ 
+-	jz4740_timer_enable_watchdog();
+ 	jz4740_wdt_set_timeout(wdt_dev, wdt_dev->timeout);
+ 
+ 	/* Start watchdog if it wasn't started already */
+@@ -121,7 +95,7 @@ static int jz4740_wdt_stop(struct watchdog_device *wdt_dev)
+ 	struct jz4740_wdt_drvdata *drvdata = watchdog_get_drvdata(wdt_dev);
+ 
+ 	writeb(0x0, drvdata->base + TCU_REG_WDT_TCER);
+-	jz4740_timer_disable_watchdog();
++	clk_disable_unprepare(drvdata->clk);
+ 
+ 	return 0;
+ }
+@@ -162,21 +136,38 @@ static int jz4740_wdt_probe(struct platform_device *pdev)
+ 	struct device *dev = &pdev->dev;
+ 	struct jz4740_wdt_drvdata *drvdata;
+ 	struct watchdog_device *jz4740_wdt;
++	long rate;
++	int ret;
+ 
+ 	drvdata = devm_kzalloc(dev, sizeof(struct jz4740_wdt_drvdata),
+ 			       GFP_KERNEL);
+ 	if (!drvdata)
+ 		return -ENOMEM;
+ 
+-	if (heartbeat < 1 || heartbeat > MAX_HEARTBEAT)
+-		heartbeat = DEFAULT_HEARTBEAT;
++	drvdata->clk = devm_clk_get(&pdev->dev, "wdt");
++	if (IS_ERR(drvdata->clk)) {
++		dev_err(&pdev->dev, "cannot find WDT clock\n");
++		return PTR_ERR(drvdata->clk);
++	}
++
++	/* Set smallest clock possible */
++	rate = clk_round_rate(drvdata->clk, 1);
++	if (rate < 0)
++		return rate;
++
++	ret = clk_set_rate(drvdata->clk, rate);
++	if (ret)
++		return ret;
+ 
++	drvdata->clk_rate = rate;
+ 	jz4740_wdt = &drvdata->wdt;
+ 	jz4740_wdt->info = &jz4740_wdt_info;
+ 	jz4740_wdt->ops = &jz4740_wdt_ops;
+-	jz4740_wdt->timeout = heartbeat;
+ 	jz4740_wdt->min_timeout = 1;
+-	jz4740_wdt->max_timeout = MAX_HEARTBEAT;
++	jz4740_wdt->max_timeout = 0xffff / rate;
++	jz4740_wdt->timeout = clamp(heartbeat,
++				    jz4740_wdt->min_timeout,
++				    jz4740_wdt->max_timeout);
+ 	jz4740_wdt->parent = dev;
+ 	watchdog_set_nowayout(jz4740_wdt, nowayout);
+ 	watchdog_set_drvdata(jz4740_wdt, drvdata);
+@@ -185,12 +176,6 @@ static int jz4740_wdt_probe(struct platform_device *pdev)
+ 	if (IS_ERR(drvdata->base))
+ 		return PTR_ERR(drvdata->base);
+ 
+-	drvdata->rtc_clk = devm_clk_get(dev, "rtc");
+-	if (IS_ERR(drvdata->rtc_clk)) {
+-		dev_err(dev, "cannot find RTC clock\n");
+-		return PTR_ERR(drvdata->rtc_clk);
+-	}
+-
+ 	return devm_watchdog_register_device(dev, &drvdata->wdt);
+ }
+ 
+-- 
+2.23.0
+
