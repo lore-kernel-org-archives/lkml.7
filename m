@@ -2,96 +2,91 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AA31CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:51:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C730CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:53:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 731AF2173B
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:51:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11C4020640
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:53:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391821AbfJWMvF (ORCPT
+        id S2391850AbfJWMxM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 08:51:05 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:49248 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391769AbfJWMvC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 08:51:02 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iNG6H-0001hc-O6; Wed, 23 Oct 2019 14:50:53 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 5C7751C03AB;
-        Wed, 23 Oct 2019 14:50:53 +0200 (CEST)
-Date:   Wed, 23 Oct 2019 12:50:53 -0000
-From:   "tip-bot2 for Ben Dooks (Codethink)" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/urgent] timers/sched_clock: Include local timekeeping.h
- for missing declarations
-Cc:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20191022131226.11465-1-ben.dooks@codethink.co.uk>
-References: <20191022131226.11465-1-ben.dooks@codethink.co.uk>
+        Wed, 23 Oct 2019 08:53:12 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49240 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2390962AbfJWMxL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 08:53:11 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 803CEB678;
+        Wed, 23 Oct 2019 12:53:08 +0000 (UTC)
+From:   Michal Suchanek <msuchanek@suse.de>
+To:     linux-scsi@vger.kernel.org
+Cc:     Michal Suchanek <msuchanek@suse.de>,
+        Jonathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Eric Biggers <ebiggers@google.com>,
+        "J. Bruce Fields" <bfields@redhat.com>,
+        Benjamin Coddington <bcodding@redhat.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Omar Sandoval <osandov@fb.com>, Ming Lei <ming.lei@redhat.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Tejun Heo <tj@kernel.org>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: [PATCH v2 0/8] Fix cdrom autoclose.
+Date:   Wed, 23 Oct 2019 14:52:39 +0200
+Message-Id: <cover.1571834862.git.msuchanek@suse.de>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Message-ID: <157183505310.29376.6098311175532476740.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the timers/urgent branch of tip:
+Link: https://lore.kernel.org/lkml/cover.1513263482.git.msuchanek@suse.de/
 
-Commit-ID:     086ee46b08634a999bcd1707eabe3b0dc1806674
-Gitweb:        https://git.kernel.org/tip/086ee46b08634a999bcd1707eabe3b0dc1806674
-Author:        Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
-AuthorDate:    Tue, 22 Oct 2019 14:12:26 +01:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Wed, 23 Oct 2019 14:48:23 +02:00
+Hello,
 
-timers/sched_clock: Include local timekeeping.h for missing declarations
+there is cdrom autoclose feature that is supposed to close the tray,
+wait for the disc to become ready, and then open the device.
 
-Include the timekeeping.h header to get the declaration of the
-sched_clock_{suspend,resume} functions. Fixes the following sparse
-warnings:
+This used to work in ancient times. Then in old times there was a hack
+in util-linux which worked around the breakage which probably resulted
+from switching to scsi emulation.
 
-kernel/time/sched_clock.c:275:5: warning: symbol 'sched_clock_suspend' was not declared. Should it be static?
-kernel/time/sched_clock.c:286:6: warning: symbol 'sched_clock_resume' was not declared. Should it be static?
+Currently util-linux maintainer refuses to merge another hack on the
+basis that kernel still has the feature so it should be fixed there.
+The code needs not be replicated in every userspace utility like mount
+or dd which has no business knowing which devices are CD-roms and where
+the autoclose setting is in the kernel.
 
-Signed-off-by: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20191022131226.11465-1-ben.dooks@codethink.co.uk
+Michal Suchanek (8):
+  cdrom: add poll_event_interruptible
+  cdrom: factor out common open_for_* code
+  cdrom: wait for the tray to close
+  cdrom: separate autoclose into an IOCTL
+  docs: cdrom: Add autoclose IOCTL
+  bdev: add open_finish.
+  scsi: sr: workaround VMware ESXi cdrom emulation bug
+  scsi: sr: wait for the medium to become ready
 
----
- kernel/time/sched_clock.c | 2 ++
- 1 file changed, 2 insertions(+)
+ Documentation/filesystems/locking.rst |   2 +
+ Documentation/ioctl/cdrom.rst         |  25 ++++
+ drivers/cdrom/cdrom.c                 | 188 ++++++++++++++------------
+ drivers/scsi/sr.c                     |  60 ++++++--
+ fs/block_dev.c                        |  21 ++-
+ include/linux/blkdev.h                |   1 +
+ include/uapi/linux/cdrom.h            |   1 +
+ 7 files changed, 198 insertions(+), 100 deletions(-)
 
-diff --git a/kernel/time/sched_clock.c b/kernel/time/sched_clock.c
-index 142b076..dbd6905 100644
---- a/kernel/time/sched_clock.c
-+++ b/kernel/time/sched_clock.c
-@@ -17,6 +17,8 @@
- #include <linux/seqlock.h>
- #include <linux/bitops.h>
- 
-+#include "timekeeping.h"
-+
- /**
-  * struct clock_read_data - data required to read from sched_clock()
-  *
+-- 
+2.23.0
+
