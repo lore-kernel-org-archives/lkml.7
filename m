@@ -2,80 +2,66 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C058CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:41:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A532CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:44:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BF9D20663
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:41:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 577B020663
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:44:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405994AbfJWNln (ORCPT
+        id S2391996AbfJWNoI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 09:41:43 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:38744 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2391642AbfJWNlm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 09:41:42 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 68646F7628D9BF9903EC;
-        Wed, 23 Oct 2019 21:41:40 +0800 (CST)
-Received: from localhost.localdomain (10.90.53.225) by
- DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 23 Oct 2019 21:41:31 +0800
-From:   Chen Wandun <chenwandun@huawei.com>
-To:     <akpm@linux-foundation.org>, <mhocko@suse.com>, <vbabka@suse.cz>,
-        <osalvador@suse.de>, <mgorman@techsingularity.net>,
-        <rppt@linux.ibm.com>, <dan.j.williams@intel.com>,
-        <alexander.h.duyck@linux.intel.com>, <anshuman.khandual@arm.com>,
-        <pavel.tatashin@microsoft.com>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <chenwandun@huawei.com>
-Subject: [PATCH] mm/page_alloc: fix gcc compile warning
-Date:   Wed, 23 Oct 2019 21:48:28 +0800
-Message-ID: <1571838508-117928-1-git-send-email-chenwandun@huawei.com>
-X-Mailer: git-send-email 2.7.4
+        Wed, 23 Oct 2019 09:44:08 -0400
+Received: from mga06.intel.com ([134.134.136.31]:4403 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391072AbfJWNoH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 09:44:07 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 06:43:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,221,1569308400"; 
+   d="scan'208";a="223187281"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga004.fm.intel.com with ESMTP; 23 Oct 2019 06:43:45 -0700
+Date:   Wed, 23 Oct 2019 06:43:45 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        linux-arch@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>
+Subject: Re: [patch V2 01/17] x86/entry/32: Remove unused resume_userspace
+ label
+Message-ID: <20191023134345.GA329@linux.intel.com>
+References: <20191023122705.198339581@linutronix.de>
+ <20191023123117.686514045@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.90.53.225]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191023123117.686514045@linutronix.de>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chenwandun <chenwandun@huawei.com>
+On Wed, Oct 23, 2019 at 02:27:06PM +0200, Thomas Gleixner wrote:
+> The C reimplementation of SYSENTER left that unused ENTRY() label
+> around. Remove it.
+> 
+> Fixes: 5f310f739b4c ("x86/entry/32: Re-implement SYSENTER using the new C path")
+> Originally-by: Peter Zijlstra <peterz@infradead.org>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> ---
 
-mm/page_alloc.o: In function `page_alloc_init_late':
-mm/page_alloc.c:1956: undefined reference to `zone_pcp_update'
-mm/page_alloc.o:(.debug_addr+0x8350): undefined reference to `zone_pcp_update'
-make: *** [vmlinux] Error 1
-
-zone_pcp_update is defined in CONFIG_MEMORY_HOTPLUG,
-so add ifdef when calling zone_pcp_update.
-
-Signed-off-by: Chenwandun <chenwandun@huawei.com>
----
- mm/page_alloc.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index f9488ef..8513150 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -1952,8 +1952,10 @@ void __init page_alloc_init_late(void)
- 	 * so the pcpu batch and high limits needs to be updated or the limits
- 	 * will be artificially small.
- 	 */
-+#ifdef CONFIG_MEMORY_HOTPLUG
- 	for_each_populated_zone(zone)
- 		zone_pcp_update(zone);
-+#endif
- 
- 	/*
- 	 * We initialized the rest of the deferred pages.  Permanently disable
--- 
-2.7.4
-
+Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
