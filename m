@@ -2,107 +2,136 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14171CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:03:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3602CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:03:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA79820679
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:03:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="jrBdFji+";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="lag+2ZpO"
+	by mail.kernel.org (Postfix) with ESMTP id 8A26E20679
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:03:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571821415;
+	bh=B8C1dQ/yMdKZ6nHJQacWqJEhXfXnaxkSoSSnIBCLaeE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=G/ZqABz7fGx6x7lTyXrISX5esgKRyLSQFllQ89EpE0c2mzTbNudgAyi85mlAzMRL2
+	 Z/yeGWLeaJ3PC+DuidI+s6mslP0foSOD9TKGPnL7rve3FERg7RBLzK0nkrUe60tvDz
+	 iIUzNXMiyIj1/moadgePdQ6NCPqpUCSuj7Czgvcg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390832AbfJWJDb (ORCPT
+        id S2390843AbfJWJDe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 05:03:31 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:42920 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390807AbfJWJD0 (ORCPT
+        Wed, 23 Oct 2019 05:03:34 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:43758 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390828AbfJWJDb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 05:03:26 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 1A93A60DCD; Wed, 23 Oct 2019 09:03:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571821405;
-        bh=bSOkFQeqO8LEVBJ2HnZt1qFBxSpvVtIOF1peJoYkpYk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jrBdFji+bPxo95zpOdRT4dV0NDboJdYVu9goD6YeWPles+fkWpgygBL/FU8J60afI
-         6bwhelTWX7hlrhfjsYe+fdyZTuLY0WBS2MqIQ5iwiwMLO21gBQyqn6PG3siRPPkO6k
-         wTAZLTQKpi5l6zgtuug/fnKDPDZLUQuDqaQW7mfE=
-Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3E3CB60DD1;
-        Wed, 23 Oct 2019 09:03:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571821402;
-        bh=bSOkFQeqO8LEVBJ2HnZt1qFBxSpvVtIOF1peJoYkpYk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lag+2ZpOrOdWTNdOgNlhR5uqv+ASWkJdriOxa8E19P4K92+MJ1b7MihYq/cCErnt6
-         I00X/mKMufLL/nvnEskcda1R9zEJ9t8AGgroRQPCrfKbWC6d/c4r4v94cdFf0o7laQ
-         bAqk1ZC4tvKtA0mzXlHWZ5EfCpN+/oPfm58PodR4=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3E3CB60DD1
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-To:     agross@kernel.org, robh+dt@kernel.org, bjorn.andersson@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org,
-        Maulik Shah <mkshah@codeaurora.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>
-Subject: [PATCH v3 11/11] arm64: dts: qcom: sc7180: Add pdc interrupt controller
-Date:   Wed, 23 Oct 2019 14:32:19 +0530
-Message-Id: <20191023090219.15603-12-rnayak@codeaurora.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20191023090219.15603-1-rnayak@codeaurora.org>
-References: <20191023090219.15603-1-rnayak@codeaurora.org>
+        Wed, 23 Oct 2019 05:03:31 -0400
+Received: by mail-oi1-f195.google.com with SMTP id s5so1324378oie.10;
+        Wed, 23 Oct 2019 02:03:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JUN9J/2vsghSQEDoYKjkArcf/+ULxW+MHO+ZanwPpo4=;
+        b=gsvSpxN8asmmJPaABTh0U7UQr4o1rZIqS6m6NbPa1f9vlQ7DPCM7tz1n9y/Nwa1WfI
+         dQVVzLdpzhZ1I0ur3nKHHMl+3CX5ERnkxHNtFUdIBNFqE8Kn2vM6Rjac8qJb0UIV+IQt
+         rv3VgX1Vo53WsqiLUfaWEb2e52sZsooDt6XTh1qpSn+e24v+VwbQp3nAxIes8ObbcPiN
+         QN/gjimkQpSq/tkzmqHAHi5qXuCPxE3uN2iYg5yaIH4Mnrq6pY8VOmCPIsxTmI9J084S
+         TlW+tDSexTnnIY7kb4nU7zi9iAze3agfwMiuKhQ4XzW2TIN/BcNp1TE5b7nLb2AkmPmN
+         qKdg==
+X-Gm-Message-State: APjAAAUfYFk0i+GW7Qo64YsSi3pTP8HOgQ63O6ckbotBBtcNg9uwe24p
+        4iuYMEs5ydQToTc9ILZhc7f+livCDpFoLsOFN54=
+X-Google-Smtp-Source: APXvYqzpnyRsjI08y4ZRUgjrw1GIJ1LFN//WuKMFEHxAIcp2foV7Lo1Ho0NyPkQWiuDpIsFmd7Iy31deRT8TXFwo9RE=
+X-Received: by 2002:aca:d706:: with SMTP id o6mr6936010oig.57.1571821410371;
+ Wed, 23 Oct 2019 02:03:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191023074945.17016-1-fengwei.yin@intel.com> <30ee0a348f624698801691f65eeecd87@AcuMS.aculab.com>
+In-Reply-To: <30ee0a348f624698801691f65eeecd87@AcuMS.aculab.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 23 Oct 2019 11:03:19 +0200
+Message-ID: <CAJZ5v0jizy95pVh1gek5rmaVvGeZUMkVdKJUdesZeXGbj=mwRw@mail.gmail.com>
+Subject: Re: [PATCH v3] ACPI/processor_idle: Remove dummy wait if kernel is in
+ guest mode
+To:     David Laight <David.Laight@aculab.com>
+Cc:     Yin Fengwei <fengwei.yin@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "lenb@kernel.org" <lenb@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maulik Shah <mkshah@codeaurora.org>
+On Wed, Oct 23, 2019 at 10:45 AM David Laight <David.Laight@aculab.com> wrote:
+>
+> From: Yin Fengwei
+> > Sent: 23 October 2019 08:50
+>
+>
+> > In function acpi_idle_do_entry(), an ioport access is used for dummy
+> > wait to guarantee hardware behavior. But it could trigger unnecessary
+> > vmexit if kernel is running as guest in virtualization environtment.
+> >
+> > If it's in virtualization environment, the deeper C state enter
+> > operation (inb()) will trap to hyervisor. It's not needed to do
+> > dummy wait after the inb() call. So we remove the dummy io port
+> > access to avoid unnecessary VMexit.
+> >
+> > We keep dummy io port access to maintain timing for native environment.
+> >
+> > Signed-off-by: Yin Fengwei <fengwei.yin@intel.com>
+> > ---
+> > ChangeLog:
+> > v2 -> v3:
+> >  - Remove dummy io port access totally for virtualization env.
+> >
+> > v1 -> v2:
+> >  - Use ndelay instead of dead loop for dummy delay.
+> >
+> >  drivers/acpi/processor_idle.c | 36 ++++++++++++++++++++++++++++++++---
+> >  1 file changed, 33 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/acpi/processor_idle.c b/drivers/acpi/processor_idle.c
+> > index ed56c6d20b08..0c4a97dd6917 100644
+> > --- a/drivers/acpi/processor_idle.c
+> > +++ b/drivers/acpi/processor_idle.c
+> > @@ -58,6 +58,17 @@ struct cpuidle_driver acpi_idle_driver = {
+> >  static
+> >  DEFINE_PER_CPU(struct acpi_processor_cx * [CPUIDLE_STATE_MAX], acpi_cstate);
+> >
+> > +static void (*dummy_wait)(u64 address);
+> > +
+> > +static void default_dummy_wait(u64 address)
+> > +{
+> > +     inl(address);
+> > +}
+> > +
+> > +static void default_noop_wait(u64 address)
+> > +{
+> > +}
+> > +
+>
+> Overengineered...
+> Just add:
+>
+> static void wait_for_freeze(void)
+> {
+> #ifdef  CONFIG_X86
+>         /* No delay is needed if we are a guest */
+>         if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
+>                 return;
+> #endif
+>
+>         /* Dummy wait op - must do something useless after P_LVL2 read
+>            because chipsets cannot guarantee that STPCLK# signal
+>            gets asserted in time to freeze execution properly. */
+>         inl(acpi_gbl_FADT.xpm_timer_block.address);
+> }
+>
+> and use it to replace the inl().
 
-Add pdc interrupt controller for sc7180
-
-Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
----
-v3:
-Used the qcom,sdm845-pdc compatible for pdc node
-
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index f2981ada578f..07ea393c2b5f 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -184,6 +184,16 @@
- 			#power-domain-cells = <1>;
- 		};
- 
-+		pdc: interrupt-controller@b220000 {
-+			compatible = "qcom,sdm845-pdc";
-+			reg = <0 0xb220000 0 0x30000>;
-+			qcom,pdc-ranges = <0 480 15>, <17 497 98>,
-+					  <119 634 4>, <124 639 1>;
-+			#interrupt-cells = <2>;
-+			interrupt-parent = <&intc>;
-+			interrupt-controller;
-+		};
-+
- 		qupv3_id_1: geniqup@ac0000 {
- 			compatible = "qcom,geni-se-qup";
- 			reg = <0 0x00ac0000 0 0x6000>;
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
-
+I was about to make a similar comment.
