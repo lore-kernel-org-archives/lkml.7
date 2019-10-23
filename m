@@ -2,150 +2,303 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52945CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 20:07:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB9ECA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 20:08:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C6A120659
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 20:07:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="SlGscV6u"
+	by mail.kernel.org (Postfix) with ESMTP id D724921928
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 20:08:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405409AbfJWUHK (ORCPT
+        id S1733049AbfJWUI4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 16:07:10 -0400
-Received: from mail-eopbgr60056.outbound.protection.outlook.com ([40.107.6.56]:26385
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730450AbfJWUHJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 16:07:09 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HavgujDjrOJaUDO/kjV29ZFyxa48586+e+olwiBRD0KGfzR52XIMixIaBAx+YrmyLaHjkjM0bbp6tWEK1PXWmRtVCYbQfrlLcXlqleUj9q0vk10+8LOMUiZtsx8I2jX7QgZgBuNYtuN/iVfxU8CaT4HuRUOOXHLChfFiKb6bSXpQZM8EBjwAL5BOLfbUgSa3tAXiwOoNKP3JpeznSpaZXBBzu5Wbdzzc/1OOtalb8ZDoibvWM/Lu0wYxnruqeVtzCyCP9xkmsbudtAesrBgQjVuacVUmGTPWj2mut6EDST8Nk2N9Y6GSwFY9FnWQ+CgrbxvDMjq4m6wkkeBOUX7asg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=btlRay3yp9k/vMTHvGvVM5ycBW7OvOsN5xwkzn1H+v8=;
- b=G4Him6BKajnKsZ9kKZC6grfF7AT+jV8G6J1L708Fuu2NHzmeLVULJp49mah3n9rfNgF3TMc02CUXAlNuI+Wsf728Z2/tp1ZhMPfmZkVC/uZXaKbbDgA1uUmr91M61uZefRPXwQXLkxZAI13tb/9asiIHHbyfG5134qmvu0v4Kn37Wu+dC3ytLP/QP1eLsIfwZsQkEToYGznSyynFA6tSwqcTOd933YICG6QXipjtV5DClbh1FsFKPRFgPEYSN31Z5itLj8++2d33owM4jeFIq+nYmExD7rsrEsRnb1kZ5t03KG5yNS7/1o6a727hvulA5r3agCDzKrFPL+vWUm2LXg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=btlRay3yp9k/vMTHvGvVM5ycBW7OvOsN5xwkzn1H+v8=;
- b=SlGscV6umKHhArMOVP73SRAVDdMC9z+oS0OeerUe4vfOXyPgdR+FVQBKbbISxsSFjjRXBTFCmEfsX4OJQSYMbEi4kqtg3WVAAPFx2Mewa8ySfxuCYJ8EiDFZ8jsT+yARKFTGl2vSvJ5ATlBJiEpPkucNJpz4jyR4wHgk61YduOg=
-Received: from VE1PR04MB6687.eurprd04.prod.outlook.com (20.179.234.30) by
- VE1PR04MB6687.eurprd04.prod.outlook.com (20.179.234.30) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2387.20; Wed, 23 Oct 2019 20:07:05 +0000
-Received: from VE1PR04MB6687.eurprd04.prod.outlook.com
- ([fe80::c93:c279:545b:b6b6]) by VE1PR04MB6687.eurprd04.prod.outlook.com
- ([fe80::c93:c279:545b:b6b6%3]) with mapi id 15.20.2387.019; Wed, 23 Oct 2019
- 20:07:05 +0000
-From:   Leo Li <leoyang.li@nxp.com>
-To:     Ran Wang <ran.wang_1@nxp.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-CC:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Pavel Machek <pavel@ucw.cz>, Anson Huang <anson.huang@nxp.com>,
-        Biwen Li <biwen.li@nxp.com>, Len Brown <len.brown@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Subject: RE: [PATCH v9 1/3] PM: wakeup: Add routine to help fetch wakeup
- source object.
-Thread-Topic: [PATCH v9 1/3] PM: wakeup: Add routine to help fetch wakeup
- source object.
-Thread-Index: AQHViXs7pjvy0YmnJESZ+DezIHv14qdn72mAgAAM0YCAAKtBgA==
-Date:   Wed, 23 Oct 2019 20:07:05 +0000
-Message-ID: <VE1PR04MB6687A70243B9764F1356442C8F6B0@VE1PR04MB6687.eurprd04.prod.outlook.com>
-References: <20191023082423.12569-1-ran.wang_1@nxp.com>
- <CAJZ5v0jvQaREhg94f-COdYTt58gMP7YvqdEH0oYiS9Z56tg-XQ@mail.gmail.com>
- <DB8PR04MB68261D8B18D39DF170ECC7C8F16B0@DB8PR04MB6826.eurprd04.prod.outlook.com>
-In-Reply-To: <DB8PR04MB68261D8B18D39DF170ECC7C8F16B0@DB8PR04MB6826.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=leoyang.li@nxp.com; 
-x-originating-ip: [64.157.242.222]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 9e96d190-6828-418a-7fbe-08d757f493cf
-x-ms-traffictypediagnostic: VE1PR04MB6687:|VE1PR04MB6687:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VE1PR04MB6687EA5F673D647B8B2839D98F6B0@VE1PR04MB6687.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 019919A9E4
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(376002)(346002)(136003)(366004)(51914003)(199004)(13464003)(189003)(55016002)(476003)(186003)(71190400001)(71200400001)(256004)(14454004)(6436002)(446003)(26005)(7696005)(5660300002)(52536014)(478600001)(66946007)(14444005)(53546011)(11346002)(54906003)(76116006)(102836004)(25786009)(99286004)(66476007)(64756008)(8676002)(8936002)(81156014)(66556008)(66446008)(110136005)(81166006)(9686003)(305945005)(6246003)(86362001)(7736002)(229853002)(4326008)(316002)(33656002)(3846002)(6116002)(6506007)(76176011)(486006)(2906002)(7416002)(74316002)(66066001);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6687;H:VE1PR04MB6687.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: OO6dGbREqJKG2+d0hxBuOb4FGQa2VqQOCXMD1cYaEZxkpcDhYQlNdHsK0RvR7EGt7WAlXbOY3iqHOBY47Zohy2wTwA018vu3g0jhgwMse1zUsQ+26QhV04mp9x1EHrTSUyFK/fadosrqo90PbDAWcZRmM7wBzAvsMUqFRn9jHOL5X9cSDzSlMcROteYXwyOlWbpKMA47ggBog4axZgTfIxP2uwuCexRr6fRsrEbf0OiIRyczp8dCY35/BzBc5C7Fs70IP8HzKfkrcVKLBnm2PaQFgf5Ya7Lz2yMIde1uiPBQr2iz56eh8mCAZymri8y/6FIwZZOP+UJbn9uZ7bB1vYXSldfaTzT0Unj2HwMSg2LQ4qK0xD2aZJcjZ7P1TKchRig01jOTfL7gdhxYPuCbeu15YWOmj4rbaQBCsOz43oFMU0S4g8KbU0EmKSifHePa
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 23 Oct 2019 16:08:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46706 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726008AbfJWUI4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 16:08:56 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3B3520650;
+        Wed, 23 Oct 2019 20:08:53 +0000 (UTC)
+Date:   Wed, 23 Oct 2019 16:08:52 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH 3/3] x86/ftrace: Use text_poke()
+Message-ID: <20191023160852.0606bc68@gandalf.local.home>
+In-Reply-To: <20191023193442.35lhhrqnyn3bfwpq@ast-mbp.dhcp.thefacebook.com>
+References: <20191021231904.4b968dc1@oasis.local.home>
+        <20191022040532.fvpxcs74i4mn4rc6@ast-mbp.dhcp.thefacebook.com>
+        <20191022071956.07e21543@gandalf.local.home>
+        <20191022094455.6a0a1a27@gandalf.local.home>
+        <20191022175052.frjzlnjjfwwfov64@ast-mbp.dhcp.thefacebook.com>
+        <20191022141021.2c4496c2@gandalf.local.home>
+        <20191022204620.jp535nfvfubjngzd@ast-mbp.dhcp.thefacebook.com>
+        <20191022170430.6af3b360@gandalf.local.home>
+        <20191022215841.2qsmhd6vxi4mwade@ast-mbp.dhcp.thefacebook.com>
+        <20191023122307.756b4978@gandalf.local.home>
+        <20191023193442.35lhhrqnyn3bfwpq@ast-mbp.dhcp.thefacebook.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9e96d190-6828-418a-7fbe-08d757f493cf
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Oct 2019 20:07:05.8581
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: uTzE0P3KOt4dSHYh0h8rQSpS+5NMzbTXut0jK51yIPTM1gZAEvvgellZmsYOW/QSdVfREHtTQ799fqkHqB6YXA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6687
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUmFuIFdhbmcgPHJhbi53
-YW5nXzFAbnhwLmNvbT4NCj4gU2VudDogV2VkbmVzZGF5LCBPY3RvYmVyIDIzLCAyMDE5IDQ6NTMg
-QU0NCj4gVG86IFJhZmFlbCBKLiBXeXNvY2tpIDxyYWZhZWxAa2VybmVsLm9yZz4NCj4gQ2M6IFJh
-ZmFlbCBKIC4gV3lzb2NraSA8cmp3QHJqd3lzb2NraS5uZXQ+OyBSb2IgSGVycmluZw0KPiA8cm9i
-aCtkdEBrZXJuZWwub3JnPjsgTGVvIExpIDxsZW95YW5nLmxpQG54cC5jb20+OyBNYXJrIFJ1dGxh
-bmQNCj4gPG1hcmsucnV0bGFuZEBhcm0uY29tPjsgUGF2ZWwgTWFjaGVrIDxwYXZlbEB1Y3cuY3o+
-OyBBbnNvbiBIdWFuZw0KPiA8YW5zb24uaHVhbmdAbnhwLmNvbT47IEJpd2VuIExpIDxiaXdlbi5s
-aUBueHAuY29tPjsgTGVuIEJyb3duDQo+IDxsZW4uYnJvd25AaW50ZWwuY29tPjsgR3JlZyBLcm9h
-aC1IYXJ0bWFuDQo+IDxncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZz47IGxpbnV4cHBjLWRldiA8
-bGludXhwcGMtDQo+IGRldkBsaXN0cy5vemxhYnMub3JnPjsgTGludXggQVJNIDxsaW51eC1hcm0t
-a2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc+Ow0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9y
-ZzsgTGludXggS2VybmVsIE1haWxpbmcgTGlzdCA8bGludXgtDQo+IGtlcm5lbEB2Z2VyLmtlcm5l
-bC5vcmc+OyBMaW51eCBQTSA8bGludXgtcG1Admdlci5rZXJuZWwub3JnPg0KPiBTdWJqZWN0OiBS
-RTogW1BBVENIIHY5IDEvM10gUE06IHdha2V1cDogQWRkIHJvdXRpbmUgdG8gaGVscCBmZXRjaCB3
-YWtldXANCj4gc291cmNlIG9iamVjdC4NCj4gDQo+IEhpIFJhZmFlbCwNCj4gDQo+IE9uIFdlZG5l
-c2RheSwgT2N0b2JlciAyMywgMjAxOSAxNzowNywgUmFmYWVsIEouIFd5c29ja2kgd3JvdGU6DQo+
-ID4NCj4gPiBPbiBXZWQsIE9jdCAyMywgMjAxOSBhdCAxMDoyNCBBTSBSYW4gV2FuZyA8cmFuLndh
-bmdfMUBueHAuY29tPg0KPiB3cm90ZToNCj4gPiA+DQo+ID4gPiBTb21lIHVzZXIgbWlnaHQgd2Fu
-dCB0byBnbyB0aHJvdWdoIGFsbCByZWdpc3RlcmVkIHdha2V1cCBzb3VyY2VzIGFuZA0KPiA+ID4g
-ZG9pbmcgdGhpbmdzIGFjY29yZGluZ2x5LiBGb3IgZXhhbXBsZSwgU29DIFBNIGRyaXZlciBtaWdo
-dCBuZWVkIHRvDQo+ID4gPiBkbyBIVyBwcm9ncmFtbWluZyB0byBwcmV2ZW50IHBvd2VyaW5nIGRv
-d24gc3BlY2lmaWMgSVAgd2hpY2ggd2FrZXVwDQo+ID4gPiBzb3VyY2UgZGVwZW5kaW5nIG9uLiBT
-byBhZGQgdGhpcyBBUEkgdG8gaGVscCB3YWxrIHRocm91Z2ggYWxsDQo+ID4gPiByZWdpc3RlcmVk
-IHdha2V1cCBzb3VyY2Ugb2JqZWN0cyBvbiB0aGF0IGxpc3QgYW5kIHJldHVybiB0aGVtIG9uZSBi
-eQ0KPiBvbmUuDQo+ID4gPg0KPiA+ID4gU2lnbmVkLW9mZi1ieTogUmFuIFdhbmcgPHJhbi53YW5n
-XzFAbnhwLmNvbT4NCj4gPiA+IFRlc3RlZC1ieTogTGVvbmFyZCBDcmVzdGV6IDxsZW9uYXJkLmNy
-ZXN0ZXpAbnhwLmNvbT4NCj4gPg0KPiA+IE9LLCB0aGFua3MgZm9yIG1ha2luZyBhbGwgb2YgdGhl
-IHJlcXVlc3RlZCBjaGFuZ2VzOg0KPiANCj4gVGhhbmtzIGZvciB5b3VyIHBhdGllbnQgZGlyZWN0
-aW9uIDopDQo+IEFjdHVhbGx5IExlbyBhbmQgbWUgcGxhbmVkIHRvIGhhdmUgYSBmMmYgZGlzY3Vz
-c2lvbiB3aXRoIHlvdSBhYm91dCB0aGlzIHBhdGNoDQo+IG9uIExQQyAyMDE5IGJ1dCB1bmZvcnR1
-bmF0ZWx5IG1pc3NlZCB0aGUgb3Bwb3J0dW5pdHkgZmluYWxseSAodjYgcmV2aWV3IHdhcw0KPiBw
-ZW5kaW5nIGF0IHRpbWUpLg0KPiANCj4gPiBSZXZpZXdlZC1ieTogUmFmYWVsIEouIFd5c29ja2kg
-PHJhZmFlbC5qLnd5c29ja2lAaW50ZWwuY29tPg0KDQpUaGFua3MgZm9yIHRoZSByZXZpZXcuDQoN
-Cj4gPg0KPiA+IGFuZCBwbGVhc2UgZmVlbCBmcmVlIHRvIHB1c2ggdGhpcyB0aHJvdWdoIHRoZSBh
-cHByb3ByaWF0ZSBhcmNoL3BsYXRmb3JtDQo+IHRyZWUuDQo+IA0KPiBZZXMsIHdlIHdpbGwgZG8g
-dGhpcyBsYXRlci4NCj4gDQo+ID4gQWx0ZXJuYXRpdmVseSwgcGxlYXNlIGxldCBtZSBrbm93IGlm
-IHlvdSB3YW50IG1lIHRvIHRha2UgdGhpcyBzZXJpZXMsDQo+ID4gYnV0IHRoZW4gSSBuZWVkIGFu
-IEFDSyBmcm9tIHRoZSBhcHByb3ByaWF0ZQ0KPiA+IG1haW50YWluZXIocykgb24gcGF0Y2ggMy4N
-Cj4gDQo+IFRoYW5rcyBhZ2FpbiwgSSB3aWxsIHdhaXQgTGVvJ3MgY29tbWVudCBvbiBwYXRjaCAz
-Lg0KDQpJIHdpbGwgZG8gYW5vdGhlciByZXZpZXcgb24gcGF0Y2ggMyBhbmQgYXBwbHkgdGhlIHNl
-cmllcyB0aHJvdWdoIG15IHNvYy9mc2wgdHJlZS4NCg0KUmVnYXJkcywNCkxlbw0K
+On Wed, 23 Oct 2019 12:34:43 -0700
+Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
+
+> > Would this work for you?  
+> 
+> Yes!
+> Looks great. More comments below.
+
+Awesome!
+
+> 
+> > 
+> > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> > index 6adaf18b3365..de3372bd08ae 100644
+> > --- a/arch/x86/Kconfig
+> > +++ b/arch/x86/Kconfig
+> > @@ -159,6 +159,7 @@ config X86
+> >  	select HAVE_DYNAMIC_FTRACE
+> >  	select HAVE_DYNAMIC_FTRACE_WITH_REGS
+> >  	select HAVE_DYNAMIC_FTRACE_WITH_IPMODIFY
+> > +	select HAVE_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
+> >  	select HAVE_EBPF_JIT
+> >  	select HAVE_EFFICIENT_UNALIGNED_ACCESS
+> >  	select HAVE_EISA
+> > diff --git a/arch/x86/include/asm/ftrace.h b/arch/x86/include/asm/ftrace.h
+> > index c38a66661576..34da1e424391 100644
+> > --- a/arch/x86/include/asm/ftrace.h
+> > +++ b/arch/x86/include/asm/ftrace.h
+> > @@ -28,6 +28,12 @@ static inline unsigned long ftrace_call_adjust(unsigned long addr)
+> >  	return addr;
+> >  }
+> >  
+> > +static inline void ftrace_set_call_func(struct pt_regs *regs, unsigned long addr)
+> > +{
+> > +	/* Emulate a call */
+> > +	regs->orig_ax = addr;  
+> 
+> This probably needs a longer comment :)
+
+Yes, when I get this to a submission point, I plan on having *a lot*
+more comments all over the place.
+
+
+> 
+> > +	.if \make_call
+> > +	movq ORIG_RAX(%rsp), %rax
+> > +	movq %rax, MCOUNT_REG_SIZE-8(%rsp)  
+> 
+> reading asm helps.
+> 
+> > +config HAVE_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
+> > +	bool
+> > +
+> >  config HAVE_FTRACE_MCOUNT_RECORD
+> >  	bool
+> >  	help
+> > @@ -565,6 +568,11 @@ config DYNAMIC_FTRACE_WITH_IPMODIFY_ONLY
+> >  	depends on DYNAMIC_FTRACE
+> >  	depends on HAVE_DYNAMIC_FTRACE_WITH_IPMODIFY
+> >  
+> > +config DYNAMIC_FTRACE_WITH_DIRECT_CALLS
+> > +	def_bool y
+> > +	depends on DYNAMIC_FTRACE
+> > +	depends on HAVE_DYNAMIC_FTRACE_WITH_DIRECT_CALLS  
+> 
+> It seems to me that it's a bit of overkill to add new config knob
+> for every ftrace feature.
+> HAVE_DYNAMIC_FTRACE_WITH_DIRECT_CALLS (that arch defined) would
+> be enough to check and return error in register_ftrace_direct()
+> right?
+
+IIRC, we started doing this because it allows the dependencies to be
+defined in the kernel/trace directory. That is, if
+CONFIG_DYNAMIC_FATRCE_WITH_DIRECT_CALLS is set, then we know that
+direct calls *and* DYNAMIC_FTRACE is enabled. It cuts down on some of
+the more complex #if or the arch needing to do
+
+ select HAVE_DYNAMIC_FTRACE_WITH_DIRECT_CALLS if DYNAMIC_FTRACE
+
+It may be overkill, but it does keep the pain in one place.
+
+> 
+> > -static struct ftrace_hash *
+> > -__ftrace_hash_move(struct ftrace_hash *src)
+> > +static void transfer_hash(struct ftrace_hash *dst, struct ftrace_hash *src)
+> >  {
+> >  	struct ftrace_func_entry *entry;
+> > -	struct hlist_node *tn;
+> >  	struct hlist_head *hhd;
+> > +	struct hlist_node *tn;
+> > +	int size;
+> > +	int i;
+> > +
+> > +	dst->flags = src->flags;
+> > +
+> > +	size = 1 << src->size_bits;
+> > +	for (i = 0; i < size; i++) {
+> > +		hhd = &src->buckets[i];
+> > +		hlist_for_each_entry_safe(entry, tn, hhd, hlist) {
+> > +			remove_hash_entry(src, entry);
+> > +			__add_hash_entry(dst, entry);  
+> 
+> I don't quite follow why this is needed.
+> I thought alloc_and_copy_ftrace_hash() can already handle it.
+> If that is just unrelated cleanup then sure. Looks good.
+
+The alloc and copy is made to always create a new hash (because of the
+way we do enabling of new filters in the set_ftrace_filter).
+
+I pulled this part out so that the direct_functions hash only needs to
+grow and allocate, when needed. Not to reallocate at every update.
+
+> 
+> > +struct ftrace_ops direct_ops = {
+> > +	.func		= call_direct_funcs,
+> > +	.flags		= FTRACE_OPS_FL_IPMODIFY | FTRACE_OPS_FL_RECURSION_SAFE
+> > +#if 1
+> > +					| FTRACE_OPS_FL_DIRECT
+> > +#endif
+> > +#ifndef CONFIG_DYNAMIC_FTRACE_WITH_IPMODIFY_ONLY
+> > +					| FTRACE_OPS_FL_SAVE_REGS
+> > +#endif  
+> 
+> With FL_DIRECT the CONFIG_DYNAMIC_FTRACE_WITH_IPMODIFY_ONLY won't be needed, right ?
+> At least not for bpf use case.
+> Do you see livepatching using it or switching to FL_DIRECT too?
+
+Correct. I talked with Josh on IRC and we are looking into removing the
+pushf/popf from the ftrace_regs_caller to see if that helps in the
+performance for live patching. I'm also currently working on making
+this patch not on top of the IP modify one, so the IP modify doesn't
+need to be applied.
+
+This also cleans up the asm code a bit more (getting rid of the macro).
+
+
+> 
+> > +	ret = -ENOMEM;
+> > +	if (ftrace_hash_empty(direct_functions) ||
+> > +	    direct_functions->count > 2 * (1 << direct_functions->size_bits)) {
+> > +		struct ftrace_hash *new_hash;
+> > +		int size = ftrace_hash_empty(direct_functions) ? 0 :
+> > +			direct_functions->count + 1;
+> > +		int bits;
+> > +
+> > +		if (size < 32)
+> > +			size = 32;
+> > +
+> > +		for (size /= 2; size; size >>= 1)
+> > +			bits++;
+> > +
+> > +		/* Don't allocate too much */
+> > +		if (bits > FTRACE_HASH_MAX_BITS)
+> > +			bits = FTRACE_HASH_MAX_BITS;
+> > +
+> > +		new_hash = alloc_ftrace_hash(bits);
+> > +		if (!new_hash)
+> > +			goto out_unlock;
+> > +
+> > +		transfer_hash(new_hash, direct_functions);
+> > +		free_ftrace_hash(direct_functions);
+> > +		direct_functions = new_hash;  
+> 
+> That's probably racy, no?
+> ftrace_get_addr_new() is not holding direct_mutex that
+> protects direct_functions.
+
+Yes, there's actually a few places that I noticed needed some more care
+with locking. And I also found some that are missing now (without these
+changes).
+
+I did say this patch is buggy ;-)
+
+
+> 
+> > +	if (!ret && !(direct_ops.flags & FTRACE_OPS_FL_ENABLED))
+> > +		ret = register_ftrace_function(&direct_ops);  
+> 
+> Having single direct_ops is nice.
+> 
+> > @@ -2370,6 +2542,10 @@ unsigned long ftrace_get_addr_new(struct dyn_ftrace *rec)
+> >  {
+> >  	struct ftrace_ops *ops;
+> >  
+> > +	if ((rec->flags & FTRACE_FL_DIRECT) &&
+> > +	    (ftrace_rec_count(rec) == 1))
+> > +		return find_rec_direct(rec->ip);
+> > +  
+> 
+> I've started playing with this function as well to
+> implement 2nd nop approach I mentioned earlier.
+> I'm going to abandon it, since your approach is better.
+> It allows not only bpf, but anyone else to register direct.
+> 
+> I have one more question/request.
+> Looks like ftrace can be turned off with sysctl.
+> Which means that a person or a script can accidently turn it off
+> and all existing kprobe+bpf stuff that is ftrace based will
+> be silently switched off.
+
+See http://lkml.kernel.org/r/20191016113316.13415-1-mbenes@suse.cz
+
+I can (and should) add the PERMANENT flag to the direct_ops.
+
+Note, the PERMANENT patches will be added before this one.
+
+> User services will be impacted and will make people unhappy.
+> I'm not sure how to solve the existing situation,
+> but for FL_DIRECT can you add a check that if particular
+> nop is modified to do direct call then the only interface to
+> turn it off is to call unregister_ftrace_direct().
+> There should no side channel to kill it.
+> ftrace_disable and ftrace_kill make me nervous too.
+
+The ftrace_disable and ftrace_kill is when a bug happens that is so bad
+that the ftrace can probably kill the system. It's time for a reboot.
+
+
+> Fast forward a year and imagine few host critical bpf progs
+> are running in production and relying on FL_DIRECT.
+> Now somebody decided to test new ftrace feature and
+> it hit one of FTRACE_WARN_ON().
+> That will shutdown the whole ftrace and bpf progs
+> will stop executing. I'd like to avoid that.
+> May be I misread the code?
+
+It basically freezes it. Current registered ftrace_ops will not be
+touched. But nothing can be removed or added.
+
+It's basically saying, "Something totally wrong has happened, and if I
+touch the code here, I may panic the box. So don't do anything more!"
+
+And yes, without adding some of theses, I have in fact paniced the box.
+
+This is something that Ingo drilled hard into me, as modifying text is
+such a dangerous operation, that there should be constant checks that
+things are happening the way they expect them to be, and if anomaly
+happens, stop touching everything.
+
+OK, I'll work to get this patch in for the next merge window.
+
+Thanks for the review.
+
+-- Steve
