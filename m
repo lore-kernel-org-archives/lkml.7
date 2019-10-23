@@ -2,174 +2,230 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B196ECA9EAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 06:39:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D5BCA9EAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 06:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87E6E214B2
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 06:39:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 366FA214B2
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 06:40:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hVvgTKdc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ah8A6oKb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389055AbfJWGji (ORCPT
+        id S2389203AbfJWGkB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 02:39:38 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:29835 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730402AbfJWGjh (ORCPT
+        Wed, 23 Oct 2019 02:40:01 -0400
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:38345 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387946AbfJWGkA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 02:39:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571812776;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=JPoAZ12wvzk0gM/LMQmdcsjRqyc3hj/9X0DxYyB3fTs=;
-        b=hVvgTKdc/bNeH9Wd6Ff8dmsch9XkS8ftV+OW2xaNYTq+d09Og0l3N50DSCJVWDrmDOfwrG
-        ZDu+gOyOaaUT/QkX4Ek0TL3OcwcevVsaegTwgK8nvzuwiJi8LbilbMrkxUO/Cg5ATJjpnw
-        YmfytHTxO9F5TQ30W1xO33jHs4CQA2g=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-98-pxA18oaXO4G0FL33orpGpw-1; Wed, 23 Oct 2019 02:39:33 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5A9AE801E52;
-        Wed, 23 Oct 2019 06:39:31 +0000 (UTC)
-Received: from [10.72.12.161] (ovpn-12-161.pek2.redhat.com [10.72.12.161])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6BB4A19C70;
-        Wed, 23 Oct 2019 06:39:16 +0000 (UTC)
-Subject: Re: [RFC 2/2] vhost: IFC VF vdpa layer
-To:     "Zhu, Lingshan" <lingshan.zhu@intel.com>,
-        Zhu Lingshan <lingshan.zhu@linux.intel.com>, mst@redhat.com,
-        alex.williamson@redhat.com
-Cc:     linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        netdev@vger.kernel.org, dan.daly@intel.com,
-        cunming.liang@intel.com, tiwei.bie@intel.com, jason.zeng@intel.com,
-        zhiyuan.lv@intel.com
-References: <20191016013050.3918-1-lingshan.zhu@intel.com>
- <20191016013050.3918-3-lingshan.zhu@intel.com>
- <9495331d-3c65-6f49-dcd9-bfdb17054cf0@redhat.com>
- <f65358e9-6728-8260-74f7-176d7511e989@intel.com>
- <1cae60b6-938d-e2df-2dca-fbf545f06853@redhat.com>
- <ddf412c6-69e2-b3ca-d0c8-75de1db78ed9@linux.intel.com>
- <b2adaab0-bbc3-b7f0-77da-e1e3cab93b76@redhat.com>
- <6588d9f4-f357-ec78-16a4-ccaf0e3768e7@intel.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <02d44f0a-687f-ed87-518b-7a4d3e83c5d3@redhat.com>
-Date:   Wed, 23 Oct 2019 14:39:15 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 23 Oct 2019 02:40:00 -0400
+Received: by mail-yb1-f194.google.com with SMTP id r68so5981516ybf.5;
+        Tue, 22 Oct 2019 23:39:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GsRmmy8kO0r1yWjAMGmPFWzuU6qtFEhb9ZOIoYR8bqI=;
+        b=ah8A6oKbZMJU0gw9xfPeocFp3eXf7lI+zU+AJDWNiCwdRCULkp+9BDeAmtpZYH3lMY
+         EKE9L5k6t6fwLilnlvkd+MO5RLsmpKF7PMuBAjDyb5oLnRN2GZ8UgoO3xJctNpkm6U2H
+         uYanhg0bHOeACWodS7wXKQ6V/zpZguzlXQ367/Kstm7cNK7dEAPl2WkSnlrCOF9sVSXC
+         4CoJBE2dpLqBd0fMfC/jE8p4Q5msr5EeWQYRIDKdh8SpQLBwjWwT7ux/X25PZF2ap2Mw
+         9idSJxJEMvYp7Ukc+tRm4FzD092+uxZOm9Yf4IDIizo8S3hMHRzmpLBcqWSJuFyJQwK6
+         Mcuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GsRmmy8kO0r1yWjAMGmPFWzuU6qtFEhb9ZOIoYR8bqI=;
+        b=eCPGJhpdCX2jW7K4QUMlH6m1TUlE+hEHAWxPfKd5bD1YWYtWbucCS3ql7EDBI+M3U4
+         KJQtU+MCYXf9Chs9EeLNvE7OKLPmhnfvaJrmb9nKh8jSo4sBfpeboQElIstbcHcQmHNd
+         lkE5VadpJyA3jX7wQmniim0iZ34QEOR/6ZOIJmp3jdPht3twrwn4GHaZ7hC6aawuBLXk
+         2gbQzxB1t1lddk4moSTs3ETHHPuLQsoGJO5Asgz0N+hcfYr9h1YTp1QexPq0+Ksp38jd
+         xv3cyX9yp/lUA4piA0Ns0ciCPt/+tac9Hkfind1fZrWzZG5ke74JlHfapzxdK8lNvlnq
+         o96g==
+X-Gm-Message-State: APjAAAVWdwEX4TihwMaDonsa/y/KenFGP6gdTq8tcc4ORIlj66A75sqm
+        CkP3oP0FOJMEZk2xZEmQU5ByZjkamSr3hH1E5PQ=
+X-Google-Smtp-Source: APXvYqyEfIXS1YE02Mcv67dN7iXghA3NKnUKoWWnlXbuVJEjLidLeAzeaD6xfSscivEuXqFzslSUfPde/2zcn8Ccszs=
+X-Received: by 2002:a25:8308:: with SMTP id s8mr4983149ybk.126.1571812797949;
+ Tue, 22 Oct 2019 23:39:57 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <6588d9f4-f357-ec78-16a4-ccaf0e3768e7@intel.com>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-MC-Unique: pxA18oaXO4G0FL33orpGpw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+References: <20191022204453.97058-1-salyzyn@android.com> <20191022204453.97058-5-salyzyn@android.com>
+In-Reply-To: <20191022204453.97058-5-salyzyn@android.com>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Wed, 23 Oct 2019 09:39:47 +0300
+Message-ID: <CAOQ4uxgWOmV_x5gRZ9tR+u86GE6JoXn-MSxKkvi87e9owMApZw@mail.gmail.com>
+Subject: Re: [PATCH v14 4/5] overlayfs: internal getxattr operations without
+ sepolicy checking
+To:     Mark Salyzyn <salyzyn@android.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        kernel-team@android.com, Miklos Szeredi <miklos@szeredi.hu>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        overlayfs <linux-unionfs@vger.kernel.org>,
+        linux-doc@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 2019/10/23 =E4=B8=8B=E5=8D=882:19, Zhu, Lingshan wrote:
+On Tue, Oct 22, 2019 at 11:46 PM Mark Salyzyn <salyzyn@android.com> wrote:
 >
-> On 10/22/2019 9:05 PM, Jason Wang wrote:
->>
->> On 2019/10/22 =E4=B8=8B=E5=8D=882:53, Zhu Lingshan wrote:
->>>
->>> On 10/21/2019 6:19 PM, Jason Wang wrote:
->>>>
->>>> On 2019/10/21 =E4=B8=8B=E5=8D=885:53, Zhu, Lingshan wrote:
->>>>>
->>>>> On 10/16/2019 6:19 PM, Jason Wang wrote:
->>>>>>
->>>>>> On 2019/10/16 =E4=B8=8A=E5=8D=889:30, Zhu Lingshan wrote:
->>>>>>> This commit introduced IFC VF operations for vdpa, which complys to
->>>>>>> vhost_mdev interfaces, handles IFC VF initialization,
->>>>>>> configuration and removal.
->>>>>>>
->>>>>>> Signed-off-by: Zhu Lingshan <lingshan.zhu@intel.com>
->>>>>>> ---
->>
->>
->> [...]
->>
->>
->>>>
->>>>
->>>>>
->>>>>>
->>>>>>
->>>>>>> +}
->>>>>>> +
->>>>>>> +static int ifcvf_mdev_set_features(struct mdev_device *mdev,=20
->>>>>>> u64 features)
->>>>>>> +{
->>>>>>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_adapter *adapter =3D mdev_get_drvd=
-ata(mdev);
->>>>>>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_hw *vf =3D IFC_PRIVATE_TO_VF(adapt=
-er);
->>>>>>> +
->>>>>>> +=C2=A0=C2=A0=C2=A0 vf->req_features =3D features;
->>>>>>> +
->>>>>>> +=C2=A0=C2=A0=C2=A0 return 0;
->>>>>>> +}
->>>>>>> +
->>>>>>> +static u64 ifcvf_mdev_get_vq_state(struct mdev_device *mdev,=20
->>>>>>> u16 qid)
->>>>>>> +{
->>>>>>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_adapter *adapter =3D mdev_get_drvd=
-ata(mdev);
->>>>>>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_hw *vf =3D IFC_PRIVATE_TO_VF(adapt=
-er);
->>>>>>> +
->>>>>>> +=C2=A0=C2=A0=C2=A0 return vf->vring[qid].last_avail_idx;
->>>>>>
->>>>>>
->>>>>> Does this really work? I'd expect it should be fetched from hw=20
->>>>>> since it's an internal state.
->>>>> for now, it's working, we intend to support LM in next version=20
->>>>> drivers.
->>>>
->>>>
->>>> I'm not sure I understand here, I don't see any synchronization=20
->>>> between the hardware and last_avail_idx, so last_avail_idx should=20
->>>> not change.
->>>>
->>>> Btw, what did "LM" mean :) ?
->>>
->>> I can add bar IO operations here, LM =3D live migration, sorry for the=
-=20
->>> abbreviation.
->>
->>
->> Just make sure I understand here, I believe you mean reading=20
->> last_avail_idx through IO bar here?
->>
->> Thanks
+> Check impure, opaque, origin & meta xattr with no sepolicy audit
+> (using __vfs_getxattr) since these operations are internal to
+> overlayfs operations and do not disclose any data.  This became
+> an issue for credential override off since sys_admin would have
+> been required by the caller; whereas would have been inherently
+> present for the creator since it performed the mount.
 >
-> Hi Jason,
+> This is a change in operations since we do not check in the new
+> ovl_do_vfs_getxattr function if the credential override is off or
+> not.  Reasoning is that the sepolicy check is unnecessary overhead,
+> especially since the check can be expensive.
 >
-> Yes, I mean last_avail_idx. is that correct?
+> Because for override credentials off, this affects _everyone_ that
+> underneath performs private xattr calls without the appropriate
+> sepolicy permissions and sys_admin capability.  Providing blanket
+> support for sys_admin would be bad for all possible callers.
 >
-> THanks
-
-
-Yes.
-
-Thanks
-
-
+> For the override credentials on, this will affect only the mounter,
+> should it lack sepolicy permissions. Not considered a security
+> problem since mounting by definition has sys_admin capabilities,
+> but sepolicy contexts would still need to be crafted.
 >
->>
->>
 
+It sounds reasonable to me, but I am not a "security person".
+
+> It should be noted that there is precedence, __vfs_getxattr is used
+> in other filesystems for their own internal trusted xattr management.
+>
+
+Urgh! "other" filesystems meaning ecryptfs_getxattr()?
+That looks like a loop hole to read any trusted xattr without any
+security checks. Not sure its a good example...
+
+> Signed-off-by: Mark Salyzyn <salyzyn@android.com>
+> Cc: Miklos Szeredi <miklos@szeredi.hu>
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: Vivek Goyal <vgoyal@redhat.com>
+> Cc: Eric W. Biederman <ebiederm@xmission.com>
+> Cc: Amir Goldstein <amir73il@gmail.com>
+> Cc: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Stephen Smalley <sds@tycho.nsa.gov>
+> Cc: linux-unionfs@vger.kernel.org
+> Cc: linux-doc@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: kernel-team@android.com
+> Cc: linux-security-module@vger.kernel.org
+>
+> ---
+> v14 - rebase to use xattr_gs_args.
+>
+> v13 - rebase to use __vfs_getxattr flags option
+>
+> v12 - rebase
+>
+> v11 - switch name to ovl_do_vfs_getxattr, fortify comment
+>
+> v10 - added to patch series
+>
+> ---
+>  fs/overlayfs/namei.c     | 12 +++++++-----
+>  fs/overlayfs/overlayfs.h |  2 ++
+>  fs/overlayfs/util.c      | 32 +++++++++++++++++++++++---------
+>  3 files changed, 32 insertions(+), 14 deletions(-)
+>
+> diff --git a/fs/overlayfs/namei.c b/fs/overlayfs/namei.c
+> index 9702f0d5309d..a4a452c489fa 100644
+> --- a/fs/overlayfs/namei.c
+> +++ b/fs/overlayfs/namei.c
+> @@ -106,10 +106,11 @@ int ovl_check_fh_len(struct ovl_fh *fh, int fh_len)
+>
+>  static struct ovl_fh *ovl_get_fh(struct dentry *dentry, const char *name)
+>  {
+> -       int res, err;
+> +       ssize_t res;
+> +       int err;
+>         struct ovl_fh *fh = NULL;
+>
+> -       res = vfs_getxattr(dentry, name, NULL, 0);
+> +       res = ovl_do_vfs_getxattr(dentry, name, NULL, 0);
+>         if (res < 0) {
+>                 if (res == -ENODATA || res == -EOPNOTSUPP)
+>                         return NULL;
+> @@ -123,7 +124,7 @@ static struct ovl_fh *ovl_get_fh(struct dentry *dentry, const char *name)
+>         if (!fh)
+>                 return ERR_PTR(-ENOMEM);
+>
+> -       res = vfs_getxattr(dentry, name, fh, res);
+> +       res = ovl_do_vfs_getxattr(dentry, name, fh, res);
+>         if (res < 0)
+>                 goto fail;
+>
+> @@ -141,10 +142,11 @@ static struct ovl_fh *ovl_get_fh(struct dentry *dentry, const char *name)
+>         return NULL;
+>
+>  fail:
+> -       pr_warn_ratelimited("overlayfs: failed to get origin (%i)\n", res);
+> +       pr_warn_ratelimited("overlayfs: failed to get origin (%zi)\n", res);
+>         goto out;
+>  invalid:
+> -       pr_warn_ratelimited("overlayfs: invalid origin (%*phN)\n", res, fh);
+> +       pr_warn_ratelimited("overlayfs: invalid origin (%*phN)\n",
+> +                           (int)res, fh);
+>         goto out;
+>  }
+>
+> diff --git a/fs/overlayfs/overlayfs.h b/fs/overlayfs/overlayfs.h
+> index c6a8ec049099..72762642b247 100644
+> --- a/fs/overlayfs/overlayfs.h
+> +++ b/fs/overlayfs/overlayfs.h
+> @@ -205,6 +205,8 @@ int ovl_want_write(struct dentry *dentry);
+>  void ovl_drop_write(struct dentry *dentry);
+>  struct dentry *ovl_workdir(struct dentry *dentry);
+>  const struct cred *ovl_override_creds(struct super_block *sb);
+> +ssize_t ovl_do_vfs_getxattr(struct dentry *dentry, const char *name, void *buf,
+> +                           size_t size);
+>  struct super_block *ovl_same_sb(struct super_block *sb);
+>  int ovl_can_decode_fh(struct super_block *sb);
+>  struct dentry *ovl_indexdir(struct super_block *sb);
+> diff --git a/fs/overlayfs/util.c b/fs/overlayfs/util.c
+> index f5678a3f8350..bed12aed902c 100644
+> --- a/fs/overlayfs/util.c
+> +++ b/fs/overlayfs/util.c
+> @@ -40,6 +40,20 @@ const struct cred *ovl_override_creds(struct super_block *sb)
+>         return override_creds(ofs->creator_cred);
+>  }
+>
+> +ssize_t ovl_do_vfs_getxattr(struct dentry *dentry, const char *name, void *buf,
+> +                           size_t size)
+> +{
+> +       struct xattr_gs_args args = {};
+> +
+> +       args.dentry = dentry;
+> +       args.inode = d_inode(dentry);
+> +       args.name = name;
+> +       args.buffer = buf;
+> +       args.size = size;
+> +       args.flags = XATTR_NOSECURITY;
+> +       return __vfs_getxattr(&args);
+> +}
+> +
+
+We do not understand each other.
+I commented on this several times.
+please put the wrapper helper ovl_do_getxattr() in overlayfs.h
+next to the other ovl_do_ wrapper helpers and add pr_debug()
+as all other wrappers have.
+
+Thanks,
+Amir.
