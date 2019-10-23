@@ -2,113 +2,144 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F2ECA9EB7
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 16:59:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CFBBCA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:00:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E80721906
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 16:59:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571849971;
-	bh=XrIyTUIIcwGweoXzbiGvqpSOVSltHgzWrBHeN+yMKhA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PrEIqprIc63zwZB8bTla3ctkThLW+ajdgIUEOkYV54svX4Aos1P9NdPcnp9UzJB19
-	 XxhrdVr/DKcL/O/Dbs7MLalVob0lbe699Fq+3C8N5mQHr/qmlzBl0oHWF4t2fqvPMv
-	 +hMTONoSY5rm6HS6o342zDk0e+7kljx0PgcJRuwM=
+	by mail.kernel.org (Postfix) with ESMTP id 742C121925
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:00:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A6f167nn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726832AbfJWQ7a (ORCPT
+        id S1726875AbfJWRAk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 12:59:30 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:60776 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726316AbfJWQ73 (ORCPT
+        Wed, 23 Oct 2019 13:00:40 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:37618 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726316AbfJWRAj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 12:59:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=XrIyTUIIcwGweoXzbiGvqpSOVSltHgzWrBHeN+yMKhA=; b=luoGGER/eGCXKNWHKBECwxZ9x
-        sLCfmNfX4bnSYny15P6DcWr3vzki1ED12Zzs26AainIOjMYSGefPYltHf2uBBfJJzVcOV+gTYjaVQ
-        4ybUzVgt6iWL9sNjMtyTB93lLR3o6t9ffzuOhla/Yu9gsa8LwoPh2pfc7v6I/psgmtLN8=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1iNJym-0000zH-4P; Wed, 23 Oct 2019 16:59:24 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 50EF62743021; Wed, 23 Oct 2019 17:59:23 +0100 (BST)
-Date:   Wed, 23 Oct 2019 17:59:23 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] cpufreq: s3c64xx: Remove pointless NULL check in
- s3c64xx_cpufreq_driver_init
-Message-ID: <20191023165923.GL5723@sirena.co.uk>
-References: <20191023000906.14374-1-natechancellor@gmail.com>
- <20191023032302.tu5nkvulo2yoctgr@vireshk-i7>
- <20191023104304.GA5723@sirena.co.uk>
- <20191023162628.GA10997@ubuntu-m2-xlarge-x86>
- <20191023163656.GH5723@sirena.co.uk>
- <20191023165417.GA15082@ubuntu-m2-xlarge-x86>
+        Wed, 23 Oct 2019 13:00:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571850038;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=mS56Ocf2Wr6s6lxq3UrbaaoGODBCpGlIzwdbwNzrmFM=;
+        b=A6f167nnaJ6DttIs4zWbA1olBTys1ifRwlWe0+2BHJqeiNrrz5hF6NX0n/fJzBPJ4cpbrh
+        dj6MiydnVp654E3/SS5/MkswuL+TgKl4xzPvc139mDR1g2Urpaor/uj3LsmDwuNycVccHF
+        Y8DCdzBiHYtWRH1pA4Eb+ePY5/E41M0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-182-adgGpz8OP6mPpsyr71ygaA-1; Wed, 23 Oct 2019 13:00:34 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 70B2C1800D6B;
+        Wed, 23 Oct 2019 17:00:32 +0000 (UTC)
+Received: from treble (ovpn-121-225.rdu2.redhat.com [10.10.121.225])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A93D16061E;
+        Wed, 23 Oct 2019 17:00:27 +0000 (UTC)
+Date:   Wed, 23 Oct 2019 12:00:25 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+        mhiramat@kernel.org, bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, jeyu@kernel.org,
+        live-patching@vger.kernel.org
+Subject: Re: [PATCH v4 15/16] module: Move where we mark modules RO,X
+Message-ID: <20191023170025.f34g3vxaqr4f5gqh@treble>
+References: <20191018073525.768931536@infradead.org>
+ <20191018074634.801435443@infradead.org>
+ <20191021135312.jbbxsuipxldocdjk@treble>
+ <20191021141402.GI1817@hirez.programming.kicks-ass.net>
+ <20191023114835.GT1817@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="AQNmCumFClRcGgHG"
+In-Reply-To: <20191023114835.GT1817@hirez.programming.kicks-ass.net>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MC-Unique: adgGpz8OP6mPpsyr71ygaA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-In-Reply-To: <20191023165417.GA15082@ubuntu-m2-xlarge-x86>
-X-Cookie: MMM-MM!!  So THIS is BIO-NEBULATION!
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Oct 23, 2019 at 01:48:35PM +0200, Peter Zijlstra wrote:
+> Now sadly that commit missed all the useful information, luckily I could
+> find the patch in my LKML folder, more sad, that thread still didn't
+> contain the actual useful information, for that I was directed to
+> github:
+>=20
+>   https://github.com/dynup/kpatch/issues/580
+>=20
+> Now, someone is owning me a beer for having to look at github for this.
 
---AQNmCumFClRcGgHG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Deal.  And you probably deserve a few more for fixing our crap.
 
-On Wed, Oct 23, 2019 at 09:54:17AM -0700, Nathan Chancellor wrote:
-> On Wed, Oct 23, 2019 at 05:36:56PM +0100, Mark Brown wrote:
-> > On Wed, Oct 23, 2019 at 09:26:28AM -0700, Nathan Chancellor wrote:
-> > > On Wed, Oct 23, 2019 at 11:43:04AM +0100, Mark Brown wrote:
+The github thing is supposed to be temporary, at least in theory we'll
+eventually have all klp patch module building code in the kernel tree.
 
-> > > > The driver should also have supported s3c6400 as well.
+> That finally explained that what happens is that the RELA was trying to
+> fix up the paravirt indirect call to 'local_irq_disable', which
+> apply_paravirt() will have overwritten with 'CLI; NOP'. This then
+> obviously goes *bang*.
+>=20
+> This then raises a number of questions:
+>=20
+>  1) why is that RELA (that obviously does not depend on any module)
+>     applied so late?
 
-> > > Kconfig says otherwise, unless I am missing something.
+Good question.  The 'pv_ops' symbol is exported by the core kernel, so I
+can't see any reason why we'd need to apply that rela late.  In theory,
+kpatch-build isn't supposed to convert that to a klp rela.  Maybe
+something went wrong in the patch creation code.
 
-> > Note the XX in the config option.
+I'm also questioning why we even need to apply the parainstructions
+section late.  Maybe we can remove that apply_paravirt() call
+altogether, along with .klp.arch.parainstruction sections.
 
-> But what about the depends and the help text?
+I'll need to look into it...
 
-Viresh asked why the driver was written with s3c6410 support optional.
-I explained that the reason that it was written this way was to
-accomodate s3c6400 support.
+>  2) why can't we unconditionally skip RELA's to paravirt sites?
 
---AQNmCumFClRcGgHG
-Content-Type: application/pgp-signature; name="signature.asc"
+We could, but I don't think it's needed if we fix #1.
 
------BEGIN PGP SIGNATURE-----
+>  3) Is there ever a possible module-dependent RELA to a paravirt /
+>     alternative site?
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2whuoACgkQJNaLcl1U
-h9D5XQf8DtCAVE+KWRLKQff+e0eoyrmuOH64fFlBCM0iJFytXmKaO6yq/o7FQjcx
-9CLRRHMdyzXLnTiVGkmkhsVGuAOJPCM+tTjYr/fHoq83Y3cKVSpWnOre95Z52OBa
-qkawCaJ6i1XrXY0hznOXDb48gQuKG7kecSLaKxGvskoYpI6csEoqeTU/jUKTSMqr
-GGa5Kdcp4LNd77ZbOWg4TRzUVj9BdcU59SFkOSPB+eA9O/Lers0oGENcu59MrxXF
-wgJnuQnwnJIv7liRZDk0/z6lSLWqIq32C/nm+AKUrQrD3obXhzvyZnigHpn/hwfV
-tEmawktj1/+nJxfhTt1gh0vRlbhiyw==
-=wsTD
------END PGP SIGNATURE-----
+Good question...
 
---AQNmCumFClRcGgHG--
+> Now, for 1), I would propose '.klp.rela.${mod}' sections only contain
+> RELAs that depend on symbols in ${mod} (or modules in general).
+
+That was already the goal, but we've apparently failed at that.
+
+> We can fix up RELAs that depend on core kernel early without problems.
+> Let them be in the normal .rela sections and be fixed up on loading
+> the patch-module as per usual.
+
+If such symbols aren't exported, then they still need to be in
+.klp.rela.vmlinux sections, since normal relas won't work.
+
+> This should also deal with 2, paravirt should always have RELAs into the
+> core kernel.
+>=20
+> Then for 3) we only have alternatives left, and I _think_ it unlikely to
+> be the case, but I'll have to have a hard look at that.
+
+I'm not sure about alternatives, but maybe we can enforce such
+limitations with tooling and/or kernel checks.
+
+--=20
+Josh
+
