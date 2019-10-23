@@ -6,84 +6,74 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD55DCA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 07:39:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 877B8CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 07:39:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B359B2064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 07:39:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A3D82064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 07:39:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389962AbfJWHjO (ORCPT
+        id S2389969AbfJWHjo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 03:39:14 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:39748 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389224AbfJWHjO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 03:39:14 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 0EE469FA3A46F5293FE7;
-        Wed, 23 Oct 2019 15:39:04 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Wed, 23 Oct 2019
- 15:38:55 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <kvalo@codeaurora.org>, <davem@davemloft.net>,
-        <yuehaibing@huawei.com>, <kstewart@linuxfoundation.org>,
-        <allison@lohutok.net>, <info@metux.net>, <tglx@linutronix.de>
-CC:     <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] adm80211: remove set but not used variables 'mem_addr' and 'io_addr'
-Date:   Wed, 23 Oct 2019 15:38:42 +0800
-Message-ID: <20191023073842.34512-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+        Wed, 23 Oct 2019 03:39:44 -0400
+Received: from mxhk.zte.com.cn ([63.217.80.70]:15540 "EHLO mxhk.zte.com.cn"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389224AbfJWHjo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 03:39:44 -0400
+Received: from mse-fl2.zte.com.cn (unknown [10.30.14.239])
+        by Forcepoint Email with ESMTPS id 2F62BE0EA367EDBE8AE2;
+        Wed, 23 Oct 2019 15:39:41 +0800 (CST)
+Received: from notes_smtp.zte.com.cn (notessmtp.zte.com.cn [10.30.1.239])
+        by mse-fl2.zte.com.cn with ESMTP id x9N7cN6U084613;
+        Wed, 23 Oct 2019 15:38:23 +0800 (GMT-8)
+        (envelope-from wang.yi59@zte.com.cn)
+Received: from fox-host8.localdomain ([10.74.120.8])
+          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
+          with ESMTP id 2019102315384248-90494 ;
+          Wed, 23 Oct 2019 15:38:42 +0800 
+From:   Yi Wang <wang.yi59@zte.com.cn>
+To:     tglx@linutronix.de
+Cc:     mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        ebiederm@xmission.com, gregkh@linuxfoundation.org,
+        gustavo@embeddedor.com, me@sam.st, linux-kernel@vger.kernel.org,
+        xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn, up2wing@gmail.com,
+        wang.liang82@zte.com.cn
+Subject: [PATCH] uprobes/x86: fix arch_uprobe_analyze_insn() comment
+Date:   Wed, 23 Oct 2019 15:40:42 +0800
+Message-Id: <1571816442-22494-1-git-send-email-wang.yi59@zte.com.cn>
+X-Mailer: git-send-email 1.8.3.1
+X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
+ 21, 2013) at 2019-10-23 15:38:42,
+        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
+ 2019-10-23 15:38:26,
+        Serialize complete at 2019-10-23 15:38:26
+X-MAIL: mse-fl2.zte.com.cn x9N7cN6U084613
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+Fix parameter name in comment and adjust the order.
+No functional change.
 
-drivers/net/wireless/admtek/adm8211.c:1784:16:
- warning: variable mem_addr set but not used [-Wunused-but-set-variable]
-drivers/net/wireless/admtek/adm8211.c:1785:15:
- warning: variable io_addr set but not used [-Wunused-but-set-variable]
-
-They are never used, so can be removed.
-
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
 ---
- drivers/net/wireless/admtek/adm8211.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ arch/x86/kernel/uprobes.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/admtek/adm8211.c b/drivers/net/wireless/admtek/adm8211.c
-index 46f1427..ba326f6 100644
---- a/drivers/net/wireless/admtek/adm8211.c
-+++ b/drivers/net/wireless/admtek/adm8211.c
-@@ -1781,8 +1781,8 @@ static int adm8211_probe(struct pci_dev *pdev,
- {
- 	struct ieee80211_hw *dev;
- 	struct adm8211_priv *priv;
--	unsigned long mem_addr, mem_len;
--	unsigned int io_addr, io_len;
-+	unsigned long mem_len;
-+	unsigned int io_len;
- 	int err;
- 	u32 reg;
- 	u8 perm_addr[ETH_ALEN];
-@@ -1794,9 +1794,7 @@ static int adm8211_probe(struct pci_dev *pdev,
- 		return err;
- 	}
+diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
+index 8cd745e..15e5aad 100644
+--- a/arch/x86/kernel/uprobes.c
++++ b/arch/x86/kernel/uprobes.c
+@@ -842,8 +842,8 @@ static int push_setup_xol_ops(struct arch_uprobe *auprobe, struct insn *insn)
  
--	io_addr = pci_resource_start(pdev, 0);
- 	io_len = pci_resource_len(pdev, 0);
--	mem_addr = pci_resource_start(pdev, 1);
- 	mem_len = pci_resource_len(pdev, 1);
- 	if (io_len < 256 || mem_len < 1024) {
- 		printk(KERN_ERR "%s (adm8211): Too short PCI resources\n",
+ /**
+  * arch_uprobe_analyze_insn - instruction analysis including validity and fixups.
++ * @auprobe: the probepoint information.
+  * @mm: the probed address space.
+- * @arch_uprobe: the probepoint information.
+  * @addr: virtual address at which to install the probepoint
+  * Return 0 on success or a -ve number on error.
+  */
 -- 
-2.7.4
-
+1.8.3.1
 
