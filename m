@@ -2,119 +2,109 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 474FCCA9EB7
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:02:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E40CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:02:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CEC821872
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:02:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F8CF20679
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:02:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Ue4NIj6G";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="LJQ6hs+u"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="awNAdFys"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390667AbfJWJCm (ORCPT
+        id S2390693AbfJWJCq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 05:02:42 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:41594 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390590AbfJWJCl (ORCPT
+        Wed, 23 Oct 2019 05:02:46 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:46780 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390590AbfJWJCp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 05:02:41 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id B943E60159; Wed, 23 Oct 2019 09:02:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571821360;
-        bh=a2i8iNnZEdkEkPcOqlJ7kkR15XF8PuCT8aN7gkvDOkE=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Ue4NIj6GzhcUzHsA+Jah0A/LQhAH8zRBxRL+haOQ3EILIOuXJpe2pIz0qubiDj+hF
-         wC7vBsWkztF4JpezCQm7x1mi9GUMxE14qm7Qw2Xspx07tbWP2SabDSMjspmhBwEirN
-         bgifl0mc9BOYZ4QSaJyHA1sIt8Y5iiJtU/3nSD38=
-Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E2E886087F;
-        Wed, 23 Oct 2019 09:02:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571821359;
-        bh=a2i8iNnZEdkEkPcOqlJ7kkR15XF8PuCT8aN7gkvDOkE=;
-        h=From:To:Cc:Subject:Date:From;
-        b=LJQ6hs+uPb1ZaKeqrf8hqIPrU52JtU2UOqnApQnarWxIAIY+U597Mtt6YAjksxCwS
-         GV+4Fg7Wk0U8kIKnM+O7EhjXwCZ/YILfBIWP8Vax9N3I/wjbwyIJiYxUOYmSddo+iV
-         E1xxYDHVLcqw/gBPZBmK4IzhD3nKfwPSV8P/gyPA=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E2E886087F
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-To:     agross@kernel.org, robh+dt@kernel.org, bjorn.andersson@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org,
-        Rajendra Nayak <rnayak@codeaurora.org>
-Subject: [PATCH v3 00/11] Add device tree support for sc7180
-Date:   Wed, 23 Oct 2019 14:32:08 +0530
-Message-Id: <20191023090219.15603-1-rnayak@codeaurora.org>
-X-Mailer: git-send-email 2.22.0
+        Wed, 23 Oct 2019 05:02:45 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9N92cQT040531;
+        Wed, 23 Oct 2019 04:02:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1571821358;
+        bh=vG+W4quqVd/rx5gPIFHyLx5O+cQx6BhNDY55hfW2vMM=;
+        h=From:To:CC:Subject:Date;
+        b=awNAdFysYIKsbC0K9Fa3reRPmlnmx4B27vKWMvmYPhzlbLokot9WQ63nJ0ePKbaoT
+         DLDi792xpdzOmfU3VGNIllg3YjA2VIYXKtAW61a2ERRm+UQFuzhd1UloyDE2cMpiQV
+         hicEgt9Gh2Z0fTFdnRwMHdp1SASYvToF9IEqcnfg=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9N92c1d021864;
+        Wed, 23 Oct 2019 04:02:38 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 23
+ Oct 2019 04:02:27 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 23 Oct 2019 04:02:37 -0500
+Received: from lta0400828a.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9N92Ynk085549;
+        Wed, 23 Oct 2019 04:02:34 -0500
+From:   Roger Quadros <rogerq@ti.com>
+To:     <felipe.balbi@linux.intel.com>, <gregkh@linuxfoundation.org>
+CC:     <pawell@cadence.com>, <peter.chen@nxp.com>, <nsekhar@ti.com>,
+        <kurahul@cadence.com>, <linux-usb@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Roger Quadros <rogerq@ti.com>
+Subject: [PATCH] usb: cdns3: gadget: Don't manage pullups
+Date:   Wed, 23 Oct 2019 12:02:32 +0300
+Message-ID: <20191023090232.27237-1-rogerq@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Changes in v3:
-* PATCH 2/11: Updated the qup and uart lables to be consistent
-with the naming convention followed in sdm845 as suggested
-by Matthias
-* Dropped 2 patches from v2 which added the new compatible and
-binding updates for sc7180 pdc and reused sdm845 compatible instead
-as suggested by Marc Z
+The USB gadget core is supposed to manage pullups
+of the controller. Don't manage pullups from within
+the controller driver. Otherwise, function drivers
+are not able to keep the controller disconnected from
+the bus till they are ready. (e.g. g_webcam)
 
-This series adds DT support for basic peripherals on qualcomm's sc7180 SoC,
-drivers for which are already upstream.
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+---
+Hi Greg/Felipe,
 
-The series has a dependency on gcc clock driver patches [1]
-to merge first
+This can be used for -rc as it is a bug fix.
 
-[1] https://www.spinics.net/lists/linux-clk/msg41851.html
+cheers,
+-roger
 
-Kiran Gunda (3):
-  arm64: dts: qcom: sc7180: Add SPMI PMIC arbiter device
-  arm64: dts: qcom: pm6150: Add PM6150/PM6150L PMIC peripherals
-  arm64: dts: qcom: sc7180-idp: Add RPMh regulators
+ drivers/usb/cdns3/gadget.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-Maulik Shah (3):
-  arm64: dts: qcom: sc7180: Add cmd_db reserved area
-  arm64: dts: qcom: sc7180: Add rpmh-rsc node
-  arm64: dts: qcom: sc7180: Add pdc interrupt controller
-
-Rajendra Nayak (3):
-  dt-bindings: qcom: Add SC7180 bindings
-  arm64: dts: sc7180: Add minimal dts/dtsi files for SC7180 soc
-  dt-bindings: arm-smmu: update binding for qcom sc7180 SoC
-
-Taniya Das (1):
-  arm64: dts: qcom: SC7180: Add node for rpmhcc clock driver
-
-Vivek Gautam (1):
-  arm64: dts: sc7180: Add device node for apps_smmu
-
- .../devicetree/bindings/arm/qcom.yaml         |   2 +
- .../devicetree/bindings/iommu/arm,smmu.txt    |   1 +
- arch/arm64/boot/dts/qcom/Makefile             |   1 +
- arch/arm64/boot/dts/qcom/pm6150.dtsi          |  85 ++++
- arch/arm64/boot/dts/qcom/pm6150l.dtsi         |  47 ++
- arch/arm64/boot/dts/qcom/sc7180-idp.dts       | 256 ++++++++++
- arch/arm64/boot/dts/qcom/sc7180.dtsi          | 459 ++++++++++++++++++
- 7 files changed, 851 insertions(+)
- create mode 100644 arch/arm64/boot/dts/qcom/pm6150.dtsi
- create mode 100644 arch/arm64/boot/dts/qcom/pm6150l.dtsi
- create mode 100644 arch/arm64/boot/dts/qcom/sc7180-idp.dts
- create mode 100644 arch/arm64/boot/dts/qcom/sc7180.dtsi
-
+diff --git a/drivers/usb/cdns3/gadget.c b/drivers/usb/cdns3/gadget.c
+index 2ca280f4c054..714382d96055 100644
+--- a/drivers/usb/cdns3/gadget.c
++++ b/drivers/usb/cdns3/gadget.c
+@@ -2324,8 +2324,6 @@ static void cdns3_gadget_config(struct cdns3_device *priv_dev)
+ 	writel(USB_CONF_CLK2OFFDS | USB_CONF_L1DS, &regs->usb_conf);
+ 
+ 	cdns3_configure_dmult(priv_dev, NULL);
+-
+-	cdns3_gadget_pullup(&priv_dev->gadget, 1);
+ }
+ 
+ /**
+@@ -2708,8 +2706,6 @@ static int cdns3_gadget_suspend(struct cdns3 *cdns, bool do_wakeup)
+ 	/* disable interrupt for device */
+ 	writel(0, &priv_dev->regs->usb_ien);
+ 
+-	cdns3_gadget_pullup(&priv_dev->gadget, 0);
+-
+ 	return 0;
+ }
+ 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
