@@ -2,107 +2,120 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BEEFCA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:10:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6153DCA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:12:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B1E420640
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:10:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uWe4Gxxa"
+	by mail.kernel.org (Postfix) with ESMTP id 41CF020640
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:12:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391194AbfJWMKE (ORCPT
+        id S2391201AbfJWMMQ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 08:10:04 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:53137 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730034AbfJWMKD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 08:10:03 -0400
-Received: by mail-wm1-f66.google.com with SMTP id r19so20977437wmh.2
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 05:10:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=GCCFnxfgctiR7ujkuq6S73RHOtLBZpaj2MQBUfolKvQ=;
-        b=uWe4GxxaDPldHT/awU5IWmMXWiJX9zobzCZrqq+ZyDgb8jfdBUOR+PX5YFHdwI5/lC
-         wNpaXg392Vm9jbCkVRfCu90EPUw3QQyy2Ow8C+AlRv+LtV+WVRkv6x/6LrOJr3mL/p8i
-         k+O5wtlrs7XawlVq/0CbZKOc2Csr/QHg9ZqoZzPmac1Moazeg85zhHVWOpabc5VYPTpS
-         R0weZTve0KM/FeioqgXhcJSzVojaVzAWoWKNRSZzVKSS2QdDbHNbaTC9wRwa+vDjDy4b
-         J/vkMN7tTgDu/j6WkExePmXeAWgMxXVGkYUH7BMapWPdxflWaLJ8pBMUvMUmk7ZxTVuJ
-         eRog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=GCCFnxfgctiR7ujkuq6S73RHOtLBZpaj2MQBUfolKvQ=;
-        b=hGCiBqABuzpB6Wwf1dXEDrbF9dIT0GhjwWYCKwKNq1e7mHSaOwSag7C6QGf4hWD9Wz
-         31uXMqNBKsXKLtkyIgw8bRxn/oegbKSJUjWQ/uWL2CNe0m05+FbnW7PpW0papkbv7CDw
-         Mozu4LdzBBtKLAuJDy1uzHKtxBr0JE5pdILVi+emLkujN2532OUstxGjhyIiOtzOv7Rr
-         ZGKlLriKP0t5uZZighh5Av5BLrwXuXlvOiJ5u7KT/+zS6h4E8iokLQiTIFZP77k99z45
-         vAQoKB+dVk2d+0/fwThY2e8nVpuup4oPI/NPWZFetBz73UGxehV6BJ+j+5rZ6ioImwrP
-         SXEg==
-X-Gm-Message-State: APjAAAWZ+nzepaUlJODiNdIWRXUao3th0Kpv9Rhatdt+JMNGz3ruTfKP
-        belo322y0M8nYK4n80zB8MxNeKBbDCI=
-X-Google-Smtp-Source: APXvYqwnT1P5lpTKGC9oq14j3EyMYmkpka1Vii05lwYOx5CHpyeTJMni1eoCxD3yrgrjTtag5l7jhA==
-X-Received: by 2002:a7b:cf30:: with SMTP id m16mr7709573wmg.89.1571832600353;
-        Wed, 23 Oct 2019 05:10:00 -0700 (PDT)
-Received: from cizrna.lan ([109.72.12.196])
-        by smtp.gmail.com with ESMTPSA id r81sm15016575wme.16.2019.10.23.05.09.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Oct 2019 05:09:59 -0700 (PDT)
-From:   Tomeu Vizoso <tomeu.vizoso@collabora.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Rob Herring <robh@kernel.org>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH] panfrost: Properly undo pm_runtime_enable when deferring a probe
-Date:   Wed, 23 Oct 2019 14:09:25 +0200
-Message-Id: <20191023120925.30668-1-tomeu.vizoso@collabora.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 23 Oct 2019 08:12:16 -0400
+Received: from mail-oln040092253026.outbound.protection.outlook.com ([40.92.253.26]:7196
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731256AbfJWMMQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 08:12:16 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=adgMa9YA7mJgBdR4pAkYb+GufdxI+FjbtQWOmUCDB/ms8CgUtnWyH7di5RNZT4sDJq/eNgVgYJ/4ttK1GpBTlHe/D4R69H+O2sGxmbYa9P3o4st6JYCiG2J0GX7lgqToyVZCGw452eAv8jm7FD52YIxWsfnmt5xThZ4oq/yb22zsAmFEaucyVwqVuLY/Ww2TjgnwsRXBqQ3gUTphfE8+4AeYXYxBhqBYC7zqfWKsFGnX63bdYIvj/sH7gCGlizpOyw2MTAnD68QdIku4/rhyCdnjdIGfrP/i6KFyHZre8eR/6uofqR1VCd7A/9T5JmhA0ulvRsKDcQiWFGI4yitCIA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TRiag2uO8KjRKbAMIAsa7rjMRhr1NmNw9n0SHcHfVfs=;
+ b=SQmXxYBmwOe5gZYfQrjJcLIw/ZjZ8GbKV1875E/1/dgt+M6/gDzuA/fIxVYEFNFczC2rorYr+ls+nayBI63s9XmbyIjB7fjOyk4CLilLETp4T4NfNDxtsCT4mF2ltR8I8G9ogpAPzQykuy/5X4UoTMB1EZtKNiEGg5epWGLxqIVafiw351hfrtj+y/XpurvaCIBnNqQPnCHnARKcQLT4BauHKAhduoODKU9ffZSvfFF6fBzaYeYJq1nNWnyqwa6EAiUzS/HOjANad8INbUzgbNPbt8ZWaveZUeMDND4wBH9sW0HBJoupe9btI9NYCRaDL55kPg9VliZk0qvjcuzcwQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from PU1APC01FT009.eop-APC01.prod.protection.outlook.com
+ (10.152.252.51) by PU1APC01HT187.eop-APC01.prod.protection.outlook.com
+ (10.152.253.156) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2387.20; Wed, 23 Oct
+ 2019 12:12:08 +0000
+Received: from SL2P216MB0187.KORP216.PROD.OUTLOOK.COM (10.152.252.58) by
+ PU1APC01FT009.mail.protection.outlook.com (10.152.252.103) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.2387.20 via Frontend Transport; Wed, 23 Oct 2019 12:12:08 +0000
+Received: from SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
+ ([fe80::ec26:6771:625e:71d]) by SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
+ ([fe80::ec26:6771:625e:71d%8]) with mapi id 15.20.2387.019; Wed, 23 Oct 2019
+ 12:12:08 +0000
+From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "logang@deltatee.com" <logang@deltatee.com>
+Subject: [PATCH v2 0/1] Add support for setting MMIO PREF hotplug bridge size
+Thread-Topic: [PATCH v2 0/1] Add support for setting MMIO PREF hotplug bridge
+ size
+Thread-Index: AQHViZsXphsMXuppp0aaaQoMHzlyXg==
+Date:   Wed, 23 Oct 2019 12:12:08 +0000
+Message-ID: <SL2P216MB018771B6A7F60532F99701A5806B0@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
+Accept-Language: en-AU, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: ME2PR01CA0061.ausprd01.prod.outlook.com
+ (2603:10c6:201:2b::25) To SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:100:22::19)
+x-incomingtopheadermarker: OriginalChecksum:45804B272D53CAF31E0C92CC6A35308795D33E288EDDE13B907CBEE1EBC00AFA;UpperCasedChecksum:5743AF275284E57C3478AF756258883AC3DC4017569B8F403CC8106352F86BD3;SizeAsReceived:7440;Count:46
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [hbKaN7I7B2huM9B/JilA1Wd55gYykHAzlsLqQWS/mOQ=]
+x-microsoft-original-message-id: <20191023121200.GA18691@nicholas-dell-linux>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 46
+x-eopattributedmessage: 0
+x-ms-traffictypediagnostic: PU1APC01HT187:
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: JDRyLXjT+Ij5JVRXBKSWifc4G6XJS4En4IqEA5ZFWsQu5egbw7P5S0ZvQh8bCTBWiq3wR9TGfkhy3bTuLYiZNIPqDD+G6PrutRYjZq91PypzGQaXRguQL51hJKJuVt8OZ2ajdXEbjQZEIjTsuzfKwRpGY4dWX9YsRxLaJFydX2wK/pBCr2/URt3cDyzQNko9
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <EFB97436A88363448907DE42F96E2AA8@KORP216.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: c03555e9-4c55-4807-5672-08d757b239b4
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Oct 2019 12:12:08.2898
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1APC01HT187
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When deferring the probe because of a missing regulator, we were calling
-pm_runtime_disable even if pm_runtime_enable wasn't called.
+Since the first revision of this patch:
 
-Move the call to pm_runtime_disable to the right place.
+Ignoring 80-character line limit based on the advice of Mika Westerberg.
 
-Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Fixes: f4a3c6a44b35 ("drm/panfrost: Disable PM on probe failure")
-Cc: Robin Murphy <robin.murphy@arm.com>
----
- drivers/gpu/drm/panfrost/panfrost_drv.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Mika noticed that memparse is modifying the str in pci_setup. Looking at
+the definition in lib/cmdline.c line 125, he is probably correct. I have
+no idea how this did not cause problems in testing.
 
-diff --git a/drivers/gpu/drm/panfrost/panfrost_drv.c b/drivers/gpu/drm/panfrost/panfrost_drv.c
-index bc2ddeb55f5d..f21bc8a7ee3a 100644
---- a/drivers/gpu/drm/panfrost/panfrost_drv.c
-+++ b/drivers/gpu/drm/panfrost/panfrost_drv.c
-@@ -556,11 +556,11 @@ static int panfrost_probe(struct platform_device *pdev)
- 	return 0;
- 
- err_out2:
-+	pm_runtime_disable(pfdev->dev);
- 	panfrost_devfreq_fini(pfdev);
- err_out1:
- 	panfrost_device_fini(pfdev);
- err_out0:
--	pm_runtime_disable(pfdev->dev);
- 	drm_dev_put(ddev);
- 	return err;
- }
+Fixed the alignment of some overflow lines.
+
+It turns out Outlook is causing my encoding issues with git send-email.
+
+If I get a new email for kernel development, what should it be? Gmail
+works, but looks tackier.
+
+Nicholas Johnson (1):
+  PCI: Add hp_mmio_size and hp_mmio_pref_size parameters
+
+ .../admin-guide/kernel-parameters.txt         |  9 ++++++-
+ drivers/pci/pci.c                             | 13 +++++++---
+ drivers/pci/pci.h                             |  3 ++-
+ drivers/pci/setup-bus.c                       | 24 ++++++++++---------
+ 4 files changed, 33 insertions(+), 16 deletions(-)
+
 -- 
-2.20.1
+2.23.0
 
