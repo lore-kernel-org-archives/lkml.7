@@ -2,149 +2,169 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BEB0CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:44:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E8E7CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:44:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5302620663
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:44:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571838270;
-	bh=xDgzQNhlX2ylQcYgKkDdPd02qB1NXK/sRR3KxYmLlok=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dBeSvef1oS/sVE8I8ysdGyEgDqyuiqsq0l6gGllBvQy/Z1JD7HlsFMV/7x799OXTG
-	 +BSazy5EdnNXt9NKw0Y137IGvdPWtmp8u3ofEDUKog6j2frLBVphKgG+KwAw8LamKu
-	 uP3uL+cCsjiSiVk3HdXjPamNFOtOmkjdQ7a+FHCo=
+	by mail.kernel.org (Postfix) with ESMTP id 6659E20663
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:44:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gv70QZPx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406003AbfJWNo0 (ORCPT
+        id S2406026AbfJWNoo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 09:44:26 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:42880 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405903AbfJWNoZ (ORCPT
+        Wed, 23 Oct 2019 09:44:44 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:40168 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390619AbfJWNon (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 09:44:25 -0400
-Received: by mail-ed1-f68.google.com with SMTP id s20so9794877edq.9;
-        Wed, 23 Oct 2019 06:44:24 -0700 (PDT)
+        Wed, 23 Oct 2019 09:44:43 -0400
+Received: by mail-pf1-f193.google.com with SMTP id x127so12974094pfb.7;
+        Wed, 23 Oct 2019 06:44:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=bqtujpqNbAQZJihzkVcd83j8KH7ymy87CfXaLggRLzI=;
+        b=gv70QZPxr2QwDImicOJ1btC3vgXVITVLotvnT607VxEd8XS3mo/bGtx97d/jSuVlbr
+         dyknHxENLL/MOdE0rdHVwQVdcdbhcN3/Yi02vJHWZsVEyNMShMjGeH2gqeLtICIPKWvK
+         qbVr+84wC5WFR7qEq6t998irZjaFIzwMFTSQWY8TYE3zrUYVfuami09BD7Y8xpGyOfvy
+         b/rbasGj/axsSZt02719YmCyf0EqBJi+sx+ZeOzpRnkxnnX6J7CW2kamhYMCQQtifDkD
+         jiZrVeHyyOEsCdBaboc2bfyys/BRD0UaTASvn/ktI4dc2JDrFsFqHg/cMfi/7sS7v84b
+         HVwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hBKYE+zy7+DFfvyH7A7knU3GB9ufsS1mx+vP5bbzBP0=;
-        b=h+15i4clnO21Zx9dM+73o0B2yXXTJmzRzBHqEXYW1uCb4maysbPf2EpfP2y/jWyQpF
-         dPvd08udhWwotPD3HLTKBt6ka5b8X6qI8s7tw7xdywZdR4Yb8bxND5lh2DssOkrU6Ul8
-         mLGSJr9FhVXlEIaEN1WsXBd9OWKgQUMPP80dpqiP6M/+wCOclGQsx9iq34DMoVgaAo3/
-         9MXE5+GytSW5N2/wpTToUWXSMg1Hv3dGsd8t+8CtROektv8v4vjw1mXRxYE4pLavN8jW
-         ZCR9HtoIC2kuTE7UgWFcZgFwxkPvl5Go4zqgNO8jlgagNCxzLfFmzjCqbcPO2c5GAb5G
-         4xIQ==
-X-Gm-Message-State: APjAAAVFaWR9/NRMnCEZ0p4XQBLa+d4Lc1+wAc3uYx6kbbP2vbRexzIW
-        1h/TPwmJ4kL9MtlTX9saKiiodoaI2YE=
-X-Google-Smtp-Source: APXvYqw1ctMopj1G34EABDvNktzYOL72/P1RYQagEEVZr6sIwqcab9NGrf4osslw7kr0sYn6k43JVw==
-X-Received: by 2002:a17:906:c801:: with SMTP id cx1mr33598956ejb.266.1571838263609;
-        Wed, 23 Oct 2019 06:44:23 -0700 (PDT)
-Received: from pi3 ([194.230.155.217])
-        by smtp.googlemail.com with ESMTPSA id z65sm848736ede.86.2019.10.23.06.44.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Oct 2019 06:44:22 -0700 (PDT)
-Date:   Wed, 23 Oct 2019 15:44:20 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Kukjin Kim <kgene@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linus.walleij@linaro.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 31/36] ARM: s3c: cpufreq: use global
- s3c2412_cpufreq_setrefresh
-Message-ID: <20191023134420.GJ11048@pi3>
-References: <20191010202802.1132272-1-arnd@arndb.de>
- <20191010203043.1241612-1-arnd@arndb.de>
- <20191010203043.1241612-31-arnd@arndb.de>
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=bqtujpqNbAQZJihzkVcd83j8KH7ymy87CfXaLggRLzI=;
+        b=J96CzqDuln15H4a86c8VE+UayOxIipl9Dbw9P/jT5TmdLt4/WBjv1tlEpZZb3lamWN
+         C2zrwPRHLkTHVwxbv31kZ/k1P7Qpc09GyAGOyuj4XjkwoPz303uHxWoEBmactzDJauDD
+         4PvJjp/0zDNczD/CPfSTs1mk3z/X4Z5y+LCCBZoprOZKxIMHUmD7ksIFfRWCq5BJVza1
+         5uO00ELokeRmw2yLCkzNmVVzhZX6tFbdu/Zy9SGtY9u+ITeaSSZIw020Lgn1n2gOGSk5
+         P3Lo5YL843OsubQhO1nf/Ns9sDsDqAC9ZUXpXuQNUwsgFP/QPNm6lGLtz8PTRTp7DOW+
+         mJaw==
+X-Gm-Message-State: APjAAAWiVq3K9gA6yTEtGJdLs9TRgQmJjEpTeVMfBRW5raHWuPUczwi8
+        GLhn06oeJyGS3B0NC7lhvjX+HYUz
+X-Google-Smtp-Source: APXvYqz4CGQL2G6j+rGwttfWxPjzpe667CQOGCSti7mkoDtHvcYAlhF1fK0vri6y+Q+kUEkfwqg90w==
+X-Received: by 2002:a63:7845:: with SMTP id t66mr9987694pgc.31.1571838282149;
+        Wed, 23 Oct 2019 06:44:42 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id c9sm4026398pfb.114.2019.10.23.06.44.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 23 Oct 2019 06:44:41 -0700 (PDT)
+Subject: Re: [PATCH V2] usb: typec: Add sysfs node to show connector
+ orientation
+To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Puma Hsu <pumahsu@google.com>
+Cc:     gregkh@linuxfoundation.org, badhri@google.com, kyletso@google.com,
+        albertccwang@google.com, rickyniu@google.com,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191022085924.92783-1-pumahsu@google.com>
+ <20191023083221.GB8828@kuha.fi.intel.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <644d890b-86e8-f05a-cd4c-32937d971a45@roeck-us.net>
+Date:   Wed, 23 Oct 2019 06:44:39 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191010203043.1241612-31-arnd@arndb.de>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191023083221.GB8828@kuha.fi.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 10:30:15PM +0200, Arnd Bergmann wrote:
-> There are two identical copies of the s3c2412_cpufreq_setrefresh
-> function: a static one in the cpufreq driver and a global
-> version in iotiming-s3c2412.c.
+On 10/23/19 1:32 AM, Heikki Krogerus wrote:
+> +Guenter
 > 
-> As the function requires the use of a hardcoded register address
-> from a header that we want to not be visible to drivers, just
-> move the existing global function and add a declaration in
-> one of the cpufreq header files.
+> On Tue, Oct 22, 2019 at 04:59:24PM +0800, Puma Hsu wrote:
+>> Export the Type-C connector orientation so that user space
+>> can get this information.
+>>
+>> Signed-off-by: Puma Hsu <pumahsu@google.com>
+>> ---
+>>   Documentation/ABI/testing/sysfs-class-typec | 11 +++++++++++
+>>   drivers/usb/typec/class.c                   | 18 ++++++++++++++++++
+>>   2 files changed, 29 insertions(+)
+>>
+>> diff --git a/Documentation/ABI/testing/sysfs-class-typec b/Documentation/ABI/testing/sysfs-class-typec
+>> index d7647b258c3c..b22f71801671 100644
+>> --- a/Documentation/ABI/testing/sysfs-class-typec
+>> +++ b/Documentation/ABI/testing/sysfs-class-typec
+>> @@ -108,6 +108,17 @@ Contact:	Heikki Krogerus <heikki.krogerus@linux.intel.com>
+>>   Description:
+>>   		Revision number of the supported USB Type-C specification.
+>>   
+>> +What:		/sys/class/typec/<port>/connector_orientation
+>> +Date:		October 2019
+>> +Contact:	Puma Hsu <pumahsu@google.com>
+>> +Description:
+>> +		Indicates which typec connector orientation is configured now.
+>> +		cc1 is defined as "normal" and cc2 is defined as "reversed".
+>> +
+>> +		Valid value:
+>> +		- unknown (nothing configured)
 > 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/cpufreq/s3c2412-cpufreq.c            | 23 --------------------
->  include/linux/soc/samsung/s3c-cpufreq-core.h |  1 +
->  2 files changed, 1 insertion(+), 23 deletions(-)
+> "unknown" means we do not know the orientation.
 > 
-> diff --git a/drivers/cpufreq/s3c2412-cpufreq.c b/drivers/cpufreq/s3c2412-cpufreq.c
-> index 38dc9e6db633..a77c63e92e1a 100644
-> --- a/drivers/cpufreq/s3c2412-cpufreq.c
-> +++ b/drivers/cpufreq/s3c2412-cpufreq.c
-> @@ -25,8 +25,6 @@
->  #include <asm/mach/arch.h>
->  #include <asm/mach/map.h>
->  
-> -#include <mach/s3c2412.h>
-> -
->  #include <mach/map.h>
->  
->  #define S3C2410_CLKREG(x) ((x) + S3C24XX_VA_CLKPWR)
-> @@ -156,27 +154,6 @@ static void s3c2412_cpufreq_setdivs(struct s3c_cpufreq_config *cfg)
->  	clk_set_parent(armclk, cfg->divs.dvs ? hclk : fclk);
->  }
->  
-> -static void s3c2412_cpufreq_setrefresh(struct s3c_cpufreq_config *cfg)
-> -{
-> -	struct s3c_cpufreq_board *board = cfg->board;
-> -	unsigned long refresh;
-> -
-> -	s3c_freq_dbg("%s: refresh %u ns, hclk %lu\n", __func__,
-> -		     board->refresh, cfg->freq.hclk);
-> -
-> -	/* Reduce both the refresh time (in ns) and the frequency (in MHz)
-> -	 * by 10 each to ensure that we do not overflow 32 bit numbers. This
-> -	 * should work for HCLK up to 133MHz and refresh period up to 30usec.
-> -	 */
-> -
-> -	refresh = (board->refresh / 10);
-> -	refresh *= (cfg->freq.hclk / 100);
-> -	refresh /= (1 * 1000 * 1000);	/* 10^6 */
-> -
-> -	s3c_freq_dbg("%s: setting refresh 0x%08lx\n", __func__, refresh);
-> -	__raw_writel(refresh, S3C2412_REFRESH);
-> -}
-> -
->  /* set the default cpu frequency information, based on an 200MHz part
->   * as we have no other way of detecting the speed rating in software.
->   */
-> diff --git a/include/linux/soc/samsung/s3c-cpufreq-core.h b/include/linux/soc/samsung/s3c-cpufreq-core.h
-> index 4d22be1031b9..eca942559014 100644
-> --- a/include/linux/soc/samsung/s3c-cpufreq-core.h
-> +++ b/include/linux/soc/samsung/s3c-cpufreq-core.h
-> @@ -246,6 +246,7 @@ extern int s3c2412_iotiming_calc(struct s3c_cpufreq_config *cfg,
->  
->  extern void s3c2412_iotiming_set(struct s3c_cpufreq_config *cfg,
->  				 struct s3c_iotimings *iot);
-> +extern void s3c2412_cpufreq_setrefresh(struct s3c_cpufreq_config *cfg);
+>> +		- normal (configured in cc1 side)
+>> +		- reversed (configured in cc2 side)
+> 
+> Guenter, do you think "connector_orientation" OK. I proposed it, but
+> I'm now wondering if something like "polarity" would be better?
+> 
 
-I think that it does not cover the !CONFIG_S3C2412_IOTIMING case.
-Either you need to provide also the empty stub or add default=y to
-S3C2412_IOTIMING. Otherwise cpufreq driver might end up without this.
+Yes, or just "orientation". I don't see the value in the "connector_" prefix.
+I also wonder if "unknown" is really correct. Is it really unknown, or
+does it mean that the port is disconnected ?
 
-Best regards,
-Krzysztof
+Guenter
+
+>>   USB Type-C partner devices (eg. /sys/class/typec/port0-partner/)
+>>   
+>> diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
+>> index 94a3eda62add..911d06676aeb 100644
+>> --- a/drivers/usb/typec/class.c
+>> +++ b/drivers/usb/typec/class.c >> @@ -1245,6 +1245,23 @@ static ssize_t usb_power_delivery_revision_show(struct device *dev,
+>>   }
+>>   static DEVICE_ATTR_RO(usb_power_delivery_revision);
+>>   
+>> +static const char * const typec_connector_orientation[] = {
+>> +	[TYPEC_ORIENTATION_NONE]		= "unknown",
+>> +	[TYPEC_ORIENTATION_NORMAL]		= "normal",
+>> +	[TYPEC_ORIENTATION_REVERSE]		= "reversed",
+>> +};
+>> +
+>> +static ssize_t connector_orientation_show(struct device *dev,
+>> +						struct device_attribute *attr,
+>> +						char *buf)
+>> +{
+>> +	struct typec_port *p = to_typec_port(dev);
+>> +
+>> +	return sprintf(buf, "%s\n",
+>> +		       typec_connector_orientation[p->orientation]);
+>> +}
+>> +static DEVICE_ATTR_RO(connector_orientation);
+>> +
+>>   static struct attribute *typec_attrs[] = {
+>>   	&dev_attr_data_role.attr,
+>>   	&dev_attr_power_operation_mode.attr,
+>> @@ -1255,6 +1272,7 @@ static struct attribute *typec_attrs[] = {
+>>   	&dev_attr_usb_typec_revision.attr,
+>>   	&dev_attr_vconn_source.attr,
+>>   	&dev_attr_port_type.attr,
+>> +	&dev_attr_connector_orientation.attr,
+>>   	NULL,
+>>   };
+>>   ATTRIBUTE_GROUPS(typec);
+> 
+> thanks,
+> 
+
