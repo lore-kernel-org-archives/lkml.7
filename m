@@ -2,63 +2,100 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F00ECA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:42:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A395CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:42:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3A322173B
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:42:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B178214B2
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:42:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390842AbfJWMmB (ORCPT
+        id S2391391AbfJWMmQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 08:42:01 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:46827 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2389887AbfJWMmB (ORCPT
+        Wed, 23 Oct 2019 08:42:16 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:46397 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389887AbfJWMmP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 08:42:01 -0400
-X-UUID: a4dc8739ecee419582113529d95f9dce-20191023
-X-UUID: a4dc8739ecee419582113529d95f9dce-20191023
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
-        (envelope-from <luhua.xu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1206687605; Wed, 23 Oct 2019 20:41:55 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 23 Oct 2019 20:41:51 +0800
-Received: from localhost.localdomain (10.15.20.246) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 23 Oct 2019 20:41:51 +0800
-From:   Luhua Xu <luhua.xu@mediatek.com>
-To:     Mark Brown <broonie@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-CC:     <linux-spi@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>,
-        <luhua.xu@mediatek.com>
-Subject: [PATCH 0/1] Add spi power control when set cs
-Date:   Wed, 23 Oct 2019 08:38:41 -0400
-Message-ID: <1571834322-1121-1-git-send-email-luhua.xu@mediatek.com>
-X-Mailer: git-send-email 2.6.4
+        Wed, 23 Oct 2019 08:42:15 -0400
+Received: by mail-lj1-f193.google.com with SMTP id d1so20905706ljl.13;
+        Wed, 23 Oct 2019 05:42:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=kQcNlSjXQd9kUXGNlIQxjvubKLwEBgtwHBAUWhoJSUo=;
+        b=RLwZOE4I9m8jfKeHOzrw1/MTSF29HoL3SdyPRi7cL+3lpzp17iEpxmrM1nEEQlCQWS
+         rEUOszMLaFKknu4qElVzpANJgTtviAiDq5xfGtQUwHxSWpZhiwFwmmywXMR3tpfnfrMo
+         sJvdn0WVViK9DIq2TgImBgPcqD6pjbl8BVY4JNkN1kRY1/ugi21YyIoqMeKuKjcosBHV
+         aCozKnpLmO2nxc0Ad8YPDIJMKlreFi4v99mFm3Ho3d7ZQwC02RABk7UBi9t/CQ+0PJcq
+         3hx9pjMluXdYW1TyptgpKx61LbxcZnKOimbJMQMBVH5jLmT+6ZQrguaeCIqWtbaBkJop
+         a/yQ==
+X-Gm-Message-State: APjAAAWjJcnBiNXOh2f3qfzy88hf2K1qhh++4qMlvj/JEAQK4EGcZy5c
+        /h+euj8yRFEM+/qoRb5uhq4=
+X-Google-Smtp-Source: APXvYqx0/8+u+gdKO6hPWbAni56ZxUpm0GD4YFDTDuu/OepdORNRBC+v14ZTlSNfLqzJtLtwglJysQ==
+X-Received: by 2002:a2e:9f08:: with SMTP id u8mr15766019ljk.124.1571834532558;
+        Wed, 23 Oct 2019 05:42:12 -0700 (PDT)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id x26sm5134522lfq.89.2019.10.23.05.42.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Oct 2019 05:42:11 -0700 (PDT)
+Date:   Wed, 23 Oct 2019 15:41:59 +0300
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] watchdog: bd70528: Add MODULE_ALIAS to allow module auto
+ loading
+Message-ID: <20191023124159.GA3490@localhost.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch add power control when set spi cs to fix register
-access violation.
+The bd70528 watchdog driver is probed by MFD driver. Add MODULE_ALIAS
+in order to allow udev to load the module when MFD sub-device cell for
+watchdog is added.
+
+Fixes: bbc88a0ec9f37 ("watchdog: bd70528: Initial support for ROHM BD70528 watchdog block")
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+---
+
+I'm not really sure if this is a bug-fix or feature but I guess the
+Fixes tag won't harm, right?
+
+ drivers/watchdog/bd70528_wdt.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/watchdog/bd70528_wdt.c b/drivers/watchdog/bd70528_wdt.c
+index b0152fef4fc7..bc60e036627a 100644
+--- a/drivers/watchdog/bd70528_wdt.c
++++ b/drivers/watchdog/bd70528_wdt.c
+@@ -288,3 +288,4 @@ module_platform_driver(bd70528_wdt);
+ MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
+ MODULE_DESCRIPTION("BD70528 watchdog driver");
+ MODULE_LICENSE("GPL");
++MODULE_ALIAS("platform:bd70528-wdt");
+-- 
+2.21.0
 
 
-luhua.xu (1):
-  spi: mediatek: add power control when set_cs
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
 
- drivers/spi/spi-mt65xx.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
