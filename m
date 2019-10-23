@@ -2,94 +2,92 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF110CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:57:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08615CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:59:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE24121928
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:57:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB2802173B
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:59:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571853556;
+	bh=GVxu4ie3F6beXlleyG/nZFkxDDZ33fjhbpnxbt5ZrVY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=N9mtYlGk4ISV2zXQCqw1WBjioiUGmwqkLvPxapR79Nrkao9CJcuRCc/dp/8j1xIof
+	 oc6SzFnNRPYRJxwHQc2wc0WPUexFMyu/0DH4FO8GTg5vrwekztsudRoRJbbvWntiAB
+	 C95BA7FriO/9X1HQXroefhNsg6VzZB/DF6dMc4Qo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732723AbfJWR5z (ORCPT
+        id S1732891AbfJWR7P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 13:57:55 -0400
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:56119 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726803AbfJWR5y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 13:57:54 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07417;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0Tg.GgAY_1571853465;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0Tg.GgAY_1571853465)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 24 Oct 2019 01:57:48 +0800
-Subject: Re: [v2 PATCH] mm: thp: handle page cache THP correctly in
- PageTransCompoundMap
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     hughd@google.com, aarcange@redhat.com,
-        kirill.shutemov@linux.intel.com, gavin.dg@linux.alibaba.com,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <1571850304-82802-1-git-send-email-yang.shi@linux.alibaba.com>
- <20191023172420.GB2963@bombadil.infradead.org>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <792ea136-4fa0-c87b-9399-5ca47c501c9c@linux.alibaba.com>
-Date:   Wed, 23 Oct 2019 10:57:44 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Wed, 23 Oct 2019 13:59:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48938 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727064AbfJWR7P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 13:59:15 -0400
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B9B52086D
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 17:59:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571853554;
+        bh=GVxu4ie3F6beXlleyG/nZFkxDDZ33fjhbpnxbt5ZrVY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=V66bBzKehixlr0jPDg+nSIzXnNnH9cQiylvILvEawEAlOw0cbqKI1c5Nz4AKkcW0E
+         ACZZEa+2w9jJjjeT43ADwbiA3Q3Jplc2CRVq+6d9RjxiwhYelcQ2IayhY1/HKM0XrQ
+         wMXFKT4izUvKRgDXAsCkuGT7qtuslqabLZe2lliA=
+Received: by mail-qt1-f171.google.com with SMTP id w14so33554098qto.9
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 10:59:14 -0700 (PDT)
+X-Gm-Message-State: APjAAAXQtHr6XUC2f0tmwzJlJoiMiIYQWc/4kCocJjbbzCNWLDtHUZQe
+        +8/MK8/kmFH83ffs19thaO4B3j+1WzZ0NjRG/Q==
+X-Google-Smtp-Source: APXvYqwgiCA3/HW7B9HdMyTBcuSF8WS4GaQJTs5HXdTu0a3ruOPx1ujAxcRIzhZ2LIxDxG0XTebd4N+mapW3qIEWKdQ=
+X-Received: by 2002:a05:6214:1111:: with SMTP id e17mr6340426qvs.79.1571853553726;
+ Wed, 23 Oct 2019 10:59:13 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191023172420.GB2963@bombadil.infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <20191023120925.30668-1-tomeu.vizoso@collabora.com>
+ <20191023122157.32067-1-tomeu.vizoso@collabora.com> <d87ff25e-52af-a467-d128-85fe18028e4c@arm.com>
+In-Reply-To: <d87ff25e-52af-a467-d128-85fe18028e4c@arm.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 23 Oct 2019 12:58:59 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKT4f+Bp7Ajg=V-Ejaynp6BXXFUJKNuCxasU3U3LgepDg@mail.gmail.com>
+Message-ID: <CAL_JsqKT4f+Bp7Ajg=V-Ejaynp6BXXFUJKNuCxasU3U3LgepDg@mail.gmail.com>
+Subject: Re: [PATCH v2] panfrost: Properly undo pm_runtime_enable when
+ deferring a probe
+To:     Steven Price <steven.price@arm.com>
+Cc:     Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 10/23/19 10:24 AM, Matthew Wilcox wrote:
-> On Thu, Oct 24, 2019 at 01:05:04AM +0800, Yang Shi wrote:
->> +	return map_count >= 0 &&
->> +	       map_count == atomic_read(&head[1].compound_mapcount);
->>   }
-> I didn't like Hugh's duplicate definition either.  May I suggest:
-
-Thanks, Willy. It is fine to me. Will take it in v3.
-
+On Wed, Oct 23, 2019 at 10:49 AM Steven Price <steven.price@arm.com> wrote:
 >
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index 2f2199a51941..3d0efd937d2b 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -695,11 +695,6 @@ static inline void *kvcalloc(size_t n, size_t size, gfp_t flags)
->   
->   extern void kvfree(const void *addr);
->   
-> -static inline atomic_t *compound_mapcount_ptr(struct page *page)
-> -{
-> -	return &page[1].compound_mapcount;
-> -}
-> -
->   static inline int compound_mapcount(struct page *page)
->   {
->   	VM_BUG_ON_PAGE(!PageCompound(page), page);
-> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-> index 2222fa795284..270aa8fd2800 100644
-> --- a/include/linux/mm_types.h
-> +++ b/include/linux/mm_types.h
-> @@ -221,6 +221,11 @@ struct page {
->   #endif
->   } _struct_page_alignment;
->   
-> +static inline atomic_t *compound_mapcount_ptr(struct page *page)
-> +{
-> +	return &page[1].compound_mapcount;
-> +}
-> +
->   /*
->    * Used for sizing the vmemmap region on some architectures
->    */
+> On 23/10/2019 13:21, Tomeu Vizoso wrote:
+> > When deferring the probe because of a missing regulator, we were calling
+> > pm_runtime_disable even if pm_runtime_enable wasn't called.
+> >
+> > Move the call to pm_runtime_disable to the right place.
+> >
+> > Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+> > Reported-by: Chen-Yu Tsai <wens@csie.org>
+> > Cc: Robin Murphy <robin.murphy@arm.com>
+> > Fixes: f4a3c6a44b35 ("drm/panfrost: Disable PM on probe failure")
+>
+> As Robin pointed out this should be:
+>
+> Fixes: 635430797d3f ("drm/panfrost: Rework runtime PM initialization")
+>
+> But other than that,
+>
+> Reviewed-by: Steven Price <steven.price@arm.com>
 
+Applied with Fixes fixed. Looks like we just missed this weeks fixes...
+
+Rob
