@@ -2,121 +2,107 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB5BCA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:08:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BEEFCA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:10:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F29CB20640
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:08:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B1E420640
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:10:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="tzSWkQhA"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uWe4Gxxa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391188AbfJWMIG (ORCPT
+        id S2391194AbfJWMKE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 08:08:06 -0400
-Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:56852 "EHLO
-        forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388063AbfJWMIE (ORCPT
+        Wed, 23 Oct 2019 08:10:04 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:53137 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730034AbfJWMKD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 08:08:04 -0400
-Received: from mxbackcorp2j.mail.yandex.net (mxbackcorp2j.mail.yandex.net [IPv6:2a02:6b8:0:1619::119])
-        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id 4D66D2E14CB;
-        Wed, 23 Oct 2019 15:08:01 +0300 (MSK)
-Received: from myt4-4db2488e778a.qloud-c.yandex.net (myt4-4db2488e778a.qloud-c.yandex.net [2a02:6b8:c00:884:0:640:4db2:488e])
-        by mxbackcorp2j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id 23hWWxoMel-7xeeCThm;
-        Wed, 23 Oct 2019 15:08:01 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1571832481; bh=+B+SvaOCbgDDknC/2/JkY6GiT3BAkTSKqe+q0hZmdlw=;
-        h=In-Reply-To:Message-ID:References:Date:To:From:Subject:Cc;
-        b=tzSWkQhA4CPHGRIdvmwXGPPyvByP7Wq4cfsdBGS4wvh9k51+5d0ckRWpwur27Eo7w
-         qOw0Ptu+5Uc3rY+hRDT5jeW2E/ERffU4VzoR4PclK96pTOpm17UlVL7lF/7eqiW1nI
-         /yLyPpwcNoBsly4QnDJQ8P5Wljg7RAPAtlTUDAn0=
-Authentication-Results: mxbackcorp2j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:3d43:d63f:7907:141a])
-        by myt4-4db2488e778a.qloud-c.yandex.net (nwsmtp/Yandex) with ESMTPSA id lZqZQXZMm5-7xVWhAw5;
-        Wed, 23 Oct 2019 15:07:59 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: [PATCH 4.4 2/2] x86/vdso: Remove hpet_page from vDSO
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
-        Andy Lutomirski <luto@kernel.org>
-Date:   Wed, 23 Oct 2019 15:07:59 +0300
-Message-ID: <157183247929.2324.17980647890399201165.stgit@buzz>
-In-Reply-To: <157183247628.2324.16440279839073827980.stgit@buzz>
-References: <157183247628.2324.16440279839073827980.stgit@buzz>
-User-Agent: StGit/0.17.1-dirty
+        Wed, 23 Oct 2019 08:10:03 -0400
+Received: by mail-wm1-f66.google.com with SMTP id r19so20977437wmh.2
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 05:10:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GCCFnxfgctiR7ujkuq6S73RHOtLBZpaj2MQBUfolKvQ=;
+        b=uWe4GxxaDPldHT/awU5IWmMXWiJX9zobzCZrqq+ZyDgb8jfdBUOR+PX5YFHdwI5/lC
+         wNpaXg392Vm9jbCkVRfCu90EPUw3QQyy2Ow8C+AlRv+LtV+WVRkv6x/6LrOJr3mL/p8i
+         k+O5wtlrs7XawlVq/0CbZKOc2Csr/QHg9ZqoZzPmac1Moazeg85zhHVWOpabc5VYPTpS
+         R0weZTve0KM/FeioqgXhcJSzVojaVzAWoWKNRSZzVKSS2QdDbHNbaTC9wRwa+vDjDy4b
+         J/vkMN7tTgDu/j6WkExePmXeAWgMxXVGkYUH7BMapWPdxflWaLJ8pBMUvMUmk7ZxTVuJ
+         eRog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=GCCFnxfgctiR7ujkuq6S73RHOtLBZpaj2MQBUfolKvQ=;
+        b=hGCiBqABuzpB6Wwf1dXEDrbF9dIT0GhjwWYCKwKNq1e7mHSaOwSag7C6QGf4hWD9Wz
+         31uXMqNBKsXKLtkyIgw8bRxn/oegbKSJUjWQ/uWL2CNe0m05+FbnW7PpW0papkbv7CDw
+         Mozu4LdzBBtKLAuJDy1uzHKtxBr0JE5pdILVi+emLkujN2532OUstxGjhyIiOtzOv7Rr
+         ZGKlLriKP0t5uZZighh5Av5BLrwXuXlvOiJ5u7KT/+zS6h4E8iokLQiTIFZP77k99z45
+         vAQoKB+dVk2d+0/fwThY2e8nVpuup4oPI/NPWZFetBz73UGxehV6BJ+j+5rZ6ioImwrP
+         SXEg==
+X-Gm-Message-State: APjAAAWZ+nzepaUlJODiNdIWRXUao3th0Kpv9Rhatdt+JMNGz3ruTfKP
+        belo322y0M8nYK4n80zB8MxNeKBbDCI=
+X-Google-Smtp-Source: APXvYqwnT1P5lpTKGC9oq14j3EyMYmkpka1Vii05lwYOx5CHpyeTJMni1eoCxD3yrgrjTtag5l7jhA==
+X-Received: by 2002:a7b:cf30:: with SMTP id m16mr7709573wmg.89.1571832600353;
+        Wed, 23 Oct 2019 05:10:00 -0700 (PDT)
+Received: from cizrna.lan ([109.72.12.196])
+        by smtp.gmail.com with ESMTPSA id r81sm15016575wme.16.2019.10.23.05.09.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Oct 2019 05:09:59 -0700 (PDT)
+From:   Tomeu Vizoso <tomeu.vizoso@collabora.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Rob Herring <robh@kernel.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH] panfrost: Properly undo pm_runtime_enable when deferring a probe
+Date:   Wed, 23 Oct 2019 14:09:25 +0200
+Message-Id: <20191023120925.30668-1-tomeu.vizoso@collabora.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia Zhang <zhang.jia@linux.alibaba.com>
+When deferring the probe because of a missing regulator, we were calling
+pm_runtime_disable even if pm_runtime_enable wasn't called.
 
-Commit 81d30225bc0c246b53270eb90b23cfbb941a186d upstream.
+Move the call to pm_runtime_disable to the right place.
 
-This trivial cleanup finalizes the removal of vDSO HPET support.
-
-Fixes: 1ed95e52d902 ("x86/vdso: Remove direct HPET access through the vDSO")
-Signed-off-by: Jia Zhang <zhang.jia@linux.alibaba.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: luto@kernel.org
-Cc: bp@alien8.de
-Link: https://lkml.kernel.org/r/20190401114045.7280-1-zhang.jia@linux.alibaba.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Fixes: f4a3c6a44b35 ("drm/panfrost: Disable PM on probe failure")
+Cc: Robin Murphy <robin.murphy@arm.com>
 ---
- arch/x86/entry/vdso/vdso2c.c |    3 ---
- arch/x86/include/asm/vdso.h  |    1 -
- 2 files changed, 4 deletions(-)
+ drivers/gpu/drm/panfrost/panfrost_drv.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/entry/vdso/vdso2c.c b/arch/x86/entry/vdso/vdso2c.c
-index 491020b2826d..6446ba489eb2 100644
---- a/arch/x86/entry/vdso/vdso2c.c
-+++ b/arch/x86/entry/vdso/vdso2c.c
-@@ -72,7 +72,6 @@ const char *outfilename;
- enum {
- 	sym_vvar_start,
- 	sym_vvar_page,
--	sym_hpet_page,
- 	sym_pvclock_page,
- 	sym_VDSO_FAKE_SECTION_TABLE_START,
- 	sym_VDSO_FAKE_SECTION_TABLE_END,
-@@ -80,7 +79,6 @@ enum {
+diff --git a/drivers/gpu/drm/panfrost/panfrost_drv.c b/drivers/gpu/drm/panfrost/panfrost_drv.c
+index bc2ddeb55f5d..f21bc8a7ee3a 100644
+--- a/drivers/gpu/drm/panfrost/panfrost_drv.c
++++ b/drivers/gpu/drm/panfrost/panfrost_drv.c
+@@ -556,11 +556,11 @@ static int panfrost_probe(struct platform_device *pdev)
+ 	return 0;
  
- const int special_pages[] = {
- 	sym_vvar_page,
--	sym_hpet_page,
- 	sym_pvclock_page,
- };
- 
-@@ -92,7 +90,6 @@ struct vdso_sym {
- struct vdso_sym required_syms[] = {
- 	[sym_vvar_start] = {"vvar_start", true},
- 	[sym_vvar_page] = {"vvar_page", true},
--	[sym_hpet_page] = {"hpet_page", true},
- 	[sym_pvclock_page] = {"pvclock_page", true},
- 	[sym_VDSO_FAKE_SECTION_TABLE_START] = {
- 		"VDSO_FAKE_SECTION_TABLE_START", false
-diff --git a/arch/x86/include/asm/vdso.h b/arch/x86/include/asm/vdso.h
-index deabaf9759b6..c2a1188cd0bf 100644
---- a/arch/x86/include/asm/vdso.h
-+++ b/arch/x86/include/asm/vdso.h
-@@ -21,7 +21,6 @@ struct vdso_image {
- 	long sym_vvar_start;  /* Negative offset to the vvar area */
- 
- 	long sym_vvar_page;
--	long sym_hpet_page;
- 	long sym_pvclock_page;
- 	long sym_VDSO32_NOTE_MASK;
- 	long sym___kernel_sigreturn;
+ err_out2:
++	pm_runtime_disable(pfdev->dev);
+ 	panfrost_devfreq_fini(pfdev);
+ err_out1:
+ 	panfrost_device_fini(pfdev);
+ err_out0:
+-	pm_runtime_disable(pfdev->dev);
+ 	drm_dev_put(ddev);
+ 	return err;
+ }
+-- 
+2.20.1
 
