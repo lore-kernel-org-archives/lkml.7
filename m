@@ -2,34 +2,56 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05106CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 16:20:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C2BACA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 16:21:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7A072084C
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 16:20:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3E4A21928
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 16:21:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MVvPfItp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407199AbfJWQUQ (ORCPT
+        id S2407207AbfJWQVT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 12:20:16 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42950 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2407057AbfJWQUQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 12:20:16 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id AD166B428;
-        Wed, 23 Oct 2019 16:20:13 +0000 (UTC)
+        Wed, 23 Oct 2019 12:21:19 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:20677 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2404850AbfJWQVT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 12:21:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571847677;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Yb+CfoGFjOsF490dmtrlU6UWPLSnL/PL/inTpFxT+eg=;
+        b=MVvPfItpPKrUKCiMDHSXW4H60wAfAxs0Kyp5Dzx1clLM2UM2tcx/1ZuyUNOvXbSkXs/9PW
+        bp2y77KYibPGOlRFbi9xsia3k+wdjbiTQZrn5TnkVYAqLWeWeh3yjFD0MpjB1SUjRXVRej
+        bJHTq9dNcsGsaTZW5GPbWnKEBhyAXkU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-210-FsNnKaJeOJa4ZPGFg-Gqxg-1; Wed, 23 Oct 2019 12:21:14 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2111A107AD31;
+        Wed, 23 Oct 2019 16:21:12 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5555060126;
+        Wed, 23 Oct 2019 16:21:06 +0000 (UTC)
 Subject: Re: [RFC PATCH 2/2] mm, vmstat: reduce zone->lock holding time by
  /proc/pagetypeinfo
+From:   Waiman Long <longman@redhat.com>
 To:     Michal Hocko <mhocko@kernel.org>
 Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@suse.de>, Waiman Long <longman@redhat.com>,
+        Mel Gorman <mgorman@suse.de>,
         Johannes Weiner <hannes@cmpxchg.org>,
-        Roman Gushchin <guro@fb.com>,
+        Roman Gushchin <guro@fb.com>, Vlastimil Babka <vbabka@suse.cz>,
         Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
         Jann Horn <jannh@google.com>, Song Liu <songliubraving@fb.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -38,117 +60,150 @@ Cc:     Andrew Morton <akpm@linux-foundation.org>,
 References: <20191023095607.GE3016@techsingularity.net>
  <20191023102737.32274-1-mhocko@kernel.org>
  <20191023102737.32274-3-mhocko@kernel.org>
- <30211965-8ad0-416d-0fe1-113270bd1ea8@suse.cz>
- <20191023133720.GA17610@dhcp22.suse.cz>
- <7fb34979-66a4-4a5d-1798-402826e31e72@suse.cz>
- <20191023143102.GI17610@dhcp22.suse.cz>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <8b5a9ee8-4e52-f98c-d833-2e8493baa3a6@suse.cz>
-Date:   Wed, 23 Oct 2019 18:20:08 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+ <a3510617-fd23-9f90-3c40-700bcb0f353c@redhat.com>
+ <20191023161029.GK17610@dhcp22.suse.cz>
+ <27e2a26d-8c9b-fdb9-782f-8efa678352b3@redhat.com>
+Organization: Red Hat
+Message-ID: <015ef5b2-7e11-02a5-6cf3-2e45f6657910@redhat.com>
+Date:   Wed, 23 Oct 2019 12:21:05 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20191023143102.GI17610@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <27e2a26d-8c9b-fdb9-782f-8efa678352b3@redhat.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MC-Unique: FsNnKaJeOJa4ZPGFg-Gqxg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/23/19 4:31 PM, Michal Hocko wrote:
-> On Wed 23-10-19 15:48:36, Vlastimil Babka wrote:
->> On 10/23/19 3:37 PM, Michal Hocko wrote:
->>>
->>> But those wouldn't really help to prevent from the lockup, right?
+On 10/23/19 12:17 PM, Waiman Long wrote:
+> On 10/23/19 12:10 PM, Michal Hocko wrote:
+>> On Wed 23-10-19 10:56:30, Waiman Long wrote:
+>>> On 10/23/19 6:27 AM, Michal Hocko wrote:
+>>>> From: Michal Hocko <mhocko@suse.com>
+>>>>
+>>>> pagetypeinfo_showfree_print is called by zone->lock held in irq mode.
+>>>> This is not really nice because it blocks both any interrupts on that
+>>>> cpu and the page allocator. On large machines this might even trigger
+>>>> the hard lockup detector.
+>>>>
+>>>> Considering the pagetypeinfo is a debugging tool we do not really need
+>>>> exact numbers here. The primary reason to look at the outuput is to se=
+e
+>>>> how pageblocks are spread among different migratetypes therefore putti=
+ng
+>>>> a bound on the number of pages on the free_list sounds like a reasonab=
+le
+>>>> tradeoff.
+>>>>
+>>>> The new output will simply tell
+>>>> [...]
+>>>> Node    6, zone   Normal, type      Movable >100000 >100000 >100000 >1=
+00000  41019  31560  23996  10054   3229    983    648
+>>>>
+>>>> instead of
+>>>> Node    6, zone   Normal, type      Movable 399568 294127 221558 10211=
+9  41019  31560  23996  10054   3229    983    648
+>>>>
+>>>> The limit has been chosen arbitrary and it is a subject of a future
+>>>> change should there be a need for that.
+>>>>
+>>>> Suggested-by: Andrew Morton <akpm@linux-foundation.org>
+>>>> Signed-off-by: Michal Hocko <mhocko@suse.com>
+>>>> ---
+>>>>  mm/vmstat.c | 19 ++++++++++++++++++-
+>>>>  1 file changed, 18 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/mm/vmstat.c b/mm/vmstat.c
+>>>> index 4e885ecd44d1..762034fc3b83 100644
+>>>> --- a/mm/vmstat.c
+>>>> +++ b/mm/vmstat.c
+>>>> @@ -1386,8 +1386,25 @@ static void pagetypeinfo_showfree_print(struct =
+seq_file *m,
+>>>> =20
+>>>>  =09=09=09area =3D &(zone->free_area[order]);
+>>>> =20
+>>>> -=09=09=09list_for_each(curr, &area->free_list[mtype])
+>>>> +=09=09=09list_for_each(curr, &area->free_list[mtype]) {
+>>>>  =09=09=09=09freecount++;
+>>>> +=09=09=09=09/*
+>>>> +=09=09=09=09 * Cap the free_list iteration because it might
+>>>> +=09=09=09=09 * be really large and we are under a spinlock
+>>>> +=09=09=09=09 * so a long time spent here could trigger a
+>>>> +=09=09=09=09 * hard lockup detector. Anyway this is a
+>>>> +=09=09=09=09 * debugging tool so knowing there is a handful
+>>>> +=09=09=09=09 * of pages in this order should be more than
+>>>> +=09=09=09=09 * sufficient
+>>>> +=09=09=09=09 */
+>>>> +=09=09=09=09if (freecount > 100000) {
+>>>> +=09=09=09=09=09seq_printf(m, ">%6lu ", freecount);
+>>>> +=09=09=09=09=09spin_unlock_irq(&zone->lock);
+>>>> +=09=09=09=09=09cond_resched();
+>>>> +=09=09=09=09=09spin_lock_irq(&zone->lock);
+>>>> +=09=09=09=09=09continue;
+>>> list_for_each() is a for loop. The continue statement will just iterate
+>>> the rests with the possibility that curr will be stale. Should we use
+>>> goto to jump after the seq_print() below?
+>> You are right. Kinda brown paper back material. Sorry about that. What
+>> about this on top?
+>> ---=20
+>> diff --git a/mm/vmstat.c b/mm/vmstat.c
+>> index 762034fc3b83..c156ce24a322 100644
+>> --- a/mm/vmstat.c
+>> +++ b/mm/vmstat.c
+>> @@ -1383,11 +1383,11 @@ static void pagetypeinfo_showfree_print(struct s=
+eq_file *m,
+>>  =09=09=09unsigned long freecount =3D 0;
+>>  =09=09=09struct free_area *area;
+>>  =09=09=09struct list_head *curr;
+>> +=09=09=09bool overflow =3D false;
+>> =20
+>>  =09=09=09area =3D &(zone->free_area[order]);
+>> =20
+>>  =09=09=09list_for_each(curr, &area->free_list[mtype]) {
+>> -=09=09=09=09freecount++;
+>>  =09=09=09=09/*
+>>  =09=09=09=09 * Cap the free_list iteration because it might
+>>  =09=09=09=09 * be really large and we are under a spinlock
+>> @@ -1397,15 +1397,15 @@ static void pagetypeinfo_showfree_print(struct s=
+eq_file *m,
+>>  =09=09=09=09 * of pages in this order should be more than
+>>  =09=09=09=09 * sufficient
+>>  =09=09=09=09 */
+>> -=09=09=09=09if (freecount > 100000) {
+>> -=09=09=09=09=09seq_printf(m, ">%6lu ", freecount);
+>> +=09=09=09=09if (++freecount >=3D 100000) {
+>> +=09=09=09=09=09overflow =3D true;
+>>  =09=09=09=09=09spin_unlock_irq(&zone->lock);
+>>  =09=09=09=09=09cond_resched();
+>>  =09=09=09=09=09spin_lock_irq(&zone->lock);
+>> -=09=09=09=09=09continue;
+>> +=09=09=09=09=09break;
+>>  =09=09=09=09}
+>>  =09=09=09}
+>> -=09=09=09seq_printf(m, "%6lu ", freecount);
+>> +=09=09=09seq_printf(m, "%s%6lu ", overflow ? ">" : "", freecount);
+>>  =09=09}
+>>  =09=09seq_putc(m, '\n');
+>>  =09}
 >>
->> No, but it would perhaps help ensure that only people who know what they
->> are doing (or been told so by a developer e.g. on linux-mm) will try to
->> collect the data, and not some automatic monitoring tools taking
->> periodic snapshots of stuff in /proc that looks interesting.
-> 
-> Well, we do trust root doesn't do harm, right?
+> Yes, that looks good to me. There is still a small chance that the
+> description will be a bit off if it is exactly 100,000. However, it is
+> not a big deal and I can live with that.
 
-Perhaps too much :)
+Alternatively, you can do
 
->>> Besides that who would enable that config and how much of a difference
->>> would root only vs. debugfs make?
->>
->> I would hope those tools don't scrap debugfs as much as /proc, but I
->> might be wrong of course :)
->>
->>> Is the incomplete value a real problem?
->>
->> Hmm perhaps not. If the overflow happens only for one migratetype, one
->> can use also /proc/buddyinfo to get to the exact count, as was proposed
->> in this thread for Movable migratetype.
-> 
-> Let's say this won't be the case. What is the worst case that the
-> imprecision would cause? In other words. Does it really matter whether
-> we have 100k pages on the free list of the specific migrate type for
-> order or say 200k?
+if (++freecount > 100000) {
+=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 :
+=C2=A0=C2=A0=C2=A0 freecount--;
+=C2=A0=C2=A0=C2=A0 break;
+}
 
-Probably not, it rather matters for which order the count approaches zero.
-
+Cheers,
+Longman
 
