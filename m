@@ -2,101 +2,216 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13CE4CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:00:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BADAC47E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:01:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E900221872
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:00:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3046021872
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:01:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="uSGIcfd7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390630AbfJWJAr (ORCPT
+        id S2390637AbfJWJBd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 05:00:47 -0400
-Received: from mga04.intel.com ([192.55.52.120]:43799 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387829AbfJWJAr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 05:00:47 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 02:00:47 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,220,1569308400"; 
-   d="scan'208";a="209878290"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 23 Oct 2019 02:00:43 -0700
-Received: by lahna (sSMTP sendmail emulation); Wed, 23 Oct 2019 12:00:42 +0300
-Date:   Wed, 23 Oct 2019 12:00:42 +0300
-From:   Mika Westerberg <mika.westerberg@intel.com>
-To:     Karol Herbst <kherbst@redhat.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lyude Paul <lyude@redhat.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        Linux ACPI Mailing List <linux-acpi@vger.kernel.org>
-Subject: Re: [PATCH v3] pci: prevent putting nvidia GPUs into lower device
- states on certain intel bridges
-Message-ID: <20191023090042.GQ2819@lahna.fi.intel.com>
-References: <CACO55tuXck7vqGVLmMBGFg6A2pr3h8koRuvvWHLNDH8XvBVxew@mail.gmail.com>
- <20191021133328.GI2819@lahna.fi.intel.com>
- <CACO55tujUZr+rKkyrkfN+wkNOJWdNEVhVc-eZ3RCXJD+G1z=7A@mail.gmail.com>
- <20191021140852.GM2819@lahna.fi.intel.com>
- <CACO55tvp6n2ahizwhc70xRJ1uTohs2ep962vwtHGQK-MkcLmsw@mail.gmail.com>
- <20191021154606.GT2819@lahna.fi.intel.com>
- <CACO55tsGhvG1qapRkdu_j7R534cFa5o=Gv2s4VZDrWUrxjBFwA@mail.gmail.com>
- <CACO55ts7hivYgN7=3bcAjWx2h8FfbR5UiKiOOExYY9m-TGRNfw@mail.gmail.com>
- <20191022124453.GK2819@lahna.fi.intel.com>
- <CACO55tvxvwUqzg=jLoO6bhmcaXQwRaTv9S4pt2t0V5TUi+HsEw@mail.gmail.com>
+        Wed, 23 Oct 2019 05:01:33 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:39477 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390436AbfJWJBc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 05:01:32 -0400
+Received: by mail-wm1-f67.google.com with SMTP id r141so9230928wme.4
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 02:01:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=aR0VSMnP4KkB+mkerf85b81/hB0bJCp5/Vkdc4wc6hA=;
+        b=uSGIcfd72Gshs/oBfZ73FZmP5Z3y0RcKof9RadYgq/hhgMK47xtr7i8SxIZBsLfb/n
+         mp4YdG1UypVdLUHfEmn41sQN3W9BkxDBLPGfII2edwAjhTCFG/HEfUkwMERiXayvpQ4o
+         zwbahWSgVszS4hzwda+y5F0MlcuRfUcQrRHRsIOnsFe41ZR9Pc6ptIjfQG8Yt1hp0hOf
+         bJJgAJ5BqiYXNQbbPCQ4MYz2o76PN91r6UgUBywdmBv0UFQNRJL7zT76lkh5uq2jpOUi
+         j2spGC3yrUV8zaYWmmDQoalQtOoto70fVYiPSzN//fsavpigJ2TXhrW1P76hPwvVgcxY
+         f1tA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=aR0VSMnP4KkB+mkerf85b81/hB0bJCp5/Vkdc4wc6hA=;
+        b=n/z+PZoyS/DJLffsTq6ySpCKoi20GtZxe/QO+pNrAlM+g0s+ZJ9ur0KKRNpqq4bBa/
+         ERjFjS5QKm39du3SaLuO0wSvBvWCSdeCRj1lrBDRApgToe6NhVSWHM2YuygGnouZG1B5
+         4FEWZeX/rvwSxdNjr3+DkL/urAGpzsgwK1j3lt302LMsPrrso8ECkImWFZBXIZH5p/Ae
+         UY4Zu6Oiq2SXezH2Bv6AQ2Z7N+gY16rOdYQDik2hKmJQpF1oWQXShKJT298IPBcaAtpJ
+         P3lrU5tUPa8dkRpybQ9g8G+HgFaJVFbxe5scJfcHSwzk5/CqOAzBw2I0jFVntq627HiK
+         S0pA==
+X-Gm-Message-State: APjAAAX8m9+BUtLksayFrV9pyd6yiUyBQkPu+21a91BpAz/SP6kT8LSE
+        dSR4Pyrz9fcZD9Tz5zZXDCs89g==
+X-Google-Smtp-Source: APXvYqyvQ8r2oQMybF8/Pj+naPcy6tRL9yoDeCNtwtwGQx9KxbqXPr4d7jlhu11P/1qFpoeyvtA1VQ==
+X-Received: by 2002:a1c:7911:: with SMTP id l17mr6675287wme.21.1571821290130;
+        Wed, 23 Oct 2019 02:01:30 -0700 (PDT)
+Received: from localhost (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id q25sm5833925wra.3.2019.10.23.02.01.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Oct 2019 02:01:29 -0700 (PDT)
+References: <1571050492-6598-1-git-send-email-qianggui.song@amlogic.com> <1571050492-6598-3-git-send-email-qianggui.song@amlogic.com>
+User-agent: mu4e 1.3.3; emacs 26.2
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Qianggui Song <qianggui.song@amlogic.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Carlo Caione <carlo@caione.org>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        Xingyu Chen <xingyu.chen@amlogic.com>,
+        "Jianxin Pan" <jianxin.pan@amlogic.com>,
+        Hanjie Lin <hanjie.lin@amlogic.com>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/4] pinctrl: meson: add a new dt parse callback for Meson-A series SoCs
+In-reply-to: <1571050492-6598-3-git-send-email-qianggui.song@amlogic.com>
+Date:   Wed, 23 Oct 2019 11:01:28 +0200
+Message-ID: <1j4kzzvnrr.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACO55tvxvwUqzg=jLoO6bhmcaXQwRaTv9S4pt2t0V5TUi+HsEw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 02:51:53PM +0200, Karol Herbst wrote:
-> On Tue, Oct 22, 2019 at 2:45 PM Mika Westerberg
-> <mika.westerberg@intel.com> wrote:
-> >
-> > On Tue, Oct 22, 2019 at 11:16:14AM +0200, Karol Herbst wrote:
-> > > I think there is something I totally forgot about:
-> > >
-> > > When there was never a driver bound to the GPU, and if runtime power
-> > > management gets enabled on that device, runtime suspend/resume works
-> > > as expected (I am not 100% sure on if that always works, but I will
-> > > recheck that).
-> >
-> > AFAIK, if there is no driver bound to the PCI device it is left to D0
-> > regardless of the runtime PM state which could explain why it works in
-> > that case (it is never put into D3hot).
-> >
-> > I looked at the acpidump you sent and there is one thing that may
-> > explain the differences between Windows and Linux. Not sure if you were
-> > aware of this already, though. The power resource PGOF() method has
-> > this:
-> >
-> >    If (((OSYS <= 0x07D9) || ((OSYS == 0x07DF) && (_REV == 0x05)))) {
-> >       ...
-> >    }
-> >
-> 
-> I think this is the fallback to some older method of runtime
-> suspending the device, and I think it will end up touching different
-> registers on the bridge controller which do not show the broken
-> behaviour.
 
-I think it actually tries to identify older Windows and then Linux (the
-_REV == 0x05 check comes from that). So at least some point Dell people
-have experiment this on Linux.
+On Mon 14 Oct 2019 at 12:54, Qianggui Song <qianggui.song@amlogic.com> wrote:
+
+> Meson A1 Soc share the same register layout of pinmux with previous
+> Meson-G12A, however there is difference for gpio and pin config register
+> in A1. The main difference is that registers before A1 are grouped by
+> function while those of A1 are by bank. The new register layout is as
+> below:
+>
+> /* first bank */	      /* addr */
+> - P_PADCTRL_GPIOP_I         base + 0x00 << 2
+> - P_PADCTRL_GPIOP_O         base + 0x01 << 2
+> - P_PADCTRL_GPIOP_OEN       base + 0x02 << 2
+> - P_PADCTRL_GPIOP_PULL_EN   base + 0x03 << 2
+> - P_PADCTRL_GPIOP_PULL_UP   base + 0x04 << 2
+> - P_PADCTRL_GPIOP_DS        base + 0x05 << 2
+>
+> /* second bank */
+> - P_PADCTRL_GPIOB_I         base + 0x10 << 2
+> - P_PADCTRL_GPIOB_O         base + 0x11 << 2
+> - P_PADCTRL_GPIOB_OEN       base + 0x12 << 2
+> - P_PADCTRL_GPIOB_PULL_EN   base + 0x13 << 2
+> - P_PADCTRL_GPIOB_PULL_UP   base + 0x14 << 2
+> - P_PADCTRL_GPIOB_DS        base + 0x15 << 2
+>
+> Each bank contains at least 6 registers to be configured, if one bank
+> has more than 16 gpios, an extra P_PADCTRL_GPIO[X]_DS_EXT is included.
+> Between two adjacent P_PADCTRL_GPIO[X]_I, there is an offset 0x10, that
+> is to say, for third bank, the offsets will be 0x20,0x21,0x22,0x23,0x24
+> ,0x25 according to above register layout. For previous chips, registers
+> are grouped according to their functions while registers of A1 are
+> according to bank.
+>
+> Current Meson pinctrl driver can cover such change by using base address
+> of GPIO as that of drive-strength.While simply giving reg_ds = reg_pullen
+> make wrong value to reg_ds for Socs that do not support drive-strength
+> like AXG.To make things simple, add an extra dt parser function for
+> a1 or later chip and remain the old dt parser function for old Socs.
+>
+> Signed-off-by: Qianggui Song <qianggui.song@amlogic.com>
+> ---
+>  drivers/pinctrl/meson/pinctrl-meson.c | 16 +++++++++++++++-
+>  drivers/pinctrl/meson/pinctrl-meson.h |  7 +++++++
+>  2 files changed, 22 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/pinctrl/meson/pinctrl-meson.c b/drivers/pinctrl/meson/pinctrl-meson.c
+> index 8bba9d053d9f..e8f6298fc96a 100644
+> --- a/drivers/pinctrl/meson/pinctrl-meson.c
+> +++ b/drivers/pinctrl/meson/pinctrl-meson.c
+> @@ -695,6 +695,17 @@ static int meson_pinctrl_parse_dt(struct meson_pinctrl *pc,
+>  	return 0;
+>  }
+>  
+> +int meson_pinctrl_parse_dt_extra(struct meson_pinctrl *pc,
+> +				 struct device_node *node)
+
+This function is the fixup for the a1 family, AFAICT.
+It should be named as such and it belong in pinctrl-meson-a1.c
+
+Every controller performing fixups should have their function as well:
+ (1) AO of gxbb, gxl and axg 
+ (2) AO of g12 and sm
+
+> +{
+> +	int ret;
+> +
+> +	ret = meson_pinctrl_parse_dt(pc, node);
+
+As said in previous review,  meson_pinctrl_parse_dt() should be called
+for every SoC to parse the *available* regions.
+
+The fixup, if necessary, will be done by providing a callback
+
+IOW, please:
+ * rework meson_pinctrl_parse_dt() to only parse the avaialble region
+ * don't call meson_pinctrl_parse_dt() from the extra function
+ * provided the extra function for the AO controllers of the other SoCs
+
+> +	pc->reg_ds = pc->reg_pullen;
+> +
+> +	return ret;
+> +}
+> +
+>  int meson_pinctrl_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+> @@ -708,7 +719,10 @@ int meson_pinctrl_probe(struct platform_device *pdev)
+>  	pc->dev = dev;
+>  	pc->data = (struct meson_pinctrl_data *) of_device_get_match_data(dev);
+>  
+> -	ret = meson_pinctrl_parse_dt(pc, dev->of_node);
+> +	if (pc->data->parse_dt)
+> +		ret = pc->data->parse_dt(pc, dev->of_node);
+> +	else
+> +		ret = meson_pinctrl_parse_dt(pc, dev->of_node);
+>  	if (ret)
+
+
+
+>  		return ret;
+>  
+> diff --git a/drivers/pinctrl/meson/pinctrl-meson.h b/drivers/pinctrl/meson/pinctrl-meson.h
+> index c696f3241a36..0cd6a869cae3 100644
+> --- a/drivers/pinctrl/meson/pinctrl-meson.h
+> +++ b/drivers/pinctrl/meson/pinctrl-meson.h
+> @@ -11,6 +11,8 @@
+>  #include <linux/regmap.h>
+>  #include <linux/types.h>
+>  
+> +struct meson_pinctrl;
+> +
+>  /**
+>   * struct meson_pmx_group - a pinmux group
+>   *
+> @@ -114,6 +116,7 @@ struct meson_pinctrl_data {
+>  	unsigned int num_banks;
+>  	const struct pinmux_ops *pmx_ops;
+>  	void *pmx_data;
+> +	int (*parse_dt)(struct meson_pinctrl *pc, struct device_node *node);
+>  };
+>  
+>  struct meson_pinctrl {
+> @@ -171,3 +174,7 @@ int meson_pmx_get_groups(struct pinctrl_dev *pcdev,
+>  
+>  /* Common probe function */
+>  int meson_pinctrl_probe(struct platform_device *pdev);
+> +
+> +/* Extra dt parse function for register layout grouped by bank */
+> +int meson_pinctrl_parse_dt_extra(struct meson_pinctrl *pc,
+> +				 struct device_node *node);
+
