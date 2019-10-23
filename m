@@ -2,182 +2,91 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D893CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 05:49:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87B6ACA9EAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 05:54:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24AA021872
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 05:49:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571809763;
-	bh=snDD2TGm/p3To1d+GTgma+dC7mp1sEZRotHc0mSrxgk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Wpq06od6ZIrtzgJ43Qdtb+mZcEkFbYK8uFHZM6LBermKZGVG7UZ9z4WX/trom4LYu
-	 JuyC3773rFXfQydnOkRh080PiumWc55Z8IvQLTSLkmH1MaK8I6/MssqblTaIQ7hjcY
-	 c7xz4W0Xnw9XG/WkFWhgnvRPg98bIBKErsVXyF4g=
+	by mail.kernel.org (Postfix) with ESMTP id 577B6214B2
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 05:54:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732691AbfJWFtV (ORCPT
+        id S1732256AbfJWFyH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 01:49:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44044 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731847AbfJWFtV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 01:49:21 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC981214B2;
-        Wed, 23 Oct 2019 05:49:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571809760;
-        bh=snDD2TGm/p3To1d+GTgma+dC7mp1sEZRotHc0mSrxgk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=jXp1j7nLsX2w5XE8QjSsMsPsl6XNtnpXMoeAsWx7LgtVt9dh19xs8SCMDNPbgwxPw
-         6VN5Z0HebFWqLdi6aej3/2KW2YqTHTNy4xg/jI9KXWPKB8I7d7f0qw7Zlc1qKC0QQ9
-         a4iUCnJ0h0ATuVIBaLQ15t9K3Wj/afO/hHwllWRU=
-Date:   Wed, 23 Oct 2019 14:49:16 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Masami Hiramatsu <mhiramat@redhat.com>
-Subject: Re: linux-next: Tree for Oct 14 (insn_decoder_test)
-Message-Id: <20191023144916.2cbd0ea16363b4cd4574f5ad@kernel.org>
-In-Reply-To: <2d83682b-6206-4992-63cc-342d61641c0a@infradead.org>
-References: <20191014174707.469f596f@canb.auug.org.au>
-        <2d83682b-6206-4992-63cc-342d61641c0a@infradead.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 23 Oct 2019 01:54:07 -0400
+Received: from outbound.smtp.vt.edu ([198.82.183.121]:34140 "EHLO
+        omr1.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727719AbfJWFyG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 01:54:06 -0400
+Received: from mr6.cc.vt.edu (mr6.cc.ipv6.vt.edu [IPv6:2607:b400:92:8500:0:af:2d00:4488])
+        by omr1.cc.vt.edu (8.14.4/8.14.4) with ESMTP id x9N5s50e005894
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 01:54:05 -0400
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
+        by mr6.cc.vt.edu (8.14.7/8.14.7) with ESMTP id x9N5s0jN030037
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 01:54:05 -0400
+Received: by mail-qt1-f200.google.com with SMTP id t25so20190750qtq.9
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 22:54:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=XpCZHMTbKXINebAUsqqTWQnMeRldTzQA3tx+o31MY8A=;
+        b=ANixQJ4KpaM+tJ4uxCKN6+ureSeQMcBLOCEx9GxIlM/Gk2edAPI4B5J2wzinj73Jrd
+         L1qm8qUtCONeFwi0VOeoekrtiUlTkrYhZVHRu0jPiALMvlU5cedgbaTGwwAmTsW5y1g0
+         hKn0EaeLkxSF5LlyM7SUHZClH7pCevc0jCnysLHuzc0YZAfNLjp9WmJ4wQR6QVt2Gq7G
+         6pIlez7083aW6zjxxQ36fTV2Bx30Wp6yOvJn/WUVZPnvbZsTu8kIA5IQA4yWGHeIO1I7
+         23EUXGTnsQodNp2VMzptQiLNM3VizpHwXBzPLTlUf+NHIcOi19GVq5dwPc+CTmtaNUTt
+         RXBQ==
+X-Gm-Message-State: APjAAAWc+JWvwYAagkJS/YZ8pUvp35X88IcWn5z7yVD6xY2N8Xa25Dqk
+        90fJi/2MDBM1WAp4T3Lz08EV5v2tlZFOByK648SFgSbaH3WxbdDIbhjknO6L29NKVzKYDZXozWm
+        zfPLM5Z/gjC8Du81yulhjReYnMXC2XOwWhgI=
+X-Received: by 2002:ac8:7289:: with SMTP id v9mr7378757qto.139.1571810040120;
+        Tue, 22 Oct 2019 22:54:00 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqy0O5lzS2JrJB3r/ZBWxG9Vjh+mJTh2FC0VZrknY0ujap517FKrms/YSu7aQCuDbJ9x2Zo+3w==
+X-Received: by 2002:ac8:7289:: with SMTP id v9mr7378749qto.139.1571810039904;
+        Tue, 22 Oct 2019 22:53:59 -0700 (PDT)
+Received: from turing-police.lan ([2601:5c0:c001:c9e1::359])
+        by smtp.gmail.com with ESMTPSA id c8sm7478656qkk.46.2019.10.22.22.53.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Oct 2019 22:53:58 -0700 (PDT)
+From:   Valdis Kletnieks <valdis.kletnieks@vt.edu>
+X-Google-Original-From: Valdis Kletnieks <Valdis.Kletnieks@vt.edu>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org,
+        Valdis Kletnieks <Valdis.Kletnieks@vt.edu>
+Subject: [PATCH 1/1] staging: exfat: Update MAINTAINERS file
+Date:   Wed, 23 Oct 2019 01:53:53 -0400
+Message-Id: <20191023055353.695275-1-Valdis.Kletnieks@vt.edu>
+X-Mailer: git-send-email 2.23.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Add a L: tag so get_maintainers.pl output includes the linux-fsdevel list
 
-On Mon, 14 Oct 2019 08:30:02 -0700
-Randy Dunlap <rdunlap@infradead.org> wrote:
-
-> On 10/13/19 11:47 PM, Stephen Rothwell wrote:
-> > Hi all,
-> > 
-> > Changes since 20191011:
-> > 
-> 
-> on x86_64:
-> 
->   HOSTCC  arch/x86/tools/insn_decoder_test
->   HOSTCC  arch/x86/tools/insn_sanity
->   TEST    posttest
-> arch/x86/tools/insn_decoder_test: warning: Found an x86 instruction decoder bug, please report this.
-> arch/x86/tools/insn_decoder_test: warning: ffffffff81000bf1:	f7 0b 00 01 08 00    	testl  $0x80100,(%rbx)
-> arch/x86/tools/insn_decoder_test: warning: objdump says 6 bytes, but insn_get_length() says 2
-> arch/x86/tools/insn_decoder_test: warning: Decoded and checked 11913894 instructions with 1 failures
->   TEST    posttest
-> arch/x86/tools/insn_sanity: Success: decoded and checked 1000000 random instructions with 0 errors (seed:0x871ce29c)
-
-Hmm, curious.
-
-x86-opcode-map.txt said,
-f7: Grp3_2 Ev (1A)
-
-and "0x0b" is 00001011b, Group encoding bits are 5,4,3 (reg field),
-so group index is 001.
-
-GrpTable: Grp3_2
-0: TEST Ev,Iz
-1:
-
-Hmm, "f7 0b" is not assigned to any instruction... (testl should be f7 03)
-
-I've checked Intel SDM May 2019 version(*), but the Opcode Map (Table A-6. Opecode
-Extensions for One- and Two-byte Opecodes by Group Number) showed the group index
-001 is still blank. I've also checked that Table B-13 (General Purpose Instruction
- Formats and Encodings for Non-64-Bit Modes (Note that this has no REX prefix)) but
-I couldn't find "f7 0b".
-
-At last, I found that on AMD64 Architecture Programmer's Manual Volume 3, Appendix A.2
-Table A-6. ModRM.reg Extensions for the Primary Opcode Map(**), which shows that both
-f7 + reg=000 and f7 + reg=001 are same. So only on AMD64, it is officially available
-instruction.
-
-(*) https://software.intel.com/sites/default/files/managed/a4/60/325383-sdm-vol-2abcd.pdf
-(**) https://www.amd.com/system/files/TechDocs/24594.pdf
-
-OK, so this should be fixed with below patch.
-
-------
-From b3f45b86df25be59fcf417730ab4c69c6310eaad Mon Sep 17 00:00:00 2001
-From: Masami Hiramatsu <mhiramat@kernel.org>
-Date: Wed, 23 Oct 2019 14:45:35 +0900
-Subject: [PATCH] x86/decoder: Add TEST opcode to Group3-2
-
-Add TEST opcode to Group3-2 reg=001b as same as Group3-1 does.
-
-Commit 12a78d43de76 ("x86/decoder: Add new TEST instruction pattern")
-added a TEST opcode assignment to f6 XX/001/XXX (Group 3-1), but not
-added f7 XX/001/XXX (Group 3-2). Actually these TEST opcode is not
-described in Intel SDM Vol2, but described in AMD64 Architecture
-Programmer's Manual Vol.3, Appendix A.2 Table A-6. ModRM.reg
-Extensions for the Primary Opcode Map.
-
-Without this fix, Randy found a warning by insn_decoder_test related
-to this issue as below.
-
-  HOSTCC  arch/x86/tools/insn_decoder_test
-  HOSTCC  arch/x86/tools/insn_sanity
-  TEST    posttest
-arch/x86/tools/insn_decoder_test: warning: Found an x86 instruction decoder bug, please report this.
-arch/x86/tools/insn_decoder_test: warning: ffffffff81000bf1:	f7 0b 00 01 08 00    	testl  $0x80100,(%rbx)
-arch/x86/tools/insn_decoder_test: warning: objdump says 6 bytes, but insn_get_length() says 2
-arch/x86/tools/insn_decoder_test: warning: Decoded and checked 11913894 instructions with 1 failures
-  TEST    posttest
-arch/x86/tools/insn_sanity: Success: decoded and checked 1000000 random instructions with 0 errors (seed:0x871ce29c)
-
-To fix this error, add TEST opcode according to AMD64 APM Vol.3.
-
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Valdis Kletnieks <Valdis.Kletnieks@vt.edu>
 ---
- arch/x86/lib/x86-opcode-map.txt       | 2 +-
- tools/arch/x86/lib/x86-opcode-map.txt | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/lib/x86-opcode-map.txt b/arch/x86/lib/x86-opcode-map.txt
-index e0b85930dd77..4635ce298d1d 100644
---- a/arch/x86/lib/x86-opcode-map.txt
-+++ b/arch/x86/lib/x86-opcode-map.txt
-@@ -907,7 +907,7 @@ EndTable
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 3d09efe69508..1884350000ae 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -6186,6 +6186,7 @@ F:	include/uapi/linux/mii.h
  
- GrpTable: Grp3_2
- 0: TEST Ev,Iz
--1:
-+1: TEST Ev,Iz
- 2: NOT Ev
- 3: NEG Ev
- 4: MUL rAX,Ev
-diff --git a/tools/arch/x86/lib/x86-opcode-map.txt b/tools/arch/x86/lib/x86-opcode-map.txt
-index e0b85930dd77..4635ce298d1d 100644
---- a/tools/arch/x86/lib/x86-opcode-map.txt
-+++ b/tools/arch/x86/lib/x86-opcode-map.txt
-@@ -907,7 +907,7 @@ EndTable
+ EXFAT FILE SYSTEM
+ M:	Valdis Kletnieks <valdis.kletnieks@vt.edu>
++L:	linux-fsdevel@vger.kernel.org
+ S:	Maintained
+ F:	drivers/staging/exfat/
  
- GrpTable: Grp3_2
- 0: TEST Ev,Iz
--1:
-+1: TEST Ev,Iz
- 2: NOT Ev
- 3: NEG Ev
- 4: MUL rAX,Ev
 -- 
-2.20.1
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+2.23.0
+
