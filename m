@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB31BCA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 21:25:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3A6BCA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 21:25:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACFC72086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 21:25:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAE002084C
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 21:25:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="BPEYnKjX"
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="iVKvUl8O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392095AbfJWVZB (ORCPT
+        id S2392122AbfJWVZm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 17:25:01 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:9018 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392012AbfJWVZA (ORCPT
+        Wed, 23 Oct 2019 17:25:42 -0400
+Received: from esa4.microchip.iphmx.com ([68.232.154.123]:59011 "EHLO
+        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392012AbfJWVZm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 17:25:00 -0400
-Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
+        Wed, 23 Oct 2019 17:25:42 -0400
+Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
   Tudor.Ambarus@microchip.com designates 198.175.253.82 as
   permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
   envelope-from="Tudor.Ambarus@microchip.com";
   x-sender="Tudor.Ambarus@microchip.com";
   x-conformance=spf_only; x-record-type="v=spf1";
@@ -33,38 +33,38 @@ Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
   a:smtpout.microchip.com a:mx1.microchip.iphmx.com
   a:mx2.microchip.iphmx.com include:servers.mcsv.net
   include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa3.microchip.iphmx.com: no sender
+Received-SPF: None (esa4.microchip.iphmx.com: no sender
   authenticity information available from domain of
   postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
   envelope-from="Tudor.Ambarus@microchip.com";
   x-sender="postmaster@email.microchip.com";
   x-conformance=spf_only
-Authentication-Results: esa3.microchip.iphmx.com; spf=Pass smtp.mailfrom=Tudor.Ambarus@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: cE2YaGadm4jSx1aV3E2tdG5p12t4mbgQEQzocF9ScEXJyxotnvOjAWSpHJLXmHRVzS5HUdlgTW
- Da4l/u5kf2vZofZZnufGM2Z0lJc5LzbhW5pgn62P5aY/Gi5D2VzeG+2aSVzSjFYzyQ1Y+XvYSf
- 8kR5rHcK628mqVjY9GfdOOGZvuyo1rFOt670ZIYQGr4RA4G0uyg1BGMY0MHf9f+DuVqYrBA9Xe
- T/y206WkEqwDGk6LyLPBk7rfKC8VQ5Ksl2mexKHPFgh8SDPsR2kDEaxZmFbtEAk9xnvb3ytZ8L
- 2hg=
+Authentication-Results: esa4.microchip.iphmx.com; spf=Pass smtp.mailfrom=Tudor.Ambarus@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: 9THn2kmwp5J212zXQahLtbWMyrI35OIdW+awRSDMAx84zgHN3jfsYF2t4Ki3yeSK5zmmp/0XvP
+ D1NEeJYWR3BbSfqLC1UeE32pe0PvzVd17abx72A333UF+J3OMGe95CzVu/r33OQyoMsGkrGcwG
+ qOlfvwSChVQSXDuDY1wrzNRf6L5cu6NsHbWMkCaDlWOKUf/5rKE6M94uWhjhBFXgtnWN6riTqD
+ pZF4ngSHUFFFaf6iPbitP1uVQibiDt5YhfxhaAGlWlkhJum/o0RIhtrnhd3Qq2l0hLJAlzx4Ck
+ zn8=
 X-IronPort-AV: E=Sophos;i="5.68,222,1569308400"; 
-   d="scan'208";a="54151951"
+   d="scan'208";a="52725911"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 23 Oct 2019 14:24:59 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 23 Oct 2019 14:25:40 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 23 Oct 2019 14:24:58 -0700
-Received: from NAM03-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
+ 15.1.1713.5; Wed, 23 Oct 2019 14:25:40 -0700
+Received: from NAM02-CY1-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5 via Frontend
- Transport; Wed, 23 Oct 2019 14:24:58 -0700
+ Transport; Wed, 23 Oct 2019 14:25:39 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hWYnaJE6QOlfbAPlWtoPTxA0HzLRv5H8HY+g+yjsYXmD1UJlSaFdGFJ9xRWHhAmag5FYpMn3FzU0LdANvz7sQKaNPAgWunw/e/tkvo83qn/rH+spb0MyvZOJ/G8GO6xL++Ob2ZyeX6bQgLrh5DpuFnffD6OuglOANU4iei0JZ0ljWSw9+8uZvP8/Tr49muiK2YMRx+yB0qEjlJt02hsP46vCzG1q/PWtUJwbgFNQJLstgt8THyGM8H9IaR2l2n7pr5xTibGi9B9Iv+jcVQkFc2jZ2y9eXC1m1TMT4dsjjCmi5LoFKKPrBEXUl/JEzzl8XCx4SS25MBQ2IK3XGhfOmw==
+ b=lRQw5tFtIUIrjcWuQ15by+I9mPYvtpgJg80qbJhdUN+tKtjJszfC2Rms3tdal9zKqVAx5wCcqnb9P53Rg594NG9T/uHZQbdXJaxjNFaIvZTnlFo9F//Imd4ZAJVP90yTyKCQckcAF9kBBLBTRIi/jjUHXgfXue3F1cAjn8pShPvQxuKXlw85vU3jxOWJQ8aJlXvRyMLr3X3uIEzgcR/QOQLF4mWbtvpYdE3smV2wmDkzVIGA40Wy4msYeivQz4mmzBSM4kyGY1IrYcJ7t5sTY8apNMLhaxitwo8RT8A6+iio7QMKcmeq6CvQfKo+Aw062j2kCm9H0fWD7sr+mJnx8Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rfQerkVRfO4/hdMv1w7iaxwJKKrsFgZjV92MIq9sa0Q=;
- b=YDKU/pBplpVlUbT7It4+WIqM6L6jKZRFyFSmBI/wXvjD3pc7wPhULhXakJxyDZYbQd1QxqTW+mtL+7/YsrLSZujH0FGPhf8eQEZ++ZioBiIip3CCG+HytY2fYpVcJvOwzzJHYFbOhQBGyDNtPMjZDKlMwCx5LnpuJVLZF0WHXDYYJLanaEbximPqEvaFc+2dr9LFyK7fmZ2phOCGJffz90dQaGhhMoLATEbhtLEDDsnCQBG/jsE/rQZf3NSZZen46LcFaeG8LEJ1J5cUzZgs+Z220riiyJuvqogJXQ3/xkozC88n8j+zcsEiTzISNB9Jm5E7rprOmlUNqtGj736hQg==
+ bh=VblfyDx2y1jXOJcoC29e6DXPe1HvRb+PV61Z83yJrIA=;
+ b=K89ulAd2nCV3oX3LgznlrX4SSo8iRCa7DFYEIqni5wh+nEa244zRyceFfe75d42gJkKLbp7hHxPrFrB8ee28LPce+HnnKk+BgUxuuBywliRi8asl+opW55WBEIzPyIse4qPunSlXk1GA1WD+UPKeYWlAYiaqouSh/XGmEL53957UAvsO+GAd/2sbC6VsKRdbsKLjdeKt+orRY/O/dbMvBwqYyySV9gE/Xe3mEZ/nGz3Zh2H14XOOo+QRxNqF1r50ZkHCxSO23WBkpmtD9lt9tjQvS8/vNuQBnQPLJXDHPNTn8HA4W4o2kKBMOB83VSkR1k0+J5aeihS6WOFlXNu0nA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microchip.com; dmarc=pass action=none
  header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
@@ -72,16 +72,16 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=microchiptechnology.onmicrosoft.com;
  s=selector2-microchiptechnology-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rfQerkVRfO4/hdMv1w7iaxwJKKrsFgZjV92MIq9sa0Q=;
- b=BPEYnKjXAsw4nGqfARKU2rGT6y7y2mZ/KjyA6SdBO+PZ5EYxqd3YXu2pOE3B6WtKtWJHMk0TDT5dZI6NGxicLI5xgRmoPeKeWYSvuAq82qZCjsgyvPnzAV13wflI+gVcCemHf9Q3TjbVxvXul3UnJ522nqm77Rh59p7bZZVyfhs=
+ bh=VblfyDx2y1jXOJcoC29e6DXPe1HvRb+PV61Z83yJrIA=;
+ b=iVKvUl8OGu6wWD/xkMb75zVru817vEPOPeQJtt1HX/4Dep7rwttrYlobELHyUwLAMG03cX6NqePa+CyrAFvxGfi6lFMKeKz4aMnZEz1tbBkvixjowopYZQE/vdY/N9+5aoX8zgqjpSQ/+0+dLWCeCAyDBv3ivi2eedieLh53PsE=
 Received: from MN2PR11MB4448.namprd11.prod.outlook.com (52.135.39.157) by
- MN2PR11MB3549.namprd11.prod.outlook.com (20.178.250.87) with Microsoft SMTP
+ MN2PR11MB4349.namprd11.prod.outlook.com (10.255.90.17) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.18; Wed, 23 Oct 2019 21:24:57 +0000
+ 15.20.2387.22; Wed, 23 Oct 2019 21:25:37 +0000
 Received: from MN2PR11MB4448.namprd11.prod.outlook.com
  ([fe80::c09c:36c8:3301:4457]) by MN2PR11MB4448.namprd11.prod.outlook.com
  ([fe80::c09c:36c8:3301:4457%5]) with mapi id 15.20.2347.029; Wed, 23 Oct 2019
- 21:24:57 +0000
+ 21:25:36 +0000
 From:   <Tudor.Ambarus@microchip.com>
 To:     <vigneshr@ti.com>, <boris.brezillon@collabora.com>,
         <marek.vasut@gmail.com>, <linux-mtd@lists.infradead.org>,
@@ -92,50 +92,50 @@ CC:     <dwmw2@infradead.org>, <computersforpeace@gmail.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
         <linux-mediatek@lists.infradead.org>
-Subject: Re: [PATCH v2 02/22] mtd: spi-nor: Introduce 'struct
- spi_nor_controller_ops'
-Thread-Topic: [PATCH v2 02/22] mtd: spi-nor: Introduce 'struct
- spi_nor_controller_ops'
-Thread-Index: AQHVcqwXvwt12P9zSEWzEDp8S155Aqdo6zKA
-Date:   Wed, 23 Oct 2019 21:24:57 +0000
-Message-ID: <18ad9382-b081-9945-f981-5bf5ba1cde56@microchip.com>
+Subject: Re: [PATCH v2 03/22] mtd: spi-nor: cadence-quadspi: Fix
+ cqspi_command_read() definition
+Thread-Topic: [PATCH v2 03/22] mtd: spi-nor: cadence-quadspi: Fix
+ cqspi_command_read() definition
+Thread-Index: AQHVcqwajFKyuDqBQky8we7iWaMUrKdo620A
+Date:   Wed, 23 Oct 2019 21:25:36 +0000
+Message-ID: <fd618129-2844-290a-64a2-b68e7d03ee1f@microchip.com>
 References: <20190924074533.6618-1-tudor.ambarus@microchip.com>
- <20190924074533.6618-3-tudor.ambarus@microchip.com>
-In-Reply-To: <20190924074533.6618-3-tudor.ambarus@microchip.com>
+ <20190924074533.6618-4-tudor.ambarus@microchip.com>
+In-Reply-To: <20190924074533.6618-4-tudor.ambarus@microchip.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-clientproxiedby: VI1PR06CA0096.eurprd06.prod.outlook.com
- (2603:10a6:803:8c::25) To MN2PR11MB4448.namprd11.prod.outlook.com
+x-clientproxiedby: VI1PR06CA0105.eurprd06.prod.outlook.com
+ (2603:10a6:803:8c::34) To MN2PR11MB4448.namprd11.prod.outlook.com
  (2603:10b6:208:193::29)
 x-ms-exchange-messagesentrepresentingtype: 1
 x-originating-ip: [86.120.239.29]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a36900a4-4399-4346-c136-08d757ff73f3
-x-ms-traffictypediagnostic: MN2PR11MB3549:
-x-microsoft-antispam-prvs: <MN2PR11MB35493C6D6608B44929760BBCF06B0@MN2PR11MB3549.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2150;
+x-ms-office365-filtering-correlation-id: 9431ddd9-a31d-41dd-65d4-08d757ff8ba7
+x-ms-traffictypediagnostic: MN2PR11MB4349:
+x-microsoft-antispam-prvs: <MN2PR11MB4349CC2F1216DB84D2C2515BF06B0@MN2PR11MB4349.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2657;
 x-forefront-prvs: 019919A9E4
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(136003)(346002)(376002)(396003)(366004)(199004)(189003)(6436002)(25786009)(2906002)(5660300002)(102836004)(26005)(64756008)(446003)(66556008)(8936002)(86362001)(2201001)(386003)(6506007)(66476007)(229853002)(66946007)(53546011)(36756003)(31696002)(81166006)(6116002)(81156014)(2501003)(8676002)(256004)(3846002)(14454004)(71200400001)(71190400001)(7416002)(110136005)(66066001)(52116002)(316002)(99286004)(6486002)(54906003)(76176011)(6512007)(31686004)(478600001)(11346002)(66446008)(6246003)(186003)(4326008)(305945005)(2616005)(486006)(476003)(7736002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB3549;H:MN2PR11MB4448.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(346002)(376002)(136003)(366004)(39860400002)(199004)(189003)(71190400001)(446003)(11346002)(71200400001)(486006)(476003)(7416002)(8936002)(2616005)(66066001)(66946007)(66556008)(66476007)(81166006)(8676002)(66446008)(64756008)(81156014)(7736002)(229853002)(25786009)(53546011)(186003)(31686004)(3846002)(6116002)(36756003)(54906003)(110136005)(76176011)(316002)(99286004)(26005)(6506007)(386003)(102836004)(52116002)(2201001)(6486002)(4744005)(2501003)(14454004)(4326008)(6512007)(6246003)(86362001)(478600001)(31696002)(256004)(2906002)(305945005)(5660300002)(6436002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB4349;H:MN2PR11MB4448.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: microchip.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: PaMmgRfwTh7beEDA0C0eGbkflOWDE+3KA9ugF8Z1nFSEGqSkoZsNqCtt1a2WBiUSdjQ0eQX27zT1Y5jeGQJsM2Vd2J4yWour6867TPTXnRCWMUTvfBjEJmXhQ6iHsF0kSVO28hrTSu77U7Kjn6boK0T8/cg9inJrnU6Zd74Si3vdM6yFOFSpU8F/b2643l+rtFbK1NiNeKVaun4fCB3f6zYQMH+gD88vcHTK+uf/utcFF/kCYWvh0wsFIxDZVlQX2loSz6Hb62/HMud1DLBTFuGxJf86HtwGMkIl5CKJzAG0l33C0zuQV8Z2cTx9fi4NZB1LoIWvuWYvcwvOc11cZLYPaFSQyvRwHX+B9t4pHcLDMUg2dG7qOVtbbCG9egfMV0Z9Ka2/gm2X0EXPdLM/zb679oquXiCcL9nBCbmv4CVue3DNsNd13hoWmnp9RtN7
+x-microsoft-antispam-message-info: DiuJS9HHMS/K79RB4/0xrK8ighm42U3YVRqPQoUTGNktaZFxkSA1uWaQOIdAhW3nLKMfJLv/y5lrw0/SCvHfz5MfuvEzgRy+FBQGH0vh+wHZ8TqyRDoqABzVgTFAQlXEG/Q5rT+iPJtBlZ+As6+P+jlNGqnJXUVKAck+98aQkmJuuxcgv6FlH59Y9H+Rn+4zCpSAYrfwFpSjvrsxbWxXrq+W//cnLSd2I2ZgvucEw8f4aFhP9Aq6DGdXWJ9RjML8qMJeNlWuY7Bn3MfFYCtkIlZYfGTyiDEHEpUlrAwRZw97EPZt8esXheTbH6nGa62PEPCARyfSJwtmd5k7VmGUCiHBvXhVDuLFKG6sLNu9eftwPQKGTTFciTMefBUbigQM/lMelp6CnElMFA+4tFArRLGxgxuCl4UmKbraQGSh6ChHsiDjtKoLl+LLovFkJTRy
 x-ms-exchange-transport-forked: True
 Content-Type: text/plain; charset="utf-8"
-Content-ID: <D377C1234231CD4495F1D287096B941D@namprd11.prod.outlook.com>
+Content-ID: <58C8278D6223884D915B224D264B1FE7@namprd11.prod.outlook.com>
 Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: a36900a4-4399-4346-c136-08d757ff73f3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Oct 2019 21:24:57.1555
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9431ddd9-a31d-41dd-65d4-08d757ff8ba7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Oct 2019 21:25:36.9244
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: juTPhF0ai6dSVS7tx3Kis9XYsQMVpipmU4tHsKgRVWFHPccWDrsDgi3FgIoPEM4bFjCd4khkfleluN8S2q98XigGpEqbzQvft0kHwR3ur84=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB3549
+X-MS-Exchange-CrossTenant-userprincipalname: om4XFLf+l23tcWCbc4oUqwAtDiSN4YmR1u5pK1ECuM292x2ZngMGdSiPRIm92jHyp5AUVwaBL1hDNT2pJ7PrAgPjShG3qa2kbLjtrVN0JiU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4349
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -143,23 +143,13 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 DQoNCk9uIDA5LzI0LzIwMTkgMTA6NDUgQU0sIFR1ZG9yIEFtYmFydXMgLSBNMTgwNjQgd3JvdGU6
 DQo+IEZyb206IFR1ZG9yIEFtYmFydXMgPHR1ZG9yLmFtYmFydXNAbWljcm9jaGlwLmNvbT4NCj4g
-DQo+IE1vdmUgYWxsIFNQSSBOT1IgY29udHJvbGxlciBkcml2ZXIgc3BlY2lmaWMgb3BzIGluIGEg
-ZGVkaWNhdGVkDQo+IHN0cnVjdHVyZS4gJ3N0cnVjdCBzcGlfbm9yJyBiZWNvbWVzIGxpZ2h0ZXIu
-DQo+IA0KPiBVc2Ugc2l6ZV90IGZvciBsZW5ndGhzIGluICdpbnQgKCp3cml0ZV9yZWcpKCknIGFu
-ZCAnaW50ICgqcmVhZF9yZWcpKCknLg0KPiBSZW5hbWUgd2l0ZS9yZWFkX2J1ZiB0byBidWYsIHRo
-ZSBuYW1lIG9mIHRoZSBmdW5jdGlvbnMgYXJlDQo+IHN1Z2dlc3RpdmUgZW5vdWdoLiBDb25zdGlm
-eSBidWYgaW4gaW50ICgqd3JpdGVfcmVnKS4gQ29tcGx5IHdpdGggdGhlc2UNCj4gY2hhbmdlcyBp
-biB0aGUgU1BJIE5PUiBjb250cm9sbGVyIGRyaXZlcnMuDQo+IA0KPiBTdWdnZXN0ZWQtYnk6IEJv
-cmlzIEJyZXppbGxvbiA8Ym9yaXMuYnJlemlsbG9uQGNvbGxhYm9yYS5jb20+DQo+IFNpZ25lZC1v
-ZmYtYnk6IFR1ZG9yIEFtYmFydXMgPHR1ZG9yLmFtYmFydXNAbWljcm9jaGlwLmNvbT4NCj4gLS0t
-DQo+ICBkcml2ZXJzL210ZC9zcGktbm9yL2FzcGVlZC1zbWMuYyAgICAgIHwgMjMgKysrKysrLS0t
-LS0NCj4gIGRyaXZlcnMvbXRkL3NwaS1ub3IvY2FkZW5jZS1xdWFkc3BpLmMgfCAzOSArKysrKysr
-KysrLS0tLS0tLS0NCj4gIGRyaXZlcnMvbXRkL3NwaS1ub3IvaGlzaS1zZmMuYyAgICAgICAgfCAy
-MiArKysrKy0tLS0tDQo+ICBkcml2ZXJzL210ZC9zcGktbm9yL2ludGVsLXNwaS5jICAgICAgIHwg
-MjQgKysrKysrLS0tLS0NCj4gIGRyaXZlcnMvbXRkL3NwaS1ub3IvbXRrLXF1YWRzcGkuYyAgICAg
-fCAyNSArKysrKysrLS0tLS0NCj4gIGRyaXZlcnMvbXRkL3NwaS1ub3IvbnhwLXNwaWZpLmMgICAg
-ICAgfCAyMyArKysrKysrLS0tLQ0KPiAgZHJpdmVycy9tdGQvc3BpLW5vci9zcGktbm9yLmMgICAg
-ICAgICB8IDc2ICsrKysrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0tLS0tDQo+ICBpbmNsdWRl
-L2xpbnV4L210ZC9zcGktbm9yLmggICAgICAgICAgIHwgNTEgKysrKysrKysrKysrKy0tLS0tLS0t
-LS0NCj4gIDggZmlsZXMgY2hhbmdlZCwgMTY2IGluc2VydGlvbnMoKyksIDExNyBkZWxldGlvbnMo
-LSkNCg0KQXBwbGllZCB0byBzcGktbm9yL25leHQuDQo=
+DQo+IG5fdHggd2FzIG5ldmVyIHVzZWQsIGRyb3AgaXQuIFJlcGxhY2UgJ2NvbnN0IHU4ICp0eGJ1
+Zicgd2l0aCAndTggb3Bjb2RlJywNCj4gdG8gY29tcGx5IHdpdGggdGhlIFNQSSBOT1IgaW50ICgq
+cmVhZF9yZWcpKCkgbWV0aG9kLiBUaGUgJ2NvbnN0Jw0KPiBxdWFsaWZpZXIgaGFzIG5vIG1lYW5p
+bmcgZm9yIHBhcmFtZXRlcnMgcGFzc2VkIGJ5IHZhbHVlLCBkcm9wIGl0Lg0KPiBHb2luZyBmdXJo
+ZXIsIHRoZSBvcGNvZGUgd2FzIHBhc3NlZCB0byBjcXNwaV9jYWxjX3JkcmVnKCkgYW5kIG5ldmVy
+IHVzZWQsDQo+IGRyb3AgaXQuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBUdWRvciBBbWJhcnVzIDx0
+dWRvci5hbWJhcnVzQG1pY3JvY2hpcC5jb20+DQo+IC0tLQ0KPiAgZHJpdmVycy9tdGQvc3BpLW5v
+ci9jYWRlbmNlLXF1YWRzcGkuYyB8IDE1ICsrKysrKystLS0tLS0tLQ0KPiAgMSBmaWxlIGNoYW5n
+ZWQsIDcgaW5zZXJ0aW9ucygrKSwgOCBkZWxldGlvbnMoLSkNCg0KQXBwbGllZCB0byBzcGktbm9y
+L25leHQuDQo=
