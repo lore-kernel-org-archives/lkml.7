@@ -4,33 +4,32 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96933CA9EBB
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 11:23:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63DE4CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 11:23:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67C2A2084B
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 11:23:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27DCD2064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 11:23:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405038AbfJWLXL (ORCPT
+        id S2405071AbfJWLX0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 07:23:11 -0400
-Received: from mga09.intel.com ([134.134.136.24]:21010 "EHLO mga09.intel.com"
+        Wed, 23 Oct 2019 07:23:26 -0400
+Received: from mga14.intel.com ([192.55.52.115]:29700 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404837AbfJWLWE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 07:22:04 -0400
+        id S2404825AbfJWLWD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 07:22:03 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 04:22:03 -0700
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 04:22:03 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,220,1569308400"; 
-   d="scan'208";a="349365434"
+   d="scan'208";a="398010774"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga004.jf.intel.com with ESMTP; 23 Oct 2019 04:22:00 -0700
+  by fmsmga005.fm.intel.com with ESMTP; 23 Oct 2019 04:22:00 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 390934ED; Wed, 23 Oct 2019 14:21:55 +0300 (EEST)
+        id 4C9B253F; Wed, 23 Oct 2019 14:21:55 +0300 (EEST)
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     linux-usb@vger.kernel.org
 Cc:     Andreas Noever <andreas.noever@gmail.com>,
@@ -47,9 +46,9 @@ Cc:     Andreas Noever <andreas.noever@gmail.com>,
         Oliver Neukum <oneukum@suse.com>,
         Christian Kellner <ckellner@redhat.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 06/25] thunderbolt: Convert DP adapter register names to follow the USB4 spec
-Date:   Wed, 23 Oct 2019 14:21:35 +0300
-Message-Id: <20191023112154.64235-7-mika.westerberg@linux.intel.com>
+Subject: [PATCH 08/25] thunderbolt: Add helper macro to iterate over switch ports
+Date:   Wed, 23 Oct 2019 14:21:37 +0300
+Message-Id: <20191023112154.64235-9-mika.westerberg@linux.intel.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191023112154.64235-1-mika.westerberg@linux.intel.com>
 References: <20191023112154.64235-1-mika.westerberg@linux.intel.com>
@@ -60,202 +59,336 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that USB4 spec has names for these DP adapter registers we can use
-them instead. This makes it easier to match certain register to the spec.
+There are quite many places in the driver where we iterate over each
+port in the switch. To make it bit more convenient, add a macro that can
+be used to iterate over each port and convert existing call sites to use it.
+
+This is based on code by Lukas Wunner.
 
 No functional changes.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 ---
- drivers/thunderbolt/switch.c  | 50 ++++++++++++++++++++---------------
- drivers/thunderbolt/tb_regs.h | 32 ++++++++++------------
- drivers/thunderbolt/tunnel.c  |  8 +++---
- 3 files changed, 46 insertions(+), 44 deletions(-)
+ drivers/thunderbolt/icm.c     | 12 +++-----
+ drivers/thunderbolt/switch.c  | 57 ++++++++++++++++++-----------------
+ drivers/thunderbolt/tb.c      | 54 ++++++++++++++++-----------------
+ drivers/thunderbolt/tb.h      | 11 +++++++
+ drivers/thunderbolt/xdomain.c |  5 ++-
+ 5 files changed, 74 insertions(+), 65 deletions(-)
 
+diff --git a/drivers/thunderbolt/icm.c b/drivers/thunderbolt/icm.c
+index 245588f691e7..24625880692e 100644
+--- a/drivers/thunderbolt/icm.c
++++ b/drivers/thunderbolt/icm.c
+@@ -1893,14 +1893,12 @@ static int icm_suspend(struct tb *tb)
+  */
+ static void icm_unplug_children(struct tb_switch *sw)
+ {
+-	unsigned int i;
++	struct tb_port *port;
+ 
+ 	if (tb_route(sw))
+ 		sw->is_unplugged = true;
+ 
+-	for (i = 1; i <= sw->config.max_port_number; i++) {
+-		struct tb_port *port = &sw->ports[i];
+-
++	tb_switch_for_each_port(sw, port) {
+ 		if (port->xdomain)
+ 			port->xdomain->is_unplugged = true;
+ 		else if (tb_port_has_remote(port))
+@@ -1936,11 +1934,9 @@ static void remove_unplugged_switch(struct tb_switch *sw)
+ 
+ static void icm_free_unplugged_children(struct tb_switch *sw)
+ {
+-	unsigned int i;
+-
+-	for (i = 1; i <= sw->config.max_port_number; i++) {
+-		struct tb_port *port = &sw->ports[i];
++	struct tb_port *port;
+ 
++	tb_switch_for_each_port(sw, port) {
+ 		if (port->xdomain && port->xdomain->is_unplugged) {
+ 			tb_xdomain_remove(port->xdomain);
+ 			port->xdomain = NULL;
 diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c
-index e3fd2c33dafc..18905ca68061 100644
+index 18905ca68061..e4014053c21a 100644
 --- a/drivers/thunderbolt/switch.c
 +++ b/drivers/thunderbolt/switch.c
-@@ -835,11 +835,12 @@ int tb_dp_port_hpd_is_active(struct tb_port *port)
- 	u32 data;
- 	int ret;
- 
--	ret = tb_port_read(port, &data, TB_CFG_PORT, port->cap_adap + 2, 1);
-+	ret = tb_port_read(port, &data, TB_CFG_PORT,
-+			   port->cap_adap + ADP_DP_CS_2, 1);
- 	if (ret)
- 		return ret;
- 
--	return !!(data & TB_DP_HDP);
-+	return !!(data & ADP_DP_CS_2_HDP);
- }
- 
- /**
-@@ -853,12 +854,14 @@ int tb_dp_port_hpd_clear(struct tb_port *port)
- 	u32 data;
- 	int ret;
- 
--	ret = tb_port_read(port, &data, TB_CFG_PORT, port->cap_adap + 3, 1);
-+	ret = tb_port_read(port, &data, TB_CFG_PORT,
-+			   port->cap_adap + ADP_DP_CS_3, 1);
- 	if (ret)
- 		return ret;
- 
--	data |= TB_DP_HPDC;
--	return tb_port_write(port, &data, TB_CFG_PORT, port->cap_adap + 3, 1);
-+	data |= ADP_DP_CS_3_HDPC;
-+	return tb_port_write(port, &data, TB_CFG_PORT,
-+			     port->cap_adap + ADP_DP_CS_3, 1);
- }
- 
- /**
-@@ -876,20 +879,23 @@ int tb_dp_port_set_hops(struct tb_port *port, unsigned int video,
- 	u32 data[2];
- 	int ret;
- 
--	ret = tb_port_read(port, data, TB_CFG_PORT, port->cap_adap,
--			   ARRAY_SIZE(data));
-+	ret = tb_port_read(port, data, TB_CFG_PORT,
-+			   port->cap_adap + ADP_DP_CS_0, ARRAY_SIZE(data));
- 	if (ret)
- 		return ret;
- 
--	data[0] &= ~TB_DP_VIDEO_HOPID_MASK;
--	data[1] &= ~(TB_DP_AUX_RX_HOPID_MASK | TB_DP_AUX_TX_HOPID_MASK);
-+	data[0] &= ~ADP_DP_CS_0_VIDEO_HOPID_MASK;
-+	data[1] &= ~ADP_DP_CS_1_AUX_RX_HOPID_MASK;
-+	data[1] &= ~ADP_DP_CS_1_AUX_RX_HOPID_MASK;
- 
--	data[0] |= (video << TB_DP_VIDEO_HOPID_SHIFT) & TB_DP_VIDEO_HOPID_MASK;
--	data[1] |= aux_tx & TB_DP_AUX_TX_HOPID_MASK;
--	data[1] |= (aux_rx << TB_DP_AUX_RX_HOPID_SHIFT) & TB_DP_AUX_RX_HOPID_MASK;
-+	data[0] |= (video << ADP_DP_CS_0_VIDEO_HOPID_SHIFT) &
-+		ADP_DP_CS_0_VIDEO_HOPID_MASK;
-+	data[1] |= aux_tx & ADP_DP_CS_1_AUX_TX_HOPID_MASK;
-+	data[1] |= (aux_rx << ADP_DP_CS_1_AUX_RX_HOPID_SHIFT) &
-+		ADP_DP_CS_1_AUX_RX_HOPID_MASK;
- 
--	return tb_port_write(port, data, TB_CFG_PORT, port->cap_adap,
--			     ARRAY_SIZE(data));
-+	return tb_port_write(port, data, TB_CFG_PORT,
-+			     port->cap_adap + ADP_DP_CS_0, ARRAY_SIZE(data));
- }
- 
- /**
-@@ -900,11 +906,11 @@ bool tb_dp_port_is_enabled(struct tb_port *port)
+@@ -1390,14 +1390,14 @@ static const struct attribute_group *switch_groups[] = {
+ static void tb_switch_release(struct device *dev)
  {
- 	u32 data[2];
+ 	struct tb_switch *sw = tb_to_switch(dev);
+-	int i;
++	struct tb_port *port;
  
--	if (tb_port_read(port, data, TB_CFG_PORT, port->cap_adap,
-+	if (tb_port_read(port, data, TB_CFG_PORT, port->cap_adap + ADP_DP_CS_0,
- 			 ARRAY_SIZE(data)))
- 		return false;
+ 	dma_port_free(sw->dma_port);
  
--	return !!(data[0] & (TB_DP_VIDEO_EN | TB_DP_AUX_EN));
-+	return !!(data[0] & (ADP_DP_CS_0_VE | ADP_DP_CS_0_AE));
+-	for (i = 1; i <= sw->config.max_port_number; i++) {
+-		if (!sw->ports[i].disabled) {
+-			ida_destroy(&sw->ports[i].in_hopids);
+-			ida_destroy(&sw->ports[i].out_hopids);
++	tb_switch_for_each_port(sw, port) {
++		if (!port->disabled) {
++			ida_destroy(&port->in_hopids);
++			ida_destroy(&port->out_hopids);
+ 		}
+ 	}
+ 
+@@ -1859,7 +1859,7 @@ int tb_switch_add(struct tb_switch *sw)
+  */
+ void tb_switch_remove(struct tb_switch *sw)
+ {
+-	int i;
++	struct tb_port *port;
+ 
+ 	if (sw->rpm) {
+ 		pm_runtime_get_sync(&sw->dev);
+@@ -1867,13 +1867,13 @@ void tb_switch_remove(struct tb_switch *sw)
+ 	}
+ 
+ 	/* port 0 is the switch itself and never has a remote */
+-	for (i = 1; i <= sw->config.max_port_number; i++) {
+-		if (tb_port_has_remote(&sw->ports[i])) {
+-			tb_switch_remove(sw->ports[i].remote->sw);
+-			sw->ports[i].remote = NULL;
+-		} else if (sw->ports[i].xdomain) {
+-			tb_xdomain_remove(sw->ports[i].xdomain);
+-			sw->ports[i].xdomain = NULL;
++	tb_switch_for_each_port(sw, port) {
++		if (tb_port_has_remote(port)) {
++			tb_switch_remove(port->remote->sw);
++			port->remote = NULL;
++		} else if (port->xdomain) {
++			tb_xdomain_remove(port->xdomain);
++			port->xdomain = NULL;
+ 		}
+ 	}
+ 
+@@ -1893,7 +1893,8 @@ void tb_switch_remove(struct tb_switch *sw)
+  */
+ void tb_sw_set_unplugged(struct tb_switch *sw)
+ {
+-	int i;
++	struct tb_port *port;
++
+ 	if (sw == sw->tb->root_switch) {
+ 		tb_sw_WARN(sw, "cannot unplug root switch\n");
+ 		return;
+@@ -1903,17 +1904,19 @@ void tb_sw_set_unplugged(struct tb_switch *sw)
+ 		return;
+ 	}
+ 	sw->is_unplugged = true;
+-	for (i = 0; i <= sw->config.max_port_number; i++) {
+-		if (tb_port_has_remote(&sw->ports[i]))
+-			tb_sw_set_unplugged(sw->ports[i].remote->sw);
+-		else if (sw->ports[i].xdomain)
+-			sw->ports[i].xdomain->is_unplugged = true;
++	tb_switch_for_each_port(sw, port) {
++		if (tb_port_has_remote(port))
++			tb_sw_set_unplugged(port->remote->sw);
++		else if (port->xdomain)
++			port->xdomain->is_unplugged = true;
+ 	}
+ }
+ 
+ int tb_switch_resume(struct tb_switch *sw)
+ {
+-	int i, err;
++	struct tb_port *port;
++	int err;
++
+ 	tb_sw_dbg(sw, "resuming switch\n");
+ 
+ 	/*
+@@ -1961,9 +1964,7 @@ int tb_switch_resume(struct tb_switch *sw)
+ 		return err;
+ 
+ 	/* check for surviving downstream switches */
+-	for (i = 1; i <= sw->config.max_port_number; i++) {
+-		struct tb_port *port = &sw->ports[i];
+-
++	tb_switch_for_each_port(sw, port) {
+ 		if (!tb_port_has_remote(port) && !port->xdomain)
+ 			continue;
+ 
+@@ -1987,14 +1988,16 @@ int tb_switch_resume(struct tb_switch *sw)
+ 
+ void tb_switch_suspend(struct tb_switch *sw)
+ {
+-	int i, err;
++	struct tb_port *port;
++	int err;
++
+ 	err = tb_plug_events_active(sw, false);
+ 	if (err)
+ 		return;
+ 
+-	for (i = 1; i <= sw->config.max_port_number; i++) {
+-		if (tb_port_has_remote(&sw->ports[i]))
+-			tb_switch_suspend(sw->ports[i].remote->sw);
++	tb_switch_for_each_port(sw, port) {
++		if (tb_port_has_remote(port))
++			tb_switch_suspend(port->remote->sw);
+ 	}
+ 
+ 	tb_lc_set_sleep(sw);
+diff --git a/drivers/thunderbolt/tb.c b/drivers/thunderbolt/tb.c
+index 1f7a9e1cc09c..49589b38ff12 100644
+--- a/drivers/thunderbolt/tb.c
++++ b/drivers/thunderbolt/tb.c
+@@ -61,12 +61,10 @@ static void tb_discover_tunnels(struct tb_switch *sw)
+ 	struct tb *tb = sw->tb;
+ 	struct tb_cm *tcm = tb_priv(tb);
+ 	struct tb_port *port;
+-	int i;
+ 
+-	for (i = 1; i <= sw->config.max_port_number; i++) {
++	tb_switch_for_each_port(sw, port) {
+ 		struct tb_tunnel *tunnel = NULL;
+ 
+-		port = &sw->ports[i];
+ 		switch (port->config.type) {
+ 		case TB_TYPE_DP_HDMI_IN:
+ 			tunnel = tb_tunnel_discover_dp(tb, port);
+@@ -95,9 +93,9 @@ static void tb_discover_tunnels(struct tb_switch *sw)
+ 		list_add_tail(&tunnel->list, &tcm->tunnel_list);
+ 	}
+ 
+-	for (i = 1; i <= sw->config.max_port_number; i++) {
+-		if (tb_port_has_remote(&sw->ports[i]))
+-			tb_discover_tunnels(sw->ports[i].remote->sw);
++	tb_switch_for_each_port(sw, port) {
++		if (tb_port_has_remote(port))
++			tb_discover_tunnels(port->remote->sw);
+ 	}
+ }
+ 
+@@ -130,9 +128,10 @@ static void tb_scan_port(struct tb_port *port);
+  */
+ static void tb_scan_switch(struct tb_switch *sw)
+ {
+-	int i;
+-	for (i = 1; i <= sw->config.max_port_number; i++)
+-		tb_scan_port(&sw->ports[i]);
++	struct tb_port *port;
++
++	tb_switch_for_each_port(sw, port)
++		tb_scan_port(port);
  }
  
  /**
-@@ -920,18 +926,18 @@ int tb_dp_port_enable(struct tb_port *port, bool enable)
- 	u32 data[2];
- 	int ret;
+@@ -263,10 +262,9 @@ static void tb_free_invalid_tunnels(struct tb *tb)
+  */
+ static void tb_free_unplugged_children(struct tb_switch *sw)
+ {
+-	int i;
+-	for (i = 1; i <= sw->config.max_port_number; i++) {
+-		struct tb_port *port = &sw->ports[i];
++	struct tb_port *port;
  
--	ret = tb_port_read(port, data, TB_CFG_PORT, port->cap_adap,
--			   ARRAY_SIZE(data));
-+	ret = tb_port_read(port, data, TB_CFG_PORT,
-+			  port->cap_adap + ADP_DP_CS_0, ARRAY_SIZE(data));
- 	if (ret)
- 		return ret;
++	tb_switch_for_each_port(sw, port) {
+ 		if (!tb_port_has_remote(port))
+ 			continue;
  
- 	if (enable)
--		data[0] |= TB_DP_VIDEO_EN | TB_DP_AUX_EN;
-+		data[0] |= ADP_DP_CS_0_VE | ADP_DP_CS_0_AE;
- 	else
--		data[0] &= ~(TB_DP_VIDEO_EN | TB_DP_AUX_EN);
-+		data[0] &= ~(ADP_DP_CS_0_VE | ADP_DP_CS_0_AE);
- 
--	return tb_port_write(port, data, TB_CFG_PORT, port->cap_adap,
--			     ARRAY_SIZE(data));
-+	return tb_port_write(port, data, TB_CFG_PORT,
-+			     port->cap_adap + ADP_DP_CS_0, ARRAY_SIZE(data));
+@@ -289,10 +287,13 @@ static void tb_free_unplugged_children(struct tb_switch *sw)
+ static struct tb_port *tb_find_port(struct tb_switch *sw,
+ 				    enum tb_port_type type)
+ {
+-	int i;
+-	for (i = 1; i <= sw->config.max_port_number; i++)
+-		if (sw->ports[i].config.type == type)
+-			return &sw->ports[i];
++	struct tb_port *port;
++
++	tb_switch_for_each_port(sw, port) {
++		if (port->config.type == type)
++			return port;
++	}
++
+ 	return NULL;
  }
  
- /* switch utility functions */
-diff --git a/drivers/thunderbolt/tb_regs.h b/drivers/thunderbolt/tb_regs.h
-index 4be9df354527..faa14b3df83c 100644
---- a/drivers/thunderbolt/tb_regs.h
-+++ b/drivers/thunderbolt/tb_regs.h
-@@ -221,24 +221,20 @@ struct tb_regs_port_header {
- #define ADP_CS_5_LCA_SHIFT			22
+@@ -304,18 +305,18 @@ static struct tb_port *tb_find_port(struct tb_switch *sw,
+ static struct tb_port *tb_find_unused_port(struct tb_switch *sw,
+ 					   enum tb_port_type type)
+ {
+-	int i;
++	struct tb_port *port;
  
- /* Display Port adapter registers */
+-	for (i = 1; i <= sw->config.max_port_number; i++) {
+-		if (tb_is_upstream_port(&sw->ports[i]))
++	tb_switch_for_each_port(sw, port) {
++		if (tb_is_upstream_port(port))
+ 			continue;
+-		if (sw->ports[i].config.type != type)
++		if (port->config.type != type)
+ 			continue;
+-		if (!sw->ports[i].cap_adap)
++		if (port->cap_adap)
+ 			continue;
+-		if (tb_port_is_enabled(&sw->ports[i]))
++		if (tb_port_is_enabled(port))
+ 			continue;
+-		return &sw->ports[i];
++		return port;
+ 	}
+ 	return NULL;
+ }
+@@ -734,11 +735,10 @@ static int tb_resume_noirq(struct tb *tb)
+ 
+ static int tb_free_unplugged_xdomains(struct tb_switch *sw)
+ {
+-	int i, ret = 0;
 -
--/* DWORD 0 */
--#define TB_DP_VIDEO_HOPID_SHIFT		16
--#define TB_DP_VIDEO_HOPID_MASK		GENMASK(26, 16)
--#define TB_DP_AUX_EN			BIT(30)
--#define TB_DP_VIDEO_EN			BIT(31)
--/* DWORD 1 */
--#define TB_DP_AUX_TX_HOPID_MASK		GENMASK(10, 0)
--#define TB_DP_AUX_RX_HOPID_SHIFT	11
--#define TB_DP_AUX_RX_HOPID_MASK		GENMASK(21, 11)
--/* DWORD 2 */
--#define TB_DP_HDP			BIT(6)
--/* DWORD 3 */
--#define TB_DP_HPDC			BIT(9)
--/* DWORD 4 */
--#define TB_DP_LOCAL_CAP			0x4
--/* DWORD 5 */
--#define TB_DP_REMOTE_CAP		0x5
-+#define ADP_DP_CS_0				0x00
-+#define ADP_DP_CS_0_VIDEO_HOPID_MASK		GENMASK(26, 16)
-+#define ADP_DP_CS_0_VIDEO_HOPID_SHIFT		16
-+#define ADP_DP_CS_0_AE				BIT(30)
-+#define ADP_DP_CS_0_VE				BIT(31)
-+#define ADP_DP_CS_1_AUX_TX_HOPID_MASK		GENMASK(10, 0)
-+#define ADP_DP_CS_1_AUX_RX_HOPID_MASK		GENMASK(21, 11)
-+#define ADP_DP_CS_1_AUX_RX_HOPID_SHIFT		11
-+#define ADP_DP_CS_2				0x02
-+#define ADP_DP_CS_2_HDP				BIT(6)
-+#define ADP_DP_CS_3				0x03
-+#define ADP_DP_CS_3_HDPC			BIT(9)
-+#define DP_LOCAL_CAP				0x04
-+#define DP_REMOTE_CAP				0x05
+-	for (i = 1; i <= sw->config.max_port_number; i++) {
+-		struct tb_port *port = &sw->ports[i];
++	struct tb_port *port;
++	int ret = 0;
  
- /* PCIe adapter registers */
- #define ADP_PCIE_CS_0				0x00
-diff --git a/drivers/thunderbolt/tunnel.c b/drivers/thunderbolt/tunnel.c
-index 2f728029c12d..382331d71c28 100644
---- a/drivers/thunderbolt/tunnel.c
-+++ b/drivers/thunderbolt/tunnel.c
-@@ -241,23 +241,23 @@ static int tb_dp_xchg_caps(struct tb_tunnel *tunnel)
++	tb_switch_for_each_port(sw, port) {
+ 		if (tb_is_upstream_port(port))
+ 			continue;
+ 		if (port->xdomain && port->xdomain->is_unplugged) {
+diff --git a/drivers/thunderbolt/tb.h b/drivers/thunderbolt/tb.h
+index 455ca490ea87..4c77d5264660 100644
+--- a/drivers/thunderbolt/tb.h
++++ b/drivers/thunderbolt/tb.h
+@@ -530,6 +530,17 @@ struct tb_switch *tb_switch_find_by_link_depth(struct tb *tb, u8 link,
+ struct tb_switch *tb_switch_find_by_uuid(struct tb *tb, const uuid_t *uuid);
+ struct tb_switch *tb_switch_find_by_route(struct tb *tb, u64 route);
  
- 	/* Read both DP_LOCAL_CAP registers */
- 	ret = tb_port_read(in, &in_dp_cap, TB_CFG_PORT,
--			   in->cap_adap + TB_DP_LOCAL_CAP, 1);
-+			   in->cap_adap + DP_LOCAL_CAP, 1);
- 	if (ret)
- 		return ret;
++/**
++ * tb_switch_for_each_port() - Iterate over each switch port
++ * @sw: Switch whose ports to iterate
++ * @p: Port used as iterator
++ *
++ * Iterates over each switch port skipping the control port (port %0).
++ */
++#define tb_switch_for_each_port(sw, p)					\
++	for ((p) = &(sw)->ports[1];					\
++	     (p) <= &(sw)->ports[(sw)->config.max_port_number]; (p)++)
++
+ static inline struct tb_switch *tb_switch_get(struct tb_switch *sw)
+ {
+ 	if (sw)
+diff --git a/drivers/thunderbolt/xdomain.c b/drivers/thunderbolt/xdomain.c
+index 4e17a7c7bf0a..880d784398a3 100644
+--- a/drivers/thunderbolt/xdomain.c
++++ b/drivers/thunderbolt/xdomain.c
+@@ -1404,10 +1404,9 @@ struct tb_xdomain_lookup {
+ static struct tb_xdomain *switch_find_xdomain(struct tb_switch *sw,
+ 	const struct tb_xdomain_lookup *lookup)
+ {
+-	int i;
++	struct tb_port *port;
  
- 	ret = tb_port_read(out, &out_dp_cap, TB_CFG_PORT,
--			   out->cap_adap + TB_DP_LOCAL_CAP, 1);
-+			   out->cap_adap + DP_LOCAL_CAP, 1);
- 	if (ret)
- 		return ret;
+-	for (i = 1; i <= sw->config.max_port_number; i++) {
+-		struct tb_port *port = &sw->ports[i];
++	tb_switch_for_each_port(sw, port) {
+ 		struct tb_xdomain *xd;
  
- 	/* Write IN local caps to OUT remote caps */
- 	ret = tb_port_write(out, &in_dp_cap, TB_CFG_PORT,
--			    out->cap_adap + TB_DP_REMOTE_CAP, 1);
-+			    out->cap_adap + DP_REMOTE_CAP, 1);
- 	if (ret)
- 		return ret;
- 
- 	return tb_port_write(in, &out_dp_cap, TB_CFG_PORT,
--			     in->cap_adap + TB_DP_REMOTE_CAP, 1);
-+			     in->cap_adap + DP_REMOTE_CAP, 1);
- }
- 
- static int tb_dp_activate(struct tb_tunnel *tunnel, bool active)
+ 		if (port->xdomain) {
 -- 
 2.23.0
 
