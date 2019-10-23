@@ -2,259 +2,140 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9CE3CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:37:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47200CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:38:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 981342084C
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:37:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12AE92084C
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:38:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="PVtmj+m0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390445AbfJWIh5 convert rfc822-to-8bit (ORCPT
+        id S2390453AbfJWIil (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 04:37:57 -0400
-Received: from mail-oln040092253082.outbound.protection.outlook.com ([40.92.253.82]:30623
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        Wed, 23 Oct 2019 04:38:41 -0400
+Received: from mail-eopbgr60057.outbound.protection.outlook.com ([40.107.6.57]:1448
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390353AbfJWIh4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 04:37:56 -0400
+        id S2389913AbfJWIik (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 04:38:40 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Z1+DO0lc65TiSt8pe40FYKEsbbaIVYBZv4ESihAkmTXuvvE66mPkmNrlGDO+4pTaVrxmTer5XK/joiaRKm/bcELlzYz2tvnICGTC1oZigGK6I10HmW7+Vowgc1A74Yz3BZtg/JtCU2cIaVIpoRLhXQT1SwOykx8IxEoQc2baI8QJj0GQXbl0LyUocIZpph+5zu1P49ZcRDrKDM/W9b1gRtzRAMW9DBlW7XO9JYJJBVSPWRjACdcoeAaOCcSCOQIurvI+fyZgbkLaQUaIXc0kyKqjC6HO+O+13KZUVEUTekPRCJeIyJPOBuWMClKLD0oPid4rQACOm0eo2K/34+Ud0g==
+ b=CwqCV/BX+/qHF/BVpoZIAoGWWJuk3wBchjtaXV5ORbMsweEYMPtd2Ct3klPLGHBLCO1bEikXJ5hPdimOuTHO/BLoVu7RcvkN573i8KS4oY3eIPlLiZAaI5cVK9/OpLId/Uw5SdJT451cOAVCOx/xO5JIffTykY7QDmRSmIDmNtcMOGmePqJNnZ1oTyYN16TdhDZ4oK5HNwkzl64nR3w8Iqj8DBOekyzlKQT6Q7uN5rGqw99TTFrGhKJW/xobDcPT82XgAKaAgmJd/IoFLSjKlVSQ9rIl/Bys/ciuaGCe8BjmSRfKyZhdVU6rV5S9POFWrsfcPuGjaB/w7rEpIVXLOQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qnPf9fo8tADOYYwG6DbGZXUs2olY4KmiP1tfy+jSTq0=;
- b=jxgPjfXoleMoADm53SSxXvKVvdCZayc8djdFfkau2/BWy3BiwXzh5gnH8wJkcMKnGg12+NUNpbeLoktOxoFeM8w/mHKRttLLoo/ZUZjVwhGad4dJKeCspacYQ4rNuCkjs2q05+bQdzirFv8ogl0lHjuxf2cEeYE3duinqo8XbG4dX9O0aPnq2I2568ow0rOOxLy7t4+sWC+mrpjUvIfc6Atz7PFEUfs+MzkcPXXupT6XumpoYxF10KH4eHhZ7mW9O4QGqKVpKKysqcYfit0NCh9SzqFavLNNP8rXrO4BkDZ4LEKH2PVGULMRBpFxUr02Sn6KPt63MUQyKFG89/78hA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from PU1APC01FT009.eop-APC01.prod.protection.outlook.com
- (10.152.252.60) by PU1APC01HT086.eop-APC01.prod.protection.outlook.com
- (10.152.253.131) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2367.14; Wed, 23 Oct
- 2019 08:37:48 +0000
-Received: from PSXP216MB0183.KORP216.PROD.OUTLOOK.COM (10.152.252.54) by
- PU1APC01FT009.mail.protection.outlook.com (10.152.252.103) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2367.14 via Frontend Transport; Wed, 23 Oct 2019 08:37:48 +0000
-Received: from PSXP216MB0183.KORP216.PROD.OUTLOOK.COM
- ([fe80::707c:4884:c137:2266]) by PSXP216MB0183.KORP216.PROD.OUTLOOK.COM
- ([fe80::707c:4884:c137:2266%5]) with mapi id 15.20.2367.025; Wed, 23 Oct 2019
- 08:37:48 +0000
-From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "logang@deltatee.com" <logang@deltatee.com>
-Subject: [PATCH 1/1] PCI: Add hp_mmio_size and hp_mmio_pref_size parameters
-Thread-Topic: [PATCH 1/1] PCI: Add hp_mmio_size and hp_mmio_pref_size
- parameters
-Thread-Index: AQHViX0m6toKrk1OzESm1M80C1WD2w==
-Date:   Wed, 23 Oct 2019 08:37:48 +0000
-Message-ID: <PSXP216MB01833367A1A154AEB816AE4E806B0@PSXP216MB0183.KORP216.PROD.OUTLOOK.COM>
-Accept-Language: en-AU, en-US
+ bh=1qyVv2XoSnBmT8uj3uxIR7IOkKTnsoHT/E2wpQc7SzA=;
+ b=B+PD4CRndHb3qlR/vRJX9+pSCql9SvpoSkZOaGVHR6AtmQBSsdFwNdbI8hLPyFtizG3Y267/xHDUeJ7/DexSEbkjaVF/32h8ifXCCvc3oEtGvr4Mr0p0RiS+UGOaU0X3P59FrI00ntaIj4b97/kyiH2df+dpA1EdiiTLvQNHleaoSmBtUmGz1jKVRuSnbjwM6sSCyFQdSg2H7yl/NeNwOXAITDbqdl8Re5BY3z4XspROpBYWZJWe/0bqQvThXu5q/EuGPA9eHqTl9hwKmDIsYYxyosMVRyz2BGkWg0OglSCjW8AZ+Pod1JfU3Ag2GfP1lAk7TT4MsNCrUsstR+fryw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1qyVv2XoSnBmT8uj3uxIR7IOkKTnsoHT/E2wpQc7SzA=;
+ b=PVtmj+m0physl6RmXbMLYUITTfDngpcxNMVvl8oszZzgz+MCb+qPsjOBAsl7vrxOUFP+RQ9Ielpb9MFOCwWkPIPvdck/4WRcRTehSAl1jNcBYf0pgLD3rgmzrpHxbNZNVMXjQl9m2eCgWhnzSsLrOG8hmBbJiUsj548EXdL68fs=
+Received: from AM7PR04MB7015.eurprd04.prod.outlook.com (52.135.57.19) by
+ AM7PR04MB7032.eurprd04.prod.outlook.com (10.255.191.204) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2367.21; Wed, 23 Oct 2019 08:38:36 +0000
+Received: from AM7PR04MB7015.eurprd04.prod.outlook.com
+ ([fe80::3924:7adb:47f2:2ece]) by AM7PR04MB7015.eurprd04.prod.outlook.com
+ ([fe80::3924:7adb:47f2:2ece%7]) with mapi id 15.20.2367.022; Wed, 23 Oct 2019
+ 08:38:36 +0000
+From:   Leonard Crestez <leonard.crestez@nxp.com>
+To:     Viorel Suman <viorel.suman@nxp.com>, Abel Vesa <abel.vesa@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>
+CC:     Daniel Baluta <daniel.baluta@nxp.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "ccaione@baylibre.com" <ccaione@baylibre.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "angus@akkea.ca" <angus@akkea.ca>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "agx@sigxcpu.org" <agx@sigxcpu.org>, Jacky Bai <ping.bai@nxp.com>,
+        "baruch@tkos.co.il" <baruch@tkos.co.il>,
+        "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "sboyd@codeaurora.org" <sboyd@codeaurora.org>,
+        Anson Huang <anson.huang@nxp.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
+Subject: Re: [PATCH v4] arm64: dts: imx8mq: Init rates and parents configs for
+ clocks
+Thread-Topic: [PATCH v4] arm64: dts: imx8mq: Init rates and parents configs
+ for clocks
+Thread-Index: AQHVRVgHX+vi+LJNg0ufd7EEy7KERw==
+Date:   Wed, 23 Oct 2019 08:38:36 +0000
+Message-ID: <AM7PR04MB7015B699FDF9F4BDB69C1499EE6B0@AM7PR04MB7015.eurprd04.prod.outlook.com>
+References: <20190728152040.15323-1-daniel.baluta@nxp.com>
+ <VI1PR04MB70239C63D88ED27D929E29C1EEAA0@VI1PR04MB7023.eurprd04.prod.outlook.com>
+ <1571812158.5953.2.camel@nxp.com>
+Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-clientproxiedby: ME2P282CA0001.AUSP282.PROD.OUTLOOK.COM
- (2603:10c6:220:4d::13) To PSXP216MB0183.KORP216.PROD.OUTLOOK.COM
- (2603:1096:300:b::17)
-x-incomingtopheadermarker: OriginalChecksum:8BFD5BF37D82C8EA85A8BA34EF2BF8F4F91DC0E4D7E6B948B7135546413ED7B2;UpperCasedChecksum:7D423CB8EE7FCD8F8E1B3841F25ED7621FF02D52C1A0A7FCACCFFA42AD5BF395;SizeAsReceived:7749;Count:48
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [xiGx/98xIeIfYqA6eBsyb4UFnne5xVY2Uw+aXcsHEGo=]
-x-microsoft-original-message-id: <20191023083740.GA3877@nicholas-dell-linux>
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=leonard.crestez@nxp.com; 
+x-originating-ip: [92.121.36.198]
 x-ms-publictraffictype: Email
-x-incomingheadercount: 48
-x-eopattributedmessage: 0
-x-ms-traffictypediagnostic: PU1APC01HT086:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 7E/88aIvlljn17/eXAWrAUlE9y7vKfR/qy7OaUvF+Dx0tPL7kc1uXRD5Qo4sNS+OChnubg4ter5eMzb5ctXgL3aOtz+LvqmHa3Nv2q/KdNTSjp2b7svYzUTX6odaJcQ+EnlgwEzXRHWv07BdKageIOfEjc9XQG2Y4wg/jHA9EcVVYtsfcXTlGNAe70FdpwMB
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 6bd9f901-222a-40d9-9ac2-08d757946554
+x-ms-traffictypediagnostic: AM7PR04MB7032:|AM7PR04MB7032:
 x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM7PR04MB7032C7A3C4EE0720112BB8C0EE6B0@AM7PR04MB7032.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 019919A9E4
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(396003)(376002)(39860400002)(136003)(189003)(199004)(33656002)(14454004)(54906003)(316002)(229853002)(25786009)(186003)(53546011)(6506007)(110136005)(102836004)(8936002)(4001150100001)(26005)(99286004)(7696005)(76176011)(478600001)(71190400001)(486006)(44832011)(71200400001)(81156014)(81166006)(14444005)(446003)(64756008)(66446008)(476003)(91956017)(66556008)(66946007)(66476007)(8676002)(305945005)(3846002)(74316002)(6116002)(256004)(9686003)(55016002)(7736002)(52536014)(4744005)(6246003)(7416002)(66066001)(5660300002)(6636002)(6436002)(86362001)(76116006)(4326008)(2906002)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM7PR04MB7032;H:AM7PR04MB7015.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: NFPkoNc1+zkG2rr/8k5zXcMtQsWsTxMPDYe59X81B2ZDYVJm4TGyFPHqVBhQR0LbBvTd+0SRYh84CxfvdBOls3OBTH7ufr3dzCqhMWkLXpGEpMZWV7lAAUcMl5XewUKzaRY0e+dQ2j83VI66PjLvCHfBApSSVPu4zb+USTqPmSoZBxXpoZ2xFR12YMIdibIEjHYz0yBvbY0/MkghRV4gUipS+fiXoQ2LY/o8N93I95qGQfwkrurcwkGvCuAhOf9nbXP3nd8Eq4SRK3mnP6OeRCdjtPeMtLz1hi4YvrMn27BSLZ9W1sXrs46+s7FVIxyAd2EM83r/MfaVfN1zXQxEZunTo+CzFQo66RdV0aHbXqFVOoskgZHeRMy8ivg0ByuXr6fEjM4LyjU15sTQFpdnKMxW1FHT51BFb9U90Y5TDlyH+ukdHjQEgbwZMWMGbnhf
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <DF046B5D888C6944B8D9050510A4F27E@KORP216.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: bba039bf-3c14-4e6c-bb01-08d7579448c1
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Oct 2019 08:37:48.6595
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6bd9f901-222a-40d9-9ac2-08d757946554
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Oct 2019 08:38:36.1730
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1APC01HT086
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 3hqBkEhdDGkOSpQNuIiudjk7ISSTLcY7/fdMS72WAcBRbcbA0SHukyvmuS3tZivP8RwB58nsSAOoZji0Iu64TA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR04MB7032
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add kernel parameter pci=hpmmiosize=nn[KMG] to set MMIO bridge window
-size for hotplug bridges.
-
-Add kernel parameter pci=hpmmioprefsize=nn[KMG] to set MMIO_PREF bridge
-window size for hotplug bridges.
-
-Leave pci=hpmemsize=nn[KMG] unchanged, to prevent disruptions to
-existing users. This sets both MMIO and MMIO_PREF to the same size.
-
-The two new parameters conform to the style of pci=hpiosize=nn[KMG].
-
-Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
----
- .../admin-guide/kernel-parameters.txt         |  9 ++++++-
- drivers/pci/pci.c                             | 17 ++++++++++---
- drivers/pci/pci.h                             |  3 ++-
- drivers/pci/setup-bus.c                       | 25 +++++++++++--------
- 4 files changed, 38 insertions(+), 16 deletions(-)
-
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index a84a83f88..cfe8c2b67 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -3492,8 +3492,15 @@
- 		hpiosize=nn[KMG]	The fixed amount of bus space which is
- 				reserved for hotplug bridge's IO window.
- 				Default size is 256 bytes.
-+		hpmmiosize=nn[KMG]	The fixed amount of bus space which is
-+				reserved for hotplug bridge's MMIO window.
-+				Default size is 2 megabytes.
-+		hpmmioprefsize=nn[KMG]	The fixed amount of bus space which is
-+				reserved for hotplug bridge's MMIO_PREF window.
-+				Default size is 2 megabytes.
- 		hpmemsize=nn[KMG]	The fixed amount of bus space which is
--				reserved for hotplug bridge's memory window.
-+				reserved for hotplug bridge's MMIO and
-+				MMIO_PREF window.
- 				Default size is 2 megabytes.
- 		hpbussize=nn	The minimum amount of additional bus numbers
- 				reserved for buses below a hotplug bridge.
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index a97e2571a..f3adab84b 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -85,10 +85,12 @@ unsigned long pci_cardbus_io_size = DEFAULT_CARDBUS_IO_SIZE;
- unsigned long pci_cardbus_mem_size = DEFAULT_CARDBUS_MEM_SIZE;
- 
- #define DEFAULT_HOTPLUG_IO_SIZE		(256)
--#define DEFAULT_HOTPLUG_MEM_SIZE	(2*1024*1024)
-+#define DEFAULT_HOTPLUG_MMIO_SIZE	(2*1024*1024)
-+#define DEFAULT_HOTPLUG_MMIO_PREF_SIZE	(2*1024*1024)
- /* pci=hpmemsize=nnM,hpiosize=nn can override this */
- unsigned long pci_hotplug_io_size  = DEFAULT_HOTPLUG_IO_SIZE;
--unsigned long pci_hotplug_mem_size = DEFAULT_HOTPLUG_MEM_SIZE;
-+unsigned long pci_hotplug_mmio_size = DEFAULT_HOTPLUG_MMIO_SIZE;
-+unsigned long pci_hotplug_mmio_pref_size = DEFAULT_HOTPLUG_MMIO_PREF_SIZE;
- 
- #define DEFAULT_HOTPLUG_BUS_SIZE	1
- unsigned long pci_hotplug_bus_size = DEFAULT_HOTPLUG_BUS_SIZE;
-@@ -6286,8 +6288,17 @@ static int __init pci_setup(char *str)
- 				pcie_ecrc_get_policy(str + 5);
- 			} else if (!strncmp(str, "hpiosize=", 9)) {
- 				pci_hotplug_io_size = memparse(str + 9, &str);
-+			} else if (!strncmp(str, "hpmmiosize=", 11)) {
-+				pci_hotplug_mmio_size =
-+					memparse(str + 11, &str);
-+			} else if (!strncmp(str, "hpmmioprefsize=", 15)) {
-+				pci_hotplug_mmio_pref_size =
-+					memparse(str + 15, &str);
- 			} else if (!strncmp(str, "hpmemsize=", 10)) {
--				pci_hotplug_mem_size = memparse(str + 10, &str);
-+				pci_hotplug_mmio_size =
-+					memparse(str + 10, &str);
-+				pci_hotplug_mmio_pref_size =
-+					memparse(str + 10, &str);
- 			} else if (!strncmp(str, "hpbussize=", 10)) {
- 				pci_hotplug_bus_size =
- 					simple_strtoul(str + 10, &str, 0);
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 3f6947ee3..9faa55a15 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -218,7 +218,8 @@ extern const struct device_type pci_dev_type;
- extern const struct attribute_group *pci_bus_groups[];
- 
- extern unsigned long pci_hotplug_io_size;
--extern unsigned long pci_hotplug_mem_size;
-+extern unsigned long pci_hotplug_mmio_size;
-+extern unsigned long pci_hotplug_mmio_pref_size;
- extern unsigned long pci_hotplug_bus_size;
- 
- /**
-diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index e7dbe2170..24fc4c715 100644
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -1178,7 +1178,8 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
- {
- 	struct pci_dev *dev;
- 	unsigned long mask, prefmask, type2 = 0, type3 = 0;
--	resource_size_t additional_mem_size = 0, additional_io_size = 0;
-+	resource_size_t additional_io_size = 0, additional_mmio_size = 0,
-+		additional_mmio_pref_size = 0;
- 	struct resource *b_res;
- 	int ret;
- 
-@@ -1212,7 +1213,8 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
- 		pci_bridge_check_ranges(bus);
- 		if (bus->self->is_hotplug_bridge) {
- 			additional_io_size  = pci_hotplug_io_size;
--			additional_mem_size = pci_hotplug_mem_size;
-+			additional_mmio_size = pci_hotplug_mmio_size;
-+			additional_mmio_pref_size = pci_hotplug_mmio_pref_size;
- 		}
- 		/* Fall through */
- 	default:
-@@ -1230,9 +1232,9 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
- 		if (b_res[2].flags & IORESOURCE_MEM_64) {
- 			prefmask |= IORESOURCE_MEM_64;
- 			ret = pbus_size_mem(bus, prefmask, prefmask,
--				  prefmask, prefmask,
--				  realloc_head ? 0 : additional_mem_size,
--				  additional_mem_size, realloc_head);
-+				prefmask, prefmask,
-+				realloc_head ? 0 : additional_mmio_pref_size,
-+				additional_mmio_pref_size, realloc_head);
- 
- 			/*
- 			 * If successful, all non-prefetchable resources
-@@ -1254,9 +1256,9 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
- 		if (!type2) {
- 			prefmask &= ~IORESOURCE_MEM_64;
- 			ret = pbus_size_mem(bus, prefmask, prefmask,
--					 prefmask, prefmask,
--					 realloc_head ? 0 : additional_mem_size,
--					 additional_mem_size, realloc_head);
-+				prefmask, prefmask,
-+				realloc_head ? 0 : additional_mmio_pref_size,
-+				additional_mmio_pref_size, realloc_head);
- 
- 			/*
- 			 * If successful, only non-prefetchable resources
-@@ -1265,7 +1267,8 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
- 			if (ret == 0)
- 				mask = prefmask;
- 			else
--				additional_mem_size += additional_mem_size;
-+				additional_mmio_size +=
-+					additional_mmio_pref_size;
- 
- 			type2 = type3 = IORESOURCE_MEM;
- 		}
-@@ -1285,8 +1288,8 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
- 		 * prefetchable resource in a 64-bit prefetchable window.
- 		 */
- 		pbus_size_mem(bus, mask, IORESOURCE_MEM, type2, type3,
--				realloc_head ? 0 : additional_mem_size,
--				additional_mem_size, realloc_head);
-+			realloc_head ? 0 : additional_mmio_size,
-+			additional_mmio_size, realloc_head);
- 		break;
- 	}
- }
--- 
-2.23.0
-
+On 2019-10-23 9:29 AM, Viorel Suman wrote:=0A=
+> On Mi, 2019-08-21 at 20:39 +0000, Leonard Crestez wrote:=0A=
+>> The audio PLLs should run below 650 mHz so please use 393216000 and=0A=
+>> 361267200 instead of 786432000 and 722534400. For the 8mm equivalent see=
+=0A=
+>> commit 053a4ffe2988 ("clk: imx: imx8mm: fix audio pll setting").=0A=
+> =0A=
+> Hi Leonard,=0A=
+> =0A=
+> Audio PLL IP on 8mm and 8mn is different than the Audio PLL IP on 8mq,=0A=
+> so the requirement to run below 650 MHZ may not apply to 8mq.=0A=
+=0A=
+This "max 650mHz" limit is from internal ADD and is also mentioned for =0A=
+imx8mq.=0A=
+=0A=
+Peng: you made the change in our internal tree, can you confirm this =0A=
+requirement also applies to 8mq?=0A=
+=0A=
+Viorel: Is there any impact from 393216000 vs 786432000 on PLL on audio? =
+=0A=
+As far as I can know this rate goes through various dividers anyway.=0A=
+=0A=
+--=0A=
+Regards,=0A=
+Leonard=0A=
