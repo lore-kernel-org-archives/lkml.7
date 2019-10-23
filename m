@@ -2,86 +2,117 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E69CA9EBB
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 19:50:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99F83CA9EBB
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 19:55:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A0C32086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 19:50:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571860208;
-	bh=szXNlP/mje0yz+wVJX8JbggDS0ltASZ41uILRnXmMpc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ZHj+61u+0hndDQ/WycgGHXayWSekFXbHJdweiM4akgp8ostp4Aea9vrs2y+IsJxEP
-	 p2VtypXf6pxfTSjBN/3GCurxD38BmBCQ3WcmES9ClLnLoiatECN7qzMWH+82x4EOdj
-	 m3zqc1SE7iJOn9MH/4e0cgIHm/YTY33bVlDaaZ0I=
+	by mail.kernel.org (Postfix) with ESMTP id 7019F2086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 19:55:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="NSjudj3A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389371AbfJWTuG (ORCPT
+        id S2390321AbfJWTzX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 15:50:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38360 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727595AbfJWTuF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 15:50:05 -0400
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E68422086D;
-        Wed, 23 Oct 2019 19:50:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571860205;
-        bh=szXNlP/mje0yz+wVJX8JbggDS0ltASZ41uILRnXmMpc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=szkpb+T2taZM3fVN10StcEC/nAFEtJgA1+xo/iGDzKUITPYdq+LWKdNOF0cfHGUI5
-         wIFWyd5WvrazD45rsrWShtgZIvIToyaxpBb5DvRTaHvnQOVjvSD/4oGhGCcn/wQaML
-         ExPReOBtqOUbWWPofTfSqUi2i0oWsMynN08WXYoA=
-Received: by mail-qt1-f174.google.com with SMTP id g50so19862391qtb.4;
-        Wed, 23 Oct 2019 12:50:04 -0700 (PDT)
-X-Gm-Message-State: APjAAAVKjlZhFiVpVQHMnXMiCFLQDdSzfwL9DOkwlTfS0xKjdIj15FtT
-        3nOb/zV9Nn/pxH2I2YeD+3TldIgo03liPVmsdA==
-X-Google-Smtp-Source: APXvYqz0vP1GOhhjZuLhazGsa+EI3oKQAYj/m4GJJfQ88tutHc8kT90FJVPCQFtSBKwwhqLESGtZU2e+texU3JV6L1s=
-X-Received: by 2002:ac8:70c4:: with SMTP id g4mr279602qtp.136.1571860204174;
- Wed, 23 Oct 2019 12:50:04 -0700 (PDT)
+        Wed, 23 Oct 2019 15:55:23 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:19354 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727595AbfJWTzW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 15:55:22 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5db0b0330000>; Wed, 23 Oct 2019 12:55:31 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 23 Oct 2019 12:55:21 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 23 Oct 2019 12:55:21 -0700
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 23 Oct
+ 2019 19:55:21 +0000
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 23 Oct
+ 2019 19:55:19 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 23 Oct 2019 19:55:19 +0000
+Received: from rcampbell-dev.nvidia.com (Not Verified[10.110.48.66]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5db0b0270001>; Wed, 23 Oct 2019 12:55:19 -0700
+From:   Ralph Campbell <rcampbell@nvidia.com>
+To:     Jerome Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Jason Gunthorpe <jgg@mellanox.com>
+CC:     <linux-rdma@vger.kernel.org>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>,
+        Ralph Campbell <rcampbell@nvidia.com>
+Subject: [PATCH v3 2/3] mm/hmm: allow snapshot of the special zero page
+Date:   Wed, 23 Oct 2019 12:55:14 -0700
+Message-ID: <20191023195515.13168-3-rcampbell@nvidia.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191023195515.13168-1-rcampbell@nvidia.com>
+References: <20191023195515.13168-1-rcampbell@nvidia.com>
 MIME-Version: 1.0
-References: <cover.1571484439.git.saiprakash.ranjan@codeaurora.org> <20191021033220.GG4500@tuxbook-pro>
-In-Reply-To: <20191021033220.GG4500@tuxbook-pro>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 23 Oct 2019 14:49:53 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLzRRQe8UZCxgXArVNhNry7PgMCthAR2aZNcm6CCEpvDA@mail.gmail.com>
-Message-ID: <CAL_JsqLzRRQe8UZCxgXArVNhNry7PgMCthAR2aZNcm6CCEpvDA@mail.gmail.com>
-Subject: Re: [PATCHv2 0/3] Add LLCC support for SC7180 SoC
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Rishabh Bhatnagar <rishabhb@codeaurora.org>,
-        Doug Anderson <dianders@chromium.org>
+X-NVConfidentiality: public
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1571860531; bh=EX0bbHxK/iAtD7z9QXzYOmMILzO2RoXi4bWaJEIf6tU=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
+         Content-Type:Content-Transfer-Encoding;
+        b=NSjudj3Amk7YhSyBkxDUUsM8HQ70EkOJRBtGC1+hAxxF4v1egWqIkh/zJZYNC1Q+S
+         5w56SvKKzQknvOOP/RFwj+bE7kc3iWtQMG3FTES26Tke1g8A+6OhaLeMLWH90BOT3s
+         Sm094urfKBVURhdYRBZX8UUDccf3ZVvEjbnVLpqArlgm2AAkGvlY9fbl3J8Dv/2tOO
+         Yd9QEk80QBSQo3zjh/Sq1YI7oOGscc3SXK6JBnvxSNV7VQ6VIDbEfkBEw2Dtall2fV
+         NVOBYn6SI+RatjZA3KAG5LhyXUK8AmQejMJHQeb+/AgW9UMpg7RmFmnYjescoBEuXi
+         pHIHEZuEDeKSw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Oct 20, 2019 at 10:32 PM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> On Sat 19 Oct 04:37 PDT 2019, Sai Prakash Ranjan wrote:
->
-> > LLCC behaviour is controlled by the configuration data set
-> > in the llcc-qcom driver, add the same for SC7180 SoC.
-> > Also convert the existing bindings to json-schema and add
-> > the compatible for SC7180 SoC.
-> >
->
-> Thanks for the patches and thanks for the review Stephen. Series applied
+If a device driver like nouveau tries to use hmm_range_fault() to access
+the special shared zero page in system memory, hmm_range_fault() will
+return -EFAULT and kill the process.
+Allow hmm_range_fault() to return success (0) when the CPU pagetable
+entry points to the special shared zero page.
+page_to_pfn() and pfn_to_page() are defined on the zero page so just
+handle it like any other page.
 
-And they break dt_binding_check. Please fix.
+Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: "J=C3=A9r=C3=B4me Glisse" <jglisse@redhat.com>
+Cc: Jason Gunthorpe <jgg@mellanox.com>
+---
+ mm/hmm.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-Rob
+diff --git a/mm/hmm.c b/mm/hmm.c
+index acf7a664b38c..8c96c9ddcae5 100644
+--- a/mm/hmm.c
++++ b/mm/hmm.c
+@@ -529,8 +529,14 @@ static int hmm_vma_handle_pte(struct mm_walk *walk, un=
+signed long addr,
+ 		if (unlikely(!hmm_vma_walk->pgmap))
+ 			return -EBUSY;
+ 	} else if (IS_ENABLED(CONFIG_ARCH_HAS_PTE_SPECIAL) && pte_special(pte)) {
+-		*pfn =3D range->values[HMM_PFN_SPECIAL];
+-		return -EFAULT;
++		if (!is_zero_pfn(pte_pfn(pte))) {
++			*pfn =3D range->values[HMM_PFN_SPECIAL];
++			return -EFAULT;
++		}
++		/*
++		 * Since each architecture defines a struct page for the zero
++		 * page, just fall through and treat it like a normal page.
++		 */
+ 	}
+=20
+ 	*pfn =3D hmm_device_entry_from_pfn(range, pte_pfn(pte)) | cpu_flags;
+--=20
+2.20.1
+
