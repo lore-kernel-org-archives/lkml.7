@@ -2,144 +2,111 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CFBBCA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:00:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90C65CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:02:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 742C121925
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:00:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A6f167nn"
+	by mail.kernel.org (Postfix) with ESMTP id 6F2842086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:02:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726875AbfJWRAk (ORCPT
+        id S1726887AbfJWRCS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 13:00:40 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:37618 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726316AbfJWRAj (ORCPT
+        Wed, 23 Oct 2019 13:02:18 -0400
+Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:45255 "EHLO
+        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726497AbfJWRCS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 13:00:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571850038;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=mS56Ocf2Wr6s6lxq3UrbaaoGODBCpGlIzwdbwNzrmFM=;
-        b=A6f167nnaJ6DttIs4zWbA1olBTys1ifRwlWe0+2BHJqeiNrrz5hF6NX0n/fJzBPJ4cpbrh
-        dj6MiydnVp654E3/SS5/MkswuL+TgKl4xzPvc139mDR1g2Urpaor/uj3LsmDwuNycVccHF
-        Y8DCdzBiHYtWRH1pA4Eb+ePY5/E41M0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-182-adgGpz8OP6mPpsyr71ygaA-1; Wed, 23 Oct 2019 13:00:34 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 70B2C1800D6B;
-        Wed, 23 Oct 2019 17:00:32 +0000 (UTC)
-Received: from treble (ovpn-121-225.rdu2.redhat.com [10.10.121.225])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A93D16061E;
-        Wed, 23 Oct 2019 17:00:27 +0000 (UTC)
-Date:   Wed, 23 Oct 2019 12:00:25 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        mhiramat@kernel.org, bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, jeyu@kernel.org,
-        live-patching@vger.kernel.org
-Subject: Re: [PATCH v4 15/16] module: Move where we mark modules RO,X
-Message-ID: <20191023170025.f34g3vxaqr4f5gqh@treble>
-References: <20191018073525.768931536@infradead.org>
- <20191018074634.801435443@infradead.org>
- <20191021135312.jbbxsuipxldocdjk@treble>
- <20191021141402.GI1817@hirez.programming.kicks-ass.net>
- <20191023114835.GT1817@hirez.programming.kicks-ass.net>
+        Wed, 23 Oct 2019 13:02:18 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R821e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07487;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0Tg.HetG_1571850128;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0Tg.HetG_1571850128)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 24 Oct 2019 01:02:10 +0800
+Subject: Re: [PATCH] mm: thp: handle page cache THP correctly in
+ PageTransCompoundMap
+To:     Hugh Dickins <hughd@google.com>
+Cc:     aarcange@redhat.com, kirill.shutemov@linux.intel.com,
+        gavin.dg@linux.alibaba.com, akpm@linux-foundation.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <1571769577-89735-1-git-send-email-yang.shi@linux.alibaba.com>
+ <alpine.LSU.2.11.1910221454060.2077@eggly.anvils>
+ <4ea5d015-19cb-d5d9-42f7-d1319d8de7c4@linux.alibaba.com>
+ <alpine.LSU.2.11.1910221802270.2748@eggly.anvils>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <b4e320b7-d152-779a-8456-263e711f69b6@linux.alibaba.com>
+Date:   Wed, 23 Oct 2019 10:02:06 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-In-Reply-To: <20191023114835.GT1817@hirez.programming.kicks-ass.net>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-MC-Unique: adgGpz8OP6mPpsyr71ygaA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+In-Reply-To: <alpine.LSU.2.11.1910221802270.2748@eggly.anvils>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 01:48:35PM +0200, Peter Zijlstra wrote:
-> Now sadly that commit missed all the useful information, luckily I could
-> find the patch in my LKML folder, more sad, that thread still didn't
-> contain the actual useful information, for that I was directed to
-> github:
->=20
->   https://github.com/dynup/kpatch/issues/580
->=20
-> Now, someone is owning me a beer for having to look at github for this.
 
-Deal.  And you probably deserve a few more for fixing our crap.
 
-The github thing is supposed to be temporary, at least in theory we'll
-eventually have all klp patch module building code in the kernel tree.
+On 10/22/19 6:31 PM, Hugh Dickins wrote:
+> On Tue, 22 Oct 2019, Yang Shi wrote:
+>> On 10/22/19 3:27 PM, Hugh Dickins wrote:
+>>> I completely agree that the current PageTransCompoundMap() is wrong.
+>>>
+>>> A fix for that is one of many patches I've not yet got to upstreaming.
+>>> Comparing yours and mine, I'm worried by your use of PageDoubleMap(),
+>>> because really that's a flag for anon THP, and not properly supported
+>>> on shmem (or now I suppose file) THP - I forget the details, is it
+>>> that it sometimes gets set, but never cleared?  Generally, we just
+>>> don't refer to PageDoubleMap() on shmem THPs (but there may be
+>>> exceptions: sorting out the THP mapcount maze, and eliminating
+>>> PageDoubleMap(), is one of my long-held ambitions, not yet reached).
+>>>
+>>> Here's the patch I've been carrying, but it's from earlier, so I
+>>> should warn that I've done no more than build-testing it on 5.4,
+>>> and I'm too far away from these issues at the moment to be able to
+>>> make a good judgement or argue for it - I hope you and others can
+>>> decide which patch is the better.  I should also add that we're
+>>> barely using PageTransCompoundMap() at all: at best it can only
+>>> give a heuristic guess as to whether the page is pmd-mapped in
+>>> any particular case, and we preferred to take forward the KVM
+>>> patches we posted back in April 2016, plumbing hva down to where
+>>> it's needed - though of course those are somewhat different now.
+>> Thanks for catching this. I was definitely thinking about using
+>> compount_mapcount instead of DoubleMap flag when I was working the patch. I
+>> just simply thought it would change less file by using DoubleMap flag but I
+>> didn't notice it was kind of unbalanced for file THP.
+>>
+>> With the unbalanced DoubleMap flag, it sounds better to use
+>> compound_mapcount.
+> Yes: no doubt PageDoubleMap could be fixed on shmem+file, but I have no
+> interest in doing that, because it's just unnecessary overhead for them.
+> (They have their own overhead, of subpage mapcounting for pmd: which is
+> something to eliminate and unify with anon when I get around to it.)
 
-> That finally explained that what happens is that the RELA was trying to
-> fix up the paravirt indirect call to 'local_irq_disable', which
-> apply_paravirt() will have overwritten with 'CLI; NOP'. This then
-> obviously goes *bang*.
->=20
-> This then raises a number of questions:
->=20
->  1) why is that RELA (that obviously does not depend on any module)
->     applied so late?
+It might be worth fixing the unbalance since mlock depends on this flag 
+too. There should be a little bit overhead when handling PTE rmap remove 
+since we have to iterate every subpage to check if _mapcount is same 
+with compound_mapcount or not in order to clear DoubleMap flag. It is 
+easy to handle this when the last PMD map is gone.
 
-Good question.  The 'pv_ops' symbol is exported by the core kernel, so I
-can't see any reason why we'd need to apply that rela late.  In theory,
-kpatch-build isn't supposed to convert that to a klp rela.  Maybe
-something went wrong in the patch creation code.
+>
+>> Thanks for sharing your patch, I'm going to rework v2 by using
+>> compound_mapcount. Do you mind I might steal your patch?
+> Please do! One less for me to worry about, thanks.
+>
+>> I'm supposed we'd better fix this bug regardless of whether you would like to
+>> move forward your KVM patches.
+> Absolutely. There remain a few other uses of PageTransCompoundMap
+> anyway, and I really wanted this outright mm fix to go in before
+> re-submitting AndresLC's KVM patch (I'll ask a KVM-savvy colleague
+> to take that over, Cc'ing you, once the mm end is correct).
 
-I'm also questioning why we even need to apply the parainstructions
-section late.  Maybe we can remove that apply_paravirt() call
-altogether, along with .klp.arch.parainstruction sections.
+Thanks.
 
-I'll need to look into it...
-
->  2) why can't we unconditionally skip RELA's to paravirt sites?
-
-We could, but I don't think it's needed if we fix #1.
-
->  3) Is there ever a possible module-dependent RELA to a paravirt /
->     alternative site?
-
-Good question...
-
-> Now, for 1), I would propose '.klp.rela.${mod}' sections only contain
-> RELAs that depend on symbols in ${mod} (or modules in general).
-
-That was already the goal, but we've apparently failed at that.
-
-> We can fix up RELAs that depend on core kernel early without problems.
-> Let them be in the normal .rela sections and be fixed up on loading
-> the patch-module as per usual.
-
-If such symbols aren't exported, then they still need to be in
-.klp.rela.vmlinux sections, since normal relas won't work.
-
-> This should also deal with 2, paravirt should always have RELAs into the
-> core kernel.
->=20
-> Then for 3) we only have alternatives left, and I _think_ it unlikely to
-> be the case, but I'll have to have a hard look at that.
-
-I'm not sure about alternatives, but maybe we can enforce such
-limitations with tooling and/or kernel checks.
-
---=20
-Josh
+>
+> Hugh
 
