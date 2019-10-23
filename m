@@ -2,102 +2,162 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 941D1CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 04:58:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9062BCA9EB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 05:07:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A8E321872
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 04:58:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571806702;
-	bh=5UOyBnC5qla2Rd1+pYVADdaJfxPTcdJGTel4r+Yxuog=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Sg5zdJDn1c2osDYIT3WJYBPTHt/kqM9bGaUhWONC50+WI8wsGqsNG4iJhpmfZb2jY
-	 /Cji0Sp3/37Bg8rHxTOk/dtKacckBrfRw0u+yFzpOdAMmuGI8en7/LfSTI7v8oOpJd
-	 QgXd3EW1MmMIxW6GW/8qWw1sZuMgEbBrPboevqGk=
+	by mail.kernel.org (Postfix) with ESMTP id 7140B21872
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 05:07:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388908AbfJWE6V (ORCPT
+        id S1732972AbfJWFH0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 00:58:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60806 "EHLO mail.kernel.org"
+        Wed, 23 Oct 2019 01:07:26 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:57658 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729233AbfJWE6U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 00:58:20 -0400
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A44821906;
-        Wed, 23 Oct 2019 04:58:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571806699;
-        bh=5UOyBnC5qla2Rd1+pYVADdaJfxPTcdJGTel4r+Yxuog=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JsuTaaG9XM9Ddn0hN5C+a4ZVb7VKn3qnj13bReZNJXttymLzG1LXTcl9cz+mVDs7f
-         vZqAzbL/xGREwwF84F+ApA19aMqUGR96YzGMcrq9pRmAeNnikL2xKE+K2jMe3JOFSF
-         OWtt30NcZn5+x71Ybl7QiRU6nzol/IqygQ5RIjkE=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Shuah Khan <shuah@kernel.org>
-Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jaswinder.singh@linaro.org,
-        =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio.lopez@collabora.co.uk>
-Subject: [BUGFIX PATCH v3 5/5] selftests: sync: Fix cast warnings on arm
-Date:   Wed, 23 Oct 2019 13:58:16 +0900
-Message-Id: <157180669615.17298.13418495289425106434.stgit@devnote2>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <157180665007.17298.907392422924029261.stgit@devnote2>
-References: <157180665007.17298.907392422924029261.stgit@devnote2>
-User-Agent: StGit/0.17.1-dirty
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+        id S1728697AbfJWFHZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 01:07:25 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 1C10F1A0311;
+        Wed, 23 Oct 2019 07:07:20 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 8B2051A0129;
+        Wed, 23 Oct 2019 07:07:16 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 1C28F402DF;
+        Wed, 23 Oct 2019 13:07:12 +0800 (SGT)
+From:   Peng Ma <peng.ma@nxp.com>
+To:     vkoul@kernel.org, dan.j.williams@intel.com, leoyang.li@nxp.com,
+        anders.roxell@linaro.org
+Cc:     linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        Peng Ma <peng.ma@nxp.com>
+Subject: [next, v2] dmaengine: fsl-dpaa2-qdma: export the symbols
+Date:   Wed, 23 Oct 2019 12:56:17 +0800
+Message-Id: <20191023045617.22764-1-peng.ma@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix warnings on __u64 and pointer translation on arm and
-other 32bit architectures. Since the pointer is 32bits on
-those archs, we should not directly cast those types.
+The symbols were not exported leading to error:
 
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Emilio López <emilio.lopez@collabora.co.uk>
+WARNING: modpost: missing MODULE_LICENSE() in drivers/dma/fsl-dpaa2-qdma/dpdmai.o
+see include/linux/module.h for more information
+GZIP    arch/arm64/boot/Image.gz
+ERROR: "dpdmai_enable" [drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko] undefined!
+ERROR: "dpdmai_set_rx_queue" [drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko] undefined!
+ERROR: "dpdmai_get_tx_queue" [drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko] undefined!
+ERROR: "dpdmai_get_rx_queue" [drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko] undefined!
+ERROR: "dpdmai_get_attributes" [drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko] undefined!
+ERROR: "dpdmai_open" [drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko] undefined!
+ERROR: "dpdmai_close" [drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko] undefined!
+ERROR: "dpdmai_disable" [drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko] undefined!
+ERROR: "dpdmai_reset" [drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko] undefined!
+WARNING: "HYPERVISOR_platform_op" [vmlinux] is a static EXPORT_SYMBOL_GPL
+make[2]: *** [__modpost] Error 1
+make[1]: *** [modules] Error 2
+make[1]: *** Waiting for unfinished jobs....
+make: *** [sub-make] Error 2
+
+So export it.
+
+Signed-off-by: Peng Ma <peng.ma@nxp.com>
+Reported-by: Anders Roxell <anders.roxell@linaro.org>
 ---
- tools/testing/selftests/sync/sync.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Changed for v2:
+	- Rewrite the title and subject
 
-diff --git a/tools/testing/selftests/sync/sync.c b/tools/testing/selftests/sync/sync.c
-index f3d599f249b9..7741c0518d18 100644
---- a/tools/testing/selftests/sync/sync.c
-+++ b/tools/testing/selftests/sync/sync.c
-@@ -109,7 +109,7 @@ static struct sync_file_info *sync_file_info(int fd)
- 			return NULL;
- 		}
+ drivers/dma/fsl-dpaa2-qdma/dpdmai.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/drivers/dma/fsl-dpaa2-qdma/dpdmai.c b/drivers/dma/fsl-dpaa2-qdma/dpdmai.c
+index fbc2b2f..f8a1f66 100644
+--- a/drivers/dma/fsl-dpaa2-qdma/dpdmai.c
++++ b/drivers/dma/fsl-dpaa2-qdma/dpdmai.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ // Copyright 2019 NXP
  
--		info->sync_fence_info = (uint64_t)fence_info;
-+		info->sync_fence_info = (uint64_t)(unsigned long)fence_info;
++#include <linux/module.h>
+ #include <linux/types.h>
+ #include <linux/io.h>
+ #include <linux/fsl/mc.h>
+@@ -90,6 +91,7 @@ int dpdmai_open(struct fsl_mc_io *mc_io, u32 cmd_flags,
  
- 		err = ioctl(fd, SYNC_IOC_FILE_INFO, info);
- 		if (err < 0) {
-@@ -124,7 +124,7 @@ static struct sync_file_info *sync_file_info(int fd)
- 
- static void sync_file_info_free(struct sync_file_info *info)
- {
--	free((void *)info->sync_fence_info);
-+	free((void *)(unsigned long)info->sync_fence_info);
- 	free(info);
+ 	return 0;
  }
++EXPORT_SYMBOL_GPL(dpdmai_open);
  
-@@ -152,7 +152,7 @@ int sync_fence_count_with_status(int fd, int status)
- 	if (!info)
- 		return -1;
+ /**
+  * dpdmai_close() - Close the control session of the object
+@@ -113,6 +115,7 @@ int dpdmai_close(struct fsl_mc_io *mc_io, u32 cmd_flags, u16 token)
+ 	/* send command to mc*/
+ 	return mc_send_command(mc_io, &cmd);
+ }
++EXPORT_SYMBOL_GPL(dpdmai_close);
  
--	fence_info = (struct sync_fence_info *)info->sync_fence_info;
-+	fence_info = (struct sync_fence_info *)(unsigned long)info->sync_fence_info;
- 	for (i = 0 ; i < info->num_fences ; i++) {
- 		if (fence_info[i].status == status)
- 			count++;
+ /**
+  * dpdmai_create() - Create the DPDMAI object
+@@ -177,6 +180,7 @@ int dpdmai_enable(struct fsl_mc_io *mc_io, u32 cmd_flags, u16 token)
+ 	/* send command to mc*/
+ 	return mc_send_command(mc_io, &cmd);
+ }
++EXPORT_SYMBOL_GPL(dpdmai_enable);
+ 
+ /**
+  * dpdmai_disable() - Disable the DPDMAI, stop sending and receiving frames.
+@@ -197,6 +201,7 @@ int dpdmai_disable(struct fsl_mc_io *mc_io, u32 cmd_flags, u16 token)
+ 	/* send command to mc*/
+ 	return mc_send_command(mc_io, &cmd);
+ }
++EXPORT_SYMBOL_GPL(dpdmai_disable);
+ 
+ /**
+  * dpdmai_reset() - Reset the DPDMAI, returns the object to initial state.
+@@ -217,6 +222,7 @@ int dpdmai_reset(struct fsl_mc_io *mc_io, u32 cmd_flags, u16 token)
+ 	/* send command to mc*/
+ 	return mc_send_command(mc_io, &cmd);
+ }
++EXPORT_SYMBOL_GPL(dpdmai_reset);
+ 
+ /**
+  * dpdmai_get_attributes() - Retrieve DPDMAI attributes.
+@@ -252,6 +258,7 @@ int dpdmai_get_attributes(struct fsl_mc_io *mc_io, u32 cmd_flags,
+ 
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(dpdmai_get_attributes);
+ 
+ /**
+  * dpdmai_set_rx_queue() - Set Rx queue configuration
+@@ -285,6 +292,7 @@ int dpdmai_set_rx_queue(struct fsl_mc_io *mc_io, u32 cmd_flags, u16 token,
+ 	/* send command to mc*/
+ 	return mc_send_command(mc_io, &cmd);
+ }
++EXPORT_SYMBOL_GPL(dpdmai_set_rx_queue);
+ 
+ /**
+  * dpdmai_get_rx_queue() - Retrieve Rx queue attributes.
+@@ -325,6 +333,7 @@ int dpdmai_get_rx_queue(struct fsl_mc_io *mc_io, u32 cmd_flags, u16 token,
+ 
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(dpdmai_get_rx_queue);
+ 
+ /**
+  * dpdmai_get_tx_queue() - Retrieve Tx queue attributes.
+@@ -364,3 +373,6 @@ int dpdmai_get_tx_queue(struct fsl_mc_io *mc_io, u32 cmd_flags,
+ 
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(dpdmai_get_tx_queue);
++
++MODULE_LICENSE("GPL v2");
+-- 
+2.9.5
 
