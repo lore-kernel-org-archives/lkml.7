@@ -2,127 +2,92 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9725BCA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:58:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86FC0CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EFC9205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:58:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Qm8MTGj6"
+	by mail.kernel.org (Postfix) with ESMTP id 57407205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:00:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390606AbfJWI6n (ORCPT
+        id S2390610AbfJWJAW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 04:58:43 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:43403 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2390574AbfJWI6m (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 04:58:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571821121;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ddQIqKhInCWjNW7paFtNB6th72sw/WUL6Px5vuUxikI=;
-        b=Qm8MTGj6oDA9LXrJcCJuFaamMcgHJ2bt+bIvmj0rkTJKIWFKo1gQpojwBpmUj9o/q/dVdT
-        PZSCjVrpN3V/QNZduKWinO285/peUFAL3sErsrIeJdM9xCPFwem8K00bjJlYwBbm+dAVbE
-        EMyfTvW6bpyvlyVMyq89lWfWEWcEGRQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-114-qMdmUyVdML2CtfDDqCaM7g-1; Wed, 23 Oct 2019 04:58:37 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 23A48476;
-        Wed, 23 Oct 2019 08:58:35 +0000 (UTC)
-Received: from krava (unknown [10.43.17.61])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 4B27A5D6C8;
-        Wed, 23 Oct 2019 08:58:31 +0000 (UTC)
-Date:   Wed, 23 Oct 2019 10:58:30 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v2 5/9] perf tools: avoid a malloc for array events
-Message-ID: <20191023085830.GG22919@krava>
-References: <20191017170531.171244-1-irogers@google.com>
- <20191023005337.196160-1-irogers@google.com>
- <20191023005337.196160-6-irogers@google.com>
+        Wed, 23 Oct 2019 05:00:22 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:46060 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387829AbfJWJAV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 05:00:21 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 4D523CDCC9D6B47E0DAC;
+        Wed, 23 Oct 2019 17:00:17 +0800 (CST)
+Received: from [127.0.0.1] (10.177.96.96) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Wed, 23 Oct 2019
+ 17:00:10 +0800
+Subject: Re: [PATCH] ASoC: mediatek: Check SND_SOC_CROS_EC_CODEC dependency
+To:     Tzung-Bi Shih <tzungbi@google.com>
+CC:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        "Matthias Brugger" <matthias.bgg@gmail.com>,
+        =?UTF-8?B?U2h1bmxpIFdhbmcgKOeOi+mhuuWIqSk=?= 
+        <shunli.wang@mediatek.com>, <yuehaibing@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <tglx@linutronix.de>,
+        KaiChieh Chuang <kaichieh.chuang@mediatek.com>,
+        "ALSA development" <alsa-devel@alsa-project.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <kernel-janitors@vger.kernel.org>
+References: <20191023063103.44941-1-maowenan@huawei.com>
+ <CA+Px+wX7-tn-rXeKqnPtp74tU5cLxhJwF6XZ_jeQX-tnAfvO5g@mail.gmail.com>
+ <1d948ec1-69e4-735f-c369-80d2b28e0eaa@huawei.com>
+ <CA+Px+wXgXkmVYboPcrhOWkAwRB2ygLDLi+TN9xw2awUZKMhCJA@mail.gmail.com>
+From:   maowenan <maowenan@huawei.com>
+Message-ID: <8ed955f7-a629-d438-f421-28aaa363532d@huawei.com>
+Date:   Wed, 23 Oct 2019 17:00:03 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.0
 MIME-Version: 1.0
-In-Reply-To: <20191023005337.196160-6-irogers@google.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-MC-Unique: qMdmUyVdML2CtfDDqCaM7g-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+In-Reply-To: <CA+Px+wXgXkmVYboPcrhOWkAwRB2ygLDLi+TN9xw2awUZKMhCJA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.96.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 05:53:33PM -0700, Ian Rogers wrote:
-> Use realloc rather than malloc+memcpy to possibly avoid a memory
-> allocation when appending array elements.
->=20
-> Signed-off-by: Ian Rogers <irogers@google.com>
 
-Acked-by: Jiri Olsa <jolsa@kernel.org>
 
-thanks,
-jirka
+On 2019/10/23 16:49, Tzung-Bi Shih wrote:
+> On Wed, Oct 23, 2019 at 4:38 PM maowenan <maowenan@huawei.com> wrote:
+>> I receive below message after I post, do you know why?
+>> '''
+>> Your mail to 'Alsa-devel' with the subject
+>>
+>>     [PATCH] ASoC: mediatek: Check SND_SOC_CROS_EC_CODEC dependency
+>>
+>> Is being held until the list moderator can review it for approval.
+>>
+>> The reason it is being held:
+>>
+>>     Post by non-member to a members-only list
+> 
+> I don't exactly know.  But I got similar messages when I first time
+> sent mail to the alsa-devel.
+> 
+> Have you subscribed to alsa-devel mailing list?  I guess it is fine to
+> wait maintainers to proceed your patch.
+> 
 
-> ---
->  tools/perf/util/parse-events.y | 8 +++-----
->  1 file changed, 3 insertions(+), 5 deletions(-)
->=20
-> diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-event=
-s.y
-> index 26cb65798522..545ab7cefc20 100644
-> --- a/tools/perf/util/parse-events.y
-> +++ b/tools/perf/util/parse-events.y
-> @@ -691,14 +691,12 @@ array_terms ',' array_term
->  =09struct parse_events_array new_array;
-> =20
->  =09new_array.nr_ranges =3D $1.nr_ranges + $3.nr_ranges;
-> -=09new_array.ranges =3D malloc(sizeof(new_array.ranges[0]) *
-> -=09=09=09=09  new_array.nr_ranges);
-> +=09new_array.ranges =3D realloc($1.ranges,
-> +=09=09=09=09sizeof(new_array.ranges[0]) *
-> +=09=09=09=09new_array.nr_ranges);
->  =09ABORT_ON(!new_array.ranges);
-> -=09memcpy(&new_array.ranges[0], $1.ranges,
-> -=09       $1.nr_ranges * sizeof(new_array.ranges[0]));
->  =09memcpy(&new_array.ranges[$1.nr_ranges], $3.ranges,
->  =09       $3.nr_ranges * sizeof(new_array.ranges[0]));
-> -=09free($1.ranges);
->  =09free($3.ranges);
->  =09$$ =3D new_array;
->  }
-> --=20
-> 2.23.0.866.gb869b98d4c-goog
->=20
+OK. Thanks.
+
+> .
+> 
 
