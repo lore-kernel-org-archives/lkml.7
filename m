@@ -2,132 +2,179 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D145BC47E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:44:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1686CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:49:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B08B72064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:44:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EA53214B2
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:49:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="U26NV0Rn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404603AbfJWKn7 convert rfc822-to-8bit (ORCPT
+        id S2404570AbfJWKtp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 06:43:59 -0400
-Received: from mail-oln040092254068.outbound.protection.outlook.com ([40.92.254.68]:48288
-        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390386AbfJWKn7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 06:43:59 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kK9hmCoFXliFdMLmgYJw8cuXQ5nTg+eW5TZXF2cnsZQTJNbDedqskDwdtfW5q/mqcTEqJwPD8D5ejZoNn1BU3SoVaf+15mTjndQ06++hSHEPXMK0bvRgJHTORBNtaX14M7qQbXRbkjzyIJ7IVy8xf51Eg63y/bJGK4LMGnCeuUHHqZddeik1uNt8N2NH+koFLFnGJ6P0EjmrdduXqnHnqk5Q7RQchS2HewOkQyTZrpng75UstsLMI6uNqXO1MaTCy+2FMp3BISlWSkzm2DKTF1D6F0bUe5MKsx/Yq4nnrjOiNNG9UohJrnzJL+tvQfBNWhlwDtR59FNqzLGCdx6vYw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QndjHuoDKoNgBnXE9ZhWSKjWrZOC0u07NYwfAAsnskw=;
- b=Cjrib0bG6AGmWnc+34OslI7AMECUNjIwZDQAAqw+NEb5z/XILmqq+1WF/RPZO5hcVYmoFqf1cdXh5IatnF7d5Y4+dvoc7lK57v1HcirWY68GyIwyu1BGuE7nJfZ1AfQH4FEQXOS481gRZlarDHy6T0yw7EsvZdc5nXsdAbvyzv7uAnp3qOXnODUZfrdzupFTlFw/ZAzmxEk9NatyMfRKQw0OYHVa/yYtb4YES3XzLgNmNuP8LzUHQtOlWwCtSTcZYFOVXLIjsfSixMccZJXlIGdD6zVjZhYQX4PBtVWHxkx1noEI0fnbW8xFeqb7NHrYH+/qFguZ0MA6wy/caDV9Vw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from SG2APC01FT030.eop-APC01.prod.protection.outlook.com
- (10.152.250.55) by SG2APC01HT138.eop-APC01.prod.protection.outlook.com
- (10.152.251.180) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2367.14; Wed, 23 Oct
- 2019 10:43:53 +0000
-Received: from SL2P216MB0187.KORP216.PROD.OUTLOOK.COM (10.152.250.51) by
- SG2APC01FT030.mail.protection.outlook.com (10.152.250.200) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.2387.20 via Frontend Transport; Wed, 23 Oct 2019 10:43:53 +0000
-Received: from SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
- ([fe80::ec26:6771:625e:71d]) by SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
- ([fe80::ec26:6771:625e:71d%8]) with mapi id 15.20.2387.019; Wed, 23 Oct 2019
- 10:43:53 +0000
-From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-To:     "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "logang@deltatee.com" <logang@deltatee.com>
-Subject: Re: [PATCH 0/1] Add support for setting MMIO PREF hotplug bridge size
-Thread-Topic: [PATCH 0/1] Add support for setting MMIO PREF hotplug bridge
- size
-Thread-Index: AQHViX0IscNJYyHchk6j0ubA//SaQKdn+jIAgAAQTwA=
-Date:   Wed, 23 Oct 2019 10:43:53 +0000
-Message-ID: <SL2P216MB0187DC3EEA0B3FD8D4F81B45806B0@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
-References: <PSXP216MB01832E0DD8892B52A3FA2589806B0@PSXP216MB0183.KORP216.PROD.OUTLOOK.COM>
- <20191023094522.GT2819@lahna.fi.intel.com>
-In-Reply-To: <20191023094522.GT2819@lahna.fi.intel.com>
-Accept-Language: en-AU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: ME4P282CA0017.AUSP282.PROD.OUTLOOK.COM
- (2603:10c6:220:90::27) To SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
- (2603:1096:100:22::19)
-x-incomingtopheadermarker: OriginalChecksum:EC1185017EA86D646DCC0261E13DDD076FD5B8FF6FCC28E462AF16B6E946DF79;UpperCasedChecksum:D449B46EE167145D70B700980EADE58740F91F1D20D697688AD178E00B98B3AD;SizeAsReceived:7646;Count:48
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [qlLLeVr12dNLSLOFyCXVW4/HhrzzeUblPieIjsAHICE=]
-x-microsoft-original-message-id: <20191023104344.GA5897@nicholas-dell-linux>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 48
-x-eopattributedmessage: 0
-x-ms-traffictypediagnostic: SG2APC01HT138:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: KItML5yrGk1DwJQNcv35iGI4GXUrO41BEb3SuOMpf22FDvYXledfanOvX0DBQuiCvo6QcZU+YYF8t51seCdz9BFA8WaWHDO24Spi+V/POhgnjBbWs1HABe87yx+aiZ863Loo4ZZ2hF7XDmx2AnrNgoIHa+ehEatXg+ABBCTOfuI19l9dOFNmELbRqvzMJulO
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2953F534D8CA8E4FB3BC9E60974A514D@KORP216.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: 8BIT
+        Wed, 23 Oct 2019 06:49:45 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:40151 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390379AbfJWKtp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 06:49:45 -0400
+Received: by mail-wm1-f68.google.com with SMTP id b24so19141778wmj.5
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 03:49:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=x9Us54scadrFU9TiJRijJVT2Q9RuXcN3VvdzhxCj4XY=;
+        b=U26NV0Rn2z8GAYz7San694T0J7eRwl0thTNtkgIkNJbPPn3lCOykKiV+flHFRJpwC+
+         EL/N+kAKyd2IGN8eHHgGMBT06Zh2c9WBVfFzIdUDcC3SSQVULEqtMv+OzEpDSToN0OFD
+         WEyTLxg8vnRRUxk1WnWTlJgjqlCJMDyjJ8PJKS3azVFAQD2Q1uuRG1jMq7oo05lcpyzq
+         E7cy1R7pTtSxN0OH34YhoAu4Ox6cAcp+CpwdU5fwa/V8T2vTJ8Xr1VNORzokC77qk98Q
+         zjIPIb0BLVk0cJT1BT7EbBtrSsNOznmZRlGdVN+x5r959X4DWLWDfcIerfX6StGUQ+RW
+         zy6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=x9Us54scadrFU9TiJRijJVT2Q9RuXcN3VvdzhxCj4XY=;
+        b=TUCh6diRCEnanluTGcesDiSJrHf+3QinvKnIaFBB9De8wLdXZ8J4pn4ZJSDM0Gw91i
+         82oWOzcMjI3+o+VMopBv5c5I/kqPuZOmVrucQ+hWxBzL7akBHG3CctC/TED16z9AInN6
+         5S4FYbUFIhX77eFzpO9TEaqH6QOBbjfUfnpj/G4qwLJhmKypARVsfd2DF4nK8nSl0heM
+         VqG7LDY3Tvnq1hphQpSriRvG40qID+fwQagreey4HYfiEKLz8YfD00nkCAe7oPePVhvq
+         W+3nggLvWSHGltJnO18L7gJ6UlKxQDKUkj+1u/+d440je0rd6wHRoDtEAQWXhnbYAIA+
+         yYxQ==
+X-Gm-Message-State: APjAAAULlUjVClCFubYDurITEjXBj5OMBcJfwAbXeI6UXYOqqjfBSDGi
+        +OhXAHpwnuLEMTy5ir8Qjat1zg==
+X-Google-Smtp-Source: APXvYqygvI1eXHgm4oUC8Ldg/5UwX2sIRJ8S+0hGdEWx4GhRDVei8QAywYaoDflMC0ZQnEAqV+p+1g==
+X-Received: by 2002:a1c:f011:: with SMTP id a17mr15921wmb.18.1571827781378;
+        Wed, 23 Oct 2019 03:49:41 -0700 (PDT)
+Received: from google.com ([2a00:79e0:d:210:e8f7:125b:61e9:733d])
+        by smtp.gmail.com with ESMTPSA id w18sm3945309wrl.75.2019.10.23.03.49.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Oct 2019 03:49:40 -0700 (PDT)
+Date:   Wed, 23 Oct 2019 11:49:40 +0100
+From:   Matthias Maennich <maennich@google.com>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Heiner Kallweit <hkallweit1@gmail.com>,
+        Jessica Yu <jeyu@kernel.org>, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: Module loading problem since 5.3
+Message-ID: <20191023104940.GD27616@google.com>
+References: <20191014085235.GW16384@42.do-not-panic.com>
+ <20191014144440.GG35313@google.com>
+ <20191016125030.GH16384@42.do-not-panic.com>
+ <20191016133710.GB35139@google.com>
+ <20191018121848.GB11244@42.do-not-panic.com>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 761e5cfa-e33d-49bc-88df-08d757a5e5ea
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Oct 2019 10:43:53.7866
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2APC01HT138
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191018121848.GB11244@42.do-not-panic.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 12:45:22PM +0300, mika.westerberg@linux.intel.com wrote:
-> On Wed, Oct 23, 2019 at 08:36:59AM +0000, Nicholas Johnson wrote:
-> > This patch adds support for two new kernel parameters. This patch has
-> > been in the making for quite some time, and has changed several times
-> > based on feedback.
-> > 
-> > I realised I was making the mistake of putting it as part of my
-> > Thunderbolt patch series. Although the other patches in the series are
-> > very important for my goal, I realised that they are just a heap of
-> > patches that are not Thunderbolt-specific. The only thing that is
-> > Thunderbolt-related is the intended use case.
-> > 
-> > I hope that posting this alone can ease the difficulty of reviewing it.
-> > 
-> > Nicholas Johnson (1):
-> >   PCI: Add hp_mmio_size and hp_mmio_pref_size parameters
-> > 
-> >  .../admin-guide/kernel-parameters.txt         |  9 ++++++-
-> >  drivers/pci/pci.c                             | 17 ++++++++++---
-> >  drivers/pci/pci.h                             |  3 ++-
-> >  drivers/pci/setup-bus.c                       | 25 +++++++++++--------
-> >  4 files changed, 38 insertions(+), 16 deletions(-)
-> 
-> If you want to add cover letter in the "normal way" so that threading is
-> preserved you can do something like 'git format-patch --cover-letter ...',
-> then edit the 0000-...patch and send it along with the other patches
-I do everything above.
+On Fri, Oct 18, 2019 at 12:18:48PM +0000, Luis Chamberlain wrote:
+>On Wed, Oct 16, 2019 at 02:37:10PM +0100, Matthias Maennich wrote:
+>> On Wed, Oct 16, 2019 at 12:50:30PM +0000, Luis Chamberlain wrote:
+>> > On Mon, Oct 14, 2019 at 03:44:40PM +0100, Matthias Maennich wrote:
+>> > > Hi Luis!
+>> > >
+>> > > On Mon, Oct 14, 2019 at 08:52:35AM +0000, Luis Chamberlain wrote:
+>> > > > On Fri, Oct 11, 2019 at 09:26:05PM +0200, Heiner Kallweit wrote:
+>> > > > > On 10.10.2019 19:15, Luis Chamberlain wrote:
+>> > > > > >
+>> > > > > >
+>> > > > > > On Thu, Oct 10, 2019, 6:50 PM Heiner Kallweit <hkallweit1@gmail.com <mailto:hkallweit1@gmail.com>> wrote:
+>> > > > > >
+>> > > > > >        MODULE_SOFTDEP("pre: realtek")
+>> > > > > >
+>> > > > > >     Are you aware of any current issues with module loading
+>> > > > > >     that could cause this problem?
+>> > > > > >
+>> > > > > >
+>> > > > > > Nope. But then again I was not aware of MODULE_SOFTDEP(). I'd encourage an extension to lib/kmod.c or something similar which stress tests this. One way that comes to mind to test this is to allow a new tests case which loads two drives which co depend on each other using this macro. That'll surely blow things up fast. That is, the current kmod tests uses request_module() or get_fs_type(), you'd want a new test case with this added using then two new dummy test drivers with the macro dependency.
+>> > > > > >
+>> > > > > > If you want to resolve this using a more tested path, you could have request_module() be used as that is currently tested. Perhaps a test patch for that can rule out if it's the macro magic which is the issue.
+>> > > > > >
+>> > > > > >   Luis
+>> > > > >
+>> > > > > Maybe issue is related to a bug in introduction of symbol namespaces, see here:
+>> > > > > https://lkml.org/lkml/2019/10/11/659
+>> > > >
+>> > > > Can you have your user with issues either revert 8651ec01daed or apply the fixes
+>> > > > mentioned by Matthias to see if that was the issue?
+>> > > >
+>> > > > Matthias what module did you run into which let you run into the issue
+>> > > > with depmod? I ask as I think it would be wise for us to add a test case
+>> > > > using lib/test_kmod.c and tools/testing/selftests/kmod/kmod.sh for the
+>> > > > regression you detected.
+>> > >
+>> > > The depmod warning can be reproduced when using a symbol that is built
+>> > > into vmlinux and used from a module. E.g. with CONFIG_USB_STORAGE=y and
+>> > > CONFIG_USB_UAS=m, the symbol `usb_stor_adjust_quirks` is built in with
+>> > > namespace USB_STORAGE and depmod stumbles upon this emitting the
+>> > > following warning (e.g. during make modules_install).
+>> > >
+>> > >  depmod: WARNING: [...]/uas.ko needs unknown symbol usb_stor_adjust_quirks
+>> > >
+>> > > As there is another (less intrusive) way of implementing the namespace
+>> > > feature, I posted a patch series [1] on last Thursday that should
+>> > > mitigate the issue as the ksymtab entries depmod eventually relies on
+>> > > are no longer carrying the namespace in their names.
+>> > >
+>> > > Cheers,
+>> > > Matthias
+>> > >
+>> > > [1] https://lore.kernel.org/lkml/20191010151443.7399-1-maennich@google.com/
+>> >
+>> > Yes but kmalloc() is built-in, and used by *all* drivers compiled as
+>> > modules, so why was that an issue?
+>>
+>> I believe you meant, "why was that *not* an issue?".
+>
+>Right.
+>
+>> In ksymtab, namespaced symbols had the format
+>>
+>>  __ksymtab_<NAMESPACE>.<symbol>
+>>
+>> while symbols without namespace would still use the old format
+>>
+>>  __ksymtab_<symbol>
+>
+>Ah, I didn't see the symbol namespace patches, good stuff!
+>
+>> These are also the names that are extracted into System.map (using
+>> scripts/mksysmap). Depmod is reading the System.map and for symbols used
+>> by modules that are in a namespace, it would not find a match as it does
+>> not understand the namespace notation. Depmod would still not emit a
+>> warning for symbols without namespace as their format did not change.
+>
+>Can we have a test case for this to ensure we don't regress on this
+>again? Or put another way, what test cases were implemented for symbol
+>namespaces?
 
-> using git send-email.
-But I was told by Bjorn that I was sending emails with funny encoding 
-which meant he had to manually apply the patches, which meant more work 
-for him. I could not figure out how to make git send-email work with the 
-correct encoding. I had to use mutt -H to fix the encoding, doing each 
-email separately.
+While modpost and kernel/module.c are the tests at build and runtime
+resp. to enforce proper use of symbol namespaces, I could imagine to
+test for the proper layout in the ksymtab entries (note, as mentioned
+earlier there are some fixes in flight to finalize the layout).
+In addition, I could imagine adding a test that tries to load a module
+that uses symbols from a namespace without importing it. The kernel
+should deny loading or complain about it (depending on the
+configuration). These are also some of the test cases I had when working
+on that feature. I did not implement these as automated tests though. I
+will put that on my list but help with that would be very welcome.
 
-I have no idea why my git send-email is strange.
+Cheers,
+Matthias
+
