@@ -2,88 +2,160 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 798A9CA9EBB
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 21:30:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CFFBCA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 21:31:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58EC621906
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 21:30:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44A902173B
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 21:31:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571866267;
+	bh=bq0xL50hpqaPXcNSOUfqCHdzo65lRDo//Gm6bz69RZs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=hbHBu+G4WoXntbGKm36j7eENGWD5E4rIL733+vXzKKmfH5qCH5ThOQId8ZXicHrJM
+	 qNt2Dk44I0iZlh2D6c1e4h6RlNOq9YDg8IP35fNt6rFZCHjqvJ3tw96upbz0y0KeCB
+	 RSZywsEjNOdj0iuhqmJQrfSHmJAUZYo9KPPHdjtI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392653AbfJWVac convert rfc822-to-8bit (ORCPT
+        id S2392663AbfJWVbF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 17:30:32 -0400
-Received: from mga11.intel.com ([192.55.52.93]:38575 "EHLO mga11.intel.com"
+        Wed, 23 Oct 2019 17:31:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732284AbfJWVab (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 17:30:31 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 14:30:31 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,222,1569308400"; 
-   d="scan'208";a="398194410"
-Received: from orsmsx108.amr.corp.intel.com ([10.22.240.6])
-  by fmsmga005.fm.intel.com with ESMTP; 23 Oct 2019 14:30:31 -0700
-Received: from orsmsx151.amr.corp.intel.com (10.22.226.38) by
- ORSMSX108.amr.corp.intel.com (10.22.240.6) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 23 Oct 2019 14:30:30 -0700
-Received: from orsmsx115.amr.corp.intel.com ([169.254.4.146]) by
- ORSMSX151.amr.corp.intel.com ([169.254.7.36]) with mapi id 14.03.0439.000;
- Wed, 23 Oct 2019 14:30:30 -0700
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-CC:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
-        "Yu, Fenghua" <fenghua.yu@intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 1/2] rtc/ia64: remove legacy efirtc driver
-Thread-Topic: [PATCH 1/2] rtc/ia64: remove legacy efirtc driver
-Thread-Index: AQHVibMQWvZIw22fo0GB+QhOFS8CkqdokOYAgACKZID//6LhUA==
-Date:   Wed, 23 Oct 2019 21:30:29 +0000
-Message-ID: <3908561D78D1C84285E8C5FCA982C28F7F4AD7F7@ORSMSX115.amr.corp.intel.com>
-References: <20191023150311.844123-1-arnd@arndb.de>
- <20191023184616.GA17078@agluck-desk2.amr.corp.intel.com>
- <20191023200135.GT3125@piout.net>
-In-Reply-To: <20191023200135.GT3125@piout.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYjA3N2Y2M2EtNzg5Yi00NjIwLTg2N2EtZDE0YjM1ZDYyMDRiIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiTnhPZ2Y3ZUV0MGdpMVZtMk5rcm92U01IaW8rYVpBSGYya0RydDNhb3ptaWhuZEJDQUx4MDdCbTF4Mk9nbUZKZSJ9
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.138]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        id S2391325AbfJWVbF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 17:31:05 -0400
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A60021A4A
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 21:31:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571866264;
+        bh=bq0xL50hpqaPXcNSOUfqCHdzo65lRDo//Gm6bz69RZs=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=xOoTNiJgTEkXxLm3Zw2wUubiwXf7K9pRiSbAs/YuGr7DsOZgVtWHy0apBBVtfFUef
+         CbVcE0oAPQLm8UTtG4o1EXrWYK7DWsHtRzkrwXnODgaWsmUu9IhJsmcaPP/DQim6Ls
+         GjdkAqyd+IeYC5RkbSD7pRoJdzmof04wqvgo5QS8=
+Received: by mail-wr1-f51.google.com with SMTP id s1so14900335wro.0
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 14:31:04 -0700 (PDT)
+X-Gm-Message-State: APjAAAUwI3wQf0K97uFhOHZWZ+fghb8xBhgiL6GE+3nHj+/eLXgCm7Ud
+        lrzHN7G/7AV/C3UIEEJl03WDn5Dn2marc7+ngr+UkA==
+X-Google-Smtp-Source: APXvYqxciiabhK1TgUrj4Tvuz0nMo9AovfxcBOd5U1U4aZECW+yDd2p8KX8bdYpf//9QdzEBqYuaRFnrVK7lMJnSpFM=
+X-Received: by 2002:adf:f342:: with SMTP id e2mr721058wrp.61.1571866262651;
+ Wed, 23 Oct 2019 14:31:02 -0700 (PDT)
 MIME-Version: 1.0
+References: <20191023122705.198339581@linutronix.de> <20191023123118.386844979@linutronix.de>
+In-Reply-To: <20191023123118.386844979@linutronix.de>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Wed, 23 Oct 2019 14:30:51 -0700
+X-Gmail-Original-Message-ID: <CALCETrWLk9LKV4+_mrOKDc3GUvXbCjqA5R6cdpqq02xoRCBOHw@mail.gmail.com>
+Message-ID: <CALCETrWLk9LKV4+_mrOKDc3GUvXbCjqA5R6cdpqq02xoRCBOHw@mail.gmail.com>
+Subject: Re: [patch V2 08/17] x86/entry: Move syscall irq tracing to C code
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>
+Content-Type: multipart/mixed; boundary="00000000000038b2b005959aa2c3"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> rtc-efi rtc-efi: setting system clock to 2019-10-23T18:30:23 UTC (1571855423)
+--00000000000038b2b005959aa2c3
+Content-Type: text/plain; charset="UTF-8"
 
-> You can remove CONFIG_RTC_HCTOSYS, this line will disappear, systemd
-> will not like that but efirtc was not setting the system time anyway so
-> this shouldn't change the behaviour.
+On Wed, Oct 23, 2019 at 5:31 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> Interrupt state tracing can be safely done in C code. The few stack
+> operations in assembly do not need to be covered.
+>
+> Remove the now pointless indirection via .Lsyscall_32_done and jump to
+> swapgs_restore_regs_and_return_to_usermode directly.
 
+This doesn't look right.
 
-Wait ... that message says "setting system clock"
+>  #define SYSCALL_EXIT_WORK_FLAGS                                \
+> @@ -279,6 +282,9 @@ static void syscall_slow_exit_work(struc
+>  {
+>         struct thread_info *ti;
+>
+> +       /* User to kernel transition disabled interrupts. */
+> +       trace_hardirqs_off();
+> +
 
-but then you say " efirtc was not setting the system time anyway".
+So you just traced IRQs off, but...
 
-So did the time get set, or not?
+>         enter_from_user_mode();
+>         local_irq_enable();
 
-If it wasn't set, why does the message say that it was set?
+Now they're on and traced on again?
 
--Tony
+I also don't see how your patch handles the fastpath case.
+
+How about the attached patch instead?
+
+--00000000000038b2b005959aa2c3
+Content-Type: text/x-patch; charset="US-ASCII"; name="irqtrace.patch"
+Content-Disposition: attachment; filename="irqtrace.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_k23sk6dd0>
+X-Attachment-Id: f_k23sk6dd0
+
+Y29tbWl0IGUxNTRhZjBkN2ZmMmQ2MDVmMTU1ZjVhY2EwNTllM2U4MzVlNDI2ZDQKQXV0aG9yOiBB
+bmR5IEx1dG9taXJza2kgPGx1dG9Aa2VybmVsLm9yZz4KRGF0ZTogICBGcmkgQXVnIDIgMTA6MzA6
+NDQgMjAxOSAtMDcwMAoKICAgIHg4Ni9lbnRyeTogTW92ZSBleGl0LXRvLXVzZXJtb2RlIGlycWZs
+YWcgdHJhY2luZyB0byBwcmVwYXJlX2V4aXRfdG9fdXNlcm1vZGUoKQogICAgCiAgICBwcmVwYXJl
+X2V4aXRfdG9fdXNlcm1vZGUoKSBjYW4gZWFzaWx5IGhhbmRsZSBpcnFmbGFnIHRyYWNpbmcuICBN
+b3ZlCiAgICB0aGUgbG9naWMgdGhlcmUgYW5kIHJlbW92ZSBpdCBmcm9tIHRoZSBlbnRyeSBhc20u
+CiAgICAKICAgIFNpZ25lZC1vZmYtYnk6IEFuZHkgTHV0b21pcnNraSA8bHV0b0BrZXJuZWwub3Jn
+PgoKZGlmZiAtLWdpdCBhL2FyY2gveDg2L2VudHJ5L2NvbW1vbi5jIGIvYXJjaC94ODYvZW50cnkv
+Y29tbW9uLmMKaW5kZXggY2M0OTM4MGVmOGFiLi5mNGNlMGNmMmZiNzQgMTAwNjQ0Ci0tLSBhL2Fy
+Y2gveDg2L2VudHJ5L2NvbW1vbi5jCisrKyBiL2FyY2gveDg2L2VudHJ5L2NvbW1vbi5jCkBAIC0y
+MTcsNiArMjE3LDEzIEBAIF9fdmlzaWJsZSBpbmxpbmUgdm9pZCBwcmVwYXJlX2V4aXRfdG9fdXNl
+cm1vZGUoc3RydWN0IHB0X3JlZ3MgKnJlZ3MpCiAKIAl1c2VyX2VudGVyX2lycW9mZigpOwogCisJ
+LyoKKwkgKiBUaGUgYWN0dWFsIHJldHVybiB0byB1c2VybW9kZSB3aWxsIGFsbW9zdCBjZXJ0YWlu
+bHkgdHVybiBJUlFzIG9uLgorCSAqIFRyYWNlIGl0IGhlcmUgdG8gc2ltcGxpZnkgdGhlIGFzbSBj
+b2RlLgorCSAqLworCWlmIChsaWtlbHkocmVncy0+ZmxhZ3MgJiBYODZfRUZMQUdTX0lGKSkKKwkJ
+dHJhY2VfaGFyZGlycXNfb24oKTsKKwogCW1kc191c2VyX2NsZWFyX2NwdV9idWZmZXJzKCk7CiB9
+CiAKZGlmZiAtLWdpdCBhL2FyY2gveDg2L2VudHJ5L2VudHJ5XzMyLlMgYi9hcmNoL3g4Ni9lbnRy
+eS9lbnRyeV8zMi5TCmluZGV4IGY4M2NhNWFhOGI3Ny4uYzcwM2MyOWJlYmIxIDEwMDY0NAotLS0g
+YS9hcmNoL3g4Ni9lbnRyeS9lbnRyeV8zMi5TCisrKyBiL2FyY2gveDg2L2VudHJ5L2VudHJ5XzMy
+LlMKQEAgLTEwNjIsNyArMTA2Miw2IEBAIEVOVFJZKGVudHJ5X0lOVDgwXzMyKQogCVNUQUNLTEVB
+S19FUkFTRQogCiByZXN0b3JlX2FsbDoKLQlUUkFDRV9JUlFTX0lSRVQKIAlTV0lUQ0hfVE9fRU5U
+UllfU1RBQ0sKIC5McmVzdG9yZV9hbGxfbm90cmFjZToKIAlDSEVDS19BTkRfQVBQTFlfRVNQRklY
+CmRpZmYgLS1naXQgYS9hcmNoL3g4Ni9lbnRyeS9lbnRyeV82NC5TIGIvYXJjaC94ODYvZW50cnkv
+ZW50cnlfNjQuUwppbmRleCAzYWJhZTgwZDQ5MDIuLjA1NjQxOWEwZTc2ZiAxMDA2NDQKLS0tIGEv
+YXJjaC94ODYvZW50cnkvZW50cnlfNjQuUworKysgYi9hcmNoL3g4Ni9lbnRyeS9lbnRyeV82NC5T
+CkBAIC0xNzIsOCArMTcyLDYgQEAgR0xPQkFMKGVudHJ5X1NZU0NBTExfNjRfYWZ0ZXJfaHdmcmFt
+ZSkKIAltb3ZxCSVyc3AsICVyc2kKIAljYWxsCWRvX3N5c2NhbGxfNjQJCS8qIHJldHVybnMgd2l0
+aCBJUlFzIGRpc2FibGVkICovCiAKLQlUUkFDRV9JUlFTX0lSRVRRCQkvKiB3ZSdyZSBhYm91dCB0
+byBjaGFuZ2UgSUYgKi8KLQogCS8qCiAJICogVHJ5IHRvIHVzZSBTWVNSRVQgaW5zdGVhZCBvZiBJ
+UkVUIGlmIHdlJ3JlIHJldHVybmluZyB0bwogCSAqIGEgY29tcGxldGVseSBjbGVhbiA2NC1iaXQg
+dXNlcnNwYWNlIGNvbnRleHQuICBJZiB3ZSdyZSBub3QsCkBAIC02MTcsNyArNjE1LDYgQEAgcmV0
+X2Zyb21faW50cjoKIC5McmV0aW50X3VzZXI6CiAJbW92CSVyc3AsJXJkaQogCWNhbGwJcHJlcGFy
+ZV9leGl0X3RvX3VzZXJtb2RlCi0JVFJBQ0VfSVJRU19JUkVUUQogCiBHTE9CQUwoc3dhcGdzX3Jl
+c3RvcmVfcmVnc19hbmRfcmV0dXJuX3RvX3VzZXJtb2RlKQogI2lmZGVmIENPTkZJR19ERUJVR19F
+TlRSWQpkaWZmIC0tZ2l0IGEvYXJjaC94ODYvZW50cnkvZW50cnlfNjRfY29tcGF0LlMgYi9hcmNo
+L3g4Ni9lbnRyeS9lbnRyeV82NF9jb21wYXQuUwppbmRleCA0MzVkZjYzN2YzOTIuLjM1MDJmMzhi
+ZGUwMSAxMDA2NDQKLS0tIGEvYXJjaC94ODYvZW50cnkvZW50cnlfNjRfY29tcGF0LlMKKysrIGIv
+YXJjaC94ODYvZW50cnkvZW50cnlfNjRfY29tcGF0LlMKQEAgLTI1NCw3ICsyNTQsNiBAQCBzeXNy
+ZXQzMl9mcm9tX3N5c3RlbV9jYWxsOgogCSAqIHN0YWNrLiBTbyBsZXQncyBlcmFzZSB0aGUgdGhy
+ZWFkIHN0YWNrIHJpZ2h0IG5vdy4KIAkgKi8KIAlTVEFDS0xFQUtfRVJBU0UKLQlUUkFDRV9JUlFT
+X09OCQkJLyogVXNlciBtb2RlIHRyYWNlcyBhcyBJUlFzIG9uLiAqLwogCW1vdnEJUkJYKCVyc3Ap
+LCAlcmJ4CQkvKiBwdF9yZWdzLT5yYnggKi8KIAltb3ZxCVJCUCglcnNwKSwgJXJicAkJLyogcHRf
+cmVncy0+cmJwICovCiAJbW92cQlFRkxBR1MoJXJzcCksICVyMTEJLyogcHRfcmVncy0+ZmxhZ3Mg
+KGluIHIxMSkgKi8KQEAgLTM5Niw2ICszOTUsNSBAQCBFTlRSWShlbnRyeV9JTlQ4MF9jb21wYXQp
+CiAuTHN5c2NhbGxfMzJfZG9uZToKIAogCS8qIEdvIGJhY2sgdG8gdXNlciBtb2RlLiAqLwotCVRS
+QUNFX0lSUVNfT04KIAlqbXAJc3dhcGdzX3Jlc3RvcmVfcmVnc19hbmRfcmV0dXJuX3RvX3VzZXJt
+b2RlCiBFTkQoZW50cnlfSU5UODBfY29tcGF0KQo=
+--00000000000038b2b005959aa2c3--
