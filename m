@@ -2,244 +2,115 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB60CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:14:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D943BCA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:15:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EE4E205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:14:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEDEE2173B
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:15:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571825727;
+	bh=LZP3BqoLpY0rpoQR77DJPDXuMn1MHW9bfkAhcsmqkj4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LAg/GXCKkFh0w5VFn3GCnEkCyaSAYCPmqUkg1AuhS6NjEjJdwihmCvR9zOqiPQ8dL
+	 /cxL8D6/8ts+NnRXFAaz7z9Q6iIUty/V8BRxNKR+jEOd4PNjeL1WFdpSsQSxuQU7C5
+	 13zs/sDgTV/s9sHgJV4934XB+t7vrnYSs2egpMwk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404378AbfJWKOq (ORCPT
+        id S2404392AbfJWKP0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 06:14:46 -0400
-Received: from mga18.intel.com ([134.134.136.126]:6622 "EHLO mga18.intel.com"
+        Wed, 23 Oct 2019 06:15:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404000AbfJWKOq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 06:14:46 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 03:14:44 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,220,1569308400"; 
-   d="scan'208";a="197388690"
-Received: from dpdk-virtio-tbie-2.sh.intel.com (HELO ___) ([10.67.104.74])
-  by fmsmga007.fm.intel.com with ESMTP; 23 Oct 2019 03:14:42 -0700
-Date:   Wed, 23 Oct 2019 18:11:36 +0800
-From:   Tiwei Bie <tiwei.bie@intel.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     mst@redhat.com, alex.williamson@redhat.com,
-        maxime.coquelin@redhat.com, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, dan.daly@intel.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        lingshan.zhu@intel.com
-Subject: Re: [PATCH v2] vhost: introduce mdev based hardware backend
-Message-ID: <20191023101135.GA6367@___>
-References: <20191022095230.2514-1-tiwei.bie@intel.com>
- <47a572fd-5597-1972-e177-8ee25ca51247@redhat.com>
- <20191023030253.GA15401@___>
- <ac36f1e3-b972-71ac-fe0c-3db03e016dcf@redhat.com>
- <20191023070747.GA30533@___>
- <106834b5-dae5-82b2-0f97-16951709d075@redhat.com>
+        id S2404104AbfJWKP0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 06:15:26 -0400
+Received: from linux-8ccs (ip5f5ade78.dynamic.kabel-deutschland.de [95.90.222.120])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78868205ED;
+        Wed, 23 Oct 2019 10:15:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571825725;
+        bh=LZP3BqoLpY0rpoQR77DJPDXuMn1MHW9bfkAhcsmqkj4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UcKhPQSN4AqI3CgkCE3D/sIATgU4jNtJhy/qJt3pHsIAMGrNZDDLK9nhDvXNw3BYN
+         2yvqDXbriHlixSAA50ztaDF5vkkeXA6RrqGBH/1JfLKg1PCaJEhnYuOEnirbUBLOWq
+         Gc4zL1A+OQDcb+sLsW4GoxUhkUqOHQl1B3M0ETq0=
+Date:   Wed, 23 Oct 2019 12:15:21 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Matthias Maennich <maennich@google.com>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        David Laight <David.Laight@aculab.com>
+Subject: Re: [PATCH v3] scripts/nsdeps: use alternative sed delimiter
+Message-ID: <20191023101520.GA5387@linux-8ccs>
+References: <20191021160419.28270-1-jeyu@kernel.org>
+ <20191022110403.29715-1-jeyu@kernel.org>
+ <CAK7LNATzCA-+-9Mp6GZcBk1UZnUdgoYHLkX0wVSHyJcRefyWEg@mail.gmail.com>
+ <20191023101340.GA27616@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <106834b5-dae5-82b2-0f97-16951709d075@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191023101340.GA27616@google.com>
+X-OS:   Linux linux-8ccs 4.12.14-lp150.12.28-default x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 03:25:00PM +0800, Jason Wang wrote:
-> On 2019/10/23 下午3:07, Tiwei Bie wrote:
-> > On Wed, Oct 23, 2019 at 01:46:23PM +0800, Jason Wang wrote:
-> > > On 2019/10/23 上午11:02, Tiwei Bie wrote:
-> > > > On Tue, Oct 22, 2019 at 09:30:16PM +0800, Jason Wang wrote:
-> > > > > On 2019/10/22 下午5:52, Tiwei Bie wrote:
-> > > > > > This patch introduces a mdev based hardware vhost backend.
-> > > > > > This backend is built on top of the same abstraction used
-> > > > > > in virtio-mdev and provides a generic vhost interface for
-> > > > > > userspace to accelerate the virtio devices in guest.
-> > > > > > 
-> > > > > > This backend is implemented as a mdev device driver on top
-> > > > > > of the same mdev device ops used in virtio-mdev but using
-> > > > > > a different mdev class id, and it will register the device
-> > > > > > as a VFIO device for userspace to use. Userspace can setup
-> > > > > > the IOMMU with the existing VFIO container/group APIs and
-> > > > > > then get the device fd with the device name. After getting
-> > > > > > the device fd of this device, userspace can use vhost ioctls
-> > > > > > to setup the backend.
-> > > > > > 
-> > > > > > Signed-off-by: Tiwei Bie <tiwei.bie@intel.com>
-> > > > > > ---
-> > > > > > This patch depends on below series:
-> > > > > > https://lkml.org/lkml/2019/10/17/286
-> > > > > > 
-> > > > > > v1 -> v2:
-> > > > > > - Replace _SET_STATE with _SET_STATUS (MST);
-> > > > > > - Check status bits at each step (MST);
-> > > > > > - Report the max ring size and max number of queues (MST);
-> > > > > > - Add missing MODULE_DEVICE_TABLE (Jason);
-> > > > > > - Only support the network backend w/o multiqueue for now;
-> > > > > Any idea on how to extend it to support devices other than net? I think we
-> > > > > want a generic API or an API that could be made generic in the future.
-> > > > > 
-> > > > > Do we want to e.g having a generic vhost mdev for all kinds of devices or
-> > > > > introducing e.g vhost-net-mdev and vhost-scsi-mdev?
-> > > > One possible way is to do what vhost-user does. I.e. Apart from
-> > > > the generic ring, features, ... related ioctls, we also introduce
-> > > > device specific ioctls when we need them. As vhost-mdev just needs
-> > > > to forward configs between parent and userspace and even won't
-> > > > cache any info when possible,
-> > > 
-> > > So it looks to me this is only possible if we expose e.g set_config and
-> > > get_config to userspace.
-> > The set_config and get_config interface isn't really everything
-> > of device specific settings. We also have ctrlq in virtio-net.
-> 
-> 
-> Yes, but it could be processed by the exist API. Isn't it? Just set ctrl vq
-> address and let parent to deal with that.
++++ Matthias Maennich [23/10/19 11:13 +0100]:
+>On Wed, Oct 23, 2019 at 10:23:39AM +0900, Masahiro Yamada wrote:
+>>On Tue, Oct 22, 2019 at 8:04 PM Jessica Yu <jeyu@kernel.org> wrote:
+>>>
+>>>When doing an out of tree build with O=, the nsdeps script constructs
+>>>the absolute pathname of the module source file so that it can insert
+>>>MODULE_IMPORT_NS statements in the right place. However, ${srctree}
+>>>contains an unescaped path to the source tree, which, when used in a sed
+>>>substitution, makes sed complain:
+>>>
+>>>++ sed 's/[^ ]* *//home/jeyu/jeyu-linux\/&/g'
+>>>sed: -e expression #1, char 12: unknown option to `s'
+>>>
+>>>The sed substitution command 's' ends prematurely with the forward
+>>>slashes in the pathname, and sed errors out when it encounters the 'h',
+>>>which is an invalid sed substitution option. To avoid escaping forward
+>>>slashes ${srctree}, we can use '|' as an alternative delimiter for
+>>>sed instead to avoid this error.
+>>>
+>>>Signed-off-by: Jessica Yu <jeyu@kernel.org>
+>>>---
+>>>
+>>>v3: don't need to escape '/' since we're using a different delimiter.
+>>>
+>>> scripts/nsdeps | 2 +-
+>>> 1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>>diff --git a/scripts/nsdeps b/scripts/nsdeps
+>>>index 3754dac13b31..dda6fbac016e 100644
+>>>--- a/scripts/nsdeps
+>>>+++ b/scripts/nsdeps
+>>>@@ -33,7 +33,7 @@ generate_deps() {
+>>>        if [ ! -f "$ns_deps_file" ]; then return; fi
+>>>        local mod_source_files=`cat $mod_file | sed -n 1p                      \
+>>>                                              | sed -e 's/\.o/\.c/g'           \
+>>>-                                             | sed "s/[^ ]* */${srctree}\/&/g"`
+>>>+                                             | sed "s|[^ ]* *|${srctree}/&|g"`
+>>>        for ns in `cat $ns_deps_file`; do
+>>>                echo "Adding namespace $ns to module $mod_name (if needed)."
+>>>                generate_deps_for_ns $ns $mod_source_files
+>>>--
+>>>2.16.4
+>>>
+>>
+>>Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+>>
+>
+>Tested-by: Matthias Maennich <maennich@google.com>
 
-I mean how to expose ctrlq related settings to userspace?
+Applied, thanks!
 
-> 
-> 
-> > 
-> > > 
-> > > > I think it might be better to do
-> > > > this in one generic vhost-mdev module.
-> > > 
-> > > Looking at definitions of VhostUserRequest in qemu, it mixed generic API
-> > > with device specific API. If we want go this ways (a generic vhost-mdev),
-> > > more questions needs to be answered:
-> > > 
-> > > 1) How could userspace know which type of vhost it would use? Do we need to
-> > > expose virtio subsystem device in for userspace this case?
-> > > 
-> > > 2) That generic vhost-mdev module still need to filter out unsupported
-> > > ioctls for a specific type. E.g if it probes a net device, it should refuse
-> > > API for other type. This in fact a vhost-mdev-net but just not modularize it
-> > > on top of vhost-mdev.
-> > > 
-> > > 
-> > > > > > - Some minor fixes and improvements;
-> > > > > > - Rebase on top of virtio-mdev series v4;
-> > [...]
-> > > > > > +
-> > > > > > +static long vhost_mdev_get_features(struct vhost_mdev *m, u64 __user *featurep)
-> > > > > > +{
-> > > > > > +	if (copy_to_user(featurep, &m->features, sizeof(m->features)))
-> > > > > > +		return -EFAULT;
-> > > > > As discussed in previous version do we need to filter out MQ feature here?
-> > > > I think it's more straightforward to let the parent drivers to
-> > > > filter out the unsupported features. Otherwise it would be tricky
-> > > > when we want to add more features in vhost-mdev module,
-> > > 
-> > > It's as simple as remove the feature from blacklist?
-> > It's not really that easy. It may break the old drivers.
-> 
-> 
-> I'm not sure I understand here, we do feature negotiation anyhow. For old
-> drivers do you mean the guest drivers without MQ?
-
-For old drivers I mean old parent drivers. It's possible
-to compile old drivers on new kernels.
-
-I'm not quite sure how will we implement MQ support in
-vhost-mdev. If we need to introduce new virtio_mdev_device_ops
-callbacks and an old driver exposed the MQ feature,
-then the new vhost-mdev will see this old driver expose
-MQ feature but not provide corresponding callbacks.
-
-> 
-> 
-> > 
-> > > 
-> > > > i.e. if
-> > > > the parent drivers may expose unsupported features and relay on
-> > > > vhost-mdev to filter them out, these features will be exposed
-> > > > to userspace automatically when they are enabled in vhost-mdev
-> > > > in the future.
-> > > 
-> > > The issue is, it's only that vhost-mdev knows its own limitation. E.g in
-> > > this patch, vhost-mdev only implements a subset of transport API, but parent
-> > > doesn't know about that.
-> > > 
-> > > Still MQ as an example, there's no way (or no need) for parent to know that
-> > > vhost-mdev does not support MQ.
-> > The mdev is a MDEV_CLASS_ID_VHOST mdev device. When the parent
-> > is being developed, it should know the currently supported features
-> > of vhost-mdev.
-> 
-> 
-> How can parent know MQ is not supported by vhost-mdev?
-
-Good point. I agree vhost-mdev should filter out the unsupported
-features. But in the meantime, I think drivers also shouldn't
-expose unsupported features.
-
-> 
-> 
-> > 
-> > > And this allows old kenrel to work with new
-> > > parent drivers.
-> > The new drivers should provide things like VIRTIO_MDEV_F_VERSION_1
-> > to be compatible with the old kernels. When VIRTIO_MDEV_F_VERSION_1
-> > is provided/negotiated, the behaviours should be consistent.
-> 
-> 
-> To be clear, I didn't mean a change in virtio-mdev API, I meant:
-> 
-> 1) old vhost-mdev kernel driver that filters out MQ
-> 
-> 2) new parent driver that support MQ
-> 
-> 
-> > 
-> > > So basically we have three choices here:
-> > > 
-> > > 1) Implement what vhost-user did and implement a generic vhost-mdev (but may
-> > > still have lots of device specific code). To support advanced feature which
-> > > requires the access to config, still lots of API that needs to be added.
-> > > 
-> > > 2) Implement what vhost-kernel did, have a generic vhost-mdev driver and a
-> > > vhost bus on top for match a device specific API e.g vhost-mdev-net. We
-> > > still have device specific API but limit them only to device specific
-> > > module. Still require new ioctls for advanced feature like MQ.
-> > > 
-> > > 3) Simply expose all virtio-mdev transport to userspace.
-> > Currently, virtio-mdev transport is a set of function callbacks
-> > defined in kernel. How to simply expose virtio-mdev transport to
-> > userspace?
-> 
-> 
-> The most straightforward way is to have an 1:1 mapping between ioctl and
-> virito_mdev_device_ops.
-
-Seems we are already trying to do 1:1 mapping between ioctl
-and virtio_mdev_device_ops in vhost-mdev now (the major piece
-missing is get_device_id/get_config/set_config).
-
-
-> 
-> Thanks
-> 
-> 
-> > 
-> > 
-> > > A generic module
-> > > without any type specific code (like virtio-mdev). No need dedicated API for
-> > > e.g MQ. But then the API will look much different than current vhost did.
-> > > 
-> > > Consider the limitation of 1) I tend to choose 2 or 3. What's you opinion?
-> > > 
-> > > 
-> 
+Jessica
