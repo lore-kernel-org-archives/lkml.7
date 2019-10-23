@@ -2,63 +2,84 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C83EECA9EB7
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:29:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D87ECA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:31:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A835B21872
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:29:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B1502084C
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:31:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390352AbfJWI3X (ORCPT
+        id S2390281AbfJWIb3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 04:29:23 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:48116 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390339AbfJWI3W (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 04:29:22 -0400
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iNC17-0005Up-55; Wed, 23 Oct 2019 10:29:17 +0200
-Date:   Wed, 23 Oct 2019 10:29:12 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Wanpeng Li <kernellwp@gmail.com>
-cc:     LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, kvm <kvm@vger.kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>
-Subject: Re: [PATCH v2] sched/nohz: Optimize get_nohz_timer_target()
-In-Reply-To: <CANRm+CxUpwZ9KwOcQp=Ok64giyjjcJOGb2=zU6vayQzLqYvpXQ@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.1910231028250.2308@nanos.tec.linutronix.de>
-References: <1561682593-12071-1-git-send-email-wanpengli@tencent.com> <20190628011012.GA19488@lerouge> <CANRm+CxUpwZ9KwOcQp=Ok64giyjjcJOGb2=zU6vayQzLqYvpXQ@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Wed, 23 Oct 2019 04:31:29 -0400
+Received: from mx7.zte.com.cn ([202.103.147.169]:4505 "EHLO mxct.zte.com.cn"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387829AbfJWIb3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 04:31:29 -0400
+Received: from mse-fl1.zte.com.cn (unknown [10.30.14.238])
+        by Forcepoint Email with ESMTPS id B1BFDE93D3079EB8002D;
+        Wed, 23 Oct 2019 16:31:26 +0800 (CST)
+Received: from notes_smtp.zte.com.cn (notessmtp.zte.com.cn [10.30.1.239])
+        by mse-fl1.zte.com.cn with ESMTP id x9N8U30j081278;
+        Wed, 23 Oct 2019 16:30:03 +0800 (GMT-8)
+        (envelope-from zhong.shiqi@zte.com.cn)
+Received: from fox-host8.localdomain ([10.74.120.8])
+          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
+          with ESMTP id 2019102316302352-91717 ;
+          Wed, 23 Oct 2019 16:30:23 +0800 
+From:   zhongshiqi <zhong.shiqi@zte.com.cn>
+To:     harry.wentland@amd.com
+Cc:     sunpeng.li@amd.com, alexander.deucher@amd.com,
+        christian.koenig@amd.com, David1.Zhou@amd.com, airlied@linux.ie,
+        daniel@ffwll.ch, Bhawanpreet.Lakha@amd.com, Jun.Lei@amd.com,
+        David.Francis@amd.com, Dmytro.Laktyushkin@amd.com,
+        anthony.koo@amd.com, Wenjing.Liu@amd.com,
+        nicholas.kazlauskas@amd.com, Aidan.Wood@amd.com,
+        Chris.Park@amd.com, Eric.Yang2@amd.com,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
+        wang.yi59@zte.com.cn, cheng.shengyu@zte.com.cn,
+        zhongshiqi <zhong.shiqi@zte.com.cn>
+Subject: [PATCH] dc.c:use kzalloc without test
+Date:   Wed, 23 Oct 2019 16:32:23 +0800
+Message-Id: <1571819543-15676-1-git-send-email-zhong.shiqi@zte.com.cn>
+X-Mailer: git-send-email 1.8.3.1
+X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
+ 21, 2013) at 2019-10-23 16:30:23,
+        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
+ 2019-10-23 16:30:06,
+        Serialize complete at 2019-10-23 16:30:06
+X-MAIL: mse-fl1.zte.com.cn x9N8U30j081278
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 23 Oct 2019, Wanpeng Li wrote:
-> I didn't see your refactor to get_nohz_timer_target() which you
-> mentioned in IRC after four months, I can observe cyclictest drop from
-> 4~5us to 8us in kvm guest(we offload the lapic timer emulation to
-> housekeeping cpu to avoid timer fire external interrupt on the pCPU
-> which vCPU resident incur a vCPU vmexit) w/o this patch in the case of
-> there is no busy housekeeping cpu. The score can be recovered after I
-> give stress to create a busy housekeeping cpu.
-> 
-> Could you consider applying this patch for temporary since I'm not
-> sure when the refactor can be ready.
+dc.c:583:null check is needed after using kzalloc function
 
-Yeah. It's delayed (again).... Will pick that up.
+Signed-off-by: zhongshiqi <zhong.shiqi@zte.com.cn>
+---
+ drivers/gpu/drm/amd/display/dc/core/dc.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Thanks,
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
+index 5d1aded..4b8819c 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
+@@ -580,6 +580,10 @@ static bool construct(struct dc *dc,
+ #ifdef CONFIG_DRM_AMD_DC_DCN2_0
+ 	// Allocate memory for the vm_helper
+ 	dc->vm_helper = kzalloc(sizeof(struct vm_helper), GFP_KERNEL);
++	if (!dc->vm_helper) {
++		dm_error("%s: failed to create dc->vm_helper\n", __func__);
++		goto fail;
++	}
+ 
+ #endif
+ 	memcpy(&dc->bb_overrides, &init_params->bb_overrides, sizeof(dc->bb_overrides));
+-- 
+2.9.5
 
-	tglx
