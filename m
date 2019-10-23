@@ -2,83 +2,85 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35C4BCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 00:33:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 692C7CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 00:35:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D19032086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 00:33:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B5F32086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 00:35:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h4et94Ag"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="y9NLf0at"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731403AbfJWAds (ORCPT
+        id S1732134AbfJWAf4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 20:33:48 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:30530 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727610AbfJWAds (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 20:33:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571790827;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=L06TXI6Vj4mhhNtCHcisydZYDybVAGuxU9Mq4ab/6+0=;
-        b=h4et94AgC7/fgPOxRvoBtoT8ios4g+yKzezLJwTilwraNucLWd+trq3hcsw4VjSQIUe2sd
-        LU1v+XU3q4FzI2ktxqrH9Eq6CZIfuUTqIVjawYBPdGd/sSwEEp6cf6mMm0seE1P/argWmh
-        TjlopVAT/J4vD5nOS94H56iMSleAeHk=
-Received: from mail-yw1-f71.google.com (mail-yw1-f71.google.com
- [209.85.161.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-156-uQfcw-WQPuaDfs0F42HDUQ-1; Tue, 22 Oct 2019 20:33:45 -0400
-Received: by mail-yw1-f71.google.com with SMTP id o204so14444591ywc.12
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 17:33:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=L06TXI6Vj4mhhNtCHcisydZYDybVAGuxU9Mq4ab/6+0=;
-        b=dkbaOyxUOKLTuKpGrgR2DSQOEBk0fYsBq2a4ezrTyaQtkGGcpgml1jIzln/6xamN9d
-         ppVqjLb93GeEdeuOlQqskqrvjlaT8QYHDFViJBZzhtKy8J2YU8h3I0YJNsL/eOJeG67o
-         /xkNAGvpiDXvO2sNd5Nx8N17xECNwSNZMMg0XopIndFvSHjsIilsIChfF4OW8neqVEUH
-         s3IV4aKmi2fR+hbRvrPNDF2n6rH6JSQKabcuiGvAZpF2Tyjb3AyAKh/0+/kQB8GYNDBx
-         Y4mnBVHH44d3P5k2dhr0vDGUl7ILEpkRlk30zOC3Xe1rm+qlkwtxH7MoD0a5O/ca0GKw
-         mPEg==
-X-Gm-Message-State: APjAAAWxlnIUgCNxQS+28/K6lYN49ST2GK9uJuxDNxAts8Eg2TlSe3JB
-        6wdMRJ+IKl+VQRSRTvbRxzgQAnmrOf3kV82LnSKF+RUEygp1XiRXkn+APEsinq8iv0WYCsRhU23
-        TR79gdahXQWmymg1bcZwlptjjVMNqTJgmj6310WJZ
-X-Received: by 2002:a25:70c3:: with SMTP id l186mr2713973ybc.233.1571790824983;
-        Tue, 22 Oct 2019 17:33:44 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyHFatb7VN3aWeF2BTP2HzwmupBAgir8JASamIqoNVXs987KedyWPbTEyTBLNfMHnYICr1i78zqyEeaC3G4skU=
-X-Received: by 2002:a25:70c3:: with SMTP id l186mr2713964ybc.233.1571790824789;
- Tue, 22 Oct 2019 17:33:44 -0700 (PDT)
+        Tue, 22 Oct 2019 20:35:56 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:58718 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727140AbfJWAf4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 20:35:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=6Z1DBBH/xUKUXF6UckwoFUZ5ZnN9nnX2q+E7Z7EAe2Q=; b=y9NLf0atN/EmyK6I1GyF2uyzPc
+        Wef1EEQatx+CogP0iIpR5QX2/xoGcAmg+ahCmFHstkzlyen5Yw0d8g5664osChhKqFiChQ1FxotsZ
+        8VTDFSCkt1zIan4zR5AzDg3UQjMMe9Kmwk9uQr3EA/rF3vm0xr/w0hhDljIR8XVCrprE=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1iN4cp-0004IX-0w; Wed, 23 Oct 2019 02:35:43 +0200
+Date:   Wed, 23 Oct 2019 02:35:43 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     Chris Snook <chris.snook@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        James Hogan <jhogan@kernel.org>,
+        Jay Cliburn <jcliburn@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, Russell King <linux@armlinux.org.uk>
+Subject: Re: [PATCH v4 2/5] dt-bindings: net: dsa: qca,ar9331 switch
+ documentation
+Message-ID: <20191023003543.GE5707@lunn.ch>
+References: <20191022055743.6832-1-o.rempel@pengutronix.de>
+ <20191022055743.6832-3-o.rempel@pengutronix.de>
 MIME-Version: 1.0
-From:   Tom Rix <trix@redhat.com>
-Date:   Tue, 22 Oct 2019 17:33:34 -0700
-Message-ID: <CACVy4SX9qbe3D7ZVU9dredVcTrP9jd2LB0AaFUSmiPeqeaj8kg@mail.gmail.com>
-Subject: [PATCH v2 0/1] xfrm : lock input tasklet skb queue
-To:     Steffen Klassert <steffen.klassert@secunet.com>,
-        herbert@gondor.apana.org.au, davem@davemloft.net,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Joerg Vehlow <lkml@jv-coder.de>
-X-MC-Unique: uQfcw-WQPuaDfs0F42HDUQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191022055743.6832-3-o.rempel@pengutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rev 2 is Jorg's original patch with some if-defs to lock only for RT.
+On Tue, Oct 22, 2019 at 07:57:40AM +0200, Oleksij Rempel wrote:
+> Atheros AR9331 has built-in 5 port switch. The switch can be configured
+> to use all 5 or 4 ports. One of built-in PHYs can be used by first built-in
+> ethernet controller or to be used directly by the switch over second ethernet
+> controller.
+> 
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 
-I have tested Jorg's change, it works on RT and since it was first it
-should take precedence.
-I can appreciate not forcing the normal kernel to move ad-hoc to RT.
-So I hope that the compromise of conditionally including the change
-will be acceptable.
+Hi Oleksij
 
-Tom
+What we never really discussed is how this MUXing of the PHY works.
 
+What i'm worried about is that when we do understand how it works, we
+cannot properly support it using this binding.
+
+Please could you try to find information about this.
+
+Thanks
+	Andrew
