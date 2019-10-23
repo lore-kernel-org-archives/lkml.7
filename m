@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E85F7CA9EB9
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6041CA9EA0
 	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 01:56:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF2BF20679
+	by mail.kernel.org (Postfix) with ESMTP id 910492064A
 	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 01:56:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="YX7sWPJf"
+	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="DpcUbxTW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387979AbfJWBz6 (ORCPT
+        id S2387854AbfJWBz5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 21:55:58 -0400
-Received: from mx0a-00190b01.pphosted.com ([67.231.149.131]:65440 "EHLO
+        Tue, 22 Oct 2019 21:55:57 -0400
+Received: from mx0a-00190b01.pphosted.com ([67.231.149.131]:30260 "EHLO
         mx0a-00190b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730121AbfJWBz5 (ORCPT
+        by vger.kernel.org with ESMTP id S1733083AbfJWBz5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 22 Oct 2019 21:55:57 -0400
-Received: from pps.filterd (m0050093.ppops.net [127.0.0.1])
-        by m0050093.ppops.net-00190b01. (8.16.0.42/8.16.0.42) with SMTP id x9N1rTKi005114;
+Received: from pps.filterd (m0122332.ppops.net [127.0.0.1])
+        by mx0a-00190b01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9N1rNVh029351;
         Wed, 23 Oct 2019 02:55:41 +0100
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-type; s=jan2016.eng;
- bh=88d6uOobOlkC3W2zdU9dP/pzc0ViYbS9kMBUXxMm6tM=;
- b=YX7sWPJfqVcJ7xkV+XLkmSOhaOIuNYWbK1C09zxbjDgzvvhaL1TVumx27eumwF0krP2w
- 5MtiCKLhdEg9LYzUpyOy1alzh9vZC50KYiPbFJ5qUYa2z1dJi5GxKPZBVzCw1p1x+Ilh
- 6oNYrqhpCMfUt6BKnAxqpxGFE3nOmVVGXFBKbkkS3r8wGtvcJa8DvBLv/ia8+4IoYooS
- mSocaFbGMu5gfAxR2gE/ahlWQiDTqhboy5q9hgKz1q9IKNRTXK1xKSo6tM8YoIn3MbHq
- qQ3FIkDcn+bTLHVLgOhN0bptIvFml/SVbuK4nuNylxBzjTUdxbGqClX5rQAFrVbSn9Mh oQ== 
+ bh=nksER0KqvgDe+8BGIyptDyrjqneiS3g2E6F9bokhk5E=;
+ b=DpcUbxTWhuNgcA24dOLORYy4UfHsuF0UPAAg4UdqQD8iMrET/qG6InS6en4YLKW4x5Vt
+ /0rZs4qsBgVuock8sNZpBRyIw+pP5U9nntENrgV3nDuxA221Ssq+UYhHbUS+Y1wyMRsP
+ a+IwxImeDAA8B2/CDKUb2nWj6o24vAWmCfB9Jo0o6q2oDWC8w+Kzf3zsclfKIjdywB3l
+ IrAfWr+i38x/8AMgVMlXqG9hRKA8Ruqj30TBHKzwQZZl3s8HTeZFTEUIfDACeKllio74
+ /1S0Lg502sBAVHi1g5A00pCEZ3ifd42DAaHWX+tHJyAlyhBzh/buWrjk9G38294Dn95t zA== 
 Received: from prod-mail-ppoint1 (prod-mail-ppoint1.akamai.com [184.51.33.18] (may be forged))
-        by m0050093.ppops.net-00190b01. with ESMTP id 2vsyugbfp5-1
+        by mx0a-00190b01.pphosted.com with ESMTP id 2vqthjjek1-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
         Wed, 23 Oct 2019 02:55:41 +0100
 Received: from pps.filterd (prod-mail-ppoint1.akamai.com [127.0.0.1])
-        by prod-mail-ppoint1.akamai.com (8.16.0.27/8.16.0.27) with SMTP id x9N1lFqg024955;
+        by prod-mail-ppoint1.akamai.com (8.16.0.27/8.16.0.27) with SMTP id x9N1lCuB024927;
         Tue, 22 Oct 2019 21:55:40 -0400
-Received: from email.msg.corp.akamai.com ([172.27.123.34])
-        by prod-mail-ppoint1.akamai.com with ESMTP id 2vqwtwq07f-1
+Received: from email.msg.corp.akamai.com ([172.27.123.33])
+        by prod-mail-ppoint1.akamai.com with ESMTP id 2vqwtwq07e-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
         Tue, 22 Oct 2019 21:55:39 -0400
-Received: from USMA1EX-CAS3.msg.corp.akamai.com (172.27.123.32) by
- usma1ex-dag1mb2.msg.corp.akamai.com (172.27.123.102) with Microsoft SMTP
+Received: from USMA1EX-CAS2.msg.corp.akamai.com (172.27.123.31) by
+ usma1ex-dag1mb6.msg.corp.akamai.com (172.27.123.65) with Microsoft SMTP
  Server (TLS) id 15.0.1473.3; Tue, 22 Oct 2019 21:55:39 -0400
 Received: from igorcastle.kendall.corp.akamai.com (172.29.170.135) by
- USMA1EX-CAS3.msg.corp.akamai.com (172.27.123.32) with Microsoft SMTP Server
+ USMA1EX-CAS2.msg.corp.akamai.com (172.27.123.31) with Microsoft SMTP Server
  id 15.0.1473.3 via Frontend Transport; Tue, 22 Oct 2019 21:55:39 -0400
 Received: by igorcastle.kendall.corp.akamai.com (Postfix, from userid 29659)
-        id 5135F61E60; Tue, 22 Oct 2019 21:55:37 -0400 (EDT)
+        id 5028461E43; Tue, 22 Oct 2019 21:55:37 -0400 (EDT)
 From:   Igor Lubashev <ilubashe@akamai.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -63,9 +63,9 @@ CC:     Igor Lubashev <ilubashe@akamai.com>, Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: [PATCH 2/3] perf kvm: Allow running without stdin
-Date:   Tue, 22 Oct 2019 21:54:52 -0400
-Message-ID: <1571795693-23558-3-git-send-email-ilubashe@akamai.com>
+Subject: [PATCH 1/3] perf top: Allow running without stdin
+Date:   Tue, 22 Oct 2019 21:54:51 -0400
+Message-ID: <1571795693-23558-2-git-send-email-ilubashe@akamai.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1571795693-23558-1-git-send-email-ilubashe@akamai.com>
 References: <1571795693-23558-1-git-send-email-ilubashe@akamai.com>
@@ -74,99 +74,75 @@ Content-Type: text/plain
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-22_06:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=995
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1908290000 definitions=main-1910230015
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
  definitions=2019-10-23_01:2019-10-22,2019-10-23 signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 clxscore=1015
- priorityscore=1501 malwarescore=0 mlxscore=0 bulkscore=0 mlxlogscore=978
- adultscore=0 suspectscore=0 impostorscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1908290000
- definitions=main-1910230016
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0
+ priorityscore=1501 malwarescore=0 mlxlogscore=999 bulkscore=0 phishscore=0
+ adultscore=0 suspectscore=0 impostorscore=0 clxscore=1015
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1908290000 definitions=main-1910230016
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allow perf kvm --stdio to run without access to stdin.
-This lets perf kvm to run in a batch mode until interrupted.
+Allow perf top --stdio to run without access to stdin.
+This lets perf top to run in a batch mode until interrupted.
 
 The following now works as expected:
 
-  $ perf kvm top --stdio < /dev/null
+  $ perf top < /dev/null
 
 Signed-off-by: Igor Lubashev <ilubashe@akamai.com>
 ---
- tools/perf/builtin-kvm.c | 33 ++++++++++++++++++++-------------
- 1 file changed, 20 insertions(+), 13 deletions(-)
+ tools/perf/builtin-top.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
-index 858da896b518..5217aa3596c7 100644
---- a/tools/perf/builtin-kvm.c
-+++ b/tools/perf/builtin-kvm.c
-@@ -930,18 +930,20 @@ static int fd_set_nonblock(int fd)
- 
- static int perf_kvm__handle_stdin(void)
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index d96f24c8770d..fbc0dc135b8a 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -665,6 +665,7 @@ static void display_setup_sig(void)
+ static void *display_thread(void *arg)
  {
--	int c;
--
--	c = getc(stdin);
--	if (c == 'q')
-+	switch (getc(stdin)) {
-+	case 'q':
-+		done = 1;
- 		return 1;
--
--	return 0;
-+	case EOF:
-+		return 0;
-+	default:
-+		return 1;
-+	}
- }
- 
- static int kvm_events_live_report(struct perf_kvm_stat *kvm)
- {
--	int nr_stdin, ret, err = -EINVAL;
-+	int nr_stdin = -1, ret, err = -EINVAL;
+ 	struct pollfd stdin_poll = { .fd = 0, .events = POLLIN };
++	nfds_t nfds = 1;
  	struct termios save;
+ 	struct perf_top *top = arg;
+ 	int delay_msecs, c;
+@@ -684,7 +685,8 @@ static void *display_thread(void *arg)
+ 	delay_msecs = top->delay_secs * MSEC_PER_SEC;
+ 	set_term_quiet_input(&save);
+ 	/* trash return*/
+-	getc(stdin);
++	if (getc(stdin) == EOF)
++		nfds = 0;
  
- 	/* live flag must be set first */
-@@ -972,13 +974,16 @@ static int kvm_events_live_report(struct perf_kvm_stat *kvm)
- 	if (evlist__add_pollfd(kvm->evlist, kvm->timerfd) < 0)
- 		goto out;
+ 	while (!done) {
+ 		perf_top__print_sym_table(top);
+@@ -692,7 +694,7 @@ static void *display_thread(void *arg)
+ 		 * Either timeout expired or we got an EINTR due to SIGWINCH,
+ 		 * refresh screen in both cases.
+ 		 */
+-		switch (poll(&stdin_poll, 1, delay_msecs)) {
++		switch (poll(&stdin_poll, nfds, delay_msecs)) {
+ 		case 0:
+ 			continue;
+ 		case -1:
+@@ -701,6 +703,10 @@ static void *display_thread(void *arg)
+ 			__fallthrough;
+ 		default:
+ 			c = getc(stdin);
++			if (c == EOF) {
++				nfds = 0;
++				continue;
++			}
+ 			tcsetattr(0, TCSAFLUSH, &save);
  
--	nr_stdin = evlist__add_pollfd(kvm->evlist, fileno(stdin));
--	if (nr_stdin < 0)
--		goto out;
--
- 	if (fd_set_nonblock(fileno(stdin)) != 0)
- 		goto out;
- 
-+	/* add stdin, if it is connected */
-+	if (getc(stdin) != EOF) {
-+		nr_stdin = evlist__add_pollfd(kvm->evlist, fileno(stdin));
-+		if (nr_stdin < 0)
-+			goto out;
-+	}
-+
- 	/* everything is good - enable the events and process */
- 	evlist__enable(kvm->evlist);
- 
-@@ -994,8 +999,10 @@ static int kvm_events_live_report(struct perf_kvm_stat *kvm)
- 		if (err)
- 			goto out;
- 
--		if (fda->entries[nr_stdin].revents & POLLIN)
--			done = perf_kvm__handle_stdin();
-+		if (nr_stdin >= 0 && fda->entries[nr_stdin].revents & POLLIN) {
-+			if (!perf_kvm__handle_stdin())
-+				fda->entries[nr_stdin].events = 0;
-+		}
- 
- 		if (!rc && !done)
- 			err = fdarray__poll(fda, 100);
+ 			if (perf_top__handle_keypress(top, c))
 -- 
 2.7.4
 
