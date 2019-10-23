@@ -2,186 +2,140 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3366CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 04:28:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4A7DCA9EAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 04:31:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C912F21872
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 04:28:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571804911;
-	bh=pud1AqfrL2+yGH3/Mj/96RE5LhtzfD6/WYjBiXtPT38=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wHnsIihCeNhe9RFOQgtAndUh0e7CJ2smft6jGcgns++G+BeKiFddk1EGz0bjVUXAd
-	 PMsLSRMmyOUL7rN4fgOGi/2JQw7T4e0yYjW4XzI5ym0NvQkFebxXE1MhoMT4VE1RQ1
-	 bsAmYzlT43Zgf+zyj67XvqXBOoY1upxpwXDRKQOQ=
+	by mail.kernel.org (Postfix) with ESMTP id 843B72086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 04:31:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d/UeAKEW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728499AbfJWE21 (ORCPT
+        id S1730650AbfJWEb6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 00:28:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56286 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725773AbfJWE21 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 00:28:27 -0400
-Received: from localhost (unknown [122.181.210.10])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B2BA214B2;
-        Wed, 23 Oct 2019 04:28:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571804906;
-        bh=pud1AqfrL2+yGH3/Mj/96RE5LhtzfD6/WYjBiXtPT38=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iqwY2860h37CrasP50CZJnw67mckyQb0+sRAUhAsM0LM9RQyIAMU0IbWjZJbzb3D0
-         9yHNOVAqpoNp60Vc8vVAxZnBGrn6Q0IZ7+b9Ht2e5+W2/iHgQ+Ocso03WHoEwj/Zaq
-         LG2USbNiXQ0tVBlfewWmUCCYm0ZJWeSr6aHHlUBs=
-Date:   Wed, 23 Oct 2019 09:58:18 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Peng Ma <peng.ma@nxp.com>
-Cc:     dan.j.williams@intel.com, leoyang.li@nxp.com,
-        anders.roxell@linaro.org, linux-kernel@vger.kernel.org,
-        dmaengine@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: fsl-dpaa2-qdma: Fixed build error when enable
- dpaa2 qdma module driver
-Message-ID: <20191023042818.GN2654@vkoul-mobl>
-References: <20191023021959.35596-1-peng.ma@nxp.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191023021959.35596-1-peng.ma@nxp.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Wed, 23 Oct 2019 00:31:58 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:46564 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725773AbfJWEb5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 00:31:57 -0400
+Received: by mail-io1-f65.google.com with SMTP id c6so23217265ioo.13
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 21:31:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=NGMLML8IKQMLZFW+6VDxAD0zaTRhNeximY488B0GKP8=;
+        b=d/UeAKEWSl2GIHhIhh59Fw6MWWVs03I81D+6yD/uYU9lsHjSLqSLCP1BrR06rHgYpK
+         v8XAGA8YLOjIZ30TDhKpz4cbDUksFA8mY4MSnA+m0K/npj+PaasdTPkjNjQOUSTFtwvF
+         3UB3Jj7z0af7pH8cYjqjfoCE6VEJ/XAEiTWzk3UgxMgUZZ6N0NwWfDjfRrLeXUn5xyp6
+         C/U3S6XbGb/lb+FlxIkYYZ5E+BWvNaCettAFeKRF63zIDICvuLi8ADDyRDmhWI2bO/Eu
+         8JVcthF/p2uQ4qaJIn6B8MIc/26eOgjABdjwyzl8QKVqjlbn5ov8MftpO4CboIVPb9xd
+         QeGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=NGMLML8IKQMLZFW+6VDxAD0zaTRhNeximY488B0GKP8=;
+        b=XSSPw7oQkcdTjpbQRh8ub90O/Wo6iH56TJQ7zASctl8DmN8h9/SJd5V5QM6aTCQBKy
+         Ctz1jlbXir4CpRfwWbgkJyqzUqnBauYYReWJ1UtBFbHKXisL5JgKvgSWrxsTKnZ/5yxg
+         36XMhaY3BikU4DYxYg+rWajN5AZqEYJCDbGo1tSSuehOcz3aG9WS3hBVrrWUzxC1aYX2
+         YCVFAUF3dqAo5Fak24tv1ABJ4EVcT1ntLxTdWQImJsdJoS/bEbFFZv7aUK5qjtgmcCQP
+         HN1sy9kAzqljK2vXLaYJKr/WGsotrGvxrCSQcVpb2QyV0fzsixU+AAObFhHCc93YdxNu
+         urdg==
+X-Gm-Message-State: APjAAAXkOjgom28tTEQx0mMuyFCAWtK0LWIwWu5MIcv1bFigG+QI/YRB
+        QJIjeckXQDsKEEsLnNYs2PI=
+X-Google-Smtp-Source: APXvYqwa+rk7FC4WOm3QHKl1zrKosjgaiN7I+AkChk0t8STWUALPGtx8Cerovi0+YAEwwtIdTzW8jg==
+X-Received: by 2002:a02:ce9c:: with SMTP id y28mr7623711jaq.84.1571805116709;
+        Tue, 22 Oct 2019 21:31:56 -0700 (PDT)
+Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
+        by smtp.googlemail.com with ESMTPSA id k2sm6298667ios.19.2019.10.22.21.31.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Oct 2019 21:31:55 -0700 (PDT)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+To:     michal.simek@xilinx.com
+Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
+        Markus.Elfring@web.de, Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] clocksource/drivers: Fix memory leak in ttc_setup_clockevent
+Date:   Tue, 22 Oct 2019 23:31:38 -0500
+Message-Id: <20191023043139.31183-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <2a6cdb63-397b-280a-7379-740e8f43ddf6@xilinx.com>
+References: <2a6cdb63-397b-280a-7379-740e8f43ddf6@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peng,
+In the implementation of ttc_setup_clockevent() release the allocated
+memory for ttcce if clk_notifier_register() fails.
 
-On 23-10-19, 10:19, Peng Ma wrote:
+Fixes: 70504f311d4b ("clocksource/drivers/cadence_ttc: Convert init function to return error")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+---
+Changes in v2:
+	- Added goto label for error handling
+	- Update description and fix typo
 
-A patch title should detail the change it is doing so a better patch
-title would be: "dmaengine: fsl-dpaa2-qdma: export the symbols"
+ drivers/clocksource/timer-cadence-ttc.c | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
-> Fixed the following error:
-> WARNING: modpost: missing MODULE_LICENSE() in drivers/dma/fsl-dpaa2-qdma/dpdmai.o
-> see include/linux/module.h for more information
-> GZIP    arch/arm64/boot/Image.gz
-> ERROR: "dpdmai_enable" [drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko] undefined!
-> ERROR: "dpdmai_set_rx_queue" [drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko] undefined!
-> ERROR: "dpdmai_get_tx_queue" [drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko] undefined!
-> ERROR: "dpdmai_get_rx_queue" [drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko] undefined!
-> ERROR: "dpdmai_get_attributes" [drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko] undefined!
-> ERROR: "dpdmai_open" [drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko] undefined!
-> ERROR: "dpdmai_close" [drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko] undefined!
-> ERROR: "dpdmai_disable" [drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko] undefined!
-> ERROR: "dpdmai_reset" [drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko] undefined!
-> WARNING: "HYPERVISOR_platform_op" [vmlinux] is a static EXPORT_SYMBOL_GPL
-> make[2]: *** [__modpost] Error 1
-> make[1]: *** [modules] Error 2
-> make[1]: *** Waiting for unfinished jobs....
-> make: *** [sub-make] Error 2
-
-And here in the log, you should say the symbols were not exported
-leading to error <give error log>
-
-So export it
-
-> 
-> Signed-off-by: Peng Ma <peng.ma@nxp.com>
-> Reported-by: Anders Roxell <anders.roxell@linaro.org>
-> ---
->  drivers/dma/fsl-dpaa2-qdma/dpdmai.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/drivers/dma/fsl-dpaa2-qdma/dpdmai.c b/drivers/dma/fsl-dpaa2-qdma/dpdmai.c
-> index fbc2b2f..f8a1f66 100644
-> --- a/drivers/dma/fsl-dpaa2-qdma/dpdmai.c
-> +++ b/drivers/dma/fsl-dpaa2-qdma/dpdmai.c
-> @@ -1,6 +1,7 @@
->  // SPDX-License-Identifier: GPL-2.0
->  // Copyright 2019 NXP
->  
-> +#include <linux/module.h>
->  #include <linux/types.h>
->  #include <linux/io.h>
->  #include <linux/fsl/mc.h>
-> @@ -90,6 +91,7 @@ int dpdmai_open(struct fsl_mc_io *mc_io, u32 cmd_flags,
->  
->  	return 0;
->  }
-> +EXPORT_SYMBOL_GPL(dpdmai_open);
->  
->  /**
->   * dpdmai_close() - Close the control session of the object
-> @@ -113,6 +115,7 @@ int dpdmai_close(struct fsl_mc_io *mc_io, u32 cmd_flags, u16 token)
->  	/* send command to mc*/
->  	return mc_send_command(mc_io, &cmd);
->  }
-> +EXPORT_SYMBOL_GPL(dpdmai_close);
->  
->  /**
->   * dpdmai_create() - Create the DPDMAI object
-> @@ -177,6 +180,7 @@ int dpdmai_enable(struct fsl_mc_io *mc_io, u32 cmd_flags, u16 token)
->  	/* send command to mc*/
->  	return mc_send_command(mc_io, &cmd);
->  }
-> +EXPORT_SYMBOL_GPL(dpdmai_enable);
->  
->  /**
->   * dpdmai_disable() - Disable the DPDMAI, stop sending and receiving frames.
-> @@ -197,6 +201,7 @@ int dpdmai_disable(struct fsl_mc_io *mc_io, u32 cmd_flags, u16 token)
->  	/* send command to mc*/
->  	return mc_send_command(mc_io, &cmd);
->  }
-> +EXPORT_SYMBOL_GPL(dpdmai_disable);
->  
->  /**
->   * dpdmai_reset() - Reset the DPDMAI, returns the object to initial state.
-> @@ -217,6 +222,7 @@ int dpdmai_reset(struct fsl_mc_io *mc_io, u32 cmd_flags, u16 token)
->  	/* send command to mc*/
->  	return mc_send_command(mc_io, &cmd);
->  }
-> +EXPORT_SYMBOL_GPL(dpdmai_reset);
->  
->  /**
->   * dpdmai_get_attributes() - Retrieve DPDMAI attributes.
-> @@ -252,6 +258,7 @@ int dpdmai_get_attributes(struct fsl_mc_io *mc_io, u32 cmd_flags,
->  
->  	return 0;
->  }
-> +EXPORT_SYMBOL_GPL(dpdmai_get_attributes);
->  
->  /**
->   * dpdmai_set_rx_queue() - Set Rx queue configuration
-> @@ -285,6 +292,7 @@ int dpdmai_set_rx_queue(struct fsl_mc_io *mc_io, u32 cmd_flags, u16 token,
->  	/* send command to mc*/
->  	return mc_send_command(mc_io, &cmd);
->  }
-> +EXPORT_SYMBOL_GPL(dpdmai_set_rx_queue);
->  
->  /**
->   * dpdmai_get_rx_queue() - Retrieve Rx queue attributes.
-> @@ -325,6 +333,7 @@ int dpdmai_get_rx_queue(struct fsl_mc_io *mc_io, u32 cmd_flags, u16 token,
->  
->  	return 0;
->  }
-> +EXPORT_SYMBOL_GPL(dpdmai_get_rx_queue);
->  
->  /**
->   * dpdmai_get_tx_queue() - Retrieve Tx queue attributes.
-> @@ -364,3 +373,6 @@ int dpdmai_get_tx_queue(struct fsl_mc_io *mc_io, u32 cmd_flags,
->  
->  	return 0;
->  }
-> +EXPORT_SYMBOL_GPL(dpdmai_get_tx_queue);
-> +
-> +MODULE_LICENSE("GPL v2");
-> -- 
-> 2.9.5
-
+diff --git a/drivers/clocksource/timer-cadence-ttc.c b/drivers/clocksource/timer-cadence-ttc.c
+index 88fe2e9ba9a3..0caacbc67102 100644
+--- a/drivers/clocksource/timer-cadence-ttc.c
++++ b/drivers/clocksource/timer-cadence-ttc.c
+@@ -411,10 +411,8 @@ static int __init ttc_setup_clockevent(struct clk *clk,
+ 	ttcce->ttc.clk = clk;
+ 
+ 	err = clk_prepare_enable(ttcce->ttc.clk);
+-	if (err) {
+-		kfree(ttcce);
+-		return err;
+-	}
++	if (err)
++		goto release_ttcce;
+ 
+ 	ttcce->ttc.clk_rate_change_nb.notifier_call =
+ 		ttc_rate_change_clockevent_cb;
+@@ -424,7 +422,7 @@ static int __init ttc_setup_clockevent(struct clk *clk,
+ 				    &ttcce->ttc.clk_rate_change_nb);
+ 	if (err) {
+ 		pr_warn("Unable to register clock notifier.\n");
+-		return err;
++		goto release_ttcce;
+ 	}
+ 
+ 	ttcce->ttc.freq = clk_get_rate(ttcce->ttc.clk);
+@@ -453,15 +451,18 @@ static int __init ttc_setup_clockevent(struct clk *clk,
+ 
+ 	err = request_irq(irq, ttc_clock_event_interrupt,
+ 			  IRQF_TIMER, ttcce->ce.name, ttcce);
+-	if (err) {
+-		kfree(ttcce);
+-		return err;
+-	}
++	if (err)
++		goto release_ttcce;
+ 
+ 	clockevents_config_and_register(&ttcce->ce,
+ 			ttcce->ttc.freq / PRESCALE, 1, 0xfffe);
+ 
+ 	return 0;
++
++release_ttcce:
++
++	kfree(ttcce);
++	return err;
+ }
+ 
+ /**
 -- 
-~Vinod
+2.17.1
+
