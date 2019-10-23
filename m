@@ -2,110 +2,193 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DBB5CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:50:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7390FC47E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:50:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D934620663
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:50:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571838602;
-	bh=TLidFQmr/RJWhGE+WZlWN0NqIrvuU32Ofk0mmWFStVY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ANsMYy7T3ea+PlpIqQP/xoRUTGF96knVIydh5kyeSLt+VNTjEf58lIswZPW/Eyk58
-	 4ZpZQ1AaVPfkRBRLsHRbKGQsqiiJtoCMabcbGYS0ujxxTlzE7FtaukxD3EisbCfsy3
-	 LPAlxLUeEJMvhm98vFCPM0PTnNPj6jc1kGTAF2O4=
+	by mail.kernel.org (Postfix) with ESMTP id 407BF20663
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:50:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z7umXCP9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406161AbfJWNuC (ORCPT
+        id S2391865AbfJWNu0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 09:50:02 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:35299 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405956AbfJWNuB (ORCPT
+        Wed, 23 Oct 2019 09:50:26 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:46328 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390181AbfJWNuZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 09:50:01 -0400
-Received: by mail-ed1-f66.google.com with SMTP id k2so5124780edx.2;
-        Wed, 23 Oct 2019 06:50:00 -0700 (PDT)
+        Wed, 23 Oct 2019 09:50:25 -0400
+Received: by mail-qt1-f195.google.com with SMTP id u22so32299778qtq.13
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 06:50:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YRkY+aBxE9hZdBe1FL06hzEtAF+venmJUi6XuiuleYs=;
+        b=Z7umXCP9MjNBDxPLTg06CWYluvjLNqLabwT5jgh+mIUUCO3NtEoNw8SSOy1h2gvBQs
+         ti0A6f88arX4+LZVmjzwpPSUcFoX09Ef6GbbDpjhCUl+hVboNOf7Z+I0yex3UmoHTNI4
+         pFy9UyRqQLlxWUt4FMv/sQgIKTlzdWxa8ZyljGm0umJ/IDY092SX0ezWjhlv0nZKTBGL
+         Fw207fL5ChkW4et6Mv/Kcuu5n6Egiyr/4ILm3tWn6maGZlUeh3qjIY3d8WzHiIjhH0K8
+         7nfgM4adsYjAD2BidWLEm0dimQhZWtGeAZCXHU+75V6n3O9urs7kBVw2Jd+3gved2aLR
+         tpRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8qBb291IPE2og/l7u8OiTDfQtbzmiVhAHgv1m3GbkfM=;
-        b=PvPI2OUUIth0m6/ElRXyVRuYu9Qan/98GzjzGOkXBd5cUTPBNeyC1CjvIPtKtn1VQ5
-         XKg24pqbXlp81cqT943pHDULu5qqNhSXr4hBAgj2CDhVOJH7/mXkV5DrDzXGFcaaJBDt
-         ZGKnQgdBi5kir79+dSPmTkQkTjIGr4tgkGseYYxVe4ftNGu7nnicwoKW5yPfEAC5Rcpp
-         TPmH/cRd861xPiqBiQs/ddK6b/aWKL7ews//H/01vvFLLpeSFQF4+U4MIMFCB8DiGroD
-         EpUu7x4ieX+082Qqc4KklTZ/+cPk8k1g93bFxeyStPMNI3Nrzc/WeiY7wzvBff9Cu8QZ
-         4+hA==
-X-Gm-Message-State: APjAAAWm0xBPohVFjCswQjmCU2VAy7SOnr8jTJvWg6J4mEC3jUJmF25S
-        2WdqDNAqQbmZLSmIeZ+v38k=
-X-Google-Smtp-Source: APXvYqwjWvPU2P28o+R/0H7qCyJXE4W8hZoo+hrDHIsqBv9q1Xi6Hyp0zb62g4wWhOXMSl17h7J2Hw==
-X-Received: by 2002:a50:ff19:: with SMTP id a25mr9916560edu.181.1571838599737;
-        Wed, 23 Oct 2019 06:49:59 -0700 (PDT)
-Received: from pi3 ([194.230.155.217])
-        by smtp.googlemail.com with ESMTPSA id j43sm734313eda.19.2019.10.23.06.49.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Oct 2019 06:49:58 -0700 (PDT)
-Date:   Wed, 23 Oct 2019 15:49:56 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Kukjin Kim <kgene@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linus.walleij@linaro.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH 33/36] ARM: s3c: move low-level clk reg access into
- platform code
-Message-ID: <20191023134956.GK11048@pi3>
-References: <20191010202802.1132272-1-arnd@arndb.de>
- <20191010203043.1241612-1-arnd@arndb.de>
- <20191010203043.1241612-33-arnd@arndb.de>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YRkY+aBxE9hZdBe1FL06hzEtAF+venmJUi6XuiuleYs=;
+        b=tezl0QavXbD+rnm2ftft/HXwj/704Z9tImGkPwLe5KGNOnw9yyJ4WUQBVFN8KEhSyk
+         uYy7Rthx8Tfpwi0Jj9uABSFS8P5D1iF3xOS8TbXSsm0eDCyU6ZBKnvXilgYG8YfbH0C6
+         rudbDSgoVss2f+VKFGVlj/GEq6qMd8BzzDybhWbTsFy/YUqLpHHPFMrD9yz/E3Ccr+ZB
+         7ZOe6WEdTXOVnoSqsjHlfPfst7y5EWtbjVVBNPEaLMlG4qqmD1Rl3NAAKrMZDZ0PfQVZ
+         SMZTrzaiSUCtnGmtppxVW+HTexEz/R6ySTu1c7vGw7hXXoMBQBkRNjvLpOQkMwrf9Rqw
+         XcaQ==
+X-Gm-Message-State: APjAAAWDIy8bWX5InVxjx7Q97UkN06ZaTUsOrO5zkiiosVx57eCbFrA4
+        mYgIUiD2md98VqnR/qjvJB3c00Y5QKNJPlbge2Dung==
+X-Google-Smtp-Source: APXvYqzw4YjCo83icRV+mrEHZmgPfBbFlldrPD5LYUxGJwtTpywYc9LXV0/W6t7MKVG/gnLc8w/UCFAy4gNRXqYJWlg=
+X-Received: by 2002:aed:24af:: with SMTP id t44mr8934014qtc.57.1571838623993;
+ Wed, 23 Oct 2019 06:50:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191010203043.1241612-33-arnd@arndb.de>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <cover.1571762488.git.andreyknvl@google.com> <26e088ae3ebcaa30afe957aeabaa9f0c653df7d0.1571762488.git.andreyknvl@google.com>
+ <CACT4Y+YntxT+cpESOBvbg+h=g-84ECJwQrFg7LM5tbq_zaMd3A@mail.gmail.com> <CAAeHK+yUTZc+BrGDvvTQD4O0hsDzhp0V6GGFdtnmE6U4yWabKw@mail.gmail.com>
+In-Reply-To: <CAAeHK+yUTZc+BrGDvvTQD4O0hsDzhp0V6GGFdtnmE6U4yWabKw@mail.gmail.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Wed, 23 Oct 2019 15:50:12 +0200
+Message-ID: <CACT4Y+b+RTYjUyB1h0SYjEq8vmOZas3ByjeJqVU1LrjxpRKy2Q@mail.gmail.com>
+Subject: Re: [PATCH 3/3] vhost, kcov: collect coverage from vhost_worker
+To:     Andrey Konovalov <andreyknvl@google.com>
+Cc:     USB list <linux-usb@vger.kernel.org>,
+        KVM list <kvm@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        David Windsor <dwindsor@gmail.com>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        Anders Roxell <anders.roxell@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 10:30:17PM +0200, Arnd Bergmann wrote:
-> Rather than have the cpufreq drivers touch include the
-> common headers to get the constants, add a small indirection.
-> This is still not the proper way that would do this through
-> the common clk API, but it lets us kill off the header file
-> usage.
-> 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  arch/arm/mach-s3c24xx/Makefile               |  2 +-
->  arch/arm/mach-s3c24xx/cpufreq-utils.c        | 32 ++++++++++++++++++++
->  drivers/cpufreq/s3c2410-cpufreq.c            |  8 +----
->  drivers/cpufreq/s3c2412-cpufreq.c            | 10 ++----
->  drivers/cpufreq/s3c2440-cpufreq.c            | 16 +++-------
->  drivers/cpufreq/s3c24xx-cpufreq.c            | 11 ++-----
->  include/linux/soc/samsung/s3c-cpufreq-core.h |  7 +++++
->  7 files changed, 51 insertions(+), 35 deletions(-)
-> 
-> diff --git a/arch/arm/mach-s3c24xx/Makefile b/arch/arm/mach-s3c24xx/Makefile
-> index 695573df00b1..195a4cb23ecb 100644
-> --- a/arch/arm/mach-s3c24xx/Makefile
-> +++ b/arch/arm/mach-s3c24xx/Makefile
-> @@ -38,7 +38,7 @@ obj-$(CONFIG_PM_SLEEP)		+= irq-pm.o sleep.o
->  
->  # common code
->  
-> -obj-$(CONFIG_S3C2410_CPUFREQ_UTILS) += cpufreq-utils.o
-> +obj-$(CONFIG_ARM_S3C24XX_CPUFREQ) += cpufreq-utils.o
+On Wed, Oct 23, 2019 at 3:35 PM Andrey Konovalov <andreyknvl@google.com> wrote:
+>
+> On Wed, Oct 23, 2019 at 10:36 AM Dmitry Vyukov <dvyukov@google.com> wrote:
+> >
+> > On Tue, Oct 22, 2019 at 6:46 PM Andrey Konovalov <andreyknvl@google.com> wrote:
+> > >
+> > > This patch adds kcov_remote_start()/kcov_remote_stop() annotations to the
+> > > vhost_worker() function, which is responsible for processing vhost works.
+> > > Since vhost_worker() threads are spawned per vhost device instance
+> > > the common kcov handle is used for kcov_remote_start()/stop() annotations
+> > > (see Documentation/dev-tools/kcov.rst for details). As the result kcov can
+> > > now be used to collect coverage from vhost worker threads.
+> > >
+> > > Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+> > > ---
+> > >  drivers/vhost/vhost.c | 6 ++++++
+> > >  drivers/vhost/vhost.h | 1 +
+> > >  2 files changed, 7 insertions(+)
+> > >
+> > > diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+> > > index 36ca2cf419bf..a5a557c4b67f 100644
+> > > --- a/drivers/vhost/vhost.c
+> > > +++ b/drivers/vhost/vhost.c
+> > > @@ -30,6 +30,7 @@
+> > >  #include <linux/sched/signal.h>
+> > >  #include <linux/interval_tree_generic.h>
+> > >  #include <linux/nospec.h>
+> > > +#include <linux/kcov.h>
+> > >
+> > >  #include "vhost.h"
+> > >
+> > > @@ -357,7 +358,9 @@ static int vhost_worker(void *data)
+> > >                 llist_for_each_entry_safe(work, work_next, node, node) {
+> > >                         clear_bit(VHOST_WORK_QUEUED, &work->flags);
+> > >                         __set_current_state(TASK_RUNNING);
+> > > +                       kcov_remote_start(dev->kcov_handle);
+> > >                         work->fn(work);
+> > > +                       kcov_remote_stop();
+> > >                         if (need_resched())
+> > >                                 schedule();
+> > >                 }
+> > > @@ -546,6 +549,7 @@ long vhost_dev_set_owner(struct vhost_dev *dev)
+> > >
+> > >         /* No owner, become one */
+> > >         dev->mm = get_task_mm(current);
+> > > +       dev->kcov_handle = current->kcov_handle;
+> >
+> > kcov_handle is not present in task_struct if !CONFIG_KCOV
+> >
+> > Also this does not use KCOV_SUBSYSTEM_COMMON.
+> > We discussed something along the following lines:
+> >
+> > u64 kcov_remote_handle(u64 subsys, u64 id)
+> > {
+> >   WARN_ON(subsys or id has wrong bits set).
+>
+> Hm, we can't have warnings in kcov_remote_handle() that is exposed in
+> uapi headers. What we can do is return 0 (invalid handle) if subsys/id
+> have incorrect bits set. And then we can either have another
+> kcov_remote_handle() internally (with a different name though) that
+> has a warning, or have warning in kcov_remote_start(). WDYT?
 
-Drop also here S3C2410_CPUFREQ_UTILS entirely.
+I would probably add the warning to kcov_remote_start(). This avoids
+the need for another function and will catch a wrong ID if caller
+generated it by some other means.
+And then ioctls should also detect bad handles passed in and return
+EINVAL. Then we will cover errors for both kernel and user programs.
 
-Best regards,
-Krzysztof
-
+>
+> >   return ...;
+> > }
+> >
+> > kcov_remote_handle(KCOV_SUBSYSTEM_USB, bus);
+> > kcov_remote_handle(KCOV_SUBSYSTEM_COMMON, current->kcov_handle);
+> >
+> >
+> > >         worker = kthread_create(vhost_worker, dev, "vhost-%d", current->pid);
+> > >         if (IS_ERR(worker)) {
+> > >                 err = PTR_ERR(worker);
+> > > @@ -571,6 +575,7 @@ long vhost_dev_set_owner(struct vhost_dev *dev)
+> > >         if (dev->mm)
+> > >                 mmput(dev->mm);
+> > >         dev->mm = NULL;
+> > > +       dev->kcov_handle = 0;
+> > >  err_mm:
+> > >         return err;
+> > >  }
+> > > @@ -682,6 +687,7 @@ void vhost_dev_cleanup(struct vhost_dev *dev)
+> > >         if (dev->worker) {
+> > >                 kthread_stop(dev->worker);
+> > >                 dev->worker = NULL;
+> > > +               dev->kcov_handle = 0;
+> > >         }
+> > >         if (dev->mm)
+> > >                 mmput(dev->mm);
+> > > diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
+> > > index e9ed2722b633..a123fd70847e 100644
+> > > --- a/drivers/vhost/vhost.h
+> > > +++ b/drivers/vhost/vhost.h
+> > > @@ -173,6 +173,7 @@ struct vhost_dev {
+> > >         int iov_limit;
+> > >         int weight;
+> > >         int byte_weight;
+> > > +       u64 kcov_handle;
+> > >  };
+> > >
+> > >  bool vhost_exceeds_weight(struct vhost_virtqueue *vq, int pkts, int total_len);
+> > > --
+> > > 2.23.0.866.gb869b98d4c-goog
+> > >
