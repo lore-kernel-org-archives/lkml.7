@@ -2,199 +2,200 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16D1FCA9EBB
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 21:43:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43B35CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 21:45:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6A2F2173B
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 21:43:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571867011;
-	bh=RXxdp0rL3Oc2Jwv23Wz3NURYaA/G7KzIw2vqsSFN4X0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=ZErxnQyUaA+y+c99cm91KOgPDR13ipyMDzVZYSItxkbLprKOPrxD6VgBVzxxnevR9
-	 VF2PYrFOzjfQlbnL90iERKR4J9Lz2iDd0YckeaIH49HMcej76KrXZwpwWy+hZl2OqT
-	 7Q5ZEtnF/saVBVwJqnTYeUKA++tjDPGN5tUtewYM=
+	by mail.kernel.org (Postfix) with ESMTP id 05E6021906
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 21:45:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R0V7DxSa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407618AbfJWVn3 (ORCPT
+        id S2407625AbfJWVpK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 17:43:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46518 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407573AbfJWVn2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 17:43:28 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 23 Oct 2019 17:45:10 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:39138 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2391240AbfJWVpK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 17:45:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571867109;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=0D4EQ8thGQKRRU/Fz2c1O7VtA1gRTINZXqgRy6HfSuk=;
+        b=R0V7DxSapSFPev4UGzimkxUEIrMclUZodFMOePwyBjdC3PkoEX9IHO8CiV/9e3ccXmQ+JC
+        4A7d90Cfe7WgzZmiok371uhmCno8Tx+Mt6X3tW1OKYEj5fCZSYkXuFHlMG9NatkMTXLOVE
+        xRIUi6+z9xhMdPFbyJ284vd00qkuzMc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-240-m8GaqF_nOUal1pqA5AbW-g-1; Wed, 23 Oct 2019 17:45:05 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF1FF2173B;
-        Wed, 23 Oct 2019 21:43:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571867007;
-        bh=RXxdp0rL3Oc2Jwv23Wz3NURYaA/G7KzIw2vqsSFN4X0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=FV2J0hI4E94GdHPD2ijQG+4lgY/AU5v/FiJMTAJLximf3vGgO8Q2yPIPNU6JdduLS
-         CXkCtuFW8o/tM3+T8CEjDY2dvxBejnGihklq/84qINYLtasBys7KQ0Eoa7k6gP3cGj
-         a+T4KclfrQxqgiqyphqXN8m73iLXy2lnP1m+TWDg=
-Date:   Wed, 23 Oct 2019 16:43:25 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jian-Hong Pan <jian-hong@endlessm.com>
-Cc:     linux@endlesssm.com, Matthew Wilcox <willy@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI/MSI: Fix restoring of MSI-X vector control's mask bit
-Message-ID: <20191023214325.GA30290@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191023211235.GA236419@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0FAFE100550E;
+        Wed, 23 Oct 2019 21:45:03 +0000 (UTC)
+Received: from emilne (unknown [10.18.25.205])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 401405DA8D;
+        Wed, 23 Oct 2019 21:44:55 +0000 (UTC)
+Message-ID: <6759dfc6c5c721b5060d75e6c5f5a0b1dbb9a80b.camel@redhat.com>
+Subject: Re: [PATCH v2 7/8] scsi: sr: workaround VMware ESXi cdrom emulation
+ bug
+From:   "Ewan D. Milne" <emilne@redhat.com>
+To:     Michal =?ISO-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>,
+        Hannes Reinecke <hare@suse.de>
+Cc:     linux-scsi@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Jens Axboe <axboe@kernel.dk>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Eric Biggers <ebiggers@google.com>,
+        "J. Bruce Fields" <bfields@redhat.com>,
+        Benjamin Coddington <bcodding@redhat.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Omar Sandoval <osandov@fb.com>, Ming Lei <ming.lei@redhat.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Tejun Heo <tj@kernel.org>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Date:   Wed, 23 Oct 2019 17:44:54 -0400
+In-Reply-To: <20191023162313.GE938@kitsune.suse.cz>
+References: <cover.1571834862.git.msuchanek@suse.de>
+         <abf81ec4f8b6139fffc609df519856ff8dc01d0d.1571834862.git.msuchanek@suse.de>
+         <08f1e291-0196-2402-1947-c0cdaaf534da@suse.de>
+         <20191023162313.GE938@kitsune.suse.cz>
+Mime-Version: 1.0
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MC-Unique: m8GaqF_nOUal1pqA5AbW-g-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 04:12:35PM -0500, Bjorn Helgaas wrote:
-> On Tue, Oct 08, 2019 at 11:42:39AM +0800, Jian-Hong Pan wrote:
-> > MSI-X vector control's bit 0 is the mask bit, which masks the
-> > corresponding interrupt request, or not. Other reserved bits might be
-> > used for other purpose by device vendors. For example, the values of
-> > Kingston NVMe SSD's MSI-X vector control are neither 0, nor 1, but other
-> > values [1].
-> > 
-> > The original restoring logic in system resuming uses the whole MSI-X
-> > vector control value as the flag to set/clear the mask bit. However,
-> > this logic conflicts the idea mentioned above. It may mislead system to
-> > disable the MSI-X vector entries. That makes system get no interrupt
-> > from Kingston NVMe SSD after resume and usually get NVMe I/O timeout
-> > error.
-> > 
-> > [  174.715534] nvme nvme0: I/O 978 QID 3 timeout, completion polled
-> > 
-> > This patch takes only the mask bit of original MSI-X vector control
-> > value as the flag to fix this issue.
-> > 
-> > [1] https://bugzilla.kernel.org/show_bug.cgi?id=204887#c8
-> > 
-> > Buglink: https://bugzilla.kernel.org/show_bug.cgi?id=204887
-> > Fixed: f2440d9acbe8 ("PCI MSI: Refactor interrupt masking code")
-> > Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
-> > ---
-> >  drivers/pci/msi.c | 7 +++++--
-> >  1 file changed, 5 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
-> > index 0884bedcfc7a..deae3d5acaf6 100644
-> > --- a/drivers/pci/msi.c
-> > +++ b/drivers/pci/msi.c
-> > @@ -433,6 +433,7 @@ static void __pci_restore_msi_state(struct pci_dev *dev)
-> >  static void __pci_restore_msix_state(struct pci_dev *dev)
-> >  {
-> >  	struct msi_desc *entry;
-> > +	u32 flag;
-> >  
-> >  	if (!dev->msix_enabled)
-> >  		return;
-> > @@ -444,8 +445,10 @@ static void __pci_restore_msix_state(struct pci_dev *dev)
-> >  				PCI_MSIX_FLAGS_ENABLE | PCI_MSIX_FLAGS_MASKALL);
-> >  
-> >  	arch_restore_msi_irqs(dev);
-> > -	for_each_pci_msi_entry(entry, dev)
-> > -		msix_mask_irq(entry, entry->masked);
-> > +	for_each_pci_msi_entry(entry, dev) {
-> > +		flag = entry->masked & PCI_MSIX_ENTRY_CTRL_MASKBIT;
-> > +		msix_mask_irq(entry, flag);
-> 
-> This makes good sense: before your patch, when we restore, we set the
-> mask bit if *any* bits in the Vector Control register are set.
-> 
-> There are other paths leading to __pci_msix_desc_mask_irq(), so I
-> think it would be better to do the masking there, e.g.,
-> 
->   if (flag & PCI_MSIX_ENTRY_CTRL_MASKBIT)
->     mask_bits |= PCI_MSIX_ENTRY_CTRL_MASKBIT;
-> 
-> I think the other paths all pass either 0 or 1, so they're all safe
-> today.  But doing the masking in __pci_msix_desc_mask_irq() removes
-> that assumption from the callers.
-> 
-> I applied the patch below to pci/msi, let me know if it doesn't work
-> for you.
-> 
-> > +	}
-> >  
-> >  	pci_msix_clear_and_set_ctrl(dev, PCI_MSIX_FLAGS_MASKALL, 0);
-> >  }
-> 
-> commit 1a828a554650
-> Author: Jian-Hong Pan <jian-hong@endlessm.com>
-> Date:   Tue Oct 8 11:42:39 2019 +0800
-> 
->     PCI/MSI: Fix incorrect MSI-X masking on resume
->     
->     When a driver enables MSI-X, msix_program_entries() reads the MSI-X Vector
->     Control register for each vector and saves it in desc->masked.  Each
->     register is 32 bits and bit 0 is the actual Mask bit.
->     
->     When we restored these registers during resume, we previously set the Mask
->     bit if *any* bit in desc->masked was set instead of when the Mask bit
->     itself was set:
->     
->       pci_restore_state
->         pci_restore_msi_state
->           __pci_restore_msix_state
->             for_each_pci_msi_entry
->               msix_mask_irq(entry, entry->masked)   <-- entire u32 word
->                 __pci_msix_desc_mask_irq(desc, flag)
->                   mask_bits = desc->masked & ~PCI_MSIX_ENTRY_CTRL_MASKBIT
->                   if (flag)       <-- testing entire u32, not just bit 0
->                     mask_bits |= PCI_MSIX_ENTRY_CTRL_MASKBIT
->                   writel(mask_bits, desc_addr + PCI_MSIX_ENTRY_VECTOR_CTRL)
->     
->     This means that after resume, MSI-X vectors were masked when they shouldn't
->     be, which leads to timeouts like this:
->     
->       nvme nvme0: I/O 978 QID 3 timeout, completion polled
->     
->     On resume, set the Mask bit only when the saved Mask bit from suspend was
->     set.
->     
->     This should remove the need for 19ea025e1d28 ("nvme: Add quirk for Kingston
->     NVME SSD running FW E8FK11.T").
->     
->     [bhelgaas: commit log, move fix to __pci_msix_desc_mask_irq()]
->     Fixes: f2440d9acbe8 ("PCI MSI: Refactor interrupt masking code")
->     Link: https://bugzilla.kernel.org/show_bug.cgi?id=204887
->     Link: https://lore.kernel.org/r/20191008034238.2503-1-jian-hong@endlessm.com
->     Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
->     Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+On Wed, 2019-10-23 at 18:23 +0200, Michal Such=C3=A1nek wrote:
+> On Wed, Oct 23, 2019 at 04:13:15PM +0200, Hannes Reinecke wrote:
+> > On 10/23/19 2:52 PM, Michal Suchanek wrote:
+> > > The WMware ESXi cdrom identifies itself as:
+> > > sr 0:0:0:0: [sr0] scsi3-mmc drive: vendor: "NECVMWarVMware SATA CD001=
+.00"
+> > > model: "VMware SATA CD001.00"
+> > > with the following get_capabilities print in sr.c:
+> > >         sr_printk(KERN_INFO, cd,
+> > >                   "scsi3-mmc drive: vendor: \"%s\" model: \"%s\"\n",
+> > >                   cd->device->vendor, cd->device->model);
+> > >=20
+> > > So the model looks like reliable identification while vendor does not=
+.
+> > >=20
+> > > The drive claims to have a tray and claims to be able to close it.
+> > > However, the UI has no notion of a tray - when medium is ejected it i=
+s
+> > > dropped in the floor and the user must select a medium again before t=
+he
+> > > drive can be re-loaded.  On the kernel side the tray_move call to clo=
+se
+> > > the tray succeeds but the drive state does not change as a result of =
+the
+> > > call.
+> > >=20
+> > > The drive does not in fact emulate the tray state. There are two ways=
+ to
+> > > get the medium state. One is the SCSI status:
+> > >=20
+> > > Physical drive:
+> > >=20
+> > > Fixed format, current; Sense key: Not Ready
+> > > Additional sense: Medium not present - tray open
+> > > Raw sense data (in hex):
+> > >         70 00 02 00 00 00 00 0a  00 00 00 00 3a 02 00 00
+> > >         00 00
+> > >=20
+> > > Fixed format, current; Sense key: Not Ready
+> > > Additional sense: Medium not present - tray closed
+> > >  Raw sense data (in hex):
+> > >         70 00 02 00 00 00 00 0a  00 00 00 00 3a 01 00 00
+> > >         00 00
+> > >=20
+> > > VMware ESXi:
+> > >=20
+> > > Fixed format, current; Sense key: Not Ready
+> > > Additional sense: Medium not present
+> > >   Info fld=3D0x0 [0]
+> > >  Raw sense data (in hex):
+> > >         f0 00 02 00 00 00 00 0a  00 00 00 00 3a 00 00 00
+> > >         00 00
+> > >=20
+> > > So the tray state is not reported here. Other is medium status which =
+the
+> > > kernel prefers if available. Adding a print here gives:
+> > >=20
+> > > cdrom: get_media_event success: code =3D 0, door_open =3D 1, medium_p=
+resent =3D 0
+> > >=20
+> > > door_open is interpreted as open tray. This is fine so long as tray_m=
+ove
+> > > would close the tray when requested or report an error which never
+> > > happens on VMware ESXi servers (5.5 and 6.5 tested).
+> > >=20
+> > > This is a popular virtualization platform so a workaround is worthwhi=
+le.
+> > >=20
+> > > Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+> > > ---
+> > >  drivers/scsi/sr.c | 6 ++++++
+> > >  1 file changed, 6 insertions(+)
+> > >=20
+> > > diff --git a/drivers/scsi/sr.c b/drivers/scsi/sr.c
+> > > index 4664fdf75c0f..8090c5bdec09 100644
+> > > --- a/drivers/scsi/sr.c
+> > > +++ b/drivers/scsi/sr.c
+> > > @@ -867,6 +867,7 @@ static void get_capabilities(struct scsi_cd *cd)
+> > >  =09unsigned int ms_len =3D 128;
+> > >  =09int rc, n;
+> > > =20
+> > > +=09static const char *model_vmware =3D "VMware";
+> > >  =09static const char *loadmech[] =3D
+> > >  =09{
+> > >  =09=09"caddy",
+> > > @@ -922,6 +923,11 @@ static void get_capabilities(struct scsi_cd *cd)
+> > >  =09=09  buffer[n + 4] & 0x20 ? "xa/form2 " : "",=09/* can read xa/fr=
+om2 */
+> > >  =09=09  buffer[n + 5] & 0x01 ? "cdda " : "", /* can read audio data =
+*/
+> > >  =09=09  loadmech[buffer[n + 6] >> 5]);
+> > > +=09if (!strncmp(cd->device->model, model_vmware, strlen(model_vmware=
+))) {
+> > > +=09=09buffer[n + 6] &=3D ~(0xff << 5);
+> > > +=09=09sr_printk(KERN_INFO, cd,
+> > > +=09=09=09  "VMware ESXi bug workaround: tray -> caddy\n");
+> > > +=09}
+> > >  =09if ((buffer[n + 6] >> 5) =3D=3D 0)
+> > >  =09=09/* caddy drives can't close tray... */
+> > >  =09=09cd->cdi.mask |=3D CDC_CLOSE_TRAY;
+> > >=20
+> >=20
+> > This looks something which should be handled via a blacklist flag, not
+> > some inline hack which everyone forgets about it...
+>=20
+> AFAIK we used to have a blacklist but don't have anymore. So either it
+> has to be resurrected for this one flag or an inline hack should be good
+> enough.
+>=20
 
-I forgot; this probably should be marked for stable, too.
+I agree with Hannes.  We should have a blacklist flag for this.
+Putting inline code in the sr driver that special cases on a particular
+device model string is not clean.  The "VMware ESXi bug workaround" message
+is not particularly descriptive either.
 
-> diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
-> index 0884bedcfc7a..771041784e64 100644
-> --- a/drivers/pci/msi.c
-> +++ b/drivers/pci/msi.c
-> @@ -213,12 +213,13 @@ u32 __pci_msix_desc_mask_irq(struct msi_desc *desc, u32 flag)
->  
->  	if (pci_msi_ignore_mask)
->  		return 0;
-> +
->  	desc_addr = pci_msix_desc_addr(desc);
->  	if (!desc_addr)
->  		return 0;
->  
->  	mask_bits &= ~PCI_MSIX_ENTRY_CTRL_MASKBIT;
-> -	if (flag)
-> +	if (flag & PCI_MSIX_ENTRY_CTRL_MASKBIT)
->  		mask_bits |= PCI_MSIX_ENTRY_CTRL_MASKBIT;
->  
->  	writel(mask_bits, desc_addr + PCI_MSIX_ENTRY_VECTOR_CTRL);
-> 
-> _______________________________________________
-> Linux-nvme mailing list
-> Linux-nvme@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-nvme
+-Ewan
+
