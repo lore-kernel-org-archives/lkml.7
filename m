@@ -2,160 +2,115 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8C63CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:42:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 884DFCA9EBB
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:43:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85ED320663
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:42:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RTdK4SUY"
+	by mail.kernel.org (Postfix) with ESMTP id 5DE7A2064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:43:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571827393;
+	bh=w17ansr82Cw8bMrH42KGu0yry/M/xvT4mqS/2dVIBBg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=BRdjDKcJnRN9+XdLq05MjcjdQcQR6Y31H74E9jcNrNGmn9Ox9PgXpX2RzEUMYLR3G
+	 jK0OEqIW5ggC7vd3QxmJ7xaOVLymKnWO53mjkKXibxnQB7Cq3OzT6zNxTo0t3xtO+k
+	 Jpa/E6q1Oeg/ivZUkFX6V3D6a3sEbTnn5pOSIxDs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404555AbfJWKmz (ORCPT
+        id S2404585AbfJWKnM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 06:42:55 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:32927 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2390181AbfJWKmz (ORCPT
+        Wed, 23 Oct 2019 06:43:12 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49322 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390566AbfJWKnM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 06:42:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571827374;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=u2SunQ8Ras1PaEhj4x41QNcvtS5kNNCH7BoY7fCECxY=;
-        b=RTdK4SUYSCgmmYLDRq7WKtTNgIkq/661hZ3ASNJm9zcRFrgOR9AmiYAM3hQfsYP5plVd2y
-        sAOzA0GmIYHYdVdLqhX+8Px152Ej8cDOOFOaKF9vQnC46XbQKWAge3TEfeG6dSRgK7moHR
-        uEq0RtLyflJ7y+75jg8ZmXn1CsUtxtQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-267-hhKhSfenMsyIkiZzHNzePw-1; Wed, 23 Oct 2019 06:42:51 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BE339107AD33;
-        Wed, 23 Oct 2019 10:42:48 +0000 (UTC)
-Received: from krava (unknown [10.43.17.61])
-        by smtp.corp.redhat.com (Postfix) with SMTP id DE2205D6C8;
-        Wed, 23 Oct 2019 10:42:46 +0000 (UTC)
-Date:   Wed, 23 Oct 2019 12:42:45 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Igor Lubashev <ilubashe@akamai.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/3] perf kvm: Allow running without stdin
-Message-ID: <20191023104245.GL22919@krava>
-References: <1571795693-23558-1-git-send-email-ilubashe@akamai.com>
- <1571795693-23558-3-git-send-email-ilubashe@akamai.com>
+        Wed, 23 Oct 2019 06:43:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=o8+aRiWYArgOfcIQUpcz0HRWYDcLBPfXp8bzXS/M6uk=; b=osCh/jbEew5Dyc2YthYufYOzT
+        /wWvYeSc75A8nWZCJhQPtPZQJIPzRLmVMjAZHWDrgPwEE/cD+/tXhLi+RnPHgD+OxlAHWnpdBLkTV
+        GlWNDNNzdGUT/gMTgUuVag18SmkkVxCDkpkaaAQASWnWKQnpLoDjBpCmbLBxBwdkDyz48=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iNE6b-0000J4-QS; Wed, 23 Oct 2019 10:43:05 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 0557E2743259; Wed, 23 Oct 2019 11:43:04 +0100 (BST)
+Date:   Wed, 23 Oct 2019 11:43:04 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] cpufreq: s3c64xx: Remove pointless NULL check in
+ s3c64xx_cpufreq_driver_init
+Message-ID: <20191023104304.GA5723@sirena.co.uk>
+References: <20191023000906.14374-1-natechancellor@gmail.com>
+ <20191023032302.tu5nkvulo2yoctgr@vireshk-i7>
 MIME-Version: 1.0
-In-Reply-To: <1571795693-23558-3-git-send-email-ilubashe@akamai.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-MC-Unique: hhKhSfenMsyIkiZzHNzePw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="9amGYk9869ThD9tj"
 Content-Disposition: inline
+In-Reply-To: <20191023032302.tu5nkvulo2yoctgr@vireshk-i7>
+X-Cookie: MMM-MM!!  So THIS is BIO-NEBULATION!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 09:54:52PM -0400, Igor Lubashev wrote:
-> Allow perf kvm --stdio to run without access to stdin.
-> This lets perf kvm to run in a batch mode until interrupted.
->=20
-> The following now works as expected:
->=20
->   $ perf kvm top --stdio < /dev/null
->=20
-> Signed-off-by: Igor Lubashev <ilubashe@akamai.com>
-> ---
->  tools/perf/builtin-kvm.c | 33 ++++++++++++++++++++-------------
->  1 file changed, 20 insertions(+), 13 deletions(-)
->=20
-> diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
-> index 858da896b518..5217aa3596c7 100644
-> --- a/tools/perf/builtin-kvm.c
-> +++ b/tools/perf/builtin-kvm.c
-> @@ -930,18 +930,20 @@ static int fd_set_nonblock(int fd)
-> =20
->  static int perf_kvm__handle_stdin(void)
->  {
-> -=09int c;
-> -
-> -=09c =3D getc(stdin);
-> -=09if (c =3D=3D 'q')
-> +=09switch (getc(stdin)) {
-> +=09case 'q':
-> +=09=09done =3D 1;
->  =09=09return 1;
-> -
-> -=09return 0;
-> +=09case EOF:
-> +=09=09return 0;
-> +=09default:
-> +=09=09return 1;
-> +=09}
->  }
-> =20
->  static int kvm_events_live_report(struct perf_kvm_stat *kvm)
->  {
-> -=09int nr_stdin, ret, err =3D -EINVAL;
-> +=09int nr_stdin =3D -1, ret, err =3D -EINVAL;
->  =09struct termios save;
-> =20
->  =09/* live flag must be set first */
-> @@ -972,13 +974,16 @@ static int kvm_events_live_report(struct perf_kvm_s=
-tat *kvm)
->  =09if (evlist__add_pollfd(kvm->evlist, kvm->timerfd) < 0)
->  =09=09goto out;
-> =20
-> -=09nr_stdin =3D evlist__add_pollfd(kvm->evlist, fileno(stdin));
-> -=09if (nr_stdin < 0)
-> -=09=09goto out;
-> -
->  =09if (fd_set_nonblock(fileno(stdin)) !=3D 0)
->  =09=09goto out;
-> =20
-> +=09/* add stdin, if it is connected */
-> +=09if (getc(stdin) !=3D EOF) {
-> +=09=09nr_stdin =3D evlist__add_pollfd(kvm->evlist, fileno(stdin));
-> +=09=09if (nr_stdin < 0)
-> +=09=09=09goto out;
-> +=09}
-> +
->  =09/* everything is good - enable the events and process */
->  =09evlist__enable(kvm->evlist);
-> =20
-> @@ -994,8 +999,10 @@ static int kvm_events_live_report(struct perf_kvm_st=
-at *kvm)
->  =09=09if (err)
->  =09=09=09goto out;
-> =20
-> -=09=09if (fda->entries[nr_stdin].revents & POLLIN)
-> -=09=09=09done =3D perf_kvm__handle_stdin();
-> +=09=09if (nr_stdin >=3D 0 && fda->entries[nr_stdin].revents & POLLIN) {
-> +=09=09=09if (!perf_kvm__handle_stdin())
 
-can this return 0 ? if stdin is EOF then nr_stdin stays -1
+--9amGYk9869ThD9tj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +=09=09=09=09fda->entries[nr_stdin].events =3D 0;
+On Wed, Oct 23, 2019 at 08:53:02AM +0530, Viresh Kumar wrote:
+> On 22-10-19, 17:09, Nathan Chancellor wrote:
+> > When building with Clang + -Wtautological-pointer-compare:
+> >=20
+> > drivers/cpufreq/s3c64xx-cpufreq.c:152:6: warning: comparison of array
+> > 's3c64xx_freq_table' equal to a null pointer is always false
+> > [-Wtautological-pointer-compare]
+> >         if (s3c64xx_freq_table =3D=3D NULL) {
+> >             ^~~~~~~~~~~~~~~~~~    ~~~~
+> > 1 warning generated.
+> >=20
+> > The definition of s3c64xx_freq_table is surrounded by an ifdef
+> > directive for CONFIG_CPU_S3C6410, which is always true for this driver
+> > because it depends on it in drivers/cpufreq/Kconfig.arm (and if it
+> > weren't, there would be a build error because s3c64xx_freq_table would
+> > not be a defined symbol).
 
-why do you need to set events to 0 in here?
+> +broonie, who wrote this patch to see his views on why he kept it like
+> this.
 
-thanks,
-jirka
+The driver should also have supported s3c6400 as well.
 
+--9amGYk9869ThD9tj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2wLrMACgkQJNaLcl1U
+h9B2ZAf/eQxJSi8vjkh2szC5fpPoxL3PqhhtoNyHk9pyamhKksLnfq8Wfc5cXoYf
+m805fFfs10op9oNpI//wwBy+WtmSWx7wFDZx+by2GeKvzPfCqjdXBvUziAtQhq/q
+pU4RI10nDISz7KV5+MogDYKIqS86tiaCpprrXQI9B524i1u1TCIiaqoW9EC6eho5
+104of9kneV1wM3wKRtz1W9HkOlV+Dnm1rDRWldGriYbd+HAJNhxGe+LNiLubnATf
+N3ntYDNTJmhuwc4KWuzOTHQE+5RXi2VBkk599ZoLoNSZhd6M5a4UU896+XYBjvEN
+NBjAKyjIVg55uIINznEJ2YtoD+u6qg==
+=wd9j
+-----END PGP SIGNATURE-----
+
+--9amGYk9869ThD9tj--
