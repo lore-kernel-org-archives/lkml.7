@@ -2,101 +2,137 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C74B3CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:37:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 543A9CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:37:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F6562064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:37:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="if0Y/K+b"
+	by mail.kernel.org (Postfix) with ESMTP id 2845C2064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:37:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571845075;
+	bh=4CP2ycU+E6K5fjkBXPL4B0R3el922R8lqyX1rX3+y/Q=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=gtC23gI0WS9x28Kvk9PshpFJprZZi/O+tNCoO9Jx0ZSukblmr2xKgcGrui5pkgpKV
+	 iOPbVAkuTqCj7A91vvPNwkPBytp4WfoPXnmGIegtsZ7Ir6EOtNwuDp2WBpuFhSVTfB
+	 ZwDitMWSQVgmtqvZy8M41FH6rXcp6Uva6hsiZl6M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392485AbfJWPhL (ORCPT
+        id S2392495AbfJWPhx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 11:37:11 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:35491 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390400AbfJWPhL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 11:37:11 -0400
-Received: by mail-il1-f195.google.com with SMTP id p8so9613246ilp.2
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 08:37:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sR2SNSnWNwKPR9DRMKnUHE6gMbz4VxB5+FQlRjQHbYk=;
-        b=if0Y/K+bq2VP0SUiEtC6YdtsHM9dyP5JmWUT3AyFj22AYtLxOkIBx9KqKRXORfJk5o
-         pwaRf3waYJBB2f6wxn5KEKEI7y2ghA7jS9NW5D8sxdxwlWLZ7nBBonDzPCSxxuKHqngp
-         IK4mH/JwTsTmfM2bciFwJtoge+ejdYHZdgOchIpDgMOGf1B0zKG2MFcwn+jtbB6OVDM+
-         JmHr6FVZzvh5RjIcRcnrySRiWRFpkdxSl5aJTBZZDLL9WNal832HP9TcNzFzjZ5s61RI
-         9+mWUu0N4g/tK96XhQGYtRcazQOuyln0l87gX3sgsPXOfI4srezH4tRoxxSpY12Bw8pU
-         p9Cg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sR2SNSnWNwKPR9DRMKnUHE6gMbz4VxB5+FQlRjQHbYk=;
-        b=lanDJEd9TjUFe5ADNL8WFUw6iIXNjAAlJ2UUkSxygTEL/3ZqwKU3apy86R3arxmWPX
-         vGmVZDZb/yemBij8DT1j4MNhPr4oz+39zUjCco3z7f3h34h83STDUDhgwCRZXgdLp6tr
-         8hFMME9TLYn/TX8SYlLjw+9TiVi3/6V76DKrvYDmUdUIG59ibqQ0NS5TNsN+WUMONa5B
-         Bg+AhuCJ0yKBs+oC1Wvi6doXnDHQpC6VnXJyjRsRgo/HnZS3imi9i6inY7mSviXVvWRy
-         5z9XJJb5Gra8mDnmYH4VX0QKUJngZAmr8RY281GPpeLsJZiN8R8FExMy/n1lHN4eiwI5
-         mKgA==
-X-Gm-Message-State: APjAAAU62keaARrccCApmwDrzDIRjd2KmWU6ChtKHDzPAYu9Ba/LXvc4
-        l34XXBZJr6/k9ceD7icqSL9EyCiivzFne9WimcCAmQ==
-X-Google-Smtp-Source: APXvYqwcyEef1k3eSIVQftJdMb4J6dmUUsBH64WugGGW0Hv+ml6s21TuA/xxpNc0Hz4rvsRY/Y30rpHOQs/Ie6/vbv0=
-X-Received: by 2002:a92:d285:: with SMTP id p5mr36879409ilp.278.1571845028660;
- Wed, 23 Oct 2019 08:37:08 -0700 (PDT)
+        Wed, 23 Oct 2019 11:37:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36316 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390400AbfJWPhx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 11:37:53 -0400
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 60F0021A4A;
+        Wed, 23 Oct 2019 15:37:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571845071;
+        bh=4CP2ycU+E6K5fjkBXPL4B0R3el922R8lqyX1rX3+y/Q=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=xhyz2fKUP6xWdPpOnNhE3QoNFZoi+xgI4KmrIfstsv2MJRBuQBMfqeIM3T6W+k3Oc
+         FavuXjHQcKWIUbvYRpaTAgd6FdTC7wpqrCck3u4UY+r/7eIFezjnRVbmxlsXbNEiVr
+         Ngz7TndveHL0+z8GdQDpYm9AwCVPxqyad/8D8YBA=
+Received: by mail-qk1-f181.google.com with SMTP id 71so16291186qkl.0;
+        Wed, 23 Oct 2019 08:37:51 -0700 (PDT)
+X-Gm-Message-State: APjAAAV2tiDh4VoehHaN+jgmTRuBDdn5hfj8I5l/TMbJGsqxzDa5mYWz
+        aBIIWQOpLWGxhzRKpy+ttli7GmGmR0B2wH8Lng==
+X-Google-Smtp-Source: APXvYqxHwHxGB2KG39VmZoeZDpBh35nE31eyksvPPkWeP0mtHx0PqbFk5yhV6ecorTgDYforRDBf+vXgZrZpHZA43ms=
+X-Received: by 2002:a05:620a:12f1:: with SMTP id f17mr9010262qkl.152.1571845070465;
+ Wed, 23 Oct 2019 08:37:50 -0700 (PDT)
 MIME-Version: 1.0
-References: <2e3d8287d05ce2d642c0445fbef6f1960124c557.1571828539.git.baolin.wang@linaro.org>
- <CAK8P3a0i_xvSzeRxfT-5LLpaAfGx3USsuXX1dv1x6Bg87jeopg@mail.gmail.com>
-In-Reply-To: <CAK8P3a0i_xvSzeRxfT-5LLpaAfGx3USsuXX1dv1x6Bg87jeopg@mail.gmail.com>
-From:   Olof Johansson <olof@lixom.net>
-Date:   Wed, 23 Oct 2019 08:36:57 -0700
-Message-ID: <CAOesGMg5MH3Dq8yBLhHZCJJwMqVaiqqJyhs-tNE_nWDzUaTPCw@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: Update the Spreadtrum SoC maintainer
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Baolin Wang <baolin.wang@linaro.org>, arm-soc <arm@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Orson Zhai <orsonzhai@gmail.com>, baolin.wang7@gmail.com,
-        Lyra Zhang <zhang.lyra@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <BY5PR04MB6599EAA659A53B2331CB812586890@BY5PR04MB6599.namprd04.prod.outlook.com>
+In-Reply-To: <BY5PR04MB6599EAA659A53B2331CB812586890@BY5PR04MB6599.namprd04.prod.outlook.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 23 Oct 2019 10:37:38 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJxcUr06+O_Ht5Kw0KXCWfSVC+6WMQqNxt-JehHh874hw@mail.gmail.com>
+Message-ID: <CAL_JsqJxcUr06+O_Ht5Kw0KXCWfSVC+6WMQqNxt-JehHh874hw@mail.gmail.com>
+Subject: Re: [PATCH v6 1/2] dt-bindings: edac: arm-dmc520.txt
+To:     Lei Wang <leiwang_git@outlook.com>
+Cc:     "bp@alien8.de" <bp@alien8.de>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "hangl@microsoft.com" <hangl@microsoft.com>,
+        "lewan@microsoft.com" <lewan@microsoft.com>,
+        "ruizhao@microsoft.com" <ruizhao@microsoft.com>,
+        "scott.branden@broadcom.com" <scott.branden@broadcom.com>,
+        "yuqing.shen@broadcom.com" <yuqing.shen@broadcom.com>,
+        "ray.jui@broadcom.com" <ray.jui@broadcom.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 5:17 AM Arnd Bergmann <arnd@arndb.de> wrote:
+On Thu, Sep 19, 2019 at 1:37 PM Lei Wang <leiwang_git@outlook.com> wrote:
 >
-> On Wed, Oct 23, 2019 at 1:06 PM Baolin Wang <baolin.wang@linaro.org> wrote:
-> > +F:     drivers/power/reset/sc27xx-poweroff.c
-> > +F:     drivers/leds/leds-sc27xx-bltc.c
-> > +F:     drivers/input/misc/sc27xx-vibra.c
-> > +F:     drivers/power/supply/sc27xx_fuel_gauge.c
-> > +F:     drivers/power/supply/sc2731_charger.c
-> > +F:     drivers/rtc/rtc-sc27xx.c
-> > +F:     drivers/regulator/sc2731-regulator.c
-> > +F:     drivers/nvmem/sc27xx-efuse.c
-> > +F:     drivers/iio/adc/sc27xx_adc.c
-> >  N:     sprd
+> This is the device tree bindings for new EDAC driver dmc520_edac.c.
 >
-> Maybe add a regex pattern for "sc27xx" instead of listing each file
-> individually?
-> That would simplify it when files move around or you add more drivers that
-> follow the same naming.
+> Signed-off-by: Lei Wang <leiwang_git@outlook.com>
+> Reviewed-by: James Morse <james.morse@arm.com>
+>
+> ---
+>     No change in v6.
+> ---
+>  .../devicetree/bindings/edac/arm-dmc520.txt   | 26 +++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/edac/arm-dmc520.txt
+>
+> diff --git a/Documentation/devicetree/bindings/edac/arm-dmc520.txt b/Documentation/devicetree/bindings/edac/arm-dmc520.txt
+> new file mode 100644
+> index 000000000000..71e7aa32971a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/edac/arm-dmc520.txt
+> @@ -0,0 +1,26 @@
+> +* ARM DMC-520 EDAC node
+> +
+> +Required properties:
+> +- compatible           : "brcm,dmc-520", "arm,dmc-520".
+> +- reg                  : Address range of the DMC-520 registers.
+> +- interrupts           : DMC-520 interrupt numbers. The example below specifies
+> +                         two interrupt lines for dram_ecc_errc_int and
+> +                         dram_ecc_errd_int.
+> +- interrupt-config     : This is an array of interrupt masks. For each of the
 
-Agreed.
+Not a standard property, so would need a vendor prefix...
 
-In addition to that: Baolin, when you resend this, feel free to send
-it to soc@kernel.org so we get it into our patchwork tracker (if you
-want us to apply it directly).
+> +                         above interrupt line, add one interrupt mask element to
+> +                         it. That is, there is a 1:1 mapping from each interrupt
+> +                         line to an interrupt mask. An interrupt mask can represent
+> +                         multiple interrupts being enabled. Refer to interrupt_control
+> +                         register in DMC-520 TRM for interrupt mapping. In the example
+> +                         below, the interrupt configuration enables dram_ecc_errc_int
+> +                         and dram_ecc_errd_int. And each interrupt is connected to
+> +                         a separate interrupt line.
 
+I've gone and read thru the TRM some. This binding doesn't seem to
+correspond to the TRM at all. There are a bunch of interrupts and a
+combined interrupt, and then there's the same set for 'overflow'
+interrupts.
 
-Thanks!
+There's only one 'interrupt_control' reg. How do you have more that 1
+32-bit value?
 
--Olof
+> +
+> +Example:
+> +
+> +dmc0: dmc@200000 {
+> +       compatible = "brcm,dmc-520", "arm,dmc-520";
+> +       reg = <0x200000 0x80000>;
+> +       interrupts = <0x0 0x349 0x4>, <0x0 0x34B 0x4>;
+> +       interrupt-config = <0x4>, <0x8>;
+> +};
+> --
+> 2.17.1
+>
