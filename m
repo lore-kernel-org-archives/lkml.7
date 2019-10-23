@@ -2,128 +2,182 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3428CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 05:47:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D893CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 05:49:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 836D2214B2
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 05:47:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gxgo2Wt/"
+	by mail.kernel.org (Postfix) with ESMTP id 24AA021872
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 05:49:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571809763;
+	bh=snDD2TGm/p3To1d+GTgma+dC7mp1sEZRotHc0mSrxgk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Wpq06od6ZIrtzgJ43Qdtb+mZcEkFbYK8uFHZM6LBermKZGVG7UZ9z4WX/trom4LYu
+	 JuyC3773rFXfQydnOkRh080PiumWc55Z8IvQLTSLkmH1MaK8I6/MssqblTaIQ7hjcY
+	 c7xz4W0Xnw9XG/WkFWhgnvRPg98bIBKErsVXyF4g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732528AbfJWFrC (ORCPT
+        id S1732691AbfJWFtV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 01:47:02 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:45840 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730470AbfJWFrC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 01:47:02 -0400
-Received: by mail-qt1-f195.google.com with SMTP id c21so30552797qtj.12
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 22:47:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=f9WOenHv0SsCyblXFz9SFK/8h5V+cleS3WS1obhs2JY=;
-        b=gxgo2Wt/VlyBqp8oFAAjLMqC7k6nO1YSO/FNF8dk3j8nQ/EyIVLKI1nKcU4jaQFYuU
-         NA+GgyhtaPNe6gPJ70LLC9kx3OcU/3gnBgfGK0MZM9a+5gYDBVXmqoNLVtk0xbQiVFv7
-         9DgWISHTNoakaUGNQ5mW2JiN0MB7z/0Nj0axNTWpDRIwxpQi9IqSXpJcM6+kExdpncMd
-         C3PeQUmGZQqF+BXLAAtqIxAd9yebkNPNVz/Zc8vGbFjcH30VnzUH6x7eSTxlqUPm2MTT
-         wNTBO6b2qK0aD24xtQAV1IKh/FV6VleRo0XzYyJEWFl1ZPi1yEx+gLnXE1tkULKUxz2t
-         KvXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=f9WOenHv0SsCyblXFz9SFK/8h5V+cleS3WS1obhs2JY=;
-        b=SbLtYG2q2I3XPuftSna6WYxiZeg71c2aE2YSXotDZ4/vmIajLR78OFVNaGhXYiuxJA
-         qUVgNgl58irnU5mX2kgMhP6r/HmLfU+2fqrqHFg6G6GDDjpHBdLS5jqGJhGmMqVHtyPB
-         kOJ6yDY7h3U1th3afSuhtXdAtahIUzMUelfTijcPwo9Lye1jR2r8+b1krLWOQUJoaDLJ
-         HZzAqU5/aOx0Qw03xrLZVC9p5YnBb1GyzqErydXybPflY4qH0P6JCa2edtbj0FgQ/Y5/
-         9Zw719hxwgegOjfO4rr8UIluqYydiWsCwjeP1rr4WUEBBg13g5nc4sCYDUW1+tORCgqk
-         USfg==
-X-Gm-Message-State: APjAAAXLDLsrZjTgKD2TLQ/CxRzzmHxvTZQn5HSINo0gmzrLcr9cfpre
-        vrKRAnG4i1DJlP98ZtU7nKtOih0bzBirjVYVB9w=
-X-Google-Smtp-Source: APXvYqwF3Ej0HdjncpvSi+yzIRxGTr1udcCX4dDn3d3Q9Eb4jGIEwxYSlVQ4eXGb/yYYjy5FM58Xc/XHPIUIPBQLjhU=
-X-Received: by 2002:ac8:542:: with SMTP id c2mr7578807qth.338.1571809621155;
- Tue, 22 Oct 2019 22:47:01 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191018080841.26712-1-paul.walmsley@sifive.com> <20191018080841.26712-6-paul.walmsley@sifive.com>
-In-Reply-To: <20191018080841.26712-6-paul.walmsley@sifive.com>
-From:   Greentime Hu <green.hu@gmail.com>
-Date:   Wed, 23 Oct 2019 13:46:24 +0800
-Message-ID: <CAEbi=3dk0R3HMnqsK1mSm2bewecdHm279f9zEq1pHWLPo9tdAg@mail.gmail.com>
-Subject: Re: [PATCH v3 5/8] riscv: mark some code and data as file-static
-To:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Mao Han <han_mao@c-sky.com>, Guo Ren <guoren@kernel.org>,
-        Greentime Hu <greentime.hu@sifive.com>
-Cc:     linux-riscv@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 23 Oct 2019 01:49:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44044 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731847AbfJWFtV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 01:49:21 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC981214B2;
+        Wed, 23 Oct 2019 05:49:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571809760;
+        bh=snDD2TGm/p3To1d+GTgma+dC7mp1sEZRotHc0mSrxgk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=jXp1j7nLsX2w5XE8QjSsMsPsl6XNtnpXMoeAsWx7LgtVt9dh19xs8SCMDNPbgwxPw
+         6VN5Z0HebFWqLdi6aej3/2KW2YqTHTNy4xg/jI9KXWPKB8I7d7f0qw7Zlc1qKC0QQ9
+         a4iUCnJ0h0ATuVIBaLQ15t9K3Wj/afO/hHwllWRU=
+Date:   Wed, 23 Oct 2019 14:49:16 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Masami Hiramatsu <mhiramat@redhat.com>
+Subject: Re: linux-next: Tree for Oct 14 (insn_decoder_test)
+Message-Id: <20191023144916.2cbd0ea16363b4cd4574f5ad@kernel.org>
+In-Reply-To: <2d83682b-6206-4992-63cc-342d61641c0a@infradead.org>
+References: <20191014174707.469f596f@canb.auug.org.au>
+        <2d83682b-6206-4992-63cc-342d61641c0a@infradead.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Paul Walmsley <paul.walmsley@sifive.com> =E6=96=BC 2019=E5=B9=B410=E6=9C=88=
-19=E6=97=A5 =E9=80=B1=E5=85=AD =E4=B8=8B=E5=8D=883:58=E5=AF=AB=E9=81=93=EF=
-=BC=9A
->
-> Several functions and arrays which are only used in the files in which
-> they are declared are missing "static" qualifiers.  Warnings for these
-> symbols are reported by sparse:
->
-> arch/riscv/kernel/stacktrace.c:22:14: warning: symbol 'walk_stackframe' w=
-as not declared. Should it be static?
-> arch/riscv/kernel/vdso.c:28:18: warning: symbol 'vdso_data' was not decla=
-red. Should it be static?
-> arch/riscv/mm/init.c:42:6: warning: symbol 'setup_zero_page' was not decl=
-ared. Should it be static?
-> arch/riscv/mm/init.c:152:7: warning: symbol 'fixmap_pte' was not declared=
-. Should it be static?
-> arch/riscv/mm/init.c:211:7: warning: symbol 'trampoline_pmd' was not decl=
-ared. Should it be static?
-> arch/riscv/mm/init.c:212:7: warning: symbol 'fixmap_pmd' was not declared=
-. Should it be static?
-> arch/riscv/mm/init.c:219:7: warning: symbol 'early_pmd' was not declared.=
- Should it be static?
-> arch/riscv/mm/sifive_l2_cache.c:145:12: warning: symbol 'sifive_l2_init' =
-was not declared. Should it be static?
->
-> Resolve these warnings by marking them as static.
->
-> Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
-> ---
->  arch/riscv/kernel/stacktrace.c  |  6 ++++--
->  arch/riscv/kernel/vdso.c        |  2 +-
->  arch/riscv/mm/init.c            | 12 +++++++-----
->  arch/riscv/mm/sifive_l2_cache.c |  2 +-
->  4 files changed, 13 insertions(+), 9 deletions(-)
->
-> diff --git a/arch/riscv/kernel/stacktrace.c b/arch/riscv/kernel/stacktrac=
-e.c
-> index 0940681d2f68..fd908baed51c 100644
-> --- a/arch/riscv/kernel/stacktrace.c
-> +++ b/arch/riscv/kernel/stacktrace.c
-> @@ -19,8 +19,10 @@ struct stackframe {
->         unsigned long ra;
->  };
->
-> -void notrace walk_stackframe(struct task_struct *task, struct pt_regs *r=
-egs,
-> -                            bool (*fn)(unsigned long, void *), void *arg=
-)
-> +static void notrace walk_stackframe(struct task_struct *task,
-> +                                   struct pt_regs *regs,
-> +                                   bool (*fn)(unsigned long, void *),
-> +                                   void *arg)
+Hi,
 
-I think walk_stackframe() could not be static because it will be used
-in perf_callchain.c.
+On Mon, 14 Oct 2019 08:30:02 -0700
+Randy Dunlap <rdunlap@infradead.org> wrote:
+
+> On 10/13/19 11:47 PM, Stephen Rothwell wrote:
+> > Hi all,
+> > 
+> > Changes since 20191011:
+> > 
+> 
+> on x86_64:
+> 
+>   HOSTCC  arch/x86/tools/insn_decoder_test
+>   HOSTCC  arch/x86/tools/insn_sanity
+>   TEST    posttest
+> arch/x86/tools/insn_decoder_test: warning: Found an x86 instruction decoder bug, please report this.
+> arch/x86/tools/insn_decoder_test: warning: ffffffff81000bf1:	f7 0b 00 01 08 00    	testl  $0x80100,(%rbx)
+> arch/x86/tools/insn_decoder_test: warning: objdump says 6 bytes, but insn_get_length() says 2
+> arch/x86/tools/insn_decoder_test: warning: Decoded and checked 11913894 instructions with 1 failures
+>   TEST    posttest
+> arch/x86/tools/insn_sanity: Success: decoded and checked 1000000 random instructions with 0 errors (seed:0x871ce29c)
+
+Hmm, curious.
+
+x86-opcode-map.txt said,
+f7: Grp3_2 Ev (1A)
+
+and "0x0b" is 00001011b, Group encoding bits are 5,4,3 (reg field),
+so group index is 001.
+
+GrpTable: Grp3_2
+0: TEST Ev,Iz
+1:
+
+Hmm, "f7 0b" is not assigned to any instruction... (testl should be f7 03)
+
+I've checked Intel SDM May 2019 version(*), but the Opcode Map (Table A-6. Opecode
+Extensions for One- and Two-byte Opecodes by Group Number) showed the group index
+001 is still blank. I've also checked that Table B-13 (General Purpose Instruction
+ Formats and Encodings for Non-64-Bit Modes (Note that this has no REX prefix)) but
+I couldn't find "f7 0b".
+
+At last, I found that on AMD64 Architecture Programmer's Manual Volume 3, Appendix A.2
+Table A-6. ModRM.reg Extensions for the Primary Opcode Map(**), which shows that both
+f7 + reg=000 and f7 + reg=001 are same. So only on AMD64, it is officially available
+instruction.
+
+(*) https://software.intel.com/sites/default/files/managed/a4/60/325383-sdm-vol-2abcd.pdf
+(**) https://www.amd.com/system/files/TechDocs/24594.pdf
+
+OK, so this should be fixed with below patch.
+
+------
+From b3f45b86df25be59fcf417730ab4c69c6310eaad Mon Sep 17 00:00:00 2001
+From: Masami Hiramatsu <mhiramat@kernel.org>
+Date: Wed, 23 Oct 2019 14:45:35 +0900
+Subject: [PATCH] x86/decoder: Add TEST opcode to Group3-2
+
+Add TEST opcode to Group3-2 reg=001b as same as Group3-1 does.
+
+Commit 12a78d43de76 ("x86/decoder: Add new TEST instruction pattern")
+added a TEST opcode assignment to f6 XX/001/XXX (Group 3-1), but not
+added f7 XX/001/XXX (Group 3-2). Actually these TEST opcode is not
+described in Intel SDM Vol2, but described in AMD64 Architecture
+Programmer's Manual Vol.3, Appendix A.2 Table A-6. ModRM.reg
+Extensions for the Primary Opcode Map.
+
+Without this fix, Randy found a warning by insn_decoder_test related
+to this issue as below.
+
+  HOSTCC  arch/x86/tools/insn_decoder_test
+  HOSTCC  arch/x86/tools/insn_sanity
+  TEST    posttest
+arch/x86/tools/insn_decoder_test: warning: Found an x86 instruction decoder bug, please report this.
+arch/x86/tools/insn_decoder_test: warning: ffffffff81000bf1:	f7 0b 00 01 08 00    	testl  $0x80100,(%rbx)
+arch/x86/tools/insn_decoder_test: warning: objdump says 6 bytes, but insn_get_length() says 2
+arch/x86/tools/insn_decoder_test: warning: Decoded and checked 11913894 instructions with 1 failures
+  TEST    posttest
+arch/x86/tools/insn_sanity: Success: decoded and checked 1000000 random instructions with 0 errors (seed:0x871ce29c)
+
+To fix this error, add TEST opcode according to AMD64 APM Vol.3.
+
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+---
+ arch/x86/lib/x86-opcode-map.txt       | 2 +-
+ tools/arch/x86/lib/x86-opcode-map.txt | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/lib/x86-opcode-map.txt b/arch/x86/lib/x86-opcode-map.txt
+index e0b85930dd77..4635ce298d1d 100644
+--- a/arch/x86/lib/x86-opcode-map.txt
++++ b/arch/x86/lib/x86-opcode-map.txt
+@@ -907,7 +907,7 @@ EndTable
+ 
+ GrpTable: Grp3_2
+ 0: TEST Ev,Iz
+-1:
++1: TEST Ev,Iz
+ 2: NOT Ev
+ 3: NEG Ev
+ 4: MUL rAX,Ev
+diff --git a/tools/arch/x86/lib/x86-opcode-map.txt b/tools/arch/x86/lib/x86-opcode-map.txt
+index e0b85930dd77..4635ce298d1d 100644
+--- a/tools/arch/x86/lib/x86-opcode-map.txt
++++ b/tools/arch/x86/lib/x86-opcode-map.txt
+@@ -907,7 +907,7 @@ EndTable
+ 
+ GrpTable: Grp3_2
+ 0: TEST Ev,Iz
+-1:
++1: TEST Ev,Iz
+ 2: NOT Ev
+ 3: NEG Ev
+ 4: MUL rAX,Ev
+-- 
+2.20.1
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
