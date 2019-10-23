@@ -2,89 +2,154 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F7C7CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:26:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC1D7CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:27:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7764521906
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:26:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCB2F21925
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:27:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391979AbfJWN0i (ORCPT
+        id S2405854AbfJWN1H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 09:26:38 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:39289 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389928AbfJWN0i (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 09:26:38 -0400
-Received: from mail-qt1-f177.google.com ([209.85.160.177]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MwgKC-1i459K22OI-00y8o6; Wed, 23 Oct 2019 15:26:36 +0200
-Received: by mail-qt1-f177.google.com with SMTP id t8so14694157qtc.6;
-        Wed, 23 Oct 2019 06:26:36 -0700 (PDT)
-X-Gm-Message-State: APjAAAU1tvN3jqPtS6ucrhW9U06BIr3ClfPYQaluNbMdSL//yT2QUilw
-        b1F0gqKyccXbW3wxleHV7NHLemhJpqC7XBMf18s=
-X-Google-Smtp-Source: APXvYqxAZ5sW4MUn7hs0uPvxFoT5m55RrQo24Ahjlcek7m7qX3oExJe4OpV4BiqYQAQiBrLzW5XHJy3sKNWlb5r7mmE=
-X-Received: by 2002:ad4:5011:: with SMTP id s17mr8084805qvo.210.1571837195091;
- Wed, 23 Oct 2019 06:26:35 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191010202802.1132272-1-arnd@arndb.de> <20191010203043.1241612-1-arnd@arndb.de>
- <20191010203043.1241612-3-arnd@arndb.de> <20191023124648.GE11048@pi3>
-In-Reply-To: <20191023124648.GE11048@pi3>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 23 Oct 2019 15:26:18 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a0_iYkpK45HmLGYObEXkYbCjDjoDdZXS5Eybw9hPYC=CQ@mail.gmail.com>
-Message-ID: <CAK8P3a0_iYkpK45HmLGYObEXkYbCjDjoDdZXS5Eybw9hPYC=CQ@mail.gmail.com>
-Subject: Re: [PATCH 03/36] usb: gadget: s3c: use platform resources
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Felipe Balbi <balbi@kernel.org>,
-        "moderated list:ARM/SAMSUNG EXYNOS ARM ARCHITECTURES" 
-        <linux-samsung-soc@vger.kernel.org>,
+        Wed, 23 Oct 2019 09:27:07 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42128 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726636AbfJWN1H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 09:27:07 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 9620CB88B;
+        Wed, 23 Oct 2019 13:27:04 +0000 (UTC)
+Subject: Re: [RFC PATCH 1/2] mm, vmstat: hide /proc/pagetypeinfo from normal
+ users
+To:     Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@suse.de>, Waiman Long <longman@redhat.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>, Roman Gushchin <guro@fb.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Jann Horn <jannh@google.com>, Song Liu <songliubraving@fb.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:JyBlGR1sxo3dSE4MR9v+8MBkEF3qa+6oFZyj0ASbrjNJ6n+xWVC
- /HFwzZHk+sodjDeC+bxfXLB4Lki30kkwdHymlKEErsDd6BB/AY+FtN/DcRmgg8I2ZPDpIeo
- Ngkswh39yISPn0npljPSCbvACe0GdYZuK3ykFcsbxr9ebKcvLYJ5eZJfdNPcjufGYiaQrpc
- L2XIKN5aeOPXMkhtSVTVQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:HFWpun0t+3g=:NxVkhyXE3OtsUPvDwwMAIR
- PuJ+d2zVUDR3Dt9OLm8pMLjyMcKi3uVFgdVIKxJRrXzaaC/yNHnKq0GGnbQO990GKE0cM5duE
- 1y7LYaQfIHfaMREaSnwbztWFzxA6sogqkfJfpH+VZkunckkPtckHSZmYpNmHNparBmYPVkjUR
- oqU3tgyW9CnpsTA/v7MVNkMnYNsL8KPQ0fArt9h0+snflLoOP4sto5i+luTF8JyPXhihEA+WK
- CMF1xu6oTAY9A6+uADIgJN3IeYXQ1nBrKxdRJ38JVbfvr3OO/vcuEbfnoAPiFR83hLGHPgS3m
- M+/iMIttssravt9Tss7WO2/XY9cuYv+luHnfS2m1feZfX8Emn8F+zEtYzsNCHRSD0T8gBf/qj
- d/Olt60SnjyWyeJri+FQdhMh0KSWbUuFarKo3coO/STnGUXi65Q2/YLoo+WOUyHjr47lTuq0r
- WfDiFYKpiUtoClX+jAwBz70/Xq8ptxj6/32OqbDmFj6RPvhjDxMVgLdYx42/WKoP8Fghr50Ns
- y6Cm39RDfHVLDW2k2epE9Z7VkuzLlT60zDvDADdx+0qx0ywjj7G4Rq9Pq3kwnOMTwDNb3JYNK
- jbr98iOiYjFy4rYKujQUtDEsl4voujOLyjzcXiQbYm+4SKUQOFwvmNUOYdammPbE3CIiHaBc5
- TZT+pLQSS/7xo3YpqwkJnPUhrk17NH8UM522vc6e257kUMjPICOCdIHp/bQtyQXPKcaAqAzjw
- WArvsEV1xP2fiXrMvbhNsprSpGQLXNoYQSxVlPu/gFn/X96wQfF5eIfTHHd33j3tH7Bo+Y22Z
- 9/UVNkSviqCTnnILmYGNx6s/+D3Y6muGFTzV9zxxuGe3iYJdLoH8/pWIzgm6VsWCeYoQEjqC1
- lEX2tLg/lSHY2IgoKEdA==
+        Rafael Aquini <aquini@redhat.com>, linux-mm@kvack.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Michal Hocko <mhocko@suse.com>
+References: <20191023095607.GE3016@techsingularity.net>
+ <20191023102737.32274-1-mhocko@kernel.org>
+ <20191023102737.32274-2-mhocko@kernel.org>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <6badc687-5559-df0f-1ec0-daab5d34b172@suse.cz>
+Date:   Wed, 23 Oct 2019 15:27:04 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
+MIME-Version: 1.0
+In-Reply-To: <20191023102737.32274-2-mhocko@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 2:47 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> On Thu, Oct 10, 2019 at 10:29:47PM +0200, Arnd Bergmann wrote:
-> > The resources are correctly initialized, so just use them
-> > instead of relying on hardcoded data from platform headers.
->
-> Generic comment to all patches - you seem to break commit msg lines
-> slightly too early. In certain cases it makes them unnecessarily longer.
-> Maybe your editor has to be fixed to wrap at 75 column.
+On 10/23/19 12:27 PM, Michal Hocko wrote:
+> From: Michal Hocko <mhocko@suse.com>
+> 
+> /proc/pagetypeinfo is a debugging tool to examine internal page
+> allocator state wrt to fragmentation. It is not very useful for
+> any other use so normal users really do not need to read this file.
+> 
+> Waiman Long has noticed that reading this file can have negative side
+> effects because zone->lock is necessary for gathering data and that
+> a) interferes with the page allocator and its users and b) can lead to
+> hard lockups on large machines which have very long free_list.
+> 
+> Reduce both issues by simply not exporting the file to regular users.
+> 
+> Reported-by: Waiman Long <longman@redhat.com>
+> Cc: stable
+> Signed-off-by: Michal Hocko <mhocko@suse.com>
 
-I tend to use '/usr//bin/fmt' with the default setting. I think the idea of that
-default is that an email reply with added '>' characters doesn't immediately
-have to reflow the text.
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
 
-       Arnd
+> ---
+>  mm/vmstat.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/mm/vmstat.c b/mm/vmstat.c
+> index 6afc892a148a..4e885ecd44d1 100644
+> --- a/mm/vmstat.c
+> +++ b/mm/vmstat.c
+> @@ -1972,7 +1972,7 @@ void __init init_mm_internals(void)
+>  #endif
+>  #ifdef CONFIG_PROC_FS
+>  	proc_create_seq("buddyinfo", 0444, NULL, &fragmentation_op);
+> -	proc_create_seq("pagetypeinfo", 0444, NULL, &pagetypeinfo_op);
+> +	proc_create_seq("pagetypeinfo", 0400, NULL, &pagetypeinfo_op);
+>  	proc_create_seq("vmstat", 0444, NULL, &vmstat_op);
+>  	proc_create_seq("zoneinfo", 0444, NULL, &zoneinfo_op);
+>  #endif
+> 
+
