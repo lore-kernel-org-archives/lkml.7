@@ -2,94 +2,142 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FDA7CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 01:17:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC80ECA9EA0
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 01:24:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FB0C20679
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 01:17:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85ECC20679
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 01:24:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="LBUyp9Pf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732617AbfJWBRC (ORCPT
+        id S1732829AbfJWBYI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 21:17:02 -0400
-Received: from mga04.intel.com ([192.55.52.120]:50268 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727851AbfJWBRC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 21:17:02 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Oct 2019 18:17:01 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,218,1569308400"; 
-   d="scan'208";a="372722536"
-Received: from unknown (HELO localhost) ([10.239.159.128])
-  by orsmga005.jf.intel.com with ESMTP; 22 Oct 2019 18:17:00 -0700
-Date:   Wed, 23 Oct 2019 09:19:51 +0800
-From:   Yang Weijiang <weijiang.yang@intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Yang Weijiang <weijiang.yang@intel.com>,
-        Jim Mattson <jmattson@google.com>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
-Subject: Re: [PATCH v7 5/7] kvm: x86: Add CET CR4 bit and XSS support
-Message-ID: <20191023011951.GB27009@local-michael-cet-test>
-References: <20190927021927.23057-1-weijiang.yang@intel.com>
- <20190927021927.23057-6-weijiang.yang@intel.com>
- <CALMp9eStz-VCv5G60KFtumQ8W1Jqf9bOcK_=KwL1P3LLjgajnQ@mail.gmail.com>
- <20191017195642.GJ20903@linux.intel.com>
- <20191018015802.GD2286@local-michael-cet-test>
- <20191022201321.GN2343@linux.intel.com>
+        Tue, 22 Oct 2019 21:24:08 -0400
+Received: from mail-eopbgr700051.outbound.protection.outlook.com ([40.107.70.51]:14176
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727851AbfJWBYI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 21:24:08 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bkEFZEvpjFeRl9guLX5ia9K3AgAgkhRVx9Psh3iyQus81wufjqRm+1fvbY0LlmzNpxDkZ+VZ4+FOubYPabddISnyZy81SyXcgYVf60sc2BWti/K2XT7hucQrPl4Fpt34O7+EbN9iAt73uacdaMA60dN0nXFCWGltGmrNKLI3tLemSz7KC5cKSx3kx2Kcdv3VICsiKtD9MC4zj1dIr2UziCDTPXVshJu/43vPB++7XDBIHaEafrmmsPIXKMtx8epyWZtoSyM+QcoXXOpRbjpjy9s/BPzKNazY0l5GR1tbvzs0db67a/bZo19auI98yJNZFGHQInGsU5N7c5qNbJjv0A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AOIS7gRbTIur2wsF5YyfSrX/ijbRy0NAZyQBmdYrOkc=;
+ b=EMhOTct1RiQ6Fwe/3SoK2SQXhBgIZZt53EKnOPeVGOevSxmPdxxj4GNJ4cP8790PSLADPTXizGy3GecHj2WCWf8kaBQEWoi80xnT+sakgMxY4Qq6KzKqcSICBxZTawbZyHTMAMbWosUXgTTgFPD7uHkfzZFFUYCY5ZE/JxJUslXNW+vBeL0334CTdsyCMdEo2lp8iIkxfm2aQvD74cU6Ewv/JMq+xZmGsFd5V4iJzTzi604a8FrPQe4uIpc6fhQT3p6zHNulJGmsTJsQ5iPbVUlN2RfjikQuBNIEXZsS6+xKtwaRVnA44ZvntLG8PMHS38mhvCA0FCDa7NdMneX1tw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synaptics.com; dmarc=pass action=none
+ header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AOIS7gRbTIur2wsF5YyfSrX/ijbRy0NAZyQBmdYrOkc=;
+ b=LBUyp9Pfv2dnYKHKy9UC+2r5OpIi3IROPMU2dNezqtn8S+/6Q3jrT5vq7MYyiHDd/BWAWvRGOnS32lofIchCdf46cQRQpvq8XWrE/nb+tXIMhppee9Si7naoQFutSzSaG0/FGSjiSas+nndB5RHgIBld4CtakEeliJYb6U4mbKo=
+Received: from BYAPR03MB4135.namprd03.prod.outlook.com (20.177.127.85) by
+ BYAPR03MB3669.namprd03.prod.outlook.com (52.135.214.24) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2367.24; Wed, 23 Oct 2019 01:24:03 +0000
+Received: from BYAPR03MB4135.namprd03.prod.outlook.com
+ ([fe80::d168:6b9a:e289:e124]) by BYAPR03MB4135.namprd03.prod.outlook.com
+ ([fe80::d168:6b9a:e289:e124%4]) with mapi id 15.20.2347.029; Wed, 23 Oct 2019
+ 01:24:03 +0000
+From:   Andrew Duggan <aduggan@synaptics.com>
+To:     "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Andrew Duggan <aduggan@synaptics.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Federico Cerutti <federico@ceres-c.it>,
+        Christopher Heiny <Cheiny@synaptics.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH] HID: rmi: Check that the RMI_STARTED bit is set before
+ unregistering the RMI transport device
+Thread-Topic: [PATCH] HID: rmi: Check that the RMI_STARTED bit is set before
+ unregistering the RMI transport device
+Thread-Index: AQHViUCO+DvinpbczkaNw8YBbxu2fw==
+Date:   Wed, 23 Oct 2019 01:24:03 +0000
+Message-ID: <20191023012344.20998-1-aduggan@synaptics.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [192.147.44.15]
+x-clientproxiedby: BYAPR21CA0007.namprd21.prod.outlook.com
+ (2603:10b6:a03:114::17) To BYAPR03MB4135.namprd03.prod.outlook.com
+ (2603:10b6:a03:77::21)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=aduggan@synaptics.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.20.1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 3a11bf00-b12c-4763-98af-08d75757b08d
+x-ms-traffictypediagnostic: BYAPR03MB3669:
+x-ms-exchange-purlcount: 1
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR03MB366938EDC5D3D61D9367CA67B26B0@BYAPR03MB3669.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 019919A9E4
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(366004)(346002)(39860400002)(136003)(396003)(189003)(199004)(186003)(966005)(2616005)(478600001)(14454004)(50226002)(86362001)(25786009)(66556008)(81166006)(1076003)(8936002)(8676002)(64756008)(66476007)(66446008)(486006)(66066001)(66946007)(2501003)(81156014)(102836004)(256004)(14444005)(476003)(26005)(6506007)(386003)(5660300002)(52116002)(305945005)(7736002)(110136005)(6116002)(3846002)(6486002)(4326008)(6512007)(71190400001)(6436002)(6306002)(2906002)(99286004)(54906003)(36756003)(71200400001)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR03MB3669;H:BYAPR03MB4135.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
+received-spf: None (protection.outlook.com: synaptics.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: lbzZXOSBX0+Jq8LuSEZ+xHClqMlQ2k8m8FiqyrM6pNx0fCBB1BDl1Lco7YWl1y/alTUdxpDOIHpM/M1glFPlbQlUgHXWd4DG+XY3mylxtLi8no3HHSeq4KJ9wTFxGWgoghbs1Bre9ZLs3rb/o4/EqI2uhAopeEcDEiMdEITW6/9mn/PyxzgWNZzpPwnchC/QpgosDsgBduQuzb4i3ziqzksXkqjjWwBiKYH1iciM+VGwxjDud90zAyJ3tVLhJPhZL7nXWMoBkcFF5s/l2ELMb054xncFdqFGS0MgYef3lILmULMQ8aGSt/W2Z7FBDv47sOU9vhEDHfnq1WsIsfAmFAWNIBX0divHTLrnxNMKtn9Oj8twKmNw2BNm8cbaPViJeNQsBeNTc0luXjpXklxSyuWG4m98XfidFAFxZYAUOsVrxPjhKdBVo1oxojmyHSnhtjUSCKBkhmi7QpAKWNCqMkGA6ZC+Th18nCZuIUhhAR0=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191022201321.GN2343@linux.intel.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+X-OriginatorOrg: synaptics.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3a11bf00-b12c-4763-98af-08d75757b08d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Oct 2019 01:24:03.4793
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 335d1fbc-2124-4173-9863-17e7051a2a0e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Ivbaczdprqb1zgQgWufsKMGt4ZGqGRcac76u4FySy/xoutyQwTlDJl55PhZe0zM1oFOWc3xcZus4g/k9GHswRA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB3669
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 01:13:21PM -0700, Sean Christopherson wrote:
-> On Fri, Oct 18, 2019 at 09:58:02AM +0800, Yang Weijiang wrote:
-> > On Thu, Oct 17, 2019 at 12:56:42PM -0700, Sean Christopherson wrote:
-> > > On Wed, Oct 02, 2019 at 12:05:23PM -0700, Jim Mattson wrote:
-> > > > > +               u64 kvm_xss = kvm_supported_xss();
-> > > > > +
-> > > > > +               best->ebx =
-> > > > > +                       xstate_required_size(vcpu->arch.xcr0 | kvm_xss, true);
-> > > > 
-> > > > Shouldn't this size be based on the *current* IA32_XSS value, rather
-> > > > than the supported IA32_XSS bits? (i.e.
-> > > > s/kvm_xss/vcpu->arch.ia32_xss/)
-> > > 
-> > > Ya.
-> > >
-> > I'm not sure if I understand correctly, kvm_xss is what KVM supports,
-> > but arch.ia32_xss reflects what guest currently is using, shoudn't CPUID
-> > report what KVM supports instead of current status?
-> > Will CPUID match current IA32_XSS status if guest changes it runtime?
-> 
-> Not in this case.  Select CPUID output is dependent on current state as
-> opposed to being a constant defind by hardware.  Per the SDM, EBX is:
-> 
->   The size in bytes of the XSAVE area containing all states enabled by
->   XCRO | IA32_XSS
-> 
-> Since KVM is emulating CPUID for the guest, XCR0 and IA32_XSS in this
-> context refers to the guest's current/actual XCR0/IA32_XSS values.  The
-> purpose of this behavior is so that software can call CPUID to query the
-> actual amount of memory that is needed for XSAVE(S), as opposed to the
-> absolute max size that _might_ be needed.
-> 
-> MONITOR/MWAIT is the other case that comes to mind where CPUID dynamically
-> reflects configured state, e.g. MWAIT is reported as unsupported if it's
-> disabled via IA32_MISC_ENABLE MSR.
-Yep, make sense, thank you for explanation.
+In the event that the RMI device is unreachable, the calls to
+rmi_set_mode() or rmi_set_page() will fail before registering the RMI
+transport device. When the device is removed, rmi_remove() will call
+rmi_unregister_transport_device() which will attempt to access the
+rmi_dev pointer which was not set. This patch adds a check of the
+RMI_STARTED bit before calling rmi_unregister_transport_device().
+The RMI_STARTED bit is only set after rmi_register_transport_device()
+completes successfully. A subsequent patch in the RMI core will add
+checks to validate the pointers before accessing them.
+
+The kernel oops was reported in this message:
+https://www.spinics.net/lists/linux-input/msg58433.html
+
+Signed-off-by: Andrew Duggan <aduggan@synaptics.com>
+Reported-by: Federico Cerutti <federico@ceres-c.it>
+---
+ drivers/hid/hid-rmi.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/hid/hid-rmi.c b/drivers/hid/hid-rmi.c
+index 7c6abd7e0979..9ce22acdfaca 100644
+--- a/drivers/hid/hid-rmi.c
++++ b/drivers/hid/hid-rmi.c
+@@ -744,7 +744,8 @@ static void rmi_remove(struct hid_device *hdev)
+ {
+ 	struct rmi_data *hdata =3D hid_get_drvdata(hdev);
+=20
+-	if (hdata->device_flags & RMI_DEVICE) {
++	if ((hdata->device_flags & RMI_DEVICE)
++	    && test_bit(RMI_STARTED, &hdata->flags)) {
+ 		clear_bit(RMI_STARTED, &hdata->flags);
+ 		cancel_work_sync(&hdata->reset_work);
+ 		rmi_unregister_transport_device(&hdata->xport);
+--=20
+2.20.1
+
