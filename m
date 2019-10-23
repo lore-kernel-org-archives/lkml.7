@@ -2,141 +2,88 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18130C47E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 16:24:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB7FACA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 16:25:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E19E221A4C
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 16:24:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD3742084C
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 16:25:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aRXrGlK6"
+	dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b="jnyA/zUO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407252AbfJWQYs (ORCPT
+        id S2436492AbfJWQZj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 12:24:48 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:60101 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2404822AbfJWQYr (ORCPT
+        Wed, 23 Oct 2019 12:25:39 -0400
+Received: from vulcan.natalenko.name ([104.207.131.136]:57578 "EHLO
+        vulcan.natalenko.name" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389149AbfJWQZj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 12:24:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571847887;
+        Wed, 23 Oct 2019 12:25:39 -0400
+Received: from mail.natalenko.name (vulcan.natalenko.name [IPv6:fe80::5400:ff:fe0c:dfa0])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by vulcan.natalenko.name (Postfix) with ESMTPSA id CFB2060CD4E;
+        Wed, 23 Oct 2019 18:25:35 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=natalenko.name;
+        s=dkim-20170712; t=1571847935;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=eanOm+wc4jMiTMvGZZMqtnxXgjKabvAJwYAPnub5fDU=;
-        b=aRXrGlK6nW9STh26MP1i9tGRoLNhbL30i8GgsZ0Pgs/oDlSj0BkDp/Qtp+j0YrkI1HzF0B
-        YYbH4l+8L85mJKH3kxw4CZWJv9mro3Ez9rDokap2RUHnxcyoUhjoMlfGkSo49RM/YWAZhP
-        NteRVnptFFYq9zOy78qDHJjTgI5cAv4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-361-nn_WxBf4PueDGKR47J5rTQ-1; Wed, 23 Oct 2019 12:24:43 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EB51780183D;
-        Wed, 23 Oct 2019 16:24:39 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.44])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 364AE6362F;
-        Wed, 23 Oct 2019 16:24:33 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Wed, 23 Oct 2019 18:24:39 +0200 (CEST)
-Date:   Wed, 23 Oct 2019 18:24:32 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Marco Elver <elver@google.com>
-Cc:     LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Alexander Potapenko <glider@google.com>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Borislav Petkov <bp@alien8.de>, Daniel Axtens <dja@axtens.net>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        David Howells <dhowells@redhat.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-efi@vger.kernel.org,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        the arch/x86 maintainers <x86@kernel.org>
-Subject: Re: [PATCH v2 1/8] kcsan: Add Kernel Concurrency Sanitizer
- infrastructure
-Message-ID: <20191023162432.GC14327@redhat.com>
-References: <20191017141305.146193-1-elver@google.com>
- <20191017141305.146193-2-elver@google.com>
- <20191022154858.GA13700@redhat.com>
- <CANpmjNPUT2B3rWaa=5Ee2Xs3HHDaUiBGpG09Q4h9Gemhsp9KFw@mail.gmail.com>
+        bh=T8zzS7fQ1+h8Dch7o2XgPzxblvYJzj9a0o53CwTbiaY=;
+        b=jnyA/zUOIOvhANewA4/U/XLZ/Yg3a6p75ZDGpruHbTgVE0VI+z43o04fM9QZWleV0efy7t
+        wakILwZ4dlR90ml71qd+e8CMJa1hltGwsfHZiM/TRJN9xDLrbq+Q5/4hHoIwQmYQewf3mI
+        tqSHWB4vLQInidp3POEexp11AoVST2E=
 MIME-Version: 1.0
-In-Reply-To: <CANpmjNPUT2B3rWaa=5Ee2Xs3HHDaUiBGpG09Q4h9Gemhsp9KFw@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-MC-Unique: nn_WxBf4PueDGKR47J5rTQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 23 Oct 2019 18:25:35 +0200
+From:   Oleksandr Natalenko <oleksandr@natalenko.name>
+To:     Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+Cc:     Lorenzo Bianconi <lorenzo@kernel.org>,
+        linux-mediatek@lists.infradead.org, Felix Fietkau <nbd@nbd.name>,
+        Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
+        Stanislaw Gruszka <sgruszka@redhat.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Roy Luo <royluo@google.com>, Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: mt76x2e hardware restart
+In-Reply-To: <20191023085039.GB2461@localhost.localdomain>
+References: <deaafa7a3e9ea2111ebb5106430849c6@natalenko.name>
+ <c6d621759c190f7810d898765115f3b4@natalenko.name>
+ <9d581001e2e6cece418329842b2b0959@natalenko.name>
+ <20191012165028.GA8739@lore-desk-wlan.lan>
+ <f7695bc79d40bbc96744a639b1243027@natalenko.name>
+ <96f43a2103a9f2be152c53f867f5805c@natalenko.name>
+ <20191016163842.GA18799@localhost.localdomain>
+ <20191023085039.GB2461@localhost.localdomain>
+Message-ID: <a2f0be152fc9ed53ea10b8e260c23faf@natalenko.name>
+X-Sender: oleksandr@natalenko.name
+User-Agent: Roundcube Webmail/1.3.10
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/22, Marco Elver wrote:
->
-> On Tue, 22 Oct 2019 at 17:49, Oleg Nesterov <oleg@redhat.com> wrote:
-> >
-> > Just for example. Suppose that task->state =3D TASK_UNINTERRUPTIBLE, th=
-is task
-> > does __set_current_state(TASK_RUNNING), another CPU does wake_up_proces=
-s(task)
-> > which does the same UNINTERRUPTIBLE -> RUNNING transition.
-> >
-> > Looks like, this is the "data race" according to kcsan?
->
-> Yes, they are "data races". They are probably not "race conditions" thoug=
-h.
->
-> This is a fair distinction to make, and we never claimed to find "race
-> conditions" only
+Hi.
 
-I see, thanks, just wanted to be sure...
+On 23.10.2019 10:50, Lorenzo Bianconi wrote:
+> I think I spotted the SG issue on mt76x2e. Could you please:
+> - keep pcie_aspm patch I sent
+> - remove the debug patch where I disabled TX Scatter-Gather on mt76x2e
+> - apply the following patch
 
-> KCSAN's goal is to find *data races* according to the LKMM.  Some data
-> races are race conditions (usually the more interesting bugs) -- but
-> not *all* data races are race conditions. Those are what are usually
-> referred to as "benign", but they can still become bugs on the wrong
-> arch/compiler combination. Hence, the need to annotate these accesses
-> with READ_ONCE, WRITE_ONCE or use atomic_t:
+Thanks for the patch. So far so good, I was able to start AP, connect to 
+it and conduct a couple of simple speed tests.
 
-Well, if I see READ_ONCE() in the code I want to understand why it was
-used. Is it really needed for correctness or we want to shut up kcsan?
-Say, why should wait_event(wq, *ptr) use READ_ONCE()? Nevermind, please
-forget.
+I'll use it more today and will let you know in case something breaks.
 
-Btw, why __kcsan_check_watchpoint() does user_access_save() before
-try_consume_watchpoint() ?
-
-Oleg.
-
+-- 
+   Oleksandr Natalenko (post-factum)
