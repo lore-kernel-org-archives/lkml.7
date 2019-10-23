@@ -2,303 +2,126 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB9ECA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 20:08:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E206CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 20:10:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D724921928
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 20:08:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF69121A4C
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 20:10:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hBvZU4+r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733049AbfJWUI4 (ORCPT
+        id S2391305AbfJWUKW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 16:08:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46706 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726008AbfJWUI4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 16:08:56 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3B3520650;
-        Wed, 23 Oct 2019 20:08:53 +0000 (UTC)
-Date:   Wed, 23 Oct 2019 16:08:52 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH 3/3] x86/ftrace: Use text_poke()
-Message-ID: <20191023160852.0606bc68@gandalf.local.home>
-In-Reply-To: <20191023193442.35lhhrqnyn3bfwpq@ast-mbp.dhcp.thefacebook.com>
-References: <20191021231904.4b968dc1@oasis.local.home>
-        <20191022040532.fvpxcs74i4mn4rc6@ast-mbp.dhcp.thefacebook.com>
-        <20191022071956.07e21543@gandalf.local.home>
-        <20191022094455.6a0a1a27@gandalf.local.home>
-        <20191022175052.frjzlnjjfwwfov64@ast-mbp.dhcp.thefacebook.com>
-        <20191022141021.2c4496c2@gandalf.local.home>
-        <20191022204620.jp535nfvfubjngzd@ast-mbp.dhcp.thefacebook.com>
-        <20191022170430.6af3b360@gandalf.local.home>
-        <20191022215841.2qsmhd6vxi4mwade@ast-mbp.dhcp.thefacebook.com>
-        <20191023122307.756b4978@gandalf.local.home>
-        <20191023193442.35lhhrqnyn3bfwpq@ast-mbp.dhcp.thefacebook.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 23 Oct 2019 16:10:22 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:46931 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389786AbfJWUKW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 16:10:22 -0400
+Received: by mail-wr1-f65.google.com with SMTP id n15so12669196wrw.13;
+        Wed, 23 Oct 2019 13:10:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bpwS+F/PeAnITy9k+IFP+J0FMYCUcRVSLDnqP4k8tK4=;
+        b=hBvZU4+rsFkkIkAEUe2UK9p+3+5+JWXtPl1AZcdpLaBuLUxk+tc9T4L0jRNaLQMGVw
+         L+y3LVknu1uoc9CULFzf8dej8BNFwUTSnBIZzaZ6iMqnEGcQ10BglL/pjhbRsbFxA0nG
+         TUqdThzwoDwZu8AijYEmyE0CjhaPz4jnW2qwRoJzTgGNO4lhQchAbhoHa8LC0QfcPbOv
+         g1q9PZPUfgx5oe/ytQHpOxqMmbMNySxPiEVN4Udp/G5hmQpBdyBv4D+tK0ktG3Ky/40m
+         h+3TAhalZNBLSbza7mE3tyVo0jG0X1Kgu7C9aFGpwlAh61iL9Qo30+bbPsMNkVnN2H8m
+         4Cnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bpwS+F/PeAnITy9k+IFP+J0FMYCUcRVSLDnqP4k8tK4=;
+        b=dxd1ArwrZjuJxpHEaGY2XYn4dahMUkk3ADNBqViPLrxwMLfhkMOEXVaw6T6k6+DttR
+         WYxv2+edP3zy2+mOWSku4sl3qJXLJZmENZF5w1/kQgFVHelqkgdcyt1s7kot8KG/7vNO
+         OLhZs22c9AvX96LA+gaQCvOtkcReipPRUX8F6yWx9hlOeHIxKha8wgW2M7CacnrNOQww
+         lK4a5SrENkgOsiE1ji9t87VLqe5adQkYv9pH7705U67fQLbWbq0IYrL4RvWn6BkSPAbk
+         6beO/Ko5CYHZbLUeRR8IbMR/6n96jYSQ20uiz0VrxNCfuw6AYlP7DBjHhXDejVo/4izN
+         A0qA==
+X-Gm-Message-State: APjAAAUGhjRQOtEW6B7xfhhUMlCF03Puluz5cezHTFzzssRA/JzHUKyr
+        UiXFvdSHNYGQNwbCQr1VcYI=
+X-Google-Smtp-Source: APXvYqwp9Wm0ez8TH/4MwrhNc/lRRV96afQBfhg751QLdG3fu7ojJDzZdlM9I3dHNw1gPuQ8UjiZig==
+X-Received: by 2002:a5d:568b:: with SMTP id f11mr449675wrv.301.1571861419759;
+        Wed, 23 Oct 2019 13:10:19 -0700 (PDT)
+Received: from Red.localdomain (lfbn-1-7036-79.w90-116.abo.wanadoo.fr. [90.116.209.79])
+        by smtp.googlemail.com with ESMTPSA id h17sm277261wmb.33.2019.10.23.13.10.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Oct 2019 13:10:18 -0700 (PDT)
+From:   Corentin Labbe <clabbe.montjoie@gmail.com>
+To:     davem@davemloft.net, herbert@gondor.apana.org.au,
+        mark.rutland@arm.com, mripard@kernel.org, robh+dt@kernel.org,
+        wens@csie.org
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com,
+        Corentin Labbe <clabbe.montjoie@gmail.com>
+Subject: [PATCH v2 0/4] crypto: add sun8i-ss driver for Allwinner Security System
+Date:   Wed, 23 Oct 2019 22:10:12 +0200
+Message-Id: <20191023201016.26195-1-clabbe.montjoie@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 23 Oct 2019 12:34:43 -0700
-Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
+Hello
 
-> > Would this work for you?  
-> 
-> Yes!
-> Looks great. More comments below.
+This patch serie adds support for the second version of Allwinner Security System.
+The first generation of the Security System is already handled by the sun4i-ss driver.
+Due to major change, the first driver cannot handle the second one.
+This new Security System is present on A80 and A83T SoCs.
 
-Awesome!
+For the moment, the driver support only DES3/AES in ECB/CBC mode.
+Patchs for CTR/CTS, RSA and RNGs will came later.
 
-> 
-> > 
-> > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> > index 6adaf18b3365..de3372bd08ae 100644
-> > --- a/arch/x86/Kconfig
-> > +++ b/arch/x86/Kconfig
-> > @@ -159,6 +159,7 @@ config X86
-> >  	select HAVE_DYNAMIC_FTRACE
-> >  	select HAVE_DYNAMIC_FTRACE_WITH_REGS
-> >  	select HAVE_DYNAMIC_FTRACE_WITH_IPMODIFY
-> > +	select HAVE_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
-> >  	select HAVE_EBPF_JIT
-> >  	select HAVE_EFFICIENT_UNALIGNED_ACCESS
-> >  	select HAVE_EISA
-> > diff --git a/arch/x86/include/asm/ftrace.h b/arch/x86/include/asm/ftrace.h
-> > index c38a66661576..34da1e424391 100644
-> > --- a/arch/x86/include/asm/ftrace.h
-> > +++ b/arch/x86/include/asm/ftrace.h
-> > @@ -28,6 +28,12 @@ static inline unsigned long ftrace_call_adjust(unsigned long addr)
-> >  	return addr;
-> >  }
-> >  
-> > +static inline void ftrace_set_call_func(struct pt_regs *regs, unsigned long addr)
-> > +{
-> > +	/* Emulate a call */
-> > +	regs->orig_ax = addr;  
-> 
-> This probably needs a longer comment :)
+This serie is tested with CRYPTO_MANAGER_EXTRA_TESTS
+and tested on:
+sun8i-a83t-bananapi-m3
+sun9i-a80-cubieboard4
 
-Yes, when I get this to a submission point, I plan on having *a lot*
-more comments all over the place.
+This serie is based on top of the "crypto: add sun8i-ce driver for
+Allwinner crypto engine" serie.
 
+Regards
 
-> 
-> > +	.if \make_call
-> > +	movq ORIG_RAX(%rsp), %rax
-> > +	movq %rax, MCOUNT_REG_SIZE-8(%rsp)  
-> 
-> reading asm helps.
-> 
-> > +config HAVE_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
-> > +	bool
-> > +
-> >  config HAVE_FTRACE_MCOUNT_RECORD
-> >  	bool
-> >  	help
-> > @@ -565,6 +568,11 @@ config DYNAMIC_FTRACE_WITH_IPMODIFY_ONLY
-> >  	depends on DYNAMIC_FTRACE
-> >  	depends on HAVE_DYNAMIC_FTRACE_WITH_IPMODIFY
-> >  
-> > +config DYNAMIC_FTRACE_WITH_DIRECT_CALLS
-> > +	def_bool y
-> > +	depends on DYNAMIC_FTRACE
-> > +	depends on HAVE_DYNAMIC_FTRACE_WITH_DIRECT_CALLS  
-> 
-> It seems to me that it's a bit of overkill to add new config knob
-> for every ftrace feature.
-> HAVE_DYNAMIC_FTRACE_WITH_DIRECT_CALLS (that arch defined) would
-> be enough to check and return error in register_ftrace_direct()
-> right?
+Changes since v1:
+- fixed uninitialized err in sun8i_ss_allocate_chanlist
+- Added missing commit description on DT Documentation patch
 
-IIRC, we started doing this because it allows the dependencies to be
-defined in the kernel/trace directory. That is, if
-CONFIG_DYNAMIC_FATRCE_WITH_DIRECT_CALLS is set, then we know that
-direct calls *and* DYNAMIC_FTRACE is enabled. It cuts down on some of
-the more complex #if or the arch needing to do
+Corentin Labbe (4):
+  crypto: Add Allwinner sun8i-ss cryptographic offloader
+  dt-bindings: crypto: Add DT bindings documentation for sun8i-ss
+    Security System
+  ARM: dts: sun8i: a83t: Add Security System node
+  ARM: dts: sun9i: a80: Add Security System node
 
- select HAVE_DYNAMIC_FTRACE_WITH_DIRECT_CALLS if DYNAMIC_FTRACE
+ .../bindings/crypto/allwinner,sun8i-ss.yaml   |  64 ++
+ arch/arm/boot/dts/sun8i-a83t.dtsi             |  10 +
+ arch/arm/boot/dts/sun9i-a80.dtsi              |  10 +
+ drivers/crypto/allwinner/Kconfig              |  28 +
+ drivers/crypto/allwinner/Makefile             |   1 +
+ drivers/crypto/allwinner/sun8i-ss/Makefile    |   2 +
+ .../allwinner/sun8i-ss/sun8i-ss-cipher.c      | 438 ++++++++++++
+ .../crypto/allwinner/sun8i-ss/sun8i-ss-core.c | 642 ++++++++++++++++++
+ drivers/crypto/allwinner/sun8i-ss/sun8i-ss.h  | 218 ++++++
+ 9 files changed, 1413 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/crypto/allwinner,sun8i-ss.yaml
+ create mode 100644 drivers/crypto/allwinner/sun8i-ss/Makefile
+ create mode 100644 drivers/crypto/allwinner/sun8i-ss/sun8i-ss-cipher.c
+ create mode 100644 drivers/crypto/allwinner/sun8i-ss/sun8i-ss-core.c
+ create mode 100644 drivers/crypto/allwinner/sun8i-ss/sun8i-ss.h
 
-It may be overkill, but it does keep the pain in one place.
+-- 
+2.21.0
 
-> 
-> > -static struct ftrace_hash *
-> > -__ftrace_hash_move(struct ftrace_hash *src)
-> > +static void transfer_hash(struct ftrace_hash *dst, struct ftrace_hash *src)
-> >  {
-> >  	struct ftrace_func_entry *entry;
-> > -	struct hlist_node *tn;
-> >  	struct hlist_head *hhd;
-> > +	struct hlist_node *tn;
-> > +	int size;
-> > +	int i;
-> > +
-> > +	dst->flags = src->flags;
-> > +
-> > +	size = 1 << src->size_bits;
-> > +	for (i = 0; i < size; i++) {
-> > +		hhd = &src->buckets[i];
-> > +		hlist_for_each_entry_safe(entry, tn, hhd, hlist) {
-> > +			remove_hash_entry(src, entry);
-> > +			__add_hash_entry(dst, entry);  
-> 
-> I don't quite follow why this is needed.
-> I thought alloc_and_copy_ftrace_hash() can already handle it.
-> If that is just unrelated cleanup then sure. Looks good.
-
-The alloc and copy is made to always create a new hash (because of the
-way we do enabling of new filters in the set_ftrace_filter).
-
-I pulled this part out so that the direct_functions hash only needs to
-grow and allocate, when needed. Not to reallocate at every update.
-
-> 
-> > +struct ftrace_ops direct_ops = {
-> > +	.func		= call_direct_funcs,
-> > +	.flags		= FTRACE_OPS_FL_IPMODIFY | FTRACE_OPS_FL_RECURSION_SAFE
-> > +#if 1
-> > +					| FTRACE_OPS_FL_DIRECT
-> > +#endif
-> > +#ifndef CONFIG_DYNAMIC_FTRACE_WITH_IPMODIFY_ONLY
-> > +					| FTRACE_OPS_FL_SAVE_REGS
-> > +#endif  
-> 
-> With FL_DIRECT the CONFIG_DYNAMIC_FTRACE_WITH_IPMODIFY_ONLY won't be needed, right ?
-> At least not for bpf use case.
-> Do you see livepatching using it or switching to FL_DIRECT too?
-
-Correct. I talked with Josh on IRC and we are looking into removing the
-pushf/popf from the ftrace_regs_caller to see if that helps in the
-performance for live patching. I'm also currently working on making
-this patch not on top of the IP modify one, so the IP modify doesn't
-need to be applied.
-
-This also cleans up the asm code a bit more (getting rid of the macro).
-
-
-> 
-> > +	ret = -ENOMEM;
-> > +	if (ftrace_hash_empty(direct_functions) ||
-> > +	    direct_functions->count > 2 * (1 << direct_functions->size_bits)) {
-> > +		struct ftrace_hash *new_hash;
-> > +		int size = ftrace_hash_empty(direct_functions) ? 0 :
-> > +			direct_functions->count + 1;
-> > +		int bits;
-> > +
-> > +		if (size < 32)
-> > +			size = 32;
-> > +
-> > +		for (size /= 2; size; size >>= 1)
-> > +			bits++;
-> > +
-> > +		/* Don't allocate too much */
-> > +		if (bits > FTRACE_HASH_MAX_BITS)
-> > +			bits = FTRACE_HASH_MAX_BITS;
-> > +
-> > +		new_hash = alloc_ftrace_hash(bits);
-> > +		if (!new_hash)
-> > +			goto out_unlock;
-> > +
-> > +		transfer_hash(new_hash, direct_functions);
-> > +		free_ftrace_hash(direct_functions);
-> > +		direct_functions = new_hash;  
-> 
-> That's probably racy, no?
-> ftrace_get_addr_new() is not holding direct_mutex that
-> protects direct_functions.
-
-Yes, there's actually a few places that I noticed needed some more care
-with locking. And I also found some that are missing now (without these
-changes).
-
-I did say this patch is buggy ;-)
-
-
-> 
-> > +	if (!ret && !(direct_ops.flags & FTRACE_OPS_FL_ENABLED))
-> > +		ret = register_ftrace_function(&direct_ops);  
-> 
-> Having single direct_ops is nice.
-> 
-> > @@ -2370,6 +2542,10 @@ unsigned long ftrace_get_addr_new(struct dyn_ftrace *rec)
-> >  {
-> >  	struct ftrace_ops *ops;
-> >  
-> > +	if ((rec->flags & FTRACE_FL_DIRECT) &&
-> > +	    (ftrace_rec_count(rec) == 1))
-> > +		return find_rec_direct(rec->ip);
-> > +  
-> 
-> I've started playing with this function as well to
-> implement 2nd nop approach I mentioned earlier.
-> I'm going to abandon it, since your approach is better.
-> It allows not only bpf, but anyone else to register direct.
-> 
-> I have one more question/request.
-> Looks like ftrace can be turned off with sysctl.
-> Which means that a person or a script can accidently turn it off
-> and all existing kprobe+bpf stuff that is ftrace based will
-> be silently switched off.
-
-See http://lkml.kernel.org/r/20191016113316.13415-1-mbenes@suse.cz
-
-I can (and should) add the PERMANENT flag to the direct_ops.
-
-Note, the PERMANENT patches will be added before this one.
-
-> User services will be impacted and will make people unhappy.
-> I'm not sure how to solve the existing situation,
-> but for FL_DIRECT can you add a check that if particular
-> nop is modified to do direct call then the only interface to
-> turn it off is to call unregister_ftrace_direct().
-> There should no side channel to kill it.
-> ftrace_disable and ftrace_kill make me nervous too.
-
-The ftrace_disable and ftrace_kill is when a bug happens that is so bad
-that the ftrace can probably kill the system. It's time for a reboot.
-
-
-> Fast forward a year and imagine few host critical bpf progs
-> are running in production and relying on FL_DIRECT.
-> Now somebody decided to test new ftrace feature and
-> it hit one of FTRACE_WARN_ON().
-> That will shutdown the whole ftrace and bpf progs
-> will stop executing. I'd like to avoid that.
-> May be I misread the code?
-
-It basically freezes it. Current registered ftrace_ops will not be
-touched. But nothing can be removed or added.
-
-It's basically saying, "Something totally wrong has happened, and if I
-touch the code here, I may panic the box. So don't do anything more!"
-
-And yes, without adding some of theses, I have in fact paniced the box.
-
-This is something that Ingo drilled hard into me, as modifying text is
-such a dangerous operation, that there should be constant checks that
-things are happening the way they expect them to be, and if anomaly
-happens, stop touching everything.
-
-OK, I'll work to get this patch in for the next merge window.
-
-Thanks for the review.
-
--- Steve
