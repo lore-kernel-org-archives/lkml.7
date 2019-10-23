@@ -2,111 +2,124 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E125CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 16:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D619ACA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 16:39:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5340D21872
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 16:38:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nphQWFQT"
+	by mail.kernel.org (Postfix) with ESMTP id B2BF421872
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 16:39:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392537AbfJWQiy (ORCPT
+        id S2392554AbfJWQjy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 12:38:54 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:55890 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733010AbfJWQiy (ORCPT
+        Wed, 23 Oct 2019 12:39:54 -0400
+Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:34133 "EHLO
+        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732359AbfJWQjy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 12:38:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=g0rPJmNeTmtTxNbr9OQMo3pBMMOXbOS/kJjZ7bJPmkI=; b=nphQWFQTNkKWc5QEe0IdwN48p
-        e/VdIDPsCZ/c9RDmnxJUMa9yie4sKXvvh5uKsghz7UEVLbTPSt7HaieuqgIclq78S9N8TcOlNL/On
-        mZL9B3uUIx/kyZbqwOP08sMO1ZE2lF/nY7TzlScTyC9fSYg2QIf35ETmp8P89CLwn8wOLrIn427vc
-        bKlwsqLVUZYwa7D3ipzUWGPSlB7anlyJfPnFuvW7UZ2PP2IwLsBf7goWrHV1t6pm2qTi3w48p8DB/
-        7J3oJUsvc8Lw1ds9p6DAlqqMUpw4lFBDFPnP1py5RsoCR3CZtMqbXckqMUBG+elvZsabhMdFNK9c6
-        yu3O+3K9w==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iNJeu-0001Ny-0e; Wed, 23 Oct 2019 16:38:52 +0000
-Date:   Wed, 23 Oct 2019 09:38:51 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Xiang Zheng <zhengxiang9@huawei.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mingo@redhat.com,
-        peterz@infradead.org, alex.williamson@redhat.com,
-        Wang Haibin <wanghaibin.wang@huawei.com>,
-        Guoheyi <guoheyi@huawei.com>,
-        yebiaoxiang <yebiaoxiang@huawei.com>
-Subject: Re: Kernel panic while doing vfio-pci hot-plug/unplug test
-Message-ID: <20191023163851.GA2963@bombadil.infradead.org>
-References: <2e7293dc-eb27-bce3-c209-e0ba15409f16@huawei.com>
- <20191023151540.GA168080@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191023151540.GA168080@google.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Wed, 23 Oct 2019 12:39:54 -0400
+Received: from unknown (HELO ironmsg02-sd.qualcomm.com) ([10.53.140.142])
+  by alexa-out-sd-01.qualcomm.com with ESMTP; 23 Oct 2019 09:39:52 -0700
+IronPort-SDR: M3iuOL4eGpUFYcFjLzrb+bYBg/KCRcLevKQnJ3+PYFf+Bs94thfVRpJIq3Kkc5JGH80Yag7XH6
+ y2yOaa3AvAkhHtje1lweRvIJXfWIJq5gy6qF1omaCf04mvO4rWmUq6Jd8Os8uInwCz7sYqo6ha
+ L6P8O95cegIhs6D5NcC9TnrxD0G/aqZAcobyj03UVbprdpdUgK6pmR2vYb/No7/sYufbAWX/X7
+ 9Ln/TLU2EJPJnk1vEyWAJtkDKn5xm3lCqy3dta/qESvDcLG1CEfDMmDMXQMo78h9oOVegFYsdN
+ lbrI2TY3h0fqcT1UcH/50k8L
+Received: from asutoshd-linux1.qualcomm.com ([10.46.160.39])
+  by ironmsg02-sd.qualcomm.com with ESMTP; 23 Oct 2019 09:39:52 -0700
+Received: by asutoshd-linux1.qualcomm.com (Postfix, from userid 92687)
+        id 75EDA2135A; Wed, 23 Oct 2019 09:39:52 -0700 (PDT)
+From:   Asutosh Das <asutoshd@codeaurora.org>
+To:     cang@codeaurora.org, rnayak@codeaurora.org, vinholikatti@gmail.com,
+        jejb@linux.vnet.ibm.com, martin.petersen@oracle.com
+Cc:     linux-scsi@vger.kernel.org, kernel-team@android.com,
+        saravanak@google.com, salyzyn@google.com,
+        Asutosh Das <asutoshd@codeaurora.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Subhash Jadavani <subhashj@codeaurora.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2 1/2] scsi: ufs: export hibern8 entry and exit
+Date:   Wed, 23 Oct 2019 09:39:41 -0700
+Message-Id: <1571848785-27698-1-git-send-email-asutoshd@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 10:15:40AM -0500, Bjorn Helgaas wrote:
-> I don't like being one of a handful of callers of __add_wait_queue(),
-> so I like that solution from that point of view.
-> 
-> The 7ea7e98fd8d0 ("PCI: Block on access to temporarily unavailable pci
-> device") commit log suggests that using __add_wait_queue() is a
-> significant optimization, but I don't know how important that is in
-> practical terms.  Config accesses are never a performance path anyway,
-> so I'd be inclined to use add_wait_queue() unless somebody complains.
+Qualcomm controllers need to be in hibern8 before scaling up
+or down the clocks. Hence, export the hibern8 entry and exit
+functions.
 
-Wow, this has got pretty messy in the umpteen years since I last looked
-at it.
+Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
+---
+ drivers/scsi/ufs/ufshcd.c | 8 ++++----
+ drivers/scsi/ufs/ufshcd.h | 3 ++-
+ 2 files changed, 6 insertions(+), 5 deletions(-)
 
-Some problems I see:
-
-1. Commit df65c1bcd9b7b639177a5a15da1b8dc3bee4f5fa (tglx) says:
-
-    x86/PCI: Select CONFIG_PCI_LOCKLESS_CONFIG
-    
-    All x86 PCI configuration space accessors have either their own
-    serialization or can operate completely lockless (ECAM).
-    
-    Disable the global lock in the generic PCI configuration space accessors.
-
-The concept behind this patch is broken.  We still need to lock out
-config space accesses when devices are undergoing D-state transitions.
-I would suggest that for the contention case that tglx is concerned about,
-we should have a pci_bus_read_config_unlocked_##size set of functions
-which can be used for devices we know never go into D states.
-
-
-2. Commit a2e27787f893621c5a6b865acf6b7766f8671328 (jan kiszka)
-   exports pci_lock.  I think this is a mistake; at best there should be
-   accessors for the pci_lock.  But I don't understand why it needs to
-   exclude PCI config space changes throughout pci_check_and_set_intx_mask().
-   Why can it not do:
-
--	bus->ops->read(bus, dev->devfn, PCI_COMMAND, 4, &cmd_status_dword);
-+	pci_read_config_dword(dev, PCI_COMMAND, &cmd_status_dword);
-
-3. I don't understand why 511dd98ce8cf6dc4f8f2cb32a8af31ce9f4ba4a1
-   changed pci_lock to be a raw spinlock.  The patch description
-   essentially says "We need it for RT" which isn't terribly helpful.
-
-4. Finally, getting back to the original problem report here, I wouldn't
-   write this code this way today.  There's no reason not to use the
-   regular add_wait_queue etc.  BUT!  Why are we using this custom locking
-   mechanism?  It pretty much screams to me of an rwsem (reads/writes
-   of config space take it for read; changes to config space accesses
-   (disabling and changing of accessor methods) take it for write.
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index c28c144..57d9315 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -250,8 +250,6 @@ static int ufshcd_probe_hba(struct ufs_hba *hba);
+ static int __ufshcd_setup_clocks(struct ufs_hba *hba, bool on,
+ 				 bool skip_ref_clk);
+ static int ufshcd_setup_clocks(struct ufs_hba *hba, bool on);
+-static int ufshcd_uic_hibern8_exit(struct ufs_hba *hba);
+-static int ufshcd_uic_hibern8_enter(struct ufs_hba *hba);
+ static inline void ufshcd_add_delay_before_dme_cmd(struct ufs_hba *hba);
+ static int ufshcd_host_reset_and_restore(struct ufs_hba *hba);
+ static void ufshcd_resume_clkscaling(struct ufs_hba *hba);
+@@ -3904,7 +3902,7 @@ static int __ufshcd_uic_hibern8_enter(struct ufs_hba *hba)
+ 	return ret;
+ }
+ 
+-static int ufshcd_uic_hibern8_enter(struct ufs_hba *hba)
++int ufshcd_uic_hibern8_enter(struct ufs_hba *hba)
+ {
+ 	int ret = 0, retries;
+ 
+@@ -3916,8 +3914,9 @@ static int ufshcd_uic_hibern8_enter(struct ufs_hba *hba)
+ out:
+ 	return ret;
+ }
++EXPORT_SYMBOL_GPL(ufshcd_uic_hibern8_enter);
+ 
+-static int ufshcd_uic_hibern8_exit(struct ufs_hba *hba)
++int ufshcd_uic_hibern8_exit(struct ufs_hba *hba)
+ {
+ 	struct uic_command uic_cmd = {0};
+ 	int ret;
+@@ -3943,6 +3942,7 @@ static int ufshcd_uic_hibern8_exit(struct ufs_hba *hba)
+ 
+ 	return ret;
+ }
++EXPORT_SYMBOL_GPL(ufshcd_uic_hibern8_exit);
+ 
+ static void ufshcd_auto_hibern8_enable(struct ufs_hba *hba)
+ {
+diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
+index e0fe247..1e3daf5 100644
+--- a/drivers/scsi/ufs/ufshcd.h
++++ b/drivers/scsi/ufs/ufshcd.h
+@@ -1107,5 +1107,6 @@ static inline u8 ufshcd_scsi_to_upiu_lun(unsigned int scsi_lun)
+ 
+ int ufshcd_dump_regs(struct ufs_hba *hba, size_t offset, size_t len,
+ 		     const char *prefix);
+-
++int ufshcd_uic_hibern8_enter(struct ufs_hba *hba);
++int ufshcd_uic_hibern8_exit(struct ufs_hba *hba);
+ #endif /* End of Header */
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
 
