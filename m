@@ -2,132 +2,68 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DC42CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:47:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D80ADCA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:47:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E64962064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:47:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XSl/bwcP"
+	by mail.kernel.org (Postfix) with ESMTP id ABF522064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:47:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404125AbfJWJrh (ORCPT
+        id S2404138AbfJWJrt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 05:47:37 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:27283 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2403961AbfJWJrd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 05:47:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571824053;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=9jJ0Mx1TSKoNbNHDjSEIStJvRuQEnjO2FdmEZzltyLU=;
-        b=XSl/bwcP9ppGNVeQP9Cn6UGrWQkKtxJrhgKYbEoUWdXww3GOw00uJqHLYLxYUqMn9TwiBv
-        8+RsHzQXHk258RfpD03idDy+u38oWXw5vifLv0qHqpxmmYMjChRlOBdZ2hevH5wkJUug6T
-        dahNWWpldm1WQ/xp0SqHTfn/sq2IXUo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-37-dsbJ0kJ6OASfiJ4hDzfrFA-1; Wed, 23 Oct 2019 05:47:29 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 82C40476;
-        Wed, 23 Oct 2019 09:47:27 +0000 (UTC)
-Received: from krava (unknown [10.43.17.61])
-        by smtp.corp.redhat.com (Postfix) with SMTP id E362619C70;
-        Wed, 23 Oct 2019 09:47:25 +0000 (UTC)
-Date:   Wed, 23 Oct 2019 11:47:24 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Andi Kleen <andi@firstfloor.org>
-Cc:     acme@kernel.org, linux-kernel@vger.kernel.org, jolsa@kernel.org,
-        eranian@google.com, kan.liang@linux.intel.com,
-        peterz@infradead.org, Andi Kleen <ak@linux.intel.com>
-Subject: Re: [PATCH v2 3/9] perf pmu: Use file system cache to optimize sysfs
- access
-Message-ID: <20191023094724.GI22919@krava>
-References: <20191020175202.32456-1-andi@firstfloor.org>
- <20191020175202.32456-4-andi@firstfloor.org>
+        Wed, 23 Oct 2019 05:47:49 -0400
+Received: from mga06.intel.com ([134.134.136.31]:53366 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2403892AbfJWJrt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 05:47:49 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 02:47:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,220,1569308400"; 
+   d="scan'208";a="209891035"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 23 Oct 2019 02:47:44 -0700
+Received: by lahna (sSMTP sendmail emulation); Wed, 23 Oct 2019 12:47:43 +0300
+Date:   Wed, 23 Oct 2019 12:47:43 +0300
+From:   "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>
+To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "logang@deltatee.com" <logang@deltatee.com>
+Subject: Re: [PATCH 1/1] PCI: Add hp_mmio_size and hp_mmio_pref_size
+ parameters
+Message-ID: <20191023094743.GU2819@lahna.fi.intel.com>
+References: <PSXP216MB01833367A1A154AEB816AE4E806B0@PSXP216MB0183.KORP216.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-In-Reply-To: <20191020175202.32456-4-andi@firstfloor.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-MC-Unique: dsbJ0kJ6OASfiJ4hDzfrFA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <PSXP216MB01833367A1A154AEB816AE4E806B0@PSXP216MB0183.KORP216.PROD.OUTLOOK.COM>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Oct 20, 2019 at 10:51:56AM -0700, Andi Kleen wrote:
+On Wed, Oct 23, 2019 at 08:37:48AM +0000, Nicholas Johnson wrote:
+>  			} else if (!strncmp(str, "hpmemsize=", 10)) {
+> -				pci_hotplug_mem_size = memparse(str + 10, &str);
+> +				pci_hotplug_mmio_size =
+> +					memparse(str + 10, &str);
+> +				pci_hotplug_mmio_pref_size =
+> +					memparse(str + 10, &str);
 
-SNIP
+Does this actually work correctly? The first memparse(str + 10, &str)
+modifies str so the next call will not start from the correct position
+anymore.
 
-> @@ -92,8 +93,12 @@ static int pmu_format(const char *name, struct list_he=
-ad *format)
->  =09snprintf(path, PATH_MAX,
->  =09=09 "%s" EVENT_SOURCE_DEVICE_PATH "%s/format", sysfs, name);
-> =20
-> -=09if (stat(path, &st) < 0)
-> +=09if (lookup_fncache(path, &res) && !res)
-> +=09=09return 0;
-> +
-> +=09if (!res && access(path, R_OK) < 0)
->  =09=09return 0;=09/* no error if format does not exist */
-> +=09update_fncache(path, true);
-> =20
->  =09if (perf_pmu__format_parse(path, format))
->  =09=09return -1;
-> @@ -470,9 +475,9 @@ static int pmu_aliases_parse(char *dir, struct list_h=
-ead *head)
->   */
->  static int pmu_aliases(const char *name, struct list_head *head)
->  {
-> -=09struct stat st;
->  =09char path[PATH_MAX];
->  =09const char *sysfs =3D sysfs__mountpoint();
-> +=09bool res =3D false;
-> =20
->  =09if (!sysfs)
->  =09=09return -1;
-> @@ -480,8 +485,11 @@ static int pmu_aliases(const char *name, struct list=
-_head *head)
->  =09snprintf(path, PATH_MAX,
->  =09=09 "%s/bus/event_source/devices/%s/events", sysfs, name);
-> =20
-> -=09if (stat(path, &st) < 0)
-> -=09=09return 0;=09 /* no error if 'events' does not exist */
-> +=09if (lookup_fncache(path, &res) && !res)
-> +=09=09return 0;
-> +=09if (!res && access(path, R_OK) < 0)
-> +=09=09return 0;
-> +=09update_fncache(path, true);
-
-I was thinking that maybe you dont need to have the fncache::res,
-but then I realized we have 2 kind of information in here:
-  - we processed this file
-  - is present file present
-
-so I think you should update the result on each update_fncache call,
-not only when it's succesful
-
-
-also, could you please make single function API for this?
-sonething like:
-
-  is_the_file_there(path)
-
-that would encapsulate those calls
-
-thanks,
-jirka
-
+Otherwise the patch looks good to me.
