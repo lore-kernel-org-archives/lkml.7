@@ -2,162 +2,119 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC78CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:48:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F364CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:49:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBEA62086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:48:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6E1F2086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:49:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="dAsNYaoP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392362AbfJWOst (ORCPT
+        id S2392371AbfJWOtZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 10:48:49 -0400
-Received: from mga02.intel.com ([134.134.136.20]:30964 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389782AbfJWOst (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 10:48:49 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 07:48:48 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,221,1569308400"; 
-   d="scan'208";a="191852479"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by orsmga008.jf.intel.com with ESMTP; 23 Oct 2019 07:48:48 -0700
-Date:   Wed, 23 Oct 2019 07:48:48 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        linux-arch@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>
-Subject: Re: [patch V2 17/17] x86/kvm: Use generic exit to guest work function
-Message-ID: <20191023144848.GH329@linux.intel.com>
-References: <20191023122705.198339581@linutronix.de>
- <20191023123119.271229148@linutronix.de>
+        Wed, 23 Oct 2019 10:49:25 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:44929 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390315AbfJWOtY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 10:49:24 -0400
+Received: by mail-oi1-f194.google.com with SMTP id s71so4741506oih.11
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 07:49:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=O9ox2pve6NHLhmzZq/Et8NzVsXtqJowAf4+8XmKRml8=;
+        b=dAsNYaoPoa0FVkpWQ+Mw+OCElmBkuYpU/+5PWViTjpSeETA9ynnP/Lnu5J8g+tEwPl
+         Z6CcJN9xhR5BUDtYeZo9pCcZcWgrjwimMU2rLTLsvOJ7Grm6/FgwwLndipgusj6dfSHe
+         uvZCqwqAuX/HwaHmKgRe7nqV6abw2AgJEO2HQsn5NNKSWdI+nMJ2dQj1aHZSNuvlxxkC
+         r7kOEy01YoQHDzoqp0/Pvv9vKFOrtdAqF8yY0wKKCS2JrckS1rrpCWE1NOplPVKbjQCn
+         igGlIMe9VeUAHKuVbdq2nCkNNzar9KcKo+925snr22p2nkRwUyxsNlcn9/dBY+O5puWd
+         DFqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=O9ox2pve6NHLhmzZq/Et8NzVsXtqJowAf4+8XmKRml8=;
+        b=ayU/5M8Cr1EXyd7CL/sTPlGeeqsNUyK69FHDQhieb5X/+/wcGLIbqS7gdlwOKug4lk
+         NutqXubBf+vdUai4S/7+/bQOl6tNIzWs9TzVKHXCNXngGEGwzMY2am2QhnZQGE38fLn6
+         5u6sWm+sThRYeylZ9ubUNQW7gzjTyQGCAOC+xJtvzne7OpvQJR/i8/hgyS1hz0Ow0BC6
+         pe00LBUdgDCbcxrgO7PivKQMY+xJVUZN++cyjVcmWPSE7lhpfPFRvmvuUVfCTPptKN0u
+         51fltaAtlkYPoLc0kFbK/2CKQYLNcNcaVbY6Ew4coDwNcRR4EQueNcfVswX4VX8LRKGB
+         TAfw==
+X-Gm-Message-State: APjAAAXRrp8W/w6s4QR5jOLMDWM7TjWlGJ/Eqb76qPfHZmhebz6NzYp+
+        6CQhhYeDBCmrKCg5dTvfeHV6+mz0FKj6RHLPbjzzPA==
+X-Google-Smtp-Source: APXvYqxcQwBzv+jaQBkvWrghfop7WtOGJow2UATWn++Bc0AtxhpgfFM1bZDEQ52mEG0UiB4ijf7XIJ9Qz1JjTc95Wzg=
+X-Received: by 2002:aca:5c06:: with SMTP id q6mr244007oib.175.1571842163611;
+ Wed, 23 Oct 2019 07:49:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191023123119.271229148@linutronix.de>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20191023122150.GA2524@localhost.localdomain>
+In-Reply-To: <20191023122150.GA2524@localhost.localdomain>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Wed, 23 Oct 2019 16:49:12 +0200
+Message-ID: <CAMpxmJUhwLOey+NtLrkvvj4apfyZyqLM_P87et+jHvGtBETspA@mail.gmail.com>
+Subject: Re: [PATCH] gpio: bd70528: Add MODULE ALIAS to autoload module
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     Matti Vaittinen <mazziesaccount@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 02:27:22PM +0200, Thomas Gleixner wrote:
-> Use the generic infrastructure to check for and handle pending work before
-> entering into guest mode.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+=C5=9Br., 23 pa=C5=BA 2019 o 14:22 Matti Vaittinen
+<matti.vaittinen@fi.rohmeurope.com> napisa=C5=82(a):
+>
+> The bd70528 GPIO driver is probed by MFD driver. Add MODULE_ALIAS
+> in order to allow udev to load the module when MFD sub-device cell
+> for GPIO is added.
+>
+> Fixes: 18bc64b3aebfa ("gpio: Initial support for ROHM bd70528 GPIO block"=
+)
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 > ---
->  arch/x86/kvm/Kconfig |    1 +
->  arch/x86/kvm/x86.c   |   17 +++++------------
->  2 files changed, 6 insertions(+), 12 deletions(-)
-> 
-> --- a/arch/x86/kvm/Kconfig
-> +++ b/arch/x86/kvm/Kconfig
-> @@ -42,6 +42,7 @@ config KVM
->  	select HAVE_KVM_MSI
->  	select HAVE_KVM_CPU_RELAX_INTERCEPT
->  	select HAVE_KVM_NO_POLL
-> +	select KVM_EXIT_TO_GUEST_WORK
->  	select KVM_GENERIC_DIRTYLOG_READ_PROTECT
->  	select KVM_VFIO
->  	select SRCU
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -52,6 +52,7 @@
->  #include <linux/irqbypass.h>
->  #include <linux/sched/stat.h>
->  #include <linux/sched/isolation.h>
-> +#include <linux/entry-common.h>
->  #include <linux/mem_encrypt.h>
->  
->  #include <trace/events/kvm.h>
-> @@ -8115,8 +8116,8 @@ static int vcpu_enter_guest(struct kvm_v
->  	if (kvm_lapic_enabled(vcpu) && vcpu->arch.apicv_active)
->  		kvm_x86_ops->sync_pir_to_irr(vcpu);
->  
-> -	if (vcpu->mode == EXITING_GUEST_MODE || kvm_request_pending(vcpu)
-> -	    || need_resched() || signal_pending(current)) {
-> +	if (vcpu->mode == EXITING_GUEST_MODE || kvm_request_pending(vcpu) ||
-> +	    exit_to_guestmode_work_pending()) {
+> I'm not really sure if this is a bug-fix or feature but I guess the
+> Fixes tag won't harm, right?
 
-The terms EXIT_TO_GUEST and exit_to_guestmode are very confusing, as
-they're inverted from the usual virt terminology of VM-Enter (enter guest)
-and VM-Exit (exit guest).  The conflict is most obvious here, with the
-above "vcpu->mode == EXITING_GUEST_MODE", which is checking to see if the
-vCPU is being forced to exit *from* guest mode because was kicked by some
-other part of KVM.
+It's definitely a feature, not a bug-fix. I applied it to for-next but
+dropped the tag.
 
-Maybe XFER_TO_GUEST?  I.e. avoid entry/exit entirely, so that neither the
-entry code or KVM ends up with a confusing name.
+Bart
 
->  		vcpu->mode = OUTSIDE_GUEST_MODE;
->  		smp_wmb();
->  		local_irq_enable();
-> @@ -8309,17 +8310,9 @@ static int vcpu_run(struct kvm_vcpu *vcp
->  
->  		kvm_check_async_pf_completion(vcpu);
->  
-> -		if (signal_pending(current)) {
-> -			r = -EINTR;
-> -			vcpu->run->exit_reason = KVM_EXIT_INTR;
-> -			++vcpu->stat.signal_exits;
-> +		r = exit_to_guestmode(kvm, vcpu);
-
-Ditto here.  If the run loop is stripped down to the core functionality,
-it effectively looks like:
-
-	for (;;) {
-		r = vcpu_enter_guest(vcpu);
-		if (r <= 0)
-			break;
-
-		...
-
-		r = exit_to_guestmode(kvm, vcpu);
-		if (r)
-			break;
-	}
-
-Appending _handle_work to the function would also be helpful so that it's
-somewhat clear the function isn't related to the core vcpu_enter_guest()
-functionality, e.g.:
-
-	for (;;) {
-		r = vcpu_enter_guest(vcpu);
-		if (r <= 0)
-			break;
-
-		...
-
-		r = xfer_to_guestmode_handle_work(kvm, vcpu);
-		if (r)
-			break;
-	}
-
-
-> +		if (r)
->  			break;
-> -		}
-> -		if (need_resched()) {
-> -			srcu_read_unlock(&kvm->srcu, vcpu->srcu_idx);
-> -			cond_resched();
-> -			vcpu->srcu_idx = srcu_read_lock(&kvm->srcu);
-> -		}
->  	}
->  
->  	srcu_read_unlock(&kvm->srcu, vcpu->srcu_idx);
-> 
-> 
+>
+>  drivers/gpio/gpio-bd70528.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/gpio/gpio-bd70528.c b/drivers/gpio/gpio-bd70528.c
+> index fd85605d2dab..8123260a92a2 100644
+> --- a/drivers/gpio/gpio-bd70528.c
+> +++ b/drivers/gpio/gpio-bd70528.c
+> @@ -230,3 +230,4 @@ module_platform_driver(bd70528_gpio);
+>  MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
+>  MODULE_DESCRIPTION("BD70528 voltage regulator driver");
+>  MODULE_LICENSE("GPL");
+> +MODULE_ALIAS("platform:bd70528-gpio");
+> --
+> 2.21.0
+>
+>
+> --
+> Matti Vaittinen, Linux device drivers
+> ROHM Semiconductors, Finland SWDC
+> Kiviharjunlenkki 1E
+> 90220 OULU
+> FINLAND
+>
+> ~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+> Simon says - in Latin please.
+> ~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+> Thanks to Simon Glass for the translation =3D]
