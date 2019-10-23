@@ -2,140 +2,132 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BF7FCA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:33:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66432CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:36:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0959A20679
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:33:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37B052064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:36:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Nm9AVlgb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404542AbfJWKds convert rfc822-to-8bit (ORCPT
+        id S2404544AbfJWKgo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 06:33:48 -0400
-Received: from mail-oln040092253036.outbound.protection.outlook.com ([40.92.253.36]:10145
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390935AbfJWKds (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 06:33:48 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mbWzYOHvJ7DLGuqx2C/JpH8hogF4UnXJB67hpsUI97gJaCngvhdewEXTzwXZZWS7iVFlxtD5bD4xVR6Oi4vXPl5STiNbLkl/rD7ko00oEVK87uB9ZBmEJF+tWFLXKzSSG3IhdBG/U9zK1UXxdmYie2BSzNwyCCTCSouKyDPruPzH7WYQ9rzfotGMoXEpS2H8BmsNlbp4jP+c92ljKlBo2exwqlCgIYsmx860vRzpk43w7qH1UpS0SOUHn8YEsNm0/UX9fdT7cRpwuULc4ryQoNE7MBRSMFA+HY3mleCwJbXKm2Hjqp6WdU5JWi/hR+paj+xKbpIFUhi3M0IvjA2bKw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VlUxN8CAzYvB4J1h8171H7fV0N/zQl6v0B590uBhPO8=;
- b=S0MEEpJmm2wxuoJ6zDNPiIHi+sYizS3hNuCu7hNPWAs/D2QWPWIsi4nJUagEVC9RTc6i0Tukv7llRBBesRZXnjYrSph4rqRbv/UOmE5dPpHutxCNYlFwIlf+icRwIj+CjjyJPC2lva/8YID3v0Qn1F+cuXdCyk6W1n+aBmeaYWnPnpECwrJOl3Oqh5fBLSy14crIMuem7hQKjb/CBfdZpLWXMHuLXYogWA+02EFBPDz8kxBIl6NVXyFQCbke2Em+b+4K/ClQDulTiwPd9AP6jy/rkXM662DgTcdC6JHR05HHc3WNTCrngwOB6d/Mp4vM6a/le4JFtuWVDf+IhfHyQQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from SG2APC01FT053.eop-APC01.prod.protection.outlook.com
- (10.152.250.57) by SG2APC01HT236.eop-APC01.prod.protection.outlook.com
- (10.152.251.175) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2367.14; Wed, 23 Oct
- 2019 10:33:43 +0000
-Received: from SL2P216MB0187.KORP216.PROD.OUTLOOK.COM (10.152.250.53) by
- SG2APC01FT053.mail.protection.outlook.com (10.152.250.240) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2387.20 via Frontend Transport; Wed, 23 Oct 2019 10:33:43 +0000
-Received: from SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
- ([fe80::ec26:6771:625e:71d]) by SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
- ([fe80::ec26:6771:625e:71d%8]) with mapi id 15.20.2387.019; Wed, 23 Oct 2019
- 10:33:43 +0000
-From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-To:     "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "logang@deltatee.com" <logang@deltatee.com>
-Subject: Re: [PATCH 1/1] PCI: Add hp_mmio_size and hp_mmio_pref_size
- parameters
-Thread-Topic: [PATCH 1/1] PCI: Add hp_mmio_size and hp_mmio_pref_size
- parameters
-Thread-Index: AQHViX0m6toKrk1OzESm1M80C1WD26dn+tqAgAACogCAAAHqgIAACEQA
-Date:   Wed, 23 Oct 2019 10:33:42 +0000
-Message-ID: <SL2P216MB0187E0B5D83583094065CA35806B0@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
-References: <PSXP216MB01833367A1A154AEB816AE4E806B0@PSXP216MB0183.KORP216.PROD.OUTLOOK.COM>
- <20191023094743.GU2819@lahna.fi.intel.com>
- <SL2P216MB0187D47276DED3EA634123BE806B0@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
- <20191023100359.GW2819@lahna.fi.intel.com>
-In-Reply-To: <20191023100359.GW2819@lahna.fi.intel.com>
-Accept-Language: en-AU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: ME2PR01CA0115.ausprd01.prod.outlook.com
- (2603:10c6:201:2c::31) To SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
- (2603:1096:100:22::19)
-x-incomingtopheadermarker: OriginalChecksum:F04BC230F1DAED8DA8E59E575EBB957B026008360374D4987CCC562DE1D4D49E;UpperCasedChecksum:1E0E2A9ED2A0E5614003CCD6A0A8E10AE0CA0B4A39013D5FD7F2D75C186FF12E;SizeAsReceived:7780;Count:48
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [/WJBjejDWNWeML1OyRPOiowRs4HOQHBWSvHYaD4V7xY=]
-x-microsoft-original-message-id: <20191023103334.GD4080@nicholas-dell-linux>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 48
-x-eopattributedmessage: 0
-x-ms-traffictypediagnostic: SG2APC01HT236:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: +2xYyom7rZzoYFsFGwnZ9GyvCPkaDe1/lBmQHKr/ZPmH4cfQmenn9sa7jp02TZj+D9sSB2DoicJfFpAx6oiGjTSYtJvF9h36tEqLj4Ki2uc8VP16lZV4BR7XrtzDBNaOeKHrMe60/ejp6hd6cnDhrkvYwkv4KIZvCoEfujwZM6BPPbFbPLpAzu8FBRs+edVN
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <91CEBE902BFE6F45BF9748FACBBE15B0@KORP216.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: 8BIT
+        Wed, 23 Oct 2019 06:36:44 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:57811 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2391068AbfJWKgn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 06:36:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571827001;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=c+ZJZ8Qp2Al2NCTrYo8r6xsLIqLGBhiVQkAHuY0n6VM=;
+        b=Nm9AVlgbEcmIT3jgILXfOG6VZ4eryS4KBt6w8wvz265wEm/RnA/DmCm+c11jD5MKro/2Wx
+        VVPTz/USMEx1gJBwZUF8oixHJK9/BYDhA8R0YlWZ8z3lEkuPdoQjyzZTICaNf8S8F2eKnf
+        FDoeOlXFej+920PH7M2hC4UYmxnio5c=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-330-ijQT5u_SMP-UphaCbNmtAA-1; Wed, 23 Oct 2019 06:36:37 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 63DF21800D6B;
+        Wed, 23 Oct 2019 10:36:35 +0000 (UTC)
+Received: from [10.72.12.79] (ovpn-12-79.pek2.redhat.com [10.72.12.79])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3ECF05D6C8;
+        Wed, 23 Oct 2019 10:36:24 +0000 (UTC)
+Subject: Re: [RFC 1/2] vhost: IFC VF hardware operation layer
+To:     Simon Horman <simon.horman@netronome.com>
+Cc:     "Zhu, Lingshan" <lingshan.zhu@intel.com>, mst@redhat.com,
+        alex.williamson@redhat.com, linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, dan.daly@intel.com,
+        cunming.liang@intel.com, tiwei.bie@intel.com, jason.zeng@intel.com,
+        zhiyuan.lv@intel.com
+References: <20191016011041.3441-1-lingshan.zhu@intel.com>
+ <20191016011041.3441-2-lingshan.zhu@intel.com>
+ <20191016095347.5sb43knc7eq44ivo@netronome.com>
+ <075be045-3a02-e7d8-672f-4a207c410ee8@intel.com>
+ <20191021163139.GC4486@netronome.com>
+ <15d94e61-9b3d-7854-b65e-6fea6db75450@redhat.com>
+ <20191023101329.GE8732@netronome.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <83356b5f-e2f4-ab79-79d7-20d4850c26a9@redhat.com>
+Date:   Wed, 23 Oct 2019 18:36:13 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 91a729f6-8574-4af2-69eb-08d757a479da
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Oct 2019 10:33:43.0152
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2APC01HT236
+In-Reply-To: <20191023101329.GE8732@netronome.com>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-MC-Unique: ijQT5u_SMP-UphaCbNmtAA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 01:03:59PM +0300, mika.westerberg@linux.intel.com wrote:
-> On Wed, Oct 23, 2019 at 09:57:17AM +0000, Nicholas Johnson wrote:
-> > On Wed, Oct 23, 2019 at 12:47:43PM +0300, mika.westerberg@linux.intel.com wrote:
-> > > On Wed, Oct 23, 2019 at 08:37:48AM +0000, Nicholas Johnson wrote:
-> > > >  			} else if (!strncmp(str, "hpmemsize=", 10)) {
-> > > > -				pci_hotplug_mem_size = memparse(str + 10, &str);
-> > > > +				pci_hotplug_mmio_size =
-> > > > +					memparse(str + 10, &str);
-> > > > +				pci_hotplug_mmio_pref_size =
-> > > > +					memparse(str + 10, &str);
-> > > 
-> > > Does this actually work correctly? The first memparse(str + 10, &str)
-> > > modifies str so the next call will not start from the correct position
-> > > anymore.
-> > I have been using this for a long time now and have not had any issues.
-> > Does it modify str? I thought that was done by the loop.
-> 
-> If you add "hpmemsize=xxx" in the command line and print both
-> pci_hotplug_mmio_size and pci_hotplug_mmio_pref_size after the
-> assignment, do they have the same value? If yes, then there is no
-> problem.
-Looking at lib/cmdline.c line 125, it looks like there is no point in me 
-testing it. It looks like you are right.
 
-What is the better fix?
+On 2019/10/23 =E4=B8=8B=E5=8D=886:13, Simon Horman wrote:
+> On Tue, Oct 22, 2019 at 09:32:36AM +0800, Jason Wang wrote:
+>> On 2019/10/22 =E4=B8=8A=E5=8D=8812:31, Simon Horman wrote:
+>>> On Mon, Oct 21, 2019 at 05:55:33PM +0800, Zhu, Lingshan wrote:
+>>>> On 10/16/2019 5:53 PM, Simon Horman wrote:
+>>>>> Hi Zhu,
+>>>>>
+>>>>> thanks for your patch.
+>>>>>
+>>>>> On Wed, Oct 16, 2019 at 09:10:40AM +0800, Zhu Lingshan wrote:
+>>> ...
+>>>
+>>>>>> +static void ifcvf_read_dev_config(struct ifcvf_hw *hw, u64 offset,
+>>>>>> +=09=09       void *dst, int length)
+>>>>>> +{
+>>>>>> +=09int i;
+>>>>>> +=09u8 *p;
+>>>>>> +=09u8 old_gen, new_gen;
+>>>>>> +
+>>>>>> +=09do {
+>>>>>> +=09=09old_gen =3D ioread8(&hw->common_cfg->config_generation);
+>>>>>> +
+>>>>>> +=09=09p =3D dst;
+>>>>>> +=09=09for (i =3D 0; i < length; i++)
+>>>>>> +=09=09=09*p++ =3D ioread8((u8 *)hw->dev_cfg + offset + i);
+>>>>>> +
+>>>>>> +=09=09new_gen =3D ioread8(&hw->common_cfg->config_generation);
+>>>>>> +=09} while (old_gen !=3D new_gen);
+>>>>> Would it be wise to limit the number of iterations of the loop above?
+>>>> Thanks but I don't quite get it. This is used to make sure the functio=
+n
+>>>> would get the latest config.
+>>> I am worried about the possibility that it will loop forever.
+>>> Could that happen?
+>>>
+>>> ...
+>> My understanding is that the function here is similar to virtio config
+>> generation [1]. So this can only happen for a buggy hardware.
+> Ok, so this circles back to my original question.
+> Should we put a bound on the number of times the loop runs
+> or should we accept that the kernel locks up if the HW is buggy?
+>
 
-pci_hotplug_mmio_size = pci_hotplug_mmio_pref_size = memparse(str + 10, &str);
+I'm not sure, and similar logic has been used by virtio-pci drivers for=20
+years. Consider this logic is pretty simple and it should not be the=20
+only place that virito hardware can lock kernel, we can keep it as is.
 
-^ Could be too long, even if we are ignoring the 80-character limit.
-
-> 
-> > Can somebody else please weigh in here? I am worried now, and I want to 
-> > be sure. If it is a problem, then I will have to read it into 
-> > pci_hotplug_mmio_size and then set:
-> > 
-> > pci_hotplug_mmio_pref_size = pci_hotplug_mmio_size
-> 
-> Yup.
-Or do you prefer the above?
+Actually, there's no need for hardware to implement generation logic, it=20
+could be emulated by software or even ignored. In new version of=20
+virtio-mdev, get_generation() is optional, when it was not implemented,=20
+0 is simply returned by virtio-mdev transport.
 
 Thanks
+
