@@ -2,88 +2,140 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D28CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 06:51:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 571E2CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 06:51:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A64DA2084C
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 06:51:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28E3F2084C
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 06:51:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571813461;
-	bh=dtIAJSZ+/PrEmKbCaiy/wKWVXQ1MTr81bajpc714TM8=;
+	s=default; t=1571813491;
+	bh=hBmd5KPV6GhZmi3teZ7pgUcmVyOexynGR7kSJghi+Ig=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EoDPEPhv5/EqIQzaLm/9dHnbL48OXnsh7YAmR/0bllhUKWM3lbX6d+bhlQVj0ryrR
-	 3qdLIRsrFG2OU9zuzjN11x/R0Rp6X0G/VYFkFuGv1LGVYW5duPn1dX+S1LI/+W5HKS
-	 AYT2IoGpuygwSJtjqLKxmEYoUFKC8XrM0eGoTVuQ=
+	b=mI7oMcB3TJDkz4Wu+F77HR8yy3zf3pCFEuRJ839xcmARsZbGkwD9pIBqhzkf5k9uY
+	 LuYAIiEkSvuh0fmEy3nYoKIYMqboU7o3YuBZT60pHSqk2shDMttnW5cGZ5zIQzA6qs
+	 HLjFT9y3kvAKW7dF8fIptcu5NsGjx7ObhHI8jCsc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389465AbfJWGvA (ORCPT
+        id S2389571AbfJWGva (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 02:51:00 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41002 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727194AbfJWGvA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 02:51:00 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 9B113B549;
-        Wed, 23 Oct 2019 06:50:58 +0000 (UTC)
-Date:   Wed, 23 Oct 2019 08:50:57 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH 1/2] mm: memcontrol: remove dead code from
- memory_max_write()
-Message-ID: <20191023065057.GC754@dhcp22.suse.cz>
-References: <20191022201518.341216-1-hannes@cmpxchg.org>
+        Wed, 23 Oct 2019 02:51:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54280 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725796AbfJWGva (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 02:51:30 -0400
+Received: from localhost (unknown [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 884232064A;
+        Wed, 23 Oct 2019 06:51:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571813489;
+        bh=hBmd5KPV6GhZmi3teZ7pgUcmVyOexynGR7kSJghi+Ig=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=zg/KpCnvvZCquZPkNV/bKcz4j8uihmbrrjeSjyqVX03QfN/9c4lefnzZgpNmiVCys
+         j9LRFc4+UxKCVkjHtE8FQBcP+//WlTQTgezIXfawEDfRUvCqRwFo9Mg/ctX9a4l1EO
+         l0sVppcq7djBD2yKfJ09z9t6wATXSxZFZtShIXZ4=
+Date:   Wed, 23 Oct 2019 08:51:26 +0200
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        lakml <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH] media: dt-bindings: media: Fixup Allwinner A10 CSI
+ binding
+Message-ID: <20191023065126.ckqgvqkzeqtt3j3m@gilmour>
+References: <b47ec7088aa4b07458519ab151de92df552a9302.1570101510.git.amit.kucheria@linaro.org>
+ <20191003115154.6f2jgj3dnqsved2y@gilmour>
+ <CAHLCerNoLyQ-e70=1VMPO_J_amA+-2vtHwfoUabo4dhUWj-H0A@mail.gmail.com>
+ <20191007100535.6gp6b3h6ueyeln3b@gilmour>
+ <CAP245DXT=HL+m-LqoC25EBnOaPmF1pUW0fEZp6EZB-MdgOJoWw@mail.gmail.com>
+ <20191007104835.v6iqpoolqtajryik@gilmour>
+ <CAL_JsqLVkikYVpjs1m+QqsOK2CfSm9+LfZWXbWEoszeSt3RGaA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="meupzleynumtgrf3"
 Content-Disposition: inline
-In-Reply-To: <20191022201518.341216-1-hannes@cmpxchg.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAL_JsqLVkikYVpjs1m+QqsOK2CfSm9+LfZWXbWEoszeSt3RGaA@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 22-10-19 16:15:17, Johannes Weiner wrote:
-> When the reclaim loop in memory_max_write() is ^C'd or similar, we set
-> err to -EINTR. But we don't return err. Once the limit is set, we
-> always return success (nbytes). Delete the dead code.
-> 
-> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
 
-Acked-by: Michal Hocko <mhocko@suse.com>
+--meupzleynumtgrf3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> ---
->  mm/memcontrol.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index 055975b0b3a3..ff90d4e7df37 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -6122,10 +6122,8 @@ static ssize_t memory_max_write(struct kernfs_open_file *of,
->  		if (nr_pages <= max)
->  			break;
->  
-> -		if (signal_pending(current)) {
-> -			err = -EINTR;
-> +		if (signal_pending(current))
->  			break;
-> -		}
->  
->  		if (!drained) {
->  			drain_all_stock(memcg);
-> -- 
-> 2.23.0
-> 
+Hi Rob,
 
--- 
-Michal Hocko
-SUSE Labs
+On Tue, Oct 22, 2019 at 11:17:35AM -0500, Rob Herring wrote:
+> On Mon, Oct 7, 2019 at 5:48 AM Maxime Ripard <mripard@kernel.org> wrote:
+> >
+> > On Mon, Oct 07, 2019 at 03:45:29PM +0530, Amit Kucheria wrote:
+> > > On Mon, Oct 7, 2019 at 3:35 PM Maxime Ripard <mripard@kernel.org> wrote:
+> > > >
+> > > > On Sat, Oct 05, 2019 at 04:15:57PM +0530, Amit Kucheria wrote:
+> > > > > On Thu, Oct 3, 2019 at 5:22 PM Maxime Ripard <mripard@kernel.org> wrote:
+> > > > > >
+> > > > > > Hi,
+> > > > > >
+> > > > > > On Thu, Oct 03, 2019 at 04:52:24PM +0530, Amit Kucheria wrote:
+> > > > > > > This new binding fails dt_binding_check due to a typo. Fix it up.
+> > > > > > >
+> > > > > > > linux.git/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml: $id: path/filename 'arm/allwinner,sun4i-a10-csi.yaml' doesn't match actual filename
+> > > > > > > linux.git/Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.example.dts' failed
+> > > > > > > make[2]: *** [Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.example.dts] Error 1
+> > > > > > > make[2]: *** Waiting for unfinished jobs....
+> > > > > > > linux.git/Makefile:1284: recipe for target 'dt_binding_check' failed
+> > > > > > > make[1]: *** [dt_binding_check] Error 2
+> > > > > > >
+> > > > > > > Fixes: c5e8f4ccd7750 ("media: dt-bindings: media: Add Allwinner A10 CSI binding")
+> > > > > > > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> > > > > >
+> > > > > > Thanks for your patch.
+> > > > > >
+> > > > > > It has already been submitted though:
+> > > > > > https://lore.kernel.org/linux-arm-kernel/1568808060-17516-1-git-send-email-pragnesh.patel@sifive.com/
+> > > > > >
+> > > > > > I'm not sure why it hasn't been applied yet though :/
+> > > > >
+> > > > > Perhaps a Fixes tag will allow more attention to it?
+> > > >
+> > > > I've added a fixes tag and merged it through the sunxi tree.
+> > > >
+> > > > Sorry for the time it took, and thanks for sending that fix!
+> > >
+> > > Will it get merged for -rc2?
+> >
+> > -rc2 was released yesterday, so we're a bit late for that, but it's
+> >  going to be in next tomorrow.
+>
+> Is this going to Linus anytime soon? It is affecting anyone submitting
+> bindings against current -rc's.
+
+Sorry for the delay, I just sent a PR
+
+Maxime
+
+--meupzleynumtgrf3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXa/4bgAKCRDj7w1vZxhR
+xUD5AQDHOQrg1fK8A/nnxv6B5Ya2z3WganmGJXv2EF+TFJppWwEA2zroQ3o10xRD
+FT086EzZEJZgS5tYvtRNiHiZJZpaRQM=
+=enB/
+-----END PGP SIGNATURE-----
+
+--meupzleynumtgrf3--
