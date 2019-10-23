@@ -2,97 +2,124 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B78B7CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 01:56:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83BA6CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 01:56:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E6232064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 01:56:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571795786;
-	bh=7K4aAK3LqRh8jXXyar1/Xb/Z6TWqqFQnOKm4QUrFieo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=HG6l767//e7JIBrowreayhCyel4gS72Tc2Y/MWHz1nuin9btM2pPwqi/G2b+1zO6y
-	 7mteMPN4XCQhhLTSbsrwuhMopZ9a+vCaS6cfzakJut3sePjZDyJ6crosRUHTTDlh92
-	 Y2r/vVW1OKDw9cOdNDManKzAn5wOS4TWBkHX84vo=
+	by mail.kernel.org (Postfix) with ESMTP id 56CCC207FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 01:56:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="SGGDphKD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388191AbfJWB4X (ORCPT
+        id S2388374AbfJWB4y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 21:56:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38770 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727582AbfJWB4X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 21:56:23 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D82B52064A;
-        Wed, 23 Oct 2019 01:56:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571795782;
-        bh=7K4aAK3LqRh8jXXyar1/Xb/Z6TWqqFQnOKm4QUrFieo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=pC4WKRsLT4Eq3kgZaw8DuTmD/QC0WMjYDHLMLBOcyBV8tMKHYe5I7oRo0gXqtL3GA
-         1mxLLvmFtnJHwDXBEWwHlckTDa7n+aqrUUjFfRGNQGgjDUVub3S8ArioIFjeDnI9I6
-         OyTtxz0s5jjxPXA04EmhWdMmpSjAm5IPBVQ469TA=
-Date:   Wed, 23 Oct 2019 10:56:18 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Alexey Dobriyan <adobriyan@gmail.com>
-Cc:     Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jaswinder.singh@linaro.org
-Subject: Re: [BUGFIX PATCH v2 1/5] selftests: proc: Make va_max 1GB on 32bit
- arch
-Message-Id: <20191023105618.48a8fcee869fbae8ead31cee@kernel.org>
-In-Reply-To: <20191021173053.GB5355@avx2>
-References: <157164647813.17692.3834082082658965225.stgit@devnote2>
-        <157164648909.17692.6080553792829040898.stgit@devnote2>
-        <20191021173053.GB5355@avx2>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 22 Oct 2019 21:56:54 -0400
+Received: from mx0b-00190b01.pphosted.com ([67.231.157.127]:7828 "EHLO
+        mx0b-00190b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727582AbfJWB4x (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 21:56:53 -0400
+Received: from pps.filterd (m0122330.ppops.net [127.0.0.1])
+        by mx0b-00190b01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9N1sMou012792;
+        Wed, 23 Oct 2019 02:55:41 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type; s=jan2016.eng;
+ bh=RsjkaC/U3EOJj+mL7fckMBUMFkrUAndFdH2o3b4CphE=;
+ b=SGGDphKDb0oEcBd9A3qPq4t3rCjOhznEkkN7zSXlox7DWiVZDRrp96YJfQAHy8l+ysZW
+ 8gM6DVLH2HraADFrJ16s5MF5S5s4Jc/VQU2824/DR9SzrsEdIsSrYrk9Z/BZXxeNU+Ea
+ Pe8GHDn9TNqVn5vDCTh/ogJbNEU5Gjb2wM8pT62fiPMbcr2Db6YpdTWNW6no/NoVielL
+ cyCIOKl5PZsnXlgtZf3m6f5KcFAN2f8/EugGudawA4yU7WSmyOfjyahewegho4JiyKIR
+ sGbh4egLhsFLg67XXqUwTJwVlc49wbyT0RBhTjdMgRcBikw+u5m+uy+LodeeKfwt+HQw 0A== 
+Received: from prod-mail-ppoint1 (prod-mail-ppoint1.akamai.com [184.51.33.18] (may be forged))
+        by mx0b-00190b01.pphosted.com with ESMTP id 2vqt4v0rab-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 23 Oct 2019 02:55:41 +0100
+Received: from pps.filterd (prod-mail-ppoint1.akamai.com [127.0.0.1])
+        by prod-mail-ppoint1.akamai.com (8.16.0.27/8.16.0.27) with SMTP id x9N1lCuC024927;
+        Tue, 22 Oct 2019 21:55:40 -0400
+Received: from email.msg.corp.akamai.com ([172.27.123.33])
+        by prod-mail-ppoint1.akamai.com with ESMTP id 2vqwtwq07e-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Tue, 22 Oct 2019 21:55:40 -0400
+Received: from USMA1EX-DAG1MB5.msg.corp.akamai.com (172.27.123.105) by
+ usma1ex-dag1mb6.msg.corp.akamai.com (172.27.123.65) with Microsoft SMTP
+ Server (TLS) id 15.0.1473.3; Tue, 22 Oct 2019 21:55:39 -0400
+Received: from USMA1EX-CAS2.msg.corp.akamai.com (172.27.123.31) by
+ usma1ex-dag1mb5.msg.corp.akamai.com (172.27.123.105) with Microsoft SMTP
+ Server (TLS) id 15.0.1473.3; Tue, 22 Oct 2019 21:55:39 -0400
+Received: from igorcastle.kendall.corp.akamai.com (172.29.170.135) by
+ USMA1EX-CAS2.msg.corp.akamai.com (172.27.123.31) with Microsoft SMTP Server
+ id 15.0.1473.3 via Frontend Transport; Tue, 22 Oct 2019 21:55:39 -0400
+Received: by igorcastle.kendall.corp.akamai.com (Postfix, from userid 29659)
+        id 4E88661DCB; Tue, 22 Oct 2019 21:55:37 -0400 (EDT)
+From:   Igor Lubashev <ilubashe@akamai.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+CC:     Igor Lubashev <ilubashe@akamai.com>, Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
+Subject: [PATCH 0/3] perf: Allow running without stdin
+Date:   Tue, 22 Oct 2019 21:54:50 -0400
+Message-ID: <1571795693-23558-1-git-send-email-ilubashe@akamai.com>
+X-Mailer: git-send-email 2.7.4
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-22_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=853
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910230015
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-23_01:2019-10-22,2019-10-23 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=836 lowpriorityscore=0
+ phishscore=0 malwarescore=0 adultscore=0 priorityscore=1501 mlxscore=0
+ bulkscore=0 spamscore=0 suspectscore=0 impostorscore=0 clxscore=1011
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1908290000
+ definitions=main-1910230016
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 21 Oct 2019 20:30:53 +0300
-Alexey Dobriyan <adobriyan@gmail.com> wrote:
+This series allows perf to run in batch mode with stdin closed.
+This is arguably a bug fix for code that runs with --stdio option and does not
+check for EOF return code from getc().
 
-> On Mon, Oct 21, 2019 at 05:28:09PM +0900, Masami Hiramatsu wrote:
-> > Currently proc-self-map-files-002.c sets va_max (max test address
-> > of user virtual address) to 4GB, but it is too big for 32bit
-> > arch and 1UL << 32 is overflow on 32bit long.
-> > 
-> > Make va_max 1GB on 32bit arch like i386 and arm.
-> 
-> > +#if __BITS_PER_LONG == 32
-> > +# define VA_MAX (1UL << 30)
-> > +#elif __BITS_PER_LONG == 64
-> > +# define VA_MAX (1UL << 32)
-> > +#else
-> > +# define VA_MAX 0
-> > +#endif
-> > +
-> >  int main(void)
-> >  {
-> >  	const int PAGE_SIZE = sysconf(_SC_PAGESIZE);
-> > -	const unsigned long va_max = 1UL << 32;
-> > +	const unsigned long va_max = VA_MAX;
-> 
-> No, just make it like 1MB unconditionally.
+This series makes the following work as expected:
 
-Ah, I sse. BTW, would you mean 1GB?
+  $ perf top --stdio < /dev/null
+  $ perf kvm top --stdio < /dev/null
 
-> This is not intended to cover all address space, just large enough part
-> (larger than reasonable vm.mmap_min_addr)
+Patches:
+  01: perf top: Allow running without stdin
+    Make "perf top --stdio" handle EOF from stdin correctly.
+    There is one getc() that does not handle EOF explicitly, since its return
+    value is checked against a list of known characters, and the main loop in
+    display_thread() will handle the EOF on the next iteration.
 
-Then, should we better to check the /proc/sys/vm/mmap_min_addr?
+  02: perf kvm: Allow running without stdin
+    Make "perf kvm --stdio" handle EOF from stdin correctly.
 
-Thank you,
+  03: perf kvm: Use evlist layer api when possible
+    This is a simple fix for a needless layering violation.
+
+Igor Lubashev (3):
+  perf top: Allow running without stdin
+  perf kvm: Allow running without stdin
+  perf kvm: Use evlist layer api when possible
+
+ tools/perf/builtin-kvm.c | 35 +++++++++++++++++++++--------------
+ tools/perf/builtin-top.c | 10 ++++++++--
+ 2 files changed, 29 insertions(+), 16 deletions(-)
 
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+2.7.4
+
