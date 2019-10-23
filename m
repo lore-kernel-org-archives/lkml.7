@@ -2,84 +2,149 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D527DCA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:46:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F48CCA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:47:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A429420640
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:46:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571834815;
-	bh=A4xxnHET7dHUr6+FUOOYWQtG2S2xuT97YaAB9hJ4Qfs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Rqgw4POcVj3uVyWV8EI12spDU+HurtQm+Fi6FLORj6OvbGx0Bt3MD3fzSupp+i+/t
-	 Y3Re7Y2YCc064WmgmrOTcIE6sD9jIyHuPY/ixspdv1wRbmDq8KN3aFrhNenRf/PJho
-	 tOfVCd8cIVknWwUsT1Npdn0VUOdwcY3r80bVavMk=
+	by mail.kernel.org (Postfix) with ESMTP id 0B05A20640
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:47:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404060AbfJWMqy (ORCPT
+        id S2405380AbfJWMrm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 08:46:54 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:34108 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390104AbfJWMqy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 08:46:54 -0400
-Received: by mail-ed1-f68.google.com with SMTP id b72so6685555edf.1;
-        Wed, 23 Oct 2019 05:46:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=A4xxnHET7dHUr6+FUOOYWQtG2S2xuT97YaAB9hJ4Qfs=;
-        b=W1KbQtpmWt/MKHEj4j+1dunbkRU3GsIeHmt9O4c6PTD4o5+0m3nkzP/9XKQfMH96LA
-         6U1o3t7Ji/LjmA2FMI4qd2pnpUyUq3/wSFEnREVh/MVym/kiIiJusdzDZs/dpWR6PTgi
-         kipHrAzEQBz/AFPEg//hgUbNLRLL89XbYbtGWx0Y/vgyGxuYl/Gfv36N/XyMtss/xHIj
-         qemA7p+4rwfj5cemtT9SwMLwUBNNG1EYNvoJB0SiY6S0xdBnFv0gyNFh7mJVMOpGflQ/
-         745CQhBcqsggL/DhIw/0vqjSNmEMSryWsasH7vrIPFM9AZmoqvaMiI+Gzi5OuTGasDIQ
-         AQ/A==
-X-Gm-Message-State: APjAAAV37q8Np60BTXdX8Erm9fpcstLjyWHKQXv8jcZkuZcYrClq47F1
-        NpstkAoU6O7Li2HXwAa1Mwc85N9oBE4=
-X-Google-Smtp-Source: APXvYqyIj+x4DPnQ8/wfFlKsi+/SJbuj1ZkWeMFOp0eV28T9/zZeeEOdXwSG8Og+Eu/s2dSay0QajQ==
-X-Received: by 2002:a50:f683:: with SMTP id d3mr15725304edn.70.1571834810704;
-        Wed, 23 Oct 2019 05:46:50 -0700 (PDT)
-Received: from pi3 ([194.230.155.217])
-        by smtp.googlemail.com with ESMTPSA id d8sm279944edb.18.2019.10.23.05.46.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Oct 2019 05:46:50 -0700 (PDT)
-Date:   Wed, 23 Oct 2019 14:46:48 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Kukjin Kim <kgene@kernel.org>, linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linus.walleij@linaro.org,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: Re: [PATCH 03/36] usb: gadget: s3c: use platform resources
-Message-ID: <20191023124648.GE11048@pi3>
-References: <20191010202802.1132272-1-arnd@arndb.de>
- <20191010203043.1241612-1-arnd@arndb.de>
- <20191010203043.1241612-3-arnd@arndb.de>
+        Wed, 23 Oct 2019 08:47:42 -0400
+Received: from mga09.intel.com ([134.134.136.24]:29838 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405290AbfJWMrl (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 08:47:41 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 05:47:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,220,1569308400"; 
+   d="scan'208";a="196766480"
+Received: from shilongz-mobl.ccr.corp.intel.com (HELO [10.254.210.50]) ([10.254.210.50])
+  by fmsmga008.fm.intel.com with ESMTP; 23 Oct 2019 05:47:38 -0700
+Subject: Re: [PATCH v3 1/5] perf util: Cleanup and refactor block info
+ functions
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+References: <20191022080710.6491-1-yao.jin@linux.intel.com>
+ <20191022080710.6491-2-yao.jin@linux.intel.com>
+ <20191023113703.GQ22919@krava>
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <abda4105-41ab-7e5e-236e-d048dfe3abed@linux.intel.com>
+Date:   Wed, 23 Oct 2019 20:47:38 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191010203043.1241612-3-arnd@arndb.de>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191023113703.GQ22919@krava>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 10:29:47PM +0200, Arnd Bergmann wrote:
-> The resources are correctly initialized, so just use them
-> instead of relying on hardcoded data from platform headers.
 
-Generic comment to all patches - you seem to break commit msg lines
-slightly too early. In certain cases it makes them unnecessarily longer.
-Maybe your editor has to be fixed to wrap at 75 column.
 
-Best regards,
-Krzysztof
+On 10/23/2019 7:37 PM, Jiri Olsa wrote:
+> On Tue, Oct 22, 2019 at 04:07:06PM +0800, Jin Yao wrote:
+> 
+> SNIP
+> 
+>>   
+>> -static int filter_cb(struct hist_entry *he, void *arg __maybe_unused)
+>> -{
+>> -	/* Skip the calculation of column length in output_resort */
+>> -	he->filtered = true;
+>> -	return 0;
+>> -}
+> 
+> please move this change into separate patch and explain in changelog
+> why this is necessary
+> 
+> thanks,
+> jirka
+> 
 
+Got it. I will move this change into a separate patch.
+
+Thanks
+Jin Yao
+
+>> -
+>>   static void hists__precompute(struct hists *hists)
+>>   {
+>>   	struct rb_root_cached *root;
+>> @@ -792,8 +695,11 @@ static void hists__precompute(struct hists *hists)
+>>   		he   = rb_entry(next, struct hist_entry, rb_node_in);
+>>   		next = rb_next(&he->rb_node_in);
+>>   
+>> -		if (compute == COMPUTE_CYCLES)
+>> -			process_block_per_sym(he);
+>> +		if (compute == COMPUTE_CYCLES) {
+>> +			bh = container_of(he, struct block_hist, he);
+>> +			init_block_hist(bh);
+>> +			block_info__process_sym(he, bh, NULL, 0);
+>> +		}
+>>   
+>>   		data__for_each_file_new(i, d) {
+>>   			pair = get_pair_data(he, d);
+>> @@ -812,16 +718,18 @@ static void hists__precompute(struct hists *hists)
+>>   				compute_wdiff(he, pair);
+>>   				break;
+>>   			case COMPUTE_CYCLES:
+>> -				process_block_per_sym(pair);
+>> -				bh = container_of(he, struct block_hist, he);
+>>   				pair_bh = container_of(pair, struct block_hist,
+>>   						       he);
+>> +				init_block_hist(pair_bh);
+>> +				block_info__process_sym(pair, pair_bh, NULL, 0);
+>> +
+>> +				bh = container_of(he, struct block_hist, he);
+>>   
+>>   				if (bh->valid && pair_bh->valid) {
+>>   					block_hists_match(&bh->block_hists,
+>>   							  &pair_bh->block_hists);
+>> -					hists__output_resort_cb(&pair_bh->block_hists,
+>> -								NULL, filter_cb);
+>> +					hists__output_resort(&pair_bh->block_hists,
+>> +							     NULL);
+>>   				}
+>>   				break;
+>>   			default:
+> 
+> SNIP
+> 
+>> diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+>> index 679a1d75090c..a7fa061987e4 100644
+>> --- a/tools/perf/util/hist.c
+>> +++ b/tools/perf/util/hist.c
+>> @@ -18,6 +18,7 @@
+>>   #include "srcline.h"
+>>   #include "symbol.h"
+>>   #include "thread.h"
+>> +#include "block-info.h"
+>>   #include "ui/progress.h"
+>>   #include <errno.h>
+>>   #include <math.h>
+>> @@ -80,6 +81,8 @@ void hists__calc_col_len(struct hists *hists, struct hist_entry *h)
+>>   	int symlen;
+>>   	u16 len;
+>>   
+>> +	if (h->block_info)
+>> +		return;
+>>   	/*
+>>   	 * +4 accounts for '[x] ' priv level info
+>>   	 * +2 accounts for 0x prefix on raw addresses
+> 
+> SNIP
+> 
