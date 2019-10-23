@@ -2,165 +2,146 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 550C5CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 06:59:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E2B1CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 07:00:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B98920684
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 06:59:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571813994;
-	bh=IpN0ESp2vKywiTrEJjsyN/RCTKP6EQXTfeuYvwZpy8U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bey2kBy/U1mQ4TH4HBSCGcTPVBYzO1Yg8l7Luw7r62Cvz2lHVJkMobO6NY8bZXqER
-	 b2HugwAgSvPVn9pq0Nc5lvwl8Eq+ME+OT6cFfZ2o296v7F9/DdXlHKXPU/yDzEhOPz
-	 aC4uBP9d6ZAz3ZMQAPypE1AEbdPFNZtZd4wr3/E8=
+	by mail.kernel.org (Postfix) with ESMTP id 0BD052064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 07:00:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="LMfZCZKv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389562AbfJWG7x (ORCPT
+        id S2389621AbfJWHA3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 02:59:53 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44714 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727194AbfJWG7w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 02:59:52 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 2CC14B5D8;
-        Wed, 23 Oct 2019 06:59:50 +0000 (UTC)
-Date:   Wed, 23 Oct 2019 08:59:49 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH 2/2] mm: memcontrol: try harder to set a new memory.high
-Message-ID: <20191023065949.GD754@dhcp22.suse.cz>
-References: <20191022201518.341216-1-hannes@cmpxchg.org>
- <20191022201518.341216-2-hannes@cmpxchg.org>
+        Wed, 23 Oct 2019 03:00:29 -0400
+Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:42406 "EHLO
+        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388218AbfJWHA3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 03:00:29 -0400
+Received: from pps.filterd (m0167090.ppops.net [127.0.0.1])
+        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9N6vlxx026605;
+        Wed, 23 Oct 2019 03:00:24 -0400
+Received: from nam01-by2-obe.outbound.protection.outlook.com (mail-by2nam01lp2055.outbound.protection.outlook.com [104.47.34.55])
+        by mx0b-00128a01.pphosted.com with ESMTP id 2vt9t219ch-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 23 Oct 2019 03:00:24 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jO0hWTm4BiIRnQ4oOfESxv9cRFztLh1NjxsYzkAJsA6vQgNgYonHhXiX6MTjoo0asXsk6jDaCfN9fNpnvBIR/qb/Gt0z1KHWKm4rU8YYMk6YyBeB6SqJvRIUdtmAgisNaIiMQz/scueUG6WXiD0ISm97g8tTHTgQGg56rpdO/gxPmbShAu7XOk+IkrosRhhc99M8MppWez/9KerM52hpe9ZvSF1oKdqTqprCiNVt+W+aPO0wJTT/phEA/i00lXET18KXwLwezRSykjzuXBid0j22xy/5Y2GU/crAAeaUhYwzZOVSu9lA9JDZGjLre4VFuxO7eWqJWBQHoC1DU9v5wQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5SAZawyw2mjZD9738Vzkiz3VqA0/AeM/sbEnyB25CHA=;
+ b=HeeLFM51soO4+14eTMp+CJllusmaht14JvcmYeGGwdKtGaA1teT4XhWf5HRB+JxSmyk9Zj+uQl1C+OIRc6d5514KJKQpGfGb9wsIn0u0Xen5iEwtZU91E/jdZ6NqVct6/CC38nxgGF5i9ip7kVoco9O2jWc3hboW0/ZeamVsR3ArsXuIoCMd1pKGWOhzamoy2786yP3vi2JUX6NDEOUMsvhgHDXcYmqj9PhKBxisv+/UuOo5+8rzFSsWlrdPrSp5+MyaKzYsbUS6OqrsqgwQswTVbf0XIcOT7iBJxwhgFX93Db8LHXDiTcwNQB6gLdHFbhdYLCvOLOtg0/MqSns+tg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 137.71.25.57) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=analog.com;
+ dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5SAZawyw2mjZD9738Vzkiz3VqA0/AeM/sbEnyB25CHA=;
+ b=LMfZCZKvSfEDqXDITQA+xD82u/+YHE7dKIfEDwCcowY8k0CGlljh9uBATMSzwT+IEH1kHNiXXr2ZAkCEtiZDyjxxc9B/8JOfU59PX+iemEUVGO0uUNzvRj7+FjIJpAcwjmuhMfka7kJg6MNRBd7riBdxqG2YjP5/tuJ2NMqCJIc=
+Received: from BN6PR03CA0068.namprd03.prod.outlook.com (2603:10b6:404:4c::30)
+ by MWHPR03MB2432.namprd03.prod.outlook.com (2603:10b6:300:9::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2387.20; Wed, 23 Oct
+ 2019 07:00:21 +0000
+Received: from SN1NAM02FT064.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e44::205) by BN6PR03CA0068.outlook.office365.com
+ (2603:10b6:404:4c::30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2367.21 via Frontend
+ Transport; Wed, 23 Oct 2019 07:00:21 +0000
+Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
+ 137.71.25.57 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.71.25.57; helo=nwd2mta2.analog.com;
+Received: from nwd2mta2.analog.com (137.71.25.57) by
+ SN1NAM02FT064.mail.protection.outlook.com (10.152.72.143) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2367.14
+ via Frontend Transport; Wed, 23 Oct 2019 07:00:20 +0000
+Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
+        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id x9N70DfB021405
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Wed, 23 Oct 2019 00:00:13 -0700
+Received: from saturn.ad.analog.com (10.48.65.116) by
+ NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
+ 14.3.408.0; Wed, 23 Oct 2019 03:00:19 -0400
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <broonie@kernel.org>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        kbuild test robot <lkp@intel.com>
+Subject: [PATCH] spi: document CS setup, hold & inactive times in header
+Date:   Wed, 23 Oct 2019 10:00:46 +0300
+Message-ID: <20191023070046.12478-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191022201518.341216-2-hannes@cmpxchg.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(346002)(39860400002)(396003)(376002)(136003)(189003)(199004)(1076003)(246002)(50226002)(186003)(356004)(316002)(86362001)(8936002)(50466002)(7636002)(426003)(486006)(305945005)(44832011)(110136005)(6666004)(8676002)(5660300002)(54906003)(4326008)(2616005)(476003)(47776003)(126002)(14444005)(36756003)(48376002)(2906002)(106002)(478600001)(70206006)(26005)(70586007)(336012)(2870700001)(7696005)(51416003);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR03MB2432;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 5297eb40-6c8a-4064-f744-08d75786ab69
+X-MS-TrafficTypeDiagnostic: MWHPR03MB2432:
+X-Microsoft-Antispam-PRVS: <MWHPR03MB243287CD34A0242BE1103E76F96B0@MWHPR03MB2432.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-Forefront-PRVS: 019919A9E4
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: T0qOIk1QMte/PEcmHxhN2V+kITe3iW4Xujq2PwlCBxT8FvHHpphWpLb1PoYNNbp7fuyVcWSK7qtQu557gr+o/5UaO7VpUjYR9aO2zNtiTPbTjmaP/tURHRUcuNFG+G1ziA5FOH2+Wb5DEtM8NnLG+k9dxhPyRIW9ggYylxSDG5KhmhW+G2DIjJSwTwafP8GFFGez94NI15Men7XPPojoPNy+/hQn+BFA7EAVAwCRIBSSpbInlf///6D53xoYoQYDQNXZrXC6Z8GLrT4//7/4EOy6vzSK5+dKEUxliuXadXOAuFQkl5z+VjaNUBkmTIc0uF2uFNz7/ZIEoeuwt1V6Mf2xLYuOSBiw9qarj26vcVjYaDQI6vzmLwDgjbltpalPuyAxQsQX5RDd2H/RshtS8HCk0EogzfXylGmSIM5du0f5uOvLjPEhqmtn2WdYFZgq
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Oct 2019 07:00:20.8176
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5297eb40-6c8a-4064-f744-08d75786ab69
+X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.57];Helo=[nwd2mta2.analog.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR03MB2432
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-23_01:2019-10-22,2019-10-23 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ priorityscore=1501 suspectscore=0 mlxlogscore=967 phishscore=0
+ impostorscore=0 clxscore=1011 malwarescore=0 spamscore=0 bulkscore=0
+ mlxscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1908290000 definitions=main-1910230068
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 22-10-19 16:15:18, Johannes Weiner wrote:
-> Setting a memory.high limit below the usage makes almost no effort to
-> shrink the cgroup to the new target size.
-> 
-> While memory.high is a "soft" limit that isn't supposed to cause OOM
-> situations, we should still try harder to meet a user request through
-> persistent reclaim.
-> 
-> For example, after setting a 10M memory.high on an 800M cgroup full of
-> file cache, the usage shrinks to about 350M:
-> 
-> + cat /cgroup/workingset/memory.current
-> 841568256
-> + echo 10M
-> + cat /cgroup/workingset/memory.current
-> 355729408
-> 
-> This isn't exactly what the user would expect to happen. Setting the
-> value a few more times eventually whittles the usage down to what we
-> are asking for:
-> 
-> + echo 10M
-> + cat /cgroup/workingset/memory.current
-> 104181760
-> + echo 10M
-> + cat /cgroup/workingset/memory.current
-> 31801344
-> + echo 10M
-> + cat /cgroup/workingset/memory.current
-> 10440704
-> 
-> To improve this, add reclaim retry loops to the memory.high write()
-> callback, similar to what we do for memory.max, to make a reasonable
-> effort that the usage meets the requested size after the call returns.
+This change documents the CS setup, host & inactive times. They were
+omitted when the fields were added, and were caught by one of the build
+bots.
 
-That suggests that the reclaim couldn't meet the given reclaim target
-but later attempts just made it through. Is this due to amount of dirty
-pages or what prevented the reclaim to do its job?
+Fixes: 25093bdeb6bc ("spi: implement SW control for CS times")
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
+ include/linux/spi/spi.h | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-While I am not against the reclaim retry loop I would like to understand
-the underlying issue. Because if this is really about dirty memory then
-we should probably be more pro-active in flushing it. Otherwise the
-retry might not be of any help.
-
-> Afterwards, a single write() to memory.high is enough in all but
-> extreme cases:
-> 
-> + cat /cgroup/workingset/memory.current
-> 841609216
-> + echo 10M
-> + cat /cgroup/workingset/memory.current
-> 10182656
-> 
-> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
-> ---
->  mm/memcontrol.c | 30 ++++++++++++++++++++++++------
->  1 file changed, 24 insertions(+), 6 deletions(-)
-> 
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index ff90d4e7df37..8090b4c99ac7 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -6074,7 +6074,8 @@ static ssize_t memory_high_write(struct kernfs_open_file *of,
->  				 char *buf, size_t nbytes, loff_t off)
->  {
->  	struct mem_cgroup *memcg = mem_cgroup_from_css(of_css(of));
-> -	unsigned long nr_pages;
-> +	unsigned int nr_retries = MEM_CGROUP_RECLAIM_RETRIES;
-> +	bool drained = false;
->  	unsigned long high;
->  	int err;
->  
-> @@ -6085,12 +6086,29 @@ static ssize_t memory_high_write(struct kernfs_open_file *of,
->  
->  	memcg->high = high;
->  
-> -	nr_pages = page_counter_read(&memcg->memory);
-> -	if (nr_pages > high)
-> -		try_to_free_mem_cgroup_pages(memcg, nr_pages - high,
-> -					     GFP_KERNEL, true);
-> +	for (;;) {
-> +		unsigned long nr_pages = page_counter_read(&memcg->memory);
-> +		unsigned long reclaimed;
-> +
-> +		if (nr_pages <= high)
-> +			break;
-> +
-> +		if (signal_pending(current))
-> +			break;
-> +
-> +		if (!drained) {
-> +			drain_all_stock(memcg);
-> +			drained = true;
-> +			continue;
-> +		}
-> +
-> +		reclaimed = try_to_free_mem_cgroup_pages(memcg, nr_pages - high,
-> +							 GFP_KERNEL, true);
-> +
-> +		if (!reclaimed && !nr_retries--)
-> +			break;
-> +	}
->  
-> -	memcg_wb_domain_size_changed(memcg);
->  	return nbytes;
->  }
->  
-> -- 
-> 2.23.0
-
+diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
+index c40d6af2bf07..98fe8663033a 100644
+--- a/include/linux/spi/spi.h
++++ b/include/linux/spi/spi.h
+@@ -407,6 +407,11 @@ static inline void spi_unregister_driver(struct spi_driver *sdrv)
+  *	     controller has native support for memory like operations.
+  * @unprepare_message: undo any work done by prepare_message().
+  * @slave_abort: abort the ongoing transfer request on an SPI slave controller
++ * @cs_setup: delay to be introduced by the controller after CS is asserted
++ * @cs_hold: delay to be introduced by the controller before CS is deasserted
++ * @cs_inactive: delay to be introduced by the controller after CS is
++ *	deasserted. If @cs_change_delay is used from @spi_transfer, then the
++ *	two delays will be added up.
+  * @cs_gpios: LEGACY: array of GPIO descs to use as chip select lines; one per
+  *	CS number. Any individual value may be -ENOENT for CS lines that
+  *	are not GPIOs (driven by the SPI controller itself). Use the cs_gpiods
 -- 
-Michal Hocko
-SUSE Labs
+2.20.1
+
