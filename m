@@ -2,109 +2,164 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA978CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:26:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27F24CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:27:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FA4620650
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:26:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bt4/svf2"
+	by mail.kernel.org (Postfix) with ESMTP id 00A4120659
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:27:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392450AbfJWP0s (ORCPT
+        id S2392465AbfJWP1C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 11:26:48 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:37072 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732725AbfJWP0r (ORCPT
+        Wed, 23 Oct 2019 11:27:02 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:49965 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732725AbfJWP1B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 11:26:47 -0400
-Received: by mail-pg1-f193.google.com with SMTP id p1so12358957pgi.4;
-        Wed, 23 Oct 2019 08:26:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=eB8tBI6yDFyKa7RDqC5m4uIkOsXMXVXVRZ+cXb0whiI=;
-        b=bt4/svf29WjLyXtdV/XTOBIt3Q+Q3s0L4pf6nH3frdrJltuIWuw4kc/D/yHT03/yIX
-         33R2LmJhWwWva9Xr8g1JiQioza0GRzkJR5kwSYBehMSTr6pPXkLoYe5nLkH+lBwCGEIX
-         MypnYI93gJIiuc8vfZp0v7Sv9HbsQAxrNPbtqI5RJug8YWy5fBH6+/Hh8gu/Zl1ts2SL
-         hUH6OjfLrxhIeh4vk2bAyJG/eY99dZOKtP7ZxjYUqFainhP7jWoQxf1vmiYjQs/ykAS2
-         j9JZeVzb63Au67+2PiAPVjMSS53I8Q9WrYNQzDfXU8hssZp8Z68uNKnaIgK+qMMT1pBN
-         Kq7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=eB8tBI6yDFyKa7RDqC5m4uIkOsXMXVXVRZ+cXb0whiI=;
-        b=juefXAIBklvnl7Nxts54rXFqPVG7jTvjl7862ftwLeAh1VHqGNdxRAJoNsnV9lacfg
-         OOw4mMBgcNHDnNOzVaqVi5vn1dXd1gsovyOp4AywB3lJrJB5tJNTQzJXUEEAsszT0Pcq
-         2Jib3v5VX5AIo34d7+kH/UZv/Oa95G1adaNXdcb6JjIabutW8izVKyVpqm58r7PzDeG5
-         5egSjNkuLanL025F8iLO/cQPh7PfsrSCRTlfmDCpQ1q5KaomyxE45BCVNAzUsZhzuTjZ
-         TWGeMV6KyTwIN4Zmm2bSvqiO1N6CIzeGPJtelPFPKzVKhIA9Iznel6QXuoRx/rmrPNKr
-         X5fQ==
-X-Gm-Message-State: APjAAAVGR7xeUpSQe7AGuhoKpjehuNkQJdD2Yc6Q8H4XOLpgmG8gNFEQ
-        tUbpbLl9S5Nd1CezntQlHOo=
-X-Google-Smtp-Source: APXvYqyIu2N5oOaT8KT0563kjSMOnaymaWdlyH/6wjqSwBA6M7dEp0dcvB2RactEHhIT3daWCrVzyQ==
-X-Received: by 2002:a62:8248:: with SMTP id w69mr11477291pfd.236.1571844405770;
-        Wed, 23 Oct 2019 08:26:45 -0700 (PDT)
-Received: from nishad ([106.51.232.103])
-        by smtp.gmail.com with ESMTPSA id k17sm32510265pgh.30.2019.10.23.08.26.42
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 23 Oct 2019 08:26:45 -0700 (PDT)
-Date:   Wed, 23 Oct 2019 20:56:38 +0530
-From:   Nishad Kamdar <nishadkamdar@gmail.com>
-To:     Hans Ulli Kroll <ulli.kroll@googlemail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joe Perches <joe@perches.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] net: ethernet: Use the correct style for SPDX License
- Identifier
-Message-ID: <20191023152634.GA3749@nishad>
+        Wed, 23 Oct 2019 11:27:01 -0400
+Received: from mail-qt1-f182.google.com ([209.85.160.182]) by
+ mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MTRAS-1iZJ5a35tU-00Tlmm; Wed, 23 Oct 2019 17:26:58 +0200
+Received: by mail-qt1-f182.google.com with SMTP id t20so32846600qtr.10;
+        Wed, 23 Oct 2019 08:26:58 -0700 (PDT)
+X-Gm-Message-State: APjAAAXqWsXeKYx3tVUPgi4zvMXArJGL9FoUQBOxxW6sVjFum4KgkVff
+        SsCbSXoi5BzZfWcGaKwaX0BbG8xvD8aaY2Aveno=
+X-Google-Smtp-Source: APXvYqwZJYNUcjDljv5SUIIJYNavbp3Ujmk3aAqd++SffV/emyrXQ3UBboCiPVxPkT3VPGqZOs5oW07jKNUPG9sQS8s=
+X-Received: by 2002:a0c:fde8:: with SMTP id m8mr8218926qvu.4.1571844417540;
+ Wed, 23 Oct 2019 08:26:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20191009190853.245077-1-arnd@arndb.de> <20191009191044.308087-11-arnd@arndb.de>
+ <20191022043451.GB20354@ZenIV.linux.org.uk> <CAK8P3a1C=skow522Ge7w=ya2hK8TPS8ncusdyX-Ne4GBWB1H4A@mail.gmail.com>
+ <20191023031711.GA26530@ZenIV.linux.org.uk>
+In-Reply-To: <20191023031711.GA26530@ZenIV.linux.org.uk>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 23 Oct 2019 17:26:41 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1=5gtn5xcg8Sjc-emcb4fy=VuNPNo6-MhP3ZDP9BXxPw@mail.gmail.com>
+Message-ID: <CAK8P3a1=5gtn5xcg8Sjc-emcb4fy=VuNPNo6-MhP3ZDP9BXxPw@mail.gmail.com>
+Subject: Re: [PATCH v6 11/43] compat_ioctl: move drivers to compat_ptr_ioctl
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        y2038 Mailman List <y2038@lists.linaro.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Jiri Kosina <jkosina@suse.cz>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:Z5Y717p5ugEHBIsqAFglSr6xPjtai5XYu7pkkFiVWRWQ+2VZW0i
+ EyM3AUu2N+5ZHLIKRo63Xcwzwr8PpvCiEC7s2a+WCZeoWBfyBIV62JntY2GczKRHGbiIHoE
+ 6Lcu5Bloflt0T8JbKStO1zjnzvpTirNfNvZCi9kuIulouG86+zDwR4LvCcvTVgiCyjUZ8oA
+ AIHsN2o/u6a9t9kHakuJw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:XIa79+yPgP4=:g0KBe50nVSYObmj9uZqsgY
+ xZb7GQQFhLM2BmD/TMx1Xqe1eADBh3Apr7V9f+jVCol2LTujnun4Dku293bLhs3irnLQTPOLJ
+ NLfbebRdtsB1sxjpF84DoLttFhGtRJYTYogSNh4sVGeYkTZPAPQwEF9pYSyV6H3ow5OVVz/rd
+ TOWpcXLHzbpteNhyzrORmiIF1gx3DQRRKJMsL1L46ShikHNb+l0IcC4j7SNEc5YST0plB/hWy
+ F46Wy5xgejqEgGJfclfBLYlhJBEeSzUyy71zwYuQzX6SwFJ3ig5VyzXCnOBhQFMc06vFr1ztS
+ hPMDlxqf8bhPtCrgTsL/wmEH/knuYouwKaZzOkBRUsiBq9SJqQpLfhS0SgAuGF0N3T4oAPg25
+ 9SOE36kQLavNUuA9zBMLfybAFZQPcObWzdBm5cKSKNxldOLKkAXIiMcU8qwLHEdm7SQvr227S
+ xH8Pky7maFe9Y5D3EQ1J1KNaLMMGpHhroF1V4VL4M9ZUd0ySqXAUFsjmva3HUTVo3ub+qFzv/
+ C3EvxkXLOjTppQTm9gVtG69Nxvu77onUddBy+NyTySrjQbEYVwl800sMaqzoPE7IPFvWpdXjN
+ jEili9kHlpzd5BYshSnUbEdM6hjOF3XReb6N4+F2iJFWq9u/vzouHwJacj5oEX4p4ET/qfE0W
+ XAI26xss5amRLddIgFKMxkTLZXeED7rjOIYwtYjc9JzvED+Qo8D7qhPguKW7okBym23y4fIlF
+ rqdOQFzLA0jbfUd1U/u5Hd1R9meV75EZWpRLY1x681yizjYTUbe/y5Y+WIo8yRAwfRhWXX3a7
+ w1DcOf8AQULXBVBYsVZ8gUhVwiCbqD+PVv7haTTo/4IjzcygN6jpbDkWiYRnvrJXpmt9D1Usg
+ VZEhNeekpUoXDsciHdiw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch corrects the SPDX License Identifier style in
-header file related to ethernet driver for Cortina Gemini
-devices. For C header files Documentation/process/license-rules.rst
-mandates C-like comments (opposed to C source files where
-C++ style should be used)
+On Wed, Oct 23, 2019 at 5:17 AM Al Viro <viro@zeniv.linux.org.uk> wrote:
+>
+> On Tue, Oct 22, 2019 at 12:26:09PM +0200, Arnd Bergmann wrote:
+> > On Tue, Oct 22, 2019 at 6:34 AM Al Viro <viro@zeniv.linux.org.uk> wrote:
+> > >
+> > > On Wed, Oct 09, 2019 at 09:10:11PM +0200, Arnd Bergmann wrote:
+> > > > Each of these drivers has a copy of the same trivial helper function to
+> > > > convert the pointer argument and then call the native ioctl handler.
+> > > >
+> > > > We now have a generic implementation of that, so use it.
+> > >
+> > > I'd rather flipped your #7 (ceph_compat_ioctl() introduction) past
+> > > that one...
+> >
+> > The idea was to be able to backport the ceph patch as a bugfix
+> > to stable kernels without having to change it or backport
+> > compat_ptr_ioctl() as well.
+> >
+> > If you still prefer it that way, I'd move to a simpler version of this
+> > patch and drop the Cc:stable.
+>
+> What I'm going to do is to put the introduction of compat_ptr_ioctl()
+> into a never-rebased branch; having e.g. ceph patch done on top of
+> it should suffice - it can go into -stable just fine. Trivially
+> backported all the way back, has no prereqs and is guaranteed to
+> cause no conflicts, so if any -stable fodder ends up depending upon
+> it, there will be no problem whatsoever.  IMO that commit should
+> precede everything else in the queue...
 
-Changes made by using a script provided by Joe Perches here:
-https://lkml.org/lkml/2019/2/7/46.
+Ok, fair enough. I've moved that one patch to the start of my git
+branch now. See below for the updated patch. I also uploaded
+the modified y2038 branch for linux-next.
 
-Suggested-by: Joe Perches <joe@perches.com>
-Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
----
- drivers/net/ethernet/cortina/gemini.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Another thing is that I'd fold #8 into #6 - it clearly belongs
+> in there.
 
-diff --git a/drivers/net/ethernet/cortina/gemini.h b/drivers/net/ethernet/cortina/gemini.h
-index 0b12f89bf89a..9fdf77d5eb37 100644
---- a/drivers/net/ethernet/cortina/gemini.h
-+++ b/drivers/net/ethernet/cortina/gemini.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- /* Register definitions for Gemini GMAC Ethernet device driver
-  *
-  * Copyright (C) 2006 Storlink, Corp.
--- 
-2.17.1
+Done.
 
+      Arnd
+
+8<------
+commit 18bd6caaef4021803dd0d031dc37c2d001d18a5b (HEAD)
+Author: Arnd Bergmann <arnd@arndb.de>
+Date:   Tue Sep 11 20:47:23 2018 +0200
+
+    ceph: fix compat_ioctl for ceph_dir_operations
+
+    The ceph_ioctl function is used both for files and directories, but only
+    the files support doing that in 32-bit compat mode.
+
+    On the s390 architecture, there is also a problem with invalid 31-bit
+    pointers that need to be passed through compat_ptr().
+
+    Use the new compat_ptr_ioctl() to address both issues.
+
+    Note: When backporting this patch to stable kernels, "compat_ioctl:
+    add compat_ptr_ioctl()" is needed as well.
+
+    Reviewed-by: "Yan, Zheng" <zyan@redhat.com>
+    Cc: stable@vger.kernel.org
+    Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+
+diff --git a/fs/ceph/dir.c b/fs/ceph/dir.c
+index 4ca0b8ff9a72..811f45badc10 100644
+--- a/fs/ceph/dir.c
++++ b/fs/ceph/dir.c
+@@ -1808,6 +1808,7 @@ const struct file_operations ceph_dir_fops = {
+        .open = ceph_open,
+        .release = ceph_release,
+        .unlocked_ioctl = ceph_ioctl,
++       .compat_ioctl = compat_ptr_ioctl,
+        .fsync = ceph_fsync,
+        .lock = ceph_lock,
+        .flock = ceph_flock,
+diff --git a/fs/ceph/file.c b/fs/ceph/file.c
+index d277f71abe0b..6092ccea50d2 100644
+--- a/fs/ceph/file.c
++++ b/fs/ceph/file.c
+@@ -2162,7 +2162,7 @@ const struct file_operations ceph_file_fops = {
+        .splice_read = generic_file_splice_read,
+        .splice_write = iter_file_splice_write,
+        .unlocked_ioctl = ceph_ioctl,
+-       .compat_ioctl   = ceph_ioctl,
++       .compat_ioctl = compat_ptr_ioctl,
+        .fallocate      = ceph_fallocate,
+        .copy_file_range = ceph_copy_file_range,
+ };
