@@ -2,110 +2,119 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 642F2CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:03:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA10CCA9EBB
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:03:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AC682086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:03:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FEAF21925
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:03:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N4mOPS98"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UGplGApx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727012AbfJWRDG (ORCPT
+        id S1727077AbfJWRDU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 13:03:06 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:38820 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726497AbfJWRDG (ORCPT
+        Wed, 23 Oct 2019 13:03:20 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:28698 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726812AbfJWRDU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 13:03:06 -0400
-Received: by mail-ot1-f65.google.com with SMTP id e11so18045694otl.5;
-        Wed, 23 Oct 2019 10:03:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=LNIlo875oLUnbVBAslOcAnj59hqK1kHx858TCXge7cA=;
-        b=N4mOPS98IWbZY/2/KBp62o4U8DpmiY8K/DxEPJzcpUxxxheeFNhUu7vukEldTwgqYR
-         rHqct06pgkkgI7CxlYFrLPVZFWX0enc8m766N5KPfidbuNpOhSlOnf7lUm4GpzbTXhqi
-         mKxKG1Y07F9CS+p9fzQ9CFIozlQSEzIVJiYzQjPfo6BpMzEDSObuiZoB7x9je0fp6S0/
-         DyL2E/W6hxxWsJfr0QGpj9uWjDA0V25V2YCZx82kOEZYyAZ8gLMmecgtPLXiTgUOyeY+
-         X9ZQcx5xLJl2//NB9fL0WDdd6hfY1K67a98OMzhy12qY9cFN8oW7zGfw3Oiphk5MZUXX
-         LNyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LNIlo875oLUnbVBAslOcAnj59hqK1kHx858TCXge7cA=;
-        b=MNvc3Vph9kmIvuS0C8x2xUpu81uNJgC/oeQ3V5vx/tpkXM4PwilMxsxQgS2X2Drg+1
-         jOU3bc2yEHqHM4s97HW3IF4E200n3kXt1+nUzcNHo2Njrsq9VBAzaC2OCio8Vgt0egge
-         nb63icvMU5Bui6SsPTco4uGpixoY1LDqqj0RkgegvJDX1Mpb2C6F1jNaa0hv/eIZHk4w
-         8KhX/tphdeM6WPEG8XlJO7hpipgh7Rgow0ZB6eMxBi35vdwOUrj8prrwLygckeW0Qewm
-         BwX6vfzIAyfS6H0eTUuUF/IyF6s5GwpK8PoBaqGkA463UTDceAubckB037kX/6+bGmhI
-         Rk5g==
-X-Gm-Message-State: APjAAAVavtALCw53b/h//ReV5tJXX0OzBvasy3cYEOYqzF/TOsmalBm+
-        2icab+bE7uWmuJ1+DLTFKoQ=
-X-Google-Smtp-Source: APXvYqyr+KOjBV2W0qrTz7k8vKZIZRshNryK06zDkLhWk6XYcHe9LOVkSReS/D2+RnKymZPKRqgmvQ==
-X-Received: by 2002:a9d:6ace:: with SMTP id m14mr8170163otq.11.1571850184682;
-        Wed, 23 Oct 2019 10:03:04 -0700 (PDT)
-Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id r26sm5705285oij.46.2019.10.23.10.03.04
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 23 Oct 2019 10:03:04 -0700 (PDT)
-Date:   Wed, 23 Oct 2019 10:03:02 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] cpufreq: s3c64xx: Remove pointless NULL check in
- s3c64xx_cpufreq_driver_init
-Message-ID: <20191023170302.GA45373@ubuntu-m2-xlarge-x86>
-References: <20191023000906.14374-1-natechancellor@gmail.com>
- <20191023032302.tu5nkvulo2yoctgr@vireshk-i7>
- <20191023104304.GA5723@sirena.co.uk>
- <20191023162628.GA10997@ubuntu-m2-xlarge-x86>
- <20191023163656.GH5723@sirena.co.uk>
- <20191023165417.GA15082@ubuntu-m2-xlarge-x86>
- <20191023165923.GL5723@sirena.co.uk>
+        Wed, 23 Oct 2019 13:03:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571850198;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=hL1kplXLC+ueQfopd2mykU/6xLsfKNYy9p+amPVfFVA=;
+        b=UGplGApx3GTROkZ/kqj1pOsV+1zvSdAQCcJhtB+yVWXMoUU0A4Co/te6jJZEJZVsYHOqqF
+        JurrG6QAz3ZROhoxzuOeg11tmaOo1htMr/+myFE9yaMIixvU0kQd41PjlpeDAUfDbU2PA4
+        2k8VOW56phVRjbxbmxW/FcCbeDGdYhg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-241-JMqWU3XDM3WOQ86NKjFRPQ-1; Wed, 23 Oct 2019 13:03:12 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 939FA800D49;
+        Wed, 23 Oct 2019 17:03:09 +0000 (UTC)
+Received: from redhat.com (ovpn-124-105.rdu2.redhat.com [10.10.124.105])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 039751001B07;
+        Wed, 23 Oct 2019 17:03:07 +0000 (UTC)
+Date:   Wed, 23 Oct 2019 13:03:06 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc:     "zhangfei.gao@foxmail.com" <zhangfei.gao@foxmail.com>,
+        francois.ozog@linaro.org, Herbert Xu <herbert@gondor.apana.org.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Zaibo Xu <xuzaibo@huawei.com>, ilias.apalodimas@linaro.org,
+        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+        Wangzhou <wangzhou1@hisilicon.com>, grant.likely@arm.com,
+        "haojian . zhuang" <haojian.zhuang@linaro.org>,
+        Zhangfei Gao <zhangfei.gao@linaro.org>,
+        Kenneth Lee <liguozhu@hisilicon.com>,
+        linux-accelerators@lists.ozlabs.org, kenneth-lee-2012@foxmail.com
+Subject: Re: [PATCH v6 2/3] uacce: add uacce driver
+Message-ID: <20191023170306.GC4163@redhat.com>
+References: <1571214873-27359-1-git-send-email-zhangfei.gao@linaro.org>
+ <1571214873-27359-3-git-send-email-zhangfei.gao@linaro.org>
+ <20191016172802.GA1533448@lophozonia>
+ <5da9a9cd.1c69fb81.9f8e8.60faSMTPIN_ADDED_BROKEN@mx.google.com>
+ <20191023074227.GA264888@lophozonia>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <20191023074227.GA264888@lophozonia>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: JMqWU3XDM3WOQ86NKjFRPQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-In-Reply-To: <20191023165923.GL5723@sirena.co.uk>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 05:59:23PM +0100, Mark Brown wrote:
-> On Wed, Oct 23, 2019 at 09:54:17AM -0700, Nathan Chancellor wrote:
-> > On Wed, Oct 23, 2019 at 05:36:56PM +0100, Mark Brown wrote:
-> > > On Wed, Oct 23, 2019 at 09:26:28AM -0700, Nathan Chancellor wrote:
-> > > > On Wed, Oct 23, 2019 at 11:43:04AM +0100, Mark Brown wrote:
-> 
-> > > > > The driver should also have supported s3c6400 as well.
-> 
-> > > > Kconfig says otherwise, unless I am missing something.
-> 
-> > > Note the XX in the config option.
-> 
-> > But what about the depends and the help text?
-> 
-> Viresh asked why the driver was written with s3c6410 support optional.
-> I explained that the reason that it was written this way was to
-> accomodate s3c6400 support.
+On Wed, Oct 23, 2019 at 09:42:27AM +0200, Jean-Philippe Brucker wrote:
+> On Fri, Oct 18, 2019 at 08:01:44PM +0800, zhangfei.gao@foxmail.com wrote:
 
-Ah understood, thanks for the clarification and sorry for the
-misunderstanding!
+[...]
+
+> > > > +static int uacce_fops_mmap(struct file *filep, struct vm_area_stru=
+ct *vma)
+> > > > +{
+> > > > +=09struct uacce_queue *q =3D filep->private_data;
+> > > > +=09struct uacce_device *uacce =3D q->uacce;
+> > > > +=09struct uacce_qfile_region *qfr;
+> > > > +=09enum uacce_qfrt type =3D 0;
+> > > > +=09unsigned int flags =3D 0;
+> > > > +=09int ret;
+> > > > +
+> > > > +=09if (vma->vm_pgoff < UACCE_QFRT_MAX)
+> > > > +=09=09type =3D vma->vm_pgoff;
+> > > > +
+> > > > +=09vma->vm_flags |=3D VM_DONTCOPY | VM_DONTEXPAND;
+> > > > +
+> > > > +=09mutex_lock(&uacce_mutex);
+>=20
+> By the way, lockdep detects a possible unsafe locking scenario here,
+> because we're taking the uacce_mutex even though mmap called us with the
+> mmap_sem held for writing. Conversely uacce_fops_release() takes the
+> mmap_sem for writing while holding the uacce_mutex. I think it can be
+> fixed easily, if we simply remove the use of mmap_sem in
+> uacce_fops_release(), since it's only taken to do some accounting which
+> doesn't look right.
+
+I think you need to remove the RLIMIT_DATA accounting altogether. Assume
+it is not an issue for now and revisit latter when it becomes one as i
+am not sure we want to add this queue memory accounting to RLIMIT_DATA
+in the first place. Maybe a memory cgroup. In anycases it is safer to
+delay this discussion to latter.
 
 Cheers,
-Nathan
+J=E9r=F4me
+
