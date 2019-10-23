@@ -2,105 +2,87 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A91DEC47E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:39:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 895ECCA9EB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:40:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8843D21D7B
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:39:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A49721D7B
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:40:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403918AbfJWJjg (ORCPT
+        id S2403973AbfJWJkP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 05:39:36 -0400
-Received: from mga05.intel.com ([192.55.52.43]:55175 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390380AbfJWJjg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 05:39:36 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 02:39:35 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,220,1569308400"; 
-   d="scan'208";a="209888327"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 23 Oct 2019 02:39:32 -0700
-Received: by lahna (sSMTP sendmail emulation); Wed, 23 Oct 2019 12:39:32 +0300
-Date:   Wed, 23 Oct 2019 12:39:32 +0300
-From:   "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>
-To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "logang@deltatee.com" <logang@deltatee.com>
-Subject: Re: [PATCH v8 4/6] PCI: Allow extend_bridge_window() to shrink
- resource if necessary
-Message-ID: <20191023093932.GS2819@lahna.fi.intel.com>
-References: <SL2P216MB01879766498AA7746C2E5FB780C00@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
- <20191008120907.GI2819@lahna.fi.intel.com>
- <SL2P216MB018711E3699EE682FD4437E8806B0@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
+        Wed, 23 Oct 2019 05:40:15 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:46342 "EHLO foss.arm.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S2403840AbfJWJkO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 05:40:14 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7E4F91688;
+        Wed, 23 Oct 2019 02:39:56 -0700 (PDT)
+Received: from localhost (e113682-lin.copenhagen.arm.com [10.32.145.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 07AC83F718;
+        Wed, 23 Oct 2019 02:39:55 -0700 (PDT)
+Date:   Wed, 23 Oct 2019 11:39:54 +0200
+From:   Christoffer Dall <christoffer.dall@arm.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     James Hogan <jhogan@kernel.org>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Marc Zyngier <maz@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Wanpeng Li <wanpengli@tencent.com>, kvm@vger.kernel.org,
+        David Hildenbrand <david@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Cornelia Huck <cohuck@redhat.com>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm-ppc@vger.kernel.org,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        kvmarm@lists.cs.columbia.edu, Jim Mattson <jmattson@google.com>
+Subject: Re: [PATCH v2 00/15] KVM: Dynamically size memslot arrays
+Message-ID: <20191023093954.GH2652@e113682-lin.lund.arm.com>
+References: <20191022003537.13013-1-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <SL2P216MB018711E3699EE682FD4437E8806B0@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191022003537.13013-1-sean.j.christopherson@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 09:16:10AM +0000, Nicholas Johnson wrote:
-> On Tue, Oct 08, 2019 at 03:09:07PM +0300, mika.westerberg@linux.intel.com wrote:
-> > On Fri, Jul 26, 2019 at 12:54:22PM +0000, Nicholas Johnson wrote:
-> > > Remove checks for resource size in extend_bridge_window(). This is
-> > > necessary to allow the pci_bus_distribute_available_resources() to
-> > > function when the kernel parameter pci=hpmemsize=nn[KMG] is used to
-> > > allocate resources. Because the kernel parameter sets the size of all
-> > > hotplug bridges to be the same, there are problems when nested hotplug
-> > > bridges are encountered. Fitting a downstream hotplug bridge with size X
-> > > and normal bridges with size Y into parent hotplug bridge with size X is
-> > > impossible, and hence the downstream hotplug bridge needs to shrink to
-> > > fit into its parent.
-> > 
-> > Maybe you could show the topology here which needs shrinking.
-> > 
-> > > Add check for if bridge is extended or shrunken and adjust pci_dbg to
-> > > reflect this.
-> > > 
-> > > Reset the resource if its new size is zero (if we have run out of a
-> > > bridge window resource). If it is set to zero size and left, it can
-> > > cause significant problems when it comes to enabling devices.
-> > 
-> > Same comment here about explaining the "significant problems".
-> I have in the past, but because the problems are very hard to describe succinctly, it just turns into a 
-> nightmare. I can try to do it again.
+On Mon, Oct 21, 2019 at 05:35:22PM -0700, Sean Christopherson wrote:
+> The end goal of this series is to dynamically size the memslot array so
+> that KVM allocates memory based on the number of memslots in use, as
+> opposed to unconditionally allocating memory for the maximum number of
+> memslots.  On x86, each memslot consumes 88 bytes, and so with 2 address
+> spaces of 512 memslots, each VM consumes ~90k bytes for the memslots.
+> E.g. given a VM that uses a total of 30 memslots, dynamic sizing reduces
+> the memory footprint from 90k to ~2.6k bytes.
 > 
-> > > 
-> > > Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-> > > ---
-> > >  drivers/pci/setup-bus.c | 16 +++++++++++-----
-> > >  1 file changed, 11 insertions(+), 5 deletions(-)
-> > > 
-> > > diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-> > > index a072781ab..7e1dc892a 100644
-> > > --- a/drivers/pci/setup-bus.c
-> > > +++ b/drivers/pci/setup-bus.c
-> > > @@ -1823,13 +1823,19 @@ static void extend_bridge_window(struct pci_dev *bridge, struct resource *res,
-> > 
-> > Since it is also shrinking now maybe name it adjust_bridge_window() instead?
-> I am happy to do this.
+> The changes required to support dynamic sizing are relatively small,
+> e.g. are essentially contained in patches 12/13 and 13/13.  Patches 1-11
+> clean up the memslot code, which has gotten quite crusy, especially
+> __kvm_set_memory_region().  The clean up is likely not strictly necessary
+> to switch to dynamic sizing, but I didn't have a remotely reasonable
+> level of confidence in the correctness of the dynamic sizing without first
+> doing the clean up.
 > 
-> If we can drop the pci_dbg() calls, then I might be able to drop this 
-> function entirely. During the development of this patch, that is exactly 
-> what I did. How important are the pci_dbg calls to you?
+> Testing, especially non-x86 platforms, would be greatly appreciated.  The
+> non-x86 changes are for all intents and purposes untested, e.g. I compile
+> tested pieces of the code by copying them into x86, but that's it.  In
+> theory, the vast majority of the functional changes are arch agnostic, in
+> theory...
 
-Well they are still useful when debugging resource allocation issues
-(and they match similar we do when extending number of buses). I would
-like to keep them if possible.
+I've built this for arm/arm64, and I've ran my usual set of tests which
+pass fine.  I've also run the selftest framework's tests for the dirty
+logging and the migration loop test for arm64, and they pass fine.
+
+You can add my (for arm64):
+
+Tested-by: Christoffer Dall <christoffer.dall@arm.com>
