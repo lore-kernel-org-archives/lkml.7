@@ -2,66 +2,108 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B5C1CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:48:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BA00CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:49:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F086F205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:48:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4184F205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:49:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gcPDrLK0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390537AbfJWIsU (ORCPT
+        id S2390549AbfJWIt1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 04:48:20 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:48168 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390314AbfJWIsT (ORCPT
+        Wed, 23 Oct 2019 04:49:27 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:44632 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390343AbfJWIt0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 04:48:19 -0400
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iNCJQ-0005pZ-KC; Wed, 23 Oct 2019 10:48:12 +0200
-Date:   Wed, 23 Oct 2019 10:48:11 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Huacai Chen <chenhc@lemote.com>
-cc:     Andy Lutomirski <luto@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Paul Burton <paul.burton@mips.com>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 110/110] lib/vdso: Improve do_hres() and update vdso data
- unconditionally
-In-Reply-To: <CAAhV-H4PEcCgOBL8ksjc+4LC9VPoCRBMtuGEK6ckmdJYXjdcSg@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.1910231037500.2308@nanos.tec.linutronix.de>
-References: <1571662320-1280-1-git-send-email-chenhc@lemote.com> <alpine.DEB.2.21.1910211648200.1904@nanos.tec.linutronix.de> <alpine.DEB.2.21.1910211658040.1904@nanos.tec.linutronix.de> <CAAhV-H4PEcCgOBL8ksjc+4LC9VPoCRBMtuGEK6ckmdJYXjdcSg@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 23 Oct 2019 04:49:26 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9N8nOrX035706;
+        Wed, 23 Oct 2019 03:49:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1571820564;
+        bh=eLinbvw4gjmm5Nbit2fMNFycPxhn1FFlzJoOTuRSlmk=;
+        h=From:To:CC:Subject:Date;
+        b=gcPDrLK0+Np7MivJLpjA2vKR9L7vM4m7/QYs8sXMNnSn6j60aMqt5QRBFKoqCq6PR
+         Ah7dp+HT792jPeoQ+zxd2+kB4+HviO2djiE88kDz3swNPBmV155sZeL5+MFRyVyxwZ
+         YByPIg87o5Mg9YF2+ppU/1KZxPTiDlopKaqog7ng=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9N8nNQD127748
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 23 Oct 2019 03:49:24 -0500
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 23
+ Oct 2019 03:49:10 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 23 Oct 2019 03:49:10 -0500
+Received: from lta0400828a.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9N8nHVt061069;
+        Wed, 23 Oct 2019 03:49:17 -0500
+From:   Roger Quadros <rogerq@ti.com>
+To:     <kishon@ti.com>
+CC:     <aniljoy@cadence.com>, <adouglas@cadence.com>, <nsekhar@ti.com>,
+        <jsarha@ti.com>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Roger Quadros <rogerq@ti.com>
+Subject: [PATCH v2 0/3] phy: cadence: j721e-wiz: Add Type-C plug flip support
+Date:   Wed, 23 Oct 2019 11:49:13 +0300
+Message-ID: <20191023084916.26895-1-rogerq@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 22 Oct 2019, Huacai Chen wrote:
+Hi,
 
-  https://people.kernel.org/tglx/notes-about-netiquette
+On J721e platform, the 2 lanes of SERDES PHY are used to achieve
+USB Type-C plug flip support without any additional MUX component
+by using a lane swap feature.
 
-Look for Toppost
- 
-> If we use (s64)cycles < 0, then how to solve the problem that a 64bit
-> counter become negative?
+However, the driver needs to know the Type-C plug orientation before
+it can decide whether to swap the lanes or not. This is achieved via a
+GPIO named DIR.
 
-I doubt that you will be able to observe that. A 64bit value becomes
-negative after 1<<63 cycles, i.e. at 1GHz thats 292 years of uptime.
+Another constraint is that the lane swap must happen only when the PHY
+is in inactive state. This is achieved by sampling the GPIO and
+programming the lane swap before bringing the PHY out of reset.
 
-What's your problem?
+This series adds support to read the GPIO and accordingly program
+the Lane swap for Type-C plug flip support.
 
-Thanks,
+Series must be applied on top of
+https://lkml.org/lkml/2019/10/16/517
 
-	tglx
+cheers,
+-roger
+
+Changelog:
+v2
+- revise commit log of patch 1
+- use regmap_field in patch 3
+
+Roger Quadros (3):
+  phy: cadence: Sierra: add phy_reset hook
+  dt-bindings: phy: ti,phy-j721e-wiz: Add Type-C dir GPIO
+  phy: ti: j721e-wiz: Manage typec-gpio-dir
+
+ .../bindings/phy/ti,phy-j721e-wiz.txt         |  9 ++++
+ drivers/phy/cadence/phy-cadence-sierra.c      | 10 ++++
+ drivers/phy/ti/phy-j721e-wiz.c                | 48 +++++++++++++++++++
+ 3 files changed, 67 insertions(+)
+
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
