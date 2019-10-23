@@ -2,261 +2,279 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EDB5CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:13:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61837CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:13:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8B1D21920
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:13:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2743021920
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:13:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571836409;
+	bh=E4BmCUwdrjVET435icDqHZy9e//AptIUo5JrQiKd85U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pOfXG/Zx/bjngBJayP90YeeCpHSxnJxWtYUV7VuEMwsUdQwYaw24G5UtDxMnZn2qM
+	 k6vevytzcj2GGZgOT1m++kXgHLNMM7EqqIc+6DziqEYHSTXPAyATKf9M3qErniTsUU
+	 YZO/G5p2JFbMXgPYVcBrwBNPJe2x8kiKgXq8aCBk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405732AbfJWNNX (ORCPT
+        id S2405744AbfJWNN2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 09:13:23 -0400
-Received: from mga01.intel.com ([192.55.52.88]:48190 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405714AbfJWNNW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 09:13:22 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 06:13:22 -0700
-X-IronPort-AV: E=Sophos;i="5.68,221,1569308400"; 
-   d="scan'208";a="191825975"
-Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.161])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 06:13:17 -0700
-From:   Jani Nikula <jani.nikula@intel.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Jani Nikula <jani.nikula@intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        intel-gfx@lists.freedesktop.org,
-        Vishal Kulkarni <vishal@chelsio.com>, netdev@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: [PATCH v4] string-choice: add yesno(), onoff(), enableddisabled(), plural() helpers
-Date:   Wed, 23 Oct 2019 16:13:08 +0300
-Message-Id: <20191023131308.9420-1-jani.nikula@intel.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 23 Oct 2019 09:13:28 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:33027 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405714AbfJWNN1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 09:13:27 -0400
+Received: by mail-ed1-f67.google.com with SMTP id c4so15728049edl.0;
+        Wed, 23 Oct 2019 06:13:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=o54Jyg7LaPMTM/R2ezpXAUg6vHkjUZaxwTxf8dd6jXk=;
+        b=qhqmL5gdouqSgD5QVpG81sTI3R3KOtcjzZIrNZIWSUG5ZNYdmCdOSslCn64pZVgdx/
+         fSNfEVAfob6EaqnuYgeqbxGu0U/g8vvB1wYTAd/4KfRUFvBglWwhAn1WZDBHvB6cYsDk
+         2GZL75nT+dNoVkm6qPGmFK7QCI55HwhXqqXm60tzluR75iHixp7SLOc3aUUK57XOrKqk
+         QqO2PGSnGtdt4+J+sQ6HL4mgSthVMsER3kfgR3PWy0aneNGir1rpeCqnIOncIVDOgQSX
+         mQf5zo7fKjgVVKnB48oRKlE0CupCC0ai0bo7HygthNy3BVQ1dnALnZeEEePGRvQSdda8
+         8v1w==
+X-Gm-Message-State: APjAAAXUEd9o+7iii/oUQVATVpHwGd/BlFGWRMWRpeWyp+0z9i7GHenX
+        hrNctcFeighXUFUCCPY4WSA=
+X-Google-Smtp-Source: APXvYqxJH5rltespiv1WDhAborQbNiDE5+2CReq8AP71JjFfyUdkdzYR7L1/bvADJTpzB8Q1SXMf1g==
+X-Received: by 2002:a17:906:704:: with SMTP id y4mr32582518ejb.259.1571836404632;
+        Wed, 23 Oct 2019 06:13:24 -0700 (PDT)
+Received: from pi3 ([194.230.155.217])
+        by smtp.googlemail.com with ESMTPSA id v5sm269620edd.90.2019.10.23.06.13.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Oct 2019 06:13:23 -0700 (PDT)
+Date:   Wed, 23 Oct 2019 15:13:21 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Kukjin Kim <kgene@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linus.walleij@linaro.org,
+        linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
+Subject: Re: [PATCH 28/36] fbdev: s3c2410fb: remove mach header dependency
+Message-ID: <20191023131321.GH11048@pi3>
+References: <20191010202802.1132272-1-arnd@arndb.de>
+ <20191010203043.1241612-1-arnd@arndb.de>
+ <20191010203043.1241612-28-arnd@arndb.de>
 MIME-Version: 1.0
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191010203043.1241612-28-arnd@arndb.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The kernel has plenty of ternary operators to choose between constant
-strings, such as condition ? "yes" : "no", as well as value == 1 ? "" :
-"s":
+On Thu, Oct 10, 2019 at 10:30:12PM +0200, Arnd Bergmann wrote:
+> The s3c2410fb driver is too deeply intertwined with the s3c24xx
+> platform code. Change it in a way that avoids the use of platform
+> header files but having all interface data in a platform_data
+> header, and the private register definitions next to the driver
+> itself.
+> 
+> One ugly bit here is that the driver pokes directly into gpio
+> registers, which are owned by another driver. Passing the
+> mapped addresses in platform_data is somewhat suboptimal, but
+> it is a small improvement over the previous version.
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  arch/arm/mach-s3c24xx/include/mach/fb.h       |  2 --
+>  arch/arm/mach-s3c24xx/mach-amlm5900.c         |  7 ++--
+>  arch/arm/mach-s3c24xx/mach-anubis.c           |  1 -
+>  arch/arm/mach-s3c24xx/mach-at2440evb.c        |  3 +-
+>  arch/arm/mach-s3c24xx/mach-bast.c             |  3 +-
+>  arch/arm/mach-s3c24xx/mach-gta02.c            |  2 +-
+>  arch/arm/mach-s3c24xx/mach-h1940.c            |  7 ++--
+>  arch/arm/mach-s3c24xx/mach-jive.c             | 10 ++++--
+>  arch/arm/mach-s3c24xx/mach-mini2440.c         |  9 +++--
+>  arch/arm/mach-s3c24xx/mach-n30.c              |  3 +-
+>  arch/arm/mach-s3c24xx/mach-osiris.c           |  1 -
+>  arch/arm/mach-s3c24xx/mach-qt2410.c           |  3 +-
+>  arch/arm/mach-s3c24xx/mach-rx1950.c           |  8 +++--
+>  arch/arm/mach-s3c24xx/mach-rx3715.c           |  7 ++--
+>  arch/arm/mach-s3c24xx/mach-smdk2413.c         |  3 +-
+>  arch/arm/mach-s3c24xx/mach-smdk2416.c         |  1 -
+>  arch/arm/mach-s3c24xx/mach-smdk2440.c         |  8 +++--
+>  arch/arm/mach-s3c24xx/mach-smdk2443.c         |  3 +-
+>  arch/arm/mach-s3c24xx/mach-vstms.c            |  3 +-
+>  arch/arm/plat-samsung/devs.c                  |  2 +-
+>  .../video/fbdev/s3c2410fb-regs-lcd.h          | 28 ++++------------
+>  drivers/video/fbdev/s3c2410fb.c               | 16 +++++----
+>  .../linux/platform_data}/fb-s3c2410.h         | 33 ++++++++++++++++++-
+>  23 files changed, 98 insertions(+), 65 deletions(-)
+>  delete mode 100644 arch/arm/mach-s3c24xx/include/mach/fb.h
+>  rename arch/arm/mach-s3c24xx/include/mach/regs-lcd.h => drivers/video/fbdev/s3c2410fb-regs-lcd.h (84%)
+>  rename {arch/arm/plat-samsung/include/plat => include/linux/platform_data}/fb-s3c2410.h (57%)
+> 
+> diff --git a/arch/arm/mach-s3c24xx/include/mach/fb.h b/arch/arm/mach-s3c24xx/include/mach/fb.h
+> deleted file mode 100644
+> index 4e539cb8b884..000000000000
+> --- a/arch/arm/mach-s3c24xx/include/mach/fb.h
+> +++ /dev/null
+> @@ -1,2 +0,0 @@
+> -/* SPDX-License-Identifier: GPL-2.0 */
+> -#include <plat/fb-s3c2410.h>
+> diff --git a/arch/arm/mach-s3c24xx/mach-amlm5900.c b/arch/arm/mach-s3c24xx/mach-amlm5900.c
+> index 40ad23b52bc0..ef6de1b1d0c6 100644
+> --- a/arch/arm/mach-s3c24xx/mach-amlm5900.c
+> +++ b/arch/arm/mach-s3c24xx/mach-amlm5900.c
+> @@ -30,9 +30,8 @@
+>  #include <mach/hardware.h>
+>  #include <asm/irq.h>
+>  #include <asm/mach-types.h>
+> -#include <mach/fb.h>
+> +#include <linux/platform_data/fb-s3c2410.h>
+>  
+> -#include <mach/regs-lcd.h>
+>  #include <mach/regs-gpio.h>
+>  #include <mach/gpio-samsung.h>
+>  
+> @@ -194,13 +193,17 @@ static struct s3c2410fb_mach_info __initdata amlm5900_fb_info = {
+>  
+>  	.gpccon =	0xaaaaaaaa,
+>  	.gpccon_mask =	0xffffffff,
+> +	.gpccon_reg =	S3C2410_GPCCON,
+>  	.gpcup =	0x0000ffff,
+>  	.gpcup_mask =	0xffffffff,
+> +	.gpcup_reg =	S3C2410_GPCUP,
+>  
+>  	.gpdcon =	0xaaaaaaaa,
+>  	.gpdcon_mask =	0xffffffff,
+> +	.gpdcon_reg =	S3C2410_GPDCON,
+>  	.gpdup =	0x0000ffff,
+>  	.gpdup_mask =	0xffffffff,
+> +	.gpdup_reg =	S3C2410_GPDUP,
+>  };
+>  #endif
+>  
+> diff --git a/arch/arm/mach-s3c24xx/mach-anubis.c b/arch/arm/mach-s3c24xx/mach-anubis.c
+> index 072966dcad78..e1a73274e90b 100644
+> --- a/arch/arm/mach-s3c24xx/mach-anubis.c
+> +++ b/arch/arm/mach-s3c24xx/mach-anubis.c
+> @@ -29,7 +29,6 @@
+>  #include <asm/mach-types.h>
+>  
+>  #include <mach/regs-gpio.h>
+> -#include <mach/regs-lcd.h>
+>  #include <mach/gpio-samsung.h>
+>  #include <linux/platform_data/mtd-nand-s3c2410.h>
+>  #include <linux/platform_data/i2c-s3c2410.h>
+> diff --git a/arch/arm/mach-s3c24xx/mach-at2440evb.c b/arch/arm/mach-s3c24xx/mach-at2440evb.c
+> index b2199906e678..bfda6dd2a9d5 100644
+> --- a/arch/arm/mach-s3c24xx/mach-at2440evb.c
+> +++ b/arch/arm/mach-s3c24xx/mach-at2440evb.c
+> @@ -25,12 +25,11 @@
+>  #include <asm/mach/irq.h>
+>  
+>  #include <mach/hardware.h>
+> -#include <mach/fb.h>
+> +#include <linux/platform_data/fb-s3c2410.h>
+>  #include <asm/irq.h>
+>  #include <asm/mach-types.h>
+>  
+>  #include <mach/regs-gpio.h>
+> -#include <mach/regs-lcd.h>
+>  #include <mach/gpio-samsung.h>
+>  #include <linux/platform_data/mtd-nand-s3c2410.h>
+>  #include <linux/platform_data/i2c-s3c2410.h>
+> diff --git a/arch/arm/mach-s3c24xx/mach-bast.c b/arch/arm/mach-s3c24xx/mach-bast.c
+> index a7c3955ae8f6..cc941b5030ea 100644
+> --- a/arch/arm/mach-s3c24xx/mach-bast.c
+> +++ b/arch/arm/mach-s3c24xx/mach-bast.c
+> @@ -40,10 +40,9 @@
+>  #include <asm/mach/irq.h>
+>  #include <asm/mach-types.h>
+>  
+> -#include <mach/fb.h>
+>  #include <mach/hardware.h>
+> +#include <linux/platform_data/fb-s3c2410.h>
+>  #include <mach/regs-gpio.h>
+> -#include <mach/regs-lcd.h>
+>  #include <mach/gpio-samsung.h>
+>  
+>  #include <plat/cpu.h>
+> diff --git a/arch/arm/mach-s3c24xx/mach-gta02.c b/arch/arm/mach-s3c24xx/mach-gta02.c
+> index 61b8c6badeb8..1e42782dbd30 100644
+> --- a/arch/arm/mach-s3c24xx/mach-gta02.c
+> +++ b/arch/arm/mach-s3c24xx/mach-gta02.c
+> @@ -57,8 +57,8 @@
+>  #include <linux/platform_data/touchscreen-s3c2410.h>
+>  #include <linux/platform_data/usb-ohci-s3c2410.h>
+>  #include <linux/platform_data/usb-s3c2410_udc.h>
+> +#include <linux/platform_data/fb-s3c2410.h>
+>  
+> -#include <mach/fb.h>
+>  #include <mach/hardware.h>
+>  #include <mach/regs-gpio.h>
+>  #include <mach/regs-irq.h>
+> diff --git a/arch/arm/mach-s3c24xx/mach-h1940.c b/arch/arm/mach-s3c24xx/mach-h1940.c
+> index 446891e23511..d56e3befa459 100644
+> --- a/arch/arm/mach-s3c24xx/mach-h1940.c
+> +++ b/arch/arm/mach-s3c24xx/mach-h1940.c
+> @@ -47,11 +47,10 @@
+>  
+>  #include <sound/uda1380.h>
+>  
+> -#include <mach/fb.h>
+> +#include <linux/platform_data/fb-s3c2410.h>
+>  #include <mach/hardware.h>
+>  #include <mach/regs-clock.h>
+>  #include <mach/regs-gpio.h>
+> -#include <mach/regs-lcd.h>
+>  #include <mach/gpio-samsung.h>
+>  
+>  #include <plat/cpu.h>
+> @@ -211,12 +210,16 @@ static struct s3c2410fb_mach_info h1940_fb_info __initdata = {
+>  	.lpcsel =	0x02,
+>  	.gpccon =	0xaa940659,
+>  	.gpccon_mask =	0xffffc0f0,
+> +	.gpccon_reg =	S3C2410_GPCCON,
+>  	.gpcup =	0x0000ffff,
+>  	.gpcup_mask =	0xffffffff,
+> +	.gpcup_reg =	S3C2410_GPCUP,
+>  	.gpdcon =	0xaa84aaa0,
+>  	.gpdcon_mask =	0xffffffff,
+> +	.gpdcon_reg =	S3C2410_GPDCON,
+>  	.gpdup =	0x0000faff,
+>  	.gpdup_mask =	0xffffffff,
+> +	.gpdup_reg =	S3C2410_GPDUP,
+>  };
+>  
+>  static int power_supply_init(struct device *dev)
+> diff --git a/arch/arm/mach-s3c24xx/mach-jive.c b/arch/arm/mach-s3c24xx/mach-jive.c
+> index 885e8f12e4b9..3b33132b2334 100644
+> --- a/arch/arm/mach-s3c24xx/mach-jive.c
+> +++ b/arch/arm/mach-s3c24xx/mach-jive.c
+> @@ -32,8 +32,7 @@
+>  #include <linux/platform_data/i2c-s3c2410.h>
+>  
+>  #include <mach/regs-gpio.h>
+> -#include <mach/regs-lcd.h>
+> -#include <mach/fb.h>
+> +#include <linux/platform_data/fb-s3c2410.h>
+>  #include <mach/gpio-samsung.h>
+>  
+>  #include <asm/mach-types.h>
+> @@ -321,6 +320,7 @@ static struct s3c2410fb_mach_info jive_lcd_config = {
+>  	 * data. */
+>  
+>  	.gpcup		= (0xf << 1) | (0x3f << 10),
+> +	.gpcup_reg =	S3C2410_GPCUP,
 
-$ git grep '? "yes" : "no"' | wc -l
-258
-$ git grep '? "on" : "off"' | wc -l
-204
-$ git grep '? "enabled" : "disabled"' | wc -l
-196
-$ git grep '? "" : "s"' | wc -l
-25
+Nits: indentation before/after '=' looks wrong. Tab should be
+before '=', one space after.
 
-Additionally, there are some occurences of the same in reverse order,
-split to multiple lines, or otherwise not caught by the simple grep.
-
-Add helpers to return the constant strings. Remove existing equivalent
-and conflicting functions in i915, cxgb4, and USB core. Further
-conversion can be done incrementally.
-
-The main goal here is to abstract recurring patterns, and slightly clean
-up the code base by not open coding the ternary operators.
-
-Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
-Cc: intel-gfx@lists.freedesktop.org
-Cc: Vishal Kulkarni <vishal@chelsio.com>
-Cc: netdev@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-usb@vger.kernel.org
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org
-Cc: Julia Lawall <julia.lawall@lip6.fr>
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Jani Nikula <jani.nikula@intel.com>
-
----
-
-v2: add string-choice.[ch] to not clutter kernel.h and to actually save
-space on string constants.
-
-v3: back to static inlines based on Rasmus' feedback
-
-v4: Massaged commit message about space savings to make it less fluffy
-based on Rasmus' feedback.
-
-Example of further cleanup possibilities are at [1], to be done
-incrementally afterwards.
-
-[1] http://lore.kernel.org/r/20190903133731.2094-2-jani.nikula@intel.com
----
- drivers/gpu/drm/i915/i915_utils.h             | 16 +---------
- .../ethernet/chelsio/cxgb4/cxgb4_debugfs.c    | 12 +------
- drivers/usb/core/config.c                     |  6 +---
- drivers/usb/core/generic.c                    |  6 +---
- include/linux/string-choice.h                 | 31 +++++++++++++++++++
- 5 files changed, 35 insertions(+), 36 deletions(-)
- create mode 100644 include/linux/string-choice.h
-
-diff --git a/drivers/gpu/drm/i915/i915_utils.h b/drivers/gpu/drm/i915/i915_utils.h
-index 562f756da421..794f02a90efe 100644
---- a/drivers/gpu/drm/i915/i915_utils.h
-+++ b/drivers/gpu/drm/i915/i915_utils.h
-@@ -28,6 +28,7 @@
- #include <linux/list.h>
- #include <linux/overflow.h>
- #include <linux/sched.h>
-+#include <linux/string-choice.h>
- #include <linux/types.h>
- #include <linux/workqueue.h>
- 
-@@ -395,21 +396,6 @@ wait_remaining_ms_from_jiffies(unsigned long timestamp_jiffies, int to_wait_ms)
- #define MBps(x) KBps(1000 * (x))
- #define GBps(x) ((u64)1000 * MBps((x)))
- 
--static inline const char *yesno(bool v)
--{
--	return v ? "yes" : "no";
--}
--
--static inline const char *onoff(bool v)
--{
--	return v ? "on" : "off";
--}
--
--static inline const char *enableddisabled(bool v)
--{
--	return v ? "enabled" : "disabled";
--}
--
- static inline void add_taint_for_CI(unsigned int taint)
- {
- 	/*
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c
-index ae6a47dd7dc9..d9123dae1d00 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c
-@@ -35,6 +35,7 @@
- #include <linux/seq_file.h>
- #include <linux/debugfs.h>
- #include <linux/string_helpers.h>
-+#include <linux/string-choice.h>
- #include <linux/sort.h>
- #include <linux/ctype.h>
- 
-@@ -2023,17 +2024,6 @@ static const struct file_operations rss_debugfs_fops = {
- /* RSS Configuration.
-  */
- 
--/* Small utility function to return the strings "yes" or "no" if the supplied
-- * argument is non-zero.
-- */
--static const char *yesno(int x)
--{
--	static const char *yes = "yes";
--	static const char *no = "no";
--
--	return x ? yes : no;
--}
--
- static int rss_config_show(struct seq_file *seq, void *v)
- {
- 	struct adapter *adapter = seq->private;
-diff --git a/drivers/usb/core/config.c b/drivers/usb/core/config.c
-index 151a74a54386..52cee9067eb4 100644
---- a/drivers/usb/core/config.c
-+++ b/drivers/usb/core/config.c
-@@ -10,6 +10,7 @@
- #include <linux/module.h>
- #include <linux/slab.h>
- #include <linux/device.h>
-+#include <linux/string-choice.h>
- #include <asm/byteorder.h>
- #include "usb.h"
- 
-@@ -19,11 +20,6 @@
- #define USB_MAXCONFIG			8	/* Arbitrary limit */
- 
- 
--static inline const char *plural(int n)
--{
--	return (n == 1 ? "" : "s");
--}
--
- static int find_next_descriptor(unsigned char *buffer, int size,
-     int dt1, int dt2, int *num_skipped)
- {
-diff --git a/drivers/usb/core/generic.c b/drivers/usb/core/generic.c
-index 38f8b3e31762..a784a09794d6 100644
---- a/drivers/usb/core/generic.c
-+++ b/drivers/usb/core/generic.c
-@@ -21,14 +21,10 @@
- 
- #include <linux/usb.h>
- #include <linux/usb/hcd.h>
-+#include <linux/string-choice.h>
- #include <uapi/linux/usb/audio.h>
- #include "usb.h"
- 
--static inline const char *plural(int n)
--{
--	return (n == 1 ? "" : "s");
--}
--
- static int is_rndis(struct usb_interface_descriptor *desc)
- {
- 	return desc->bInterfaceClass == USB_CLASS_COMM
-diff --git a/include/linux/string-choice.h b/include/linux/string-choice.h
-new file mode 100644
-index 000000000000..320b598bd8f0
---- /dev/null
-+++ b/include/linux/string-choice.h
-@@ -0,0 +1,31 @@
-+/* SPDX-License-Identifier: MIT */
-+/*
-+ * Copyright © 2019 Intel Corporation
-+ */
-+
-+#ifndef __STRING_CHOICE_H__
-+#define __STRING_CHOICE_H__
-+
-+#include <linux/types.h>
-+
-+static inline const char *yesno(bool v)
-+{
-+	return v ? "yes" : "no";
-+}
-+
-+static inline const char *onoff(bool v)
-+{
-+	return v ? "on" : "off";
-+}
-+
-+static inline const char *enableddisabled(bool v)
-+{
-+	return v ? "enabled" : "disabled";
-+}
-+
-+static inline const char *plural(long v)
-+{
-+	return v == 1 ? "" : "s";
-+}
-+
-+#endif /* __STRING_CHOICE_H__ */
--- 
-2.20.1
+Best regards,
+Krzysztof
 
