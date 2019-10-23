@@ -2,149 +2,94 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F48CCA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:47:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40578CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:47:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B05A20640
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:47:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17EA020640
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:47:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="Ty01jSUZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405380AbfJWMrm (ORCPT
+        id S2405397AbfJWMr5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 08:47:42 -0400
-Received: from mga09.intel.com ([134.134.136.24]:29838 "EHLO mga09.intel.com"
+        Wed, 23 Oct 2019 08:47:57 -0400
+Received: from onstation.org ([52.200.56.107]:33894 "EHLO onstation.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405290AbfJWMrl (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 08:47:41 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 05:47:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,220,1569308400"; 
-   d="scan'208";a="196766480"
-Received: from shilongz-mobl.ccr.corp.intel.com (HELO [10.254.210.50]) ([10.254.210.50])
-  by fmsmga008.fm.intel.com with ESMTP; 23 Oct 2019 05:47:38 -0700
-Subject: Re: [PATCH v3 1/5] perf util: Cleanup and refactor block info
- functions
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-References: <20191022080710.6491-1-yao.jin@linux.intel.com>
- <20191022080710.6491-2-yao.jin@linux.intel.com>
- <20191023113703.GQ22919@krava>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <abda4105-41ab-7e5e-236e-d048dfe3abed@linux.intel.com>
-Date:   Wed, 23 Oct 2019 20:47:38 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S2405381AbfJWMr4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 08:47:56 -0400
+Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id F35C83E951;
+        Wed, 23 Oct 2019 12:47:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1571834875;
+        bh=0kqhIdrcdwTaeOk++zBCxLaWbwoAfqHJ5bwvzT6eofE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Ty01jSUZZyZs/E5U7fYrVJsqd7rCW3TaZaBl4f6bW9Imrc+LwyG/rkLvdy1HnEelF
+         yz54byi8l52QHKOb+vJbMLzFSvC5pmQg29NgewohrS2cpj2QCPLe7MwSxSaRhAcH7K
+         8lU1zbQPw4nW+ClZbLkZrp8GCMt2MEyGq6n/hcZU=
+Date:   Wed, 23 Oct 2019 08:47:53 -0400
+From:   Brian Masney <masneyb@onstation.org>
+To:     Georgi Djakov <georgi.djakov@linaro.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 5/5] ARM: dts: qcom: msm8974: add interconnect nodes
+Message-ID: <20191023124753.GA14218@onstation.org>
+References: <20191013080804.10231-1-masneyb@onstation.org>
+ <20191013080804.10231-6-masneyb@onstation.org>
+ <d154b0c6-fc39-bebc-d1b5-cc179fb6055d@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20191023113703.GQ22919@krava>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <d154b0c6-fc39-bebc-d1b5-cc179fb6055d@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Oct 23, 2019 at 02:50:19PM +0300, Georgi Djakov wrote:
+> On 13.10.19 г. 11:08 ч., Brian Masney wrote:
+> > Add interconnect nodes that's needed to support bus scaling.
+> > 
+> > Signed-off-by: Brian Masney <masneyb@onstation.org>
+> > ---
+> >  arch/arm/boot/dts/qcom-msm8974.dtsi | 60 +++++++++++++++++++++++++++++
+> >  1 file changed, 60 insertions(+)
+> > 
+> > diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
+> > @@ -1152,6 +1207,11 @@
+> >  				              "core",
+> >  				              "vsync";
+> >  
+> > +				interconnects = <&mmssnoc MNOC_MAS_GRAPHICS_3D &bimc BIMC_SLV_EBI_CH0>,
+> > +				                <&ocmemnoc OCMEM_VNOC_MAS_GFX3D &ocmemnoc OCMEM_SLV_OCMEM>;
+> 
+> Who will be the requesting bandwidth to DDR and ocmem? Is it the display or GPU
+> or both? The above seem like GPU-related interconnects, so maybe these
+> properties should be in the GPU DT node.
 
+The display is what currently requests the interconnect path,
+specifically mdp5_setup_interconnect() in
+drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c. The Freedreno GPU bindings
+currently don't have interconnect support. Maybe this is something that
+I should add to that driver as well?
 
-On 10/23/2019 7:37 PM, Jiri Olsa wrote:
-> On Tue, Oct 22, 2019 at 04:07:06PM +0800, Jin Yao wrote:
+> > +				interconnect-names = "mdp0-mem",
+> > +				                     "mdp1-mem";
 > 
-> SNIP
-> 
->>   
->> -static int filter_cb(struct hist_entry *he, void *arg __maybe_unused)
->> -{
->> -	/* Skip the calculation of column length in output_resort */
->> -	he->filtered = true;
->> -	return 0;
->> -}
-> 
-> please move this change into separate patch and explain in changelog
-> why this is necessary
-> 
-> thanks,
-> jirka
-> 
+> As the second path is not to DDR, but to ocmem, it might be better to call it
+> something like "gpu-ocmem".
 
-Got it. I will move this change into a separate patch.
+I used what mdp5_kms.c expected.
 
-Thanks
-Jin Yao
-
->> -
->>   static void hists__precompute(struct hists *hists)
->>   {
->>   	struct rb_root_cached *root;
->> @@ -792,8 +695,11 @@ static void hists__precompute(struct hists *hists)
->>   		he   = rb_entry(next, struct hist_entry, rb_node_in);
->>   		next = rb_next(&he->rb_node_in);
->>   
->> -		if (compute == COMPUTE_CYCLES)
->> -			process_block_per_sym(he);
->> +		if (compute == COMPUTE_CYCLES) {
->> +			bh = container_of(he, struct block_hist, he);
->> +			init_block_hist(bh);
->> +			block_info__process_sym(he, bh, NULL, 0);
->> +		}
->>   
->>   		data__for_each_file_new(i, d) {
->>   			pair = get_pair_data(he, d);
->> @@ -812,16 +718,18 @@ static void hists__precompute(struct hists *hists)
->>   				compute_wdiff(he, pair);
->>   				break;
->>   			case COMPUTE_CYCLES:
->> -				process_block_per_sym(pair);
->> -				bh = container_of(he, struct block_hist, he);
->>   				pair_bh = container_of(pair, struct block_hist,
->>   						       he);
->> +				init_block_hist(pair_bh);
->> +				block_info__process_sym(pair, pair_bh, NULL, 0);
->> +
->> +				bh = container_of(he, struct block_hist, he);
->>   
->>   				if (bh->valid && pair_bh->valid) {
->>   					block_hists_match(&bh->block_hists,
->>   							  &pair_bh->block_hists);
->> -					hists__output_resort_cb(&pair_bh->block_hists,
->> -								NULL, filter_cb);
->> +					hists__output_resort(&pair_bh->block_hists,
->> +							     NULL);
->>   				}
->>   				break;
->>   			default:
-> 
-> SNIP
-> 
->> diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
->> index 679a1d75090c..a7fa061987e4 100644
->> --- a/tools/perf/util/hist.c
->> +++ b/tools/perf/util/hist.c
->> @@ -18,6 +18,7 @@
->>   #include "srcline.h"
->>   #include "symbol.h"
->>   #include "thread.h"
->> +#include "block-info.h"
->>   #include "ui/progress.h"
->>   #include <errno.h>
->>   #include <math.h>
->> @@ -80,6 +81,8 @@ void hists__calc_col_len(struct hists *hists, struct hist_entry *h)
->>   	int symlen;
->>   	u16 len;
->>   
->> +	if (h->block_info)
->> +		return;
->>   	/*
->>   	 * +4 accounts for '[x] ' priv level info
->>   	 * +2 accounts for 0x prefix on raw addresses
-> 
-> SNIP
-> 
+Brian
