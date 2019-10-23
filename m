@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 167A4CA9EBD
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:44:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2210ECA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:44:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC14421A4A
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:44:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9A9221925
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:44:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="csQhuSQa"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="P3vHRqK9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391722AbfJWMo3 (ORCPT
+        id S2391741AbfJWMog (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 08:44:29 -0400
-Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:37296 "EHLO
+        Wed, 23 Oct 2019 08:44:36 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:52110 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2390091AbfJWMoZ (ORCPT
+        by vger.kernel.org with ESMTP id S2391712AbfJWMo2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 08:44:25 -0400
+        Wed, 23 Oct 2019 08:44:28 -0400
 Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 6A202C0DE0;
-        Wed, 23 Oct 2019 12:44:25 +0000 (UTC)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 6B6DDC08DD;
+        Wed, 23 Oct 2019 12:44:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1571834665; bh=oQQShnjm5R0MR/xjv312sQ6gQ7J+z4O6hvMy/a53QQ0=;
+        t=1571834667; bh=E8g39bo7xM+VQE70QKbT9O0p8rPYtJ1LN4ovj5afXJ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=csQhuSQaZbUGLS/Neq9lNc9aM1zzt3cKR2BLe2IrahOS6+K6OlIM3JRDG5aO2vnv1
-         97fXqckNqp0XIWWax/pbYTEvxneDTmGapFY54SjaVuBH26MMYuE9p5Rp+FuZKZyrCD
-         PMTFpFD/UvsN6ESgb/g53xHlcsft6rA0PSKer6AiSgara37mcNV7EsnNMkJU1pdoah
-         lEEYxuponQvdIz5oJwZHVjJK1X+dPmc0eQ817xjuiABBYvjat7zDmQELEu+1wZBk4c
-         W/eqzG61FdwP1nuLBbn4s9RgaZUbjxWM8Pc99RvFs+uX0Rbp56Ltdruf0clzbxhyZX
-         NHZN4WDWXQZzw==
+        b=P3vHRqK9YyBTGlfngyd0pcURocD1QogvCpA3c1brd3p6FopwFBcfh5reLnxfvsw/V
+         0owo2qG3N+YtHG93tYxLMUIQM7jOmXbSlHCXwI0SljlTlRWQ9XXGYCLui4A2r6ES/W
+         zCAzik01+QecObKeZPFLdryWlxRuqBtJ3OT4pLd+5wSNQ83crq0UxQt7nMTgABAdgo
+         3pGhpiG59FMtQdccX7RKGdqroC8jfqbMwP4rlIZfXp8GLdXECN+93n8sScQJjCwRHV
+         is26pe88JE8xdBrYl+PgWhiEtLhrt6oH1allMKHFQEQJbWc+RidTTilj0pLVkNZxZy
+         1C7IqOAdGZpIA==
 Received: from paltsev-e7480.internal.synopsys.com (paltsev-e7480.internal.synopsys.com [10.121.3.73])
-        by mailhost.synopsys.com (Postfix) with ESMTP id C45E6A0057;
-        Wed, 23 Oct 2019 12:44:23 +0000 (UTC)
+        by mailhost.synopsys.com (Postfix) with ESMTP id D17D9A0057;
+        Wed, 23 Oct 2019 12:44:25 +0000 (UTC)
 From:   Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 To:     linux-snps-arc@lists.infradead.org,
         Vineet Gupta <Vineet.Gupta1@synopsys.com>
 Cc:     linux-kernel@vger.kernel.org,
         Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
         Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Subject: [PATCH 4/8] ARC: HAPS: add HIGHMEM memory zone to DTS
-Date:   Wed, 23 Oct 2019 15:44:13 +0300
-Message-Id: <20191023124417.5770-5-Eugeniy.Paltsev@synopsys.com>
+Subject: [PATCH 8/8] ARC: nSIM_700: remove unused network options
+Date:   Wed, 23 Oct 2019 15:44:17 +0300
+Message-Id: <20191023124417.5770-9-Eugeniy.Paltsev@synopsys.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191023124417.5770-1-Eugeniy.Paltsev@synopsys.com>
 References: <20191023124417.5770-1-Eugeniy.Paltsev@synopsys.com>
@@ -59,52 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is required as a preparation of merging nSIM and HASP
-defonfig and device tree.
-
-As we have HIGHMEM disabled in both HAPS and nSIM defconfigs
-this doesn't lead to any functional change.
+We have snps,arc-emac enabled in nSIM_700. It's obsolete and it's
+not used anymore so remove its device tree node and disable
+unused network options in defconfig.
 
 Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 ---
- arch/arc/boot/dts/haps_hs.dts | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ arch/arc/boot/dts/nsim_700.dts      | 16 ----------------
+ arch/arc/configs/nsim_700_defconfig |  4 ++--
+ 2 files changed, 2 insertions(+), 18 deletions(-)
 
-diff --git a/arch/arc/boot/dts/haps_hs.dts b/arch/arc/boot/dts/haps_hs.dts
-index 11fad2f79056..60d578e2781f 100644
---- a/arch/arc/boot/dts/haps_hs.dts
-+++ b/arch/arc/boot/dts/haps_hs.dts
-@@ -9,13 +9,15 @@
- / {
- 	model = "snps,zebu_hs";
- 	compatible = "snps,zebu_hs";
--	#address-cells = <1>;
--	#size-cells = <1>;
-+	#address-cells = <2>;
-+	#size-cells = <2>;
- 	interrupt-parent = <&core_intc>;
+diff --git a/arch/arc/boot/dts/nsim_700.dts b/arch/arc/boot/dts/nsim_700.dts
+index ae9bc21fe11b..f8832a15e174 100644
+--- a/arch/arc/boot/dts/nsim_700.dts
++++ b/arch/arc/boot/dts/nsim_700.dts
+@@ -52,22 +52,6 @@
+ 			no-loopback-test = <1>;
+ 		};
  
- 	memory {
- 		device_type = "memory";
--		reg = <0x80000000 0x20000000>;	/* 512 */
-+		/* CONFIG_LINUX_RAM_BASE needs to match low mem start */
-+		reg = <0x0 0x80000000 0x0 0x20000000	/* 512 MB low mem */
-+		       0x1 0x00000000 0x0 0x40000000>;	/* 1 GB highmem */
- 	};
- 
- 	chosen {
-@@ -31,8 +33,9 @@
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 
--		/* child and parent address space 1:1 mapped */
--		ranges;
-+		/* only perip space at end of low mem accessible
-+			  bus addr,  parent bus addr, size    */
-+		ranges = <0x80000000 0x0 0x80000000 0x80000000>;
- 
- 		core_clk: core_clk {
- 			#clock-cells = <0>;
+-		ethernet@c0fc2000 {
+-			compatible = "snps,arc-emac";
+-			reg = <0xc0fc2000 0x3c>;
+-			interrupts = <6>;
+-			mac-address = [ 00 11 22 33 44 55 ];
+-			clock-frequency = <80000000>;
+-			max-speed = <100>;
+-			phy = <&phy0>;
+-
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-			phy0: ethernet-phy@0 {
+-				reg = <1>;
+-			};
+-		};
+-
+ 		arcpct0: pct {
+ 			compatible = "snps,arc700-pct";
+ 		};
+diff --git a/arch/arc/configs/nsim_700_defconfig b/arch/arc/configs/nsim_700_defconfig
+index 5c488140f537..326f6cde7826 100644
+--- a/arch/arc/configs/nsim_700_defconfig
++++ b/arch/arc/configs/nsim_700_defconfig
+@@ -35,8 +35,8 @@ CONFIG_DEVTMPFS=y
+ # CONFIG_PREVENT_FIRMWARE_BUILD is not set
+ # CONFIG_BLK_DEV is not set
+ CONFIG_NETDEVICES=y
+-CONFIG_ARC_EMAC=y
+-CONFIG_LXT_PHY=y
++# CONFIG_ETHERNET is not set
++# CONFIG_WLAN is not set
+ # CONFIG_INPUT_KEYBOARD is not set
+ # CONFIG_INPUT_MOUSE is not set
+ # CONFIG_SERIO is not set
 -- 
 2.21.0
 
