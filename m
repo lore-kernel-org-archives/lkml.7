@@ -2,59 +2,60 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EEEECA9EA0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D81D9CA9EB7
 	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 00:06:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26D3621783
+	by mail.kernel.org (Postfix) with ESMTP id AF0582084B
 	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 00:06:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rV4dprwN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nmL2XLde"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731464AbfJWAF5 (ORCPT
+        id S1731585AbfJWAGA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 20:05:57 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:38436 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727960AbfJWAF5 (ORCPT
+        Tue, 22 Oct 2019 20:06:00 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:52412 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727960AbfJWAGA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 20:05:57 -0400
-Received: by mail-wr1-f65.google.com with SMTP id v9so8697831wrq.5;
-        Tue, 22 Oct 2019 17:05:55 -0700 (PDT)
+        Tue, 22 Oct 2019 20:06:00 -0400
+Received: by mail-wm1-f68.google.com with SMTP id r19so19193341wmh.2;
+        Tue, 22 Oct 2019 17:05:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=RVKbhGUPx9Rp4t5lnvvSGAoEpsAteMrVsae47CNGU14=;
-        b=rV4dprwNkqYCdBGstHoA61ZbChSAvfasMEjznbxr7K8YlZ6b/uCc65hPy+xGsoLfgk
-         lIXI860w/KucgAduq4zMJLowbW5NklpuLCq1VTl4xtE5l6jH8XOQE8f9F+l3Jso0P3B+
-         iU9V/ExzTp617nC7rcnqjAHqSsAHBSSdwmwBGDFX7Si9Cp+5EfrbaleMqfk9U/wJWdjO
-         XWJ7Dha21OzRYq/nP9iK0O/g3AAZl1i7Vn/P9cveEur3J1uXHI/b1e1kpd+S1pDBEGXB
-         X8w/CU9k5k0PZXFFgu6qsQEHckF1ficun2aF/ndxVbBXnKcoWwbg37IoqaBa5sEozBX6
-         goqg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=gokM4n7dedwvMz3nVQdhJWZwmalfuzEvK8MTROAEiLo=;
+        b=nmL2XLde2WB2uLAdxke8rA0HqWKBFJYeHsDDwcWrVgidimSdkjonniTpyTYGI5B6Ao
+         finU+ZW9URhPGp5hmx0j+y4i7hYUTDE0eFMI5+F9gmi7J+KwWGfXLhDD/yu0i7LkWi4y
+         xZrkLts/zyLMBDvsiwI6i5NXc/p4LVDXrJy1PUm9yB+shjeppAOsamV5PILKZNgb3KuS
+         XLF0h1ajOIYYpe+9OKilKd+r1yvVsK/OAEOmDJ8kfpI0MeQya29a//NxYzfHOheqFts4
+         nGHsKFpxMYULLljAiWBa5RMtNOjWCBeHjwuef4nK9nF3Mw7S+EX+XxeKfcglZ/0kMiWj
+         Uj2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=RVKbhGUPx9Rp4t5lnvvSGAoEpsAteMrVsae47CNGU14=;
-        b=RT4SO/Gd8Ug7ar/Hh95eYzQjkqBTU2a4ZSLkJ7wzKbFWCYFDOymm1FiZ85yHbkTHTR
-         B/qVRyroWlzDisain/7yuEb+4uHBya6qFncJ2n2X7ML0KxTtXFcdbvkglc+YasjqMkMg
-         AOprxBXtyo1KJ56hISpphFCV0YrID2FdSp6oKc7sGB9drbsTmPcXXYySSBF5AlOVzUNd
-         HuOEqbe86b81SyHN7yBXbsW1BXOKlv38q5oQUVjBXd+p31DcLFgozkWBaLjGdCOluNAP
-         FomiPIOr9s3H2t+66ALMTdqkDNMnUeaaAdjBuKC29KQSlocpht9+dvJI0DffGifM76ml
-         lirQ==
-X-Gm-Message-State: APjAAAU9untCKQrJXklE1pEAygi8VTe+49xBpDLqu27Jfo7NwgFxkqhe
-        B+RCuGm9gsNrCgsOvrxcxbXisRG7
-X-Google-Smtp-Source: APXvYqyyX1wB2kOZ08WrMc2jMATBMd5XgQO6AIaHwnrUyVWtMDn1LyZ/X+WuzzvPv9A62KSXHBtCzw==
-X-Received: by 2002:adf:e2cc:: with SMTP id d12mr5775327wrj.345.1571789154654;
-        Tue, 22 Oct 2019 17:05:54 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=gokM4n7dedwvMz3nVQdhJWZwmalfuzEvK8MTROAEiLo=;
+        b=sELVt2jz4petFKpXo+RuzY1GLU+ceESUdK22qMCDIfj+NOArHhQi4W04LnZEy9ovLO
+         wrDYYU+XLBK5cdTAQd6qLA6zZ01+lS13HWy0cqFhTGw4Wad0L3iP0oxCdoIOYQXzPjPb
+         0Srsh9dX1ZVjJI130COt4EiVUyJq+GMlh+cLYp3Nz37nJn/4+vH5Bgz+qsYbCAgqcu/i
+         RRAKhgaJFf+qPQRW2wsmmqtu3cIeW4sDL3Ndl1U/wn16pMMHWOPHxwbqv85hv3Pb6JDX
+         Z6PwdKqGUo3VVo6zkWjC9upa+QaRCrtjwThg8IaY5vTcfWWSY1M7a6IUlTraAszqEVpj
+         3XpQ==
+X-Gm-Message-State: APjAAAVtiJUX4QqNpkIPkJ8lGajhuH+e92nWqJZh4qTPqfUvl6O3BhKE
+        X9WNClBG5Mtb6h2Qy+xWLbKkS1NM
+X-Google-Smtp-Source: APXvYqzQiHMeCDDNoaK/Il7oXDsbZlPDZKvFYnqWF6/bPf9fzRds46WyFEcSpn4NOt4+HVP2eMqs/g==
+X-Received: by 2002:a7b:cd83:: with SMTP id y3mr5550699wmj.150.1571789157938;
+        Tue, 22 Oct 2019 17:05:57 -0700 (PDT)
 Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id v10sm18500272wmg.48.2019.10.22.17.05.50
+        by smtp.gmail.com with ESMTPSA id v10sm18500272wmg.48.2019.10.22.17.05.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Oct 2019 17:05:53 -0700 (PDT)
+        Tue, 22 Oct 2019 17:05:57 -0700 (PDT)
 From:   Florian Fainelli <f.fainelli@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Florian Fainelli <f.fainelli@gmail.com>,
@@ -73,51 +74,52 @@ Cc:     Florian Fainelli <f.fainelli@gmail.com>,
         Jim Quinlan <james.quinlan@broadcom.com>,
         Sudeep Holla <Sudeep.Holla@arm.com>,
         Thanu Rangarajan <Thanu.Rangarajan@arm.com>
-Subject: [PATCH RFC 0/2] irqchip/gic: Allow the use of SGI interrupts
-Date:   Tue, 22 Oct 2019 17:05:45 -0700
-Message-Id: <20191023000547.7831-1-f.fainelli@gmail.com>
+Subject: [PATCH RFC 1/2] dt-bindings: Define interrupt type for SGI interrupts
+Date:   Tue, 22 Oct 2019 17:05:46 -0700
+Message-Id: <20191023000547.7831-2-f.fainelli@gmail.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191023000547.7831-1-f.fainelli@gmail.com>
+References: <20191023000547.7831-1-f.fainelli@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+In preparation for allowing drivers to use SGIs, define a new value for
+the first ARM GIC interrupt controller cell to take a new value to
+specifically designate a SGI interrupt.
 
-Sending this as RFC so as to gather comments on the approach chosen
-here. The Broadcom STB mailbox driver and its firmware in EL3 use a
-combination of "smc" for inbound (Linux to monitor) and SGI for outbound
-(monitor to Linux) signaling. This mailbox driver can be seen here:
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ .../devicetree/bindings/interrupt-controller/arm,gic.yaml       | 2 +-
+ include/dt-bindings/interrupt-controller/arm-gic.h              | 1 +
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-https://github.com/ffainelli/linux/commit/17cc97919f4cd2583d67e624273da8b54b44a4a7
-
-(we may switch to the recently proposed standard arm-smc mailbox driver
-proposed by Peng Fang, but we would need interrupt notification anyway).
-
-In our downstream kernel, we have hacked the arch/*/kernel/smp.c code to
-permit the installation of custom "IPI" handlers, this is obviously
-wrong and absolutely not suitable for usptream.
-
-Here, we allow the GIC to recognize SGI interrupt specified in Device
-Tree with a new specifier in the first cell (2) and then we let the
-mapping and translation occur provided that we are above the NR_IPI
-range.
-
-Immediate problems that I am aware of:
-
-- on ARM (32-bit) NR_IPI does not include IPI_CPU_BACKTRACE, so we could
-  (are) be off by one in our check against NR_IPI
-
-Florian Fainelli (3):
-  dt-bindings: Define interrupt type for SGI interrupts
-  irqchip/gic: Allow the use of SGI interrupts
-
- .../interrupt-controller/arm,gic.yaml         |   2 +-
- drivers/irqchip/irq-gic.c                     |  41 ++-
- .../interrupt-controller/arm-gic.h            |   1 +
- 7 files changed, 313 insertions(+), 16 deletions(-)
- create mode 100644 drivers/mailbox/brcmstb-mailbox.c
-
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/arm,gic.yaml b/Documentation/devicetree/bindings/interrupt-controller/arm,gic.yaml
+index 9a47820ef346..2d0bfcbe4933 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/arm,gic.yaml
++++ b/Documentation/devicetree/bindings/interrupt-controller/arm,gic.yaml
+@@ -58,7 +58,7 @@ properties:
+     const: 3
+     description: |
+       The 1st cell is the interrupt type; 0 for SPI interrupts, 1 for PPI
+-      interrupts.
++      interrupts and 2 for SGI interrupts.
+ 
+       The 2nd cell contains the interrupt number for the interrupt type.
+       SPI interrupts are in the range [0-987].  PPI interrupts are in the
+diff --git a/include/dt-bindings/interrupt-controller/arm-gic.h b/include/dt-bindings/interrupt-controller/arm-gic.h
+index 35b6f69b7db6..2dcc394b7b6b 100644
+--- a/include/dt-bindings/interrupt-controller/arm-gic.h
++++ b/include/dt-bindings/interrupt-controller/arm-gic.h
+@@ -12,6 +12,7 @@
+ 
+ #define GIC_SPI 0
+ #define GIC_PPI 1
++#define GIC_SGI 2
+ 
+ /*
+  * Interrupt specifier cell 2.
 -- 
 2.17.1
 
