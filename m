@@ -2,81 +2,142 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDEFECA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 20:56:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2FB8CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 20:56:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B437020650
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 20:56:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NSGRlTlN"
+	by mail.kernel.org (Postfix) with ESMTP id C13172173B
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 20:56:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405493AbfJWU4G (ORCPT
+        id S2405865AbfJWU4l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 16:56:06 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:36736 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405172AbfJWU4G (ORCPT
+        Wed, 23 Oct 2019 16:56:41 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:37740 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405172AbfJWU4l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 16:56:06 -0400
-Received: by mail-pl1-f194.google.com with SMTP id j11so10684464plk.3;
-        Wed, 23 Oct 2019 13:56:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=07Atb/6gQrkEJ26f3FmK/lTnstI+R5Npacag/JwqRmk=;
-        b=NSGRlTlNMvNDTQo1Xgl6h/5SFLy3iEek92UpZddKGZwMLi9rm6RGvCk34EEpwcvnXY
-         2+iMcWENqwCSRCNothH74ArZl214/hY0l0D9qRpmD9sb5aagimUCcGhyKMcHY927Ztwg
-         c88Zb6dfsK9zLrmOUlKGkQ2OaAFRbcpk5PdWx48PbkJ7hAVXVVvxvFBHzLsKrx3KZh+k
-         oloiMzC1jMAVMs/Liz/LR49VcZKDdLsreuOQ6U3adWpOj4qEzFBih0FqRCrcz6T5PiG6
-         HZ4oILYz0NCSUjw/wa9Tp5fwowIlK2sD0Z0BNE00hFKfbXJ63XlUvWc52Ww4rmQsBja3
-         RQiA==
+        Wed, 23 Oct 2019 16:56:41 -0400
+Received: by mail-wm1-f68.google.com with SMTP id q130so176673wme.2;
+        Wed, 23 Oct 2019 13:56:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=07Atb/6gQrkEJ26f3FmK/lTnstI+R5Npacag/JwqRmk=;
-        b=KSZ++CNyggKwxHz176xD2xhKjW/B98z3sQga8cITRNGkFrro6mktT4BgV20JqZF7At
-         e78ZFxjE6BpxvCtYUyDTzAijhwik0L3VyojAp/Y6Wa0kXaUFsMdJ7L21aHIoaZO9awmc
-         4V6s+Esrj/7/aeyGreJ4CWJ9vi8oOaAxFe8+dH8vZ3TKNSpZtCHgmlU1dqWgE/Da9cRd
-         x4LCqzB8K4IK/nFE016Q5G/MGyEQ7WtK95DKbZNVhEceJ/ORq065+c9Ohgy5T6ZlnwFX
-         CCBMee/GlQTYzxDdY4/3XPt1r84zRFX7Ngy3hos5wCcqgry4UIWwPbLr9sJM04kZK8si
-         IE/A==
-X-Gm-Message-State: APjAAAW0KI/0psAoedB8f1Y9HxCT07qtIG/G5IlpSklHc1Qd4UNzeU+f
-        /a3I7Y0ZVFa2R94hpD7P/A==
-X-Google-Smtp-Source: APXvYqycKSXQGXAynFiufHVxYiQKe72QcM+36tuPsviNgI9wA+eb7Uq7f9nUd8r5SmkPlCDem3pktw==
-X-Received: by 2002:a17:902:d70a:: with SMTP id w10mr11144217ply.342.1571864165109;
-        Wed, 23 Oct 2019 13:56:05 -0700 (PDT)
-Received: from localhost.localdomain ([216.52.21.4])
-        by smtp.gmail.com with ESMTPSA id s11sm131885pjp.26.2019.10.23.13.56.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 23 Oct 2019 13:56:04 -0700 (PDT)
-From:   Praveen Chaudhary <praveen5582@gmail.com>
-X-Google-Original-From: Praveen Chaudhary <pchaudhary@linkedin.com>
-To:     fw@strlen.de
-Cc:     astracner@linkedin.com, davem@davemloft.net, kadlec@netfilter.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        pablo@netfilter.org, praveen5582@gmail.com, zxu@linkedin.com
-Subject: RE: [PATCH] [netfilter]: Fix skb->csum calculation when netfilter
-Date:   Wed, 23 Oct 2019 13:56:02 -0700
-Message-Id: <1571864162-9097-1-git-send-email-pchaudhary@linkedin.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <20191023193337.GP25052@breakpoint.cc>
-References: <20191023193337.GP25052@breakpoint.cc>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=32v8K2RHKvWo9eMjAZ2zLlE2KejEYDR1L/fOwlpiWkU=;
+        b=sNlbQcnr4Qcave2hUpGJBUHxgmyXmJgFUOM+7kuZ9Edt5XuTjDQ/L/c9t4SMrB1lnU
+         335vBCfSgBd0z/iA42ZO7YkIPg+x0UVDXKi6ztAa8sNGzF080Z8c8su0upppYlsflTz2
+         I6daSbVbf/fMsuxmUEgNWEyArKBWD45gNeNThKVgpBHV47ONPHJJ3/AG7CUzhbgSrZot
+         LoxU9GDTe/P7kMeleltAFMrXTuBkqk+QwniV08/JmL3iON7nJYNxxGZFbR67TeoUGpbb
+         FgmxD73umW8AX/RDTSNNXBB0S4PJJM26Riv8TIdnatnz+xW/OgzYVN7YSTg9T7WJ8/3y
+         V4fQ==
+X-Gm-Message-State: APjAAAXr9OJu9v7iNfGwwsXfC+gcp6mpNYnELtYFgkaA6+PIzmOMCB0D
+        YzUJa2SiIlpcG4SbhRS5HzgJf/JCtM8BnVD8
+X-Google-Smtp-Source: APXvYqx3/CV7TtgBkFCYKsLwC9Yvg+bNsX7rQNs1v1Im2R4whylc7FoGZ8LrNsu0JT58IAfGfzwGDg==
+X-Received: by 2002:a1c:7e10:: with SMTP id z16mr1586651wmc.11.1571864199028;
+        Wed, 23 Oct 2019 13:56:39 -0700 (PDT)
+Received: from localhost ([109.70.119.5])
+        by smtp.gmail.com with ESMTPSA id o18sm26164584wrm.11.2019.10.23.13.56.38
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 23 Oct 2019 13:56:38 -0700 (PDT)
+From:   Patrick Bellasi <patrick.bellasi@matbug.net>
+To:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Douglas Raillard <douglas.raillard@arm.com>,
+        Quentin Perret <qperret@google.com>,
+        Patrick Bellasi <patrick.bellasi@matbug.com>
+Subject: [PATCH v2] sched/fair: util_est: fast ramp-up EWMA on utilization increases
+Date:   Wed, 23 Oct 2019 21:56:30 +0100
+Message-Id: <20191023205630.14469-1-patrick.bellasi@matbug.net>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Florian 
+The estimated utilization for a task:
 
-Thanks for the review,
+   util_est = max(util_avg, est.enqueue, est.ewma)
 
-inet_proto_csum_replace16 is called from many places, whereas this fix is applicable only for nf_nat_ipv6_csum_update, where we need to update skb->csum for ipv6 src/dst address change. 
-Also my point is, inet_proto_csum_replace16 is updating skb->csum for change in udp header checksum field, but that is not complete. So, I added a new function. Basically, I used a safe apprioach to fix it, without impacting other cases. Let me know other options,  I am open to suggestions.
+is defined based on:
+ - util_avg: the PELT defined utilization
+ - est.enqueued: the util_avg at the end of the last activation
+ - est.ewma:     a exponential moving average on the est.enqueued
+                 samples
 
-More importantly, I hope this is clear that the current code does not update skb->csum completely. Which is a bug. Thanks again.
+According to this definition, when a task suddenly change its bandwidth
+requirements from small to big, the EWMA will need to collect multiple
+samples before converging up to track the new big utilization.
+
+This slow convergence towards bigger utilization values is not
+aligned to the default scheduler behavior, which is to optimize for
+performance. Moreover, the est.ewma component fails to compensate for
+temporarely utilization drops which spans just few est.enqueued samples.
+
+To let util_est do a better job in the scenario depicted above, change
+its definition by making util_est directly follow upward motion and
+only decay the est.ewma on downward.
+
+Signed-off-by: Patrick Bellasi <patrick.bellasi@matbug.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+---
+ kernel/sched/fair.c     | 14 +++++++++++++-
+ kernel/sched/features.h |  1 +
+ 2 files changed, 14 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index a81c36472822..a14487462b6c 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -3768,11 +3768,22 @@ util_est_dequeue(struct cfs_rq *cfs_rq, struct task_struct *p, bool task_sleep)
+ 	if (ue.enqueued & UTIL_AVG_UNCHANGED)
+ 		return;
+ 
++	/*
++	 * Reset EWMA on utilization increases, the moving average is used only
++	 * to smooth utilization decreases.
++	 */
++	ue.enqueued = (task_util(p) | UTIL_AVG_UNCHANGED);
++	if (sched_feat(UTIL_EST_FASTUP)) {
++		if (ue.ewma < ue.enqueued) {
++			ue.ewma = ue.enqueued;
++			goto done;
++		}
++	}
++
+ 	/*
+ 	 * Skip update of task's estimated utilization when its EWMA is
+ 	 * already ~1% close to its last activation value.
+ 	 */
+-	ue.enqueued = (task_util(p) | UTIL_AVG_UNCHANGED);
+ 	last_ewma_diff = ue.enqueued - ue.ewma;
+ 	if (within_margin(last_ewma_diff, (SCHED_CAPACITY_SCALE / 100)))
+ 		return;
+@@ -3805,6 +3816,7 @@ util_est_dequeue(struct cfs_rq *cfs_rq, struct task_struct *p, bool task_sleep)
+ 	ue.ewma <<= UTIL_EST_WEIGHT_SHIFT;
+ 	ue.ewma  += last_ewma_diff;
+ 	ue.ewma >>= UTIL_EST_WEIGHT_SHIFT;
++done:
+ 	WRITE_ONCE(p->se.avg.util_est, ue);
+ }
+ 
+diff --git a/kernel/sched/features.h b/kernel/sched/features.h
+index 2410db5e9a35..7481cd96f391 100644
+--- a/kernel/sched/features.h
++++ b/kernel/sched/features.h
+@@ -89,3 +89,4 @@ SCHED_FEAT(WA_BIAS, true)
+  * UtilEstimation. Use estimated CPU utilization.
+  */
+ SCHED_FEAT(UTIL_EST, true)
++SCHED_FEAT(UTIL_EST_FASTUP, true)
+-- 
+2.17.1
+
