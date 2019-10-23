@@ -5,35 +5,35 @@ X-Spam-Level:
 X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22625CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 00:18:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70970CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 00:18:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4E4020650
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 00:18:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44F2B2086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 00:18:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="nQfxB7Rh"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="GR5qiulu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732344AbfJWASZ (ORCPT
+        id S1732831AbfJWASq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 20:18:25 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:45252 "EHLO
+        Tue, 22 Oct 2019 20:18:46 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:45276 "EHLO
         linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732218AbfJWASZ (ORCPT
+        with ESMTP id S1732224AbfJWASZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 22 Oct 2019 20:18:25 -0400
 Received: from nramas-ThinkStation-P520.corp.microsoft.com (unknown [131.107.174.108])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 4E0AA2010AC3;
+        by linux.microsoft.com (Postfix) with ESMTPSA id 9ADA92010AC5;
         Tue, 22 Oct 2019 17:18:24 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4E0AA2010AC3
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9ADA92010AC5
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
         s=default; t=1571789904;
-        bh=ZxF80hLmpS4odHnXd8DZjntedVTyJ3tH1vjLMOXe8os=;
+        bh=4Bq0D88j9WL7mEGpp0j6poBpUK+duhRJiZbGEgFGP/8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nQfxB7Rh3YN88VbtVbjqd7vP5nGaCHsKqZgVYm3tXgm6uFu/1QF1Ovv9OhP0f3I2B
-         3HOdT/Yjw3cGFebSmHU3Z17BB34MGPkkotsW/fghalngocZmk/mHAat/sfsasfq1qg
-         W2JfR9lx+ZSRtYHRaRFTv+7GG2IomNjKpwzRHpIA=
+        b=GR5qiulus8Ap/Lz+o/JQtHylY8rYL6Hwe4J3vcj3qCPdx3Eu/MnySgUf1STSslCmk
+         +/0JcClLmQ/+57UJM7TQNqXeR37TjqwF8YcPnoUAbOVWZRTDonJFsrmllMChXvybFd
+         4DHp635ZK1QIAmcdvWji6U3kF9rPLiBm32MA9YAE=
 From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
 To:     zohar@linux.ibm.com, dhowells@redhat.com, casey@schaufler-ca.com,
         sashal@kernel.org, jamorris@linux.microsoft.com,
@@ -41,9 +41,9 @@ To:     zohar@linux.ibm.com, dhowells@redhat.com, casey@schaufler-ca.com,
         linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
         keyrings@vger.kernel.org
 Cc:     nramas@linux.microsoft.com
-Subject: [PATCH v1 1/6] KEYS: Helper function to check if the given keyring is builtin_trusted_keys
-Date:   Tue, 22 Oct 2019 17:18:13 -0700
-Message-Id: <20191023001818.3684-2-nramas@linux.microsoft.com>
+Subject: [PATCH v1 3/6] KEYS: ima hook to measure builtin_trusted_keys
+Date:   Tue, 22 Oct 2019 17:18:15 -0700
+Message-Id: <20191023001818.3684-4-nramas@linux.microsoft.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191023001818.3684-1-nramas@linux.microsoft.com>
 References: <20191023001818.3684-1-nramas@linux.microsoft.com>
@@ -52,42 +52,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Helper function to check if the given keyring is
-the builtin_trusted_keys keyring.
+Add a new ima hook to measure keys added to builtin_trusted_keys
+keyring.
 
-This function is used by ima to determine if a key is
-added to the builtin_trusted_keys keyring.
+Updated ima_match_rules function to handle the new ima hook.
+This is used to determine if ima policy requires measurement
+of keys added to builtin_trusted_keys keyring.
 
 Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
 ---
- certs/system_keyring.c        | 5 +++++
- include/keys/system_keyring.h | 2 ++
- 2 files changed, 7 insertions(+)
+ Documentation/ABI/testing/ima_policy | 1 +
+ security/integrity/ima/ima.h         | 1 +
+ security/integrity/ima/ima_api.c     | 1 +
+ security/integrity/ima/ima_policy.c  | 5 ++++-
+ 4 files changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/certs/system_keyring.c b/certs/system_keyring.c
-index 1eba08a1af82..5533c7f92fef 100644
---- a/certs/system_keyring.c
-+++ b/certs/system_keyring.c
-@@ -283,3 +283,8 @@ void __init set_platform_trusted_keys(struct key *keyring)
- 	platform_trusted_keys = keyring;
- }
- #endif
-+
-+inline bool is_builtin_trusted_keyring(struct key *keyring)
-+{
-+	return (keyring == builtin_trusted_keys);
-+}
-diff --git a/include/keys/system_keyring.h b/include/keys/system_keyring.h
-index c1a96fdf598b..2bc0aaa07f05 100644
---- a/include/keys/system_keyring.h
-+++ b/include/keys/system_keyring.h
-@@ -66,4 +66,6 @@ static inline void set_platform_trusted_keys(struct key *keyring)
- }
- #endif
+diff --git a/Documentation/ABI/testing/ima_policy b/Documentation/ABI/testing/ima_policy
+index fc376a323908..25566c74e679 100644
+--- a/Documentation/ABI/testing/ima_policy
++++ b/Documentation/ABI/testing/ima_policy
+@@ -29,6 +29,7 @@ Description:
+ 				[FIRMWARE_CHECK]
+ 				[KEXEC_KERNEL_CHECK] [KEXEC_INITRAMFS_CHECK]
+ 				[KEXEC_CMDLINE]
++				[BUILTIN_TRUSTED_KEYS]
+ 			mask:= [[^]MAY_READ] [[^]MAY_WRITE] [[^]MAY_APPEND]
+ 			       [[^]MAY_EXEC]
+ 			fsmagic:= hex value
+diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+index b6847ee1f47a..0d2908036882 100644
+--- a/security/integrity/ima/ima.h
++++ b/security/integrity/ima/ima.h
+@@ -189,6 +189,7 @@ static inline unsigned long ima_hash_key(u8 *digest)
+ 	hook(KEXEC_INITRAMFS_CHECK)	\
+ 	hook(POLICY_CHECK)		\
+ 	hook(KEXEC_CMDLINE)		\
++	hook(BUILTIN_TRUSTED_KEYS)	\
+ 	hook(MAX_CHECK)
+ #define __ima_hook_enumify(ENUM)	ENUM,
  
-+extern bool is_builtin_trusted_keyring(struct key *keyring);
-+
- #endif /* _KEYS_SYSTEM_KEYRING_H */
+diff --git a/security/integrity/ima/ima_api.c b/security/integrity/ima/ima_api.c
+index f614e22bf39f..cc04706b7e7a 100644
+--- a/security/integrity/ima/ima_api.c
++++ b/security/integrity/ima/ima_api.c
+@@ -175,6 +175,7 @@ void ima_add_violation(struct file *file, const unsigned char *filename,
+  *	subj,obj, and type: are LSM specific.
+  *	func: FILE_CHECK | BPRM_CHECK | CREDS_CHECK | MMAP_CHECK | MODULE_CHECK
+  *	| KEXEC_CMDLINE
++ *	| BUILTIN_TRUSTED_KEYS
+  *	mask: contains the permission mask
+  *	fsmagic: hex value
+  *
+diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+index 6df7f641ff66..944636076152 100644
+--- a/security/integrity/ima/ima_policy.c
++++ b/security/integrity/ima/ima_policy.c
+@@ -370,7 +370,7 @@ static bool ima_match_rules(struct ima_rule_entry *rule, struct inode *inode,
+ {
+ 	int i;
+ 
+-	if (func == KEXEC_CMDLINE) {
++	if ((func == KEXEC_CMDLINE) || (func == BUILTIN_TRUSTED_KEYS)) {
+ 		if ((rule->flags & IMA_FUNC) && (rule->func == func))
+ 			return true;
+ 		return false;
+@@ -959,6 +959,9 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
+ 				entry->func = POLICY_CHECK;
+ 			else if (strcmp(args[0].from, "KEXEC_CMDLINE") == 0)
+ 				entry->func = KEXEC_CMDLINE;
++			else if (strcmp(args[0].from,
++					"BUILTIN_TRUSTED_KEYS") == 0)
++				entry->func = BUILTIN_TRUSTED_KEYS;
+ 			else
+ 				result = -EINVAL;
+ 			if (!result)
 -- 
 2.17.1
 
