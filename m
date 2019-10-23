@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1091CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 00:54:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB84BCA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 00:54:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B6AC20B7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 00:54:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 826E420B7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 00:54:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vU9Nva4n"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r0rbBPq3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733187AbfJWAyW (ORCPT
+        id S1733231AbfJWAy0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 20:54:22 -0400
-Received: from mail-pf1-f201.google.com ([209.85.210.201]:56150 "EHLO
-        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733119AbfJWAyU (ORCPT
+        Tue, 22 Oct 2019 20:54:26 -0400
+Received: from mail-pg1-f201.google.com ([209.85.215.201]:43122 "EHLO
+        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733192AbfJWAyY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 20:54:20 -0400
-Received: by mail-pf1-f201.google.com with SMTP id u21so14745125pfm.22
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 17:54:18 -0700 (PDT)
+        Tue, 22 Oct 2019 20:54:24 -0400
+Received: by mail-pg1-f201.google.com with SMTP id i4so7861719pgh.10
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 17:54:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=Eei92dL823o7tet+Ip4WaSABxxdMEUUGpCFLcr5LKjQ=;
-        b=vU9Nva4nrJ9ocpJ4U2cW/r1BB12zalwqLOjqiulEgLHpUNLRIhljy5fyKXTqodnlyc
-         jo9PNKJq7UQpyoZ/gLf88cO0NNXNWfEziKDc8XF+OpJ2gKrJeh3VByhkk+xd4H/tkwtq
-         vwZBWuNfE2UpU7U3lSQR5pKvoOvHkWFAovDw7Fu96nQSgCxqL6Q/2aP0n2mKjEUzyFiM
-         I4UyQ7eyUHjp9WKM7KC8SappuaSi5o4E3+sFPY9fvHepeohXmvWB+qYagzIp5qs8bKW/
-         wFc/ADbed+PQi4XtK32igHeY/BKy5kKYOXvF6MDWfTSKh+Q0uw6xAC8CCu4ts5Wl6pAG
-         zEUA==
+        bh=PC42O41NBd9i4kPitdETrfG1Za58EwGfR6rcMq8N6/A=;
+        b=r0rbBPq3zpHRSh0k4CXUWN+PXGWGcH8Ra0xoXnRwQ8P1bprYbq8aMicMKIu2ImqIQ7
+         MDSSYQfeTaiJpLjTAUJQ2ipOGzsIVFRfx3VI0THolL1pXV6nqyOdO9WXwfSLRWnMkR70
+         6y2E0N1kF6/qWjyqDEO3U3vtpDMEpsv6xlO24q7JxIIyuHPdFm13QEO0jbYPDIvMLYZx
+         8FaE0eeXPISxOWkRiap7IQPhvErtd1lc1jTm/9quWMF2iFevLI5BjCvlRYsrOvI7P9Hc
+         TFRxmQ7r64tZv0/Yh365ScvoWZK53o8xHze1Q5hlgbDcmgbMzAlCzWEUka8kqRLYU5tD
+         49CA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=Eei92dL823o7tet+Ip4WaSABxxdMEUUGpCFLcr5LKjQ=;
-        b=TBc52DNllK2pH1qQXdSBk8q5YQPexfbJa8I+7ArS1Vc/EKpvHZe6VfnmabGISZ4vcg
-         CiquigzmKWeWwsbDPs9+OuEaN8HO8p1TViFpIxCvuUsOmY1IuIH/FXDHhzlBiBVRZtTo
-         9nZCs0dtBqxSxzcnUZaaKLMQbKv3xZ36RgJ38EOovROerZA8yXIYkRzFIbJVSc1iVXtN
-         D2PdWcq/io1pllWKWsCY+cc3EIBYWl48bA6pweQ98fE85mz5Qkcm39P7XCFAsvTSHkUy
-         Yt2UzHrU+ozTMsl4pK6UZc023kXHpKHG/0i6aTmDtFuCQhvIkV4UvZwS/5SdqsVRZkL5
-         UL9Q==
-X-Gm-Message-State: APjAAAVl1qv3shwQkTetaOP57mQjHi3Rg3MOo6+HndaHBBLlRowoebnp
-        VijF/7LTGeOaY48rdM23BXVeOTuzOq/1
-X-Google-Smtp-Source: APXvYqxa3zImBUDxonWgg0Z0hHH2Y4+PxoOJUsIEtvQaCZHSLLukguLHqmPjTaeip9XRqq7LOPOCn5kDJfwH
-X-Received: by 2002:a63:d806:: with SMTP id b6mr6860540pgh.122.1571792056943;
- Tue, 22 Oct 2019 17:54:16 -0700 (PDT)
-Date:   Tue, 22 Oct 2019 17:53:35 -0700
+        bh=PC42O41NBd9i4kPitdETrfG1Za58EwGfR6rcMq8N6/A=;
+        b=RR0wGTalPPUukzU+MHqNjmLOat5sUIXsNJMIWDxP/pHD3UNZGUzHb0MOjSw2DZ/p7F
+         b/nFqIfFeJGdZrxpyFDtH2vB9Lb4ZMtf6IxL1o9QEy3eIDbFcu2ToyItikUduBzHHI8g
+         OepCW+VLiqxMt4FknEJj4X2vKG1uxlGd2FYoWsle7XGCeowIJOXKFoJ6apl4YCu25WjQ
+         S62VjqcYFb4E1FQN9gnN4s99rbfZe+FMVU3wYXhjXwA40YHxoWStYwhLrK2grluHcesX
+         nGpLa91RZQlaLFtSe+KMYMoG+9e/L46ozSO+shPYzEas1uSBXPpB2u4Un8w5FVebIsrP
+         l+KA==
+X-Gm-Message-State: APjAAAWzKeWHV/+LPaNZwkhZci9eW7YuVavo+EboP1fioW60GISkl9Nv
+        2x5XFQVnMeR8stXn5axTzjcY9BVUbX0t
+X-Google-Smtp-Source: APXvYqwVBqK65JMFO/1L3DV9WrvU2qA1aac/SY8ENQ2THYATWcqtOPLUbl+6/IfMrZt9xHPeGxFd/Q765iSO
+X-Received: by 2002:a63:1904:: with SMTP id z4mr6953016pgl.413.1571792062316;
+ Tue, 22 Oct 2019 17:54:22 -0700 (PDT)
+Date:   Tue, 22 Oct 2019 17:53:37 -0700
 In-Reply-To: <20191023005337.196160-1-irogers@google.com>
-Message-Id: <20191023005337.196160-8-irogers@google.com>
+Message-Id: <20191023005337.196160-10-irogers@google.com>
 Mime-Version: 1.0
 References: <20191017170531.171244-1-irogers@google.com> <20191023005337.196160-1-irogers@google.com>
 X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
-Subject: [PATCH v2 7/9] perf tools: before yyabort-ing free components
+Subject: [PATCH v2 9/9] perf tools: add a deep delete for parse event terms
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -86,596 +86,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Yyabort doesn't destruct inputs and so this must be done manually before
-using yyabort.
+Add a parse_events_term deep delete function so that owned strings and
+arrays are freed.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/parse-events.y | 250 +++++++++++++++++++++++++--------
- 1 file changed, 195 insertions(+), 55 deletions(-)
+ tools/perf/util/parse-events.c | 16 +++++++++++++---
+ tools/perf/util/parse-events.h |  1 +
+ tools/perf/util/parse-events.y | 12 ++----------
+ tools/perf/util/pmu.c          |  2 +-
+ 4 files changed, 17 insertions(+), 14 deletions(-)
 
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index 6bf64b3767cc..5e7bebc8fad4 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -2806,6 +2806,18 @@ int parse_events_term__clone(struct parse_events_term **new,
+ 		return new_term(new, &temp, strdup(term->val.str), 0);
+ }
+ 
++void parse_events_term__delete(struct parse_events_term *term)
++{
++	if (term->array.nr_ranges)
++		zfree(&term->array.ranges);
++
++	if (term->type_val != PARSE_EVENTS__TERM_TYPE_NUM)
++		zfree(&term->val.str);
++
++	zfree(&term->config);
++	free(term);
++}
++
+ int parse_events_copy_term_list(struct list_head *old,
+ 				 struct list_head **new)
+ {
+@@ -2836,10 +2848,8 @@ void parse_events_terms__purge(struct list_head *terms)
+ 	struct parse_events_term *term, *h;
+ 
+ 	list_for_each_entry_safe(term, h, terms, list) {
+-		if (term->array.nr_ranges)
+-			zfree(&term->array.ranges);
+ 		list_del_init(&term->list);
+-		free(term);
++		parse_events_term__delete(term);
+ 	}
+ }
+ 
+diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
+index a7d42faeab0c..d1ade97e2357 100644
+--- a/tools/perf/util/parse-events.h
++++ b/tools/perf/util/parse-events.h
+@@ -139,6 +139,7 @@ int parse_events_term__sym_hw(struct parse_events_term **term,
+ 			      char *config, unsigned idx);
+ int parse_events_term__clone(struct parse_events_term **new,
+ 			     struct parse_events_term *term);
++void parse_events_term__delete(struct parse_events_term *term);
+ void parse_events_terms__delete(struct list_head *terms);
+ void parse_events_terms__purge(struct list_head *terms);
+ void parse_events__clear_array(struct parse_events_array *a);
 diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-index 4725b14b9db4..d1cceb3bc620 100644
+index d1cceb3bc620..649c63809bad 100644
 --- a/tools/perf/util/parse-events.y
 +++ b/tools/perf/util/parse-events.y
-@@ -152,6 +152,7 @@ start_events: groups
- {
- 	struct parse_events_state *parse_state = _parse_state;
- 
-+	/* frees $1 */
- 	parse_events_update_lists($1, &parse_state->list);
+@@ -49,14 +49,6 @@ static void free_list_evsel(struct list_head* list_evsel)
+ 	free(list_evsel);
  }
  
-@@ -161,6 +162,7 @@ groups ',' group
- 	struct list_head *list  = $1;
- 	struct list_head *group = $3;
- 
-+	/* frees $3 */
- 	parse_events_update_lists(group, list);
- 	$$ = list;
- }
-@@ -170,6 +172,7 @@ groups ',' event
- 	struct list_head *list  = $1;
- 	struct list_head *event = $3;
- 
-+	/* frees $3 */
- 	parse_events_update_lists(event, list);
- 	$$ = list;
- }
-@@ -182,8 +185,14 @@ group:
- group_def ':' PE_MODIFIER_EVENT
- {
- 	struct list_head *list = $1;
-+	int err;
- 
--	ABORT_ON(parse_events__modifier_group(list, $3));
-+	err = parse_events__modifier_group(list, $3);
-+	free($3);
-+	if (err) {
-+		free_list_evsel(list);
-+		YYABORT;
-+	}
- 	$$ = list;
- }
- |
-@@ -196,6 +205,7 @@ PE_NAME '{' events '}'
- 
- 	inc_group_count(list, _parse_state);
- 	parse_events__set_leader($1, list, _parse_state);
-+	free($1);
- 	$$ = list;
- }
- |
-@@ -214,6 +224,7 @@ events ',' event
- 	struct list_head *event = $3;
- 	struct list_head *list  = $1;
- 
-+	/* frees $3 */
- 	parse_events_update_lists(event, list);
- 	$$ = list;
- }
-@@ -226,13 +237,19 @@ event_mod:
- event_name PE_MODIFIER_EVENT
- {
- 	struct list_head *list = $1;
-+	int err;
- 
- 	/*
- 	 * Apply modifier on all events added by single event definition
- 	 * (there could be more events added for multiple tracepoint
- 	 * definitions via '*?'.
- 	 */
--	ABORT_ON(parse_events__modifier_event(list, $2, false));
-+	err = parse_events__modifier_event(list, $2, false);
-+	free($2);
-+	if (err) {
-+		free_list_evsel(list);
-+		YYABORT;
-+	}
- 	$$ = list;
- }
- |
-@@ -241,8 +258,14 @@ event_name
- event_name:
- PE_EVENT_NAME event_def
- {
--	ABORT_ON(parse_events_name($2, $1));
-+	int err;
-+
-+	err = parse_events_name($2, $1);
- 	free($1);
-+	if (err) {
-+		free_list_evsel($2);
-+		YYABORT;
-+	}
- 	$$ = $2;
- }
- |
-@@ -262,23 +285,32 @@ PE_NAME opt_pmu_config
- {
- 	struct parse_events_state *parse_state = _parse_state;
- 	struct parse_events_error *error = parse_state->error;
--	struct list_head *list, *orig_terms, *terms;
-+	struct list_head *list = NULL, *orig_terms = NULL, *terms= NULL;
-+	char *pattern = NULL;
-+
-+#define CLEANUP_YYABORT					\
-+	do {						\
-+		parse_events_terms__delete($2);		\
-+		parse_events_terms__delete(orig_terms);	\
-+		free($1);				\
-+		YYABORT;				\
-+	} while(0)
- 
- 	if (parse_events_copy_term_list($2, &orig_terms))
--		YYABORT;
-+		CLEANUP_YYABORT;
- 
- 	if (error)
- 		error->idx = @1.first_column;
- 
- 	list = alloc_list();
--	ABORT_ON(!list);
-+	if (!list)
-+		CLEANUP_YYABORT;
- 	if (parse_events_add_pmu(_parse_state, list, $1, $2, false, false)) {
- 		struct perf_pmu *pmu = NULL;
- 		int ok = 0;
--		char *pattern;
- 
- 		if (asprintf(&pattern, "%s*", $1) < 0)
--			YYABORT;
-+			CLEANUP_YYABORT;
- 
- 		while ((pmu = perf_pmu__scan(pmu)) != NULL) {
- 			char *name = pmu->name;
-@@ -287,31 +319,32 @@ PE_NAME opt_pmu_config
- 			    strncmp($1, "uncore_", 7))
- 				name += 7;
- 			if (!fnmatch(pattern, name, 0)) {
--				if (parse_events_copy_term_list(orig_terms, &terms)) {
--					free(pattern);
--					YYABORT;
--				}
-+				if (parse_events_copy_term_list(orig_terms, &terms))
-+					CLEANUP_YYABORT;
- 				if (!parse_events_add_pmu(_parse_state, list, pmu->name, terms, true, false))
- 					ok++;
- 				parse_events_terms__delete(terms);
- 			}
- 		}
- 
--		free(pattern);
+-static void free_term(struct parse_events_term *term)
+-{
+-	if (term->type_val == PARSE_EVENTS__TERM_TYPE_STR)
+-		free(term->val.str);
+-	zfree(&term->array.ranges);
+-	free(term);
+-}
 -
- 		if (!ok)
--			YYABORT;
-+			CLEANUP_YYABORT;
- 	}
- 	parse_events_terms__delete($2);
- 	parse_events_terms__delete(orig_terms);
-+	free($1);
- 	$$ = list;
-+#undef CLEANUP_YYABORT
- }
- |
- PE_KERNEL_PMU_EVENT sep_dc
+ static void inc_group_count(struct list_head *list,
+ 		       struct parse_events_state *parse_state)
  {
- 	struct list_head *list;
-+	int err;
- 
--	if (parse_events_multi_pmu_add(_parse_state, $1, &list) < 0)
-+	err = parse_events_multi_pmu_add(_parse_state, $1, &list);
-+	free($1);
-+	if (err < 0)
- 		YYABORT;
- 	$$ = list;
- }
-@@ -322,6 +355,8 @@ PE_PMU_EVENT_PRE '-' PE_PMU_EVENT_SUF sep_dc
- 	char pmu_name[128];
- 
- 	snprintf(&pmu_name, 128, "%s-%s", $1, $3);
-+	free($1);
-+	free($3);
- 	if (parse_events_multi_pmu_add(_parse_state, pmu_name, &list) < 0)
- 		YYABORT;
- 	$$ = list;
-@@ -338,11 +373,16 @@ value_sym '/' event_config '/'
- 	struct list_head *list;
- 	int type = $1 >> 16;
- 	int config = $1 & 255;
-+	int err;
- 
- 	list = alloc_list();
- 	ABORT_ON(!list);
--	ABORT_ON(parse_events_add_numeric(_parse_state, list, type, config, $3));
-+	err = parse_events_add_numeric(_parse_state, list, type, config, $3);
- 	parse_events_terms__delete($3);
-+	if (err) {
-+		free_list_evsel(list);
-+		YYABORT;
-+	}
- 	$$ = list;
- }
- |
-@@ -374,11 +414,19 @@ PE_NAME_CACHE_TYPE '-' PE_NAME_CACHE_OP_RESULT '-' PE_NAME_CACHE_OP_RESULT opt_e
- 	struct parse_events_state *parse_state = _parse_state;
- 	struct parse_events_error *error = parse_state->error;
- 	struct list_head *list;
-+	int err;
- 
- 	list = alloc_list();
- 	ABORT_ON(!list);
--	ABORT_ON(parse_events_add_cache(list, &parse_state->idx, $1, $3, $5, error, $6));
-+	err = parse_events_add_cache(list, &parse_state->idx, $1, $3, $5, error, $6);
- 	parse_events_terms__delete($6);
-+	free($1);
-+	free($3);
-+	free($5);
-+	if (err) {
-+		free_list_evsel(list);
-+		YYABORT;
-+	}
- 	$$ = list;
- }
- |
-@@ -387,11 +435,18 @@ PE_NAME_CACHE_TYPE '-' PE_NAME_CACHE_OP_RESULT opt_event_config
- 	struct parse_events_state *parse_state = _parse_state;
- 	struct parse_events_error *error = parse_state->error;
- 	struct list_head *list;
-+	int err;
- 
- 	list = alloc_list();
- 	ABORT_ON(!list);
--	ABORT_ON(parse_events_add_cache(list, &parse_state->idx, $1, $3, NULL, error, $4));
-+	err = parse_events_add_cache(list, &parse_state->idx, $1, $3, NULL, error, $4);
- 	parse_events_terms__delete($4);
-+	free($1);
-+	free($3);
-+	if (err) {
-+		free_list_evsel(list);
-+		YYABORT;
-+	}
- 	$$ = list;
- }
- |
-@@ -400,11 +455,17 @@ PE_NAME_CACHE_TYPE opt_event_config
- 	struct parse_events_state *parse_state = _parse_state;
- 	struct parse_events_error *error = parse_state->error;
- 	struct list_head *list;
-+	int err;
- 
- 	list = alloc_list();
- 	ABORT_ON(!list);
--	ABORT_ON(parse_events_add_cache(list, &parse_state->idx, $1, NULL, NULL, error, $2));
-+	err = parse_events_add_cache(list, &parse_state->idx, $1, NULL, NULL, error, $2);
- 	parse_events_terms__delete($2);
-+	free($1);
-+	if (err) {
-+		free_list_evsel(list);
-+		YYABORT;
-+	}
- 	$$ = list;
- }
- 
-@@ -413,11 +474,17 @@ PE_PREFIX_MEM PE_VALUE '/' PE_VALUE ':' PE_MODIFIER_BP sep_dc
- {
- 	struct parse_events_state *parse_state = _parse_state;
- 	struct list_head *list;
-+	int err;
- 
- 	list = alloc_list();
- 	ABORT_ON(!list);
--	ABORT_ON(parse_events_add_breakpoint(list, &parse_state->idx,
--					     (void *) $2, $6, $4));
-+	err = parse_events_add_breakpoint(list, &parse_state->idx,
-+					(void *) $2, $6, $4);
-+	free($6);
-+	if (err) {
-+		free(list);
-+		YYABORT;
-+	}
- 	$$ = list;
- }
- |
-@@ -428,8 +495,11 @@ PE_PREFIX_MEM PE_VALUE '/' PE_VALUE sep_dc
- 
- 	list = alloc_list();
- 	ABORT_ON(!list);
--	ABORT_ON(parse_events_add_breakpoint(list, &parse_state->idx,
--					     (void *) $2, NULL, $4));
-+	if (parse_events_add_breakpoint(list, &parse_state->idx,
-+						(void *) $2, NULL, $4)) {
-+		free(list);
-+		YYABORT;
-+	}
- 	$$ = list;
- }
- |
-@@ -437,11 +507,17 @@ PE_PREFIX_MEM PE_VALUE ':' PE_MODIFIER_BP sep_dc
- {
- 	struct parse_events_state *parse_state = _parse_state;
- 	struct list_head *list;
-+	int err;
- 
- 	list = alloc_list();
- 	ABORT_ON(!list);
--	ABORT_ON(parse_events_add_breakpoint(list, &parse_state->idx,
--					     (void *) $2, $4, 0));
-+	err = parse_events_add_breakpoint(list, &parse_state->idx,
-+					(void *) $2, $4, 0);
-+	free($4);
-+	if (err) {
-+		free(list);
-+		YYABORT;
-+	}
- 	$$ = list;
- }
- |
-@@ -452,8 +528,11 @@ PE_PREFIX_MEM PE_VALUE sep_dc
- 
- 	list = alloc_list();
- 	ABORT_ON(!list);
--	ABORT_ON(parse_events_add_breakpoint(list, &parse_state->idx,
--					     (void *) $2, NULL, 0));
-+	if (parse_events_add_breakpoint(list, &parse_state->idx,
-+						(void *) $2, NULL, 0)) {
-+		free(list);
-+		YYABORT;
-+	}
- 	$$ = list;
- }
- 
-@@ -463,29 +542,35 @@ tracepoint_name opt_event_config
- 	struct parse_events_state *parse_state = _parse_state;
- 	struct parse_events_error *error = parse_state->error;
- 	struct list_head *list;
-+	int err;
- 
- 	list = alloc_list();
- 	ABORT_ON(!list);
- 	if (error)
- 		error->idx = @1.first_column;
- 
--	if (parse_events_add_tracepoint(list, &parse_state->idx, $1.sys, $1.event,
--					error, $2))
--		return -1;
-+	err = parse_events_add_tracepoint(list, &parse_state->idx, $1.sys, $1.event,
-+					error, $2);
- 
-+	parse_events_terms__delete($2);
-+	free($1.sys);
-+	free($1.event);
-+	if (err) {
-+		free(list);
-+		return -1;
-+	}
- 	$$ = list;
- }
- 
- tracepoint_name:
- PE_NAME '-' PE_NAME ':' PE_NAME
- {
--	char sys_name[128];
- 	struct tracepoint_name tracepoint;
- 
--	snprintf(&sys_name, 128, "%s-%s", $1, $3);
--	tracepoint.sys = &sys_name;
-+	ABORT_ON(asprintf(&tracepoint.sys, "%s-%s", $1, $3) < 0);
- 	tracepoint.event = $5;
--
-+	free($1);
-+	free($3);
- 	$$ = tracepoint;
- }
- |
-@@ -500,11 +585,16 @@ event_legacy_numeric:
- PE_VALUE ':' PE_VALUE opt_event_config
- {
- 	struct list_head *list;
-+	int err;
- 
- 	list = alloc_list();
- 	ABORT_ON(!list);
--	ABORT_ON(parse_events_add_numeric(_parse_state, list, (u32)$1, $3, $4));
-+	err = parse_events_add_numeric(_parse_state, list, (u32)$1, $3, $4);
- 	parse_events_terms__delete($4);
-+	if (err) {
-+		free(list);
-+		YYABORT;
-+	}
- 	$$ = list;
- }
- 
-@@ -512,11 +602,16 @@ event_legacy_raw:
- PE_RAW opt_event_config
- {
- 	struct list_head *list;
-+	int err;
- 
- 	list = alloc_list();
- 	ABORT_ON(!list);
--	ABORT_ON(parse_events_add_numeric(_parse_state, list, PERF_TYPE_RAW, $1, $2));
-+	err = parse_events_add_numeric(_parse_state, list, PERF_TYPE_RAW, $1, $2);
- 	parse_events_terms__delete($2);
-+	if (err) {
-+		free(list);
-+		YYABORT;
-+	}
- 	$$ = list;
- }
- 
-@@ -525,22 +620,33 @@ PE_BPF_OBJECT opt_event_config
- {
- 	struct parse_events_state *parse_state = _parse_state;
- 	struct list_head *list;
-+	int err;
- 
- 	list = alloc_list();
- 	ABORT_ON(!list);
--	ABORT_ON(parse_events_load_bpf(parse_state, list, $1, false, $2));
-+	err = parse_events_load_bpf(parse_state, list, $1, false, $2);
- 	parse_events_terms__delete($2);
-+	free($1);
-+	if (err) {
-+		free(list);
-+		YYABORT;
-+	}
- 	$$ = list;
- }
- |
- PE_BPF_SOURCE opt_event_config
- {
- 	struct list_head *list;
-+	int err;
- 
- 	list = alloc_list();
- 	ABORT_ON(!list);
--	ABORT_ON(parse_events_load_bpf(_parse_state, list, $1, true, $2));
-+	err = parse_events_load_bpf(_parse_state, list, $1, true, $2);
- 	parse_events_terms__delete($2);
-+	if (err) {
-+		free(list);
-+		YYABORT;
-+	}
- 	$$ = list;
- }
- 
-@@ -573,6 +679,10 @@ opt_pmu_config:
- start_terms: event_config
- {
- 	struct parse_events_state *parse_state = _parse_state;
-+	if (parse_state->terms) {
-+		parse_events_terms__delete ($1);
-+		YYABORT;
-+	}
- 	parse_state->terms = $1;
- }
- 
-@@ -582,7 +692,10 @@ event_config ',' event_term
- 	struct list_head *head = $1;
+@@ -99,7 +91,7 @@ static void inc_group_count(struct list_head *list,
+ %type <str> PE_DRV_CFG_TERM
+ %destructor { free ($$); } <str>
+ %type <term> event_term
+-%destructor { free_term ($$); } <term>
++%destructor { parse_events_term__delete ($$); } <term>
+ %type <list_terms> event_config
+ %type <list_terms> opt_event_config
+ %type <list_terms> opt_pmu_config
+@@ -693,7 +685,7 @@ event_config ',' event_term
  	struct parse_events_term *term = $3;
  
--	ABORT_ON(!head);
-+	if (!head) {
-+		free_term(term);
-+		YYABORT;
-+	}
+ 	if (!head) {
+-		free_term(term);
++		parse_events_term__delete(term);
+ 		YYABORT;
+ 	}
  	list_add_tail(&term->list, head);
- 	$$ = $1;
- }
-@@ -603,8 +716,12 @@ PE_NAME '=' PE_NAME
- {
- 	struct parse_events_term *term;
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index 0fc2a51bb953..081e55300237 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -1258,7 +1258,7 @@ int perf_pmu__check_alias(struct perf_pmu *pmu, struct list_head *head_terms,
+ 		info->metric_name = alias->metric_name;
  
--	ABORT_ON(parse_events_term__str(&term, PARSE_EVENTS__TERM_TYPE_USER,
--					$1, $3, &@1, &@3));
-+	if (parse_events_term__str(&term, PARSE_EVENTS__TERM_TYPE_USER,
-+					$1, $3, &@1, &@3)) {
-+		free($1);
-+		free($3);
-+		YYABORT;
-+	}
- 	$$ = term;
- }
- |
-@@ -612,8 +729,11 @@ PE_NAME '=' PE_VALUE
- {
- 	struct parse_events_term *term;
+ 		list_del_init(&term->list);
+-		free(term);
++		parse_events_term__delete(term);
+ 	}
  
--	ABORT_ON(parse_events_term__num(&term, PARSE_EVENTS__TERM_TYPE_USER,
--					$1, $3, false, &@1, &@3));
-+	if (parse_events_term__num(&term, PARSE_EVENTS__TERM_TYPE_USER,
-+					$1, $3, false, &@1, &@3)) {
-+		free($1);
-+		YYABORT;
-+	}
- 	$$ = term;
- }
- |
-@@ -622,7 +742,10 @@ PE_NAME '=' PE_VALUE_SYM_HW
- 	struct parse_events_term *term;
- 	int config = $3 & 255;
- 
--	ABORT_ON(parse_events_term__sym_hw(&term, $1, config));
-+	if (parse_events_term__sym_hw(&term, $1, config)) {
-+		free($1);
-+		YYABORT;
-+	}
- 	$$ = term;
- }
- |
-@@ -630,8 +753,11 @@ PE_NAME
- {
- 	struct parse_events_term *term;
- 
--	ABORT_ON(parse_events_term__num(&term, PARSE_EVENTS__TERM_TYPE_USER,
--					$1, 1, true, &@1, NULL));
-+	if (parse_events_term__num(&term, PARSE_EVENTS__TERM_TYPE_USER,
-+					$1, 1, true, &@1, NULL)) {
-+		free($1);
-+		YYABORT;
-+	}
- 	$$ = term;
- }
- |
-@@ -648,7 +774,10 @@ PE_TERM '=' PE_NAME
- {
- 	struct parse_events_term *term;
- 
--	ABORT_ON(parse_events_term__str(&term, (int)$1, NULL, $3, &@1, &@3));
-+	if (parse_events_term__str(&term, (int)$1, NULL, $3, &@1, &@3)) {
-+		free($3);
-+		YYABORT;
-+	}
- 	$$ = term;
- }
- |
-@@ -672,9 +801,13 @@ PE_NAME array '=' PE_NAME
- {
- 	struct parse_events_term *term;
- 
--	ABORT_ON(parse_events_term__str(&term, PARSE_EVENTS__TERM_TYPE_USER,
--					$1, $4, &@1, &@4));
--
-+	if (parse_events_term__str(&term, PARSE_EVENTS__TERM_TYPE_USER,
-+					$1, $4, &@1, &@4)) {
-+		free($1);
-+		free($4);
-+		free($2.ranges);
-+		YYABORT;
-+	}
- 	term->array = $2;
- 	$$ = term;
- }
-@@ -683,8 +816,12 @@ PE_NAME array '=' PE_VALUE
- {
- 	struct parse_events_term *term;
- 
--	ABORT_ON(parse_events_term__num(&term, PARSE_EVENTS__TERM_TYPE_USER,
--					$1, $4, false, &@1, &@4));
-+	if (parse_events_term__num(&term, PARSE_EVENTS__TERM_TYPE_USER,
-+					$1, $4, false, &@1, &@4)) {
-+		free($1);
-+		free($2.ranges);
-+		YYABORT;
-+	}
- 	term->array = $2;
- 	$$ = term;
- }
-@@ -695,8 +832,11 @@ PE_DRV_CFG_TERM
- 	char *config = strdup($1);
- 
- 	ABORT_ON(!config);
--	ABORT_ON(parse_events_term__str(&term, PARSE_EVENTS__TERM_TYPE_DRV_CFG,
--					config, $1, &@1, NULL));
-+	if (parse_events_term__str(&term, PARSE_EVENTS__TERM_TYPE_DRV_CFG,
-+					config, $1, &@1, NULL)) {
-+		free($1);
-+		YYABORT;
-+	}
- 	$$ = term;
- }
- 
+ 	/*
 -- 
 2.23.0.866.gb869b98d4c-goog
 
