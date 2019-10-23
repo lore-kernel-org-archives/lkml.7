@@ -2,138 +2,148 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9B03CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 03:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 066F2CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 03:26:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0F942053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 03:26:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9B2E207FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 03:26:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Of993IQq"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sRquuot5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732855AbfJWD0M (ORCPT
+        id S1733019AbfJWD0m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 23:26:12 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:42623 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732542AbfJWD0M (ORCPT
+        Tue, 22 Oct 2019 23:26:42 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:40290 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732542AbfJWD0m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 23:26:12 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 21so723859pfj.9
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 20:26:11 -0700 (PDT)
+        Tue, 22 Oct 2019 23:26:42 -0400
+Received: by mail-io1-f68.google.com with SMTP id p6so14931348iod.7
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 20:26:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=/UlXYMZppBsSqe1vUiYDqERsW7xBrjIEOgZPw2HevXQ=;
-        b=Of993IQqMLC66eF00w8dmizT/a6HT3ZI87pGzsxKyvSWD+kCvdW4DiBN4LmAPwUc06
-         IxuBFUqjFceVK5QoPCC8AGawzgTctgoOMQeMdOGiLUG8e96xxVu9xODLI6bade4ALOq5
-         UpgTGh5csfvIeadwi9tSJXsYtXMAOqcrW7QUGlPUIKgOa4T4g3vBv2JBh01ORZyabaTX
-         8Kq4npb/1KrvUN7ZRyB2kgXtod30n4cYXnFQf7IXLRQ2XGYKQS6V0wLRhz9oJsfyOPp9
-         LQwI+7HhvF4fxvXGDdB04OmFg0Y+yUoHcJT7fKdNR8sSSrrelmRi7YvX8+dNTTEkbzvs
-         gbaw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=h+j4esZlyAn6Jj0G1LuKplgHe+Pu/B4eUeGKka5Wc1Q=;
+        b=sRquuot576k5OEV69QqANCFmPKRu3I8HEHwtE8bDIFH4iTCUZFiLXeKrWFsOe2azT7
+         z55TK3jLnrH5cNizZ4FnrfShy2c+Skof/p3Fjzbf57m1Z2iP+8JbrODlmxvF/JsuvUzG
+         a8vHa9Ger6Fvv0eLHXW6gloXznk5lgiClj6OV02Vr7TQrGfnltuNNyNXH0xlQf9Bu+2h
+         Qk+vocBSIP4uz9zkzPmQKi2cE1dBci4362Q9JG00tv7dfrFuUg5yEGOZ77QioaHuV+8X
+         Ey6mdQTEv9fE41eHFQ14hHHeqf67oGHfke+tU1cla+f9Jl0vJsz1j07hZL/z+Eyc7AU6
+         Mzig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/UlXYMZppBsSqe1vUiYDqERsW7xBrjIEOgZPw2HevXQ=;
-        b=uHuM9FDhdoEzA8L3R2RI9M/6TpeyV2rIIiP8HuRf7ghm3kVJb8Mh5Xe86JUfm3Dic6
-         gkblyH03Ki0VzLY51ogwaHFCcFizDBCQuHvoxRIuXAMOsx3y52lLPmqVujvLEOs44eSi
-         mSZKtOSNsaSX9U1Yzuz2slG0JDtbUHZd8uejDDc3tDc6tRW3GdQ9H4HbxRj9xk5KW5B8
-         TSU0dEy6iGpkjHNKTeuwtcpoHg499U5XE/u1nTOqvqMaO0hXCn67BBnZHCCar04umXIF
-         qK2M0cmvxERMV6RrQ5/I+UQlKyytXJ2pvJvjvcac7biAXVYP/RvGzkLvMlx94mKKsH1T
-         Yi0g==
-X-Gm-Message-State: APjAAAXlKRAh7UA8ss7YYJtVkHI0c5tXHI4sms2L/CpgH5e/F0nXH8aj
-        zIxjMAVTdPzQayyOdmye8gJe4g==
-X-Google-Smtp-Source: APXvYqynLoFjILHM41lE+4jb0UI2aJV2uE0h4ShZERIOG33lA0L4lJ6LJkceyIhhirWA25OIYT9srQ==
-X-Received: by 2002:a17:90a:6283:: with SMTP id d3mr8926771pjj.27.1571801171251;
-        Tue, 22 Oct 2019 20:26:11 -0700 (PDT)
-Received: from localhost ([122.172.151.112])
-        by smtp.gmail.com with ESMTPSA id a20sm16271438pjs.30.2019.10.22.20.26.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 22 Oct 2019 20:26:10 -0700 (PDT)
-Date:   Wed, 23 Oct 2019 08:56:08 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] cpufreq: mark duplicate frequencies as invalid and
- continue as normal
-Message-ID: <20191023032608.v7lgqirvpbwgsyz4@vireshk-i7>
-References: <20191022173215.13350-1-sudeep.holla@arm.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=h+j4esZlyAn6Jj0G1LuKplgHe+Pu/B4eUeGKka5Wc1Q=;
+        b=p1noK/kMN9yiuxe83jBjdDAkrI/YqmV/WmOFvjHiTaNtAcgGnQpB614mo4CPRnzZg+
+         ZKbKhZeV+o7UmavsvzJBWYedEXFebMWz2XZ58LBiKFJnElMhDmLVvgskssWyQr/7UWeU
+         TnoGFtSzay1w/6gbYIPBiGc4mtGmsbc+6XE+wY4qbSSaPPtype1/G0sM9dMlsLJbR8Ua
+         cIU5RU4xQm16g1oCuzBuuOhRCbPCqVb4eRiT8C+mrMLTWy6EAsAEzu0ZbF9SacUzcesF
+         EPIpriJRnfNlCFvy6aJ86TK06fOHdq2HvDTDVzSguKRsTasf6vSLjRl6ou/gu40wJhoF
+         yz5A==
+X-Gm-Message-State: APjAAAU2EXBPn6c0YFgph0VArLTYcfL+E77TfTW+Bue5id3s4gGKFADw
+        qpfZzcRV4WM1h0L9nwGHhjWLvo7rT7Df0EZNWx8eMg==
+X-Google-Smtp-Source: APXvYqygqvKfL7Ykw3boZKQwFYF5duCex0GHhqhb/QKexuQBFeBJm0daroKda/Sx6MKbPCAfONIR6Gg+O6waKr/5XBg=
+X-Received: by 2002:a6b:c701:: with SMTP id x1mr1239496iof.162.1571801199435;
+ Tue, 22 Oct 2019 20:26:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191022173215.13350-1-sudeep.holla@arm.com>
-User-Agent: NeoMutt/20180716-391-311a52
+References: <20191022085924.92783-1-pumahsu@google.com> <20191022172731.GA230934@kroah.com>
+In-Reply-To: <20191022172731.GA230934@kroah.com>
+From:   Puma Hsu <pumahsu@google.com>
+Date:   Wed, 23 Oct 2019 11:26:03 +0800
+Message-ID: <CAGCq0LYp4Ua052nSwuZwZBAqCMZcLyt9UMsCPThGg27P=YSjNA@mail.gmail.com>
+Subject: Re: [PATCH V2] usb: typec: Add sysfs node to show connector orientation
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Badhri Jagan Sridharan <badhri@google.com>,
+        Kyle Tso <kyletso@google.com>,
+        Albert Wang <albertccwang@google.com>,
+        Chien Kun Niu <rickyniu@google.com>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22-10-19, 18:32, Sudeep Holla wrote:
-> Currently if we encounter duplicate frequency table entries, we abort
-> the validation and return error immediately. Instead of failing, we
-> can mark the entry as invalid and continue to function normal.
-> 
-> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> Cc: Viresh Kumar <viresh.kumar@linaro.org>
-> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> ---
->  drivers/cpufreq/freq_table.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> Hi Viresh,
-> 
-> Since commit da0c6dc00c69 ("cpufreq: Handle sorted frequency tables more
-> efficiently"), I seem to have modified the firmware entry on my TC2 to
-> drop 500MHz and had not seen the issue with duplicate entries and had
-> totally forgotten about it.
-> 
-> Recently I reverted back to original setting as I corrupted it and
-> started seeing this issues. I don't know the background for raising
-> duplicates as fatal error but we did allow it when we add arm_big_little.c
-> and hence this RFC. If there are known issues with this approach, I can
-> continue with changed firmware config.
-> 
-> With switcher, we have:
-> (little cluster)
-> Virt: 175 MHz, 200 MHz, 250 MHz, 300 MHz, 350 MHz, 400 MHz, 450 MHz, 500 MHz
-> Actu: 350 MHz, 400 MHz, 500 MHz, 600 MHz, 700 MHz, 800 MHz, 900 MHz, 1000 MHz
-> (big cluster)
-> 500 MHz, 600 MHz, 700 MHz, 800 MHz, 900 MHz, 1000 MHz, 1.10 GHz, 1.20 GHz
-> 
-> with 500 MHz duplicate in merged table.
-> 
-> Regards,
-> Sudeep
-> 
-> diff --git a/drivers/cpufreq/freq_table.c b/drivers/cpufreq/freq_table.c
-> index ded427e0a488..e9bf287846d6 100644
-> --- a/drivers/cpufreq/freq_table.c
-> +++ b/drivers/cpufreq/freq_table.c
-> @@ -305,9 +305,10 @@ static int set_freq_table_sorted(struct cpufreq_policy *policy)
->  		}
->  
->  		if (pos->frequency == prev->frequency) {
-> -			pr_warn("Duplicate freq-table entries: %u\n",
-> +			pr_warn("Duplicate freq-table entries: %u marking it invalid\n,",
->  				pos->frequency);
-> -			return -EINVAL;
-> +			pos->frequency = CPUFREQ_ENTRY_INVALID;
-> +			continue;
->  		}
->  
->  		/* Frequency increased from prev to pos */
+Hi Greg,
 
-Of course we can do this, but I don't see why we shouldn't force
-people to fix the freq-tables instead. What's the point of allowing
-people to have duplicate entries instead ? This shouldn't happen with
-OPP tables as we check for duplicate entries there as well.
 
--- 
-viresh
+On Wed, Oct 23, 2019 at 1:27 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> On Tue, Oct 22, 2019 at 04:59:24PM +0800, Puma Hsu wrote:
+> > Export the Type-C connector orientation so that user space
+> > can get this information.
+> >
+> > Signed-off-by: Puma Hsu <pumahsu@google.com>
+> > ---
+> >  Documentation/ABI/testing/sysfs-class-typec | 11 +++++++++++
+> >  drivers/usb/typec/class.c                   | 18 ++++++++++++++++++
+> >  2 files changed, 29 insertions(+)
+> >
+> > diff --git a/Documentation/ABI/testing/sysfs-class-typec b/Documentation/ABI/testing/sysfs-class-typec
+> > index d7647b258c3c..b22f71801671 100644
+> > --- a/Documentation/ABI/testing/sysfs-class-typec
+> > +++ b/Documentation/ABI/testing/sysfs-class-typec
+> > @@ -108,6 +108,17 @@ Contact: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> >  Description:
+> >               Revision number of the supported USB Type-C specification.
+> >
+> > +What:                /sys/class/typec/<port>/connector_orientation
+> > +Date:                October 2019
+> > +Contact:     Puma Hsu <pumahsu@google.com>
+> > +Description:
+> > +             Indicates which typec connector orientation is configured now.
+> > +             cc1 is defined as "normal" and cc2 is defined as "reversed".
+>
+> Why the blank line after "Description:"?  Shouldn't "Indicates..." be
+> right after it?
+
+I checked the coding style for sysfs-class-*, all of them put the
+description at the next line behind "Description:"
+Should I change it?
+
+> > +
+> > +             Valid value:
+> > +             - unknown (nothing configured)
+> > +             - normal (configured in cc1 side)
+> > +             - reversed (configured in cc2 side)
+> >
+> >  USB Type-C partner devices (eg. /sys/class/typec/port0-partner/)
+> >
+> > diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
+> > index 94a3eda62add..911d06676aeb 100644
+> > --- a/drivers/usb/typec/class.c
+> > +++ b/drivers/usb/typec/class.c
+> > @@ -1245,6 +1245,23 @@ static ssize_t usb_power_delivery_revision_show(struct device *dev,
+> >  }
+> >  static DEVICE_ATTR_RO(usb_power_delivery_revision);
+> >
+> > +static const char * const typec_connector_orientation[] = {
+> > +     [TYPEC_ORIENTATION_NONE]                = "unknown",
+> > +     [TYPEC_ORIENTATION_NORMAL]              = "normal",
+> > +     [TYPEC_ORIENTATION_REVERSE]             = "reversed",
+> > +};
+> > +
+> > +static ssize_t connector_orientation_show(struct device *dev,
+> > +                                             struct device_attribute *attr,
+> > +                                             char *buf)
+>
+> Can you line this up properly?
+
+Yes, I will update it in version3 once the previous problem is confirmed.
+
+>
+> thanks,
+>
+> greg k-h
+
+
+Thanks in advance.
+Puma Hsu
