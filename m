@@ -2,105 +2,115 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0226CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:39:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9750ACA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:39:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA5AD21872
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:39:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=habanalabs.onmicrosoft.com header.i=@habanalabs.onmicrosoft.com header.b="NuBGn7lY"
+	by mail.kernel.org (Postfix) with ESMTP id 774A521A4A
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:39:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392087AbfJWNjp (ORCPT
+        id S2405957AbfJWNjz convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 09:39:45 -0400
-Received: from mail-eopbgr80114.outbound.protection.outlook.com ([40.107.8.114]:44758
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2391615AbfJWNjp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 09:39:45 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MpOl8WzxRWxQUIpZ7lzBfKSFYQWZF5I1IaGZrruaR53jgSsgx77TezGiEST243nG0lNBVE0czv3e8P3og9Ak/CcdNLd5QF9pRR8YTu2yUbmGDWI75DK964/myU2p2mlzeMWSeFBTR50g2sla0bAG8/NN+xkIEi288/RVJ6+i4i6bDzOGxzMqPwagWgyljVkdgREjWKIkYv8eIhcubEhKtQEYmoVL/9SRiHPphDwgUy7eGWBV6nILw/C28oaNiT68wrvHqgtBh8bSuTLGjC0qja615fz3H5Fwl+KUpvisr5qP4ONAmoJtRSZiSL/gzrI/PEgP1oG/Tm7OlnAmGKRphw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WT1PRXvpLeXkddn7h7qxO7ktFLA+CLYY4s31dKPhjsY=;
- b=ZNfC4KIdlqrRS6TBKpcmqQc8IoY1XCiafAWs/92jZBWQs62fabzbH05BP+26auAZQgiEK+Z+UDkHHRBqq7aFOfxb675C1Zow6b1UC7XuoX4WVnuC/MKimkwK2JmESL92+uIZoCrxXkqqXupb0BnqTzqYGENLYUQYE/TomzJwrof/E1NDfPtqHxGVEEcWbGCsybh7gzbr1gcCew2XxdB07ZN7FBo/e9Kg84o/KcopzYANa+gLN3nPy5JAUg0MUGcQawmmvB3BSzlevyYM4Q6TLF/aQjCLVaAHNci4qNNMOYDhgvGZuDXGbztiTueJ7MnivIAcPN0TIq20WaFWzJAl0A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=habana.ai; dmarc=pass action=none header.from=habana.ai;
- dkim=pass header.d=habana.ai; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=habanalabs.onmicrosoft.com; s=selector2-habanalabs-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WT1PRXvpLeXkddn7h7qxO7ktFLA+CLYY4s31dKPhjsY=;
- b=NuBGn7lY+IrpKdAHRUjJSwzQ1okYXtl0fmAdc8u16AZaT9zHMJQpcyWAmuX/oeJ6uA5Mq1tgwPuqYHYWB4MIbzuSvhEkKT9uhFgMkMWkqAmgSavgxhZc6DORnGVtLbkXIJNIqwxIf8ThZT88Y3XP79Xh+y0ti1Jqvu57AyLYR/8=
-Received: from AM6PR0202MB3382.eurprd02.prod.outlook.com (52.133.8.16) by
- AM6PR0202MB3400.eurprd02.prod.outlook.com (52.133.8.148) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2387.20; Wed, 23 Oct 2019 13:39:41 +0000
-Received: from AM6PR0202MB3382.eurprd02.prod.outlook.com
- ([fe80::6479:5608:22f:e251]) by AM6PR0202MB3382.eurprd02.prod.outlook.com
- ([fe80::6479:5608:22f:e251%5]) with mapi id 15.20.2367.022; Wed, 23 Oct 2019
- 13:39:41 +0000
-From:   Omer Shpigelman <oshpigelman@habana.ai>
-To:     Christoph Hellwig <hch@infradead.org>
-CC:     "oded.gabbay@gmail.com" <oded.gabbay@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2 1/2] habanalabs: support kernel memory mapping
-Thread-Topic: [PATCH v2 1/2] habanalabs: support kernel memory mapping
-Thread-Index: AQHViKI2kzFSWJT/Dk6DGcovF5gSd6dn9PuAgABElLA=
-Date:   Wed, 23 Oct 2019 13:39:41 +0000
-Message-ID: <AM6PR0202MB3382B554A4C7F0F677A804D7B86B0@AM6PR0202MB3382.eurprd02.prod.outlook.com>
-References: <20191022063028.9030-1-oshpigelman@habana.ai>
- <20191023092035.GA12222@infradead.org>
-In-Reply-To: <20191023092035.GA12222@infradead.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=oshpigelman@habana.ai; 
-x-originating-ip: [31.154.181.186]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1e524e25-f8c7-4f22-eaa2-08d757be7520
-x-ms-traffictypediagnostic: AM6PR0202MB3400:
-x-microsoft-antispam-prvs: <AM6PR0202MB34005B2A17E7DD7E2E9B89D1B86B0@AM6PR0202MB3400.eurprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5797;
-x-forefront-prvs: 019919A9E4
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(396003)(376002)(39840400004)(366004)(346002)(189003)(199004)(74316002)(8676002)(53546011)(6506007)(4326008)(76176011)(7696005)(14454004)(81156014)(81166006)(6916009)(26005)(6436002)(102836004)(6116002)(186003)(305945005)(25786009)(7736002)(99286004)(478600001)(486006)(446003)(55016002)(2906002)(9686003)(11346002)(6246003)(3846002)(476003)(229853002)(33656002)(76116006)(66446008)(64756008)(66476007)(316002)(71190400001)(71200400001)(66066001)(66946007)(5660300002)(52536014)(54906003)(4744005)(86362001)(8936002)(66556008)(256004);DIR:OUT;SFP:1102;SCL:1;SRVR:AM6PR0202MB3400;H:AM6PR0202MB3382.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: habana.ai does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: pk7xD0J16oinzFx/+N8Pm6io0ykJv5MpVJcfRlGjXBv+Pg9R+cZXRMTudBaRnbvEwQ3RrJ7MoPSCK+J57FLJBmdiVdfN/2KaZVL+U5J6pq0SG5jJYIOGHvGa7W27bxc4L1whSb+X6ONS+rmvp9S/LwwN4W6ejUJV2Mu56R0T9PitOzTqLH+qZwk8K4a8ILphUhMdpwJTb70+hMeQzYg6H65udqIJnmgsN55Bw6ocpnhvwliVGDDsmohyEwWqLzzef+cuVeeQvNwbWHzC5QREMDU14IlwObi3z06XVj68YxRS8rAkTlrESud1qk5NR2rMBpXsU+We0+y1rVDAaQ7YqvoWSZteB7KCQe7tGzN2wYX2iZth7GgEFIrv0PXs6/tBqgdzN9WAcKtpD79613gAB4+LTwJvEKca4PraohkMPjOrq2N6Me2G84+GuZmuXxfz
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 23 Oct 2019 09:39:55 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:43825 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392089AbfJWNjy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 09:39:54 -0400
+Received: from mail-qt1-f177.google.com ([209.85.160.177]) by
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1Mf0Nm-1hmXPR1EIE-00gboz; Wed, 23 Oct 2019 15:39:51 +0200
+Received: by mail-qt1-f177.google.com with SMTP id o49so24470171qta.7;
+        Wed, 23 Oct 2019 06:39:49 -0700 (PDT)
+X-Gm-Message-State: APjAAAU6rjuILI+dBSQWkepJeZcFXjrhStzYWyvwa71wsCNVgYufVnZt
+        iHt9MtJEPLOwsEVZaopkvY4n9SDmIlf2VoWvAbc=
+X-Google-Smtp-Source: APXvYqyt7m8OnGbGOfKvN6UapNf8Y0PixnD+b/5MFVO15QeK4AzpoE5xCHBxjuJT4OWklHgs4L5FWsrmt4sucJ53v+g=
+X-Received: by 2002:ac8:18eb:: with SMTP id o40mr9289234qtk.304.1571837989082;
+ Wed, 23 Oct 2019 06:39:49 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: habana.ai
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1e524e25-f8c7-4f22-eaa2-08d757be7520
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Oct 2019 13:39:41.5539
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4d4539-213c-4ed8-a251-dc9766ba127a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 0W6hVTtvnsj1gxsnDGBlS3rFeV+di2ef2g6zDhrMgfsgZwuFv/W4drAGQmictzneABWpsOUJkt7025L5NVILSA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0202MB3400
+References: <20191010202802.1132272-1-arnd@arndb.de> <20191023131049.GG11048@pi3>
+In-Reply-To: <20191023131049.GG11048@pi3>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 23 Oct 2019 15:39:32 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1v2-+geD+JbNP-t418ZjntQNSte4rt8c7N6sJdpb3+DQ@mail.gmail.com>
+Message-ID: <CAK8P3a1v2-+geD+JbNP-t418ZjntQNSte4rt8c7N6sJdpb3+DQ@mail.gmail.com>
+Subject: Re: [PATCH 00/36] ARM: samsung platform cleanup
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        linux-leds@vger.kernel.org,
+        "moderated list:ARM/SAMSUNG EXYNOS ARM ARCHITECTURES" 
+        <linux-samsung-soc@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Lihua Yao <ylhuajnu@outlook.com>,
+        Kukjin Kim <kgene@kernel.org>, linux-serial@vger.kernel.org,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        =?UTF-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        Sergio Prado <sergio.prado@e-labworks.com>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Lihua Yao <ylhuajnu@163.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-hwmon@vger.kernel.org, patches@opensource.cirrus.com,
+        USB list <linux-usb@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Provags-ID: V03:K1:NLof35stNYTGVLCCiBOj5shE8fEwjZaac7cdAu2nrrmym/kOcjv
+ Qnfa/3i0a5qyJkyMXctYodBV7VP0bHQaFrXIBjwV/gpmENyzPTQE7+sVihuV4liYROCT33b
+ 9WO8+gy5V2fG2DuQgIo6thaPwkDMewwBExepC4yasYMIPkDiS0zr+8kJODaOpU4HPFc7gMV
+ MPShUYeuOvxdtdljHgfJg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:DaQc5ZGaJsY=:F603/POvpKLPXWa0X1lFEH
+ aQjxfOCxGD/pIMHmKlHcbcFD80Nc+ewErQWmvj+Qgp6xaAE5MxfbNNNrin9LMgRKve0v8GrHu
+ BPPYcLBIJd/tRGzy7EoHKzi1xCTWBRKPuZW+NRo5Q3c4o6tNWGjXzPGUI9xyOYPIzGuB4sxow
+ ECbUMNeq+vtLAQSVxvpHOttzchCbbhPJcjfvA+bQAYJp52FgAuxb7i+4FvHbE4PKIBUfZrfn7
+ RTWpJntJNT2FyPouWE44kX34NjZBTj4rpIcCKzq/vJGEBiexW1JIi5IKVdXZvOH5f6ayOyfG4
+ N5aMRdit65bReN0guN1SsKJ7uFbD0kzxYt0bE1Mf25djeRlbjBl6eNdESrSyRRUYp5EHOfQ/A
+ Sa10vMW4Ena5av/pF9Ivtanmnx43oe8gg/n1e283kgsPXqMvxru3WC5Nzl6w8FtOo8cSrKeIA
+ 4cwYy4vh4ukZW7IvGkXi8VTyHR5QO0uX/EIi41POGGpNZfuz2RZFE3OQuaZ2ZAWDyKIDIkMiS
+ w6MOzO71LwFlzMud8Juwt083ioitXDvT/9TIYbAIAmfnUtb8NIa87LZjq9LnymQfMT/771jDX
+ Pv0pU2J8yDYscI2Ar/9iY65bLYD1odSzwo1yupcBRkEYBk2LtDP2ofqM/FtIHQxHEgUCSL8BF
+ +DQWO4nbj5c/D8V8Rcbk6xIsj3dpX/eZmDwcjBHzixCuvxTtC6bkTqxwxXemSc09w9sXO96BH
+ 8wrLVBqppvA4u9/3mwzDk1TPdUl264mBZECZMuP2bwYmiOyo6CZ+bMP0dYsot7zDsLQZk6JM2
+ zgDILD/0tZiVRCT1r1eA1ueLWwCTN+MFNjGnfX1TAxma6wIGEoHuP9Uzto3sTth328X/tkiaT
+ tiL3D4xHp9lUaPHnTz2w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCBPY3QgMjMsIDIwMTkgYXQgMTI6MjEgUE0gQ2hyaXN0b3BoIEhlbGx3aWcgPGhjaEBp
-bmZyYWRlYWQub3JnPiB3cm90ZToNCj4gT24gVHVlLCBPY3QgMjIsIDIwMTkgYXQgMDY6MzA6MzVB
-TSArMDAwMCwgT21lciBTaHBpZ2VsbWFuIHdyb3RlOg0KPiA+IENoYW5nZXMgaW4gdjI6DQo+ID4g
-IC0gdXNlIGEgYm9vbGVhbiBwYXJhbWV0ZXIgdG8gaW5kaWNhdGUgZm9yIGtlcm5lbCBhZGRyZXNz
-IHJhdGhlciB0aGFuDQo+ID4gICAgY2FsbGluZyBpc192bWFsbG9jX2FkZHIsIGFzIGtlcm5lbCBh
-bmQgdXNlciBhZGRyZXNzZXMgY2FuIG92ZXJsYXAgb24NCj4gPiAgICBzb21lIGFyY2hpdGVjdHVy
-ZXMuDQo+IA0KPiBUaGF0IGlzIHN0aWxsIGJyb2tlbi4gIFBsZWFzZSB1c2UgYW4gYWN0dWFsIGtl
-cm5lbCBwb2ludGVyIGluc3RlYWQgb2YgbG9zaW5nIGFsbA0KPiB0eXBlIHNhZmV0eSBieSBjYXN0
-aW5nIGl0IGFuIGludGVnZXIgdHlwZS4NCg0KSSdtIG5vdCBzdXJlIEkgdW5kZXJzdGFuZC4gQ2Fu
-IHlvdSBwbGVhc2UgcGluIHBvaW50IHRoZSBwcm9ibGVtYXRpYyBsaW5lPw0K
+On Wed, Oct 23, 2019 at 3:11 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> On Thu, Oct 10, 2019 at 10:28:02PM +0200, Arnd Bergmann wrote:
+> > The contents are available for testing in
+> >
+> > git://kernel.org:/pub/scm/linux/kernel/git/arnd/playground.git s3c-multiplatform
+>
+> When sending v2, can you Cc:
+>
+> Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
+> Lihua Yao <ylhuajnu@outlook.com>
+> (or Lihua Yao <ylhuajnu@163.com> if outlook.com bounces)
+> Sergio Prado <sergio.prado@e-labworks.com>
+> Sylwester Nawrocki <s.nawrocki@samsung.com>
+>
+> These are folks which to my knowledge had working S3C and S5P boards
+> so maybe they could provide testing.
+
+Ok, will do. I've uploaded the modified version based on your comments to
+the above URL for now.
+
+I'll probably give it a little more time before resending, but they
+could already
+start testing that version.
+
+Thanks a lot for the review!
+
+      Arnd
