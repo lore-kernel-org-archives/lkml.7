@@ -2,253 +2,219 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0180CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 03:59:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99524CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 04:03:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6EA421872
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 03:59:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 692BE207FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 04:03:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387978AbfJWD7m (ORCPT
+        id S1726318AbfJWEDZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 23:59:42 -0400
-Received: from mga06.intel.com ([134.134.136.31]:14139 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729994AbfJWD7m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 23:59:42 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Oct 2019 20:59:40 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,219,1569308400"; 
-   d="scan'208";a="209908838"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by orsmga002.jf.intel.com with ESMTP; 22 Oct 2019 20:59:39 -0700
-Date:   Tue, 22 Oct 2019 21:04:00 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     "Raj, Ashok" <ashok.raj@intel.com>
-Cc:     iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Eric Auger <eric.auger@redhat.com>,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v6 02/10] iommu/vt-d: Add custom allocator for IOASID
-Message-ID: <20191022210400.357e69a9@jacob-builder>
-In-Reply-To: <20191023005129.GC100970@otc-nc-03>
-References: <1571788403-42095-1-git-send-email-jacob.jun.pan@linux.intel.com>
-        <1571788403-42095-3-git-send-email-jacob.jun.pan@linux.intel.com>
-        <20191023005129.GC100970@otc-nc-03>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Wed, 23 Oct 2019 00:03:25 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4705 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725780AbfJWEDZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 00:03:25 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 96040EF763408D7CB488;
+        Wed, 23 Oct 2019 12:03:20 +0800 (CST)
+Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 23 Oct
+ 2019 12:03:11 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Chao Yu <chao@kernel.org>, <linux-erofs@lists.ozlabs.org>
+CC:     <linux-kernel@vger.kernel.org>, Gao Xiang <xiang@kernel.org>,
+        "Pratik Shinde" <pratikshinde320@gmail.com>,
+        Gao Xiang <gaoxiang25@huawei.com>
+Subject: [PATCH v4] erofs: support superblock checksum
+Date:   Wed, 23 Oct 2019 12:05:57 +0800
+Message-ID: <20191023040557.230886-1-gaoxiang25@huawei.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191022180620.19638-1-pratikshinde320@gmail.com>
+References: <20191022180620.19638-1-pratikshinde320@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.140.130.215]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 22 Oct 2019 17:51:29 -0700
-"Raj, Ashok" <ashok.raj@intel.com> wrote:
+From: Pratik Shinde <pratikshinde320@gmail.com>
 
-> On Tue, Oct 22, 2019 at 04:53:15PM -0700, Jacob Pan wrote:
-> > When VT-d driver runs in the guest, PASID allocation must be
-> > performed via virtual command interface. This patch registers a
-> > custom IOASID allocator which takes precedence over the default
-> > XArray based allocator. The resulting IOASID allocation will always
-> > come from the host. This ensures that PASID namespace is system-
-> > wide.
-> > 
-> > Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-> > Signed-off-by: Liu, Yi L <yi.l.liu@intel.com>
-> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > ---
-> >  drivers/iommu/Kconfig       |  1 +
-> >  drivers/iommu/intel-iommu.c | 67
-> > +++++++++++++++++++++++++++++++++++++++++++++
-> > include/linux/intel-iommu.h |  2 ++ 3 files changed, 70
-> > insertions(+)
-> > 
-> > diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-> > index fd50ddffffbf..961fe5795a90 100644
-> > --- a/drivers/iommu/Kconfig
-> > +++ b/drivers/iommu/Kconfig
-> > @@ -211,6 +211,7 @@ config INTEL_IOMMU_SVM
-> >  	bool "Support for Shared Virtual Memory with Intel IOMMU"
-> >  	depends on INTEL_IOMMU && X86
-> >  	select PCI_PASID
-> > +	select IOASID
-> >  	select MMU_NOTIFIER
-> >  	help
-> >  	  Shared Virtual Memory (SVM) provides a facility for
-> > devices diff --git a/drivers/iommu/intel-iommu.c
-> > b/drivers/iommu/intel-iommu.c index 3f974919d3bd..3aff0141c522
-> > 100644 --- a/drivers/iommu/intel-iommu.c
-> > +++ b/drivers/iommu/intel-iommu.c
-> > @@ -1706,6 +1706,8 @@ static void free_dmar_iommu(struct
-> > intel_iommu *iommu) if (ecap_prs(iommu->ecap))
-> >  			intel_svm_finish_prq(iommu);
-> >  	}
-> > +	ioasid_unregister_allocator(&iommu->pasid_allocator);
-> > +
-> >  #endif
-> >  }
-> >  
-> > @@ -4910,6 +4912,46 @@ static int __init
-> > probe_acpi_namespace_devices(void) return 0;
-> >  }
-> >  
-> > +#ifdef CONFIG_INTEL_IOMMU_SVM  
-> 
-> Maybe move them to intel-svm.c instead? that's where the bulk
-> of the svm support is?
-> 
-The reason I put them in intel-iommu.c is that pasid allocators need to
-be registered during initialization of Intel iommu. No strong
-preference.
+Introduce superblock checksum feature in order to check
+a number of given blocks at mounting time.
 
-> > +static ioasid_t intel_ioasid_alloc(ioasid_t min, ioasid_t max,
-> > void *data) +{
-> > +	struct intel_iommu *iommu = data;
-> > +	ioasid_t ioasid;
-> > +
-> > +	/*
-> > +	 * VT-d virtual command interface always uses the full 20
-> > bit
-> > +	 * PASID range. Host can partition guest PASID range based
-> > on
-> > +	 * policies but it is out of guest's control.
-> > +	 */
-> > +	if (min < PASID_MIN || max > PASID_MAX)
-> > +		return INVALID_IOASID;  
-> 
-> What are these PASID_MIN/MAX? Do you check if these are within the 
-> limits supported by the iommu/vIOMMU as its enumerated?
-> 
-PASID_MIN/MAX is the full range, 1-2M.
-I do not check range because VCMD interface will always use the
-full range. vIOMMU will always support full 20 bit guest PASID.
-The host VFIO code calls IOASID allocator which should respect IOMMU
-enumerated range.
-> 
-> > +
-> > +	if (vcmd_alloc_pasid(iommu, &ioasid))
-> > +		return INVALID_IOASID;
-> > +
-> > +	return ioasid;
-> > +}
-> > +
-> > +static void intel_ioasid_free(ioasid_t ioasid, void *data)
-> > +{
-> > +	struct iommu_pasid_alloc_info *svm;
-> > +	struct intel_iommu *iommu = data;
-> > +
-> > +	if (!iommu)
-> > +		return;
-> > +	/*
-> > +	 * Sanity check the ioasid owner is done at upper layer,
-> > e.g. VFIO
-> > +	 * We can only free the PASID when all the devices are
-> > unbond.
-> > +	 */
-> > +	svm = ioasid_find(NULL, ioasid, NULL);
-> > +	if (!svm) {
-> > +		pr_warn("Freeing unbond IOASID %d\n", ioasid);
-> > +		return;
-> > +	}
-> > +	vcmd_free_pasid(iommu, ioasid);
-> > +}
-> > +#endif
-> > +
-> >  int __init intel_iommu_init(void)
-> >  {
-> >  	int ret = -ENODEV;
-> > @@ -5020,6 +5062,31 @@ int __init intel_iommu_init(void)
-> >  				       "%s", iommu->name);
-> >  		iommu_device_set_ops(&iommu->iommu,
-> > &intel_iommu_ops); iommu_device_register(&iommu->iommu);
-> > +#ifdef CONFIG_INTEL_IOMMU_SVM
-> > +		if (cap_caching_mode(iommu->cap) &&
-> > sm_supported(iommu)) {  
-> 
-> do you need to check against cap_caching_mode() or ecap_vcmd?
-> 
-I guess ecap_vcmd() will suffice. Kind of redundant.
-> 
-> > +			/*
-> > +			 * Register a custom ASID allocator if we
-> > are running
-> > +			 * in a guest, the purpose is to have a
-> > system wide PASID
-> > +			 * namespace among all PASID users.
-> > +			 * There can be multiple vIOMMUs in each
-> > guest but only
-> > +			 * one allocator is active. All vIOMMU
-> > allocators will
-> > +			 * eventually be calling the same host
-> > allocator.
-> > +			 */
-> > +			iommu->pasid_allocator.alloc =
-> > intel_ioasid_alloc;
-> > +			iommu->pasid_allocator.free =
-> > intel_ioasid_free;
-> > +			iommu->pasid_allocator.pdata = (void
-> > *)iommu;
-> > +			ret =
-> > ioasid_register_allocator(&iommu->pasid_allocator);
-> > +			if (ret) {
-> > +				pr_warn("Custom PASID allocator
-> > registeration failed\n");
-> > +				/*
-> > +				 * Disable scalable mode on this
-> > IOMMU if there
-> > +				 * is no custom allocator. Mixing
-> > SM capable vIOMMU
-> > +				 * and non-SM vIOMMU are not
-> > supported.
-> > +				 */
-> > +				intel_iommu_sm = 0;
-> > +			}
-> > +		}
-> > +#endif
-> >  	}
-> >  
-> >  	bus_set_iommu(&pci_bus_type, &intel_iommu_ops);
-> > diff --git a/include/linux/intel-iommu.h
-> > b/include/linux/intel-iommu.h index eea7468694a7..fb1973a761c1
-> > 100644 --- a/include/linux/intel-iommu.h
-> > +++ b/include/linux/intel-iommu.h
-> > @@ -19,6 +19,7 @@
-> >  #include <linux/iommu.h>
-> >  #include <linux/io-64-nonatomic-lo-hi.h>
-> >  #include <linux/dmar.h>
-> > +#include <linux/ioasid.h>
-> >  
-> >  #include <asm/cacheflush.h>
-> >  #include <asm/iommu.h>
-> > @@ -542,6 +543,7 @@ struct intel_iommu {
-> >  #ifdef CONFIG_INTEL_IOMMU_SVM
-> >  	struct page_req_dsc *prq;
-> >  	unsigned char prq_name[16];    /* Name for PRQ interrupt */
-> > +	struct ioasid_allocator_ops pasid_allocator; /* Custom
-> > allocator for PASIDs */ #endif
-> >  	struct q_inval  *qi;            /* Queued invalidation
-> > info */ u32 *iommu_state; /* Store iommu states between suspend and
-> > resume.*/ -- 
-> > 2.7.4
-> >   
+Signed-off-by: Pratik Shinde <pratikshinde320@gmail.com>
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+---
+changes from v3:
+ (based on Pratik's v3 patch)
+ - add LIBCRC32C dependency;
+ - use kmap() in order to avoid sleeping in atomic context;
+ - skip the first 1024 byte for x86 boot sector,
+   co-tested with userspace utils,
+   https://lore.kernel.org/r/20191023034957.184711-1-gaoxiang25@huawei.com
 
-[Jacob Pan]
+ fs/erofs/Kconfig    |  1 +
+ fs/erofs/erofs_fs.h |  6 +++--
+ fs/erofs/internal.h |  2 ++
+ fs/erofs/super.c    | 53 +++++++++++++++++++++++++++++++++++++++++++--
+ 4 files changed, 58 insertions(+), 4 deletions(-)
+
+diff --git a/fs/erofs/Kconfig b/fs/erofs/Kconfig
+index 9d634d3a1845..74b0aaa7114c 100644
+--- a/fs/erofs/Kconfig
++++ b/fs/erofs/Kconfig
+@@ -3,6 +3,7 @@
+ config EROFS_FS
+ 	tristate "EROFS filesystem support"
+ 	depends on BLOCK
++	select LIBCRC32C
+ 	help
+ 	  EROFS (Enhanced Read-Only File System) is a lightweight
+ 	  read-only file system with modern designs (eg. page-sized
+diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
+index b1ee5654750d..461913be1d1c 100644
+--- a/fs/erofs/erofs_fs.h
++++ b/fs/erofs/erofs_fs.h
+@@ -11,6 +11,8 @@
+ 
+ #define EROFS_SUPER_OFFSET      1024
+ 
++#define EROFS_FEATURE_COMPAT_SB_CHKSUM          0x00000001
++
+ /*
+  * Any bits that aren't in EROFS_ALL_FEATURE_INCOMPAT should
+  * be incompatible with this kernel version.
+@@ -37,8 +39,8 @@ struct erofs_super_block {
+ 	__u8 uuid[16];          /* 128-bit uuid for volume */
+ 	__u8 volume_name[16];   /* volume name */
+ 	__le32 feature_incompat;
+-
+-	__u8 reserved2[44];
++	__le32 chksum_blocks;	/* number of blocks used for checksum */
++	__u8 reserved2[40];
+ };
+ 
+ /*
+diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+index 544a453f3076..a3778f597bf6 100644
+--- a/fs/erofs/internal.h
++++ b/fs/erofs/internal.h
+@@ -85,6 +85,7 @@ struct erofs_sb_info {
+ 
+ 	u8 uuid[16];                    /* 128-bit uuid for volume */
+ 	u8 volume_name[16];             /* volume name */
++	u32 feature_compat;
+ 	u32 feature_incompat;
+ 
+ 	unsigned int mount_opt;
+@@ -426,6 +427,7 @@ static inline void z_erofs_exit_zip_subsystem(void) {}
+ #endif	/* !CONFIG_EROFS_FS_ZIP */
+ 
+ #define EFSCORRUPTED    EUCLEAN         /* Filesystem is corrupted */
++#define EFSBADCRC       EBADMSG         /* Bad CRC detected */
+ 
+ #endif	/* __EROFS_INTERNAL_H */
+ 
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index 0e369494f2f2..18d1ec18a671 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -9,6 +9,7 @@
+ #include <linux/statfs.h>
+ #include <linux/parser.h>
+ #include <linux/seq_file.h>
++#include <linux/crc32c.h>
+ #include "xattr.h"
+ 
+ #define CREATE_TRACE_POINTS
+@@ -46,6 +47,47 @@ void _erofs_info(struct super_block *sb, const char *function,
+ 	va_end(args);
+ }
+ 
++static int erofs_superblock_csum_verify(struct super_block *sb, void *sbdata)
++{
++	struct erofs_super_block *dsb;
++	u32 expected_crc, nblocks, crc;
++	void *kaddr;
++	struct page *page;
++	int i;
++
++	dsb = kmemdup(sbdata + EROFS_SUPER_OFFSET,
++		      EROFS_BLKSIZ - EROFS_SUPER_OFFSET, GFP_KERNEL);
++	if (!dsb)
++		return -ENOMEM;
++
++	expected_crc = le32_to_cpu(dsb->checksum);
++	nblocks = le32_to_cpu(dsb->chksum_blocks);
++	dsb->checksum = 0;
++	/* to allow for x86 boot sectors and other oddities. */
++	crc = crc32c(~0, dsb, EROFS_BLKSIZ - EROFS_SUPER_OFFSET);
++	kfree(dsb);
++
++	for (i = 1; i < nblocks; i++) {
++		page = erofs_get_meta_page(sb, i);
++		if (IS_ERR(page))
++			return PTR_ERR(page);
++
++		kaddr = kmap_atomic(page);
++		crc = crc32c(crc, kaddr, EROFS_BLKSIZ);
++		kunmap_atomic(kaddr);
++
++		unlock_page(page);
++		put_page(page);
++	}
++
++	if (crc != expected_crc) {
++		erofs_err(sb, "invalid checksum 0x%08x, 0x%08x expected",
++			  crc, expected_crc);
++		return -EFSBADCRC;
++	}
++	return 0;
++}
++
+ static void erofs_inode_init_once(void *ptr)
+ {
+ 	struct erofs_inode *vi = ptr;
+@@ -112,7 +154,7 @@ static int erofs_read_superblock(struct super_block *sb)
+ 
+ 	sbi = EROFS_SB(sb);
+ 
+-	data = kmap_atomic(page);
++	data = kmap(page);
+ 	dsb = (struct erofs_super_block *)(data + EROFS_SUPER_OFFSET);
+ 
+ 	ret = -EINVAL;
+@@ -121,6 +163,13 @@ static int erofs_read_superblock(struct super_block *sb)
+ 		goto out;
+ 	}
+ 
++	sbi->feature_compat = le32_to_cpu(dsb->feature_compat);
++	if (sbi->feature_compat & EROFS_FEATURE_COMPAT_SB_CHKSUM) {
++		ret = erofs_superblock_csum_verify(sb, data);
++		if (ret)
++			goto out;
++	}
++
+ 	blkszbits = dsb->blkszbits;
+ 	/* 9(512 bytes) + LOG_SECTORS_PER_BLOCK == LOG_BLOCK_SIZE */
+ 	if (blkszbits != LOG_BLOCK_SIZE) {
+@@ -155,7 +204,7 @@ static int erofs_read_superblock(struct super_block *sb)
+ 	}
+ 	ret = 0;
+ out:
+-	kunmap_atomic(data);
++	kunmap(data);
+ 	put_page(page);
+ 	return ret;
+ }
+-- 
+2.17.1
+
