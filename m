@@ -2,89 +2,151 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29B54CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:15:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78801CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:16:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A0E421A4A
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:15:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FC922173B
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:16:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NWFhLywu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405605AbfJWNPT (ORCPT
+        id S2405167AbfJWNQt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 09:15:19 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35604 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730450AbfJWNPS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 09:15:18 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E45C7B2F5;
-        Wed, 23 Oct 2019 13:15:16 +0000 (UTC)
-Date:   Wed, 23 Oct 2019 14:15:14 +0100
-From:   Mel Gorman <mgorman@suse.de>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Waiman Long <longman@redhat.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Roman Gushchin <guro@fb.com>, Vlastimil Babka <vbabka@suse.cz>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Jann Horn <jannh@google.com>, Song Liu <songliubraving@fb.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rafael Aquini <aquini@redhat.com>, linux-mm@kvack.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Michal Hocko <mhocko@suse.com>
-Subject: Re: [RFC PATCH 2/2] mm, vmstat: reduce zone->lock holding time by
- /proc/pagetypeinfo
-Message-ID: <20191023131514.GC28938@suse.de>
-References: <20191023095607.GE3016@techsingularity.net>
- <20191023102737.32274-1-mhocko@kernel.org>
- <20191023102737.32274-3-mhocko@kernel.org>
+        Wed, 23 Oct 2019 09:16:49 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:34229 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2387479AbfJWNQr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 09:16:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571836605;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=MxbE8MLVaAhRio1mtblUongS1uhU/Uw7VV6nAO/hf6k=;
+        b=NWFhLywum5ifGt1mQNHm8Syc1MFKRnlmjwnhdOlt66dlbrv8CmblZU3Vk4+0yRTmS1tiKb
+        C3QzhCWdwxLb1tmEH3x3I7+IjTZ1mex3ukAEkGGUbjH6gzs4igdCD1ERJpYHStDQo21Kum
+        4tafyr3KU5c48ml11Jt2kYW/rWI6XBM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-62-n84wmhJgPQC0N_OluIU2Vg-1; Wed, 23 Oct 2019 09:16:40 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5C10C1800D79;
+        Wed, 23 Oct 2019 13:16:36 +0000 (UTC)
+Received: from jason-ThinkPad-X1-Carbon-6th.redhat.com (ovpn-12-126.pek2.redhat.com [10.72.12.126])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9997D60126;
+        Wed, 23 Oct 2019 13:14:25 +0000 (UTC)
+From:   Jason Wang <jasowang@redhat.com>
+To:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com
+Cc:     virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        cohuck@redhat.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
+        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
+        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
+        stefanha@redhat.com, Jason Wang <jasowang@redhat.com>
+Subject: [PATCH V5 2/6] modpost: add support for mdev class id
+Date:   Wed, 23 Oct 2019 21:07:48 +0800
+Message-Id: <20191023130752.18980-3-jasowang@redhat.com>
+In-Reply-To: <20191023130752.18980-1-jasowang@redhat.com>
+References: <20191023130752.18980-1-jasowang@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <20191023102737.32274-3-mhocko@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MC-Unique: n84wmhJgPQC0N_OluIU2Vg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 12:27:37PM +0200, Michal Hocko wrote:
-> From: Michal Hocko <mhocko@suse.com>
-> 
-> pagetypeinfo_showfree_print is called by zone->lock held in irq mode.
-> This is not really nice because it blocks both any interrupts on that
-> cpu and the page allocator. On large machines this might even trigger
-> the hard lockup detector.
-> 
-> Considering the pagetypeinfo is a debugging tool we do not really need
-> exact numbers here. The primary reason to look at the outuput is to see
-> how pageblocks are spread among different migratetypes therefore putting
-> a bound on the number of pages on the free_list sounds like a reasonable
-> tradeoff.
-> 
-> The new output will simply tell
-> [...]
-> Node    6, zone   Normal, type      Movable >100000 >100000 >100000 >100000  41019  31560  23996  10054   3229    983    648
-> 
-> instead of
-> Node    6, zone   Normal, type      Movable 399568 294127 221558 102119  41019  31560  23996  10054   3229    983    648
-> 
-> The limit has been chosen arbitrary and it is a subject of a future
-> change should there be a need for that.
-> 
-> Suggested-by: Andrew Morton <akpm@linux-foundation.org>
-> Signed-off-by: Michal Hocko <mhocko@suse.com>
+Add support to parse mdev class id table.
 
-You could have used need_resched() instead of unconditionally dropping the
-lock but that's very minor for a proc file and it would allos a parallel
-allocation to go ahead so
+Reviewed-by: Parav Pandit <parav@mellanox.com>
+Signed-off-by: Jason Wang <jasowang@redhat.com>
+---
+ drivers/vfio/mdev/vfio_mdev.c     |  2 ++
+ scripts/mod/devicetable-offsets.c |  3 +++
+ scripts/mod/file2alias.c          | 10 ++++++++++
+ 3 files changed, 15 insertions(+)
 
-Acked-by: Mel Gorman <mgorman@suse.de>
+diff --git a/drivers/vfio/mdev/vfio_mdev.c b/drivers/vfio/mdev/vfio_mdev.c
+index 7b24ee9cb8dd..cb701cd646f0 100644
+--- a/drivers/vfio/mdev/vfio_mdev.c
++++ b/drivers/vfio/mdev/vfio_mdev.c
+@@ -125,6 +125,8 @@ static const struct mdev_class_id id_table[] =3D {
+ =09{ 0 },
+ };
+=20
++MODULE_DEVICE_TABLE(mdev, id_table);
++
+ static struct mdev_driver vfio_mdev_driver =3D {
+ =09.name=09=3D "vfio_mdev",
+ =09.probe=09=3D vfio_mdev_probe,
+diff --git a/scripts/mod/devicetable-offsets.c b/scripts/mod/devicetable-of=
+fsets.c
+index 054405b90ba4..6cbb1062488a 100644
+--- a/scripts/mod/devicetable-offsets.c
++++ b/scripts/mod/devicetable-offsets.c
+@@ -231,5 +231,8 @@ int main(void)
+ =09DEVID(wmi_device_id);
+ =09DEVID_FIELD(wmi_device_id, guid_string);
+=20
++=09DEVID(mdev_class_id);
++=09DEVID_FIELD(mdev_class_id, id);
++
+ =09return 0;
+ }
+diff --git a/scripts/mod/file2alias.c b/scripts/mod/file2alias.c
+index c91eba751804..d365dfe7c718 100644
+--- a/scripts/mod/file2alias.c
++++ b/scripts/mod/file2alias.c
+@@ -1335,6 +1335,15 @@ static int do_wmi_entry(const char *filename, void *=
+symval, char *alias)
+ =09return 1;
+ }
+=20
++/* looks like: "mdev:cN" */
++static int do_mdev_entry(const char *filename, void *symval, char *alias)
++{
++=09DEF_FIELD(symval, mdev_class_id, id);
++
++=09sprintf(alias, "mdev:c%02X", id);
++=09return 1;
++}
++
+ /* Does namelen bytes of name exactly match the symbol? */
+ static bool sym_is(const char *name, unsigned namelen, const char *symbol)
+ {
+@@ -1407,6 +1416,7 @@ static const struct devtable devtable[] =3D {
+ =09{"typec", SIZE_typec_device_id, do_typec_entry},
+ =09{"tee", SIZE_tee_client_device_id, do_tee_entry},
+ =09{"wmi", SIZE_wmi_device_id, do_wmi_entry},
++=09{"mdev", SIZE_mdev_class_id, do_mdev_entry},
+ };
+=20
+ /* Create MODULE_ALIAS() statements.
+--=20
+2.19.1
 
--- 
-Mel Gorman
-SUSE Labs
