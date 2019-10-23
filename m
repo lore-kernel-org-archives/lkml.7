@@ -2,142 +2,184 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8E15CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:35:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F14FCA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:35:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 889B92173B
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:35:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCAFB20640
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:35:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="d0ce1aJu"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QqK89MD/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392041AbfJWNfS (ORCPT
+        id S2405888AbfJWNf2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 09:35:18 -0400
-Received: from mail-eopbgr730064.outbound.protection.outlook.com ([40.107.73.64]:26957
-        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390248AbfJWNfR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 09:35:17 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NI7w62c0FuHh7gWJovXPHS6YiKYBnMbCF0bMbuuBPicx3pSy+LU0SqjDktEkjP+G6Es8EMXEOgsYiVRR/rAfhmc8STQiWehRweva2VPs6BdPRCKShK4GHX9Gun05kcCwUXCA3uYB+omKHqQQMKhZ5R1+TRQfP0j1jIJl95nNxHFH3QTNfvd9wMbrH21OBth8xfK9jUSLtZ56djChiBlAS71ENgZYi4p6mchVjmvCV3Ch2eCo+jP6oO6Zwx7i2pEj15FKEDqVzuSR8yYhQuXPfw5LKTlrz3pk5nu0bNXPaSCbjxpbOA2qwQ8bedKDRVr3reSogRdHkxReV8GM2ZUFxQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QcALwbRggHuEL+ngRJBDqegkYJatfNONegGp/7qjzhs=;
- b=fOAfigJbSFrLeqdmsTPrpJ53jL/eMQ62+nb9HXjgbX3SetsDkhSLZDHyhIu/7snGqhEL/ImGTHvln+P2MQ2lc1Dhq1EG+t+BJ/arhTx/iqi/BOO1c+7/BVBiqeLiysI6oVhYq4WeIvw2dxLv3jcSNcozWl3I735k5P0Z/5wY6YbwCBpX2J5kxN7UCh/EWsf7dLcNuKJJ3ZiPZZWAiKAtS3O8ZbOQG3eZ/35pmS4qtmaE17V34gIthk0SyoVZ4IIbSfbuCi1j08n/PHFMxCmqXsfxazgUr6o2SD72QcNaKkcGnjQN61blzH/ui3r/w+BrqjVuhbt5CojKl6/NoqsJEw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Wed, 23 Oct 2019 09:35:28 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:38158 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392044AbfJWNfZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 09:35:25 -0400
+Received: by mail-pg1-f195.google.com with SMTP id w3so12173397pgt.5
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 06:35:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QcALwbRggHuEL+ngRJBDqegkYJatfNONegGp/7qjzhs=;
- b=d0ce1aJu++WcHeJsZJ1j8SXIn8HB46YeFftu7tt3xPj/TiNn1LN1rguk2EQ7DiAqMYS16f+o+4Zt7C8WSNOfdc7XQUiUiqcbb0fxogg6QAVGRVrQ8JGmTdxSzyZCeZw2cRWKHOwEZd164qxY1rI3Fk3uMgCGqbM015SOnftI6lI=
-Received: from CY4PR1201MB0230.namprd12.prod.outlook.com (10.172.79.7) by
- CY4PR1201MB0070.namprd12.prod.outlook.com (10.172.76.16) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2367.20; Wed, 23 Oct 2019 13:35:10 +0000
-Received: from CY4PR1201MB0230.namprd12.prod.outlook.com
- ([fe80::5471:f58b:733e:1a61]) by CY4PR1201MB0230.namprd12.prod.outlook.com
- ([fe80::5471:f58b:733e:1a61%7]) with mapi id 15.20.2367.025; Wed, 23 Oct 2019
- 13:35:09 +0000
-From:   Harry Wentland <hwentlan@amd.com>
-To:     zhongshiqi <zhong.shiqi@zte.com.cn>,
-        "Wentland, Harry" <Harry.Wentland@amd.com>
-CC:     "Li, Sun peng (Leo)" <Sunpeng.Li@amd.com>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>,
-        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        "Lakha, Bhawanpreet" <Bhawanpreet.Lakha@amd.com>,
-        "Lei, Jun" <Jun.Lei@amd.com>,
-        "David.Francis@amd.com" <David.Francis@amd.com>,
-        "Laktyushkin, Dmytro" <Dmytro.Laktyushkin@amd.com>,
-        "Koo, Anthony" <Anthony.Koo@amd.com>,
-        "Liu, Wenjing" <Wenjing.Liu@amd.com>,
-        "Kazlauskas, Nicholas" <Nicholas.Kazlauskas@amd.com>,
-        "Aidan.Wood@amd.com" <Aidan.Wood@amd.com>,
-        "Park, Chris" <Chris.Park@amd.com>,
-        "Yang, Eric" <Eric.Yang2@amd.com>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "xue.zhihong@zte.com.cn" <xue.zhihong@zte.com.cn>,
-        "wang.yi59@zte.com.cn" <wang.yi59@zte.com.cn>,
-        "cheng.shengyu@zte.com.cn" <cheng.shengyu@zte.com.cn>
-Subject: Re: [PATCH] dc.c:use kzalloc without test
-Thread-Topic: [PATCH] dc.c:use kzalloc without test
-Thread-Index: AQHViXxGNdmdXeQn1kuTzFek/LoFxqdoOmQA
-Date:   Wed, 23 Oct 2019 13:35:09 +0000
-Message-ID: <fa46cad1-8845-78b7-eb6a-45942813020b@amd.com>
-References: <1571819543-15676-1-git-send-email-zhong.shiqi@zte.com.cn>
-In-Reply-To: <1571819543-15676-1-git-send-email-zhong.shiqi@zte.com.cn>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [165.204.55.250]
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
-x-clientproxiedby: YTBPR01CA0008.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:14::21) To CY4PR1201MB0230.namprd12.prod.outlook.com
- (2603:10b6:910:1e::7)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Harry.Wentland@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 02407ec4-7f5c-4c46-2a47-08d757bdd2bd
-x-ms-traffictypediagnostic: CY4PR1201MB0070:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CY4PR1201MB00701337BF08CD3516D091508C6B0@CY4PR1201MB0070.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3631;
-x-forefront-prvs: 019919A9E4
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(136003)(376002)(396003)(366004)(189003)(199004)(76176011)(386003)(6506007)(65956001)(6486002)(476003)(66066001)(26005)(2616005)(229853002)(186003)(99286004)(11346002)(316002)(256004)(6436002)(478600001)(25786009)(102836004)(52116002)(53546011)(31686004)(4326008)(4744005)(6512007)(65806001)(486006)(446003)(36756003)(58126008)(6636002)(14454004)(81156014)(305945005)(6246003)(4001150100001)(71200400001)(54906003)(81166006)(71190400001)(8676002)(2906002)(6116002)(66476007)(110136005)(31696002)(64756008)(8936002)(5660300002)(3846002)(66556008)(66946007)(7736002)(66446008);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR1201MB0070;H:CY4PR1201MB0230.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: FpUgVSBySIBKmcJfAWliADljm4dOAwkRg/ZjkYJ5vvwt+o7sC6lhGtrOo5SO4ZhwwpYZD16phOWu5KwVZTpK2AfOnpZuOMQCU2963NkfEs5rraR/3ijZqIHn7y36Nv+ZpjmaTD7vwbC/q0LVcvOIb781y9bFJft9zYUwXBIgOy4vsZKgdM5V9+u/a6PJqy9v3cqlJWMBHNT2p4B0TxHlrknReeAf3HBV0FOQvP9R4YoWIX+k2Nb7QeEx7DPVYA78wBC2ZSLdKe5jHgZzffyo9nJo2Cjq3GQ3CDngIGIehPxbheJej03FkTdIUPLq5Vo2LUuvyNzGzHX7lL6lrmA/cYD/xHibC5VmhQHyRty0ylcziRJAtvM4SMQwWpWBY/Wn2flQJF2lmKHsN9rfom/NZX0x1oE98phF5hYxh6BEizM8eKYmh/VH0h/jwfL/Fl11
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <F3FA943D0EB68E45B22BDE28854746E9@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vVilgvsFyNX8l3o19LPHCyMKXEOlo8DFL7KyI287g14=;
+        b=QqK89MD/Yy/DM00W1esVEoeVn3WMhLsa0Vl3e77HqhpfXG1sxJ0v4cgzzmJTrf7pHQ
+         HcpSZgN31RBFHk6C7UnejQDVK6ql1RlvQgrgDpRuB/5HN0jwZ4qnDwnaHbicV36UWhMu
+         KwFlO69OYvODLWqaW+AIKdV+fmaq5vcqsd1PcbjMAAQarx1WdTLAbUb4dcb/kMGuqFyi
+         qqUtZ9oYKNMoCYPjRS0LtILIQLBGu5ytKdhZg1UR7mtZh9zYg+zLmI5gowtGsbfT76ie
+         /iChDTldOkR4Y0RQ/5JfueemrwEfFRlzAfFt3dAVNFnONLrl6PzrYvU6sG2AelLOrRPa
+         I6Yg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vVilgvsFyNX8l3o19LPHCyMKXEOlo8DFL7KyI287g14=;
+        b=jWV8EYd/mt0fV/EpWwI4TwuGI17/Xcq8Ko6y7672nWr44Qe/o4+SmB+aI9QPH7yds1
+         I4fRhrc8B11AxlC5SB6tHWRLVXUY8nwbM+6tnv9Wa9+7/B/P4GjoCk9XHxYw7uz0DFS8
+         JqnlKIabP8Ut0m0rQXtu/wWUEzWzNgJ4i8XORdfPi74+e6wPDESM2vJwqFXeagYTkdgV
+         3QljGB8CFmmAR5ApcS0wsys+j80iU6w8eKvJd0RR07Z/p2r/Z4MVE3RcnAFi0F53gJcz
+         Puz3rlm4dcuD9bJc80rbhOlt5kqFmMbOmNEoSxuD+PXLZkCMPzC4IbkA3/c3t5OF2tmi
+         2pVA==
+X-Gm-Message-State: APjAAAWWJRZqJltXrZCp9e35ZDrldGt45uOt+Cv4tRpp9y3+/wnCgDpR
+        E6jYC8b7u+Hb2Q0pj1MKQTfeAxTruxeowTVm5s3CCQ==
+X-Google-Smtp-Source: APXvYqxsyojwtcUMv+o4xED6tZ63YIYmQojsChVXt9dxnYDWrRS7pWDqJ873W66V6rP/TblVEj2JJse9T5W9jYerCBg=
+X-Received: by 2002:a17:90a:6509:: with SMTP id i9mr11551965pjj.47.1571837723368;
+ Wed, 23 Oct 2019 06:35:23 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 02407ec4-7f5c-4c46-2a47-08d757bdd2bd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Oct 2019 13:35:09.6430
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Z5+V7nki8KWlnt+mUbW2KYLjrce2KPy+ScmWIRZovjW36i9pJwMforEsBKHa4RnkEO0QJv40CF5ZaeI6cEDQsQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1201MB0070
+References: <cover.1571762488.git.andreyknvl@google.com> <26e088ae3ebcaa30afe957aeabaa9f0c653df7d0.1571762488.git.andreyknvl@google.com>
+ <CACT4Y+YntxT+cpESOBvbg+h=g-84ECJwQrFg7LM5tbq_zaMd3A@mail.gmail.com>
+In-Reply-To: <CACT4Y+YntxT+cpESOBvbg+h=g-84ECJwQrFg7LM5tbq_zaMd3A@mail.gmail.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Wed, 23 Oct 2019 15:35:12 +0200
+Message-ID: <CAAeHK+yUTZc+BrGDvvTQD4O0hsDzhp0V6GGFdtnmE6U4yWabKw@mail.gmail.com>
+Subject: Re: [PATCH 3/3] vhost, kcov: collect coverage from vhost_worker
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     USB list <linux-usb@vger.kernel.org>,
+        KVM list <kvm@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        David Windsor <dwindsor@gmail.com>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        Anders Roxell <anders.roxell@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjAxOS0xMC0yMyA0OjMyIGEubS4sIHpob25nc2hpcWkgd3JvdGU6DQo+IGRjLmM6NTgzOm51
-bGwgY2hlY2sgaXMgbmVlZGVkIGFmdGVyIHVzaW5nIGt6YWxsb2MgZnVuY3Rpb24NCj4gDQo+IFNp
-Z25lZC1vZmYtYnk6IHpob25nc2hpcWkgPHpob25nLnNoaXFpQHp0ZS5jb20uY24+DQoNClJldmll
-d2VkLWJ5OiBIYXJyeSBXZW50bGFuZCA8aGFycnkud2VudGxhbmRAYW1kLmNvbT4NCg0KSGFycnkN
-Cg0KPiAtLS0NCj4gIGRyaXZlcnMvZ3B1L2RybS9hbWQvZGlzcGxheS9kYy9jb3JlL2RjLmMgfCA0
-ICsrKysNCj4gIDEgZmlsZSBjaGFuZ2VkLCA0IGluc2VydGlvbnMoKykNCj4gDQo+IGRpZmYgLS1n
-aXQgYS9kcml2ZXJzL2dwdS9kcm0vYW1kL2Rpc3BsYXkvZGMvY29yZS9kYy5jIGIvZHJpdmVycy9n
-cHUvZHJtL2FtZC9kaXNwbGF5L2RjL2NvcmUvZGMuYw0KPiBpbmRleCA1ZDFhZGVkLi40Yjg4MTlj
-IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vYW1kL2Rpc3BsYXkvZGMvY29yZS9kYy5j
-DQo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9hbWQvZGlzcGxheS9kYy9jb3JlL2RjLmMNCj4gQEAg
-LTU4MCw2ICs1ODAsMTAgQEAgc3RhdGljIGJvb2wgY29uc3RydWN0KHN0cnVjdCBkYyAqZGMsDQo+
-ICAjaWZkZWYgQ09ORklHX0RSTV9BTURfRENfRENOMl8wDQo+ICAJLy8gQWxsb2NhdGUgbWVtb3J5
-IGZvciB0aGUgdm1faGVscGVyDQo+ICAJZGMtPnZtX2hlbHBlciA9IGt6YWxsb2Moc2l6ZW9mKHN0
-cnVjdCB2bV9oZWxwZXIpLCBHRlBfS0VSTkVMKTsNCj4gKwlpZiAoIWRjLT52bV9oZWxwZXIpIHsN
-Cj4gKwkJZG1fZXJyb3IoIiVzOiBmYWlsZWQgdG8gY3JlYXRlIGRjLT52bV9oZWxwZXJcbiIsIF9f
-ZnVuY19fKTsNCj4gKwkJZ290byBmYWlsOw0KPiArCX0NCj4gIA0KPiAgI2VuZGlmDQo+ICAJbWVt
-Y3B5KCZkYy0+YmJfb3ZlcnJpZGVzLCAmaW5pdF9wYXJhbXMtPmJiX292ZXJyaWRlcywgc2l6ZW9m
-KGRjLT5iYl9vdmVycmlkZXMpKTsNCj4gDQo=
+On Wed, Oct 23, 2019 at 10:36 AM Dmitry Vyukov <dvyukov@google.com> wrote:
+>
+> On Tue, Oct 22, 2019 at 6:46 PM Andrey Konovalov <andreyknvl@google.com> wrote:
+> >
+> > This patch adds kcov_remote_start()/kcov_remote_stop() annotations to the
+> > vhost_worker() function, which is responsible for processing vhost works.
+> > Since vhost_worker() threads are spawned per vhost device instance
+> > the common kcov handle is used for kcov_remote_start()/stop() annotations
+> > (see Documentation/dev-tools/kcov.rst for details). As the result kcov can
+> > now be used to collect coverage from vhost worker threads.
+> >
+> > Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+> > ---
+> >  drivers/vhost/vhost.c | 6 ++++++
+> >  drivers/vhost/vhost.h | 1 +
+> >  2 files changed, 7 insertions(+)
+> >
+> > diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+> > index 36ca2cf419bf..a5a557c4b67f 100644
+> > --- a/drivers/vhost/vhost.c
+> > +++ b/drivers/vhost/vhost.c
+> > @@ -30,6 +30,7 @@
+> >  #include <linux/sched/signal.h>
+> >  #include <linux/interval_tree_generic.h>
+> >  #include <linux/nospec.h>
+> > +#include <linux/kcov.h>
+> >
+> >  #include "vhost.h"
+> >
+> > @@ -357,7 +358,9 @@ static int vhost_worker(void *data)
+> >                 llist_for_each_entry_safe(work, work_next, node, node) {
+> >                         clear_bit(VHOST_WORK_QUEUED, &work->flags);
+> >                         __set_current_state(TASK_RUNNING);
+> > +                       kcov_remote_start(dev->kcov_handle);
+> >                         work->fn(work);
+> > +                       kcov_remote_stop();
+> >                         if (need_resched())
+> >                                 schedule();
+> >                 }
+> > @@ -546,6 +549,7 @@ long vhost_dev_set_owner(struct vhost_dev *dev)
+> >
+> >         /* No owner, become one */
+> >         dev->mm = get_task_mm(current);
+> > +       dev->kcov_handle = current->kcov_handle;
+>
+> kcov_handle is not present in task_struct if !CONFIG_KCOV
+>
+> Also this does not use KCOV_SUBSYSTEM_COMMON.
+> We discussed something along the following lines:
+>
+> u64 kcov_remote_handle(u64 subsys, u64 id)
+> {
+>   WARN_ON(subsys or id has wrong bits set).
+
+Hm, we can't have warnings in kcov_remote_handle() that is exposed in
+uapi headers. What we can do is return 0 (invalid handle) if subsys/id
+have incorrect bits set. And then we can either have another
+kcov_remote_handle() internally (with a different name though) that
+has a warning, or have warning in kcov_remote_start(). WDYT?
+
+>   return ...;
+> }
+>
+> kcov_remote_handle(KCOV_SUBSYSTEM_USB, bus);
+> kcov_remote_handle(KCOV_SUBSYSTEM_COMMON, current->kcov_handle);
+>
+>
+> >         worker = kthread_create(vhost_worker, dev, "vhost-%d", current->pid);
+> >         if (IS_ERR(worker)) {
+> >                 err = PTR_ERR(worker);
+> > @@ -571,6 +575,7 @@ long vhost_dev_set_owner(struct vhost_dev *dev)
+> >         if (dev->mm)
+> >                 mmput(dev->mm);
+> >         dev->mm = NULL;
+> > +       dev->kcov_handle = 0;
+> >  err_mm:
+> >         return err;
+> >  }
+> > @@ -682,6 +687,7 @@ void vhost_dev_cleanup(struct vhost_dev *dev)
+> >         if (dev->worker) {
+> >                 kthread_stop(dev->worker);
+> >                 dev->worker = NULL;
+> > +               dev->kcov_handle = 0;
+> >         }
+> >         if (dev->mm)
+> >                 mmput(dev->mm);
+> > diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
+> > index e9ed2722b633..a123fd70847e 100644
+> > --- a/drivers/vhost/vhost.h
+> > +++ b/drivers/vhost/vhost.h
+> > @@ -173,6 +173,7 @@ struct vhost_dev {
+> >         int iov_limit;
+> >         int weight;
+> >         int byte_weight;
+> > +       u64 kcov_handle;
+> >  };
+> >
+> >  bool vhost_exceeds_weight(struct vhost_virtqueue *vq, int pkts, int total_len);
+> > --
+> > 2.23.0.866.gb869b98d4c-goog
+> >
