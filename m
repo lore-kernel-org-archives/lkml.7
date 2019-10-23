@@ -2,95 +2,99 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3618CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 11:47:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1E1DCA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 11:47:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4D7920650
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 11:47:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1E1520650
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 11:47:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404588AbfJWLqr (ORCPT
+        id S2404753AbfJWLr1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 07:46:47 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:49266 "EHLO foss.arm.com"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S2390566AbfJWLqr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 07:46:47 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 864A4494;
-        Wed, 23 Oct 2019 04:46:24 -0700 (PDT)
-Received: from [192.168.0.9] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B41A03F6C4;
-        Wed, 23 Oct 2019 04:46:22 -0700 (PDT)
-Subject: Re: [PATCH v3 1/2] sched/topology: Don't try to build empty sched
- domains
-To:     Valentin Schneider <valentin.schneider@arm.com>,
-        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org
-Cc:     lizefan@huawei.com, tj@kernel.org, hannes@cmpxchg.org,
-        mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org,
-        morten.rasmussen@arm.com, qperret@google.com,
-        stable@vger.kernel.org
-References: <20191015154250.12951-1-valentin.schneider@arm.com>
- <20191015154250.12951-2-valentin.schneider@arm.com>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <9134acf7-69bb-403b-2e9c-0eb7fb7efabd@arm.com>
-Date:   Wed, 23 Oct 2019 13:46:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 23 Oct 2019 07:47:27 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:33932 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390566AbfJWLr0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 07:47:26 -0400
+Received: by mail-lj1-f195.google.com with SMTP id j19so20770860lja.1;
+        Wed, 23 Oct 2019 04:47:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=YAqjCYndjyjb4IlD06dDEpbQdw5J16aymsS3GxVNxno=;
+        b=s6LfvdTrZW88BBic7lkqUXRdA8CVEwHhyOqNGQ6d2W2dZC+lYRkl+iWwEt+FummunV
+         QwHkermvmkX6wiF/RQ3gcnmTULpiE4lMtkeKx+cB6HMQ8NnTs3ifwRxxzCPDY3rLkw/G
+         7LGF1pQkGcpT8uza3wFTf2muo9tZrgjZ9KPzRYbKkcbUlbOMEQSlG4K2vIEs8Pqr6duc
+         HAO81uVgmU+MGiwCQ13kO/miy4uBo38TOWaRVAOyUWEOotVRSix1zO60IcvDNNokvN8r
+         L008SbRfSww9W52IvrQQCcQYJRCcVpEsCJj/rcf87T00zx9K4qkXmwGgwgaHdtG956XO
+         u+SQ==
+X-Gm-Message-State: APjAAAXkYfnalcRwVn0ZNzynjmWUqFkB+RBEQuMKjXENl5aH7jvJgBFr
+        YhzAefGOWB1LHSg29yhSwlw=
+X-Google-Smtp-Source: APXvYqw7dFHxkzDAU3F6Ge+LjB4hsmaP2tq3czgTMDhqkv8Zjs3DByhnLLmQSeqetI83Nh0NS8lXLA==
+X-Received: by 2002:a2e:a0d6:: with SMTP id f22mr22151941ljm.81.1571831244557;
+        Wed, 23 Oct 2019 04:47:24 -0700 (PDT)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id f16sm9416905lfc.26.2019.10.23.04.47.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Oct 2019 04:47:23 -0700 (PDT)
+Date:   Wed, 23 Oct 2019 14:47:11 +0300
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] rtc: bd70528: Add MODULE ALIAS to autoload module
+Message-ID: <20191023114711.GA13954@localhost.localdomain>
 MIME-Version: 1.0
-In-Reply-To: <20191015154250.12951-2-valentin.schneider@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/10/2019 17:42, Valentin Schneider wrote:
+The bd70528 RTC driver is probed by MFD driver. Add MODULE_ALIAS
+in order to allow udev to load the module when MFD sub-device cell
+for RTC is added.
 
-[...]
+I'm not sure if this is a bugfix or feature addition but I guess
+fixes tag won't harm in this case.
 
-> diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
-> index c52bc91f882b..a859e5539440 100644
-> --- a/kernel/cgroup/cpuset.c
-> +++ b/kernel/cgroup/cpuset.c
-> @@ -817,6 +817,11 @@ static int generate_sched_domains(cpumask_var_t **domains,
->  		struct cpuset *a = csa[i];
->  		int apn = a->pn;
->  
-> +		if (cpumask_empty(a->effective_cpus)) {
-> +			ndoms--;
-> +			continue;
-> +		}
-> +
->  		for (j = 0; j < csn; j++) {
->  			struct cpuset *b = csa[j];
->  			int bpn = b->pn;
-> @@ -859,6 +864,9 @@ static int generate_sched_domains(cpumask_var_t **domains,
->  			continue;
->  		}
->  
-> +		if (cpumask_empty(a->effective_cpus))
-> +			continue;
-> +
+Fixes: 32a4a4ebf768 ("rtc: bd70528: Initial support for ROHM bd70528 RTC")
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+---
+ drivers/rtc/rtc-bd70528.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Can you not just prevent that a cpuset pointer (cp) is added to the
-cpuset array (csa[]) in case cpumask_empty(cp->effective_cpus)?
+diff --git a/drivers/rtc/rtc-bd70528.c b/drivers/rtc/rtc-bd70528.c
+index f9bdd555e1a2..41fd54b622b1 100644
+--- a/drivers/rtc/rtc-bd70528.c
++++ b/drivers/rtc/rtc-bd70528.c
+@@ -498,3 +498,4 @@ module_platform_driver(bd70528_rtc);
+ MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
+ MODULE_DESCRIPTION("BD70528 RTC driver");
+ MODULE_LICENSE("GPL");
++MODULE_ALIAS("platofrm:bd70528-rtc");
+-- 
+2.21.0
 
-@@ -798,9 +800,14 @@ static int generate_sched_domains(cpumask_var_t
-**domains, cpumask_subset(cp->cpus_allowed, top_cpuset.effective_cpus))
-                        continue;
 
--   if (is_sched_load_balance(cp))
-+   if (is_sched_load_balance(cp) && !cpumask_empty(cp->effective_cpus))
-            csa[csn++] = cp;
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
 
->  		dp = doms[nslot];
->  
->  		if (nslot == ndoms) {
-
-[...]
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
