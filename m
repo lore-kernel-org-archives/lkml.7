@@ -2,119 +2,91 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE2C5CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:02:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89217CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:03:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8227C21906
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:02:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cHO2Z3KY"
+	by mail.kernel.org (Postfix) with ESMTP id 662CA21872
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:03:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406420AbfJWPCv (ORCPT
+        id S2406445AbfJWPDS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 11:02:51 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:44993 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390541AbfJWPCu (ORCPT
+        Wed, 23 Oct 2019 11:03:18 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:43569 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390431AbfJWPDS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 11:02:50 -0400
-Received: by mail-pf1-f194.google.com with SMTP id q21so13092302pfn.11;
-        Wed, 23 Oct 2019 08:02:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=+CWAItAYmWIbjE19EtlFeNSpGXkB58kb+qP39bZy8Bs=;
-        b=cHO2Z3KYDcZ6jRjBOOsAdswjJsCO6jmKU63I/rEGv5PiEh8iOVyQn6Y4+cuuRQfcaz
-         Q9GjAXRWEUDQQIikmKGh9G/J7S2U/YTt/0M/1BemR8O+SoBihQthJicMMqU584lNiQI2
-         i5uyFvk2MuRt1+ly4oop4VZ5RyHl1vrsCvERijBroBqXoxtmEQNvm7w4IdKve9/hCyd5
-         rLyNKVqekuRF+Yd9VjARoWbQs35DUYjs3DVpgaUNGiZ8mKn9F+Hei9VfiyVoArfeeUu/
-         FrHqOYXCqG6c/z6trRd7r1i/NGJc+258GqekbGmbnci3VmSGjUI/qKE3KlPBNkw1qjKy
-         uC1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+CWAItAYmWIbjE19EtlFeNSpGXkB58kb+qP39bZy8Bs=;
-        b=ubOaBS7TG7GHqWjreMKgr8lrPIWA3E2yhveGVoNs036WPvY6Y/E3uwxTN+2svM1bOu
-         YyrNfN7q1bkf2fGyBFDBU3GnDsUW4l1bB0N8NXztnmkzs0j8n1ZnoIqRj5bhv6rVCW/4
-         tBrKBT17Asb7jaD7A9SO7MP3LiRhp+4b96MDnynhfaZHR3DJSIIKMp1wXjBujGFKtBjQ
-         U/3tr08r5ppHJwi/lw1gu6EfOUkPi2ixe0j7WNKUCkRSu+wxh9bfg8FUis20ekFW1hX/
-         ELRlT2qrI6XMfIQ+y2tRaFCTFHEaNyIsxkycmfzvfBEZjVnRuRMCurgvzJ7hDf+DInJ0
-         daKQ==
-X-Gm-Message-State: APjAAAUdrgwMakYvPjR+T5u+ALa//LH1a5s0I7ZeIc56z6jwjVZ/Gg+l
-        tczC+nAeG9/PRLXfBWHvx/c=
-X-Google-Smtp-Source: APXvYqw+Awo/GLWhReDYxPmFXdeJ11IFaR/cRmaKL8N3spZeTAhOx2dIIPJ9KGcQrzQ/Dy5XC4WKJw==
-X-Received: by 2002:a63:28f:: with SMTP id 137mr9514675pgc.301.1571842969959;
-        Wed, 23 Oct 2019 08:02:49 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id p66sm25021811pfg.127.2019.10.23.08.02.49
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 23 Oct 2019 08:02:49 -0700 (PDT)
-Date:   Wed, 23 Oct 2019 08:02:48 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     mazziesaccount@gmail.com,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] watchdog: bd70528: Add MODULE_ALIAS to allow module auto
- loading
-Message-ID: <20191023150248.GB16612@roeck-us.net>
-References: <20191023124159.GA3490@localhost.localdomain>
+        Wed, 23 Oct 2019 11:03:18 -0400
+Received: from mail-qk1-f172.google.com ([209.85.222.172]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MkYg4-1hjEyo1iKk-00lz8E; Wed, 23 Oct 2019 17:03:16 +0200
+Received: by mail-qk1-f172.google.com with SMTP id m4so3105942qke.9;
+        Wed, 23 Oct 2019 08:03:16 -0700 (PDT)
+X-Gm-Message-State: APjAAAXLQRWelsDDq6VW8HremVfTEJc+tZ95PkZnNRdM/08kUoNcvCON
+        A2IolviuxL48u/tB3Q8HNiOM6bjieO6XfxKNQ5I=
+X-Google-Smtp-Source: APXvYqxb/oybHp/GwbjiOR9LMf6sQshKj2mYiiKO3OlPOokqW0QjnOPGkDW0AzOpBgUax7ZEFmFmk7GyW7E6epBqv/s=
+X-Received: by 2002:a37:58d:: with SMTP id 135mr5703900qkf.394.1571842995129;
+ Wed, 23 Oct 2019 08:03:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191023124159.GA3490@localhost.localdomain>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20191009190853.245077-1-arnd@arndb.de> <20191009191044.308087-10-arnd@arndb.de>
+ <d1022cda6bd6ce73e9875644a5a2c65e4d554f37.camel@codethink.co.uk>
+ <CAK8P3a0BYkPTSnQUmde2k+HVcg7XNihzWTEzrCD4d8G8ecO9-w@mail.gmail.com>
+ <20191022043051.GA20354@ZenIV.linux.org.uk> <CAK8P3a3yutJU83AfxKXTFuCVQwsX50KYsDgbGbHeJJ0JoLbejg@mail.gmail.com>
+ <20191023102937.GK3125@piout.net> <CAK8P3a2+wEH5mtq_vF6fTSkmCfBeKHOvNmjbvViiHFWxUAjV_g@mail.gmail.com>
+ <20191023143436.GN3125@piout.net>
+In-Reply-To: <20191023143436.GN3125@piout.net>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 23 Oct 2019 17:02:58 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1TYPCrKQFX10tbLpDwM9zb8kUNH=90Nn5d01fyqLg0_w@mail.gmail.com>
+Message-ID: <CAK8P3a1TYPCrKQFX10tbLpDwM9zb8kUNH=90Nn5d01fyqLg0_w@mail.gmail.com>
+Subject: Re: [Y2038] [PATCH v6 10/43] compat_ioctl: move rtc handling into rtc-dev.c
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        y2038 Mailman List <y2038@lists.linaro.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:QPENz3jfS9XFgtYV/TFdNKMGl6rpS0gD/9MdJSC/g9uAKbEpmWT
+ Z7HfjwWJ+QoVAAhrV/MaGWmI7dNSi6HhFeZlnP1DwBDGCEz5R4T4XSZfq7o26E9qR1GTeTb
+ oT1z3sFN2YLVZd2MIPfVH8N+/maai+QQgPzn1KoiStzyrQLPmIUM8eM3QTZ0xa6su8mZHku
+ pSJY08soz24uKFzRNSahg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:/2aHZkd0Fgs=:sZ7rn+lWko0U+YCOexeNPx
+ n8bDn51MIOzZkaplxUd6C1GGsEE3UkHrudQZj8YBfHOMaO/CUtWXgv9hbuT4vDh48urw7rh1z
+ YrnyiRMbgwmLVH3HSM9JwgyYHeDXz7OXe8LvA6ChA+Fkwpz/2V/jO9M5zr6oF8lsSy5SQlKnX
+ oY9V3JYeJLAfR7as0bo92EwZ8/tF4zNzxa2eL9UPL07gGd0qi/ag0+UcYOpMu1+0aIh2KEFOw
+ tEfL8+ewpii419vh90symYyVu/69xG9RKNXJpgCn3IrhxuWLLMf1nx9XpMJZummE1tO2sx8Zk
+ jOQB0oJBb0d2yAcaIBASQPAvT5WhX6uWOOIjkgyjLf+SoSwgbIQKj7rKH5XymUfq0VbwL0VnY
+ 7Hz+TrbCyMwxSFd+udzMjL9SqbPqkH/5+U23WhLQ7bPtLHqrZlS5AffkjToJE0oTFitQ+jF0f
+ 7jle1zwwYBFXFQcMclMPzKpxBZQOrh8alH02ROkYJj+u3ogArwuUqE0jvEcsUUSwmxxB24Wd7
+ MiMnxqLTglPD5yJeqUeDNcybVNQ79xomg76N6yzDM8p1KA6yjckep0c+AccvptQdOcZ+gDl1H
+ RtnCEaZ3HzCLKCJu/bRONoik7uBMummBca/6NlXL+7Kz4ysyLU5Hg5lLpjNPlCi6gaDUpIE/2
+ JyAJH7aYp95pu1tqcSrm2v5LacORYfkGTV2fw3qyT9AWYKc895xHZACZzujY78qWKwQMSwIKN
+ C4jGdhoEbM29Wlso5sRalwdEAt3dUZpOmcpjY/GVRI4fUDJ2Vh8RdCz8uLV3LIutmPXj1z4oo
+ JEQGhBjKagHlKruHlzuWxxhN69UT5IgcDImBKlQbg+T1W4Nre+OLTYiR1E5ne9MxDvhkdU0iA
+ TgA77Jyt0+qu+Ba/BgCA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 03:41:59PM +0300, Matti Vaittinen wrote:
-> The bd70528 watchdog driver is probed by MFD driver. Add MODULE_ALIAS
-> in order to allow udev to load the module when MFD sub-device cell for
-> watchdog is added.
-> 
-> Fixes: bbc88a0ec9f37 ("watchdog: bd70528: Initial support for ROHM BD70528 watchdog block")
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+On Wed, Oct 23, 2019 at 4:34 PM Alexandre Belloni
+<alexandre.belloni@bootlin.com> wrote:
+> On 23/10/2019 16:28:40+0200, Arnd Bergmann wrote:
+> > Ok, done. Speaking of removing rtc drivers, should we just kill off
+> > drivers/char/rtc.c and drivers/char/efirtc.c as well? I don't remember
+> > why we left them in the tree, but I'm fairly sure they are not actually
+> > needed.
+> >
+>
+> https://lore.kernel.org/lkml/CAK8P3a0QZNY+K+V1HG056xCerz=_L2jh5UfZ+2LWkDqkw5Zznw@mail.gmail.com/
+>
+> That's how we left it ;)
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Right, that is roughly what I remembered. Sending a patch to remove them
+now, let's see if anyone cares.
 
-> ---
-> 
-> I'm not really sure if this is a bug-fix or feature but I guess the
-> Fixes tag won't harm, right?
-> 
->  drivers/watchdog/bd70528_wdt.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/watchdog/bd70528_wdt.c b/drivers/watchdog/bd70528_wdt.c
-> index b0152fef4fc7..bc60e036627a 100644
-> --- a/drivers/watchdog/bd70528_wdt.c
-> +++ b/drivers/watchdog/bd70528_wdt.c
-> @@ -288,3 +288,4 @@ module_platform_driver(bd70528_wdt);
->  MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
->  MODULE_DESCRIPTION("BD70528 watchdog driver");
->  MODULE_LICENSE("GPL");
-> +MODULE_ALIAS("platform:bd70528-wdt");
-> -- 
-> 2.21.0
-> 
-> 
-> -- 
-> Matti Vaittinen, Linux device drivers
-> ROHM Semiconductors, Finland SWDC
-> Kiviharjunlenkki 1E
-> 90220 OULU
-> FINLAND
-> 
-> ~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-> Simon says - in Latin please.
-> ~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-> Thanks to Simon Glass for the translation =] 
+          Arnd
