@@ -2,115 +2,109 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D943BCA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:15:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89C0FCA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:16:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEDEE2173B
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:15:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59D8920650
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:16:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571825727;
-	bh=LZP3BqoLpY0rpoQR77DJPDXuMn1MHW9bfkAhcsmqkj4=;
+	s=default; t=1571825770;
+	bh=95VETJwzfjNzq+Hxq3/c7JAkanOBoPXn2ZrXKElGSlw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LAg/GXCKkFh0w5VFn3GCnEkCyaSAYCPmqUkg1AuhS6NjEjJdwihmCvR9zOqiPQ8dL
-	 /cxL8D6/8ts+NnRXFAaz7z9Q6iIUty/V8BRxNKR+jEOd4PNjeL1WFdpSsQSxuQU7C5
-	 13zs/sDgTV/s9sHgJV4934XB+t7vrnYSs2egpMwk=
+	b=MPm51rGb+6iyDGCFbx+YZIgjx10HE0AU8pDNq+8clqgS+brFSjLkLS5zc07I/65ge
+	 d5YFEjTGJT25pRVMJ5DxRc5zczq7WLSUiU+oqtY3FRIO9SBuCD551j3IsdToe4owuI
+	 7RN/gzgVeO4dKUbaWMzqMkecn6NZuROW3hcywf5Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404392AbfJWKP0 (ORCPT
+        id S2404233AbfJWKQJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 06:15:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54570 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404104AbfJWKP0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 06:15:26 -0400
-Received: from linux-8ccs (ip5f5ade78.dynamic.kabel-deutschland.de [95.90.222.120])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78868205ED;
-        Wed, 23 Oct 2019 10:15:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571825725;
-        bh=LZP3BqoLpY0rpoQR77DJPDXuMn1MHW9bfkAhcsmqkj4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UcKhPQSN4AqI3CgkCE3D/sIATgU4jNtJhy/qJt3pHsIAMGrNZDDLK9nhDvXNw3BYN
-         2yvqDXbriHlixSAA50ztaDF5vkkeXA6RrqGBH/1JfLKg1PCaJEhnYuOEnirbUBLOWq
-         Gc4zL1A+OQDcb+sLsW4GoxUhkUqOHQl1B3M0ETq0=
-Date:   Wed, 23 Oct 2019 12:15:21 +0200
-From:   Jessica Yu <jeyu@kernel.org>
-To:     Matthias Maennich <maennich@google.com>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Laight <David.Laight@aculab.com>
-Subject: Re: [PATCH v3] scripts/nsdeps: use alternative sed delimiter
-Message-ID: <20191023101520.GA5387@linux-8ccs>
-References: <20191021160419.28270-1-jeyu@kernel.org>
- <20191022110403.29715-1-jeyu@kernel.org>
- <CAK7LNATzCA-+-9Mp6GZcBk1UZnUdgoYHLkX0wVSHyJcRefyWEg@mail.gmail.com>
- <20191023101340.GA27616@google.com>
+        Wed, 23 Oct 2019 06:16:09 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:38929 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390935AbfJWKQJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 06:16:09 -0400
+Received: by mail-wm1-f67.google.com with SMTP id r141so9476926wme.4;
+        Wed, 23 Oct 2019 03:16:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=9iPPqusJPjy3fAoziYeQ1zwfhPnXfEyQ34hAjHCQafo=;
+        b=VYLE/i7wvrdstNdqoYBu4hHMmgi2Xnp6mJUGJmCBGfkD/0g0gaS2KtG/wmobKZdIUC
+         ow+h77+mHBjo1CVD8W0IDu5KX7/Qs4Q7B6gqWRjx5LnWu2iQB99vVvzdvwwo1yfpasfL
+         D0EOvOmY1UfEj7U5aIPMesDQ+Y3ao9sIF1a5JKQZUey9bODP2TAYH/2MMF6HTnCDwZs5
+         cbfcmRhSAA9uzqDMFqFA3KNlgij+qz2MWSd7omoOrklclFnJwXp0fGChmSa5AH4vVSsK
+         e2DtfhLxvqvCjQVYrnaHE/zn3fQ3DAja0d33FlyIMeaYHuILDZEHFC8Fmsk8C9oifSxk
+         3ooA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9iPPqusJPjy3fAoziYeQ1zwfhPnXfEyQ34hAjHCQafo=;
+        b=XyW9+kSJdUnvqfqFuYQkB78ehdJ80vWqJEofUTieKXoG8XgN3GjfjqnAxANNjl6lDm
+         KoBPWhltMiIiS7P8qC9XZPbdPL5HUTQB4zlzmSdsKKosCXV1gdaEhHoovDRl7cTG4Kn+
+         vX2gCDIPvpSqsK/UUnQhexj+Qj/HHkrjalOvyabOSVjlFtLHx2PcyhpT5/dOfvyVqXJ+
+         a2Rgl12mnARCxG73vUGL9Ixc6DKFXKTSfx/ezCpCw8DeS2wA082XYvfe8U+gaGiGcnQN
+         +S3wJiwOrxaIn2XV3zbXGgAhHWwKgMgFqAy4A20C64+OGJo0yoPxTkXTVGif4WqyIref
+         OMDg==
+X-Gm-Message-State: APjAAAUt9Er/IInxW1SjNmhYZ+dYvchTJkPnvc1UVgGJOlnGh2OdTMlg
+        esTiO8t9SnskMa0GWcF8iwM=
+X-Google-Smtp-Source: APXvYqwxuHSMMTKBbHUKw6TukoIvtmzINUAeMlsHvgxZimi044g64RvzMK+5ejsMdipBS0mtnKfohQ==
+X-Received: by 2002:a7b:cf12:: with SMTP id l18mr7292922wmg.105.1571825766994;
+        Wed, 23 Oct 2019 03:16:06 -0700 (PDT)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id c189sm1979877wme.24.2019.10.23.03.16.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Oct 2019 03:16:06 -0700 (PDT)
+Date:   Wed, 23 Oct 2019 12:16:03 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Thomas Hellstrom <thellstrom@vmware.com>
+Cc:     Ingo Molnar <mingo@elte.hu>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: Fixes tags need some work in the tip tree
+Message-ID: <20191023101603.GA120912@gmail.com>
+References: <20191023071655.10a9cff5@canb.auug.org.au>
+ <MN2PR05MB6141177C37F2D1566E4FB341A1680@MN2PR05MB6141.namprd05.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191023101340.GA27616@google.com>
-X-OS:   Linux linux-8ccs 4.12.14-lp150.12.28-default x86_64
+In-Reply-To: <MN2PR05MB6141177C37F2D1566E4FB341A1680@MN2PR05MB6141.namprd05.prod.outlook.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+++ Matthias Maennich [23/10/19 11:13 +0100]:
->On Wed, Oct 23, 2019 at 10:23:39AM +0900, Masahiro Yamada wrote:
->>On Tue, Oct 22, 2019 at 8:04 PM Jessica Yu <jeyu@kernel.org> wrote:
->>>
->>>When doing an out of tree build with O=, the nsdeps script constructs
->>>the absolute pathname of the module source file so that it can insert
->>>MODULE_IMPORT_NS statements in the right place. However, ${srctree}
->>>contains an unescaped path to the source tree, which, when used in a sed
->>>substitution, makes sed complain:
->>>
->>>++ sed 's/[^ ]* *//home/jeyu/jeyu-linux\/&/g'
->>>sed: -e expression #1, char 12: unknown option to `s'
->>>
->>>The sed substitution command 's' ends prematurely with the forward
->>>slashes in the pathname, and sed errors out when it encounters the 'h',
->>>which is an invalid sed substitution option. To avoid escaping forward
->>>slashes ${srctree}, we can use '|' as an alternative delimiter for
->>>sed instead to avoid this error.
->>>
->>>Signed-off-by: Jessica Yu <jeyu@kernel.org>
->>>---
->>>
->>>v3: don't need to escape '/' since we're using a different delimiter.
->>>
->>> scripts/nsdeps | 2 +-
->>> 1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>>diff --git a/scripts/nsdeps b/scripts/nsdeps
->>>index 3754dac13b31..dda6fbac016e 100644
->>>--- a/scripts/nsdeps
->>>+++ b/scripts/nsdeps
->>>@@ -33,7 +33,7 @@ generate_deps() {
->>>        if [ ! -f "$ns_deps_file" ]; then return; fi
->>>        local mod_source_files=`cat $mod_file | sed -n 1p                      \
->>>                                              | sed -e 's/\.o/\.c/g'           \
->>>-                                             | sed "s/[^ ]* */${srctree}\/&/g"`
->>>+                                             | sed "s|[^ ]* *|${srctree}/&|g"`
->>>        for ns in `cat $ns_deps_file`; do
->>>                echo "Adding namespace $ns to module $mod_name (if needed)."
->>>                generate_deps_for_ns $ns $mod_source_files
->>>--
->>>2.16.4
->>>
->>
->>Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
->>
->
->Tested-by: Matthias Maennich <maennich@google.com>
 
-Applied, thanks!
+* Thomas Hellstrom <thellstrom@vmware.com> wrote:
 
-Jessica
+> On 10/22/19 10:17 PM, Stephen Rothwell wrote:
+> > Hi all,
+> >
+> > n commit
+> >
+> >   6fee2a0be0ec ("x86/cpu/vmware: Fix platform detection VMWARE_PORT macro")
+> >
+> > Fixes tag
+> >
+> >   Fixes: b4dd4f6e3648 ("Add a header file for hypercall definitions")
+> 
+> The cited subject is missing a leading "x86/vmware:". Ingo, please let
+> me know if you want me to respin those.
+
+Those who are picking it up for a backport will go by the sha1, while 
+humans reading it are fine without the prefix, I think this is OK as-is.
+
+Thanks,
+
+	Ingo
