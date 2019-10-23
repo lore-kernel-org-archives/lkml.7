@@ -2,177 +2,232 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22044CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:04:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2EF8CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:06:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1EFA20679
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:04:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F4DE20659
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:06:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571821472;
-	bh=ZmVZoPdxxoehQbJawDew6wgaE9PLNjAkXDMn2kn900M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nzBHOAqMySA4bSbxEIiaYCROJ9izERXBEV9jlLnejcBBZBYQ+MaCmlu3X+1k1AFGS
-	 9UNm/dGUy4FQZZNdErp6azlVNIpE+0VIOV8KAkZSgNJnglq7b9xKKk4cyo8Il1b+iS
-	 OLeY5ak3tIa6UtwDgk5H6/+weixb+xy/Bb9qLrXQ=
+	s=default; t=1571821618;
+	bh=rLzFMviBq1IW3xz0y6OVf/ZnK34FeVYbm2iAMwRl5mI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=IpJVIIl+96eU6mCeDMLRNQZf14m53CQ9rR6unmuOCgCCo5gyRnGP8IEovFEFZPJss
+	 xQrkqHsl3F5iNs84s3gxytzLVkUZx3cSiDN53+aP6YCV0kr12kUtOGkjNFzzCXo2sS
+	 CyRzuHqiqklsuADX7FJZV+Z4S9YWygUfGgGc6a64=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390862AbfJWJEa (ORCPT
+        id S2390676AbfJWJG5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 05:04:30 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52432 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390314AbfJWJEa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 05:04:30 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 2C3B1B83F;
-        Wed, 23 Oct 2019 09:04:28 +0000 (UTC)
-Date:   Wed, 23 Oct 2019 11:04:22 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Mel Gorman <mgorman@techsingularity.net>
-Cc:     Waiman Long <longman@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>,
-        Roman Gushchin <guro@fb.com>, Vlastimil Babka <vbabka@suse.cz>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Jann Horn <jannh@google.com>, Song Liu <songliubraving@fb.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rafael Aquini <aquini@redhat.com>, Mel Gorman <mgorman@suse.de>
-Subject: Re: [PATCH] mm/vmstat: Reduce zone lock hold time when reading
- /proc/pagetypeinfo
-Message-ID: <20191023090422.GK754@dhcp22.suse.cz>
-References: <20191022162156.17316-1-longman@redhat.com>
- <20191022165745.GT9379@dhcp22.suse.cz>
- <20191023083143.GC3016@techsingularity.net>
+        Wed, 23 Oct 2019 05:06:57 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:35470 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390231AbfJWJG5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 05:06:57 -0400
+Received: by mail-oi1-f195.google.com with SMTP id x3so16753894oig.2;
+        Wed, 23 Oct 2019 02:06:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FBj8GLla1LYyB2CdUTD0DNJdp/9JV1zJyBmNqUMEb5E=;
+        b=WKqYHFw5AwFrCKmX0JvRtKLaJtV+hWtTJKPbzpU2XBeWIlORfVgUbHinz7gZgCG7Mj
+         D933jqJO6uNqjHL8a2XsPe3QZIA88ZcTL2u72PJedae/QhRl7+TRF+BGFbQopTP29x3V
+         yX5ZuFCmid8Fw4uEXNuR3meru3UCcZjeGzmqdsbMi8Ao3K7xHIvGi0qK/v/AJ2kNOrfX
+         6GyzKSs9ynTD2Tt0KyvkqczndRKVIUsfGquOcCZpcDL93Cq6LmYKGJDGT0TtFQ8Ttqyq
+         XAvFZ70Rm3l1pnO4IQ7wrccwoL1FXSY5sI2xACddbqjhzCFR2j2K6+1IRP4AxCKEj8WP
+         X3Bw==
+X-Gm-Message-State: APjAAAXzr4DWklBOu0sZIpiCARzAr5o1q0gddF/qCoNpuWOGEcSi4IPZ
+        GlTIHmH8+AZeRov+dCKaWcPkzyEOpIdnvR1DpAo=
+X-Google-Smtp-Source: APXvYqyTirHnxPx9RjJnt0t5BfWKP5pSpiJnq+2XRPKiTpfW8z3VJ5oCRR5WKfiwapiGyf/vUU3yqd6A2ed8cyxSsVw=
+X-Received: by 2002:aca:5885:: with SMTP id m127mr6878786oib.110.1571821614375;
+ Wed, 23 Oct 2019 02:06:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191023083143.GC3016@techsingularity.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191023082423.12569-1-ran.wang_1@nxp.com>
+In-Reply-To: <20191023082423.12569-1-ran.wang_1@nxp.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 23 Oct 2019 11:06:43 +0200
+Message-ID: <CAJZ5v0jvQaREhg94f-COdYTt58gMP7YvqdEH0oYiS9Z56tg-XQ@mail.gmail.com>
+Subject: Re: [PATCH v9 1/3] PM: wakeup: Add routine to help fetch wakeup
+ source object.
+To:     Ran Wang <ran.wang_1@nxp.com>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Rob Herring <robh+dt@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Pavel Machek <pavel@ucw.cz>, Huang Anson <anson.huang@nxp.com>,
+        Li Biwen <biwen.li@nxp.com>, Len Brown <len.brown@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 23-10-19 09:31:43, Mel Gorman wrote:
-> On Tue, Oct 22, 2019 at 06:57:45PM +0200, Michal Hocko wrote:
-> > [Cc Mel]
-> > 
-> > On Tue 22-10-19 12:21:56, Waiman Long wrote:
-> > > The pagetypeinfo_showfree_print() function prints out the number of
-> > > free blocks for each of the page orders and migrate types. The current
-> > > code just iterates the each of the free lists to get counts.  There are
-> > > bug reports about hard lockup panics when reading the /proc/pagetyeinfo
-> > > file just because it look too long to iterate all the free lists within
-> > > a zone while holing the zone lock with irq disabled.
-> > > 
-> > > Given the fact that /proc/pagetypeinfo is readable by all, the possiblity
-> > > of crashing a system by the simple act of reading /proc/pagetypeinfo
-> > > by any user is a security problem that needs to be addressed.
-> > 
-> > Should we make the file 0400? It is a useful thing when debugging but
-> > not something regular users would really need for life.
-> > 
-> 
-> I think this would be useful in general. The information is not that
-> useful outside of debugging. Even then it's only useful when trying to
-> get a handle on why a path like compaction is taking too long.
+On Wed, Oct 23, 2019 at 10:24 AM Ran Wang <ran.wang_1@nxp.com> wrote:
+>
+> Some user might want to go through all registered wakeup sources
+> and doing things accordingly. For example, SoC PM driver might need to
+> do HW programming to prevent powering down specific IP which wakeup
+> source depending on. So add this API to help walk through all registered
+> wakeup source objects on that list and return them one by one.
+>
+> Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+> Tested-by: Leonard Crestez <leonard.crestez@nxp.com>
 
-So can we go with this to address the security aspect of this and have
-something trivial to backport.
+OK, thanks for making all of the requested changes:
 
-> > > There is a free_area structure associated with each page order. There
-> > > is also a nr_free count within the free_area for all the different
-> > > migration types combined. Tracking the number of free list entries
-> > > for each migration type will probably add some overhead to the fast
-> > > paths like moving pages from one migration type to another which may
-> > > not be desirable.
-> > 
-> > Have you tried to measure that overhead?
-> >  
-> 
-> I would prefer this option not be taken. It would increase the cost of
-> watermark calculations which is a relatively fast path.
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Is the change for the wmark check going to require more than
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index c0b2e0306720..5d95313ba4a5 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -3448,9 +3448,6 @@ bool __zone_watermark_ok(struct zone *z, unsigned int order, unsigned long mark,
- 		struct free_area *area = &z->free_area[o];
- 		int mt;
- 
--		if (!area->nr_free)
--			continue;
--
- 		for (mt = 0; mt < MIGRATE_PCPTYPES; mt++) {
- 			if (!free_area_empty(area, mt))
- 				return true;
+and please feel free to push this through the appropriate
+arch/platform tree.  Alternatively, please let me know if you want me
+to take this series, but then I need an ACK from the appropriate
+maintainer(s) on patch 3.
 
-Is this really going to be visible in practice? Sure we are going to do
-more checks but most orders tend to have at least some memory in a
-reasonably balanced system and we can hardly expect an optimal
-allocation path on those that are not.
- 
-> > > we can actually skip iterating the list of one of the migration types
-> > > and used nr_free to compute the missing count. Since MIGRATE_MOVABLE
-> > > is usually the largest one on large memory systems, this is the one
-> > > to be skipped. Since the printing order is migration-type => order, we
-> > > will have to store the counts in an internal 2D array before printing
-> > > them out.
-> > > 
-> > > Even by skipping the MIGRATE_MOVABLE pages, we may still be holding the
-> > > zone lock for too long blocking out other zone lock waiters from being
-> > > run. This can be problematic for systems with large amount of memory.
-> > > So a check is added to temporarily release the lock and reschedule if
-> > > more than 64k of list entries have been iterated for each order. With
-> > > a MAX_ORDER of 11, the worst case will be iterating about 700k of list
-> > > entries before releasing the lock.
-> > 
-> > But you are still iterating through the whole free_list at once so if it
-> > gets really large then this is still possible. I think it would be
-> > preferable to use per migratetype nr_free if it doesn't cause any
-> > regressions.
-> > 
-> 
-> I think it will. The patch as it is contains the overhead within the
-> reader of the pagetypeinfo proc file which is a non-critical path. The
-> page allocator paths on the other hand is very important.
-
-As pointed out in other email. The problem with this patch is that it
-hasn't really removed the iteration over the whole free_list which is
-the primary problem. So I think that we should either consider this a
-non-issue and make it "admin knows this is potentially expensive" or do
-something like Andrew was suggesting if we do not want to change the
-nr_free accounting.
-
-diff --git a/mm/vmstat.c b/mm/vmstat.c
-index 6afc892a148a..83c0295ecddc 100644
---- a/mm/vmstat.c
-+++ b/mm/vmstat.c
-@@ -1386,8 +1386,16 @@ static void pagetypeinfo_showfree_print(struct seq_file *m,
- 
- 			area = &(zone->free_area[order]);
- 
--			list_for_each(curr, &area->free_list[mtype])
-+			list_for_each(curr, &area->free_list[mtype]) {
- 				freecount++;
-+				if (freecount > BIG_NUMBER) {
-+					seq_printf(">%6lu ", freecount);
-+					spin_unlock_irq(&zone->lock);
-+					cond_resched();
-+					spin_lock_irq(&zone->lock);
-+					continue;
-+				}
-+			}
- 			seq_printf(m, "%6lu ", freecount);
- 		}
- 		seq_putc(m, '\n');
--- 
-Michal Hocko
-SUSE Labs
+> ---
+> Change in v9:
+>         - Supplement comments for wakeup_sources_read_lock(),
+>           wakeup_sources_read_unlock, wakeup_sources_walk_start and
+>           wakeup_sources_walk_next().
+>
+> Change in v8:
+>         - Rename wakeup_source_get_next() to wakeup_sources_walk_next().
+>         - Add wakeup_sources_read_lock() to take over locking job of
+>           wakeup_source_get_star().
+>         - Rename wakeup_source_get_start() to wakeup_sources_walk_start().
+>         - Replace wakeup_source_get_stop() with wakeup_sources_read_unlock().
+>         - Define macro for_each_wakeup_source(ws).
+>
+> Change in v7:
+>         - Remove define of member *dev in wake_irq to fix conflict with commit
+>         c8377adfa781 ("PM / wakeup: Show wakeup sources stats in sysfs"), user
+>         will use ws->dev->parent instead.
+>         - Remove '#include <linux/of_device.h>' because it is not used.
+>
+> Change in v6:
+>         - Add wakeup_source_get_star() and wakeup_source_get_stop() to aligned
+>         with wakeup_sources_stats_seq_start/nex/stop.
+>
+> Change in v5:
+>         - Update commit message, add decription of walk through all wakeup
+>         source objects.
+>         - Add SCU protection in function wakeup_source_get_next().
+>         - Rename wakeup_source member 'attached_dev' to 'dev' and move it up
+>         (before wakeirq).
+>
+> Change in v4:
+>         - None.
+>
+> Change in v3:
+>         - Adjust indentation of *attached_dev;.
+>
+> Change in v2:
+>         - None.
+>
+>  drivers/base/power/wakeup.c | 54 +++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/pm_wakeup.h   |  9 ++++++++
+>  2 files changed, 63 insertions(+)
+>
+> diff --git a/drivers/base/power/wakeup.c b/drivers/base/power/wakeup.c
+> index 5817b51..70a9edb 100644
+> --- a/drivers/base/power/wakeup.c
+> +++ b/drivers/base/power/wakeup.c
+> @@ -248,6 +248,60 @@ void wakeup_source_unregister(struct wakeup_source *ws)
+>  EXPORT_SYMBOL_GPL(wakeup_source_unregister);
+>
+>  /**
+> + * wakeup_sources_read_lock - Lock wakeup source list for read.
+> + *
+> + * Returns an index of srcu lock for struct wakeup_srcu.
+> + * This index must be passed to the matching wakeup_sources_read_unlock().
+> + */
+> +int wakeup_sources_read_lock(void)
+> +{
+> +       return srcu_read_lock(&wakeup_srcu);
+> +}
+> +EXPORT_SYMBOL_GPL(wakeup_sources_read_lock);
+> +
+> +/**
+> + * wakeup_sources_read_unlock - Unlock wakeup source list.
+> + * @idx: return value from corresponding wakeup_sources_read_lock()
+> + */
+> +void wakeup_sources_read_unlock(int idx)
+> +{
+> +       srcu_read_unlock(&wakeup_srcu, idx);
+> +}
+> +EXPORT_SYMBOL_GPL(wakeup_sources_read_unlock);
+> +
+> +/**
+> + * wakeup_sources_walk_start - Begin a walk on wakeup source list
+> + *
+> + * Returns first object of the list of wakeup sources.
+> + *
+> + * Note that to be safe, wakeup sources list needs to be locked by calling
+> + * wakeup_source_read_lock() for this.
+> + */
+> +struct wakeup_source *wakeup_sources_walk_start(void)
+> +{
+> +       struct list_head *ws_head = &wakeup_sources;
+> +
+> +       return list_entry_rcu(ws_head->next, struct wakeup_source, entry);
+> +}
+> +EXPORT_SYMBOL_GPL(wakeup_sources_walk_start);
+> +
+> +/**
+> + * wakeup_sources_walk_next - Get next wakeup source from the list
+> + * @ws: Previous wakeup source object
+> + *
+> + * Note that to be safe, wakeup sources list needs to be locked by calling
+> + * wakeup_source_read_lock() for this.
+> + */
+> +struct wakeup_source *wakeup_sources_walk_next(struct wakeup_source *ws)
+> +{
+> +       struct list_head *ws_head = &wakeup_sources;
+> +
+> +       return list_next_or_null_rcu(ws_head, &ws->entry,
+> +                               struct wakeup_source, entry);
+> +}
+> +EXPORT_SYMBOL_GPL(wakeup_sources_walk_next);
+> +
+> +/**
+>   * device_wakeup_attach - Attach a wakeup source object to a device object.
+>   * @dev: Device to handle.
+>   * @ws: Wakeup source object to attach to @dev.
+> diff --git a/include/linux/pm_wakeup.h b/include/linux/pm_wakeup.h
+> index 661efa0..aa3da66 100644
+> --- a/include/linux/pm_wakeup.h
+> +++ b/include/linux/pm_wakeup.h
+> @@ -63,6 +63,11 @@ struct wakeup_source {
+>         bool                    autosleep_enabled:1;
+>  };
+>
+> +#define for_each_wakeup_source(ws) \
+> +       for ((ws) = wakeup_sources_walk_start();        \
+> +            (ws);                                      \
+> +            (ws) = wakeup_sources_walk_next((ws)))
+> +
+>  #ifdef CONFIG_PM_SLEEP
+>
+>  /*
+> @@ -92,6 +97,10 @@ extern void wakeup_source_remove(struct wakeup_source *ws);
+>  extern struct wakeup_source *wakeup_source_register(struct device *dev,
+>                                                     const char *name);
+>  extern void wakeup_source_unregister(struct wakeup_source *ws);
+> +extern int wakeup_sources_read_lock(void);
+> +extern void wakeup_sources_read_unlock(int idx);
+> +extern struct wakeup_source *wakeup_sources_walk_start(void);
+> +extern struct wakeup_source *wakeup_sources_walk_next(struct wakeup_source *ws);
+>  extern int device_wakeup_enable(struct device *dev);
+>  extern int device_wakeup_disable(struct device *dev);
+>  extern void device_set_wakeup_capable(struct device *dev, bool capable);
+> --
+> 2.7.4
+>
