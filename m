@@ -2,127 +2,95 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73EB2CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 11:41:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3618CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 11:47:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 536D22084B
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 11:41:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4D7920650
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 11:47:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404628AbfJWLlk (ORCPT
+        id S2404588AbfJWLqr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 07:41:40 -0400
-Received: from mga02.intel.com ([134.134.136.20]:17445 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390623AbfJWLlj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 07:41:39 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 04:41:38 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,220,1569308400"; 
-   d="scan'208";a="399363728"
-Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.121])
-  by fmsmga006.fm.intel.com with ESMTP; 23 Oct 2019 04:41:33 -0700
-Date:   Wed, 23 Oct 2019 14:41:33 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Sumit Garg <sumit.garg@linaro.org>
-Cc:     dhowells@redhat.com, peterhuewe@gmx.de, keyrings@vger.kernel.org,
-        linux-integrity@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-security-module@vger.kernel.org, herbert@gondor.apana.org.au,
-        davem@davemloft.net, jgg@ziepe.ca, arnd@arndb.de,
-        gregkh@linuxfoundation.org, jejb@linux.ibm.com,
-        zohar@linux.ibm.com, jmorris@namei.org, serge@hallyn.com,
-        jsnitsel@redhat.com, linux-kernel@vger.kernel.org,
-        daniel.thompson@linaro.org
-Subject: Re: [Patch v8 0/4] Create and consolidate trusted keys subsystem
-Message-ID: <20191023114133.GD21973@linux.intel.com>
-References: <1571202895-32651-1-git-send-email-sumit.garg@linaro.org>
+        Wed, 23 Oct 2019 07:46:47 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:49266 "EHLO foss.arm.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S2390566AbfJWLqr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 07:46:47 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 864A4494;
+        Wed, 23 Oct 2019 04:46:24 -0700 (PDT)
+Received: from [192.168.0.9] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B41A03F6C4;
+        Wed, 23 Oct 2019 04:46:22 -0700 (PDT)
+Subject: Re: [PATCH v3 1/2] sched/topology: Don't try to build empty sched
+ domains
+To:     Valentin Schneider <valentin.schneider@arm.com>,
+        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org
+Cc:     lizefan@huawei.com, tj@kernel.org, hannes@cmpxchg.org,
+        mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org,
+        morten.rasmussen@arm.com, qperret@google.com,
+        stable@vger.kernel.org
+References: <20191015154250.12951-1-valentin.schneider@arm.com>
+ <20191015154250.12951-2-valentin.schneider@arm.com>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <9134acf7-69bb-403b-2e9c-0eb7fb7efabd@arm.com>
+Date:   Wed, 23 Oct 2019 13:46:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1571202895-32651-1-git-send-email-sumit.garg@linaro.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191015154250.12951-2-valentin.schneider@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 10:44:51AM +0530, Sumit Garg wrote:
-> This patch-set does restructuring of trusted keys code to create and
-> consolidate trusted keys subsystem.
-> 
-> Also, patch #2 replaces tpm1_buf code used in security/keys/trusted.c and
-> crypto/asymmertic_keys/asym_tpm.c files to use the common tpm_buf code.
-> 
-> Changes in v8:
-> 1. Rebased to latest tpmdd/master.
-> 2. Added Reviewed-by tags.
-> 
-> Changes in v7:
-> 1. Rebased to top of tpmdd/master
-> 2. Patch #4: update tpm2 trusted keys code to use tpm_send() instead of
->    tpm_transmit_cmd() which is an internal function.
-> 
-> Changes in v6:
-> 1. Switch TPM asymmetric code also to use common tpm_buf code. These
->    changes required patches #1 and #2 update, so I have dropped review
->    tags from those patches.
-> 2. Incorporated miscellaneous comments from Jarkko.
-> 
-> Changes in v5:
-> 1. Drop 5/5 patch as its more relavant along with TEE patch-set.
-> 2. Add Reviewed-by tag for patch #2.
-> 3. Fix build failure when "CONFIG_HEADER_TEST" and
->    "CONFIG_KERNEL_HEADER_TEST" config options are enabled.
-> 4. Misc changes to rename files.
-> 
-> Changes in v4:
-> 1. Separate patch for export of tpm_buf code to include/linux/tpm.h
-> 2. Change TPM1.x trusted keys code to use common tpm_buf
-> 3. Keep module name as trusted.ko only
-> 
-> Changes in v3:
-> 
-> Move TPM2 trusted keys code to trusted keys subsystem.
-> 
-> Changes in v2:
-> 
-> Split trusted keys abstraction patch for ease of review.
-> 
-> Sumit Garg (4):
->   tpm: Move tpm_buf code to include/linux/
->   KEYS: Use common tpm_buf for trusted and asymmetric keys
->   KEYS: trusted: Create trusted keys subsystem
->   KEYS: trusted: Move TPM2 trusted keys code
-> 
->  crypto/asymmetric_keys/asym_tpm.c                  | 101 +++----
->  drivers/char/tpm/tpm-interface.c                   |  56 ----
->  drivers/char/tpm/tpm.h                             | 223 ---------------
->  drivers/char/tpm/tpm2-cmd.c                        | 307 --------------------
->  include/Kbuild                                     |   1 -
->  include/keys/{trusted.h => trusted_tpm.h}          |  49 +---
->  include/linux/tpm.h                                | 248 ++++++++++++++--
->  security/keys/Makefile                             |   2 +-
->  security/keys/trusted-keys/Makefile                |   8 +
->  .../{trusted.c => trusted-keys/trusted_tpm1.c}     |  96 +++----
->  security/keys/trusted-keys/trusted_tpm2.c          | 314 +++++++++++++++++++++
->  11 files changed, 649 insertions(+), 756 deletions(-)
->  rename include/keys/{trusted.h => trusted_tpm.h} (77%)
->  create mode 100644 security/keys/trusted-keys/Makefile
->  rename security/keys/{trusted.c => trusted-keys/trusted_tpm1.c} (94%)
->  create mode 100644 security/keys/trusted-keys/trusted_tpm2.c
-> 
-> -- 
-> 2.7.4
-> 
+On 15/10/2019 17:42, Valentin Schneider wrote:
 
-Tested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+[...]
 
-/Jarkko
+> diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+> index c52bc91f882b..a859e5539440 100644
+> --- a/kernel/cgroup/cpuset.c
+> +++ b/kernel/cgroup/cpuset.c
+> @@ -817,6 +817,11 @@ static int generate_sched_domains(cpumask_var_t **domains,
+>  		struct cpuset *a = csa[i];
+>  		int apn = a->pn;
+>  
+> +		if (cpumask_empty(a->effective_cpus)) {
+> +			ndoms--;
+> +			continue;
+> +		}
+> +
+>  		for (j = 0; j < csn; j++) {
+>  			struct cpuset *b = csa[j];
+>  			int bpn = b->pn;
+> @@ -859,6 +864,9 @@ static int generate_sched_domains(cpumask_var_t **domains,
+>  			continue;
+>  		}
+>  
+> +		if (cpumask_empty(a->effective_cpus))
+> +			continue;
+> +
+
+Can you not just prevent that a cpuset pointer (cp) is added to the
+cpuset array (csa[]) in case cpumask_empty(cp->effective_cpus)?
+
+@@ -798,9 +800,14 @@ static int generate_sched_domains(cpumask_var_t
+**domains, cpumask_subset(cp->cpus_allowed, top_cpuset.effective_cpus))
+                        continue;
+
+-   if (is_sched_load_balance(cp))
++   if (is_sched_load_balance(cp) && !cpumask_empty(cp->effective_cpus))
+            csa[csn++] = cp;
+
+>  		dp = doms[nslot];
+>  
+>  		if (nslot == ndoms) {
+
+[...]
