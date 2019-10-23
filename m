@@ -6,122 +6,166 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACFB7CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44634CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:38:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A3882084C
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:38:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2039A21D81
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:38:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390464AbfJWIip (ORCPT
+        id S2390478AbfJWIiv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 04:38:45 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4710 "EHLO huawei.com"
+        Wed, 23 Oct 2019 04:38:51 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:2433 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389913AbfJWIio (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 04:38:44 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id DB97AD32800C05640DB2;
-        Wed, 23 Oct 2019 16:38:41 +0800 (CST)
-Received: from [127.0.0.1] (10.177.96.96) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Wed, 23 Oct 2019
- 16:38:33 +0800
-Subject: Re: [PATCH] ASoC: mediatek: Check SND_SOC_CROS_EC_CODEC dependency
-To:     Tzung-Bi Shih <tzungbi@google.com>
-CC:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        "Matthias Brugger" <matthias.bgg@gmail.com>,
-        =?UTF-8?B?U2h1bmxpIFdhbmcgKOeOi+mhuuWIqSk=?= 
-        <shunli.wang@mediatek.com>, <yuehaibing@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <tglx@linutronix.de>,
-        KaiChieh Chuang <kaichieh.chuang@mediatek.com>,
-        "ALSA development" <alsa-devel@alsa-project.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        id S2389913AbfJWIiv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 04:38:51 -0400
+Received: from DGGEMM402-HUB.china.huawei.com (unknown [172.30.72.53])
+        by Forcepoint Email with ESMTP id C961B789A126E53FB2EE;
+        Wed, 23 Oct 2019 16:38:49 +0800 (CST)
+Received: from dggeme754-chm.china.huawei.com (10.3.19.100) by
+ DGGEMM402-HUB.china.huawei.com (10.3.20.210) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 23 Oct 2019 16:38:49 +0800
+Received: from [127.0.0.1] (10.184.212.80) by dggeme754-chm.china.huawei.com
+ (10.3.19.100) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 23
+ Oct 2019 16:38:48 +0800
+From:   "liwei (GF)" <liwei391@huawei.com>
+Subject: Re: [PATCH v3 1/2] arm64: Relax ICC_PMR_EL1 accesses when
+ ICC_CTLR_EL1.PMHE is clear
+To:     Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
+        "Catalin Marinas" <catalin.marinas@arm.com>
+CC:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        <huawei.libin@huawei.com>, <guohanjun@huawei.com>,
         <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <kernel-janitors@vger.kernel.org>
-References: <20191023063103.44941-1-maowenan@huawei.com>
- <CA+Px+wX7-tn-rXeKqnPtp74tU5cLxhJwF6XZ_jeQX-tnAfvO5g@mail.gmail.com>
-From:   maowenan <maowenan@huawei.com>
-Message-ID: <1d948ec1-69e4-735f-c369-80d2b28e0eaa@huawei.com>
-Date:   Wed, 23 Oct 2019 16:38:21 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.0
+        <linux-kernel@vger.kernel.org>
+References: <20191002090613.14236-1-maz@kernel.org>
+ <20191002090613.14236-2-maz@kernel.org>
+Message-ID: <ad164b94-06af-ffe7-b8ff-317b4078b1a5@huawei.com>
+Date:   Wed, 23 Oct 2019 16:38:47 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <CA+Px+wX7-tn-rXeKqnPtp74tU5cLxhJwF6XZ_jeQX-tnAfvO5g@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+In-Reply-To: <20191002090613.14236-2-maz@kernel.org>
+Content-Type: text/plain; charset="gbk"
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.96.96]
+X-Originating-IP: [10.184.212.80]
+X-ClientProxiedBy: dggeme712-chm.china.huawei.com (10.1.199.108) To
+ dggeme754-chm.china.huawei.com (10.3.19.100)
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Marc,
 
-
-On 2019/10/23 16:32, Tzung-Bi Shih wrote:
-> On Wed, Oct 23, 2019 at 2:31 PM Mao Wenan <maowenan@huawei.com> wrote:
->>
->> If SND_SOC_MT8183_MT6358_TS3A227E_MAX98357A=y,
->> below errors can be seen:
->> sound/soc/codecs/cros_ec_codec.o: In function `send_ec_host_command':
->> cros_ec_codec.c:(.text+0x534): undefined reference to `cros_ec_cmd_xfer_status'
->> cros_ec_codec.c:(.text+0x101c): undefined reference to `cros_ec_get_host_event'
->>
->> This is because it will select SND_SOC_CROS_EC_CODEC
->> after commit 2cc3cd5fdc8b ("ASoC: mediatek: mt8183: support WoV"),
->> but SND_SOC_CROS_EC_CODEC depends on CROS_EC.
->>
->> Fixes: 2cc3cd5fdc8b ("ASoC: mediatek: mt8183: support WoV")
->> Signed-off-by: Mao Wenan <maowenan@huawei.com>
->> ---
->>  sound/soc/mediatek/Kconfig | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/sound/soc/mediatek/Kconfig b/sound/soc/mediatek/Kconfig
->> index 8b29f39..a656d20 100644
->> --- a/sound/soc/mediatek/Kconfig
->> +++ b/sound/soc/mediatek/Kconfig
->> @@ -125,7 +125,7 @@ config SND_SOC_MT8183_MT6358_TS3A227E_MAX98357A
->>         select SND_SOC_MAX98357A
->>         select SND_SOC_BT_SCO
->>         select SND_SOC_TS3A227E
->> -       select SND_SOC_CROS_EC_CODEC
->> +       select SND_SOC_CROS_EC_CODEC if CROS_EC
->>         help
->>           This adds ASoC driver for Mediatek MT8183 boards
->>           with the MT6358 TS3A227E MAX98357A audio codec.
->> --
->> 2.7.4
->>
+On 2019/10/2 17:06, Marc Zyngier wrote:
+> The GICv3 architecture specification is incredibly misleading when it
+> comes to PMR and the requirement for a DSB. It turns out that this DSB
+> is only required if the CPU interface sends an Upstream Control
+> message to the redistributor in order to update the RD's view of PMR.
 > 
-> Just realized your patch seems not showing in the list
-> (https://mailman.alsa-project.org/pipermail/alsa-devel/2019-October/thread.html).
-> I have no idea why.
+> This message is only sent when ICC_CTLR_EL1.PMHE is set, which isn't
+> the case in Linux. It can still be set from EL3, so some special care
+> is required. But the upshot is that in the (hopefuly large) majority
+> of the cases, we can drop the DSB altogether.
 > 
-I receive below message after I post, do you know why?
-'''
-Your mail to 'Alsa-devel' with the subject
-
-    [PATCH] ASoC: mediatek: Check SND_SOC_CROS_EC_CODEC dependency
-
-Is being held until the list moderator can review it for approval.
-
-The reason it is being held:
-
-    Post by non-member to a members-only list
-
-Either the message will get posted to the list, or you will receive
-notification of the moderator's decision.  If you would like to cancel
-this posting, please visit the following URL:
-
-    https://mailman.alsa-project.org/mailman/confirm/alsa-devel/574c24ad00f4d1aefc802a8a4b2c5fbda710e4e9
-'''
-
-> .
+> This relies on a new static key being set if the boot CPU has PMHE
+> set. The drawback is that this static key has to be exported to
+> modules.
 > 
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: James Morse <james.morse@arm.com>
+> Cc: Julien Thierry <julien.thierry.kdev@gmail.com>
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> ---
+>  arch/arm64/include/asm/barrier.h   | 12 ++++++++++++
+>  arch/arm64/include/asm/daifflags.h |  3 ++-
+>  arch/arm64/include/asm/irqflags.h  | 19 ++++++++++---------
+>  arch/arm64/include/asm/kvm_host.h  |  3 +--
+>  arch/arm64/kernel/entry.S          |  6 ++++--
+>  arch/arm64/kvm/hyp/switch.c        |  4 ++--
+>  drivers/irqchip/irq-gic-v3.c       | 20 ++++++++++++++++++++
+>  include/linux/irqchip/arm-gic-v3.h |  2 ++
+>  8 files changed, 53 insertions(+), 16 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/barrier.h b/arch/arm64/include/asm/barrier.h
+> index e0e2b1946f42..7d9cc5ec4971 100644
+> --- a/arch/arm64/include/asm/barrier.h
+> +++ b/arch/arm64/include/asm/barrier.h
+> @@ -29,6 +29,18 @@
+>  						 SB_BARRIER_INSN"nop\n",	\
+>  						 ARM64_HAS_SB))
+>  
+> +#ifdef CONFIG_ARM64_PSEUDO_NMI
+> +#define pmr_sync()						\
+> +	do {							\
+> +		extern struct static_key_false gic_pmr_sync;	\
+> +								\
+> +		if (static_branch_unlikely(&gic_pmr_sync))	\
+> +			dsb(sy);				\
+> +	} while(0)
+> +#else
+> +#define pmr_sync()	do {} while (0)
+> +#endif
+> +
+
+Thank you for solving this problem, it helps a lot indeed.
+
+The pmr_sync() will call dsb(sy) when ARM64_PSEUDO_NMI=y and gic_pmr_sync=force,
+but if pseudo nmi is not enabled through boot option, it just take one more
+redundant calling than before at the following two place.
+
+I think change dsb(sy) to
++                       asm volatile(ALTERNATIVE("nop", "dsb sy",       \
++                               ARM64_HAS_IRQ_PRIO_MASKING)     \
++                               : : : "memory");                \
+may be more appropriate.
+
+Thanks,
+Wei
+
+>  
+> @@ -34,14 +35,14 @@ static inline void arch_local_irq_enable(void)
+>  	}
+>  
+>  	asm volatile(ALTERNATIVE(
+> -		"msr	daifclr, #2		// arch_local_irq_enable\n"
+> -		"nop",
+> -		__msr_s(SYS_ICC_PMR_EL1, "%0")
+> -		"dsb	sy",
+> +		"msr	daifclr, #2		// arch_local_irq_enable",
+> +		__msr_s(SYS_ICC_PMR_EL1, "%0"),
+>  		ARM64_HAS_IRQ_PRIO_MASKING)
+>  		:
+>  		: "r" ((unsigned long) GIC_PRIO_IRQON)
+>  		: "memory");
+> +
+> +	pmr_sync();
+>  }
+>  
+>  static inline void arch_local_irq_disable(void)
+> @@ -116,14 +117,14 @@ static inline unsigned long arch_local_irq_save(void)
+>  static inline void arch_local_irq_restore(unsigned long flags)
+>  {
+>  	asm volatile(ALTERNATIVE(
+> -			"msr	daif, %0\n"
+> -			"nop",
+> -			__msr_s(SYS_ICC_PMR_EL1, "%0")
+> -			"dsb	sy",
+> -			ARM64_HAS_IRQ_PRIO_MASKING)
+> +		"msr	daif, %0",
+> +		__msr_s(SYS_ICC_PMR_EL1, "%0"),
+> +		ARM64_HAS_IRQ_PRIO_MASKING)
+>  		:
+>  		: "r" (flags)
+>  		: "memory");
+> +
+> +	pmr_sync();
+>  }
+>  
 
