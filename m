@@ -2,345 +2,132 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3A3ACA9EB7
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:19:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B26A4CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:19:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 976D521872
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:19:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571840342;
-	bh=dT5vckUujNcvhm/VYaU6dns3elhMjHfY1GUvw/fJDaM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=c5tT9QDfgFpbMlvxmbDWEFcf9IVIXQWU4V3A0cK2qY4ZbSLD2/MxUHbBF+q25GjAq
-	 5D0zrIi1mCINw1JlnMoobRdjHAllNidrE6KFCxi3JB05NJmWfJOcCXOvBOVecqqv9r
-	 jg71SDVkR80yWT8VOjxprzYhBAMH5TgurPmftbhQ=
+	by mail.kernel.org (Postfix) with ESMTP id 8049C21906
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:19:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hZP3VRnS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406346AbfJWOTB (ORCPT
+        id S2406358AbfJWOTm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 10:19:01 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37182 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2404423AbfJWOTB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 10:19:01 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 03332ACA8;
-        Wed, 23 Oct 2019 14:18:58 +0000 (UTC)
-Date:   Wed, 23 Oct 2019 16:18:57 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH 5/8] mm: vmscan: replace shrink_node() loop with a retry
- jump
-Message-ID: <20191023141857.GF17610@dhcp22.suse.cz>
-References: <20191022144803.302233-1-hannes@cmpxchg.org>
- <20191022144803.302233-6-hannes@cmpxchg.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191022144803.302233-6-hannes@cmpxchg.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 23 Oct 2019 10:19:42 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:28673 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2406348AbfJWOTm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 10:19:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571840381;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=b5XwPGWfRLOQx/XL/lGD6w9DJuiaWtEwmYD7upyMG5M=;
+        b=hZP3VRnSAwhgxMPmNeIFTQpSt8hfelO5HCTtH5KRc8AXA5e9GVksB2SMgXiONKqcZFsIl+
+        2eGzQKfHOGqSxjKtv7sf4mp9aGYCyC+h56XKfs+QY2kmSOxqZUJvOKY7cqw+VhhDdzcJPJ
+        /avj4c3Y+3Na6fgzg+1gimkGrXRFuo8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-187-vDLmOuu8Pauaq5KU5RV9Dw-1; Wed, 23 Oct 2019 10:19:37 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4A85780183D;
+        Wed, 23 Oct 2019 14:19:36 +0000 (UTC)
+Received: from localhost.localdomain.com (ovpn-12-33.pek2.redhat.com [10.72.12.33])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 24C635C241;
+        Wed, 23 Oct 2019 14:19:19 +0000 (UTC)
+From:   Lianbo Jiang <lijiang@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        x86@kernel.org, bhe@redhat.com, dyoung@redhat.com, jgross@suse.com,
+        dhowells@redhat.com, Thomas.Lendacky@amd.com,
+        ebiederm@xmission.com, vgoyal@redhat.com, kexec@lists.infradead.org
+Subject: [PATCH 0/2 v5] x86/kdump: Fix 'kmem -s' reported an invalid freepointer when SME was active
+Date:   Wed, 23 Oct 2019 22:19:10 +0800
+Message-Id: <20191023141912.29110-1-lijiang@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MC-Unique: vDLmOuu8Pauaq5KU5RV9Dw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 22-10-19 10:48:00, Johannes Weiner wrote:
-> Most of the function body is inside a loop, which imposes an
-> additional indentation and scoping level that makes the code a bit
-> hard to follow and modify.
+In purgatory(), the main things are as below:
 
-I do agree!
+[1] verify sha256 hashes for various segments.
+    Lets keep these codes, and do not touch the logic.
 
-> The looping only happens in case of reclaim-compaction, which isn't
-> the common case. So rather than adding yet another function level to
-> the reclaim path and have every reclaim invocation go through a level
-> that only exists for one specific cornercase, use a retry goto.
+[2] copy the first 640k content to a backup region.
+    Lets safely remove it and clean all code related to backup region.
 
-I would just keep the core logic in its own function and do the loop
-around it rather than a goto retry. This is certainly a matter of taste
-but I like a loop with an explicit condition much more than a if with
-goto.
+This patch series will remove the backup region, because the current
+handling of copying the first 640k runs into problems when SME is
+active(https://bugzilla.kernel.org/show_bug.cgi?id=3D204793).
 
-> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
-> ---
->  mm/vmscan.c | 231 ++++++++++++++++++++++++++--------------------------
->  1 file changed, 115 insertions(+), 116 deletions(-)
-> 
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index 302dad112f75..235d1fc72311 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -2729,144 +2729,143 @@ static bool pgdat_memcg_congested(pg_data_t *pgdat, struct mem_cgroup *memcg)
->  static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
->  {
->  	struct reclaim_state *reclaim_state = current->reclaim_state;
-> +	struct mem_cgroup *root = sc->target_mem_cgroup;
->  	unsigned long nr_reclaimed, nr_scanned;
->  	bool reclaimable = false;
-> +	struct mem_cgroup *memcg;
-> +again:
-> +	memset(&sc->nr, 0, sizeof(sc->nr));
->  
-> -	do {
-> -		struct mem_cgroup *root = sc->target_mem_cgroup;
-> -		struct mem_cgroup *memcg;
-> -
-> -		memset(&sc->nr, 0, sizeof(sc->nr));
-> -
-> -		nr_reclaimed = sc->nr_reclaimed;
-> -		nr_scanned = sc->nr_scanned;
-> +	nr_reclaimed = sc->nr_reclaimed;
-> +	nr_scanned = sc->nr_scanned;
->  
-> -		memcg = mem_cgroup_iter(root, NULL, NULL);
-> -		do {
-> -			unsigned long reclaimed;
-> -			unsigned long scanned;
-> +	memcg = mem_cgroup_iter(root, NULL, NULL);
-> +	do {
-> +		unsigned long reclaimed;
-> +		unsigned long scanned;
->  
-> -			switch (mem_cgroup_protected(root, memcg)) {
-> -			case MEMCG_PROT_MIN:
-> -				/*
-> -				 * Hard protection.
-> -				 * If there is no reclaimable memory, OOM.
-> -				 */
-> +		switch (mem_cgroup_protected(root, memcg)) {
-> +		case MEMCG_PROT_MIN:
-> +			/*
-> +			 * Hard protection.
-> +			 * If there is no reclaimable memory, OOM.
-> +			 */
-> +			continue;
-> +		case MEMCG_PROT_LOW:
-> +			/*
-> +			 * Soft protection.
-> +			 * Respect the protection only as long as
-> +			 * there is an unprotected supply
-> +			 * of reclaimable memory from other cgroups.
-> +			 */
-> +			if (!sc->memcg_low_reclaim) {
-> +				sc->memcg_low_skipped = 1;
->  				continue;
-> -			case MEMCG_PROT_LOW:
-> -				/*
-> -				 * Soft protection.
-> -				 * Respect the protection only as long as
-> -				 * there is an unprotected supply
-> -				 * of reclaimable memory from other cgroups.
-> -				 */
-> -				if (!sc->memcg_low_reclaim) {
-> -					sc->memcg_low_skipped = 1;
-> -					continue;
-> -				}
-> -				memcg_memory_event(memcg, MEMCG_LOW);
-> -				break;
-> -			case MEMCG_PROT_NONE:
-> -				/*
-> -				 * All protection thresholds breached. We may
-> -				 * still choose to vary the scan pressure
-> -				 * applied based on by how much the cgroup in
-> -				 * question has exceeded its protection
-> -				 * thresholds (see get_scan_count).
-> -				 */
-> -				break;
->  			}
-> +			memcg_memory_event(memcg, MEMCG_LOW);
-> +			break;
-> +		case MEMCG_PROT_NONE:
-> +			/*
-> +			 * All protection thresholds breached. We may
-> +			 * still choose to vary the scan pressure
-> +			 * applied based on by how much the cgroup in
-> +			 * question has exceeded its protection
-> +			 * thresholds (see get_scan_count).
-> +			 */
-> +			break;
-> +		}
->  
-> -			reclaimed = sc->nr_reclaimed;
-> -			scanned = sc->nr_scanned;
-> -			shrink_node_memcg(pgdat, memcg, sc);
-> -
-> -			shrink_slab(sc->gfp_mask, pgdat->node_id, memcg,
-> -					sc->priority);
-> -
-> -			/* Record the group's reclaim efficiency */
-> -			vmpressure(sc->gfp_mask, memcg, false,
-> -				   sc->nr_scanned - scanned,
-> -				   sc->nr_reclaimed - reclaimed);
-> -
-> -		} while ((memcg = mem_cgroup_iter(root, memcg, NULL)));
-> +		reclaimed = sc->nr_reclaimed;
-> +		scanned = sc->nr_scanned;
-> +		shrink_node_memcg(pgdat, memcg, sc);
->  
-> -		if (reclaim_state) {
-> -			sc->nr_reclaimed += reclaim_state->reclaimed_slab;
-> -			reclaim_state->reclaimed_slab = 0;
-> -		}
-> +		shrink_slab(sc->gfp_mask, pgdat->node_id, memcg,
-> +			    sc->priority);
->  
-> -		/* Record the subtree's reclaim efficiency */
-> -		vmpressure(sc->gfp_mask, sc->target_mem_cgroup, true,
-> -			   sc->nr_scanned - nr_scanned,
-> -			   sc->nr_reclaimed - nr_reclaimed);
-> +		/* Record the group's reclaim efficiency */
-> +		vmpressure(sc->gfp_mask, memcg, false,
-> +			   sc->nr_scanned - scanned,
-> +			   sc->nr_reclaimed - reclaimed);
->  
-> -		if (sc->nr_reclaimed - nr_reclaimed)
-> -			reclaimable = true;
-> +	} while ((memcg = mem_cgroup_iter(root, memcg, NULL)));
->  
-> -		if (current_is_kswapd()) {
-> -			/*
-> -			 * If reclaim is isolating dirty pages under writeback,
-> -			 * it implies that the long-lived page allocation rate
-> -			 * is exceeding the page laundering rate. Either the
-> -			 * global limits are not being effective at throttling
-> -			 * processes due to the page distribution throughout
-> -			 * zones or there is heavy usage of a slow backing
-> -			 * device. The only option is to throttle from reclaim
-> -			 * context which is not ideal as there is no guarantee
-> -			 * the dirtying process is throttled in the same way
-> -			 * balance_dirty_pages() manages.
-> -			 *
-> -			 * Once a node is flagged PGDAT_WRITEBACK, kswapd will
-> -			 * count the number of pages under pages flagged for
-> -			 * immediate reclaim and stall if any are encountered
-> -			 * in the nr_immediate check below.
-> -			 */
-> -			if (sc->nr.writeback && sc->nr.writeback == sc->nr.taken)
-> -				set_bit(PGDAT_WRITEBACK, &pgdat->flags);
-> +	if (reclaim_state) {
-> +		sc->nr_reclaimed += reclaim_state->reclaimed_slab;
-> +		reclaim_state->reclaimed_slab = 0;
-> +	}
->  
-> -			/*
-> -			 * Tag a node as congested if all the dirty pages
-> -			 * scanned were backed by a congested BDI and
-> -			 * wait_iff_congested will stall.
-> -			 */
-> -			if (sc->nr.dirty && sc->nr.dirty == sc->nr.congested)
-> -				set_bit(PGDAT_CONGESTED, &pgdat->flags);
-> +	/* Record the subtree's reclaim efficiency */
-> +	vmpressure(sc->gfp_mask, sc->target_mem_cgroup, true,
-> +		   sc->nr_scanned - nr_scanned,
-> +		   sc->nr_reclaimed - nr_reclaimed);
->  
-> -			/* Allow kswapd to start writing pages during reclaim.*/
-> -			if (sc->nr.unqueued_dirty == sc->nr.file_taken)
-> -				set_bit(PGDAT_DIRTY, &pgdat->flags);
-> +	if (sc->nr_reclaimed - nr_reclaimed)
-> +		reclaimable = true;
->  
-> -			/*
-> -			 * If kswapd scans pages marked marked for immediate
-> -			 * reclaim and under writeback (nr_immediate), it
-> -			 * implies that pages are cycling through the LRU
-> -			 * faster than they are written so also forcibly stall.
-> -			 */
-> -			if (sc->nr.immediate)
-> -				congestion_wait(BLK_RW_ASYNC, HZ/10);
-> -		}
-> +	if (current_is_kswapd()) {
-> +		/*
-> +		 * If reclaim is isolating dirty pages under writeback,
-> +		 * it implies that the long-lived page allocation rate
-> +		 * is exceeding the page laundering rate. Either the
-> +		 * global limits are not being effective at throttling
-> +		 * processes due to the page distribution throughout
-> +		 * zones or there is heavy usage of a slow backing
-> +		 * device. The only option is to throttle from reclaim
-> +		 * context which is not ideal as there is no guarantee
-> +		 * the dirtying process is throttled in the same way
-> +		 * balance_dirty_pages() manages.
-> +		 *
-> +		 * Once a node is flagged PGDAT_WRITEBACK, kswapd will
-> +		 * count the number of pages under pages flagged for
-> +		 * immediate reclaim and stall if any are encountered
-> +		 * in the nr_immediate check below.
-> +		 */
-> +		if (sc->nr.writeback && sc->nr.writeback == sc->nr.taken)
-> +			set_bit(PGDAT_WRITEBACK, &pgdat->flags);
->  
->  		/*
-> -		 * Legacy memcg will stall in page writeback so avoid forcibly
-> -		 * stalling in wait_iff_congested().
-> +		 * Tag a node as congested if all the dirty pages
-> +		 * scanned were backed by a congested BDI and
-> +		 * wait_iff_congested will stall.
->  		 */
-> -		if (cgroup_reclaim(sc) && writeback_throttling_sane(sc) &&
-> -		    sc->nr.dirty && sc->nr.dirty == sc->nr.congested)
-> -			set_memcg_congestion(pgdat, root, true);
-> +		if (sc->nr.dirty && sc->nr.dirty == sc->nr.congested)
-> +			set_bit(PGDAT_CONGESTED, &pgdat->flags);
-> +
-> +		/* Allow kswapd to start writing pages during reclaim.*/
-> +		if (sc->nr.unqueued_dirty == sc->nr.file_taken)
-> +			set_bit(PGDAT_DIRTY, &pgdat->flags);
->  
->  		/*
-> -		 * Stall direct reclaim for IO completions if underlying BDIs
-> -		 * and node is congested. Allow kswapd to continue until it
-> -		 * starts encountering unqueued dirty pages or cycling through
-> -		 * the LRU too quickly.
-> +		 * If kswapd scans pages marked marked for immediate
-> +		 * reclaim and under writeback (nr_immediate), it
-> +		 * implies that pages are cycling through the LRU
-> +		 * faster than they are written so also forcibly stall.
->  		 */
-> -		if (!sc->hibernation_mode && !current_is_kswapd() &&
-> -		   current_may_throttle() && pgdat_memcg_congested(pgdat, root))
-> -			wait_iff_congested(BLK_RW_ASYNC, HZ/10);
-> +		if (sc->nr.immediate)
-> +			congestion_wait(BLK_RW_ASYNC, HZ/10);
-> +	}
-> +
-> +	/*
-> +	 * Legacy memcg will stall in page writeback so avoid forcibly
-> +	 * stalling in wait_iff_congested().
-> +	 */
-> +	if (cgroup_reclaim(sc) && writeback_throttling_sane(sc) &&
-> +	    sc->nr.dirty && sc->nr.dirty == sc->nr.congested)
-> +		set_memcg_congestion(pgdat, root, true);
-> +
-> +	/*
-> +	 * Stall direct reclaim for IO completions if underlying BDIs
-> +	 * and node is congested. Allow kswapd to continue until it
-> +	 * starts encountering unqueued dirty pages or cycling through
-> +	 * the LRU too quickly.
-> +	 */
-> +	if (!sc->hibernation_mode && !current_is_kswapd() &&
-> +	    current_may_throttle() && pgdat_memcg_congested(pgdat, root))
-> +		wait_iff_congested(BLK_RW_ASYNC, HZ/10);
->  
-> -	} while (should_continue_reclaim(pgdat, sc->nr_reclaimed - nr_reclaimed,
-> -					 sc));
-> +	if (should_continue_reclaim(pgdat, sc->nr_reclaimed - nr_reclaimed,
-> +				    sc))
-> +		goto again;
->  
->  	/*
->  	 * Kswapd gives up on balancing particular nodes after too
-> -- 
-> 2.23.0
+The low 1MiB region will always be reserved when the crashkernel kernel
+command line option is specified. And this way makes it unnecessary to
+do anything with the low 1MiB region, because the memory allocated later
+won't fall into the low 1MiB area.
 
--- 
-Michal Hocko
-SUSE Labs
+This series includes two patches:
+[1] x86/kdump: always reserve the low 1MiB when the crashkernel option
+    is specified
+    The low 1MiB region will always be reserved when the crashkernel
+    kernel command line option is specified, which ensures that the
+    memory allocated later won't fall into the low 1MiB area.
+
+[2] x86/kdump: clean up all the code related to the backup region
+    Remove the backup region and clean up.
+
+Changes since v1:
+[1] Add extra checking condition: when the crashkernel option is
+    specified, reserve the low 640k area.
+
+Changes since v2:
+[1] Reserve the low 1MiB region when the crashkernel option is only
+    specified.(Suggested by Eric)
+
+[2] Remove the unused crash_copy_backup_region()
+
+[3] Remove the backup region and clean up
+
+[4] Split them into three patches
+
+Changes since v3:
+[1] Improve the first patch's log
+
+[2] Improve the third patch based on Eric's suggestions
+
+Changes since v4:
+[1] Correct some typos, and also improve the first patch's log
+
+[2] Add a new function kexec_reserve_low_1MiB() in kernel/kexec_core.c
+    and which is called by reserve_real_mode(). (Suggested by Boris)=20
+
+Lianbo Jiang (2):
+  x86/kdump: always reserve the low 1MiB when the crashkernel option is
+    specified
+  x86/kdump: clean up all the code related to the backup region
+
+ arch/x86/include/asm/kexec.h       | 10 ----
+ arch/x86/include/asm/purgatory.h   | 10 ----
+ arch/x86/kernel/crash.c            | 87 ++++--------------------------
+ arch/x86/kernel/machine_kexec_64.c | 47 ----------------
+ arch/x86/purgatory/purgatory.c     | 19 -------
+ arch/x86/realmode/init.c           |  2 +
+ include/linux/kexec.h              |  2 +
+ kernel/kexec_core.c                | 13 +++++
+ 8 files changed, 28 insertions(+), 162 deletions(-)
+
+--=20
+2.17.1
+
