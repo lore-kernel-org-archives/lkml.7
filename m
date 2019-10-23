@@ -2,254 +2,200 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3149CA9EBB
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:12:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 399D6CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:13:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 715A5214B2
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:12:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0951520640
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:13:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571832804;
+	bh=q0HB093G8YTHpPgkMrbu29RHoKgtWViq73a6cQtM7Hw=;
+	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
+	b=16LrXliIcoH03o75hsUtueUO+Vn8eGKGXcS1Ye6Nye0x4P1Ch3ZLx75ACx5dvS2Zs
+	 R8+qfOCreMAIymfR/+5MzhCByUc0IO6oLqxA1TfzL+Cflt/dUhn6q4udQccL9qaLwI
+	 CU1spbPWcma5jUsQebiXpWtkvO6mw1NRYNqxRYXs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391224AbfJWMMg convert rfc822-to-8bit (ORCPT
+        id S2391226AbfJWMNX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 08:12:36 -0400
-Received: from mail-oln040092255053.outbound.protection.outlook.com ([40.92.255.53]:43897
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2391208AbfJWMMf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 08:12:35 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=M2y8TKuNTnWc/cVbid7EYaGvdpKK7PhA4FtMIcmfiWKCaRsY9DaF4K0JNrKBkVL50ucfaeI/0NlhlZuce46859AFOhirSzRezsimoZajOf/cwUFRWSBjGlA+4Sp+wkk9WJehYtBnqq6eHrzoaebGp6792NFkkz1PcOAW8zSlUq+1YciRkhElTVpOF4wAMLT2Fr4d2mo7a6ZhSTLHdt4433j72tFVLUN5kArlfp8LPPYXaD1LQsQadg/6yIZ+R6xz7IFmPXxjn+GhAZM+QAe6JrxzZBH97jZzRYHOEcPp7zfOo8xW5rJzzw56i76Pl9KhtNIS5ZASpe7tC4xdILUzBw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7CZVvxa2Xc3npnG0RNoHz+au1c3N7sDZ2cCkbjaSz6I=;
- b=cZQ2tX+bSpEtcZVjedwF4bWPy86EzRkk3uXPbnx16dOyGTqHig9W8eMm/vUB4Llo6/Els0lY+hRy9PvYKdJ6//remFhaOb0qezKhUVmiRTMC6sg9NJBTJCHkSZRMNPC73pyziBevZBNooTtaShGdWP6LZczj/tbWJqTZOwiQVNlkz2OmaMJVm782SH06wwEeHReRX2f1pho/evlcHFzjARfF2jzCikvmZCsZlCDRuTDLN+gJ7XysaIBXJBYtdu2QcouTeEwq18nVKILTZANaaM2nghT/bgS/VKDpbcSTM53l4nhQxkWrVBOFaA+ceGg+Lta0sWBY2TfPJV44/GvArw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from PU1APC01FT009.eop-APC01.prod.protection.outlook.com
- (10.152.252.60) by PU1APC01HT022.eop-APC01.prod.protection.outlook.com
- (10.152.253.19) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2367.14; Wed, 23 Oct
- 2019 12:12:29 +0000
-Received: from SL2P216MB0187.KORP216.PROD.OUTLOOK.COM (10.152.252.58) by
- PU1APC01FT009.mail.protection.outlook.com (10.152.252.103) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.2387.20 via Frontend Transport; Wed, 23 Oct 2019 12:12:29 +0000
-Received: from SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
- ([fe80::ec26:6771:625e:71d]) by SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
- ([fe80::ec26:6771:625e:71d%8]) with mapi id 15.20.2387.019; Wed, 23 Oct 2019
- 12:12:29 +0000
-From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "logang@deltatee.com" <logang@deltatee.com>
-Subject: [PATCH v2 1/1] PCI: Add hp_mmio_size and hp_mmio_pref_size parameters
-Thread-Topic: [PATCH v2 1/1] PCI: Add hp_mmio_size and hp_mmio_pref_size
- parameters
-Thread-Index: AQHViZskmoGSmBjPlkKlRTahWX6YYA==
-Date:   Wed, 23 Oct 2019 12:12:29 +0000
-Message-ID: <SL2P216MB0187E4D0055791957B7E2660806B0@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
-Accept-Language: en-AU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: ME2PR01CA0086.ausprd01.prod.outlook.com
- (2603:10c6:201:2d::26) To SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
- (2603:1096:100:22::19)
-x-incomingtopheadermarker: OriginalChecksum:F81D6982ADF92EBEB81F6D242F93ACF3FE1840BF83B4E7133895C15B7A39AB8F;UpperCasedChecksum:E99E1DA0BD6EB757345B5011B2A15083C7B895634EF1EC856CE01B1614125BB9;SizeAsReceived:7443;Count:46
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [lR8VBdmZnZu3u60qcGz05dQWcVsvIqEqjlMorKVB/bo=]
-x-microsoft-original-message-id: <20191023121222.GA18696@nicholas-dell-linux>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 46
-x-eopattributedmessage: 0
-x-ms-traffictypediagnostic: PU1APC01HT022:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: uwZpPdm6PPfhw8phkbyeDSBDTy8x0OlxjCQlWhE98KhwxYyd4DDgzlDjHY7VnI6bUWSva7WA4kGfaXkcR/cCMmnG3UlHUDogM4DB0sXsTZkl7hQdfdx1S/T5Qy292ZQ2Zi9ovH9Vy3SKc74Hg0vc/GppuF5q24pvClPWxkyepOIfF31o2PvcGD/hp1AcRbpC
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <88B49A2AE3BD09448EA052F6D46BFFA6@KORP216.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: 8BIT
+        Wed, 23 Oct 2019 08:13:23 -0400
+Received: from inca-roads.misterjones.org ([213.251.177.50]:49339 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726925AbfJWMNW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 08:13:22 -0400
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iNFVq-0001TZ-BF; Wed, 23 Oct 2019 14:13:14 +0200
+To:     "liwei (GF)" <liwei391@huawei.com>
+Subject: Re: [PATCH v3 1/2] arm64: Relax =?UTF-8?Q?ICC=5FPMR=5FEL=31=20acc?=  =?UTF-8?Q?esses=20when=20ICC=5FCTLR=5FEL=31=2EPMHE=20is=20clear?=
+X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: b55d8346-8a9b-45ec-ccba-08d757b2467e
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Oct 2019 12:12:29.7573
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1APC01HT022
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 23 Oct 2019 13:13:14 +0100
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        <huawei.libin@huawei.com>, <guohanjun@huawei.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+In-Reply-To: <ad164b94-06af-ffe7-b8ff-317b4078b1a5@huawei.com>
+References: <20191002090613.14236-1-maz@kernel.org>
+ <20191002090613.14236-2-maz@kernel.org>
+ <ad164b94-06af-ffe7-b8ff-317b4078b1a5@huawei.com>
+Message-ID: <4ed2ed389a81cc0ec6f3150ce38517a5@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: liwei391@huawei.com, will@kernel.org, catalin.marinas@arm.com, suzuki.poulose@arm.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, huawei.libin@huawei.com, guohanjun@huawei.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add kernel parameter pci=hpmmiosize=nn[KMG] to set MMIO bridge window
-size for hotplug bridges.
+Hi Wei,
 
-Add kernel parameter pci=hpmmioprefsize=nn[KMG] to set MMIO_PREF bridge
-window size for hotplug bridges.
+On 2019-10-23 09:38, liwei (GF) wrote:
+> Hi Marc,
+>
+> On 2019/10/2 17:06, Marc Zyngier wrote:
+>> The GICv3 architecture specification is incredibly misleading when 
+>> it
+>> comes to PMR and the requirement for a DSB. It turns out that this 
+>> DSB
+>> is only required if the CPU interface sends an Upstream Control
+>> message to the redistributor in order to update the RD's view of 
+>> PMR.
+>>
+>> This message is only sent when ICC_CTLR_EL1.PMHE is set, which isn't
+>> the case in Linux. It can still be set from EL3, so some special 
+>> care
+>> is required. But the upshot is that in the (hopefuly large) majority
+>> of the cases, we can drop the DSB altogether.
+>>
+>> This relies on a new static key being set if the boot CPU has PMHE
+>> set. The drawback is that this static key has to be exported to
+>> modules.
+>>
+>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>> Cc: Will Deacon <will@kernel.org>
+>> Cc: James Morse <james.morse@arm.com>
+>> Cc: Julien Thierry <julien.thierry.kdev@gmail.com>
+>> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+>> Signed-off-by: Marc Zyngier <maz@kernel.org>
+>> ---
+>>  arch/arm64/include/asm/barrier.h   | 12 ++++++++++++
+>>  arch/arm64/include/asm/daifflags.h |  3 ++-
+>>  arch/arm64/include/asm/irqflags.h  | 19 ++++++++++---------
+>>  arch/arm64/include/asm/kvm_host.h  |  3 +--
+>>  arch/arm64/kernel/entry.S          |  6 ++++--
+>>  arch/arm64/kvm/hyp/switch.c        |  4 ++--
+>>  drivers/irqchip/irq-gic-v3.c       | 20 ++++++++++++++++++++
+>>  include/linux/irqchip/arm-gic-v3.h |  2 ++
+>>  8 files changed, 53 insertions(+), 16 deletions(-)
+>>
+>> diff --git a/arch/arm64/include/asm/barrier.h 
+>> b/arch/arm64/include/asm/barrier.h
+>> index e0e2b1946f42..7d9cc5ec4971 100644
+>> --- a/arch/arm64/include/asm/barrier.h
+>> +++ b/arch/arm64/include/asm/barrier.h
+>> @@ -29,6 +29,18 @@
+>>  						 SB_BARRIER_INSN"nop\n",	\
+>>  						 ARM64_HAS_SB))
+>>
+>> +#ifdef CONFIG_ARM64_PSEUDO_NMI
+>> +#define pmr_sync()						\
+>> +	do {							\
+>> +		extern struct static_key_false gic_pmr_sync;	\
+>> +								\
+>> +		if (static_branch_unlikely(&gic_pmr_sync))	\
+>> +			dsb(sy);				\
+>> +	} while(0)
+>> +#else
+>> +#define pmr_sync()	do {} while (0)
+>> +#endif
+>> +
+>
+> Thank you for solving this problem, it helps a lot indeed.
+>
+> The pmr_sync() will call dsb(sy) when ARM64_PSEUDO_NMI=y and
+> gic_pmr_sync=force,
+> but if pseudo nmi is not enabled through boot option, it just take 
+> one more
+> redundant calling than before at the following two place.
+>
+> I think change dsb(sy) to
+> +                       asm volatile(ALTERNATIVE("nop", "dsb sy",     
+>  \
+> +                               ARM64_HAS_IRQ_PRIO_MASKING)     \
+> +                               : : : "memory");                \
+> may be more appropriate.
 
-Leave pci=hpmemsize=nn[KMG] unchanged, to prevent disruptions to
-existing users. This sets both MMIO and MMIO_PREF to the same size.
+I'm not sure I understand what you mean. The static key defaults to 
+false,
+so if pseudo_nmi is not enabled, this dsb(sy) is simply never executed.
 
-The two new parameters conform to the style of pci=hpiosize=nn[KMG].
+Am I missing something obvious?
 
-Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
----
- .../admin-guide/kernel-parameters.txt         |  9 ++++++-
- drivers/pci/pci.c                             | 13 +++++++---
- drivers/pci/pci.h                             |  3 ++-
- drivers/pci/setup-bus.c                       | 24 ++++++++++---------
- 4 files changed, 33 insertions(+), 16 deletions(-)
+Thanks,
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index a84a83f88..cfe8c2b67 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -3492,8 +3492,15 @@
- 		hpiosize=nn[KMG]	The fixed amount of bus space which is
- 				reserved for hotplug bridge's IO window.
- 				Default size is 256 bytes.
-+		hpmmiosize=nn[KMG]	The fixed amount of bus space which is
-+				reserved for hotplug bridge's MMIO window.
-+				Default size is 2 megabytes.
-+		hpmmioprefsize=nn[KMG]	The fixed amount of bus space which is
-+				reserved for hotplug bridge's MMIO_PREF window.
-+				Default size is 2 megabytes.
- 		hpmemsize=nn[KMG]	The fixed amount of bus space which is
--				reserved for hotplug bridge's memory window.
-+				reserved for hotplug bridge's MMIO and
-+				MMIO_PREF window.
- 				Default size is 2 megabytes.
- 		hpbussize=nn	The minimum amount of additional bus numbers
- 				reserved for buses below a hotplug bridge.
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index a97e2571a..e0406c663 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -85,10 +85,12 @@ unsigned long pci_cardbus_io_size = DEFAULT_CARDBUS_IO_SIZE;
- unsigned long pci_cardbus_mem_size = DEFAULT_CARDBUS_MEM_SIZE;
- 
- #define DEFAULT_HOTPLUG_IO_SIZE		(256)
--#define DEFAULT_HOTPLUG_MEM_SIZE	(2*1024*1024)
-+#define DEFAULT_HOTPLUG_MMIO_SIZE	(2*1024*1024)
-+#define DEFAULT_HOTPLUG_MMIO_PREF_SIZE	(2*1024*1024)
- /* pci=hpmemsize=nnM,hpiosize=nn can override this */
- unsigned long pci_hotplug_io_size  = DEFAULT_HOTPLUG_IO_SIZE;
--unsigned long pci_hotplug_mem_size = DEFAULT_HOTPLUG_MEM_SIZE;
-+unsigned long pci_hotplug_mmio_size = DEFAULT_HOTPLUG_MMIO_SIZE;
-+unsigned long pci_hotplug_mmio_pref_size = DEFAULT_HOTPLUG_MMIO_PREF_SIZE;
- 
- #define DEFAULT_HOTPLUG_BUS_SIZE	1
- unsigned long pci_hotplug_bus_size = DEFAULT_HOTPLUG_BUS_SIZE;
-@@ -6286,8 +6288,13 @@ static int __init pci_setup(char *str)
- 				pcie_ecrc_get_policy(str + 5);
- 			} else if (!strncmp(str, "hpiosize=", 9)) {
- 				pci_hotplug_io_size = memparse(str + 9, &str);
-+			} else if (!strncmp(str, "hpmmiosize=", 11)) {
-+				pci_hotplug_mmio_size = memparse(str + 11, &str);
-+			} else if (!strncmp(str, "hpmmioprefsize=", 15)) {
-+				pci_hotplug_mmio_pref_size = memparse(str + 15, &str);
- 			} else if (!strncmp(str, "hpmemsize=", 10)) {
--				pci_hotplug_mem_size = memparse(str + 10, &str);
-+				pci_hotplug_mmio_size = memparse(str + 10, &str);
-+				pci_hotplug_mmio_pref_size = pci_hotplug_mmio_size;
- 			} else if (!strncmp(str, "hpbussize=", 10)) {
- 				pci_hotplug_bus_size =
- 					simple_strtoul(str + 10, &str, 0);
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 3f6947ee3..9faa55a15 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -218,7 +218,8 @@ extern const struct device_type pci_dev_type;
- extern const struct attribute_group *pci_bus_groups[];
- 
- extern unsigned long pci_hotplug_io_size;
--extern unsigned long pci_hotplug_mem_size;
-+extern unsigned long pci_hotplug_mmio_size;
-+extern unsigned long pci_hotplug_mmio_pref_size;
- extern unsigned long pci_hotplug_bus_size;
- 
- /**
-diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index e7dbe2170..93fd2070a 100644
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -1178,7 +1178,8 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
- {
- 	struct pci_dev *dev;
- 	unsigned long mask, prefmask, type2 = 0, type3 = 0;
--	resource_size_t additional_mem_size = 0, additional_io_size = 0;
-+	resource_size_t additional_io_size = 0, additional_mmio_size = 0,
-+			additional_mmio_pref_size = 0;
- 	struct resource *b_res;
- 	int ret;
- 
-@@ -1212,7 +1213,8 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
- 		pci_bridge_check_ranges(bus);
- 		if (bus->self->is_hotplug_bridge) {
- 			additional_io_size  = pci_hotplug_io_size;
--			additional_mem_size = pci_hotplug_mem_size;
-+			additional_mmio_size = pci_hotplug_mmio_size;
-+			additional_mmio_pref_size = pci_hotplug_mmio_pref_size;
- 		}
- 		/* Fall through */
- 	default:
-@@ -1230,9 +1232,9 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
- 		if (b_res[2].flags & IORESOURCE_MEM_64) {
- 			prefmask |= IORESOURCE_MEM_64;
- 			ret = pbus_size_mem(bus, prefmask, prefmask,
--				  prefmask, prefmask,
--				  realloc_head ? 0 : additional_mem_size,
--				  additional_mem_size, realloc_head);
-+				prefmask, prefmask,
-+				realloc_head ? 0 : additional_mmio_pref_size,
-+				additional_mmio_pref_size, realloc_head);
- 
- 			/*
- 			 * If successful, all non-prefetchable resources
-@@ -1254,9 +1256,9 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
- 		if (!type2) {
- 			prefmask &= ~IORESOURCE_MEM_64;
- 			ret = pbus_size_mem(bus, prefmask, prefmask,
--					 prefmask, prefmask,
--					 realloc_head ? 0 : additional_mem_size,
--					 additional_mem_size, realloc_head);
-+				prefmask, prefmask,
-+				realloc_head ? 0 : additional_mmio_pref_size,
-+				additional_mmio_pref_size, realloc_head);
- 
- 			/*
- 			 * If successful, only non-prefetchable resources
-@@ -1265,7 +1267,7 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
- 			if (ret == 0)
- 				mask = prefmask;
- 			else
--				additional_mem_size += additional_mem_size;
-+				additional_mmio_size += additional_mmio_pref_size;
- 
- 			type2 = type3 = IORESOURCE_MEM;
- 		}
-@@ -1285,8 +1287,8 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
- 		 * prefetchable resource in a 64-bit prefetchable window.
- 		 */
- 		pbus_size_mem(bus, mask, IORESOURCE_MEM, type2, type3,
--				realloc_head ? 0 : additional_mem_size,
--				additional_mem_size, realloc_head);
-+			realloc_head ? 0 : additional_mmio_size,
-+			additional_mmio_size, realloc_head);
- 		break;
- 	}
- }
+         M.
+
+>
+> Thanks,
+> Wei
+>
+>>
+>> @@ -34,14 +35,14 @@ static inline void arch_local_irq_enable(void)
+>>  	}
+>>
+>>  	asm volatile(ALTERNATIVE(
+>> -		"msr	daifclr, #2		// arch_local_irq_enable\n"
+>> -		"nop",
+>> -		__msr_s(SYS_ICC_PMR_EL1, "%0")
+>> -		"dsb	sy",
+>> +		"msr	daifclr, #2		// arch_local_irq_enable",
+>> +		__msr_s(SYS_ICC_PMR_EL1, "%0"),
+>>  		ARM64_HAS_IRQ_PRIO_MASKING)
+>>  		:
+>>  		: "r" ((unsigned long) GIC_PRIO_IRQON)
+>>  		: "memory");
+>> +
+>> +	pmr_sync();
+>>  }
+>>
+>>  static inline void arch_local_irq_disable(void)
+>> @@ -116,14 +117,14 @@ static inline unsigned long 
+>> arch_local_irq_save(void)
+>>  static inline void arch_local_irq_restore(unsigned long flags)
+>>  {
+>>  	asm volatile(ALTERNATIVE(
+>> -			"msr	daif, %0\n"
+>> -			"nop",
+>> -			__msr_s(SYS_ICC_PMR_EL1, "%0")
+>> -			"dsb	sy",
+>> -			ARM64_HAS_IRQ_PRIO_MASKING)
+>> +		"msr	daif, %0",
+>> +		__msr_s(SYS_ICC_PMR_EL1, "%0"),
+>> +		ARM64_HAS_IRQ_PRIO_MASKING)
+>>  		:
+>>  		: "r" (flags)
+>>  		: "memory");
+>> +
+>> +	pmr_sync();
+>>  }
+>>
+
 -- 
-2.23.0
-
+Jazz is not dead. It just smells funny...
