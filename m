@@ -2,34 +2,34 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC97DCA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 11:22:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31326CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 11:22:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C78A02064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 11:22:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CD1A2064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 11:22:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404868AbfJWLWG (ORCPT
+        id S2404909AbfJWLWK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 07:22:06 -0400
-Received: from mga11.intel.com ([192.55.52.93]:54237 "EHLO mga11.intel.com"
+        Wed, 23 Oct 2019 07:22:10 -0400
+Received: from mga09.intel.com ([134.134.136.24]:21010 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404834AbfJWLWE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 07:22:04 -0400
+        id S2404873AbfJWLWH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 07:22:07 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 04:22:03 -0700
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 04:22:07 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,220,1569308400"; 
-   d="scan'208";a="196748271"
+   d="scan'208";a="349365442"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga008.fm.intel.com with ESMTP; 23 Oct 2019 04:22:00 -0700
+  by orsmga004.jf.intel.com with ESMTP; 23 Oct 2019 04:22:03 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 8312F62B; Wed, 23 Oct 2019 14:21:55 +0300 (EEST)
+        id BAB22695; Wed, 23 Oct 2019 14:21:55 +0300 (EEST)
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     linux-usb@vger.kernel.org
 Cc:     Andreas Noever <andreas.noever@gmail.com>,
@@ -46,9 +46,9 @@ Cc:     Andreas Noever <andreas.noever@gmail.com>,
         Oliver Neukum <oneukum@suse.com>,
         Christian Kellner <ckellner@redhat.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 13/25] thunderbolt: Add downstream PCIe port mappings for Alpine and Titan Ridge
-Date:   Wed, 23 Oct 2019 14:21:42 +0300
-Message-Id: <20191023112154.64235-14-mika.westerberg@linux.intel.com>
+Subject: [PATCH 18/25] thunderbolt: Make tb_find_port() available to other files
+Date:   Wed, 23 Oct 2019 14:21:47 +0300
+Message-Id: <20191023112154.64235-19-mika.westerberg@linux.intel.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191023112154.64235-1-mika.westerberg@linux.intel.com>
 References: <20191023112154.64235-1-mika.westerberg@linux.intel.com>
@@ -59,71 +59,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to keep PCIe hierarchies consistent across hotplugs, add
-hard-coded PCIe downstream port to Thunderbolt port for Alpine Ridge and
-Titan Ridge as well.
+We will be needing this when adding initial USB4 support so make it
+available to other files in the driver as well. We also rename it to
+tb_switch_find_port() to follow conventions used in switch.c.
+
+No functional changes.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 ---
- drivers/thunderbolt/tb.c |  5 ++++-
- drivers/thunderbolt/tb.h | 25 +++++++++++++++++++++++++
- 2 files changed, 29 insertions(+), 1 deletion(-)
+ drivers/thunderbolt/switch.c | 18 ++++++++++++++++++
+ drivers/thunderbolt/tb.c     | 22 ++--------------------
+ drivers/thunderbolt/tb.h     |  2 ++
+ 3 files changed, 22 insertions(+), 20 deletions(-)
 
+diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c
+index 677f383c16ab..b538078fb988 100644
+--- a/drivers/thunderbolt/switch.c
++++ b/drivers/thunderbolt/switch.c
+@@ -2477,6 +2477,24 @@ struct tb_switch *tb_switch_find_by_route(struct tb *tb, u64 route)
+ 	return NULL;
+ }
+ 
++/**
++ * tb_switch_find_port() - return the first port of @type on @sw or NULL
++ * @sw: Switch to find the port from
++ * @type: Port type to look for
++ */
++struct tb_port *tb_switch_find_port(struct tb_switch *sw,
++				    enum tb_port_type type)
++{
++	struct tb_port *port;
++
++	tb_switch_for_each_port(sw, port) {
++		if (port->config.type == type)
++			return port;
++	}
++
++	return NULL;
++}
++
+ void tb_switch_exit(void)
+ {
+ 	ida_destroy(&nvm_ida);
 diff --git a/drivers/thunderbolt/tb.c b/drivers/thunderbolt/tb.c
-index e8e2d20cf4c6..c24b577e049e 100644
+index ea8727f769d6..54085f67810a 100644
 --- a/drivers/thunderbolt/tb.c
 +++ b/drivers/thunderbolt/tb.c
-@@ -342,10 +342,13 @@ static struct tb_port *tb_find_pcie_down(struct tb_switch *sw,
- 		 * Hard-coded Thunderbolt port to PCIe down port mapping
- 		 * per controller.
- 		 */
--		if (tb_switch_is_cactus_ridge(sw))
-+		if (tb_switch_is_cactus_ridge(sw) ||
-+		    tb_switch_is_alpine_ridge(sw))
- 			index = !phy_port ? 6 : 7;
- 		else if (tb_switch_is_falcon_ridge(sw))
- 			index = !phy_port ? 6 : 8;
-+		else if (tb_switch_is_titan_ridge(sw))
-+			index = !phy_port ? 8 : 9;
- 		else
- 			goto out;
- 
-diff --git a/drivers/thunderbolt/tb.h b/drivers/thunderbolt/tb.h
-index a6f1fa0d4771..3d7b2202d248 100644
---- a/drivers/thunderbolt/tb.h
-+++ b/drivers/thunderbolt/tb.h
-@@ -608,6 +608,31 @@ static inline bool tb_switch_is_falcon_ridge(const struct tb_switch *sw)
+@@ -338,24 +338,6 @@ static void tb_free_unplugged_children(struct tb_switch *sw)
  	}
  }
  
-+static inline bool tb_switch_is_alpine_ridge(const struct tb_switch *sw)
-+{
-+	switch (sw->config.device_id) {
-+	case PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_2C_BRIDGE:
-+	case PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_LP_BRIDGE:
-+	case PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_C_4C_BRIDGE:
-+	case PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_C_2C_BRIDGE:
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
-+
-+static inline bool tb_switch_is_titan_ridge(const struct tb_switch *sw)
-+{
-+	switch (sw->config.device_id) {
-+	case PCI_DEVICE_ID_INTEL_TITAN_RIDGE_2C_BRIDGE:
-+	case PCI_DEVICE_ID_INTEL_TITAN_RIDGE_4C_BRIDGE:
-+	case PCI_DEVICE_ID_INTEL_TITAN_RIDGE_DD_BRIDGE:
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
-+
+-/**
+- * tb_find_port() - return the first port of @type on @sw or NULL
+- * @sw: Switch to find the port from
+- * @type: Port type to look for
+- */
+-static struct tb_port *tb_find_port(struct tb_switch *sw,
+-				    enum tb_port_type type)
+-{
+-	struct tb_port *port;
+-
+-	tb_switch_for_each_port(sw, port) {
+-		if (port->config.type == type)
+-			return port;
+-	}
+-
+-	return NULL;
+-}
+-
  /**
-  * tb_switch_is_icm() - Is the switch handled by ICM firmware
-  * @sw: Switch to check
+  * tb_find_unused_port() - return the first inactive port on @sw
+  * @sw: Switch to find the port on
+@@ -586,7 +568,7 @@ static int tb_tunnel_pci(struct tb *tb, struct tb_switch *sw)
+ 	struct tb_switch *parent_sw;
+ 	struct tb_tunnel *tunnel;
+ 
+-	up = tb_find_port(sw, TB_TYPE_PCIE_UP);
++	up = tb_switch_find_port(sw, TB_TYPE_PCIE_UP);
+ 	if (!up)
+ 		return 0;
+ 
+@@ -624,7 +606,7 @@ static int tb_approve_xdomain_paths(struct tb *tb, struct tb_xdomain *xd)
+ 
+ 	sw = tb_to_switch(xd->dev.parent);
+ 	dst_port = tb_port_at(xd->route, sw);
+-	nhi_port = tb_find_port(tb->root_switch, TB_TYPE_NHI);
++	nhi_port = tb_switch_find_port(tb->root_switch, TB_TYPE_NHI);
+ 
+ 	mutex_lock(&tb->lock);
+ 	tunnel = tb_tunnel_alloc_dma(tb, nhi_port, dst_port, xd->transmit_ring,
+diff --git a/drivers/thunderbolt/tb.h b/drivers/thunderbolt/tb.h
+index ec851f20c571..ade1c7c77db1 100644
+--- a/drivers/thunderbolt/tb.h
++++ b/drivers/thunderbolt/tb.h
+@@ -533,6 +533,8 @@ void tb_switch_suspend(struct tb_switch *sw);
+ int tb_switch_resume(struct tb_switch *sw);
+ int tb_switch_reset(struct tb *tb, u64 route);
+ void tb_sw_set_unplugged(struct tb_switch *sw);
++struct tb_port *tb_switch_find_port(struct tb_switch *sw,
++				    enum tb_port_type type);
+ struct tb_switch *tb_switch_find_by_link_depth(struct tb *tb, u8 link,
+ 					       u8 depth);
+ struct tb_switch *tb_switch_find_by_uuid(struct tb *tb, const uuid_t *uuid);
 -- 
 2.23.0
 
