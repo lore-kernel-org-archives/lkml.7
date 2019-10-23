@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D81D9CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 00:06:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EF81CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 00:06:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF0582084B
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 00:06:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E99FB21783
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 00:06:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nmL2XLde"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZhTu4zFI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731585AbfJWAGA (ORCPT
+        id S1731856AbfJWAGE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 20:06:00 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:52412 "EHLO
+        Tue, 22 Oct 2019 20:06:04 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:40653 "EHLO
         mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727960AbfJWAGA (ORCPT
+        with ESMTP id S1727960AbfJWAGD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 20:06:00 -0400
-Received: by mail-wm1-f68.google.com with SMTP id r19so19193341wmh.2;
-        Tue, 22 Oct 2019 17:05:58 -0700 (PDT)
+        Tue, 22 Oct 2019 20:06:03 -0400
+Received: by mail-wm1-f68.google.com with SMTP id b24so17753030wmj.5;
+        Tue, 22 Oct 2019 17:06:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=gokM4n7dedwvMz3nVQdhJWZwmalfuzEvK8MTROAEiLo=;
-        b=nmL2XLde2WB2uLAdxke8rA0HqWKBFJYeHsDDwcWrVgidimSdkjonniTpyTYGI5B6Ao
-         finU+ZW9URhPGp5hmx0j+y4i7hYUTDE0eFMI5+F9gmi7J+KwWGfXLhDD/yu0i7LkWi4y
-         xZrkLts/zyLMBDvsiwI6i5NXc/p4LVDXrJy1PUm9yB+shjeppAOsamV5PILKZNgb3KuS
-         XLF0h1ajOIYYpe+9OKilKd+r1yvVsK/OAEOmDJ8kfpI0MeQya29a//NxYzfHOheqFts4
-         nGHsKFpxMYULLljAiWBa5RMtNOjWCBeHjwuef4nK9nF3Mw7S+EX+XxeKfcglZ/0kMiWj
-         Uj2w==
+        bh=UHr4crB3Dlo9CDtDYw06eX2hUAeMInOCDregffY1R94=;
+        b=ZhTu4zFIDCC2d1bvNTmeamTKakpEcalGy9udhPKNt1cQUWiJ+rCzQz82XXyMQHDqJv
+         UJCZz6zd/i8PE6urMg1yTNfDt7SOlIR+WYCdOSj5dMkAuw1Cq8q44MXqVdDyAMsM7vnW
+         Y/ZT6Z8/37dK/26p0vThbdaC3LW+M66H2xH+613Thh6apkUETaEyRll8JGmwjWp/NJ4q
+         7Qh741sIjHHV2WKEeo5q9V1IFlANaqYvuxusUFEm2WHg5qVvYwBSD5CvNNkGzIttvA75
+         1iGlIOw6dchx6RvOwcVvUu1fmbgiaSPI78cR6N7yzjryreDTeGnZqDd4tFZH3Y9E3fEC
+         64Gg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=gokM4n7dedwvMz3nVQdhJWZwmalfuzEvK8MTROAEiLo=;
-        b=sELVt2jz4petFKpXo+RuzY1GLU+ceESUdK22qMCDIfj+NOArHhQi4W04LnZEy9ovLO
-         wrDYYU+XLBK5cdTAQd6qLA6zZ01+lS13HWy0cqFhTGw4Wad0L3iP0oxCdoIOYQXzPjPb
-         0Srsh9dX1ZVjJI130COt4EiVUyJq+GMlh+cLYp3Nz37nJn/4+vH5Bgz+qsYbCAgqcu/i
-         RRAKhgaJFf+qPQRW2wsmmqtu3cIeW4sDL3Ndl1U/wn16pMMHWOPHxwbqv85hv3Pb6JDX
-         Z6PwdKqGUo3VVo6zkWjC9upa+QaRCrtjwThg8IaY5vTcfWWSY1M7a6IUlTraAszqEVpj
-         3XpQ==
-X-Gm-Message-State: APjAAAVtiJUX4QqNpkIPkJ8lGajhuH+e92nWqJZh4qTPqfUvl6O3BhKE
-        X9WNClBG5Mtb6h2Qy+xWLbKkS1NM
-X-Google-Smtp-Source: APXvYqzQiHMeCDDNoaK/Il7oXDsbZlPDZKvFYnqWF6/bPf9fzRds46WyFEcSpn4NOt4+HVP2eMqs/g==
-X-Received: by 2002:a7b:cd83:: with SMTP id y3mr5550699wmj.150.1571789157938;
-        Tue, 22 Oct 2019 17:05:57 -0700 (PDT)
+        bh=UHr4crB3Dlo9CDtDYw06eX2hUAeMInOCDregffY1R94=;
+        b=jI7cRrd46wz/CAtFzmcMjXxeVYwN3HE0mZJoAXSYetHlItrzJap+XI+PJUO6uZa3Sy
+         SHRECp2OMb+qU7JL4vrqNjov9dPURXX81sQq99MFoOvylmlFgFjqIeOlOCzymCpY3S+U
+         78kJXL2wDHhhhKlBaI8pKFL+s/tZZs42/xKvI8fCet/DFxI0uDBWPJoks1MCW5KVFKJ5
+         ZpJUlACZuR6yMM2fglxpA5gAppCGavRVvtw47kUmudzDl4sqUhoon3Bot/656LuvSjER
+         4e5Qww0zjGZdc9VjDfJcGmC7iDAfw9Ua1TMmYIyvV/w1W9GRO8zEuSfXwVGPPq7r71a7
+         49DQ==
+X-Gm-Message-State: APjAAAVBaHut9P+nLcxtqYVv+uaiOPQcLgIyNAdXyLE2TRTFQ4X65DRD
+        ksJ7vZ9S7QPUIynFauSO2LTA3Uv1
+X-Google-Smtp-Source: APXvYqx6vZAry8wKP1UL4roFWw7F2MAgBNgEr3xVlLLYA/CUqWDSAVYx61bir8gN0n5++tH8pFd/rQ==
+X-Received: by 2002:a7b:c313:: with SMTP id k19mr5396848wmj.6.1571789161462;
+        Tue, 22 Oct 2019 17:06:01 -0700 (PDT)
 Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id v10sm18500272wmg.48.2019.10.22.17.05.54
+        by smtp.gmail.com with ESMTPSA id v10sm18500272wmg.48.2019.10.22.17.05.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Oct 2019 17:05:57 -0700 (PDT)
+        Tue, 22 Oct 2019 17:06:00 -0700 (PDT)
 From:   Florian Fainelli <f.fainelli@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Florian Fainelli <f.fainelli@gmail.com>,
@@ -74,9 +74,9 @@ Cc:     Florian Fainelli <f.fainelli@gmail.com>,
         Jim Quinlan <james.quinlan@broadcom.com>,
         Sudeep Holla <Sudeep.Holla@arm.com>,
         Thanu Rangarajan <Thanu.Rangarajan@arm.com>
-Subject: [PATCH RFC 1/2] dt-bindings: Define interrupt type for SGI interrupts
-Date:   Tue, 22 Oct 2019 17:05:46 -0700
-Message-Id: <20191023000547.7831-2-f.fainelli@gmail.com>
+Subject: [PATCH RFC 2/2] irqchip/gic: Allow the use of SGI interrupts
+Date:   Tue, 22 Oct 2019 17:05:47 -0700
+Message-Id: <20191023000547.7831-3-f.fainelli@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191023000547.7831-1-f.fainelli@gmail.com>
 References: <20191023000547.7831-1-f.fainelli@gmail.com>
@@ -85,41 +85,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation for allowing drivers to use SGIs, define a new value for
-the first ARM GIC interrupt controller cell to take a new value to
-specifically designate a SGI interrupt.
+SGI interrupts are a convenient way for trusted firmware to target a
+specific set of CPUs. Update the ARM GIC code to allow the translation
+and mapping of SGI interrupts.
+
+Since the kernel already uses SGIs for various inter-processor interrupt
+activities, we specifically make sure that we do not let users of the
+IRQ API to even try to map those.
+
+Internal IPIs remain dispatched through handle_IPI() while public SGIs
+get promoted to a normal interrupt flow management.
 
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- .../devicetree/bindings/interrupt-controller/arm,gic.yaml       | 2 +-
- include/dt-bindings/interrupt-controller/arm-gic.h              | 1 +
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ drivers/irqchip/irq-gic.c | 41 +++++++++++++++++++++++++++------------
+ 1 file changed, 29 insertions(+), 12 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/arm,gic.yaml b/Documentation/devicetree/bindings/interrupt-controller/arm,gic.yaml
-index 9a47820ef346..2d0bfcbe4933 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/arm,gic.yaml
-+++ b/Documentation/devicetree/bindings/interrupt-controller/arm,gic.yaml
-@@ -58,7 +58,7 @@ properties:
-     const: 3
-     description: |
-       The 1st cell is the interrupt type; 0 for SPI interrupts, 1 for PPI
--      interrupts.
-+      interrupts and 2 for SGI interrupts.
+diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
+index 30ab623343d3..dcfdbaacdd64 100644
+--- a/drivers/irqchip/irq-gic.c
++++ b/drivers/irqchip/irq-gic.c
+@@ -385,7 +385,10 @@ static void __exception_irq_entry gic_handle_irq(struct pt_regs *regs)
+ 			 * Pairs with the write barrier in gic_raise_softirq
+ 			 */
+ 			smp_rmb();
+-			handle_IPI(irqnr, regs);
++			if (irqnr < NR_IPI)
++				handle_IPI(irqnr, regs);
++			else
++				handle_domain_irq(gic->domain, irqnr, regs);
+ #endif
+ 			continue;
+ 		}
+@@ -1005,20 +1008,34 @@ static int gic_irq_domain_translate(struct irq_domain *d,
+ 		if (fwspec->param_count < 3)
+ 			return -EINVAL;
  
-       The 2nd cell contains the interrupt number for the interrupt type.
-       SPI interrupts are in the range [0-987].  PPI interrupts are in the
-diff --git a/include/dt-bindings/interrupt-controller/arm-gic.h b/include/dt-bindings/interrupt-controller/arm-gic.h
-index 35b6f69b7db6..2dcc394b7b6b 100644
---- a/include/dt-bindings/interrupt-controller/arm-gic.h
-+++ b/include/dt-bindings/interrupt-controller/arm-gic.h
-@@ -12,6 +12,7 @@
+-		/* Get the interrupt number and add 16 to skip over SGIs */
+-		*hwirq = fwspec->param[1] + 16;
+-
+-		/*
+-		 * For SPIs, we need to add 16 more to get the GIC irq
+-		 * ID number
+-		 */
+-		if (!fwspec->param[0])
++		*hwirq = fwspec->param[1];
++		switch (fwspec->param[0]) {
++		case 0:
++			/*
++			 * For SPIs, we need to add 16 more to get the GIC irq
++			 * ID number
++			 */
++			*hwirq += 16;
++			/* fall through */
++		case 1:
++			/* Add 16 to skip over SGIs */
+ 			*hwirq += 16;
++			*type = fwspec->param[2] & IRQ_TYPE_SENSE_MASK;
  
- #define GIC_SPI 0
- #define GIC_PPI 1
-+#define GIC_SGI 2
+-		*type = fwspec->param[2] & IRQ_TYPE_SENSE_MASK;
++			/* Make it clear that broken DTs are... broken */
++			WARN_ON(*type == IRQ_TYPE_NONE);
++			break;
++		case 2:
++			/* Refuse to map internal IPIs */
++			if (*hwirq < NR_IPI)
++				return -EPERM;
++
++			*type = IRQ_TYPE_NONE;
++			break;
++		default:
++			break;
++		}
  
- /*
-  * Interrupt specifier cell 2.
+-		/* Make it clear that broken DTs are... broken */
+-		WARN_ON(*type == IRQ_TYPE_NONE);
+ 		return 0;
+ 	}
+ 
 -- 
 2.17.1
 
