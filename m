@@ -2,112 +2,165 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6362FC47E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 06:57:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 550C5CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 06:59:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43BF82064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 06:57:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B98920684
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 06:59:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571813994;
+	bh=IpN0ESp2vKywiTrEJjsyN/RCTKP6EQXTfeuYvwZpy8U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bey2kBy/U1mQ4TH4HBSCGcTPVBYzO1Yg8l7Luw7r62Cvz2lHVJkMobO6NY8bZXqER
+	 b2HugwAgSvPVn9pq0Nc5lvwl8Eq+ME+OT6cFfZ2o296v7F9/DdXlHKXPU/yDzEhOPz
+	 aC4uBP9d6ZAz3ZMQAPypE1AEbdPFNZtZd4wr3/E8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389490AbfJWG5l (ORCPT
+        id S2389562AbfJWG7x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 02:57:41 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:46868 "EHLO huawei.com"
+        Wed, 23 Oct 2019 02:59:53 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44714 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725796AbfJWG5k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 02:57:40 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 4F145F217A17E3EA47FD;
-        Wed, 23 Oct 2019 14:57:38 +0800 (CST)
-Received: from [127.0.0.1] (10.74.221.148) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Wed, 23 Oct 2019
- 14:57:37 +0800
-Subject: Re: linux-next: Tree for Oct 23
-To:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Mark Salyzyn <salyzyn@android.com>
-References: <20191023155519.2d6765d4@canb.auug.org.au>
- <d1a57062-24cb-e9c4-e1db-07406b1cea9a@hisilicon.com>
- <CAMuHMdX1rhmvpWBHzvDYRNeYyotNp2ct1ysy4Jd0SjVUvGJd-Q@mail.gmail.com>
-CC:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
-Message-ID: <b2da5636-3907-2d34-af8a-5600729453d4@hisilicon.com>
-Date:   Wed, 23 Oct 2019 14:57:36 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.1.1
+        id S1727194AbfJWG7w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 02:59:52 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 2CC14B5D8;
+        Wed, 23 Oct 2019 06:59:50 +0000 (UTC)
+Date:   Wed, 23 Oct 2019 08:59:49 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH 2/2] mm: memcontrol: try harder to set a new memory.high
+Message-ID: <20191023065949.GD754@dhcp22.suse.cz>
+References: <20191022201518.341216-1-hannes@cmpxchg.org>
+ <20191022201518.341216-2-hannes@cmpxchg.org>
 MIME-Version: 1.0
-In-Reply-To: <CAMuHMdX1rhmvpWBHzvDYRNeYyotNp2ct1ysy4Jd0SjVUvGJd-Q@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.74.221.148]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191022201518.341216-2-hannes@cmpxchg.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
+On Tue 22-10-19 16:15:18, Johannes Weiner wrote:
+> Setting a memory.high limit below the usage makes almost no effort to
+> shrink the cgroup to the new target size.
+> 
+> While memory.high is a "soft" limit that isn't supposed to cause OOM
+> situations, we should still try harder to meet a user request through
+> persistent reclaim.
+> 
+> For example, after setting a 10M memory.high on an 800M cgroup full of
+> file cache, the usage shrinks to about 350M:
+> 
+> + cat /cgroup/workingset/memory.current
+> 841568256
+> + echo 10M
+> + cat /cgroup/workingset/memory.current
+> 355729408
+> 
+> This isn't exactly what the user would expect to happen. Setting the
+> value a few more times eventually whittles the usage down to what we
+> are asking for:
+> 
+> + echo 10M
+> + cat /cgroup/workingset/memory.current
+> 104181760
+> + echo 10M
+> + cat /cgroup/workingset/memory.current
+> 31801344
+> + echo 10M
+> + cat /cgroup/workingset/memory.current
+> 10440704
+> 
+> To improve this, add reclaim retry loops to the memory.high write()
+> callback, similar to what we do for memory.max, to make a reasonable
+> effort that the usage meets the requested size after the call returns.
 
-On 2019/10/23 14:44, Geert Uytterhoeven wrote:
-> On Wed, Oct 23, 2019 at 8:17 AM Shaokun Zhang
-> <zhangshaokun@hisilicon.com> wrote:
->> +Cc: Mark Salyzyn
->>
->> There is a compiler failure on arm64 platform, as follow:
->> zhangshaokun@ubuntu:~/linux-next$ make -j64
->>   CALL    scripts/atomic/check-atomics.sh
->>   CC      arch/arm64/kernel/asm-offsets.s
->> In file included from ./include/linux/sysctl.h:30:0,
->>                  from ./include/linux/umh.h:9,
->>                  from ./include/linux/kmod.h:9,
->>                  from ./include/linux/module.h:13,
->>                  from ./include/linux/acpi.h:29,
->>                  from ./include/acpi/apei.h:9,
->>                  from ./include/acpi/ghes.h:5,
->>                  from ./include/linux/arm_sdei.h:8,
->>                  from arch/arm64/kernel/asm-offsets.c:10:
->> ./include/uapi/linux/sysctl.h:561:29: error: expected ‘,’ or ‘}’ before ‘__attribute__’
->>   NET_IPV6_TEMP_PREFERED_LFT __attribute__((deprecated)) = /* NOTYPO */
->>                              ^
->> scripts/Makefile.build:99: recipe for target 'arch/arm64/kernel/asm-offsets.s' failed
->> make[1]: *** [arch/arm64/kernel/asm-offsets.s] Error 1
->> Makefile:1108: recipe for target 'prepare0' failed
->> make: *** [prepare0] Error 2
->>
->> It's the commit <79f0cf35dccb> ("treewide: cleanup: replace prefered with preferred").
-> 
-> After receiving a report from kisskb for failures for m68k, looking at
-> http://kisskb.ellerman.id.au/kisskb/head/f3c452cfc59c817950b150b51ec2b33409d7640b/
-> and doing some testing, it looks like this construct is supported by gcc-7
-> and gcc-8, but not by gcc-4.6.3 and gcc-5. Don't know about gcc-6.
-> 
+That suggests that the reclaim couldn't meet the given reclaim target
+but later attempts just made it through. Is this due to amount of dirty
+pages or what prevented the reclaim to do its job?
 
-GCC version is 5.4.0
-zhangshaokun@ubuntu:~/linux-next$ gcc --version
-gcc (Ubuntu/Linaro 5.4.0-6ubuntu1~16.04.10) 5.4.0 20160609
-Copyright (C) 2015 Free Software Foundation, Inc.
-This is free software; see the source for copying conditions.  There is NO
-warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+While I am not against the reclaim retry loop I would like to understand
+the underlying issue. Because if this is really about dirty memory then
+we should probably be more pro-active in flushing it. Otherwise the
+retry might not be of any help.
 
-Thanks,
+> Afterwards, a single write() to memory.high is enough in all but
+> extreme cases:
+> 
+> + cat /cgroup/workingset/memory.current
+> 841609216
+> + echo 10M
+> + cat /cgroup/workingset/memory.current
+> 10182656
+> 
+> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+> ---
+>  mm/memcontrol.c | 30 ++++++++++++++++++++++++------
+>  1 file changed, 24 insertions(+), 6 deletions(-)
+> 
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index ff90d4e7df37..8090b4c99ac7 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -6074,7 +6074,8 @@ static ssize_t memory_high_write(struct kernfs_open_file *of,
+>  				 char *buf, size_t nbytes, loff_t off)
+>  {
+>  	struct mem_cgroup *memcg = mem_cgroup_from_css(of_css(of));
+> -	unsigned long nr_pages;
+> +	unsigned int nr_retries = MEM_CGROUP_RECLAIM_RETRIES;
+> +	bool drained = false;
+>  	unsigned long high;
+>  	int err;
+>  
+> @@ -6085,12 +6086,29 @@ static ssize_t memory_high_write(struct kernfs_open_file *of,
+>  
+>  	memcg->high = high;
+>  
+> -	nr_pages = page_counter_read(&memcg->memory);
+> -	if (nr_pages > high)
+> -		try_to_free_mem_cgroup_pages(memcg, nr_pages - high,
+> -					     GFP_KERNEL, true);
+> +	for (;;) {
+> +		unsigned long nr_pages = page_counter_read(&memcg->memory);
+> +		unsigned long reclaimed;
+> +
+> +		if (nr_pages <= high)
+> +			break;
+> +
+> +		if (signal_pending(current))
+> +			break;
+> +
+> +		if (!drained) {
+> +			drain_all_stock(memcg);
+> +			drained = true;
+> +			continue;
+> +		}
+> +
+> +		reclaimed = try_to_free_mem_cgroup_pages(memcg, nr_pages - high,
+> +							 GFP_KERNEL, true);
+> +
+> +		if (!reclaimed && !nr_retries--)
+> +			break;
+> +	}
+>  
+> -	memcg_wb_domain_size_changed(memcg);
+>  	return nbytes;
+>  }
+>  
+> -- 
+> 2.23.0
 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-> 
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
-> 
-> .
-> 
-
+-- 
+Michal Hocko
+SUSE Labs
