@@ -2,108 +2,307 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99473CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:49:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31864CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:50:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7014821872
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:49:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="veHln+b8"
+	by mail.kernel.org (Postfix) with ESMTP id 098AC205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:50:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390539AbfJWIt0 (ORCPT
+        id S2390599AbfJWIur (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 04:49:26 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:47746 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390331AbfJWIt0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 04:49:26 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9N8nOFc093697;
-        Wed, 23 Oct 2019 03:49:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571820564;
-        bh=Vg5p/9UukhFhBnfEC9XZnlFxpQ+4sUdE5PCioPm1To8=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=veHln+b8aWMlD1JjoyyZnRwTAYw7/7ZJ9V88dcI17pE6QJKZtu1Wbb0PBEUxsPN99
-         gBF5MWZxsfG+WpVGDh32G0/5gM8Hvyw3vTb52trhdKdd/qDouCVpkiVhTnxkZmLUcw
-         IX/yA0VS9sptF8RqohqOckiBIAUnQMGnEnxjcrkE=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9N8nNQE127748
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 23 Oct 2019 03:49:24 -0500
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 23
- Oct 2019 03:49:12 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 23 Oct 2019 03:49:21 -0500
-Received: from lta0400828a.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9N8nHVu061069;
-        Wed, 23 Oct 2019 03:49:19 -0500
-From:   Roger Quadros <rogerq@ti.com>
-To:     <kishon@ti.com>
-CC:     <aniljoy@cadence.com>, <adouglas@cadence.com>, <nsekhar@ti.com>,
-        <jsarha@ti.com>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Roger Quadros <rogerq@ti.com>
-Subject: [PATCH v2 1/3] phy: cadence: Sierra: add phy_reset hook
-Date:   Wed, 23 Oct 2019 11:49:14 +0300
-Message-ID: <20191023084916.26895-2-rogerq@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191023084916.26895-1-rogerq@ti.com>
-References: <20191023084916.26895-1-rogerq@ti.com>
+        Wed, 23 Oct 2019 04:50:47 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38610 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390314AbfJWIuq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 04:50:46 -0400
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com [209.85.221.69])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C70DB81F18
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 08:50:45 +0000 (UTC)
+Received: by mail-wr1-f69.google.com with SMTP id f15so6917502wrs.13
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 01:50:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=UGpHR3YNnSGEJZU7s+h4ckmTsa+OQ5I+i9CjqJw4MrQ=;
+        b=XdO6DI5d0l7IPqbMHx6ckvajOcaOKfjyh8eMn8Ip0BdLb4JPXax357xqtsbmNnE8V9
+         3ZRuWtmmGeWYYIjQyGmfjQUsi/HvbLcBOklCfiGhJsQMEbF3mG85BbIuONMBexIhJQRa
+         SscVZlehTBNs1GqY7w/6n4tgOhPdrYt8iKuXBPKC9W4tG31JWjk/RK2J/EHPCYVdA0Ap
+         NFBNfYzQrStAwfHG597e7/7aKNGxSLhKMubeJciBZfgo9HjTiQovkQHNBwKd0UIqNFpR
+         mdTov2MVXqxYfeHn6uv1q2L9V3ru7MD7qhSZ+5gwj/hHMYqpdQD3r6Qi7j4immI/clta
+         Wn4g==
+X-Gm-Message-State: APjAAAVHggSzL7nTxTmNaWXq63lUqF5eTqv4PoetTTQfcKCxwGZx9JGt
+        zSSmBQ25Kq2hq+Gt2mvzwu6cRULu0h101VGY8AyCz/mlU/KUZKpaYJuwRI7lu3uZqz4OFMqPRbN
+        B0eOyMxHzIfjOgWstGQh+tbvr
+X-Received: by 2002:a05:600c:2295:: with SMTP id 21mr6623684wmf.63.1571820644302;
+        Wed, 23 Oct 2019 01:50:44 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyZyTxr/+2CE4qo/T2isgKXb9jxn+6y7k2kj3f7Lz38SlDYDkPehIrxc7YMkW+CGlTnd0PJ/w==
+X-Received: by 2002:a05:600c:2295:: with SMTP id 21mr6623643wmf.63.1571820643899;
+        Wed, 23 Oct 2019 01:50:43 -0700 (PDT)
+Received: from localhost.localdomain (nat-pool-mxp-t.redhat.com. [149.6.153.186])
+        by smtp.gmail.com with ESMTPSA id q6sm1206662wrx.30.2019.10.23.01.50.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Oct 2019 01:50:42 -0700 (PDT)
+Date:   Wed, 23 Oct 2019 10:50:39 +0200
+From:   Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+To:     Lorenzo Bianconi <lorenzo@kernel.org>
+Cc:     Oleksandr Natalenko <oleksandr@natalenko.name>,
+        linux-mediatek@lists.infradead.org, Felix Fietkau <nbd@nbd.name>,
+        Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
+        Stanislaw Gruszka <sgruszka@redhat.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Roy Luo <royluo@google.com>, Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: mt76x2e hardware restart
+Message-ID: <20191023085039.GB2461@localhost.localdomain>
+References: <deaafa7a3e9ea2111ebb5106430849c6@natalenko.name>
+ <c6d621759c190f7810d898765115f3b4@natalenko.name>
+ <9d581001e2e6cece418329842b2b0959@natalenko.name>
+ <20191012165028.GA8739@lore-desk-wlan.lan>
+ <f7695bc79d40bbc96744a639b1243027@natalenko.name>
+ <96f43a2103a9f2be152c53f867f5805c@natalenko.name>
+ <20191016163842.GA18799@localhost.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="JP+T4n/bALQSJXh8"
+Content-Disposition: inline
+In-Reply-To: <20191016163842.GA18799@localhost.localdomain>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some platforms e.g. J721e need lane swap register
-to be programmed before reset is deasserted.
-This patch ensures that we propagate the phy_reset
-back to the reset controller driver.
 
-Signed-off-by: Roger Quadros <rogerq@ti.com>
-Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+--JP+T4n/bALQSJXh8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+> > Hello.
+> >=20
+> > On 15.10.2019 18:52, Oleksandr Natalenko wrote:
+> > > Thanks for the answer and the IRC discussion. As agreed I've applied
+> > > [1] and [2], and have just swapped the card to try it again. So far,
+> > > it works fine in 5 GHz band in 802.11ac mode as an AP.
+> > >=20
+> > > I'll give it more load with my phone over evening, and we can discuss
+> > > what to do next (if needed) tomorrow again. Or feel free to drop me an
+> > > email today.
+> > >=20
+> > > Thanks for your efforts.
+> > >=20
+> > > [1]
+> > > https://github.com/LorenzoBianconi/wireless-drivers-next/commit/cf343=
+6c42a297967235a9c9778620c585100529e.patch
+> > > [2]
+> > > https://github.com/LorenzoBianconi/wireless-drivers-next/commit/aad25=
+6eb62620f9646d39c1aa69234f50c89eed8.patch
+> >=20
+> > As agreed, here are iperf3 results, AP to STA distance is 2 meters.
+> >=20
+> > Client sends, TCP:
+> >=20
+> > [ ID] Interval           Transfer     Bitrate         Retr
+> > [  5]   0.00-10.00  sec  70.4 MBytes  59.0 Mbits/sec  3800
+> > sender
+> > [  5]   0.00-10.03  sec  70.0 MBytes  58.6 Mbits/sec
+> > receiver
+> >=20
+> > Client receives, TCP:
+> >=20
+> > [ ID] Interval           Transfer     Bitrate         Retr
+> > [  5]   0.00-10.06  sec   196 MBytes   163 Mbits/sec  3081
+> > sender
+> > [  5]   0.00-10.01  sec   191 MBytes   160 Mbits/sec
+> > receiver
+> >=20
+> > Client sends, UDP, 128 streams:
+> >=20
+> > [ ID] Interval           Transfer     Bitrate         Jitter    Lost/To=
+tal
+> > Datagrams
+> > [SUM]   0.00-10.00  sec   160 MBytes   134 Mbits/sec  0.000 ms  0/115894
+> > (0%)  sender
+> > [SUM]   0.00-10.01  sec   160 MBytes   134 Mbits/sec  0.347 ms  0/115892
+> > (0%)  receiver
+> >=20
+> > Client receives, UDP, 128 streams:
+> >=20
+> > [ ID] Interval           Transfer     Bitrate         Jitter    Lost/To=
+tal
+> > Datagrams
+> > [SUM]   0.00-10.01  sec   119 MBytes  99.4 Mbits/sec  0.000 ms  0/85888=
+ (0%)
+> > sender
+> > [SUM]   0.00-10.00  sec   119 MBytes  99.5 Mbits/sec  0.877 ms  0/85888=
+ (0%)
+> > receiver
+> >=20
+> > Given the HW is not the most powerful, the key point here is that nothi=
+ng
+> > crashed after doing these tests.
+>=20
+> Hi Oleksandr,
+>=20
+> thx a lot for testing these 2 patches. Now we need to understand why the =
+chip
+> hangs if we enable scatter gather dma transfer on x86 while it is working=
+ fine
+> on multiple mips/arm devices (patch 2/2 just disable it for debugging).
+
+Hi Oleksandr,
+
+I think I spotted the SG issue on mt76x2e. Could you please:
+- keep pcie_aspm patch I sent
+- remove the debug patch where I disabled TX Scatter-Gather on mt76x2e
+- apply the following patch
+
+Regards,
+Lorenzo
+
+mt76: dma: fix buffer unmap with non-linear skbs
+
+mt76 dma layer is supposed to unmap skb data buffers while keep txwi mapped
+on hw dma ring. At the moment mt76 wrongly unmap txwi or does not unmap data
+fragments in even positions for non-linear skbs. This issue may result in hw
+hangs with A-MSUD if the system relies on IOMMU or SWIOTLB.
+Fix this behaviour marking first and last queue entries introducing
+MT_QUEUE_ENTRY_FIRST and MT_QUEUE_ENTRY_LAST flags and properly unmap
+data fragments
+
+Fixes: 17f1de56df05 ("mt76: add common code shared between multiple chipset=
+s")
+Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
 ---
- drivers/phy/cadence/phy-cadence-sierra.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/net/wireless/mediatek/mt76/dma.c  | 33 +++++++++++++----------
+ drivers/net/wireless/mediatek/mt76/mt76.h |  3 +++
+ 2 files changed, 22 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/phy/cadence/phy-cadence-sierra.c b/drivers/phy/cadence/phy-cadence-sierra.c
-index affede8c4368..e6d27bdec22a 100644
---- a/drivers/phy/cadence/phy-cadence-sierra.c
-+++ b/drivers/phy/cadence/phy-cadence-sierra.c
-@@ -339,10 +339,20 @@ static int cdns_sierra_phy_off(struct phy *gphy)
- 	return reset_control_assert(ins->lnk_rst);
- }
- 
-+static int cdns_sierra_phy_reset(struct phy *gphy)
-+{
-+	struct cdns_sierra_phy *sp = dev_get_drvdata(gphy->dev.parent);
-+
-+	reset_control_assert(sp->phy_rst);
-+	reset_control_deassert(sp->phy_rst);
-+	return 0;
-+};
-+
- static const struct phy_ops ops = {
- 	.init		= cdns_sierra_phy_init,
- 	.power_on	= cdns_sierra_phy_on,
- 	.power_off	= cdns_sierra_phy_off,
-+	.reset		= cdns_sierra_phy_reset,
- 	.owner		= THIS_MODULE,
+diff --git a/drivers/net/wireless/mediatek/mt76/dma.c b/drivers/net/wireles=
+s/mediatek/mt76/dma.c
+index 4da7cffbab29..a3026a0ca8c5 100644
+--- a/drivers/net/wireless/mediatek/mt76/dma.c
++++ b/drivers/net/wireless/mediatek/mt76/dma.c
+@@ -54,7 +54,7 @@ mt76_dma_add_buf(struct mt76_dev *dev, struct mt76_queue =
+*q,
+ 	int i, idx =3D -1;
+=20
+ 	if (txwi)
+-		q->entry[q->head].txwi =3D DMA_DUMMY_DATA;
++		q->entry[q->head].flags =3D MT_QUEUE_ENTRY_FIRST;
+=20
+ 	for (i =3D 0; i < nbufs; i +=3D 2, buf +=3D 2) {
+ 		u32 buf0 =3D buf[0].addr, buf1 =3D 0;
+@@ -83,6 +83,7 @@ mt76_dma_add_buf(struct mt76_dev *dev, struct mt76_queue =
+*q,
+ 		q->queued++;
+ 	}
+=20
++	q->entry[idx].flags |=3D MT_QUEUE_ENTRY_LAST;
+ 	q->entry[idx].txwi =3D txwi;
+ 	q->entry[idx].skb =3D skb;
+=20
+@@ -93,27 +94,31 @@ static void
+ mt76_dma_tx_cleanup_idx(struct mt76_dev *dev, struct mt76_queue *q, int id=
+x,
+ 			struct mt76_queue_entry *prev_e)
+ {
++	__le32 addr, __ctrl =3D READ_ONCE(q->desc[idx].ctrl);
+ 	struct mt76_queue_entry *e =3D &q->entry[idx];
+-	__le32 __ctrl =3D READ_ONCE(q->desc[idx].ctrl);
+-	u32 ctrl =3D le32_to_cpu(__ctrl);
+-
+-	if (!e->txwi || !e->skb) {
+-		__le32 addr =3D READ_ONCE(q->desc[idx].buf0);
+-		u32 len =3D FIELD_GET(MT_DMA_CTL_SD_LEN0, ctrl);
++	u32 len, ctrl =3D le32_to_cpu(__ctrl);
+=20
++	if (e->flags & MT_QUEUE_ENTRY_FIRST) {
++		addr =3D READ_ONCE(q->desc[idx].buf1);
++		len =3D FIELD_GET(MT_DMA_CTL_SD_LEN1, ctrl);
+ 		dma_unmap_single(dev->dev, le32_to_cpu(addr), len,
+ 				 DMA_TO_DEVICE);
+-	}
+-
+-	if (!(ctrl & MT_DMA_CTL_LAST_SEC0)) {
+-		__le32 addr =3D READ_ONCE(q->desc[idx].buf1);
+-		u32 len =3D FIELD_GET(MT_DMA_CTL_SD_LEN1, ctrl);
+-
++	} else {
++		addr =3D READ_ONCE(q->desc[idx].buf0);
++		len =3D FIELD_GET(MT_DMA_CTL_SD_LEN0, ctrl);
+ 		dma_unmap_single(dev->dev, le32_to_cpu(addr), len,
+ 				 DMA_TO_DEVICE);
++		if (e->txwi &&
++		    ((ctrl & MT_DMA_CTL_LAST_SEC1) ||
++		     !(e->flags & MT_QUEUE_ENTRY_LAST))) {
++			addr =3D READ_ONCE(q->desc[idx].buf1);
++			len =3D FIELD_GET(MT_DMA_CTL_SD_LEN1, ctrl);
++			dma_unmap_single(dev->dev, le32_to_cpu(addr), len,
++					 DMA_TO_DEVICE);
++		}
+ 	}
+=20
+-	if (e->txwi =3D=3D DMA_DUMMY_DATA)
++	if (!(e->flags & MT_QUEUE_ENTRY_LAST))
+ 		e->txwi =3D NULL;
+=20
+ 	if (e->skb =3D=3D DMA_DUMMY_DATA)
+diff --git a/drivers/net/wireless/mediatek/mt76/mt76.h b/drivers/net/wirele=
+ss/mediatek/mt76/mt76.h
+index e95a5893f93b..b0ac82b31789 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt76.h
++++ b/drivers/net/wireless/mediatek/mt76/mt76.h
+@@ -83,6 +83,8 @@ struct mt76_tx_info {
+ 	u32 info;
  };
- 
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+=20
++#define MT_QUEUE_ENTRY_FIRST	BIT(0)
++#define MT_QUEUE_ENTRY_LAST	BIT(1)
+ struct mt76_queue_entry {
+ 	union {
+ 		void *buf;
+@@ -95,6 +97,7 @@ struct mt76_queue_entry {
+ 	enum mt76_txq_id qid;
+ 	bool schedule;
+ 	bool done;
++	u32 flags;
+ };
+=20
+ struct mt76_queue_regs {
+--=20
+2.21.0
 
+>=20
+> Regards,
+> Lorenzo
+>=20
+> >=20
+> > --=20
+> >   Oleksandr Natalenko (post-factum)
+
+
+
+--JP+T4n/bALQSJXh8
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCXbAUXAAKCRA6cBh0uS2t
+rF/rAQCyhLupkRPLUnZ/u8RTazD0fai2XfAUiYa6BP9pmufiIQD+K53LBN+/QpAE
+3JTEkMlFUtOM8jVQtF8L4kueXoshyg0=
+=t1jf
+-----END PGP SIGNATURE-----
+
+--JP+T4n/bALQSJXh8--
