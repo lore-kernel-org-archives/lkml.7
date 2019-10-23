@@ -2,109 +2,96 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89C0FCA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:16:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A720ECA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:16:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59D8920650
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:16:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571825770;
-	bh=95VETJwzfjNzq+Hxq3/c7JAkanOBoPXn2ZrXKElGSlw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MPm51rGb+6iyDGCFbx+YZIgjx10HE0AU8pDNq+8clqgS+brFSjLkLS5zc07I/65ge
-	 d5YFEjTGJT25pRVMJ5DxRc5zczq7WLSUiU+oqtY3FRIO9SBuCD551j3IsdToe4owuI
-	 7RN/gzgVeO4dKUbaWMzqMkecn6NZuROW3hcywf5Y=
+	by mail.kernel.org (Postfix) with ESMTP id 76D58205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:16:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="DlvVzDAH";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="LVDf3tcx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404233AbfJWKQJ (ORCPT
+        id S2404301AbfJWKQz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 06:16:09 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:38929 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390935AbfJWKQJ (ORCPT
+        Wed, 23 Oct 2019 06:16:55 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:53868 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403810AbfJWKQz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 06:16:09 -0400
-Received: by mail-wm1-f67.google.com with SMTP id r141so9476926wme.4;
-        Wed, 23 Oct 2019 03:16:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=9iPPqusJPjy3fAoziYeQ1zwfhPnXfEyQ34hAjHCQafo=;
-        b=VYLE/i7wvrdstNdqoYBu4hHMmgi2Xnp6mJUGJmCBGfkD/0g0gaS2KtG/wmobKZdIUC
-         ow+h77+mHBjo1CVD8W0IDu5KX7/Qs4Q7B6gqWRjx5LnWu2iQB99vVvzdvwwo1yfpasfL
-         D0EOvOmY1UfEj7U5aIPMesDQ+Y3ao9sIF1a5JKQZUey9bODP2TAYH/2MMF6HTnCDwZs5
-         cbfcmRhSAA9uzqDMFqFA3KNlgij+qz2MWSd7omoOrklclFnJwXp0fGChmSa5AH4vVSsK
-         e2DtfhLxvqvCjQVYrnaHE/zn3fQ3DAja0d33FlyIMeaYHuILDZEHFC8Fmsk8C9oifSxk
-         3ooA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9iPPqusJPjy3fAoziYeQ1zwfhPnXfEyQ34hAjHCQafo=;
-        b=XyW9+kSJdUnvqfqFuYQkB78ehdJ80vWqJEofUTieKXoG8XgN3GjfjqnAxANNjl6lDm
-         KoBPWhltMiIiS7P8qC9XZPbdPL5HUTQB4zlzmSdsKKosCXV1gdaEhHoovDRl7cTG4Kn+
-         vX2gCDIPvpSqsK/UUnQhexj+Qj/HHkrjalOvyabOSVjlFtLHx2PcyhpT5/dOfvyVqXJ+
-         a2Rgl12mnARCxG73vUGL9Ixc6DKFXKTSfx/ezCpCw8DeS2wA082XYvfe8U+gaGiGcnQN
-         +S3wJiwOrxaIn2XV3zbXGgAhHWwKgMgFqAy4A20C64+OGJo0yoPxTkXTVGif4WqyIref
-         OMDg==
-X-Gm-Message-State: APjAAAUt9Er/IInxW1SjNmhYZ+dYvchTJkPnvc1UVgGJOlnGh2OdTMlg
-        esTiO8t9SnskMa0GWcF8iwM=
-X-Google-Smtp-Source: APXvYqwxuHSMMTKBbHUKw6TukoIvtmzINUAeMlsHvgxZimi044g64RvzMK+5ejsMdipBS0mtnKfohQ==
-X-Received: by 2002:a7b:cf12:: with SMTP id l18mr7292922wmg.105.1571825766994;
-        Wed, 23 Oct 2019 03:16:06 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id c189sm1979877wme.24.2019.10.23.03.16.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Oct 2019 03:16:06 -0700 (PDT)
-Date:   Wed, 23 Oct 2019 12:16:03 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Thomas Hellstrom <thellstrom@vmware.com>
-Cc:     Ingo Molnar <mingo@elte.hu>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: Fixes tags need some work in the tip tree
-Message-ID: <20191023101603.GA120912@gmail.com>
-References: <20191023071655.10a9cff5@canb.auug.org.au>
- <MN2PR05MB6141177C37F2D1566E4FB341A1680@MN2PR05MB6141.namprd05.prod.outlook.com>
+        Wed, 23 Oct 2019 06:16:55 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 10E1C61282; Wed, 23 Oct 2019 10:16:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571825814;
+        bh=tS28jUJhwHH2gy1huRdTOg7DLGrPTLou2VFpUP+xrr4=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=DlvVzDAHTKuNxc8am8S9BNY532beF7zvBcVuYZGq3u4fN668cBXsGoHReODnjKzkH
+         nBnTpr49Kll5jXte09NftMry1siH/Ix7AnjXD0rxhDjILxY9QIzXoh577Ba1i81TaS
+         mqmiBLIdrRHidVp0HRsmYvr9ZhbVvpHRtFafkIfg=
+Received: from tynnyri.adurom.net (tynnyri.adurom.net [51.15.11.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4A53C6126F;
+        Wed, 23 Oct 2019 10:16:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571825809;
+        bh=tS28jUJhwHH2gy1huRdTOg7DLGrPTLou2VFpUP+xrr4=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=LVDf3tcxlr0PG/Y2JkbhrqpnBSzHRcKgL0zg3A44qao1jnvzhrrWkOchQT86dDkZ0
+         PMb9JT5wbyPweXhsZ1U/kTkUdOc1ac4nFQwo92HdNCA5k50PP4amgE8Y62GGIA3H2V
+         XpFtD0q+mY5ipz0ht9Df5ls9yR4RJ/kRBu+1eB5M=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4A53C6126F
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Chris Chiu <chiu@endlessm.com>
+Cc:     YueHaibing <yuehaibing@huawei.com>,
+        Jes Sorensen <Jes.Sorensen@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        David Miller <davem@davemloft.net>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] rtl8xxxu: remove set but not used variable 'rate_mask'
+References: <20191023075342.26656-1-yuehaibing@huawei.com>
+        <CAB4CAwek7u3_U9T_314P7qK2o7ReKQ0EVvYTkyzrORZjhdSRnA@mail.gmail.com>
+Date:   Wed, 23 Oct 2019 13:16:43 +0300
+In-Reply-To: <CAB4CAwek7u3_U9T_314P7qK2o7ReKQ0EVvYTkyzrORZjhdSRnA@mail.gmail.com>
+        (Chris Chiu's message of "Wed, 23 Oct 2019 18:10:50 +0800")
+Message-ID: <87sgnjeph0.fsf@tynnyri.adurom.net>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <MN2PR05MB6141177C37F2D1566E4FB341A1680@MN2PR05MB6141.namprd05.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Chris Chiu <chiu@endlessm.com> writes:
 
-* Thomas Hellstrom <thellstrom@vmware.com> wrote:
+> On Wed, Oct 23, 2019 at 3:54 PM YueHaibing <yuehaibing@huawei.com> wrote:
+>>
+>> drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c:4484:6:
+>>  warning: variable rate_mask set but not used [-Wunused-but-set-variable]
+>>
+>> It is never used since commit a9bb0b515778 ("rtl8xxxu: Improve
+>> TX performance of RTL8723BU on rtl8xxxu driver")
+>>
+>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>> ---
+> Singed-off-by: Chris Chiu <chiu@endlessm.com>
 
-> On 10/22/19 10:17 PM, Stephen Rothwell wrote:
-> > Hi all,
-> >
-> > n commit
-> >
-> >   6fee2a0be0ec ("x86/cpu/vmware: Fix platform detection VMWARE_PORT macro")
-> >
-> > Fixes tag
-> >
-> >   Fixes: b4dd4f6e3648 ("Add a header file for hypercall definitions")
-> 
-> The cited subject is missing a leading "x86/vmware:". Ingo, please let
-> me know if you want me to respin those.
+In the future please use Reviewed-by:
 
-Those who are picking it up for a backport will go by the sha1, while 
-humans reading it are fine without the prefix, I think this is OK as-is.
+https://www.kernel.org/doc/html/latest/process/submitting-patches.html#using-reported-by-tested-by-reviewed-by-suggested-by-and-fixes
 
-Thanks,
+Signed-off-by is supposed to be used when you are sending a patch and
+Acked-by is used by the driver maintainer, in this case Jes.
 
-	Ingo
+-- 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
