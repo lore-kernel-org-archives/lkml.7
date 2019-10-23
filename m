@@ -2,147 +2,85 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C23ECA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:27:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A713CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:29:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26D0A21872
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:27:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571833671;
-	bh=t8T7r1ufu3VJCAxY8EdZbRggUlqydUzVwu4ytEqymNY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qXTEAd1M5huiKbmLeQ+DiYOlsic/A9/EHeME+ZnVqqxmOs9QtEdW0exNS7w3Tdy+Z
-	 A9EFYRMQfX9IEY0wAKRuaFancLzMFT5XBCyj8ib4ZuY0pmbgpdjQP/o6hZl/Adwy9z
-	 OaJUC5rX4MUpqq9iR2NxfIT8z+dYibz5G2xSFynw=
+	by mail.kernel.org (Postfix) with ESMTP id 665A62086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:29:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388034AbfJWM1u (ORCPT
+        id S2391300AbfJWM3F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 08:27:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59508 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725947AbfJWM1t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 08:27:49 -0400
-Received: from earth.universe (monacowifi.monaco.mc [82.113.13.92])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8EE942086D;
-        Wed, 23 Oct 2019 12:27:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571833668;
-        bh=t8T7r1ufu3VJCAxY8EdZbRggUlqydUzVwu4ytEqymNY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rEP/KHnEMJt+p5oYo2wj9P7HvDzYxvMMwbEVPFb+ct/AWVpFypiPGZHrOr4EWYoAE
-         jlhMIW2NSPmc6niovedZIbrtq6DoVMMbZ2gRRS9/YcbVTFlwTJQY/yAge1392WcaYi
-         MH10fJB3ITMrv12A5eyEmGMImZ8HqZj4mTiHnPro=
-Received: by earth.universe (Postfix, from userid 1000)
-        id A982F3C09B2; Wed, 23 Oct 2019 14:27:45 +0200 (CEST)
-Date:   Wed, 23 Oct 2019 14:27:45 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Marcel Holtmann <marcel@holtmann.org>
-Cc:     Tony Lindgren <tony@atomide.com>, Adam Ford <aford173@gmail.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        linux-bluetooth@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@collabora.com
-Subject: Re: [PATCHv2 4/4] Bluetooth: btwilink: drop superseded driver
-Message-ID: <20191023122745.ldh2ghnzazdhaf2x@earth.universe>
-References: <20191003134147.9458-1-sre@kernel.org>
- <20191003134147.9458-5-sre@kernel.org>
- <BC1F82AC-2988-4BC6-99EA-1C9F9289E582@holtmann.org>
- <20191020205901.56bafijk7cu3rpaj@earth.universe>
- <AC376F8D-77F3-4497-94D1-FE25A5ED9337@holtmann.org>
+        Wed, 23 Oct 2019 08:29:05 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:50166 "EHLO foss.arm.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S1725775AbfJWM3F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 08:29:05 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 493E0494;
+        Wed, 23 Oct 2019 05:28:44 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B406B3F6C4;
+        Wed, 23 Oct 2019 05:28:42 -0700 (PDT)
+Date:   Wed, 23 Oct 2019 13:28:40 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Thara Gopinath <thara.gopinath@linaro.org>
+Cc:     mingo@redhat.com, peterz@infradead.org, ionela.voinescu@arm.com,
+        vincent.guittot@linaro.org, rui.zhang@intel.com,
+        edubezval@gmail.com, qperret@google.com,
+        linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
+        javi.merino@kernel.org, daniel.lezcano@linaro.org
+Subject: Re: [Patch v4 4/6] sched/fair: update cpu_capcity to reflect thermal
+ pressure
+Message-ID: <20191023122252.dz7obopab6iizy4s@e107158-lin.cambridge.arm.com>
+References: <1571776465-29763-1-git-send-email-thara.gopinath@linaro.org>
+ <1571776465-29763-5-git-send-email-thara.gopinath@linaro.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="iqu4xmpkphwkun2f"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <AC376F8D-77F3-4497-94D1-FE25A5ED9337@holtmann.org>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <1571776465-29763-5-git-send-email-thara.gopinath@linaro.org>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 10/22/19 16:34, Thara Gopinath wrote:
+> cpu_capacity relflects the maximum available capacity of a cpu. Thermal
+> pressure on a cpu means this maximum available capacity is reduced. This
+> patch reduces the average thermal pressure for a cpu from its maximum
+> available capacity so that cpu_capacity reflects the actual
+> available capacity.
+> 
+> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+> ---
+>  kernel/sched/fair.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 4f9c2cb..be3e802 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -7727,6 +7727,7 @@ static unsigned long scale_rt_capacity(struct sched_domain *sd, int cpu)
+>  
+>  	used = READ_ONCE(rq->avg_rt.util_avg);
+>  	used += READ_ONCE(rq->avg_dl.util_avg);
+> +	used += READ_ONCE(rq->avg_thermal.load_avg);
 
---iqu4xmpkphwkun2f
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Maybe a naive question - but can we add util_avg with load_avg without
+a conversion? I thought the 2 signals have different properties.
 
-Hi,
+Cheers
 
-On Mon, Oct 21, 2019 at 05:14:15PM +0200, Marcel Holtmann wrote:
-> Hi Sebastian,
->=20
-> >>> All users of this driver have been converted to the serdev based
-> >>> hci_ll driver. The unused driver can be safely dropped now.
-> >>>=20
-> >>> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> >>> ---
-> >>> drivers/bluetooth/Kconfig    |  11 --
-> >>> drivers/bluetooth/Makefile   |   1 -
-> >>> drivers/bluetooth/btwilink.c | 337 -----------------------------------
-> >>> 3 files changed, 349 deletions(-)
-> >>> delete mode 100644 drivers/bluetooth/btwilink.c
-> >>=20
-> >> patch has been applied to bluetooth-next tree.
-> >>=20
-> >> However what I really like to see is that you re-introduce a
-> >> btwilink driver that is purely serdev based and doesn=E2=80=99t rely on
-> >> any hci_uart/hci_ldisc code. A clean serdev only driver is that
-> >> best and easier to maintain long term.
-> >=20
-> > So basically move the serdev implementation from hci_ll.c into its
-> > own driver and make hci_ll hci_uart based only? That effectively
-> > means, that we have two implementations of the protocol. I don't
-> > think this will improve maintainability, since then bugs needs to
-> > be fixed in two places? Note, that we have a couple of drivers
-> > with serdev+hci_uart by now:
-> >=20
-> > for file in $(grep -l serdev drivers/bluetooth/hci_*c) ; grep -l hci_ua=
-rt_register_proto "${file}"
-> > hci_bcm.c
-> > hci_h5.c
-> > hci_ldisc.c
-> > hci_ll.c
-> > hci_mrvl.c
-> > hci_qca.c
->=20
-> I would like to have something similar to btmtkuart.c which is a
-> pure serdev driver that doesn=E2=80=99t depend on any hci_ldisc.c
-> framework. If we have this, then we would just drop hci_ll.c from
-> the kernel and focus on the serdev only version. As noted, there
-> is no need for any other driver at that point since everything is
-> probed anyway. Users will not even notice the difference.
+--
+Qais Yousef
 
-This can be achieved by just removing the hci_uart part from
-hci_ll. But AFAIK there are some non-wilink based TI HCILL
-devices, which do not require any extra platform data and might
-still use the hci_uart part.
-
--- Sebastian
-
---iqu4xmpkphwkun2f
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl2wRzoACgkQ2O7X88g7
-+pogDw//Xb2ZDLcdKOs0TDYMMcP6rvRkA9S5ou7bDl8c2XgGbqsQSr7a851UVUxK
-S6ya43Jt6jQFTyR1pB55sSvoNu278E/TuBS3dPVwML5LasWRte3eFnITIdI0lHZ4
-ixeJ7JUUsvFLsiZ0GYTFm9ps4lAoh8qvpMFy0zrF4sdNoUq8QEUH4iAePN7Y7C+z
-Tc8RKRND96YNf1oar+mOpwDjqrV9DLahcOncO5VQn5pIO6N65g28K5tBslPIG3ZV
-MDoDmQTpjLnUxLpXs6oWkEbgBmBpI3Hx+ogRZfj1OF0m0qeCEGhvvcBp6STHiEkG
-u0vlQUC4RvnbGVul73MdOTSqfoghGuHiqyxazDWNmHFpo81HdhaHSB6/IxCKl8e4
-XJYYCbDTur4uWIMw9t5NTe7QUHrOezj2QrCNXDyikz1mNN4O4WrahKzkiLA0GSAu
-V2r+gcr6Z7r0QJs5cAimiYF3Hm5xl/sPhnhCqyRfFSBX93SeraGPkqF/PvcPWDRu
-J0H10QcDLI3xo3jnhUQPgcDoMeuNsKhE4w6sQvUPfbsXUme4/6d2+hrLsevQj+HE
-1Ozg/BKkIAlPQ8Pbtz93lZoseLJPCFROArLqLZERiRb++iAfVj/inJZzyhewhZJD
-cYzanohB9A6ZpLXiZLtuRKsQxCEoBYLX314LKlZJ2FaaUeSKIDY=
-=qmL6
------END PGP SIGNATURE-----
-
---iqu4xmpkphwkun2f--
+>  
+>  	if (unlikely(used >= max))
+>  		return 1;
+> -- 
+> 2.1.4
+> 
