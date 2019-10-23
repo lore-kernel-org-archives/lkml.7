@@ -2,92 +2,121 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B4FCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 02:41:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBD09CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 02:41:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3D0E2053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 02:41:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92B62214B2
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 02:41:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iU2oyWeX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cGAgcBjN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389181AbfJWClP (ORCPT
+        id S2389225AbfJWCl6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 22:41:15 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:42790 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730655AbfJWClO (ORCPT
+        Tue, 22 Oct 2019 22:41:58 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:39278 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729994AbfJWCl5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 22:41:14 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 21so658510pfj.9
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 19:41:14 -0700 (PDT)
+        Tue, 22 Oct 2019 22:41:57 -0400
+Received: by mail-qk1-f193.google.com with SMTP id 4so18421862qki.6
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 19:41:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=67e1Q0MOW3JpeTjPpBwrGL7Br8C/8KI2Kwh1vAn3ymg=;
-        b=iU2oyWeXXlCDX5qFs3nFJrMsiKp4OWnDWapu3NEeIHQCI3wOOyoQ1E4HhciKoLO3Gf
-         RHahVLm3qvxgaVRWkXgLWFM9sNdlSF9SDtpi5mZXHGc6RRTsXMwkojC+XOjcNQiO71hd
-         U4pRNr3XkLY3OqdDVmwFaYiKNXZT9bzVU3ZrE=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=q4raC0KDrg0Y3VOU96/cM0m4sT0Xq+RiWIVVbLsEG3o=;
+        b=cGAgcBjNZ7OGStncxmS8AdWRHM1wBepX2aAZNEflgKnz6qUeoCLayiPuMzY7TIH8lb
+         fZl60JgJSx6k4Y8w4Zru4lh2M1HrwdAVcQCLPDcNsvA+8EGfEQQeWdBIeN1Tlpn256u/
+         h/84gUCUmLt2Zuy+lNfIEbDxqGKfn2u1zs5d6Ji4wzGjwioKo5QGUaVcRWFbZ8aFtRgy
+         R+b5lFW1NAbamEvfz3/gsg2ZsZebWuE7hQg/GGI2hmU0wQ8LkFc090kkopPJf9XaiH+z
+         NNuH3qT0o4Bca3w3Gy3SI5mkPZ728mqz8U7gmltkcZJOlbyxMidEHAe4/hlR/v6YZslS
+         /8Sw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=67e1Q0MOW3JpeTjPpBwrGL7Br8C/8KI2Kwh1vAn3ymg=;
-        b=emu30zNutIFIyge7NEDLhtw3/ovA9o4nrJUZRrGRANCFQZSyyYcbO0bWWN3WTeMpJR
-         GPbWywUSfdaxY3PCKLY9caGbt8nbpYann9rK8LWoS/faqpDqPSNB8i0bI3mHzzDuIEqC
-         RT1eBlYN5Ytoqym8E/MQeOeWJiero/KSFmV/sUNXmFusN4AYpBAbvHCbIfIlUPb5UWd0
-         v4kbmcv8f9D2nHrXUBXv8MGmE0Ozpue8dT0EaVwWI9WTYk74RCj5YUodXTbjkeiMNAlL
-         /yeDEsRHJhVlWRtc5Xr4FFIe9gZIG2ypfGur6gxV+9/YyU8m5gGRH5F/5dU4oxmz87Xa
-         S8oQ==
-X-Gm-Message-State: APjAAAVqhXTbiZTrJHzS35rr3sx7kU6HFe5px77tmIE0XEOv1az1fPnp
-        TvvPRtZxNoG5b9vgDp46gj8j4w==
-X-Google-Smtp-Source: APXvYqwXnfEK8HCYKm0YIv9h0z8cNUUeG188FZOP6II9/7y0akJFVN1LoQsVcDAkgDFgnzevGkW2Qw==
-X-Received: by 2002:a17:90a:1b2a:: with SMTP id q39mr8559698pjq.119.1571798473820;
-        Tue, 22 Oct 2019 19:41:13 -0700 (PDT)
-Received: from ikjn-p920.tpe.corp.google.com ([2401:fa00:1:10:254e:2b40:ef8:ee17])
-        by smtp.gmail.com with ESMTPSA id 139sm4073338pfb.78.2019.10.22.19.41.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Oct 2019 19:41:13 -0700 (PDT)
-From:   Ikjoon Jang <ikjn@chromium.org>
-To:     linux-input@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-kernel@vger.kernel.org,
-        Nicolas Boitchat <drinkcat@chromium.org>,
-        Ikjoon Jang <ikjn@chromium.org>
-Subject: [PATCH v3 0/2] HID: google: add device tree bindings for
-Date:   Wed, 23 Oct 2019 10:41:03 +0800
-Message-Id: <20191023024103.225771-1-ikjn@chromium.org>
-X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=q4raC0KDrg0Y3VOU96/cM0m4sT0Xq+RiWIVVbLsEG3o=;
+        b=Ry6eb1fwTvv9beFXDui2AEzwoeBerNpeZW/gXVY9VJsvUoYDcymn0Tuq3TL2LTGY0r
+         BIxQj8zvWjJ9ZLhH3UcbeSDBHgKrSb5WKfbRNoFeauTPihhVtqIBXkZUJ7F1jPD0BC0v
+         rgL8wWJi79ZE1roXVV83aOuF3rsS5l2VpEhVKRwrOWtJZgKIcLCgwHU1isqJQuhAhFS7
+         4xkxX+xptTk15jnCDnqoa1M0uro57vN0K4jfEBJh5PjnOiutsYXPKlqDy55FA/SuhyxY
+         o6XdQ6zU2cVEB7ZirfxPAT1geZc/oniSX1t38wIkqcUXHJGy5FYdFYdZhJFZJWRr1+vL
+         lDQw==
+X-Gm-Message-State: APjAAAX7bDIzFg/uvHwuoTLnCGOZCC1h2nI5sApXh4noFGVpIuDE7o1o
+        blPFryDl/HiZ7Qj1/mHABTwuiQ==
+X-Google-Smtp-Source: APXvYqxujctKv2HySWW6Y07W2SuJ8MZUeMGfRnect8SenIwk0zEEAi1cnR2+yCc96rV6CT1PWC8OfQ==
+X-Received: by 2002:a37:7b44:: with SMTP id w65mr6367539qkc.409.1571798516742;
+        Tue, 22 Oct 2019 19:41:56 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s (li937-157.members.linode.com. [45.56.119.157])
+        by smtp.gmail.com with ESMTPSA id 76sm12508050qke.111.2019.10.22.19.41.52
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 22 Oct 2019 19:41:55 -0700 (PDT)
+Date:   Wed, 23 Oct 2019 10:41:49 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        acme@kernel.org, open list <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        lkft-triage@lists.linaro.org
+Subject: Re: Linux-next: 20191022: perf: bpf_helpers_doc.py: not found
+Message-ID: <20191023024149.GA29009@leoy-ThinkPad-X240s>
+References: <CA+G9fYvWdkmmkrq7hvADZ-1qnUNEwRULoTPfOQDnu1aZW8cDEA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+G9fYvWdkmmkrq7hvADZ-1qnUNEwRULoTPfOQDnu1aZW8cDEA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DT bindings for Whiskers swich device and its documentation.
+Hi Naresh,
 
-v3: dt bindings description changed
-v2: dropped a patch not relevant to DT bindings
+On Tue, Oct 22, 2019 at 09:04:04PM +0530, Naresh Kamboju wrote:
+> We have noticed perf (OE recipe) build failure on linux next 20191022.
+> do you see this failure ?
+> 
+> /bin/sh: 1: perf/1.0-r9/perf-1.0/scripts/bpf_helpers_doc.py: not found
+> Makefile:184: recipe for target 'bpf_helper_defs.h' failed
+> make[3]: *** [bpf_helper_defs.h] Error 127
+> make[3]: *** Deleting file 'bpf_helper_defs.h'
+> Makefile.perf:765: recipe for target 'perf/1.0-r9/perf-1.0/libbpf.a' failed
+> make[2]: *** [perf/1.0-r9/perf-1.0/libbpf.a] Error 2
 
-Ikjoon Jang (2):
-  dt-bindings: input: Add DT bindings for Whiskers switch
-  HID: google: Add of_match table to Whiskers switch device.
+I tested for two methods with linux-next, one is native building mode
+for Arm64 building on DB410c board, another is cross compiling Arm64
+binary on my x86 laptop.  Both cannot reproduce this failure.
 
- .../devicetree/bindings/input/cros-cbas.yaml  | 22 +++++++++++++++++++
- drivers/hid/hid-google-hammer.c               | 10 +++++++++
- 2 files changed, 32 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/cros-cbas.yaml
+After read your shared build log and I think the building process is
+expected: Perf tool tries to build libbpf, so it changes to the
+building folder 'BPF_DIR' (which is under $(srctree)/tools/lib/bpf/),
+then failed to find file $(srctree)/scripts/bpf_helpers_doc.py.
 
--- 
-2.23.0.866.gb869b98d4c-goog
+Here $(srctree) means the kernel's root folder.
 
+Seems to me, this failure is caused by missing to sync kernel files
+$linux_src/scripts to the OE folder 'perf/1.0-r9/perf-1.0/scripts'?
+
+Thanks,
+Leo Yan
+
+> Metadata:
+> ------------------------------------------------------------------------
+> kernel: 5.4.0-rc4
+> git repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+> git branch: master
+> git commit: a722f75b2923b4fd44c17e7255e822ac48fe85f0
+> git describe: next-20191022
+> Test details: https://qa-reports.linaro.org/lkft/linux-next-oe/build/next-20191022
+> 
+> Full build log:
+> https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-next/DISTRO=lkft,MACHINE=hikey,label=docker-lkft/631/consoleText
+> 
+> - Naresh
