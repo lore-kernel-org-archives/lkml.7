@@ -2,131 +2,168 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FBB6CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 22:50:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8883CA9EBB
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 22:56:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E475820679
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 22:50:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dzTDdH1n"
+	by mail.kernel.org (Postfix) with ESMTP id 7DD4620663
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 22:56:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571871382;
+	bh=pH0FnxHuQ4uryY+5yag7Co6S+Z3nSAfsh/gAbdxNnLk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=edTlYhKR05D7WFUyrgY2eynguIoupOTtVdZkXwwAbkvZhtWI72uVcsZ2R6IekDohP
+	 x6q0QriedlTNBk+80U88OVe+AU4Vwlk0NCFOJhHB8viR0UTmREDUEdubqR7QoQXlIS
+	 +YX1Ns8Oa15/Gl5I3RDw0ahF5tG+6mXTvxkB8lys=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436888AbfJWWuB (ORCPT
+        id S2392698AbfJWW4V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 18:50:01 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23159 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2436878AbfJWWuB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 18:50:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571871000;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Yz7wSvOGd82/0K8lGxn6yjb1/1nVsqdH855L2IiS7Z0=;
-        b=dzTDdH1n0BKJ9o4PJ7hdXkJjMd5q5OBG6xKGHDzeMBRiZPQTR2mRCqMt5gDDWJjob1na1I
-        oc0f14c5eFgIO3yf7kwb9dDK+Wv50S8q+HLIDaIkgsu1pWQJntgG7k96bFpuHzMbREr6JC
-        fu3p3zMsFtXBHHEfqfqCxIFY8p+SonI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-208-ThLW4CDOM-6LSfmPyZOXsQ-1; Wed, 23 Oct 2019 18:49:58 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 23 Oct 2019 18:56:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60208 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727831AbfJWW4U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 18:56:20 -0400
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 11A351005500;
-        Wed, 23 Oct 2019 22:49:57 +0000 (UTC)
-Received: from treble (ovpn-121-225.rdu2.redhat.com [10.10.121.225])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id EECEE5C1D4;
-        Wed, 23 Oct 2019 22:49:54 +0000 (UTC)
-Date:   Wed, 23 Oct 2019 17:49:52 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        linux-arch@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>,
-        Miroslav Benes <mbenes@suse.cz>
-Subject: Re: [patch V2 03/17] x86/traps: Remove pointless irq enable from
- do_spurious_interrupt_bug()
-Message-ID: <20191023224952.d73mataiisu3u4tg@treble>
-References: <20191023122705.198339581@linutronix.de>
- <20191023123117.871608831@linutronix.de>
- <20191023213107.m7ishskghswktspp@treble>
- <alpine.DEB.2.21.1910240018230.1852@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1910240018230.1852@nanos.tec.linutronix.de>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-MC-Unique: ThLW4CDOM-6LSfmPyZOXsQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
+        by mail.kernel.org (Postfix) with ESMTPSA id 77AFA21929;
+        Wed, 23 Oct 2019 22:56:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571871379;
+        bh=pH0FnxHuQ4uryY+5yag7Co6S+Z3nSAfsh/gAbdxNnLk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=NZLyOT+ZqApYNjFfkvN4E7nfBNCZAjOdC/wzoETDChxjDRKMAXrf0iSDA2NpO1dAl
+         n3jrJoabu0ncBYm24CEnLneZZFelnIqDG07Oa2FG2xVneQxq6qjLqnh4rNvt1Xk8HB
+         diUUCetS09WEi0qR/QGP/DU2B2gikuUL57m32dSk=
+Date:   Wed, 23 Oct 2019 15:56:19 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Jani Nikula <jani.nikula@intel.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        intel-gfx@lists.freedesktop.org,
+        Vishal Kulkarni <vishal@chelsio.com>, netdev@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, Julia Lawall <julia.lawall@lip6.fr>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Subject: Re: [PATCH v4] string-choice: add yesno(), onoff(),
+ enableddisabled(), plural() helpers
+Message-Id: <20191023155619.43e0013f0c8c673a5c508c1e@linux-foundation.org>
+In-Reply-To: <20191023131308.9420-1-jani.nikula@intel.com>
+References: <20191023131308.9420-1-jani.nikula@intel.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 12:35:27AM +0200, Thomas Gleixner wrote:
-> On Wed, 23 Oct 2019, Josh Poimboeuf wrote:
->=20
-> > On Wed, Oct 23, 2019 at 02:27:08PM +0200, Thomas Gleixner wrote:
-> > > That function returns immediately after conditionally reenabling inte=
-rrupts which
-> > > is more than pointless and requires the ASM code to disable interrupt=
-s again.
-> > >=20
-> > > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> > > ---
-> > >  arch/x86/kernel/traps.c |    1 -
-> > >  1 file changed, 1 deletion(-)
-> > >=20
-> > > --- a/arch/x86/kernel/traps.c
-> > > +++ b/arch/x86/kernel/traps.c
-> > > @@ -871,7 +871,6 @@ do_simd_coprocessor_error(struct pt_regs
-> > >  dotraplinkage void
-> > >  do_spurious_interrupt_bug(struct pt_regs *regs, long error_code)
-> > >  {
-> > > -=09cond_local_irq_enable(regs);
-> > >  }
-> >=20
-> > I think we can just remove this handler altogether.  The Intel and AMD
-> > manuals say vector 15 (X86_TRAP_SPURIOUS) is reserved.
->=20
-> Right, but this has history. Pentium Pro Erratum:
->=20
->   PROBLEM: If the APIC subsystem is configured in mixed mode with Virtual
->   Wire mode implemented through the local APIC, an interrupt vector of 0F=
-h
->   (Intel reserved encoding) may be generated by the local APIC (Int 15).
->   This vector may be generated upon receipt of a spurious interrupt (an
->   interrupt which is removed before the system receives the INTA sequence=
-)
->   instead of the programmed 8259 spurious interrupt vector.
->=20
->   IMPLICATION: The spurious interrupt vector programmed in the 8259 is
->   normally handled by an operating system=E2=80=99s spurious interrupt
->   handler. However, a vector of 0Fh is unknown to some operating systems,
->   which would crash if this erratum occurred.
->=20
-> Initially (2.1.) there was a printk() in that handler, which later got
-> ifdeffed out (2.1.54).
->=20
-> So I rather keep that thing at least as long as we support PPro :) Even i=
-f
-> we ditch that the handler is not really hurting anyone.
+On Wed, 23 Oct 2019 16:13:08 +0300 Jani Nikula <jani.nikula@intel.com> wrot=
+e:
 
-Ah.  I guess we could remove the idtentry for 64-bit then?  Anyway the
-above would be a good comment for the function.
+> The kernel has plenty of ternary operators to choose between constant
+> strings, such as condition ? "yes" : "no", as well as value =3D=3D 1 ? ""=
+ :
+> "s":
+>=20
+> $ git grep '? "yes" : "no"' | wc -l
+> 258
+> $ git grep '? "on" : "off"' | wc -l
+> 204
+> $ git grep '? "enabled" : "disabled"' | wc -l
+> 196
+> $ git grep '? "" : "s"' | wc -l
+> 25
+>=20
+> Additionally, there are some occurences of the same in reverse order,
+> split to multiple lines, or otherwise not caught by the simple grep.
+>=20
+> Add helpers to return the constant strings. Remove existing equivalent
+> and conflicting functions in i915, cxgb4, and USB core. Further
+> conversion can be done incrementally.
+>=20
+> The main goal here is to abstract recurring patterns, and slightly clean
+> up the code base by not open coding the ternary operators.
 
---=20
-Josh
+Fair enough.
+
+> --- /dev/null
+> +++ b/include/linux/string-choice.h
+> @@ -0,0 +1,31 @@
+> +/* SPDX-License-Identifier: MIT */
+> +/*
+> + * Copyright =A9 2019 Intel Corporation
+> + */
+> +
+> +#ifndef __STRING_CHOICE_H__
+> +#define __STRING_CHOICE_H__
+> +
+> +#include <linux/types.h>
+> +
+> +static inline const char *yesno(bool v)
+> +{
+> +	return v ? "yes" : "no";
+> +}
+> +
+> +static inline const char *onoff(bool v)
+> +{
+> +	return v ? "on" : "off";
+> +}
+> +
+> +static inline const char *enableddisabled(bool v)
+> +{
+> +	return v ? "enabled" : "disabled";
+> +}
+> +
+> +static inline const char *plural(long v)
+> +{
+> +	return v =3D=3D 1 ? "" : "s";
+> +}
+> +
+> +#endif /* __STRING_CHOICE_H__ */
+
+These aren't very good function names.  Better to create a kernel-style
+namespace such as "choice_" and then add the expected underscores:
+
+choice_yes_no()
+choice_enabled_disabled()
+choice_plural()
+
+(Example: note that slabinfo.c already has an "onoff()").
+
+
+Also, I worry that making these functions inline means that each .o
+file will contain its own copy of the strings ("yes", "no", "enabled",
+etc) if the .c file calls the relevant helper.  I'm not sure if the
+linker is smart enough (yet) to fix this up.  If not, we will end up
+with a smaller kernel by uninlining these functions.=20
+lib/string-choice.c would suit.
+
+And doing this will cause additional savings: calling a single-arg
+out-of-line function generates less .text than calling yesno().  When I
+did this:=20
+
+--- a/include/linux/string-choice.h~string-choice-add-yesno-onoff-enableddi=
+sabled-plural-helpers-fix
++++ a/include/linux/string-choice.h
+@@ -8,10 +8,7 @@
+=20
+ #include <linux/types.h>
+=20
+-static inline const char *yesno(bool v)
+-{
+-	return v ? "yes" : "no";
+-}
++const char *yesno(bool v);
+=20
+ static inline const char *onoff(bool v)
+ {
+
+The text segment of drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.o
+(78 callsites) shrunk by 118 bytes.
 
