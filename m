@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C7EBCA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:53:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED38DCA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:53:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4846420640
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:53:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFFFE2173B
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:53:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391959AbfJWMxk (ORCPT
+        id S2391840AbfJWMxL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 08:53:40 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49374 "EHLO mx1.suse.de"
+        Wed, 23 Oct 2019 08:53:11 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49286 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390962AbfJWMxO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 08:53:14 -0400
+        id S2391001AbfJWMxL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 08:53:11 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id A3F2AB67B;
-        Wed, 23 Oct 2019 12:53:11 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 475E4B679;
+        Wed, 23 Oct 2019 12:53:09 +0000 (UTC)
 From:   Michal Suchanek <msuchanek@suse.de>
 To:     linux-scsi@vger.kernel.org
 Cc:     Michal Suchanek <msuchanek@suse.de>,
@@ -40,9 +40,9 @@ Cc:     Michal Suchanek <msuchanek@suse.de>,
         Bart Van Assche <bvanassche@acm.org>,
         Tejun Heo <tj@kernel.org>, linux-doc@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH v2 4/8] cdrom: separate autoclose into an IOCTL
-Date:   Wed, 23 Oct 2019 14:52:43 +0200
-Message-Id: <eb3804ca76748a8113fbb2322dc23cb06b9109bf.1571834862.git.msuchanek@suse.de>
+Subject: [PATCH v2 1/8] cdrom: add poll_event_interruptible
+Date:   Wed, 23 Oct 2019 14:52:40 +0200
+Message-Id: <7fc0315de16d99ba29b4ffc565996188d290fac9.1571834862.git.msuchanek@suse.de>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1571834862.git.msuchanek@suse.de>
 References: <cover.1571834862.git.msuchanek@suse.de>
@@ -53,141 +53,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This allows the sr driver to call it separately without blocking other
-processes accessing the device. This solves a issue with process waiting
-in open() on broken drive to close the tray blocking out all access to
-the device, including nonblocking access to determine drive status.
+Add convenience macro for polling an event that does not have a
+waitqueue.
 
 Signed-off-by: Michal Suchanek <msuchanek@suse.de>
 ---
- drivers/cdrom/cdrom.c      | 83 +++++++++++++++++++++-----------------
- include/uapi/linux/cdrom.h |  1 +
- 2 files changed, 48 insertions(+), 36 deletions(-)
+ drivers/cdrom/cdrom.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
 diff --git a/drivers/cdrom/cdrom.c b/drivers/cdrom/cdrom.c
-index c0fc9a02b70c..bd8813b5afdb 100644
+index ac42ae4651ce..2ad6b73482fe 100644
 --- a/drivers/cdrom/cdrom.c
 +++ b/drivers/cdrom/cdrom.c
-@@ -1071,46 +1071,16 @@ int open_for_common(struct cdrom_device_info *cdi, tracktype *tracks)
- 		cd_dbg(CD_OPEN, "drive_status=%d\n", ret);
- 		if (ret == CDS_TRAY_OPEN) {
- 			cd_dbg(CD_OPEN, "the tray is open...\n");
--			/* can/may i close it? */
--			if (CDROM_CAN(CDC_CLOSE_TRAY) &&
--			    cdi->options & CDO_AUTO_CLOSE) {
--				cd_dbg(CD_OPEN, "trying to close the tray\n");
--				ret = cdrom_tray_close(cdi);
--				if (ret == -ERESTARTSYS)
--					return ret;
--				if (ret) {
--					cd_dbg(CD_OPEN, "bummer. tried to close the tray but failed.\n");
--					/* Ignore the error from the low
--					level driver.  We don't care why it
--					couldn't close the tray.  We only care 
--					that there is no disc in the drive, 
--					since that is the _REAL_ problem here.*/
--					return -ENOMEDIUM;
--				}
--			} else {
--				cd_dbg(CD_OPEN, "bummer. this drive can't close the tray.\n");
--				return -ENOMEDIUM;
--			}
--			/* Ok, the door should be closed now.. Check again */
--			ret = cdo->drive_status(cdi, CDSL_CURRENT);
--			if ((ret == CDS_NO_DISC) || (ret==CDS_TRAY_OPEN)) {
--				cd_dbg(CD_OPEN, "bummer. the tray is still not closed.\n");
--				cd_dbg(CD_OPEN, "tray might not contain a medium\n");
--				return -ENOMEDIUM;
--			}
--			cd_dbg(CD_OPEN, "the tray is now closed\n");
-+			return -ENOMEDIUM;
- 		}
--		/* the door should be closed now, check for the disc */
- 		if (ret == CDS_DRIVE_NOT_READY) {
--			int poll_res = poll_event_interruptible(
--				CDS_DRIVE_NOT_READY !=
--				(ret = cdo->drive_status(cdi, CDSL_CURRENT)),
--				500);
--			if (poll_res == -ERESTARTSYS)
--				return poll_res;
-+			cd_dbg(CD_OPEN, "the drive is not ready...\n");
-+			return -ENOMEDIUM;
- 		}
--		if (ret != CDS_DISC_OK)
-+		if (ret != CDS_DISC_OK) {
-+			cd_dbg(CD_OPEN, "drive returned status %i...\n", ret);
- 			return -ENOMEDIUM;
-+		}
- 	}
- 	cdrom_count_tracks(cdi, tracks);
- 	if (tracks->error == CDS_NO_DISC) {
-@@ -2353,6 +2323,45 @@ static int cdrom_ioctl_closetray(struct cdrom_device_info *cdi)
- 	return cdi->ops->tray_move(cdi, 0);
- }
+@@ -282,10 +282,24 @@
+ #include <linux/fcntl.h>
+ #include <linux/blkdev.h>
+ #include <linux/times.h>
++#include <linux/delay.h>
+ #include <linux/uaccess.h>
++#include <linux/sched/signal.h>
+ #include <scsi/scsi_common.h>
+ #include <scsi/scsi_request.h>
  
-+static int cdrom_ioctl_autoclose(struct cdrom_device_info *cdi)
-+{
-+	const struct cdrom_device_ops *cdo = cdi->ops;
-+	int ret;
++#define poll_event_interruptible(event, interval) ({ \
++	int ret = 0; \
++	while (!(event)) { \
++		if (signal_pending(current)) { \
++			ret = -ERESTARTSYS; \
++			break; \
++		} \
++		msleep_interruptible(interval); \
++	} \
++	ret; \
++})
 +
-+	if (!cdo->drive_status)
-+		return -ENXIO;
-+
-+	ret = cdo->drive_status(cdi, CDSL_CURRENT);
-+
-+	if ((ret == CDS_TRAY_OPEN) && CDROM_CAN(CDC_CLOSE_TRAY) &&
-+	    (cdi->options & CDO_AUTO_CLOSE)) {
-+		cd_dbg(CD_DO_IOCTL, "trying to close the tray...\n");
-+		ret = cdrom_tray_close(cdi);
-+		if (ret == -ERESTARTSYS)
-+			return ret;
-+		if (ret) {
-+			cd_dbg(CD_DO_IOCTL, "bummer. tried to close the tray but failed.\n");
-+			return -ENOMEDIUM;
-+			ret = cdo->drive_status(cdi, CDSL_CURRENT);
-+		}
-+		ret = cdo->drive_status(cdi, CDSL_CURRENT);
-+	}
-+
-+	if (ret == CDS_DRIVE_NOT_READY) {
-+		int poll_res;
-+
-+		cd_dbg(CD_DO_IOCTL, "waiting for drive to become ready...\n");
-+		poll_res = poll_event_interruptible(CDS_DRIVE_NOT_READY !=
-+			(ret = cdo->drive_status(cdi, CDSL_CURRENT)), 50);
-+		if (poll_res == -ERESTARTSYS)
-+			return poll_res;
-+	}
-+	if (ret != CDS_DISC_OK)
-+		return -ENOMEDIUM;
-+
-+	return 0;
-+}
-+
- static int cdrom_ioctl_eject_sw(struct cdrom_device_info *cdi,
- 		unsigned long arg)
- {
-@@ -3365,6 +3374,8 @@ int cdrom_ioctl(struct cdrom_device_info *cdi, struct block_device *bdev,
- 		return cdrom_ioctl_debug(cdi, arg);
- 	case CDROM_GET_CAPABILITY:
- 		return cdrom_ioctl_get_capability(cdi);
-+	case CDROM_AUTOCLOSE:
-+		return cdrom_ioctl_autoclose(cdi);
- 	case CDROM_GET_MCN:
- 		return cdrom_ioctl_get_mcn(cdi, argp);
- 	case CDROM_DRIVE_STATUS:
-diff --git a/include/uapi/linux/cdrom.h b/include/uapi/linux/cdrom.h
-index 2817230148fd..6493d8c593ee 100644
---- a/include/uapi/linux/cdrom.h
-+++ b/include/uapi/linux/cdrom.h
-@@ -129,6 +129,7 @@
- #define CDROM_LOCKDOOR		0x5329  /* lock or unlock door */
- #define CDROM_DEBUG		0x5330	/* Turn debug messages on/off */
- #define CDROM_GET_CAPABILITY	0x5331	/* get capabilities */
-+#define CDROM_AUTOCLOSE		0x5332	/* If autoclose enabled close tray */
- 
- /* Note that scsi/scsi_ioctl.h also uses 0x5382 - 0x5386.
-  * Future CDROM ioctls should be kept below 0x537F
+ /* used to tell the module to turn on full debugging messages */
+ static bool debug;
+ /* default compatibility mode */
 -- 
 2.23.0
 
