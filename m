@@ -2,92 +2,84 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2112CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:07:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08F76CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:08:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7BFA21906
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:07:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="NchdNT9S"
+	by mail.kernel.org (Postfix) with ESMTP id CB52221906
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:08:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571818108;
+	bh=4oAsPmCE7NkhrzXpeL/BR1JvZGVK6Osp1an0jLKHdso=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DUp8qq/k3Gxgv3HGAXYmIUMdY1b4+NmWTNKtlNSnnfKCn7c0TnSOP32fSgkupywdt
+	 WfArZzPLBBFuZ1juzmVjRXDAbtXUs4Ogbtler3wGFI2ILRCYO/uwZklwAq3pLUvgYq
+	 udV0KiBkaDYps239ThZlYmBN+ekJ9B1RnaI0WjHo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390157AbfJWIHU (ORCPT
+        id S2390168AbfJWII1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 04:07:20 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:58698 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727574AbfJWIHU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 04:07:20 -0400
-Received: from zn.tnic (p200300EC2F11E8005961F1FA34C94581.dip0.t-ipconnect.de [IPv6:2003:ec:2f11:e800:5961:f1fa:34c9:4581])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8762E1EC0CA4;
-        Wed, 23 Oct 2019 10:07:14 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1571818034;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6re90X+K2Ba3Le4UC0nY3M3OCT0CmUV6pKn4yBGcnFE=;
-        b=NchdNT9SJ/OUDAsztb3nXKP6IK9CYG3dJ6LG7Jd0S3aYJx/OZScUjw8sCyjfwcXzFRebHW
-        tDoHQLNq2eZw/Wn44CiyRG2zBHiIoXd862DF+Z+0st9qyilVL4Pn64q9UM4icW9L20aTXs
-        wOz0w/9+4TuLU7oXj8jbO75NtfpHeF8=
-Date:   Wed, 23 Oct 2019 10:07:09 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Yi Wang <wang.yi59@zte.com.cn>
-Cc:     tony.luck@intel.com, tglx@linutronix.de, mingo@redhat.com,
-        hpa@zytor.com, x86@kernel.org, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
-        up2wing@gmail.com, wang.liang82@zte.com.cn
-Subject: Re: [PATCH] x86/mce/amd: fix -Wmissing-prototypes warnings
-Message-ID: <20191023080709.GC16060@zn.tnic>
-References: <1571817437-7570-1-git-send-email-wang.yi59@zte.com.cn>
+        Wed, 23 Oct 2019 04:08:27 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48720 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2390035AbfJWII1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 04:08:27 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 99998BB64;
+        Wed, 23 Oct 2019 08:08:25 +0000 (UTC)
+Date:   Wed, 23 Oct 2019 10:08:23 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     linux-mm <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Chris Down <chris@chrisdown.name>, Tejun Heo <tj@kernel.org>,
+        Roman Gushchin <guro@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Minchan Kim <minchan@kernel.org>, Mel Gorman <mgorman@suse.de>
+Subject: Re: [RFC v1] memcg: add memcg lru for page reclaiming
+Message-ID: <20191023080823.GH754@dhcp22.suse.cz>
+References: <20191022133050.15620-1-hdanton@sina.com>
+ <20191023044448.16484-1-hdanton@sina.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1571817437-7570-1-git-send-email-wang.yi59@zte.com.cn>
+In-Reply-To: <20191023044448.16484-1-hdanton@sina.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 03:57:17PM +0800, Yi Wang wrote:
-> We get two warnings when build kernel W=1:
-> arch/x86/kernel/cpu/mce/amd.c:586:6: warning: no previous prototype for ‘disable_err_thresholding’ [-Wmissing-prototypes]
+On Wed 23-10-19 12:44:48, Hillf Danton wrote:
 > 
-> Make the function static to fix this.
+> On Tue, 22 Oct 2019 15:58:32 +0200 Michal Hocko wrote:
+> > 
+> > On Tue 22-10-19 21:30:50, Hillf Danton wrote:
+[...]
+> > > in this RFC after ripping pages off
+> > > the first victim, the work finishes with the first ancestor of the victim
+> > > added to lru.
+> > > 
+> > > Recaliming is defered until kswapd becomes active.
+> > 
+> > This is a wrong assumption because high limit might be configured way
+> > before kswapd is woken up.
 > 
-> Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
-> ---
->  arch/x86/kernel/cpu/mce/amd.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/kernel/cpu/mce/amd.c b/arch/x86/kernel/cpu/mce/amd.c
-> index 6ea7fdc..5167bd2 100644
-> --- a/arch/x86/kernel/cpu/mce/amd.c
-> +++ b/arch/x86/kernel/cpu/mce/amd.c
-> @@ -583,7 +583,7 @@ bool amd_filter_mce(struct mce *m)
->   * - Prevent possible spurious interrupts from the IF bank on Family 0x17
->   *   Models 0x10-0x2F due to Erratum #1114.
->   */
-> -void disable_err_thresholding(struct cpuinfo_x86 *c, unsigned int bank)
-> +static void disable_err_thresholding(struct cpuinfo_x86 *c, unsigned int bank)
->  {
->  	int i, num_msrs;
->  	u64 hwcr;
-> --
+> This change was introduced because high limit breach looks not like a
+> serious problem in the absence of memory pressure. Lets do the hard work,
+> reclaiming one memcg a time up through the hierarchy, when kswapd becomes
+> active. It also explains the BH introduced.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?h=ras/core&id=47cd84e98f512eac5aad988f08baff432aea35ba
-
+But this goes against the main motivation for the high limit - to
+throttle. It is not all that important that there is not global memory
+pressure. The preventive high limit reclaim is there to make sure that
+the specific memcg is kept in a reasonable containment.
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Michal Hocko
+SUSE Labs
