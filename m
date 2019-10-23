@@ -2,134 +2,233 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E830BCA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 16:02:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AC17CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 16:04:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEA5C205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 16:02:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF713205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 16:04:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="Oujg9zCL"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GvH++91i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392513AbfJWQCJ (ORCPT
+        id S2406919AbfJWQEA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 12:02:09 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:42823 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390259AbfJWQCJ (ORCPT
+        Wed, 23 Oct 2019 12:04:00 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:55548 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390259AbfJWQEA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 12:02:09 -0400
-Received: by mail-qt1-f195.google.com with SMTP id w14so33015075qto.9
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 09:02:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=HuBYZtMC/2ECcAW9w0F4WSDn6CrA0ouxLYzbuT3eoqw=;
-        b=Oujg9zCLBa9tQBIQTqDCy+i0l78T+gT/9d9EP49uk5MYfABKpewjiVNaP2E51x00IF
-         Zwa7biWZoVIokr9BcQV12H0SY+DHOyTJFqUPIkCdvErh0OOUxCuNFwHu6JmrefXpXyQO
-         r+G9PTaKYYtfsDyyXi98xwGM1BTpJbl82AiO0le0fp8E7JK4GAUEFEV3BbmG1Ef+VN34
-         mf+wyT1VlkemxsFj6d+wViItcmVvBSWBKf0SeWoDPLuKEKTV3iGGmHmUORBnh3nFDPs9
-         eeKXtpD+iKjBBUFZM8dxAFOjGZu5V0COBfwX/KRqHA2+aNYJf1QM0G27Pk5p6blzlXmR
-         1q2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HuBYZtMC/2ECcAW9w0F4WSDn6CrA0ouxLYzbuT3eoqw=;
-        b=BSA9dVs4kfLjL7LW8gC7d2/mqA8h2BOD/EubtDE3YhjnYzD7XHlfeGtmkUvD/h2mv1
-         kQltJZ6RPUZD4pzbfJD9AsJZVRUIXVK1kiTm07IDiS7+y3RHRDoD+uOej/jEX8JFoaXg
-         x0EaQAg/AUxvtJqEYFssPkY22bcJF5Rf4sci8Ut6Rou2s541i9LK3lOzDDwYGX928OJl
-         cYFFtx9FwbH+GdOippvqV6/FFErRZdYISGZtkIrliedIyLCAxTK/BdNdM0ZkZ4vNSqVM
-         Q7PUWos9GVA/ota/YIcHSm3FQQCgRDTYOo/er/8pg454hgTOaLS73+5F9z/olAflnSk6
-         DUCQ==
-X-Gm-Message-State: APjAAAW/wyE3qEie93EhQpa/pqtmbQEbdk/c8A6iwK+7XA9vAs1OeGVM
-        FNnqw7jqTh3vy8eaB+OmTtF1yg==
-X-Google-Smtp-Source: APXvYqxPzOphiOVWEomKtrBEJMZvSJUadgOrLJBK6Urxyiyd/tnIKFneIQ5HmVcqQBRX8tR4ddjhJw==
-X-Received: by 2002:ac8:21e7:: with SMTP id 36mr4238166qtz.160.1571846525149;
-        Wed, 23 Oct 2019 09:02:05 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::2:c4de])
-        by smtp.gmail.com with ESMTPSA id d23sm12014900qkc.127.2019.10.23.09.02.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Oct 2019 09:02:04 -0700 (PDT)
-Date:   Wed, 23 Oct 2019 12:02:03 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>
-Subject: Re: [PATCH 4/8] mm: vmscan: naming fixes: global_reclaim() and
- sane_reclaim()
-Message-ID: <20191023160203.GC366316@cmpxchg.org>
-References: <20191022144803.302233-1-hannes@cmpxchg.org>
- <20191022144803.302233-5-hannes@cmpxchg.org>
- <20191022194048.GA22721@tower.DHCP.thefacebook.com>
+        Wed, 23 Oct 2019 12:04:00 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9NG3vgX112238;
+        Wed, 23 Oct 2019 11:03:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1571846637;
+        bh=BxhYqfISxxfUd046h/4yDZAHPUSBBOH2lP6gqHi//HM=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=GvH++91iQOv52dMzIZkPEqabT24Mcq+7s94V2iaDQwpU1eEH7fLI5/5uEqvkEEbjG
+         nO4+okIRng8YoRPsppiiUZecToDFruPH9VqnrG1jtUhiRcHpcaTvCE1NAuiEpaOCt2
+         L06s1OfblR/Ortilh+ii7hEQ/t7sZMOn2HFUPlf0=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9NG3vGb114740
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 23 Oct 2019 11:03:57 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 23
+ Oct 2019 11:03:56 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 23 Oct 2019 11:03:46 -0500
+Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with SMTP id x9NG3txt010695;
+        Wed, 23 Oct 2019 11:03:55 -0500
+Date:   Wed, 23 Oct 2019 11:03:50 -0500
+From:   Benoit Parrot <bparrot@ti.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+CC:     Rob Herring <robh+dt@kernel.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Jyri Sarha <jsarha@ti.com>
+Subject: Re: [Patch 07/19] media: ti-vpe: cal: add CSI2 PHY LDO errata support
+Message-ID: <20191023160349.3wsbtwghnixaiewf@ti.com>
+References: <20191018153437.20614-1-bparrot@ti.com>
+ <20191018153437.20614-8-bparrot@ti.com>
+ <68dbd926-0e37-93f7-e03e-def4b4146d32@xs4all.nl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20191022194048.GA22721@tower.DHCP.thefacebook.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <68dbd926-0e37-93f7-e03e-def4b4146d32@xs4all.nl>
+User-Agent: NeoMutt/20171215
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 07:40:52PM +0000, Roman Gushchin wrote:
-> On Tue, Oct 22, 2019 at 10:47:59AM -0400, Johannes Weiner wrote:
-> > Seven years after introducing the global_reclaim() function, I still
-> > have to double take when reading a callsite. I don't know how others
-> > do it, this is a terrible name.
+Hans Verkuil <hverkuil@xs4all.nl> wrote on Mon [2019-Oct-21 12:38:03 +0200]:
+> On 10/18/19 5:34 PM, Benoit Parrot wrote:
+> > Apply Errata i913 every time the functional clock is enabled.
+> > This should take care of suspend/resume case as well.
 > > 
-> > Invert the meaning and rename it to cgroup_reclaim().
-> > 
-> > [ After all, "global reclaim" is just regular reclaim invoked from the
-> >   page allocator. It's reclaim on behalf of a cgroup limit that is a
-> >   special case of reclaim, and should be explicit - not the reverse. ]
-> > 
-> > sane_reclaim() isn't very descriptive either: it tests whether we can
-> > use the regular writeback throttling - available during regular page
-> > reclaim or cgroup2 limit reclaim - or need to use the broken
-> > wait_on_page_writeback() method. Use "writeback_throttling_sane()".
-> > 
-> > Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+> > Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> > Signed-off-by: Jyri Sarha <jsarha@ti.com>
 > > ---
-> >  mm/vmscan.c | 38 ++++++++++++++++++--------------------
-> >  1 file changed, 18 insertions(+), 20 deletions(-)
+> >  drivers/media/platform/ti-vpe/cal.c      | 56 +++++++++++++++++++++++-
+> >  drivers/media/platform/ti-vpe/cal_regs.h | 27 ++++++++++++
+> >  2 files changed, 82 insertions(+), 1 deletion(-)
 > > 
-> > diff --git a/mm/vmscan.c b/mm/vmscan.c
-> > index 622b77488144..302dad112f75 100644
-> > --- a/mm/vmscan.c
-> > +++ b/mm/vmscan.c
-> > @@ -239,13 +239,13 @@ static void unregister_memcg_shrinker(struct shrinker *shrinker)
-> >  	up_write(&shrinker_rwsem);
+> > diff --git a/drivers/media/platform/ti-vpe/cal.c b/drivers/media/platform/ti-vpe/cal.c
+> > index 62aeedb705e9..3cbc4dca6de8 100644
+> > --- a/drivers/media/platform/ti-vpe/cal.c
+> > +++ b/drivers/media/platform/ti-vpe/cal.c
+> > @@ -284,6 +284,13 @@ static struct cal_data dra72x_cal_data = {
+> >  	.flags = 0,
+> >  };
+> >  
+> > +static struct cal_data dra72x_es1_cal_data = {
+> > +	.csi2_phy_core = dra72x_cal_csi_phy,
+> > +	.num_csi2_phy = ARRAY_SIZE(dra72x_cal_csi_phy),
+> > +
+> > +	.flags = DRA72_CAL_PRE_ES2_LDO_DISABLE,
+> > +};
+> > +
+> >  /*
+> >   * there is one cal_dev structure in the driver, it is shared by
+> >   * all instances.
+> > @@ -569,9 +576,52 @@ static void cal_get_hwinfo(struct cal_dev *dev)
+> >  		hwinfo);
 > >  }
 > >  
-> > -static bool global_reclaim(struct scan_control *sc)
-> > +static bool cgroup_reclaim(struct scan_control *sc)
+> > +/*
+> > + *   Errata i913: CSI2 LDO Needs to be disabled when module is powered on
+> > + *
+> > + *   Enabling CSI2 LDO shorts it to core supply. It is crucial the 2 CSI2
+> > + *   LDOs on the device are disabled if CSI-2 module is powered on
+> > + *   (0x4845 B304 | 0x4845 B384 [28:27] = 0x1) or in ULPS (0x4845 B304
+> > + *   | 0x4845 B384 [28:27] = 0x2) mode. Common concerns include: high
+> > + *   current draw on the module supply in active mode.
+> > + *
+> > + *   Errata does not apply when CSI-2 module is powered off
+> > + *   (0x4845 B304 | 0x4845 B384 [28:27] = 0x0).
+> > + *
+> > + * SW Workaround:
+> > + *	Set the following register bits to disable the LDO,
+> > + *	which is essentially CSI2 REG10 bit 6:
+> > + *
+> > + *		Core 0:  0x4845 B828 = 0x0000 0040
+> > + *		Core 1:  0x4845 B928 = 0x0000 0040
+> > + */
+> > +static void i913_errata(struct cal_dev *dev, unsigned int port)
+> > +{
+> > +	u32 reg10 = reg_read(dev->cc[port], CAL_CSI2_PHY_REG10);
+> > +
+> > +	set_field(&reg10, CAL_CSI2_PHY_REG0_HSCLOCKCONFIG_DISABLE,
+> > +		  CAL_CSI2_PHY_REG10_I933_LDO_DISABLE_MASK);
+> > +
+> > +	cal_dbg(1, dev, "CSI2_%d_REG10 = 0x%08x\n", port, reg10);
+> > +	reg_write(dev->cc[port], CAL_CSI2_PHY_REG10, reg10);
+> > +}
+> > +
+> >  static inline int cal_runtime_get(struct cal_dev *dev)
+> 
+> I'd drop the 'inline' here. It doesn't seem appropriate anymore since this
+> function is now more complex.
+
+Ok I'll fix that
+
+Benoit
+
+> 
+> Regards,
+> 
+> 	Hans
+> 
 > >  {
-> > -	return !sc->target_mem_cgroup;
-> > +	return sc->target_mem_cgroup;
+> > -	return pm_runtime_get_sync(&dev->pdev->dev);
+> > +	int r;
+> > +
+> > +	r = pm_runtime_get_sync(&dev->pdev->dev);
+> > +
+> > +	if (dev->flags & DRA72_CAL_PRE_ES2_LDO_DISABLE) {
+> > +		/*
+> > +		 * Apply errata on both port eveytime we (re-)enable
+> > +		 * the clock
+> > +		 */
+> > +		i913_errata(dev, 0);
+> > +		i913_errata(dev, 1);
+> > +	}
+> > +
+> > +	return r;
 > >  }
+> >  
+> >  static inline void cal_runtime_put(struct cal_dev *dev)
+> > @@ -2071,6 +2121,10 @@ static const struct of_device_id cal_of_match[] = {
+> >  		.compatible = "ti,dra72-cal",
+> >  		.data = (void *)&dra72x_cal_data,
+> >  	},
+> > +	{
+> > +		.compatible = "ti,dra72-pre-es2-cal",
+> > +		.data = (void *)&dra72x_es1_cal_data,
+> > +	},
+> >  	{},
+> >  };
+> >  MODULE_DEVICE_TABLE(of, cal_of_match);
+> > diff --git a/drivers/media/platform/ti-vpe/cal_regs.h b/drivers/media/platform/ti-vpe/cal_regs.h
+> > index 68cfc922b422..78d6f015c9ea 100644
+> > --- a/drivers/media/platform/ti-vpe/cal_regs.h
+> > +++ b/drivers/media/platform/ti-vpe/cal_regs.h
+> > @@ -10,6 +10,30 @@
+> >  #ifndef __TI_CAL_REGS_H
+> >  #define __TI_CAL_REGS_H
+> >  
+> > +/*
+> > + * struct cal_dev.flags possibilities
+> > + *
+> > + * DRA72_CAL_PRE_ES2_LDO_DISABLE:
+> > + *   Errata i913: CSI2 LDO Needs to be disabled when module is powered on
+> > + *
+> > + *   Enabling CSI2 LDO shorts it to core supply. It is crucial the 2 CSI2
+> > + *   LDOs on the device are disabled if CSI-2 module is powered on
+> > + *   (0x4845 B304 | 0x4845 B384 [28:27] = 0x1) or in ULPS (0x4845 B304
+> > + *   | 0x4845 B384 [28:27] = 0x2) mode. Common concerns include: high
+> > + *   current draw on the module supply in active mode.
+> > + *
+> > + *   Errata does not apply when CSI-2 module is powered off
+> > + *   (0x4845 B304 | 0x4845 B384 [28:27] = 0x0).
+> > + *
+> > + * SW Workaround:
+> > + *	Set the following register bits to disable the LDO,
+> > + *	which is essentially CSI2 REG10 bit 6:
+> > + *
+> > + *		Core 0:  0x4845 B828 = 0x0000 0040
+> > + *		Core 1:  0x4845 B928 = 0x0000 0040
+> > + */
+> > +#define DRA72_CAL_PRE_ES2_LDO_DISABLE BIT(0)
+> > +
+> >  #define CAL_NUM_CSI2_PORTS		2
+> >  
+> >  /* CAL register offsets */
+> > @@ -71,6 +95,7 @@
+> >  #define CAL_CSI2_PHY_REG0		0x000
+> >  #define CAL_CSI2_PHY_REG1		0x004
+> >  #define CAL_CSI2_PHY_REG2		0x008
+> > +#define CAL_CSI2_PHY_REG10		0x028
+> >  
+> >  /* CAL Control Module Core Camerrx Control register offsets */
+> >  #define CM_CTRL_CORE_CAMERRX_CONTROL	0x000
+> > @@ -458,6 +483,8 @@
+> >  #define CAL_CSI2_PHY_REG1_CLOCK_MISS_DETECTOR_STATUS_SUCCESS		0
+> >  #define CAL_CSI2_PHY_REG1_RESET_DONE_STATUS_MASK		GENMASK(29, 28)
+> >  
+> > +#define CAL_CSI2_PHY_REG10_I933_LDO_DISABLE_MASK		BIT_MASK(6)
+> > +
+> >  #define CAL_CSI2_PHY_REG2_CCP2_SYNC_PATTERN_MASK		GENMASK(23, 0)
+> >  #define CAL_CSI2_PHY_REG2_TRIGGER_CMD_RXTRIGESC3_MASK		GENMASK(25, 24)
+> >  #define CAL_CSI2_PHY_REG2_TRIGGER_CMD_RXTRIGESC2_MASK		GENMASK(27, 26)
+> > 
 > 
-> Isn't targeted_reclaim() better?
-> 
-> cgroup_reclaim() is also ok to me, but it sounds a bit like we reclaim
-> from this specific cgroup. Also targeted/global is IMO a better opposition
-> than cgroup/global (the latter reminds me days when there were global
-> and cgroup LRUs).
-
-I think "targeted" is quite a bit less descriptive when you come at
-the page replacement algorithm without cgroups in mind.
-
-> The rest of the patch looks good!
-> 
-> Reviewed-by: Roman Gushchin <guro@fb.com>
-
-Thanks!
