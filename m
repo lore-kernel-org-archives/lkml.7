@@ -2,130 +2,117 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA09CC47E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:03:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E497DCA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:06:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE02721920
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:03:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC03021925
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:06:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571839409;
-	bh=e6ndqxJ5BQltdcOadIuz8he5A76pb9Kj1tOy1ThEWWg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=g+FC/ZKevqJfXwU/VlcsYcVx7mdSqtMbvmgsC+R+HtMh+v7msPoSK7laVY3D9nVaM
-	 KQeDmcY+vclzeCM5vB54cnGlRf9Pwv2p+ZfLxYlWscvhjFJFpsydaNAi0foBkEifrx
-	 iUwJzYp0hoo0wdc9EF3SQAOsBxHgmP8aQFf6sHfU=
+	s=default; t=1571839607;
+	bh=aiQojpwbcIAv0uEDXY2hYs9C8OlWQJf55DfRkA41iBc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lz+1FMbcSlbciXS+Ci1mVKP4AuI4sxOJwG4pTjxwq1COQ7y3z5kdiWY+73edwCzvz
+	 RYwyCNb/yfR4EZ2epzu8JzZH2EAYEm0pnDiLJHJ9ihL43YyZ/EaJTNyepLD4X6WnUW
+	 idycOOt9DyDimPytj8RABIVbCKPOI+XIRtcPDAHE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406321AbfJWOD2 (ORCPT
+        id S2390507AbfJWOGq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 10:03:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40696 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725789AbfJWOD2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 10:03:28 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D82121906;
-        Wed, 23 Oct 2019 14:03:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571839407;
-        bh=e6ndqxJ5BQltdcOadIuz8he5A76pb9Kj1tOy1ThEWWg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=b6HJoPOia8Pgl1nvUfx6ESrPXWMlX4COz0I7+bqbsAkKS1VIpSG12vKIr+anlRrKJ
-         2EFgzOU+hoWL2oSjsz/c3Tb4piCaV1W7ZTHPQV7FaseVOISC1dY+bsogFLd21T39d4
-         YiEL6cNPi/VIbwfF93TkuV83+h8gvk+c1HlbhJT0=
-Date:   Wed, 23 Oct 2019 09:03:25 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Cc:     "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "logang@deltatee.com" <logang@deltatee.com>
-Subject: Re: [PATCH v8 1/6] PCI: Consider alignment of hot-added bridges when
- distributing available resources
-Message-ID: <20191023140325.GA156673@google.com>
+        Wed, 23 Oct 2019 10:06:46 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49678 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2390333AbfJWOGp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 10:06:45 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id EEFC7AE04;
+        Wed, 23 Oct 2019 14:06:43 +0000 (UTC)
+Date:   Wed, 23 Oct 2019 16:06:42 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH 3/8] mm: vmscan: move inactive_list_is_low() swap check
+ to the caller
+Message-ID: <20191023140642.GD17610@dhcp22.suse.cz>
+References: <20191022144803.302233-1-hannes@cmpxchg.org>
+ <20191022144803.302233-4-hannes@cmpxchg.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <PSXP216MB0183D447FD3ADF6F82979439806B0@PSXP216MB0183.KORP216.PROD.OUTLOOK.COM>
+In-Reply-To: <20191022144803.302233-4-hannes@cmpxchg.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 09:08:42AM +0000, Nicholas Johnson wrote:
-> On Tue, Oct 08, 2019 at 02:38:12PM +0300, mika.westerberg@linux.intel.com wrote:
-> > On Fri, Jul 26, 2019 at 12:53:19PM +0000, Nicholas Johnson wrote:
-
-> > >  	/*
-> > > -	 * Calculate the total amount of extra resource space we can
-> > > -	 * pass to bridges below this one.  This is basically the
-> > > -	 * extra space reduced by the minimal required space for the
-> > > -	 * non-hotplug bridges.
-> > > +	 * Reduce the available resource space by what the
-> > > +	 * bridge and devices below it occupy.
-> > 
-> > This can be widen:
-> I avoided changing comments because Bjorn said it creates distracting 
-> noise. But I am considering changing tactics because what I have been 
-> doing has not been working.
-
-I think Mika's point was not that you should avoid changing the
-comment, but that your new comment could be rewrapped so it used the
-whole 80 column width, which matches the rest of the file.  That's
-trivial to do and if you don't do it I can do it while applying the
-patch.
-
-> > 	/*
-> > 	 * Reduce the available resource space by what the bridge and
-> > 	 * devices below it occupy.
-> > 	 */
-> > 
-> > >  	 */
-> > > -	remaining_io = available_io;
-> > > -	remaining_mmio = available_mmio;
-> > > -	remaining_mmio_pref = available_mmio_pref;
-> > > -
-> > >  	for_each_pci_bridge(dev, bus) {
-> > > -		const struct resource *res;
-> > > +		struct resource *res;
-> > > +		resource_size_t used_size;
-> > 
-> > Some people like "reverse christmas tree" format better:
-> We had this discussion a while ago, and Bjorn piped in and said it is 
-> not enforced. However, I will give it a go this time.
-
-I usually don't request changes in the order, so it doesn't really
-matter to me, but I personally put the declarations in the order of
-their use in the code below.
-
-> > 		resource_size_t used_size;
-> > 		struct resource *res;
-
-> > > -		pci_bus_distribute_available_resources(b, add_list, io, mmio,
-> > > -						       mmio_pref);
-> > > +		io.start = io.end + 1;
-> > 
-> > I think you can also write it like:
-> > 
-> > 		io.start += io_per_hp;
-> You are possibly correct - and it is impressive that you saw that. I 
-> never did. The way that I have written it fits in with the thought 
-> patterns I used to create it ("set the start of the next window to be 
-> just after the end of the last"). I will take this suggestion as you 
-> wanting it written that way (provided testing goes fine).
+On Tue 22-10-19 10:47:58, Johannes Weiner wrote:
+> inactive_list_is_low() should be about one thing: checking the ratio
+> between inactive and active list. Kitchensink checks like the one for
+> swap space makes the function hard to use and modify its
+> callsites. Luckly, most callers already have an understanding of the
+> swap situation, so it's easy to clean up.
 > 
-> > > +		mmio.start = mmio.end + 1;
-> > > +		mmio_pref.start = mmio_pref.end + 1;
+> get_scan_count() has its own, memcg-aware swap check, and doesn't even
+> get to the inactive_list_is_low() check on the anon list when there is
+> no swap space available.
+> 
+> shrink_list() is called on the results of get_scan_count(), so that
+> check is redundant too.
+> 
+> age_active_anon() has its own totalswap_pages check right before it
+> checks the list proportions.
+> 
+> The shrink_node_memcg() site is the only one that doesn't do its own
+> swap check. Add it there.
+> 
+> Then delete the swap check from inactive_list_is_low().
+> 
+> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
 
-I assume you'll do that for mmio.start and mmio_pref.start as well?
+OK, makes sense to me.
+Acked-by: Michal Hocko <mhocko@suse.com>
 
-Bjorn
+> ---
+>  mm/vmscan.c | 9 +--------
+>  1 file changed, 1 insertion(+), 8 deletions(-)
+> 
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index be3c22c274c1..622b77488144 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -2226,13 +2226,6 @@ static bool inactive_list_is_low(struct lruvec *lruvec, bool file,
+>  	unsigned long refaults;
+>  	unsigned long gb;
+>  
+> -	/*
+> -	 * If we don't have swap space, anonymous page deactivation
+> -	 * is pointless.
+> -	 */
+> -	if (!file && !total_swap_pages)
+> -		return false;
+> -
+>  	inactive = lruvec_lru_size(lruvec, inactive_lru, sc->reclaim_idx);
+>  	active = lruvec_lru_size(lruvec, active_lru, sc->reclaim_idx);
+>  
+> @@ -2653,7 +2646,7 @@ static void shrink_node_memcg(struct pglist_data *pgdat, struct mem_cgroup *memc
+>  	 * Even if we did not try to evict anon pages at all, we want to
+>  	 * rebalance the anon lru active/inactive ratio.
+>  	 */
+> -	if (inactive_list_is_low(lruvec, false, sc, true))
+> +	if (total_swap_pages && inactive_list_is_low(lruvec, false, sc, true))
+>  		shrink_active_list(SWAP_CLUSTER_MAX, lruvec,
+>  				   sc, LRU_ACTIVE_ANON);
+>  }
+> -- 
+> 2.23.0
+
+-- 
+Michal Hocko
+SUSE Labs
