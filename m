@@ -2,234 +2,120 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB7C9CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:17:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89E39CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:17:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 990BE2064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:17:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F5232064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:17:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qyhPtzj+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390205AbfJWIRC (ORCPT
+        id S2390219AbfJWIRJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 04:17:02 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:40078 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389987AbfJWIRC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 04:17:02 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 00703BF957FC376344C8;
-        Wed, 23 Oct 2019 16:16:59 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.202) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 23 Oct
- 2019 16:15:30 +0800
-Subject: Re: [PATCH v4] erofs: support superblock checksum
-To:     Gao Xiang <gaoxiang25@huawei.com>, Chao Yu <chao@kernel.org>,
-        <linux-erofs@lists.ozlabs.org>
-CC:     Gao Xiang <xiang@kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20191022180620.19638-1-pratikshinde320@gmail.com>
- <20191023040557.230886-1-gaoxiang25@huawei.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <f158affb-c5c5-9cbe-d87d-17210bc635fe@huawei.com>
-Date:   Wed, 23 Oct 2019 16:15:29 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Wed, 23 Oct 2019 04:17:09 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:39661 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389987AbfJWIRI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 04:17:08 -0400
+Received: by mail-ot1-f65.google.com with SMTP id s22so16644346otr.6;
+        Wed, 23 Oct 2019 01:17:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pFfoWoAOi1Gcw21Dvgij8W69ZIOoeiIbU6wqQ9bvYIs=;
+        b=qyhPtzj+Q83LmFli8fCHnZNkQXis8IZzO3MVaa0FxB62+2mfVWi/37dqpW9Zymo/UF
+         NaLAdqwRO7psvPqF8oEse1+JFvHpHtlmasmDlS/69Al343m3dYlb3Iuu9lL07t6S4Xk3
+         84vkM9fVls39ER5OF2wdNVds3H89FhtrMUFkvtdn7jzyJcjUIwF3UOcWXbcRBGHSh6bb
+         h3jfAtPfJiWG93mxyw7x9k4zStqocpe5nixXmIfE5RyPox1H9Ukihn9MJMR3SxUFXZZ8
+         L7CTaFKW+kUB4IDuXCG0NP1k/+gsYa13SoYTrgLe32LAPtZ8q584KbVMpihol4Ig1tRx
+         66Vw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pFfoWoAOi1Gcw21Dvgij8W69ZIOoeiIbU6wqQ9bvYIs=;
+        b=O4grJiy/tnAVeEJ/7wd9wKafstqRMp24X0Gcd+nXpH/eLMMftiZWZMErQ8HfyZobkj
+         oSGM4TaN/gF0BuXIgDT8Y/EYdnHnRMBvsl8vhH9SoMt/IfDUc6hSOWowxtr/WzclIa5t
+         8gpDnqRbK1gmxsJsASHMASfrmLMxAkDZ/WBr4PGxlgEb9naoHJVXgg+DUcLWJDoCdM/9
+         Y3HJx7/DQiEWggKa8c7y3xm+SyIYJTe5bM7WOkE1uEyxOMRf4S37Neo6EiYt4GURmIat
+         TEIJ9ynmwpgctfOUGmLlxV5L1NEQmOK5MT4yXU0k6AZ7qSrh5h+urc5+7Ln7ctFu9QlJ
+         lnbQ==
+X-Gm-Message-State: APjAAAUXXY/9E+iWfN66CBeXPZVXdCR9WijGFvDI1J4OHdHQ1QXsSQw8
+        B1dcGtUZVX/FHcHTEy3GZc2L5ZDH+q6R8JvDE8A=
+X-Google-Smtp-Source: APXvYqzcv+GPuUgPESRDeCMqNkyh/xbdfpRDVj9dr96h1BCtFi1FqDllWpfX+LIbUpptSCrp0t1mCJjfD5nEkUqJ9O4=
+X-Received: by 2002:a9d:69c7:: with SMTP id v7mr867245oto.45.1571818626331;
+ Wed, 23 Oct 2019 01:17:06 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191023040557.230886-1-gaoxiang25@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+References: <1561682593-12071-1-git-send-email-wanpengli@tencent.com> <20190628011012.GA19488@lerouge>
+In-Reply-To: <20190628011012.GA19488@lerouge>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Wed, 23 Oct 2019 16:16:55 +0800
+Message-ID: <CANRm+CxUpwZ9KwOcQp=Ok64giyjjcJOGb2=zU6vayQzLqYvpXQ@mail.gmail.com>
+Subject: Re: [PATCH v2] sched/nohz: Optimize get_nohz_timer_target()
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, kvm <kvm@vger.kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Xiang, Pratik,
+On Fri, 28 Jun 2019 at 09:10, Frederic Weisbecker <frederic@kernel.org> wrote:
+>
+> On Fri, Jun 28, 2019 at 08:43:12AM +0800, Wanpeng Li wrote:
+> > From: Wanpeng Li <wanpengli@tencent.com>
+> >
+> > On a machine, cpu 0 is used for housekeeping, the other 39 cpus in the
+> > same socket are in nohz_full mode. We can observe huge time burn in the
+> > loop for seaching nearest busy housekeeper cpu by ftrace.
+> >
+> >   2)               |       get_nohz_timer_target() {
+> >   2)   0.240 us    |         housekeeping_test_cpu();
+> >   2)   0.458 us    |         housekeeping_test_cpu();
+> >
+> >   ...
+> >
+> >   2)   0.292 us    |         housekeeping_test_cpu();
+> >   2)   0.240 us    |         housekeeping_test_cpu();
+> >   2)   0.227 us    |         housekeeping_any_cpu();
+> >   2) + 43.460 us   |       }
+> >
+> > This patch optimizes the searching logic by finding a nearest housekeeper
+> > cpu in the housekeeping cpumask, it can minimize the worst searching time
+> > from ~44us to < 10us in my testing. In addition, the last iterated busy
+> > housekeeper can become a random candidate while current CPU is a better
+> > fallback if it is a housekeeper.
+> >
+> > Cc: Ingo Molnar <mingo@redhat.com>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Cc: Frederic Weisbecker <frederic@kernel.org>
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+>
+> Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
 
-On 2019/10/23 12:05, Gao Xiang wrote:
-> From: Pratik Shinde <pratikshinde320@gmail.com>
-> 
-> Introduce superblock checksum feature in order to check
-> a number of given blocks at mounting time.
-> 
-> Signed-off-by: Pratik Shinde <pratikshinde320@gmail.com>
-> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
-> ---
-> changes from v3:
->  (based on Pratik's v3 patch)
->  - add LIBCRC32C dependency;
->  - use kmap() in order to avoid sleeping in atomic context;
->  - skip the first 1024 byte for x86 boot sector,
->    co-tested with userspace utils,
->    https://lore.kernel.org/r/20191023034957.184711-1-gaoxiang25@huawei.com
-> 
->  fs/erofs/Kconfig    |  1 +
->  fs/erofs/erofs_fs.h |  6 +++--
->  fs/erofs/internal.h |  2 ++
->  fs/erofs/super.c    | 53 +++++++++++++++++++++++++++++++++++++++++++--
->  4 files changed, 58 insertions(+), 4 deletions(-)
-> 
-> diff --git a/fs/erofs/Kconfig b/fs/erofs/Kconfig
-> index 9d634d3a1845..74b0aaa7114c 100644
-> --- a/fs/erofs/Kconfig
-> +++ b/fs/erofs/Kconfig
-> @@ -3,6 +3,7 @@
->  config EROFS_FS
->  	tristate "EROFS filesystem support"
->  	depends on BLOCK
-> +	select LIBCRC32C
->  	help
->  	  EROFS (Enhanced Read-Only File System) is a lightweight
->  	  read-only file system with modern designs (eg. page-sized
-> diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
-> index b1ee5654750d..461913be1d1c 100644
-> --- a/fs/erofs/erofs_fs.h
-> +++ b/fs/erofs/erofs_fs.h
-> @@ -11,6 +11,8 @@
->  
->  #define EROFS_SUPER_OFFSET      1024
->  
-> +#define EROFS_FEATURE_COMPAT_SB_CHKSUM          0x00000001
-> +
->  /*
->   * Any bits that aren't in EROFS_ALL_FEATURE_INCOMPAT should
->   * be incompatible with this kernel version.
-> @@ -37,8 +39,8 @@ struct erofs_super_block {
->  	__u8 uuid[16];          /* 128-bit uuid for volume */
->  	__u8 volume_name[16];   /* volume name */
->  	__le32 feature_incompat;
-> -
-> -	__u8 reserved2[44];
-> +	__le32 chksum_blocks;	/* number of blocks used for checksum */
-> +	__u8 reserved2[40];
->  };
->  
->  /*
-> diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-> index 544a453f3076..a3778f597bf6 100644
-> --- a/fs/erofs/internal.h
-> +++ b/fs/erofs/internal.h
-> @@ -85,6 +85,7 @@ struct erofs_sb_info {
->  
->  	u8 uuid[16];                    /* 128-bit uuid for volume */
->  	u8 volume_name[16];             /* volume name */
-> +	u32 feature_compat;
->  	u32 feature_incompat;
->  
->  	unsigned int mount_opt;
-> @@ -426,6 +427,7 @@ static inline void z_erofs_exit_zip_subsystem(void) {}
->  #endif	/* !CONFIG_EROFS_FS_ZIP */
->  
->  #define EFSCORRUPTED    EUCLEAN         /* Filesystem is corrupted */
-> +#define EFSBADCRC       EBADMSG         /* Bad CRC detected */
->  
->  #endif	/* __EROFS_INTERNAL_H */
->  
-> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-> index 0e369494f2f2..18d1ec18a671 100644
-> --- a/fs/erofs/super.c
-> +++ b/fs/erofs/super.c
-> @@ -9,6 +9,7 @@
->  #include <linux/statfs.h>
->  #include <linux/parser.h>
->  #include <linux/seq_file.h>
-> +#include <linux/crc32c.h>
->  #include "xattr.h"
->  
->  #define CREATE_TRACE_POINTS
-> @@ -46,6 +47,47 @@ void _erofs_info(struct super_block *sb, const char *function,
->  	va_end(args);
->  }
->  
-> +static int erofs_superblock_csum_verify(struct super_block *sb, void *sbdata)
-> +{
-> +	struct erofs_super_block *dsb;
-> +	u32 expected_crc, nblocks, crc;
-> +	void *kaddr;
-> +	struct page *page;
-> +	int i;
-> +
-> +	dsb = kmemdup(sbdata + EROFS_SUPER_OFFSET,
-> +		      EROFS_BLKSIZ - EROFS_SUPER_OFFSET, GFP_KERNEL);
-> +	if (!dsb)
-> +		return -ENOMEM;
-> +
-> +	expected_crc = le32_to_cpu(dsb->checksum);
-> +	nblocks = le32_to_cpu(dsb->chksum_blocks);
+Hi Thomas,
 
-Now, we try to use nblocks's value before checking its validation, I guess fuzz
-test can easily make the value extreme larger, result in checking latter blocks
-unnecessarily.
+I didn't see your refactor to get_nohz_timer_target() which you
+mentioned in IRC after four months, I can observe cyclictest drop from
+4~5us to 8us in kvm guest(we offload the lapic timer emulation to
+housekeeping cpu to avoid timer fire external interrupt on the pCPU
+which vCPU resident incur a vCPU vmexit) w/o this patch in the case of
+there is no busy housekeeping cpu. The score can be recovered after I
+give stress to create a busy housekeeping cpu.
 
-IMO, we'd better
-1. check validation of superblock to make sure all fields in sb are valid
-2. use .nblocks to count and check payload blocks following sb
+Could you consider applying this patch for temporary since I'm not
+sure when the refactor can be ready.
 
-Thanks,
-
-> +	dsb->checksum = 0;
-> +	/* to allow for x86 boot sectors and other oddities. */
-> +	crc = crc32c(~0, dsb, EROFS_BLKSIZ - EROFS_SUPER_OFFSET);
-> +	kfree(dsb);
-> +
-> +	for (i = 1; i < nblocks; i++) {
-> +		page = erofs_get_meta_page(sb, i);
-> +		if (IS_ERR(page))
-> +			return PTR_ERR(page);
-> +
-> +		kaddr = kmap_atomic(page);
-> +		crc = crc32c(crc, kaddr, EROFS_BLKSIZ);
-> +		kunmap_atomic(kaddr);
-> +
-> +		unlock_page(page);
-> +		put_page(page);
-> +	}
-> +
-> +	if (crc != expected_crc) {
-> +		erofs_err(sb, "invalid checksum 0x%08x, 0x%08x expected",
-> +			  crc, expected_crc);
-> +		return -EFSBADCRC;
-> +	}
-> +	return 0;
-> +}
-> +
->  static void erofs_inode_init_once(void *ptr)
->  {
->  	struct erofs_inode *vi = ptr;
-> @@ -112,7 +154,7 @@ static int erofs_read_superblock(struct super_block *sb)
->  
->  	sbi = EROFS_SB(sb);
->  
-> -	data = kmap_atomic(page);
-> +	data = kmap(page);
->  	dsb = (struct erofs_super_block *)(data + EROFS_SUPER_OFFSET);
->  
->  	ret = -EINVAL;
-> @@ -121,6 +163,13 @@ static int erofs_read_superblock(struct super_block *sb)
->  		goto out;
->  	}
->  
-> +	sbi->feature_compat = le32_to_cpu(dsb->feature_compat);
-> +	if (sbi->feature_compat & EROFS_FEATURE_COMPAT_SB_CHKSUM) {
-> +		ret = erofs_superblock_csum_verify(sb, data);
-> +		if (ret)
-> +			goto out;
-> +	}
-> +
->  	blkszbits = dsb->blkszbits;
->  	/* 9(512 bytes) + LOG_SECTORS_PER_BLOCK == LOG_BLOCK_SIZE */
->  	if (blkszbits != LOG_BLOCK_SIZE) {
-> @@ -155,7 +204,7 @@ static int erofs_read_superblock(struct super_block *sb)
->  	}
->  	ret = 0;
->  out:
-> -	kunmap_atomic(data);
-> +	kunmap(data);
->  	put_page(page);
->  	return ret;
->  }
-> 
+    Wanpeng
