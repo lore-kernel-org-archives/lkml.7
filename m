@@ -7,66 +7,66 @@ X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B692CA9EBB
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 22:05:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54782CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 22:05:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 585462084C
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 22:05:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 256E22084C
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 22:05:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="DXtMHtar"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="CvPPc+ni"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436657AbfJWWFB (ORCPT
+        id S2436671AbfJWWFg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 18:05:01 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:43835 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731301AbfJWWFB (ORCPT
+        Wed, 23 Oct 2019 18:05:36 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:35893 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731301AbfJWWFf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 18:05:01 -0400
-Received: by mail-io1-f65.google.com with SMTP id c11so17835180iom.10
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 15:05:00 -0700 (PDT)
+        Wed, 23 Oct 2019 18:05:35 -0400
+Received: by mail-il1-f193.google.com with SMTP id s75so10680352ilc.3
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 15:05:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sifive.com; s=google;
         h=date:from:to:cc:subject:in-reply-to:message-id:references
          :user-agent:mime-version;
-        bh=XdPCEWlB4SwMtK6X0JrzAACXbCmQF9hCLxinMMV5oKY=;
-        b=DXtMHtarGS/991rhtQn7HiY905vOBpsVeKHWWuraadUPXnYwcgaOxCQ6CyqK52G1WJ
-         oLqKh0ufsj1NN0h6b1+ldhs3JnF2et6/vzpjPbklc+cFSogL6za9lDUterUbKddjPvFg
-         6nXxsZBxwOWPCFPAeHrdqAiF8QIybMb/OVsp1hqKV0pTrIeoj3GaqSGNX3NmSMQN70tu
-         3ucYujVS7edy6y2UPknBDCT7JPHPYltLhmPy03ySSZeynZ+3sSau+yq2StAUyvi1C0Kk
-         5/t6MFtjq4Dzsq31ffIYG7vDcNl3ugWzafyatEwBiGDGx0bFkrSI+nf/PFSTCgBfpfkh
-         8KDA==
+        bh=6nNENVA+itqkpIQzusrAU/yenbBYQKj6dV7c1bpwXz0=;
+        b=CvPPc+ni++8l/tgBZsJga/63Afatp4dAhBpkHiaekonYGAecYw9T+FrpwLyAKbMYvr
+         dnuorpGtZ+7lXI5RuZ/15abvyX51iXf9ZgLmu0AFhVW2tdYjzn0uw80DXlANBcSZn1hC
+         rqQioWQsnDVncQhMDIYUJDzAuYb4xBdRMOOReiaRWSKOp0dlc3hHV/W3gAwL9GgvLCXN
+         Hk0wI8BtHEuhqHHpZWpJ65iR9TJ2uaC2K/atx2qowegeUp0X0o+MG0Mvs2Nyw9N5pfOx
+         AxC7H+4jCU2zfM0NvdLkZyK12X8oJ/F536QdB/y/lTrDjJfTk3QeKyXsZkPcY4I91pQe
+         jy8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
          :references:user-agent:mime-version;
-        bh=XdPCEWlB4SwMtK6X0JrzAACXbCmQF9hCLxinMMV5oKY=;
-        b=CjHd7foR2tXxQura0pFWrLEWYbj3Ug7gvpDuQmt7mams6NkXn9F/iuqOZV8cPR14t2
-         AMxtqWEJ/zeqS2o0zmiSHKri+Dw+7Hw/4g3f1IP12X3faHbaW7XEkbB30DSyRcEF2ziz
-         7FaHwKrNTpVnVPdohHbSci9bzBZHK9onlh5NwaDrmb8w/NO2MkuFG0yBf1ZJM//keawY
-         vsRrgX89O0+hapShsR9xo2FHXf18N/ovbbgkkF3dw2G7rRuzU1V5jb2AWmzlzb+mphCQ
-         W/DWT5v6tAFcF0imDlcHRJkf+beFV5CtHcVp6C0Z4hxHcXpRKNgj0YqtM/G3Api2YEVo
-         lKQQ==
-X-Gm-Message-State: APjAAAULkYCzQornoQZfVQKp8wUw0rnCgkBKR9MQ27eoE+bZeLrEiXUc
-        O0vbht4Bzw5uHnWjspnFBlE/xg==
-X-Google-Smtp-Source: APXvYqyouhiLhfPkOcgMyKI6xZ8nOzoA6AHtQWyGjoCzRe6OlSEwj/Cz5O79ZygyDNmxJz3rPwbULA==
-X-Received: by 2002:a6b:400e:: with SMTP id k14mr5875901ioa.254.1571868300059;
-        Wed, 23 Oct 2019 15:05:00 -0700 (PDT)
+        bh=6nNENVA+itqkpIQzusrAU/yenbBYQKj6dV7c1bpwXz0=;
+        b=WUiFUNQNGTIyclWKFmx95GnENhqX802XTC5jQprayQuSFqe4DbTjp+/H4o4jz8ilrX
+         l520xHqeVt0bpsndyO1KP8xoi+ZqjoqkeCgZ7hEv8py2wy1++fIFZhm0he7L0N6A9Cs7
+         bJv16V8LsNVwei3OQpfYQlvJca07o19CXCNjBth8IYbg4GdlAiAIK8FcHwAT8Irz658P
+         gN2Dygxh8X/zl73DbMN76o6sR5M26G0BSi0LaTG4g2/JKkezVWK86iCTizorTJMRvCeD
+         RdFUUSRrkj4kuvpvnJcEAEuELVriVNAwPziDBC7mjNT82Qrdf46Fbu5m12HzX9ZAUrZZ
+         Gm3g==
+X-Gm-Message-State: APjAAAUk0E0MB6GFqdRJPqMc1+YiDvAMnnqDEUuk3EamHcj24GYrfbMx
+        Dwu1YELNga91kbyI0pfuyTtuCg==
+X-Google-Smtp-Source: APXvYqzCVL6/ED1XfSU6ZwasV1fopkH1VvPNO4zpWZ5VdnWQoKnpy32UtyRduLuAvPAODzzp6WeAug==
+X-Received: by 2002:a92:d3c9:: with SMTP id c9mr24486179ilh.259.1571868333002;
+        Wed, 23 Oct 2019 15:05:33 -0700 (PDT)
 Received: from localhost ([64.62.168.194])
-        by smtp.gmail.com with ESMTPSA id p19sm4640731ili.56.2019.10.23.15.04.58
+        by smtp.gmail.com with ESMTPSA id j21sm4998581ioj.86.2019.10.23.15.05.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Oct 2019 15:04:59 -0700 (PDT)
-Date:   Wed, 23 Oct 2019 15:04:56 -0700 (PDT)
+        Wed, 23 Oct 2019 15:05:32 -0700 (PDT)
+Date:   Wed, 23 Oct 2019 15:05:30 -0700 (PDT)
 From:   Paul Walmsley <paul.walmsley@sifive.com>
 X-X-Sender: paulw@viisi.sifive.com
 To:     Christoph Hellwig <hch@lst.de>
 cc:     Palmer Dabbelt <palmer@sifive.com>,
         Damien Le Moal <damien.lemoal@wdc.com>,
         linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 01/15] riscv: cleanup <asm/bug.h>
-In-Reply-To: <20191017173743.5430-2-hch@lst.de>
-Message-ID: <alpine.DEB.2.21.9999.1910231504450.16536@viisi.sifive.com>
-References: <20191017173743.5430-1-hch@lst.de> <20191017173743.5430-2-hch@lst.de>
+Subject: Re: [PATCH 02/15] riscv: cleanup do_trap_break
+In-Reply-To: <20191017173743.5430-3-hch@lst.de>
+Message-ID: <alpine.DEB.2.21.9999.1910231505140.16536@viisi.sifive.com>
+References: <20191017173743.5430-1-hch@lst.de> <20191017173743.5430-3-hch@lst.de>
 User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -77,7 +77,10 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Thu, 17 Oct 2019, Christoph Hellwig wrote:
 
-> Remove various not required ifdefs and externs.
+> If we always compile the get_break_insn_length inline function we can
+> remove the ifdefs and let dead code elimination take care of the warn
+> branch that is now unreadable because the report_bug stub always
+> returns BUG_TRAP_TYPE_BUG.
 > 
 > Signed-off-by: Christoph Hellwig <hch@lst.de>
 
