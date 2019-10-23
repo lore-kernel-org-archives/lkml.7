@@ -2,139 +2,244 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D76FCA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:14:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB60CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:14:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D0EC2084C
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:14:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EE4E205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:14:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404360AbfJWKOT (ORCPT
+        id S2404378AbfJWKOq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 06:14:19 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53804 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2391029AbfJWKNa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 06:13:30 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 40CC8B513;
-        Wed, 23 Oct 2019 10:13:28 +0000 (UTC)
-From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-To:     linux-realtek-soc@lists.infradead.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: [PATCH v2 02/11] dt-bindings: reset: Add Realtek RTD1195
-Date:   Wed, 23 Oct 2019 12:13:08 +0200
-Message-Id: <20191023101317.26656-3-afaerber@suse.de>
-X-Mailer: git-send-email 2.16.4
-In-Reply-To: <20191023101317.26656-1-afaerber@suse.de>
-References: <20191023101317.26656-1-afaerber@suse.de>
+        Wed, 23 Oct 2019 06:14:46 -0400
+Received: from mga18.intel.com ([134.134.136.126]:6622 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404000AbfJWKOq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 06:14:46 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 03:14:44 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,220,1569308400"; 
+   d="scan'208";a="197388690"
+Received: from dpdk-virtio-tbie-2.sh.intel.com (HELO ___) ([10.67.104.74])
+  by fmsmga007.fm.intel.com with ESMTP; 23 Oct 2019 03:14:42 -0700
+Date:   Wed, 23 Oct 2019 18:11:36 +0800
+From:   Tiwei Bie <tiwei.bie@intel.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     mst@redhat.com, alex.williamson@redhat.com,
+        maxime.coquelin@redhat.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, dan.daly@intel.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        lingshan.zhu@intel.com
+Subject: Re: [PATCH v2] vhost: introduce mdev based hardware backend
+Message-ID: <20191023101135.GA6367@___>
+References: <20191022095230.2514-1-tiwei.bie@intel.com>
+ <47a572fd-5597-1972-e177-8ee25ca51247@redhat.com>
+ <20191023030253.GA15401@___>
+ <ac36f1e3-b972-71ac-fe0c-3db03e016dcf@redhat.com>
+ <20191023070747.GA30533@___>
+ <106834b5-dae5-82b2-0f97-16951709d075@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <106834b5-dae5-82b2-0f97-16951709d075@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a header with symbolic reset indices for Realtek RTD1195 SoC.
-Naming was derived from BSP register description headers.
+On Wed, Oct 23, 2019 at 03:25:00PM +0800, Jason Wang wrote:
+> On 2019/10/23 下午3:07, Tiwei Bie wrote:
+> > On Wed, Oct 23, 2019 at 01:46:23PM +0800, Jason Wang wrote:
+> > > On 2019/10/23 上午11:02, Tiwei Bie wrote:
+> > > > On Tue, Oct 22, 2019 at 09:30:16PM +0800, Jason Wang wrote:
+> > > > > On 2019/10/22 下午5:52, Tiwei Bie wrote:
+> > > > > > This patch introduces a mdev based hardware vhost backend.
+> > > > > > This backend is built on top of the same abstraction used
+> > > > > > in virtio-mdev and provides a generic vhost interface for
+> > > > > > userspace to accelerate the virtio devices in guest.
+> > > > > > 
+> > > > > > This backend is implemented as a mdev device driver on top
+> > > > > > of the same mdev device ops used in virtio-mdev but using
+> > > > > > a different mdev class id, and it will register the device
+> > > > > > as a VFIO device for userspace to use. Userspace can setup
+> > > > > > the IOMMU with the existing VFIO container/group APIs and
+> > > > > > then get the device fd with the device name. After getting
+> > > > > > the device fd of this device, userspace can use vhost ioctls
+> > > > > > to setup the backend.
+> > > > > > 
+> > > > > > Signed-off-by: Tiwei Bie <tiwei.bie@intel.com>
+> > > > > > ---
+> > > > > > This patch depends on below series:
+> > > > > > https://lkml.org/lkml/2019/10/17/286
+> > > > > > 
+> > > > > > v1 -> v2:
+> > > > > > - Replace _SET_STATE with _SET_STATUS (MST);
+> > > > > > - Check status bits at each step (MST);
+> > > > > > - Report the max ring size and max number of queues (MST);
+> > > > > > - Add missing MODULE_DEVICE_TABLE (Jason);
+> > > > > > - Only support the network backend w/o multiqueue for now;
+> > > > > Any idea on how to extend it to support devices other than net? I think we
+> > > > > want a generic API or an API that could be made generic in the future.
+> > > > > 
+> > > > > Do we want to e.g having a generic vhost mdev for all kinds of devices or
+> > > > > introducing e.g vhost-net-mdev and vhost-scsi-mdev?
+> > > > One possible way is to do what vhost-user does. I.e. Apart from
+> > > > the generic ring, features, ... related ioctls, we also introduce
+> > > > device specific ioctls when we need them. As vhost-mdev just needs
+> > > > to forward configs between parent and userspace and even won't
+> > > > cache any info when possible,
+> > > 
+> > > So it looks to me this is only possible if we expose e.g set_config and
+> > > get_config to userspace.
+> > The set_config and get_config interface isn't really everything
+> > of device specific settings. We also have ctrlq in virtio-net.
+> 
+> 
+> Yes, but it could be processed by the exist API. Isn't it? Just set ctrl vq
+> address and let parent to deal with that.
 
-Signed-off-by: Andreas Färber <afaerber@suse.de>
----
- v2: New
- 
- include/dt-bindings/reset/realtek,rtd1195.h | 74 +++++++++++++++++++++++++++++
- 1 file changed, 74 insertions(+)
- create mode 100644 include/dt-bindings/reset/realtek,rtd1195.h
+I mean how to expose ctrlq related settings to userspace?
 
-diff --git a/include/dt-bindings/reset/realtek,rtd1195.h b/include/dt-bindings/reset/realtek,rtd1195.h
-new file mode 100644
-index 000000000000..27902abf935b
---- /dev/null
-+++ b/include/dt-bindings/reset/realtek,rtd1195.h
-@@ -0,0 +1,74 @@
-+/* SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause) */
-+/*
-+ * Realtek RTD1195 reset controllers
-+ *
-+ * Copyright (c) 2017 Andreas Färber
-+ */
-+#ifndef DT_BINDINGS_RESET_RTD1195_H
-+#define DT_BINDINGS_RESET_RTD1195_H
-+
-+/* soft reset 1 */
-+#define RTD1195_RSTN_MISC		0
-+#define RTD1195_RSTN_RNG		1
-+#define RTD1195_RSTN_USB3_POW		2
-+#define RTD1195_RSTN_GSPI		3
-+#define RTD1195_RSTN_USB3_P0_MDIO	4
-+#define RTD1195_RSTN_VE_H265		5
-+#define RTD1195_RSTN_USB		6
-+#define RTD1195_RSTN_USB_PHY0		8
-+#define RTD1195_RSTN_USB_PHY1		9
-+#define RTD1195_RSTN_HDMIRX		11
-+#define RTD1195_RSTN_HDMI		12
-+#define RTD1195_RSTN_ETN		14
-+#define RTD1195_RSTN_AIO		15
-+#define RTD1195_RSTN_GPU		16
-+#define RTD1195_RSTN_VE_H264		17
-+#define RTD1195_RSTN_VE_JPEG		18
-+#define RTD1195_RSTN_TVE		19
-+#define RTD1195_RSTN_VO			20
-+#define RTD1195_RSTN_LVDS		21
-+#define RTD1195_RSTN_SE			22
-+#define RTD1195_RSTN_DCU		23
-+#define RTD1195_RSTN_DC_PHY		24
-+#define RTD1195_RSTN_CP			25
-+#define RTD1195_RSTN_MD			26
-+#define RTD1195_RSTN_TP			27
-+#define RTD1195_RSTN_AE			28
-+#define RTD1195_RSTN_NF			29
-+#define RTD1195_RSTN_MIPI		30
-+
-+/* soft reset 2 */
-+#define RTD1195_RSTN_ACPU		0
-+#define RTD1195_RSTN_VCPU		1
-+#define RTD1195_RSTN_PCR		9
-+#define RTD1195_RSTN_CR			10
-+#define RTD1195_RSTN_EMMC		11
-+#define RTD1195_RSTN_SDIO		12
-+#define RTD1195_RSTN_I2C_5		18
-+#define RTD1195_RSTN_RTC		20
-+#define RTD1195_RSTN_I2C_4		23
-+#define RTD1195_RSTN_I2C_3		24
-+#define RTD1195_RSTN_I2C_2		25
-+#define RTD1195_RSTN_I2C_1		26
-+#define RTD1195_RSTN_UR1		28
-+
-+/* soft reset 3 */
-+#define RTD1195_RSTN_SB2		0
-+
-+/* iso soft reset */
-+#define RTD1195_ISO_RSTN_VFD		0
-+#define RTD1195_ISO_RSTN_IR		1
-+#define RTD1195_ISO_RSTN_CEC0		2
-+#define RTD1195_ISO_RSTN_CEC1		3
-+#define RTD1195_ISO_RSTN_DP		4
-+#define RTD1195_ISO_RSTN_CBUSTX		5
-+#define RTD1195_ISO_RSTN_CBUSRX		6
-+#define RTD1195_ISO_RSTN_EFUSE		7
-+#define RTD1195_ISO_RSTN_UR0		8
-+#define RTD1195_ISO_RSTN_GMAC		9
-+#define RTD1195_ISO_RSTN_GPHY		10
-+#define RTD1195_ISO_RSTN_I2C_0		11
-+#define RTD1195_ISO_RSTN_I2C_6		12
-+#define RTD1195_ISO_RSTN_CBUS		13
-+
-+#endif
--- 
-2.16.4
+> 
+> 
+> > 
+> > > 
+> > > > I think it might be better to do
+> > > > this in one generic vhost-mdev module.
+> > > 
+> > > Looking at definitions of VhostUserRequest in qemu, it mixed generic API
+> > > with device specific API. If we want go this ways (a generic vhost-mdev),
+> > > more questions needs to be answered:
+> > > 
+> > > 1) How could userspace know which type of vhost it would use? Do we need to
+> > > expose virtio subsystem device in for userspace this case?
+> > > 
+> > > 2) That generic vhost-mdev module still need to filter out unsupported
+> > > ioctls for a specific type. E.g if it probes a net device, it should refuse
+> > > API for other type. This in fact a vhost-mdev-net but just not modularize it
+> > > on top of vhost-mdev.
+> > > 
+> > > 
+> > > > > > - Some minor fixes and improvements;
+> > > > > > - Rebase on top of virtio-mdev series v4;
+> > [...]
+> > > > > > +
+> > > > > > +static long vhost_mdev_get_features(struct vhost_mdev *m, u64 __user *featurep)
+> > > > > > +{
+> > > > > > +	if (copy_to_user(featurep, &m->features, sizeof(m->features)))
+> > > > > > +		return -EFAULT;
+> > > > > As discussed in previous version do we need to filter out MQ feature here?
+> > > > I think it's more straightforward to let the parent drivers to
+> > > > filter out the unsupported features. Otherwise it would be tricky
+> > > > when we want to add more features in vhost-mdev module,
+> > > 
+> > > It's as simple as remove the feature from blacklist?
+> > It's not really that easy. It may break the old drivers.
+> 
+> 
+> I'm not sure I understand here, we do feature negotiation anyhow. For old
+> drivers do you mean the guest drivers without MQ?
 
+For old drivers I mean old parent drivers. It's possible
+to compile old drivers on new kernels.
+
+I'm not quite sure how will we implement MQ support in
+vhost-mdev. If we need to introduce new virtio_mdev_device_ops
+callbacks and an old driver exposed the MQ feature,
+then the new vhost-mdev will see this old driver expose
+MQ feature but not provide corresponding callbacks.
+
+> 
+> 
+> > 
+> > > 
+> > > > i.e. if
+> > > > the parent drivers may expose unsupported features and relay on
+> > > > vhost-mdev to filter them out, these features will be exposed
+> > > > to userspace automatically when they are enabled in vhost-mdev
+> > > > in the future.
+> > > 
+> > > The issue is, it's only that vhost-mdev knows its own limitation. E.g in
+> > > this patch, vhost-mdev only implements a subset of transport API, but parent
+> > > doesn't know about that.
+> > > 
+> > > Still MQ as an example, there's no way (or no need) for parent to know that
+> > > vhost-mdev does not support MQ.
+> > The mdev is a MDEV_CLASS_ID_VHOST mdev device. When the parent
+> > is being developed, it should know the currently supported features
+> > of vhost-mdev.
+> 
+> 
+> How can parent know MQ is not supported by vhost-mdev?
+
+Good point. I agree vhost-mdev should filter out the unsupported
+features. But in the meantime, I think drivers also shouldn't
+expose unsupported features.
+
+> 
+> 
+> > 
+> > > And this allows old kenrel to work with new
+> > > parent drivers.
+> > The new drivers should provide things like VIRTIO_MDEV_F_VERSION_1
+> > to be compatible with the old kernels. When VIRTIO_MDEV_F_VERSION_1
+> > is provided/negotiated, the behaviours should be consistent.
+> 
+> 
+> To be clear, I didn't mean a change in virtio-mdev API, I meant:
+> 
+> 1) old vhost-mdev kernel driver that filters out MQ
+> 
+> 2) new parent driver that support MQ
+> 
+> 
+> > 
+> > > So basically we have three choices here:
+> > > 
+> > > 1) Implement what vhost-user did and implement a generic vhost-mdev (but may
+> > > still have lots of device specific code). To support advanced feature which
+> > > requires the access to config, still lots of API that needs to be added.
+> > > 
+> > > 2) Implement what vhost-kernel did, have a generic vhost-mdev driver and a
+> > > vhost bus on top for match a device specific API e.g vhost-mdev-net. We
+> > > still have device specific API but limit them only to device specific
+> > > module. Still require new ioctls for advanced feature like MQ.
+> > > 
+> > > 3) Simply expose all virtio-mdev transport to userspace.
+> > Currently, virtio-mdev transport is a set of function callbacks
+> > defined in kernel. How to simply expose virtio-mdev transport to
+> > userspace?
+> 
+> 
+> The most straightforward way is to have an 1:1 mapping between ioctl and
+> virito_mdev_device_ops.
+
+Seems we are already trying to do 1:1 mapping between ioctl
+and virtio_mdev_device_ops in vhost-mdev now (the major piece
+missing is get_device_id/get_config/set_config).
+
+
+> 
+> Thanks
+> 
+> 
+> > 
+> > 
+> > > A generic module
+> > > without any type specific code (like virtio-mdev). No need dedicated API for
+> > > e.g MQ. But then the API will look much different than current vhost did.
+> > > 
+> > > Consider the limitation of 1) I tend to choose 2 or 3. What's you opinion?
+> > > 
+> > > 
+> 
