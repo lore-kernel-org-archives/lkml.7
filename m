@@ -2,148 +2,159 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 066F2CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 03:26:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A59B4CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 03:43:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9B2E207FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 03:26:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72C412173B
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 03:43:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sRquuot5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jBkAkT8K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733019AbfJWD0m (ORCPT
+        id S1733110AbfJWDnO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 23:26:42 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:40290 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732542AbfJWD0m (ORCPT
+        Tue, 22 Oct 2019 23:43:14 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:43959 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730808AbfJWDnO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 23:26:42 -0400
-Received: by mail-io1-f68.google.com with SMTP id p6so14931348iod.7
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 20:26:40 -0700 (PDT)
+        Tue, 22 Oct 2019 23:43:14 -0400
+Received: by mail-qk1-f195.google.com with SMTP id a194so14436443qkg.10;
+        Tue, 22 Oct 2019 20:43:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=h+j4esZlyAn6Jj0G1LuKplgHe+Pu/B4eUeGKka5Wc1Q=;
-        b=sRquuot576k5OEV69QqANCFmPKRu3I8HEHwtE8bDIFH4iTCUZFiLXeKrWFsOe2azT7
-         z55TK3jLnrH5cNizZ4FnrfShy2c+Skof/p3Fjzbf57m1Z2iP+8JbrODlmxvF/JsuvUzG
-         a8vHa9Ger6Fvv0eLHXW6gloXznk5lgiClj6OV02Vr7TQrGfnltuNNyNXH0xlQf9Bu+2h
-         Qk+vocBSIP4uz9zkzPmQKi2cE1dBci4362Q9JG00tv7dfrFuUg5yEGOZ77QioaHuV+8X
-         Ey6mdQTEv9fE41eHFQ14hHHeqf67oGHfke+tU1cla+f9Jl0vJsz1j07hZL/z+Eyc7AU6
-         Mzig==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=1VLjmkD3Rwi0EmWCkc7vL9OT1uRUJflAVuUFK1TCUfs=;
+        b=jBkAkT8KEpSceUnUT5D05nwe+iUUaw4Z2mTUBn3UmLbvelJfBJ0apbdnjAvMT5YvY3
+         ntlBx/J1kfkGuRuxJfFxXJf2vGgCVZTHEIHO57WyPJwTDbFtfIHT+ZKaN/KMYhlFvbZg
+         l5uHyObZQT100bTkbf22/rl6axphYwccnbaGlNbtA7ZHNCnG5G+uK+fKnMQcl0zxeKhy
+         OjEkXlm2lczwehiMu+tWksfrRrrhUMMho7Ws55ENPgLgFzE/p/4SpSz1sJWyxxny2pCR
+         I84UJUFwbPpDwBAgMSF7HEay+FmmXN2jMIRe5bgfbKXigapMT68B3xN3ohWxw4Xv9+yv
+         6X3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=h+j4esZlyAn6Jj0G1LuKplgHe+Pu/B4eUeGKka5Wc1Q=;
-        b=p1noK/kMN9yiuxe83jBjdDAkrI/YqmV/WmOFvjHiTaNtAcgGnQpB614mo4CPRnzZg+
-         ZKbKhZeV+o7UmavsvzJBWYedEXFebMWz2XZ58LBiKFJnElMhDmLVvgskssWyQr/7UWeU
-         TnoGFtSzay1w/6gbYIPBiGc4mtGmsbc+6XE+wY4qbSSaPPtype1/G0sM9dMlsLJbR8Ua
-         cIU5RU4xQm16g1oCuzBuuOhRCbPCqVb4eRiT8C+mrMLTWy6EAsAEzu0ZbF9SacUzcesF
-         EPIpriJRnfNlCFvy6aJ86TK06fOHdq2HvDTDVzSguKRsTasf6vSLjRl6ou/gu40wJhoF
-         yz5A==
-X-Gm-Message-State: APjAAAU2EXBPn6c0YFgph0VArLTYcfL+E77TfTW+Bue5id3s4gGKFADw
-        qpfZzcRV4WM1h0L9nwGHhjWLvo7rT7Df0EZNWx8eMg==
-X-Google-Smtp-Source: APXvYqygqvKfL7Ykw3boZKQwFYF5duCex0GHhqhb/QKexuQBFeBJm0daroKda/Sx6MKbPCAfONIR6Gg+O6waKr/5XBg=
-X-Received: by 2002:a6b:c701:: with SMTP id x1mr1239496iof.162.1571801199435;
- Tue, 22 Oct 2019 20:26:39 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1VLjmkD3Rwi0EmWCkc7vL9OT1uRUJflAVuUFK1TCUfs=;
+        b=ClIVLf5A/lh41Z4zexUPHGBx4y87X1oWdoUcY48xVnwq/m5ywxPqqB8yzGxTHfkvxE
+         BB40oYAQcN2UmESTZullRmDqKSzySBma9/JBcj7/ZA5PIgE3VQxXu/EsU3m4FmyJetah
+         4us3ClohzwsqdkXDAcPYOQcXL7LbTe7ZXxzyFokge9LshpWSTodH4K4l0Whg62y1P7+i
+         UVuWpu18A+FLWK1VnzoakdB6+h5UsZpdMm6QQFUZOroZkIIoYtds0eBcklxG3Rp7xTUn
+         /NmmwrGOVUeaoKkffCFM1omcS3b96ZTJNi88v1rn1DvqeF5KkDzpaQT3nxRVIICXvKbO
+         fQeQ==
+X-Gm-Message-State: APjAAAW4KF0I6+UiKmotqvdVAkHXTM+nTWIYMPNq8rtfv9Ml1pnRlg9T
+        SiF3NWgFVzJ5fFKRZ52Hz6rinSVbuGc=
+X-Google-Smtp-Source: APXvYqyfwugcAWTEZOsrSK/23d7kNjtNUgsTU3k7oaizdL5WSdU/HGKgK5xsqWdRyhpv5GrVnl6Udw==
+X-Received: by 2002:a37:9a8a:: with SMTP id c132mr6452527qke.92.1571802192882;
+        Tue, 22 Oct 2019 20:43:12 -0700 (PDT)
+Received: from smtp.gmail.com (gwcrusp.semfio.usp.br. [143.107.150.86])
+        by smtp.gmail.com with ESMTPSA id c15sm146qkc.101.2019.10.22.20.43.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Oct 2019 20:43:12 -0700 (PDT)
+Date:   Wed, 23 Oct 2019 00:43:07 -0300
+From:   Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Dragos Bogdan <dragos.bogdan@analog.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        devicetree@vger.kernel.org, kernel-usp@googlegroups.com
+Subject: Re: [PATCH v2 2/2] dt-bindings: iio: adc: Add DT docs for AD7292
+Message-ID: <20191023034305.f6zm6hyvh3nlltas@smtp.gmail.com>
+References: <20191016025220.td3xb7oxlfkznxl6@smtp.gmail.com>
+ <20191017191152.GA11222@bogus>
+ <20191019150652.h6bkfz2w2ohemvwy@smtp.gmail.com>
+ <CAL_JsqKqgko02KstmytNNUUF0-QR7rpMF4dV=X55N=TnDahd+Q@mail.gmail.com>
+ <20191022140604.ovmooly47qax2sms@smtp.gmail.com>
+ <CAL_JsqLf8kpOu0MQN-TAhQkiZCGfMKWmztnHNo+2BAVqfX8yGQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20191022085924.92783-1-pumahsu@google.com> <20191022172731.GA230934@kroah.com>
-In-Reply-To: <20191022172731.GA230934@kroah.com>
-From:   Puma Hsu <pumahsu@google.com>
-Date:   Wed, 23 Oct 2019 11:26:03 +0800
-Message-ID: <CAGCq0LYp4Ua052nSwuZwZBAqCMZcLyt9UMsCPThGg27P=YSjNA@mail.gmail.com>
-Subject: Re: [PATCH V2] usb: typec: Add sysfs node to show connector orientation
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Badhri Jagan Sridharan <badhri@google.com>,
-        Kyle Tso <kyletso@google.com>,
-        Albert Wang <albertccwang@google.com>,
-        Chien Kun Niu <rickyniu@google.com>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqLf8kpOu0MQN-TAhQkiZCGfMKWmztnHNo+2BAVqfX8yGQ@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+Hi Rob,
 
+OK, thanks for the explanation.
 
-On Wed, Oct 23, 2019 at 1:27 AM Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> On Tue, Oct 22, 2019 at 04:59:24PM +0800, Puma Hsu wrote:
-> > Export the Type-C connector orientation so that user space
-> > can get this information.
+I indeed missed some details from the documentation. I will be more
+careful on my next readings.
+
+I see there are other documentation files at Documentation/devicetree/
+and Documentation/devicetree/bindings/. Besides these, would you
+recommend other documentation and/or material for those who want to
+write dt-bindings that validate with dt-schema?
+
+Thanks in advance,
+
+Marcelo
+
+On 10/22, Rob Herring wrote:
+> On Tue, Oct 22, 2019 at 9:06 AM Marcelo Schmitt
+> <marcelo.schmitt1@gmail.com> wrote:
 > >
-> > Signed-off-by: Puma Hsu <pumahsu@google.com>
-> > ---
-> >  Documentation/ABI/testing/sysfs-class-typec | 11 +++++++++++
-> >  drivers/usb/typec/class.c                   | 18 ++++++++++++++++++
-> >  2 files changed, 29 insertions(+)
+> > Hi,
 > >
-> > diff --git a/Documentation/ABI/testing/sysfs-class-typec b/Documentation/ABI/testing/sysfs-class-typec
-> > index d7647b258c3c..b22f71801671 100644
-> > --- a/Documentation/ABI/testing/sysfs-class-typec
-> > +++ b/Documentation/ABI/testing/sysfs-class-typec
-> > @@ -108,6 +108,17 @@ Contact: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> >  Description:
-> >               Revision number of the supported USB Type-C specification.
+> > I ran the DTC and CHECK for AD7292 schema however, the target '__build'
+> > did not run due to errors found in regulator/fixed-regulator.yaml and
+> > arm/allwinner,sun4i-a10-csi.yaml.
+> 
+> Fixes for those are still pending in -next. Use 'make -k' and ignore those.
+> 
 > >
-> > +What:                /sys/class/typec/<port>/connector_orientation
-> > +Date:                October 2019
-> > +Contact:     Puma Hsu <pumahsu@google.com>
-> > +Description:
-> > +             Indicates which typec connector orientation is configured now.
-> > +             cc1 is defined as "normal" and cc2 is defined as "reversed".
->
-> Why the blank line after "Description:"?  Shouldn't "Indicates..." be
-> right after it?
-
-I checked the coding style for sysfs-class-*, all of them put the
-description at the next line behind "Description:"
-Should I change it?
-
-> > +
-> > +             Valid value:
-> > +             - unknown (nothing configured)
-> > +             - normal (configured in cc1 side)
-> > +             - reversed (configured in cc2 side)
+> > I recall seeing something about the maxItems requirement over regulator
+> > supplies being changed on the iio mailing list, so I updated my repo
+> > locally, cloned and reinstalled the dt-schema toolset. However, I still
+> > can't make it go through the '__build' target.
 > >
-> >  USB Type-C partner devices (eg. /sys/class/typec/port0-partner/)
+> > Python 3.7.5rc1 is my default python and I got the following pip3
+> > packages installed:
 > >
-> > diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
-> > index 94a3eda62add..911d06676aeb 100644
-> > --- a/drivers/usb/typec/class.c
-> > +++ b/drivers/usb/typec/class.c
-> > @@ -1245,6 +1245,23 @@ static ssize_t usb_power_delivery_revision_show(struct device *dev,
-> >  }
-> >  static DEVICE_ATTR_RO(usb_power_delivery_revision);
+> > ruamel.yaml        0.16.5
+> > ruamel.yaml.clib   0.2.0
+> > rfc3987            1.3.8
+> > jsonschema         3.0.1
+> > dtschema           0.0.1  at $HOME/<iio repo dir>/dt-schema
 > >
-> > +static const char * const typec_connector_orientation[] = {
-> > +     [TYPEC_ORIENTATION_NONE]                = "unknown",
-> > +     [TYPEC_ORIENTATION_NORMAL]              = "normal",
-> > +     [TYPEC_ORIENTATION_REVERSE]             = "reversed",
-> > +};
-> > +
-> > +static ssize_t connector_orientation_show(struct device *dev,
-> > +                                             struct device_attribute *attr,
-> > +                                             char *buf)
->
-> Can you line this up properly?
-
-Yes, I will update it in version3 once the previous problem is confirmed.
-
->
-> thanks,
->
-> greg k-h
-
-
-Thanks in advance.
-Puma Hsu
+> > Debian Bullseye packages installed:
+> > python3-yaml/testing,now 5.1.2-1
+> > libyaml-dev/testing,now 0.2.2-1
+> >
+> > I was only able to run DTC after installing the libyaml-dev package, so
+> > I think it might be worth to add it to the project dependencies at
+> > https://github.com/robherring/dt-schema.
+> 
+> Strictly speaking, it's not a dependency for dt-schema. It's
+> documented in Documentation/devicetree/writing-schema.rst. I've added
+> a pointer to that in bindings/submitting-patches.txt. I'm not sure how
+> else to make it more obvious.
+> 
+> BTW, You will get a useful error message if libyaml is missing when
+> building 'make dtbs_check'. I need to make that work for
+> dt_binding_check.
+> 
+> > apt-get install libyaml-dev
+> 
+> You need the lib too, but that tends to already be installed. IIRC,
+> installing the headers doesn't install the lib automatically.
+> 
+> In any case, I wanted to avoid putting in distro specific instructions
+> in the kernel.
+> 
+> Rob
+> 
+> -- 
+> You received this message because you are subscribed to the Google Groups "Kernel USP" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to kernel-usp+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/kernel-usp/CAL_JsqLf8kpOu0MQN-TAhQkiZCGfMKWmztnHNo%2B2BAVqfX8yGQ%40mail.gmail.com.
