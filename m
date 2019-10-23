@@ -2,94 +2,110 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFCBCCA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:15:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBD3ACA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:18:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA3A521928
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:15:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 873AE21872
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:18:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VgIrHUc5"
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="K0hKL19q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728384AbfJWRP2 (ORCPT
+        id S1728676AbfJWRSR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 13:15:28 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:38721 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726205AbfJWRP2 (ORCPT
+        Wed, 23 Oct 2019 13:18:17 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:35713 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726205AbfJWRSR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 13:15:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571850927;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=617sJpkJrHxWXGxLxE+ajDrOrRik16ybHA6VjXhWGmA=;
-        b=VgIrHUc5/LWmt3W6rzQ+GoYrgzagOvLZ7tVZZR2czYuseeRloa1AAwpwf18/RhEbLwXmNB
-        OQ2+ZOcnzD8u1/xmyUdetBAcuaWmWNJLQmHQnfqT7V7JbjRkbJ2wP00UNbmrl0P7X8MWHB
-        sHpRRCRA+TF+bkUmo+2W8dgYRO7PK6c=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-172-mJxpOxcsMAmXNsr3nwCp7w-1; Wed, 23 Oct 2019 13:15:23 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D23EA1800D6B;
-        Wed, 23 Oct 2019 17:15:21 +0000 (UTC)
-Received: from treble (ovpn-121-225.rdu2.redhat.com [10.10.121.225])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7D29B6061E;
-        Wed, 23 Oct 2019 17:15:16 +0000 (UTC)
-Date:   Wed, 23 Oct 2019 12:15:14 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        mhiramat@kernel.org, bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, jeyu@kernel.org
-Subject: Re: [PATCH v4 15/16] module: Move where we mark modules RO,X
-Message-ID: <20191023171514.7hkhtvfcj5vluwcg@treble>
-References: <20191018073525.768931536@infradead.org>
- <20191018074634.801435443@infradead.org>
- <20191021135312.jbbxsuipxldocdjk@treble>
- <20191021141402.GI1817@hirez.programming.kicks-ass.net>
- <20191023114835.GT1817@hirez.programming.kicks-ass.net>
- <20191023151654.GF19358@hirez.programming.kicks-ass.net>
+        Wed, 23 Oct 2019 13:18:17 -0400
+Received: by mail-wm1-f68.google.com with SMTP id v6so3436759wmj.0
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 10:18:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=android.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=48XDzmeFiM9yOQfqbOoh8NKzWofKTXbdxGBYN62jtKs=;
+        b=K0hKL19qHw3J5tEam6YX1YovarKMfA3S6y4cNF77riVmCADwA/pXcYvmY0AeRHQ++Y
+         jIRM4zjpusmWcKoGcs1aG+IZEIaqeUcXqXbxWbxyqAXzTYi8q2iFgrUS+HRVCAY45cwA
+         OM+2clMI8peNxrDQUz6R18LprsOW4U7o1S9yUo1oU1nnr5EyvGHDwuvvgr2S70OeAlee
+         nqzFU5+Qt9bYt1TvxhXxJjm5enxaXLlnBA+hFq9MOiJdtN6VSULqfbftc8LjaUPw3WRR
+         JnAQXuWP7Es9gpasa98YAoNwV2rjgVR2XwUo9EYnWUVjRYrTdKrEXsNyY71PrfjfwBEU
+         PTNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=48XDzmeFiM9yOQfqbOoh8NKzWofKTXbdxGBYN62jtKs=;
+        b=runqY74oMLv/h+kGhZP7Zfm0PPtPP0NQ+T496nruX9tQkqne8ThL80RuyUm+s++x0v
+         Ja/FUSW2TV+sUVThdZbm042SNmn9YnhVHX1PoehGs2pO1KeIYtTYAT14xLBqS8GeoCsk
+         mLqwuC1WeggH7k7azwnveAliU6oR4x9aMVatrTYcJZHM63WVyLEs2hLavWzGy4MlURq7
+         hF+DD2fKreO8I9rkP0jwt562n7m5bN62GmBsp6bw9zDvhakBBK6sb1pLp4Rv/s+MZDnI
+         G1Ut5vKbZ+//t+8GDa8I2CopLNWB3Fai7NAyVgviLu6s1EM3CYR0tbgZIkR/G8I6v4y+
+         ah0w==
+X-Gm-Message-State: APjAAAWfUYmRBIJ6ImJpx0WRu0rMOxOwb6RYm9/N/Jm/asNkVGm6Sh33
+        usXdrBvGCChZZjtdJcC5BhJ26A==
+X-Google-Smtp-Source: APXvYqzNDT5y6csWeVLItVHdqJPlxCEQp3G7g/uwZZKeYuvL1K3rIgc2YTkz8U/QH+j0z4bPJx5fmQ==
+X-Received: by 2002:a7b:c049:: with SMTP id u9mr931749wmc.12.1571851094909;
+        Wed, 23 Oct 2019 10:18:14 -0700 (PDT)
+Received: from balsini.lon.corp.google.com ([2a00:79e0:d:210:e751:37a0:1e95:e65d])
+        by smtp.gmail.com with ESMTPSA id r65sm21571740wmr.9.2019.10.23.10.18.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Oct 2019 10:18:14 -0700 (PDT)
+From:   Alessio Balsini <balsini@android.com>
+To:     gregkh@linuxfoundation.org
+Cc:     stable@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@android.com, Alessio Balsini <balsini@android.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 4.9 4.14] loop: Add LOOP_SET_DIRECT_IO to compat ioctl
+Date:   Wed, 23 Oct 2019 18:17:36 +0100
+Message-Id: <20191023171736.161697-1-balsini@android.com>
+X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
+In-Reply-To: <20190805115309.GJ2349@hirez.programming.kicks-ass.net>
+References: <20190805115309.GJ2349@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <20191023151654.GF19358@hirez.programming.kicks-ass.net>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-MC-Unique: mJxpOxcsMAmXNsr3nwCp7w-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 05:16:54PM +0200, Peter Zijlstra wrote:
-> @@ -157,6 +158,14 @@ static int __apply_relocate_add(Elf64_Sh
-> =20
->  =09=09val =3D sym->st_value + rel[i].r_addend;
-> =20
-> +=09=09/*
-> +=09=09 * .klp.rela.* sections should only contain module
-> +=09=09 * related RELAs. All core-kernel RELAs should be in
-> +=09=09 * normal .rela.* sections and be applied when loading
-> +=09=09 * the patch module itself.
-> +=09=09 */
-> +=09=09WARN_ON_ONCE(klp && core_kernel_text(val));
-> +
+[ Upstream commit fdbe4eeeb1aac219b14f10c0ed31ae5d1123e9b8 ]
 
-This isn't quite true, we also use .klp.rela sections to access
-unexported vmlinux symbols.
+Enabling Direct I/O with loop devices helps reducing memory usage by
+avoiding double caching.  32 bit applications running on 64 bits systems
+are currently not able to request direct I/O because is missing from the
+lo_compat_ioctl.
 
---=20
-Josh
+This patch fixes the compatibility issue mentioned above by exporting
+LOOP_SET_DIRECT_IO as additional lo_compat_ioctl() entry.
+The input argument for this ioctl is a single long converted to a 1-bit
+boolean, so compatibility is preserved.
+
+Cc: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Alessio Balsini <balsini@android.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/block/loop.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+index da3902ac16c86..8aadd4d0c3a88 100644
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -1557,6 +1557,7 @@ static int lo_compat_ioctl(struct block_device *bdev, fmode_t mode,
+ 		arg = (unsigned long) compat_ptr(arg);
+ 	case LOOP_SET_FD:
+ 	case LOOP_CHANGE_FD:
++	case LOOP_SET_DIRECT_IO:
+ 		err = lo_ioctl(bdev, mode, cmd, arg);
+ 		break;
+ 	default:
+-- 
+2.23.0.866.gb869b98d4c-goog
 
