@@ -2,89 +2,86 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54782CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 22:05:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 150CECA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 22:06:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 256E22084C
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 22:05:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB6A82084C
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 22:06:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="CvPPc+ni"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AJnwTDVs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436671AbfJWWFg (ORCPT
+        id S2436685AbfJWWGa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 18:05:36 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:35893 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731301AbfJWWFf (ORCPT
+        Wed, 23 Oct 2019 18:06:30 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:20105 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2436673AbfJWWG3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 18:05:35 -0400
-Received: by mail-il1-f193.google.com with SMTP id s75so10680352ilc.3
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 15:05:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=6nNENVA+itqkpIQzusrAU/yenbBYQKj6dV7c1bpwXz0=;
-        b=CvPPc+ni++8l/tgBZsJga/63Afatp4dAhBpkHiaekonYGAecYw9T+FrpwLyAKbMYvr
-         dnuorpGtZ+7lXI5RuZ/15abvyX51iXf9ZgLmu0AFhVW2tdYjzn0uw80DXlANBcSZn1hC
-         rqQioWQsnDVncQhMDIYUJDzAuYb4xBdRMOOReiaRWSKOp0dlc3hHV/W3gAwL9GgvLCXN
-         Hk0wI8BtHEuhqHHpZWpJ65iR9TJ2uaC2K/atx2qowegeUp0X0o+MG0Mvs2Nyw9N5pfOx
-         AxC7H+4jCU2zfM0NvdLkZyK12X8oJ/F536QdB/y/lTrDjJfTk3QeKyXsZkPcY4I91pQe
-         jy8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=6nNENVA+itqkpIQzusrAU/yenbBYQKj6dV7c1bpwXz0=;
-        b=WUiFUNQNGTIyclWKFmx95GnENhqX802XTC5jQprayQuSFqe4DbTjp+/H4o4jz8ilrX
-         l520xHqeVt0bpsndyO1KP8xoi+ZqjoqkeCgZ7hEv8py2wy1++fIFZhm0he7L0N6A9Cs7
-         bJv16V8LsNVwei3OQpfYQlvJca07o19CXCNjBth8IYbg4GdlAiAIK8FcHwAT8Irz658P
-         gN2Dygxh8X/zl73DbMN76o6sR5M26G0BSi0LaTG4g2/JKkezVWK86iCTizorTJMRvCeD
-         RdFUUSRrkj4kuvpvnJcEAEuELVriVNAwPziDBC7mjNT82Qrdf46Fbu5m12HzX9ZAUrZZ
-         Gm3g==
-X-Gm-Message-State: APjAAAUk0E0MB6GFqdRJPqMc1+YiDvAMnnqDEUuk3EamHcj24GYrfbMx
-        Dwu1YELNga91kbyI0pfuyTtuCg==
-X-Google-Smtp-Source: APXvYqzCVL6/ED1XfSU6ZwasV1fopkH1VvPNO4zpWZ5VdnWQoKnpy32UtyRduLuAvPAODzzp6WeAug==
-X-Received: by 2002:a92:d3c9:: with SMTP id c9mr24486179ilh.259.1571868333002;
-        Wed, 23 Oct 2019 15:05:33 -0700 (PDT)
-Received: from localhost ([64.62.168.194])
-        by smtp.gmail.com with ESMTPSA id j21sm4998581ioj.86.2019.10.23.15.05.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Oct 2019 15:05:32 -0700 (PDT)
-Date:   Wed, 23 Oct 2019 15:05:30 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Christoph Hellwig <hch@lst.de>
-cc:     Palmer Dabbelt <palmer@sifive.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 02/15] riscv: cleanup do_trap_break
-In-Reply-To: <20191017173743.5430-3-hch@lst.de>
-Message-ID: <alpine.DEB.2.21.9999.1910231505140.16536@viisi.sifive.com>
-References: <20191017173743.5430-1-hch@lst.de> <20191017173743.5430-3-hch@lst.de>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Wed, 23 Oct 2019 18:06:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571868388;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=EBZdX8XYASZ/hcfjUquvBjt91Cclb0VNS3/vMpZYZLM=;
+        b=AJnwTDVsXqnhtGyUbS1aTs1R5KMeO7VGybkdc7tmurlhFBd9M6/c7GYiZ8S0u2pQH4Xup4
+        CIGDZjHjL7ri8pwKX8zzGROBIh1dIg7azYirX8Od9YvqvcK7lxDN51PjGqo13QuVbRB2He
+        7yNknj7VXbN2VbzGf5nNucSA9wEvM3U=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-212-D38nSc7BMIG3e80ECrNc-w-1; Wed, 23 Oct 2019 18:06:24 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 10E8F476;
+        Wed, 23 Oct 2019 22:06:23 +0000 (UTC)
+Received: from treble (ovpn-121-225.rdu2.redhat.com [10.10.121.225])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C114560C57;
+        Wed, 23 Oct 2019 22:06:20 +0000 (UTC)
+Date:   Wed, 23 Oct 2019 17:06:18 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        linux-arch@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>,
+        Miroslav Benes <mbenes@suse.cz>
+Subject: Re: [patch V2 07/17] x86/entry/64: Remove redundant interrupt disable
+Message-ID: <20191023220618.qsmog2k5oaagj27v@treble>
+References: <20191023122705.198339581@linutronix.de>
+ <20191023123118.296135499@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20191023123118.296135499@linutronix.de>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-MC-Unique: D38nSc7BMIG3e80ECrNc-w-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 17 Oct 2019, Christoph Hellwig wrote:
+On Wed, Oct 23, 2019 at 02:27:12PM +0200, Thomas Gleixner wrote:
+> Now that the trap handlers return with interrupts disabled, the
+> unconditional disabling of interrupts in the low level entry code can be
+> removed along with the trace calls.
+>=20
+> Add debug checks where appropriate.
 
-> If we always compile the get_break_insn_length inline function we can
-> remove the ifdefs and let dead code elimination take care of the warn
-> branch that is now unreadable because the report_bug stub always
-> returns BUG_TRAP_TYPE_BUG.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+This seems a little scary.  Does anybody other than Andy actually run
+with CONFIG_DEBUG_ENTRY?  What happens if somebody accidentally leaves
+irqs enabled?  How do we know you found all the leaks?
 
-Thanks, queued for v5.4-rc.
+--=20
+Josh
 
-
-- Paul
