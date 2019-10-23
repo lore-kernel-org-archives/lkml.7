@@ -2,207 +2,348 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D88DECA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:23:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3CA4CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:23:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF92221872
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:23:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 827E621928
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:23:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Cmc5oaMU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405805AbfJWNXV (ORCPT
+        id S2405822AbfJWNXh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 09:23:21 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:35040 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2405794AbfJWNXV (ORCPT
+        Wed, 23 Oct 2019 09:23:37 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:22976 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2405811AbfJWNXh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 09:23:21 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9NDKJlK098962
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 09:23:20 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vtp0u4q3s-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 09:23:19 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Wed, 23 Oct 2019 14:23:17 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 23 Oct 2019 14:23:13 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9NDNCu915204484
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 23 Oct 2019 13:23:12 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9B962A4065;
-        Wed, 23 Oct 2019 13:23:12 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 79CEDA4060;
-        Wed, 23 Oct 2019 13:23:11 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.184.174])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 23 Oct 2019 13:23:11 +0000 (GMT)
-Subject: Re: [PATCH v1 5/6] KEYS: measure queued keys
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        dhowells@redhat.com, casey@schaufler-ca.com, sashal@kernel.org,
-        jamorris@linux.microsoft.com,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        keyrings@vger.kernel.org
-Date:   Wed, 23 Oct 2019 09:23:10 -0400
-In-Reply-To: <20191023001818.3684-6-nramas@linux.microsoft.com>
-References: <20191023001818.3684-1-nramas@linux.microsoft.com>
-         <20191023001818.3684-6-nramas@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19102313-0016-0000-0000-000002BC2203
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19102313-0017-0000-0000-0000331D61EE
-Message-Id: <1571836990.5104.96.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-23_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910230136
+        Wed, 23 Oct 2019 09:23:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571837015;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=9esACzUJF0u6QtBjv/epLb0yRS+8Z5hwILebZ4esYPQ=;
+        b=Cmc5oaMUln77A1emLNgVxA36hYHslfQEd1TOKYJkKUPjFEEMxvdl/5iJb7BR2Duz/d7ULI
+        Tx6AyjgW0NZjZFryrvNMuYYsOvaf/Kwt71iUZTddj7EWmM5uzDY9vNu8f8PlyBGjgvdIP9
+        ru7YnB36uW0b66uM77sIRuszf4SXfGE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-282-SjDw5hsHPSuhoHLQQPtesw-1; Wed, 23 Oct 2019 09:23:32 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 26DE4800D59;
+        Wed, 23 Oct 2019 13:23:28 +0000 (UTC)
+Received: from jason-ThinkPad-X1-Carbon-6th.redhat.com (ovpn-12-126.pek2.redhat.com [10.72.12.126])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 30BD8600CC;
+        Wed, 23 Oct 2019 13:20:18 +0000 (UTC)
+From:   Jason Wang <jasowang@redhat.com>
+To:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com
+Cc:     virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        cohuck@redhat.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
+        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
+        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
+        stefanha@redhat.com, Jason Wang <jasowang@redhat.com>
+Subject: [PATCH V5 4/6] mdev: introduce virtio device and its device ops
+Date:   Wed, 23 Oct 2019 21:07:50 +0800
+Message-Id: <20191023130752.18980-5-jasowang@redhat.com>
+In-Reply-To: <20191023130752.18980-1-jasowang@redhat.com>
+References: <20191023130752.18980-1-jasowang@redhat.com>
+MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MC-Unique: SjDw5hsHPSuhoHLQQPtesw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-10-22 at 17:18 -0700, Lakshmi Ramasubramanian wrote:
-> Call process_buffer_measurement to measure keys that
-> are added and updated in the system.
+This patch implements basic support for mdev driver that supports
+virtio transport for kernel virtio driver.
 
-This patch description doesn't describe what the patch actually does
-(eg. it not only calls process_buffer_measurement, but defines the IMA
-hook itself.)
+Signed-off-by: Jason Wang <jasowang@redhat.com>
+---
+ drivers/vfio/mdev/mdev_core.c    |  20 ++++
+ drivers/vfio/mdev/mdev_private.h |   2 +
+ include/linux/mdev.h             |   6 ++
+ include/linux/virtio_mdev_ops.h  | 159 +++++++++++++++++++++++++++++++
+ 4 files changed, 187 insertions(+)
+ create mode 100644 include/linux/virtio_mdev_ops.h
 
-The ordering of this patch set is awkward.  It should first introduce
-a generic method for measuring keys based on the keyring.  Then add
-the additional support needed for the specific builtin_trusted_keys
-keyring usecase.
-
-> 
-> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-> ---
->  security/integrity/ima/ima_main.c  | 23 +++++++++++++++++++++
->  security/integrity/ima/ima_queue.c | 32 ++++++++++++++++++++++++++++++
->  2 files changed, 55 insertions(+)
-> 
-> diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-> index 8e965d18fb21..7c2afb954f19 100644
-> --- a/security/integrity/ima/ima_main.c
-> +++ b/security/integrity/ima/ima_main.c
-> @@ -678,6 +678,29 @@ void ima_kexec_cmdline(const void *buf, int size)
->  	}
->  }
->  
-> +/*
-> + * ima_post_key_create_or_update
-> + * @keyring points to the keyring to which the key belongs
-> + * @key points to the key being created or updated
-> + * @cred cred structure
-> + * @flags flags passed to key_create_or_update function
-> + * @create flag to indicate whether the key was created or updated
-> + *
-> + * IMA hook called when a new key is created or updated.
-> + *
-> + * On success return 0.
-> + * Return appropriate error code on error
-> + */
-> +int ima_post_key_create_or_update(struct key *keyring, struct key *key,
-> +				  const struct cred *cred,
-> +				  unsigned long flags, bool create)
-> +{
-> +	if (key->type != &key_type_asymmetric)
-> +		return 0;
-> +
-> +	return ima_measure_key(keyring, key);
-> +}
-> +
-
-Here is the new IMA hook, not "[PATCH v1 3/6] KEYS: ima hook to
-measure builtin_trusted_keys".  The new hook should call
-process_buffer_measurement() directly.  A subsequent patch, based on
-the keyring, would determine if it needs to be queued.
-
-Mimi
-
-
->  static int __init init_ima(void)
->  {
->  	int error;
-> diff --git a/security/integrity/ima/ima_queue.c b/security/integrity/ima/ima_queue.c
-> index a262e289615b..0da11a292f99 100644
-> --- a/security/integrity/ima/ima_queue.c
-> +++ b/security/integrity/ima/ima_queue.c
-> @@ -322,7 +322,12 @@ static struct ima_trusted_key_entry *ima_alloc_trusted_queue_entry(
->  int ima_measure_key(struct key *keyring, struct key *key)
->  {
->  	int rc = 0;
-> +	int pcr = CONFIG_IMA_MEASURE_PCR_IDX;
-> +	struct ima_template_desc *template_desc = ima_template_desc_current();
-> +	int action;
->  	struct ima_trusted_key_entry *entry = NULL;
-> +	const struct public_key *pk;
-> +	u32 secid;
->  	enum ima_hooks func;
->  	bool queued = false;
->  
-> @@ -344,16 +349,43 @@ int ima_measure_key(struct key *keyring, struct key *key)
->  
->  	mutex_unlock(&ima_trusted_keys_mutex);
->  
-> +	if ((rc == 0) && !queued) {
-> +		security_task_getsecid(current, &secid);
-> +		action = ima_get_action(NULL, current_cred(), secid, 0,
-> +					func, &pcr, &template_desc);
-> +		if (action & IMA_MEASURE) {
-> +			pk = key->payload.data[asym_crypto];
-> +			process_buffer_measurement(pk->key, pk->keylen,
-> +						   key->description,
-> +						   pcr, template_desc);
-> +		}
-> +	}
-> +
->  	return rc;
->  }
->  
->  void ima_measure_queued_trusted_keys(void)
->  {
->  	struct ima_trusted_key_entry *entry, *tmp;
-> +	int pcr = CONFIG_IMA_MEASURE_PCR_IDX;
-> +	struct ima_template_desc *template_desc = ima_template_desc_current();
-> +	int action;
-> +	u32 secid;
->  
->  	mutex_lock(&ima_trusted_keys_mutex);
->  
->  	list_for_each_entry_safe(entry, tmp, &ima_trusted_keys, list) {
-> +		security_task_getsecid(current, &secid);
-> +		action = ima_get_action(NULL, current_cred(), secid, 0,
-> +					entry->func, &pcr,
-> +					&template_desc);
-> +		if (action & IMA_MEASURE) {
-> +			process_buffer_measurement(entry->public_key,
-> +						   entry->public_key_len,
-> +						   entry->key_description,
-> +						   pcr,
-> +						   template_desc);
-> +		}
->  		list_del(&entry->list);
->  		ima_free_trusted_key_entry(entry);
->  	}
+diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
+index 555bd61d8c38..9b00c3513120 100644
+--- a/drivers/vfio/mdev/mdev_core.c
++++ b/drivers/vfio/mdev/mdev_core.c
+@@ -76,6 +76,26 @@ const struct vfio_mdev_device_ops *mdev_get_vfio_ops(str=
+uct mdev_device *mdev)
+ }
+ EXPORT_SYMBOL(mdev_get_vfio_ops);
+=20
++/* Specify the virtio device ops for the mdev device, this
++ * must be called during create() callback for virtio mdev device.
++ */
++void mdev_set_virtio_ops(struct mdev_device *mdev,
++=09=09=09 const struct virtio_mdev_device_ops *virtio_ops)
++{
++=09mdev_set_class(mdev, MDEV_CLASS_ID_VIRTIO);
++=09mdev->virtio_ops =3D virtio_ops;
++}
++EXPORT_SYMBOL(mdev_set_virtio_ops);
++
++/* Get the virtio device ops for the mdev device. */
++const struct virtio_mdev_device_ops *
++mdev_get_virtio_ops(struct mdev_device *mdev)
++{
++=09WARN_ON(mdev->class_id !=3D MDEV_CLASS_ID_VIRTIO);
++=09return mdev->virtio_ops;
++}
++EXPORT_SYMBOL(mdev_get_virtio_ops);
++
+ struct device *mdev_dev(struct mdev_device *mdev)
+ {
+ =09return &mdev->dev;
+diff --git a/drivers/vfio/mdev/mdev_private.h b/drivers/vfio/mdev/mdev_priv=
+ate.h
+index 0770410ded2a..7b47890c34e7 100644
+--- a/drivers/vfio/mdev/mdev_private.h
++++ b/drivers/vfio/mdev/mdev_private.h
+@@ -11,6 +11,7 @@
+ #define MDEV_PRIVATE_H
+=20
+ #include <linux/vfio_mdev_ops.h>
++#include <linux/virtio_mdev_ops.h>
+=20
+ int  mdev_bus_register(void);
+ void mdev_bus_unregister(void);
+@@ -38,6 +39,7 @@ struct mdev_device {
+ =09u16 class_id;
+ =09union {
+ =09=09const struct vfio_mdev_device_ops *vfio_ops;
++=09=09const struct virtio_mdev_device_ops *virtio_ops;
+ =09};
+ };
+=20
+diff --git a/include/linux/mdev.h b/include/linux/mdev.h
+index 4625f1a11014..9b69b0bbebfd 100644
+--- a/include/linux/mdev.h
++++ b/include/linux/mdev.h
+@@ -17,6 +17,7 @@
+=20
+ struct mdev_device;
+ struct vfio_mdev_device_ops;
++struct virtio_mdev_device_ops;
+=20
+ /*
+  * Called by the parent device driver to set the device which represents
+@@ -112,6 +113,10 @@ void mdev_set_class(struct mdev_device *mdev, u16 id);
+ void mdev_set_vfio_ops(struct mdev_device *mdev,
+ =09=09       const struct vfio_mdev_device_ops *vfio_ops);
+ const struct vfio_mdev_device_ops *mdev_get_vfio_ops(struct mdev_device *m=
+dev);
++void mdev_set_virtio_ops(struct mdev_device *mdev,
++=09=09=09 const struct virtio_mdev_device_ops *virtio_ops);
++const struct virtio_mdev_device_ops *
++mdev_get_virtio_ops(struct mdev_device *mdev);
+=20
+ extern struct bus_type mdev_bus_type;
+=20
+@@ -127,6 +132,7 @@ struct mdev_device *mdev_from_dev(struct device *dev);
+=20
+ enum {
+ =09MDEV_CLASS_ID_VFIO =3D 1,
++=09MDEV_CLASS_ID_VIRTIO =3D 2,
+ =09/* New entries must be added here */
+ };
+=20
+diff --git a/include/linux/virtio_mdev_ops.h b/include/linux/virtio_mdev_op=
+s.h
+new file mode 100644
+index 000000000000..d417b41f2845
+--- /dev/null
++++ b/include/linux/virtio_mdev_ops.h
+@@ -0,0 +1,159 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Virtio mediated device driver
++ *
++ * Copyright 2019, Red Hat Corp.
++ *     Author: Jason Wang <jasowang@redhat.com>
++ */
++#ifndef _LINUX_VIRTIO_MDEV_H
++#define _LINUX_VIRTIO_MDEV_H
++
++#include <linux/interrupt.h>
++#include <linux/mdev.h>
++#include <uapi/linux/vhost.h>
++
++#define VIRTIO_MDEV_DEVICE_API_STRING=09=09"virtio-mdev"
++#define VIRTIO_MDEV_F_VERSION_1 0x1
++
++struct virtio_mdev_callback {
++=09irqreturn_t (*callback)(void *data);
++=09void *private;
++};
++
++/**
++ * struct vfio_mdev_device_ops - Structure to be registered for each
++ * mdev device to register the device for virtio/vhost drivers.
++ *
++ * The device ops that is supported by VIRTIO_MDEV_F_VERSION_1, the
++ * callbacks are mandatory unless explicity mentioned.
++ *
++ * @set_vq_address:=09=09Set the address of virtqueue
++ *=09=09=09=09@mdev: mediated device
++ *=09=09=09=09@idx: virtqueue index
++ *=09=09=09=09@desc_area: address of desc area
++ *=09=09=09=09@driver_area: address of driver area
++ *=09=09=09=09@device_area: address of device area
++ *=09=09=09=09Returns integer: success (0) or error (< 0)
++ * @set_vq_num:=09=09=09Set the size of virtqueue
++ *=09=09=09=09@mdev: mediated device
++ *=09=09=09=09@idx: virtqueue index
++ *=09=09=09=09@num: the size of virtqueue
++ * @kick_vq:=09=09=09Kick the virtqueue
++ *=09=09=09=09@mdev: mediated device
++ *=09=09=09=09@idx: virtqueue index
++ * @set_vq_cb:=09=09=09Set the interrupt callback function for
++ *=09=09=09=09a virtqueue
++ *=09=09=09=09@mdev: mediated device
++ *=09=09=09=09@idx: virtqueue index
++ *=09=09=09=09@cb: virtio-mdev interrupt callback structure
++ * @set_vq_ready:=09=09Set ready status for a virtqueue
++ *=09=09=09=09@mdev: mediated device
++ *=09=09=09=09@idx: virtqueue index
++ *=09=09=09=09@ready: ready (true) not ready(false)
++ * @get_vq_ready:=09=09Get ready status for a virtqueue
++ *=09=09=09=09@mdev: mediated device
++ *=09=09=09=09@idx: virtqueue index
++ *=09=09=09=09Returns boolean: ready (true) or not (false)
++ * @set_vq_state:=09=09Set the state for a virtqueue
++ *=09=09=09=09@mdev: mediated device
++ *=09=09=09=09@idx: virtqueue index
++ *=09=09=09=09@state: virtqueue state (last_avail_idx)
++ *=09=09=09=09Returns integer: success (0) or error (< 0)
++ * @get_vq_state:=09=09Get the state for a virtqueue
++ *=09=09=09=09@mdev: mediated device
++ *=09=09=09=09@idx: virtqueue index
++ *=09=09=09=09Returns virtqueue state (last_avail_idx)
++ * @get_vq_align:=09=09Get the virtqueue align requirement
++ *=09=09=09=09for the device
++ *=09=09=09=09@mdev: mediated device
++ *=09=09=09=09Returns virtqueue algin requirement
++ * @get_features:=09=09Get virtio features supported by the device
++ *=09=09=09=09@mdev: mediated device
++ *=09=09=09=09Returns the virtio features support by the
++ *=09=09=09=09device
++ * @get_features:=09=09Set virtio features supported by the driver
++ *=09=09=09=09@mdev: mediated device
++ *=09=09=09=09@features: feature support by the driver
++ *=09=09=09=09Returns integer: success (0) or error (< 0)
++ * @set_config_cb:=09=09Set the config interrupt callback
++ *=09=09=09=09@mdev: mediated device
++ *=09=09=09=09@cb: virtio-mdev interrupt callback structure
++ * @get_vq_num_max:=09=09Get the max size of virtqueue
++ *=09=09=09=09@mdev: mediated device
++ *=09=09=09=09Returns u16: max size of virtqueue
++ * @get_device_id:=09=09Get virtio device id
++ *=09=09=09=09@mdev: mediated device
++ *=09=09=09=09Returns u32: virtio device id
++ * @get_vendor_id:=09=09Get id for the vendor that provides this device
++ *=09=09=09=09@mdev: mediated device
++ *=09=09=09=09Returns u32: virtio vendor id
++ * @get_status:=09=09=09Get the device status
++ *=09=09=09=09@mdev: mediated device
++ *=09=09=09=09Returns u8: virtio device status
++ * @set_status:=09=09=09Set the device status
++ *=09=09=09=09@mdev: mediated device
++ *=09=09=09=09@status: virtio device status
++ * @get_config:=09=09=09Read from device specific configuration space
++ *=09=09=09=09@mdev: mediated device
++ *=09=09=09=09@offset: offset from the beginning of
++ *=09=09=09=09configuration space
++ *=09=09=09=09@buf: buffer used to read to
++ *=09=09=09=09@len: the length to read from
++ *=09=09=09=09configration space
++ * @set_config:=09=09=09Write to device specific configuration space
++ *=09=09=09=09@mdev: mediated device
++ *=09=09=09=09@offset: offset from the beginning of
++ *=09=09=09=09configuration space
++ *=09=09=09=09@buf: buffer used to write from
++ *=09=09=09=09@len: the length to write to
++ *=09=09=09=09configration space
++ * @get_mdev_features:=09=09Get a set of bits that demonstrate
++ *=09=09=09=09thecapability of the mdev device. New
++ *=09=09=09=09features bits must be added when
++ *=09=09=09=09introducing new device ops.
++ *=09=09=09=09@mdev: mediated device
++ *=09=09=09=09Returns the mdev features (API) support by
++ *=09=09=09=09the device.
++ * @get_generation:=09=09Get device config generaton (optionally)
++ *=09=09=09=09@mdev: mediated device
++ *=09=09=09=09Returns u32: device generation
++ */
++struct virtio_mdev_device_ops {
++=09/* Virtqueue ops */
++=09int (*set_vq_address)(struct mdev_device *mdev,
++=09=09=09      u16 idx, u64 desc_area, u64 driver_area,
++=09=09=09      u64 device_area);
++=09void (*set_vq_num)(struct mdev_device *mdev, u16 idx, u32 num);
++=09void (*kick_vq)(struct mdev_device *mdev, u16 idx);
++=09void (*set_vq_cb)(struct mdev_device *mdev, u16 idx,
++=09=09=09  struct virtio_mdev_callback *cb);
++=09void (*set_vq_ready)(struct mdev_device *mdev, u16 idx, bool ready);
++=09bool (*get_vq_ready)(struct mdev_device *mdev, u16 idx);
++=09int (*set_vq_state)(struct mdev_device *mdev, u16 idx, u64 state);
++=09u64 (*get_vq_state)(struct mdev_device *mdev, u16 idx);
++
++=09/* Virtio device ops */
++=09u16 (*get_vq_align)(struct mdev_device *mdev);
++=09u64 (*get_features)(struct mdev_device *mdev);
++=09int (*set_features)(struct mdev_device *mdev, u64 features);
++=09void (*set_config_cb)(struct mdev_device *mdev,
++=09=09=09      struct virtio_mdev_callback *cb);
++=09u16 (*get_vq_num_max)(struct mdev_device *mdev);
++=09u32 (*get_device_id)(struct mdev_device *mdev);
++=09u32 (*get_vendor_id)(struct mdev_device *mdev);
++=09u8 (*get_status)(struct mdev_device *mdev);
++=09void (*set_status)(struct mdev_device *mdev, u8 status);
++=09void (*get_config)(struct mdev_device *mdev, unsigned int offset,
++=09=09=09   void *buf, unsigned int len);
++=09void (*set_config)(struct mdev_device *mdev, unsigned int offset,
++=09=09=09   const void *buf, unsigned int len);
++=09u32 (*get_generation)(struct mdev_device *mdev);
++
++=09/* Mdev device ops */
++=09u64 (*get_mdev_features)(struct mdev_device *mdev);
++};
++
++void mdev_set_virtio_ops(struct mdev_device *mdev,
++=09=09=09 const struct virtio_mdev_device_ops *virtio_ops);
++
++#endif
+--=20
+2.19.1
 
