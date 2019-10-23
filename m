@@ -2,131 +2,113 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13AEDCA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:52:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CFEECA9EB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:54:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D98182064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:52:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E77BB2064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:54:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="FX+z9mTu"
+	dkim=pass (2048-bit key) header.d=antmicro-com.20150623.gappssmtp.com header.i=@antmicro-com.20150623.gappssmtp.com header.b="H8VSkOPT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390494AbfJWJwl (ORCPT
+        id S2390895AbfJWJym (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 05:52:41 -0400
-Received: from mail-eopbgr70083.outbound.protection.outlook.com ([40.107.7.83]:32003
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390079AbfJWJwl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 05:52:41 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IVCz2GQOSskeQvdbXQMwhwuJb0Hu7C4GvkT9Y7GIZut6ADMH8f6YG9bxxPrg7vixTOBke/aMRUlL1L/k6n4teEbSpIckHkuNXsTGoQQUaYCnAYzU/t8/Wi0TpCGKykfAk8MBx3Fi81Gj4YgpIqZm8zOlPOty1TuZv6bbkFVkkZ9GjIBM8xHfXiTp96Hzm7nC81A/3KzhT0vLUIgJOqLgia4JS3jscg9GD4g42LnrdQCFn1bSu/dHdxH7h4kLh/2OrxajuPng8rGoHSNFAp6Xk/lfSnEteGZxojLd587CkifopDmfDj0Hg+lR1rUNPk0Pgb6CymXXTTO31L+nR7S3Sg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Y+zkCo3fe9gLsE7BLQxy++PAwztFcHXKQ66Z2Q/zYIA=;
- b=ULpLFdS+PITwuoJXijhiNcgY7maV78LiEouU1wPluPytDutNlcHpNrPEOoexwGz3P6kLkVEDAoBizoiIHy+oLbFwYdFN/zP9OFvD4ESvam/g3sY53CNFXCFdMw2i+YqXFDNwS+vgw+S+tmr3XzuK7YYVRZvbX7GSh1NaxFhZDQ3Dkb4LAQ9adUVmrSgLPnrrp9hvaQ1O1sWLAv+DTOb9N9hSKAzU2UwwX0bsj9XsbJyqiQK0+Lm0Mwa7jg2ZXK1W3ZKpLkNGEhZzZ/NO6U63tb3il8OUCFOJt43YGtpze76DWbTeSBDHJlR4+bWR/6k4bACeUJMUq3wPPeuTedy+yg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Y+zkCo3fe9gLsE7BLQxy++PAwztFcHXKQ66Z2Q/zYIA=;
- b=FX+z9mTuCoh/q1jVtTsODks52xjJr/tSewFQCae4Ou10WjQU5026oD5/ToaZd8cs0JSENnf9i0KDvmkCcNT44ORFPpd8wt01cJtyJNvf86vA99HGpEjWWI47CkkktnDxBXc+dQ1QQ+O0+XsFvzWUv1kw3yY1hILu9FivZ0THQHc=
-Received: from DB8PR04MB6826.eurprd04.prod.outlook.com (52.133.243.14) by
- DB8PR04MB7002.eurprd04.prod.outlook.com (52.133.242.13) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2367.24; Wed, 23 Oct 2019 09:52:36 +0000
-Received: from DB8PR04MB6826.eurprd04.prod.outlook.com
- ([fe80::bcee:92dc:277f:6a78]) by DB8PR04MB6826.eurprd04.prod.outlook.com
- ([fe80::bcee:92dc:277f:6a78%7]) with mapi id 15.20.2387.021; Wed, 23 Oct 2019
- 09:52:36 +0000
-From:   Ran Wang <ran.wang_1@nxp.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-CC:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Rob Herring <robh+dt@kernel.org>, Leo Li <leoyang.li@nxp.com>,
+        Wed, 23 Oct 2019 05:54:42 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:42331 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390377AbfJWJym (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 05:54:42 -0400
+Received: by mail-lj1-f194.google.com with SMTP id u4so6242271ljj.9
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 02:54:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=antmicro-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=4VHhZd/wcq8CsgM9Wmx2uBu3omWaeKjtFbw8MkTHq6g=;
+        b=H8VSkOPTjkxxX/RyvszS1osFjESmMV3MyStKtrMJXKcrHnaBAIIT4oQYWysZCSdVA/
+         iiTbaT4dONHJeFdxBX/kQs1p28NAGh8qRMeLE0apAU2SpQXgOozRXqx/gcR/5NUtcdCH
+         jDR9qE8t8ttnB278/DjCfFphY69YxM2CX4jG5avgiriB5g3owh50ascghBQDePjjRxdX
+         KWM2BxLxD2dY1Lo4eojmFkjKoqoEmg8BIrQ8V+DD9VPu+0Jqc51jTuD53vRv+zIxhtJe
+         Zz2AmXSw2Psdqro6vxj8boriL8UGofLG2nYKbioiL2CyJ7CG31XVCRa0K/1MZbbN8fpb
+         7zLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=4VHhZd/wcq8CsgM9Wmx2uBu3omWaeKjtFbw8MkTHq6g=;
+        b=uJnNDlonrUbMpJsC3bZqVTjoMMT4i+XiwA58AVsrczcJg0SwHg465VD7kknKJlgbjg
+         ys7JZiG8iTOnc1mW/1l30L5nUv/M4y4p7llv2eHz3i8YFJIDFFzyw+lMuM7BqGqalGVU
+         WW+2thzte6BkyNfLc08ZKjwByonLNXCzAD0YP+v1ZcNUS7kFeKX/HU6m42oDJ/el9NYN
+         M25fc2pzkDq6r21ao1K4VYV2Xc7ccadTkkY8fHaQdFqPJ5YTWAKKdm7THo0dpUcyZKU1
+         xxuAPNsFqad+tpQHUiUTjP2HC3Dd0BwAsBdQUNWss+D557atJlhl9THL86SustBImj1U
+         TFaQ==
+X-Gm-Message-State: APjAAAVVooWPtPUvlfu9q+1Yc/o77GNFNIMg85qn6qXijj7dc4G48Jgq
+        LBnYcJKJqQf+P+H6lj0/YMX4fg==
+X-Google-Smtp-Source: APXvYqx2dskJDKXaT+E0oNXiAyypndDtxvLHHetWpyjlUHp4FdtjH3uYI6Q1hpDsb+x0thq/HRyJ6g==
+X-Received: by 2002:a2e:750c:: with SMTP id q12mr21242131ljc.138.1571824480183;
+        Wed, 23 Oct 2019 02:54:40 -0700 (PDT)
+Received: from localhost.localdomain (d79-196.icpnet.pl. [77.65.79.196])
+        by smtp.gmail.com with ESMTPSA id v7sm9177824lfd.55.2019.10.23.02.54.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Oct 2019 02:54:39 -0700 (PDT)
+Date:   Wed, 23 Oct 2019 11:54:33 +0200
+From:   Mateusz Holenko <mholenko@antmicro.com>
+To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Pavel Machek <pavel@ucw.cz>, Anson Huang <anson.huang@nxp.com>,
-        Biwen Li <biwen.li@nxp.com>, Len Brown <len.brown@intel.com>,
+        Jonas Bonn <jonas@southpole.se>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        Stafford Horne <shorne@gmail.com>,
+        openrisc@lists.librecores.org
+Cc:     Karol Gugala <kgugala@antmicro.com>,
+        Mateusz Holenko <mholenko@antmicro.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Subject: RE: [PATCH v9 1/3] PM: wakeup: Add routine to help fetch wakeup
- source object.
-Thread-Topic: [PATCH v9 1/3] PM: wakeup: Add routine to help fetch wakeup
- source object.
-Thread-Index: AQHViXs7UdarjtV7pUSRto5BtluIHadn72mAgAAD6VA=
-Date:   Wed, 23 Oct 2019 09:52:35 +0000
-Message-ID: <DB8PR04MB68261D8B18D39DF170ECC7C8F16B0@DB8PR04MB6826.eurprd04.prod.outlook.com>
-References: <20191023082423.12569-1-ran.wang_1@nxp.com>
- <CAJZ5v0jvQaREhg94f-COdYTt58gMP7YvqdEH0oYiS9Z56tg-XQ@mail.gmail.com>
-In-Reply-To: <CAJZ5v0jvQaREhg94f-COdYTt58gMP7YvqdEH0oYiS9Z56tg-XQ@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=ran.wang_1@nxp.com; 
-x-originating-ip: [92.121.36.198]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: f046a4d1-3e53-4029-56e8-08d7579ebb9b
-x-ms-traffictypediagnostic: DB8PR04MB7002:|DB8PR04MB7002:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB8PR04MB7002FE0A224980C1063BE2CFF16B0@DB8PR04MB7002.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 019919A9E4
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(136003)(396003)(346002)(39860400002)(366004)(199004)(189003)(14454004)(486006)(4326008)(476003)(54906003)(66446008)(66066001)(11346002)(446003)(7696005)(8676002)(2906002)(76176011)(7416002)(81156014)(81166006)(5660300002)(6916009)(6116002)(52536014)(8936002)(3846002)(74316002)(99286004)(64756008)(66476007)(71190400001)(71200400001)(102836004)(26005)(6506007)(53546011)(33656002)(7736002)(186003)(66556008)(305945005)(25786009)(316002)(76116006)(66946007)(229853002)(86362001)(6436002)(14444005)(478600001)(9686003)(55016002)(6246003)(256004);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB7002;H:DB8PR04MB6826.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 4dqyDE5/H37BxgjQxq2YG1+8REOLL3UDHOz3MCLBEWBSwZCqa9rgl/tNzajgG/kXeupZzSgTa2itTQ7No4IIzbSq8tEfd9ezaP9GpIlB0+O7H5fbyBnEcrBG567V2M4zTVpKixkDxT1fGxjqPiRpBqjgkUB5nAbWub2bs4Q9mS7jG03El2O1e/1GzUj26I4bsCwUfMvvWNGTKmh1CkHwuYaN+MizPqu8mwOx/+dryUMIkCs6PHBFH15Sz5ZcFDthRBWAfKggZ54F+6hOC4ps2GzYNFSvC8tw5vd5mjxcoC+KWG07RQdgMmLYTjoph94Re40CA9jyjAKrx+WQ3VWQbZPAbHlDoear6gQLXGi23AiKztImjEdAxXIwlrRsrYPZX+jOkMRG7I6gLe5W3xVkVaumaDgozlNq+81RFQu6La6hnmhPU5RvufgPK/aVb+zf
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Filip Kokosinski <fkokosinski@internships.antmicro.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Joel Stanley <joel@jms.id.au>
+Subject: [PATCH 0/1]  openrisc: LiteX+mor1kx platform
+Message-ID: <20191023115427.23684-0-mholenko@antmicro.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f046a4d1-3e53-4029-56e8-08d7579ebb9b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Oct 2019 09:52:35.8948
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: uQplgfQzr0ExExL1A8eUXQMtCPSfucu1oImQZ2W6myyJmd/j8aBHcG+quo3eL08r296lVA4EdBIYSbmk2ZTMCA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB7002
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgUmFmYWVsLA0KDQpPbiBXZWRuZXNkYXksIE9jdG9iZXIgMjMsIDIwMTkgMTc6MDcsIFJhZmFl
-bCBKLiBXeXNvY2tpIHdyb3RlOg0KPiANCj4gT24gV2VkLCBPY3QgMjMsIDIwMTkgYXQgMTA6MjQg
-QU0gUmFuIFdhbmcgPHJhbi53YW5nXzFAbnhwLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBTb21lIHVz
-ZXIgbWlnaHQgd2FudCB0byBnbyB0aHJvdWdoIGFsbCByZWdpc3RlcmVkIHdha2V1cCBzb3VyY2Vz
-IGFuZA0KPiA+IGRvaW5nIHRoaW5ncyBhY2NvcmRpbmdseS4gRm9yIGV4YW1wbGUsIFNvQyBQTSBk
-cml2ZXIgbWlnaHQgbmVlZCB0byBkbw0KPiA+IEhXIHByb2dyYW1taW5nIHRvIHByZXZlbnQgcG93
-ZXJpbmcgZG93biBzcGVjaWZpYyBJUCB3aGljaCB3YWtldXANCj4gPiBzb3VyY2UgZGVwZW5kaW5n
-IG9uLiBTbyBhZGQgdGhpcyBBUEkgdG8gaGVscCB3YWxrIHRocm91Z2ggYWxsDQo+ID4gcmVnaXN0
-ZXJlZCB3YWtldXAgc291cmNlIG9iamVjdHMgb24gdGhhdCBsaXN0IGFuZCByZXR1cm4gdGhlbSBv
-bmUgYnkgb25lLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogUmFuIFdhbmcgPHJhbi53YW5nXzFA
-bnhwLmNvbT4NCj4gPiBUZXN0ZWQtYnk6IExlb25hcmQgQ3Jlc3RleiA8bGVvbmFyZC5jcmVzdGV6
-QG54cC5jb20+DQo+IA0KPiBPSywgdGhhbmtzIGZvciBtYWtpbmcgYWxsIG9mIHRoZSByZXF1ZXN0
-ZWQgY2hhbmdlczoNCg0KVGhhbmtzIGZvciB5b3VyIHBhdGllbnQgZGlyZWN0aW9uIDopDQpBY3R1
-YWxseSBMZW8gYW5kIG1lIHBsYW5lZCB0byBoYXZlIGEgZjJmIGRpc2N1c3Npb24gd2l0aCB5b3Ug
-YWJvdXQgdGhpcyBwYXRjaCBvbg0KTFBDIDIwMTkgYnV0IHVuZm9ydHVuYXRlbHkgbWlzc2VkIHRo
-ZSBvcHBvcnR1bml0eSBmaW5hbGx5ICh2NiByZXZpZXcgd2FzDQpwZW5kaW5nIGF0IHRpbWUpLg0K
-IA0KPiBSZXZpZXdlZC1ieTogUmFmYWVsIEouIFd5c29ja2kgPHJhZmFlbC5qLnd5c29ja2lAaW50
-ZWwuY29tPg0KPiANCj4gYW5kIHBsZWFzZSBmZWVsIGZyZWUgdG8gcHVzaCB0aGlzIHRocm91Z2gg
-dGhlIGFwcHJvcHJpYXRlIGFyY2gvcGxhdGZvcm0gdHJlZS4NCg0KWWVzLCB3ZSB3aWxsIGRvIHRo
-aXMgbGF0ZXIuDQoNCj4gQWx0ZXJuYXRpdmVseSwgcGxlYXNlIGxldCBtZSBrbm93IGlmIHlvdSB3
-YW50IG1lIHRvIHRha2UgdGhpcyBzZXJpZXMsIGJ1dCB0aGVuIEkNCj4gbmVlZCBhbiBBQ0sgZnJv
-bSB0aGUgYXBwcm9wcmlhdGUNCj4gbWFpbnRhaW5lcihzKSBvbiBwYXRjaCAzLg0KDQpUaGFua3Mg
-YWdhaW4sIEkgd2lsbCB3YWl0IExlbydzIGNvbW1lbnQgb24gcGF0Y2ggMy4NCg0KUmVnYXJkcywN
-ClJhbg0KDQo=
+This patchset adds a new LiteX SoC-based platform
+configured for mor1kx (OpenRISC) CPU coupled with
+LiteUART serial device.
+
+Details about LiteX can be found at
+https://github.com/enjoy-digital/litex.
+
+This platform is intended for further extension
+once drivers for other LiteX devices are merged
+to the kernel.
+
+NOTE:
+This requires another patchset to be merged first:
+https://lore.kernel.org/patchwork/cover/1143352/
+
+Filip Kokosinski (1):
+  openrisc: add support for LiteX
+
+ MAINTAINERS                               |  1 +
+ arch/openrisc/boot/dts/or1klitex.dts      | 49 +++++++++++++++++++++++
+ arch/openrisc/configs/or1klitex_defconfig | 18 +++++++++
+ 3 files changed, 68 insertions(+)
+ create mode 100644 arch/openrisc/boot/dts/or1klitex.dts
+ create mode 100644 arch/openrisc/configs/or1klitex_defconfig
+
+-- 
+2.23.0
+
