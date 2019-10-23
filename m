@@ -2,110 +2,145 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E205CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5C21CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:41:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64AEA2064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:41:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D2AD2064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:41:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="irN2kiQL"
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="KBoKx5yO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406855AbfJWPlA (ORCPT
+        id S2406879AbfJWPlD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 11:41:00 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:45787 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404283AbfJWPk7 (ORCPT
+        Wed, 23 Oct 2019 11:41:03 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:45116 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406861AbfJWPlC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 11:40:59 -0400
-Received: by mail-wr1-f68.google.com with SMTP id q13so17664830wrs.12
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 08:40:58 -0700 (PDT)
+        Wed, 23 Oct 2019 11:41:02 -0400
+Received: by mail-pg1-f196.google.com with SMTP id r1so12359189pgj.12
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 08:41:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=veaWPcqNKkHO2xesR9++rJ5BEwtFW1XMdldljCUmrk8=;
-        b=irN2kiQLBDfDnCbkJkg5TiJ0d5LvrWcrQ5jUW84CdQAxBOp1dChVo9su8AS5uRSXFp
-         ryQ+1X1PYcX+WoSysGNEbEJPpc0fpgfTWJoUNywUDNIbqA8mH3ODHwEWSeyCJhLouOeE
-         DVHVp69j/ByZgGGQgC+qzhbsjg2qiHrZ2bFtw=
+        d=android.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=TI9rW32nt+i6GyURUSN10bGjthP0EG+xScjnb+pkqac=;
+        b=KBoKx5yOJdWGZz7I1M810keaJ1ZlEuvnt+HTZJAS0UmK0LTUpPmdFTkklfgcGdi73r
+         feMTzV569J5UceysOEInvWeJdRd/ZzonW6Aa3VYlqczCqXy+PY9ipoJvzLD+NWbnZ5rP
+         mW2vwJLR0Vq7sY9XP/QBVZSb/GxJx9fS5CE5Yo07sdXhMNQdYvScXxROVKhe4Esy5Cvd
+         e50H85g6521yumbQVB+PGX8SW/L7QzMUvgyanXK1Toe52me2wt2CIUN9qyd4f938PFQ7
+         rthEsivMBKI4ftQ33yVLiM1NHSBLjKlHtZVEVP38OG7iyjy4z/skVUexYga7/45kjz+T
+         6+ug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=veaWPcqNKkHO2xesR9++rJ5BEwtFW1XMdldljCUmrk8=;
-        b=XTL2W3Tyvq3e9wE4PWobZtAO5csa/F7vCknDWopCn3Mt4Yhib83UUstJbpOynQe0+v
-         kq7lZcufvrFEr+JLap8X/+wlhPF88dstWG+RK4WWr2CW2j6GN/RLdPlWxm1+kBpgL4j5
-         mk/lHY0ZmG0E3FagXU+zEFqjqk2dp0ciqNoWQhbUcWY+khmZ/+4owLSFAG/u1bzLYLpE
-         Jza7BUrPj0aO/GN4/m7hC0+deFZYKWkWy04U3qHWhXYoMnk0INy3qQ1KNzIj6YpchYRC
-         GPxrcaluUIVmFWYmbscDxAsMbw49VtC0yPz/QSOFaQ3OvFiDqU9Um6hK+V5MFBGvE+/E
-         nMQQ==
-X-Gm-Message-State: APjAAAUgWo4+mTTLGhHKdfnOu1soOla5r2uIpFCLFt0S/4X5DaPTOYyk
-        a6IHvM4TWmrfU4IRCpwhW40edbkovks=
-X-Google-Smtp-Source: APXvYqwikxw4MBCiG3jMJl/r6iNmK2oFCpBVjH1jp5K/GYEMf1X3ljOFTScw2qqjSvtT/PV9J5kUBg==
-X-Received: by 2002:adf:dc44:: with SMTP id m4mr7923796wrj.203.1571845257764;
-        Wed, 23 Oct 2019 08:40:57 -0700 (PDT)
-Received: from kpsingh-kernel.localdomain (90.226.197.178.dynamic.wless.zhbmb00p-cgnat.res.cust.swisscom.ch. [178.197.226.90])
-        by smtp.gmail.com with ESMTPSA id a186sm21123622wmd.3.2019.10.23.08.40.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Oct 2019 08:40:57 -0700 (PDT)
-From:   KP Singh <kpsingh@chromium.org>
-To:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Florent Revest <revest@chromium.org>
-Subject: [PATCH bpf-next v2] libbpf: Fix strncat bounds error in libbpf_prog_type_by_name
-Date:   Wed, 23 Oct 2019 17:40:38 +0200
-Message-Id: <20191023154038.24075-1-kpsingh@chromium.org>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=TI9rW32nt+i6GyURUSN10bGjthP0EG+xScjnb+pkqac=;
+        b=pfPl0mPwL6jqlB8/z4LJyRs0r/wbxTiWmK7nWXiitHpopf+YYgzjJiOgmDu0r9zoVw
+         Xo3PfDhGe+lfiwvSg2KB+JcpAjhUTEcmkWs5W9DTlzcqJDRsCmhZVtj+YkBioHqhcv6S
+         oLT2LqYJwIyx0CtWGBsJUm4r+518DDOtDd/mrLzFqB8ym9QDQPrvGAu9cZFhSqpJKByI
+         YptqmTGHGEe9sVX6c+LRmOnGgfTvk7Bs8x2j0epgjyDPykKQ682OqKiXfWussumGDAsM
+         Pq1c4WC0b0XbIKLJ1yXjNFhL9UNxk+o7rlmFb4kUfRIymr2wO+4SIVGvhgiES+6vsl4f
+         dJSA==
+X-Gm-Message-State: APjAAAW8i5kEiXjpVsV60VuhyqIeqmsZLtTshCi38DCXzGkjiP8+MJvW
+        +4xdyXh970fMJgKBdIG1UY9k4A==
+X-Google-Smtp-Source: APXvYqxpUg0BJf6IgZEek+Avbtx6SaPZVRb4CoPCBRhASaoQxSh7v/tZYoAbFxDTBg5wYPAauGUeIw==
+X-Received: by 2002:a17:90a:e987:: with SMTP id v7mr765373pjy.86.1571845261541;
+        Wed, 23 Oct 2019 08:41:01 -0700 (PDT)
+Received: from nebulus.mtv.corp.google.com ([2620:15c:211:200:5404:91ba:59dc:9400])
+        by smtp.googlemail.com with ESMTPSA id r18sm28682272pfc.3.2019.10.23.08.40.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 23 Oct 2019 08:41:01 -0700 (PDT)
+Subject: Re: [PATCH] Cleanup: replace prefered with preferred
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, kernel-team@android.com,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        VMware Graphics <linux-graphics-maintainer@vmware.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Alexander Aring <alex.aring@gmail.com>,
+        Jukka Rissanen <jukka.rissanen@linux.intel.com>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Matthew Garrett <matthewgarrett@google.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        hersen wu <hersenxs.wu@amd.com>, Roman Li <Roman.Li@amd.com>,
+        Maxim Martynov <maxim@arista.com>,
+        David Ahern <dsahern@gmail.com>,
+        Francesco Ruggeri <fruggeri@arista.com>,
+        =?UTF-8?Q?Linus_L=c3=bcssing?= <linus.luessing@c0d3.blue>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Feng Tang <feng.tang@intel.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Rafael Aquini <aquini@redhat.com>, netdev@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-efi@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-media@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-bluetooth@vger.kernel.org, linux-wpan@vger.kernel.org
+References: <20191022214208.211448-1-salyzyn@android.com>
+ <20191023115637.GA23733@linux.intel.com>
+From:   Mark Salyzyn <salyzyn@android.com>
+Message-ID: <fa12cb96-7a93-bf85-214d-a7bfaf8b8b0a@android.com>
+Date:   Wed, 23 Oct 2019 08:40:59 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191023115637.GA23733@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: KP Singh <kpsingh@google.com>
+On 10/23/19 4:56 AM, Jarkko Sakkinen wrote:
+> On Tue, Oct 22, 2019 at 02:41:45PM -0700, Mark Salyzyn wrote:
+>> Replace all occurrences of prefered with preferred to make future
+>> checkpatch.pl's happy.  A few places the incorrect spelling is
+>> matched with the correct spelling to preserve existing user space API.
+>>
+>> Signed-off-by: Mark Salyzyn <salyzyn@android.com>
+> I'd fix such things when the code is otherwise change and scope this
+> patch only to Documentation/. There is no pragmatic benefit of doing
+> this for the code.
+>
+> /Jarkko
 
-On compiling samples with this change, one gets an error:
+The pragmatic benefit comes with the use of an ABI/API checker (which is 
+a 'distro' thing, not a top of tree kernel thing) produces its map which 
+is typically required to be co-located in the same tree as the kernel 
+repository. Quite a few ABI/API update checkins result in a 
+checkpatch.pl complaint about the misspelled elements being 
+(re-)recorded due to proximity. We have a separate task to improve how 
+it is tracked in Android to reduce milepost marker changes that result 
+in sweeping changes to the database which would reduce the occurrences.
 
- error: ‘strncat’ specified bound 118 equals destination size
-  [-Werror=stringop-truncation]
+I will split this between pure and inert documentation/comments for now, 
+with a followup later for the code portion which understandably is more 
+controversial.
 
-    strncat(dst, name + section_names[i].len,
-    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     sizeof(raw_tp_btf_name) - (dst - raw_tp_btf_name));
-     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Cleanup is the least appreciated part of kernel maintenance ;-}.
 
-strncat requires the destination to have enough space for the
-terminating null byte.
-
-Fixes: f75a697e09137 ("libbpf: Auto-detect btf_id of BTF-based raw_tracepoint")
-Signed-off-by: KP Singh <kpsingh@google.com>
----
- tools/lib/bpf/libbpf.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-index 290684b504b7..dc7d493a7d3d 100644
---- a/tools/lib/bpf/libbpf.c
-+++ b/tools/lib/bpf/libbpf.c
-@@ -4693,7 +4693,7 @@ int libbpf_prog_type_by_name(const char *name, enum bpf_prog_type *prog_type,
- 			}
- 			/* prepend "btf_trace_" prefix per kernel convention */
- 			strncat(dst, name + section_names[i].len,
--				sizeof(raw_tp_btf_name) - (dst - raw_tp_btf_name));
-+				sizeof(raw_tp_btf_name) - sizeof("btf_trace_"));
- 			ret = btf__find_by_name(btf, raw_tp_btf_name);
- 			btf__free(btf);
- 			if (ret <= 0) {
--- 
-2.20.1
+Sincerely -- Mark Salyzyn
 
