@@ -2,113 +2,261 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0D03CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:13:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EDB5CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:13:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1F8821872
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:13:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8B1D21920
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:13:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405715AbfJWNNS (ORCPT
+        id S2405732AbfJWNNX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 09:13:18 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:54037 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732284AbfJWNNS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 09:13:18 -0400
-Received: from mail-qt1-f174.google.com ([209.85.160.174]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1N0WsG-1i2Q9I2DmG-00wUtA; Wed, 23 Oct 2019 15:13:16 +0200
-Received: by mail-qt1-f174.google.com with SMTP id d17so17563196qto.3;
-        Wed, 23 Oct 2019 06:13:16 -0700 (PDT)
-X-Gm-Message-State: APjAAAUvr/EHRgKKqvbAbV5FhhCWbuOItsJJh3bd3H9fsCEz0JBKpLEM
-        6H/8nIYZhwEyTNRddt/T1wLK1+/3h8pbHHXc9qI=
-X-Google-Smtp-Source: APXvYqwyklGa+hU94PEjBetixWY4koQXLl44bdA7QqFGHctKg3vHkVWCQgnQFCjrA3OSGO0d2Jdn/TI29o9nax1bT50=
-X-Received: by 2002:ac8:33d4:: with SMTP id d20mr8948137qtb.204.1571836395377;
- Wed, 23 Oct 2019 06:13:15 -0700 (PDT)
+        Wed, 23 Oct 2019 09:13:23 -0400
+Received: from mga01.intel.com ([192.55.52.88]:48190 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405714AbfJWNNW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 09:13:22 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 06:13:22 -0700
+X-IronPort-AV: E=Sophos;i="5.68,221,1569308400"; 
+   d="scan'208";a="191825975"
+Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.161])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 06:13:17 -0700
+From:   Jani Nikula <jani.nikula@intel.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Jani Nikula <jani.nikula@intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        intel-gfx@lists.freedesktop.org,
+        Vishal Kulkarni <vishal@chelsio.com>, netdev@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Subject: [PATCH v4] string-choice: add yesno(), onoff(), enableddisabled(), plural() helpers
+Date:   Wed, 23 Oct 2019 16:13:08 +0300
+Message-Id: <20191023131308.9420-1-jani.nikula@intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20191010202802.1132272-1-arnd@arndb.de> <20191010203043.1241612-1-arnd@arndb.de>
- <20191010203043.1241612-10-arnd@arndb.de> <20191023115544.GA11048@pi3>
-In-Reply-To: <20191023115544.GA11048@pi3>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 23 Oct 2019 15:12:59 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a0s6VCujZRbFN3NkoX=LDw0jwYJg01xOnSdn=DM3TKm1Q@mail.gmail.com>
-Message-ID: <CAK8P3a0s6VCujZRbFN3NkoX=LDw0jwYJg01xOnSdn=DM3TKm1Q@mail.gmail.com>
-Subject: Re: [PATCH 10/36] ARM: s5pv210: use private pm save/restore
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     "moderated list:ARM/SAMSUNG EXYNOS ARM ARCHITECTURES" 
-        <linux-samsung-soc@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:t+Hfc6SEiVLo6ko/SzZIszsVSiUE9AsrbclU9caoLGTrb7UsZHJ
- ZQ8j7eZsohO992djr0lcPVhtZ/6i3VseunxbFXAFZze90Dse1xSWODDxnWcHbDMsOUwbfRA
- uv/zQxv3LbuO7nDV4vLxsl8GlJP8105OjBvmS8uDZyHvwQhfJRF+Zj2QEyx1peiMFDZMeIF
- lJ116TgLAMijLmB0HIAiA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:3ocy5qycobI=:5uIjV1XzRimLi8KksTah2i
- PCKWN0Gcz4waoEVC/OwV3tQLO+3o8lZMIBwZWi6Jn4Hq8wedmWV7L79PTkDxsLbzit/4teN5A
- +T6k6OeDvTw+Y+zLlNPYXSvp5d0uMkhhx0WYWu76mUHSBm+1wwfrVHB/sg3lpG4AizTP27ICX
- qHqhp/YTmEZ2f2DP040k1R6+yp1cYZrv6ur95NdRDp7kbSWbbMTAH1UeXdZl18fESMC0PS078
- K5eOLFpnGhpghH2iRByqVa1kxNs7wIhrn7Ju9u1YUWqVQnc3O68EpFqJZQTL50YjZZrjmnTQF
- 4+YnR18YxMII6GNEXbOJoDG6wY0FY4A/lk0tH8tJYhkVZaVXK5CxPAHog+ha03tCeDwS1dcRh
- U4MglaNTkTUTqVZr0QB42/I831+Ol+BhrOWvX1paJYozeSrz3n6U1+Xe3zP9ve+fbxQJBY3cE
- 85SV9MwjL8GKDcXBWnvdE8ZW43YpRP0GmROHqWKs7OQsO984TmICxj2M+bR73VVI9JFHkepxX
- kyBI7LRZ4hhcZY52DwH6KQ1Fs/CONWGzhcBX4cWXC+yLXvBiLrf1ihUXIXAq308/uIjIDAu2z
- AcFcPqJbkwfTkb5fZpt0YMv3HRTedAKsIj+eO4wAW+CYF6va74q5C4gmTInC4pkVf1i+l5dl0
- k8jtD1YF8ckrBeAjsy1e1uFXhhdsknoMtPyWHmR1smMGiF16KwsOMkylKiBa03ccveelluNWP
- b23IA9KIS8xhCyZsdQWwFafWt+sNUhOTI6Z4aE7AUsJ2orRL0Je3+wzWrJ8UZ48aJ171618W1
- u/mtJSrA9T+Dq6qglXvInZSB2DAIV9nEnIy+XEK9+9eb6/ZXaPRiyIMuKL/rdyoiEpX3MkZsZ
- kxD0nBODwie5mYiSwsAQ==
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > diff --git a/arch/arm/mach-s5pv210/regs-clock.h b/arch/arm/mach-s5pv210/regs-clock.h
-> > index 2a35c831a9b0..8c7530614e37 100644
-> > --- a/arch/arm/mach-s5pv210/regs-clock.h
-> > +++ b/arch/arm/mach-s5pv210/regs-clock.h
-> > @@ -9,7 +9,7 @@
-> >  #ifndef __ASM_ARCH_REGS_CLOCK_H
-> >  #define __ASM_ARCH_REGS_CLOCK_H __FILE__
-> >
-> > -#include <plat/map-base.h>
-> > +#define S3C_VA_SYS           ((void __iomem __force *)0xF6100000)
->
-> The same as for one of earlier patches - I prefer to keep the S3C_ADDR()
-> macro for consistency.
+The kernel has plenty of ternary operators to choose between constant
+strings, such as condition ? "yes" : "no", as well as value == 1 ? "" :
+"s":
 
-Ok, done.
+$ git grep '? "yes" : "no"' | wc -l
+258
+$ git grep '? "on" : "off"' | wc -l
+204
+$ git grep '? "enabled" : "disabled"' | wc -l
+196
+$ git grep '? "" : "s"' | wc -l
+25
 
-As the constant is only used in arch/arm/mach-s5pv210/pm.c and the
-s5pv210_dt_restart() function, I think it would be best to use ioremap()
-here and remove the constant as well as s5pv210_fdt_map_sys() and
-s5pv210_dt_map_io().
+Additionally, there are some occurences of the same in reverse order,
+split to multiple lines, or otherwise not caught by the simple grep.
 
-That can clearly be a follow-up patch.
+Add helpers to return the constant strings. Remove existing equivalent
+and conflicting functions in i915, cxgb4, and USB core. Further
+conversion can be done incrementally.
 
-> > diff --git a/arch/arm/plat-samsung/Makefile b/arch/arm/plat-samsung/Makefile
-> > index d88b9b84f3a9..025ce22876c1 100644
-> > --- a/arch/arm/plat-samsung/Makefile
-> > +++ b/arch/arm/plat-samsung/Makefile
-> > @@ -24,9 +24,7 @@ obj-$(CONFIG_GPIO_SAMSUNG)     += gpio-samsung.o
-> >
-> >  # PM support
-> >
-> > -obj-$(CONFIG_PM_SLEEP)               += pm-common.o
-> > -obj-$(CONFIG_EXYNOS_CPU_SUSPEND) += pm-common.o
->
-> CONFIG_EXYNOS_CPU_SUSPEND looks unrelated and seems to be not needed at
-> all. Can you remove it in separate patch?
+The main goal here is to abstract recurring patterns, and slightly clean
+up the code base by not open coding the ternary operators.
 
-Done.
+Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Cc: intel-gfx@lists.freedesktop.org
+Cc: Vishal Kulkarni <vishal@chelsio.com>
+Cc: netdev@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-usb@vger.kernel.org
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org
+Cc: Julia Lawall <julia.lawall@lip6.fr>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Jani Nikula <jani.nikula@intel.com>
 
-        Arnd
+---
+
+v2: add string-choice.[ch] to not clutter kernel.h and to actually save
+space on string constants.
+
+v3: back to static inlines based on Rasmus' feedback
+
+v4: Massaged commit message about space savings to make it less fluffy
+based on Rasmus' feedback.
+
+Example of further cleanup possibilities are at [1], to be done
+incrementally afterwards.
+
+[1] http://lore.kernel.org/r/20190903133731.2094-2-jani.nikula@intel.com
+---
+ drivers/gpu/drm/i915/i915_utils.h             | 16 +---------
+ .../ethernet/chelsio/cxgb4/cxgb4_debugfs.c    | 12 +------
+ drivers/usb/core/config.c                     |  6 +---
+ drivers/usb/core/generic.c                    |  6 +---
+ include/linux/string-choice.h                 | 31 +++++++++++++++++++
+ 5 files changed, 35 insertions(+), 36 deletions(-)
+ create mode 100644 include/linux/string-choice.h
+
+diff --git a/drivers/gpu/drm/i915/i915_utils.h b/drivers/gpu/drm/i915/i915_utils.h
+index 562f756da421..794f02a90efe 100644
+--- a/drivers/gpu/drm/i915/i915_utils.h
++++ b/drivers/gpu/drm/i915/i915_utils.h
+@@ -28,6 +28,7 @@
+ #include <linux/list.h>
+ #include <linux/overflow.h>
+ #include <linux/sched.h>
++#include <linux/string-choice.h>
+ #include <linux/types.h>
+ #include <linux/workqueue.h>
+ 
+@@ -395,21 +396,6 @@ wait_remaining_ms_from_jiffies(unsigned long timestamp_jiffies, int to_wait_ms)
+ #define MBps(x) KBps(1000 * (x))
+ #define GBps(x) ((u64)1000 * MBps((x)))
+ 
+-static inline const char *yesno(bool v)
+-{
+-	return v ? "yes" : "no";
+-}
+-
+-static inline const char *onoff(bool v)
+-{
+-	return v ? "on" : "off";
+-}
+-
+-static inline const char *enableddisabled(bool v)
+-{
+-	return v ? "enabled" : "disabled";
+-}
+-
+ static inline void add_taint_for_CI(unsigned int taint)
+ {
+ 	/*
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c
+index ae6a47dd7dc9..d9123dae1d00 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c
+@@ -35,6 +35,7 @@
+ #include <linux/seq_file.h>
+ #include <linux/debugfs.h>
+ #include <linux/string_helpers.h>
++#include <linux/string-choice.h>
+ #include <linux/sort.h>
+ #include <linux/ctype.h>
+ 
+@@ -2023,17 +2024,6 @@ static const struct file_operations rss_debugfs_fops = {
+ /* RSS Configuration.
+  */
+ 
+-/* Small utility function to return the strings "yes" or "no" if the supplied
+- * argument is non-zero.
+- */
+-static const char *yesno(int x)
+-{
+-	static const char *yes = "yes";
+-	static const char *no = "no";
+-
+-	return x ? yes : no;
+-}
+-
+ static int rss_config_show(struct seq_file *seq, void *v)
+ {
+ 	struct adapter *adapter = seq->private;
+diff --git a/drivers/usb/core/config.c b/drivers/usb/core/config.c
+index 151a74a54386..52cee9067eb4 100644
+--- a/drivers/usb/core/config.c
++++ b/drivers/usb/core/config.c
+@@ -10,6 +10,7 @@
+ #include <linux/module.h>
+ #include <linux/slab.h>
+ #include <linux/device.h>
++#include <linux/string-choice.h>
+ #include <asm/byteorder.h>
+ #include "usb.h"
+ 
+@@ -19,11 +20,6 @@
+ #define USB_MAXCONFIG			8	/* Arbitrary limit */
+ 
+ 
+-static inline const char *plural(int n)
+-{
+-	return (n == 1 ? "" : "s");
+-}
+-
+ static int find_next_descriptor(unsigned char *buffer, int size,
+     int dt1, int dt2, int *num_skipped)
+ {
+diff --git a/drivers/usb/core/generic.c b/drivers/usb/core/generic.c
+index 38f8b3e31762..a784a09794d6 100644
+--- a/drivers/usb/core/generic.c
++++ b/drivers/usb/core/generic.c
+@@ -21,14 +21,10 @@
+ 
+ #include <linux/usb.h>
+ #include <linux/usb/hcd.h>
++#include <linux/string-choice.h>
+ #include <uapi/linux/usb/audio.h>
+ #include "usb.h"
+ 
+-static inline const char *plural(int n)
+-{
+-	return (n == 1 ? "" : "s");
+-}
+-
+ static int is_rndis(struct usb_interface_descriptor *desc)
+ {
+ 	return desc->bInterfaceClass == USB_CLASS_COMM
+diff --git a/include/linux/string-choice.h b/include/linux/string-choice.h
+new file mode 100644
+index 000000000000..320b598bd8f0
+--- /dev/null
++++ b/include/linux/string-choice.h
+@@ -0,0 +1,31 @@
++/* SPDX-License-Identifier: MIT */
++/*
++ * Copyright © 2019 Intel Corporation
++ */
++
++#ifndef __STRING_CHOICE_H__
++#define __STRING_CHOICE_H__
++
++#include <linux/types.h>
++
++static inline const char *yesno(bool v)
++{
++	return v ? "yes" : "no";
++}
++
++static inline const char *onoff(bool v)
++{
++	return v ? "on" : "off";
++}
++
++static inline const char *enableddisabled(bool v)
++{
++	return v ? "enabled" : "disabled";
++}
++
++static inline const char *plural(long v)
++{
++	return v == 1 ? "" : "s";
++}
++
++#endif /* __STRING_CHOICE_H__ */
+-- 
+2.20.1
+
