@@ -2,145 +2,77 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 350D1CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 11:52:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EBC4CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 11:53:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 085BE21872
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 11:52:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571831568;
-	bh=LD+J+ZExC/pqSgprd/uLaXnogXmNDPWV/k/HnXBzzK4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RjDF16CPhW09PNuQXQ/D3E6utnh5MyiGLPVEZ9zFNdWyoFNU0tvdcOElA5IMaR3FS
-	 vgeI7iNMi9EbtVBiBAf2djIRASikSih6qqbYyM48N1W9Z1xVae9ASa6KlV8Ys0CjRg
-	 jKl/yN0UJalJfdWFfYVcUwP0JSoaNI0lFXK7UP0Q=
+	by mail.kernel.org (Postfix) with ESMTP id 402FE20650
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 11:53:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405118AbfJWLwq (ORCPT
+        id S2405137AbfJWLxO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 07:52:46 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:46992 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732092AbfJWLwq (ORCPT
+        Wed, 23 Oct 2019 07:53:14 -0400
+Received: from rtits2.realtek.com ([211.75.126.72]:36377 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732092AbfJWLxO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 07:52:46 -0400
-Received: by mail-lf1-f67.google.com with SMTP id t8so15804911lfc.13;
-        Wed, 23 Oct 2019 04:52:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=UP5gdkUuUJ2fsIKZrjEEkYxT+1Zl1EyXr08pcip8sao=;
-        b=ZOwB7v2fJxbfdvIDy77oGHpdx0ITObnIMzLP1PBA0JYHycFiCFTimtItIut2yaexKd
-         Nvw9nLxfhtbFpmjUSdzOmVq74vn0R+SnDGIf9Zd9zgtJBGyw5L7wMJiaDrp4OrQFvlQ/
-         gllURpAn+uBcYT2QYmqeNDvD0C5wTyTHVqylvt4EKVPLDQLWIZN2bxKPdvsIPKJ4dhsQ
-         79tWPVmD0A04/28kdiIrdqSxOQD0K8hld1jwB69hFG+X8BjDPlqUQEIPCTv11aPQqqn1
-         +IJ91s3X0GznTY/541ho3JC7cdnmJ2of77P40E2+lUP+HFX5I58PV/hfvF3dm/7cfEhM
-         XgAw==
-X-Gm-Message-State: APjAAAW16DTjjcrGwAFdZ0e7hn36uy/C+sMIFMy73uEm0rpF5TYLxsxz
-        HsOAvJpHOJHgNnQzJirvCSM=
-X-Google-Smtp-Source: APXvYqyRaVJn6WIOly1Fo+ZbC/dp1NYNTs+N33NvoETznb2nPYT//qen03pc4/5IirEEcUHwT5GFNQ==
-X-Received: by 2002:a19:5517:: with SMTP id n23mr5873958lfe.139.1571831564526;
-        Wed, 23 Oct 2019 04:52:44 -0700 (PDT)
-Received: from xi.terra (c-51f1e055.07-184-6d6c6d4.bbcust.telenor.se. [85.224.241.81])
-        by smtp.gmail.com with ESMTPSA id u24sm6049489ljl.64.2019.10.23.04.52.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 23 Oct 2019 04:52:43 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.92.2)
-        (envelope-from <johan@kernel.org>)
-        id 1iNFCG-00074i-P9; Wed, 23 Oct 2019 13:53:00 +0200
-Date:   Wed, 23 Oct 2019 13:53:00 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     "Ji-Ze Hong (Peter Hong)" <hpeter@gmail.com>
-Cc:     johan@kernel.org, gregkh@linuxfoundation.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        peter_hong@fintek.com.tw,
-        "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>
-Subject: Re: [PATCH V2 5/7] USB: serial: f81232: Set F81534A serial port with
- RS232 mode
-Message-ID: <20191023115300.GU24768@localhost>
-References: <20190923022449.10952-1-hpeter+linux_kernel@gmail.com>
- <20190923022449.10952-6-hpeter+linux_kernel@gmail.com>
+        Wed, 23 Oct 2019 07:53:14 -0400
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x9NBqkls003476, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (RTITCASV01.realtek.com.tw[172.21.6.18])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x9NBqkls003476
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Wed, 23 Oct 2019 19:52:46 +0800
+Received: from RTITMBSVM03.realtek.com.tw ([fe80::e1fe:b2c1:57ec:f8e1]) by
+ RTITCASV01.realtek.com.tw ([::1]) with mapi id 14.03.0468.000; Wed, 23 Oct
+ 2019 19:52:45 +0800
+From:   Hayes Wang <hayeswang@realtek.com>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+CC:     nic_swsd <nic_swsd@realtek.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "pmalani@chromium.org" <pmalani@chromium.org>,
+        "grundler@chromium.org" <grundler@chromium.org>,
+        "'Linux Samsung SOC'" <linux-samsung-soc@vger.kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: RE: [PATCH net-next] r8152: support request_firmware for RTL8153
+Thread-Topic: [PATCH net-next] r8152: support request_firmware for RTL8153
+Thread-Index: AQHVg84yG1svvwJLbEa5ZZ4zq0Zj+qdnd3YAgACNnOD//4TeAIAAm7jA
+Date:   Wed, 23 Oct 2019 11:52:45 +0000
+Message-ID: <0835B3720019904CB8F7AA43166CEEB2F18ED47C@RTITMBSVM03.realtek.com.tw>
+References: <1394712342-15778-329-Taiwan-albertk@realtek.com>
+        <CGME20191023091648eucas1p12dcc4e9041169e3c7ae43f4ea525dd7f@eucas1p1.samsung.com>
+        <44261242-ff44-0067-bbb9-2241e400ad53@samsung.com>
+        <0835B3720019904CB8F7AA43166CEEB2F18ED3FA@RTITMBSVM03.realtek.com.tw>
+ <c20abd08-5f22-2cc8-15fa-956d06b5b8af@samsung.com>
+In-Reply-To: <c20abd08-5f22-2cc8-15fa-956d06b5b8af@samsung.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.21.177.214]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190923022449.10952-6-hpeter+linux_kernel@gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 10:24:47AM +0800, Ji-Ze Hong (Peter Hong) wrote:
-> The Fintek F81532A/534A/535/536 is USB-to-2/4/8/12 serial ports device
-> and the serial ports are default disabled. Each port contains max 3 pins
-> GPIO and the 3 pins are default pull high with input mode.
-> 
-> When the serial port had activated (running probe()), we'll transform the
-> 3 pins from GPIO function publicly to control Tranceiver privately use.
-
-I'm not sure I understand what you're saying here.
-
-> We'll default set to 0/0/1 for control transceiver to RS232 mode.
-> 
-> Otherwise, If the serial port is not active, the 3 pins is in GPIO mode
-> and controlled by global GPIO device with VID/PID: 2c42/16f8.
-
-Does this mean that you can control the three GPIOs either through the
-serial device or through the gpio-control device (which are two separate
-USB devices)?
-
-> Signed-off-by: Ji-Ze Hong (Peter Hong) <hpeter+linux_kernel@gmail.com>
-> ---
->  drivers/usb/serial/f81232.c | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
-> 
-> diff --git a/drivers/usb/serial/f81232.c b/drivers/usb/serial/f81232.c
-> index 36a17aedc2ae..01cb5a5ea1d2 100644
-> --- a/drivers/usb/serial/f81232.c
-> +++ b/drivers/usb/serial/f81232.c
-> @@ -96,6 +96,15 @@ MODULE_DEVICE_TABLE(usb, all_serial_id_table);
->  #define F81534A_TRIGGER_MULTPILE_4X	BIT(3)
->  #define F81534A_FIFO_128BYTE		(BIT(1) | BIT(0))
->  
-> +/* Serial port self GPIO control, 2bytes [control&output data][input data] */
-> +#define F81534A_GPIO_REG		0x10e
-> +#define F81534A_GPIO_MODE2_DIR		BIT(6) /* 1: input, 0: output */
-> +#define F81534A_GPIO_MODE1_DIR		BIT(5)
-> +#define F81534A_GPIO_MODE0_DIR		BIT(4)
-> +#define F81534A_GPIO_MODE2_OUTPUT	BIT(2)
-> +#define F81534A_GPIO_MODE1_OUTPUT	BIT(1)
-> +#define F81534A_GPIO_MODE0_OUTPUT	BIT(0)
-> +
->  struct f81232_private {
->  	struct mutex lock;
->  	u8 modem_control;
-> @@ -866,6 +875,14 @@ static int f81232_port_probe(struct usb_serial_port *port)
->  
->  static int f81534a_port_probe(struct usb_serial_port *port)
->  {
-> +	int status;
-> +
-> +	/* tri-state with pull-high, default RS232 Mode */
-> +	status = f81232_set_register(port, F81534A_GPIO_REG,
-> +					F81534A_GPIO_MODE2_DIR);
-> +	if (status)
-> +		return status;
-
-Ok, so you reset the tranceiver config on every probe.
-
-Are the three GPIOs always connected to one particular tranceiver, or
-are they truly general purpose?
-
-In the latter case, it doesn't seem like a good idea to drive pins 0
-and 1 low here as you have know idea what they're used for.
-
-> +
->  	return f81232_port_probe(port);
->  }
-
-Johan
+TWFyZWsgU3p5cHJvd3NraSBbbWFpbHRvOm0uc3p5cHJvd3NraUBzYW1zdW5nLmNvbV0NCj4gU2Vu
+dDogV2VkbmVzZGF5LCBPY3RvYmVyIDIzLCAyMDE5IDY6MjMgUE0NClsuLi5dDQo+ID4+IFRoaXMg
+cGF0Y2ggKHdoaWNoIGxhbmRlZCBpbiBsaW51eC1uZXh0IGxhc3QgZGF5cykgY2F1c2VzIGEgZm9s
+bG93aW5nDQo+ID4+IGtlcm5lbCBvb3BzIG9uIHRoZSBBUk0gMzJiaXQgRXh5bm9zNTQyMiBTb0Mg
+YmFzZWQgT2Ryb2lkIFhVNCBib2FyZDoNCj4gPiBQbGVhc2UgdHJ5IHRoZSBmb2xsb3dpbmcgcGF0
+Y2guDQo+IA0KPiBZZXMsIHRoaXMgZml4ZXMgdGhlIGlzc3VlLiBJJ3ZlIGFwcGxpZWQgdGhvc2Ug
+Y2hhbmdlcyBtYW51YWxseSBvbiB0b3Agb2YNCj4gTGludXggbmV4dC0yMDE5MTAyMiwgZHVlIHRv
+IHNvbWUgZGlmZmVyZW5jZXMgaW4gdGhlIGNvbnRleHQuIFdoZW4geW91DQo+IHByZXBhcmUgYSBm
+aW5hbCBwYXRjaCwgZmVlbCBmcmVlIHRvIGFkZDoNCj4gDQo+IFJlcG9ydGVkLWJ5OiBNYXJlayBT
+enlwcm93c2tpIDxtLnN6eXByb3dza2lAc2Ftc3VuZy5jb20+DQo+IEZpeGVzOiA5MzcwZjJkMDVh
+MmEgKCJyODE1Mjogc3VwcG9ydCByZXF1ZXN0X2Zpcm13YXJlIGZvciBSVEw4MTUzIikNCj4gVGVz
+dGVkLWJ5OiBNYXJlayBTenlwcm93c2tpIDxtLnN6eXByb3dza2lAc2Ftc3VuZy5jb20+DQoNClRo
+YW5rcw0KDQpCZXN0IFJlZ2FyZHMsDQpIYXllcw0KDQoNCg0K
