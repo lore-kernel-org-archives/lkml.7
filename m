@@ -2,117 +2,152 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF918C47E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:10:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC18DCA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:10:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2A5C21906
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:10:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78AA621872
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:10:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LbchELzQ"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="CsdOxpTL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406542AbfJWPKU (ORCPT
+        id S2406555AbfJWPKa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 11:10:20 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:25273 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2406533AbfJWPKU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 11:10:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571843419;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=tlaewf16ukXOc2N6dF0rd3mLZ8BjJkXYbd4jVtG8Wwg=;
-        b=LbchELzQpdSI/qQruRz2IQcO66fu1MXxBjv6wNQDsxmCm1ZlmBY+mPLttE4jx/4V2XXRso
-        d3QA6A8FhK6S4iwM80y53hCmIyjzNaO7vnCl6SQlnH3XPhn3e6DZVqJ5NkO/2SGtlx569F
-        nj8xVAgi/KuE9MnISEO7yaBFlCTqWpA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-280-9FH-jAAlMq6rZptRE9Q6BQ-1; Wed, 23 Oct 2019 11:10:15 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6CCBD1800D6B;
-        Wed, 23 Oct 2019 15:10:13 +0000 (UTC)
-Received: from optiplex-lnx (ovpn-112-50.rdu2.redhat.com [10.10.112.50])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5F2265C241;
-        Wed, 23 Oct 2019 15:10:08 +0000 (UTC)
-Date:   Wed, 23 Oct 2019 11:10:05 -0400
-From:   Rafael Aquini <aquini@redhat.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@suse.de>, Waiman Long <longman@redhat.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Roman Gushchin <guro@fb.com>, Vlastimil Babka <vbabka@suse.cz>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Jann Horn <jannh@google.com>, Song Liu <songliubraving@fb.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>,
-        Michal Hocko <mhocko@suse.com>
-Subject: Re: [RFC PATCH 1/2] mm, vmstat: hide /proc/pagetypeinfo from normal
- users
-Message-ID: <20191023151005.GE22601@optiplex-lnx>
-References: <20191023095607.GE3016@techsingularity.net>
- <20191023102737.32274-1-mhocko@kernel.org>
- <20191023102737.32274-2-mhocko@kernel.org>
+        Wed, 23 Oct 2019 11:10:30 -0400
+Received: from mail-eopbgr720073.outbound.protection.outlook.com ([40.107.72.73]:23212
+        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2406544AbfJWPKa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 11:10:30 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ADcp0+JxDMQf8zqur9puQk/zv1AR/PcUKEnn2qViEzKqm6SJx/tnSq2w0OgnfHtlzowgbdrmAuTV2w1Eu1JygcU1ITzGlsV/bqjRCUFb2UFDp7CuUQr2/nIs0HSpTt1dRoUltDP/UgB/cc1ADNJZjSgvZaf/5zYiQrO77eN4Ver/iBUXlhW4rec1UW+bzw1UwOIW7gszBCM1MWbM+SBwqrubytj8hOaW6K1stTlII3+YFPRm8DDFcxbgWQpX2mMnXyjme/UBJ0o5bU40MH9UA32ifAeq3L/LnreEmCZmuWq88DM/tl7S+gCjPwvRwqCguzocdDB2yGQ/3nHWLZEiIQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NYVqaNguwvQNGohg3eYIEB3nVDcm3Twlycg/gMk33FU=;
+ b=PdbHOXywD5lFNb3BNrGXbP8M/bCtslSxAn1HSIXP3+o3DFeyPmJ9/cbu441yH3aVXbCPSPPEUZoziH5kUYan0LhWNlboBoHBRSqs/JO+FRb1KblFKNqrw+dIqRrqDnf47ARV3JE4dhPuAqT338B7mIifHwqXtu0YS6Y6vDAViChfkhsh4LePeX25S/w+jkaahxGH0VfnGqVeBVQGdDwylool1M0FYsmDzCBBCUnJlu/yMMBJJJ9wG5WLF6HmtdXVBrV7oQbMgJzC4yZYRohY/JRMbTD6H7Am1Y5m4qj7NdJRxnw8+WMeKvXcx7QwYQj69KOJdr4gcEwQ+q2U/1AMEw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
+ dmarc=permerror action=none header.from=amd.com; dkim=none (message not
+ signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NYVqaNguwvQNGohg3eYIEB3nVDcm3Twlycg/gMk33FU=;
+ b=CsdOxpTLuI7YDMJ6UjdRuDi0tRkkYm0nKqL0SoJBFPZIG+BdxRL2q4btlSY3RXBBJSFcD3aRO3E+2nywDeGA8ZDtH1FwqntJcQAna1r1CDGX+8tjFC02NJeGYhYaRB4eeaP8GaoNueKWdH4HwKCIVtIll/KGwstrDOPQ0g3CE6Y=
+Received: from MWHPR12CA0062.namprd12.prod.outlook.com (2603:10b6:300:103::24)
+ by BYAPR12MB2918.namprd12.prod.outlook.com (2603:10b6:a03:13c::27) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2387.20; Wed, 23 Oct
+ 2019 15:10:26 +0000
+Received: from BY2NAM03FT043.eop-NAM03.prod.protection.outlook.com
+ (2a01:111:f400:7e4a::209) by MWHPR12CA0062.outlook.office365.com
+ (2603:10b6:300:103::24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2387.20 via Frontend
+ Transport; Wed, 23 Oct 2019 15:10:26 +0000
+Authentication-Results: spf=none (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; infradead.org; dkim=none (message not signed)
+ header.d=none;infradead.org; dmarc=permerror action=none header.from=amd.com;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+Received: from SATLEXMB01.amd.com (165.204.84.17) by
+ BY2NAM03FT043.mail.protection.outlook.com (10.152.85.147) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
+ 15.20.2387.20 via Frontend Transport; Wed, 23 Oct 2019 15:10:26 +0000
+Received: from fritz.amd.com (10.180.168.240) by SATLEXMB01.amd.com
+ (10.181.40.142) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Wed, 23 Oct
+ 2019 10:10:24 -0500
+From:   Kim Phillips <kim.phillips@amd.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        <kim.phillips@amd.com>
+CC:     <stable@vger.kernel.org>, Stephane Eranian <eranian@google.com>,
+        "Arnaldo Carvalho de Melo" <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        "Namhyung Kim" <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Borislav Petkov" <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>,
+        <x86@kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH 1/2] perf/x86/amd/ibs: Fix reading of the IBS OpData register and thus precise RIP validity
+Date:   Wed, 23 Oct 2019 10:09:54 -0500
+Message-ID: <20191023150955.30292-1-kim.phillips@amd.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <20191023102737.32274-2-mhocko@kernel.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-MC-Unique: 9FH-jAAlMq6rZptRE9Q6BQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB01.amd.com (10.181.40.142) To SATLEXMB01.amd.com
+ (10.181.40.142)
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:165.204.84.17;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(6029001)(4636009)(396003)(39860400002)(376002)(346002)(136003)(428003)(189003)(199004)(3846002)(14444005)(316002)(110136005)(7049001)(336012)(48376002)(47776003)(54906003)(6116002)(4326008)(386003)(51416003)(53416004)(6666004)(7696005)(5660300002)(2870700001)(356004)(478600001)(486006)(16526019)(2906002)(70586007)(26005)(36756003)(1076003)(86362001)(7416002)(426003)(44832011)(50466002)(7736002)(8936002)(70206006)(8676002)(50226002)(476003)(305945005)(126002)(81156014)(81166006)(186003)(2616005);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR12MB2918;H:SATLEXMB01.amd.com;FPR:;SPF:None;LANG:en;PTR:InfoDomainNonexistent;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: e472328f-4354-42ca-ec1e-08d757cb2253
+X-MS-TrafficTypeDiagnostic: BYAPR12MB2918:
+X-Microsoft-Antispam-PRVS: <BYAPR12MB291825087DE7337F36466E72876B0@BYAPR12MB2918.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5797;
+X-Forefront-PRVS: 019919A9E4
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: vQwIRZlMu9o4JnTZsl7O7xwxIXlfRuc0jm3qXTCwgb/57RlQoX9WqZGDpYALfn7K2C2UURlXQ4GajDOGeaYyvpmt9UVYeJbFz/fSgVTzwTCww0Y+lRUy6KlstI54QMwQhTo6ftR0rya3j4plXeMqdr3JUXulIInva9sjDi/PbBlrPIK/HDQsh0k+L79xCtSBDbNUbo0nOOegT5HQPQgnohq0gIMCd6YaegYq16+gUh+h7lG7rCAEgSbDhMHWt1Ct2eoflYDgY2iSfLIuaFpbbirE2zZQXFWq6jUJdsQGt4ZZnW6MIgPkrMw4L+y9YFFxDH3ymISSW/ObXMR5pT6DRdgFLja4bT4PHins9whWegn57DBe7qZSh7Rubi234i7VOE8HlYCA92qwVq5a1JtiFIyMfo71fGUl1OIz3H7jhEYZ2AvzapZhJ1tXQY8c8T8l
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Oct 2019 15:10:26.0796
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: e472328f-4354-42ca-ec1e-08d757cb2253
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB01.amd.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB2918
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 12:27:36PM +0200, Michal Hocko wrote:
-> From: Michal Hocko <mhocko@suse.com>
->=20
-> /proc/pagetypeinfo is a debugging tool to examine internal page
-> allocator state wrt to fragmentation. It is not very useful for
-> any other use so normal users really do not need to read this file.
->=20
-> Waiman Long has noticed that reading this file can have negative side
-> effects because zone->lock is necessary for gathering data and that
-> a) interferes with the page allocator and its users and b) can lead to
-> hard lockups on large machines which have very long free_list.
->=20
-> Reduce both issues by simply not exporting the file to regular users.
->=20
-> Reported-by: Waiman Long <longman@redhat.com>
-> Cc: stable
-> Signed-off-by: Michal Hocko <mhocko@suse.com>
-> ---
->  mm/vmstat.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/mm/vmstat.c b/mm/vmstat.c
-> index 6afc892a148a..4e885ecd44d1 100644
-> --- a/mm/vmstat.c
-> +++ b/mm/vmstat.c
-> @@ -1972,7 +1972,7 @@ void __init init_mm_internals(void)
->  #endif
->  #ifdef CONFIG_PROC_FS
->  =09proc_create_seq("buddyinfo", 0444, NULL, &fragmentation_op);
-> -=09proc_create_seq("pagetypeinfo", 0444, NULL, &pagetypeinfo_op);
-> +=09proc_create_seq("pagetypeinfo", 0400, NULL, &pagetypeinfo_op);
->  =09proc_create_seq("vmstat", 0444, NULL, &vmstat_op);
->  =09proc_create_seq("zoneinfo", 0444, NULL, &zoneinfo_op);
->  #endif
-> --=20
-> 2.20.1
->
-=20
-Acked-by: Rafael Aquini <aquini@redhat.com>
+The loop that reads all the IBS MSRs into *buf stopped one MSR short of
+reading the IbsOpData register, which contains the RipInvalid status bit.
+
+Fix the offset_max assignment so the MSR gets read, so the RIP invalid
+evaluation is based on what the IBS h/w output, instead of what was
+left in memory.
+
+Signed-off-by: Kim Phillips <kim.phillips@amd.com>
+Fixes: d47e8238cd76 ("perf/x86-ibs: Take instruction pointer from ibs sample")
+Cc: stable@vger.kernel.org
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: x86@kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ arch/x86/events/amd/ibs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
+index 5b35b7ea5d72..98ba21a588a1 100644
+--- a/arch/x86/events/amd/ibs.c
++++ b/arch/x86/events/amd/ibs.c
+@@ -614,7 +614,7 @@ static int perf_ibs_handle_irq(struct perf_ibs *perf_ibs, struct pt_regs *iregs)
+ 	if (event->attr.sample_type & PERF_SAMPLE_RAW)
+ 		offset_max = perf_ibs->offset_max;
+ 	else if (check_rip)
+-		offset_max = 2;
++		offset_max = 3;
+ 	else
+ 		offset_max = 1;
+ 	do {
+-- 
+2.23.0
 
