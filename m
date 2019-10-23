@@ -2,131 +2,175 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B3EFCA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 19:21:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EDD9CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 19:22:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DF3E20663
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 19:21:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571858497;
-	bh=eA+ZT4QHat2+EIWy0C1wo1arzUq8iBFuHoCMVRtUvt8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=UTvOO1BGrRJbZSm1/cFnHS77lUx97Bmd3/Q7m0HLoD1BGe15UDlqLEIX2IGTKBd73
-	 i9Eq4yvUNn/I8r3DsHID3JJaRfjkMzecCbGvswo0vAEoIEEYERbpKIr1Jpk40Or7uj
-	 PGe2/1eXAcljuJs8p3HGVfgFLKy3fyNhLf8n4WrA=
+	by mail.kernel.org (Postfix) with ESMTP id 086EA20663
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 19:22:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="y0ZJLr+c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390615AbfJWTVc (ORCPT
+        id S2391358AbfJWTWX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 15:21:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34002 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732686AbfJWTVc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 15:21:32 -0400
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5659B21A4A
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 19:21:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571858491;
-        bh=eA+ZT4QHat2+EIWy0C1wo1arzUq8iBFuHoCMVRtUvt8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=N30U1gto6Y/YW/X1kjdHTf6mLeW4+VibfbIFM42pv5YSs8asbTGcNaJWGqyX25TxZ
-         z5gpw2lQn2AOn3p/diZj3/f2Oz28XCAKU3IjBQBjW9vLWlYnblHW6a82xQHkMXk/Ta
-         DByiMu15BSt/Z7StrjbIRoYhSWZ8+32agPiSV8Js=
-Received: by mail-wr1-f49.google.com with SMTP id r1so13537992wrs.9
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 12:21:31 -0700 (PDT)
-X-Gm-Message-State: APjAAAUZYLfdNSaZ8+CGB1INZ3jzu33026z80yP536Tm9ZnRYM4aQDRm
-        Eq4x1gzaNMyT5KydpGdIFep3Y/y+TXYpgWgkpY9Tig==
-X-Google-Smtp-Source: APXvYqw7KTG+90tUY67BWKH60wbgDRsGNBs48rLJnwu/jKRhPVU6JrS99XBLoxXAEuVueDNIS4APVe/18+ujBzqLCQ0=
-X-Received: by 2002:a05:6000:1288:: with SMTP id f8mr266958wrx.111.1571858489805;
- Wed, 23 Oct 2019 12:21:29 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191012191602.45649-1-dancol@google.com> <20191012191602.45649-4-dancol@google.com>
- <CALCETrVZHd+csdRL-uKbVN3Z7yeNNtxiDy-UsutMi=K3ZgCiYw@mail.gmail.com>
- <CAKOZuevUqs_Oe1UEwguQK7Ate3ai1DSVSij=0R=vmz9LzX4k6Q@mail.gmail.com>
- <CALCETrUyq=J37gU-MYXqLdoi7uH7iNNVRjvcGUT11JA1QuTFyg@mail.gmail.com>
- <CAG48ez3P27-xqdjKLqfP_0Q_v9K92CgEjU4C=kob2Ax7=NoZbA@mail.gmail.com> <20191023190959.GA9902@redhat.com>
-In-Reply-To: <20191023190959.GA9902@redhat.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Wed, 23 Oct 2019 12:21:18 -0700
-X-Gmail-Original-Message-ID: <CALCETrWY+5ynDct7eU_nDUqx=okQvjm=Y5wJvA4ahBja=CQXGw@mail.gmail.com>
-Message-ID: <CALCETrWY+5ynDct7eU_nDUqx=okQvjm=Y5wJvA4ahBja=CQXGw@mail.gmail.com>
-Subject: Re: [PATCH 3/7] Add a UFFD_SECURE flag to the userfaultfd API.
-To:     Andrea Arcangeli <aarcange@redhat.com>
-Cc:     Andy Lutomirski <luto@kernel.org>, Jann Horn <jannh@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Lokesh Gidra <lokeshgidra@google.com>,
-        Nick Kralevich <nnk@google.com>,
-        Nosh Minwalla <nosh@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 23 Oct 2019 15:22:23 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:44351 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733199AbfJWTWW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 15:22:22 -0400
+Received: by mail-ot1-f66.google.com with SMTP id n48so3503516ota.11
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 12:22:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=AWSzxloZFjqBSYPavsipaCsXnn7FGNC3x2RIp+ASNJ8=;
+        b=y0ZJLr+cgueiZO+fvCl5wIdEf3wPufsEH3or0+C0r5plqTxF1gFC/WLiGlDAkykQhC
+         ag8VtmVwHXOSW8923OLMhCe1w9F4ChfzgZeulr2vEzCCTuUyiV5WOFki57obZ/R95fDz
+         QYHccMqGnIjqC3R4ZHQR/6bW6rpvDnP5r2I3H+bzcou2XpyFOt/Ml+IMaEEZ8vrk+rNt
+         TYeHQZ70HuC30AuFX6ekWQ6nXUcyWoB1TkYV8urrgfx0ouxJzxoUZEU6pMXUYVsfWsIt
+         B0VccJ/4phWLs9Ow9ky4hzFnDr3sJaBu4zGPHBZ7grhiUiYILikWh/fbHSyMxj33k/80
+         gVuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=AWSzxloZFjqBSYPavsipaCsXnn7FGNC3x2RIp+ASNJ8=;
+        b=C6Rv3mGK9q2Vqm8cZEHXFMcIuePrTb+o6mB2HyDf3zidAoi1kmCe6gU97Gm7dzzbla
+         wAQF8xg1pOW1JEp69dtVxK8uyHZzQ/5bcMre+T/BFxLSciaOJgNE8XbMdsoXq1uAxjrk
+         LnUj7nr5LnAMEO2DMrieyLFl7Np3hpLQJwA4narz1xxziwCy+ExkJJ0waoNwsFLWKp2K
+         LkNUCoaDwV+4aeHSX7s33mhUP0uzkw/dZIRuBu1CyWpainNL3nGMQ7I6OukgKyIQgPJy
+         7BJRHaATvWCo+TiTIoaB9R5myyXkIScFPa33eYSso44gHnWvWlhpsLNyNag/0e2oqSYO
+         9eYg==
+X-Gm-Message-State: APjAAAVMXbAh7FGBoikX0PH0o1u7yVhwRiKwr/hmFUL+F+C+ZZnDTgur
+        Je8ROTB+38lGlNL/1ijxwwxZXQ==
+X-Google-Smtp-Source: APXvYqykmlBWzvgJXmGine00U7/POyerlUZvysm+7sDg/xeN7uvm3sWMkXfvTaV+4GZ862hIFPTEow==
+X-Received: by 2002:a9d:3476:: with SMTP id v109mr8496480otb.211.1571858541669;
+        Wed, 23 Oct 2019 12:22:21 -0700 (PDT)
+Received: from rip.lixom.net (99-152-116-91.lightspeed.sntcca.sbcglobal.net. [99.152.116.91])
+        by smtp.gmail.com with ESMTPSA id d25sm5783461oic.23.2019.10.23.12.22.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 23 Oct 2019 12:22:20 -0700 (PDT)
+From:   Olof Johansson <olof@lixom.net>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Keith Busch <keith.busch@intel.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Olof Johansson <olof@lixom.net>
+Subject: [PATCH] PCI/DPC: Add pcie_ports=dpc-native parameter to bring back old behavior
+Date:   Wed, 23 Oct 2019 12:22:05 -0700
+Message-Id: <20191023192205.97024-1-olof@lixom.net>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 12:10 PM Andrea Arcangeli <aarcange@redhat.com> wrote:
->
-> Hello,
->
-> On Sat, Oct 12, 2019 at 06:14:23PM -0700, Andy Lutomirski wrote:
-> > [adding more people because this is going to be an ABI break, sigh]
->
-> That wouldn't break the ABI, no more than when if you boot a kernel
-> built with CONFIG_USERFAULTFD=n.
->
-> All non-cooperative features can be removed any time in a backwards
-> compatible way, the only precaution is to mark their feature bits as
-> reserved so they can't be reused for something else later.
->
-> > least severely restricted.  A .read implementation MUST NOT ACT ON THE
-> > CALLING TASK.  Ever.  Just imagine the effect of passing a userfaultfd
-> > as stdin to a setuid program.
->
-> With UFFD_EVENT_FORK, the newly created uffd that controls the child,
-> is not passed to the parent nor to the child. Instead it's passed to
-> the CRIU monitor only, which has to be already running as root and is
-> fully trusted and acts a hypervisor (despite there is no hypervisor).
->
-> By the time execve runs and any suid bit in the execve'd inode becomes
-> relevant, well before the new userland executable code can run, the
-> kernel throws away the "old_mm" controlled by any uffd and all
-> attached uffds are released as well.
->
-> All I found is your "A .read implementation MUST NOT ACT ON THE
-> CALLING TASK" as an explanation that something is broken but I need
-> further clarification.
+In commit eed85ff4c0da7 ("PCI/DPC: Enable DPC only if AER is available"),
+the behavior was changed such that native (kernel) handling of DPC
+got tied to whether the kernel also handled AER. While this is what
+the standard recommends, there are BIOSes out there that lack the DPC
+handling since it was never required in the past.
 
-There are two things going on here.
+To make DPC still work on said platforms the same way they did before,
+add a "pcie_ports=dpc-native" kernel parameter that can be passed in
+if needed, while keeping defaults unchanged.
 
-1. Daniel wants to add LSM labels to userfaultfd objects.  This seems
-reasonable to me.  The question, as I understand it, is: who is the
-subject that creates a uffd referring to a forked child?  I'm sure
-this is solvable in any number of straightforward ways, but I think
-it's less important than:
+Signed-off-by: Olof Johansson <olof@lixom.net>
+---
+ Documentation/admin-guide/kernel-parameters.txt | 1 +
+ drivers/pci/pcie/dpc.c                          | 2 +-
+ drivers/pci/pcie/portdrv_core.c                 | 7 ++++++-
+ drivers/pci/pcie/portdrv_pci.c                  | 8 ++++++++
+ include/linux/pci.h                             | 2 ++
+ 5 files changed, 18 insertions(+), 2 deletions(-)
 
-2. The existing ABI is busted independently of #1.  Suppose you call
-userfaultfd to get a userfaultfd and enable UFFD_FEATURE_EVENT_FORK.
-Then you do:
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 5e27d74e2b74b..e0325421980aa 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -3548,6 +3548,7 @@
+ 			even if the platform doesn't give the OS permission to
+ 			use them.  This may cause conflicts if the platform
+ 			also tries to use these services.
++		dpc-native	Use native PCIe service for DPC, but none other.
+ 		compat	Disable native PCIe services (PME, AER, DPC, PCIe
+ 			hotplug).
+ 
+diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+index a32ec3487a8d0..e06f42f58d3d4 100644
+--- a/drivers/pci/pcie/dpc.c
++++ b/drivers/pci/pcie/dpc.c
+@@ -291,7 +291,7 @@ static int dpc_probe(struct pcie_device *dev)
+ 	int status;
+ 	u16 ctl, cap;
+ 
+-	if (pcie_aer_get_firmware_first(pdev))
++	if (pcie_aer_get_firmware_first(pdev) && !pcie_ports_dpc_native)
+ 		return -ENOTSUPP;
+ 
+ 	dpc = devm_kzalloc(device, sizeof(*dpc), GFP_KERNEL);
+diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
+index 1b330129089fe..c24bf6cac4186 100644
+--- a/drivers/pci/pcie/portdrv_core.c
++++ b/drivers/pci/pcie/portdrv_core.c
+@@ -250,8 +250,13 @@ static int get_port_device_capability(struct pci_dev *dev)
+ 		pcie_pme_interrupt_enable(dev, false);
+ 	}
+ 
++	/*
++	 * With dpc-native, we set it if AER is available, even if AER is
++	 * handled by firmware.
++	 */
+ 	if (pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DPC) &&
+-	    pci_aer_available() && services & PCIE_PORT_SERVICE_AER)
++	    pci_aer_available() &&
++	    (pcie_ports_dpc_native || (services & PCIE_PORT_SERVICE_AER)))
+ 		services |= PCIE_PORT_SERVICE_DPC;
+ 
+ 	if (pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM ||
+diff --git a/drivers/pci/pcie/portdrv_pci.c b/drivers/pci/pcie/portdrv_pci.c
+index 0a87091a0800e..b415656519a73 100644
+--- a/drivers/pci/pcie/portdrv_pci.c
++++ b/drivers/pci/pcie/portdrv_pci.c
+@@ -29,12 +29,20 @@ bool pcie_ports_disabled;
+  */
+ bool pcie_ports_native;
+ 
++/*
++ * If the user specified "pcie_ports=dpc-native", use the PCIe services
++ * for DPC, but cuse platform defaults for the others.
++ */
++bool pcie_ports_dpc_native;
++
+ static int __init pcie_port_setup(char *str)
+ {
+ 	if (!strncmp(str, "compat", 6))
+ 		pcie_ports_disabled = true;
+ 	else if (!strncmp(str, "native", 6))
+ 		pcie_ports_native = true;
++	else if (!strncmp(str, "dpc-native", 10))
++		pcie_ports_dpc_native = true;
+ 
+ 	return 1;
+ }
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index fc1844061e88f..603d4822757b6 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1534,9 +1534,11 @@ static inline int pci_irqd_intx_xlate(struct irq_domain *d,
+ #ifdef CONFIG_PCIEPORTBUS
+ extern bool pcie_ports_disabled;
+ extern bool pcie_ports_native;
++extern bool pcie_ports_dpc_native;
+ #else
+ #define pcie_ports_disabled	true
+ #define pcie_ports_native	false
++#define pcie_ports_dpc_native	false
+ #endif
+ 
+ #define PCIE_LINK_STATE_L0S		BIT(0)
+-- 
+2.11.0
 
-$ sudo <&[userfaultfd number]
-
-Sudo will read it and get a new fd unexpectedly added to its fd table.
-It's worse if SCM_RIGHTS is involved.
-
-So I think we either need to declare that UFFD_FEATURE_EVENT_FORK is
-only usable by global root or we need to remove it and maybe re-add it
-in some other form.
-
-
---Andy
