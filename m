@@ -2,117 +2,132 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6429ACA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:31:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0917ACA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:32:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4422D2084C
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:31:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CED3321872
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:32:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390354AbfJWIbu (ORCPT
+        id S2390357AbfJWIc0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 04:31:50 -0400
-Received: from outbound-smtp22.blacknight.com ([81.17.249.190]:46920 "EHLO
-        outbound-smtp22.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2390165AbfJWIbt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 04:31:49 -0400
-Received: from mail.blacknight.com (pemlinmail06.blacknight.ie [81.17.255.152])
-        by outbound-smtp22.blacknight.com (Postfix) with ESMTPS id 19574B86F3
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 09:31:46 +0100 (IST)
-Received: (qmail 2938 invoked from network); 23 Oct 2019 08:31:45 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.19.210])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 23 Oct 2019 08:31:45 -0000
-Date:   Wed, 23 Oct 2019 09:31:43 +0100
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Waiman Long <longman@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>,
-        Roman Gushchin <guro@fb.com>, Vlastimil Babka <vbabka@suse.cz>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Jann Horn <jannh@google.com>, Song Liu <songliubraving@fb.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rafael Aquini <aquini@redhat.com>, Mel Gorman <mgorman@suse.de>
-Subject: Re: [PATCH] mm/vmstat: Reduce zone lock hold time when reading
- /proc/pagetypeinfo
-Message-ID: <20191023083143.GC3016@techsingularity.net>
-References: <20191022162156.17316-1-longman@redhat.com>
- <20191022165745.GT9379@dhcp22.suse.cz>
+        Wed, 23 Oct 2019 04:32:26 -0400
+Received: from mga02.intel.com ([134.134.136.20]:4257 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390020AbfJWIc0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 04:32:26 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 01:32:25 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,220,1569308400"; 
+   d="scan'208";a="209874161"
+Received: from kuha.fi.intel.com ([10.237.72.53])
+  by fmsmga001.fm.intel.com with SMTP; 23 Oct 2019 01:32:22 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Wed, 23 Oct 2019 11:32:21 +0300
+Date:   Wed, 23 Oct 2019 11:32:21 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Puma Hsu <pumahsu@google.com>, Guenter Roeck <linux@roeck-us.net>
+Cc:     gregkh@linuxfoundation.org, badhri@google.com, kyletso@google.com,
+        albertccwang@google.com, rickyniu@google.com,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2] usb: typec: Add sysfs node to show connector
+ orientation
+Message-ID: <20191023083221.GB8828@kuha.fi.intel.com>
+References: <20191022085924.92783-1-pumahsu@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191022165745.GT9379@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191022085924.92783-1-pumahsu@google.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 06:57:45PM +0200, Michal Hocko wrote:
-> [Cc Mel]
-> 
-> On Tue 22-10-19 12:21:56, Waiman Long wrote:
-> > The pagetypeinfo_showfree_print() function prints out the number of
-> > free blocks for each of the page orders and migrate types. The current
-> > code just iterates the each of the free lists to get counts.  There are
-> > bug reports about hard lockup panics when reading the /proc/pagetyeinfo
-> > file just because it look too long to iterate all the free lists within
-> > a zone while holing the zone lock with irq disabled.
-> > 
-> > Given the fact that /proc/pagetypeinfo is readable by all, the possiblity
-> > of crashing a system by the simple act of reading /proc/pagetypeinfo
-> > by any user is a security problem that needs to be addressed.
-> 
-> Should we make the file 0400? It is a useful thing when debugging but
-> not something regular users would really need for life.
-> 
++Guenter
 
-I think this would be useful in general. The information is not that
-useful outside of debugging. Even then it's only useful when trying to
-get a handle on why a path like compaction is taking too long.
-
-> > There is a free_area structure associated with each page order. There
-> > is also a nr_free count within the free_area for all the different
-> > migration types combined. Tracking the number of free list entries
-> > for each migration type will probably add some overhead to the fast
-> > paths like moving pages from one migration type to another which may
-> > not be desirable.
+On Tue, Oct 22, 2019 at 04:59:24PM +0800, Puma Hsu wrote:
+> Export the Type-C connector orientation so that user space
+> can get this information.
 > 
-> Have you tried to measure that overhead?
+> Signed-off-by: Puma Hsu <pumahsu@google.com>
+> ---
+>  Documentation/ABI/testing/sysfs-class-typec | 11 +++++++++++
+>  drivers/usb/typec/class.c                   | 18 ++++++++++++++++++
+>  2 files changed, 29 insertions(+)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-class-typec b/Documentation/ABI/testing/sysfs-class-typec
+> index d7647b258c3c..b22f71801671 100644
+> --- a/Documentation/ABI/testing/sysfs-class-typec
+> +++ b/Documentation/ABI/testing/sysfs-class-typec
+> @@ -108,6 +108,17 @@ Contact:	Heikki Krogerus <heikki.krogerus@linux.intel.com>
+>  Description:
+>  		Revision number of the supported USB Type-C specification.
 >  
+> +What:		/sys/class/typec/<port>/connector_orientation
+> +Date:		October 2019
+> +Contact:	Puma Hsu <pumahsu@google.com>
+> +Description:
+> +		Indicates which typec connector orientation is configured now.
+> +		cc1 is defined as "normal" and cc2 is defined as "reversed".
+> +
+> +		Valid value:
+> +		- unknown (nothing configured)
 
-I would prefer this option not be taken. It would increase the cost of
-watermark calculations which is a relatively fast path.
+"unknown" means we do not know the orientation.
 
-> > we can actually skip iterating the list of one of the migration types
-> > and used nr_free to compute the missing count. Since MIGRATE_MOVABLE
-> > is usually the largest one on large memory systems, this is the one
-> > to be skipped. Since the printing order is migration-type => order, we
-> > will have to store the counts in an internal 2D array before printing
-> > them out.
-> > 
-> > Even by skipping the MIGRATE_MOVABLE pages, we may still be holding the
-> > zone lock for too long blocking out other zone lock waiters from being
-> > run. This can be problematic for systems with large amount of memory.
-> > So a check is added to temporarily release the lock and reschedule if
-> > more than 64k of list entries have been iterated for each order. With
-> > a MAX_ORDER of 11, the worst case will be iterating about 700k of list
-> > entries before releasing the lock.
-> 
-> But you are still iterating through the whole free_list at once so if it
-> gets really large then this is still possible. I think it would be
-> preferable to use per migratetype nr_free if it doesn't cause any
-> regressions.
-> 
+> +		- normal (configured in cc1 side)
+> +		- reversed (configured in cc2 side)
 
-I think it will. The patch as it is contains the overhead within the
-reader of the pagetypeinfo proc file which is a non-critical path. The
-page allocator paths on the other hand is very important.
+Guenter, do you think "connector_orientation" OK. I proposed it, but
+I'm now wondering if something like "polarity" would be better?
+
+>  USB Type-C partner devices (eg. /sys/class/typec/port0-partner/)
+>  
+> diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
+> index 94a3eda62add..911d06676aeb 100644
+> --- a/drivers/usb/typec/class.c
+> +++ b/drivers/usb/typec/class.c
+> @@ -1245,6 +1245,23 @@ static ssize_t usb_power_delivery_revision_show(struct device *dev,
+>  }
+>  static DEVICE_ATTR_RO(usb_power_delivery_revision);
+>  
+> +static const char * const typec_connector_orientation[] = {
+> +	[TYPEC_ORIENTATION_NONE]		= "unknown",
+> +	[TYPEC_ORIENTATION_NORMAL]		= "normal",
+> +	[TYPEC_ORIENTATION_REVERSE]		= "reversed",
+> +};
+> +
+> +static ssize_t connector_orientation_show(struct device *dev,
+> +						struct device_attribute *attr,
+> +						char *buf)
+> +{
+> +	struct typec_port *p = to_typec_port(dev);
+> +
+> +	return sprintf(buf, "%s\n",
+> +		       typec_connector_orientation[p->orientation]);
+> +}
+> +static DEVICE_ATTR_RO(connector_orientation);
+> +
+>  static struct attribute *typec_attrs[] = {
+>  	&dev_attr_data_role.attr,
+>  	&dev_attr_power_operation_mode.attr,
+> @@ -1255,6 +1272,7 @@ static struct attribute *typec_attrs[] = {
+>  	&dev_attr_usb_typec_revision.attr,
+>  	&dev_attr_vconn_source.attr,
+>  	&dev_attr_port_type.attr,
+> +	&dev_attr_connector_orientation.attr,
+>  	NULL,
+>  };
+>  ATTRIBUTE_GROUPS(typec);
+
+thanks,
 
 -- 
-Mel Gorman
-SUSE Labs
+heikki
