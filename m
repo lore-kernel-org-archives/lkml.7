@@ -2,209 +2,86 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE89ACA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 19:42:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E69CA9EBB
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 19:50:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E29620640
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 19:42:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A0C32086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 19:50:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571860208;
+	bh=szXNlP/mje0yz+wVJX8JbggDS0ltASZ41uILRnXmMpc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ZHj+61u+0hndDQ/WycgGHXayWSekFXbHJdweiM4akgp8ostp4Aea9vrs2y+IsJxEP
+	 p2VtypXf6pxfTSjBN/3GCurxD38BmBCQ3WcmES9ClLnLoiatECN7qzMWH+82x4EOdj
+	 m3zqc1SE7iJOn9MH/4e0cgIHm/YTY33bVlDaaZ0I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388288AbfJWTmk (ORCPT
+        id S2389371AbfJWTuG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 15:42:40 -0400
-Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:53644 "EHLO
-        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728697AbfJWTmj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 15:42:39 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04391;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0Tg.I.VG_1571859431;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0Tg.I.VG_1571859431)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 24 Oct 2019 03:37:14 +0800
-Subject: Re: [v2 PATCH] mm: thp: handle page cache THP correctly in
- PageTransCompoundMap
-To:     Hugh Dickins <hughd@google.com>
-Cc:     aarcange@redhat.com, kirill.shutemov@linux.intel.com,
-        gavin.dg@linux.alibaba.com, akpm@linux-foundation.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-References: <1571850304-82802-1-git-send-email-yang.shi@linux.alibaba.com>
- <alpine.LSU.2.11.1910231157570.1088@eggly.anvils>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <4d3c14ef-ee86-2719-70d6-68f1a8b42c28@linux.alibaba.com>
-Date:   Wed, 23 Oct 2019 12:37:09 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Wed, 23 Oct 2019 15:50:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38360 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727595AbfJWTuF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 15:50:05 -0400
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E68422086D;
+        Wed, 23 Oct 2019 19:50:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571860205;
+        bh=szXNlP/mje0yz+wVJX8JbggDS0ltASZ41uILRnXmMpc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=szkpb+T2taZM3fVN10StcEC/nAFEtJgA1+xo/iGDzKUITPYdq+LWKdNOF0cfHGUI5
+         wIFWyd5WvrazD45rsrWShtgZIvIToyaxpBb5DvRTaHvnQOVjvSD/4oGhGCcn/wQaML
+         ExPReOBtqOUbWWPofTfSqUi2i0oWsMynN08WXYoA=
+Received: by mail-qt1-f174.google.com with SMTP id g50so19862391qtb.4;
+        Wed, 23 Oct 2019 12:50:04 -0700 (PDT)
+X-Gm-Message-State: APjAAAVKjlZhFiVpVQHMnXMiCFLQDdSzfwL9DOkwlTfS0xKjdIj15FtT
+        3nOb/zV9Nn/pxH2I2YeD+3TldIgo03liPVmsdA==
+X-Google-Smtp-Source: APXvYqz0vP1GOhhjZuLhazGsa+EI3oKQAYj/m4GJJfQ88tutHc8kT90FJVPCQFtSBKwwhqLESGtZU2e+texU3JV6L1s=
+X-Received: by 2002:ac8:70c4:: with SMTP id g4mr279602qtp.136.1571860204174;
+ Wed, 23 Oct 2019 12:50:04 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <alpine.LSU.2.11.1910231157570.1088@eggly.anvils>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <cover.1571484439.git.saiprakash.ranjan@codeaurora.org> <20191021033220.GG4500@tuxbook-pro>
+In-Reply-To: <20191021033220.GG4500@tuxbook-pro>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 23 Oct 2019 14:49:53 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLzRRQe8UZCxgXArVNhNry7PgMCthAR2aZNcm6CCEpvDA@mail.gmail.com>
+Message-ID: <CAL_JsqLzRRQe8UZCxgXArVNhNry7PgMCthAR2aZNcm6CCEpvDA@mail.gmail.com>
+Subject: Re: [PATCHv2 0/3] Add LLCC support for SC7180 SoC
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Rishabh Bhatnagar <rishabhb@codeaurora.org>,
+        Doug Anderson <dianders@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 10/23/19 12:28 PM, Hugh Dickins wrote:
-> On Thu, 24 Oct 2019, Yang Shi wrote:
+On Sun, Oct 20, 2019 at 10:32 PM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
 >
->> We have usecase to use tmpfs as QEMU memory backend and we would like to
->> take the advantage of THP as well.  But, our test shows the EPT is not
->> PMD mapped even though the underlying THP are PMD mapped on host.
->> The number showed by /sys/kernel/debug/kvm/largepage is much less than
->> the number of PMD mapped shmem pages as the below:
->>
->> 7f2778200000-7f2878200000 rw-s 00000000 00:14 262232 /dev/shm/qemu_back_mem.mem.Hz2hSf (deleted)
->> Size:            4194304 kB
->> [snip]
->> AnonHugePages:         0 kB
->> ShmemPmdMapped:   579584 kB
->> [snip]
->> Locked:                0 kB
->>
->> cat /sys/kernel/debug/kvm/largepages
->> 12
->>
->> And some benchmarks do worse than with anonymous THPs.
->>
->> By digging into the code we figured out that commit 127393fbe597 ("mm:
->> thp: kvm: fix memory corruption in KVM with THP enabled") checks if
->> there is a single PTE mapping on the page for anonymous THP when
->> setting up EPT map.  But, the _mapcount < 0 check doesn't fit to page
->> cache THP since every subpage of page cache THP would get _mapcount
->> inc'ed once it is PMD mapped, so PageTransCompoundMap() always returns
->> false for page cache THP.  This would prevent KVM from setting up PMD
->> mapped EPT entry.
->>
->> So we need handle page cache THP correctly.  However, when page cache
->> THP's PMD gets split, kernel just remove the map instead of setting up
->> PTE map like what anonymous THP does.  Before KVM calls get_user_pages()
->> the subpages may get PTE mapped even though it is still a THP since the
->> page cache THP may be mapped by other processes at the mean time.
->>
->> Checking its _mapcount and whether the THP has PTE mapped or not.
->> Although this may report some false negative cases (PTE mapped by other
->> processes), it looks not trivial to make this accurate.
->>
->> With this fix /sys/kernel/debug/kvm/largepage would show reasonable
->> pages are PMD mapped by EPT as the below:
->>
->> 7fbeaee00000-7fbfaee00000 rw-s 00000000 00:14 275464 /dev/shm/qemu_back_mem.mem.SKUvat (deleted)
->> Size:            4194304 kB
->> [snip]
->> AnonHugePages:         0 kB
->> ShmemPmdMapped:   557056 kB
->> [snip]
->> Locked:                0 kB
->>
->> cat /sys/kernel/debug/kvm/largepages
->> 271
->>
->> And the benchmarks are as same as anonymous THPs.
->>
-> Fixes: dd78fedde4b9 ("rmap: support file thp")
-
-OK, though it might be the best blame target.
-
+> On Sat 19 Oct 04:37 PDT 2019, Sai Prakash Ranjan wrote:
 >
->> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
->> Reported-by: Gang Deng <gavin.dg@linux.alibaba.com>
->> Tested-by: Gang Deng <gavin.dg@linux.alibaba.com>
->> Suggested-by: Hugh Dickins <hughd@google.com>
->> Cc: Andrea Arcangeli <aarcange@redhat.com>
->> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
->> Cc: <stable@vger.kernel.org> 4.8+
->> ---
->> v2: Adopted the suggestion from Hugh to use _mapcount and compound_mapcount.
->>      But I just open coding compound_mapcount to avoid duplicating the
->>      definition of compound_mapcount_ptr in two different files.  Since
->>      "compound_mapcount" looks self-explained so I'm supposed the open
->>      coding would not affect the readability.
-> No, relying on head[1] is not nice: Matthew's suggestion better.
-
-Done in v3.
-
+> > LLCC behaviour is controlled by the configuration data set
+> > in the llcc-qcom driver, add the same for SC7180 SoC.
+> > Also convert the existing bindings to json-schema and add
+> > the compatible for SC7180 SoC.
+> >
 >
->>   include/linux/page-flags.h | 22 ++++++++++++++++++++--
->>   1 file changed, 20 insertions(+), 2 deletions(-)
->>
->> diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
->> index f91cb88..954a877 100644
->> --- a/include/linux/page-flags.h
->> +++ b/include/linux/page-flags.h
->> @@ -622,12 +622,30 @@ static inline int PageTransCompound(struct page *page)
->>    *
->>    * Unlike PageTransCompound, this is safe to be called only while
->>    * split_huge_pmd() cannot run from under us, like if protected by the
->> - * MMU notifier, otherwise it may result in page->_mapcount < 0 false
->> + * MMU notifier, otherwise it may result in page->_mapcount check false
->>    * positives.
->> + *
->> + * We have to treat page cache THP differently since every subpage of it
->> + * would get _mapcount inc'ed once it is PMD mapped.  But, it may be PTE
->> + * mapped in the current process so comparing subpage's _mapcount to
->> + * compound_mapcount ot filter out PTE mapped case.
-> s/ ot / to /
+> Thanks for the patches and thanks for the review Stephen. Series applied
 
-oops, will fix it.
+And they break dt_binding_check. Please fix.
 
->
->>    */
->>   static inline int PageTransCompoundMap(struct page *page)
->>   {
->> -	return PageTransCompound(page) && atomic_read(&page->_mapcount) < 0;
->> +	struct page *head;
->> +	int map_count;
->> +
->> +	if (!PageTransCompound(page))
->> +		return 0;
->> +
->> +	if (PageAnon(page))
->> +		return atomic_read(&page->_mapcount) < 0;
->> +
->> +	head = compound_head(page);
->> +	map_count = atomic_read(&page->_mapcount);
->> +	/* File THP is PMD mapped and not double mapped */
-> s/ double / PTE /
-
-Will fix it.
-
->
->> +	return map_count >= 0 &&
-> You have added a map_count >= 0 test there. Okay, not wrong, but not
-> necessary, and not consistent with what's returned in the PageAnon
-> case (if this were called for an unmapped page).
-
-I was thinking about this too. I'm wondering there might be a case that 
-the PMD is split and it was the last PMD map, in this case subpage's 
-_mapcount is also equal to compound_mapcount (both is -1). So, it would 
-return true, then KVM may setup PMD map in EPT, but it might be PTE 
-mapped later on the host. But, I'm not quite sure if this is really 
-possible or if this is really a integrity problem. So, I thought it 
-might be safer to add this check.
-
->
-> But asking for consistency in this function is asking for too much.
-> It is *very* specialized to the particular places from which it is
-> called (doesn't really belong in page-flags.h at all), and just so
-> long as it gives them the right answer most of the time, and errs
-> on the safe side the rest of the time, it'll do.
->
-> (I don't know if it's ever called on a tail page: it would not crash
-> if it were, but different tail pages may give different answers.)
->
->> +	       map_count == atomic_read(&head[1].compound_mapcount);
->>   }
->>   
->>   /*
->> -- 
->> 1.8.3.1
->>
->>
-
+Rob
