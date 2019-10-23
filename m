@@ -3,78 +3,84 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C97CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:03:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2049CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:04:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D1FA2064B
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:03:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91F182084B
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:04:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390971AbfJWKDt (ORCPT
+        id S2391004AbfJWKEE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 06:03:49 -0400
-Received: from mga05.intel.com ([192.55.52.43]:56935 "EHLO mga05.intel.com"
+        Wed, 23 Oct 2019 06:04:04 -0400
+Received: from mga14.intel.com ([192.55.52.115]:24028 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390897AbfJWKDt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 06:03:49 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
+        id S2390361AbfJWKEE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 06:04:04 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 03:03:48 -0700
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 03:04:03 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,220,1569308400"; 
-   d="scan'208";a="223133571"
-Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.170]) ([10.237.72.170])
-  by fmsmga004.fm.intel.com with ESMTP; 23 Oct 2019 03:03:47 -0700
-Subject: Re: [PATCH] usb: xhci: fix Immediate Data Transfer endianness
-To:     Samuel Holland <samuel@sholland.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-References: <20191020015313.4558-1-samuel@sholland.org>
-From:   Mathias Nyman <mathias.nyman@linux.intel.com>
-Message-ID: <f5029323-9b3b-1c66-3c89-c3230d5a24ea@linux.intel.com>
-Date:   Wed, 23 Oct 2019 13:05:54 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+   d="scan'208";a="209893830"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 23 Oct 2019 03:04:00 -0700
+Received: by lahna (sSMTP sendmail emulation); Wed, 23 Oct 2019 13:04:00 +0300
+Date:   Wed, 23 Oct 2019 13:03:59 +0300
+From:   "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>
+To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "logang@deltatee.com" <logang@deltatee.com>
+Subject: Re: [PATCH 1/1] PCI: Add hp_mmio_size and hp_mmio_pref_size
+ parameters
+Message-ID: <20191023100359.GW2819@lahna.fi.intel.com>
+References: <PSXP216MB01833367A1A154AEB816AE4E806B0@PSXP216MB0183.KORP216.PROD.OUTLOOK.COM>
+ <20191023094743.GU2819@lahna.fi.intel.com>
+ <SL2P216MB0187D47276DED3EA634123BE806B0@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-In-Reply-To: <20191020015313.4558-1-samuel@sholland.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SL2P216MB0187D47276DED3EA634123BE806B0@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20.10.2019 4.53, Samuel Holland wrote:
-> The arguments to queue_trb are always byteswapped to LE for placement in
-> the ring, but this should not happen in the case of immediate data; the
-> bytes copied out of transfer_buffer are already in the correct order.
-> Add a complementary byteswap so the bytes end up in the ring correctly.
+On Wed, Oct 23, 2019 at 09:57:17AM +0000, Nicholas Johnson wrote:
+> On Wed, Oct 23, 2019 at 12:47:43PM +0300, mika.westerberg@linux.intel.com wrote:
+> > On Wed, Oct 23, 2019 at 08:37:48AM +0000, Nicholas Johnson wrote:
+> > >  			} else if (!strncmp(str, "hpmemsize=", 10)) {
+> > > -				pci_hotplug_mem_size = memparse(str + 10, &str);
+> > > +				pci_hotplug_mmio_size =
+> > > +					memparse(str + 10, &str);
+> > > +				pci_hotplug_mmio_pref_size =
+> > > +					memparse(str + 10, &str);
+> > 
+> > Does this actually work correctly? The first memparse(str + 10, &str)
+> > modifies str so the next call will not start from the correct position
+> > anymore.
+> I have been using this for a long time now and have not had any issues.
+> Does it modify str? I thought that was done by the loop.
+
+If you add "hpmemsize=xxx" in the command line and print both
+pci_hotplug_mmio_size and pci_hotplug_mmio_pref_size after the
+assignment, do they have the same value? If yes, then there is no
+problem.
+
+> Can somebody else please weigh in here? I am worried now, and I want to 
+> be sure. If it is a problem, then I will have to read it into 
+> pci_hotplug_mmio_size and then set:
 > 
-> This was observed on BE ppc64 with a "Texas Instruments TUSB73x0
-> SuperSpeed USB 3.0 xHCI Host Controller [104c:8241]" as a ch341
-> usb-serial adapter ("1a86:7523 QinHeng Electronics HL-340 USB-Serial
-> adapter") always transmitting the same character (generally NUL) over
-> the serial link regardless of the key pressed.
-> 
+> pci_hotplug_mmio_pref_size = pci_hotplug_mmio_size
 
-Thanks, nice catch.
-
-It's unfortunate that we ended up with a situation where this fix is the
-least intrusive one.
-With IDT we would just want to memcpy() bytes an not care about endianness,
-but on BE we end up storing data bytes in a u64, and start with a complementary u64
-byteswap to counter a later u32 byteswap done after splitting the u64 to upper
-and lower 32 bit parts.
-
-This because that TRB field is normally used for 64bit data buffer pointers,
-and all code is written to support that
-
-adding to queue
-
--Mathias
+Yup.
