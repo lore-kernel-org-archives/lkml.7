@@ -5,60 +5,63 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DFB3CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:08:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDEABCA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:09:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1520421906
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:08:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C423021906
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:09:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Gw/RPOoC"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="MfQV+IGF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390178AbfJWIIp (ORCPT
+        id S2390081AbfJWIJo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 04:08:45 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:40848 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390035AbfJWIIo (ORCPT
+        Wed, 23 Oct 2019 04:09:44 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:40028 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727574AbfJWIJo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 04:08:44 -0400
+        Wed, 23 Oct 2019 04:09:44 -0400
 Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9N88WYj076964;
-        Wed, 23 Oct 2019 03:08:32 -0500
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9N89gbD078048;
+        Wed, 23 Oct 2019 03:09:42 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571818112;
-        bh=8TVmm97HdkcTxHMy4E/vDIGl+8tPfIFTz7dUv6cSREk=;
+        s=ti-com-17Q1; t=1571818182;
+        bh=ZfP9BharqnfDDOfH8UAQbM0m+BiwuI/R1NAozBclods=;
         h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Gw/RPOoCBvKJZR+30BdyQ5PXdddkMhZiUiP1Xq6GSdG3ANF7eSj+ycwN3nHLNUzsH
-         gqk1VLxSteXH6M5jXYHw1Et3WOQiGCc9/teTCIRFYwpaB7iqazKYTosyEFSjlX+FvE
-         VTKjLgoi6+K4N2nO42vztwhj6BXyFLnbXP60xseI=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9N88VNt087263;
-        Wed, 23 Oct 2019 03:08:32 -0500
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+        b=MfQV+IGFnagRc37Yi3oA1t489rrWR+PifzaYeEqhPSInDKnmFFIehc5PYJhtN52Vh
+         l973nGx6TCeNB71RwACtmzpcckT7ONmHWF11KPP8FaurYTPBwamUf67huBOdeRVTvn
+         L2xeiJjQbWE0Z6PNf/WpXp5+qDeA9CVXPArh/Gyw=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9N89bdd088759;
+        Wed, 23 Oct 2019 03:09:42 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 23
- Oct 2019 03:07:57 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ Oct 2019 03:08:40 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 23 Oct 2019 03:07:56 -0500
+ Frontend Transport; Wed, 23 Oct 2019 03:08:40 -0500
 Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9N8845V017123;
-        Wed, 23 Oct 2019 03:08:04 -0500
-Subject: Re: [PATCH -next] phy: ti: dm816x: remove set but not used variable
- 'phy_data'
-To:     YueHaibing <yuehaibing@huawei.com>, <kishon@ti.com>
-CC:     <linux-kernel@vger.kernel.org>
-References: <20191023074523.31888-1-yuehaibing@huawei.com>
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9N88lhF120094;
+        Wed, 23 Oct 2019 03:08:47 -0500
+Subject: Re: [PATCH 1/3] phy: cadence: Sierra: add phy_reset hook
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+CC:     <aniljoy@cadence.com>, <adouglas@cadence.com>, <nsekhar@ti.com>,
+        <jsarha@ti.com>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <20191022132249.869-1-rogerq@ti.com>
+ <20191022132249.869-2-rogerq@ti.com>
+ <3d261add-8fa8-13b8-a42b-8662fcbe4b23@ti.com>
 From:   Roger Quadros <rogerq@ti.com>
-Message-ID: <9e60aeb1-e9e7-f6c1-a392-8a714171b878@ti.com>
-Date:   Wed, 23 Oct 2019 11:08:03 +0300
+Message-ID: <1956da9e-ec5f-ce68-25ea-1d570e1f7b54@ti.com>
+Date:   Wed, 23 Oct 2019 11:08:46 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191023074523.31888-1-yuehaibing@huawei.com>
+In-Reply-To: <3d261add-8fa8-13b8-a42b-8662fcbe4b23@ti.com>
 Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -68,49 +71,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Kishon,
 
+On 23/10/2019 10:36, Kishon Vijay Abraham I wrote:
+> Roger,
+> 
+> On 22/10/19 6:52 PM, Roger Quadros wrote:
+>> This is required if type C driver needs to hold
+>> global reset on J7ES to perform LN10 swap.
+> 
+> Can you replace "This" with something more specific.
 
-On 23/10/2019 10:45, YueHaibing wrote:
-> Fixes gcc '-Wunused-but-set-variable' warning:
-> 
-> drivers/phy/ti/phy-dm816x-usb.c:192:29: warning:
->   variable phy_data set but not used [-Wunused-but-set-variable]
-> 
-> It is never used, so can be removed.
-> 
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-
-Reviewed-by: Roger Quadros <rogerq@ti.com>
+I meant this patch, but I will revise the commit message.
 
 cheers,
 -roger
-
-> ---
->   drivers/phy/ti/phy-dm816x-usb.c | 3 ---
->   1 file changed, 3 deletions(-)
 > 
-> diff --git a/drivers/phy/ti/phy-dm816x-usb.c b/drivers/phy/ti/phy-dm816x-usb.c
-> index cbcce7c..26f1947 100644
-> --- a/drivers/phy/ti/phy-dm816x-usb.c
-> +++ b/drivers/phy/ti/phy-dm816x-usb.c
-> @@ -189,7 +189,6 @@ static int dm816x_usb_phy_probe(struct platform_device *pdev)
->   	struct phy_provider *phy_provider;
->   	struct usb_otg *otg;
->   	const struct of_device_id *of_id;
-> -	const struct usb_phy_data *phy_data;
->   	int error;
->   
->   	of_id = of_match_device(of_match_ptr(dm816x_usb_phy_id_table),
-> @@ -220,8 +219,6 @@ static int dm816x_usb_phy_probe(struct platform_device *pdev)
->   	if (phy->usbphy_ctrl == 0x2c)
->   		phy->instance = 1;
->   
-> -	phy_data = of_id->data;
-> -
->   	otg = devm_kzalloc(&pdev->dev, sizeof(*otg), GFP_KERNEL);
->   	if (!otg)
->   		return -ENOMEM;
-> 
+> Thanks
+> Kishon
+>>
+>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+>> ---
+>>   drivers/phy/cadence/phy-cadence-sierra.c | 10 ++++++++++
+>>   1 file changed, 10 insertions(+)
+>>
+>> diff --git a/drivers/phy/cadence/phy-cadence-sierra.c b/drivers/phy/cadence/phy-cadence-sierra.c
+>> index affede8c4368..e6d27bdec22a 100644
+>> --- a/drivers/phy/cadence/phy-cadence-sierra.c
+>> +++ b/drivers/phy/cadence/phy-cadence-sierra.c
+>> @@ -339,10 +339,20 @@ static int cdns_sierra_phy_off(struct phy *gphy)
+>>   	return reset_control_assert(ins->lnk_rst);
+>>   }
+>>   
+>> +static int cdns_sierra_phy_reset(struct phy *gphy)
+>> +{
+>> +	struct cdns_sierra_phy *sp = dev_get_drvdata(gphy->dev.parent);
+>> +
+>> +	reset_control_assert(sp->phy_rst);
+>> +	reset_control_deassert(sp->phy_rst);
+>> +	return 0;
+>> +};
+>> +
+>>   static const struct phy_ops ops = {
+>>   	.init		= cdns_sierra_phy_init,
+>>   	.power_on	= cdns_sierra_phy_on,
+>>   	.power_off	= cdns_sierra_phy_off,
+>> +	.reset		= cdns_sierra_phy_reset,
+>>   	.owner		= THIS_MODULE,
+>>   };
+>>   
+>>
 
 -- 
 Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
