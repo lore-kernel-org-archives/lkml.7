@@ -2,102 +2,253 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00673CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:32:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39555CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:32:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9D0B21906
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:32:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16793214B2
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:32:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391597AbfJWMcm (ORCPT
+        id S2405353AbfJWMc5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 08:32:42 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:50392 "EHLO foss.arm.com"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S2405347AbfJWMck (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 08:32:40 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AC3BC497;
-        Wed, 23 Oct 2019 05:32:17 -0700 (PDT)
-Received: from arm.com (e112269-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3CC263F6C4;
-        Wed, 23 Oct 2019 05:32:16 -0700 (PDT)
-Date:   Wed, 23 Oct 2019 13:32:10 +0100
-From:   Steven Price <steven.price@arm.com>
-To:     Mao Wenan <maowenan@huawei.com>
-Cc:     "maz@kernel.org" <maz@kernel.org>,
-        James Morse <James.Morse@arm.com>,
-        "julien.thierry.kdev@gmail.com" <julien.thierry.kdev@gmail.com>,
-        Suzuki Poulose <Suzuki.Poulose@arm.com>,
-        Catalin Marinas <Catalin.Marinas@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
-Subject: Re: [PATCH] KVM: arm64: Select SCHED_INFO before SCHEDSTATS
-Message-ID: <20191023123210.GA40238@arm.com>
-References: <20191023032254.159510-1-maowenan@huawei.com>
+        Wed, 23 Oct 2019 08:32:57 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:49112 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391378AbfJWMbm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 08:31:42 -0400
+Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iNFne-00017q-A1; Wed, 23 Oct 2019 14:31:38 +0200
+Message-Id: <20191023123118.386844979@linutronix.de>
+User-Agent: quilt/0.65
+Date:   Wed, 23 Oct 2019 14:27:13 +0200
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        linux-arch@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>
+Subject: [patch V2 08/17] x86/entry: Move syscall irq tracing to C code
+References: <20191023122705.198339581@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191023032254.159510-1-maowenan@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 04:22:54AM +0100, Mao Wenan wrote:
-> If KVM=y, it will select SCHEDSTATS, below erros can
-> be seen:
-> kernel/sched/stats.h: In function rq_sched_info_arrive:
-> kernel/sched/stats.h:12:20: error: struct sched_info
-> has no member named run_delay
->    rq->rq_sched_info.run_delay += delta;
->                     ^
-> kernel/sched/stats.h:13:20: error: struct sched_info
-> has no member named pcount
->    rq->rq_sched_info.pcount++;
->                     ^
-> kernel/sched/stats.h: In function rq_sched_info_dequeued:
-> kernel/sched/stats.h:31:20: error: struct sched_info has
-> no member named run_delay
->    rq->rq_sched_info.run_delay += delta;
-> 
-> These are because CONFIG_SCHED_INFO is not set, This patch 
-> is to select SCHED_INFO before SCHEDSTATS.
+Interrupt state tracing can be safely done in C code. The few stack
+operations in assembly do not need to be covered.
 
-It looks like I didn't spot this because when DEBUG_KERNEL is enabled
-then KVM selects SCHEDSTATS, which selects SCHED_INFO. Thanks for
-spotting this.
+Remove the now pointless indirection via .Lsyscall_32_done and jump to
+swapgs_restore_regs_and_return_to_usermode directly.
 
-> 
-> Fixes: 8564d6372a7d ("KVM: arm64: Support stolen time reporting via shared structure")
-> Signed-off-by: Mao Wenan <maowenan@huawei.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ arch/x86/entry/common.c          |   10 ++++++++++
+ arch/x86/entry/entry_32.S        |   17 -----------------
+ arch/x86/entry/entry_64.S        |    6 ------
+ arch/x86/entry/entry_64_compat.S |   30 ++++--------------------------
+ 4 files changed, 14 insertions(+), 49 deletions(-)
 
-Reviewed-by: Steven Price <steven.price@arm.com>
+--- a/arch/x86/entry/common.c
++++ b/arch/x86/entry/common.c
+@@ -218,6 +218,9 @@ static void exit_to_usermode_loop(struct
+ 	user_enter_irqoff();
+ 
+ 	mds_user_clear_cpu_buffers();
++
++	/* The return to usermode reenables interrupts. Tell the tracer */
++	trace_hardirqs_on();
+ }
+ 
+ #define SYSCALL_EXIT_WORK_FLAGS				\
+@@ -279,6 +282,9 @@ static void syscall_slow_exit_work(struc
+ {
+ 	struct thread_info *ti;
+ 
++	/* User to kernel transition disabled interrupts. */
++	trace_hardirqs_off();
++
+ 	enter_from_user_mode();
+ 	local_irq_enable();
+ 	ti = current_thread_info();
+@@ -351,6 +357,7 @@ static __always_inline void do_syscall_3
+ /* Handles int $0x80 */
+ __visible void do_int80_syscall_32(struct pt_regs *regs)
+ {
++	trace_hardirqs_off();
+ 	enter_from_user_mode();
+ 	local_irq_enable();
+ 	do_syscall_32_irqs_on(regs);
+@@ -367,6 +374,9 @@ static __always_inline void do_syscall_3
+ 	unsigned long landing_pad = (unsigned long)current->mm->context.vdso +
+ 		vdso_image_32.sym_int80_landing_pad;
+ 
++	/* User to kernel transition disabled interrupts. */
++	trace_hardirqs_off();
++
+ 	/*
+ 	 * SYSENTER loses EIP, and even SYSCALL32 needs us to skip forward
+ 	 * so that 'regs->ip -= 2' lands back on an int $0x80 instruction.
+--- a/arch/x86/entry/entry_32.S
++++ b/arch/x86/entry/entry_32.S
+@@ -924,12 +924,6 @@ ENTRY(entry_SYSENTER_32)
+ 	jnz	.Lsysenter_fix_flags
+ .Lsysenter_flags_fixed:
+ 
+-	/*
+-	 * User mode is traced as though IRQs are on, and SYSENTER
+-	 * turned them off.
+-	 */
+-	TRACE_IRQS_OFF
+-
+ 	movl	%esp, %eax
+ 	call	do_fast_syscall_32
+ 	/* XEN PV guests always use IRET path */
+@@ -939,8 +933,6 @@ ENTRY(entry_SYSENTER_32)
+ 	STACKLEAK_ERASE
+ 
+ /* Opportunistic SYSEXIT */
+-	TRACE_IRQS_ON			/* User mode traces as IRQs on. */
+-
+ 	/*
+ 	 * Setup entry stack - we keep the pointer in %eax and do the
+ 	 * switch after almost all user-state is restored.
+@@ -1039,12 +1031,6 @@ ENTRY(entry_INT80_32)
+ 
+ 	SAVE_ALL pt_regs_ax=$-ENOSYS switch_stacks=1	/* save rest */
+ 
+-	/*
+-	 * User mode is traced as though IRQs are on, and the interrupt gate
+-	 * turned them off.
+-	 */
+-	TRACE_IRQS_OFF
+-
+ 	movl	%esp, %eax
+ 	call	do_int80_syscall_32
+ .Lsyscall_32_done:
+@@ -1052,11 +1038,8 @@ ENTRY(entry_INT80_32)
+ 	STACKLEAK_ERASE
+ 
+ restore_all:
+-	TRACE_IRQS_IRET
+ 	SWITCH_TO_ENTRY_STACK
+-.Lrestore_all_notrace:
+ 	CHECK_AND_APPLY_ESPFIX
+-.Lrestore_nocheck:
+ 	/* Switch back to user CR3 */
+ 	SWITCH_TO_USER_CR3 scratch_reg=%eax
+ 
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -167,15 +167,11 @@ GLOBAL(entry_SYSCALL_64_after_hwframe)
+ 
+ 	PUSH_AND_CLEAR_REGS rax=$-ENOSYS
+ 
+-	TRACE_IRQS_OFF
+-
+ 	/* IRQs are off. */
+ 	movq	%rax, %rdi
+ 	movq	%rsp, %rsi
+ 	call	do_syscall_64		/* returns with IRQs disabled */
+ 
+-	TRACE_IRQS_IRETQ		/* we're about to change IF */
+-
+ 	/*
+ 	 * Try to use SYSRET instead of IRET if we're returning to
+ 	 * a completely clean 64-bit userspace context.  If we're not,
+@@ -342,7 +338,6 @@ ENTRY(ret_from_fork)
+ 	UNWIND_HINT_REGS
+ 	movq	%rsp, %rdi
+ 	call	syscall_return_slowpath	/* returns with IRQs disabled */
+-	TRACE_IRQS_ON			/* user mode is traced as IRQS on */
+ 	jmp	swapgs_restore_regs_and_return_to_usermode
+ 
+ 1:
+@@ -606,7 +601,6 @@ END(common_spurious)
+ GLOBAL(retint_user)
+ 	mov	%rsp,%rdi
+ 	call	prepare_exit_to_usermode
+-	TRACE_IRQS_IRETQ
+ 
+ GLOBAL(swapgs_restore_regs_and_return_to_usermode)
+ #ifdef CONFIG_DEBUG_ENTRY
+--- a/arch/x86/entry/entry_64_compat.S
++++ b/arch/x86/entry/entry_64_compat.S
+@@ -129,17 +129,11 @@ ENTRY(entry_SYSENTER_compat)
+ 	jnz	.Lsysenter_fix_flags
+ .Lsysenter_flags_fixed:
+ 
+-	/*
+-	 * User mode is traced as though IRQs are on, and SYSENTER
+-	 * turned them off.
+-	 */
+-	TRACE_IRQS_OFF
+-
+ 	movq	%rsp, %rdi
+ 	call	do_fast_syscall_32
+ 	/* XEN PV guests always use IRET path */
+-	ALTERNATIVE "testl %eax, %eax; jz .Lsyscall_32_done", \
+-		    "jmp .Lsyscall_32_done", X86_FEATURE_XENPV
++	ALTERNATIVE "testl %eax, %eax; jz swapgs_restore_regs_and_return_to_usermode", \
++		    "jmp swapgs_restore_regs_and_return_to_usermode", X86_FEATURE_XENPV
+ 	jmp	sysret32_from_system_call
+ 
+ .Lsysenter_fix_flags:
+@@ -247,17 +241,11 @@ GLOBAL(entry_SYSCALL_compat_after_hwfram
+ 	pushq   $0			/* pt_regs->r15 = 0 */
+ 	xorl	%r15d, %r15d		/* nospec   r15 */
+ 
+-	/*
+-	 * User mode is traced as though IRQs are on, and SYSENTER
+-	 * turned them off.
+-	 */
+-	TRACE_IRQS_OFF
+-
+ 	movq	%rsp, %rdi
+ 	call	do_fast_syscall_32
+ 	/* XEN PV guests always use IRET path */
+-	ALTERNATIVE "testl %eax, %eax; jz .Lsyscall_32_done", \
+-		    "jmp .Lsyscall_32_done", X86_FEATURE_XENPV
++	ALTERNATIVE "testl %eax, %eax; jz swapgs_restore_regs_and_return_to_usermode", \
++		    "jmp swapgs_restore_regs_and_return_to_usermode", X86_FEATURE_XENPV
+ 
+ 	/* Opportunistic SYSRET */
+ sysret32_from_system_call:
+@@ -266,7 +254,6 @@ GLOBAL(entry_SYSCALL_compat_after_hwfram
+ 	 * stack. So let's erase the thread stack right now.
+ 	 */
+ 	STACKLEAK_ERASE
+-	TRACE_IRQS_ON			/* User mode traces as IRQs on. */
+ 	movq	RBX(%rsp), %rbx		/* pt_regs->rbx */
+ 	movq	RBP(%rsp), %rbp		/* pt_regs->rbp */
+ 	movq	EFLAGS(%rsp), %r11	/* pt_regs->flags (in r11) */
+@@ -403,17 +390,8 @@ ENTRY(entry_INT80_compat)
+ 	xorl	%r15d, %r15d		/* nospec   r15 */
+ 	cld
+ 
+-	/*
+-	 * User mode is traced as though IRQs are on, and the interrupt
+-	 * gate turned them off.
+-	 */
+-	TRACE_IRQS_OFF
+-
+ 	movq	%rsp, %rdi
+ 	call	do_int80_syscall_32
+-.Lsyscall_32_done:
+ 
+-	/* Go back to user mode. */
+-	TRACE_IRQS_ON
+ 	jmp	swapgs_restore_regs_and_return_to_usermode
+ END(entry_INT80_compat)
 
-> ---
->  arch/arm64/kvm/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm64/kvm/Kconfig b/arch/arm64/kvm/Kconfig
-> index d8b88e4..3c46eac 100644
-> --- a/arch/arm64/kvm/Kconfig
-> +++ b/arch/arm64/kvm/Kconfig
-> @@ -39,6 +39,7 @@ config KVM
->  	select IRQ_BYPASS_MANAGER
->  	select HAVE_KVM_IRQ_BYPASS
->  	select HAVE_KVM_VCPU_RUN_PID_CHANGE
-> +	select SCHED_INFO
->  	select SCHEDSTATS
->  	---help---
->  	  Support hosting virtualized guest machines.
-> -- 
-> 2.7.4
-> 
+
