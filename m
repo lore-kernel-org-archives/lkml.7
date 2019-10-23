@@ -2,153 +2,129 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F487C47E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:13:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C1ECCA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:13:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54C40205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:13:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20866205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:13:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="rXcf07Ef"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Nh1OJ7aJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404298AbfJWKNm (ORCPT
+        id S2404310AbfJWKNp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 06:13:42 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:37742 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404266AbfJWKNj (ORCPT
+        Wed, 23 Oct 2019 06:13:45 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:36600 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404300AbfJWKNo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 06:13:39 -0400
-Received: by mail-ed1-f68.google.com with SMTP id r4so15321755edy.4
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 03:13:38 -0700 (PDT)
+        Wed, 23 Oct 2019 06:13:44 -0400
+Received: by mail-wr1-f66.google.com with SMTP id w18so20866612wrt.3
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 03:13:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        d=google.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=ORDM/VOBs1fIrp01I0A5xms2tGNpKSAd1TbHc1PkN5w=;
-        b=rXcf07Ef2MkSeZMGF3P4Q07eX4Y+LghQnjQZ4TE6fRY/lyPxphd/TGZkXWCyliyv9k
-         JRVd5T1itlTVH6a/44ePIv+jYO7zyF7Vw8U0lWYqSfR2cMJlFLWaQZ9ubGE4RZKnWovT
-         SeIcGZonw3JCCbt7SNCLdoY+2k5BwOiM9haBN0drd1VwFBQ9wwKEV44m5UEoOHRropd9
-         iajVfoflOTx5L6VT46RC8Gblu4rebThCGjwYyQH8qPMXxlgGp0iPMXkOXOfswvy4CO88
-         Ka9ggW3bx+36ONuvSwcGA+xqTCXQKNBGKl1zm09t/uFhLxEePbKOR457z8zA3/fkCpOy
-         Ds9g==
+         :content-disposition:in-reply-to:user-agent;
+        bh=4qw8x64i4XFEDlSAFYgF2VhxflxKizeU9gCHhrw8jfw=;
+        b=Nh1OJ7aJevO81JAtHvLk1Jt33aeKFq13ZRvSI/dwaK1Rc+O4hYrEMuF+LPjBPamW6M
+         hvMt5QPNnt+EWAeF5CrbTlH+BijHNo1iF2S3CMUP37k+Ws3CXaXP5GAwos7SZl0dlzW4
+         k3COkFO2cS3oNqQjKITOC7K5YlTDyZiEFKbQ+2FRpjI4DObXKJfO9f1da4yimF7Z4kMo
+         Jb7YggxwHasNVvZMI3NxaDENzDhPwlmJdDBrk9pitYrOmCHoXvarBEAa5D8ROR7Qs66/
+         Q+WYCzsYGqj2ohsB6DEqDwzKxh2pWPZl7eyjx9z1bIBKxlbsKeJhEZB9SSHYcrmE0kby
+         4Gzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=ORDM/VOBs1fIrp01I0A5xms2tGNpKSAd1TbHc1PkN5w=;
-        b=KKR5za/oMC9Zr0F15q7i/oPpAT+HC0tPQnRYw7xA6WCes5En/bbrpIuNcRJV4InpTf
-         GdKCRkaO7/eJE2lXMnss9u0g4FpWs1xTRx7GV6Xg9YrBzae9frhVQm+eIVIGSM3l+f8d
-         0urbmNIQeEC+yRRkR5NUeNn/LFGui3OfyBK/9zExj3KFIj16nTan7/piurqP71UBU/Nb
-         Q1NhF0nMeEgb7Bxp73omqBjhWsBqHxrl/C2qh/gMghz/UE57curJEGPAt7d+BmP2CK1i
-         QW0BV7o0l42btBdc55rnryfLU0EKz6C/3r0rhbWCskYvAIKy5V5gPfu2SlC5zsPcL+iQ
-         ZIcw==
-X-Gm-Message-State: APjAAAVzxvGpPjLyXJ4NzM4CZjpkDIPvbQMj/eRABaw8NeMoAI1UNfFl
-        unIBoXfNwnkNHmxaqu4jflWE+Q==
-X-Google-Smtp-Source: APXvYqyltJAbTQ9ow85BJkdjYC7irXmeeLrCr37rdhH0tOd5l2py+1UfitLMbDnJ4Ds+5iVUMRwsTg==
-X-Received: by 2002:aa7:cc95:: with SMTP id p21mr9049005edt.189.1571825617836;
-        Wed, 23 Oct 2019 03:13:37 -0700 (PDT)
-Received: from netronome.com ([62.119.166.9])
-        by smtp.gmail.com with ESMTPSA id ck10sm39035ejb.59.2019.10.23.03.13.33
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4qw8x64i4XFEDlSAFYgF2VhxflxKizeU9gCHhrw8jfw=;
+        b=BVmOVB8Jv3O8jWZoSjd/vt05BFCWGY5m44e+ilz2neSpXqYIE4JT4Oekfh2Tkwg/6Q
+         mMmDRGr3xhP+WY70tqBOUxEH72OiP0YbaTHqCsLoy2QVktvzgcx62Re4vk/MmeKnhWoj
+         VRw1jSYLxE8qWX3hOSOOC1CbFaNziOIH2IyQX0K1Aaxfb4HIwIdyJO9eO3AinSqloiov
+         xeKcQa56aylXRQMSfiDdm1c+7CowT76HXiDliTR8oVByC98kjvhur28Gg2waaTQ3Lpxk
+         WpfEmm+tBZwTcQBzE/GuKRpEY/pRqiAXlKoq60At5Q7Zyl8FG5v6JrXfwZcKrxtLsDQO
+         Xaaw==
+X-Gm-Message-State: APjAAAX6gVIpBKQc1RihTqxCHttg7vmRRC6JZb5NlLEK/GXQoPXBt1GZ
+        8O2VjRxjmIf6pICLsD9QVxScQg==
+X-Google-Smtp-Source: APXvYqxFesDIFMVEfJ+rAMm9XZfz/W3E1o2L8swFcNttv6/59Hul897kno2oER77JLbHa0srULlycQ==
+X-Received: by 2002:adf:e651:: with SMTP id b17mr7298903wrn.191.1571825621824;
+        Wed, 23 Oct 2019 03:13:41 -0700 (PDT)
+Received: from google.com ([2a00:79e0:d:210:e8f7:125b:61e9:733d])
+        by smtp.gmail.com with ESMTPSA id b186sm3144466wmb.21.2019.10.23.03.13.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Oct 2019 03:13:37 -0700 (PDT)
-Date:   Wed, 23 Oct 2019 12:13:31 +0200
-From:   Simon Horman <simon.horman@netronome.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     "Zhu, Lingshan" <lingshan.zhu@intel.com>, mst@redhat.com,
-        alex.williamson@redhat.com, linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        netdev@vger.kernel.org, dan.daly@intel.com,
-        cunming.liang@intel.com, tiwei.bie@intel.com, jason.zeng@intel.com,
-        zhiyuan.lv@intel.com
-Subject: Re: [RFC 1/2] vhost: IFC VF hardware operation layer
-Message-ID: <20191023101329.GE8732@netronome.com>
-References: <20191016011041.3441-1-lingshan.zhu@intel.com>
- <20191016011041.3441-2-lingshan.zhu@intel.com>
- <20191016095347.5sb43knc7eq44ivo@netronome.com>
- <075be045-3a02-e7d8-672f-4a207c410ee8@intel.com>
- <20191021163139.GC4486@netronome.com>
- <15d94e61-9b3d-7854-b65e-6fea6db75450@redhat.com>
+        Wed, 23 Oct 2019 03:13:41 -0700 (PDT)
+Date:   Wed, 23 Oct 2019 11:13:40 +0100
+From:   Matthias Maennich <maennich@google.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Jessica Yu <jeyu@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        David Laight <David.Laight@aculab.com>
+Subject: Re: [PATCH v3] scripts/nsdeps: use alternative sed delimiter
+Message-ID: <20191023101340.GA27616@google.com>
+References: <20191021160419.28270-1-jeyu@kernel.org>
+ <20191022110403.29715-1-jeyu@kernel.org>
+ <CAK7LNATzCA-+-9Mp6GZcBk1UZnUdgoYHLkX0wVSHyJcRefyWEg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <15d94e61-9b3d-7854-b65e-6fea6db75450@redhat.com>
+In-Reply-To: <CAK7LNATzCA-+-9Mp6GZcBk1UZnUdgoYHLkX0wVSHyJcRefyWEg@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 09:32:36AM +0800, Jason Wang wrote:
-> 
-> On 2019/10/22 上午12:31, Simon Horman wrote:
-> > On Mon, Oct 21, 2019 at 05:55:33PM +0800, Zhu, Lingshan wrote:
-> > > On 10/16/2019 5:53 PM, Simon Horman wrote:
-> > > > Hi Zhu,
-> > > > 
-> > > > thanks for your patch.
-> > > > 
-> > > > On Wed, Oct 16, 2019 at 09:10:40AM +0800, Zhu Lingshan wrote:
-> > ...
-> > 
-> > > > > +static void ifcvf_read_dev_config(struct ifcvf_hw *hw, u64 offset,
-> > > > > +		       void *dst, int length)
-> > > > > +{
-> > > > > +	int i;
-> > > > > +	u8 *p;
-> > > > > +	u8 old_gen, new_gen;
-> > > > > +
-> > > > > +	do {
-> > > > > +		old_gen = ioread8(&hw->common_cfg->config_generation);
-> > > > > +
-> > > > > +		p = dst;
-> > > > > +		for (i = 0; i < length; i++)
-> > > > > +			*p++ = ioread8((u8 *)hw->dev_cfg + offset + i);
-> > > > > +
-> > > > > +		new_gen = ioread8(&hw->common_cfg->config_generation);
-> > > > > +	} while (old_gen != new_gen);
-> > > > Would it be wise to limit the number of iterations of the loop above?
-> > > Thanks but I don't quite get it. This is used to make sure the function
-> > > would get the latest config.
-> > I am worried about the possibility that it will loop forever.
-> > Could that happen?
-> > 
-> > ...
-> 
-> 
-> My understanding is that the function here is similar to virtio config
-> generation [1]. So this can only happen for a buggy hardware.
+On Wed, Oct 23, 2019 at 10:23:39AM +0900, Masahiro Yamada wrote:
+>On Tue, Oct 22, 2019 at 8:04 PM Jessica Yu <jeyu@kernel.org> wrote:
+>>
+>> When doing an out of tree build with O=, the nsdeps script constructs
+>> the absolute pathname of the module source file so that it can insert
+>> MODULE_IMPORT_NS statements in the right place. However, ${srctree}
+>> contains an unescaped path to the source tree, which, when used in a sed
+>> substitution, makes sed complain:
+>>
+>> ++ sed 's/[^ ]* *//home/jeyu/jeyu-linux\/&/g'
+>> sed: -e expression #1, char 12: unknown option to `s'
+>>
+>> The sed substitution command 's' ends prematurely with the forward
+>> slashes in the pathname, and sed errors out when it encounters the 'h',
+>> which is an invalid sed substitution option. To avoid escaping forward
+>> slashes ${srctree}, we can use '|' as an alternative delimiter for
+>> sed instead to avoid this error.
+>>
+>> Signed-off-by: Jessica Yu <jeyu@kernel.org>
+>> ---
+>>
+>> v3: don't need to escape '/' since we're using a different delimiter.
+>>
+>>  scripts/nsdeps | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/scripts/nsdeps b/scripts/nsdeps
+>> index 3754dac13b31..dda6fbac016e 100644
+>> --- a/scripts/nsdeps
+>> +++ b/scripts/nsdeps
+>> @@ -33,7 +33,7 @@ generate_deps() {
+>>         if [ ! -f "$ns_deps_file" ]; then return; fi
+>>         local mod_source_files=`cat $mod_file | sed -n 1p                      \
+>>                                               | sed -e 's/\.o/\.c/g'           \
+>> -                                             | sed "s/[^ ]* */${srctree}\/&/g"`
+>> +                                             | sed "s|[^ ]* *|${srctree}/&|g"`
+>>         for ns in `cat $ns_deps_file`; do
+>>                 echo "Adding namespace $ns to module $mod_name (if needed)."
+>>                 generate_deps_for_ns $ns $mod_source_files
+>> --
+>> 2.16.4
+>>
+>
+>Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+>
 
-Ok, so this circles back to my original question.
-Should we put a bound on the number of times the loop runs
-or should we accept that the kernel locks up if the HW is buggy?
+Tested-by: Matthias Maennich <maennich@google.com>
 
-> 
-> Thanks
-> 
-> [1] https://docs.oasis-open.org/virtio/virtio/v1.1/csprd01/virtio-v1.1-csprd01.html
-> Section 2.4.1
-> 
-> 
-> > 
-> > > > > +static void io_write64_twopart(u64 val, u32 *lo, u32 *hi)
-> > > > > +{
-> > > > > +	iowrite32(val & ((1ULL << 32) - 1), lo);
-> > > > > +	iowrite32(val >> 32, hi);
-> > > > > +}
-> > > > I see this macro is also in virtio_pci_modern.c
-> > > > 
-> > > > Assuming lo and hi aren't guaranteed to be sequential
-> > > > and thus iowrite64_hi_lo() cannot be used perhaps
-> > > > it would be good to add a common helper somewhere.
-> > > Thanks, I will try after this IFC patchwork, I will cc you.
-> > Thanks.
-> > 
-> > ...
-> 
+Cheers,
+Matthias
